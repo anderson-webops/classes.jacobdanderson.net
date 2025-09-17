@@ -190,9 +190,9 @@ export default defineConfig({
 	server: {
 		proxy: {
 			"/api": {
-				target: "http://localhost:3002",
+				target: "http://localhost:3008",
 				changeOrigin: true,
-				rewrite: p => p.replace(/^\/api/, "") // strip /api
+				rewrite: (p) => p.replace(/^\/api/, "") // strip /api
 			}
 		}
 	}
