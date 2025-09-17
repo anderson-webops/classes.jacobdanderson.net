@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type { Tutor, User } from "@/stores/app";
-import axios from "axios";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
+import { api } from "@/api";
 import { useAppStore } from "@/stores/app";
 
 const app = useAppStore();
@@ -28,7 +28,7 @@ async function getTutors() {
 
 // fetch total users
 async function getNumberOfUsers() {
-	const { data } = await axios.get<User[]>("/api/users/all");
+	const { data } = await api.get<User[]>("/users/all");
 	numberOfUsers.value = data.length;
 }
 
@@ -37,11 +37,11 @@ async function getUsers(t: Tutor | null) {
 	await getNumberOfUsers();
 	if (!t) return;
 
-	const { data } = await axios.get<User[]>(`/api/users/oftutor/${t._id}`);
+	const { data } = await api.get<User[]>(`/users/oftutor/${t._id}`);
 	app.setUsers(data);
-	await axios.put(`/api/tutors/${t._id}`, {
+	await api.put(`/tutors/${t._id}`, {
 		...t,
-		usersOfTutorLength: data.lengt
+		usersOfTutorLength: data.length
 	});
 }
 
@@ -52,12 +52,9 @@ async function addUser() {
 		return;
 	}
 	try {
-		const { data } = await axios.post(
-			`/api/users/${selectedTutor.value._id}`,
-			{
-				currentUser: currentUser.value
-			}
-		);
+		const { data } = await api.post(`/users/${selectedTutor.value._id}`, {
+			currentUser: currentUser.value
+		});
 		if (data.currentUser) {
 			app.setCurrentUser(data.currentUser);
 		}
@@ -72,9 +69,7 @@ async function addUser() {
 async function selectTutor(t: Tutor) {
 	if (!currentUser.value) return;
 	try {
-		await axios.put(
-			`/api/users/selectTutor/${currentUser.value._id}/${t._id}`
-		);
+		await api.put(`/users/selectTutor/${currentUser.value._id}/${t._id}`);
 		await app.refreshCurrentUser();
 	} catch (e: any) {
 		error.value = `Error: ${e.response?.data?.message ?? e.message}`;
@@ -85,7 +80,7 @@ async function selectTutor(t: Tutor) {
 async function editTutor(t: Tutor) {
 	if (!admin.value && currentTutor.value?._id !== t._id) return;
 	try {
-		await axios.put(`/api/tutors/${t._id}`, {
+		await api.put(`/tutors/${t._id}`, {
 			...t,
 			editTutors: !t.editTutors,
 			saveEdit: t.editTutors ? "Edit" : "Save"
@@ -100,8 +95,8 @@ async function deleteTutor(t: Tutor) {
 	if (!admin.value && currentTutor.value?._id !== t._id) return;
 	try {
 		await getUsers(t);
-		await axios.delete(`/api/users/under/${t._id}`);
-		await axios.delete(`/api/tutors/remove/${t._id}`);
+		await api.delete(`/users/under/${t._id}`);
+		await api.delete(`/tutors/remove/${t._id}`);
 		await getTutors();
 		await getUsers(null);
 	} catch (e: any) {

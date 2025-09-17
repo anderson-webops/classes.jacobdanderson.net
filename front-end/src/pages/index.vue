@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
+import { api } from "@/api.ts";
 
 defineOptions({ name: "HomePage" });
 
@@ -27,6 +28,7 @@ async function updateQuote() {
 		// Optionally, choose only one quote:
 		// const res = await fetch("/api/quotes?tags=success&limit=1");
 		// const [q]  = await res.json();          // destructure first item
+		await api.get("/accounts/me");
 
 		const res = await fetch("/api/quotes?tags=success&limit=100");
 		if (!res.ok) {
@@ -64,9 +66,9 @@ onMounted(updateQuote);
 		<div v-if="quotePresent" class="quote mt-3">
 			<q>{{ quoteText }}</q>
 			<br />
-			<q>
-				<span>- {{ quoteAuthor }}</span></q
-			>
+			<p>
+				<span id="quote-author">- {{ quoteAuthor }}</span>
+			</p>
 		</div>
 
 		<img
@@ -75,12 +77,13 @@ onMounted(updateQuote);
 			src="https://images.theconversation.com/files/268439/original/file-20190409-2921-1a4uike.jpg?ixlib=rb-1.1.0&q=30&auto=format&w=600&h=398&fit=crop&dpr=2"
 			width="30%"
 		/>
-		<h2>Welcome to Tutoring with Jacob!</h2>
+		<h2>Welcome to Operation Opportunity!</h2>
 		<p class="mt-3">
-			I offer 1-on-1 tutoring sessions in computer science and math
-			subjects. Whether you're struggling with a specific topic or looking
-			to improve your overall understanding, I'm here to help you succeed.
-			I charge just $40 per hour for personalized tutoring sessions.
+			Operation Opportunity is dedicated to helping all students
+			everywhere become ready and prepared for college. Starting early on,
+			our priority is to help students develop study and critical thinking
+			skills, aid them through the college application process, and make
+			higher education more accesible to everyone.
 		</p>
 	</section>
 </template>
@@ -98,7 +101,8 @@ span {
 	background-color: whitesmoke;
 }
 
-q {
+q,
+#quote-author {
 	font-style: italic;
 }
 
