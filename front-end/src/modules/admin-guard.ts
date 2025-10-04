@@ -4,7 +4,11 @@ import { api } from "@/api";
 import { useAppStore } from "@/stores/app";
 
 export const install: UserModule = ({ router }) => {
-	if (!import.meta.env.SS) return;
+        // This guard should only run in the browser. During SSG/SSR
+        // (when `import.meta.env.SSR` is true) the navigation guards are
+        // evaluated on the server where we do not have access to the
+        // cookie-backed session, so bail out early in that scenario.
+        if (import.meta.env.SSR) return;
 
 	router.beforeEach(async (to) => {
 		if (!to.meta.requiresAdmin) return;

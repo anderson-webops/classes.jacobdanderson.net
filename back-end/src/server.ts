@@ -2,7 +2,7 @@
 import { env, exit } from "node:process";
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
-import express from "express";
+import express, { type NextFunction, type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
 import mongoose from "mongoose";
 
@@ -147,7 +147,17 @@ async function main() {
 		res.json({ adminID: s?.adminID ?? null, tutorID: s?.tutorID ?? null, userID: s?.userID ?? null });
 	});
 
-	const PORT = env.PORT || 3008;
+        app.use((req, res) => {
+                console.warn(`404 Not Found: ${req.method} ${req.originalUrl}`);
+                res.status(404).json({ message: "Not Found" });
+        });
+
+        app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
+                console.error(`Unhandled error processing ${req.method} ${req.originalUrl}:`, err);
+                res.status(500).json({ message: "Internal Server Error" });
+        });
+
+        const PORT = env.PORT || 3008;
 	app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
 }
 
