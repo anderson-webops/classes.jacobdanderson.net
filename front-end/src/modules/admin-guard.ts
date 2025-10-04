@@ -4,7 +4,9 @@ import { api } from "@/api";
 import { useAppStore } from "@/stores/app";
 
 export const install: UserModule = ({ router }) => {
-	if (!import.meta.env.SS) return;
+        // This guard should only run in the client-side SPA.
+        // During SSG/SSR builds `router` isn't mounted, so bail early.
+        if (import.meta.env.SSR) return;
 
 	router.beforeEach(async (to) => {
 		if (!to.meta.requiresAdmin) return;
