@@ -59,15 +59,19 @@ async function main() {
 		}
 	}
 
-	app.use(cookieSession(cookieOptions));
+        app.use(cookieSession(cookieOptions));
 
-	// 3) cache-control for auth endpoints
-	app.use((req, res, next) => {
-		if (req.path.startsWith("/accounts") || req.path.endsWith("/loggedin")) {
-			res.setHeader("Cache-Control", "no-store");
-		}
-		next();
-	});
+        const isAuthPath = (path: string) =>
+                path.includes("/accounts") || path.endsWith("/loggedin");
+
+        // 3) cache-control for auth endpoints
+        app.use((req, res, next) => {
+                const fullPath = `${req.baseUrl || ""}${req.path}`;
+                if (isAuthPath(fullPath)) {
+                        res.setHeader("Cache-Control", "no-store");
+                }
+                next();
+        });
 
 	// 4) rate limit (can be before or after parsers; keep before routes)
 	const rateWindowMs = Number(env.RATE_WINDOW_MS || 60000);
@@ -79,27 +83,34 @@ async function main() {
 		legacyHeaders: false,
 		message: { message: "Too many requests, slow down." }
 	});
-	app.use("/admin-mail", adminMailLimiter, adminMailRoutes);
+        const mountApiRoutes = (prefix = "") => {
+                app.use(`${prefix}/admin-mail`, adminMailLimiter, adminMailRoutes);
+                app.use(`${prefix}/quotes`, quoteProxy);
+                app.use(`${prefix}/tutors`, tutorRoutes);
+                app.use(`${prefix}/users`, userRoutes);
+                app.use(`${prefix}/admins`, adminRoutes);
+                app.use(`${prefix}/accounts`, accountRoutes);
+                app.get(`${prefix}/accounts/me`, (req, res) => {
+                        const s = req.session as any;
+                        res.json({
+                                adminID: s?.adminID ?? null,
+                                tutorID: s?.tutorID ?? null,
+                                userID: s?.userID ?? null
+                        });
+                });
+        };
 
-	//
-	app.use("/quotes", quoteProxy);
+        mountApiRoutes();
+        mountApiRoutes("/api");
 
-	// ready
-	app.get("/readyz", (_req, res) => {
-		const s = mongoose.connection.readyState; // 1=connected, 2=connecting
-		if (s === 1) return res.json({ ready: true });
-		return res.status(503).json({ ready: false, state: s });
-	});
+        // ready
+        app.get("/readyz", (_req, res) => {
+                const s = mongoose.connection.readyState; // 1=connected, 2=connecting
+                if (s === 1) return res.json({ ready: true });
+                return res.status(503).json({ ready: false, state: s });
+        });
 
-	// cache-control for auth endpoints
-	app.use((req, res, next) => {
-		if (req.path.startsWith("/accounts") || req.path.endsWith("/loggedin")) {
-			res.setHeader("Cache-Control", "no-store");
-		}
-		next();
-	});
-
-	// --- Get Mongo URI from Vault (preferred), else env fallback ---
+        // --- Get Mongo URI from Vault (preferred), else env fallback ---
 	let mongoUri: string | undefined;
 	try {
 		const { uri } = await readMongoSecret(); // your Vault client should read from KV v2
@@ -136,18 +147,7 @@ async function main() {
 	});
 
 	// Your routes (note: you’ve commented an axios baseURL elsewhere; these are mounted as-is)
-	app.use("/tutors", tutorRoutes);
-	app.use("/users", userRoutes);
-	app.use("/admins", adminRoutes);
-	app.use("/accounts", accountRoutes);
-
-	// after your session middleware in server.ts
-	app.get("/accounts/me", (req, res) => {
-		const s = req.session as any;
-		res.json({ adminID: s?.adminID ?? null, tutorID: s?.tutorID ?? null, userID: s?.userID ?? null });
-	});
-
-	const PORT = env.PORT || 3008;
+        const PORT = env.PORT || 3008;
 	app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
 }
 
