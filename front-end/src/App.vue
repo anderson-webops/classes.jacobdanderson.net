@@ -3,17 +3,18 @@
 // you can use this to manipulate the document head in any components,
 // they will be rendered correctly in the html results with vite-ssg
 useHead({
-	title: "Classes",
-	meta: [
-		{
-			name: "Classes",
-			content: ""
-		},
-		{
-			name: "theme-color",
-			content: () => (isDark.value ? "#00aba9" : "#ffffff")
-		}
-	],
+        title: "Jacob Anderson Tutoring",
+        meta: [
+                {
+                        name: "description",
+                        content:
+                                "Personalized 1:1 tutoring in programming, STEM, and Spanish with instructor Jacob Anderson."
+                },
+                {
+                        name: "theme-color",
+                        content: () => (isDark.value ? "#0b7285" : "#f8fafc")
+                }
+        ],
 	link: [
 		{
 			rel: "icon",

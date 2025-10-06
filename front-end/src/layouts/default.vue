@@ -1,33 +1,36 @@
 <script lang="ts" setup>
-import AccountManagement from "~/components/AccountManagement.vue";
+import TheFooter from "~/components/TheFooter.vue";
 import TheHeader from "~/components/TheHeader.vue";
-import { useAppStore } from "../stores/app";
-
-const app = useAppStore();
-
-function showLoginModal() {
-	app.setLoginBlock(true);
-}
-
-function showSignupModal() {
-	app.setSignupBlock(true);
-}
 </script>
 
 <template>
-	<main>
-		<TheHeader
-			@login-click="showLoginModal"
-			@signup-click="showSignupModal"
-		/>
-
-		<!----------------------------
-		-   Login and Signup Forms   -
-		----------------------------->
-
-		<AccountManagement />
-
-		<RouterView />
-		<TheFooter />
-	</main>
+        <main class="layout">
+                <TheHeader />
+                <RouterView />
+                <TheFooter />
+        </main>
 </template>
+
+<style scoped>
+.layout {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+        background: linear-gradient(180deg, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 50%, #ffffff 100%);
+        color: #0f172a;
+}
+
+.layout :deep(main),
+.layout :deep(section) {
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.layout :deep(a) {
+        color: inherit;
+        text-decoration: none;
+}
+
+.layout :deep(a:hover) {
+        text-decoration: underline;
+}
+</style>
