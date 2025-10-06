@@ -1,109 +1,190 @@
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-import { useAppStore } from "@/stores/app";
+import { ref } from "vue";
 
-const emit = defineEmits<{
-	(e: "loginClick"): void;
-	(e: "signupClick"): void;
-}>();
+const menuOpen = ref(false);
 
-const app = useAppStore();
-const { isLoggedIn, isAdmin } = storeToRefs(app);
+const navItems = [
+        { label: "Services", href: "#services" },
+        { label: "Approach", href: "#approach" },
+        { label: "Schedule", href: "#schedule" },
+        { label: "Pricing", href: "#pricing" },
+        { label: "Contact", href: "#contact" },
+];
 
-function logoutUser() {
-	app.logout();
+function toggleMenu() {
+        menuOpen.value = !menuOpen.value;
+}
+
+function closeMenu() {
+        menuOpen.value = false;
 }
 </script>
 
 <template>
-	<header>
-		<nav
-			class="navbar navbar-expand-lg navbar-light"
-			style="background-color: #e3f2fd"
-		>
-			<div class="container-fluid">
-				<router-link
-					aria-current="page"
-					class="nav-item navbar-brand nav-link"
-					to="/"
-				>
-					Operation Opportunity
-				</router-link>
-				<button
-					aria-controls="navbarSupportedContent"
-					aria-expanded="false"
-					aria-label="Toggle navigation"
-					class="navbar-toggler"
-					data-bs-target="#navbarSupportedContent"
-					data-bs-toggle="collapse"
-					type="button"
-				>
-					<span class="navbar-toggler-icon" />
-				</button>
-				<div
-					id="navbarSupportedContent"
-					class="collapse navbar-collapse"
-				>
-					<ul class="nav navbar-nav mb-lg-0 mb-2 me-auto">
-						<li class="nav-item">
-							<router-link class="nav-link" to="/">
-								Home
-							</router-link>
-						</li>
-						<li class="nav-item">
-							<router-link class="nav-link" to="/signup">
-								Signup
-							</router-link>
-						</li>
-						<li class="nav-item">
-							<router-link class="nav-link" to="/supportus">
-								Support Us
-							</router-link>
-						</li>
-						<li class="nav-item">
-							<router-link class="nav-link" to="/about">
-								About
-							</router-link>
-						</li>
-						<li v-if="isLoggedIn" class="nav-item">
-							<router-link class="nav-link" to="/profile">
-								Profile
-							</router-link>
-						</li>
-						<li v-if="isAdmin" class="nav-item">
-							<router-link class="nav-link" to="/admin/mdmail">
-								Session Notes
-							</router-link>
-						</li>
-					</ul>
-					<!-- Logout Button -->
-					<button
-						v-if="isLoggedIn"
-						class="btn-outline-danger btn"
-						@click="logoutUser"
-					>
-						Logout
-					</button>
-					<!-- Login button -->
-					<button
-						v-else
-						class="btn-outline-success btn"
-						@click="emit('loginClick')"
-					>
-						Login
-					</button>
-					<!-- Signup button -->
-					<button
-						v-if="!isLoggedIn"
-						class="btn-outline-primary btn"
-						@click="emit('signupClick')"
-					>
-						Signup
-					</button>
-				</div>
-			</div>
-		</nav>
-	</header>
+        <header class="site-header">
+                <div class="container">
+                        <RouterLink class="logo" to="/" @click="closeMenu">
+                                Jacob D. Anderson Classes
+                        </RouterLink>
+                        <button
+                                class="menu-button"
+                                type="button"
+                                @click="toggleMenu"
+                        >
+                                <span class="sr-only">Toggle navigation</span>
+                                <span :class="['menu-icon', { 'menu-icon--open': menuOpen }]" />
+                        </button>
+                        <nav :class="['nav-links', { 'nav-links--open': menuOpen }]">
+                                <a
+                                        v-for="item in navItems"
+                                        :key="item.href"
+                                        :href="item.href"
+                                        class="nav-link"
+                                        @click="closeMenu"
+                                >
+                                        {{ item.label }}
+                                </a>
+                        </nav>
+                </div>
+        </header>
 </template>
 
-<style scoped></style>
+<style scoped>
+.site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1rem 1.5rem;
+}
+
+.logo {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #0f172a;
+        text-decoration: none;
+}
+
+.menu-button {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 9999px;
+        border: none;
+        background: #e2e8f0;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+}
+
+.menu-button:focus-visible,
+.menu-button:hover {
+        background: #cbd5f5;
+}
+
+.sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+}
+
+.menu-icon,
+.menu-icon::before,
+.menu-icon::after {
+        display: block;
+        width: 1.5rem;
+        height: 2px;
+        border-radius: 9999px;
+        background: #1e293b;
+        transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+        content: "";
+}
+
+.menu-icon {
+        position: relative;
+}
+
+.menu-icon::before {
+        position: absolute;
+        top: -0.4rem;
+        left: 0;
+}
+
+.menu-icon::after {
+        position: absolute;
+        bottom: -0.4rem;
+        left: 0;
+}
+
+.menu-icon--open {
+        background: transparent;
+}
+
+.menu-icon--open::before {
+        transform: translateY(0.4rem) rotate(45deg);
+}
+
+.menu-icon--open::after {
+        transform: translateY(-0.4rem) rotate(-45deg);
+}
+
+.nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+}
+
+.nav-link {
+        font-weight: 600;
+        color: #475569;
+        text-decoration: none;
+        transition: color 0.2s ease-in-out;
+}
+
+.nav-link:focus-visible,
+.nav-link:hover {
+        color: #1d4ed8;
+}
+
+@media (max-width: 768px) {
+        .menu-button {
+                display: inline-flex;
+        }
+
+        .nav-links {
+                position: absolute;
+                top: 100%;
+                right: 1.5rem;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                margin-top: 0.75rem;
+                padding: 1rem 1.25rem;
+                background: #ffffff;
+                border-radius: 0.75rem;
+                box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+        }
+
+        .nav-links--open {
+                display: flex;
+        }
+}
+</style>
