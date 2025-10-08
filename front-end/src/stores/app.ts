@@ -2,36 +2,41 @@
 import { defineStore } from "pinia";
 import { api } from "@/api";
 
+type Displayable = string | number | boolean | null | undefined;
+
 /* ------------------------------------------------------------------ */
 /*  TypeScript interfaces                                             */
 /* ------------------------------------------------------------------ */
 export interface Tutor {
-	_id: string;
-	name: string;
-	email: string;
-	age: number;
-	state: string;
-	usersOfTutorLength: number;
-	editTutors: boolean;
-	saveEdit: string;
+        _id: string;
+        name: string;
+        email: string;
+        age: number;
+        state: string;
+        usersOfTutorLength: number;
+        editTutors: boolean;
+        saveEdit: string;
+        [key: string]: Displayable;
 }
 
 export interface User {
-	_id: string;
-	name: string;
-	email: string;
-	age: number;
-	state: string;
-	editUsers: boolean;
-	saveEdit: string;
+        _id: string;
+        name: string;
+        email: string;
+        age: number;
+        state: string;
+        editUsers: boolean;
+        saveEdit: string;
+        [key: string]: Displayable;
 }
 
 export interface Admin {
-	_id: string;
-	name: string;
-	email: string;
-	editAdmins: boolean;
-	saveEdit: string;
+        _id: string;
+        name: string;
+        email: string;
+        editAdmins: boolean;
+        saveEdit: string;
+        [key: string]: Displayable;
 }
 
 /* ------------------------------------------------------------------ */

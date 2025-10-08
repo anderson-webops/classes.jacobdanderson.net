@@ -167,12 +167,12 @@ async function addSignup() {
 					/>
 
 					<button class="button" type="submit">Login</button>
-					<label>
-						<input
-							checked="checked"
-							name="remember"
-							type="checkbox"
-						/>
+                                        <label>
+                                                <input
+                                                        :checked="true"
+                                                        name="remember"
+                                                        type="checkbox"
+                                                />
 						Remember me
 					</label>
 					<span class="signup"

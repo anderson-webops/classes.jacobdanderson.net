@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { setupLayouts } from "virtual:generated-layouts";
 import { ViteSSG } from "vite-ssg";
 
-import { routes } from "vue-router/auto-routes";
+import generatedRoutes from "vue-router/auto-routes";
 import App from "./App.vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 // Assuming you have styles defined in these files
@@ -24,8 +24,8 @@ library.add(faFacebook, faGithub, faInstagram);
 // noinspection JSUnusedGlobalSymbols
 export const createApp = ViteSSG(
 	App,
-	{
-		routes: setupLayouts(routes),
+        {
+                routes: setupLayouts(generatedRoutes),
 		base: import.meta.env.BASE_URL
 	},
 	async (ctx) => {
