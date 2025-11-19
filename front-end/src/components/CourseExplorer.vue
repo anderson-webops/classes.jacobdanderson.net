@@ -4,15 +4,18 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { useCoursesStore } from "@/stores/courses";
 
 const coursesStore = useCoursesStore();
-const courses = coursesStore.courses;
+
+const courseList = computed(() => coursesStore.courses?.value ?? []);
 
 const selectedCourseId = ref("");
 const activeModuleId = ref<string | null>(null);
 const openItems = ref<Record<string, string | null>>({});
 
 watchEffect(() => {
-	if (!selectedCourseId.value && courses.value.length > 0) {
-		selectCourse(courses.value[0].id);
+	const availableCourses = courseList.value;
+
+	if (!selectedCourseId.value && availableCourses.length > 0) {
+		selectCourse(availableCourses[0].id);
 	}
 });
 
@@ -23,7 +26,7 @@ watch(selectedCourseId, () => {
 
 const selectedCourse = computed(
 	() =>
-		courses.value.find(course => course.id === selectedCourseId.value) ??
+		courseList.value.find(course => course.id === selectedCourseId.value) ??
 		null
 );
 
@@ -73,7 +76,7 @@ function hasSupplemental(module: CourseModule) {
 					class="course-select"
 				>
 					<option
-						v-for="course in courses"
+						v-for="course in courseList"
 						:key="course.id"
 						:value="course.id"
 					>
