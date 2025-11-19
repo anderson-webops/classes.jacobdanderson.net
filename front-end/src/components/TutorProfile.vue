@@ -2,7 +2,6 @@
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
-import AccountSecurity from "@/components/AccountSecurity.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
@@ -80,10 +79,18 @@ const permittedCourses = computed(() => {
 });
 
 const courseLookup = computed(() => {
-	const map: Record<string, string> = {};
-	for (const course of courses.value ?? []) map[course.id] = course.name;
-	return map;
+        const map: Record<string, string> = {};
+        for (const course of courses.value ?? []) map[course.id] = course.name;
+        return map;
 });
+
+function updateEntityField(
+        entity: Record<string, any>,
+        key: string,
+        value: string | number | boolean | null | undefined
+) {
+        entity[key] = value;
+}
 
 watch(
 	users,
@@ -151,15 +158,27 @@ async function saveUserCourses(userID: string) {
 			<ul>
 				<li><h4>Tutor</h4></li>
 
-				<ProfileFields
-					:editing="tutorEdit"
-					:entity="currentTutor"
-					:fields="tutorFields"
-				/>
-			</ul>
-			<br />
-			<p class="assignment">
-				<strong>Courses enabled:</strong>
+                                <ProfileFields
+                                        :editing="tutorEdit"
+                                        :entity="currentTutor"
+                                        :fields="tutorFields"
+                                        :expanded="isCardActive('tutor')"
+                                        :show-security="true"
+                                        :entity-id="currentTutor._id"
+                                        role="tutor"
+                                        @update="
+                                                (key, value) =>
+                                                        updateEntityField(
+                                                                currentTutor as Record<string, any>,
+                                                                key,
+                                                                value
+                                                        )
+                                        "
+                                />
+                        </ul>
+                        <br />
+                        <p class="assignment">
+                                <strong>Courses enabled:</strong>
 				{{
 					permittedCourses.length
 						? permittedCourses.map(course => course.name).join(", ")
@@ -180,17 +199,10 @@ async function saveUserCourses(userID: string) {
 						tutorEdit ? saveTutor(currentTutor) : toggleTutor()
 					"
 				>
-					{{ tutorEdit ? "Save" : "Edit" }}
-				</button>
-			</div>
-
-			<AccountSecurity
-				v-if="isCardActive('tutor')"
-				:email="currentTutor.email"
-				:entity-id="currentTutor._id"
-				role="tutor"
-			/>
-		</div>
+                                        {{ tutorEdit ? "Save" : "Edit" }}
+                                </button>
+                        </div>
+                </div>
 
 		<!-- ───── Users under this tutor (read-only) ───── -->
 		<hr />

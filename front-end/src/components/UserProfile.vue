@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import AccountSecurity from "@/components/AccountSecurity.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
@@ -40,11 +39,19 @@ const assignedTutorNames = computed(() => {
 /*  field list (only once)                            */
 /* -------------------------------------------------- */
 const fields = [
-	{ key: "name", label: "Name" },
-	{ key: "email", label: "Email" },
-	{ key: "age", label: "Age" },
-	{ key: "state", label: "State" }
+        { key: "name", label: "Name" },
+        { key: "email", label: "Email" },
+        { key: "age", label: "Age" },
+        { key: "state", label: "State" }
 ];
+
+function updateEntityField(
+        entity: Record<string, any>,
+        key: string,
+        value: string | number | boolean | null | undefined
+) {
+        entity[key] = value;
+}
 </script>
 
 <template>
@@ -66,13 +73,25 @@ const fields = [
 					<h4>User</h4>
 				</li>
 
-				<ProfileFields
-					:editing="editing"
-					:entity="currentUser"
-					:fields="fields"
-				/>
-			</ul>
-			<br />
+                                <ProfileFields
+                                        :editing="editing"
+                                        :entity="currentUser"
+                                        :fields="fields"
+                                        :expanded="cardActive"
+                                        :show-security="true"
+                                        :entity-id="currentUser._id"
+                                        role="user"
+                                        @update="
+                                                (key, value) =>
+                                                        updateEntityField(
+                                                                currentUser as Record<string, any>,
+                                                                key,
+                                                                value
+                                                        )
+                                        "
+                                />
+                        </ul>
+                        <br />
 			<p class="assignment">
 				<strong>Assigned tutor(s):</strong>
 				{{
@@ -93,18 +112,11 @@ const fields = [
 					class="btn-primary btn"
 					@click.stop="editing ? save(currentUser) : toggle()"
 				>
-					{{ editing ? "Save" : "Edit" }}
-				</button>
-			</div>
-
-			<AccountSecurity
-				v-if="cardActive"
-				:email="currentUser.email"
-				:entity-id="currentUser._id"
-				role="user"
-			/>
-		</div>
-	</section>
+                                        {{ editing ? "Save" : "Edit" }}
+                                </button>
+                        </div>
+                </div>
+        </section>
 </template>
 
 <style scoped>
