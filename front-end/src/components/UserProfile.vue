@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
-import AccountSecurity from "@/components/AccountSecurity.vue";
+import { computed, ref, watch } from "vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
 import { useAppStore } from "@/stores/app";
+
+type Displayable = string | number | boolean | null | undefined;
 
 /* -------------------------------------------------- */
 /*  Pinia state                                       */
@@ -18,11 +19,44 @@ const deleteMe = useDeleteAccount("user");
 /*  editable helper                                   */
 /* -------------------------------------------------- */
 const { editing, toggle, save } = useEditable("user");
+const userDraft = ref<any | null>(null);
+const userEntity = computed(() =>
+        editing.value ? userDraft.value ?? currentUser.value : currentUser.value
+);
 
 const cardActive = ref(false);
 
 function activateCard() {
-	cardActive.value = true;
+        cardActive.value = true;
+}
+
+watch(
+        currentUser,
+        value => {
+                userDraft.value = value ? { ...value } : null;
+        },
+        { immediate: true }
+);
+
+function onFieldUpdate(key: string, value: Displayable) {
+        if (!userDraft.value && currentUser.value) userDraft.value = { ...currentUser.value } as any;
+        if (userDraft.value) userDraft.value[key] = value as any;
+}
+
+function startEdit() {
+        if (!currentUser.value) return;
+        userDraft.value = { ...currentUser.value };
+        if (!editing.value) toggle();
+}
+
+async function saveProfile() {
+        if (!userDraft.value) return;
+        await save(userDraft.value);
+}
+
+function cancelEdit() {
+        userDraft.value = currentUser.value ? { ...currentUser.value } : null;
+        if (editing.value) toggle();
 }
 
 const assignedTutorNames = computed(() => {
@@ -66,12 +100,16 @@ const fields = [
 					<h4>User</h4>
 				</li>
 
-				<ProfileFields
-					:editing="editing"
-					:entity="currentUser"
-					:fields="fields"
-				/>
-			</ul>
+                                <ProfileFields
+                                        :editing="editing"
+                                        :entity="userEntity!"
+                                        :fields="fields"
+                                        :role="'user'"
+                                        :entity-id="currentUser._id"
+                                        :show-security="cardActive"
+                                        @update="onFieldUpdate"
+                                />
+                        </ul>
 			<br />
 			<p class="assignment">
 				<strong>Assigned tutor(s):</strong>
@@ -83,28 +121,29 @@ const fields = [
 			</p>
 
 			<div v-if="cardActive" class="card-actions">
-				<button
-					class="btn-danger btn"
-					@click.stop="deleteMe(currentUser!._id)"
-				>
-					Delete
-				</button>
-				<button
-					class="btn-primary btn"
-					@click.stop="editing ? save(currentUser) : toggle()"
-				>
-					{{ editing ? "Save" : "Edit" }}
-				</button>
-			</div>
-
-			<AccountSecurity
-				v-if="cardActive"
-				:email="currentUser.email"
-				:entity-id="currentUser._id"
-				role="user"
-			/>
-		</div>
-	</section>
+                                <button
+                                        class="btn-danger btn"
+                                        @click.stop="deleteMe(currentUser!._id)"
+                                >
+                                        Delete
+                                </button>
+                                <button
+                                        class="btn-primary btn"
+                                        @click.stop="editing ? saveProfile() : startEdit()"
+                                >
+                                        {{ editing ? "Save" : "Edit" }}
+                                </button>
+                                <button
+                                        v-if="editing"
+                                        class="btn-secondary btn"
+                                        type="button"
+                                        @click.stop="cancelEdit"
+                                >
+                                        Cancel
+                                </button>
+                        </div>
+                </div>
+        </section>
 </template>
 
 <style scoped>

@@ -73,8 +73,8 @@ export const validAdmin: RequestHandler = async (req, res, next) => {
  *  • tutorID in session matches the :tutorID param
  */
 export const validTutorOrAdmin: RequestHandler = (req, res, next) => {
-	const sess = req.session as any;
-	const { tutorID } = req.params;
+        const sess = req.session as any;
+        const { tutorID } = req.params;
 
 	// if admin, always OK
 	if (sess.adminID) {
@@ -86,5 +86,19 @@ export const validTutorOrAdmin: RequestHandler = (req, res, next) => {
 		return next();
 	}
 
-	res.status(403).json({ message: "Not authorized to perform this action." });
+        res.status(403).json({ message: "Not authorized to perform this action." });
+};
+
+/**
+ * Allow access when either a tutor or admin session exists. Useful for
+ * endpoints that don't depend on a specific tutor ID.
+ */
+export const validTutorOrAdminSession: RequestHandler = (req, res, next) => {
+        const sess = req.session as any;
+
+        if (sess?.adminID || sess?.tutorID) {
+                return next();
+        }
+
+        res.status(403).json({ message: "Not authorized to perform this action." });
 };

@@ -2,12 +2,13 @@
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
-import AccountSecurity from "@/components/AccountSecurity.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+
+type Displayable = string | number | boolean | null | undefined;
 
 /* -------------------------------------------------- */
 const app = useAppStore();
@@ -18,10 +19,14 @@ const deleteMe = useDeleteAccount("tutor");
 
 /* editable (the tutor card itself) */
 const {
-	editing: tutorEdit,
-	toggle: toggleTutor,
-	save: saveTutor
+        editing: tutorEdit,
+        toggle: toggleTutor,
+        save: saveTutor
 } = useEditable("tutor");
+const tutorDraft = ref<any | null>(null);
+const tutorEntity = computed(() =>
+        tutorEdit.value ? tutorDraft.value ?? currentTutor.value : currentTutor.value
+);
 
 /* field list */
 const tutorFields = [
@@ -57,11 +62,40 @@ function activateCard(id: string) {
 }
 
 function isCardActive(id: string) {
-	return cardState.value === id;
+        return cardState.value === id;
 }
 
 function userCardId(id: string) {
-	return `user-${id}`;
+        return `user-${id}`;
+}
+
+watch(
+        currentTutor,
+        value => {
+                tutorDraft.value = value ? { ...value } : null;
+        },
+        { immediate: true }
+);
+
+function onTutorFieldUpdate(key: string, value: Displayable) {
+        if (!tutorDraft.value && currentTutor.value) tutorDraft.value = { ...currentTutor.value } as any;
+        if (tutorDraft.value) tutorDraft.value[key] = value as any;
+}
+
+function startTutorEdit() {
+        if (!currentTutor.value) return;
+        tutorDraft.value = { ...currentTutor.value };
+        if (!tutorEdit.value) toggleTutor();
+}
+
+async function saveTutorProfile() {
+        if (!tutorDraft.value) return;
+        await saveTutor(tutorDraft.value);
+}
+
+function cancelTutorEdit() {
+        tutorDraft.value = currentTutor.value ? { ...currentTutor.value } : null;
+        if (tutorEdit.value) toggleTutor();
 }
 
 const userEditing = ref<Record<string, boolean>>({});
@@ -151,12 +185,16 @@ async function saveUserCourses(userID: string) {
 			<ul>
 				<li><h4>Tutor</h4></li>
 
-				<ProfileFields
-					:editing="tutorEdit"
-					:entity="currentTutor"
-					:fields="tutorFields"
-				/>
-			</ul>
+                                <ProfileFields
+                                        :editing="tutorEdit"
+                                        :entity="tutorEntity!"
+                                        :fields="tutorFields"
+                                        :role="'tutor'"
+                                        :entity-id="currentTutor._id"
+                                        :show-security="isCardActive('tutor')"
+                                        @update="onTutorFieldUpdate"
+                                />
+                        </ul>
 			<br />
 			<p class="assignment">
 				<strong>Courses enabled:</strong>
@@ -168,29 +206,30 @@ async function saveUserCourses(userID: string) {
 			</p>
 
 			<div v-if="isCardActive('tutor')" class="card-actions">
-				<button
-					class="btn-danger btn"
-					@click.stop="deleteMe(currentTutor!._id)"
-				>
-					Delete
-				</button>
-				<button
-					class="btn-primary btn"
-					@click.stop="
-						tutorEdit ? saveTutor(currentTutor) : toggleTutor()
-					"
-				>
-					{{ tutorEdit ? "Save" : "Edit" }}
-				</button>
-			</div>
-
-			<AccountSecurity
-				v-if="isCardActive('tutor')"
-				:email="currentTutor.email"
-				:entity-id="currentTutor._id"
-				role="tutor"
-			/>
-		</div>
+                                <button
+                                        class="btn-danger btn"
+                                        @click.stop="deleteMe(currentTutor!._id)"
+                                >
+                                        Delete
+                                </button>
+                                <button
+                                        class="btn-primary btn"
+                                        @click.stop="
+                                                tutorEdit ? saveTutorProfile() : startTutorEdit()
+                                        "
+                                >
+                                        {{ tutorEdit ? "Save" : "Edit" }}
+                                </button>
+                                <button
+                                        v-if="tutorEdit"
+                                        class="btn btn-secondary"
+                                        type="button"
+                                        @click.stop="cancelTutorEdit"
+                                >
+                                        Cancel
+                                </button>
+                        </div>
+                </div>
 
 		<!-- ───── Users under this tutor (read-only) ───── -->
 		<hr />
