@@ -8,7 +8,7 @@ import TutorProfile from "@/components/TutorProfile.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import { useAppStore } from "@/stores/app";
 
-type ProfileTab = "profile" | "courses";
+type ProfileTab = "profile" | "courses" | "manage";
 
 defineOptions({ name: "ProfilePage" });
 
@@ -38,16 +38,31 @@ const profileRole = computed(() => {
 });
 
 const canBrowseCourses = computed(
-	() => !currentAdmin.value && (currentTutor.value || currentUser.value)
+	() => !!(currentTutor.value || currentUser.value || currentAdmin.value)
 );
 
 const activeTab = ref<ProfileTab>("profile");
 
-watch(canBrowseCourses, value => {
-	if (!value && activeTab.value !== "profile") {
-		activeTab.value = "profile";
+const activeProfileProps = computed(() =>
+	currentAdmin.value ? { mode: activeTab.value } : {}
+);
+
+watch(
+	() => ({
+		canBrowse: canBrowseCourses.value,
+		isAdmin: !!currentAdmin.value
+	}),
+	({ canBrowse, isAdmin }) => {
+		if (!canBrowse && activeTab.value !== "profile") {
+			activeTab.value = "profile";
+			return;
+		}
+
+		if (!isAdmin && activeTab.value === "manage") {
+			activeTab.value = "profile";
+		}
 	}
-});
+);
 
 const heroTitle = computed(() => {
 	if (profileRole.value === "Administrator") {
@@ -117,6 +132,16 @@ function openAuthModal() {
 						Profile
 					</button>
 					<button
+						v-if="currentAdmin"
+						:aria-selected="activeTab === 'manage'"
+						class="tab"
+						role="tab"
+						type="button"
+						@click="activeTab = 'manage'"
+					>
+						Manage profiles
+					</button>
+					<button
 						:aria-selected="activeTab === 'courses'"
 						class="tab"
 						role="tab"
@@ -129,7 +154,8 @@ function openAuthModal() {
 
 				<component
 					:is="activeProfileComponent"
-					v-if="activeTab === 'profile'"
+					v-if="activeTab === 'profile' || activeTab === 'manage'"
+					v-bind="activeProfileProps"
 				/>
 				<CourseExplorer v-else-if="canBrowseCourses" />
 			</div>
