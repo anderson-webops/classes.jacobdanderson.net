@@ -17,9 +17,21 @@ const { courses } = storeToRefs(coursesStore);
 const courseList = computed(() => courses.value ?? []);
 
 const appStore = useAppStore();
-const { currentTutor } = storeToRefs(appStore);
+const { currentTutor, currentUser } = storeToRefs(appStore);
 
 const canViewSolutions = computed(() => !!currentTutor.value);
+const allowedCourseIds = computed(() => {
+	if (currentTutor.value) return currentTutor.value.coursePermissions ?? [];
+	if (currentUser.value) return currentUser.value.allowedCourses ?? [];
+	return [];
+});
+
+const visibleCourses = computed(() => {
+	const allowed = allowedCourseIds.value;
+	if (!allowed.length) return [];
+	const allowedSet = new Set(allowed);
+	return courseList.value.filter(course => allowedSet.has(course.id));
+});
 
 const selectedCourseId = ref("");
 const activeModuleId = ref<string | null>(null);
@@ -30,10 +42,16 @@ function renderMarkdown(content: string) {
 }
 
 watchEffect(() => {
-	const availableCourses = courseList.value;
-
-	if (!selectedCourseId.value && availableCourses.length > 0) {
-		selectCourse(availableCourses[0].id);
+	const available = visibleCourses.value;
+	if (!available.length) {
+		selectedCourseId.value = "";
+		return;
+	}
+	if (
+		!selectedCourseId.value ||
+		!available.some(course => course.id === selectedCourseId.value)
+	) {
+		selectCourse(available[0].id);
 	}
 });
 
@@ -44,8 +62,9 @@ watch(selectedCourseId, () => {
 
 const selectedCourse = computed(
 	() =>
-		courseList.value.find(course => course.id === selectedCourseId.value) ??
-		null
+		visibleCourses.value.find(
+			course => course.id === selectedCourseId.value
+		) ?? null
 );
 
 function selectCourse(id: string) {
@@ -83,7 +102,7 @@ function hasSupplemental(module: CourseModule) {
 
 <template>
 	<section class="course-explorer">
-		<div class="course-selector">
+		<div v-if="visibleCourses.length" class="course-selector">
 			<label class="selector-label" for="course-select"
 				>Choose a course</label
 			>
@@ -94,7 +113,7 @@ function hasSupplemental(module: CourseModule) {
 					class="course-select"
 				>
 					<option
-						v-for="course in courseList"
+						v-for="course in visibleCourses"
 						:key="course.id"
 						:value="course.id"
 					>
@@ -378,7 +397,15 @@ function hasSupplemental(module: CourseModule) {
 			</div>
 		</div>
 
-		<p v-else class="empty-copy">Course information is on the way.</p>
+		<p v-else-if="!courseList.length" class="empty-copy">
+			Course information is on the way.
+		</p>
+		<div v-else class="course-empty">
+			<p>
+				No courses have been assigned to your account yet. Please
+				contact your tutor or administrator for access.
+			</p>
+		</div>
 	</section>
 </template>
 
@@ -424,6 +451,15 @@ function hasSupplemental(module: CourseModule) {
 	display: flex;
 	flex-direction: column;
 	gap: 1.25rem;
+}
+
+.course-empty {
+	margin-top: 2rem;
+	text-align: center;
+	color: #475569;
+	background: rgba(148, 163, 184, 0.15);
+	border-radius: 18px;
+	padding: 2rem;
 }
 
 .module-card {

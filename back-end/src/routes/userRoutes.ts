@@ -8,8 +8,13 @@ import {
 	getLoggedInUser,
 	updateUser
 } from "../controllers/users/userController.js";
-import { getUsersOfTutor, promoteUserToTutor, setUserTutors } from "../controllers/users/userExtraController.js";
-import { validAdmin, validTutor, validUser } from "../middleware/auth.js";
+import {
+	getUsersOfTutor,
+	promoteUserToTutor,
+	setUserCourses,
+	setUserTutors
+} from "../controllers/users/userExtraController.js";
+import { validAdmin, validTutor, validTutorOrAdminFlexible, validUser } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -30,6 +35,9 @@ router.put("/tutor/:userID", validTutor, updateUser);
 
 // Update tutor assignments for a user (admin only)
 router.put("/:userID/tutors", validAdmin, setUserTutors);
+
+// Update course assignments for a user (tutor or admin)
+router.put("/:userID/courses", validTutorOrAdminFlexible, setUserCourses);
 
 // Promote a user to tutor (admin only)
 router.post("/:userID/promote", validAdmin, promoteUserToTutor);

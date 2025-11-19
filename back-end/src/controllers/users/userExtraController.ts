@@ -21,11 +21,18 @@ export const setUserTutors: RequestHandler = async (req, res) => {
 		.filter(id => Types.ObjectId.isValid(id))
 		.map(id => new Types.ObjectId(id));
 
-	const validTutors = await Tutor.find({ _id: { $in: cleanTutorIDs } }, { _id: 1 });
+	const validTutors = await Tutor.find({ _id: { $in: cleanTutorIDs } }, { _id: 1, coursePermissions: 1 });
 	const validTutorIds = validTutors.map(t => t._id);
 	const user = await User.findById(userID);
 	if (!user) return res.sendStatus(404);
 	user.tutors = validTutorIds;
+	const allowableCourses = new Set<string>();
+	for (const tutor of validTutors) {
+		for (const course of tutor.coursePermissions ?? []) allowableCourses.add(course);
+	}
+	if (allowableCourses.size > 0) {
+		user.allowedCourses = user.allowedCourses.filter(course => allowableCourses.has(course));
+	}
 	await user.save();
 	res.json({ tutors: user.tutors });
 };
@@ -46,7 +53,8 @@ export const promoteUserToTutor: RequestHandler = async (req, res) => {
 		age: user.age,
 		state: user.state,
 		password: user.password,
-		role: "tutor"
+		role: "tutor",
+		coursePermissions: []
 	} as any);
 	(tutor as any).skipPasswordHash = true;
 
@@ -54,4 +62,30 @@ export const promoteUserToTutor: RequestHandler = async (req, res) => {
 	await user.deleteOne();
 
 	res.status(201).json({ tutor });
+};
+
+export const setUserCourses: RequestHandler = async (req, res) => {
+	const { userID } = req.params;
+	const { courseIDs } = req.body as { courseIDs?: string[] };
+	if (!Types.ObjectId.isValid(userID)) return res.status(400).json({ message: "Invalid user ID" });
+	if (!Array.isArray(courseIDs)) return res.status(400).json({ message: "courseIDs must be an array" });
+
+	const user = await User.findById(userID);
+	if (!user) return res.sendStatus(404);
+
+	const normalizedCourses = [...new Set(courseIDs.map(id => id?.trim()).filter((id): id is string => !!id))];
+
+	if (req.currentAdmin) {
+		user.allowedCourses = normalizedCourses;
+	}
+	else if (req.currentTutor) {
+		const allowed = new Set(req.currentTutor.coursePermissions ?? []);
+		user.allowedCourses = normalizedCourses.filter(id => allowed.has(id));
+	}
+	else {
+		return res.status(403).json({ message: "Not authorized to update courses" });
+	}
+
+	await user.save();
+	res.json({ allowedCourses: user.allowedCourses });
 };

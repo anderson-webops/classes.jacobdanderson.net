@@ -88,3 +88,27 @@ export const validTutorOrAdmin: RequestHandler = (req, res, next) => {
 
 	res.status(403).json({ message: "Not authorized to perform this action." });
 };
+
+export const validTutorOrAdminFlexible: RequestHandler = async (req, res, next) => {
+	try {
+		if (req.session?.adminID) {
+			const admin = await Admin.findById(req.session.adminID);
+			if (!admin) return res.status(403).json({ message: "Admin account not found" });
+			req.currentAdmin = admin;
+			return next();
+		}
+
+		if (req.session?.tutorID) {
+			const tutor = await Tutor.findById(req.session.tutorID);
+			if (!tutor) return res.status(403).json({ message: "Tutor account not found" });
+			req.currentTutor = tutor;
+			return next();
+		}
+
+		return res.status(403).json({ message: "Not logged in or session expired" });
+	}
+	catch (error) {
+		console.error("Error in validTutorOrAdminFlexible middleware:", error);
+		res.status(500).json({ message: "Server error while validating session" });
+	}
+};

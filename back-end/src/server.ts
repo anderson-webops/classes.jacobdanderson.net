@@ -41,7 +41,7 @@ async function main() {
 	const cookieOptions: CookieSessionOpts = {
 		name: "session",
 		keys: [SESSION_SECRET],
-		maxAge: 24 * 60 * 60 * 1000,
+		maxAge: 4 * 60 * 60 * 1000,
 		sameSite: "lax", // default, safe for dev & same-origin
 		secure: false // default in dev
 	};

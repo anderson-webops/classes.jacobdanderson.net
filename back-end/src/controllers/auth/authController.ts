@@ -19,7 +19,11 @@ function isEntity(u: any): u is Entity {
 
 // LOGIN
 export const login: RequestHandler = async (req, res) => {
-	const { email, password } = req.body as { email?: string; password?: string };
+	const { email, password, rememberMe } = req.body as {
+		email?: string;
+		password?: string;
+		rememberMe?: boolean;
+	};
 	if (!email || !password) return res.sendStatus(400);
 
 	const e = email.trim().toLowerCase();
@@ -57,6 +61,7 @@ export const login: RequestHandler = async (req, res) => {
 
 	// sign‐in
 	session[sessionKey] = entity._id.toString();
+	req.sessionOptions.maxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 4 * 60 * 60 * 1000;
 	return res.json({ [responseKey]: entity });
 };
 
@@ -97,6 +102,38 @@ export const changeEmail: RequestHandler = async (req, res) => {
 		doc.email = newEmail;
 		await doc.save();
 		return res.json({ message: "Email updated successfully." });
+	}
+
+	return res.status(404).json({ message: "Entity not found." });
+};
+
+export const changePassword: RequestHandler = async (req, res) => {
+	const { ID } = req.params;
+	const { currentPassword, newPassword } = req.body as { currentPassword?: string; newPassword?: string };
+	if (!currentPassword || !newPassword) {
+		return res.status(400).json({ message: "Current and new passwords are required." });
+	}
+	if (newPassword.length < 8) {
+		return res.status(400).json({ message: "New password must be at least 8 characters." });
+	}
+
+	const models = [User, Tutor, Admin] as Array<import("mongoose").Model<any>>;
+	for (const Model of models) {
+		const doc = await Model.findById(ID);
+		if (!doc) continue;
+		const ownsAccount
+			= (Model === User && req.session?.userID === ID)
+				|| (Model === Tutor && req.session?.tutorID === ID)
+				|| (Model === Admin && req.session?.adminID === ID);
+		if (!ownsAccount) {
+			return res.status(403).json({ message: "Not authorized to change this password." });
+		}
+		if (!(await doc.comparePassword(currentPassword))) {
+			return res.status(403).json({ message: "Current password is incorrect." });
+		}
+		doc.password = newPassword;
+		await doc.save();
+		return res.json({ message: "Password updated successfully." });
 	}
 
 	return res.status(404).json({ message: "Entity not found." });

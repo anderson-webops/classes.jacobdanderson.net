@@ -2,10 +2,12 @@
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
+import AccountSecurity from "@/components/AccountSecurity.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
 import { useAppStore } from "@/stores/app";
+import { useCoursesStore } from "@/stores/courses";
 
 /* -------------------------------------------------- */
 const app = useAppStore();
@@ -13,6 +15,13 @@ const { currentAdmin, tutors, users } = storeToRefs(app);
 const error = ref("");
 const deleteMe = useDeleteAccount("admin");
 const userAssignments = ref<Record<string, string[]>>({});
+const tutorCourseSelections = ref<Record<string, string[]>>({});
+const editingTutors = ref<Record<string, boolean>>({});
+const editingUsers = ref<Record<string, boolean>>({});
+const adminActionsVisible = ref(false);
+
+const coursesStore = useCoursesStore();
+const { courses } = storeToRefs(coursesStore);
 
 /* editable helper for the admin card */
 const {
@@ -52,6 +61,17 @@ watch(
 	{ immediate: true }
 );
 
+watch(
+	tutors,
+	value => {
+		const selections: Record<string, string[]> = {};
+		for (const tutor of value)
+			selections[tutor._id] = [...(tutor.coursePermissions ?? [])];
+		tutorCourseSelections.value = selections;
+	},
+	{ immediate: true }
+);
+
 const tutorsHeader = computed(() =>
 	currentAdmin.value && tutors.value.length === 0 ? "No Tutors" : "Tutors"
 );
@@ -70,6 +90,68 @@ function formatAssignedTutors(userID: string) {
 	const assigned = userAssignments.value[userID] ?? [];
 	if (assigned.length === 0) return "No tutors assigned";
 	return assigned.map(id => tutorLookup.value[id] ?? "Unknown").join(", ");
+}
+
+function toggleTutorEdit(tutorID: string) {
+	editingTutors.value = {
+		...editingTutors.value,
+		[tutorID]: !editingTutors.value[tutorID]
+	};
+}
+
+function toggleUserEdit(userID: string) {
+	editingUsers.value = {
+		...editingUsers.value,
+		[userID]: !editingUsers.value[userID]
+	};
+}
+
+function onTutorCourseToggle(
+	tutorID: string,
+	courseID: string,
+	checked: boolean
+) {
+	const current = new Set(tutorCourseSelections.value[tutorID] ?? []);
+	if (checked) current.add(courseID);
+	else current.delete(courseID);
+	tutorCourseSelections.value = {
+		...tutorCourseSelections.value,
+		[tutorID]: [...current]
+	};
+}
+
+async function saveTutorCourses(tutorID: string) {
+	try {
+		await api.put(`/tutors/${tutorID}/courses`, {
+			courseIDs: tutorCourseSelections.value[tutorID] ?? []
+		});
+		error.value = "";
+		await app.fetchTutors();
+	} catch (e: any) {
+		error.value =
+			e.response?.data?.message ??
+			e.message ??
+			"Unable to update tutor courses";
+	}
+}
+
+async function demoteTutor(tutorID: string) {
+	try {
+		await api.post(`/tutors/${tutorID}/demote`);
+		error.value = "";
+		await loadAll();
+	} catch (e: any) {
+		error.value =
+			e.response?.data?.message ?? e.message ?? "Unable to demote tutor";
+	}
+}
+
+function formatTutorCourses(tutorID: string) {
+	const ids = tutorCourseSelections.value[tutorID] ?? [];
+	if (!ids.length) return "No course access";
+	const lookup: Record<string, string> = {};
+	for (const course of courses.value ?? []) lookup[course.id] = course.name;
+	return ids.map(id => lookup[id] ?? id).join(", ");
 }
 
 function onTutorSelectionChange(userID: string, event: Event) {
@@ -113,7 +195,11 @@ async function promoteToTutor(userID: string) {
 		<h2>Profile</h2>
 
 		<!-- ───── Admin card ───── -->
-		<div v-if="currentAdmin" class="tutorList mt-2">
+		<div
+			v-if="currentAdmin"
+			class="tutorList mt-2"
+			@click="adminActionsVisible = true"
+		>
 			<br />
 			<ul>
 				<li><h4>Admin</h4></li>
@@ -124,17 +210,31 @@ async function promoteToTutor(userID: string) {
 					:fields="fields"
 				/>
 			</ul>
-			<br />
+			<div v-if="adminActionsVisible" class="actionButtons">
+				<button
+					class="btn-danger btn"
+					@click.stop="deleteMe(currentAdmin!._id)"
+				>
+					Delete
+				</button>
+				<button
+					class="btn-primary btn"
+					@click.stop="
+						adminEdit ? saveAdmin(currentAdmin) : toggleAdmin()
+					"
+				>
+					{{ adminEdit ? "Save" : "Edit" }}
+				</button>
+			</div>
+			<p v-else class="actionHint">
+				Click the card to manage this profile.
+			</p>
 
-			<button class="btn-danger btn" @click="deleteMe(currentAdmin!._id)">
-				Delete
-			</button>
-			<button
-				class="btn-primary btn"
-				@click="adminEdit ? saveAdmin(currentAdmin) : toggleAdmin()"
-			>
-				{{ adminEdit ? "Save" : "Edit" }}
-			</button>
+			<AccountSecurity
+				:current-email="currentAdmin.email"
+				:entity-id="currentAdmin._id"
+				role="admin"
+			/>
 		</div>
 
 		<!-- ───── Tutors list (read-only) ───── -->
@@ -145,6 +245,55 @@ async function promoteToTutor(userID: string) {
 			<ul>
 				<ProfileFields :editing="false" :entity="t" :fields="fields" />
 			</ul>
+			<p class="currentAssignments">
+				<strong>Course access:</strong>
+				{{ formatTutorCourses(t._id) }}
+			</p>
+			<div class="assignmentActions">
+				<button
+					class="btn btn-secondary"
+					type="button"
+					@click="toggleTutorEdit(t._id)"
+				>
+					{{ editingTutors[t._id] ? "Close" : "Edit" }}
+				</button>
+			</div>
+			<div v-if="editingTutors[t._id]" class="coursePermissions">
+				<label v-for="course in courses" :key="course.id">
+					<input
+						:checked="
+							(tutorCourseSelections[t._id] ?? []).includes(
+								course.id
+							)
+						"
+						type="checkbox"
+						@change="
+							onTutorCourseToggle(
+								t._id,
+								course.id,
+								($event.target as HTMLInputElement).checked
+							)
+						"
+					/>
+					{{ course.name }}
+				</label>
+				<div class="assignmentActions">
+					<button
+						class="btn btn-primary"
+						type="button"
+						@click="saveTutorCourses(t._id)"
+					>
+						Save courses
+					</button>
+					<button
+						class="btn btn-danger"
+						type="button"
+						@click="demoteTutor(t._id)"
+					>
+						Demote to user
+					</button>
+				</div>
+			</div>
 		</div>
 
 		<!-- ───── Users list (read-only) ───── -->
@@ -155,7 +304,20 @@ async function promoteToTutor(userID: string) {
 			<ul>
 				<ProfileFields :editing="false" :entity="u" :fields="fields" />
 			</ul>
-			<div class="assignmentControls">
+			<div class="assignmentSummary">
+				<p>
+					<strong>Assigned tutors:</strong>
+					{{ formatAssignedTutors(u._id) }}
+				</p>
+				<button
+					class="btn btn-secondary"
+					type="button"
+					@click="toggleUserEdit(u._id)"
+				>
+					{{ editingUsers[u._id] ? "Close" : "Edit" }}
+				</button>
+			</div>
+			<div v-if="editingUsers[u._id]" class="assignmentControls">
 				<label class="assignmentLabel" :for="`tutor-select-${u._id}`">
 					Assign Tutors
 				</label>
@@ -170,10 +332,6 @@ async function promoteToTutor(userID: string) {
 						{{ t.name }}
 					</option>
 				</select>
-				<p class="currentAssignments">
-					<strong>Current:</strong>
-					{{ formatAssignedTutors(u._id) }}
-				</p>
 				<div class="assignmentActions">
 					<button
 						class="btn btn-primary"
@@ -215,6 +373,20 @@ li {
 	align-self: center;
 }
 
+.assignmentSummary {
+	margin: 0.5rem auto;
+	max-width: 360px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.assignmentSummary p {
+	margin: 0;
+	text-align: left;
+}
+
 .hidden {
 	display: none;
 }
@@ -240,6 +412,21 @@ div.tutorList {
 	width: 90%;
 }
 
+.coursePermissions {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 0.35rem;
+	margin: 0.5rem auto;
+	width: 90%;
+	text-align: left;
+}
+
+.coursePermissions label {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
 .assignmentControls select {
 	min-height: 6rem;
 	padding: 0.25rem;
@@ -250,6 +437,19 @@ div.tutorList {
 	gap: 0.5rem;
 	flex-wrap: wrap;
 	justify-content: center;
+}
+
+.actionButtons {
+	display: flex;
+	gap: 0.5rem;
+	justify-content: center;
+	margin-top: 0.5rem;
+}
+
+.actionHint {
+	margin: 0.5rem 0;
+	font-size: 0.9rem;
+	color: #4b5563;
 }
 
 .currentAssignments {

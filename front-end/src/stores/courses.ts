@@ -46,8 +46,26 @@ function slugify(value: string): string {
 		.replace(/-+$/, "");
 }
 
+const EXCLUDED_TITLES = [/session recap/i, /recap & assignment review/i];
+
+function stripTutorNotes(content: string): string {
+	let sanitized = content.replace(
+		/\*\*Instructor Note\*\*:[\s\S]*?(?=\n\s*\n|$)/gi,
+		""
+	);
+	sanitized = sanitized.replace(/Instructor Notes?:[^\n]*/gi, "");
+	sanitized = sanitized.replace(/\*\*Instructor Note\*\*/gi, "");
+	return sanitized;
+}
+
 function normalizeContent(content: string): string {
-	return content.replace(/\n{3,}/g, "\n\n").trim();
+	return stripTutorNotes(content)
+		.replace(/\n{3,}/g, "\n\n")
+		.trim();
+}
+
+function shouldKeepItem(title: string): boolean {
+	return !EXCLUDED_TITLES.some(pattern => pattern.test(title));
 }
 
 const rawCourses: RawCourse[] = [
@@ -2500,13 +2518,15 @@ const normalizedCourses: CourseDefinition[] = rawCourses.map(course => {
 				items: RawCourseModuleItem[],
 				prefix: string
 			): CourseModuleItem[] =>
-				items.map(item => ({
-					id: slugify(`${moduleId}-${prefix}-${item.title}`),
-					title: item.title,
-					content: normalizeContent(item.content),
-					projectLink: item.projectLink,
-					solutionLink: item.solutionLink
-				}));
+				items
+					.filter(item => shouldKeepItem(item.title))
+					.map(item => ({
+						id: slugify(`${moduleId}-${prefix}-${item.title}`),
+						title: item.title,
+						content: normalizeContent(item.content),
+						projectLink: item.projectLink,
+						solutionLink: item.solutionLink
+					}));
 
 			return {
 				id: moduleId,

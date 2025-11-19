@@ -16,6 +16,7 @@ export interface Tutor {
 	usersOfTutorLength: number;
 	editTutors: boolean;
 	saveEdit: string;
+	coursePermissions?: string[];
 	[key: string]: Displayable;
 }
 
@@ -26,9 +27,16 @@ export interface User {
 	age: number;
 	state: string;
 	tutors?: string[];
+	allowedCourses?: string[];
 	editUsers: boolean;
 	saveEdit: string;
 	[key: string]: Displayable;
+}
+
+export interface TutorSummary {
+	_id: string;
+	name: string;
+	email: string;
 }
 
 export interface Admin {
@@ -52,6 +60,7 @@ export const useAppStore = defineStore("app", {
 		currentUser: null as User | null,
 		currentTutor: null as Tutor | null,
 		currentAdmin: null as Admin | null,
+		currentUserTutors: [] as TutorSummary[],
 
 		loginBlock: false,
 		signupBlock: false,
@@ -114,6 +123,10 @@ export const useAppStore = defineStore("app", {
 		}, */
 		setCurrentUser(u: User | null) {
 			this.currentUser = u;
+			if (!u) this.currentUserTutors = [];
+		},
+		setCurrentUserTutors(list: TutorSummary[]) {
+			this.currentUserTutors = list;
 		},
 		setCurrentTutor(t: Tutor | null) {
 			this.currentTutor = t;
@@ -180,11 +193,14 @@ export const useAppStore = defineStore("app", {
 
 		async refreshCurrentUser() {
 			try {
-				const { data } = await api.get<{ currentUser: User }>(
-					"/users/loggedin"
-				);
+				const { data } = await api.get<{
+					currentUser: User;
+					assignedTutors?: TutorSummary[];
+				}>("/users/loggedin");
 				this.setCurrentUser(data.currentUser);
+				this.setCurrentUserTutors(data.assignedTutors ?? []);
 			} catch {
+				this.setCurrentUserTutors([]);
 				this.setCurrentUser(null);
 			}
 		},
