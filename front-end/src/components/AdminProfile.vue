@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { api } from "@/api";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
@@ -11,6 +12,9 @@ const app = useAppStore();
 const { currentAdmin, tutors, users } = storeToRefs(app);
 const error = ref("");
 const deleteMe = useDeleteAccount("admin");
+const tutorSelections = ref<Record<string, string[]>>({});
+const savingAssignments = ref<Record<string, boolean>>({});
+const promoting = ref<Record<string, boolean>>({});
 
 /* editable helper for the admin card */
 const {
@@ -37,6 +41,66 @@ async function loadAll() {
 }
 
 onMounted(loadAll);
+
+watch(
+	() => users.value,
+	newUsers => {
+		const next: Record<string, string[]> = {};
+		for (const user of newUsers) {
+			next[user._id] = [...(user.tutors ?? []).map(String)];
+		}
+		tutorSelections.value = next;
+	},
+	{ immediate: true }
+);
+
+function selectionFor(userId: string) {
+	return tutorSelections.value[userId] ?? [];
+}
+
+function summaryFor(userId: string) {
+	const ids = selectionFor(userId);
+	if (!ids.length) return "No tutors assigned";
+	const names = ids
+		.map(id => tutors.value.find(t => t._id === id)?.name)
+		.filter((name): name is string => !!name);
+	return names.length ? names.join(", ") : "No tutors assigned";
+}
+
+async function saveUserTutors(userId: string) {
+	error.value = "";
+	savingAssignments.value = { ...savingAssignments.value, [userId]: true };
+	try {
+		await api.put(`/users/admin/${userId}/tutors`, {
+			tutorIDs: selectionFor(userId)
+		});
+		await loadAll();
+	} catch (e: any) {
+		error.value =
+			e.response?.data?.message ??
+			e.message ??
+			"Unable to update assignments.";
+	} finally {
+		savingAssignments.value = {
+			...savingAssignments.value,
+			[userId]: false
+		};
+	}
+}
+
+async function promoteUser(userId: string) {
+	error.value = "";
+	promoting.value = { ...promoting.value, [userId]: true };
+	try {
+		await api.post(`/users/admin/${userId}/promote`);
+		await loadAll();
+	} catch (e: any) {
+		error.value =
+			e.response?.data?.message ?? e.message ?? "Unable to promote user.";
+	} finally {
+		promoting.value = { ...promoting.value, [userId]: false };
+	}
+}
 
 const tutorsHeader = computed(() =>
 	currentAdmin.value && tutors.value.length === 0 ? "No Tutors" : "Tutors"
@@ -94,6 +158,52 @@ const usersHeader = computed(() =>
 			<ul>
 				<ProfileFields :editing="false" :entity="u" :fields="fields" />
 			</ul>
+
+			<div class="assignment-panel">
+				<label class="assignment-label" :for="`assign-${u._id}`"
+					>Assigned tutors</label
+				>
+				<select
+					:id="`assign-${u._id}`"
+					v-model="tutorSelections[u._id]"
+					class="assignment-select"
+					:disabled="!tutors.length"
+					multiple
+				>
+					<option v-for="t in tutors" :key="t._id" :value="t._id">
+						{{ t.name }}
+					</option>
+				</select>
+				<p class="assignment-summary">
+					{{ summaryFor(u._id) }}
+				</p>
+				<div class="assignment-actions">
+					<button
+						class="btn btn-primary"
+						type="button"
+						:disabled="savingAssignments[u._id]"
+						@click="saveUserTutors(u._id)"
+					>
+						{{
+							savingAssignments[u._id]
+								? "Saving..."
+								: "Save assignments"
+						}}
+					</button>
+					<button
+						class="btn btn-secondary"
+						type="button"
+						:disabled="promoting[u._id]"
+						@click="promoteUser(u._id)"
+					>
+						{{
+							promoting[u._id]
+								? "Promoting..."
+								: "Promote to tutor"
+						}}
+					</button>
+				</div>
+			</div>
 		</div>
 
 		<p v-if="error" class="error">
@@ -138,5 +248,54 @@ div.tutorList {
 .error {
 	color: red;
 	margin-top: 10px;
+}
+
+.assignment-panel {
+	margin: 0 2rem 1rem;
+	padding: 1rem 0 0;
+	border-top: 1px solid #ddd;
+	text-align: left;
+}
+
+.assignment-label {
+	font-weight: 600;
+	display: block;
+	margin-bottom: 0.5rem;
+}
+
+.assignment-select {
+	width: 100%;
+	min-height: 5rem;
+	padding: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+}
+
+.assignment-summary {
+	margin: 0.5rem 0 0;
+	font-size: 0.9rem;
+	color: #333;
+}
+
+.assignment-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 0.75rem;
+}
+
+.btn-secondary {
+	background: #6b7280;
+	color: #fff;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.btn-secondary:disabled,
+.btn.btn-primary:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
 }
 </style>
