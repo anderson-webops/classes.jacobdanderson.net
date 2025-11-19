@@ -8,7 +8,7 @@ import TutorProfile from "@/components/TutorProfile.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import { useAppStore } from "@/stores/app";
 
-type ProfileTab = "profile" | "courses";
+type ProfileTab = "profile" | "courses" | "manage";
 
 defineOptions({ name: "ProfilePage" });
 
@@ -38,15 +38,26 @@ const profileRole = computed(() => {
 });
 
 const canBrowseCourses = computed(
-	() => !currentAdmin.value && (currentTutor.value || currentUser.value)
+        () => !currentAdmin.value && (currentTutor.value || currentUser.value)
 );
+
+const tabOptions = computed(() => {
+        const options: { key: ProfileTab; label: string }[] = [
+                { key: "profile", label: "Profile" }
+        ];
+        if (canBrowseCourses.value)
+                options.push({ key: "courses", label: "Course library" });
+        if (currentAdmin.value)
+                options.push({ key: "manage", label: "Manage profiles" });
+        return options;
+});
 
 const activeTab = ref<ProfileTab>("profile");
 
-watch(canBrowseCourses, value => {
-	if (!value && activeTab.value !== "profile") {
-		activeTab.value = "profile";
-	}
+watch(tabOptions, options => {
+        if (!options.find(option => option.key === activeTab.value)) {
+                activeTab.value = options[0]?.key ?? "profile";
+        }
 });
 
 const heroTitle = computed(() => {
@@ -102,36 +113,34 @@ function openAuthModal() {
 			</header>
 
 			<div v-if="hasProfile" class="profile-card">
-				<div
-					v-if="canBrowseCourses"
-					class="profile-tabs"
-					role="tablist"
-				>
-					<button
-						:aria-selected="activeTab === 'profile'"
-						class="tab"
-						role="tab"
-						type="button"
-						@click="activeTab = 'profile'"
-					>
-						Profile
-					</button>
-					<button
-						:aria-selected="activeTab === 'courses'"
-						class="tab"
-						role="tab"
-						type="button"
-						@click="activeTab = 'courses'"
-					>
-						Course library
-					</button>
-				</div>
+                                <div
+                                        v-if="tabOptions.length > 1"
+                                        class="profile-tabs"
+                                        role="tablist"
+                                >
+                                        <button
+                                                v-for="option in tabOptions"
+                                                :key="option.key"
+                                                :aria-selected="activeTab === option.key"
+                                                class="tab"
+                                                role="tab"
+                                                type="button"
+                                                @click="activeTab = option.key"
+                                        >
+                                                {{ option.label }}
+                                        </button>
+                                </div>
 
-				<component
-					:is="activeProfileComponent"
-					v-if="activeTab === 'profile'"
-				/>
-				<CourseExplorer v-else-if="canBrowseCourses" />
+                                <component
+                                        :is="activeProfileComponent"
+                                        v-if="activeTab === 'profile'"
+                                />
+                                <component
+                                        :is="activeProfileComponent"
+                                        v-else-if="currentAdmin && activeTab === 'manage'"
+                                        view="manage"
+                                />
+                                <CourseExplorer v-else-if="canBrowseCourses" />
 			</div>
 
 			<div v-else class="profile-empty">

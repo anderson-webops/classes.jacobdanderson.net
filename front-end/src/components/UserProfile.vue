@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import AccountSecurity from "@/components/AccountSecurity.vue";
-import ProfileFields from "@/components/ProfileFields.vue";
+import ProfileDetailsCard from "@/components/ProfileDetailsCard.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
 import { useAppStore } from "@/stores/app";
@@ -40,11 +39,16 @@ const assignedTutorNames = computed(() => {
 /*  field list (only once)                            */
 /* -------------------------------------------------- */
 const fields = [
-	{ key: "name", label: "Name" },
-	{ key: "email", label: "Email" },
-	{ key: "age", label: "Age" },
-	{ key: "state", label: "State" }
+        { key: "name", label: "Name" },
+        { key: "email", label: "Email" },
+        { key: "age", label: "Age" },
+        { key: "state", label: "State" }
 ];
+
+function updateUserField(key: string, value: any) {
+        if (!currentUser.value) return;
+        app.setCurrentUser({ ...currentUser.value, [key]: value });
+}
 </script>
 
 <template>
@@ -61,19 +65,22 @@ const fields = [
 			<p v-if="!cardActive" class="card-hint">
 				Click the card to manage your details.
 			</p>
-			<ul>
-				<li>
-					<h4>User</h4>
-				</li>
+                                <ul>
+                                        <li>
+                                                <h4>User</h4>
+                                        </li>
 
-				<ProfileFields
-					:editing="editing"
-					:entity="currentUser"
-					:fields="fields"
-				/>
-			</ul>
-			<br />
-			<p class="assignment">
+                                <ProfileDetailsCard
+                                        :editing="editing"
+                                        :entity="currentUser"
+                                        :fields="fields"
+                                        role="user"
+                                        :show-security="cardActive"
+                                        @update:field="updateUserField"
+                                />
+                        </ul>
+                        <br />
+                        <p class="assignment">
 				<strong>Assigned tutor(s):</strong>
 				{{
 					assignedTutorNames.length
@@ -89,22 +96,15 @@ const fields = [
 				>
 					Delete
 				</button>
-				<button
-					class="btn-primary btn"
-					@click.stop="editing ? save(currentUser) : toggle()"
-				>
-					{{ editing ? "Save" : "Edit" }}
-				</button>
-			</div>
-
-			<AccountSecurity
-				v-if="cardActive"
-				:email="currentUser.email"
-				:entity-id="currentUser._id"
-				role="user"
-			/>
-		</div>
-	</section>
+                                <button
+                                        class="btn-primary btn"
+                                        @click.stop="editing ? save(currentUser) : toggle()"
+                                >
+                                        {{ editing ? "Save" : "Edit" }}
+                                </button>
+                        </div>
+                </div>
+        </section>
 </template>
 
 <style scoped>

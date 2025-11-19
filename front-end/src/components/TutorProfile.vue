@@ -2,8 +2,7 @@
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
-import AccountSecurity from "@/components/AccountSecurity.vue";
-import ProfileFields from "@/components/ProfileFields.vue";
+import ProfileDetailsCard from "@/components/ProfileDetailsCard.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
 import { useAppStore } from "@/stores/app";
@@ -47,7 +46,7 @@ async function loadUsers() {
 onMounted(loadUsers);
 
 const usersHeader = computed(() =>
-	currentTutor.value && users.value.length === 0 ? "No Users" : "Users"
+        currentTutor.value && users.value.length === 0 ? "No Users" : "Users"
 );
 
 const cardState = ref<string | null>(null);
@@ -57,7 +56,7 @@ function activateCard(id: string) {
 }
 
 function isCardActive(id: string) {
-	return cardState.value === id;
+        return cardState.value === id;
 }
 
 function userCardId(id: string) {
@@ -80,10 +79,15 @@ const permittedCourses = computed(() => {
 });
 
 const courseLookup = computed(() => {
-	const map: Record<string, string> = {};
-	for (const course of courses.value ?? []) map[course.id] = course.name;
-	return map;
+        const map: Record<string, string> = {};
+        for (const course of courses.value ?? []) map[course.id] = course.name;
+        return map;
 });
+
+function updateTutorField(key: string, value: any) {
+        if (!currentTutor.value) return;
+        app.setCurrentTutor({ ...currentTutor.value, [key]: value });
+}
 
 watch(
 	users,
@@ -148,17 +152,20 @@ async function saveUserCourses(userID: string) {
 			<p v-if="!isCardActive('tutor')" class="card-hint">
 				Click your card to edit details or manage security.
 			</p>
-			<ul>
-				<li><h4>Tutor</h4></li>
+                                <ul>
+                                        <li><h4>Tutor</h4></li>
 
-				<ProfileFields
-					:editing="tutorEdit"
-					:entity="currentTutor"
-					:fields="tutorFields"
-				/>
-			</ul>
-			<br />
-			<p class="assignment">
+                                <ProfileDetailsCard
+                                        :editing="tutorEdit"
+                                        :entity="currentTutor"
+                                        :fields="tutorFields"
+                                        role="tutor"
+                                        :show-security="isCardActive('tutor')"
+                                        @update:field="updateTutorField"
+                                />
+                        </ul>
+                        <br />
+                        <p class="assignment">
 				<strong>Courses enabled:</strong>
 				{{
 					permittedCourses.length
@@ -174,23 +181,16 @@ async function saveUserCourses(userID: string) {
 				>
 					Delete
 				</button>
-				<button
-					class="btn-primary btn"
-					@click.stop="
-						tutorEdit ? saveTutor(currentTutor) : toggleTutor()
+                                <button
+                                        class="btn-primary btn"
+                                        @click.stop="
+                                                tutorEdit ? saveTutor(currentTutor) : toggleTutor()
 					"
 				>
 					{{ tutorEdit ? "Save" : "Edit" }}
-				</button>
-			</div>
-
-			<AccountSecurity
-				v-if="isCardActive('tutor')"
-				:email="currentTutor.email"
-				:entity-id="currentTutor._id"
-				role="tutor"
-			/>
-		</div>
+                                </button>
+                        </div>
+                </div>
 
 		<!-- ───── Users under this tutor (read-only) ───── -->
 		<hr />
@@ -205,14 +205,16 @@ async function saveUserCourses(userID: string) {
 		>
 			<br />
 			<ul>
-				<!-- Fields: name / email / age / state -->
-				<!-- Editing = false: read-only list -->
-				<ProfileFields
-					:editing="false"
-					:entity="u"
-					:fields="tutorFields"
-				/>
-			</ul>
+                                <!-- Fields: name / email / age / state -->
+                                <!-- Editing = false: read-only list -->
+                                <ProfileDetailsCard
+                                        :editing="false"
+                                        :entity="u"
+                                        :fields="tutorFields"
+                                        role="user"
+                                        :show-security="false"
+                                />
+                        </ul>
 			<p class="assignment">
 				<strong>Course access:</strong>
 				{{
