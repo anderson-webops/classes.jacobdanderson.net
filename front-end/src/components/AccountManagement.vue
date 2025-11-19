@@ -44,7 +44,6 @@ async function loginTutor() {
 }
 
 // form state
-const signupType = ref<"tutor" | "user">("tutor");
 const name = ref("");
 const age = ref("");
 const state = ref("");
@@ -78,31 +77,18 @@ async function addSignup() {
 	if (!passwordMatch.value) return;
 
 	try {
-		// fire the right endpoint with credentials turned on
-		const res =
-			signupType.value === "tutor"
-				? await api.post(
-						"/tutors",
-						{
-							name: name.value,
-							age: age.value,
-							state: state.value,
-							email: email.value,
-							password: password.value
-						},
-						{ withCredentials: true }
-					)
-				: await api.post(
-						"/users",
-						{
-							name: name.value,
-							age: age.value,
-							state: state.value,
-							email: email.value,
-							password: password.value
-						},
-						{ withCredentials: true }
-					);
+		// all self-serve signups create user accounts
+		const res = await api.post(
+			"/users",
+			{
+				name: name.value,
+				age: age.value,
+				state: state.value,
+				email: email.value,
+				password: password.value
+			},
+			{ withCredentials: true }
+		);
 
 		// immediately stash the newly-created user/tutor into Pinia
 		if (res.data.currentTutor) {
@@ -217,26 +203,11 @@ async function addSignup() {
 					<p>Please fill in this form to create a new account.</p>
 					<hr />
 
-					<!-- ─── User Type Selector ────────────────────────────────────────── -->
-					<div class="mb-3">
-						<label>
-							<input
-								v-model="signupType"
-								type="radio"
-								value="tutor"
-							/>
-							Tutor
-						</label>
-						&ensp;
-						<label>
-							<input
-								v-model="signupType"
-								type="radio"
-								value="user"
-							/>
-							User
-						</label>
-					</div>
+					<p class="info-text">
+						All new accounts begin as student accounts.
+						Administrators can promote users to tutors after
+						verifying their details.
+					</p>
 
 					<!-- ─── Common Fields ─────────────────────────────────────────────── -->
 					<label for="name"><b>Name</b></label>
@@ -383,6 +354,12 @@ div.signupForm span {
 /* Add padding to containers */
 .container {
 	padding: 16px;
+}
+
+.info-text {
+	margin: 0 0 1rem;
+	font-size: 0.95rem;
+	color: #4b5563;
 }
 
 /* Extra style for the cancel button (red) */

@@ -26,6 +26,7 @@ export interface User {
 	age: number;
 	state: string;
 	editUsers: boolean;
+	tutors?: string[];
 	saveEdit: string;
 	[key: string]: Displayable;
 }

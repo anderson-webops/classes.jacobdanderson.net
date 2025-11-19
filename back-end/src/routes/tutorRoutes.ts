@@ -8,12 +8,16 @@ import {
 	getLoggedInTutor,
 	updateTutor
 } from "../controllers/users/tutorController.js";
-import { validTutor, validTutorOrAdmin } from "../middleware/auth.js";
+import { promoteUserToTutor } from "../controllers/users/tutorExtraController.js";
+import { validAdmin, validTutor, validTutorOrAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Route to create a tutor
-router.post("/", createTutor);
+// Route to create a tutor (admin only)
+router.post("/", validAdmin, createTutor);
+
+// Route to promote an existing user to tutor (admin only)
+router.post("/promote/:userID", validAdmin, promoteUserToTutor);
 
 // Route to get all tutors
 router.get("/", getAllTutors);

@@ -8,8 +8,8 @@ import {
 	getLoggedInUser,
 	updateUser
 } from "../controllers/users/userController.js";
-import { assignTutorToUser, deleteUsersUnderTutor, getUsersOfTutor } from "../controllers/users/userExtraController.js";
-import { validTutor, validUser } from "../middleware/auth.js";
+import { deleteUsersUnderTutor, getUsersOfTutor, updateUserTutors } from "../controllers/users/userExtraController.js";
+import { validAdmin, validTutor, validTutorOrAdmin, validUser } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ const router = express.Router();
 router.post("/", createUser);
 
 // Get users belonging to a given tutor
-router.get("/oftutor/:tutorID", getUsersOfTutor);
+router.get("/oftutor/:tutorID", validTutorOrAdmin, getUsersOfTutor);
 
 // Get all users
 router.get("/all", getAllUsers);
@@ -28,8 +28,8 @@ router.put("/user/:userID", validUser, updateUser);
 // Update user info by the tutor
 router.put("/tutor/:userID", validTutor, updateUser);
 
-// Assign a tutor to a user
-router.put("/tutor/:userID/:tutorID", assignTutorToUser);
+// Update the tutor assignments for a user (admin only)
+router.put("/:userID/tutors", validAdmin, updateUserTutors);
 
 // Delete the user by the user themselves
 router.delete("/user/:userID", validUser, deleteUser);
@@ -37,8 +37,8 @@ router.delete("/user/:userID", validUser, deleteUser);
 // Delete the user by the tutor
 router.delete("/tutor/:userID", validTutor, deleteUser);
 
-// Delete users under a tutor
-router.delete("/under/:tutorID", deleteUsersUnderTutor);
+// Remove tutor assignments from users when a tutor is removed (admin only)
+router.delete("/under/:tutorID", validAdmin, deleteUsersUnderTutor);
 
 // Get logged in user
 router.get("/loggedin", validUser, getLoggedInUser);

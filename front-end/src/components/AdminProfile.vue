@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { api } from "@/api";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
@@ -10,7 +11,11 @@ import { useAppStore } from "@/stores/app";
 const app = useAppStore();
 const { currentAdmin, tutors, users } = storeToRefs(app);
 const error = ref("");
+const successMessage = ref("");
 const deleteMe = useDeleteAccount("admin");
+const tutorSelections = ref<Record<string, string[]>>({});
+const savingAssignments = ref<string | null>(null);
+const promotingUser = ref<string | null>(null);
 
 /* editable helper for the admin card */
 const {
@@ -37,6 +42,73 @@ async function loadAll() {
 }
 
 onMounted(loadAll);
+
+watch(
+	users,
+	value => {
+		const next: Record<string, string[]> = {};
+		value.forEach(user => {
+			next[user._id] = (user.tutors ?? []).map(String);
+		});
+		tutorSelections.value = next;
+	},
+	{ immediate: true }
+);
+
+function toggleTutorSelection(
+	userID: string,
+	tutorID: string,
+	checked: boolean
+) {
+	const current = tutorSelections.value[userID]
+		? [...tutorSelections.value[userID]]
+		: [];
+	const next = checked
+		? Array.from(new Set([...current, tutorID]))
+		: current.filter(id => id !== tutorID);
+	tutorSelections.value = {
+		...tutorSelections.value,
+		[userID]: next
+	};
+}
+
+async function saveTutorAssignments(userID: string) {
+	savingAssignments.value = userID;
+	error.value = "";
+	successMessage.value = "";
+	try {
+		await api.put(`/users/${userID}/tutors`, {
+			tutorIds: tutorSelections.value[userID] ?? []
+		});
+		await Promise.all([app.fetchUsers(), app.fetchTutors()]);
+		successMessage.value = "Tutor assignments updated.";
+	} catch (err: any) {
+		error.value =
+			err.response?.data?.message ??
+			err.message ??
+			"Failed to update assignments.";
+	} finally {
+		savingAssignments.value = null;
+	}
+}
+
+async function promoteUser(userID: string) {
+	promotingUser.value = userID;
+	error.value = "";
+	successMessage.value = "";
+	try {
+		await api.post(`/tutors/promote/${userID}`);
+		successMessage.value = "User promoted to tutor.";
+		await Promise.all([app.fetchTutors(), app.fetchUsers()]);
+	} catch (err: any) {
+		error.value =
+			err.response?.data?.message ??
+			err.message ??
+			"Failed to promote user.";
+	} finally {
+		promotingUser.value = null;
+	}
+}
 
 const tutorsHeader = computed(() =>
 	currentAdmin.value && tutors.value.length === 0 ? "No Tutors" : "Tutors"
@@ -94,8 +166,63 @@ const usersHeader = computed(() =>
 			<ul>
 				<ProfileFields :editing="false" :entity="u" :fields="fields" />
 			</ul>
+
+			<div class="assignment-panel">
+				<p class="assignment-label">Tutor assignments</p>
+				<p v-if="!tutors.length" class="assignment-empty">
+					No tutors are currently available.
+				</p>
+				<div v-else class="assignment-options">
+					<label
+						v-for="t in tutors"
+						:key="`${u._id}-${t._id}`"
+						class="assignment-option"
+					>
+						<input
+							type="checkbox"
+							:checked="tutorSelections[u._id]?.includes(t._id)"
+							@change="
+								toggleTutorSelection(
+									u._id,
+									t._id,
+									($event.target as HTMLInputElement).checked
+								)
+							"
+						/>
+						<span>{{ t.name }}</span>
+					</label>
+				</div>
+
+				<div class="assignment-actions">
+					<button
+						class="btn btn-primary"
+						type="button"
+						:disabled="savingAssignments === u._id"
+						@click="saveTutorAssignments(u._id)"
+					>
+						{{
+							savingAssignments === u._id
+								? "Saving..."
+								: "Save assignments"
+						}}
+					</button>
+					<button
+						class="btn btn-secondary"
+						type="button"
+						:disabled="promotingUser === u._id"
+						@click="promoteUser(u._id)"
+					>
+						{{
+							promotingUser === u._id
+								? "Promoting..."
+								: "Promote to tutor"
+						}}
+					</button>
+				</div>
+			</div>
 		</div>
 
+		<p v-if="successMessage" class="success">{{ successMessage }}</p>
 		<p v-if="error" class="error">
 			{{ error }}
 		</p>
@@ -135,8 +262,64 @@ div.tutorList {
 	}
 }
 
+.assignment-panel {
+	background: #f9fafb;
+	border-radius: 12px;
+	padding: 1rem;
+	margin: 1rem auto 0;
+	width: 90%;
+}
+
+.assignment-label {
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.assignment-empty {
+	margin: 0;
+	color: #6b7280;
+	font-size: 0.9rem;
+}
+
+.assignment-options {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 0.75rem;
+}
+
+.assignment-option {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: 0.9rem;
+}
+
+.assignment-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	justify-content: flex-end;
+	margin-top: 0.75rem;
+}
+
+.btn-secondary {
+	background-color: #6b7280;
+	color: #fff;
+}
+
+.btn:disabled,
+.btn-secondary:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
 .error {
 	color: red;
+	margin-top: 10px;
+}
+
+.success {
+	color: #16a34a;
 	margin-top: 10px;
 }
 </style>
