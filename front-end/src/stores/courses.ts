@@ -50,6 +50,23 @@ function normalizeContent(content: string): string {
 	return content.replace(/\n{3,}/g, "\n\n").trim();
 }
 
+function sanitizeContent(content: string): string {
+	const withoutTutorNotes = content
+		.split("\n")
+		.filter(line => !line.toLowerCase().includes("instructor note"))
+		.join("\n");
+	return normalizeContent(withoutTutorNotes);
+}
+
+const tutorOnlyTitleFragments = ["session recap", "recap & assignment review"];
+
+function shouldDisplayItem(title: string): boolean {
+	const normalized = title.toLowerCase();
+	return !tutorOnlyTitleFragments.some(fragment =>
+		normalized.includes(fragment)
+	);
+}
+
 const rawCourses: RawCourse[] = [
 	{
 		name: "Scratch Level 1",
@@ -2500,13 +2517,15 @@ const normalizedCourses: CourseDefinition[] = rawCourses.map(course => {
 				items: RawCourseModuleItem[],
 				prefix: string
 			): CourseModuleItem[] =>
-				items.map(item => ({
-					id: slugify(`${moduleId}-${prefix}-${item.title}`),
-					title: item.title,
-					content: normalizeContent(item.content),
-					projectLink: item.projectLink,
-					solutionLink: item.solutionLink
-				}));
+				items
+					.filter(item => shouldDisplayItem(item.title))
+					.map(item => ({
+						id: slugify(`${moduleId}-${prefix}-${item.title}`),
+						title: item.title,
+						content: sanitizeContent(item.content),
+						projectLink: item.projectLink,
+						solutionLink: item.solutionLink
+					}));
 
 			return {
 				id: moduleId,

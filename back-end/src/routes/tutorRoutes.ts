@@ -8,7 +8,11 @@ import {
 	getLoggedInTutor,
 	updateTutor
 } from "../controllers/users/tutorController.js";
-import { validTutor, validTutorOrAdmin } from "../middleware/auth.js";
+import {
+	demoteTutorToUser,
+	setTutorCourseAccess
+} from "../controllers/users/tutorExtraController.js";
+import { validAdmin, validTutor, validTutorOrAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -23,6 +27,12 @@ router.put("/:tutorID", validTutorOrAdmin, updateTutor);
 
 // Route to delete a tutor (protected - admin OR that tutor)
 router.delete("/remove/:tutorID", validTutorOrAdmin, deleteTutor);
+
+// Route to update course access for a tutor (admin only)
+router.put("/:tutorID/courses", validAdmin, setTutorCourseAccess);
+
+// Route to demote a tutor back to a user (admin only)
+router.post("/:tutorID/demote", validAdmin, demoteTutorToUser);
 
 // Route to get the currently logged-in tutor (protected)
 router.get("/loggedin", validTutor, getLoggedInTutor);

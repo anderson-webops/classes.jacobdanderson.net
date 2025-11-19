@@ -88,3 +88,37 @@ export const validTutorOrAdmin: RequestHandler = (req, res, next) => {
 
 	res.status(403).json({ message: "Not authorized to perform this action." });
 };
+
+export const validTutorOrAdminSession: RequestHandler = async (req, res, next) => {
+	if (req.session?.adminID) {
+		try {
+			const admin = await Admin.findById(req.session.adminID);
+			if (!admin) {
+				return res.status(403).json({ message: "Admin account not found" });
+			}
+			req.currentAdmin = admin;
+			return next();
+		}
+		catch (error) {
+			console.error("Error validating admin session:", error);
+			return res.status(500).json({ message: "Server error while validating admin" });
+		}
+	}
+
+	if (req.session?.tutorID) {
+		try {
+			const tutor = await Tutor.findById(req.session.tutorID);
+			if (!tutor) {
+				return res.status(403).json({ message: "Tutor account not found" });
+			}
+			req.currentTutor = tutor;
+			return next();
+		}
+		catch (error) {
+			console.error("Error validating tutor session:", error);
+			return res.status(500).json({ message: "Server error while validating tutor" });
+		}
+	}
+
+	return res.status(403).json({ message: "Not authorized to perform this action." });
+};

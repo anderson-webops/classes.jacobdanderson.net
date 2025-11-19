@@ -18,6 +18,7 @@ const tutorSchema: Schema<ITutor> = new Schema(
 		usersOfTutorLength: { type: Number, default: 0 },
 		editTutors: { type: Boolean, default: false },
 		saveEdit: { type: String, default: "Edit" },
+		courseAccess: { type: [String], default: [] },
 		role: { type: String, default: "tutor" }
 	},
 	{ timestamps: true }

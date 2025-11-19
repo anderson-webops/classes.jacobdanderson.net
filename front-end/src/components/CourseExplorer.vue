@@ -6,6 +6,8 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 
+const props = defineProps<{ allowedCourseIds?: string[] }>();
+
 const markdown = new MarkdownIt({
 	breaks: true,
 	linkify: true
@@ -15,6 +17,16 @@ const coursesStore = useCoursesStore();
 const { courses } = storeToRefs(coursesStore);
 
 const courseList = computed(() => courses.value ?? []);
+const allowedSet = computed(() => {
+	if (props.allowedCourseIds == null) return null;
+	const ids = props.allowedCourseIds.filter(Boolean);
+	return new Set(ids);
+});
+const filteredCourses = computed(() => {
+	if (allowedSet.value === null) return courseList.value;
+	if (allowedSet.value.size === 0) return [];
+	return courseList.value.filter(course => allowedSet.value!.has(course.id));
+});
 
 const appStore = useAppStore();
 const { currentTutor } = storeToRefs(appStore);
@@ -30,9 +42,14 @@ function renderMarkdown(content: string) {
 }
 
 watchEffect(() => {
-	const availableCourses = courseList.value;
-
-	if (!selectedCourseId.value && availableCourses.length > 0) {
+	const availableCourses = filteredCourses.value;
+	if (availableCourses.length === 0) {
+		selectedCourseId.value = "";
+		return;
+	}
+	if (
+		!availableCourses.some(course => course.id === selectedCourseId.value)
+	) {
 		selectCourse(availableCourses[0].id);
 	}
 });
@@ -44,8 +61,13 @@ watch(selectedCourseId, () => {
 
 const selectedCourse = computed(
 	() =>
-		courseList.value.find(course => course.id === selectedCourseId.value) ??
-		null
+		filteredCourses.value.find(
+			course => course.id === selectedCourseId.value
+		) ?? null
+);
+const hasCourses = computed(() => filteredCourses.value.length > 0);
+const showRestrictionNotice = computed(
+	() => allowedSet.value !== null && filteredCourses.value.length === 0
 );
 
 function selectCourse(id: string) {
@@ -92,9 +114,10 @@ function hasSupplemental(module: CourseModule) {
 					id="course-select"
 					v-model="selectedCourseId"
 					class="course-select"
+					:disabled="!hasCourses"
 				>
 					<option
-						v-for="course in courseList"
+						v-for="course in filteredCourses"
 						:key="course.id"
 						:value="course.id"
 					>
@@ -102,6 +125,9 @@ function hasSupplemental(module: CourseModule) {
 					</option>
 				</select>
 			</div>
+			<p v-if="showRestrictionNotice" class="empty-copy">
+				No courses have been assigned to you yet.
+			</p>
 		</div>
 
 		<div v-if="selectedCourse" class="course-modules">
@@ -378,6 +404,9 @@ function hasSupplemental(module: CourseModule) {
 			</div>
 		</div>
 
+		<p v-else-if="hasCourses" class="empty-copy">
+			Select a course to view its modules.
+		</p>
 		<p v-else class="empty-copy">Course information is on the way.</p>
 	</section>
 </template>

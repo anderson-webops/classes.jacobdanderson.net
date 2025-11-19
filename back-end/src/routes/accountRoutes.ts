@@ -1,7 +1,7 @@
 // src/routes/accountRoutes.ts
 
 import { Router } from "express";
-import { changeEmail, checkEmail, login, logout } from "../controllers/auth/authController.js";
+import { changeEmail, changePassword, checkEmail, login, logout } from "../controllers/auth/authController.js";
 
 const router = Router();
 
@@ -15,6 +15,9 @@ router.post("/changeEmail/:ID", changeEmail);
 router.post("/login", login);
 
 router.delete("/logout", logout);
+
+// Route to change password for the logged-in entity
+router.post("/changePassword", changePassword);
 
 // in accountRoutes.ts
 router.get("/me", (req, res) => {

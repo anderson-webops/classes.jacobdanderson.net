@@ -41,6 +41,12 @@ const canBrowseCourses = computed(
 	() => !currentAdmin.value && (currentTutor.value || currentUser.value)
 );
 
+const allowedCourseIds = computed(() => {
+	if (currentTutor.value) return currentTutor.value.courseAccess ?? [];
+	if (currentUser.value) return currentUser.value.allowedCourses ?? [];
+	return [];
+});
+
 const activeTab = ref<ProfileTab>("profile");
 
 watch(canBrowseCourses, value => {
@@ -131,7 +137,10 @@ function openAuthModal() {
 					:is="activeProfileComponent"
 					v-if="activeTab === 'profile'"
 				/>
-				<CourseExplorer v-else-if="canBrowseCourses" />
+				<CourseExplorer
+					v-else-if="canBrowseCourses"
+					:allowed-course-ids="allowedCourseIds"
+				/>
 			</div>
 
 			<div v-else class="profile-empty">

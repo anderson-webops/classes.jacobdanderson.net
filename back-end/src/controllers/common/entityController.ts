@@ -7,13 +7,15 @@ export interface EntityOpts<T extends Document> {
 	idParam: string; // e.g. "adminID", "tutorID", "userID"
 	sessionKey: "adminID" | "tutorID" | "userID";
 	responseKey: "currentAdmin" | "currentTutor" | "currentUser";
+	populate?: string | string[];
 }
 
 export function makeEntityController<T extends Document & { comparePassword?: (pw: string) => Promise<boolean> }>({
 	model,
 	idParam,
 	sessionKey,
-	responseKey
+	responseKey,
+	populate
 }: EntityOpts<T>) {
 	// Create
 	const create: RequestHandler = async (req, res) => {
@@ -34,7 +36,11 @@ export function makeEntityController<T extends Document & { comparePassword?: (p
 	// Read all
 	const getAll: RequestHandler = async (_req, res) => {
 		try {
-			const list = await model.find();
+			const query = model.find();
+			if (populate) {
+				query.populate(populate);
+			}
+			const list = await query.exec();
 			res.json(list);
 		}
 		catch (err) {
@@ -47,7 +53,11 @@ export function makeEntityController<T extends Document & { comparePassword?: (p
 	const update: RequestHandler = async (req, res) => {
 		const id = req.params[idParam];
 		try {
-			const doc = await model.findById(id);
+			const query = model.findById(id);
+			if (populate) {
+				query.populate(populate);
+			}
+			const doc = await query.exec();
 			if (!doc) return res.sendStatus(404);
 			Object.assign(doc, req.body);
 			await doc.save();

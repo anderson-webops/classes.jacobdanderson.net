@@ -12,5 +12,6 @@ export const {
 	model: User,
 	idParam: "userID",
 	sessionKey: "userID",
-	responseKey: "currentUser"
+	responseKey: "currentUser",
+	populate: "tutors"
 });

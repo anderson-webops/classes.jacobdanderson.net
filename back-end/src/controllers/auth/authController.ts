@@ -19,7 +19,11 @@ function isEntity(u: any): u is Entity {
 
 // LOGIN
 export const login: RequestHandler = async (req, res) => {
-	const { email, password } = req.body as { email?: string; password?: string };
+	const { email, password, rememberMe } = req.body as {
+		email?: string;
+		password?: string;
+		rememberMe?: boolean;
+	};
 	if (!email || !password) return res.sendStatus(400);
 
 	const e = email.trim().toLowerCase();
@@ -57,6 +61,12 @@ export const login: RequestHandler = async (req, res) => {
 
 	// sign‐in
 	session[sessionKey] = entity._id.toString();
+	if (typeof rememberMe === "boolean") {
+		req.sessionOptions = req.sessionOptions || {};
+		req.sessionOptions.maxAge = rememberMe
+			? 30 * 24 * 60 * 60 * 1000
+			: 24 * 60 * 60 * 1000;
+	}
 	return res.json({ [responseKey]: entity });
 };
 
@@ -100,4 +110,45 @@ export const changeEmail: RequestHandler = async (req, res) => {
 	}
 
 	return res.status(404).json({ message: "Entity not found." });
+};
+
+export const changePassword: RequestHandler = async (req, res) => {
+	const { currentPassword, newPassword } = req.body as {
+		currentPassword?: string;
+		newPassword?: string;
+	};
+	const session = req.session as CustomSession;
+	if (!newPassword || !currentPassword) {
+		return res.status(400).json({ message: "Current and new passwords are required." });
+	}
+
+	let Model: typeof User | typeof Tutor | typeof Admin | null = null;
+	let id: string | undefined;
+
+	if (session.adminID) {
+		Model = Admin;
+		id = session.adminID;
+	}
+	else if (session.tutorID) {
+		Model = Tutor;
+		id = session.tutorID;
+	}
+	else if (session.userID) {
+		Model = User;
+		id = session.userID;
+	}
+
+	if (!Model || !id) {
+		return res.status(403).json({ message: "Not authenticated" });
+	}
+
+	const entity = await Model.findById(id);
+	if (!entity) return res.sendStatus(404);
+	if (!(await (entity as any).comparePassword?.(currentPassword))) {
+		return res.status(403).json({ message: "Current password is incorrect" });
+	}
+
+	(entity as any).password = newPassword;
+	await entity.save();
+	res.json({ message: "Password updated successfully." });
 };

@@ -19,6 +19,10 @@ const userSchema: Schema<IUser> = new Schema(
 			],
 			default: []
 		},
+		allowedCourses: {
+			type: [String],
+			default: []
+		},
 		name: { type: String, required: true },
 		email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
 		age: { type: String },

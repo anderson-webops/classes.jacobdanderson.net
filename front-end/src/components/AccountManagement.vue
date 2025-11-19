@@ -2,7 +2,7 @@
 <script lang="ts" setup>
 import type { AxiosError } from "axios";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { api } from "@/api";
 import { useAppStore } from "@/stores/app";
 
@@ -13,7 +13,18 @@ const { loginBlock, signupBlock } = storeToRefs(app);
 
 const loginEmail = ref("");
 const loginPassword = ref("");
+const rememberMe = ref(false);
 const errorLogin = ref("");
+
+if (typeof window !== "undefined") {
+	rememberMe.value = window.localStorage.getItem("rememberMe") === "true";
+}
+
+watch(rememberMe, value => {
+	if (typeof window !== "undefined") {
+		window.localStorage.setItem("rememberMe", value ? "true" : "false");
+	}
+});
 
 function changeLoginView(show: boolean) {
 	app.setLoginBlock(show);
@@ -27,7 +38,8 @@ async function loginTutor() {
 			"/accounts/login",
 			{
 				email: loginEmail.value,
-				password: loginPassword.value
+				password: loginPassword.value,
+				rememberMe: rememberMe.value
 			},
 			{ withCredentials: true }
 		);
@@ -153,11 +165,11 @@ async function addSignup() {
 
 					<button class="button" type="submit">Login</button>
 					<label>
-						<!--						checked="checked" -->
 						<input
-							:checked="true"
+							v-model="rememberMe"
 							name="remember"
 							type="checkbox"
+							@click.stop
 						/>
 						Remember me
 					</label>
