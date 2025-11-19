@@ -4,6 +4,7 @@ import type { IBaseUser } from "../abstractions/BaseUser.js";
 export interface ITutor extends IBaseUser {
 	age: string;
 	state: string;
+	courses: string[];
 	usersOfTutorLength?: number;
 	editTutors?: boolean;
 	role: string; // e.g. "tutor"

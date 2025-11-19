@@ -30,6 +30,40 @@ export const setUserTutors: RequestHandler = async (req, res) => {
 	res.json({ tutors: user.tutors });
 };
 
+export const setUserCourses: RequestHandler = async (req, res) => {
+	const { userID } = req.params;
+	const { courseIDs } = req.body as { courseIDs?: string[] };
+
+	if (!Types.ObjectId.isValid(userID)) {
+		return res.status(400).json({ message: "Invalid user ID" });
+	}
+
+	if (!Array.isArray(courseIDs)) {
+		return res.status(400).json({ message: "courseIDs must be an array" });
+	}
+
+	const user = await User.findById(userID);
+	if (!user) return res.sendStatus(404);
+
+	if (req.currentTutor) {
+		const tutorId = req.currentTutor._id;
+		const isAssigned = user.tutors.some(tutor => tutor.equals(tutorId));
+		if (!isAssigned) {
+			return res.status(403).json({ message: "You can only update your assigned students." });
+		}
+
+		const allowedCourses = new Set(req.currentTutor.courses ?? []);
+		const invalidCourse = courseIDs.find(course => !allowedCourses.has(course));
+		if (invalidCourse) {
+			return res.status(400).json({ message: `Tutor is not allowed to assign ${invalidCourse}.` });
+		}
+	}
+
+	user.courses = Array.from(new Set(courseIDs.map(course => course.trim()).filter(Boolean)));
+	await user.save();
+	res.json({ courses: user.courses });
+};
+
 export const promoteUserToTutor: RequestHandler = async (req, res) => {
 	const { userID } = req.params;
 	if (!Types.ObjectId.isValid(userID)) return res.status(400).json({ message: "Invalid user ID" });

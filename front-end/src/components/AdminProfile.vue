@@ -1,11 +1,15 @@
 <script lang="ts" setup>
+import type { Admin } from "@/stores/app";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import { api } from "@/api";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
 import { useAppStore } from "@/stores/app";
+import { useCoursesStore } from "@/stores/courses";
+
+type Displayable = string | number | boolean | null | undefined;
 
 /* -------------------------------------------------- */
 const app = useAppStore();
@@ -13,6 +17,24 @@ const { currentAdmin, tutors, users } = storeToRefs(app);
 const error = ref("");
 const deleteMe = useDeleteAccount("admin");
 const userAssignments = ref<Record<string, string[]>>({});
+const tutorCourseAssignments = ref<Record<string, string[]>>({});
+const adminDraft = ref<Admin | null>(null);
+const passwordForm = reactive({ newPassword: "", confirmPassword: "" });
+const passwordError = ref("");
+
+const coursesStore = useCoursesStore();
+const { courses: courseDefinitions } = storeToRefs(coursesStore);
+const courseOptions = computed(() =>
+	courseDefinitions.value.map(course => ({
+		id: course.id,
+		name: course.name
+	}))
+);
+const courseLookup = computed(() => {
+	const lookup: Record<string, string> = {};
+	for (const course of courseOptions.value) lookup[course.id] = course.name;
+	return lookup;
+});
 
 /* editable helper for the admin card */
 const {
@@ -52,6 +74,33 @@ watch(
 	{ immediate: true }
 );
 
+watch(
+	[adminEdit, currentAdmin],
+	([editing, admin]) => {
+		if (editing && admin) {
+			adminDraft.value = JSON.parse(JSON.stringify(admin)) as Admin;
+		}
+		if (!editing) {
+			adminDraft.value = null;
+			passwordForm.newPassword = "";
+			passwordForm.confirmPassword = "";
+			passwordError.value = "";
+		}
+	},
+	{ immediate: true }
+);
+
+watch(
+	tutors,
+	value => {
+		const assignments: Record<string, string[]> = {};
+		for (const tutor of value)
+			assignments[tutor._id] = [...(tutor.courses ?? [])];
+		tutorCourseAssignments.value = assignments;
+	},
+	{ immediate: true }
+);
+
 const tutorsHeader = computed(() =>
 	currentAdmin.value && tutors.value.length === 0 ? "No Tutors" : "Tutors"
 );
@@ -70,6 +119,16 @@ function formatAssignedTutors(userID: string) {
 	const assigned = userAssignments.value[userID] ?? [];
 	if (assigned.length === 0) return "No tutors assigned";
 	return assigned.map(id => tutorLookup.value[id] ?? "Unknown").join(", ");
+}
+
+function formatCourseList(courseIDs?: string[]) {
+	if (!courseIDs || courseIDs.length === 0) return "No courses assigned";
+	return courseIDs.map(id => courseLookup.value[id] ?? id).join(", ");
+}
+
+function updateAdminField(key: string, value: Displayable) {
+	if (!adminDraft.value) return;
+	adminDraft.value = { ...adminDraft.value, [key]: value } as Admin;
 }
 
 function onTutorSelectionChange(userID: string, event: Event) {
@@ -106,6 +165,59 @@ async function promoteToTutor(userID: string) {
 			e.response?.data?.message ?? e.message ?? "Unable to promote user";
 	}
 }
+
+async function saveTutorCourses(tutorID: string) {
+	try {
+		await api.put(`/tutors/${tutorID}/courses`, {
+			courseIDs: tutorCourseAssignments.value[tutorID] ?? []
+		});
+		await app.fetchTutors();
+		error.value = "";
+	} catch (e: any) {
+		error.value =
+			e.response?.data?.message ??
+			e.message ??
+			"Unable to update tutor courses";
+	}
+}
+
+async function demoteTutor(tutorID: string) {
+	try {
+		await api.post(`/tutors/${tutorID}/demote`);
+		await Promise.all([app.fetchTutors(), app.fetchUsers()]);
+		error.value = "";
+	} catch (e: any) {
+		error.value =
+			e.response?.data?.message ?? e.message ?? "Unable to demote tutor";
+	}
+}
+
+async function saveAdminProfile() {
+	if (!adminDraft.value) return;
+	const payload: any = { ...adminDraft.value };
+	if (passwordForm.newPassword || passwordForm.confirmPassword) {
+		if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+			passwordError.value = "Passwords do not match.";
+			return;
+		}
+		passwordError.value = "";
+		payload.password = passwordForm.newPassword;
+	}
+
+	try {
+		const updated = await saveAdmin(payload);
+		if (updated) adminDraft.value = updated as Admin;
+		error.value = "";
+	} catch (e: any) {
+		error.value =
+			e.response?.data?.message ??
+			e.message ??
+			"Unable to save admin profile";
+	} finally {
+		passwordForm.newPassword = "";
+		passwordForm.confirmPassword = "";
+	}
+}
 </script>
 
 <template>
@@ -120,18 +232,37 @@ async function promoteToTutor(userID: string) {
 
 				<ProfileFields
 					:editing="adminEdit"
-					:entity="currentAdmin"
+					:entity="
+						adminEdit && adminDraft ? adminDraft : currentAdmin
+					"
 					:fields="fields"
+					@update="updateAdminField"
 				/>
 			</ul>
-			<br />
-
+			<div v-if="adminEdit" class="passwordFields">
+				<label>
+					New password
+					<input
+						v-model="passwordForm.newPassword"
+						placeholder="Leave blank to keep current password"
+						type="password"
+					/>
+				</label>
+				<label>
+					Confirm password
+					<input
+						v-model="passwordForm.confirmPassword"
+						type="password"
+					/>
+				</label>
+				<p v-if="passwordError" class="error">{{ passwordError }}</p>
+			</div>
 			<button class="btn-danger btn" @click="deleteMe(currentAdmin!._id)">
 				Delete
 			</button>
 			<button
 				class="btn-primary btn"
-				@click="adminEdit ? saveAdmin(currentAdmin) : toggleAdmin()"
+				@click="adminEdit ? saveAdminProfile() : toggleAdmin()"
 			>
 				{{ adminEdit ? "Save" : "Edit" }}
 			</button>
@@ -145,6 +276,42 @@ async function promoteToTutor(userID: string) {
 			<ul>
 				<ProfileFields :editing="false" :entity="t" :fields="fields" />
 			</ul>
+			<p class="currentAssignments">
+				<strong>Courses enabled:</strong>
+				{{ formatCourseList(t.courses) }}
+			</p>
+			<div v-if="adminEdit" class="courseAccess">
+				<p class="helperText">
+					Select which courses this tutor can access.
+				</p>
+				<div class="courseGrid">
+					<label v-for="course in courseOptions" :key="course.id">
+						<input
+							v-model="tutorCourseAssignments[t._id]"
+							:value="course.id"
+							type="checkbox"
+						/>
+						{{ course.name }}
+					</label>
+				</div>
+				<div class="courseActions">
+					<button
+						class="btn btn-primary"
+						type="button"
+						@click="saveTutorCourses(t._id)"
+					>
+						Save Course Access
+					</button>
+					<button
+						class="btn btn-danger"
+						type="button"
+						@click="demoteTutor(t._id)"
+					>
+						Demote to User
+					</button>
+				</div>
+			</div>
+			<p v-else class="helperText">Press Edit to manage tutor access.</p>
 		</div>
 
 		<!-- ───── Users list (read-only) ───── -->
@@ -155,7 +322,11 @@ async function promoteToTutor(userID: string) {
 			<ul>
 				<ProfileFields :editing="false" :entity="u" :fields="fields" />
 			</ul>
-			<div class="assignmentControls">
+			<p class="currentAssignments">
+				<strong>Current tutors:</strong>
+				{{ formatAssignedTutors(u._id) }}
+			</p>
+			<div v-if="adminEdit" class="assignmentControls">
 				<label class="assignmentLabel" :for="`tutor-select-${u._id}`">
 					Assign Tutors
 				</label>
@@ -170,10 +341,6 @@ async function promoteToTutor(userID: string) {
 						{{ t.name }}
 					</option>
 				</select>
-				<p class="currentAssignments">
-					<strong>Current:</strong>
-					{{ formatAssignedTutors(u._id) }}
-				</p>
 				<div class="assignmentActions">
 					<button
 						class="btn btn-primary"
@@ -191,6 +358,9 @@ async function promoteToTutor(userID: string) {
 					</button>
 				</div>
 			</div>
+			<p v-else class="helperText">
+				Press Edit to manage tutor assignments.
+			</p>
 		</div>
 
 		<p v-if="error" class="error">
@@ -259,5 +429,59 @@ div.tutorList {
 .error {
 	color: red;
 	margin-top: 10px;
+}
+
+.passwordFields {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin: 0 auto 1rem;
+	width: 90%;
+}
+
+.passwordFields label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	text-align: left;
+}
+
+.passwordFields input {
+	padding: 0.35rem;
+}
+
+.helperText {
+	margin: 0.5rem auto 0;
+	color: #4b5563;
+	font-size: 0.9rem;
+	text-align: center;
+}
+
+.courseAccess {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	margin: 0.5rem auto 1rem;
+	width: 90%;
+}
+
+.courseGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 0.5rem;
+}
+
+.courseGrid label {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: 0.9rem;
+}
+
+.courseActions {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+	justify-content: center;
 }
 </style>

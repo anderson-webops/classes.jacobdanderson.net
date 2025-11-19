@@ -50,6 +50,20 @@ function normalizeContent(content: string): string {
 	return content.replace(/\n{3,}/g, "\n\n").trim();
 }
 
+const hiddenItemTitles = new Set([
+	"session recap & assignment",
+	"recap & assignment review"
+]);
+
+function sanitizeItemContent(content: string): string {
+	const normalized = normalizeContent(content);
+	const paragraphs = normalized.split(/\n{2,}/);
+	const filtered = paragraphs.filter(
+		paragraph => paragraph.trim() && !/instructor notes?/i.test(paragraph)
+	);
+	return filtered.join("\n\n").trim();
+}
+
 const rawCourses: RawCourse[] = [
 	{
 		name: "Scratch Level 1",
@@ -2500,13 +2514,21 @@ const normalizedCourses: CourseDefinition[] = rawCourses.map(course => {
 				items: RawCourseModuleItem[],
 				prefix: string
 			): CourseModuleItem[] =>
-				items.map(item => ({
-					id: slugify(`${moduleId}-${prefix}-${item.title}`),
-					title: item.title,
-					content: normalizeContent(item.content),
-					projectLink: item.projectLink,
-					solutionLink: item.solutionLink
-				}));
+				items
+					.filter(
+						item =>
+							!hiddenItemTitles.has(
+								item.title.trim().toLowerCase()
+							)
+					)
+					.map(item => ({
+						id: slugify(`${moduleId}-${prefix}-${item.title}`),
+						title: item.title,
+						content: sanitizeItemContent(item.content),
+						projectLink: item.projectLink,
+						solutionLink: item.solutionLink
+					}))
+					.filter(item => item.content.length > 0);
 
 			return {
 				id: moduleId,

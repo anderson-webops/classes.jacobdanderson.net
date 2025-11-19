@@ -88,3 +88,11 @@ export const validTutorOrAdmin: RequestHandler = (req, res, next) => {
 
 	res.status(403).json({ message: "Not authorized to perform this action." });
 };
+
+export const validAdminOrTutor: RequestHandler = (req, res, next) => {
+	if (req.session?.adminID) {
+		return validAdmin(req, res, next);
+	}
+
+	return validTutor(req, res, next);
+};

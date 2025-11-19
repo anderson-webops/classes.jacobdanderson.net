@@ -19,7 +19,11 @@ function isEntity(u: any): u is Entity {
 
 // LOGIN
 export const login: RequestHandler = async (req, res) => {
-	const { email, password } = req.body as { email?: string; password?: string };
+	const { email, password, remember } = req.body as {
+		email?: string;
+		password?: string;
+		remember?: boolean;
+	};
 	if (!email || !password) return res.sendStatus(400);
 
 	const e = email.trim().toLowerCase();
@@ -57,6 +61,11 @@ export const login: RequestHandler = async (req, res) => {
 
 	// sign‐in
 	session[sessionKey] = entity._id.toString();
+
+	if (req.sessionOptions) {
+		const day = 24 * 60 * 60 * 1000;
+		req.sessionOptions.maxAge = (remember ? 30 : 1) * day;
+	}
 	return res.json({ [responseKey]: entity });
 };
 

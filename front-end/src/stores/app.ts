@@ -13,6 +13,7 @@ export interface Tutor {
 	email: string;
 	age: number;
 	state: string;
+	courses?: string[];
 	usersOfTutorLength: number;
 	editTutors: boolean;
 	saveEdit: string;
@@ -26,6 +27,7 @@ export interface User {
 	age: number;
 	state: string;
 	tutors?: string[];
+	courses?: string[];
 	editUsers: boolean;
 	saveEdit: string;
 	[key: string]: Displayable;

@@ -13,6 +13,7 @@ const { loginBlock, signupBlock } = storeToRefs(app);
 
 const loginEmail = ref("");
 const loginPassword = ref("");
+const rememberMe = ref(true);
 const errorLogin = ref("");
 
 function changeLoginView(show: boolean) {
@@ -27,7 +28,8 @@ async function loginTutor() {
 			"/accounts/login",
 			{
 				email: loginEmail.value,
-				password: loginPassword.value
+				password: loginPassword.value,
+				remember: rememberMe.value
 			},
 			{ withCredentials: true }
 		);
@@ -155,7 +157,7 @@ async function addSignup() {
 					<label>
 						<!--						checked="checked" -->
 						<input
-							:checked="true"
+							v-model="rememberMe"
 							name="remember"
 							type="checkbox"
 						/>

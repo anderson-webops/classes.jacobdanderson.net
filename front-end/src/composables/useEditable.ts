@@ -22,6 +22,8 @@ export function useEditable(kind: Kind) {
 
 	/* ----------------------------------------- */
 	async function save(entity: any) {
+		if (!entity?._id) return null;
+
 		// 1) change-e-mail if needed
 		if (!baseline) baseline = entity.email;
 		if (entity.email !== baseline) {
@@ -39,13 +41,19 @@ export function useEditable(kind: Kind) {
 					? `/tutors/${entity._id}`
 					: `/admins/${entity._id}`;
 
-		await api.put(url, entity);
+		const payload = { ...entity };
+		await api.put(url, payload);
 		editing.value = false;
 
+		const sanitized = { ...payload };
+		delete sanitized.password;
+
 		// 3) update Pinia _in-place_ (no extra fetch)
-		if (kind === "user") app.setCurrentUser(entity);
-		else if (kind === "tutor") app.setCurrentTutor(entity);
-		else app.setCurrentAdmin(entity);
+		if (kind === "user") app.setCurrentUser(sanitized);
+		else if (kind === "tutor") app.setCurrentTutor(sanitized);
+		else app.setCurrentAdmin(sanitized);
+
+		return sanitized;
 	}
 
 	return { editing, toggle, save };

@@ -2,9 +2,11 @@
 import type { CourseModule } from "@/stores/courses";
 import MarkdownIt from "markdown-it";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+
+const props = defineProps<{ allowedCourseIds: string[] }>();
 
 const markdown = new MarkdownIt({
 	breaks: true,
@@ -15,6 +17,14 @@ const coursesStore = useCoursesStore();
 const { courses } = storeToRefs(coursesStore);
 
 const courseList = computed(() => courses.value ?? []);
+const allowedCourseIds = computed(() => props.allowedCourseIds ?? []);
+const availableCourses = computed(() => {
+	const allowed = new Set(allowedCourseIds.value);
+	if (allowed.size === 0) return [];
+
+	return courseList.value.filter(course => allowed.has(course.id));
+});
+const hasCourses = computed(() => availableCourses.value.length > 0);
 
 const appStore = useAppStore();
 const { currentTutor } = storeToRefs(appStore);
@@ -29,13 +39,19 @@ function renderMarkdown(content: string) {
 	return markdown.render(content);
 }
 
-watchEffect(() => {
-	const availableCourses = courseList.value;
+watch(
+	availableCourses,
+	courseOptions => {
+		if (courseOptions.length === 0) {
+			selectedCourseId.value = "";
+			return;
+		}
 
-	if (!selectedCourseId.value && availableCourses.length > 0) {
-		selectCourse(availableCourses[0].id);
-	}
-});
+		if (!courseOptions.some(course => course.id === selectedCourseId.value))
+			selectedCourseId.value = courseOptions[0].id;
+	},
+	{ immediate: true }
+);
 
 watch(selectedCourseId, () => {
 	activeModuleId.value = null;
@@ -44,13 +60,10 @@ watch(selectedCourseId, () => {
 
 const selectedCourse = computed(
 	() =>
-		courseList.value.find(course => course.id === selectedCourseId.value) ??
-		null
+		availableCourses.value.find(
+			course => course.id === selectedCourseId.value
+		) ?? null
 );
-
-function selectCourse(id: string) {
-	selectedCourseId.value = id;
-}
 
 function toggleModule(moduleId: string) {
 	activeModuleId.value = activeModuleId.value === moduleId ? null : moduleId;
@@ -83,95 +96,63 @@ function hasSupplemental(module: CourseModule) {
 
 <template>
 	<section class="course-explorer">
-		<div class="course-selector">
-			<label class="selector-label" for="course-select"
-				>Choose a course</label
-			>
-			<div class="selector-control">
-				<select
-					id="course-select"
-					v-model="selectedCourseId"
-					class="course-select"
+		<div v-if="hasCourses">
+			<div class="course-selector">
+				<label class="selector-label" for="course-select"
+					>Choose a course</label
 				>
-					<option
-						v-for="course in courseList"
-						:key="course.id"
-						:value="course.id"
+				<div class="selector-control">
+					<select
+						id="course-select"
+						v-model="selectedCourseId"
+						class="course-select"
 					>
-						{{ course.name }}
-					</option>
-				</select>
+						<option
+							v-for="course in availableCourses"
+							:key="course.id"
+							:value="course.id"
+						>
+							{{ course.name }}
+						</option>
+					</select>
+				</div>
 			</div>
-		</div>
 
-		<div v-if="selectedCourse" class="course-modules">
-			<div
-				v-for="(module, index) in selectedCourse.modules"
-				:key="module.id"
-				class="module-card"
-			>
-				<button
-					class="module-toggle"
-					type="button"
-					@click="toggleModule(module.id)"
+			<div v-if="selectedCourse" class="course-modules">
+				<div
+					v-for="(module, index) in selectedCourse.modules"
+					:key="module.id"
+					class="module-card"
 				>
-					<span class="module-index">{{ index + 1 }}</span>
-					<span class="module-title">{{ module.title }}</span>
-					<span aria-hidden="true" class="module-icon">
-						{{ activeModuleId === module.id ? "−" : "+" }}
-					</span>
-				</button>
-
-				<transition name="accordion">
-					<div
-						v-if="activeModuleId === module.id"
-						class="module-body"
+					<button
+						class="module-toggle"
+						type="button"
+						@click="toggleModule(module.id)"
 					>
-						<div class="module-section">
-							<h3>Curriculum</h3>
-							<ol class="item-list">
-								<li
-									v-for="item in module.curriculum"
-									:key="item.id"
-									class="item"
-								>
-									<button
-										class="item-toggle"
-										type="button"
-										@click="
-											toggleItem(
-												module.id,
-												itemKey(
-													module.id,
-													'curriculum',
-													item.id
-												)
-											)
-										"
+						<span class="module-index">{{ index + 1 }}</span>
+						<span class="module-title">{{ module.title }}</span>
+						<span class="module-icon" aria-hidden="true">
+							{{ activeModuleId === module.id ? "−" : "+" }}
+						</span>
+					</button>
+					<transition name="accordion">
+						<div
+							v-if="activeModuleId === module.id"
+							class="module-body"
+						>
+							<div class="module-section">
+								<h3>Curriculum projects</h3>
+								<ol class="item-list">
+									<li
+										v-for="item in module.curriculumProjects"
+										:key="item.id"
+										class="item"
 									>
-										<span>{{ item.title }}</span>
-										<span
-											class="item-icon"
-											aria-hidden="true"
-										>
-											{{
-												isItemOpen(
-													module.id,
-													itemKey(
-														module.id,
-														"curriculum",
-														item.id
-													)
-												)
-													? "Hide"
-													: "View"
-											}}
-										</span>
-									</button>
-									<transition name="accordion">
-										<div
-											v-if="
-												isItemOpen(
+										<button
+											class="item-toggle"
+											type="button"
+											@click="
+												toggleItem(
 													module.id,
 													itemKey(
 														module.id,
@@ -180,205 +161,243 @@ function hasSupplemental(module: CourseModule) {
 													)
 												)
 											"
-											class="item-content"
 										>
-											<div class="item-content-body">
-												<div
-													v-if="
-														item.projectLink ||
-														(canViewSolutions &&
-															item.solutionLink)
-													"
-													class="item-links"
-												>
-													<p
-														v-if="item.projectLink"
-														class="item-link"
-													>
-														<strong
-															>Project:</strong
-														>
-														<a
-															:href="
-																item.projectLink
-															"
-															rel="noreferrer"
-															target="_blank"
-														>
-															{{
-																item.projectLink
-															}}
-														</a>
-													</p>
-													<p
-														v-if="
-															canViewSolutions &&
-															item.solutionLink
-														"
-														class="item-link"
-													>
-														<strong
-															>Solution:</strong
-														>
-														<a
-															:href="
-																item.solutionLink
-															"
-															rel="noreferrer"
-															target="_blank"
-														>
-															{{
-																item.solutionLink
-															}}
-														</a>
-													</p>
-												</div>
-												<div
-													v-if="item.content"
-													class="item-content-markdown"
-													v-html="
-														renderMarkdown(
-															item.content
+											<span>{{ item.title }}</span>
+											<span
+												class="item-icon"
+												aria-hidden="true"
+											>
+												{{
+													isItemOpen(
+														module.id,
+														itemKey(
+															module.id,
+															"curriculum",
+															item.id
 														)
-													"
-												/>
+													)
+														? "Hide"
+														: "View"
+												}}
+											</span>
+										</button>
+										<transition name="accordion">
+											<div
+												v-if="
+													isItemOpen(
+														module.id,
+														itemKey(
+															module.id,
+															'curriculum',
+															item.id
+														)
+													)
+												"
+												class="item-content"
+											>
+												<div class="item-content-body">
+													<div
+														v-if="
+															item.projectLink ||
+															(canViewSolutions &&
+																item.solutionLink)
+														"
+														class="item-links"
+													>
+														<p
+															v-if="
+																item.projectLink
+															"
+															class="item-link"
+														>
+															<strong
+																>Project:</strong
+															>
+															<a
+																:href="
+																	item.projectLink
+																"
+																target="_blank"
+																rel="noreferrer"
+																>{{
+																	item.projectLink
+																}}</a
+															>
+														</p>
+														<p
+															v-if="
+																item.solutionLink &&
+																canViewSolutions
+															"
+															class="item-link"
+														>
+															<strong
+																>Solution:</strong
+															>
+															<a
+																:href="
+																	item.solutionLink
+																"
+																target="_blank"
+																rel="noreferrer"
+																>{{
+																	item.solutionLink
+																}}</a
+															>
+														</p>
+													</div>
+													<div
+														class="item-content-markdown"
+														v-html="
+															renderMarkdown(
+																item.content
+															)
+														"
+													/>
+												</div>
 											</div>
-										</div>
-									</transition>
-								</li>
-							</ol>
-						</div>
+										</transition>
+									</li>
+								</ol>
 
-						<div
-							v-if="hasSupplemental(module)"
-							class="module-section"
-						>
-							<h3>Supplemental projects</h3>
-							<ol class="item-list">
-								<li
-									v-for="item in module.supplementalProjects"
-									:key="item.id"
-									class="item"
+								<div
+									v-if="hasSupplemental(module)"
+									class="module-section"
 								>
-									<button
-										class="item-toggle"
-										type="button"
-										@click="
-											toggleItem(
-												module.id,
-												itemKey(
-													module.id,
-													'supplemental',
-													item.id
-												)
-											)
-										"
-									>
-										<span>{{ item.title }}</span>
-										<span
-											class="item-icon"
-											aria-hidden="true"
+									<h3>Supplemental projects</h3>
+									<ol class="item-list">
+										<li
+											v-for="item in module.supplementalProjects"
+											:key="item.id"
+											class="item"
 										>
-											{{
-												isItemOpen(
-													module.id,
-													itemKey(
+											<button
+												class="item-toggle"
+												type="button"
+												@click="
+													toggleItem(
 														module.id,
-														"supplemental",
-														item.id
-													)
-												)
-													? "Hide"
-													: "View"
-											}}
-										</span>
-									</button>
-									<transition name="accordion">
-										<div
-											v-if="
-												isItemOpen(
-													module.id,
-													itemKey(
-														module.id,
-														'supplemental',
-														item.id
-													)
-												)
-											"
-											class="item-content"
-										>
-											<div class="item-content-body">
-												<div
-													v-if="item.content"
-													class="item-content-markdown"
-													v-html="
-														renderMarkdown(
-															item.content
+														itemKey(
+															module.id,
+															'supplemental',
+															item.id
 														)
-													"
-												/>
+													)
+												"
+											>
+												<span>{{ item.title }}</span>
+												<span
+													class="item-icon"
+													aria-hidden="true"
+												>
+													{{
+														isItemOpen(
+															module.id,
+															itemKey(
+																module.id,
+																"supplemental",
+																item.id
+															)
+														)
+															? "Hide"
+															: "View"
+													}}
+												</span>
+											</button>
+											<transition name="accordion">
 												<div
 													v-if="
-														item.projectLink ||
-														(canViewSolutions &&
-															item.solutionLink)
+														isItemOpen(
+															module.id,
+															itemKey(
+																module.id,
+																'supplemental',
+																item.id
+															)
+														)
 													"
-													class="item-links"
+													class="item-content"
 												>
-													<p
-														v-if="item.projectLink"
-														class="item-link"
+													<div
+														class="item-content-body"
 													>
-														<strong
-															>Project:</strong
-														>
-														<a
-															:href="
-																item.projectLink
+														<div
+															v-if="
+																item.projectLink ||
+																(canViewSolutions &&
+																	item.solutionLink)
 															"
-															rel="noreferrer"
-															target="_blank"
+															class="item-links"
 														>
-															{{
-																item.projectLink
-															}}
-														</a>
-													</p>
-													<p
-														v-if="
-															canViewSolutions &&
-															item.solutionLink
-														"
-														class="item-link"
-													>
-														<strong
-															>Solution:</strong
-														>
-														<a
-															:href="
-																item.solutionLink
+															<p
+																v-if="
+																	item.projectLink
+																"
+																class="item-link"
+															>
+																<strong
+																	>Project:</strong
+																>
+																<a
+																	:href="
+																		item.projectLink
+																	"
+																	target="_blank"
+																	rel="noreferrer"
+																	>{{
+																		item.projectLink
+																	}}</a
+																>
+															</p>
+															<p
+																v-if="
+																	item.solutionLink &&
+																	canViewSolutions
+																"
+																class="item-link"
+															>
+																<strong
+																	>Solution:</strong
+																>
+																<a
+																	:href="
+																		item.solutionLink
+																	"
+																	target="_blank"
+																	rel="noreferrer"
+																	>{{
+																		item.solutionLink
+																	}}</a
+																>
+															</p>
+														</div>
+														<div
+															class="item-content-markdown"
+															v-html="
+																renderMarkdown(
+																	item.content
+																)
 															"
-															rel="noreferrer"
-															target="_blank"
-														>
-															{{
-																item.solutionLink
-															}}
-														</a>
-													</p>
+														/>
+													</div>
 												</div>
-											</div>
-										</div>
-									</transition>
-								</li>
-							</ol>
+											</transition>
+										</li>
+									</ol>
+								</div>
+							</div>
 						</div>
-					</div>
-				</transition>
+					</transition>
+				</div>
 			</div>
 		</div>
-
-		<p v-else class="empty-copy">Course information is on the way.</p>
+		<div v-else class="course-empty">
+			<h3>No courses assigned yet</h3>
+			<p class="empty-copy">
+				Ask your tutor or administrator to enable courses so they show
+				up here.
+			</p>
+		</div>
 	</section>
 </template>
 
@@ -387,6 +406,19 @@ function hasSupplemental(module: CourseModule) {
 	display: flex;
 	flex-direction: column;
 	gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.course-empty {
+	padding: 2rem;
+	border-radius: 1rem;
+	background: #f8fafc;
+	text-align: center;
+	border: 1px dashed rgba(15, 23, 42, 0.1);
+}
+
+.course-empty h3 {
+	margin: 0 0 0.35rem;
+	color: #0f172a;
 }
 
 .course-selector {
@@ -510,13 +542,10 @@ function hasSupplemental(module: CourseModule) {
 	border-radius: 14px;
 	background: rgba(255, 255, 255, 0.92);
 	box-shadow: 0 12px 20px -20px rgba(15, 23, 42, 0.35);
-	overflow: hidden;
 }
 
 .item-toggle {
 	width: 100%;
-	border: none;
-	background: transparent;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
