@@ -10,10 +10,10 @@ import { passwordPlugin } from "../plugins/password.js";
  */
 const userSchema: Schema<IUser> = new Schema(
 	{
-		tutor: {
-			type: mongoose.Schema.Types.ObjectId,
+		tutors: {
+			type: [mongoose.Schema.Types.ObjectId],
 			ref: "Tutor",
-			default: null
+			default: []
 		},
 		name: { type: String, required: true },
 		email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },

@@ -44,7 +44,6 @@ async function loginTutor() {
 }
 
 // form state
-const signupType = ref<"tutor" | "user">("tutor");
 const name = ref("");
 const age = ref("");
 const state = ref("");
@@ -78,44 +77,28 @@ async function addSignup() {
 	if (!passwordMatch.value) return;
 
 	try {
-		// fire the right endpoint with credentials turned on
-		const res =
-			signupType.value === "tutor"
-				? await api.post(
-						"/tutors",
-						{
-							name: name.value,
-							age: age.value,
-							state: state.value,
-							email: email.value,
-							password: password.value
-						},
-						{ withCredentials: true }
-					)
-				: await api.post(
-						"/users",
-						{
-							name: name.value,
-							age: age.value,
-							state: state.value,
-							email: email.value,
-							password: password.value
-						},
-						{ withCredentials: true }
-					);
+		const { data } = await api.post(
+			"/users",
+			{
+				name: name.value,
+				age: age.value,
+				state: state.value,
+				email: email.value,
+				password: password.value
+			},
+			{ withCredentials: true }
+		);
 
-		// immediately stash the newly-created user/tutor into Pinia
-		if (res.data.currentTutor) {
-			app.setCurrentTutor(res.data.currentTutor);
-		} else if (res.data.currentUser) {
-			app.setCurrentUser(res.data.currentUser);
+		if (data.currentUser) {
+			app.setCurrentUser(data.currentUser);
+			app.setCurrentTutor(null);
 		}
 
 		resetData();
 		changeSignupView(false);
 	} catch (err: unknown) {
 		const e = err as AxiosError<{ message?: string }>;
-		errorLogin.value = `Error: ${
+		error.value = `Error: ${
 			e.response?.data?.message ?? e.message ?? "Unknown error"
 		}`;
 	}
@@ -214,29 +197,12 @@ async function addSignup() {
 
 				<div class="container">
 					<h1 class="mb-2">Sign Up</h1>
-					<p>Please fill in this form to create a new account.</p>
+					<p>
+						Please fill in this form to create a new account. All
+						new accounts are created as students; an administrator
+						can promote you to a tutor later if needed.
+					</p>
 					<hr />
-
-					<!-- ─── User Type Selector ────────────────────────────────────────── -->
-					<div class="mb-3">
-						<label>
-							<input
-								v-model="signupType"
-								type="radio"
-								value="tutor"
-							/>
-							Tutor
-						</label>
-						&ensp;
-						<label>
-							<input
-								v-model="signupType"
-								type="radio"
-								value="user"
-							/>
-							User
-						</label>
-					</div>
 
 					<!-- ─── Common Fields ─────────────────────────────────────────────── -->
 					<label for="name"><b>Name</b></label>
