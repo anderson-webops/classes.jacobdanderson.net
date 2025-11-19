@@ -2,9 +2,7 @@
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
-import AccountSecurity from "@/components/AccountSecurity.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
-import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
@@ -14,9 +12,11 @@ const app = useAppStore();
 const { currentAdmin, tutors, users } = storeToRefs(app);
 const error = ref("");
 const success = ref("");
-const deleteMe = useDeleteAccount("admin");
+const editableAdmin = ref<any | null>(null);
 const userAssignments = ref<Record<string, string[]>>({});
-const userEditing = ref<Record<string, boolean>>({});
+const userAssignmentEditing = ref<Record<string, boolean>>({});
+const userCourseEditing = ref<Record<string, boolean>>({});
+const userCourseSelections = ref<Record<string, string[]>>({});
 const tutorEditing = ref<Record<string, boolean>>({});
 const tutorCourseSelections = ref<Record<string, string[]>>({});
 const activeCard = ref<string | null>(null);
@@ -32,10 +32,18 @@ const courseNameMap = computed(() => {
 
 /* editable helper for the admin card */
 const {
-	editing: adminEdit,
-	toggle: toggleAdmin,
-	save: saveAdmin
+        editing: adminEdit,
+        toggle: toggleAdmin,
+        save: saveAdmin
 } = useEditable("admin");
+
+watch(
+        currentAdmin,
+        value => {
+                editableAdmin.value = value ? { ...value } : null;
+        },
+        { immediate: true }
+);
 
 /* field list (admin / tutor / user share the same set) */
 const fields = [
@@ -57,20 +65,26 @@ async function loadAll() {
 onMounted(loadAll);
 
 watch(
-	users,
-	value => {
-		const assignments: Record<string, string[]> = {};
-		const editing: Record<string, boolean> = {};
-		for (const user of value) {
-			assignments[user._id] = (user.tutors ?? []).map(t =>
-				typeof t === "string" ? t : t._id
-			);
-			editing[user._id] = false;
-		}
-		userAssignments.value = assignments;
-		userEditing.value = editing;
-	},
-	{ immediate: true }
+        users,
+        value => {
+                const assignments: Record<string, string[]> = {};
+                const assignmentEditing: Record<string, boolean> = {};
+                const courseEditing: Record<string, boolean> = {};
+                const courseSelection: Record<string, string[]> = {};
+                for (const user of value) {
+                        assignments[user._id] = (user.tutors ?? []).map(t =>
+                                typeof t === "string" ? t : t._id
+                        );
+                        assignmentEditing[user._id] = false;
+                        courseEditing[user._id] = false;
+                        courseSelection[user._id] = [...(user.courseAccess ?? [])];
+                }
+                userAssignments.value = assignments;
+                userAssignmentEditing.value = assignmentEditing;
+                userCourseEditing.value = courseEditing;
+                userCourseSelections.value = courseSelection;
+        },
+        { immediate: true }
 );
 
 watch(
@@ -115,29 +129,70 @@ function formatTutorCourses(tutorID: string) {
 }
 
 function activateCard(id: string) {
-	activeCard.value = activeCard.value === id ? null : id;
+        activeCard.value = activeCard.value === id ? null : id;
 }
 
 function isCardActive(id: string) {
-	return activeCard.value === id;
+        return activeCard.value === id;
 }
 
-function toggleUserEdit(userID: string) {
-	userEditing.value = {
-		...userEditing.value,
-		[userID]: !userEditing.value[userID]
-	};
-	success.value = "";
-	error.value = "";
+function onAdminFieldUpdate(key: string, value: any) {
+        if (!editableAdmin.value) editableAdmin.value = { ...currentAdmin.value };
+        editableAdmin.value = {
+                ...editableAdmin.value,
+                [key]: value
+        };
+}
+
+function startAdminEdit() {
+        success.value = "";
+        error.value = "";
+        editableAdmin.value = currentAdmin.value ? { ...currentAdmin.value } : null;
+        if (!adminEdit.value) toggleAdmin();
+}
+
+function cancelAdminEdit() {
+        editableAdmin.value = currentAdmin.value ? { ...currentAdmin.value } : null;
+        if (adminEdit.value) toggleAdmin();
+}
+
+async function saveAdminProfile() {
+        if (!editableAdmin.value || !currentAdmin.value) return;
+        try {
+            success.value = "";
+            error.value = "";
+            await saveAdmin(editableAdmin.value);
+            success.value = "Updated admin profile.";
+        } catch (e: any) {
+            error.value = e.response?.data?.message ?? e.message ?? "Unable to save admin";
+        }
+}
+
+function toggleUserAssignmentEdit(userID: string) {
+        userAssignmentEditing.value = {
+                ...userAssignmentEditing.value,
+                [userID]: !userAssignmentEditing.value[userID]
+        };
+        success.value = "";
+        error.value = "";
+}
+
+function toggleUserCourseEdit(userID: string) {
+        userCourseEditing.value = {
+                ...userCourseEditing.value,
+                [userID]: !userCourseEditing.value[userID]
+        };
+        success.value = "";
+        error.value = "";
 }
 
 function toggleTutorEdit(tutorID: string) {
-	tutorEditing.value = {
-		...tutorEditing.value,
-		[tutorID]: !tutorEditing.value[tutorID]
-	};
-	success.value = "";
-	error.value = "";
+        tutorEditing.value = {
+                ...tutorEditing.value,
+                [tutorID]: !tutorEditing.value[tutorID]
+        };
+        success.value = "";
+        error.value = "";
 }
 
 function onTutorCourseToggle(
@@ -166,60 +221,82 @@ function onTutorSelectionChange(userID: string, event: Event) {
 }
 
 async function saveAssignments(userID: string) {
-	try {
-		await api.put(`/users/${userID}/tutors`, {
-			tutorIDs: userAssignments.value[userID] ?? []
-		});
-		await Promise.all([app.fetchUsers(), app.fetchTutors()]);
-		success.value = "Saved tutor assignments.";
-		error.value = "";
-	} catch (e: any) {
-		error.value =
-			e.response?.data?.message ?? e.message ?? "Unable to update tutors";
-	}
+        try {
+                await api.put(`/users/${userID}/tutors`, {
+                        tutorIDs: userAssignments.value[userID] ?? []
+                });
+                await Promise.all([app.fetchUsers(), app.fetchTutors()]);
+                success.value = "Saved tutor assignments.";
+                error.value = "";
+        } catch (e: any) {
+                error.value =
+                        e.response?.data?.message ?? e.message ?? "Unable to update tutors";
+        }
 }
 
-async function promoteToTutor(userID: string) {
-	try {
-		await api.post(`/users/${userID}/promote`);
-		await Promise.all([app.fetchUsers(), app.fetchTutors()]);
-		success.value = "User promoted to tutor.";
-		error.value = "";
-	} catch (e: any) {
-		error.value =
-			e.response?.data?.message ?? e.message ?? "Unable to promote user";
-	}
+function allowedCoursesForUser(userID: string) {
+        const tutorsForUser = userAssignments.value[userID] ?? [];
+        const allowed = new Set<string>();
+        for (const tutorID of tutorsForUser) {
+                for (const course of tutorCourseSelections.value[tutorID] ?? []) {
+                        allowed.add(course);
+                }
+        }
+        return courseOptions.value.filter(course => allowed.has(course.id));
+}
+
+function onUserCourseToggle(userID: string, courseID: string, checked: boolean) {
+        const existing = new Set(userCourseSelections.value[userID] ?? []);
+        if (checked) existing.add(courseID);
+        else existing.delete(courseID);
+        userCourseSelections.value = {
+                ...userCourseSelections.value,
+                [userID]: [...existing]
+        };
+}
+
+async function saveUserCourses(userID: string) {
+        try {
+                success.value = "";
+                error.value = "";
+                const allowed = new Set(
+                        allowedCoursesForUser(userID).map(course => course.id)
+                );
+                const filtered = (userCourseSelections.value[userID] ?? []).filter(id =>
+                        allowed.has(id)
+                );
+                userCourseSelections.value = {
+                        ...userCourseSelections.value,
+                        [userID]: filtered
+                };
+                await api.put(`/users/${userID}/courses`, {
+                        courseIDs: filtered
+                });
+                success.value = "Saved course access.";
+                await app.fetchUsers();
+                userCourseEditing.value = { ...userCourseEditing.value, [userID]: false };
+        } catch (e: any) {
+                error.value =
+                        e.response?.data?.message ?? e.message ?? "Unable to save courses";
+        }
 }
 
 async function saveTutorCourses(tutorID: string) {
-	try {
-		success.value = "";
-		error.value = "";
-		await api.put(`/tutors/${tutorID}/courses`, {
+        try {
+                success.value = "";
+                error.value = "";
+                await api.put(`/tutors/${tutorID}/courses`, {
 			courseIDs: tutorCourseSelections.value[tutorID] ?? []
 		});
 		success.value = "Updated tutor course access.";
 		await app.fetchTutors();
 		tutorEditing.value = { ...tutorEditing.value, [tutorID]: false };
 	} catch (e: any) {
-		error.value =
-			e.response?.data?.message ??
-			e.message ??
-			"Unable to update tutor courses";
-	}
-}
-
-async function demoteTutor(tutorID: string) {
-	try {
-		success.value = "";
-		error.value = "";
-		await api.post(`/tutors/${tutorID}/demote`);
-		await Promise.all([app.fetchUsers(), app.fetchTutors()]);
-		success.value = "Tutor demoted to user.";
-	} catch (e: any) {
-		error.value =
-			e.response?.data?.message ?? e.message ?? "Unable to demote tutor";
-	}
+                error.value =
+                        e.response?.data?.message ??
+                        e.message ??
+                        "Unable to update tutor courses";
+        }
 }
 </script>
 
@@ -235,44 +312,43 @@ async function demoteTutor(tutorID: string) {
 			@click="activateCard('admin')"
 		>
 			<br />
-			<p v-if="!isCardActive('admin')" class="card-hint">
-				Click to edit admin details or security settings.
-			</p>
-			<ul>
-				<li><h4>Admin</h4></li>
+                        <p v-if="!isCardActive('admin')" class="card-hint">
+                                Click to edit admin details or security settings.
+                        </p>
+                        <ul>
+                                <li><h4>Admin</h4></li>
 
-				<ProfileFields
-					:editing="adminEdit"
-					:entity="currentAdmin"
-					:fields="fields"
-				/>
-			</ul>
-			<br />
+                                <ProfileFields
+                                        :editing="adminEdit"
+                                        :entity="adminEdit ? editableAdmin ?? currentAdmin : currentAdmin"
+                                        :fields="fields"
+                                        :entity-id="currentAdmin._id"
+                                        role="admin"
+                                        :show-security="isCardActive('admin')"
+                                        @update="onAdminFieldUpdate"
+                                />
+                        </ul>
+                        <br />
 
-			<div v-if="isCardActive('admin')" class="card-actions">
-				<button
-					class="btn-danger btn"
-					@click.stop="deleteMe(currentAdmin!._id)"
-				>
-					Delete
-				</button>
-				<button
-					class="btn-primary btn"
-					@click.stop="
-						adminEdit ? saveAdmin(currentAdmin) : toggleAdmin()
-					"
-				>
-					{{ adminEdit ? "Save" : "Edit" }}
-				</button>
-			</div>
-
-			<AccountSecurity
-				v-if="isCardActive('admin')"
-				:email="currentAdmin.email"
-				:entity-id="currentAdmin._id"
-				role="admin"
-			/>
-		</div>
+                        <div v-if="isCardActive('admin')" class="card-actions">
+                                <button
+                                        class="btn-primary btn"
+                                        @click.stop="
+                                                adminEdit ? saveAdminProfile() : startAdminEdit()
+                                        "
+                                >
+                                        {{ adminEdit ? "Save" : "Edit" }}
+                                </button>
+                                <button
+                                        v-if="adminEdit"
+                                        class="btn-secondary btn"
+                                        type="button"
+                                        @click.stop="cancelAdminEdit"
+                                >
+                                        Cancel
+                                </button>
+                        </div>
+                </div>
 
 		<!-- ───── Tutors list (read-only) ───── -->
 		<hr />
@@ -325,33 +401,26 @@ async function demoteTutor(tutorID: string) {
 						{{ course.name }}
 					</label>
 				</div>
-				<div class="card-actions">
-					<button
-						class="btn btn-primary"
-						type="button"
-						@click.stop="saveTutorCourses(t._id)"
-					>
-						Save courses
-					</button>
-					<button
-						class="btn btn-danger"
-						type="button"
-						@click.stop="demoteTutor(t._id)"
-					>
-						Demote to user
-					</button>
-				</div>
-			</div>
-		</div>
+                                <div class="card-actions">
+                                        <button
+                                                class="btn btn-primary"
+                                                type="button"
+                                                @click.stop="saveTutorCourses(t._id)"
+                                        >
+                                                Save courses
+                                        </button>
+                                </div>
+                        </div>
+                </div>
 
 		<!-- ───── Users list (read-only) ───── -->
 		<hr />
 		<h2>{{ usersHeader }}</h2>
-		<div
-			v-for="u in users"
-			:key="u._id"
-			class="tutorList mt-2"
-			:class="[{ active: isCardActive(`user-${u._id}`) }]"
+                <div
+                        v-for="u in users"
+                        :key="u._id"
+                        class="tutorList mt-2"
+                        :class="[{ active: isCardActive(`user-${u._id}`) }]"
 			@click="activateCard(`user-${u._id}`)"
 		>
 			<br />
@@ -359,24 +428,40 @@ async function demoteTutor(tutorID: string) {
 				<ProfileFields :editing="false" :entity="u" :fields="fields" />
 			</ul>
 			<p class="assignment">
-				<strong>Assigned tutors:</strong>
-				{{ formatAssignedTutors(u._id) }}
-			</p>
-			<div v-if="isCardActive(`user-${u._id}`)" class="card-actions">
-				<button
-					class="btn-secondary btn"
-					type="button"
-					@click.stop="toggleUserEdit(u._id)"
-				>
-					{{ userEditing[u._id] ? "Close" : "Edit assignments" }}
-				</button>
-			</div>
-			<div v-if="userEditing[u._id]" class="assignmentControls">
-				<label class="assignmentLabel" :for="`tutor-select-${u._id}`">
-					Assign Tutors
-				</label>
-				<select
-					:id="`tutor-select-${u._id}`"
+                                <strong>Assigned tutors:</strong>
+                                {{ formatAssignedTutors(u._id) }}
+                        </p>
+                        <div v-if="isCardActive(`user-${u._id}`)" class="card-actions">
+                                <button
+                                        class="btn-secondary btn"
+                                        type="button"
+                                        @click.stop="toggleUserAssignmentEdit(u._id)"
+                                >
+                                        {{
+                                                userAssignmentEditing[u._id]
+                                                        ? "Close"
+                                                        : "Edit assignments"
+                                        }}
+                                </button>
+                                <button
+                                        class="btn-secondary btn"
+                                        type="button"
+                                        :disabled="allowedCoursesForUser(u._id).length === 0"
+                                        @click.stop="toggleUserCourseEdit(u._id)"
+                                >
+                                        {{
+                                                userCourseEditing[u._id]
+                                                        ? "Close courses"
+                                                        : "Edit course access"
+                                        }}
+                                </button>
+                        </div>
+                        <div v-if="userAssignmentEditing[u._id]" class="assignmentControls">
+                                <label class="assignmentLabel" :for="`tutor-select-${u._id}`">
+                                        Assign Tutors
+                                </label>
+                                <select
+                                        :id="`tutor-select-${u._id}`"
 					:disabled="tutors.length === 0"
 					multiple
 					:value="userAssignments[u._id] ?? []"
@@ -385,25 +470,51 @@ async function demoteTutor(tutorID: string) {
 					<option v-for="t in tutors" :key="t._id" :value="t._id">
 						{{ t.name }}
 					</option>
-				</select>
-				<div class="assignmentActions">
-					<button
-						class="btn btn-primary"
-						type="button"
-						@click.stop="saveAssignments(u._id)"
-					>
-						Save Assignments
-					</button>
-					<button
-						class="btn btn-secondary"
-						type="button"
-						@click.stop="promoteToTutor(u._id)"
-					>
-						Promote to Tutor
-					</button>
-				</div>
-			</div>
-		</div>
+                                </select>
+                                <div class="assignmentActions">
+                                        <button
+                                                class="btn btn-primary"
+                                                type="button"
+                                                @click.stop="saveAssignments(u._id)"
+                                        >
+                                                Save Assignments
+                                        </button>
+                                </div>
+                        </div>
+                        <div v-if="userCourseEditing[u._id]" class="course-editor">
+                                <p v-if="allowedCoursesForUser(u._id).length === 0" class="hint">
+                                        Assign at least one tutor with course permissions to enable courses for this user.
+                                </p>
+                                <div v-else class="checkbox-grid">
+                                        <label
+                                                v-for="course in allowedCoursesForUser(u._id)"
+                                                :key="course.id"
+                                        >
+                                                <input
+                                                        :checked="userCourseSelections[u._id]?.includes(course.id)"
+                                                        type="checkbox"
+                                                        @change="
+                                                                onUserCourseToggle(
+                                                                        u._id,
+                                                                        course.id,
+                                                                        ($event.target as HTMLInputElement).checked
+                                                                )
+                                                        "
+                                                />
+                                                {{ course.name }}
+                                        </label>
+                                </div>
+                                <div class="card-actions">
+                                        <button
+                                                class="btn btn-primary"
+                                                type="button"
+                                                @click.stop="saveUserCourses(u._id)"
+                                        >
+                                                Save course access
+                                        </button>
+                                </div>
+                        </div>
+                </div>
 
 		<p v-if="success" class="status">{{ success }}</p>
 		<p v-if="error" class="error">

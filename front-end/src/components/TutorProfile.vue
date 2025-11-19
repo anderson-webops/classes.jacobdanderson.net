@@ -2,7 +2,6 @@
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
-import AccountSecurity from "@/components/AccountSecurity.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
@@ -15,12 +14,13 @@ const { currentTutor, users } = storeToRefs(app);
 const error = ref("");
 const success = ref("");
 const deleteMe = useDeleteAccount("tutor");
+const editableTutor = ref<any | null>(null);
 
 /* editable (the tutor card itself) */
 const {
-	editing: tutorEdit,
-	toggle: toggleTutor,
-	save: saveTutor
+        editing: tutorEdit,
+        toggle: toggleTutor,
+        save: saveTutor
 } = useEditable("tutor");
 
 /* field list */
@@ -46,6 +46,14 @@ async function loadUsers() {
 
 onMounted(loadUsers);
 
+watch(
+        currentTutor,
+        value => {
+                editableTutor.value = value ? { ...value } : null;
+        },
+        { immediate: true }
+);
+
 const usersHeader = computed(() =>
 	currentTutor.value && users.value.length === 0 ? "No Users" : "Users"
 );
@@ -57,11 +65,40 @@ function activateCard(id: string) {
 }
 
 function isCardActive(id: string) {
-	return cardState.value === id;
+        return cardState.value === id;
 }
 
 function userCardId(id: string) {
-	return `user-${id}`;
+        return `user-${id}`;
+}
+
+function onTutorFieldUpdate(key: string, value: any) {
+        if (!editableTutor.value) editableTutor.value = { ...currentTutor.value };
+        editableTutor.value = { ...editableTutor.value, [key]: value };
+}
+
+function startTutorEdit() {
+        success.value = "";
+        error.value = "";
+        editableTutor.value = currentTutor.value ? { ...currentTutor.value } : null;
+        if (!tutorEdit.value) toggleTutor();
+}
+
+function cancelTutorEdit() {
+        editableTutor.value = currentTutor.value ? { ...currentTutor.value } : null;
+        if (tutorEdit.value) toggleTutor();
+}
+
+async function saveTutorProfile() {
+        if (!editableTutor.value || !currentTutor.value) return;
+        try {
+                success.value = "";
+                error.value = "";
+                await saveTutor(editableTutor.value);
+                success.value = "Updated tutor profile.";
+        } catch (e: any) {
+                error.value = e.response?.data?.message ?? e.message ?? "Unable to save tutor";
+        }
 }
 
 const userEditing = ref<Record<string, boolean>>({});
@@ -149,17 +186,21 @@ async function saveUserCourses(userID: string) {
 				Click your card to edit details or manage security.
 			</p>
 			<ul>
-				<li><h4>Tutor</h4></li>
+                                <li><h4>Tutor</h4></li>
 
-				<ProfileFields
-					:editing="tutorEdit"
-					:entity="currentTutor"
-					:fields="tutorFields"
-				/>
-			</ul>
-			<br />
-			<p class="assignment">
-				<strong>Courses enabled:</strong>
+                                <ProfileFields
+                                        :editing="tutorEdit"
+                                        :entity="tutorEdit ? editableTutor ?? currentTutor : currentTutor"
+                                        :fields="tutorFields"
+                                        :entity-id="currentTutor._id"
+                                        role="tutor"
+                                        :show-security="isCardActive('tutor')"
+                                        @update="onTutorFieldUpdate"
+                                />
+                        </ul>
+                        <br />
+                        <p class="assignment">
+                                <strong>Courses enabled:</strong>
 				{{
 					permittedCourses.length
 						? permittedCourses.map(course => course.name).join(", ")
@@ -167,30 +208,31 @@ async function saveUserCourses(userID: string) {
 				}}
 			</p>
 
-			<div v-if="isCardActive('tutor')" class="card-actions">
-				<button
-					class="btn-danger btn"
-					@click.stop="deleteMe(currentTutor!._id)"
-				>
-					Delete
-				</button>
-				<button
-					class="btn-primary btn"
-					@click.stop="
-						tutorEdit ? saveTutor(currentTutor) : toggleTutor()
-					"
-				>
-					{{ tutorEdit ? "Save" : "Edit" }}
-				</button>
-			</div>
-
-			<AccountSecurity
-				v-if="isCardActive('tutor')"
-				:email="currentTutor.email"
-				:entity-id="currentTutor._id"
-				role="tutor"
-			/>
-		</div>
+                        <div v-if="isCardActive('tutor')" class="card-actions">
+                                <button
+                                        class="btn-danger btn"
+                                        @click.stop="deleteMe(currentTutor!._id)"
+                                >
+                                        Delete
+                                </button>
+                                <button
+                                        class="btn-primary btn"
+                                        @click.stop="
+                                                tutorEdit ? saveTutorProfile() : startTutorEdit()
+                                        "
+                                >
+                                        {{ tutorEdit ? "Save" : "Edit" }}
+                                </button>
+                                <button
+                                        v-if="tutorEdit"
+                                        class="btn-secondary btn"
+                                        type="button"
+                                        @click.stop="cancelTutorEdit"
+                                >
+                                        Cancel
+                                </button>
+                        </div>
+                </div>
 
 		<!-- ───── Users under this tutor (read-only) ───── -->
 		<hr />

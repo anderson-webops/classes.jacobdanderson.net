@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
-import AccountSecurity from "@/components/AccountSecurity.vue";
+import { computed, ref, watch } from "vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { useEditable } from "@/composables/useEditable";
@@ -13,22 +12,51 @@ import { useAppStore } from "@/stores/app";
 const app = useAppStore();
 const { currentUser, tutors } = storeToRefs(app);
 const deleteMe = useDeleteAccount("user");
+const editableUser = ref<any | null>(null);
 
 /* -------------------------------------------------- */
 /*  editable helper                                   */
 /* -------------------------------------------------- */
 const { editing, toggle, save } = useEditable("user");
 
+watch(
+        currentUser,
+        value => {
+                editableUser.value = value ? { ...value } : null;
+        },
+        { immediate: true }
+);
+
 const cardActive = ref(false);
 
 function activateCard() {
-	cardActive.value = true;
+        cardActive.value = true;
+}
+
+function onUserFieldUpdate(key: string, value: any) {
+        if (!editableUser.value) editableUser.value = { ...currentUser.value };
+        editableUser.value = { ...editableUser.value, [key]: value };
+}
+
+function startEdit() {
+        editableUser.value = currentUser.value ? { ...currentUser.value } : null;
+        if (!editing.value) toggle();
+}
+
+function cancelEdit() {
+        editableUser.value = currentUser.value ? { ...currentUser.value } : null;
+        if (editing.value) toggle();
+}
+
+async function saveUserProfile() {
+        if (!editableUser.value || !currentUser.value) return;
+        await save(editableUser.value);
 }
 
 const assignedTutorNames = computed(() => {
-	if (!currentUser.value?.tutors?.length) return [] as string[];
-	return currentUser.value.tutors
-		.map(t =>
+        if (!currentUser.value?.tutors?.length) return [] as string[];
+        return currentUser.value.tutors
+                .map(t =>
 			typeof t === "string"
 				? (tutors.value.find(tt => tt._id === t)?.name ?? null)
 				: t.name
@@ -62,19 +90,23 @@ const fields = [
 				Click the card to manage your details.
 			</p>
 			<ul>
-				<li>
-					<h4>User</h4>
-				</li>
+                                <li>
+                                        <h4>User</h4>
+                                </li>
 
-				<ProfileFields
-					:editing="editing"
-					:entity="currentUser"
-					:fields="fields"
-				/>
-			</ul>
-			<br />
-			<p class="assignment">
-				<strong>Assigned tutor(s):</strong>
+                                <ProfileFields
+                                        :editing="editing"
+                                        :entity="editing ? editableUser ?? currentUser : currentUser"
+                                        :fields="fields"
+                                        :entity-id="currentUser._id"
+                                        role="user"
+                                        :show-security="cardActive"
+                                        @update="onUserFieldUpdate"
+                                />
+                        </ul>
+                        <br />
+                        <p class="assignment">
+                                <strong>Assigned tutor(s):</strong>
 				{{
 					assignedTutorNames.length
 						? assignedTutorNames.join(", ")
@@ -84,27 +116,28 @@ const fields = [
 
 			<div v-if="cardActive" class="card-actions">
 				<button
-					class="btn-danger btn"
-					@click.stop="deleteMe(currentUser!._id)"
-				>
-					Delete
-				</button>
-				<button
-					class="btn-primary btn"
-					@click.stop="editing ? save(currentUser) : toggle()"
-				>
-					{{ editing ? "Save" : "Edit" }}
-				</button>
-			</div>
-
-			<AccountSecurity
-				v-if="cardActive"
-				:email="currentUser.email"
-				:entity-id="currentUser._id"
-				role="user"
-			/>
-		</div>
-	</section>
+                                        class="btn-danger btn"
+                                        @click.stop="deleteMe(currentUser!._id)"
+                                >
+                                        Delete
+                                </button>
+                                <button
+                                        class="btn-primary btn"
+                                        @click.stop="editing ? saveUserProfile() : startEdit()"
+                                >
+                                        {{ editing ? "Save" : "Edit" }}
+                                </button>
+                                <button
+                                        v-if="editing"
+                                        class="btn-secondary btn"
+                                        type="button"
+                                        @click.stop="cancelEdit"
+                                >
+                                        Cancel
+                                </button>
+                        </div>
+                </div>
+        </section>
 </template>
 
 <style scoped>

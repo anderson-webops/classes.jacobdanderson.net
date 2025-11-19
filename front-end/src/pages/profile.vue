@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
+import AdminManageProfiles from "@/components/AdminManageProfiles.vue";
 import AdminProfile from "@/components/AdminProfile.vue";
 import CourseExplorer from "@/components/CourseExplorer.vue";
 
@@ -8,7 +9,7 @@ import TutorProfile from "@/components/TutorProfile.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import { useAppStore } from "@/stores/app";
 
-type ProfileTab = "profile" | "courses";
+type ProfileTab = "profile" | "courses" | "manage";
 
 defineOptions({ name: "ProfilePage" });
 
@@ -37,17 +38,36 @@ const profileRole = computed(() => {
 	return null;
 });
 
-const canBrowseCourses = computed(
-	() => !currentAdmin.value && (currentTutor.value || currentUser.value)
-);
+const canBrowseCourses = computed(() => currentTutor.value || currentUser.value);
 
 const activeTab = ref<ProfileTab>("profile");
 
-watch(canBrowseCourses, value => {
-	if (!value && activeTab.value !== "profile") {
-		activeTab.value = "profile";
-	}
+const tabs = computed(() => {
+        if (currentAdmin.value) {
+                return [
+                        { key: "profile", label: "Profile" },
+                        { key: "manage", label: "Manage profiles" },
+                        { key: "courses", label: "Course library" }
+                ];
+        }
+        if (canBrowseCourses.value) {
+                return [
+                        { key: "profile", label: "Profile" },
+                        { key: "courses", label: "Course library" }
+                ];
+        }
+        return [{ key: "profile", label: "Profile" }];
 });
+
+watch(
+        tabs,
+        value => {
+                if (!value.some(tab => tab.key === activeTab.value)) {
+                        activeTab.value = value[0].key as ProfileTab;
+                }
+        },
+        { immediate: true }
+);
 
 const heroTitle = computed(() => {
 	if (profileRole.value === "Administrator") {
@@ -101,38 +121,30 @@ function openAuthModal() {
 				<p>{{ heroSubtitle }}</p>
 			</header>
 
-			<div v-if="hasProfile" class="profile-card">
-				<div
-					v-if="canBrowseCourses"
-					class="profile-tabs"
-					role="tablist"
-				>
-					<button
-						:aria-selected="activeTab === 'profile'"
-						class="tab"
-						role="tab"
-						type="button"
-						@click="activeTab = 'profile'"
-					>
-						Profile
-					</button>
-					<button
-						:aria-selected="activeTab === 'courses'"
-						class="tab"
-						role="tab"
-						type="button"
-						@click="activeTab = 'courses'"
-					>
-						Course library
-					</button>
-				</div>
+                        <div v-if="hasProfile" class="profile-card">
+                                <div v-if="tabs.length > 1" class="profile-tabs" role="tablist">
+                                        <button
+                                                v-for="tab in tabs"
+                                                :key="tab.key"
+                                                :aria-selected="activeTab === tab.key"
+                                                class="tab"
+                                                role="tab"
+                                                type="button"
+                                                @click="activeTab = tab.key as ProfileTab"
+                                        >
+                                                {{ tab.label }}
+                                        </button>
+                                </div>
 
-				<component
-					:is="activeProfileComponent"
-					v-if="activeTab === 'profile'"
-				/>
-				<CourseExplorer v-else-if="canBrowseCourses" />
-			</div>
+                                <component
+                                        :is="activeProfileComponent"
+                                        v-if="activeTab === 'profile'"
+                                />
+                                <AdminManageProfiles
+                                        v-else-if="activeTab === 'manage' && currentAdmin"
+                                />
+                                <CourseExplorer v-else-if="activeTab === 'courses'" />
+                        </div>
 
 			<div v-else class="profile-empty">
 				<div class="empty-card">
