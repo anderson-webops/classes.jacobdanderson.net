@@ -115,7 +115,7 @@ function formatTutorCourses(tutorID: string) {
 }
 
 function activateCard(id: string) {
-	activeCard.value = id;
+	activeCard.value = activeCard.value === id ? null : id;
 }
 
 function isCardActive(id: string) {

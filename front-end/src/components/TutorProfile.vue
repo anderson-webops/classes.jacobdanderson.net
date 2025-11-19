@@ -53,7 +53,7 @@ const usersHeader = computed(() =>
 const cardState = ref<string | null>(null);
 
 function activateCard(id: string) {
-	cardState.value = id;
+	cardState.value = cardState.value === id ? null : id;
 }
 
 function isCardActive(id: string) {
