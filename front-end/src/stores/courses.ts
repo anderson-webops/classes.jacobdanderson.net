@@ -47,7 +47,30 @@ function slugify(value: string): string {
 }
 
 function normalizeContent(content: string): string {
-        return content.replace(/\n{3,}/g, "\n\n").trim();
+	const withoutReferences = content
+		.replace(/contentReference\[[^\]]*?\]\{[^}]*?\}/gi, "")
+		.replace(/\r\n/g, "\n");
+
+	const lines = withoutReferences.split("\n");
+	const nonEmptyLines = lines.filter(line => line.trim().length > 0);
+	const indent = nonEmptyLines.length
+		? Math.min(
+				...nonEmptyLines.map(line => line.match(/^\s*/)?.[0].length ?? 0)
+			)
+		: 0;
+
+	const dedented = indent
+		? lines
+				.map(line => (line.length >= indent ? line.slice(indent) : line.trim()))
+				.join("\n")
+		: lines.join("\n");
+
+	return dedented
+		.replace(/[ \t]+$/gm, "")
+		.replace(/\\"/g, '"')
+		.replace(/\\'/g, "'")
+		.replace(/\n{3,}/g, "\n\n")
+		.trim();
 }
 
 function extractLinks(item: RawCourseModuleItem) {
