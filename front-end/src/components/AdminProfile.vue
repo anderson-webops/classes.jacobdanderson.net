@@ -31,10 +31,10 @@ const adminDraft = ref<typeof currentAdmin.value | null>(null);
 const coursesStore = useCoursesStore();
 const { courses } = storeToRefs(coursesStore);
 const courseOptions = computed(() => courses.value ?? []);
-const courseNameMap = computed(() => {
-	const map: Record<string, string> = {};
-	for (const course of courseOptions.value) map[course.id] = course.name;
-	return map;
+const courseNameMap = computed<Record<string, string>>(() => {
+        const map: Record<string, string> = {};
+        for (const course of courseOptions.value ?? []) map[course.id] = course.name;
+        return map;
 });
 
 /* editable helper for the admin card */
@@ -119,9 +119,9 @@ function formatAssignedTutors(userID: string) {
 }
 
 function formatTutorCourses(tutorID: string) {
-	const list = tutorCourseSelections.value[tutorID] ?? [];
-	if (list.length === 0) return "No courses enabled";
-	return list.map(id => courseNameMap.value[id] ?? id).join(", ");
+        const list = tutorCourseSelections.value[tutorID] ?? [];
+        if (list.length === 0) return "No courses enabled";
+        return list.map(id => courseNameMap.value?.[id] ?? id).join(", ");
 }
 
 watch(
@@ -133,13 +133,17 @@ watch(
 );
 
 function activateCard(id: string) {
-	// Prevent collapsing the admin card while editing.
-	if (adminEdit.value && id === "admin") return;
-	if (id.startsWith("user-")) {
-		const userID = id.slice("user-".length);
-		if (userEditing.value[userID]) return; // keep open while editing
-	}
-	activeCard.value = activeCard.value === id ? null : id;
+        // Prevent collapsing the admin card while editing.
+        if (adminEdit.value && id === "admin") return;
+        if (id.startsWith("tutor-")) {
+                const tutorID = id.slice("tutor-".length);
+                if (tutorEditing.value[tutorID]) return; // keep open while editing
+        }
+        if (id.startsWith("user-")) {
+                const userID = id.slice("user-".length);
+                if (userEditing.value[userID]) return; // keep open while editing
+        }
+        activeCard.value = activeCard.value === id ? null : id;
 }
 
 function isCardActive(id: string) {
@@ -550,13 +554,13 @@ function confirmDeleteAdmin() {
 				<p class="assignment">
 					<strong>Course access:</strong>
 					{{
-						(userCourseSelections[u._id]?.length ?? 0)
-							? (userCourseSelections[u._id] ?? [])
-									.map(id => courseNameMap.value[id] ?? id)
-									.join(", ")
-							: "No courses assigned"
-					}}
-				</p>
+                                                (userCourseSelections[u._id]?.length ?? 0)
+                                                        ? (userCourseSelections[u._id] ?? [])
+                                                                        .map(id => courseNameMap.value?.[id] ?? id)
+                                                                        .join(", ")
+                                                        : "No courses assigned"
+                                        }}
+                                </p>
 				<div v-if="isCardActive(`user-${u._id}`)" class="card-actions">
 					<button
 						v-if="!userEditing[u._id]"
@@ -792,11 +796,11 @@ li {
 }
 
 div.tutorList {
-	outline: black solid 1px;
-	padding-bottom: 1%;
-	width: 35%;
-	margin: auto;
-	cursor: pointer;
+        outline: black solid 1px;
+        padding: 0.5rem 0 1.25rem;
+        width: 35%;
+        margin: auto;
+        cursor: pointer;
 	transition:
 		border-color 0.2s ease,
 		box-shadow 0.2s ease;
