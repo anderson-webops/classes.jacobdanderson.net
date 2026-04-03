@@ -3,14 +3,10 @@ import DOMPurify from "dompurify";
 import { marked } from "marked";
 import { computed, ref, watch } from "vue";
 import { api } from "@/api";
+import { ADMIN_RECIPIENTS } from "@/modules/adminRecipients";
 
 // allow single newlines to render as <br> and keep GitHub-flavored markdown
 marked.setOptions({ breaks: true, gfm: true });
-
-interface Recipient {
-	name: string;
-	emails: string[];
-}
 
 interface MatchedUserAccount {
 	_id: string;
@@ -26,20 +22,6 @@ interface SendAssociations {
 type DateInputEl = HTMLInputElement & { showPicker?: () => void };
 
 const CUSTOM_OPTION = "Custom";
-
-const recipients: Recipient[] = [
-	{ name: "Abby", emails: ["shihchungchou2014@gmail.com"] },
-	{ name: "Saba", emails: ["ana82g@gmail.com", "saba13g@gmail.com"] },
-	{ name: "Jinen", emails: ["jinengandhi10@gmail.com"] },
-	{ name: "Devin", emails: ["terminatordrake@gmail.com"] },
-	{ name: "Parmer", emails: ["parmarsfl@gmail.com"] },
-	{ name: "Jayden", emails: ["jaydenpfl@gmail.com"] },
-	{
-		name: "Test",
-		emails: ["classes@jacobdanderson.net", "classes@jacobdanderson.net"]
-	}
-	// { name: "Abby (Abigail)", emails: ["parmarsfl@gmail.com"] }
-];
 
 const to = ref("");
 const subject = ref("");
@@ -70,8 +52,10 @@ function renderPreview(markdown: string): string {
 }
 
 const livePreviewHtml = computed(() => renderPreview(md.value));
-const selectedRecipient = computed<Recipient | undefined>(() =>
-	recipients.find(recipient => recipient.name === selectedRecipientName.value)
+const selectedRecipient = computed(() =>
+	ADMIN_RECIPIENTS.find(
+		recipient => recipient.name === selectedRecipientName.value
+	)
 );
 const isCustomRecipient = computed(
 	() => selectedRecipientName.value === CUSTOM_OPTION
@@ -90,7 +74,7 @@ watch(
 			to.value = "";
 			return;
 		}
-		const recip = recipients.find(r => r.name === name);
+		const recip = ADMIN_RECIPIENTS.find(r => r.name === name);
 		if (!recip) {
 			to.value = "";
 			return;
@@ -271,7 +255,7 @@ function parseDateIso(value: string): string | null {
 				<select id="recipient-select" v-model="selectedRecipientName">
 					<option disabled value="">Select a person</option>
 					<option
-						v-for="recipient in recipients"
+						v-for="recipient in ADMIN_RECIPIENTS"
 						:key="recipient.name"
 						:value="recipient.name"
 					>
