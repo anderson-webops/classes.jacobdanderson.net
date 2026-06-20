@@ -142,11 +142,11 @@ function supplementalLabLabelReplacement(_match: string, number: string) {
 function compactTitleFocus(text: string, fallback: string) {
 	const compacted = cleanTitleText(text)
 		.replace(
-			/:\s*(?:Applied Challenge|Core Project|Debugging and Failure Modes|Diagnostic Checkpoint|Extension Challenge|Fluency Drill|Focused Practice|Modeling or Error Analysis|Open-Ended Variant|Planning and Architecture|Review and Reflection|Standards Practice Set|Verification and Reflection)$/i,
+			/:\s*(?:Applied Challenge|Core Project|Debugging and Failure Modes|Diagnostic Checkpoint|Understanding Check|Extension Challenge|Fluency Drill|Focused Practice|Modeling or Error Analysis|Open-Ended Variant|Planning and Architecture|Review and Reflection|Standards Practice Set|Verification and Reflection)$/i,
 			""
 		)
 		.replace(
-			/^(?:Applied Challenge|Core Project|Debugging and Failure Modes|Diagnostic Checkpoint|Extension Challenge|Fluency Drill|Focused Practice|Modeling or Error Analysis|Open-Ended Variant|Planning and Architecture|Review|Standards Practice Set|Verification Review):\s*/i,
+			/^(?:Applied Challenge|Core Project|Debugging and Failure Modes|Diagnostic Checkpoint|Understanding Check|Extension Challenge|Fluency Drill|Focused Practice|Modeling or Error Analysis|Open-Ended Variant|Planning and Architecture|Review|Standards Practice Set|Verification Review):\s*/i,
 			""
 		)
 		.replace(/^(?:Module|Unit|Chapter)\s+\d+\s*[:.-]?\s*/i, "")
@@ -296,7 +296,7 @@ function contextualizeGenericItemTitle(
 	itemTitle: string
 ) {
 	if (itemTitle === "Diagnostic Checkpoint") {
-		return "Diagnostic Checkpoint";
+		return "Understanding Check";
 	}
 
 	const supplementalMatch = itemTitle.match(/^(.+?) Supplemental ([2-9])$/i);
@@ -352,6 +352,7 @@ function conciseGenericItemTitle(suffix: string) {
 		"Core Project",
 		"Debugging and Failure Modes",
 		"Diagnostic Checkpoint",
+		"Understanding Check",
 		"Extension Challenge",
 		"Fluency Drill",
 		"Focused Practice",
@@ -362,6 +363,8 @@ function conciseGenericItemTitle(suffix: string) {
 		"Standards Practice Set",
 		"Verification and Reflection"
 	]);
+
+	if (trimmed === "Diagnostic Checkpoint") return "Understanding Check";
 
 	return genericSuffixes.has(trimmed) ? trimmed : null;
 }
@@ -381,6 +384,7 @@ function contextualizeGenericDisplayTitles(course: RawCourse) {
 		"Core Project",
 		"Debugging and Failure Modes",
 		"Diagnostic Checkpoint",
+		"Understanding Check",
 		"Extension Challenge",
 		"Extension Lab",
 		"Extension Practice",
@@ -2640,7 +2644,7 @@ function cleanSupportTopicTitle(title: string) {
 		)
 		.replace(/^[A-Z]{1,5}\d+\s+Supplemental Graphics Project:\s*/iu, "")
 		.replace(
-			/^(?:Applied Challenge|Core Project|Debugging and Failure Modes|Diagnostic Checkpoint|Extension Challenge|Fluency Drill|Focused Practice|Guided Example|Modeling or Error Analysis|Open-Ended Variant|Planning and Architecture|Project|Review and Reflection|Review|Standards Practice Set|Supplemental Project|Verification and Reflection|Verification Review|Worked Example|Checkpoint):\s*/iu,
+			/^(?:Applied Challenge|Core Project|Debugging and Failure Modes|Diagnostic Checkpoint|Understanding Check|Extension Challenge|Fluency Drill|Focused Practice|Guided Example|Modeling or Error Analysis|Open-Ended Variant|Planning and Architecture|Project|Review and Reflection|Review|Standards Practice Set|Supplemental Project|Verification and Reflection|Verification Review|Worked Example|Checkpoint):\s*/iu,
 			""
 		)
 		.replace(

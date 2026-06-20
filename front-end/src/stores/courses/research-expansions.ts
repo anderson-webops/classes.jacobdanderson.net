@@ -362,10 +362,10 @@ function buildStandardsModule(
 			{
 				title: `${courseLabel} Source Map`,
 				content: [
-					`**Source map:** ${courseLabel} uses these standards, documentation, and tooling references to stay aligned with current expectations. Priority is **${profile.priority}**, so these items shape pacing and practice before lower-priority enrichment.`,
+					`**Source map:** ${courseLabel} uses these standards, documentation, and tooling references to stay aligned with current expectations. Priority is **${profile.priority}**, so these references should guide core pacing and practice before optional enrichment.`,
 					`**Authoritative sources to use:**\n${sourceBullets(profile.sources)}`,
 					standardsEvidenceNote(courseLabel),
-					`**Evidence target:** ${courseLabel} is traceable to these standards, docs, or tooling references rather than only to inherited project names.`
+					`**Evidence target:** ${courseLabel} is traceable to these standards, docs, or tooling references rather than only to project titles.`
 				].join("\n\n")
 			},
 			{
@@ -375,7 +375,7 @@ function buildStandardsModule(
 					`**Core skills:**\n${bullets(profile.gaps)}`,
 					courseUseNote(
 						courseLabel,
-						`In ${courseLabel}, one core-skill item can become a short lesson, a diagnostic checkpoint, or a remediation path depending on the course pacing.`
+						`In ${courseLabel}, each core-skill item can become a short explanation, a practice check, or a focused review path depending on the current need.`
 					),
 					`**Evidence target:** Lesson or project readiness in ${courseLabel} requires a concrete explanation, worked example, practice task, and observable evidence for one of these skills.`
 				].join("\n\n")
@@ -389,7 +389,7 @@ function buildStandardsModule(
 						courseLabel,
 						`Topic additions in ${courseLabel} are strongest when they include vocabulary, one representative example, one common-error check, and one transfer task.`
 					),
-					`**Common pitfalls:** Topics in ${courseLabel} are strongest when they connect to real projects. If the connection is unclear, a smaller bridge lesson belongs before the major project.`
+					`**Common pitfalls:** New topics in ${courseLabel} need a visible connection to a real project. If the connection is unclear, start with a smaller bridge practice before the major project.`
 				].join("\n\n")
 			},
 			{
@@ -397,7 +397,7 @@ function buildStandardsModule(
 				content: [
 					`**Course boundaries:** The priority and expansion topics clarify what belongs in ${courseLabel} and what fits better in a prerequisite, follow-up, or separate course. This keeps the course coherent instead of absorbing every adjacent topic.`,
 					`**Boundary rule:** Keep a topic inside ${courseLabel} when it directly supports the projects, assessments, and expected readiness level. Move the topic elsewhere when it requires a different prerequisite chain, a different safety model, or a level of depth that would crowd out the core purpose.`,
-					`**Evidence target:** The ${courseLabel} boundary, one near-term addition, and one intentionally deferred topic are explicit.`
+					`**Evidence target:** The ${courseLabel} boundary, one near-term addition, and one topic saved for a later course are explicit.`
 				].join("\n\n")
 			}
 		],
