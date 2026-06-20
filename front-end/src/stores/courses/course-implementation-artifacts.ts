@@ -696,6 +696,23 @@ function appendModule(course: RawCourse, module: RawCourseModule) {
 	if (!hasModule(course, module.title)) course.modules.push(module);
 }
 
+function insertBeforeFirstNonUnitySequenceModule(
+	course: RawCourse,
+	module: RawCourseModule
+) {
+	if (hasModule(course, module.title)) return;
+
+	const insertionIndex = course.modules.findIndex(
+		existing => !existing.title.startsWith("UGD")
+	);
+
+	if (insertionIndex === -1) {
+		course.modules.push(module);
+	} else {
+		course.modules.splice(insertionIndex, 0, module);
+	}
+}
+
 function projectItem(title: string, content: string): RawCourseModuleItem {
 	return { title, content };
 }
@@ -1662,7 +1679,9 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 		}
 	];
 
-	for (const module of modules) appendModule(course, module);
+	for (const module of modules) {
+		insertBeforeFirstNonUnitySequenceModule(course, module);
+	}
 }
 
 function addCppMatrixModule(courseId: string, course: RawCourse) {
@@ -2873,7 +2892,7 @@ function addUnityFullProjectWorkflowModules(
 ) {
 	if (courseId !== "unity-game-development") return;
 
-	appendModule(course, {
+	insertBeforeFirstNonUnitySequenceModule(course, {
 		title: "UGD7 Testing, Profiling, Builds, CI, and Asset Pipeline",
 		curriculum: [
 			{
@@ -2911,7 +2930,7 @@ function addUnityFullProjectWorkflowModules(
 		]
 	});
 
-	appendModule(course, {
+	insertBeforeFirstNonUnitySequenceModule(course, {
 		title: "UGD8 Full-Project Starter and Review Repository Plan",
 		curriculum: [
 			{

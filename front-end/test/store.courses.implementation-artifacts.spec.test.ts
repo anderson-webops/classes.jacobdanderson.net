@@ -260,6 +260,22 @@ describe("implemented course development artifacts", () => {
 
 		expect(text).toContain("Unity 6.3 LTS");
 		expect(rebuiltModules.length).toBeGreaterThanOrEqual(7);
+		expect(course.modules[0].title).toBe(
+			"UGD0 Unity 6.3 LTS Setup, Assets, and Project Hygiene"
+		);
+		expect(
+			course.modules.findIndex(module =>
+				module.title.startsWith(
+					"Legacy Snapshot Archive: GD6 Collision"
+				)
+			)
+		).toBeGreaterThan(
+			course.modules.findIndex(module =>
+				module.title.startsWith(
+					"UGD8 Full-Project Starter and Review Repository Plan"
+				)
+			)
+		);
 		expect(
 			rebuiltModules.every(
 				module => module.supplementalProjects.length >= 2
