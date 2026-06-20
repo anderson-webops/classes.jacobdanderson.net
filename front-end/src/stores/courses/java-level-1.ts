@@ -92,7 +92,7 @@ function buildJavaFoundationGuidance(
 
 	return buildImplementationLabGuidance({
 		courseFamily: "Java Level 1",
-		moduleTitle: `${context.code} Java Foundations Build ${build}: Implementation Lab`,
+		moduleTitle: `${context.code} Java Foundations Build ${build}: Practice Studio`,
 		section,
 		context
 	});
@@ -170,7 +170,7 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/JS1-Division-Facts"
 				},
 				{
-					title: "Variable Types & Input/Output Supplemental 3",
+					title: "Variable Types & Input/Output Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "JS1 Variable Types & Input/Output",
@@ -239,7 +239,7 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/JS2-Snowman"
 				},
 				{
-					title: "Casting and Operators Supplemental 3",
+					title: "Casting and Operators Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "JS2 Casting and Operators",
@@ -467,12 +467,12 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/JS5-Random-Number-Guesser"
 				},
 				{
-					title: "Practice with Loops & Conditionals Supplemental 2",
+					title: "Practice with Loops & Conditionals Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "JS5 Practice with Loops & Conditionals",
 						itemTitle:
-							"Practice with Loops & Conditionals Supplemental 2",
+							"Practice with Loops & Conditionals Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -482,12 +482,12 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-03-js5-practice-with-loops-conditionals-supplemental-2/solution"
 				},
 				{
-					title: "Practice with Loops & Conditionals Supplemental 3",
+					title: "Practice with Loops & Conditionals Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "JS5 Practice with Loops & Conditionals",
 						itemTitle:
-							"Practice with Loops & Conditionals Supplemental 3",
+							"Practice with Loops & Conditionals Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -549,11 +549,11 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/APCS/tree/main/APCS-Check-in-1/solution"
 				},
 				{
-					title: "Check In #1 Supplemental 2",
+					title: "Check In #1 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "Check-In #1",
-						itemTitle: "Check In #1 Supplemental 2",
+						itemTitle: "Check In #1 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -563,11 +563,11 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-05-check-in-1-supplemental-2/solution"
 				},
 				{
-					title: "Check In #1 Supplemental 3",
+					title: "Check In #1 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "Check-In #1",
-						itemTitle: "Check In #1 Supplemental 3",
+						itemTitle: "Check In #1 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -880,11 +880,11 @@ export const javaLevel1Course: RawCourse = {
 					})
 				},
 				{
-					title: "Check In #2 Supplemental 2",
+					title: "Check In #2 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "Check-In #2",
-						itemTitle: "Check In #2 Supplemental 2",
+						itemTitle: "Check In #2 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -894,11 +894,11 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-07-check-in-2-supplemental-2/solution"
 				},
 				{
-					title: "Check In #2 Supplemental 3",
+					title: "Check In #2 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "Check-In #2",
-						itemTitle: "Check In #2 Supplemental 3",
+						itemTitle: "Check In #2 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -958,11 +958,11 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/JS9-Simple-Battleship"
 				},
 				{
-					title: "Master Project: Battleship Supplemental 2",
+					title: "Master Project: Battleship Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "JS9 Master Project: Battleship",
-						itemTitle: "Master Project: Battleship Supplemental 2",
+						itemTitle: "Master Project: Battleship Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -972,11 +972,11 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-09-js9-master-project-battleship-supplemental-2/solution"
 				},
 				{
-					title: "Master Project: Battleship Supplemental 3",
+					title: "Master Project: Battleship Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "JS9 Master Project: Battleship",
-						itemTitle: "Master Project: Battleship Supplemental 3",
+						itemTitle: "Master Project: Battleship Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -988,7 +988,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "J1X02 Java Foundations Build 13: Implementation Lab",
+			title: "J1X02 Java Foundations Build 13: Practice Studio",
 			curriculum: [
 				{
 					title: "J1X02 Java Foundations Build 13: Core Concepts",
@@ -1021,13 +1021,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-02-java-foundations-build-13/solution"
 				},
 				{
-					title: "J1X02 Java Foundations Build 13 Supplemental 2: Implementation Lab",
+					title: "J1X02 Java Foundations Build 13 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X02 Java Foundations Build 13: Implementation Lab",
+							"J1X02 Java Foundations Build 13: Practice Studio",
 						itemTitle:
-							"J1X02 Java Foundations Build 13 Supplemental 2: Implementation Lab",
+							"J1X02 Java Foundations Build 13 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1037,13 +1037,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-11-applied-studio-12-j1x02-java-foundations-build-13-supplemental-2/solution"
 				},
 				{
-					title: "J1X02 Java Foundations Build 13 Supplemental 3: Implementation Lab",
+					title: "J1X02 Java Foundations Build 13 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X02 Java Foundations Build 13: Implementation Lab",
+							"J1X02 Java Foundations Build 13: Practice Studio",
 						itemTitle:
-							"J1X02 Java Foundations Build 13 Supplemental 3: Implementation Lab",
+							"J1X02 Java Foundations Build 13 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1055,7 +1055,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "J1X03 Java Foundations Build 14: Implementation Lab",
+			title: "J1X03 Java Foundations Build 14: Practice Studio",
 			curriculum: [
 				{
 					title: "J1X03 Java Foundations Build 14: Core Concepts",
@@ -1088,13 +1088,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-03-java-foundations-build-14/solution"
 				},
 				{
-					title: "J1X03 Java Foundations Build 14 Supplemental 2: Implementation Lab",
+					title: "J1X03 Java Foundations Build 14 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X03 Java Foundations Build 14: Implementation Lab",
+							"J1X03 Java Foundations Build 14: Practice Studio",
 						itemTitle:
-							"J1X03 Java Foundations Build 14 Supplemental 2: Implementation Lab",
+							"J1X03 Java Foundations Build 14 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1104,13 +1104,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-13-applied-studio-13-j1x03-java-foundations-build-14-supplemental-2/solution"
 				},
 				{
-					title: "J1X03 Java Foundations Build 14 Supplemental 3: Implementation Lab",
+					title: "J1X03 Java Foundations Build 14 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X03 Java Foundations Build 14: Implementation Lab",
+							"J1X03 Java Foundations Build 14: Practice Studio",
 						itemTitle:
-							"J1X03 Java Foundations Build 14 Supplemental 3: Implementation Lab",
+							"J1X03 Java Foundations Build 14 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1122,7 +1122,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "J1X04 Java Foundations Build 15: Implementation Lab",
+			title: "J1X04 Java Foundations Build 15: Practice Studio",
 			curriculum: [
 				{
 					title: "J1X04 Java Foundations Build 15: Core Concepts",
@@ -1155,13 +1155,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-04-java-foundations-build-15/solution"
 				},
 				{
-					title: "J1X04 Java Foundations Build 15 Supplemental 2: Implementation Lab",
+					title: "J1X04 Java Foundations Build 15 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X04 Java Foundations Build 15: Implementation Lab",
+							"J1X04 Java Foundations Build 15: Practice Studio",
 						itemTitle:
-							"J1X04 Java Foundations Build 15 Supplemental 2: Implementation Lab",
+							"J1X04 Java Foundations Build 15 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1171,13 +1171,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-15-applied-studio-14-j1x04-java-foundations-build-15-supplemental-2/solution"
 				},
 				{
-					title: "J1X04 Java Foundations Build 15 Supplemental 3: Implementation Lab",
+					title: "J1X04 Java Foundations Build 15 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X04 Java Foundations Build 15: Implementation Lab",
+							"J1X04 Java Foundations Build 15: Practice Studio",
 						itemTitle:
-							"J1X04 Java Foundations Build 15 Supplemental 3: Implementation Lab",
+							"J1X04 Java Foundations Build 15 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1189,7 +1189,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "J1X05 Java Foundations Build 16: Implementation Lab",
+			title: "J1X05 Java Foundations Build 16: Practice Studio",
 			curriculum: [
 				{
 					title: "J1X05 Java Foundations Build 16: Core Concepts",
@@ -1222,13 +1222,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-05-java-foundations-build-16/solution"
 				},
 				{
-					title: "J1X05 Java Foundations Build 16 Supplemental 2: Implementation Lab",
+					title: "J1X05 Java Foundations Build 16 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X05 Java Foundations Build 16: Implementation Lab",
+							"J1X05 Java Foundations Build 16: Practice Studio",
 						itemTitle:
-							"J1X05 Java Foundations Build 16 Supplemental 2: Implementation Lab",
+							"J1X05 Java Foundations Build 16 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1238,13 +1238,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-17-applied-studio-15-j1x05-java-foundations-build-16-supplemental-2/solution"
 				},
 				{
-					title: "J1X05 Java Foundations Build 16 Supplemental 3: Implementation Lab",
+					title: "J1X05 Java Foundations Build 16 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X05 Java Foundations Build 16: Implementation Lab",
+							"J1X05 Java Foundations Build 16: Practice Studio",
 						itemTitle:
-							"J1X05 Java Foundations Build 16 Supplemental 3: Implementation Lab",
+							"J1X05 Java Foundations Build 16 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1256,7 +1256,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "J1X06 Java Foundations Build 17: Implementation Lab",
+			title: "J1X06 Java Foundations Build 17: Practice Studio",
 			curriculum: [
 				{
 					title: "J1X06 Java Foundations Build 17: Core Concepts",
@@ -1289,13 +1289,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-06-java-foundations-build-17/solution"
 				},
 				{
-					title: "J1X06 Java Foundations Build 17 Supplemental 2: Implementation Lab",
+					title: "J1X06 Java Foundations Build 17 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X06 Java Foundations Build 17: Implementation Lab",
+							"J1X06 Java Foundations Build 17: Practice Studio",
 						itemTitle:
-							"J1X06 Java Foundations Build 17 Supplemental 2: Implementation Lab",
+							"J1X06 Java Foundations Build 17 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1305,13 +1305,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-19-applied-studio-16-j1x06-java-foundations-build-17-supplemental-2/solution"
 				},
 				{
-					title: "J1X06 Java Foundations Build 17 Supplemental 3: Implementation Lab",
+					title: "J1X06 Java Foundations Build 17 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"J1X06 Java Foundations Build 17: Implementation Lab",
+							"J1X06 Java Foundations Build 17: Practice Studio",
 						itemTitle:
-							"J1X06 Java Foundations Build 17 Supplemental 3: Implementation Lab",
+							"J1X06 Java Foundations Build 17 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1323,14 +1323,14 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "Temperature Converter: Implementation Lab",
+			title: "Temperature Converter: Practice Studio",
 			curriculum: [
 				{
 					title: "Temperature Converter: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"Temperature Converter: Implementation Lab",
+							"Temperature Converter: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1339,7 +1339,7 @@ export const javaLevel1Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"Temperature Converter: Implementation Lab",
+							"Temperature Converter: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1348,7 +1348,7 @@ export const javaLevel1Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"Temperature Converter: Implementation Lab",
+							"Temperature Converter: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1360,7 +1360,7 @@ export const javaLevel1Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"Temperature Converter: Implementation Lab",
+							"Temperature Converter: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1371,7 +1371,7 @@ export const javaLevel1Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"Temperature Converter: Implementation Lab",
+							"Temperature Converter: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1379,13 +1379,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/JS2-Temperature-Converter"
 				},
 				{
-					title: "Temperature Converter Supplemental 2: Implementation Lab",
+					title: "Temperature Converter Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"Temperature Converter: Implementation Lab",
+							"Temperature Converter: Practice Studio",
 						itemTitle:
-							"Temperature Converter Supplemental 2: Implementation Lab",
+							"Temperature Converter Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1395,13 +1395,13 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-21-applied-studio-17-temperature-converter-supplemental-2/solution"
 				},
 				{
-					title: "Temperature Converter Supplemental 3: Implementation Lab",
+					title: "Temperature Converter Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle:
-							"Temperature Converter: Implementation Lab",
+							"Temperature Converter: Practice Studio",
 						itemTitle:
-							"Temperature Converter Supplemental 3: Implementation Lab",
+							"Temperature Converter Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),

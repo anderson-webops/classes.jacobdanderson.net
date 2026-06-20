@@ -3724,6 +3724,25 @@ describe("course text quality normalization", () => {
 		).toContain("divisibility checks");
 	});
 
+	it("keeps Java Level 1 applied build labels practice-oriented", async () => {
+		const course = await loadRawCourse("java-level-1");
+		expect(course).not.toBeNull();
+
+		const source = fs.readFileSync(
+			"src/stores/courses/java-level-1.ts",
+			"utf8"
+		);
+		const corpus = allCourseText(course);
+
+		expect(source).not.toMatch(/\bImplementation Lab\b/);
+		expect(source).not.toMatch(/\bSupplemental [23]\b/);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/);
+		expect(corpus).not.toMatch(/\bSupplemental [23]\b/);
+		expect(corpus).toContain("J1X02 Java Foundations Build 13: Practice Studio");
+		expect(corpus).toContain("J1X06 Java Foundations Build 17 Extension Practice");
+		expect(corpus).toContain("Temperature Converter Transfer Practice");
+	});
+
 	it("formats inline project steps and support labels as readable markdown blocks", async () => {
 		const [scratchLevel1, scratchLevel2, pygames] = await Promise.all([
 			loadRawCourse("scratch-level-1"),
