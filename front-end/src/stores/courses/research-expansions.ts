@@ -169,7 +169,7 @@ function projectOptionGoal(
 		return `**Goal:** Build **${optionTitle}** for ${courseLabel} as a reasoning artifact with an explicit state representation, decision rule or search strategy, traceable output, and limitation note.${optionContext}`;
 	}
 	if (family.includes("algebra")) {
-		return `**Goal:** Use **${optionTitle}** to model, solve, graph, or justify relationships in ${courseLabel} with visible steps and a reasonableness check.${optionContext}`;
+		return `**Goal:** The ${optionTitle} project models, solves, graphs, or justifies relationships in ${courseLabel} with visible steps and a reasonableness check.${optionContext}`;
 	}
 	if (family.includes("c++")) {
 		return `**Goal:** Build **${optionTitle}** for ${courseLabel} as a program with a documented compile command, data representation, ownership or container decision, and test cases.${optionContext}`;

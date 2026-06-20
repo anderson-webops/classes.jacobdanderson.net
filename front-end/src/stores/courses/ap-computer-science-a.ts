@@ -766,7 +766,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Specifications, Design, and Testability",
 					content:
-						"Use APCS9 for reading a spec, identifying missing requirements, and designing code that can be tested cleanly instead of guessed into existence.",
+						"APCS9 focuses on reading a spec, identifying missing requirements, and designing code that can be tested cleanly instead of guessed into existence.",
 					mediaLink: media("apcs9-software-development-lifecycle.png")
 				},
 				{
