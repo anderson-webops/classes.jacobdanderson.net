@@ -138,7 +138,7 @@ const graphicsBranchModules: RawCourseModule[] = [
 			{
 				title: "Coordinate Systems and Drawing Primitives",
 				content:
-					"**Concept path:** This section covers the drawing surface as a coordinate system with an origin, x/y directions, widths, heights, colors, and layering order. Predict where a shape appears before running the program.\n\n**Practice targets:** Draw one shape by hand from its coordinates, change only one parameter, and predict the visual effect before rerunning. Include one overlap or layering example so drawing order is visible.\n\n**Evidence target:** The coordinate explanation should account for both position and size. A common error is treating width and height as the second corner instead of dimensions measured from the starting coordinate."
+					"**Concept path:** The drawing surface is a coordinate system with an origin, x/y directions, widths, heights, colors, and layering order. Predict where a shape appears before running the program.\n\n**Practice targets:** Draw one shape by hand from its coordinates, change only one parameter, and predict the visual effect before rerunning. Include one overlap or layering example so drawing order is visible.\n\n**Evidence target:** The coordinate explanation should account for both position and size. A common error is treating width and height as the second corner instead of dimensions measured from the starting coordinate."
 			},
 			{
 				title: "Java Graphics Project 1: Rainbow",

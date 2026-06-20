@@ -442,7 +442,7 @@ Slope-intercept form is \`y = mx + b\`, where \`m\` is the slope and \`b\` is th
 - Delivery growth from the kick-off project: \`y = 15x\`
 - If a line has slope \`5\` and goes through \`(1, 8)\`, then \`y = 5x + 3\`
 
-Skill target: Read a graph, identify the intercept, and explain what the slope means in context.
+The graph reading target is to identify the intercept and explain what the slope means in context.
 				`.trim()
 			)
 		]),
@@ -459,7 +459,7 @@ Point-slope form is \`y - y1 = m(x - x1)\`. It is especially useful when the slo
 - If slope is \`5\` and the line goes through \`(1, 8)\`, one point-slope form is \`y - 8 = 5(x - 1)\`
 - Converting \`y - 8 = 5(x - 1)\` to standard form gives \`-5x + y = 3\`
 
-Practice target: Moving between point-slope, slope-intercept, and standard form until the three representations feel interchangeable.
+Practice moving between point-slope, slope-intercept, and standard form until the three representations feel interchangeable.
 				`.trim()
 			)
 		]),
@@ -914,7 +914,7 @@ The master project closes the course with a short independent explanation.
 			createLesson(
 				"Additional Practice",
 				`
-Use the remaining source answers for a compact end-of-course review. The goal is to choose a method deliberately: graphing for visual interpretation, substitution when a variable is already isolated, and elimination when terms can cancel cleanly. Each answer should be checked in both original equations. When the result is \`no solution\` or \`infinite solutions\`, explain the line relationship instead of treating the answer like a missing ordered pair.
+Use the remaining source answers for a compact end-of-course review. Choose a method deliberately: graphing for visual interpretation, substitution when a variable is already isolated, and elimination when terms can cancel cleanly. Each answer should be checked in both original equations. When the result is \`no solution\` or \`infinite solutions\`, explain the line relationship instead of treating the answer like a missing ordered pair.
 
 **Selected answers**
 

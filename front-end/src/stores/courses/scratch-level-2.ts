@@ -1238,7 +1238,7 @@ Typing practice is not required to complete the Scratch course, but it can make 
 				{
 					title: "Concept Path",
 					content:
-						"Advanced Scratch concepts map directly to Python readiness: lists store collections, custom blocks behave like functions, inputs resemble parameters, loops repeat actions, conditionals branch, and variables preserve state. The goal is to explain a Scratch system in text-code terms without losing how the original project behaves."
+						"Advanced Scratch concepts map directly to Python readiness: lists store collections, custom blocks behave like functions, inputs resemble parameters, loops repeat actions, conditionals branch, and variables preserve state. The explanation should translate a Scratch system into text-code terms without losing how the original project behaves."
 				},
 				{
 					title: "Design and Planning Map",

@@ -71,7 +71,7 @@ export const cppLevel2Course: RawCourse = {
 				{
 					title: "CPPM1 Project 2: Pointer Error Examples",
 					content:
-						"Trace incorrect pointer patterns and explain exactly why they fail. Skill target: name the bug, not just observe that the program misbehaves.",
+						"Trace incorrect pointer patterns and explain exactly why they fail. The explanation should name the bug, not just observe that the program misbehaves.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointer-Error-Examples",
 					solutionLink:
@@ -274,7 +274,7 @@ export const cppLevel2Course: RawCourse = {
 				{
 					title: "CPPM5 Project 3: Modern Ownership Reflection",
 					content:
-						"Pick one manual allocation from a capstone and compare it with a standard container or `std::unique_ptr` version. The goal is to compare ownership responsibilities, not to rewrite the whole project.",
+						"Pick one manual allocation from a capstone and compare it with a standard container or `std::unique_ptr` version. The comparison focuses on ownership responsibilities, not rewriting the whole project.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Modern-Ownership-Reflection",
 					solutionLink:

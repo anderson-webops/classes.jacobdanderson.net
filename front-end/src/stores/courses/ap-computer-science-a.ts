@@ -191,7 +191,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Variables, Primitive Types, and Strings",
 					content:
-						"`int`, `double`, `boolean`, and `String` are the basic vocabulary of Java programs. Skill target: declare, initialize, print, and update values without syntax friction."
+						"`int`, `double`, `boolean`, and `String` are the basic vocabulary of Java programs. The working target is to declare, initialize, print, and update values without syntax friction."
 				},
 				{
 					title: "Scanners, Formatting, and Casting",
@@ -253,7 +253,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Relational and Logical Operators",
 					content:
-						"Skill target: Evaluate compound boolean expressions exactly, including short-circuit behavior and correct `String` equality with `.equals()`."
+						"Evaluate compound boolean expressions exactly, including short-circuit behavior and correct `String` equality with `.equals()`."
 				},
 				{
 					title: "Core Project: Verifying Expressions",
@@ -309,7 +309,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Conditionals, Scope, and Nesting",
 					content:
-						"`if`, `else if`, and `else` are precise control-flow tools. Skill target: explain which branch runs and why, especially in nested cases."
+						"`if`, `else if`, and `else` are precise control-flow tools. A correct explanation names which branch runs and why, especially in nested cases."
 				},
 				{
 					title: "Packages, Math, and Randomness",
@@ -373,7 +373,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "For Loops, While Loops, and Infinite Loop Risk",
 					content:
-						"Counted loops and condition-driven loops are separate tools with separate failure modes. Key idea: when a loop terminates and what state changes make that possible."
+						"Counted loops and condition-driven loops are separate tools with separate failure modes. The central reasoning question is when a loop terminates and what state changes make that possible."
 				},
 				{
 					title: "Nested Loops and Early Exception Reasoning",
@@ -487,7 +487,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Classes, Fields, and Constructors",
 					content:
-						"Start the object sequence by focusing on how a class groups state and behavior. Skill target: Name what belongs as an instance variable and what belongs in a method."
+						"Start the object sequence by focusing on how a class groups state and behavior. The design check is naming what belongs as an instance variable and what belongs in a method."
 				},
 				{
 					title: "Accessors, Mutators, and Method Practice",
@@ -606,12 +606,12 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Superclass and Subclass Design",
 					content:
-						"Inheritance captures shared state and behavior without copy-pasting class logic. Skill target: justify why a subclass relationship is appropriate."
+						"Inheritance captures shared state and behavior without copy-pasting class logic. A valid subclass relationship needs a clear justification."
 				},
 				{
 					title: "Constructors, `super`, and Overriding",
 					content:
-						"Make constructor chaining and method overriding explicit. Key idea: What gets inherited, what gets customized, and when `super(...)` is required."
+						"Make constructor chaining and method overriding explicit: what gets inherited, what gets customized, and when `super(...)` is required."
 				},
 				{
 					title: "Core Project: Book and PictureBook Class",
@@ -675,7 +675,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Type Reasoning and Invalid Calls",
 					content:
-						"Skill target: Explain which method runs, which calls fail at compile time, and why a reference type constrains what members are visible."
+						"Explain which method runs, which calls fail at compile time, and why a reference type constrains what members are visible."
 				},
 				{
 					title: "Core Project: Many Shapes",
@@ -884,7 +884,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Mutation, Traversal, and Removal Rules",
 					content:
-						"Key idea: When enhanced `for` loops are appropriate, when index-based loops are safer, and why removal during enhanced iteration breaks."
+						"The core rule is when enhanced `for` loops are appropriate, when index-based loops are safer, and why removal during enhanced iteration breaks."
 				},
 				{
 					title: "Core Project: Practice With ArrayLists",
@@ -1044,7 +1044,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Best, Average, and Worst Case",
 					content:
-						"Key idea: How to describe runtime across favorable, typical, and unfavorable cases, especially for loops and search tasks."
+						"Runtime should be described across favorable, typical, and unfavorable cases, especially for loops and search tasks."
 				},
 				{
 					title: "Core Project: Runtime Analysis",
@@ -1168,7 +1168,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Binary Search Preconditions",
 					content:
-						"Binary search is a fast search that only works because the data is sorted. Skill target: explain how each comparison halves the remaining search space."
+						"Binary search is a fast search that only works because the data is sorted. Each comparison halves the remaining search space."
 				},
 				{
 					title: "Merge Sort and Divide-and-Conquer",

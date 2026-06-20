@@ -630,7 +630,7 @@ export const networkSystemsCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 8: IPv6 in Practice",
-						itemTitle: "Unit 8: IPv6 in Practice Supplemental 2",
+						itemTitle: "Unit 8: IPv6 in Practice Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -644,7 +644,7 @@ export const networkSystemsCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 8: IPv6 in Practice",
-						itemTitle: "Unit 8: IPv6 in Practice Supplemental 3",
+						itemTitle: "Unit 8: IPv6 in Practice Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),

@@ -615,7 +615,7 @@ Before coding, decide how each row should differ from the previous one. The fini
 					title: "GrS9 Supplemental Project 4: Square Inception with Functions",
 					content: `Remake Square Inception with a helper function that accepts both size and color information: \`drawSquare(sideLength, r, g, b)\`.
 
-The goal is to remove repeated square-drawing code while keeping the visual effect from the earlier project. Use a loop to call the helper with changing side lengths and RGB values, then verify that changing the loop rule changes the whole pattern without editing the helper body.`,
+This removes repeated square-drawing code while keeping the visual effect from the earlier project. Use a loop to call the helper with changing side lengths and RGB values, then verify that changing the loop rule changes the whole pattern without editing the helper body.`,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS7-Square-Inception-with-Functions/solution"
 				},

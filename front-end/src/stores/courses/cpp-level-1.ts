@@ -9,7 +9,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "Program Setup, Syntax, and Compile-Run Cycle",
 					content:
-						"Start with a single-file console program and make the compile-run cycle explicit. Cover: `#include`, `main`, braces, semicolons, comments, compiler errors versus runtime behavior, and the idea that C++ is compiled before it runs. Practice target: Making one small change, recompiling, reading the output or error, and explaining what changed before the syntax load rises."
+						"Start with a single-file console program and make the compile-run cycle explicit. Cover: `#include`, `main`, braces, semicolons, comments, compiler errors versus runtime behavior, and the idea that C++ is compiled before it runs. A successful first workflow makes one small change, recompiles, reads the output or error, and explains what changed before the syntax load rises."
 				},
 				{
 					title: "Primitive Types, Strings, and Console I/O",
@@ -105,7 +105,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "Function Signatures, Return Values, and Decomposition",
 					content:
-						"Functions are named units of work with parameters and return types. Include reading a function signature, deciding what data a function needs, deciding what it returns, separating calculation from printing, avoiding repeated code, and using small helper functions to make a larger program easier to test. Skill target: explain why a function exists, not just how to call it."
+						"Functions are named units of work with parameters and return types. Include reading a function signature, deciding what data a function needs, deciding what it returns, separating calculation from printing, avoiding repeated code, and using small helper functions to make a larger program easier to test. A strong explanation names why a function exists, not just how to call it."
 				},
 				{
 					title: "Randomness and Small Simulation Helpers",
@@ -234,7 +234,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "CPPF6 Project 1: Parameter Passing Tracing",
 					content:
-						"Trace what changes and what does not when values are passed by value, by reference, and by const reference. The goal is to reason about function boundaries clearly.",
+						"Trace what changes and what does not when values are passed by value, by reference, and by const reference. The result should show clear reasoning about function boundaries.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Parameter-Passing-Starter",
 					solutionLink:

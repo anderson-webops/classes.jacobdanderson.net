@@ -236,7 +236,7 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 				{
 					title: "Heat Transfer",
 					content:
-						"This section covers conduction, convection, and radiation using diagrams, simulations, and everyday examples. Identify which transfer method dominates in a given scenario."
+						"Heat transfer can happen through conduction, convection, and radiation. Use diagrams, simulations, and everyday examples to identify which transfer method dominates in a given scenario."
 				},
 				{
 					title: "Energy Efficiency and Constraints",
