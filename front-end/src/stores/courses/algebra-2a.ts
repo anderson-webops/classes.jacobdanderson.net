@@ -252,7 +252,7 @@ Quadratic transformations are predictable:
 - Flip \`y = 2x^2 + 3\` across the x-axis and then shift up \`3\` -> \`y = -2x^2\`
 - Scale \`y = 2x^2 + 3\` by \`3\`, shift left \`4\`, shift up \`2\` -> \`y = 6(x + 4)^2 + 11\`
 
-The generated comparison graph below provides a clean reusable reference for transformation questions that depend on visual comparison.
+The comparison graph below provides a clean reusable reference for transformation questions that depend on visual comparison.
 				`.trim(),
 				media.quadraticTransforms
 			),
@@ -285,7 +285,7 @@ If the directrix is \`y = 1\` and the focus is \`(2, 3)\`, then the parabola is
 			createLesson(
 				"Graph Prompt Reference",
 				`
-Use a graphing tool or the generated quadratic-transformation reference for graph-only prompts such as:
+Use a graphing tool or the provided quadratic-transformation reference for graph-only prompts such as:
 
 - color-match parabola comparison questions
 - a few transformation sketches with no surviving coordinates
@@ -474,7 +474,7 @@ Build a graph with:
 - local max near \`(-3/2, 4)\`
 - local min near \`(4, -9)\`
 
-That feature set forces a graph that crosses the x-axis three times, rises to the right, and includes at least two turning points. The generated polynomial-behavior graphic is meant to replace several missing original sketches of exactly this kind.
+That feature set forces a graph that crosses the x-axis three times, rises to the right, and includes at least two turning points. The polynomial-behavior graphic provides a clean example of this feature set.
 				`.trim(),
 				media.polynomialBehavior
 			)
@@ -509,7 +509,7 @@ Treat the results as planning data for the next few sessions.
 - Reflecting \`x^3 - 2x + 1\` across the y-axis gives \`-x^3 + 2x + 1\`
 - Reflecting the same function across the x-axis gives \`-x^3 + 2x - 1\`
 
-Use the generated graph pack anywhere the original check-in referenced a missing sketch or color-coded polynomial graph.
+Use the provided graph pack anywhere a check-in item needs a sketch or color-coded polynomial graph.
 				`.trim(),
 				media.polynomialBehavior
 			)
@@ -575,7 +575,7 @@ which gives \`x = 7\`.
 				`
 Some rational-function prompts work best with graph references, including graph-reading exercises with asymptotes, holes, and range questions.
 
-Use the generated rational-function gallery when a clean reference is enough, and use the linked reference visual when the exact graph must be supplied separately.
+Use the provided rational-function gallery when a clean reference is enough, and use the linked reference visual when the exact graph must be supplied separately.
 				`.trim(),
 				media.rationalFunctions
 			)
@@ -774,14 +774,14 @@ This check-in closes the course by revisiting rational functions, rational opera
   - \`C(x) = 2.75x\` for \`x >= 5\`
   - \`22\` dollars means \`8\` bags
 
-Reuse the generated rational, radical, and piecewise visuals for any review item that needs a graph reference.
+Reuse the provided rational, radical, and piecewise visuals for any review item that needs a graph reference.
 				`.trim(),
 				media.rationalFunctions
 			),
 			createLesson(
 				"Check-In Visual References",
 				`
-Use a graphing tool or the generated rational/piecewise references for visual prompts such as:
+Use a graphing tool or the provided rational/piecewise references for visual prompts such as:
 
 - one rational-function graph with multiple asymptotes and a hole
 - at least one piecewise graph-definition prompt

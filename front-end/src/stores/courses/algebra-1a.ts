@@ -477,7 +477,7 @@ Graph the boundary line first. Then decide whether the boundary is solid or dash
 - \`sqrt(y) >= 7\` -> \`y >= 49\`
 - \`2 + 5 + 1.5b >= 10\` -> \`b >= 2\`, so at least \`2\` bags of chips
 
-The generated graph shows \`y > 2x + 5\`: shade the region above the dashed boundary line.
+The provided graph shows \`y > 2x + 5\`: shade the region above the dashed boundary line.
 				`.trim(),
 				media.graphingInequality
 			)
@@ -566,7 +566,7 @@ This check-in focuses on moving comfortably between slope-intercept, point-slope
 - Pea plants sprouting at week \`2\` and growing \`3\` inches per week -> \`y = 3x - 6\`
 - Matt's peas, same growth rate, \`8\` inches tall at week \`6\` -> \`y - 8 = 3(x - 6)\`
 - Converted to slope-intercept form -> \`y = 3x - 10\`
-- For the generated pea graph:
+- For the provided pea graph:
   - slope-intercept form -> \`y = 5x + 3\`
   - one point-slope form -> \`y - 8 = 5(x - 1)\`
   - standard form -> \`-5x + y = 3\`
@@ -621,7 +621,7 @@ To solve a system by graphing, find the point that lies on both graphs.
 - Parallel lines -> \`no solution\`
 - The exact same line written two ways -> \`infinite solutions\`
 
-The generated graph shows the classic intersection at \`(1, 5)\`.
+The provided graph shows the classic intersection at \`(1, 5)\`.
 				`.trim(),
 				media.systemsGraphing
 			),

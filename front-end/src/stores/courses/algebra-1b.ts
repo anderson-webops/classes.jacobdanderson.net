@@ -1002,7 +1002,7 @@ This check-in reviews graphing quadratics, transformations, functions, inverse f
 			createLesson(
 				"Check-In Visual Reference",
 				`
-Use a graphing tool or the generated function reference for graph-only prompts such as:
+Use a graphing tool or the provided function reference for graph-only prompts such as:
 
 - the vertical-line-test example
 - the inverse-existence graph in the advanced section
