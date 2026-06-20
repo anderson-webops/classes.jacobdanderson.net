@@ -453,9 +453,9 @@ function buildSequencingModule(
 			{
 				title: `${courseLabel} Readiness Checklist`,
 				content: [
-					`**Readiness checklist:** This checklist keeps ${courseLabel} modules concrete, sequenced, and assessable.`,
-					`**Alignment test:** In a complete ${courseLabel} module, the concept, project, and assessment measure the same skill. If the ${courseLabel} assessment checks a different skill than the project practices, the module needs a clearer project target or checkpoint before it is ready.`,
-					`**Ready modules show:**\n- Each ${courseLabel} module has a named prerequisite and observable outcome.\n- Each ${courseLabel} project has required behavior, test cases, and an extension.\n- The ${courseLabel} assessment matches the subject: code trace, rubric, CER response, math justification, security report, or model evaluation.\n- Any ${courseLabel} toolchain, dataset, simulation, or source-code dependency is linked and version-aware.`
+					`**Readiness checklist:** This checklist keeps ${courseLabel} modules concrete, sequenced, and easy to check.`,
+					`**Alignment test:** In a complete ${courseLabel} module, the concept, project, and checkpoint all practice the same skill. If the ${courseLabel} checkpoint checks a different skill than the project practices, the module needs a clearer project target before it is ready.`,
+					`**Ready modules show:**\n- Each ${courseLabel} module has a named prerequisite and observable outcome.\n- Each ${courseLabel} project has required behavior, test cases, and an extension.\n- The ${courseLabel} checkpoint format matches the work: code trace, rubric, CER response, math justification, security report, or model evaluation.\n- Any ${courseLabel} toolchain, dataset, simulation, or source-code dependency is linked and version-aware.`
 				].join("\n\n")
 			},
 			{
@@ -530,7 +530,7 @@ function buildProjectModule(
 			{
 				title: `${courseLabel} Capstone Gate`,
 				content: [
-					`**Readiness check:** Before the ${courseLabel} capstone begins, prerequisite modules, project ladder, and assessment model are practiced on smaller artifacts.`,
+					`**Readiness check:** Before the ${courseLabel} capstone begins, prerequisite modules, project ladder, and checkpoint style are practiced on smaller artifacts.`,
 					`**Gate guidance:** The ${courseLabel} capstone is ready when it combines known skills in a larger context rather than introducing several untested ideas at once. The first version stays narrow, demonstrable, and easy to verify before optional polish is added.`,
 					`**Required gate artifact:** Write a short ${courseLabel} capstone brief that names the target user or problem, the exact deliverable, the core concept being reused from earlier modules, the minimum viable first version, and the evidence that will prove the first version works.`,
 					`**Capstone checks:**\n- The ${courseLabel} capstone has one ordinary path and one edge, failure, or misconception path.\n- The first milestone can be tested without completing every optional feature.\n- The explanation separates required behavior from polish.\n- Two risks are named with a mitigation, fallback, or narrowed scope.`

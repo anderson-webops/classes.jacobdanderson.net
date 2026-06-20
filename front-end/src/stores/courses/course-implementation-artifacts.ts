@@ -932,7 +932,7 @@ function setCourseDevelopmentMetadata(courseId: string, course: RawCourse) {
 	const familyLabel = profile?.family ?? courseLabel;
 	const courseBoundaries = boundaryOverrides[courseId] ?? [
 		`${courseLabel} keeps prerequisites, core lessons, projects, targeted review, enrichment, and assessments labeled separately.`,
-		`${courseLabel} does not add adjacent-topic enrichment until the required ${familyLabel} project and assessment evidence exists.`
+		`${courseLabel} does not add adjacent-topic enrichment until the required ${familyLabel} project and completion check exist.`
 	];
 	const capstoneExpectations = capstoneFor(
 		courseId,
