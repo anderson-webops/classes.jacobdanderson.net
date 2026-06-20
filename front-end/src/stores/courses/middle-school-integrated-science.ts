@@ -9,7 +9,12 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 				{
 					title: "Remote Science Workflow",
 					content:
-						"No beakers, kits, or required household experiments are needed. The course uses notebooks, shared simulations, images, public datasets, diagrams, short readings, and structured discussion. Optional observations are included only when they are safe, simple, and replaceable with an equivalent data or simulation option."
+						"No specialized science equipment or required household experiments are needed. The course uses notebooks, shared simulations, images, public datasets, diagrams, short readings, and structured discussion. Optional observations are included only when they are safe, simple, and replaceable with an equivalent data or simulation option."
+				},
+				{
+					title: "Progression Map: Reasoning, Models, and Data",
+					content:
+						"Core path: identify variables, controls, claims, evidence, and model limitations in short scenarios. Stretch path: revise flawed investigations, choose graph types, explain uncertainty, and compare two possible interpretations of the same data. The module builds a repeatable evidence routine that applies to life, Earth, physical, and space science."
 				},
 				{
 					title: "Questions, Variables, and Fair Tests",
@@ -49,6 +54,11 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 						"Cells are the basic unit of life, and cell theory connects living things to repeated evidence from observation. Microscope images or virtual slides support comparisons among plant, animal, and bacterial cells while keeping structure and function connected."
 				},
 				{
+					title: "Progression Map: Cells and Systems",
+					content:
+						"Core path: match cell structures to jobs and connect cells, tissues, organs, and body systems. Stretch path: explain how several systems coordinate in a case, identify what an analogy hides, and trace matter, energy, or information through the model. The emphasis is function and interaction rather than memorizing labels alone."
+				},
+				{
 					title: "Organelles and Cell Jobs",
 					content:
 						"Cover the nucleus, cell membrane, cytoplasm, mitochondria, chloroplasts, cell wall, and vacuole. Keep the focus on the job of each structure and how cells meet life needs."
@@ -83,7 +93,12 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 				{
 					title: "DNA, Genes, and Inherited Traits",
 					content:
-						"DNA and genes act as instructions that influence traits. Inherited traits should be distinguished from learned behaviors and environmental effects without overcomplicating molecular biology."
+						"DNA and genes act as instructions that influence traits. Inherited traits are distinguished from learned behaviors and environmental effects without overcomplicating molecular biology."
+				},
+				{
+					title: "Progression Map: Traits and Adaptation",
+					content:
+						"Core path: distinguish inherited traits, learned behaviors, variation, and environmental pressure. Stretch path: interpret trait-frequency data, explain why individuals do not choose to evolve, and connect adaptation claims to population-level evidence over generations. Simulations and datasets keep the reasoning visible without physical manipulatives."
 				},
 				{
 					title: "Variation and Natural Selection",
@@ -123,6 +138,11 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 						"Producers, consumers, decomposers, food webs, and energy pyramids describe how ecosystems move resources. Energy flows through ecosystems while matter cycles through organisms and the environment."
 				},
 				{
+					title: "Progression Map: Ecosystems and Human Impact",
+					content:
+						"Core path: trace energy through food webs and identify limiting factors in population graphs. Stretch path: evaluate biodiversity, indirect effects, stakeholder tradeoffs, and evidence quality in a human-impact case. The module connects ecological models to decisions without reducing the issue to one simple answer."
+				},
+				{
 					title: "Population Dynamics",
 					content:
 						"Carrying capacity, limiting factors, competition, predation, disease, and resource availability all affect population size. Graphs and scenarios make it possible to predict population changes from evidence."
@@ -158,6 +178,11 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 					title: "Earth as Interacting Systems",
 					content:
 						"The geosphere, hydrosphere, atmosphere, and biosphere are interacting Earth systems. One event, such as a wildfire, storm, or drought, can affect several systems at once."
+				},
+				{
+					title: "Progression Map: Earth Systems and Climate",
+					content:
+						"Core path: read maps and graphs for weather variables, Earth-system interactions, and short-term patterns. Stretch path: separate weather from climate, interpret long-term data trends, and name uncertainty or scale limits in the evidence. The course uses public datasets and maps so reasoning stays source-based."
 				},
 				{
 					title: "Weather, Air Masses, and Forecasting",
@@ -197,6 +222,11 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 						"Particle-level explanations connect visible matter to atoms, elements, molecules, compounds, mixtures, and pure substances. Diagrams and formulas help distinguish these categories."
 				},
 				{
+					title: "Progression Map: Matter and Chemical Change",
+					content:
+						"Core path: classify matter, compare physical and chemical changes, and track particles before and after a change. Stretch path: use conservation of matter to explain coefficients, identify uncertainty in reaction evidence, and decide when a scenario lacks enough information. Diagrams and simulations replace unsafe or impractical reactions."
+				},
+				{
 					title: "Conservation of Matter",
 					content:
 						"Atoms are rearranged during physical and chemical changes, but matter is conserved in closed systems. Balanced visual models can show conservation without requiring physical reactions."
@@ -234,6 +264,11 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 						"Kinetic, potential, thermal, chemical, electrical, light, and sound energy are useful categories for tracking systems. The focus is energy transfer and transformation rather than memorizing isolated forms."
 				},
 				{
+					title: "Progression Map: Energy and Engineering",
+					content:
+						"Core path: identify energy inputs, outputs, transfers, and losses in diagrams. Stretch path: compare efficiency, cost, reliability, safety, and environmental constraints before recommending a design improvement. The module treats engineering as evidence-based tradeoff analysis."
+				},
+				{
 					title: "Heat Transfer",
 					content:
 						"Heat transfer can happen through conduction, convection, and radiation. Use diagrams, simulations, and everyday examples to identify which transfer method dominates in a given scenario."
@@ -241,7 +276,7 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 				{
 					title: "Energy Efficiency and Constraints",
 					content:
-						"Useful energy, wasted energy, efficiency, cost, reliability, safety, and environmental impact all shape engineering decisions. The topic should be treated as a tradeoff analysis, not a single right answer."
+						"Useful energy, wasted energy, efficiency, cost, reliability, safety, and environmental impact all shape engineering decisions. The topic works as a tradeoff analysis, not a single right answer."
 				},
 				{
 					title: "Guided Practice: Energy Flow Diagrams",
@@ -271,6 +306,11 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 						"Define motion quantities and relate them to everyday examples. Use simple calculations and graphs to connect words, numbers, and visual representations."
 				},
 				{
+					title: "Progression Map: Forces and Motion",
+					content:
+						"Core path: describe motion with words, numbers, and position-time or speed-time graphs. Stretch path: draw free-body diagrams, connect net force to motion changes, and explain Newton's laws through scenario evidence. The same scenario can be represented as a story, graph, diagram, and calculation."
+				},
+				{
 					title: "Newton's Laws in Plain Language",
 					content:
 						"Inertia, force causing acceleration, and action-reaction pairs provide a plain-language entry point to Newton's laws. Diagrams and scenarios are more useful here than formal derivations."
@@ -278,7 +318,7 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 				{
 					title: "Gravity, Friction, and Normal Force",
 					content:
-						"Common forces and free-body diagrams simplify motion problems by showing which forces act on one object. Practice should include force arrows and predictions about whether motion will change."
+						"Common forces and free-body diagrams simplify motion problems by showing which forces act on one object. Practice includes force arrows and predictions about whether motion changes."
 				},
 				{
 					title: "Data Practice: Motion Graph Interpretation",
@@ -306,6 +346,11 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 					title: "Wave Properties",
 					content:
 						"Amplitude, wavelength, frequency, and wave speed describe wave behavior. Simulations and diagrams can compare water waves, sound waves, light waves, and seismic waves."
+				},
+				{
+					title: "Progression Map: Waves and Electricity",
+					content:
+						"Core path: name wave properties, compare light and sound interactions, and model simple circuits. Stretch path: explain how waves carry information, compare series and parallel circuit behavior, and connect magnetism to fields, motors, or generators. Virtual builders and diagrams provide the evidence base."
 				},
 				{
 					title: "Light and Sound Interactions",
@@ -342,7 +387,12 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 				{
 					title: "Earth, Moon, Sun, and Gravity",
 					content:
-						"Day and night, seasons, Moon phases, eclipses, tides, and orbital motion can be explained with models and animations. Model limitations and common misconceptions should stay visible."
+						"Day and night, seasons, Moon phases, eclipses, tides, and orbital motion can be explained with models and animations. Model limitations and common misconceptions stay visible."
+				},
+				{
+					title: "Progression Map: Space Systems and Capstone",
+					content:
+						"Core path: use models to explain sky patterns, scale, gravity, and planetary conditions. Stretch path: critique model distortions, explain evidence from light, and revise a capstone claim after feedback. The final presentation combines question, evidence, model, limitation, and next question."
 				},
 				{
 					title: "Solar System Scale and Planetary Conditions",
@@ -352,7 +402,7 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 				{
 					title: "Stars, Galaxies, and Evidence From Light",
 					content:
-						"Stars, galaxies, spectra, and the idea that light carries information about distant objects connect astronomy to evidence. The focus should remain on scientific inference from observations."
+						"Stars, galaxies, spectra, and the idea that light carries information about distant objects connect astronomy to evidence. The focus remains on scientific inference from observations."
 				},
 				{
 					title: "Capstone Studio: Research, Model, Explain, Revise",

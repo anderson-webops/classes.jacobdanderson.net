@@ -1,6 +1,7 @@
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 import { elementaryScienceCourse } from "@/stores/courses/elementary-science";
+import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { middleSchoolIntegratedScienceCourse } from "@/stores/courses/middle-school-integrated-science";
 import { useCoursesStore } from "@/stores/courses";
 
@@ -21,6 +22,13 @@ describe("course catalog breadth", () => {
 		expect(course?.modules.length).toBeGreaterThanOrEqual(17);
 		expect(
 			coreModules(course?.modules).every(
+				module =>
+					module.curriculum.length >= 3 &&
+					module.supplementalProjects.length >= 2
+			)
+		).toBe(true);
+		expect(
+			introToPhysicsCourse.modules.every(
 				module =>
 					module.curriculum.length >= 4 &&
 					module.supplementalProjects.length >= 2
@@ -74,10 +82,30 @@ describe("course catalog breadth", () => {
 			"No physical lab supplies are required"
 		);
 		expect(JSON.stringify(middleSchool)).toContain(
-			"No beakers, kits, or required household experiments are needed"
+			"No specialized science equipment or required household experiments are needed"
 		);
+		expect(JSON.stringify([elementary, middleSchool])).toContain(
+			"specialized science equipment or household experiments are not required"
+		);
+		expect(
+			elementaryScienceCourse.modules.every(module =>
+				module.curriculum.some(item =>
+					item.title.startsWith("Grade-Band Path:")
+				)
+			)
+		).toBe(true);
+		expect(
+			middleSchoolIntegratedScienceCourse.modules.every(module =>
+				module.curriculum.some(item =>
+					item.title.startsWith("Progression Map:")
+				)
+			)
+		).toBe(true);
 		expect(JSON.stringify([elementary, middleSchool])).not.toContain(
 			"Cover: 1."
+		);
+		expect(JSON.stringify([elementary, middleSchool])).not.toContain(
+			"evidence should point"
 		);
 	});
 });

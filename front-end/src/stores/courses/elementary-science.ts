@@ -12,6 +12,11 @@ export const elementaryScienceCourse: RawCourse = {
 						"No physical lab supplies are required beyond paper or notes. A notebook or digital document is used for dated vocabulary, sketches, questions, evidence, and short explanations. The Zoom format relies on shared images, simulations, short videos, discussion, paper sketches, and simple graphs."
 				},
 				{
+					title: "Grade-Band Path: Observations and Evidence",
+					content:
+						"K-2 path: name what is visible, draw or sort examples, and explain one idea aloud or in a sentence frame. Grades 3-5 path: turn observations into a small table or graph, separate observation from inference, and write a short claim-evidence-reasoning explanation. The same image, clip, or dataset can support both levels by changing the expected evidence format and vocabulary depth."
+				},
+				{
 					title: "Observing, Inferring, and Asking Testable Questions",
 					content:
 						"Observations describe what is directly visible or measurable, inferences explain what the evidence may mean, and testable questions point toward evidence that could be collected or analyzed. A mystery image or short nature clip can support five observations, two inferences, and one evidence-based question."
@@ -24,7 +29,7 @@ export const elementaryScienceCourse: RawCourse = {
 				{
 					title: "Counting, Sorting, and Simple Graphs",
 					content:
-						"Observations can become data by sorting objects in a shared picture or provided dataset. A tally table and simple bar graph make the pattern visible, and the explanation should separate what the graph shows from what it might mean."
+						"Observations can become data by sorting objects in a shared picture or provided dataset. A tally table and simple bar graph make the pattern visible, and the explanation separates what the graph shows from what it might mean."
 				}
 			],
 			supplementalProjects: [
@@ -47,6 +52,11 @@ export const elementaryScienceCourse: RawCourse = {
 					title: "What Makes Something Living?",
 					content:
 						"Living things can be recognized through needs, growth, response, reproduction, and cells at an elementary level. Clear examples and edge cases such as seeds, fire, robots, and viruses help separate everyday guesses from evidence-based classification without requiring advanced biology vocabulary."
+				},
+				{
+					title: "Grade-Band Path: Living Things",
+					content:
+						"K-2 path: classify examples as living or nonliving, name one need, and connect one structure to a job. Grades 3-5 path: compare organisms with a table, explain structure and function with evidence, and use environment-change scenarios to predict survival challenges. Both paths keep vocabulary concrete before adding more abstract cause-and-effect reasoning."
 				},
 				{
 					title: "Plants, Animals, and Survival Needs",
@@ -86,6 +96,11 @@ export const elementaryScienceCourse: RawCourse = {
 						"Habitats are places that provide what organisms need. Living parts, such as plants and animals, can be separated from nonliving parts, such as sunlight, water, air, rocks, and temperature."
 				},
 				{
+					title: "Grade-Band Path: Ecosystems",
+					content:
+						"K-2 path: identify living and nonliving parts, match organisms to needs, and draw simple food-chain arrows. Grades 3-5 path: build a small food web, trace cause and effect when one population changes, and use graph evidence to support a claim about ecosystem stability. The shared goal is understanding relationships, with older students carrying the reasoning through more links."
+				},
+				{
 					title: "Producers, Consumers, and Decomposers",
 					content:
 						"Build food chains from shared pictures and simple cards. Explain producers, consumers, and decomposers, then emphasize that energy starts with sunlight for most ecosystems."
@@ -121,6 +136,11 @@ export const elementaryScienceCourse: RawCourse = {
 					title: "Weather Variables",
 					content:
 						"Temperature, wind, clouds, precipitation, and humidity describe weather with measurements and observations rather than only with feelings. Current weather maps or provided examples make these variables visible."
+				},
+				{
+					title: "Grade-Band Path: Weather and Earth Systems",
+					content:
+						"K-2 path: observe sky conditions, match weather symbols to descriptions, and sequence water-cycle steps with pictures. Grades 3-5 path: read simple forecasts, compare data points, distinguish weather from longer patterns, and explain slow versus fast Earth changes with evidence from images or maps. Both paths use remote visuals instead of physical demonstrations."
 				},
 				{
 					title: "The Water Cycle",
@@ -160,6 +180,11 @@ export const elementaryScienceCourse: RawCourse = {
 						"States of matter can be described through shape, volume, and particle spacing using diagrams and simulations. Comparing examples shows why some materials are easy to classify while others are more complicated."
 				},
 				{
+					title: "Grade-Band Path: Matter and Materials",
+					content:
+						"K-2 path: sort visible examples by state or property and describe them with everyday words. Grades 3-5 path: use property data to justify material choices, compare reversible and irreversible changes, and explain tricky examples with particle or evidence language. No physical samples are required because images, tables, and simulations provide the evidence."
+				},
+				{
 					title: "Properties of Materials",
 					content:
 						"Material properties include color, texture, hardness, flexibility, transparency, absorbency, magnetism, and whether a material floats or sinks. Images and provided data can replace physical supplies while still supporting evidence-based choices."
@@ -195,6 +220,11 @@ export const elementaryScienceCourse: RawCourse = {
 					title: "Pushes, Pulls, Speed, and Direction",
 					content:
 						"A force is a push or pull that can change motion. Animations, short videos, and simple drawings can show starting, stopping, speeding up, slowing down, and changing direction."
+				},
+				{
+					title: "Grade-Band Path: Forces and Motion",
+					content:
+						"K-2 path: use arrows and motion words to show pushes, pulls, starts, stops, and direction changes. Grades 3-5 path: compare force-arrow diagrams, read simple motion graphs, and explain how a simple machine changes force or distance. The older path adds graph reasoning while keeping the same visible motion examples."
 				},
 				{
 					title: "Gravity, Friction, and Balanced Forces",
@@ -234,6 +264,11 @@ export const elementaryScienceCourse: RawCourse = {
 						"Light travels from a source and can be reflected, absorbed, or transmitted. Diagrams, images, and virtual ray models can show these interactions without requiring flashlights or physical materials."
 				},
 				{
+					title: "Grade-Band Path: Light, Sound, and Signals",
+					content:
+						"K-2 path: identify sources, receivers, shadows, reflections, and sounds in pictures or short clips. Grades 3-5 path: draw paths for light or sound, compare signal designs, and explain why a signal carries information reliably or unreliably. The same phenomenon can be handled as vocabulary recognition first and model-based explanation second."
+				},
+				{
 					title: "Shadows, Reflection, and Color",
 					content:
 						"Shadows form when light is blocked, and reflection helps explain how objects become visible. Color can be connected to the light that reaches our eyes at an age-appropriate level."
@@ -269,6 +304,11 @@ export const elementaryScienceCourse: RawCourse = {
 					title: "Day, Night, and Sky Patterns",
 					content:
 						"The Sun, Moon, stars, day and night, and repeating sky patterns can be studied as observable patterns. Animations and diagrams show that many sky changes are patterns caused by motion."
+				},
+				{
+					title: "Grade-Band Path: Space and Capstone Design",
+					content:
+						"K-2 path: observe repeating sky patterns, compare familiar objects, and use a drawing or oral explanation to describe a model. Grades 3-5 path: critique model scale, compare planetary properties, and build a capstone explanation with a question, evidence, model, and limitation. The capstone can stay visual for younger learners and become a fuller CER presentation for older learners."
 				},
 				{
 					title: "Planets and the Solar System",
