@@ -465,7 +465,7 @@ export const pythonLevel1Course: RawCourse = {
 				{
 					title: "GrS8 Project 3: Picasso Game",
 					content:
-						"Use key presses to draw different shapes and create more surprising patterns through interactive input. Map each key to a clear drawing function, and include at least one key that changes color, position, or size before drawing. The project should feel like a small interactive art tool rather than a fixed drawing.",
+						"Use key presses to draw different shapes and create more surprising patterns through interactive input. Map each key to a clear drawing function, and include at least one key that changes color, position, or size before drawing. The project functions as a small interactive art tool rather than a fixed drawing.",
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/Picasso-Game/solution"
 				}

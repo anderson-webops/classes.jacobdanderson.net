@@ -274,7 +274,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Singleton and Why to Be Skeptical",
 					content:
-						"Present Singleton because it is part of the classic catalog, but teach it through the lens of hidden global state, test pain, and lifetime ambiguity. Leave preferring scoped services and injection unless a truly application-wide single instance is warranted."
+						"Singleton is part of the classic catalog, but it is best evaluated through the lens of hidden global state, test pain, and lifetime ambiguity. Prefer scoped services and injection unless a truly application-wide single instance is warranted."
 				},
 				{
 					title: "Adapter",

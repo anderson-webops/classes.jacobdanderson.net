@@ -885,7 +885,7 @@ export const networkSystemsCourse: RawCourse = {
 				{
 					title: "Project Pass: Validate the NAT and Exposure Topology from Outside",
 					content:
-						"Return to the router and NAT lab and treat it as the capstone exposure exercise: decide which service should be reachable, limit what is exposed, and verify the result from another network position. The project should tie together routing, firewalls, listening services, and diagnostics into one defensible path explanation.",
+						"Return to the router and NAT lab and treat it as the capstone exposure exercise: decide which service should be reachable, limit what is exposed, and verify the result from another network position. The project ties together routing, firewalls, listening services, and diagnostics into one defensible path explanation.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS6-Router-NAT-Topology-Lab/starter",
 					solutionLink:

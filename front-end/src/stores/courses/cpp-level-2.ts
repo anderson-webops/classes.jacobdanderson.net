@@ -249,7 +249,7 @@ export const cppLevel2Course: RawCourse = {
 				{
 					title: "CPPM5 Project 2: Profile Posts",
 					content:
-						"Rebuild the profile-posts concept with manual dynamic storage instead of `std::vector`. This is intentionally harder than the Level 1 capstone and should feel like a second-course endpoint.",
+						"Rebuild the profile-posts concept with manual dynamic storage instead of `std::vector`. This is intentionally harder than the Level 1 capstone and serves as a second-course endpoint.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Profile-Posts",
 					solutionLink:

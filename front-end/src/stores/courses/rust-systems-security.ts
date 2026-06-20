@@ -254,7 +254,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "Result, Match, and the Question-Mark Operator",
 					content:
-						"This section covers `Result` as a typed alternative to error-code conventions. Pattern matching and `?` should feel like a disciplined error-propagation style, not just new syntax."
+						"This section covers `Result` as a typed alternative to error-code conventions. Pattern matching and `?` create a disciplined error-propagation style, not just new syntax."
 				},
 				{
 					title: "Error Handling and Security Posture",

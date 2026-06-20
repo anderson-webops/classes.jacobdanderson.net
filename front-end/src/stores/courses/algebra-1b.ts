@@ -947,7 +947,7 @@ This check-in reviews graphing quadratics, transformations, functions, inverse f
 **Review stance**
 
 - Try each problem independently first
-- use guiding questions before full reteaching is needed
+	- use guiding questions before a full review is needed
 - treat the results as feedback for the next few sessions, not as a formal exam grade
 				`.trim()
 			),

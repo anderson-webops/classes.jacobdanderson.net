@@ -577,7 +577,7 @@ const boundaryOverrides: Record<string, string[]> = {
 	],
 	"machine-learning": [
 		"Owns learning from examples: baselines, splits, leakage control, model selection, metrics, error analysis, and model cards.",
-		"Assumes Data Science cleaning and communication habits rather than reteaching them as the course center."
+		"Assumes Data Science cleaning and communication habits rather than reviewing them as the course center."
 	],
 	"c-level-1": [
 		"Builds idiomatic C++ fluency before ownership-heavy design.",
@@ -1789,7 +1789,7 @@ function addApCsaAlignmentModule(courseId: string, course: RawCourse) {
 			{
 				title: "Answer-Check Review Rule",
 				content:
-					"**Concept path:** Any AP CSA project without an answer-check path should be paired with local review material or marked as discussion-only. Answer checks can be tests, expected output, trace tables, rubric bullets, or explanation prompts, but the project should not leave correctness completely implicit.\n\n**Review rule:** If a project answer cannot be checked automatically, define a human-checkable artifact: method signatures, sample trace, expected console output, object-state table, or FRQ-style rubric bullets. For algorithms, include at least one normal case and one boundary case. For class design, include one state change or method-contract explanation.\n\n**Evidence target:** Each project states whether the work is checked by tests, discussion, trace, rubric, or expected-output comparison."
+					"**Concept path:** Any AP CSA project without an answer-check path needs local review material or a discussion-only label. Answer checks can be tests, expected output, trace tables, rubric bullets, or explanation prompts, but the project must not leave correctness completely implicit.\n\n**Review rule:** If a project answer cannot be checked automatically, define a human-checkable artifact: method signatures, sample trace, expected console output, object-state table, or FRQ-style rubric bullets. For algorithms, include at least one normal case and one boundary case. For class design, include one state change or method-contract explanation.\n\n**Evidence target:** Each project states whether the work is checked by tests, discussion, trace, rubric, or expected-output comparison."
 			}
 		],
 		supplementalProjects: [
@@ -2412,12 +2412,12 @@ function addAdvancedPythonStudioModule(courseId: string, course: RawCourse) {
 			{
 				title: "Studio Project: Local Document Search Engine",
 				content:
-					"**Project goal:** Read a folder of text/markdown/json files, build an inverted index, support keyword or prefix searches, rank results, and benchmark at least two query strategies. The project should make parsing, indexing, query behavior, and scoring visible enough to debug without guessing which file or token caused a result.\n\n**Completion checks:**\n- Parsing handles empty and malformed files.\n- Tests cover found, missing, repeated, and case-variant terms.\n- The report explains data structures and runtime."
+					"**Project goal:** Read a folder of text/markdown/json files, build an inverted index, support keyword or prefix searches, rank results, and benchmark at least two query strategies. The project makes parsing, indexing, query behavior, and scoring visible enough to debug without guessing which file or token caused a result.\n\n**Completion checks:**\n- Parsing handles empty and malformed files.\n- Tests cover found, missing, repeated, and case-variant terms.\n- The report explains data structures and runtime."
 			},
 			{
 				title: "Studio Project: External Sort or Log Pipeline",
 				content:
-					"**Project goal:** Process CSV/log data using streaming, chunking, heap/merge ideas, summary generation, and memory-aware benchmarking. The project should make the tradeoff visible: loading everything is simpler, but streaming or chunking is necessary when data size becomes part of the problem.\n\n**Required behavior:** read deterministic fixtures, handle malformed or empty rows, produce a sorted or aggregated output, record timing or memory evidence, and explain why the chosen approach fits the input size.\n\n**Completion checks:**\n- The pipeline scales beyond toy input.\n- Memory assumptions are measured or justified.\n- The final report includes test fixtures and limitations."
+					"**Project goal:** Process CSV/log data using streaming, chunking, heap/merge ideas, summary generation, and memory-aware benchmarking. The project makes the tradeoff visible: loading everything is simpler, but streaming or chunking is necessary when data size becomes part of the problem.\n\n**Required behavior:** read deterministic fixtures, handle malformed or empty rows, produce a sorted or aggregated output, record timing or memory evidence, and explain why the chosen approach fits the input size.\n\n**Completion checks:**\n- The pipeline scales beyond toy input.\n- Memory assumptions are measured or justified.\n- The final report includes test fixtures and limitations."
 			}
 		]
 	});
@@ -2495,7 +2495,7 @@ function addJavaBridgeModernModule(courseId: string, course: RawCourse) {
 				{
 					title: "Platform Gate",
 					content:
-						"**Readiness check:** Java Level 3 should feel like real application work: packages, NIO Path/Files, streams or well-structured loops, exceptions, tests, generics, simple concurrency boundaries, and maintainable command-line behavior. The gate is satisfied when code organization, error handling, and test fixtures are visible enough that the project could grow without becoming one large main method.\n\n**Readiness evidence:** A medium-size Java project should have a clear source-root layout, named package boundaries, model or service classes that can run without terminal input, and at least one reproducible test fixture or manual test transcript. Error handling should report what failed and where, not only print a stack trace and continue.\n\n**Evidence target:** A project demonstrates how Java organizes a medium-size program, not just how individual syntax features work."
+						"**Readiness check:** Java Level 3 functions as real application work: packages, NIO Path/Files, streams or well-structured loops, exceptions, tests, generics, simple concurrency boundaries, and maintainable command-line behavior. The gate is satisfied when code organization, error handling, and test fixtures are visible enough that the project could grow without becoming one large main method.\n\n**Readiness evidence:** A medium-size Java project should have a clear source-root layout, named package boundaries, model or service classes that can run without terminal input, and at least one reproducible test fixture or manual test transcript. Error handling should report what failed and where, not only print a stack trace and continue.\n\n**Evidence target:** A project demonstrates how Java organizes a medium-size program, not just how individual syntax features work."
 				},
 				{
 					title: "Files, Streams, and Tests",
@@ -2512,7 +2512,7 @@ function addJavaBridgeModernModule(courseId: string, course: RawCourse) {
 				{
 					title: "Java Level 3 Project: File Indexer or Log Analyzer",
 					content:
-						"**Project goal:** Build a Java application using records/classes, NIO file traversal, aggregation, and JUnit tests. The project should separate file discovery, parsing, data representation, analysis, and reporting so each piece can be tested or replaced independently.\n\n**Required structure:** Use one layer to discover files, one layer to parse records, one layer to aggregate results, and one layer to format output. Keep rejected rows or unreadable files visible in the report instead of silently dropping them.\n\n**Completion checks:**\n- File errors are handled clearly.\n- Tests cover empty, small, malformed, and larger inputs.\n- The final note explains the data model, API boundary, and one performance tradeoff."
+						"**Project goal:** Build a Java application using records/classes, NIO file traversal, aggregation, and JUnit tests. The project separates file discovery, parsing, data representation, analysis, and reporting so each piece can be tested or replaced independently.\n\n**Required structure:** Use one layer to discover files, one layer to parse records, one layer to aggregate results, and one layer to format output. Keep rejected rows or unreadable files visible in the report instead of silently dropping them.\n\n**Completion checks:**\n- File errors are handled clearly.\n- Tests cover empty, small, malformed, and larger inputs.\n- The final note explains the data model, API boundary, and one performance tradeoff."
 				},
 				{
 					title: "Java Level 3 Project: Service Pipeline",

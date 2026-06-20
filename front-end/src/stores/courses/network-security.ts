@@ -405,7 +405,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Project: Request Schema Validation Gateway",
 					content:
-						"Build a gateway layer that checks request shape, body size, allowed methods, and required authentication context before forwarding work to the rest of the service. The project should feel like a reusable network boundary rather than a one-off form checker.",
+						"Build a gateway layer that checks request shape, body size, allowed methods, and required authentication context before forwarding work to the rest of the service. The project functions as a reusable network boundary rather than a one-off form checker.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC2-Request-Schema-Validation-Gateway/starter",
 					solutionLink:
@@ -697,7 +697,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Project: Rate-Limit and Abuse Detector",
 					content:
-						"Build a small TS analyzer that groups events by actor, tracks burst behavior, and recommends throttle or block responses based on repeated suspicious patterns. The project should produce an operator-friendly summary instead of a raw score dump.",
+						"Build a small TS analyzer that groups events by actor, tracks burst behavior, and recommends throttle or block responses based on repeated suspicious patterns. The project produces an operator-friendly summary instead of a raw score dump.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC4-Rate-Limit-and-Abuse-Detector/starter",
 					solutionLink:

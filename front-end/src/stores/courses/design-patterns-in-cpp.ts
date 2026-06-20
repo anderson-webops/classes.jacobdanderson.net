@@ -618,7 +618,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Trees of Heterogeneous Objects",
 					content:
-						"Composite works well for scene graphs, widget trees, or editor hierarchies where leaf and container nodes must share a common interface. Structural recursion should feel useful rather than ornamental."
+						"Composite works well for scene graphs, widget trees, or editor hierarchies where leaf and container nodes must share a common interface. Structural recursion is useful when it removes special-case tree handling rather than adding ornamental abstraction."
 				},
 				{
 					title: "Traversal without Leaking Storage Details",
@@ -921,7 +921,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Choosing the Right Medium-Sized Problem",
 					content:
-						"Use a medium-sized engine, editor tool, simulation framework, or importer pipeline as the capstone target. The project should be large enough for real boundary pressure, but still small enough that every added abstraction can be justified."
+						"Use a medium-sized engine, editor tool, simulation framework, or importer pipeline as the capstone target. The project needs enough size for real boundary pressure while staying small enough that every added abstraction can be justified."
 				},
 				{
 					title: "Pattern Justification as a Required Deliverable",

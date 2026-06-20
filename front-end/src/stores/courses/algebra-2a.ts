@@ -751,7 +751,7 @@ This check-in closes the course by revisiting rational functions, rational opera
 **Review stance**
 
 - Try the question independently first
-- use hints before full reteaching is needed
+	- use hints before a full review is needed
 - use the results to decide whether to spiral back or move on
 				`.trim()
 			),

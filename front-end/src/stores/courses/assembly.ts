@@ -232,7 +232,7 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "and, or, xor, test, and Condition Checks",
 					content:
-						"Use the logic instructions to connect bit operations to control flow. `test` and `xor` should feel especially practical because they show up constantly in zero checks, mask checks, and quick register clearing patterns."
+						"Use the logic instructions to connect bit operations to control flow. `test` and `xor` are especially practical because they show up constantly in zero checks, mask checks, and quick register clearing patterns."
 				},
 				{
 					title: "Flags, Condition Codes, and Arithmetic Visibility",
@@ -875,7 +875,7 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "How Assembly Explains Low-Level Bugs",
 					content:
-						"Buffer mistakes, stale pointers, and bad control-flow assumptions become easier to explain once the actual loads, stores, and branch decisions are visible. Assembly should feel like a clarity tool for reliability work, not only like a language to write by hand."
+						"Buffer mistakes, stale pointers, and bad control-flow assumptions become easier to explain once the actual loads, stores, and branch decisions are visible. Use assembly as a clarity tool for reliability work, not only as a language to write by hand."
 				},
 				{
 					title: "Reverse Engineering as a Reliability and Security Skill",

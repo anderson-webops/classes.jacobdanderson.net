@@ -166,7 +166,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Decimal, Binary, and Hex Conversions",
 					content:
-						"Practice converting small values across decimal, binary, and hexadecimal until moving between representations no longer depends on guessing. Hex should feel like a readable shorthand for groups of four bits, not like an unrelated numbering system."
+						"Practice converting small values across decimal, binary, and hexadecimal until moving between representations no longer depends on guessing. Hex works as a readable shorthand for groups of four bits, not as an unrelated numbering system."
 				},
 				{
 					title: "Signed vs Unsigned Integers and Two's Complement",
@@ -176,7 +176,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Project: Hex and Binary Inspector",
 					content:
-						"Use the inspector lab to print one value in decimal, hex, and grouped binary, then compare its signed and unsigned 16-bit interpretations. The project should make two's complement visible and require explicit reasoning about nibbles and bytes instead of hand-waving about 'the number.'",
+						"Use the inspector lab to print one value in decimal, hex, and grouped binary, then compare its signed and unsigned 16-bit interpretations. The project makes two's complement visible and requires explicit reasoning about nibbles and bytes instead of hand-waving about 'the number.'",
 					projectLink:
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE1-Hex-and-Binary-Inspector/starter",
 					solutionLink:
