@@ -1187,11 +1187,20 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Heap allocation calls are explicit ownership decisions instead of generic ways to 'make more memory.'"
 		);
+		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain("Representation Transfer Practice");
+		expect(corpus).toContain("Dispatch Extension Practice");
+		expect(corpus).toContain("Systems Build 14: Byte Inspector Studio");
+		expect(corpus).toContain("Systems Build 17: Capstone Utility Studio");
+		expect(corpus).toContain("Capstone Utility Studio Extension Practice");
 		expect(source).not.toMatch(/This section covers/i);
 		expect(source).not.toMatch(/Key idea:/i);
 		expect(source).not.toMatch(/Skill target:/i);
 		expect(source).not.toMatch(/The goal is to/i);
 		expect(source).not.toMatch(/This project should/i);
+		expect(source).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
 	});
 
 	it("keeps AI Level 1 lessons explanatory instead of scaffold-labeled", async () => {
