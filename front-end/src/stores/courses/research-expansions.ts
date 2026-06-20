@@ -357,13 +357,13 @@ function buildStandardsModule(
 ): RawCourseModule {
 	return {
 		kind: "appendix",
-		title: "Standards Map",
+		title: "Course Foundations",
 		curriculum: [
 			{
-				title: `${courseLabel} Source Map`,
+				title: `${courseLabel} Reference Guide`,
 				content: [
-					`**Source map:** ${courseLabel} uses these standards, documentation, and tooling references to stay aligned with current expectations. Priority is **${profile.priority}**, so these references should guide core pacing and practice before optional enrichment.`,
-					`**Authoritative sources to use:**\n${sourceBullets(profile.sources)}`,
+					`**Reference guide:** ${courseLabel} uses these standards, documentation, and tooling references to keep examples, projects, and expectations aligned with current practice.`,
+					`**Core references:**\n${sourceBullets(profile.sources)}`,
 					standardsEvidenceNote(courseLabel),
 					`**Evidence target:** ${courseLabel} is traceable to these standards, docs, or tooling references rather than only to project titles.`
 				].join("\n\n")
@@ -403,17 +403,17 @@ function buildStandardsModule(
 		],
 		supplementalProjects: [
 			{
-				title: `${courseLabel} Standards Checkpoint`,
+				title: `${courseLabel} Readiness Check`,
 				content: [
-					`**Readiness map:** A one-page map for ${courseLabel} lists prerequisites, target standards or docs, and the first observable readiness skill.`,
-					`**Map guidance:** The ${courseLabel} map distinguishes prerequisite knowledge, required content, optional enrichment, and reference-only material. It also records which project or assessment proves that the mapped skill can be used independently.`,
+					`**Readiness check:** Before deeper ${courseLabel} work begins, the prerequisite skills, target references, and first observable success criteria should be clear.`,
+					`**Check guidance:** The ${courseLabel} readiness check distinguishes prerequisite knowledge, required content, optional enrichment, and reference-only material. It also records which project or assessment proves that the skill can be used independently.`,
 					`**Evidence targets:**\n- The ${courseLabel} map names at least three prerequisites.\n- Each planned ${courseLabel} module cites a standard, official document, or deliberate toolchain target.\n- The evidence for ${profile.family} readiness is explicit.`
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Sequence Map`,
+				title: `${courseLabel} Learning Sequence`,
 				content: [
-					`**Readiness map:** The current ${courseLabel} sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
+					`**Learning sequence:** The current ${courseLabel} sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
 					`**Sequence guidance:** ${courseLabel} sequence decisions are based on dependency, not convenience. If a project in ${courseLabel} expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,
 					`**Evidence targets:**\n- No ${courseLabel} gap remains as a vague reminder without a clear next action.\n- Required ${profile.family} gaps appear before the project that depends on them.\n- Optional ${courseLabel} enrichment is labeled separately from required pacing.`
 				].join("\n\n")
@@ -428,12 +428,12 @@ function buildSequencingModule(
 ): RawCourseModule {
 	return {
 		kind: "appendix",
-		title: "Course Roadmap",
+		title: "Course Next Steps",
 		curriculum: [
 			{
-				title: `${courseLabel} Module Options`,
+				title: `${courseLabel} Next Module Ideas`,
 				content: [
-					`**Module options:** These ${profile.family} additions can become full ${courseLabel} modules after the source material, examples, and assessments are clear. The order follows prerequisite dependency, not just topic popularity.`,
+					`**Next module ideas:** These ${profile.family} additions show where ${courseLabel} can grow after the current core sequence is solid. The order follows prerequisite dependency, not just topic popularity.`,
 					`**Suggested additions:**\n${bullets(profile.moduleAdditions)}`,
 					sequencingEvidenceNote(courseLabel),
 					`**Evidence target:** Every ${courseLabel} module states the concept, why it matters, one worked example, one practice task, one assessment checkpoint, and one extension.`
@@ -459,7 +459,7 @@ function buildSequencingModule(
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Reference Refresh`,
+				title: `${courseLabel} Resource Updates`,
 				content: [
 					`**Resource guide:** ${courseLabel} references stay current when the course depends on an external tool, source repository, dataset, simulation, exam standard, or official documentation page.`,
 					`**Refresh guidance:** Stable ${courseLabel} conceptual references can be reviewed less often, but tool versions, source-code repositories, exam links, data licenses, and simulation URLs need an explicit refresh cadence. If a link changes, update the ${courseLabel} course text and the project resource card together.`,
@@ -477,10 +477,10 @@ function buildSequencingModule(
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Materials Readiness`,
+				title: `${courseLabel} Resource Checklist`,
 				content: [
-					`**Project goal:** Create a materials checklist for ${courseLabel}: source code, starter/reference files, datasets, simulations, diagrams, rubrics, and tool versions.`,
-					`**Checklist guidance:** A missing resource in ${courseLabel} is not automatically a blocker, but it must be classified. For ${courseLabel}, mark each item as required, replaceable, provided, learner-created, optional enrichment, or reference-only so the course does not depend on hidden materials.`,
+					`**Project goal:** Build a resource checklist for ${courseLabel}: source code, starter/reference files, datasets, simulations, diagrams, rubrics, and tool versions.`,
+					`**Checklist guidance:** A missing resource in ${courseLabel} is not automatically a blocker, but it should be classified. For ${courseLabel}, mark each item as required, replaceable, provided, learner-created, optional enrichment, or reference-only so the course does not depend on hidden materials.`,
 					`**Evidence targets:**\n- Every required ${courseLabel} project has a starter state or equivalent handout.\n- Every ${profile.family} assessment has a rubric or answer-check method.\n- Any external ${courseLabel} tool or source is documented with a stable URL.`
 				].join("\n\n")
 			}
@@ -1923,6 +1923,7 @@ export function applyResearchBackedExpansions(
 	const alreadyExpanded = course.modules.some(
 		module =>
 			module.title === "Standards Map" ||
+			module.title === "Course Foundations" ||
 			module.title === `${label}: Standards and Course Map` ||
 			module.title.startsWith(
 				`${profile.family}: Standards and Scope Expansion`
