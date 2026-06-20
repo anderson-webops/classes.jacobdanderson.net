@@ -277,7 +277,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML2-KNN-Customer-Segmentation-Classification-Updated"
 				},
 				{
-					title: "K Nearest Neighbors supplemental 2",
+					title: "K Nearest Neighbors Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML2 K-Nearest Neighbors",
@@ -290,7 +290,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-01-ml2-k-nearest-neighbors-supplemental-2/solution"
 				},
 				{
-					title: "K Nearest Neighbors supplemental 3",
+					title: "K Nearest Neighbors Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML2 K-Nearest Neighbors",
@@ -395,7 +395,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML3-Naive-Bayes-Iris-Flowers-Classification"
 				},
 				{
-					title: "Naive Bayes supplemental 2",
+					title: "Naive Bayes Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML3 Naive Bayes",
@@ -408,7 +408,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-03-ml3-naive-bayes-supplemental-2/solution"
 				},
 				{
-					title: "Naive Bayes supplemental 3",
+					title: "Naive Bayes Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML3 Naive Bayes",
@@ -471,7 +471,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Diabetes-Diagnosis-With-Neural-Networks"
 				},
 				{
-					title: "ML3.5 Decision Trees and Interpretable Models supplemental 2",
+					title: "ML3.5 Decision Trees and Interpretable Models Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -485,7 +485,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-05-ml3-5-decision-trees-and-interpretable-models-supplemental-2/solution"
 				},
 				{
-					title: "ML3.5 Decision Trees and Interpretable Models supplemental 3",
+					title: "ML3.5 Decision Trees and Interpretable Models Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -659,7 +659,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Neuron-Implementation"
 				},
 				{
-					title: "Neural Networks supplemental 2",
+					title: "Neural Networks Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML4 Neural Networks",
@@ -672,7 +672,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-07-ml4-neural-networks-supplemental-2/solution"
 				},
 				{
-					title: "Neural Networks supplemental 3",
+					title: "Neural Networks Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML4 Neural Networks",
@@ -807,7 +807,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-Simple-Linear-Regression-Updated"
 				},
 				{
-					title: "Introduction to Regression supplemental 2",
+					title: "Introduction to Regression Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML5 Introduction to Regression",
@@ -820,7 +820,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-09-ml5-introduction-to-regression-supplemental-2/solution"
 				},
 				{
-					title: "Introduction to Regression supplemental 3",
+					title: "Introduction to Regression Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML5 Introduction to Regression",
@@ -899,7 +899,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML6-Predicting-House-Prices"
 				},
 				{
-					title: "Regression with Neural Networks supplemental 2",
+					title: "Regression with Neural Networks Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML6 Regression with Neural Networks",
@@ -912,7 +912,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-11-ml6-regression-with-neural-networks-supplemental-2/solution"
 				},
 				{
-					title: "Regression with Neural Networks supplemental 3",
+					title: "Regression with Neural Networks Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML6 Regression with Neural Networks",
@@ -997,7 +997,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://colab.research.google.com/drive/1YvuhSoBOXsV7Iip3Xu5AGgQC4LmJWbnL?usp=sharing"
 				},
 				{
-					title: "Image Classifier supplemental 2",
+					title: "Image Classifier Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML7 Image Classifier",
@@ -1010,7 +1010,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-13-ml7-image-classifier-supplemental-2/solution"
 				},
 				{
-					title: "Image Classifier supplemental 3",
+					title: "Image Classifier Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML7 Image Classifier",
@@ -1030,12 +1030,12 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Classification Metrics beyond Accuracy",
 					content:
-						"Accuracy, precision, recall, F1, and the confusion matrix are different lenses on model quality. Key idea: why a single percentage can hide the wrong failure mode, especially on imbalanced data."
+						"Accuracy, precision, recall, F1, and the confusion matrix are different lenses on model quality. A single percentage can hide the wrong failure mode, especially on imbalanced data, so model evaluation should name which errors matter most."
 				},
 				{
 					title: "Regression Metrics and Residual Thinking",
 					content:
-						"Make residuals, MAE, MSE, and `R^2` part of the recurring regression workflow. Skill target: Explain what a bad prediction looks like on the graph and in the summary metrics."
+						"Make residuals, MAE, MSE, and `R^2` part of the recurring regression workflow. A strong regression explanation connects a bad prediction on the graph to the same error pattern in the summary metrics."
 				},
 				{
 					title: "Dataset Choice by Difficulty and Model Fit",
@@ -1077,7 +1077,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML5-Simple-Linear-Regression"
 				},
 				{
-					title: "ML7.5 Model Evaluation, Comparison, and Dataset Strategy supplemental 2",
+					title: "ML7.5 Model Evaluation, Comparison, and Dataset Strategy Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1091,7 +1091,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-15-ml7-5-model-evaluation-comparison-and-dataset-strategy-supplemental-2/solution"
 				},
 				{
-					title: "ML7.5 Model Evaluation, Comparison, and Dataset Strategy supplemental 3",
+					title: "ML7.5 Model Evaluation, Comparison, and Dataset Strategy Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1199,7 +1199,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML8-Master-Project"
 				},
 				{
-					title: "Master Project supplemental 2",
+					title: "Master Project Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML8 Master Project",
@@ -1212,7 +1212,7 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-17-ml8-master-project-supplemental-2/solution"
 				},
 				{
-					title: "Master Project supplemental 3",
+					title: "Master Project Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle: "ML8 Master Project",
@@ -1227,14 +1227,14 @@ export const machineLearningCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Customer Segmentation Starter Build: Implementation Lab",
+			title: "Customer Segmentation Starter Build: Practice Studio",
 			curriculum: [
 				{
 					title: "Customer Segmentation Starter Build: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Starter Build: Implementation Lab",
+							"Customer Segmentation Starter Build: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1243,7 +1243,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Starter Build: Implementation Lab",
+							"Customer Segmentation Starter Build: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1252,7 +1252,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Starter Build: Implementation Lab",
+							"Customer Segmentation Starter Build: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1266,7 +1266,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Starter Build: Implementation Lab",
+							"Customer Segmentation Starter Build: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1277,7 +1277,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Starter Build: Implementation Lab",
+							"Customer Segmentation Starter Build: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1287,11 +1287,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML1-Customer-Segmentation"
 				},
 				{
-					title: "Customer Segmentation Starter Build supplemental 2: Implementation Lab",
+					title: "Customer Segmentation Starter Build Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Starter Build: Implementation Lab",
+							"Customer Segmentation Starter Build: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1301,11 +1301,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-19-applied-studio-12-customer-segmentation-supplemental-2/solution"
 				},
 				{
-					title: "Customer Segmentation Starter Build supplemental 3: Implementation Lab",
+					title: "Customer Segmentation Starter Build Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Starter Build: Implementation Lab",
+							"Customer Segmentation Starter Build: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1317,14 +1317,14 @@ export const machineLearningCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Customer Segmentation Interview: Implementation Lab",
+			title: "Customer Segmentation Interview: Practice Studio",
 			curriculum: [
 				{
 					title: "Customer Segmentation Interview: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Interview: Implementation Lab",
+							"Customer Segmentation Interview: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1333,7 +1333,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Interview: Implementation Lab",
+							"Customer Segmentation Interview: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1342,7 +1342,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Interview: Implementation Lab",
+							"Customer Segmentation Interview: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1354,7 +1354,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Interview: Implementation Lab",
+							"Customer Segmentation Interview: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1365,7 +1365,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Interview: Implementation Lab",
+							"Customer Segmentation Interview: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1373,11 +1373,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML1-Customer-Segmentation-Interview-Starter"
 				},
 				{
-					title: "Customer Segmentation Interview supplemental 2: Implementation Lab",
+					title: "Customer Segmentation Interview Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Interview: Implementation Lab",
+							"Customer Segmentation Interview: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1387,11 +1387,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-21-applied-studio-13-customer-segmentation-interview-supplemental-2/solution"
 				},
 				{
-					title: "Customer Segmentation Interview supplemental 3: Implementation Lab",
+					title: "Customer Segmentation Interview Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation Interview: Implementation Lab",
+							"Customer Segmentation Interview: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1403,14 +1403,14 @@ export const machineLearningCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Customer Segmentation: Implementation Lab",
+			title: "Customer Segmentation: Practice Studio",
 			curriculum: [
 				{
 					title: "Customer Segmentation: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation: Implementation Lab",
+							"Customer Segmentation: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1419,7 +1419,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation: Implementation Lab",
+							"Customer Segmentation: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1428,7 +1428,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation: Implementation Lab",
+							"Customer Segmentation: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1440,7 +1440,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation: Implementation Lab",
+							"Customer Segmentation: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1451,7 +1451,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation: Implementation Lab",
+							"Customer Segmentation: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1459,11 +1459,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML1-Customer-Segmentation-Starter"
 				},
 				{
-					title: "Customer Segmentation supplemental 2: Implementation Lab",
+					title: "Customer Segmentation Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation: Implementation Lab",
+							"Customer Segmentation: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1473,11 +1473,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-23-applied-studio-14-customer-segmentation-supplemental-2/solution"
 				},
 				{
-					title: "Customer Segmentation supplemental 3: Implementation Lab",
+					title: "Customer Segmentation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Customer Segmentation: Implementation Lab",
+							"Customer Segmentation: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1489,14 +1489,14 @@ export const machineLearningCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Disney Movie Clustering Starter Build: Implementation Lab",
+			title: "Disney Movie Clustering Starter Build: Practice Studio",
 			curriculum: [
 				{
 					title: "Disney Movie Clustering Starter Build: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering Starter Build: Implementation Lab",
+							"Disney Movie Clustering Starter Build: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1505,7 +1505,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering Starter Build: Implementation Lab",
+							"Disney Movie Clustering Starter Build: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1514,7 +1514,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering Starter Build: Implementation Lab",
+							"Disney Movie Clustering Starter Build: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1528,7 +1528,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering Starter Build: Implementation Lab",
+							"Disney Movie Clustering Starter Build: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1539,7 +1539,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering Starter Build: Implementation Lab",
+							"Disney Movie Clustering Starter Build: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1549,11 +1549,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML1-Disney-Movie-Clustering"
 				},
 				{
-					title: "Disney Movie Clustering Starter Build supplemental 2: Implementation Lab",
+					title: "Disney Movie Clustering Starter Build Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering Starter Build: Implementation Lab",
+							"Disney Movie Clustering Starter Build: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1563,11 +1563,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-25-applied-studio-15-disney-movie-clustering-supplemental-2/solution"
 				},
 				{
-					title: "Disney Movie Clustering Starter Build supplemental 3: Implementation Lab",
+					title: "Disney Movie Clustering Starter Build Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering Starter Build: Implementation Lab",
+							"Disney Movie Clustering Starter Build: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1579,14 +1579,14 @@ export const machineLearningCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Disney Movie Clustering: Implementation Lab",
+			title: "Disney Movie Clustering: Practice Studio",
 			curriculum: [
 				{
 					title: "Disney Movie Clustering: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering: Implementation Lab",
+							"Disney Movie Clustering: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1595,7 +1595,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering: Implementation Lab",
+							"Disney Movie Clustering: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1604,7 +1604,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering: Implementation Lab",
+							"Disney Movie Clustering: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1616,7 +1616,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering: Implementation Lab",
+							"Disney Movie Clustering: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1627,7 +1627,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering: Implementation Lab",
+							"Disney Movie Clustering: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1635,11 +1635,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML1-Disney-Movie-Clustering-Starter"
 				},
 				{
-					title: "Disney Movie Clustering supplemental 2: Implementation Lab",
+					title: "Disney Movie Clustering Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering: Implementation Lab",
+							"Disney Movie Clustering: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1649,11 +1649,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-27-applied-studio-16-disney-movie-clustering-supplemental-2/solution"
 				},
 				{
-					title: "Disney Movie Clustering supplemental 3: Implementation Lab",
+					title: "Disney Movie Clustering Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"Disney Movie Clustering: Implementation Lab",
+							"Disney Movie Clustering: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1665,14 +1665,14 @@ export const machineLearningCourse: RawCourse = {
 			]
 		},
 		{
-			title: "KNN Car Classification: Implementation Lab",
+			title: "KNN Car Classification: Practice Studio",
 			curriculum: [
 				{
 					title: "KNN Car Classification: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"KNN Car Classification: Implementation Lab",
+							"KNN Car Classification: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1681,7 +1681,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"KNN Car Classification: Implementation Lab",
+							"KNN Car Classification: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1690,7 +1690,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"KNN Car Classification: Implementation Lab",
+							"KNN Car Classification: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1702,7 +1702,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"KNN Car Classification: Implementation Lab",
+							"KNN Car Classification: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1713,7 +1713,7 @@ export const machineLearningCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"KNN Car Classification: Implementation Lab",
+							"KNN Car Classification: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1721,11 +1721,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML2-KNN-Car-Classification-Updated"
 				},
 				{
-					title: "KNN Car Classification supplemental 2: Implementation Lab",
+					title: "KNN Car Classification Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"KNN Car Classification: Implementation Lab",
+							"KNN Car Classification: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1735,11 +1735,11 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-29-applied-studio-17-knn-car-classification-supplemental-2/solution"
 				},
 				{
-					title: "KNN Car Classification supplemental 3: Implementation Lab",
+					title: "KNN Car Classification Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
-							"KNN Car Classification: Implementation Lab",
+							"KNN Car Classification: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
