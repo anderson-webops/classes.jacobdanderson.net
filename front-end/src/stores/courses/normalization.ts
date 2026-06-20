@@ -6008,7 +6008,9 @@ function scienceSupport(context: CourseTextContext) {
 	const evidenceFormat = scienceEvidenceFormat(context);
 	const materialBoundary = band.includes("physics")
 		? "special lab supplies, physical sensors, or dedicated equipment are not required"
-		: "beakers, kits, and household materials are not required";
+		: band.includes("elementary") || band.includes("middle-school")
+			? "specialized science equipment or household experiments are not required"
+			: "beakers, kits, and household materials are not required";
 	const remoteInvestigation = variantPrompt(context, [
 		subject =>
 			`${subject} uses shared-screen materials and paper notes alongside ${evidenceFormat}; for ${topic}, any physical demonstration is replaceable with evidence from the named resource, so ${materialBoundary}.`,
@@ -6059,7 +6061,7 @@ function scienceEvidenceCheckpoint(context: CourseTextContext) {
 			subject =>
 				`**CER checkpoint:** For ${subject}, write one claim, cite the specific evidence source, and explain the connection with the target vocabulary rather than only naming the topic.`,
 			subject =>
-				`**CER checkpoint:** Finish ${subject} by separating the claim, the evidence, and the reasoning. The ${subject} evidence should point to the resource used, and the reasoning should explain why it supports the claim.`,
+				`**CER checkpoint:** Finish ${subject} by separating the claim, the evidence, and the reasoning. The ${subject} evidence points to the resource used, and the reasoning explains why it supports the claim.`,
 			subject =>
 				`**CER checkpoint:** Connect ${subject} to a clear claim, a resource-based evidence statement, and reasoning that names the scientific idea or model being used.`,
 			subject =>
