@@ -87,7 +87,7 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 				{
 					title: "Small Record Types and Sequence Storage",
 					content:
-						"Use a simple task manager to re-center the work on structured records, not just primitive values. This is the point where a vector of objects should start to feel normal instead of advanced."
+						"Use a simple task manager to re-center the work on structured records, not just primitive values. This is the point where a vector of objects becomes a normal representation choice instead of an advanced feature."
 				},
 				{
 					title: "Filtering, Removal, and Stable Output",
@@ -334,7 +334,7 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 				{
 					title: "Visited State and Cycle Prevention",
 					content:
-						"Backtracking only works cleanly when visited cells and state changes are tracked carefully. This is the unit where accidental revisits, coordinate mistakes, and off-by-one bugs should be surfaced deliberately. Use the CS235 5x5x5 maze constraints as the anchor: exactly 125 imported cells, six legal directions, and no mutation of the current maze after a bad import."
+						"Backtracking only works cleanly when visited cells and state changes are tracked carefully. This unit deliberately surfaces accidental revisits, coordinate mistakes, and off-by-one bugs. Use the CS235 5x5x5 maze constraints as the anchor: exactly 125 imported cells, six legal directions, and no mutation of the current maze after a bad import."
 				},
 				{
 					title: "Path Construction and Rollback",
@@ -576,7 +576,7 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 				{
 					title: "Removal with Predecessors",
 					content:
-						"Removal should be taught carefully because it combines structure cases with invariant preservation. Explicitly reason through leaf removal, one-child replacement, two-child replacement using the in-order predecessor, duplicate rejection, and invalid removals that should leave the tree unchanged."
+						"Removal requires careful reasoning because it combines structure cases with invariant preservation. Explicitly reason through leaf removal, one-child replacement, two-child replacement using the in-order predecessor, duplicate rejection, and invalid removals that leave the tree unchanged."
 				},
 				{
 					title: "Binary Search Trees: Verification and Reflection",
@@ -654,7 +654,7 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 				{
 					title: "Single and Double Rotations",
 					content:
-						"Make left-left, right-right, left-right, and right-left cases concrete with tiny examples. Rotations should be presented as local rewiring that preserves in-order structure while reducing height problems. Stress the CS235-style verification cases: ordered inserts, duplicate inserts, missing removals, and repeated add/remove operations that keep every balance factor valid."
+						"Make left-left, right-right, left-right, and right-left cases concrete with tiny examples. Rotations are local rewiring steps that preserve in-order structure while reducing height problems. Stress the CS235-style verification cases: ordered inserts, duplicate inserts, missing removals, and repeated add/remove operations that keep every balance factor valid."
 				},
 				{
 					title: "AVL Trees and Rebalancing: Verification and Reflection",
@@ -805,7 +805,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 11: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 11: Sequence Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 11: Sequence Invariant Studio",
 						section: "concepts"
 					})
 				},
@@ -813,7 +814,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 11: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 11: Sequence Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 11: Sequence Invariant Studio",
 						section: "example"
 					})
 				},
@@ -821,7 +823,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 11: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 11: Sequence Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 11: Sequence Invariant Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -833,7 +836,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 11: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 11: Sequence Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 11: Sequence Invariant Studio",
 						section: "review"
 					})
 				}
@@ -843,7 +847,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 11: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 11: Sequence Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 11: Sequence Invariant Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -855,7 +860,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Sequence Invariant Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 11: Sequence Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 11: Sequence Invariant Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -868,7 +874,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Sequence Invariant Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 11: Sequence Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 11: Sequence Invariant Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -886,7 +893,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 12: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 12: Graph Route Analysis Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 12: Graph Route Analysis Studio",
 						section: "concepts"
 					})
 				},
@@ -894,7 +902,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 12: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 12: Graph Route Analysis Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 12: Graph Route Analysis Studio",
 						section: "example"
 					})
 				},
@@ -902,7 +911,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 12: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 12: Graph Route Analysis Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 12: Graph Route Analysis Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -914,7 +924,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 12: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 12: Graph Route Analysis Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 12: Graph Route Analysis Studio",
 						section: "review"
 					})
 				}
@@ -924,7 +935,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 12: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 12: Graph Route Analysis Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 12: Graph Route Analysis Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -936,7 +948,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Graph Route Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 12: Graph Route Analysis Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 12: Graph Route Analysis Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -949,7 +962,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Graph Route Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 12: Graph Route Analysis Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 12: Graph Route Analysis Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -967,7 +981,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 13: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 13: Recursive Search Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 13: Recursive Search Studio",
 						section: "concepts"
 					})
 				},
@@ -975,7 +990,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 13: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 13: Recursive Search Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 13: Recursive Search Studio",
 						section: "example"
 					})
 				},
@@ -983,7 +999,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 13: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 13: Recursive Search Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 13: Recursive Search Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -995,7 +1012,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 13: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 13: Recursive Search Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 13: Recursive Search Studio",
 						section: "review"
 					})
 				}
@@ -1005,7 +1023,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 13: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 13: Recursive Search Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 13: Recursive Search Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1017,7 +1036,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Recursive Search Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 13: Recursive Search Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 13: Recursive Search Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1030,7 +1050,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Recursive Search Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 13: Recursive Search Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 13: Recursive Search Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1048,7 +1069,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 14: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 14: Partition Sorting Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 14: Partition Sorting Studio",
 						section: "concepts"
 					})
 				},
@@ -1056,7 +1078,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 14: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 14: Partition Sorting Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 14: Partition Sorting Studio",
 						section: "example"
 					})
 				},
@@ -1064,7 +1087,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 14: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 14: Partition Sorting Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 14: Partition Sorting Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1076,7 +1100,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 14: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 14: Partition Sorting Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 14: Partition Sorting Studio",
 						section: "review"
 					})
 				}
@@ -1086,7 +1111,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 14: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 14: Partition Sorting Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 14: Partition Sorting Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1098,7 +1124,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Partition Sorting Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 14: Partition Sorting Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 14: Partition Sorting Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1111,7 +1138,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Partition Sorting Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 14: Partition Sorting Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 14: Partition Sorting Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1129,7 +1157,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 15: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 15: Template Linked Structure Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 15: Template Linked Structure Studio",
 						section: "concepts"
 					})
 				},
@@ -1137,7 +1166,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 15: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 15: Template Linked Structure Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 15: Template Linked Structure Studio",
 						section: "example"
 					})
 				},
@@ -1145,7 +1175,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 15: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 15: Template Linked Structure Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 15: Template Linked Structure Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1157,7 +1188,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 15: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 15: Template Linked Structure Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 15: Template Linked Structure Studio",
 						section: "review"
 					})
 				}
@@ -1167,7 +1199,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 15: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 15: Template Linked Structure Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 15: Template Linked Structure Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1179,7 +1212,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Template Linked Structure Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 15: Template Linked Structure Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 15: Template Linked Structure Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1192,7 +1226,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Template Linked Structure Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 15: Template Linked Structure Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 15: Template Linked Structure Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1210,7 +1245,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 16: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 16: Tree Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 16: Tree Invariant Studio",
 						section: "concepts"
 					})
 				},
@@ -1218,7 +1254,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 16: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 16: Tree Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 16: Tree Invariant Studio",
 						section: "example"
 					})
 				},
@@ -1226,7 +1263,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 16: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 16: Tree Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 16: Tree Invariant Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1238,7 +1276,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 16: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 16: Tree Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 16: Tree Invariant Studio",
 						section: "review"
 					})
 				}
@@ -1248,7 +1287,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 16: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 16: Tree Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 16: Tree Invariant Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1260,7 +1300,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Tree Invariant Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 16: Tree Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 16: Tree Invariant Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1273,7 +1314,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Tree Invariant Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 16: Tree Invariant Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 16: Tree Invariant Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1291,7 +1333,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 17: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 17: Benchmarking Capstone Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 17: Benchmarking Capstone Studio",
 						section: "concepts"
 					})
 				},
@@ -1299,7 +1342,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 17: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 17: Benchmarking Capstone Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 17: Benchmarking Capstone Studio",
 						section: "example"
 					})
 				},
@@ -1307,7 +1351,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 17: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 17: Benchmarking Capstone Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 17: Benchmarking Capstone Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1319,7 +1364,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 17: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 17: Benchmarking Capstone Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 17: Benchmarking Capstone Studio",
 						section: "review"
 					})
 				}
@@ -1329,7 +1375,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "C++ Algorithm Lab 17: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "C++ Algorithm Lab 17: Benchmarking Capstone Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 17: Benchmarking Capstone Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1341,7 +1388,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Benchmarking Capstone Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 17: Benchmarking Capstone Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 17: Benchmarking Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1354,7 +1402,8 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 					title: "Benchmarking Capstone Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle: "C++ Algorithm Lab 17: Benchmarking Capstone Studio",
+						moduleTitle:
+							"C++ Algorithm Lab 17: Benchmarking Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
