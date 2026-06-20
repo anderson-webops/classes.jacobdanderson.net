@@ -82,12 +82,12 @@ export const introToChemistryCourse: RawCourse = {
 			title: "CHM1 Workflow, Safety, Measurement, and Models",
 			curriculum: [
 				{
-					title: "Course Map and Learning Workflow",
+					title: "Course Overview and Learning Workflow",
 					content: [
 						"**Concept path:** Intro to Chemistry builds from observation and safety into particles, periodic-table evidence, bonding, phase change, reactions, solutions, quantitative reasoning, and a final real-world explanation. Each module contains concept material, practice tasks, projects, and checkpoints. The original course used progress markers and learning targets to make completion visible; the current course preserves that idea by making each module's outputs explicit so progress can be tracked by evidence of understanding rather than by time spent.",
 						"**Learning path:** Read the course as a sequence of reusable habits: observe carefully, name the particles or substances involved, choose a model, connect evidence to the model, check units or ratios when numbers appear, and state what the explanation cannot prove. When reviewing a module, look for the output and checkpoint sections; those are the clearest signs of what should be understood before moving on.",
 						"**Course structure:** Modules introduce concepts in a deliberate order, but projects can be revisited whenever a later topic needs an earlier idea. For example, water cohesion returns during intermolecular attractions, soda and a balloon returns during gas behavior, and the volcano and elephant-toothpaste cases return during reaction evidence.",
-						"**Output:** A personal course map listing the current module, the main concept, the project or case study, and one checkpoint question.",
+						"**Output:** A personal course overview listing the current module, the main concept, the project or case study, and one checkpoint question.",
 						"**CER checkpoint:** Explain how a chemistry project differs from a demonstration when the project includes evidence, a model, and a claim."
 					].join("\n\n"),
 					datasetLink: material("original-project-source-index")
