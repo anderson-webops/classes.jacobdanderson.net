@@ -119,12 +119,12 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Design Review: Favoring Explicit Package Structure",
 					content:
-						"The package layout should reveal the architecture rather than merely mirror folders. Good Java design makes stable boundaries obvious in the codebase."
+						"The package layout reveals the architecture rather than merely mirroring folders. Good Java design makes stable boundaries obvious in the codebase."
 				},
 				{
 					title: "Reflection Question: What Makes a Good Seam in Java?",
 					content:
-						"Identify where they would insert an interface, fake, or wrapper if they needed to change behavior safely later. The answer should reference testability, not abstraction for its own sake."
+						"Identify where an interface, fake, or wrapper would make later behavior changes safer. The answer references testability, not abstraction for its own sake."
 				},
 				{
 					title: "DPJ2 Java Design Foundations: Core Project",
@@ -184,7 +184,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Factory Method",
 					content:
-						"Use Factory Method to centralize creation when subclasses or configuration decide which concrete product should exist. Keep the lesson grounded in duplicated constructor logic and hard-coded creation branching."
+						"Use Factory Method to centralize creation when subclasses or configuration decide which concrete product exists. Keep the lesson grounded in duplicated constructor logic and hard-coded creation branching."
 				},
 				{
 					title: "Abstract Factory",
@@ -315,7 +315,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: distinguish wrapping an incompatible API from simplifying a noisy subsystem. Prompt: decide whether a logger should automatically become a Singleton.",
+						"Readiness check: distinguish wrapping an incompatible API from simplifying a noisy subsystem. Prompt: decide whether a logger actually needs a Singleton.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-07-dpj4-creational-patterns-ii-and-boundary-patterns/starter",
 					solutionLink:
@@ -357,7 +357,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Bridge",
 					content:
-						"Use Bridge when abstraction and implementation should vary independently, such as shapes versus renderers or notifications versus delivery channels. Contrast this with subclass explosions that multiply every combination."
+						"Use Bridge when abstraction and implementation vary independently, such as shapes versus renderers or notifications versus delivery channels. Contrast this with subclass explosions that multiply every combination."
 				},
 				{
 					title: "Composite",
@@ -382,7 +382,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Reflection Question: Which Structural Pattern Changes the Client View?",
 					content:
-						"Explain how each structural pattern changes what the client needs to know. A strong answer should distinguish hidden subsystem complexity, preserved interface shape, recursive composition, and deferred access."
+						"Explain how each structural pattern changes what the client needs to know. A strong answer distinguishes hidden subsystem complexity, preserved interface shape, recursive composition, and deferred access."
 				},
 				{
 					title: "DPJ5 Structural Patterns in Depth: Core Project",
@@ -527,7 +527,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Observer",
 					content:
-						"Observer is easiest to understand through notifications, UI listeners, and event-driven collaboration where publishers should not know their consumers in detail. Make coupling direction and unsubscribe behavior explicit."
+						"Observer is easiest to understand through notifications, UI listeners, and event-driven collaboration where publishers do not know their consumers in detail. Make coupling direction and unsubscribe behavior explicit."
 				},
 				{
 					title: "Command",
@@ -542,7 +542,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Mediator, Memento, and Visitor",
 					content:
-						"Use Mediator to reduce many-to-many chatter, Memento to capture restorable state without exposing internals recklessly, and Visitor to add operations over stable object structures. These should be taught as higher-friction patterns that solve real coordination or traversal pressure rather than default solutions."
+						"Use Mediator to reduce many-to-many chatter, Memento to capture restorable state without exposing internals recklessly, and Visitor to add operations over stable object structures. Treat these as higher-friction patterns that solve real coordination or traversal pressure rather than default solutions."
 				},
 				{
 					title: "Worked Example Set: Event Flow, Undo, and Cross-Object Coordination",
@@ -714,7 +714,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Design Review Exercise: Name the Tradeoff, Not Just the Pattern",
 					content:
-						"Review a medium example and argue for or against introducing a pattern. Credit should go to the quality of the tradeoff analysis, not to how many pattern names are mentioned."
+						"Review a medium example and argue for or against introducing a pattern. Credit goes to the quality of the tradeoff analysis, not to how many pattern names are mentioned."
 				},
 				{
 					title: "Refactoring Preview: Pattern Selection Requires Safe Change",
@@ -722,14 +722,14 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"Bridge into the follow-up refactoring course by showing that pattern choice is inseparable from small, safe code transformation steps. Visible pattern: Why Extract Method, Move Method, Replace Conditional with Polymorphism, and similar refactorings are the path into better design."
 				},
 				{
-					title: "Mini Lab: Improve a Brittle Object Model with Restraint",
+					title: "Brittle Object Model Refactor Studio",
 					content:
 						"Start from a messy Java design, identify only the highest-value improvements, and refactor toward a smaller justified set of patterns. Include a note about what was intentionally left alone."
 				},
 				{
 					title: "Reflection Question: What Improvement Was Actually Measured?",
 					content:
-						"Explain how they know a refactor improved extensibility, readability, or testability rather than merely increasing abstraction. A strong answer should mention a before-and-after collaboration or change scenario."
+						"Explain how the refactor improved extensibility, readability, or testability rather than merely increasing abstraction. A strong answer mentions a before-and-after collaboration or change scenario."
 				},
 				{
 					title: "DPJ9 Pattern Selection and Refactoring Judgment: Core Project",
@@ -812,7 +812,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Architecture Review: Package Layout, Seams, and Testability",
 					content:
-						"Evaluate the final design in terms of package structure, dependency direction, and ease of change. The resulting design should be defensible as actually easier to extend or test."
+						"Evaluate the final design in terms of package structure, dependency direction, and ease of change. The resulting design is defensible as actually easier to extend or test."
 				},
 				{
 					title: "Capstone Reflection: What Changed and What Stayed Simple?",
@@ -878,8 +878,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Strategy Selection Refactor: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Strategy Selection Refactor Studio",
+						moduleTitle: "Strategy Selection Refactor Studio",
 						section: "concepts"
 					})
 				},
@@ -887,8 +886,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Strategy Selection Refactor: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Strategy Selection Refactor Studio",
+						moduleTitle: "Strategy Selection Refactor Studio",
 						section: "example"
 					})
 				},
@@ -896,8 +894,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Strategy Selection Refactor: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Strategy Selection Refactor Studio",
+						moduleTitle: "Strategy Selection Refactor Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -909,8 +906,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Strategy Selection Refactor: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Strategy Selection Refactor Studio",
+						moduleTitle: "Strategy Selection Refactor Studio",
 						section: "review"
 					})
 				}
@@ -920,8 +916,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Strategy Selection Refactor: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Strategy Selection Refactor Studio",
+						moduleTitle: "Strategy Selection Refactor Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -933,8 +928,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Strategy Selection Refactor Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
-						moduleTitle:
-							"Strategy Selection Refactor Studio",
+						moduleTitle: "Strategy Selection Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -947,8 +941,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Strategy Selection Refactor Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
-						moduleTitle:
-							"Strategy Selection Refactor Studio",
+						moduleTitle: "Strategy Selection Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -966,8 +959,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Structural Wrapper Refactor: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Structural Wrapper Refactor Studio",
+						moduleTitle: "Structural Wrapper Refactor Studio",
 						section: "concepts"
 					})
 				},
@@ -975,8 +967,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Structural Wrapper Refactor: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Structural Wrapper Refactor Studio",
+						moduleTitle: "Structural Wrapper Refactor Studio",
 						section: "example"
 					})
 				},
@@ -984,8 +975,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Structural Wrapper Refactor: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Structural Wrapper Refactor Studio",
+						moduleTitle: "Structural Wrapper Refactor Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -997,8 +987,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Structural Wrapper Refactor: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Structural Wrapper Refactor Studio",
+						moduleTitle: "Structural Wrapper Refactor Studio",
 						section: "review"
 					})
 				}
@@ -1008,8 +997,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Structural Wrapper Refactor: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Structural Wrapper Refactor Studio",
+						moduleTitle: "Structural Wrapper Refactor Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1021,8 +1009,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Structural Wrapper Refactor Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
-						moduleTitle:
-							"Structural Wrapper Refactor Studio",
+						moduleTitle: "Structural Wrapper Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1035,8 +1022,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Structural Wrapper Refactor Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
-						moduleTitle:
-							"Structural Wrapper Refactor Studio",
+						moduleTitle: "Structural Wrapper Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1054,8 +1040,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Architecture Judgment Capstone: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Architecture Judgment Capstone Studio",
+						moduleTitle: "Architecture Judgment Capstone Studio",
 						section: "concepts"
 					})
 				},
@@ -1063,8 +1048,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Architecture Judgment Capstone: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Architecture Judgment Capstone Studio",
+						moduleTitle: "Architecture Judgment Capstone Studio",
 						section: "example"
 					})
 				},
@@ -1072,8 +1056,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Architecture Judgment Capstone: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Architecture Judgment Capstone Studio",
+						moduleTitle: "Architecture Judgment Capstone Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1085,8 +1068,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Architecture Judgment Capstone: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Architecture Judgment Capstone Studio",
+						moduleTitle: "Architecture Judgment Capstone Studio",
 						section: "review"
 					})
 				}
@@ -1096,8 +1078,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Architecture Judgment Capstone: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
-						moduleTitle:
-							"Architecture Judgment Capstone Studio",
+						moduleTitle: "Architecture Judgment Capstone Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1109,8 +1090,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Architecture Judgment Capstone Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
-						moduleTitle:
-							"Architecture Judgment Capstone Studio",
+						moduleTitle: "Architecture Judgment Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1123,8 +1103,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 					title: "Architecture Judgment Capstone Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
-						moduleTitle:
-							"Architecture Judgment Capstone Studio",
+						moduleTitle: "Architecture Judgment Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),

@@ -3748,10 +3748,15 @@ describe("course text quality normalization", () => {
 		expect(source).not.toMatch(/\bSupplemental [23]\b/);
 		expect(source).not.toMatch(/\bThis section covers\b/);
 		expect(source).not.toContain("Key idea:");
+		expect(source).not.toMatch(/\bMini Lab\b/);
+		expect(source).not.toMatch(/\bshould\b/);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/);
 		expect(corpus).not.toMatch(/\bSupplemental [23]\b/);
+		expect(corpus).not.toMatch(/\bMini Lab\b/);
 		expect(corpus).toContain("Refactoring Clinic 11: Practice Studio");
 		expect(corpus).toContain("Refactoring Clinic 17 Extension Practice");
+		expect(corpus).toContain("Calculation Pipeline Refactor Studio");
+		expect(corpus).toContain("Characterization Test Refactor Studio");
 		expect(corpus).toContain("Composing Methods Transfer Practice");
 		expect(corpus).toContain(
 			"Capstone Refactoring Studio Extension Practice"
@@ -3801,9 +3806,13 @@ describe("course text quality normalization", () => {
 		expect(source).not.toMatch(/Supplemental [23]/);
 		expect(source).not.toMatch(/Implementation Lab/);
 		expect(source).not.toMatch(/Key idea:/);
+		expect(source).not.toMatch(/\bMini Lab\b/);
+		expect(source).not.toMatch(/\bshould\b/);
+		expect(corpus).not.toMatch(/\bMini Lab\b/);
 		expect(corpus).toContain("Strategy Selection Refactor Studio");
 		expect(corpus).toContain("Structural Wrapper Refactor Studio");
 		expect(corpus).toContain("Architecture Judgment Capstone Studio");
+		expect(corpus).toContain("Brittle Object Model Refactor Studio");
 		expect(corpus).toContain(
 			"Strategy Selection Refactor Transfer Practice"
 		);
