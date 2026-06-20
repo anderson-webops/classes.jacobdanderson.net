@@ -87,13 +87,13 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ1-Mad-Lib"
 				},
 				{
-					title: "Review: Variables, Strings, and Input supplemental 2",
+					title: "Java Syntax Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle:
 							"AJ1 Review: Variables, Strings, and Input",
 						itemTitle:
-							"Review: Variables, Strings, and Input supplemental 2",
+							"Java Syntax Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -103,13 +103,13 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-01-aj1-review-variables-strings-and-input-supplemental-2/solution"
 				},
 				{
-					title: "Review: Variables, Strings, and Input supplemental 3",
+					title: "Console Input Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle:
 							"AJ1 Review: Variables, Strings, and Input",
 						itemTitle:
-							"Review: Variables, Strings, and Input supplemental 3",
+							"Console Input Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -353,11 +353,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ3-Student-Class"
 				},
 				{
-					title: "Review: Objects and Classes supplemental 2",
+					title: "Object Model Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ3 Review: Objects and Classes",
-						itemTitle: "Review: Objects and Classes supplemental 2",
+						itemTitle: "Object Model Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -367,11 +367,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-03-aj3-review-objects-and-classes-supplemental-2/solution"
 				},
 				{
-					title: "Review: Objects and Classes supplemental 3",
+					title: "Inheritance Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ3 Review: Objects and Classes",
-						itemTitle: "Review: Objects and Classes supplemental 3",
+						itemTitle: "Inheritance Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -448,11 +448,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ4-Recursion-Practice"
 				},
 				{
-					title: "Recursion supplemental 2",
+					title: "Recursive Trace Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ4 Recursion",
-						itemTitle: "Recursion supplemental 2",
+						itemTitle: "Recursive Trace Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -462,11 +462,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-05-aj4-recursion-supplemental-2/solution"
 				},
 				{
-					title: "Recursion supplemental 3",
+					title: "Recursive Backtracking Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ4 Recursion",
-						itemTitle: "Recursion supplemental 3",
+						itemTitle: "Recursive Backtracking Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -539,12 +539,12 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ5-Linear-Search"
 				},
 				{
-					title: "Linear Search and Big O Notation supplemental 2",
+					title: "Search Runtime Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ5 Linear Search and Big-O Notation",
 						itemTitle:
-							"Linear Search and Big O Notation supplemental 2",
+							"Search Runtime Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -554,12 +554,12 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-07-aj5-linear-search-and-big-o-notation-supplemental-2/solution"
 				},
 				{
-					title: "Linear Search and Big O Notation supplemental 3",
+					title: "Runtime Comparison Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ5 Linear Search and Big-O Notation",
 						itemTitle:
-							"Linear Search and Big O Notation supplemental 3",
+							"Runtime Comparison Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -644,11 +644,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ6-Binary-Search-with-Iteration"
 				},
 				{
-					title: "Binary Search supplemental 2",
+					title: "Binary Search Trace Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ6 Binary Search",
-						itemTitle: "Binary Search supplemental 2",
+						itemTitle: "Binary Search Trace Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -658,11 +658,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-09-aj6-binary-search-supplemental-2/solution"
 				},
 				{
-					title: "Binary Search supplemental 3",
+					title: "Binary Search Edge-Case Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ6 Binary Search",
-						itemTitle: "Binary Search supplemental 3",
+						itemTitle: "Binary Search Edge-Case Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -747,11 +747,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ-Check-In-1"
 				},
 				{
-					title: "Check In #1 supplemental 2",
+					title: "Review Checkpoint Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #1",
-						itemTitle: "Check In #1 supplemental 2",
+						itemTitle: "Review Checkpoint Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -761,11 +761,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-11-check-in-1-supplemental-2/solution"
 				},
 				{
-					title: "Check In #1 supplemental 3",
+					title: "Review Checkpoint Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #1",
-						itemTitle: "Check In #1 supplemental 3",
+						itemTitle: "Review Checkpoint Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -850,12 +850,12 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ7-Biggest-to-Smallest-Bookshelf"
 				},
 				{
-					title: "Selection and Insertion Sort supplemental 2",
+					title: "Elementary Sorting Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ7 Selection and Insertion Sort",
 						itemTitle:
-							"Selection and Insertion Sort supplemental 2",
+							"Elementary Sorting Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -865,12 +865,12 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-13-aj7-selection-and-insertion-sort-supplemental-2/solution"
 				},
 				{
-					title: "Selection and Insertion Sort supplemental 3",
+					title: "Elementary Sorting Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ7 Selection and Insertion Sort",
 						itemTitle:
-							"Selection and Insertion Sort supplemental 3",
+							"Elementary Sorting Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -943,11 +943,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ8-Bubble-Sort"
 				},
 				{
-					title: "Bubble Sort supplemental 2",
+					title: "Bubble Sort Trace Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ8 Bubble Sort",
-						itemTitle: "Bubble Sort supplemental 2",
+						itemTitle: "Bubble Sort Trace Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -957,11 +957,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-15-aj8-bubble-sort-supplemental-2/solution"
 				},
 				{
-					title: "Bubble Sort supplemental 3",
+					title: "Bubble Sort Optimization Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ8 Bubble Sort",
-						itemTitle: "Bubble Sort supplemental 3",
+						itemTitle: "Bubble Sort Optimization Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1046,11 +1046,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ9-Merge"
 				},
 				{
-					title: "Merge Sort supplemental 2",
+					title: "Merge Sort Trace Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ9 Merge Sort",
-						itemTitle: "Merge Sort supplemental 2",
+						itemTitle: "Merge Sort Trace Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1060,11 +1060,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-17-aj9-merge-sort-supplemental-2/solution"
 				},
 				{
-					title: "Merge Sort supplemental 3",
+					title: "Merge Sort Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ9 Merge Sort",
-						itemTitle: "Merge Sort supplemental 3",
+						itemTitle: "Merge Sort Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1149,11 +1149,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ-Check-In-2"
 				},
 				{
-					title: "Check In #2 supplemental 2",
+					title: "Sorting Checkpoint Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #2",
-						itemTitle: "Check In #2 supplemental 2",
+						itemTitle: "Sorting Checkpoint Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1163,11 +1163,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-19-check-in-2-supplemental-2/solution"
 				},
 				{
-					title: "Check In #2 supplemental 3",
+					title: "Sorting Checkpoint Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #2",
-						itemTitle: "Check In #2 supplemental 3",
+						itemTitle: "Sorting Checkpoint Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1238,11 +1238,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Juni-Bakery"
 				},
 				{
-					title: "Sustainable Programming supplemental 2",
+					title: "Refactoring Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ10 Sustainable Programming",
-						itemTitle: "Sustainable Programming supplemental 2",
+						itemTitle: "Refactoring Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1252,11 +1252,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-21-aj10-sustainable-programming-supplemental-2/solution"
 				},
 				{
-					title: "Sustainable Programming supplemental 3",
+					title: "Maintainability Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ10 Sustainable Programming",
-						itemTitle: "Sustainable Programming supplemental 3",
+						itemTitle: "Maintainability Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1318,11 +1318,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ11-Linked-List"
 				},
 				{
-					title: "Linked Lists supplemental 2",
+					title: "Linked List Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ11 Linked Lists",
-						itemTitle: "Linked Lists supplemental 2",
+						itemTitle: "Linked List Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1332,11 +1332,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-23-aj11-linked-lists-supplemental-2/solution"
 				},
 				{
-					title: "Linked Lists supplemental 3",
+					title: "Linked List Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ11 Linked Lists",
-						itemTitle: "Linked Lists supplemental 3",
+						itemTitle: "Linked List Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1467,11 +1467,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ13-Class-Rank"
 				},
 				{
-					title: "Priority Queues and Maps supplemental 2",
+					title: "Priority Queue Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ13 Priority Queues and Maps",
-						itemTitle: "Priority Queues and Maps supplemental 2",
+						itemTitle: "Priority Queue Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1481,11 +1481,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-25-aj13-priority-queues-and-maps-supplemental-2/solution"
 				},
 				{
-					title: "Priority Queues and Maps supplemental 3",
+					title: "Map Lookup Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ13 Priority Queues and Maps",
-						itemTitle: "Priority Queues and Maps supplemental 3",
+						itemTitle: "Map Lookup Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1553,11 +1553,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ-Check-In-3"
 				},
 				{
-					title: "Check In #3 supplemental 2",
+					title: "Data Structures Checkpoint Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #3",
-						itemTitle: "Check In #3 supplemental 2",
+						itemTitle: "Data Structures Checkpoint Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1567,11 +1567,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-27-check-in-3-supplemental-2/solution"
 				},
 				{
-					title: "Check In #3 supplemental 3",
+					title: "Data Structures Checkpoint Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #3",
-						itemTitle: "Check In #3 supplemental 3",
+						itemTitle: "Data Structures Checkpoint Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1647,11 +1647,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ14-Basic-BST"
 				},
 				{
-					title: "Binary Search Trees supplemental 2",
+					title: "BST Traversal Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ14 Binary Search Trees",
-						itemTitle: "Binary Search Trees supplemental 2",
+						itemTitle: "BST Traversal Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1661,11 +1661,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-29-aj14-binary-search-trees-supplemental-2/solution"
 				},
 				{
-					title: "Binary Search Trees supplemental 3",
+					title: "BST Mutation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ14 Binary Search Trees",
-						itemTitle: "Binary Search Trees supplemental 3",
+						itemTitle: "BST Mutation Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1732,11 +1732,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ15-Hash-Map"
 				},
 				{
-					title: "Hash Tables supplemental 2",
+					title: "Hash Table Collision Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ15 Hash Tables",
-						itemTitle: "Hash Tables supplemental 2",
+						itemTitle: "Hash Table Collision Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1746,11 +1746,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-31-aj15-hash-tables-supplemental-2/solution"
 				},
 				{
-					title: "Hash Tables supplemental 3",
+					title: "Hash Table Resizing Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ15 Hash Tables",
-						itemTitle: "Hash Tables supplemental 3",
+						itemTitle: "Hash Table Resizing Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1809,11 +1809,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ16-Eulerian-Mail-Circuit"
 				},
 				{
-					title: "Graphs supplemental 2",
+					title: "Graph Traversal Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ16 Graphs",
-						itemTitle: "Graphs supplemental 2",
+						itemTitle: "Graph Traversal Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1823,11 +1823,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-33-aj16-graphs-supplemental-2/solution"
 				},
 				{
-					title: "Graphs supplemental 3",
+					title: "Graph Modeling Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ16 Graphs",
-						itemTitle: "Graphs supplemental 3",
+						itemTitle: "Graph Modeling Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1885,11 +1885,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ-Check-In-4"
 				},
 				{
-					title: "Check In #4 supplemental 2",
+					title: "Advanced Structures Checkpoint Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #4",
-						itemTitle: "Check In #4 supplemental 2",
+						itemTitle: "Advanced Structures Checkpoint Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1899,11 +1899,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-35-check-in-4-supplemental-2/solution"
 				},
 				{
-					title: "Check In #4 supplemental 3",
+					title: "Advanced Structures Checkpoint Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #4",
-						itemTitle: "Check In #4 supplemental 3",
+						itemTitle: "Advanced Structures Checkpoint Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1969,11 +1969,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ17-Weighted-Graph"
 				},
 				{
-					title: "Master Project: Google Maps supplemental 2",
+					title: "Google Maps Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ17 Master Project: Google Maps",
-						itemTitle: "Master Project: Google Maps supplemental 2",
+						itemTitle: "Google Maps Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1983,11 +1983,11 @@ export const javaLevel3Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/J3-37-aj17-master-project-google-maps-supplemental-2/solution"
 				},
 				{
-					title: "Master Project: Google Maps supplemental 3",
+					title: "Google Maps Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ17 Master Project: Google Maps",
-						itemTitle: "Master Project: Google Maps supplemental 3",
+						itemTitle: "Google Maps Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -2213,8 +2213,11 @@ export const javaLevel3Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "AJ21 Project 3: Report Builder Refactor",
-					content:
-						"Take a messy report generator and refactor it into parsing, aggregation, formatting, and output stages. Skill target: Swap one stage without rewriting the whole pipeline.",
+					content: `**Project target:** Refactor a messy report generator into a clear data pipeline with separate parsing, aggregation, formatting, and output stages.
+
+**Build path:** First identify the current mixed responsibilities and write down the inputs and outputs for each stage. Then extract one stage at a time, keeping the program runnable after each change so behavior can be compared against the original report.
+
+**Evidence target:** The final version can swap or modify one stage without rewriting the whole pipeline, and a short before-and-after explanation names which responsibility moved into each new method or class.`,
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ21-Report-Builder-Refactor"
 				}
