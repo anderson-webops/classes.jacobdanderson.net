@@ -400,7 +400,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Math Demo",
 					content:
-						"The source course used a Replit math demo; the repo-backed counterpart is the `APCS3-Math-Fun` project and should be used instead.",
+						"Use the `APCS3-Math-Fun` project to practice `Math` methods, packages, casting, and readable output. The finished program should demonstrate each calculation with inputs and output that make the method behavior easy to verify.",
 					projectLink: repo("APCS3-Math-Fun/starter"),
 					solutionLink: repo("APCS3-Math-Fun/solution"),
 					mediaLink: media("apcs3-project-2-math-demo.mp4")
@@ -834,9 +834,9 @@ export const apComputerScienceACourse: RawCourse = {
 					solutionLink: repo("APCS9-Specification/solution")
 				},
 				{
-					title: "Robust Input Solution Build",
+					title: "Robust Input Reference Review",
 					content:
-						"The completed robust-input build compares an input-validation structure against a reference implementation. Look for where invalid values are rejected, where the program repeats, and where valid data finally enters the main logic.",
+						"Compare the robust-input practice project with the reference implementation after the local version runs. Look for where invalid values are rejected, where the program repeats, and where valid data finally enters the main logic.",
 					projectLink: repo("APCS9-Robust-Input-Practice/starter"),
 					solutionLink: repo("APCS9-Robust-Input-Practice/solution")
 				}

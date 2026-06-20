@@ -4169,8 +4169,8 @@ function projectExpectations(context: CourseTextContext) {
 				`- Compile and run ${subject}, then test a normal AP-style case plus one edge case involving a boundary value, empty collection, null-risk, or branch change when relevant.`,
 				`- Include a short ${subject} trace, state table, or explanation of why the selected Java construct behaves that way.`
 			],
-			subject => [
-				`- Name the ${subject} AP Java target: type behavior, expression evaluation, control flow, method call, class state, array, or list operation.`,
+			() => [
+				"- Name the AP Java target: type behavior, expression evaluation, control flow, method call, class state, array, or list operation.",
 				`- Check a routine case and one case shaped like an AP distractor, such as off-by-one indexing, integer division, equality, aliasing, or mutation.`,
 				`- Record the exact Java rule that justifies the result.`
 			],
@@ -5779,6 +5779,14 @@ function compactGeneratedProjectSupport(
 			.replace(
 				/\b(standard|typical|ordinary|small|minimal|runnable|visible|local|working|traceable|current|finished|final) the\b/gi,
 				"$1"
+			)
+			.replace(
+				/\b(the [A-Z][^.!?\n]{1,180}?) program build command\b/g,
+				"$1 build command"
+			)
+			.replace(
+				/\b(the [A-Z][^.!?\n]{1,180}?) program normal behavior\b/g,
+				"$1 program's normal behavior"
 			)
 			.replace(
 				new RegExp(
