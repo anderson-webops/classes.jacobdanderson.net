@@ -7,7 +7,7 @@ export interface ProjectGuidanceOptions {
 }
 
 function projectArtifact(kind: ProjectGuidanceOptions["projectKind"]) {
-	return kind === "core" ? "implementation checkpoint" : "applied challenge";
+	return kind === "core" ? "core build checkpoint" : "applied challenge";
 }
 
 function stableVariantIndex(seed: string, count: number) {
@@ -89,20 +89,28 @@ function cleanupReferenceNamePattern() {
 		"task",
 		"Java work",
 		"Java implementation",
+		"class model",
 		"class exercise",
 		"code checkpoint",
 		"object-design task",
+		"object-design exercise",
 		"practice build",
 		"type-model task",
 		"method-contract exercise",
+		"method-contract checkpoint",
 		"API checkpoint",
 		"object-state build",
 		"collection exercise",
+		"data-structure exercise",
 		"Java design task",
+		"design checkpoint",
 		"systems artifact",
 		"command-line build",
 		"runtime check",
 		"diagnostic run",
+		"runtime trace",
+		"memory trace",
+		"tooling check",
 		"low-level implementation",
 		"lab",
 		"solution",
@@ -140,11 +148,12 @@ function guidanceReference(courseFamily: string, moduleTitle: string) {
 	) {
 		const references = [
 			"the program",
-			"the systems artifact",
 			"the command-line build",
 			"the runtime check",
 			"the diagnostic run",
-			"the low-level implementation"
+			"the runtime trace",
+			"the memory trace",
+			"the tooling check"
 		];
 
 		return references[
@@ -154,18 +163,18 @@ function guidanceReference(courseFamily: string, moduleTitle: string) {
 	if (family.includes("swift")) return "the app path";
 	if (family.includes("java")) {
 		const references = [
-			"the Java implementation",
+			"the class model",
 			"the class exercise",
 			"the project",
 			"the code checkpoint",
-			"the object-design task",
+			"the object-design exercise",
 			"the practice build",
-			"the type-model task",
-			"the method-contract exercise",
+			"the method-contract checkpoint",
 			"the API checkpoint",
 			"the object-state build",
 			"the collection exercise",
-			"the Java design task"
+			"the data-structure exercise",
+			"the design checkpoint"
 		];
 
 		return references[
@@ -196,6 +205,35 @@ function scopedGuidanceReference(reference: string, moduleTitle: string) {
 		)
 	) {
 		return cleanTitle;
+	}
+
+	const [firstReferenceWord = "", ...remainingReferenceWords] =
+		bareReference.split(/\s+/);
+	const firstReferenceRoot = firstReferenceWord.split("-")[0];
+	if (
+		firstReferenceRoot &&
+		new RegExp(
+			`\\b${escapeStringForRegExp(firstReferenceRoot)}$`,
+			"i"
+		).test(cleanTitle)
+	) {
+		const trimmedFirstWord = firstReferenceWord
+			.replace(
+				new RegExp(
+					`^${escapeStringForRegExp(firstReferenceRoot)}[-\\s]?`,
+					"i"
+				),
+				""
+			)
+			.trim();
+		const collapsedReference = [
+			trimmedFirstWord,
+			...remainingReferenceWords
+		]
+			.filter(Boolean)
+			.join(" ");
+		if (collapsedReference)
+			return `the ${cleanTitle} ${collapsedReference}`;
 	}
 
 	return `the ${cleanTitle} ${bareReference}`;
@@ -417,6 +455,11 @@ function compactGuidanceBody(
 			"$1"
 		)
 		.replace(/\b(the final|The final|the closing|The closing) the\b/g, "$1")
+		.replace(/\b(one|each|every|a|an) the\b/gi, "$1")
+		.replace(
+			/\b(standard|typical|ordinary|small|minimal|runnable|visible|local|working|traceable|current|finished|final) the\b/gi,
+			"$1"
+		)
 		.replace(/\b- the\b/g, "- The")
 		.replace(
 			new RegExp(`\\bAfter ${escapedReference} page behavior\\b`, "g"),
@@ -1244,7 +1287,7 @@ function requiredWorkSteps(
 			],
 			[
 				`For ${subject}, separate syntax setup from design setup by naming the package, class boundary, state, and public contract.`,
-				`Build a minimal runnable ${subject} version, then add the Java feature that matters for this module: access control, overload, override, interface, record, or collection behavior.`,
+				`Build a minimal runnable version of ${subject}, then add the Java feature that matters for this module: access control, overload, override, interface, record, or collection behavior.`,
 				`Verify ${subject} with a traceable example and one edge case that would expose a weak method contract.`
 			],
 			[
@@ -1269,7 +1312,7 @@ function requiredWorkSteps(
 			],
 			[
 				`Describe ${subject} with an example object or call sequence before implementing the general version.`,
-				`Keep one small ${subject} driver example available while compiling after each state, branch, loop, or dispatch change.`,
+				`Keep a small driver example for ${subject} available while compiling after each state, branch, loop, or dispatch change.`,
 				`Check the ${subject} expected path, a boundary path, and one case that would expose a vague method contract.`
 			],
 			[
@@ -1285,7 +1328,7 @@ function requiredWorkSteps(
 			[
 				`Start ${subject} by separating data representation, behavior, and driver code.`,
 				`Add ${subject} implementation details in slices that keep errors tied to one field, constructor, method, branch, or list operation.`,
-				`Check a standard ${subject} run, a boundary run, and one run that tests how Java references or objects behave.`
+				`Check a standard run for ${subject}, a boundary run, and one run that tests how Java references or objects behave.`
 			],
 			[
 				`Write the ${subject} API expectation first: what can be called, what changes state, and what gets returned or printed.`,
@@ -2093,26 +2136,26 @@ function projectPathNote({
 	if (projectKind === "core") {
 		if (hasReference) {
 			return [
-				`**Path:** Core implementation. ${subject} is built and verified independently before comparison with ${reference}.`,
-				`**Path:** Core implementation. ${subject} reaches a working local result first, then ${reference} is used to compare structure and edge handling.`,
-				`**Path:** Core implementation. ${subject} needs fresh evidence before ${reference} is opened, so comparison does not replace reasoning.`,
-				`**Path:** Core implementation. ${subject} starts with a standard path and one boundary check, then ${reference} helps identify missing cases.`,
-				`**Path:** Core implementation. ${subject} is treated as the primary solution attempt; ${reference} is a review tool after behavior is observed.`,
-				`**Path:** Core implementation. ${subject} records compile/run, output, trace, or result evidence before using ${reference} for refinement.`,
-				`**Path:** Core implementation. ${subject} is complete enough to explain before ${reference} is used as a second opinion.`,
-				`**Path:** Core implementation. ${subject} compares against ${reference} only after the local design has a checked standard scenario.`
+				`**Path:** Core build. ${subject} is built and verified independently before comparison with ${reference}.`,
+				`**Path:** Core build. ${subject} reaches a working local result first, then ${reference} is used to compare structure and edge handling.`,
+				`**Path:** Core build. ${subject} needs fresh evidence before ${reference} is opened, so comparison does not replace reasoning.`,
+				`**Path:** Core build. ${subject} starts with a standard path and one boundary check, then ${reference} helps identify missing cases.`,
+				`**Path:** Core build. ${subject} is treated as the primary attempt; ${reference} is a review tool after behavior is observed.`,
+				`**Path:** Core build. ${subject} records compile/run, output, trace, or result evidence before using ${reference} for refinement.`,
+				`**Path:** Core build. ${subject} is complete enough to explain before ${reference} is used as a second opinion.`,
+				`**Path:** Core build. ${subject} compares against ${reference} only after the local design has a checked standard scenario.`
 			][index];
 		}
 
 		return [
-			`**Path:** Core implementation. ${subject} is verified with one standard case plus one boundary or failure-mode check.`,
-			`**Path:** Core implementation. ${subject} moves from the smallest working result to a checked edge case.`,
-			`**Path:** Core implementation. ${subject} records expected behavior, observed behavior, and one condition that could break it.`,
-			`**Path:** Core implementation. ${subject} keeps the first version narrow enough to test before optional polish is added.`,
-			`**Path:** Core implementation. ${subject} has a clear success condition and one edge case that tests more than syntax.`,
-			`**Path:** Core implementation. ${subject} is checked against both the intended path and one small failure-mode path.`,
-			`**Path:** Core implementation. ${subject} turns the module concept into a visible result with at least one edge check.`,
-			`**Path:** Core implementation. ${subject} is considered ready only after the main result and one boundary condition are both explainable.`
+			`**Path:** Core build. ${subject} is verified with one standard case plus one boundary or failure-mode check.`,
+			`**Path:** Core build. ${subject} moves from the smallest working result to a checked edge case.`,
+			`**Path:** Core build. ${subject} records expected behavior, observed behavior, and one condition that could break it.`,
+			`**Path:** Core build. ${subject} keeps the first version narrow enough to test before optional polish is added.`,
+			`**Path:** Core build. ${subject} has a clear success condition and one edge case that tests more than syntax.`,
+			`**Path:** Core build. ${subject} is checked against both the intended path and one small failure-mode path.`,
+			`**Path:** Core build. ${subject} turns the module concept into a visible result with at least one edge check.`,
+			`**Path:** Core build. ${subject} is considered ready only after the main result and one boundary condition are both explainable.`
 		][index];
 	}
 

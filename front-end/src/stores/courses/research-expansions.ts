@@ -523,7 +523,7 @@ function buildProjectModule(
 				title: `${courseLabel} Rubric`,
 				content: [
 					`**Reflection:** Every major ${courseLabel} project includes a short note naming the goal, approach, evidence, bug or misconception, and one next improvement.`,
-					`**Rubric use:** Score the ${courseLabel} artifact and the explanation separately. A project in ${courseLabel} can produce the right output while still needing a stronger explanation, clearer evidence, better edge-case coverage, or a more maintainable structure.`,
+					`**Rubric use:** Score the ${courseLabel} deliverable and the explanation separately. A project in ${courseLabel} can produce the right output while still needing a stronger explanation, clearer evidence, better edge-case coverage, or a more maintainable structure.`,
 					`**Project checks:**\n- The ${courseLabel} deliverable is visible, runnable, or inspectable.\n- A normal ${courseLabel} case and an edge case are tested or justified.\n- The ${courseLabel} explanation does not depend on reading every line or step from notes.`
 				].join("\n\n")
 			},

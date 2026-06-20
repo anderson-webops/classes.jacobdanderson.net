@@ -423,19 +423,23 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(
 				/\b(?:a AI|a Algebra|a object|a array|an Java|an Python|an C\+\+)\b/i
 			);
+			expect(corpus).not.toMatch(
+				/\b(?:Java implementation|type-model task|systems artifact|low-level implementation|Core implementation)\b/i
+			);
+			expect(corpus).not.toMatch(
+				/as (?:an AI\/Python|a Java|the USACO Bronze) implementation checkpoint/i
+			);
 			expect(corpus).toContain("opening the starter resource");
 			expect(corpus).toContain("Open the starter resource");
+			expect(corpus).toContain("as an AI/Python core build checkpoint");
 			expect(corpus).toContain(
-				"as an AI/Python implementation checkpoint"
-			);
-			expect(corpus).toContain(
-				"Complete **PTJ0 Positioning and Workflow Translation** as a Java implementation checkpoint that exposes class responsibilities, public behavior, and one edge case"
+				"Complete **PTJ0 Positioning and Workflow Translation** as a Java core build checkpoint that exposes class responsibilities, public behavior, and one edge case"
 			);
 			expect(corpus).toContain(
 				"Build the web development applied challenge for **JSM1 Fundamentals Review** as a browser-visible feature with clear state, interaction, and error-handling evidence"
 			);
 			expect(corpus).toContain(
-				"Solve the USACO Bronze implementation checkpoint for **USB0 Setup and Contest Workflow** with exact input/output behavior, a traceable invariant, and evidence from sample plus custom cases"
+				"Solve the USACO Bronze core build checkpoint for **USB0 Setup and Contest Workflow** with exact input/output behavior, a traceable invariant, and evidence from sample plus custom cases"
 			);
 			expect(corpus).toContain(
 				"Build **Images and Sprites: Practice Studio** as a core build checkpoint with runnable behavior, inspectable evidence, and a clear boundary case"
@@ -633,13 +637,13 @@ describe("course text quality normalization", () => {
 				"Verify the intended behavior plus one boundary case using terminal, debugger, sanitizer, trace, or log evidence."
 			);
 			expect(corpus).toMatch(
-				/Build a minimal runnable [^.\n]+ version, then add the Java feature that matters for this module/
+				/Build a minimal runnable version of [^.\n]+, then add the Java feature that matters for this module/
 			);
 			expect(corpus).toMatch(
 				/Compile [^.\n]+ after each constructor, method signature, branch, or collection change/
 			);
 			expect(corpus).toMatch(
-				/Keep one small [^.\n]+ driver example available while compiling after each state, branch, loop, or dispatch change/
+				/Keep a small driver example for [^.\n]+ available while compiling after each state, branch, loop, or dispatch change/
 			);
 			expect(corpus).toMatch(
 				/Change one [^.\n]+ API, allocation, loop, branch, build setting, or diagnostic hook at a time/
@@ -678,7 +682,7 @@ describe("course text quality normalization", () => {
 				"Extend the Java work with one additional method and a test or console trace that proves its contract"
 			);
 			expect(corpus).toContain(
-				"Extend the object-design task with one additional method and a test or console trace that proves its contract"
+				"Verify the Division Facts object-design exercise with one standard case and one boundary case that exposes the key concept"
 			);
 			expect(corpus).toContain(
 				"Produce **PTJ1 Functions, Parameters, and Return Types** with a named Java type boundary, visible behavior, and evidence from a standard scenario plus a boundary scenario"
@@ -2949,7 +2953,7 @@ describe("course text quality normalization", () => {
 			"IPv6 Extension Practice"
 		]);
 		expect(new Set(projectItems.map(item => item.content)).size).toBe(3);
-		expect(projectItems[0].content).toContain("Core implementation");
+		expect(projectItems[0].content).toContain("Core build");
 		expect(projectItems[1].content).toContain("Transfer Practice");
 		expect(projectItems[2].content).toContain("Extension Practice");
 	});
@@ -3802,7 +3806,7 @@ describe("course text quality normalization", () => {
 
 		expect(projectItems).toHaveLength(3);
 		expect(new Set(projectItems.map(item => item.content)).size).toBe(3);
-		expect(projectItems[0].content).toContain("implementation checkpoint");
+		expect(projectItems[0].content).toContain("core build checkpoint");
 		expect(projectItems[1].title).toContain("Transfer Practice");
 		expect(projectItems[1].content).toContain("Transfer Practice");
 		expect(projectItems[2].title).toContain("Extension Practice");
@@ -4323,7 +4327,7 @@ describe("course text quality normalization", () => {
 				/\*\*Goal:\*\* \*\*[^*]+\*\* produces a visible result for [^\n.]+: one ordinary path/i
 			);
 			expect(corpus).not.toMatch(
-				/\*\*Goal:\*\* The (?:class exercise|code checkpoint|object-design task|practice build|type-model task|method-contract exercise|API checkpoint|object-state build|collection exercise|Java design task|project|activity|program|analysis|work) (?:turns|makes|shows|grows|applies|includes|demonstrates|connects|documents|produces|ends|centers)\b/i
+				/\*\*Goal:\*\* The (?:class model|class exercise|code checkpoint|object-design task|object-design exercise|practice build|type-model task|method-contract exercise|method-contract checkpoint|API checkpoint|object-state build|collection exercise|data-structure exercise|Java design task|design checkpoint|project|activity|program|analysis|work) (?:turns|makes|shows|grows|applies|includes|demonstrates|connects|documents|produces|ends|centers)\b/i
 			);
 			expect(corpus).not.toMatch(
 				/\*\*Concept path:\*\* [^\n.]+ starts with the relevant parts of [^\n.]+, then follows one concrete example through a changed case/i
@@ -4367,7 +4371,7 @@ describe("course text quality normalization", () => {
 			);
 			expect(corpus).not.toMatch(/\bUse this [^.]+ baseline\b/i);
 			expect(corpus).not.toMatch(
-				/\b(?:the|The) (?:project|program|activity|task|build|checkpoint|exercise|response|practice task|AP Java task|Java checkpoint|code checkpoint|class exercise|type-model task|object-design task|practice build|collection exercise|API checkpoint) for (?:Project|Reference|Supplemental|Check-In|Core|PS\d|JS\d|AJ\d|JM\d|APCS\d)\b/i
+				/\b(?:the|The) (?:project|program|activity|task|build|checkpoint|exercise|response|practice task|AP Java task|Java checkpoint|code checkpoint|class model|class exercise|type-model task|object-design task|object-design exercise|practice build|method-contract checkpoint|collection exercise|data-structure exercise|API checkpoint|design checkpoint) for (?:Project|Reference|Supplemental|Check-In|Core|PS\d|JS\d|AJ\d|JM\d|APCS\d)\b/i
 			);
 			expect(corpus).not.toMatch(/\bfor (?:the )?project for\b/i);
 			expect(corpus).not.toMatch(
