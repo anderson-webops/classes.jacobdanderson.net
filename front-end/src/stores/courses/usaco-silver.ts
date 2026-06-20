@@ -131,7 +131,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: HashSets",
 					content:
-						"Practice membership and deduplication logic in a contest setting where the structure choice matters directly.",
+						"Practice membership and deduplication logic in a contest setting where the structure choice matters directly. The checkpoint is naming what belongs in the set, why duplicates must disappear, and how lookup changes the solution from repeated searching into direct evidence.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US5-Hash-Sets/starter",
 					solutionLink:
@@ -203,7 +203,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Mothers Milk",
 					content:
-						"Use state-space exploration to practice traversal on a generated graph instead of a fixed one.",
+						"Use state-space exploration to practice traversal on a generated graph instead of a fixed one. Represent a state as the amount in each bucket, generate all legal pours, and explain why visited-state tracking is enough to prevent loops while preserving every reachable final answer.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US6-Mothers-Milk/starter",
 					solutionLink:
@@ -212,7 +212,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: MooTube",
 					content:
-						"Treat relationships and thresholds as graph structure so that traversal answers a query cleanly.",
+						"Treat relationships and thresholds as graph structure so that traversal answers a query cleanly. For each query, identify which edges remain usable under the relevance cutoff, traverse only through those edges, and verify that the count excludes the starting video itself.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US7-Moo-Tube/starter",
 					solutionLink:
@@ -240,12 +240,12 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Search over Data and Search over Answers",
 					content:
-						"Differentiate between searching a sorted structure and binary searching over a possible answer range. Silver Know that binary search is a strategy for monotonic questions, not just for arrays."
+						"Differentiate between searching a sorted structure and binary searching over a possible answer range. Know that binary search is a strategy for monotonic questions, not just for arrays."
 				},
 				{
 					title: "Prove the Predicate",
 					content:
-						"Whenever answer-space search appears, Practice writing the monotonic predicate in plain language before coding. This keeps binary search tied to logic instead of template memorization."
+						"Whenever answer-space search appears, write the monotonic predicate in plain language before coding. This keeps binary search tied to logic instead of template memorization."
 				},
 				{
 					title: "Compare Candidate Approaches Honestly",
@@ -271,7 +271,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Prime Palindromes",
 					content:
-						"Use a search-heavy numeric problem to practice pruning and candidate generation with strong test discipline.",
+						"Use a search-heavy numeric problem to practice pruning and candidate generation with strong test discipline. The solution should generate plausible palindrome candidates before primality checks, justify any skipped ranges, and include boundary tests for the smallest and largest requested values.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US10-Prime-Palindromes/starter",
 					solutionLink:
@@ -280,7 +280,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Ordered Fractions",
 					content:
-						"Use ordering and careful generation of candidates to practice sorted reasoning in a mathematically flavored setting.",
+						"Use ordering and careful generation of candidates to practice sorted reasoning in a mathematically flavored setting. Generate only reduced fractions, compare without floating-point ambiguity when possible, and explain why the output order is mathematically sorted rather than accidentally matching the sample.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US14-Ordered-Fractions/starter",
 					solutionLink:
@@ -289,7 +289,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Loan Repayment",
 					content:
-						"Use binary search over the answer space to practice monotonic reasoning and careful predicate design.",
+						"Use binary search over the answer space to practice monotonic reasoning and careful predicate design. Write the feasibility predicate in words first, identify why larger or smaller candidate values preserve monotonicity, and test off-by-one boundaries at the final answer.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US-Loan-Repayment/starter",
 					solutionLink:
@@ -298,7 +298,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Searching for Soulmates",
 					content:
-						"Use a later Silver search-style problem to compare direct transformation ideas with cleaner search reasoning.",
+						"Use a later Silver search-style problem to compare direct transformation ideas with cleaner search reasoning. Track which operations move a value toward the target efficiently, avoid wandering through unnecessary states, and justify the chosen search or greedy strategy with small transformation traces.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US40-Searching-For-Soulmates/starter",
 					solutionLink:
@@ -348,7 +348,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Counting Haybales",
 					content:
-						"Use sorted positions and repeated range queries to practice structural counting instead of repeated scanning.",
+						"Use sorted positions and repeated range queries to practice structural counting instead of repeated scanning. The solution should convert each query into two boundary searches, explain inclusive endpoint handling, and include tests where the range starts or ends outside all haybale positions.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US18-Counting-Haybales/starter",
 					solutionLink:
@@ -357,7 +357,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Prefix Sums",
 					content:
-						"Treat a direct prefix-sum exercise as a template for broader Silver range reasoning.",
+						"Treat a direct prefix-sum exercise as a template for broader Silver range reasoning. Define exactly what each prefix entry stores, derive the range formula before coding, and check empty-prefix, one-element, and full-array ranges so the indexing convention is not ambiguous.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US22-Prefix-Sums/starter",
 					solutionLink:
@@ -366,7 +366,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Just Green Enough",
 					content:
-						"Use a more layered counting problem to test whether transformed values stay aligned with the real goal.",
+						"Use a more layered counting problem to test whether transformed values stay aligned with the real goal. Reduce the grid values to the property being counted, use cumulative structure to avoid checking every rectangle naively, and verify that rectangles containing values below the threshold are excluded.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US33-Just-Green-Enough/starter",
 					solutionLink:
@@ -429,7 +429,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Cow Dance Show",
 					content:
-						"Use scheduling and ordered simulation to practice reasoning about feasibility and bottlenecks.",
+						"Use scheduling and ordered simulation to practice reasoning about feasibility and bottlenecks. Model a stage size as a feasibility question, simulate finish times with an ordered structure, and explain why the minimum valid stage size can be found by binary search.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US21-Cow-Dance-Show/starter",
 					solutionLink:
@@ -438,7 +438,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Secret Cow Code",
 					content:
-						"Use structured reasoning and repeated transformations to avoid naive simulation of a much larger process.",
+						"Use structured reasoning and repeated transformations to avoid naive simulation of a much larger process. Work backward from the requested index through the length-doubling pattern, preserve one-based versus zero-based indexing deliberately, and test positions exactly at rotation boundaries.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US23-Secret-Cow-Code/starter",
 					solutionLink:
@@ -447,7 +447,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Rental Service",
 					content:
-						"Compare multiple ways to allocate resources and justify the order in which choices should be considered.",
+						"Compare multiple ways to allocate resources and justify the order in which choices should be considered. Sort cows, milk buyers, and renters by the relevant value, then explain how prefix or suffix profit tables make each split between renting and selling easy to evaluate.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US34-Rental-Service/starter",
 					solutionLink:
@@ -496,7 +496,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Redistributing Gifts",
 					content:
-						"Use a more layered relationship problem to test whether graph and constraint reasoning are becoming automatic.",
+						"Use a more layered relationship problem to test whether graph and constraint reasoning are becoming automatic. Convert preference lists into reachability or mutual-improvement relationships, identify which trades are actually possible, and keep the final counting tied to the problem's preference constraint.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US38-Redistributing-Gifts/starter",
 					solutionLink:
@@ -505,7 +505,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Wormhole Sort",
 					content:
-						"Use a Silver capstone that mixes structural reasoning, search thinking, and strong implementation discipline.",
+						"Use a Silver capstone that mixes structural reasoning, search thinking, and strong implementation discipline. Treat the answer as a width threshold, use connectivity to test whether every cow can reach its target position, and justify the monotonic property behind the binary search.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US-Wormhole-Sort/starter",
 					solutionLink:
@@ -572,7 +572,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Floodfill",
 					content:
-						"Use a direct flood-fill and component-style problem to reinforce traversal fundamentals in a contest setting.",
+						"Use a direct flood-fill and component-style problem to reinforce traversal fundamentals in a contest setting. Mark visited cells, define exactly which neighbors are connected, and record component sizes or labels so the traversal produces reusable information rather than only a pass/fail search.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US12-Floodfill/starter",
 					solutionLink:
@@ -581,7 +581,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Cities and States",
 					content:
-						"Use hashed counting and pair reasoning to strengthen map-based Silver problem modeling.",
+						"Use hashed counting and pair reasoning to strengthen map-based Silver problem modeling. Store city-prefix and state pairs, count complementary pairs carefully, and explain how the solution avoids double-counting and ignores pairs where the city prefix already equals its own state.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US19-Cities-and-States/starter",
 					solutionLink:
@@ -599,7 +599,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Rectangular Pasture",
 					content:
-						"Use geometric counting and structure-aware iteration as a stronger late-Silver challenge.",
+						"Use geometric counting and structure-aware iteration as a stronger late-Silver challenge. Compress coordinates, reason about choosing left and right boundaries, and use prefix counts to determine how many vertical choices are available without scanning every rectangle explicitly.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US36-Rectangular-Pasture/starter",
 					solutionLink:

@@ -142,7 +142,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Transformations",
 					content:
-						"Practice rule-driven simulation by applying a fixed set of transformations and checking results systematically.",
+						"Practice rule-driven simulation by applying each transformation as a named case, comparing the resulting grid to the target, and stopping only after the fallback case is justified. A strong solution keeps rotation, reflection, and combination logic separate enough to debug with a tiny custom pattern.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB10-Transformations/starter",
 					solutionLink:
@@ -206,7 +206,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Milking Cows",
 					content:
-						"Use interval merging and longest-gap reasoning to practice scanning sorted ranges carefully.",
+						"Use interval merging and longest-gap reasoning to practice scanning sorted ranges carefully. The key checkpoint is explaining when two intervals count as continuous milking, when a true idle gap begins, and why sorting by start time makes the one-pass scan trustworthy.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB6-Milking-Cows/starter",
 					solutionLink:
@@ -224,7 +224,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Speeding Ticket",
 					content:
-						"Practice range comparisons and piecewise simulation while keeping the data model simple enough to debug quickly.",
+						"Practice range comparisons and piecewise simulation while keeping the data model simple enough to debug quickly. The solution should state how each mile segment receives a limit and an actual speed, then report the maximum violation rather than only whether a violation happened.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB29-Speeding-Ticket/starter",
 					solutionLink:
@@ -273,7 +273,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Diamond Collector",
 					content:
-						"Use sorting and window-style reasoning to capture a best group under a constraint.",
+						"Use sorting and window-style reasoning to capture the largest valid group under a size-difference constraint. The final explanation should identify the sorted invariant, why the left edge only moves forward, and which sample cases prove that duplicate sizes and boundary-equal differences are handled correctly.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB37-Diamond-Collector/starter",
 					solutionLink:
@@ -282,7 +282,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Promotion Counting",
 					content:
-						"Practice tier-by-tier counting and careful propagation of totals through a simple structure.",
+						"Practice tier-by-tier counting and careful propagation of totals through a simple structure. Work from the highest division downward, track how many animals must have moved up at each boundary, and verify that the intermediate totals reconcile with the before-and-after counts.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB31-Promotion-Counting/starter",
 					solutionLink:
@@ -353,7 +353,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: The Lost Cow",
 					content:
-						"Use path simulation to model repeated movement and distance accumulation carefully.",
+						"Use path simulation to model repeated movement and distance accumulation carefully. The important evidence is a trace of each outward sweep, including overshooting the target, so the total distance reflects the route actually traveled rather than only the difference between endpoints.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB25-The-Lost-Cow/starter",
 					solutionLink:
@@ -362,7 +362,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Wormholes",
 					content:
-						"Treat pairings and repeated movement as a structured search exercise with a clear, bounded state space.",
+						"Treat pairings and repeated movement as a structured search exercise with a clear, bounded state space. Build the pairing recursively, simulate rightward travel through paired wormholes, and include a termination argument showing how a repeated state reveals a cycle.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB16-Wormholes/starter",
 					solutionLink:
@@ -371,7 +371,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Family Tree",
 					content:
-						"Use parent and ancestor reasoning to practice a light graph-style relationship problem without leaving Bronze territory.",
+						"Use parent and ancestor reasoning to practice a light graph-style relationship problem without leaving Bronze territory. The solution should compare ancestor chains, distinguish direct parent-child relationships from cousins or siblings, and explain why the reported relationship is the most specific valid one.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB51-Family-Tree/starter",
 					solutionLink:
@@ -429,7 +429,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Feeding the Cows",
 					content:
-						"Use a late-Bronze constraint problem to test whether the solution stays simple under a more layered prompt.",
+						"Use a late-Bronze constraint problem to test whether the solution stays simple under a more layered prompt. Focus on placing feed as far right as safely possible, tracking which cows are already covered, and proving the greedy placement does not waste future coverage.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB63-Feeding-the-Cows/starter",
 					solutionLink:
@@ -510,7 +510,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Mixing Milk",
 					content:
-						"Use repeated pour operations to rehearse careful simulation and container-state updates.",
+						"Use repeated pour operations to rehearse careful simulation and container-state updates. Each pour should update both source and destination amounts from the same transfer value, with a short trace showing that capacity limits and empty-source cases behave correctly.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB11-Mixing-Milk/starter",
 					solutionLink:
@@ -519,7 +519,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Hoof, Paper, Scissors",
 					content:
-						"Use case-based counting and matchup reasoning to strengthen simple game-logic analysis.",
+						"Use case-based counting and matchup reasoning to strengthen simple game-logic analysis. Enumerate the possible winning mappings, count how many rounds each mapping wins, and explain why trying the small complete set is safer than hard-coding one assumed rule order.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB20-Hoof-Paper-Scissors/starter",
 					solutionLink:
@@ -537,7 +537,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Cow College",
 					content:
-						"Use a late Bronze optimization prompt to practice sorting, revenue reasoning, and clear objective definition.",
+						"Use a late Bronze optimization prompt to practice sorting, revenue reasoning, and clear objective definition. Sort tuition offers, evaluate each candidate price by the number of cows willing to pay it, and record how ties are handled so the chosen answer matches the stated output rule.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB62-Cow-College/starter",
 					solutionLink:
@@ -552,8 +552,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 12 Barn Repair Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 12 Barn Repair Java: Practice Studio",
+						moduleTitle: "UB 12 Barn Repair Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -561,8 +560,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 12 Barn Repair Java: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 12 Barn Repair Java: Practice Studio",
+						moduleTitle: "UB 12 Barn Repair Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -570,8 +568,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 12 Barn Repair Java: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 12 Barn Repair Java: Practice Studio",
+						moduleTitle: "UB 12 Barn Repair Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -584,8 +581,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 12 Barn Repair Java: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 12 Barn Repair Java: Practice Studio",
+						moduleTitle: "UB 12 Barn Repair Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -595,8 +591,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 12 Barn Repair Java: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 12 Barn Repair Java: Practice Studio",
+						moduleTitle: "UB 12 Barn Repair Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -609,8 +604,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "Combination Lock",
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 12 Barn Repair Java: Practice Studio",
+						moduleTitle: "UB 12 Barn Repair Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -623,8 +617,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "Prime Cryptarithm",
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 12 Barn Repair Java: Practice Studio",
+						moduleTitle: "UB 12 Barn Repair Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -995,8 +988,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 17 Block Game Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 17 Block Game Java: Practice Studio",
+						moduleTitle: "UB 17 Block Game Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1004,8 +996,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 17 Block Game Java: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 17 Block Game Java: Practice Studio",
+						moduleTitle: "UB 17 Block Game Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1013,8 +1004,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 17 Block Game Java: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 17 Block Game Java: Practice Studio",
+						moduleTitle: "UB 17 Block Game Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1027,8 +1017,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 17 Block Game Java: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 17 Block Game Java: Practice Studio",
+						moduleTitle: "UB 17 Block Game Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1038,8 +1027,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 17 Block Game Java: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 17 Block Game Java: Practice Studio",
+						moduleTitle: "UB 17 Block Game Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1052,8 +1040,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "Why Did the Cow Cross the Road III",
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 17 Block Game Java: Practice Studio",
+						moduleTitle: "UB 17 Block Game Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1066,8 +1053,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "The Lost Cow Java",
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 17 Block Game Java: Practice Studio",
+						moduleTitle: "UB 17 Block Game Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1355,8 +1341,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 21 Cow Tipping Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 21 Cow Tipping Java: Practice Studio",
+						moduleTitle: "UB 21 Cow Tipping Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1364,8 +1349,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 21 Cow Tipping Java: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 21 Cow Tipping Java: Practice Studio",
+						moduleTitle: "UB 21 Cow Tipping Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1373,8 +1357,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 21 Cow Tipping Java: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 21 Cow Tipping Java: Practice Studio",
+						moduleTitle: "UB 21 Cow Tipping Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1387,8 +1370,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 21 Cow Tipping Java: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 21 Cow Tipping Java: Practice Studio",
+						moduleTitle: "UB 21 Cow Tipping Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1398,8 +1380,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 21 Cow Tipping Java: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 21 Cow Tipping Java: Practice Studio",
+						moduleTitle: "UB 21 Cow Tipping Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1412,8 +1393,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "Speeding Ticket Java",
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 21 Cow Tipping Java: Practice Studio",
+						moduleTitle: "UB 21 Cow Tipping Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1426,8 +1406,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "Friday the Thirteenth",
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
-						moduleTitle:
-							"UB 21 Cow Tipping Java: Practice Studio",
+						moduleTitle: "UB 21 Cow Tipping Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
