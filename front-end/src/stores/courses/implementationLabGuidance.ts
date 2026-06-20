@@ -145,7 +145,7 @@ export function buildImplementationLabGuidance({
 			"invariant that should stay true as features are added";
 
 		return [
-			`Use **${label}** to connect the build target to ${focus}.`,
+			`**${label}** connects the build target to ${focus}.`,
 			`Define ${artifact}, and ${invariant}.`,
 			`Keep **${label}** concrete: the concept is complete only when the result can be run, inspected, and explained with evidence from the artifact.`
 		].join("\n\n");
@@ -156,7 +156,7 @@ export function buildImplementationLabGuidance({
 			`Walk through one representative **${label}** case before expanding the implementation.`,
 			`Start **${label}** with one narrow case that can be traced from input to result.`,
 			`Before adding features to **${label}**, run one standard scenario slowly enough to explain each checkpoint.`,
-			`Use a small **${label}** example first so the later build has a known baseline.`
+			`A small **${label}** example comes first so the later build has a known baseline.`
 		][variantIndex(courseFamily, moduleTitle, section, 4)];
 
 		return [

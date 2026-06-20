@@ -6131,7 +6131,7 @@ function studioArtifact(context: CourseTextContext) {
 		return "a browser-visible feature with defined UI behavior, data flow, and error handling";
 	}
 
-	return "a working artifact with explicit requirements, test cases, and a short explanation";
+	return "a clear result with defined behavior, test cases, and a short explanation";
 }
 
 function compactStudioContextTitle(title: string) {

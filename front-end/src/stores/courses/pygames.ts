@@ -53,7 +53,7 @@ export const pyGamesCourse: RawCourse = {
 						"https://github.com/instruction-material/PyGames/tree/main/music"
 				},
 				{
-					title: "Setup, Editors, and Asset Workflow Transfer Practice",
+					title: "Transfer Practice: Setup, Editors, and Asset Workflow",
 					content: buildProjectGuidance({
 						courseFamily: "Python/PyGame",
 						moduleTitle: "PyG0 Setup, Editors, and Asset Workflow",

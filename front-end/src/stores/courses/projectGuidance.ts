@@ -2053,27 +2053,27 @@ function projectPathNote({
 
 	if (label.includes("transfer")) {
 		return [
-			`**Path:** Transfer version. ${subject} keeps the core idea but changes the data, representation, constraint, or context so the reasoning is not tied to the first example.`,
-			`**Path:** Transfer version. ${subject} reuses the same concept in a nearby situation and records which part changed.`,
-			`**Path:** Transfer version. ${subject} changes one condition while preserving the main rule, making the difference visible in the result.`,
-			`**Path:** Transfer version. ${subject} asks whether the same reasoning still works after the input shape, model, or constraint shifts.`,
-			`**Path:** Transfer version. ${subject} compares the familiar case with a changed case before treating the idea as mastered.`,
-			`**Path:** Transfer version. ${subject} keeps the target concept stable while the surrounding details change enough to test understanding.`,
-			`**Path:** Transfer version. ${subject} turns the example into a new scenario, then identifies what carried over and what had to change.`,
-			`**Path:** Transfer version. ${subject} checks whether the target concept survives a controlled variation rather than only a copied pattern.`
+			`**Path:** Transfer Practice. ${subject} keeps the core idea but changes the data, representation, constraint, or context so the reasoning is not tied to the first example.`,
+			`**Path:** Transfer Practice. ${subject} reuses the same concept in a nearby situation and records which part changed.`,
+			`**Path:** Transfer Practice. ${subject} changes one condition while preserving the main rule, making the difference visible in the result.`,
+			`**Path:** Transfer Practice. ${subject} asks whether the same reasoning still works after the input shape, model, or constraint shifts.`,
+			`**Path:** Transfer Practice. ${subject} compares the familiar case with a changed case before treating the idea as mastered.`,
+			`**Path:** Transfer Practice. ${subject} keeps the target concept stable while the surrounding details change enough to test understanding.`,
+			`**Path:** Transfer Practice. ${subject} turns the example into a new scenario, then identifies what carried over and what had to change.`,
+			`**Path:** Transfer Practice. ${subject} checks whether the target concept survives a controlled variation rather than only a copied pattern.`
 		][index];
 	}
 
 	if (label.includes("extension") || label.includes("challenge")) {
 		return [
-			`**Path:** Extension version. ${subject} starts from a working base case, then adds a harder constraint, extra edge case, design variation, or deeper explanation target.`,
-			`**Path:** Extension version. ${subject} keeps the baseline behavior intact while one new requirement raises the difficulty.`,
-			`**Path:** Extension version. ${subject} extends the core result only after the original case has current evidence.`,
-			`**Path:** Extension version. ${subject} adds complexity in one visible place so the new behavior can still be traced.`,
-			`**Path:** Extension version. ${subject} turns a correct base case into a sturdier result by adding an edge case or design tradeoff.`,
-			`**Path:** Extension version. ${subject} raises the challenge without losing the original success condition.`,
-			`**Path:** Extension version. ${subject} adds a deliberate constraint and then checks that the earlier behavior still works.`,
-			`**Path:** Extension version. ${subject} moves from working output to more robust output by naming the new rule and verifying it.`
+			`**Path:** Extension Practice. ${subject} starts from a working base case, then adds a harder constraint, extra edge case, design variation, or deeper explanation target.`,
+			`**Path:** Extension Practice. ${subject} keeps the baseline behavior intact while one new requirement raises the difficulty.`,
+			`**Path:** Extension Practice. ${subject} extends the core result only after the original case has current evidence.`,
+			`**Path:** Extension Practice. ${subject} adds complexity in one visible place so the new behavior can still be traced.`,
+			`**Path:** Extension Practice. ${subject} turns a correct base case into a sturdier result by adding an edge case or design tradeoff.`,
+			`**Path:** Extension Practice. ${subject} raises the challenge without losing the original success condition.`,
+			`**Path:** Extension Practice. ${subject} adds a deliberate constraint and then checks that the earlier behavior still works.`,
+			`**Path:** Extension Practice. ${subject} moves from working output to more robust output by naming the new rule and verifying it.`
 		][index];
 	}
 

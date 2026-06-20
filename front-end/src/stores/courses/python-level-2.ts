@@ -351,7 +351,7 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "Check-In #1 Overview",
 					content:
-						"Use this module as a low-pressure review of variables, loops, and conditionals. Work through the prompts independently first, then revisit any areas that need reinforcement.",
+						"This module is a low-pressure review of variables, loops, and conditionals. Work through the prompts independently first, then revisit any areas that need reinforcement.",
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS-Check-in-1/solution"
 				},
@@ -752,7 +752,7 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "Check-In #2 Overview",
 					content:
-						"Use this review module to revisit functions, lists, dictionaries, and sets. Focus on explaining why each data structure or function design is a good fit for the task."
+						"This review module revisits functions, lists, dictionaries, and sets. Focus on explaining why each data structure or function design is a good fit for the task."
 				},
 				{
 					title: "Check-In #2: Functions",

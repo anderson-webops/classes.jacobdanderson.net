@@ -17,7 +17,7 @@ export const javaLevel2Course: RawCourse = {
 				{
 					title: "Objects vs. Classes",
 					content:
-						"Learn how a class acts as a template and an object acts as an instance with its own data and behavior. Use this module to connect class design to real-world entities."
+						"Learn how a class acts as a template and an object acts as an instance with its own data and behavior. This module connects class design to real-world entities."
 				},
 				{
 					title: "JM1 Project 1: Dog Class",
@@ -139,7 +139,8 @@ export const javaLevel2Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM3 Static Variables & Methods",
-						itemTitle: "Static Variables & Methods Extension Practice",
+						itemTitle:
+							"Static Variables & Methods Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -156,7 +157,7 @@ export const javaLevel2Course: RawCourse = {
 				{
 					title: "Check-In #1 Overview",
 					content:
-						"Use this module as a low-pressure review of object-oriented programming basics in Java, including classes, constructors, instance methods, static members, and comparable objects.",
+						"This module is a low-pressure review of object-oriented programming basics in Java, including classes, constructors, instance methods, static members, and comparable objects.",
 					solutionLink:
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM-Check-in-1"
 				},
@@ -291,7 +292,8 @@ export const javaLevel2Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM4 Subclasses & Inheritance",
-						itemTitle: "Subclasses & Inheritance Extension Practice",
+						itemTitle:
+							"Subclasses & Inheritance Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -423,7 +425,8 @@ export const javaLevel2Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM6 Threading & Error Handling",
-						itemTitle: "Threading & Error Handling Transfer Practice",
+						itemTitle:
+							"Threading & Error Handling Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -437,7 +440,8 @@ export const javaLevel2Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM6 Threading & Error Handling",
-						itemTitle: "Threading & Error Handling Extension Practice",
+						itemTitle:
+							"Threading & Error Handling Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -454,7 +458,7 @@ export const javaLevel2Course: RawCourse = {
 				{
 					title: "Check-In #2 Overview",
 					content:
-						"Use this review to revisit inheritance, method overriding, threading, try-catch handling, and maps. This module combines reading existing class code with extending it in new directions.",
+						"This review revisits inheritance, method overriding, threading, try-catch handling, and maps. This module combines reading existing class code with extending it in new directions.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM-Check-in-2-Starter-Updated",
 					solutionLink:
@@ -1033,8 +1037,7 @@ export const javaLevel2Course: RawCourse = {
 					title: "JM Maze Runner Project: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
-						moduleTitle:
-							"JM Maze Runner Project: Practice Studio",
+						moduleTitle: "JM Maze Runner Project: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1042,8 +1045,7 @@ export const javaLevel2Course: RawCourse = {
 					title: "JM Maze Runner Project: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
-						moduleTitle:
-							"JM Maze Runner Project: Practice Studio",
+						moduleTitle: "JM Maze Runner Project: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1051,8 +1053,7 @@ export const javaLevel2Course: RawCourse = {
 					title: "JM Maze Runner Project: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
-						moduleTitle:
-							"JM Maze Runner Project: Practice Studio",
+						moduleTitle: "JM Maze Runner Project: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1064,8 +1065,7 @@ export const javaLevel2Course: RawCourse = {
 					title: "JM Maze Runner Project: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
-						moduleTitle:
-							"JM Maze Runner Project: Practice Studio",
+						moduleTitle: "JM Maze Runner Project: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1075,8 +1075,7 @@ export const javaLevel2Course: RawCourse = {
 					title: "JM Maze Runner Project: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
-						moduleTitle:
-							"JM Maze Runner Project: Practice Studio",
+						moduleTitle: "JM Maze Runner Project: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1088,10 +1087,8 @@ export const javaLevel2Course: RawCourse = {
 					title: "JM Maze Runner Project Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
-						moduleTitle:
-							"JM Maze Runner Project: Practice Studio",
-						itemTitle:
-							"JM Maze Runner Project Transfer Practice",
+						moduleTitle: "JM Maze Runner Project: Practice Studio",
+						itemTitle: "JM Maze Runner Project Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1104,10 +1101,8 @@ export const javaLevel2Course: RawCourse = {
 					title: "JM Maze Runner Project Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
-						moduleTitle:
-							"JM Maze Runner Project: Practice Studio",
-						itemTitle:
-							"JM Maze Runner Project Extension Practice",
+						moduleTitle: "JM Maze Runner Project: Practice Studio",
+						itemTitle: "JM Maze Runner Project Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),

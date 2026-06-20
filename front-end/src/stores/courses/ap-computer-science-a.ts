@@ -14,7 +14,7 @@ const APCS_README =
 	"https://github.com/instruction-material/APCS/blob/main/README.md";
 const APCS_TRACKS_GUIDE = "/course-assets/apcs/apcs-pacing-tracks.md";
 const WINDOWS_VSCODE_JAVA_SETUP = `
-Use this checklist when setting up Java on Windows with VS Code:
+This checklist supports Java setup on Windows with VS Code:
 
 1. Install a full JDK, not only a Java Runtime. The tested setup uses Eclipse Temurin JDK 21:
 
@@ -111,7 +111,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Strings and Printing Reference",
 					content:
-						"Use this reference build to reinforce output formatting, concatenation, escape characters, and readable console output. The checkpoint is being able to predict the exact printed text, including spaces, quotation marks, and line breaks.",
+						"This reference build reinforces output formatting, concatenation, escape characters, and readable console output. The checkpoint is being able to predict the exact printed text, including spaces, quotation marks, and line breaks.",
 					projectLink: repo(
 						"APCS1-Strings-and-Printing-Reference/starter"
 					),
@@ -216,7 +216,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Rounding It Off",
 					content:
-						"Use this project to drill casting-based rounding without relying on `Math` helpers. The useful checkpoint is explaining why adding `0.5` before an integer cast works for positive values and where that shortcut would need more care.",
+						"This project drills casting-based rounding without relying on `Math` helpers. The useful checkpoint is explaining why adding `0.5` before an integer cast works for positive values and where that shortcut would need more care.",
 					projectLink: repo("APCS1-Rounding-It-Off/starter"),
 					solutionLink: repo("APCS1-Rounding-It-Off/solution"),
 					mediaLink: media("apcs1-project-2-rounding-it-off.mp4")
@@ -258,7 +258,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Verifying Expressions",
 					content:
-						"Use this project for expression tracing and boolean reasoning. The checkpoint is being able to evaluate each subexpression in order, name the final boolean result, and explain any short-circuit behavior.",
+						"This project develops expression tracing and boolean reasoning. The checkpoint is being able to evaluate each subexpression in order, name the final boolean result, and explain any short-circuit behavior.",
 					projectLink: repo("APCS2-Verifying-Expressions/starter"),
 					solutionLink: repo("APCS2-Verifying-Expressions/solution")
 				},
@@ -272,7 +272,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Quotient and Remainder",
 					content:
-						"Use this build to reinforce integer division and remainder reasoning before `%` becomes automatic. The explanation should connect quotient, remainder, truncation, and unit meaning rather than only reporting two numbers.",
+						"This build reinforces integer division and remainder reasoning before `%` becomes automatic. The explanation should connect quotient, remainder, truncation, and unit meaning rather than only reporting two numbers.",
 					projectLink: repo("APCS2-Quotient-and-Remainder/starter"),
 					solutionLink: repo("APCS2-Quotient-and-Remainder/solution"),
 					mediaLink: media(
@@ -344,14 +344,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: Math Package",
 					content:
-						"Use this reference project when `abs`, `pow`, `sqrt`, and round-off behavior need a focused review. Connect each method call to its argument types, return type, and any casting needed before storing the result.",
+						"This reference project supports focused review of `abs`, `pow`, `sqrt`, and round-off behavior. Connect each method call to its argument types, return type, and any casting needed before storing the result.",
 					projectLink: repo("APCS3-Math-Package-Reference/starter"),
 					solutionLink: repo("APCS3-Math-Package-Reference/solution")
 				},
 				{
 					title: "Reference: Random Numbers",
 					content:
-						"Use this reference to tighten integer-range generation and avoid off-by-one mistakes with `Math.random()`. A strong explanation names the lowest possible value, highest possible value, and why the cast happens after scaling.",
+						"This reference tightens integer-range generation and helps avoid off-by-one mistakes with `Math.random()`. A strong explanation names the lowest possible value, highest possible value, and why the cast happens after scaling.",
 					projectLink: repo("APCS3-Random-Numbers-Reference/starter"),
 					solutionLink: repo(
 						"APCS3-Random-Numbers-Reference/solution"
@@ -383,7 +383,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Translating Loops",
 					content:
-						"Use this project to translate between `for` and `while` forms while preserving exact behavior. The important check is that initialization, condition, update, and output stay equivalent after the rewrite.",
+						"This project translates between `for` and `while` forms while preserving exact behavior. The important check is that initialization, condition, update, and output stay equivalent after the rewrite.",
 					projectLink: repo("APCS4-Translating-Loops/starter"),
 					solutionLink: repo("APCS4-Translating-Loops/solution"),
 					mediaLink: media("apcs4-project-2-translating-loops.mp4")
@@ -400,7 +400,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: For Loop Practice",
 					content:
-						"Use this project to reinforce counted iteration, accumulators, and output-driven tracing. Each loop should have a clear start value, stop condition, update step, and predicted output before the code is treated as finished.",
+						"This project reinforces counted iteration, accumulators, and output-driven tracing. Each loop should have a clear start value, stop condition, update step, and predicted output before the code is treated as finished.",
 					projectLink: repo("APCS4-For-Loop-Practice/starter"),
 					solutionLink: repo("APCS4-For-Loop-Practice/solution"),
 					mediaLink: media("apcs4-project-1-for-loops-practice.mp4")
@@ -448,7 +448,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Check-In Prompt Bank",
 					content:
-						"Use the prompt bank for the full Check-In #2 review. The checkpoint should show whether classes, methods, and inheritance are ready for the main object-oriented sequence.",
+						"Use the prompt bank for the full Check-In #2 review. This checkpoint shows whether classes, methods, and inheritance are ready for the main object-oriented sequence.",
 					projectLink: repo("APCS-Check-in-2/starter"),
 					solutionLink: repo("APCS-Check-in-2/solution")
 				}
@@ -530,7 +530,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Supplemental: Spreadsheet Width",
 					content:
-						"Use this supplemental build when precise method specs need more implementation practice. The task is useful because it forces careful interpretation of inputs, return values, edge cases, and formatting rules before implementation starts.",
+						"This supplemental build gives precise method specs more implementation practice. The task is useful because it forces careful interpretation of inputs, return values, edge cases, and formatting rules before implementation starts.",
 					projectLink: repo("APCS5-Spreadsheet-Width/starter"),
 					solutionLink: repo("APCS5-Spreadsheet-Width/solution"),
 					mediaLink: media(
@@ -590,7 +590,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: Getters and Setters",
 					content:
-						"Use this reference for direct review of controlled access patterns and field updates. The key idea is that public methods can protect object invariants while still allowing outside code to read or request valid changes.",
+						"This reference directly reviews controlled access patterns and field updates. The key idea is that public methods can protect object invariants while still allowing outside code to read or request valid changes.",
 					projectLink: repo(
 						"APCS6-Getters-and-Setters-Reference/starter"
 					),
@@ -845,7 +845,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Practice With Two-Dimensional Arrays",
 					content:
-						"Use this project for grid traversal, row-and-column reasoning, and nested loops. A complete solution should explain which loop controls rows, which loop controls columns, and how the code changes when the target is a row, column, cell, or whole matrix.",
+						"This project develops grid traversal, row-and-column reasoning, and nested loops. A complete solution should explain which loop controls rows, which loop controls columns, and how the code changes when the target is a row, column, cell, or whole matrix.",
 					projectLink: repo(
 						"APCS10-Practice-With-Two-Dimensional-Arrays/starter"
 					),
@@ -978,7 +978,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Minimum and Maximum",
 					content:
-						"Use this project as a targeted follow-up when wrapper constants and search initialization still feel abstract. Trace the first element, current best value, comparison result, and update rule so the initialization choice is defensible.",
+						"This project is a targeted follow-up when wrapper constants and search initialization still feel abstract. Trace the first element, current best value, comparison result, and update rule so the initialization choice is defensible.",
 					projectLink: repo("APCS12-Minimum-and-Maximum/starter"),
 					solutionLink: repo("APCS12-Minimum-and-Maximum/solution")
 				},
@@ -1019,7 +1019,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Minimum and Maximum Search",
 					content:
-						"Use this build to reinforce wrapper constants and collection scanning with boxed integers. The explanation should justify the initial minimum and maximum values, then trace how each comparison can update the answer.",
+						"This build reinforces wrapper constants and collection scanning with boxed integers. The explanation should justify the initial minimum and maximum values, then trace how each comparison can update the answer.",
 					projectLink: repo("APCS12-Minimum-and-Maximum/starter"),
 					solutionLink: repo("APCS12-Minimum-and-Maximum/solution"),
 					mediaLink: media("apcs12-project-2-minimum-search.mp4")
@@ -1152,7 +1152,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: Stack Overflow",
 					content:
-						"Use this reference when a recursive call is easy to write but the stopping condition is still hard to explain.",
+						"This reference targets the case where a recursive call is easy to write but the stopping condition is still hard to explain.",
 					projectLink: repo(
 						"APCS15-Stack-Overflow-Reference/starter"
 					),

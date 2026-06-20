@@ -1496,7 +1496,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Check-In #3 Overview",
 					content:
-						"Use this check-in to revisit sustainable programming ideas, linked lists, stacks, queues, priority queues, and maps through a mix of short explanations and code extensions.",
+						"This check-in revisits sustainable programming ideas, linked lists, stacks, queues, priority queues, and maps through a mix of short explanations and code extensions.",
 					solutionLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ-Check-In-3"
 				},
@@ -1698,7 +1698,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ15 Project 1: HashMap",
 					content:
-						"Implement a custom `HashMap` with linear probing, tombstones, rehashing, and the usual map operations. Show how put, get, remove, and contains behave through collisions, deleted slots, duplicate keys, and a resize triggered by load factor.",
+						"Implement a custom `HashMap` with linear probing, tombstones, rehashing, and the usual map operations. Trace how put, get, remove, and contains behave through collisions, deleted slots, duplicate keys, and a resize triggered by load factor.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ15-Hash-Map-Starter",
 					solutionLink:
@@ -1840,7 +1840,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Check-In #4 Overview",
 					content:
-						"Use this final check-in to review binary search trees, hash tables, and graphs, along with the main vocabulary and algorithm ideas from those topics.",
+						"This final check-in reviews binary search trees, hash tables, and graphs, along with the main vocabulary and algorithm ideas from those topics.",
 					solutionLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ-Check-In-4"
 				},
