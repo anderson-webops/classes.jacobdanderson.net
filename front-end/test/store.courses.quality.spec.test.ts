@@ -1962,8 +1962,19 @@ describe("course text quality normalization", () => {
 		expect(source).not.toContain(
 			"Create a boss-style Space Battle where an alien ship with AI fires at the player. The finished game should make the alien behavior clear"
 		);
+		expect(source).not.toMatch(/\bImplementation Lab\b/);
+		expect(source).not.toMatch(/\bSupplemental [23]\b/);
+		expect(source).not.toMatch(/\bKey idea:/);
+		expect(source).not.toMatch(/\bThe goal is to\b/);
+		expect(loadedCorpus).not.toMatch(/\bImplementation Lab\b/);
+		expect(loadedCorpus).not.toMatch(/\bSupplemental [23]\b/);
 		expect(loadedCorpus).toContain("The score changes only on collision");
 		expect(loadedCorpus).toContain("Both projectile lists update safely");
+		expect(loadedCorpus).toContain("Images and Sprites: Practice Studio");
+		expect(loadedCorpus).toContain(
+			"Setup, Editors, and Asset Workflow Transfer Practice"
+		);
+		expect(loadedCorpus).toContain("Master Project Extension Practice");
 	});
 
 	it("keeps JavaScript normalization focused on web development instead of Java", async () => {
