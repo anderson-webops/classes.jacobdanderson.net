@@ -338,6 +338,36 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it("keeps Rust Systems Security labels and safety explanations production-ready", async () => {
+		const course = await loadRawCourse("rust-systems-security");
+		expect(course).not.toBeNull();
+
+		const source = fs.readFileSync(
+			"src/stores/courses/rust-systems-security.ts",
+			"utf8"
+		);
+		const loadedCorpus = allCourseText(course!);
+
+		for (const corpus of [source, loadedCorpus]) {
+			expect(corpus).not.toMatch(/\bSupplemental [23]\b/);
+			expect(corpus).not.toMatch(/\bThis section covers\b/);
+			expect(corpus).not.toMatch(/\bKey idea:/);
+		}
+
+		expect(loadedCorpus).toContain(
+			"Tooling, Cargo, and Why Rust Exists Transfer Practice"
+		);
+		expect(loadedCorpus).toContain(
+			"Capstone: Harden a Legacy Tool Extension Practice"
+		);
+		expect(loadedCorpus).toContain(
+			"Ownership means one clear owner for a resource at a time"
+		);
+		expect(loadedCorpus).toContain(
+			"The key question is which guarantees the compiler stops checking"
+		);
+	});
+
 	it(
 		"replaces generic linked-project boilerplate with concrete project guidance",
 		async () => {
