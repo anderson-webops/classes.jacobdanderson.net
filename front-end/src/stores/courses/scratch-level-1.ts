@@ -24,7 +24,7 @@ export const scratchLevel1Course: RawCourse = {
 5. Create a score variable that increases when an object is collected.
 6. Create a timer variable that decreases as the game runs.
 
-**Completion check:** The player should move in four directions, collect objects, gain points, and have a visible countdown that changes during play.`,
+**Completion check:** The player moves in four directions, collects objects, gains points, and has a visible countdown that changes during play.`,
 					projectLink: "https://scratch.mit.edu/projects/304003593/",
 					solutionLink: "https://scratch.mit.edu/projects/313184786/"
 				},
@@ -87,7 +87,7 @@ export const scratchLevel1Course: RawCourse = {
 4. When D is pressed, turn the arrow 15 degrees right.
 5. When the spacebar is pressed, point the arrow toward the mouse.
 
-**Completion check:** Each event should change only the intended direction or rotation, so the spinner is easy to test one key at a time.`,
+**Completion check:** Each event changes only the intended direction or rotation, so the spinner is easy to test one key at a time.`,
 					projectLink: "https://scratch.mit.edu/projects/287920173/",
 					solutionLink: "https://scratch.mit.edu/projects/287887351/"
 				},
@@ -102,7 +102,7 @@ export const scratchLevel1Course: RawCourse = {
 4. When the up or down arrow is pressed, grow or shrink the ball.
 5. When the ball is clicked, play a sound and change its color.
 
-**Completion check:** The ball should reset on green flag and each input should produce visible feedback.`,
+**Completion check:** The ball resets on green flag, and each input produces visible feedback.`,
 					projectLink: "https://scratch.mit.edu/projects/287924505/",
 					solutionLink: "https://scratch.mit.edu/projects/287922077/"
 				},
@@ -121,7 +121,7 @@ export const scratchLevel1Course: RawCourse = {
 
 **Extension:** Add another sprite controlled by the W-A-S-D keys.
 
-**Completion check:** Every event should be independently testable without breaking the green-flag reset.`,
+**Completion check:** Every event is independently testable without breaking the green-flag reset.`,
 					projectLink: "https://scratch.mit.edu/projects/287707460/",
 					solutionLink: "https://scratch.mit.edu/projects/284408078/"
 				}
@@ -168,7 +168,7 @@ export const scratchLevel1Course: RawCourse = {
 4. Each movement changes the pen color.
 5. The green flag erases old drawings and lifts the pen before resetting the ball.
 
-**Completion check:** The stage should start clean, the ball should leave a visible trail while moving, and repeated green-flag runs should not preserve old drawings.`,
+**Completion check:** The stage starts clean, the ball leaves a visible trail while moving, and repeated green-flag runs do not preserve old drawings.`,
 					projectLink: "https://scratch.mit.edu/projects/313084455/",
 					solutionLink: "https://scratch.mit.edu/projects/287952358/"
 				},
@@ -187,7 +187,7 @@ export const scratchLevel1Course: RawCourse = {
 
 **Extension:** Trace shapes on other backdrops.
 
-**Completion check:** The controls should feel like a drawing tool, and the green flag should always return the project to the same clean starting state.`,
+**Completion check:** The controls feel like a drawing tool, and the green flag always returns the project to the same clean starting state.`,
 					projectLink: "https://scratch.mit.edu/projects/287738652/",
 					solutionLink: "https://scratch.mit.edu/projects/285312799/"
 				},
@@ -204,7 +204,7 @@ export const scratchLevel1Course: RawCourse = {
 
 **Extension:** Trace shapes on other backdrops.
 
-**Completion check:** Each key should draw only its assigned shape, and the green flag should reset the drawing area cleanly.`,
+**Completion check:** Each key draws only its assigned shape, and the green flag resets the drawing area cleanly.`,
 					projectLink: "https://scratch.mit.edu/projects/288003770/",
 					solutionLink: "https://scratch.mit.edu/projects/287999903/"
 				}
@@ -252,7 +252,7 @@ export const scratchLevel1Course: RawCourse = {
 5. Pressing 5 repeats a hide, wait, and show sequence.
 6. Pressing the spacebar repeats a costume switch, sound, and return-to-original-costume sequence three times.
 
-**Completion check:** Each key should demonstrate a different kind of repetition, and the repeated behavior should be visible enough to compare with a non-loop version.`,
+**Completion check:** Each key demonstrates a different kind of repetition, and the repeated behavior is visible enough to compare with a non-loop version.`,
 					projectLink: "https://scratch.mit.edu/projects/291122885/",
 					solutionLink: "https://scratch.mit.edu/projects/291119943/"
 				},
@@ -265,12 +265,12 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Build steps:**
 1. The green flag plays "Hot Cross Buns" twice.
-2. Repeated note patterns should be placed inside loops instead of copied block by block.
-3. The timing should stay steady enough for the melody to be recognizable.
+2. Repeated note patterns go inside loops instead of copied block by block.
+3. The timing stays steady enough for the melody to be recognizable.
 
 **Extension:** Compose another short song that also has repeated sections.
 
-**Completion check:** The song should play twice from the green flag, and the repeated sections should be implemented with loops.`,
+**Completion check:** The song plays twice from the green flag, and the repeated sections are implemented with loops.`,
 					projectLink: "https://scratch.mit.edu/projects/291117784/",
 					solutionLink: "https://scratch.mit.edu/projects/291115434/"
 				},
@@ -286,7 +286,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Extension:** Add other shapes, such as an octagon or a star, with optional random sizes and colors.
 
-**Completion check:** Each key should produce the intended shape, and the code should reuse loops instead of manually copying every side or turn.`,
+**Completion check:** Each key produces the intended shape, and the code reuses loops instead of manually copying every side or turn.`,
 					projectLink: "https://scratch.mit.edu/projects/289744824/",
 					solutionLink: "https://scratch.mit.edu/projects/289445069/"
 				}
@@ -303,7 +303,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Extension:** Draw a different circle-like shape with different step and turn values.
 
-**Completion check:** The shapes should close cleanly, and the explanation should connect the number of sides to the turn angle.`,
+**Completion check:** The shapes close cleanly, and the explanation connects the number of sides to the turn angle.`,
 					projectLink: "https://scratch.mit.edu/projects/330468686/",
 					solutionLink: "https://scratch.mit.edu/projects/330429172/"
 				},
@@ -336,7 +336,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 2. A conditional checks whether the dinosaur is standing on red and says "I'm in red!" when the condition is true.
 3. Additional color checks handle yellow, blue, and grey.
 
-**Completion check:** Moving the dinosaur onto each target color should produce the matching response without triggering the wrong color message.`,
+**Completion check:** Moving the dinosaur onto each target color produces the matching response without triggering the wrong color message.`,
 					projectLink: "https://scratch.mit.edu/projects/291223299/",
 					solutionLink: "https://scratch.mit.edu/projects/291220849/"
 				},
@@ -352,7 +352,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Debug target:** Watch for reactions that repeat too quickly while the ball remains touching a sprite. Add timing, movement, or reset behavior if a collision triggers more times than intended.
 
-**Completion check:** Each sprite should react only when the ball touches it, then return to a clear ready state for the next collision.`,
+**Completion check:** Each sprite reacts only when the ball touches it, then returns to a clear ready state for the next collision.`,
 					projectLink: "https://scratch.mit.edu/projects/291542721/",
 					solutionLink: "https://scratch.mit.edu/projects/291530292/"
 				},
@@ -366,7 +366,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. The wand moves to the ghost and sends the ghost toward the star.
 4. When the ghost touches the star, the star grows to fill the screen.
 
-**Completion check:** Each wand action should cause the intended sprite reaction, and the scene should clearly show cause and effect.`,
+**Completion check:** Each wand action causes the intended sprite reaction, and the scene clearly shows cause and effect.`,
 					projectLink: "https://scratch.mit.edu/projects/304279087/",
 					solutionLink: "https://scratch.mit.edu/projects/304279316/"
 				}
@@ -381,7 +381,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 2. A conditional turns the octopus blue when it is on a blue background.
 3. Additional conditionals handle yellow, green, and red backgrounds.
 
-**Completion check:** The octopus should match the background color after moving onto each color zone.`,
+**Completion check:** The octopus matches the background color after moving onto each color zone.`,
 					projectLink: "https://scratch.mit.edu/projects/326209430/",
 					solutionLink: "https://scratch.mit.edu/projects/326209241/"
 				},
@@ -396,7 +396,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Extension:** Add more sprites and make the ball pass among all players.
 
-**Completion check:** The ball should move to the correct next player based on who currently has it.`,
+**Completion check:** The ball moves to the correct next player based on who currently has it.`,
 					projectLink: "https://scratch.mit.edu/projects/326211768/",
 					solutionLink: "https://scratch.mit.edu/projects/326211724/"
 				},
@@ -428,7 +428,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 4. The same pattern works for r (red) and y (yellow).
 5. Sounds and costume changes provide extra feedback for each color.
 
-**Completion check:** Correct colors and incorrect colors should produce different responses for every tested key.`,
+**Completion check:** Correct colors and incorrect colors produce different responses for every tested key.`,
 					projectLink: "https://scratch.mit.edu/projects/293788691/",
 					solutionLink: "https://scratch.mit.edu/projects/293787944/"
 				},
@@ -443,7 +443,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 4. If the dinosaur is not touching bananas, it says "There aren't any bananas here!".
 5. If the bananas are touching the dinosaur, they wait one second and move to a random location; otherwise, they say "I'm over here!".
 
-**Completion check:** The spacebar should produce one clear branch when the dinosaur is touching bananas and a different branch when it is not.`,
+**Completion check:** The spacebar produces one clear branch when the dinosaur is touching bananas and a different branch when it is not.`,
 					projectLink: "https://scratch.mit.edu/projects/293457751/",
 					solutionLink: "https://scratch.mit.edu/projects/293291715/"
 				},
@@ -467,7 +467,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. Otherwise, the rocketship moves down 5 steps while still pointing upward.
 4. Reaching the star triggers a blastoff effect with sound, motion, or visual feedback.
 
-**Completion check:** Clicking and not clicking should create visibly different movement, and reaching the star should produce a clear win moment.`,
+**Completion check:** Clicking and not clicking create visibly different movement, and reaching the star produces a clear win moment.`,
 					projectLink: "https://scratch.mit.edu/projects/332463981/",
 					solutionLink: "https://scratch.mit.edu/projects/332459692/"
 				},
@@ -481,7 +481,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. Otherwise, it says "Take me to my mom".
 4. The mom fish glides randomly around the screen.
 
-**Completion check:** The baby fish should update its message correctly as it touches or does not touch the mom fish.`,
+**Completion check:** The baby fish updates its message correctly as it touches or does not touch the mom fish.`,
 					projectLink: "https://scratch.mit.edu/projects/332468797/",
 					solutionLink: "https://scratch.mit.edu/projects/332464646/"
 				},
@@ -510,7 +510,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. Pressing 3 asks a harder question and repeats until the answer is correct.
 4. For the harder question, answers that are too low trigger "Higher!", and answers that are too high trigger "Lower!".
 
-**Completion check:** Correct, incorrect, too-low, and too-high answers should each produce clear feedback.`,
+**Completion check:** Correct, incorrect, too-low, and too-high answers each produce clear feedback.`,
 					projectLink: "https://scratch.mit.edu/projects/295332936/",
 					solutionLink: "https://scratch.mit.edu/projects/294539961/"
 				},
@@ -526,7 +526,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Extension:** Add more fortunes and questions to make the fortune teller more detailed.
 
-**Completion check:** Different answers should produce different fortunes, and unexpected answers should not break the project.`,
+**Completion check:** Different answers produce different fortunes, and unexpected answers do not break the project.`,
 					projectLink: "https://scratch.mit.edu/projects/295333590/",
 					solutionLink: "https://scratch.mit.edu/projects/294540150/"
 				},
@@ -542,7 +542,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Extension:** Add a guess counter and congratulate the player for guessing in fewer than 5 tries.
 
-**Completion check:** A wrong guess should keep the game running, and a correct guess should end the loop with clear feedback.`,
+**Completion check:** A wrong guess keeps the game running, and a correct guess ends the loop with clear feedback.`,
 					projectLink: "https://scratch.mit.edu/projects/295335247/",
 					solutionLink: "https://scratch.mit.edu/projects/294541979/"
 				}
@@ -559,7 +559,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 4. Variables store items collected or tasks completed.
 5. Prompts or rewards make exploration and hidden secrets clear.
 
-**Completion check:** Each major choice should lead to a different visible event and update any related variables correctly.`,
+**Completion check:** Each major choice leads to a different visible event and updates any related variables correctly.`,
 					projectLink: "https://scratch.mit.edu/projects/330320360/",
 					solutionLink: "https://scratch.mit.edu/projects/330316142/"
 				},
@@ -574,9 +574,9 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 4. Additional questions, such as "Do you want to collect rocks or search for life?", branch the story.
 5. Variables track discoveries or points.
 
-**Design target:** Each planet should feel distinct through backdrop, dialogue, sprite behavior, or point changes rather than only changing a line of text.
+**Design target:** Each planet feels distinct through backdrop, dialogue, sprite behavior, or point changes rather than only changing a line of text.
 
-**Completion check:** Planet choice and mission choice should both affect the story path, and the variable values should match the choices made.`,
+**Completion check:** Planet choice and mission choice both affect the story path, and the variable values match the choices made.`,
 					projectLink: "https://scratch.mit.edu/projects/330321409/",
 					solutionLink: "https://scratch.mit.edu/projects/330316808/"
 				},
@@ -606,7 +606,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 4. Score and timer variables track game progress.
 5. The game ends when the timer runs out and displays the final score.
 
-**Completion check:** Clicking different stage locations should move the mantis accurately, and touching a bug should update the game state once per catch.`,
+**Completion check:** Clicking different stage locations moves the mantis accurately, and touching a bug updates the game state once per catch.`,
 					projectLink: "https://scratch.mit.edu/projects/302997680/",
 					solutionLink: "https://scratch.mit.edu/projects/302865707/"
 				},
@@ -621,7 +621,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 4. Touching the cake plays a sound, moves the cake to a new random location, and increases the score.
 5. A countdown timer ends the game when it reaches zero.
 
-**Completion check:** The cake should relocate after every catch, and the timer should produce a clear end state.`,
+**Completion check:** The cake relocates after every catch, and the timer produces a clear end state.`,
 					projectLink: "https://scratch.mit.edu/projects/302998723/",
 					solutionLink: "https://scratch.mit.edu/projects/302865909/"
 				},
@@ -635,7 +635,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. Broadcast messages trigger each act in sequence, such as dancing, jumping, or playing an instrument.
 4. After every act is finished, all performers bow together.
 
-**Completion check:** The acts should run in a clear order, and the final bow should happen only after the individual performances finish.`,
+**Completion check:** The acts run in a clear order, and the final bow happens only after the individual performances finish.`,
 					projectLink: "https://scratch.mit.edu/projects/302999957/",
 					solutionLink: "https://scratch.mit.edu/projects/302866259/"
 				}
@@ -650,7 +650,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 2. Each quadrant displays a message such as "I'm in Quadrant I" when the sprite enters it.
 3. Shapes or obstacles can make the path more challenging.
 
-**Completion check:** The displayed quadrant message should match the sprite's current X/Y position.`,
+**Completion check:** The displayed quadrant message matches the sprite's current X/Y position.`,
 					projectLink: "https://scratch.mit.edu/projects/330290958/",
 					solutionLink: "https://scratch.mit.edu/projects/330287678/"
 				},
@@ -663,7 +663,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 2. Typed input lets the player enter coordinates for custom shapes.
 3. Example coordinate sets can draw initials or simple pictures.
 
-**Completion check:** The drawn shape should match the coordinate plan, and user-entered coordinates should move the sprite predictably.`,
+**Completion check:** The drawn shape matches the coordinate plan, and user-entered coordinates move the sprite predictably.`,
 					projectLink: "https://scratch.mit.edu/projects/330291711/",
 					solutionLink: "https://scratch.mit.edu/projects/330288612/"
 				},
@@ -694,7 +694,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 5. When the timer reaches zero, the game stops and displays the final score.
 6. A high-score variable can track the best result across plays.
 
-**Completion check:** The score should increase only from target clicks, and the timer should reliably stop the game at zero.`,
+**Completion check:** The score increases only from target clicks, and the timer reliably stops the game at zero.`,
 					projectLink: "https://scratch.mit.edu/projects/302996579/",
 					solutionLink: "https://scratch.mit.edu/projects/302864606/"
 				},
@@ -708,7 +708,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. A countdown timer ends the game when it reaches zero.
 4. Difficulty can increase by speeding up spiders over time.
 
-**Completion check:** Each spider click should count once, and the game should end cleanly when the timer expires.`,
+**Completion check:** Each spider click counts once, and the game ends cleanly when the timer expires.`,
 					projectLink: "https://scratch.mit.edu/projects/302996964/",
 					solutionLink: "https://scratch.mit.edu/projects/302865093/"
 				},
@@ -732,7 +732,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. The project displays the number of steps taken.
 4. Obstacles and a goal can turn the counter into a small maze challenge.
 
-**Completion check:** The steps variable should increase only when movement happens, not when unrelated keys or events occur.`,
+**Completion check:** The steps variable increases only when movement happens, not when unrelated keys or events occur.`,
 					projectLink: "https://scratch.mit.edu/projects/330293454/",
 					solutionLink: "https://scratch.mit.edu/projects/330289893/"
 				},
@@ -746,7 +746,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. A timer ends the game when time runs out.
 4. The final screen displays how much food was collected.
 
-**Completion check:** The food count should increase only when the crab collects food, and the timer should create a clear end state.`,
+**Completion check:** The food count increases only when the crab collects food, and the timer creates a clear end state.`,
 					projectLink: "https://scratch.mit.edu/projects/330294193/",
 					solutionLink: "https://scratch.mit.edu/projects/330290622/"
 				},
@@ -761,7 +761,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 4. If the player cannot afford an item, a message explains the problem.
 5. Buying continues until the money runs out.
 
-**Completion check:** Affordable purchases should reduce the money variable correctly, while unaffordable purchases should not make the total go negative.`,
+**Completion check:** Affordable purchases reduce the money variable correctly, while unaffordable purchases do not make the total go negative.`,
 					projectLink: "https://scratch.mit.edu/projects/330294909/",
 					solutionLink: "https://scratch.mit.edu/projects/330291357/"
 				}
@@ -773,7 +773,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				{
 					title: "Message broadcasting",
 					content:
-						"Broadcasting lets sprites send messages to each other. This is useful when one sprite should wait for another sprite to finish speaking, moving, or changing state before its own script begins.\n\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
+						"Broadcasting lets sprites send messages to each other. This is useful when one sprite needs to wait for another sprite to finish speaking, moving, or changing state before its own script begins.\n\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
 				},
 				{
 					title: "GS10 Project 1 – Dance Off",
@@ -790,7 +790,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Extension:** Add lighting changes, a final applause sequence, or a closing pose after everyone is done.
 
-**Completion check:** The dancers should perform in a clear sequence, and the music should stop from a broadcast rather than an unrelated timer.`,
+**Completion check:** The dancers perform in a clear sequence, and the music stops from a broadcast rather than an unrelated timer.`,
 					projectLink: "https://scratch.mit.edu/projects/301002220/",
 					solutionLink: "https://scratch.mit.edu/projects/300644693/"
 				},
@@ -801,12 +801,12 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 **Build steps:**
 1. Program the bowl so the arrow keys control it after the green flag is clicked.
 2. When an item sprite touches the bowl, broadcast a message such as "Cheese touched".
-3. Decide what each sprite should do after receiving its message. It might move, play a sound, hide, or trigger a bowl reaction.
+3. Decide what each sprite does after receiving its message. It might move, play a sound, hide, or trigger a bowl reaction.
 4. Add variables that track how many times each object has been collected.
 5. Add a 15-second timer.
 6. When the timer ends, broadcast a message that makes every sprite react, such as spinning, growing, shrinking, or showing a final result.
 
-**Completion check:** Each collected object should update the correct variable and trigger the correct broadcast response.`,
+**Completion check:** Each collected object updates the correct variable and triggers the correct broadcast response.`,
 					projectLink: "https://scratch.mit.edu/projects/303008513/",
 					solutionLink: "https://scratch.mit.edu/projects/302811491/"
 				},
@@ -830,7 +830,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. Broadcast messages make each character speak or move at the correct time.
 4. Additional broadcasts handle scene changes or major story events.
 
-**Completion check:** The story should run in a clear sequence because sprites react to broadcasts, not because unrelated scripts happen to finish at the same time.`,
+**Completion check:** The story runs in a clear sequence because sprites react to broadcasts, not because unrelated scripts happen to finish at the same time.`,
 					projectLink: "https://scratch.mit.edu/projects/330301165/",
 					solutionLink: "https://scratch.mit.edu/projects/328309254/"
 				},
@@ -867,7 +867,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Implementation options:** The starter project can be used as a base, or the race can be rebuilt from a blank project with original sprites, costumes, and backdrops.
 
-**Completion check:** The race should have clear starting positions, player controls, a finish condition, and visible feedback when the race ends.`,
+**Completion check:** The race has clear starting positions, player controls, a finish condition, and visible feedback when the race ends.`,
 					projectLink: "https://scratch.mit.edu/projects/304551665/",
 					solutionLink: "https://scratch.mit.edu/projects/305082197/"
 				},
@@ -916,7 +916,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Extensions:** Add another skeleton for extra difficulty. Add sound effects and backdrop changes for the finishing touches. For a harder potion pattern, make the potion wait a few seconds before appearing again.
 
-**Completion check:** The level variable should change exactly once per collision event, and the win/loss broadcasts should make the final state clear.`,
+**Completion check:** The level variable changes exactly once per collision event, and the win/loss broadcasts make the final state clear.`,
 					projectLink: "https://scratch.mit.edu/projects/332395747/",
 					solutionLink: "https://scratch.mit.edu/projects/330724703/"
 				},
@@ -943,7 +943,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Implementation options:** The starter project can be used as a base, or the same mechanics can be rebuilt from a blank project with original sprites, costumes, and backdrops.
 
-**Completion check:** The player should move reliably, asteroids should reset cleanly, collisions should be detected consistently, and the game should have a clear ending or replay path.`,
+**Completion check:** The player moves reliably, asteroids reset cleanly, collisions are detected consistently, and the game has a clear ending or replay path.`,
 					projectLink: "https://scratch.mit.edu/projects/303001451/",
 					solutionLink: "https://scratch.mit.edu/projects/302948550/"
 				},
@@ -1011,9 +1011,9 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 4. Which variables track game state?
 5. How does the game end?
 
-**Build target:** A playable minimum version comes before polish. The minimum version should prove the controls, main rule, score or progress state, and ending.
+**Build target:** A playable minimum version comes before polish. The minimum version proves the controls, main rule, score or progress state, and ending.
 
-**Completion check:** The game should feel like one connected system rather than isolated scripts, and the final behavior should be traceable from green flag to ending state.`
+**Completion check:** The game feels like one connected system rather than isolated scripts, and the final behavior is traceable from green flag to ending state.`
 				},
 				{
 					title: "Master Project Presentation",
@@ -1025,7 +1025,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 3. Describe one problem that came up during development and how it was solved.
 4. Reflect on the finished result and one improvement that would make the game stronger.
 
-**Completion check:** The explanation should make the game logic understandable to someone viewing the project for the first time.`
+**Completion check:** The explanation makes the game logic understandable to someone viewing the project for the first time.`
 				},
 				{
 					title: "Course recap",
