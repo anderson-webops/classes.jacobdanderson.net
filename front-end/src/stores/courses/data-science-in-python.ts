@@ -355,7 +355,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 				{
 					title: "Reference Archive: Data Science in Python Workspace",
 					content:
-						"Use the reference Python archive when the full workspace layout is useful for comparison with the current course structure and material organization.",
+						"Use the reference Python archive when the full workspace layout is useful for comparison with the active course structure.",
 					projectLink:
 						"https://github.com/instruction-material/Data-Science/tree/main"
 				},
