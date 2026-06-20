@@ -798,7 +798,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Debuggers, Sanitizers, and Evidence-Driven Diagnosis",
 					content:
-						"`lldb` or `gdb` plus sanitizers make low-level bugs easier to understand by pointing at the exact failing access or bad lifetime event. Observation and reproduction should replace guess-and-retry debugging."
+						"`lldb` or `gdb` plus sanitizers make low-level bugs easier to understand by pointing at the exact failing access or bad lifetime event. Observation and reproduction replace guess-and-retry debugging with evidence."
 				},
 				{
 					title: "Binary Inspection with objdump and nm",
@@ -873,7 +873,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Read Input, Validate Early, Transform Deliberately",
 					content:
-						"Validate each row or record before it enters the main transform path. This is the capstone version of the whole course philosophy: bytes and fields should become trusted data only after the code has checked the boundaries and assumptions explicitly."
+						"Validate each row or record before it enters the main transform path. This is the capstone version of the whole course philosophy: bytes and fields become trusted data only after the code has checked the boundaries and assumptions explicitly."
 				},
 				{
 					title: "Write Output That Another Tool Could Trust",
@@ -1178,7 +1178,8 @@ export const cSystemsEngineeringCourse: RawCourse = {
 					title: "Capstone Utility Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Capstone Utility Studio",
+						moduleTitle:
+							"Systems Build 17: Capstone Utility Studio",
 						section: "concepts"
 					})
 				},
@@ -1186,7 +1187,8 @@ export const cSystemsEngineeringCourse: RawCourse = {
 					title: "Capstone Utility Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Capstone Utility Studio",
+						moduleTitle:
+							"Systems Build 17: Capstone Utility Studio",
 						section: "example"
 					})
 				},
@@ -1194,7 +1196,8 @@ export const cSystemsEngineeringCourse: RawCourse = {
 					title: "Capstone Utility Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Capstone Utility Studio",
+						moduleTitle:
+							"Systems Build 17: Capstone Utility Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1206,7 +1209,8 @@ export const cSystemsEngineeringCourse: RawCourse = {
 					title: "Capstone Utility Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Capstone Utility Studio",
+						moduleTitle:
+							"Systems Build 17: Capstone Utility Studio",
 						section: "review"
 					})
 				}
@@ -1216,7 +1220,8 @@ export const cSystemsEngineeringCourse: RawCourse = {
 					title: "Capstone Utility Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Capstone Utility Studio",
+						moduleTitle:
+							"Systems Build 17: Capstone Utility Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1228,7 +1233,8 @@ export const cSystemsEngineeringCourse: RawCourse = {
 					title: "Capstone Utility Studio Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Capstone Utility Studio",
+						moduleTitle:
+							"Systems Build 17: Capstone Utility Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1241,7 +1247,8 @@ export const cSystemsEngineeringCourse: RawCourse = {
 					title: "Capstone Utility Studio Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Capstone Utility Studio",
+						moduleTitle:
+							"Systems Build 17: Capstone Utility Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),

@@ -1228,6 +1228,7 @@ describe("course text quality normalization", () => {
 		expect(source).not.toMatch(/Skill target:/i);
 		expect(source).not.toMatch(/The goal is to/i);
 		expect(source).not.toMatch(/This project should/i);
+		expect(corpus).not.toMatch(/\bshould\b/i);
 		expect(source).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
