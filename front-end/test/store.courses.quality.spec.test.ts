@@ -2578,6 +2578,38 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("C Foundations Transfer Studio");
 	});
 
+	it("keeps Low-Level Security Part 1 defensive and specifically labeled", async () => {
+		const course = await loadRawCourse("low-level-security");
+		expect(course).not.toBeNull();
+		const corpus = allCourseText(course);
+
+		expect(corpus).not.toMatch(/This section covers/i);
+		expect(corpus).not.toMatch(/Key idea:/i);
+		expect(corpus).not.toMatch(/Skill target:/i);
+		expect(corpus).not.toMatch(/Practice target:/i);
+		expect(corpus).not.toMatch(/The goal is to/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).not.toMatch(/Offensive Security Lab/i);
+		expect(corpus).toContain(
+			"Bug-finding starts by creating test inputs that should be rejected"
+		);
+		expect(corpus).toContain("Memory Layout Transfer Practice");
+		expect(corpus).toContain("Parser Hardening Transfer Practice");
+		expect(corpus).toContain("Patch Review Transfer Practice");
+		expect(corpus).toContain("Defensive Exploitability Triage Studio");
+		expect(corpus).toContain("Defensive Hardening Audit Studio");
+		expect(corpus).toContain(
+			"Low-Level Security Lab 7: Sanitizer Triage Studio"
+		);
+		expect(corpus).toContain(
+			"Low-Level Security Lab 9: Binary Parser Hardening Studio"
+		);
+		expect(corpus).toContain(
+			"Low-Level Security Lab 12: Patch Review Handoff Studio"
+		);
+	});
+
 	it("keeps Low-Level Security Part 2 defensive and specifically labeled", async () => {
 		const course = await loadRawCourse("low-level-security-part-2");
 		expect(course).not.toBeNull();
