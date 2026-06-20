@@ -216,7 +216,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Rounding It Off",
 					content:
-						"Use this project to drill casting-based rounding without relying on `Math` helpers.",
+						"Use this project to drill casting-based rounding without relying on `Math` helpers. The useful checkpoint is explaining why adding `0.5` before an integer cast works for positive values and where that shortcut would need more care.",
 					projectLink: repo("APCS1-Rounding-It-Off/starter"),
 					solutionLink: repo("APCS1-Rounding-It-Off/solution"),
 					mediaLink: media("apcs1-project-2-rounding-it-off.mp4")
@@ -272,7 +272,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Quotient and Remainder",
 					content:
-						"Use this build to reinforce integer division and remainder reasoning without hiding behind the modulus operator.",
+						"Use this build to reinforce integer division and remainder reasoning before `%` becomes automatic. The explanation should connect quotient, remainder, truncation, and unit meaning rather than only reporting two numbers.",
 					projectLink: repo("APCS2-Quotient-and-Remainder/starter"),
 					solutionLink: repo("APCS2-Quotient-and-Remainder/solution"),
 					mediaLink: media(
@@ -282,7 +282,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Too Chicken to Cross the Road",
 					content:
-						"Use the boolean-only version first so logic is encoded cleanly before conditionals are added in APCS3.",
+						"Use the boolean-only version first so logic is encoded cleanly before conditionals are added in APCS3. A strong solution names each boolean expression, tests both true and false paths, and avoids hiding the decision inside vague variable names.",
 					projectLink: repo(
 						"APCS2-Too-Chicken-To-Cross-The-Road/starter"
 					),
@@ -296,7 +296,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Two in One",
 					content:
-						"Use this one-line boolean exercise to force concise reasoning about relationships between values.",
+						"Use this one-line boolean exercise to force concise reasoning about relationships between values. The goal is to write one readable compound expression, then justify the expression with at least one matching case and one non-matching case.",
 					projectLink: repo("APCS2-Two-In-One/starter"),
 					solutionLink: repo("APCS2-Two-In-One/solution"),
 					mediaLink: media("apcs2-project-4-two-in-one.mp4")
@@ -319,7 +319,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Elevator Warning",
 					content:
-						"Use Elevator Warning as the cleanest repo-backed APCS3 project for threshold checks, conditionals, and readable output.",
+						"Use Elevator Warning as the cleanest repo-backed APCS3 project for threshold checks, conditionals, and readable output. The decision structure should make the unsafe condition obvious and should handle boundary values exactly, not just typical inputs.",
 					projectLink: repo("APCS3-Elevator-Warning/starter"),
 					solutionLink: repo("APCS3-Elevator-Warning/solution"),
 					mediaLink: media("apcs3-project-3-elevator-warning.mp4")
@@ -336,7 +336,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Too Chicken Take Two",
 					content:
-						"Redo the APCS2 boolean problem with explicit conditionals and nested branches.",
+						"Redo the APCS2 boolean problem with explicit conditionals and nested branches. Compare this version to the boolean-only version by naming which part became easier to read, which part became longer, and how the same truth cases are preserved.",
 					projectLink: repo("APCS3-Too-Chicken-Take-Two/starter"),
 					solutionLink: repo("APCS3-Too-Chicken-Take-Two/solution"),
 					mediaLink: media("apcs3-project-1-too-chicken-take-two.mp4")
@@ -400,7 +400,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: For Loop Practice",
 					content:
-						"Use this project to reinforce counted iteration, accumulators, and output-driven tracing.",
+						"Use this project to reinforce counted iteration, accumulators, and output-driven tracing. Each loop should have a clear start value, stop condition, update step, and predicted output before the code is treated as finished.",
 					projectLink: repo("APCS4-For-Loop-Practice/starter"),
 					solutionLink: repo("APCS4-For-Loop-Practice/solution"),
 					mediaLink: media("apcs4-project-1-for-loops-practice.mp4")
@@ -514,7 +514,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Method Practice",
 					content:
-						"Use the APCS5 method-practice project for short parameter and return-value reps.",
+						"Use the APCS5 method-practice project for short parameter and return-value repetitions. Each method should identify its inputs, output, side effects if any, and one call from `main` that proves the method contract is being used correctly.",
 					projectLink: repo("APCS5-Practice-with-Methods/starter"),
 					solutionLink: repo("APCS5-Practice-with-Methods/solution"),
 					mediaLink: media("apcs5-project-1-method-practice.mp4")
@@ -522,7 +522,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Store Class",
 					content:
-						"Use Store Class when another object model with a small but meaningful state transition would help.",
+						"Use Store Class when another object model with a small but meaningful state transition would help. The useful evidence is a before-and-after object state, such as inventory, price, or balance changing through a method rather than direct field access.",
 					projectLink: repo("APCS5-Store-Class/starter"),
 					solutionLink: repo("APCS5-Store-Class/solution"),
 					mediaLink: media("apcs5-project-3-store-class.mp4")
@@ -530,7 +530,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Supplemental: Spreadsheet Width",
 					content:
-						"Use this supplemental build when precise method specs need more implementation practice.",
+						"Use this supplemental build when precise method specs need more implementation practice. The task is useful because it forces careful interpretation of inputs, return values, edge cases, and formatting rules before implementation starts.",
 					projectLink: repo("APCS5-Spreadsheet-Width/starter"),
 					solutionLink: repo("APCS5-Spreadsheet-Width/solution"),
 					mediaLink: media(
@@ -574,7 +574,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Bank Account Class",
 					content:
-						"Use the bank-account build for clean state transitions, deposits, withdrawals, and invariant thinking.",
+						"Use the bank-account build for clean state transitions, deposits, withdrawals, and invariant thinking. A strong implementation prevents invalid balances, keeps fields encapsulated, and demonstrates state before and after each transaction.",
 					projectLink: repo("APCS6-Bank-Account-Class/starter"),
 					solutionLink: repo("APCS6-Bank-Account-Class/solution"),
 					mediaLink: media("apcs6-project-2-bank-account-class.mp4")
@@ -590,7 +590,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: Getters and Setters",
 					content:
-						"Use this reference for direct review of controlled access patterns and field updates.",
+						"Use this reference for direct review of controlled access patterns and field updates. The key idea is that public methods can protect object invariants while still allowing outside code to read or request valid changes.",
 					projectLink: repo(
 						"APCS6-Getters-and-Setters-Reference/starter"
 					),
@@ -743,7 +743,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "ArrayList Reference",
 					content:
-						"Use the ArrayList reference pack when the check-in shows mutation or traversal gaps.",
+						"Use the ArrayList reference pack when the check-in shows mutation or traversal gaps. Focus on method names, shifting behavior after removal, wrapper-class requirements, and when index-based loops are safer than enhanced loops.",
 					projectLink: repo("APCS11-Array-List-Reference/starter"),
 					solutionLink: repo("APCS11-Array-List-Reference/solution")
 				},
@@ -837,7 +837,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Random Mad Libs",
 					content:
-						"Use Random Mad Lib to connect arrays, random indexing, and lightweight string generation.",
+						"Use Random Mad Lib to connect arrays, random indexing, and lightweight string generation. The check is that every random index stays in bounds, every word bank has a clear role, and the generated output still reads as a complete sentence.",
 					projectLink: repo("APCS10-Random-Mad-Lib/starter"),
 					solutionLink: repo("APCS10-Random-Mad-Lib/solution"),
 					mediaLink: media("apcs10-project-2-random-mad-libs.mp4")
@@ -845,7 +845,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Practice With Two-Dimensional Arrays",
 					content:
-						"Use this project for grid traversal, row-and-column reasoning, and nested loops.",
+						"Use this project for grid traversal, row-and-column reasoning, and nested loops. A complete solution should explain which loop controls rows, which loop controls columns, and how the code changes when the target is a row, column, cell, or whole matrix.",
 					projectLink: repo(
 						"APCS10-Practice-With-Two-Dimensional-Arrays/starter"
 					),
@@ -859,7 +859,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Matrix Arithmetic",
 					content:
-						"Use matrix arithmetic as a more structured 2D-array build.",
+						"Use matrix arithmetic as a more structured 2D-array build. The project should make dimension compatibility explicit, then trace at least one cell of the result so array indexing and arithmetic reasoning are connected.",
 					projectLink: repo("APCS10-Matrix-Arithmetic/starter"),
 					solutionLink: repo("APCS10-Matrix-Arithmetic/solution"),
 					mediaLink: media("apcs10-project-4-matrix-arithmetic.mp4")
@@ -903,7 +903,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "ArrayList Reference Pack",
 					content:
-						"Keep the ArrayList reference build close for method review and quick syntax reinforcement.",
+						"Keep the ArrayList reference build close for method review and quick syntax reinforcement. It should support fast checks of `add`, `get`, `set`, `remove`, `size`, traversal style, and mutation safety.",
 					projectLink: repo("APCS11-Array-List-Reference/starter"),
 					solutionLink: repo("APCS11-Array-List-Reference/solution")
 				}
@@ -912,7 +912,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Fortune Teller",
 					content:
-						"Use FortuneTeller to combine ArrayLists, random selection, and controlled mutation of collection state.",
+						"Use FortuneTeller to combine ArrayLists, random selection, and controlled mutation of collection state. The interesting check is whether random choices remain valid as items are added, removed, or reused.",
 					projectLink: repo("APCS11-Fortune-Teller-Class/starter"),
 					solutionLink: repo("APCS11-Fortune-Teller-Class/solution"),
 					mediaLink: media("apcs11-project-2-fortune-teller.mp4")
@@ -985,7 +985,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Runtime Analysis Starter",
 					content:
-						"Use the runtime starter if the check-in shows weak step-counting or loop-cost reasoning.",
+						"Use the runtime starter if the check-in shows weak step-counting or loop-cost reasoning. The goal is to connect a loop structure to growth rate before using Big-O notation as shorthand.",
 					projectLink: repo("APCS13-Runtime-Analysis/starter"),
 					solutionLink: repo("APCS13-Runtime-Analysis/solution")
 				}
@@ -1019,7 +1019,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Minimum and Maximum Search",
 					content:
-						"Use this build to reinforce wrapper constants and collection scanning with boxed integers.",
+						"Use this build to reinforce wrapper constants and collection scanning with boxed integers. The explanation should justify the initial minimum and maximum values, then trace how each comparison can update the answer.",
 					projectLink: repo("APCS12-Minimum-and-Maximum/starter"),
 					solutionLink: repo("APCS12-Minimum-and-Maximum/solution"),
 					mediaLink: media("apcs12-project-2-minimum-search.mp4")
@@ -1095,7 +1095,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Insertion Sort",
 					content:
-						"Use the insertion-sort build to contrast local shifting with global minimum selection.",
+						"Use the insertion-sort build to contrast local shifting with global minimum selection. The useful trace shows the sorted prefix growing, the current value shifting left, and why nearly sorted input behaves differently from reverse-sorted input.",
 					projectLink: repo("APCS14-Insertion-Sort/starter"),
 					solutionLink: repo("APCS14-Insertion-Sort/solution"),
 					mediaLink: media("apcs14-project-2-insertion-sort.mp4")
@@ -1120,14 +1120,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Tracing Recursion",
 					content:
-						"Use the verified starter and review pair for tracing recursion as the main APCS15 reasoning checkpoint.",
+						"Use the verified starter and review pair for tracing recursion as the main APCS15 reasoning checkpoint. The expected evidence is a stack-frame trace that names the base case, the recursive call, and the order in which values return.",
 					projectLink: repo("APCS15-Tracing-Recursion/starter"),
 					solutionLink: repo("APCS15-Tracing-Recursion/solution")
 				},
 				{
 					title: "Recursion Reference Pack",
 					content:
-						"Keep the recursion reference available for short examples before assigning the longer practice set.",
+						"Keep the recursion reference available for short examples before assigning the longer practice set. It is most useful when a small trace is needed to separate the base case, recursive step, printed output order, and returned value.",
 					projectLink: repo("APCS15-Recursion-Reference/starter"),
 					solutionLink: repo("APCS15-Recursion-Reference/solution")
 				}
@@ -1144,7 +1144,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Blob Erase",
 					content:
-						"Use Blob Erase to extend recursion into two-dimensional traversal and backtracking logic.",
+						"Use Blob Erase to extend recursion into two-dimensional traversal and backtracking logic. The key explanation is why the current cell must be checked and marked before recursive calls expand to neighboring cells.",
 					projectLink: repo("APCS15-Blob-Erase/starter"),
 					solutionLink: repo("APCS15-Blob-Erase/solution"),
 					mediaLink: media("apcs15-project-3-blob-erase.mp4")
@@ -1178,7 +1178,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Binary Search",
 					content:
-						"Use the binary-search build for both iterative and recursive search structure.",
+						"Use the binary-search build for both iterative and recursive search structure. Each version should state the sorted-data precondition, the low/high bounds, the middle calculation, and the condition that proves the target is absent.",
 					projectLink: repo("APCS16-Binary-Search/starter"),
 					solutionLink: repo("APCS16-Binary-Search/solution"),
 					mediaLink: media("apcs16-project-1-binary-search.mp4")
@@ -1196,7 +1196,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Merge Sort",
 					content:
-						"Use the merge-sort build for the full divide-and-conquer implementation after the merge step itself is clear.",
+						"Use the merge-sort build for the full divide-and-conquer implementation after the merge step itself is clear. The trace should separate splitting, recursive sorting, and merging so the `O(n log n)` structure is visible rather than memorized.",
 					projectLink: repo("APCS16-Merge-Sort/starter"),
 					solutionLink: repo("APCS16-Merge-Sort/solution"),
 					mediaLink: media("apcs16-project-2-merge-sort.mp4")
@@ -1258,7 +1258,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "2020 Repo Practice Exam",
 					content:
-						"Keep the repo-backed practice exam available as an additional full-run benchmark.",
+						"Keep the repo-backed practice exam available as an additional full-run benchmark. Use it when timing, stamina, and mixed-topic switching matter more than another isolated concept drill.",
 					projectLink: repo("APCS-A-2020-Practice-Exam/starter"),
 					solutionLink: repo("APCS-A-2020-Practice-Exam/solution")
 				}
