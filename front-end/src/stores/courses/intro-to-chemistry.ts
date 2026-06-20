@@ -1389,10 +1389,11 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Simulation Set",
 					content: [
 						"**Resource bank:** The course uses PhET simulations for atoms, states of matter, molecule shapes, balancing equations, limiting reactants, concentration, molarity, and pH. It also preserves the original PBS atom simulation, PBS periodic-table interactive, and JavaLab dissolution simulation as source links. These simulations provide controlled evidence sources when a physical lab would require materials, supervision, or safety equipment outside the scope of a remote course.",
+						"**Simulation catalog:** https://phet.colorado.edu/en/simulations/filter?subjects=chemistry. Choose a specific simulation from the catalog before treating it as evidence; the course item or notebook entry should name the simulation and the setting used.",
 						"**Use:** A simulation counts as evidence only when a specific setting, observation, or screenshot is connected to a claim. A good simulation note records the variable changed, the visible result, and the particle-level interpretation.",
 						"**Evidence target:** Simulation-based work includes the variable changed, what was observed, what the observation supports, and one limitation of the model."
 					].join("\n\n"),
-					mediaLink:
+					datasetLink:
 						"https://phet.colorado.edu/en/simulations/filter?subjects=chemistry"
 				},
 				{
@@ -1421,13 +1422,12 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Simulation Evidence Log",
 					content: [
 						"**Project goal:** Build a reusable evidence log for one PhET chemistry simulation.",
+						"**Simulation catalog:** https://phet.colorado.edu/en/simulations/filter?subjects=chemistry. Pick one simulation and record its exact name, settings, and changed variables.",
 						"**Requirements:** Include simulation name, variables changed, screenshots or sketches, observations, claim, evidence, reasoning, and limitation. Use the materials pack headings as a template for naming variables and changed conditions.",
 						"**Analysis target:** Each row should separate what changed from what was measured or observed. For example, changing solute amount is a variable change; color intensity or concentration reading is evidence; the conclusion belongs in the reasoning column.",
 						"**Completion checks:** The log identifies exactly what the simulation shows and does not treat the simulation as proof without explanation."
 					].join("\n\n"),
-					datasetLink: MATERIALS.pack,
-					mediaLink:
-						"https://phet.colorado.edu/en/simulations/filter?subjects=chemistry"
+					datasetLink: MATERIALS.pack
 				},
 				{
 					title: "Project: Chemistry Reference Card",

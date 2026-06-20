@@ -600,6 +600,50 @@ describe("implemented course development artifacts", () => {
 		expect(text).toContain("sample login names");
 	});
 
+	it("keeps Java Level 1 check-in links away from ambiguous repo roots", async () => {
+		for (const courseId of [
+			"java-level-1",
+			"java-without-graphics",
+			"java-with-graphics"
+		]) {
+			const serializedCourse = JSON.stringify(await requireCourse(courseId));
+			const rootOnlyLinks = [
+				...serializedCourse.matchAll(
+					/https:\/\/github\.com\/instruction-material\/Java-Level-1(?=["\\])/g
+				)
+			];
+
+			expect(rootOnlyLinks, courseId).toHaveLength(0);
+			expect(serializedCourse).toContain(
+				"Java-Level-1/tree/main/JS7-Practice-with-Arrays"
+			);
+		}
+	});
+
+	it("keeps broad PhET subject catalogs as resource links rather than media embeds", async () => {
+		for (const courseId of [
+			"elementary-science",
+			"middle-school-integrated-science",
+			"intro-to-chemistry",
+			"intro-to-physics",
+			"physics-level-2"
+		]) {
+			const course = await requireCourse(courseId);
+			const phetCatalogMediaLinks = courseItems(course)
+				.filter(item =>
+					item.mediaLink?.includes(
+						"phet.colorado.edu/en/simulations/filter?subjects="
+					)
+				)
+				.map(item => item.title);
+
+			expect(phetCatalogMediaLinks, courseId).toEqual([]);
+			expect(JSON.stringify(course), courseId).toContain(
+				"phet.colorado.edu/en/simulations/filter?subjects="
+			);
+		}
+	});
+
 	it("keeps Pythonic Design Patterns source links course-owned", async () => {
 		const serializedCourse = JSON.stringify(
 			await requireCourse("pythonic-design-patterns")

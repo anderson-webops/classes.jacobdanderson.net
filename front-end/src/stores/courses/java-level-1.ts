@@ -838,9 +838,7 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "Check-In #2 Overview",
 					content:
-						"Use this review to revisit math operators, randomness, methods, arrays, and two-dimensional arrays. Focus on explaining not just what the code does, but why each structure fits the problem.",
-					solutionLink:
-						"https://github.com/instruction-material/Java-Level-1"
+						"Use this review to revisit math operators, randomness, methods, arrays, and two-dimensional arrays. Focus on explaining not just what the code does, but why each structure fits the problem."
 				},
 				{
 					title: "Check-In #2: Mathematical Operators and Randomness",
@@ -879,9 +877,7 @@ export const javaLevel1Course: RawCourse = {
 						courseFamily: "Java Level 1",
 						moduleTitle: "Check In #2",
 						section: "extension"
-					}),
-					solutionLink:
-						"https://github.com/instruction-material/Java-Level-1"
+					})
 				},
 				{
 					title: "Check In #2 Supplemental 2",
