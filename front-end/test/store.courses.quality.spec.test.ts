@@ -4143,8 +4143,9 @@ describe("course text quality normalization", () => {
 
 		const saveTheWizard = findItem(scratchLevel1!, /Save the Wizard/);
 		expect(saveTheWizard.content).toContain(
-			"The level variable should change exactly once per collision event"
+			"The level variable changes exactly once per collision event"
 		);
+		expect(allCourseText(scratchLevel1!)).not.toMatch(/\bshould\b/i);
 
 		const babyChick = findItem(scratchLevel2!, /Baby Chick/);
 		expect(babyChick.content).toContain(
