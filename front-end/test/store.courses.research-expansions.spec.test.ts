@@ -23,6 +23,33 @@ function allText(
 }
 
 describe("research-backed course family expansions", () => {
+	it("keeps research expansion profile lists deduplicated", () => {
+		const listFields = [
+			"gaps",
+			"topics",
+			"moduleAdditions",
+			"projectTypes",
+			"assessments",
+			"materials"
+		] as const;
+		const failures: string[] = [];
+
+		for (const [courseId, profile] of Object.entries(
+			researchBackedExpansionProfiles
+		)) {
+			for (const field of listFields) {
+				const normalized = profile[field].map(item =>
+					item.trim().toLowerCase()
+				);
+				if (new Set(normalized).size === normalized.length) continue;
+
+				failures.push(`${courseId}: ${field}`);
+			}
+		}
+
+		expect(failures).toEqual([]);
+	});
+
 	it(
 		"adds standards, sequencing, and project practice appendices to every audited course",
 		async () => {
