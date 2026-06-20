@@ -386,7 +386,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Analyze three statements about isotopes and decide whether each is accurate, misleading, or false.",
 						"**Requirements:** Each decision needs a corrected statement and a short explanation using protons, neutrons, mass number, and atomic number. At least one statement should confuse isotope identity with ion charge, and at least one should confuse mass number with average atomic mass.",
-						"**Evidence target:** Use the isotope table to support the correction. A strong answer names the exact particle count that stayed the same and the exact particle count that changed, then explains what that means for the claim.",
+						"**Evidence target:** The isotope table supports the correction. A strong answer names the exact particle count that stayed the same and the exact particle count that changed, then explains what that means for the claim.",
 						"**Completion checks:** At least one correction addresses the misconception that different isotopes are different elements, and at least one correction addresses the difference between mass number and average atomic mass."
 					].join("\n\n"),
 					datasetLink: material("isotope-table"),
@@ -492,7 +492,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Restore the original Exploration of the Periodic Table, Mystery Elements, and Name Making with the Periodic Table activities in a more evidence-driven format. Create a set of cards where each card gives clues such as symbol, atomic number, group, period, region, common use, or trend behavior, then build one word or name from valid element symbols.",
 						"**Requirements:** Make at least eight mystery cards and one symbol code. Each mystery card should be solvable from periodic-table evidence, not private trivia. The symbol code must list the full element name for every symbol used and include one property note for at least four of those elements. Include the original checks for `H`, `O`, atomic number, molar mass or atomic mass, state of matter, and one missing-letter observation.",
-						"**Evidence target:** Use at least two references from the periodic-table reference set. If a source is stronger for trend data and another is stronger for standard names, say which source was used for which purpose.",
+						"**Evidence target:** At least two references from the periodic-table reference set support the work. If a source is stronger for trend data and another is stronger for standard names, say which source was used for which purpose.",
 						"**Completion checks:** The finished cards distinguish atomic number from atomic mass, use real symbols with correct capitalization, and cite table evidence for each answer."
 					].join("\n\n"),
 					datasetLink: material(
@@ -991,7 +991,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Create a short guide to the pH scale using examples from the simulation.",
 						"**Requirements:** Include acidic, neutral, and basic examples; one dilution example; one logarithmic-scale caution; and one safety note about not tasting or mixing unknown substances. The guide should explain that a pH change of 1 is not a small linear step, because the pH scale is logarithmic.",
-						"**Evidence target:** Use simulation observations or the solution tables to justify each category. For example, identify water as near neutral because of measured pH evidence, not because it is familiar or safe to drink.",
+						"**Evidence target:** Simulation observations or the solution tables justify each category. For example, identify water as near neutral because of measured pH evidence, not because it is familiar or safe to drink.",
 						"**Completion checks:** The explanation separates pH evidence from unsafe or unsupported sensory claims and clearly states how dilution affects concentration."
 					].join("\n\n"),
 					datasetLink: material(

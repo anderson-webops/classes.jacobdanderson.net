@@ -3429,7 +3429,7 @@ function proficiencyEvidence(context: CourseTextContext) {
 			subject =>
 				`For ${subject}, explain the main state change, show the normal play path, test one edge case, and describe how the player can tell the result worked.`,
 			subject =>
-				`Use ${subject} to trace one player action through events, variables, and visible feedback, then replay the project from a clean start.`,
+				`${subject} evidence traces one player action through events, variables, and visible feedback, then replays the project from a clean start.`,
 			subject =>
 				evidenceForSubject(
 					subject,

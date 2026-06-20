@@ -178,7 +178,7 @@ function securityLabConceptContent(topic: string) {
 	const label = securityLabLabel(topic);
 
 	return [
-		`**Concept path:** Use **${label}** to connect the lab artifact to ${securityLabFocus(topic)}.`,
+		`**Concept path:** **${label}** connects the lab artifact to ${securityLabFocus(topic)}.`,
 		"Name the allowed target, disallowed actions, evidence source, stop condition, and defensive purpose.",
 		"Begin with the protected asset, the trust boundary, the unsafe assumption, and the invariant that should stay true after the code is changed. The concept is not only the bug name; it includes what input or state can cross the boundary, what evidence would confirm the problem, and what evidence would confirm the defensive result.",
 		"Keep the work defensive and local. A strong concept note identifies the expected behavior, the failure-mode behavior, the smallest useful remediation or hardening step, and the command, trace, sanitizer report, or test output that would let another person verify the final state."

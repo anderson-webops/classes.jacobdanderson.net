@@ -293,7 +293,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		sourceAndTooling: [
 			"Use ISO C++ Core Guidelines, local Makefile or CMake workflows, and source folders under Instruction-Material.",
 			"Keep starter and review naming consistent across CPP Level 1-3 and DS&A repos.",
-			"Use CS235/CS236-inspired concepts only after rewriting them into original course projects."
+			"CS235/CS236-inspired concepts belong only after being rewritten into original course projects."
 		],
 		safetyAndAccess: [
 			"Keep memory labs local and educational, not exploit-oriented.",
