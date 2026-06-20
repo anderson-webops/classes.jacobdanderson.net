@@ -5254,6 +5254,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/Skill target:/i);
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).not.toMatch(/\bshould\b/i);
 		expect(corpus).toContain(
 			"The assembly pipeline is an artifact flow: source becomes object code"
 		);

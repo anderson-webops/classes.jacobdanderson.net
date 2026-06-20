@@ -317,7 +317,7 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "Project: Array Sum and Search Routines",
 					content:
-						"The array lab connects loops, comparisons, pointer stepping, and return values in one traceable routine. Each pass through the loop should make the accumulator or search result clearer, and the branch condition should explain exactly why the loop continues or exits.",
+						"The array lab connects loops, comparisons, pointer stepping, and return values in one traceable routine. Each pass through the loop reveals the accumulator or search state more clearly, and the branch condition explains exactly why the loop continues or exits.",
 					projectLink:
 						"https://github.com/instruction-material/Assembly/tree/main/ASM2-Array-Sum-and-Search/starter",
 					solutionLink:
@@ -443,7 +443,7 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "Parameter Passing and Return Values",
 					content:
-						"The System V AMD64 calling convention defines where the first arguments live, where integer return values come back, and when extra values spill to the stack. Before stepping through a call, the expected argument registers and return register should already be predictable."
+						"The System V AMD64 calling convention defines where the first arguments live, where integer return values come back, and when extra values spill to the stack. Before stepping through a call, the expected argument registers and return register are predictable from the function signature."
 				},
 				{
 					title: "Caller-Saved versus Callee-Saved Registers",
@@ -524,7 +524,7 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "Project: String Length and Copy Routines",
 					content:
-						"The string lab makes pointer walking, null termination, and capacity-aware copying visible one instruction at a time. Every load, store, and branch should be justified in terms of address movement, byte values, and buffer boundaries.",
+						"The string lab makes pointer walking, null termination, and capacity-aware copying visible one instruction at a time. Every load, store, and branch has a concrete justification in address movement, byte values, and buffer boundaries.",
 					projectLink:
 						"https://github.com/instruction-material/Assembly/tree/main/ASM3-String-Length-and-Copy/starter",
 					solutionLink:
@@ -603,7 +603,7 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "Register-Trace Worksheet: System Calls and Runtime Interaction",
 					content:
-						"Keep a short worksheet for system calls and runtime interaction that records the key registers, flag changes, memory addresses, and one plain-language explanation of why the control flow moved the way it did. Focus especially on argument pointers, parse-state changes, and where invalid input should stop the flow so the worksheet narrates instruction flow rather than only skimming mnemonics.",
+						"Keep a short worksheet for system calls and runtime interaction that records the key registers, flag changes, memory addresses, and one plain-language explanation of why the control flow moved the way it did. Focus especially on argument pointers, parse-state changes, and the exact point where invalid input stops the flow so the worksheet narrates instruction flow rather than only skimming mnemonics.",
 					projectLink:
 						"https://github.com/instruction-material/Assembly/tree/main/ASM5-Tiny-Command-Line-Parser/starter",
 					solutionLink:
@@ -720,7 +720,7 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "Step Instructions, Not Just Source Lines",
 					content:
-						"Instruction-level debugging treats a single machine instruction as the smallest meaningful step. One compare, move, load, store, or conditional jump can change the state that the next instruction depends on, so the trace should explain the machine state before and after each step."
+						"Instruction-level debugging treats a single machine instruction as the smallest meaningful step. One compare, move, load, store, or conditional jump can change the state that the next instruction depends on, so the trace records the machine state before and after each step."
 				},
 				{
 					title: "Watching Registers and Memory Together",
@@ -805,7 +805,7 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "Instruction Count versus Real Performance",
 					content:
-						"Distrust simplistic 'fewer instructions always wins' thinking. Some instructions are more expensive than others, memory access matters, and compiler optimizations often reshape the cost model in ways that should be observed rather than assumed."
+						"Distrust simplistic 'fewer instructions always wins' thinking. Some instructions are more expensive than others, memory access matters, and compiler optimizations often reshape the cost model in ways that require observation rather than assumption."
 				},
 				{
 					title: "C-to-Assembly Compare: Loop Shape versus Loop Cost",
@@ -973,7 +973,7 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "Register-Trace Worksheet: Expansion Ideas and Next Steps",
 					content:
-						"Keep a short worksheet for expansion ideas and next steps that records the key registers, flag changes, memory addresses, and one plain-language explanation of why the control flow moved the way it did. Focus especially on which next specialization fits the current strengths and why; the worksheet should narrate instruction flow rather than only skim mnemonics.",
+						"Keep a short worksheet for expansion ideas and next steps that records the key registers, flag changes, memory addresses, and one plain-language explanation of why the control flow moved the way it did. Focus especially on which next specialization fits the current strengths and why; the worksheet narrates instruction flow rather than only skimming mnemonics.",
 					projectLink:
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-11-asm13-expansion-ideas-and-next-steps/starter",
 					solutionLink:
