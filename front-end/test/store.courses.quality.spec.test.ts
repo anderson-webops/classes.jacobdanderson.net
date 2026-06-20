@@ -2492,6 +2492,9 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/Skill target:/i);
 		expect(corpus).not.toMatch(/The goal is to/i);
 		expect(source).not.toMatch(/should include/i);
+		expect(source).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(source).not.toMatch(/\bshould\b/i);
+		expect(source).not.toContain("local dev server`");
 		expect(corpus).toContain(
 			"browser devtools, Git/GitHub basics, npm, and project layout need to become recurring strands"
 		);
@@ -2501,6 +2504,14 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"DNS and domain routing are the networking layer"
 		);
+		expect(corpus).toContain("The expanded path has four main goals");
+		expect(corpus).toContain("Browser fundamentals remain the technical base");
+		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain("Course Path Transfer Practice");
+		expect(corpus).toContain("JavaScript Bridge Transfer Practice");
+		expect(corpus).toContain("Web Foundations Transfer Practice");
+		expect(corpus).toContain("Full Stack Web Lab 17 Extension Practice");
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
 	});
 
 	it("keeps Network Systems IPv6 projects distinct and clearly named", async () => {

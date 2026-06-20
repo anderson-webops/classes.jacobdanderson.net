@@ -21,7 +21,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "macOS and Windows Walkthroughs",
 					content:
-						"On macOS, install Node.js LTS, the chosen editor, and verify that `node`, `npm`, and a local dev server` all work before moving into frameworks or deployment. On Windows, add early practice with path handling, terminals, and environment variables so hosting and backend topics do not feel like a second course with different rules."
+						"On macOS, install Node.js LTS, the chosen editor, and verify that Node, npm, and a local dev server all run before moving into frameworks or deployment. On Windows, add early practice with path handling, terminals, and environment variables so hosting and backend topics do not feel like a second course with different rules."
 				},
 				{
 					title: "Course Workspace and Folder Structure",
@@ -58,7 +58,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-05-wdf0-setup-and-tooling/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 2",
+					title: "Setup and Tooling Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF0 Setup and Tooling",
@@ -71,7 +71,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-01-wdf0-setup-and-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 3",
+					title: "Setup and Tooling Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF0 Setup and Tooling",
@@ -89,14 +89,14 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 			title: "WDF1 Positioning, Goals, and Suggested Course Family",
 			curriculum: [
 				{
-					title: "Why the JavaScript Path Should Expand into Web Development",
+					title: "JavaScript Path Into Web Development",
 					content:
 						"Position this course as the bridge from browser-focused JavaScript to full web-development fluency. The current JavaScript courses are still valuable for programming, DOM work, and browser APIs, and now those skills connect to project structure, back-end services, databases, deployment, hosting, and operations."
 				},
 				{
 					title: "Main Goals of the Expanded Path",
 					content:
-						"State the four main goals clearly: turn browser-focused JavaScript into full web-development fluency, add practical hosting and deployment knowledge, connect front end, back end, databases, and networking, and prepare for publishing real projects rather than only local demos. These goals should be revisited whenever a new unit risks feeling isolated from the rest of the stack."
+						"The expanded path has four main goals: turn browser-focused JavaScript into full web-development fluency, add practical hosting and deployment knowledge, connect front end, back end, databases, and networking, and prepare for publishing real projects rather than only local demos. These goals keep each new unit connected to the rest of the stack."
 				},
 				{
 					title: "Suggested Course Family and Placement",
@@ -139,7 +139,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-06-wdf1-positioning-goals-and-suggested-course-family/solution"
 				},
 				{
-					title: "Positioning, Goals, and Suggested Course Family supplemental 2",
+					title: "Course Path Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -153,7 +153,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-03-wdf1-positioning-goals-and-suggested-course-family-supplemental-2/solution"
 				},
 				{
-					title: "Positioning, Goals, and Suggested Course Family supplemental 3",
+					title: "Course Path Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -174,7 +174,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "Keep HTML, CSS, DOM, and APIs as the Base",
 					content:
-						"Do not throw away the browser fundamentals that made the JavaScript path strong. Keep HTML, CSS, DOM work, and APIs as the technical base, but place them inside real project folders so navigation, file structure, asset management, version control, and browser logic develop together."
+						"Browser fundamentals remain the technical base of the path: HTML, CSS, DOM work, and APIs. Those fundamentals now live inside real project folders so navigation, file structure, asset management, version control, and browser logic develop together."
 				},
 				{
 					title: "Use More File-Based Local Projects, Not Only CodePen",
@@ -217,7 +217,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-07-wdf2-stage-1-strengthen-the-existing-javascript-courses/solution"
 				},
 				{
-					title: "Stage 1: Strengthen the Existing JavaScript Courses supplemental 2",
+					title: "JavaScript Bridge Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -231,7 +231,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-05-wdf2-stage-1-strengthen-the-existing-javascript-courses-supplemental-2/solution"
 				},
 				{
-					title: "Stage 1: Strengthen the Existing JavaScript Courses supplemental 3",
+					title: "JavaScript Bridge Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -295,7 +295,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF1-Portfolio-Custom-Domain/solution"
 				},
 				{
-					title: "Stage 2: Web Development Foundations supplemental 2",
+					title: "Web Foundations Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -309,7 +309,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-07-wdf3-stage-2-web-development-foundations-supplemental-2/solution"
 				},
 				{
-					title: "Stage 2: Web Development Foundations supplemental 3",
+					title: "Web Foundations Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -372,7 +372,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF4-Realtime-Chat-App/solution"
 				},
 				{
-					title: "Stage 3: Front End Applications supplemental 2",
+					title: "Front-End Apps Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF4 Stage 3: Front-End Applications",
@@ -385,7 +385,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-09-wdf4-stage-3-front-end-applications-supplemental-2/solution"
 				},
 				{
-					title: "Stage 3: Front End Applications supplemental 3",
+					title: "Front-End Apps Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF4 Stage 3: Front-End Applications",
@@ -420,7 +420,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "Auth Basics and Session vs Token Concepts",
 					content:
-						"Authentication starts conceptually by distinguishing identity, authorization, sessions, and tokens. A complete production auth system is not required here, but the material should explain why login state, cookies, bearer tokens, and protected routes change the design of both front-end and back-end code."
+						"Authentication starts conceptually by distinguishing identity, authorization, sessions, and tokens. A complete production auth system is not required here, but the material explains why login state, cookies, bearer tokens, and protected routes change the design of both front-end and back-end code."
 				},
 				{
 					title: "WDF5 Stage 4: Back-End Basics: Core Project",
@@ -447,7 +447,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF3-Booking-Contact-App/solution"
 				},
 				{
-					title: "Stage 4: Back End Basics supplemental 2",
+					title: "Back-End Basics Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF5 Stage 4: Back-End Basics",
@@ -460,7 +460,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-11-wdf5-stage-4-back-end-basics-supplemental-2/solution"
 				},
 				{
-					title: "Stage 4: Back End Basics supplemental 3",
+					title: "Back-End Basics Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF5 Stage 4: Back-End Basics",
@@ -515,14 +515,14 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "Project: Blog or Notes App with MongoDB",
 					content:
-						"The notes app lab combines MongoDB basics, schemas, validation, and CRUD in a full-stack workflow. The finished explanation should trace how the browser talks to the API, how the API validates payloads, how the database stores notes, and why a simple index or schema constraint improves the project beyond a basic demo.",
+						"The notes app lab combines MongoDB basics, schemas, validation, and CRUD in a full-stack workflow. The finished explanation traces how the browser talks to the API, how the API validates payloads, how the database stores notes, and why a simple index or schema constraint improves the project beyond a basic demo.",
 					projectLink:
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF2-Notes-App-with-MongoDB/starter",
 					solutionLink:
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF2-Notes-App-with-MongoDB/solution"
 				},
 				{
-					title: "Stage 5: Databases and Data Models supplemental 2",
+					title: "Database Models Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF6 Stage 5: Databases and Data Models",
@@ -535,7 +535,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-13-wdf6-stage-5-databases-and-data-models-supplemental-2/solution"
 				},
 				{
-					title: "Stage 5: Databases and Data Models supplemental 3",
+					title: "Database Models Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF6 Stage 5: Databases and Data Models",
@@ -597,7 +597,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF5-Separate-Deployment-Lab/solution"
 				},
 				{
-					title: "Stage 6: Hosting and Deployment supplemental 2",
+					title: "Hosting Deployment Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF7 Stage 6: Hosting and Deployment",
@@ -610,7 +610,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-15-wdf7-stage-6-hosting-and-deployment-supplemental-2/solution"
 				},
 				{
-					title: "Stage 6: Hosting and Deployment supplemental 3",
+					title: "Hosting Deployment Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF7 Stage 6: Hosting and Deployment",
@@ -673,7 +673,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-08-wdf8-hosting-and-operations-topics-to-add/solution"
 				},
 				{
-					title: "Hosting and Operations Topics to Add supplemental 2",
+					title: "Hosting Ops Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -687,7 +687,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-17-wdf8-hosting-and-operations-topics-to-add-supplemental-2/solution"
 				},
 				{
-					title: "Hosting and Operations Topics to Add supplemental 3",
+					title: "Hosting Ops Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -744,7 +744,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "Project: Deployment Lab for Separate Front-End and Back-End Shipping",
 					content:
-						'A split deployment project ties hosting, DNS, reverse proxies, environment configuration, and monitoring together. The final explanation should move beyond "my app works locally" into "I can explain how the pieces are hosted, connected, and verified after release."',
+						'A split deployment project ties hosting, DNS, reverse proxies, environment configuration, and monitoring together. The final explanation moves beyond "my app works locally" into "I can explain how the pieces are hosted, connected, and verified after release."',
 					projectLink:
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF5-Separate-Deployment-Lab/starter",
 					solutionLink:
@@ -762,7 +762,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF1-Portfolio-Custom-Domain/solution"
 				},
 				{
-					title: "Good Practical Projects supplemental 2",
+					title: "Practical Projects Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF9 Good Practical Projects",
@@ -775,7 +775,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-19-wdf9-good-practical-projects-supplemental-2/solution"
 				},
 				{
-					title: "Good Practical Projects supplemental 3",
+					title: "Practical Projects Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF9 Good Practical Projects",
@@ -800,7 +800,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "TLS and Reverse Proxies",
 					content:
-						"TLS and reverse proxies should be understood at the operational level: where HTTPS termination often happens, why certificates matter, and how a reverse proxy can stand between public traffic and an app process. This gives deployment architecture more meaning than a collection of copied config snippets."
+						"TLS and reverse proxies are understood at the operational level: where HTTPS termination often happens, why certificates matter, and how a reverse proxy can stand between public traffic and an app process. This gives deployment architecture more meaning than a collection of copied config snippets."
 				},
 				{
 					title: "Backups, Environment Rotation, and Performance Basics",
@@ -837,7 +837,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-09-wdf10-suggested-advanced-strand/solution"
 				},
 				{
-					title: "Suggested Advanced Strand supplemental 2",
+					title: "Operations Strand Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF10 Suggested Advanced Strand",
@@ -850,7 +850,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-21-wdf10-suggested-advanced-strand-supplemental-2/solution"
 				},
 				{
-					title: "Suggested Advanced Strand supplemental 3",
+					title: "Operations Strand Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF10 Suggested Advanced Strand",
@@ -912,7 +912,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-10-wdf11-integration-with-network-topics/solution"
 				},
 				{
-					title: "Integration with Network Topics supplemental 2",
+					title: "Network Integration Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF11 Integration with Network Topics",
@@ -925,7 +925,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-23-wdf11-integration-with-network-topics-supplemental-2/solution"
 				},
 				{
-					title: "Integration with Network Topics supplemental 3",
+					title: "Network Integration Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF11 Integration with Network Topics",
@@ -987,7 +987,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-11-wdf12-expansion-ideas-and-next-steps/solution"
 				},
 				{
-					title: "Expansion Ideas and Next Steps supplemental 2",
+					title: "Next Steps Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF12 Expansion Ideas and Next Steps",
@@ -1000,7 +1000,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-25-wdf12-expansion-ideas-and-next-steps-supplemental-2/solution"
 				},
 				{
-					title: "Expansion Ideas and Next Steps supplemental 3",
+					title: "Next Steps Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "WDF12 Expansion Ideas and Next Steps",
@@ -1073,7 +1073,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-01-full-stack-web-lab-14/solution"
 				},
 				{
-					title: "Full Stack Web Lab 14 supplemental 2: Implementation Lab",
+					title: "Full Stack Web Lab 14 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1087,7 +1087,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-27-applied-studio-14-full-stack-web-lab-14-supplemental-2/solution"
 				},
 				{
-					title: "Full Stack Web Lab 14 supplemental 3: Implementation Lab",
+					title: "Full Stack Web Lab 14 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1161,7 +1161,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-02-full-stack-web-lab-15/solution"
 				},
 				{
-					title: "Full Stack Web Lab 15 supplemental 2: Implementation Lab",
+					title: "Full Stack Web Lab 15 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1175,7 +1175,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-29-applied-studio-15-full-stack-web-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "Full Stack Web Lab 15 supplemental 3: Implementation Lab",
+					title: "Full Stack Web Lab 15 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1249,7 +1249,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-03-full-stack-web-lab-16/solution"
 				},
 				{
-					title: "Full Stack Web Lab 16 supplemental 2: Implementation Lab",
+					title: "Full Stack Web Lab 16 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1263,7 +1263,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-31-applied-studio-16-full-stack-web-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "Full Stack Web Lab 16 supplemental 3: Implementation Lab",
+					title: "Full Stack Web Lab 16 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1337,7 +1337,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-04-full-stack-web-lab-17/solution"
 				},
 				{
-					title: "Full Stack Web Lab 17 supplemental 2: Implementation Lab",
+					title: "Full Stack Web Lab 17 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1351,7 +1351,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-33-applied-studio-17-full-stack-web-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "Full Stack Web Lab 17 supplemental 3: Implementation Lab",
+					title: "Full Stack Web Lab 17 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
