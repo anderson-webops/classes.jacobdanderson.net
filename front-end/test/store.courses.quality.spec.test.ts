@@ -2508,6 +2508,43 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Operations Capstone Extension Practice");
 	});
 
+	it("keeps Data Structures and Algorithms in C++ labels algorithm-specific", async () => {
+		const course = await loadRawCourse(
+			"data-structures-and-algorithms-in-cpp"
+		);
+		expect(course).not.toBeNull();
+		const corpus = allCourseText(course);
+
+		expect(corpus).not.toMatch(/This section covers/i);
+		expect(corpus).not.toMatch(/Key idea:/i);
+		expect(corpus).not.toMatch(/Skill target:/i);
+		expect(corpus).not.toMatch(/The goal is to/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).toContain(
+			"Sequence mutation becomes concrete through task filtering and removal"
+		);
+		expect(corpus).toContain(
+			"Shortest-path work is a repeated relaxation problem"
+		);
+		expect(corpus).toContain(
+			"Height maintenance and balance factors are structural evidence"
+		);
+		expect(corpus).toContain("Setup and Positioning Transfer Practice");
+		expect(corpus).toContain("Graph Navigation Transfer Practice");
+		expect(corpus).toContain("AVL Rotation Extension Practice");
+		expect(corpus).toContain(
+			"C++ Algorithm Lab 11: Sequence Invariant Studio"
+		);
+		expect(corpus).toContain(
+			"C++ Algorithm Lab 14: Partition Sorting Studio"
+		);
+		expect(corpus).toContain(
+			"C++ Algorithm Lab 17: Benchmarking Capstone Studio"
+		);
+		expect(corpus).toContain("Benchmarking Capstone Extension Practice");
+	});
+
 	it("keeps Low-Level Security Part 2 defensive and specifically labeled", async () => {
 		const course = await loadRawCourse("low-level-security-part-2");
 		expect(course).not.toBeNull();
