@@ -11,7 +11,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "USACO File I/O and Submission Rhythm",
 					content:
-						"Set up a clean competitive-programming workflow with fast compile-run cycles, local sample files, and disciplined input/output handling. Key idea: Contest success depends on fast iteration and careful reading, not on large project scaffolding."
+						"Set up a clean competitive-programming workflow with fast compile-run cycles, local sample files, and disciplined input/output handling. Contest success depends on fast iteration and careful reading, not on large project scaffolding."
 				},
 				{
 					title: "Bronze-Level Problem Framing",
@@ -318,7 +318,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Path Simulation and Reachability",
 					content:
-						"Bronze problems can feel a little more graph-like or stateful without demanding heavy graph theory. Practice target: Staying organized as the state space becomes less linear."
+						"Bronze problems can feel a little more graph-like or stateful without demanding heavy graph theory. The main habit is staying organized as the state space becomes less linear."
 				},
 				{
 					title: "Track Structure Explicitly",
@@ -546,14 +546,14 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 12 Barn Repair Java: Implementation Lab",
+			title: "UB 12 Barn Repair Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 12 Barn Repair Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 12 Barn Repair Java: Implementation Lab",
+							"UB 12 Barn Repair Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -562,7 +562,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 12 Barn Repair Java: Implementation Lab",
+							"UB 12 Barn Repair Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -571,7 +571,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 12 Barn Repair Java: Implementation Lab",
+							"UB 12 Barn Repair Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -585,7 +585,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 12 Barn Repair Java: Implementation Lab",
+							"UB 12 Barn Repair Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -596,7 +596,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 12 Barn Repair Java: Implementation Lab",
+							"UB 12 Barn Repair Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -610,7 +610,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 12 Barn Repair Java: Implementation Lab",
+							"UB 12 Barn Repair Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -624,7 +624,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 12 Barn Repair Java: Implementation Lab",
+							"UB 12 Barn Repair Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -636,14 +636,14 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 13 Combination Lock Java: Implementation Lab",
+			title: "UB 13 Combination Lock Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 13 Combination Lock Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 13 Combination Lock Java: Implementation Lab",
+							"UB 13 Combination Lock Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -652,7 +652,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 13 Combination Lock Java: Implementation Lab",
+							"UB 13 Combination Lock Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -661,7 +661,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 13 Combination Lock Java: Implementation Lab",
+							"UB 13 Combination Lock Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -675,7 +675,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 13 Combination Lock Java: Implementation Lab",
+							"UB 13 Combination Lock Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -686,7 +686,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 13 Combination Lock Java: Implementation Lab",
+							"UB 13 Combination Lock Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -700,7 +700,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 13 Combination Lock Java: Implementation Lab",
+							"UB 13 Combination Lock Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -714,7 +714,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 13 Combination Lock Java: Implementation Lab",
+							"UB 13 Combination Lock Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -726,14 +726,14 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 14 Prime Cryptarithm Java: Implementation Lab",
+			title: "UB 14 Prime Cryptarithm Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 14 Prime Cryptarithm Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 14 Prime Cryptarithm Java: Implementation Lab",
+							"UB 14 Prime Cryptarithm Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -742,7 +742,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 14 Prime Cryptarithm Java: Implementation Lab",
+							"UB 14 Prime Cryptarithm Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -751,7 +751,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 14 Prime Cryptarithm Java: Implementation Lab",
+							"UB 14 Prime Cryptarithm Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -765,7 +765,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 14 Prime Cryptarithm Java: Implementation Lab",
+							"UB 14 Prime Cryptarithm Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -776,7 +776,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 14 Prime Cryptarithm Java: Implementation Lab",
+							"UB 14 Prime Cryptarithm Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -790,7 +790,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 14 Prime Cryptarithm Java: Implementation Lab",
+							"UB 14 Prime Cryptarithm Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -804,7 +804,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 14 Prime Cryptarithm Java: Implementation Lab",
+							"UB 14 Prime Cryptarithm Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -816,14 +816,14 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 15 Ski Course Design Java: Implementation Lab",
+			title: "UB 15 Ski Course Design Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 15 Ski Course Design Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 15 Ski Course Design Java: Implementation Lab",
+							"UB 15 Ski Course Design Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -832,7 +832,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 15 Ski Course Design Java: Implementation Lab",
+							"UB 15 Ski Course Design Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -841,7 +841,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 15 Ski Course Design Java: Implementation Lab",
+							"UB 15 Ski Course Design Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -855,7 +855,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 15 Ski Course Design Java: Implementation Lab",
+							"UB 15 Ski Course Design Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -866,7 +866,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 15 Ski Course Design Java: Implementation Lab",
+							"UB 15 Ski Course Design Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -880,7 +880,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 15 Ski Course Design Java: Implementation Lab",
+							"UB 15 Ski Course Design Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -894,7 +894,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 15 Ski Course Design Java: Implementation Lab",
+							"UB 15 Ski Course Design Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -906,13 +906,13 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 16 Wormholes Java: Implementation Lab",
+			title: "UB 16 Wormholes Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 16 Wormholes Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle: "UB 16 Wormholes Java: Implementation Lab",
+						moduleTitle: "UB 16 Wormholes Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -920,7 +920,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 16 Wormholes Java: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle: "UB 16 Wormholes Java: Implementation Lab",
+						moduleTitle: "UB 16 Wormholes Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -928,7 +928,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 16 Wormholes Java: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle: "UB 16 Wormholes Java: Implementation Lab",
+						moduleTitle: "UB 16 Wormholes Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -941,7 +941,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 16 Wormholes Java: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle: "UB 16 Wormholes Java: Implementation Lab",
+						moduleTitle: "UB 16 Wormholes Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -951,7 +951,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "UB 16 Wormholes Java: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
-						moduleTitle: "UB 16 Wormholes Java: Implementation Lab",
+						moduleTitle: "UB 16 Wormholes Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -964,7 +964,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "Why Did the Cow Cross the Road",
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
-						moduleTitle: "UB 16 Wormholes Java: Implementation Lab",
+						moduleTitle: "UB 16 Wormholes Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -977,7 +977,7 @@ export const usacoBronzeCourse: RawCourse = {
 					title: "Why Did the Cow Cross the Road II",
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
-						moduleTitle: "UB 16 Wormholes Java: Implementation Lab",
+						moduleTitle: "UB 16 Wormholes Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -989,14 +989,14 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 17 Block Game Java: Implementation Lab",
+			title: "UB 17 Block Game Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 17 Block Game Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 17 Block Game Java: Implementation Lab",
+							"UB 17 Block Game Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1005,7 +1005,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 17 Block Game Java: Implementation Lab",
+							"UB 17 Block Game Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1014,7 +1014,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 17 Block Game Java: Implementation Lab",
+							"UB 17 Block Game Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1028,7 +1028,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 17 Block Game Java: Implementation Lab",
+							"UB 17 Block Game Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1039,7 +1039,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 17 Block Game Java: Implementation Lab",
+							"UB 17 Block Game Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1053,7 +1053,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 17 Block Game Java: Implementation Lab",
+							"UB 17 Block Game Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1067,7 +1067,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 17 Block Game Java: Implementation Lab",
+							"UB 17 Block Game Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1079,14 +1079,14 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 18 The Cow Signal Java: Implementation Lab",
+			title: "UB 18 The Cow Signal Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 18 The Cow Signal Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 18 The Cow Signal Java: Implementation Lab",
+							"UB 18 The Cow Signal Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1095,7 +1095,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 18 The Cow Signal Java: Implementation Lab",
+							"UB 18 The Cow Signal Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1104,7 +1104,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 18 The Cow Signal Java: Implementation Lab",
+							"UB 18 The Cow Signal Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1118,7 +1118,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 18 The Cow Signal Java: Implementation Lab",
+							"UB 18 The Cow Signal Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1129,7 +1129,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 18 The Cow Signal Java: Implementation Lab",
+							"UB 18 The Cow Signal Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1143,7 +1143,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 18 The Cow Signal Java: Implementation Lab",
+							"UB 18 The Cow Signal Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1157,7 +1157,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 18 The Cow Signal Java: Implementation Lab",
+							"UB 18 The Cow Signal Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1169,14 +1169,14 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 19 Don't Be Last Java: Implementation Lab",
+			title: "UB 19 Don't Be Last Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 19 Don't Be Last Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 19 Don't Be Last Java: Implementation Lab",
+							"UB 19 Don't Be Last Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1185,7 +1185,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 19 Don't Be Last Java: Implementation Lab",
+							"UB 19 Don't Be Last Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1194,7 +1194,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 19 Don't Be Last Java: Implementation Lab",
+							"UB 19 Don't Be Last Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1208,7 +1208,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 19 Don't Be Last Java: Implementation Lab",
+							"UB 19 Don't Be Last Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1219,7 +1219,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 19 Don't Be Last Java: Implementation Lab",
+							"UB 19 Don't Be Last Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1233,7 +1233,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 19 Don't Be Last Java: Implementation Lab",
+							"UB 19 Don't Be Last Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1247,7 +1247,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 19 Don't Be Last Java: Implementation Lab",
+							"UB 19 Don't Be Last Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1259,14 +1259,14 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 20 Hoof Paper Scissors Java: Implementation Lab",
+			title: "UB 20 Hoof Paper Scissors Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 20 Hoof Paper Scissors Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 20 Hoof Paper Scissors Java: Implementation Lab",
+							"UB 20 Hoof Paper Scissors Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1275,7 +1275,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 20 Hoof Paper Scissors Java: Implementation Lab",
+							"UB 20 Hoof Paper Scissors Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1284,7 +1284,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 20 Hoof Paper Scissors Java: Implementation Lab",
+							"UB 20 Hoof Paper Scissors Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1298,7 +1298,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 20 Hoof Paper Scissors Java: Implementation Lab",
+							"UB 20 Hoof Paper Scissors Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1309,7 +1309,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 20 Hoof Paper Scissors Java: Implementation Lab",
+							"UB 20 Hoof Paper Scissors Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1323,7 +1323,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 20 Hoof Paper Scissors Java: Implementation Lab",
+							"UB 20 Hoof Paper Scissors Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1337,7 +1337,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 20 Hoof Paper Scissors Java: Implementation Lab",
+							"UB 20 Hoof Paper Scissors Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1349,14 +1349,14 @@ export const usacoBronzeCourse: RawCourse = {
 			]
 		},
 		{
-			title: "UB 21 Cow Tipping Java: Implementation Lab",
+			title: "UB 21 Cow Tipping Java: Practice Studio",
 			curriculum: [
 				{
 					title: "UB 21 Cow Tipping Java: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 21 Cow Tipping Java: Implementation Lab",
+							"UB 21 Cow Tipping Java: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1365,7 +1365,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 21 Cow Tipping Java: Implementation Lab",
+							"UB 21 Cow Tipping Java: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1374,7 +1374,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 21 Cow Tipping Java: Implementation Lab",
+							"UB 21 Cow Tipping Java: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1388,7 +1388,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 21 Cow Tipping Java: Implementation Lab",
+							"UB 21 Cow Tipping Java: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1399,7 +1399,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 21 Cow Tipping Java: Implementation Lab",
+							"UB 21 Cow Tipping Java: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1413,7 +1413,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 21 Cow Tipping Java: Implementation Lab",
+							"UB 21 Cow Tipping Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1427,7 +1427,7 @@ export const usacoBronzeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "USACO",
 						moduleTitle:
-							"UB 21 Cow Tipping Java: Implementation Lab",
+							"UB 21 Cow Tipping Java: Practice Studio",
 						projectKind: "core",
 						hasReference: true
 					}),
