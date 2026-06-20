@@ -3372,7 +3372,7 @@ function remediationPrompt(context: CourseTextContext) {
 	if (isMathContext(context)) {
 		return variantPrompt(context, [
 			subject =>
-				`For ${subject}, name the exact step that broke down, complete one focused remediation problem, and revisit the same skill before moving to a more complex project.`,
+				`For ${subject}, name the exact step that broke down, complete one focused review problem, and revisit the same skill before moving to a more complex project.`,
 			subject =>
 				`Use ${subject} to isolate the representation, sign, unit, graph, or algebra step that failed, then retry a smaller example.`,
 			subject =>
@@ -3444,7 +3444,7 @@ function remediationPrompt(context: CourseTextContext) {
 
 	return variantPrompt(context, [
 		subject =>
-			`Record the specific misconception in ${subject}, complete one focused remediation problem, and revisit the same skill before moving to a more complex project.`,
+			`Record the specific misconception in ${subject}, complete one focused review problem, and revisit the same skill before moving to a more complex project.`,
 		subject =>
 			`For ${subject}, identify the missing vocabulary, trace step, syntax habit, design choice, or test case, then retry a smaller version.`,
 		subject =>
