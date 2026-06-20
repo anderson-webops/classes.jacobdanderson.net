@@ -53,7 +53,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-05-cse0-setup-and-tooling/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 2",
+					title: "Setup and Tooling Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "CSE0 Setup and Tooling",
@@ -66,7 +66,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-01-cse0-setup-and-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 3",
+					title: "Setup and Tooling Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "CSE0 Setup and Tooling",
@@ -121,14 +121,14 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Engineering Notebook: Why C for Systems Work",
 					content:
-						"Keep a short engineering notebook for why c for systems work that records the byte view, memory view, compiler or runtime evidence, and one plain-language explanation of why the code worked or failed. Focus especially on source-to-binary boundaries, declarations vs definitions, and what the runtime model exposes to build the habit of explaining systems behavior instead of only trusting output.",
+						"Keep a short engineering notebook for why C matters in systems work that records the byte view, memory view, compiler or runtime evidence, and one plain-language explanation of why the code worked or failed. Focus especially on source-to-binary boundaries, declarations vs definitions, and what the runtime model exposes to build the habit of explaining systems behavior instead of only trusting output.",
 					projectLink:
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-06-unit-1-why-c-for-systems-work/starter",
 					solutionLink:
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-06-unit-1-why-c-for-systems-work/solution"
 				},
 				{
-					title: "Unit 1: Why C for Systems Work supplemental 2",
+					title: "Translation Boundary Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 1: Why C for Systems Work",
@@ -141,7 +141,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-03-unit-1-why-c-for-systems-work-supplemental-2/solution"
 				},
 				{
-					title: "Unit 1: Why C for Systems Work supplemental 3",
+					title: "Translation Boundary Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 1: Why C for Systems Work",
@@ -194,7 +194,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE1-Hex-and-Binary-Inspector/solution"
 				},
 				{
-					title: "Unit 2: Binary, Hex, and Number Representation supplemental 2",
+					title: "Representation Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle:
@@ -208,7 +208,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-05-unit-2-binary-hex-and-number-representation-supplemental-2/solution"
 				},
 				{
-					title: "Unit 2: Binary, Hex, and Number Representation supplemental 3",
+					title: "Representation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle:
@@ -271,7 +271,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE2-Bitflag-Configuration-Parser/solution"
 				},
 				{
-					title: "Unit 3: Bitwise Operations supplemental 2",
+					title: "Bitmask Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 3: Bitwise Operations",
@@ -284,7 +284,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-07-unit-3-bitwise-operations-supplemental-2/solution"
 				},
 				{
-					title: "Unit 3: Bitwise Operations supplemental 3",
+					title: "Bitmask Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 3: Bitwise Operations",
@@ -337,7 +337,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE4-Memory-Visualizer/solution"
 				},
 				{
-					title: "Unit 4: Memory and Layout supplemental 2",
+					title: "Memory Layout Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 4: Memory and Layout",
@@ -350,7 +350,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-09-unit-4-memory-and-layout-supplemental-2/solution"
 				},
 				{
-					title: "Unit 4: Memory and Layout supplemental 3",
+					title: "Memory Layout Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 4: Memory and Layout",
@@ -403,7 +403,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE5-Byte-Buffer-Workbench/solution"
 				},
 				{
-					title: "Unit 5: Strings and Byte Buffers supplemental 2",
+					title: "Byte Buffer Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 5: Strings and Byte Buffers",
@@ -416,7 +416,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-11-unit-5-strings-and-byte-buffers-supplemental-2/solution"
 				},
 				{
-					title: "Unit 5: Strings and Byte Buffers supplemental 3",
+					title: "Byte Buffer Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 5: Strings and Byte Buffers",
@@ -478,7 +478,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE6-Packet-Serializer-Deserializer/solution"
 				},
 				{
-					title: "Unit 6: Files, Streams, and Parsing supplemental 2",
+					title: "Parser Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 6: Files, Streams, and Parsing",
@@ -491,7 +491,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-13-unit-6-files-streams-and-parsing-supplemental-2/solution"
 				},
 				{
-					title: "Unit 6: Files, Streams, and Parsing supplemental 3",
+					title: "Parser Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 6: Files, Streams, and Parsing",
@@ -544,7 +544,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE7-Dynamic-Ring-Buffer/solution"
 				},
 				{
-					title: "Unit 7: Dynamic Memory and Lifetime supplemental 2",
+					title: "Lifetime Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 7: Dynamic Memory and Lifetime",
@@ -557,7 +557,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-15-unit-7-dynamic-memory-and-lifetime-supplemental-2/solution"
 				},
 				{
-					title: "Unit 7: Dynamic Memory and Lifetime supplemental 3",
+					title: "Lifetime Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 7: Dynamic Memory and Lifetime",
@@ -619,7 +619,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-07-unit-8-function-pointers-and-dispatch/solution"
 				},
 				{
-					title: "Unit 8: Function Pointers and Dispatch supplemental 2",
+					title: "Dispatch Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 8: Function Pointers and Dispatch",
@@ -632,7 +632,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-17-unit-8-function-pointers-and-dispatch-supplemental-2/solution"
 				},
 				{
-					title: "Unit 8: Function Pointers and Dispatch supplemental 3",
+					title: "Dispatch Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 8: Function Pointers and Dispatch",
@@ -678,14 +678,14 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Engineering Notebook: Data Structures in C",
 					content:
-						"Keep a short engineering notebook for data structures in c that records the byte view, memory view, compiler or runtime evidence, and one plain-language explanation of why the code worked or failed. Focus especially on container choice, invariants, and what evidence shows the structure is preserving logical order to build the habit of explaining systems behavior instead of only trusting output.",
+						"Keep a short engineering notebook for data structures in C that records the byte view, memory view, compiler or runtime evidence, and one plain-language explanation of why the code worked or failed. Focus especially on container choice, invariants, and what evidence shows the structure is preserving logical order to build the habit of explaining systems behavior instead of only trusting output.",
 					projectLink:
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE7-Dynamic-Ring-Buffer/starter",
 					solutionLink:
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE7-Dynamic-Ring-Buffer/solution"
 				},
 				{
-					title: "Unit 9: Data Structures in C supplemental 2",
+					title: "Structure Invariants Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 9: Data Structures in C",
@@ -698,7 +698,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-19-unit-9-data-structures-in-c-supplemental-2/solution"
 				},
 				{
-					title: "Unit 9: Data Structures in C supplemental 3",
+					title: "Structure Invariants Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 9: Data Structures in C",
@@ -753,14 +753,14 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Engineering Notebook: Engineering Math in Code",
 					content:
-						"Keep a short engineering notebook for engineering math in code that records the byte view, memory view, compiler or runtime evidence, and one plain-language explanation of why the code worked or failed. Focus especially on scaling choices, overflow checks, and why the chosen units make the transform safer to reason about to build the habit of explaining systems behavior instead of only trusting output.",
+						"Keep a short engineering notebook for engineering math in code that records the byte view, memory view, compiler or runtime evidence, and one plain-language explanation of why the code worked or failed. Focus especially on scaling choices, overflow checks, and why the chosen units make the transform safer to reason about.",
 					projectLink:
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-08-unit-10-engineering-math-in-code/starter",
 					solutionLink:
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-08-unit-10-engineering-math-in-code/solution"
 				},
 				{
-					title: "Unit 10: Engineering Math in Code supplemental 2",
+					title: "Numeric Reliability Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 10: Engineering Math in Code",
@@ -773,7 +773,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-21-unit-10-engineering-math-in-code-supplemental-2/solution"
 				},
 				{
-					title: "Unit 10: Engineering Math in Code supplemental 3",
+					title: "Numeric Reliability Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 10: Engineering Math in Code",
@@ -835,7 +835,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-09-unit-11-systems-tooling/solution"
 				},
 				{
-					title: "Unit 11: Systems Tooling supplemental 2",
+					title: "Tooling Evidence Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 11: Systems Tooling",
@@ -848,7 +848,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-23-unit-11-systems-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Unit 11: Systems Tooling supplemental 3",
+					title: "Tooling Evidence Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 11: Systems Tooling",
@@ -894,14 +894,14 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Engineering Notebook: Capstone Engineering Utility",
 					content:
-						"Keep a short engineering notebook for capstone engineering utility that records the byte view, memory view, compiler or runtime evidence, and one plain-language explanation of why the code worked or failed. Focus especially on input validation order, derived-field logic, and why the final output format is trustworthy to build the habit of explaining systems behavior instead of only trusting output.",
+						"Keep a short engineering notebook for the capstone engineering utility that records the byte view, memory view, compiler or runtime evidence, and one plain-language explanation of why the code worked or failed. Focus especially on input validation order, derived-field logic, and why the final output format is trustworthy.",
 					projectLink:
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE9-Capstone-Telemetry-Transform-CLI/starter",
 					solutionLink:
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE9-Capstone-Telemetry-Transform-CLI/solution"
 				},
 				{
-					title: "Unit 12: Capstone Engineering Utility supplemental 2",
+					title: "Capstone Utility Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 12: Capstone Engineering Utility",
@@ -914,7 +914,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-25-unit-12-capstone-engineering-utility-supplemental-2/solution"
 				},
 				{
-					title: "Unit 12: Capstone Engineering Utility supplemental 3",
+					title: "Capstone Utility Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
 						moduleTitle: "Unit 12: Capstone Engineering Utility",
@@ -929,29 +929,29 @@ export const cSystemsEngineeringCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Systems Build 14: Implementation Lab",
+			title: "Systems Build 14: Byte Inspector Studio",
 			curriculum: [
 				{
-					title: "Systems Build 14: Core Concepts",
+					title: "Byte Inspector Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 14: Implementation Lab",
+						moduleTitle: "Systems Build 14: Byte Inspector Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Systems Build 14: Guided Example",
+					title: "Byte Inspector Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 14: Implementation Lab",
+						moduleTitle: "Systems Build 14: Byte Inspector Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Systems Build 14: Core Project",
+					title: "Byte Inspector Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 14: Implementation Lab",
+						moduleTitle: "Systems Build 14: Byte Inspector Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -960,20 +960,20 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-01-systems-build-14/solution"
 				},
 				{
-					title: "Systems Build 14: Review and Reflection",
+					title: "Byte Inspector Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 14: Implementation Lab",
+						moduleTitle: "Systems Build 14: Byte Inspector Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Systems Build 14: Extension Challenge",
+					title: "Byte Inspector Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 14: Implementation Lab",
+						moduleTitle: "Systems Build 14: Byte Inspector Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -982,10 +982,10 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-01-systems-build-14/solution"
 				},
 				{
-					title: "Systems Build 14 supplemental 2: Implementation Lab",
+					title: "Byte Inspector Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 14: Implementation Lab",
+						moduleTitle: "Systems Build 14: Byte Inspector Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -995,10 +995,10 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-27-applied-studio-14-systems-build-14-supplemental-2/solution"
 				},
 				{
-					title: "Systems Build 14 supplemental 3: Implementation Lab",
+					title: "Byte Inspector Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 14: Implementation Lab",
+						moduleTitle: "Systems Build 14: Byte Inspector Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1010,29 +1010,29 @@ export const cSystemsEngineeringCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Systems Build 15: Implementation Lab",
+			title: "Systems Build 15: Memory Layout Studio",
 			curriculum: [
 				{
-					title: "Systems Build 15: Core Concepts",
+					title: "Memory Layout Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 15: Implementation Lab",
+						moduleTitle: "Systems Build 15: Memory Layout Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Systems Build 15: Guided Example",
+					title: "Memory Layout Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 15: Implementation Lab",
+						moduleTitle: "Systems Build 15: Memory Layout Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Systems Build 15: Core Project",
+					title: "Memory Layout Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 15: Implementation Lab",
+						moduleTitle: "Systems Build 15: Memory Layout Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1041,20 +1041,20 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-02-systems-build-15/solution"
 				},
 				{
-					title: "Systems Build 15: Review and Reflection",
+					title: "Memory Layout Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 15: Implementation Lab",
+						moduleTitle: "Systems Build 15: Memory Layout Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Systems Build 15: Extension Challenge",
+					title: "Memory Layout Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 15: Implementation Lab",
+						moduleTitle: "Systems Build 15: Memory Layout Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1063,10 +1063,10 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-02-systems-build-15/solution"
 				},
 				{
-					title: "Systems Build 15 supplemental 2: Implementation Lab",
+					title: "Memory Layout Studio Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 15: Implementation Lab",
+						moduleTitle: "Systems Build 15: Memory Layout Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1076,10 +1076,10 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-29-applied-studio-15-systems-build-15-supplemental-2/solution"
 				},
 				{
-					title: "Systems Build 15 supplemental 3: Implementation Lab",
+					title: "Memory Layout Studio Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 15: Implementation Lab",
+						moduleTitle: "Systems Build 15: Memory Layout Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1091,29 +1091,29 @@ export const cSystemsEngineeringCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Systems Build 16: Implementation Lab",
+			title: "Systems Build 16: Binary Parser Studio",
 			curriculum: [
 				{
-					title: "Systems Build 16: Core Concepts",
+					title: "Binary Parser Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 16: Implementation Lab",
+						moduleTitle: "Systems Build 16: Binary Parser Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Systems Build 16: Guided Example",
+					title: "Binary Parser Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 16: Implementation Lab",
+						moduleTitle: "Systems Build 16: Binary Parser Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Systems Build 16: Core Project",
+					title: "Binary Parser Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 16: Implementation Lab",
+						moduleTitle: "Systems Build 16: Binary Parser Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1122,20 +1122,20 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-03-systems-build-16/solution"
 				},
 				{
-					title: "Systems Build 16: Review and Reflection",
+					title: "Binary Parser Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 16: Implementation Lab",
+						moduleTitle: "Systems Build 16: Binary Parser Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Systems Build 16: Extension Challenge",
+					title: "Binary Parser Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 16: Implementation Lab",
+						moduleTitle: "Systems Build 16: Binary Parser Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1144,10 +1144,10 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-03-systems-build-16/solution"
 				},
 				{
-					title: "Systems Build 16 supplemental 2: Implementation Lab",
+					title: "Binary Parser Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 16: Implementation Lab",
+						moduleTitle: "Systems Build 16: Binary Parser Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1157,10 +1157,10 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-31-applied-studio-16-systems-build-16-supplemental-2/solution"
 				},
 				{
-					title: "Systems Build 16 supplemental 3: Implementation Lab",
+					title: "Binary Parser Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 16: Implementation Lab",
+						moduleTitle: "Systems Build 16: Binary Parser Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1172,29 +1172,29 @@ export const cSystemsEngineeringCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Systems Build 17: Implementation Lab",
+			title: "Systems Build 17: Capstone Utility Studio",
 			curriculum: [
 				{
-					title: "Systems Build 17: Core Concepts",
+					title: "Capstone Utility Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Implementation Lab",
+						moduleTitle: "Systems Build 17: Capstone Utility Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Systems Build 17: Guided Example",
+					title: "Capstone Utility Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Implementation Lab",
+						moduleTitle: "Systems Build 17: Capstone Utility Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Systems Build 17: Core Project",
+					title: "Capstone Utility Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Implementation Lab",
+						moduleTitle: "Systems Build 17: Capstone Utility Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1203,20 +1203,20 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-04-systems-build-17/solution"
 				},
 				{
-					title: "Systems Build 17: Review and Reflection",
+					title: "Capstone Utility Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Implementation Lab",
+						moduleTitle: "Systems Build 17: Capstone Utility Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Systems Build 17: Extension Challenge",
+					title: "Capstone Utility Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Implementation Lab",
+						moduleTitle: "Systems Build 17: Capstone Utility Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1225,10 +1225,10 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-04-systems-build-17/solution"
 				},
 				{
-					title: "Systems Build 17 supplemental 2: Implementation Lab",
+					title: "Capstone Utility Studio Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Implementation Lab",
+						moduleTitle: "Systems Build 17: Capstone Utility Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1238,10 +1238,10 @@ export const cSystemsEngineeringCourse: RawCourse = {
 						"https://github.com/instruction-material/C-Systems-Engineering/tree/main/CSE-33-applied-studio-17-systems-build-17-supplemental-2/solution"
 				},
 				{
-					title: "Systems Build 17 supplemental 3: Implementation Lab",
+					title: "Capstone Utility Studio Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C systems",
-						moduleTitle: "Systems Build 17: Implementation Lab",
+						moduleTitle: "Systems Build 17: Capstone Utility Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
