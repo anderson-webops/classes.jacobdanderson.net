@@ -936,13 +936,115 @@ function moduleFocusVerbReplacement(_match: string, verb: string) {
 }
 
 function neutralizeCourseShouldPhrasing(text: string) {
-	return text.replace(
-		/\bcourse should (?:(already|now|repeatedly)\s+)?([A-Za-z]+)\b/g,
-		(_match, adverb: string | undefined, verb: string) => {
-			const normalizedAdverb = adverb ? `${adverb.toLowerCase()} ` : "";
-			return `course ${normalizedAdverb}${thirdPersonVerb(verb)}`;
-		}
-	);
+	return text
+		.replace(
+			/\bcourse should (?:(already|now|repeatedly)\s+)?([A-Za-z]+)\b/g,
+			(_match, adverb: string | undefined, verb: string) => {
+				const normalizedAdverb = adverb
+					? `${adverb.toLowerCase()} `
+					: "";
+				return `course ${normalizedAdverb}${thirdPersonVerb(verb)}`;
+			}
+		)
+		.replace(
+			/\bEach checkpoint should answer three questions\b/g,
+			"Each checkpoint answers three questions"
+		)
+		.replace(
+			/\bA missing resource in ([^.\n]+?) is not automatically a blocker, but it should be classified\b/g,
+			"A missing resource in $1 is not automatically a blocker; it is classified"
+		)
+		.replace(
+			/\bThe evidence should point to the resource used, and the reasoning should explain\b/g,
+			"The evidence points to the resource used, and the reasoning explains"
+		)
+		.replace(/\bA fallback should preserve\b/g, "A fallback preserves")
+		.replace(/\bThe notes should identify\b/g, "The notes identify")
+		.replace(
+			/\bReusable ([^.\n]+?) projects should include enough setup notes\b/g,
+			"Reusable $1 projects include enough setup notes"
+		)
+		.replace(
+			/\bThe setup should not silently rely\b/g,
+			"The setup does not silently rely"
+		)
+		.replace(/\bThe habit should be\b/g, "The habit is")
+		.replace(
+			/\bRecord the invariant that should remain true\b/g,
+			"Record the invariant that remains true"
+		)
+		.replace(
+			/\binvariant that should stay true\b/g,
+			"invariant that stays true"
+		)
+		.replace(/\bThe example should be\b/g, "The example is")
+		.replace(
+			/\bThe later project should reuse\b/g,
+			"The later project reuses"
+		)
+		.replace(
+			/\bIt should separate observed evidence from inferred risk\b/g,
+			"The review separates observed evidence from inferred risk"
+		)
+		.replace(
+			/\bIt should distinguish reachability, impact, mitigation, and remaining uncertainty\b/g,
+			"The review distinguishes reachability, impact, mitigation, and remaining uncertainty"
+		)
+		.replace(
+			/\b(Data Science|AI Foundations|Machine Learning) artifacts should preserve\b/g,
+			"$1 artifacts preserve"
+		)
+		.replace(
+			/\bManual-memory work should include\b/g,
+			"Manual-memory work includes"
+		)
+		.replace(
+			/\bBranch placement should be based\b/g,
+			"Branch placement is based"
+		)
+		.replace(
+			/\bThe harness should reduce ambiguity\b/g,
+			"The harness reduces ambiguity"
+		)
+		.replace(/\bThe review should identify\b/g, "The review identifies")
+		.replace(/\bThe label should make\b/g, "The label makes")
+		.replace(/\bThe formats should not be\b/g, "The formats are not")
+		.replace(/\bThe blueprint should make\b/g, "The blueprint makes")
+		.replace(/\bEvery dataset should have\b/g, "Every dataset has")
+		.replace(/\bThe card should make\b/g, "The card makes")
+		.replace(/\bThe card should connect\b/g, "The card connects")
+		.replace(/\bThe report should explain\b/g, "The report explains")
+		.replace(/\bEach example should include\b/g, "Each example includes")
+		.replace(/\bThe build should preserve\b/g, "The build preserves")
+		.replace(/\bEach level should have\b/g, "Each level has")
+		.replace(
+			/\bMulti-file assignments should use\b/g,
+			"Multi-file assignments use"
+		)
+		.replace(/\bDS&A should follow\b/g, "DS&A follows")
+		.replace(
+			/\bC Systems, Assembly, Design Patterns, and Low-Level Security should assume\b/g,
+			"C Systems, Assembly, Design Patterns, and Low-Level Security assume"
+		)
+		.replace(/\bThe generated graph\b/g, "The provided graph")
+		.replace(/\bThe generated graphic\b/g, "The provided graphic")
+		.replace(/\bThe generated reference\b/g, "The provided reference")
+		.replace(
+			/\bThe generated sequence graphic\b/g,
+			"The provided sequence graphic"
+		)
+		.replace(
+			/\bThe generated unit-circle graphic\b/g,
+			"The provided unit-circle graphic"
+		)
+		.replace(/\bThe generated graph pack\b/g, "The provided graph pack")
+		.replace(
+			/\bthe generated rational\/piecewise references\b/g,
+			"the provided rational/piecewise references"
+		)
+		.replace(/\bthe generated graph pack\b/g, "the provided graph pack")
+		.replace(/\bUse the generated\b/g, "Use the provided")
+		.replace(/\bReuse the generated\b/g, "Reuse the provided");
 }
 
 function indefiniteArticleFor(value: string) {
