@@ -16,7 +16,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "The Comparative Framing",
 					content:
-						"Frame the course around specific low-level bug classes from C and C++: dangling pointers, double frees, unchecked indexing, null-like misuse, error-code drift, and race conditions. Every Rust concept should answer what changes about those risks."
+						"Frame the course around specific low-level bug classes from C and C++: dangling pointers, double frees, unchecked indexing, null-like misuse, error-code drift, and race conditions. Every Rust concept answers what changes about those risks."
 				},
 				{
 					title: "Compiler Guidance as an Engineering Tool",
@@ -816,7 +816,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "Document What Rust Improved and What It Did Not",
 					content:
-						"The final reflection should be technically honest. Rust meaningfully reduces memory-safety and API-misuse risk in many cases, but logic flaws, insecure protocol assumptions, and weak threat models can still survive the port."
+						"The final reflection stays technically honest. Rust meaningfully reduces memory-safety and API-misuse risk in many cases, but logic flaws, insecure protocol assumptions, and weak threat models can still survive the port."
 				},
 				{
 					title: "Prepare for Systems, Security, or Compiler Follow-On Work",
