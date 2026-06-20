@@ -614,14 +614,18 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 					title: "Project 2 – Cake Chaser",
 					content: `**Project goal:** Build a timed chase game where a player sprite collects cake at random coordinates.
 
-**Build steps:**
-1. Set up two sprites: a person and a slice of cake.
-2. Arrow keys move the person around the stage.
-3. The cake appears at random X and Y coordinates.
-4. Touching the cake plays a sound, moves the cake to a new random location, and increases the score.
-5. A countdown timer ends the game when it reaches zero.
+	**Build steps:**
+	1. Set up two sprites: a person and a slice of cake.
+	2. Arrow keys move the person around the stage.
+		3. The cake appears at random X and Y coordinates.
+		4. Touching the cake plays a sound, moves the cake to a new random location, and increases the score.
+		5. A countdown timer ends the game when it reaches zero.
 
-**Completion check:** The cake relocates after every catch, and the timer produces a clear end state.`,
+		**Design notes:** Keep the cake's random position separate from the player movement logic so each part can be tested on its own. The catch behavior happens once per touch, then immediately places the cake somewhere new so the game does not award repeated points for the same catch.
+
+		**Evidence:** Test the game from a clean green-flag start, catch the cake at least three times, and confirm the score, sound, random location, and timer all change for the intended reason.
+
+		**Completion check:** The cake relocates after every catch, and the timer produces a clear end state.`,
 					projectLink: "https://scratch.mit.edu/projects/302998723/",
 					solutionLink: "https://scratch.mit.edu/projects/302865909/"
 				},
@@ -939,11 +943,15 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 					title: "GS12 Project 1 – Asteroid Dodge",
 					content: `**Project goal:** Build Asteroid Dodge with clear controls, collision rules, scoring or survival timing, and restart behavior.
 
-**Planning targets:** Identify player controls, asteroid movement, collision rules, score or survival timer, and restart behavior before programming. Add a project comment that lists the implementation steps.
+		**Planning targets:** Identify player controls, asteroid movement, collision rules, score or survival timer, and restart behavior before programming. Add a project comment that lists the implementation steps.
 
-**Implementation options:** The starter project can be used as a base, or the same mechanics can be rebuilt from a blank project with original sprites, costumes, and backdrops.
+		**Build options:** The starter project can be used as a base, or the same mechanics can be rebuilt from a blank project with original sprites, costumes, and backdrops.
 
-**Completion check:** The player moves reliably, asteroids reset cleanly, collisions are detected consistently, and the game has a clear ending or replay path.`,
+		**Design notes:** Treat the player, asteroids, timer, and collision response as separate systems. A good first version has only one asteroid and one clear collision outcome; additional asteroids, speed changes, sounds, or polish come after the reset and end-state behavior are reliable.
+
+		**Evidence:** Test a normal dodge path, a collision path, and a restart path. The game shows what changed after a collision, resets old asteroid positions when replayed, and avoids hidden score or timer state from the previous run.
+
+		**Completion check:** The player moves reliably, asteroids reset cleanly, collisions are detected consistently, and the game has a clear ending or replay path.`,
 					projectLink: "https://scratch.mit.edu/projects/303001451/",
 					solutionLink: "https://scratch.mit.edu/projects/302948550/"
 				},

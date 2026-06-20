@@ -1308,20 +1308,28 @@ const generatedReferencePattern = [
 	"traced solution",
 	"practice task",
 	"Java implementation",
+	"class model",
 	"class exercise",
 	"code checkpoint",
 	"object-design task",
+	"object-design exercise",
 	"practice build",
 	"type-model task",
 	"method-contract exercise",
+	"method-contract checkpoint",
 	"API checkpoint",
 	"object-state build",
 	"collection exercise",
+	"data-structure exercise",
 	"Java design task",
+	"design checkpoint",
 	"systems artifact",
 	"command-line build",
 	"runtime check",
 	"diagnostic run",
+	"runtime trace",
+	"memory trace",
+	"tooling check",
 	"low-level implementation"
 ].join("|");
 
@@ -5177,18 +5185,18 @@ function projectSupportReference(context: CourseTextContext) {
 	}
 	if (isJavaContext(context)) {
 		return variantPrompt(context, [
-			() => "the Java implementation",
+			() => "the class model",
 			() => "the class exercise",
 			() => "the project",
 			() => "the code checkpoint",
-			() => "the object-design task",
+			() => "the object-design exercise",
 			() => "the practice build",
-			() => "the type-model task",
-			() => "the method-contract exercise",
+			() => "the method-contract checkpoint",
 			() => "the API checkpoint",
 			() => "the object-state build",
 			() => "the collection exercise",
-			() => "the Java design task"
+			() => "the data-structure exercise",
+			() => "the design checkpoint"
 		]);
 	}
 	if (isWebContext(context)) return "the page";
@@ -5201,11 +5209,12 @@ function projectSupportReference(context: CourseTextContext) {
 	if (isLowLevelSystemsContext(context) || /c\+\+|cpp/.test(source)) {
 		return variantPrompt(context, [
 			() => "the program",
-			() => "the systems artifact",
 			() => "the command-line build",
 			() => "the runtime check",
 			() => "the diagnostic run",
-			() => "the low-level implementation"
+			() => "the runtime trace",
+			() => "the memory trace",
+			() => "the tooling check"
 		]);
 	}
 	if (isDataAiMlContext(context)) return "the analysis";
@@ -5238,6 +5247,34 @@ function projectSupportScopedReference(
 		)
 	) {
 		return topic;
+	}
+
+	const [firstReferenceWord = "", ...remainingReferenceWords] =
+		bareReference.split(/\s+/);
+	const firstReferenceRoot = firstReferenceWord.split("-")[0];
+	if (
+		firstReferenceRoot &&
+		new RegExp(
+			`\\b${escapeStringForRegExp(firstReferenceRoot)}$`,
+			"i"
+		).test(topic)
+	) {
+		const trimmedFirstWord = firstReferenceWord
+			.replace(
+				new RegExp(
+					`^${escapeStringForRegExp(firstReferenceRoot)}[-\\s]?`,
+					"i"
+				),
+				""
+			)
+			.trim();
+		const collapsedReference = [
+			trimmedFirstWord,
+			...remainingReferenceWords
+		]
+			.filter(Boolean)
+			.join(" ");
+		if (collapsedReference) return `the ${topic} ${collapsedReference}`;
 	}
 
 	return `the ${topic} ${bareReference}`
@@ -5290,20 +5327,28 @@ function compactGeneratedProjectSupport(
 		"task",
 		"Java work",
 		"Java implementation",
+		"class model",
 		"class exercise",
 		"code checkpoint",
 		"object-design task",
+		"object-design exercise",
 		"practice build",
 		"type-model task",
 		"method-contract exercise",
+		"method-contract checkpoint",
 		"API checkpoint",
 		"object-state build",
 		"collection exercise",
+		"data-structure exercise",
 		"Java design task",
+		"design checkpoint",
 		"systems artifact",
 		"command-line build",
 		"runtime check",
 		"diagnostic run",
+		"runtime trace",
+		"memory trace",
+		"tooling check",
 		"low-level implementation",
 		"system check",
 		"lab",
@@ -5729,6 +5774,11 @@ function compactGeneratedProjectSupport(
 					"g"
 				),
 				"$1 $2"
+			)
+			.replace(/\b(one|each|every|a|an) the\b/gi, "$1")
+			.replace(
+				/\b(standard|typical|ordinary|small|minimal|runnable|visible|local|working|traceable|current|finished|final) the\b/gi,
+				"$1"
 			)
 			.replace(
 				new RegExp(
@@ -6307,7 +6357,7 @@ function studioBuildSequence(context: CourseTextContext) {
 			],
 			() => [
 				`- Describe the ${studioLabel} initial state, expected state transition, observable output, and cleanup or rollback path.`,
-				`- Use small ${studioLabel} command/build/debug cycles so the first failing step has a narrow cause.`,
+				`- Use short command/build/debug cycles for ${studioLabel} so the first failing step has a narrow cause.`,
 				`- Verify both ${studioLabel} intended behavior and one edge case with concrete terminal, trace, log, or debugger evidence.`
 			]
 		]);
