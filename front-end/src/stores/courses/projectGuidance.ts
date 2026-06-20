@@ -1315,7 +1315,7 @@ function requiredWorkSteps(
 			[
 				`Define the ${moduleTitle} starting data, intermediate state, loop or function responsibility, and final result before writing code.`,
 				`Keep ${moduleTitle} runnable while adding logic so each error points to one recent branch, loop, helper, or collection change.`,
-				`Compare the output for one ordinary case, one boundary case, and one case that is rejected, ignored safely, or handled with a clear fallback.`
+				`Compare the output for one standard case, one boundary case, and one case that is rejected, ignored safely, or handled with a clear fallback.`
 			],
 			[
 				`Turn ${moduleTitle} into a Python plan: inputs, stored values, functions, collections, control flow, and visible evidence.`,
@@ -1340,7 +1340,7 @@ function requiredWorkSteps(
 			[
 				`Before coding ${moduleTitle}, name the main function or loop, the data it receives, the data it changes, and the visible result it produces.`,
 				`Build ${moduleTitle} from a tiny traceable case toward the full prompt, rerunning after each control-flow or data-structure change.`,
-				`Finish by testing one ordinary case, one edge case, and one case chosen because it might break the first design.`
+				`Finish by testing one standard case, one edge case, and one case chosen because it might break the first design.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 8)];
 	}
@@ -1719,7 +1719,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} shows the transformation, model, search, or scoring evidence used to judge success.`,
-				`The verification includes one ordinary case and one boundary, noisy, missing-data, or failure-shaped case.`,
+				`The verification includes one standard case and one boundary, noisy, missing-data, or failure-shaped case.`,
 				`The closing ${moduleTitle} note limits the claim to what the evidence can support.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];

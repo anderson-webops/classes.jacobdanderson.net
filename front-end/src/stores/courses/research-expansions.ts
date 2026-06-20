@@ -224,10 +224,10 @@ function projectOptionRequiredOutcome(
 		return "**Required outcome:**\n- For this option, state the question, dataset, key columns or features, and cleaning or modeling choice.\n- Include a baseline, sanity check, metric, visualization, or small trace.\n- Explain what the evidence supports and one limitation of the result.";
 	}
 	if (family.includes("ai")) {
-		return "**Required outcome:**\n- For this option, define the state representation, action space, rule, search, or scoring method.\n- Trace one ordinary case and one case where the strategy behaves poorly or ambiguously.\n- Explain why the strategy is reasonable and where it is limited.";
+		return "**Required outcome:**\n- For this option, define the state representation, action space, rule, search, or scoring method.\n- Trace one standard case and one case where the strategy behaves poorly or ambiguously.\n- Explain why the strategy is reasonable and where it is limited.";
 	}
 	if (family.includes("algebra")) {
-		return "**Required outcome:**\n- For this option, show the rule, equation, graph, table, or transformation being used.\n- Include one ordinary case and one sign, unit, intercept, domain, or boundary check.\n- Explain how the result is known to be reasonable.";
+		return "**Required outcome:**\n- For this option, show the rule, equation, graph, table, or transformation being used.\n- Include one standard case and one sign, unit, intercept, domain, or boundary check.\n- Explain how the result is known to be reasonable.";
 	}
 	if (isScienceFamily(family)) {
 		return "**Required outcome:**\n- For this option, state the phenomenon or question, model or data source, claim, and relevant vocabulary.\n- Separate the observation, pattern, and explanation.\n- Connect evidence to the claim and name one model limitation or uncertainty.";

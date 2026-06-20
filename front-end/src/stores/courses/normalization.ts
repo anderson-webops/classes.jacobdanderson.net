@@ -3936,7 +3936,7 @@ function projectExpectations(context: CourseTextContext) {
 			subject => [
 				`- Map the ${subject} UI path from input or click through state, data, and rendered result.`,
 				`- Run ${subject} from a clean page load and resize the viewport before accepting the result.`,
-				`- Confirm ${subject} handles the ordinary case and at least one missing-data, invalid-input, or failed-request case.`
+				`- Confirm ${subject} handles the standard case and at least one missing-data, invalid-input, or failed-request case.`
 			],
 			subject => [
 				`- Define the ${subject} route or component, user action, state owner, and visible response before coding.`,
@@ -4196,7 +4196,7 @@ function projectExpectations(context: CourseTextContext) {
 			],
 			subject => [
 				`- Before coding ${subject}, write the expected input, intermediate state, helper function role, and final printed or saved result.`,
-				`- Begin with a tiny traceable case, then add one ordinary case and one awkward or invalid case.`,
+				`- Begin with a tiny traceable case, then add one standard case and one awkward or invalid case.`,
 				`- Keep the ${subject} implementation readable enough that the data flow can be followed without rereading every line.`
 			],
 			subject => [
@@ -4333,7 +4333,7 @@ function projectExpectations(context: CourseTextContext) {
 			],
 			() => [
 				"- Identify the known values, unknown value, and representation before choosing a method.",
-				"- Test one ordinary case and one case involving sign, intercept, domain, unit, or graph behavior.",
+				"- Test one standard case and one case involving sign, intercept, domain, unit, or graph behavior.",
 				"- Explain how the answer can be checked without simply repeating the same calculation."
 			],
 			() => [
@@ -5101,11 +5101,11 @@ function projectSupport(context: CourseTextContext) {
 		() =>
 			`**Goal:** Build ${reference} in a small working case, then add one improvement or edge case.`,
 		() =>
-			`**Goal:** Connect ${reference} to a visible run, trace, model, or user interaction and record what proves it works.`,
+			`**Goal:** Show how ${reference} works through a visible result, trace, model, or interaction, then record the evidence that confirms it.`,
 		() =>
-			`**Goal:** Verify ${reference} with one ordinary case and one case that could fail if the concept is misunderstood.`,
+			`**Goal:** Verify ${reference} with one standard case and one boundary case that exposes the key concept.`,
 		() =>
-			`**Goal:** Start from a small working case for ${reference}, then add one improvement with visible evidence.`,
+			`**Goal:** Build a small working version of ${reference}, then add one visible improvement and evidence that it works.`,
 		() =>
 			`**Goal:** Apply the concept in ${reference}, then compare expected behavior with the observed result.`,
 		() =>
@@ -5113,7 +5113,7 @@ function projectSupport(context: CourseTextContext) {
 		() =>
 			`**Goal:** Choose one design or reasoning decision in ${reference}, test it, and show its effect in the final artifact.`,
 		() =>
-			`**Goal:** Demonstrate ${reference} with one ordinary case and one case that could fail if the idea is misunderstood.`,
+			`**Goal:** Demonstrate ${reference} with one standard case and one boundary case that tests the central idea.`,
 		() =>
 			`**Goal:** Map the prompt requirements to ${reference}, then record the evidence that proves the result works.`,
 		() =>
@@ -6914,7 +6914,7 @@ function studioSupport(context: CourseTextContext) {
 			return `Model path for ${pathSubject}: setup, one hand-checkable trace, expected output, and the reason the result is trustworthy.`;
 		}
 		if (pathTitle.includes("core project")) {
-			return `Required build path for ${pathSubject}: complete the main artifact first, then verify the ordinary case and one boundary case.`;
+			return `Required build path for ${pathSubject}: complete the main artifact first, then verify the standard case and one boundary case.`;
 		}
 		if (pathTitle.includes("review")) {
 			return `Review path for ${pathSubject}: inspect the result, name one limitation or bug risk, and record the next improvement.`;
