@@ -4921,6 +4921,9 @@ describe("course text quality normalization", () => {
 		);
 		expect(text).not.toMatch(/Source and Asset Parity Implementation/i);
 		expect(text).not.toMatch(/Guide students|Require students|Push them/i);
+		expect(text).not.toMatch(
+			/\bshould\b|Original prompt restored|teaching flow|lesson arc|your instructor/i
+		);
 		expect(text).not.toContain("CHM0");
 		expect(items.length).toBeGreaterThanOrEqual(78);
 		expect(thinItems).toEqual([]);
