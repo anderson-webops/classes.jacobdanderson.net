@@ -133,6 +133,9 @@ describe("research-backed course family expansions", () => {
 				expect(expansionText, courseId).not.toMatch(
 					/\*\*(?:Project goal|Required outcome|Completion checks|Readiness evidence):\*\*/
 				);
+				expect(expansionText, courseId).not.toMatch(
+					/\*\*(?:Reference guide|Course connection|Sequence guidance|Project ladder|Course boundaries):\*\*/i
+				);
 			}
 		},
 		COURSE_SWEEP_TIMEOUT
@@ -165,7 +168,7 @@ describe("research-backed course family expansions", () => {
 		expect(corpus).toContain("scikit-learn Model Evaluation");
 		expect(corpus).toContain("Unity Learn");
 		expect(corpus).toContain("No physical supplies beyond paper");
-		expect(corpus).toContain("Project Option:");
+		expect(corpus).toContain("Practice Project:");
 		expect(corpus).toContain("AI Level 1 Checkpoints");
 	});
 });
