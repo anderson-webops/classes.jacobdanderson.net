@@ -353,9 +353,9 @@ export const dataScienceInPythonCourse: RawCourse = {
 			],
 			supplementalProjects: [
 				{
-					title: "Legacy Archive: Data Science in Python Workspace",
+					title: "Reference Archive: Data Science in Python Workspace",
 					content:
-						"Use the older umbrella Python archive when the original single-folder legacy layout is useful for comparison with the current course structure and material organization.",
+						"Use the reference Python archive when the full workspace layout is useful for comparison with the current course structure and material organization.",
 					projectLink:
 						"https://github.com/instruction-material/Data-Science/tree/main"
 				},

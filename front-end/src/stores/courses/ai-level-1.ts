@@ -96,9 +96,9 @@ export const aiLevel1Course: RawCourse = {
 			],
 			supplementalProjects: [
 				{
-					title: "Legacy Archive: AI Level 1 Workspace",
+					title: "Reference Archive: AI Level 1 Workspace",
 					content:
-						"Use the legacy umbrella Python archive when the older single-folder legacy layout is useful for comparison or for recovering an earlier classroom variant of the AI Level 1 materials.",
+						"Use the reference Python archive when the full workspace layout is useful for comparison, alternate practice, or recovering an earlier classroom variant of the AI Level 1 materials.",
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main"
 				},
@@ -694,7 +694,7 @@ export const aiLevel1Course: RawCourse = {
 			title: "Unit 9: Repo Extension Bank and Canonical Variants",
 			curriculum: [
 				{
-					title: "Optional Reinforcement versus Archive Material",
+					title: "Optional Reinforcement versus Core Scope",
 					content:
 						"Treat the extra `AI-Level-1` repo folders as a structured extension bank, not as missing core lessons. The public course keeps one canonical Tic-Tac-Toe and Marble Game path visible while still exposing worthwhile extra graph, stack, and class-based practice."
 				},

@@ -1399,17 +1399,17 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 			]
 		},
 		{
-			title: "SADX Enrichment and Legacy Archive Boundaries",
+			title: "SADX Enrichment and Reference Boundaries",
 			curriculum: [
 				{
 					title: "Canonical Swift Repo Structure",
 					content:
-						"Treat the `SAD1` through `SAD7` projects as the canonical active course path. The older `Mod1Pro*` through `Mod5Pro*` folders remain in the repo as archive material rather than as a second competing sequence."
+						"Treat the `SAD1` through `SAD7` projects as the canonical active course path. The older `Mod1Pro*` through `Mod5Pro*` folders remain available as reference material rather than as a second competing sequence."
 				},
 				{
-					title: "Legacy Means Reference, Not Core Scope",
+					title: "Reference Material, Not Core Scope",
 					content:
-						"Keep the `legacy/` materials and the older `Mod*` folders available only for historical demo recovery or scaffold comparison. These materials should not re-enter the main public course flow."
+						"Keep the older reference folders available only for demo recovery or scaffold comparison. These materials stay outside the main public course flow."
 				},
 				{
 					title: "Shapes Studio as Intentional Enrichment",
@@ -1417,20 +1417,18 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"Expose `SADX-SwiftUI-Shapes-Studio` as optional enrichment because it still reinforces useful SwiftUI drawing and layout ideas, but it sits outside the main shipping-app spine."
 				},
 				{
-					title: "SADX Enrichment and Legacy Archive Boundaries: Verification and Reflection",
+					title: "SADX Enrichment and Reference Boundaries: Verification and Reflection",
 					content: buildSupportSectionGuidance({
 						courseFamily: "Swift",
-						moduleTitle:
-							"SADX Enrichment and Legacy Archive Boundaries",
+						moduleTitle: "SADX Enrichment and Reference Boundaries",
 						section: "verification"
 					})
 				},
 				{
-					title: "SADX Enrichment and Legacy Archive Boundaries: Core Project",
+					title: "SADX Enrichment and Reference Boundaries: Core Project",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
-						moduleTitle:
-							"SADX Enrichment and Legacy Archive Boundaries",
+						moduleTitle: "SADX Enrichment and Reference Boundaries",
 						projectKind: "core",
 						hasReference: true
 					}),
@@ -1451,11 +1449,10 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-Swift-UI-Shapes-Studio/solution"
 				},
 				{
-					title: "SADX Enrichment and Legacy Archive Boundaries supplemental 2",
+					title: "SADX Enrichment and Reference Boundaries supplemental 2",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
-						moduleTitle:
-							"SADX Enrichment and Legacy Archive Boundaries",
+						moduleTitle: "SADX Enrichment and Reference Boundaries",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1465,11 +1462,10 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-40-sadx-enrichment-and-legacy-archive-boundaries-supplemental-2/solution"
 				},
 				{
-					title: "SADX Enrichment and Legacy Archive Boundaries supplemental 3",
+					title: "SADX Enrichment and Reference Boundaries supplemental 3",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
-						moduleTitle:
-							"SADX Enrichment and Legacy Archive Boundaries",
+						moduleTitle: "SADX Enrichment and Reference Boundaries",
 						projectKind: "extension",
 						hasReference: true
 					}),
