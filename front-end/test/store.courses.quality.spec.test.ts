@@ -5094,6 +5094,12 @@ describe("course text quality normalization", () => {
 			expect(source).not.toMatch(/\bWatch for\b/i);
 			expect(source).not.toMatch(/The correction should replace/i);
 			expect(source).not.toContain("Misconception Watchlist");
+			expect(source).not.toMatch(/\bMini Lab\b/i);
+			expect(source).not.toMatch(/\bshould\b/i);
+			expect(courseText).not.toMatch(/\bMini Lab\b/i);
+			expect(courseText).not.toMatch(
+				/with your instructor|Recording Studio|Juni/i
+			);
 			for (const pattern of genericCurriculumTemplates) {
 				expect(courseText).not.toMatch(pattern);
 			}
@@ -5117,9 +5123,30 @@ describe("course text quality normalization", () => {
 		expect(introPhysicsCorpus).toContain(
 			"The final portfolio turns physics knowledge into a defended design or investigation."
 		);
+		expect(introPhysicsCorpus).toContain(
+			"The opening workflow is intentionally lightweight and remote-friendly."
+		);
+		expect(introPhysicsCorpus).toContain(
+			"Remote Investigation: Reaction-Time Data"
+		);
+		expect(introPhysicsCorpus).toContain(
+			"Remote Investigation: Circuit Measurement Log"
+		);
+		expect(introPhysicsCorpus).toContain(
+			"Remote Investigation: Grand Experiment Proposal"
+		);
+		expect(introPhysicsCorpus).not.toMatch(
+			/Run a short ruler-drop lab|Use a phone camera to record|Build a simple series or parallel circuit|before touching the hardware|household materials/i
+		);
 
 		const physics2 = await loadRawCourse("physics-level-2");
 		const physics2Corpus = allCourseText(physics2);
+		expect(physics2Corpus).toContain(
+			"Investigation or Simulation: Ballistics Model Comparison"
+		);
+		expect(physics2Corpus).toContain(
+			"Investigation or Simulation: Engineering Modeling Challenge"
+		);
 		expect(physics2Corpus).toContain(
 			"Numerical modeling turns a physics relationship into repeated update rules."
 		);

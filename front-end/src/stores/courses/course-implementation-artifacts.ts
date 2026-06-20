@@ -1271,7 +1271,7 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 			{
 				title: "Curated Remote Resource Bank",
 				content: [
-					`**Remote investigation:** ${guidance.remoteInvestigation} Core work avoids household materials, lab kits, heat, chemicals, electricity components, and outdoor data collection.`,
+						`**Remote investigation:** ${guidance.remoteInvestigation} ${guidance.safetyBoundary}`,
 					`**Resource shortlist:**\n${bullets(resources)}`,
 					links?.catalogLink
 						? `**Simulation catalog:** ${links.catalogLink}. Use the catalog to choose a specific simulation before recording observations, variables, and model limitations.`
