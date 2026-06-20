@@ -2419,7 +2419,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("buildImplementationLabGuidance");
 		expect(corpus).toContain("Assembly Lab 15: Stack Trace Studio");
 		expect(corpus).toContain("Systems Build 14: Byte Inspector Studio");
-		expect(corpus).toContain("Full Stack Web Lab 14: Implementation Lab");
+		expect(corpus).toContain("Full Stack Web Lab 14: Feature Slice Studio");
 	});
 
 	it("keeps Network Security guidance specific and defensively scoped", async () => {
@@ -2519,8 +2519,16 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Course Path Transfer Practice");
 		expect(corpus).toContain("JavaScript Bridge Transfer Practice");
 		expect(corpus).toContain("Web Foundations Transfer Practice");
-		expect(corpus).toContain("Full Stack Web Lab 17 Extension Practice");
+		expect(corpus).toContain("Feature Slice Transfer Practice");
+		expect(corpus).toContain("Full Stack Web Lab 14: Feature Slice Studio");
+		expect(corpus).toContain("Full Stack Web Lab 15: API Integration Studio");
+		expect(corpus).toContain("Full Stack Web Lab 16: Data Persistence Studio");
+		expect(corpus).toContain(
+			"Full Stack Web Lab 17: Deployment Readiness Studio"
+		);
+		expect(corpus).toContain("Deployment Readiness Extension Practice");
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
 	});
 
 	it("keeps Network Systems IPv6 projects distinct and clearly named", async () => {
