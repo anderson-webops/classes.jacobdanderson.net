@@ -6939,9 +6939,9 @@ function studioSupport(context: CourseTextContext) {
 			() =>
 				`${pathSubject} starts from the intended result, then records the evidence, boundary behavior, and limitation that make the work reviewable.`,
 			() =>
-				`Use ${pathSubject} to produce a concrete result, check it against the module goal, and name one limitation before extension work begins.`,
+				`Use ${pathSubject} to produce a concrete result, verify it against the target skill, and name one limitation before extending it.`,
 			() =>
-				`${pathSubject} leaves behind a runnable artifact, a specific verification note, and one improvement target tied to the module goal.`
+				`${pathSubject} leaves behind a runnable artifact, a specific verification note, and one improvement target tied to the target skill.`
 		]);
 	})();
 
