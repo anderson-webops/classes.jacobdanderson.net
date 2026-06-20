@@ -2012,7 +2012,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Capstone Support Material",
 					content:
-						"Keep the `AJ17` starters and side folders visible as capstone support, not as hidden repo drift. The Google Maps branch should have supporting scaffolds that are easy to find when deeper extension work is useful."
+						"Keep the `AJ17` starters and side folders visible as capstone support, not as hidden repo drift. The Google Maps extension includes supporting scaffolds that are easy to find when deeper extension work is useful."
 				},
 				{
 					title: "Repo Extension, Starter, and Capstone Library: Verification and Reflection",

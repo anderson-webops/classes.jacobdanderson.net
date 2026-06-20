@@ -3851,6 +3851,54 @@ describe("course text quality normalization", () => {
 		).toContain("divisibility checks");
 	});
 
+	it("keeps Java graphics split tracks neutral and project-rich", async () => {
+		const [javaWithoutGraphics, javaWithGraphics] = await Promise.all([
+			loadRawCourse("java-without-graphics"),
+			loadRawCourse("java-with-graphics")
+		]);
+		expect(javaWithoutGraphics).not.toBeNull();
+		expect(javaWithGraphics).not.toBeNull();
+
+		const noGraphicsText = allCourseText(javaWithoutGraphics);
+		const graphicsText = allCourseText(javaWithGraphics);
+		const combinedText = `${noGraphicsText}\n${graphicsText}`;
+
+		expect(noGraphicsText).toContain("Java Track Map: Without Graphics");
+		expect(noGraphicsText).toContain("What This Track Keeps");
+		expect(noGraphicsText).toContain(
+			"Track Checkpoint: Console Project Choice"
+		);
+		expect(graphicsText).toContain("Java Track Map: With Graphics");
+		expect(graphicsText).toContain("Graphics Track Positioning");
+		expect(graphicsText).toContain(
+			"Java Graphics Track 1: Coordinates, Color, and Shapes"
+		);
+		expect(graphicsText).toContain(
+			"Java Graphics Extension: Coordinate Refactor"
+		);
+		expect(graphicsText).toContain(
+			"Java Graphics Extension: Pattern Parameter Swap"
+		);
+
+		expect(combinedText).not.toContain("What This Branch Keeps");
+		expect(combinedText).not.toContain("Graphics Branch Positioning");
+		expect(combinedText).not.toContain("Java Graphics Branch");
+		expect(combinedText).not.toMatch(/\bbranch should\b/i);
+		expect(combinedText).not.toMatch(/\bgraphics should\b/i);
+
+		const customGraphicsModules = javaWithGraphics!.modules.filter(module =>
+			/^Java Graphics Track [12]:/.test(module.title)
+		);
+		expect(customGraphicsModules).toHaveLength(2);
+
+		for (const module of customGraphicsModules) {
+			expect(
+				module.supplementalProjects.length,
+				module.title
+			).toBeGreaterThanOrEqual(2);
+		}
+	});
+
 	it("keeps Java Level 1 applied build labels practice-oriented", async () => {
 		const course = await loadRawCourse("java-level-1");
 		expect(course).not.toBeNull();
