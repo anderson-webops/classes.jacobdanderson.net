@@ -3822,7 +3822,7 @@ function projectExpectations(context: CourseTextContext) {
 			],
 			subject => [
 				`- Restate the ${subject} problem as exact input, exact output, preserved invariant, and complexity budget.`,
-				`- Trace one tiny ${subject} case before coding, then run the sample and one non-sample edge case.`,
+				"- Trace one tiny hand-checkable case before coding, then run the sample and one non-sample edge case.",
 				`- Record the ${subject} algorithm idea, complexity class, and one assumption the tests are meant to challenge.`
 			]
 		]);

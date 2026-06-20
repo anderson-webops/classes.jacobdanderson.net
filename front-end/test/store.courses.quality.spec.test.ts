@@ -429,20 +429,23 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(
 				/as (?:an AI\/Python|a Java|the USACO Bronze) implementation checkpoint/i
 			);
+			expect(corpus).not.toMatch(
+				/\b(?:core build checkpoint|applied challenge)\b/i
+			);
 			expect(corpus).toContain("opening the starter resource");
 			expect(corpus).toContain("Open the starter resource");
-			expect(corpus).toContain("as an AI/Python core build checkpoint");
+			expect(corpus).toContain("as an AI/Python project");
 			expect(corpus).toContain(
-				"Complete **PTJ0 Positioning and Workflow Translation** as a Java core build checkpoint that exposes class responsibilities, public behavior, and one edge case"
+				"Complete **PTJ0 Positioning and Workflow Translation** as a Java project that exposes class responsibilities, public behavior, and one edge case"
 			);
 			expect(corpus).toContain(
-				"Build the web development applied challenge for **JSM1 Fundamentals Review** as a browser-visible feature with clear state, interaction, and error-handling evidence"
+				"Build the web development extension challenge for **JSM1 Fundamentals Review** as a browser-visible feature with clear state, interaction, and error-handling evidence"
 			);
 			expect(corpus).toContain(
-				"Solve the USACO Bronze core build checkpoint for **USB0 Setup and Contest Workflow** with exact input/output behavior, a traceable invariant, and evidence from sample plus custom cases"
+				"Solve the USACO Bronze project for **USB0 Setup and Contest Workflow** with exact input/output behavior, a traceable invariant, and evidence from sample plus custom cases"
 			);
 			expect(corpus).toContain(
-				"Build **Images and Sprites: Practice Studio** as a core build checkpoint with runnable behavior, inspectable evidence, and a clear boundary case"
+				"Build **Images and Sprites: Practice Studio** as a working version with runnable behavior, inspectable evidence, and a clear boundary case"
 			);
 			expect(corpus).not.toMatch(
 				/Open the starter and name the concrete inputs, outputs, state changes, data structures, or system boundaries involved/
@@ -742,7 +745,7 @@ describe("course text quality normalization", () => {
 			expect(corpus).toContain(
 				"A polished Scratch game is more than a set of working controls"
 			);
-			expect(corpus).toContain("applied challenge");
+			expect(corpus).toContain("extension challenge");
 			expect(corpus).toContain("Standards Map");
 		},
 		COURSE_SWEEP_TIMEOUT
@@ -2953,7 +2956,7 @@ describe("course text quality normalization", () => {
 			"IPv6 Extension Practice"
 		]);
 		expect(new Set(projectItems.map(item => item.content)).size).toBe(3);
-		expect(projectItems[0].content).toContain("Core build");
+		expect(projectItems[0].content).toContain("First version");
 		expect(projectItems[1].content).toContain("Transfer Practice");
 		expect(projectItems[2].content).toContain("Extension Practice");
 	});
@@ -3806,7 +3809,7 @@ describe("course text quality normalization", () => {
 
 		expect(projectItems).toHaveLength(3);
 		expect(new Set(projectItems.map(item => item.content)).size).toBe(3);
-		expect(projectItems[0].content).toContain("core build checkpoint");
+		expect(projectItems[0].content).toContain("Java project");
 		expect(projectItems[1].title).toContain("Transfer Practice");
 		expect(projectItems[1].content).toContain("Transfer Practice");
 		expect(projectItems[2].title).toContain("Extension Practice");
