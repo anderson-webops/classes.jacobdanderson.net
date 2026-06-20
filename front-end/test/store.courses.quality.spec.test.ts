@@ -352,6 +352,7 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(/\bSupplemental [23]\b/);
 			expect(corpus).not.toMatch(/\bThis section covers\b/);
 			expect(corpus).not.toMatch(/\bKey idea:/);
+			expect(corpus).not.toMatch(/\bshould\b/i);
 		}
 
 		expect(loadedCorpus).toContain(
