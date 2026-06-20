@@ -93,7 +93,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"Sign in with an Apple ID in Xcode and explain when a paid Apple Developer membership is required. Create a clean app-development folder structure for projects, screenshots, app icons, metadata drafts, and notes so the workflow starts with manageable organization."
 				},
 				{
-					title: "Mini Lab: First Blank SwiftUI App",
+					title: "First Blank SwiftUI App Studio",
 					content:
 						"Create a new iOS App project in Xcode, run it in the preview canvas and simulator, and confirm that scheme selection, destination choice, and project naming make sense. This lab is about environmental confidence, not visual polish."
 				},
@@ -113,7 +113,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: explain why a Mac is required for practical iOS shipping work and create a new project without getting lost in Xcode's initial templates. Prompt: identify where screenshots, exported builds, and app notes should live before real app work begins.",
+						"Readiness check: explain why a Mac is required for practical iOS shipping work and create a new project without getting lost in Xcode's initial templates. Prompt: identify where screenshots, exported builds, and app notes belong before real app work begins.",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/Mod1Pro1"
 				},
@@ -151,7 +151,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "What Code Signing Actually Means",
 					content:
-						"Code signing is proof of authorship and permission rather than a mysterious Xcode checkbox. Teams, bundle identifiers, development signing, and distribution signing should be understood conceptually before the errors appear in practice."
+						"Code signing is proof of authorship and permission rather than a mysterious Xcode checkbox. Teams, bundle identifiers, development signing, and distribution signing make more sense when the concepts are clear before the errors appear in practice."
 				},
 				{
 					title: "Practical Walkthrough: Team Selection and Bundle IDs",
@@ -238,7 +238,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"Console logs, build output, and run-on-device messages provide the first useful failure signals. Capture the earliest useful signal before chasing symptoms so setup problems stay diagnosable."
 				},
 				{
-					title: "Mini Lab: First Launch Troubleshooting",
+					title: "First Launch Troubleshooting Studio",
 					content:
 						"Take a blank or simple starter app, run it on simulator, then on device if available, and document what changed between the two paths. Record one issue they encountered or might realistically encounter and how they would investigate it."
 				},
@@ -383,9 +383,9 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"Take a small app and identify where the app launches, which views it owns, how navigation branches, and where user-facing data is stored or derived. Treat this as architecture reading, not just code reading."
 				},
 				{
-					title: "Reflection Question: Which Part of an App Should Change Most Slowly?",
+					title: "Reflection Question: Stable App Structure",
 					content:
-						"Compare core structure with surface-level UI and explain which decisions should stay stable and which should be easy to revise. This builds architectural judgment before the app grows past a few screens."
+						"Compare core structure with surface-level UI and explain which decisions stay stable and which remain easy to revise. This builds architectural judgment before the app grows past a few screens."
 				},
 				{
 					title: "SAD6 What an App Is Structurally: Core Project",
@@ -403,7 +403,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: label the app entry point, scene, view hierarchy, navigation model, and data model responsibilities in a small example. The structure should be explainable without relying on memorized code fragments.",
+						"Readiness check: label the app entry point, scene, view hierarchy, navigation model, and data model responsibilities in a small example. The structure is explainable without relying on memorized code fragments.",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/Mod2Pro2"
 				},
@@ -730,7 +730,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Practice Lab: Favorite Toggle and Editable Notes",
 					content:
-						"Build one small interaction that is purely local and one that should be shared across multiple views. Explain why the two interactions do not deserve the same state approach."
+						"Build one small interaction that is purely local and one shared across multiple views. Explain why the two interactions do not deserve the same state approach."
 				},
 				{
 					title: "Reflection Question: What Does It Mean to Own State?",
@@ -810,14 +810,14 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Reflection Question: What Deserves a Tab vs a Drill-Down Screen?",
 					content:
-						"Defend which parts of an app should be top-level destinations and which should be reached only from context. This improves product thinking as well as navigation structure."
+						"Defend which parts of an app deserve top-level destinations and which are reached only from context. This improves product thinking as well as navigation structure."
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: explain the role of a `NavigationStack`, a `TabView`, and a sheet without using them interchangeably. Prompt: 'Why should favorites be a tab in one app but a detail section in another?'",
+						"Readiness check: explain the role of a `NavigationStack`, a `TabView`, and a sheet without using them interchangeably. Prompt: 'Why are favorites a tab in one app but a detail section in another?'",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/SAD3-Multi-Tab-Hobby-App/starter",
 					solutionLink:
@@ -883,7 +883,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: add an item, mutate one property on an existing item, and delete a row without introducing unclear ownership or stale UI. Prompt: describe what should happen to the list after an add form succeeds.",
+						"Readiness check: add an item, mutate one property on an existing item, and delete a row without introducing unclear ownership or stale UI. Prompt: describe how the list changes after an add form succeeds.",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/SAD5-Simple-Tracker-App/starter",
 					solutionLink:
@@ -953,7 +953,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: describe when an app should use bundled assets versus remote media, and how a list selection should influence a map-centered view. Prompt: 'What has to happen in the app before a location permission request makes sense?'",
+						"Readiness check: describe when an app uses bundled assets versus remote media, and how a list selection influences a map-centered view. Prompt: 'What has to happen in the app before a location permission request makes sense?'",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/SAD2-Media-Gallery-App/starter",
 					solutionLink:
@@ -1019,7 +1019,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: explain the full path from URL to decoded model to visible list row, and name the UI states the feature must represent. Prompt: 'What should the app do before the first response arrives?'",
+						"Readiness check: explain the full path from URL to decoded model to visible list row, and name the UI states the feature must represent. Prompt: 'What does the app show before the first response arrives?'",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/SAD6-API-Reference-App/starter",
 					solutionLink:
@@ -1085,7 +1085,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: explain where persistent data is loaded, when it should be saved, and what should happen if stored data is missing or malformed. Prompt: compare a first launch with a tenth launch.",
+						"Readiness check: explain where persistent data is loaded, when it is saved, and what happens if stored data is missing or malformed. Prompt: compare a first launch with a tenth launch.",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/SAD5-Simple-Tracker-App/starter",
 					solutionLink:
@@ -1300,7 +1300,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: outline the order of archive, upload, metadata review, TestFlight, and App Review without skipping critical steps. Prompt: identify which publishing artifact should be prepared before the final upload begins.",
+						"Readiness check: outline the order of archive, upload, metadata review, TestFlight, and App Review without skipping critical steps. Prompt: identify which publishing artifact is prepared before the final upload begins.",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/Mod5Pro2"
 				},
@@ -1338,7 +1338,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Scope a Capstone Like a Real App",
 					content:
-						"Frame the capstone as a coherent app that can realistically be tested and presented, not as a dumping ground for every feature learned in the course. The project definition should include scope, audience, primary user flow, and the minimum set of features that make the app worth testing."
+						"Frame the capstone as a coherent app that can realistically be tested and presented, not as a dumping ground for every feature learned in the course. The project definition includes scope, audience, primary user flow, and the minimum set of features that make the app worth testing."
 				},
 				{
 					title: "Build Phase: Implement, Test, and Polish",
@@ -1348,7 +1348,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Project: Publish-Ready Capstone App",
 					content:
-						"Use the capstone starter as a shipping-minded shell for a final app that includes intentional navigation, polished core screens, accessibility review, and store/testing preparation notes. The final explanation should cover not only what the app does, but how it would be prepared for TestFlight or the App Store.",
+						"Use the capstone starter as a shipping-minded shell for a final app that includes intentional navigation, polished core screens, accessibility review, and store/testing preparation notes. The final explanation covers not only what the app does, but how it would be prepared for TestFlight or the App Store.",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/SAD7-Publish-Ready-Capstone/starter",
 					solutionLink:
