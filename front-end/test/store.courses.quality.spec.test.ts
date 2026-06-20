@@ -1971,6 +1971,10 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(/\bSkill target:/);
 			expect(corpus).not.toMatch(/\bThis section covers\b/);
 			expect(corpus).not.toMatch(/\bThe goal is to\b/);
+			expect(corpus).not.toMatch(/\bshould\b/i);
+			expect(corpus).not.toMatch(/Not mistake/);
+			expect(corpus).not.toMatch(/\bwhy python changes\b/);
+			expect(corpus).not.toMatch(/\bdesign foundations in python\b/);
 		}
 
 		expect(loadedCorpus).toContain(
