@@ -1745,7 +1745,7 @@ function neutralizeStudentFacingText(text: string) {
 				.replace(/\*\*Use this section:\*\*/gi, "**Learning path:**")
 				.replace(/\*\*Output:\*\*/gi, "**Result:**")
 				.replace(/\*\*Requirements:\*\*/gi, "**Include:**")
-				.replace(/\*\*Completion check:\*\*/gi, "**Evidence target:**")
+				.replace(/\*\*Completion check:\*\*/gi, "**Checkpoint:**")
 				.replace(
 					/\bThe final artifact should name\b/g,
 					"The final artifact names"
@@ -2173,7 +2173,7 @@ function neutralizeStudentFacingText(text: string) {
 					/\bthe student's future self\b/gi,
 					"future maintenance"
 				)
-				.replace(/\bthe student's map\b/gi, "the course map")
+				.replace(/\bthe student's map\b/gi, "the learning plan")
 				.replace(/\bthe student's goals\b/gi, "the learning goals")
 				.replace(
 					/\bonce the student builds the habit\b/gi,
