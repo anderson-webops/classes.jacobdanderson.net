@@ -9,7 +9,7 @@ const refactoringClinicContexts = {
 		artifact:
 			"the source class that owns too much behavior, the extracted collaborator, the public method that clients still call, and the tests that compare before-and-after output",
 		invariant:
-			"the invariant that clients should not need to know which class now owns the moved behavior",
+			"the invariant that clients do not need to know which class now owns the moved behavior",
 		exampleCase:
 			"For **Refactoring Clinic 11**, trace one method that reads more data from another object than from its own class. Record the original call path, the data it uses, the extracted method or class boundary, and the test output before moving anything else.",
 		boundaryCase:
@@ -22,7 +22,7 @@ const refactoringClinicContexts = {
 		artifact:
 			"the original conditional hotspot, the replacement interface or superclass, the concrete variants, and the caller that selects or receives the right behavior",
 		invariant:
-			"the invariant that adding a new variant should not require editing the old branch-heavy method",
+			"the invariant that adding a new variant does not require editing the old branch-heavy method",
 		exampleCase:
 			"For **Refactoring Clinic 12**, trace one switch or if/else chain through two different branches with expected outputs. Refactor only one branch into a variant first, then compare the mixed state against the original behavior.",
 		boundaryCase:
@@ -35,7 +35,7 @@ const refactoringClinicContexts = {
 		artifact:
 			"the original method signature, the new parameter object or preserved source object, validation rules, and the call sites that become simpler after the change",
 		invariant:
-			"the invariant that grouped data should represent one coherent concept rather than a bag of unrelated values",
+			"the invariant that grouped data represents one coherent concept rather than a bag of unrelated values",
 		exampleCase:
 			"For **Refactoring Clinic 13**, choose one call with three or more related parameters and trace how those values travel through the method. Replace the group with a named object, then verify the same output with the old sample input.",
 		boundaryCase:
@@ -74,13 +74,13 @@ const refactoringClinicContexts = {
 		artifact:
 			"the nullable collaborator or return value, the special-case object or explicit Optional boundary, default behavior, and callers that no longer repeat null checks",
 		invariant:
-			"the invariant that absent data should have one explicit policy instead of several slightly different caller-side guesses",
+			"the invariant that absent data has one explicit policy instead of several slightly different caller-side guesses",
 		exampleCase:
 			"For **Refactoring Clinic 16**, trace one normal object and one missing object through the same call path. Introduce a special case or explicit absence boundary, then verify both paths still produce deliberate output.",
 		boundaryCase:
 			"Then check a partially populated object so the design does not confuse a valid object with absent data or use Null Object to hide a data-quality problem.",
 		reviewEvidence:
-			"Summarize which null checks were removed, where absence is now represented, what default behavior is intentional, and what condition should still fail loudly."
+			"Summarize which null checks were removed, where absence is now represented, what default behavior is intentional, and what condition still fails loudly."
 	},
 	17: {
 		focus: "multi-smell sequencing, characterization tests, commit-sized refactor steps, postponed changes, rollback points, and evidence that a refactor plan improves design without becoming a rewrite",
@@ -139,7 +139,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"Review several medium Java snippets and decide whether the dominant pressure is method size, misplaced behavior, bad conditionals, poor object boundaries, or unhealthy inheritance. This sets up the later modules by linking smells to the right category of refactorings."
 				},
 				{
-					title: "Mini Lab: Write the Refactor Plan Before Touching Code",
+					title: "Refactor Planning Studio",
 					content:
 						"Write a small staged plan naming the smell, the next one or two refactorings, and the expected benefit before editing. This prevents flailing and makes code review discussion more precise."
 				},
@@ -222,7 +222,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"Explain when Replace Method with Method Object is justified: many local variables, multi-step computation, or logic that deserves its own collaborator. Compare it against simpler Extract Method work to avoid premature escalation."
 				},
 				{
-					title: "Mini Lab: Refactor a Calculation Pipeline Safely",
+					title: "Calculation Pipeline Refactor Studio",
 					content:
 						"Take a pricing, scoring, or report-generation method and refactor it into cleaner smaller steps without changing observable output. Document which composing-method moves were used."
 				},
@@ -234,7 +234,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Reflection Question: When Is Extraction Enough?",
 					content:
-						"Explain when smaller methods are enough and when a new class or pattern becomes justified. The answer should reference responsibility, not raw line count alone."
+						"Explain when smaller methods are enough and when a new class or pattern becomes justified. The answer references responsibility, not raw line count alone."
 				},
 				{
 					title: "DPR2 Composing Methods: Core Project",
@@ -312,14 +312,14 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"Use Introduce Foreign Method and Introduce Local Extension to handle awkward third-party or library types without polluting the rest of the codebase. This pairs naturally with Adapter and Facade from the first course."
 				},
 				{
-					title: "Mini Lab: Re-home Behavior Without Breaking Clients",
+					title: "Behavior Ownership Refactor Studio",
 					content:
 						"Take a collaboration tangle and move the logic to the objects that actually own the data and decision-making context. Track what client code becomes simpler after the move."
 				},
 				{
 					title: "Reflection Question: Who Should Own This Behavior?",
 					content:
-						"Explain how they detect that a method belongs somewhere else. A good answer should mention what data the method leans on and which object's invariants it really serves."
+						"Explain how to detect that a method belongs somewhere else. A good answer mentions what data the method leans on and which object's invariants it really serves."
 				},
 				{
 					title: "DPR3 Moving Features Between Objects: Core Project",
@@ -389,7 +389,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Associations, Encapsulation, and Collection Safety",
 					content:
-						"Field and collection encapsulation belong beside association direction changes because data design is API design. Good refactors should make illegal states harder to represent."
+						"Field and collection encapsulation belong beside association direction changes because data design is API design. Good refactors make illegal states harder to represent."
 				},
 				{
 					title: "Data Modeling Lab: Upgrade a Weak Domain Model",
@@ -424,7 +424,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: name when Replace Type Code with Class is enough and when State or Strategy is the better move. Prompt: justify whether a collection should be directly exposed or wrapped.",
+						"Readiness check: name when Replace Type Code with Class is enough and when State or Strategy is the better move. Prompt: justify whether a collection is directly exposed or wrapped.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-11-dpr4-organizing-data/starter",
 					solutionLink:
@@ -479,10 +479,10 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Null Object and Assertion as Design Signals",
 					content:
-						"Use Introduce Null Object to remove repeated absence handling when a stable do-nothing implementation clarifies the design. Use assertions to document assumptions that should fail loudly rather than become buried conditionals."
+						"Use Introduce Null Object to remove repeated absence handling when a stable do-nothing implementation clarifies the design. Use assertions to document assumptions that fail loudly rather than becoming buried conditionals."
 				},
 				{
-					title: "Mini Lab: Conditional Tangle Rescue",
+					title: "Conditional Tangle Refactor Studio",
 					content:
 						"Take a Java policy engine or workflow method with nested flags and refactor it into clearer control flow, optionally ending in polymorphism where justified. Record which conditional refactors happened before any pattern was introduced."
 				},
@@ -564,10 +564,10 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Exceptions, Preconditions, and API Shape",
 					content:
-						"Compare Replace Error Code with Exception and Replace Exception with Test to clarify when failure should be exceptional and when a pre-check is the cleaner API. Connect this to Java method contracts and caller expectations."
+						"Compare Replace Error Code with Exception and Replace Exception with Test to clarify when failure is exceptional and when a pre-check is the cleaner API. Connect this to Java method contracts and caller expectations."
 				},
 				{
-					title: "Mini Lab: Reduce Call-Site Noise in a Service Layer",
+					title: "Call-Site Noise Refactor Studio",
 					content:
 						"Take a Java service class with confusing calls and refactor it until the main use cases read clearly from the caller's perspective. Highlight which method-call simplifications improved the design most."
 				},
@@ -594,7 +594,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: choose between Introduce Parameter Object and Preserve Whole Object. Prompt: identify when a constructor should become a factory method.",
+						"Readiness check: choose between Introduce Parameter Object and Preserve Whole Object. Prompt: identify when a constructor becomes clearer as a factory method.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-13-dpr6-simplifying-method-calls/starter",
 					solutionLink:
@@ -649,10 +649,10 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Delegation Versus Inheritance Revisited",
 					content:
-						"Replace Inheritance with Delegation and Replace Delegation with Inheritance belong together because they compare the forces honestly. Java design should not worship either one uncritically."
+						"Replace Inheritance with Delegation and Replace Delegation with Inheritance belong together because they compare the forces honestly. Java design does not worship either one uncritically."
 				},
 				{
-					title: "Mini Lab: Repair a Parallel Hierarchy",
+					title: "Parallel Hierarchy Refactor Studio",
 					content:
 						"Take a Java design where hierarchy changes cascade across multiple class trees and simplify the abstraction story. Explain whether the final design is flatter, deeper, or simply cleaner."
 				},
@@ -719,12 +719,12 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "From Technique Catalog to Pattern Choice",
 					content:
-						"Refactoring techniques often pave the road into patterns instead of requiring a direct jump into pattern vocabulary. Examples should include Replace Constructor with Factory Method toward Factory Method, Replace Type Code with State or Strategy toward State or Strategy, Replace Conditional with Polymorphism toward Strategy or State, and Form Template Method toward Template Method."
+						"Refactoring techniques often pave the road into patterns instead of requiring a direct jump into pattern vocabulary. Include examples such as Replace Constructor with Factory Method toward Factory Method, Replace Type Code with State or Strategy toward State or Strategy, Replace Conditional with Polymorphism toward Strategy or State, and Form Template Method toward Template Method."
 				},
 				{
 					title: "Pattern Entry Paths from Refactoring.Guru",
 					content:
-						"Common refactoring journeys include Extract Method plus Move Method plus Extract Class toward clearer collaborators; Hide Delegate and Facade toward subsystem simplification; Introduce Local Extension plus Adapter toward boundary cleanup; and command-history refactors toward Command and Memento. The pattern should appear as the result of a sequence, not as the first move."
+						"Common refactoring journeys include Extract Method plus Move Method plus Extract Class toward clearer collaborators; Hide Delegate and Facade toward subsystem simplification; Introduce Local Extension plus Adapter toward boundary cleanup; and command-history refactors toward Command and Memento. The pattern appears as the result of a sequence, not as the first move."
 				},
 				{
 					title: "Worked Example Set: One Smell, Several Possible Destinations",
@@ -732,7 +732,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"Take one Java design problem and show more than one plausible refactoring path, such as guard clauses only, Strategy, or State. This makes good design contextual and falsifiable instead of presenting a single pattern as automatically correct."
 				},
 				{
-					title: "Mini Lab: Refactor Until the Pattern Is Obvious",
+					title: "Smell-to-Pattern Refactor Studio",
 					content:
 						"Stop after each small change and ask whether the named pattern is now justified or still premature. This builds restraint and sequence awareness."
 				},
@@ -764,7 +764,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: narrate a multi-step path from smell to pattern without skipping the intermediate refactors. Prompt: decide whether every switch statement should end in polymorphism.",
+						"Readiness check: narrate a multi-step path from smell to pattern without skipping the intermediate refactors. Prompt: decide whether every switch statement needs polymorphism.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-15-dpr8-refactoring-toward-patterns/starter",
 					solutionLink:
@@ -817,7 +817,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"Start with a class bound to time, I O, random generation, or global state and introduce seams that allow safe small changes. Connect this directly back to Singleton skepticism and public API cleanup."
 				},
 				{
-					title: "Mini Lab: Characterization Test then Structural Change",
+					title: "Characterization Test Refactor Studio",
 					content:
 						"Write or simulate a small set of characterization checks on brittle Java code, then perform a planned refactor while preserving the observable behavior. Visible pattern: The emotional difference between refactoring blind and refactoring with a safety net."
 				},
@@ -907,7 +907,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Pattern Arrival Review",
 					content:
-						"Identify which patterns genuinely emerged in the final design and which remained unnecessary. This is where the two-course sequence should finally converge into one coherent design mindset."
+						"Identify which patterns genuinely emerged in the final design and which remained unnecessary. This is where the two-course sequence converges into one coherent design mindset."
 				},
 				{
 					title: "Final Architecture Review",
@@ -1008,8 +1008,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 11 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 11: Practice Studio",
+						moduleTitle: "Refactoring Clinic 11: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1022,8 +1021,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 11 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 11: Practice Studio",
+						moduleTitle: "Refactoring Clinic 11: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1071,8 +1069,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 12 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 12: Practice Studio",
+						moduleTitle: "Refactoring Clinic 12: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1085,8 +1082,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 12 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 12: Practice Studio",
+						moduleTitle: "Refactoring Clinic 12: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1134,8 +1130,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 13 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 13: Practice Studio",
+						moduleTitle: "Refactoring Clinic 13: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1148,8 +1143,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 13 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 13: Practice Studio",
+						moduleTitle: "Refactoring Clinic 13: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1197,8 +1191,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 14 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 14: Practice Studio",
+						moduleTitle: "Refactoring Clinic 14: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1211,8 +1204,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 14 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 14: Practice Studio",
+						moduleTitle: "Refactoring Clinic 14: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1260,8 +1252,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 15 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 15: Practice Studio",
+						moduleTitle: "Refactoring Clinic 15: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1274,8 +1265,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 15 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 15: Practice Studio",
+						moduleTitle: "Refactoring Clinic 15: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1323,8 +1313,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 16 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 16: Practice Studio",
+						moduleTitle: "Refactoring Clinic 16: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1337,8 +1326,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 16 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 16: Practice Studio",
+						moduleTitle: "Refactoring Clinic 16: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1386,8 +1374,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 17 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 17: Practice Studio",
+						moduleTitle: "Refactoring Clinic 17: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1400,8 +1387,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 					title: "Refactoring Clinic 17 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
-						moduleTitle:
-							"Refactoring Clinic 17: Practice Studio",
+						moduleTitle: "Refactoring Clinic 17: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
