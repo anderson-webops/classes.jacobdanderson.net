@@ -106,7 +106,7 @@ function buildRefactoringClinicGuidance(
 ) {
 	return buildImplementationLabGuidance({
 		courseFamily: "Java design patterns",
-		moduleTitle: `Refactoring Clinic ${clinic}: Implementation Lab`,
+		moduleTitle: `Refactoring Clinic ${clinic}: Practice Studio`,
 		section,
 		context: refactoringClinicContexts[clinic]
 	});
@@ -174,7 +174,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-08-dpr1-code-smells-and-safe-refactoring-workflow/solution"
 				},
 				{
-					title: "Code Smells and Safe Refactoring Workflow Supplemental 2",
+					title: "Code Smells and Safe Refactoring Workflow Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
@@ -188,7 +188,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-01-dpr1-code-smells-and-safe-refactoring-workflow-supplemental-2/solution"
 				},
 				{
-					title: "Code Smells and Safe Refactoring Workflow Supplemental 3",
+					title: "Code Smells and Safe Refactoring Workflow Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
@@ -209,7 +209,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Refactoring.Guru Category: Composing Methods",
 					content:
-						"Cover the full category directly: Extract Method, Inline Method, Extract Variable, Inline Temp, Replace Temp with Query, Split Temporary Variable, Remove Assignments to Parameters, Replace Method with Method Object, and Substitute Algorithm. This section covers these as the core moves for taming Long Method and improving local readability."
+						"Cover the full category directly: Extract Method, Inline Method, Extract Variable, Inline Temp, Replace Temp with Query, Split Temporary Variable, Remove Assignments to Parameters, Replace Method with Method Object, and Substitute Algorithm. Together, these are the core moves for taming Long Method and improving local readability."
 				},
 				{
 					title: "Worked Example Set: Shrinking a Long Method",
@@ -229,7 +229,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Pattern Connection: Clear Methods Make Later Patterns Possible",
 					content:
-						"Strategy, Template Method, and Command become easier to introduce after method-level mess is removed. Key idea: Patterns often fail when built on top of unreadable methods."
+						"Strategy, Template Method, and Command become easier to introduce after method-level mess is removed. Patterns often fail when built on top of unreadable methods, so local clarity is part of architectural design rather than cosmetic cleanup."
 				},
 				{
 					title: "Reflection Question: When Is Extraction Enough?",
@@ -261,7 +261,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-09-dpr2-composing-methods/solution"
 				},
 				{
-					title: "Composing Methods Supplemental 2",
+					title: "Composing Methods Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR2 Composing Methods",
@@ -274,7 +274,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-03-dpr2-composing-methods-supplemental-2/solution"
 				},
 				{
-					title: "Composing Methods Supplemental 3",
+					title: "Composing Methods Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR2 Composing Methods",
@@ -304,7 +304,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Delegation Boundaries: Hide or Remove the Middle Man",
 					content:
-						"This section covers Hide Delegate and Remove Middle Man together so both sides of delegation exposure are visible. The question is not whether delegation is good, but whether the current layer is clarifying or merely forwarding everything."
+						"Hide Delegate and Remove Middle Man are best studied together because they reveal both sides of delegation exposure. The question is not whether delegation is good, but whether the current layer is clarifying or merely forwarding everything."
 				},
 				{
 					title: "Local Extension and Foreign Method for Library Friction",
@@ -346,7 +346,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-10-dpr3-moving-features-between-objects/solution"
 				},
 				{
-					title: "Moving Features Between Objects Supplemental 2",
+					title: "Moving Features Between Objects Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR3 Moving Features Between Objects",
@@ -359,7 +359,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-05-dpr3-moving-features-between-objects-supplemental-2/solution"
 				},
 				{
-					title: "Moving Features Between Objects Supplemental 3",
+					title: "Moving Features Between Objects Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR3 Moving Features Between Objects",
@@ -379,7 +379,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Refactoring.Guru Category: Organizing Data",
 					content:
-						"Cover Self Encapsulate Field, Replace Data Value with Object, Change Value to Reference, Change Reference to Value, Replace Array with Object, Duplicate Observed Data, Change Unidirectional Association to Bidirectional, Change Bidirectional Association to Unidirectional, Replace Magic Number with Symbolic Constant, Encapsulate Field, Encapsulate Collection, Replace Type Code with Class, Replace Type Code with Subclasses, Replace Type Code with State/Strategy, and Replace Subclass with Fields. This section covers the category as a way of making data expressive, explicit, and collaboration-friendly."
+						"Cover Self Encapsulate Field, Replace Data Value with Object, Change Value to Reference, Change Reference to Value, Replace Array with Object, Duplicate Observed Data, Change Unidirectional Association to Bidirectional, Change Bidirectional Association to Unidirectional, Replace Magic Number with Symbolic Constant, Encapsulate Field, Encapsulate Collection, Replace Type Code with Class, Replace Type Code with Subclasses, Replace Type Code with State/Strategy, and Replace Subclass with Fields. The category turns vague or primitive data into expressive, explicit, collaboration-friendly objects and APIs."
 				},
 				{
 					title: "Worked Example Set: Primitive Obsession and Type Codes",
@@ -389,7 +389,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Associations, Encapsulation, and Collection Safety",
 					content:
-						"This section covers field and collection encapsulation together with association direction changes so data design is treated as API design. Good refactors should make illegal states harder to represent."
+						"Field and collection encapsulation belong beside association direction changes because data design is API design. Good refactors should make illegal states harder to represent."
 				},
 				{
 					title: "Data Modeling Lab: Upgrade a Weak Domain Model",
@@ -431,7 +431,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-11-dpr4-organizing-data/solution"
 				},
 				{
-					title: "Organizing Data Supplemental 2",
+					title: "Organizing Data Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR4 Organizing Data",
@@ -444,7 +444,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-07-dpr4-organizing-data-supplemental-2/solution"
 				},
 				{
-					title: "Organizing Data Supplemental 3",
+					title: "Organizing Data Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR4 Organizing Data",
@@ -516,7 +516,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-12-dpr5-simplifying-conditional-expressions/solution"
 				},
 				{
-					title: "Simplifying Conditional Expressions Supplemental 2",
+					title: "Simplifying Conditional Expressions Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR5 Simplifying Conditional Expressions",
@@ -529,7 +529,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-09-dpr5-simplifying-conditional-expressions-supplemental-2/solution"
 				},
 				{
-					title: "Simplifying Conditional Expressions Supplemental 3",
+					title: "Simplifying Conditional Expressions Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR5 Simplifying Conditional Expressions",
@@ -549,7 +549,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Refactoring.Guru Category: Simplifying Method Calls",
 					content:
-						"Cover Rename Method, Add Parameter, Remove Parameter, Separate Query from Modifier, Parameterize Method, Introduce Parameter Object, Preserve Whole Object, Remove Setting Method, Replace Parameter with Explicit Methods, Replace Parameter with Method Call, Hide Method, Replace Constructor with Factory Method, Replace Error Code with Exception, and Replace Exception with Test. This section covers this category as API cleanup for call sites, responsibilities, and object lifecycle."
+						"Cover Rename Method, Add Parameter, Remove Parameter, Separate Query from Modifier, Parameterize Method, Introduce Parameter Object, Preserve Whole Object, Remove Setting Method, Replace Parameter with Explicit Methods, Replace Parameter with Method Call, Hide Method, Replace Constructor with Factory Method, Replace Error Code with Exception, and Replace Exception with Test. The category treats API cleanup as a design tool for clearer call sites, responsibilities, and object lifecycle."
 				},
 				{
 					title: "Worked Example Set: Cleaning a Public API",
@@ -601,7 +601,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-13-dpr6-simplifying-method-calls/solution"
 				},
 				{
-					title: "Simplifying Method Calls Supplemental 2",
+					title: "Simplifying Method Calls Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR6 Simplifying Method Calls",
@@ -614,7 +614,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-11-dpr6-simplifying-method-calls-supplemental-2/solution"
 				},
 				{
-					title: "Simplifying Method Calls Supplemental 3",
+					title: "Simplifying Method Calls Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR6 Simplifying Method Calls",
@@ -634,7 +634,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Refactoring.Guru Category: Dealing with Generalization",
 					content:
-						"Cover Pull Up Field, Pull Up Method, Pull Up Constructor Body, Push Down Field, Push Down Method, Extract Subclass, Extract Superclass, Extract Interface, Collapse Hierarchy, Form Template Method, Replace Inheritance with Delegation, and Replace Delegation with Inheritance. This section covers the category as the disciplined way to reshape inheritance and abstraction once the real variation is understood."
+						"Cover Pull Up Field, Pull Up Method, Pull Up Constructor Body, Push Down Field, Push Down Method, Extract Subclass, Extract Superclass, Extract Interface, Collapse Hierarchy, Form Template Method, Replace Inheritance with Delegation, and Replace Delegation with Inheritance. The category provides disciplined ways to reshape inheritance and abstraction once the real variation is understood."
 				},
 				{
 					title: "Worked Example Set: Fixing a Bad Hierarchy",
@@ -649,7 +649,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Delegation Versus Inheritance Revisited",
 					content:
-						"This section covers Replace Inheritance with Delegation and Replace Delegation with Inheritance together to compare the forces honestly. Java design should not worship either one uncritically."
+						"Replace Inheritance with Delegation and Replace Delegation with Inheritance belong together because they compare the forces honestly. Java design should not worship either one uncritically."
 				},
 				{
 					title: "Mini Lab: Repair a Parallel Hierarchy",
@@ -686,7 +686,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-14-dpr7-dealing-with-generalization/solution"
 				},
 				{
-					title: "Dealing with Generalization Supplemental 2",
+					title: "Dealing with Generalization Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR7 Dealing with Generalization",
@@ -699,7 +699,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-13-dpr7-dealing-with-generalization-supplemental-2/solution"
 				},
 				{
-					title: "Dealing with Generalization Supplemental 3",
+					title: "Dealing with Generalization Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR7 Dealing with Generalization",
@@ -719,7 +719,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "From Technique Catalog to Pattern Choice",
 					content:
-						"This section covers how refactoring techniques pave the road into patterns instead of jumping there directly. Examples should include Replace Constructor with Factory Method toward Factory Method, Replace Type Code with State or Strategy toward State or Strategy, Replace Conditional with Polymorphism toward Strategy or State, and Form Template Method toward Template Method."
+						"Refactoring techniques often pave the road into patterns instead of requiring a direct jump into pattern vocabulary. Examples should include Replace Constructor with Factory Method toward Factory Method, Replace Type Code with State or Strategy toward State or Strategy, Replace Conditional with Polymorphism toward Strategy or State, and Form Template Method toward Template Method."
 				},
 				{
 					title: "Pattern Entry Paths from Refactoring.Guru",
@@ -739,7 +739,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Tradeoff Review: Pattern Arrival Versus Pattern Forcing",
 					content:
-						"This section covers the difference between discovering a stable abstraction through refactoring and forcing a catalog pattern because it seems advanced. Use before-and-after change scenarios as the arbiter."
+						"Discovering a stable abstraction through refactoring is different from forcing a catalog pattern because it seems advanced. Use before-and-after change scenarios as the arbiter."
 				},
 				{
 					title: "Reflection Question: Which Step Made the Biggest Difference?",
@@ -771,7 +771,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-15-dpr8-refactoring-toward-patterns/solution"
 				},
 				{
-					title: "Refactoring Toward Patterns Supplemental 2",
+					title: "Refactoring Toward Patterns Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR8 Refactoring Toward Patterns",
@@ -784,7 +784,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-15-dpr8-refactoring-toward-patterns-supplemental-2/solution"
 				},
 				{
-					title: "Refactoring Toward Patterns Supplemental 3",
+					title: "Refactoring Toward Patterns Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR8 Refactoring Toward Patterns",
@@ -824,7 +824,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				{
 					title: "Design Review: Refactoring Pace and Reviewability",
 					content:
-						"This section covers how to package refactors into readable commits or change sets rather than one giant diff. This keeps the work maintainable for teams and future maintenance."
+						"Package refactors into readable commits or change sets rather than one giant diff. Smaller reviewed steps keep the work maintainable for teams and future maintenance."
 				},
 				{
 					title: "Reflection Question: What Let You Move Faster Safely?",
@@ -857,7 +857,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-16-dpr9-testability-di-and-refactoring-with-confidence/solution"
 				},
 				{
-					title: "Testability, DI, and Refactoring with Confidence Supplemental 2",
+					title: "Testability, DI, and Refactoring with Confidence Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
@@ -871,7 +871,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-17-dpr9-testability-di-and-refactoring-with-confidence-supplemental-2/solution"
 				},
 				{
-					title: "Testability, DI, and Refactoring with Confidence Supplemental 3",
+					title: "Testability, DI, and Refactoring with Confidence Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
@@ -944,7 +944,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-17-dpr10-capstone-refactoring-studio/solution"
 				},
 				{
-					title: "Capstone Refactoring Studio Supplemental 2",
+					title: "Capstone Refactoring Studio Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR10 Capstone Refactoring Studio",
@@ -957,7 +957,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-19-dpr10-capstone-refactoring-studio-supplemental-2/solution"
 				},
 				{
-					title: "Capstone Refactoring Studio Supplemental 3",
+					title: "Capstone Refactoring Studio Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle: "DPR10 Capstone Refactoring Studio",
@@ -972,7 +972,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Refactoring Clinic 11: Implementation Lab",
+			title: "Refactoring Clinic 11: Practice Studio",
 			curriculum: [
 				{
 					title: "Refactoring Clinic 11: Core Concepts",
@@ -1005,11 +1005,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-01-refactoring-clinic-11/solution"
 				},
 				{
-					title: "Refactoring Clinic 11 Supplemental 2: Implementation Lab",
+					title: "Refactoring Clinic 11 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 11: Implementation Lab",
+							"Refactoring Clinic 11: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1019,11 +1019,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-21-applied-studio-11-refactoring-clinic-11-supplemental-2/solution"
 				},
 				{
-					title: "Refactoring Clinic 11 Supplemental 3: Implementation Lab",
+					title: "Refactoring Clinic 11 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 11: Implementation Lab",
+							"Refactoring Clinic 11: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1035,7 +1035,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Refactoring Clinic 12: Implementation Lab",
+			title: "Refactoring Clinic 12: Practice Studio",
 			curriculum: [
 				{
 					title: "Refactoring Clinic 12: Core Concepts",
@@ -1068,11 +1068,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-02-refactoring-clinic-12/solution"
 				},
 				{
-					title: "Refactoring Clinic 12 Supplemental 2: Implementation Lab",
+					title: "Refactoring Clinic 12 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 12: Implementation Lab",
+							"Refactoring Clinic 12: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1082,11 +1082,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-23-applied-studio-12-refactoring-clinic-12-supplemental-2/solution"
 				},
 				{
-					title: "Refactoring Clinic 12 Supplemental 3: Implementation Lab",
+					title: "Refactoring Clinic 12 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 12: Implementation Lab",
+							"Refactoring Clinic 12: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1098,7 +1098,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Refactoring Clinic 13: Implementation Lab",
+			title: "Refactoring Clinic 13: Practice Studio",
 			curriculum: [
 				{
 					title: "Refactoring Clinic 13: Core Concepts",
@@ -1131,11 +1131,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-03-refactoring-clinic-13/solution"
 				},
 				{
-					title: "Refactoring Clinic 13 Supplemental 2: Implementation Lab",
+					title: "Refactoring Clinic 13 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 13: Implementation Lab",
+							"Refactoring Clinic 13: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1145,11 +1145,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-25-applied-studio-13-refactoring-clinic-13-supplemental-2/solution"
 				},
 				{
-					title: "Refactoring Clinic 13 Supplemental 3: Implementation Lab",
+					title: "Refactoring Clinic 13 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 13: Implementation Lab",
+							"Refactoring Clinic 13: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1161,7 +1161,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Refactoring Clinic 14: Implementation Lab",
+			title: "Refactoring Clinic 14: Practice Studio",
 			curriculum: [
 				{
 					title: "Refactoring Clinic 14: Core Concepts",
@@ -1194,11 +1194,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-04-refactoring-clinic-14/solution"
 				},
 				{
-					title: "Refactoring Clinic 14 Supplemental 2: Implementation Lab",
+					title: "Refactoring Clinic 14 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 14: Implementation Lab",
+							"Refactoring Clinic 14: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1208,11 +1208,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-27-applied-studio-14-refactoring-clinic-14-supplemental-2/solution"
 				},
 				{
-					title: "Refactoring Clinic 14 Supplemental 3: Implementation Lab",
+					title: "Refactoring Clinic 14 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 14: Implementation Lab",
+							"Refactoring Clinic 14: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1224,7 +1224,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Refactoring Clinic 15: Implementation Lab",
+			title: "Refactoring Clinic 15: Practice Studio",
 			curriculum: [
 				{
 					title: "Refactoring Clinic 15: Core Concepts",
@@ -1257,11 +1257,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-05-refactoring-clinic-15/solution"
 				},
 				{
-					title: "Refactoring Clinic 15 Supplemental 2: Implementation Lab",
+					title: "Refactoring Clinic 15 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 15: Implementation Lab",
+							"Refactoring Clinic 15: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1271,11 +1271,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-29-applied-studio-15-refactoring-clinic-15-supplemental-2/solution"
 				},
 				{
-					title: "Refactoring Clinic 15 Supplemental 3: Implementation Lab",
+					title: "Refactoring Clinic 15 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 15: Implementation Lab",
+							"Refactoring Clinic 15: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1287,7 +1287,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Refactoring Clinic 16: Implementation Lab",
+			title: "Refactoring Clinic 16: Practice Studio",
 			curriculum: [
 				{
 					title: "Refactoring Clinic 16: Core Concepts",
@@ -1320,11 +1320,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-06-refactoring-clinic-16/solution"
 				},
 				{
-					title: "Refactoring Clinic 16 Supplemental 2: Implementation Lab",
+					title: "Refactoring Clinic 16 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 16: Implementation Lab",
+							"Refactoring Clinic 16: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1334,11 +1334,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-31-applied-studio-16-refactoring-clinic-16-supplemental-2/solution"
 				},
 				{
-					title: "Refactoring Clinic 16 Supplemental 3: Implementation Lab",
+					title: "Refactoring Clinic 16 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 16: Implementation Lab",
+							"Refactoring Clinic 16: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1350,7 +1350,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Refactoring Clinic 17: Implementation Lab",
+			title: "Refactoring Clinic 17: Practice Studio",
 			curriculum: [
 				{
 					title: "Refactoring Clinic 17: Core Concepts",
@@ -1383,11 +1383,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-07-refactoring-clinic-17/solution"
 				},
 				{
-					title: "Refactoring Clinic 17 Supplemental 2: Implementation Lab",
+					title: "Refactoring Clinic 17 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 17: Implementation Lab",
+							"Refactoring Clinic 17: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1397,11 +1397,11 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPR-33-applied-studio-17-refactoring-clinic-17-supplemental-2/solution"
 				},
 				{
-					title: "Refactoring Clinic 17 Supplemental 3: Implementation Lab",
+					title: "Refactoring Clinic 17 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java Part 2",
 						moduleTitle:
-							"Refactoring Clinic 17: Implementation Lab",
+							"Refactoring Clinic 17: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
