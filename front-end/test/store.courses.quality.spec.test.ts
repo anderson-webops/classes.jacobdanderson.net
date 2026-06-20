@@ -2517,6 +2517,8 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/Key idea:/i);
 		expect(corpus).not.toMatch(/Skill target:/i);
 		expect(corpus).not.toMatch(/The goal is to/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
 		expect(corpus).toContain(
 			"`grep`, `find`, `rg`, `sort`, `uniq`, `wc`, and `xargs` work as a family"
 		);
@@ -2526,6 +2528,20 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"`journalctl` is the central way to read systemd-managed service output"
 		);
+		expect(corpus).toContain("Shell Pipeline Transfer Practice");
+		expect(corpus).toContain("systemd Service Transfer Practice");
+		expect(corpus).toContain("Backup Reliability Extension Practice");
+		expect(corpus).toContain(
+			"Linux Systems Lab 14: Service Deployment Studio"
+		);
+		expect(corpus).toContain(
+			"Linux Systems Lab 15: Automation and Observability Studio"
+		);
+		expect(corpus).toContain("Linux Systems Lab 16: Backup Recovery Studio");
+		expect(corpus).toContain(
+			"Linux Systems Lab 17: Operations Capstone Studio"
+		);
+		expect(corpus).toContain("Operations Capstone Extension Practice");
 	});
 
 	it("keeps Web Development Foundations guidance specific", async () => {

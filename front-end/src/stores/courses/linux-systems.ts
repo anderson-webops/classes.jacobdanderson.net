@@ -49,7 +49,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS1-Personal-Lab-VM/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 2",
+					title: "Setup and Tooling Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "LS0 Setup and Tooling",
@@ -62,7 +62,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-01-ls0-setup-and-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 3",
+					title: "Setup and Tooling Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "LS0 Setup and Tooling",
@@ -124,7 +124,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-05-unit-1-shell-foundations/solution"
 				},
 				{
-					title: "Unit 1: Shell Foundations supplemental 2",
+					title: "Shell Pipeline Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 1: Shell Foundations",
@@ -137,7 +137,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-03-unit-1-shell-foundations-supplemental-2/solution"
 				},
 				{
-					title: "Unit 1: Shell Foundations supplemental 3",
+					title: "Shell Pipeline Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 1: Shell Foundations",
@@ -190,7 +190,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS2-Static-Site-from-srv/solution"
 				},
 				{
-					title: "Unit 2: Filesystem Hierarchy and Directory Purpose supplemental 2",
+					title: "Filesystem Layout Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle:
@@ -204,7 +204,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-05-unit-2-filesystem-hierarchy-and-directory-purpose-supplemental-2/solution"
 				},
 				{
-					title: "Unit 2: Filesystem Hierarchy and Directory Purpose supplemental 3",
+					title: "Filesystem Layout Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle:
@@ -267,7 +267,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-06-unit-3-users-groups-and-permissions/solution"
 				},
 				{
-					title: "Unit 3: Users, Groups, and Permissions supplemental 2",
+					title: "Permissions Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 3: Users, Groups, and Permissions",
@@ -280,7 +280,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-07-unit-3-users-groups-and-permissions-supplemental-2/solution"
 				},
 				{
-					title: "Unit 3: Users, Groups, and Permissions supplemental 3",
+					title: "Permissions Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 3: Users, Groups, and Permissions",
@@ -342,7 +342,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-07-unit-4-editing-and-configuration/solution"
 				},
 				{
-					title: "Unit 4: Editing and Configuration supplemental 2",
+					title: "Configuration Editing Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 4: Editing and Configuration",
@@ -355,7 +355,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-09-unit-4-editing-and-configuration-supplemental-2/solution"
 				},
 				{
-					title: "Unit 4: Editing and Configuration supplemental 3",
+					title: "Configuration Editing Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 4: Editing and Configuration",
@@ -417,7 +417,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-08-unit-5-processes-and-job-control/solution"
 				},
 				{
-					title: "Unit 5: Processes and Job Control supplemental 2",
+					title: "Process Control Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 5: Processes and Job Control",
@@ -430,7 +430,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-11-unit-5-processes-and-job-control-supplemental-2/solution"
 				},
 				{
-					title: "Unit 5: Processes and Job Control supplemental 3",
+					title: "Process Control Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 5: Processes and Job Control",
@@ -488,7 +488,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS5-Systemd-Toy-Service/solution"
 				},
 				{
-					title: "Unit 6: Services and systemd supplemental 2",
+					title: "systemd Service Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 6: Services and systemd",
@@ -501,7 +501,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-13-unit-6-services-and-systemd-supplemental-2/solution"
 				},
 				{
-					title: "Unit 6: Services and systemd supplemental 3",
+					title: "systemd Service Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 6: Services and systemd",
@@ -563,7 +563,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-09-unit-7-logging-and-observability/solution"
 				},
 				{
-					title: "Unit 7: Logging and Observability supplemental 2",
+					title: "Log Investigation Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 7: Logging and Observability",
@@ -576,7 +576,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-15-unit-7-logging-and-observability-supplemental-2/solution"
 				},
 				{
-					title: "Unit 7: Logging and Observability supplemental 3",
+					title: "Log Investigation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 7: Logging and Observability",
@@ -634,7 +634,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS6-Backup-Cron-and-Timer/solution"
 				},
 				{
-					title: "Unit 8: Scheduling and Automation supplemental 2",
+					title: "Automation Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 8: Scheduling and Automation",
@@ -647,7 +647,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-17-unit-8-scheduling-and-automation-supplemental-2/solution"
 				},
 				{
-					title: "Unit 8: Scheduling and Automation supplemental 3",
+					title: "Automation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 8: Scheduling and Automation",
@@ -710,7 +710,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-10-unit-9-package-management-and-software-layout/solution"
 				},
 				{
-					title: "Unit 9: Package Management and Software Layout supplemental 2",
+					title: "Package Layout Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle:
@@ -724,7 +724,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-19-unit-9-package-management-and-software-layout-supplemental-2/solution"
 				},
 				{
-					title: "Unit 9: Package Management and Software Layout supplemental 3",
+					title: "Package Layout Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle:
@@ -787,7 +787,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-11-unit-10-networking-from-a-systems-view/solution"
 				},
 				{
-					title: "Unit 10: Networking from a Systems View supplemental 2",
+					title: "Network Diagnostics Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 10: Networking from a Systems View",
@@ -800,7 +800,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-21-unit-10-networking-from-a-systems-view-supplemental-2/solution"
 				},
 				{
-					title: "Unit 10: Networking from a Systems View supplemental 3",
+					title: "Network Diagnostics Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 10: Networking from a Systems View",
@@ -867,7 +867,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS3-Nginx-Reverse-Proxy-App/solution"
 				},
 				{
-					title: "Unit 11: Web Servers supplemental 2",
+					title: "Web Server Deployment Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 11: Web Servers",
@@ -880,7 +880,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-23-unit-11-web-servers-supplemental-2/solution"
 				},
 				{
-					title: "Unit 11: Web Servers supplemental 3",
+					title: "Web Server Deployment Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle: "Unit 11: Web Servers",
@@ -943,7 +943,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-12-unit-12-storage-backups-and-reliability/solution"
 				},
 				{
-					title: "Unit 12: Storage, Backups, and Reliability supplemental 2",
+					title: "Backup Reliability Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle:
@@ -957,7 +957,7 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-25-unit-12-storage-backups-and-reliability-supplemental-2/solution"
 				},
 				{
-					title: "Unit 12: Storage, Backups, and Reliability supplemental 3",
+					title: "Backup Reliability Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
 						moduleTitle:
@@ -973,29 +973,29 @@ export const linuxSystemsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Linux Systems Lab 14: Implementation Lab",
+			title: "Linux Systems Lab 14: Service Deployment Studio",
 			curriculum: [
 				{
-					title: "Linux Systems Lab 14: Core Concepts",
+					title: "Service Deployment Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Linux Systems Lab 14: Guided Example",
+					title: "Service Deployment Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Linux Systems Lab 14: Core Project",
+					title: "Service Deployment Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1004,20 +1004,20 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-01-linux-systems-lab-14/solution"
 				},
 				{
-					title: "Linux Systems Lab 14: Review and Reflection",
+					title: "Service Deployment Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Linux Systems Lab 14: Extension Challenge",
+					title: "Service Deployment Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1026,10 +1026,10 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-01-linux-systems-lab-14/solution"
 				},
 				{
-					title: "Linux Systems Lab 14 supplemental 2: Implementation Lab",
+					title: "Service Deployment Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1039,10 +1039,10 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-27-applied-studio-14-linux-systems-lab-14-supplemental-2/solution"
 				},
 				{
-					title: "Linux Systems Lab 14 supplemental 3: Implementation Lab",
+					title: "Service Deployment Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1054,29 +1054,32 @@ export const linuxSystemsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Linux Systems Lab 15: Implementation Lab",
+			title: "Linux Systems Lab 15: Automation and Observability Studio",
 			curriculum: [
 				{
-					title: "Linux Systems Lab 15: Core Concepts",
+					title: "Automation and Observability Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 15: Implementation Lab",
+						moduleTitle:
+							"Linux Systems Lab 15: Automation and Observability Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Linux Systems Lab 15: Guided Example",
+					title: "Automation and Observability Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 15: Implementation Lab",
+						moduleTitle:
+							"Linux Systems Lab 15: Automation and Observability Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Linux Systems Lab 15: Core Project",
+					title: "Automation and Observability Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 15: Implementation Lab",
+						moduleTitle:
+							"Linux Systems Lab 15: Automation and Observability Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1085,20 +1088,22 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-02-linux-systems-lab-15/solution"
 				},
 				{
-					title: "Linux Systems Lab 15: Review and Reflection",
+					title: "Automation and Observability Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 15: Implementation Lab",
+						moduleTitle:
+							"Linux Systems Lab 15: Automation and Observability Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Linux Systems Lab 15: Extension Challenge",
+					title: "Automation and Observability Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 15: Implementation Lab",
+						moduleTitle:
+							"Linux Systems Lab 15: Automation and Observability Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1107,10 +1112,11 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-02-linux-systems-lab-15/solution"
 				},
 				{
-					title: "Linux Systems Lab 15 supplemental 2: Implementation Lab",
+					title: "Automation Observability Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 15: Implementation Lab",
+						moduleTitle:
+							"Linux Systems Lab 15: Automation and Observability Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1120,10 +1126,11 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-29-applied-studio-15-linux-systems-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "Linux Systems Lab 15 supplemental 3: Implementation Lab",
+					title: "Automation Observability Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 15: Implementation Lab",
+						moduleTitle:
+							"Linux Systems Lab 15: Automation and Observability Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1135,29 +1142,29 @@ export const linuxSystemsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Linux Systems Lab 16: Implementation Lab",
+			title: "Linux Systems Lab 16: Backup Recovery Studio",
 			curriculum: [
 				{
-					title: "Linux Systems Lab 16: Core Concepts",
+					title: "Backup Recovery Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Linux Systems Lab 16: Guided Example",
+					title: "Backup Recovery Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Linux Systems Lab 16: Core Project",
+					title: "Backup Recovery Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1166,20 +1173,20 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-03-linux-systems-lab-16/solution"
 				},
 				{
-					title: "Linux Systems Lab 16: Review and Reflection",
+					title: "Backup Recovery Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Linux Systems Lab 16: Extension Challenge",
+					title: "Backup Recovery Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1188,10 +1195,10 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-03-linux-systems-lab-16/solution"
 				},
 				{
-					title: "Linux Systems Lab 16 supplemental 2: Implementation Lab",
+					title: "Backup Recovery Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1201,10 +1208,10 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-31-applied-studio-16-linux-systems-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "Linux Systems Lab 16 supplemental 3: Implementation Lab",
+					title: "Backup Recovery Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1216,29 +1223,29 @@ export const linuxSystemsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Linux Systems Lab 17: Implementation Lab",
+			title: "Linux Systems Lab 17: Operations Capstone Studio",
 			curriculum: [
 				{
-					title: "Linux Systems Lab 17: Core Concepts",
+					title: "Operations Capstone Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Linux Systems Lab 17: Guided Example",
+					title: "Operations Capstone Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Linux Systems Lab 17: Core Project",
+					title: "Operations Capstone Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1247,20 +1254,20 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-04-linux-systems-lab-17/solution"
 				},
 				{
-					title: "Linux Systems Lab 17: Review and Reflection",
+					title: "Operations Capstone Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Linux Systems Lab 17: Extension Challenge",
+					title: "Operations Capstone Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1269,10 +1276,10 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-04-linux-systems-lab-17/solution"
 				},
 				{
-					title: "Linux Systems Lab 17 supplemental 2: Implementation Lab",
+					title: "Operations Capstone Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1282,10 +1289,10 @@ export const linuxSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS-33-applied-studio-17-linux-systems-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "Linux Systems Lab 17 supplemental 3: Implementation Lab",
+					title: "Operations Capstone Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Implementation Lab",
+						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
