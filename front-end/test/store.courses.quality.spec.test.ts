@@ -4504,9 +4504,14 @@ describe("course text quality normalization", () => {
 		expect(source).not.toMatch(/\bKey idea:/i);
 		expect(source).not.toMatch(/\bThis section covers\b/i);
 		expect(source).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(source).not.toMatch(/\bMini Lab\b/i);
+		expect(source).not.toMatch(/\bshould\b/i);
 		expect(corpus).not.toMatch(/\bSkill target:/i);
 		expect(corpus).not.toMatch(/\bPractice target:/i);
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bMini Lab\b/i);
+		expect(corpus).toContain("First Blank SwiftUI App Studio");
+		expect(corpus).toContain("First Launch Troubleshooting Studio");
 		expect(corpus).toContain(
 			"Each step changes the signing requirements, metadata expectations, and audience that can access the build."
 		);
