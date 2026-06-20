@@ -203,31 +203,31 @@ const dataCatalogs: Record<string, string[]> = {
 
 const scienceResourceLinks: Record<
 	string,
-	{ mediaLink: string; datasetLink: string }
+	{ catalogLink: string; datasetLink: string }
 > = {
 	"elementary-science": {
-		mediaLink:
+		catalogLink:
 			"https://phet.colorado.edu/en/simulations/filter?subjects=elementary-school",
 		datasetLink:
 			"https://www.noaa.gov/education/resource-collections/weather-atmosphere"
 	},
 	"middle-school-integrated-science": {
-		mediaLink:
+		catalogLink:
 			"https://phet.colorado.edu/en/simulations/filter?subjects=middle-school",
 		datasetLink: "https://www.biointeractive.org/classroom-resources"
 	},
 	"intro-to-chemistry": {
-		mediaLink:
+		catalogLink:
 			"https://phet.colorado.edu/en/simulations/filter?subjects=chemistry",
 		datasetLink: "https://pubchem.ncbi.nlm.nih.gov/"
 	},
 	"intro-to-physics": {
-		mediaLink:
+		catalogLink:
 			"https://phet.colorado.edu/en/simulations/filter?subjects=physics",
 		datasetLink: "https://www.nasa.gov/stem-content/"
 	},
 	"physics-level-2": {
-		mediaLink:
+		catalogLink:
 			"https://phet.colorado.edu/en/simulations/filter?subjects=physics",
 		datasetLink: "https://www.nist.gov/pml/weights-and-measures/si-units"
 	}
@@ -1256,9 +1256,13 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 				content: [
 					`**Remote investigation:** ${guidance.remoteInvestigation} Required work avoids household materials, lab kits, heat, chemicals, electricity components, and outdoor data collection.`,
 					`**Resource shortlist:**\n${bullets(resources)}`,
+					links?.catalogLink
+						? `**Simulation catalog:** ${links.catalogLink}. Use the catalog to choose a specific simulation before recording observations, variables, and model limitations.`
+						: "",
 					"**Evidence target:** Every investigation names the phenomenon, the source of evidence, the vocabulary target, and the CER prompt."
-				].join("\n\n"),
-				mediaLink: links?.mediaLink,
+				]
+					.filter(Boolean)
+					.join("\n\n"),
 				datasetLink: links?.datasetLink
 			},
 			{
@@ -1295,7 +1299,7 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 					`**Changed-condition prediction:** Predict what would happen if ${guidance.changedCondition} changed, then state what evidence would confirm or challenge that prediction.`,
 					"**Completion checks:**\n- The evidence comes from the shared source.\n- The reasoning explains why the evidence supports the claim.\n- The work includes a prediction for what would change if one variable changed."
 				].join("\n\n"),
-				mediaLink: links?.mediaLink
+				datasetLink: links?.catalogLink
 			},
 			{
 				title: "Resource Project: Model Critique",
