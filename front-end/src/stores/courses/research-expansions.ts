@@ -154,37 +154,37 @@ function projectOptionGoal(
 			: ` The option focus is: ${optionDescription}.`;
 
 	if (family.includes("scratch")) {
-		return `**Project goal:** Build **${optionTitle}** as a playable ${courseLabel} project with clear sprite roles, event flow, state changes, and end conditions.${optionContext}`;
+		return `**Goal:** Build **${optionTitle}** as a playable ${courseLabel} project with clear sprite roles, event flow, state changes, and end conditions.${optionContext}`;
 	}
 	if (family.includes("python")) {
-		return `**Project goal:** Implement **${optionTitle}** for ${courseLabel} with named inputs, reusable functions or classes where helpful, and reproducible console or file output.${optionContext}`;
+		return `**Goal:** Implement **${optionTitle}** for ${courseLabel} with named inputs, reusable functions or classes where helpful, and reproducible console or file output.${optionContext}`;
 	}
 	if (family.includes("pygame")) {
-		return `**Project goal:** Prototype **${optionTitle}** as a game loop with actors, controls, collision or state rules, scoring or progress feedback, and a reset path.${optionContext}`;
+		return `**Goal:** Prototype **${optionTitle}** as a game loop with actors, controls, collision or state rules, scoring or progress feedback, and a reset path.${optionContext}`;
 	}
 	if (family.includes("data") || family.includes("machine learning")) {
-		return `**Project goal:** Complete **${optionTitle}** for ${courseLabel} as an analysis artifact with a defined question, source data, cleaning or feature choices, evidence, and limitations.${optionContext}`;
+		return `**Goal:** Complete **${optionTitle}** for ${courseLabel} as an analysis artifact with a defined question, source data, cleaning or feature choices, evidence, and limitations.${optionContext}`;
 	}
 	if (family.includes("ai")) {
-		return `**Project goal:** Build **${optionTitle}** for ${courseLabel} as a reasoning artifact with an explicit state representation, decision rule or search strategy, traceable output, and limitation note.${optionContext}`;
+		return `**Goal:** Build **${optionTitle}** for ${courseLabel} as a reasoning artifact with an explicit state representation, decision rule or search strategy, traceable output, and limitation note.${optionContext}`;
 	}
 	if (family.includes("algebra")) {
-		return `**Project goal:** Use **${optionTitle}** to model, solve, graph, or justify relationships in ${courseLabel} with visible steps and a reasonableness check.${optionContext}`;
+		return `**Goal:** Use **${optionTitle}** to model, solve, graph, or justify relationships in ${courseLabel} with visible steps and a reasonableness check.${optionContext}`;
 	}
 	if (family.includes("c++")) {
-		return `**Project goal:** Build **${optionTitle}** for ${courseLabel} as a program with a documented compile command, data representation, ownership or container decision, and test cases.${optionContext}`;
+		return `**Goal:** Build **${optionTitle}** for ${courseLabel} as a program with a documented compile command, data representation, ownership or container decision, and test cases.${optionContext}`;
 	}
 	if (family.includes("javascript") || family.includes("web")) {
-		return `**Project goal:** Build **${optionTitle}** for ${courseLabel} as a browser feature with visible UI state, event handling, validation, and responsive layout evidence.${optionContext}`;
+		return `**Goal:** Build **${optionTitle}** for ${courseLabel} as a browser feature with visible UI state, event handling, validation, and responsive layout evidence.${optionContext}`;
 	}
 	if (family.includes("java")) {
-		return `**Project goal:** Implement **${optionTitle}** for ${courseLabel} as a Java artifact with clear class responsibilities, method contracts, state changes, and compile/run evidence.${optionContext}`;
+		return `**Goal:** Implement **${optionTitle}** for ${courseLabel} as a Java artifact with clear class responsibilities, method contracts, state changes, and compile/run evidence.${optionContext}`;
 	}
 	if (family.includes("usaco")) {
-		return `**Project goal:** Solve **${optionTitle}** as a contest problem for ${courseLabel} with exact input/output behavior, constraints, invariants, and complexity reasoning.${optionContext}`;
+		return `**Goal:** Solve **${optionTitle}** as a contest problem for ${courseLabel} with exact input/output behavior, constraints, invariants, and complexity reasoning.${optionContext}`;
 	}
 	if (isScienceFamily(family)) {
-		return `**Project goal:** Investigate **${optionTitle}** for ${courseLabel} as a model, data, or explanation task that connects a claim to evidence and reasoning.${optionContext}`;
+		return `**Goal:** Investigate **${optionTitle}** for ${courseLabel} as a model, data, or explanation task that connects a claim to evidence and reasoning.${optionContext}`;
 	}
 	if (
 		family.includes("security") ||
@@ -192,15 +192,15 @@ function projectOptionGoal(
 		family.includes("linux") ||
 		family.includes("network")
 	) {
-		return `**Project goal:** Complete **${optionTitle}** for ${courseLabel} as a local lab with explicit scope, allowed target, command evidence, interpretation, and rollback or remediation.${optionContext}`;
+		return `**Goal:** Complete **${optionTitle}** for ${courseLabel} as a local lab with explicit scope, allowed target, command evidence, interpretation, and rollback or remediation.${optionContext}`;
 	}
 	if (family.includes("swift")) {
-		return `**Project goal:** Build **${optionTitle}** for ${courseLabel} as an app feature with a defined screen, state owner, user flow, simulator evidence, and accessibility check.${optionContext}`;
+		return `**Goal:** Build **${optionTitle}** for ${courseLabel} as an app feature with a defined screen, state owner, user flow, simulator evidence, and accessibility check.${optionContext}`;
 	}
 	if (family.includes("unity")) {
-		return `**Project goal:** Build **${optionTitle}** as a Unity scene or mechanic for ${courseLabel} with player action, state feedback, playtest evidence, and reset behavior.${optionContext}`;
+		return `**Goal:** Build **${optionTitle}** as a Unity scene or mechanic for ${courseLabel} with player action, state feedback, playtest evidence, and reset behavior.${optionContext}`;
 	}
-	return `**Project goal:** Complete **${optionTitle}** for ${courseLabel} as an artifact with named inputs, expected behavior, evidence of correctness, and one limitation or edge case.${optionContext}`;
+	return `**Goal:** Complete **${optionTitle}** for ${courseLabel} as an artifact with named inputs, expected behavior, evidence of correctness, and one limitation or edge case.${optionContext}`;
 }
 
 function projectOptionRequiredOutcome(
@@ -218,19 +218,19 @@ function projectOptionRequiredOutcome(
 		];
 
 	if (family.includes("scratch")) {
-		return `**Required outcome:**\n- Name the sprites, events, variables, broadcasts, or clones that control the project.\n- Show one standard play path and one reset, win/loss, scoring, or boundary condition.\n- Explain the main Scratch state or event-flow decision in the ${courseLabel} context.`;
+		return `**Outcome:**\n- Name the sprites, events, variables, broadcasts, or clones that control the project.\n- Show one standard play path and one reset, win/loss, scoring, or boundary condition.\n- Explain the main Scratch state or event-flow decision in the ${courseLabel} context.`;
 	}
 	if (family.includes("data") || family.includes("machine learning")) {
-		return "**Required outcome:**\n- State the question, dataset, key columns or features, and cleaning or modeling choice.\n- Include a baseline, sanity check, metric, visualization, or small trace.\n- Explain what the evidence supports and one limitation of the result.";
+		return "**Outcome:**\n- State the question, dataset, key columns or features, and cleaning or modeling choice.\n- Include a baseline, sanity check, metric, visualization, or small trace.\n- Explain what the evidence supports and one limitation of the result.";
 	}
 	if (family.includes("ai")) {
-		return "**Required outcome:**\n- Define the state representation, action space, rule, search, or scoring method.\n- Trace one standard case and one case where the strategy behaves poorly or ambiguously.\n- Explain why the strategy is reasonable and where it is limited.";
+		return "**Outcome:**\n- Define the state representation, action space, rule, search, or scoring method.\n- Trace one standard case and one case where the strategy behaves poorly or ambiguously.\n- Explain why the strategy is reasonable and where it is limited.";
 	}
 	if (family.includes("algebra")) {
-		return "**Required outcome:**\n- Show the rule, equation, graph, table, or transformation being used.\n- Include one standard case and one sign, unit, intercept, domain, or boundary check.\n- Explain how the result is known to be reasonable.";
+		return "**Outcome:**\n- Show the rule, equation, graph, table, or transformation being used.\n- Include one standard case and one sign, unit, intercept, domain, or boundary check.\n- Explain how the result is known to be reasonable.";
 	}
 	if (isScienceFamily(family)) {
-		return "**Required outcome:**\n- State the phenomenon or question, model or data source, claim, and relevant vocabulary.\n- Separate the observation, pattern, and explanation.\n- Connect evidence to the claim and name one model limitation or uncertainty.";
+		return "**Outcome:**\n- State the phenomenon or question, model or data source, claim, and relevant vocabulary.\n- Separate the observation, pattern, and explanation.\n- Connect evidence to the claim and name one model limitation or uncertainty.";
 	}
 	if (
 		family.includes("security") ||
@@ -238,26 +238,26 @@ function projectOptionRequiredOutcome(
 		family.includes("linux") ||
 		family.includes("network")
 	) {
-		return `**Required outcome:**\n- State the local scope, target, starting state, allowed tools, and stop condition.\n- Record command, configuration, trace, or log evidence before and after the change.\n- Explain the impact and the ${courseLabel} rollback, mitigation, or verification step.`;
+		return `**Outcome:**\n- State the local scope, target, starting state, allowed tools, and stop condition.\n- Record command, configuration, trace, or log evidence before and after the change.\n- Explain the impact and the ${courseLabel} rollback, mitigation, or verification step.`;
 	}
 	if (family.includes("usaco")) {
-		return "**Required outcome:**\n- Translate the prompt into input format, output format, constraints, and invariant.\n- Pass the sample and at least one tiny, boundary, duplicate, tie, or adversarial custom case.\n- State the time and memory complexity in relation to the constraints.";
+		return "**Outcome:**\n- Translate the prompt into input format, output format, constraints, and invariant.\n- Pass the sample and at least one tiny, boundary, duplicate, tie, or adversarial custom case.\n- State the time and memory complexity in relation to the constraints.";
 	}
 	if (family.includes("javascript") || family.includes("web")) {
-		return "**Required outcome:**\n- Identify the UI state, event handler, data flow, validation path, and visible output.\n- Test with a fresh load, normal action, empty or error case, and responsive layout when relevant.\n- Explain the main DOM, API, state, or accessibility decision.";
+		return "**Outcome:**\n- Identify the UI state, event handler, data flow, validation path, and visible output.\n- Test with a fresh load, normal action, empty or error case, and responsive layout when relevant.\n- Explain the main DOM, API, state, or accessibility decision.";
 	}
 	if (family.includes("java")) {
-		return `**Required outcome:**\n- Identify the classes, fields, method contracts, and object-state changes.\n- Compile and run one standard case and one boundary or edge case.\n- Explain the main type, inheritance, interface, collection, or record decision in the ${courseLabel} context.`;
+		return `**Outcome:**\n- Identify the classes, fields, method contracts, and object-state changes.\n- Compile and run one standard case and one boundary or edge case.\n- Explain the main type, inheritance, interface, collection, or record decision in the ${courseLabel} context.`;
 	}
 	if (family.includes("c++")) {
-		return `**Required outcome:**\n- Name the data representation, ownership or lifetime assumption, compile command, and expected output.\n- Build with ${courseLabel} warnings when possible and test standard, boundary, and malformed input.\n- Explain the container, pointer/reference, memory, or algorithm decision.`;
+		return `**Outcome:**\n- Name the data representation, ownership or lifetime assumption, compile command, and expected output.\n- Build with ${courseLabel} warnings when possible and test standard, boundary, and malformed input.\n- Explain the container, pointer/reference, memory, or algorithm decision.`;
 	}
 
 	return choose([
-		`**Required outcome:**\n- Define the inputs, output or artifact, success condition, and evidence source.\n- Include one standard case, a boundary case, and one failure-mode case.\n- Explain the main design, model, proof, or reasoning decision in the ${courseLabel} context.`,
-		`**Required outcome:**\n- State the starting context, target result, evidence source, and one assumption that could fail.\n- Check a representative case and one edge or transfer case.\n- Explain the reasoning choice that makes the ${courseLabel} result valid.`,
-		`**Required outcome:**\n- Name the artifact, inputs, constraints, output, and verification evidence.\n- Test the standard path plus one boundary, exception, or changed-condition path.\n- Explain the main tradeoff or model decision in the ${courseLabel} context.`,
-		`**Required outcome:**\n- Identify what is being built or solved, what counts as success, and how the result will be checked.\n- Include one small traceable case and one nontrivial case.\n- Explain which ${courseLabel} concept controls the final behavior.`
+		`**Outcome:**\n- Define the inputs, output or artifact, success condition, and evidence source.\n- Include one standard case, a boundary case, and one failure-mode case.\n- Explain the main design, model, proof, or reasoning decision in the ${courseLabel} context.`,
+		`**Outcome:**\n- State the starting context, target result, evidence source, and one assumption that could fail.\n- Check a representative case and one edge or transfer case.\n- Explain the reasoning choice that makes the ${courseLabel} result valid.`,
+		`**Outcome:**\n- Name the artifact, inputs, constraints, output, and verification evidence.\n- Test the standard path plus one boundary, exception, or changed-condition path.\n- Explain the main tradeoff or model decision in the ${courseLabel} context.`,
+		`**Outcome:**\n- Identify what is being built or solved, what counts as success, and how the result will be checked.\n- Include one small traceable case and one nontrivial case.\n- Explain which ${courseLabel} concept controls the final behavior.`
 	]);
 }
 
@@ -377,7 +377,7 @@ function buildStandardsModule(
 						courseLabel,
 						`In ${courseLabel}, each core-skill item can become a short explanation, a practice check, or a focused review path depending on the current need.`
 					),
-					`**Readiness evidence:** Lesson or project readiness in ${courseLabel} requires a concrete explanation, worked example, practice task, and observable work for one of these skills.`
+					`**Readiness:** Lesson or project readiness in ${courseLabel} requires a concrete explanation, worked example, practice task, and observable work for one of these skills.`
 				].join("\n\n")
 			},
 			{
@@ -451,36 +451,36 @@ function buildSequencingModule(
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Readiness Checklist`,
+				title: `${courseLabel} Module Alignment Guide`,
 				content: [
-					`**Readiness checklist:** This checklist keeps ${courseLabel} modules concrete, sequenced, and easy to check.`,
+					`**Alignment guide:** Strong ${courseLabel} modules connect the concept, example, project, and checkpoint to the same target skill.`,
 					`**Alignment test:** In a complete ${courseLabel} module, the concept, project, and checkpoint all practice the same skill. If the ${courseLabel} checkpoint checks a different skill than the project practices, the module needs a clearer project target before it is ready.`,
-					`**Ready modules show:**\n- Each ${courseLabel} module has a named prerequisite and observable outcome.\n- Each ${courseLabel} project has required behavior, test cases, and an extension.\n- The ${courseLabel} checkpoint format matches the work: code trace, rubric, CER response, math justification, security report, or model evaluation.\n- Any ${courseLabel} toolchain, dataset, simulation, or source-code dependency is linked and version-aware.`
+					`**Aligned modules show:**\n- Each ${courseLabel} module has a named prerequisite and observable outcome.\n- Each ${courseLabel} project has required behavior, test cases, and an extension.\n- The ${courseLabel} checkpoint format matches the work: code trace, rubric, CER response, math justification, security report, or model evaluation.\n- Any ${courseLabel} toolchain, dataset, simulation, or source-code dependency is linked and version-aware.`
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Resource Updates`,
+				title: `${courseLabel} Current References`,
 				content: [
-					`**Resource guide:** ${courseLabel} references stay current when the course depends on an external tool, source repository, dataset, simulation, exam standard, or official documentation page.`,
-					`**Refresh guidance:** Stable ${courseLabel} conceptual references can be reviewed less often, but tool versions, source-code repositories, exam links, data licenses, and simulation URLs need an explicit refresh cadence. If a link changes, update the ${courseLabel} course text and the project resource card together.`,
-					`**Update check:** The ${courseLabel} note states what must be refreshed each term, which links or versions are stable, and which materials are reference-only rather than assignments.`
+					`**Reference guide:** ${courseLabel} references are most useful when their role is clear: concept explanation, starter source, dataset, simulation, exam standard, official documentation, or optional background.`,
+					`**Current-reference rule:** Stable ${courseLabel} concepts can use long-lived references, but tool versions, source-code repositories, exam links, data licenses, and simulation URLs need explicit version or access notes. When a link changes, the course text and project resource card need to stay in sync.`,
+					`**Reference check:** The ${courseLabel} note states which links or versions are stable, which materials need periodic review, and which materials are reference-only rather than assignments.`
 				].join("\n\n")
 			}
 		],
 		supplementalProjects: [
 			{
-				title: `${courseLabel} Dependency Graph`,
+				title: `${courseLabel} Prerequisite Map`,
 				content: [
-					`**Project goal:** Draw or write a dependency graph for ${profile.family}. Show which ${courseLabel} modules unlock later projects and which topics work as optional enrichment.`,
-					`**Graph guidance:** Each ${courseLabel} node is a concrete skill or module, not a broad course label. Each edge explains the dependency in plain language, such as "requires arrays before 2D grids" or "requires variables before simulation state."`,
-					`**Completion checks:**\n- At least five ${courseLabel} modules or topic clusters are included.\n- Every ${courseLabel} edge explains the prerequisite relationship.\n- One risky ${profile.family} ordering decision is identified and revised.`
+					`**Goal:** Draw or write a prerequisite map for ${profile.family}. Show which ${courseLabel} modules unlock later projects and which topics work as optional enrichment.`,
+					`**Map guidance:** Each ${courseLabel} node is a concrete skill or module, not a broad course label. Each edge explains the dependency in plain language, such as "requires arrays before 2D grids" or "requires variables before simulation state."`,
+					`**Checkpoints:**\n- At least five ${courseLabel} modules or topic clusters are included.\n- Every ${courseLabel} edge explains the prerequisite relationship.\n- One risky ${profile.family} ordering decision is identified and revised.`
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Resource Checklist`,
+				title: `${courseLabel} Resource Inventory`,
 				content: [
-					`**Project goal:** Build a resource checklist for ${courseLabel}: source code, starter/reference files, datasets, simulations, diagrams, rubrics, and tool versions.`,
-					`**Checklist guidance:** A missing resource in ${courseLabel} is not automatically a blocker, but it should be classified. For ${courseLabel}, mark each item as required, replaceable, provided, learner-created, optional enrichment, or reference-only so the course does not depend on hidden materials.`,
+					`**Goal:** Build a resource inventory for ${courseLabel}: source code, starter/reference files, datasets, simulations, diagrams, rubrics, and tool versions.`,
+					`**Inventory guidance:** A missing resource in ${courseLabel} is not automatically a blocker, but it needs a classification. For ${courseLabel}, mark each item as required, replaceable, provided, learner-created, optional enrichment, or reference-only so the course does not depend on hidden materials.`,
 					`**Resource checks:**\n- Every required ${courseLabel} project has a starter state or equivalent handout.\n- Every ${profile.family} assessment has a rubric or answer-check method.\n- Any external ${courseLabel} tool or source is documented with a stable URL.`
 				].join("\n\n")
 			}
@@ -542,7 +542,7 @@ function buildProjectModule(
 			content: [
 				projectOptionGoal(profile, courseLabel, project),
 				projectOptionRequiredOutcome(profile, courseLabel, project),
-				`**Completion checks:**\n${bullets(profile.assessments.slice(0, 3))}`,
+				`**Checkpoints:**\n${bullets(profile.assessments.slice(0, 3))}`,
 				projectOptionExtension(profile, project)
 			].join("\n\n")
 		}))

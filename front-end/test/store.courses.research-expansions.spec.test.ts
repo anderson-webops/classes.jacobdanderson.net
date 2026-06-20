@@ -22,6 +22,21 @@ function allText(
 		.join("\n");
 }
 
+function moduleText(
+	module: NonNullable<
+		Awaited<ReturnType<typeof loadRawCourse>>
+	>["modules"][number]
+) {
+	return [
+		module.title,
+		...module.curriculum.flatMap(item => [item.title, item.content]),
+		...module.supplementalProjects.flatMap(item => [
+			item.title,
+			item.content
+		])
+	].join("\n");
+}
+
 describe("research-backed course family expansions", () => {
 	it("keeps research expansion profile lists deduplicated", () => {
 		const listFields = [
@@ -95,6 +110,29 @@ describe("research-backed course family expansions", () => {
 					),
 					courseId
 				).toBe(true);
+
+				const expansionText = expansionModules
+					.map(moduleText)
+					.join("\n");
+				const courseLabel = course!.name.trim() || profile.family;
+				expect(expansionText, courseId).toContain(
+					`${courseLabel} Module Alignment Guide`
+				);
+				expect(expansionText, courseId).toContain(
+					`${courseLabel} Current References`
+				);
+				expect(expansionText, courseId).toContain(
+					`${courseLabel} Prerequisite Map`
+				);
+				expect(expansionText, courseId).toContain(
+					`${courseLabel} Resource Inventory`
+				);
+				expect(expansionText, courseId).not.toMatch(
+					/\b(?:Readiness Checklist|Resource Updates|Dependency Graph|Resource Checklist)\b/
+				);
+				expect(expansionText, courseId).not.toMatch(
+					/\*\*(?:Project goal|Required outcome|Completion checks|Readiness evidence):\*\*/
+				);
 			}
 		},
 		COURSE_SWEEP_TIMEOUT
