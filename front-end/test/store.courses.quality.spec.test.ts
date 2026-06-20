@@ -2545,6 +2545,39 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Benchmarking Capstone Extension Practice");
 	});
 
+	it("keeps Python to Java and C++ Bridge labels transition-specific", async () => {
+		const course = await loadRawCourse("python-to-java-and-cpp-bridge");
+		expect(course).not.toBeNull();
+		const corpus = allCourseText(course);
+
+		expect(corpus).not.toMatch(/This section covers/i);
+		expect(corpus).not.toMatch(/Key idea:/i);
+		expect(corpus).not.toMatch(/Skill target:/i);
+		expect(corpus).not.toMatch(/Practice target:/i);
+		expect(corpus).not.toMatch(/The goal is to/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).toContain(
+			"Compiler errors are structured feedback rather than evidence that the language is hostile"
+		);
+		expect(corpus).toContain("Workflow Translation Extension Practice");
+		expect(corpus).toContain("Function Signature Transfer Practice");
+		expect(corpus).toContain("Collection Indexing Transfer Practice");
+		expect(corpus).toContain("Java Scanner Transfer Practice");
+		expect(corpus).toContain("C++ Vector Extension Practice");
+		expect(corpus).toContain(
+			"Language Bridge Lab 11: Compile-Run Comparison Studio"
+		);
+		expect(corpus).toContain(
+			"Language Bridge Lab 13: Collection Porting Studio"
+		);
+		expect(corpus).toContain(
+			"Language Bridge Lab 17: Bridge Capstone Port Studio"
+		);
+		expect(corpus).toContain("Graphics Translation Studio");
+		expect(corpus).toContain("C Foundations Transfer Studio");
+	});
+
 	it("keeps Low-Level Security Part 2 defensive and specifically labeled", async () => {
 		const course = await loadRawCourse("low-level-security-part-2");
 		expect(course).not.toBeNull();
