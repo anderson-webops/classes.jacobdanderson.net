@@ -1142,6 +1142,7 @@ function normalizeSupportLabelText(text: string) {
 		.replace(/\*\*Required fields:\*\*/gi, "**Include:**")
 		.replace(/\*\*Required notes:\*\*/gi, "**Notes:**")
 		.replace(/\*\*Required elements:\*\*/gi, "**Include:**")
+		.replace(/\*\*Required gate artifact:\*\*/gi, "**Capstone brief:**")
 		.replace(/\*\*Work sequence:\*\*/gi, "**Steps:**")
 		.replace(/\*\*Implementation steps:\*\*/gi, "**Steps:**")
 		.replace(/\*\*Success criteria:\*\*/gi, "**Success:**")
@@ -1157,6 +1158,14 @@ function normalizeSupportLabelText(text: string) {
 		.replace(/\*\*Assessment ideas:\*\*/gi, "**Practice checks:**")
 		.replace(/\*\*Rubric use:\*\*/gi, "**Review focus:**")
 		.replace(/\*\*Rubric dimensions:\*\*/gi, "**Review criteria:**")
+		.replace(/\*\*Current course use:\*\*/gi, "**Course use:**")
+		.replace(/\*\*Current course emphasis:\*\*/gi, "**Course focus:**")
+		.replace(/\*\*Current course boundary:\*\*/gi, "**Course boundary:**")
+		.replace(/\*\*Course-specific labels:\*\*/gi, "**Course labels:**")
+		.replace(
+			/\*\*Original prompt restored:\*\*/gi,
+			"**Original activity:**"
+		)
 		.replace(/\*\*Remote-safe activity:\*\*/gi, "**Remote activity:**")
 		.replace(/\*\*Remote investigation:\*\*/gi, "**Investigation:**")
 		.replace(/\*\*Science explanation:\*\*/gi, "**Explanation:**");
