@@ -46,7 +46,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Setup and Tooling",
 					content:
-						"Keep a running security notebook for setup and tooling that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which services are running locally, how they are being inspected, and where the lab boundary starts. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for setup and tooling that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which services are running locally, how they are being inspected, and where the lab boundary starts. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC-03-nsec0-setup-and-tooling/starter",
 					solutionLink:
@@ -96,7 +96,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "CIA Triad in Practical Service Terms",
 					content:
-						"Confidentiality, integrity, and availability become concrete through web-service examples: leaked tokens, tampered requests, poisoned logs, service outages, and rate-limit exhaustion. The triad should read like an operational checklist for a real service, not a vocabulary box."
+						"Confidentiality, integrity, and availability become concrete through web-service examples: leaked tokens, tampered requests, poisoned logs, service outages, and rate-limit exhaustion. The triad reads like an operational checklist for a real service, not a vocabulary box."
 				},
 				{
 					title: "Threat Modeling Small TS Services",
@@ -122,7 +122,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Security Model of Networked Systems",
 					content:
-						"Keep a running security notebook for security model of networked systems that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about what the service is protecting, who is trusted, and which assets matter most. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for the security model of networked systems that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about what the service is protecting, who is trusted, and which assets matter most. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC-04-unit-1-security-model-of-networked-systems/starter",
 					solutionLink:
@@ -195,7 +195,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Sockets, Ports, and Services",
 					content:
-						"Keep a running security notebook for sockets, ports, and services that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which listeners are local-only, which are LAN-visible, and which would be dangerous if exposed publicly. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for sockets, ports, and services that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which listeners are local-only, which are LAN-visible, and which would be dangerous if exposed publicly. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC1-Local-Port-Inventory-Tool/starter",
 					solutionLink:
@@ -235,7 +235,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Requests, Headers, Cookies, and Tokens",
 					content:
-						"Make the HTTP request concrete: method, path, headers, body, cookie state, and bearer tokens all represent different trust claims. Each part should be tied to what it proves, what it does not prove, and how it could be forged or misused."
+						"Make the HTTP request concrete: method, path, headers, body, cookie state, and bearer tokens all represent different trust claims. Each part ties back to what it proves, what it does not prove, and how it could be forged or misused."
 				},
 				{
 					title: "Authentication versus Authorization",
@@ -270,7 +270,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: HTTP and API Security Basics",
 					content:
-						"Keep a running security notebook for http and api security basics that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about what claims the request makes, which claims are verified, and where an attacker could lie. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for HTTP and API security basics that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about what claims the request makes, which claims are verified, and where an attacker could lie. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC-05-unit-3-http-and-api-security-basics/starter",
 					solutionLink:
@@ -325,7 +325,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Why Plain HTTP Is Still Risky",
 					content:
-						"Use redirects, downgrade mistakes, mixed-content issues, and exposed login or cookie flows to show why plain HTTP still creates avoidable risk. This unit should tie transport security back to service design rather than treating it as a separate ops task."
+						"Use redirects, downgrade mistakes, mixed-content issues, and exposed login or cookie flows to show why plain HTTP still creates avoidable risk. This unit ties transport security back to service design rather than treating it as a separate ops task."
 				},
 				{
 					title: "Unit 4: TLS and Secure Transport: Core Project",
@@ -345,7 +345,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: TLS and Secure Transport",
 					content:
-						"Keep a running security notebook for tls and secure transport that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about where TLS starts, where it ends, and which component still has to make authorization and validation decisions. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for TLS and secure transport that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about where TLS starts, where it ends, and which component still has to make authorization and validation decisions. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC-06-unit-4-tls-and-secure-transport/starter",
 					solutionLink:
@@ -416,7 +416,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Input Validation on the Network Boundary",
 					content:
-						"Keep a running security notebook for input validation on the network boundary that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which requests are rejected early, how limits are enforced, and what evidence is kept for incident review. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for input validation on the network boundary that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which requests are rejected early, how limits are enforced, and what evidence is kept for incident review. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC2-Request-Schema-Validation-Gateway/starter",
 					solutionLink:
@@ -463,7 +463,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Suspicious Activity Indicators",
 					content:
-						"Use repeated 401 or 403 responses, path scanning, bursty clients, oversized bodies, odd user agents, and authentication churn as concrete indicators of suspicious activity. The habit should be to define signals before an incident happens."
+						"Use repeated 401 or 403 responses, path scanning, bursty clients, oversized bodies, odd user agents, and authentication churn as concrete indicators of suspicious activity. Define signals before an incident happens."
 				},
 				{
 					title: "Rate-Limit and Abuse Telemetry",
@@ -478,7 +478,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Project: Suspicious Request Log Parser",
 					content:
-						"Build a parser that turns raw request logs into a short anomaly report with top sources, failure clusters, and suspicious request patterns. The output should help a human operator decide what to inspect next.",
+						"Build a parser that turns raw request logs into a short anomaly report with top sources, failure clusters, and suspicious request patterns. The output helps a human operator decide what to inspect next.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC3-Suspicious-Request-Log-Parser/starter",
 					solutionLink:
@@ -489,7 +489,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Logging, Monitoring, and Forensics",
 					content:
-						"Keep a running security notebook for logging, monitoring, and forensics that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which events matter, which fields are safe to log, and how one incident timeline can be reconstructed from evidence. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for logging, monitoring, and forensics that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which events matter, which fields are safe to log, and how one incident timeline can be reconstructed from evidence. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC3-Suspicious-Request-Log-Parser/starter",
 					solutionLink:
@@ -531,7 +531,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "UFW Review and Least-Open Policy",
 					content:
-						"Review host firewall behavior with a deny-by-default mindset, then explicitly map which ports should be reachable from which networks. Exposure policy is a design decision that should be documented, not guessed from whatever happens to work."
+						"Review host firewall behavior with a deny-by-default mindset, then explicitly map which ports are reachable from which networks. Exposure policy is a design decision that is documented, not guessed from whatever happens to work."
 				},
 				{
 					title: "Reverse Proxies as Security Boundaries",
@@ -541,7 +541,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Internal versus External Services",
 					content:
-						"Concrete examples such as admin panels, metrics endpoints, worker callbacks, and app APIs show which services should stay internal. 'Works from the outside' is not the same thing as 'should be reachable from the outside'."
+						"Concrete examples such as admin panels, metrics endpoints, worker callbacks, and app APIs show which services stay internal. 'Works from the outside' is not the same thing as 'belongs on the public edge'."
 				},
 				{
 					title: "Trusted Proxy Headers and Real Client Identity",
@@ -562,7 +562,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Firewalls, Proxies, and Exposure",
 					content:
-						"Keep a running security notebook for firewalls, proxies, and exposure that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which component owns the public edge, which ports remain internal, and which headers can be trusted. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for firewalls, proxies, and exposure that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which component owns the public edge, which ports remain internal, and which headers can be trusted. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC6-TLS-and-Proxy-Companion-App/starter",
 					solutionLink:
@@ -607,7 +607,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Headers and Browser-Side Policy",
 					content:
-						"Common header protections include content type discipline, frame policy, and transport hints. Each header should be connected to what it does, what it does not solve, and how browser-facing service security depends on concrete HTTP behavior instead of vague best-practice lists."
+						"Common header protections include content type discipline, frame policy, and transport hints. Each header connects to what it does, what it does not solve, and how browser-facing service security depends on concrete HTTP behavior instead of vague best-practice lists."
 				},
 				{
 					title: "CORS, Body Limits, and Parsing Rules",
@@ -637,7 +637,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Secure Node/TypeScript Services",
 					content:
-						"Keep a running security notebook for secure node/typescript services that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which guards happen at middleware, which happen per route, and which headers or limits are part of the public contract. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for secure Node/TypeScript services that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which guards happen at middleware, which happen per route, and which headers or limits are part of the public contract. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC-07-unit-8-secure-node-typescript-services/starter",
 					solutionLink:
@@ -677,7 +677,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Local-Only Scanners and Safe Lab Constraints",
 					content:
-						"Make the ethics and boundary conditions explicit before any network tool is built. Tools should stay local or lab-scoped, record their assumptions, and avoid normalizing broad unsolicited scanning as acceptable practice."
+						"Make the ethics and boundary conditions explicit before any network tool is built. Tools stay local or lab-scoped, record their assumptions, and avoid normalizing broad unsolicited scanning as acceptable practice."
 				},
 				{
 					title: "Reusable Request Validation Helpers",
@@ -692,7 +692,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Packet Metadata Without Full Packet Abuse",
 					content:
-						"Use captured request metadata or safe local logs to reason about flow, size, timing, and protocol behavior without turning the course into an offensive packet-crafting exercise. The emphasis should stay on interpretation and defense."
+						"Use captured request metadata or safe local logs to reason about flow, size, timing, and protocol behavior without turning the course into an offensive packet-crafting exercise. The emphasis stays on interpretation and defense."
 				},
 				{
 					title: "Project: Rate-Limit and Abuse Detector",
@@ -708,7 +708,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Defensive Network Tooling in TS",
 					content:
-						"Keep a running security notebook for defensive network tooling in ts that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about how a tool stays within lab scope, what evidence it consumes, and what kind of decision it is allowed to make. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for defensive network tooling in TypeScript that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about how a tool stays within lab scope, what evidence it consumes, and what kind of decision it is allowed to make. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC4-Rate-Limit-and-Abuse-Detector/starter",
 					solutionLink:
@@ -779,7 +779,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: WebSockets and Real-Time Security",
 					content:
-						"Keep a running security notebook for websockets and real-time security that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about how the connection is authenticated, which events are allowed, and when the service should throttle or disconnect. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for WebSockets and real-time security that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about how the connection is authenticated, which events are allowed, and when the service throttles or disconnects. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC5-Secure-Real-Time-Notifier/starter",
 					solutionLink:
@@ -821,7 +821,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Environment Variables and Secret Handling",
 					content:
-						"Secrets are runtime configuration that should be injected deliberately, rotated when needed, and kept out of source control and logs. Distinguish public config, internal config, and true secrets before deciding where a value belongs."
+						"Secrets are runtime configuration injected deliberately, rotated when needed, and kept out of source control and logs. Distinguish public config, internal config, and true secrets before deciding where a value belongs."
 				},
 				{
 					title: "TLS Certificate Placement and Renewal Ownership",
@@ -831,12 +831,12 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Service Exposure, Logs, and Recovery Signals",
 					content:
-						"Deployment review combines public exposure, logging quality, health checks, and rollback clarity. Before a service is declared secure enough to expose, the evidence should show what is public, what is logged, how health is checked, and how rollback would work."
+						"Deployment review combines public exposure, logging quality, health checks, and rollback clarity. Before a service is declared secure enough to expose, the evidence shows what is public, what is logged, how health is checked, and how rollback would work."
 				},
 				{
 					title: "Secure Release Checklist",
 					content:
-						"End the unit with a practical release checklist: only intended ports exposed, reverse-proxy headers understood, auth paths tested, limits in place, logs readable, and recovery steps documented. The emphasis should be repeatable discipline rather than one-time heroics."
+						"End the unit with a practical release checklist: only intended ports exposed, reverse-proxy headers understood, auth paths tested, limits in place, logs readable, and recovery steps documented. The emphasis is repeatable discipline rather than one-time heroics."
 				},
 				{
 					title: "Unit 11: Deployment Security Basics: Core Project",
@@ -856,7 +856,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Deployment Security Basics",
 					content:
-						"Keep a running security notebook for deployment security basics that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about what secrets exist, where TLS terminates, what is publicly exposed, and what evidence confirms the deployment state. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for deployment security basics that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about what secrets exist, where TLS terminates, what is publicly exposed, and what evidence confirms the deployment state. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC-08-unit-11-deployment-security-basics/starter",
 					solutionLink:
@@ -901,7 +901,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Build a Repeatable Defensive Test Plan",
 					content:
-						"Convert the threat model into a concrete local test plan: authentication checks, authorization bypass attempts, malformed requests, request tampering, body-size limits, rate-limit behavior, proxy exposure, and log visibility. The emphasis should be on repeatable evidence gathering and safe rollback, not on flashy one-off tricks."
+						"Convert the threat model into a concrete local test plan: authentication checks, authorization bypass attempts, malformed requests, request tampering, body-size limits, rate-limit behavior, proxy exposure, and log visibility. The emphasis is repeatable evidence gathering and safe rollback, not flashy one-off tricks."
 				},
 				{
 					title: "Use AI to Draft Checks, Payload Variants, and Review Notes",
@@ -932,7 +932,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Authorized Penetration Testing, AI-Assisted Workflow, and Disclosure",
 					content:
-						"Keep a running security notebook for authorized penetration testing, ai-assisted workflow, and disclosure that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about written scope, permitted checks, how AI was used, and what evidence supports the final report. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for authorized penetration testing, AI-assisted workflow, and disclosure that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about written scope, permitted checks, how AI was used, and what evidence supports the final report. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC-09-unit-12-authorized-penetration-testing-ai-assisted-workflow-and-disclosure/starter",
 					solutionLink:
@@ -989,7 +989,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Write the Incident, Disclosure, and Recovery Notes",
 					content:
-						"Finish with a brief incident-response and disclosure packet that explains how suspicious requests would be investigated, which findings should stay private until fixed, which logs would be consulted first, and what immediate containment or recovery steps the operator would take."
+						"Finish with a brief incident-response and disclosure packet that explains how suspicious requests would be investigated, which findings remain private until fixed, which logs are consulted first, and what immediate containment or recovery steps the operator would take."
 				},
 				{
 					title: "Unit 13: Capstone: Core Project",
@@ -1009,7 +1009,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Capstone",
 					content:
-						"Keep a running security notebook for capstone that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about the full threat model, the defensive controls implemented, and the remaining risks after audit. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for the capstone that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about the full threat model, the defensive controls implemented, and the remaining risks after audit. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC-10-unit-13-capstone/starter",
 					solutionLink:

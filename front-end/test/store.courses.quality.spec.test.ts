@@ -2598,6 +2598,12 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/The goal is to normalize calm/i);
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).not.toMatch(/\bshould\b/i);
+		expect(corpus).not.toMatch(/\bhttp and api\b/);
+		expect(corpus).not.toMatch(/\btls and secure\b/);
+		expect(corpus).not.toMatch(/\bnode\/typescript\b/);
+		expect(corpus).not.toMatch(/\bwebsockets\b/);
+		expect(corpus).not.toMatch(/\bai-assisted\b/);
 		expect(corpus).toContain(
 			"Attack surface means every externally reachable input"
 		);
