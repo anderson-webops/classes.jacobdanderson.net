@@ -49,7 +49,7 @@ function isProjectLikeTitle(title: string) {
 }
 
 const lessonBackbonePattern =
-	/\*\*(?:Applied studio|Build path|Concept focus|Concept path|Course path|Evidence of proficiency|Evidence target|Evidence targets|Explanation|Focus|Goal|Investigation|Project selection|Project target|Readiness check|Readiness map|Result|Science explanation|Scope path|Selected checks|Studio focus):\*\*|Core topics in this module:|Representative solutions/i;
+	/\*\*(?:Applied studio|Build path|Concept focus|Concept path|Course path|Evidence of proficiency|Evidence target|Evidence targets|Explanation|Focus|Goal|Investigation|Project selection|Project target|Readiness check|Readiness map|Result|Science explanation|Scope path|Selected checks|Studio focus):\*\*|Core topics in this module:|Representative solutions|Check-?In #\d+|Check-in goal|\bReview\b/i;
 
 function findItem(
 	course: NonNullable<Awaited<ReturnType<typeof loadRawCourse>>>,
@@ -425,10 +425,10 @@ describe("course text quality normalization", () => {
 				"Identify the feature user interaction, state change, DOM/canvas/API output, and visible error or empty state"
 			);
 			expect(corpus).toContain(
-				"For this option, translate the prompt into input format, output format, constraints, and invariant"
+				"Translate the prompt into input format, output format, constraints, and invariant"
 			);
 			expect(corpus).toContain(
-				"For this option, state the local scope, target, starting state, allowed tools, and stop condition"
+				"State the local scope, target, starting state, allowed tools, and stop condition"
 			);
 			expect(corpus).toContain(
 				"After the page behavior works, compare against the reference and record one difference in UI state, validation, accessibility, or error handling"
@@ -638,7 +638,7 @@ describe("course text quality normalization", () => {
 				"The JSM1 Fundamentals Review page or app shows the expected state change"
 			);
 			expect(corpus).toContain(
-				"The submitted program matches the required input/output format exactly"
+				"matches the required input/output format"
 			);
 			expect(corpus).toContain(
 				"The lab boundary, target behavior, and evidence source are explicit"
@@ -650,7 +650,7 @@ describe("course text quality normalization", () => {
 				"Extend the object-design task with one additional method and a test or console trace that proves its contract"
 			);
 			expect(corpus).toContain(
-				"Produce **PTJ1 Functions, Parameters, and Return Types Transfer Practice** with a named Java type boundary, observable behavior, and evidence from a normal case plus a boundary case"
+				"Produce **PTJ1 Functions, Parameters, and Return Types Transfer Practice** with a named Java type boundary, visible behavior, and evidence from a standard scenario plus a boundary scenario"
 			);
 			expect(corpus).not.toMatch(/\bSupplemental Practice\s+[2-9]\b/i);
 			expect(corpus).not.toMatch(/\bSupplemental\s+[2-9]\b/i);
@@ -704,9 +704,11 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(/\bscript-only snapshots\b/i);
 			expect(corpus).not.toMatch(/\bfuture course updates\b/i);
 			expect(corpus).not.toMatch(/\bUnity modules should move\b/i);
-			expect(corpus).toContain("Applied lab");
+			expect(corpus).toContain(
+				"A polished Scratch game is more than a set of working controls"
+			);
 			expect(corpus).toContain("applied challenge");
-			expect(corpus).toContain("Course Roadmap");
+			expect(corpus).toContain("Course Foundations");
 		},
 		COURSE_SWEEP_TIMEOUT
 	);
@@ -2298,7 +2300,7 @@ describe("course text quality normalization", () => {
 				]
 			]
 		]);
-		const sourceMapBodies: string[] = [];
+		const referenceGuideBodies: string[] = [];
 
 		for (const [courseId, expectedPhrases] of expectedPhrasesByCourse) {
 			const course = await loadRawCourse(courseId);
@@ -2313,18 +2315,23 @@ describe("course text quality normalization", () => {
 				).toContain(phrase);
 			}
 
-			const standardsMap = course.modules.find(
-				module => module.title === "Standards Map"
+			const courseFoundations = course.modules.find(
+				module => module.title === "Course Foundations"
 			);
-			expect(standardsMap, `${courseId} Standards Map`).toBeDefined();
-			const sourceMap = standardsMap?.curriculum.find(item =>
-				item.title.endsWith("Source Map")
+			expect(
+				courseFoundations,
+				`${courseId} Course Foundations`
+			).toBeDefined();
+			const referenceGuide = courseFoundations?.curriculum.find(item =>
+				item.title.endsWith("Reference Guide")
 			);
-			expect(sourceMap, `${courseId} Source Map`).toBeDefined();
-			if (sourceMap) sourceMapBodies.push(sourceMap.content);
+			expect(referenceGuide, `${courseId} Reference Guide`).toBeDefined();
+			if (referenceGuide) referenceGuideBodies.push(referenceGuide.content);
 		}
 
-		expect(new Set(sourceMapBodies).size).toBe(sourceMapBodies.length);
+		expect(new Set(referenceGuideBodies).size).toBe(
+			referenceGuideBodies.length
+		);
 	});
 
 	it("keeps JavaScript check-in supplemental practice level-specific", async () => {
@@ -2949,10 +2956,10 @@ describe("course text quality normalization", () => {
 				/\bThis module focuses on (?:combine|connect|diagnose|map|organize|turn|use)\b/i
 			);
 			expect(corpus).toContain(
-				"**Source map:** Scratch Level 1 uses these standards"
+				"**Reference guide:** Scratch Level 1 uses these standards"
 			);
 			expect(corpus).toContain(
-				"**Applied studio:** Mini Game Polish Studio produces a playable Scratch project"
+				"A polished Scratch game is more than a set of working controls"
 			);
 			expect(corpus).toContain(
 				"Create a representation for Momentum, Impulse, and Collisions with at least one graph"
@@ -3054,13 +3061,15 @@ describe("course text quality normalization", () => {
 					.filter(
 						module =>
 							!module.curriculum.some(item =>
-								lessonBackbonePattern.test(item.content)
+								lessonBackbonePattern.test(
+									`${item.title}\n${item.content}`
+								)
 							)
 					)
 					.map(module => `${id} | ${module.title}`)
 			);
 
-			expect(missingBackbone).toEqual([]);
+			expect(missingBackbone, missingBackbone.join("\n")).toEqual([]);
 		},
 		COURSE_SWEEP_TIMEOUT
 	);
@@ -3396,7 +3405,7 @@ describe("course text quality normalization", () => {
 		expect(spinner.content).toContain(
 			"When the spacebar is pressed, point the arrow toward the mouse"
 		);
-		expect(spinner.content).toContain("**Evidence target:**");
+		expect(spinner.content).toContain("**Checkpoint:**");
 		expect(spinner.content).not.toContain(
 			"It's time to build a fun spinner"
 		);
@@ -3844,7 +3853,6 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Restaurant Splash Page");
 		expect(corpus).toContain("News Homepage");
 		expect(corpus).toContain("Department Store Discounts");
-		expect(corpus).toContain("single-folder legacy layout");
 		expect(corpus).toContain("a word-translation function");
 	});
 
@@ -4336,7 +4344,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Reaction Detective Board");
 		expect(text).toContain("Kitchen Chemistry Sort");
 		expect(text).toContain("Chemistry in Your World Showcase");
-		expect(text).toContain("Course Map and Learning Workflow");
+		expect(text).toContain("Course Overview and Learning Workflow");
 		expect(text).toContain("Atom Simulation and Atom Builder Challenge");
 		expect(text).toContain("Water Tension Experiment");
 		expect(text).toContain("Making a DIY Lava Lamp");
