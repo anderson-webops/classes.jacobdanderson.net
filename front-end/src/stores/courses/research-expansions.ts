@@ -377,7 +377,7 @@ function buildStandardsModule(
 						courseLabel,
 						`In ${courseLabel}, each core-skill item can become a short explanation, a practice check, or a focused review path depending on the current need.`
 					),
-					`**Completion check:** Lesson or project readiness in ${courseLabel} requires a concrete explanation, worked example, practice task, and observable work for one of these skills.`
+					`**Readiness evidence:** Lesson or project readiness in ${courseLabel} requires a concrete explanation, worked example, practice task, and observable work for one of these skills.`
 				].join("\n\n")
 			},
 			{
@@ -413,7 +413,7 @@ function buildStandardsModule(
 			{
 				title: `${courseLabel} Learning Sequence`,
 				content: [
-					`**Learning sequence:** The current ${courseLabel} sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
+					`**Sequence path:** The current ${courseLabel} sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
 					`**Sequence guidance:** ${courseLabel} sequence decisions are based on dependency, not convenience. If a project in ${courseLabel} expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,
 					`**Sequence checks:**\n- No ${courseLabel} gap remains as a vague reminder without a clear next action.\n- Required ${profile.family} gaps appear before the project that depends on them.\n- Optional ${courseLabel} enrichment is labeled separately from required pacing.`
 				].join("\n\n")
