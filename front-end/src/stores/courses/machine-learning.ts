@@ -152,7 +152,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "ML1 Supplemental Project 1: Flower Clustering",
 					content: `**Goal:** Cluster iris flowers by petal length and petal width.
 
-**Required workflow:**
+**Core workflow:**
 - Load the \`iris.csv\` file into a notebook.
 - Use either scikit-learn k-means or a from-scratch implementation based on the customer segmentation project.
 - Plot the raw data before clustering.
@@ -1409,8 +1409,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Customer Segmentation: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Customer Segmentation: Practice Studio",
+						moduleTitle: "Customer Segmentation: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1418,8 +1417,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Customer Segmentation: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Customer Segmentation: Practice Studio",
+						moduleTitle: "Customer Segmentation: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1427,8 +1425,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Customer Segmentation: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Customer Segmentation: Practice Studio",
+						moduleTitle: "Customer Segmentation: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1439,8 +1436,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Customer Segmentation: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Customer Segmentation: Practice Studio",
+						moduleTitle: "Customer Segmentation: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1450,8 +1446,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Customer Segmentation: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Customer Segmentation: Practice Studio",
+						moduleTitle: "Customer Segmentation: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1462,8 +1457,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Customer Segmentation Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Customer Segmentation: Practice Studio",
+						moduleTitle: "Customer Segmentation: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1476,8 +1470,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Customer Segmentation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Customer Segmentation: Practice Studio",
+						moduleTitle: "Customer Segmentation: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1585,8 +1578,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Disney Movie Clustering: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Disney Movie Clustering: Practice Studio",
+						moduleTitle: "Disney Movie Clustering: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1594,8 +1586,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Disney Movie Clustering: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Disney Movie Clustering: Practice Studio",
+						moduleTitle: "Disney Movie Clustering: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1603,8 +1594,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Disney Movie Clustering: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Disney Movie Clustering: Practice Studio",
+						moduleTitle: "Disney Movie Clustering: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1615,8 +1605,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Disney Movie Clustering: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Disney Movie Clustering: Practice Studio",
+						moduleTitle: "Disney Movie Clustering: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1626,8 +1615,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Disney Movie Clustering: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Disney Movie Clustering: Practice Studio",
+						moduleTitle: "Disney Movie Clustering: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1638,8 +1626,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Disney Movie Clustering Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Disney Movie Clustering: Practice Studio",
+						moduleTitle: "Disney Movie Clustering: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1652,8 +1639,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "Disney Movie Clustering Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"Disney Movie Clustering: Practice Studio",
+						moduleTitle: "Disney Movie Clustering: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1671,8 +1657,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "KNN Car Classification: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"KNN Car Classification: Practice Studio",
+						moduleTitle: "KNN Car Classification: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1680,8 +1665,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "KNN Car Classification: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"KNN Car Classification: Practice Studio",
+						moduleTitle: "KNN Car Classification: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1689,8 +1673,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "KNN Car Classification: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"KNN Car Classification: Practice Studio",
+						moduleTitle: "KNN Car Classification: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1701,8 +1684,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "KNN Car Classification: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"KNN Car Classification: Practice Studio",
+						moduleTitle: "KNN Car Classification: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1712,8 +1694,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "KNN Car Classification: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"KNN Car Classification: Practice Studio",
+						moduleTitle: "KNN Car Classification: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1724,8 +1705,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "KNN Car Classification Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"KNN Car Classification: Practice Studio",
+						moduleTitle: "KNN Car Classification: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1738,8 +1718,7 @@ export const machineLearningCourse: RawCourse = {
 					title: "KNN Car Classification Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
-						moduleTitle:
-							"KNN Car Classification: Practice Studio",
+						moduleTitle: "KNN Car Classification: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),

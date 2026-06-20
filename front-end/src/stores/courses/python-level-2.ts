@@ -1,5 +1,61 @@
 import type { RawCourse } from "./types";
 
+function conceptBrief({
+	evidence,
+	focus,
+	practice
+}: {
+	evidence: string;
+	focus: string;
+	practice: string[];
+}) {
+	return [
+		`**Focus:** ${focus}`,
+		`**Practice:**\n${practice.map((item, index) => `${index + 1}. ${item}`).join("\n")}`,
+		`**Evidence:** ${evidence}`
+	].join("\n\n");
+}
+
+function projectBrief({
+	build,
+	checkpoints,
+	extension,
+	goal,
+	outcome
+}: {
+	build: string[];
+	checkpoints: string[];
+	extension?: string;
+	goal: string;
+	outcome?: string;
+}) {
+	return [
+		`**Goal:** ${goal}`,
+		outcome ? `**Outcome:** ${outcome}` : "",
+		`**Build path:**\n${build.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
+		`**Checkpoints:**\n${checkpoints.map(checkpoint => `- ${checkpoint}`).join("\n")}`,
+		extension ? `**Extension:** ${extension}` : ""
+	]
+		.filter(Boolean)
+		.join("\n\n");
+}
+
+function reviewBrief({
+	evidence,
+	focus,
+	tasks
+}: {
+	evidence: string;
+	focus: string;
+	tasks: string[];
+}) {
+	return [
+		`**Focus:** ${focus}`,
+		`**Tasks:**\n${tasks.map((task, index) => `${index + 1}. ${task}`).join("\n")}`,
+		`**Evidence:** ${evidence}`
+	].join("\n\n");
+}
+
 export const pythonLevel2Course: RawCourse = {
 	name: "Python Level 2",
 	modules: [
@@ -8,28 +64,74 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Introductions and Setup",
-					content:
-						'Get familiar with the coding environment, including how to open projects, run code, view output in the console, and create a blank reference project for reusable examples. Start with `print("hello world")` and use it to review what printed output means.'
+					content: conceptBrief({
+						focus: "The first module establishes a reliable edit-run-debug loop before the projects depend on user input, strings, and numeric conversion.",
+						practice: [
+							'Run a tiny program such as `print("hello world")` and identify exactly where output appears.',
+							"Open an existing project, create a blank reference file, and keep reusable examples separate from project submissions.",
+							"Change one line, rerun the file, and confirm the output changed for the expected reason."
+						],
+						evidence:
+							"The environment is ready when a small program can be edited, run, inspected in the console, and corrected after a simple typo without losing track of which file is being executed."
+					})
 				},
 				{
 					title: "Variables and Strings",
-					content:
-						"Review variables as named places to store changing data such as strings and numbers. Practice creating a string variable, printing it, and using `len()` to measure its length."
+					content: conceptBrief({
+						focus: "Variables give names to values so later code can reuse or transform them. Strings are ordered sequences of characters, so they support length checks, indexing, and combination with other strings.",
+						practice: [
+							"Store a name, word, or short phrase in a variable and print it more than once.",
+							"Measure the string with `len()` and compare that length to the visible characters, including spaces.",
+							"Retrieve the first character, a middle character, and the last character with indexes when the string is long enough."
+						],
+						evidence:
+							"A complete explanation distinguishes the variable name from the value it stores and explains why string indexes begin at 0."
+					})
 				},
 				{
 					title: "Asking the User for Input",
-					content:
-						"Use `input()` to collect user responses and store them in variables. Then build output from those values with string concatenation, indexing, `str()`, and `int()` or `float()` when numeric conversions are needed."
+					content: conceptBrief({
+						focus: "`input()` collects text from the user. Programs that need math must convert that text with `int()` or `float()` before using arithmetic.",
+						practice: [
+							"Collect two or more responses and store each response in a clearly named variable.",
+							"Build a sentence from user-provided strings while preserving spaces and punctuation.",
+							"Convert a numeric response before adding, subtracting, multiplying, or rounding it."
+						],
+						evidence:
+							"The program output proves which values are still strings and which values have been converted for numeric work."
+					})
 				},
 				{
 					title: "Comments",
-					content:
-						"Add comments with `#` to explain code, document input being collected, and temporarily disable lines during testing."
+					content: conceptBrief({
+						focus: "Comments clarify intent for a reader and can temporarily remove a line from execution during debugging. They do not fix unclear variable names or replace testing.",
+						practice: [
+							"Add short comments above sections that collect input, transform values, or print final output.",
+							"Comment out one experimental line, rerun the program, and observe which behavior disappeared.",
+							"Remove comments that only repeat the exact code and keep comments that explain purpose or assumptions."
+						],
+						evidence:
+							"Useful comments make the program easier to review without hiding what the code actually does."
+					})
 				},
 				{
 					title: "PS1 Project 1: Mad Libs",
-					content:
-						"Create a Mad Libs program that asks for at least five words and prints a completed story using those values.",
+					content: projectBrief({
+						goal: "Create a Mad Libs program that gathers words from the user and inserts them into a complete story.",
+						build: [
+							"Ask for at least five pieces of text, such as a noun, adjective, verb, place, animal, or name.",
+							"Store each answer in a clearly named variable.",
+							"Print a story that combines fixed story text with the collected words.",
+							"Run the story with different answers to confirm the variables control the final output."
+						],
+						checkpoints: [
+							"The story includes every requested word.",
+							"Spacing and punctuation are readable.",
+							"The explanation can trace one input prompt through to the final printed sentence."
+						],
+						extension:
+							"Add a title, multiple paragraphs, or a replay loop that creates a different story with new answers."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Mad-Libs/solution",
 					mediaLink:
@@ -37,8 +139,22 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS1 Project 2: Index Picker",
-					content:
-						"Ask the user for a word and an index, then print both the word and the character stored at that index.",
+					content: projectBrief({
+						goal: "Build a small string-indexing tool that reveals the character stored at a requested position.",
+						build: [
+							"Ask for a word or short phrase.",
+							"Ask for an index and convert it to an integer.",
+							"Print the original word and the character found at that index.",
+							"Test the first index, a middle index, and the last valid index."
+						],
+						checkpoints: [
+							"The index is converted before it is used.",
+							"The program demonstrates that index 0 points to the first character.",
+							"The output makes the selected character easy to identify."
+						],
+						extension:
+							"Check whether the requested index is valid before indexing so the program can print a helpful message instead of crashing."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Index-Picker/solution",
 					mediaLink:
@@ -48,8 +164,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS1 Supplemental Project 1: Space Mountain",
-					content:
-						"Track the remaining safe weight capacity on a roller coaster car by asking for four rider weights and printing how much capacity remains after each rider boards.",
+					content: projectBrief({
+						goal: "Track a roller coaster car's remaining safe capacity as riders board one at a time.",
+						build: [
+							"Define the starting capacity.",
+							"Ask for four rider weights and convert each response to a number.",
+							"Subtract each rider's weight from the remaining capacity.",
+							"Print the remaining capacity after every rider boards."
+						],
+						checkpoints: [
+							"Every rider changes the same running total.",
+							"The printed values make the order of updates clear.",
+							"The final output identifies whether capacity remains or has been exceeded."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Space-Mountain/solution",
 					mediaLink:
@@ -57,8 +185,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS1 Supplemental Project 2: Tip Calculator",
-					content:
-						"Ask for a bill total and tip percentage, calculate the tip, and print both a rounded-dollar version and a version rounded to the nearest cent.",
+					content: projectBrief({
+						goal: "Calculate a restaurant tip and compare whole-dollar rounding with cents-based rounding.",
+						build: [
+							"Ask for the bill total and tip percentage.",
+							"Convert both inputs to numeric values.",
+							"Calculate the tip and the total including tip.",
+							"Print a whole-dollar estimate and a cents-accurate value."
+						],
+						checkpoints: [
+							"Percent input is interpreted correctly.",
+							"Money output includes clear labels.",
+							"The explanation distinguishes rounding for readability from the exact calculated value."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Tip-Calculator/solution",
 					mediaLink:
@@ -66,8 +206,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS1 Supplemental Project 3: Relay Race",
-					content:
-						"Collect four relay split times, then print both the team's total time and the average lap time.",
+					content: projectBrief({
+						goal: "Calculate total and average relay-race time from four split times.",
+						build: [
+							"Ask for four lap or runner split times.",
+							"Convert the inputs to numbers.",
+							"Add the times to find the team total.",
+							"Divide by four to find the average split."
+						],
+						checkpoints: [
+							"The total and average use numeric addition, not string concatenation.",
+							"The output labels the units of time.",
+							"The average changes correctly if one split time is changed."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Relay-Race/solution",
 					mediaLink:
@@ -80,18 +232,47 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "For Loops",
-					content:
-						"Use `for i in range(...)` to repeat actions a fixed number of times, start from different values, count backward, and step by larger increments. Practice sequences such as 0 to 9, every third number, reverse counting, and perfect squares."
+					content: conceptBrief({
+						focus: "`for i in range(...)` fits repetition with a known count or a predictable number sequence. The range start, stop, and step determine exactly which values appear.",
+						practice: [
+							"Print 0 through 9 and identify why the stop value is not included.",
+							"Print every third number in a range by changing the step.",
+							"Count backward with a negative step.",
+							"Print perfect squares by using the loop variable in a calculation."
+						],
+						evidence:
+							"A correct explanation predicts the first value, final printed value, number of iterations, and step direction before the loop runs."
+					})
 				},
 				{
 					title: "While Loops",
-					content:
-						"Use `while` loops when repetition should continue until a condition changes. Compare standard condition-based loops with `while True` plus `break`."
+					content: conceptBrief({
+						focus: "`while` loops fit repetition controlled by a changing condition. The loop must move toward a stopping state or it can run forever.",
+						practice: [
+							"Write a loop that counts upward until a limit is reached.",
+							"Write a loop that keeps asking for input until a target answer appears.",
+							"Compare a condition-based `while` loop with `while True` plus an explicit `break`."
+						],
+						evidence:
+							"The loop design is solid when the condition, the update, and the stopping case can be explained separately."
+					})
 				},
 				{
 					title: "PS2 Project 1: Crazy Nametags",
-					content:
-						"Ask for a name, then print its letters in several ways with both `for` loops and `while` loops: forward, every other character, and backward.",
+					content: projectBrief({
+						goal: "Print a name in several patterns to compare `for` loops, `while` loops, indexes, and stepping rules.",
+						build: [
+							"Ask for a name and store it as a string.",
+							"Print the letters forward.",
+							"Print every other character by controlling the index or range step.",
+							"Print the name backward with a reverse loop."
+						],
+						checkpoints: [
+							"At least one version uses a `for` loop.",
+							"At least one version uses a `while` loop.",
+							"The backward version starts at the last valid index rather than one past the end."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Crazy-Nametags/solution",
 					mediaLink:
@@ -99,8 +280,22 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS2 Project 2: Change Machine",
-					content:
-						"Ask for an amount of money in cents and compute quarters, dimes, nickels, and pennies using loops and counters.",
+					content: projectBrief({
+						goal: "Convert a number of cents into quarters, dimes, nickels, and pennies.",
+						build: [
+							"Ask for an amount in cents and convert it to an integer.",
+							"Count how many quarters fit and update the remaining cents.",
+							"Repeat the process for dimes, nickels, and pennies.",
+							"Print the final coin breakdown."
+						],
+						checkpoints: [
+							"The remaining-cent value decreases after each coin type.",
+							"The breakdown adds back up to the original amount.",
+							"Boundary cases such as 0, 4, 5, 10, 25, and 99 cents are tested."
+						],
+						extension:
+							"Rebuild the solution with integer division and modulo, then compare that version with the loop-and-counter approach."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Change-Machine/solution",
 					mediaLink:
@@ -110,8 +305,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS2 Supplemental Project 1: Interest Aggregator",
-					content:
-						"Model compound growth over time by asking for a starting balance and printing projected balances across 20 years at a chosen interest rate.",
+					content: projectBrief({
+						goal: "Model compound growth over time and print a readable year-by-year projection.",
+						build: [
+							"Ask for a starting balance and interest rate.",
+							"Convert the inputs to numeric values.",
+							"Loop through 20 years of growth.",
+							"Update the balance each year and print the year number with the projected balance."
+						],
+						checkpoints: [
+							"The balance changes cumulatively rather than resetting each year.",
+							"The interest rate is converted from a percent into a multiplier correctly.",
+							"The output is rounded or formatted so the trend is readable."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Interest-Aggregator/solution",
 					mediaLink:
@@ -119,8 +326,22 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS2 Supplemental Project 2: Password Guesser",
-					content:
-						"Use a sample target phrase and keep asking for guesses until it matches, then print how many guesses it took.",
+					content: projectBrief({
+						goal: "Build a guessing loop that continues until the user enters the target phrase.",
+						build: [
+							"Define a target password or phrase.",
+							"Ask for guesses inside a loop.",
+							"Track the number of attempts.",
+							"Stop only when the guess matches the target exactly."
+						],
+						checkpoints: [
+							"The loop has a clear stopping condition.",
+							"The attempt count matches the number of guesses made.",
+							"The output distinguishes a failed guess from the final successful guess."
+						],
+						extension:
+							"Add case-insensitive comparison, a maximum attempt limit, or hints after repeated failed guesses."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Password-Guesser/solution",
 					mediaLink:
@@ -128,8 +349,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS2 Supplemental Project 3: For Loop Fun",
-					content:
-						"Use nested loops to print number patterns, including repeated rows, shifting rows, and growing or shrinking triangle-style output.",
+					content: projectBrief({
+						goal: "Create structured number and shape patterns with nested loops.",
+						build: [
+							"Print a repeated row pattern first.",
+							"Add an outer loop so the row repeats across multiple lines.",
+							"Change the inner-loop range so the pattern grows, shrinks, or shifts by row.",
+							"Compare the loop variables used for rows with the loop variables used for columns."
+						],
+						checkpoints: [
+							"The output shape matches the intended row and column counts.",
+							"The inner loop controls content inside a row.",
+							"The outer loop controls how many rows appear."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-For-Loop-Fun/solution",
 					mediaLink:
@@ -137,8 +370,23 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS2 Supplemental Project 4: Calendar Machine",
-					content:
-						"Convert a number of days into years, months, weeks, and days.",
+					content: projectBrief({
+						goal: "Convert a raw day count into larger calendar-style units.",
+						outcome:
+							"The final program explains how many whole years, months, weeks, and days fit into the original total, while keeping the leftover days consistent with the chosen unit assumptions.",
+						build: [
+							"Ask for a number of days and convert it to an integer.",
+							"Compute complete years, remaining months, remaining weeks, and leftover days using a consistent approximation.",
+							"Update the remaining day count after each unit.",
+							"Print the result with clear labels."
+						],
+						checkpoints: [
+							"The chosen year and month assumptions are stated.",
+							"The remaining day count is updated in the correct order.",
+							"The final units reconstruct the original day count under the chosen assumptions.",
+							"Test zero days, a small number of days, and a value large enough to use every unit."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Calendar-Machine/solution",
 					mediaLink:
@@ -146,8 +394,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS2 Supplemental Project 5: Double or Nothing",
-					content:
-						"Simulate a betting game where the user starts with $10 and can keep risking all current winnings on a coin flip until choosing to stop or losing everything.",
+					content: projectBrief({
+						goal: "Simulate a simple risk-reward game driven by random coin flips and a stopping choice.",
+						build: [
+							"Begin with a fixed starting amount.",
+							"Ask whether the player wants to risk the current amount.",
+							"Flip a random coin when the player continues.",
+							"Double the amount on a win, set it to zero on a loss, and stop when the player quits or loses."
+						],
+						checkpoints: [
+							"The current amount is updated in only one place per round.",
+							"The game stops cleanly after a loss or a quit choice.",
+							"The output explains the result of each flip before the next decision."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Double-or-Nothing/solution",
 					mediaLink:
@@ -155,8 +415,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS2 Supplemental Project 6: Debugging Loops",
-					content:
-						"Fix a loop-based rocket launch simulator by reading console errors, locating each bug, and correcting the loop logic until the program runs fully.",
+					content: projectBrief({
+						goal: "Repair a loop-based rocket launch simulator by using console evidence instead of guessing.",
+						build: [
+							"Run the starter code and record the first error or incorrect behavior.",
+							"Fix one issue at a time, then rerun the program.",
+							"Inspect loop starts, stops, updates, and indentation.",
+							"Continue until the launch countdown and post-launch behavior run completely."
+						],
+						checkpoints: [
+							"Each fix is connected to a specific error or observed behavior.",
+							"The loop no longer skips values, repeats forever, or stops too early.",
+							"The final run demonstrates the complete launch sequence."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Debugging-Loops/starter",
 					solutionLink:
@@ -166,8 +438,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS2 Supplemental Project 7: Multiplication Tables",
-					content:
-						"Use nested loops to print the multiplication facts from 1 x 1 through 12 x 12.",
+					content: projectBrief({
+						goal: "Generate a complete multiplication table with nested loops.",
+						build: [
+							"Create one loop for the first factor.",
+							"Create a nested loop for the second factor.",
+							"Compute and print each product from 1 x 1 through 12 x 12.",
+							"Format the output so row and column structure is visible."
+						],
+						checkpoints: [
+							"All 144 facts appear exactly once.",
+							"The row factor and column factor are not accidentally swapped in the label.",
+							"The structure remains readable when the maximum factor changes."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Multiplication-Tables/solution",
 					mediaLink:
@@ -175,8 +459,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS2 Supplemental Project 8: Archery Simulator",
-					content:
-						"Simulate five rounds of archery with three shots per round, use randomness to determine hits and misses, and track the total number of bullseyes.",
+					content: projectBrief({
+						goal: "Simulate an archery session with nested rounds, random outcomes, and a running score.",
+						build: [
+							"Loop through five rounds.",
+							"Inside each round, simulate three shots.",
+							"Generate a random outcome to determine whether each shot is a bullseye.",
+							"Track round results and the total number of bullseyes."
+						],
+						checkpoints: [
+							"The nested loops match the round and shot structure.",
+							"The total score accumulates across all rounds.",
+							"The output makes it possible to verify the total from the printed shot results."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Juni-Archery/solution",
 					mediaLink:
@@ -189,13 +485,36 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "ASCII and Ciphers",
-					content:
-						"Use `ord()` and `chr()` to move between characters and their ASCII codes, then apply that knowledge to build simple encoders and decoders. Review how ciphers transform messages into coded text."
+					content: conceptBrief({
+						focus: "`ord()` converts a character into its numeric code, and `chr()` converts a numeric code back into a character. Ciphers use this relationship to transform messages in predictable ways.",
+						practice: [
+							"Convert several letters and symbols with `ord()` and compare the returned numbers.",
+							"Convert numbers back into characters with `chr()`.",
+							"Shift a letter by adding or subtracting from its numeric code.",
+							"Discuss why wraparound is needed when a shift moves past `z` or before `a`."
+						],
+						evidence:
+							"A correct cipher explanation names the original character, the numeric transformation, and the final decoded character."
+					})
 				},
 				{
 					title: "PS3 Project 1: Simple Cipher",
-					content:
-						"Translate a message into ASCII with spaces between values, then build a second version that adds a constant key to each ASCII code.",
+					content: projectBrief({
+						goal: "Encode text by converting characters into numeric ASCII values and applying a simple numeric key.",
+						build: [
+							"Ask for a short message.",
+							"Convert each character to its ASCII number.",
+							"Print the plain ASCII sequence with clear spacing.",
+							"Add a constant key to each value and print the shifted sequence."
+						],
+						checkpoints: [
+							"Every input character produces one output number.",
+							"Spaces between numbers make the encoded result readable.",
+							"The key changes all numeric values consistently."
+						],
+						extension:
+							"Add a decoder that subtracts the same key and reconstructs the original message."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Simple-Cipher/solution",
 					mediaLink:
@@ -203,8 +522,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS3 Project 2: Caesar Cipher",
-					content:
-						"Encrypt and decrypt text by shifting letters forward or backward through the alphabet by a chosen key, including wraparound behavior at both ends of the alphabet.",
+					content: projectBrief({
+						goal: "Build a Caesar cipher that shifts letters through the alphabet and supports decoding with the reverse shift.",
+						build: [
+							"Ask for a message and shift amount.",
+							"Convert each letter to a position in the alphabet.",
+							"Apply the shift and wrap around when the result leaves the alphabet range.",
+							"Convert the shifted positions back into letters."
+						],
+						checkpoints: [
+							"`z` shifted forward and `a` shifted backward both wrap correctly.",
+							"Encryption and decryption undo one another with the same key.",
+							"Non-letter characters are either preserved or handled by a stated rule."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Caesar-Cipher/solution",
 					mediaLink:
@@ -214,8 +545,23 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS3 Supplemental Project 1: ASCII Art",
-					content:
-						"Ask for a number and print a square grid of `#` symbols with that dimension.",
+					content: projectBrief({
+						goal: "Generate a square block of text art from a user-selected size.",
+						build: [
+							"Ask for the square size.",
+							"Build each row with nested loops or string repetition.",
+							"Print the requested number of rows.",
+							"Test small, medium, and larger sizes."
+						],
+						checkpoints: [
+							"The number of rows equals the number of columns.",
+							"Size 1 still works.",
+							"The pattern is produced by loop logic rather than manually written rows.",
+							"The output remains aligned when the size changes from one digit to two digits if numbers are added later."
+						],
+						extension:
+							"Add hollow squares, diagonal marks, or alternating characters so the row/column condition becomes more meaningful than printing the same repeated symbol every time."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-ASCII-Art/solution",
 					mediaLink:
@@ -223,8 +569,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS3 Supplemental Project 2: Uppercase to Lowercase",
-					content:
-						"Convert an uppercase word to lowercase using ASCII math with `ord()` and `chr()` rather than calling `.lower()`.",
+					content: projectBrief({
+						goal: "Convert uppercase letters to lowercase by using ASCII offsets directly.",
+						build: [
+							"Ask for an uppercase word.",
+							"Convert each character with `ord()`.",
+							"Add the uppercase-to-lowercase offset when the character is uppercase.",
+							"Convert the result back with `chr()` and build the lowercase word."
+						],
+						checkpoints: [
+							"The solution does not rely on `.lower()`.",
+							"Each character transformation can be traced numerically.",
+							"Already-lowercase or nonletter characters have a defined behavior."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Uppercase-to-Lowercase/solution",
 					mediaLink:
@@ -232,8 +590,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS3 Supplemental Project 3: Nested Boxes",
-					content:
-						"Print progressively larger box outlines using loops and concise pattern logic.",
+					content: projectBrief({
+						goal: "Print nested or progressively larger box outlines using loop-controlled row and column logic.",
+						build: [
+							"Choose a maximum box size.",
+							"Print one box outline correctly before adding more.",
+							"Grow or nest the outlines with loops.",
+							"Decide when a cell belongs to a border versus an empty interior."
+						],
+						checkpoints: [
+							"Horizontal and vertical borders line up.",
+							"Interior spaces remain empty where expected.",
+							"The same logic works for more than one size."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Nested-Boxes/solution",
 					mediaLink:
@@ -241,8 +611,22 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS3 Supplemental Project 4: Password Cracker",
-					content:
-						"Reverse an encoded sample phrase and try all 26 Caesar-shift possibilities to identify the most plausible original text.",
+					content: projectBrief({
+						goal: "Try every Caesar-shift possibility and identify which decoded message looks most plausible.",
+						build: [
+							"Load or define an encoded sample phrase.",
+							"Loop through all 26 possible shifts.",
+							"Decode the phrase with each shift.",
+							"Print the candidates so the readable one can be selected."
+						],
+						checkpoints: [
+							"All 26 shift values are attempted.",
+							"Wraparound works for every candidate.",
+							"The final answer is supported by visible decoded output, not guessed."
+						],
+						extension:
+							"Add a simple word-list score that ranks candidates by how many common English words they contain."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Password-Cracker/solution",
 					mediaLink:
@@ -255,13 +639,36 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Conditionals",
-					content:
-						"Use `if`, `elif`, and `else` to control program flow based on conditions, and combine checks with `and` and `or` when more than one condition matters."
+					content: conceptBrief({
+						focus: "Conditionals let a program choose different behavior based on boolean expressions. `if`, `elif`, and `else` form an ordered decision chain, while `and` and `or` combine multiple checks.",
+						practice: [
+							"Write a two-branch decision with `if` and `else`.",
+							"Add `elif` cases and predict which branch runs first when more than one condition could be true.",
+							"Combine comparisons with `and` and `or` for cases where two facts matter.",
+							"Test boundary values that sit exactly on the cutoff between branches."
+						],
+						evidence:
+							"A good conditional design explains the order of branches, the boundary cases, and why the final `else` handles everything left."
+					})
 				},
 				{
 					title: "PS4 Project 1: Rock, Paper, Scissors",
-					content:
-						"Build a two-player Rock, Paper, Scissors game and determine the winner with either a long conditional chain or nested conditionals. Optional extensions can add replay, CPU simulation, and invalid-input handling.",
+					content: projectBrief({
+						goal: "Build a two-player Rock, Paper, Scissors game that determines ties, wins, losses, and invalid input.",
+						build: [
+							"Ask both players for a move.",
+							"Normalize or validate the input.",
+							"Check ties before win/loss cases.",
+							"Decide the winner with a clear conditional structure."
+						],
+						checkpoints: [
+							"All nine valid move combinations have a correct outcome.",
+							"Invalid moves do not accidentally count as wins.",
+							"The branch order is explainable without reading every line aloud."
+						],
+						extension:
+							"Add replay, a computer opponent, score tracking, or an expanded version such as Rock, Paper, Scissors, Lizard, Spock."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Rock-Paper-Scissors/solution",
 					mediaLink:
@@ -269,8 +676,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS4 Project 2: FizzBuzz",
-					content:
-						"Print numbers 1 through 50, replacing multiples of 3 with `Fizz`, multiples of 5 with `Buzz`, and multiples of both with `FizzBuzz`.",
+					content: projectBrief({
+						goal: "Print the classic FizzBuzz sequence while handling overlapping divisibility rules correctly.",
+						build: [
+							"Loop through the numbers 1 through 50.",
+							"Check whether the current number is divisible by both 3 and 5.",
+							"Check the single-divisor cases for 3 and 5.",
+							"Print the original number when none of the special cases apply."
+						],
+						checkpoints: [
+							"Multiples of 15 print `FizzBuzz`, not only `Fizz` or only `Buzz`.",
+							"The modulo operator is used intentionally.",
+							"The branch order prevents the overlapping case from being swallowed by an earlier condition."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-FizzBuzz/solution",
 					mediaLink:
@@ -278,8 +697,22 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS4 Project 3: Credit Card Validator",
-					content:
-						"Validate a card number by summing digits with every other digit doubled and checking whether the total is a multiple of 10.",
+					content: projectBrief({
+						goal: "Implement a simplified checksum validator for card-style number strings.",
+						build: [
+							"Read the card number as text so individual digits can be inspected.",
+							"Move through the digits in the required order.",
+							"Double every other digit according to the validation rule and adjust multi-digit results if needed.",
+							"Sum the processed digits and check whether the total is a multiple of 10."
+						],
+						checkpoints: [
+							"The program treats digits as characters until conversion is needed.",
+							"The doubling pattern is consistent from the correct side of the number.",
+							"Valid and invalid sample numbers produce different, explained outcomes."
+						],
+						extension:
+							"Add length checks, digit-only validation, or issuer-style prefix checks as separate rules."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Credit-Card-Validator/solution",
 					mediaLink:
@@ -289,8 +722,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS4 Supplemental Project 1: Carnival Strength Tester",
-					content:
-						"Read how high a puck flew and print a prize tier based on the measured height.",
+					content: projectBrief({
+						goal: "Classify a carnival strength-test result into a prize tier.",
+						build: [
+							"Ask for the measured height.",
+							"Convert the response to a number.",
+							"Compare the height against ordered prize thresholds.",
+							"Print the matching prize tier."
+						],
+						checkpoints: [
+							"Boundary heights land in the intended tier.",
+							"The thresholds are checked in an order that avoids unreachable branches.",
+							"The output includes both the measured value and the result."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Carnival-Strength-Tester/solution",
 					mediaLink:
@@ -298,8 +743,23 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS4 Supplemental Project 2: Test Statistics",
-					content:
-						"Read five test scores and print the highest score, the lowest score, and the average.",
+					content: projectBrief({
+						goal: "Compute a small set of summary statistics from five test scores.",
+						build: [
+							"Collect five numeric scores.",
+							"Track or compute the highest score.",
+							"Track or compute the lowest score.",
+							"Calculate and print the average."
+						],
+						checkpoints: [
+							"All inputs are converted before arithmetic.",
+							"The average divides by the correct number of scores.",
+							"Repeated high or low values still produce the correct result.",
+							"Scores at 0, 100, and repeated middle values are tested so boundary and tie behavior is visible."
+						],
+						extension:
+							"Add a letter-grade summary, a median, or a dropped-lowest-score version and explain how the summary changes."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Test-Statistics/solution",
 					mediaLink:
@@ -307,8 +767,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS4 Supplemental Project 3: Relay Race Statistics",
-					content:
-						"Collect four lap times, compute the average pace, and report whether each runner was faster than, slower than, or equal to the average.",
+					content: projectBrief({
+						goal: "Compare each relay split against the team average.",
+						build: [
+							"Collect four lap times.",
+							"Compute the total and average.",
+							"Compare each split to the average.",
+							"Print whether each runner was faster than, slower than, or equal to the average pace."
+						],
+						checkpoints: [
+							"The average is computed once from all four values.",
+							"Each runner is compared against the same average.",
+							"Equal-to-average cases are handled deliberately."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Relay-Race-Statistics/solution",
 					mediaLink:
@@ -316,8 +788,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS4 Supplemental Project 4: Joe's Donuts Opening Day",
-					content:
-						"Use a conditional chain to determine which promotions apply to a given customer number on opening day, including overlapping offers and a universal year-round deal.",
+					content: projectBrief({
+						goal: "Determine which donut-shop promotions apply to a customer number.",
+						build: [
+							"Ask for the customer's position in line.",
+							"Represent each promotion rule as a conditional check.",
+							"Handle overlapping promotions without losing any applicable reward.",
+							"Print every promotion the customer receives."
+						],
+						checkpoints: [
+							"Multiple promotions can apply to the same customer when the rules overlap.",
+							"Universal promotions are not blocked by earlier branches.",
+							"The solution distinguishes independent `if` statements from an exclusive `if`/`elif` chain."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Joes-Donuts-Opening-Day/solution",
 					mediaLink:
@@ -325,8 +809,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS4 Supplemental Project 5: Number Guesser",
-					content:
-						"Build a number guessing game with a random target from 1 to 50 and give higher/lower feedback until the correct number is guessed.",
+					content: projectBrief({
+						goal: "Build a higher/lower number guessing game with a random target.",
+						build: [
+							"Generate a random target from 1 to 50.",
+							"Ask for guesses in a loop.",
+							"Print higher or lower feedback after each incorrect guess.",
+							"Stop when the guess matches the target and report the attempt count."
+						],
+						checkpoints: [
+							"The random target is chosen once per game, not once per guess.",
+							"Guesses are converted before comparison.",
+							"The feedback direction is correct for both too-low and too-high guesses."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Number-Guesser/solution",
 					mediaLink:
@@ -334,8 +830,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS4 Supplemental Project 6: Debugging Conditionals",
-					content:
-						"Fix a ticket-prize script by reading console output, identifying incorrect conditionals, and repairing the program until it behaves correctly.",
+					content: projectBrief({
+						goal: "Debug a ticket-prize script by connecting each wrong result to the conditional rule that produced it.",
+						build: [
+							"Run the starter and note the first incorrect branch or error.",
+							"Check comparison operators, branch order, and indentation.",
+							"Fix one issue at a time and rerun after each change.",
+							"Test values at the exact prize cutoffs."
+						],
+						checkpoints: [
+							"Each ticket range maps to the intended prize.",
+							"Boundary values do not fall through to the wrong branch.",
+							"The final explanation names at least one conditional bug and why the fix worked."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Debugging-Conditionals/starter",
 					solutionLink:
@@ -350,30 +858,74 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Check-In #1 Overview",
-					content:
-						"This module is a low-pressure review of variables, loops, and conditionals. Work through the prompts independently first, then revisit any areas that need reinforcement.",
+					content: reviewBrief({
+						focus: "This checkpoint reviews variables, strings, input, loops, and conditionals without introducing a new large project.",
+						tasks: [
+							"Solve each prompt independently before comparing approaches.",
+							"Record which prompts were immediate, which required a reminder, and which need more practice.",
+							"Choose the most useful supplemental project based on any missed prompt."
+						],
+						evidence:
+							"A useful checkpoint result identifies specific skills, not a vague sense of being ready or not ready."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS-Check-in-1/solution"
 				},
 				{
 					title: "Check-In #1: Variables",
-					content:
-						"Review variables and basic string operations by storing values, printing them, converting between data types, gathering user input, measuring string length, indexing into strings, and printing combined output with clear spacing."
+					content: reviewBrief({
+						focus: "Variables, type conversion, string length, indexing, and formatted output.",
+						tasks: [
+							"Store several values with clear variable names and print them.",
+							"Collect user input and convert numeric input only when arithmetic is required.",
+							"Measure a string, access selected indexes, and combine strings with clean spacing."
+						],
+						evidence:
+							"The work shows the difference between storing a value, printing a value, and transforming a value."
+					})
 				},
 				{
 					title: "Check-In #1: Loops",
-					content:
-						"Compare `for` loops and `while` loops, print number sequences with different ranges and steps, iterate through strings character by character, and use a `while True` loop with a stopping condition as an optional extension."
+					content: reviewBrief({
+						focus: "`for` loops, `while` loops, range parameters, string iteration, and stop conditions.",
+						tasks: [
+							"Print number sequences with different starts, stops, and steps.",
+							"Iterate through a string by character.",
+							"Rewrite one fixed-count loop as a condition-controlled `while` loop."
+						],
+						evidence:
+							"The explanation predicts how many times the loop runs and why it stops."
+					})
 				},
 				{
 					title: "Check-In #1: Conditionals",
-					content:
-						"Review `if`, `elif`, and `else` by checking guesses against target values, combining conditions with `and` and `or`, and rewriting part of the solution using a nested conditional."
+					content: reviewBrief({
+						focus: "Branch order, combined conditions, nested conditionals, and boundary cases.",
+						tasks: [
+							"Check guesses against target values.",
+							"Combine conditions with `and` and `or`.",
+							"Rewrite one decision with a nested conditional and compare readability."
+						],
+						evidence:
+							"The work identifies which branch runs for correct, partially correct, and incorrect inputs."
+					})
 				},
 				{
 					title: "Check-In #1: Additional Practice Project",
-					content:
-						"Create a letter shifter that moves characters forward or backward through the alphabet based on either the overall word length or the parity of each index.",
+					content: projectBrief({
+						goal: "Create a letter shifter that changes characters according to a simple rule.",
+						build: [
+							"Ask for a word or short phrase.",
+							"Choose a shifting rule based on word length or character index parity.",
+							"Shift each alphabetic character forward or backward.",
+							"Preserve or intentionally handle spaces and punctuation."
+						],
+						checkpoints: [
+							"Alphabet wraparound is handled.",
+							"The same rule is applied consistently across the whole input.",
+							"The result can be explained by tracing at least two characters."
+						]
+					}),
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps3_caesar_cipher.gif"
 				}
@@ -385,13 +937,34 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Functions",
-					content:
-						"Define functions as reusable blocks of code with a name, parameters, a body, and often a return value. Compare built-in functions such as `input()`, `print()`, and `str()` with user-defined functions."
+					content: conceptBrief({
+						focus: "Functions package reusable behavior behind a name. Parameters bring information into the function, return values send information back out, and scope controls which names exist inside or outside the function.",
+						practice: [
+							"Compare built-in functions such as `input()`, `print()`, and `str()` with a user-defined helper.",
+							"Write one function that prints a result and one function that returns a result.",
+							"Trace how argument order affects parameter values.",
+							"Call one helper from another helper to build a larger behavior from smaller pieces."
+						],
+						evidence:
+							"A complete function explanation states the inputs, output, side effects, and where the result is used."
+					})
 				},
 				{
 					title: "PS5 Project 1: Functions Practice",
-					content:
-						"Write practice functions for arithmetic, averages, factorials, and exponents, and describe what each function takes in and returns.",
+					content: projectBrief({
+						goal: "Write a set of focused practice functions and explain each function's contract.",
+						build: [
+							"Create arithmetic helpers with parameters.",
+							"Write an average helper that returns a computed result.",
+							"Write factorial and exponent helpers that use loops.",
+							"Call each function with several test inputs."
+						],
+						checkpoints: [
+							"Each function has a clear name and one main responsibility.",
+							"Returned values are used by the caller rather than ignored.",
+							"Tests include ordinary values and at least one boundary case such as 0 or 1."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Functions-Practice/solution",
 					mediaLink:
@@ -399,8 +972,17 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "Parameter Tracing",
-					content:
-						"Trace a provided program to reinforce the importance of parameter order, variable scope, and calling functions inside other functions.",
+					content: reviewBrief({
+						focus: "Parameter tracing connects a function call to the values received inside the function body.",
+						tasks: [
+							"Label each argument at the call site.",
+							"Map each argument to its matching parameter by position.",
+							"Trace local variables separately from variables outside the function.",
+							"Predict the output before running the starter."
+						],
+						evidence:
+							"The trace explains why changing argument order can change the result even when the same values are present."
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Parameter-Tracing/starter",
 					solutionLink:
@@ -408,8 +990,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS5 Project 2: Coin Flipper",
-					content:
-						"Build a `flipCoin()` function that returns heads or tails, call it many times, tally the outcomes, and compare the observed percentages with the expected distribution.",
+					content: projectBrief({
+						goal: "Estimate heads/tails frequencies with a function and repeated simulation.",
+						build: [
+							"Write `flipCoin()` so it returns either heads or tails.",
+							"Call the function many times inside a loop.",
+							"Count how many times each result appears.",
+							"Print totals and percentages."
+						],
+						checkpoints: [
+							"The flip function returns a value instead of printing all results internally.",
+							"The tally variables update once per flip.",
+							"The observed percentages are compared to the expected 50/50 pattern without assuming every run will be exact."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Coin-Flipper/solution",
 					mediaLink:
@@ -417,8 +1011,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS5 Project 3: Dice Roller",
-					content:
-						"Simulate rolling two dice repeatedly, track sums, and analyze why middle totals appear more often than edge totals.",
+					content: projectBrief({
+						goal: "Simulate two dice and analyze the distribution of possible sums.",
+						build: [
+							"Write or reuse a function that returns a random die roll.",
+							"Roll two dice repeatedly and add their values.",
+							"Track how often each sum appears.",
+							"Print a summary that makes common and rare sums visible."
+						],
+						checkpoints: [
+							"Sums range from 2 through 12.",
+							"The frequency table updates the correct sum each roll.",
+							"The explanation connects middle sums to more possible dice combinations."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Dice-Roller/solution",
 					mediaLink:
@@ -428,15 +1034,39 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS5 Supplemental Project 1: Squawka Zilly Floog",
-					content:
-						"Define a small set of math functions that call one another to compute increasingly complex expressions.",
+					content: projectBrief({
+						goal: "Build a chain of math helpers where later functions reuse earlier functions.",
+						build: [
+							"Define a small group of simple arithmetic functions.",
+							"Create larger functions that call the smaller helpers.",
+							"Print intermediate and final results while testing.",
+							"Clean the output once the function chain is correct."
+						],
+						checkpoints: [
+							"Functions are reused rather than copied.",
+							"Argument order is consistent across calls.",
+							"The final expression can be traced through the helper calls."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Squawka-Zilly-Floog/solution"
 				},
 				{
 					title: "PS5 Supplemental Project 2: Word Translator",
-					content:
-						"Write a translator function for a simplified Pig Latin variant and use it to translate a user-provided word.",
+					content: projectBrief({
+						goal: "Write a reusable word-translation function for a simplified Pig Latin-style rule.",
+						build: [
+							"Ask for a word.",
+							"Define a function that receives one word as a parameter.",
+							"Apply the translation rule by moving or adding characters.",
+							"Return and print the translated word."
+						],
+						checkpoints: [
+							"The translation logic lives inside a function.",
+							"Short words and ordinary words have defined behavior.",
+							"The original and translated words are both visible in the output."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Juni-Latin/solution",
 					mediaLink:
@@ -444,8 +1074,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS5 Supplemental Project 3: Number Games",
-					content:
-						"Write helper functions such as `isEven`, `isOdd`, `isMultiple7`, and `isPrime`, then use them to print categorized ranges of numbers.",
+					content: projectBrief({
+						goal: "Create predicate helper functions that classify numbers and reuse them across ranges.",
+						build: [
+							"Write boolean helpers such as `isEven`, `isOdd`, `isMultiple7`, and `isPrime`.",
+							"Test each helper with known true and false examples.",
+							"Loop through a range of numbers.",
+							"Print categories based on which helpers return `True`."
+						],
+						checkpoints: [
+							"Each helper returns a boolean.",
+							"Prime checking handles 0, 1, 2, and composite numbers correctly.",
+							"The output proves the helper functions are being reused."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Number-Games/solution",
 					mediaLink:
@@ -453,8 +1095,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS5 Supplemental Project 4: Debugging Functions",
-					content:
-						"Repair a guessing-game script by interpreting function-related error messages and fixing bugs one by one.",
+					content: projectBrief({
+						goal: "Repair a guessing-game script by tracing function definitions, calls, parameters, and returns.",
+						build: [
+							"Run the starter and record the first error or incorrect result.",
+							"Check whether functions are defined before they are called.",
+							"Verify parameter counts, argument order, and return values.",
+							"Fix one issue at a time and rerun after each fix."
+						],
+						checkpoints: [
+							"Every function call matches the function definition.",
+							"Returned values are captured where needed.",
+							"The final game flow works without hidden global-state assumptions."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Debugging-Functions/starter",
 					solutionLink:
@@ -469,13 +1123,34 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Lists",
-					content:
-						"Use lists as ordered collections of values. Practice creating empty lists, iterating directly or by index, appending and removing items, printing full lists, and checking whether an item exists."
+					content: conceptBrief({
+						focus: "Lists store ordered collections. They are useful when the number of values can grow, when positions matter, or when a program needs to process many related items with one loop.",
+						practice: [
+							"Create empty and pre-filled lists.",
+							"Append values and remove values.",
+							"Iterate directly through values and by index when positions matter.",
+							"Check membership and print list contents in a readable way."
+						],
+						evidence:
+							"A list-based solution is justified when it avoids many separate variables and allows the same logic to process every item."
+					})
 				},
 				{
 					title: "PS6 Project 1: Lists Practice",
-					content:
-						"Generate lists of descending numbers, letters from a word, perfect squares, and factorials, then write functions that compute aggregate properties such as the sum or maximum of a list.",
+					content: projectBrief({
+						goal: "Generate and analyze several lists to practice list construction, iteration, and aggregation.",
+						build: [
+							"Create a list of descending numbers.",
+							"Create a list of letters from a word.",
+							"Generate lists of perfect squares and factorials.",
+							"Write helper functions that compute properties such as sum, maximum, or length."
+						],
+						checkpoints: [
+							"Generated lists have the expected number of items.",
+							"Aggregation functions work for more than one list.",
+							"The code distinguishes list construction from list analysis."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Lists-Practice-1/solution",
 					mediaLink:
@@ -483,15 +1158,41 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS6 Project 2: Build a Song",
-					content:
-						"Use the `pysynth` module to turn a list of note-duration pairs into a `.wav` file and experiment with changing melodies and rhythm values.",
+					content: projectBrief({
+						goal: "Represent a melody as list data and generate a playable audio file.",
+						build: [
+							"Represent notes and durations in the structure expected by `pysynth`.",
+							"Create a short melody manually.",
+							"Generate a `.wav` file from the list.",
+							"Change note order or duration values and compare the result."
+						],
+						checkpoints: [
+							"The music data is stored as structured list values.",
+							"The generated file reflects changes to the list.",
+							"The explanation connects list order to the order of notes played."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Build-a-Song/solution"
 				},
 				{
 					title: "PS6 Project 3: Song Generator",
-					content:
-						"Ask the user for notes and optionally durations, store them in a list structure, and generate a song file from the resulting sequence.",
+					content: projectBrief({
+						goal: "Generate a song from user-provided note data stored in a list structure.",
+						build: [
+							"Ask for notes and, if supported, note durations.",
+							"Validate or normalize the input values.",
+							"Append each note entry to the song list.",
+							"Generate an audio file from the completed sequence."
+						],
+						checkpoints: [
+							"The list grows as the user adds notes.",
+							"Invalid note or duration choices have a defined behavior.",
+							"The resulting audio matches the order of the stored entries."
+						],
+						extension:
+							"Add a menu that lets the user preview, delete, or replace a note before generating the final file."
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Song-Generator/starter",
 					solutionLink:
@@ -503,8 +1204,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS6 Supplemental Project 1: Tower of Terror",
-					content:
-						"Collect rider weights into a list, then print the list, the total weight, and the average weight.",
+					content: projectBrief({
+						goal: "Store rider weights in a list and compute ride-summary values.",
+						build: [
+							"Collect each rider weight and append it to a list.",
+							"Print the full weight list.",
+							"Compute total weight.",
+							"Compute average weight."
+						],
+						checkpoints: [
+							"The number of list entries matches the number of riders entered.",
+							"The total and average use the list data rather than separate repeated variables.",
+							"Empty or invalid input behavior is considered before division."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Tower-of-Terror/solution",
 					mediaLink:
@@ -512,8 +1225,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS6 Supplemental Project 2: Basketball Stars",
-					content:
-						"Use a list of sublists to store points, rebounds, and assists for several players and identify which players recorded a triple double.",
+					content: projectBrief({
+						goal: "Store player statistics in nested lists and detect triple-double performances.",
+						build: [
+							"Represent each player's points, rebounds, and assists together.",
+							"Store all players in a larger list.",
+							"Loop through players and inspect each stat category.",
+							"Print which players meet the triple-double threshold."
+						],
+						checkpoints: [
+							"Nested indexing retrieves the intended stat.",
+							"All three categories must meet the threshold.",
+							"The output identifies both the player and the stats that qualified."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Basketball-Stars/solution",
 					mediaLink:
@@ -521,8 +1246,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS6 Supplemental Project 3: Stock Trader",
-					content:
-						"Read stock trade histories from starter lists and print the most recent trade price and average trade price for each company.",
+					content: projectBrief({
+						goal: "Analyze stock trade histories stored in starter lists.",
+						build: [
+							"Inspect the structure of the starter trade-history lists.",
+							"Retrieve the most recent price for each company.",
+							"Compute average trade price from each history.",
+							"Print a clear summary for every company."
+						],
+						checkpoints: [
+							"Indexing retrieves the intended recent trade.",
+							"The average divides by the number of trades in that company's list.",
+							"The output remains correct if trade-history lengths differ."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Stock-Trader/starter",
 					solutionLink:
@@ -532,8 +1269,23 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS6 Supplemental Project 4: Dog Breeds",
-					content:
-						"Build a list of dog breeds and print formatted information about each breed, including its first letter and length.",
+					content: projectBrief({
+						goal: "Store dog breeds in a list and print derived information for each entry.",
+						build: [
+							"Create or collect a list of breed names.",
+							"Loop through every breed.",
+							"Print the breed name, first letter, and length.",
+							"Format the output consistently."
+						],
+						checkpoints: [
+							"The same loop handles every breed.",
+							"Indexing is safe for the provided breed names.",
+							"The printed summary is readable for names with spaces.",
+							"Empty strings or accidentally blank entries have a defined behavior before first-letter indexing occurs."
+						],
+						extension:
+							"Add sorting, filtering by first letter, or a count of long breed names to turn the list into a small searchable catalog."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Dog-Breeds/solution",
 					mediaLink:
@@ -541,8 +1293,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS6 Supplemental Project 5: Card Shuffler",
-					content:
-						"Generate an ordered deck representation, repeatedly swap two random positions, and compare how shuffled the deck looks after different numbers of swaps.",
+					content: projectBrief({
+						goal: "Represent a deck as a list and shuffle it through repeated random swaps.",
+						build: [
+							"Generate an ordered deck representation.",
+							"Pick two random indexes.",
+							"Swap the values at those positions.",
+							"Repeat the swap process many times and print the resulting deck."
+						],
+						checkpoints: [
+							"The deck keeps the same number of cards after shuffling.",
+							"No card values are lost or duplicated by the swap operation.",
+							"Different numbers of swaps visibly change how mixed the deck appears."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Card-Shuffler/solution",
 					mediaLink:
@@ -550,8 +1314,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS6 Supplemental Project 6: Debugging Lists",
-					content:
-						"Debug an ice-cream survey program by locating list-related mistakes from the console errors and fixing them in sequence.",
+					content: projectBrief({
+						goal: "Debug an ice-cream survey program by tracing list operations and indexes.",
+						build: [
+							"Run the starter and record the first error or wrong survey result.",
+							"Check list creation, appending, indexing, and removal operations.",
+							"Fix one list issue at a time.",
+							"Rerun with several survey inputs to confirm the final behavior."
+						],
+						checkpoints: [
+							"Indexes stay within list bounds.",
+							"Items are added and removed from the intended list.",
+							"The final survey summary matches the entered responses."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Debugging-Lists/starter",
 					solutionLink:
@@ -566,13 +1342,34 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Dictionaries",
-					content:
-						"Use dictionaries as key-value stores for fast lookups and clearer modeling than parallel lists. Practice accessing values, checking membership, iterating through keys, and storing different data types as keys and values."
+					content: conceptBrief({
+						focus: "Dictionaries map keys to values. They are usually clearer than parallel lists when one value is looked up by name, code, category, or identifier.",
+						practice: [
+							"Create a dictionary with several key-value pairs.",
+							"Look up values by key and handle missing keys deliberately.",
+							"Add and update entries.",
+							"Iterate through keys, values, or key-value pairs depending on the task."
+						],
+						evidence:
+							"A dictionary design is justified when the key explains how the program finds the value."
+					})
 				},
 				{
 					title: "PS7 Project 1: Dictionaries Practice",
-					content:
-						"Create dictionaries of words and definitions, squares, factorials, and letter frequencies from a word.",
+					content: projectBrief({
+						goal: "Practice dictionary construction through vocabulary, computed values, and frequency counts.",
+						build: [
+							"Create a word-definition dictionary.",
+							"Generate dictionaries of squares and factorials.",
+							"Count letter frequencies in a word or phrase.",
+							"Print entries in a readable format."
+						],
+						checkpoints: [
+							"Keys and values are chosen intentionally for each dictionary.",
+							"Frequency counts update existing entries instead of replacing the whole dictionary.",
+							"The same lookup pattern works across multiple dictionary examples."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Dictionaries-Practice/solution",
 					mediaLink:
@@ -580,8 +1377,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS7 Project 2: Song Generator 2",
-					content:
-						"Upgrade the song generator by using a dictionary that translates note-duration names such as whole, half, quarter, or eighth into the values expected by the music generator.",
+					content: projectBrief({
+						goal: "Upgrade the song generator by translating human-readable duration names through a dictionary.",
+						build: [
+							"Create a duration dictionary for names such as whole, half, quarter, and eighth.",
+							"Ask the user for notes and duration names.",
+							"Look up each duration value before storing the note entry.",
+							"Generate the final song from the translated note data."
+						],
+						checkpoints: [
+							"Duration names are not hard-coded in several unrelated conditionals.",
+							"Invalid duration names are handled clearly.",
+							"The dictionary boundary makes the music data easier to read and revise."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Song-Generator-2/starter",
 					solutionLink:
@@ -593,8 +1402,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS7 Supplemental Project 1: Birthday Converter",
-					content:
-						"Convert a birthday written as `mm/dd/yyyy` into a full written date using dictionaries for month names and day suffixes, including special cases such as 11th through 13th.",
+					content: projectBrief({
+						goal: "Convert numeric birthday text into a written date.",
+						build: [
+							"Parse a birthday written as `mm/dd/yyyy`.",
+							"Convert the month number into a month name with a dictionary.",
+							"Choose the day suffix with rules or a dictionary.",
+							"Handle special suffix cases such as 11th, 12th, and 13th."
+						],
+						checkpoints: [
+							"The date parts are split and converted safely.",
+							"Month lookup uses dictionary data.",
+							"Suffix rules handle ordinary and special-case days."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Birthday-Converter/starter",
 					solutionLink:
@@ -604,8 +1425,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS7 Supplemental Project 2: Test Scores",
-					content:
-						"Store student test scores in a dictionary whose values are lists, then compute a second dictionary of student averages.",
+					content: projectBrief({
+						goal: "Store multiple test scores per student and compute average scores.",
+						build: [
+							"Create a dictionary where each key is a student and each value is a list of scores.",
+							"Loop through the dictionary entries.",
+							"Compute each student's average.",
+							"Store or print the average results."
+						],
+						checkpoints: [
+							"The values are lists, not a single overwritten score.",
+							"Each average divides by that student's score count.",
+							"The output identifies which average belongs to which student."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Test-Scores/solution",
 					mediaLink:
@@ -613,8 +1446,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS7 Supplemental Project 3: Coffee Shop",
-					content:
-						"Convert menu prices stored in parallel lists into a dictionary and print a formatted menu from the result.",
+					content: projectBrief({
+						goal: "Replace parallel menu lists with a dictionary and print a readable menu.",
+						build: [
+							"Inspect the starter item and price lists.",
+							"Create a dictionary where item names map to prices.",
+							"Loop through the dictionary to print the menu.",
+							"Format prices consistently."
+						],
+						checkpoints: [
+							"Each item maps to the correct price.",
+							"The dictionary removes the need to keep two list indexes synchronized manually.",
+							"The formatted menu remains readable if another item is added."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Coffee-Shop/starter",
 					solutionLink:
@@ -624,8 +1469,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS7 Supplemental Project 4: Dictionary Indexing",
-					content:
-						"Use nested indexing across dictionaries, lists, and tuples to extract the values needed to print a target sequence of words.",
+					content: projectBrief({
+						goal: "Trace nested data structures and extract target values from dictionaries, lists, and tuples.",
+						build: [
+							"Inspect the outer data structure before writing code.",
+							"Identify whether each step requires a key, list index, or tuple index.",
+							"Extract the target words in order.",
+							"Print the required sequence."
+						],
+						checkpoints: [
+							"Each indexing step matches the structure at that level.",
+							"The code does not rely on trial-and-error guessing.",
+							"The final output is supported by a trace of how each word was reached."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Dictionary-Indexing/starter",
 					solutionLink:
@@ -635,8 +1492,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS7 Supplemental Project 5: Debugging Dictionaries",
-					content:
-						"Fix a Halloween candy counter by tracing dictionary-related bugs from console messages until the program works correctly.",
+					content: projectBrief({
+						goal: "Repair a candy counter by tracing dictionary keys, updates, and lookup behavior.",
+						build: [
+							"Run the starter and record the first dictionary-related error or wrong count.",
+							"Check key spelling, missing keys, and update logic.",
+							"Fix one issue at a time.",
+							"Verify the final candy counts with a known input sequence."
+						],
+						checkpoints: [
+							"Counts increment instead of replacing unrelated entries.",
+							"Missing-key behavior is handled deliberately.",
+							"The final dictionary matches the expected candy totals."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Debugging-Dictionaries/starter",
 					solutionLink:
@@ -651,8 +1520,20 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "PS8 Project 1: Morse Code",
-					content:
-						"Use a dictionary-based translation system to convert text into Morse code and then into a music-based version using short and long note durations.",
+					content: projectBrief({
+						goal: "Translate text into Morse code and then represent the dots and dashes as musical durations.",
+						build: [
+							"Create or inspect a dictionary that maps letters to Morse code.",
+							"Translate each input character into dots and dashes.",
+							"Map dots and dashes to short and long note durations.",
+							"Generate or print the encoded result in a way that preserves letter boundaries."
+						],
+						checkpoints: [
+							"Unsupported characters have a defined behavior.",
+							"The translation preserves spaces or word boundaries clearly.",
+							"The dictionary makes the code easier to extend than a long conditional chain."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS8-Morse-Code/starter",
 					solutionLink:
@@ -668,13 +1549,34 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Sets",
-					content:
-						"Use sets for unordered collections of unique values. Practice creating sets, adding and removing values, checking membership, measuring size, and comparing sets with union and intersection."
+					content: conceptBrief({
+						focus: "Sets store unique values without preserving a meaningful order. They are useful for membership tests, deduplication, and comparing groups.",
+						practice: [
+							"Create sets directly and from lists or strings.",
+							"Add and remove values.",
+							"Check membership with `in`.",
+							"Compare two sets with union, intersection, and difference."
+						],
+						evidence:
+							"A set-based solution is appropriate when uniqueness or group comparison matters more than order."
+					})
 				},
 				{
 					title: "PS9 Project 1: Sets Practice",
-					content:
-						"Create random sets, compare them with union and intersection, extract unique letters from words, compare words by common letters, and write functions that filter sets by conditions.",
+					content: projectBrief({
+						goal: "Practice set creation, comparison, filtering, and deduplication.",
+						build: [
+							"Create random or fixed sets.",
+							"Compare sets with union and intersection.",
+							"Extract unique letters from words.",
+							"Write helper functions that filter set values by conditions."
+						],
+						checkpoints: [
+							"Duplicate values collapse to one set entry.",
+							"Union and intersection results are explained correctly.",
+							"Filtering returns a new meaningful set rather than mutating unexpectedly."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Sets-Practice/solution",
 					mediaLink:
@@ -682,8 +1584,22 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS9 Project 2: Wheel of Fortune",
-					content:
-						"Build a word-guessing game that uses sets to track both all letters in the target word and the letters the user has guessed correctly, then add replay or random-word extensions if desired.",
+					content: projectBrief({
+						goal: "Build a word-guessing game that uses sets to track target letters and guessed letters.",
+						build: [
+							"Choose or ask for a target word.",
+							"Create one set for unique letters in the target word.",
+							"Create another set for correctly guessed letters.",
+							"Update the guessed set until every target letter has been found."
+						],
+						checkpoints: [
+							"Repeated letters do not require repeated guesses.",
+							"Wrong guesses do not pollute the correct-letter set.",
+							"The win condition compares sets rather than a fragile string pattern."
+						],
+						extension:
+							"Add replay, random word selection, wrong-guess tracking, or a displayed puzzle board."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Wheel-of-Fortune/solution",
 					mediaLink:
@@ -693,8 +1609,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS9 Supplemental Project 1: Class Registration",
-					content:
-						"Remove duplicate names from class rosters and report the actual enrollment count in each course.",
+					content: projectBrief({
+						goal: "Clean class rosters by removing duplicates and reporting real enrollment counts.",
+						build: [
+							"Load or create course rosters with repeated names.",
+							"Convert each roster to a set to remove duplicates.",
+							"Compute the actual enrollment count.",
+							"Print the cleaned roster and count for each course."
+						],
+						checkpoints: [
+							"Duplicates are removed without manual special cases.",
+							"The count comes from the cleaned set.",
+							"The result explains what information was lost when order and duplicates were removed."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Class-Registration/starter",
 					solutionLink:
@@ -704,8 +1632,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS9 Supplemental Project 2: Class Registration II",
-					content:
-						"Determine which students are waitlisted once duplicates are removed and enrollment caps are enforced.",
+					content: projectBrief({
+						goal: "Apply enrollment caps after roster deduplication and identify waitlisted students.",
+						build: [
+							"Clean duplicate registrations.",
+							"Apply each class capacity limit.",
+							"Separate enrolled students from waitlisted students.",
+							"Print both groups clearly."
+						],
+						checkpoints: [
+							"Capacity is enforced after duplicates are removed.",
+							"Waitlisted students are not also counted as enrolled.",
+							"The output handles full, under-filled, and exactly-full classes."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Class-Registration-II/starter",
 					solutionLink:
@@ -715,8 +1655,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS9 Supplemental Project 3: Favorite Foods",
-					content:
-						"Compare two sets of favorite foods and print the shared foods as well as the foods unique to each person.",
+					content: projectBrief({
+						goal: "Compare two people or groups by shared and unique favorite foods.",
+						build: [
+							"Create two sets of favorite foods.",
+							"Compute the shared favorites with intersection.",
+							"Compute foods unique to each set with difference.",
+							"Print each comparison category."
+						],
+						checkpoints: [
+							"Shared values appear only in the shared category.",
+							"Unique values are reported for the correct person or group.",
+							"The explanation names which set operation produced each result."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Favorite-Foods/solution",
 					mediaLink:
@@ -724,8 +1676,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS9 Supplemental Project 4: Soccer Nationalities",
-					content:
-						"Use a dictionary of player nationalities and a set to count and print the distinct countries represented on a team.",
+					content: projectBrief({
+						goal: "Combine dictionary lookup with set deduplication to summarize team nationalities.",
+						build: [
+							"Represent player nationalities with a dictionary that maps player names to countries.",
+							"Loop through the player entries.",
+							"Add each nationality to a set.",
+							"Print the unique countries and the total number represented."
+						],
+						checkpoints: [
+							"Players from the same country count once in the unique set.",
+							"The dictionary keeps player identity separate from nationality grouping.",
+							"The output makes the distinction between players and countries clear."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Soccer-Nationalities/starter",
 					solutionLink:
@@ -735,8 +1699,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS9 Supplemental Project 5: Debugging Sets",
-					content:
-						"Fix a capture-the-flag tracker by correcting set-related errors and verifying the program state after each repair.",
+					content: projectBrief({
+						goal: "Debug a capture-the-flag tracker by inspecting set operations and state after each change.",
+						build: [
+							"Run the starter and identify the first incorrect set state.",
+							"Check add, remove, membership, union, and intersection logic.",
+							"Fix one problem at a time.",
+							"Print or inspect set contents after each important step."
+						],
+						checkpoints: [
+							"Set operations match the intended game rule.",
+							"Duplicate entries do not create fake progress.",
+							"The final tracker state matches the expected captured flags."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Debugging-Sets/starter",
 					solutionLink:
@@ -751,33 +1727,85 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Check-In #2 Overview",
-					content:
-						"This review module revisits functions, lists, dictionaries, and sets. Focus on explaining why each data structure or function design is a good fit for the task."
+					content: reviewBrief({
+						focus: "This checkpoint revisits functions, lists, dictionaries, and sets with emphasis on choosing the right tool for the data.",
+						tasks: [
+							"Solve the prompts without changing the data structure just to make the code easier temporarily.",
+							"Explain why a function, list, dictionary, or set is appropriate for each prompt.",
+							"Record any prompt where the data model was unclear before the syntax."
+						],
+						evidence:
+							"Readiness is demonstrated by matching data structures to the task and explaining the tradeoff."
+					})
 				},
 				{
 					title: "Check-In #2: Functions",
-					content:
-						"Review the difference between defining and calling functions, returning values, importing `random`, and using functions to build small simulations such as a lottery game."
+					content: reviewBrief({
+						focus: "Function definitions, calls, parameters, return values, imports, and small simulations.",
+						tasks: [
+							"Define and call helper functions with clear parameters.",
+							"Return values that are used by later code.",
+							"Include `random` in a controlled simulation such as a lottery or game."
+						],
+						evidence:
+							"The solution identifies what each function receives, returns, and changes."
+					})
 				},
 				{
 					title: "Check-In #2: Lists",
-					content:
-						"Practice building lists from scratch, adding and removing elements, printing formatted output, and generating lists of numbers such as ranges and even values."
+					content: reviewBrief({
+						focus: "List construction, mutation, iteration, formatting, and generated numeric sequences.",
+						tasks: [
+							"Build lists from scratch and from loops.",
+							"Add, remove, and inspect elements.",
+							"Generate number lists such as ranges, even values, or calculated values."
+						],
+						evidence:
+							"The list is used to simplify repeated work rather than to hide several unrelated variables."
+					})
 				},
 				{
 					title: "Check-In #2: Dictionaries",
-					content:
-						"Review how dictionaries store key-value pairs, how to look up values, add entries, iterate through keys and values, and generate dictionaries from computed data."
+					content: reviewBrief({
+						focus: "Key-value modeling, lookup behavior, dictionary updates, iteration, and generated dictionaries.",
+						tasks: [
+							"Create dictionaries manually and from computed values.",
+							"Look up, add, and update entries.",
+							"Iterate through keys and values while preserving what each key means."
+						],
+						evidence:
+							"The solution explains why each key is stable enough to retrieve the matching value."
+					})
 				},
 				{
 					title: "Check-In #2: Sets",
-					content:
-						"Practice using sets for unique values, membership tests, intersections, unions, and deduplicating characters or words from input text."
+					content: reviewBrief({
+						focus: "Uniqueness, membership tests, intersections, unions, and deduplication.",
+						tasks: [
+							"Create sets from text, lists, or explicit values.",
+							"Compare sets with union and intersection.",
+							"Remove duplicates with sets and explain what information is lost."
+						],
+						evidence:
+							"The answer distinguishes unique membership from ordered sequence data."
+					})
 				},
 				{
 					title: "Check-In #2: Additional Practice Project",
-					content:
-						"Use sets to analyze unique letters or words in user-provided text and compare the number of unique items with the total number of items."
+					content: projectBrief({
+						goal: "Analyze user-provided text by comparing total items with unique items.",
+						build: [
+							"Ask for a word, sentence, or short paragraph.",
+							"Split or iterate through the text according to whether letters or words are being analyzed.",
+							"Create a set of unique items.",
+							"Compare the total count with the unique count."
+						],
+						checkpoints: [
+							"The item definition is clear: letter, word, or other token.",
+							"Case and punctuation behavior are defined.",
+							"The final comparison explains what the set removed."
+						]
+					})
 				}
 			],
 			supplementalProjects: []
@@ -787,8 +1815,22 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "PS10 Project 1: To-Do List",
-					content:
-						"Build an interactive to-do list that lets the user add tasks, remove tasks, display the numbered list, and optionally prioritize tasks or reject invalid removals.",
+					content: projectBrief({
+						goal: "Build an interactive to-do list with menu-driven list operations.",
+						build: [
+							"Store tasks in a list.",
+							"Provide menu options to add a task, remove a task, display the list, and quit.",
+							"Number the displayed tasks so removal is understandable.",
+							"Validate removal choices before mutating the list."
+						],
+						checkpoints: [
+							"The program loop keeps running until the user chooses to quit.",
+							"Adding and removing tasks updates the same list.",
+							"Invalid menu choices or invalid removal indexes do not crash the program."
+						],
+						extension:
+							"Add priority labels, completed-task status, saving/loading, or due-date sorting."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS10-Todo-List/solution",
 					mediaLink:
@@ -798,8 +1840,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS10 Supplemental Project 1: US Capitals Quiz",
-					content:
-						"Run a state-capitals quiz until an incorrect answer is given, then print the final score.",
+					content: projectBrief({
+						goal: "Run a state-capitals quiz with dictionary lookup and score tracking.",
+						build: [
+							"Represent state-capital pairs with a dictionary.",
+							"Ask quiz questions in a loop.",
+							"Compare the user's answer to the expected capital.",
+							"Stop on an incorrect answer and print the final score."
+						],
+						checkpoints: [
+							"The state prompt and capital answer come from the same dictionary entry.",
+							"The score increments only after correct answers.",
+							"Case and spelling behavior are stated."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS10-US-Capitals-Quiz/starter",
 					solutionLink:
@@ -809,8 +1863,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS10 Supplemental Project 2: Field Day",
-					content:
-						"Assign classmates to kickball, capture the flag, both, or neither, then print the final rosters for both teams.",
+					content: projectBrief({
+						goal: "Assign classmates to event rosters and compare group membership.",
+						build: [
+							"Represent classmates and event choices with sets or lists.",
+							"Assign students to kickball, capture the flag, both, or neither.",
+							"Compute each final roster.",
+							"Print the groups clearly."
+						],
+						checkpoints: [
+							"Students in both events are represented accurately.",
+							"Students in neither event are not accidentally dropped from the reasoning.",
+							"The data structure choice matches whether order or uniqueness matters."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS10-Field-Day/solution",
 					mediaLink:
@@ -818,8 +1884,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS10 Supplemental Project 3: Field Day II",
-					content:
-						"Randomly split a class into Team Red and Team Blue while printing roster updates and the remaining unassigned players after each round.",
+					content: projectBrief({
+						goal: "Randomly divide a class into two teams while tracking unassigned players.",
+						build: [
+							"Store the full class roster.",
+							"Randomly choose a student for Team Red or Team Blue.",
+							"Remove assigned students from the unassigned group.",
+							"Print team rosters and remaining players after each round."
+						],
+						checkpoints: [
+							"No student appears on both teams.",
+							"Every assigned student is removed from the unassigned group.",
+							"The process ends with balanced or intentionally handled uneven teams."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS10-Field-Day-II/solution",
 					mediaLink:
@@ -832,8 +1910,22 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "PS11 Project 1: Bank Account",
-					content:
-						"Create a login-based bank account simulator with sample login names, access phrases, balances, deposits, withdrawals, credential updates, and optional interest collection.",
+					content: projectBrief({
+						goal: "Create a console bank-account simulator with login, balances, and transaction actions.",
+						build: [
+							"Represent sample accounts with sample login names, access phrases, and balances.",
+							"Validate a login before allowing account actions.",
+							"Add menu options for deposits, withdrawals, balance display, and credential updates.",
+							"Reject invalid withdrawals or malformed numeric input."
+						],
+						checkpoints: [
+							"Authentication state is checked before account actions run.",
+							"Balances update only after valid transactions.",
+							"Account data is organized so credentials and balances stay connected to the correct user."
+						],
+						extension:
+							"Add simple interest, transaction history, account lockout after repeated failures, or save/load behavior."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS11-Bank-Account/solution",
 					mediaLink:
@@ -843,8 +1935,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS11 Supplemental Project 1: Calculator",
-					content:
-						"Write arithmetic helper functions and combine them into a calculator that lets the user choose an operation and print the result.",
+					content: projectBrief({
+						goal: "Build a calculator from small arithmetic helper functions.",
+						build: [
+							"Write helper functions for supported operations.",
+							"Ask the user for two numbers and an operation.",
+							"Call the matching helper based on the chosen operation.",
+							"Print the result with the original expression."
+						],
+						checkpoints: [
+							"Division by zero has a defined behavior.",
+							"Each arithmetic operation lives in one helper.",
+							"Invalid operation choices are handled separately from arithmetic errors."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS11-Calculator/solution",
 					mediaLink:
@@ -852,8 +1956,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS11 Supplemental Project 2: Theme Park Planner",
-					content:
-						"Use dictionaries and looping menu logic to track how much time remains in a six-hour amusement park visit and which rides the user chooses.",
+					content: projectBrief({
+						goal: "Plan a theme-park visit by tracking ride choices and remaining time.",
+						build: [
+							"Represent ride names and estimated durations in a dictionary.",
+							"Begin with a six-hour time budget.",
+							"Let the user choose rides from a menu.",
+							"Subtract ride time and print the updated plan after each choice."
+						],
+						checkpoints: [
+							"Ride durations come from the dictionary.",
+							"The remaining time never silently goes negative.",
+							"The final plan lists chosen rides and unused time."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS11-Juni-World/starter",
 					solutionLink:
@@ -868,13 +1984,36 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Time Module",
-					content:
-						"Use the `time` module to pause execution with `time.sleep()` and measure elapsed time with `time.time()` and Unix timestamps."
+					content: conceptBrief({
+						focus: "The `time` module can pause execution and measure elapsed time. `time.sleep()` delays the program, while `time.time()` returns a timestamp that can be compared against another timestamp.",
+						practice: [
+							"Create a short countdown with `time.sleep()`.",
+							"Record a start time and end time with `time.time()`.",
+							"Subtract timestamps to calculate elapsed seconds.",
+							"Discuss why elapsed time can vary slightly between runs."
+						],
+						evidence:
+							"A timing program is correct when it measures a duration from two timestamps rather than hard-coding how long the user took."
+					})
 				},
 				{
 					title: "PS12 Project 1: Type Racer",
-					content:
-						"Pick a random sentence, count down, time the user while typing, require exact completion before stopping the timer, and optionally score accuracy or support multiple players.",
+					content: projectBrief({
+						goal: "Build a typing race that measures how long the user takes to type a target sentence.",
+						build: [
+							"Choose a random sentence from a list.",
+							"Show a countdown before timing begins.",
+							"Record the start time, collect the typed response, and record the end time.",
+							"Accept only exact completion or report accuracy before calculating the final result."
+						],
+						checkpoints: [
+							"Timing starts after the countdown and stops after the user submits text.",
+							"The target and typed response are compared clearly.",
+							"The final report includes elapsed time and, if included, accuracy."
+						],
+						extension:
+							"Add multiplayer rounds, words-per-minute scoring, typo highlighting, or a high-score table."
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Type-Racer/solution",
 					mediaLink:
@@ -884,8 +2023,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS12 Supplemental Project 1: Review Sentiment",
-					content:
-						"Split a review into words, compare them against positive and negative vocabularies, and classify the overall review sentiment.",
+					content: projectBrief({
+						goal: "Classify a review by comparing its words to positive and negative vocabularies.",
+						build: [
+							"Collect or load a short review.",
+							"Split the review into words and normalize case or punctuation.",
+							"Compare words against positive and negative word sets.",
+							"Compute a score and print the resulting sentiment."
+						],
+						checkpoints: [
+							"Text cleaning rules are stated.",
+							"Positive and negative matches are counted separately.",
+							"The result is described as a simple heuristic rather than perfect language understanding."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Review-Sentiment/starter",
 					solutionLink:
@@ -895,8 +2046,22 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS12 Supplemental Project 2: Evil Wheel of Fortune",
-					content:
-						"Implement a harder version of Wheel of Fortune where the computer keeps a changing list of possible words and avoids committing to a secret word for as long as possible.",
+					content: projectBrief({
+						goal: "Implement a harder word-guessing game that delays choosing a fixed secret word.",
+						build: [
+							"Load a list of possible words.",
+							"Filter possible words after each guess.",
+							"Choose a response pattern that keeps the largest useful word family.",
+							"Continue until the game ends with a consistent remaining word."
+						],
+						checkpoints: [
+							"The possible-word list only contains words consistent with previous answers.",
+							"The computer's responses remain logically possible.",
+							"The final word belongs to the remaining candidate set."
+						],
+						extension:
+							"Display the candidate count after each guess or compare the strategy to a normal fixed-word version."
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Evil-Wheel-of-Fortune/starter",
 					solutionLink:
@@ -911,8 +2076,22 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "PS13 Project 1: Wordsmith",
-					content:
-						"Use a provided word list to build a timed word game around seven random letters, validating guesses, preventing repeats, and scoring accepted words. Optional extensions can add a high score, new game loop, or guaranteed vowels.",
+					content: projectBrief({
+						goal: "Build a timed word game from seven random letters and a valid-word list.",
+						build: [
+							"Choose or generate seven letters.",
+							"Load the valid-word list.",
+							"Accept guesses until the timer expires or the round ends.",
+							"Reject repeated, impossible, or invalid words and score accepted words."
+						],
+						checkpoints: [
+							"Guesses use only available letters.",
+							"Repeated guesses do not score twice.",
+							"The score rule is visible and testable."
+						],
+						extension:
+							"Add guaranteed vowels, round replay, high scores, or difficulty levels based on word length."
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS13-Wordsmith/starter",
 					solutionLink:
@@ -924,8 +2103,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS13 Supplemental Project 1: Typewriter Monkeys",
-					content:
-						"Continuously generate random letters and stop when the last three letters typed form a valid three-letter English word.",
+					content: projectBrief({
+						goal: "Simulate random typing until the newest three-letter sequence forms a valid word.",
+						build: [
+							"Load or define a set of valid three-letter words.",
+							"Generate random letters one at a time.",
+							"Track the most recent three-letter window.",
+							"Stop when the window is a valid word and report the number of generated letters."
+						],
+						checkpoints: [
+							"The rolling window updates correctly after each new letter.",
+							"Membership checking uses the word set efficiently.",
+							"The final output includes the found word and attempt count."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS13-Typewriter-Monkeys/starter",
 					solutionLink:
@@ -935,8 +2126,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS13 Supplemental Project 2: Advanced Typewriter Monkeys",
-					content:
-						"Generalize the monkey-typing simulation so it searches for a valid word of length `n` and compare how runtime changes as `n` increases.",
+					content: projectBrief({
+						goal: "Generalize random typing to search for valid words of length `n` and observe how runtime changes.",
+						build: [
+							"Ask for or set a target word length.",
+							"Load valid words of that length.",
+							"Track a rolling window of length `n`.",
+							"Measure attempts or elapsed time until a valid word appears."
+						],
+						checkpoints: [
+							"The same logic works for more than one word length.",
+							"The rolling window stays exactly length `n` after enough letters are generated.",
+							"The runtime comparison explains why longer targets usually take more attempts."
+						]
+					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS13-Advanced-Typewriter-Monkeys/starter",
 					solutionLink:
@@ -951,8 +2154,20 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "PS14 Project 1: Simple Blackjack",
-					content:
-						"Build a simplified Blackjack game with cards valued 2 through 11, repeated player hit/stay choices, dealer drawing until at least 17, and replay support.",
+					content: projectBrief({
+						goal: "Build a simplified Blackjack game with player choices, dealer rules, and round outcomes.",
+						build: [
+							"Represent card values from 2 through 11.",
+							"Let the player hit or stay in a loop.",
+							"Have the dealer draw until reaching at least 17.",
+							"Compare final totals and report win, loss, bust, or tie."
+						],
+						checkpoints: [
+							"Player and dealer totals update separately.",
+							"Bust conditions stop or resolve the round correctly.",
+							"Replay starts a fresh round rather than reusing stale totals."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS14-Simple-Blackjack/solution",
 					mediaLink:
@@ -960,8 +2175,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS14 Project 2: Advanced Blackjack",
-					content:
-						"Extend Blackjack with face cards, named card output, ace handling as 1 or 11, and helper functions that compute the best available hand value.",
+					content: projectBrief({
+						goal: "Extend Blackjack with richer card representation, face cards, aces, and hand-value helpers.",
+						build: [
+							"Represent card names separately from card values where needed.",
+							"Add face-card output for Jack, Queen, and King.",
+							"Handle aces as 1 or 11 depending on the hand.",
+							"Write helper functions that compute the best valid hand value."
+						],
+						checkpoints: [
+							"Ace handling prevents unnecessary busts when possible.",
+							"Card display is readable to the player.",
+							"Hand-value logic is reusable for both player and dealer."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS14-Advanced-Blackjack/solution",
 					mediaLink:
@@ -971,8 +2198,20 @@ export const pythonLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "PS14 Supplemental Project 1: Game of War",
-					content:
-						"Simulate ten rounds of War by giving each player a random card value each round, printing the result, and tracking total wins.",
+					content: projectBrief({
+						goal: "Simulate a fixed number of War card-game rounds and track the winner count.",
+						build: [
+							"Loop through ten rounds.",
+							"Generate a random card value for each player.",
+							"Compare card values and print the round result.",
+							"Track wins, losses, and ties."
+						],
+						checkpoints: [
+							"Each round has independent random values.",
+							"The score table updates after every round.",
+							"The final summary matches the printed round outcomes."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS14-Game-of-War/solution",
 					mediaLink:
@@ -980,8 +2219,20 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS14 Supplemental Project 2: Mastermind",
-					content:
-						"Implement the code-breaking game Mastermind by comparing user guesses to a hidden four-digit code and reporting how many digits are correct or close.",
+					content: projectBrief({
+						goal: "Implement a Mastermind-style code-breaking game with feedback for exact and partial matches.",
+						build: [
+							"Generate or define a hidden four-digit code.",
+							"Ask for guesses in a loop.",
+							"Count exact matches in the correct position.",
+							"Count close matches that use a correct digit in the wrong position without double-counting."
+						],
+						checkpoints: [
+							"Guess length and digit validity are checked.",
+							"Exact matches and close matches are reported separately.",
+							"Repeated digits are handled by a clear rule."
+						]
+					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS14-Mastermind/solution",
 					mediaLink:
@@ -994,20 +2245,51 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "PS15 Project 1: Master Project",
-					content:
-						"Design and build a larger console project that showcases the core concepts from the course. Possible directions include trivia games, virtual pets, dice games, or text-based RPGs. Start by outlining the major program steps and data structures before implementation.",
+					content: projectBrief({
+						goal: "Design and build a larger console project that combines the main Python Level 2 skills.",
+						build: [
+							"Choose a project direction such as trivia, a virtual pet, a dice game, a text RPG, or another console application with meaningful state.",
+							"Outline the main program loop, user actions, data structures, and helper functions before implementation.",
+							"Build a small playable or usable version first.",
+							"Add polish only after the core data and control flow are reliable."
+						],
+						checkpoints: [
+							"The project uses at least three major course ideas such as functions, loops, lists, dictionaries, sets, random, or timing.",
+							"The main loop, data model, and helper functions can be explained separately.",
+							"The finished program handles ordinary input and at least one invalid or edge-case input."
+						],
+						extension:
+							"Add save/load, scoring, levels, configuration, or replay if those features strengthen the core design instead of distracting from it."
+					}),
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps_15_master_project.mp4"
 				},
 				{
 					title: "Master Project Presentation",
-					content:
-						"Prepare a short presentation that explains the project structure, the most important coding decisions, and how the course concepts came together in the final program."
+					content: reviewBrief({
+						focus: "The presentation explains how the project works, why it was structured that way, and what tradeoffs were made.",
+						tasks: [
+							"Describe the user flow from program start to program end.",
+							"Identify the most important variables, functions, and data structures.",
+							"Show one bug or design decision that required revision.",
+							"Run a short demo with an ordinary path and one edge case."
+						],
+						evidence:
+							"A strong presentation connects code choices to behavior instead of only showing that the final program runs."
+					})
 				},
 				{
 					title: "Course Recap",
-					content:
-						"Review the major ideas from the course: variables, strings, input, loops, ASCII and ciphers, conditionals, functions, lists, dictionaries, sets, timing, and larger game structure. Then compare possible next courses based on future goals, such as Python Level 3, Java Level 1, Data Science in Python, PyGame, or JavaScript Level 1."
+					content: reviewBrief({
+						focus: "The recap connects the individual projects into a map of Python Level 2 skills and possible next directions.",
+						tasks: [
+							"Review variables, strings, input, loops, ASCII/ciphers, conditionals, functions, lists, dictionaries, sets, timing, and larger game structure.",
+							"Identify which skills feel automatic and which still need deliberate practice.",
+							"Compare next-course options such as Python Level 3, Java Level 1, Data Science in Python, PyGame, or JavaScript Level 1 based on goals."
+						],
+						evidence:
+							"The next step follows from demonstrated strengths and gaps, not only from completing the last module."
+					})
 				}
 			],
 			supplementalProjects: []

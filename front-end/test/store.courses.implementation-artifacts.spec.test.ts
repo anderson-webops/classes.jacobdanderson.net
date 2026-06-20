@@ -611,7 +611,7 @@ describe("implemented course development artifacts", () => {
 		expect(text).not.toContain(
 			["usernames", `${credentialWord}s`].join(", ")
 		);
-		expect(text).toContain("Use a sample target phrase");
+		expect(text).toContain("target password or phrase");
 		expect(text).toContain("encoded sample phrase");
 		expect(text).toContain("sample login names");
 	});
@@ -622,7 +622,9 @@ describe("implemented course development artifacts", () => {
 			"java-without-graphics",
 			"java-with-graphics"
 		]) {
-			const serializedCourse = JSON.stringify(await requireCourse(courseId));
+			const serializedCourse = JSON.stringify(
+				await requireCourse(courseId)
+			);
 			const rootOnlyLinks = [
 				...serializedCourse.matchAll(
 					/https:\/\/github\.com\/instruction-material\/Java-Level-1(?=["\\])/g

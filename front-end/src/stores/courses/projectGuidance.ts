@@ -2159,7 +2159,7 @@ export function buildProjectGuidance({
 	});
 	const body = [
 		`**Focus:** ${focusFor(courseFamily, scopedModuleTitle, projectKind)}.`,
-		"**Required work:**",
+		"**Core work:**",
 		...requiredWorkSteps(courseFamily, scopedModuleTitle, projectKind).map(
 			(step, index) => `${index + 1}. ${step}`
 		),
