@@ -92,8 +92,7 @@ export const javaLevel3Course: RawCourse = {
 						courseFamily: "Java Level 3",
 						moduleTitle:
 							"AJ1 Review: Variables, Strings, and Input",
-						itemTitle:
-							"Java Syntax Transfer Practice",
+						itemTitle: "Java Syntax Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -108,8 +107,7 @@ export const javaLevel3Course: RawCourse = {
 						courseFamily: "Java Level 3",
 						moduleTitle:
 							"AJ1 Review: Variables, Strings, and Input",
-						itemTitle:
-							"Console Input Extension Practice",
+						itemTitle: "Console Input Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -543,8 +541,7 @@ export const javaLevel3Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ5 Linear Search and Big-O Notation",
-						itemTitle:
-							"Search Runtime Transfer Practice",
+						itemTitle: "Search Runtime Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -558,8 +555,7 @@ export const javaLevel3Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ5 Linear Search and Big-O Notation",
-						itemTitle:
-							"Runtime Comparison Extension Practice",
+						itemTitle: "Runtime Comparison Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -854,8 +850,7 @@ export const javaLevel3Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ7 Selection and Insertion Sort",
-						itemTitle:
-							"Elementary Sorting Transfer Practice",
+						itemTitle: "Elementary Sorting Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -869,8 +864,7 @@ export const javaLevel3Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "AJ7 Selection and Insertion Sort",
-						itemTitle:
-							"Elementary Sorting Extension Practice",
+						itemTitle: "Elementary Sorting Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1217,7 +1211,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ10 Project 3: Exception Practice",
 					content:
-						"Handle file, input, null, and arithmetic exceptions, and create a custom `DivideByZeroException` for more precise error reporting.",
+						"Handle file, input, null, and arithmetic exceptions, and create a custom `DivideByZeroException` for more precise error reporting. The checkpoint is separating recoverable input problems from programmer mistakes, then showing a small test for each handled path.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Exception-Practice-Starter",
 					solutionLink:
@@ -1278,7 +1272,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Singly Linked Lists",
 					content:
-						"Review heads, nodes, links, and one-directional traversal in a singly linked list."
+						"Review heads, nodes, links, and one-directional traversal in a singly linked list. Trace how insertion, removal, and search update references, especially at the head, at the tail, in the middle, and in an empty list."
 				},
 				{
 					title: "AJ11 Project 1: Singly Linked List",
@@ -1358,7 +1352,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ12 Project 1: Implementing a Stack",
 					content:
-						"Implement a stack with array storage, a top pointer, and checks for overflow and underflow.",
+						"Implement a stack with array storage, a top pointer, and checks for overflow and underflow. The implementation should make each mutation of the top index explicit and include tests for pushing to capacity, popping to empty, and reading the top without removing it.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ12-Stack-Starter",
 					solutionLink:
@@ -1367,7 +1361,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Queues",
 					content:
-						"Learn how queues use First In First Out behavior and support `enqueue`, `dequeue`, `front`, and `empty`."
+						"Learn how queues use First In First Out behavior and support `enqueue`, `dequeue`, `front`, and `empty`. Compare the queue contract with stack behavior, then trace how front and back indices move when several items are added and removed."
 				},
 				{
 					title: "AJ12 Project 2: Implementing a Queue",
@@ -1383,7 +1377,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ12 Supplemental Project 1: Valid Parentheses",
 					content:
-						"Use a stack to determine whether parentheses, brackets, and braces are balanced and properly nested.",
+						"Use a stack to determine whether parentheses, brackets, and braces are balanced and properly nested. Push opening symbols, match closing symbols against the most recent opener, and test mismatched types, early closing symbols, and unfinished openings.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ12-Valid-Parentheses",
 					solutionLink:
@@ -1392,7 +1386,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ12 Supplemental Project 2: Calculator with Stacks",
 					content:
-						"Build a stack-based calculator that treats operators as commands acting on the most recently entered numbers.",
+						"Build a stack-based calculator that treats operators as commands acting on the most recently entered numbers. The solution should document the command format, detect missing operands, and trace at least one multi-step expression so the stack state is visible after every operation.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ12-Calculator-with-Stacks",
 					solutionLink:
@@ -1401,7 +1395,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ12 Supplemental Project 3: Implementing a Deque",
 					content:
-						"Extend queue ideas into a double-ended queue implemented with a circular array.",
+						"Extend queue ideas into a double-ended queue implemented with a circular array. Support adding and removing at both ends, define how wraparound works in each direction, and test transitions between empty, one-item, full, and partially wrapped states.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ12-Deque-Starter",
 					solutionLink:
@@ -1529,7 +1523,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Check-In #3: Maps",
 					content:
-						"Review map creation, iteration, membership checks, duplicate-key behavior, and practical use cases for key-value storage."
+						"Review map creation, iteration, membership checks, duplicate-key behavior, and practical use cases for key-value storage. Include a small scenario where a map replaces a nested loop and explain what the key and value represent in plain language."
 				},
 				{
 					title: "Check-In #3: Additional Practice Project",
@@ -1557,7 +1551,8 @@ export const javaLevel3Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #3",
-						itemTitle: "Data Structures Checkpoint Transfer Practice",
+						itemTitle:
+							"Data Structures Checkpoint Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1571,7 +1566,8 @@ export const javaLevel3Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #3",
-						itemTitle: "Data Structures Checkpoint Extension Practice",
+						itemTitle:
+							"Data Structures Checkpoint Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1588,7 +1584,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Trees",
 					content:
-						"Core tree vocabulary includes nodes, edges, parents, children, ancestors, descendants, leaves, roots, height, and subtrees."
+						"Core tree vocabulary includes nodes, edges, parents, children, ancestors, descendants, leaves, roots, height, and subtrees. Draw a small tree, label each term directly on the drawing, and distinguish structural vocabulary from traversal order."
 				},
 				{
 					title: "Binary Search Trees",
@@ -1598,7 +1594,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "BST Practice Problems",
 					content:
-						"Practice inserting and deleting nodes from drawn binary search trees and reason through in-order predecessor replacement."
+						"Practice inserting and deleting nodes from drawn binary search trees and reason through in-order predecessor replacement. The checkpoint is identifying which deletion case applies: leaf, one child, or two children, then preserving the BST ordering invariant afterward."
 				},
 				{
 					title: "AJ14 Project 1: BST Basic Implementation",
@@ -1617,7 +1613,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ14 Project 2: BST Traversals",
 					content:
-						"Implement preorder, inorder, and postorder traversals and use inorder traversal to define `toString()`.",
+						"Implement preorder, inorder, and postorder traversals and use inorder traversal to define `toString()`. Trace one sample tree by hand first so each traversal order has a visible purpose rather than becoming three nearly identical recursive methods.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ14-BST-Traversals",
 					solutionLink:
@@ -1702,7 +1698,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ15 Project 1: HashMap",
 					content:
-						"Implement a custom `HashMap` with linear probing, tombstones, rehashing, and the usual map operations.",
+						"Implement a custom `HashMap` with linear probing, tombstones, rehashing, and the usual map operations. Show how put, get, remove, and contains behave through collisions, deleted slots, duplicate keys, and a resize triggered by load factor.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ15-Hash-Map-Starter",
 					solutionLink:
@@ -1772,7 +1768,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Representing a Graph",
 					content:
-						"Compare adjacency lists, adjacency matrices, and incidence lists, and discuss when each representation is most useful."
+						"Compare adjacency lists, adjacency matrices, and incidence lists, and discuss when each representation is most useful. The evidence target is matching representation choice to graph density, edge lookup needs, traversal cost, and memory tradeoffs."
 				},
 				{
 					title: "AJ16 Project 1: Basic Graph Implementation",
@@ -1856,7 +1852,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Check-In #4: Hash Tables",
 					content:
-						"Explain how hash tables work, compute load factors, compare collision-handling strategies, and identify when rehashing is necessary."
+						"Explain how hash tables work, compute load factors, compare collision-handling strategies, and identify when rehashing is necessary. Include at least one collision trace so linear probing, tombstones, or chaining are described as concrete table states."
 				},
 				{
 					title: "Check-In #4: Graphs",
@@ -1866,7 +1862,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Check-In #4: Additional Practice Project",
 					content:
-						"Extend a BST with a breadth-first search method that prints nodes level by level using a queue.",
+						"Extend a BST with a breadth-first search method that prints nodes level by level using a queue. The implementation should enqueue children in a deliberate order, handle an empty tree, and explain why BFS differs from preorder traversal.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ-Check-In-4-Additional-Practice-Project",
 					solutionLink:
@@ -1889,7 +1885,8 @@ export const javaLevel3Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #4",
-						itemTitle: "Advanced Structures Checkpoint Transfer Practice",
+						itemTitle:
+							"Advanced Structures Checkpoint Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1903,7 +1900,8 @@ export const javaLevel3Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 3",
 						moduleTitle: "Check-In #4",
-						itemTitle: "Advanced Structures Checkpoint Extension Practice",
+						itemTitle:
+							"Advanced Structures Checkpoint Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1925,7 +1923,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ17 Project 1: Weighted Graph",
 					content:
-						"Create a weighted graph implementation that will support the street searcher project.",
+						"Create a weighted graph implementation that will support the street searcher project. Store vertices, weighted edges, and neighbor lookups in a way that makes Dijkstra's algorithm possible without mixing parsing, graph storage, and route-search logic.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ17-Weighted-Graph-Starter",
 					solutionLink:
@@ -2044,14 +2042,14 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Extension: Exceptions Reference Lab",
 					content:
-						"Use the standalone exceptions folder for a cleaner error-handling example than the larger bakery or data-structures projects.",
+						"Use the standalone exceptions folder for a cleaner error-handling example than the larger bakery or data-structures projects. Treat it as a focused reference for try-catch placement, custom exception naming, and deciding when an error should be handled locally.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Exceptions"
 				},
 				{
 					title: "Extension: Nested Classes",
 					content:
-						"Nested classes provide an optional design extension for understanding how helper types can live inside larger structures.",
+						"Nested classes provide an optional design extension for understanding how helper types can live inside larger structures. Compare a static nested helper with an inner class that needs access to the outer instance, then decide which version keeps ownership clearer.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Nested-Classes"
 				},
@@ -2065,14 +2063,14 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Extension: Separate Chaining Hash Table",
 					content:
-						"The separate-chaining implementation adds one more explicit collision-handling model beyond the main hash-map work.",
+						"The separate-chaining implementation adds one more explicit collision-handling model beyond the main hash-map work. Use it to compare bucket lists against linear probing, especially for deletion behavior, clustering, and load-factor interpretation.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ15-Separate-Chaining-Hash-Table"
 				},
 				{
 					title: "Reference: Open Addressing Hash Tables",
 					content:
-						"Keep the open-addressing reference alongside separate chaining to compare the main collision strategies directly.",
+						"Keep the open-addressing reference alongside separate chaining to compare the main collision strategies directly. Focus on probe sequences, tombstones, clustering, and why removing an entry cannot simply clear a slot without considering later lookups.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ15-Open-Addressing-Reference"
 				},
@@ -2093,7 +2091,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Starter: Master Project",
 					content:
-						"Use the final master-project starter as an additional capstone scaffold beyond the main public sequence.",
+						"Use the final master-project starter as an additional capstone scaffold beyond the main public sequence. It is most useful when the route-searcher architecture needs to be rebuilt from the ground up while preserving weighted-graph and file-loading expectations.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ17-Master-Project-Starter"
 				}
