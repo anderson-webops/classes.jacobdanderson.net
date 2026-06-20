@@ -102,7 +102,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference Pack",
 					content:
-						"The repo-backed reference projects for variables, strings, and casting establish a clean notes-and-sandbox workflow from day one.",
+						"The repo-backed reference projects for variables, strings, and casting establish a clean notes-and-sandbox workflow from day one. Use them to separate Java syntax issues from actual concept gaps before starting the first graded-style projects.",
 					projectLink: repo("APCS1-Variables-Reference/starter"),
 					solutionLink: repo("APCS1-Variables-Reference/solution")
 				}
@@ -111,7 +111,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Strings and Printing Reference",
 					content:
-						"Use this reference build to reinforce output formatting, concatenation, escape characters, and readable console output.",
+						"Use this reference build to reinforce output formatting, concatenation, escape characters, and readable console output. The checkpoint is being able to predict the exact printed text, including spaces, quotation marks, and line breaks.",
 					projectLink: repo(
 						"APCS1-Strings-and-Printing-Reference/starter"
 					),
@@ -122,7 +122,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Casting Reference",
 					content:
-						"This reference build gives a tighter review of integer division, explicit casts, and loss-of-precision reasoning.",
+						"This reference build gives a tighter review of integer division, explicit casts, and loss-of-precision reasoning. Use it to explain when Java truncates automatically, when an explicit cast is required, and what information is lost.",
 					projectLink: repo("APCS1-Casting-Reference/starter"),
 					solutionLink: repo("APCS1-Casting-Reference/solution")
 				},
@@ -151,7 +151,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Check-In Prompt Bank",
 					content:
-						"Run the verified check-in prompt bank from the APCS repo rather than the original Replit source. This is the direct GitHub-backed replacement for the original Replit reference.",
+						"Run the check-in prompt bank from the APCS repo as the main review source. It collects the variables, conditionals, loops, and exception prompts in one place so the checkpoint stays structured.",
 					projectLink: repo("APCS-Check-in-1/starter"),
 					solutionLink: repo("APCS-Check-in-1/solution")
 				}
@@ -172,14 +172,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Variables Reference",
 					content:
-						"Return to the variables reference when types, assignment, or `Math.random()` range construction are still hesitant.",
+						"Return to the variables reference when types, assignment, or `Math.random()` range construction are still hesitant. The useful evidence is a short program that declares values, updates them, and explains the resulting type of each expression.",
 					projectLink: repo("APCS1-Variables-Reference/starter"),
 					solutionLink: repo("APCS1-Variables-Reference/solution")
 				},
 				{
 					title: "Loops Reference",
 					content:
-						"Use the loop reference pack for fast review of counted iteration before moving into APCS4.",
+						"Use the loop reference pack for fast review of counted iteration before moving into APCS4. Focus on predicting the first iteration, last iteration, number of iterations, and the variable state after the loop ends.",
 					projectLink: repo("APCS4-Loops-Reference/starter"),
 					solutionLink: repo("APCS4-Loops-Reference/solution")
 				}
@@ -201,7 +201,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Mad Libs",
 					content:
-						"This first APCS1 build combines variables, strings, scanner input, and formatted output without introducing structural overhead.",
+						"This first APCS1 build combines variables, strings, scanner input, and formatted output without introducing structural overhead. A complete version should use clear prompts, store each input in a named variable, and produce readable output without accidental missing spaces.",
 					projectLink: repo("APCS1-Mad-Libs/starter"),
 					solutionLink: repo("APCS1-Mad-Libs/solution"),
 					mediaLink: media("apcs1-project-1-mad-libs.mp4")
@@ -224,7 +224,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Hospital Survey",
 					content:
-						"This project gives another structured pass through typed input, variable naming, and console formatting.",
+						"This project gives another structured pass through typed input, variable naming, and console formatting. Use it to check that numeric and text inputs are read with the correct scanner method and then reported with useful labels.",
 					projectLink: repo("APCS1-Hospital-Survey/starter"),
 					solutionLink: repo("APCS1-Hospital-Survey/solution"),
 					mediaLink: media("apcs1-project-3-hospital-survey.mp4")
@@ -232,7 +232,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Strings and Printing Reference",
 					content:
-						"Keep the strings and printing reference nearby for review of escape characters, concatenation, and output layout.",
+						"Keep the strings and printing reference nearby for review of escape characters, concatenation, and output layout. It is especially useful when the code is logically correct but the displayed result has spacing or formatting bugs.",
 					projectLink: repo(
 						"APCS1-Strings-and-Printing-Reference/starter"
 					),
@@ -248,17 +248,17 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Arithmetic and Update Operators",
 					content:
-						"Arithmetic expressions, operator precedence, `%`, and update patterns like `+=`, `++`, and `--` are the basic mechanics for manipulating numeric state."
+						"Arithmetic expressions, operator precedence, `%`, and update patterns like `+=`, `++`, and `--` are the basic mechanics for manipulating numeric state. Trace each expression before running it so precedence and mutation order are explicit."
 				},
 				{
 					title: "Relational and Logical Operators",
 					content:
-						"Evaluate compound boolean expressions exactly, including short-circuit behavior and correct `String` equality with `.equals()`."
+						"Evaluate compound boolean expressions exactly, including short-circuit behavior and correct `String` equality with `.equals()`. The goal is to justify why an expression is true or false, not just guess from the final output."
 				},
 				{
 					title: "Core Project: Verifying Expressions",
 					content:
-						"Use the verified starter and review pair for expression tracing and boolean reasoning instead of the original Replit-only workflow.",
+						"Use this project for expression tracing and boolean reasoning. The checkpoint is being able to evaluate each subexpression in order, name the final boolean result, and explain any short-circuit behavior.",
 					projectLink: repo("APCS2-Verifying-Expressions/starter"),
 					solutionLink: repo("APCS2-Verifying-Expressions/solution")
 				},
@@ -344,14 +344,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: Math Package",
 					content:
-						"Use this repo reference when `abs`, `pow`, `sqrt`, and round-off behavior need a focused review.",
+						"Use this reference project when `abs`, `pow`, `sqrt`, and round-off behavior need a focused review. Connect each method call to its argument types, return type, and any casting needed before storing the result.",
 					projectLink: repo("APCS3-Math-Package-Reference/starter"),
 					solutionLink: repo("APCS3-Math-Package-Reference/solution")
 				},
 				{
 					title: "Reference: Random Numbers",
 					content:
-						"Use this reference to tighten integer-range generation and avoid off-by-one mistakes with `Math.random()`.",
+						"Use this reference to tighten integer-range generation and avoid off-by-one mistakes with `Math.random()`. A strong explanation names the lowest possible value, highest possible value, and why the cast happens after scaling.",
 					projectLink: repo("APCS3-Random-Numbers-Reference/starter"),
 					solutionLink: repo(
 						"APCS3-Random-Numbers-Reference/solution"
@@ -383,7 +383,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Translating Loops",
 					content:
-						"Use the verified starter and review pair for translating between `for` and `while` forms while preserving exact behavior.",
+						"Use this project to translate between `for` and `while` forms while preserving exact behavior. The important check is that initialization, condition, update, and output stay equivalent after the rewrite.",
 					projectLink: repo("APCS4-Translating-Loops/starter"),
 					solutionLink: repo("APCS4-Translating-Loops/solution"),
 					mediaLink: media("apcs4-project-2-translating-loops.mp4")
@@ -391,7 +391,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Loop Reference Pack",
 					content:
-						"Keep the loop references available for targeted review on tracing, nested iteration, and pattern generation.",
+						"Keep the loop references available for targeted review on tracing, nested iteration, and pattern generation. Use them to practice predicting output before execution and identifying which variable controls each repeated action.",
 					projectLink: repo("APCS4-Loops-Reference/starter"),
 					solutionLink: repo("APCS4-Loops-Reference/solution")
 				}
@@ -408,7 +408,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: While Loop and Nested Loop Practice",
 					content:
-						"Use this mixed practice set to drill while-loop termination and nested iteration on structured output problems.",
+						"Use this mixed practice set to drill while-loop termination and nested iteration on structured output problems. The key check is explaining which condition eventually becomes false and how many times the inner loop runs.",
 					projectLink: repo(
 						"APCS4-While-Loop-and-Nested-Loop-Practice/starter"
 					),
@@ -422,7 +422,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: While Loops and Nested Loops",
 					content:
-						"Use the reference pack when nested iteration needs one more clean example before arrays arrive.",
+						"Use the reference pack when nested iteration needs one more clean example before arrays arrive. Focus on loop initialization, update placement, and the relationship between row-style output and nested loop structure.",
 					projectLink: repo(
 						"APCS4-While-Loops-and-Nested-Loops-Reference/starter"
 					),
@@ -443,12 +443,12 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Prompt Bank Coverage",
 					content:
-						"The check-in concentrates on class definitions, constructors, accessor and mutator methods, static members, inheritance, overriding, and `super`."
+						"The check-in concentrates on class definitions, constructors, accessor and mutator methods, static members, inheritance, overriding, and `super`. Treat the answers as evidence of object-model reasoning, not just isolated syntax recall."
 				},
 				{
 					title: "Core Check-In Prompt Bank",
 					content:
-						"Use the GitHub-backed prompt bank for the full Check-In #2 review instead of the original Replit link.",
+						"Use the prompt bank for the full Check-In #2 review. The checkpoint should show whether classes, methods, and inheritance are ready for the main object-oriented sequence.",
 					projectLink: repo("APCS-Check-in-2/starter"),
 					solutionLink: repo("APCS-Check-in-2/solution")
 				}
@@ -457,7 +457,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Additional Practice: Animal Kingdom",
 					content:
-						"Use the taxonomy inheritance project after the check-in when inheritance needs one more structured build.",
+						"Use the taxonomy inheritance project after the check-in when inheritance needs one more structured build. The important design target is avoiding repeated data by letting each subclass add only the classification level it owns.",
 					projectLink: repo(
 						"APCS-Check-in-2-Additional-Practice-Project/starter"
 					),
@@ -468,14 +468,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Class Example",
 					content:
-						"Use this short class example when constructor syntax or instance variables still feel shaky.",
+						"Use this short class example when constructor syntax or instance variables still feel shaky. It should make the relationship between a class definition, a constructed object, and the object's stored fields concrete.",
 					projectLink: repo("APCS5-Class-Example/starter"),
 					solutionLink: repo("APCS5-Class-Example/solution")
 				},
 				{
 					title: "This Reference",
 					content:
-						"Use the `this` reference pack when constructor syntax works but `this.field` still needs a clearer explanation.",
+						"Use the `this` reference pack when constructor syntax works but `this.field` still needs a clearer explanation. The checkpoint is distinguishing a parameter name from the instance variable that belongs to the current object.",
 					projectLink: repo("APCS6-This-Reference/starter"),
 					solutionLink: repo("APCS6-This-Reference/solution")
 				}
@@ -492,7 +492,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Accessors, Mutators, and Method Practice",
 					content:
-						"Use short object builds to make getters, setters, parameters, return values, and `this` references concrete."
+						"Use short object builds to make getters, setters, parameters, return values, and `this` references concrete. A finished example should show both reading state safely and changing state only through methods that preserve the class contract."
 				},
 				{
 					title: "Core Project: Student Class",
@@ -545,7 +545,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "State Mutation and Reference Semantics",
 					content:
-						"Continue class work with object references, side effects, and method calls that mutate encapsulated state."
+						"Continue class work with object references, side effects, and method calls that mutate encapsulated state. The central tracing skill is predicting what changes inside an object after each method call and what remains unchanged."
 				},
 				{
 					title: "Getters, Setters, `this`, and Primitive vs. Reference",
@@ -582,7 +582,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Farm Class",
 					content:
-						"Use the starter and review pair when another class-based build with simpler domain language would help.",
+						"Use the starter and review pair when another class-based build with simpler domain language would help. Focus on fields, constructor setup, method-driven updates, and a short demonstration that object state changes only in intended ways.",
 					projectLink: repo("APCS6-Farm-Class/starter"),
 					solutionLink: repo("APCS6-Farm-Class/solution"),
 					mediaLink: media("apcs6-project-1-farm-class.mp4")
@@ -630,7 +630,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Pet Class",
 					content:
-						"Use the pet-class build for the first inheritance pass before expanding the class family further.",
+						"Use the pet-class build for the first inheritance pass before expanding the class family further. The goal is to identify what belongs in the superclass and what should be left for subclasses to specialize.",
 					projectLink: repo("APCS7-Pets/starter"),
 					solutionLink: repo("APCS7-Pets/solution"),
 					mediaLink: media("apcs7-project-1-pet-class.mp4")
@@ -638,7 +638,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: More Pets",
 					content:
-						"Use the extended pets build for a second inheritance pass with more subclasses and behavior to compare.",
+						"Use the extended pets build for a second inheritance pass with more subclasses and behavior to compare. The useful evidence is a small set of objects whose shared and specialized behavior can be explained side by side.",
 					projectLink: repo("APCS7-Pets/starter"),
 					solutionLink: repo("APCS7-Pets/solution"),
 					mediaLink: media("apcs7-project-2-more-pets.mp4")
@@ -646,7 +646,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Pet Special Methods",
 					content:
-						"Use the later pet build to focus on overridden object methods and more specialized subclass behavior.",
+						"Use the later pet build to focus on overridden object methods and more specialized subclass behavior. Explain which method implementation runs for each object and why overriding is better than duplicating unrelated code.",
 					projectLink: repo("APCS7-Dogs/starter"),
 					solutionLink: repo("APCS7-Dogs/solution"),
 					mediaLink: media("apcs7-project-3-pet-special-methods.mp4")
@@ -654,7 +654,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Multiple Choice Reference",
 					content:
-						"Use the APCS7 multiple-choice reference to reinforce inheritance vocabulary and trace reasoning.",
+						"Use the APCS7 multiple-choice reference to reinforce inheritance vocabulary and trace reasoning. Each answer should be justified by constructor order, inherited member access, or overridden method behavior.",
 					projectLink: repo(
 						"APCS7-Multiple-Choice-Reference/starter"
 					),
@@ -670,7 +670,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Superclass References and Dynamic Dispatch",
 					content:
-						"Polymorphism combines shared method contracts with runtime method selection based on the actual object type."
+						"Polymorphism combines shared method contracts with runtime method selection based on the actual object type. The AP skill is explaining both compile-time reference restrictions and runtime overridden-method selection."
 				},
 				{
 					title: "Type Reasoning and Invalid Calls",
@@ -680,7 +680,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Many Shapes",
 					content:
-						"Use the verified starter and review pair for the Many Shapes project because it mirrors the source module's polymorphism focus directly.",
+						"Use the Many Shapes project as the main polymorphism build. It should show superclass references, overridden methods, shared method contracts, and the difference between compile-time visibility and runtime behavior.",
 					projectLink: repo("APCS8-Many-Shapes/starter"),
 					solutionLink: repo("APCS8-Many-Shapes/solution"),
 					mediaLink: media("apcs8-project-1-many-shapes.mp4")
@@ -690,14 +690,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Polymorphism Reference",
 					content:
-						"Use the reference pack for short, explicit examples of superclass references and overridden methods.",
+						"Use the reference pack for short, explicit examples of superclass references and overridden methods. For each example, identify the declared reference type, actual object type, visible methods, and method body that runs.",
 					projectLink: repo("APCS8-Polymorphism-Reference/starter"),
 					solutionLink: repo("APCS8-Polymorphism-Reference/solution")
 				},
 				{
 					title: "Multiple Choice Reference",
 					content:
-						"Use the APCS8 multiple-choice reference when a polymorphic model is easier to code than to trace.",
+						"Use the APCS8 multiple-choice reference when a polymorphic model is easier to code than to trace. The target is eliminating answer choices by compile-time type rules and dynamic dispatch behavior.",
 					projectLink: repo(
 						"APCS8-Multiple-Choice-Reference/starter"
 					),
@@ -723,7 +723,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Check-In Prompt Bank",
 					content:
-						"Use the GitHub-backed prompt bank for the main Check-In #3 review sequence.",
+						"Use the GitHub-backed prompt bank for the main Check-In #3 review sequence. It should confirm that design reasoning, polymorphism, arrays, and ArrayLists are ready before the course moves into AP-style algorithm work.",
 					projectLink: repo("APCS-Check-in-3/starter"),
 					solutionLink: repo("APCS-Check-in-3/solution")
 				}
@@ -732,7 +732,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Additional Practice: Letter Shifter",
 					content:
-						"Use the letter-shifter project to reinforce inheritance, overriding, and character-level string manipulation after the check-in.",
+						"Use the letter-shifter project to reinforce inheritance, overriding, and character-level string manipulation after the check-in. A strong solution reuses shared shifting logic and handles wraparound cases for uppercase and lowercase letters.",
 					projectLink: repo(
 						"APCS-Check-in-3-Additional-Practice-Project/starter"
 					),
@@ -750,7 +750,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Multiple Choice Reference",
 					content:
-						"Use the APCS11 multiple-choice reference here because the check-in's later prompts rely on strong collection tracing.",
+						"Use the APCS11 multiple-choice reference here because the check-in's later prompts rely on strong collection tracing. Focus on index shifting, removal effects, and wrapper-class constraints rather than memorizing method names only.",
 					projectLink: repo(
 						"APCS11-Multiple-Choice-Reference/starter"
 					),
@@ -772,12 +772,12 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Robust Input and Failure Handling",
 					content:
-						"Strengthen input handling and validation so malformed input is treated as part of core program correctness."
+						"Strengthen input handling and validation so malformed input is treated as part of core program correctness. The goal is a program that recovers from invalid input with a clear loop instead of crashing or accepting bad state."
 				},
 				{
 					title: "Core Project: Robust Input Practice",
 					content:
-						"Use the verified starter and review pair for robust input practice as the main APCS9 implementation checkpoint.",
+						"Use robust input practice as the main APCS9 implementation checkpoint. The implementation should show validation loops, clear error messages, and a final valid value before continuing.",
 					projectLink: repo("APCS9-Robust-Input-Practice/starter"),
 					solutionLink: repo("APCS9-Robust-Input-Practice/solution"),
 					mediaLink: media(
@@ -796,7 +796,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Robust Input Solution Build",
 					content:
-						"Use the completed robust-input build to compare an input-validation structure against a reference implementation.",
+						"Use the completed robust-input build to compare an input-validation structure against a reference implementation. Look for where invalid values are rejected, where the program repeats, and where valid data finally enters the main logic.",
 					projectLink: repo("APCS9-Robust-Input-Practice/starter"),
 					solutionLink: repo("APCS9-Robust-Input-Practice/solution")
 				}
@@ -808,7 +808,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Arrays, Indexing, and Fixed Size",
 					content:
-						"One-dimensional arrays are fixed-size ordered collections with constant-time indexed access and strict bounds."
+						"One-dimensional arrays are fixed-size ordered collections with constant-time indexed access and strict bounds. The essential habit is tracing valid indexes from `0` through `length - 1` before writing traversal code."
 				},
 				{
 					title: "Pass-by-Reference Effects and 2D Arrays",
@@ -818,7 +818,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Practice With Arrays",
 					content:
-						"Use the practice-with-arrays project as the main APCS10 implementation checkpoint for traversal, accumulation, and simple array-return methods.",
+						"Use the practice-with-arrays project as the main APCS10 implementation checkpoint for traversal, accumulation, and simple array-return methods. The evidence should include a trace of how each loop visits elements and updates an answer.",
 					projectLink: repo("APCS10-Practice-With-Arrays/starter"),
 					solutionLink: repo("APCS10-Practice-With-Arrays/solution"),
 					mediaLink: media(
@@ -828,7 +828,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Array Reference Pack",
 					content:
-						"Keep the array reference build available for quick review of indexing, `.length`, and default values.",
+						"Keep the array reference build available for quick review of indexing, `.length`, and default values. Use it when array syntax is blocking the more important reasoning about traversal, bounds, and mutation.",
 					projectLink: repo("APCS10-Array-Reference/starter"),
 					solutionLink: repo("APCS10-Array-Reference/solution")
 				}
@@ -879,7 +879,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "ArrayLists, Wrapper Constraints, and Core Methods",
 					content:
-						"`ArrayList` is a resizable ordered collection with method-based access, dynamic size, and object-only storage."
+						"`ArrayList` is a resizable ordered collection with method-based access, dynamic size, and object-only storage. The key contrast with arrays is that size changes through methods, while indexes still require careful bounds reasoning."
 				},
 				{
 					title: "Mutation, Traversal, and Removal Rules",
@@ -928,7 +928,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Free Response Practice",
 					content:
-						"Use the APCS11 FRQ practice build to bridge list manipulation and AP free-response expectations.",
+						"Use the APCS11 FRQ practice build to bridge list manipulation and AP free-response expectations. The focus is writing correct list updates while explaining index choices, loop direction, and side effects clearly enough for partial credit.",
 					projectLink: repo("APCS11-Free-Response-Practice/starter"),
 					solutionLink: repo("APCS11-Free-Response-Practice/solution")
 				},
@@ -952,12 +952,12 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Prompt Bank Coverage",
 					content:
-						"The prompt bank emphasizes computational steps, recursive reasoning, sorting traces, search preconditions, and wrapper-class behavior."
+						"The prompt bank emphasizes computational steps, recursive reasoning, sorting traces, search preconditions, and wrapper-class behavior. Treat it as a readiness check for the algorithm-heavy final third of the course."
 				},
 				{
 					title: "Core Check-In Prompt Bank",
 					content:
-						"Use the GitHub-backed prompt bank for the full Check-In #4 review sequence.",
+						"Use the GitHub-backed prompt bank for the full Check-In #4 review sequence. It should identify whether the remaining work should prioritize wrappers, recursion, sorting, searching, or AP-style trace explanations.",
 					projectLink: repo("APCS-Check-in-4/starter"),
 					solutionLink: repo("APCS-Check-in-4/solution"),
 					mediaLink: media("apcs-check-in-4.mp4")
@@ -967,7 +967,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Additional Practice: Inversion Counting",
 					content:
-						"Use inversion counting after the check-in when one more applied problem should connect sorting and runtime ideas.",
+						"Use inversion counting after the check-in when one more applied problem should connect sorting and runtime ideas. The important reasoning is how pair comparisons reveal disorder and why a brute-force count has quadratic cost.",
 					projectLink: repo(
 						"APCS-Check-in-4-Additional-Practice-Project/starter"
 					),
@@ -978,7 +978,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Minimum and Maximum",
 					content:
-						"Use this project as a targeted follow-up when wrapper constants and search initialization still feel abstract.",
+						"Use this project as a targeted follow-up when wrapper constants and search initialization still feel abstract. Trace the first element, current best value, comparison result, and update rule so the initialization choice is defensible.",
 					projectLink: repo("APCS12-Minimum-and-Maximum/starter"),
 					solutionLink: repo("APCS12-Minimum-and-Maximum/solution")
 				},
@@ -1002,12 +1002,12 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Static Constants and Search Initialization",
 					content:
-						"`Integer.MIN_VALUE` and `Integer.MAX_VALUE` support sane initialization choices for min/max search problems."
+						"`Integer.MIN_VALUE` and `Integer.MAX_VALUE` support sane initialization choices for min/max search problems. The concept matters because a bad starting value can make a correct-looking loop fail on all-negative or all-positive data."
 				},
 				{
 					title: "Core Project: Suits, Decks, and Hands",
 					content:
-						"Use the verified starter and review pair for Suits, Decks, and Hands as the main APCS12 build.",
+						"Use Suits, Decks, and Hands as the main APCS12 build. The project connects wrapper-aware values, object collections, random selection, and clear class responsibilities in one card-modeling task.",
 					projectLink: repo("APCS12-Suit-Deck-and-Hand/starter"),
 					solutionLink: repo("APCS12-Suit-Deck-and-Hand/solution"),
 					mediaLink: media(
@@ -1027,7 +1027,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Deck Class",
 					content:
-						"Use Deck Class when another wrapper-style object around a collection would help before APCS17.",
+						"Use Deck Class when another wrapper-style object around a collection would help before APCS17. The useful check is whether cards are represented consistently and deck operations preserve valid collection state.",
 					projectLink: repo("APCS12-Deck-Class/starter"),
 					solutionLink: repo("APCS12-Deck-Class/solution")
 				}
@@ -1044,12 +1044,12 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Best, Average, and Worst Case",
 					content:
-						"Runtime should be described across favorable, typical, and unfavorable cases, especially for loops and search tasks."
+						"Runtime should be described across favorable, typical, and unfavorable cases, especially for loops and search tasks. Use concrete input examples to explain why the same code can do different amounts of work."
 				},
 				{
 					title: "Core Project: Runtime Analysis",
 					content:
-						"Use the verified starter and review pair for runtime analysis as the main APCS13 reasoning checkpoint.",
+						"Use runtime analysis as the main APCS13 reasoning checkpoint. The goal is to count operations from code structure first, then summarize the growth rate with notation.",
 					projectLink: repo("APCS13-Runtime-Analysis/starter"),
 					solutionLink: repo("APCS13-Runtime-Analysis/solution")
 				}
@@ -1058,7 +1058,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Linear Search Implementation",
 					content:
-						"Use the linear-search build to compare unsorted search, sorted early exits, and traceable search behavior.",
+						"Use the linear-search build to compare unsorted search, sorted early exits, and traceable search behavior. A complete explanation should cover found-at-front, found-at-end, and not-found cases.",
 					projectLink: repo(
 						"APCS13-Linear-Search-Implementation/starter"
 					),
@@ -1120,7 +1120,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Tracing Recursion",
 					content:
-						"Use the verified starter and review pair for tracing recursion as the main APCS15 reasoning checkpoint. The expected evidence is a stack-frame trace that names the base case, the recursive call, and the order in which values return.",
+						"Use tracing recursion as the main APCS15 reasoning checkpoint. The expected evidence is a stack-frame trace that names the base case, the recursive call, and the order in which values return.",
 					projectLink: repo("APCS15-Tracing-Recursion/starter"),
 					solutionLink: repo("APCS15-Tracing-Recursion/solution")
 				},
@@ -1136,7 +1136,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Project: Recursion Practice",
 					content:
-						"Use the full recursion-practice build for factorials, powers, Fibonacci, cascades, and other classic recursive patterns.",
+						"Use the full recursion-practice build for factorials, powers, Fibonacci, cascades, and other classic recursive patterns. Each method should name its base case, smaller subproblem, and return path before being considered complete.",
 					projectLink: repo("APCS15-Recursion-Practice/starter"),
 					solutionLink: repo("APCS15-Recursion-Practice/solution"),
 					mediaLink: media("apcs15-project-2-recursion-practice.mp4")
