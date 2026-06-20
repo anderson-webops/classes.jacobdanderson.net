@@ -7,7 +7,7 @@ export interface ProjectGuidanceOptions {
 }
 
 function projectArtifact(kind: ProjectGuidanceOptions["projectKind"]) {
-	return kind === "core" ? "core build checkpoint" : "applied challenge";
+	return kind === "core" ? "project" : "extension challenge";
 }
 
 function stableVariantIndex(seed: string, count: number) {
@@ -678,6 +678,18 @@ function compactGuidanceBody(
 				"g"
 			),
 			"Solve one tiny hand-built case"
+		)
+		.replace(
+			/\bSolve one tiny the ([A-Z][^.!?\n]{1,220}?) (solution|project|program|feature|analysis|lab|checkpoint|build|exercise) hand-built case\b/g,
+			"Use one tiny hand-built case for the $1 $2"
+		)
+		.replace(
+			/\bone tiny the ([A-Z][^.!?\n]{1,220}?) (solution|project|program|feature|analysis|lab|checkpoint|build|exercise) hand-built case\b/g,
+			"one tiny hand-built case for the $1 $2"
+		)
+		.replace(
+			/\bone tiny the ([A-Z][^.!?\n]{1,220}?) (solution|project|program|feature|analysis|lab|checkpoint|build|exercise) trace\b/g,
+			"one tiny trace for the $1 $2"
 		)
 		.replace(
 			new RegExp(
@@ -2136,26 +2148,26 @@ function projectPathNote({
 	if (projectKind === "core") {
 		if (hasReference) {
 			return [
-				`**Path:** Core build. ${subject} is built and verified independently before comparison with ${reference}.`,
-				`**Path:** Core build. ${subject} reaches a working local result first, then ${reference} is used to compare structure and edge handling.`,
-				`**Path:** Core build. ${subject} needs fresh evidence before ${reference} is opened, so comparison does not replace reasoning.`,
-				`**Path:** Core build. ${subject} starts with a standard path and one boundary check, then ${reference} helps identify missing cases.`,
-				`**Path:** Core build. ${subject} is treated as the primary attempt; ${reference} is a review tool after behavior is observed.`,
-				`**Path:** Core build. ${subject} records compile/run, output, trace, or result evidence before using ${reference} for refinement.`,
-				`**Path:** Core build. ${subject} is complete enough to explain before ${reference} is used as a second opinion.`,
-				`**Path:** Core build. ${subject} compares against ${reference} only after the local design has a checked standard scenario.`
+				`**Path:** First version. ${subject} is built and verified independently before comparison with ${reference}.`,
+				`**Path:** First version. ${subject} reaches a working local result first, then ${reference} is used to compare structure and edge handling.`,
+				`**Path:** First version. ${subject} needs fresh evidence before ${reference} is opened, so comparison does not replace reasoning.`,
+				`**Path:** First version. ${subject} starts with a standard path and one boundary check, then ${reference} helps identify missing cases.`,
+				`**Path:** First version. ${subject} is treated as the primary attempt; ${reference} is a review tool after behavior is observed.`,
+				`**Path:** First version. ${subject} records compile/run, output, trace, or result evidence before using ${reference} for refinement.`,
+				`**Path:** First version. ${subject} is complete enough to explain before ${reference} is used as a second opinion.`,
+				`**Path:** First version. ${subject} compares against ${reference} only after the local design has a checked standard scenario.`
 			][index];
 		}
 
 		return [
-			`**Path:** Core build. ${subject} is verified with one standard case plus one boundary or failure-mode check.`,
-			`**Path:** Core build. ${subject} moves from the smallest working result to a checked edge case.`,
-			`**Path:** Core build. ${subject} records expected behavior, observed behavior, and one condition that could break it.`,
-			`**Path:** Core build. ${subject} keeps the first version narrow enough to test before optional polish is added.`,
-			`**Path:** Core build. ${subject} has a clear success condition and one edge case that tests more than syntax.`,
-			`**Path:** Core build. ${subject} is checked against both the intended path and one small failure-mode path.`,
-			`**Path:** Core build. ${subject} turns the module concept into a visible result with at least one edge check.`,
-			`**Path:** Core build. ${subject} is considered ready only after the main result and one boundary condition are both explainable.`
+			`**Path:** First version. ${subject} is verified with one standard case plus one boundary or failure-mode check.`,
+			`**Path:** First version. ${subject} moves from the smallest working result to a checked edge case.`,
+			`**Path:** First version. ${subject} records expected behavior, observed behavior, and one condition that could break it.`,
+			`**Path:** First version. ${subject} keeps the first version narrow enough to test before optional polish is added.`,
+			`**Path:** First version. ${subject} has a clear success condition and one edge case that tests more than syntax.`,
+			`**Path:** First version. ${subject} is checked against both the intended path and one small failure-mode path.`,
+			`**Path:** First version. ${subject} turns the module concept into a visible result with at least one edge check.`,
+			`**Path:** First version. ${subject} is considered ready only after the main result and one boundary condition are both explainable.`
 		][index];
 	}
 

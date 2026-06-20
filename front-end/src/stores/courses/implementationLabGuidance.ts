@@ -106,7 +106,7 @@ function referenceStep(label: string, artifact: string, hasReference = true) {
 	const artifactLabel = definiteLabel(label);
 
 	return hasReference
-		? `Compare the finished **${label}** ${artifact} draft with the reference only after the artifact works; record one meaningful difference in behavior, robustness, readability, or design.`
+		? `Compare the finished **${label}** ${artifact} with the reference only after it works; record one meaningful difference in behavior, robustness, readability, or design.`
 		: `Write a verification note for ${artifactLabel} ${artifact} that identifies the evidence used to confirm the result.`;
 }
 
@@ -179,9 +179,7 @@ export function buildImplementationLabGuidance({
 	}
 
 	const artifact =
-		section === "coreProject"
-			? "core build checkpoint"
-			: "extension build checkpoint";
+		section === "coreProject" ? "working version" : "extension version";
 	const artifactArticle = artifact.startsWith("extension") ? "an" : "a";
 	const projectGoal = [
 		`**Project goal:** Build **${label}** as ${artifactArticle} ${artifact} with runnable behavior, inspectable evidence, and a clear boundary case.`,
@@ -201,6 +199,6 @@ export function buildImplementationLabGuidance({
 		"**Completion checks:**",
 		`- ${capitalizedDefiniteLabel(label)} ${artifact} demonstrates the lab concept through runnable behavior, output, tests, traces, logs, or another concrete result.`,
 		`- The protected boundary or failure-mode check for ${definiteLabel(label)} ${artifact} is named explicitly and is not only the provided sample.`,
-		`- The final **${articleSafeLabel(label)}** ${artifact} note identifies one implementation, debugging, or reasoning choice that materially affected the result.`
+		`- The final note for **${articleSafeLabel(label)}** identifies one implementation, debugging, or reasoning choice that materially affected the result.`
 	].join("\n\n");
 }

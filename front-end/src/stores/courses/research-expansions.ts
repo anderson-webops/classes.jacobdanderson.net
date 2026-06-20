@@ -523,8 +523,8 @@ function buildProjectModule(
 				title: `${courseLabel} Rubric`,
 				content: [
 					`**Reflection:** Every major ${courseLabel} project includes a short note naming the goal, approach, evidence, bug or misconception, and one next improvement.`,
-					`**Rubric use:** Score the ${courseLabel} deliverable and the explanation separately. A project in ${courseLabel} can produce the right output while still needing a stronger explanation, clearer evidence, better edge-case coverage, or a more maintainable structure.`,
-					`**Project checks:**\n- The ${courseLabel} deliverable is visible, runnable, or inspectable.\n- A normal ${courseLabel} case and an edge case are tested or justified.\n- The ${courseLabel} explanation does not depend on reading every line or step from notes.`
+					`**Rubric use:** Score the ${courseLabel} finished work and the explanation separately. A project in ${courseLabel} can produce the right output while still needing a stronger explanation, clearer evidence, better edge-case coverage, or a more maintainable structure.`,
+					`**Project checks:**\n- The ${courseLabel} project result is visible, runnable, or inspectable.\n- A normal ${courseLabel} case and an edge case are tested or justified.\n- The ${courseLabel} explanation does not depend on reading every line or step from notes.`
 				].join("\n\n")
 			},
 			{
@@ -532,7 +532,7 @@ function buildProjectModule(
 				content: [
 					`**Capstone gate:** Before the ${courseLabel} capstone begins, prerequisite modules, project types, and checkpoint style are practiced on smaller artifacts.`,
 					`**Gate guidance:** The ${courseLabel} capstone is ready when it combines known skills in a larger context rather than introducing several untested ideas at once. The first version stays narrow, demonstrable, and easy to verify before optional polish is added.`,
-					`**Required gate artifact:** Write a short ${courseLabel} capstone brief that names the target user or problem, the exact deliverable, the core concept being reused from earlier modules, the minimum viable first version, and the evidence that will prove the first version works.`,
+					`**Required capstone brief:** Name the target user or problem, the exact project result, the core concept being reused from earlier modules, the minimum viable first version, and the evidence that will prove the first version works.`,
 					`**Capstone checks:**\n- The ${courseLabel} capstone has one ordinary path and one edge, failure, or misconception path.\n- The first milestone can be tested without completing every optional feature.\n- The explanation separates required behavior from polish.\n- Two risks are named with a mitigation, fallback, or narrowed scope.`
 				].join("\n\n")
 			}
