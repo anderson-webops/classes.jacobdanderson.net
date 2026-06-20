@@ -1015,32 +1015,32 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Full Stack Web Lab 14: Implementation Lab",
+			title: "Full Stack Web Lab 14: Feature Slice Studio",
 			curriculum: [
 				{
-					title: "Full Stack Web Lab 14: Core Concepts",
+					title: "Feature Slice Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 14: Implementation Lab",
+							"Full Stack Web Lab 14: Feature Slice Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Full Stack Web Lab 14: Guided Example",
+					title: "Feature Slice Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 14: Implementation Lab",
+							"Full Stack Web Lab 14: Feature Slice Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Full Stack Web Lab 14: Core Project",
+					title: "Feature Slice Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 14: Implementation Lab",
+							"Full Stack Web Lab 14: Feature Slice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1049,22 +1049,22 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-01-full-stack-web-lab-14/solution"
 				},
 				{
-					title: "Full Stack Web Lab 14: Review and Reflection",
+					title: "Feature Slice Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 14: Implementation Lab",
+							"Full Stack Web Lab 14: Feature Slice Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Full Stack Web Lab 14: Extension Challenge",
+					title: "Feature Slice Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 14: Implementation Lab",
+							"Full Stack Web Lab 14: Feature Slice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1073,11 +1073,11 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-01-full-stack-web-lab-14/solution"
 				},
 				{
-					title: "Full Stack Web Lab 14 Transfer Practice",
+					title: "Feature Slice Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 14: Implementation Lab",
+							"Full Stack Web Lab 14: Feature Slice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1087,11 +1087,11 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-27-applied-studio-14-full-stack-web-lab-14-supplemental-2/solution"
 				},
 				{
-					title: "Full Stack Web Lab 14 Extension Practice",
+					title: "Feature Slice Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 14: Implementation Lab",
+							"Full Stack Web Lab 14: Feature Slice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1103,32 +1103,32 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Full Stack Web Lab 15: Implementation Lab",
+			title: "Full Stack Web Lab 15: API Integration Studio",
 			curriculum: [
 				{
-					title: "Full Stack Web Lab 15: Core Concepts",
+					title: "API Integration Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 15: Implementation Lab",
+							"Full Stack Web Lab 15: API Integration Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Full Stack Web Lab 15: Guided Example",
+					title: "API Integration Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 15: Implementation Lab",
+							"Full Stack Web Lab 15: API Integration Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Full Stack Web Lab 15: Core Project",
+					title: "API Integration Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 15: Implementation Lab",
+							"Full Stack Web Lab 15: API Integration Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1137,22 +1137,22 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-02-full-stack-web-lab-15/solution"
 				},
 				{
-					title: "Full Stack Web Lab 15: Review and Reflection",
+					title: "API Integration Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 15: Implementation Lab",
+							"Full Stack Web Lab 15: API Integration Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Full Stack Web Lab 15: Extension Challenge",
+					title: "API Integration Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 15: Implementation Lab",
+							"Full Stack Web Lab 15: API Integration Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1161,11 +1161,11 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-02-full-stack-web-lab-15/solution"
 				},
 				{
-					title: "Full Stack Web Lab 15 Transfer Practice",
+					title: "API Integration Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 15: Implementation Lab",
+							"Full Stack Web Lab 15: API Integration Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1175,11 +1175,11 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-29-applied-studio-15-full-stack-web-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "Full Stack Web Lab 15 Extension Practice",
+					title: "API Integration Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 15: Implementation Lab",
+							"Full Stack Web Lab 15: API Integration Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1191,32 +1191,32 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Full Stack Web Lab 16: Implementation Lab",
+			title: "Full Stack Web Lab 16: Data Persistence Studio",
 			curriculum: [
 				{
-					title: "Full Stack Web Lab 16: Core Concepts",
+					title: "Data Persistence Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 16: Implementation Lab",
+							"Full Stack Web Lab 16: Data Persistence Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Full Stack Web Lab 16: Guided Example",
+					title: "Data Persistence Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 16: Implementation Lab",
+							"Full Stack Web Lab 16: Data Persistence Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Full Stack Web Lab 16: Core Project",
+					title: "Data Persistence Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 16: Implementation Lab",
+							"Full Stack Web Lab 16: Data Persistence Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1225,22 +1225,22 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-03-full-stack-web-lab-16/solution"
 				},
 				{
-					title: "Full Stack Web Lab 16: Review and Reflection",
+					title: "Data Persistence Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 16: Implementation Lab",
+							"Full Stack Web Lab 16: Data Persistence Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Full Stack Web Lab 16: Extension Challenge",
+					title: "Data Persistence Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 16: Implementation Lab",
+							"Full Stack Web Lab 16: Data Persistence Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1249,11 +1249,11 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-03-full-stack-web-lab-16/solution"
 				},
 				{
-					title: "Full Stack Web Lab 16 Transfer Practice",
+					title: "Data Persistence Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 16: Implementation Lab",
+							"Full Stack Web Lab 16: Data Persistence Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1263,11 +1263,11 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-31-applied-studio-16-full-stack-web-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "Full Stack Web Lab 16 Extension Practice",
+					title: "Data Persistence Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 16: Implementation Lab",
+							"Full Stack Web Lab 16: Data Persistence Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1279,32 +1279,32 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Full Stack Web Lab 17: Implementation Lab",
+			title: "Full Stack Web Lab 17: Deployment Readiness Studio",
 			curriculum: [
 				{
-					title: "Full Stack Web Lab 17: Core Concepts",
+					title: "Deployment Readiness Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 17: Implementation Lab",
+							"Full Stack Web Lab 17: Deployment Readiness Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Full Stack Web Lab 17: Guided Example",
+					title: "Deployment Readiness Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 17: Implementation Lab",
+							"Full Stack Web Lab 17: Deployment Readiness Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Full Stack Web Lab 17: Core Project",
+					title: "Deployment Readiness Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 17: Implementation Lab",
+							"Full Stack Web Lab 17: Deployment Readiness Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1313,22 +1313,22 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-04-full-stack-web-lab-17/solution"
 				},
 				{
-					title: "Full Stack Web Lab 17: Review and Reflection",
+					title: "Deployment Readiness Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 17: Implementation Lab",
+							"Full Stack Web Lab 17: Deployment Readiness Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Full Stack Web Lab 17: Extension Challenge",
+					title: "Deployment Readiness Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 17: Implementation Lab",
+							"Full Stack Web Lab 17: Deployment Readiness Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1337,11 +1337,11 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-04-full-stack-web-lab-17/solution"
 				},
 				{
-					title: "Full Stack Web Lab 17 Transfer Practice",
+					title: "Deployment Readiness Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 17: Implementation Lab",
+							"Full Stack Web Lab 17: Deployment Readiness Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1351,11 +1351,11 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF-33-applied-studio-17-full-stack-web-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "Full Stack Web Lab 17 Extension Practice",
+					title: "Deployment Readiness Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
-							"Full Stack Web Lab 17: Implementation Lab",
+							"Full Stack Web Lab 17: Deployment Readiness Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
