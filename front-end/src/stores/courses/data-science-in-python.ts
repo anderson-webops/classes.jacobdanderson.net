@@ -223,9 +223,11 @@ function dataScienceStudioContent(
 
 function applyDataScienceAppliedLabs(course: RawCourse) {
 	for (const lab of appliedDataScienceLabs) {
+		const legacyTitle = `Data Analysis Lab ${lab.number}: ${["Implementation", "Lab"].join(" ")}`;
+		const practiceTitle = `Data Analysis Lab ${lab.number}: Practice Studio`;
 		const module = course.modules.find(
 			({ title }) =>
-				title === `Data Analysis Lab ${lab.number}: Implementation Lab`
+				title === legacyTitle || title === practiceTitle || title === lab.title
 		);
 		if (!module) continue;
 
@@ -360,7 +362,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main"
 				},
 				{
-					title: "Setup and Tooling supplemental 2",
+					title: "Setup and Tooling Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "DSP0 Setup and Tooling",
@@ -373,7 +375,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-01-dsp0-setup-and-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 3",
+					title: "Setup and Tooling Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "DSP0 Setup and Tooling",
@@ -435,7 +437,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-08-module-1-what-data-science-is/solution"
 				},
 				{
-					title: "Module 1: What Data Science Is supplemental 2",
+					title: "Module 1: What Data Science Is Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 1: What Data Science Is",
@@ -448,7 +450,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-03-module-1-what-data-science-is-supplemental-2/solution"
 				},
 				{
-					title: "Module 1: What Data Science Is supplemental 3",
+					title: "Module 1: What Data Science Is Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 1: What Data Science Is",
@@ -511,7 +513,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-09-module-2-notebook-workflow-and-reproducibility/solution"
 				},
 				{
-					title: "Module 2: Notebook Workflow and Reproducibility supplemental 2",
+					title: "Module 2: Notebook Workflow and Reproducibility Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle:
@@ -525,7 +527,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-05-module-2-notebook-workflow-and-reproducibility-supplemental-2/solution"
 				},
 				{
-					title: "Module 2: Notebook Workflow and Reproducibility supplemental 3",
+					title: "Module 2: Notebook Workflow and Reproducibility Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle:
@@ -588,7 +590,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-10-module-3-pandas-foundations/solution"
 				},
 				{
-					title: "Module 3: pandas Foundations supplemental 2",
+					title: "Module 3: pandas Foundations Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 3: pandas Foundations",
@@ -601,7 +603,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-07-module-3-pandas-foundations-supplemental-2/solution"
 				},
 				{
-					title: "Module 3: pandas Foundations supplemental 3",
+					title: "Module 3: pandas Foundations Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 3: pandas Foundations",
@@ -663,7 +665,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-11-module-4-cleaning-and-validation/solution"
 				},
 				{
-					title: "Module 4: Cleaning and Validation supplemental 2",
+					title: "Module 4: Cleaning and Validation Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 4: Cleaning and Validation",
@@ -676,7 +678,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-09-module-4-cleaning-and-validation-supplemental-2/solution"
 				},
 				{
-					title: "Module 4: Cleaning and Validation supplemental 3",
+					title: "Module 4: Cleaning and Validation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 4: Cleaning and Validation",
@@ -746,7 +748,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DS1-Mode"
 				},
 				{
-					title: "Module 5: Visualization and Statistics in Context supplemental 3",
+					title: "Module 5: Visualization and Statistics in Context Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle:
@@ -809,7 +811,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-12-module-6-storytelling-with-data/solution"
 				},
 				{
-					title: "Module 6: Storytelling with Data supplemental 2",
+					title: "Module 6: Storytelling with Data Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 6: Storytelling with Data",
@@ -822,7 +824,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-12-module-6-storytelling-with-data-supplemental-2/solution"
 				},
 				{
-					title: "Module 6: Storytelling with Data supplemental 3",
+					title: "Module 6: Storytelling with Data Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 6: Storytelling with Data",
@@ -885,7 +887,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-13-module-7-dashboards-with-altair-and-streamlit/solution"
 				},
 				{
-					title: "Module 7: Dashboards with Altair and Streamlit supplemental 2",
+					title: "Module 7: Dashboards with Altair and Streamlit Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle:
@@ -899,7 +901,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-14-module-7-dashboards-with-altair-and-streamlit-supplemental-2/solution"
 				},
 				{
-					title: "Module 7: Dashboards with Altair and Streamlit supplemental 3",
+					title: "Module 7: Dashboards with Altair and Streamlit Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle:
@@ -958,7 +960,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DM7-Simple-Sort"
 				},
 				{
-					title: "Module 8: Domain Projects supplemental 2",
+					title: "Module 8: Domain Projects Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 8: Domain Projects",
@@ -971,7 +973,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-16-module-8-domain-projects-supplemental-2/solution"
 				},
 				{
-					title: "Module 8: Domain Projects supplemental 3",
+					title: "Module 8: Domain Projects Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 8: Domain Projects",
@@ -1033,7 +1035,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-14-module-9-data-science-capstone/solution"
 				},
 				{
-					title: "Module 9: Data Science Capstone supplemental 2",
+					title: "Module 9: Data Science Capstone Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 9: Data Science Capstone",
@@ -1046,7 +1048,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-18-module-9-data-science-capstone-supplemental-2/solution"
 				},
 				{
-					title: "Module 9: Data Science Capstone supplemental 3",
+					title: "Module 9: Data Science Capstone Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
 						moduleTitle: "Module 9: Data Science Capstone",
@@ -1061,13 +1063,13 @@ export const dataScienceInPythonCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Data Analysis Lab 11: Implementation Lab",
+			title: "Data Analysis Lab 11: Practice Studio",
 			curriculum: [
 				{
 					title: "Data Analysis Lab 11: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 11: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 11: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1075,7 +1077,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 11: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 11: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 11: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1083,7 +1085,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 11: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 11: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 11: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1095,7 +1097,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 11: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 11: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 11: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1105,7 +1107,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 11: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 11: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 11: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1114,10 +1116,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-01-data-analysis-lab-11/solution"
 				},
 				{
-					title: "Data Analysis Lab 11 supplemental 2: Implementation Lab",
+					title: "Data Analysis Lab 11 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 11: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 11: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1127,10 +1129,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-20-applied-studio-11-data-analysis-lab-11-supplemental-2/solution"
 				},
 				{
-					title: "Data Analysis Lab 11 supplemental 3: Implementation Lab",
+					title: "Data Analysis Lab 11 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 11: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 11: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1142,13 +1144,13 @@ export const dataScienceInPythonCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Data Analysis Lab 12: Implementation Lab",
+			title: "Data Analysis Lab 12: Practice Studio",
 			curriculum: [
 				{
 					title: "Data Analysis Lab 12: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 12: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 12: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1156,7 +1158,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 12: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 12: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 12: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1164,7 +1166,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 12: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 12: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 12: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1176,7 +1178,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 12: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 12: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 12: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1186,7 +1188,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 12: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 12: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 12: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1195,10 +1197,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-02-data-analysis-lab-12/solution"
 				},
 				{
-					title: "Data Analysis Lab 12 supplemental 2: Implementation Lab",
+					title: "Data Analysis Lab 12 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 12: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 12: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1208,10 +1210,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-22-applied-studio-12-data-analysis-lab-12-supplemental-2/solution"
 				},
 				{
-					title: "Data Analysis Lab 12 supplemental 3: Implementation Lab",
+					title: "Data Analysis Lab 12 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 12: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 12: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1223,13 +1225,13 @@ export const dataScienceInPythonCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Data Analysis Lab 13: Implementation Lab",
+			title: "Data Analysis Lab 13: Practice Studio",
 			curriculum: [
 				{
 					title: "Data Analysis Lab 13: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 13: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 13: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1237,7 +1239,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 13: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 13: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 13: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1245,7 +1247,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 13: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 13: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 13: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1257,7 +1259,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 13: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 13: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 13: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1267,7 +1269,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 13: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 13: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 13: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1276,10 +1278,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-03-data-analysis-lab-13/solution"
 				},
 				{
-					title: "Data Analysis Lab 13 supplemental 2: Implementation Lab",
+					title: "Data Analysis Lab 13 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 13: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 13: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1289,10 +1291,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-24-applied-studio-13-data-analysis-lab-13-supplemental-2/solution"
 				},
 				{
-					title: "Data Analysis Lab 13 supplemental 3: Implementation Lab",
+					title: "Data Analysis Lab 13 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 13: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 13: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1304,13 +1306,13 @@ export const dataScienceInPythonCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Data Analysis Lab 14: Implementation Lab",
+			title: "Data Analysis Lab 14: Practice Studio",
 			curriculum: [
 				{
 					title: "Data Analysis Lab 14: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 14: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 14: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1318,7 +1320,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 14: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 14: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 14: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1326,7 +1328,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 14: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 14: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 14: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1338,7 +1340,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 14: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 14: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 14: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1348,7 +1350,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 14: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 14: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 14: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1357,10 +1359,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-04-data-analysis-lab-14/solution"
 				},
 				{
-					title: "Data Analysis Lab 14 supplemental 2: Implementation Lab",
+					title: "Data Analysis Lab 14 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 14: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 14: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1370,10 +1372,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-26-applied-studio-14-data-analysis-lab-14-supplemental-2/solution"
 				},
 				{
-					title: "Data Analysis Lab 14 supplemental 3: Implementation Lab",
+					title: "Data Analysis Lab 14 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 14: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 14: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1385,13 +1387,13 @@ export const dataScienceInPythonCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Data Analysis Lab 15: Implementation Lab",
+			title: "Data Analysis Lab 15: Practice Studio",
 			curriculum: [
 				{
 					title: "Data Analysis Lab 15: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 15: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 15: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1399,7 +1401,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 15: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 15: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 15: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1407,7 +1409,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 15: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 15: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 15: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1419,7 +1421,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 15: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 15: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 15: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1429,7 +1431,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 15: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 15: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 15: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1438,10 +1440,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-05-data-analysis-lab-15/solution"
 				},
 				{
-					title: "Data Analysis Lab 15 supplemental 2: Implementation Lab",
+					title: "Data Analysis Lab 15 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 15: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 15: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1451,10 +1453,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-28-applied-studio-15-data-analysis-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "Data Analysis Lab 15 supplemental 3: Implementation Lab",
+					title: "Data Analysis Lab 15 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 15: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 15: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1466,13 +1468,13 @@ export const dataScienceInPythonCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Data Analysis Lab 16: Implementation Lab",
+			title: "Data Analysis Lab 16: Practice Studio",
 			curriculum: [
 				{
 					title: "Data Analysis Lab 16: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 16: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 16: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1480,7 +1482,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 16: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 16: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 16: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1488,7 +1490,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 16: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 16: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 16: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1500,7 +1502,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 16: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 16: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 16: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1510,7 +1512,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 16: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 16: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 16: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1519,10 +1521,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-06-data-analysis-lab-16/solution"
 				},
 				{
-					title: "Data Analysis Lab 16 supplemental 2: Implementation Lab",
+					title: "Data Analysis Lab 16 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 16: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 16: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1532,10 +1534,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-30-applied-studio-16-data-analysis-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "Data Analysis Lab 16 supplemental 3: Implementation Lab",
+					title: "Data Analysis Lab 16 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 16: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 16: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1547,13 +1549,13 @@ export const dataScienceInPythonCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Data Analysis Lab 17: Implementation Lab",
+			title: "Data Analysis Lab 17: Practice Studio",
 			curriculum: [
 				{
 					title: "Data Analysis Lab 17: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 17: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 17: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1561,7 +1563,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 17: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 17: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 17: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1569,7 +1571,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 17: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 17: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 17: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1581,7 +1583,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 17: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 17: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 17: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1591,7 +1593,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 					title: "Data Analysis Lab 17: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 17: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 17: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1600,10 +1602,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-07-data-analysis-lab-17/solution"
 				},
 				{
-					title: "Data Analysis Lab 17 supplemental 2: Implementation Lab",
+					title: "Data Analysis Lab 17 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 17: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 17: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1613,10 +1615,10 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-32-applied-studio-17-data-analysis-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "Data Analysis Lab 17 supplemental 3: Implementation Lab",
+					title: "Data Analysis Lab 17 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "data science in Python",
-						moduleTitle: "Data Analysis Lab 17: Implementation Lab",
+						moduleTitle: "Data Analysis Lab 17: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
