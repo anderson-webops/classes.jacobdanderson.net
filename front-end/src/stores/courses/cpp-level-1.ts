@@ -9,7 +9,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "Program Setup, Syntax, and Compile-Run Cycle",
 					content:
-						"Start with a single-file console program and make the compile-run cycle explicit. Cover: `#include`, `main`, braces, semicolons, comments, compiler errors versus runtime behavior, and the idea that C++ is compiled before it runs. A successful first workflow makes one small change, recompiles, reads the output or error, and explains what changed before the syntax load rises."
+						"This lesson begins with a single-file console program and makes the compile-run cycle explicit.\n\n**Key topics:**\n- `#include`\n- `main`\n- braces\n- semicolons\n- comments\n- compiler errors versus runtime behavior\n- the idea that C++ is compiled before it runs\n\n**Practice check:** A successful first workflow makes one small change, recompiles, reads the output or error, and explains what changed before the syntax load rises."
 				},
 				{
 					title: "Primitive Types, Strings, and Console I/O",

@@ -300,7 +300,7 @@ The written response should identify the transformation, asymptote, intercept, o
 			createLesson(
 				"Review Targets",
 				`
-Use this check-in as a guided review of the first three modules, not as a formal exam.
+This check-in is a guided review of the first three modules, not a formal exam.
 
 **Skills to revisit**
 

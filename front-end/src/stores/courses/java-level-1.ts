@@ -504,7 +504,7 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "Check-In #1 Overview",
 					content:
-						"Use this module as a low-pressure review of variables, strings, conditionals, and loops. Work through the prompts independently first, then revisit any ideas that need reinforcement.",
+						"This module is a low-pressure review of variables, strings, conditionals, and loops. Work through the prompts independently first, then revisit any ideas that need reinforcement.",
 					projectLink:
 						"https://github.com/instruction-material/APCS/tree/main/APCS-Check-in-1/starter",
 					solutionLink:
@@ -838,7 +838,7 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "Check-In #2 Overview",
 					content:
-						"Use this review to revisit math operators, randomness, methods, arrays, and two-dimensional arrays. Focus on explaining not just what the code does, but why each structure fits the problem."
+						"This review revisits math operators, randomness, methods, arrays, and two-dimensional arrays. Focus on explaining not just what the code does, but why each structure fits the problem."
 				},
 				{
 					title: "Check-In #2: Mathematical Operators and Randomness",
@@ -962,7 +962,8 @@ export const javaLevel1Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "JS9 Master Project: Battleship",
-						itemTitle: "Master Project: Battleship Transfer Practice",
+						itemTitle:
+							"Master Project: Battleship Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -976,7 +977,8 @@ export const javaLevel1Course: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
 						moduleTitle: "JS9 Master Project: Battleship",
-						itemTitle: "Master Project: Battleship Extension Practice",
+						itemTitle:
+							"Master Project: Battleship Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1329,8 +1331,7 @@ export const javaLevel1Course: RawCourse = {
 					title: "Temperature Converter: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
-						moduleTitle:
-							"Temperature Converter: Practice Studio",
+						moduleTitle: "Temperature Converter: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1338,8 +1339,7 @@ export const javaLevel1Course: RawCourse = {
 					title: "Temperature Converter: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
-						moduleTitle:
-							"Temperature Converter: Practice Studio",
+						moduleTitle: "Temperature Converter: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1347,8 +1347,7 @@ export const javaLevel1Course: RawCourse = {
 					title: "Temperature Converter: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
-						moduleTitle:
-							"Temperature Converter: Practice Studio",
+						moduleTitle: "Temperature Converter: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1359,8 +1358,7 @@ export const javaLevel1Course: RawCourse = {
 					title: "Temperature Converter: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
-						moduleTitle:
-							"Temperature Converter: Practice Studio",
+						moduleTitle: "Temperature Converter: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1370,8 +1368,7 @@ export const javaLevel1Course: RawCourse = {
 					title: "Temperature Converter: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 1",
-						moduleTitle:
-							"Temperature Converter: Practice Studio",
+						moduleTitle: "Temperature Converter: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1382,10 +1379,8 @@ export const javaLevel1Course: RawCourse = {
 					title: "Temperature Converter Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
-						moduleTitle:
-							"Temperature Converter: Practice Studio",
-						itemTitle:
-							"Temperature Converter Transfer Practice",
+						moduleTitle: "Temperature Converter: Practice Studio",
+						itemTitle: "Temperature Converter Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1398,10 +1393,8 @@ export const javaLevel1Course: RawCourse = {
 					title: "Temperature Converter Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 1",
-						moduleTitle:
-							"Temperature Converter: Practice Studio",
-						itemTitle:
-							"Temperature Converter Extension Practice",
+						moduleTitle: "Temperature Converter: Practice Studio",
+						itemTitle: "Temperature Converter Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),

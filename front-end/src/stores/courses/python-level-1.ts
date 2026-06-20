@@ -225,7 +225,7 @@ export const pythonLevel1Course: RawCourse = {
 				{
 					title: "Check-In #1 Overview",
 					content:
-						"Use this check-in as a guided review of Turtle basics, loops, variables, random numbers, and conditionals. Try each prompt independently first, then revisit any topics that need more practice.",
+						"This check-in is a guided review of Turtle basics, loops, variables, random numbers, and conditionals. Try each prompt independently first, then revisit any topics that need more practice.",
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/Check-in-1/solution"
 				},
@@ -509,7 +509,7 @@ export const pythonLevel1Course: RawCourse = {
 				{
 					title: "Check-In #2 Overview",
 					content:
-						"Use this review to revisit advanced loops, functions, and event listeners. Focus on explaining not just how the code works, but why each structure is useful."
+						"This review revisits advanced loops, functions, and event listeners. Focus on explaining not just how the code works, but why each structure is useful."
 				},
 				{
 					title: "Check-In #2: Advanced Loops",
@@ -857,7 +857,7 @@ Build the game in layers: movement first, then bouncing balls, then player colli
 				{
 					title: "Check-In #3 Overview",
 					content:
-						"Use this module to review nested loops, game mechanics, advanced conditionals, and lists. Treat it as a progress snapshot and a chance to strengthen weaker topics."
+						"This module reviews nested loops, game mechanics, advanced conditionals, and lists. Treat it as a progress snapshot and a chance to strengthen weaker topics."
 				},
 				{
 					title: "Check-In #3: Nested Loops and Game Mechanics",

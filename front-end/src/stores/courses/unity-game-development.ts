@@ -32,9 +32,9 @@ export const unityGameDevelopmentCourse: RawCourse = {
 			],
 			supplementalProjects: [
 				{
-					title: "Module 3 Supplemental 1",
+					title: "Collision State Review",
 					content:
-						"Use the paired starter and review snapshots as extra collision and object-state practice. Compare the starter and solution by naming the minimum script changes, the expected player-visible behavior, and one bug that would appear if a collider, tag, or serialized reference were missing.",
+						"Use the paired starter and review snapshots as extra collision and object-state practice. Compare the initial and completed versions by naming the minimum script changes, the expected player-visible behavior, and one bug that would appear if a collider, tag, or serialized reference were missing.",
 					projectLink: repo("UGD-03-supplemental-1-starter"),
 					solutionLink: repo("UGD-03-supplemental-1-solution")
 				},

@@ -246,7 +246,7 @@ export const pythonLevel3Course: RawCourse = {
 				{
 					title: "Check-In #1 Overview",
 					content:
-						"Use this module as a low-pressure review of recursion, stacks, and string processing. Work through each prompt independently first, then revisit any skill that still needs practice."
+						"This module is a low-pressure review of recursion, stacks, and string processing. Work through each prompt independently first, then revisit any skill that still needs practice."
 				},
 				{
 					title: "Check-In #1: String Functions",
@@ -429,7 +429,7 @@ export const pythonLevel3Course: RawCourse = {
 				{
 					title: "Check-In #2 Overview",
 					content:
-						"Use this check-in to review algorithm analysis and core search and sorting topics. Focus on explaining the reasoning behind each answer, not just the final result."
+						"This check-in reviews algorithm analysis and core search and sorting topics. Focus on explaining the reasoning behind each answer, not just the final result."
 				},
 				{
 					title: "Check-In #2: Time Complexity",
@@ -647,7 +647,7 @@ export const pythonLevel3Course: RawCourse = {
 				{
 					title: "Check-In #3 Overview",
 					content:
-						"Use this final check-in to review advanced sorting and file input/output. Work through examples independently first, then revisit any weak spots."
+						"This final check-in reviews advanced sorting and file input/output. Work through examples independently first, then revisit any weak spots."
 				},
 				{
 					title: "Check-In #3: Bubble Sort",

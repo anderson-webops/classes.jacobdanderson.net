@@ -351,7 +351,7 @@ This covers the matrix-inverse and quotient work needed for the cleaned Check-in
 			createLesson(
 				"Review Targets",
 				`
-Use this check-in as a guided review rather than a formal exam.
+This check-in is a guided review rather than a formal exam.
 
 **Focus areas**
 

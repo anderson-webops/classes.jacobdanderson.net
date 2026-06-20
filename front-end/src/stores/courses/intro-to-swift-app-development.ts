@@ -225,7 +225,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Simulator vs Real Device",
 					content:
-						"Explain the strengths and limits of the iOS Simulator and why certain checks still need a real iPhone. Use this module to compare rapid UI iteration, hardware features, permissions, and performance realism."
+						"Explain the strengths and limits of the iOS Simulator and why certain checks still need a real iPhone. This module compares rapid UI iteration, hardware features, permissions, and performance realism."
 				},
 				{
 					title: "Practical Walkthrough: Build and Run Destinations",

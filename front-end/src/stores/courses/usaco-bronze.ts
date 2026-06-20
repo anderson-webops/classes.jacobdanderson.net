@@ -519,7 +519,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Hoof, Paper, Scissors",
 					content:
-						"Use case-based counting and matchup reasoning to strengthen simple game-logic analysis. Enumerate the possible winning mappings, count how many rounds each mapping wins, and explain why trying the small complete set is safer than hard-coding one assumed rule order.",
+						"Use case-based counting and matchup reasoning to strengthen simple game-logic analysis. Enumerate the possible winning rule assignments, count how many rounds each assignment wins, and explain why trying the small complete set is safer than hard-coding one assumed rule order.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB20-Hoof-Paper-Scissors/starter",
 					solutionLink:

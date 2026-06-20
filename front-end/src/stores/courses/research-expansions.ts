@@ -80,7 +80,7 @@ function sourceBullets(names: string[]) {
 }
 
 function courseUseNote(courseLabel: string, emphasis: string) {
-	return `**Reference role:** Use the references to clarify lesson focus, project requirements, and visible course work. ${emphasis}`;
+	return `**Reference role:** For ${courseLabel}, use the references to clarify lesson focus, project requirements, and visible course work. ${emphasis}`;
 }
 
 function standardsEvidenceNote(courseLabel: string) {
@@ -371,7 +371,7 @@ function buildStandardsModule(
 			{
 				title: `${courseLabel} Core Skills`,
 				content: [
-					`**Skill map:** These skills benefit from focused review, clear examples, and explicit prerequisite connections before larger projects.`,
+					`**Skill map:** ${courseLabel} uses these skills for focused review, clear examples, and explicit prerequisite connections before larger projects.`,
 					`**Core skills:**\n${bullets(profile.gaps)}`,
 					courseUseNote(
 						courseLabel,
@@ -383,7 +383,7 @@ function buildStandardsModule(
 			{
 				title: `${courseLabel} Next Topics`,
 				content: [
-					`**Growth areas:** The next areas for deeper coverage appear in prerequisite order and connect each addition to a concrete project or checkpoint.`,
+					`**Growth areas:** ${courseLabel} next areas for deeper coverage appear in prerequisite order and connect each addition to a concrete project or checkpoint.`,
 					`**Expansion topics:**\n${bullets(profile.topics)}`,
 					courseUseNote(
 						courseLabel,
@@ -395,9 +395,9 @@ function buildStandardsModule(
 			{
 				title: `${courseLabel} Boundaries`,
 				content: [
-					`**Scope boundary:** The priority and expansion topics clarify what belongs here and what fits better in a prerequisite, follow-up, or separate course. This keeps the course coherent instead of absorbing every adjacent topic.`,
-					`**Boundary rule:** Keep a topic here when it directly supports the projects, assessments, and expected readiness level. Move it elsewhere when it requires a different prerequisite chain, safety model, or level of depth that would crowd out the core purpose.`,
-					`**Boundary check:** The course boundary, one near-term addition, and one topic saved for a later course are explicit.`
+					`**Scope boundary:** ${courseLabel} priority and expansion topics clarify what belongs here and what fits better in a prerequisite, follow-up, or separate course. This keeps the course coherent instead of absorbing every adjacent topic.`,
+					`**Boundary rule:** Keep a topic in ${courseLabel} when it directly supports the projects, assessments, and expected readiness level. Move it elsewhere when it requires a different prerequisite chain, safety model, or level of depth that would crowd out the core purpose.`,
+					`**Boundary check:** The ${courseLabel} boundary, one near-term addition, and one topic saved for a later course are explicit.`
 				].join("\n\n")
 			}
 		],
@@ -413,8 +413,8 @@ function buildStandardsModule(
 			{
 				title: `${courseLabel} Learning Sequence`,
 				content: [
-					`**Sequence map:** The current sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
-					`**Ordering rule:** Sequence decisions are based on dependency, not convenience. If a project expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,
+					`**Sequence map:** The current ${courseLabel} sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
+					`**Ordering rule:** ${courseLabel} sequence decisions are based on dependency, not convenience. If a project expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,
 					`**Sequence is clear when:**\n- No gap remains as a vague reminder without a clear next action.\n- Required ${profile.family} gaps appear before the project that depends on them.\n- Optional enrichment is labeled separately from required pacing.`
 				].join("\n\n")
 			}
@@ -442,9 +442,9 @@ function buildSequencingModule(
 			{
 				title: `${courseLabel} Resources`,
 				content: [
-					`**Resource map:** Course materials support the modules by making source code, datasets, simulations, version choices, and reference materials explicit.`,
+					`**Resource map:** ${courseLabel} materials support the modules by making source code, datasets, simulations, version choices, and reference materials explicit.`,
 					`**Materials and tools:**\n${bullets(profile.materials)}`,
-					`**Resource roles:** Each resource has a role: explanation, starter artifact, data source, simulation, rubric, answer check, or extension. Links that are only background references are labeled that way so they do not look like required assignments.`,
+					`**Resource roles:** Each ${courseLabel} resource has a role: explanation, starter artifact, data source, simulation, rubric, answer check, or extension. Links that are only background references are labeled that way so they do not look like required assignments.`,
 					profile.safety
 						? `**Safety or delivery boundary:** ${profile.safety}`
 						: `**Safety or delivery boundary:** ${courseLabel} uses age-appropriate examples, cited source material, and project scopes small enough for an online lesson.`
@@ -461,9 +461,9 @@ function buildSequencingModule(
 			{
 				title: `${courseLabel} Current References`,
 				content: [
-					`**Link map:** References are most useful when their role is clear: concept explanation, starter source, dataset, simulation, exam standard, official documentation, or optional background.`,
-					`**Current-reference rule:** Stable concepts can use long-lived references, but tool versions, source-code repositories, exam links, data licenses, and simulation URLs need explicit version or access notes. When a link changes, the course text and project resource card need to stay in sync.`,
-					`**Reference check:** The note states which links or versions are stable, which materials need periodic review, and which materials are reference-only rather than assignments.`
+					`**Link map:** ${courseLabel} references are most useful when their role is clear: concept explanation, starter source, dataset, simulation, exam standard, official documentation, or optional background.`,
+					`**Current-reference rule:** Stable ${courseLabel} concepts can use long-lived references, but tool versions, source-code repositories, exam links, data licenses, and simulation URLs need explicit version or access notes. When a link changes, the course text and project resource card need to stay in sync.`,
+					`**Reference check:** The ${courseLabel} note states which links or versions are stable, which materials need periodic review, and which materials are reference-only rather than assignments.`
 				].join("\n\n")
 			}
 		],

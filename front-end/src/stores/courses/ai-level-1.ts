@@ -836,7 +836,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-01-ai-search-lab-13/solution"
 				},
 				{
-					title: "AI Search Lab 13 Transfer Practice",
+					title: "Transfer Practice: AI Search Lab 13",
 					content: aiSearchSupplementalContent(13, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-05-applied-studio-11-ai-search-lab-13-supplemental-2/starter",
@@ -844,7 +844,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-05-applied-studio-11-ai-search-lab-13-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 13 Extension Practice",
+					title: "Extension Practice: AI Search Lab 13",
 					content: aiSearchSupplementalContent(13, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-06-applied-studio-11-ai-search-lab-13-supplemental-3/starter",
@@ -907,7 +907,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-02-ai-search-lab-14/solution"
 				},
 				{
-					title: "AI Search Lab 14 Transfer Practice",
+					title: "Transfer Practice: AI Search Lab 14",
 					content: aiSearchSupplementalContent(14, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-07-applied-studio-12-ai-search-lab-14-supplemental-2/starter",
@@ -915,7 +915,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-07-applied-studio-12-ai-search-lab-14-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 14 Extension Practice",
+					title: "Extension Practice: AI Search Lab 14",
 					content: aiSearchSupplementalContent(14, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-08-applied-studio-12-ai-search-lab-14-supplemental-3/starter",
@@ -978,7 +978,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-03-ai-search-lab-15/solution"
 				},
 				{
-					title: "AI Search Lab 15 Transfer Practice",
+					title: "Transfer Practice: AI Search Lab 15",
 					content: aiSearchSupplementalContent(15, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-09-applied-studio-13-ai-search-lab-15-supplemental-2/starter",
@@ -986,7 +986,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-09-applied-studio-13-ai-search-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 15 Extension Practice",
+					title: "Extension Practice: AI Search Lab 15",
 					content: aiSearchSupplementalContent(15, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-10-applied-studio-13-ai-search-lab-15-supplemental-3/starter",
@@ -1049,7 +1049,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-04-ai-search-lab-16/solution"
 				},
 				{
-					title: "AI Search Lab 16 Transfer Practice",
+					title: "Transfer Practice: AI Search Lab 16",
 					content: aiSearchSupplementalContent(16, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-11-applied-studio-14-ai-search-lab-16-supplemental-2/starter",
@@ -1057,7 +1057,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-11-applied-studio-14-ai-search-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 16 Extension Practice",
+					title: "Extension Practice: AI Search Lab 16",
 					content: aiSearchSupplementalContent(16, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-12-applied-studio-14-ai-search-lab-16-supplemental-3/starter",
@@ -1120,7 +1120,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-05-ai-search-lab-17/solution"
 				},
 				{
-					title: "AI Search Lab 17 Transfer Practice",
+					title: "Transfer Practice: AI Search Lab 17",
 					content: aiSearchSupplementalContent(17, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-13-applied-studio-15-ai-search-lab-17-supplemental-2/starter",
@@ -1128,7 +1128,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-13-applied-studio-15-ai-search-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 17 Extension Practice",
+					title: "Extension Practice: AI Search Lab 17",
 					content: aiSearchSupplementalContent(17, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-14-applied-studio-15-ai-search-lab-17-supplemental-3/starter",
@@ -1275,7 +1275,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/FAI8-The-Marble-Game-AI-Copy"
 				},
 				{
-					title: "The Marble Game AI Transfer Practice",
+					title: "Transfer Practice: The Marble Game AI",
 					content: buildProjectGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle: "The Marble Game AI: Practice Studio",
@@ -1288,7 +1288,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-17-applied-studio-17-the-marble-game-ai-copy-supplemental-2/solution"
 				},
 				{
-					title: "The Marble Game AI Extension Practice",
+					title: "Extension Practice: The Marble Game AI",
 					content: buildProjectGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle: "The Marble Game AI: Practice Studio",

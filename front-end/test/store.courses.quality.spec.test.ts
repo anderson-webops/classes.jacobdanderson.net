@@ -437,7 +437,7 @@ describe("course text quality normalization", () => {
 				"Solve the USACO Bronze implementation checkpoint for **USB0 Setup and Contest Workflow** with exact input/output behavior, a traceable invariant, and evidence from sample plus custom cases"
 			);
 			expect(corpus).toContain(
-				"Turn **Images and Sprites** into a core build checkpoint with a reproducible run, visible diagnostics, and a named success condition"
+				"Build **Images and Sprites: Practice Studio** as a core build checkpoint with runnable behavior, inspectable evidence, and a clear boundary case"
 			);
 			expect(corpus).not.toMatch(
 				/Open the starter and name the concrete inputs, outputs, state changes, data structures, or system boundaries involved/
@@ -680,7 +680,7 @@ describe("course text quality normalization", () => {
 				"Extend the object-design task with one additional method and a test or console trace that proves its contract"
 			);
 			expect(corpus).toContain(
-				"Produce **PTJ1 Functions, Parameters, and Return Types Transfer Practice** with a named Java type boundary, visible behavior, and evidence from a standard scenario plus a boundary scenario"
+				"Produce **PTJ1 Functions, Parameters, and Return Types** with a named Java type boundary, visible behavior, and evidence from a standard scenario plus a boundary scenario"
 			);
 			expect(corpus).not.toMatch(/\bSupplemental Practice\s+[2-9]\b/i);
 			expect(corpus).not.toMatch(/\bSupplemental\s+[2-9]\b/i);
@@ -1158,25 +1158,25 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain('courseFamily: "web development"');
 	});
 
-		it("keeps generated project guidance labels aligned to course families", () => {
-			const courseFamilies = new Map([
-				["src/stores/courses/ai-level-1.ts", "AI/Python"],
-				["src/stores/courses/c-systems-engineering.ts", "C systems"],
-				[
-					"src/stores/courses/data-science-in-python.ts",
-					"data science in Python"
-				],
-				["src/stores/courses/machine-learning.ts", "machine learning"],
-				["src/stores/courses/network-security.ts", "network security"],
-				["src/stores/courses/pygames.ts", "Python/PyGame"],
-				[
-					"src/stores/courses/python-to-java-and-cpp-bridge.ts",
-					"Java/C++ bridge"
-				],
-				["src/stores/courses/usaco-bronze.ts", "USACO"],
-				["src/stores/courses/usaco-silver.ts", "USACO Silver"],
-				["src/stores/courses/usaco-gold.ts", "USACO Gold"]
-			]);
+	it("keeps generated project guidance labels aligned to course families", () => {
+		const courseFamilies = new Map([
+			["src/stores/courses/ai-level-1.ts", "AI/Python"],
+			["src/stores/courses/c-systems-engineering.ts", "C systems"],
+			[
+				"src/stores/courses/data-science-in-python.ts",
+				"data science in Python"
+			],
+			["src/stores/courses/machine-learning.ts", "machine learning"],
+			["src/stores/courses/network-security.ts", "network security"],
+			["src/stores/courses/pygames.ts", "Python/PyGame"],
+			[
+				"src/stores/courses/python-to-java-and-cpp-bridge.ts",
+				"Java/C++ bridge"
+			],
+			["src/stores/courses/usaco-bronze.ts", "USACO"],
+			["src/stores/courses/usaco-silver.ts", "USACO Silver"],
+			["src/stores/courses/usaco-gold.ts", "USACO Gold"]
+		]);
 
 		for (const [path, family] of courseFamilies) {
 			const source = fs.readFileSync(path, "utf8");
@@ -1261,8 +1261,8 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(corpus).toContain("AI Search Lab 13: Practice Studio");
-		expect(corpus).toContain("AI Search Lab 17 Extension Practice");
-		expect(corpus).toContain("The Marble Game AI Transfer Practice");
+		expect(corpus).toContain("Extension Practice: AI Search Lab 17");
+		expect(corpus).toContain("Transfer Practice: The Marble Game AI");
 	});
 
 	it("keeps Data Science lessons explanatory instead of scaffold-labeled", async () => {
@@ -1438,7 +1438,9 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/The goal is to/i);
 		expect(corpus).toContain("UB 12 Barn Repair Java: Practice Studio");
 		expect(corpus).toContain("US Berry Picking: Practice Studio");
-		expect(corpus).toContain("Dynamic Programming Practice: Practice Studio");
+		expect(corpus).toContain(
+			"Dynamic Programming Practice: Practice Studio"
+		);
 		expect(corpus).toContain("Hamming Codes Transfer Practice");
 		expect(corpus).toContain("MST II Extension Practice");
 	});
@@ -2033,7 +2035,7 @@ describe("course text quality normalization", () => {
 		expect(loadedCorpus).toContain("Both projectile lists update safely");
 		expect(loadedCorpus).toContain("Images and Sprites: Practice Studio");
 		expect(loadedCorpus).toContain(
-			"Setup, Editors, and Asset Workflow Transfer Practice"
+			"Transfer Practice: Setup, Editors, and Asset Workflow"
 		);
 		expect(loadedCorpus).toContain("Master Project Extension Practice");
 	});
@@ -2242,7 +2244,9 @@ describe("course text quality normalization", () => {
 			if (!course) continue;
 
 			for (const module of course.modules.filter(module =>
-				/^Low-Level Security Lab (?:[7-9]|1[0-7])(?:$|:)/.test(module.title)
+				/^Low-Level Security Lab (?:[7-9]|1[0-7])(?:$|:)/.test(
+					module.title
+				)
 			)) {
 				const challenge = module.supplementalProjects.find(item =>
 					/Extension Challenge/.test(item.title)
@@ -2280,12 +2284,12 @@ describe("course text quality normalization", () => {
 		}
 
 		expect(checkedModules).toEqual([
-			"Low-Level Security Lab 7",
-			"Low-Level Security Lab 8",
-			"Low-Level Security Lab 9",
-			"Low-Level Security Lab 10",
-			"Low-Level Security Lab 11",
-			"Low-Level Security Lab 12",
+			"Low-Level Security Lab 7: Sanitizer Triage Studio",
+			"Low-Level Security Lab 8: Bounds Regression Studio",
+			"Low-Level Security Lab 9: Binary Parser Hardening Studio",
+			"Low-Level Security Lab 10: Integer State Safety Studio",
+			"Low-Level Security Lab 11: Fuzzing Regression Studio",
+			"Low-Level Security Lab 12: Patch Review Handoff Studio",
 			"Low-Level Security Lab 13: Exploitability Triage Studio",
 			"Low-Level Security Lab 14: Stack Corruption Hardening Studio",
 			"Low-Level Security Lab 15: Heap Lifetime Audit Studio",
@@ -2316,7 +2320,9 @@ describe("course text quality normalization", () => {
 
 		for (const [labNumber, focus] of expectedFocusByLab) {
 			const module = course.modules.find(
-				module => module.title === `AI Search Lab ${labNumber}`
+				module =>
+					module.title ===
+					`AI Search Lab ${labNumber}: Practice Studio`
 			);
 			expect(module, `AI Search Lab ${labNumber}`).toBeDefined();
 			if (!module) continue;
@@ -2448,15 +2454,13 @@ describe("course text quality normalization", () => {
 			const standardsMap = course.modules.find(
 				module => module.title === "Standards Map"
 			);
-			expect(
-				standardsMap,
-				`${courseId} Standards Map`
-			).toBeDefined();
+			expect(standardsMap, `${courseId} Standards Map`).toBeDefined();
 			const referenceGuide = standardsMap?.curriculum.find(item =>
 				item.title.endsWith("Reference Guide")
 			);
 			expect(referenceGuide, `${courseId} Reference Guide`).toBeDefined();
-			if (referenceGuide) referenceGuideBodies.push(referenceGuide.content);
+			if (referenceGuide)
+				referenceGuideBodies.push(referenceGuide.content);
 		}
 
 		expect(new Set(referenceGuideBodies).size).toBe(
@@ -2518,8 +2522,12 @@ describe("course text quality normalization", () => {
 				);
 			}
 			if (courseId === "javascript-level-2-javascript-master") {
-				expect(courseText).toContain("Fundamentals Review Transfer Practice");
-				expect(courseText).toContain("Master Project Extension Practice");
+				expect(courseText).toContain(
+					"Fundamentals Review Transfer Practice"
+				);
+				expect(courseText).toContain(
+					"Master Project Extension Practice"
+				);
 			}
 			for (const phrase of expectedPhrases) {
 				expect(
@@ -2695,9 +2703,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"This makes medium-sized C++ structure feel normal"
 		);
-		expect(corpus).toContain(
-			"Lifetime is part of architecture in C++"
-		);
+		expect(corpus).toContain("Lifetime is part of architecture in C++");
 		expect(corpus).toContain(
 			"The design question is when an interface clarifies a seam"
 		);
@@ -2710,12 +2716,8 @@ describe("course text quality normalization", () => {
 			"Pattern Lab 14: Ownership-Aware Refactor Studio"
 		);
 		expect(corpus).toContain("Ownership-Aware Refactor Concepts");
-		expect(corpus).toContain(
-			"Pattern Lab 16: Structural Boundary Studio"
-		);
-		expect(corpus).toContain(
-			"Pattern Lab 17: Refactoring Capstone Studio"
-		);
+		expect(corpus).toContain("Pattern Lab 16: Structural Boundary Studio");
+		expect(corpus).toContain("Pattern Lab 17: Refactoring Capstone Studio");
 		expect(corpus).toContain("Refactoring Capstone Extension Practice");
 	});
 
@@ -2845,7 +2847,9 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Linux Systems Lab 15: Automation and Observability Studio"
 		);
-		expect(corpus).toContain("Linux Systems Lab 16: Backup Recovery Studio");
+		expect(corpus).toContain(
+			"Linux Systems Lab 16: Backup Recovery Studio"
+		);
 		expect(corpus).toContain(
 			"Linux Systems Lab 17: Operations Capstone Studio"
 		);
@@ -2879,15 +2883,21 @@ describe("course text quality normalization", () => {
 			"DNS and domain routing are the networking layer"
 		);
 		expect(corpus).toContain("The expanded path has four main goals");
-		expect(corpus).toContain("Browser fundamentals remain the technical base");
+		expect(corpus).toContain(
+			"Browser fundamentals remain the technical base"
+		);
 		expect(corpus).toContain("Setup and Tooling Transfer Practice");
 		expect(corpus).toContain("Course Path Transfer Practice");
 		expect(corpus).toContain("JavaScript Bridge Transfer Practice");
 		expect(corpus).toContain("Web Foundations Transfer Practice");
 		expect(corpus).toContain("Feature Slice Transfer Practice");
 		expect(corpus).toContain("Full Stack Web Lab 14: Feature Slice Studio");
-		expect(corpus).toContain("Full Stack Web Lab 15: API Integration Studio");
-		expect(corpus).toContain("Full Stack Web Lab 16: Data Persistence Studio");
+		expect(corpus).toContain(
+			"Full Stack Web Lab 15: API Integration Studio"
+		);
+		expect(corpus).toContain(
+			"Full Stack Web Lab 16: Data Persistence Studio"
+		);
 		expect(corpus).toContain(
 			"Full Stack Web Lab 17: Deployment Readiness Studio"
 		);
@@ -2949,14 +2959,18 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/\(COPY\)/i);
 		expect(corpus).not.toContain("ai search lab");
 		expect(corpus).not.toContain("data analysis lab");
-		expect(corpus).not.toMatch(/Data Analysis Lab 1[1-7]: Implementation Lab/);
+		expect(corpus).not.toMatch(
+			/Data Analysis Lab 1[1-7]: Implementation Lab/
+		);
 		expect(corpus).not.toMatch(/Data Analysis Lab 1[1-7] supplemental/i);
-		expect(corpus).not.toMatch(/KNN Car Classification: Implementation Lab/);
+		expect(corpus).not.toMatch(
+			/KNN Car Classification: Implementation Lab/
+		);
 		expect(corpus).not.toMatch(/KNN Car Classification supplemental/i);
-		expect(corpus).toContain("AI Search Lab 13: Implementation Lab");
+		expect(corpus).toContain("AI Search Lab 13: Practice Studio");
 		expect(corpus).toContain("Data Analysis Lab 11: Practice Studio");
 		expect(corpus).toContain("Data Analysis Lab 17 Extension Practice");
-		expect(corpus).toContain("The Marble Game AI: Implementation Lab");
+		expect(corpus).toContain("The Marble Game AI");
 		expect(corpus).toContain("KNN Car Classification: Practice Studio");
 		expect(corpus).toContain("KNN Car Classification Extension Practice");
 		expect(corpus).toContain("buildImplementationLabGuidance");
@@ -2967,10 +2981,10 @@ describe("course text quality normalization", () => {
 		expect(course).not.toBeNull();
 		const corpus = allCourseText(course);
 
-			expect(corpus).not.toMatch(
-				/Data Analysis Lab 1[1-7]: Implementation Lab/
-			);
-			expect(corpus).not.toMatch(/Data Analysis Lab 1[1-7]: Practice Studio/);
+		expect(corpus).not.toMatch(
+			/Data Analysis Lab 1[1-7]: Implementation Lab/
+		);
+		expect(corpus).not.toMatch(/Data Analysis Lab 1[1-7]: Practice Studio/);
 		expect(corpus).not.toMatch(/complete build-and-review sequence/i);
 		expect(corpus).not.toMatch(/open-ended placeholder/i);
 		expect(corpus).not.toMatch(/vague enrichment/i);
@@ -3739,7 +3753,9 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Refactoring Clinic 11: Practice Studio");
 		expect(corpus).toContain("Refactoring Clinic 17 Extension Practice");
 		expect(corpus).toContain("Composing Methods Transfer Practice");
-		expect(corpus).toContain("Capstone Refactoring Studio Extension Practice");
+		expect(corpus).toContain(
+			"Capstone Refactoring Studio Extension Practice"
+		);
 	});
 
 	it("keeps modern design-pattern projects distinct across core, transfer, and extension work", async () => {
@@ -3767,9 +3783,9 @@ describe("course text quality normalization", () => {
 		expect(new Set(projectItems.map(item => item.content)).size).toBe(3);
 		expect(projectItems[0].content).toContain("implementation checkpoint");
 		expect(projectItems[1].title).toContain("Transfer Practice");
-		expect(projectItems[1].content).toContain("Transfer version");
+		expect(projectItems[1].content).toContain("Transfer Practice");
 		expect(projectItems[2].title).toContain("Extension Practice");
-		expect(projectItems[2].content).toContain("Extension version");
+		expect(projectItems[2].content).toContain("Extension Practice");
 	});
 
 	it("keeps Design Patterns in Java labels pattern-specific", async () => {
@@ -3788,8 +3804,12 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Strategy Selection Refactor Studio");
 		expect(corpus).toContain("Structural Wrapper Refactor Studio");
 		expect(corpus).toContain("Architecture Judgment Capstone Studio");
-		expect(corpus).toContain("Strategy Selection Refactor Transfer Practice");
-		expect(corpus).toContain("Architecture Judgment Capstone Extension Practice");
+		expect(corpus).toContain(
+			"Strategy Selection Refactor Transfer Practice"
+		);
+		expect(corpus).toContain(
+			"Architecture Judgment Capstone Extension Practice"
+		);
 	});
 
 	it("keeps Java foundation implementation builds tied to distinct source projects", async () => {
@@ -3845,8 +3865,12 @@ describe("course text quality normalization", () => {
 		expect(source).not.toMatch(/\bSupplemental [23]\b/);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/);
 		expect(corpus).not.toMatch(/\bSupplemental [23]\b/);
-		expect(corpus).toContain("J1X02 Java Foundations Build 13: Practice Studio");
-		expect(corpus).toContain("J1X06 Java Foundations Build 17 Extension Practice");
+		expect(corpus).toContain(
+			"J1X02 Java Foundations Build 13: Practice Studio"
+		);
+		expect(corpus).toContain(
+			"J1X06 Java Foundations Build 17 Extension Practice"
+		);
 		expect(corpus).toContain("Temperature Converter Transfer Practice");
 	});
 
@@ -3864,9 +3888,13 @@ describe("course text quality normalization", () => {
 		expect(source).not.toMatch(/\bSupplemental [23]\b/);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/);
 		expect(corpus).not.toMatch(/\bSupplemental [23]\b/);
-		expect(corpus).toContain("JM Master Project Example Quiz Game: Practice Studio");
+		expect(corpus).toContain(
+			"JM Master Project Example Quiz Game: Practice Studio"
+		);
 		expect(corpus).toContain("JM Maze Runner Project Extension Practice");
-		expect(corpus).toContain("Static Variables & Methods Extension Practice");
+		expect(corpus).toContain(
+			"Static Variables & Methods Extension Practice"
+		);
 	});
 
 	it("formats inline project steps and support labels as readable markdown blocks", async () => {

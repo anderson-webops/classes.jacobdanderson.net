@@ -353,7 +353,7 @@ After factoring, set each factor equal to zero.
 			createLesson(
 				"Perfect Squares and Difference of Squares",
 				`
-Use this module to highlight the algebra patterns that appear most often before solving quadratics.
+This module highlights the algebra patterns that appear most often before solving quadratics.
 
 **Core identities**
 
@@ -369,7 +369,7 @@ Use this module to highlight the algebra patterns that appear most often before 
 - \`4t^2 - 16t + 16 = (2t - 4)^2\`
 - \`x^3 + 6x^2 + 9x = x(x + 3)^2\`
 
-Use this module to sharpen factor recognition before moving into completing the square and the quadratic formula.
+This module sharpens factor recognition before moving into completing the square and the quadratic formula.
 				`.trim()
 			)
 		]),
@@ -427,7 +427,7 @@ The positive physical solution is often the only answer that makes sense in appl
 				createLesson(
 					"Project Bridge",
 					`
-Use this module as a short sports-modeling bridge between solving quadratics and graphing them.
+This module is a short sports-modeling bridge between solving quadratics and graphing them.
 
 **Project focus**
 
@@ -444,7 +444,7 @@ Finish by sketching a half-court shot model and explaining which form of the qua
 			createLesson(
 				"Review Targets",
 				`
-Use this check-in as a guided review rather than as a formal exam.
+This check-in is a guided review rather than a formal exam.
 
 **Skills to revisit**
 
@@ -540,7 +540,7 @@ Use the ride-path family to compare how steepness changes without moving the ver
 				createLesson(
 					"Project Bridge",
 					`
-Use this module as a short sports-graphing project tied to quadratic transformations.
+This module is a short sports-graphing project tied to quadratic transformations.
 
 **Project focus**
 
