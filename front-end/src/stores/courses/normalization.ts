@@ -1147,6 +1147,8 @@ function normalizeSupportLabelText(text: string) {
 		.replace(/\*\*Success criteria:\*\*/gi, "**Success:**")
 		.replace(/\*\*Build sequence:\*\*/gi, "**Build steps:**")
 		.replace(/\*\*Completion checks:\*\*/gi, "**Checkpoints:**")
+		.replace(/\*\*Evidence target:\*\*/gi, "**What to show:**")
+		.replace(/\*\*Evidence targets:\*\*/gi, "**What to show:**")
 		.replace(/\*\*Remote-safe activity:\*\*/gi, "**Remote activity:**")
 		.replace(/\*\*Remote investigation:\*\*/gi, "**Investigation:**")
 		.replace(/\*\*Science explanation:\*\*/gi, "**Explanation:**");
