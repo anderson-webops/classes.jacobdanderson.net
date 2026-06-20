@@ -868,7 +868,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Scope a Robust CLI Utility",
 					content:
-						"Frame the capstone as a careful utility that reads structured input, validates it, transforms it, and writes trustworthy output. The challenge is not adding every possible feature; it is building a small tool whose invariants and failure cases are clearly understood."
+						"Frame the capstone as a careful utility that reads structured input, validates it, transforms it, and writes trustworthy output. The challenge is not adding every possible feature; it is building a small tool whose invariants and failure-mode scenarios are clearly understood."
 				},
 				{
 					title: "Read Input, Validate Early, Transform Deliberately",

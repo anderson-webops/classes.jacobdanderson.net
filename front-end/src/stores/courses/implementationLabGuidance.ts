@@ -155,7 +155,7 @@ export function buildImplementationLabGuidance({
 		const opener = [
 			`Walk through one representative **${label}** case before expanding the implementation.`,
 			`Start **${label}** with one narrow case that can be traced from input to result.`,
-			`Before adding features to **${label}**, run one normal case slowly enough to explain each checkpoint.`,
+			`Before adding features to **${label}**, run one standard scenario slowly enough to explain each checkpoint.`,
 			`Use a small **${label}** example first so the later build has a known baseline.`
 		][variantIndex(courseFamily, moduleTitle, section, 4)];
 
@@ -165,7 +165,7 @@ export function buildImplementationLabGuidance({
 				`For **${label}**, record the starting files or commands, exact input, expected result, observed result, and a visible checkpoint that proves the code is moving in the right direction.`,
 			`Trace the example in the same vocabulary the project will use later: inputs, state changes, method or function boundaries, outputs, and the evidence that confirms each step. This keeps the example from becoming a demonstration to copy without understanding.`,
 			context?.boundaryCase ??
-				`Then add one **${label}** boundary or failure case so the project has a clear comparison between normal behavior and the edge condition that most needs protection.`
+				`Then add one **${label}** boundary or failure-mode check so the project has a clear comparison between standard behavior and the edge condition that most needs protection.`
 		].join("\n\n");
 	}
 
@@ -187,7 +187,7 @@ export function buildImplementationLabGuidance({
 		`**Project goal:** Build **${label}** as ${artifactArticle} ${artifact} with runnable behavior, inspectable evidence, and a clear boundary case.`,
 		`**Project goal:** Complete **${label}** as ${artifactArticle} ${artifact} that exposes the lab concept through a working run and one protected edge case.`,
 		`**Project goal:** Turn **${label}** into ${artifactArticle} ${artifact} with a reproducible run, visible diagnostics, and a named success condition.`,
-		`**Project goal:** Produce **${label}** as ${artifactArticle} ${artifact} whose normal path and failure or boundary path can both be inspected.`
+		`**Project goal:** Produce **${label}** as ${artifactArticle} ${artifact} whose standard path and failure or boundary path can both be inspected.`
 	][variantIndex(courseFamily, moduleTitle, section, 4)];
 
 	return [
@@ -196,11 +196,11 @@ export function buildImplementationLabGuidance({
 		"**Required work:**",
 		`1. For ${definiteLabel(label)} ${artifact}, identify the concrete inputs, outputs, state changes, files, commands, services, or system boundaries involved.`,
 		`2. Build ${definiteLabel(label)} ${artifact} in small runnable steps, checking output, logs, traces, tests, or browser/runtime behavior after each meaningful change.`,
-		`3. Check ${definiteLabel(label)} ${artifact} with one normal path, one boundary or failure path, and one case tied directly to the lab's main concept.`,
+		`3. Check ${definiteLabel(label)} ${artifact} with one standard path, one boundary or failure path, and one case tied directly to the lab's main concept.`,
 		`4. ${referenceStep(label, artifact, hasReference)}`,
 		"**Completion checks:**",
 		`- ${capitalizedDefiniteLabel(label)} ${artifact} demonstrates the lab concept through runnable behavior, output, tests, traces, logs, or another concrete result.`,
-		`- The protected boundary or failure case for ${definiteLabel(label)} ${artifact} is named explicitly and is not only the provided sample.`,
+		`- The protected boundary or failure-mode check for ${definiteLabel(label)} ${artifact} is named explicitly and is not only the provided sample.`,
 		`- The final **${articleSafeLabel(label)}** ${artifact} note identifies one implementation, debugging, or reasoning choice that materially affected the result.`
 	].join("\n\n");
 }

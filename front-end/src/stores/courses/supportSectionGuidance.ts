@@ -103,7 +103,7 @@ export function buildSupportSectionGuidance({
 
 	if (section === "debugging") {
 		const opener = [
-			`**${title}** diagnoses realistic failure modes instead of only rerunning the normal case.`,
+			`**${title}** diagnoses realistic failure modes instead of only rerunning the standard scenario.`,
 			`**${title}** narrows the failure before changing the solution.`,
 			`**${title}** is a controlled troubleshooting pass with evidence before and after the fix.`
 		][variant];
@@ -111,7 +111,7 @@ export function buildSupportSectionGuidance({
 		return [
 			opener,
 			`The **${title}** work is checked for ${focus}.`,
-			`The ${courseFamily} evidence names the symptom in **${title}**, the smallest reproduction, the suspected cause, the fix, and the proof that the fix changed the behavior.`
+			`The ${courseFamily} evidence names the symptom in **${title}**, the smallest reproduction, the suspected cause, the fix, and the result that confirms the behavior changed.`
 		].join("\n\n");
 	}
 
@@ -127,7 +127,7 @@ export function buildSupportSectionGuidance({
 			`The **${title}** plan names the core state, inputs, outputs, boundaries, and verification evidence for ${focus}.`,
 			`The build order for **${title}** produces a small working version early, then adds complexity only after the current checkpoint can be explained.`,
 			`A complete plan separates required behavior from optional polish. It identifies the first runnable slice, the data or state representation, the smallest useful test case, and the point where the work can pause without losing a working baseline.`,
-			`Each checkpoint should answer three questions: what changed, how the change can be observed, and what evidence would show that the next layer is safe to add.`
+			`Each checkpoint answers three questions: what changed, how the change can be observed, and what evidence would show that the next layer is safe to add.`
 		].join("\n\n");
 	}
 
@@ -156,6 +156,6 @@ export function buildSupportSectionGuidance({
 	return [
 		opener,
 		`The **${title}** extension stays centered on ${focus}.`,
-		`The new ${courseFamily} requirement in **${title}** remains testable: expected behavior is defined, one normal case and one boundary case are run, and the change from the base version is recorded.`
+		`The new ${courseFamily} requirement in **${title}** remains testable: expected behavior is defined, one standard check and one boundary check are run, and the change from the base version is recorded.`
 	].join("\n\n");
 }

@@ -472,7 +472,7 @@ const familyAssessmentCadence: Record<string, string[]> = {
 	programming: [
 		"Short code-tracing, debugging, or design check every module.",
 		"At least one source-backed project milestone per major concept cluster.",
-		"Project review includes normal case, edge case, and written explanation.",
+		"Project review includes a standard scenario, an edge case, and a written explanation.",
 		"Capstone or transfer task requires tests, run instructions, and reflection."
 	],
 	science: [
@@ -882,7 +882,7 @@ function assessmentCadenceFor(
 	return [
 		`${courseLabel} includes a short code-tracing, debugging, or design check every module.`,
 		`${courseLabel} has at least one source-backed project milestone per major concept cluster.`,
-		`${courseLabel} project review includes a normal case, edge case, and written explanation.`,
+		`${courseLabel} project review includes a standard scenario, an edge case, and a written explanation.`,
 		`${courseLabel} capstone or transfer task requires tests, run instructions, and reflection.`
 	];
 }
@@ -1745,7 +1745,7 @@ function addCppMatrixModule(courseId: string, course: RawCourse) {
 			},
 			{
 				title: "Placement Check",
-				content: `**Readiness check:** The placement check asks for a pointer/reference explanation, an appropriate vector or map use, a recursive trace, and a command parser rejection path. The weakest answer determines the next module because a gap in memory, containers, recursion, or parsing will become more expensive inside a larger C++ project.\n\n**Current course emphasis:** ${placement.placementCheck}\n\n**Evidence of proficiency:** The explanation includes the failure case, not only the successful path.`
+				content: `**Readiness check:** The placement check asks for a pointer/reference explanation, an appropriate vector or map use, a recursive trace, and a command parser rejection path. The weakest answer determines the next module because a gap in memory, containers, recursion, or parsing will become more expensive inside a larger C++ project.\n\n**Current course emphasis:** ${placement.placementCheck}\n\n**Evidence of proficiency:** The explanation includes the failure-mode check, not only the successful path.`
 			}
 		],
 		supplementalProjects: [
@@ -1789,7 +1789,7 @@ function addApCsaAlignmentModule(courseId: string, course: RawCourse) {
 			{
 				title: "Answer-Check Review Rule",
 				content:
-					"**Concept path:** Any AP CSA project without an answer-check path needs local review material or a discussion-only label. Answer checks can be tests, expected output, trace tables, rubric bullets, or explanation prompts, but the project must not leave correctness completely implicit.\n\n**Review rule:** If a project answer cannot be checked automatically, define a human-checkable artifact: method signatures, sample trace, expected console output, object-state table, or FRQ-style rubric bullets. For algorithms, include at least one normal case and one boundary case. For class design, include one state change or method-contract explanation.\n\n**Evidence target:** Each project states whether the work is checked by tests, discussion, trace, rubric, or expected-output comparison."
+					"**Concept path:** Any AP CSA project without an answer-check path needs local review material or a discussion-only label. Answer checks can be tests, expected output, trace tables, rubric bullets, or explanation prompts, but the project must not leave correctness completely implicit.\n\n**Review rule:** If a project answer cannot be checked automatically, define a human-checkable artifact: method signatures, sample trace, expected console output, object-state table, or FRQ-style rubric bullets. For algorithms, include at least one standard scenario and one boundary scenario. For class design, include one state change or method-contract explanation.\n\n**Evidence target:** Each project states whether the work is checked by tests, discussion, trace, rubric, or expected-output comparison."
 			}
 		],
 		supplementalProjects: [
@@ -1842,7 +1842,7 @@ function addDataCatalogModule(courseId: string, course: RawCourse) {
 			reproducibility:
 				"For AI Foundations, reproducibility means the same start state, goal test, transition rules, tie-breaking rule, and trace produce the same path or decision.",
 			evaluation:
-				"For AI Foundations, evaluation should compare a solver or agent against a known path, baseline strategy, state count, trace, or failure case rather than a statistical score alone.",
+				"For AI Foundations, evaluation should compare a solver or agent against a known path, baseline strategy, state count, trace, or failure-mode example rather than a statistical score alone.",
 			responsibleUse:
 				"For AI Foundations, the responsible-use note should name where the representation, heuristic, rule priority, or search depth can mislead an agent or user.",
 			readinessCard:
@@ -2320,7 +2320,7 @@ function addDataAiMlBoundaryModule(courseId: string, course: RawCourse) {
 			checkpoint:
 				"AI Foundations checkpoints focus on representation, state transitions, heuristic assumptions, deterministic traces, search failure modes, and whether an agent explanation is faithful.",
 			artifact:
-				"AI Foundations artifacts should preserve the path from problem representation to solver behavior, including start state, legal moves, goal test, trace, and failure case.",
+				"AI Foundations artifacts should preserve the path from problem representation to solver behavior, including start state, legal moves, goal test, trace, and failure-mode example.",
 			antiOverlap:
 				"Keep the project in AI Foundations when the central work is symbolic reasoning, search, planning, rule systems, or agent behavior rather than data cleaning or statistical generalization.",
 			classification:
@@ -2689,7 +2689,7 @@ function addCppThreeCourseSpineModule(courseId: string, course: RawCourse) {
 		supplementalProjects: [
 			{
 				title: "C++ Spine Project: Build-Test Harness",
-				content: `**Project goal:** Add a repeatable build and test harness to one C++ project. The harness should reduce ambiguity: one command builds, one command runs a normal case, and one command runs tests or edge-case checks. For manual-memory or parser work, include sanitizer output or a deliberately failing input when the local toolchain supports it.\n\n**Current course use:** ${spine.harnessProject}\n\n**Completion checks:**\n- The README names build/run/test commands.\n- At least one edge case is tested.\n- The work demonstrates the ability to explain what the compiler or sanitizer is checking.\n- A fresh checkout can reproduce the same result without relying on hidden IDE state.`
+				content: `**Project goal:** Add a repeatable build and test harness to one C++ project. The harness should reduce ambiguity: one command builds, one command runs a standard scenario, and one command runs tests or edge-case checks. For manual-memory or parser work, include sanitizer output or a deliberately failing input when the local toolchain supports it.\n\n**Current course use:** ${spine.harnessProject}\n\n**Completion checks:**\n- The README names build/run/test commands.\n- At least one edge case is tested.\n- The work demonstrates the ability to explain what the compiler or sanitizer is checking.\n- A fresh checkout can reproduce the same result without relying on hidden IDE state.`
 			},
 			{
 				title: "C++ Spine Project: Ownership and Interface Review",
@@ -2897,7 +2897,7 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "UGD7 Project 1: Test and Build Gate",
 				content:
-					"**Project goal:** Add one Edit Mode test, one Play Mode smoke test, and one local build profile to an existing Unity project. The gate proves that core logic, scene boot, and build configuration are inspectable before more content is added.\n\n**Gate sequence:**\n1. Choose one script or system with deterministic logic and write an Edit Mode test for its normal case and one boundary case.\n2. Add a Play Mode smoke test or documented play-mode checklist proving the scene loads, the player can act, and a win, loss, restart, or state-change path is visible.\n3. Create or document a local build profile with target platform, scene list, output folder, and any required quality or input settings.\n4. Run the gate from a clean editor state and record command path, menu path, or screenshot evidence.\n5. Add one failure mode and recovery note, such as missing scene in build settings, compile error, package mismatch, or test assembly setup.\n\n**Completion checks:**\n- Tests run from a documented path.\n- The build profile is named and reproducible.\n- Scene boot and one gameplay state transition are verified.\n- A failure mode and recovery step are recorded."
+					"**Project goal:** Add one Edit Mode test, one Play Mode smoke test, and one local build profile to an existing Unity project. The gate proves that core logic, scene boot, and build configuration are inspectable before more content is added.\n\n**Gate sequence:**\n1. Choose one script or system with deterministic logic and write an Edit Mode test for its standard scenario and one boundary case.\n2. Add a Play Mode smoke test or documented play-mode checklist proving the scene loads, the player can act, and a win, loss, restart, or state-change path is visible.\n3. Create or document a local build profile with target platform, scene list, output folder, and any required quality or input settings.\n4. Run the gate from a clean editor state and record command path, menu path, or screenshot evidence.\n5. Add one failure mode and recovery note, such as missing scene in build settings, compile error, package mismatch, or test assembly setup.\n\n**Completion checks:**\n- Tests run from a documented path.\n- The build profile is named and reproducible.\n- Scene boot and one gameplay state transition are verified.\n- A failure mode and recovery step are recorded."
 			},
 			{
 				title: "UGD7 Project 2: Asset Pipeline Review",
@@ -3176,7 +3176,7 @@ function fallbackPracticeFocus(topic: string, courseId?: string) {
 			],
 			checks: [
 				"The trace shows intermediate states, not only the final result.",
-				"At least one boundary or awkward case is checked.",
+				"At least one boundary or edge case is checked.",
 				"The explanation connects the trace to correctness or runtime."
 			]
 		};
@@ -3191,7 +3191,7 @@ function fallbackPracticeFocus(topic: string, courseId?: string) {
 			goal: "practice moving data from input to representation to output without losing context.",
 			sequence: [
 				"Define the expected input shape and one example record or value.",
-				"Process a normal case and a case with missing, empty, repeated, or unusually ordered data.",
+				"Process a standard scenario and a case with missing, empty, repeated, or unusually ordered data.",
 				"Summarize what the output proves about the representation or data-handling choice."
 			],
 			checks: [

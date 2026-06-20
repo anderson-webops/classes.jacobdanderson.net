@@ -475,7 +475,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Common Pitfalls",
 					content:
-						"Common pitfalls include trusting a long simulation without a small sanity test, choosing a time step that creates artificial behavior, and treating graph smoothness as proof that the physics is correct."
+						"Common pitfalls include trusting a long simulation without a small sanity test, choosing a time step that creates artificial behavior, and treating graph smoothness as confirmation that the physics is correct."
 				},
 				{
 					title: "Extension Project: Motion Model Comparison",

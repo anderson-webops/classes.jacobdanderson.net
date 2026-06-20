@@ -92,7 +92,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Algorithm or puzzle solver that includes tracing, edge cases, and complexity discussion."
 		],
 		assessmentStyle: [
-			"Use function-level tests or assertions for normal, boundary, and awkward cases.",
+			"Use function-level tests or assertions for standard, boundary, and edge cases.",
 			"Trace before running to identify type, mutation, off-by-one, and missing-return bugs.",
 			"Review capstones for requirements, organization, input/output behavior, and explanation quality."
 		],
@@ -138,7 +138,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		assessmentStyle: [
 			"Explain update, draw, input, collision, and state-transition phases.",
-			"Run collision and restart edge-case tests rather than only testing one normal case.",
+			"Run collision and restart edge-case tests rather than only testing one standard scenario.",
 			"Use a rubric for controls, feedback, state, code organization, asset hygiene, and polish."
 		],
 		sourceAndTooling: [

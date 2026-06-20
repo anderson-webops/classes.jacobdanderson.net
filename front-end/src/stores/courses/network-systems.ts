@@ -464,7 +464,7 @@ export const networkSystemsCourse: RawCourse = {
 				{
 					title: "Project: Diagnose Why a Service Is Reachable Locally but Not from Another Machine",
 					content:
-						"Use the reachability lab to compare localhost success, same-subnet failure, and outside failure cases against service state, route state, and firewall state. Write down the failure signature before they edit anything so the later fix has real diagnostic context.",
+						"Use the reachability lab to compare localhost success, same-subnet failure, and outside failure-mode scenarios against service state, route state, and firewall state. Write down the failure signature before editing anything so the later fix has real diagnostic context.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS2-Local-vs-Remote-Reachability-Diagnosis/starter",
 					solutionLink:
