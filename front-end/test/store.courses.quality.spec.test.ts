@@ -2839,14 +2839,17 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(
 			/Extend the core build with one extra requirement/i
 		);
-		expect(corpus).not.toMatch(/\(COPY\)/i);
-		expect(corpus).not.toContain("ai search lab");
-		expect(corpus).not.toContain("data analysis lab");
-		expect(corpus).toContain("AI Search Lab 13: Implementation Lab");
-		expect(corpus).toContain("Data Analysis Lab 11: Implementation Lab");
-		expect(corpus).toContain("The Marble Game AI: Implementation Lab");
-		expect(corpus).toContain("KNN Car Classification: Implementation Lab");
-		expect(corpus).toContain("buildImplementationLabGuidance");
+			expect(corpus).not.toMatch(/\(COPY\)/i);
+			expect(corpus).not.toContain("ai search lab");
+			expect(corpus).not.toContain("data analysis lab");
+			expect(corpus).not.toMatch(/Data Analysis Lab 1[1-7]: Implementation Lab/);
+			expect(corpus).not.toMatch(/Data Analysis Lab 1[1-7] supplemental/i);
+			expect(corpus).toContain("AI Search Lab 13: Implementation Lab");
+			expect(corpus).toContain("Data Analysis Lab 11: Practice Studio");
+			expect(corpus).toContain("Data Analysis Lab 17 Extension Practice");
+			expect(corpus).toContain("The Marble Game AI: Implementation Lab");
+			expect(corpus).toContain("KNN Car Classification: Implementation Lab");
+			expect(corpus).toContain("buildImplementationLabGuidance");
 	});
 
 	it("keeps Data Science applied studios named and distinct in the loaded course", async () => {
@@ -2854,9 +2857,10 @@ describe("course text quality normalization", () => {
 		expect(course).not.toBeNull();
 		const corpus = allCourseText(course);
 
-		expect(corpus).not.toMatch(
-			/Data Analysis Lab 1[1-7]: Implementation Lab/
-		);
+			expect(corpus).not.toMatch(
+				/Data Analysis Lab 1[1-7]: Implementation Lab/
+			);
+			expect(corpus).not.toMatch(/Data Analysis Lab 1[1-7]: Practice Studio/);
 		expect(corpus).not.toMatch(/complete build-and-review sequence/i);
 		expect(corpus).not.toMatch(/open-ended placeholder/i);
 		expect(corpus).not.toMatch(/vague enrichment/i);
