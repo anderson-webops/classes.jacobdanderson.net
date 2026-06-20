@@ -2143,8 +2143,8 @@ function addAlgebraStandardsArchitectureModule(
 			{
 				title: "Course Item Labels",
 				content: [
-					"**Concept path:** Use clear labels such as Lesson, Practice, Check-in, Project, Remediation, Enrichment, or Assessment. The label should make the purpose of each item obvious: introducing a concept, practicing a skill, checking mastery, repairing a gap, or extending the idea.",
-					"**Label rules:** A Lesson introduces vocabulary, representation, and a worked example. Practice builds fluency with near-transfer problems. A Check-in samples mastery without becoming a full unit test. A Project applies algebra to a context, model, or comparison. Remediation targets a named gap, while Enrichment changes a constraint or adds a second method.",
+					"**Concept path:** Use clear labels such as Lesson, Practice, Check-in, Project, Targeted Review, Enrichment, or Assessment. The label should make the purpose of each item obvious: introducing a concept, practicing a skill, checking mastery, reviewing a gap, or extending the idea.",
+					"**Label rules:** A Lesson introduces vocabulary, representation, and a worked example. Practice builds fluency with near-transfer problems. A Check-in samples mastery without becoming a full unit test. A Project applies algebra to a context, model, or comparison. Targeted Review revisits a named gap, while Enrichment changes a constraint or adds a second method.",
 					`**Course-specific labels:** ${details.labelExamples}`,
 					"**Evidence target:** A reader can tell which items teach, which items practice, which items assess, which items extend, and which algebra strand is being checked before opening the detailed prompt."
 				].join("\n\n")
@@ -2155,7 +2155,7 @@ function addAlgebraStandardsArchitectureModule(
 					`**Project goal:** Each algebra course includes one required anchor modeling project and one optional extension project. For this course, the anchor should center on ${details.anchorFocus} The project defines quantities, chooses representations, solves, interprets, and checks reasonableness. The extension keeps the same mathematical structure but changes one meaningful constraint, comparison, or method so transfer becomes visible.`,
 					`**Anchor structure:**\n1. Name the context, variables, units, domain, and question being answered.\n2. Represent the relationship with ${details.anchorRepresentations}.\n3. Solve with visible algebra and explain why that method fits the context.\n4. Check the answer through substitution, graph inspection, units, estimation, or a boundary case.\n5. Write a conclusion that interprets the result rather than only reporting a value.`,
 					`**Extension structure:** ${details.extensionChange}. The extension records what stayed equivalent, what changed, and which representation made the change easiest to inspect.`,
-					"**Completion checks:**\n- At least two representations are used and compared.\n- The answer is interpreted in context with a reasonableness check.\n- The rubric separates procedure, representation, interpretation, and error-analysis evidence.\n- A remediation path identifies the prerequisite skill to revisit if the anchor project breaks down."
+					"**Completion checks:**\n- At least two representations are used and compared.\n- The answer is interpreted in context with a reasonableness check.\n- The rubric separates procedure, representation, interpretation, and error-analysis evidence.\n- A targeted review note identifies the prerequisite skill to revisit if the anchor project breaks down."
 				].join("\n\n")
 			},
 			{
