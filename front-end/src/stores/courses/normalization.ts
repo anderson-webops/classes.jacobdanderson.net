@@ -524,11 +524,12 @@ function distinguishDuplicateGeneratedProjectGuidance(course: RawCourse) {
 			if (group.length < 2) continue;
 
 			for (const item of group) {
-				if (/\*\*Variant focus:\*\*/i.test(item.content)) continue;
+				if (/\*\*(?:Variant|Variant focus):\*\*/i.test(item.content))
+					continue;
 
 				item.content = [
 					item.content.trim(),
-					`**Variant focus:** ${generatedGuidanceVariantFocus(course, module, item)}`
+					`**Variant:** ${generatedGuidanceVariantFocus(course, module, item)}`
 				].join("\n\n");
 			}
 		}
@@ -1142,7 +1143,10 @@ function normalizeSupportLabelText(text: string) {
 		.replace(/\*\*Required fields:\*\*/gi, "**Include:**")
 		.replace(/\*\*Required notes:\*\*/gi, "**Notes:**")
 		.replace(/\*\*Required elements:\*\*/gi, "**Include:**")
+		.replace(/\*\*Required work:\*\*/gi, "**Task:**")
 		.replace(/\*\*Required gate artifact:\*\*/gi, "**Capstone brief:**")
+		.replace(/\*\*Path:\*\*/gi, "**Approach:**")
+		.replace(/\*\*Build path:\*\*/gi, "**Build plan:**")
 		.replace(/\*\*Work sequence:\*\*/gi, "**Steps:**")
 		.replace(/\*\*Implementation steps:\*\*/gi, "**Steps:**")
 		.replace(/\*\*Success criteria:\*\*/gi, "**Success:**")
@@ -1158,6 +1162,14 @@ function normalizeSupportLabelText(text: string) {
 		.replace(/\*\*Assessment ideas:\*\*/gi, "**Practice checks:**")
 		.replace(/\*\*Rubric use:\*\*/gi, "**Review focus:**")
 		.replace(/\*\*Rubric dimensions:\*\*/gi, "**Review criteria:**")
+		.replace(/\*\*Variant focus:\*\*/gi, "**Variant:**")
+		.replace(/\*\*Applied lab:\*\*/gi, "**Lab:**")
+		.replace(/\*\*Applied studio:\*\*/gi, "**Studio:**")
+		.replace(/\*\*Project target:\*\*/gi, "**Project focus:**")
+		.replace(/\*\*Alignment test:\*\*/gi, "**Alignment check:**")
+		.replace(/\*\*Boundary rule:\*\*/gi, "**Boundary:**")
+		.replace(/\*\*Gate guidance:\*\*/gi, "**Capstone check:**")
+		.replace(/\*\*Check guidance:\*\*/gi, "**Check focus:**")
 		.replace(/\*\*Current course use:\*\*/gi, "**Course use:**")
 		.replace(/\*\*Current course emphasis:\*\*/gi, "**Course focus:**")
 		.replace(/\*\*Current course boundary:\*\*/gi, "**Course boundary:**")
