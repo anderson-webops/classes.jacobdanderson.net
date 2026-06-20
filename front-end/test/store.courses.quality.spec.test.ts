@@ -2482,6 +2482,8 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/Skill target:/i);
 		expect(corpus).not.toMatch(/The goal is to make port-to-process/i);
 		expect(corpus).not.toMatch(/The goal is to make dual-stack/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
 		expect(corpus).toContain(
 			"Interfaces attach a host to a network, frames move across the local link"
 		);
@@ -2491,6 +2493,19 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Safe port forwarding is a last-mile exposure step"
 		);
+		expect(corpus).toContain("Network Stack Transfer Practice");
+		expect(corpus).toContain("DNS Resolution Transfer Practice");
+		expect(corpus).toContain("Packet Capture Extension Practice");
+		expect(corpus).toContain(
+			"Network Systems Lab 15: Diagnostic Workflow Studio"
+		);
+		expect(corpus).toContain(
+			"Network Systems Lab 16: Service Exposure Studio"
+		);
+		expect(corpus).toContain(
+			"Network Systems Lab 17: Operations Capstone Studio"
+		);
+		expect(corpus).toContain("Operations Capstone Extension Practice");
 	});
 
 	it("keeps Linux Systems guidance operational and specific", async () => {

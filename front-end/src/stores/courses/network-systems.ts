@@ -53,7 +53,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-04-ns0-setup-and-tooling/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 2",
+					title: "Setup and Tooling Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "NS0 Setup and Tooling",
@@ -66,7 +66,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-01-ns0-setup-and-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 3",
+					title: "Setup and Tooling Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "NS0 Setup and Tooling",
@@ -129,7 +129,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-05-unit-1-the-network-stack-in-plain-english/solution"
 				},
 				{
-					title: "Unit 1: The Network Stack in Plain English supplemental 2",
+					title: "Network Stack Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
@@ -143,7 +143,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-03-unit-1-the-network-stack-in-plain-english-supplemental-2/solution"
 				},
 				{
-					title: "Unit 1: The Network Stack in Plain English supplemental 3",
+					title: "Network Stack Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
@@ -206,7 +206,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-06-unit-2-addresses-and-naming/solution"
 				},
 				{
-					title: "Unit 2: Addresses and Naming supplemental 2",
+					title: "Addressing Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 2: Addresses and Naming",
@@ -219,7 +219,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-05-unit-2-addresses-and-naming-supplemental-2/solution"
 				},
 				{
-					title: "Unit 2: Addresses and Naming supplemental 3",
+					title: "Addressing Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 2: Addresses and Naming",
@@ -282,7 +282,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-07-unit-3-switches-routers-nat-and-the-internet-edge/solution"
 				},
 				{
-					title: "Unit 3: Switches, Routers, NAT, and the Internet Edge supplemental 2",
+					title: "Routing Edge Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
@@ -296,7 +296,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-07-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-2/solution"
 				},
 				{
-					title: "Unit 3: Switches, Routers, NAT, and the Internet Edge supplemental 3",
+					title: "Routing Edge Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
@@ -350,7 +350,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS1-Listening-Services-Map/solution"
 				},
 				{
-					title: "Unit 4: Ports and Listening Services supplemental 2",
+					title: "Port Inventory Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 4: Ports and Listening Services",
@@ -363,7 +363,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-09-unit-4-ports-and-listening-services-supplemental-2/solution"
 				},
 				{
-					title: "Unit 4: Ports and Listening Services supplemental 3",
+					title: "Port Inventory Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 4: Ports and Listening Services",
@@ -416,7 +416,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS4-IPv4-vs-IPv6-Resolution-Comparison/solution"
 				},
 				{
-					title: "Unit 5: DNS and Name Resolution supplemental 2",
+					title: "DNS Resolution Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 5: DNS and Name Resolution",
@@ -429,7 +429,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-11-unit-5-dns-and-name-resolution-supplemental-2/solution"
 				},
 				{
-					title: "Unit 5: DNS and Name Resolution supplemental 3",
+					title: "DNS Resolution Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 5: DNS and Name Resolution",
@@ -482,7 +482,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS2-Local-vs-Remote-Reachability-Diagnosis/solution"
 				},
 				{
-					title: "Unit 6: Core Diagnostics supplemental 2",
+					title: "Diagnostic Trace Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 6: Core Diagnostics",
@@ -495,7 +495,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-13-unit-6-core-diagnostics-supplemental-2/solution"
 				},
 				{
-					title: "Unit 6: Core Diagnostics supplemental 3",
+					title: "Diagnostic Trace Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 6: Core Diagnostics",
@@ -548,7 +548,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS6-Router-NAT-Topology-Lab/solution"
 				},
 				{
-					title: "Unit 7: Linux Interface and Route Management supplemental 2",
+					title: "Linux Interface Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
@@ -562,7 +562,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-15-unit-7-linux-interface-and-route-management-supplemental-2/solution"
 				},
 				{
-					title: "Unit 7: Linux Interface and Route Management supplemental 3",
+					title: "Linux Interface Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
@@ -694,7 +694,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS3-UFW-Web-Server-Policy/solution"
 				},
 				{
-					title: "Unit 9: Firewalls and Host Policy supplemental 2",
+					title: "Firewall Policy Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 9: Firewalls and Host Policy",
@@ -707,7 +707,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-19-unit-9-firewalls-and-host-policy-supplemental-2/solution"
 				},
 				{
-					title: "Unit 9: Firewalls and Host Policy supplemental 3",
+					title: "Firewall Policy Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 9: Firewalls and Host Policy",
@@ -760,7 +760,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS5-Tcpdump-HTTP-Capture/solution"
 				},
 				{
-					title: "Unit 10: Packet Capture and Deep Inspection supplemental 2",
+					title: "Packet Capture Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
@@ -774,7 +774,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-21-unit-10-packet-capture-and-deep-inspection-supplemental-2/solution"
 				},
 				{
-					title: "Unit 10: Packet Capture and Deep Inspection supplemental 3",
+					title: "Packet Capture Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
@@ -837,7 +837,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-09-unit-11-common-application-protocols/solution"
 				},
 				{
-					title: "Unit 11: Common Application Protocols supplemental 2",
+					title: "Application Protocol Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 11: Common Application Protocols",
@@ -850,7 +850,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-23-unit-11-common-application-protocols-supplemental-2/solution"
 				},
 				{
-					title: "Unit 11: Common Application Protocols supplemental 3",
+					title: "Application Protocol Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 11: Common Application Protocols",
@@ -903,7 +903,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS6-Router-NAT-Topology-Lab/solution"
 				},
 				{
-					title: "Unit 12: Secure Exposure of Services supplemental 2",
+					title: "Secure Exposure Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 12: Secure Exposure of Services",
@@ -916,7 +916,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-25-unit-12-secure-exposure-of-services-supplemental-2/solution"
 				},
 				{
-					title: "Unit 12: Secure Exposure of Services supplemental 3",
+					title: "Secure Exposure Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 12: Secure Exposure of Services",
@@ -978,7 +978,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-10-ns13-expansion-ideas-and-next-steps/solution"
 				},
 				{
-					title: "Expansion Ideas and Next Steps supplemental 2",
+					title: "Next Steps Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "NS13 Expansion Ideas and Next Steps",
@@ -991,7 +991,7 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-27-ns13-expansion-ideas-and-next-steps-supplemental-2/solution"
 				},
 				{
-					title: "Expansion Ideas and Next Steps supplemental 3",
+					title: "Next Steps Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "NS13 Expansion Ideas and Next Steps",
@@ -1006,32 +1006,32 @@ export const networkSystemsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Network Systems Lab 15: Implementation Lab",
+			title: "Network Systems Lab 15: Diagnostic Workflow Studio",
 			curriculum: [
 				{
-					title: "Network Systems Lab 15: Core Concepts",
+					title: "Diagnostic Workflow Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 15: Implementation Lab",
+							"Network Systems Lab 15: Diagnostic Workflow Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Network Systems Lab 15: Guided Example",
+					title: "Diagnostic Workflow Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 15: Implementation Lab",
+							"Network Systems Lab 15: Diagnostic Workflow Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Network Systems Lab 15: Core Project",
+					title: "Diagnostic Workflow Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 15: Implementation Lab",
+							"Network Systems Lab 15: Diagnostic Workflow Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1040,22 +1040,22 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-01-network-systems-lab-15/solution"
 				},
 				{
-					title: "Network Systems Lab 15: Review and Reflection",
+					title: "Diagnostic Workflow Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 15: Implementation Lab",
+							"Network Systems Lab 15: Diagnostic Workflow Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Network Systems Lab 15: Extension Challenge",
+					title: "Diagnostic Workflow Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 15: Implementation Lab",
+							"Network Systems Lab 15: Diagnostic Workflow Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1064,11 +1064,11 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-01-network-systems-lab-15/solution"
 				},
 				{
-					title: "Network Systems Lab 15 supplemental 2: Implementation Lab",
+					title: "Diagnostic Workflow Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 15: Implementation Lab",
+							"Network Systems Lab 15: Diagnostic Workflow Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1078,11 +1078,11 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-29-applied-studio-15-network-systems-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "Network Systems Lab 15 supplemental 3: Implementation Lab",
+					title: "Diagnostic Workflow Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 15: Implementation Lab",
+							"Network Systems Lab 15: Diagnostic Workflow Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1094,32 +1094,32 @@ export const networkSystemsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Network Systems Lab 16: Implementation Lab",
+			title: "Network Systems Lab 16: Service Exposure Studio",
 			curriculum: [
 				{
-					title: "Network Systems Lab 16: Core Concepts",
+					title: "Service Exposure Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 16: Implementation Lab",
+							"Network Systems Lab 16: Service Exposure Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Network Systems Lab 16: Guided Example",
+					title: "Service Exposure Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 16: Implementation Lab",
+							"Network Systems Lab 16: Service Exposure Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Network Systems Lab 16: Core Project",
+					title: "Service Exposure Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 16: Implementation Lab",
+							"Network Systems Lab 16: Service Exposure Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1128,22 +1128,22 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-02-network-systems-lab-16/solution"
 				},
 				{
-					title: "Network Systems Lab 16: Review and Reflection",
+					title: "Service Exposure Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 16: Implementation Lab",
+							"Network Systems Lab 16: Service Exposure Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Network Systems Lab 16: Extension Challenge",
+					title: "Service Exposure Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 16: Implementation Lab",
+							"Network Systems Lab 16: Service Exposure Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1152,11 +1152,11 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-02-network-systems-lab-16/solution"
 				},
 				{
-					title: "Network Systems Lab 16 supplemental 2: Implementation Lab",
+					title: "Service Exposure Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 16: Implementation Lab",
+							"Network Systems Lab 16: Service Exposure Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1166,11 +1166,11 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-31-applied-studio-16-network-systems-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "Network Systems Lab 16 supplemental 3: Implementation Lab",
+					title: "Service Exposure Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 16: Implementation Lab",
+							"Network Systems Lab 16: Service Exposure Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1182,32 +1182,32 @@ export const networkSystemsCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Network Systems Lab 17: Implementation Lab",
+			title: "Network Systems Lab 17: Operations Capstone Studio",
 			curriculum: [
 				{
-					title: "Network Systems Lab 17: Core Concepts",
+					title: "Operations Capstone Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 17: Implementation Lab",
+							"Network Systems Lab 17: Operations Capstone Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Network Systems Lab 17: Guided Example",
+					title: "Operations Capstone Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 17: Implementation Lab",
+							"Network Systems Lab 17: Operations Capstone Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Network Systems Lab 17: Core Project",
+					title: "Operations Capstone Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 17: Implementation Lab",
+							"Network Systems Lab 17: Operations Capstone Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1216,22 +1216,22 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-03-network-systems-lab-17/solution"
 				},
 				{
-					title: "Network Systems Lab 17: Review and Reflection",
+					title: "Operations Capstone Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 17: Implementation Lab",
+							"Network Systems Lab 17: Operations Capstone Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Network Systems Lab 17: Extension Challenge",
+					title: "Operations Capstone Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 17: Implementation Lab",
+							"Network Systems Lab 17: Operations Capstone Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1240,11 +1240,11 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-03-network-systems-lab-17/solution"
 				},
 				{
-					title: "Network Systems Lab 17 supplemental 2: Implementation Lab",
+					title: "Operations Capstone Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 17: Implementation Lab",
+							"Network Systems Lab 17: Operations Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1254,11 +1254,11 @@ export const networkSystemsCourse: RawCourse = {
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-33-applied-studio-17-network-systems-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "Network Systems Lab 17 supplemental 3: Implementation Lab",
+					title: "Operations Capstone Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle:
-							"Network Systems Lab 17: Implementation Lab",
+							"Network Systems Lab 17: Operations Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
