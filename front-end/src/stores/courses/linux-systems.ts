@@ -235,7 +235,7 @@ export const linuxSystemsCourse: RawCourse = {
 				{
 					title: "sudo, Service Accounts, and Least Privilege",
 					content:
-						"Explain why not everything should run as root and why long-lived services often need dedicated identities. Connect least privilege to practical decisions such as document-root ownership, writable log directories, and which account should own deployed application code."
+						"Explain why not everything runs as root and why long-lived services often need dedicated identities. Connect least privilege to practical decisions such as document-root ownership, writable log directories, and the account that owns deployed application code."
 				},
 				{
 					title: "Permission Debugging as a Systems Skill",
@@ -315,7 +315,7 @@ export const linuxSystemsCourse: RawCourse = {
 				{
 					title: "Readable Configs Beat Clever Configs",
 					content:
-						"Favor clear comments, stable indentation, and small focused changes over dense one-liners that are hard to audit later. The Linux operator who comes back to a file three weeks later should still be able to explain what changed and why."
+						"Favor clear comments, stable indentation, and small focused changes over dense one-liners that are hard to audit later. A Linux operator returning to a file three weeks later can still identify what changed, why it changed, and how to verify it."
 				},
 				{
 					title: "Unit 4: Editing and Configuration: Core Project",
@@ -450,7 +450,7 @@ export const linuxSystemsCourse: RawCourse = {
 				{
 					title: "What a Service Is and Why systemd Matters",
 					content:
-						"Frame services as named, supervised processes that should survive shell exits, expose status, and restart predictably when something goes wrong. `systemd` matters because it gives Linux a common language for startup ordering, service lifecycle management, logging integration, and scheduled work."
+						"Frame services as named, supervised processes that survive shell exits, expose status, and restart predictably when something goes wrong. `systemd` matters because it gives Linux a common language for startup ordering, service lifecycle management, logging integration, and scheduled work."
 				},
 				{
 					title: "Reading Unit Files",
@@ -470,7 +470,7 @@ export const linuxSystemsCourse: RawCourse = {
 				{
 					title: "Project: Create a systemd Service for a Toy App",
 					content:
-						"Use the toy-service lab to package a simple long-running process under `systemd` and then operate it with start, stop, restart, enable, and log inspection commands. The lab should require justification for each path, user, restart policy, and environment choice in the unit file rather than treating service files as boilerplate.",
+						"Use the toy-service lab to package a simple long-running process under `systemd` and then operate it with start, stop, restart, enable, and log inspection commands. The finished service record includes justification for each path, user, restart policy, and environment choice in the unit file rather than treating service files as boilerplate.",
 					projectLink:
 						"https://github.com/instruction-material/Linux-Systems/tree/main/LS5-Systemd-Toy-Service/starter",
 					solutionLink:
@@ -672,7 +672,7 @@ export const linuxSystemsCourse: RawCourse = {
 				{
 					title: "Package Install vs Source Build vs Tarball Drop",
 					content:
-						"Compare system packages, source builds, and manually unpacked tarballs in terms of traceability, maintenance burden, and filesystem placement. Software that appears in production without a clear install method, owner, or upgrade path should raise suspicion."
+						"Compare system packages, source builds, and manually unpacked tarballs in terms of traceability, maintenance burden, and filesystem placement. Software that appears in production without a clear install method, owner, or upgrade path is operationally suspect."
 				},
 				{
 					title: "Understand Where Installed Software Lives",
@@ -830,7 +830,7 @@ export const linuxSystemsCourse: RawCourse = {
 				{
 					title: "Reverse Proxy vs Static File Serving",
 					content:
-						"Explain the operational difference between serving files directly from disk and forwarding requests to an upstream application. This distinction is central to real Linux work because it shapes what should be inspected first during an outage: the content path, the web server config, the upstream process, or the network path between them."
+						"Explain the operational difference between serving files directly from disk and forwarding requests to an upstream application. This distinction is central to real Linux work because it shapes the first outage checks: the content path, the web server config, the upstream process, or the network path between them."
 				},
 				{
 					title: "TLS, Virtual Hosts, Server Blocks, Reload vs Restart",
@@ -905,7 +905,7 @@ export const linuxSystemsCourse: RawCourse = {
 				{
 					title: "Backup Patterns for Small Linux Systems",
 					content:
-						"Backups are a reliability practice rather than a checkbox. Think about what must be preserved, how often it changes, where archives should live, how retention works, and how to tell whether a backup succeeded beyond simply seeing that a file was created."
+						"Backups are a reliability practice rather than a checkbox. Think about what must be preserved, how often it changes, where archives belong, how retention works, and how to tell whether a backup succeeded beyond simply seeing that a file was created."
 				},
 				{
 					title: "log and tmp Cleanup as Operational Hygiene",
@@ -979,7 +979,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Service Deployment Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
+						moduleTitle:
+							"Linux Systems Lab 14: Service Deployment Studio",
 						section: "concepts"
 					})
 				},
@@ -987,7 +988,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Service Deployment Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
+						moduleTitle:
+							"Linux Systems Lab 14: Service Deployment Studio",
 						section: "example"
 					})
 				},
@@ -995,7 +997,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Service Deployment Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
+						moduleTitle:
+							"Linux Systems Lab 14: Service Deployment Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1007,7 +1010,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Service Deployment Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
+						moduleTitle:
+							"Linux Systems Lab 14: Service Deployment Studio",
 						section: "review"
 					})
 				}
@@ -1017,7 +1021,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Service Deployment Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
+						moduleTitle:
+							"Linux Systems Lab 14: Service Deployment Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1029,7 +1034,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Service Deployment Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
+						moduleTitle:
+							"Linux Systems Lab 14: Service Deployment Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1042,7 +1048,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Service Deployment Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 14: Service Deployment Studio",
+						moduleTitle:
+							"Linux Systems Lab 14: Service Deployment Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1148,7 +1155,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Backup Recovery Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
+						moduleTitle:
+							"Linux Systems Lab 16: Backup Recovery Studio",
 						section: "concepts"
 					})
 				},
@@ -1156,7 +1164,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Backup Recovery Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
+						moduleTitle:
+							"Linux Systems Lab 16: Backup Recovery Studio",
 						section: "example"
 					})
 				},
@@ -1164,7 +1173,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Backup Recovery Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
+						moduleTitle:
+							"Linux Systems Lab 16: Backup Recovery Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1176,7 +1186,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Backup Recovery Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
+						moduleTitle:
+							"Linux Systems Lab 16: Backup Recovery Studio",
 						section: "review"
 					})
 				}
@@ -1186,7 +1197,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Backup Recovery Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
+						moduleTitle:
+							"Linux Systems Lab 16: Backup Recovery Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1198,7 +1210,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Backup Recovery Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
+						moduleTitle:
+							"Linux Systems Lab 16: Backup Recovery Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1211,7 +1224,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Backup Recovery Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 16: Backup Recovery Studio",
+						moduleTitle:
+							"Linux Systems Lab 16: Backup Recovery Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1229,7 +1243,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Operations Capstone Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
+						moduleTitle:
+							"Linux Systems Lab 17: Operations Capstone Studio",
 						section: "concepts"
 					})
 				},
@@ -1237,7 +1252,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Operations Capstone Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
+						moduleTitle:
+							"Linux Systems Lab 17: Operations Capstone Studio",
 						section: "example"
 					})
 				},
@@ -1245,7 +1261,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Operations Capstone Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
+						moduleTitle:
+							"Linux Systems Lab 17: Operations Capstone Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1257,7 +1274,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Operations Capstone Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
+						moduleTitle:
+							"Linux Systems Lab 17: Operations Capstone Studio",
 						section: "review"
 					})
 				}
@@ -1267,7 +1285,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Operations Capstone Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
+						moduleTitle:
+							"Linux Systems Lab 17: Operations Capstone Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1279,7 +1298,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Operations Capstone Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
+						moduleTitle:
+							"Linux Systems Lab 17: Operations Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1292,7 +1312,8 @@ export const linuxSystemsCourse: RawCourse = {
 					title: "Operations Capstone Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Linux systems",
-						moduleTitle: "Linux Systems Lab 17: Operations Capstone Studio",
+						moduleTitle:
+							"Linux Systems Lab 17: Operations Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
