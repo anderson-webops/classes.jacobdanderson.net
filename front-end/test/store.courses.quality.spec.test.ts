@@ -2417,8 +2417,8 @@ describe("course text quality normalization", () => {
 			/Extend the core build with one extra requirement/i
 		);
 		expect(corpus).toContain("buildImplementationLabGuidance");
-		expect(corpus).toContain("Assembly Lab 15: Implementation Lab");
-		expect(corpus).toContain("Systems Build 14: Implementation Lab");
+		expect(corpus).toContain("Assembly Lab 15: Stack Trace Studio");
+		expect(corpus).toContain("Systems Build 14: Byte Inspector Studio");
 		expect(corpus).toContain("Full Stack Web Lab 14: Implementation Lab");
 	});
 
@@ -4648,6 +4648,8 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/This section covers/i);
 		expect(corpus).not.toMatch(/Key idea:/i);
 		expect(corpus).not.toMatch(/Skill target:/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
 		expect(corpus).toContain(
 			"The assembly pipeline is an artifact flow: source becomes object code"
 		);
@@ -4657,5 +4659,11 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Instruction-level debugging treats a single machine instruction as the smallest meaningful step."
 		);
+		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain("Register Flow Transfer Practice");
+		expect(corpus).toContain("Assembly Lab 15: Stack Trace Studio");
+		expect(corpus).toContain("Assembly Lab 16: ABI Integration Studio");
+		expect(corpus).toContain("Assembly Lab 17: Reverse Trace Studio");
+		expect(corpus).toContain("Reverse Trace Extension Practice");
 	});
 });

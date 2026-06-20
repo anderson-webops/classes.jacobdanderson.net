@@ -53,7 +53,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-04-asm0-setup-and-tooling/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 2",
+					title: "Setup and Tooling Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "ASM0 Setup and Tooling",
@@ -66,7 +66,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-01-asm0-setup-and-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Setup and Tooling supplemental 3",
+					title: "Setup and Tooling Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "ASM0 Setup and Tooling",
@@ -128,7 +128,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-05-unit-1-machine-model-and-toolchain/solution"
 				},
 				{
-					title: "Unit 1: Machine Model and Toolchain supplemental 2",
+					title: "Toolchain Trace Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 1: Machine Model and Toolchain",
@@ -141,7 +141,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-03-unit-1-machine-model-and-toolchain-supplemental-2/solution"
 				},
 				{
-					title: "Unit 1: Machine Model and Toolchain supplemental 3",
+					title: "Toolchain Trace Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 1: Machine Model and Toolchain",
@@ -194,7 +194,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM1-Integer-Calculator/solution"
 				},
 				{
-					title: "Unit 2: Registers and Data Movement supplemental 2",
+					title: "Register Flow Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 2: Registers and Data Movement",
@@ -207,7 +207,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-05-unit-2-registers-and-data-movement-supplemental-2/solution"
 				},
 				{
-					title: "Unit 2: Registers and Data Movement supplemental 3",
+					title: "Register Flow Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 2: Registers and Data Movement",
@@ -269,7 +269,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-06-unit-3-arithmetic-and-logic/solution"
 				},
 				{
-					title: "Unit 3: Arithmetic and Logic supplemental 2",
+					title: "Flag Logic Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 3: Arithmetic and Logic",
@@ -282,7 +282,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-07-unit-3-arithmetic-and-logic-supplemental-2/solution"
 				},
 				{
-					title: "Unit 3: Arithmetic and Logic supplemental 3",
+					title: "Flag Logic Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 3: Arithmetic and Logic",
@@ -335,7 +335,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM2-Array-Sum-and-Search/solution"
 				},
 				{
-					title: "Unit 4: Branching and Loops supplemental 2",
+					title: "Branch Trace Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 4: Branching and Loops",
@@ -348,7 +348,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-09-unit-4-branching-and-loops-supplemental-2/solution"
 				},
 				{
-					title: "Unit 4: Branching and Loops supplemental 3",
+					title: "Branch Trace Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 4: Branching and Loops",
@@ -410,7 +410,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-07-unit-5-the-stack-and-function-calls/solution"
 				},
 				{
-					title: "Unit 5: The Stack and Function Calls supplemental 2",
+					title: "Stack Frame Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 5: The Stack and Function Calls",
@@ -423,7 +423,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-11-unit-5-the-stack-and-function-calls-supplemental-2/solution"
 				},
 				{
-					title: "Unit 5: The Stack and Function Calls supplemental 3",
+					title: "Stack Frame Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 5: The Stack and Function Calls",
@@ -476,7 +476,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM4-Call-C-Helper-from-Assembly/solution"
 				},
 				{
-					title: "Unit 6: Calling Conventions and ABI supplemental 2",
+					title: "Calling Convention Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 6: Calling Conventions and ABI",
@@ -489,7 +489,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-13-unit-6-calling-conventions-and-abi-supplemental-2/solution"
 				},
 				{
-					title: "Unit 6: Calling Conventions and ABI supplemental 3",
+					title: "Calling Convention Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 6: Calling Conventions and ABI",
@@ -542,7 +542,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM3-String-Length-and-Copy/solution"
 				},
 				{
-					title: "Unit 7: Memory Addressing and Data Structures supplemental 2",
+					title: "Addressing Mode Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle:
@@ -556,7 +556,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-15-unit-7-memory-addressing-and-data-structures-supplemental-2/solution"
 				},
 				{
-					title: "Unit 7: Memory Addressing and Data Structures supplemental 3",
+					title: "Addressing Mode Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle:
@@ -610,7 +610,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM5-Tiny-Command-Line-Parser/solution"
 				},
 				{
-					title: "Unit 8: System Calls and Runtime Interaction supplemental 2",
+					title: "System Call Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle:
@@ -624,7 +624,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2/solution"
 				},
 				{
-					title: "Unit 8: System Calls and Runtime Interaction supplemental 3",
+					title: "System Call Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle:
@@ -687,7 +687,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-08-unit-9-reading-compiler-output/solution"
 				},
 				{
-					title: "Unit 9: Reading Compiler Output supplemental 2",
+					title: "Compiler Output Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 9: Reading Compiler Output",
@@ -700,7 +700,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-19-unit-9-reading-compiler-output-supplemental-2/solution"
 				},
 				{
-					title: "Unit 9: Reading Compiler Output supplemental 3",
+					title: "Compiler Output Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 9: Reading Compiler Output",
@@ -762,7 +762,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-09-unit-10-debugging-at-instruction-level/solution"
 				},
 				{
-					title: "Unit 10: Debugging at Instruction Level supplemental 2",
+					title: "Instruction Debugging Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 10: Debugging at Instruction Level",
@@ -775,7 +775,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-21-unit-10-debugging-at-instruction-level-supplemental-2/solution"
 				},
 				{
-					title: "Unit 10: Debugging at Instruction Level supplemental 3",
+					title: "Instruction Debugging Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 10: Debugging at Instruction Level",
@@ -837,7 +837,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-10-unit-11-performance-and-code-shape/solution"
 				},
 				{
-					title: "Unit 11: Performance and Code Shape supplemental 2",
+					title: "Code Shape Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 11: Performance and Code Shape",
@@ -850,7 +850,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-23-unit-11-performance-and-code-shape-supplemental-2/solution"
 				},
 				{
-					title: "Unit 11: Performance and Code Shape supplemental 3",
+					title: "Code Shape Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "Unit 11: Performance and Code Shape",
@@ -903,7 +903,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM6-Reverse-Engineering-Toy-Program/solution"
 				},
 				{
-					title: "Unit 12: Security and Reliability Visibility supplemental 2",
+					title: "Reliability Visibility Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle:
@@ -917,7 +917,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-25-unit-12-security-and-reliability-visibility-supplemental-2/solution"
 				},
 				{
-					title: "Unit 12: Security and Reliability Visibility supplemental 3",
+					title: "Reliability Visibility Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle:
@@ -980,7 +980,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-11-asm13-expansion-ideas-and-next-steps/solution"
 				},
 				{
-					title: "Expansion Ideas and Next Steps supplemental 2",
+					title: "Next Steps Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "ASM13 Expansion Ideas and Next Steps",
@@ -993,7 +993,7 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-27-asm13-expansion-ideas-and-next-steps-supplemental-2/solution"
 				},
 				{
-					title: "Expansion Ideas and Next Steps supplemental 3",
+					title: "Next Steps Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
 						moduleTitle: "ASM13 Expansion Ideas and Next Steps",
@@ -1008,29 +1008,29 @@ export const assemblyCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Assembly Lab 15: Implementation Lab",
+			title: "Assembly Lab 15: Stack Trace Studio",
 			curriculum: [
 				{
-					title: "Assembly Lab 15: Core Concepts",
+					title: "Stack Trace Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 15: Implementation Lab",
+						moduleTitle: "Assembly Lab 15: Stack Trace Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Assembly Lab 15: Guided Example",
+					title: "Stack Trace Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 15: Implementation Lab",
+						moduleTitle: "Assembly Lab 15: Stack Trace Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Assembly Lab 15: Core Project",
+					title: "Stack Trace Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 15: Implementation Lab",
+						moduleTitle: "Assembly Lab 15: Stack Trace Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1039,20 +1039,20 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-01-assembly-lab-15/solution"
 				},
 				{
-					title: "Assembly Lab 15: Review and Reflection",
+					title: "Stack Trace Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 15: Implementation Lab",
+						moduleTitle: "Assembly Lab 15: Stack Trace Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Assembly Lab 15: Extension Challenge",
+					title: "Stack Trace Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 15: Implementation Lab",
+						moduleTitle: "Assembly Lab 15: Stack Trace Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1061,10 +1061,10 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-01-assembly-lab-15/solution"
 				},
 				{
-					title: "Assembly Lab 15 supplemental 2: Implementation Lab",
+					title: "Stack Trace Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 15: Implementation Lab",
+						moduleTitle: "Assembly Lab 15: Stack Trace Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1074,10 +1074,10 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-29-applied-studio-15-assembly-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "Assembly Lab 15 supplemental 3: Implementation Lab",
+					title: "Stack Trace Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 15: Implementation Lab",
+						moduleTitle: "Assembly Lab 15: Stack Trace Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1089,29 +1089,29 @@ export const assemblyCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Assembly Lab 16: Implementation Lab",
+			title: "Assembly Lab 16: ABI Integration Studio",
 			curriculum: [
 				{
-					title: "Assembly Lab 16: Core Concepts",
+					title: "ABI Integration Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 16: Implementation Lab",
+						moduleTitle: "Assembly Lab 16: ABI Integration Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Assembly Lab 16: Guided Example",
+					title: "ABI Integration Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 16: Implementation Lab",
+						moduleTitle: "Assembly Lab 16: ABI Integration Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Assembly Lab 16: Core Project",
+					title: "ABI Integration Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 16: Implementation Lab",
+						moduleTitle: "Assembly Lab 16: ABI Integration Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1120,20 +1120,20 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-02-assembly-lab-16/solution"
 				},
 				{
-					title: "Assembly Lab 16: Review and Reflection",
+					title: "ABI Integration Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 16: Implementation Lab",
+						moduleTitle: "Assembly Lab 16: ABI Integration Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Assembly Lab 16: Extension Challenge",
+					title: "ABI Integration Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 16: Implementation Lab",
+						moduleTitle: "Assembly Lab 16: ABI Integration Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1142,10 +1142,10 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-02-assembly-lab-16/solution"
 				},
 				{
-					title: "Assembly Lab 16 supplemental 2: Implementation Lab",
+					title: "ABI Integration Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 16: Implementation Lab",
+						moduleTitle: "Assembly Lab 16: ABI Integration Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1155,10 +1155,10 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-31-applied-studio-16-assembly-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "Assembly Lab 16 supplemental 3: Implementation Lab",
+					title: "ABI Integration Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 16: Implementation Lab",
+						moduleTitle: "Assembly Lab 16: ABI Integration Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1170,29 +1170,29 @@ export const assemblyCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Assembly Lab 17: Implementation Lab",
+			title: "Assembly Lab 17: Reverse Trace Studio",
 			curriculum: [
 				{
-					title: "Assembly Lab 17: Core Concepts",
+					title: "Reverse Trace Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 17: Implementation Lab",
+						moduleTitle: "Assembly Lab 17: Reverse Trace Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Assembly Lab 17: Guided Example",
+					title: "Reverse Trace Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 17: Implementation Lab",
+						moduleTitle: "Assembly Lab 17: Reverse Trace Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Assembly Lab 17: Core Project",
+					title: "Reverse Trace Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 17: Implementation Lab",
+						moduleTitle: "Assembly Lab 17: Reverse Trace Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1201,20 +1201,20 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-03-assembly-lab-17/solution"
 				},
 				{
-					title: "Assembly Lab 17: Review and Reflection",
+					title: "Reverse Trace Studio: Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 17: Implementation Lab",
+						moduleTitle: "Assembly Lab 17: Reverse Trace Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Assembly Lab 17: Extension Challenge",
+					title: "Reverse Trace Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 17: Implementation Lab",
+						moduleTitle: "Assembly Lab 17: Reverse Trace Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1223,10 +1223,10 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-03-assembly-lab-17/solution"
 				},
 				{
-					title: "Assembly Lab 17 supplemental 2: Implementation Lab",
+					title: "Reverse Trace Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 17: Implementation Lab",
+						moduleTitle: "Assembly Lab 17: Reverse Trace Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1236,10 +1236,10 @@ export const assemblyCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/main/ASM-33-applied-studio-17-assembly-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "Assembly Lab 17 supplemental 3: Implementation Lab",
+					title: "Reverse Trace Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "assembly",
-						moduleTitle: "Assembly Lab 17: Implementation Lab",
+						moduleTitle: "Assembly Lab 17: Reverse Trace Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
