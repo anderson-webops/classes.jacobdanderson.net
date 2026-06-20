@@ -53,7 +53,7 @@ function securityLabFocus(topic: string) {
 		source.includes("disclosure") ||
 		source.includes("memory observation")
 	) {
-		return "trust-boundary output, stale or unintended bytes, logging and serialization controls, and proof that the leak is closed";
+		return "trust-boundary output, stale or unintended bytes, logging and serialization controls, and evidence that the leak is closed";
 	}
 	if (source.includes("mitigation")) {
 		return "binary hardening evidence, build-matrix comparison, mitigation-aware wording, and the distinction between reduced likelihood and fixed code";
@@ -62,7 +62,7 @@ function securityLabFocus(topic: string) {
 		return "control-relevant state, integrity assumptions, defensive mitigation reasoning, and safe high-level analysis without offensive construction";
 	}
 	if (source.includes("bug report") || source.includes("patch")) {
-		return "reproduction notes, root-cause analysis, patch scope, regression proof, and concise maintainer communication";
+		return "reproduction notes, root-cause analysis, patch scope, regression evidence, and concise maintainer communication";
 	}
 	if (source.includes("capstone")) {
 		return "finding ranking, attacker assumptions, patch justification, mitigation summaries, and regression evidence across multiple bug classes";
@@ -78,7 +78,7 @@ function securityLabPurposeText(
 	if (mode === "core") {
 		return {
 			artifact: "core security lab",
-			path: "Build the baseline lab first: reproduce the intended behavior, document the local boundary, and prove one normal case plus one defensive edge case."
+			path: "Build the baseline lab first: reproduce the intended behavior, document the local boundary, and confirm one standard scenario plus one defensive edge case."
 		};
 	}
 
@@ -117,7 +117,7 @@ function securityLabProjectContent(
 		[
 			"1. State the local lab boundary and the exact toy target or starter being inspected.",
 			"2. Build and run the lab with the expected defensive tooling, such as warnings, sanitizers, debugger output, or structured trace logs where relevant.",
-			"3. Test the lab with one normal case, one malformed or boundary case, and one regression case that proves the final behavior is intentional.",
+			"3. Test the lab with one standard scenario, one malformed or boundary case, and one regression case that confirms the final behavior is intentional.",
 			"4. Write a short audit note naming the violated assumption, the fix or hardening choice, and the evidence that supports the conclusion."
 		],
 		[
@@ -129,7 +129,7 @@ function securityLabProjectContent(
 		[
 			"1. Name the local target, controlled input, hardening or mitigation assumption, and rollback path.",
 			"2. Record baseline evidence before changing the fixture, build flags, parser logic, lifetime rule, or report format.",
-			"3. Verify normal behavior, failure-shaped behavior, and the final defensive result after the change.",
+			"3. Verify standard behavior, failure-mode behavior, and the final defensive result after the change.",
 			"4. Summarize the bug class, defensive value, and evidence that would let another maintainer reproduce the conclusion."
 		],
 		[
@@ -151,7 +151,7 @@ function securityLabProjectContent(
 			"- Record what the patch or hardening step proves and what it does not prove."
 		],
 		[
-			"- Baseline, failure-shaped, and post-change evidence can be rerun in the local lab.",
+			"- Baseline, failure-mode, and post-change evidence can be rerun in the local lab.",
 			"- The conclusion is supported by sanitizer, debugger, trace, log, build, or binary-hardening evidence.",
 			"- The final note states the remaining limitation without expanding beyond the approved target."
 		],
@@ -182,8 +182,8 @@ function securityLabConceptContent(topic: string) {
 
 	return [
 		`**Concept path:** Use **${label}** to connect the lab artifact to ${securityLabFocus(topic)}.`,
-		"Begin with the protected asset, the trust boundary, the unsafe assumption, and the invariant that should stay true after the code, configuration, or report is changed. The concept is not only the bug name; it includes reachability, controllability, mitigation state, evidence source, and the defensive conclusion that can actually be supported.",
-		"Keep the work defensive and local. A strong concept note identifies the normal behavior, the failure-shaped behavior, the smallest useful remediation or hardening step, and the command, trace, sanitizer report, binary-hardening check, or test output that would let another person verify the final state."
+		"Begin with the protected asset, the trust boundary, the unsafe assumption, and the invariant that should stay true after the code, configuration, or report is changed. The concept is not only the bug name; it includes reachability, controllability, mitigation state, evidence source, and the defensive conclusion that can be supported.",
+		"Keep the work defensive and local. A strong concept note identifies the expected behavior, the failure-mode behavior, the smallest useful remediation or hardening step, and the command, trace, sanitizer report, binary-hardening check, or test output that would let another person verify the final state."
 	].join("\n\n");
 }
 
@@ -194,7 +194,7 @@ function securityLabExampleContent(topic: string) {
 	return [
 		`**Evidence target:** Trace one small local example for **${label}** before changing the implementation.`,
 		`Record the exact input, command, expected behavior, observed behavior, mitigation state, and relevant warning, sanitizer, debugger, trace, byte dump, or log output for ${focus}. The example should be small enough to explain line by line, but realistic enough to show why the risk classification or defensive invariant matters.`,
-		`After the trace, identify which assumption the example checks and which part of ${label} it prepares for. The later project should reuse this example as the normal case, add one failure-shaped or boundary case, and finish with a regression case that confirms the remediation did not only hide the original symptom.`
+		`After the trace, identify which assumption the example checks and which part of ${label} it prepares for. The later project should reuse this example as the standard scenario, add one failure-mode or boundary case, and finish with a regression case that confirms the remediation did not only hide the original symptom.`
 	].join("\n\n");
 }
 
@@ -204,7 +204,7 @@ function securityLabReviewContent(topic: string) {
 
 	return [
 		`**Mastery check:** Close **${label}** with a maintainer-facing audit note rather than a vague reflection.`,
-		`The note should summarize the root cause, the security or reliability boundary involved, the patch or hardening choice, and the normal, failure-shaped, and regression evidence that supports ${focus}. It should distinguish reachability, impact, mitigation, and remaining uncertainty so the result stays reviewable and does not overclaim.`,
+		`The note should summarize the root cause, the security or reliability boundary involved, the patch or hardening choice, and the standard, failure-mode, and regression evidence that supports ${focus}. It should distinguish reachability, impact, mitigation, and remaining uncertainty so the result stays reviewable and does not overclaim.`,
 		"Finish by naming one remaining limitation without expanding beyond the provided local lab. Good review evidence includes the rerun command, the relevant output or trace, the behavior that changed, and the behavior that still needs a future test or design decision."
 	].join("\n\n");
 }

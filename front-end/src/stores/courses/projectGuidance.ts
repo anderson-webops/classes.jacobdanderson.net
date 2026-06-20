@@ -314,7 +314,7 @@ function compactGuidanceBody(
 		)
 		.replace(
 			new RegExp(`\\bAt least one ${escapedTitle} normal path\\b`, "g"),
-			"At least one normal path"
+			"At least one standard path"
 		)
 		.replace(
 			new RegExp(
@@ -915,10 +915,10 @@ function projectGoal(
 
 	if (family.includes("java")) {
 		return [
-			`**Project goal:** Implement the ${courseFamily} ${artifact} for **${moduleTitle}** with compiling Java code, clear object boundaries, and checks for normal and edge behavior.`,
+			`**Project goal:** Implement the ${courseFamily} ${artifact} for **${moduleTitle}** with compiling Java code, clear object boundaries, and checks for standard and edge behavior.`,
 			`**Project goal:** Complete **${moduleTitle}** as a Java ${artifact} that exposes class responsibilities, public behavior, and one edge case.`,
 			`**Project goal:** Build **${moduleTitle}** through short compile/run cycles, then verify the relevant object state, method contract, or collection behavior.`,
-			`**Project goal:** Produce **${moduleTitle}** with a named Java type boundary, observable behavior, and evidence from a normal case plus a boundary case.`
+			`**Project goal:** Produce **${moduleTitle}** with a named Java type boundary, visible behavior, and evidence from a standard scenario plus a boundary scenario.`
 		][index];
 	}
 
@@ -926,7 +926,7 @@ function projectGoal(
 		return [
 			`**Project goal:** Build the ${courseFamily} ${artifact} for **${moduleTitle}** as a runnable Python program with readable data flow and traceable boundary cases.`,
 			`**Project goal:** Complete **${moduleTitle}** as a Python ${artifact} with separated input, transformation, and output behavior.`,
-			`**Project goal:** Implement **${moduleTitle}** with a hand-checkable normal case, an awkward input or boundary case, and readable helper boundaries.`,
+			`**Project goal:** Implement **${moduleTitle}** with a hand-checkable standard scenario, an edge input or boundary case, and readable helper boundaries.`,
 			`**Project goal:** Produce **${moduleTitle}** as a runnable program whose data flow can be traced without guessing hidden state.`
 		][index];
 	}
@@ -949,7 +949,7 @@ function projectGoal(
 		return [
 			`**Project goal:** Build the ${courseFamily} ${artifact} for **${moduleTitle}** with a reproducible command, inspectable runtime behavior, and memory or diagnostic evidence.`,
 			`**Project goal:** Complete **${moduleTitle}** as a systems ${artifact} that names the command path, resource boundary, and diagnostic evidence.`,
-			`**Project goal:** Implement **${moduleTitle}** in short build/run/debug cycles, then verify one normal path and one boundary or failure path.`,
+			`**Project goal:** Implement **${moduleTitle}** in short build/run/debug cycles, then verify one standard path and one boundary or failure path.`,
 			`**Project goal:** Produce **${moduleTitle}** with visible low-level evidence such as compiler output, sanitizer output, logs, traces, timing, or memory state.`
 		][index];
 	}
@@ -964,8 +964,8 @@ function projectGoal(
 	}
 
 	return [
-		`**Project goal:** Create the ${courseFamily} ${artifact} for **${moduleTitle}** with an observable result, a checked boundary case, and a short reasoning note.`,
-		`**Project goal:** Complete **${moduleTitle}** as a ${artifact} for ${courseFamily} with a clear success condition and evidence that the result works.`,
+		`**Project goal:** Create the ${courseFamily} ${artifact} for **${moduleTitle}** with a visible result, a checked boundary case, and a short reasoning note.`,
+		`**Project goal:** Complete **${moduleTitle}** as a ${artifact} for ${courseFamily} with a clear success condition and supporting evidence.`,
 		`**Project goal:** Build **${moduleTitle}** in small verifiable steps, then compare the expected result with the observed result.`,
 		`**Project goal:** Produce **${moduleTitle}** as a focused artifact that demonstrates the module concept and one important edge case.`
 	][index];
@@ -1012,7 +1012,7 @@ function familyFocus(
 	if (family.includes("python")) {
 		return [
 			`Keep the ${moduleTitle} Python implementation readable and testable by separating input handling, data transformation, helper functions, and output; boundary cases stay small enough to trace by hand`,
-			`Use ${moduleTitle} to practice Python structure: isolate the calculation, name the data shape, run one normal case, and run one boundary case without hiding logic in input prompts`,
+			`Use ${moduleTitle} to practice Python structure: isolate the calculation, name the data shape, run one standard scenario, and run one boundary scenario without hiding logic in input prompts`,
 			`For ${moduleTitle}, make the Python data flow visible from input or setup through transformation to output, with one small traceable case proving the main branch or loop`,
 			`Build ${moduleTitle} as readable Python first: clear names, narrow helper functions when useful, predictable output, and a test case that catches more than syntax errors`
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
@@ -1080,7 +1080,7 @@ function javaFamilyFocus(
 		`Use Java syntax and object boundaries deliberately in ${moduleTitle}: method contracts, object state, collection choices, and compile-run feedback are visible in the finished artifact`,
 		`Make ${moduleTitle} show how Java responsibilities are divided across classes, methods, records, interfaces, collections, or tests instead of hiding everything in one procedure`,
 		`Connect ${moduleTitle} to concrete Java behavior: object construction, method calls, state changes, access boundaries, and one edge case are easy to inspect`,
-		`Keep ${moduleTitle} structured enough to explain: name the owning type, the public behavior, the state or data representation, and the compile/run evidence that proves it`
+		`Keep ${moduleTitle} structured enough to explain: name the owning type, the public behavior, the state or data representation, and the compile/run evidence that verifies it`
 	][variantIndex(courseFamily, moduleTitle, kind, 4)];
 }
 
@@ -1097,7 +1097,7 @@ function systemsFamilyFocus(
 		`Use ${moduleTitle} to connect source code to runtime evidence: command line, build output, process state, memory layout, and diagnostic traces agree`,
 		`Make ${moduleTitle} easy to rerun from scratch by recording setup assumptions, command sequence, expected output, and one low-level observation`,
 		`Keep ${moduleTitle} focused on the boundary between program design and machine behavior, with evidence from compilation, execution, or diagnostics`,
-		`Treat ${moduleTitle} as an engineering artifact: define the contract, run it from a clean command, and capture the evidence that proves the contract holds`,
+		`Treat ${moduleTitle} as an engineering artifact: define the contract, run it from a clean command, and capture evidence that the contract holds`,
 		`Use ${moduleTitle} to make one ownership, resource, process, or performance assumption visible through repeatable command evidence`,
 		`Frame ${moduleTitle} around the command path and the diagnostic signal that would reveal an incorrect systems assumption`,
 		`Make ${moduleTitle} show both the intended behavior and the evidence source used to distinguish it from a lucky run`,
@@ -1193,7 +1193,7 @@ function requiredWorkSteps(
 			[
 				`Inspect the ${moduleTitle} input data, state space, features, labels, or rules before deciding what result would count as evidence.`,
 				`Implement the ${moduleTitle} transformation, model, search, or scoring step in small checks that expose intermediate results.`,
-				`Verify ${moduleTitle} with a normal case, a boundary or failure case, and one limitation that affects how confidently the output can be interpreted.`
+				`Verify ${moduleTitle} with a standard case, a boundary or failure-mode check, and one limitation that affects how confidently the output can be interpreted.`
 			],
 			[
 				`State the ${moduleTitle} question, input source, success signal, and assumption most likely to affect interpretation.`,
@@ -1220,7 +1220,7 @@ function requiredWorkSteps(
 			[
 				`Sketch the classes, methods, records, interfaces, or collections that own the main responsibilities in ${subject}.`,
 				`Implement one ${subject} constructor, method, branch, or test at a time, compiling after each meaningful change.`,
-				`Check ${subject} with a normal case, an edge case, and one object-state or method-dispatch case tied to the module concept.`
+				`Check ${subject} with a standard scenario, an edge case, and one object-state or method-dispatch case tied to the module concept.`
 			],
 			[
 				`For ${subject}, identify which type owns the state, which method exposes behavior, and which test or console trace proves it.`,
@@ -1230,12 +1230,12 @@ function requiredWorkSteps(
 			[
 				"Map the program into Java responsibilities before coding: constructor data, method parameters, return values, stored state, and any collection shape.",
 				`Compile ${subject} after each meaningful signature, field, branch, or loop change so errors stay local.`,
-				`Check ${subject} with one ordinary path, one awkward or invalid input path, and one state transition or method-call sequence.`
+				`Check ${subject} with one ordinary path, one edge or invalid input path, and one state transition or method-call sequence.`
 			],
 			[
 				`Name the public behavior for ${subject}, then decide which class, helper method, interface, record, or collection owns it.`,
 				`Implement the ${subject} behavior in short compile/run cycles with a visible output, assertion, or trace after each stage.`,
-				`Verify ${subject} with one normal case, one edge path, and one design boundary such as encapsulation, overriding, overloading, or collection mutation.`
+				`Verify ${subject} with one standard scenario, one edge path, and one design boundary such as encapsulation, overriding, overloading, or collection mutation.`
 			],
 			[
 				`Write the ${subject} object model first: type names, fields, public methods, and the evidence each method produces.`,
@@ -1245,17 +1245,17 @@ function requiredWorkSteps(
 			[
 				`For ${subject}, separate syntax setup from design setup by naming the package, class boundary, state, and public contract.`,
 				`Build a minimal runnable ${subject} version, then add the Java feature that matters for this module: access control, overload, override, interface, record, or collection behavior.`,
-				`Verify ${subject} with a traceable example and one awkward case that would expose a weak method contract.`
+				`Verify ${subject} with a traceable example and one edge case that would expose a weak method contract.`
 			],
 			[
 				`Start ${subject} with a concrete method-call example, including parameter values, expected return or output, and any state before and after the call.`,
 				`Keep compile/run cycles short enough that a type error, null risk, equality issue, or dispatch mistake points to one recent edit.`,
-				`Test ${subject} with a normal path, a boundary path, and one case that checks how classes collaborate.`
+				`Test ${subject} with a standard path, a boundary path, and one case that checks how classes collaborate.`
 			],
 			[
-				`Decide the public API for ${subject}, the private implementation details, and the evidence that proves the boundary works.`,
+				`Decide the public API for ${subject}, the private implementation details, and the evidence that verifies the boundary.`,
 				`Implement one responsibility at a time and keep constructor setup, method behavior, and collection or inheritance logic separately testable.`,
-				`Compare ${subject} against one expected scenario and one failure-shaped scenario before using the reference.`
+				`Compare ${subject} against one expected scenario and one failure-mode scenario before using the reference.`
 			],
 			[
 				`Write ${subject} as a small Java contract: visible behavior, stored state, input values, output values, and ownership of each rule.`,
@@ -1275,7 +1275,7 @@ function requiredWorkSteps(
 			[
 				`Separate ${subject} into model behavior, runner or console behavior, and any collection or inheritance behavior.`,
 				`Implement the smallest observable model behavior first, then add the extra path that carries the module concept.`,
-				`Confirm the result with a concrete output, assertion, or trace for a typical case and a deliberately awkward case.`
+				`Confirm the result with a concrete output, assertion, or trace for a typical case and a deliberately challenging case.`
 			],
 			[
 				`Define ${subject} through one example object state, one public call, and one expected result before writing the general solution.`,
@@ -1285,7 +1285,7 @@ function requiredWorkSteps(
 			[
 				`Start ${subject} by separating data representation, behavior, and driver code.`,
 				`Add ${subject} implementation details in slices that keep errors tied to one field, constructor, method, branch, or list operation.`,
-				`Check a normal ${subject} run, a boundary run, and one run that tests how Java references or objects behave.`
+				`Check a standard ${subject} run, a boundary run, and one run that tests how Java references or objects behave.`
 			],
 			[
 				`Write the ${subject} API expectation first: what can be called, what changes state, and what gets returned or printed.`,
@@ -1305,7 +1305,7 @@ function requiredWorkSteps(
 			[
 				`Name the ${moduleTitle} input, transformation, helper function boundary, data structure, and expected output before coding.`,
 				`Implement ${moduleTitle} in small runnable pieces, keeping input handling, transformation, and output easy to inspect.`,
-				`Check ${moduleTitle} with a normal case, a boundary case, and one unexpected or awkward input that can be traced by hand.`
+				`Check ${moduleTitle} with a standard scenario, a boundary case, and one unexpected or edge input that can be traced by hand.`
 			],
 			[
 				`Sketch the ${moduleTitle} data flow from user input or file data through variables, loops, helpers, and printed or saved output.`,
@@ -1320,7 +1320,7 @@ function requiredWorkSteps(
 			[
 				`Turn ${moduleTitle} into a Python plan: inputs, stored values, functions, collections, control flow, and visible evidence.`,
 				`Implement the smallest correct slice first, then add validation, iteration, file handling, or formatting only after it runs.`,
-				`Trace ${moduleTitle} by hand for one compact case, then confirm the program with a normal case and an awkward case.`
+				`Trace ${moduleTitle} by hand for one compact case, then confirm the program with a standard case and an edge case.`
 			],
 			[
 				`Identify which ${moduleTitle} values are collected, transformed, stored, searched, counted, or printed before implementation begins.`,
@@ -1348,19 +1348,19 @@ function requiredWorkSteps(
 	if (family.includes("security") || family.includes("network")) {
 		return [
 			[
-				`State the ${moduleTitle} local lab boundary, protected asset, unsafe assumption, and evidence that would prove the issue or fix.`,
+				`State the ${moduleTitle} local lab boundary, protected asset, unsafe assumption, and evidence that would confirm the issue or fix.`,
 				`Run or modify the ${moduleTitle} fixture in small steps while capturing logs, traces, requests, responses, or configuration changes.`,
-				`Verify ${moduleTitle} normal behavior, failure or attack-shaped behavior, and one remediation, detection, or hardening result.`
+				`Verify ${moduleTitle} standard behavior, failure-mode behavior, and one remediation, detection, or hardening result.`
 			],
 			[
 				`For ${moduleTitle}, define the approved target, allowed traffic or inputs, expected safe behavior, and failure mode before running the lab.`,
 				`Capture one concrete ${moduleTitle} evidence source such as a log, packet, request, response, rule, or configuration diff at each major step.`,
-				`Finish with proof of normal operation plus one defensive validation, rollback, or hardening check.`
+				`Finish with evidence of standard operation plus one defensive validation, rollback, or hardening check.`
 			],
 			[
 				`Identify the ${moduleTitle} trust boundary, asset, threat or fault assumption, and evidence needed to support the finding.`,
 				`Work through the lab in reversible steps while recording command output, traces, logs, or service responses.`,
-				`Compare expected behavior, failure-shaped behavior, and the result after mitigation or configuration change.`
+				`Compare expected behavior, failure-mode behavior, and the result after mitigation or configuration change.`
 			],
 			[
 				`Scope ${moduleTitle} to owned fixtures or local systems, then name the risk, control, and validation evidence before changing anything.`,
@@ -1380,10 +1380,10 @@ function requiredWorkSteps(
 			[
 				`Name the ${moduleTitle} authorized fixture, the data that may be observed, and the evidence that would be out of scope.`,
 				`Run the lab with enough logging, capture, or configuration detail to explain both the starting state and the changed state.`,
-				`Compare a safe baseline, a failure-shaped case, and one defensive verification that proves the response is intentional.`
+				`Compare a safe baseline, a failure-mode case, and one defensive verification that shows the response is intentional.`
 			],
 			[
-				`Frame ${moduleTitle} as a defensive investigation: target, permission boundary, suspected weakness, and proof needed.`,
+				`Frame ${moduleTitle} as a defensive investigation: target, permission boundary, suspected weakness, and evidence needed.`,
 				`Record the command, log, request, response, packet, or configuration evidence at the point where the behavior changes.`,
 				`Finish with a mitigation, rollback, detection, or hardening result plus one remaining limitation.`
 			]
@@ -1400,7 +1400,7 @@ function requiredWorkSteps(
 			[
 				`Identify the ${moduleTitle} inputs, ownership or lifetime boundary, build command, runtime behavior, and diagnostic output.`,
 				`Implement or instrument ${moduleTitle} one boundary at a time, rebuilding and rerunning after each meaningful change.`,
-				`Verify ${moduleTitle} with a normal case, a boundary or failure case, and one trace, sanitizer, debugger, memory, or performance observation.`
+				`Verify ${moduleTitle} with a standard case, a boundary or failure-mode check, and one trace, sanitizer, debugger, memory, or performance observation.`
 			],
 			[
 				`For ${moduleTitle}, name the command, file or memory boundary, expected runtime behavior, and evidence source before changing code.`,
@@ -1410,12 +1410,12 @@ function requiredWorkSteps(
 			[
 				`Map ${moduleTitle} to its low-level contract: inputs, outputs, ownership, lifetime, build mode, and observable machine or runtime state.`,
 				`Change one ${moduleTitle} boundary at a time and keep the build/run command close enough to rerun immediately.`,
-				`Check ordinary behavior for ${moduleTitle}, plus a boundary or invalid case and one diagnostic trace tied to the systems concept.`
+				`Check standard behavior for ${moduleTitle}, plus a boundary or invalid case and one diagnostic trace tied to the systems concept.`
 			],
 			[
-				`Start ${moduleTitle} by recording the starting state, command path, resource boundary, and expected observable result.`,
+				`Start ${moduleTitle} by recording the starting state, command path, resource boundary, and expected visible result.`,
 				`Implement ${moduleTitle} in short compile/run/debug cycles so failures point to a specific boundary or assumption.`,
-				`Check ${moduleTitle} with one normal path, one failure or edge path, and one memory, lifetime, performance, register, or process-state detail.`
+				`Check ${moduleTitle} with one standard path, one failure or edge path, and one memory, lifetime, performance, register, or process-state detail.`
 			],
 			[
 				`Define the ${moduleTitle} contract in terms of inputs, outputs, resource ownership, and the command that proves it.`,
@@ -1430,7 +1430,7 @@ function requiredWorkSteps(
 			[
 				`Frame ${moduleTitle} around a clear systems question: what state changes, what resource is touched, and how the evidence will be captured.`,
 				`Use short ${moduleTitle} command-line cycles to connect the source change to build output, runtime output, and diagnostic evidence.`,
-				`Record ${moduleTitle} normal behavior, abnormal or boundary behavior, and the low-level clue that explains the difference.`
+				`Record ${moduleTitle} standard behavior, abnormal or boundary behavior, and the low-level clue that explains the difference.`
 			],
 			[
 				`Write down the ${moduleTitle} preconditions, command path, expected side effect or output, and the diagnostic signal to inspect.`,
@@ -1445,10 +1445,10 @@ function requiredWorkSteps(
 			[
 				`Describe the ${moduleTitle} runtime contract: what enters, what changes, what resource is owned, and what output proves success.`,
 				`Keep each build/run cycle tied to one ownership, lifetime, layout, complexity, or command assumption.`,
-				`Compare a representative run with a failure-shaped run and record the low-level evidence that explains the difference.`
+				`Compare a representative run with a failure-mode run and record the low-level evidence that explains the difference.`
 			],
 			[
-				`Name the ${moduleTitle} command path, toolchain flags, memory or process boundary, and observable result before coding.`,
+				`Name the ${moduleTitle} command path, toolchain flags, memory or process boundary, and visible result before coding.`,
 				`Change one ${moduleTitle} API, allocation, loop, branch, build setting, or diagnostic hook at a time.`,
 				`Finish ${moduleTitle} with a repeatable run plus one trace, warning, sanitizer result, debugger observation, or timing clue.`
 			],
@@ -1475,7 +1475,7 @@ function requiredWorkSteps(
 			[
 				`State the ${moduleTitle} app goal as a screen, action, state change, and success signal.`,
 				`Change one view, binding, model, or persistence boundary at a time and rerun the preview or simulator after meaningful steps.`,
-				`Confirm that a normal path and one awkward state both produce understandable UI feedback.`
+				`Confirm that a standard path and one edge state both produce understandable UI feedback.`
 			],
 			[
 				`Name the ${moduleTitle} SwiftUI view, model data, navigation path, and project setting that could affect the result.`,
@@ -1498,7 +1498,7 @@ function requiredWorkSteps(
 	return [
 		`Name the ${moduleTitle} artifact, input surface, output surface, state change, and success condition before building.`,
 		`Build the ${moduleTitle} behavior in small observable steps, checking the result after each meaningful change.`,
-		`Verify ${moduleTitle} with a normal path, a boundary or failure path, and one case tied directly to the module concept.`
+		`Verify ${moduleTitle} with a standard path, a boundary or failure path, and one case tied directly to the module concept.`
 	];
 }
 
@@ -1545,7 +1545,7 @@ function referenceReviewStep(
 		return [
 			`After the ${moduleTitle} samples and custom cases pass, compare against the reference and record one difference in invariant, complexity, or edge-case handling.`,
 			`Use the ${moduleTitle} reference only after local tests pass, then note one difference in proof idea, bounds handling, or complexity.`,
-			`Compare ${moduleTitle} with the reference after the sample and edge case pass, focusing on invariant, implementation detail, or failure case.`,
+			`Compare ${moduleTitle} with the reference after the sample and edge case pass, focusing on invariant, implementation detail, or failure-mode check.`,
 			`After ${moduleTitle} behaves like a contest submission, use the reference to check one missed edge case or alternate invariant.`
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
 	}
@@ -1690,7 +1690,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} works from a clean load and gives clear feedback for the target interaction.`,
-				`A normal path, a missing or invalid data path, and a responsive-layout or keyboard path have been exercised.`,
+				`A standard path, a missing or invalid data path, and a responsive-layout or keyboard path have been exercised.`,
 				`The closing ${moduleTitle} note records the browser evidence and the UI state decision that mattered.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
@@ -1704,7 +1704,7 @@ function completionCheckSteps(
 		return [
 			[
 				`The ${moduleTitle} result is tied to inspected input data, model/search behavior, or an explicit transformation.`,
-				`A normal ${moduleTitle} case, a sanity check, and one limitation or failure mode are recorded.`,
+				`A standard ${moduleTitle} scenario, a sanity check, and one limitation or failure mode are recorded.`,
 				`The final ${moduleTitle} note separates what the evidence supports from what remains uncertain.`
 			],
 			[
@@ -1719,7 +1719,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} shows the transformation, model, search, or scoring evidence used to judge success.`,
-				`The verification includes one standard case and one boundary, noisy, missing-data, or failure-shaped case.`,
+				`The verification includes one standard case and one boundary, noisy, missing-data, or failure-mode case.`,
 				`The closing ${moduleTitle} note limits the claim to what the evidence can support.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
@@ -1729,7 +1729,7 @@ function completionCheckSteps(
 		return [
 			[
 				`${moduleTitle} compiles cleanly and the expected behavior is visible through output, tests, or method calls.`,
-				`A normal ${moduleTitle} case, an edge case, and one object-state, inheritance, interface, record, or collection case are checked.`,
+				`A standard ${moduleTitle} scenario, an edge case, and one object-state, inheritance, interface, record, or collection case are checked.`,
 				`The final ${moduleTitle} note names the class boundary, method contract, or data representation choice that mattered.`
 			],
 			[
@@ -1759,7 +1759,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} includes reproducible evidence through output, assertions, traces, or method-call examples.`,
-				`A normal path, an edge path, and one object-collaboration path are verified when the prompt allows it.`,
+				`A standard path, an edge path, and one object-collaboration path are verified when the prompt allows it.`,
 				`The final ${moduleTitle} note separates the Java syntax issue from the design or API issue.`
 			],
 			[
@@ -1839,7 +1839,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} keeps input, transformation, and output behavior inspectable in the final version.`,
-				`The program has evidence for a normal path, a smallest or empty path, and one awkward data shape.`,
+				`The program has evidence for a standard path, a smallest or empty path, and one edge data shape.`,
 				`The final ${moduleTitle} note explains how the chosen Python structure made the behavior easier to verify.`
 			],
 			[
@@ -1864,17 +1864,17 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} stays inside the approved local or owned boundary and records the evidence source used.`,
-				`Expected behavior, failure-shaped behavior, and one defensive validation or rollback path are checked.`,
+				`Expected behavior, failure-mode behavior, and one defensive validation or rollback path are checked.`,
 				`The final ${moduleTitle} note connects the evidence to impact and mitigation.`
 			],
 			[
 				`${moduleTitle} identifies the protected asset, trust boundary, and diagnostic or test evidence.`,
-				`The lab includes normal operation plus one blocked, malformed, risky, or failure-shaped scenario.`,
+				`The lab includes standard operation plus one blocked, malformed, risky, or failure-mode scenario.`,
 				`The final ${moduleTitle} note names the defensive control or recovery decision that mattered.`
 			],
 			[
 				`${moduleTitle} has concrete local evidence such as logs, packets, requests, responses, traces, or configuration output.`,
-				`A safe baseline, a failure or attack-shaped case, and a verified mitigation or diagnostic result are recorded.`,
+				`A safe baseline, a failure-mode case, and a verified mitigation or diagnostic result are recorded.`,
 				`The closing ${moduleTitle} note states the scope boundary and the hardening or validation result.`
 			],
 			[
@@ -1884,7 +1884,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} stays within the named fixture or local system and avoids claims beyond the collected evidence.`,
-				`A normal run, a fault-shaped run, and a rollback, alerting, or hardening verification are present.`,
+				`A standard run, a fault-mode run, and a rollback, alerting, or hardening verification are present.`,
 				`The closing ${moduleTitle} note explains why the defensive control or recovery path is sufficient for the lab.`
 			],
 			[
@@ -1894,7 +1894,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} documents the authorization boundary, data observed, and defensive goal of the lab.`,
-				`The checks prove normal behavior, the relevant unsafe or failure behavior, and the mitigation or monitoring result.`,
+				`The checks confirm standard behavior, the relevant unsafe or failure behavior, and the mitigation or monitoring result.`,
 				`The closing ${moduleTitle} note connects the evidence to a practical remediation or hardening choice.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 8)];
@@ -1909,7 +1909,7 @@ function completionCheckSteps(
 		return [
 			[
 				`${moduleTitle} builds from a clean command and produces inspectable runtime behavior.`,
-				`A normal ${moduleTitle} case, a boundary or failure case, and one memory, lifetime, trace, debugger, or performance check are recorded.`,
+				`A standard ${moduleTitle} case, a boundary or failure-mode check, and one memory, lifetime, trace, debugger, or performance check are recorded.`,
 				`The final ${moduleTitle} note names the ownership, resource, ABI, build, diagnostic, or complexity decision that mattered.`
 			],
 			[
@@ -1924,7 +1924,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} includes the command, expected output, and evidence needed to reproduce the result.`,
-				`At least one ${moduleTitle} normal path, one failure or edge path, and one memory, process, register, or timing detail are checked.`,
+				`At least one ${moduleTitle} standard path, one failure or edge path, and one memory, process, register, or timing detail are checked.`,
 				`The final ${moduleTitle} note explains the most important ownership, build, diagnostic, or complexity choice.`
 			],
 			[
@@ -1939,17 +1939,17 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} names the source files, command, runtime state, and success signal used for verification.`,
-				`The checks cover ordinary output, a boundary or failure-shaped input, and one low-level observation.`,
+				`The checks cover ordinary output, a boundary or failure-mode input, and one low-level observation.`,
 				`The closing ${moduleTitle} note separates what the program did from how the diagnostic evidence supports it.`
 			],
 			[
 				`${moduleTitle} has a documented rerun path and evidence from output, tests, logs, traces, or tooling.`,
-				`The verification includes a normal case, a problematic case, and one resource, lifetime, layout, timing, or process-state detail.`,
+				`The verification includes a standard scenario, a problematic case, and one resource, lifetime, layout, timing, or process-state detail.`,
 				`The final ${moduleTitle} note identifies the assumption that would be easiest to break in a larger system.`
 			],
 			[
 				`${moduleTitle} has current evidence from a clean build/run command, not only from prior IDE output.`,
-				`The checks include the intended run, one boundary or failure-shaped run, and one warning, trace, log, sanitizer, or debugger observation.`,
+				`The checks include the intended run, one boundary or failure-mode run, and one warning, trace, log, sanitizer, or debugger observation.`,
 				`The ${moduleTitle} review names the resource, lifetime, layout, complexity, or command assumption that controlled the result.`
 			],
 			[
@@ -2006,8 +2006,8 @@ function completionCheckSteps(
 	}
 
 	return [
-		`The finished ${moduleTitle} artifact has an observable result tied to the module concept.`,
-		`A normal ${moduleTitle} case, a boundary or failure case, and one transfer case have been checked.`,
+		`The finished ${moduleTitle} artifact has a visible result tied to the module concept.`,
+		`A standard ${moduleTitle} case, a boundary or failure-mode check, and one transfer case have been checked.`,
 		`The final ${moduleTitle} note names one design, debugging, or reasoning decision that affected the outcome.`
 	];
 }
@@ -2095,23 +2095,23 @@ function projectPathNote({
 			return [
 				`**Path:** Core implementation. ${subject} is built and verified independently before comparison with ${reference}.`,
 				`**Path:** Core implementation. ${subject} reaches a working local result first, then ${reference} is used to compare structure and edge handling.`,
-				`**Path:** Core implementation. ${subject} should have fresh evidence before ${reference} is opened, so comparison does not replace reasoning.`,
-				`**Path:** Core implementation. ${subject} starts with a normal path and one boundary check, then ${reference} helps identify missing cases.`,
+				`**Path:** Core implementation. ${subject} needs fresh evidence before ${reference} is opened, so comparison does not replace reasoning.`,
+				`**Path:** Core implementation. ${subject} starts with a standard path and one boundary check, then ${reference} helps identify missing cases.`,
 				`**Path:** Core implementation. ${subject} is treated as the primary solution attempt; ${reference} is a review tool after behavior is observed.`,
 				`**Path:** Core implementation. ${subject} records compile/run, output, trace, or result evidence before using ${reference} for refinement.`,
 				`**Path:** Core implementation. ${subject} is complete enough to explain before ${reference} is used as a second opinion.`,
-				`**Path:** Core implementation. ${subject} compares against ${reference} only after the local design has a checked normal case.`
+				`**Path:** Core implementation. ${subject} compares against ${reference} only after the local design has a checked standard scenario.`
 			][index];
 		}
 
 		return [
-			`**Path:** Core implementation. ${subject} is verified with one normal case plus one boundary or failure case.`,
+			`**Path:** Core implementation. ${subject} is verified with one standard case plus one boundary or failure-mode check.`,
 			`**Path:** Core implementation. ${subject} moves from the smallest working result to a checked edge case.`,
 			`**Path:** Core implementation. ${subject} records expected behavior, observed behavior, and one condition that could break it.`,
 			`**Path:** Core implementation. ${subject} keeps the first version narrow enough to test before optional polish is added.`,
-			`**Path:** Core implementation. ${subject} has a clear success condition and one awkward case that proves more than syntax.`,
-			`**Path:** Core implementation. ${subject} is checked against both the intended path and one small failure-shaped path.`,
-			`**Path:** Core implementation. ${subject} turns the module concept into an observable result with at least one edge check.`,
+			`**Path:** Core implementation. ${subject} has a clear success condition and one edge case that tests more than syntax.`,
+			`**Path:** Core implementation. ${subject} is checked against both the intended path and one small failure-mode path.`,
+			`**Path:** Core implementation. ${subject} turns the module concept into a visible result with at least one edge check.`,
 			`**Path:** Core implementation. ${subject} is considered ready only after the main result and one boundary condition are both explainable.`
 		][index];
 	}
@@ -2132,7 +2132,7 @@ function projectPathNote({
 	return [
 		`**Path:** Independent practice. ${subject} changes one meaningful condition from the core version, followed by a record of what still works, what breaks, and why.`,
 		`**Path:** Independent practice. ${subject} preserves the main idea while one changed condition tests whether the reasoning transfers.`,
-		`**Path:** Independent practice. ${subject} records the baseline expectation, the changed case, and the evidence that proves the result.`,
+		`**Path:** Independent practice. ${subject} records the baseline expectation, the changed case, and the evidence that confirms the result.`,
 		`**Path:** Independent practice. ${subject} makes one controlled variation and explains the effect on the final behavior.`,
 		`**Path:** Independent practice. ${subject} keeps the work small enough to compare against the core case without copying it.`,
 		`**Path:** Independent practice. ${subject} checks what survives after the rule, input, representation, or constraint changes.`,

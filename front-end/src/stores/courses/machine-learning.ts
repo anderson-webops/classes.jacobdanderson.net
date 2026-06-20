@@ -958,7 +958,7 @@ export const machineLearningCourse: RawCourse = {
 
 **Reflection checks:**
 - Compare predictions with true labels.
-- Discuss both success and failure cases.
+- Discuss both success behavior and failure-mode behavior.
 - Summarize the dataset, model architecture, test accuracy, and any images where the model struggled.`,
 					projectLink:
 						"https://colab.research.google.com/drive/12HpOOjmQgf5sLmrTgknSFX24aSln6rT6?usp=sharing",

@@ -17,7 +17,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				{
 					title: "Compiled vs. Interpreted Workflows",
 					content:
-						"Compare Python's quick script loop with Java and C++ compile-run cycles. Practice target: Treating compiler errors as structured feedback rather than as proof that the language is hostile."
+						"Compare Python's quick script loop with Java and C++ compile-run cycles. Practice target: Treating compiler errors as structured feedback rather than as evidence that the language is hostile."
 				},
 				{
 					title: "Blocks, Braces, and Signatures",

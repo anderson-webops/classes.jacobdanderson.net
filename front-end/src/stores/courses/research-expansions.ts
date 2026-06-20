@@ -92,7 +92,7 @@ function sequencingEvidenceNote(courseLabel: string) {
 }
 
 function projectEvidenceNote(courseLabel: string) {
-	return `**Project check:** Project work in ${courseLabel} is ready when the expected artifact, success criteria, normal case, edge case, explanation target, and extension path can be read without guessing what the work is meant to prove.`;
+	return `**Project check:** Project work in ${courseLabel} is ready when the expected artifact, success criteria, standard scenario, edge case, explanation target, and extension path can be read without guessing what the work is meant to demonstrate.`;
 }
 
 function projectDescription(project: string) {
@@ -218,19 +218,19 @@ function projectOptionRequiredOutcome(
 		];
 
 	if (family.includes("scratch")) {
-		return `**Required outcome:**\n- For this option, name the sprites, events, variables, broadcasts, or clones that control the project.\n- Show one normal play path and one reset, win/loss, scoring, or boundary condition.\n- Explain the main Scratch state or event-flow decision in the ${courseLabel} context.`;
+		return `**Required outcome:**\n- Name the sprites, events, variables, broadcasts, or clones that control the project.\n- Show one standard play path and one reset, win/loss, scoring, or boundary condition.\n- Explain the main Scratch state or event-flow decision in the ${courseLabel} context.`;
 	}
 	if (family.includes("data") || family.includes("machine learning")) {
-		return "**Required outcome:**\n- For this option, state the question, dataset, key columns or features, and cleaning or modeling choice.\n- Include a baseline, sanity check, metric, visualization, or small trace.\n- Explain what the evidence supports and one limitation of the result.";
+		return "**Required outcome:**\n- State the question, dataset, key columns or features, and cleaning or modeling choice.\n- Include a baseline, sanity check, metric, visualization, or small trace.\n- Explain what the evidence supports and one limitation of the result.";
 	}
 	if (family.includes("ai")) {
-		return "**Required outcome:**\n- For this option, define the state representation, action space, rule, search, or scoring method.\n- Trace one standard case and one case where the strategy behaves poorly or ambiguously.\n- Explain why the strategy is reasonable and where it is limited.";
+		return "**Required outcome:**\n- Define the state representation, action space, rule, search, or scoring method.\n- Trace one standard case and one case where the strategy behaves poorly or ambiguously.\n- Explain why the strategy is reasonable and where it is limited.";
 	}
 	if (family.includes("algebra")) {
-		return "**Required outcome:**\n- For this option, show the rule, equation, graph, table, or transformation being used.\n- Include one standard case and one sign, unit, intercept, domain, or boundary check.\n- Explain how the result is known to be reasonable.";
+		return "**Required outcome:**\n- Show the rule, equation, graph, table, or transformation being used.\n- Include one standard case and one sign, unit, intercept, domain, or boundary check.\n- Explain how the result is known to be reasonable.";
 	}
 	if (isScienceFamily(family)) {
-		return "**Required outcome:**\n- For this option, state the phenomenon or question, model or data source, claim, and relevant vocabulary.\n- Separate the observation, pattern, and explanation.\n- Connect evidence to the claim and name one model limitation or uncertainty.";
+		return "**Required outcome:**\n- State the phenomenon or question, model or data source, claim, and relevant vocabulary.\n- Separate the observation, pattern, and explanation.\n- Connect evidence to the claim and name one model limitation or uncertainty.";
 	}
 	if (
 		family.includes("security") ||
@@ -238,26 +238,26 @@ function projectOptionRequiredOutcome(
 		family.includes("linux") ||
 		family.includes("network")
 	) {
-		return `**Required outcome:**\n- For this option, state the local scope, target, starting state, allowed tools, and stop condition.\n- Record command, configuration, trace, or log evidence before and after the change.\n- Explain the impact and the ${courseLabel} rollback, mitigation, or verification step.`;
+		return `**Required outcome:**\n- State the local scope, target, starting state, allowed tools, and stop condition.\n- Record command, configuration, trace, or log evidence before and after the change.\n- Explain the impact and the ${courseLabel} rollback, mitigation, or verification step.`;
 	}
 	if (family.includes("usaco")) {
-		return "**Required outcome:**\n- For this option, translate the prompt into input format, output format, constraints, and invariant.\n- Pass the sample and at least one tiny, boundary, duplicate, tie, or adversarial custom case.\n- State the time and memory complexity in relation to the constraints.";
+		return "**Required outcome:**\n- Translate the prompt into input format, output format, constraints, and invariant.\n- Pass the sample and at least one tiny, boundary, duplicate, tie, or adversarial custom case.\n- State the time and memory complexity in relation to the constraints.";
 	}
 	if (family.includes("javascript") || family.includes("web")) {
-		return "**Required outcome:**\n- For this option, identify the UI state, event handler, data flow, validation path, and visible output.\n- Test with a fresh load, normal action, empty or error case, and responsive layout when relevant.\n- Explain the main DOM, API, state, or accessibility decision.";
+		return "**Required outcome:**\n- Identify the UI state, event handler, data flow, validation path, and visible output.\n- Test with a fresh load, normal action, empty or error case, and responsive layout when relevant.\n- Explain the main DOM, API, state, or accessibility decision.";
 	}
 	if (family.includes("java")) {
-		return `**Required outcome:**\n- For this option, identify the classes, fields, method contracts, and object-state changes.\n- Compile and run one normal case and one boundary or awkward case.\n- Explain the main type, inheritance, interface, collection, or record decision in the ${courseLabel} context.`;
+		return `**Required outcome:**\n- Identify the classes, fields, method contracts, and object-state changes.\n- Compile and run one standard case and one boundary or edge case.\n- Explain the main type, inheritance, interface, collection, or record decision in the ${courseLabel} context.`;
 	}
 	if (family.includes("c++")) {
-		return `**Required outcome:**\n- For this option, name the data representation, ownership or lifetime assumption, compile command, and expected output.\n- Build with ${courseLabel} warnings when possible and test normal, boundary, and malformed or awkward input.\n- Explain the container, pointer/reference, memory, or algorithm decision.`;
+		return `**Required outcome:**\n- Name the data representation, ownership or lifetime assumption, compile command, and expected output.\n- Build with ${courseLabel} warnings when possible and test standard, boundary, and malformed input.\n- Explain the container, pointer/reference, memory, or algorithm decision.`;
 	}
 
 	return choose([
-		`**Required outcome:**\n- For this option, define the inputs, output or artifact, success condition, and evidence source.\n- Include one normal case, a boundary case, and one awkward or failure case.\n- Explain the main design, model, proof, or reasoning decision in the ${courseLabel} context.`,
-		`**Required outcome:**\n- For this option, state the starting context, target result, evidence source, and one assumption that could fail.\n- Check a representative case and one edge or transfer case.\n- Explain the reasoning choice that makes the ${courseLabel} result valid.`,
-		`**Required outcome:**\n- For this option, name the artifact, inputs, constraints, output, and verification evidence.\n- Test the ordinary path plus one boundary, exception, or changed-condition path.\n- Explain the main tradeoff or model decision in the ${courseLabel} context.`,
-		`**Required outcome:**\n- For this option, identify what is being built or solved, what counts as success, and how the result will be checked.\n- Include one small traceable case and one nontrivial case.\n- Explain which ${courseLabel} concept controls the final behavior.`
+		`**Required outcome:**\n- Define the inputs, output or artifact, success condition, and evidence source.\n- Include one standard case, a boundary case, and one failure-mode case.\n- Explain the main design, model, proof, or reasoning decision in the ${courseLabel} context.`,
+		`**Required outcome:**\n- State the starting context, target result, evidence source, and one assumption that could fail.\n- Check a representative case and one edge or transfer case.\n- Explain the reasoning choice that makes the ${courseLabel} result valid.`,
+		`**Required outcome:**\n- Name the artifact, inputs, constraints, output, and verification evidence.\n- Test the standard path plus one boundary, exception, or changed-condition path.\n- Explain the main tradeoff or model decision in the ${courseLabel} context.`,
+		`**Required outcome:**\n- Identify what is being built or solved, what counts as success, and how the result will be checked.\n- Include one small traceable case and one nontrivial case.\n- Explain which ${courseLabel} concept controls the final behavior.`
 	]);
 }
 
@@ -859,7 +859,7 @@ const aiProfile: ResearchExpansionProfile = {
 	],
 	topics: [
 		"Search algorithms, heuristics, game trees, minimax, state machines, constraint satisfaction, planning, and rule systems.",
-		"Evaluation of AI behavior and failure cases.",
+		"Evaluation of AI behavior and failure-mode examples.",
 		"Responsible AI concepts: stakeholder, harm, mitigation, uncertainty, and human oversight."
 	],
 	moduleAdditions: [
@@ -880,7 +880,7 @@ const aiProfile: ResearchExpansionProfile = {
 	assessments: [
 		"Draw a state graph and identify valid moves.",
 		"Compare uninformed and heuristic search results.",
-		"Explain one AI failure case.",
+		"Explain one AI failure-mode example.",
 		"Identify stakeholder, harm, mitigation, and uncertainty."
 	],
 	materials: [

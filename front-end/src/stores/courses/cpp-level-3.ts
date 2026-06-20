@@ -14,7 +14,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "CPPI0 Project: Build and Debug Checkpoint",
 					content:
-						"Create a tiny multi-file command-line project with one class, one helper module, and one deliberately broken case. Fix the bug with a debugger or trace output and record the evidence that proved the fix.",
+						"Create a tiny multi-file command-line project with one class, one helper module, and one deliberately broken case. Fix the bug with a debugger or trace output and document what confirms the fix.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI0-Build-and-Debug-Checkpoint/starter",
 					solutionLink:

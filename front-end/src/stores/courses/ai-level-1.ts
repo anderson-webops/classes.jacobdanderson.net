@@ -51,7 +51,7 @@ function aiSearchSupplementalContent(
 		"4. Write a short interpretation that separates algorithm behavior from implementation bugs or arbitrary tie-breaking.",
 		"**Completion checks:**",
 		`- ${finalCheck}`,
-		"- The output includes a normal case, a changed or awkward case, and a short explanation of what the trace proves.",
+		"- The output includes a standard case, a changed or edge case, and a short explanation of what the trace supports.",
 		"- The conclusion names one limitation of the representation, heuristic, cost rule, or stopping condition."
 	].join("\n\n");
 }
@@ -576,7 +576,7 @@ export const aiLevel1Course: RawCourse = {
 						"Define what counts as a correct or useful output before optimizing anything. Even in small AI systems, evaluation depends on clear labels, goals, baselines, and constraints."
 				},
 				{
-					title: "Bias, Failure Cases, and Overconfidence",
+					title: "Bias, Failure Modes, and Overconfidence",
 					content:
 						"Use toy AI examples to discuss blind spots, brittle heuristics, misleading benchmarks, and the danger of calling a system 'intelligent' when it only works on a narrow slice of cases. Responsible AI starts with honest evaluation."
 				},

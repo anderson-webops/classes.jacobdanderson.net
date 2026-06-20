@@ -145,7 +145,7 @@ export const javaLevel3Course: RawCourse = {
 
 **Build path:** Keep each method responsible for one task: double numeric values, sum even numbers, generate random doubles, or total word lengths. Use parameters and return values so methods can be tested without rewriting the main method every time.
 
-**Evidence target:** Each method has at least one normal case plus one edge case, such as an empty array, a one-element array, or an array with no even numbers.`,
+**Evidence target:** Each method has at least one standard scenario plus one edge case, such as an empty array, a one-element array, or an array with no even numbers.`,
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ2-Array-Practice",
 					solutionLink:
