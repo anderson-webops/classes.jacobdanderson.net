@@ -56,7 +56,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-01-rss0-tooling-cargo-and-why-rust-exists-supplemental-2/solution"
 				},
 				{
-					title: "Tooling, Cargo, and Why Rust Exists Supplemental 2",
+					title: "Tooling, Cargo, and Why Rust Exists Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS0 Tooling, Cargo, and Why Rust Exists",
@@ -69,7 +69,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-01-rss0-tooling-cargo-and-why-rust-exists-supplemental-2/solution"
 				},
 				{
-					title: "Tooling, Cargo, and Why Rust Exists Supplemental 3",
+					title: "Tooling, Cargo, and Why Rust Exists Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS0 Tooling, Cargo, and Why Rust Exists",
@@ -89,7 +89,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "Single Ownership as a Memory Rule",
 					content:
-						"This section covers ownership as one clear owner for a resource at a time. Compare it directly to the kinds of ambiguous cleanup responsibility that lead to double free or use-after-free bugs in C and C++."
+						"Ownership means one clear owner for a resource at a time. Compare it directly to ambiguous cleanup responsibility that leads to double free or use-after-free bugs in C and C++."
 				},
 				{
 					title: "Moves, Copies, and Clone",
@@ -136,7 +136,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-03-rss1-ownership-moves-and-memory-responsibility-supplemental-2/solution"
 				},
 				{
-					title: "Ownership, Moves, and Memory Responsibility Supplemental 2",
+					title: "Ownership, Moves, and Memory Responsibility Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -150,7 +150,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-03-rss1-ownership-moves-and-memory-responsibility-supplemental-2/solution"
 				},
 				{
-					title: "Ownership, Moves, and Memory Responsibility Supplemental 3",
+					title: "Ownership, Moves, and Memory Responsibility Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -171,7 +171,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "Shared vs. Mutable Borrowing",
 					content:
-						"This section covers Rust's borrowing rules as a way to limit ambiguous mutation and observation. Connect this to the kinds of aliasing bugs that become hard to reason about in larger C/C++ systems."
+						"Rust's borrowing rules limit ambiguous mutation and observation. Connect the rules to aliasing bugs that become hard to reason about in larger C/C++ systems."
 				},
 				{
 					title: "Lifetime Reasoning without Mysticism",
@@ -216,7 +216,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-05-rss2-borrowing-aliasing-and-lifetimes-supplemental-2/solution"
 				},
 				{
-					title: "Borrowing, Aliasing, and Lifetimes Supplemental 2",
+					title: "Borrowing, Aliasing, and Lifetimes Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS2 Borrowing, Aliasing, and Lifetimes",
@@ -229,7 +229,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-05-rss2-borrowing-aliasing-and-lifetimes-supplemental-2/solution"
 				},
 				{
-					title: "Borrowing, Aliasing, and Lifetimes Supplemental 3",
+					title: "Borrowing, Aliasing, and Lifetimes Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS2 Borrowing, Aliasing, and Lifetimes",
@@ -254,7 +254,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "Result, Match, and the Question-Mark Operator",
 					content:
-						"This section covers `Result` as a typed alternative to error-code conventions. Pattern matching and `?` create a disciplined error-propagation style, not just new syntax."
+						"`Result` is a typed alternative to error-code conventions. Pattern matching and `?` create a disciplined error-propagation style, not just new syntax."
 				},
 				{
 					title: "Error Handling and Security Posture",
@@ -295,7 +295,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-07-rss3-option-result-and-typed-error-paths-supplemental-2/solution"
 				},
 				{
-					title: "Option, Result, and Typed Error Paths Supplemental 2",
+					title: "Option, Result, and Typed Error Paths Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -309,7 +309,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-07-rss3-option-result-and-typed-error-paths-supplemental-2/solution"
 				},
 				{
-					title: "Option, Result, and Typed Error Paths Supplemental 3",
+					title: "Option, Result, and Typed Error Paths Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -330,7 +330,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "String, str, Vec, and Slice Differences",
 					content:
-						"This section covers owned strings, borrowed string slices, vectors, arrays, and slices as distinct tools rather than one generic container idea. Key idea: Which operations are cheap views and which allocate or move ownership."
+						"Owned strings, borrowed string slices, vectors, arrays, and slices are distinct tools rather than one generic container idea. The important distinction is which operations are cheap views and which allocate or move ownership."
 				},
 				{
 					title: "Indexing, Iteration, and Safer Access Patterns",
@@ -377,7 +377,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-09-rss4-strings-slices-collections-and-bounds-safety-supplemental-2/solution"
 				},
 				{
-					title: "Strings, Slices, Collections, and Bounds Safety Supplemental 2",
+					title: "Strings, Slices, Collections, and Bounds Safety Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -391,7 +391,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-09-rss4-strings-slices-collections-and-bounds-safety-supplemental-2/solution"
 				},
 				{
-					title: "Strings, Slices, Collections, and Bounds Safety Supplemental 3",
+					title: "Strings, Slices, Collections, and Bounds Safety Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -422,7 +422,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "Pattern Matching as Validation",
 					content:
-						"This section covers `match` not just as syntax, but as a way to force complete reasoning across every state the program can inhabit."
+						"`match` is more than syntax; it forces complete reasoning across every state the program can inhabit."
 				},
 				{
 					title: "Structs, Enums, and Safer State Models: Verification and Reflection",
@@ -458,7 +458,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-11-rss5-structs-enums-and-safer-state-models-supplemental-2/solution"
 				},
 				{
-					title: "Structs, Enums, and Safer State Models Supplemental 2",
+					title: "Structs, Enums, and Safer State Models Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -472,7 +472,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-11-rss5-structs-enums-and-safer-state-models-supplemental-2/solution"
 				},
 				{
-					title: "Structs, Enums, and Safer State Models Supplemental 3",
+					title: "Structs, Enums, and Safer State Models Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -493,7 +493,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "Traits as Behavior Contracts",
 					content:
-						"This section covers traits as explicit contracts for reusable behavior. Compare them with interfaces, abstract classes, or virtual methods without losing the Rust-specific emphasis on disciplined composition."
+						"Traits are explicit contracts for reusable behavior. Compare them with interfaces, abstract classes, or virtual methods without losing the Rust-specific emphasis on disciplined composition."
 				},
 				{
 					title: "Iterator Safety vs. Invalidation Risk",
@@ -539,7 +539,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-13-rss6-traits-iterators-and-api-contracts-supplemental-2/solution"
 				},
 				{
-					title: "Traits, Iterators, and API Contracts Supplemental 2",
+					title: "Traits, Iterators, and API Contracts Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -553,7 +553,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-13-rss6-traits-iterators-and-api-contracts-supplemental-2/solution"
 				},
 				{
-					title: "Traits, Iterators, and API Contracts Supplemental 3",
+					title: "Traits, Iterators, and API Contracts Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -574,7 +574,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "File I/O and Parser Discipline",
 					content:
-						"This section covers parsing as a systems task where small unchecked assumptions cause real bugs. Use Rust's file APIs and typed error model to build safer parse-and-validate workflows."
+						"Parsing is a systems task where small unchecked assumptions cause real bugs. Rust's file APIs and typed error model support safer parse-and-validate workflows."
 				},
 				{
 					title: "Input Validation and Trust Boundaries",
@@ -620,7 +620,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-15-rss7-files-parsers-and-secure-cli-design-supplemental-2/solution"
 				},
 				{
-					title: "Files, Parsers, and Secure CLI Design Supplemental 2",
+					title: "Files, Parsers, and Secure CLI Design Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -634,7 +634,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-15-rss7-files-parsers-and-secure-cli-design-supplemental-2/solution"
 				},
 				{
-					title: "Files, Parsers, and Secure CLI Design Supplemental 3",
+					title: "Files, Parsers, and Secure CLI Design Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle:
@@ -700,7 +700,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-17-rss8-concurrency-and-race-reduction-supplemental-2/solution"
 				},
 				{
-					title: "Concurrency and Race Reduction Supplemental 2",
+					title: "Concurrency and Race Reduction Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS8 Concurrency and Race Reduction",
@@ -713,7 +713,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-17-rss8-concurrency-and-race-reduction-supplemental-2/solution"
 				},
 				{
-					title: "Concurrency and Race Reduction Supplemental 3",
+					title: "Concurrency and Race Reduction Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS8 Concurrency and Race Reduction",
@@ -733,7 +733,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 				{
 					title: "What Unsafe Actually Means",
 					content:
-						"This section covers `unsafe` as a narrow escape hatch, not a forbidden magic zone. Learn which guarantees the compiler stops checking and why that creates a smaller trusted computing boundary that must be justified carefully."
+						"`unsafe` is a narrow escape hatch, not a forbidden magic zone. The key question is which guarantees the compiler stops checking and why that creates a smaller trusted computing boundary that must be justified carefully."
 				},
 				{
 					title: "FFI as a Real-World Boundary",
@@ -778,7 +778,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-19-rss9-unsafe-ffi-and-trusted-boundaries-supplemental-2/solution"
 				},
 				{
-					title: "Unsafe, FFI, and Trusted Boundaries Supplemental 2",
+					title: "Unsafe, FFI, and Trusted Boundaries Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS9 Unsafe, FFI, and Trusted Boundaries",
@@ -791,7 +791,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-19-rss9-unsafe-ffi-and-trusted-boundaries-supplemental-2/solution"
 				},
 				{
-					title: "Unsafe, FFI, and Trusted Boundaries Supplemental 3",
+					title: "Unsafe, FFI, and Trusted Boundaries Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS9 Unsafe, FFI, and Trusted Boundaries",
@@ -856,7 +856,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-21-rss10-capstone-harden-a-legacy-tool-supplemental-2/solution"
 				},
 				{
-					title: "Capstone: Harden a Legacy Tool Supplemental 2",
+					title: "Capstone: Harden a Legacy Tool Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS10 Capstone: Harden a Legacy Tool",
@@ -869,7 +869,7 @@ export const rustSystemsSecurityCourse: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-21-rss10-capstone-harden-a-legacy-tool-supplemental-2/solution"
 				},
 				{
-					title: "Capstone: Harden a Legacy Tool Supplemental 3",
+					title: "Capstone: Harden a Legacy Tool Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Rust systems",
 						moduleTitle: "RSS10 Capstone: Harden a Legacy Tool",
