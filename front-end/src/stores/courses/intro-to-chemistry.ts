@@ -85,7 +85,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Course Overview and Learning Workflow",
 					content: [
 						"**Concept path:** Intro to Chemistry builds from observation and safety into particles, periodic-table evidence, bonding, phase change, reactions, solutions, quantitative reasoning, and a final real-world explanation. Each module contains concept material, practice tasks, projects, and checkpoints. Progress is tracked through explicit module outputs and evidence of understanding rather than by time spent.",
-						"**Learning path:** Read the course as a sequence of reusable habits: observe carefully, name the particles or substances involved, choose a model, connect evidence to the model, check units or ratios when numbers appear, and state what the explanation cannot prove. When reviewing a module, look for the output and checkpoint sections; those are the clearest signs of what should be understood before moving on.",
+						"**Learning path:** Read the course as a sequence of reusable habits: observe carefully, name the particles or substances involved, choose a model, connect evidence to the model, check units or ratios when numbers appear, and state what the explanation cannot prove. When reviewing a module, look for the output and checkpoint sections; those are the clearest signs of what is expected before moving on.",
 						"**Course structure:** Modules introduce concepts in a deliberate order, but projects can be revisited whenever a later topic needs an earlier idea. For example, water cohesion returns during intermolecular attractions, soda and a balloon returns during gas behavior, and the volcano and elephant-toothpaste cases return during reaction evidence.",
 						"**Output:** A personal course overview listing the current module, the main concept, the project or case study, and one checkpoint question.",
 						"**CER checkpoint:** Explain how a chemistry project differs from a demonstration when the project includes evidence, a model, and a claim."
@@ -95,7 +95,7 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Chemistry as Evidence-Based Explanation",
 					content: [
-						"**Concept path:** Chemistry studies matter, the particles that make it up, and the evidence that shows when matter changes. A chemistry explanation usually connects three levels at once: what is visible at the human scale, what is modeled at the particle scale, and what measurements or references support the claim. This course uses notebooks, shared simulations, diagrams, short readings, and provided data tables rather than required household chemicals or physical lab supplies, so the focus stays on reasoning from safe evidence. A strong explanation should separate observation from inference: seeing ice melt is an observation, while explaining faster particle motion and changing arrangement is a model-based inference.",
+						"**Concept path:** Chemistry studies matter, the particles that make it up, and the evidence that shows when matter changes. A chemistry explanation usually connects three levels at once: what is visible at the human scale, what is modeled at the particle scale, and what measurements or references support the claim. This course uses notebooks, shared simulations, diagrams, short readings, and provided data tables rather than required household chemicals or physical lab supplies, so the focus stays on reasoning from safe evidence. A strong explanation separates observation from inference: seeing ice melt is an observation, while explaining faster particle motion and changing arrangement is a model-based inference.",
 						"**Learning path:** Start by choosing one visible phenomenon, then describe it twice: once as plain observation and once as a particle-level explanation. Keep a notebook page open while reading so each new idea can be sorted into observation, model, evidence, or claim. A useful routine is: name what changed, identify what evidence is available, choose a particle model, and write one sentence explaining how the model accounts for the evidence.",
 						"**Remote-safe activity:** Set up a chemistry notebook with four recurring sections: observation, particle model, evidence, and claim-evidence-reasoning. Use a simple example such as ice melting, salt dissolving, or a metal object rusting to separate what can be observed from what must be inferred.",
 						"**Output:** A one-page notebook template and a short explanation of why particle models can explain more than visible description alone.",
@@ -122,10 +122,10 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Models, Diagrams, and Limits",
 					content: [
-						"**Concept path:** A model is a useful simplification that highlights some features of a system while hiding others. Chemistry depends on models because atoms, ions, molecules, and energy changes are not directly visible in ordinary observation. Particle diagrams can show spacing and arrangement, formulas can show composition, simulations can show controlled changes, graphs can show patterns over time, and equations can show conservation and ratios. The important habit is to identify what question the model answers and what it leaves out; no model should be treated as a perfect copy of matter itself.",
+						"**Concept path:** A model is a useful simplification that highlights some features of a system while hiding others. Chemistry depends on models because atoms, ions, molecules, and energy changes are not directly visible in ordinary observation. Particle diagrams can show spacing and arrangement, formulas can show composition, simulations can show controlled changes, graphs can show patterns over time, and equations can show conservation and ratios. The important habit is to identify what question the model answers and what it leaves out; no model is treated as a perfect copy of matter itself.",
 						"**Learning path:** Compare representations by function. Build a short list for each model: what it shows well, what it hides, and what question it can answer. When choosing between a formula, diagram, graph, simulation, or equation, state the question first; the best model is the one that gives the needed evidence for that question without pretending to show everything.",
 						"**Remote-safe activity:** Compare a particle diagram, a chemical formula, and a simulation screenshot for the same substance or process. Identify one strength and one limitation of each representation.",
-						"**Decision rule:** Pick the model that answers the current question. A formula is efficient for composition, a particle diagram is better for spacing and arrangement, a graph is better for change over time, and an equation is better for conservation and ratios. No single representation should be treated as the whole explanation.",
+						"**Decision rule:** Pick the model that answers the current question. A formula is efficient for composition, a particle diagram is better for spacing and arrangement, a graph is better for change over time, and an equation is better for conservation and ratios. No single representation is treated as the whole explanation.",
 						"**Output:** A model-comparison table with the columns representation, what it shows well, what it hides, when it is useful, and one question it cannot answer alone.",
 						"**CER checkpoint:** Defend which model is best for explaining a beginner question about matter, and identify one question that the model cannot answer by itself."
 					].join("\n\n"),
@@ -149,8 +149,8 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Chemistry Notebook System",
 					content: [
 						"**Project goal:** Build a reusable notebook page for chemistry explanations. The page must include a phenomenon, vocabulary, observation, particle model, evidence table, CER paragraph, and one changed-condition prediction.",
-						"**Requirements:** Use one everyday phenomenon supplied by the course material. This restores the original Everyday Chemistry Observation Log as a remote-safe notebook task: no household experiment is required; a photo, diagram, simulation screenshot, or provided data table is enough. The page should explicitly label what was observed, what was inferred, and what model explains the difference.",
-						"**Example direction:** Melting ice can be described visibly as a shape/state change, but the chemistry explanation should describe particle motion, spacing, and identity. The prediction can change temperature, pressure, or amount of matter.",
+						"**Requirements:** Use one everyday phenomenon supplied by the course material. This restores the original Everyday Chemistry Observation Log as a remote-safe notebook task: no household experiment is required; a photo, diagram, simulation screenshot, or provided data table is enough. The page explicitly labels what was observed, what was inferred, and what model explains the difference.",
+						"**Example direction:** Melting ice can be described visibly as a shape/state change, but the chemistry explanation describes particle motion, spacing, and identity. The prediction can change temperature, pressure, or amount of matter.",
 						"**Completion checks:** The page separates observation from inference, includes units where numbers appear, and ends with a testable prediction."
 					].join("\n\n"),
 					datasetLink: material(
@@ -163,7 +163,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Choose two representations of the same chemistry idea and compare how well they explain it. Good choices include a formula versus a particle diagram, a graph versus a simulation, or a word explanation versus an equation.",
 						"**Requirements:** Name the chemistry idea, explain what each representation shows, identify what each leaves out, and choose which one is most useful for a beginner explanation. Include at least one case where the less-useful model is still valuable for a narrower question.",
-						"**Analysis target:** The final answer should not rank models by appearance. It should explain the information each model preserves. For example, a balanced equation is powerful for atom conservation but weak for molecular shape or reaction speed unless additional evidence is added.",
+						"**Analysis target:** The final answer does not rank models by appearance. It explains the information each model preserves. For example, a balanced equation is powerful for atom conservation but weak for molecular shape or reaction speed unless additional evidence is added.",
 						"**Completion checks:** The comparison uses at least three chemistry vocabulary terms, includes one limitation instead of claiming any model is perfect, and ends with one revised explanation that combines the two models."
 					].join("\n\n"),
 					datasetLink: material("model-comparison-cards"),
@@ -177,7 +177,7 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Matter, Properties, and Classification",
 					content: [
-						"**Concept path:** Matter is anything that has mass and occupies space, but chemistry usually goes further by describing what kind of matter it is and what properties provide evidence. Physical properties such as density, melting point, boiling point, color, conductivity, solubility, and state at room temperature can be observed or measured without changing substance identity. These properties help distinguish samples, but they must be used carefully: appearance alone is weak evidence, while a repeated measured property such as density or boiling point is stronger. Classification should be based on the material and its composition, not merely on the object shape or everyday name.",
+						"**Concept path:** Matter is anything that has mass and occupies space, but chemistry usually goes further by describing what kind of matter it is and what properties provide evidence. Physical properties such as density, melting point, boiling point, color, conductivity, solubility, and state at room temperature can be observed or measured without changing substance identity. These properties help distinguish samples, but they must be used carefully: appearance alone is weak evidence, while a repeated measured property such as density or boiling point is stronger. Classification is based on the material and its composition, not merely on the object shape or everyday name.",
 						"**Learning path:** Sort examples by evidence rather than familiarity. First decide whether the example is matter, then identify whether the description names an object, a material, or a property. Useful evidence includes mass, volume, composition, and measurable properties; weak evidence includes appearance alone or assumptions from everyday use. The original lava-lamp density case fits here: oil and water separate because density and particle interactions differ, while gas bubbles can temporarily change what rises or falls.",
 						"**Remote-safe activity:** Sort the matter and classification cards into matter and non-matter, then classify matter examples by observable properties. Use property evidence rather than personal familiarity.",
 						"**Worked example:** Light from a lamp can affect matter, but it is not classified as a material sample in this activity because the prompt asks for things with mass and volume. Salt water is matter, but its category depends on composition rather than just appearance.",
@@ -244,8 +244,8 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Project: Mystery Matter Sorting",
 					content: [
-						"**Project goal:** Sort a set of mystery cards using only properties and composition clues. Each card should be classified as element, compound, homogeneous mixture, heterogeneous mixture, or not enough information.",
-						"**Requirements:** Write the decision rule before sorting. This project preserves the original Material Sorting Challenge while making the evidence target clearer. Every classification needs one evidence sentence. At least two cards should be intentionally uncertain so the final product practices saying what evidence is missing instead of guessing.",
+						"**Project goal:** Sort a set of mystery cards using only properties and composition clues. Each card is classified as element, compound, homogeneous mixture, heterogeneous mixture, or not enough information.",
+						"**Requirements:** Write the decision rule before sorting. This project preserves the original Material Sorting Challenge while making the evidence target clearer. Every classification needs one evidence sentence. At least two cards are intentionally uncertain so the final product practices saying what evidence is missing instead of guessing.",
 						"**Example direction:** A clear liquid is not automatically a pure substance; it could be water, salt water, vinegar, or many other homogeneous mixtures.",
 						"**Analysis target:** Include one card where visible appearance is misleading and one card where composition evidence is decisive. The strongest work shows why a property such as color or clarity is not enough by itself unless it is connected to composition, fixed ratio, or separable parts.",
 						"**Completion checks:** At least two cards include uncertainty notes, and the final answer distinguishes physical property evidence from composition evidence."
@@ -257,7 +257,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: States of Matter Simulation Report",
 					content: [
 						"**Project goal:** Use the States of Matter simulation to explain how particle motion changes across states and during heating, cooling, or compression. This preserves the original States of Matter Simulation project while replacing required recording or live-demo steps with a written or visual report.",
-						"**Requirements:** Include three screenshots or sketches, one particle-motion comparison, one changed-condition prediction, and one limitation of the simulation. The report should compare a solid, liquid, and gas using the same substance when possible so the change in motion and spacing is not confused with changing the identity of the particles. Answer the original investigation questions: Can two phases exist at one temperature? What changes when energy is added with the heater? What changes when container volume gets smaller? Which phase is dominant at high temperature and which is dominant at low temperature?",
+						"**Requirements:** Include three screenshots or sketches, one particle-motion comparison, one changed-condition prediction, and one limitation of the simulation. The report compares a solid, liquid, and gas using the same substance when possible so the change in motion and spacing is not confused with changing the identity of the particles. Answer the original investigation questions: Can two phases exist at one temperature? What changes when energy is added with the heater? What changes when container volume gets smaller? Which phase is dominant at high temperature and which is dominant at low temperature?",
 						"**Analysis target:** Explain why heating changes motion before it changes the substance's chemical identity. If the simulation shows particles separating during evaporation, connect that observation to state change rather than bond breaking inside the particles.",
 						"**Completion checks:** The report uses the terms particle, motion, spacing, attraction, energy, and state accurately, and each image is tied to a specific claim rather than included as decoration."
 					].join("\n\n"),
@@ -268,7 +268,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Preserve the original Making Oobleck activity as a remote-safe model-limits analysis. Oobleck is a familiar non-Newtonian mixture that can feel more solid under sudden force and flow more like a liquid when handled gently.",
 						"**Requirements:** Use the provided case description, an optional safe video observation, or a supervised household observation if appropriate. Record what happens under slow movement, sudden pressure, and release. Then decide which parts of the solid/liquid model help explain the behavior and which parts are too simple.",
-						"**Original prompt restored:** Describe what the material feels or looks like, decide whether it should be classified as solid, liquid, or borderline, and propose one practical use that depends on its unusual behavior. The proposal should include a feasibility note; an idea can be creative while still needing evidence.",
+						"**Activity prompt:** Describe what the material feels or looks like, decide whether it is best classified as solid, liquid, or borderline, and propose one practical use that depends on its unusual behavior. The proposal includes a feasibility note; an idea can be creative while still needing evidence.",
 						"**Completion checks:** The explanation uses viscosity, force, flow, solid, liquid, model, and limitation accurately, and it does not force the material into a category without explaining the evidence."
 					].join("\n\n"),
 					datasetLink: material("original-project-source-index"),
@@ -279,7 +279,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Preserve the original lava-lamp density project as a diagram or video-backed case study. The chemistry target is not building a decorative object; it is explaining density, immiscible liquids, gas bubbles, and temporary changes in what rises or sinks.",
 						"**Requirements:** Use the provided diagram, the optional video source, or a safe supervised observation. Identify the oil layer, water layer, food coloring or colored-water region, and gas bubbles. Explain why water and oil separate, why one layer is denser, and how gas bubbles can carry colored water upward temporarily.",
-						"**Original prompt restored:** Connect density to real-world examples such as ships, submarines, vegetables floating in soup, and ice floating in water. The answer should state that floating depends on density of the whole object or material system, not just on weight.",
+						"**Activity prompt:** Connect density to real-world examples such as ships, submarines, vegetables floating in soup, and ice floating in water. The answer states that floating depends on density of the whole object or material system, not just on weight.",
 						"**Completion checks:** The final explanation includes density, volume, mass, layer, gas bubble, and particle-packing language, and it distinguishes density from weight."
 					].join("\n\n"),
 					datasetLink: material("original-project-source-index"),
@@ -297,7 +297,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Learning path:** Track one particle type at a time. Build a table with columns for protons, neutrons, electrons, element identity, mass number, and charge. Change only one particle count per row and record what changed. This makes the rules visible: proton changes alter element identity, neutron changes alter isotope/mass number, and electron changes alter charge.",
 						"**Remote investigation:** Use the PhET Build an Atom simulation to change protons, neutrons, and electrons separately. Track which changes alter element identity, isotope, mass number, and charge. The original Atom Simulation project used the PBS/ChemThink atom simulation and atomic-structure sequence; that source remains useful for reading about vibrating atoms, electron clouds, atomic mass units, and charge before or after using the interactive atom builder.",
 						"**Reasoning focus:** Atomic identity is controlled by the nucleus because the proton count defines the element. Neutrons change isotope and mass number; electrons change charge and many chemical interactions. This separation prevents the common mistake of calling every charged atom a new element.",
-						"**Output:** A particle-change table with rows for adding a proton, adding a neutron, adding an electron, and removing an electron. Each row should name what changes and what stays the same.",
+						"**Output:** A particle-change table with rows for adding a proton, adding a neutron, adding an electron, and removing an electron. Each row names what changes and what stays the same.",
 						"**CER checkpoint:** Explain why changing proton count is more identity-changing than changing electron count."
 					].join("\n\n"),
 					mediaLink: SIMULATIONS.buildAtom
@@ -361,7 +361,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Checkpoint: Atomic Structure, Isotopes, and Ions",
 					content: [
 						"**Checkpoint goal:** Verify that particle counts, isotope notation, and ion charge can be interpreted without mixing up the roles of protons, neutrons, and electrons.",
-						"**Tasks:** Solve one neutral-atom problem, one isotope problem, one positive-ion problem, one negative-ion problem, and one average-atomic-mass interpretation question. Each answer should show the arithmetic or rule used, not just the final label.",
+						"**Tasks:** Solve one neutral-atom problem, one isotope problem, one positive-ion problem, one negative-ion problem, and one average-atomic-mass interpretation question. Each answer shows the arithmetic or rule used, not just the final label.",
 						"**Mastery evidence:** A complete response explains why proton count controls element identity, why neutron count controls isotope, why electron count controls charge, and why periodic-table atomic mass is an abundance-weighted average rather than the mass of every atom.",
 						"**Revision trigger:** If any answer changes the element after only changing electrons, or treats different isotopes as different elements, return to the particle-change table before continuing."
 					].join("\n\n"),
@@ -374,9 +374,9 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Atom Simulation and Atom Builder Challenge",
 					content: [
 						"**Project goal:** Restore the original Atom Simulation project inside the current atomic-structure module. Use the PBS/ChemThink atomic-structure sequence or the PhET Build an Atom simulation to explain the parts of an atom and then create a challenge set using particle counts.",
-						"**Requirements:** Include a labeled atom diagram, definitions for proton, neutron, electron, nucleus, electron cloud, atomic number, atomic mass unit, and charge, plus at least eight build challenges: two neutral atoms, two isotopes, two positive ions, and two negative ions. Each challenge should include both a screenshot/sketch and the arithmetic used to determine identity, mass number, or charge.",
+						"**Requirements:** Include a labeled atom diagram, definitions for proton, neutron, electron, nucleus, electron cloud, atomic number, atomic mass unit, and charge, plus at least eight build challenges: two neutral atoms, two isotopes, two positive ions, and two negative ions. Each challenge includes both a screenshot/sketch and the arithmetic used to determine identity, mass number, or charge.",
 						"**Analysis target:** Add one intentionally tricky challenge where the element identity stays the same even though charge changes, and one where mass number changes even though the element stays the same. These two cases force the distinction between isotope and ion.",
-						"**Completion checks:** Every answer includes proton, neutron, electron, mass number, atomic number, and charge evidence. The final explanation should describe why changing electrons can change charge without changing the element."
+						"**Completion checks:** Every answer includes proton, neutron, electron, mass number, atomic number, and charge evidence. The final explanation describes why changing electrons can change charge without changing the element."
 					].join("\n\n"),
 					datasetLink: REFERENCES.pbsAtomSimulation,
 					mediaLink: SIMULATIONS.buildAtom
@@ -385,7 +385,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Isotope Claim Check",
 					content: [
 						"**Project goal:** Analyze three statements about isotopes and decide whether each is accurate, misleading, or false.",
-						"**Requirements:** Each decision needs a corrected statement and a short explanation using protons, neutrons, mass number, and atomic number. At least one statement should confuse isotope identity with ion charge, and at least one should confuse mass number with average atomic mass.",
+						"**Requirements:** Each decision needs a corrected statement and a short explanation using protons, neutrons, mass number, and atomic number. At least one statement intentionally confuses isotope identity with ion charge, and at least one intentionally confuses mass number with average atomic mass.",
 						"**Evidence target:** The isotope table supports the correction. A strong answer names the exact particle count that stayed the same and the exact particle count that changed, then explains what that means for the claim.",
 						"**Completion checks:** At least one correction addresses the misconception that different isotopes are different elements, and at least one correction addresses the difference between mass number and average atomic mass."
 					].join("\n\n"),
@@ -453,12 +453,12 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Trend Reasoning Without Memorizing Every Detail",
 					content: [
-						"**Concept path:** Periodic trends describe how properties tend to change across periods and down groups. Atomic radius, ionization energy, electronegativity, and metallic character are not random facts; they are connected to nuclear attraction, electron shielding, and energy levels. Across a period, atoms often become smaller and attract electrons more strongly because additional protons pull on electrons in the same general shell. Down a group, atoms often become larger because added energy levels place valence electrons farther from the nucleus. Introductory trend work should emphasize explanation and evidence over memorizing every exception.",
+						"**Concept path:** Periodic trends describe how properties tend to change across periods and down groups. Atomic radius, ionization energy, electronegativity, and metallic character are not random facts; they are connected to nuclear attraction, electron shielding, and energy levels. Across a period, atoms often become smaller and attract electrons more strongly because additional protons pull on electrons in the same general shell. Down a group, atoms often become larger because added energy levels place valence electrons farther from the nucleus. Introductory trend work emphasizes explanation and evidence over memorizing every exception.",
 						"**Learning path:** For each trend comparison, write the direction first, then the reason. Useful prompts are: Are the elements in the same period or group? Is the main issue nuclear attraction, shielding, or energy level? Does the provided trend table support the prediction? If an exception or missing data appears, state the uncertainty instead of forcing the simplified trend.",
 						"**Remote-safe activity:** Use the periodic trend mini table to compare two elements. Decide which has a larger atomic radius or stronger attraction for electrons and explain the evidence source.",
 						"**Worked example:** Sodium is below lithium in group 1, so the simplified trend table supports predicting a larger atomic radius for sodium. Fluorine is far to the right in period 2, so it is modeled as strongly attracting electrons.",
 						"**Causal model:** Across a period, added protons increase nuclear attraction while electrons are added to the same general energy level, so atomic radius often decreases and electron attraction often increases. Down a group, extra energy levels place valence electrons farther from the nucleus and shielding increases, so radius often increases.",
-						"**Output:** Three trend comparison answers with a one-sentence justification each. Each justification should name the direction on the table and the simplified attraction or shielding idea behind the trend.",
+						"**Output:** Three trend comparison answers with a one-sentence justification each. Each justification names the direction on the table and the simplified attraction or shielding idea behind the trend.",
 						"**CER checkpoint:** Explain how table position can support a prediction even when exact numerical data is not known."
 					].join("\n\n"),
 					datasetLink: material("periodic-trend-mini-table"),
@@ -469,9 +469,9 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Project: Element Profile Cards",
 					content: [
-						"**Project goal:** Build profile cards for six elements from different table regions. Each card should include symbol, atomic number, atomic mass, region, common use, and one property-based prediction.",
-						"**Requirements:** At least one element must be a metal, one nonmetal, one noble gas, and one halogen. Each card should include one claim about expected behavior and one source note from the ACS periodic table, RSC periodic table, IUPAC periodic table, Ptable, or the trend mini table.",
-						"**Analysis target:** Include one prediction based on group, one prediction based on period or trend direction, and one limitation that names missing evidence. The cards should not imply that table position alone proves every property.",
+						"**Project goal:** Build profile cards for six elements from different table regions. Each card includes symbol, atomic number, atomic mass, region, common use, and one property-based prediction.",
+						"**Requirements:** At least one element must be a metal, one nonmetal, one noble gas, and one halogen. Each card includes one claim about expected behavior and one source note from the ACS periodic table, RSC periodic table, IUPAC periodic table, Ptable, or the trend mini table.",
+						"**Analysis target:** Include one prediction based on group, one prediction based on period or trend direction, and one limitation that names missing evidence. The cards do not imply that table position alone proves every property.",
 						"**Completion checks:** The final comparison explains one similarity within a group and one difference across a period."
 					].join("\n\n"),
 					datasetLink: REFERENCES.acsPeriodicTable
@@ -480,7 +480,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Periodic Trend Argument",
 					content: [
 						"**Project goal:** Choose three element pairs and make a short argument about a periodic trend for each pair.",
-						"**Requirements:** Each argument must identify the trend, cite table position or provided trend data, and explain the reasoning in plain language. Include one pair across a period, one pair down a group, and one pair where the prediction should be stated cautiously.",
+						"**Requirements:** Each argument must identify the trend, cite table position or provided trend data, and explain the reasoning in plain language. Include one pair across a period, one pair down a group, and one pair where the prediction is stated cautiously.",
 						"**Evidence target:** For each pair, identify whether attraction, shielding, or energy level changes are the main simplified explanation. If the trend table does not provide enough evidence for a confident claim, say what additional data would be needed.",
 						"**Completion checks:** The work avoids unsupported claims such as nearby elements are always identical and distinguishes trend evidence from exact numerical property data."
 					].join("\n\n"),
@@ -491,7 +491,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Mystery Element Cards and Symbol Codes",
 					content: [
 						"**Project goal:** Restore the original Exploration of the Periodic Table, Mystery Elements, and Name Making with the Periodic Table activities in a more evidence-driven format. Create a set of cards where each card gives clues such as symbol, atomic number, group, period, region, common use, or trend behavior, then build one word or name from valid element symbols.",
-						"**Requirements:** Make at least eight mystery cards and one symbol code. Each mystery card should be solvable from periodic-table evidence, not private trivia. The symbol code must list the full element name for every symbol used and include one property note for at least four of those elements. Include the original checks for `H`, `O`, atomic number, molar mass or atomic mass, state of matter, and one missing-letter observation.",
+						"**Requirements:** Make at least eight mystery cards and one symbol code. Each mystery card is solvable from periodic-table evidence, not private trivia. The symbol code must list the full element name for every symbol used and include one property note for at least four of those elements. Include the original checks for `H`, `O`, atomic number, molar mass or atomic mass, state of matter, and one missing-letter observation.",
 						"**Evidence target:** At least two references from the periodic-table reference set support the work. If a source is stronger for trend data and another is stronger for standard names, say which source was used for which purpose.",
 						"**Completion checks:** The finished cards distinguish atomic number from atomic mass, use real symbols with correct capitalization, and cite table evidence for each answer."
 					].join("\n\n"),
@@ -511,7 +511,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Why Atoms Bond",
 					content: [
 						"**Concept path:** Chemical bonding explains why atoms or ions stay associated in stable substances. At an introductory level, bonding is modeled through attractions involving charged particles and valence electrons: positive and negative ions attract in ionic compounds, while nonmetal atoms share electron pairs in covalent molecules. Bonding is not simply atoms wanting to be full; it is a lower-energy or more stable arrangement of particles compared with the separated pieces. This section links periodic-table patterns to formulas, names, structures, and properties.",
-						"**Learning path:** Identify the particle model before writing formulas or names. Decide whether the example is best modeled as ionic attraction among ions or covalent sharing within molecules, then connect that model to a formula and one property prediction. Avoid treating bonding categories as labels only; each category should explain what particles are attracting and why the arrangement is stable.",
+						"**Learning path:** Identify the particle model before writing formulas or names. Decide whether the example is best modeled as ionic attraction among ions or covalent sharing within molecules, then connect that model to a formula and one property prediction. Avoid treating bonding categories as labels only; each category explains what particles are attracting and why the arrangement is stable.",
 						"**Remote-safe activity:** Compare sodium chloride, water, oxygen gas, carbon dioxide, and methane from the bonding card set. Identify whether each example is better described by ionic or covalent bonding at an introductory level.",
 						"**Worked example:** Sodium chloride is modeled as ionic because sodium and chlorine form charged particles that attract in a repeating structure. Water is modeled as covalent because hydrogen and oxygen share electrons in molecules.",
 						"**Output:** A bonding comparison table with bond type, particle-level attraction, formula, and one property prediction.",
@@ -527,7 +527,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Learning path:** Follow a charge-balance routine: write the cation and anion, write each charge, choose the smallest ratio that makes total charge zero, then check that the final formula is neutral. If a polyatomic ion appears more than once, use parentheses to show the group stays together. Read each subscript as part of the ratio, not as a prefix from the name.",
 						"**Remote-safe activity:** Use the ion cards to build neutral formulas such as `NaCl`, `MgCl₂`, `Al₂O₃`, `CaF₂`, and `NH₄NO₃`. Balance total positive and negative charge before writing the formula.",
 						"**Worked example:** Aluminum is `+3` and oxide is `-2`, so the smallest neutral ratio is two aluminum ions and three oxide ions: `Al₂O₃`.",
-						"**Naming connection:** Formula writing and naming should agree. `MgCl₂` is magnesium chloride because magnesium keeps its element name and chlorine becomes chloride. Polyatomic ions such as ammonium and nitrate stay grouped when they appear in a formula.",
+						"**Naming connection:** Formula writing and naming agree. `MgCl₂` is magnesium chloride because magnesium keeps its element name and chlorine becomes chloride. Polyatomic ions such as ammonium and nitrate stay grouped when they appear in a formula.",
 						"**Output:** Six ionic formula examples with charge-balance evidence and matching compound names.",
 						"**CER checkpoint:** Explain why `MgCl₂` needs two chloride ions for one magnesium ion."
 					].join("\n\n"),
@@ -652,7 +652,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Formula and Bonding Card Sort",
 					content: [
 						"**Project goal:** Sort formulas into ionic compounds, covalent molecules, and uncertain cases using element type, charge patterns, and formula clues.",
-						"**Requirements:** Include at least twelve formulas and write one rule used for each category. The sort should include formula units, molecules, and at least two cases where the formula alone is not enough to support a confident claim.",
+						"**Requirements:** Include at least twelve formulas and write one rule used for each category. The sort includes formula units, molecules, and at least two cases where the formula alone is not enough to support a confident claim.",
 						"**Analysis target:** Add names for at least eight of the sorted formulas and flag any naming rule used. This keeps formula writing, bonding model, and nomenclature connected instead of separate memorization tasks.",
 						"**Completion checks:** The sort includes at least two uncertain cases and explains what extra evidence would be needed."
 					].join("\n\n"),
@@ -662,7 +662,7 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Project: Molecule Shape Gallery",
 					content: [
-						"**Project goal:** Build a gallery of simple molecule shapes using sketches from the simulation or a diagram. Each gallery entry should connect shape to one possible property consequence.",
+						"**Project goal:** Build a gallery of simple molecule shapes using sketches from the simulation or a diagram. Each gallery entry connects shape to one possible property consequence.",
 						"**Requirements:** Include at least five molecules and at least three different shape categories. For each entry, show the Lewis-style electron regions or simulation setup used to decide the shape, then write one sentence explaining why the molecule is not simply flat because it is drawn on paper.",
 						"**Analysis target:** Distinguish formula, structure, and shape. For example, a formula can identify the atoms present, but it does not automatically show the three-dimensional arrangement or the distribution of electron regions.",
 						"**Completion checks:** Every entry names bonded atoms, lone pairs if relevant, shape, and one limitation of the model."
@@ -705,7 +705,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Concept path:** Intermolecular attractions are forces between particles, not the covalent or ionic bonds inside a particle. These attractions influence boiling point, evaporation rate, surface tension, viscosity, and solubility because particles with stronger attractions are harder to separate or rearrange. Introductory work focuses on comparing stronger and weaker attractions and connecting them to observable properties. The goal is not to memorize every force category immediately, but to reason that structure and polarity affect how particles interact in bulk matter.",
 						"**Learning path:** Link structure to attraction, then attraction to property. For each substance, identify what evidence suggests stronger or weaker attractions, then predict a property such as boiling point, evaporation rate, or solubility. Make the reasoning explicit: stronger attractions usually require more energy to separate particles, so they often raise boiling point or slow evaporation.",
 						"**Remote-safe activity:** Compare water, carbon dioxide, ethanol, and a hexane-like oil model using the intermolecular property cards. Then connect the original water-cohesion and surface-tension case to attraction evidence: a dome of water on a coin or a bead of water on a surface is visible behavior, while cohesion is the model that explains why nearby water molecules pull together.",
-						"**Worked example:** Water is predicted to have stronger attractions than carbon dioxide under ordinary conditions, so it has a much higher boiling point. Strong attractions also support surface tension and cohesion, but the evidence should still be stated carefully: the visible water shape supports a model of molecular attraction; it does not directly show individual molecules.",
+						"**Worked example:** Water is predicted to have stronger attractions than carbon dioxide under ordinary conditions, so it has a much higher boiling point. Strong attractions also support surface tension and cohesion, but the evidence stays carefully stated: the visible water shape supports a model of molecular attraction; it does not directly show individual molecules.",
 						"**Output:** A property-prediction table connecting attraction strength to visible behavior.",
 						"**CER checkpoint:** Explain why molecular structure can affect a bulk property such as boiling point."
 					].join("\n\n"),
@@ -718,7 +718,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Concept path:** A phase diagram maps which state of a substance is stable at different combinations of temperature and pressure. Each region represents solid, liquid, or gas behavior, while boundary lines represent conditions where two phases can coexist or change into one another. The diagram is not a particle picture and it is not universal for all substances; it is a condition map for a specific substance. Reading a phase diagram requires naming both coordinates before making a claim, because changing pressure can matter just as much as changing temperature.",
 						"**Learning path:** Read phase diagrams by coordinates. First locate temperature and pressure, then identify the region or boundary, then describe what state or transition the point represents. For changed-condition questions, trace the path on the diagram before naming the result. Do not transfer one substance's phase diagram to another without evidence.",
 						"**Remote-safe activity:** Read a simplified phase diagram and identify solid, liquid, gas, melting, boiling, and sublimation regions. Compare what changes when pressure increases or temperature decreases.",
-						"**Reading habit:** State both coordinates before naming a phase. A point on a boundary should be described as a transition condition rather than forced into only one region. The diagram is substance-specific, so the same temperature and pressure can mean different phases for different substances.",
+						"**Reading habit:** State both coordinates before naming a phase. A point on a boundary is described as a transition condition rather than forced into only one region. The diagram is substance-specific, so the same temperature and pressure can mean different phases for different substances.",
 						"**Output:** Three phase-diagram coordinate questions, one boundary interpretation, and one changed-condition prediction.",
 						"**CER checkpoint:** Explain why pressure can matter for phase, not only temperature."
 					].join("\n\n"),
@@ -732,7 +732,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Learning path:** Use controlled-variable reasoning. Change one variable at a time, record what happens to pressure, volume, temperature, or particle amount, and explain the result through collisions. A useful template is: variable changed, variable held constant, visible or numerical result, collision-level explanation.",
 						"**Remote investigation:** Use the PhET Gas Properties simulation to compare what happens when temperature, volume, particle amount, or container size changes. Keep one variable controlled when testing another so the pattern is interpretable. The original soda-and-balloon activity belongs here as a pressure and gas-release case: carbon dioxide is already dissolved under pressure, and opening the system changes conditions so gas leaves solution and can inflate a balloon in the demonstration version.",
 						"**Worked example:** If volume decreases while particle amount and temperature stay similar, particles collide with the walls more often, so pressure rises in the simplified model. If temperature rises in a fixed volume, faster particles create stronger and more frequent collisions. If a sealed carbonated drink is opened, lower pressure allows dissolved carbon dioxide to escape into the gas space.",
-						"**Output:** A gas-variable table with four rows: change temperature, change volume, change amount, and hold a variable constant. Each row should include prediction, observation, and collision-level reasoning.",
+						"**Output:** A gas-variable table with four rows: change temperature, change volume, change amount, and hold a variable constant. Each row includes prediction, observation, and collision-level reasoning.",
 						"**CER checkpoint:** Explain why a gas-law pattern is a particle-collision model rather than only a memorized equation."
 					].join("\n\n"),
 					datasetLink: material("gas-law-scenarios"),
@@ -742,7 +742,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Checkpoint: Energy, Phase Change, and Gases",
 					content: [
 						"**Checkpoint goal:** Connect particle motion, energy transfer, phase diagrams, and gas-variable reasoning into one coherent model.",
-						"**Tasks:** Interpret one heating-curve segment, one phase-diagram coordinate, one intermolecular-property prediction, and one gas-variable scenario. Each answer should state the visible or numerical evidence and then translate it into a particle-level explanation.",
+						"**Tasks:** Interpret one heating-curve segment, one phase-diagram coordinate, one intermolecular-property prediction, and one gas-variable scenario. Each answer states the visible or numerical evidence and then translates it into a particle-level explanation.",
 						"**Mastery evidence:** A complete response distinguishes temperature from total thermal energy, phase change from chemical reaction, pressure from temperature, and attraction strength from molecule identity.",
 						"**Revision trigger:** If an answer says particles expand, disappear, or change identity during ordinary heating, return to the particle-motion and phase-change examples before continuing."
 					].join("\n\n"),
@@ -768,8 +768,9 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Property Prediction from Attractions",
 					content: [
 						"**Project goal:** Use particle attraction evidence to predict which of several substances will evaporate, boil, or dissolve more readily.",
-						"**Requirements:** Use the intermolecular property cards or diagrams. Each prediction needs a claim, evidence, and reasoning. At least one prediction should name a limitation, such as missing temperature, pressure, or structure detail.",
-						"**Worked example:** A hexane-like oil is predicted not to mix well with water because the property card describes mostly nonpolar attractions. The claim should not overstate that all oils behave identically.",
+						"**Requirements:** Use the intermolecular property cards or diagrams. Each prediction needs a claim, evidence, and reasoning. At least one prediction names a limitation, such as missing temperature, pressure, or structure detail.",
+						"**Worked example:** A hexane-like oil is predicted not to mix well with water because the property card describes mostly nonpolar attractions. The claim does not overstate that all oils behave identically.",
+						"**Analysis path:** For each substance, first identify the attraction evidence, then connect that evidence to one property. Stronger attractions usually make particles harder to separate, which can raise boiling point or slow evaporation. Solubility predictions also need a compatibility idea: a substance mixes better with another substance when their particle interactions are similar enough to make mixing favorable. If the evidence only names one property, keep the prediction narrow instead of inventing a complete behavior profile.",
 						"**Completion checks:** The work names uncertainty where the provided evidence is incomplete."
 					].join("\n\n"),
 					datasetLink: material("intermolecular-property-cards"),
@@ -780,7 +781,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Preserve the original water-tension activity as a remote-safe explanation of cohesion and surface tension. The central question is why water can form a dome or bead before spilling, and why another liquid such as oil may behave differently.",
 						"**Requirements:** Use the Khan Academy water-cohesion reading, the optional video source, provided diagrams, or a safe supervised observation. Explain `H₂O` as two hydrogen atoms bonded to one oxygen atom, sketch a simple water-molecule model, define cohesion and surface tension, and connect those ideas to water droplets on a coin.",
-						"**Original prompt restored:** Predict how many water droplets a coin could hold, compare water with oil or another provided liquid scenario, and explain whether a different coin size should change the result. Optional comparisons such as soda or honey should be treated as evidence prompts, not required materials.",
+						"**Activity prompt:** Predict how many water droplets a coin could hold, compare water with oil or another provided liquid scenario, and explain whether a different coin size changes the result. Optional comparisons such as soda or honey are evidence prompts, not required materials.",
 						"**Completion checks:** The explanation connects visible droplet behavior to molecular attraction, uses cohesion and surface tension correctly, and states that the demonstration supports a model rather than directly showing individual molecules."
 					].join("\n\n"),
 					datasetLink: REFERENCES.khanWaterCohesion,
@@ -797,7 +798,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Concept path:** A chemical reaction rearranges atoms into new substances while conserving the atoms themselves. Reactants are the starting substances, products are the substances formed, and the evidence for reaction must be interpreted in context. Gas production, temperature change, color change, light, precipitate formation, odor change, or new properties can support a reaction claim, but no single clue is automatically conclusive. Boiling can produce bubbles without forming a new substance, while a particle diagram or equation can show when gas bubbles represent a product. Good reaction reasoning combines visible evidence with a particle-level or equation-based explanation.",
 						"**Learning path:** Identify reactants and products before interpreting evidence. For each scenario, list the visible clue, then decide whether the clue shows a new substance or could be explained physically. Strong answers connect at least two evidence sources, such as a visible change plus a particle diagram, equation, or property comparison.",
 						"**Remote-safe activity:** Classify the physical and chemical change cards as likely physical change, likely chemical change, or not enough evidence. Include rusting, burning fuel, dissolving sugar, mixing salt and water, a gas-forming reaction diagram, and the original elephant-toothpaste and baking-soda-volcano cases as diagram or video-based reaction-evidence examples.",
-						"**Worked example:** Bubbling is strong reaction evidence when a particle diagram shows new gas particles forming. It is weak evidence by itself when water is simply boiling. In a baking-soda-volcano case, gas bubbles support a reaction claim because the acid-base model produces carbon dioxide; in elephant toothpaste, foam supports gas production and catalyst discussion, but the explanation should name the reaction evidence rather than relying on dramatic appearance.",
+						"**Worked example:** Bubbling is strong reaction evidence when a particle diagram shows new gas particles forming. It is weak evidence by itself when water is simply boiling. In a baking-soda-volcano case, gas bubbles support a reaction claim because the acid-base model produces carbon dioxide; in elephant toothpaste, foam supports gas production and catalyst discussion, but the explanation names the reaction evidence rather than relying on dramatic appearance.",
 						"**Output:** A classification table with evidence and uncertainty notes.",
 						"**CER checkpoint:** Explain why bubbling can be strong evidence in one context and weak evidence in another."
 					].join("\n\n"),
@@ -819,11 +820,11 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Reaction Types and Patterns",
 					content: [
-						"**Concept path:** Reaction types are pattern labels that help organize how atoms and ions rearrange. Synthesis combines simpler substances into a more complex product, decomposition breaks one substance into simpler products, single replacement and double replacement exchange partners, combustion involves a fuel reacting with oxygen, precipitation forms an insoluble solid, and acid-base reactions involve proton or ion-transfer patterns depending on the model used. These labels are useful because they guide prediction and evidence, but they do not replace balancing or observation. A reaction type should summarize what the equation and evidence already support.",
+						"**Concept path:** Reaction types are pattern labels that help organize how atoms and ions rearrange. Synthesis combines simpler substances into a more complex product, decomposition breaks one substance into simpler products, single replacement and double replacement exchange partners, combustion involves a fuel reacting with oxygen, precipitation forms an insoluble solid, and acid-base reactions involve proton or ion-transfer patterns depending on the model used. These labels are useful because they guide prediction and evidence, but they do not replace balancing or observation. A reaction type summarizes what the equation and evidence already support.",
 						"**Learning path:** Treat reaction type as a classification argument. First inspect the reactants and products, then identify the rearrangement pattern, then name the reaction type, and finally cite the evidence that supports that label. If a reaction could fit more than one introductory pattern, explain the stronger evidence instead of relying on the label alone.",
 						"**Remote-safe activity:** Sort the reaction type cards by pattern. The goal is pattern recognition and evidence, not advanced prediction rules.",
 						"**Worked example:** `CH₄ + 2O₂ → CO₂ + 2H₂O` is combustion because a carbon-containing fuel reacts with oxygen and forms carbon dioxide and water. A vinegar-and-baking-soda volcano is better treated as an acid-base gas-production case, while elephant toothpaste is a decomposition case where a catalyst changes the reaction rate.",
-						"**Reasoning focus:** Reaction type is a summary of the rearrangement pattern, not a replacement for evidence. A precipitation label should connect to an insoluble solid forming; a combustion label should connect to fuel, oxygen, and common products in the introductory model.",
+						"**Reasoning focus:** Reaction type is a summary of the rearrangement pattern, not a replacement for evidence. A precipitation label connects to an insoluble solid forming; a combustion label connects to fuel, oxygen, and common products in the introductory model.",
 						"**Output:** A reaction-type chart with one reason for each classification and one uncertain reaction where more evidence is needed.",
 						"**CER checkpoint:** Explain how a reaction type helps summarize what changed."
 					].join("\n\n"),
@@ -848,7 +849,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Equation Balancing Portfolio",
 					content: [
 						"**Project goal:** Build a portfolio of balanced equations that shows conservation of atoms through counts, particle diagrams, or bar charts.",
-						"**Requirements:** Include at least eight equations, with at least two requiring coefficients greater than 2. At least three equations should come from the reaction type cards so the portfolio connects conservation and reaction pattern.",
+						"**Requirements:** Include at least eight equations, with at least two requiring coefficients greater than 2. At least three equations come from the reaction type cards so the portfolio connects conservation and reaction pattern.",
 						"**Analysis target:** Organize the portfolio by difficulty. Begin with one-element balance checks, then move to equations with two compounds, then include at least one equation where a polyatomic group can be counted as a unit if it appears unchanged on both sides.",
 						"**Completion checks:** Every equation includes before/after atom counts, and at least one mistake is corrected with an explanation."
 					].join("\n\n"),
@@ -859,7 +860,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Limiting Reactant Story Problem",
 					content: [
 						"**Project goal:** Create and solve a limiting-reactant problem using a food, craft, or particle analogy, then connect it to a real chemical equation.",
-						"**Requirements:** Include the needed ratio, starting amounts, limiting reactant, product amount, and leftovers. Then write the same ratio as a coefficient relationship in a balanced equation. The analogy should make the limiting ingredient obvious before the chemical version is solved.",
+						"**Requirements:** Include the needed ratio, starting amounts, limiting reactant, product amount, and leftovers. Then write the same ratio as a coefficient relationship in a balanced equation. The analogy makes the limiting ingredient obvious before the chemical version is solved.",
 						"**Worked example direction:** If one sandwich requires two slices of bread and one slice of cheese, six bread slices and two cheese slices make only two sandwiches because cheese runs out first. The same ratio logic applies when coefficients describe particles reacting in fixed proportions.",
 						"**Completion checks:** The analogy and chemical example both use the same ratio logic, and the final explanation identifies leftovers without calling them product."
 					].join("\n\n"),
@@ -870,7 +871,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Restore the original reaction-detective project as a remote-safe evidence board. Build a board of reaction cases such as rusting, combustion, elephant toothpaste, baking soda volcanoes, precipitation, and boiling as a non-reaction comparison.",
 						"**Requirements:** Each card needs reactants or starting materials when known, products or likely products when known, visible evidence, reaction type or uncertainty, and one explanation of why the evidence does or does not support chemical change. Include at least one card where the visible clue is not enough by itself.",
-						"**Analysis target:** Separate evidence of change from interpretation. Bubbles, foam, heat, color, and motion should be connected to a reaction model, particle diagram, equation, or uncertainty note instead of being treated as automatic proof.",
+						"**Analysis target:** Separate evidence of change from interpretation. Bubbles, foam, heat, color, and motion connect to a reaction model, particle diagram, equation, or uncertainty note instead of being treated as automatic proof.",
 						"**Completion checks:** The board includes at least six cases, uses reactant/product language accurately, and flags at least one uncertain or physical-change example."
 					].join("\n\n"),
 					datasetLink: material("reaction-type-cards"),
@@ -881,7 +882,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Restore the original chemical-reactions introduction using methane combustion and rust formation as anchor examples. The project distinguishes physical change from chemical reaction, identifies reactants and products, and explains coefficients, subscripts, and state symbols.",
 						"**Requirements:** Analyze `CH₄ + 2O₂ → CO₂ + 2H₂O` as a combustion model and `4Fe(s) + 3O₂(g) → 2Fe₂O₃(s)` as a rust-formation model. Explain what the subscript in `CH₄` means, what the coefficient `2` before `O₂` means, why oxygen is required for combustion in this simplified model, and what `(s)`, `(g)`, and `(l)` communicate.",
-						"**Original prompt restored:** Sketch or describe iron and oxygen particles rearranging into iron oxide. The drawing does not need advanced molecular geometry, but it should show that atoms are conserved and rearranged rather than disappearing or being created.",
+						"**Activity prompt:** Sketch or describe iron and oxygen particles rearranging into iron oxide. The drawing does not need advanced molecular geometry, but it shows that atoms are conserved and rearranged rather than disappearing or being created.",
 						"**Completion checks:** The answer correctly identifies Fe as iron, distinguishes subscripts from coefficients, distinguishes phase labels from formulas, and explains why a phase change alone is not a chemical reaction."
 					].join("\n\n"),
 					datasetLink: material("original-project-source-index"),
@@ -892,7 +893,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Preserve the original Elephant Toothpaste project as a remote-safe reaction-evidence case. The chemistry target is decomposition of hydrogen peroxide, gas production, catalysis, and foam as trapped oxygen gas.",
 						"**Requirements:** Use the provided video sources, diagrams, or a safe supervised observation. Identify the starting substances, the trigger or catalyst, the gas produced, why soap creates foam, and why changing amount can scale the visible result without changing the underlying chemistry.",
-						"**Original prompt restored:** Compare the small-scale and large-scale elephant-toothpaste videos. Explain what is similar, what changes when the amount of material changes, and why the dramatic foam should be interpreted through gas production and catalyst evidence rather than appearance alone.",
+						"**Activity prompt:** Compare the small-scale and large-scale elephant-toothpaste videos. Explain what is similar, what changes when the amount of material changes, and why the dramatic foam is interpreted through gas production and catalyst evidence rather than appearance alone.",
 						"**Completion checks:** The explanation uses catalyst, decomposition, oxygen, hydrogen peroxide, foam, rate, and evidence accurately, and it states why the catalyst changes reaction speed without being treated as the main product."
 					].join("\n\n"),
 					datasetLink: REFERENCES.elephantToothpasteAtomClip,
@@ -904,7 +905,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Preserve the original vinegar-and-baking-soda volcano as a reaction case about acid-base gas production. The project also makes clear that a classroom volcano model is not the same process as a real lava volcano.",
 						"**Requirements:** Use the provided video, diagram, or safe supervised observation. Identify vinegar as the acid model, baking soda as the base model, carbon dioxide as the gas that creates bubbles or foam, and water as one byproduct in the introductory explanation.",
-						"**Original prompt restored:** Predict what will happen before vinegar is added, describe the visible evidence after mixing, and explain whether the model works the same way as a real volcano. The final answer should name the chemistry model and the limitation of the analogy.",
+						"**Activity prompt:** Predict what will happen before vinegar is added, describe the visible evidence after mixing, and explain whether the model works the same way as a real volcano. The final answer names the chemistry model and the limitation of the analogy.",
 						"**Completion checks:** The explanation uses acid, base, carbon dioxide, product, gas, reaction evidence, and analogy limit accurately."
 					].join("\n\n"),
 					datasetLink: material("original-project-source-index"),
@@ -920,9 +921,9 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Solutes, Solvents, and Solution Vocabulary",
 					content: [
 						"**Concept path:** A solution is a homogeneous mixture in which particles of one or more solutes are evenly dispersed through a solvent. The solute is the substance being dissolved, the solvent is the substance doing the dissolving, and the solution is the combined mixture. A clear or uniform appearance does not prove a sample is a pure substance; salt water and sugar water can look uniform while still being mixtures. Concentration describes how much solute is present relative to the amount of solution or solvent, so solution vocabulary connects directly to later quantitative reasoning.",
-						"**Learning path:** Label each part of a solution example. Identify the solute, solvent, whole solution, and evidence that the mixture is homogeneous. Then add a non-example or uncertain example to test the definition. A good solution explanation should make clear whether it is discussing composition, visible uniformity, or concentration.",
+						"**Learning path:** Label each part of a solution example. Identify the solute, solvent, whole solution, and evidence that the mixture is homogeneous. Then add a non-example or uncertain example to test the definition. A good solution explanation makes clear whether it is discussing composition, visible uniformity, or concentration.",
 						"**Remote-safe activity:** Classify solution examples such as salt water, sugar water, air, vinegar, brass, invisible ink solution, and saltwater separation scenarios. Identify solute, solvent, and evidence for homogeneous mixture where possible. Use the concentration table when a scenario includes solute amount or solution volume.",
-						"**Worked example:** Salt water can be clear and uniform while still being a mixture. Sodium chloride is a compound with a fixed formula; salt water is a solution whose concentration can change. In the original invisible-ink case, diluted lemon juice can be treated as a solution scenario; revealing the message involves additional chemistry evidence, so the explanation should distinguish the solution from the later visible change.",
+						"**Worked example:** Salt water can be clear and uniform while still being a mixture. Sodium chloride is a compound with a fixed formula; salt water is a solution whose concentration can change. In the original invisible-ink case, diluted lemon juice can be treated as a solution scenario; revealing the message involves additional chemistry evidence, so the explanation distinguishes the solution from the later visible change.",
 						"**Output:** A solution vocabulary chart with examples and non-examples.",
 						"**CER checkpoint:** Explain why a clear liquid is not automatically a pure substance."
 					].join("\n\n"),
@@ -978,7 +979,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Project goal:** Use a simulation to investigate how concentration changes when solute amount and solution volume change.",
 						"**Requirements:** Test at least six scenarios, record variables, and identify one pattern. Include at least one case where solute changes, one where volume changes, one where both change, and one where saturation appears.",
 						"**Worked example:** If the solute amount stays the same and water is added, concentration decreases because the same dissolved amount is spread through more solution.",
-						"**Analysis target:** Include one controlled comparison where only one variable changes and one confounded comparison where two variables change. The conclusion should identify which comparison gives stronger evidence and why.",
+						"**Analysis target:** Include one controlled comparison where only one variable changes and one confounded comparison where two variables change. The conclusion identifies which comparison gives stronger evidence and why.",
 						"**Completion checks:** The final CER response cites simulation evidence and uses solute, solvent, solution, concentration, dilute, and saturated accurately."
 					].join("\n\n"),
 					datasetLink: material(
@@ -990,7 +991,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: pH Scale Explanation",
 					content: [
 						"**Project goal:** Create a short guide to the pH scale using examples from the simulation.",
-						"**Requirements:** Include acidic, neutral, and basic examples; one dilution example; one logarithmic-scale caution; and one safety note about not tasting or mixing unknown substances. The guide should explain that a pH change of 1 is not a small linear step, because the pH scale is logarithmic.",
+						"**Requirements:** Include acidic, neutral, and basic examples; one dilution example; one logarithmic-scale caution; and one safety note about not tasting or mixing unknown substances. The guide explains that a pH change of 1 is not a small linear step because the pH scale is logarithmic.",
 						"**Evidence target:** Simulation observations or the solution tables justify each category. For example, identify water as near neutral because of measured pH evidence, not because it is familiar or safe to drink.",
 						"**Completion checks:** The explanation separates pH evidence from unsafe or unsupported sensory claims and clearly states how dilution affects concentration."
 					].join("\n\n"),
@@ -1004,7 +1005,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Restore the original kitchen-chemistry sorting idea as a safe classification and separation project. Use provided descriptions of familiar materials such as salt water, vinegar, sugar water, air, brass, sand-and-salt mixture, oil-and-water mixture, and baking soda solution.",
 						"**Requirements:** Classify each material as element, compound, homogeneous mixture, heterogeneous mixture, solution, acid/base model, or uncertain. For mixtures, propose a separation method such as hand sorting, filtration, dissolving, evaporation model, or distillation preview. No actual separating, heating, tasting, or mixing is required.",
-						"**Analysis target:** Explain why some mixtures are easy to separate mechanically while solutions require a particle-distribution explanation. The final map should distinguish familiar household names from chemistry categories.",
+						"**Analysis target:** Explain why some mixtures are easy to separate mechanically while solutions require a particle-distribution explanation. The final map distinguishes familiar household names from chemistry categories.",
 						"**Completion checks:** Every material has a classification, evidence sentence, and separation or uncertainty note."
 					].join("\n\n"),
 					datasetLink: material("original-phenomena-case-library"),
@@ -1017,7 +1018,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Preserve the original invisible-ink project as a solution-and-reaction case. The focus is to distinguish the diluted lemon-juice solution from the later visible change that can occur when the message is revealed.",
 						"**Requirements:** Use the provided video source, written scenario, or safe supervised observation. Identify lemon juice and water as the starting mixture, define citric acid as the important solute in the simplified model, explain why dilution can make the dried mark harder to see, and connect browning or darkening to oxidation or heat-triggered chemical change.",
-						"**Original prompt restored:** Answer whether ink is a liquid, whether becoming invisible changes state of matter, what materials are mixed, why water is added instead of only lemon juice, and whether the resulting invisible ink should be classified as a mixture or solution.",
+						"**Activity prompt:** Answer whether ink is a liquid, whether becoming invisible changes state of matter, what materials are mixed, why water is added instead of only lemon juice, and whether the resulting invisible ink is classified as a mixture or solution.",
 						"**Completion checks:** The final explanation separates solution vocabulary from reaction evidence and does not claim that the liquid disappears."
 					].join("\n\n"),
 					datasetLink: material("original-project-source-index"),
@@ -1029,7 +1030,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Restore the original dissolution simulation project using a particle-level model of solutes, solvents, water orientation, and charged particles.",
 						"**Requirements:** Use the JavaLab dissolution simulation or provided diagrams to compare how ink, `NaNO₃`, `NaCl`, `CuSO₄`, or `KBr` interact with water. Identify the solute and solvent, name the elements in each formula, and explain how positive and negative charges influence water's orientation around dissolved particles.",
-						"**Original prompt restored:** Draw or describe water molecules interacting with `KBr`, using different colors or labels for each part of the molecules and showing charge orientation where appropriate.",
+						"**Activity prompt:** Draw or describe water molecules interacting with `KBr`, using different colors or labels for each part of the molecules and showing charge orientation where appropriate.",
 						"**Completion checks:** The response correctly identifies sugar or salt as solute and water as solvent in common examples, names elements from formulas, and connects plus/minus signs to attraction and repulsion."
 					].join("\n\n"),
 					datasetLink: material("original-project-source-index"),
@@ -1041,7 +1042,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Restore the original separating-mixtures activity as a remote-safe comparison of hand sorting, filtering, dissolving, and evaporation models.",
 						"**Requirements:** Compare three scenarios: rocks/gravel/sand, sand and salt, and saltwater. Explain which are heterogeneous mixtures, which are homogeneous mixtures or solutions, and which separation method fits each case. Use diagrams, the materials pack, or optional safe observation; no physical mixing or evaporation is required.",
-						"**Original prompt restored:** Explain why green and blue marbles can be separated by hand, why dissolved salt cannot be picked out manually, what water does to sodium chloride in a particle model, and how evaporation can recover salt from saltwater. The saltwater time-lapse source can be used as a visual reference.",
+						"**Activity prompt:** Explain why green and blue marbles can be separated by hand, why dissolved salt cannot be picked out manually, what water does to sodium chloride in a particle model, and how evaporation can recover salt from saltwater. The saltwater time-lapse source can be used as a visual reference.",
 						"**Completion checks:** The answer distinguishes mixture from solution, links method choice to particle size or solubility, and explains why separation method depends on how substances are distributed."
 					].join("\n\n"),
 					datasetLink: material("original-project-source-index"),
@@ -1136,7 +1137,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Checkpoint goal:** Check whether mole, molar mass, equation ratio, unit conversion, and reasonableness checks are connected instead of memorized as separate formulas.",
 						"**Tasks:** Complete one molar-mass calculation, one grams-to-moles conversion, one mole-ratio conversion, one grams-to-grams setup, and one error diagnosis. Write the unit at every step and circle the conversion factor that came from the balanced equation.",
-						"**Mastery evidence:** A complete response identifies when the periodic table is used, when the balanced equation is used, and when a final answer should be rejected because the unit or magnitude is unreasonable.",
+						"**Mastery evidence:** A complete response identifies when the periodic table is used, when the balanced equation is used, and when a final answer is rejected because the unit or magnitude is unreasonable.",
 						"**Revision trigger:** If coefficients are applied directly to grams, or if the equation is never balanced before a ratio is used, return to the graduated practice sequence."
 					].join("\n\n"),
 					datasetLink: material("quantitative-chemistry-checkpoint"),
@@ -1150,8 +1151,8 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Molar Mass Reference Sheet",
 					content: [
 						"**Project goal:** Build a reference sheet that explains molar mass through examples instead of listing formulas alone.",
-						"**Requirements:** Include at least eight compounds, show element-by-element contributions, and include one common mistake to avoid. At least two examples should come from the practice set and at least two should be chosen independently from formulas already used in the course.",
-						"**Analysis target:** Include one ionic compound, one covalent molecule, one formula with parentheses if ready, and one example where a coefficient in an equation should not be included in the molar mass of a single formula unit.",
+						"**Requirements:** Include at least eight compounds, show element-by-element contributions, and include one common mistake to avoid. At least two examples come from the practice set and at least two are chosen independently from formulas already used in the course.",
+						"**Analysis target:** Include one ionic compound, one covalent molecule, one formula with parentheses if ready, and one example where a coefficient in an equation is not included in the molar mass of a single formula unit.",
 						"**Completion checks:** Units are visible in every calculation, and the sheet explains why formulas determine molar mass."
 					].join("\n\n"),
 					datasetLink: material(
@@ -1258,7 +1259,7 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Choosing a Chemistry Phenomenon",
 					content: [
-						"**Concept path:** A capstone phenomenon should be specific enough to explain with course concepts and available evidence. Broad topics such as food, batteries, or pollution are too large unless they are narrowed into a claim such as why carbonation changes after pressure is released, how ions contribute to hard-water deposits, or why corrosion produces a new substance. Good capstone choices connect visible evidence to particle models, formulas, equations, concentration, energy, or structure-property reasoning. The topic must also be safe for remote work, which means provided evidence, simulations, diagrams, public references, or nonphysical observations should be enough to support the explanation.",
+						"**Concept path:** A capstone phenomenon is specific enough to explain with course concepts and available evidence. Broad topics such as food, batteries, or pollution are too large unless they are narrowed into a claim such as why carbonation changes after pressure is released, how ions contribute to hard-water deposits, or why corrosion produces a new substance. Good capstone choices connect visible evidence to particle models, formulas, equations, concentration, energy, or structure-property reasoning. The topic must also be safe for remote work, which means provided evidence, simulations, diagrams, public references, or nonphysical observations are enough to support the explanation.",
 						"**Learning path:** Narrow the topic before gathering evidence. Write a broad topic, convert it into a specific question, name the chemistry concepts that can answer it, and check whether safe evidence is available. If the topic requires materials, tasting, heating, or unsupported claims, revise it until the explanation can be built from course-safe evidence.",
 						"**Remote-safe activity:** Compare three possible capstone topics using the evidence seeds. Score each for safety, available evidence, chemistry vocabulary, and scope.",
 						"**Worked example:** Carbonation is a strong capstone topic because it can connect gas solubility, pressure, pH, equilibrium preview, and evidence from diagrams or simulation-style models without requiring any physical tasting or mixing.",
@@ -1271,9 +1272,9 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Building the Evidence Set",
 					content: [
-						"**Concept path:** A strong chemistry explanation uses more than one type of evidence and makes clear how each source supports the claim. Observation can show what changed, a diagram can show a particle model, a data table can show a pattern, a simulation can test a variable, an equation can show conservation or ratios, and an authoritative reference can define or confirm a property. Evidence must be relevant, not merely related to the topic. A photo without context, a general website paragraph, or a simulation setting that does not match the claim should be treated as weak evidence until the connection is explained.",
+						"**Concept path:** A strong chemistry explanation uses more than one type of evidence and makes clear how each source supports the claim. Observation can show what changed, a diagram can show a particle model, a data table can show a pattern, a simulation can test a variable, an equation can show conservation or ratios, and an authoritative reference can define or confirm a property. Evidence must be relevant, not merely related to the topic. A photo without context, a general website paragraph, or a simulation setting that does not match the claim is treated as weak evidence until the connection is explained.",
 						"**Learning path:** Build an evidence log with four columns: source, what it shows, how it supports the claim, and limitation. Include at least one model-based source and one data or reference source when possible. Reject or revise evidence that cannot be connected to the claim in a direct sentence.",
-						"**Remote-safe activity:** Gather or use evidence from the materials pack for the capstone topic. At least one source should be a diagram, simulation, or data table; at least one should be a written reference.",
+						"**Remote-safe activity:** Gather or use evidence from the materials pack for the capstone topic. At least one source is a diagram, simulation, or data table; at least one is a written reference.",
 						"**Worked example:** A rusting explanation can use a before/after image, a particle model, and a redox preview. A weak evidence source would be a photo with no context or no connection to the claim.",
 						"**Output:** An evidence log with source, what it shows, how it supports the claim, and one limitation.",
 						"**CER checkpoint:** Reject one piece of weak evidence and explain why it does not support the claim."
@@ -1284,10 +1285,10 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Writing the Chemistry Explanation",
 					content: [
-						"**Concept path:** A complete chemistry explanation connects vocabulary, particle-level model, formula or equation when relevant, evidence, and a changed-condition prediction. Vocabulary gives the explanation precision, but terms must be used accurately and tied to evidence. The particle model explains why the visible evidence occurs, while formulas, equations, graphs, or data tables add structure and accountability. A changed-condition prediction shows whether the model can be used, not only repeated. The final explanation should be self-contained enough that another reader can understand and challenge the claim without private notes.",
+						"**Concept path:** A complete chemistry explanation connects vocabulary, particle-level model, formula or equation when relevant, evidence, and a changed-condition prediction. Vocabulary gives the explanation precision, but terms must be used accurately and tied to evidence. The particle model explains why the visible evidence occurs, while formulas, equations, graphs, or data tables add structure and accountability. A changed-condition prediction shows whether the model can be used, not only repeated. The final explanation is self-contained enough that another reader can understand and challenge the claim without private notes.",
 						"**Learning path:** Draft in sections before writing the final paragraph. Start with the claim, add the most relevant evidence, explain the particle or system model, insert formulas or equations where they clarify the reasoning, define key vocabulary in context, and end with a prediction. Then revise so the final explanation reads smoothly without losing the evidence chain.",
 						"**Remote-safe activity:** Draft a CER-based capstone explanation. Use course concepts from at least four modules, such as atoms, periodic table, bonding, phase change, reactions, solutions, or stoichiometry.",
-						"**Writing habit:** Each paragraph should do one job: define the phenomenon, present evidence, explain the particle or system model, connect vocabulary, and state what would change under a new condition. If a term appears, it should either be defined or used in a way the evidence supports.",
+						"**Writing habit:** Each paragraph does one job: define the phenomenon, present evidence, explain the particle or system model, connect vocabulary, and state what changes under a new condition. If a term appears, it is either defined or used in a way the evidence supports.",
 						"**Output:** A structured explanation with claim, evidence, reasoning, model, vocabulary, and prediction sections.",
 						"**CER checkpoint:** Check whether every claim has evidence and whether every vocabulary term is used accurately."
 					].join("\n\n"),
@@ -1298,7 +1299,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Presentation, Revision, and Reflection",
 					content: [
 						"**Concept path:** Scientific communication improves through revision because explanations become stronger when claims, evidence, models, and limits are made more precise. A good final version states the question, narrows the claim, explains the particle or system model, cites evidence, names uncertainty, and identifies what would be tested or compared next. Revision is not only proofreading; it can mean replacing weak evidence, correcting a formula, narrowing an overbroad claim, adding units, improving a diagram, or naming a limitation. Strong communication makes the reasoning easy to inspect rather than hiding uncertainty.",
-						"**Learning path:** Revise with a purpose. Choose one revision target at a time: claim clarity, evidence quality, model accuracy, vocabulary, units, limitation, or prediction. After each revision, write what changed and why it improves the explanation. The final reflection should name both a strengthened idea and a remaining question.",
+						"**Learning path:** Revise with a purpose. Choose one revision target at a time: claim clarity, evidence quality, model accuracy, vocabulary, units, limitation, or prediction. After each revision, write what changed and why it improves the explanation. The final reflection names both a strengthened idea and a remaining question.",
 						"**Remote-safe activity:** Present the capstone as slides, a short written report, or an annotated notebook page. Revise after feedback by strengthening evidence, clarifying vocabulary, or narrowing the claim.",
 						"**Revision focus:** A useful revision changes the work, not only the wording. Good revisions add a missing evidence source, narrow an overbroad claim, replace a vague model, correct a unit or formula, or state uncertainty more precisely.",
 						"**Output:** A final capstone artifact and a short reflection naming one strengthened idea and one remaining question.",
@@ -1324,8 +1325,8 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Chemistry in Your World Showcase",
 					content: [
 						"**Project goal:** Explain one real-world chemistry phenomenon using course concepts, evidence, and a particle-level model. This preserves the original Chemistry in Your World Showcase while requiring clearer source-backed reasoning.",
-						"**Requirements:** Include a claim, evidence log, particle/model explanation, at least four course vocabulary terms, one diagram or simulation reference, one changed-condition prediction, and one limitation. The final artifact should name which parts of the topic were covered in the intro course and which parts are advanced previews.",
-						"**Analysis target:** The artifact should be narrow enough that another person could disagree with the claim using evidence. Replace broad topics with testable claims, such as pressure changing carbonation behavior, ions affecting hard-water deposits, or electron transfer explaining corrosion.",
+						"**Requirements:** Include a claim, evidence log, particle/model explanation, at least four course vocabulary terms, one diagram or simulation reference, one changed-condition prediction, and one limitation. The final artifact names which parts of the topic were covered in the intro course and which parts are advanced previews.",
+						"**Analysis target:** The artifact is narrow enough that another person could disagree with the claim using evidence. Replace broad topics with testable claims, such as pressure changing carbonation behavior, ions affecting hard-water deposits, or electron transfer explaining corrosion.",
 						"**Completion checks:** The final artifact is self-contained, source-backed, remote-safe, and specific enough to be corrected or challenged."
 					].join("\n\n"),
 					datasetLink: material("capstone-evidence-seeds"),
@@ -1336,7 +1337,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Restore the original CHM7 master project as a focused reaction-modeling capstone. Choose a real-world topic such as food, batteries, sports equipment, medicine, cleaning, corrosion, or environmental chemistry, then narrow it to one chemical reaction or process that can be explained safely with evidence.",
 						"**Requirements:** Identify the topic, the reaction or process, the reactants or starting substances, the products or ending substances, the reaction type if known, and the atomic- or particle-level rearrangement. Include a diagram, particle storyboard, equation, simulation, or object model that makes the invisible part of the reaction visible without requiring a home experiment.",
-						"**Original prompt restored:** Decide whether the reaction could be recreated safely at home and explain why or why not. Regardless of that answer, design a safe demonstration model such as a drawing, particle storyboard, paper model, or annotated equation. The final explanation should make clear what the starting material was, what changed, what product formed, and why the reaction matters in the chosen real-world context.",
+						"**Activity prompt:** Decide whether the reaction could be recreated safely at home and explain why or why not. Regardless of that answer, design a safe demonstration model such as a drawing, particle storyboard, paper model, or annotated equation. The final explanation makes clear what the starting material was, what changed, what product formed, and why the reaction matters in the chosen real-world context.",
 						"**Completion checks:** The final work includes a narrowed topic, a reaction model, evidence, safety reasoning, real-world significance, and one course recap connection showing which earlier chemistry ideas were used."
 					].join("\n\n"),
 					datasetLink: material("capstone-evidence-seeds"),
@@ -1346,7 +1347,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Capstone Peer Review",
 					content: [
 						"**Project goal:** Review a capstone explanation using a rubric for claim clarity, evidence quality, chemistry accuracy, model use, safety, and next-step reasoning.",
-						"**Requirements:** Provide at least two strengths, two revision targets, and one question that would improve the investigation. Each comment should point to a specific claim, data point, model, or vocabulary choice.",
+						"**Requirements:** Provide at least two strengths, two revision targets, and one question that would improve the investigation. Each comment points to a specific claim, data point, model, or vocabulary choice.",
 						"**Analysis target:** Sort feedback into accuracy, evidence, clarity, and scope. Accuracy feedback corrects chemistry; evidence feedback asks for a source or data; clarity feedback improves explanation; scope feedback narrows or expands the claim.",
 						"**Completion checks:** Feedback references the artifact directly and avoids vague comments such as good job or add more detail without naming what detail is missing."
 					].join("\n\n"),
@@ -1389,7 +1390,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Simulation Set",
 					content: [
 						"**Resource bank:** The course uses PhET simulations for atoms, states of matter, molecule shapes, balancing equations, limiting reactants, concentration, molarity, and pH. It also preserves the original PBS atom simulation, PBS periodic-table interactive, and JavaLab dissolution simulation as source links. These simulations provide controlled evidence sources when a physical lab would require materials, supervision, or safety equipment outside the scope of a remote course.",
-						"**Simulation catalog:** https://phet.colorado.edu/en/simulations/filter?subjects=chemistry. Choose a specific simulation from the catalog before treating it as evidence; the course item or notebook entry should name the simulation and the setting used.",
+						"**Simulation catalog:** https://phet.colorado.edu/en/simulations/filter?subjects=chemistry. Choose a specific simulation from the catalog before treating it as evidence; the course item or notebook entry names the simulation and the setting used.",
 						"**Use:** A simulation counts as evidence only when a specific setting, observation, or screenshot is connected to a claim. A good simulation note records the variable changed, the visible result, and the particle-level interpretation.",
 						"**Evidence target:** Simulation-based work includes the variable changed, what was observed, what the observation supports, and one limitation of the model."
 					].join("\n\n"),
@@ -1411,7 +1412,7 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Chemistry Explanation Rubric",
 					content: [
 						"**Resource bank:** Strong explanations are assessed by claim clarity, evidence relevance, particle-model reasoning, accurate vocabulary, safe scope, and changed-condition prediction. The rubric categories are summarized here so checks stay consistent across projects.",
-						"**Use:** Apply the rubric to project drafts before final submission. A weak explanation usually needs a narrower claim, better evidence, or a clearer model. The rubric is also a diagnostic tool: it should reveal which part of the explanation is weak rather than simply assigning a score.",
+						"**Use:** Apply the rubric to project drafts before final submission. A weak explanation usually needs a narrower claim, better evidence, or a clearer model. The rubric is also a diagnostic tool: it reveals which part of the explanation is weak rather than simply assigning a score.",
 						"**Evidence target:** The final work can answer: What is the claim? What evidence supports it? What particle-level model explains it? What would change under a new condition?"
 					].join("\n\n"),
 					solutionLink: MATERIALS.answerKey
@@ -1424,7 +1425,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Project goal:** Build a reusable evidence log for one PhET chemistry simulation.",
 						"**Simulation catalog:** https://phet.colorado.edu/en/simulations/filter?subjects=chemistry. Pick one simulation and record its exact name, settings, and changed variables.",
 						"**Requirements:** Include simulation name, variables changed, screenshots or sketches, observations, claim, evidence, reasoning, and limitation. Use the materials pack headings as a template for naming variables and changed conditions.",
-						"**Analysis target:** Each row should separate what changed from what was measured or observed. For example, changing solute amount is a variable change; color intensity or concentration reading is evidence; the conclusion belongs in the reasoning column.",
+						"**Analysis target:** Each row separates what changed from what was measured or observed. For example, changing solute amount is a variable change; color intensity or concentration reading is evidence; the conclusion belongs in the reasoning column.",
 						"**Completion checks:** The log identifies exactly what the simulation shows and does not treat the simulation as proof without explanation."
 					].join("\n\n"),
 					datasetLink: MATERIALS.pack
@@ -1434,7 +1435,7 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Create a concise reference card for one recurring chemistry tool: periodic table, units, CER, particle diagrams, balancing equations, or pH scale.",
 						"**Requirements:** Include the tool's purpose, how to read it, one example, one common mistake, and one link to a supporting reference. If the card covers a calculation tool, include units and one completed sample calculation.",
-						"**Analysis target:** Write the card as a usable aid, not a summary paragraph. It should include a decision rule, a worked mini-example, and a warning that prevents a real mistake such as changing subscripts, dropping units, or using a model outside its limits.",
+						"**Analysis target:** Write the card as a usable aid, not a summary paragraph. It includes a decision rule, a worked mini-example, and a warning that prevents a real mistake such as changing subscripts, dropping units, or using a model outside its limits.",
 						"**Completion checks:** The card is useful during a later project without needing a separate explanation."
 					].join("\n\n"),
 					datasetLink: MATERIALS.pack,
