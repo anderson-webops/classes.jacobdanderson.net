@@ -21,7 +21,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Sanitizers and Warnings as Design Feedback",
 					content:
-						"Treat warnings, debug stepping, and sanitizers as architecture tools rather than as last-minute cleanup. Lifetime mistakes, ownership confusion, and invalid references should be surfaced concretely while the design is still small."
+						"Treat warnings, debug stepping, and sanitizers as architecture tools rather than as last-minute cleanup. Lifetime mistakes, ownership confusion, and invalid references are easiest to diagnose while the design is still small."
 				},
 				{
 					title: "Why CMake Matters Here",
@@ -96,7 +96,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Composition over Inheritance with Lifetime in View",
 					content:
-						"Reinforce composition as the default, but make the reason concrete: fewer fragile inheritance trees, clearer ownership, and easier resource cleanup. The design choice should be explained in terms of safety and maintainability, not fashion."
+						"Treat composition as the default because the reason is concrete: fewer fragile inheritance trees, clearer ownership, and easier resource cleanup. A strong design explanation connects the choice to safety and maintainability, not fashion."
 				},
 				{
 					title: "Runtime versus Compile-Time Variation",
@@ -239,7 +239,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Ownership-Aware Creation",
 					content:
-						"Factory patterns should start with ownership and compatibility questions. Explicitly decide when a factory returns a value, `unique_ptr`, or another handle type rather than copying a Java constructor wrapper blindly."
+						"Factory patterns begin with ownership and compatibility questions. Explicitly decide when a factory returns a value, `unique_ptr`, or another handle type rather than copying a Java constructor wrapper blindly."
 				},
 				{
 					title: "Abstract Factory for Coordinated Families",
@@ -249,12 +249,12 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Builder for Configuration-Heavy Setup",
 					content:
-						"Use Builder when setup becomes order-sensitive, verbose, or full of optional pieces. In modern C++, Compare Builder against value-type configuration structs and direct construction before escalating."
+						"Use Builder when setup becomes order-sensitive, verbose, or full of optional pieces. In modern C++, compare Builder against value-type configuration structs and direct construction before escalating."
 				},
 				{
 					title: "Creation Tradeoffs in Practice",
 					content:
-						"Justify whether the real pressure is family selection, staged assembly, or both. The right creation pattern should emerge from readability and ownership clarity, not from catalog completion."
+						"Justify whether the real pressure is family selection, staged assembly, or both. The right creation pattern emerges from readability and ownership clarity, not from catalog completion."
 				},
 				{
 					title: "DPC3 Factory Method, Abstract Factory, and Builder: Core Project",
@@ -317,7 +317,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Runtime Strategy Objects",
 					content:
-						"Strategy should first appear in its classic runtime-polymorphism form so swappable behavior is easy to reason about. Use pricing, scoring, or routing rules where the runtime choice is a genuine product requirement."
+						"Strategy first appears in its classic runtime-polymorphism form so swappable behavior is easy to reason about. Use pricing, scoring, or routing rules where the runtime choice is a genuine product requirement."
 				},
 				{
 					title: "Lambdas and Function Objects",
@@ -427,7 +427,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Project: Observer Event Hub",
 					content:
-						"Build an event hub that stores listeners safely, publishes notifications, and keeps a summary view alive without dangling references. Ownership should be part of the pattern discussion rather than an afterthought.",
+						"Build an event hub that stores listeners safely, publishes notifications, and keeps a summary view alive without dangling references. Ownership is part of the pattern design rather than an afterthought.",
 					projectLink:
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC3-Observer-Event-Hub/starter",
 					solutionLink:
@@ -477,12 +477,12 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Facade for Subsystem Cleanup",
 					content:
-						"Use Facade when a subsystem currently exposes too much detail. A facade simplifies a boundary; it should not become another oversized god object."
+						"Use Facade when a subsystem currently exposes too much detail. A facade simplifies a boundary; it is not a replacement name for another oversized god object."
 				},
 				{
 					title: "Boundary Choice before Pattern Choice",
 					content:
-						"Decide whether the real problem is layered behavior, mismatched APIs, or subsystem sprawl. The right pattern should follow from the boundary issue, not from terminology alone."
+						"Decide whether the real problem is layered behavior, mismatched APIs, or subsystem sprawl. The right pattern follows from the boundary issue, not from terminology alone."
 				},
 				{
 					title: "DPC6 Decorator, Adapter, and Facade: Core Project",
@@ -542,7 +542,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Commands as Explicit User or System Actions",
 					content:
-						"Command packages actions, queues work, and makes undo or history possible. Good command objects should represent meaningful behavior transitions rather than merely wrapping one-line functions."
+						"Command packages actions, queues work, and makes undo or history possible. Good command objects represent meaningful behavior transitions rather than merely wrapping one-line functions."
 				},
 				{
 					title: "Undo and Action History",
@@ -578,7 +578,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Project: Command and State Editor",
 					content:
-						"Build a tiny editor that changes behavior by mode and records work through commands instead of sprawling control flow. The important judgment move is deciding what belongs in the command, what belongs in the state, and what should stay simple.",
+						"Build a tiny editor that changes behavior by mode and records work through commands instead of sprawling control flow. The important judgment move is deciding what belongs in the command, what belongs in the state, and what stays simple.",
 					projectLink:
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC5-Command-and-State-Editor/starter",
 					solutionLink:
@@ -633,7 +633,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Container Exposure Tradeoffs",
 					content:
-						"Justify whether to expose iterators, flattened snapshots, visitor-style helpers, or no traversal API at all. C++ gives several options, so the abstraction should be deliberate."
+						"Justify whether to expose iterators, flattened snapshots, visitor-style helpers, or no traversal API at all. C++ gives several options, so the abstraction is deliberate rather than accidental."
 				},
 				{
 					title: "DPC8 Composite and Iterator: Core Project",
@@ -693,7 +693,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Why Singleton Is Attractive",
 					content:
-						"Present Singleton honestly as a tempting shortcut for configuration, logging, and shared services. Visible pattern: Why it feels convenient before the course critiques the tradeoffs."
+						"Singleton is a tempting shortcut for configuration, logging, and shared services. The first pass names why it feels convenient before the course critiques the tradeoffs."
 				},
 				{
 					title: "The Real Risks",
@@ -708,7 +708,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "When a Global Really Is Global",
 					content:
-						"Allow for rare cases where a process-wide singleton is justified, but explain why narrower ownership failed first. This unit should end with skepticism, not prohibition for its own sake."
+						"Rare cases can justify a process-wide singleton, but the reasoning starts by explaining why narrower ownership failed first. The unit ends with skepticism, not prohibition for its own sake."
 				},
 				{
 					title: "DPC9 Singleton, Global State, and Dependency Injection: Core Project",
@@ -786,7 +786,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Caches, Handles, and Shared Ownership Decisions",
 					content:
-						"Compare when a resource cache should share ownership and when a move-only handle is safer. Justify the ownership graph explicitly instead of guessing at what feels convenient."
+						"Compare when a resource cache shares ownership and when a move-only handle is safer. Justify the ownership graph explicitly instead of guessing at what feels convenient."
 				},
 				{
 					title: "DPC10 Patterns for Resource Management: Core Project",
@@ -856,12 +856,12 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Separating Responsibilities",
 					content:
-						"Split construction, delivery behavior, priority rules, and subsystem coordination into their proper places. The right pattern choices should emerge from this responsibility cleanup rather than from a predetermined checklist."
+						"Split construction, delivery behavior, priority rules, and subsystem coordination into their proper places. The right pattern choices emerge from this responsibility cleanup rather than from a predetermined checklist."
 				},
 				{
 					title: "Compile-Time and Runtime Clarity",
 					content:
-						"Explain not just why the new design is safer, but also why it is easier to build, reason about, and debug. C++ refactoring should improve both lifetime correctness and day-to-day clarity."
+						"Explain not just why the new design is safer, but also why it is easier to build, reason about, and debug. Effective C++ refactoring improves both lifetime correctness and day-to-day clarity."
 				},
 				{
 					title: "DPC11 Legacy Refactoring Lab: Core Project",
@@ -926,7 +926,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Pattern Justification as a Required Deliverable",
 					content:
-						"Name each pattern or C++ ownership tool in the capstone and explain which flexibility, lifetime, or testability pressure it solves. A pattern with no stated pressure should be treated as suspect."
+						"Name each pattern or C++ ownership tool in the capstone and explain which flexibility, lifetime, or testability pressure it solves. A pattern with no stated pressure is treated as suspect."
 				},
 				{
 					title: "Runtime and Compile-Time Tradeoff Review",
@@ -936,7 +936,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Debugging and Sanitizer Readiness",
 					content:
-						"Capstone work should still be verified through warnings, debugger runs, and targeted sanitizer checks where available. Finish the course with the expectation that a design is not complete until it survives inspection."
+						"Capstone work is verified through warnings, debugger runs, and targeted sanitizer checks where available. The course ends with the expectation that a design is not complete until it survives inspection."
 				},
 				{
 					title: "DPC12 Capstone Studio: Core Project",
@@ -1085,8 +1085,7 @@ export const designPatternsInCppCourse: RawCourse = {
 					title: "Runtime Variation Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
-						moduleTitle:
-							"Pattern Lab 15: Runtime Variation Studio",
+						moduleTitle: "Pattern Lab 15: Runtime Variation Studio",
 						section: "concepts"
 					})
 				},
@@ -1094,8 +1093,7 @@ export const designPatternsInCppCourse: RawCourse = {
 					title: "Runtime Strategy Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
-						moduleTitle:
-							"Pattern Lab 15: Runtime Variation Studio",
+						moduleTitle: "Pattern Lab 15: Runtime Variation Studio",
 						section: "example"
 					})
 				},
@@ -1103,8 +1101,7 @@ export const designPatternsInCppCourse: RawCourse = {
 					title: "Runtime Variation Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
-						moduleTitle:
-							"Pattern Lab 15: Runtime Variation Studio",
+						moduleTitle: "Pattern Lab 15: Runtime Variation Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1116,8 +1113,7 @@ export const designPatternsInCppCourse: RawCourse = {
 					title: "Runtime Variation Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
-						moduleTitle:
-							"Pattern Lab 15: Runtime Variation Studio",
+						moduleTitle: "Pattern Lab 15: Runtime Variation Studio",
 						section: "review"
 					})
 				}
@@ -1127,8 +1123,7 @@ export const designPatternsInCppCourse: RawCourse = {
 					title: "Runtime Variation Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
-						moduleTitle:
-							"Pattern Lab 15: Runtime Variation Studio",
+						moduleTitle: "Pattern Lab 15: Runtime Variation Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1140,8 +1135,7 @@ export const designPatternsInCppCourse: RawCourse = {
 					title: "Runtime Variation Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle:
-							"Pattern Lab 15: Runtime Variation Studio",
+						moduleTitle: "Pattern Lab 15: Runtime Variation Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1154,8 +1148,7 @@ export const designPatternsInCppCourse: RawCourse = {
 					title: "Runtime Variation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
-						moduleTitle:
-							"Pattern Lab 15: Runtime Variation Studio",
+						moduleTitle: "Pattern Lab 15: Runtime Variation Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
