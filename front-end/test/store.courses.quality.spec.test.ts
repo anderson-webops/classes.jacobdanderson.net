@@ -2677,6 +2677,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/The goal is to/i);
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).not.toMatch(/\bshould\b/i);
 		expect(corpus).toContain(
 			"Sequence mutation becomes concrete through task filtering and removal"
 		);
