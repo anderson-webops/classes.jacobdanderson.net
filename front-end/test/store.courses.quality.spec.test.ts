@@ -2135,7 +2135,7 @@ describe("course text quality normalization", () => {
 			if (!course) continue;
 
 			for (const module of course.modules.filter(module =>
-				/^Low-Level Security Lab (?:[7-9]|1[0-7])$/.test(module.title)
+				/^Low-Level Security Lab (?:[7-9]|1[0-7])(?:$|:)/.test(module.title)
 			)) {
 				const challenge = module.supplementalProjects.find(item =>
 					/Extension Challenge/.test(item.title)
@@ -2179,11 +2179,11 @@ describe("course text quality normalization", () => {
 			"Low-Level Security Lab 10",
 			"Low-Level Security Lab 11",
 			"Low-Level Security Lab 12",
-			"Low-Level Security Lab 13",
-			"Low-Level Security Lab 14",
-			"Low-Level Security Lab 15",
-			"Low-Level Security Lab 16",
-			"Low-Level Security Lab 17"
+			"Low-Level Security Lab 13: Exploitability Triage Studio",
+			"Low-Level Security Lab 14: Stack Corruption Hardening Studio",
+			"Low-Level Security Lab 15: Heap Lifetime Audit Studio",
+			"Low-Level Security Lab 16: Disclosure Boundary Hardening Studio",
+			"Low-Level Security Lab 17: Defensive Audit Capstone Studio"
 		]);
 		const combinedText = courses.map(allCourseText).join("\n");
 		expect(combinedText).toContain("sanitizer-output triage");
@@ -2506,6 +2506,38 @@ describe("course text quality normalization", () => {
 			"Network Systems Lab 17: Operations Capstone Studio"
 		);
 		expect(corpus).toContain("Operations Capstone Extension Practice");
+	});
+
+	it("keeps Low-Level Security Part 2 defensive and specifically labeled", async () => {
+		const course = await loadRawCourse("low-level-security-part-2");
+		expect(course).not.toBeNull();
+		const corpus = allCourseText(course);
+
+		expect(corpus).not.toMatch(/This section covers/i);
+		expect(corpus).not.toMatch(/Key idea:/i);
+		expect(corpus).not.toMatch(/Skill target:/i);
+		expect(corpus).not.toMatch(/The goal is to/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).toContain(
+			"Exploitability triage is a disciplined decision process"
+		);
+		expect(corpus).toContain(
+			"Common mitigations are factors that change exploitability analysis"
+		);
+		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain("Stack Corruption Transfer Practice");
+		expect(corpus).toContain("Patch Workflow Extension Practice");
+		expect(corpus).toContain(
+			"Low-Level Security Lab 13: Exploitability Triage Studio"
+		);
+		expect(corpus).toContain(
+			"Low-Level Security Lab 14: Stack Corruption Hardening Studio"
+		);
+		expect(corpus).toContain(
+			"Low-Level Security Lab 17: Defensive Audit Capstone Studio"
+		);
+		expect(corpus).toContain("Defensive Audit Extension Practice");
 	});
 
 	it("keeps Linux Systems guidance operational and specific", async () => {
@@ -3333,13 +3365,13 @@ describe("course text quality normalization", () => {
 
 		const webStudio = findItem(
 			webDevelopment!,
-			/Full-Stack Web Lab 15: Core Concepts/
+			/API Integration Studio: Core Concepts/
 		);
 		expect(webStudio.content).toContain(
-			"Identify the lab user interaction, state change, DOM/canvas/API output, and visible loading, empty, or error state."
+			"Map the lab UI event to state, rendering, data flow, and the message shown when something goes wrong."
 		);
 		expect(webStudio.content).toContain(
-			"Implement one visible behavior at a time and inspect the page, console, network panel, or local server after each change."
+			"The lab user input, state update, rendered output, and error messaging are all inspectable."
 		);
 		expect(webStudio.content).not.toContain(
 			"smallest the browser-visible path"
