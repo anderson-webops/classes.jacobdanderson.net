@@ -76,7 +76,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Modules and Packages as Architectural Boundaries",
 					content:
-						"Show that Python module boundaries often do work that other languages push into extra classes. Skill target: See packages, imports, and file ownership as part of the design vocabulary."
+						"Python module boundaries often do work that other languages push into extra classes. Packages, imports, and file ownership are part of the design vocabulary, not just project setup details."
 				},
 				{
 					title: "When the Textbook Form Still Helps",
@@ -109,7 +109,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-02-pdp1-why-python-changes-the-design-patterns-conversation-supplemental-3/solution"
 				},
 				{
-					title: "Why Python Changes the Design Patterns Conversation Supplemental 2",
+					title: "Why Python Changes the Design Patterns Conversation Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle:
@@ -123,7 +123,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-01-pdp1-why-python-changes-the-design-patterns-conversation-supplemental-2/solution"
 				},
 				{
-					title: "Why Python Changes the Design Patterns Conversation Supplemental 3",
+					title: "Why Python Changes the Design Patterns Conversation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle:
@@ -149,7 +149,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Protocols, ABCs, and Informal Interfaces",
 					content:
-						"This section covers `typing.Protocol`, abstract base classes, and duck typing as three different tools with different tradeoffs. Learn that Python can express contracts lightly without pretending every project needs heavy interface scaffolding."
+						"`typing.Protocol`, abstract base classes, and duck typing are three different contract tools with different tradeoffs. Python can express contracts lightly without pretending every project needs heavy interface scaffolding."
 				},
 				{
 					title: "Data Classes, Configuration Objects, and Dependency Direction",
@@ -186,7 +186,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-04-pdp2-design-foundations-in-python-supplemental-3/solution"
 				},
 				{
-					title: "Design Foundations in Python Supplemental 2",
+					title: "Design Foundations in Python Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP2 Design Foundations in Python",
@@ -199,7 +199,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-03-pdp2-design-foundations-in-python-supplemental-2/solution"
 				},
 				{
-					title: "Design Foundations in Python Supplemental 3",
+					title: "Design Foundations in Python Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP2 Design Foundations in Python",
@@ -254,14 +254,14 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Project: Strategy Rulebook",
 					content:
-						"Build a small rule-selection engine where pricing or scoring behavior can be swapped between plain functions, configured callables, and named selections. The goal is to see Strategy in a Pythonic form before the course grows more structural.",
+						"Build a small rule-selection engine where pricing or scoring behavior can be swapped between plain functions, configured callables, and named selections. Strategy appears first in a Pythonic form before the course grows more structural.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP1-Strategy-Rulebook/starter",
 					solutionLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP1-Strategy-Rulebook/solution"
 				},
 				{
-					title: "Strategy Without Ceremony Supplemental 2",
+					title: "Strategy Without Ceremony Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP3 Strategy Without Ceremony",
@@ -274,7 +274,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-05-pdp3-strategy-without-ceremony-supplemental-2/solution"
 				},
 				{
-					title: "Strategy Without Ceremony Supplemental 3",
+					title: "Strategy Without Ceremony Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP3 Strategy Without Ceremony",
@@ -294,7 +294,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Factory Functions and Named Constructors",
 					content:
-						"This section covers factory functions and `@classmethod` constructors as the default Python tools for creation pressure. Visible pattern: How these options already solve many textbook Factory Method problems cleanly."
+						"Factory functions and `@classmethod` constructors are the default Python tools for creation pressure. These options already solve many textbook Factory Method problems cleanly before a heavier pattern form is needed."
 				},
 				{
 					title: "Builder for Configuration-Heavy Objects",
@@ -336,7 +336,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP2-Factory-and-Builder-Config-Kit/solution"
 				},
 				{
-					title: "Factory and Builder in Python Supplemental 2",
+					title: "Factory and Builder in Python Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP4 Factory and Builder in Python",
@@ -349,7 +349,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-07-pdp4-factory-and-builder-in-python-supplemental-2/solution"
 				},
 				{
-					title: "Factory and Builder in Python Supplemental 3",
+					title: "Factory and Builder in Python Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP4 Factory and Builder in Python",
@@ -369,7 +369,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Subscription Lists and Event Fan-Out",
 					content:
-						"This section covers Observer as a controlled way to notify multiple listeners without hard-coding every downstream action into the source object. In Python, this often begins with lists of callables before it becomes a larger event abstraction."
+						"Observer is a controlled way to notify multiple listeners without hard-coding every downstream action into the source object. In Python, this often begins with lists of callables before it becomes a larger event abstraction."
 				},
 				{
 					title: "Designing Event Payloads and Listener Contracts",
@@ -411,7 +411,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP3-Observer-Notification-Hub/solution"
 				},
 				{
-					title: "Observer, Events, and Callbacks Supplemental 2",
+					title: "Observer, Events, and Callbacks Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP5 Observer, Events, and Callbacks",
@@ -424,7 +424,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-09-pdp5-observer-events-and-callbacks-supplemental-2/solution"
 				},
 				{
-					title: "Observer, Events, and Callbacks Supplemental 3",
+					title: "Observer, Events, and Callbacks Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP5 Observer, Events, and Callbacks",
@@ -479,14 +479,14 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Project: Decorator, Proxy, and Facade Toolkit",
 					content:
-						"Wrap a small profile or content service with metrics, lightweight authorization, caching, and one simplifying facade. The goal is to see the difference between adding behavior, guarding access, and simplifying a subsystem boundary.",
+						"Wrap a small profile or content service with metrics, lightweight authorization, caching, and one simplifying facade. The project separates adding behavior, guarding access, and simplifying a subsystem boundary.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP4-Decorator-Proxy-Facade-Toolkit/starter",
 					solutionLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP4-Decorator-Proxy-Facade-Toolkit/solution"
 				},
 				{
-					title: "Decorator, Proxy, and Facade Supplemental 2",
+					title: "Decorator, Proxy, and Facade Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP6 Decorator, Proxy, and Facade",
@@ -499,7 +499,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-11-pdp6-decorator-proxy-and-facade-supplemental-2/solution"
 				},
 				{
-					title: "Decorator, Proxy, and Facade Supplemental 3",
+					title: "Decorator, Proxy, and Facade Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP6 Decorator, Proxy, and Facade",
@@ -519,7 +519,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Explicit State Objects versus Enum-Driven Branching",
 					content:
-						"This section covers State as a response to behavior that changes by mode, not as a universal replacement for every flag. Compare a growing branch tree with explicit state objects and choose based on the actual complexity."
+						"State is a response to behavior that changes by mode, not a universal replacement for every flag. Compare a growing branch tree with explicit state objects and choose based on the actual complexity."
 				},
 				{
 					title: "Commands as Callables, Objects, and History Entries",
@@ -534,7 +534,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Combining State and Command Carefully",
 					content:
-						"Turn-based flows, editors, and workflow systems often use both patterns together. Skill target: Separate mode logic from action packaging so the design stays explainable."
+						"Turn-based flows, editors, and workflow systems often use both patterns together. Mode logic and action packaging stay separate so the design remains explainable."
 				},
 				{
 					title: "PDP7 State and Command: Core Project",
@@ -561,7 +561,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP5-State-Command-Quest-Loop/solution"
 				},
 				{
-					title: "State and Command Supplemental 2",
+					title: "State and Command Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP7 State and Command",
@@ -574,7 +574,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-13-pdp7-state-and-command-supplemental-2/solution"
 				},
 				{
-					title: "State and Command Supplemental 3",
+					title: "State and Command Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP7 State and Command",
@@ -594,7 +594,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Adapters for Third-Party Data and APIs",
 					content:
-						"This section covers Adapter as a boundary-normalization tool whenever outside systems return awkward names, shapes, or expectations. Skill target: Isolate external weirdness near the edge rather than spreading it through the codebase."
+						"Adapter is a boundary-normalization tool whenever outside systems return awkward names, shapes, or expectations. External weirdness stays near the edge instead of spreading through the codebase."
 				},
 				{
 					title: "Compatibility Layers and Anti-Corruption Boundaries",
@@ -636,7 +636,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP6-Adapter-Template-Import-Pipeline/solution"
 				},
 				{
-					title: "Adapter and Integration Boundaries Supplemental 2",
+					title: "Adapter and Integration Boundaries Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP8 Adapter and Integration Boundaries",
@@ -649,7 +649,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-15-pdp8-adapter-and-integration-boundaries-supplemental-2/solution"
 				},
 				{
-					title: "Adapter and Integration Boundaries Supplemental 3",
+					title: "Adapter and Integration Boundaries Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP8 Adapter and Integration Boundaries",
@@ -712,7 +712,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP6-Adapter-Template-Import-Pipeline/solution"
 				},
 				{
-					title: "Method versus Higher Order Functions Supplemental 2",
+					title: "Method versus Higher Order Functions Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle:
@@ -726,7 +726,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-17-pdp9-template-method-versus-higher-order-functions-supplemental-2/solution"
 				},
 				{
-					title: "Method versus Higher Order Functions Supplemental 3",
+					title: "Method versus Higher Order Functions Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle:
@@ -747,7 +747,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Module-Level Singletons and Why They Feel Convenient",
 					content:
-						"This section covers module state, cached objects, and one-per-process resources as Python's practical forms of singleton-like behavior. The lesson starts from real convenience before it moves into the costs."
+						"Module state, cached objects, and one-per-process resources are Python's practical forms of singleton-like behavior. The topic starts from real convenience before moving into the costs."
 				},
 				{
 					title: "Hidden Globals, Implicit Coupling, and Test Pain",
@@ -790,7 +790,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-20-pdp10-singleton-global-state-and-module-patterns/solution"
 				},
 				{
-					title: "Singleton, Global State, and Module Patterns Supplemental 2",
+					title: "Singleton, Global State, and Module Patterns Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle:
@@ -804,7 +804,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-19-pdp10-singleton-global-state-and-module-patterns/solution"
 				},
 				{
-					title: "Singleton, Global State, and Module Patterns Supplemental 3",
+					title: "Singleton, Global State, and Module Patterns Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle:
@@ -825,7 +825,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "From Large Script to Coherent Modules",
 					content:
-						"This section covers script-to-application refactors as a series of small moves: extract functions, name concepts, isolate I/O, group state, and split files by responsibility. The point is to make evolution realistic instead of magical."
+						"Script-to-application refactors work best as a series of small moves: extract functions, name concepts, isolate I/O, group state, and split files by responsibility. The point is to make evolution realistic instead of magical."
 				},
 				{
 					title: "Tangled Conditionals and Mixed Responsibilities",
@@ -867,7 +867,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP7-Pythonic-Refactor-Capstone/solution"
 				},
 				{
-					title: "Refactoring Python Code Smells Supplemental 2",
+					title: "Refactoring Python Code Smells Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP11 Refactoring Python Code Smells",
@@ -880,7 +880,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-21-pdp11-refactoring-python-code-smells-supplemental-2/solution"
 				},
 				{
-					title: "Refactoring Python Code Smells Supplemental 3",
+					title: "Refactoring Python Code Smells Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP11 Refactoring Python Code Smells",
@@ -942,7 +942,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP7-Pythonic-Refactor-Capstone/solution"
 				},
 				{
-					title: "Capstone Pythonic Refactor Studio Supplemental 2",
+					title: "Capstone Pythonic Refactor Studio Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP12 Capstone Pythonic Refactor Studio",
@@ -955,7 +955,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-23-pdp12-capstone-pythonic-refactor-studio-supplemental-2/solution"
 				},
 				{
-					title: "Capstone Pythonic Refactor Studio Supplemental 3",
+					title: "Capstone Pythonic Refactor Studio Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Python",
 						moduleTitle: "PDP12 Capstone Pythonic Refactor Studio",

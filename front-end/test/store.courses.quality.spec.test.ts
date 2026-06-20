@@ -1923,6 +1923,37 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it("keeps Pythonic Design Patterns labels neutral and learner-readable", async () => {
+		const course = await loadRawCourse("pythonic-design-patterns");
+		expect(course).not.toBeNull();
+
+		const source = fs.readFileSync(
+			"src/stores/courses/pythonic-design-patterns.ts",
+			"utf8"
+		);
+		const loadedCorpus = allCourseText(course!);
+
+		for (const corpus of [source, loadedCorpus]) {
+			expect(corpus).not.toMatch(/\bSupplemental [23]\b/);
+			expect(corpus).not.toMatch(/\bSkill target:/);
+			expect(corpus).not.toMatch(/\bThis section covers\b/);
+			expect(corpus).not.toMatch(/\bThe goal is to\b/);
+		}
+
+		expect(loadedCorpus).toContain(
+			"Why Python Changes the Design Patterns Conversation Transfer Practice"
+		);
+		expect(loadedCorpus).toContain(
+			"Factory and Builder in Python Extension Practice"
+		);
+		expect(loadedCorpus).toContain(
+			"Packages, imports, and file ownership are part of the design vocabulary"
+		);
+		expect(loadedCorpus).toContain(
+			"External weirdness stays near the edge instead of spreading through the codebase"
+		);
+	});
+
 	it("keeps PyGame lessons and projects structured instead of dense one-paragraph prompts", async () => {
 		const course = await loadRawCourse("pygames");
 		expect(course).not.toBeNull();
