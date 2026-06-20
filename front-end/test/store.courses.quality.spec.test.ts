@@ -2545,6 +2545,45 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Benchmarking Capstone Extension Practice");
 	});
 
+	it("keeps Design Patterns in C++ labels pattern-specific", async () => {
+		const course = await loadRawCourse("design-patterns-in-cpp");
+		expect(course).not.toBeNull();
+		const corpus = allCourseText(course);
+
+		expect(corpus).not.toMatch(/This section covers/i);
+		expect(corpus).not.toMatch(/Key idea:/i);
+		expect(corpus).not.toMatch(/Skill target:/i);
+		expect(corpus).not.toMatch(/Practice target:/i);
+		expect(corpus).not.toMatch(/The goal is to/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).toContain(
+			"This makes medium-sized C++ structure feel normal"
+		);
+		expect(corpus).toContain(
+			"Lifetime is part of architecture in C++"
+		);
+		expect(corpus).toContain(
+			"The design question is when an interface clarifies a seam"
+		);
+		expect(corpus).toContain("Build Tooling Transfer Practice");
+		expect(corpus).toContain("Modern Ownership Transfer Practice");
+		expect(corpus).toContain("Creation Pattern Transfer Practice");
+		expect(corpus).toContain("Observer Event Transfer Practice");
+		expect(corpus).toContain("RAII Wrapper Transfer Practice");
+		expect(corpus).toContain(
+			"Pattern Lab 14: Ownership-Aware Refactor Studio"
+		);
+		expect(corpus).toContain("Ownership-Aware Refactor Concepts");
+		expect(corpus).toContain(
+			"Pattern Lab 16: Structural Boundary Studio"
+		);
+		expect(corpus).toContain(
+			"Pattern Lab 17: Refactoring Capstone Studio"
+		);
+		expect(corpus).toContain("Refactoring Capstone Extension Practice");
+	});
+
 	it("keeps Python to Java and C++ Bridge labels transition-specific", async () => {
 		const course = await loadRawCourse("python-to-java-and-cpp-bridge");
 		expect(course).not.toBeNull();

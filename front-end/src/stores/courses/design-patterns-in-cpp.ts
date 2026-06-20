@@ -26,7 +26,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Why CMake Matters Here",
 					content:
-						"Use `CMake` to normalize repeatable builds across starter and review projects. The goal is to make medium-sized C++ structure feel normal so patterns are learned in realistic code rather than isolated snippets."
+						"Use `CMake` to normalize repeatable builds across starter and review projects. This makes medium-sized C++ structure feel normal so patterns are learned in realistic code rather than isolated snippets."
 				},
 				{
 					title: "DPC0 Setup and Tooling: Core Project",
@@ -53,7 +53,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-05-dpc0-setup-and-tooling/solution"
 				},
 				{
-					title: "Setup and Tooling Supplemental 2",
+					title: "Build Tooling Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC0 Setup and Tooling",
@@ -66,7 +66,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-01-dpc0-setup-and-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Setup and Tooling Supplemental 3",
+					title: "CMake Workflow Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC0 Setup and Tooling",
@@ -86,7 +86,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Ownership Changes the Conversation",
 					content:
-						"Start with object ownership, RAII, and stack-versus-heap decisions. Key idea: Lifetime is part of architecture in C++, so some textbook patterns must be rewritten to avoid careless heap graphs."
+						"Start with object ownership, RAII, and stack-versus-heap decisions. Lifetime is part of architecture in C++, so some textbook patterns must be rewritten to avoid careless heap graphs."
 				},
 				{
 					title: "Value Semantics versus Reference Semantics",
@@ -129,7 +129,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-06-dpc1-why-patterns-look-different-in-modern-cpp/solution"
 				},
 				{
-					title: "Why Patterns Look Different in Modern C++ Supplemental 2",
+					title: "Modern Ownership Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
@@ -143,7 +143,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-03-dpc1-why-patterns-look-different-in-modern-cpp-supplemental-2/solution"
 				},
 				{
-					title: "Why Patterns Look Different in Modern C++ Supplemental 3",
+					title: "Pattern Adaptation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
@@ -164,7 +164,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Abstract Base Classes, Interfaces, and Contracts",
 					content:
-						"Use abstract base classes intentionally for runtime polymorphism rather than as a default wrapper around every class. Key idea: When an interface is clarifying a seam and when it is merely copying Java habits."
+						"Use abstract base classes intentionally for runtime polymorphism rather than as a default wrapper around every class. The design question is when an interface clarifies a seam and when it merely copies Java habits."
 				},
 				{
 					title: "Const-Correctness and Dependency Direction",
@@ -179,7 +179,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Practical Move Semantics",
 					content:
-						"Frame move semantics around obvious ownership transfer instead of abstract rules. Skill target: Explain when move-only types make a design safer and when copying a value remains perfectly appropriate."
+						"Frame move semantics around obvious ownership transfer instead of abstract rules. Explain when move-only types make a design safer and when copying a value remains perfectly appropriate."
 				},
 				{
 					title: "DPC2 Design Foundations: Core Project",
@@ -206,7 +206,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-07-dpc2-design-foundations/solution"
 				},
 				{
-					title: "Design Foundations Supplemental 2",
+					title: "Interface Contract Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC2 Design Foundations",
@@ -219,7 +219,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-05-dpc2-design-foundations-supplemental-2/solution"
 				},
 				{
-					title: "Design Foundations Supplemental 3",
+					title: "Move Semantics Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC2 Design Foundations",
@@ -282,7 +282,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC1-Factories-and-Builders-Workshop/solution"
 				},
 				{
-					title: "Factory Method, Abstract Factory, and Builder Supplemental 2",
+					title: "Creation Pattern Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
@@ -296,7 +296,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-07-dpc3-factory-method-abstract-factory-and-builder-supplemental-2/solution"
 				},
 				{
-					title: "Factory Method, Abstract Factory, and Builder Supplemental 3",
+					title: "Builder Family Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
@@ -359,7 +359,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC2-Strategy-and-Policy-Simulator/solution"
 				},
 				{
-					title: "Strategy and Policy Based Design Supplemental 2",
+					title: "Strategy Policy Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC4 Strategy and Policy-Based Design",
@@ -372,7 +372,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-09-dpc4-strategy-and-policy-based-design-supplemental-2/solution"
 				},
 				{
-					title: "Strategy and Policy Based Design Supplemental 3",
+					title: "Policy Design Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC4 Strategy and Policy-Based Design",
@@ -427,14 +427,14 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Project: Observer Event Hub",
 					content:
-						"Build an event hub that stores listeners safely, publishes notifications, and keeps a summary view alive without dangling references. The goal is to make ownership part of the pattern discussion rather than an afterthought.",
+						"Build an event hub that stores listeners safely, publishes notifications, and keeps a summary view alive without dangling references. Ownership should be part of the pattern discussion rather than an afterthought.",
 					projectLink:
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC3-Observer-Event-Hub/starter",
 					solutionLink:
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC3-Observer-Event-Hub/solution"
 				},
 				{
-					title: "Observer and Event Flow Supplemental 2",
+					title: "Observer Event Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC5 Observer and Event Flow",
@@ -447,7 +447,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-11-dpc5-observer-and-event-flow-supplemental-2/solution"
 				},
 				{
-					title: "Observer and Event Flow Supplemental 3",
+					title: "Listener Lifetime Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC5 Observer and Event Flow",
@@ -477,7 +477,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Facade for Subsystem Cleanup",
 					content:
-						"Use Facade when a subsystem currently exposes too much detail. Key idea: A facade simplifies a boundary; it should not become another oversized god object."
+						"Use Facade when a subsystem currently exposes too much detail. A facade simplifies a boundary; it should not become another oversized god object."
 				},
 				{
 					title: "Boundary Choice before Pattern Choice",
@@ -509,7 +509,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC4-Facade-Adapter-Import-Tool/solution"
 				},
 				{
-					title: "Decorator, Adapter, and Facade Supplemental 2",
+					title: "Structural Wrapper Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC6 Decorator, Adapter, and Facade",
@@ -522,7 +522,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-13-dpc6-decorator-adapter-and-facade-supplemental-2/solution"
 				},
 				{
-					title: "Decorator, Adapter, and Facade Supplemental 3",
+					title: "Facade Boundary Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC6 Decorator, Adapter, and Facade",
@@ -585,7 +585,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC5-Command-and-State-Editor/solution"
 				},
 				{
-					title: "Command and State Supplemental 2",
+					title: "Command State Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC7 Command and State",
@@ -598,7 +598,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-15-dpc7-command-and-state-supplemental-2/solution"
 				},
 				{
-					title: "Command and State Supplemental 3",
+					title: "Undo State Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC7 Command and State",
@@ -660,7 +660,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC6-Composite-Scene-Tree/solution"
 				},
 				{
-					title: "Composite and Iterator Supplemental 2",
+					title: "Composite Traversal Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC8 Composite and Iterator",
@@ -673,7 +673,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-17-dpc8-composite-and-iterator-supplemental-2/solution"
 				},
 				{
-					title: "Composite and Iterator Supplemental 3",
+					title: "Iterator Boundary Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC8 Composite and Iterator",
@@ -736,7 +736,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-08-dpc9-singleton-global-state-and-dependency-injection/solution"
 				},
 				{
-					title: "Singleton, Global State, and Dependency Injection Supplemental 2",
+					title: "Dependency Injection Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
@@ -750,7 +750,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-19-dpc9-singleton-global-state-and-dependency-injection-supplemental-2/solution"
 				},
 				{
-					title: "Singleton, Global State, and Dependency Injection Supplemental 3",
+					title: "Global State Refactor Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
@@ -813,7 +813,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC7-RAII-Resource-Manager/solution"
 				},
 				{
-					title: "Patterns for Resource Management Supplemental 2",
+					title: "RAII Wrapper Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC10 Patterns for Resource Management",
@@ -826,7 +826,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-21-dpc10-patterns-for-resource-management-supplemental-2/solution"
 				},
 				{
-					title: "Patterns for Resource Management Supplemental 3",
+					title: "Resource Boundary Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC10 Patterns for Resource Management",
@@ -888,7 +888,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC8-Legacy-Refactor-Capstone/solution"
 				},
 				{
-					title: "Legacy Refactoring Lab Supplemental 2",
+					title: "Legacy Refactor Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC11 Legacy Refactoring Lab",
@@ -901,7 +901,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-23-dpc11-legacy-refactoring-lab-supplemental-2/solution"
 				},
 				{
-					title: "Legacy Refactoring Lab Supplemental 3",
+					title: "Raw Pointer Refactor Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC11 Legacy Refactoring Lab",
@@ -963,7 +963,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-09-dpc12-capstone-studio/solution"
 				},
 				{
-					title: "Capstone Studio Supplemental 2",
+					title: "Capstone Architecture Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC12 Capstone Studio",
@@ -976,7 +976,7 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-25-dpc12-capstone-studio-supplemental-2/solution"
 				},
 				{
-					title: "Capstone Studio Supplemental 3",
+					title: "Capstone Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle: "DPC12 Capstone Studio",
@@ -991,32 +991,32 @@ export const designPatternsInCppCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Pattern Implementation Lab 14: Implementation Lab",
+			title: "Pattern Lab 14: Ownership-Aware Refactor Studio",
 			curriculum: [
 				{
-					title: "Pattern Implementation Lab 14: Core Concepts",
+					title: "Ownership-Aware Refactor Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 14: Implementation Lab",
+							"Pattern Lab 14: Ownership-Aware Refactor Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 14: Guided Example",
+					title: "Ownership Boundary Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 14: Implementation Lab",
+							"Pattern Lab 14: Ownership-Aware Refactor Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 14: Core Project",
+					title: "Ownership-Aware Refactor Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 14: Implementation Lab",
+							"Pattern Lab 14: Ownership-Aware Refactor Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1025,22 +1025,22 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-01-pattern-implementation-lab-14/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 14: Review and Reflection",
+					title: "Ownership Refactor Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 14: Implementation Lab",
+							"Pattern Lab 14: Ownership-Aware Refactor Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Pattern Implementation Lab 14: Extension Challenge",
+					title: "Ownership Refactor Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 14: Implementation Lab",
+							"Pattern Lab 14: Ownership-Aware Refactor Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1049,11 +1049,11 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-01-pattern-implementation-lab-14/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 14 Supplemental 2: Implementation Lab",
+					title: "Ownership Refactor Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
-							"Pattern Implementation Lab 14: Implementation Lab",
+							"Pattern Lab 14: Ownership-Aware Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1063,11 +1063,11 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-27-applied-studio-14-pattern-implementation-lab-14-supplemental-2/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 14 Supplemental 3: Implementation Lab",
+					title: "Ownership Refactor Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
-							"Pattern Implementation Lab 14: Implementation Lab",
+							"Pattern Lab 14: Ownership-Aware Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1079,32 +1079,32 @@ export const designPatternsInCppCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Pattern Implementation Lab 15: Implementation Lab",
+			title: "Pattern Lab 15: Runtime Variation Studio",
 			curriculum: [
 				{
-					title: "Pattern Implementation Lab 15: Core Concepts",
+					title: "Runtime Variation Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Pattern Lab 15: Runtime Variation Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 15: Guided Example",
+					title: "Runtime Strategy Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Pattern Lab 15: Runtime Variation Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 15: Core Project",
+					title: "Runtime Variation Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Pattern Lab 15: Runtime Variation Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1113,22 +1113,22 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-02-pattern-implementation-lab-15/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 15: Review and Reflection",
+					title: "Runtime Variation Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Pattern Lab 15: Runtime Variation Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Pattern Implementation Lab 15: Extension Challenge",
+					title: "Runtime Variation Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Pattern Lab 15: Runtime Variation Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1137,11 +1137,11 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-02-pattern-implementation-lab-15/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 15 Supplemental 2: Implementation Lab",
+					title: "Runtime Variation Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Pattern Lab 15: Runtime Variation Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1151,11 +1151,11 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-29-applied-studio-15-pattern-implementation-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 15 Supplemental 3: Implementation Lab",
+					title: "Runtime Variation Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Pattern Lab 15: Runtime Variation Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1167,32 +1167,32 @@ export const designPatternsInCppCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Pattern Implementation Lab 16: Implementation Lab",
+			title: "Pattern Lab 16: Structural Boundary Studio",
 			curriculum: [
 				{
-					title: "Pattern Implementation Lab 16: Core Concepts",
+					title: "Structural Boundary Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Pattern Lab 16: Structural Boundary Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 16: Guided Example",
+					title: "Adapter and Facade Boundary Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Pattern Lab 16: Structural Boundary Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 16: Core Project",
+					title: "Structural Boundary Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Pattern Lab 16: Structural Boundary Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1201,22 +1201,22 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-03-pattern-implementation-lab-16/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 16: Review and Reflection",
+					title: "Structural Boundary Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Pattern Lab 16: Structural Boundary Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Pattern Implementation Lab 16: Extension Challenge",
+					title: "Structural Boundary Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Pattern Lab 16: Structural Boundary Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1225,11 +1225,11 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-03-pattern-implementation-lab-16/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 16 Supplemental 2: Implementation Lab",
+					title: "Structural Boundary Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Pattern Lab 16: Structural Boundary Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1239,11 +1239,11 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-31-applied-studio-16-pattern-implementation-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 16 Supplemental 3: Implementation Lab",
+					title: "Structural Boundary Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Pattern Lab 16: Structural Boundary Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1255,32 +1255,32 @@ export const designPatternsInCppCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Pattern Implementation Lab 17: Implementation Lab",
+			title: "Pattern Lab 17: Refactoring Capstone Studio",
 			curriculum: [
 				{
-					title: "Pattern Implementation Lab 17: Core Concepts",
+					title: "Refactoring Capstone Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Pattern Lab 17: Refactoring Capstone Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 17: Guided Example",
+					title: "Pattern Selection Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Pattern Lab 17: Refactoring Capstone Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 17: Core Project",
+					title: "Refactoring Capstone Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Pattern Lab 17: Refactoring Capstone Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1289,22 +1289,22 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-04-pattern-implementation-lab-17/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 17: Review and Reflection",
+					title: "Refactoring Capstone Review",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Pattern Lab 17: Refactoring Capstone Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Pattern Implementation Lab 17: Extension Challenge",
+					title: "Refactoring Capstone Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "C++ design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Pattern Lab 17: Refactoring Capstone Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1313,11 +1313,11 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-04-pattern-implementation-lab-17/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 17 Supplemental 2: Implementation Lab",
+					title: "Refactoring Capstone Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Pattern Lab 17: Refactoring Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1327,11 +1327,11 @@ export const designPatternsInCppCourse: RawCourse = {
 						"https://github.com/instruction-material/Design-Patterns-in-CPP/tree/main/DPC-33-applied-studio-17-pattern-implementation-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 17 Supplemental 3: Implementation Lab",
+					title: "Refactoring Capstone Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "C++",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Pattern Lab 17: Refactoring Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
