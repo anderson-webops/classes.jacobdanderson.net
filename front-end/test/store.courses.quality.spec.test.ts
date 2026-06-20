@@ -3356,7 +3356,7 @@ describe("course text quality normalization", () => {
 				/\bThis module focuses on (?:combine|connect|diagnose|map|organize|turn|use)\b/i
 			);
 			expect(corpus).toContain(
-				"**Reference guide:** Scratch Level 1 uses these standards"
+				"**Reference map:** Scratch Level 1 uses these standards"
 			);
 			expect(corpus).toContain(
 				"A polished Scratch game is more than a set of working controls"

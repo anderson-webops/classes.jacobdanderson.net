@@ -80,11 +80,11 @@ function sourceBullets(names: string[]) {
 }
 
 function courseUseNote(courseLabel: string, emphasis: string) {
-	return `**Course connection:** ${courseLabel} connects the reference list to concrete lesson or project focus areas and visible course work. ${emphasis}`;
+	return `**Reference role:** Use the references to clarify lesson focus, project requirements, and visible course work. ${emphasis}`;
 }
 
 function standardsEvidenceNote(courseLabel: string) {
-	return `**Reference use:** A strong entry in ${courseLabel} names the source standard or documentation page, explains why that source matters for the current module, and connects it to a visible task such as a worked example, project requirement, assessment item, or reflection prompt.`;
+	return `**Source-backed work:** A strong ${courseLabel} entry names the standard or documentation page, explains why it matters, and connects it to a visible task such as a worked example, project requirement, assessment item, or reflection prompt.`;
 }
 
 function sequencingEvidenceNote(courseLabel: string) {
@@ -92,7 +92,7 @@ function sequencingEvidenceNote(courseLabel: string) {
 }
 
 function projectEvidenceNote(courseLabel: string) {
-	return `**Project check:** Project work in ${courseLabel} is ready when the expected artifact, success criteria, standard scenario, edge case, explanation target, and extension path can be read without guessing what the work is meant to demonstrate.`;
+	return `**Project evidence:** Project work in ${courseLabel} is ready when the expected artifact, success criteria, standard scenario, edge case, explanation target, and extension path are clear without guessing what the work is meant to demonstrate.`;
 }
 
 function projectDescription(project: string) {
@@ -362,60 +362,60 @@ function buildStandardsModule(
 			{
 				title: `${courseLabel} Reference Guide`,
 				content: [
-					`**Reference guide:** ${courseLabel} uses these standards, documentation, and tooling references to keep examples, projects, and expectations aligned with current practice.`,
+					`**Reference map:** ${courseLabel} uses these standards, documentation, and tooling references to keep examples, projects, and expectations aligned with current practice.`,
 					`**Core references:**\n${sourceBullets(profile.sources)}`,
 					standardsEvidenceNote(courseLabel),
-					`**Finished work shows:** ${courseLabel} is traceable to these standards, docs, or tooling references rather than only to project titles.`
+					`**Finished work shows:** Examples, projects, and checkpoints are traceable to the reference map rather than only to project titles.`
 				].join("\n\n")
 			},
 			{
 				title: `${courseLabel} Core Skills`,
 				content: [
-					`**Skill focus:** ${courseLabel} skills benefit from focused review, clear examples, and explicit prerequisite connections before larger projects.`,
+					`**Skill map:** These skills benefit from focused review, clear examples, and explicit prerequisite connections before larger projects.`,
 					`**Core skills:**\n${bullets(profile.gaps)}`,
 					courseUseNote(
 						courseLabel,
-						`In ${courseLabel}, each core-skill item can become a short explanation, a practice check, or a focused review path depending on the current need.`
+						`Each core-skill item can become a short explanation, a practice check, or a focused review path depending on the current need.`
 					),
-					`**Readiness:** Lesson or project readiness in ${courseLabel} requires a concrete explanation, worked example, practice task, and observable work for one of these skills.`
+					`**Ready to practice:** A lesson or project is ready when one core skill has a concrete explanation, worked example, practice task, and observable work.`
 				].join("\n\n")
 			},
 			{
 				title: `${courseLabel} Next Topics`,
 				content: [
-					`**Topic focus:** These topics for ${courseLabel} mark the next areas for deeper coverage. The ${courseLabel} topic order follows prerequisite dependency and connects each addition to a concrete project or checkpoint.`,
+					`**Growth areas:** The next areas for deeper coverage appear in prerequisite order and connect each addition to a concrete project or checkpoint.`,
 					`**Expansion topics:**\n${bullets(profile.topics)}`,
 					courseUseNote(
 						courseLabel,
-						`Topic additions in ${courseLabel} are strongest when they include vocabulary, one representative example, one common-error check, and one transfer task.`
+						`Topic additions are strongest when they include vocabulary, one representative example, one common-error check, and one transfer task.`
 					),
-					`**Common pitfalls:** New topics in ${courseLabel} need a visible connection to a real project. When that connection is unclear, a smaller bridge practice comes before the major project.`
+					`**Bridge rule:** New topics need a visible connection to a real project. When that connection is unclear, a smaller bridge practice comes before the major project.`
 				].join("\n\n")
 			},
 			{
 				title: `${courseLabel} Boundaries`,
 				content: [
-					`**Course boundaries:** The priority and expansion topics clarify what belongs in ${courseLabel} and what fits better in a prerequisite, follow-up, or separate course. This keeps the course coherent instead of absorbing every adjacent topic.`,
-					`**Boundary rule:** Keep a topic inside ${courseLabel} when it directly supports the projects, assessments, and expected readiness level. Move the topic elsewhere when it requires a different prerequisite chain, a different safety model, or a level of depth that would crowd out the core purpose.`,
-					`**Boundary check:** The ${courseLabel} boundary, one near-term addition, and one topic saved for a later course are explicit.`
+					`**Scope boundary:** The priority and expansion topics clarify what belongs here and what fits better in a prerequisite, follow-up, or separate course. This keeps the course coherent instead of absorbing every adjacent topic.`,
+					`**Boundary rule:** Keep a topic here when it directly supports the projects, assessments, and expected readiness level. Move it elsewhere when it requires a different prerequisite chain, safety model, or level of depth that would crowd out the core purpose.`,
+					`**Boundary check:** The course boundary, one near-term addition, and one topic saved for a later course are explicit.`
 				].join("\n\n")
 			}
 		],
 		supplementalProjects: [
 			{
-				title: `${courseLabel} Readiness Check`,
+				title: `${courseLabel} Prerequisite Check`,
 				content: [
-					`**Readiness check:** Before deeper ${courseLabel} work begins, the prerequisite skills, target references, and first observable success criteria should be clear.`,
-					`**Check guidance:** The ${courseLabel} readiness check distinguishes prerequisite knowledge, required content, optional enrichment, and reference-only material. It also records which project or assessment proves that the skill can be used independently.`,
-					`**Readiness checks:**\n- The ${courseLabel} readiness check names at least three prerequisites.\n- Each planned ${courseLabel} module cites a standard, official document, or deliberate toolchain target.\n- The proof of ${profile.family} readiness is explicit.`
+					`**Prerequisite check:** Before deeper ${courseLabel} work begins, the prerequisite skills, target references, and first observable success criteria are clear.`,
+					`**Use this check to separate:** prerequisite knowledge, required content, optional enrichment, and reference-only material. Record which project or assessment proves that a skill can be used independently.`,
+					`**Ready when:**\n- At least three prerequisites are named.\n- Each planned module cites a standard, official document, or deliberate toolchain target.\n- The proof of ${profile.family} readiness is explicit.`
 				].join("\n\n")
 			},
 			{
 				title: `${courseLabel} Learning Sequence`,
 				content: [
-					`**Sequence path:** The current ${courseLabel} sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
-					`**Sequence guidance:** ${courseLabel} sequence decisions are based on dependency, not convenience. If a project in ${courseLabel} expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,
-					`**Sequence checks:**\n- No ${courseLabel} gap remains as a vague reminder without a clear next action.\n- Required ${profile.family} gaps appear before the project that depends on them.\n- Optional ${courseLabel} enrichment is labeled separately from required pacing.`
+					`**Sequence map:** The current sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
+					`**Ordering rule:** Sequence decisions are based on dependency, not convenience. If a project expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,
+					`**Sequence is clear when:**\n- No gap remains as a vague reminder without a clear next action.\n- Required ${profile.family} gaps appear before the project that depends on them.\n- Optional enrichment is labeled separately from required pacing.`
 				].join("\n\n")
 			}
 		]
@@ -433,18 +433,18 @@ function buildSequencingModule(
 			{
 				title: `${courseLabel} Next Module Ideas`,
 				content: [
-					`**Next module ideas:** These ${profile.family} additions show where ${courseLabel} can grow after the current core sequence is solid. The order follows prerequisite dependency, not just topic popularity.`,
+					`**Next modules:** These ${profile.family} additions show where the course can grow after the current core sequence is solid. The order follows prerequisite dependency, not just topic popularity.`,
 					`**Suggested additions:**\n${bullets(profile.moduleAdditions)}`,
 					sequencingEvidenceNote(courseLabel),
-					`**Module check:** Every ${courseLabel} module states the concept, why it matters, one worked example, one practice task, one quick check, and one extension.`
+					`**Complete module pattern:** A strong module states the concept, why it matters, one worked example, one practice task, one quick check, and one extension.`
 				].join("\n\n")
 			},
 			{
 				title: `${courseLabel} Resources`,
 				content: [
-					`**Resource guide:** These materials support ${courseLabel} modules by making source code, datasets, simulations, version choices, and reference materials explicit.`,
+					`**Resource map:** Course materials support the modules by making source code, datasets, simulations, version choices, and reference materials explicit.`,
 					`**Materials and tools:**\n${bullets(profile.materials)}`,
-					`**Resource use:** Each ${courseLabel} resource has a role: explanation, starter artifact, data source, simulation, rubric, answer check, or extension. ${courseLabel} links that are only background references are labeled that way so they do not look like required assignments.`,
+					`**Resource roles:** Each resource has a role: explanation, starter artifact, data source, simulation, rubric, answer check, or extension. Links that are only background references are labeled that way so they do not look like required assignments.`,
 					profile.safety
 						? `**Safety or delivery boundary:** ${profile.safety}`
 						: `**Safety or delivery boundary:** ${courseLabel} uses age-appropriate examples, cited source material, and project scopes small enough for an online lesson.`
@@ -461,9 +461,9 @@ function buildSequencingModule(
 			{
 				title: `${courseLabel} Current References`,
 				content: [
-					`**Reference guide:** ${courseLabel} references are most useful when their role is clear: concept explanation, starter source, dataset, simulation, exam standard, official documentation, or optional background.`,
-					`**Current-reference rule:** Stable ${courseLabel} concepts can use long-lived references, but tool versions, source-code repositories, exam links, data licenses, and simulation URLs need explicit version or access notes. When a link changes, the course text and project resource card need to stay in sync.`,
-					`**Reference check:** The ${courseLabel} note states which links or versions are stable, which materials need periodic review, and which materials are reference-only rather than assignments.`
+					`**Link map:** References are most useful when their role is clear: concept explanation, starter source, dataset, simulation, exam standard, official documentation, or optional background.`,
+					`**Current-reference rule:** Stable concepts can use long-lived references, but tool versions, source-code repositories, exam links, data licenses, and simulation URLs need explicit version or access notes. When a link changes, the course text and project resource card need to stay in sync.`,
+					`**Reference check:** The note states which links or versions are stable, which materials need periodic review, and which materials are reference-only rather than assignments.`
 				].join("\n\n")
 			}
 		],
@@ -505,7 +505,7 @@ function buildProjectModule(
 				title: `${courseLabel} Project Ladder`,
 				content: [
 					`**Project progression:** These ${profile.family} project types create a progression for ${courseLabel} from guided practice to independent capstone work. Every ${courseLabel} project names the artifact, required behavior, evidence of correctness, and one extension path.`,
-					`**Project ladder:**\n${bullets(profile.projectTypes)}`,
+					`**Project types:**\n${bullets(profile.projectTypes)}`,
 					projectEvidenceNote(courseLabel),
 					`**Project completion:** Project work in ${courseLabel} is complete when the main design, model, proof, or reasoning choice is explained, not only when it runs or produces an answer.`
 				].join("\n\n")
@@ -513,7 +513,7 @@ function buildProjectModule(
 			{
 				title: `${courseLabel} Checkpoints`,
 				content: [
-					`**Readiness check:** These checks identify whether ${courseLabel} concepts are ready for the next module.`,
+					`**Checkpoint map:** These checks identify whether ${courseLabel} concepts are ready for the next module.`,
 					`**Assessment ideas:**\n${bullets(profile.assessments)}`,
 					`**Checkpoint use:** Treat each ${courseLabel} assessment as evidence for one named skill. The best ${courseLabel} checkpoint is small enough to complete quickly but specific enough to reveal whether the concept transfers to a changed example.`,
 					`**Evidence of proficiency:** ${courseLabel} work demonstrates the ability to transfer the same idea to a new example, explain why the result is valid, and identify one limitation or edge case.`
@@ -522,7 +522,7 @@ function buildProjectModule(
 			{
 				title: `${courseLabel} Rubric`,
 				content: [
-					`**Project reflection:** Every major ${courseLabel} project includes a short reflection naming the goal, approach, evidence, bug or misconception, and one next improvement.`,
+					`**Reflection:** Every major ${courseLabel} project includes a short note naming the goal, approach, evidence, bug or misconception, and one next improvement.`,
 					`**Rubric use:** Score the ${courseLabel} artifact and the explanation separately. A project in ${courseLabel} can produce the right output while still needing a stronger explanation, clearer evidence, better edge-case coverage, or a more maintainable structure.`,
 					`**Project checks:**\n- The ${courseLabel} deliverable is visible, runnable, or inspectable.\n- A normal ${courseLabel} case and an edge case are tested or justified.\n- The ${courseLabel} explanation does not depend on reading every line or step from notes.`
 				].join("\n\n")
@@ -530,7 +530,7 @@ function buildProjectModule(
 			{
 				title: `${courseLabel} Capstone Gate`,
 				content: [
-					`**Readiness check:** Before the ${courseLabel} capstone begins, prerequisite modules, project ladder, and checkpoint style are practiced on smaller artifacts.`,
+					`**Capstone gate:** Before the ${courseLabel} capstone begins, prerequisite modules, project types, and checkpoint style are practiced on smaller artifacts.`,
 					`**Gate guidance:** The ${courseLabel} capstone is ready when it combines known skills in a larger context rather than introducing several untested ideas at once. The first version stays narrow, demonstrable, and easy to verify before optional polish is added.`,
 					`**Required gate artifact:** Write a short ${courseLabel} capstone brief that names the target user or problem, the exact deliverable, the core concept being reused from earlier modules, the minimum viable first version, and the evidence that will prove the first version works.`,
 					`**Capstone checks:**\n- The ${courseLabel} capstone has one ordinary path and one edge, failure, or misconception path.\n- The first milestone can be tested without completing every optional feature.\n- The explanation separates required behavior from polish.\n- Two risks are named with a mitigation, fallback, or narrowed scope.`
@@ -538,7 +538,7 @@ function buildProjectModule(
 			}
 		],
 		supplementalProjects: projects.map(project => ({
-			title: `Project Option: ${projectTitle(project)}`,
+			title: `Practice Project: ${projectTitle(project)}`,
 			content: [
 				projectOptionGoal(profile, courseLabel, project),
 				projectOptionRequiredOutcome(profile, courseLabel, project),
