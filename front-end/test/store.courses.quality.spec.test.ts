@@ -2455,6 +2455,16 @@ describe("course text quality normalization", () => {
 				]
 			]
 		]);
+		const sourcePathByCourse = new Map([
+			[
+				"javascript-level-1-javascript-superstar",
+				"src/stores/courses/javascript-level-1.ts"
+			],
+			[
+				"javascript-level-2-javascript-master",
+				"src/stores/courses/javascript-level-2.ts"
+			]
+		]);
 		const supplementalBodies: string[] = [];
 
 		for (const [courseId, expectedPhrases] of expectedByCourse) {
@@ -2462,7 +2472,17 @@ describe("course text quality normalization", () => {
 			expect(course, courseId).not.toBeNull();
 			if (!course) continue;
 
-			const courseText = allCourseText(course);
+			const sourcePath = sourcePathByCourse.get(courseId);
+			expect(sourcePath, courseId).toBeDefined();
+			const courseText = [
+				sourcePath ? fs.readFileSync(sourcePath, "utf8") : "",
+				allCourseText(course)
+			].join("\n");
+			if (courseId === "javascript-level-2-javascript-master") {
+				expect(courseText).not.toMatch(/\bsupplemental [23]\b/i);
+				expect(courseText).toContain("Fundamentals Review Transfer Practice");
+				expect(courseText).toContain("Master Project Extension Practice");
+			}
 			for (const phrase of expectedPhrases) {
 				expect(
 					courseText,
