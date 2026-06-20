@@ -69,12 +69,12 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/bbb5cce14f0a1bc5c5c4b5582da67750"
 				},
 				{
-					title: "Check In #1 supplemental 2",
+					title: "Check In #1 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JavaScript Master Check-In #1",
 						itemTitle:
-							"Transfer Practice: Check-In #1 supplemental 2",
+							"JavaScript Master Check-In #1 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -84,12 +84,12 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-01-check-in-1-supplemental-2/solution"
 				},
 				{
-					title: "Check In #1 supplemental 3",
+					title: "Check In #1 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JavaScript Master Check-In #1",
 						itemTitle:
-							"Extension Practice: Check-In #1 supplemental 3",
+							"JavaScript Master Check-In #1 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -164,12 +164,12 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/7b72b5cd25d5372e9097f68de4b66db6"
 				},
 				{
-					title: "Check In #2 supplemental 2",
+					title: "Check In #2 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JavaScript Master Check-In #2",
 						itemTitle:
-							"Transfer Practice: Check-In #2 supplemental 2",
+							"JavaScript Master Check-In #2 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -179,12 +179,12 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-03-check-in-2-supplemental-2/solution"
 				},
 				{
-					title: "Check In #2 supplemental 3",
+					title: "Check In #2 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JavaScript Master Check-In #2",
 						itemTitle:
-							"Extension Practice: Check-In #2 supplemental 3",
+							"JavaScript Master Check-In #2 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -324,7 +324,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/5e36bb6a04a440e18fb502b1cd635628"
 				},
 				{
-					title: "Fundamentals Review supplemental 2",
+					title: "Fundamentals Review Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM1 Fundamentals Review",
@@ -337,7 +337,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-05-jsm1-fundamentals-review-supplemental-2/solution"
 				},
 				{
-					title: "Fundamentals Review supplemental 3",
+					title: "Fundamentals Review Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM1 Fundamentals Review",
@@ -530,7 +530,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/a85d4be8f2f94812a0357dae2a1d1e00"
 				},
 				{
-					title: "Complex Conditionals supplemental 2",
+					title: "Complex Conditionals Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM3 Complex Conditionals",
@@ -543,7 +543,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-07-jsm3-complex-conditionals-supplemental-2/solution"
 				},
 				{
-					title: "Complex Conditionals supplemental 3",
+					title: "Complex Conditionals Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM3 Complex Conditionals",
@@ -631,7 +631,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/1d48af84b840e8d7a72fd02e82de9f28"
 				},
 				{
-					title: "Canvas supplemental 3",
+					title: "Canvas Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM4 Canvas",
@@ -755,7 +755,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/f163e56c8fa75a482877d789d08fc784"
 				},
 				{
-					title: "Arrays and Iterators supplemental 3",
+					title: "Arrays and Iterators Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM5 Arrays and Iterators",
@@ -860,7 +860,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/abdb1b2dadb02ac244d8cf862bd9b321"
 				},
 				{
-					title: "Objects and Properties supplemental 3",
+					title: "Objects and Properties Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM6 Objects and Properties",
@@ -964,7 +964,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/8f44f06f31939f0a56050f4718f0b608"
 				},
 				{
-					title: "Helper Functions and Event Listeners supplemental 3",
+					title: "Helper Functions and Event Listeners Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1041,7 +1041,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/2cc6ea883fc971206d81c61a3f93582e"
 				},
 				{
-					title: "Collisions and Controls supplemental 2",
+					title: "Collisions and Controls Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM8 Collisions and Controls",
@@ -1054,7 +1054,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-13-jsm8-collisions-and-controls-supplemental-2/solution"
 				},
 				{
-					title: "Collisions and Controls supplemental 3",
+					title: "Collisions and Controls Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM8 Collisions and Controls",
@@ -1142,7 +1142,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/643e3bf98d5a641557276dbc1f269a02"
 				},
 				{
-					title: "Games in the Canvas supplemental 2",
+					title: "Games in the Canvas Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM9 Games in the Canvas",
@@ -1155,7 +1155,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-15-jsm9-games-in-the-canvas-supplemental-2/solution"
 				},
 				{
-					title: "Games in the Canvas supplemental 3",
+					title: "Games in the Canvas Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM9 Games in the Canvas",
@@ -1231,7 +1231,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/d07e0093689c1e654fc59de47093b043"
 				},
 				{
-					title: "APIs and Requests supplemental 2",
+					title: "APIs and Requests Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM10 APIs and Requests",
@@ -1244,7 +1244,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-17-jsm10-apis-and-requests-supplemental-2/solution"
 				},
 				{
-					title: "APIs and Requests supplemental 3",
+					title: "APIs and Requests Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM10 APIs and Requests",
@@ -1376,7 +1376,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/bc74a6591ecf2d986cd8fd83eb46e427"
 				},
 				{
-					title: "NoSQL and CRUD supplemental 2",
+					title: "NoSQL and CRUD Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM12 NoSQL and CRUD",
@@ -1389,7 +1389,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-19-jsm12-nosql-and-crud-supplemental-2/solution"
 				},
 				{
-					title: "NoSQL and CRUD supplemental 3",
+					title: "NoSQL and CRUD Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM12 NoSQL and CRUD",
@@ -1450,7 +1450,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/c3fb5542e72c66ad7264b94a8be3c4c0"
 				},
 				{
-					title: "Message Board supplemental 2",
+					title: "Message Board Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM13 Message Board",
@@ -1463,7 +1463,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-21-jsm13-message-board-supplemental-2/solution"
 				},
 				{
-					title: "Message Board supplemental 3",
+					title: "Message Board Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM13 Message Board",
@@ -1530,7 +1530,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/540c4d060641bb749cefde340d69acd6"
 				},
 				{
-					title: "Quiz Game supplemental 2",
+					title: "Quiz Game Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM14 Quiz Game",
@@ -1543,7 +1543,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-23-jsm14-quiz-game-supplemental-2/solution"
 				},
 				{
-					title: "Quiz Game supplemental 3",
+					title: "Quiz Game Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM14 Quiz Game",
@@ -1611,7 +1611,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-01-jsm15-master-project/solution"
 				},
 				{
-					title: "Master Project supplemental 2",
+					title: "Master Project Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM15 Master Project",
@@ -1624,7 +1624,7 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-25-jsm15-master-project-supplemental-2/solution"
 				},
 				{
-					title: "Master Project supplemental 3",
+					title: "Master Project Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSM15 Master Project",
