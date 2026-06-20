@@ -64,7 +64,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-04-dpj1-what-patterns-are-and-what-they-are-not/solution"
 				},
 				{
-					title: "What Patterns Are and What They Are Not Supplemental 2",
+					title: "What Patterns Are and What They Are Not Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
@@ -78,7 +78,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-01-dpj1-what-patterns-are-and-what-they-are-not-supplemental-2/solution"
 				},
 				{
-					title: "What Patterns Are and What They Are Not Supplemental 3",
+					title: "What Patterns Are and What They Are Not Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
@@ -151,7 +151,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-05-dpj2-java-design-foundations/solution"
 				},
 				{
-					title: "Java Design Foundations Supplemental 2",
+					title: "Java Design Foundations Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ2 Java Design Foundations",
@@ -164,7 +164,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-03-dpj2-java-design-foundations-supplemental-2/solution"
 				},
 				{
-					title: "Java Design Foundations Supplemental 3",
+					title: "Java Design Foundations Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ2 Java Design Foundations",
@@ -236,7 +236,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-06-dpj3-creational-patterns-i/solution"
 				},
 				{
-					title: "Creational Patterns I Supplemental 2",
+					title: "Creational Patterns I Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ3 Creational Patterns I",
@@ -249,7 +249,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-05-dpj3-creational-patterns-i-supplemental-2/solution"
 				},
 				{
-					title: "Creational Patterns I Supplemental 3",
+					title: "Creational Patterns I Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ3 Creational Patterns I",
@@ -322,7 +322,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-07-dpj4-creational-patterns-ii-and-boundary-patterns/solution"
 				},
 				{
-					title: "Creational Patterns II and Boundary Patterns Supplemental 2",
+					title: "Creational Patterns II and Boundary Patterns Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
@@ -336,7 +336,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-07-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-2/solution"
 				},
 				{
-					title: "Creational Patterns II and Boundary Patterns Supplemental 3",
+					title: "Creational Patterns II and Boundary Patterns Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
@@ -362,7 +362,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 				{
 					title: "Composite",
 					content:
-						"Composite is clearest through recursive structures such as menus, scene graphs, or document trees. Key idea: when treating leaf and group nodes uniformly improves client code."
+						"Composite is clearest through recursive structures such as menus, scene graphs, or document trees. The pattern becomes useful when treating leaf and group nodes uniformly makes client code simpler and less branch-heavy."
 				},
 				{
 					title: "Decorator",
@@ -409,7 +409,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-08-dpj5-structural-patterns-in-depth/solution"
 				},
 				{
-					title: "Structural Patterns in Depth Supplemental 2",
+					title: "Structural Patterns in Depth Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ5 Structural Patterns in Depth",
@@ -422,7 +422,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-09-dpj5-structural-patterns-in-depth-supplemental-2/solution"
 				},
 				{
-					title: "Structural Patterns in Depth Supplemental 3",
+					title: "Structural Patterns in Depth Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ5 Structural Patterns in Depth",
@@ -494,7 +494,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-09-dpj6-behavioral-patterns-i/solution"
 				},
 				{
-					title: "Behavioral Patterns I Supplemental 2",
+					title: "Behavioral Patterns I Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ6 Behavioral Patterns I",
@@ -507,7 +507,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-11-dpj6-behavioral-patterns-i-supplemental-2/solution"
 				},
 				{
-					title: "Behavioral Patterns I Supplemental 3",
+					title: "Behavioral Patterns I Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ6 Behavioral Patterns I",
@@ -579,7 +579,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-10-dpj7-behavioral-patterns-ii/solution"
 				},
 				{
-					title: "Behavioral Patterns II Supplemental 2",
+					title: "Behavioral Patterns II Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ7 Behavioral Patterns II",
@@ -592,7 +592,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-13-dpj7-behavioral-patterns-ii-supplemental-2/solution"
 				},
 				{
-					title: "Behavioral Patterns II Supplemental 3",
+					title: "Behavioral Patterns II Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ7 Behavioral Patterns II",
@@ -665,13 +665,13 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-11-dpj8-modern-extensions-and-architecture-level-patterns/solution"
 				},
 				{
-					title: "Modern Extensions and Architecture Level Patterns Supplemental 2",
+					title: "Modern Extensions and Architecture Level Patterns Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
 							"DPJ8 Modern Extensions and Architecture-Level Patterns",
 						itemTitle:
-							"Modern Extensions and Architecture Level Patterns Supplemental 2",
+							"Modern Extensions and Architecture Level Patterns Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -681,13 +681,13 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-15-dpj8-modern-extensions-and-architecture-level-patterns-supplemental-2/solution"
 				},
 				{
-					title: "Modern Extensions and Architecture Level Patterns Supplemental 3",
+					title: "Modern Extensions and Architecture Level Patterns Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
 							"DPJ8 Modern Extensions and Architecture-Level Patterns",
 						itemTitle:
-							"Modern Extensions and Architecture Level Patterns Supplemental 3",
+							"Modern Extensions and Architecture Level Patterns Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -757,7 +757,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-12-dpj9-pattern-selection-and-refactoring-judgment/solution"
 				},
 				{
-					title: "Pattern Selection and Refactoring Judgment Supplemental 2",
+					title: "Pattern Selection and Refactoring Judgment Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
@@ -771,7 +771,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-17-dpj9-pattern-selection-and-refactoring-judgment-supplemental-2/solution"
 				},
 				{
-					title: "Pattern Selection and Refactoring Judgment Supplemental 3",
+					title: "Pattern Selection and Refactoring Judgment Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
@@ -844,7 +844,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-13-dpj10-capstone-refactor/solution"
 				},
 				{
-					title: "Capstone Refactor Supplemental 2",
+					title: "Capstone Refactor Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ10 Capstone Refactor",
@@ -857,7 +857,7 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-19-dpj10-capstone-refactor-supplemental-2/solution"
 				},
 				{
-					title: "Capstone Refactor Supplemental 3",
+					title: "Capstone Refactor Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle: "DPJ10 Capstone Refactor",
@@ -872,32 +872,32 @@ export const designPatternsInJavaCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Pattern Implementation Lab 15: Implementation Lab",
+			title: "Strategy Selection Refactor Studio",
 			curriculum: [
 				{
-					title: "Pattern Implementation Lab 15: Core Concepts",
+					title: "Strategy Selection Refactor: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Strategy Selection Refactor Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 15: Guided Example",
+					title: "Strategy Selection Refactor: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Strategy Selection Refactor Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 15: Core Project",
+					title: "Strategy Selection Refactor: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Strategy Selection Refactor Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -906,22 +906,22 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-01-pattern-implementation-lab-15/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 15: Review and Reflection",
+					title: "Strategy Selection Refactor: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Strategy Selection Refactor Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Pattern Implementation Lab 15: Extension Challenge",
+					title: "Strategy Selection Refactor: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Strategy Selection Refactor Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -930,11 +930,11 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-01-pattern-implementation-lab-15/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 15 Supplemental 2: Implementation Lab",
+					title: "Strategy Selection Refactor Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Strategy Selection Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -944,11 +944,11 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-29-applied-studio-15-pattern-implementation-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 15 Supplemental 3: Implementation Lab",
+					title: "Strategy Selection Refactor Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
-							"Pattern Implementation Lab 15: Implementation Lab",
+							"Strategy Selection Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -960,32 +960,32 @@ export const designPatternsInJavaCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Pattern Implementation Lab 16: Implementation Lab",
+			title: "Structural Wrapper Refactor Studio",
 			curriculum: [
 				{
-					title: "Pattern Implementation Lab 16: Core Concepts",
+					title: "Structural Wrapper Refactor: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Structural Wrapper Refactor Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 16: Guided Example",
+					title: "Structural Wrapper Refactor: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Structural Wrapper Refactor Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 16: Core Project",
+					title: "Structural Wrapper Refactor: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Structural Wrapper Refactor Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -994,22 +994,22 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-02-pattern-implementation-lab-16/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 16: Review and Reflection",
+					title: "Structural Wrapper Refactor: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Structural Wrapper Refactor Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Pattern Implementation Lab 16: Extension Challenge",
+					title: "Structural Wrapper Refactor: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Structural Wrapper Refactor Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1018,11 +1018,11 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-02-pattern-implementation-lab-16/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 16 Supplemental 2: Implementation Lab",
+					title: "Structural Wrapper Refactor Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Structural Wrapper Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1032,11 +1032,11 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-31-applied-studio-16-pattern-implementation-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 16 Supplemental 3: Implementation Lab",
+					title: "Structural Wrapper Refactor Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
-							"Pattern Implementation Lab 16: Implementation Lab",
+							"Structural Wrapper Refactor Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1048,32 +1048,32 @@ export const designPatternsInJavaCourse: RawCourse = {
 			]
 		},
 		{
-			title: "Pattern Implementation Lab 17: Implementation Lab",
+			title: "Architecture Judgment Capstone Studio",
 			curriculum: [
 				{
-					title: "Pattern Implementation Lab 17: Core Concepts",
+					title: "Architecture Judgment Capstone: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Architecture Judgment Capstone Studio",
 						section: "concepts"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 17: Guided Example",
+					title: "Architecture Judgment Capstone: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Architecture Judgment Capstone Studio",
 						section: "example"
 					})
 				},
 				{
-					title: "Pattern Implementation Lab 17: Core Project",
+					title: "Architecture Judgment Capstone: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Architecture Judgment Capstone Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1082,22 +1082,22 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-03-pattern-implementation-lab-17/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 17: Review and Reflection",
+					title: "Architecture Judgment Capstone: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Architecture Judgment Capstone Studio",
 						section: "review"
 					})
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "Pattern Implementation Lab 17: Extension Challenge",
+					title: "Architecture Judgment Capstone: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java design patterns",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Architecture Judgment Capstone Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1106,11 +1106,11 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-03-pattern-implementation-lab-17/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 17 Supplemental 2: Implementation Lab",
+					title: "Architecture Judgment Capstone Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Architecture Judgment Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1120,11 +1120,11 @@ export const designPatternsInJavaCourse: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-3/tree/main/DPJ-33-applied-studio-17-pattern-implementation-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "Pattern Implementation Lab 17 Supplemental 3: Implementation Lab",
+					title: "Architecture Judgment Capstone Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Design Patterns in Java",
 						moduleTitle:
-							"Pattern Implementation Lab 17: Implementation Lab",
+							"Architecture Judgment Capstone Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
