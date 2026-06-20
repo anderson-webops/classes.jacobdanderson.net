@@ -139,7 +139,7 @@ For \`y = 2^(x + 1)\`:
 - \`2^(2x)\` -> horizontal shrink by factor \`1/2\`
 - \`2^(-x)\` -> reflect across the y-axis
 
-The generated reference replaces the original graph screenshots and color-coded solution images.
+The provided reference supports graph-feature comparison and color-coded solution review.
 				`.trim(),
 				media.expLogFamilies
 			),
@@ -261,7 +261,7 @@ A geometric sequence changes by a constant ratio \`r\`. The nth-term formula is
 - Savings after ten years: \`500(1.05)^10 approx 814\`
 - Bouncy-ball rebound heights follow \`20(0.83)^(n - 1)\`
 
-The generated graphic combines the geometric-sequence plots and the rebound table that originally appeared as separate images.
+The provided graphic combines geometric-sequence plots with the rebound table used for application practice.
 				`.trim(),
 				media.geometricReference
 			),
@@ -419,7 +419,7 @@ Probability measures how likely an event is, on a scale from \`0\` to \`1\`.
 - Not rolling a \`5\`: \`1 - 1/6 = 5/6\`
 - Multiple of three and then a \`4\`: \`(2/6)(1/6) = 1/18\`
 
-The generated reference replaces the original sample-space sketches, Venn-style overlap prompts, and table screenshots.
+The provided reference supports sample-space sketches, Venn-style overlap prompts, and table-based probability review.
 				`.trim(),
 				media.probabilityTables
 			),
@@ -512,7 +512,7 @@ Desmos is an appropriate calculator for the larger tables in this module. Use a 
 			createLesson(
 				"Data Visual References",
 				`
-Use the cleaned data or the generated regression reference whenever a prompt needs a scatter plot, slope graph, or line-of-best-fit sketch.
+Use the cleaned data or the provided regression reference whenever a prompt needs a scatter plot, slope graph, or line-of-best-fit sketch.
 				`.trim(),
 				media.statisticsRegression
 			)
@@ -628,7 +628,7 @@ For \`y = cos(x)\` at the same x-values:
 - local min of \`cos(x)\`: \`(pi, -1)\`
 - roots of \`tan(x)\`: integer multiples of \`pi\`
 
-The generated graph pack provides clean sine, cosine, tangent, and tangent-table references.
+The provided graph pack gives clean sine, cosine, tangent, and tangent-table references.
 				`.trim(),
 				media.trigGraphs
 			),
@@ -659,7 +659,7 @@ For \`y = a tan(bx) + d\`:
 - \`2cos(pi x) + 7\` -> amplitude \`2\`, period \`2\`, midline \`y = 7\`
 - \`-3cos(2x) + 1.5\` -> amplitude \`3\`, period \`pi\`, midline \`y = 1.5\`
 
-The generated trig-graph reference covers the standard parent graphs. If a particular transformation prompt still depends on a missing screenshot, rebuild the graph from the equation by identifying amplitude, period, midline, phase shift, and reflection first.
+The provided trig-graph reference covers the standard parent graphs. For any transformation prompt, rebuild the graph from the equation by identifying amplitude, period, midline, phase shift, and reflection first.
 				`.trim(),
 				media.trigGraphs
 			)
