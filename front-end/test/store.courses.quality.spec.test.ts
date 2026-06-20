@@ -3613,6 +3613,28 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it("keeps Design Patterns in Java Part 2 labels practice-oriented", async () => {
+		const course = await loadRawCourse("design-patterns-in-java-part-2");
+		expect(course).not.toBeNull();
+
+		const source = fs.readFileSync(
+			"src/stores/courses/design-patterns-in-java-part-2.ts",
+			"utf8"
+		);
+		const corpus = allCourseText(course);
+
+		expect(source).not.toMatch(/\bImplementation Lab\b/);
+		expect(source).not.toMatch(/\bSupplemental [23]\b/);
+		expect(source).not.toMatch(/\bThis section covers\b/);
+		expect(source).not.toContain("Key idea:");
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/);
+		expect(corpus).not.toMatch(/\bSupplemental [23]\b/);
+		expect(corpus).toContain("Refactoring Clinic 11: Practice Studio");
+		expect(corpus).toContain("Refactoring Clinic 17 Extension Practice");
+		expect(corpus).toContain("Composing Methods Transfer Practice");
+		expect(corpus).toContain("Capstone Refactoring Studio Extension Practice");
+	});
+
 	it("keeps modern design-pattern projects distinct across core, transfer, and extension work", async () => {
 		const course = await loadRawCourse("design-patterns-in-java");
 		expect(course).not.toBeNull();
