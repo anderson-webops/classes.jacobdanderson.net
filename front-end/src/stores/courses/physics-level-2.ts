@@ -28,7 +28,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Extend the motion-graph strand by combining graph interpretation with vector reasoning. Compare horizontal and vertical component graphs, estimate turning points, and decide when acceleration changes only one part of the motion. Justify each conclusion with slope, area, or vector language."
 				},
 				{
-					title: "Mini Lab or Simulation: Ballistics Model Comparison",
+					title: "Investigation or Simulation: Ballistics Model Comparison",
 					content:
 						"Compare a projectile prediction from equations with data from video, a simulator, or a spreadsheet model. Decide which assumptions are reasonable, where drag starts to matter, and why a model can still be useful when it is not perfect."
 				},
@@ -75,7 +75,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Use measured or simulated data that compares net force, mass, and acceleration across several trials. Graph the relationships, interpret slopes, and explain which variables were controlled and which were changed. Use the results to reinforce that acceleration is a system response, not an independent ingredient."
 				},
 				{
-					title: "Mini Lab or Simulation: Elevator and Scale Force Study",
+					title: "Investigation or Simulation: Elevator and Scale Force Study",
 					content:
 						"Model an elevator or amusement-ride scenario and compare actual weight with apparent weight. Predict when the scale reading exceeds, matches, or falls below true weight and justify each case with a net-force argument."
 				},
@@ -122,9 +122,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Use simulation or spreadsheet data to compare how acceleration changes as ramp angle changes under different friction assumptions. Graph the results, identify thresholds where slipping begins, and discuss why the relationship is not captured by 'steeper always means simple linear growth.'"
 				},
 				{
-					title: "Mini Lab or Simulation: Pulley or Incline Force Analyzer",
+					title: "Investigation or Simulation: Pulley or Incline Force Analyzer",
 					content:
-						"Build or simulate a pulley or incline system and compare the predicted acceleration with observed motion. Keep a force summary, a diagram, and a short note about how friction or mass mismatch changes the result."
+						"Use a simulation, provided dataset, or optional safe build of a pulley or incline system and compare the predicted acceleration with observed motion. Keep a force summary, a diagram, and a short note about how friction or mass mismatch changes the result."
 				},
 				{
 					title: "Reflection Question: Which Assumption Matters Most Here?",
@@ -136,7 +136,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: decide when static friction should be compared against a maximum value and when kinetic friction is the better model. A strong checkpoint explains why the normal force is not always equal to weight."
+						"Readiness check: decide when static friction must be compared against a maximum value and when kinetic friction is the better model. A strong checkpoint explains why the normal force is not always equal to weight."
 				},
 				{
 					title: "Common Pitfalls",
@@ -169,9 +169,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Use force-time graphs or collision data tables to estimate impulse from area under the curve. Compare the momentum before and after several collision cases and discuss which differences come from measurement error versus genuine modeling limits."
 				},
 				{
-					title: "Mini Lab or Simulation: Collision Lab with Momentum Ledger",
+					title: "Investigation or Simulation: Collision Momentum Ledger",
 					content:
-						"Run a cart, marble, or digital collision investigation and keep a momentum accounting table. Record predictions, classify the collision type, and explain why momentum and kinetic energy do not always behave the same way."
+						"Use a collision simulation, provided cart dataset, video case, or optional safe collision investigation and keep a momentum accounting table. Record predictions, classify the collision type, and explain why momentum and kinetic energy do not always behave the same way."
 				},
 				{
 					title: "Reflection Question: Why Is System Choice So Important?",
@@ -216,9 +216,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Build or interpret a simple dataset that changes lever arm length while keeping force fixed. Graph torque versus distance, explain the trend, and discuss when the relationship may deviate because of measurement limits or setup geometry."
 				},
 				{
-					title: "Mini Lab or Simulation: Balance and Door-Handle Investigation",
+					title: "Investigation or Simulation: Balance and Door-Handle Analysis",
 					content:
-						"Use a meter stick balance, weighted ruler, or door-handle test to compare rotational effectiveness at different distances from the pivot. Connect physical effort to torque rather than claiming one side is simply 'heavier' in every case."
+						"Use a balance simulation, provided torque dataset, door-handle case, or optional safe physical observation to compare rotational effectiveness at different distances from the pivot. Connect physical effort to torque rather than claiming one side is simply 'heavier' in every case."
 				},
 				{
 					title: "Reflection Question: How Is Rotation Like Translation, and How Is It Different?",
@@ -240,7 +240,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Extension Project: Torque Design Challenge",
 					content:
-						"Design a lifting or balancing tool using lever-arm reasoning. Explain where the pivot should go, where the effort force should be applied, and what tradeoffs the design introduces."
+						"Design a lifting or balancing tool using lever-arm reasoning. Explain the pivot location, effort-force location, and tradeoffs the design introduces."
 				}
 			]
 		},
@@ -263,7 +263,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Compare how orbital radius changes period, speed, and gravitational force using tables, plots, or simulation output. Include an inverse-square comparison so the distance effect in gravity problems is visible before exact values are computed."
 				},
 				{
-					title: "Mini Lab or Simulation: Simple Orbit Simulator in Python or Spreadsheet",
+					title: "Investigation or Simulation: Simple Orbit Model in Python or Spreadsheet",
 					content:
 						"Build a basic orbit model with a spreadsheet, Desmos, or simple Python code that updates position and velocity qualitatively. Compare a low-orbit and high-orbit case and explain what changes in period, speed, and curvature."
 				},
@@ -310,7 +310,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Collect or interpret current-voltage data for resistive elements and compare linear versus non-linear behavior qualitatively. Build a clean circuit table listing current, potential difference, and resistance for each branch or component in a mixed circuit."
 				},
 				{
-					title: "Mini Lab or Simulation: Series-Parallel Circuit Build",
+					title: "Investigation or Simulation: Series-Parallel Circuit Analysis",
 					content:
 						"Create or simulate a series-parallel circuit and compare predictions with measured or observed results. Keep a circuit diagram, note where potential drops occur, and explain how current splits or recombines at junctions."
 				},
@@ -357,9 +357,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Interpret a heating curve to identify temperature changes versus phase-change plateaus, then compare that skill to reading an optics graph or image-distance table. Describe what the graph means physically, not just to label segments."
 				},
 				{
-					title: "Mini Lab or Simulation: Insulation Test or Lens Investigation",
+					title: "Investigation or Simulation: Insulation or Lens Analysis",
 					content:
-						"Run a small thermal or optics investigation, such as comparing insulation materials, tracing heat loss, or exploring image formation with simple lenses or mirrors. Define what counts as evidence and note where the simplified classroom model begins to break down."
+						"Use a thermal simulation, optics simulation, provided dataset, or optional safe observation to compare insulation behavior, trace heat loss, or explore image formation with lenses or mirrors. Define what counts as evidence and note where the simplified classroom model begins to break down."
 				},
 				{
 					title: "Reflection Question: When Does a Model Need to Change?",
@@ -404,7 +404,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Compare an experimental or simulated dataset to a model prediction, then separate random error, systematic error, and model breakdown. Include a graph that makes the comparison visible rather than hiding it inside paragraphs."
 				},
 				{
-					title: "Mini Lab or Simulation: Engineering Modeling Challenge",
+					title: "Investigation or Simulation: Engineering Modeling Challenge",
 					content:
 						"Accept projects such as a projectile planner, elevator-force simulation, pulley design, collision analysis, orbit model, or thermal design study. Each project includes a question, a model, a data source, a graph, and a short defense of the model's limits."
 				},
@@ -443,7 +443,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Simulation Reasoning Toolkit",
 					content:
-						"Start each simulation by naming the system, stored quantities, update equation, units, and stopping condition. Use a very small test case before trusting a longer run: constant velocity should stay linear, free fall should curve predictably, and total energy should only drift for a known reason. Record both the graph and one numerical check so errors in the loop, signs, or time step are visible."
+						"Start each simulation by naming the system, stored quantities, update equation, units, and stopping condition. Use a very small test case before trusting a longer run: constant velocity stays linear, free fall curves predictably, and total energy only drifts for a known reason. Record both the graph and one numerical check so errors in the loop, signs, or time step are visible."
 				},
 				{
 					title: "Worked Example Set",
@@ -453,7 +453,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Time-Step Data Exercise",
 					content:
-						"Run the same model with at least two time-step sizes and graph the results together. Look for divergence, artificial energy gain or loss, and places where a smooth path becomes jagged. The written conclusion should explain whether the model is stable enough for the question being asked, not simply which graph looks better."
+						"Run the same model with at least two time-step sizes and graph the results together. Look for divergence, artificial energy gain or loss, and places where a smooth path becomes jagged. The written conclusion explains whether the model is stable enough for the question being asked, not simply which graph looks better."
 				},
 				{
 					title: "Simulation Case Study",
@@ -495,7 +495,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Data Quality Toolkit",
 					content:
-						"Before fitting a curve, define the measured quantities, units, instrument resolution, expected relationship, and possible bias source. Then inspect the data visually before calculating. A fitted line or curve needs a physical interpretation: the slope, intercept, residual pattern, and outliers should all be explained in context."
+						"Before fitting a curve, define the measured quantities, units, instrument resolution, expected relationship, and possible bias source. Then inspect the data visually before calculating. A fitted line or curve needs a physical interpretation: the slope, intercept, residual pattern, and outliers all need context."
 				},
 				{
 					title: "Worked Example Set",
@@ -713,7 +713,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Noisy Signal Exercise",
 					content:
-						"Plot a signal with noise, calibration points, or filtering applied. Explain which features represent the physical quantity and which are measurement artifacts. The exercise should compare at least two interpretations, such as raw peak value versus averaged trend or unfiltered noise versus smoothed signal."
+						"Plot a signal with noise, calibration points, or filtering applied. Explain which features represent the physical quantity and which are measurement artifacts. Compare at least two interpretations, such as raw peak value versus averaged trend or unfiltered noise versus smoothed signal."
 				},
 				{
 					title: "Sensor Case Study",
@@ -765,7 +765,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Event Diagram Exercise",
 					content:
-						"Represent a passenger-car-road problem, GPS timing example, particle scenario, or light-signal case with labeled frames and events. The diagram should make clear which observer describes each quantity and where the classical description remains adequate or begins to fail."
+						"Represent a passenger-car-road problem, GPS timing example, particle scenario, or light-signal case with labeled frames and events. The diagram makes clear which observer describes each quantity and where the classical description remains adequate or begins to fail."
 				},
 				{
 					title: "Relativity Case Study",
@@ -844,7 +844,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Extension Project: Independent Physics Portfolio",
 					content:
-						"Build an independent physics portfolio with a focused question, chosen model, evidence source, graph or diagram, conclusion, and limitation. The final revision should show how the evidence changed the claim or narrowed the scope."
+						"Build an independent physics portfolio with a focused question, chosen model, evidence source, graph or diagram, conclusion, and limitation. The final revision shows how the evidence changed the claim or narrowed the scope."
 				}
 			]
 		}

@@ -10,7 +10,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Introductions and Setup",
 					content:
-						"Start with a light-weight physics workflow rather than a heavy programming stack. Use VS Code or PyCharm if Python modeling will be helpful later, but keep browser tools like PhET, Desmos, and spreadsheets ready because the work stays highly visual and experimental. Create one physics folder for lab notes, exported graphs, photos, and short simulation writeups; no CMake or large software setup is required."
+						"The opening workflow is intentionally lightweight and remote-friendly. Browser tools such as PhET, Desmos, spreadsheets, public videos, and provided datasets carry most of the course, while VS Code or PyCharm can be added later only when Python modeling is useful. A single physics folder for notes, exported graphs, annotated screenshots, and short simulation writeups keeps evidence organized without requiring hardware kits, physical sensors, special lab supplies, or a large software setup."
 				},
 				{
 					title: "Measurement, Units, and Significant Figures",
@@ -20,17 +20,17 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set: Estimation and Uncertainty",
 					content:
-						"Work through short examples that convert units, compare measured values, and round answers to appropriate precision. Include one estimate-first problem, such as predicting walking speed down a hallway before timing it, so the value of a rough model is concrete. Connect the examples to engineering habits: track assumptions, record units every line, and explain where the largest uncertainty comes from."
+						"Short examples convert units, compare measured values, and round answers to appropriate precision. Include one estimate-first problem, such as predicting walking speed from a provided hallway dataset or short motion clip, so the value of a rough model is concrete without requiring a live experiment. Connect the examples to engineering habits: track assumptions, record units every line, and explain where the largest uncertainty comes from."
 				},
 				{
 					title: "Graph and Data Exercise: Walking Trial Table",
 					content:
-						"Use provided or safely observed position-versus-time data from walking at different speeds. Build a data table, choose axes carefully, graph the results, and interpret the slope as speed. This is the first full data-analysis strand: table to graph, graph to meaning, and meaning back to the original motion."
+						"Provided position-versus-time data from walking at different speeds is the default evidence source. Optional safe observations can be added if they are simple and appropriate, but the assignment works fully from the shared table. Build a data table, choose axes carefully, graph the results, and interpret the slope as speed. This is the first full data-analysis strand: table to graph, graph to meaning, and meaning back to the original motion."
 				},
 				{
-					title: "Mini Lab: Reaction-Time Ruler Drop",
+					title: "Remote Investigation: Reaction-Time Data",
 					content:
-						"Run a short ruler-drop lab to connect measurement with uncertainty and repeated trials. Predict how reaction time is inferred from distance fallen, collect several trials, compute an average, and discuss why repeated measurements matter more than one lucky attempt. Close by identifying controllable variables and sources of experimental error."
+						"Use a provided ruler-drop dataset, simulation, or short demonstration video to connect measurement with uncertainty and repeated trials. Predict how reaction time is inferred from distance fallen, compute an average across several trials, and discuss why repeated measurements matter more than one lucky attempt. The key work is the reasoning chain from distance to time, not physically dropping an object. Close by identifying controllable variables, uncontrolled factors, and sources of experimental error."
 				},
 				{
 					title: "Reflection Question: What Makes Evidence Trustworthy?",
@@ -52,7 +52,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Extension Project: Measurement Scavenger Hunt",
 					content:
-						"Choose ten everyday objects or motions and decide which quantities could be measured directly and which would need to be calculated. Record the tools used, the likely uncertainty, and one reason each measurement might be difficult."
+						"Choose ten everyday objects, images, diagrams, or motion scenarios and decide which quantities could be measured directly and which would need to be calculated. Record the likely tool or data source, the likely uncertainty, and one reason each measurement might be difficult. Physical measuring is optional; screenshots, public images, class diagrams, and provided data are acceptable evidence sources when they make the measurement reasoning visible."
 				}
 			]
 		},
@@ -72,17 +72,17 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Graph and Data Exercise: Motion Graph Detective",
 					content:
-						"Use several graphs and reconstruct what the object was doing during each interval. Then reverse the task: provide a story and sketch a graph that matches it. Include one graph with a common trap, such as a flat line on a position graph, and explain why it means 'stopped' rather than 'at zero speed forever.'"
+						"Several provided graphs support reconstructing what the object was doing during each interval. Then reverse the task: use a written story to sketch a graph that matches it. Include one graph with a common trap, such as a flat line on a position graph, and explain why it means 'stopped' rather than 'at zero speed forever.' The exercise works from shared graphs, diagrams, or simulations, so no live motion capture is required."
 				},
 				{
-					title: "Mini Lab: Phone-Camera Motion Analysis",
+					title: "Remote Investigation: Motion Analysis",
 					content:
-						"Use a phone camera to record a rolling cart, bouncing ball, or walking person and extract simple frame-by-frame position data. Build a table, estimate velocity over intervals, and compare the graph with the original video. This lab should explicitly bridge intuition and mathematics by showing that graphs come from real measurements, not just textbook drawings."
+						"Use a provided video clip, simulation export, or sample frame-by-frame table to analyze a rolling cart, bouncing ball, or walking person. Optional phone-camera data can be substituted when safe and convenient, but the required work is table-building, interval velocity estimation, and comparison between the graph and the original motion. The investigation bridges intuition and mathematics by showing that graphs come from measured or modeled evidence, not just textbook drawings."
 				},
 				{
 					title: "Simulation Challenge: Bouncy Ball Toss and Air Traffic Control",
 					content:
-						"Use one qualitative toss scenario and one wind-plus-plane scenario to compare one-dimensional motion with combined motion. Predict outcomes first, then test them with simulation or diagramming, and explain which part of the motion changes because of the extra velocity contribution."
+						"Use one qualitative toss scenario and one wind-plus-plane scenario to compare one-dimensional motion with combined motion. Predict outcomes first, then test them with simulation, diagramming, or provided data, and explain which part of the motion changes because of the extra velocity contribution."
 				},
 				{
 					title: "Reflection Question: Which Representation Helped Most?",
@@ -114,12 +114,12 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Forces as Interactions",
 					content:
-						"Force is an interaction between objects rather than a vague push that automatically causes motion. Newton's laws depend on repeated free-body diagram practice, especially balanced versus unbalanced situations. Weight, normal force, tension, applied force, and friction should stay distinct so later engineering problems stay organized."
+						"Force is an interaction between objects rather than a vague push that automatically causes motion. Newton's laws depend on repeated free-body diagram practice, especially balanced versus unbalanced situations. Weight, normal force, tension, applied force, and friction remain distinct so later engineering problems stay organized."
 				},
 				{
 					title: "Worked Example Set: Free-Body Diagram Repetition",
 					content:
-						"Work through a hanging object, a crate on a floor, an elevator rider, and a tug-of-war setup. For each example, isolate one object at a time, label every external force, and connect the net force to the motion. Build repetition on purpose so the diagramming habit feels routine before the math gets harder."
+						"Work through a hanging object, a crate on a floor, an elevator rider, and a tug-of-war setup using diagrams or provided scenario cards. For each example, isolate one object at a time, label every external force, and connect the net force to the motion. Build repetition on purpose so the diagramming habit feels routine before the math gets harder."
 				},
 				{
 					title: "Graph and Data Exercise: Net Force and Acceleration",
@@ -127,9 +127,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use a small data table or simulation output showing how acceleration changes as net force changes for the same mass. Graph acceleration versus net force and interpret the trend in plain language. Then repeat with a larger mass so the slope comparison reveals what inertia changes."
 				},
 				{
-					title: "Mini Lab: Paper Bridge or Tower Force Analysis",
+					title: "Remote Investigation: Structure Force Analysis",
 					content:
-						"A simple paper bridge or tower can reveal compression, tension, and likely failure points before testing. Sketches and force arrows should explain why one design is stronger than another rather than treating the challenge as pure trial and error. This is the module's main engineering tie-in."
+						"Use a provided bridge/tower diagram, photo set, simulation, or simple paper-design sketch to analyze compression, tension, and likely failure points. Physical construction is optional; the required artifact is a labeled model that explains why one design handles forces better than another. Sketches and force arrows connect structure to evidence rather than treating the challenge as trial and error. This is the module's main engineering tie-in."
 				},
 				{
 					title: "Simulation Challenge: Runaway Train and Elevator Forces",
@@ -146,7 +146,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Use quick diagram checks that start from a single sentence prompt and produce a complete free-body diagram. Each force direction should be justified before any calculations happen."
+						"Use quick diagram checks that start from a single sentence prompt and produce a complete free-body diagram. Justify each force direction before any calculations happen."
 				},
 				{
 					title: "Common Pitfalls",
@@ -156,7 +156,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Extension Project: Test of Strength",
 					content:
-						"Hold or suspend an object in static equilibrium, identify the forces, and explain why the object can feel heavy even when it is not accelerating. Use the setup to compare sensation, force, and motion carefully."
+						"Analyze a static-equilibrium scenario from a diagram, photo, simulation, or safe optional observation. Identify the forces and explain why an object can feel heavy even when it is not accelerating. The project compares sensation, force, and motion carefully without requiring suspended weights or physical materials."
 				}
 			]
 		},
@@ -171,7 +171,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set: Ball Drops, Ramps, and Pendulums",
 					content:
-						"Falling objects, ramp motion, and pendulum swings show energy changing form while the total stays interpretable. Include at least one frictionless example and one real-world example where thermal energy matters. The central habit is describing where the energy is, not just plugging numbers into formulas."
+						"Falling objects, ramp motion, and pendulum swings show energy changing form while the total stays interpretable. Use diagrams, simulation traces, provided video clips, or short datasets rather than requiring a live setup. Include at least one frictionless example and one real-world example where thermal energy matters. The central habit is describing where the energy is, not just plugging numbers into formulas."
 				},
 				{
 					title: "Graph and Data Exercise: Height-Speed and Energy Bar Charts",
@@ -179,14 +179,14 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use tables or simulation data showing how speed changes with height on a ramp or track. Build energy bar charts alongside numeric data so energy conservation is visible both graphically and mathematically. Compare a no-friction graph with a rough-surface graph and explain the missing mechanical energy."
 				},
 				{
-					title: "Mini Lab: Roller Coaster Energy Storyboard",
+					title: "Remote Investigation: Roller Coaster Energy Storyboard",
 					content:
 						"Create a storyboard for a roller coaster or skater run and label where gravitational potential, kinetic, and thermal energy are largest. Predict the speed ranking at different positions and justify their choices with energy reasoning rather than only with slope intuition."
 				},
 				{
-					title: "Mini Lab: Galileo's Ball Drop Revisited",
+					title: "Remote Investigation: Galileo's Ball Drop Revisited",
 					content:
-						"A ball-drop comparison revisits gravity with better measurement and cleaner reasoning than in the opening modules. The analysis should separate what the experiment can actually show, what air resistance changes, and why the result supports the idea of common gravitational acceleration."
+						"A provided ball-drop dataset, simulation, or video comparison revisits gravity with better measurement and cleaner reasoning than in the opening modules. The analysis separates what the evidence can actually show, what air resistance changes, and why the result supports the idea of common gravitational acceleration. Optional observations can supplement the shared evidence, but the course task remains valid without dropping objects."
 				},
 				{
 					title: "Reflection Question: Why Is Energy Such a Useful Idea?",
@@ -208,7 +208,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Extension Project: Pendulum Design",
 					content:
-						"Plan a pendulum demonstration and explain why it gradually loses amplitude in the real world. Suggest practical ways to reduce energy loss and predict which changes would matter most."
+						"Plan a pendulum model using a simulation, diagram, or safe optional observation and explain why amplitude gradually decreases in the real world. Suggest practical ways to reduce energy loss and predict which changes would matter most. The final artifact can be a labeled diagram, short model writeup, or comparison table rather than a physical build."
 				}
 			]
 		},
@@ -218,7 +218,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Charge, Current, Voltage, and Resistance",
 					content:
-						"Electricity starts with practical circuits rather than abstract field theory. Charge, current, voltage, and resistance should be tied to physical meaning. Water-flow analogies are helpful for intuition, but they are never a substitute for precise reasoning."
+						"Electricity starts with practical circuits rather than abstract field theory. Charge, current, voltage, and resistance stay tied to physical meaning. Water-flow analogies are helpful for intuition, but they are never a substitute for precise reasoning."
 				},
 				{
 					title: "Worked Example Set: Series and Parallel Circuits",
@@ -228,12 +228,12 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Graph and Data Exercise: Current-Voltage Tables",
 					content:
-						"Several current-voltage data points for the same resistor or circuit element can be collected or simulated. Graph current versus voltage, interpret the slope qualitatively, and connect the pattern to resistance. Repeated measurements matter here too, especially when contacts or batteries are imperfect."
+						"Several provided or simulated current-voltage data points for the same resistor or circuit element support the graphing task. Graph current versus voltage, interpret the slope qualitatively, and connect the pattern to resistance. Repeated measurements still matter, and imperfections can be discussed through noisy datasets or circuit-simulator variation rather than requiring physical contacts or batteries."
 				},
 				{
-					title: "Mini Lab: Circuit Build and Measurement Log",
+					title: "Remote Investigation: Circuit Measurement Log",
 					content:
-						"Build a simple series or parallel circuit and keep a careful measurement log. Record predicted versus observed bulb behavior, current direction, and any measured voltage or current values available from classroom tools. Sketch the circuit before and after assembly."
+						"Use a circuit simulator, provided schematic, or provided measurement table to compare a simple series circuit with a parallel circuit. Record predicted versus observed bulb behavior, current direction, and voltage or current values from the shared evidence. Sketch the circuit before and after the modeled change. A physical circuit build is optional only when appropriate tools and safety conditions are available."
 				},
 				{
 					title: "Simulation Challenge: Circuit Debugging",
@@ -243,14 +243,14 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Reflection Question: What Does a Diagram Hide or Reveal?",
 					content:
-						"Compare a physical breadboard or battery-and-bulb setup with its schematic diagram. A strong response explains which representation helps more with building and which helps more with reasoning."
+						"Compare a physical-looking circuit image, breadboard photo, or battery-and-bulb setup with its schematic diagram. A strong response explains which representation helps more with building and which helps more with reasoning."
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: predict what happens when one component is removed or replaced before touching the hardware. A good checkpoint explains current and voltage in the same circuit without mixing the two ideas."
+						"Readiness check: predict what happens when one component is removed or replaced before changing the circuit diagram or simulation. A good checkpoint explains current and voltage in the same circuit without mixing the two ideas."
 				},
 				{
 					title: "Common Pitfalls",
@@ -260,7 +260,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Extension Project: Home Device Power Survey",
 					content:
-						"Choose several household devices, estimate how electrical energy use differs among them, and connect those differences to power ratings and run time. This works well as a short bridge from circuits to practical energy use."
+						"Choose several common devices, estimate how electrical energy use differs among them, and connect those differences to power ratings and run time. This works well as a short bridge from circuits to practical energy use."
 				}
 			]
 		},
@@ -270,27 +270,27 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Wave Behavior Across Media",
 					content:
-						"Amplitude, wavelength, frequency, and wave speed can be developed through visual and auditory examples. Mechanical waves such as sound and electromagnetic waves such as light should be compared through shared wave ideas first. This module should make physics feel highly observable and pattern-based."
+						"Amplitude, wavelength, frequency, and wave speed can be developed through visual and auditory examples. Mechanical waves such as sound and electromagnetic waves such as light become easier to compare once shared wave ideas are visible. The module presents physics as observable, pattern-based reasoning rather than formula memorization."
 				},
 				{
 					title: "Worked Example Set: Pitch, Color, and Wave Speed",
 					content:
-						"Work examples that connect higher frequency with higher pitch, compare louder versus softer sounds through amplitude, and relate color differences to light frequency or wavelength. Include a simple wave-speed relationship problem and one example involving reflection or refraction."
+						"Work examples that connect higher frequency with higher pitch, compare louder versus softer sounds through amplitude, and relate color differences to light frequency or wavelength. Use waveform screenshots, audio-tool displays, or simulations as evidence. Include a simple wave-speed relationship problem and one example involving reflection or refraction."
 				},
 				{
 					title: "Graph and Data Exercise: Reading Waveforms",
 					content:
-						"Interpret snapshots of waves and wave-versus-time graphs so amplitude, period, and wavelength can be read from more than one representation. If possible, compare a generated sound waveform with the sound being heard. Use the exercise to reinforce that graphs describe measurable quantities, not artistic shapes."
+						"Interpret snapshots of waves and wave-versus-time graphs so amplitude, period, and wavelength can be read from more than one representation. A generated sound waveform or provided screenshot can be compared with the sound it represents when audio is available. Use the exercise to reinforce that graphs describe measurable quantities, not artistic shapes."
 				},
 				{
-					title: "Mini Lab: Resonance and Sound Demo",
+					title: "Remote Investigation: Resonance and Sound",
 					content:
-						"Run a resonance-focused demo using tuning forks, cups, strings, or a digital tone generator. Identify which variable is being changed, what happens near resonance, and how energy transfer becomes easier when frequencies match."
+						"Use a resonance simulation, digital tone generator, provided waveform, or short demonstration clip to study resonance. Identify which variable is being changed, what happens near resonance, and how energy transfer becomes easier when frequencies match. Physical objects such as tuning forks, cups, or strings are optional examples rather than required materials."
 				},
 				{
 					title: "Simulation Challenge: Light, Reflection, and Refraction",
 					content:
-						"Use a ripple tank, mirror setup, or light simulation to compare reflection and refraction. Predict path changes first, then test the prediction and explain the result using wave ideas instead of only memorized rules."
+						"Use a light simulation, ray diagram set, or provided ripple-tank/mirror clip to compare reflection and refraction. Predict path changes first, then test the prediction and explain the result using wave ideas instead of only memorized rules."
 				},
 				{
 					title: "Reflection Question: Why Are Waves So Good for Modeling Patterns?",
@@ -312,7 +312,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Extension Project: Sound Wave or Resonance Demo",
 					content:
-						"Design a demonstration that shows standing waves, resonance, or frequency changes clearly enough to be explained back from the evidence. Include a prediction, an observation, and a short explanation of what the wave model gets right."
+						"Design a remote-safe demonstration, simulation walkthrough, or evidence brief that shows standing waves, resonance, or frequency changes clearly enough to be explained from the evidence. Include a prediction, an observation from the shared source, and a short explanation of what the wave model gets right."
 				}
 			]
 		},
@@ -327,7 +327,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set: Turning a Question into a Testable Plan",
 					content:
-						"Work through how to refine a broad idea into a focused question, how to identify independent and dependent variables, and how to choose a useful graph before collecting data. Include one weak plan and one improved plan so the contrast makes a manageable investigation easier to recognize."
+						"Work through how to refine a broad idea into a focused question, how to identify independent and dependent variables, and how to choose a useful graph before collecting or selecting data. Include one weak plan and one improved plan so the contrast makes a manageable investigation easier to recognize."
 				},
 				{
 					title: "Graph and Data Exercise: Choosing the Best Representation",
@@ -335,9 +335,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Give a small capstone-style dataset, then decide whether a line graph, scatterplot, bar chart, or energy storyboard communicates the result best. Justify the choice in terms of the question being answered, not just visual preference."
 				},
 				{
-					title: "Mini Lab: Grand Experiment Proposal",
+					title: "Remote Investigation: Grand Experiment Proposal",
 					content:
-						"Draft and revise the final experiment or modeling challenge before full execution. Accept options such as a motion study, energy audit, bridge-force analysis, simple circuit investigation, or resonance demo, as long as the question is narrow and the data plan is realistic."
+						"Draft and revise the final experiment, simulation, dataset analysis, or modeling challenge before full execution. Accept options such as a motion study, energy audit, bridge-force analysis, simple circuit investigation, or resonance demo when the question is narrow, the evidence source is realistic, and the plan can be completed over Zoom without special materials."
 				},
 				{
 					title: "Communication and Defense of Results",
@@ -347,7 +347,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Reflection Question: How Has Your Physics Thinking Changed?",
 					content:
-						"Compare how evidence, graphs, and models were handled at the start of the course versus at the end. The reflection should make scientific growth visible, not just review vocabulary."
+						"Compare how evidence, graphs, and models were handled at the start of the course versus at the end. The reflection makes scientific growth visible, not just review vocabulary."
 				}
 			],
 			supplementalProjects: [
@@ -364,7 +364,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Capstone Option: A Grand Experiment",
 					content:
-						"Design and carry out an original physics experiment or simulation-based investigation using one of the major course themes. Start with a focused question, justify the setup, collect repeatable evidence, and defend the conclusion with a graph or clearly labeled model."
+						"Design and carry out an original physics investigation using one of the major course themes. The default format is simulation-based, dataset-based, diagram-based, or video-observation-based; physical observations are optional only when safe, simple, and available. Begin with a focused question, justify the setup, collect repeatable evidence, and defend the conclusion with a graph or clearly labeled model."
 				}
 			]
 		},
@@ -384,7 +384,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set",
 					content:
-						"Use collisions, recoil, impact safety, and force-time graphs as the core examples. Each problem should start with a before-and-after sketch, a prediction about which object changes momentum most, the conservation or impulse calculation, and a reasonableness check on direction and units."
+						"Use collisions, recoil, impact safety, and force-time graphs as the core examples. Each problem starts with a before-and-after sketch, a prediction about which object changes momentum most, the conservation or impulse calculation, and a reasonableness check on direction and units."
 				},
 				{
 					title: "Graph, Diagram, or Data Exercise",
@@ -392,7 +392,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Create a representation for Momentum, Impulse, and Collisions with at least one graph, diagram sequence, or data table. Read a force-time graph and shade the impulse area, then compare it with a before-and-after momentum table. The useful representation shows whether momentum is conserved inside the chosen system or changed by an external impulse."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use a collision simulation, provided cart data, or a video case study of an impact safety design. The final explanation identifies the system, the momentum or impulse evidence, and one simplification such as friction, deformation, or measurement timing."
 				},
@@ -406,7 +406,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Checkpoint: identify the system boundary, the positive direction, the before-and-after momentum values, and whether external impulse is being ignored or measured. The explanation should say why conservation applies or why impulse is the better model."
+						"Checkpoint: identify the system boundary, the positive direction, the before-and-after momentum values, and whether external impulse is being ignored or measured. The explanation states why conservation applies or why impulse is the better model."
 				},
 				{
 					title: "Common Pitfalls",
@@ -441,10 +441,10 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Graph, Diagram, or Data Exercise",
 					content:
-						"Build a torque table with force, lever arm, torque direction, and net torque. A balance-beam diagram should show how equal forces can fail to balance when their distances from the pivot differ."
+						"Build a torque table with force, lever arm, torque direction, and net torque. A balance-beam diagram shows how equal forces can fail to balance when their distances from the pivot differ."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use a seesaw simulation, door-handle case, or paper balance model. The final explanation shows the pivot, identifies all torques, and states which small real-world effects were ignored, such as friction at the hinge."
 				},
@@ -496,7 +496,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Create a density table or pressure comparison chart, then use it to predict floating, sinking, or surface pressure. A strong representation labels the material, volume, mass, area, and force so the conclusion is tied to measurable quantities."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use a buoyancy simulation, boat-shape design case, or provided fluid-density dataset. The final explanation identifies the displaced-fluid evidence and states one limitation, such as treating the fluid as still or ignoring object deformation."
 				},
@@ -510,7 +510,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Checkpoint: distinguish pressure, density, and buoyant force in the same scenario. The answer should identify area, volume, mass, displaced fluid, and whether the object-fluid system is being simplified."
+						"Checkpoint: distinguish pressure, density, and buoyant force in the same scenario. The answer identifies area, volume, mass, displaced fluid, and whether the object-fluid system is being simplified."
 				},
 				{
 					title: "Common Pitfalls",
@@ -545,10 +545,10 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Graph, Diagram, or Data Exercise",
 					content:
-						"Read a heating or cooling curve and label warming segments, phase-change plateaus, and transfer direction. A data table should connect mass, material, temperature change, and energy so the graph is more than a line shape."
+						"Read a heating or cooling curve and label warming segments, phase-change plateaus, and transfer direction. A data table connects mass, material, temperature change, and energy so the graph is more than a line shape."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use a thermal simulation, insulation design case, or provided temperature dataset. The final explanation states the transfer path, evidence for warming or cooling, and one uncontrolled factor such as airflow, contact area, or sensor delay."
 				},
@@ -562,7 +562,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Checkpoint: separate temperature, heat transfer, total thermal energy, and phase change in one scenario. The explanation should identify the system, surroundings, and direction of energy flow."
+						"Checkpoint: separate temperature, heat transfer, total thermal energy, and phase change in one scenario. The explanation identifies the system, surroundings, and direction of energy flow."
 				},
 				{
 					title: "Common Pitfalls",
@@ -597,10 +597,10 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Graph, Diagram, or Data Exercise",
 					content:
-						"Draw ray diagrams for several object positions and record image orientation, relative size, and image type. The diagram should show reflection or refraction rules explicitly rather than only reporting an answer."
+						"Draw ray diagrams for several object positions and record image orientation, relative size, and image type. The diagram shows reflection or refraction rules explicitly rather than only reporting an answer."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use a lens simulation, mirror case study, or provided optical-device diagram. The final explanation connects the ray model to the device purpose and names one limitation such as ideal thin lenses or ignoring lens thickness."
 				},
@@ -639,7 +639,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Model and Reasoning Toolkit",
 					content:
-						"Start with a field diagram, current direction, coil orientation, and energy transformation. Then decide whether the situation is about an electromagnet, a force on a current, a motor effect, a generator effect, or a changing-field induction effect."
+						"Begin with a field diagram, current direction, coil orientation, and energy transformation. Then decide whether the situation is about an electromagnet, a force on a current, a motor effect, a generator effect, or a changing-field induction effect."
 				},
 				{
 					title: "Worked Example Set",
@@ -652,7 +652,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Create a field-line sketch or input-output table for a magnetic device. The useful representation shows direction, relative strength, and what changes when current, coil turns, magnet motion, or distance changes."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use an electromagnet simulation, generator case study, or speaker/motor diagram. The final explanation identifies the field interaction and one simplification, such as ideal coils, uniform fields, or neglected losses."
 				},
@@ -704,7 +704,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Read position-time or amplitude-frequency graphs and identify amplitude, period, frequency, damping, and resonance peaks. A strong graph explanation connects the shape to energy transfer and restoring motion."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use a pendulum simulation, spring dataset, sound resonance example, or bridge case study. The final explanation identifies the driving pattern, the response, and one factor that would add damping or shift the period."
 				},
@@ -718,7 +718,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Checkpoint: identify equilibrium, amplitude, period, frequency, and whether damping or driving is present. The explanation should separate one full cycle from one crossing of equilibrium."
+						"Checkpoint: identify equilibrium, amplitude, period, frequency, and whether damping or driving is present. The explanation separates one full cycle from one crossing of equilibrium."
 				},
 				{
 					title: "Common Pitfalls",
@@ -753,10 +753,10 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Graph, Diagram, or Data Exercise",
 					content:
-						"Compare orbital radius, period, speed, or surface gravity using a table or scaled diagram. The representation should reveal that distance and mass both matter, and that visual scale can be misleading without units."
+						"Compare orbital radius, period, speed, or surface gravity using a table or scaled diagram. The representation reveals that distance and mass both matter, and that visual scale can be misleading without units."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use an orbit simulation, mission sketch, or provided planetary dataset. The final explanation shows force direction, velocity direction, and one simplification such as circular orbit assumptions or ignoring atmospheric drag."
 				},
@@ -805,10 +805,10 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Graph, Diagram, or Data Exercise",
 					content:
-						"Read a spectrum, energy-level diagram, or device data table. The representation should make discrete energies, absorption/emission patterns, or model breakdown visible instead of only naming quantum vocabulary."
+						"Read a spectrum, energy-level diagram, or device data table. The representation makes discrete energies, absorption/emission patterns, or model breakdown visible instead of only naming quantum vocabulary."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use a spectrum simulation, semiconductor case study, photoelectric-effect visualization, or GPS timing scenario. The final explanation connects evidence to model limits and avoids claiming more precision than the introductory model supports."
 				},
@@ -822,7 +822,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Checkpoint: name the observation, the classical model being challenged, and the modern-physics idea that handles the evidence better. The response should avoid vague claims that quantum physics is simply 'weird.'"
+						"Checkpoint: name the observation, the classical model being challenged, and the modern-physics idea that handles the evidence better. The response avoids vague claims that quantum physics is simply 'weird.'"
 				},
 				{
 					title: "Common Pitfalls",
@@ -847,7 +847,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Model and Reasoning Toolkit",
 					content:
-						"Choose one physics thread, define the system, state the assumption that makes the model usable, and decide what evidence would support or weaken the claim. Calculations and graphs should serve the argument rather than appear as decoration."
+						"Choose one physics thread, define the system, state the assumption that makes the model usable, and decide what evidence would support or weaken the claim. Calculations and graphs serve the argument rather than appear as decoration."
 				},
 				{
 					title: "Worked Example Set",
@@ -857,10 +857,10 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Graph, Diagram, or Data Exercise",
 					content:
-						"Select the graph, diagram, data table, or storyboard that best supports the final claim. The chosen representation should make the relationship visible and include units, labels, and enough context for someone else to evaluate the evidence."
+						"Select the graph, diagram, data table, or storyboard that best supports the final claim. The chosen representation makes the relationship visible and includes units, labels, and enough context for someone else to evaluate the evidence."
 				},
 				{
-					title: "Mini Lab, Simulation, or Case Study",
+					title: "Investigation, Simulation, or Case Study",
 					content:
 						"Use a safe remote simulation, provided dataset, video observation, or paper design case as the final evidence source. The final explanation states the claim, evidence, model, uncertainty, and revision decision in a single coherent argument."
 				},

@@ -6006,9 +6006,12 @@ function scienceSupport(context: CourseTextContext) {
 	const band = scienceCourseBand(context);
 	const topic = scienceTopicFocus(context);
 	const evidenceFormat = scienceEvidenceFormat(context);
+	const materialBoundary = band.includes("physics")
+		? "special lab supplies, physical sensors, or dedicated equipment are not required"
+		: "beakers, kits, and household materials are not required";
 	const remoteInvestigation = variantPrompt(context, [
 		subject =>
-			`${subject} uses shared-screen materials and paper notes alongside ${evidenceFormat}; for ${topic}, any physical demonstration is replaceable with evidence from the named resource, so beakers, kits, and household materials are not required.`,
+			`${subject} uses shared-screen materials and paper notes alongside ${evidenceFormat}; for ${topic}, any physical demonstration is replaceable with evidence from the named resource, so ${materialBoundary}.`,
 		subject =>
 			`${subject} is designed for a Zoom-safe ${band} workflow using ${evidenceFormat}. This ${band} evidence plan for ${topic} treats physical supplies as optional only when the same question can be answered from notes, diagrams, tables, or screen-shared resources.`,
 		subject =>
