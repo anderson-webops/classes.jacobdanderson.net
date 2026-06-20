@@ -1378,6 +1378,34 @@ describe("course text quality normalization", () => {
 		expect(duplicateGroups).toEqual([]);
 	});
 
+	it("keeps USACO practice blocks contest-specific instead of scaffold-labeled", async () => {
+		const courses = await Promise.all([
+			loadRawCourse("usaco-bronze"),
+			loadRawCourse("usaco-silver"),
+			loadRawCourse("usaco-gold")
+		]);
+		const corpus = courses.map(allCourseText).join("\n");
+
+		for (const course of courses) {
+			expect(course).not.toBeNull();
+		}
+
+		expect(corpus).not.toMatch(/Implementation Lab/i);
+		expect(corpus).not.toMatch(/\bSupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/This section covers/i);
+		expect(corpus).not.toMatch(/Key idea:/i);
+		expect(corpus).not.toMatch(/Skill target:/i);
+		expect(corpus).not.toMatch(/Practice target:/i);
+		expect(corpus).not.toMatch(/Target skill:/i);
+		expect(corpus).not.toMatch(/Practice focus:/i);
+		expect(corpus).not.toMatch(/The goal is to/i);
+		expect(corpus).toContain("UB 12 Barn Repair Java: Practice Studio");
+		expect(corpus).toContain("US Berry Picking: Practice Studio");
+		expect(corpus).toContain("Dynamic Programming Practice: Practice Studio");
+		expect(corpus).toContain("Hamming Codes Transfer Practice");
+		expect(corpus).toContain("MST II Extension Practice");
+	});
+
 	it("keeps C++ placement appendices level-specific across Levels 1-3", async () => {
 		const courseIds = ["c-level-1", "cpp-level-2", "cpp-level-3"] as const;
 		const courseLevels: Record<(typeof courseIds)[number], string> = {
