@@ -1662,9 +1662,16 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(
 			/Create a simple chatbot that asks several questions/i
 		);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bSkill target:/i);
 		expect(corpus).toContain(
 			"Java programs move through a source-edit, compile, run, and observe cycle"
 		);
+		expect(corpus).toContain("Java Syntax Transfer Practice");
+		expect(corpus).toContain("Object Model Transfer Practice");
+		expect(corpus).toContain("Recursive Trace Transfer Practice");
+		expect(corpus).toContain("Search Runtime Transfer Practice");
+		expect(corpus).toContain("Binary Search Edge-Case Practice");
 		expect(corpus).toContain("Arrays are fixed-size ordered collections");
 		expect(corpus).toContain(
 			"Object-oriented Java is clearest when each class owns one coherent responsibility"
@@ -1707,6 +1714,9 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"This review compares selection sort, insertion sort, bubble sort, and merge sort"
 		);
+		expect(corpus).toContain("Elementary Sorting Transfer Practice");
+		expect(corpus).toContain("Bubble Sort Optimization Practice");
+		expect(corpus).toContain("Merge Sort Trace Practice");
 	});
 
 	it("keeps Java Level 3 advanced track source free of planning shorthand", async () => {
@@ -1736,6 +1746,10 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Java concurrency begins with bounded task execution rather than raw thread chaos"
 		);
+		expect(corpus).toContain("Refactoring Transfer Practice");
+		expect(corpus).toContain("Priority Queue Transfer Practice");
+		expect(corpus).toContain("Graph Modeling Extension Practice");
+		expect(corpus).toContain("Google Maps Extension Practice");
 	});
 
 	it("keeps early Python Turtle prompts structured around planning and verification", async () => {
