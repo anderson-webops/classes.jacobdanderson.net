@@ -43,17 +43,17 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		assessmentStyle: [
 			"Explain one event chain from input to visible result.",
-			"Use broken-script debugging checkpoints that require prediction, repair, and retest.",
+			"Broken-script debugging checkpoints require prediction, repair, and retest.",
 			"Include a brief project presentation that names the goal, the main blocks used, and one improvement after playtesting."
 		],
 		sourceAndTooling: [
-			"Use Scratch educator references and stable project examples.",
+			"Scratch educator references and stable project examples anchor the source material.",
 			"Maintain broken-script cards and remix/reference projects for debugging practice.",
 			"Keep a simple blocks-to-pseudocode glossary visible across both levels."
 		],
 		safetyAndAccess: [
 			"Keep projects browser-accessible and age-appropriate.",
-			"Use only age-appropriate shared assets or provided media.",
+			"Only age-appropriate shared assets or provided media belong in course projects.",
 			"Make any account-sharing or public remixing optional and supervised."
 		],
 		adminExpansionBacklog: [
@@ -78,7 +78,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Level 1 needs no Python experience. Level 3 expects comfort with functions, loops, lists, dictionaries, and debugging console programs.",
 		outcomes: [
 			"Write clear console programs with input handling, conditionals, loops, functions, and data structures.",
-			"Use files, CSV or JSON records, exceptions, modules, command-line arguments, and lightweight tests in medium-size programs.",
+			"Files, CSV or JSON records, exceptions, modules, command-line arguments, and lightweight tests belong in medium-size programs.",
 			"Explain how Python choices map to Java and C++ choices when moving into stronger typing, classes, and memory-aware programming."
 		],
 		sequencingNotes: [
@@ -92,17 +92,17 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Algorithm or puzzle solver that includes tracing, edge cases, and complexity discussion."
 		],
 		assessmentStyle: [
-			"Use function-level tests or assertions for standard, boundary, and edge cases.",
+			"Function-level tests or assertions cover standard, boundary, and edge cases.",
 			"Trace before running to identify type, mutation, off-by-one, and missing-return bugs.",
 			"Review capstones for requirements, organization, input/output behavior, and explanation quality."
 		],
 		sourceAndTooling: [
 			"Standardize starter and review parity across the Python source repos.",
-			"Use Python 3, optional pytest examples, and small CSV/JSON fixtures.",
+			"Python 3, optional pytest examples, and small CSV/JSON fixtures support the project workflow.",
 			"Keep bridge projects explicit about what changes when the same idea is written in Java or C++."
 		],
 		safetyAndAccess: [
-			"Use local files and provided datasets unless an API key is explicitly configured for class.",
+			"Local files and provided datasets are the default unless an API key is explicitly configured for class.",
 			"Keep web/API examples read-only and replaceable with fixture files.",
 			"Do not require paid services or personal credentials for core projects."
 		],
@@ -124,7 +124,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		outcomes: [
 			"Build games around a clear update loop, input model, collision or interaction rules, UI state, and restart/end conditions.",
 			"Separate model/state decisions from rendering or scene setup so bugs can be diagnosed without guessing.",
-			"Use playtest notes, bug reproduction steps, asset attribution, and version-control habits in every substantial game."
+			"Playtest notes, bug reproduction steps, asset attribution, and version-control habits belong in every substantial game."
 		],
 		sequencingNotes: [
 			"PyGame starts with main loop, events, rectangles, sprites, collision, audio, menus, and level data.",
@@ -139,17 +139,17 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		assessmentStyle: [
 			"Explain update, draw, input, collision, and state-transition phases.",
 			"Run collision and restart edge-case tests rather than only testing one standard scenario.",
-			"Use a rubric for controls, feedback, state, code organization, asset hygiene, and polish."
+			"Rubrics cover controls, feedback, state, code organization, asset hygiene, and polish."
 		],
 		sourceAndTooling: [
-			"Use PyGame documentation for Python game-loop material.",
-			"Use Unity Learn, Unity Manual, Build Profiles, Input System, Test Framework, package locks, and Git LFS for Unity projects.",
+			"PyGame documentation anchors Python game-loop material.",
+			"Unity Learn, Unity Manual, Build Profiles, Input System, Test Framework, package locks, and Git LFS anchor Unity projects.",
 			"Keep THIRD_PARTY_ASSETS notes and engine version files with each Unity starter and review state.",
 			"Treat current Unity starter and review source folders as the baseline; mature modules use checkpoint tags or equivalent history so game-growth history can be inspected over time.",
 			"Unity source packages document editor version, package baseline, Build Profiles, Input System setup, Edit Mode or Play Mode smoke tests, and asset-license provenance."
 		],
 		safetyAndAccess: [
-			"Use licensed or provided assets only.",
+			"Licensed or provided assets only.",
 			"Make heavy Unity editor work optional when the available computer cannot run the full toolchain.",
 			"Keep multiplayer, analytics, ads, and monetization out of the core course."
 		],
@@ -187,14 +187,14 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		assessmentStyle: [
 			"Explain what each row, feature, label, and metric means.",
-			"Use interpretation questions that separate correlation, prediction, and causation.",
+			"Interpretation questions separate correlation, prediction, and causation.",
 			"Include limitations, dataset assumptions, and responsible-use notes in final projects.",
 			"Include an experiment log for ML projects: baseline, model choice, split method, metric, failed attempt, and one next improvement."
 		],
 		sourceAndTooling: [
-			"Use pandas, matplotlib or seaborn, scikit-learn, and small pinned CSV fixtures.",
+			"pandas, matplotlib or seaborn, scikit-learn, and small pinned CSV fixtures support the workflow.",
 			"Keep dataset source notes, license notes, schema notes, and expected output artifacts with each project.",
-			"Use NIST AI RMF and scikit-learn model-evaluation documentation as reference anchors.",
+			"NIST AI RMF and scikit-learn model-evaluation documentation are reference anchors.",
 			"Data Science source pool: NYC 311, NOAA Climate Data Online, CDC BRFSS, Our World in Data, Iris, Palmer Penguins, and small provided CSV fixtures.",
 			"AI Foundations source pool: OpenStreetMap or OSMnx extracts, MiniZinc-style constraint examples, Lichess puzzles, OpenSpiel examples, and authored toy state spaces.",
 			"Machine Learning source pool: scikit-learn sample datasets, OpenML, FashionMNIST or CIFAR-10 where appropriate, Hugging Face Datasets, and local train/test fixtures."
@@ -226,7 +226,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Write enough justification to classify an error as arithmetic, notation, concept, or strategy."
 		],
 		sequencingNotes: [
-			"Use Common Core algebra domains as the standards map and keep representation changes visible.",
+			"Common Core algebra domains provide the standards map, with representation changes kept visible.",
 			"Add cumulative mixed practice so older skills do not vanish after a unit ends.",
 			"Separate direct practice, modeling projects, error analysis, and enrichment rather than making every supplemental look the same."
 		],
@@ -236,19 +236,19 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Cumulative mixed practice set with a short reflection on which representation helped most."
 		],
 		assessmentStyle: [
-			"Use short quizzes, explanation prompts, graph/table interpretation, and error diagnosis.",
+			"Short quizzes, explanation prompts, graph/table interpretation, and error diagnosis shape assessment.",
 			"State what each variable represents and why each transformation is allowed.",
 			"Track misconceptions across sessions rather than only marking answers wrong."
 		],
 		sourceAndTooling: [
 			"Anchor standards to Common Core high-school algebra and functions domains where appropriate.",
-			"Use graphing calculators or Desmos-style visuals when they clarify representation changes.",
+			"Graphing calculators or Desmos-style visuals are useful when they clarify representation changes.",
 			"Track unresolved worksheet or image replacements explicitly until original source visuals are replaced with owned or source-safe materials."
 		],
 		safetyAndAccess: [
 			"Keep external calculators or graphing tools optional when a school requires a specific platform.",
 			"Do not rely on copyrighted textbook pages as course text.",
-			"Use accessible diagrams and alternative text for graph-heavy material."
+			"Accessible diagrams and alternative text belong with graph-heavy material."
 		],
 		adminExpansionBacklog: [
 			"Build a formal algebra project taxonomy for practice, modeling, error analysis, and enrichment.",
@@ -272,7 +272,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Level 1 assumes general programming readiness. Level 2 and 3 assume variables, I/O, loops, functions, classes, vectors, references, pointers, raw arrays, and dynamic memory have been introduced.",
 		outcomes: [
 			"Write C++ programs with clear types, functions, classes, vectors, references, pointers, arrays, dynamic memory, RAII, and standard-library containers.",
-			"Use state machines, parsers, file persistence, templates, virtual interfaces, and medium-size command architecture without adding AI/ML content.",
+			"State machines, parsers, file persistence, templates, virtual interfaces, and medium-size command architecture are covered without adding AI/ML content.",
 			"Implement and analyze linked structures, trees, heaps, hashing, graphs, dynamic programming, and shortest-path style projects."
 		],
 		sequencingNotes: [
@@ -287,11 +287,11 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		assessmentStyle: [
 			"Trace memory ownership, object lifetime, and copy/move expectations before and after code runs.",
-			"Use compile/run tests for empty, one-element, duplicate, invalid-input, and large-enough cases.",
+			"Compile/run tests cover empty, one-element, duplicate, invalid-input, and large-enough cases.",
 			"Include runtime and data-structure tradeoff explanations for DS&A projects."
 		],
 		sourceAndTooling: [
-			"Use ISO C++ Core Guidelines, local Makefile or CMake workflows, and source folders under Instruction-Material.",
+			"ISO C++ Core Guidelines, local Makefile or CMake workflows, and source folders under Instruction-Material anchor the source/tooling path.",
 			"Keep starter and review naming consistent across CPP Level 1-3 and DS&A repos.",
 			"CS235/CS236-inspired concepts belong only after being rewritten into original course projects."
 		],
@@ -323,7 +323,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Readiness includes command-line work, typed programming basics, files, and experience debugging small programs.",
 		outcomes: [
 			"Explain machine representation, memory layout, stack/heap behavior, build tooling, processes, files, permissions, services, logs, and diagnostics.",
-			"Use Linux and network tools to gather evidence and explain system state without guessing.",
+			"Linux and network tools gather evidence and explain system state without guessing.",
 			"Compare C/C++ systems risks with Rust ownership, borrowing, traits, error handling, and safe concurrency patterns."
 		],
 		sequencingNotes: [
@@ -338,19 +338,19 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		assessmentStyle: [
 			"Include command transcripts, annotated outputs, and short evidence-to-claim explanations.",
-			"Use checklists for setup, verification, rollback, and failure-mode diagnosis.",
+			"Checklists cover setup, verification, rollback, and failure-mode diagnosis.",
 			"Distinguish observation from inference in system and network troubleshooting."
 		],
 		sourceAndTooling: [
-			"Use local VMs, containers, or owned servers where needed.",
+			"Local VMs, containers, or owned servers support labs where needed.",
 			"Anchor network concepts to RFC 9110 for HTTP and RFC 8446 for TLS where appropriate.",
-			"Use systemd documentation, Rust Book, and command-line reproducibility notes."
+			"systemd documentation, Rust Book, and command-line reproducibility notes are reference anchors."
 		],
 		safetyAndAccess: [
 			"Do not require router changes, scans of third-party hosts, or home-network reconfiguration.",
-			"Use local traffic, owned domains, or provided captures.",
+			"Local traffic, owned domains, or provided captures are the approved evidence sources.",
 			"Keep privileged commands constrained and require rollback notes for configuration changes.",
-			"Use a simple safety matrix for each lab: allowed target, prohibited target, required evidence, rollback or cleanup step, and what to skip when admin access is unavailable."
+			"Each lab includes a simple safety matrix: allowed target, prohibited target, required evidence, rollback or cleanup step, and what to skip when admin access is unavailable."
 		],
 		adminExpansionBacklog: [
 			"Add a systems prerequisite matrix that shows where C, Assembly, Linux, Networking, Security, and Rust belong in the sequence.",
@@ -377,7 +377,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		outcomes: [
 			"Write Java classes with encapsulation, constructors, methods, inheritance, polymorphism, abstract classes, interfaces, and records where appropriate.",
 			"Choose between graphics and non-graphics tracks depending on whether the next project emphasizes visual interaction or deeper backend/model design.",
-			"Use tests, tracing, and design explanations to show object state and method contracts."
+			"Tests, tracing, and design explanations show object state and method contracts."
 		],
 		sequencingNotes: [
 			"Java Level 1-3 remains the general pathway for syntax, classes, inheritance, data structures, and project fluency.",
@@ -395,7 +395,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Include unit tests or small driver programs for normal, empty, duplicate, invalid, and boundary cases."
 		],
 		sourceAndTooling: [
-			"Use JDK tooling, simple command-line builds or IDE projects, and explicit starter plus review source folders.",
+			"JDK tooling, simple command-line builds or IDE projects, and explicit starter plus review source folders support Java course work.",
 			"Keep Java records covered as immutable data carriers, not as a replacement for every class.",
 			"Maintain separate source links for graphics and non-graphics tracks."
 		],
@@ -427,7 +427,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		sequencingNotes: [
 			"Keep the AP scope distinct from the broader Java courses.",
 			"Map every module to College Board unit expectations and exam task types.",
-			"Use Barron's or other exam-prep material only as a supplement, not as uncited course text."
+			"Barron's or other exam-prep material remains supplemental, not uncited course text."
 		],
 		projectExpectations: [
 			"AP-style class design and method-writing projects with scoring notes.",
@@ -435,13 +435,13 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Timed practice sets with review of wrong-answer patterns and fixes."
 		],
 		assessmentStyle: [
-			"Use MCQ distractor analysis and FRQ rubrics.",
+			"MCQ distractor analysis and FRQ rubrics are core assessment formats.",
 			"Keep a recurring error log grouped by syntax, tracing, object state, loops, arrays, and recursion.",
 			"Include digital-exam timing practice and short written explanations of why an answer is valid.",
 			"Practice the current 42 MCQ / 4 FRQ exam shape and score FRQs by rows so partial-credit habits are visible instead of only final answers."
 		],
 		sourceAndTooling: [
-			"Use College Board AP CSA course and exam documentation as the authority.",
+			"College Board AP CSA course and exam documentation is the authority.",
 			"Link AP project starter folders and review folders in the instruction-material source repo when available.",
 			"Keep downloaded AP media in the static classes media repo, not in Downloads.",
 			"Guardrails to refresh each cycle: official Java subset, Bluebook-style typed and uncompiled practice, four FRQ families, AP Lab Quartet references, data ethics, text-file/dataset practice, wrapper parsing, recursion, ArrayList analysis, and 2D arrays."
@@ -449,7 +449,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		safetyAndAccess: [
 			"Do not expose completed-state links where only starter materials belong.",
 			"Avoid copying proprietary textbook material into course text.",
-			"Use practice problems in a way that respects source and licensing boundaries."
+			"Practice problems must respect source and licensing boundaries."
 		],
 		adminExpansionBacklog: [
 			"Add an explicit AP exam alignment map to the public pathway and internal audits.",
@@ -473,7 +473,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Write postmortems that identify the blocker: reading, modeling, algorithm choice, implementation bug, or testing gap."
 		],
 		sequencingNotes: [
-			"Use official USACO problems and USACO Guide topics as the sequencing authority.",
+			"Official USACO problems and USACO Guide topics provide the sequencing authority.",
 			"Bronze emphasizes careful implementation before advanced algorithms.",
 			"Silver and Gold add topic ladders only after easier problems can be solved cleanly under time.",
 			"Avoid random chronological contest browsing; choose official problems by division, topic, and slot difficulty so each assignment has a specific purpose."
@@ -486,11 +486,11 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		assessmentStyle: [
 			"Check exact sample input/output, smallest case, largest reasonable case, ties, duplicates, and impossible cases.",
 			"Include time complexity, memory complexity, and proof of why the algorithm matches constraints.",
-			"Use timed practice only after a repeatable untimed solution process is reliable.",
+			"Timed practice starts only after a repeatable untimed solution process is reliable.",
 			"Every assigned official problem includes a brute-force idea, target complexity, invariant or proof note, common wrong turns, and postmortem."
 		],
 		sourceAndTooling: [
-			"Use USACO Official and USACO Guide as authoritative references.",
+			"USACO Official and USACO Guide are authoritative references.",
 			"Keep local templates for input parsing, stress testing, and postmortem notes.",
 			"Prefer original explanatory text around official problems rather than copying problem statements into the course."
 		],
@@ -537,10 +537,10 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		assessmentStyle: [
 			"Identify the responsibility that moved during refactoring.",
 			"Include behavior-preserving tests before and after a refactor.",
-			"Use design tradeoff prompts, not just vocabulary quizzes."
+			"Design tradeoff prompts matter more than vocabulary-only quizzes."
 		],
 		sourceAndTooling: [
-			"Use language-specific source folders with starter and review pairs.",
+			"Language-specific source folders include starter and review pairs.",
 			"Prefer small runnable examples over framework-heavy demos.",
 			"Keep cross-language comparisons explicit when a course borrows an idea from another language."
 		],
@@ -571,7 +571,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		prerequisiteSummary:
 			"Elementary Science splits K-2 and grades 3-5 expectations. Middle school science assumes basic reading, graphing, and explanation readiness. Chemistry and Physics assume stronger math and model reading.",
 		outcomes: [
-			"Use observations, provided images, graphs, data tables, simulations, and models to explain phenomena.",
+			"Observations, provided images, graphs, data tables, simulations, and models explain phenomena.",
 			"Write claim-evidence-reasoning responses that distinguish observation from inference.",
 			"Connect grade-band science vocabulary to models in life science, earth/space science, physical science, chemistry, and physics."
 		],
@@ -587,12 +587,12 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Each unit uses one shared phenomenon, one simulation or visualization, one public dataset/media source, one notebook or graphic organizer, and one CER routine."
 		],
 		assessmentStyle: [
-			"Use CER writing, vocabulary checks, graph interpretation, diagram labeling, and model critique.",
+			"CER writing, vocabulary checks, graph interpretation, diagram labeling, and model critique shape assessment.",
 			"Separate what they saw from what they inferred.",
-			"Use short formative checks rather than physical lab completion as proof of understanding."
+			"Short formative checks are stronger proof of understanding than physical lab completion."
 		],
 		sourceAndTooling: [
-			"Use NGSS appendices, ACS chemistry guidance, PhET simulations, and vetted NASA/NOAA/USGS/HHMI resources as appropriate.",
+			"NGSS appendices, ACS chemistry guidance, PhET simulations, and vetted NASA/NOAA/USGS/HHMI resources anchor science references as appropriate.",
 			"Keep every activity Zoom-first with notes, paper, shared screen, and provided source material.",
 			"Maintain a resource shortlist by module: standard, visual/simulation, data source, model, and CER prompt.",
 			"Elementary and middle-school source pool: PhET, NASA, NOAA, USGS, HHMI BioInteractive, CK-12-style open readings, National Geographic Education, and original diagrams or data tables.",
@@ -601,7 +601,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		safetyAndAccess: [
 			"No required beakers, kits, chemicals, household experiments, or physical supplies beyond notes and paper.",
 			"Any optional physical demo needs an equivalent diagram, simulation, or data table.",
-			"Use age-appropriate content and avoid unsafe home-lab instructions."
+			"Age-appropriate content and remote-safe instructions are required."
 		],
 		adminExpansionBacklog: [
 			"Write a high-school science pathway after elementary and middle-school courses are stabilized.",
@@ -636,12 +636,12 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		assessmentStyle: [
 			"Label app entry point, scene, view hierarchy, navigation model, and data model responsibilities.",
-			"Use UI behavior checks plus code explanations.",
+			"UI behavior checks and code explanations support assessment.",
 			"Include one accessibility or usability improvement in major projects."
 		],
 		sourceAndTooling: [
-			"Use Apple's App Dev Training and current SwiftUI documentation as the authority.",
-			"Use Xcode, SwiftUI previews, local assets, and starter plus review projects where available.",
+			"Apple's App Dev Training and current SwiftUI documentation are the authority.",
+			"Xcode, SwiftUI previews, local assets, and starter plus review projects support the workflow where available.",
 			"Keep simulator/device requirements explicit."
 		],
 		safetyAndAccess: [
@@ -670,7 +670,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"JavaScript Level 1 can start near the beginning. Web Development Foundations assumes readiness with small JavaScript programs, HTML/CSS, and the DOM.",
 		outcomes: [
 			"Build browser projects with HTML, CSS, JavaScript, DOM events, forms, fetch/async APIs, local state, and responsive layout.",
-			"Use file-based projects, Git/GitHub, npm scripts, local dev servers, browser devtools, and deployment workflows.",
+			"File-based projects, Git/GitHub, npm scripts, local dev servers, browser devtools, and deployment workflows support the sequence.",
 			"Explain HTTP basics, accessibility checks, security basics, OWASP-informed safe input handling, and production-readiness tradeoffs."
 		],
 		sequencingNotes: [
@@ -691,14 +691,14 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Include one accessibility fix, one async/loading/error-state fix, and one safe-input or output-escaping explanation in substantial web projects."
 		],
 		sourceAndTooling: [
-			"Use MDN JavaScript, RFC 9110 HTTP Semantics, OWASP Web Security Testing Guide, browser devtools, Git, npm, and deployment docs as anchors.",
+			"MDN JavaScript, RFC 9110 HTTP Semantics, OWASP Web Security Testing Guide, browser devtools, Git, npm, and deployment docs are source anchors.",
 			"Keep starter and review source folders in the Web Development Foundations and JavaScript repos.",
-			"Use linting/formatting and simple local dev server scripts before frameworks.",
+			"Linting/formatting and simple local dev server scripts come before frameworks.",
 			"Core topic checklist: semantic HTML, forms and labels, responsive CSS, DOM events, modules, promises, async/await, fetch, JSON, HTTP status codes, local storage, deployment, performance basics, and OWASP-informed validation."
 		],
 		safetyAndAccess: [
 			"Do not require real payment, authentication, or production secrets for course projects.",
-			"Use safe mock APIs or provided endpoints for early work.",
+			"Safe mock APIs or provided endpoints support early work.",
 			"Treat security topics as defensive design and safe validation, not offensive web testing."
 		],
 		adminExpansionBacklog: [
@@ -722,7 +722,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Useful prerequisites include command-line basics and enough networking, systems, or C/C++ context to understand the specific security course.",
 		outcomes: [
 			"Write threat models, identify assets and trust boundaries, collect evidence, describe impact, and propose defensive mitigations.",
-			"Use local fixtures, intentionally vulnerable examples, owned targets, or provided packet captures to study security behavior safely.",
+			"Local fixtures, intentionally vulnerable examples, owned targets, or provided packet captures support safe security study.",
 			"Connect network, memory, binary, and systems concepts to defensive hardening, detection, and reporting."
 		],
 		sequencingNotes: [
@@ -741,9 +741,9 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Include a short report rather than only screenshots or command output."
 		],
 		sourceAndTooling: [
-			"Use OWASP, RFCs, local VMs/containers, provided captures, and intentionally vulnerable toy fixtures.",
+			"OWASP, RFCs, local VMs/containers, provided captures, and intentionally vulnerable toy fixtures anchor the source/tooling path.",
 			"Keep a prohibited-activities checklist and approved-target policy attached to the course.",
-			"Use defensive verification scripts where possible."
+			"Defensive verification scripts are preferred where possible."
 		],
 		safetyAndAccess: [
 			"Prohibited: scanning third-party systems, attacking real services, bypassing access controls, credential harvesting, or using another person's data.",

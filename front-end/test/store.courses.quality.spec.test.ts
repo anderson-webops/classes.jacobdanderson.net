@@ -4699,7 +4699,7 @@ describe("course text quality normalization", () => {
 		expect(guideItem.content).toContain("Slow/Supported");
 		expect(guideItem.content).toContain("Fast/Quick");
 		expect(guide).toContain(
-			"Use this readme to choose a route through AP Computer Science A"
+			"This guide compares routes through AP Computer Science A"
 		);
 		expect(guide).toMatch(/\|\s*Quick Track\s*\|\s*Fast\s*\|/);
 		expect(guide).toMatch(/\|\s*Standard Track\s*\|\s*Medium\s*\|/);
@@ -4708,7 +4708,7 @@ describe("course text quality normalization", () => {
 		expect(guide).toMatch(/\|\s*Slow \/ Easy\s*\|\s*Supported Track\s*\|/);
 		expect(guide).toMatch(/\|\s*Fast \/ Quick\s*\|\s*Quick Track\s*\|/);
 		expect(guide).toMatch(/\|\s*Hard\s*\|\s*Challenge Track\s*\|/);
-		expect(guide).toContain("How To Use This Guide");
+		expect(guide).toContain("How This Guide Works");
 		expect(guide).toContain("Track Labels At A Glance");
 		expect(guide).toContain("Course Track Cards");
 		expect(guide).toContain("Track Recipes");
