@@ -174,7 +174,7 @@ function securityLabProjectContent(
 }
 
 function securityLabLabel(topic: string) {
-	return topic.replace(/: Implementation Lab$/, "");
+	return topic;
 }
 
 function securityLabConceptContent(topic: string) {
@@ -238,7 +238,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Core Outcomes for Part 2",
 					content:
-						"The goal is precise vulnerability reasoning: distinguish a crash from an exploitable condition, explain how bug classes can lead to control-flow or data corruption, evaluate mitigations such as ASLR, NX, canaries, RELRO, and allocator behavior, and produce patch notes plus regression checks that close the bug class rather than only describing it."
+						"The course outcome is precise vulnerability reasoning: distinguish a crash from an exploitable condition, explain how bug classes can lead to control-flow or data corruption, evaluate mitigations such as ASLR, NX, canaries, RELRO, and allocator behavior, and produce patch notes plus regression checks that close the bug class rather than only describing it."
 				},
 				{
 					title: "LLS Part 2 Setup and Tooling: Core Project",
@@ -263,7 +263,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-04-rust-systems-lab-15/solution"
 				},
 				{
-					title: "LLS Part 2 Setup and Tooling Supplemental 2",
+					title: "Setup and Tooling Transfer Practice",
 					content: securityLabProjectContent(
 						"LLS Part 2 Setup and Tooling",
 						"extension",
@@ -275,7 +275,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-01-lls-part-2-setup-and-tooling-supplemental-2/solution"
 				},
 				{
-					title: "LLS Part 2 Setup and Tooling Supplemental 3",
+					title: "Setup and Tooling Extension Practice",
 					content: securityLabProjectContent(
 						"LLS Part 2 Setup and Tooling",
 						"extension",
@@ -294,7 +294,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Reachability, Controllability, Impact, and Attacker Assumptions",
 					content:
-						"This section covers exploitability triage as a disciplined decision process. The triage decision checks whether untrusted input reaches the bug, whether the attacker can shape the failing bytes or state, what the likely impact is, and what assumptions about the environment are required before a maintainers' note should call the issue security-relevant."
+						"Exploitability triage is a disciplined decision process. The triage decision checks whether untrusted input reaches the bug, whether the attacker can shape the failing bytes or state, what the likely impact is, and what assumptions about the environment are required before a maintainer's note should call the issue security-relevant."
 				},
 				{
 					title: "Crash Taxonomy for Defensive Analysis",
@@ -304,7 +304,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Write Short Exploitability Notes for Maintainers",
 					content:
-						"Skill target: Write concise notes that name reachability, attacker control, current mitigations, likely impact, and immediate next steps. The note should be short enough to be useful in a triage queue but concrete enough that another engineer can tell why the issue was classified as availability-only, disclosure-relevant, or corruption-relevant."
+						"Write concise notes that name reachability, attacker control, current mitigations, likely impact, and immediate next steps. The note should be short enough to be useful in a triage queue but concrete enough that another engineer can tell why the issue was classified as availability-only, disclosure-relevant, or corruption-relevant."
 				},
 				{
 					title: "Project: LLS13 Crash Classification Lab",
@@ -327,7 +327,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS13-Crash-Classification-Lab/solution"
 				},
 				{
-					title: "Module 1: Exploitability Triage Supplemental 2",
+					title: "Exploitability Triage Transfer Practice",
 					content: securityLabProjectContent(
 						"Module 1: Exploitability Triage",
 						"extension",
@@ -339,7 +339,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-03-module-1-exploitability-triage-supplemental-2/solution"
 				},
 				{
-					title: "Module 1: Exploitability Triage Supplemental 3",
+					title: "Exploitability Triage Extension Practice",
 					content: securityLabProjectContent(
 						"Module 1: Exploitability Triage",
 						"extension",
@@ -368,7 +368,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Safer APIs, Stack Canaries, and Layered Defenses",
 					content:
-						"Compare safer bounded APIs and validation-first copy rules to mitigations such as stack canaries. Key idea: Canaries and hardening settings help detect or disrupt stack corruption, but they do not justify leaving unchecked copy logic in place."
+						"Compare safer bounded APIs and validation-first copy rules to mitigations such as stack canaries. Canaries and hardening settings help detect or disrupt stack corruption, but they do not justify leaving unchecked copy logic in place."
 				},
 				{
 					title: "Project: LLS14 Stack Frame Corruption Demo and Fix",
@@ -391,7 +391,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS14-Stack-Frame-Corruption-Demo-and-Fix/solution"
 				},
 				{
-					title: "Module 2: Stack Corruption in Toy Programs Supplemental 2",
+					title: "Stack Corruption Transfer Practice",
 					content: securityLabProjectContent(
 						"Module 2: Stack Corruption in Toy Programs",
 						"extension",
@@ -403,7 +403,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-05-module-2-stack-corruption-in-toy-programs-supplemental-2/solution"
 				},
 				{
-					title: "Module 2: Stack Corruption in Toy Programs Supplemental 3",
+					title: "Stack Corruption Extension Practice",
 					content: securityLabProjectContent(
 						"Module 2: Stack Corruption in Toy Programs",
 						"extension",
@@ -422,7 +422,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Use-After-Free, Double Free, and Stale Pointer Reuse",
 					content:
-						"This section covers heap-lifetime issues as ownership and lifecycle failures, not as magic allocator trivia. Key idea: Why stale references, repeated frees, and reused heap slots can turn ordinary bookkeeping mistakes into disclosure or corruption problems when old handles or pointers still reach new objects."
+						"Heap-lifetime issues are ownership and lifecycle failures, not allocator trivia. Stale references, repeated frees, and reused heap slots can turn ordinary bookkeeping mistakes into disclosure or corruption problems when old handles or pointers still reach new objects."
 				},
 				{
 					title: "Ownership Mistakes That Escalate Risk",
@@ -455,7 +455,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS15-Heap-Lifetime-Audit/solution"
 				},
 				{
-					title: "Module 3: Heap Lifetime and Heap Metadata Concepts Supplemental 2",
+					title: "Heap Lifetime Transfer Practice",
 					content: securityLabProjectContent(
 						"Module 3: Heap Lifetime and Heap Metadata Concepts",
 						"extension",
@@ -467,7 +467,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-07-module-3-heap-lifetime-and-heap-metadata-concepts-supplemental-2/solution"
 				},
 				{
-					title: "Module 3: Heap Lifetime and Heap Metadata Concepts Supplemental 3",
+					title: "Heap Lifetime Extension Practice",
 					content: securityLabProjectContent(
 						"Module 3: Heap Lifetime and Heap Metadata Concepts",
 						"extension",
@@ -486,7 +486,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Uninitialized Reads, Oversized Reads, and Stale Data Disclosure",
 					content:
-						"This section covers disclosure bugs as trust-boundary problems where bytes that should stay internal cross into logs, responses, or other observable outputs. Recognize that a leak can matter even when the program does not crash, because addresses, object contents, and stale internal notes can still change the risk profile of a later bug."
+						"Disclosure bugs are trust-boundary problems where bytes that should stay internal cross into logs, responses, or other observable outputs. A leak can matter even when the program does not crash, because addresses, object contents, and stale internal notes can still change the risk profile of a later bug."
 				},
 				{
 					title: "Why Leaked Addresses or Object Contents Matter",
@@ -530,7 +530,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-05-rust-systems-lab-16/solution"
 				},
 				{
-					title: "Module 4: Information Disclosure and Memory Observation Supplemental 2",
+					title: "Memory Disclosure Transfer Practice",
 					content: securityLabProjectContent(
 						"Module 4: Information Disclosure and Memory Observation",
 						"extension",
@@ -542,7 +542,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-09-module-4-information-disclosure-and-memory-observation-supplemental-2/solution"
 				},
 				{
-					title: "Module 4: Information Disclosure and Memory Observation Supplemental 3",
+					title: "Memory Disclosure Extension Practice",
 					content: securityLabProjectContent(
 						"Module 4: Information Disclosure and Memory Observation",
 						"extension",
@@ -561,7 +561,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "NX, ASLR, PIE, RELRO, Stack Canaries, and Hardened Allocators",
 					content:
-						"Common mitigations are factors that change exploitability analysis, not excuses to ignore the underlying bug. Key idea: What NX, ASLR, PIE, RELRO, stack canaries, and hardened allocators are trying to prevent or make harder, and how those mitigations change the confidence and wording of a triage note."
+						"Common mitigations are factors that change exploitability analysis, not excuses to ignore the underlying bug. NX, ASLR, PIE, RELRO, stack canaries, and hardened allocators each prevent or complicate different failure paths, so the observed mitigation set should change the confidence and wording of a triage note."
 				},
 				{
 					title: "Mitigations Shrink the Attack Surface but Do Not Replace Fixes",
@@ -594,7 +594,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS16-Mitigation-Comparison-Build-Matrix/solution"
 				},
 				{
-					title: "Module 5: Mitigation Aware Analysis Supplemental 2",
+					title: "Mitigation Analysis Transfer Practice",
 					content: securityLabProjectContent(
 						"Module 5: Mitigation-Aware Analysis",
 						"extension",
@@ -606,7 +606,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-11-module-5-mitigation-aware-analysis-supplemental-2/solution"
 				},
 				{
-					title: "Module 5: Mitigation Aware Analysis Supplemental 3",
+					title: "Mitigation Analysis Extension Practice",
 					content: securityLabProjectContent(
 						"Module 5: Mitigation-Aware Analysis",
 						"extension",
@@ -635,7 +635,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Why Modern Mitigations and Safer Languages Are Valuable",
 					content:
-						"Connect the previous modules to language and platform choice. Key idea: Why mitigations, safer libraries, and safer languages meaningfully reduce risk, while still recognizing that legacy native code and performance-sensitive systems often require disciplined hardening rather than complete rewrites."
+						"Connect the previous modules to language and platform choice. Mitigations, safer libraries, and safer languages meaningfully reduce risk, while legacy native code and performance-sensitive systems often still require disciplined hardening rather than complete rewrites."
 				},
 				{
 					title: "Module 6: Control-Flow Thinking for Defenders: Verification and Reflection",
@@ -669,7 +669,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-06-rust-systems-lab-17/solution"
 				},
 				{
-					title: "Module 6: Control Flow Thinking for Defenders Supplemental 2",
+					title: "Control-Flow Defense Transfer Practice",
 					content: securityLabProjectContent(
 						"Module 6: Control-Flow Thinking for Defenders",
 						"extension",
@@ -681,7 +681,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-13-module-6-control-flow-thinking-for-defenders-supplemental-2/solution"
 				},
 				{
-					title: "Module 6: Control Flow Thinking for Defenders Supplemental 3",
+					title: "Control-Flow Defense Extension Practice",
 					content: securityLabProjectContent(
 						"Module 6: Control-Flow Thinking for Defenders",
 						"extension",
@@ -710,12 +710,12 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Use AI to Accelerate Triage, Not Replace Evidence",
 					content:
-						"This section covers AI as a narrow assistant for defensive work: summarize sanitizer output, propose regression cases, help structure disclosure notes, compare two patch options, or convert a long debugging session into a clearer maintainer-facing report. Also learn the limits: AI can hallucinate exploitability claims, miss the real root cause, or suggest unsafe follow-ups, so every claim must still be checked against the local toy binary, debugger output, sanitizer evidence, and the written lab boundary."
+						"AI can serve as a narrow assistant for defensive work: summarize sanitizer output, propose regression cases, help structure disclosure notes, compare two patch options, or convert a long debugging session into a clearer maintainer-facing report. Its limits are part of the lesson: AI can hallucinate exploitability claims, miss the real root cause, or suggest unsafe follow-ups, so every claim must still be checked against the local toy binary, debugger output, sanitizer evidence, and the written lab boundary."
 				},
 				{
 					title: "Patch Notes Should Close the Bug Class",
 					content:
-						"Skill target: Describe not only what line changed, but what assumption was invalid and how the patch changes the invariant. This helps prevent shallow fixes that silence one reproduction case while leaving the bug class alive elsewhere in the codebase."
+						"Describe not only what line changed, but what assumption was invalid and how the patch changes the invariant. This helps prevent shallow fixes that silence one reproduction case while leaving the bug class alive elsewhere in the codebase."
 				},
 				{
 					title: "Project: LLS17 Disclosure and Triage Report",
@@ -738,7 +738,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS17-Disclosure-and-Triage-Report/solution"
 				},
 				{
-					title: "Module 7: From Bug Report to Patch Supplemental 2",
+					title: "Patch Workflow Transfer Practice",
 					content: securityLabProjectContent(
 						"Module 7: From Bug Report to Patch",
 						"extension",
@@ -750,7 +750,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-15-module-7-from-bug-report-to-patch-supplemental-2/solution"
 				},
 				{
-					title: "Module 7: From Bug Report to Patch Supplemental 3",
+					title: "Patch Workflow Extension Practice",
 					content: securityLabProjectContent(
 						"Module 7: From Bug Report to Patch",
 						"extension",
@@ -802,7 +802,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS18-Exploit-Informed-Hardening-Capstone/solution"
 				},
 				{
-					title: "Module 8: Capstone Audit Supplemental 2",
+					title: "Capstone Audit Transfer Practice",
 					content: securityLabProjectContent(
 						"Module 8: Capstone Audit",
 						"extension",
@@ -814,7 +814,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-17-module-8-capstone-audit-supplemental-2/solution"
 				},
 				{
-					title: "Module 8: Capstone Audit Supplemental 3",
+					title: "Capstone Audit Extension Practice",
 					content: securityLabProjectContent(
 						"Module 8: Capstone Audit",
 						"extension",
@@ -828,24 +828,24 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Low-Level Security Lab 13: Implementation Lab",
+			title: "Low-Level Security Lab 13: Exploitability Triage Studio",
 			curriculum: [
 				{
 					title: "Low-Level Security Lab 13: Core Concepts",
 					content: securityLabConceptContent(
-						"Low-Level Security Lab 13: Implementation Lab"
+						"Low-Level Security Lab 13: Exploitability Triage Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 13: Guided Example",
 					content: securityLabExampleContent(
-						"Low-Level Security Lab 13: Implementation Lab"
+						"Low-Level Security Lab 13: Exploitability Triage Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 13: Core Project",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 13: Implementation Lab",
+						"Low-Level Security Lab 13: Exploitability Triage Studio",
 						"core"
 					),
 					projectLink:
@@ -856,7 +856,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 13: Review and Reflection",
 					content: securityLabReviewContent(
-						"Low-Level Security Lab 13: Implementation Lab"
+						"Low-Level Security Lab 13: Exploitability Triage Studio"
 					)
 				}
 			],
@@ -864,7 +864,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 13: Extension Challenge",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 13: Implementation Lab",
+						"Low-Level Security Lab 13: Exploitability Triage Studio",
 						"extension"
 					),
 					projectLink:
@@ -873,9 +873,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS-07-low-level-security-lab-13/solution"
 				},
 				{
-					title: "Low-Level Security Lab 13 Supplemental 2: Implementation Lab",
+					title: "Exploitability Studio Transfer Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 13: Implementation Lab",
+						"Low-Level Security Lab 13: Exploitability Triage Studio",
 						"extension",
 						"transfer-practice"
 					),
@@ -885,9 +885,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-19-applied-studio-10-low-level-security-lab-13-supplemental-2/solution"
 				},
 				{
-					title: "Low-Level Security Lab 13 Supplemental 3: Implementation Lab",
+					title: "Exploitability Studio Extension Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 13: Implementation Lab",
+						"Low-Level Security Lab 13: Exploitability Triage Studio",
 						"extension",
 						"extension-practice"
 					),
@@ -899,24 +899,24 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Low-Level Security Lab 14: Implementation Lab",
+			title: "Low-Level Security Lab 14: Stack Corruption Hardening Studio",
 			curriculum: [
 				{
 					title: "Low-Level Security Lab 14: Core Concepts",
 					content: securityLabConceptContent(
-						"Low-Level Security Lab 14: Implementation Lab"
+						"Low-Level Security Lab 14: Stack Corruption Hardening Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 14: Guided Example",
 					content: securityLabExampleContent(
-						"Low-Level Security Lab 14: Implementation Lab"
+						"Low-Level Security Lab 14: Stack Corruption Hardening Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 14: Core Project",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 14: Implementation Lab",
+						"Low-Level Security Lab 14: Stack Corruption Hardening Studio",
 						"core"
 					),
 					projectLink:
@@ -927,7 +927,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 14: Review and Reflection",
 					content: securityLabReviewContent(
-						"Low-Level Security Lab 14: Implementation Lab"
+						"Low-Level Security Lab 14: Stack Corruption Hardening Studio"
 					)
 				}
 			],
@@ -935,7 +935,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 14: Extension Challenge",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 14: Implementation Lab",
+						"Low-Level Security Lab 14: Stack Corruption Hardening Studio",
 						"extension"
 					),
 					projectLink:
@@ -944,9 +944,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS-08-low-level-security-lab-14/solution"
 				},
 				{
-					title: "Low-Level Security Lab 14 Supplemental 2: Implementation Lab",
+					title: "Stack Hardening Transfer Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 14: Implementation Lab",
+						"Low-Level Security Lab 14: Stack Corruption Hardening Studio",
 						"extension",
 						"transfer-practice"
 					),
@@ -956,9 +956,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-21-applied-studio-11-low-level-security-lab-14-supplemental-2/solution"
 				},
 				{
-					title: "Low-Level Security Lab 14 Supplemental 3: Implementation Lab",
+					title: "Stack Hardening Extension Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 14: Implementation Lab",
+						"Low-Level Security Lab 14: Stack Corruption Hardening Studio",
 						"extension",
 						"extension-practice"
 					),
@@ -970,24 +970,24 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Low-Level Security Lab 15: Implementation Lab",
+			title: "Low-Level Security Lab 15: Heap Lifetime Audit Studio",
 			curriculum: [
 				{
 					title: "Low-Level Security Lab 15: Core Concepts",
 					content: securityLabConceptContent(
-						"Low-Level Security Lab 15: Implementation Lab"
+						"Low-Level Security Lab 15: Heap Lifetime Audit Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 15: Guided Example",
 					content: securityLabExampleContent(
-						"Low-Level Security Lab 15: Implementation Lab"
+						"Low-Level Security Lab 15: Heap Lifetime Audit Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 15: Core Project",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 15: Implementation Lab",
+						"Low-Level Security Lab 15: Heap Lifetime Audit Studio",
 						"core"
 					),
 					projectLink:
@@ -998,7 +998,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 15: Review and Reflection",
 					content: securityLabReviewContent(
-						"Low-Level Security Lab 15: Implementation Lab"
+						"Low-Level Security Lab 15: Heap Lifetime Audit Studio"
 					)
 				}
 			],
@@ -1006,7 +1006,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 15: Extension Challenge",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 15: Implementation Lab",
+						"Low-Level Security Lab 15: Heap Lifetime Audit Studio",
 						"extension"
 					),
 					projectLink:
@@ -1015,9 +1015,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS-09-low-level-security-lab-15/solution"
 				},
 				{
-					title: "Low-Level Security Lab 15 Supplemental 2: Implementation Lab",
+					title: "Heap Lifetime Transfer Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 15: Implementation Lab",
+						"Low-Level Security Lab 15: Heap Lifetime Audit Studio",
 						"extension",
 						"transfer-practice"
 					),
@@ -1027,9 +1027,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-23-applied-studio-12-low-level-security-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "Low-Level Security Lab 15 Supplemental 3: Implementation Lab",
+					title: "Heap Lifetime Extension Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 15: Implementation Lab",
+						"Low-Level Security Lab 15: Heap Lifetime Audit Studio",
 						"extension",
 						"extension-practice"
 					),
@@ -1041,24 +1041,24 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Low-Level Security Lab 16: Implementation Lab",
+			title: "Low-Level Security Lab 16: Disclosure Boundary Hardening Studio",
 			curriculum: [
 				{
 					title: "Low-Level Security Lab 16: Core Concepts",
 					content: securityLabConceptContent(
-						"Low-Level Security Lab 16: Implementation Lab"
+						"Low-Level Security Lab 16: Disclosure Boundary Hardening Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 16: Guided Example",
 					content: securityLabExampleContent(
-						"Low-Level Security Lab 16: Implementation Lab"
+						"Low-Level Security Lab 16: Disclosure Boundary Hardening Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 16: Core Project",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 16: Implementation Lab",
+						"Low-Level Security Lab 16: Disclosure Boundary Hardening Studio",
 						"core"
 					),
 					projectLink:
@@ -1069,7 +1069,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 16: Review and Reflection",
 					content: securityLabReviewContent(
-						"Low-Level Security Lab 16: Implementation Lab"
+						"Low-Level Security Lab 16: Disclosure Boundary Hardening Studio"
 					)
 				}
 			],
@@ -1077,7 +1077,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 16: Extension Challenge",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 16: Implementation Lab",
+						"Low-Level Security Lab 16: Disclosure Boundary Hardening Studio",
 						"extension"
 					),
 					projectLink:
@@ -1086,9 +1086,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS-10-low-level-security-lab-16/solution"
 				},
 				{
-					title: "Low-Level Security Lab 16 Supplemental 2: Implementation Lab",
+					title: "Disclosure Boundary Transfer Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 16: Implementation Lab",
+						"Low-Level Security Lab 16: Disclosure Boundary Hardening Studio",
 						"extension",
 						"transfer-practice"
 					),
@@ -1098,9 +1098,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-25-applied-studio-13-low-level-security-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "Low-Level Security Lab 16 Supplemental 3: Implementation Lab",
+					title: "Disclosure Boundary Extension Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 16: Implementation Lab",
+						"Low-Level Security Lab 16: Disclosure Boundary Hardening Studio",
 						"extension",
 						"extension-practice"
 					),
@@ -1112,24 +1112,24 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Low-Level Security Lab 17: Implementation Lab",
+			title: "Low-Level Security Lab 17: Defensive Audit Capstone Studio",
 			curriculum: [
 				{
 					title: "Low-Level Security Lab 17: Core Concepts",
 					content: securityLabConceptContent(
-						"Low-Level Security Lab 17: Implementation Lab"
+						"Low-Level Security Lab 17: Defensive Audit Capstone Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 17: Guided Example",
 					content: securityLabExampleContent(
-						"Low-Level Security Lab 17: Implementation Lab"
+						"Low-Level Security Lab 17: Defensive Audit Capstone Studio"
 					)
 				},
 				{
 					title: "Low-Level Security Lab 17: Core Project",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 17: Implementation Lab",
+						"Low-Level Security Lab 17: Defensive Audit Capstone Studio",
 						"core"
 					),
 					projectLink:
@@ -1140,7 +1140,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 17: Review and Reflection",
 					content: securityLabReviewContent(
-						"Low-Level Security Lab 17: Implementation Lab"
+						"Low-Level Security Lab 17: Defensive Audit Capstone Studio"
 					)
 				}
 			],
@@ -1148,7 +1148,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Low-Level Security Lab 17: Extension Challenge",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 17: Implementation Lab",
+						"Low-Level Security Lab 17: Defensive Audit Capstone Studio",
 						"extension"
 					),
 					projectLink:
@@ -1157,9 +1157,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS-11-low-level-security-lab-17/solution"
 				},
 				{
-					title: "Low-Level Security Lab 17 Supplemental 2: Implementation Lab",
+					title: "Defensive Audit Transfer Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 17: Implementation Lab",
+						"Low-Level Security Lab 17: Defensive Audit Capstone Studio",
 						"extension",
 						"transfer-practice"
 					),
@@ -1169,9 +1169,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS2-27-applied-studio-14-low-level-security-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "Low-Level Security Lab 17 Supplemental 3: Implementation Lab",
+					title: "Defensive Audit Extension Practice",
 					content: securityLabProjectContent(
-						"Low-Level Security Lab 17: Implementation Lab",
+						"Low-Level Security Lab 17: Defensive Audit Capstone Studio",
 						"extension",
 						"extension-practice"
 					),
