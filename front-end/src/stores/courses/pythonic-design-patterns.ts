@@ -20,7 +20,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Positioning against Python 2, Python 3, and the Java Track",
 					content:
-						"Frame this course as a follow-up after Python fundamentals for improving structure, reuse, and maintainability. The Python track should borrow the judgment from the Java design-patterns sequence without copying the Java object model."
+						"Frame this course as a follow-up after Python fundamentals for improving structure, reuse, and maintainability. The Python track borrows the judgment from the Java design-patterns sequence without copying the Java object model."
 				},
 				{
 					title: "Pattern Names as Compression, Not Decoration",
@@ -43,7 +43,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Pattern Journal: Setup and Tooling",
 					content:
-						"Keep a compact journal for setup and tooling that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which workflow choices will make later refactors observable and safe. The habit should be diagnosis first, pattern name second.",
+						"Keep a compact journal for setup and tooling that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which workflow choices will make later refactors observable and safe. The habit is diagnosis first, pattern name second.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main"
 				},
@@ -66,7 +66,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Dynamic Typing, Duck Typing, and Protocol Thinking",
 					content:
-						"Focus on behavior and shape rather than concrete inheritance trees. Pythonic architecture often starts from the question 'what capabilities do I need?' instead of 'which subclass should exist?'"
+						"Focus on behavior and shape rather than concrete inheritance trees. Pythonic architecture often starts from the question 'what capabilities are required?' instead of 'which subclass exists?'"
 				},
 				{
 					title: "Functions, Closures, and Decorators as First-Class Design Tools",
@@ -102,7 +102,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Pattern Journal: Why Python Changes the Design-Patterns Conversation",
 					content:
-						"Keep a compact journal for why python changes the design-patterns conversation that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which Python features replace ceremony and which ones simply hide it. The habit should be diagnosis first, pattern name second.",
+						"Keep a compact journal for why Python changes the design-patterns conversation that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which Python features replace ceremony and which ones simply hide it. The habit is diagnosis first, pattern name second.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-02-pdp1-why-python-changes-the-design-patterns-conversation-supplemental-3/starter",
 					solutionLink:
@@ -159,7 +159,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Seams for Testing and Refactoring",
 					content:
-						"Show where to place seams for file I/O, network access, time, randomness, and external services. Good Python design should make later tests and later cleanup easier without adding fake complexity."
+						"Show where to place seams for file I/O, network access, time, randomness, and external services. Good Python design makes later tests and later cleanup easier without adding fake complexity."
 				},
 				{
 					title: "PDP2 Design Foundations in Python: Core Project",
@@ -179,7 +179,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Pattern Journal: Design Foundations in Python",
 					content:
-						"Keep a compact journal for design foundations in python that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which boundary would be easiest to fake, replace, or move later. The habit should be diagnosis first, pattern name second.",
+						"Keep a compact journal for design foundations in Python that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which boundary would be easiest to fake, replace, or move later. The habit is diagnosis first, pattern name second.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-04-pdp2-design-foundations-in-python-supplemental-3/starter",
 					solutionLink:
@@ -234,7 +234,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "When a Dictionary Lookup Beats a Full Pattern",
 					content:
-						"Explicitly compare Strategy with a simple mapping of names to functions. The Pythonic lesson is that structure should grow only when the problem justifies it."
+						"Explicitly compare Strategy with a simple mapping of names to functions. The Pythonic lesson is that structure grows only when the problem justifies it."
 				},
 				{
 					title: "PDP3 Strategy Without Ceremony: Core Project",
@@ -299,7 +299,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Builder for Configuration-Heavy Objects",
 					content:
-						"Builder fits best when object setup becomes noisy, order-sensitive, or full of optional configuration. The key question should be readability and correctness, not pattern completionism."
+						"Builder fits best when object setup becomes noisy, order-sensitive, or full of optional configuration. The key question is readability and correctness, not pattern completionism."
 				},
 				{
 					title: "Families, Variants, and Environment Selection",
@@ -309,7 +309,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "What to Avoid in Python Creation Code",
 					content:
-						"Warn against creation frameworks that merely hide constructors behind more constructors. Python creation code should usually become shorter and clearer, not more ceremonial."
+						"Warn against creation frameworks that merely hide constructors behind more constructors. Python creation code usually becomes shorter and clearer, not more ceremonial."
 				},
 				{
 					title: "PDP4 Factory and Builder in Python: Core Project",
@@ -374,12 +374,12 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Designing Event Payloads and Listener Contracts",
 					content:
-						"Event payload shape affects coupling. A good event system should tell subscribers enough to act without leaking the entire source object or making every listener depend on internal details."
+						"Event payload shape affects coupling. A good event system tells subscribers enough to act without leaking the entire source object or making every listener depend on internal details."
 				},
 				{
 					title: "Unsubscribe, Ordering, and Failure Handling",
 					content:
-						"Make the operational concerns explicit: duplicate subscriptions, stale listeners, listener exceptions, and event ordering all affect whether an event system stays understandable. Not mistake Observer for free decoupling."
+						"Make the operational concerns explicit: duplicate subscriptions, stale listeners, listener exceptions, and event ordering all affect whether an event system stays understandable. Do not mistake Observer for free decoupling."
 				},
 				{
 					title: "Sync versus Async Event Flow",
@@ -404,7 +404,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Project: Observer Notification Hub",
 					content:
-						"Build an event bus that fans account or order events out to several listeners such as logs, summaries, and user-facing notifications. The lab should make event boundaries and unsubscribe behavior observable rather than magical.",
+						"Build an event bus that fans account or order events out to several listeners such as logs, summaries, and user-facing notifications. The lab makes event boundaries and unsubscribe behavior observable rather than magical.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP3-Observer-Notification-Hub/starter",
 					solutionLink:
@@ -454,7 +454,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Layering Behavior without Hiding Intent",
 					content:
-						"Wrappers can become unreadable if they stack carelessly. A Pythonic design should still let another developer explain the actual call path without hunting through invisible magic."
+						"Wrappers can become unreadable if they stack carelessly. A Pythonic design still lets another developer explain the actual call path without hunting through invisible magic."
 				},
 				{
 					title: "Cross-Cutting Concerns without Framework Bloat",
@@ -604,7 +604,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Testing Adapters with Small, Explicit Fixtures",
 					content:
-						"Adapter code should be validated with tiny fixtures that make field mapping and default handling obvious. Treat boundary tests as evidence that the internal model is staying protected."
+						"Adapter code is validated with tiny fixtures that make field mapping and default handling obvious. Treat boundary tests as evidence that the internal model is staying protected."
 				},
 				{
 					title: "When a Translation Function Is Enough",
@@ -669,7 +669,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Inheritance-Based Skeletons and Hook Methods",
 					content:
-						"The textbook Template Method shape is included for recognition, but the use case should stay concrete: a stable algorithm skeleton with a few genuine hooks. Treat it as a niche tool, not a default architecture style."
+						"The textbook Template Method shape is included for recognition, but the use case stays concrete: a stable algorithm skeleton with a few genuine hooks. Treat it as a niche tool, not a default architecture style."
 				},
 				{
 					title: "Replacing Template Method with Callables or Composition",
@@ -679,12 +679,12 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Choosing by Extension Pressure",
 					content:
-						"Compare several variations of a workflow and ask whether the extension points are truly stable enough to justify an inheritance skeleton. If the answer is no, the design should stay lighter."
+						"Compare several variations of a workflow and ask whether the extension points are truly stable enough to justify an inheritance skeleton. If the answer is no, the design stays lighter."
 				},
 				{
 					title: "Readability and Onboarding Cost",
 					content:
-						"Template Method can obscure behavior for newer readers when hooks are scattered across subclasses. Pythonic design should make the final control flow easier to follow, not harder."
+						"Template Method can obscure behavior for newer readers when hooks are scattered across subclasses. Pythonic design makes the final control flow easier to follow, not harder."
 				},
 				{
 					title: "PDP9 Template Method versus Higher-Order Functions: Core Project",
@@ -705,7 +705,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Project: Compare Template Skeletons with Callable Pipelines",
 					content:
-						"Use the same import or workflow problem in both an inheritance-based and higher-order-function form, then explain which version is easier to evolve and why. The exercise should make the Pythonic bias toward simpler extension mechanisms feel earned.",
+						"Use the same import or workflow problem in both an inheritance-based and higher-order-function form, then explain which version is easier to evolve and why. The exercise makes the Pythonic bias toward simpler extension mechanisms feel earned.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP6-Adapter-Template-Import-Pipeline/starter",
 					solutionLink:
@@ -757,7 +757,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Context Objects, App Factories, and Explicit Wiring",
 					content:
-						"Offer practical alternatives such as configuration objects, explicit dependency injection, app factories, or small service containers. The replacement should be simpler to reason about, not theoretically purer."
+						"Offer practical alternatives such as configuration objects, explicit dependency injection, app factories, or small service containers. The replacement is simpler to reason about, not theoretically purer."
 				},
 				{
 					title: "When Shared Process State Is Still Legitimate",
@@ -783,7 +783,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Pattern Journal: Singleton, Global State, and Module Patterns",
 					content:
-						"Keep a compact journal for singleton, global state, and module patterns that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which shared objects are explicit resources and which ones are just hidden dependencies. The habit should be diagnosis first, pattern name second.",
+						"Keep a compact journal for singleton, global state, and module patterns that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which shared objects are explicit resources and which ones are just hidden dependencies. The habit is diagnosis first, pattern name second.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP-20-pdp10-singleton-global-state-and-module-patterns/starter",
 					solutionLink:
@@ -840,7 +840,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Tests and Characterization before Structural Change",
 					content:
-						"Lightweight characterization tests or scripted assertions should exist before bigger changes land. Even in Python, safe refactoring depends on evidence that the external behavior still holds."
+						"Lightweight characterization tests or scripted assertions exist before bigger changes land. Even in Python, safe refactoring depends on evidence that the external behavior still holds."
 				},
 				{
 					title: "PDP11 Refactoring Python Code Smells: Core Project",
