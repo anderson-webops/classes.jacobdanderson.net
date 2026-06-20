@@ -4304,6 +4304,31 @@ describe("course text quality normalization", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
+	it("keeps Swift app development labels explanatory and practice-oriented", async () => {
+		const course = await loadRawCourse("intro-to-swift-app-development");
+		expect(course).not.toBeNull();
+
+		const source = fs.readFileSync(
+			"src/stores/courses/intro-to-swift-app-development.ts",
+			"utf8"
+		);
+		const corpus = allCourseText(course);
+
+		expect(source).not.toMatch(/\bSkill target:/i);
+		expect(source).not.toMatch(/\bPractice target:/i);
+		expect(source).not.toMatch(/\bKey idea:/i);
+		expect(source).not.toMatch(/\bThis section covers\b/i);
+		expect(source).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bSkill target:/i);
+		expect(corpus).not.toMatch(/\bPractice target:/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).toContain(
+			"Each step changes the signing requirements, metadata expectations, and audience that can access the build."
+		);
+		expect(corpus).toContain("State and Data Flow Extension Practice");
+		expect(corpus).toContain("Capstone App Transfer Practice");
+	});
+
 	it(
 		"keeps algebra supplemental projects specific, neutral, and topic-aware",
 		async () => {

@@ -21,12 +21,12 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Practical Walkthrough: Local Build vs TestFlight vs App Store",
 					content:
-						"The release ladder is concrete: run in Xcode, test on simulator, test on device, archive, upload, distribute through TestFlight, and finally prepare for App Review. Skill target: explain what changes at each step, especially around signing, metadata, and who can access the build."
+						"The release ladder is concrete: run in Xcode, test on simulator, test on device, archive, upload, distribute through TestFlight, and finally prepare for App Review. Each step changes the signing requirements, metadata expectations, and audience that can access the build."
 				},
 				{
 					title: "Reflection Question: Where Does Publishing Friction Come From?",
 					content:
-						"Explain which parts of the Apple app pipeline are technical, which are organizational, and which are account-related. The goal is to reduce confusion later by making invisible dependencies explicit now."
+						"Explain which parts of the Apple app pipeline are technical, which are organizational, and which are account-related. Making these invisible dependencies explicit early reduces confusion during later signing, testing, and publishing work."
 				},
 				{
 					title: "SAD1 Apple Developer Ecosystem Overview: Core Project",
@@ -60,7 +60,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod5Pro3"
 				},
 				{
-					title: "Apple Developer Ecosystem Overview supplemental 3",
+					title: "Apple Developer Ecosystem Overview Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD1 Apple Developer Ecosystem Overview",
@@ -118,7 +118,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod1Pro1"
 				},
 				{
-					title: "Mac Setup and Project Tooling supplemental 2",
+					title: "Mac Setup and Project Tooling Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD2 Mac Setup and Project Tooling",
@@ -131,7 +131,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-02-sad2-mac-setup-and-project-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Mac Setup and Project Tooling supplemental 3",
+					title: "Mac Setup and Project Tooling Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD2 Mac Setup and Project Tooling",
@@ -190,7 +190,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod1Pro2"
 				},
 				{
-					title: "Certificates, Signing, and Bundle IDs supplemental 2",
+					title: "Certificates, Signing, and Bundle IDs Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle:
@@ -204,7 +204,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-04-sad3-certificates-signing-and-bundle-ids-supplemental-2/solution"
 				},
 				{
-					title: "Certificates, Signing, and Bundle IDs supplemental 3",
+					title: "Certificates, Signing, and Bundle IDs Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle:
@@ -235,7 +235,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Practical Walkthrough: Logs, Console Output, and Crash Clues",
 					content:
-						"Console logs, build output, and run-on-device messages provide the first useful failure signals. The goal is to capture the first useful signal rather than chasing symptoms."
+						"Console logs, build output, and run-on-device messages provide the first useful failure signals. Capture the earliest useful signal before chasing symptoms so setup problems stay diagnosable."
 				},
 				{
 					title: "Mini Lab: First Launch Troubleshooting",
@@ -263,7 +263,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod1Pro3"
 				},
 				{
-					title: "Running on Simulator and Device supplemental 2",
+					title: "Running on Simulator and Device Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD4 Running on Simulator and Device",
@@ -276,7 +276,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-06-sad4-running-on-simulator-and-device-supplemental-2/solution"
 				},
 				{
-					title: "Running on Simulator and Device supplemental 3",
+					title: "Running on Simulator and Device Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD4 Running on Simulator and Device",
@@ -301,7 +301,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Practical Walkthrough: Internal vs External Testing",
 					content:
-						"Explain the difference between internal and external TestFlight groups, what information each workflow requires, and why beta notes and review context matter. Key idea: Where testing sits between private development and public release."
+						"Explain the difference between internal and external TestFlight groups, what information each workflow requires, and why beta notes and review context matter. TestFlight sits between private development and public release, so it needs both technical readiness and clear communication."
 				},
 				{
 					title: "Practical Walkthrough: Version Numbers, Build Numbers, and Assets",
@@ -335,7 +335,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod2Pro1"
 				},
 				{
-					title: "App Store Connect and TestFlight Workflow supplemental 2",
+					title: "App Store Connect and TestFlight Workflow Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle:
@@ -349,7 +349,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-08-sad5-app-store-connect-and-testflight-workflow-supplemental-2/solution"
 				},
 				{
-					title: "App Store Connect and TestFlight Workflow supplemental 3",
+					title: "App Store Connect and TestFlight Workflow Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle:
@@ -385,7 +385,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Reflection Question: Which Part of an App Should Change Most Slowly?",
 					content:
-						"Compare core structure with surface-level UI and explain which decisions should stay stable and which should be easy to revise. The goal is to start building architectural judgment."
+						"Compare core structure with surface-level UI and explain which decisions should stay stable and which should be easy to revise. This builds architectural judgment before the app grows past a few screens."
 				},
 				{
 					title: "SAD6 What an App Is Structurally: Core Project",
@@ -408,7 +408,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod2Pro2"
 				},
 				{
-					title: "What an App Is Structurally supplemental 2",
+					title: "What an App Is Structurally Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD6 What an App Is Structurally",
@@ -421,7 +421,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-10-sad6-what-an-app-is-structurally-supplemental-2/solution"
 				},
 				{
-					title: "What an App Is Structurally supplemental 3",
+					title: "What an App Is Structurally Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD6 What an App Is Structurally",
@@ -451,7 +451,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Practical Walkthrough: Asset Catalogs and Preview Canvas",
 					content:
-						"Images, icons, and colors belong in dedicated asset containers, and the preview canvas supports fast SwiftUI iteration. Key idea: Why assets belong in dedicated containers instead of scattered file imports."
+						"Images, icons, and colors belong in dedicated asset containers, and the preview canvas supports fast SwiftUI iteration. Dedicated asset containers keep resources discoverable and maintainable instead of scattering file imports across views."
 				},
 				{
 					title: "Reflection Question: Which Xcode Areas Do You Need Every Day?",
@@ -479,7 +479,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod3Pro1"
 				},
 				{
-					title: "Xcode Project Anatomy supplemental 2",
+					title: "Xcode Project Anatomy Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD7 Xcode Project Anatomy",
@@ -492,7 +492,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-12-sad7-xcode-project-anatomy-supplemental-2/solution"
 				},
 				{
-					title: "Xcode Project Anatomy supplemental 3",
+					title: "Xcode Project Anatomy Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD7 Xcode Project Anatomy",
@@ -545,7 +545,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD1-Welcome-Profile-App/solution"
 				},
 				{
-					title: "SwiftUI Mental Model supplemental 2",
+					title: "SwiftUI Mental Model Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD8 SwiftUI Mental Model",
@@ -558,7 +558,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-14-sad8-swiftui-mental-model-supplemental-2/solution"
 				},
 				{
-					title: "SwiftUI Mental Model supplemental 3",
+					title: "SwiftUI Mental Model Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD8 SwiftUI Mental Model",
@@ -578,7 +578,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Variables, Constants, and Types",
 					content:
-						"This section covers Swift language basics in the context of app code rather than as abstract textbook material. Cover `let`, `var`, common types, strings, arrays, dictionaries, optionals, conditionals, and loops using examples that feed directly into UI and app data."
+						"Swift language basics work best in the context of app code rather than as abstract textbook material. Use `let`, `var`, common types, strings, arrays, dictionaries, optionals, conditionals, and loops in examples that feed directly into UI and app data."
 				},
 				{
 					title: "Worked Example Set: Modeling App Content with Basic Types",
@@ -588,7 +588,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Practice Lab: Turning Raw Data into View Content",
 					content:
-						"Take a few small pieces of app content and transform them into values a SwiftUI view can render cleanly. Practice target: Conditional display, simple loops, and safe handling of missing data."
+						"Take a few small pieces of app content and transform them into values a SwiftUI view can render cleanly. The practice centers on conditional display, simple loops, and safe handling of missing data."
 				},
 				{
 					title: "Reflection Question: Which Swift Basics Show Up Most Often in Apps?",
@@ -616,7 +616,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod3Pro2"
 				},
 				{
-					title: "Swift Basics in App Context supplemental 2",
+					title: "Swift Basics in App Context Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD9 Swift Basics in App Context",
@@ -629,7 +629,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-16-sad9-swift-basics-in-app-context-supplemental-2/solution"
 				},
 				{
-					title: "Swift Basics in App Context supplemental 3",
+					title: "Swift Basics in App Context Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD9 Swift Basics in App Context",
@@ -687,7 +687,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod4Pro1"
 				},
 				{
-					title: "Functions, Structs, and Enums supplemental 2",
+					title: "Functions, Structs, and Enums Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD10 Functions, Structs, and Enums",
@@ -700,7 +700,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-18-sad10-functions-structs-and-enums-supplemental-2/solution"
 				},
 				{
-					title: "Functions, Structs, and Enums supplemental 3",
+					title: "Functions, Structs, and Enums Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD10 Functions, Structs, and Enums",
@@ -720,7 +720,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "`@State`, `@Binding`, and Observable Data",
 					content:
-						"This section covers `@State`, `@Binding`, `@StateObject`, and the broader observation model as answers to the question: who owns this data and who is allowed to change it? Focus on ownership first so the wrappers feel motivated instead of magical."
+						"`@State`, `@Binding`, `@StateObject`, and the broader observation model answer the question: who owns this data and who is allowed to change it? Focus on ownership first so the wrappers feel motivated instead of magical."
 				},
 				{
 					title: "Worked Example Set: Local State vs Shared State",
@@ -758,7 +758,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod4Pro2"
 				},
 				{
-					title: "State and Data Flow supplemental 2",
+					title: "State and Data Flow Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD11 State and Data Flow",
@@ -771,7 +771,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-20-sad11-state-and-data-flow-supplemental-2/solution"
 				},
 				{
-					title: "State and Data Flow supplemental 3",
+					title: "State and Data Flow Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD11 State and Data Flow",
@@ -824,7 +824,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD3-Multi-Tab-Hobby-App/solution"
 				},
 				{
-					title: "Navigation and Multi Screen Apps supplemental 2",
+					title: "Navigation and Multi Screen Apps Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD12 Navigation and Multi-Screen Apps",
@@ -837,7 +837,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-22-sad12-navigation-and-multi-screen-apps-supplemental-2/solution"
 				},
 				{
-					title: "Navigation and Multi Screen Apps supplemental 3",
+					title: "Navigation and Multi Screen Apps Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD12 Navigation and Multi-Screen Apps",
@@ -890,7 +890,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD5-Simple-Tracker-App/solution"
 				},
 				{
-					title: "Lists, Forms, and CRUD Patterns supplemental 2",
+					title: "Lists, Forms, and CRUD Patterns Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD13 Lists, Forms, and CRUD Patterns",
@@ -903,7 +903,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-24-sad13-lists-forms-and-crud-patterns-supplemental-2/solution"
 				},
 				{
-					title: "Lists, Forms, and CRUD Patterns supplemental 3",
+					title: "Lists, Forms, and CRUD Patterns Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD13 Lists, Forms, and CRUD Patterns",
@@ -960,7 +960,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD2-Media-Gallery-App/solution"
 				},
 				{
-					title: "Media, Maps, and Device Features supplemental 2",
+					title: "Media, Maps, and Device Features Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD14 Media, Maps, and Device Features",
@@ -973,7 +973,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-26-sad14-media-maps-and-device-features-supplemental-2/solution"
 				},
 				{
-					title: "Media, Maps, and Device Features supplemental 3",
+					title: "Media, Maps, and Device Features Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD14 Media, Maps, and Device Features",
@@ -993,7 +993,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "APIs, JSON, and Async Loading",
 					content:
-						"This section covers networking as a structured workflow: request data, decode JSON, represent loading state, represent error state, and render success cleanly. Most app-networking bugs are state and architecture problems as much as syntax problems."
+						"Networking is a structured workflow: request data, decode JSON, represent loading state, represent error state, and render success cleanly. Most app-networking bugs are state and architecture problems as much as syntax problems."
 				},
 				{
 					title: "Worked Example Set: Loading, Loaded, and Failed UI States",
@@ -1026,7 +1026,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD6-API-Reference-App/solution"
 				},
 				{
-					title: "Networking and Data Loading supplemental 2",
+					title: "Networking and Data Loading Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD15 Networking and Data Loading",
@@ -1039,7 +1039,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-28-sad15-networking-and-data-loading-supplemental-2/solution"
 				},
 				{
-					title: "Networking and Data Loading supplemental 3",
+					title: "Networking and Data Loading Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD15 Networking and Data Loading",
@@ -1092,7 +1092,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD5-Simple-Tracker-App/solution"
 				},
 				{
-					title: "Persistence supplemental 2",
+					title: "Persistence Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD16 Persistence",
@@ -1105,7 +1105,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-30-sad16-persistence-supplemental-2/solution"
 				},
 				{
-					title: "Persistence supplemental 3",
+					title: "Persistence Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD16 Persistence",
@@ -1125,7 +1125,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Debugging as Observation",
 					content:
-						"This section covers debugging as a disciplined observation process rather than trial-and-error clicking. Review console logs, breakpoints, previews, and the role of small reproducible cases in SwiftUI app work."
+						"Debugging is a disciplined observation process rather than trial-and-error clicking. Review console logs, breakpoints, previews, and the role of small reproducible cases in SwiftUI app work."
 				},
 				{
 					title: "Worked Example Set: UI Bug vs Data Bug vs Build Bug",
@@ -1135,7 +1135,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Practical Walkthrough: Previews and Basic Test Concepts",
 					content:
-						"Use previews for fast UI checks and introduce simple unit and UI test ideas conceptually. Key idea: Testing is about confidence and regression prevention, even if they are not writing a large suite yet."
+						"Use previews for fast UI checks and introduce simple unit and UI test ideas conceptually. Testing is about confidence and regression prevention, even when the project is not ready for a large suite yet."
 				},
 				{
 					title: "Reflection Question: Which Signal Do You Trust First?",
@@ -1163,7 +1163,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod4Pro3"
 				},
 				{
-					title: "Debugging and Testing supplemental 2",
+					title: "Debugging and Testing Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD17 Debugging and Testing",
@@ -1176,7 +1176,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-32-sad17-debugging-and-testing-supplemental-2/solution"
 				},
 				{
-					title: "Debugging and Testing supplemental 3",
+					title: "Debugging and Testing Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD17 Debugging and Testing",
@@ -1234,7 +1234,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod5Pro1"
 				},
 				{
-					title: "App Design and Accessibility supplemental 2",
+					title: "App Design and Accessibility Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD18 App Design and Accessibility",
@@ -1247,7 +1247,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-34-sad18-app-design-and-accessibility-supplemental-2/solution"
 				},
 				{
-					title: "App Design and Accessibility supplemental 3",
+					title: "App Design and Accessibility Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD18 App Design and Accessibility",
@@ -1267,7 +1267,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Archive, Upload, and Release Checklists",
 					content:
-						"The final publishing path is an ordered workflow: archive build, upload process, App Store Connect checklists, TestFlight release, and review basics. Key idea: release is not a final mysterious button."
+						"The final publishing path is an ordered workflow: archive build, upload process, App Store Connect checklists, TestFlight release, and review basics. Release is a sequence of visible checks rather than one mysterious final button."
 				},
 				{
 					title: "Practical Walkthrough: Build Metadata and Preflight Review",
@@ -1305,7 +1305,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/Mod5Pro2"
 				},
 				{
-					title: "Final Publishing Walkthrough supplemental 2",
+					title: "Final Publishing Walkthrough Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD19 Final Publishing Walkthrough",
@@ -1318,7 +1318,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-36-sad19-final-publishing-walkthrough-supplemental-2/solution"
 				},
 				{
-					title: "Final Publishing Walkthrough supplemental 3",
+					title: "Final Publishing Walkthrough Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD19 Final Publishing Walkthrough",
@@ -1348,7 +1348,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Project: Publish-Ready Capstone App",
 					content:
-						"Use the capstone starter as a shipping-minded shell for a final app that includes intentional navigation, polished core screens, accessibility review, and store/testing preparation notes. Skill target: Explain not only what the app does, but how they would prepare it for TestFlight or the App Store.",
+						"Use the capstone starter as a shipping-minded shell for a final app that includes intentional navigation, polished core screens, accessibility review, and store/testing preparation notes. The final explanation should cover not only what the app does, but how it would be prepared for TestFlight or the App Store.",
 					projectLink:
 						"https://github.com/instruction-material/Swift/tree/main/SAD7-Publish-Ready-Capstone/starter",
 					solutionLink:
@@ -1371,7 +1371,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD7-Publish-Ready-Capstone/solution"
 				},
 				{
-					title: "Capstone App supplemental 2",
+					title: "Capstone App Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD20 Capstone App",
@@ -1384,7 +1384,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-38-sad20-capstone-app-supplemental-2/solution"
 				},
 				{
-					title: "Capstone App supplemental 3",
+					title: "Capstone App Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SAD20 Capstone App",
@@ -1449,7 +1449,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-Swift-UI-Shapes-Studio/solution"
 				},
 				{
-					title: "SADX Enrichment and Reference Boundaries supplemental 2",
+					title: "SADX Enrichment and Reference Boundaries Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SADX Enrichment and Reference Boundaries",
@@ -1462,7 +1462,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 						"https://github.com/instruction-material/Swift/tree/main/SAD-40-sadx-enrichment-and-legacy-archive-boundaries-supplemental-2/solution"
 				},
 				{
-					title: "SADX Enrichment and Reference Boundaries supplemental 3",
+					title: "SADX Enrichment and Reference Boundaries Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SADX Enrichment and Reference Boundaries",
