@@ -2876,7 +2876,7 @@ function addSystemsSpecificSafetyModule(courseId: string, course: RawCourse) {
 		supplementalProjects: [
 			{
 				title: `${courseLabel} Defensive Lab: Scope and Reset Drill`,
-				content: `**Project goal:** Before a lab for ${courseLabel} begins, write the scope, allowed tools, stop conditions, expected evidence, and reset path. The drill should be specific enough that the lab can be repeated safely and stopped cleanly if the result is unexpected.\n\n**Required fields:** lab boundary, allowed target, allowed tools, evidence to collect, stop condition, reset command or recovery step, and one disallowed action.\n\n**Completion checks:**\n- Scope is local and owned.\n- Reset path is specific.\n- Disallowed actions are named.\n- The expected evidence is tied to the toolchain.`
+				content: `**Project goal:** Before a lab for ${courseLabel} begins, write the scope, allowed tools, stop conditions, expected evidence, and reset path. The drill is specific enough for the lab to be repeated safely and stopped cleanly if the result is unexpected.\n\n**Required fields:** lab boundary, allowed target, allowed tools, evidence to collect, stop condition, reset command or recovery step, and one disallowed action.\n\n**Completion checks:**\n- Scope is local and owned.\n- Reset path is specific.\n- Disallowed actions are named.\n- The expected evidence is tied to the toolchain.`
 			},
 			{
 				title: `${courseLabel} Defensive Lab: Evidence-to-Remediation Report`,

@@ -174,7 +174,7 @@ export function buildImplementationLabGuidance({
 			`Close **${label}** with an engineering note rather than a generic reflection.`,
 			context?.reviewEvidence ??
 				`Summarize the final **${label}** behavior, the most important edge case, the evidence used to verify the result, and one limitation or next improvement.`,
-			`${capitalizedDefiniteLabel(label)} note should be specific enough that the same artifact could be rerun or reviewed later without reconstructing the reasoning from memory.`
+			`${capitalizedDefiniteLabel(label)} note is specific enough for the same artifact to be rerun or reviewed later without reconstructing the reasoning from memory.`
 		].join("\n\n");
 	}
 
