@@ -4038,7 +4038,7 @@ describe("course text quality normalization", () => {
 
 		const requiredSections = [
 			"**Project goal:** Help the wizard collect potions",
-			"**Project goal:** Use arrow-key movement and compound condition checks",
+			"**Project goal:** Guide the baby chick to its parents",
 			"**Butterfly controls:**",
 			"**State to track:**",
 			"**Lists and variables:**",

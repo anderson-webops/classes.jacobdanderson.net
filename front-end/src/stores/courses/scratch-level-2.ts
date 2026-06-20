@@ -38,7 +38,7 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "GM1 Project 2: Drawing Mouse",
-					content: `**Project goal:** Use event listeners and loops to draw different shapes on command.
+					content: `**Project goal:** Combine event listeners and loops to draw different shapes on command.
 
 **Build steps:**
 1. When the green flag is clicked, erase all drawings so the stage starts clean.
@@ -170,14 +170,14 @@ export const scratchLevel2Course: RawCourse = {
 				{
 					title: "GM2 Project 1: Square Inception",
 					content:
-						"1. Trace the order of the sample pattern before building it.\n2. Program the cat to draw the first small square in the bottom-right quadrant. Clear the canvas first and put the pen down before drawing starts.\n3. Program the medium square and then the large square.\n4. After the three squares are drawn in the bottom-right quadrant, turn 90 degrees and change the pen color by 25.\n5. Use nested loops to draw the same square pattern in the other three quadrants.\n6. Use a variable for side length to simplify the code further.",
+						"1. Trace the order of the sample pattern before building it.\n2. Program the cat to draw the first small square in the bottom-right quadrant. Clear the canvas first and put the pen down before drawing starts.\n3. Program the medium square and then the large square.\n4. After the three squares are drawn in the bottom-right quadrant, turn 90 degrees and change the pen color by 25.\n5. Add nested loops to draw the same square pattern in the other three quadrants.\n6. Store side length in a variable to simplify the code further.",
 					projectLink: "https://scratch.mit.edu/projects/306391834/",
 					solutionLink: "https://scratch.mit.edu/projects/306394145/"
 				},
 				{
 					title: "GM2 Project 2: Pyramid",
 					content:
-						"1. Trace the sample pattern before building it.\n2. Program the cat to draw the first tiny triangle. Start at (0, 120), point in direction 150 degrees, and put the pen down before drawing starts.\n3. Program a slightly larger triangle, then an even larger triangle.\n4. Use nested loops and a variable to draw 15 total triangles for the pyramid.",
+						"1. Trace the sample pattern before building it.\n2. Program the cat to draw the first tiny triangle. Start at (0, 120), point in direction 150 degrees, and put the pen down before drawing starts.\n3. Program a slightly larger triangle, then an even larger triangle.\n4. Add nested loops and a variable to draw 15 total triangles for the pyramid.",
 					projectLink: "https://scratch.mit.edu/projects/307922307",
 					solutionLink: "https://scratch.mit.edu/projects/307918456"
 				},
@@ -193,7 +193,7 @@ export const scratchLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "GM2 Supplemental Project 1: Playing Baseball",
-					content: `**Project goal:** Use loops and broadcasts to coordinate a pitcher and batter animation.
+					content: `**Project goal:** Coordinate a pitcher and batter animation with loops and broadcasts.
 
 **Build steps:**
 1. Set the pitcher's costume to the first costume at the start.
@@ -202,7 +202,9 @@ export const scratchLevel2Course: RawCourse = {
 4. When the batter receives the message, cycle through the batter's costumes.
 5. Decide how many strikes create an out, then repeat the pitch-and-bat sequence that many times.
 
-**Completion check:** The batter should wait for the pitch broadcast instead of starting at the same time as the pitcher.`,
+**Completion check:** The batter should wait for the pitch broadcast instead of starting at the same time as the pitcher.
+
+**Evidence check:** A correct sequence can be traced as pitcher action, broadcast, batter response, strike update, and repeat.`,
 					projectLink: "https://scratch.mit.edu/projects/334075920",
 					solutionLink: "https://scratch.mit.edu/projects/334073245/"
 				},
@@ -273,7 +275,7 @@ export const scratchLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "GM3 Supplemental Project 1: Baby Chick",
-					content: `**Project goal:** Use arrow-key movement and compound condition checks to help the baby chick find its parents.
+					content: `**Project goal:** Guide the baby chick to its parents with arrow-key movement and compound condition checks.
 
 **Build steps:**
 1. Program the chick so it can move up, down, left, and right with the arrow keys.
@@ -289,7 +291,7 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "GM3 Supplemental Project 2: Save the Butterfly",
-					content: `**Project goal:** Use alternating-key controls, random movement, broadcasts, and compound conditionals to help the butterfly escape the frog.
+					content: `**Project goal:** Help the butterfly escape the frog with alternating-key controls, random movement, broadcasts, and compound conditionals.
 
 **Setup:**
 1. When the green flag is pressed, place the butterfly at (-60, 0) and the frog at (-170, 0).
@@ -297,9 +299,9 @@ export const scratchLevel2Course: RawCourse = {
 3. After the introduction, make the frog move a random number of steps from 0 to 3 for the rest of the game. Increase the step range for a harder version.
 
 **Butterfly controls:**
-1. Use a wait-until pattern so the butterfly moves forward 5 steps when the player alternates between the left and right arrow keys.
+1. Add a wait-until pattern so the butterfly moves forward 5 steps when the player alternates between the left and right arrow keys.
 2. Prevent the shortcut where holding both keys down bypasses the intended control pattern.
-3. Use complex conditionals to make the control rule explicit.
+3. Add complex conditionals to make the control rule explicit.
 
 **Win and loss rules:**
 1. If the butterfly touches the frog, stop the butterfly scripts, broadcast a loss message, hide the butterfly, and reset visibility on the next green flag.
@@ -380,8 +382,8 @@ export const scratchLevel2Course: RawCourse = {
 **Prompts:**
 1. Define a loop and explain what it means for one loop to be placed inside another loop.
 2. Add a sprite that plays a sound when the spacebar is pressed. Put a repeat 3 around the sound block, then put a repeat 2 around the whole script. Predict the total number of sounds before running it.
-3. When the green flag is clicked, draw a triangle, turn 60 degrees, and draw another triangle. Use a repeat block to form a hexagon of triangles.
-4. Draw another larger hexagon around the first one. Use a loop around the existing code if it helps remove repetition.
+3. When the green flag is clicked, draw a triangle, turn 60 degrees, and draw another triangle. Add a repeat block to form a hexagon of triangles.
+4. Draw another larger hexagon around the first one. A loop around the existing code can remove repetition.
 
 **Completion check:** The prediction for the sound loop should match the actual run, and the drawing should show why nested loops reduce repeated code.`,
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
@@ -409,7 +411,7 @@ export const scratchLevel2Course: RawCourse = {
 				{
 					title: "Check-in #1: Additional Practice Project",
 					content:
-						"Use a variable to make the owl count from 1 to 50.\nAdd a conditional so that if the spacebar or the up arrow is pressed, the owl says something instead of the number.\nAdd a conditional so that if the mouse pointer is on the owl, it gets shy and doesn't say anything at all!",
+						"Make the owl count from 1 to 50 with a variable.\nAdd a conditional so that if the spacebar or the up arrow is pressed, the owl says something instead of the number.\nAdd a conditional so that if the mouse pointer is on the owl, it gets shy and doesn't say anything at all!",
 					projectLink: "https://scratch.mit.edu/projects/386649746/",
 					solutionLink: "https://scratch.mit.edu/projects/386368696/"
 				}
@@ -446,7 +448,7 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "GM5 Project 1: Security Bot",
-					content: `**Project goal:** Use Scratch string blocks to make a security robot ask questions and check text responses.
+					content: `**Project goal:** Build a security robot with Scratch string blocks that ask questions and check text responses.
 
 **String checks:**
 1. Ask for the user's name and reply with "Nice to meet you, _____".
@@ -462,7 +464,7 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "GM5 Project 2: Spelling Bee",
-					content: `**Project goal:** Use string indexing and loops to spell words in different patterns.
+					content: `**Project goal:** Spell words in different patterns with string indexing and loops.
 
 **Key commands:**
 1. When 1 is pressed, ask for a word and spell it letter by letter. Example: C-O-D-I-N-G.
@@ -507,7 +509,7 @@ export const scratchLevel2Course: RawCourse = {
 					content: `**Project goal:** Build a spelling test that checks one letter at a time.
 
 **Build steps:**
-1. Use the starter's Secret Word variable as the word to spell.
+1. Treat the starter's Secret Word variable as the word to spell.
 2. Add the Text to Speech extension and speak the secret word.
 3. Ask the user to enter the word one letter at a time.
 4. If a letter is correct, speak "Correct!"
@@ -720,7 +722,7 @@ export const scratchLevel2Course: RawCourse = {
 					title: "Functions",
 					content: `**Concept path:** Custom blocks in Scratch work like functions. A function is a named set of instructions that can be reused whenever a sprite needs that behavior.
 
-**Definition and call:** Use the My Blocks section to create a custom block, define what it does, and call it from another script. Defining a function describes the behavior once; calling the function runs that behavior with specific input values.
+**Definition and call:** The My Blocks section creates custom blocks, defines what each block does, and calls those blocks from other scripts. Defining a function describes the behavior once; calling the function runs that behavior with specific input values.
 
 **Why it matters:** Functions keep projects organized by separating repeated behavior into named pieces. A game such as Music Memory could use functions for playing a note sequence, checking an answer, resetting a round, or displaying feedback.`
 				},
@@ -734,7 +736,7 @@ export const scratchLevel2Course: RawCourse = {
 3. A jump function that takes the jump height as input.
 4. A teleport function with no inputs: spin, move to a random spot with a sound effect, then spin again.
 
-**Green-flag sequence:** Use the custom blocks to make the cat jump 100 steps, speak 3 times, draw a square of size 100, teleport, and draw another square.
+**Green-flag sequence:** The main script should call the custom blocks to make the cat jump 100 steps, speak 3 times, draw a square of size 100, teleport, and draw another square.
 
 **Completion check:** Each behavior should be defined once as a custom block and then called from the main green-flag script.`,
 					projectLink: "https://scratch.mit.edu/projects/315773207",
@@ -823,7 +825,7 @@ export const scratchLevel2Course: RawCourse = {
 				{
 					title: "Check-in #2: Mathematical Operators and Randomness",
 					content:
-						"Math-1: How can Scratch perform operations on numbers? Where are these blocks located?\nMath-2: When the 2 key is pressed, make Andie say the result of adding together 5 and 6.\nMath-3,4: Create a random number between 1 and 20 and store it in a variable. If the number is less than 10, have Andie say “Wow, that's a small number!” otherwise, say “Whoa, that's a big number!”\nMath-5: What is the mod block? Use it to report to the user the remainder of dividing any two numbers.",
+						"Math-1: How can Scratch perform operations on numbers? Where are these blocks located?\nMath-2: When the 2 key is pressed, make Andie say the result of adding together 5 and 6.\nMath-3,4: Create a random number between 1 and 20 and store it in a variable. If the number is less than 10, have Andie say “Wow, that's a small number!” otherwise, say “Whoa, that's a big number!”\nMath-5: What is the mod block? Have it report to the user the remainder of dividing any two numbers.",
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
@@ -865,7 +867,7 @@ export const scratchLevel2Course: RawCourse = {
 1. Add one dancing sprite.
 2. Create a function that loops through all of the sprite's costumes.
 3. Add a number input for how many seconds the dance should last.
-4. Use division in the wait block so the total costume loop lasts the requested number of seconds.
+4. Calculate the wait block with division so the total costume loop lasts the requested number of seconds.
 5. When the green flag is pressed, make the sprite dance for 3 seconds.
 6. Ask for the user's top five favorite dance moves by costume number.
 7. Store those favorite moves in a list.
@@ -946,7 +948,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Pal movement:**
 1. When Pal receives Level 1, place Pal at the starting point.
-2. Use a forever loop for ground checks and arrow-key movement.
+2. Run a forever loop for ground checks and arrow-key movement.
 3. Move Pal down when it is not touching green so gravity keeps it on the ground.
 4. Move Pal left and right with the arrow keys.
 5. When the up arrow is pressed, make Pal jump by increasing its y position. For a harder version, prevent Pal from jumping through platforms.
