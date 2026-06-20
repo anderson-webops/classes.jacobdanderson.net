@@ -3630,15 +3630,37 @@ describe("course text quality normalization", () => {
 				item.title.includes("Core Project")
 			),
 			...module.supplementalProjects.filter(item =>
-				/^(?:Transfer|Extension) Practice/.test(item.title)
+				/\b(?:Transfer|Extension) Practice\b/.test(item.title)
 			)
 		];
 
 		expect(projectItems).toHaveLength(3);
 		expect(new Set(projectItems.map(item => item.content)).size).toBe(3);
 		expect(projectItems[0].content).toContain("implementation checkpoint");
-		expect(projectItems[1].content).toContain("Transfer Practice");
-		expect(projectItems[2].content).toContain("Extension Practice");
+		expect(projectItems[1].title).toContain("Transfer Practice");
+		expect(projectItems[1].content).toContain("Transfer version");
+		expect(projectItems[2].title).toContain("Extension Practice");
+		expect(projectItems[2].content).toContain("Extension version");
+	});
+
+	it("keeps Design Patterns in Java labels pattern-specific", async () => {
+		const course = await loadRawCourse("design-patterns-in-java");
+		expect(course).not.toBeNull();
+		const corpus = allCourseText(course);
+		const source = fs.readFileSync(
+			"src/stores/courses/design-patterns-in-java.ts",
+			"utf8"
+		);
+
+		expect(source).not.toMatch(/Pattern Implementation Lab 1[5-7]/);
+		expect(source).not.toMatch(/Supplemental [23]/);
+		expect(source).not.toMatch(/Implementation Lab/);
+		expect(source).not.toMatch(/Key idea:/);
+		expect(corpus).toContain("Strategy Selection Refactor Studio");
+		expect(corpus).toContain("Structural Wrapper Refactor Studio");
+		expect(corpus).toContain("Architecture Judgment Capstone Studio");
+		expect(corpus).toContain("Strategy Selection Refactor Transfer Practice");
+		expect(corpus).toContain("Architecture Judgment Capstone Extension Practice");
 	});
 
 	it("keeps Java foundation implementation builds tied to distinct source projects", async () => {
