@@ -114,7 +114,7 @@ const graphicsIntroModule: RawCourseModule = {
 		{
 			title: "Graphics Setup Expectations",
 			content:
-				"**Concept path:** Keep graphics work intentionally small and local: understand coordinates, shape sizing, color selection, repeated drawing with loops, and helper methods that compose a larger scene. Do not let graphics setup replace the main Java goals of clean control flow and object design.\n\n**Setup boundary:** Graphics setup is useful only after the compile-run workflow is stable. The project should first prove that a tiny shape renders, then add coordinate reasoning, repeated shapes, helper methods, and scene-level organization in separate steps.\n\n**Evidence target:** A graphics project should include a coordinate sketch, named helper methods, and at least one changed input or setting that visibly changes the output in a predictable way."
+				"**Concept path:** Keep graphics work intentionally small and local: understand coordinates, shape sizing, color selection, repeated drawing with loops, and helper methods that compose a larger scene. Do not let graphics setup replace the main Java goals of clean control flow and object design.\n\n**Setup boundary:** Graphics setup is useful only after the compile-run workflow is stable. The project first proves that a tiny shape renders, then adds coordinate reasoning, repeated shapes, helper methods, and scene-level organization in separate steps.\n\n**Evidence target:** A graphics project should include a coordinate sketch, named helper methods, and at least one changed input or setting that visibly changes the output in a predictable way."
 		}
 	],
 	supplementalProjects: [

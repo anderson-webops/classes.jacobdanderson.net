@@ -587,7 +587,7 @@ export const scratchLevel1Course: RawCourse = {
 4. If a sprite is chosen, make it bounce around the room with Dani.
 5. If a sprite is not chosen, give it an appropriate alternate reaction.
 
-**Completion check:** The chosen and unchosen sprites should respond differently, and the project should reset correctly with the green flag.`,
+**Completion check:** The chosen and unchosen sprites respond differently, and the project resets correctly with the green flag.`,
 					projectLink: "https://scratch.mit.edu/projects/330302209/",
 					solutionLink: "https://scratch.mit.edu/projects/328312475/"
 				},
@@ -800,7 +800,7 @@ Typing practice is not required to complete the Scratch course, but it can make 
 				{
 					title: "Concept Path",
 					content:
-						"A polished Scratch game is more than a set of working controls. It needs clear instructions, visible score or progress feedback, balanced difficulty, sound or visual polish, and an ending state that makes the result feel complete. The project should be easy to trace from green flag to reset, normal play, win/loss state, and replay."
+						"A polished Scratch game is more than a set of working controls. It needs clear instructions, visible score or progress feedback, balanced difficulty, sound or visual polish, and an ending state that makes the result feel complete. The project is easy to trace from green flag to reset, normal play, win/loss state, and replay."
 				},
 				{
 					title: "Design and Planning Map",
@@ -847,7 +847,7 @@ Typing practice is not required to complete the Scratch course, but it can make 
 				{
 					title: "Concept Path",
 					content:
-						"An interactive story uses events, broadcasts, costumes, backdrops, and variables to make choices visible. The project should show how a scene starts, which choice changes the story state, what message moves the project to the next scene, and how each ending is reached."
+						"An interactive story uses events, broadcasts, costumes, backdrops, and variables to make choices visible. The project shows how a scene starts, which choice changes the story state, what message moves the project to the next scene, and how each ending is reached."
 				},
 				{
 					title: "Design and Planning Map",

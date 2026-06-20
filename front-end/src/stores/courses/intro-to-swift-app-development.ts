@@ -380,7 +380,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Worked Example Set: Reading a Tiny App Blueprint",
 					content:
-						"Take a small app and identify where the app launches, which views it owns, how navigation branches, and where user-facing data is stored or derived. This should feel like architecture reading, not just code reading."
+						"Take a small app and identify where the app launches, which views it owns, how navigation branches, and where user-facing data is stored or derived. Treat this as architecture reading, not just code reading."
 				},
 				{
 					title: "Reflection Question: Which Part of an App Should Change Most Slowly?",
@@ -876,7 +876,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Reflection Question: What Makes CRUD Feel Predictable?",
 					content:
-						"Explain which interactions in a tracker app should feel immediate and which ones need more guardrails or confirmation. This connects interface design to data integrity."
+						"Explain which interactions in a tracker app need immediate feedback and which ones need more guardrails or confirmation. This connects interface design to data integrity."
 				}
 			],
 			supplementalProjects: [

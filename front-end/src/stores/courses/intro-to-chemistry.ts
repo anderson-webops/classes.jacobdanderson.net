@@ -879,7 +879,7 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Project: Introduction to Chemical Reactions",
 					content: [
-						"**Project goal:** Restore the original chemical-reactions introduction using methane combustion and rust formation as anchor examples. The project should distinguish physical change from chemical reaction, identify reactants and products, and explain coefficients, subscripts, and state symbols.",
+						"**Project goal:** Restore the original chemical-reactions introduction using methane combustion and rust formation as anchor examples. The project distinguishes physical change from chemical reaction, identifies reactants and products, and explains coefficients, subscripts, and state symbols.",
 						"**Requirements:** Analyze `CH₄ + 2O₂ → CO₂ + 2H₂O` as a combustion model and `4Fe(s) + 3O₂(g) → 2Fe₂O₃(s)` as a rust-formation model. Explain what the subscript in `CH₄` means, what the coefficient `2` before `O₂` means, why oxygen is required for combustion in this simplified model, and what `(s)`, `(g)`, and `(l)` communicate.",
 						"**Original prompt restored:** Sketch or describe iron and oxygen particles rearranging into iron oxide. The drawing does not need advanced molecular geometry, but it should show that atoms are conserved and rearranged rather than disappearing or being created.",
 						"**Completion checks:** The answer correctly identifies Fe as iron, distinguishes subscripts from coefficients, distinguishes phase labels from formulas, and explains why a phase change alone is not a chemical reaction."
@@ -902,7 +902,7 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Project: Making a Volcano Case Analysis",
 					content: [
-						"**Project goal:** Preserve the original vinegar-and-baking-soda volcano as a reaction case about acid-base gas production. The project should also make clear that a classroom volcano model is not the same process as a real lava volcano.",
+						"**Project goal:** Preserve the original vinegar-and-baking-soda volcano as a reaction case about acid-base gas production. The project also makes clear that a classroom volcano model is not the same process as a real lava volcano.",
 						"**Requirements:** Use the provided video, diagram, or safe supervised observation. Identify vinegar as the acid model, baking soda as the base model, carbon dioxide as the gas that creates bubbles or foam, and water as one byproduct in the introductory explanation.",
 						"**Original prompt restored:** Predict what will happen before vinegar is added, describe the visible evidence after mixing, and explain whether the model works the same way as a real volcano. The final answer should name the chemistry model and the limitation of the analogy.",
 						"**Completion checks:** The explanation uses acid, base, carbon dioxide, product, gas, reaction evidence, and analogy limit accurately."

@@ -678,8 +678,8 @@ This check-in revisits the second half of the course.
 - trig ratios, radians, and unit-circle coordinates
 - graphing transformed trig functions
 
-Treat the check-in as planning data for future reteaching, not as a formal exam.
-				`.trim()
+	Treat the check-in as planning data for future review, not as a formal exam.
+					`.trim()
 			),
 			createLesson(
 				"Representative Review Problems",

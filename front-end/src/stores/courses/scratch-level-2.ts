@@ -27,7 +27,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Extension:** Add another sprite controlled by the W-A-S-D keys.
 
-**Completion check:** Each event should trigger only the intended behavior, and the project should reset cleanly when the green flag is clicked.`,
+**Completion check:** Each event triggers only the intended behavior, and the project resets cleanly when the green flag is clicked.`,
 					projectLink: "https://scratch.mit.edu/projects/287707460/",
 					solutionLink: "https://scratch.mit.edu/projects/284408078/"
 				},
@@ -1097,7 +1097,7 @@ Typing practice is not required to complete the Scratch course, but it can make 
 				{
 					title: "Concept Path",
 					content:
-						"An arcade system depends on reusable structure: clone creation, list-backed state, custom blocks, broadcasts, and conditionals should work together instead of living in separate one-off scripts. The project should make spawn rules, collisions, scoring, levels, and game-over cleanup traceable from the green flag."
+						"An arcade system depends on reusable structure: clone creation, list-backed state, custom blocks, broadcasts, and conditionals should work together instead of living in separate one-off scripts. The project makes spawn rules, collisions, scoring, levels, and game-over cleanup traceable from the green flag."
 				},
 				{
 					title: "Design and Planning Map",

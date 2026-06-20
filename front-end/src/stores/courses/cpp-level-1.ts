@@ -71,7 +71,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "CPPF2 Project 2: Rock, Paper, Scissors",
 					content:
-						"Use conditionals to compare choices and decide winners. This project should feel like branching logic practice, not like a giant design exercise.",
+						"Use conditionals to compare choices and decide winners. Keep the focus on branching logic practice rather than a large design exercise.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Rock-Paper-Scissors",
 					solutionLink:
@@ -163,7 +163,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "CPPF4 Project: Cat Class",
 					content:
-						"Build a small class with constructors, state updates, and readable output. The project should feel like modeling and method practice, not like memory management practice.",
+						"Build a small class with constructors, state updates, and readable output. The project focuses on modeling and method practice, not memory management.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Cat-Class",
 					solutionLink:
@@ -227,7 +227,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "References, Const References, and Function Boundaries",
 					content:
-						"References are aliases, and `const` references are a safe way to avoid unnecessary copying. Include pass-by-value versus pass-by-reference, when a function should mutate caller-owned data, when it should only observe data, why `const` communicates intent, and how to trace what changes after a function call. This should feel like a data-flow topic, not a pointer topic.",
+						"References are aliases, and `const` references are a safe way to avoid unnecessary copying. Include pass-by-value versus pass-by-reference, when a function should mutate caller-owned data, when it should only observe data, why `const` communicates intent, and how to trace what changes after a function call. Treat this as a data-flow topic, not a pointer topic.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Parameter-Passing-Introduction"
 				},

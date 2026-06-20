@@ -871,8 +871,8 @@ The master project closes the course with a short independent explanation.
 - Design and solve at least two original problems.
 - Record a short presentation that explains the explanation clearly and concisely.
 
-This project should feel like a short capstone reflection, not another worksheet.
-				`.trim()
+	This project is a short capstone reflection rather than another worksheet.
+					`.trim()
 			)
 		]),
 		createModule("Check-in #3", [

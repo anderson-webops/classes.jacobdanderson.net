@@ -10,7 +10,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Editor, Interpreter, and Project Baseline",
 					content:
-						"Standardize on `Python 3` in either `PyCharm` or `VS Code`, verify the interpreter path, and make multi-file project navigation part of the opening setup. From the beginning, the course should feel architectural rather than like a sequence of isolated scripts."
+						"Standardize on `Python 3` in either `PyCharm` or `VS Code`, verify the interpreter path, and make multi-file project navigation part of the opening setup. From the beginning, the course emphasizes architecture rather than a sequence of isolated scripts."
 				},
 				{
 					title: "Packages, Virtual Environments, and Lightweight Testing",
@@ -144,7 +144,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Composition over Inheritance in a Python Setting",
 					content:
-						"Small Python examples show why composition, delegation, and explicit collaborators scale better than eager subclass trees. Inheritance used only as a habit should feel suspicious."
+						"Small Python examples show why composition, delegation, and explicit collaborators scale better than eager subclass trees. Inheritance used only as a habit deserves skepticism."
 				},
 				{
 					title: "Protocols, ABCs, and Informal Interfaces",
@@ -554,7 +554,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Project: State and Command Quest Loop",
 					content:
-						"Build a small quest or workflow loop where explicit states govern allowed actions and command objects or callables power history, replay, or undo. The lab should feel like applied control-flow cleanup, not just game-themed syntax practice.",
+						"Build a small quest or workflow loop where explicit states govern allowed actions and command objects or callables power history, replay, or undo. The lab functions as applied control-flow cleanup, not just game-themed syntax practice.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP5-State-Command-Quest-Loop/starter",
 					solutionLink:
@@ -669,7 +669,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Inheritance-Based Skeletons and Hook Methods",
 					content:
-						"The textbook Template Method shape is included for recognition, but the use case should stay concrete: a stable algorithm skeleton with a few genuine hooks. This should feel like a niche tool, not a default architecture style."
+						"The textbook Template Method shape is included for recognition, but the use case should stay concrete: a stable algorithm skeleton with a few genuine hooks. Treat it as a niche tool, not a default architecture style."
 				},
 				{
 					title: "Replacing Template Method with Callables or Composition",
@@ -757,7 +757,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Context Objects, App Factories, and Explicit Wiring",
 					content:
-						"Offer practical alternatives such as configuration objects, explicit dependency injection, app factories, or small service containers. The replacement should feel simpler to reason about, not theoretically purer."
+						"Offer practical alternatives such as configuration objects, explicit dependency injection, app factories, or small service containers. The replacement should be simpler to reason about, not theoretically purer."
 				},
 				{
 					title: "When Shared Process State Is Still Legitimate",
@@ -935,7 +935,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "Project: Pythonic Refactor Capstone",
 					content:
-						"Take the capstone starter through diagnosis, extraction, boundary cleanup, and final polish, then compare the finished structure against the original in a short architecture review. The best solutions should feel lighter and clearer, not more ornate.",
+						"Take the capstone starter through diagnosis, extraction, boundary cleanup, and final polish, then compare the finished structure against the original in a short architecture review. The best solutions are lighter and clearer, not more ornate.",
 					projectLink:
 						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main/PDP7-Pythonic-Refactor-Capstone/starter",
 					solutionLink:

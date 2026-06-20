@@ -49,7 +49,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "CPPI1 Project: Saveable Task Manager",
 					content:
-						"Build a command-driven task manager that can add tasks, mark them complete, filter by status, save to a text file, and reload on startup. The project should require at least one explicit parser function and one validation path.",
+						"Build a command-driven task manager that can add tasks, mark them complete, filter by status, save to a text file, and reload on startup. The project requires at least one explicit parser function and one validation path.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI1-Saveable-Task-Manager/starter",
 					solutionLink:
@@ -163,7 +163,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "CPPI4 Project: Resource-Safe File Processor",
 					content:
-						"Build a file-processing tool that opens input/output files, validates records, reports errors, and relies on object lifetime for cleanup. The project should include at least one deliberately failed open or parse case.",
+						"Build a file-processing tool that opens input/output files, validates records, reports errors, and relies on object lifetime for cleanup. The project includes at least one deliberately failed open or parse case.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI4-Resource-Safe-File-Processor/starter",
 					solutionLink:

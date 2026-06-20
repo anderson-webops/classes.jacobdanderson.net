@@ -238,7 +238,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS1 Supplemental Project 2: Hello World!",
 					content:
-						"Use string indexing to construct `Hello World!` from provided strings. Identify the index of each needed character, store or print the characters in order, and verify that spaces and punctuation are included intentionally. This project should make zero-based indexing concrete rather than relying on a prewritten full phrase.",
+						"Use string indexing to construct `Hello World!` from provided strings. Identify the index of each needed character, store or print the characters in order, and verify that spaces and punctuation are included intentionally. This makes zero-based indexing concrete rather than relying on a prewritten full phrase.",
 					projectLink: "https://codepen.io/junilearning/pen/MWKEKPJ",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/36a808fbb70a55e25889b07c74debb6a"
@@ -1012,7 +1012,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS12 Supplemental Project 1: Table Documentation Dive",
 					content:
-						"Extend a table using documentation-driven changes. Add hover highlighting, make selected names or entries link to credible sources, and verify that the clickable area is obvious. The project should demonstrate reading documentation, applying a class or attribute, and checking the result in the browser.",
+						"Extend a table using documentation-driven changes. Add hover highlighting, make selected names or entries link to credible sources, and verify that the clickable area is obvious. The project demonstrates reading documentation, applying a class or attribute, and checking the result in the browser.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/a08f05f994009cffe397dd6dd86dbddd",
 					solutionLink:
@@ -1075,7 +1075,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS13 Project 3: Pokemon Team",
 					content:
-						"Create a responsive Pokemon team page with images, nicknames, moveset tables, stats icons, and a navbar. Use a grid so team cards reflow cleanly across screen sizes, and keep table labels readable on mobile. Each Pokemon card should feel like the same component filled with different content.",
+						"Create a responsive Pokemon team page with images, nicknames, moveset tables, stats icons, and a navbar. Use a grid so team cards reflow cleanly across screen sizes, and keep table labels readable on mobile. Each Pokemon card uses the same component pattern with different content.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/ae3059e723f4f66779b4cd4e2a1fc520",
 					solutionLink:

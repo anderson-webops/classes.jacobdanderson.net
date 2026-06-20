@@ -106,7 +106,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "Entry Expectations from JavaScript Level 1 and 2",
 					content:
-						"This course assumes comfort reading and writing small-to-medium JavaScript programs, working with HTML and CSS, manipulating the DOM, responding to events, and reasoning about APIs and basic data models. It can briefly reinforce those ideas, but it should not spend most of its time reteaching them. The real transition is from `browser-only projects` into `file-based local development, Git, npm, dev servers, back-end services, databases, and deployment`. Strong JavaScript Level 2 preparation may make the early setup material move quickly, but workflow and environment habits remain part of the curriculum rather than optional side topics."
+						"This course assumes comfort reading and writing small-to-medium JavaScript programs, working with HTML and CSS, manipulating the DOM, responding to events, and reasoning about APIs and basic data models. It can briefly reinforce those ideas without making review the center of the course. The real transition is from `browser-only projects` into `file-based local development, Git, npm, dev servers, back-end services, databases, and deployment`. Strong JavaScript Level 2 preparation may make the early setup material move quickly, but workflow and environment habits remain part of the curriculum rather than optional side topics."
 				},
 				{
 					title: "What This Course Is Not",
@@ -189,7 +189,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "Make Browser Devtools a Recurring Strand",
 					content:
-						"Use devtools in every major JavaScript or browser module so debugging becomes routine. Console inspection, network tabs, layout inspection, storage inspection, and source maps should feel like part of the normal development loop, especially before frameworks and back ends make the debugging surface larger."
+						"Use devtools in every major JavaScript or browser module so debugging becomes routine. Console inspection, network tabs, layout inspection, storage inspection, and source maps become part of the normal development loop, especially before frameworks and back ends make the debugging surface larger."
 				},
 				{
 					title: "WDF2 Stage 1: Strengthen the Existing JavaScript Courses: Core Project",
@@ -330,7 +330,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "Modern UI Composition",
 					content:
-						"Move from small DOM exercises to reusable UI composition through views, components, states, and boundaries. Even before a specific framework becomes central, modern front-end code should feel organized around reusable parts that make complex interfaces easier to debug and extend."
+						"Move from small DOM exercises to reusable UI composition through views, components, states, and boundaries. Even before a specific framework becomes central, modern front-end code is organized around reusable parts that make complex interfaces easier to debug and extend."
 				},
 				{
 					title: "Routing and Multi-View Thinking",
@@ -365,7 +365,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "Project: Real-Time Chat or Notification App",
 					content:
-						"Use the real-time chat lab to show how front-end application state, live updates, and interface composition change once events start arriving continuously rather than only through one-off HTTP requests. This project should also reinforce responsive layout, input validation, and the user experience of joining, sending, and receiving updates.",
+						"Use the real-time chat lab to show how front-end application state, live updates, and interface composition change once events start arriving continuously rather than only through one-off HTTP requests. This project also reinforces responsive layout, input validation, and the user experience of joining, sending, and receiving updates.",
 					projectLink:
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF4-Realtime-Chat-App/starter",
 					solutionLink:
@@ -726,7 +726,7 @@ export const webDevelopmentFoundationsCourse: RawCourse = {
 				{
 					title: "Project: Booking or Contact App with Email Integration",
 					content:
-						"This project should teach that forms do not end at the browser: contact requests need validation, transport, environment-based configuration, and a secure boundary between public inputs and private server credentials.",
+						"Forms do not end at the browser: contact requests need validation, transport, environment-based configuration, and a secure boundary between public inputs and private server credentials.",
 					projectLink:
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/WDF3-Booking-Contact-App/starter",
 					solutionLink:
