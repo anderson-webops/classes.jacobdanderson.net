@@ -142,7 +142,7 @@ export function buildImplementationLabGuidance({
 			`${definiteLabel(label)} artifact, minimum working behavior, input/output surfaces`;
 		const invariant =
 			context?.invariant ??
-			"invariant that should stay true as features are added";
+			"invariant that remains true as features are added";
 
 		return [
 			`**${label}** connects the build target to ${focus}.`,

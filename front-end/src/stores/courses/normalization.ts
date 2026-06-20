@@ -4992,7 +4992,7 @@ function extensionPrompt(context: CourseTextContext) {
 			subject =>
 				`Extend ${subject} with one diagnostic command and the expected output that confirms the system state.`,
 			subject =>
-				`Add a rollback or recovery step to ${subject} and document when it should be used.`,
+				`Add a rollback or recovery step to ${subject} and document the condition that triggers it.`,
 			subject =>
 				`Add a logging, permission, service, or automation check to ${subject} that can be rerun from a clean shell.`,
 			subject =>
