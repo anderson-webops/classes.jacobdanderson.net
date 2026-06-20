@@ -164,7 +164,7 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 	"network-systems": [
 		"Local VM/container or home-lab-safe diagnostics only.",
 		"IPv4, IPv6, DNS, routing, firewall, and packet-capture commands must include rollback notes.",
-		"Packet captures should use provided or owned traffic."
+		"Packet captures use provided or owned traffic."
 	],
 	"rust-systems-security": [
 		"Current stable Rust toolchain and Cargo.",
