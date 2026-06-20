@@ -3750,6 +3750,25 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Temperature Converter Transfer Practice");
 	});
 
+	it("keeps Java Level 2 advanced project labels practice-oriented", async () => {
+		const course = await loadRawCourse("java-level-2");
+		expect(course).not.toBeNull();
+
+		const source = fs.readFileSync(
+			"src/stores/courses/java-level-2.ts",
+			"utf8"
+		);
+		const corpus = allCourseText(course);
+
+		expect(source).not.toMatch(/\bImplementation Lab\b/);
+		expect(source).not.toMatch(/\bSupplemental [23]\b/);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/);
+		expect(corpus).not.toMatch(/\bSupplemental [23]\b/);
+		expect(corpus).toContain("JM Master Project Example Quiz Game: Practice Studio");
+		expect(corpus).toContain("JM Maze Runner Project Extension Practice");
+		expect(corpus).toContain("Static Variables & Methods Extension Practice");
+	});
+
 	it("formats inline project steps and support labels as readable markdown blocks", async () => {
 		const [scratchLevel1, scratchLevel2, pygames] = await Promise.all([
 			loadRawCourse("scratch-level-1"),
