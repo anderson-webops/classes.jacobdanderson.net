@@ -61,6 +61,46 @@ If VS Code still will not run Java, reopen only the assignment folder, re-check 
 const repo = (path: string) => `${APCS_REPO_BASE}/${path}`;
 const media = (file: string) => `${STATIC_MEDIA_BASE}/${file}`;
 
+function apConcept({
+	evidence,
+	focus,
+	practice
+}: {
+	evidence: string;
+	focus: string;
+	practice: string[];
+}) {
+	return [
+		`**Concept path:** ${focus}`,
+		`**Practice sequence:**\n${practice.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
+		`**Evidence:** ${evidence}`
+	].join("\n\n");
+}
+
+function apProject({
+	apReasoning,
+	checks,
+	extension,
+	goal,
+	steps
+}: {
+	apReasoning: string;
+	checks: string[];
+	extension?: string;
+	goal: string;
+	steps: string[];
+}) {
+	return [
+		`**Goal:** ${goal}`,
+		`**Build path:**\n${steps.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
+		`**AP CSA Java reasoning:** ${apReasoning}`,
+		`**Checks:**\n${checks.map(check => `- ${check}`).join("\n")}`,
+		extension ? `**Extension:** ${extension}` : ""
+	]
+		.filter(Boolean)
+		.join("\n\n");
+}
+
 export const apComputerScienceACourse: RawCourse = {
 	name: "AP Computer Science A",
 	modules: [
@@ -1038,18 +1078,52 @@ export const apComputerScienceACourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Runtime by Step Counting",
-					content:
-						"Runtime should be measured in operations rather than wall-clock time so algorithms can be compared independent of machine speed."
+					content: apConcept({
+						focus: "Runtime analysis compares how work grows as input size grows. Wall-clock time changes with hardware, compiler settings, and background load, so AP CSA reasoning counts loop iterations, comparisons, assignments, recursive calls, or other stable operations.",
+						practice: [
+							"Choose one code fragment and name the operation being counted.",
+							"Trace the count for small inputs such as `n = 1`, `n = 2`, and `n = 5`.",
+							"Rewrite the count as a simple expression in terms of `n`.",
+							"Summarize the growth rate only after the counted work is clear."
+						],
+						evidence:
+							"A complete runtime explanation connects the code structure to the count. The final Big-O label is not enough unless the loop bounds or recursive calls explain why that label fits."
+					})
 				},
 				{
 					title: "Best, Average, and Worst Case",
-					content:
-						"Runtime should be described across favorable, typical, and unfavorable cases, especially for loops and search tasks. Concrete input examples explain why the same code can do different amounts of work."
+					content: apConcept({
+						focus: "The same algorithm can do different amounts of work depending on the input. Search algorithms are the cleanest examples: the target might be first, last, absent, or positioned near the middle.",
+						practice: [
+							"Name one input that makes the algorithm finish quickly.",
+							"Name one input that forces the largest number of checks.",
+							"Explain whether a typical case needs a probability model or only a representative example.",
+							"Connect the case labels to the exact comparison or loop that changes."
+						],
+						evidence:
+							"Best, average, and worst-case labels are supported by concrete inputs and a trace of how many checks those inputs cause."
+					})
 				},
 				{
 					title: "Core Project: Runtime Analysis",
-					content:
-						"Runtime analysis is the main APCS13 reasoning checkpoint. The goal is to count operations from code structure first, then summarize the growth rate with notation.",
+					content: apProject({
+						goal: "Use the runtime-analysis starter to connect Java loop structure to growth-rate reasoning.",
+						steps: [
+							"Identify the input size for each method before counting anything.",
+							"Mark the line or operation that represents the repeated work.",
+							"Count the operation for small input sizes and look for the pattern.",
+							"Classify the growth rate after the count is visible."
+						],
+						apReasoning:
+							"AP CSA Java reasoning expects the answer to cite code structure: loop bounds, nested loops, early exits, or recursive calls. The notation is a summary of that evidence, not a replacement for it.",
+						checks: [
+							"The counted operation is named explicitly.",
+							"At least one small input trace supports the formula.",
+							"The final growth class matches the dominant term rather than a copied guess."
+						],
+						extension:
+							"Compare two implementations of the same task and explain which input sizes would make the difference noticeable."
+					}),
 					projectLink: repo("APCS13-Runtime-Analysis/starter"),
 					solutionLink: repo("APCS13-Runtime-Analysis/solution")
 				}
@@ -1057,8 +1131,24 @@ export const apComputerScienceACourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Project: Linear Search Implementation",
-					content:
-						"The linear-search build compares unsorted search, sorted early exits, and traceable search behavior. A complete explanation should cover found-at-front, found-at-end, and not-found cases.",
+					content: apProject({
+						goal: "Implement and trace linear search so the result and runtime case are both visible.",
+						steps: [
+							"Search an unsorted array with a simple left-to-right loop.",
+							"Return or report the target as soon as it is found.",
+							"Add a sorted-data variant only when the early-exit condition is justified.",
+							"Trace found-at-front, found-at-end, and not-found inputs."
+						],
+						apReasoning:
+							"The AP question is not only whether the code finds the target. It is also which comparisons occur, when the loop stops, and how sortedness changes the worst-case or early-exit behavior.",
+						checks: [
+							"The not-found case terminates without reading past the end.",
+							"The found-at-front case performs one comparison.",
+							"The sorted variant explains why values beyond the target point no longer need checking."
+						],
+						extension:
+							"Return the first matching index instead of a boolean result, then test duplicates and explain why the first occurrence is returned."
+					}),
 					projectLink: repo(
 						"APCS13-Linear-Search-Implementation/starter"
 					),
@@ -1074,18 +1164,52 @@ export const apComputerScienceACourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Selection Sort",
-					content:
-						"Selection sort is the repeated process of finding the next extreme element and moving it into the sorted section."
+					content: apConcept({
+						focus: "Selection sort repeatedly finds the next smallest or largest value and moves it into the sorted region. The sorted region grows from one side, while the unsorted region shrinks by one element per pass.",
+						practice: [
+							"Trace one pass and record the current index, candidate extreme index, and comparison result.",
+							"Swap only after the pass identifies the correct extreme value.",
+							"Draw the boundary between sorted and unsorted regions after each pass.",
+							"Count the comparisons to connect the algorithm to quadratic runtime."
+						],
+						evidence:
+							"A correct trace explains the invariant: after pass `k`, the first `k` positions contain the correct values in sorted order."
+					})
 				},
 				{
 					title: "Insertion Sort",
-					content:
-						"Insertion sort uses repeated local insertion into an already sorted prefix, with special attention to best-case and worst-case inputs."
+					content: apConcept({
+						focus: "Insertion sort grows a sorted prefix by inserting the next value into the correct earlier position. It rewards nearly sorted data because values often do not need to move far.",
+						practice: [
+							"Mark the sorted prefix before each pass.",
+							"Store the current value and shift larger or smaller values until the insertion point is open.",
+							"Compare an already sorted input with a reverse-sorted input.",
+							"Explain why the best case has fewer movements than the worst case."
+						],
+						evidence:
+							"The trace shows both the current value being inserted and the sorted prefix remaining sorted after the insertion."
+					})
 				},
 				{
 					title: "Core Project: Selection Sort",
-					content:
-						"The selection-sort build is the main APCS14 checkpoint because it gives the algorithm a clean invariant to describe while coding.",
+					content: apProject({
+						goal: "Implement selection sort with a visible sorted-region invariant and traceable comparison behavior.",
+						steps: [
+							"Choose ascending or descending order and keep that direction consistent.",
+							"Loop over each position that will receive the next selected value.",
+							"Search the remaining unsorted region for the next extreme value.",
+							"Swap after the scan and record how the sorted region changed."
+						],
+						apReasoning:
+							"AP CSA Java reasoning focuses on the invariant and the nested-loop count. The outer loop fixes one position per pass, and the inner loop searches the remaining region.",
+						checks: [
+							"Already sorted, reverse sorted, duplicate-heavy, and single-element arrays all behave correctly.",
+							"The trace identifies the selected index before the swap.",
+							"The runtime explanation connects the nested loops to quadratic growth."
+						],
+						extension:
+							"Sort objects by one field, such as card rank or student score, and explain what comparison changed."
+					}),
 					projectLink: repo("APCS14-Selection-Sort/starter"),
 					solutionLink: repo("APCS14-Selection-Sort/solution"),
 					mediaLink: media("apcs14-project-1-selection-sort.mp4")
@@ -1094,8 +1218,24 @@ export const apComputerScienceACourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Project: Insertion Sort",
-					content:
-						"The insertion-sort build contrasts local shifting with global minimum selection. The useful trace shows the sorted prefix growing, the current value shifting left, and why nearly sorted input behaves differently from reverse-sorted input.",
+					content: apProject({
+						goal: "Implement insertion sort and explain why its behavior changes with input order.",
+						steps: [
+							"Treat index `0` as the initial sorted prefix.",
+							"Take the next value and move left through the prefix until the insertion point is found.",
+							"Shift values without overwriting the stored current value.",
+							"Trace a nearly sorted input and a reverse-sorted input."
+						],
+						apReasoning:
+							"Insertion sort questions often test loop conditions, index bounds, and the order of assignment during shifting. A clean trace shows why `j >= 0` style bounds checks matter.",
+						checks: [
+							"The current value is preserved while other values shift.",
+							"The algorithm handles duplicates without losing values.",
+							"The best-case and worst-case examples are named and justified."
+						],
+						extension:
+							"Add a counter for comparisons and shifts, then compare selection sort and insertion sort on the same inputs."
+					}),
 					projectLink: repo("APCS14-Insertion-Sort/starter"),
 					solutionLink: repo("APCS14-Insertion-Sort/solution"),
 					mediaLink: media("apcs14-project-2-insertion-sort.mp4")
@@ -1107,20 +1247,54 @@ export const apComputerScienceACourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Base Cases, Recursive Steps, and Stack Frames",
-					content:
-						"Recursion depends on naming the base case, describing the smaller subproblem, and tracing the call stack on paper.",
+					content: apConcept({
+						focus: "A recursive method solves a problem by delegating a smaller version of the same problem to another method call. The base case stops the chain, and the recursive step must move closer to that stop condition.",
+						practice: [
+							"Identify the base case before reading the recursive line.",
+							"Write the smaller subproblem created by one recursive call.",
+							"Draw stack frames for a small input and mark where each call pauses.",
+							"Trace the return path separately from the call path."
+						],
+						evidence:
+							"The explanation names the stopping condition, the shrinking input, and the order in which output or return values appear."
+					}),
 					mediaLink: media("apcs15-recursion-1.png")
 				},
 				{
 					title: "Stack Overflow and Tail Recursion",
-					content:
-						"The stack-overflow discussion shows why a missing or weak base case is not a minor bug but a structural failure.",
+					content: apConcept({
+						focus: "Every recursive call consumes a stack frame. A missing base case, a base case that is never reached, or a recursive step that does not shrink the problem eventually exhausts the stack.",
+						practice: [
+							"Find the recursive call and ask what input it receives next.",
+							"Check whether that next input is closer to the base case.",
+							"Compare a tail-recursive method with a method that still has work after the recursive call returns.",
+							"Explain the error using stack frames rather than only naming `StackOverflowError`."
+						],
+						evidence:
+							"A valid diagnosis points to the exact recursive step that fails to approach the base case or the exact input where the base case is skipped."
+					}),
 					mediaLink: media("apcs15-recursion-2.png")
 				},
 				{
 					title: "Core Project: Tracing Recursion",
-					content:
-						"Tracing recursion is the main APCS15 reasoning checkpoint. The expected evidence is a stack-frame trace that names the base case, the recursive call, and the order in which values return.",
+					content: apProject({
+						goal: "Trace recursive methods by drawing the call chain, base case, and return path before relying on runtime output.",
+						steps: [
+							"Read each method and identify the base case.",
+							"Trace the calls created by the input from `main`.",
+							"Predict printed output or returned values before running the code.",
+							"Summarize what the method does for any valid input."
+						],
+						apReasoning:
+							"AP CSA Java reasoning often asks for output order, return value, or termination. The trace needs separate call-down and return-up phases because recursive output can occur before or after the recursive call.",
+						checks: [
+							"Each frame has its own parameter values.",
+							"The base-case frame is identified explicitly.",
+							"The predicted output order matches the method body order."
+						],
+						extension:
+							"Modify one base case or recursive step and predict how the output or termination changes."
+					}),
 					projectLink: repo("APCS15-Tracing-Recursion/starter"),
 					solutionLink: repo("APCS15-Tracing-Recursion/solution")
 				},
@@ -1135,24 +1309,70 @@ export const apComputerScienceACourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Project: Recursion Practice",
-					content:
-						"The full recursion-practice build covers factorials, powers, Fibonacci, cascades, and other classic recursive patterns. Each method should name its base case, smaller subproblem, and return path before being considered complete.",
+					content: apProject({
+						goal: "Implement classic recursive methods while keeping the base case, smaller subproblem, and return path explicit.",
+						steps: [
+							"Write the base case before the recursive case.",
+							"Reduce the input in a way that reaches the base case.",
+							"Return or print in the correct order for factorials, powers, Fibonacci-style sequences, and string cascades.",
+							"Test the smallest valid input, a typical input, and an input near a boundary."
+						],
+						apReasoning:
+							"The AP emphasis is method behavior and traceability. A recursive method that works for one sample but lacks a defensible base case remains fragile.",
+						checks: [
+							"The recursive call uses a smaller or simpler input.",
+							"Return values combine correctly after the recursive call returns.",
+							"The method avoids duplicate or infinite work unless the prompt intentionally explores that cost."
+						],
+						extension:
+							"Compare a recursive solution with an iterative version and explain which state is implicit in the call stack."
+					}),
 					projectLink: repo("APCS15-Recursion-Practice/starter"),
 					solutionLink: repo("APCS15-Recursion-Practice/solution"),
 					mediaLink: media("apcs15-project-2-recursion-practice.mp4")
 				},
 				{
 					title: "Project: Blob Erase",
-					content:
-						"Blob Erase extends recursion into two-dimensional traversal and backtracking logic. The key explanation is why the current cell must be checked and marked before recursive calls expand to neighboring cells.",
+					content: apProject({
+						goal: "Use recursion to erase a connected region in a 2D grid while avoiding repeated visits and out-of-bounds access.",
+						steps: [
+							"Represent the image as a 2D array of filled and empty cells.",
+							"Reject invalid positions, empty cells, and already-erased cells as base cases.",
+							"Erase or mark the current cell before exploring neighbors.",
+							"Recurse up, down, left, and right to cover the connected blob."
+						],
+						apReasoning:
+							"This is AP CSA Java reasoning for 2D arrays plus recursion. The correctness depends on the base-case order, row/column bounds, and marking the current cell before recursive expansion.",
+						checks: [
+							"Starting on an empty cell changes nothing.",
+							"Starting outside the grid is handled safely.",
+							"A blob with branches erases completely without infinite recursion."
+						],
+						extension:
+							"Return the number of erased cells or add diagonal connectivity, then explain how the base cases and recursive calls changed."
+					}),
 					projectLink: repo("APCS15-Blob-Erase/starter"),
 					solutionLink: repo("APCS15-Blob-Erase/solution"),
 					mediaLink: media("apcs15-project-3-blob-erase.mp4")
 				},
 				{
 					title: "Reference: Stack Overflow",
-					content:
-						"This reference targets the case where a recursive call is easy to write but the stopping condition is still hard to explain.",
+					content: apProject({
+						goal: "Diagnose recursive methods that compile but do not terminate safely.",
+						steps: [
+							"Identify the base case and the recursive call.",
+							"Trace two or three calls to see whether the input approaches the base case.",
+							"Name the first repeated pattern that proves the recursion will continue indefinitely.",
+							"Repair the stop condition or shrinking step and trace again."
+						],
+						apReasoning:
+							"AP CSA Java reasoning treats stack overflow as evidence of a failed recursive structure, not as a random runtime event.",
+						checks: [
+							"The diagnosis cites a specific input and method line.",
+							"The repaired version reaches the base case.",
+							"The explanation separates infinite recursion from a long but finite recursion."
+						]
+					}),
 					projectLink: repo(
 						"APCS15-Stack-Overflow-Reference/starter"
 					),
@@ -1167,26 +1387,74 @@ export const apComputerScienceACourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Binary Search Preconditions",
-					content:
-						"Binary search is a fast search that only works because the data is sorted. Each comparison halves the remaining search space."
+					content: apConcept({
+						focus: "Binary search is fast because each comparison eliminates half of the remaining sorted search space. Without sorted data, the eliminated half might still contain the target.",
+						practice: [
+							"State the sorted-data precondition before tracing the algorithm.",
+							"Record `low`, `high`, `middle`, and the middle value for each step.",
+							"Choose the left or right half by comparing the target with the middle value.",
+							"Stop when the target is found or when the bounds cross."
+						],
+						evidence:
+							"A complete trace explains both why the selected half is still possible and why the discarded half is impossible."
+					})
 				},
 				{
 					title: "Merge Sort and Divide-and-Conquer",
-					content:
-						"Merge sort uses recursive splitting followed by deterministic merging of sorted halves. The merge step should be traced explicitly, not hand-waved."
+					content: apConcept({
+						focus: "Merge sort divides an array into smaller arrays, sorts those smaller arrays recursively, and then merges sorted halves into one sorted result. The merge step is where most visible work occurs.",
+						practice: [
+							"Draw the split tree until each subarray has length one.",
+							"Merge two sorted one-element arrays by comparing their first values.",
+							"Continue merging while preserving sorted order.",
+							"Count the merge levels and connect them to `n log n` growth."
+						],
+						evidence:
+							"The explanation separates divide, recursive sort, and merge. A result that is merely sorted is not enough unless the merge decisions can be traced."
+					})
 				},
 				{
 					title: "Core Project: Binary Search",
-					content:
-						"The binary-search build covers both iterative and recursive search structure. Each version should state the sorted-data precondition, the low/high bounds, the middle calculation, and the condition that proves the target is absent.",
+					content: apProject({
+						goal: "Implement iterative and recursive binary search while making the sorted-data precondition and bound updates explicit.",
+						steps: [
+							"State the sorted-data precondition before using the algorithm.",
+							"Trace at least one search by recording the low, high, and middle indices at each step.",
+							"Move the lower or upper bound past the middle after each failed comparison.",
+							"Return the correct result when the target is found or when the range becomes empty."
+						],
+						apReasoning:
+							"AP CSA Java reasoning connects the code to halving behavior. The iterative version exposes loop invariants, while the recursive version exposes base cases and smaller search ranges.",
+						checks: [
+							"The target at the first, middle, and last positions is found.",
+							"The absent-target case terminates when bounds cross.",
+							"The recursive version changes the range on every recursive call."
+						],
+						extension:
+							"Return the found index instead of a boolean and decide what to return when duplicates exist."
+					}),
 					projectLink: repo("APCS16-Binary-Search/starter"),
 					solutionLink: repo("APCS16-Binary-Search/solution"),
 					mediaLink: media("apcs16-project-1-binary-search.mp4")
 				},
 				{
 					title: "Merge Step Visual",
-					content:
-						"The merge visual and repo merge-sort project separate the recursive split from the actual merge operation.",
+					content: apProject({
+						goal: "Use the merge visual to isolate the sorted-merge operation before implementing the full recursive sort.",
+						steps: [
+							"Start with two already sorted lists.",
+							"Compare the first remaining value from each list.",
+							"Move the smaller value into the output list.",
+							"Append the rest of the non-empty list after the other side is exhausted."
+						],
+						apReasoning:
+							"The merge operation is valid only because both input halves are already sorted. This precondition explains why the remaining tail can be copied without more cross-comparisons.",
+						checks: [
+							"Equal values follow a consistent tie rule.",
+							"The output length equals the combined input lengths.",
+							"The output remains sorted after every move."
+						]
+					}),
 					projectLink: repo("APCS16-Merge-Sort/starter"),
 					solutionLink: repo("APCS16-Merge-Sort/solution"),
 					mediaLink: media("am_10_merge.mp4")
@@ -1195,8 +1463,24 @@ export const apComputerScienceACourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Project: Merge Sort",
-					content:
-						"The merge-sort build covers the full divide-and-conquer implementation after the merge step itself is clear. The trace should separate splitting, recursive sorting, and merging so the `O(n log n)` structure is visible rather than memorized.",
+					content: apProject({
+						goal: "Implement recursive merge sort and explain how splitting plus merging creates `O(n log n)` behavior.",
+						steps: [
+							"Use an array of length zero or one as the base case.",
+							"Split larger arrays into left and right halves.",
+							"Recursively sort each half.",
+							"Merge the two sorted halves into one sorted result."
+						],
+						apReasoning:
+							"AP CSA Java reasoning for merge sort depends on recognizing the recursive structure and the linear work at each merge level. The algorithm has no best-case shortcut like insertion sort.",
+						checks: [
+							"Empty, single-element, duplicate-heavy, and already sorted arrays are handled.",
+							"The merge helper assumes sorted inputs and preserves every element.",
+							"The runtime explanation identifies both the number of levels and the work per level."
+						],
+						extension:
+							"Track temporary-array allocation or implement an index-range version, then compare clarity and space usage."
+					}),
 					projectLink: repo("APCS16-Merge-Sort/starter"),
 					solutionLink: repo("APCS16-Merge-Sort/solution"),
 					mediaLink: media("apcs16-project-2-merge-sort.mp4")
@@ -1208,18 +1492,52 @@ export const apComputerScienceACourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Practice Exam and FRQ Rhythm",
-					content:
-						"Reserve full practice exams for timed work and use past FRQs throughout the final stretch so tracing, partial-credit thinking, and time management become routine."
+					content: apConcept({
+						focus: "The final APCS stretch changes from learning isolated topics to switching between topics under time pressure. Multiple-choice practice trains recognition and tracing; FRQs train method contracts, partial credit, and concise written reasoning.",
+						practice: [
+							"Run short mixed-topic sets before assigning full exams.",
+							"Score FRQs with official rubrics and identify the exact missed point category.",
+							"Keep an error log by unit, such as arrays, ArrayLists, recursion, inheritance, or sorting.",
+							"Reserve full practice exams for timed conditions rather than casual review."
+						],
+						evidence:
+							"Practice is productive when missed questions produce a targeted review action, not only a score."
+					})
 				},
 				{
 					title: "Next Course Positioning",
-					content:
-						"The end of the course identifies the right next step: more advanced Java, C++, Python Level 2, or USACO depending on readiness and goals."
+					content: apConcept({
+						focus: "The next course choice depends on the kind of work that remains challenging after AP CSA: Java design depth, C++ memory and systems work, Python/data projects, or contest-style algorithmic problem solving.",
+						practice: [
+							"Review the strongest completed project and the hardest unresolved topic.",
+							"Compare exam-readiness evidence with independent-project evidence.",
+							"Choose one next route and name the prerequisite that makes it appropriate.",
+							"Record one skill to preserve during the transition, such as tracing, testing, or design explanation."
+						],
+						evidence:
+							"The recommendation follows from demonstrated work: runnable code, trace explanations, FRQ scoring, and independence on new prompts."
+					})
 				},
 				{
 					title: "Core Project: Spaceships",
-					content:
-						"Spaceships is the first full capstone because it pulls together classes, collections, add/remove methods, and `toString()` design in one larger build.",
+					content: apProject({
+						goal: "Build a nested object model for a spaceship fleet using classes, collections, add/remove behavior, and readable `toString()` output.",
+						steps: [
+							"Define `Passenger`, `Room`, `Ship`, and `Fleet` responsibilities before coding.",
+							"Store collections at the level that owns them: passengers in rooms, rooms in ships, ships in fleets.",
+							"Implement add and remove methods that preserve valid state.",
+							"Generate a random fleet and print it in a readable hierarchy."
+						],
+						apReasoning:
+							"This capstone tests AP CSA Java reasoning with object ownership, collection traversal, method contracts, and string representation. The design matters as much as the final printed output.",
+						checks: [
+							"Each class owns only the state that belongs to its abstraction.",
+							"Add/remove methods work for empty, typical, and already-missing cases.",
+							"The printed fleet can be checked against the constructed object counts."
+						],
+						extension:
+							"Add capacity limits per room or ship and explain where the validation belongs."
+					}),
 					projectLink: repo("APCS17-Spaceships/starter"),
 					solutionLink: repo("APCS17-Spaceships/solution"),
 					mediaLink: media("apcs17-master-project-1-spaceships.mp4")
@@ -1234,16 +1552,48 @@ export const apComputerScienceACourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Master Project: Elevens",
-					content:
-						"Elevens is the card-game capstone when the next challenge should involve stateful gameplay logic and collection updates.",
+					content: apProject({
+						goal: "Implement the Elevens card-game variation with deck state, hand state, move validation, and replenishment after removals.",
+						steps: [
+							"Reuse or adapt the deck/card model from earlier modules.",
+							"Deal a nine-card hand while cards remain available.",
+							"Detect valid moves: pairs summing to eleven or a Jack-Queen-King group.",
+							"Remove selected cards, refill the hand, and stop when the deck is cleared or no move remains."
+						],
+						apReasoning:
+							"Elevens combines ArrayList mutation, object modeling, conditionals, and game-state loops. The hardest part is keeping collection changes correct while validating legal moves.",
+						checks: [
+							"Removing cards does not skip or corrupt later indexes.",
+							"The game detects both winning and no-move ending states.",
+							"Ace, face-card, and suit behavior matches the stated rules."
+						],
+						extension:
+							"Add a move suggester that lists all valid moves and compare its output with manual traces."
+					}),
 					projectLink: repo("APCS17-Elevens/starter"),
 					solutionLink: repo("APCS17-Elevens/solution"),
 					mediaLink: media("apcs17-master-project-2-elevens.mp4")
 				},
 				{
 					title: "Master Project: Decode",
-					content:
-						"Decode is the lighter-weight string and object capstone built around encode/decode behavior and paired tower logic.",
+					content: apProject({
+						goal: "Build a message-and-tower communication model where matching secret numbers allow encoded messages to be decoded correctly.",
+						steps: [
+							"Define a `Message` class that stores text and can shift letters forward or backward.",
+							"Define a `Tower` class with a secret number used for transmission and receiving.",
+							"Preserve spaces, punctuation, or nonletters according to a stated rule.",
+							"Test two towers with matching and non-matching secret numbers."
+						],
+						apReasoning:
+							"Decode is AP CSA Java reasoning for strings, methods, object state, and encapsulation. The important design question is which class owns the shifting behavior and which class owns the secret key.",
+						checks: [
+							"Encoding and decoding with the same number restores the original message.",
+							"Different tower numbers produce unreadable or different text.",
+							"Wraparound behavior for letters is specified and tested."
+						],
+						extension:
+							"Add a simple history of sent messages or support different shift strategies without exposing tower internals."
+					}),
 					projectLink: repo("APCS17-Decode/starter"),
 					solutionLink: repo("APCS17-Decode/solution"),
 					mediaLink: media("apcs17-master-project-3-decode.mp4")
