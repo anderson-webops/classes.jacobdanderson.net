@@ -4,7 +4,7 @@ This packet supplies the card sets, data tables, and scenario lists referenced b
 
 ## Measurement Tables and Unit Conversions
 
-Use these tables to decide which data is usable, which needs conversion, and which needs clearer units.
+These tables help identify which data is usable, which data needs conversion, and which data needs clearer units.
 
 ### Table A: Clear Units
 
@@ -30,7 +30,7 @@ Use these tables to decide which data is usable, which needs conversion, and whi
 | 2     |     50 |      22 |
 | 3     |     50 |     295 |
 
-**Use:** Convert kilograms to grams, liters to milliliters, and Kelvin to Celsius when needed. Explain why Table C cannot support a precise chemistry conclusion without labels.
+**Practice note:** Convert kilograms to grams, liters to milliliters, and Kelvin to Celsius when needed. Explain why Table C cannot support a precise chemistry conclusion without labels.
 
 ### Precision, Scientific Notation, and Error Practice
 
@@ -42,11 +42,11 @@ Use these tables to decide which data is usable, which needs conversion, and whi
 | Expected mass is `25.0 g`; measured mass is `24.5 g`. | Percent error is `2.0%` because the absolute difference is `0.5 g`, and `0.5 / 25.0 x 100 = 2.0%`. |
 | A graph has unlabeled axes.                           | Pattern may be visible, but the chemistry meaning is not defensible.                               |
 
-**Use:** Treat units, precision, graph labels, and uncertainty notes as part of the evidence. A calculator answer with too many digits should be rounded to the precision supported by the measurements.
+**Evidence note:** Units, precision, graph labels, and uncertainty notes are part of the evidence. A calculator answer with too many digits should be rounded to the precision supported by the measurements.
 
 ## Model Comparison Cards
 
-Use these cards to decide which representation is most useful for a specific chemistry question. A strong answer names both a strength and a limitation.
+These cards compare which representation is most useful for a specific chemistry question. A strong answer names both a strength and a limitation.
 
 | Card | Representation                      | What It Shows Well                                        | What It Hides or Simplifies                                              |
 | ---- | ----------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------ |
@@ -57,11 +57,11 @@ Use these cards to decide which representation is most useful for a specific che
 | E    | Balanced equation `2H₂ + O₂ → 2H₂O` | Conservation of atoms and reaction ratio                  | Speed, energy, mechanism, and experimental conditions                    |
 | F    | Written CER paragraph               | Claim, evidence, and reasoning in one explanation         | Visual structure unless a diagram or table is included                   |
 
-**Use:** Match the representation to the question. A formula is efficient for composition, a diagram is better for particle arrangement, and a graph is better for change over time.
+**Representation note:** The representation should match the question. A formula is efficient for composition, a diagram is better for particle arrangement, and a graph is better for change over time.
 
 ## Original Phenomena Case Library
 
-These cases preserve the original course phenomena while keeping the current course remote-safe. Use a diagram, description, simulation, data table, or vetted video clip when a physical demonstration is not appropriate.
+These cases preserve the original course phenomena while keeping the current course remote-safe. A diagram, description, simulation, data table, or vetted video clip can replace a physical demonstration when needed.
 
 | Original Case                      | Safe Course Version                                                                          | Main Chemistry Idea                                                 | Evidence Question                                                                         |
 | ---------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
@@ -75,11 +75,11 @@ These cases preserve the original course phenomena while keeping the current cou
 | Invisible ink                      | Analyze a diluted lemon-juice message scenario                                               | Solution, dilution, oxidation or heat-triggered visible change      | Which part is solution vocabulary, and which part is reaction evidence?                   |
 | Mixture separation                 | Compare gravel sorting, sand filtration, salt dissolving, and saltwater evaporation diagrams | Heterogeneous mixtures, solutions, solubility, separation methods   | How does particle size or solubility determine the separation method?                     |
 
-**Use:** For each case, write one observation, one model, one chemistry term, and one limitation. A familiar demonstration becomes chemistry only when the evidence is connected to a particle-level or system-level explanation.
+**Evidence note:** Each case needs one observation, one model, one chemistry term, and one limitation. A familiar demonstration becomes chemistry only when the evidence is connected to a particle-level or system-level explanation.
 
 ## Original Project Source Index
 
-The current course preserves the original CHM1-CHM7 projects as source-backed, remote-safe lessons. Use these links as evidence sources, optional observation references, or comparison material. Do not treat video links as required physical experiments.
+The current course preserves the original CHM1-CHM7 projects as source-backed, remote-safe lessons. These links serve as evidence sources, optional observation references, or comparison material. Video links are not required physical experiments.
 
 | Original Project or Concept                     | Current Course Location               | Preserved Source or Reference                                                                                                                                                                                                                               | Main Restored Task                                                                                                             |
 | ----------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -101,7 +101,7 @@ The current course preserves the original CHM1-CHM7 projects as source-backed, r
 | Separating Mixtures                             | CHM8 Solutions                        | [saltwater evaporation time lapse](https://youtu.be/MrmpTO3FZdQ?si=LjzUUQUSqqrxHasm)                                                                                                                                                                        | Compare hand sorting, filtering, dissolving, and evaporation models                                                            |
 | Model Your Own Reaction                         | CHM11 Capstone                        | Capstone evidence seeds and source log                                                                                                                                                                                                                      | Choose a real-world chemistry topic, model one reaction, explain safety and significance                                       |
 
-**Use:** When an original activity involved household materials, the default version is now a case study or evidence analysis. Optional physical observations are replaceable with the linked source, a diagram, or provided data.
+**Remote-safe note:** When an original activity involved household materials, the default version is now a case study or evidence analysis. Optional physical observations are replaceable with the linked source, a diagram, or provided data.
 
 ## Matter and Classification Cards
 
@@ -137,7 +137,7 @@ Classify each scenario as likely physical change, likely chemical change, or not
 
 ## Isotope Table
 
-Use simplified abundances for first-pass average atomic mass reasoning.
+Simplified abundances support first-pass average atomic mass reasoning.
 
 | Isotope     | Protons | Neutrons | Mass Number | Simplified Abundance |
 | ----------- | ------: | -------: | ----------: | -------------------: |
@@ -147,11 +147,11 @@ Use simplified abundances for first-pass average atomic mass reasoning.
 | Chlorine-35 |      17 |       18 |          35 |                  75% |
 | Chlorine-37 |      17 |       20 |          37 |                  25% |
 
-**Use:** Calculate a simplified chlorine average: `(35 x 0.75) + (37 x 0.25) = 35.5`.
+**Practice note:** A simplified chlorine average is `(35 x 0.75) + (37 x 0.25) = 35.5`.
 
 ## Ion and Formula Cards
 
-Use these ions to build neutral ionic formulas by balancing total positive and negative charge.
+These ions build neutral ionic formulas by balancing total positive and negative charge.
 
 | Positive Ion | Charge | Negative Ion | Charge |
 | ------------ | -----: | ------------ | -----: |
@@ -176,11 +176,11 @@ Solve each item by naming protons, neutrons, electrons, mass number, atomic numb
 | D    | A chlorine particle has 17 protons, 18 neutrons, and 18 electrons. Identify element, isotope mass number, and charge. |
 | E    | Chlorine's periodic-table mass is near 35.5 rather than exactly 35 or 37. Explain what that average means.            |
 
-**Use:** The checkpoint is complete only when the rule is visible: protons identify element, neutrons affect isotope, electrons affect charge, and average atomic mass depends on isotope abundance.
+**Checkpoint:** The work is complete only when the rule is visible: protons identify element, neutrons affect isotope, electrons affect charge, and average atomic mass depends on isotope abundance.
 
 ## Nomenclature Practice Cards
 
-Use these cards to practice moving between formula, name, and naming rule.
+These cards practice moving between formula, name, and naming rule.
 
 | Formula or Name     | Type                       | Expected Partner       | Naming Rule                                        |
 | ------------------- | -------------------------- | ---------------------- | -------------------------------------------------- |
@@ -193,11 +193,11 @@ Use these cards to practice moving between formula, name, and naming rule.
 | `PCl₃`              | covalent                   | phosphorus trichloride | prefix on chlorine marks three atoms               |
 | aluminum oxide      | ionic                      | `Al₂O₃`                | smallest neutral whole-number ion ratio            |
 
-**Use:** Decide whether the formula is ionic or covalent before naming. Ionic names primarily communicate ion identity and charge balance; covalent names use prefixes to communicate atom counts.
+**Naming note:** Decide whether the formula is ionic or covalent before naming. Ionic names primarily communicate ion identity and charge balance; covalent names use prefixes to communicate atom counts.
 
 ## Periodic Trend Mini Table
 
-Use this simplified table to reason about trends without memorizing every exception.
+This simplified table supports trend reasoning without requiring every exception to be memorized.
 
 | Element | Period | Group | Atomic Radius Trend | Electronegativity Trend |
 | ------- | -----: | ----: | ------------------- | ----------------------- |
@@ -209,11 +209,11 @@ Use this simplified table to reason about trends without memorizing every except
 | Na      |      3 |     1 | larger than Li      | low                     |
 | Cl      |      3 |    17 | larger than F       | high                    |
 
-**Use:** Across a period, radius generally decreases and attraction for electrons generally increases. Down a group, radius generally increases.
+**Trend pattern:** Across a period, radius generally decreases and attraction for electrons generally increases. Down a group, radius generally increases.
 
 ## Periodic Table Reference Comparison
 
-Use more than one periodic-table source when a task needs property detail, trend support, or standard names and symbols.
+More than one periodic-table source is useful when a task needs property detail, trend support, or standard names and symbols.
 
 | Reference                                                                              | Best Use                                                                                  | Caution                                                                                   |
 | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
@@ -222,7 +222,7 @@ Use more than one periodic-table source when a task needs property detail, trend
 | [IUPAC periodic table](https://iupac.org/what-we-do/periodic-table-of-elements/)       | Standard names, symbols, atomic numbers, and official periodic-table reference            | It is less activity-focused than classroom tables                                         |
 | [Ptable interactive periodic table](https://ptable.com/)                               | Fast interactive scanning, filtering, and quick comparison of element data                | Treat it as a tool for exploration; verify high-stakes details with an official reference |
 
-**Use:** Start with symbol, name, and atomic number. Then compare what each source adds: trend view, property note, standard naming, visual organization, or historical context. If a project uses a source, name the source and the exact fact it supported.
+**Reference workflow:** Start with symbol, name, and atomic number. Then compare what each source adds: trend view, property note, standard naming, visual organization, or historical context. If a project uses a source, name the source and the exact fact it supported.
 
 ## Bonding and Formula Cards
 
@@ -239,7 +239,7 @@ Use more than one periodic-table source when a task needs property detail, trend
 
 ## Lewis Structure Practice Set
 
-Use this table for first-pass Lewis-style sketches. The goal is to track valence electrons, bonds, lone pairs, and shape clues, not to cover every exception in advanced bonding.
+This table supports first-pass Lewis-style sketches. The goal is to track valence electrons, bonds, lone pairs, and shape clues, not to cover every exception in advanced bonding.
 
 | Formula | Total Valence Electrons | First-Pass Structure Clue                                  | Common Mistake to Avoid                                              |
 | ------- | ----------------------: | ---------------------------------------------------------- | -------------------------------------------------------------------- |
@@ -250,7 +250,7 @@ Use this table for first-pass Lewis-style sketches. The goal is to track valence
 | `CH₄`   |                       8 | Carbon central, four C-H single bonds                      | Adding lone pairs to carbon in methane                               |
 | `NH₃`   |                       8 | Nitrogen central, three N-H bonds, one lone pair           | Forgetting the lone pair that affects shape                          |
 
-**Use:** Count valence electrons, place bonds, assign remaining electrons as lone pairs, then check whether the drawing matches a reasonable simple shape model.
+**Sketching note:** Count valence electrons, place bonds, assign remaining electrons as lone pairs, then check whether the drawing matches a reasonable simple shape model.
 
 ## Heating Curve Data
 
@@ -267,11 +267,11 @@ This simplified data describes a sample heated at a steady rate.
 |         12 |             100 | boiling continues |
 |         14 |             120 | gas warming       |
 
-**Use:** Flat regions can still involve energy transfer because energy changes particle arrangement instead of average particle speed.
+**Interpretation note:** Flat regions can still involve energy transfer because energy changes particle arrangement instead of average particle speed.
 
 ## Phase Diagram Data
 
-Use this simplified map to reason about state from temperature and pressure. The values are intentionally approximate and should be treated as a model, not a complete reference diagram.
+This simplified map supports reasoning about state from temperature and pressure. The values are intentionally approximate and should be treated as a model, not a complete reference diagram.
 
 | Point | Temperature (C) | Pressure (atm) | Region or Boundary                        |
 | ----- | --------------: | -------------: | ----------------------------------------- |
@@ -283,11 +283,11 @@ Use this simplified map to reason about state from temperature and pressure. The
 | F     |             -10 |            0.2 | sublimation boundary model                |
 | G     |              25 |            3.0 | liquid remains favored at higher pressure |
 
-**Use:** Locate the point, identify the region or boundary, then predict how moving right, left, up, or down changes the favored state.
+**Modeling note:** Locate the point, identify the region or boundary, then predict how moving right, left, up, or down changes the favored state.
 
 ## Gas Law Scenarios
 
-Use these scenarios with a gas-particle model. Keep one variable controlled when possible before making a claim.
+These scenarios pair with a gas-particle model. One variable should stay controlled when possible before a claim is made.
 
 | Scenario | Variable Changed             | Controlled Variables                    | Expected Collision-Level Reasoning                                 |
 | -------- | ---------------------------- | --------------------------------------- | ------------------------------------------------------------------ |
@@ -297,7 +297,7 @@ Use these scenarios with a gas-particle model. Keep one variable controlled when
 | D        | Volume increases             | amount and temperature roughly constant | particles spread out, so wall collisions become less frequent      |
 | E        | Temperature decreases        | amount and volume constant              | slower particles create weaker/fewer effective collisions          |
 
-**Use:** Explain gas behavior through particles and collisions before using formula shortcuts. The goal is to identify pressure, volume, temperature, and amount as related variables, not to memorize every gas law name.
+**Modeling note:** Gas behavior should be explained through particles and collisions before formula shortcuts. The goal is to identify pressure, volume, temperature, and amount as related variables, not to memorize every gas law name.
 
 ## Energy Phase and Gas Checkpoint
 
@@ -308,7 +308,7 @@ Use these scenarios with a gas-particle model. Keep one variable controlled when
 | Attractions   | Intermolecular property cards | Predict a property and cite attraction evidence.                     |
 | Gas scenario  | Gas law scenarios             | Explain pressure change through collision frequency or strength.     |
 
-**Use:** Each answer should include visible or numerical evidence and a particle-level explanation. Avoid claims that particles grow, disappear, or change identity during ordinary phase changes.
+**Evidence note:** Each answer should include visible or numerical evidence and a particle-level explanation. Avoid claims that particles grow, disappear, or change identity during ordinary phase changes.
 
 ## Intermolecular Property Cards
 
@@ -332,7 +332,7 @@ Use these scenarios with a gas-particle model. Keep one variable controlled when
 
 ## Reaction Energy and Rate Cases
 
-Use these cases to separate energy transfer evidence from rate evidence. A reaction can release energy and still be slow if useful collisions are rare.
+These cases separate energy transfer evidence from rate evidence. A reaction can release energy and still be slow if useful collisions are rare.
 
 | Case | Evidence Description                                              | Energy Evidence                                       | Rate Evidence                      | Limitation                                      |
 | ---- | ----------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------- | ----------------------------------------------- |
@@ -342,11 +342,11 @@ Use these cases to separate energy transfer evidence from rate evidence. A react
 | D    | A cold pack becomes colder after its packet is mixed in a diagram | thermal energy is absorbed from surroundings          | rate is not directly compared      | diagram does not provide exact temperature data |
 | E    | Rust forms slowly on iron exposed to moist air                    | new substance appears; energy transfer is not obvious | visible change takes days or weeks | oxygen/water conditions are simplified          |
 
-**Use:** Mark whether the evidence supports energy transfer, rate change, both, or neither. Do not treat "fast" and "releases energy" as the same claim.
+**Evidence note:** Mark whether the evidence supports energy transfer, rate change, both, or neither. Do not treat "fast" and "releases energy" as the same claim.
 
 ## Equilibrium Evidence Cases
 
-Use these cases to model dynamic balance. Equilibrium means opposing processes continue at matching rates under stable conditions.
+These cases model dynamic balance. Equilibrium means opposing processes continue at matching rates under stable conditions.
 
 | Case | System                                        | Forward Process                 | Reverse Process                | Changed Condition Prediction                              |
 | ---- | --------------------------------------------- | ------------------------------- | ------------------------------ | --------------------------------------------------------- |
@@ -355,11 +355,11 @@ Use these cases to model dynamic balance. Equilibrium means opposing processes c
 | C    | closed container with liquid water and vapor  | evaporation                     | condensation                   | warming favors more vapor                                 |
 | D    | weak acid model in water                      | acid particles donate H⁺        | ions recombine                 | dilution changes concentrations and can shift measured pH |
 
-**Use:** Identify the two opposing processes, then explain why the system can be active even when the visible amount appears stable.
+**Modeling note:** Identify the two opposing processes, then explain why the system can be active even when the visible amount appears stable.
 
 ## Redox Evidence Cases
 
-Use these cases to connect visible changes with electron-transfer language at an introductory level.
+These cases connect visible changes with electron-transfer language at an introductory level.
 
 | Case | Description                     | Oxidation Idea                           | Reduction Idea                                     | Visible or Measurable Evidence            |
 | ---- | ------------------------------- | ---------------------------------------- | -------------------------------------------------- | ----------------------------------------- |
@@ -368,7 +368,7 @@ Use these cases to connect visible changes with electron-transfer language at an
 | C    | tarnishing silver model         | silver surface forms a compound          | another reactant gains electron density            | dull surface replaces shiny metal         |
 | D    | battery discharge diagram       | one electrode loses electrons            | the other side accepts electrons                   | current can power a device in the diagram |
 
-**Use:** Redox claims should name what loses electron density, what gains electron density, and what evidence suggests a substance changed.
+**Evidence note:** Redox claims should name what loses electron density, what gains electron density, and what evidence suggests a substance changed.
 
 ## Concentration and pH Scenario Tables
 
@@ -389,7 +389,7 @@ Use these cases to connect visible changes with electron-transfer language at an
 
 ## Molar Mass and Stoichiometry Practice Set
 
-Use approximate atomic masses: H = 1, C = 12, O = 16, Na = 23, Cl = 35.5, Ca = 40.
+Approximate atomic masses for practice: H = 1, C = 12, O = 16, Na = 23, Cl = 35.5, Ca = 40.
 
 1. Find molar mass for `H₂O`.
 2. Find molar mass for `CO₂`.
@@ -399,8 +399,8 @@ Use approximate atomic masses: H = 1, C = 12, O = 16, Na = 23, Cl = 35.5, Ca = 4
 6. Convert 2.5 mol of `CO₂` to grams.
 7. For `2H₂ + O₂ → 2H₂O`, identify the mole ratio from oxygen to water.
 8. For `CH₄ + 2O₂ → CO₂ + 2H₂O`, identify the mole ratio from methane to water.
-9. Use `2H₂ + O₂ → 2H₂O` to find moles of water from 3 mol oxygen.
-10. Use `CH₄ + 2O₂ → CO₂ + 2H₂O` to set up grams methane to grams water. Do not solve until the units are arranged.
+9. From `2H₂ + O₂ → 2H₂O`, find moles of water from 3 mol oxygen.
+10. From `CH₄ + 2O₂ → CO₂ + 2H₂O`, set up grams methane to grams water. Do not solve until the units are arranged.
 
 ## Water Formation Stoichiometry and Heat Case
 
@@ -440,7 +440,7 @@ Prompts:
 6. Calculate heat released if water vapor forms.
 7. Explain why product state changes the heat value.
 
-**Use:** Product amount comes from the limiting reactant before heat is calculated. The heat value is tied to moles of product and product state; do not use all available oxygen if hydrogen has already run out.
+**Stoichiometry note:** Product amount comes from the limiting reactant before heat is calculated. The heat value is tied to moles of product and product state; do not use all available oxygen if hydrogen has already run out.
 
 ## Quantitative Chemistry Checkpoint
 
@@ -453,7 +453,7 @@ Prompts:
 | Grams-to-grams setup       | Set up conversion from 16 g `CH₄` to grams `H₂O` for `CH₄ + 2O₂ → CO₂ + 2H₂O`.                             |
 | Error diagnosis            | Explain why using coefficients directly on grams is invalid.                                               |
 
-**Use:** Circle the conversion factor that comes from the periodic table and underline the conversion factor that comes from the balanced equation.
+**Conversion note:** Circle the conversion factor that comes from the periodic table and underline the conversion factor that comes from the balanced equation.
 
 ## Stoichiometry Error Cases
 
@@ -468,7 +468,7 @@ Each flawed solution contains one main error.
 
 ## Remote Investigation Checklist
 
-Use this checklist before starting any remote chemistry project.
+This checklist belongs before any remote chemistry project.
 
 | Check           | Strong Version                                                                            | Red Flag                                                 |
 | --------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -479,11 +479,11 @@ Use this checklist before starting any remote chemistry project.
 | CER             | Claim, evidence, and reasoning are separated                                              | The claim is unsupported or only repeats the observation |
 | Limitation      | One missing detail or uncertainty is named                                                | The explanation claims the model proves everything       |
 
-**Use:** If a project fails any safety or evidence check, replace the physical action with a simulation, provided dataset, diagram, or reference.
+**Safety note:** If a project fails any safety or evidence check, replace the physical action with a simulation, provided dataset, diagram, or reference.
 
 ## Capstone Evidence Seeds
 
-Use these as starting points when a capstone needs a remote-safe source set. Each topic still needs a narrowed claim and at least two evidence types.
+These topics are starting points when a capstone needs a remote-safe source set. Each topic still needs a narrowed claim and at least two evidence types.
 
 | Topic               | Possible Evidence                                                                  | Useful Chemistry Ideas                                            | Better Narrow Claim                                                               |
 | ------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |
@@ -497,7 +497,7 @@ Use these as starting points when a capstone needs a remote-safe source set. Eac
 
 ## Capstone Defense Checkpoint
 
-Use these questions before presenting the final capstone artifact.
+These questions support review before the final capstone artifact is presented.
 
 1. What is the exact claim?
 2. Which evidence directly supports the claim?
@@ -506,4 +506,4 @@ Use these questions before presenting the final capstone artifact.
 5. What uncertainty or limitation remains?
 6. What new evidence would change the conclusion?
 
-**Use:** If any answer depends on uncited evidence, unsafe physical work, or a broad topic instead of a narrow claim, revise before presenting.
+**Revision note:** If any answer depends on uncited evidence, unsafe physical work, or a broad topic instead of a narrow claim, revise before presenting.
