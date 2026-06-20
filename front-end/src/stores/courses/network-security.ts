@@ -1084,7 +1084,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Security Notebook: Expansion Ideas and Next Steps",
 					content:
-						"Keep a running security notebook for expansion ideas and next steps that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which next layer of security work builds most naturally from the current course. The habit should be evidence first, assumptions second.",
+						"Keep a running security notebook for expansion ideas and next steps that records one packet or service diagram, the commands or traces inspected, the trust boundary being discussed, and one concise conclusion about which next layer of security work builds most naturally from this course. The habit is evidence first, assumptions second.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Security/tree/main/NSEC-11-nsec14-expansion-ideas-and-next-steps/starter",
 					solutionLink:
