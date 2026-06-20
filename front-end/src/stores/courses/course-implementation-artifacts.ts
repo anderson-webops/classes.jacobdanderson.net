@@ -73,7 +73,7 @@ export const courseContentOnlySourcePolicies: Record<string, string> = {
 	"intro-to-physics":
 		"Content and media course. Source parity means every lab-style activity has a simulation, graph dataset, or paper-model alternative.",
 	"java-with-graphics":
-		"Composed Java track. Source parity is inherited from Java Level 1, Java Level 2, Java Level 3, and the graphics branch notes in the catalog.",
+		"Composed Java track. Source parity is inherited from Java Level 1, Java Level 2, Java Level 3, and the graphics track notes in the catalog.",
 	"java-without-graphics":
 		"Composed Java track. Source parity is inherited from Java Level 1, Java Level 2, and Java Level 3.",
 	"javascript-level-1-javascript-superstar":
@@ -1271,7 +1271,7 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 			{
 				title: "Curated Remote Resource Bank",
 				content: [
-						`**Remote investigation:** ${guidance.remoteInvestigation} ${guidance.safetyBoundary}`,
+					`**Remote investigation:** ${guidance.remoteInvestigation} ${guidance.safetyBoundary}`,
 					`**Resource shortlist:**\n${bullets(resources)}`,
 					links?.catalogLink
 						? `**Simulation catalog:** ${links.catalogLink}. Use the catalog to choose a specific simulation before recording observations, variables, and model limitations.`
