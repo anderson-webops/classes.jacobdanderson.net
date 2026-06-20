@@ -389,7 +389,7 @@ function buildStandardsModule(
 						courseLabel,
 						`Topic additions in ${courseLabel} are strongest when they include vocabulary, one representative example, one common-error check, and one transfer task.`
 					),
-					`**Common pitfalls:** New topics in ${courseLabel} need a visible connection to a real project. If the connection is unclear, start with a smaller bridge practice before the major project.`
+					`**Common pitfalls:** New topics in ${courseLabel} need a visible connection to a real project. When that connection is unclear, a smaller bridge practice comes before the major project.`
 				].join("\n\n")
 			},
 			{

@@ -1199,6 +1199,8 @@ const supportLabelPattern = [
 	"Concept path",
 	"Common pitfalls",
 	"Mastery check",
+	"Evidence",
+	"Readiness evidence",
 	"Readiness check",
 	"Evidence of proficiency",
 	"If this is difficult",
@@ -1254,6 +1256,8 @@ function normalizeSupportLabelText(text: string) {
 		.replace(/\*\*Success criteria:\*\*/gi, "**Success:**")
 		.replace(/\*\*Build sequence:\*\*/gi, "**Build steps:**")
 		.replace(/\*\*Completion checks:\*\*/gi, "**Checkpoints:**")
+		.replace(/\*\*Mastery check:\*\*/gi, "**Evidence:**")
+		.replace(/\*\*Readiness evidence:\*\*/gi, "**Readiness:**")
 		.replace(/\*\*Evidence target:\*\*/gi, "**What to show:**")
 		.replace(/\*\*Evidence targets:\*\*/gi, "**What to show:**")
 		.replace(/\*\*Readiness check:\*\*/gi, "**Quick check:**")
@@ -1879,6 +1883,8 @@ function neutralizeStudentFacingText(text: string) {
 				.replace(/\*\*Output:\*\*/gi, "**Result:**")
 				.replace(/\*\*Requirements:\*\*/gi, "**Include:**")
 				.replace(/\*\*Completion check:\*\*/gi, "**Checkpoint:**")
+				.replace(/\*\*Mastery check:\*\*/gi, "**Evidence:**")
+				.replace(/\*\*Readiness evidence:\*\*/gi, "**Readiness:**")
 				.replace(
 					/\bThe final artifact should name\b/g,
 					"The final artifact names"
