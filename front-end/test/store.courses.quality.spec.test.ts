@@ -2638,6 +2638,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/The goal is to make dual-stack/i);
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).not.toMatch(/\bshould\b/i);
 		expect(corpus).toContain(
 			"Interfaces attach a host to a network, frames move across the local link"
 		);

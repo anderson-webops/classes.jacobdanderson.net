@@ -459,7 +459,7 @@ export const networkSystemsCourse: RawCourse = {
 				{
 					title: "Timeout versus Refusal versus Reset",
 					content:
-						"Repeat the failure signatures until they become quick to classify: timeout usually means a packet is not getting through or not coming back, refusal usually means the host is reachable but nothing is listening, and reset usually means a TCP conversation was actively torn down. Verification still matters, but this classification should become instinctive."
+						"Repeat the failure signatures until they become quick to classify: timeout usually means a packet is not getting through or not coming back, refusal usually means the host is reachable but nothing is listening, and reset usually means a TCP conversation was actively torn down. Verification still matters, and the classification becomes an evidence-backed diagnostic habit."
 				},
 				{
 					title: "Project: Diagnose Why a Service Is Reachable Locally but Not from Another Machine",
@@ -530,7 +530,7 @@ export const networkSystemsCourse: RawCourse = {
 				{
 					title: "Project: Simulate a Router and NAT Lab in a Disposable Linux Topology",
 					content:
-						"Use the NAT-topology lab to create a small routed environment with isolated segments, a forwarding node, and explicit edge behavior. The lab should make next-hop logic, interface state, route tables, and selective exposure visible instead of abstract.",
+						"Use the NAT-topology lab to create a small routed environment with isolated segments, a forwarding node, and explicit edge behavior. The lab makes next-hop logic, interface state, route tables, and selective exposure visible instead of abstract.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS6-Router-NAT-Topology-Lab/starter",
 					solutionLink:
@@ -644,7 +644,8 @@ export const networkSystemsCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "network systems",
 						moduleTitle: "Unit 8: IPv6 in Practice",
-						itemTitle: "Unit 8: IPv6 in Practice Extension Practice",
+						itemTitle:
+							"Unit 8: IPv6 in Practice Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -671,7 +672,7 @@ export const networkSystemsCourse: RawCourse = {
 				{
 					title: "UFW versus iptables and nftables",
 					content:
-						"Explain UFW as a policy layer over lower-level packet filtering instead of treating it as a completely separate system. The abstraction should be visible without forcing raw packet-filter syntax too early."
+						"Explain UFW as a policy layer over lower-level packet filtering instead of treating it as a completely separate system. The abstraction remains visible without forcing raw packet-filter syntax too early."
 				},
 				{
 					title: "Project: Build and Verify a UFW Policy for a Web Server",
@@ -885,7 +886,7 @@ export const networkSystemsCourse: RawCourse = {
 				{
 					title: "Project Pass: Validate the NAT and Exposure Topology from Outside",
 					content:
-						"Return to the router and NAT lab and treat it as the capstone exposure exercise: decide which service should be reachable, limit what is exposed, and verify the result from another network position. The project ties together routing, firewalls, listening services, and diagnostics into one defensible path explanation.",
+						"Return to the router and NAT lab and treat it as the capstone exposure exercise: decide which service is reachable, limit what is exposed, and verify the result from another network position. The project ties together routing, firewalls, listening services, and diagnostics into one defensible path explanation.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS6-Router-NAT-Topology-Lab/starter",
 					solutionLink:
@@ -971,7 +972,7 @@ export const networkSystemsCourse: RawCourse = {
 				{
 					title: "Operations Notebook: Expansion Ideas and Next Steps",
 					content:
-						"Keep a short operations notebook for expansion ideas and next steps that records the commands run, key outputs, one network diagram, and one plain-language explanation of what the evidence proves. Focus especially on which advanced networking path fits the learning goals and why; the explanation should stay grounded in observed network state rather than guesses.",
+						"Keep a short operations notebook for expansion ideas and next steps that records the commands run, key outputs, one network diagram, and one plain-language explanation of what the evidence proves. Focus especially on which advanced networking path fits the learning goals and why; the explanation stays grounded in observed network state rather than guesses.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS-10-ns13-expansion-ideas-and-next-steps/starter",
 					solutionLink:
