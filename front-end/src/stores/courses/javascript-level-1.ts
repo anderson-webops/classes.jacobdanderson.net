@@ -11,7 +11,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Check-In #1 Overview",
 					content:
-						"Use this checkpoint as a review of JavaScript variables, operators, randomness, loops, conditionals, SVG drawing, and nested loops. Each prompt should produce a small runnable example and a short explanation of why the chosen JavaScript structure fits the task. The goal is to identify which fundamentals are fluent and which ones need more practice before the next project sequence.",
+						"Use this checkpoint as a review of JavaScript variables, operators, randomness, loops, conditionals, SVG drawing, and nested loops. Each prompt should produce a small runnable example and a short explanation of why the chosen JavaScript structure fits the task. The checkpoint identifies which fundamentals are fluent and which ones need more practice before the next project sequence.",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/9023ac5a2ab1213c64d59d7b864aef8d"
 				},
@@ -67,12 +67,12 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/9023ac5a2ab1213c64d59d7b864aef8d"
 				},
 				{
-					title: "Check In #1 supplemental 2",
+					title: "Check In #1 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JavaScript Superstar Check-In #1",
 						itemTitle:
-							"Transfer Practice: Check-In #1 supplemental 2",
+							"JavaScript Superstar Check-In #1 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -82,12 +82,12 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-01-check-in-1-supplemental-2/solution"
 				},
 				{
-					title: "Check In #1 supplemental 3",
+					title: "Check In #1 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JavaScript Superstar Check-In #1",
 						itemTitle:
-							"Extension Practice: Check-In #1 supplemental 3",
+							"JavaScript Superstar Check-In #1 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -148,12 +148,12 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/ce3da888e3e72bcaff1251f225b2f6fa"
 				},
 				{
-					title: "Check In #2 supplemental 2",
+					title: "Check In #2 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JavaScript Superstar Check-In #2",
 						itemTitle:
-							"Transfer Practice: Check-In #2 supplemental 2",
+							"JavaScript Superstar Check-In #2 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -163,12 +163,12 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-03-check-in-2-supplemental-2/solution"
 				},
 				{
-					title: "Check In #2 supplemental 3",
+					title: "Check In #2 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JavaScript Superstar Check-In #2",
 						itemTitle:
-							"Extension Practice: Check-In #2 supplemental 3",
+							"JavaScript Superstar Check-In #2 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -439,7 +439,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/eb1d816cbecce4d20944284fc085ae36"
 				},
 				{
-					title: "Combining Loops and Variables supplemental 2",
+					title: "Combining Loops and Variables Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS4 Combining Loops and Variables",
@@ -452,7 +452,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-05-jss4-combining-loops-and-variables-supplemental-2/solution"
 				},
 				{
-					title: "Combining Loops and Variables supplemental 3",
+					title: "Combining Loops and Variables Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS4 Combining Loops and Variables",
@@ -607,7 +607,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/67b0c29a104afde9cce553de6cacf882"
 				},
 				{
-					title: "Advanced Conditionals supplemental 3",
+					title: "Advanced Conditionals Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS6 Advanced Conditionals",
@@ -752,7 +752,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Introduction to HTML",
 					content:
-						"A webpage's structure comes from HTML tags. Practice headings, `div`, `span`, line breaks, links, and images in CodePen, then inspect how nesting creates parent and child elements. The goal is to read a small HTML snippet and explain which elements contain which other elements."
+						"A webpage's structure comes from HTML tags. Practice headings, `div`, `span`, line breaks, links, and images in CodePen, then inspect how nesting creates parent and child elements. The expected result is a readable small HTML snippet with a clear explanation of which elements contain which other elements."
 				},
 				{
 					title: "Document Object Model (DOM)",
@@ -794,7 +794,7 @@ export const javascriptLevel1Course: RawCourse = {
 					solutionLink: "https://flexboxfroggy.com/"
 				},
 				{
-					title: "Introduction to HTML & CSS supplemental 3",
+					title: "Introduction to HTML & CSS Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS9 Introduction to HTML & CSS",
@@ -872,7 +872,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/b858a6f5c9b50333229dd36700cc4ac0"
 				},
 				{
-					title: "Animations in JavaScript supplemental 3",
+					title: "Animations in JavaScript Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS10 Animations in JavaScript",
@@ -897,7 +897,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "The Position Property",
 					content:
-						"Compare `static`, `relative`, `absolute`, and `fixed` positioning by moving visible boxes with `top`, `left`, `right`, and `bottom`. Add overlapping boxes and change `z-index` so layering is visible. The goal is to predict whether a positioned element moves relative to itself, its containing block, or the viewport.",
+						"Compare `static`, `relative`, `absolute`, and `fixed` positioning by moving visible boxes with `top`, `left`, `right`, and `bottom`. Add overlapping boxes and change `z-index` so layering is visible. The expected result is a correct prediction of whether a positioned element moves relative to itself, its containing block, or the viewport.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/261c1809ad0309dd584526c73c586289"
 				},
@@ -931,7 +931,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/3efe23650b01fd4f978f3f827cc1691e"
 				},
 				{
-					title: "More HTML & CSS supplemental 2",
+					title: "More HTML & CSS Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS11 More HTML & CSS",
@@ -944,7 +944,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-10-jss11-more-html-and-css-supplemental-2/solution"
 				},
 				{
-					title: "More HTML & CSS supplemental 3",
+					title: "More HTML & CSS Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS11 More HTML & CSS",
@@ -964,7 +964,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Component Libraries",
 					content:
-						"Component libraries provide prebuilt CSS and JavaScript patterns. Add Materialize through CodePen settings, read the relevant documentation before copying markup, and identify which classes control layout, color, spacing, or component behavior. The goal is to use the library deliberately rather than treating class names as magic."
+						"Component libraries provide prebuilt CSS and JavaScript patterns. Add Materialize through CodePen settings, read the relevant documentation before copying markup, and identify which classes control layout, color, spacing, or component behavior. The library should be used deliberately rather than treated as a set of magic class names."
 				},
 				{
 					title: "JSS12 Project 1: Rainbow Sections",
@@ -1019,7 +1019,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/0bbd6c8223876a9fa514f42411e3f37d"
 				},
 				{
-					title: "Basic Website Layout supplemental 2",
+					title: "Basic Website Layout Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS12 Basic Website Layout",
@@ -1032,7 +1032,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-12-jss12-basic-website-layout-supplemental-2/solution"
 				},
 				{
-					title: "Basic Website Layout supplemental 3",
+					title: "Basic Website Layout Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS12 Basic Website Layout",
@@ -1111,7 +1111,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/45dabf41b44570f312ef9334db333f97"
 				},
 				{
-					title: "The Grid Layout supplemental 3",
+					title: "The Grid Layout Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS13 The Grid Layout",
@@ -1195,7 +1195,7 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/1d2df4b333d28c9a00f17d0fa4f37978"
 				},
 				{
-					title: "Dynamic Websites with JavaScript supplemental 3",
+					title: "Dynamic Websites with JavaScript Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle: "JSS14 Dynamic Websites with JavaScript",

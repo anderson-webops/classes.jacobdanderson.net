@@ -2508,8 +2508,16 @@ describe("course text quality normalization", () => {
 				sourcePath ? fs.readFileSync(sourcePath, "utf8") : "",
 				allCourseText(course)
 			].join("\n");
+			expect(courseText).not.toMatch(/\bsupplemental [23]\b/i);
+			if (courseId === "javascript-level-1-javascript-superstar") {
+				expect(courseText).toContain(
+					"Combining Loops and Variables Transfer Practice"
+				);
+				expect(courseText).toContain(
+					"Dynamic Websites with JavaScript Extension Practice"
+				);
+			}
 			if (courseId === "javascript-level-2-javascript-master") {
-				expect(courseText).not.toMatch(/\bsupplemental [23]\b/i);
 				expect(courseText).toContain("Fundamentals Review Transfer Practice");
 				expect(courseText).toContain("Master Project Extension Practice");
 			}
