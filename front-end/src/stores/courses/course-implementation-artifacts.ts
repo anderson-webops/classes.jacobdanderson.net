@@ -326,7 +326,7 @@ const scienceResourceGuidance: Record<
 		notebookOutput:
 			"a system boundary note, input/output list, graph or diagram, CER paragraph, and changed-variable prediction",
 		safetyBoundary:
-			"Required work uses browser evidence and provided data; optional observations never require collecting outdoor samples, handling organisms, using electricity, or changing household materials.",
+			"Core work uses browser evidence and provided data; optional observations avoid collecting outdoor samples, handling organisms, using electricity, or changing household materials.",
 		projectGoal:
 			"Use one approved middle-school simulation, public data source, or media case to explain a system relationship with evidence.",
 		observations:
@@ -768,7 +768,7 @@ function safetyPolicyFor(
 		return [
 			`${courseLabel} uses public, synthetic, or provided datasets only.`,
 			`Record ${familyLabel} source, license or usage assumption, sensitive fields, limitations, and intended use before analysis or modeling.`,
-			`Require human review and limitation notes for ${courseLabel} AI/ML/data outputs.`
+			`Include human review and limitation notes for ${courseLabel} AI/ML/data outputs.`
 		];
 	}
 	if (kind === "game") {
@@ -1271,7 +1271,7 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 			{
 				title: "Curated Remote Resource Bank",
 				content: [
-					`**Remote investigation:** ${guidance.remoteInvestigation} Required work avoids household materials, lab kits, heat, chemicals, electricity components, and outdoor data collection.`,
+					`**Remote investigation:** ${guidance.remoteInvestigation} Core work avoids household materials, lab kits, heat, chemicals, electricity components, and outdoor data collection.`,
 					`**Resource shortlist:**\n${bullets(resources)}`,
 					links?.catalogLink
 						? `**Simulation catalog:** ${links.catalogLink}. Use the catalog to choose a specific simulation before recording observations, variables, and model limitations.`

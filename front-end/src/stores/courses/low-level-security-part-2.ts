@@ -166,7 +166,7 @@ function securityLabProjectContent(
 		`**Project goal:** Complete the ${purposeText.artifact} for **${label}** that produces defensive evidence, not just a passing program.`,
 		`**Focus:** ${securityLabFocus(topic)}.`,
 		`**Practice path:** ${purposeText.path}`,
-		"**Required work:**",
+		"**Core work:**",
 		...requiredWork,
 		"**Completion checks:**",
 		...completionChecks

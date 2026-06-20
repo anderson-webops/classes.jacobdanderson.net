@@ -1247,7 +1247,7 @@ function normalizeSupportLabelText(text: string) {
 		.replace(/\*\*Required fields:\*\*/gi, "**Include:**")
 		.replace(/\*\*Required notes:\*\*/gi, "**Notes:**")
 		.replace(/\*\*Required elements:\*\*/gi, "**Include:**")
-		.replace(/\*\*Required work:\*\*/gi, "**Task:**")
+		.replace(/\*\*Required work:\*\*/gi, "**Core work:**")
 		.replace(/\*\*Required gate artifact:\*\*/gi, "**Capstone brief:**")
 		.replace(/\*\*Path:\*\*/gi, "**Approach:**")
 		.replace(/\*\*Build path:\*\*/gi, "**Build plan:**")

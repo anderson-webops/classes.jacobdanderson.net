@@ -728,7 +728,7 @@ const pythonLevel3Profile: ResearchExpansionProfile = {
 	...pythonProfile,
 	gaps: [
 		"Treat Python Level 3 as an algorithms and software-quality bridge, not only a harder project list.",
-		"Require traces, runtimes, and boundary cases for recursion, stacks, searching, and sorting work.",
+		"Include traces, runtimes, and boundary cases for recursion, stacks, searching, and sorting work.",
 		"Add stronger capstone expectations around file-backed data, maintainability, tests, and explanation."
 	],
 	topics: [
@@ -968,7 +968,7 @@ const cppProfile: ResearchExpansionProfile = {
 	],
 	assessments: [
 		"Draw a memory or ownership diagram.",
-		"Require compiler-warning and sanitizer-clean builds.",
+		"Include compiler-warning and sanitizer-clean builds.",
 		"Review const/reference/ownership choices.",
 		"Write unit tests for edge cases.",
 		"Defend why a class, interface, or template is appropriate."
@@ -1053,7 +1053,7 @@ const cSystemsProfile: ResearchExpansionProfile = {
 		"Memory-safe dynamic array with tests."
 	],
 	assessments: [
-		"Require sanitizer-clean runs.",
+		"Include sanitizer-clean runs.",
 		"Trace memory manually.",
 		"Use an error-handling checklist.",
 		"Review buffer bounds and ownership."
@@ -1361,7 +1361,7 @@ const elementaryScienceProfile: ResearchExpansionProfile = {
 		"Image, video, and data bank.",
 		"Zoom science notebook template."
 	],
-	safety: "Require only notes, paper, shared screen materials, and optional simple sketches. No physical supplies beyond paper should be required."
+	safety: "Only notes, paper, shared screen materials, and optional simple sketches are needed. No physical supplies beyond paper should be required."
 };
 
 const middleScienceProfile: ResearchExpansionProfile = {

@@ -193,7 +193,7 @@ export function buildImplementationLabGuidance({
 	return [
 		projectGoal,
 		`**Focus:** ${focus}.`,
-		"**Required work:**",
+		"**Core work:**",
 		`1. For ${definiteLabel(label)} ${artifact}, identify the concrete inputs, outputs, state changes, files, commands, services, or system boundaries involved.`,
 		`2. Build ${definiteLabel(label)} ${artifact} in small runnable steps, checking output, logs, traces, tests, or browser/runtime behavior after each meaningful change.`,
 		`3. Check ${definiteLabel(label)} ${artifact} with one standard path, one boundary or failure path, and one case tied directly to the lab's main concept.`,

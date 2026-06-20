@@ -44,7 +44,7 @@ function aiSearchSupplementalContent(
 		`**Project goal:** Complete the ${purposeText.artifact} for **${label}** with a reproducible run, visible search trace, and one edge case that is not copied from the core lab.`,
 		`**Practice path:** ${purposeText.path}`,
 		`**Focus:** ${aiSearchLabFocus(labNumber)}.`,
-		"**Required work:**",
+		"**Core work:**",
 		"1. Define the state representation, valid actions, goal condition, frontier rule, and evidence to record before changing the code.",
 		"2. Run one baseline case and save enough trace output to explain the order in which states are explored.",
 		"3. Change one meaningful condition, then rerun the search and compare path, cost, frontier size, visited states, or decision quality.",
