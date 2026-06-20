@@ -135,11 +135,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM3-Supplemental-Project-1-Basketball-Statistics"
 				},
 				{
-					title: "Static Variables & Methods Supplemental 3",
+					title: "Static Variables & Methods Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM3 Static Variables & Methods",
-						itemTitle: "Static Variables & Methods Supplemental 3",
+						itemTitle: "Static Variables & Methods Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -202,11 +202,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM-Check-in-1"
 				},
 				{
-					title: "Check-In #1 Supplemental 2",
+					title: "Check-In #1 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "Check-In #1",
-						itemTitle: "Check-In #1 Supplemental 2",
+						itemTitle: "Check-In #1 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -216,11 +216,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-02-check-in-1-supplemental-2/solution"
 				},
 				{
-					title: "Check-In #1 Supplemental 3",
+					title: "Check-In #1 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "Check-In #1",
-						itemTitle: "Check-In #1 Supplemental 3",
+						itemTitle: "Check-In #1 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -287,11 +287,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM4-Lesson-and-DanceLesson-Class"
 				},
 				{
-					title: "Subclasses & Inheritance Supplemental 3",
+					title: "Subclasses & Inheritance Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM4 Subclasses & Inheritance",
-						itemTitle: "Subclasses & Inheritance Supplemental 3",
+						itemTitle: "Subclasses & Inheritance Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -347,11 +347,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM5-Supplemental-Project-1-Lending-Library"
 				},
 				{
-					title: "Maps Supplemental 2",
+					title: "Maps Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM5 Maps",
-						itemTitle: "Maps Supplemental 2",
+						itemTitle: "Maps Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -361,11 +361,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-05-jm5-maps-supplemental-2/solution"
 				},
 				{
-					title: "Maps Supplemental 3",
+					title: "Maps Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM5 Maps",
-						itemTitle: "Maps Supplemental 3",
+						itemTitle: "Maps Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -419,11 +419,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM6-Supplemental-Project-1-Barnyard-Orchestra"
 				},
 				{
-					title: "Threading & Error Handling Supplemental 2",
+					title: "Threading & Error Handling Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM6 Threading & Error Handling",
-						itemTitle: "Threading & Error Handling Supplemental 2",
+						itemTitle: "Threading & Error Handling Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -433,11 +433,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-07-jm6-threading-and-error-handling-supplemental-2/solution"
 				},
 				{
-					title: "Threading & Error Handling Supplemental 3",
+					title: "Threading & Error Handling Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM6 Threading & Error Handling",
-						itemTitle: "Threading & Error Handling Supplemental 3",
+						itemTitle: "Threading & Error Handling Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -499,11 +499,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM-Check-in-2-Updated"
 				},
 				{
-					title: "Check-In #2 Supplemental 2",
+					title: "Check-In #2 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "Check-In #2",
-						itemTitle: "Check-In #2 Supplemental 2",
+						itemTitle: "Check-In #2 Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -513,11 +513,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-09-check-in-2-supplemental-2/solution"
 				},
 				{
-					title: "Check-In #2 Supplemental 3",
+					title: "Check-In #2 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "Check-In #2",
-						itemTitle: "Check-In #2 Supplemental 3",
+						itemTitle: "Check-In #2 Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -576,11 +576,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM7-Calculator/src/main/java"
 				},
 				{
-					title: "Bank Account Supplemental 2",
+					title: "Bank Account Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM7 Bank Account",
-						itemTitle: "Bank Account Supplemental 2",
+						itemTitle: "Bank Account Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -590,11 +590,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-11-jm7-bank-account-supplemental-2/solution"
 				},
 				{
-					title: "Bank Account Supplemental 3",
+					title: "Bank Account Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM7 Bank Account",
-						itemTitle: "Bank Account Supplemental 3",
+						itemTitle: "Bank Account Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -652,11 +652,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM8-Supplemental-Project-Bank-Account/src/main/java"
 				},
 				{
-					title: "File I/O Supplemental 2",
+					title: "File I/O Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM8 File I/O",
-						itemTitle: "File I/O Supplemental 2",
+						itemTitle: "File I/O Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -666,11 +666,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-13-jm8-file-i-o-supplemental-2/solution"
 				},
 				{
-					title: "File I/O Supplemental 3",
+					title: "File I/O Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM8 File I/O",
-						itemTitle: "File I/O Supplemental 3",
+						itemTitle: "File I/O Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -730,11 +730,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/Maze-Runner-Part-3"
 				},
 				{
-					title: "Maze Runner Supplemental 2",
+					title: "Maze Runner Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM9 Maze Runner",
-						itemTitle: "Maze Runner Supplemental 2",
+						itemTitle: "Maze Runner Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -744,11 +744,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-15-jm9-maze-runner-supplemental-2/solution"
 				},
 				{
-					title: "Maze Runner Supplemental 3",
+					title: "Maze Runner Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM9 Maze Runner",
-						itemTitle: "Maze Runner Supplemental 3",
+						itemTitle: "Maze Runner Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -807,11 +807,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM7-Calculator"
 				},
 				{
-					title: "Master Project Supplemental 2",
+					title: "Master Project Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM10 Master Project",
-						itemTitle: "Master Project Supplemental 2",
+						itemTitle: "Master Project Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -821,11 +821,11 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-17-jm10-master-project-supplemental-2/solution"
 				},
 				{
-					title: "Master Project Supplemental 3",
+					title: "Master Project Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle: "JM10 Master Project",
-						itemTitle: "Master Project Supplemental 3",
+						itemTitle: "Master Project Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -937,14 +937,14 @@ export const javaLevel2Course: RawCourse = {
 			]
 		},
 		{
-			title: "JM Master Project Example Quiz Game: Implementation Lab",
+			title: "JM Master Project Example Quiz Game: Practice Studio",
 			curriculum: [
 				{
 					title: "JM Master Project Example Quiz Game: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Master Project Example Quiz Game: Implementation Lab",
+							"JM Master Project Example Quiz Game: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -953,7 +953,7 @@ export const javaLevel2Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Master Project Example Quiz Game: Implementation Lab",
+							"JM Master Project Example Quiz Game: Practice Studio",
 						section: "example"
 					})
 				},
@@ -962,7 +962,7 @@ export const javaLevel2Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Master Project Example Quiz Game: Implementation Lab",
+							"JM Master Project Example Quiz Game: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -974,7 +974,7 @@ export const javaLevel2Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Master Project Example Quiz Game: Implementation Lab",
+							"JM Master Project Example Quiz Game: Practice Studio",
 						section: "review"
 					})
 				}
@@ -985,7 +985,7 @@ export const javaLevel2Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Master Project Example Quiz Game: Implementation Lab",
+							"JM Master Project Example Quiz Game: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -993,13 +993,13 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM-Master-Project-Example-Quiz-Game"
 				},
 				{
-					title: "JM Master Project Example Quiz Game Supplemental 2: Implementation Lab",
+					title: "JM Master Project Example Quiz Game Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Master Project Example Quiz Game: Implementation Lab",
+							"JM Master Project Example Quiz Game: Practice Studio",
 						itemTitle:
-							"JM Master Project Example Quiz Game Supplemental 2: Implementation Lab",
+							"JM Master Project Example Quiz Game Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1009,13 +1009,13 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-19-applied-studio-14-jm-master-project-example-quiz-game-supplemental-2/solution"
 				},
 				{
-					title: "JM Master Project Example Quiz Game Supplemental 3: Implementation Lab",
+					title: "JM Master Project Example Quiz Game Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Master Project Example Quiz Game: Implementation Lab",
+							"JM Master Project Example Quiz Game: Practice Studio",
 						itemTitle:
-							"JM Master Project Example Quiz Game Supplemental 3: Implementation Lab",
+							"JM Master Project Example Quiz Game Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1027,14 +1027,14 @@ export const javaLevel2Course: RawCourse = {
 			]
 		},
 		{
-			title: "JM Maze Runner Project: Implementation Lab",
+			title: "JM Maze Runner Project: Practice Studio",
 			curriculum: [
 				{
 					title: "JM Maze Runner Project: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Maze Runner Project: Implementation Lab",
+							"JM Maze Runner Project: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1043,7 +1043,7 @@ export const javaLevel2Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Maze Runner Project: Implementation Lab",
+							"JM Maze Runner Project: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1052,7 +1052,7 @@ export const javaLevel2Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Maze Runner Project: Implementation Lab",
+							"JM Maze Runner Project: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1065,7 +1065,7 @@ export const javaLevel2Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Maze Runner Project: Implementation Lab",
+							"JM Maze Runner Project: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1076,7 +1076,7 @@ export const javaLevel2Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Maze Runner Project: Implementation Lab",
+							"JM Maze Runner Project: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1085,13 +1085,13 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM-Maze-Runner-Project-Solution"
 				},
 				{
-					title: "JM Maze Runner Project Supplemental 2: Implementation Lab",
+					title: "JM Maze Runner Project Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Maze Runner Project: Implementation Lab",
+							"JM Maze Runner Project: Practice Studio",
 						itemTitle:
-							"JM Maze Runner Project Supplemental 2: Implementation Lab",
+							"JM Maze Runner Project Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1101,13 +1101,13 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-21-applied-studio-15-jm-maze-runner-project-supplemental-2/solution"
 				},
 				{
-					title: "JM Maze Runner Project Supplemental 3: Implementation Lab",
+					title: "JM Maze Runner Project Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java Level 2",
 						moduleTitle:
-							"JM Maze Runner Project: Implementation Lab",
+							"JM Maze Runner Project: Practice Studio",
 						itemTitle:
-							"JM Maze Runner Project Supplemental 3: Implementation Lab",
+							"JM Maze Runner Project Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
