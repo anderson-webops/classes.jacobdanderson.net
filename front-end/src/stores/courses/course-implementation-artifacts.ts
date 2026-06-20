@@ -435,7 +435,7 @@ const apCsaUnitMap = [
 	"FRQ Family 2 Class Design: complete class writing with private state, constructors, methods, and behavior contracts.",
 	"FRQ Family 3 Data Analysis with ArrayList: object-list traversal, filtering, aggregation, mutation, and summary statistics.",
 	"FRQ Family 4 2D Array: row/column traversal, boundary checks, nested loops, and grid reasoning.",
-	"Digital exam routine: typed responses without compiler feedback, indentation discipline, row-scored review, and error-log remediation."
+	"Digital exam routine: typed responses without compiler feedback, indentation discipline, row-scored review, and error-log correction."
 ];
 
 const cppConceptMatrix = [
@@ -785,7 +785,7 @@ function capstoneFor(
 	if (kind === "ap") {
 		return [
 			`${courseLabel} includes a timed digital AP practice set plus a row-scored FRQ family review.`,
-			`${courseLabel} uses an error log showing remediation by current AP CSA unit and question family.`
+			`${courseLabel} uses an error log showing targeted review by current AP CSA unit and question family.`
 		];
 	}
 	if (kind === "science") {
@@ -931,7 +931,7 @@ function setCourseDevelopmentMetadata(courseId: string, course: RawCourse) {
 	const courseLabel = course.name.trim() || courseId;
 	const familyLabel = profile?.family ?? courseLabel;
 	const courseBoundaries = boundaryOverrides[courseId] ?? [
-		`${courseLabel} keeps prerequisites, core lessons, projects, remediation, enrichment, and assessments labeled separately.`,
+		`${courseLabel} keeps prerequisites, core lessons, projects, targeted review, enrichment, and assessments labeled separately.`,
 		`${courseLabel} does not add adjacent-topic enrichment until the required ${familyLabel} project and assessment evidence exists.`
 	];
 	const capstoneExpectations = capstoneFor(
@@ -1784,12 +1784,12 @@ function addApCsaAlignmentModule(courseId: string, course: RawCourse) {
 			{
 				title: "MCQ Distractor Analysis",
 				content:
-					"**Readiness check:** After each MCQ practice set, classify missed questions by distractor type: off-by-one, reference vs value, integer division, boolean logic, object state, array bounds, or method dispatch. The purpose is to find repeatable misconception patterns rather than simply record a score.\n\n**Review routine:** For every missed item, write the wrong answer chosen, the tempting assumption behind it, the Java rule that resolves it, and a smaller example that exposes the same trap. A loop-bound miss might become a three-element trace; a method-dispatch miss might become a two-class inheritance trace.\n\n**Evidence target:** The error log records each miss, groups repeated mistake types, and repeats a targeted remediation problem."
+					"**Readiness check:** After each MCQ practice set, classify missed questions by distractor type: off-by-one, reference vs value, integer division, boolean logic, object state, array bounds, or method dispatch. The purpose is to find repeatable misconception patterns rather than simply record a score.\n\n**Review routine:** For every missed item, write the wrong answer chosen, the tempting assumption behind it, the Java rule that resolves it, and a smaller example that exposes the same trap. A loop-bound miss might become a three-element trace; a method-dispatch miss might become a two-class inheritance trace.\n\n**Evidence target:** The error log records each miss, groups repeated mistake types, and repeats a targeted review problem."
 			},
 			{
-				title: "Answer-Check Remediation Rule",
+				title: "Answer-Check Review Rule",
 				content:
-					"**Concept path:** Any AP CSA project without an answer-check path should be paired with local review material or marked as discussion-only. Answer checks can be tests, expected output, trace tables, rubric bullets, or explanation prompts, but the project should not leave correctness completely implicit.\n\n**Remediation rule:** If a project answer cannot be checked automatically, define a human-checkable artifact: method signatures, sample trace, expected console output, object-state table, or FRQ-style rubric bullets. For algorithms, include at least one normal case and one boundary case. For class design, include one state change or method-contract explanation.\n\n**Evidence target:** Each project states whether the work is checked by tests, discussion, trace, rubric, or expected-output comparison."
+					"**Concept path:** Any AP CSA project without an answer-check path should be paired with local review material or marked as discussion-only. Answer checks can be tests, expected output, trace tables, rubric bullets, or explanation prompts, but the project should not leave correctness completely implicit.\n\n**Review rule:** If a project answer cannot be checked automatically, define a human-checkable artifact: method signatures, sample trace, expected console output, object-state table, or FRQ-style rubric bullets. For algorithms, include at least one normal case and one boundary case. For class design, include one state change or method-contract explanation.\n\n**Evidence target:** Each project states whether the work is checked by tests, discussion, trace, rubric, or expected-output comparison."
 			}
 		],
 		supplementalProjects: [
@@ -1801,7 +1801,7 @@ function addApCsaAlignmentModule(courseId: string, course: RawCourse) {
 			{
 				title: "AP Alignment Project: Error Log Review",
 				content:
-					"**Project goal:** Build an error log across one module of MCQ or FRQ practice. The log should separate the mistake type from the correct concept, because AP improvement depends on recognizing patterns such as loop bounds, object state, reference behavior, and rubric wording.\n\n**Completion checks:**\n- Missed items are grouped by AP concept.\n- One remediation task is assigned per recurring issue.\n- The next check-in revisits the weakest skill."
+					"**Project goal:** Build an error log across one module of MCQ or FRQ practice. The log should separate the mistake type from the correct concept, because AP improvement depends on recognizing patterns such as loop bounds, object state, reference behavior, and rubric wording.\n\n**Completion checks:**\n- Missed items are grouped by AP concept.\n- One targeted review task is assigned per recurring issue.\n- The next check-in revisits the weakest skill."
 			}
 		]
 	});

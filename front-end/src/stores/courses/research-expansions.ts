@@ -614,7 +614,7 @@ const pythonProfile: ResearchExpansionProfile = {
 	topics: [
 		"Testing small functions, debugging with trace output, files, exceptions, modules, command-line programs, APIs, and virtual environments.",
 		"Dictionaries, sets, nested data, recursion, sorting, searching, and runtime reasoning.",
-		"Clear separation between beginner projects, supplemental projects, remediation, and capstones."
+		"Clear separation between beginner projects, supplemental projects, targeted review, and capstones."
 	],
 	moduleAdditions: [
 		"Python debugging and testing lab.",
@@ -654,7 +654,7 @@ const pythonLevel1Profile: ResearchExpansionProfile = {
 	topics: [
 		"Variables, numeric and string input, turtle coordinates, counted loops, random values, conditionals, functions, events, and simple lists.",
 		"Reading error messages, tracing loop variables, and checking small examples before adding graphics.",
-		"Clear separation between beginner core projects, remediation practice, optional art/game extensions, and final reflection."
+		"Clear separation between beginner core projects, targeted review practice, optional art/game extensions, and final reflection."
 	],
 	moduleAdditions: [
 		"Turtle coordinate and loop-debugging lab.",

@@ -179,7 +179,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Loops Reference",
 					content:
-						"Use the loop reference pack for fast remediation on counted iteration before moving into APCS4.",
+						"Use the loop reference pack for fast review of counted iteration before moving into APCS4.",
 					projectLink: repo("APCS4-Loops-Reference/starter"),
 					solutionLink: repo("APCS4-Loops-Reference/solution")
 				}
@@ -232,7 +232,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Strings and Printing Reference",
 					content:
-						"Keep the strings and printing reference nearby for remediation on escape characters, concatenation, and output layout.",
+						"Keep the strings and printing reference nearby for review of escape characters, concatenation, and output layout.",
 					projectLink: repo(
 						"APCS1-Strings-and-Printing-Reference/starter"
 					),
@@ -590,7 +590,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: Getters and Setters",
 					content:
-						"Use this reference for direct remediation on controlled access patterns and field updates.",
+						"Use this reference for direct review of controlled access patterns and field updates.",
 					projectLink: repo(
 						"APCS6-Getters-and-Setters-Reference/starter"
 					),
@@ -828,7 +828,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Array Reference Pack",
 					content:
-						"Keep the array reference build available for quick remediation on indexing, `.length`, and default values.",
+						"Keep the array reference build available for quick review of indexing, `.length`, and default values.",
 					projectLink: repo("APCS10-Array-Reference/starter"),
 					solutionLink: repo("APCS10-Array-Reference/solution")
 				}
