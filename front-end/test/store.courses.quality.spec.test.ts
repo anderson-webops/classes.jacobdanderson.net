@@ -2434,6 +2434,8 @@ describe("course text quality normalization", () => {
 			/The goal is to recognize weak assumptions/i
 		);
 		expect(corpus).not.toMatch(/The goal is to normalize calm/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
 		expect(corpus).toContain(
 			"Attack surface means every externally reachable input"
 		);
@@ -2444,6 +2446,16 @@ describe("course text quality normalization", () => {
 			"Penetration testing is an authorized defensive activity"
 		);
 		expect(corpus).toContain("never ask it to target unauthorized systems");
+		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain("HTTP API Boundary Transfer Practice");
+		expect(corpus).toContain("Authorized Testing Transfer Practice");
+		expect(corpus).toContain(
+			"Network Security Lab 16: Service Boundary Hardening Studio"
+		);
+		expect(corpus).toContain(
+			"Network Security Lab 17: Audit and Disclosure Studio"
+		);
+		expect(corpus).toContain("Audit Report Extension Practice");
 	});
 
 	it("keeps Network Systems explanations topic-specific", async () => {
