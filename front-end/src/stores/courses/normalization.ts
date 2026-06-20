@@ -1149,6 +1149,14 @@ function normalizeSupportLabelText(text: string) {
 		.replace(/\*\*Completion checks:\*\*/gi, "**Checkpoints:**")
 		.replace(/\*\*Evidence target:\*\*/gi, "**What to show:**")
 		.replace(/\*\*Evidence targets:\*\*/gi, "**What to show:**")
+		.replace(/\*\*Readiness check:\*\*/gi, "**Quick check:**")
+		.replace(
+			/\*\*Evidence of proficiency:\*\*/gi,
+			"**What mastery looks like:**"
+		)
+		.replace(/\*\*Assessment ideas:\*\*/gi, "**Practice checks:**")
+		.replace(/\*\*Rubric use:\*\*/gi, "**Review focus:**")
+		.replace(/\*\*Rubric dimensions:\*\*/gi, "**Review criteria:**")
 		.replace(/\*\*Remote-safe activity:\*\*/gi, "**Remote activity:**")
 		.replace(/\*\*Remote investigation:\*\*/gi, "**Investigation:**")
 		.replace(/\*\*Science explanation:\*\*/gi, "**Explanation:**");
@@ -1767,6 +1775,14 @@ function neutralizeStudentFacingText(text: string) {
 				.replace(
 					/\bThe final answer should not rank\b/g,
 					"A strong answer does not rank"
+				)
+				.replace(
+					/\bfirst observable success criteria should be clear\b/g,
+					"first observable success criteria are clear"
+				)
+				.replace(
+					/\bA fast-track learner should still demonstrate\b/g,
+					"A fast-track learner demonstrates"
 				)
 				.replace(
 					/\bthe final answer should not rank\b/g,
