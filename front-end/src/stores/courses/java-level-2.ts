@@ -779,7 +779,7 @@ export const javaLevel2Course: RawCourse = {
 				{
 					title: "Portfolio Project",
 					content:
-						"Learn how to move a finished project from Replit to GitHub by creating a repository, initializing Git in Replit, connecting the project, and pushing the code so it can become part of a public coding portfolio."
+						"Move a finished Java project into a GitHub repository with a clear README, source folders, build/run instructions, and a short portfolio note explaining what the project demonstrates."
 				},
 				{
 					title: "Course Recap",
