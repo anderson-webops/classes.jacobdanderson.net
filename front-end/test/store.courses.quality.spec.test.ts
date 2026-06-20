@@ -1226,6 +1226,13 @@ describe("course text quality normalization", () => {
 		expect(source).not.toMatch(/Visible pattern:/i);
 		expect(source).not.toMatch(/Practice target:/i);
 		expect(source).not.toMatch(/The goal is to/i);
+		expect(source).not.toMatch(/\bImplementation Lab\b/i);
+		expect(source).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(corpus).toContain("AI Search Lab 13: Practice Studio");
+		expect(corpus).toContain("AI Search Lab 17 Extension Practice");
+		expect(corpus).toContain("The Marble Game AI Transfer Practice");
 	});
 
 	it("keeps Data Science lessons explanatory instead of scaffold-labeled", async () => {

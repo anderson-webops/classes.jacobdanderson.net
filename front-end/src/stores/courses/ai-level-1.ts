@@ -614,7 +614,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/FAI10-Water-Jug-Riddle"
 				},
 				{
-					title: "Unit 7: Features, Evaluation, and Responsible AI supplemental 3",
+					title: "Unit 7: Features, Evaluation, and Responsible AI Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle:
@@ -783,13 +783,13 @@ export const aiLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "AI Search Lab 13: Implementation Lab",
+			title: "AI Search Lab 13: Practice Studio",
 			curriculum: [
 				{
 					title: "AI Search Lab 13: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 13: Implementation Lab",
+						moduleTitle: "AI Search Lab 13: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -797,7 +797,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 13: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 13: Implementation Lab",
+						moduleTitle: "AI Search Lab 13: Practice Studio",
 						section: "example"
 					})
 				},
@@ -805,7 +805,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 13: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 13: Implementation Lab",
+						moduleTitle: "AI Search Lab 13: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -817,7 +817,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 13: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 13: Implementation Lab",
+						moduleTitle: "AI Search Lab 13: Practice Studio",
 						section: "review"
 					})
 				}
@@ -827,7 +827,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 13: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 13: Implementation Lab",
+						moduleTitle: "AI Search Lab 13: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -836,7 +836,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-01-ai-search-lab-13/solution"
 				},
 				{
-					title: "AI Search Lab 13 supplemental 2: Implementation Lab",
+					title: "AI Search Lab 13 Transfer Practice",
 					content: aiSearchSupplementalContent(13, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-05-applied-studio-11-ai-search-lab-13-supplemental-2/starter",
@@ -844,7 +844,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-05-applied-studio-11-ai-search-lab-13-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 13 supplemental 3: Implementation Lab",
+					title: "AI Search Lab 13 Extension Practice",
 					content: aiSearchSupplementalContent(13, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-06-applied-studio-11-ai-search-lab-13-supplemental-3/starter",
@@ -854,13 +854,13 @@ export const aiLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "AI Search Lab 14: Implementation Lab",
+			title: "AI Search Lab 14: Practice Studio",
 			curriculum: [
 				{
 					title: "AI Search Lab 14: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 14: Implementation Lab",
+						moduleTitle: "AI Search Lab 14: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -868,7 +868,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 14: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 14: Implementation Lab",
+						moduleTitle: "AI Search Lab 14: Practice Studio",
 						section: "example"
 					})
 				},
@@ -876,7 +876,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 14: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 14: Implementation Lab",
+						moduleTitle: "AI Search Lab 14: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -888,7 +888,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 14: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 14: Implementation Lab",
+						moduleTitle: "AI Search Lab 14: Practice Studio",
 						section: "review"
 					})
 				}
@@ -898,7 +898,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 14: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 14: Implementation Lab",
+						moduleTitle: "AI Search Lab 14: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -907,7 +907,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-02-ai-search-lab-14/solution"
 				},
 				{
-					title: "AI Search Lab 14 supplemental 2: Implementation Lab",
+					title: "AI Search Lab 14 Transfer Practice",
 					content: aiSearchSupplementalContent(14, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-07-applied-studio-12-ai-search-lab-14-supplemental-2/starter",
@@ -915,7 +915,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-07-applied-studio-12-ai-search-lab-14-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 14 supplemental 3: Implementation Lab",
+					title: "AI Search Lab 14 Extension Practice",
 					content: aiSearchSupplementalContent(14, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-08-applied-studio-12-ai-search-lab-14-supplemental-3/starter",
@@ -925,13 +925,13 @@ export const aiLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "AI Search Lab 15: Implementation Lab",
+			title: "AI Search Lab 15: Practice Studio",
 			curriculum: [
 				{
 					title: "AI Search Lab 15: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 15: Implementation Lab",
+						moduleTitle: "AI Search Lab 15: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -939,7 +939,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 15: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 15: Implementation Lab",
+						moduleTitle: "AI Search Lab 15: Practice Studio",
 						section: "example"
 					})
 				},
@@ -947,7 +947,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 15: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 15: Implementation Lab",
+						moduleTitle: "AI Search Lab 15: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -959,7 +959,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 15: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 15: Implementation Lab",
+						moduleTitle: "AI Search Lab 15: Practice Studio",
 						section: "review"
 					})
 				}
@@ -969,7 +969,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 15: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 15: Implementation Lab",
+						moduleTitle: "AI Search Lab 15: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -978,7 +978,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-03-ai-search-lab-15/solution"
 				},
 				{
-					title: "AI Search Lab 15 supplemental 2: Implementation Lab",
+					title: "AI Search Lab 15 Transfer Practice",
 					content: aiSearchSupplementalContent(15, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-09-applied-studio-13-ai-search-lab-15-supplemental-2/starter",
@@ -986,7 +986,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-09-applied-studio-13-ai-search-lab-15-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 15 supplemental 3: Implementation Lab",
+					title: "AI Search Lab 15 Extension Practice",
 					content: aiSearchSupplementalContent(15, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-10-applied-studio-13-ai-search-lab-15-supplemental-3/starter",
@@ -996,13 +996,13 @@ export const aiLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "AI Search Lab 16: Implementation Lab",
+			title: "AI Search Lab 16: Practice Studio",
 			curriculum: [
 				{
 					title: "AI Search Lab 16: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 16: Implementation Lab",
+						moduleTitle: "AI Search Lab 16: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1010,7 +1010,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 16: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 16: Implementation Lab",
+						moduleTitle: "AI Search Lab 16: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1018,7 +1018,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 16: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 16: Implementation Lab",
+						moduleTitle: "AI Search Lab 16: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1030,7 +1030,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 16: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 16: Implementation Lab",
+						moduleTitle: "AI Search Lab 16: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1040,7 +1040,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 16: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 16: Implementation Lab",
+						moduleTitle: "AI Search Lab 16: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1049,7 +1049,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-04-ai-search-lab-16/solution"
 				},
 				{
-					title: "AI Search Lab 16 supplemental 2: Implementation Lab",
+					title: "AI Search Lab 16 Transfer Practice",
 					content: aiSearchSupplementalContent(16, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-11-applied-studio-14-ai-search-lab-16-supplemental-2/starter",
@@ -1057,7 +1057,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-11-applied-studio-14-ai-search-lab-16-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 16 supplemental 3: Implementation Lab",
+					title: "AI Search Lab 16 Extension Practice",
 					content: aiSearchSupplementalContent(16, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-12-applied-studio-14-ai-search-lab-16-supplemental-3/starter",
@@ -1067,13 +1067,13 @@ export const aiLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "AI Search Lab 17: Implementation Lab",
+			title: "AI Search Lab 17: Practice Studio",
 			curriculum: [
 				{
 					title: "AI Search Lab 17: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 17: Implementation Lab",
+						moduleTitle: "AI Search Lab 17: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1081,7 +1081,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 17: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 17: Implementation Lab",
+						moduleTitle: "AI Search Lab 17: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1089,7 +1089,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 17: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 17: Implementation Lab",
+						moduleTitle: "AI Search Lab 17: Practice Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1101,7 +1101,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 17: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 17: Implementation Lab",
+						moduleTitle: "AI Search Lab 17: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1111,7 +1111,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "AI Search Lab 17: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "AI Search Lab 17: Implementation Lab",
+						moduleTitle: "AI Search Lab 17: Practice Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1120,7 +1120,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-05-ai-search-lab-17/solution"
 				},
 				{
-					title: "AI Search Lab 17 supplemental 2: Implementation Lab",
+					title: "AI Search Lab 17 Transfer Practice",
 					content: aiSearchSupplementalContent(17, "transfer"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-13-applied-studio-15-ai-search-lab-17-supplemental-2/starter",
@@ -1128,7 +1128,7 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-13-applied-studio-15-ai-search-lab-17-supplemental-2/solution"
 				},
 				{
-					title: "AI Search Lab 17 supplemental 3: Implementation Lab",
+					title: "AI Search Lab 17 Extension Practice",
 					content: aiSearchSupplementalContent(17, "extension"),
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-14-applied-studio-15-ai-search-lab-17-supplemental-3/starter",
@@ -1138,14 +1138,14 @@ export const aiLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "Unbeatable TicTacToe AI 1: Implementation Lab",
+			title: "Unbeatable TicTacToe AI 1: Practice Studio",
 			curriculum: [
 				{
 					title: "Unbeatable TicTacToe AI 1: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle:
-							"Unbeatable TicTacToe AI 1: Implementation Lab",
+							"Unbeatable TicTacToe AI 1: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1154,7 +1154,7 @@ export const aiLevel1Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle:
-							"Unbeatable TicTacToe AI 1: Implementation Lab",
+							"Unbeatable TicTacToe AI 1: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1163,7 +1163,7 @@ export const aiLevel1Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle:
-							"Unbeatable TicTacToe AI 1: Implementation Lab",
+							"Unbeatable TicTacToe AI 1: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1175,7 +1175,7 @@ export const aiLevel1Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle:
-							"Unbeatable TicTacToe AI 1: Implementation Lab",
+							"Unbeatable TicTacToe AI 1: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1186,7 +1186,7 @@ export const aiLevel1Course: RawCourse = {
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle:
-							"Unbeatable TicTacToe AI 1: Implementation Lab",
+							"Unbeatable TicTacToe AI 1: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1194,11 +1194,11 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/FAI7-Unbeatable-Tic-Tac-Toe-AI-1"
 				},
 				{
-					title: "Unbeatable TicTacToe AI 1 supplemental 2: Implementation Lab",
+					title: "Unbeatable TicTacToe AI 1 Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle:
-							"Unbeatable TicTacToe AI 1: Implementation Lab",
+							"Unbeatable TicTacToe AI 1: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1208,11 +1208,11 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-15-applied-studio-16-unbeatable-tictactoe-ai-1-supplemental-2/solution"
 				},
 				{
-					title: "Unbeatable TicTacToe AI 1 supplemental 3: Implementation Lab",
+					title: "Unbeatable TicTacToe AI 1 Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "AI/Python",
 						moduleTitle:
-							"Unbeatable TicTacToe AI 1: Implementation Lab",
+							"Unbeatable TicTacToe AI 1: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1224,13 +1224,13 @@ export const aiLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "The Marble Game AI: Implementation Lab",
+			title: "The Marble Game AI: Practice Studio",
 			curriculum: [
 				{
 					title: "The Marble Game AI: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "The Marble Game AI: Implementation Lab",
+						moduleTitle: "The Marble Game AI: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1238,7 +1238,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "The Marble Game AI: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "The Marble Game AI: Implementation Lab",
+						moduleTitle: "The Marble Game AI: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1246,7 +1246,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "The Marble Game AI: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "The Marble Game AI: Implementation Lab",
+						moduleTitle: "The Marble Game AI: Practice Studio",
 						section: "coreProject",
 						hasReference: false
 					}),
@@ -1257,7 +1257,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "The Marble Game AI: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "The Marble Game AI: Implementation Lab",
+						moduleTitle: "The Marble Game AI: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1267,7 +1267,7 @@ export const aiLevel1Course: RawCourse = {
 					title: "The Marble Game AI: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "The Marble Game AI: Implementation Lab",
+						moduleTitle: "The Marble Game AI: Practice Studio",
 						section: "extension",
 						hasReference: false
 					}),
@@ -1275,10 +1275,10 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/FAI8-The-Marble-Game-AI-Copy"
 				},
 				{
-					title: "The Marble Game AI supplemental 2: Implementation Lab",
+					title: "The Marble Game AI Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "The Marble Game AI: Implementation Lab",
+						moduleTitle: "The Marble Game AI: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1288,10 +1288,10 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-17-applied-studio-17-the-marble-game-ai-copy-supplemental-2/solution"
 				},
 				{
-					title: "The Marble Game AI supplemental 3: Implementation Lab",
+					title: "The Marble Game AI Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "AI/Python",
-						moduleTitle: "The Marble Game AI: Implementation Lab",
+						moduleTitle: "The Marble Game AI: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
