@@ -121,7 +121,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Dynamic Programming with Fibonacci",
 					content:
-						"Use a simple recurrence to make the DP mindset explicit before harder state spaces are introduced.",
+						"Use a simple recurrence to make the DP mindset explicit before harder state spaces are introduced. The checkpoint is not the Fibonacci answer itself, but the ability to name the state, base cases, transition, evaluation order, and improvement from repeated recursion to stored subproblems.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG1-Dynamic-Programming-with-Fibonacci/starter",
 					solutionLink:
@@ -130,7 +130,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: 0-1 Knapsack",
 					content:
-						"Use a classic optimization recurrence to practice state design, choices, and table updates.",
+						"Use a classic optimization recurrence to practice state design, choices, and table updates. Define whether each state means best value after considering items, remaining capacity, or used capacity, then explain why each item creates exactly two choices: take it or skip it.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG2-0-1-Knapsack/starter",
 					solutionLink:
@@ -139,7 +139,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Teamwork",
 					content:
-						"Use grouped decisions and transition design to move beyond the most basic DP templates.",
+						"Use grouped decisions and transition design to move beyond the most basic DP templates. The solution should describe how a final group is chosen, how that group affects score, and why checking bounded group lengths keeps the recurrence feasible.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG3-Teamwork/starter",
 					solutionLink:
@@ -198,7 +198,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Dijkstra's Algorithm",
 					content:
-						"Use a direct shortest-path implementation to make priority-queue relaxation fully concrete.",
+						"Use a direct shortest-path implementation to make priority-queue relaxation fully concrete. Track distance estimates, stale queue entries, and edge relaxations explicitly, then explain why nonnegative weights allow the smallest queued distance to become final.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG9-Dijkstras-Algorithm/starter",
 					solutionLink:
@@ -207,7 +207,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Shortcut",
 					content:
-						"Use shortest-path information inside a second optimization question so distance arrays become tools, not endpoints.",
+						"Use shortest-path information inside a second optimization question so distance arrays become tools, not endpoints. After building shortest-path structure, reason about how many cows use each path segment and which shortcut location creates the largest time savings.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG11-Shortcut/starter",
 					solutionLink:
@@ -244,12 +244,12 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Minimum Spanning Tree Intuition",
 					content:
-						"This section develops MSTs as the cheapest way to connect everything under the given edge structure. The core idea is The objective clearly before they memorize Kruskal or Prim."
+						"This section develops MSTs as the cheapest way to connect everything under the given edge structure. State the objective clearly before memorizing Kruskal or Prim."
 				},
 				{
 					title: "Disjoint Set Union as a Connectivity Tool",
 					content:
-						"Use DSU to support fast connectivity checks while edges are considered in sorted order. The core idea is The role of union-find in the larger algorithmic plan."
+						"Use DSU to support fast connectivity checks while edges are considered in sorted order. The important idea is the role of union-find in the larger algorithmic plan."
 				},
 				{
 					title: "Edge Ordering and Greedy Validity",
@@ -259,7 +259,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Connectivity Problems beyond the Template",
 					content:
-						"Compare direct MST tasks with problems that use connectivity ideas in disguised forms. Gold Build a wider pattern library than a single named algorithm."
+						"Compare direct MST tasks with problems that use connectivity ideas in disguised forms. Build a wider pattern library than a single named algorithm."
 				},
 				{
 					title: "Unit 3: MSTs, DSU, and Connectivity Optimization: Core Project",
@@ -280,7 +280,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: MST",
 					content:
-						"Use a direct MST implementation to practice sorted edges, cycle avoidance, and connection cost reasoning.",
+						"Use a direct MST implementation to practice sorted edges, cycle avoidance, and connection cost reasoning. The explanation should name the objective, show why adding a cycle cannot help, and connect the sorted-edge process to the cheapest safe next choice.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG14-MST/starter",
 					solutionLink:
@@ -289,7 +289,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Disjoint Sets and Kruskal's",
 					content:
-						"Use a dedicated DSU and Kruskal exercise to make the structure and proof idea explicit.",
+						"Use a dedicated DSU and Kruskal exercise to make the structure and proof idea explicit. Implement find and union with clear component meaning, then use the DSU state to justify exactly when an edge connects two components versus creating a cycle.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG19-Disjoint-Sets-and-Kruskals/starter",
 					solutionLink:
@@ -298,7 +298,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Moocast",
 					content:
-						"Use a connectivity optimization problem that turns graph reachability and distance structure into a stronger Gold-style challenge.",
+						"Use a connectivity optimization problem that turns graph reachability and distance structure into a stronger Gold-style challenge. Model power or distance as an edge threshold, test connectivity under that threshold, and explain how the search or MST view finds the minimum sufficient value.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG17-Moocast/starter",
 					solutionLink:
@@ -348,7 +348,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Binary Indexed Tree / Fenwick Tree",
 					content:
-						"Build a direct Fenwick tree checkpoint that connects the data structure to concrete prefix-query behavior.",
+						"Build a direct Fenwick tree checkpoint that connects the data structure to concrete prefix-query behavior. The solution should explain what each internal index stores, why lowbit moves to the next responsible range, and how updates and prefix queries stay logarithmic.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG22-Binary-Indexed-Tree-Fenwick-Tree/starter",
 					solutionLink:
@@ -357,7 +357,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Balanced Photo",
 					content:
-						"Use relative ordering and imbalance counts to practice range-style reasoning around positions.",
+						"Use relative ordering and imbalance counts to practice range-style reasoning around positions. Count taller cows to the left and right of each cow with an ordered or Fenwick-style structure, then state the imbalance condition precisely before tallying the answer.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG23-Balanced-Photo/starter",
 					solutionLink:
@@ -366,7 +366,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Out of Sorts",
 					content:
-						"Use ordering and movement analysis to show how a simple-looking sorting story hides richer structure.",
+						"Use ordering and movement analysis to show how a simple-looking sorting story hides richer structure. Compare original and sorted positions, identify the maximum displacement that controls the number of passes, and include duplicate-value handling so the mapping stays stable.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG26-Out-of-Sorts/starter",
 					solutionLink:
@@ -404,7 +404,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Keep Spatial Reasoning Precise",
 					content:
-						"Whether the task involves geometry, movement, or mirrored structures, Keep diagrams and coordinate reasoning explicit instead of relying on intuition alone."
+						"Whether the task involves geometry, movement, or mirrored structures, keep diagrams and coordinate reasoning explicit instead of relying on intuition alone."
 				},
 				{
 					title: "Know When the Model Is the Real Challenge",
@@ -430,7 +430,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Lasers and Mirrors",
 					content:
-						"Use a spatially flavored graph problem to practice turning geometry into a graph you can actually search.",
+						"Use a spatially flavored graph problem to practice turning geometry into a graph you can actually search. Treat shared rows and columns as transitions, search mirror changes rather than every coordinate step, and verify that the graph model preserves the meaning of a reflection.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG33-Lasers-and-Mirrors/starter",
 					solutionLink:
@@ -439,7 +439,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Lights Out",
 					content:
-						"Use geometric structure and path reasoning to test whether multiple interpretations of distance and position stay aligned.",
+						"Use geometric structure and path reasoning to test whether multiple interpretations of distance and position stay aligned. Compare path signatures around the polygon, determine when a position becomes uniquely identifiable, and connect that ambiguity to the extra distance traveled.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG35-Lights-Out/starter",
 					solutionLink:
@@ -448,7 +448,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Circular Barn Revisited",
 					content:
-						"Use a more involved structural problem to push representation and optimization thinking together.",
+						"Use a more involved structural problem to push representation and optimization thinking together. Break the circular dependency deliberately, define the DP state for doors and covered segments, and justify how rotation choices or preprocessing keep the recurrence consistent.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG36-Circular-Barn-Revisited/starter",
 					solutionLink:
@@ -467,7 +467,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Count Carefully, Mod Carefully",
 					content:
-						"When combinatorics enters the picture, Be precise about what is being counted, what constraints remain, and how modular arithmetic interacts with the recurrence."
+						"When combinatorics enters the picture, be precise about what is being counted, what constraints remain, and how modular arithmetic interacts with the recurrence."
 				},
 				{
 					title: "Blend Math Insight with Algorithm Design",
@@ -497,7 +497,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Cow Poetry",
 					content:
-						"Use combinatorial counting and dynamic programming together in a problem where explanation matters as much as implementation.",
+						"Use combinatorial counting and dynamic programming together in a problem where explanation matters as much as implementation. Compute syllable-count possibilities, group words by rhyme class, and explain how the poem pattern multiplies choices without double-counting equivalent rhyme assignments.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG28-Cow-Poetry/starter",
 					solutionLink:
@@ -506,7 +506,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Stamp Painting",
 					content:
-						"Use a counting DP problem to practice recurrence design under modular arithmetic constraints.",
+						"Use a counting DP problem to practice recurrence design under modular arithmetic constraints. State what is counted directly and what is easier to subtract, keep the recurrence compatible with modular arithmetic, and test tiny lengths where manual counting is possible.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG32-Stamp-Painting/starter",
 					solutionLink:
@@ -515,7 +515,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Time is Mooney",
 					content:
-						"Use a richer optimization problem that blends repeated transitions and scoring over time.",
+						"Use a richer optimization problem that blends repeated transitions and scoring over time. Define the state by city and day, update scores along directed edges, and explain the stopping bound so the search does not become an unbounded walk.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG-Time-is-Mooney/starter",
 					solutionLink:
@@ -573,7 +573,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Radio Contact",
 					content:
-						"Use a capstone-style state problem that blends movement and optimization in a way that rewards careful representation.",
+						"Use a capstone-style state problem that blends movement and optimization in a way that rewards careful representation. Model the state as how many moves each route has consumed, compare the three possible next-step choices, and verify the energy calculation at synchronized and unsynchronized positions.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG34-Radio-Contact/starter",
 					solutionLink:
@@ -582,7 +582,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Cowpatibility",
 					content:
-						"Use a richer counting or combinatorial problem as one more test of explanation and implementation discipline.",
+						"Use a richer counting or combinatorial problem as one more test of explanation and implementation discipline. Count shared flavor subsets with inclusion-exclusion, explain why subset size changes the sign, and validate the final incompatible count by subtracting compatible pairs from all pairs.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG29-Cowpatibility/starter",
 					solutionLink:
@@ -649,7 +649,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Roadblock",
 					content:
-						"Use shortest-path sensitivity analysis to deepen understanding of weighted-graph optimization.",
+						"Use shortest-path sensitivity analysis to deepen understanding of weighted-graph optimization. Start with the original shortest path, test how doubling each edge on that path changes the result, and explain why edges outside the chosen path do not need the same brute-force treatment.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG10-Roadblock/starter",
 					solutionLink:
@@ -658,7 +658,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Superbull",
 					content:
-						"Use an MST-style optimization problem as a stronger extension of connectivity and edge-choice reasoning.",
+						"Use an MST-style optimization problem as a stronger extension of connectivity and edge-choice reasoning. Translate team pair scores into complete-graph edge weights, choose a maximum spanning tree rather than a minimum one, and justify why connecting all teams once captures the tournament objective.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG15-Superbull/starter",
 					solutionLink:
@@ -667,7 +667,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Fenced In",
 					content:
-						"Use a richer connectivity and cost-optimization problem to strengthen MST and graph-structure judgment.",
+						"Use a richer connectivity and cost-optimization problem to strengthen MST and graph-structure judgment. Convert fence gaps into grid edge costs, reason about repeated horizontal and vertical connections, and connect the optimized construction to MST principles without materializing unnecessary edges.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG20-Fenced-In/starter",
 					solutionLink:
@@ -1203,8 +1203,7 @@ export const usacoGoldCourse: RawCourse = {
 					title: "I Would Walk 500 Miles: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO Gold",
-						moduleTitle:
-							"I Would Walk 500 Miles: Practice Studio",
+						moduleTitle: "I Would Walk 500 Miles: Practice Studio",
 						section: "concepts"
 					})
 				},
@@ -1212,8 +1211,7 @@ export const usacoGoldCourse: RawCourse = {
 					title: "I Would Walk 500 Miles: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO Gold",
-						moduleTitle:
-							"I Would Walk 500 Miles: Practice Studio",
+						moduleTitle: "I Would Walk 500 Miles: Practice Studio",
 						section: "example"
 					})
 				},
@@ -1221,8 +1219,7 @@ export const usacoGoldCourse: RawCourse = {
 					title: "I Would Walk 500 Miles: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO Gold",
-						moduleTitle:
-							"I Would Walk 500 Miles: Practice Studio",
+						moduleTitle: "I Would Walk 500 Miles: Practice Studio",
 						section: "coreProject",
 						hasReference: true
 					}),
@@ -1235,8 +1232,7 @@ export const usacoGoldCourse: RawCourse = {
 					title: "I Would Walk 500 Miles: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO Gold",
-						moduleTitle:
-							"I Would Walk 500 Miles: Practice Studio",
+						moduleTitle: "I Would Walk 500 Miles: Practice Studio",
 						section: "review"
 					})
 				}
@@ -1246,8 +1242,7 @@ export const usacoGoldCourse: RawCourse = {
 					title: "I Would Walk 500 Miles: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "USACO Gold",
-						moduleTitle:
-							"I Would Walk 500 Miles: Practice Studio",
+						moduleTitle: "I Would Walk 500 Miles: Practice Studio",
 						section: "extension",
 						hasReference: true
 					}),
@@ -1260,8 +1255,7 @@ export const usacoGoldCourse: RawCourse = {
 					title: "I Would Walk 500 Miles Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "USACO Gold",
-						moduleTitle:
-							"I Would Walk 500 Miles: Practice Studio",
+						moduleTitle: "I Would Walk 500 Miles: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1274,8 +1268,7 @@ export const usacoGoldCourse: RawCourse = {
 					title: "I Would Walk 500 Miles Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "USACO Gold",
-						moduleTitle:
-							"I Would Walk 500 Miles: Practice Studio",
+						moduleTitle: "I Would Walk 500 Miles: Practice Studio",
 						projectKind: "extension",
 						hasReference: true
 					}),
