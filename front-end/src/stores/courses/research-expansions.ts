@@ -357,7 +357,7 @@ function buildStandardsModule(
 ): RawCourseModule {
 	return {
 		kind: "appendix",
-		title: "Course Foundations",
+		title: "Standards Map",
 		curriculum: [
 			{
 				title: `${courseLabel} Reference Guide`,
@@ -428,7 +428,7 @@ function buildSequencingModule(
 ): RawCourseModule {
 	return {
 		kind: "appendix",
-		title: "Course Next Steps",
+		title: "Course Roadmap",
 		curriculum: [
 			{
 				title: `${courseLabel} Next Module Ideas`,
@@ -1923,6 +1923,7 @@ export function applyResearchBackedExpansions(
 	const alreadyExpanded = course.modules.some(
 		module =>
 			module.title === "Standards Map" ||
+			module.title === "Course Roadmap" ||
 			module.title === "Course Foundations" ||
 			module.title === `${label}: Standards and Course Map` ||
 			module.title.startsWith(

@@ -708,7 +708,7 @@ describe("course text quality normalization", () => {
 				"A polished Scratch game is more than a set of working controls"
 			);
 			expect(corpus).toContain("applied challenge");
-			expect(corpus).toContain("Course Foundations");
+			expect(corpus).toContain("Standards Map");
 		},
 		COURSE_SWEEP_TIMEOUT
 	);
@@ -2315,14 +2315,14 @@ describe("course text quality normalization", () => {
 				).toContain(phrase);
 			}
 
-			const courseFoundations = course.modules.find(
-				module => module.title === "Course Foundations"
+			const standardsMap = course.modules.find(
+				module => module.title === "Standards Map"
 			);
 			expect(
-				courseFoundations,
-				`${courseId} Course Foundations`
+				standardsMap,
+				`${courseId} Standards Map`
 			).toBeDefined();
-			const referenceGuide = courseFoundations?.curriculum.find(item =>
+			const referenceGuide = standardsMap?.curriculum.find(item =>
 				item.title.endsWith("Reference Guide")
 			);
 			expect(referenceGuide, `${courseId} Reference Guide`).toBeDefined();
