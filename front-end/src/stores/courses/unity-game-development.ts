@@ -38,7 +38,7 @@ export const unityGameDevelopmentCourse: RawCourse = {
 					solutionLink: repo("UGD-03-supplemental-1-solution")
 				},
 				{
-					title: "Module 3 Supplemental 2",
+					title: "Module 3 Transfer Practice",
 					content:
 						"Extend the module mechanics with one additional game-rule constraint, then compare against the solution snapshot.",
 					projectLink: repo("UGD-03-supplemental-2-starter"),
@@ -76,7 +76,7 @@ export const unityGameDevelopmentCourse: RawCourse = {
 			],
 			supplementalProjects: [
 				{
-					title: "Module 3 Supplemental 2 Alternate",
+					title: "Module 3 Transfer Practice Alternate",
 					content:
 						"Use the alternate supplemental snapshot for additional UI and event-flow practice.",
 					projectLink: repo(

@@ -83,7 +83,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "Recursion, Base Cases, and Stack Frames",
 					content:
-						"This section covers recursion through call-stack diagrams before algorithm vocabulary. Cover: the base case, the recursive step, the smaller subproblem, what data each stack frame owns, what value returns to the previous frame, and why missing or non-progressing base cases lead to infinite recursion. Start with strings, vectors, and small grids to build control-flow confidence before linked lists or trees."
+						"Recursion starts with call-stack diagrams before algorithm vocabulary. The important pieces are the base case, the recursive step, the smaller subproblem, what data each stack frame owns, what value returns to the previous frame, and why missing or non-progressing base cases lead to infinite recursion. Strings, vectors, and small grids build control-flow confidence before linked lists or trees."
 				},
 				{
 					title: "Recursive Traversal and Backtracking",
@@ -118,7 +118,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "Choosing Containers and Traversing with Iterators",
 					content:
-						"Move beyond `vector` by treating standard containers as design choices. Cover: when `array`, `deque`, `set`, `map`, and `unordered_map` fit better than a vector; how ordering, uniqueness, key lookup, insertion, and mutation patterns affect the choice; how iterators represent positions across different containers; and how iterator invalidation differs from pointer arithmetic. Skill target: Justify a container choice by the operations the program actually performs."
+						"Move beyond `vector` by treating standard containers as design choices. Compare when `array`, `deque`, `set`, `map`, and `unordered_map` fit better than a vector; how ordering, uniqueness, key lookup, insertion, and mutation patterns affect the choice; how iterators represent positions across different containers; and how iterator invalidation differs from pointer arithmetic. A justified container choice follows from the operations the program actually performs."
 				},
 				{
 					title: "Standard Algorithms and Relation-Style Views",
@@ -153,12 +153,12 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "RAII and Single-Owner Resource Design",
 					content:
-						"This section covers RAII as the default modern C++ answer to cleanup: resources are acquired by objects and released automatically when those objects leave scope. Cover: destructors, scope exit, standard containers, file streams, and why this is the same lifetime principle introduced in Level 2. `std::unique_ptr` is the first smart pointer because it models single ownership clearly; practice deliberate moves and avoid treating heap allocation as the default."
+						"RAII is the default modern C++ answer to cleanup: resources are acquired by objects and released automatically when those objects leave scope. Connect destructors, scope exit, standard containers, file streams, and the same lifetime principle introduced in Level 2. `std::unique_ptr` is the first smart pointer because it models single ownership clearly; practice deliberate moves and avoid treating heap allocation as the default."
 				},
 				{
 					title: "Validation, Exceptions, and Resource Boundaries",
 					content:
-						"This section covers error handling at the same time as resource safety. Cover: expected bad input that should be validated and reported normally; exceptional failures that should interrupt the current operation; failed file opens; parse errors; partial output; and why RAII makes cleanup reliable even when a function returns early or throws. Skill target: Explain what state is preserved after a failed operation."
+						"Error handling belongs beside resource safety. Distinguish expected bad input that should be validated and reported normally; exceptional failures that should interrupt the current operation; failed file opens; parse errors; partial output; and why RAII makes cleanup reliable even when a function returns early or throws. A strong failure-path explanation names what state is preserved after a failed operation."
 				},
 				{
 					title: "CPPI4 Project: Resource-Safe File Processor",
