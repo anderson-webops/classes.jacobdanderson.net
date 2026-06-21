@@ -161,6 +161,12 @@ describe("research-backed course family expansions", () => {
 				expect(expansionText, courseId).not.toMatch(
 					/\*\*(?:Reference guide|Course connection|Sequence guidance|Project ladder|Course boundaries):\*\*/i
 				);
+				expect(expansionText, courseId).not.toMatch(
+					/\b(?:source-backed|version-aware|hidden materials|learner-created|expected readiness level)\b/i
+				);
+				expect(expansionText, courseId).not.toMatch(
+					/\*\*(?:Ready to practice|Ready when):\*\*/i
+				);
 			}
 		},
 		COURSE_SWEEP_TIMEOUT
