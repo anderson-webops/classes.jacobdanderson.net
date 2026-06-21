@@ -447,7 +447,7 @@ function buildSequencingModule(
 					`**Resource roles:** Each ${courseLabel} resource has a role: explanation, starter artifact, data source, simulation, rubric, answer check, or extension. Links that are only background references are labeled that way so they do not look like required assignments.`,
 					profile.safety
 						? `**Safety or delivery boundary:** ${profile.safety}`
-						: `**Safety or delivery boundary:** ${courseLabel} uses age-appropriate examples, cited source material, and project scopes small enough for an online lesson.`
+						: `**Safety or delivery boundary:** ${courseLabel} uses age-appropriate examples, cited references, and project scopes small enough for an online lesson.`
 				].join("\n\n")
 			},
 			{

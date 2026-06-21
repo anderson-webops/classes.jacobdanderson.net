@@ -136,13 +136,13 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Required Textbook",
 					content:
-						"The source material expects the Barron's AP Computer Science A book for chapter-based multiple choice and free-response practice. Keep the textbook aligned with the course sequence instead of treating it as a separate study track.",
+						"Use the Barron's AP Computer Science A book for chapter-based multiple choice and free-response practice. Keep the textbook aligned with the course sequence instead of treating it as a separate study track.",
 					projectLink: BARRONS_TEXTBOOK
 				},
 				{
 					title: "Reference Pack",
 					content:
-						"The repo-backed reference projects for variables, strings, and casting establish a clean notes-and-sandbox workflow from day one. They separate Java syntax issues from actual concept gaps before the first graded-style projects.",
+						"The reference projects for variables, strings, and casting establish a clean notes-and-sandbox workflow from day one. They separate Java syntax issues from actual concept gaps before the first graded-style projects.",
 					projectLink: repo("APCS1-Variables-Reference/starter"),
 					solutionLink: repo("APCS1-Variables-Reference/solution")
 				}
@@ -359,7 +359,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Elevator Warning",
 					content:
-						"Elevator Warning is the cleanest repo-backed APCS3 project for threshold checks, conditionals, and readable output. The decision structure should make the unsafe condition obvious and should handle boundary values exactly, not just typical inputs.",
+						"Elevator Warning is a focused APCS3 project for threshold checks, conditionals, and readable output. The decision structure should make the unsafe condition obvious and should handle boundary values exactly, not just typical inputs.",
 					projectLink: repo("APCS3-Elevator-Warning/starter"),
 					solutionLink: repo("APCS3-Elevator-Warning/solution"),
 					mediaLink: media("apcs3-project-3-elevator-warning.mp4")
@@ -656,7 +656,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Book and PictureBook Class",
 					content:
-						"Book and PictureBook Class is the main APCS7 build because it maps directly to the source module and keeps the inheritance tree readable.",
+						"Book and PictureBook Class is the main APCS7 build for readable inheritance practice. The class hierarchy should make the shared superclass behavior and subclass-specific behavior easy to trace.",
 					projectLink: repo("APCS7-Books-and-Picture-Books/starter"),
 					solutionLink: repo(
 						"APCS7-Books-and-Picture-Books/solution"
@@ -829,7 +829,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Deck Spec / Specification",
 					content:
-						"The source module's deck-spec work maps to the repo's specification folder. It practices reading and refining incomplete requirements.",
+						"Use the deck-specification project to practice reading incomplete requirements, identifying missing decisions, and refining the spec before implementation.",
 					projectLink: repo("APCS9-Specification/starter"),
 					solutionLink: repo("APCS9-Specification/solution")
 				},
@@ -907,7 +907,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Free Response Practice",
 					content:
-						"The source module uses the 2022 AP CS A FRQ set and scoring guidelines for Problem 4. Keep both resources directly linked here.",
+						"Use the 2022 AP CS A FRQ set and official scoring guidelines for Problem 4. Keep the prompt and rubric together so practice includes both solving and scoring.",
 					projectLink: AP_2022_FRQ,
 					solutionLink: AP_2022_FRQ_SCORING
 				}
@@ -1265,7 +1265,7 @@ export const apComputerScienceACourse: RawCourse = {
 					content: apConcept({
 						focus: "Every recursive call consumes a stack frame. A missing base case, a base case that is never reached, or a recursive step that does not shrink the problem eventually exhausts the stack.",
 						practice: [
-							"Find the recursive call and ask what input it receives next.",
+							"Find the recursive call and write the next argument value it receives.",
 							"Check whether that next input is closer to the base case.",
 							"Compare a tail-recursive method with a method that still has work after the recursive call returns.",
 							"Explain the error using stack frames rather than only naming `StackOverflowError`."
@@ -1608,7 +1608,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "2020 Repo Practice Exam",
 					content:
-						"The repo-backed practice exam is an additional full-run benchmark for timing, stamina, and mixed-topic switching when those matter more than another isolated concept drill.",
+						"The 2020 practice exam is an additional full-run benchmark for timing, stamina, and mixed-topic switching when those matter more than another isolated concept drill.",
 					projectLink: repo("APCS-A-2020-Practice-Exam/starter"),
 					solutionLink: repo("APCS-A-2020-Practice-Exam/solution")
 				}

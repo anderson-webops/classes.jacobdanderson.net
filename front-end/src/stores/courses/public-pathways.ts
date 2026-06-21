@@ -47,7 +47,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Include a brief project presentation that names the goal, the main blocks used, and one improvement after playtesting."
 		],
 		sourceAndTooling: [
-			"Scratch educator references and stable project examples anchor the source material.",
+			"Scratch educator references and stable project examples anchor the course references.",
 			"Maintain broken-script cards and remix/reference projects for debugging practice.",
 			"Keep a simple blocks-to-pseudocode glossary visible across both levels."
 		],
@@ -453,7 +453,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		adminExpansionBacklog: [
 			"Add an explicit AP exam alignment map to the public pathway and internal audits.",
-			"Audit every Replit-era AP link against current GitHub source folders.",
+			"Audit every legacy AP project link against current GitHub source folders.",
 			"Keep digital-exam and FRQ-family notes refreshed before each May exam cycle.",
 			"Flag older FRQs as useful practice but adapt instructions and scoring language when they do not match the current digital exam shape."
 		]
@@ -593,7 +593,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		sourceAndTooling: [
 			"NGSS appendices, ACS chemistry guidance, PhET simulations, and vetted NASA/NOAA/USGS/HHMI resources anchor science references as appropriate.",
-			"Keep every activity Zoom-first with notes, paper, shared screen, and provided source material.",
+			"Keep every activity Zoom-first with notes, paper, shared screen, and provided references.",
 			"Maintain a resource shortlist by module: standard, visual/simulation, data source, model, and CER prompt.",
 			"Elementary and middle-school source pool: PhET, NASA, NOAA, USGS, HHMI BioInteractive, CK-12-style open readings, National Geographic Education, and original diagrams or data tables.",
 			"Chemistry/physics source pool: ACS safety and curriculum guidance, PhET simulations, NIST or periodic-table references, NOAA/NASA data where relevant, and original graphing or free-body-diagram datasets."
