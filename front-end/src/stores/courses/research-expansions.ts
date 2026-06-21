@@ -431,18 +431,18 @@ function buildSequencingModule(
 		title: "Course Roadmap",
 		curriculum: [
 			{
-				title: `${courseLabel} Next Module Ideas`,
+				title: `${courseLabel} Follow-Up Path`,
 				content: [
-					`**Next modules:** These ${profile.family} additions show where the course can grow after the current core sequence is solid. The order follows prerequisite dependency, not just topic popularity.`,
-					`**Suggested additions:**\n${bullets(profile.moduleAdditions)}`,
+					`**Extension path:** These ${profile.family} topics show natural directions after the core sequence. The order follows prerequisite dependency so each extension builds on skills already practiced.`,
+					`**Possible next topics:**\n${bullets(profile.moduleAdditions)}`,
 					sequencingEvidenceNote(courseLabel),
-					`**Complete module pattern:** A strong module states the concept, why it matters, one worked example, one practice task, one quick check, and one extension.`
+					`**Useful module pattern:** A complete module states the concept, explains why it matters, includes one worked example, provides one practice task, checks understanding quickly, and offers one extension.`
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Resources`,
+				title: `${courseLabel} Resource Map`,
 				content: [
-					`**Resource map:** ${courseLabel} materials support the modules by making source code, datasets, simulations, version choices, and reference materials explicit.`,
+					`**Resource map:** ${courseLabel} materials identify the code, datasets, simulations, version choices, and references used in the course.`,
 					`**Materials and tools:**\n${bullets(profile.materials)}`,
 					`**Resource roles:** Each ${courseLabel} resource has a role: explanation, starter artifact, data source, simulation, rubric, answer check, or extension. Links that are only background references are labeled that way so they do not look like required assignments.`,
 					profile.safety
@@ -459,11 +459,11 @@ function buildSequencingModule(
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Current References`,
+				title: `${courseLabel} Reference Map`,
 				content: [
-					`**Link map:** ${courseLabel} references are most useful when their role is clear: concept explanation, starter source, dataset, simulation, exam standard, official documentation, or optional background.`,
-					`**Current-reference rule:** Stable ${courseLabel} concepts can use long-lived references, but tool versions, source-code repositories, exam links, data licenses, and simulation URLs need explicit version or access notes. When a link changes, the course text and project resource card need to stay in sync.`,
-					`**Reference check:** The ${courseLabel} note states which links or versions are stable, which materials need periodic review, and which materials are reference-only rather than assignments.`
+					`**Reference map:** ${courseLabel} references are most useful when their role is clear: concept explanation, starter code, dataset, simulation, exam standard, official documentation, or optional background.`,
+					`**Version note:** Stable ${courseLabel} concepts can use long-lived references, while tool versions, code repositories, exam links, data licenses, and simulation URLs need clear version or access notes.`,
+					`**Reference check:** A useful ${courseLabel} reference note states which links or versions are stable, which materials need periodic review, and which materials are reference-only rather than assignments.`
 				].join("\n\n")
 			}
 		],
