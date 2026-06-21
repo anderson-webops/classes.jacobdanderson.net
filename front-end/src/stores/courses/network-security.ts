@@ -245,7 +245,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Common Mistakes in Toy APIs",
 					content:
-						"Insecure toy APIs often trust client role flags, leak internal errors, reflect unsanitized values, skip ownership checks, or expose admin-style endpoints without guardrails. Recognizing the weak assumption matters before adding more code on top of it."
+						"Insecure toy APIs often trust client role flags, leak internal errors, reflect unsanitized values, skip ownership checks, or expose privileged endpoints without guardrails. Recognizing the weak assumption matters before adding more code on top of it."
 				},
 				{
 					title: "State Changes, Idempotence, and Error Surfaces",
@@ -541,7 +541,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Internal versus External Services",
 					content:
-						"Concrete examples such as admin panels, metrics endpoints, worker callbacks, and app APIs show which services stay internal. 'Works from the outside' is not the same thing as 'belongs on the public edge'."
+						"Concrete examples such as control panels, metrics endpoints, worker callbacks, and app APIs show which services stay internal. 'Works from the outside' is not the same thing as 'belongs on the public edge'."
 				},
 				{
 					title: "Trusted Proxy Headers and Real Client Identity",
@@ -617,7 +617,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Route-Level Authentication and Authorization",
 					content:
-						"Explicit route guards, ownership checks, and admin boundaries belong on top of authentication. Each sensitive route needs a defensible authorization story."
+						"Explicit route guards, ownership checks, and privilege boundaries belong on top of authentication. Each sensitive route needs a defensible authorization story."
 				},
 				{
 					title: "Unit 8: Secure Node/TypeScript Services: Core Project",

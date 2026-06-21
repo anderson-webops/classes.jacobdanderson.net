@@ -596,7 +596,7 @@ export const networkSystemsCourse: RawCourse = {
 						"Dual-stack examples show why a hostname may resolve to both A and AAAA records and why the chosen family changes which path, firewall rules, and failure modes matter. This is a real operational issue rather than a theoretical appendix."
 				},
 				{
-					title: "Common IPv6 Admin Mistakes",
+					title: "Common IPv6 Operations Mistakes",
 					content:
 						"Highlight the mistakes that repeatedly confuse IPv6 operations: forgetting link-local scope, validating only IPv4 reachability, or assuming that an IPv4 firewall policy automatically covers IPv6. These are the habits that create subtle deployment gaps."
 				},
