@@ -84,7 +84,7 @@ function courseUseNote(courseLabel: string, emphasis: string) {
 }
 
 function standardsEvidenceNote(courseLabel: string) {
-	return `**Source-backed work:** A strong ${courseLabel} entry names the standard or documentation page, explains why it matters, and connects it to a visible task such as a worked example, project requirement, assessment item, or reflection prompt.`;
+	return `**Reference-supported work:** A strong ${courseLabel} entry names the standard or documentation page, explains why it matters, and connects it to a visible task such as a worked example, project requirement, assessment item, or reflection prompt.`;
 }
 
 function sequencingEvidenceNote(courseLabel: string) {
@@ -377,7 +377,7 @@ function buildStandardsModule(
 						courseLabel,
 						`Each core-skill item can become a short explanation, a practice check, or a focused review path depending on the current need.`
 					),
-					`**Ready to practice:** A lesson or project is ready when one core skill has a concrete explanation, worked example, practice task, and observable work.`
+					`**Practice setup:** A lesson or project is usable when one core skill has a concrete explanation, worked example, practice task, and observable work.`
 				].join("\n\n")
 			},
 			{
@@ -396,7 +396,7 @@ function buildStandardsModule(
 				title: `${courseLabel} Boundaries`,
 				content: [
 					`**Scope boundary:** ${courseLabel} priority and expansion topics clarify what belongs here and what fits better in a prerequisite, follow-up, or separate course. This keeps the course coherent instead of absorbing every adjacent topic.`,
-					`**Boundary rule:** Keep a topic in ${courseLabel} when it directly supports the projects, assessments, and expected readiness level. Move it elsewhere when it requires a different prerequisite chain, safety model, or level of depth that would crowd out the core purpose.`,
+					`**Boundary rule:** Keep a topic in ${courseLabel} when it directly supports the projects, assessments, and expected skill level. Move it elsewhere when it requires a different prerequisite chain, safety model, or level of depth that would crowd out the core purpose.`,
 					`**Boundary check:** The ${courseLabel} boundary, one near-term addition, and one topic saved for a later course are explicit.`
 				].join("\n\n")
 			}
@@ -407,7 +407,7 @@ function buildStandardsModule(
 				content: [
 					`**Prerequisite check:** Before deeper ${courseLabel} work begins, the prerequisite skills, target references, and first observable success criteria are clear.`,
 					`**Use this check to separate:** prerequisite knowledge, required content, optional enrichment, and reference-only material. Record which project or assessment proves that a skill can be used independently.`,
-					`**Ready when:**\n- At least three prerequisites are named.\n- Each planned module cites a standard, official document, or deliberate toolchain target.\n- The proof of ${profile.family} readiness is explicit.`
+					`**Prerequisite evidence:**\n- At least three prerequisites are named.\n- Each planned module cites a standard, official document, or deliberate toolchain target.\n- The first ${profile.family} success criterion is explicit.`
 				].join("\n\n")
 			},
 			{
@@ -455,7 +455,7 @@ function buildSequencingModule(
 				content: [
 					`**Alignment guide:** Strong ${courseLabel} modules connect the concept, example, project, and checkpoint to the same target skill.`,
 					`**Alignment test:** In a complete ${courseLabel} module, the concept, project, and checkpoint all practice the same skill. If the ${courseLabel} checkpoint checks a different skill than the project practices, the module needs a clearer project target before it is ready.`,
-					`**Aligned modules show:**\n- Each ${courseLabel} module has a named prerequisite and observable outcome.\n- Each ${courseLabel} project has required behavior, test cases, and an extension.\n- The ${courseLabel} checkpoint format matches the work: code trace, rubric, CER response, math justification, security report, or model evaluation.\n- Any ${courseLabel} toolchain, dataset, simulation, or source-code dependency is linked and version-aware.`
+					`**Aligned modules show:**\n- Each ${courseLabel} module has a named prerequisite and observable outcome.\n- Each ${courseLabel} project has required behavior, test cases, and an extension.\n- The ${courseLabel} checkpoint format matches the work: code trace, rubric, CER response, math justification, security report, or model evaluation.\n- Any ${courseLabel} toolchain, dataset, simulation, or source-code dependency is linked with version or access notes.`
 				].join("\n\n")
 			},
 			{
@@ -480,7 +480,7 @@ function buildSequencingModule(
 				title: `${courseLabel} Resource Inventory`,
 				content: [
 					`**Inventory purpose:** The ${courseLabel} resource inventory identifies source code, starter/reference files, datasets, simulations, diagrams, rubrics, and tool versions used by the course.`,
-					`**Inventory reading:** A missing resource in ${courseLabel} is not automatically a blocker, but it needs a clear classification: required, replaceable, provided, learner-created, optional enrichment, or reference-only. That classification prevents hidden materials from becoming invisible prerequisites.`,
+					`**Inventory reading:** A missing resource in ${courseLabel} is not automatically a blocker, but it needs a clear classification: required, replaceable, provided, created during the course, optional enrichment, or reference-only. That classification prevents unlisted materials from becoming required by accident.`,
 					`**Resource checks:**\n- Required ${courseLabel} projects have a starter state or equivalent handout.\n- ${profile.family} assessments have a rubric or answer-check method.\n- External ${courseLabel} tools or sources are documented with stable URLs.`
 				].join("\n\n")
 			}
