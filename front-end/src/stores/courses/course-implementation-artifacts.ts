@@ -3149,7 +3149,7 @@ function pythonCheckInPracticeFocus(
 	if (!focus) return null;
 
 	return {
-		goal: `check readiness in ${focus.skills.join(", ")} through a direct case and a changed case.`,
+		goal: `practice ${focus.skills.join(", ")} through a direct case and a changed case.`,
 		sequence: [
 			`Choose one small task that uses ${focus.skills.slice(0, -1).join(", ")}, and ${focus.skills.at(-1)}.`,
 			focus.transfer,
@@ -3324,7 +3324,7 @@ function supplementalTransferContent(
 	const focus = fallbackPracticeFocus(topic, courseId);
 	const variants = [
 		{
-			goal: `Extend ${topic} with a focused transfer task that asks for work to ${focus.goal}`,
+			goal: `Extend ${topic} with focused transfer practice: ${focus.goal}`,
 			sequence: focus.sequence
 		},
 		{
@@ -3376,7 +3376,7 @@ function supplementalProjectFor(
 
 		return {
 			title: `Checkpoint: ${topic}`,
-			content: `**Project goal:** Build a readiness checkpoint for ${topic} that asks for work to ${focus.goal}\n\n**Work sequence:**\n${focus.sequence.map((step, index) => `${index + 1}. ${step}`).join("\n")}\n\n**Completion checks:**\n${focus.checks.map(check => `- ${check}`).join("\n")}`
+			content: `**Project goal:** Complete focused practice for ${topic}: ${focus.goal}\n\n**Work sequence:**\n${focus.sequence.map((step, index) => `${index + 1}. ${step}`).join("\n")}\n\n**Completion checks:**\n${focus.checks.map(check => `- ${check}`).join("\n")}`
 		};
 	}
 
