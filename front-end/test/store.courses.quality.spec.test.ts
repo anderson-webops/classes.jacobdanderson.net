@@ -326,6 +326,42 @@ describe("course text quality normalization", () => {
 	});
 
 	it(
+		"keeps generated support free of article-collision grammar artifacts",
+		async () => {
+			const artifactPatterns = [
+				/\bexpected the\b/i,
+				/\bA complete the\b/i,
+				/\bThe final the\b/i,
+				/\bthe\s+the\b/i,
+				/\ba\s+the\b/i,
+				/\ban\s+the\b/i
+			];
+			const failures = (await loadedCatalogCourses()).flatMap(
+				({ course, entry }) =>
+					course.modules.flatMap(module =>
+						[
+							...module.curriculum,
+							...module.supplementalProjects
+						].flatMap(item => {
+							const matched = artifactPatterns.find(pattern =>
+								pattern.test(item.content)
+							);
+
+							return matched
+								? [
+										`${entry.id} / ${module.title} / ${item.title}: ${matched}`
+									]
+								: [];
+						})
+					)
+			);
+
+			expect(failures).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
+	it(
 		"removes generated placeholder language from loaded catalog text",
 		async () => {
 			const corpus = await loadedCatalogText();
