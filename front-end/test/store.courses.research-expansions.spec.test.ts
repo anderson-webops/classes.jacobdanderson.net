@@ -119,13 +119,38 @@ describe("research-backed course family expansions", () => {
 					`${courseLabel} Module Alignment Guide`
 				);
 				expect(expansionText, courseId).toContain(
-					`${courseLabel} Current References`
+					`${courseLabel} Reference Guide`
 				);
 				expect(expansionText, courseId).toContain(
 					`${courseLabel} Prerequisite Map`
 				);
 				expect(expansionText, courseId).toContain(
 					`${courseLabel} Resource Inventory`
+				);
+				const roadmapModule = expansionModules.find(
+					module => module.title === "Course Roadmap"
+				);
+				expect(roadmapModule, courseId).toBeDefined();
+				const roadmapText = moduleText(roadmapModule!);
+				expect(roadmapText, courseId).toContain("**Map purpose:**");
+				expect(roadmapText, courseId).toContain("**Map reading:**");
+				expect(roadmapText, courseId).toContain(
+					"**What the map clarifies:**"
+				);
+				expect(roadmapText, courseId).toContain(
+					"**Inventory purpose:**"
+				);
+				expect(roadmapText, courseId).toContain(
+					"**Inventory reading:**"
+				);
+				expect(roadmapText, courseId).not.toMatch(
+					/\*\*Goal:\*\*\s+(?:Draw or write a prerequisite map|Build a resource inventory)/i
+				);
+				expect(roadmapText, courseId).not.toMatch(
+					/\*\*(?:Map guidance|Inventory guidance|Checkpoints):\*\*/i
+				);
+				expect(roadmapText, courseId).not.toMatch(
+					/\bmark each item as\b/i
 				);
 				expect(expansionText, courseId).not.toMatch(
 					/\b(?:Readiness Checklist|Resource Updates|Dependency Graph|Resource Checklist)\b/

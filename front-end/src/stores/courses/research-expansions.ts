@@ -471,17 +471,17 @@ function buildSequencingModule(
 			{
 				title: `${courseLabel} Prerequisite Map`,
 				content: [
-					`**Goal:** Draw or write a prerequisite map for ${profile.family}. Show which ${courseLabel} modules unlock later projects and which topics work as optional enrichment.`,
-					`**Map guidance:** Each ${courseLabel} node is a concrete skill or module, not a broad course label. Each edge explains the dependency in plain language, such as "requires arrays before 2D grids" or "requires variables before simulation state."`,
-					`**Checkpoints:**\n- At least five ${courseLabel} modules or topic clusters are included.\n- Every ${courseLabel} edge explains the prerequisite relationship.\n- One risky ${profile.family} ordering decision is identified and revised.`
+					`**Map purpose:** The ${courseLabel} prerequisite map shows which modules unlock later projects and which topics work as optional enrichment.`,
+					`**Map reading:** Each ${courseLabel} node is a concrete skill or module, not a broad course label. Each edge explains the dependency in plain language, such as "requires arrays before 2D grids" or "requires variables before simulation state."`,
+					`**What the map clarifies:**\n- The main ${courseLabel} modules or topic clusters are visible in prerequisite order.\n- Each ${courseLabel} edge explains why one idea needs to come before another.\n- Risky ${profile.family} ordering decisions can be spotted before they interrupt a project.`
 				].join("\n\n")
 			},
 			{
 				title: `${courseLabel} Resource Inventory`,
 				content: [
-					`**Goal:** Build a resource inventory for ${courseLabel}: source code, starter/reference files, datasets, simulations, diagrams, rubrics, and tool versions.`,
-					`**Inventory guidance:** A missing resource in ${courseLabel} is not automatically a blocker, but it needs a classification. For ${courseLabel}, mark each item as required, replaceable, provided, learner-created, optional enrichment, or reference-only so the course does not depend on hidden materials.`,
-					`**Resource checks:**\n- Every required ${courseLabel} project has a starter state or equivalent handout.\n- Every ${profile.family} assessment has a rubric or answer-check method.\n- Any external ${courseLabel} tool or source is documented with a stable URL.`
+					`**Inventory purpose:** The ${courseLabel} resource inventory identifies source code, starter/reference files, datasets, simulations, diagrams, rubrics, and tool versions used by the course.`,
+					`**Inventory reading:** A missing resource in ${courseLabel} is not automatically a blocker, but it needs a clear classification: required, replaceable, provided, learner-created, optional enrichment, or reference-only. That classification prevents hidden materials from becoming invisible prerequisites.`,
+					`**Resource checks:**\n- Required ${courseLabel} projects have a starter state or equivalent handout.\n- ${profile.family} assessments have a rubric or answer-check method.\n- External ${courseLabel} tools or sources are documented with stable URLs.`
 				].join("\n\n")
 			}
 		]
