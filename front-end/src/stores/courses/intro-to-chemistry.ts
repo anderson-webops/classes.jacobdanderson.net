@@ -1311,7 +1311,7 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Checkpoint: Capstone Defense",
 					content: [
-						"**Checkpoint goal:** Confirm that the final explanation is specific, source-backed, safe for remote work, and accurate enough to be challenged.",
+						"**Checkpoint goal:** Confirm that the final explanation is specific, evidence-supported, safe for remote work, and accurate enough to be challenged.",
 						"**Tasks:** Answer four defense questions: What claim is being made? Which evidence directly supports it? Which particle, equation, graph, or system model explains the evidence? What result or new evidence would change the claim?",
 						"**Mastery evidence:** A strong defense can identify a limitation without weakening the whole explanation. It can also distinguish a chemistry claim from a personal opinion, broad topic summary, or unsupported real-world anecdote.",
 						'**Revision trigger:** If the capstone depends on a required physical experiment, an uncited image, or a broad topic such as "chemistry in food" without a narrowed claim, revise the scope before presenting.'
@@ -1324,10 +1324,10 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Project: Chemistry in Your World Showcase",
 					content: [
-						"**Project goal:** Explain one real-world chemistry phenomenon using course concepts, evidence, and a particle-level model. This preserves the original Chemistry in Your World Showcase while requiring clearer source-backed reasoning.",
+						"**Project goal:** Explain one real-world chemistry phenomenon using course concepts, evidence, and a particle-level model. This preserves the original Chemistry in Your World Showcase while requiring clearer evidence-supported reasoning.",
 						"**Requirements:** Include a claim, evidence log, particle/model explanation, at least four course vocabulary terms, one diagram or simulation reference, one changed-condition prediction, and one limitation. The final artifact names which parts of the topic were covered in the intro course and which parts are advanced previews.",
 						"**Analysis target:** The artifact is narrow enough that another person could disagree with the claim using evidence. Replace broad topics with testable claims, such as pressure changing carbonation behavior, ions affecting hard-water deposits, or electron transfer explaining corrosion.",
-						"**Completion checks:** The final artifact is self-contained, source-backed, remote-safe, and specific enough to be corrected or challenged."
+						"**Completion checks:** The final artifact is self-contained, evidence-supported, remote-safe, and specific enough to be corrected or challenged."
 					].join("\n\n"),
 					datasetLink: material("capstone-evidence-seeds"),
 					solutionLink: answerKey("capstone-rubric")
