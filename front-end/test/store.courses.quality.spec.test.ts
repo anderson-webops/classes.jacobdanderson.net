@@ -43,8 +43,59 @@ function wordCount(text: string) {
 }
 
 function isProjectLikeTitle(title: string) {
-	return /project|capstone|challenge|lab|practice|drill|notebook|audit|reflection|build|create|implement|exercise/i.test(
-		title
+	return (
+		!isInformationalResourceTitle(title) &&
+		/project|capstone|challenge|lab|practice|drill|notebook|audit|reflection|build|create|implement|exercise/i.test(
+			title
+		)
+	);
+}
+
+const explicitProjectTitlePattern = new RegExp(
+	[
+		"^(?:(?:[A-Z]{2,}\\d+(?:\\.\\d+)?|PS\\d+|GM\\d+|JSS\\d+|JSM\\d+|Unit\\s+\\d+)\\s+)?",
+		"(?:Core Project|Project|Practice Project|Extension Project|Extension Challenge|Capstone|Master Project|",
+		"Supplemental Project|Catalog Project|Graphics Java Project|Guided Practice|Data Practice|Simulation Practice|",
+		"Readiness Check|Checkpoint:|Extension:|Supplemental:|Design Exercise:)"
+	].join(""),
+	"i"
+);
+
+const informationalResourceTitlePattern = new RegExp(
+	`\\b(?:${[
+		"answer key",
+		"archive",
+		"course asset",
+		"free response",
+		"frq",
+		"guide",
+		"handbook",
+		"materials?",
+		"multiple choice",
+		"official scoring",
+		"practice exam",
+		"reference",
+		"resource",
+		"rubric",
+		"scoring guidelines",
+		"setup checklist",
+		"textbook",
+		"worksheet"
+	].join("|")})\\b`,
+	"i"
+);
+
+function isExplicitProjectTitle(title: string) {
+	return (
+		explicitProjectTitlePattern.test(title) ||
+		/\b(?:Extension|Transfer) Practice\b/i.test(title)
+	);
+}
+
+function isInformationalResourceTitle(title: string) {
+	return (
+		!isExplicitProjectTitle(title) &&
+		informationalResourceTitlePattern.test(title)
 	);
 }
 
@@ -217,6 +268,61 @@ describe("course text quality normalization", () => {
 			.map(reference => `${reference.file}: ${reference.id}`);
 
 		expect(unknownIds).toEqual([]);
+	});
+
+	it("keeps informational resource cards free of generated project scaffolds", async () => {
+		const samples = [
+			{
+				courseId: "ap-computer-science-a",
+				moduleTitle: "General: Course Introduction and Setup",
+				itemTitle: "Required Textbook"
+			},
+			{
+				courseId: "ap-computer-science-a",
+				moduleTitle: "General: Course Introduction and Setup",
+				itemTitle: "Reference Pack"
+			},
+			{
+				courseId: "ap-computer-science-a",
+				moduleTitle: "General: Course Introduction and Setup",
+				itemTitle: "Strings and Printing Reference"
+			},
+			{
+				courseId: "data-science-in-python",
+				moduleTitle: "DSP0 Setup and Tooling",
+				itemTitle: "Reference Archive: Data Science in Python Workspace"
+			},
+			{
+				courseId: "ai-level-1",
+				moduleTitle: "FAI0 Setup and Tooling",
+				itemTitle: "Reference Archive: AI Level 1 Workspace"
+			},
+			{
+				courseId: "java-level-2",
+				moduleTitle: "JM11 Repo Extension and Reference Library",
+				itemTitle: "Reference: HashMaps Examples"
+			}
+		];
+		const generatedScaffoldPattern =
+			/\*\*(?:Goal|Focus|Required outcome|Completion checks|Extension|Concept focus|Practice sequence|Learning sequence|Mastery check):\*\*/i;
+
+		for (const sample of samples) {
+			const course = await loadRawCourse(sample.courseId);
+			expect(course).not.toBeNull();
+			const module = course?.modules.find(
+				module => module.title === sample.moduleTitle
+			);
+			const item = [
+				...(module?.curriculum ?? []),
+				...(module?.supplementalProjects ?? [])
+			].find(item => item.title === sample.itemTitle);
+
+			expect(
+				item,
+				`${sample.courseId} / ${sample.moduleTitle} / ${sample.itemTitle}`
+			).toBeDefined();
+			expect(item?.content).not.toMatch(generatedScaffoldPattern);
+		}
 	});
 
 	it(
@@ -3462,8 +3568,9 @@ describe("course text quality normalization", () => {
 						}))
 					].flatMap(({ section, item }) => {
 						const projectLike =
-							isProjectLikeTitle(item.title) ||
-							Boolean(item.projectLink || item.solutionLink);
+							!isInformationalResourceTitle(item.title) &&
+							(isProjectLikeTitle(item.title) ||
+								Boolean(item.projectLink || item.solutionLink));
 						const shortWithoutReview =
 							projectLike &&
 							wordCount(item.content) < 95 &&
@@ -5020,8 +5127,11 @@ describe("course text quality normalization", () => {
 		expect(periodicTableReferences.content).toMatch(
 			/\*\*Reference purpose:\*\*[\s\S]+?\n\n\*\*Reference links:\*\*/
 		);
-		expect(periodicTableReferences.content).toMatch(
-			/response\. The activity claim answers/
+		expect(periodicTableReferences.content).toContain(
+			"A reference note names the source, the element or trend checked, and the exact fact or property the source supported."
+		);
+		expect(periodicTableReferences.content).not.toMatch(
+			/\bactivity claim answers\b/i
 		);
 
 		const bondEnergyLesson = items.find(

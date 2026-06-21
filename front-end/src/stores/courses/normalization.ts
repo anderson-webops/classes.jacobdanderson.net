@@ -627,11 +627,64 @@ function githubTree(repo: string, path: string) {
 const projectLikeTitlePattern =
 	/project|capstone|challenge|lab|practice|drill|notebook|audit|reflection|review|build|create|implement|exercise/i;
 
+const explicitProjectTitlePattern = new RegExp(
+	[
+		"^(?:(?:[A-Z]{2,}\\d+(?:\\.\\d+)?|PS\\d+|GM\\d+|JSS\\d+|JSM\\d+|Unit\\s+\\d+)\\s+)?",
+		"(?:Core Project|Project|Practice Project|Extension Project|Extension Challenge|Capstone|Master Project|",
+		"Supplemental Project|Catalog Project|Graphics Java Project|Guided Practice|Data Practice|Simulation Practice|",
+		"Readiness Check|Checkpoint:|Extension:|Supplemental:|Design Exercise:)"
+	].join(""),
+	"i"
+);
+
+const informationalResourceTitlePattern = new RegExp(
+	`\\b(?:${[
+		"answer key",
+		"archive",
+		"course asset",
+		"free response",
+		"frq",
+		"guide",
+		"handbook",
+		"materials?",
+		"multiple choice",
+		"official scoring",
+		"practice exam",
+		"reference",
+		"resource",
+		"rubric",
+		"scoring guidelines",
+		"setup checklist",
+		"textbook",
+		"worksheet"
+	].join("|")})\\b`,
+	"i"
+);
+
+function isExplicitProjectItemTitle(title: string) {
+	return (
+		explicitProjectTitlePattern.test(title) ||
+		/\b(?:Extension|Transfer) Practice\b/i.test(title)
+	);
+}
+
+function isInformationalResourceItem(item: RawCourseModuleItem) {
+	return (
+		!isExplicitProjectItemTitle(item.title) &&
+		informationalResourceTitlePattern.test(item.title)
+	);
+}
+
 function isProjectLikeItem(item: RawCourseModuleItem) {
 	return (
-		projectLikeTitlePattern.test(item.title) ||
-		Boolean(item.projectLink || item.solutionLink)
+		!isInformationalResourceItem(item) &&
+		(projectLikeTitlePattern.test(item.title) ||
+			Boolean(item.projectLink || item.solutionLink))
 	);
+}
+
+function isConceptLessonItem(item: RawCourseModuleItem) {
+	return !isProjectLikeItem(item) && !isInformationalResourceItem(item);
 }
 
 const genericSupportItemTitlePattern =
@@ -820,14 +873,14 @@ function groupConceptLessons(items: RawCourseModuleItem[]) {
 function normalizeModuleLessonShape(course: RawCourse) {
 	for (const module of course.modules) {
 		const conceptItems = module.curriculum.filter(
-			item => !isProjectLikeItem(item)
+			item => isConceptLessonItem(item)
 		);
 
 		if (conceptItems.length === 0) continue;
 
 		if (conceptItems.length <= 2) {
 			module.curriculum = module.curriculum.map(item =>
-				isProjectLikeItem(item)
+				!isConceptLessonItem(item)
 					? item
 					: enrichBriefConceptLesson(module, item)
 			);
@@ -836,7 +889,7 @@ function normalizeModuleLessonShape(course: RawCourse) {
 
 		if (conceptItems.some(hasAttachedResource)) {
 			module.curriculum = module.curriculum.map(item =>
-				isProjectLikeItem(item)
+				!isConceptLessonItem(item)
 					? item
 					: enrichBriefConceptLesson(module, item)
 			);
@@ -848,7 +901,7 @@ function normalizeModuleLessonShape(course: RawCourse) {
 		let insertedConceptGroup = false;
 
 		for (const item of module.curriculum) {
-			if (isProjectLikeItem(item)) {
+			if (!isConceptLessonItem(item)) {
 				nextCurriculum.push(item);
 				continue;
 			}
@@ -2640,6 +2693,7 @@ function needsContentSupport(context: CourseTextContext) {
 	const content = context.item.content;
 	if (!content.trim()) return true;
 	if (structuredSupportPattern.test(content)) return false;
+	if (isInformationalResourceItem(context.item)) return false;
 
 	return (
 		placeholderContentPattern.test(content) ||
@@ -7163,6 +7217,7 @@ function normalizeCourseTextQuality(course: RawCourse, courseId: string) {
 				const context = { courseId, course, module, item, section };
 				if (
 					isScienceContext(context) &&
+					!isInformationalResourceItem(item) &&
 					!scienceEvidencePattern.test(item.content)
 				) {
 					item.content = `${supportBaseContent(item.content)}\n\n${scienceEvidenceCheckpoint(context)}`;
