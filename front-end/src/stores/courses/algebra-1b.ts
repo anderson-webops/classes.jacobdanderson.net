@@ -644,7 +644,7 @@ This project uses composition and inverse functions to model a fictional wormhol
 				`.trim()
 			),
 			createLesson(
-				"Answer Key",
+				"Worked Solution",
 				`
 One consistent choice set is:
 
