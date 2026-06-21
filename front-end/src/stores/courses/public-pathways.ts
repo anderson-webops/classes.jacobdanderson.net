@@ -443,7 +443,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		sourceAndTooling: [
 			"College Board AP CSA course and exam documentation is the authority.",
 			"Link AP project starter folders and review folders in the instruction-material source repo when available.",
-			"Keep downloaded AP media in the static classes media repo, not in Downloads.",
+			"Keep AP media in the static classes media repo, not in ad hoc local folders.",
 			"Guardrails to refresh each cycle: official Java subset, Bluebook-style typed and uncompiled practice, four FRQ families, AP Lab Quartet references, data ethics, text-file/dataset practice, wrapper parsing, recursion, ArrayList analysis, and 2D arrays."
 		],
 		safetyAndAccess: [
