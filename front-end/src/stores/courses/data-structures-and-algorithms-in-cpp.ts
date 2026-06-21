@@ -207,7 +207,7 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 				{
 					title: "Project: Graph Navigation",
 					content:
-						"Read a weighted road-style network, compute the shortest path between two nodes, and reconstruct the route from start to goal. The project is directly aligned with the graph-navigation lab style from the source course, but rewritten for cleaner starter code and review material.",
+						"Read a weighted road-style network, compute the shortest path between two nodes, and reconstruct the route from start to goal. The project emphasizes clean starter code, readable graph representation, and review material that makes the path reconstruction easy to inspect.",
 					projectLink:
 						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP2-Graph-Navigation/starter",
 					solutionLink:
