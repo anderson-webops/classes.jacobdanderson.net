@@ -4192,7 +4192,7 @@ function projectExpectations(context: CourseTextContext) {
 	}
 	if (/\b(?:file|files|parser|csv|json|io|i\/o)\b/.test(source)) {
 		return [
-			`- Identify the expected ${subject} file format and how malformed or missing data will be handled.`,
+			`- Identify the expected file format for ${subject} and how malformed or missing data will be handled.`,
 			`- Test ${subject} with at least one normal file and one awkward file with an empty line or incomplete record.`,
 			`- Keep ${subject} parsing, validation, and output formatting separated enough to debug each part.`
 		];
@@ -6179,7 +6179,7 @@ function scienceEvidenceCheckpoint(context: CourseTextContext) {
 			subject =>
 				`**CER checkpoint:** Use ${subject} to name the phenomenon, quote or describe the evidence source, and explain the scientific model that links the evidence to the claim.`,
 			subject =>
-				`**CER checkpoint:** A complete ${subject} response states the claim, identifies the observation or data behind it, and uses vocabulary from the module to justify the reasoning.`,
+				`**CER checkpoint:** A complete response for ${subject} states the claim, identifies the observation or data behind it, and uses vocabulary from the module to justify the reasoning.`,
 			subject =>
 				`**CER checkpoint:** For ${subject}, write the claim first, then add one specific observation, measurement, graph feature, or simulation result as evidence.`,
 			subject =>
