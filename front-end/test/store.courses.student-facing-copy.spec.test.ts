@@ -114,6 +114,8 @@ const forbiddenStudentFacingPatterns = [
 	/\bCreate a new Scratch project\. Using this project as (?:a )?rough guide, introduce\b/i,
 	/\bWatch for\b/i,
 	/\bwatch for\b/i,
+	/\bBuild a readiness checkpoint\b/i,
+	/\basks for work to\b/i,
 	/\bStart with\b/i,
 	/\bStart with vocabulary\b/i,
 	/\b(?:Use|Show|Walk|Stress|Teach|Demonstrate|Introduce|Cover|Review)\b[^.]{0,140}\b(?:students?|learners?)\b/i,
