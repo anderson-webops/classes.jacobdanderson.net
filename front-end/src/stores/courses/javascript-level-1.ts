@@ -503,7 +503,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Advanced String Functions",
 					content:
-						"Use template strings to build readable output with backticks and embedded placeholder expressions. Then use `.toUpperCase()` and `.toLowerCase()` to normalize or transform text. These tools are especially useful when user input might have unexpected capitalization."
+						"Use template strings to build readable output with backticks and embedded expressions. Then use `.toUpperCase()` and `.toLowerCase()` to normalize or transform text. These tools are especially useful when user input might have unexpected capitalization."
 				},
 				{
 					title: "JSS5 Project 3: Wholesome Memes",

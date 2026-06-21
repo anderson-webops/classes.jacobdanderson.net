@@ -366,7 +366,7 @@ export const javascriptLevel2Course: RawCourse = {
 					title: "String Interpolation",
 					content: `**Concept path:** Template strings make dynamic text easier to read by placing expressions directly inside backticks. This is especially useful when output combines labels, numbers, and calculated values.
 
-**Practice targets:** Rewrite a concatenated string using placeholder expressions inside backticks. Include at least one variable, one arithmetic expression, and one function call inside a template string. Compare the result to the older concatenation version.
+**Practice targets:** Rewrite a concatenated string using embedded expressions inside backticks. Include at least one variable, one arithmetic expression, and one function call inside a template string. Compare the result to the older concatenation version.
 
 **Evidence target:** The output text is identical to the concatenated version, but the source code is easier to scan because the sentence order matches the displayed sentence.`
 				},
