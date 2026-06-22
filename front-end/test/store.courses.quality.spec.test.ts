@@ -3633,19 +3633,33 @@ describe("course text quality normalization", () => {
 	);
 
 	it("keeps course expansion templates from regenerating instructor-action copy", () => {
-		const corpus = [
+		const templateCorpus = [
 			"src/stores/courses/course-implementation-artifacts.ts",
 			"src/stores/courses/research-expansions.ts"
 		]
 			.map(path => fs.readFileSync(path, "utf8"))
 			.join("\n");
+		const normalizerCorpus = fs.readFileSync(
+			"src/stores/courses/normalization.ts",
+			"utf8"
+		);
 
-		expect(corpus).not.toMatch(/\bTeach\b/);
-		expect(corpus).not.toMatch(/Teach students/i);
-		expect(corpus).not.toMatch(/Instructor Note/i);
-		expect(corpus).not.toMatch(/\*\*Learning sequence:\*\*/i);
-		expect(corpus).not.toMatch(/\*\*Completion check:\*\*/i);
-		expect(corpus).not.toMatch(/\bUse .* supplemental projects\b/i);
+		expect(templateCorpus).not.toMatch(/\bTeach\b/);
+		expect(templateCorpus).not.toMatch(/Teach students/i);
+		expect(templateCorpus).not.toMatch(/Instructor Note/i);
+		expect(templateCorpus).not.toMatch(/\*\*Learning sequence:\*\*/i);
+		expect(templateCorpus).not.toMatch(/\*\*Completion check:\*\*/i);
+		expect(templateCorpus).not.toMatch(/\bUse .* supplemental projects\b/i);
+		expect(templateCorpus).not.toMatch(/\bparent-managed\b/i);
+		expect(templateCorpus).not.toMatch(/\bparent-supervised\b/i);
+		expect(templateCorpus).not.toMatch(/\bfast-track learner should\b/i);
+		expect(templateCorpus).not.toMatch(/\bEvery grade band should\b/i);
+		expect(normalizerCorpus).toContain(
+			"Fast-track placement still requires"
+		);
+		expect(normalizerCorpus).not.toContain(
+			"A fast-track learner demonstrates"
+		);
 	});
 
 	it("adds project requirements and completion checks to thin legacy Python project prompts", async () => {
