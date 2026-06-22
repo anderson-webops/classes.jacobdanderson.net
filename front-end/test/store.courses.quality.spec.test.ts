@@ -4914,6 +4914,36 @@ describe("course text quality normalization", () => {
 		);
 	});
 
+	it("keeps linked AP Computer Science A reference cards substantive", async () => {
+		const course = await loadRawCourse("ap-computer-science-a");
+		expect(course).not.toBeNull();
+
+		const thinReferenceCards = course!.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.filter(item => {
+					const hasLinkedResource = Boolean(
+						item.projectLink ||
+							item.solutionLink ||
+							item.datasetLink ||
+							item.mediaLink
+					);
+
+					return hasLinkedResource && isInformationalResourceTitle(item.title);
+				})
+				.filter(
+					item =>
+						item.content.replace(/\s+/g, " ").trim().length < 280 ||
+						wordCount(item.content) < 45
+				)
+				.map(
+					item =>
+						`${module.title} / ${item.title} / ${wordCount(item.content)} words`
+				)
+		);
+
+		expect(thinReferenceCards).toEqual([]);
+	});
+
 	it("adds an AP Computer Science A pacing track guide", async () => {
 		const course = await loadRawCourse("ap-computer-science-a");
 		expect(course).not.toBeNull();

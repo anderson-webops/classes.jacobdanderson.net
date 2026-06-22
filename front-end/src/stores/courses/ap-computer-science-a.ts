@@ -136,13 +136,13 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Required Textbook",
 					content:
-						"Use the Barron's AP Computer Science A book for chapter-based multiple choice and free-response practice. Keep the textbook aligned with the course sequence instead of treating it as a separate study track.",
+						"Use the Barron's AP Computer Science A book for chapter-based multiple choice and free-response practice. Keep the textbook aligned with the course sequence instead of treating it as a separate study track. The useful pattern is to read or review the relevant chapter section after the Java concept appears in code, then answer a small set of questions with written justification. Mark any missed question by concept: syntax, tracing, object state, array/list traversal, recursion, runtime, or AP wording.",
 					projectLink: BARRONS_TEXTBOOK
 				},
 				{
 					title: "Reference Pack",
 					content:
-						"The reference projects for variables, strings, and casting establish a clean notes-and-sandbox workflow from day one. They separate Java syntax issues from actual concept gaps before the first graded-style projects.",
+						"The reference projects for variables, strings, and casting establish a clean notes-and-sandbox workflow from day one. They separate Java syntax issues from actual concept gaps before the first graded-style projects. Use these references as fast comparison examples: first predict what the program prints, then run it, then explain any mismatch using Java vocabulary. A completed pass should identify variable type, expression result type, printed spacing, and any cast or truncation that changes the value.",
 					projectLink: repo("APCS1-Variables-Reference/starter"),
 					solutionLink: repo("APCS1-Variables-Reference/solution")
 				}
@@ -151,7 +151,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Strings and Printing Reference",
 					content:
-						"This reference build reinforces output formatting, concatenation, escape characters, and readable console output. The checkpoint is being able to predict the exact printed text, including spaces, quotation marks, and line breaks.",
+						"This reference build reinforces output formatting, concatenation, escape characters, and readable console output. The checkpoint is being able to predict the exact printed text, including spaces, quotation marks, and line breaks. Use it when a project result is logically correct but visually messy. The expected evidence is a before/after output comparison and a short note explaining which part came from a literal string, which part came from a variable, and where `print` versus `println` changes the layout.",
 					projectLink: repo(
 						"APCS1-Strings-and-Printing-Reference/starter"
 					),
@@ -162,14 +162,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Casting Reference",
 					content:
-						"This reference build gives a tighter review of integer division, explicit casts, and loss-of-precision reasoning. It explains when Java truncates automatically, when an explicit cast is required, and what information is lost.",
+						"This reference build gives a tighter review of integer division, explicit casts, and loss-of-precision reasoning. It explains when Java truncates automatically, when an explicit cast is required, and what information is lost. Use it before rounding, quotient/remainder, or expression-tracing work. A strong check traces the expression twice: once with the original operand types and once after the cast, so the final answer is tied to Java's evaluation rules instead of calculator intuition.",
 					projectLink: repo("APCS1-Casting-Reference/starter"),
 					solutionLink: repo("APCS1-Casting-Reference/solution")
 				},
 				{
 					title: "2020 Practice Exam",
 					content:
-						"Keep the repo practice exam available as a later-course benchmark, but introduce it here so the AP end state is visible early.",
+						"Keep the repo practice exam available as a later-course benchmark, but introduce it here so the AP end state is visible early. It does not need to be attempted at the start of the course. Its purpose is to show the final mixture of tracing, object modeling, arrays/lists, recursion, searching, sorting, and written reasoning. Use it later as a timed or semi-timed diagnostic, then sort missed questions by unit rather than treating the score as the only feedback.",
 					projectLink: repo("APCS-A-2020-Practice-Exam/starter"),
 					solutionLink: repo("APCS-A-2020-Practice-Exam/solution")
 				}
@@ -212,14 +212,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Variables Reference",
 					content:
-						"Return to the variables reference when types, assignment, or `Math.random()` range construction are still hesitant. The useful evidence is a short program that declares values, updates them, and explains the resulting type of each expression.",
+						"Return to the variables reference when types, assignment, or `Math.random()` range construction are still hesitant. The useful evidence is a short program that declares values, updates them, and explains the resulting type of each expression. Use it to separate syntax mistakes from concept mistakes: a missing semicolon is different from choosing `int` when a decimal result is required. A finished review should include one value update, one printed expression, and one explanation of why the type is valid.",
 					projectLink: repo("APCS1-Variables-Reference/starter"),
 					solutionLink: repo("APCS1-Variables-Reference/solution")
 				},
 				{
 					title: "Loops Reference",
 					content:
-						"The loop reference pack gives a fast review of counted iteration before APCS4. The focus is predicting the first iteration, last iteration, number of iterations, and the variable state after the loop ends.",
+						"The loop reference pack gives a fast review of counted iteration before APCS4. The focus is predicting the first iteration, last iteration, number of iterations, and the variable state after the loop ends. Use it when a check-in answer has the right idea but prints one too many or one too few values. The evidence should include a small trace table with the loop variable, condition result, printed output, and update after each pass.",
 					projectLink: repo("APCS4-Loops-Reference/starter"),
 					solutionLink: repo("APCS4-Loops-Reference/solution")
 				}
@@ -272,7 +272,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Strings and Printing Reference",
 					content:
-						"Keep the strings and printing reference nearby for review of escape characters, concatenation, and output layout. It is especially useful when the code is logically correct but the displayed result has spacing or formatting bugs.",
+						"Keep the strings and printing reference nearby for review of escape characters, concatenation, and output layout. It is especially useful when the code is logically correct but the displayed result has spacing or formatting bugs. Use the reference to compare expected output against actual output character by character. A good repair names the exact missing literal, extra space, newline, quote, or variable placement that caused the formatting mismatch.",
 					projectLink: repo(
 						"APCS1-Strings-and-Printing-Reference/starter"
 					),
@@ -305,7 +305,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Chapter 2 Multiple Choice Focus",
 					content:
-						"Barron's Chapter 2 work belongs here because integer division, casting, precedence, and boolean logic should be justified without running code."
+						"Barron's Chapter 2 work belongs here because integer division, casting, precedence, and boolean logic should be justified without running code. For each missed question, write the expression evaluation in order: parentheses, multiplication or division, remainder, addition or subtraction, relational comparison, and boolean combination. The useful evidence is not only the selected letter but the trace that proves why the other choices are impossible."
 				}
 			],
 			supplementalProjects: [
@@ -367,7 +367,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference Pack",
 					content:
-						"Keep the conditionals, math-package, and random-number references available as short focused reviews instead of burying those examples inside larger projects.",
+						"Keep the conditionals, math-package, and random-number references available as short focused reviews instead of burying those examples inside larger projects. Use this pack when a larger project fails for a small reason: incorrect branch order, missing `else`, wrong `Math` return type, or an off-by-one random range. A completed reference pass should name one exact decision point, one boundary value, and one printed result that proves the rule works.",
 					projectLink: repo("APCS3-Conditionals-Reference/starter"),
 					solutionLink: repo("APCS3-Conditionals-Reference/solution")
 				}
@@ -384,14 +384,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: Math Package",
 					content:
-						"This reference project supports focused review of `abs`, `pow`, `sqrt`, and round-off behavior. Connect each method call to its argument types, return type, and any casting needed before storing the result.",
+						"This reference project supports focused review of `abs`, `pow`, `sqrt`, and round-off behavior. Connect each method call to its argument types, return type, and any casting needed before storing the result. Use it to prevent a common AP mistake: treating a library method as magic instead of tracing its input and output type. The evidence should include one call with a predictable answer and one call where `double` behavior or casting changes how the result must be stored or printed.",
 					projectLink: repo("APCS3-Math-Package-Reference/starter"),
 					solutionLink: repo("APCS3-Math-Package-Reference/solution")
 				},
 				{
 					title: "Reference: Random Numbers",
 					content:
-						"This reference tightens integer-range generation and helps avoid off-by-one mistakes with `Math.random()`. A strong explanation names the lowest possible value, highest possible value, and why the cast happens after scaling.",
+						"This reference tightens integer-range generation and helps avoid off-by-one mistakes with `Math.random()`. A strong explanation names the lowest possible value, highest possible value, and why the cast happens after scaling. Use the reference to build several ranges, such as `0` through `9`, `1` through `10`, or `99` through `199`, and explain the formula as `low + (int)(Math.random() * count)`. The finished check should identify the number of possible outcomes, not only the endpoints.",
 					projectLink: repo("APCS3-Random-Numbers-Reference/starter"),
 					solutionLink: repo(
 						"APCS3-Random-Numbers-Reference/solution"
@@ -431,7 +431,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Loop Reference Pack",
 					content:
-						"The loop references support targeted review on tracing, nested iteration, and pattern generation. They practice predicting output before execution and identifying which variable controls each repeated action.",
+						"The loop references support targeted review on tracing, nested iteration, and pattern generation. They practice predicting output before execution and identifying which variable controls each repeated action. Use this pack before pattern-printing or array traversal if loop boundaries are still uncertain. A useful trace states the initialization, first condition check, body effect, update step, last successful iteration, and the variable value that finally stops the loop.",
 					projectLink: repo("APCS4-Loops-Reference/starter"),
 					solutionLink: repo("APCS4-Loops-Reference/solution")
 				}
@@ -462,7 +462,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: While Loops and Nested Loops",
 					content:
-						"The reference pack gives one more clean nested-iteration example before arrays arrive. The focus is loop initialization, update placement, and the relationship between row-style output and nested loop structure.",
+						"The reference pack gives one more clean nested-iteration example before arrays arrive. The focus is loop initialization, update placement, and the relationship between row-style output and nested loop structure. Use it to explain which loop controls rows, which loop controls columns, and where the newline belongs. A completed trace should count total inner-loop executions and identify what would change if the update statement moved inside or outside the inner loop.",
 					projectLink: repo(
 						"APCS4-While-Loops-and-Nested-Loops-Reference/starter"
 					),
@@ -515,7 +515,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "This Reference",
 					content:
-						"The `this` reference pack clarifies constructor syntax and `this.field`. The checkpoint is distinguishing a parameter name from the instance variable that belongs to the current object.",
+						"The `this` reference pack clarifies constructor syntax and `this.field`. The checkpoint is distinguishing a parameter name from the instance variable that belongs to the current object. Use it when constructor code compiles but stores the wrong value or leaves a field unchanged. The evidence should include a shadowed-parameter example, the corrected `this.field = parameter` assignment, and a printed object state proving the field was initialized.",
 					projectLink: repo("APCS6-This-Reference/starter"),
 					solutionLink: repo("APCS6-This-Reference/solution")
 				}
@@ -545,7 +545,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Free Response Prep",
 					content:
-						"Start free-response style writing here so small-class behavior can be explained before inheritance and polymorphism raise the difficulty.",
+						"Start free-response style writing here so small-class behavior can be explained before inheritance and polymorphism raise the difficulty. The goal is not full exam timing yet; it is writing method behavior precisely enough for partial-credit scoring. A good response names the instance variables involved, explains each method's contract, and uses test calls or object-state examples to prove that the class behaves as specified.",
 					projectLink: repo("APCS5-Free-Response-Practice/starter"),
 					solutionLink: repo("APCS5-Free-Response-Practice/solution")
 				}
@@ -585,12 +585,12 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "State Mutation and Reference Semantics",
 					content:
-						"Continue class work with object references, side effects, and method calls that mutate encapsulated state. The central tracing skill is predicting what changes inside an object after each method call and what remains unchanged."
+						"Continue class work with object references, side effects, and method calls that mutate encapsulated state. The central tracing skill is predicting what changes inside an object after each method call and what remains unchanged. Use before/after state tables for at least one object: field values before the call, parameter values during the call, field values after the call, and any returned value. This prevents a common mistake where a printed result is confused with the object's actual stored state."
 				},
 				{
 					title: "Getters, Setters, `this`, and Primitive vs. Reference",
 					content:
-						"The APCS6 reference packs distinguish field access, parameter shadowing, and the difference between primitive copies and object references."
+						"The APCS6 reference packs distinguish field access, parameter shadowing, and the difference between primitive copies and object references. The important comparison is whether a method receives an independent primitive value or a reference to an object whose fields can be changed. A strong explanation traces one setter call, one getter call, and one object-reference example without using public field access as a shortcut."
 				},
 				{
 					title: "Core Project: Vending Machine Class",
@@ -605,7 +605,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Free Response and Multiple Choice Support",
 					content:
-						"Keep the APCS6 free-response and multiple-choice references available here because subtle object-state mistakes become common at this point.",
+						"Keep the APCS6 free-response and multiple-choice references available here because subtle object-state mistakes become common at this point. Use these resources after a class project runs to check whether the same behavior can be explained in AP language. The evidence should include one written method contract, one object-state trace, and one multiple-choice elimination where the wrong answers fail because of reference behavior, access rules, or parameter scope.",
 					projectLink: repo("APCS6-Free-Response-Practice/starter"),
 					solutionLink: repo("APCS6-Free-Response-Practice/solution")
 				}
@@ -630,7 +630,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: Getters and Setters",
 					content:
-						"This reference directly reviews controlled access patterns and field updates. The key idea is that public methods can protect object invariants while still allowing outside code to read or request valid changes.",
+						"This reference directly reviews controlled access patterns and field updates. The key idea is that public methods can protect object invariants while still allowing outside code to read or request valid changes. Use it to compare direct field access with method-mediated access. A finished pass should identify which method reads state, which method requests a change, what validation protects the field, and what test proves an invalid update does not corrupt the object.",
 					projectLink: repo(
 						"APCS6-Getters-and-Setters-Reference/starter"
 					),
@@ -694,7 +694,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Multiple Choice Reference",
 					content:
-						"The APCS7 multiple-choice reference reinforces inheritance vocabulary and trace reasoning. Each answer should be justified by constructor order, inherited member access, or overridden method behavior.",
+						"The APCS7 multiple-choice reference reinforces inheritance vocabulary and trace reasoning. Each answer should be justified by constructor order, inherited member access, or overridden method behavior. Use it after coding a subclass so the terminology stays tied to actual Java behavior. The expected evidence is one eliminated answer for each common misconception: assuming private fields are inherited as directly accessible, skipping `super(...)`, or forgetting that an override changes which method body runs.",
 					projectLink: repo(
 						"APCS7-Multiple-Choice-Reference/starter"
 					),
@@ -730,14 +730,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Polymorphism Reference",
 					content:
-						"The reference pack gives short, explicit examples of superclass references and overridden methods. For each example, identify the declared reference type, actual object type, visible methods, and method body that runs.",
+						"The reference pack gives short, explicit examples of superclass references and overridden methods. For each example, identify the declared reference type, actual object type, visible methods, and method body that runs. Use it to separate compile-time visibility from runtime dispatch. A strong trace explains why one method call compiles, why another call fails before running, and why an overridden method body can still run through a superclass reference.",
 					projectLink: repo("APCS8-Polymorphism-Reference/starter"),
 					solutionLink: repo("APCS8-Polymorphism-Reference/solution")
 				},
 				{
 					title: "Multiple Choice Reference",
 					content:
-						"The APCS8 multiple-choice reference helps when a polymorphic model is easier to code than to trace. The target is eliminating answer choices by compile-time type rules and dynamic dispatch behavior.",
+						"The APCS8 multiple-choice reference helps when a polymorphic model is easier to code than to trace. The target is eliminating answer choices by compile-time type rules and dynamic dispatch behavior. Use it to practice the two-step AP habit: first list what the reference type permits, then decide which implementation runs from the actual object type. The final explanation should make clear whether an error is compile-time, runtime, or simply the expected override behavior.",
 					projectLink: repo(
 						"APCS8-Multiple-Choice-Reference/starter"
 					),
@@ -783,14 +783,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "ArrayList Reference",
 					content:
-						"The ArrayList reference pack supports mutation or traversal gaps. The focus is method names, shifting behavior after removal, wrapper-class requirements, and when index-based loops are safer than enhanced loops.",
+						"The ArrayList reference pack supports mutation or traversal gaps. The focus is method names, shifting behavior after removal, wrapper-class requirements, and when index-based loops are safer than enhanced loops. Use it before any list-removal problem. A completed pass should trace `size()`, `get`, `set`, `add`, and `remove`, then explain how indexes shift after removal and why an enhanced `for` loop is not safe for structural mutation.",
 					projectLink: repo("APCS11-Array-List-Reference/starter"),
 					solutionLink: repo("APCS11-Array-List-Reference/solution")
 				},
 				{
 					title: "Multiple Choice Reference",
 					content:
-						"The APCS11 multiple-choice reference belongs here because the check-in's later prompts rely on strong collection tracing. The focus is index shifting, removal effects, and wrapper-class constraints rather than memorizing method names only.",
+						"The APCS11 multiple-choice reference belongs here because the check-in's later prompts rely on strong collection tracing. The focus is index shifting, removal effects, and wrapper-class constraints rather than memorizing method names only. Use each question as a mini-trace: write the list contents after each operation, mark the current index, and identify whether a primitive value was autoboxed into an object. The right answer should follow from the trace, not from recognition of the method name.",
 					projectLink: repo(
 						"APCS11-Multiple-Choice-Reference/starter"
 					),
@@ -836,7 +836,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Robust Input Reference Review",
 					content:
-						"Compare the robust-input practice project with the reference implementation after the local version runs. Look for where invalid values are rejected, where the program repeats, and where valid data finally enters the main logic.",
+						"Compare the robust-input practice project with the reference implementation after the local version runs. Look for where invalid values are rejected, where the program repeats, and where valid data finally enters the main logic. Use the comparison to separate validation from processing: validation keeps asking until the data is usable, while processing should run only after the value is trustworthy. The evidence should include one invalid input, one boundary input, and one valid input trace.",
 					projectLink: repo("APCS9-Robust-Input-Practice/starter"),
 					solutionLink: repo("APCS9-Robust-Input-Practice/solution")
 				}
@@ -853,7 +853,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Pass-by-Reference Effects and 2D Arrays",
 					content:
-						"Arrays show how object references behave in methods, then extend that reasoning into two-dimensional arrays and matrix-style traversal."
+						"Arrays show how object references behave in methods, then extend that reasoning into two-dimensional arrays and matrix-style traversal. The key AP idea is that a method can modify the contents of an array object even when the parameter variable itself is local. For 2D arrays, trace rows and columns separately: row index, column index, accessed value, update rule, and whether the loop visits the whole matrix or only part of it."
 				},
 				{
 					title: "Core Project: Practice With Arrays",
@@ -868,7 +868,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Array Reference Pack",
 					content:
-						"The array reference build gives a quick review of indexing, `.length`, and default values when array syntax is blocking the more important reasoning about traversal, bounds, and mutation.",
+						"The array reference build gives a quick review of indexing, `.length`, and default values when array syntax is blocking the more important reasoning about traversal, bounds, and mutation. Use it before moving into accumulation or matrix work. A finished reference pass should identify valid indexes, default element values, the difference between changing an element and reassigning a local parameter, and one out-of-bounds index that the loop must avoid.",
 					projectLink: repo("APCS10-Array-Reference/starter"),
 					solutionLink: repo("APCS10-Array-Reference/solution")
 				}
@@ -907,7 +907,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Free Response Practice",
 					content:
-						"Use the 2022 AP CS A FRQ set and official scoring guidelines for Problem 4. Keep the prompt and rubric together so practice includes both solving and scoring.",
+						"Use the 2022 AP CS A FRQ set and official scoring guidelines for Problem 4. Keep the prompt and rubric together so practice includes both solving and scoring. The useful routine is to write a solution under light timing, then score it line by line against the official rubric. Mark whether lost points came from loop bounds, array indexing, missing return values, incorrect conditionals, or incomplete explanation so the next review target is specific.",
 					projectLink: AP_2022_FRQ,
 					solutionLink: AP_2022_FRQ_SCORING
 				}
@@ -943,7 +943,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "ArrayList Reference Pack",
 					content:
-						"Keep the ArrayList reference build close for method review and quick syntax reinforcement. It should support fast checks of `add`, `get`, `set`, `remove`, `size`, traversal style, and mutation safety.",
+						"Keep the ArrayList reference build close for method review and quick syntax reinforcement. It should support fast checks of `add`, `get`, `set`, `remove`, `size`, traversal style, and mutation safety. Use it to compare array and ArrayList thinking directly: arrays expose `.length`, while ArrayLists use `size()` and method calls for access and mutation. A completed pass should include one append, one insertion, one replacement, one removal, and a trace of the final indexes.",
 					projectLink: repo("APCS11-Array-List-Reference/starter"),
 					solutionLink: repo("APCS11-Array-List-Reference/solution")
 				}
@@ -968,7 +968,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Free Response Practice",
 					content:
-						"The APCS11 FRQ practice build bridges list manipulation and AP free-response expectations. The focus is writing correct list updates while explaining index choices, loop direction, and side effects clearly enough for partial credit.",
+						"The APCS11 FRQ practice build bridges list manipulation and AP free-response expectations. The focus is writing correct list updates while explaining index choices, loop direction, and side effects clearly enough for partial credit. Use the solution after an attempt to check whether the algorithm preserves every required element, skips no elements after removal, and returns or mutates exactly what the prompt requested. The scoring pass should identify the first incorrect line, not only the final symptom.",
 					projectLink: repo("APCS11-Free-Response-Practice/starter"),
 					solutionLink: repo("APCS11-Free-Response-Practice/solution")
 				},
@@ -1301,7 +1301,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Recursion Reference Pack",
 					content:
-						"Keep the recursion reference available for short examples before assigning the longer practice set. It is most useful when a small trace is needed to separate the base case, recursive step, printed output order, and returned value.",
+						"Keep the recursion reference available for short examples before assigning the longer practice set. It is most useful when a small trace is needed to separate the base case, recursive step, printed output order, and returned value. Use it to draw two views of the same method: the call-down path with parameter values and the return-up path with completed results. A good explanation identifies where recursion stops and whether work happens before or after the recursive call.",
 					projectLink: repo("APCS15-Recursion-Reference/starter"),
 					solutionLink: repo("APCS15-Recursion-Reference/solution")
 				}
@@ -1545,7 +1545,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Past FRQ Archive",
 					content:
-						"Keep the official College Board FRQ archive available throughout APCS17 for cycling through multiple years of real prompts.",
+						"Keep the official College Board FRQ archive available throughout APCS17 for cycling through multiple years of real prompts. Use the archive strategically rather than randomly: choose one question type, attempt it under timing, then score it with the official rubric before moving to another year. Track patterns in missed points, such as missing helper methods, array traversal errors, object-state mistakes, or incomplete written reasoning, so review is driven by evidence.",
 					projectLink: AP_FRQ_ARCHIVE
 				}
 			],
@@ -1601,14 +1601,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "2022 FRQ and Scoring Guidelines",
 					content:
-						"The 2022 AP CS A FRQ set and official scoring guidelines support timed practice and post-run scoring conversations.",
+						"The 2022 AP CS A FRQ set and official scoring guidelines support timed practice and post-run scoring conversations. Attempt the prompt before reading the scoring document, then annotate the solution with where each point would be earned or lost. The goal is to learn AP scoring precision: correct idea, correct Java syntax, complete edge handling, and no extra behavior that contradicts the prompt.",
 					projectLink: AP_2022_FRQ,
 					solutionLink: AP_2022_FRQ_SCORING
 				},
 				{
 					title: "2020 Repo Practice Exam",
 					content:
-						"The 2020 practice exam is an additional full-run benchmark for timing, stamina, and mixed-topic switching when those matter more than another isolated concept drill.",
+						"The 2020 practice exam is an additional full-run benchmark for timing, stamina, and mixed-topic switching when those matter more than another isolated concept drill. Use it after the major Java and data-structure topics have appeared. The post-exam review should classify misses by unit and by error type, then choose one targeted project, trace drill, or FRQ correction before attempting another full mixed set.",
 					projectLink: repo("APCS-A-2020-Practice-Exam/starter"),
 					solutionLink: repo("APCS-A-2020-Practice-Exam/solution")
 				}
