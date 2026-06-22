@@ -1549,12 +1549,12 @@ function neutralizeLessonDirectiveText(text: string) {
 		.replace(
 			/\bRepeat the core ideas from ([^.]+) on a smaller problem to build speed, independence, and cleaner reasoning\./g,
 			(_match, topic) =>
-				`Practice ${stripTrailingSentencePunctuation(topic)} on a focused smaller problem to build speed, independence, and cleaner reasoning.`
+				`Focused drill for ${stripTrailingSentencePunctuation(topic)}: rebuild the central behavior in a smaller scene, then test one normal run and one boundary or restart case.`
 		)
 		.replace(
 			/\bCreate an original variation inspired by ([^.]+)\. Keep the scope small, but require one meaningful design or reasoning choice\./g,
 			(_match, topic) =>
-				`Design a small original variation of ${stripTrailingSentencePunctuation(topic)} with one meaningful design or reasoning choice.`
+				`Original variant for ${stripTrailingSentencePunctuation(topic)}: change the theme, control rule, score condition, or feedback cue while keeping the core Scratch idea visible.`
 		)
 		.replace(
 			/(^|\n\s*|[.!?]\s+|:\s+)Teach students to\b/g,
@@ -7011,6 +7011,9 @@ function studioSupport(context: CourseTextContext) {
 		"",
 		studioReference
 	);
+	const studioIntro = isScratchSource(contextText(context))
+		? `**${supportLabel}:** ${supportSubject} defines a Scratch project slice around ${unscopedSubjectFocus(context)}.`
+		: `**${supportLabel}:** ${supportSubject} produces ${studioArtifact(context)} connected to ${unscopedSubjectFocus(context)}.`;
 	const studioPath = (() => {
 		if (pathTitle.includes("build requirements")) {
 			return `Build path for ${pathSubject}: define the required parts, connect them into one runnable artifact, and verify the complete path rather than isolated pieces.`;
@@ -7069,7 +7072,7 @@ function studioSupport(context: CourseTextContext) {
 	})();
 
 	return [
-		`**${supportLabel}:** ${supportSubject} produces ${studioArtifact(context)} connected to ${unscopedSubjectFocus(context)}.`,
+		studioIntro,
 		`**Path:** ${studioPath}`,
 		`**Studio focus:** ${compactScopedStudio(studioFocus)}`,
 		`**Build sequence:**\n${compactStudio(studioBuildSequence(context).join("\n"))}\n- ${compactScopedStudio(reviewStep)}`,
