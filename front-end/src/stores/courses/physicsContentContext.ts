@@ -41,41 +41,41 @@ const diagnosticCheckpointOverrides: Record<string, string> = {
 
 const misconceptionWatchlistOverrides: Record<string, string> = {
 	"PHY8 Momentum, Impulse, and Collisions":
-		"Common pitfalls include treating momentum as the same as force, assuming every collision conserves kinetic energy, and ignoring external forces when deciding whether momentum is conserved.",
+		"Common failure modes include treating momentum as the same as force, assuming every collision conserves kinetic energy, and ignoring external forces when deciding whether momentum is conserved.",
 	"PHY9 Rotational Motion and Torque Basics":
-		"Common pitfalls include treating force magnitude as the only thing that matters, forgetting the perpendicular lever arm, and treating clockwise or counterclockwise signs as physical truths instead of conventions.",
+		"Common failure modes include treating force magnitude as the only thing that matters, forgetting the perpendicular lever arm, and treating clockwise or counterclockwise signs as physical truths instead of conventions.",
 	"PHY10 Fluids, Pressure, and Buoyancy":
-		"Common pitfalls include saying an object floats only because it is light, treating pressure as only downward, and confusing total mass with density or displaced volume.",
+		"Common failure modes include saying an object floats only because it is light, treating pressure as only downward, and confusing total mass with density or displaced volume.",
 	"PHY11 Heat, Temperature, and Thermal Energy":
-		"Common pitfalls include using heat and temperature interchangeably, saying cold flows from one object to another, and expecting temperature to change during every phase-change interval.",
+		"Common failure modes include using heat and temperature interchangeably, saying cold flows from one object to another, and expecting temperature to change during every phase-change interval.",
 	"PHY12 Optics, Mirrors, Lenses, and Images":
-		"Common pitfalls include assuming every image can be projected on a screen, treating lenses as if they use up light, and drawing rays without connecting them to image evidence.",
+		"Common failure modes include assuming every image can be projected on a screen, treating lenses as if they use up light, and drawing rays without connecting them to image evidence.",
 	"PHY13 Magnetism and Electromagnetic Induction":
-		"Common pitfalls include treating magnetism as only attraction, assuming current is consumed by a coil, and expecting induction without a changing magnetic field or changing loop area.",
+		"Common failure modes include treating magnetism as only attraction, assuming current is consumed by a coil, and expecting induction without a changing magnetic field or changing loop area.",
 	"PHY14 Simple Harmonic Motion and Resonance":
-		"Common pitfalls include assuming amplitude always changes period, treating resonance as any vibration, and interpreting equilibrium as a place where motion is impossible.",
+		"Common failure modes include assuming amplitude always changes period, treating resonance as any vibration, and interpreting equilibrium as a place where motion is impossible.",
 	"PHY15 Astronomy, Gravity, and Orbits":
-		"Common pitfalls include claiming astronauts are weightless because there is no gravity, adding a forward force to keep planets moving, and treating space as a region with no interactions.",
+		"Common failure modes include claiming astronauts are weightless because there is no gravity, adding a forward force to keep planets moving, and treating space as a region with no interactions.",
 	"PHY16 Modern Physics and Model Limits":
-		"Common pitfalls include using quantum as a synonym for anything possible, picturing photons only as tiny classical balls, and thinking a model limit makes the whole earlier model useless.",
+		"Common failure modes include using quantum as a synonym for anything possible, picturing photons only as tiny classical balls, and thinking a model limit makes the whole earlier model useless.",
 	"PHY17 Engineering Design and Physics Portfolio":
-		"Common pitfalls include letting polish hide weak evidence, adding equations that do not support the claim, and treating uncertainty or limitations as weaknesses instead of part of the argument.",
+		"Common failure modes include letting polish hide weak evidence, adding equations that do not support the claim, and treating uncertainty or limitations as weaknesses instead of part of the argument.",
 	"PHY17 Numerical Modeling and Simulation Checks":
-		"Common pitfalls include treating simulation output as automatically true, assuming a smaller step size fixes every issue without comparison, and mistaking numerical artifacts for physical effects.",
+		"Common failure modes include treating simulation output as automatically true, assuming a smaller step size fixes every issue without comparison, and mistaking numerical artifacts for physical effects.",
 	"PHY18 Experimental Uncertainty and Curve Fitting":
-		"Common pitfalls include forcing a best-fit line through every point, treating extra decimal places as better evidence, and deleting outliers without a defensible reason.",
+		"Common failure modes include forcing a best-fit line through every point, treating extra decimal places as better evidence, and deleting outliers without a defensible reason.",
 	"PHY19 Coupled Systems and Constraints":
-		"Common pitfalls include assuming every connected object has the same tension, using one free-body diagram for both a whole system and its parts, and skipping the constraint equation.",
+		"Common failure modes include assuming every connected object has the same tension, using one free-body diagram for both a whole system and its parts, and skipping the constraint equation.",
 	"PHY20 Fluids and Continuum Models":
-		"Common pitfalls include applying Bernoulli-style reasoning to every fluid problem, treating pressure as only downward, and forgetting that continuum models break down at very small scales.",
+		"Common failure modes include applying Bernoulli-style reasoning to every fluid problem, treating pressure as only downward, and forgetting that continuum models break down at very small scales.",
 	"PHY21 Thermodynamics and Engines":
-		"Common pitfalls include treating heat as a substance contained inside an object, expecting 100 percent efficient engines, and failing to distinguish heat transfer from work.",
+		"Common failure modes include treating heat as a substance contained inside an object, expecting 100 percent efficient engines, and failing to distinguish heat transfer from work.",
 	"PHY22 Electromagnetic Applications and Signals":
-		"Common pitfalls include treating a sensor reading as the true value without calibration, assuming filters can remove noise without tradeoffs, and ignoring bandwidth or sampling limits.",
+		"Common failure modes include treating a sensor reading as the true value without calibration, assuming filters can remove noise without tradeoffs, and ignoring bandwidth or sampling limits.",
 	"PHY23 Relativity and Reference Frames Preview":
-		"Common pitfalls include treating relativity as mere perception, expecting noticeable relativistic effects at ordinary speeds, and assuming reference-frame dependence means there are no objective predictions.",
+		"Common failure modes include treating relativity as mere perception, expecting noticeable relativistic effects at ordinary speeds, and assuming reference-frame dependence means there are no objective predictions.",
 	"PHY24 Independent Physics Research Portfolio":
-		"Common pitfalls include substituting a broad topic for a focused question, using citations instead of reasoning, and treating limitations as something to hide rather than as evidence of careful scope."
+		"Common failure modes include substituting a broad topic for a focused question, using citations instead of reasoning, and treating limitations as something to hide rather than as evidence of careful scope."
 };
 
 function applyPhysicsSupplementOverrides(course: RawCourse) {
@@ -86,7 +86,7 @@ function applyPhysicsSupplementOverrides(course: RawCourse) {
 					diagnosticCheckpointOverrides[module.title] ?? item.content;
 			}
 
-			if (item.title === "Common Pitfalls") {
+			if (item.title === "Failure Modes") {
 				item.content =
 					misconceptionWatchlistOverrides[module.title] ??
 					item.content;

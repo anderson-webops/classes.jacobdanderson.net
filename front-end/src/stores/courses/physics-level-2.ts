@@ -45,9 +45,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: resolve vectors accurately, label angles consistently, and explain why horizontal and vertical equations can be solved separately in projectile motion. Prompt: choose axes and defend the choice before calculating."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating horizontal motion as if it 'runs out' at the top of a projectile, adding vectors by simply adding magnitudes, and treating sign mistakes as minor when they actually signal a broken coordinate setup."
+						"Common failure modes include treating horizontal motion as if it 'runs out' at the top of a projectile, adding vectors by simply adding magnitudes, and treating sign mistakes as minor when they actually signal a broken coordinate setup."
 				},
 				{
 					title: "Extension Project: Rescue Drone Navigation",
@@ -92,9 +92,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: identify all external forces before solving and state whether the system is accelerating along each chosen axis. A short diagram checkpoint explains a scale reading without relying on intuition alone."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include mixing up the force pair in Newton's third law with the set of forces on one object, and assuming a larger scale reading means the object's mass changed."
+						"Common failure modes include mixing up the force pair in Newton's third law with the set of forces on one object, and assuming a larger scale reading means the object's mass changed."
 				},
 				{
 					title: "Extension Project: Tug-of-War System Audit",
@@ -139,9 +139,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: decide when static friction must be compared against a maximum value and when kinetic friction is the better model. A strong checkpoint explains why the normal force is not always equal to weight."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include assuming friction always equals mu times N even in static situations where it only adjusts up to a maximum, and projecting the full weight down the ramp instead of resolving gravity into components."
+						"Common failure modes include assuming friction always equals mu times N even in static situations where it only adjusts up to a maximum, and projecting the full weight down the ramp instead of resolving gravity into components."
 				},
 				{
 					title: "Extension Project: Ramp Design Challenge",
@@ -186,9 +186,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: distinguish momentum conservation from kinetic-energy conservation and interpret the sign of momentum consistently. Prompt: decide whether a force-time graph indicates a large force for a short time or a smaller force for a longer time."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating momentum as conserved only when objects bounce apart, assuming heavier objects always 'win' a collision regardless of velocity, and confusing impulse with impact duration alone."
+						"Common failure modes include treating momentum as conserved only when objects bounce apart, assuming heavier objects always 'win' a collision regardless of velocity, and confusing impulse with impact duration alone."
 				},
 				{
 					title: "Extension Project: Safety System Design Review",
@@ -233,9 +233,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: identify the pivot, choose a sign convention, and explain why a large force near the pivot may be less effective than a smaller force farther away. A quick prompt about opening a heavy door works well here."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating force magnitude as the only important factor, ignoring the location of the force, and confusing clockwise versus counterclockwise sign choices with right versus wrong answers rather than conventions."
+						"Common failure modes include treating force magnitude as the only important factor, ignoring the location of the force, and confusing clockwise versus counterclockwise sign choices with right versus wrong answers rather than conventions."
 				},
 				{
 					title: "Extension Project: Torque Design Challenge",
@@ -280,9 +280,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: identify the inward direction in circular motion and explain why constant speed does not imply zero acceleration. Prompt: compare gravity at Earth's surface with gravity in low orbit."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include adding centrifugal force automatically in every inertial-frame analysis, assuming satellites orbit because gravity has become negligible, and confusing constant speed with constant velocity."
+						"Common failure modes include adding centrifugal force automatically in every inertial-frame analysis, assuming satellites orbit because gravity has become negligible, and confusing constant speed with constant velocity."
 				},
 				{
 					title: "Extension Project: Orbit Planner",
@@ -327,9 +327,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: compare branch current and branch voltage correctly in series and parallel settings. A useful checkpoint predicts what changes everywhere in the circuit when one resistor is increased."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include assuming the battery provides a fixed current regardless of circuit structure, treating voltage as if it is used up the same way current is imagined to be used up, and overgeneralizing pure-series rules to every mixed circuit."
+						"Common failure modes include assuming the battery provides a fixed current regardless of circuit structure, treating voltage as if it is used up the same way current is imagined to be used up, and overgeneralizing pure-series rules to every mixed circuit."
 				},
 				{
 					title: "Extension Project: Circuit Design Audit",
@@ -374,9 +374,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: distinguish heat from temperature, identify the dominant heat-transfer pathway in a scenario, and interpret a heating curve in words. If optics is included, the checkpoint explains what a lens is doing to rays rather than merely naming the lens type."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include using heat and temperature interchangeably, assuming shiny automatically means hotter or colder without a mechanism, and treating a virtual image as if it physically sits on a screen."
+						"Common failure modes include using heat and temperature interchangeably, assuming shiny automatically means hotter or colder without a mechanism, and treating a virtual image as if it physically sits on a screen."
 				},
 				{
 					title: "Extension Project: Thermal Design Challenge",
@@ -421,9 +421,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: defend the system choice, assumptions, graph choice, and uncertainty treatment under follow-up questioning. A strong checkpoint explains what evidence would have changed the conclusion."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include hiding weak reasoning behind long calculations, treating simulation output as automatically trustworthy because a computer produced it, and mistaking complexity for rigor instead of choosing a simpler, better-justified model."
+						"Common failure modes include hiding weak reasoning behind long calculations, treating simulation output as automatically trustworthy because a computer produced it, and mistaking complexity for rigor instead of choosing a simpler, better-justified model."
 				},
 				{
 					title: "Capstone Option: Physics Modeling Challenge",
@@ -473,9 +473,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Check whether the update rule, time step, initial conditions, and validation target are stated before a simulation run is trusted. A strong checkpoint explains one conservation or limiting-case test that would catch a broken numerical model."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include trusting a long simulation without a small sanity test, choosing a time step that creates artificial behavior, and treating graph smoothness as confirmation that the physics is correct."
+						"Common failure modes include trusting a long simulation without a small sanity test, choosing a time step that creates artificial behavior, and treating graph smoothness as confirmation that the physics is correct."
 				},
 				{
 					title: "Extension Project: Motion Model Comparison",
@@ -525,9 +525,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Check whether the measurement units, precision, suspected bias, fit type, and residual pattern are named before drawing a conclusion. A strong checkpoint explains what the slope means and whether the data actually supports that model."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include reporting too many digits, ignoring systematic bias because the graph looks linear, treating correlation as a physics law, and skipping residuals that would reveal a poor fit."
+						"Common failure modes include reporting too many digits, ignoring systematic bias because the graph looks linear, treating correlation as a physics law, and skipping residuals that would reveal a poor fit."
 				},
 				{
 					title: "Extension Project: Measurement Audit",
@@ -577,9 +577,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Check whether the system boundary, connected objects, shared variables, and idealized constraints are named before solving. A strong checkpoint explains why two accelerations, distances, or forces are linked rather than merely copying a pulley formula."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include assigning one tension value when the ideal-string assumption is not justified, mixing internal and external forces, and writing more equations without checking whether the constraints are independent."
+						"Common failure modes include assigning one tension value when the ideal-string assumption is not justified, mixing internal and external forces, and writing more equations without checking whether the constraints are independent."
 				},
 				{
 					title: "Extension Project: Connected System Constraint Map",
@@ -629,9 +629,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Check whether the fluid region, density or pressure variables, flow assumptions, and model limits are stated before calculation. A strong checkpoint explains why a continuum model is acceptable for the case being analyzed."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include using a pipe-flow formula outside its assumptions, ignoring viscosity or turbulence, mixing pressure and force units, and treating density as constant when the situation does not justify it."
+						"Common failure modes include using a pipe-flow formula outside its assumptions, ignoring viscosity or turbulence, mixing pressure and force units, and treating density as constant when the situation does not justify it."
 				},
 				{
 					title: "Extension Project: Fluid System Case Study",
@@ -681,9 +681,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Check whether heat, work, internal-energy change, system boundary, and useful output are labeled before efficiency is calculated. A strong checkpoint explains the sign convention and why an ideal limit is not the same as a real device."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating heat as stored energy, reversing work signs, claiming lost energy disappeared, and comparing engines or refrigerators without first defining the useful output."
+						"Common failure modes include treating heat as stored energy, reversing work signs, claiming lost energy disappeared, and comparing engines or refrigerators without first defining the useful output."
 				},
 				{
 					title: "Extension Project: Engine or Refrigerator Audit",
@@ -733,9 +733,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Check whether the measured quantity, transducer, sampling method, calibration evidence, and noise source are identified before interpreting a signal. A strong checkpoint explains which part of the graph is physical and which part may be measurement artifact."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include smoothing away real events, mistaking noise for a signal, trusting an uncalibrated sensor, and forgetting that a transducer can distort the quantity it is supposed to reveal."
+						"Common failure modes include smoothing away real events, mistaking noise for a signal, trusting an uncalibrated sensor, and forgetting that a transducer can distort the quantity it is supposed to reveal."
 				},
 				{
 					title: "Extension Project: Sensor System Proposal",
@@ -785,9 +785,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Check whether the observer frame, event labels, velocity claim, and domain limit are stated before applying a correction. A strong checkpoint explains why the classical frame description is adequate or why a relativistic preview is needed."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include mixing quantities from different frames, treating relativity as relevant at every everyday speed, and using a correction formula without naming the physical scale that makes the correction matter."
+						"Common failure modes include mixing quantities from different frames, treating relativity as relevant at every everyday speed, and using a correction formula without naming the physical scale that makes the correction matter."
 				},
 				{
 					title: "Extension Project: Relativity Explainer",
@@ -837,9 +837,9 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 						"Check whether the research question, source quality, physical quantities, model choice, and limitation are explicit before the portfolio is drafted. A strong checkpoint explains how the evidence narrows or revises the original claim."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include choosing a topic too broad to model, collecting interesting facts without a physics question, using an unvetted source as evidence, and hiding uncertainty instead of using it to improve the final claim."
+						"Common failure modes include choosing a topic too broad to model, collecting interesting facts without a physics question, using an unvetted source as evidence, and hiding uncertainty instead of using it to improve the final claim."
 				},
 				{
 					title: "Extension Project: Independent Physics Portfolio",

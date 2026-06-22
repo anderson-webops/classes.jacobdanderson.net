@@ -436,7 +436,7 @@ function buildStandardsModule(
 				].join("\n\n")
 			},
 			{
-				title: expansionTitle(courseLabel, "Learning Sequence"),
+				title: expansionTitle(courseLabel, "Sequence Map"),
 				content: [
 					`**Sequence map:** The current ${courseLabel} sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
 					`**Ordering rule:** ${courseLabel} sequence decisions are based on dependency, not convenience. If any ${courseLabel} project expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,

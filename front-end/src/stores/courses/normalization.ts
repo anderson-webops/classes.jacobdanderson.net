@@ -753,7 +753,7 @@ function cleanAppliedLabReferenceText(text: string) {
 
 function neutralizeLessonPointText(text: string) {
 	const hasSupportLabel =
-		/\*\*(?:Focus|Goal|Outcome|Expected outcome|Verification focus|Readable output|Result quality|Project goal|Concept path|Readiness check|Common pitfalls|Mastery check|Investigation|Remote investigation|Explanation|Science explanation|Studio focus|Build steps|Build sequence|Checkpoints|Completion checks|Evidence target|Evidence targets|Extension):?\*\*/i.test(
+		/\*\*(?:Focus|Goal|Outcome|Expected outcome|Verification focus|Readable output|Result quality|Project goal|Concept path|Readiness check|Common pitfalls|Failure modes|Common failure modes|Mastery check|Investigation|Remote investigation|Explanation|Science explanation|Studio focus|Build steps|Build sequence|Checkpoints|Completion checks|Evidence target|Evidence targets|Extension):?\*\*/i.test(
 			text
 		);
 	const source =
@@ -941,7 +941,7 @@ interface CourseTextContext {
 }
 
 const structuredSupportPattern =
-	/\*\*(?:Goal|Project goal|Teaching flow|Concept path|Learning sequence|Diagnostic guidance|Readiness check|Misconception check|Common pitfalls|Exit check|Mastery check|Investigation|Remote investigation|Explanation|Science explanation|Studio focus|Evidence target|Evidence targets|AP connection):?\*\*/i;
+	/\*\*(?:Goal|Project goal|Teaching flow|Concept path|Learning sequence|Diagnostic guidance|Readiness check|Misconception check|Common pitfalls|Failure modes|Common failure modes|Exit check|Mastery check|Investigation|Remote investigation|Explanation|Science explanation|Studio focus|Evidence target|Evidence targets|AP connection):?\*\*/i;
 const projectReviewSupportPattern =
 	/\*\*(?:Outcome|Required outcome|Success criteria|Completion checks|Checkpoints|Extension):\*\*/i;
 const visibleLessonBackbonePattern =
@@ -1265,6 +1265,8 @@ const supportLabelPattern = [
 	"Extension",
 	"Concept path",
 	"Common pitfalls",
+	"Common failure modes",
+	"Failure modes",
 	"Mastery check",
 	"Evidence",
 	"Readiness evidence",
@@ -1724,14 +1726,29 @@ function neutralizeLessonDirectiveText(text: string) {
 		)
 		.replace(
 			/\bWatch for likely mistakes such as\b/g,
-			"Common mistakes include"
+			"Common failure modes include"
 		)
 		.replace(
 			/\bwatch for likely mistakes such as\b/g,
-			"common mistakes include"
+			"common failure modes include"
 		)
-		.replace(/\bWatch for\b/g, "Common pitfalls include")
-		.replace(/\bwatch for\b/g, "common pitfalls include")
+		.replace(/\bWatch for\b/g, "Common failure modes include")
+		.replace(/\bwatch for\b/g, "common failure modes include")
+		.replace(/\*\*Common pitfalls:\*\*/gi, "**Failure modes:**")
+		.replace(/\bcommon pitfalls\b/g, "common failure modes")
+		.replace(/\bCommon pitfalls\b/g, "Common failure modes")
+		.replace(
+			/\bFor ([^.,\n]{1,140}), check for\b/g,
+			"For $1, failure modes include"
+		)
+		.replace(
+			/\bFor ([^.,\n]{1,140}), check whether\b/g,
+			"For $1, verification asks whether"
+		)
+		.replace(
+			/\bIn ([^.,\n]{1,140}), check for\b/g,
+			"In $1, failure modes include"
+		)
 		.replace(
 			/\bStudents also often assume\b/g,
 			"Another common assumption is that"
@@ -2025,10 +2042,7 @@ function neutralizeStudentFacingText(text: string) {
 					/\*\*Diagnostic guidance:\*\*/gi,
 					"**Readiness check:**"
 				)
-				.replace(
-					/\*\*Misconception check:\*\*/gi,
-					"**Common pitfalls:**"
-				)
+				.replace(/\*\*Misconception check:\*\*/gi, "**Failure modes:**")
 				.replace(/\*\*Exit check:\*\*/gi, "**Mastery check:**")
 				.replace(
 					/Use this as one guided lesson arc covering these sections in sequence:/gi,
@@ -3200,9 +3214,9 @@ function commonPitfalls(context: CourseTextContext) {
 	if (isDataAiMlContext(context)) {
 		return variantPrompt(context, [
 			subject =>
-				`In ${subject}, common pitfalls include assuming a dataset is complete or neutral, confusing correlation with explanation, trusting one metric without a baseline, or omitting limitations and responsible-use boundaries.`,
+				`In ${subject}, common failure modes include assuming a dataset is complete or neutral, confusing correlation with explanation, trusting one metric without a baseline, or omitting limitations and responsible-use boundaries.`,
 			subject =>
-				`For ${subject}, common pitfalls include uninspected missing values, unclear labels, metrics without baselines, conclusions that overclaim, and limitations that are mentioned only after the answer.`,
+				`For ${subject}, common failure modes include uninspected missing values, unclear labels, metrics without baselines, conclusions that overclaim, and limitations that are mentioned only after the answer.`,
 			subject =>
 				`In ${subject}, likely mistakes include treating sampled data as the whole population, hiding cleaning choices, skipping a toy sanity check, or interpreting a model result without a comparison point.`,
 			subject =>
@@ -3212,9 +3226,9 @@ function commonPitfalls(context: CourseTextContext) {
 	if (isApcsContext(context)) {
 		return variantPrompt(context, [
 			subject =>
-				`In ${subject}, common pitfalls include rushing past Java's exact syntax, confusing primitive values with object references, skipping trace tables, or testing only the example from the prompt.`,
+				`In ${subject}, common failure modes include rushing past Java's exact syntax, confusing primitive values with object references, skipping trace tables, or testing only the example from the prompt.`,
 			subject =>
-				`For ${subject}, common pitfalls include syntax that compiles differently than expected, object references treated like primitive values, missing trace tables, and edge cases copied from the sample only.`,
+				`For ${subject}, common failure modes include syntax that compiles differently than expected, object references treated like primitive values, missing trace tables, and edge cases copied from the sample only.`,
 			subject =>
 				`In ${subject}, likely mistakes include changing several Java statements before compiling, overlooking AP-style boundary cases, and explaining the answer without tracing state.`,
 			subject =>
@@ -3224,9 +3238,9 @@ function commonPitfalls(context: CourseTextContext) {
 	if (isCompetitiveProgrammingContext(context)) {
 		return variantPrompt(context, [
 			subject =>
-				`In ${subject}, common pitfalls include matching the sample without proving the general case, missing boundary sizes, using an algorithm that is too slow, or overlooking duplicate and tie cases.`,
+				`In ${subject}, common failure modes include matching the sample without proving the general case, missing boundary sizes, using an algorithm that is too slow, or overlooking duplicate and tie cases.`,
 			subject =>
-				`For ${subject}, common pitfalls include sample-only reasoning, untested smallest and largest inputs, hidden off-by-one errors, and complexity that does not fit the constraints.`,
+				`For ${subject}, common failure modes include sample-only reasoning, untested smallest and largest inputs, hidden off-by-one errors, and complexity that does not fit the constraints.`,
 			subject =>
 				`In ${subject}, likely mistakes include coding before the invariant is clear, treating ties inconsistently, and skipping adversarial cases that expose ordering assumptions.`,
 			subject =>
@@ -3236,9 +3250,9 @@ function commonPitfalls(context: CourseTextContext) {
 	if (isSwiftAppContext(context)) {
 		return variantPrompt(context, [
 			subject =>
-				`In ${subject}, common pitfalls include unclear state ownership, treating previews as full tests, overlooking empty or error states, and confusing Xcode configuration issues with app behavior.`,
+				`In ${subject}, common failure modes include unclear state ownership, treating previews as full tests, overlooking empty or error states, and confusing Xcode configuration issues with app behavior.`,
 			subject =>
-				`For ${subject}, common pitfalls include state that lives in the wrong view, previews that hide real simulator behavior, missing accessibility labels, and layouts that break at another size.`,
+				`For ${subject}, common failure modes include state that lives in the wrong view, previews that hide real simulator behavior, missing accessibility labels, and layouts that break at another size.`,
 			subject =>
 				`In ${subject}, likely mistakes include mixing navigation and model logic, verifying only the default preview, and ignoring error or empty data states.`,
 			subject =>
@@ -3248,9 +3262,9 @@ function commonPitfalls(context: CourseTextContext) {
 	if (isSecurityContext(context)) {
 		return variantPrompt(context, [
 			subject =>
-				`In ${subject}, common pitfalls include blurring the authorized scope, changing a system before recording the baseline, trusting command output without interpretation, or skipping rollback evidence.`,
+				`In ${subject}, common failure modes include blurring the authorized scope, changing a system before recording the baseline, trusting command output without interpretation, or skipping rollback evidence.`,
 			subject =>
-				`For ${subject}, common pitfalls include unclear lab boundaries, missing before-and-after evidence, mitigation steps that are not verified, and command output copied without explanation.`,
+				`For ${subject}, common failure modes include unclear lab boundaries, missing before-and-after evidence, mitigation steps that are not verified, and command output copied without explanation.`,
 			subject =>
 				`In ${subject}, likely mistakes include testing outside the approved environment, changing too many settings at once, and omitting the evidence that confirms the final state.`,
 			subject =>
@@ -3260,9 +3274,9 @@ function commonPitfalls(context: CourseTextContext) {
 	if (isSystemsContext(context)) {
 		return variantPrompt(context, [
 			subject =>
-				`In ${subject}, common pitfalls include changing a toolchain or system state before recording the baseline, using commands whose effects are unclear, trusting output without interpretation, or skipping rollback and reproducibility evidence.`,
+				`In ${subject}, common failure modes include changing a toolchain or system state before recording the baseline, using commands whose effects are unclear, trusting output without interpretation, or skipping rollback and reproducibility evidence.`,
 			subject =>
-				`For ${subject}, common pitfalls include hidden environment assumptions, commands that cannot be repeated, missing diagnostic output, and cleanup steps that are not documented.`,
+				`For ${subject}, common failure modes include hidden environment assumptions, commands that cannot be repeated, missing diagnostic output, and cleanup steps that are not documented.`,
 			subject =>
 				`In ${subject}, likely mistakes include editing too many variables at once, ignoring logs or traces, losing the before/after comparison, and leaving the final state hard to reproduce.`,
 			subject =>
@@ -3272,7 +3286,7 @@ function commonPitfalls(context: CourseTextContext) {
 	if (isGameContext(context)) {
 		return variantPrompt(context, [
 			subject =>
-				`In ${subject}, common pitfalls include unclear start or reset state, event-order bugs, collision or score changes that are hard to trace, and feedback that does not show what changed.`,
+				`In ${subject}, common failure modes include unclear start or reset state, event-order bugs, collision or score changes that are hard to trace, and feedback that does not show what changed.`,
 			subject =>
 				`For ${subject}, check for stale state, event-order bugs, scoring or timing updates that are hard to inspect, and player feedback that does not match the state.`,
 			subject =>
@@ -3284,9 +3298,9 @@ function commonPitfalls(context: CourseTextContext) {
 	if (isWebContext(context)) {
 		return variantPrompt(context, [
 			subject =>
-				`In ${subject}, common pitfalls include building only the default interaction, hiding loading or error states, ignoring keyboard and screen-size behavior, or letting UI state drift away from the data source.`,
+				`In ${subject}, common failure modes include building only the default interaction, hiding loading or error states, ignoring keyboard and screen-size behavior, or letting UI state drift away from the data source.`,
 			subject =>
-				`For ${subject}, common pitfalls include interactions that work only with perfect input, missing empty or failure states, inaccessible controls, and layouts that collapse on narrow screens.`,
+				`For ${subject}, common failure modes include interactions that work only with perfect input, missing empty or failure states, inaccessible controls, and layouts that collapse on narrow screens.`,
 			subject =>
 				`In ${subject}, likely mistakes include updating the DOM without updating state, handling clicks but not keyboard use, and testing only one viewport or browser state.`,
 			subject =>
@@ -3298,7 +3312,7 @@ function commonPitfalls(context: CourseTextContext) {
 			subject =>
 				`In ${subject}, common mistakes include mixing input, calculation, and output in one hard-to-test block; mutating a list while looping; missing a return value; or only testing the easiest input.`,
 			subject =>
-				`For ${subject}, common pitfalls include helper functions that depend on hidden input, loops that skip or double-count values, unclear list mutation, and output that cannot be checked independently.`,
+				`For ${subject}, common failure modes include helper functions that depend on hidden input, loops that skip or double-count values, unclear list mutation, and output that cannot be checked independently.`,
 			subject =>
 				`In ${subject}, likely bugs include off-by-one loops, branches that never run, functions that print instead of return when a value is needed, and tests that only cover the easiest input.`,
 			subject =>
@@ -3320,9 +3334,9 @@ function commonPitfalls(context: CourseTextContext) {
 	if (/c\+\+|cpp/.test(source)) {
 		return variantPrompt(context, [
 			subject =>
-				`In ${subject}, common pitfalls include losing track of ownership or lifetime, mixing indices with values, ignoring compiler warnings, or testing only the case that appears in the prompt.`,
+				`In ${subject}, common failure modes include losing track of ownership or lifetime, mixing indices with values, ignoring compiler warnings, or testing only the case that appears in the prompt.`,
 			subject =>
-				`For ${subject}, common pitfalls include unclear resource ownership, stale references, unchecked bounds, copied data that was expected to alias, and diagnostics that are ignored.`,
+				`For ${subject}, common failure modes include unclear resource ownership, stale references, unchecked bounds, copied data that was expected to alias, and diagnostics that are ignored.`,
 			subject =>
 				`In ${subject}, likely mistakes include relying on undefined behavior, hiding allocation or lifetime decisions, skipping edge-size inputs, and treating compiler warnings as optional.`,
 			subject =>
@@ -3334,6 +3348,24 @@ function commonPitfalls(context: CourseTextContext) {
 	}
 
 	return "Confusing the example with the general rule, skipping a boundary condition, leaving assumptions unstated, or accepting a result without evidence.";
+}
+
+function failureModeGuidance(context: CourseTextContext) {
+	return commonPitfalls(context)
+		.replace(/\bCommon pitfalls\b/g, "Common failure modes")
+		.replace(/\bcommon pitfalls\b/g, "common failure modes")
+		.replace(
+			/\bFor ([^.,\n]{1,140}), check for\b/g,
+			"For $1, failure modes include"
+		)
+		.replace(
+			/\bIn ([^.,\n]{1,140}), check for\b/g,
+			"In $1, failure modes include"
+		)
+		.replace(
+			/\bFor ([^.,\n]{1,140}), check whether\b/g,
+			"For $1, verification asks whether"
+		);
 }
 
 function diagnosticCategories(context: CourseTextContext) {
@@ -6022,7 +6054,7 @@ function lessonSupport(context: CourseTextContext) {
 
 	return [
 		isJavaContext(context) ? javaConceptPath() : conceptPath,
-		`**Common pitfalls:** ${commonPitfalls(context)}`,
+		`**Failure modes:** ${failureModeGuidance(context)}`,
 		`**Mastery check:** ${proficiencyEvidence(context)}`
 	].join("\n\n");
 }
@@ -7258,7 +7290,7 @@ function mathModuleBackboneSupport(context: CourseTextContext) {
 
 	return [
 		`**Concept path:** ${topic} connects the main rule or representation to worked examples, then checks the result through substitution, graph or table interpretation, units, or reasonableness.`,
-		`**Common pitfalls:** In ${topic}, common mistakes include copying a pattern without checking the condition, dropping a sign or exponent, skipping domain or unit restrictions, or reporting an answer without explaining what it means.`,
+		`**Failure modes:** In ${topic}, common errors include copying a pattern without checking the condition, dropping a sign or exponent, skipping domain or unit restrictions, or reporting an answer without explaining what it means.`,
 		`**Mastery check:** A complete response states the setup, shows the algebraic or representational move, verifies the answer in context, and explains one case where the same method would need to change.`
 	].join("\n\n");
 }
