@@ -424,7 +424,7 @@ This project uses community data to reason about rate of change, graph trends, a
 - Compare two groups or two time periods and explain which trend is growing faster.
 - Write a recommendation based on the data, not just the arithmetic.
 
-The final explanation should connect the slope calculation to what is happening in the community context.
+The final explanation connects the slope calculation to what is happening in the community context.
 				`.trim(),
 					media.communityDataAnalysis
 				)
@@ -499,7 +499,7 @@ This project combines slope classification with avalanche-risk interpretation.
 **Mission 2**
 
 - Compare avalanche risk after storms of different sizes.
-- Decide how long slopes should stay closed if the resort reopens once avalanche probability drops below \`40%\`.
+- Decide how long slopes stay closed if the resort reopens once avalanche probability drops below \`40%\`.
 - Explain why snow-slab risk can change over time.
 				`.trim()
 				),
@@ -914,7 +914,7 @@ The master project closes the course with a short independent explanation.
 			createLesson(
 				"Additional Practice",
 				`
-Use the remaining source answers for a compact end-of-course review. Choose a method deliberately: graphing for visual interpretation, substitution when a variable is already isolated, and elimination when terms can cancel cleanly. Each answer should be checked in both original equations. When the result is \`no solution\` or \`infinite solutions\`, explain the line relationship instead of treating the answer like a missing ordered pair.
+Use the remaining source answers for a compact end-of-course review. Choose a method deliberately: graphing for visual interpretation, substitution when a variable is already isolated, and elimination when terms can cancel cleanly. Check each answer in both original equations. When the result is \`no solution\` or \`infinite solutions\`, explain the line relationship instead of treating the answer like a missing ordered pair.
 
 **Selected answers**
 

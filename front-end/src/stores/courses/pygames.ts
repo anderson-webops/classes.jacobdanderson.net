@@ -875,7 +875,7 @@ export const pyGamesCourse: RawCourse = {
 				{
 					title: "Check-In #2: Additional Practice Project",
 					content:
-						'Modify one of the Bigfoot games so pressing the "f" key flips gravity upside down. When gravity is reversed, Bigfoot should fall upward without leaving the screen; adjust collision so he can stand against the top or bottom surfaces appropriately. Optionally, flip Bigfoot\'s sprite with bigfoot.angle = 180 when gravity is reversed and make moving platforms behave correctly with inverted gravity.',
+						'Modify one of the Bigfoot games so pressing the "f" key flips gravity upside down. When gravity is reversed, Bigfoot falls upward without leaving the screen; adjust collision so he can stand against the top or bottom surfaces appropriately. Optionally, flip Bigfoot\'s sprite with bigfoot.angle = 180 when gravity is reversed and make moving platforms behave correctly with inverted gravity.',
 					projectLink:
 						"https://github.com/instruction-material/PyGames/tree/main",
 					solutionLink:
@@ -948,11 +948,11 @@ export const pyGamesCourse: RawCourse = {
 - When the alien reaches the right edge, call \`time.sleep(1)\` before resetting the alien to the left.
 - Observe that the pause freezes the whole game, including input and animation.
 
-**Design note:** \`time.sleep()\` is acceptable for a tiny transition or demonstration, but it is usually not the best choice for live gameplay because it blocks the event loop. Later projects should prefer clock scheduling when the game needs to keep updating while a delay is in progress.`
+**Design note:** \`time.sleep()\` is acceptable for a tiny transition or demonstration, but it is usually not the best choice for live gameplay because it blocks the event loop. Later projects use clock scheduling when the game needs to keep updating while a delay is in progress.`
 				},
 				{
 					title: "Clock Scheduling in Pygame Zero",
-					content: `**Concept focus:** Pygame Zero's \`clock\` schedules functions without freezing the game. Scheduled callbacks are better than \`time.sleep()\` when animation and input should continue.
+					content: `**Concept focus:** Pygame Zero's \`clock\` schedules functions without freezing the game. Scheduled callbacks are better than \`time.sleep()\` when animation and input continue.
 
 **One-time schedule:**
 - Create an alien that changes to a "hurt" image when clicked.
@@ -969,7 +969,7 @@ export const pyGamesCourse: RawCourse = {
 				{
 					title: "PyG7 Project 1: Alien Catch",
 					content:
-						"Build a game that uses multiple screens and timing to challenge the player's reactions. The finished Alien Catch game should make its screen flow and speed changes easy to explain. Implement a start screen where the user presses Enter to begin (keyboard.RETURN or keyboard.kp_enter depending on the key). In play mode, have an alien move horizontally across the screen while the player presses space to stop the alien. If the alien stops on top of a target square, the player gains a point and the alien's speed increases; otherwise, the player loses a life. Before each new run, use time.sleep or a clock-based delay to pause for one second so the player can prepare. Track lives with a global variable and, when lives reach zero, switch gameState to an end screen where the player can press Enter/Return to play again or Escape to quit using quit().",
+						"Build a game that uses multiple screens and timing to challenge the player's reactions. The finished Alien Catch game makes its screen flow and speed changes easy to explain. Implement a start screen where the user presses Enter to begin (keyboard.RETURN or keyboard.kp_enter depending on the key). In play mode, have an alien move horizontally across the screen while the player presses space to stop the alien. If the alien stops on top of a target square, the player gains a point and the alien's speed increases; otherwise, the player loses a life. Before each new run, use time.sleep or a clock-based delay to pause for one second so the player can prepare. Track lives with a global variable and, when lives reach zero, switch gameState to an end screen where the player can press Enter/Return to play again or Escape to quit using quit().",
 					projectLink:
 						"https://github.com/instruction-material/PyGames/tree/main",
 					solutionLink:
@@ -1331,12 +1331,12 @@ export const pyGamesCourse: RawCourse = {
 				{
 					title: "Check-In #3: Projectiles and Enemy AI",
 					content:
-						"Projectiles-1: When the space key is pressed, fire a laser from the spaceship. Move the laser upwards (or toward the target) and make the target disappear when hit. Initially, restrict to one laser at a time. Projectiles-2/3/4: Update the code to support multiple simultaneous lasers, typically by storing them in a list and iterating to move and draw them. Projectiles-5: Choose one target and make it exhibit simple AI: it should continuously move toward the spaceship while still relocating to a random position every few seconds and resetting properly when shot."
+						"Projectiles-1: When the space key is pressed, fire a laser from the spaceship. Move the laser upwards (or toward the target) and make the target disappear when hit. Initially, restrict to one laser at a time. Projectiles-2/3/4: Update the code to support multiple simultaneous lasers, typically by storing them in a list and iterating to move and draw them. Projectiles-5: Choose one target and make it exhibit simple AI: it continuously moves toward the spaceship while still relocating to a random position every few seconds and resetting properly when shot."
 				},
 				{
 					title: "Check-In #3: Additional Practice Project",
 					content:
-						"Extend the Shark Chase game by adding a crab enemy that patrols along the bottom of the ocean. The crab should move left and right following the diver's horizontal position. If the crab touches the diver while the diver is not hiding in seaweed, the game should end. Bonus: if the diver is hiding in seaweed, make the crab move away instead of toward the diver, and occasionally have the crab jump using the game clock to schedule jumps.",
+						"Extend the Shark Chase game by adding a crab enemy that patrols along the bottom of the ocean. The crab moves left and right following the diver's horizontal position. If the crab touches the diver while the diver is not hiding in seaweed, the game ends. Bonus: if the diver is hiding in seaweed, make the crab move away instead of toward the diver, and occasionally have the crab jump using the game clock to schedule jumps.",
 					projectLink:
 						"https://github.com/instruction-material/PyGames/tree/main",
 					solutionLink:
@@ -1566,7 +1566,7 @@ export const pyGamesCourse: RawCourse = {
 				{
 					title: "Recap & Readiness Check",
 					content:
-						"Review what went into building Space Invaders and identify which parts of the course felt strongest and which parts still need reinforcement. Use that reflection to decide whether the next step should be Python Level 2 or additional PyGame fundamentals practice."
+						"Review what went into building Space Invaders and identify which parts of the course felt strongest and which parts still need reinforcement. Use that reflection to choose the next step: Python Level 2 or additional PyGame fundamentals practice."
 				},
 				{
 					title: "PyG12 Project 1: Master Project",

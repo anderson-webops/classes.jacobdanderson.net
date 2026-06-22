@@ -110,7 +110,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "Randomness and Small Simulation Helpers",
 					content:
-						"`rand()` belongs after basic function calls are comfortable. Cover: seeding at the correct level, generating bounded random values, wrapping random behavior in helper functions, testing code that has random output, and separating generation logic from game or simulation output. Randomness should create a reason to decompose the program instead of writing one long `main`.",
+						"`rand()` belongs after basic function calls are comfortable. Cover: seeding at the correct level, generating bounded random values, wrapping random behavior in helper functions, testing code that has random output, and separating generation logic from game or simulation output. Randomness creates a reason to decompose the program instead of writing one long `main`.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-rand-Reference"
 				},
@@ -126,7 +126,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "CPPF3 Project 2: Number Guesser",
 					content:
-						"Break the game into input handling, random-number selection, and guess checking. This is the point where function decomposition should start feeling necessary instead of optional.",
+						"Break the game into input handling, random-number selection, and guess checking. This is the point where function decomposition starts feeling necessary instead of optional.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Number-Guesser",
 					solutionLink:
@@ -151,7 +151,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "Classes, Objects, and Encapsulated State",
 					content:
-						"A class packages related data and behavior together. Include objects as individual instances, private state, public behavior, constructors, getters/setters when appropriate, and why methods should protect invariants instead of letting every part of the program edit fields directly. Keep the focus on object modeling, not advanced language mechanics."
+						"A class packages related data and behavior together. Include objects as individual instances, private state, public behavior, constructors, getters/setters when appropriate, and why methods protect invariants instead of letting every part of the program edit fields directly. Keep the focus on object modeling, not advanced language mechanics."
 				},
 				{
 					title: "Multi-File Class Implementation",
@@ -227,14 +227,14 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "References, Const References, and Function Boundaries",
 					content:
-						"References are aliases, and `const` references are a safe way to avoid unnecessary copying. Include pass-by-value versus pass-by-reference, when a function should mutate caller-owned data, when it should only observe data, why `const` communicates intent, and how to trace what changes after a function call. Treat this as a data-flow topic, not a pointer topic.",
+						"References are aliases, and `const` references are a safe way to avoid unnecessary copying. Include pass-by-value versus pass-by-reference, when a function mutates caller-owned data, when it only observes data, why `const` communicates intent, and how to trace what changes after a function call. Treat this as a data-flow topic, not a pointer topic.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Parameter-Passing-Introduction"
 				},
 				{
 					title: "CPPF6 Project 1: Parameter Passing Tracing",
 					content:
-						"Trace what changes and what does not when values are passed by value, by reference, and by const reference. The result should show clear reasoning about function boundaries.",
+						"Trace what changes and what does not when values are passed by value, by reference, and by const reference. The result shows clear reasoning about function boundaries.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Parameter-Passing-Starter",
 					solutionLink:
@@ -275,7 +275,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "Nested Vectors, Grid Traversal, and Nested Loop Patterns",
 					content:
-						"A 2D vector should first feel like a grid of rows instead of a shortcut into raw multi-dimensional arrays. Include reading `grid[row][col]`, row versus column meaning, printing a grid, updating a cell, nested loops for row totals and scans, rectangular versus irregular grids, and why this higher-level model prepares for raw array layout later without introducing memory tricks too early.",
+						"A 2D vector first works as a grid of rows instead of a shortcut into raw multi-dimensional arrays. Include reading `grid[row][col]`, row versus column meaning, printing a grid, updating a cell, nested loops for row totals and scans, rectangular versus irregular grids, and why this higher-level model prepares for raw array layout later without introducing memory tricks too early.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Grids-and-2D-Vectors-Reference"
 				},
@@ -307,7 +307,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "Profile Modeling and API Design",
 					content:
-						"Model a `Post` as a small record and a `Profile` as a class that owns a vector of posts. Cover: why `Post` can be a simple record, why `Profile` should own the collection, how to design add/remove/print/update methods, how to validate indexes before mutation, and how to keep the API readable without introducing manual ownership logic.",
+						"Model a `Post` as a small record and a `Profile` as a class that owns a vector of posts. Cover: why `Post` can be a simple record, why `Profile` owns the collection, how to design add/remove/print/update methods, how to validate indexes before mutation, and how to keep the API readable without introducing manual ownership logic.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-Profile-Posts"
 				},
@@ -319,7 +319,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "CPPF8 Project: Profile Posts",
 					content:
-						"Build a small profile manager that stores posts, prints them clearly, sums hearts, removes posts safely, and updates likes. The finished version should include a clear command loop, validated menu choices, and at least one named program state so Level 1 ends with a small interactive application rather than a collection of isolated functions.",
+						"Build a small profile manager that stores posts, prints them clearly, sums hearts, removes posts safely, and updates likes. The finished version includes a clear command loop, validated menu choices, and at least one named program state so Level 1 ends with a small interactive application rather than a collection of isolated functions.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-Profile-Posts",
 					solutionLink:

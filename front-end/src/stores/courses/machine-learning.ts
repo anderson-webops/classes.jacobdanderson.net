@@ -22,12 +22,12 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Data Cleaning and Visualization First",
 					content:
-						"Before any model is trained, inspect columns, missing values, scales, and class balance. Basic plotting and train/test thinking should be treated as part of the baseline workflow, not as optional polish after the algorithm appears."
+						"Before any model is trained, inspect columns, missing values, scales, and class balance. Basic plotting and train/test thinking belong in the baseline workflow, not as optional polish after the algorithm appears."
 				},
 				{
 					title: "Model Comparison as the Course Habit",
 					content:
-						"Most serious datasets should be tested with at least two approaches. One model run is only a starting point, not the end of the reasoning."
+						"Most serious datasets are tested with at least two approaches. One model run is only a starting point, not the end of the reasoning."
 				},
 				{
 					title: "ML0 Setup, Tooling, and Data Workflow: Core Project",
@@ -540,9 +540,9 @@ export const machineLearningCourse: RawCourse = {
 - Pass the activation function into the constructor so different functions can be tested later.
 
 **Method contract:**
-- The \`run()\` method should receive the two inputs, \`x1\` and \`x2\`.
-- It should also receive or use the bias value.
-- It should compute the weighted sum and return the activated output.
+- The \`run()\` method receives the two inputs, \`x1\` and \`x2\`.
+- It also receives or uses the bias value.
+- It computes the weighted sum and returns the activated output.
 
 **Support function:** Write a standalone sigmoid function that takes one numeric input and returns the sigmoid output.
 
@@ -634,7 +634,7 @@ export const machineLearningCourse: RawCourse = {
 - Compare different batch sizes.
 - Watch both performance and training time.
 
-**Reflection:** Summarize the dataset, network structure, accuracy, and one prediction pattern that should be interpreted cautiously.`,
+**Reflection:** Summarize the dataset, network structure, accuracy, and one prediction pattern that needs cautious interpretation.`,
 					projectLink:
 						"https://colab.research.google.com/drive/1CLK1xyg-6rvgj2Z8KtTkt2y4sGYL-dTG",
 					solutionLink:
@@ -946,7 +946,7 @@ export const machineLearningCourse: RawCourse = {
 
 **Model choices:**
 - Use a simple convolutional neural network when the goal is image-specific learning.
-- A dense network after flattening can be used as a comparison, but it should be discussed as a weaker baseline for image structure.
+- A dense network after flattening can be used as a comparison, but discuss it as a weaker baseline for image structure.
 - Compile with a suitable multi-class classification loss.
 
 **Evaluation steps:**
@@ -1030,7 +1030,7 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Classification Metrics beyond Accuracy",
 					content:
-						"Accuracy, precision, recall, F1, and the confusion matrix are different lenses on model quality. A single percentage can hide the wrong failure mode, especially on imbalanced data, so model evaluation should name which errors matter most."
+						"Accuracy, precision, recall, F1, and the confusion matrix are different lenses on model quality. A single percentage can hide the wrong failure mode, especially on imbalanced data, so model evaluation names which errors matter most."
 				},
 				{
 					title: "Regression Metrics and Residual Thinking",

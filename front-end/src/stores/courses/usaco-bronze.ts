@@ -88,7 +88,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Turn Story Problems into Variables and Steps",
 					content:
-						"Translate narrative wording into a tiny model: what is tracked, what changes each step, and when the answer should be updated. The first win at Bronze is usually accurate modeling, not deep theory."
+						"Translate narrative wording into a tiny model: what is tracked, what changes each step, and when the answer is updated. The first win at Bronze is usually accurate modeling, not deep theory."
 				},
 				{
 					title: "Follow the Rules Exactly",
@@ -175,7 +175,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Greedy Choice with Just Enough Justification",
 					content:
-						"Small greedy arguments apply when choosing the earliest finish, largest gap, or best local option can be justified clearly. At Bronze level, the proof should stay intuitive but still be named aloud."
+						"Small greedy arguments apply when choosing the earliest finish, largest gap, or best local option can be justified clearly. At Bronze level, the proof stays intuitive but still needs to be named aloud."
 				},
 				{
 					title: "Scanning Arrays for Best Answers",
@@ -224,7 +224,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Speeding Ticket",
 					content:
-						"Practice range comparisons and piecewise simulation while keeping the data model simple enough to debug quickly. The solution should state how each mile segment receives a limit and an actual speed, then report the maximum violation rather than only whether a violation happened.",
+						"Practice range comparisons and piecewise simulation while keeping the data model simple enough to debug quickly. The solution states how each mile segment receives a limit and an actual speed, then reports the maximum violation rather than only whether a violation happened.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB29-Speeding-Ticket/starter",
 					solutionLink:
@@ -273,7 +273,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Diamond Collector",
 					content:
-						"Use sorting and window-style reasoning to capture the largest valid group under a size-difference constraint. The final explanation should identify the sorted invariant, why the left edge only moves forward, and which sample cases prove that duplicate sizes and boundary-equal differences are handled correctly.",
+						"Use sorting and window-style reasoning to capture the largest valid group under a size-difference constraint. The final explanation identifies the sorted invariant, why the left edge only moves forward, and which sample cases prove that duplicate sizes and boundary-equal differences are handled correctly.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB37-Diamond-Collector/starter",
 					solutionLink:
@@ -371,7 +371,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Family Tree",
 					content:
-						"Use parent and ancestor reasoning to practice a light graph-style relationship problem without leaving Bronze territory. The solution should compare ancestor chains, distinguish direct parent-child relationships from cousins or siblings, and explain why the reported relationship is the most specific valid one.",
+						"Use parent and ancestor reasoning to practice a light graph-style relationship problem without leaving Bronze territory. The solution compares ancestor chains, distinguishes direct parent-child relationships from cousins or siblings, and explains why the reported relationship is the most specific valid one.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB51-Family-Tree/starter",
 					solutionLink:
@@ -510,7 +510,7 @@ export const usacoBronzeCourse: RawCourse = {
 				{
 					title: "Problem: Mixing Milk",
 					content:
-						"Use repeated pour operations to rehearse careful simulation and container-state updates. Each pour should update both source and destination amounts from the same transfer value, with a short trace showing that capacity limits and empty-source cases behave correctly.",
+						"Use repeated pour operations to rehearse careful simulation and container-state updates. Each pour updates both source and destination amounts from the same transfer value, with a short trace showing that capacity limits and empty-source cases behave correctly.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Bronze/tree/main/UB11-Mixing-Milk/starter",
 					solutionLink:

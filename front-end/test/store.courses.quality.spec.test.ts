@@ -1257,6 +1257,7 @@ describe("course text quality normalization", () => {
 	it("keeps visible course source copy free of instructor-action artifacts", () => {
 		const corpus = visibleCourseSourceCorpus();
 
+		expect(corpus).not.toMatch(/\bshould\b/i);
 		expect(corpus).not.toMatch(/\bTeach\b/);
 		expect(corpus).not.toMatch(/\bRequire\b/);
 		expect(corpus).not.toMatch(/\bEncourage\b/);

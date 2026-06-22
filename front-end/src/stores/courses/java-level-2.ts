@@ -179,7 +179,7 @@ export const javaLevel2Course: RawCourse = {
 				{
 					title: "Check-In #1: Comparable Objects",
 					content:
-						"Implement `Comparable` for the `Car` class, define `compareTo()`, sort an array of cars, and explain when `compareTo()` should return `-1`, `0`, or `1`."
+						"Implement `Comparable` for the `Car` class, define `compareTo()`, sort an array of cars, and explain when `compareTo()` returns `-1`, `0`, or `1`."
 				},
 				{
 					title: "Check-In #1: Additional Practice Project",
