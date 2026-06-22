@@ -10,6 +10,12 @@ function projectArtifact(kind: ProjectGuidanceOptions["projectKind"]) {
 	return kind === "core" ? "project" : "extension challenge";
 }
 
+function adjectivalCourseFamily(courseFamily: string) {
+	return courseFamily
+		.replace(/\bweb development\b/gi, "web-development")
+		.replace(/\bnetwork systems\b/gi, "network-systems");
+}
+
 function stableVariantIndex(seed: string, count: number) {
 	let hash = 2166136261;
 
@@ -323,7 +329,7 @@ function compactGuidanceBody(
 		)
 		.replace(
 			new RegExp(
-				`\\bThe ${escapedTitle} (page|app|program|result|lab|submitted program|artifact|feature|pipeline|checked cases)\\b`,
+				`\\bThe ${escapedTitle} (page|app|program|result|lab|submitted program|artifact|feature|pipeline)\\b`,
 				"g"
 			),
 			"The $1"
@@ -916,6 +922,16 @@ function guidanceModuleTitle(moduleTitle: string, itemTitle?: string) {
 		return `${compactModuleTitle} Extension Challenge`;
 	}
 
+	if (
+		compactItemTitle &&
+		compactItemTitle.toLowerCase() !== compactModuleTitle.toLowerCase() &&
+		/\b(?:project|practice|challenge|example|review|checkpoint|lab|studio|drill|capstone|build)\b/i.test(
+			compactItemTitle
+		)
+	) {
+		return compactItemTitle;
+	}
+
 	return compactModuleTitle;
 }
 
@@ -925,13 +941,14 @@ function projectGoal(
 	kind: ProjectGuidanceOptions["projectKind"]
 ) {
 	const family = courseFamily.toLowerCase();
+	const adjectivalFamily = adjectivalCourseFamily(courseFamily);
 	const artifact = projectArtifact(kind);
 	const index = variantIndex(courseFamily, moduleTitle, kind, 4);
 
 	if (family.includes("usaco")) {
 		return [
-			`**Project goal:** Solve the ${courseFamily} ${artifact} for **${moduleTitle}** with exact input/output behavior, a traceable invariant, and evidence from sample plus custom cases.`,
-			`**Project goal:** Turn **${moduleTitle}** into a contest-ready ${courseFamily} ${artifact} with a proved idea, matching samples, and at least one custom edge case.`,
+			`**Project goal:** Solve the ${adjectivalFamily} ${artifact} for **${moduleTitle}** with exact input/output behavior, a traceable invariant, and evidence from sample plus custom cases.`,
+			`**Project goal:** Turn **${moduleTitle}** into a contest-ready ${adjectivalFamily} ${artifact} with a proved idea, matching samples, and at least one custom edge case.`,
 			`**Project goal:** Complete **${moduleTitle}** as a ${artifact} for ${courseFamily} that states the constraints, preserves an invariant, and justifies complexity.`,
 			`**Project goal:** Implement **${moduleTitle}** with strict USACO input/output discipline, then verify the algorithm against samples and a hand-built boundary case.`
 		][index];
@@ -939,10 +956,10 @@ function projectGoal(
 
 	if (family.includes("web") || family.includes("javascript")) {
 		return [
-			`**Project goal:** Build the ${courseFamily} ${artifact} for **${moduleTitle}** as a browser-visible feature with clear state, interaction, and error-handling evidence.`,
-			`**Project goal:** Complete **${moduleTitle}** as a ${courseFamily} ${artifact} that connects user input, page state, and visible output.`,
+			`**Project goal:** Build the ${adjectivalFamily} ${artifact} for **${moduleTitle}** as a browser-visible feature with clear state, interaction, and error-handling evidence.`,
+			`**Project goal:** Complete **${moduleTitle}** as a ${adjectivalFamily} ${artifact} that connects user input, page state, and visible output.`,
 			`**Project goal:** Implement **${moduleTitle}** with a normal browser path, an invalid or empty path, and evidence from the page, console, or network flow.`,
-			`**Project goal:** Produce **${moduleTitle}** as a user-facing ${courseFamily} ${artifact} with interaction, validation, and accessibility or layout evidence.`
+			`**Project goal:** Produce **${moduleTitle}** as a user-facing ${adjectivalFamily} ${artifact} with interaction, validation, and accessibility or layout evidence.`
 		][index];
 	}
 
@@ -961,7 +978,7 @@ function projectGoal(
 		family.includes("ai")
 	) {
 		return [
-			`**Project goal:** Produce the ${courseFamily} ${artifact} for **${moduleTitle}** as an evidence-backed analysis, model, or search result with a stated limitation.`,
+			`**Project goal:** Produce the ${adjectivalFamily} ${artifact} for **${moduleTitle}** as an evidence-backed analysis, model, or search result with a stated limitation.`,
 			`**Project goal:** Complete **${moduleTitle}** as a ${artifact} for ${courseFamily} that inspects inputs, records assumptions, and verifies the output with a sanity check.`,
 			`**Project goal:** Build **${moduleTitle}** around a clear question, measurable result, baseline or trace, and limitation that affects interpretation.`,
 			`**Project goal:** Turn **${moduleTitle}** into a reproducible data/model checkpoint with visible intermediate evidence and a cautious conclusion.`
@@ -970,7 +987,7 @@ function projectGoal(
 
 	if (family.includes("java")) {
 		return [
-			`**Project goal:** Implement the ${courseFamily} ${artifact} for **${moduleTitle}** with compiling Java code, clear object boundaries, and checks for standard and edge behavior.`,
+			`**Project goal:** Implement the ${adjectivalFamily} ${artifact} for **${moduleTitle}** with compiling Java code, clear object boundaries, and checks for standard and edge behavior.`,
 			`**Project goal:** Complete **${moduleTitle}** as a Java ${artifact} that exposes class responsibilities, public behavior, and one edge case.`,
 			`**Project goal:** Build **${moduleTitle}** through short compile/run cycles, then verify the relevant object state, method contract, or collection behavior.`,
 			`**Project goal:** Produce **${moduleTitle}** with a named Java type boundary, visible behavior, and evidence from a standard scenario plus a boundary scenario.`
@@ -979,7 +996,7 @@ function projectGoal(
 
 	if (family.includes("python")) {
 		return [
-			`**Project goal:** Build the ${courseFamily} ${artifact} for **${moduleTitle}** as a runnable Python program with readable data flow and traceable boundary cases.`,
+			`**Project goal:** Build the ${adjectivalFamily} ${artifact} for **${moduleTitle}** as a runnable Python program with readable data flow and traceable boundary cases.`,
 			`**Project goal:** Complete **${moduleTitle}** as a Python ${artifact} with separated input, transformation, and output behavior.`,
 			`**Project goal:** Implement **${moduleTitle}** with a hand-checkable standard scenario, an edge input or boundary case, and readable helper boundaries.`,
 			`**Project goal:** Produce **${moduleTitle}** as a runnable program whose data flow can be traced without guessing hidden state.`
@@ -988,7 +1005,7 @@ function projectGoal(
 
 	if (family.includes("security") || family.includes("network")) {
 		return [
-			`**Project goal:** Complete the ${courseFamily} ${artifact} for **${moduleTitle}** inside the approved local boundary, with defensive evidence and a rollback or hardening note.`,
+			`**Project goal:** Complete the ${adjectivalFamily} ${artifact} for **${moduleTitle}** inside the approved local boundary, with defensive evidence and a rollback or hardening note.`,
 			`**Project goal:** Turn **${moduleTitle}** into a scoped defensive checkpoint with captured evidence, interpretation, and mitigation or rollback notes.`,
 			`**Project goal:** Build **${moduleTitle}** around an owned-lab symptom, diagnostic command, observed result, and hardening or validation step.`,
 			`**Project goal:** Produce **${moduleTitle}** with explicit scope, safe test evidence, and a final state that can be verified.`
@@ -1002,7 +1019,7 @@ function projectGoal(
 		family.includes("c++")
 	) {
 		return [
-			`**Project goal:** Build the ${courseFamily} ${artifact} for **${moduleTitle}** with a reproducible command, inspectable runtime behavior, and memory or diagnostic evidence.`,
+			`**Project goal:** Build the ${adjectivalFamily} ${artifact} for **${moduleTitle}** with a reproducible command, inspectable runtime behavior, and memory or diagnostic evidence.`,
 			`**Project goal:** Complete **${moduleTitle}** as a systems ${artifact} that names the command path, resource boundary, and diagnostic evidence.`,
 			`**Project goal:** Implement **${moduleTitle}** in short build/run/debug cycles, then verify one standard path and one boundary or failure path.`,
 			`**Project goal:** Produce **${moduleTitle}** with visible low-level evidence such as compiler output, sanitizer output, logs, traces, timing, or memory state.`
@@ -1011,7 +1028,7 @@ function projectGoal(
 
 	if (family.includes("swift")) {
 		return [
-			`**Project goal:** Implement the ${courseFamily} ${artifact} for **${moduleTitle}** as a simulator-verified app path with visible state, navigation, or persistence behavior.`,
+			`**Project goal:** Implement the ${adjectivalFamily} ${artifact} for **${moduleTitle}** as a simulator-verified app path with visible state, navigation, or persistence behavior.`,
 			`**Project goal:** Complete **${moduleTitle}** as a Swift app checkpoint with a visible screen state and one verified interaction path.`,
 			`**Project goal:** Build **${moduleTitle}** with a clear state owner, simulator evidence, and one empty, error, layout, or accessibility check.`,
 			`**Project goal:** Produce **${moduleTitle}** as a runnable app slice whose behavior can be demonstrated from launch through the target interaction.`
@@ -1019,7 +1036,7 @@ function projectGoal(
 	}
 
 	return [
-		`**Project goal:** Create the ${courseFamily} ${artifact} for **${moduleTitle}** with a visible result, a checked boundary case, and a short reasoning note.`,
+		`**Project goal:** Create the ${adjectivalFamily} ${artifact} for **${moduleTitle}** with a visible result, a checked boundary case, and a short reasoning note.`,
 		`**Project goal:** Complete **${moduleTitle}** as a ${artifact} for ${courseFamily} with a clear success condition and supporting evidence.`,
 		`**Project goal:** Build **${moduleTitle}** in small verifiable steps, then compare the expected result with the observed result.`,
 		`**Project goal:** Produce **${moduleTitle}** as a focused artifact that demonstrates the module concept and one important edge case.`
@@ -1309,13 +1326,13 @@ function requiredWorkSteps(
 			],
 			[
 				`Decide the public API for ${subject}, the private implementation details, and the evidence that verifies the boundary.`,
-				`Implement one responsibility at a time and keep constructor setup, method behavior, and collection or inheritance logic separately testable.`,
+				`Implement one responsibility for ${subject} at a time and keep constructor setup, method behavior, and collection or inheritance logic separately testable.`,
 				`Compare ${subject} against one expected scenario and one failure-mode scenario before using the reference.`
 			],
 			[
 				`Write ${subject} as a small Java contract: visible behavior, stored state, input values, output values, and ownership of each rule.`,
-				`Add fields, constructors, methods, and tests in an order that keeps every compile error tied to a recent change.`,
-				`Check one straightforward scenario, one boundary scenario, and one scenario involving object identity, equality, or mutation.`
+				`Add fields, constructors, methods, and tests for ${subject} in an order that keeps every compile error tied to a recent change.`,
+				`Check one straightforward ${subject} scenario, one boundary scenario, and one scenario involving object identity, equality, or mutation.`
 			],
 			[
 				`Choose the ${subject} type structure before coding: class, record, interface, helper, collection, or inheritance relationship.`,
@@ -1335,7 +1352,7 @@ function requiredWorkSteps(
 			[
 				`Define ${subject} through one example object state, one public call, and one expected result before writing the general solution.`,
 				`Compile after each change to the public contract, then rerun the smallest example before expanding behavior.`,
-				`Use the final check to identify the class, method, record, interface, or collection choice that carried the design.`
+				`Use the ${subject} final check to identify the class, method, record, interface, or collection choice that carried the design.`
 			],
 			[
 				`Start ${subject} by separating data representation, behavior, and driver code.`,
@@ -1349,7 +1366,7 @@ function requiredWorkSteps(
 			],
 			[
 				`Choose a narrow responsibility for each ${subject} Java type before adding optional behavior.`,
-				`Build the first runnable path around one constructor or method, then add edge behavior only after the main path is verified.`,
+				`Build the first runnable path for ${subject} around one constructor or method, then add edge behavior only after the main path is verified.`,
 				`Finish with evidence that names the relevant Java concept and the code boundary where it appears.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 16)];
@@ -1804,12 +1821,12 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} has a current compile/run result and the important method calls are traceable.`,
-				`The checked cases include a typical call, a boundary call, and one state or collection interaction.`,
+				`The ${moduleTitle} checked cases include a typical call, a boundary call, and one state or collection interaction.`,
 				`The final ${moduleTitle} note names the Java construct that carried the main responsibility.`
 			],
 			[
 				`${moduleTitle} can be rebuilt from the documented files and still shows the expected behavior.`,
-				`Constructor setup, public method behavior, and one awkward input or state transition are checked where relevant.`,
+				`In ${moduleTitle}, constructor setup, public method behavior, and one awkward input or state transition are checked where relevant.`,
 				`The final ${moduleTitle} note explains why the chosen class or interface boundary is useful.`
 			],
 			[
@@ -1819,7 +1836,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} demonstrates the target behavior after a clean compile, not just from previous run output.`,
-				`The checked cases cover expected behavior, boundary behavior, and one class, record, interface, or collection interaction.`,
+				`The ${moduleTitle} checked cases cover expected behavior, boundary behavior, and one class, record, interface, or collection interaction.`,
 				`The final ${moduleTitle} note states which method contract or representation choice mattered most.`
 			],
 			[
@@ -1829,7 +1846,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} has current compile evidence and a visible check for the main behavior.`,
-				`The checks exercise constructor setup, public method behavior, and one awkward condition such as null risk, equality, or collection mutation where relevant.`,
+				`The ${moduleTitle} checks exercise constructor setup, public method behavior, and one awkward condition such as null risk, equality, or collection mutation where relevant.`,
 				`The ${moduleTitle} summary separates syntax correctness from the API or object-design decision.`
 			],
 			[
@@ -1844,12 +1861,12 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} has a clean compile/run path and evidence tied to the current source files.`,
-				`The check covers the main method behavior, one boundary behavior, and one state or reference behavior where relevant.`,
+				`The ${moduleTitle} check covers the main method behavior, one boundary behavior, and one state or reference behavior where relevant.`,
 				`The ${moduleTitle} review names the Java construct that made the behavior possible.`
 			],
 			[
 				`${moduleTitle} demonstrates the intended behavior through a driver, test, trace, or recorded console output.`,
-				`Verification compares a typical example with one example involving invalid input, boundary state, or object collaboration.`,
+				`${moduleTitle} verification compares a typical example with one example involving invalid input, boundary state, or object collaboration.`,
 				`The ${moduleTitle} summary states the API, state, or representation decision that mattered.`
 			],
 			[
@@ -1859,7 +1876,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} shows current evidence for both syntax correctness and the intended object behavior.`,
-				`The verification includes one straightforward example and one example chosen to expose equality, aliasing, mutation, or dispatch mistakes.`,
+				`The ${moduleTitle} verification includes one straightforward example and one example chosen to expose equality, aliasing, mutation, or dispatch mistakes.`,
 				`The final ${moduleTitle} review names the rule to carry into the next Java task.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 16)];
@@ -2004,7 +2021,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} has current evidence from a clean build/run command, not only from prior IDE output.`,
-				`The checks include the intended run, one boundary or failure-mode run, and one warning, trace, log, sanitizer, or debugger observation.`,
+				`The ${moduleTitle} checks include the intended run, one boundary or failure-mode run, and one warning, trace, log, sanitizer, or debugger observation.`,
 				`The ${moduleTitle} review names the resource, lifetime, layout, complexity, or command assumption that controlled the result.`
 			],
 			[
