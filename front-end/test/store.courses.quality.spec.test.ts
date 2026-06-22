@@ -3848,7 +3848,7 @@ describe("course text quality normalization", () => {
 			"any larger dataset result is accepted.\n\n**Readable output:**"
 		);
 		expect(csvStudio.content).toContain(
-			"- Name the dataset or search space, target question, feature or column choices, and comparison point."
+			"- Name the CSV Summaries and Sanity Checks dataset or search space, target question, feature or column choices, and comparison point."
 		);
 		expect(csvStudio.content).not.toContain(
 			"Define the Concept Path for DSP10"
@@ -3859,10 +3859,10 @@ describe("course text quality normalization", () => {
 			?.curriculum.find(item => item.title === "Core Concepts");
 		expect(scratchStudio).toBeDefined();
 		expect(scratchStudio.content).toContain(
-			"The studio starting position, visible state, score or timer, and reset behavior are predictable"
+			"Debugging and Remix Studio starting position, visible state, score or timer, and reset behavior are predictable"
 		);
 		expect(scratchStudio.content).toContain(
-			"Review the studio by comparing the intended behavior with the evidence collected during the final run"
+			"Review Debugging and Remix Studio by comparing the intended behavior with the evidence collected during the final run"
 		);
 		expect(scratchStudio.content).not.toContain(
 			"Check Concept Path against the stated success criteria"
@@ -3873,10 +3873,10 @@ describe("course text quality normalization", () => {
 			/API Integration Studio: Core Concepts/
 		);
 		expect(webStudio.content).toContain(
-			"Map the lab UI event to state, rendering, data flow, and the message shown when something goes wrong."
+			"Map the Full-Stack Web Lab 15 API Integration Studio UI event to state, rendering, data flow, and the message shown when something goes wrong."
 		);
 		expect(webStudio.content).toContain(
-			"The lab user input, state update, rendered output, and error messaging are all inspectable."
+			"Full-Stack Web Lab 15 API Integration Studio user input, state update, rendered output, and error messaging are all inspectable."
 		);
 		expect(webStudio.content).not.toContain(
 			"smallest the browser-visible path"
