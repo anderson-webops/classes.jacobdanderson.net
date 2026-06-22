@@ -4397,6 +4397,18 @@ describe("course text quality normalization", () => {
 		expect(platformerPal.content).toContain(
 			"Each level should reset cleanly, use the correct broadcast, and avoid running old level scripts"
 		);
+
+		const levelTwoTyping = findItem(
+			scratchLevel2!,
+			/Typing and Code Fluency/
+		);
+		expect(levelTwoTyping.content).toContain(
+			"Code-fluency transitions"
+		);
+		expect(levelTwoTyping.content).toContain("score = score + 1");
+		expect(levelTwoTyping.content).not.toContain(
+			"Practice with the Keyboard - Typing Letters"
+		);
 	});
 
 	it("neutralizes repetitive generated supplemental project wording", async () => {

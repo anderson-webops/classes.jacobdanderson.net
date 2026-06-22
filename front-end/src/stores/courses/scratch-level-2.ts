@@ -1050,26 +1050,28 @@ export const scratchLevel2Course: RawCourse = {
 						"End the course by reviewing the major Scratch concepts: events, loops, conditionals, complex conditionals, variables, broadcasting, cloning, lists, functions, coordinates, game states, and project planning.\nConnect those ideas to the next text-based programming course. The same logic skills carry over into Python, but the blocks become typed code."
 				},
 				{
-					title: "Optional Extra Practice: Typing Games",
-					content: `**Purpose:** This resource supports the transition from Scratch into Python Level 1.
+					title: "Optional Extra Practice: Typing and Code Fluency",
+					content: `**Purpose:** This resource supports the transition from advanced Scratch projects into typed programming.
 
-Typing practice is not required to complete the Scratch course, but it can make the move to text-based programming smoother. Choose games that feel useful, practice for about 15 to 20 minutes as needed, and move to the intermediate options if the beginner games feel too easy.
+Scratch Level 2 already uses larger designs, lists, functions, and coordinated game state. Extra practice should therefore focus less on beginner keyboard discovery and more on maintaining typing comfort while translating familiar block logic into short typed-code patterns.
 
-**Why it matters:** Scratch programs are assembled from blocks, while Python programs are typed. Keyboard fluency makes it easier to focus on programming ideas instead of searching for keys.
+**Why it matters:** A student who can already plan a Scratch game still has to manage punctuation, spelling, indentation, and syntax in Python or JavaScript. Short typing warmups reduce that friction, but the main target is code fluency: recognizing how Scratch ideas such as variables, loops, conditionals, lists, and functions appear in text.
 
-**Beginner typing games:**
-- Practice with the Keyboard - Typing Letters: https://scratch.mit.edu/projects/214833806/
-- Practice with the Keyboard - Typing Numbers: https://scratch.mit.edu/projects/214828609/
-- Practice with the Keyboard - Typing Letters Race: https://www.nitrotype.com/
-
-**Intermediate typing games:**
+**Warm-up options:**
+- Nitro Type: https://www.nitrotype.com/
 - Cup Stack Typing: https://www.abcya.com/games/cup-stack-typing-game
 - Ghost Typing: https://www.abcya.com/games/ghost_typing
-- Koala Paddleboards: https://www.abcya.com/games/spelling_practice
 
-**Advanced typing games:**
+**Code-fluency transitions:**
+1. Rewrite a Scratch variable update as a typed statement such as \`score = score + 1\`.
+2. Rewrite a Scratch repeat loop as a short \`for\` loop.
+3. Rewrite a Scratch \`if touching color\` rule as an \`if\` statement with a clear condition.
+4. Write a short function name and describe its input, output, and side effect before coding it.
+
+**Stretch practice:**
 - Typing Rocket: https://www.abcya.com/games/typing_rocket
-- Type Racer: https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Type-Racer/starter`
+- Type Racer project reference: https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Type-Racer/starter
+- Choose one finished Scratch Level 2 project and write a five-line pseudocode version of its main loop.`
 				}
 			],
 			supplementalProjects: [
