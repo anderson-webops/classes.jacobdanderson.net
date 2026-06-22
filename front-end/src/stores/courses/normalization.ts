@@ -3369,7 +3369,7 @@ function diagnosticCategories(context: CourseTextContext) {
 function evidenceForSubject(subject: string, details: string) {
 	const trimmed = subject.trim();
 
-	return `${trimmed} evidence includes ${details}`;
+	return `${trimmed} is demonstrated by ${details}`;
 }
 
 function normalizeEvidenceSentence(text: string) {
@@ -3404,7 +3404,7 @@ function proficiencyEvidence(context: CourseTextContext) {
 			subject =>
 				evidenceForSubject(
 					subject,
-					"the target skill, a changed example, and a reasonableness explanation tied to the context."
+					"the rule being practiced, a changed example, and a reasonableness explanation tied to the context."
 				),
 			subject =>
 				`For ${subject}, demonstrate the procedure, justify the key step, and catch one common mistake before moving on.`
@@ -3505,7 +3505,7 @@ function proficiencyEvidence(context: CourseTextContext) {
 			subject =>
 				`For ${subject}, explain the main state change, show the normal play path, test one edge case, and describe how the player can tell the result worked.`,
 			subject =>
-				`${subject} evidence traces one player action through events, variables, and visible feedback, then replays the project from a clean start.`,
+				`Trace one ${subject} player action through events, variables, and visible feedback, then replay the project from a clean start.`,
 			subject =>
 				evidenceForSubject(
 					subject,
@@ -6031,21 +6031,21 @@ function lessonSupport(context: CourseTextContext) {
 		]);
 	const conceptPath = variantPrompt(context, [
 		() =>
-			`**Concept path:** For ${focus}, one concrete example establishes the relevant vocabulary, then a nearby variation checks whether the same reasoning still works.`,
+			`**Concept path:** Start ${focus} work with the vocabulary needed for one concrete example, then check the same reasoning with a nearby variation.`,
 		() =>
-			`**Concept path:** For ${focus}, one traceable example, one changed condition, and one explanation make the reasoning visible.`,
+			`**Concept path:** Use ${focus} to connect one traceable example, one changed condition, and one explanation of what stayed consistent.`,
 		() =>
-			`**Concept path:** For ${focus}, the main representation is identified first, then traced through a concrete task and checked against a variation.`,
+			`**Concept path:** Name the main representation in ${focus}, then trace it through a concrete task and a variation.`,
 		() =>
-			`**Concept path:** For ${focus}, one worked example and one transfer check show what changes when the situation changes.`,
+			`**Concept path:** Use one worked example in ${focus} and one transfer check to show what changes when the situation changes.`,
 		() =>
-			`**Concept path:** For ${focus}, a named idea is traced through one example, then checked against a nearby case.`,
+			`**Concept path:** Name the central idea in ${focus}, trace it through one example, and check it against a nearby case.`,
 		() =>
-			`**Concept path:** For ${focus}, the first pass makes the rule or model visible; the second pass changes one condition to test transfer.`,
+			`**Concept path:** Make the rule or model in ${focus} visible first, then use a changed condition to test transfer.`,
 		() =>
-			`**Concept path:** For ${focus}, vocabulary, examples, changed cases, and evidence are easier to use when they are separated clearly.`,
+			`**Concept path:** Separate vocabulary, examples, changed cases, and evidence in ${focus} so each part can be checked clearly.`,
 		() =>
-			`**Concept path:** For ${focus}, a focused example anchors the idea, and a controlled variation checks whether the explanation still fits.`
+			`**Concept path:** Anchor ${focus} with a focused example, then use a controlled variation to check whether the explanation still fits.`
 	]);
 
 	return [
@@ -6072,7 +6072,7 @@ function diagnosticSupport(context: CourseTextContext) {
 			subject =>
 				`${subject} locates the current bottleneck: vocabulary, setup, tracing, syntax, design, testing, or explanation.`,
 			subject =>
-				`A short independent attempt for ${subject} comes first, followed by comparison with the target skill before support is added.`,
+				`A short independent attempt for ${subject} comes first, followed by comparison with the core concept before support is added.`,
 			subject =>
 				`${subject} reveals whether the next step is more practice, a smaller example, concept review, or transfer work.`,
 			subject =>
@@ -6740,7 +6740,7 @@ function studioCompletionChecks(context: CourseTextContext) {
 		() => [
 			`- ${studioLabel} can be reviewed from its output, notes, test, trace, diagram, or other concrete evidence.`,
 			`- ${studioLabel} checks a normal path and one path where the rule, state, or assumption changes.`,
-			`- The ${studioLabel} final response explains why the result meets the target skill.`
+			`- The ${studioLabel} final response explains why the result meets the stated concept.`
 		],
 		() => [
 			`- ${studioLabel} makes the success condition visible before optional extensions are added.`,
@@ -7100,7 +7100,7 @@ function studioSupport(context: CourseTextContext) {
 		() =>
 			`Separate ${studioReference} setup, core behavior, edge cases, and review notes so the finished artifact can be inspected later.`,
 		() =>
-			`Build the smallest complete version of ${studioReference} first, then record evidence that shows it meets the activity requirements.`,
+			`Build the smallest complete version of ${studioReference} first, then record evidence that shows it meets the named requirements.`,
 		() =>
 			`Connect ${studioReference} prerequisites to a concrete result, a testable constraint, and a visible review point.`,
 		() =>
@@ -7108,7 +7108,7 @@ function studioSupport(context: CourseTextContext) {
 		() =>
 			`Keep ${studioReference} organized around setup, implementation, verification, and one improvement or limitation.`,
 		() =>
-			`Use ${studioReference} to make the target skill visible through one artifact, one test case, and one explanation.`,
+			`Use ${studioReference} to make the course concept visible through one artifact, one test case, and one explanation.`,
 		() =>
 			`Treat ${studioReference} as a compact build: define the result, check the result, then name the next safe change.`,
 		() =>
@@ -7143,7 +7143,7 @@ function studioSupport(context: CourseTextContext) {
 		() =>
 			`Name the strongest ${reviewTarget} evidence, the weakest assumption, and the most useful follow-up revision.`,
 		() =>
-			`Compare ${reviewTarget} evidence with the target skill and record one point that became clearer during the build.`,
+			`Compare ${reviewTarget} evidence with the course concept and record one point that became clearer during the build.`,
 		() =>
 			`End ${reviewTarget} with one confirmed behavior, one unresolved risk, and one practical improvement target.`
 	]);
@@ -7206,9 +7206,9 @@ function studioSupport(context: CourseTextContext) {
 			() =>
 				`${pathSubject} starts from the intended result, then records the evidence, boundary behavior, and limitation that make the work reviewable.`,
 			() =>
-				`Use ${pathSubject} to produce a concrete result, verify it against the target skill, and name one limitation before extending it.`,
+				`Use ${pathSubject} to produce a concrete result, verify it against the stated concept, and name one limitation before extending it.`,
 			() =>
-				`${pathSubject} leaves behind a runnable artifact, a specific verification note, and one improvement target tied to the target skill.`
+				`${pathSubject} leaves behind a runnable artifact, a specific verification note, and one improvement tied to the stated concept.`
 		]);
 	})();
 

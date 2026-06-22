@@ -1228,7 +1228,7 @@ function addAlgebraSupplementalProjects(courseId: string, course: RawCourse) {
 			const standardsPracticeVariants = [
 				`**Project goal:** Build a checkpoint for ${module.title} in ${courseLabel} that moves from a labeled example to independent transfer. The practice check is ${focus.routine}.\n\n**Steps:**\n1. Write one worked example with labels for the given information, algebraic move, and answer check.\n2. Add two near-transfer problems with changed numbers or changed wording.\n3. Add one representation task requiring ${focus.representation}.\n4. End with one explanation prompt about why the method works.\n\n**Completion checks:**\n- Each answer shows the algebraic rule, representation choice, or property used.\n- One item includes ${focus.trap}.\n- The final check confirms the answer through ${focus.check}.`,
 				`**Project goal:** Create a short practice set for ${module.title} that separates procedure, representation, and interpretation. The set builds confidence with ${focus.routine} before adding a transfer case.\n\n**Steps:**\n1. Present one model problem with the setup and answer check visible.\n2. Add one routine problem, one changed-context problem, and one explanation-only prompt.\n3. Include a representation change: ${focus.representation}.\n4. Add a one-sentence reflection naming the easiest place to make an error.\n\n**Completion checks:**\n- The worked example explains the transformation instead of only listing steps.\n- The changed-context problem includes ${focus.trap}.\n- The answer key includes reasoning, not only final values.`,
-				`**Project goal:** Build a retrieval-and-transfer checkpoint for ${module.title}. The checkpoint reviews the core rule, then proves the rule still works when the representation or context changes.\n\n**Steps:**\n1. Define the target skill in one sentence using precise algebra vocabulary.\n2. Solve one direct case focused on ${focus.routine}.\n3. Convert the same idea into another form through ${focus.representation}.\n4. Add one short explanation comparing the direct case and the changed case.\n\n**Completion checks:**\n- Setup, calculation, and interpretation are visible.\n- One problem includes ${focus.trap}.\n- The review identifies one secure skill and one detail that needs another example.`,
+				`**Project goal:** Build a retrieval-and-transfer checkpoint for ${module.title}. The checkpoint reviews the core rule, then proves the rule still works when the representation or context changes.\n\n**Steps:**\n1. Define the mathematical idea in one sentence using precise algebra vocabulary.\n2. Solve one direct case focused on ${focus.routine}.\n3. Convert the same idea into another form through ${focus.representation}.\n4. Add one short explanation comparing the direct case and the changed case.\n\n**Completion checks:**\n- Setup, calculation, and interpretation are visible.\n- One problem includes ${focus.trap}.\n- The review identifies one secure skill and one detail that needs another example.`,
 				`**Project goal:** Create a mixed skill-check for ${courseLabel} ${module.title}. The check combines one solved model, three new problems, and one justification task tied to ${focus.representation}.\n\n**Steps:**\n1. Name the rule, property, graph feature, or representation being practiced.\n2. Write a solved model with a visible reasonableness check.\n3. Add two routine problems and one problem containing ${focus.trap}.\n4. Add a justification question that asks why the selected method fits the problem.\n\n**Completion checks:**\n- Solutions include enough intermediate work to locate arithmetic, algebra, or representation mistakes.\n- At least one prompt requires ${focus.check}.\n- The closing note names the misconception most likely to affect the next module.`
 			];
 			const modelingProjectVariants = [
@@ -2021,7 +2021,7 @@ function addToolchainAssumptionsModule(courseId: string, course: RawCourse) {
 			{
 				title: `${courseLabel} Reproducibility Notes`,
 				content: [
-					`**Concept path:** Reusable ${courseLabel} projects should include enough setup notes that a fresh checkout or fresh browser session can reproduce the assignment. Record package versions, compiler flags, data paths, Unity/Xcode/editor versions, or lab VM assumptions when they affect the work. The notes should identify what is required, what is optional, and what can be substituted without changing the target skill.`,
+					`**Concept path:** Reusable ${courseLabel} projects should include enough setup notes that a fresh checkout or fresh browser session can reproduce the assignment. Record package versions, compiler flags, data paths, Unity/Xcode/editor versions, or lab VM assumptions when they affect the work. The notes should identify what is required, what is optional, and what can be substituted without changing the core concept.`,
 					"**Evidence target:** Re-running the project does not depend on hidden local state."
 				].join("\n\n")
 			}
@@ -3266,7 +3266,7 @@ function fallbackPracticeFocus(topic: string, courseId?: string) {
 	}
 
 	return {
-		goal: "turn the topic skill into a small transfer task with a clear result and an explanation of why it works.",
+		goal: "turn the core concept into a small transfer task with a clear result and an explanation of why it works.",
 		sequence: [
 			"State the core skill from the topic in one sentence.",
 			"Complete a direct case, then change one condition such as input, representation, constraint, or context.",
@@ -3275,7 +3275,7 @@ function fallbackPracticeFocus(topic: string, courseId?: string) {
 		checks: [
 			"The changed condition is explicit.",
 			"Both the direct case and transfer case have visible evidence.",
-			"The explanation connects the result back to the topic skill."
+			"The explanation connects the result back to the core concept."
 		]
 	};
 }
@@ -3338,7 +3338,7 @@ function supplementalTransferContent(
 		{
 			goal: `Turn ${topic} into a short variation with a visible result, one boundary case, and a concise explanation.`,
 			sequence: [
-				"Name the topic skill that must carry over.",
+				"Name the concept or rule that must carry over.",
 				focus.sequence[1],
 				focus.sequence[2]
 			]
