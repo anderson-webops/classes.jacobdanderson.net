@@ -5082,6 +5082,15 @@ describe("course text quality normalization", () => {
 		expect(thinReferenceCards).toEqual([]);
 	});
 
+	it("keeps AP Computer Science A course copy direct and neutral", () => {
+		const source = fs.readFileSync(
+			"src/stores/courses/ap-computer-science-a.ts",
+			"utf8"
+		);
+
+		expect(source).not.toMatch(/\bshould\b/i);
+	});
+
 	it("adds an AP Computer Science A pacing track guide", async () => {
 		const course = await loadRawCourse("ap-computer-science-a");
 		expect(course).not.toBeNull();
