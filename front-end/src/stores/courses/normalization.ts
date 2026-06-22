@@ -1709,7 +1709,7 @@ function neutralizeLessonDirectiveText(text: string) {
 			/\blearners start with manageable organization\b/g,
 			"project organization stays manageable"
 		)
-		.replace(/\bshould start with\b/g, "should begin with")
+		.replace(/\bshould start with\b/g, "begins with")
 		.replace(
 			/\bdeployment bugs start with services not listening\b/g,
 			"deployment bugs begin when services are not listening"
@@ -2126,11 +2126,11 @@ function neutralizeStudentFacingText(text: string) {
 				)
 				.replace(
 					/\bthe tutor should be able to\b/gi,
-					"the course should make it possible to"
+					"the course makes it possible to"
 				)
 				.replace(
 					/\bThe tutor should be able to\b/g,
-					"The course should make it possible to"
+					"The course makes it possible to"
 				)
 				.replace(/\bA future tutor can\b/g, "A future reviewer can")
 				.replace(/\bA tutor can\b/g, "The course makes it possible to")
@@ -2209,10 +2209,10 @@ function neutralizeStudentFacingText(text: string) {
 					"This lesson develops how to"
 				)
 				.replace(/\bThis lesson covers\b/g, "This lesson develops")
-				.replace(/\bThe goal is to be able to\b/g, "The result should")
-				.replace(/\bthe goal is to be able to\b/g, "the result should")
-				.replace(/\bThe goal is to\b/g, "The result should")
-				.replace(/\bthe goal is to\b/g, "the result should")
+				.replace(/\bThe goal is to be able to\b/g, "The result is to")
+				.replace(/\bthe goal is to be able to\b/g, "the result is to")
+				.replace(/\bThe goal is to\b/g, "The result is to")
+				.replace(/\bthe goal is to\b/g, "the result is to")
 				.replace(
 					/\bSummarize ([^.]+?) by naming\b/g,
 					"A complete check for $1 names"
@@ -2333,16 +2333,10 @@ function neutralizeStudentFacingText(text: string) {
 					(_match, verb: string) =>
 						`A strong response ${thirdPersonVerb(verb)}`
 				)
-				.replace(
-					/\bThe student should\b/g,
-					"A complete response should"
-				)
-				.replace(/\bStudents should\b/g, "Complete responses should")
-				.replace(
-					/\bthe student should\b/g,
-					"a complete response should"
-				)
-				.replace(/\bstudents should\b/g, "complete responses should")
+				.replace(/\bThe student should\b/g, "A complete response")
+				.replace(/\bStudents should\b/g, "Complete responses")
+				.replace(/\bthe student should\b/g, "a complete response")
+				.replace(/\bstudents should\b/g, "complete responses")
 				.replace(
 					/\bwhen the student needs one more\b/gi,
 					"for one more"
@@ -2483,20 +2477,14 @@ function neutralizeStudentFacingText(text: string) {
 					"This lesson develops how to"
 				)
 				.replace(/\bThis lesson covers\b/g, "This lesson develops")
-				.replace(
-					/\bThe learner should\b/g,
-					"A complete response should"
-				)
-				.replace(/\bLearners should\b/g, "Complete responses should")
-				.replace(
-					/\bthe learner should\b/g,
-					"a complete response should"
-				)
-				.replace(/\blearners should\b/g, "complete responses should")
-				.replace(/\bThe goal is to be able to\b/g, "The result should")
-				.replace(/\bthe goal is to be able to\b/g, "the result should")
-				.replace(/\bThe goal is to\b/g, "The result should")
-				.replace(/\bthe goal is to\b/g, "the result should")
+				.replace(/\bThe learner should\b/g, "A complete response")
+				.replace(/\bLearners should\b/g, "Complete responses")
+				.replace(/\bthe learner should\b/g, "a complete response")
+				.replace(/\blearners should\b/g, "complete responses")
+				.replace(/\bThe goal is to be able to\b/g, "The result is to")
+				.replace(/\bthe goal is to be able to\b/g, "the result is to")
+				.replace(/\bThe goal is to\b/g, "The result is to")
+				.replace(/\bthe goal is to\b/g, "the result is to")
 				.replace(
 					/\bThe learner can ([a-z])/g,
 					capitalizeMatchedFirstLetter
@@ -3423,7 +3411,7 @@ function proficiencyEvidence(context: CourseTextContext) {
 					"the metric or source, the processing change, and a clear separation between measured output and conclusion."
 				),
 			subject =>
-				`For ${subject}, demonstrate one small hand-checkable case, one representative result, and one reason the result should not be generalized too far.`
+				`For ${subject}, demonstrate one small hand-checkable case, one representative result, and one reason the result is not generalizable too far.`
 		]);
 	}
 	if (isApcsContext(context)) {
@@ -3694,7 +3682,7 @@ function diagnosticExtensionPrompt(context: CourseTextContext) {
 			subject =>
 				`Add a second model or dataset to ${subject} and explain what stays consistent.`,
 			subject =>
-				`Change one unit, scale, or model limit in ${subject} and predict how the claim should change.`,
+				`Change one unit, scale, or model limit in ${subject} and predict how the claim changes.`,
 			subject =>
 				`Apply the ${subject} question to a related phenomenon and name the evidence needed to compare it.`
 		]);
@@ -3862,7 +3850,7 @@ function projectExpectations(context: CourseTextContext) {
 			],
 			subject => [
 				`- State the ${subject} input representation, expected behavior, and evaluation signal before building.`,
-				`- Test ${subject} with a hand-checkable case, a representative case, and one case where the result should be uncertain or limited.`,
+				`- Test ${subject} with a hand-checkable case, a representative case, and one case where the result is uncertain or limited.`,
 				`- For ${subject}, explain which trace, score, comparison, or visualization supports the conclusion.`
 			],
 			subject => [
@@ -3976,7 +3964,7 @@ function projectExpectations(context: CourseTextContext) {
 				`- Record the command and evidence for ${subject} so the systems behavior can be reproduced from a clean checkout or shell.`
 			],
 			subject => [
-				`- Name the ${subject} source files, build flags, entry point, and runtime state that should be visible after the run.`,
+				`- Name the ${subject} source files, build flags, entry point, and runtime state visible after the run.`,
 				`- Check one successful run and one failure-mode run with terminal output, warning output, debugger output, or logs.`,
 				`- Keep the ${subject} final evidence tied to a repeatable command rather than an IDE-only observation.`
 			],
@@ -4150,7 +4138,7 @@ function projectExpectations(context: CourseTextContext) {
 			],
 			subject => [
 				`- Show the ${subject} data before and after the operation so changes are visible.`,
-				`- Test ${subject} at index 0, the final valid index, and one value that should not be accessed.`,
+				`- Test ${subject} at index 0, the final valid index, and one value that is out of bounds.`,
 				`- Explain how the ${subject} traversal avoids skipping elements or reading beyond the structure.`
 			],
 			subject => [
@@ -4200,7 +4188,7 @@ function projectExpectations(context: CourseTextContext) {
 			],
 			subject => [
 				`- State the ${subject} encoding rule before writing helper methods or loops.`,
-				`- Test ${subject} with lowercase, uppercase, symbols, and a message that should return unchanged.`,
+				`- Test ${subject} with lowercase, uppercase, symbols, and a message that returns unchanged.`,
 				`- Verify ${subject} by decoding an encoded message and comparing it with the starting text.`
 			]
 		]);
