@@ -39,7 +39,7 @@ export const cppLevel2Course: RawCourse = {
 				{
 					title: "CPPM0 Project 3: Lifetime Diagram Extension",
 					content:
-						"Extend one CPM0 tracing project with a written before/after diagram. The diagram should label stack values, aliases, mutation points, and lifetime boundaries.",
+						"Extend one CPM0 tracing project with a written before/after diagram. The diagram labels stack values, aliases, mutation points, and lifetime boundaries.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Lifetime-Tracing-Warm-Up",
 					solutionLink:
@@ -71,7 +71,7 @@ export const cppLevel2Course: RawCourse = {
 				{
 					title: "CPPM1 Project 2: Pointer Error Examples",
 					content:
-						"Trace incorrect pointer patterns and explain exactly why they fail. The explanation should name the bug, not just observe that the program misbehaves.",
+						"Trace incorrect pointer patterns and explain exactly why they fail. The explanation names the bug, not just observes that the program misbehaves.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointer-Error-Examples",
 					solutionLink:
@@ -96,7 +96,7 @@ export const cppLevel2Course: RawCourse = {
 				{
 					title: "Raw Arrays as Contiguous Memory",
 					content:
-						"Raw arrays are fixed-size contiguous blocks and should be framed as a lower-level model than `std::vector`, not as the new default beginner container. Include explicit size parameters, valid index ranges, how array names decay to addresses, why bounds are not tracked for you, and how raw arrays help explain what safer containers are doing.",
+						"Raw arrays are fixed-size contiguous blocks and function as a lower-level model than `std::vector`, not as the new default beginner container. Include explicit size parameters, valid index ranges, how array names decay to addresses, why bounds are not tracked for you, and how raw arrays help explain what safer containers are doing.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Array-Basics-Reference"
 				},
@@ -151,7 +151,7 @@ export const cppLevel2Course: RawCourse = {
 				{
 					title: "CPPM3 Project 1: 2D Array Practice",
 					content:
-						"Compute sums, minimums, multiplication tables, and row averages with raw 2D array logic. This should reinforce layout reasoning and careful indexing.",
+						"Compute sums, minimums, multiplication tables, and row averages with raw 2D array logic. This reinforces layout reasoning and careful indexing.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-2D-Array-Practice",
 					solutionLink:

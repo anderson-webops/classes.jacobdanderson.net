@@ -14,7 +14,7 @@ export const unityGameDevelopmentCourse: RawCourse = {
 				{
 					title: "GD6.1 Collision Commotion",
 					content:
-						"Use this legacy C# script snapshot as a focused collision-reading exercise. Identify which object moves, which object detects contact, whether the contact should block movement or only trigger an event, and what evidence in the script proves that behavior. Treat the snapshot as reference practice before applying the same idea inside the full Unity project sequence.",
+						"Use this legacy C# script snapshot as a focused collision-reading exercise. Identify which object moves, which object detects contact, whether the contact blocks movement or only triggers an event, and what evidence in the script proves that behavior. Treat the snapshot as reference practice before applying the same idea inside the full Unity project sequence.",
 					projectLink: repo("UGD-06-01-collision-commotion")
 				},
 				{
@@ -54,7 +54,7 @@ export const unityGameDevelopmentCourse: RawCourse = {
 				{
 					title: "GD7.1 Displaying Text",
 					content:
-						"Read the snapshot as a small model of UI responsibility. The game manager should own broad game state, the player script should own player behavior, and the text component should display the current state without becoming the place where core rules are hidden.",
+						"Read the snapshot as a small model of UI responsibility. The game manager owns broad game state, the player script owns player behavior, and the text component displays the current state without becoming the place where core rules are hidden.",
 					projectLink: repo("UGD-07-01-displaying-text")
 				},
 				{
@@ -109,7 +109,7 @@ export const unityGameDevelopmentCourse: RawCourse = {
 				{
 					title: "GD8.3 Killer Objects",
 					content:
-						"Hazard objects should create failure states without turning the player script into a catch-all manager. Identify whether the hazard, player, or game manager owns detection, damage or failure, UI feedback, and restart behavior.",
+						"Hazard objects create failure states without turning the player script into a catch-all manager. Identify whether the hazard, player, or game manager owns detection, damage or failure, UI feedback, and restart behavior.",
 					projectLink: repo("UGD-08-03-killer-objects")
 				}
 			],
@@ -141,7 +141,7 @@ export const unityGameDevelopmentCourse: RawCourse = {
 				{
 					title: "Legacy Module 5 Project 1: Capstone Loop Snapshot",
 					content:
-						"Use the first capstone snapshot to organize a more complete game loop and test the major state transitions. The review should identify the start condition, active-play loop, success or failure condition, restart path, and one dependency that must be present for the project to open cleanly.",
+						"Use the first capstone snapshot to organize a more complete game loop and test the major state transitions. The review identifies the start condition, active-play loop, success or failure condition, restart path, and one dependency that must be present for the project to open cleanly.",
 					projectLink: repo("UGD-05-project-1")
 				},
 				{

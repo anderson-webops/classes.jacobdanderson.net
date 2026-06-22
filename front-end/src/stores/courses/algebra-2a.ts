@@ -291,7 +291,7 @@ Use a graphing tool or the provided quadratic-transformation reference for graph
 - a few transformation sketches with no surviving coordinates
 - at least one directrix-focus reference image
 
-The written response should identify the transformation, asymptote, intercept, or focus/directrix relationship being tested.
+The written response identifies the transformation, asymptote, intercept, or focus/directrix relationship being tested.
 				`.trim(),
 				media.quadraticTransforms
 			)

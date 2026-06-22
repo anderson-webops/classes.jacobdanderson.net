@@ -878,7 +878,7 @@ The photon-count data for this activity is:
 				createLesson(
 					"Experiment Visual Reference",
 					`
-Use the photon-count graph or a simulator sketch to anchor the visual parts of the experiment. The written explanation should still identify the pattern, the likely best-fit shape, and how wavelength changes with mass and speed.
+Use the photon-count graph or a simulator sketch to anchor the visual parts of the experiment. The written explanation still identifies the pattern, the likely best-fit shape, and how wavelength changes with mass and speed.
 				`.trim(),
 					media.photonCounts
 				)

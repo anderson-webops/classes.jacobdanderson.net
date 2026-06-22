@@ -271,7 +271,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Prime Palindromes",
 					content:
-						"Use a search-heavy numeric problem to practice pruning and candidate generation with strong test discipline. The solution should generate plausible palindrome candidates before primality checks, justify any skipped ranges, and include boundary tests for the smallest and largest requested values.",
+						"Use a search-heavy numeric problem to practice pruning and candidate generation with strong test discipline. The solution generates plausible palindrome candidates before primality checks, justifies any skipped ranges, and includes boundary tests for the smallest and largest requested values.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US10-Prime-Palindromes/starter",
 					solutionLink:
@@ -348,7 +348,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Counting Haybales",
 					content:
-						"Use sorted positions and repeated range queries to practice structural counting instead of repeated scanning. The solution should convert each query into two boundary searches, explain inclusive endpoint handling, and include tests where the range starts or ends outside all haybale positions.",
+						"Use sorted positions and repeated range queries to practice structural counting instead of repeated scanning. The solution converts each query into two boundary searches, explains inclusive endpoint handling, and includes tests where the range starts or ends outside all haybale positions.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US18-Counting-Haybales/starter",
 					solutionLink:
@@ -447,7 +447,7 @@ export const usacoSilverCourse: RawCourse = {
 				{
 					title: "Problem: Rental Service",
 					content:
-						"Compare multiple ways to allocate resources and justify the order in which choices should be considered. Sort cows, milk buyers, and renters by the relevant value, then explain how prefix or suffix profit tables make each split between renting and selling easy to evaluate.",
+						"Compare multiple ways to allocate resources and justify the order in which choices are considered. Sort cows, milk buyers, and renters by the relevant value, then explain how prefix or suffix profit tables make each split between renting and selling easy to evaluate.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Silver/tree/main/US34-Rental-Service/starter",
 					solutionLink:

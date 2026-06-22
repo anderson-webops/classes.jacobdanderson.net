@@ -317,7 +317,7 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 						"Take a collaboration tangle and move the logic to the objects that actually own the data and decision-making context. Track what client code becomes simpler after the move."
 				},
 				{
-					title: "Reflection Question: Who Should Own This Behavior?",
+					title: "Reflection Question: Behavior Ownership",
 					content:
 						"Explain how to detect that a method belongs somewhere else. A good answer mentions what data the method leans on and which object's invariants it really serves."
 				},

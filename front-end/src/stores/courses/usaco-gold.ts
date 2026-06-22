@@ -91,7 +91,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Transitions, Base Cases, and Ordering",
 					content:
-						"State how each DP cell depends on earlier work and in what order the states can be computed. The recurrence should be explainable in plain language before it is translated into code."
+						"State how each DP cell depends on earlier work and in what order the states can be computed. The recurrence is explainable in plain language before it is translated into code."
 				},
 				{
 					title: "Space and Time Tradeoffs",
@@ -139,7 +139,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Teamwork",
 					content:
-						"Use grouped decisions and transition design to move beyond the most basic DP templates. The solution should describe how a final group is chosen, how that group affects score, and why checking bounded group lengths keeps the recurrence feasible.",
+						"Use grouped decisions and transition design to move beyond the most basic DP templates. The solution describes how a final group is chosen, how that group affects score, and why checking bounded group lengths keeps the recurrence feasible.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG3-Teamwork/starter",
 					solutionLink:
@@ -280,7 +280,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: MST",
 					content:
-						"Use a direct MST implementation to practice sorted edges, cycle avoidance, and connection cost reasoning. The explanation should name the objective, show why adding a cycle cannot help, and connect the sorted-edge process to the cheapest safe next choice.",
+						"Use a direct MST implementation to practice sorted edges, cycle avoidance, and connection cost reasoning. The explanation names the objective, shows why adding a cycle cannot help, and connects the sorted-edge process to the cheapest safe next choice.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG14-MST/starter",
 					solutionLink:
@@ -348,7 +348,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "Problem: Binary Indexed Tree / Fenwick Tree",
 					content:
-						"Build a direct Fenwick tree checkpoint that connects the data structure to concrete prefix-query behavior. The solution should explain what each internal index stores, why lowbit moves to the next responsible range, and how updates and prefix queries stay logarithmic.",
+						"Build a direct Fenwick tree checkpoint that connects the data structure to concrete prefix-query behavior. The solution explains what each internal index stores, why lowbit moves to the next responsible range, and how updates and prefix queries stay logarithmic.",
 					projectLink:
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG22-Binary-Indexed-Tree-Fenwick-Tree/starter",
 					solutionLink:

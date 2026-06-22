@@ -1286,7 +1286,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSM11 Project 2: Join Tables Practice",
 					content:
-						"Complete SQLBolt lessons 6-7 and focus on why `JOIN` requires a relationship between tables. Identify the key columns being matched, describe what rows should appear in the result, and write one extra join query that would answer a realistic question about related records.",
+						"Complete SQLBolt lessons 6-7 and focus on why `JOIN` requires a relationship between tables. Identify the key columns being matched, describe what rows appear in the result, and write one extra join query that would answer a realistic question about related records.",
 					projectLink:
 						"https://sqlbolt.com/lesson/select_queries_with_joins"
 				},
@@ -1344,7 +1344,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSONBin Setup",
 					content:
-						'Create a public JSONBin record with a small starter object such as `{"notes": ["my first message"]}`. Identify the latest-record GET endpoint and the PUT endpoint, then test both requests before building UI around them. The key skill is separating local page state from persisted remote state: after a refresh, the saved data should still be recoverable from the bin.'
+						'Create a public JSONBin record with a small starter object such as `{"notes": ["my first message"]}`. Identify the latest-record GET endpoint and the PUT endpoint, then test both requests before building UI around them. The key skill is separating local page state from persisted remote state: after a refresh, the saved data remains recoverable from the bin.'
 				},
 				{
 					title: "JSM12 Project 1: To-Do List",
@@ -1409,7 +1409,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSM13 Project 1: Message Board",
 					content:
-						"Build a message board that stores posts as JSON objects with at least a title, URL, and image URL. The form should create a new post, save it to the remote data store, clear or reset the inputs, and render the newest posts in a readable order above the form. Verify the board by adding multiple posts and refreshing to confirm that the saved posts return.",
+						"Build a message board that stores posts as JSON objects with at least a title, URL, and image URL. The form creates a new post, saves it to the remote data store, clears or resets the inputs, and renders the newest posts in a readable order above the form. Verify the board by adding multiple posts and refreshing to confirm that the saved posts return.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/6c0b3c5a207fc24b58c44a5f481922e3",
 					solutionLink: "https://codepen.io/junilearning/pen/GRPwwOg"
@@ -1443,7 +1443,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSM13 Supplemental Project 1: Adding Comments",
 					content:
-						"Add comments as nested data under each message-board post. Each rendered post should show its existing comments, provide an input for a new comment, update only the intended post, and persist the changed board back to the data store. Test with at least two posts so comments do not accidentally attach to the wrong item.",
+						"Add comments as nested data under each message-board post. Each rendered post shows its existing comments, provides an input for a new comment, updates only the intended post, and persists the changed board back to the data store. Test with at least two posts so comments do not accidentally attach to the wrong item.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/f40d31ed70aef27cee691e91d947ef14",
 					solutionLink:
@@ -1568,7 +1568,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "Handoff to Web Development Foundations",
 					content:
-						"`Web Development Foundations` should be the default follow-on course after JavaScript Level 2. Be reasonably comfortable with functions, conditionals, arrays, objects, events, APIs, and basic data modeling before starting it. The goal of that next course is not to reteach core syntax, but to move into file-based local projects, Git and GitHub, npm, dev servers, back-end basics, databases, and deployment. If the `JSM10` through `JSM13` range still feels shaky, review those units before making the jump."
+						"`Web Development Foundations` is the default follow-on course after JavaScript Level 2. Be reasonably comfortable with functions, conditionals, arrays, objects, events, APIs, and basic data modeling before starting it. The goal of that next course is not to reteach core syntax, but to move into file-based local projects, Git and GitHub, npm, dev servers, back-end basics, databases, and deployment. If the `JSM10` through `JSM13` range still feels shaky, review those units before making the jump."
 				},
 				{
 					title: "Course Recap",

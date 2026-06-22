@@ -39,7 +39,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "Command Architecture and File Persistence",
 					content:
-						"Refine the Level 1 command-loop pattern into a structure that can grow: read a line, parse the command, validate arguments, call a focused function, update state, and print a stable result. Cover: separating command interpretation from data mutation; choosing a small text format; using `ifstream`, `ofstream`, and `getline`; deciding what data should be saved; reloading state on startup; and testing persistence by closing and reopening the program. Keep the focus on readable line-based formats, not binary files or complex serialization."
+						"Refine the Level 1 command-loop pattern into a structure that can grow: read a line, parse the command, validate arguments, call a focused function, update state, and print a stable result. Cover: separating command interpretation from data mutation; choosing a small text format; using `ifstream`, `ofstream`, and `getline`; deciding what data gets saved; reloading state on startup; and testing persistence by closing and reopening the program. Keep the focus on readable line-based formats, not binary files or complex serialization."
 				},
 				{
 					title: "Scanning, Parsing, and Error Boundaries",
@@ -69,7 +69,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "CPPI1 Project 3: Mini Command Scanner",
 					content:
-						"Build a small tokenizer for task-manager-style commands. It should recognize words, numbers, quoted strings, punctuation, comments, line numbers, and malformed input before any command mutates application state.",
+						"Build a small tokenizer for task-manager-style commands. It recognizes words, numbers, quoted strings, punctuation, comments, line numbers, and malformed input before any command mutates application state.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI1-Mini-Command-Scanner/starter",
 					solutionLink:
@@ -104,7 +104,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "CPPI2 Project 2: Recursion Trace Drill",
 					content:
-						"Trace three recursive calls by hand before running the program. The submitted work should include the predicted output, the actual output, and one corrected misconception.",
+						"Trace three recursive calls by hand before running the program. The submitted work includes the predicted output, the actual output, and one corrected misconception.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI2-Recursion-Trace-Drill/starter",
 					solutionLink:
@@ -158,7 +158,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "Validation, Exceptions, and Resource Boundaries",
 					content:
-						"Error handling belongs beside resource safety. Distinguish expected bad input that should be validated and reported normally; exceptional failures that should interrupt the current operation; failed file opens; parse errors; partial output; and why RAII makes cleanup reliable even when a function returns early or throws. A strong failure-path explanation names what state is preserved after a failed operation."
+						"Error handling belongs beside resource safety. Distinguish expected bad input that is validated and reported normally; exceptional failures that interrupt the current operation; failed file opens; parse errors; partial output; and why RAII makes cleanup reliable even when a function returns early or throws. A strong failure-path explanation names what state is preserved after a failed operation."
 				},
 				{
 					title: "CPPI4 Project: Resource-Safe File Processor",
@@ -188,7 +188,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "Predictable Value Types and Restrained Operators",
 					content:
-						"Review constructors, invariants, `const` methods, and value semantics before adding operator overloading. Cover: what makes a class safe to copy, compare, print, and store in containers; when `operator<<`, comparison operators, or arithmetic operators make a type read naturally; and why overloaded operators should not hide surprising side effects. Leave with a bias toward readable value behavior, not clever syntax."
+						"Review constructors, invariants, `const` methods, and value semantics before adding operator overloading. Cover: what makes a class safe to copy, compare, print, and store in containers; when `operator<<`, comparison operators, or arithmetic operators make a type read naturally; and why overloaded operators avoid surprising side effects. Leave with a bias toward readable value behavior, not clever syntax."
 				},
 				{
 					title: "Templates and Diagnostic Reading",

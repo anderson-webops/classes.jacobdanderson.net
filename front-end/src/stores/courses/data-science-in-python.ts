@@ -449,7 +449,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 				{
 					title: "Analysis Log: What Data Science Is",
 					content:
-						"Keep a compact analysis log for what data science is that records the question being asked, the dataset assumptions being made, the exact columns or calculations used, and one short note about why the chosen question is worth answering with data in the first place. The log should make the question, assumptions, and value of the analysis visible before any code is judged.",
+						"Keep a compact analysis log for what data science is that records the question being asked, the dataset assumptions being made, the exact columns or calculations used, and one short note about why the chosen question is worth answering with data in the first place. The log makes the question, assumptions, and value of the analysis visible before any code is judged.",
 					projectLink:
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-08-module-1-what-data-science-is/starter",
 					solutionLink:
@@ -525,7 +525,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 				{
 					title: "Analysis Log: Notebook Workflow and Reproducibility",
 					content:
-						"Keep a compact analysis log for notebook workflow and reproducibility that records the question being asked, the dataset assumptions being made, the exact columns or calculations used, and one short note about which parts of the analysis are exploratory and which belong in stable steps. The log separates exploratory notebook work from stable steps that should reproduce cleanly.",
+						"Keep a compact analysis log for notebook workflow and reproducibility that records the question being asked, the dataset assumptions being made, the exact columns or calculations used, and one short note about which parts of the analysis are exploratory and which belong in stable steps. The log separates exploratory notebook work from stable steps that reproduce cleanly.",
 					projectLink:
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-09-module-2-notebook-workflow-and-reproducibility/starter",
 					solutionLink:
@@ -946,7 +946,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 				{
 					title: "Shape the Dataset to the Question",
 					content:
-						"Decide which columns matter, which records should be filtered, and what derived metrics are worth creating. This is the stage where an analysis becomes tailored rather than generic."
+						"Decide which columns matter, which records to filter, and what derived metrics are worth creating. This is the stage where an analysis becomes tailored rather than generic."
 				},
 				{
 					title: "Compare Multiple Analytical Angles",
@@ -1027,7 +1027,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 				{
 					title: "Reflect on Next Steps",
 					content:
-						"The capstone reflection helps identify a next course such as `Machine Learning`, `AI Level 1`, `Web Development Foundations`, or a more advanced Python track. The reflection should clarify whether modeling, storytelling, or productizing data work is the strongest next direction."
+						"The capstone reflection helps identify a next course such as `Machine Learning`, `AI Level 1`, `Web Development Foundations`, or a more advanced Python track. The reflection clarifies whether modeling, storytelling, or productizing data work is the strongest next direction."
 				},
 				{
 					title: "Module 9: Data Science Capstone: Core Project",

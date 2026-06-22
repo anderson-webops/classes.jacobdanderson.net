@@ -27,7 +27,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				{
 					title: "What Transfers Cleanly from Python",
 					content:
-						"Make the transfer explicit: loops, conditionals, string processing, decomposition into helper functions, and object modeling still matter. The bridge should preserve confidence by showing where the existing mental model still applies."
+						"Make the transfer explicit: loops, conditionals, string processing, decomposition into helper functions, and object modeling still matter. The bridge preserves confidence by showing where the existing mental model still applies."
 				},
 				{
 					title: "PTJ0 Positioning and Workflow Translation: Core Project",
@@ -180,7 +180,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				{
 					title: "String APIs and Slice Replacement",
 					content:
-						"Translate Python slicing habits into Java and C++ string methods. The bridge should slow the workflow just enough to make substring ranges, mutation rules, and off-by-one boundaries deliberate."
+						"Translate Python slicing habits into Java and C++ string methods. The bridge slows the workflow just enough to make substring ranges, mutation rules, and off-by-one boundaries deliberate."
 				},
 				{
 					title: "Bounds and Loop Discipline",
@@ -338,7 +338,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				{
 					title: "Scanner, main, and Java Project Rhythm",
 					content:
-						"Practice `Scanner`, `public static void main`, and the file structure expected by early Java projects. This should make the first weeks of `Java Level 1` feel familiar instead of abrupt."
+						"Practice `Scanner`, `public static void main`, and the file structure expected by early Java projects. This makes the first weeks of `Java Level 1` feel familiar instead of abrupt."
 				},
 				{
 					title: "String Equality and Reference Habits",

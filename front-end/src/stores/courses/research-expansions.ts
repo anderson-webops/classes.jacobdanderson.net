@@ -305,7 +305,7 @@ function projectOptionExtension(
 	}
 	if (isScienceFamily(family)) {
 		return choose([
-			`**Extension:** Change one variable, data source, scale, or model assumption and predict how the claim should change.`,
+			`**Extension:** Change one variable, data source, scale, or model assumption and predict how the claim changes.`,
 			`**Extension:** Add a second evidence source or model limitation and explain whether it strengthens the claim.`,
 			`**Extension:** Compare the same phenomenon at another scale, system, or condition and revise the explanation.`
 		]);
@@ -1401,7 +1401,7 @@ const elementaryScienceProfile: ResearchExpansionProfile = {
 		"Image, video, and data bank.",
 		"Zoom science notebook template."
 	],
-	safety: "Only notes, paper, shared screen materials, and optional simple sketches are needed. No physical supplies beyond paper should be required."
+	safety: "Only notes, paper, shared screen materials, and optional simple sketches are needed. No physical supplies beyond paper are required."
 };
 
 const middleScienceProfile: ResearchExpansionProfile = {
@@ -1745,7 +1745,7 @@ const rustProfile: ResearchExpansionProfile = {
 		"Borrowing diagram worksheets.",
 		"Parser fixtures and expected error cases."
 	],
-	safety: "Unsafe and FFI content should be optional, reading-heavy, and constrained to toy examples with explicit trusted boundaries."
+	safety: "Unsafe and FFI content is optional, reading-heavy, and constrained to toy examples with explicit trusted boundaries."
 };
 
 const javaScriptProfile: ResearchExpansionProfile = {
@@ -1847,7 +1847,7 @@ const machineLearningProfile: ResearchExpansionProfile = {
 	],
 	topics: [
 		"Train/test split, cross-validation, classification, regression, metrics, overfitting, underfitting, feature engineering, pipelines, baselines, confusion matrices, ROC/PR tradeoffs, unsupervised learning, model cards, and bias/fairness basics.",
-		"Deep learning should remain optional or later unless the course explicitly targets it."
+		"Deep learning remains optional or later unless the course explicitly targets it."
 	],
 	moduleAdditions: [
 		"ML workflow and problem framing.",
