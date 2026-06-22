@@ -4910,7 +4910,12 @@ function scopedItemSubject(context: CourseTextContext) {
 
 	if (isAppliedStudioContext(context)) {
 		if (genericSupportItemTitlePattern.test(itemTitle)) {
-			return compactModuleTitle;
+			const itemLabel =
+				compactStudioContextTitle(itemTitle).toLowerCase();
+
+			return itemLabel
+				? `${compactModuleTitle} ${itemLabel}`
+				: compactModuleTitle;
 		}
 
 		if (
@@ -5168,8 +5173,31 @@ function extensionPrompt(context: CourseTextContext) {
 	]);
 }
 
+function normalizeSupportFocusPrefix(
+	context: CourseTextContext,
+	focus: string
+) {
+	const genericPrefixMatch = focus.match(
+		/^(?:Applied Challenge|Core Project|Debugging and Failure Modes|Diagnostic Checkpoint|Understanding Check|Extension Challenge|Fluency Drill|Focused Practice|Guided Example|Modeling or Error Analysis|Open-Ended Variant|Planning and Architecture|Project|Review and Reflection|Review|Standards Practice Set|Supplemental Project|Verification and Reflection|Verification Review|Worked Example|Checkpoint):\s*/i
+	);
+	if (!genericPrefixMatch) return focus;
+
+	const moduleTopic =
+		cleanSupportTopicTitle(context.module.title) ||
+		cleanModuleTopicTitle(context.module.title);
+	const replacementTopic =
+		moduleTopic && !genericSupportItemTitlePattern.test(moduleTopic)
+			? moduleTopic
+			: projectSupportReference(context);
+
+	return `${replacementTopic}: ${focus.slice(genericPrefixMatch[0].length)}`;
+}
+
 function projectSupport(context: CourseTextContext) {
-	const focus = projectSupportFocus(context);
+	const focus = normalizeSupportFocusPrefix(
+		context,
+		projectSupportFocus(context)
+	);
 	const reference = projectSupportScopedReference(
 		context,
 		projectSupportReference(context)
@@ -6652,7 +6680,7 @@ function studioCompletionChecks(context: CourseTextContext) {
 		return variantLines(context, [
 			() => [
 				`- The ${studioLabel} question, dataset or state-space assumptions, and metric or evidence source are explicit.`,
-				`- A ${studioLabel} baseline, sanity check, or small hand-checkable example supports the result.`,
+				`- ${studioLabel} includes a baseline, sanity check, or small hand-checkable example that supports the result.`,
 				`- The ${studioLabel} final interpretation includes at least one limitation.`
 			],
 			() => [
@@ -6901,27 +6929,8 @@ function compactStudioSupportText(
 				`Keep ${reference} `
 			)
 			.replace(
-				new RegExp(`\\bName the ${escapedLabel}\\s+`, "g"),
-				"Name the "
-			)
-			.replace(
-				new RegExp(`\\bSeparate ${escapedLabel}\\s+`, "g"),
-				"Separate "
-			)
-			.replace(
 				new RegExp(`\\bStart ${escapedLabel} with\\b`, "g"),
 				"Start with"
-			)
-			.replace(
-				new RegExp(`\\bAssign each ${escapedLabel}\\s+`, "g"),
-				"Assign each "
-			)
-			.replace(
-				new RegExp(
-					`\\bComplete the smallest inspectable ${escapedLabel}\\s+`,
-					"g"
-				),
-				"Complete the smallest inspectable "
 			)
 			.replace(
 				new RegExp(`\\bCompile ${escapedLabel} after\\b`, "g"),
@@ -6961,7 +6970,7 @@ function compactStudioSupportText(
 			)
 			.replace(
 				new RegExp(`\\b${escapedLabel} requirements\\b`, "g"),
-				"The requirements"
+				`${reference} requirements`
 			)
 			.replace(
 				new RegExp(`\\bThe ${escapedLabel} protected boundary\\b`, "g"),
@@ -7053,7 +7062,11 @@ function studioSupport(context: CourseTextContext) {
 			supportLabel === "Applied lab" ? "this lab" : "this studio";
 	}
 	const compactStudioReference =
-		supportLabel === "Applied lab" ? "the lab" : "the studio";
+		studioReference && !/^this (?:lab|studio)$/i.test(studioReference)
+			? studioReference
+			: supportLabel === "Applied lab"
+				? "the lab"
+				: "the studio";
 	const supportSubject = studioSupportSubject(context, supportNoun);
 	const compactStudio = (text: string) =>
 		compactStudioSupportText(

@@ -106,6 +106,12 @@ function securityLabProjectContent(
 	const label = securityLabLabel(topic);
 	const purposeText = securityLabPurposeText(mode, purpose);
 	const variant = stableVariantIndex(`${label}|${mode}|${purpose}`, 4);
+	const scopeReminder = [
+		`Use only the provided **${label}** fixture, starter files, and local defensive evidence.`,
+		`Keep **${label}** inside the owned local lab: no public systems, no third-party targets, and no scope expansion.`,
+		`Treat **${label}** as a defensive local fixture; all claims need evidence from the supplied toy target or starter.`,
+		`The authorization scope for **${label}** is the provided local lab artifact, repeatable tooling, and a rollback path for every change.`
+	][variant];
 	const requiredWork = [
 		[
 			"1. State the local lab boundary and the exact toy target or starter being inspected.",
@@ -157,7 +163,7 @@ function securityLabProjectContent(
 
 	return [
 		`**Project goal:** Complete the ${purposeText.artifact} for **${label}** that produces defensive evidence, not just a passing program.`,
-		`**Studio focus:** ${securityLabFocus(topic)}. The work stays inside an authorized local lab boundary and uses only the provided toy target or starter fixture.`,
+		`**Studio focus:** ${securityLabFocus(topic)}. ${scopeReminder}`,
 		`**Practice path:** ${purposeText.path}`,
 		"**Build steps:**",
 		...requiredWork,

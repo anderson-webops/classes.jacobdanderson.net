@@ -1722,22 +1722,22 @@ function completionCheckSteps(
 		return [
 			[
 				`The ${moduleTitle} submitted program matches the required input/output format exactly.`,
-				`A tiny hand-traced ${moduleTitle} case, the sample case, and one boundary or ordering case have matching results.`,
+				`The verification set for ${moduleTitle} includes the sample, a tiny hand-traced case, and one boundary or ordering case with matching results.`,
 				`The final ${moduleTitle} note names the invariant, complexity target, and one edge case that shaped the solution.`
 			],
 			[
 				`${moduleTitle} accepts contest-style input and prints exactly the expected output with no prompts or extra text.`,
-				`The sample, one hand-built tiny case, and one boundary, tie, duplicate, or ordering case agree with the trace.`,
+				`The verification set for ${moduleTitle} includes the sample, one hand-built tiny case, and one boundary, tie, duplicate, or ordering case that agrees with the trace.`,
 				`The final ${moduleTitle} note explains the invariant and why the complexity fits the largest input.`
 			],
 			[
 				`${moduleTitle} passes the official sample and preserves the required output format on custom tests.`,
-				`At least one minimal case and one adversarial or constraint-shaped case are checked against hand reasoning.`,
+				`The ${moduleTitle} custom tests include one minimal case and one adversarial or constraint-shaped case checked against hand reasoning.`,
 				`The final ${moduleTitle} note names the algorithm idea, complexity, and edge case that mattered most.`
 			],
 			[
 				`${moduleTitle} runs through stdin/stdout or the expected file contract exactly as a contest submission would.`,
-				`The verification covers the sample, a traceable small case, and one non-sample case chosen to challenge the invariant.`,
+				`The verification set for ${moduleTitle} covers the sample, a traceable small case, and one non-sample case chosen to challenge the invariant.`,
 				`The closing ${moduleTitle} note states the runtime, memory expectation, and one assumption tested directly.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
