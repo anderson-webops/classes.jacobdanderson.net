@@ -4483,7 +4483,7 @@ function completionChecks(context: CourseTextContext) {
 			subject => [
 				`- ${subject} can be replayed without stale score, position, costume, or clone state.`,
 				`- ${subject} handles normal play and one boundary case such as timer end, collision, missed input, or repeated click.`,
-				"- Record the Scratch state variable or event chain most responsible for correctness."
+				`- Record the ${subject} state variable or event chain most responsible for correctness.`
 			]
 		]);
 	}
@@ -6586,7 +6586,7 @@ function studioCompletionChecks(context: CourseTextContext) {
 			() => [
 				`- ${studioLabel} starts from a predictable green-flag state.`,
 				`- ${studioLabel} controls, events, broadcasts, variables, sprite interactions, and reset behavior are checked where they apply.`,
-				"- Record the Scratch state variable or event chain most responsible for correctness."
+				`- Record the ${studioLabel} state variable or event chain most responsible for correctness.`
 			],
 			() => [
 				`- ${studioLabel} starting position, visible state, score or timer, and reset behavior are predictable.`,
