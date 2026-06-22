@@ -343,7 +343,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				{
 					title: "String Equality and Reference Habits",
 					content:
-						"Make `.equals()` versus `==` explicit for a Python background. This is one of the most important translation mistakes to prevent before the main Java course."
+						'Java string comparison separates value equality from reference identity. Python learners often expect `==` to compare string contents because Python makes that common case feel natural; in Java, `.equals()` expresses content equality while `==` asks whether two variables point to the same object. The bridge example needs at least one literal string, one string built from input or concatenation, and one `null` check so the difference is visible instead of memorized. Good Java habits place the known non-null value first when useful, such as `"yes".equals(answer)`, and reserve `==` for primitives, enum constants, or intentional identity checks.'
 				},
 				{
 					title: "Bridge Exit to Java Level 1",

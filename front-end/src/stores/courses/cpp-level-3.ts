@@ -44,7 +44,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "Scanning, Parsing, and Error Boundaries",
 					content:
-						"Adapt the CS236 scanner/parser ideas at a smaller scale without turning this into a compiler course. Cover: tokenizing raw command text into words, numbers, quoted strings, punctuation, comments, and unknown tokens; tracking line numbers; using `enum class` token types; defining a narrow parser boundary with helpers such as `match` and `advance`; rejecting malformed rows, missing fields, wrong types, and unknown commands; and preventing bad input from corrupting existing application state."
+						"Adapt the CS236 scanner/parser ideas at a smaller scale without turning this into a compiler course. The scanner converts raw command text into tokens such as words, numbers, quoted strings, punctuation, comments, and unknown tokens while preserving line numbers for error messages. The parser consumes those tokens through a narrow boundary with helpers such as `match`, `advance`, and `peek`, then produces either a valid command object or a clear rejection. Accepted and rejected examples belong side by side: malformed rows, missing fields, wrong types, unknown commands, unterminated strings, and extra tokens after a command. The application state is updated only after parsing and validation succeed, so bad input cannot silently corrupt saved data."
 				},
 				{
 					title: "CPPI1 Project: Saveable Task Manager",
@@ -153,12 +153,12 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "RAII and Single-Owner Resource Design",
 					content:
-						"RAII is the default modern C++ answer to cleanup: resources are acquired by objects and released automatically when those objects leave scope. Connect destructors, scope exit, standard containers, file streams, and the same lifetime principle introduced in Level 2. `std::unique_ptr` is the first smart pointer because it models single ownership clearly; practice deliberate moves and avoid treating heap allocation as the default."
+						"RAII is the default modern C++ answer to cleanup: resources are acquired by objects and released automatically when those objects leave scope. Destructors are not called manually in normal code; they run because scope, object lifetime, and ownership are designed correctly. Standard containers, file streams, lock guards, and small wrapper classes are concrete RAII examples before custom resource classes appear. `std::unique_ptr` is the first smart pointer because it models single ownership clearly: moving it transfers ownership, the moved-from pointer no longer owns the resource, and copying is intentionally blocked. `std::shared_ptr` is introduced later only when shared lifetime is justified rather than as a default heap-allocation habit."
 				},
 				{
 					title: "Validation, Exceptions, and Resource Boundaries",
 					content:
-						"Error handling belongs beside resource safety. Distinguish expected bad input that is validated and reported normally; exceptional failures that interrupt the current operation; failed file opens; parse errors; partial output; and why RAII makes cleanup reliable even when a function returns early or throws. A strong failure-path explanation names what state is preserved after a failed operation."
+						"Error handling belongs beside resource safety. Expected bad input is validated and reported normally; exceptional failures interrupt the current operation because continuing would leave the program in an untrustworthy state. Key cases include failed file opens, parse errors, invalid numeric ranges, partial output, rollback of a failed save, and preserving the previous valid state when a command cannot be completed. RAII makes cleanup reliable even when a function returns early or throws, but it does not replace validation. The failure-path target is the basic guarantee: after a failed operation, the program can name which state was preserved, which temporary work was discarded, and which message explains the problem."
 				},
 				{
 					title: "CPPI4 Project: Resource-Safe File Processor",
@@ -228,7 +228,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "Advanced Pathways and Program Framing",
 					content:
-						"Close the course by naming the next paths clearly and framing the capstone as evidence of readiness. Cover: when to continue into `Data Structures and Algorithms in C++`, when `Design Patterns in C++` is the better architecture path, and when lower-level representation points toward `C Systems Engineering`. Include an advanced CS236-inspired capstone option: scanner, parser, command or AST objects, table-style evaluation, and a dependency graph, kept smaller than the original college project."
+						"Close the course by naming the next paths clearly and framing the capstone as evidence of readiness. `Data Structures and Algorithms in C++` fits when performance, asymptotic reasoning, trees, graphs, and containers are the main next gap. `Design Patterns in C++` fits when the next gap is architecture: polymorphic roles, state objects, factories, adapters, and testable boundaries. `C Systems Engineering` fits when memory layout, compilation, operating-system interfaces, and lower-level representation are the strongest pull. The advanced CS236-inspired capstone can combine a scanner, parser, command or AST objects, table-style evaluation, and a dependency graph, but it remains smaller than the original college project. Readiness evidence includes a parse trace, a class or ownership diagram, focused tests, and a written limitation."
 				},
 				{
 					title: "CPPI6 Capstone: Saveable Command-Driven Simulation",

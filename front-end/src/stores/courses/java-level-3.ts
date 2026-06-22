@@ -2056,7 +2056,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Reference: Node Class",
 					content:
-						"Keep the node-class reference visible because it supports the linked-list, tree, and graph sections that arrive later in the course.",
+						"The node-class reference supports the linked-list, tree, and graph sections that arrive later in the course. It isolates the basic idea of a node from the larger data structure: stored value, reference to the next node or child nodes, and the difference between changing a node's data versus changing the links between nodes. Use it to compare singly linked, tree-shaped, and graph-adjacent structures before the full algorithms appear. A useful reference pass draws the object references, labels which node is reachable from which variable, and explains what changes after one insertion or reassignment.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Node-Class"
 				},
@@ -2070,7 +2070,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Reference: Open Addressing Hash Tables",
 					content:
-						"Keep the open-addressing reference alongside separate chaining to compare the main collision strategies directly. Focus on probe sequences, tombstones, clustering, and why removing an entry cannot simply clear a slot without considering later lookups.",
+						"The open-addressing reference sits beside separate chaining so the two main collision strategies can be compared directly. In open addressing, colliding keys stay inside the table array and a probe sequence decides where to continue searching. That makes load factor, clustering, tombstones, deletion, and resize behavior visible in a different way from bucket lists. A useful comparison traces one insertion collision, one successful lookup after a collision, and one removal case where clearing the slot would break a later lookup. The reference is strongest when the table state is drawn after each step.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ15-Open-Addressing-Reference"
 				},

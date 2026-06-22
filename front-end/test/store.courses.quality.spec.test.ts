@@ -325,6 +325,158 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it("keeps advanced bridge and reference cards substantive", async () => {
+		const samples = [
+			{
+				courseId: "data-science-in-python",
+				itemTitle: "Reference Archive: Data Science in Python Workspace",
+				minWords: 85,
+				required: [/folder layout/i, /sample data/i, /limitation/i]
+			},
+			{
+				courseId: "ai-level-1",
+				itemTitle: "Reference Archive: AI Level 1 Workspace",
+				minWords: 80,
+				required: [/state representation/i, /search order/i, /algorithm/i]
+			},
+			{
+				courseId: "python-to-java-and-cpp-bridge",
+				itemTitle: "String Equality and Reference Habits",
+				minWords: 75,
+				required: [/\.equals\(\)/i, /==/i, /null/i, /reference identity/i]
+			},
+			{
+				courseId: "cpp-level-2",
+				itemTitle: "Level 2 Positioning and Ownership Vocabulary",
+				minWords: 90,
+				required: [/owner/i, /borrower/i, /invariant/i, /valid state/i]
+			},
+			{
+				courseId: "cpp-level-2",
+				itemTitle: "References, Lifetimes, and Evidence-Based Debugging",
+				minWords: 85,
+				required: [/const/i, /alias diagram/i, /sanitizers/i, /lifetime/i]
+			},
+			{
+				courseId: "cpp-level-3",
+				itemTitle: "Scanning, Parsing, and Error Boundaries",
+				minWords: 90,
+				required: [/scanner/i, /parser/i, /accepted and rejected/i, /application state/i]
+			},
+			{
+				courseId: "cpp-level-3",
+				itemTitle: "RAII and Single-Owner Resource Design",
+				minWords: 85,
+				required: [/destructors/i, /std::unique_ptr/i, /moving/i, /std::shared_ptr/i]
+			},
+			{
+				courseId: "cpp-level-3",
+				itemTitle: "Validation, Exceptions, and Resource Boundaries",
+				minWords: 85,
+				required: [/rollback/i, /basic guarantee/i, /temporary work/i, /RAII/i]
+			},
+			{
+				courseId: "cpp-level-3",
+				itemTitle: "Advanced Pathways and Program Framing",
+				minWords: 95,
+				required: [
+					/Data Structures and Algorithms/i,
+					/Design Patterns/i,
+					/C Systems Engineering/i,
+					/parse trace/i
+				]
+			},
+			{
+				courseId: "java-level-2",
+				itemTitle: "Reference and Solution Boundaries",
+				minWords: 70,
+				required: [/starter-style/i, /solution-style/i, /course pacing/i, /current project/i]
+			},
+			{
+				courseId: "java-level-2",
+				itemTitle: "Reference: HashMaps Examples",
+				minWords: 70,
+				required: [/HashMap/i, /lookup/i, /missing key/i, /key-value/i]
+			},
+			{
+				courseId: "java-level-2",
+				itemTitle: "Reference: Try-Catch Example",
+				minWords: 80,
+				required: [/try/i, /catch/i, /checked exceptions/i, /safely continue/i]
+			},
+			{
+				courseId: "java-level-1",
+				itemTitle: "Java Level 1 Project: Console Object Model",
+				minWords: 95,
+				required: [/main/i, /object state/i, /field access/i, /Java-specific design/i]
+			},
+			{
+				courseId: "java-level-1",
+				itemTitle: "Java Level 1 Project: Record-backed Data Summary",
+				minWords: 95,
+				required: [/record components/i, /sample rows/i, /named components/i, /immutable/i]
+			},
+			{
+				courseId: "java-level-2",
+				itemTitle: "Collections and Contracts",
+				minWords: 105,
+				required: [/mutability/i, /duplicate/i, /lookup misses/i, /HashMap/i]
+			},
+			{
+				courseId: "java-level-2",
+				itemTitle: "Java Level 2 Project: Interface-driven Simulator",
+				minWords: 95,
+				required: [
+					/interface type/i,
+					/implementation class/i,
+					/same starting state/i,
+					/simulation state/i
+				]
+			},
+			{
+				courseId: "java-level-2",
+				itemTitle: "Java Level 2 Project: Record-backed CSV Loader",
+				minWords: 95,
+				required: [/expected columns/i, /typed record/i, /accepted dataset/i, /domain logic/i]
+			},
+			{
+				courseId: "java-level-3",
+				itemTitle: "Reference: Node Class",
+				minWords: 80,
+				required: [
+					/linked-list/i,
+					/child nodes/i,
+					/object references/i,
+					/reassignment/i
+				]
+			},
+			{
+				courseId: "java-level-3",
+				itemTitle: "Reference: Open Addressing Hash Tables",
+				minWords: 80,
+				required: [
+					/probe sequence/i,
+					/tombstones/i,
+					/separate chaining/i,
+					/successful lookup/i
+				]
+			}
+		];
+
+		for (const sample of samples) {
+			const course = await loadRawCourse(sample.courseId);
+			expect(course, sample.courseId).not.toBeNull();
+			const item = findItem(course!, new RegExp(`^${sample.itemTitle}$`, "i"));
+
+			expect(wordCount(item.content), sample.itemTitle).toBeGreaterThanOrEqual(
+				sample.minWords
+			);
+			for (const pattern of sample.required) {
+				expect(item.content, `${sample.itemTitle}: ${pattern}`).toMatch(pattern);
+			}
+		}
+	});
+
 	it(
 		"keeps generated support free of article-collision grammar artifacts",
 		async () => {

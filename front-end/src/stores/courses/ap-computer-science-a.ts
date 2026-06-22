@@ -136,13 +136,13 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Required Textbook",
 					content:
-						"Use the Barron's AP Computer Science A book for chapter-based multiple choice and free-response practice. Keep the textbook aligned with the course sequence instead of treating it as a separate study track. The useful pattern is to read or review the relevant chapter section after the Java concept appears in code, then answer a small set of questions with written justification. Mark any missed question by concept: syntax, tracing, object state, array/list traversal, recursion, runtime, or AP wording.",
+						"Use the Barron's AP Computer Science A book for chapter-based multiple choice and free-response practice. Keep the textbook aligned with the course sequence instead of treating it as a separate study track. The useful pattern is to read or review the relevant chapter section after the Java concept appears in code, then answer a small set of questions with written justification. Mark any missed question by concept: syntax, tracing, object state, array/list traversal, recursion, runtime, or AP wording. Revisit those marks before each check-in so textbook practice feeds back into code work.",
 					projectLink: BARRONS_TEXTBOOK
 				},
 				{
 					title: "Reference Pack",
 					content:
-						"The reference projects for variables, strings, and casting establish a clean notes-and-sandbox workflow from day one. They separate Java syntax issues from actual concept gaps before the first graded-style projects. Use these references as fast comparison examples: first predict what the program prints, then run it, then explain any mismatch using Java vocabulary. A completed pass identifies variable type, expression result type, printed spacing, and any cast or truncation that changes the value.",
+						"The reference projects for variables, strings, and casting establish a clean notes-and-sandbox workflow from day one. They separate Java syntax issues from actual concept gaps before the first graded-style projects. Use these references as fast comparison examples: first predict what the program prints, then run it, then explain any mismatch using Java vocabulary. A completed pass identifies variable type, expression result type, printed spacing, and any cast or truncation that changes the value. Keep the comparison small enough that one rule is visible at a time.",
 					projectLink: repo("APCS1-Variables-Reference/starter"),
 					solutionLink: repo("APCS1-Variables-Reference/solution")
 				}
@@ -151,7 +151,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Strings and Printing Reference",
 					content:
-						"This reference build reinforces output formatting, concatenation, escape characters, and readable console output. The checkpoint is being able to predict the exact printed text, including spaces, quotation marks, and line breaks. Use it when a project result is logically correct but visually messy. The expected evidence is a before/after output comparison and a short note explaining which part came from a literal string, which part came from a variable, and where `print` versus `println` changes the layout.",
+						"This reference build reinforces output formatting, concatenation, escape characters, and readable console output. The checkpoint is being able to predict the exact printed text, including spaces, quotation marks, and line breaks. Use it when a project result is logically correct but visually messy. The expected evidence is a before/after output comparison and a short note explaining which part came from a literal string, which part came from a variable, and where `print` versus `println` changes the layout. This prevents formatting bugs from hiding otherwise correct logic.",
 					projectLink: repo(
 						"APCS1-Strings-and-Printing-Reference/starter"
 					),
@@ -162,14 +162,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Casting Reference",
 					content:
-						"This reference build gives a tighter review of integer division, explicit casts, and loss-of-precision reasoning. It explains when Java truncates automatically, when an explicit cast is required, and what information is lost. Use it before rounding, quotient/remainder, or expression-tracing work. A strong check traces the expression twice: once with the original operand types and once after the cast, so the final answer is tied to Java's evaluation rules instead of calculator intuition.",
+						"This reference build gives a tighter review of integer division, explicit casts, and loss-of-precision reasoning. It explains when Java truncates automatically, when an explicit cast is required, and what information is lost. Use it before rounding, quotient/remainder, or expression-tracing work. A strong check traces the expression twice: once with the original operand types and once after the cast, so the final answer is tied to Java's evaluation rules instead of calculator intuition. Include at least one negative or non-even division case when reviewing.",
 					projectLink: repo("APCS1-Casting-Reference/starter"),
 					solutionLink: repo("APCS1-Casting-Reference/solution")
 				},
 				{
 					title: "2020 Practice Exam",
 					content:
-						"Keep the repo practice exam available as a later-course benchmark, but introduce it here so the AP end state is visible early. It does not need to be attempted at the start of the course. Its purpose is to show the final mixture of tracing, object modeling, arrays/lists, recursion, searching, sorting, and written reasoning. Use it later as a timed or semi-timed diagnostic, then sort missed questions by unit rather than treating the score as the only feedback.",
+						"Keep the repo practice exam available as a later-course benchmark, but introduce it here so the AP end state is visible early. It does not need to be attempted at the start of the course. Its purpose is to show the final mixture of tracing, object modeling, arrays/lists, recursion, searching, sorting, and written reasoning. Use it later as a timed or semi-timed diagnostic, then sort missed questions by unit rather than treating the score as the only feedback. The review result produces a short targeted practice list.",
 					projectLink: repo("APCS-A-2020-Practice-Exam/starter"),
 					solutionLink: repo("APCS-A-2020-Practice-Exam/solution")
 				}
@@ -272,7 +272,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Strings and Printing Reference",
 					content:
-						"Keep the strings and printing reference nearby for review of escape characters, concatenation, and output layout. It is especially useful when the code is logically correct but the displayed result has spacing or formatting bugs. Use the reference to compare expected output against actual output character by character. A good repair names the exact missing literal, extra space, newline, quote, or variable placement that caused the formatting mismatch.",
+						"Keep the strings and printing reference nearby for review of escape characters, concatenation, and output layout. It is especially useful when the code is logically correct but the displayed result has spacing or formatting bugs. Use the reference to compare expected output against actual output character by character. A good repair names the exact missing literal, extra space, newline, quote, or variable placement that caused the formatting mismatch. Include one example that prints values on the same line and one that intentionally moves to the next line.",
 					projectLink: repo(
 						"APCS1-Strings-and-Printing-Reference/starter"
 					),
@@ -305,7 +305,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Chapter 2 Multiple Choice Focus",
 					content:
-						"Barron's Chapter 2 work belongs here because integer division, casting, precedence, and boolean logic are justified without running code. For each missed question, write the expression evaluation in order: parentheses, multiplication or division, remainder, addition or subtraction, relational comparison, and boolean combination. The useful evidence is not only the selected letter but the trace that proves why the other choices are impossible."
+						"Barron's Chapter 2 work belongs here because integer division, casting, precedence, and boolean logic are justified without running code. For each missed question, write the expression evaluation in order: parentheses, multiplication or division, remainder, addition or subtraction, relational comparison, and boolean combination. The useful evidence is not only the selected letter but the trace that proves why the other choices are impossible. Keep at least one example where Java's integer division differs from calculator intuition."
 				}
 			],
 			supplementalProjects: [
@@ -367,7 +367,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference Pack",
 					content:
-						"Keep the conditionals, math-package, and random-number references available as short focused reviews instead of burying those examples inside larger projects. Use this pack when a larger project fails for a small reason: incorrect branch order, missing `else`, wrong `Math` return type, or an off-by-one random range. A completed reference pass names one exact decision point, one boundary value, and one printed result that proves the rule works.",
+						"Keep the conditionals, math-package, and random-number references available as short focused reviews instead of burying those examples inside larger projects. Use this pack when a larger project fails for a small reason: incorrect branch order, missing `else`, wrong `Math` return type, or an off-by-one random range. A completed reference pass names one exact decision point, one boundary value, and one printed result that proves the rule works. The pack is also useful for separating a syntax problem from a logic problem before continuing a larger project.",
 					projectLink: repo("APCS3-Conditionals-Reference/starter"),
 					solutionLink: repo("APCS3-Conditionals-Reference/solution")
 				}
@@ -384,14 +384,14 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference: Math Package",
 					content:
-						"This reference project supports focused review of `abs`, `pow`, `sqrt`, and round-off behavior. Connect each method call to its argument types, return type, and any casting needed before storing the result. Use it to prevent a common AP mistake: treating a library method as magic instead of tracing its input and output type. The evidence includes one call with a predictable answer and one call where `double` behavior or casting changes how the result must be stored or printed.",
+						"This reference project supports focused review of `abs`, `pow`, `sqrt`, and round-off behavior. Connect each method call to its argument types, return type, and any casting needed before storing the result. Use it to prevent a common AP mistake: treating a library method as magic instead of tracing its input and output type. The evidence includes one call with a predictable answer and one call where `double` behavior or casting changes how the result must be stored or printed. A useful review also distinguishes the `Math` class from an object instance.",
 					projectLink: repo("APCS3-Math-Package-Reference/starter"),
 					solutionLink: repo("APCS3-Math-Package-Reference/solution")
 				},
 				{
 					title: "Reference: Random Numbers",
 					content:
-						"This reference tightens integer-range generation and helps avoid off-by-one mistakes with `Math.random()`. A strong explanation names the lowest possible value, highest possible value, and why the cast happens after scaling. Use the reference to build several ranges, such as `0` through `9`, `1` through `10`, or `99` through `199`, and explain the formula as `low + (int)(Math.random() * count)`. The finished check identifies the number of possible outcomes, not only the endpoints.",
+						"This reference tightens integer-range generation and helps avoid off-by-one mistakes with `Math.random()`. A strong explanation names the lowest possible value, highest possible value, and why the cast happens after scaling. Use the reference to build several ranges, such as `0` through `9`, `1` through `10`, or `99` through `199`, and explain the formula as `low + (int)(Math.random() * count)`. The finished check identifies the number of possible outcomes, not only the endpoints. Include one range where the lower bound is not zero.",
 					projectLink: repo("APCS3-Random-Numbers-Reference/starter"),
 					solutionLink: repo(
 						"APCS3-Random-Numbers-Reference/solution"
