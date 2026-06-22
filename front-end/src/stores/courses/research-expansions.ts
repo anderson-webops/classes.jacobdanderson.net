@@ -289,6 +289,7 @@ function projectOptionExtension(
 	project: string
 ) {
 	const family = profile.family.toLowerCase();
+	const projectContext = project.trim() || "this project";
 	const choose = (options: string[]) =>
 		options[
 			stableVariantIndex(`${profile.family}|${project}`, options.length)
@@ -354,16 +355,16 @@ function projectOptionExtension(
 		family.includes("python")
 	) {
 		return choose([
-			`**Extension:** Add one edge case, helper, refactor, or alternate representation and explain which requirement it tests.`,
-			`**Extension:** Add one changed input, object state, data structure, or ownership case and compare the result.`,
-			`**Extension:** Add one small refactor plus a test or trace proving that behavior stayed equivalent.`
+			`**Extension:** In ${projectContext}, add one edge case, helper, refactor, or alternate representation and explain which requirement it tests.`,
+			`**Extension:** In ${projectContext}, add one changed input, object state, data structure, or ownership case and compare the result.`,
+			`**Extension:** In ${projectContext}, add one small refactor plus a test or trace proving that behavior stayed equivalent.`
 		]);
 	}
 
 	return choose([
-		`**Extension:** Change one constraint, input, representation, or success condition and explain what stayed equivalent.`,
-		`**Extension:** Add one transfer case with a changed assumption and document what still works.`,
-		`**Extension:** Add a second example that tests the same idea under a different boundary condition.`
+		`**Extension:** In ${projectContext}, change one constraint, input, representation, or success condition and explain what stayed equivalent.`,
+		`**Extension:** In ${projectContext}, add one transfer case with a changed assumption and document what still works.`,
+		`**Extension:** In ${projectContext}, add a second example that tests the same idea under a different boundary condition.`
 	]);
 }
 
