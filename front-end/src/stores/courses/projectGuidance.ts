@@ -1336,8 +1336,8 @@ function requiredWorkSteps(
 			],
 			[
 				`Choose the ${subject} type structure before coding: class, record, interface, helper, collection, or inheritance relationship.`,
-				`Keep each implementation slice runnable, then expand only after the current method behavior is visible.`,
-				`Use the final check to show both the Java syntax rule and the design boundary being practiced.`
+				`Keep each ${subject} implementation slice runnable, then expand only after the current method behavior is visible.`,
+				`Use the ${subject} final check to show both the Java syntax rule and the design boundary being practiced.`
 			],
 			[
 				`Describe ${subject} with an example object or call sequence before implementing the general version.`,
@@ -1367,7 +1367,7 @@ function requiredWorkSteps(
 			[
 				`Choose a narrow responsibility for each ${subject} Java type before adding optional behavior.`,
 				`Build the first runnable path for ${subject} around one constructor or method, then add edge behavior only after the main path is verified.`,
-				`Finish with evidence that names the relevant Java concept and the code boundary where it appears.`
+				`Finish ${subject} with evidence that names the relevant Java concept and the code boundary where it appears.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 16)];
 	}

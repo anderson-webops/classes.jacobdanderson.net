@@ -476,7 +476,7 @@ function buildSequencingModule(
 			{
 				title: `${courseLabel} Module Alignment Guide`,
 				content: [
-					`**Alignment guide:** Strong ${courseLabel} modules connect the concept, example, project, and checkpoint to the same target skill.`,
+					`**Alignment guide:** Strong ${courseLabel} modules connect the concept, example, project, and checkpoint to the same module outcome.`,
 					`**Alignment test:** In a complete ${courseLabel} module, the concept, project, and checkpoint all practice the same skill. If the checkpoint for ${courseLabel} checks a different skill than the project practices, the module needs a clearer project target before it is ready.`,
 					`**Aligned modules show:**\n- Each module in ${courseLabel} has a named prerequisite and observable outcome.\n- Each project in ${courseLabel} has required behavior, test cases, and an extension.\n- The checkpoint format for ${courseLabel} matches the work: code trace, rubric, CER response, math justification, security report, or model evaluation.\n- Any toolchain, dataset, simulation, or source-code dependency for ${courseLabel} is linked with version or access notes.`
 				].join("\n\n")
@@ -565,11 +565,26 @@ function buildProjectModule(
 			content: [
 				projectOptionGoal(profile, courseLabel, project),
 				projectOptionRequiredOutcome(profile, courseLabel, project),
-				`**Checkpoints:**\n${bullets(profile.assessments.slice(0, 3))}`,
+				`**Checkpoints:**\n${bullets(projectOptionCheckpoints(profile, project))}`,
 				projectOptionExtension(profile, project)
 			].join("\n\n")
 		}))
 	};
+}
+
+function projectOptionCheckpoints(
+	profile: ResearchExpansionProfile,
+	project: string
+) {
+	const title = projectTitle(project);
+
+	return profile.assessments.slice(0, 3).map(assessment => {
+		const trimmed = assessment.trim().replace(/\.$/, "");
+		const lowerAssessment =
+			trimmed.charAt(0).toLowerCase() + trimmed.slice(1);
+
+		return `For ${title}, ${lowerAssessment}.`;
+	});
 }
 
 function buildExpansionModules(
