@@ -172,6 +172,46 @@ describe("research-backed course family expansions", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
+	it(
+		"keeps research appendices course-specific instead of shared boilerplate",
+		async () => {
+			const retiredPhrases = [
+				"**Finished work shows:** Examples, projects, and checkpoints are traceable to the reference map rather than only to project titles.",
+				"Each core-skill item can become a short explanation, a practice check, or a focused review path depending on the current need.",
+				"**Practice setup:** A lesson or project is usable when one core skill has a concrete explanation, worked example, practice task, and observable work.",
+				"Topic additions are strongest when they include vocabulary, one representative example, one common-error check, and one transfer task.",
+				"When that connection is unclear, a smaller bridge practice comes before the major project.",
+				"Move it elsewhere when it requires a different prerequisite chain, safety model, or level of depth that would crowd out the core purpose.",
+				"Move it elsewhere when that topic requires a different prerequisite chain, safety model, or level of depth that would crowd out the core purpose.",
+				"**Use this check to separate:** prerequisite knowledge, required content, optional enrichment, and reference-only material.",
+				"- Each planned module cites a standard, official document, or deliberate toolchain target.",
+				"If a project expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.",
+				"The order follows prerequisite dependency so each extension builds on skills already practiced.",
+				"**Useful module pattern:** A complete module states the concept, explains why it matters, includes one worked example, provides one practice task, checks understanding quickly, and offers one extension.",
+				"Links that are only background references are labeled that way so they do not look like required assignments.",
+				"Each edge explains the dependency in plain language, such as \"requires arrays before 2D grids\" or \"requires variables before simulation state.\"",
+				"The first version stays narrow, demonstrable, and easy to verify before optional polish is added.",
+				"**Required capstone brief:** Name the target user or problem, the exact project result, the core concept being reused from earlier modules, the minimum viable first version, and the evidence that will prove the first version works."
+			];
+			const hits: string[] = [];
+
+			for (const courseId of researchBackedExpansionCourseIds) {
+				const course = await loadRawCourse(courseId);
+				expect(course, courseId).not.toBeNull();
+				const text = allText(course!);
+
+				for (const phrase of retiredPhrases) {
+					if (text.includes(phrase)) {
+						hits.push(`${courseId}: ${phrase}`);
+					}
+				}
+			}
+
+			expect(hits).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
 	it("carries the researched standards, tooling, safety, and assessment anchors into course text", async () => {
 		const courseIds = [
 			"ai-level-1",
