@@ -4336,11 +4336,29 @@ describe("course text quality normalization", () => {
 		expect(scratchCorpus).not.toMatch(
 			/Create an original variation inspired by/i
 		);
-		expect(scratchCorpus).toContain(
-			"Practice GS1 Starting in Scratch on a focused smaller problem"
+		expect(scratchCorpus).not.toMatch(
+			/\bPractice .* on a focused smaller problem to build speed, independence, and cleaner reasoning/i
+		);
+		expect(scratchCorpus).not.toMatch(
+			/\bDesign a small original variation of .* with one meaningful design or reasoning choice/i
+		);
+		expect(scratchCorpus).not.toMatch(
+			/\bproduces a playable Scratch project with clear event flow/i
+		);
+		expect(scratchCorpus).not.toMatch(
+			/\badds one new constraint, input shape, or behavior that still fits the original goal/i
+		);
+		expect(scratchCorpus).not.toMatch(
+			/\bstays centered on sprite roles, event timing, broadcasts, clones, variables, stage behavior/i
 		);
 		expect(scratchCorpus).toContain(
-			"Design a small original variation of GS1 Starting in Scratch"
+			"Focused drill for GS1 Starting in Scratch: rebuild the central behavior in a smaller scene"
+		);
+		expect(scratchCorpus).toContain(
+			"Original variant for GS1 Starting in Scratch: change the theme, control rule, score condition, or feedback cue"
+		);
+		expect(scratchCorpus).toContain(
+			"defines a Scratch project slice around Scratch game design"
 		);
 		expect(allCourseText(webDevelopment)).not.toMatch(/\bbut Now\b/);
 	});

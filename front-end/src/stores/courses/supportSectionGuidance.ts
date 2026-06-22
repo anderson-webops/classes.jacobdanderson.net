@@ -92,6 +92,53 @@ function familyFocus(courseFamily: string) {
 	return "inputs, state changes, boundaries, observable behavior, edge cases, and verification evidence";
 }
 
+function scratchSupportSectionGuidance(
+	title: string,
+	section: SupportSectionKind,
+	variant: number
+) {
+	const sceneFocus = [
+		"start state, main event, sprite response, score or timer change, and reset behavior",
+		"player action, block sequence, visible feedback, and replay path",
+		"sprites, events, variables, broadcasts or clones, and the stage result"
+	][variant];
+
+	if (section === "planning") {
+		return [
+			`**${title}** begins with the playable loop before optional polish.`,
+			`The plan names the ${sceneFocus}.`,
+			"Build the smallest version that can start, respond, show feedback, and restart. Extra costumes, sounds, levels, or difficulty changes belong after that loop can be replayed without stale state.",
+			"Useful planning evidence includes a short sprite-role list, one event chain, the variables that change, and a first test path from green flag to visible result.",
+			"The checkpoint is concrete: one sprite action is traced from trigger block to state change to stage feedback. If a project uses score, timer, lives, levels, messages, or clones, the plan records where that state is reset and how the next run proves the reset worked."
+		].join("\n\n");
+	}
+
+	if (section === "verification") {
+		return [
+			`**${title}** is checked by replaying the project from a clean green-flag start.`,
+			`The review compares expected and observed behavior for the ${sceneFocus}.`,
+			"Run one normal play path, one repeated-input or missed-input case, and one restart. The evidence identifies the block sequence or variable most responsible for the result, plus one remaining limitation or next polish idea.",
+			"A useful verification pass does not rely on the project looking mostly right. It names the expected stage state, the observed stage state, the input or event that produced it, and the Scratch block or variable that explains the match or mismatch."
+		].join("\n\n");
+	}
+
+	if (section === "debugging") {
+		return [
+			`**${title}** debugging starts by reproducing one visible failure.`,
+			`The failure is traced through the ${sceneFocus}.`,
+			"Change the smallest relevant script, then replay the same case and one neighboring case. Keep the bug note concrete: symptom, likely cause, changed block, and result after the fix.",
+			"Scratch bugs are often state or event-order problems: a variable was not reset, a forever loop is still running, a broadcast arrives too early, or a clone remains from the previous run. The repair is complete only when the same failure no longer appears from a fresh green-flag start."
+		].join("\n\n");
+	}
+
+	return [
+		`**${title}** changes one part of the playable Scratch loop while keeping the base project recognizable.`,
+		`The extension focuses on the ${sceneFocus}.`,
+		"Choose one added constraint such as a new control, a harder timer, an extra sprite interaction, a different scoring rule, or a clearer feedback cue. The added behavior is complete only when the normal path, one boundary case, and a restart still work.",
+		"The extension evidence names what changed from the base version and what stayed the same. A strong extension keeps the original game understandable, then adds one visible rule that can be tested without guessing from the code alone."
+	].join("\n\n");
+}
+
 export function buildSupportSectionGuidance({
 	courseFamily,
 	moduleTitle,
@@ -100,6 +147,10 @@ export function buildSupportSectionGuidance({
 	const title = normalizedTitle(moduleTitle);
 	const focus = familyFocus(courseFamily);
 	const variant = variantIndex(courseFamily, moduleTitle, section, 3);
+
+	if (courseFamily.toLowerCase().includes("scratch")) {
+		return scratchSupportSectionGuidance(title, section, variant);
+	}
 
 	if (section === "debugging") {
 		const opener = [
