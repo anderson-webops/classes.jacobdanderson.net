@@ -497,7 +497,12 @@ describe("course text quality normalization", () => {
 				"Check the studio against the stated success criteria and note one revision",
 				"final the studio",
 				"last the studio",
-				"latest the studio"
+				"latest the studio",
+				"small the studio",
+				"small the lab",
+				"the studio normal behavior",
+				"the lab normal behavior",
+				"**Result quality:** State the question, input data, calculation or transformation, result, and limitation clearly enough to review without reading every line of code."
 			];
 			const hits: string[] = [];
 

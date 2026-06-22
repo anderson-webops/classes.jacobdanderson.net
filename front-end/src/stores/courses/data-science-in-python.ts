@@ -20,6 +20,17 @@ interface AppliedDataScienceLab {
 	supplemental3: string;
 }
 
+function stableVariantIndex(seed: string, count: number) {
+	let hash = 2166136261;
+
+	for (const character of seed) {
+		hash ^= character.charCodeAt(0);
+		hash = Math.imul(hash, 16777619) >>> 0;
+	}
+
+	return hash % count;
+}
+
 const appliedDataScienceLabs: AppliedDataScienceLab[] = [
 	{
 		number: 11,
@@ -209,15 +220,21 @@ function dataScienceAppliedSupplementUrl(
 
 function dataScienceStudioContent(
 	lab: AppliedDataScienceLab,
-	_sectionTitle: string,
+	sectionTitle: string,
 	body: string
 ) {
 	const focus = lab.focus.replace(/[.!?]\s*$/, "");
+	const resultQuality = [
+		`**Result quality:** ${lab.title} states the question, input data, transformation, result, and limitation clearly enough to review without reading every line of code.`,
+		`**Result quality:** ${sectionTitle} names the dataset, relevant columns, calculation or visual step, conclusion, and one caveat before treating the result as evidence.`,
+		`**Result quality:** The ${lab.title} writeup separates source data, cleaning or transformation choices, computed result, interpretation, and limitation.`,
+		`**Result quality:** ${sectionTitle} is complete when a reader can identify the question, the rows or features used, the evidence produced, and the boundary of the claim.`
+	][stableVariantIndex(`${lab.number}|${sectionTitle}`, 4)];
 
 	return [
 		body,
 		`**Verification focus:** ${focus}. Include one small hand-checkable case before accepting any larger dataset result.`,
-		"**Result quality:** State the question, input data, calculation or transformation, result, and limitation clearly enough to review without reading every line of code."
+		resultQuality
 	].join("\n\n");
 }
 

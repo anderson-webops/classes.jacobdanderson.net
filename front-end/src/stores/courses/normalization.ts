@@ -6979,7 +6979,21 @@ function compactStudioSupportText(
 			/\b(one|each|every|first|second|third|another) the (?:studio|lab|work) ([a-z])/gi,
 			"$1 $2"
 		)
+		.replace(
+			/\b(a|an) (small|compact|simple|focused|minimal|ordinary|standard) the (studio|lab|work) ([a-z])/gi,
+			"$1 $2 $3 $4"
+		)
 		.replace(/\b(a|an) the (?:studio|lab|work) ([a-z])/gi, "$1 $2")
+		.replace(
+			/\bthe (studio|lab|work) (normal|ordinary|standard|expected|main|final|latest|last) behavior\b/gi,
+			(_match, noun: string, adjective: string) =>
+				`${adjective} ${noun} behavior`
+		)
+		.replace(
+			/\bthe (studio|lab|work) (class|constructor|method|object|public|data|state|model|driver|fields|requirements|hypothesis|question|source|result|conclusion|summary|startup)\b/gi,
+			(_match, noun: string, descriptor: string) =>
+				`the ${noun}'s ${descriptor}`
+		)
 		.replace(
 			/\b(?:A|a) (?:the )?(?:studio|lab|work) intermediate\b/g,
 			"An intermediate"
