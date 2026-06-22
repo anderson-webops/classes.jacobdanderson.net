@@ -480,6 +480,43 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it(
+		"keeps generated implementation and studio guidance from reverting to repeated scaffolding",
+		async () => {
+			const retiredPhrases = [
+				"Trace the example in the same vocabulary the project will use later",
+				"This keeps the example from becoming a demonstration to copy without understanding",
+				"A complete verification pass names the expected result",
+				"Useful evidence can be a trace, screenshot, console output",
+				"If the evidence does not match the expectation",
+				"requirements, evidence, and success criteria are specific enough to review later",
+				"protected boundary or failure-mode check is named explicitly",
+				"The studio result is visible, runnable, inspectable, or supported by concrete evidence",
+				"After the studio works, record one mismatch, limitation, or design choice",
+				"Compare the studio against the original goal and record at least one improvement or bug fix",
+				"Check the studio against the stated success criteria and note one revision",
+				"final the studio",
+				"last the studio",
+				"latest the studio"
+			];
+			const hits: string[] = [];
+
+			for (const entry of courseCatalog) {
+				const course = await loadRawCourse(entry.id);
+				const text = allCourseText(course);
+
+				for (const phrase of retiredPhrases) {
+					if (text.includes(phrase)) {
+						hits.push(`${entry.id}: ${phrase}`);
+					}
+				}
+			}
+
+			expect(hits).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
 	it("keeps Rust Systems Security labels and safety explanations production-ready", async () => {
 		const course = await loadRawCourse("rust-systems-security");
 		expect(course).not.toBeNull();
@@ -3820,7 +3857,7 @@ describe("course text quality normalization", () => {
 			"The studio starting position, visible state, score or timer, and reset behavior are predictable"
 		);
 		expect(scratchStudio.content).toContain(
-			"Compare the studio against the original goal and record at least one improvement or bug fix"
+			"Review the studio by comparing the intended behavior with the evidence collected during the final run"
 		);
 		expect(scratchStudio.content).not.toContain(
 			"Check Concept Path against the stated success criteria"

@@ -152,18 +152,25 @@ export function buildImplementationLabGuidance({
 	}
 
 	if (section === "example") {
+		const variant = variantIndex(courseFamily, moduleTitle, section, 4);
 		const opener = [
 			`Walk through one representative **${label}** case before expanding the implementation.`,
 			`Start **${label}** with one narrow case that can be traced from input to result.`,
 			`Before adding features to **${label}**, run one standard scenario slowly enough to explain each checkpoint.`,
 			`A small **${label}** example comes first so the later build has a known baseline.`
-		][variantIndex(courseFamily, moduleTitle, section, 4)];
+		][variant];
+		const traceStep = [
+			`Use the same vocabulary the later **${label}** work will use: inputs, state changes, boundaries, outputs, and the evidence that confirms each step.`,
+			`Connect the **${label}** example to the later build by naming the input, state transition, boundary, output, and verification evidence in order.`,
+			`Keep the **${label}** example inspectable: record what enters the system, what changes, where the boundary is, what comes out, and how the result is checked.`,
+			`Describe the **${label}** example as a reusable pattern, not a script to copy: starting condition, transition, result, and evidence all need names.`
+		][variant];
 
 		return [
 			opener,
 			context?.exampleCase ??
 				`For **${label}**, record the starting files or commands, exact input, expected result, observed result, and a visible checkpoint that proves the code is moving in the right direction.`,
-			`Trace the example in the same vocabulary the project will use later: inputs, state changes, method or function boundaries, outputs, and the evidence that confirms each step. This keeps the example from becoming a demonstration to copy without understanding.`,
+			traceStep,
 			context?.boundaryCase ??
 				`Then add one **${label}** boundary or failure-mode check so the project has a clear comparison between standard behavior and the edge condition that most needs protection.`
 		].join("\n\n");
@@ -198,7 +205,7 @@ export function buildImplementationLabGuidance({
 		`4. ${referenceStep(label, artifact, hasReference)}`,
 		"**Completion checks:**",
 		`- ${capitalizedDefiniteLabel(label)} ${artifact} demonstrates the lab concept through runnable behavior, output, tests, traces, logs, or another concrete result.`,
-		`- The protected boundary or failure-mode check for ${definiteLabel(label)} ${artifact} is named explicitly and is not only the provided sample.`,
+		`- ${capitalizedDefiniteLabel(label)} ${artifact} includes a named boundary, failure path, or constraint check beyond the provided sample.`,
 		`- The final note for **${articleSafeLabel(label)}** identifies one implementation, debugging, or reasoning choice that materially affected the result.`
 	].join("\n\n");
 }

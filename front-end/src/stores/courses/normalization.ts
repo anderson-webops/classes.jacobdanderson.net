@@ -477,17 +477,31 @@ function generatedGuidanceVariantFocus(
 		module,
 		cleanDisplayTitle(item.title)
 	);
+	const variant = stableVariantIndex(
+		`${course.name}|${module.title}|${item.title}`,
+		4
+	);
 
 	if (/core project/i.test(item.title)) {
 		return `${subject} establishes the required baseline behavior first. The result identifies the main artifact, standard success path, and one protected boundary case before optional variants are attempted.`;
 	}
 
 	if (/transfer/i.test(item.title)) {
-		return `${subject} keeps the core concept intact while changing the input shape, representation, context, or constraint. The evidence shows whether the idea works outside the first example.`;
+		return [
+			`${subject} keeps the core concept intact while changing the input shape, representation, context, or constraint. The evidence shows whether the idea works outside the first example.`,
+			`${subject} applies the same idea in a nearby setting, then names what changed, what stayed stable, and what evidence supports the transfer.`,
+			`${subject} tests whether the original reasoning survives a changed input, representation, or constraint by making the difference from the base task explicit.`,
+			`${subject} moves the concept into a second context while preserving the main success condition, then explains which part transferred cleanly and which part needed adjustment.`
+		][variant];
 	}
 
 	if (/extension/i.test(item.title)) {
-		return `${subject} starts from the working base case, then adds a harder edge case, extra rule, design variation, or deeper explanation target. The evidence shows what changed and why the original reasoning still holds.`;
+		return [
+			`${subject} starts from the working base case, then adds a harder edge case, extra rule, design variation, or deeper explanation target. The evidence shows what changed and why the original reasoning still holds.`,
+			`${subject} adds one meaningful difficulty after the base version works, then identifies the new requirement, the evidence that checks it, and the limitation it exposes.`,
+			`${subject} deepens the task by changing one constraint or adding one edge case, with an explanation of how the base reasoning was adapted rather than only expanded.`,
+			`${subject} extends the original work with a new rule, representation, or explanation target and compares the base behavior with the extended behavior.`
+		][variant];
 	}
 
 	if (/challenge/i.test(item.title)) {
@@ -6478,6 +6492,21 @@ function studioBuildSequence(context: CourseTextContext) {
 				`- Separate ${studioLabel} model responsibilities from console, file, UI, or runner code before adding extra features.`,
 				`- Recompile after each ${studioLabel} contract change and keep the smallest runnable example available.`,
 				`- Check ${studioLabel} constructor state, method behavior, invalid or edge input, and one Java-specific design choice.`
+			],
+			() => [
+				`- Identify the ${studioLabel} data model, public API, helper logic, and runner responsibility before coding.`,
+				`- Add one ${studioLabel} class, method, branch, or collection operation at a time with a compile/run check after each step.`,
+				`- Test ${studioLabel} with an ordinary object, a boundary input, and one case involving reference behavior, inheritance, records, or interfaces.`
+			],
+			() => [
+				`- State the ${studioLabel} class invariant, constructor expectations, method contract, and observable output.`,
+				`- Keep a small ${studioLabel} driver or test harness available while fields, methods, and relationships change.`,
+				`- Confirm ${studioLabel} normal behavior, one invalid or edge condition, and one Java design choice that affects the result.`
+			],
+			() => [
+				`- Map ${studioLabel} requirements to fields, constructors, methods, collection operations, and any inheritance or interface boundary.`,
+				`- Compile and run ${studioLabel} after each contract-level edit so errors stay tied to the most recent change.`,
+				`- Review ${studioLabel} with a sample case, a changed input, and one explanation of state, dispatch, equality, or mutability.`
 			]
 		]);
 	}
@@ -6641,19 +6670,64 @@ function studioCompletionChecks(context: CourseTextContext) {
 
 	return variantLines(context, [
 		() => [
-			`- ${studioLabel} demonstrates the module concept through observable behavior, output, tests, traces, logs, or another concrete result.`,
-			`- The ${studioLabel} protected boundary or failure-mode check is named explicitly and is not only the provided sample.`,
-			`- Record one ${studioLabel} implementation, debugging, or reasoning choice that materially affected the result.`
+			`- ${studioLabel} shows the target concept through output, tests, traces, logs, a diagram, or another inspectable result.`,
+			`- ${studioLabel} includes a named boundary, failure path, or changed-condition check beyond the provided sample.`,
+			`- Record one ${studioLabel} implementation, debugging, or reasoning choice that changed the final result.`
 		],
 		() => [
-			`- The ${studioLabel} result is visible, runnable, inspectable, or supported by concrete evidence.`,
+			`- ${studioLabel} leaves behind a visible run, checked output, trace, table, screenshot, or written evidence source.`,
 			`- ${studioLabel} checks a standard case and a changed, edge, or failure-mode case.`,
 			`- The ${studioLabel} explanation names one decision that affected correctness, clarity, robustness, or interpretation.`
 		],
 		() => [
-			`- ${studioLabel} requirements, evidence, and success criteria are specific enough to review later.`,
+			`- ${studioLabel} defines the requirement, success signal, and evidence source clearly enough to review later.`,
 			`- ${studioLabel} includes at least one verification case beyond the provided sample.`,
-			`- The ${studioLabel} final note explains what changed, what was proven, and what limitation remains.`
+			`- The ${studioLabel} final note explains the confirmed behavior, the remaining limitation, and the next revision target.`
+		],
+		() => [
+			`- ${studioLabel} has a stated starting condition, expected result, observed result, and interpretation.`,
+			`- ${studioLabel} uses one normal path and one altered condition to check whether the concept transfers.`,
+			`- The ${studioLabel} review connects the evidence to the course idea instead of only reporting that it worked.`
+		],
+		() => [
+			`- ${studioLabel} identifies the artifact or answer being produced and the signal that proves it is complete.`,
+			`- ${studioLabel} checks the happy path plus one value, input, state, or assumption that could break it.`,
+			`- The ${studioLabel} notes preserve enough context to rerun or re-explain the result later.`
+		],
+		() => [
+			`- ${studioLabel} names the observable result and the evidence used to judge it.`,
+			`- ${studioLabel} includes at least one comparison against a boundary, alternate input, or likely misconception.`,
+			`- The ${studioLabel} conclusion states what the evidence supports and what it does not prove.`
+		],
+		() => [
+			`- ${studioLabel} identifies the main skill, the artifact or answer, and the evidence that connects them.`,
+			`- ${studioLabel} tests one expected case and one case that changes an input, constraint, or assumption.`,
+			`- The ${studioLabel} wrap-up names what was reliable, what was fragile, and what would be changed next.`
+		],
+		() => [
+			`- ${studioLabel} records the intended result before checking the observed result.`,
+			`- ${studioLabel} includes a second check that is not just the prompt's sample or default condition.`,
+			`- The ${studioLabel} explanation separates evidence, interpretation, and remaining uncertainty.`
+		],
+		() => [
+			`- ${studioLabel} can be reviewed from its output, notes, test, trace, diagram, or other concrete evidence.`,
+			`- ${studioLabel} checks a normal path and one path where the rule, state, or assumption changes.`,
+			`- The ${studioLabel} final response explains why the result meets the target skill.`
+		],
+		() => [
+			`- ${studioLabel} makes the success condition visible before optional extensions are added.`,
+			`- ${studioLabel} verifies the expected case and one case likely to expose a weak assumption.`,
+			`- The ${studioLabel} review names the strongest evidence and the next most useful improvement.`
+		],
+		() => [
+			`- ${studioLabel} has a concrete output or explanation that can be compared with the goal.`,
+			`- ${studioLabel} includes one follow-up check that changes the data, input, model, rule, or state.`,
+			`- The ${studioLabel} closing note identifies one confirmed idea and one limitation.`
+		],
+		() => [
+			`- ${studioLabel} names the requirement being checked and the evidence used to check it.`,
+			`- ${studioLabel} tests one standard case and one less comfortable case before extension work begins.`,
+			`- The ${studioLabel} summary records what changed during the build and why it matters.`
 		]
 	]);
 }
@@ -6757,7 +6831,15 @@ function studioExtensionPrompt(context: CourseTextContext) {
 			() =>
 				"Add one invalid-input, boundary, or overload case that protects the class contract.",
 			() =>
-				"Add one small refactor that improves responsibility boundaries without changing public behavior."
+				"Add one small refactor that improves responsibility boundaries without changing public behavior.",
+			() =>
+				"Add one constructor, accessor, mutator, equals-style, or toString-style case and explain what behavior it protects.",
+			() =>
+				"Add one test that changes object state through a public method, then verify the expected state without relying on hidden fields.",
+			() =>
+				"Add one collection or array variation and explain how the loop, index, or enhanced-for behavior changes the result.",
+			() =>
+				"Add one interface, abstract-class, inheritance, or record variation only if it clarifies the object responsibility."
 		]);
 	}
 	if (isCppContext(context)) {
@@ -6989,22 +7071,50 @@ function studioSupport(context: CourseTextContext) {
 		() =>
 			`Build the smallest complete version of ${studioReference} first, then record evidence that shows it meets the activity requirements.`,
 		() =>
-			"Connect prerequisite ideas to a concrete result, a testable constraint, and a visible review point.",
+			`Connect ${studioReference} prerequisites to a concrete result, a testable constraint, and a visible review point.`,
 		() =>
 			`Define ${studioReference} by its required behavior, verification evidence, likely edge case, and final explanation target.`,
 		() =>
-			`Keep ${studioReference} organized around setup, implementation, verification, and one improvement or limitation.`
+			`Keep ${studioReference} organized around setup, implementation, verification, and one improvement or limitation.`,
+		() =>
+			`Use ${studioReference} to make the target skill visible through one artifact, one test case, and one explanation.`,
+		() =>
+			`Treat ${studioReference} as a compact build: define the result, check the result, then name the next safe change.`,
+		() =>
+			`Anchor ${studioReference} in one observable behavior and one evidence source before adding optional complexity.`,
+		() =>
+			`Make ${studioReference} reviewable by naming the artifact, success signal, boundary case, and follow-up note.`
 	]);
 	const reviewTarget = compactStudioReference;
 	const reviewStep = variantPrompt(context, [
 		() =>
-			`Compare ${reviewTarget} against the original goal and record at least one improvement or bug fix.`,
+			`Compare ${reviewTarget}'s latest run with the original goal and record one concrete improvement or bug fix.`,
 		() =>
-			`Check ${reviewTarget} against the stated success criteria and note one revision that improves correctness, clarity, or robustness.`,
+			`Use the success criteria to choose one ${reviewTarget} revision that improves correctness, clarity, or robustness.`,
 		() =>
-			`After ${reviewTarget} works, record one mismatch, limitation, or design choice that would guide a later revision.`,
+			`Once ${reviewTarget} works, name one mismatch, limitation, or design choice that can guide a later revision.`,
 		() =>
-			`Finish ${reviewTarget} by naming one test result, one improvement made, and one remaining constraint.`
+			`Finish ${reviewTarget} by naming one test result, one improvement made, and one remaining constraint.`,
+		() =>
+			`Review ${reviewTarget} by comparing the intended behavior with the evidence collected during the final run.`,
+		() =>
+			`Before extending ${reviewTarget}, record one confirmed behavior and one assumption that still needs care.`,
+		() =>
+			`Close ${reviewTarget} with a short note naming what was verified, what changed, and what would be revised next.`,
+		() =>
+			`Use ${reviewTarget}'s last run to identify one successful path, one fragile path, and one concrete follow-up.`,
+		() =>
+			`Record one ${reviewTarget} result that matched the target and one result that needed adjustment or explanation.`,
+		() =>
+			`Summarize ${reviewTarget} with the tested case, the evidence source, and the next change that would most improve it.`,
+		() =>
+			`Check whether ${reviewTarget} still works under one changed condition before treating the activity as finished.`,
+		() =>
+			`Name the strongest ${reviewTarget} evidence, the weakest assumption, and the most useful follow-up revision.`,
+		() =>
+			`Compare ${reviewTarget} evidence with the target skill and record one point that became clearer during the build.`,
+		() =>
+			`End ${reviewTarget} with one confirmed behavior, one unresolved risk, and one practical improvement target.`
 	]);
 	const compactExtension = compactStudioSupportText(
 		compactStudio(studioExtensionPrompt(context)),
