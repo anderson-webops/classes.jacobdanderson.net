@@ -3655,6 +3655,7 @@ describe("course text quality normalization", () => {
 			"utf8"
 		);
 
+		expect(templateCorpus).not.toMatch(/\bshould\b/i);
 		expect(templateCorpus).not.toMatch(/\bTeach\b/);
 		expect(templateCorpus).not.toMatch(/Teach students/i);
 		expect(templateCorpus).not.toMatch(/Instructor Note/i);
