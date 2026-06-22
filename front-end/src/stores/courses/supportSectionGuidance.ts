@@ -188,13 +188,23 @@ export function buildSupportSectionGuidance({
 			`**${title}** compares the expected result with what actually happened.`,
 			`**${title}** is reviewed through evidence, not just whether the final answer looks plausible.`
 		][variant];
+		const evidenceReview = [
+			`The verification note for **${title}** names the expected result, observed result, evidence source, and interpretation. The evidence type fits the work: trace, screenshot, console output, unit test, sample run, diagram, table, or short comparison.`,
+			`A useful **${title}** check separates expectation, observation, and interpretation. It points to the trace, screenshot, output, test, sample run, diagram, table, or written comparison that supports the conclusion.`,
+			`The **${title}** evidence record makes the review reproducible: expected behavior, actual behavior, source of evidence, and the reason the evidence supports or weakens the conclusion.`
+		][variant];
+		const mismatchReview = [
+			`When the result differs from the expectation, classify the mismatch first: implementation bug, unclear requirement, invalid assumption, weak test case, or acceptable limitation. The classification determines the next check.`,
+			`If the evidence does not match the target, identify the kind of mismatch before revising the work: code or logic error, unclear requirement, wrong assumption, weak test, or real limitation.`,
+			`A mismatch in **${title}** produces a diagnosis before another edit: what failed, why it likely failed, and which smaller check can confirm the next change.`
+		][variant];
 
 		return [
 			opener,
 			`Expected and observed behavior in **${title}** are compared for ${focus}.`,
 			`The **${title}** record includes the main result, one meaningful edge case, one design or debugging decision, and one limitation that would guide a later revision.`,
-			`A complete verification pass names the expected result, the actual result, the evidence source, and the interpretation. Useful evidence can be a trace, screenshot, console output, unit test, sample run, diagram, table, or short written comparison, depending on the course family.`,
-			`If the evidence does not match the expectation, classify the mismatch before changing the work: implementation bug, unclear requirement, invalid assumption, weak test case, or acceptable limitation. That classification determines the next check.`
+			evidenceReview,
+			mismatchReview
 		].join("\n\n");
 	}
 
