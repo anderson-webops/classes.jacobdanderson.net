@@ -342,10 +342,7 @@ function compactGuidanceBody(
 			"the $1"
 		)
 		.replace(
-			new RegExp(
-				`\\bA normal ${escapedTitle} (interaction|case|input)\\b`,
-				"g"
-			),
+			new RegExp(`\\bA normal ${escapedTitle} (case|input)\\b`, "g"),
 			"A normal $1"
 		)
 		.replace(
@@ -1061,10 +1058,10 @@ function familyFocus(
 
 	if (family.includes("web") || family.includes("javascript")) {
 		return [
-			`Connect ${moduleTitle} browser behavior to state changes, event handling, DOM or canvas output, and user input; the result is inspectable in the page, not only in source code`,
+			`In ${moduleTitle}, connect browser behavior to state changes, event handling, DOM or canvas output, and user input; the result is inspectable in the page, not only in source code`,
 			`For ${moduleTitle}, make the browser evidence visible through a user action, a state or data change, rendered output, and one failure or empty-state check`,
 			`Use ${moduleTitle} to tie the code to the page: event listener, state update, DOM or canvas result, and keyboard or responsive-layout behavior are observable`,
-			`Keep ${moduleTitle} grounded in the actual user flow, with source code, browser output, console or network evidence, and one edge interaction all agreeing`
+			`Ground ${moduleTitle} in the actual user flow, with source code, browser output, console or network evidence, and one edge interaction all agreeing`
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
 	}
 
@@ -1346,12 +1343,12 @@ function requiredWorkSteps(
 			],
 			[
 				`Separate ${subject} into model behavior, runner or console behavior, and any collection or inheritance behavior.`,
-				`Implement the smallest observable model behavior first, then add the extra path that carries the module concept.`,
-				`Confirm the result with a concrete output, assertion, or trace for a typical case and a deliberately challenging case.`
+				`Implement the smallest observable ${subject} model behavior first, then add the extra path that carries the module concept.`,
+				`Confirm ${subject} with a concrete output, assertion, or trace for a typical case and a deliberately challenging case.`
 			],
 			[
 				`Define ${subject} through one example object state, one public call, and one expected result before writing the general solution.`,
-				`Compile after each change to the public contract, then rerun the smallest example before expanding behavior.`,
+				`Compile ${subject} after each public-contract change, then rerun the smallest example before expanding behavior.`,
 				`Use the ${subject} final check to identify the class, method, record, interface, or collection choice that carried the design.`
 			],
 			[
@@ -1624,10 +1621,10 @@ function referenceReviewStep(
 
 	if (family.includes("web") || family.includes("javascript")) {
 		return [
-			`After the ${moduleTitle} page behavior works, compare against the reference and record one difference in UI state, validation, accessibility, or error handling.`,
+			`Once ${moduleTitle} page behavior works, compare against the reference and record one difference in UI state, validation, accessibility, or error handling.`,
 			`Use the ${moduleTitle} reference after the browser path works, then note one difference in state, layout, validation, or feedback.`,
 			`Compare ${moduleTitle} with the reference only after a clean browser reload succeeds, focusing on one UI or data-flow difference.`,
-			`After ${moduleTitle} passes the local browser checks, record one reference difference involving interaction, accessibility, error handling, or layout.`
+			`Once ${moduleTitle} passes the local browser checks, record one reference difference involving interaction, accessibility, error handling, or layout.`
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
 	}
 
@@ -1659,10 +1656,10 @@ function referenceReviewStep(
 
 	if (family.includes("python")) {
 		return [
-			`After the ${moduleTitle} program runs, compare against the reference and record one difference in helper boundaries, data handling, input validation, or output formatting.`,
+			`Once ${moduleTitle} runs locally, compare against the reference and record one difference in helper boundaries, data handling, input validation, or output formatting.`,
 			`Use the ${moduleTitle} reference after local output is reproducible, then note one difference in decomposition, data flow, or edge handling.`,
 			`Compare ${moduleTitle} with the reference by checking one helper, loop, collection, file, or formatting decision.`,
-			`After ${moduleTitle} works locally, record one reference difference that would affect readability, robustness, or testability.`
+			`Once ${moduleTitle} works locally, record one reference difference that would affect readability, robustness, or testability.`
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
 	}
 
@@ -1762,7 +1759,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} works from a clean load and gives clear feedback for the target interaction.`,
-				`A standard path, a missing or invalid data path, and a responsive-layout or keyboard path have been exercised.`,
+				`A ${moduleTitle} standard path, a missing or invalid data path, and a responsive-layout or keyboard path have been exercised.`,
 				`The closing ${moduleTitle} note records the browser evidence and the UI state decision that mattered.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
@@ -1841,7 +1838,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} rebuilds from the current files and shows the expected console output, assertion, or method trace.`,
-				`Verification includes a routine call, a stress or boundary call, and one case involving stored state or collaboration between objects.`,
+				`${moduleTitle} verification includes a routine call, a stress or boundary call, and one case involving stored state or collaboration between objects.`,
 				`The ${moduleTitle} review identifies the Java rule that explains the result.`
 			],
 			[
@@ -1851,12 +1848,12 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} can be rerun without relying on stale IDE output, and the expected behavior is easy to inspect.`,
-				`Compare an ordinary example, an edge example, and one type-boundary example with the expected results.`,
+				`Compare a ${moduleTitle} ordinary example, an edge example, and one type-boundary example with the expected results.`,
 				`The ${moduleTitle} closing note names the responsibility that belongs in the class, record, interface, or helper method.`
 			],
 			[
 				`${moduleTitle} produces reproducible evidence through a run, unit-style check, trace, or small driver program.`,
-				`The verification distinguishes input handling, object state, and method return or side-effect behavior.`,
+				`The ${moduleTitle} verification distinguishes input handling, object state, and method return or side-effect behavior.`,
 				`The ${moduleTitle} review records the design choice that would be hardest to fix if it were wrong.`
 			],
 			[

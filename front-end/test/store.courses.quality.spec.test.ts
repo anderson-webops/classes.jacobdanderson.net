@@ -652,8 +652,8 @@ describe("course text quality normalization", () => {
 			expect(corpus).toContain(
 				"State the local scope, target, starting state, allowed tools, and stop condition"
 			);
-			expect(corpus).toContain(
-				"After the page behavior works, compare against the reference and record one difference in UI state, validation, accessibility, or error handling"
+			expect(corpus).toMatch(
+				/Once [^\n.]+ page behavior works, compare against the reference and record one difference in UI state, validation, accessibility, or error handling/
 			);
 			expect(corpus).not.toMatch(
 				/After the code compiles and tests run, compare against the reference and record one difference in class responsibility, method contract, state handling, or edge-case coverage/
