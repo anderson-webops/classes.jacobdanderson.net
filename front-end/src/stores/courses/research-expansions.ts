@@ -232,6 +232,7 @@ function projectOptionRequiredOutcome(
 	project: string
 ) {
 	const family = profile.family.toLowerCase();
+	const projectContext = project.trim() || "this project";
 	const choose = (options: string[]) =>
 		options[
 			stableVariantIndex(
@@ -244,16 +245,16 @@ function projectOptionRequiredOutcome(
 		return `**Outcome:**\n- Name the sprites, events, variables, broadcasts, or clones that control the project.\n- Show one standard play path and one reset, win/loss, scoring, or boundary condition.\n- Explain the main Scratch state or event-flow decision in the ${courseLabel} context.`;
 	}
 	if (family.includes("data") || family.includes("machine learning")) {
-		return "**Outcome:**\n- State the question, dataset, key columns or features, and cleaning or modeling choice.\n- Include a baseline, sanity check, metric, visualization, or small trace.\n- Explain what the evidence supports and one limitation of the result.";
+		return `**Outcome:**\n- For ${projectContext}, state the question, dataset, key columns or features, and cleaning or modeling choice.\n- Include a baseline, sanity check, metric, visualization, or small trace.\n- Explain what the evidence supports and one limitation of the result.`;
 	}
 	if (family.includes("ai")) {
-		return "**Outcome:**\n- Define the state representation, action space, rule, search, or scoring method.\n- Trace one standard case and one case where the strategy behaves poorly or ambiguously.\n- Explain why the strategy is reasonable and where it is limited.";
+		return `**Outcome:**\n- For ${projectContext}, define the state representation, action space, rule, search, or scoring method.\n- Trace one standard case and one case where the strategy behaves poorly or ambiguously.\n- Explain why the strategy is reasonable and where it is limited.`;
 	}
 	if (family.includes("algebra")) {
-		return "**Outcome:**\n- Show the rule, equation, graph, table, or transformation being used.\n- Include one standard case and one sign, unit, intercept, domain, or boundary check.\n- Explain how the result is known to be reasonable.";
+		return `**Outcome:**\n- For ${projectContext}, show the rule, equation, graph, table, or transformation being used.\n- Include one standard case and one sign, unit, intercept, domain, or boundary check.\n- Explain how the result is known to be reasonable.`;
 	}
 	if (isScienceFamily(family)) {
-		return "**Outcome:**\n- State the phenomenon or question, model or data source, claim, and relevant vocabulary.\n- Separate the observation, pattern, and explanation.\n- Connect evidence to the claim and name one model limitation or uncertainty.";
+		return `**Outcome:**\n- For ${projectContext}, state the phenomenon or question, model or data source, claim, and relevant vocabulary.\n- Separate the observation, pattern, and explanation.\n- Connect ${projectContext} evidence to the claim and name one model limitation or uncertainty.`;
 	}
 	if (
 		family.includes("security") ||
@@ -267,7 +268,7 @@ function projectOptionRequiredOutcome(
 		return "**Outcome:**\n- Translate the prompt into input format, output format, constraints, and invariant.\n- Pass the sample and at least one tiny, boundary, duplicate, tie, or adversarial custom case.\n- State the time and memory complexity in relation to the constraints.";
 	}
 	if (family.includes("javascript") || family.includes("web")) {
-		return "**Outcome:**\n- Identify the UI state, event handler, data flow, validation path, and visible output.\n- Test with a fresh load, normal action, empty or error case, and responsive layout when relevant.\n- Explain the main DOM, API, state, or accessibility decision.";
+		return `**Outcome:**\n- For ${projectContext}, identify the UI state, event handler, data flow, validation path, and visible output.\n- Test with a fresh load, normal action, empty or error case, and responsive layout when relevant.\n- Explain the main DOM, API, state, or accessibility decision.`;
 	}
 	if (family.includes("java")) {
 		return `**Outcome:**\n- Identify the classes, fields, method contracts, and object-state changes.\n- Compile and run one standard case and one boundary or edge case.\n- Explain the main type, inheritance, interface, collection, or record decision in the ${courseLabel} context.`;
