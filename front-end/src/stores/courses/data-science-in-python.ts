@@ -244,7 +244,9 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 		const practiceTitle = `Data Analysis Lab ${lab.number}: Practice Studio`;
 		const module = course.modules.find(
 			({ title }) =>
-				title === legacyTitle || title === practiceTitle || title === lab.title
+				title === legacyTitle ||
+				title === practiceTitle ||
+				title === lab.title
 		);
 		if (!module) continue;
 
