@@ -96,6 +96,7 @@ function cleanupReferenceNamePattern() {
 		"Java work",
 		"Java implementation",
 		"class model",
+		"Java exercise",
 		"class exercise",
 		"code checkpoint",
 		"object-design task",
@@ -169,7 +170,7 @@ function guidanceReference(courseFamily: string, moduleTitle: string) {
 	if (family.includes("swift")) return "the app path";
 	if (family.includes("java")) {
 		const references = [
-			"the class model",
+			"the Java exercise",
 			"the class exercise",
 			"the project",
 			"the code checkpoint",
@@ -788,6 +789,15 @@ function normalizeGeneratedGuidanceText(
 	const escapedCourseFamily = escapeStringForRegExp(courseFamily);
 
 	return guidanceText
+		.replace(
+			/\bExtension Challenge(?:\s*:\s*Extension Challenge|\s+Extension Challenge)\b/g,
+			"Extension Challenge"
+		)
+		.replace(
+			/\b([A-Z][A-Za-z0-9 '&:/-]{1,120}?) class model class\b/g,
+			"$1 class"
+		)
+		.replace(/\b([A-Z][A-Za-z0-9 '&:/-]{1,120}?) class model\b/g, "$1")
 		.replace(new RegExp(`\\b(${cleanupReferenceNames}) \\1\\b`, "gi"), "$1")
 		.replace(/\b([A-Z][A-Z-]{3,})\s+\1\b/gi, "$1")
 		.replace(/\b(the final|The final|the closing|The closing) the\b/g, "$1")
