@@ -851,7 +851,7 @@ export const javaLevel2Course: RawCourse = {
 				{
 					title: "Reference and Solution Boundaries",
 					content:
-						"Starter-only or solution-only folders stay support-oriented. The public course surfaces the most useful ones below while still keeping the main Java 2 progression readable."
+						"The extra folders are support material for comparison, recovery, and extension work. Starter-style folders are useful when a concept needs a smaller practice surface than the main module project; solution-style folders are for reference comparison, debugging comparison, or checking a completed approach after the core reasoning has already been attempted. The main Java 2 progression remains the source of course pacing. These references are best used by naming the concept being checked, the file or class being inspected, and the difference between the reference structure and the current project."
 				},
 				{
 					title: "When to Reach for the Extension Bank",
@@ -899,7 +899,7 @@ export const javaLevel2Course: RawCourse = {
 				{
 					title: "Reference: HashMaps Examples",
 					content:
-						"Keep a smaller maps example bank available when the main dealership or file-I/O projects feel too large for the immediate practice need.",
+						"This smaller maps example bank isolates `HashMap` mechanics from the larger dealership and file-I/O projects. It is useful for checking key-value vocabulary, insertion, lookup, replacement, removal, iteration over keys or entries, and the difference between a missing key and a key whose value is present but unexpected. A good reference pass compares one concrete map operation with the same operation inside the larger project, then names what data type is used for the key, what data type is used for the value, and what behavior is expected when the key is not found.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM-Java-Hash-Maps-Examples"
 				},
@@ -927,7 +927,7 @@ export const javaLevel2Course: RawCourse = {
 				{
 					title: "Reference: Try-Catch Example",
 					content:
-						"Use a smaller exception-handling example for a cleaner reference than the larger try-catch projects.",
+						"This focused exception-handling example separates the `try`, `catch`, and recovery path from the larger projects. It is useful for comparing checked exceptions, unchecked exceptions, parse failures, file failures, and input validation without extra application logic in the way. The reference target is not just adding a `catch` block; it is identifying which operation can fail, what exception or invalid state represents that failure, what message or fallback is produced, and whether the program can safely continue afterward. A useful review also names which values remain trustworthy after the failure.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-2/tree/main/JM6-Try-Catch-Example"
 				},

@@ -98,7 +98,7 @@ export const aiLevel1Course: RawCourse = {
 				{
 					title: "Reference Archive: AI Level 1 Workspace",
 					content:
-						"Use the reference Python archive when the full workspace layout is useful for comparison, alternate practice, or recovering an earlier classroom variant of the AI Level 1 materials.",
+						"The AI Level 1 workspace archive is a reference map for the course's Python search and game-AI materials. It identifies the folder layout, starter files, graph and grid examples, trace-output patterns, and earlier classroom variants that may clarify how a lab is organized. The archive is most useful for comparing state representation, action rules, search order, scoring logic, and reflection notes across projects. A strong use of the archive names the file being inspected, the behavior it demonstrates, and the part of the current project it helps verify; it is not a shortcut around explaining the algorithm.",
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-1/tree/main"
 				},

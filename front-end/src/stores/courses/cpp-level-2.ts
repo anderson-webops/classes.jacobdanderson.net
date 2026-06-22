@@ -9,12 +9,12 @@ export const cppLevel2Course: RawCourse = {
 				{
 					title: "Level 2 Positioning and Ownership Vocabulary",
 					content:
-						"This course is the low-level follow-on after prior work has already covered menu-driven programs with functions, classes, vectors, structs, references, and simple state. Level 2 deepens the memory model instead of presenting pointer syntax as disconnected trivia. The central vocabulary includes what it means for a function or class to own data, how observation, mutation, borrowing, and ownership differ, and what needs to be clear before raw arrays, heap allocation, and custom containers."
+						"This course is the low-level follow-on after prior work has already covered menu-driven programs with functions, classes, vectors, structs, references, and simple state. Level 2 deepens the memory model instead of presenting pointer syntax as disconnected trivia. The central vocabulary includes owner, observer, borrower, mutator, lifetime boundary, valid state, invariant, alias, and cleanup responsibility. These terms make later pointer work reviewable: every function or class can be described by what data it owns, what data it temporarily observes, what data it may mutate, and what must remain true when the operation finishes. Raw arrays, heap allocation, and custom containers become safer once that ownership sentence is explicit."
 				},
 				{
 					title: "References, Lifetimes, and Evidence-Based Debugging",
 					content:
-						"Pass-by-value, pass-by-reference, and `const` reference come before raw pointers because they expose ownership and aliasing without adding address syntax too early. Key topics include stack objects, heap objects, aliases, dangling references, leaks, objects that clean themselves up when they leave scope, when a function may mutate caller-owned data, when it only observes data, and how address prints, trace output, and debugger inspection provide evidence for where values live and why an alias changes what it changes."
+						"Pass-by-value, pass-by-reference, and `const` reference come before raw pointers because they expose ownership and aliasing without adding address syntax too early. Key topics include stack objects, heap objects, aliases, dangling references, leaks, invalidated references, scope-based cleanup, and the difference between a function that mutates caller-owned data and one that only observes it. The debugging habit is evidence-based: draw a small alias diagram, print relevant addresses only when they clarify the question, inspect values in the debugger, and compare the trace with the ownership sentence for the function. Compiler warnings and sanitizers are treated as evidence about lifetime mistakes, not as mysterious messages to work around."
 				},
 				{
 					title: "CPPM0 Project 1: Lifetime Tracing Warm-Up",
