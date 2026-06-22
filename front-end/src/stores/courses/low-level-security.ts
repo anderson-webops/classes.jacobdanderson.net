@@ -65,13 +65,17 @@ function securityLabFocus(topic: string) {
 }
 
 function securityLabPurposeText(
+	topic: string,
 	mode: SecurityLabMode,
 	purpose: SecurityLabPurpose
 ) {
+	const label = securityLabLabel(topic);
+	const focus = securityLabFocus(topic);
+
 	if (mode === "core") {
 		return {
 			artifact: "core security lab",
-			path: "Build the baseline lab first: reproduce the intended behavior, document the local boundary, and confirm one standard scenario plus one defensive edge case."
+			path: `Build the **${label}** baseline first: reproduce the intended behavior around ${focus}, document the local boundary, and confirm one standard scenario plus one defensive edge case.`
 		};
 	}
 
@@ -81,15 +85,15 @@ function securityLabPurposeText(
 	> = {
 		"extension-challenge": {
 			artifact: "extension challenge security lab",
-			path: "Add one meaningful constraint beyond the core lab, such as a stricter input rule, stronger sanitizer evidence, or a clearer mitigation decision."
+			path: `Add one meaningful **${label}** constraint beyond the core lab, such as a stricter input rule, stronger sanitizer evidence, or a clearer mitigation decision tied to ${focus}.`
 		},
 		"transfer-practice": {
 			artifact: "transfer-practice security lab",
-			path: "Move the same defensive method to a changed fixture, input shape, build flag, or data layout so the invariant is tested outside the original example."
+			path: `Move the **${label}** defensive method to a changed fixture, input shape, build flag, or data layout so the invariant for ${focus} is tested outside the original example.`
 		},
 		"extension-practice": {
 			artifact: "extension-practice security lab",
-			path: "Make an independent hardening pass with a stronger edge-case suite, a tighter audit note, and one limitation that remains outside the local lab."
+			path: `Make an independent **${label}** hardening pass with a stronger edge-case suite, a tighter audit note, and one limitation that remains outside the local ${focus} lab.`
 		}
 	};
 
@@ -104,7 +108,7 @@ function securityLabProjectContent(
 		: "extension-challenge"
 ) {
 	const label = securityLabLabel(topic);
-	const purposeText = securityLabPurposeText(mode, purpose);
+	const purposeText = securityLabPurposeText(topic, mode, purpose);
 	const variant = stableVariantIndex(`${label}|${mode}|${purpose}`, 4);
 	const scopeReminder = [
 		`Use only the provided **${label}** fixture, starter files, and local defensive evidence.`,
@@ -185,9 +189,9 @@ function securityLabConceptContent(topic: string) {
 
 	return [
 		`**Concept path:** **${label}** connects the lab artifact to ${securityLabFocus(topic)}.`,
-		"Name the allowed target, disallowed actions, evidence source, stop condition, and defensive purpose.",
-		"Begin with the protected asset, the trust boundary, the unsafe assumption, and the invariant that should stay true after the code is changed. The concept is not only the bug name; it includes what input or state can cross the boundary, what evidence would confirm the problem, and what evidence would confirm the defensive result.",
-		"Keep the work defensive and local. A strong concept note identifies the expected behavior, the failure-mode behavior, the smallest useful remediation or hardening step, and the command, trace, sanitizer report, or test output that would let another person verify the final state."
+		`For **${label}**, name the allowed target, disallowed actions, evidence source, stop condition, and defensive purpose before running commands.`,
+		`Begin **${label}** with the protected asset, the trust boundary, the unsafe assumption, and the invariant that should stay true after the code is changed. The concept is not only the bug name; it includes what input or state can cross the boundary, what evidence would confirm the problem, and what evidence would confirm the defensive result.`,
+		`Keep **${label}** defensive and local. A strong concept note identifies the expected behavior, the failure-mode behavior, the smallest useful remediation or hardening step, and the command, trace, sanitizer report, or test output that would let another person verify the final state.`
 	].join("\n\n");
 }
 
@@ -209,7 +213,7 @@ function securityLabReviewContent(topic: string) {
 	return [
 		`**Mastery check:** Close **${label}** with a maintainer-facing audit note rather than a vague reflection.`,
 		`The note should summarize the root cause, the security or reliability boundary involved, the patch or hardening choice, and the standard, malformed, and regression evidence that supports ${focus}. It should separate observed evidence from inferred risk so the result stays reviewable and does not overclaim.`,
-		"Finish by naming one remaining limitation without expanding beyond the provided local lab. Good review evidence includes the rerun command, the relevant output or trace, the behavior that changed, and the behavior that still needs a future test or design decision."
+		`Finish **${label}** by naming one remaining limitation without expanding beyond the provided local lab. Good review evidence includes the rerun command, the relevant output or trace, the behavior that changed, and the behavior that still needs a future test or design decision.`
 	].join("\n\n");
 }
 
