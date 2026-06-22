@@ -11,7 +11,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Check-In #1 Overview",
 					content:
-						"Use this checkpoint as a review of JavaScript variables, operators, randomness, loops, conditionals, SVG drawing, and nested loops. Each prompt should produce a small runnable example and a short explanation of why the chosen JavaScript structure fits the task. The checkpoint identifies which fundamentals are fluent and which ones need more practice before the next project sequence.",
+						"Use this checkpoint as a review of JavaScript variables, operators, randomness, loops, conditionals, SVG drawing, and nested loops. Each prompt produces a small runnable example and a short explanation of why the chosen JavaScript structure fits the task. The checkpoint identifies which fundamentals are fluent and which ones need more practice before the next project sequence.",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/9023ac5a2ab1213c64d59d7b864aef8d"
 				},
@@ -23,7 +23,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Check-In #1: Mathematical Operators and Randomness",
 					content:
-						"Generate a random number from 1 through 256, convert it into an integer, then apply several arithmetic operations to that value. Print the original integer, the value plus 5, the value multiplied by 10, and at least one remainder calculation. The finished code should make the order of operations and rounding step easy to inspect."
+						"Generate a random number from 1 through 256, convert it into an integer, then apply several arithmetic operations to that value. Print the original integer, the value plus 5, the value multiplied by 10, and at least one remainder calculation. The finished code makes the order of operations and rounding step easy to inspect."
 				},
 				{
 					title: "Check-In #1: Loops",
@@ -43,12 +43,12 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Check-In #1: Nested Loops",
 					content:
-						"Use nested loops to print a shrinking star pattern: four stars, then three, then two, then one. Build the pattern once with nested `for` loops and again with nested `while` loops. The outer loop should control the row and the inner loop should control how many stars appear in that row."
+						"Use nested loops to print a shrinking star pattern: four stars, then three, then two, then one. Build the pattern once with nested `for` loops and again with nested `while` loops. The outer loop controls the row and the inner loop controls how many stars appear in that row."
 				},
 				{
 					title: "Check-In #1: Additional Practice Project",
 					content:
-						"Build a three-round random number guessing game with golf-style scoring. Each round should choose a target number, allow three guesses, compare each guess to the target, and award fewer points for closer guesses. Track total score across rounds and print enough feedback for a player to understand whether a guess was close, far away, or exact.",
+						"Build a three-round random number guessing game with golf-style scoring. Each round chooses a target number, allows three guesses, compares each guess to the target, and awards fewer points for closer guesses. Track total score across rounds and print enough feedback for a player to understand whether a guess was close, far away, or exact.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/b04e9208251c84d123c97daf37972988",
 					solutionLink:
@@ -104,7 +104,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Check-In #2 Overview",
 					content:
-						"Use this checkpoint to review the web-development half of JavaScript Level 1: HTML structure, CSS layout, D3 animation, DOM events, components, and responsive page layout. Each task should connect a visible result to the underlying markup, style rule, or JavaScript event that created it.",
+						"Use this checkpoint to review the web-development half of JavaScript Level 1: HTML structure, CSS layout, D3 animation, DOM events, components, and responsive page layout. Each task connects a visible result to the underlying markup, style rule, or JavaScript event that created it.",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/ce3da888e3e72bcaff1251f225b2f6fa"
 				},
@@ -220,7 +220,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS1 Project 2: Mad Libs",
 					content:
-						"Create a Mad Libs story that uses `prompt()` to collect at least five words, stores each response in a clearly named variable, and prints a complete story with `printToScreen()`. The story should include punctuation and spaces intentionally so the final sentence reads naturally instead of looking like raw concatenated fragments.",
+						"Create a Mad Libs story that uses `prompt()` to collect at least five words, stores each response in a clearly named variable, and prints a complete story with `printToScreen()`. The story includes punctuation and spaces intentionally so the final sentence reads naturally instead of looking like raw concatenated fragments.",
 					projectLink: "https://codepen.io/junilearning/pen/qBbPbPp",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/ce06ca273ecc8c28529261846833d4c1"
@@ -246,7 +246,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS1 Supplemental Project 3: Debugging a Friend Survey",
 					content:
-						"Debug a friend's survey code by checking prompts, variable names, string concatenation, numeric conversion, and output statements. Run the broken version first, list what the program should ask and print, then fix one issue at a time until every answer appears in the intended place.",
+						"Debug a friend's survey code by checking prompts, variable names, string concatenation, numeric conversion, and output statements. Run the broken version first, list the intended prompts and printed output, then fix one issue at a time until every answer appears in the intended place.",
 					projectLink: "https://codepen.io/junilearning/pen/VwexoXw",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/a16730b9a6d5bba63389d9e3f5614ab9"
@@ -337,7 +337,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS3 Project 1: For Loops Practice",
 					content:
-						"Use `printToScreen()` and `for` loops to print several numeric sequences: 1 through 50, 50 down to 1, even numbers through 100, odd numbers down from 100, powers of 3, and the sequence 500, 100, 20, 4. Each sequence should have its own loop rule so the start value, condition, and update step are visible.",
+						"Use `printToScreen()` and `for` loops to print several numeric sequences: 1 through 50, 50 down to 1, even numbers through 100, odd numbers down from 100, powers of 3, and the sequence 500, 100, 20, 4. Each sequence has its own loop rule so the start value, condition, and update step are visible.",
 					projectLink: "https://codepen.io/junilearning/pen/PoZJGKV",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/8c4bf4ddfb48b6a93a41d0347d6f78ef"
@@ -345,12 +345,12 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "While Loops",
 					content:
-						"A `while` loop repeats as long as its condition stays true. It is useful when the stopping point depends on a changing value rather than a fixed number of repetitions. Every `while` loop should have a clear starting value, a condition, and an update that moves the loop toward stopping; otherwise it can become infinite."
+						"A `while` loop repeats as long as its condition stays true. It is useful when the stopping point depends on a changing value rather than a fixed number of repetitions. Every `while` loop needs a clear starting value, a condition, and an update that moves the loop toward stopping; otherwise it can become infinite."
 				},
 				{
 					title: "JSS3 Project 2: String Reversal",
 					content:
-						"Prompt for a word, then print its letters forward with a `for` loop and backward with a `while` loop. Use string indices deliberately: the forward loop should start at 0, while the backward loop should start at the last valid index. Test a one-letter word and a longer word to confirm the boundary logic.",
+						"Prompt for a word, then print its letters forward with a `for` loop and backward with a `while` loop. Use string indices deliberately: the forward loop starts at 0, while the backward loop starts at the last valid index. Test a one-letter word and a longer word to confirm the boundary logic.",
 					projectLink: "https://codepen.io/junilearning/pen/OJMxRvY",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/3f802bef974fcccd10caafaac8c3eb04"
@@ -368,7 +368,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS3 Supplemental Project 1: Powers of 3",
 					content:
-						"Print every power of 3 that is less than 5000. Start with a value of 1, repeatedly multiply by 3, and stop before the value reaches the limit. The output should make the growth pattern clear, and the loop should avoid printing the first value that is too large.",
+						"Print every power of 3 that is less than 5000. Start with a value of 1, repeatedly multiply by 3, and stop before the value reaches the limit. The output makes the growth pattern clear, and the loop avoids printing the first value that is too large.",
 					projectLink: "https://codepen.io/junilearning/pen/wvMrzEw",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/1c1201771499a38d4f15588580d7bfa1"
@@ -433,7 +433,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS4 Supplemental Project 1: Debugging Football",
 					content:
-						"Debug the football-drive simulation by tracking yards, downs, and stopping conditions. The final program should update the drive state consistently, avoid off-by-one loop mistakes, and print enough information to tell whether the drive ends by scoring, failing, or reaching the intended limit.",
+						"Debug the football-drive simulation by tracking yards, downs, and stopping conditions. The final program updates the drive state consistently, avoids off-by-one loop mistakes, and prints enough information to tell whether the drive ends by scoring, failing, or reaching the intended limit.",
 					projectLink: "https://codepen.io/junilearning/pen/gOPRqPr",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/eb1d816cbecce4d20944284fc085ae36"
@@ -495,7 +495,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS5 Project 2: What Grade Is This?",
 					content:
-						"Given a number from 0 through 100, print the matching letter grade with an `if`/`else if`/`else` chain. Decide how boundary values such as 90, 80, 70, and invalid scores should be handled before coding. Test the exact boundary values as well as one score in the middle of each grade range.",
+						"Given a number from 0 through 100, print the matching letter grade with an `if`/`else if`/`else` chain. Decide how boundary values such as 90, 80, 70, and invalid scores are handled before coding. Test the exact boundary values as well as one score in the middle of each grade range.",
 					projectLink: "https://codepen.io/junilearning/pen/yLezjje",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/2d86a137a1c362df390051e86a298e9d"
@@ -526,7 +526,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS5 Supplemental Project 2: Snake Eyes",
 					content:
-						"Simulate rolling two dice until both dice show 1. Each iteration should roll both dice, count the attempt, and decide whether the stopping condition has been met. Print the total number of rolls and enough sample roll information to verify that the loop is actually waiting for snake eyes.",
+						"Simulate rolling two dice until both dice show 1. Each iteration rolls both dice, counts the attempt, and decides whether the stopping condition has been met. Print the total number of rolls and enough sample roll information to verify that the loop is actually waiting for snake eyes.",
 					projectLink: "https://codepen.io/junilearning/pen/jOWGKZw",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/6580937e9dfd9ce926651a6fe915e078"
@@ -534,7 +534,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS5 Supplemental Project 3: Debugging the Favorite Fruit Guesser",
 					content:
-						"Debug a fruit guesser that uses color and taste conditionals. First identify the intended decision tree, then check whether each condition is testing the correct variable and whether the branches are ordered correctly. Test at least one input that should match, one that should almost match, and one that should fall through to the default result.",
+						"Debug a fruit guesser that uses color and taste conditionals. First identify the intended decision tree, then check whether each condition is testing the correct variable and whether the branches are ordered correctly. Test at least one input that matches, one that almost matches, and one that falls through to the default result.",
 					projectLink: "https://codepen.io/junilearning/pen/PoZdQeW",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/949d30ec6dbcc0dfdda259392403b0b7"
@@ -578,7 +578,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Switch Statements",
 					content:
-						"A `switch` statement is useful when one expression should be compared against several exact cases. Each case should handle one expected value, `break` should prevent accidental fall-through, and `default` should handle unknown values. Test at least one known case and one default case."
+						"A `switch` statement is useful when one expression is compared against several exact cases. Each case handles one expected value, `break` prevents accidental fall-through, and `default` handles unknown values. Test at least one known case and one default case."
 				},
 				{
 					title: "JSS6 Project 3: GCF of Two Numbers",
@@ -601,7 +601,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS6 Supplemental Project 2: Debugging Bugging Friends",
 					content:
-						"Debug a program that decides whether messaging frequency is too high. Identify the intended thresholds, check whether `&&` or `||` is appropriate in each condition, and verify that edge values exactly on the threshold behave as expected. The fixed version should explain why each branch fires.",
+						"Debug a program that decides whether messaging frequency is too high. Identify the intended thresholds, check whether `&&` or `||` is appropriate in each condition, and verify that edge values exactly on the threshold behave as expected. The fixed version explains why each branch fires.",
 					projectLink: "https://codepen.io/junilearning/pen/mdVGXLE",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/67b0c29a104afde9cce553de6cacf882"
@@ -645,7 +645,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS7 Project 2: Smiley Face",
 					content:
-						"Draw a smiley face with D3 by combining circles, ellipses, and an arc-based mouth. Use `degreesToRadians()` or a similar helper so the mouth angles are understandable. The final drawing should place both eyes symmetrically and position the mouth relative to the face center instead of relying on unexplained coordinates.",
+						"Draw a smiley face with D3 by combining circles, ellipses, and an arc-based mouth. Use `degreesToRadians()` or a similar helper so the mouth angles are understandable. The final drawing places both eyes symmetrically and positions the mouth relative to the face center instead of relying on unexplained coordinates.",
 					projectLink: "https://codepen.io/junilearning/pen/MWKOeRd",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/593993382174caa7d510ddbd5b0009d8"
@@ -697,7 +697,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS8 Project 1: Multiplication Tables",
 					content:
-						"Use nested loops to print multiplication tables from 1 through 10. The outer loop should choose the row number and the inner loop should choose the column number. Print each product in a readable format and count how many multiplication operations occur so the connection between nested loops and total work is visible.",
+						"Use nested loops to print multiplication tables from 1 through 10. The outer loop chooses the row number and the inner loop chooses the column number. Print each product in a readable format and count how many multiplication operations occur so the connection between nested loops and total work is visible.",
 					projectLink: "https://codepen.io/junilearning/pen/WNrXoBj",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/431a3c1e61b0fe9d0e6fa2e16e6d37f6"
@@ -705,7 +705,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS8 Project 2: Pattern Production",
 					content:
-						"Create a repeated pattern in two forms. First print a star pattern with nested loops, then recreate the same row-and-column structure with D3 Pac-Man shapes using `transform: translate(...)` for placement. The D3 version should preserve the same pattern logic rather than placing each Pac-Man manually.",
+						"Create a repeated pattern in two forms. First print a star pattern with nested loops, then recreate the same row-and-column structure with D3 Pac-Man shapes using `transform: translate(...)` for placement. The D3 version preserves the same pattern logic rather than placing each Pac-Man manually.",
 					projectLink: "https://codepen.io/junilearning/pen/pogdRva",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/9b713f294e21887a1a2c9b528764bd4b"
@@ -723,7 +723,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS8 Supplemental Project 1: Archery Simulator",
 					content:
-						"Simulate five rounds of archery with three arrows per round. Use nested loops so the outer loop represents rounds and the inner loop represents arrows. Each arrow should have a random one-in-three chance to hit, and the program should print per-round results plus the total number of bullseyes.",
+						"Simulate five rounds of archery with three arrows per round. Use nested loops so the outer loop represents rounds and the inner loop represents arrows. Each arrow has a random one-in-three chance to hit, and the program prints per-round results plus the total number of bullseyes.",
 					projectLink: "https://codepen.io/junilearning/pen/xxZPgdv",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/2882e6ebc5b146358627d5c4f5afd90c"
@@ -731,7 +731,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS8 Supplemental Project 2: Tower of Boxes",
 					content:
-						"Print the stacked box pattern with nested loops. Decide which loop controls the height of the tower and which loop controls the symbols within each row. The finished output should match the target pattern exactly, including row lengths, spacing, and line breaks.",
+						"Print the stacked box pattern with nested loops. Decide which loop controls the height of the tower and which loop controls the symbols within each row. The finished output matches the target pattern exactly, including row lengths, spacing, and line breaks.",
 					projectLink: "https://codepen.io/junilearning/pen/PoZOWWp",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/6973a709e1c0d6932da2ed1e7650d30f"
@@ -739,7 +739,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS8 Supplemental Project 3: Shield Debugging",
 					content:
-						"Debug the stacked shield pattern by checking the order of nested-loop output. The final result should print or draw each layer in the correct sequence, with loop counters controlling rows and columns clearly enough to explain why the shield stacks correctly.",
+						"Debug the stacked shield pattern by checking the order of nested-loop output. The final result prints or draws each layer in the correct sequence, with loop counters controlling rows and columns clearly enough to explain why the shield stacks correctly.",
 					projectLink: "https://codepen.io/junilearning/pen/pogyeaj",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/1ac928d6d9d777928c4439b4262310a3"
@@ -782,7 +782,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS9 Supplemental Project 1: Practice with CSS Selectors",
 					content:
-						"Use CSS Diner to practice selector precision, not just clicking through the levels. Track examples of tag, class, id, descendant, child, adjacent-sibling, attribute, and pseudo-class selectors. After the practice, write three original selectors for a small HTML snippet and explain which elements each selector should match before testing it.",
+						"Use CSS Diner to practice selector precision, not just clicking through the levels. Track examples of tag, class, id, descendant, child, adjacent-sibling, attribute, and pseudo-class selectors. After the practice, write three original selectors for a small HTML snippet and explain which elements each selector matches before testing it.",
 					projectLink: "https://flukeout.github.io/",
 					solutionLink: "https://flukeout.github.io/"
 				},
@@ -845,7 +845,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS10 Project 3: Growing Ball",
 					content:
-						"Use `mouseover` and `mouseout` events to change a circle's size without losing track of its center point. The ball should grow when hovered, shrink when the pointer leaves, and use transitions smooth enough that the event behavior is easy to see and debug.",
+						"Use `mouseover` and `mouseout` events to change a circle's size without losing track of its center point. The ball grows when hovered, shrinks when the pointer leaves, and uses transitions smooth enough that the event behavior is easy to see and debug.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/ff4f98a080f26536a286835de4b1b9a2",
 					solutionLink:
@@ -892,7 +892,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "The Box Model",
 					content:
-						"Use one visible box to separate the four box-model layers: content, padding, border, and margin. Change one layer at a time and predict whether the visible box, its internal spacing, or its distance from neighboring elements should change. This keeps layout debugging concrete instead of memorizing definitions."
+						"Use one visible box to separate the four box-model layers: content, padding, border, and margin. Change one layer at a time and predict whether the visible box, its internal spacing, or its distance from neighboring elements changes. This keeps layout debugging concrete instead of memorizing definitions."
 				},
 				{
 					title: "The Position Property",
@@ -904,7 +904,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS11 Project 2: My Hero Page",
 					content:
-						"Build a hero page that uses a custom Google Font, a clear heading, and both ordered and unordered lists. Use `ul`, `ol`, and `li` semantically: ordered lists should represent steps or rankings, while unordered lists should represent related items without a strict sequence. Check that the font loads and that list spacing is readable.",
+						"Build a hero page that uses a custom Google Font, a clear heading, and both ordered and unordered lists. Use `ul`, `ol`, and `li` semantically: ordered lists represent steps or rankings, while unordered lists represent related items without a strict sequence. Check that the font loads and that list spacing is readable.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/d959f67d5f753f31d3fea61cd4e6e8e3",
 					solutionLink:
@@ -913,7 +913,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS11 Project 3: My JavaScript Art",
 					content:
-						"Create a page that presents three favorite D3 drawings or animations from the course. Each piece should have a title, a short description of the JavaScript or SVG concept it demonstrates, and enough page structure that the gallery feels intentional rather than a list of disconnected embeds.",
+						"Create a page that presents three favorite D3 drawings or animations from the course. Each piece has a title, a short description of the JavaScript or SVG concept it demonstrates, and enough page structure that the gallery feels intentional rather than a list of disconnected embeds.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/b252c1398d97eda534482419d9103b87",
 					solutionLink:
@@ -964,12 +964,12 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Component Libraries",
 					content:
-						"Component libraries provide prebuilt CSS and JavaScript patterns. Add Materialize through CodePen settings, read the relevant documentation before copying markup, and identify which classes control layout, color, spacing, or component behavior. The library should be used deliberately rather than treated as a set of magic class names."
+						"Component libraries provide prebuilt CSS and JavaScript patterns. Add Materialize through CodePen settings, read the relevant documentation before copying markup, and identify which classes control layout, color, spacing, or component behavior. The library is used deliberately rather than treated as a set of magic class names."
 				},
 				{
 					title: "JSS12 Project 1: Rainbow Sections",
 					content:
-						"Use Materialize sections, containers, cards, and color helpers to build a rainbow-themed page. Each section should have a clear color choice, readable text, and consistent spacing. Prefer Materialize spacing/layout classes where possible, and only use line breaks when they are intentionally part of the design.",
+						"Use Materialize sections, containers, cards, and color helpers to build a rainbow-themed page. Each section has a clear color choice, readable text, and consistent spacing. Prefer Materialize spacing/layout classes where possible, and only use line breaks when they are intentionally part of the design.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/ed06d5371daf7472425bea1c7e65e4bf",
 					solutionLink:
@@ -978,7 +978,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS12 Project 2: My Hobby Table",
 					content:
-						"Build a styled table about a hobby using the Materialize table documentation. Use `thead` and `th` for column labels, keep each row consistent, and choose hover, striped, or centered table styles intentionally. The finished table should be readable without relying only on color.",
+						"Build a styled table about a hobby using the Materialize table documentation. Use `thead` and `th` for column labels, keep each row consistent, and choose hover, striped, or centered table styles intentionally. The finished table is readable without relying only on color.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/0214806859946640ce1654c9c3ec08f0",
 					solutionLink:
@@ -992,7 +992,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Mobile Wrappers",
 					content:
-						"Use Materialize responsive helper classes to show, hide, or rearrange content for small, medium, and large screens. Test the same page at multiple viewport widths and record which content should remain visible, which content should collapse or disappear, and why that choice improves the layout.",
+						"Use Materialize responsive helper classes to show, hide, or rearrange content for small, medium, and large screens. Test the same page at multiple viewport widths and record which content remains visible, which content collapses or disappears, and why that choice improves the layout.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/ab476697ba2b3957601555751bda65fb",
 					solutionLink:
@@ -1001,7 +1001,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS12 Project 4: My JavaScript Art Part II",
 					content:
-						"Add another D3 piece to the JavaScript art page and reorganize the gallery with Materialize sections or containers. The new piece should include a title and description, and the page should show clearer grouping than the first version: sections, cards, or spacing should help a visitor scan the work.",
+						"Add another D3 piece to the JavaScript art page and reorganize the gallery with Materialize sections or containers. The new piece includes a title and description, and the page shows clearer grouping than the first version: sections, cards, or spacing help a visitor scan the work.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/68f7db60fabe38f5ff48cf4cfa631a4c",
 					solutionLink:
@@ -1066,7 +1066,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Component Library Grids",
 					content:
-						"Materialize uses a 12-column responsive grid. Build rows with columns that change across small, medium, and large breakpoints, then resize the browser to verify when each layout rule takes effect. The page should make it clear why responsive component-library grids are different from manually placing every element.",
+						"Materialize uses a 12-column responsive grid. Build rows with columns that change across small, medium, and large breakpoints, then resize the browser to verify when each layout rule takes effect. The page makes it clear why responsive component-library grids are different from manually placing every element.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/a3eaa0595c2a0f55991e946605e38e60",
 					solutionLink:
@@ -1095,7 +1095,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS13 Supplemental Project 1: FakeTech.io",
 					content:
-						"Build a fictional company page with employee cards. Use Materialize components such as circular images, vertical alignment wrappers, card layouts, and hoverable shadows. Each card should include consistent content fields, and the page should stay readable when the cards wrap to a new row.",
+						"Build a fictional company page with employee cards. Use Materialize components such as circular images, vertical alignment wrappers, card layouts, and hoverable shadows. Each card includes consistent content fields, and the page stays readable when the cards wrap to a new row.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/ca71737eccb1712a4a653a8f883c57cf",
 					solutionLink:
@@ -1104,7 +1104,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS13 Supplemental Project 2: Art Gallery",
 					content:
-						"Create an online art gallery with 12 pieces using horizontal cards, descriptions, and links. Plan how the gallery should behave on desktop, tablet, and mobile widths, then use responsive classes or grid rules to make the cards readable at each size.",
+						"Create an online art gallery with 12 pieces using horizontal cards, descriptions, and links. Plan how the gallery behaves on desktop, tablet, and mobile widths, then use responsive classes or grid rules to make the cards readable at each size.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/8a2437122b9c7eb4159c9cacccdedae8",
 					solutionLink:
@@ -1224,7 +1224,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Recommended Next Course Path",
 					content:
-						"`JavaScript Level 2` should be the normal next step after this course. A comfortable JavaScript Level 1 finish should lead into deeper functions, arrays, objects, events, APIs, and data work in JavaScript Level 2 before moving into `Web Development Foundations`, which assumes stronger JavaScript fluency and shifts the emphasis from browser-only projects toward local project structure, Git, npm, servers, databases, and deployment."
+						"`JavaScript Level 2` is the normal next step after this course. A comfortable JavaScript Level 1 finish leads into deeper functions, arrays, objects, events, APIs, and data work in JavaScript Level 2 before moving into `Web Development Foundations`, which assumes stronger JavaScript fluency and shifts the emphasis from browser-only projects toward local project structure, Git, npm, servers, databases, and deployment."
 				},
 				{
 					title: "Course Recap",
@@ -1244,7 +1244,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS15 Supplemental Project 1: Restaurant Splash Page",
 					content:
-						"Build a restaurant splash page with a menu preview, location or hours section, and at least one Materialize parallax or card layout. The page should communicate a clear restaurant identity through typography, color, images, and navigation rather than only placing empty starter sections.",
+						"Build a restaurant splash page with a menu preview, location or hours section, and at least one Materialize parallax or card layout. The page communicates a clear restaurant identity through typography, color, images, and navigation rather than only placing empty starter sections.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/eb5dc79c245ab907ddd8f56853cb817a",
 					solutionLink:
@@ -1262,7 +1262,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "JSS15 Supplemental Project 3: Jun-E-Commerce",
 					content:
-						"Build a small e-commerce landing page with featured products, prices or descriptions, and a Materialize carousel or card grid. The page should make product browsing clear, include at least one call-to-action, and remain readable on a narrow screen.",
+						"Build a small e-commerce landing page with featured products, prices or descriptions, and a Materialize carousel or card grid. The page makes product browsing clear, includes at least one call-to-action, and remains readable on a narrow screen.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/c8048a26149f2dc5c4340a2d6cdb0ce2",
 					solutionLink:

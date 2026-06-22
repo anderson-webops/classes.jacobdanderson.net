@@ -2336,11 +2336,16 @@ describe("course text quality normalization", () => {
 		);
 		expect(course).not.toBeNull();
 		const corpus = allCourseText(course);
+		const source = fs.readFileSync(
+			"src/stores/courses/javascript-level-1.ts",
+			"utf8"
+		);
 
 		expect(corpus).not.toMatch(/Let the learner/i);
 		expect(corpus).not.toMatch(/guide with questions/i);
 		expect(corpus).not.toMatch(/Another review checkpoint/i);
 		expect(corpus).not.toMatch(/Optional .* idea/i);
+		expect(source).not.toMatch(/\bshould\b/i);
 
 		const checks = [
 			{
