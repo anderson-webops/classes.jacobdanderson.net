@@ -2444,6 +2444,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(
 			/Extend the core build with one extra requirement/i
 		);
+		expect(corpus).not.toMatch(/\bshould\b/i);
 		expect(corpus).toContain("securityLabConceptContent");
 		expect(corpus).toContain("securityLabExampleContent");
 		expect(corpus).toContain("securityLabReviewContent");
@@ -3001,9 +3002,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toContain(
 			"Finish by naming one remaining limitation without expanding beyond the provided local lab"
 		);
-		expect(corpus).toContain(
-			"Bug-finding starts by creating test inputs that should be rejected"
-		);
+		expect(corpus).toContain("Bug-finding starts by creating test inputs designed for rejection");
 		expect(corpus).toContain("Memory Layout Transfer Practice");
 		expect(corpus).toContain("Parser Hardening Transfer Practice");
 		expect(corpus).toContain("Patch Review Transfer Practice");

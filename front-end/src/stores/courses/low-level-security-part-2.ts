@@ -186,7 +186,7 @@ function securityLabConceptContent(topic: string) {
 
 	return [
 		`**Concept path:** **${label}** connects the lab artifact to ${securityLabFocus(topic)}.`,
-		`Begin **${label}** with the protected asset, the trust boundary, the unsafe assumption, and the invariant that should stay true after the code, configuration, or report is changed. The concept is not only the bug name; it includes reachability, controllability, mitigation state, evidence source, and the defensive conclusion that can be supported.`,
+		`Begin **${label}** with the protected asset, the trust boundary, the unsafe assumption, and the invariant that stays true after the code, configuration, or report is changed. The concept is not only the bug name; it includes reachability, controllability, mitigation state, evidence source, and the defensive conclusion that can be supported.`,
 		`Keep **${label}** defensive and local. A strong concept note identifies the expected behavior, the failure-mode behavior, the smallest useful remediation or hardening step, and the command, trace, sanitizer report, binary-hardening check, or test output that would let another person verify the final state.`
 	].join("\n\n");
 }
@@ -197,8 +197,8 @@ function securityLabExampleContent(topic: string) {
 
 	return [
 		`**Evidence target:** Trace one small local example for **${label}** before changing the implementation.`,
-		`Record the exact input, command, expected behavior, observed behavior, mitigation state, and relevant warning, sanitizer, debugger, trace, byte dump, or log output for ${focus}. The example should be small enough to explain line by line, but realistic enough to show why the risk classification or defensive invariant matters.`,
-		`After the trace, identify which assumption the example checks and which part of ${label} it prepares for. The later project should reuse this example as the standard scenario, add one failure-mode or boundary case, and finish with a regression case that confirms the remediation did not only hide the original symptom.`
+		`Record the exact input, command, expected behavior, observed behavior, mitigation state, and relevant warning, sanitizer, debugger, trace, byte dump, or log output for ${focus}. The example is small enough to explain line by line, but realistic enough to show why the risk classification or defensive invariant matters.`,
+		`After the trace, identify which assumption the example checks and which part of ${label} it prepares for. The later project reuses this example as the standard scenario, adds one failure-mode or boundary case, and finishes with a regression case that confirms the remediation did not only hide the original symptom.`
 	].join("\n\n");
 }
 
@@ -208,7 +208,7 @@ function securityLabReviewContent(topic: string) {
 
 	return [
 		`**Mastery check:** Close **${label}** with a maintainer-facing audit note rather than a vague reflection.`,
-		`The note should summarize the root cause, the security or reliability boundary involved, the patch or hardening choice, and the standard, failure-mode, and regression evidence that supports ${focus}. It should distinguish reachability, impact, mitigation, and remaining uncertainty so the result stays reviewable and does not overclaim.`,
+		`The note summarizes the root cause, the security or reliability boundary involved, the patch or hardening choice, and the standard, failure-mode, and regression evidence that supports ${focus}. It distinguishes reachability, impact, mitigation, and remaining uncertainty so the result stays reviewable and does not overclaim.`,
 		`Finish **${label}** by naming one remaining limitation without expanding beyond the provided local lab. Good review evidence includes the rerun command, the relevant output or trace, the behavior that changed, and the behavior that still needs a future test or design decision.`
 	].join("\n\n");
 }
@@ -237,7 +237,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Ethics Statement and Defensive Scope",
 					content:
-						"This course follows `Low Level Security Part 1` and uses tightly controlled toy programs to show how a defensive engineer evaluates risk, not how to deploy offensive techniques. The opening ethics statement should make the boundary explicit: local targets only, no public services, no real-world payloads, and every risky concept ends with a patch, mitigation summary, or regression case. If AI is used anywhere in the workflow, it must stay within that same defensive scope and every suggestion must be verified locally before it enters a report or patch discussion."
+						"This course follows `Low Level Security Part 1` and uses tightly controlled toy programs to show how a defensive engineer evaluates risk, not how to deploy offensive techniques. The opening ethics statement makes the boundary explicit: local targets only, no public services, no real-world payloads, and every risky concept ends with a patch, mitigation summary, or regression case. If AI is used anywhere in the workflow, it must stay within that same defensive scope and every suggestion must be verified locally before it enters a report or patch discussion."
 				},
 				{
 					title: "Core Outcomes for Part 2",
@@ -298,7 +298,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Reachability, Controllability, Impact, and Attacker Assumptions",
 					content:
-						"Exploitability triage is a disciplined decision process. The triage decision checks whether untrusted input reaches the bug, whether the attacker can shape the failing bytes or state, what the likely impact is, and what assumptions about the environment are required before a maintainer's note should call the issue security-relevant."
+						"Exploitability triage is a disciplined decision process. The triage decision checks whether untrusted input reaches the bug, whether the attacker can shape the failing bytes or state, what the likely impact is, and what assumptions about the environment are required before a maintainer's note calls the issue security-relevant."
 				},
 				{
 					title: "Crash Taxonomy for Defensive Analysis",
@@ -308,7 +308,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Write Short Exploitability Notes for Maintainers",
 					content:
-						"Write concise notes that name reachability, attacker control, current mitigations, likely impact, and immediate next steps. The note should be short enough to be useful in a triage queue but concrete enough that another engineer can tell why the issue was classified as availability-only, disclosure-relevant, or corruption-relevant."
+						"Write concise notes that name reachability, attacker control, current mitigations, likely impact, and immediate next steps. The note is short enough to be useful in a triage queue but concrete enough that another engineer can tell why the issue was classified as availability-only, disclosure-relevant, or corruption-relevant."
 				},
 				{
 					title: "Project: LLS13 Crash Classification Lab",
@@ -441,7 +441,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Project: LLS15 Heap Lifetime Audit",
 					content:
-						"Use the heap-lifetime lab to review a toy session pool where a released slot can be reused while an old handle still exists. The patch should make lifetime rules explicit and block stale-handle access so the ownership fix clearly closes an otherwise security-relevant confusion bug.",
+						"Use the heap-lifetime lab to review a toy session pool where a released slot can be reused while an old handle still exists. The patch makes lifetime rules explicit and blocks stale-handle access so the ownership fix clearly closes an otherwise security-relevant confusion bug.",
 					projectLink:
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS15-Heap-Lifetime-Audit/starter",
 					solutionLink:
@@ -490,12 +490,12 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Uninitialized Reads, Oversized Reads, and Stale Data Disclosure",
 					content:
-						"Disclosure bugs are trust-boundary problems where bytes that should stay internal cross into logs, responses, or other observable outputs. A leak can matter even when the program does not crash, because addresses, object contents, and stale internal notes can still change the risk profile of a later bug."
+						"Disclosure bugs are trust-boundary problems where internal bytes cross into logs, responses, or other observable outputs. A leak can matter even when the program does not crash, because addresses, object contents, and stale internal notes can still change the risk profile of a later bug."
 				},
 				{
 					title: "Why Leaked Addresses or Object Contents Matter",
 					content:
-						"Leaked addresses, stale session data, or internal debug strings increase attacker knowledge and reduce uncertainty. The course keeps this defensive and local, focusing on why maintainers should prioritize disclosure and harden the boundary rather than on how to weaponize the information."
+						"Leaked addresses, stale session data, or internal debug strings increase attacker knowledge and reduce uncertainty. The course keeps this defensive and local, focusing on why maintainers prioritize disclosure and harden the boundary rather than on how to weaponize the information."
 				},
 				{
 					title: "Harden Logs, Debug Output, and Serialization Boundaries",
@@ -565,7 +565,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "NX, ASLR, PIE, RELRO, Stack Canaries, and Hardened Allocators",
 					content:
-						"Common mitigations are factors that change exploitability analysis, not excuses to ignore the underlying bug. NX, ASLR, PIE, RELRO, stack canaries, and hardened allocators each prevent or complicate different failure paths, so the observed mitigation set should change the confidence and wording of a triage note."
+						"Common mitigations are factors that change exploitability analysis, not excuses to ignore the underlying bug. NX, ASLR, PIE, RELRO, stack canaries, and hardened allocators each prevent or complicate different failure paths, so the observed mitigation set changes the confidence and wording of a triage note."
 				},
 				{
 					title: "Mitigations Shrink the Attack Surface but Do Not Replace Fixes",
@@ -717,7 +717,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"AI can serve as a narrow assistant for defensive work: summarize sanitizer output, propose regression cases, help structure disclosure notes, compare two patch options, or convert a long debugging session into a clearer maintainer-facing report. Its limits are part of the lesson: AI can hallucinate exploitability claims, miss the real root cause, or suggest unsafe follow-ups, so every claim must still be checked against the local toy binary, debugger output, sanitizer evidence, and the written lab boundary."
 				},
 				{
-					title: "Patch Notes Should Close the Bug Class",
+					title: "Patch Notes Close the Bug Class",
 					content:
 						"Describe not only what line changed, but what assumption was invalid and how the patch changes the invariant. This helps prevent shallow fixes that silence one reproduction case while leaving the bug class alive elsewhere in the codebase."
 				},
@@ -783,12 +783,12 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Deliver an Audit Packet and Mitigation Summary",
 					content:
-						"The final deliverable should be an audit packet and mitigation summary, not an exploit. That packet should include the ethics statement, findings ranked by impact, attacker assumptions, the mitigations observed, the patch list, and the regression results that justify closing the issue set."
+						"The final deliverable is an audit packet and mitigation summary, not an exploit. That packet includes the ethics statement, findings ranked by impact, attacker assumptions, the mitigations observed, the patch list, and the regression results that justify closing the issue set."
 				},
 				{
 					title: "Project: LLS18 Exploit-Informed Hardening Capstone",
 					content:
-						"Use the capstone starter to review a larger intentionally flawed toy system that mixes stack-like corruption, stale-handle reuse, and disclosure boundaries. The completed review path should demonstrate how exploit-informed analysis leads to narrow hardening patches and a clearer mitigation summary without ever leaving the local lab scope.",
+						"Use the capstone starter to review a larger intentionally flawed toy system that mixes stack-like corruption, stale-handle reuse, and disclosure boundaries. The completed review path demonstrates how exploit-informed analysis leads to narrow hardening patches and a clearer mitigation summary without ever leaving the local lab scope.",
 					projectLink:
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS18-Exploit-Informed-Hardening-Capstone/starter",
 					solutionLink:

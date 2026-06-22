@@ -133,7 +133,7 @@ function securityLabProjectContent(
 			"1. Define the local target, allowed files, expected safe behavior, and evidence source for this lab.",
 			"2. Reproduce the relevant behavior with current compiler, sanitizer, debugger, or log evidence.",
 			"3. Apply the smallest useful fix or hardening step, then rerun the original case plus a boundary case.",
-			"4. Record the invariant that should remain true and the command or trace that proves it."
+			"4. Record the invariant that remains true and the command or trace that proves it."
 		],
 		[
 			"1. Write the scope line first: local fixture, allowed tooling, data that may be observed, and rollback path.",
@@ -190,7 +190,7 @@ function securityLabConceptContent(topic: string) {
 	return [
 		`**Concept path:** **${label}** connects the lab artifact to ${securityLabFocus(topic)}.`,
 		`For **${label}**, name the allowed target, disallowed actions, evidence source, stop condition, and defensive purpose before running commands.`,
-		`Begin **${label}** with the protected asset, the trust boundary, the unsafe assumption, and the invariant that should stay true after the code is changed. The concept is not only the bug name; it includes what input or state can cross the boundary, what evidence would confirm the problem, and what evidence would confirm the defensive result.`,
+		`Begin **${label}** with the protected asset, the trust boundary, the unsafe assumption, and the invariant that stays true after the code is changed. The concept is not only the bug name; it includes what input or state can cross the boundary, what evidence would confirm the problem, and what evidence would confirm the defensive result.`,
 		`Keep **${label}** defensive and local. A strong concept note identifies the expected behavior, the failure-mode behavior, the smallest useful remediation or hardening step, and the command, trace, sanitizer report, or test output that would let another person verify the final state.`
 	].join("\n\n");
 }
@@ -201,8 +201,8 @@ function securityLabExampleContent(topic: string) {
 
 	return [
 		`**Evidence target:** Trace one small local example for **${label}** before changing the implementation.`,
-		`Record the exact input, command, expected behavior, observed behavior, and relevant warning, sanitizer, debugger, byte dump, or log output for ${focus}. The example should be small enough to explain line by line, but realistic enough to show why the boundary or invariant matters.`,
-		`After the trace, identify which assumption the example checks and which part of ${label} it prepares for. The later project should reuse this example as the standard scenario, add one boundary or malformed case, and finish with a regression case that confirms the remediation did not only hide the original symptom.`
+		`Record the exact input, command, expected behavior, observed behavior, and relevant warning, sanitizer, debugger, byte dump, or log output for ${focus}. The example is small enough to explain line by line, but realistic enough to show why the boundary or invariant matters.`,
+		`After the trace, identify which assumption the example checks and which part of ${label} it prepares for. The later project reuses this example as the standard scenario, adds one boundary or malformed case, and finishes with a regression case that confirms the remediation did not only hide the original symptom.`
 	].join("\n\n");
 }
 
@@ -212,7 +212,7 @@ function securityLabReviewContent(topic: string) {
 
 	return [
 		`**Mastery check:** Close **${label}** with a maintainer-facing audit note rather than a vague reflection.`,
-		`The note should summarize the root cause, the security or reliability boundary involved, the patch or hardening choice, and the standard, malformed, and regression evidence that supports ${focus}. It should separate observed evidence from inferred risk so the result stays reviewable and does not overclaim.`,
+		`The note summarizes the root cause, the security or reliability boundary involved, the patch or hardening choice, and the standard, malformed, and regression evidence that supports ${focus}. It separates observed evidence from inferred risk so the result stays reviewable and does not overclaim.`,
 		`Finish **${label}** by naming one remaining limitation without expanding beyond the provided local lab. Good review evidence includes the rerun command, the relevant output or trace, the behavior that changed, and the behavior that still needs a future test or design decision.`
 	].join("\n\n");
 }
@@ -374,12 +374,12 @@ export const lowLevelSecurityCourse: RawCourse = {
 				{
 					title: "Printable Data, Encodings, and Validation",
 					content:
-						"Not every parser should accept arbitrary bytes. For simple educational protocols, printable ASCII or a narrow allowed character set makes malformed data and rejection paths easier to reason about. This makes it easier to write meaningful negative tests and to observe how validation gates reduce risk."
+						"Not every parser accepts arbitrary bytes. For simple educational protocols, printable ASCII or a narrow allowed character set makes malformed data and rejection paths easier to reason about. This makes it easier to write meaningful negative tests and to observe how validation gates reduce risk."
 				},
 				{
 					title: "Negative Tests for Malformed Inputs",
 					content:
-						"Bug-finding starts by creating test inputs that should be rejected: too short, too long, wrong declared length, unknown opcode, invalid characters, or missing body bytes. Name each test after the assumption it challenges so the debugging story stays clear."
+						"Bug-finding starts by creating test inputs designed for rejection: too short, too long, wrong declared length, unknown opcode, invalid characters, or missing body bytes. Name each test after the assumption it challenges so the debugging story stays clear."
 				},
 				{
 					title: "LLS3 Project 3: Length-Prefixed Parser",
@@ -395,7 +395,7 @@ export const lowLevelSecurityCourse: RawCourse = {
 				{
 					title: "Supplemental: File Format Review Worksheet",
 					content:
-						"Pick a small made-up binary format and write a review worksheet: fields, invariants, maximum sizes, and what should happen if each field is malformed.",
+						"Pick a small made-up binary format and write a review worksheet: fields, invariants, maximum sizes, and expected behavior when each field is malformed.",
 					projectLink:
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS3-Length-Prefixed-Parser/starter",
 					solutionLink:
@@ -443,7 +443,7 @@ export const lowLevelSecurityCourse: RawCourse = {
 				{
 					title: "Designing a Ring Buffer Safely",
 					content:
-						"A fixed-capacity byte ring buffer makes capacity checks, wraparound, and invariants concrete. The key security lesson is that a data structure should guard its own correctness: reject writes that exceed free capacity, reject reads that request more bytes than are available, and leave the buffer unchanged on failure."
+						"A fixed-capacity byte ring buffer makes capacity checks, wraparound, and invariants concrete. The key security lesson is that a data structure guards its own correctness: reject writes that exceed free capacity, reject reads that request more bytes than are available, and leave the buffer unchanged on failure."
 				},
 				{
 					title: "Assertions, Invariants, and Audit Notes",
@@ -571,12 +571,12 @@ export const lowLevelSecurityCourse: RawCourse = {
 				{
 					title: "Patch Engineering and Narrow Fixes",
 					content:
-						"A secure patch should do three things: stop the broken behavior, preserve legitimate behavior, and add a test that proves the bug stays fixed. Giant rewrites are risky when a smaller targeted repair is sufficient. Compare quick guards against deeper refactors and document why the chosen fix is enough."
+						"A secure patch does three things: stops the broken behavior, preserves legitimate behavior, and adds a test that proves the bug stays fixed. Giant rewrites are risky when a smaller targeted repair is sufficient. Compare quick guards against deeper refactors and document why the chosen fix is enough."
 				},
 				{
 					title: "Code Review Heuristics for Low-Level Safety",
 					content:
-						"A short review checklist should include: unchecked lengths, copies into fixed buffers, stale references after ownership changes, arithmetic on untrusted sizes, silent truncation, and missing failure paths. Review comments should name the violated invariant rather than only pointing at syntax."
+						"A short review checklist includes unchecked lengths, copies into fixed buffers, stale references after ownership changes, arithmetic on untrusted sizes, silent truncation, and missing failure paths. Review comments name the violated invariant rather than only pointing at syntax."
 				},
 				{
 					title: "Documenting a Vulnerability Clearly",
@@ -591,7 +591,7 @@ export const lowLevelSecurityCourse: RawCourse = {
 				{
 					title: "LLS6 Capstone: Audit and Harden a Tiny System",
 					content:
-						"Use the capstone starter to audit a tiny packet-driven system that combines bounded label storage with command dispatch. Perform a full pass: threat model, invariants, malformed input list, tool-assisted testing plan, patch list, and regression suite. The capstone deliverable is a short audit packet, not an exploit, and every change should be justified against a specific broken assumption.",
+						"Use the capstone starter to audit a tiny packet-driven system that combines bounded label storage with command dispatch. Perform a full pass: threat model, invariants, malformed input list, tool-assisted testing plan, patch list, and regression suite. The capstone deliverable is a short audit packet, not an exploit, and every change is justified against a specific broken assumption.",
 					projectLink:
 						"https://github.com/instruction-material/Low-Level-Security/tree/main/LLS6-Capstone-Audit/starter",
 					solutionLink:
