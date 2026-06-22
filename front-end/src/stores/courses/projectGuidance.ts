@@ -476,10 +476,6 @@ function compactGuidanceBody(
 			"one $2 for the $1"
 		)
 		.replace(
-			new RegExp(`\\bAfter ${escapedReference} local lab works\\b`, "g"),
-			"After the local lab works"
-		)
-		.replace(
 			new RegExp(`\\bAfter ${escapedReference} simulator path\\b`, "g"),
 			"After the simulator path"
 		)
@@ -1493,8 +1489,8 @@ function requiredWorkSteps(
 			],
 			[
 				`List the ${moduleTitle} files, build target, runtime setup, and memory or resource boundary before changing implementation code.`,
-				`Make one change at a time and rerun the relevant command so the cause of each output or error remains visible.`,
-				`Verify the expected result, one edge condition, and one tool-backed observation from a debugger, trace, warning, sanitizer, or profiler.`
+				`Make one ${moduleTitle} change at a time and rerun the relevant command so the cause of each output or error remains visible.`,
+				`Verify the ${moduleTitle} expected result, one edge condition, and one tool-backed observation from a debugger, trace, warning, sanitizer, or profiler.`
 			],
 			[
 				`Frame ${moduleTitle} around a clear systems question: what state changes, what resource is touched, and how the evidence will be captured.`,
@@ -1523,8 +1519,8 @@ function requiredWorkSteps(
 			],
 			[
 				`Frame ${moduleTitle} around the engineering question being tested: representation, ownership, lifetime, complexity, or system state.`,
-				`Use small command-line checks to keep source changes, build output, runtime behavior, and diagnostics aligned.`,
-				`Record evidence for the ordinary path and the path most likely to reveal a hidden systems assumption.`
+				`Use small ${moduleTitle} command-line checks to keep source changes, build output, runtime behavior, and diagnostics aligned.`,
+				`Record ${moduleTitle} evidence for the ordinary path and the path most likely to reveal a hidden systems assumption.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 12)];
 	}
@@ -1665,7 +1661,7 @@ function referenceReviewStep(
 
 	if (family.includes("security") || family.includes("network")) {
 		return [
-			`After the ${moduleTitle} local lab works, compare against the reference and record one difference in evidence capture, boundary assumptions, defensive control, or rollback path.`,
+			`Once ${moduleTitle} local lab works, compare against the reference and record one difference in evidence capture, boundary assumptions, defensive control, or rollback path.`,
 			`Use the ${moduleTitle} reference only after the local boundary and evidence are clear, then note one scope, mitigation, or diagnostic difference.`,
 			`Compare ${moduleTitle} with the reference by checking one log, trace, request, response, rule, control, or rollback detail.`,
 			`After ${moduleTitle} has local defensive evidence, record one reference difference that changes impact, mitigation, or recovery confidence.`
@@ -2003,12 +1999,12 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} can be reproduced from a clean command path with current output or test evidence.`,
-				`One representative case, one invalid or stress case, and one compiler, debugger, sanitizer, log, or timing observation are included.`,
+				`${moduleTitle} includes one representative case, one invalid or stress case, and one compiler, debugger, sanitizer, log, or timing observation.`,
 				`The final ${moduleTitle} note connects the observed system behavior to the design choice under review.`
 			],
 			[
 				`${moduleTitle} names the source files, command, runtime state, and success signal used for verification.`,
-				`The checks cover ordinary output, a boundary or failure-mode input, and one low-level observation.`,
+				`${moduleTitle} checks cover ordinary output, a boundary or failure-mode input, and one low-level observation.`,
 				`The closing ${moduleTitle} note separates what the program did from how the diagnostic evidence supports it.`
 			],
 			[
@@ -2028,12 +2024,12 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} records the build target, runtime input, observable output, and diagnostic source used for verification.`,
-				`At least one ordinary path and one edge path are checked with concrete terminal or tool evidence.`,
+				`At least one ${moduleTitle} ordinary path and one edge path are checked with concrete terminal or tool evidence.`,
 				`The ${moduleTitle} summary separates program behavior from compiler, linker, debugger, sanitizer, or runtime-environment behavior.`
 			],
 			[
 				`${moduleTitle} shows the expected behavior through repeatable output, logs, traces, tests, or instrumentation.`,
-				`The verification includes a representative path, an awkward path, and one low-level clue tied to ownership, layout, or resource use.`,
+				`The ${moduleTitle} verification includes a representative path, an awkward path, and one low-level clue tied to ownership, layout, or resource use.`,
 				`The final ${moduleTitle} review identifies the assumption that must stay true for the artifact to remain correct.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 12)];

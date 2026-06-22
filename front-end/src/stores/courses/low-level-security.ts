@@ -115,9 +115,9 @@ function securityLabProjectContent(
 	const requiredWork = [
 		[
 			"1. State the local lab boundary and the exact toy target or starter being inspected.",
-			"2. Build and run the lab with the expected defensive tooling, such as warnings, sanitizers, debugger output, or structured trace logs where relevant.",
-			"3. Test the lab with one standard scenario, one malformed or boundary case, and one regression case that confirms the final behavior is intentional.",
-			"4. Write a short audit note naming the violated assumption, the fix or hardening choice, and the evidence that supports the conclusion."
+			`2. Build and run **${label}** with the expected defensive tooling, such as warnings, sanitizers, debugger output, or structured trace logs where relevant.`,
+			`3. Test **${label}** with one standard scenario, one malformed or boundary case, and one regression case that confirms the final behavior is intentional.`,
+			`4. Write a short **${label}** audit note naming the violated assumption, the fix or hardening choice, and the evidence that supports the conclusion.`
 		],
 		[
 			"1. Name the owned fixture, protected behavior, toolchain, and stop condition before running commands.",
@@ -141,7 +141,7 @@ function securityLabProjectContent(
 	const completionChecks = [
 		[
 			"- The work stays inside the provided local lab and does not target public systems.",
-			"- Security claims are backed by local build, runtime, sanitizer, debugger, or test evidence.",
+			`- **${label}** security claims are backed by local build, runtime, sanitizer, debugger, or test evidence.`,
 			"- The final note explains the bug class or invariant well enough for a maintainer to reproduce and verify the result."
 		],
 		[

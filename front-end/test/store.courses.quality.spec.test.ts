@@ -685,8 +685,11 @@ describe("course text quality normalization", () => {
 			expect(corpus).toMatch(
 				/After [^.\n]+ samples and custom cases pass, compare against the reference and record one difference in invariant, complexity, or edge-case handling/
 			);
-			expect(corpus).toContain(
+			expect(corpus).not.toContain(
 				"After the local lab works, compare against the reference and record one difference in evidence capture, boundary assumptions, defensive control, or rollback path"
+			);
+			expect(corpus).toMatch(
+				/Once [^.\n]+ local lab works, compare against the reference and record one difference in evidence capture, boundary assumptions, defensive control, or rollback path/
 			);
 			expect(corpus).not.toMatch(
 				/The artifact demonstrates the module concept through behavior, output, tests, traces, or another concrete result/

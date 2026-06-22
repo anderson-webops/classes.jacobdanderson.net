@@ -75,8 +75,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"PTJ0 Positioning and Workflow Translation",
-						itemTitle:
-							"Workflow Translation Extension Practice",
+						itemTitle: "Workflow Translation Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -144,8 +143,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"PTJ1 Functions, Parameters, and Return Types",
-						itemTitle:
-							"Function Signature Transfer Practice",
+						itemTitle: "Function Signature Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -160,8 +158,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"PTJ1 Functions, Parameters, and Return Types",
-						itemTitle:
-							"Return-Type Extension Practice",
+						itemTitle: "Return-Type Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -227,8 +224,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
 						moduleTitle: "PTJ2 Collections, Strings, and Indexing",
-						itemTitle:
-							"Collection Indexing Transfer Practice",
+						itemTitle: "Collection Indexing Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -242,8 +238,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
 						moduleTitle: "PTJ2 Collections, Strings, and Indexing",
-						itemTitle:
-							"Text API Extension Practice",
+						itemTitle: "Text API Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -311,8 +306,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"PTJ3 Classes and Objects across Languages",
-						itemTitle:
-							"Class Port Transfer Practice",
+						itemTitle: "Class Port Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -327,8 +321,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"PTJ3 Classes and Objects across Languages",
-						itemTitle:
-							"Header Source Extension Practice",
+						itemTitle: "Header Source Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -563,8 +556,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 11: Compile-Run Comparison Studio",
-						itemTitle:
-							"Compile-Run Transfer Practice",
+						itemTitle: "Compile-Run Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -579,8 +571,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 11: Compile-Run Comparison Studio",
-						itemTitle:
-							"Compile-Run Extension Practice",
+						itemTitle: "Compile-Run Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -655,8 +646,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 12: Type Signature Translation Studio",
-						itemTitle:
-							"Type Signature Transfer Practice",
+						itemTitle: "Type Signature Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -671,8 +661,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 12: Type Signature Translation Studio",
-						itemTitle:
-							"Type Signature Extension Practice",
+						itemTitle: "Type Signature Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -747,8 +736,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 13: Collection Porting Studio",
-						itemTitle:
-							"Collection Porting Transfer Practice",
+						itemTitle: "Collection Porting Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -763,8 +751,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 13: Collection Porting Studio",
-						itemTitle:
-							"Collection Porting Extension Practice",
+						itemTitle: "Collection Porting Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -839,8 +826,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 14: Class Model Translation Studio",
-						itemTitle:
-							"Class Model Transfer Practice",
+						itemTitle: "Class Model Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -855,8 +841,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 14: Class Model Translation Studio",
-						itemTitle:
-							"Class Model Extension Practice",
+						itemTitle: "Class Model Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -931,8 +916,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 15: Java Console Adaptation Studio",
-						itemTitle:
-							"Java Console Transfer Practice",
+						itemTitle: "Java Console Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -947,8 +931,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 15: Java Console Adaptation Studio",
-						itemTitle:
-							"Java Console Extension Practice",
+						itemTitle: "Java Console Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1023,8 +1006,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 16: C++ Console Adaptation Studio",
-						itemTitle:
-							"C++ Console Adaptation Transfer Practice",
+						itemTitle: "C++ Console Adaptation Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1039,8 +1021,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 16: C++ Console Adaptation Studio",
-						itemTitle:
-							"C++ Console Adaptation Extension Practice",
+						itemTitle: "C++ Console Adaptation Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1115,8 +1096,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 17: Bridge Capstone Port Studio",
-						itemTitle:
-							"Bridge Capstone Transfer Practice",
+						itemTitle: "Bridge Capstone Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1131,8 +1111,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 						courseFamily: "Java/C++ bridge",
 						moduleTitle:
 							"Language Bridge Lab 17: Bridge Capstone Port Studio",
-						itemTitle:
-							"Bridge Capstone Extension Practice",
+						itemTitle: "Bridge Capstone Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1199,8 +1178,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
 						moduleTitle: "Graphics Translation Studio",
-						itemTitle:
-							"Graphics Transfer Practice",
+						itemTitle: "Graphics Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1214,8 +1192,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
 						moduleTitle: "Graphics Translation Studio",
-						itemTitle:
-							"Graphics Extension Practice",
+						itemTitle: "Graphics Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1284,8 +1261,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
 						moduleTitle: "C++ Console Practice Studio",
-						itemTitle:
-							"C++ Console Practice Transfer Practice",
+						itemTitle: "C++ Console Practice Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1299,8 +1275,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
 						moduleTitle: "C++ Console Practice Studio",
-						itemTitle:
-							"C++ Console Practice Extension Practice",
+						itemTitle: "C++ Console Practice Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1318,8 +1293,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "Java Foundations Transfer Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"Java Foundations Transfer Studio",
+						moduleTitle: "Java Foundations Transfer Studio",
 						section: "concepts"
 					})
 				},
@@ -1327,8 +1301,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "Java Foundations Transfer Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"Java Foundations Transfer Studio",
+						moduleTitle: "Java Foundations Transfer Studio",
 						section: "example"
 					})
 				},
@@ -1336,8 +1309,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "Java Foundations Transfer Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"Java Foundations Transfer Studio",
+						moduleTitle: "Java Foundations Transfer Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1349,8 +1321,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "Java Foundations Transfer Studio: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"Java Foundations Transfer Studio",
+						moduleTitle: "Java Foundations Transfer Studio",
 						section: "review"
 					})
 				}
@@ -1360,8 +1331,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "Java Foundations Transfer Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"Java Foundations Transfer Studio",
+						moduleTitle: "Java Foundations Transfer Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1373,10 +1343,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "Java Foundations Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Java Foundations Transfer Studio",
-						itemTitle:
-							"Java Foundations Transfer Practice",
+						moduleTitle: "Java Foundations Transfer Studio",
+						itemTitle: "Java Foundations Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1389,10 +1357,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "Java Foundations Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Java Foundations Transfer Studio",
-						itemTitle:
-							"Java Foundations Extension Practice",
+						moduleTitle: "Java Foundations Transfer Studio",
+						itemTitle: "Java Foundations Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1410,8 +1376,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "C Foundations Transfer Studio: Core Concepts",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"C Foundations Transfer Studio",
+						moduleTitle: "C Foundations Transfer Studio",
 						section: "concepts"
 					})
 				},
@@ -1419,8 +1384,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "C Foundations Transfer Studio: Guided Example",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"C Foundations Transfer Studio",
+						moduleTitle: "C Foundations Transfer Studio",
 						section: "example"
 					})
 				},
@@ -1428,8 +1392,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "C Foundations Transfer Studio: Core Project",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"C Foundations Transfer Studio",
+						moduleTitle: "C Foundations Transfer Studio",
 						section: "coreProject"
 					}),
 					projectLink:
@@ -1441,8 +1404,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "C Foundations Transfer Studio: Review and Reflection",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"C Foundations Transfer Studio",
+						moduleTitle: "C Foundations Transfer Studio",
 						section: "review"
 					})
 				}
@@ -1452,8 +1414,7 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "C Foundations Transfer Studio: Extension Challenge",
 					content: buildImplementationLabGuidance({
 						courseFamily: "language bridge",
-						moduleTitle:
-							"C Foundations Transfer Studio",
+						moduleTitle: "C Foundations Transfer Studio",
 						section: "extension"
 					}),
 					projectLink:
@@ -1465,10 +1426,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "C Foundations Transfer Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"C Foundations Transfer Studio",
-						itemTitle:
-							"C Foundations Transfer Practice",
+						moduleTitle: "C Foundations Transfer Studio",
+						itemTitle: "C Foundations Transfer Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
@@ -1481,10 +1440,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 					title: "C Foundations Extension Practice",
 					content: buildProjectGuidance({
 						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"C Foundations Transfer Studio",
-						itemTitle:
-							"C Foundations Extension Practice",
+						moduleTitle: "C Foundations Transfer Studio",
+						itemTitle: "C Foundations Extension Practice",
 						projectKind: "extension",
 						hasReference: true
 					}),
