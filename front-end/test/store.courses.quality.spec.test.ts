@@ -369,6 +369,13 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(/introduce the main goal/i);
 			expect(corpus).not.toMatch(/build the central artifact/i);
 			expect(corpus).not.toMatch(/alternate supplemental snapshot/i);
+			expect(corpus).not.toMatch(
+				/Extension Challenge(?:\s*:\s*Extension Challenge|\s+Extension Challenge)/i
+			);
+			expect(corpus).not.toMatch(/\bclass model class\b/i);
+			expect(corpus).not.toMatch(
+				/\b[A-Z][A-Za-z0-9 '&:/-]{1,120}? class model\b/
+			);
 		},
 		COURSE_SWEEP_TIMEOUT
 	);

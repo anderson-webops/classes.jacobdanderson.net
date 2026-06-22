@@ -1375,6 +1375,7 @@ const generatedReferencePattern = [
 	"traced solution",
 	"practice task",
 	"Java implementation",
+	"Java exercise",
 	"class model",
 	"class exercise",
 	"code checkpoint",
@@ -5281,7 +5282,7 @@ function projectSupportReference(context: CourseTextContext) {
 	}
 	if (isJavaContext(context)) {
 		return variantPrompt(context, [
-			() => "the class model",
+			() => "the Java exercise",
 			() => "the class exercise",
 			() => "the project",
 			() => "the code checkpoint",
@@ -5423,6 +5424,7 @@ function compactGeneratedProjectSupport(
 		"task",
 		"Java work",
 		"Java implementation",
+		"Java exercise",
 		"class model",
 		"class exercise",
 		"code checkpoint",
@@ -7872,6 +7874,8 @@ function usacoCourseFamily(courseId: string) {
 function usacoSupplementalSubject(itemTitle: string) {
 	return cleanTitleText(itemTitle)
 		.replace(/^Problem:\s*/i, "")
+		.replace(/^Extension Challenge:\s*/i, "")
+		.replace(/:\s*Extension Challenge$/i, "")
 		.replace(
 			/\bSupplemental\s+([2-4]):\s*Implementation Lab$/i,
 			(_match: string, number: string) => supplementalPurposeLabel(number)
