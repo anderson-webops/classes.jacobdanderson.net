@@ -47,7 +47,7 @@ export const scratchLevel2Course: RawCourse = {
 4. Add a similar event so another key draws a circle.
 5. Create at least one additional shape, such as an octagon, star, or original geometric pattern.
 
-**Completion check:** Each key should draw a clear shape without leaving unwanted setup marks from the previous drawing.`,
+**Completion check:** Each key draws a clear shape without leaving unwanted setup marks from the previous drawing.`,
 					projectLink: "https://scratch.mit.edu/projects/289744824/",
 					solutionLink: "https://scratch.mit.edu/projects/289445069/"
 				},
@@ -67,7 +67,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Feedback behavior:** For each question, have Gobo change costume, play a sound, or say a message that clearly shows whether the answer was correct.
 
-**Completion check:** The harder question should keep asking until the correct answer is entered, while the simpler questions should give immediate feedback.`,
+**Completion check:** The harder question keeps asking until the correct answer is entered, while the simpler questions give immediate feedback.`,
 					projectLink: "https://scratch.mit.edu/projects/295332936/",
 					solutionLink: "https://scratch.mit.edu/projects/294539961/"
 				},
@@ -92,14 +92,14 @@ export const scratchLevel2Course: RawCourse = {
 5. Count time down to 0.
 6. When time runs out, hide the button and show the final score.
 
-**Completion check:** Starting a new round should reset the button visibility, score, and timer instead of carrying over old state.`,
+**Completion check:** Starting a new round resets the button visibility, score, and timer instead of carrying over old state.`,
 					projectLink: "https://scratch.mit.edu/projects/299327014/",
 					solutionLink: "https://scratch.mit.edu/projects/299311602/"
 				},
 				{
 					title: "Message Broadcasting",
 					content:
-						"Broadcasting lets sprites send messages to each other. This is useful when one sprite should wait for another sprite to finish speaking, moving, or changing state before its own script begins.\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
+						"Broadcasting lets sprites send messages to each other. This is useful when one sprite waits for another sprite to finish speaking, moving, or changing state before its own script begins.\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
 				},
 				{
 					title: "GM1 Project 5: Dance Off",
@@ -116,7 +116,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Extension:** Add lighting changes, a final applause sequence, or a closing pose after everyone is done.
 
-**Completion check:** The performers should appear in a clear order, and the music should stop because of a broadcast rather than by timing guesswork.`,
+**Completion check:** The performers appear in a clear order, and the music stops because of a broadcast rather than by timing guesswork.`,
 					projectLink: "https://scratch.mit.edu/projects/301002220/",
 					solutionLink: "https://scratch.mit.edu/projects/300644693/"
 				},
@@ -202,7 +202,7 @@ export const scratchLevel2Course: RawCourse = {
 4. When the batter receives the message, cycle through the batter's costumes.
 5. Decide how many strikes create an out, then repeat the pitch-and-bat sequence that many times.
 
-**Completion check:** The batter should wait for the pitch broadcast instead of starting at the same time as the pitcher.
+**Completion check:** The batter waits for the pitch broadcast instead of starting at the same time as the pitcher.
 
 **Evidence check:** A correct sequence can be traced as pitcher action, broadcast, batter response, strike update, and repeat.`,
 					projectLink: "https://scratch.mit.edu/projects/334075920",
@@ -219,7 +219,9 @@ export const scratchLevel2Course: RawCourse = {
 4. Extend the row logic into multiple rows by changing the starting position for each row.
 5. Draw 6 rows of squares from the top to the bottom of the screen.
 
-**Completion check:** The grid should have consistent square size, row spacing, and column spacing.`,
+**Checkpoints:**
+- The grid has consistent square size, row spacing, and column spacing.
+- One row can be traced before the row logic repeats downward across the stage.`,
 					projectLink: "https://scratch.mit.edu/projects/334073152/",
 					solutionLink: "https://scratch.mit.edu/projects/334067890/"
 				},
@@ -235,7 +237,7 @@ export const scratchLevel2Course: RawCourse = {
 5. Reuse the petal pattern to create six more petals that start near the flower center and move outward.
 6. Change the pen color after each petal to create a rainbow effect.
 
-**Completion check:** The finished flower should show both repetition and controlled variation: repeated petals, changing angle, and changing color.`,
+**Completion check:** The finished flower shows both repetition and controlled variation: repeated petals, changing angle, and changing color.`,
 					projectLink: "https://scratch.mit.edu/projects/335808333/",
 					solutionLink: "https://scratch.mit.edu/projects/335807180/"
 				}
@@ -308,7 +310,7 @@ export const scratchLevel2Course: RawCourse = {
 2. If the butterfly touches the dark purple tree, broadcast a win message and glide the butterfly off the screen.
 3. When the frog receives either the win or loss broadcast, stop the remaining scripts and respond with the matching outcome.
 
-**Completion check:** The butterfly should only move with the intended alternating-key pattern, and the win/loss broadcasts should end the game cleanly.`,
+**Completion check:** The butterfly moves only with the intended alternating-key pattern, and the win/loss broadcasts end the game cleanly.`,
 					projectLink: "https://scratch.mit.edu/projects/335798048",
 					solutionLink: "https://scratch.mit.edu/projects/335794365"
 				},
@@ -325,7 +327,7 @@ export const scratchLevel2Course: RawCourse = {
 				{
 					title: "Cloning",
 					content:
-						"A clone is a temporary copy of a sprite while the project runs. This is useful when many similar objects should appear on screen, such as raindrops, paint marks, enemies, stars, or collectibles.\nThe main Scratch blocks are `create clone of myself`, `when I start as a clone`, and `delete this clone`. Most clone-based projects hide the original parent sprite and show only the clones, because the clones are the objects that move, collide, and disappear."
+						"A clone is a temporary copy of a sprite while the project runs. This is useful when many similar objects appear on screen, such as raindrops, paint marks, enemies, stars, or collectibles.\nThe main Scratch blocks are `create clone of myself`, `when I start as a clone`, and `delete this clone`. Most clone-based projects hide the original parent sprite and show only the clones, because the clones are the objects that move, collide, and disappear."
 				},
 				{
 					title: "GM4 Project 1: Jackson Pollock Clones",
@@ -337,7 +339,7 @@ export const scratchLevel2Course: RawCourse = {
 				{
 					title: "GM4 Project 2: Rainy Day",
 					content:
-						"1. Program the umbrella so that it can be moved with the left and right arrow keys.\n2. Program the chick to continuously move forward in little steps and bounce if it hits a wall. Also make the chick switch directions randomly, once every few steps.\n3. Program the rain drop to create clones of itself continuously.\n4. When a clone is created, it should fall from the sky. Think about what should happen when it touches the chick and when the clone should be deleted, and add these scenarios into the code.\n5. Keep track of the number of times the chick got wet, and give the player 60 seconds to protect the chick as much as possible.",
+						"1. Program the umbrella so that it can be moved with the left and right arrow keys.\n2. Program the chick to continuously move forward in little steps and bounce if it hits a wall. Also make the chick switch directions randomly, once every few steps.\n3. Program the rain drop to create clones of itself continuously.\n4. When a clone is created, make it fall from the sky. Decide what happens when it touches the chick and when the clone is deleted, then add these scenarios into the code.\n5. Keep track of the number of times the chick got wet, and give the player 60 seconds to protect the chick as much as possible.",
 					projectLink: "https://scratch.mit.edu/projects/307634451/",
 					solutionLink: "https://scratch.mit.edu/projects/307629921/"
 				},
@@ -354,7 +356,7 @@ export const scratchLevel2Course: RawCourse = {
 				{
 					title: "GM4 Supplemental Project 1: Fruity Fest",
 					content:
-						"1. Set up the parrot to move around with the up/down/left/right arrow keys.\n2. Set up the fruit so that a clone is created every second. Each clone should be a random piece of fruit, and it should show up in a random location!\n3. Keep track of the total amount of fruit the parrot collects, and end the game and display the fruit platter once the parrot collects 10 pieces.",
+						"1. Set up the parrot to move around with the up/down/left/right arrow keys.\n2. Set up the fruit so that a clone is created every second. Each clone is a random piece of fruit and appears in a random location.\n3. Keep track of the total amount of fruit the parrot collects, and end the game and display the fruit platter once the parrot collects 10 pieces.",
 					projectLink: "https://scratch.mit.edu/projects/336915372/",
 					solutionLink: "https://scratch.mit.edu/projects/336928836/"
 				},
@@ -385,7 +387,7 @@ export const scratchLevel2Course: RawCourse = {
 3. When the green flag is clicked, draw a triangle, turn 60 degrees, and draw another triangle. Add a repeat block to form a hexagon of triangles.
 4. Draw another larger hexagon around the first one. A loop around the existing code can remove repetition.
 
-**Completion check:** The prediction for the sound loop should match the actual run, and the drawing should show why nested loops reduce repeated code.`,
+**Completion check:** The prediction for the sound loop matches the actual run, and the drawing shows why nested loops reduce repeated code.`,
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
@@ -397,9 +399,9 @@ export const scratchLevel2Course: RawCourse = {
 2. Move the drawing code so the parent sprite creates clones every 2 seconds after the green flag is clicked.
 3. Make each clone go to a random position and draw the hexagon shape.
 4. Make clones show when created and delete themselves when finished.
-5. Decide what the original parent sprite should do while it is not drawing.
+5. Decide what the original parent sprite does while it is not drawing.
 
-**Completion check:** The parent sprite should manage clone creation while the clones handle the drawing and cleanup.`,
+**Completion check:** The parent sprite manages clone creation while the clones handle the drawing and cleanup.`,
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
@@ -458,7 +460,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Extension:** Ask for a 6-letter word that starts with a and report whether it matches.
 
-**Completion check:** Each rule should check the user's actual text rather than only reacting to any answer.`,
+**Completion check:** Each rule checks the user's actual text rather than only reacting to any answer.`,
 					projectLink: "https://scratch.mit.edu/projects/308722400/",
 					solutionLink: "https://scratch.mit.edu/projects/308717171/"
 				},
@@ -474,7 +476,7 @@ export const scratchLevel2Course: RawCourse = {
 5. When 5 is pressed, spell every other letter. Example: C-D-N.
 6. When 6 is pressed, spell the word backward. Example: G-N-I-D-O-C.
 
-**Completion check:** Each key should use the same input idea but a different string traversal pattern.`,
+**Completion check:** Each key uses the same input idea but a different string traversal pattern.`,
 					projectLink: "https://scratch.mit.edu/projects/357452950/",
 					solutionLink: "https://scratch.mit.edu/projects/357452924/"
 				},
@@ -500,7 +502,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Extension:** Build the full report with one say block that contains several joined text pieces.
 
-**Completion check:** The final message should include all three user-provided details in a readable sentence.`,
+**Completion check:** The final message includes all three user-provided details in a readable sentence.`,
 					projectLink: "https://scratch.mit.edu/projects/338824789",
 					solutionLink: "https://scratch.mit.edu/projects/338828947/"
 				},
@@ -516,7 +518,7 @@ export const scratchLevel2Course: RawCourse = {
 5. If a letter is incorrect, end the game.
 6. If the full word is spelled correctly, speak "You spelled [secret word] correctly!"
 
-**Completion check:** The spelling test should compare each typed letter to the matching position in the secret word.`,
+**Completion check:** The spelling test compares each typed letter to the matching position in the secret word.`,
 					projectLink: "https://scratch.mit.edu/projects/338829500",
 					solutionLink: "https://scratch.mit.edu/projects/338832976"
 				},
@@ -572,7 +574,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Extension:** Ask how many multiples the user wants to hear, then repeat for that many values instead of always stopping at ten.
 
-**Completion check:** The multiplier should update each round so the output is a sequence, not the same product repeated.`,
+**Completion check:** The multiplier updates each round so the output is a sequence, not the same product repeated.`,
 					projectLink: "https://scratch.mit.edu/projects/338508588/",
 					solutionLink: "https://scratch.mit.edu/projects/338505545/"
 				},
@@ -590,7 +592,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Automated graphing:** Move Dotty to (-180, 180), put the pen down, and repeatedly increase x by 1 while setting y to the absolute value of x.
 
-**Completion check:** The stamped points should form the expected V-shape for an absolute value function.`,
+**Completion check:** The stamped points form the expected V-shape for an absolute value function.`,
 					projectLink: "https://scratch.mit.edu/projects/341759115",
 					solutionLink: "https://scratch.mit.edu/projects/338501835/"
 				},
@@ -621,7 +623,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Extension:** Keep asking for new items until the user types "stop" instead of always collecting exactly five items.
 
-**Completion check:** The list should preserve every entered item and report the items in order.`,
+**Completion check:** The list preserves every entered item and reports the items in order.`,
 					projectLink: "https://scratch.mit.edu/projects/308826506/",
 					solutionLink: "https://scratch.mit.edu/projects/308824008/"
 				},
@@ -642,7 +644,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Extensions:** Read every other number, multiply each number by 10, or turn the sprite by each number of degrees.
 
-**Completion check:** The same stored list should support all four read modes without requiring separate variables for each item.`,
+**Completion check:** The same stored list supports all four read modes without requiring separate variables for each item.`,
 					projectLink: "https://scratch.mit.edu/projects/315090026/",
 					solutionLink: "https://scratch.mit.edu/projects/315051160/"
 				},
@@ -659,7 +661,7 @@ export const scratchLevel2Course: RawCourse = {
 6. If a guess is incorrect, end the game.
 7. If all guesses are correct, start a new round with one additional note.
 
-**Completion check:** The solution list and guess list should make it clear which note failed when the player makes a mistake.`,
+**Completion check:** The solution list and guess list make it clear which note failed when the player makes a mistake.`,
 					projectLink: "https://scratch.mit.edu/projects/309658040/",
 					solutionLink: "https://scratch.mit.edu/projects/309653930/"
 				}
@@ -704,7 +706,7 @@ export const scratchLevel2Course: RawCourse = {
 5. Reduce the remaining guess count after each guess or after each incorrect guess, depending on the chosen game rule.
 6. The player wins after guessing all unique letters and loses after running out of guesses.
 
-**Completion check:** Repeated guesses should not count as new progress, and the game should clearly show whether the player won or lost.`,
+**Completion check:** Repeated guesses do not count as new progress, and the game clearly shows whether the player won or lost.`,
 					projectLink: "https://scratch.mit.edu/projects/340691786",
 					solutionLink: "https://scratch.mit.edu/projects/342643080"
 				},
@@ -736,9 +738,9 @@ export const scratchLevel2Course: RawCourse = {
 3. A jump function that takes the jump height as input.
 4. A teleport function with no inputs: spin, move to a random spot with a sound effect, then spin again.
 
-**Green-flag sequence:** The main script should call the custom blocks to make the cat jump 100 steps, speak 3 times, draw a square of size 100, teleport, and draw another square.
+**Green-flag sequence:** The main script calls the custom blocks to make the cat jump 100 steps, speak 3 times, draw a square of size 100, teleport, and draw another square.
 
-**Completion check:** Each behavior should be defined once as a custom block and then called from the main green-flag script.`,
+**Completion check:** Each behavior is defined once as a custom block and then called from the main green-flag script.`,
 					projectLink: "https://scratch.mit.edu/projects/315773207",
 					solutionLink: "https://scratch.mit.edu/projects/315770711/"
 				},
@@ -748,16 +750,16 @@ export const scratchLevel2Course: RawCourse = {
 
 **Function design:**
 1. Create at least four talent functions.
-2. Each function should have a clear name, such as play song, spin, jump, or draw shape.
-3. At least two talents should use inputs, such as number of notes, number of spins, jump height, or drawing size.
+2. Give each function a clear name, such as play song, spin, jump, or draw shape.
+3. At least two talents use inputs, such as number of notes, number of spins, jump height, or drawing size.
 
 **Interaction flow:**
 1. When the green flag is clicked, the cat introduces the talent show.
-2. Ask which talent should be performed.
+2. Ask which talent to perform.
 3. Ask for any input value that the selected talent needs.
 4. Call the matching custom block with the selected input.
 
-**Completion check:** The same talent function should work with different input values, proving that the custom block is reusable.`,
+**Completion check:** The same talent function works with different input values, proving that the custom block is reusable.`,
 					projectLink: "https://scratch.mit.edu/projects/309293557",
 					solutionLink: "https://scratch.mit.edu/projects/309287208/"
 				},
@@ -786,7 +788,7 @@ export const scratchLevel2Course: RawCourse = {
 - Add average to the calculator reporter.
 - Add a second input to the multiples function so it can say any requested number of multiples.
 
-**Completion check:** Each function should be reusable with different inputs and should avoid copy-pasted blocks when the behavior is the same.`,
+**Completion check:** Each function is reusable with different inputs and avoids copy-pasted blocks when the behavior is the same.`,
 					projectLink: "https://scratch.mit.edu/projects/339918479",
 					solutionLink: "https://scratch.mit.edu/projects/339602908"
 				},
@@ -802,7 +804,7 @@ export const scratchLevel2Course: RawCourse = {
 
 **Extension:** Add helper functions for player wins, computer wins, and ties so the feedback code stays organized.
 
-**Completion check:** The game should handle invalid input, ties, and all six non-tie matchups without duplicated decision logic.`,
+**Completion check:** The game handles invalid input, ties, and all six non-tie matchups without duplicated decision logic.`,
 					projectLink: "https://scratch.mit.edu/projects/339972570/",
 					solutionLink: "https://scratch.mit.edu/projects/339731727/"
 				},
@@ -838,10 +840,10 @@ export const scratchLevel2Course: RawCourse = {
 3. Create a list called actions and add each costume name when 3 is pressed.
 4. Make Andie say the second item in the list.
 5. Report all available actions by looping through the list.
-6. After reporting all actions, ask which action should appear and switch to that costume.
+6. After reporting all actions, ask which action to show and switch to that costume.
 7. Clear the list first so pressing 3 does not add duplicate items.
 
-**Completion check:** The action list should be rebuilt cleanly and should control the costume selection.`,
+**Completion check:** The action list is rebuilt cleanly and controls the costume selection.`,
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
@@ -856,7 +858,7 @@ export const scratchLevel2Course: RawCourse = {
 5. Have Find Multiples say the first 10 multiples of the input number.
 6. When the spacebar is pressed, make Andie say the multiples of a random number from 1 to 10.
 
-**Completion check:** The same Find Multiples custom block should work for different random inputs.`,
+**Completion check:** The same Find Multiples custom block works for different random inputs.`,
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
@@ -866,7 +868,7 @@ export const scratchLevel2Course: RawCourse = {
 **Build steps:**
 1. Add one dancing sprite.
 2. Create a function that loops through all of the sprite's costumes.
-3. Add a number input for how many seconds the dance should last.
+3. Add a number input for how many seconds the dance lasts.
 4. Calculate the wait block with division so the total costume loop lasts the requested number of seconds.
 5. When the green flag is pressed, make the sprite dance for 3 seconds.
 6. Ask for the user's top five favorite dance moves by costume number.
@@ -874,7 +876,7 @@ export const scratchLevel2Course: RawCourse = {
 8. Create a function that loops through the favorite-moves list.
 9. Make the sprite repeat those favorite moves forever.
 
-**Completion check:** The dance timing should depend on the input value, and the favorite-move loop should come from the list rather than hard-coded costume changes.`,
+**Completion check:** The dance timing depends on the input value, and the favorite-move loop comes from the list rather than hard-coded costume changes.`,
 					projectLink: "https://scratch.mit.edu/projects/386649865/",
 					solutionLink: "https://scratch.mit.edu/projects/386376803/"
 				}
@@ -960,7 +962,7 @@ export const scratchLevel2Course: RawCourse = {
 4. Repeat the structure for Level 3, including teleporters that move Pal from the teleporter in to the teleporter out.
 5. When Pal collects the Level 3 key, broadcast the end of the game and switch to the ending backdrop.
 
-**Completion check:** Each level should reset cleanly, use the correct broadcast, and avoid running old level scripts after the backdrop changes.`,
+**Completion check:** Each level resets cleanly, uses the correct broadcast, and avoids running old level scripts after the backdrop changes.`,
 					projectLink: "https://scratch.mit.edu/projects/343651574/",
 					solutionLink: "https://scratch.mit.edu/projects/343348430/"
 				},
@@ -1042,7 +1044,7 @@ export const scratchLevel2Course: RawCourse = {
 				{
 					title: "Master Project Presentation",
 					content:
-						"Once it's complete, prepare a simple project summary about how the game was programmed, which lists and functions were used, and what design choices made it work.\n\nThe summary should reflect on the finished project, the problem-solving involved in building it, and one improvement that would make the game stronger."
+						"Once it's complete, prepare a simple project summary about how the game was programmed, which lists and functions were used, and what design choices made it work.\n\nThe summary reflects on the finished project, the problem-solving involved in building it, and one improvement that would make the game stronger."
 				},
 				{
 					title: "Course Recap",
@@ -1053,7 +1055,7 @@ export const scratchLevel2Course: RawCourse = {
 					title: "Optional Extra Practice: Typing and Code Fluency",
 					content: `**Purpose:** This resource supports the transition from advanced Scratch projects into typed programming.
 
-Scratch Level 2 already uses larger designs, lists, functions, and coordinated game state. Extra practice should therefore focus less on beginner keyboard discovery and more on maintaining typing comfort while translating familiar block logic into short typed-code patterns.
+Scratch Level 2 already uses larger designs, lists, functions, and coordinated game state. Extra practice therefore focuses less on beginner keyboard discovery and more on maintaining typing comfort while translating familiar block logic into short typed-code patterns.
 
 **Why it matters:** A student who can already plan a Scratch game still has to manage punctuation, spelling, indentation, and syntax in Python or JavaScript. Short typing warmups reduce that friction, but the main target is code fluency: recognizing how Scratch ideas such as variables, loops, conditionals, lists, and functions appear in text.
 
@@ -1101,7 +1103,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 				{
 					title: "Concept Path",
 					content:
-						"An arcade system depends on reusable structure: clone creation, list-backed state, custom blocks, broadcasts, and conditionals should work together instead of living in separate one-off scripts. The project makes spawn rules, collisions, scoring, levels, and game-over cleanup traceable from the green flag."
+						"An arcade system depends on reusable structure: clone creation, list-backed state, custom blocks, broadcasts, and conditionals work together instead of living in separate one-off scripts. The project makes spawn rules, collisions, scoring, levels, and game-over cleanup traceable from the green flag."
 				},
 				{
 					title: "Design and Planning Map",
@@ -1242,7 +1244,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 				{
 					title: "Concept Path",
 					content:
-						"Advanced Scratch concepts map directly to Python readiness: lists store collections, custom blocks behave like functions, inputs resemble parameters, loops repeat actions, conditionals branch, and variables preserve state. The explanation should translate a Scratch system into text-code terms without losing how the original project behaves."
+						"Advanced Scratch concepts map directly to Python readiness: lists store collections, custom blocks behave like functions, inputs resemble parameters, loops repeat actions, conditionals branch, and variables preserve state. The explanation translates a Scratch system into text-code terms without losing how the original project behaves."
 				},
 				{
 					title: "Design and Planning Map",

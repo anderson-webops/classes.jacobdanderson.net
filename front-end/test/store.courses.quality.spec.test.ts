@@ -4404,13 +4404,14 @@ describe("course text quality normalization", () => {
 			/Rock Paper Scissors/
 		);
 		expect(rockPaperScissors.content).toContain(
-			"handle invalid input, ties, and all six non-tie matchups"
+			"The game handles invalid input, ties, and all six non-tie matchups"
 		);
 
 		const platformerPal = findItem(scratchLevel2!, /Platformer Pal/);
 		expect(platformerPal.content).toContain(
-			"Each level should reset cleanly, use the correct broadcast, and avoid running old level scripts"
+			"Each level resets cleanly, uses the correct broadcast, and avoids running old level scripts"
 		);
+		expect(allCourseText(scratchLevel2!)).not.toMatch(/\bshould\b/i);
 
 		const levelTwoTyping = findItem(
 			scratchLevel2!,
