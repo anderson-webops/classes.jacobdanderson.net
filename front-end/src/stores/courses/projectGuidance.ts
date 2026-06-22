@@ -362,7 +362,7 @@ function compactGuidanceBody(
 		)
 		.replace(
 			new RegExp(
-				`\\bone ${escapedTitle} (visible behavior|normal case|diagnostic observation)\\b`,
+				`\\bone ${escapedTitle} (normal case|diagnostic observation)\\b`,
 				"g"
 			),
 			"one $1"
@@ -1234,7 +1234,7 @@ function requiredWorkSteps(
 	if (family.includes("web") || family.includes("javascript")) {
 		return [
 			[
-				"Identify the feature user interaction, state change, DOM/canvas/API output, and visible error or empty state.",
+				`Identify the ${moduleTitle} user interaction, state change, DOM/canvas/API output, and visible error or empty state.`,
 				`Implement one ${moduleTitle} visible behavior at a time, inspecting the page, console, network panel, or local server after each change.`,
 				`Verify ${moduleTitle} with a normal interaction, an invalid or empty input, and one accessibility, layout, or deployment-readiness check.`
 			],
@@ -1270,7 +1270,7 @@ function requiredWorkSteps(
 			[
 				`State the ${moduleTitle} question, input source, success signal, and assumption most likely to affect interpretation.`,
 				`Expose one intermediate ${moduleTitle} table, trace, metric, baseline, or visualization before accepting the final output.`,
-				`Check a hand-verifiable case, a representative case, and one case where the method could fail or mislead.`
+				`Check a hand-verifiable ${moduleTitle} case, a representative case, and one case where the method could fail or mislead.`
 			],
 			[
 				`Define the ${moduleTitle} measurement, prediction, classification, search, or comparison target before implementation begins.`,
@@ -1781,7 +1781,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} includes enough intermediate evidence to connect the input source to the output.`,
-				`The work checks a hand-verifiable case, a representative case, and one caveat or failure mode.`,
+				`The ${moduleTitle} work checks a hand-verifiable case, a representative case, and one caveat or failure mode.`,
 				`The final ${moduleTitle} note distinguishes observed behavior from interpretation.`
 			],
 			[

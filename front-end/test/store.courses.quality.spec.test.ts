@@ -643,8 +643,8 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(
 				/Check the draft against the expected behavior after a working version exists; record one difference that affects correctness, readability, robustness, or design/
 			);
-			expect(corpus).toContain(
-				"Identify the feature user interaction, state change, DOM/canvas/API output, and visible error or empty state"
+			expect(corpus).toMatch(
+				/Identify the [^\n.]+ user interaction, state change, DOM\/canvas\/API output, and visible error or empty state/
 			);
 			expect(corpus).toContain(
 				"Translate the prompt into input format, output format, constraints, and invariant"
