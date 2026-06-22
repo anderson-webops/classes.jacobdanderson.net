@@ -1987,7 +1987,7 @@ function neutralizeStudentFacingText(text: string) {
 				)
 				.replace(
 					/\bA fast-track learner should still demonstrate\b/g,
-					"A fast-track learner demonstrates"
+					"Fast-track placement still requires"
 				)
 				.replace(
 					/\bthe final answer should not rank\b/g,

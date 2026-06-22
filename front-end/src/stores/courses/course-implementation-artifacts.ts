@@ -759,7 +759,7 @@ function safetyPolicyFor(
 	if (kind === "systems") return systemsSecurityPolicy(courseLabel);
 	if (kind === "science") {
 		return [
-			`${courseLabel} is Zoom-safe by default: no required beakers, heat, chemicals, electricity kits, outdoor access, food, or parent-managed supplies.`,
+			`${courseLabel} is Zoom-safe by default: no required beakers, heat, chemicals, electricity kits, outdoor access, food, or adult-managed supplies.`,
 			`${familyLabel} work uses shared simulations, curated media, public datasets, sketches, graphs, and paper notebooks.`,
 			`Any optional ${courseLabel} household observation must have a fully equivalent provided-data or simulation alternative.`
 		];
@@ -1295,7 +1295,7 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 				content: [
 					"**Concept path:** Required science projects are completable with notes, paper, a browser, and shared-screen material. Optional household observations need a fully equivalent data or simulation alternative.",
 					`**Course boundary:** ${guidance.safetyBoundary}`,
-					"**Evidence target:** No required project depends on beakers, kits, food, chemicals, heat, electricity, outdoor access, or parent-managed materials."
+					"**Evidence target:** No required project depends on beakers, kits, food, chemicals, heat, electricity, outdoor access, or adult-managed materials."
 				].join("\n\n")
 			},
 			{
@@ -2231,12 +2231,12 @@ function addScienceGradeBandScopeModule(courseId: string, course: RawCourse) {
 				{
 					title: "Engineering Every Year",
 					content:
-						"**Concept path:** Engineering is not a bonus unit. Every grade band should include criteria, constraints, solution comparison, revision after evidence, and a short design reflection.\n\n**Evidence target:** The work demonstrates the ability to explain what problem the design solves, what tradeoff was chosen, and what evidence would improve the solution."
+						"**Concept path:** Engineering is not a bonus unit. Every grade band includes criteria, constraints, solution comparison, revision after evidence, and a short design reflection.\n\n**Evidence target:** The work demonstrates the ability to explain what problem the design solves, what tradeoff was chosen, and what evidence would improve the solution."
 				},
 				{
 					title: "Physical-Material Boundary",
 					content:
-						"**Remote investigation:** No activity requires beakers, chemicals, heat, food, kits, outdoor collection, or parent-supervised construction. Optional observations must have an equivalent image, simulation, or data table.\n\n**Evidence target:** The core objective can be completed with only paper, notes, and browser/shared-screen access."
+						"**Remote investigation:** No activity requires beakers, chemicals, heat, food, kits, outdoor collection, or supervised construction. Optional observations must have an equivalent image, simulation, or data table.\n\n**Evidence target:** The core objective can be completed with only paper, notes, and browser/shared-screen access."
 				}
 			],
 			supplementalProjects: [
@@ -2454,7 +2454,7 @@ function addJavaBridgeModernModule(courseId: string, course: RawCourse) {
 				{
 					title: "Placement Gate",
 					content:
-						"**Readiness check:** Java Level 1 can move quickly through variables, conditionals, loops, and console I/O when the same ideas are already fluent in Python or C++. The non-negotiable evidence is Java-specific: method signatures, class layout, package/import habits, primitive versus reference types, and compile/run troubleshooting.\n\n**Placement evidence:** A fast-track learner should still demonstrate a clean compile-run cycle, explain `public static void main`, choose between `int`, `double`, `boolean`, `String`, and wrapper objects, and identify when a failure is syntax, type, runtime, or logic related. Familiar programming skill does not replace Java's explicit file, class, and type rules.\n\n**Evidence target:** A complete response explains what Java requires explicitly that Python hides and what Java hides compared with C++ memory management."
+						"**Readiness check:** Java Level 1 can move quickly through variables, conditionals, loops, and console I/O when the same ideas are already fluent in Python or C++. The non-negotiable evidence is Java-specific: method signatures, class layout, package/import habits, primitive versus reference types, and compile/run troubleshooting.\n\n**Placement evidence:** Fast-track placement still requires a clean compile-run cycle, an explanation of `public static void main`, deliberate choices between `int`, `double`, `boolean`, `String`, and wrapper objects, and the ability to identify whether a failure is syntax, type, runtime, or logic related. Familiar programming skill does not replace Java's explicit file, class, and type rules.\n\n**Evidence target:** A complete response explains what Java requires explicitly that Python hides and what Java hides compared with C++ memory management."
 				},
 				{
 					title: "Java Object Basics",
