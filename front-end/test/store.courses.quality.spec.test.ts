@@ -2025,6 +2025,11 @@ describe("course text quality normalization", () => {
 	it("keeps early Python Turtle prompts structured around planning and verification", async () => {
 		const course = await loadRawCourse("python-level-1");
 		expect(course).not.toBeNull();
+		const source = fs.readFileSync(
+			"src/stores/courses/python-level-1.ts",
+			"utf8"
+		);
+		expect(source).not.toMatch(/\bshould\b/i);
 
 		const checks = [
 			{
