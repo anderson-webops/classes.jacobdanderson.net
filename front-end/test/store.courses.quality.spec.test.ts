@@ -623,7 +623,7 @@ describe("course text quality normalization", () => {
 				"Complete **PTJ0 Positioning and Workflow Translation** as a Java project that exposes class responsibilities, public behavior, and one edge case"
 			);
 			expect(corpus).toContain(
-				"Build the web development extension challenge for **JSM1 Fundamentals Review** as a browser-visible feature with clear state, interaction, and error-handling evidence"
+				"Build the web-development extension challenge for **JSM1 Fundamentals Review** as a browser-visible feature with clear state, interaction, and error-handling evidence"
 			);
 			expect(corpus).toContain(
 				"Solve the USACO Bronze project for **USB0 Setup and Contest Workflow** with exact input/output behavior, a traceable invariant, and evidence from sample plus custom cases"
@@ -872,7 +872,7 @@ describe("course text quality normalization", () => {
 				"Verify the Division Facts object-design exercise with one standard case and one boundary case that exposes the key concept"
 			);
 			expect(corpus).toContain(
-				"Produce **PTJ1 Functions, Parameters, and Return Types** with a named Java type boundary, visible behavior, and evidence from a standard scenario plus a boundary scenario"
+				"Complete **PTJ1 Functions, Parameters, and Return Types** as a Java project that exposes class responsibilities, public behavior, and one edge case"
 			);
 			expect(corpus).not.toMatch(/\bSupplemental Practice\s+[2-9]\b/i);
 			expect(corpus).not.toMatch(/\bSupplemental\s+[2-9]\b/i);
@@ -2244,7 +2244,7 @@ describe("course text quality normalization", () => {
 		]);
 		const corpus = courses.map(allCourseText).join("\n");
 
-		expect(corpus).toContain("web development workflow");
+		expect(corpus).toContain("web-development workflow");
 		expect(corpus).not.toContain("object-oriented Java design");
 		expect(corpus).not.toContain("classes, method contracts, object state");
 	});

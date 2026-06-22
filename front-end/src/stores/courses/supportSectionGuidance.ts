@@ -190,12 +190,12 @@ export function buildSupportSectionGuidance({
 		][variant];
 		const evidenceReview = [
 			`The verification note for **${title}** names the expected result, observed result, evidence source, and interpretation. The evidence type fits the work: trace, screenshot, console output, unit test, sample run, diagram, table, or short comparison.`,
-			`A useful **${title}** check separates expectation, observation, and interpretation. It points to the trace, screenshot, output, test, sample run, diagram, table, or written comparison that supports the conclusion.`,
+			`A useful **${title}** check separates expectation, observation, and interpretation. The **${title}** conclusion points to the trace, screenshot, output, test, sample run, diagram, table, or written comparison that supports it.`,
 			`The **${title}** evidence record makes the review reproducible: expected behavior, actual behavior, source of evidence, and the reason the evidence supports or weakens the conclusion.`
 		][variant];
 		const mismatchReview = [
 			`When the result differs from the expectation, classify the mismatch first: implementation bug, unclear requirement, invalid assumption, weak test case, or acceptable limitation. The classification determines the next check.`,
-			`If the evidence does not match the target, identify the kind of mismatch before revising the work: code or logic error, unclear requirement, wrong assumption, weak test, or real limitation.`,
+			`If the **${title}** evidence does not match the target, identify the mismatch before revising the work: code or logic error, unclear requirement, wrong assumption, weak test, or real limitation.`,
 			`A mismatch in **${title}** produces a diagnosis before another edit: what failed, why it likely failed, and which smaller check can confirm the next change.`
 		][variant];
 

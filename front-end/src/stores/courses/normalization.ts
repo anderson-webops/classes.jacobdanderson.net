@@ -643,7 +643,7 @@ const projectLikeTitlePattern =
 
 const explicitProjectTitlePattern = new RegExp(
 	[
-		"^(?:(?:[A-Z]{2,}\\d+(?:\\.\\d+)?|PS\\d+|GM\\d+|JSS\\d+|JSM\\d+|Unit\\s+\\d+)\\s+)?",
+		"^(?:(?:[A-Z]{2,}\\d+(?:\\.\\d+)?|Unit\\s+\\d+)\\s+)?",
 		"(?:Core Project|Project|Practice Project|Extension Project|Extension Challenge|Capstone|Master Project|",
 		"Supplemental Project|Catalog Project|Graphics Java Project|Guided Practice|Data Practice|Simulation Practice|",
 		"Readiness Check|Checkpoint:|Extension:|Supplemental:|Design Exercise:)"
@@ -886,8 +886,8 @@ function groupConceptLessons(items: RawCourseModuleItem[]) {
 
 function normalizeModuleLessonShape(course: RawCourse) {
 	for (const module of course.modules) {
-		const conceptItems = module.curriculum.filter(
-			item => isConceptLessonItem(item)
+		const conceptItems = module.curriculum.filter(item =>
+			isConceptLessonItem(item)
 		);
 
 		if (conceptItems.length === 0) continue;
@@ -3043,7 +3043,7 @@ function subjectFocus(context: CourseTextContext) {
 	if (isWebContext(context)) {
 		return topicScopedFocus(
 			context,
-			"web development workflow with user-facing behavior, browser checks, API/data flow, accessibility, and deployment readiness"
+			"web-development workflow with user-facing behavior, browser checks, API/data flow, accessibility, and deployment readiness"
 		);
 	}
 	if (/design pattern|refactoring|pattern implementation/.test(source)) {
@@ -6224,7 +6224,7 @@ function studioArtifact(context: CourseTextContext) {
 		return "a repeatable Linux systems checkpoint with commands, evidence, logs, and troubleshooting notes";
 	}
 	if (isNetworkSystemsSource(source)) {
-		return "a network systems checkpoint with topology, commands, packet or service evidence, and interpretation";
+		return "a network-systems checkpoint with topology, commands, packet or service evidence, and interpretation";
 	}
 	if (/assembly/.test(source)) {
 		return "an annotated assembly trace or small program that proves register, stack, and memory behavior";
@@ -6823,23 +6823,27 @@ function studioExtensionPrompt(context: CourseTextContext) {
 		]);
 	}
 	if (isJavaContext(context)) {
+		const subjectReference = articleSafeStudioReference(
+			supportFocusTopic(context)
+		);
+
 		return variantPrompt(context, [
 			() =>
-				"Add one method, subclass, interface, record, collection case, or edge-case test.",
+				`Add one method, subclass, interface, record, collection case, or edge-case test for ${subjectReference}.`,
 			() =>
-				"Add one object-state or method-dispatch trace that proves the intended behavior.",
+				`Add one object-state or method-dispatch trace for ${subjectReference} that proves the intended behavior.`,
 			() =>
-				"Add one invalid-input, boundary, or overload case that protects the class contract.",
+				`Add one invalid-input, boundary, or overload case that protects the ${subjectReference} class contract.`,
 			() =>
-				"Add one small refactor that improves responsibility boundaries without changing public behavior.",
+				`Add one small refactor for ${subjectReference} that improves responsibility boundaries without changing public behavior.`,
 			() =>
-				"Add one constructor, accessor, mutator, equals-style, or toString-style case and explain what behavior it protects.",
+				`Add one constructor, accessor, mutator, equals-style, or toString-style case for ${subjectReference} and explain what behavior it protects.`,
 			() =>
-				"Add one test that changes object state through a public method, then verify the expected state without relying on hidden fields.",
+				`Add one test for ${subjectReference} that changes object state through a public method, then verify the expected state without relying on hidden fields.`,
 			() =>
-				"Add one collection or array variation and explain how the loop, index, or enhanced-for behavior changes the result.",
+				`Add one collection or array variation for ${subjectReference} and explain how the loop, index, or enhanced-for behavior changes the result.`,
 			() =>
-				"Add one interface, abstract-class, inheritance, or record variation only if it clarifies the object responsibility."
+				`Add one interface, abstract-class, inheritance, or record variation for ${subjectReference} only if it clarifies the object responsibility.`
 		]);
 	}
 	if (isCppContext(context)) {

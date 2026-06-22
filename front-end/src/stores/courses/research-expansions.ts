@@ -79,6 +79,29 @@ function sourceBullets(names: string[]) {
 	);
 }
 
+function escapeRegExp(value: string) {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function expansionTitle(courseLabel: string, suffix: string) {
+	const [firstSuffixWord = ""] = suffix.split(/\s+/);
+	if (!firstSuffixWord) return courseLabel;
+
+	if (
+		!new RegExp(`\\b${escapeRegExp(firstSuffixWord)}$`, "i").test(
+			courseLabel.trim()
+		)
+	) {
+		return `${courseLabel} ${suffix}`;
+	}
+
+	const compactSuffix = suffix
+		.replace(new RegExp(`^${escapeRegExp(firstSuffixWord)}\\s+`, "i"), "")
+		.trim();
+
+	return compactSuffix ? `${courseLabel} ${compactSuffix}` : courseLabel;
+}
+
 function courseUseNote(courseLabel: string, emphasis: string) {
 	return `**Reference role:** For ${courseLabel}, use the references to clarify lesson focus, project requirements, and visible course work. ${emphasis}`;
 }
@@ -360,7 +383,7 @@ function buildStandardsModule(
 		title: "Standards Map",
 		curriculum: [
 			{
-				title: `${courseLabel} Reference Guide`,
+				title: expansionTitle(courseLabel, "Reference Guide"),
 				content: [
 					`**Reference map:** ${courseLabel} uses these standards, documentation, and tooling references to keep examples, projects, and expectations aligned with current practice.`,
 					`**Core references:**\n${sourceBullets(profile.sources)}`,
@@ -369,7 +392,7 @@ function buildStandardsModule(
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Core Skills`,
+				title: expansionTitle(courseLabel, "Core Skills"),
 				content: [
 					`**Skill map:** ${courseLabel} uses these skills for focused review, clear examples, and explicit prerequisite connections before larger projects.`,
 					`**Core skills:**\n${bullets(profile.gaps)}`,
@@ -381,7 +404,7 @@ function buildStandardsModule(
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Next Topics`,
+				title: expansionTitle(courseLabel, "Next Topics"),
 				content: [
 					`**Growth areas:** ${courseLabel} next areas for deeper coverage appear in prerequisite order and connect each addition to a concrete project or checkpoint.`,
 					`**Expansion topics:**\n${bullets(profile.topics)}`,
@@ -411,7 +434,7 @@ function buildStandardsModule(
 				].join("\n\n")
 			},
 			{
-				title: `${courseLabel} Learning Sequence`,
+				title: expansionTitle(courseLabel, "Learning Sequence"),
 				content: [
 					`**Sequence map:** The current ${courseLabel} sequence labels each gap as prerequisite, core lesson, project practice, assessment, enrichment, or optional reference.`,
 					`**Ordering rule:** ${courseLabel} sequence decisions are based on dependency, not convenience. If any ${courseLabel} project expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,
@@ -454,8 +477,8 @@ function buildSequencingModule(
 				title: `${courseLabel} Module Alignment Guide`,
 				content: [
 					`**Alignment guide:** Strong ${courseLabel} modules connect the concept, example, project, and checkpoint to the same target skill.`,
-					`**Alignment test:** In a complete ${courseLabel} module, the concept, project, and checkpoint all practice the same skill. If the ${courseLabel} checkpoint checks a different skill than the project practices, the module needs a clearer project target before it is ready.`,
-					`**Aligned modules show:**\n- Each ${courseLabel} module has a named prerequisite and observable outcome.\n- Each ${courseLabel} project has required behavior, test cases, and an extension.\n- The ${courseLabel} checkpoint format matches the work: code trace, rubric, CER response, math justification, security report, or model evaluation.\n- Any ${courseLabel} toolchain, dataset, simulation, or source-code dependency is linked with version or access notes.`
+					`**Alignment test:** In a complete ${courseLabel} module, the concept, project, and checkpoint all practice the same skill. If the checkpoint for ${courseLabel} checks a different skill than the project practices, the module needs a clearer project target before it is ready.`,
+					`**Aligned modules show:**\n- Each module in ${courseLabel} has a named prerequisite and observable outcome.\n- Each project in ${courseLabel} has required behavior, test cases, and an extension.\n- The checkpoint format for ${courseLabel} matches the work: code trace, rubric, CER response, math justification, security report, or model evaluation.\n- Any toolchain, dataset, simulation, or source-code dependency for ${courseLabel} is linked with version or access notes.`
 				].join("\n\n")
 			},
 			{
@@ -524,7 +547,7 @@ function buildProjectModule(
 				content: [
 					`**Reflection:** Every major ${courseLabel} project includes a short note naming the goal, approach, evidence, bug or misconception, and one next improvement.`,
 					`**Rubric use:** Score the ${courseLabel} finished work and the explanation separately. A project in ${courseLabel} can produce the right output while still needing a stronger explanation, clearer evidence, better edge-case coverage, or a more maintainable structure.`,
-					`**Project checks:**\n- The ${courseLabel} project result is visible, runnable, or inspectable.\n- A normal ${courseLabel} case and an edge case are tested or justified.\n- The ${courseLabel} explanation does not depend on reading every line or step from notes.`
+					`**Project checks:**\n- The project result for ${courseLabel} is visible, runnable, or inspectable.\n- A normal case and an edge case for ${courseLabel} are tested or justified.\n- The explanation for ${courseLabel} does not depend on reading every line or step from notes.`
 				].join("\n\n")
 			},
 			{
