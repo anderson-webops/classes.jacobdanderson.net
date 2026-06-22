@@ -4763,8 +4763,9 @@ describe("course text quality normalization", () => {
 			const allCourses = loadedCourses.map(({ course }) => course);
 			const allCorpus = await loadedCatalogText();
 			expect(allCorpus).not.toMatch(
-				/Common pitfalls:\*\* Common mistakes include/i
+				/Failure modes:\*\* Common mistakes include/i
 			);
+			expect(allCorpus).not.toMatch(/\bCommon pitfalls\b/i);
 			expect(allCorpus).not.toMatch(
 				/Modify the prompt so it still uses the same concept/i
 			);
@@ -5472,7 +5473,7 @@ describe("course text quality normalization", () => {
 			"Readiness check: define the system boundary"
 		);
 		expect(physicsContextHelper).toContain(
-			"Common pitfalls include treating momentum"
+			"Common failure modes include treating momentum"
 		);
 
 		for (const courseId of courseIds) {
@@ -5486,7 +5487,7 @@ describe("course text quality normalization", () => {
 			);
 			const misconceptions = course!.modules.flatMap(module =>
 				module.supplementalProjects
-					.filter(item => item.title === "Common Pitfalls")
+					.filter(item => item.title === "Failure Modes")
 					.map(item => item.content)
 			);
 			const combined = [...diagnostics, ...misconceptions].join("\n");
@@ -5503,7 +5504,7 @@ describe("course text quality normalization", () => {
 			expect(combined).not.toMatch(genericMisconceptionTemplate);
 			expect(combined).not.toMatch(genericCheckpointTemplate);
 			expect(combined).not.toMatch(/\bWatch for\b/i);
-			expect(courseText).toContain("Common Pitfalls");
+			expect(courseText).toContain("Failure Modes");
 			expect(courseText).not.toContain("Misconception Watchlist");
 			expect(source).not.toMatch(/\bWatch for\b/i);
 			expect(source).not.toMatch(/The correction should replace/i);
@@ -5574,7 +5575,7 @@ describe("course text quality normalization", () => {
 			"An independent physics portfolio begins with a focused question narrow enough to model and broad enough to matter."
 		);
 		expect(
-			findItem(physics2!, /Common Pitfalls/, /Bernoulli-style reasoning/)
+			findItem(physics2!, /Failure Modes/, /Bernoulli-style reasoning/)
 				.content
 		).toContain("continuum models break down");
 	});

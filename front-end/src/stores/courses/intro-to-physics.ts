@@ -45,9 +45,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: convert units without losing meaning, label graphs with quantities and units, and explain why the same measured value can be both precise and inaccurate. Prompt: 'If two groups got slightly different walking speeds, does that automatically mean one group is wrong?'"
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating a graph as a picture of the path rather than a relationship between variables, assuming more decimal places always mean better science, and treating uncertainty as failed experimentation."
+						"Common failure modes include treating a graph as a picture of the path rather than a relationship between variables, assuming more decimal places always mean better science, and treating uncertainty as failed experimentation."
 				},
 				{
 					title: "Extension Project: Measurement Scavenger Hunt",
@@ -97,9 +97,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: move fluently between story, graph, and equation without being coached toward a specific formula. Prompt: explain the sign of velocity and acceleration in words, not just symbols."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating the steepest graph point as the object's highest physical position, interpreting a time-axis crossing as the object disappearing, and confusing negative velocity with negative speed."
+						"Common failure modes include treating the steepest graph point as the object's highest physical position, interpreting a time-axis crossing as the object disappearing, and confusing negative velocity with negative speed."
 				},
 				{
 					title: "Extension Project: Track Star vs. Marathon Runner",
@@ -149,9 +149,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use quick diagram checks that start from a single sentence prompt and produce a complete free-body diagram. Justify each force direction before any calculations happen."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include drawing a nonexistent 'force of motion,' confusing Newton's third-law pairs with forces acting on the same object, and treating mass and weight as interchangeable."
+						"Common failure modes include drawing a nonexistent 'force of motion,' confusing Newton's third-law pairs with forces acting on the same object, and treating mass and weight as interchangeable."
 				},
 				{
 					title: "Extension Project: Test of Strength",
@@ -201,9 +201,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: distinguish energy stored in a system from energy transferred into or out of it. Prompt: narrate an energy story in words before writing any equations."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating energy as something that gets 'used up' rather than transferred or transformed, and assuming heavier objects fall faster simply because they have more weight."
+						"Common failure modes include treating energy as something that gets 'used up' rather than transferred or transformed, and assuming heavier objects fall faster simply because they have more weight."
 				},
 				{
 					title: "Extension Project: Pendulum Design",
@@ -253,9 +253,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: predict what happens when one component is removed or replaced before changing the circuit diagram or simulation. A good checkpoint explains current and voltage in the same circuit without mixing the two ideas."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating current as something that gets 'used up' by the first bulb in a series circuit, assuming a battery supplies a fixed current no matter the circuit, and confusing an open circuit with a weaker circuit rather than a broken path."
+						"Common failure modes include treating current as something that gets 'used up' by the first bulb in a series circuit, assuming a battery supplies a fixed current no matter the circuit, and confusing an open circuit with a weaker circuit rather than a broken path."
 				},
 				{
 					title: "Extension Project: Home Device Power Survey",
@@ -305,7 +305,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: identify amplitude, frequency, and wavelength from both pictures and graphs. Prompt: explain what changes when a sound gets louder versus when it gets higher in pitch."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
 						"Common mistakes include mixing up amplitude with frequency, assuming waves always transport matter forward rather than mainly transporting energy, and thinking light needs a medium in the same way sound does."
 				},
@@ -357,9 +357,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Readiness check: propose a question that is narrow enough to test, identify uncertainty honestly, and choose a graph that matches the data type. A strong checkpoint predicts in advance what result would count as evidence for or against the hypothesis."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating a lab as successful only when the hypothesis is confirmed, using polish to hide weak evidence, and jumping to explanations before controlling variables."
+						"Common failure modes include treating a lab as successful only when the hypothesis is confirmed, using polish to hide weak evidence, and jumping to explanations before controlling variables."
 				},
 				{
 					title: "Capstone Option: A Grand Experiment",
@@ -409,9 +409,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: identify the system boundary, the positive direction, the before-and-after momentum values, and whether external impulse is being ignored or measured. The explanation states why conservation applies or why impulse is the better model."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating momentum as a scalar, assuming kinetic energy is always conserved in collisions, forgetting direction signs, and describing airbags as reducing momentum change rather than increasing stopping time to reduce average force."
+						"Common failure modes include treating momentum as a scalar, assuming kinetic energy is always conserved in collisions, forgetting direction signs, and describing airbags as reducing momentum change rather than increasing stopping time to reduce average force."
 				},
 				{
 					title: "Extension Project: Impact Safety Brief",
@@ -461,9 +461,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: locate the pivot, draw the applied force, identify the perpendicular lever arm, and predict clockwise or counterclockwise rotation before calculating torque."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include measuring distance along the object instead of perpendicular distance to the force line, mixing clockwise and counterclockwise signs, and assuming the largest force always creates the largest torque."
+						"Common failure modes include measuring distance along the object instead of perpendicular distance to the force line, mixing clockwise and counterclockwise signs, and assuming the largest force always creates the largest torque."
 				},
 				{
 					title: "Extension Project: Rotation and Torque Audit",
@@ -513,9 +513,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: distinguish pressure, density, and buoyant force in the same scenario. The answer identifies area, volume, mass, displaced fluid, and whether the object-fluid system is being simplified."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include saying heavy objects always sink, treating pressure and force as identical, ignoring area, and using density without specifying the material or the volume being compared."
+						"Common failure modes include saying heavy objects always sink, treating pressure and force as identical, ignoring area, and using density without specifying the material or the volume being compared."
 				},
 				{
 					title: "Extension Project: Boat Shape and Buoyancy Design",
@@ -565,9 +565,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: separate temperature, heat transfer, total thermal energy, and phase change in one scenario. The explanation identifies the system, surroundings, and direction of energy flow."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating heat and temperature as the same thing, assuming all materials warm equally, ignoring mass, and describing insulation as creating heat rather than slowing energy transfer."
+						"Common failure modes include treating heat and temperature as the same thing, assuming all materials warm equally, ignoring mass, and describing insulation as creating heat rather than slowing energy transfer."
 				},
 				{
 					title: "Extension Project: Thermal Design Memo",
@@ -617,9 +617,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: draw at least two correct rays, identify the image as real or virtual, and explain whether the model is using reflection, refraction, or both."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include using lens formulas before deciding image type, drawing rays that bend without a normal line, treating virtual images as fake, and forgetting that ray models are simplified representations of light behavior."
+						"Common failure modes include using lens formulas before deciding image type, drawing rays that bend without a normal line, treating virtual images as fake, and forgetting that ray models are simplified representations of light behavior."
 				},
 				{
 					title: "Extension Project: Optical Device Explainer",
@@ -669,9 +669,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: identify current direction, magnetic field direction, device purpose, and energy transformation before using vocabulary such as motor, generator, or induction."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating magnetic fields as visible material lines, describing magnets as storing unlimited energy, mixing up motors and generators, and ignoring the role of changing fields in induction."
+						"Common failure modes include treating magnetic fields as visible material lines, describing magnets as storing unlimited energy, mixing up motors and generators, and ignoring the role of changing fields in induction."
 				},
 				{
 					title: "Extension Project: Electromagnetic Device Brief",
@@ -721,9 +721,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: identify equilibrium, amplitude, period, frequency, and whether damping or driving is present. The explanation separates one full cycle from one crossing of equilibrium."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include confusing amplitude with period, assuming resonance always destroys a system, ignoring damping, and treating every repeated motion as perfectly simple harmonic."
+						"Common failure modes include confusing amplitude with period, assuming resonance always destroys a system, ignoring damping, and treating every repeated motion as perfectly simple harmonic."
 				},
 				{
 					title: "Extension Project: Resonance Case Study",
@@ -773,9 +773,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: draw force and velocity directions for an orbiting object, then explain the difference between falling, orbiting, and escaping in terms of speed and gravitational interaction."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include saying there is no gravity in orbit, drawing orbital force forward along the path, using not-to-scale diagrams as evidence, and confusing mass with weight on different worlds."
+						"Common failure modes include saying there is no gravity in orbit, drawing orbital force forward along the path, using not-to-scale diagrams as evidence, and confusing mass with weight on different worlds."
 				},
 				{
 					title: "Extension Project: Mission Planning Sketch",
@@ -825,9 +825,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: name the observation, the classical model being challenged, and the modern-physics idea that handles the evidence better. The response avoids vague claims that quantum physics is simply 'weird.'"
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include treating modern physics as magic, claiming classical physics is useless, confusing photons with ordinary particles in every respect, and using device names without explaining the evidence behind the model."
+						"Common failure modes include treating modern physics as magic, claiming classical physics is useless, confusing photons with ordinary particles in every respect, and using device names without explaining the evidence behind the model."
 				},
 				{
 					title: "Extension Project: Modern Physics Explainer",
@@ -877,9 +877,9 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Checkpoint: confirm that the portfolio has a focused question, named model, evidence source, labeled representation, limitation, and revision plan before final polish begins."
 				},
 				{
-					title: "Common Pitfalls",
+					title: "Failure Modes",
 					content:
-						"Common pitfalls include making the portfolio too broad, hiding weak evidence behind visual polish, omitting units, using a graph without interpreting it, and failing to say what the model cannot explain."
+						"Common failure modes include making the portfolio too broad, hiding weak evidence behind visual polish, omitting units, using a graph without interpreting it, and failing to say what the model cannot explain."
 				},
 				{
 					title: "Extension Project: Final Physics Portfolio",

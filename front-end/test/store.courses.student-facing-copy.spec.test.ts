@@ -90,6 +90,7 @@ const forbiddenStudentFacingPatterns = [
 	/\*\*Completion checks:\*\*/i,
 	/\*\*Learning sequence:\*\*/i,
 	/\*\*Mastery check:\*\*/i,
+	/\bCommon pitfalls\b/i,
 	/\*\*Readiness evidence:\*\*/i,
 	/\bSequence Triage\b/i,
 	/\bTriage guidance\b/i,
