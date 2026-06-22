@@ -114,6 +114,10 @@ describe("research-backed course family expansions", () => {
 				const expansionText = expansionModules
 					.map(moduleText)
 					.join("\n");
+				const referenceAndRoadmapText = expansionModules
+					.filter(module => module.title !== "Project Practice Guide")
+					.map(moduleText)
+					.join("\n");
 				const courseLabel = course!.name.trim() || profile.family;
 				expect(expansionText, courseId).toContain(
 					`${courseLabel} Module Alignment Guide`
@@ -166,6 +170,12 @@ describe("research-backed course family expansions", () => {
 				);
 				expect(expansionText, courseId).not.toMatch(
 					/\*\*(?:Ready to practice|Ready when):\*\*/i
+				);
+				expect(expansionText, courseId).not.toMatch(
+					/\b(?:each gap|no gap remains|required [^.]{0,80} gaps|planned [^.]{0,80} module|Use this [^.]{0,80} check to separate)\b/i
+				);
+				expect(referenceAndRoadmapText, courseId).not.toMatch(
+					/^- (?:Add|Apply|Audit|Build|Check|Choose|Clarify|Compare|Complete|Create|Explain|Fix|Keep|Make|Map|Pass|Review|State|Strengthen|Trace|Treat|Use)\b/im
 				);
 			}
 		},
