@@ -350,10 +350,6 @@ function compactGuidanceBody(
 			"A tiny hand-traced case"
 		)
 		.replace(
-			new RegExp(`\\bA typical ${escapedTitle} (path|input)\\b`, "g"),
-			"A typical $1"
-		)
-		.replace(
 			new RegExp(`\\bAt least one ${escapedTitle} normal path\\b`, "g"),
 			"At least one standard path"
 		)

@@ -646,11 +646,11 @@ describe("course text quality normalization", () => {
 			expect(corpus).toMatch(
 				/Identify the [^\n.]+ user interaction, state change, DOM\/canvas\/API output, and visible error or empty state/
 			);
-			expect(corpus).toContain(
-				"Translate the prompt into input format, output format, constraints, and invariant"
+			expect(corpus).toMatch(
+				/For [^\n.]+, translate the prompt into input format, output format, constraints, and invariant/
 			);
-			expect(corpus).toContain(
-				"State the local scope, target, starting state, allowed tools, and stop condition"
+			expect(corpus).toMatch(
+				/For [^\n.]+, state the local scope, target, starting state, allowed tools, and stop condition/
 			);
 			expect(corpus).toMatch(
 				/Once [^\n.]+ page behavior works, compare against the reference and record one difference in UI state, validation, accessibility, or error handling/
@@ -891,8 +891,8 @@ describe("course text quality normalization", () => {
 			expect(corpus).toContain(
 				"Change one rule or control in the checkpoint while preserving the same play goal"
 			);
-			expect(corpus).toContain(
-				"Change one success condition in the checkpoint and compare it with the original version"
+			expect(corpus).toMatch(
+				/Change one success condition in [^\n.]+ and compare it with the original version/
 			);
 		},
 		COURSE_SWEEP_TIMEOUT

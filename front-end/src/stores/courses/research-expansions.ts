@@ -232,7 +232,7 @@ function projectOptionRequiredOutcome(
 	project: string
 ) {
 	const family = profile.family.toLowerCase();
-	const projectContext = project.trim() || "this project";
+	const projectContext = projectDescription(project) || "this project";
 	const choose = (options: string[]) =>
 		options[
 			stableVariantIndex(
@@ -262,26 +262,26 @@ function projectOptionRequiredOutcome(
 		family.includes("linux") ||
 		family.includes("network")
 	) {
-		return `**Outcome:**\n- State the local scope, target, starting state, allowed tools, and stop condition.\n- Record command, configuration, trace, or log evidence before and after the change.\n- Explain the impact and the ${courseLabel} rollback, mitigation, or verification step.`;
+		return `**Outcome:**\n- For ${projectContext}, state the local scope, target, starting state, allowed tools, and stop condition.\n- Record ${projectContext} command, configuration, trace, or log evidence before and after the change.\n- Explain the impact and the ${courseLabel} rollback, mitigation, or verification step.`;
 	}
 	if (family.includes("usaco")) {
-		return "**Outcome:**\n- Translate the prompt into input format, output format, constraints, and invariant.\n- Pass the sample and at least one tiny, boundary, duplicate, tie, or adversarial custom case.\n- State the time and memory complexity in relation to the constraints.";
+		return `**Outcome:**\n- For ${projectContext}, translate the prompt into input format, output format, constraints, and invariant.\n- Pass the ${courseLabel} sample and at least one tiny, boundary, duplicate, tie, or adversarial custom case.\n- State the time and memory complexity in relation to the constraints.`;
 	}
 	if (family.includes("javascript") || family.includes("web")) {
 		return `**Outcome:**\n- For ${projectContext}, identify the UI state, event handler, data flow, validation path, and visible output.\n- Test with a fresh load, normal action, empty or error case, and responsive layout when relevant.\n- Explain the main DOM, API, state, or accessibility decision.`;
 	}
 	if (family.includes("java")) {
-		return `**Outcome:**\n- Identify the classes, fields, method contracts, and object-state changes.\n- Compile and run one standard case and one boundary or edge case.\n- Explain the main type, inheritance, interface, collection, or record decision in the ${courseLabel} context.`;
+		return `**Outcome:**\n- For ${projectContext}, identify the classes, fields, method contracts, and object-state changes.\n- Compile and run one ${courseLabel} standard case and one boundary or edge case.\n- Explain the main type, inheritance, interface, collection, or record decision in the ${courseLabel} context.`;
 	}
 	if (family.includes("c++")) {
-		return `**Outcome:**\n- Name the data representation, ownership or lifetime assumption, compile command, and expected output.\n- Build with ${courseLabel} warnings when possible and test standard, boundary, and malformed input.\n- Explain the container, pointer/reference, memory, or algorithm decision.`;
+		return `**Outcome:**\n- For ${projectContext}, name the data representation, ownership or lifetime assumption, compile command, and expected output.\n- Build with ${courseLabel} warnings when possible and test standard, boundary, and malformed input.\n- Explain the container, pointer/reference, memory, or algorithm decision.`;
 	}
 
 	return choose([
-		`**Outcome:**\n- Define the inputs, output or artifact, success condition, and evidence source.\n- Include one standard case, a boundary case, and one failure-mode case.\n- Explain the main design, model, proof, or reasoning decision in the ${courseLabel} context.`,
-		`**Outcome:**\n- State the starting context, target result, evidence source, and one assumption that could fail.\n- Check a representative case and one edge or transfer case.\n- Explain the reasoning choice that makes the ${courseLabel} result valid.`,
-		`**Outcome:**\n- Name the artifact, inputs, constraints, output, and verification evidence.\n- Test the standard path plus one boundary, exception, or changed-condition path.\n- Explain the main tradeoff or model decision in the ${courseLabel} context.`,
-		`**Outcome:**\n- Identify what is being built or solved, what counts as success, and how the result will be checked.\n- Include one small traceable case and one nontrivial case.\n- Explain which ${courseLabel} concept controls the final behavior.`
+		`**Outcome:**\n- For ${projectContext}, define the inputs, output or artifact, success condition, and evidence source.\n- Include one ${courseLabel} standard case, a boundary case, and one failure-mode case.\n- Explain the main design, model, proof, or reasoning decision in the ${courseLabel} context.`,
+		`**Outcome:**\n- State the ${projectContext} starting context, target result, evidence source, and one assumption that could fail.\n- Check one representative case for ${courseLabel} and one edge or transfer case.\n- Explain the reasoning choice that makes the ${courseLabel} result valid.`,
+		`**Outcome:**\n- Name the ${projectContext} artifact, inputs, constraints, output, and verification evidence.\n- Test the ${courseLabel} standard path plus one boundary, exception, or changed-condition path.\n- Explain the main tradeoff or model decision in the ${courseLabel} context.`,
+		`**Outcome:**\n- Identify what the ${projectContext} build or solution produces, what counts as success, and how the result will be checked.\n- Include one ${courseLabel} small traceable case and one nontrivial case.\n- Explain which ${courseLabel} concept controls the final behavior.`
 	]);
 }
 
@@ -290,7 +290,7 @@ function projectOptionExtension(
 	project: string
 ) {
 	const family = profile.family.toLowerCase();
-	const projectContext = project.trim() || "this project";
+	const projectContext = projectDescription(project) || "this project";
 	const choose = (options: string[]) =>
 		options[
 			stableVariantIndex(`${profile.family}|${project}`, options.length)
