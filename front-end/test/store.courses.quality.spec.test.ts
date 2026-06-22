@@ -2983,6 +2983,14 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
 		expect(corpus).not.toMatch(/Offensive Security Lab/i);
+		expect(corpus).not.toContain(
+			"Build the baseline lab first: reproduce the intended behavior, document the local boundary"
+		);
+		expect(corpus).not.toContain("Begin with the protected asset, the trust boundary, the unsafe assumption");
+		expect(corpus).not.toContain("Keep the work defensive and local. A strong concept note identifies");
+		expect(corpus).not.toContain(
+			"Finish by naming one remaining limitation without expanding beyond the provided local lab"
+		);
 		expect(corpus).toContain(
 			"Bug-finding starts by creating test inputs that should be rejected"
 		);
@@ -2995,10 +3003,16 @@ describe("course text quality normalization", () => {
 			"Low-Level Security Lab 7: Sanitizer Triage Studio"
 		);
 		expect(corpus).toContain(
+			"Build the **Low-Level Security Lab 7: Sanitizer Triage Studio** baseline first"
+		);
+		expect(corpus).toContain(
 			"Low-Level Security Lab 9: Binary Parser Hardening Studio"
 		);
 		expect(corpus).toContain(
 			"Low-Level Security Lab 12: Patch Review Handoff Studio"
+		);
+		expect(corpus).toContain(
+			"Finish **Low-Level Security Lab 12: Patch Review Handoff Studio** by naming one remaining limitation"
 		);
 	});
 
@@ -3013,6 +3027,14 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/The goal is to/i);
 		expect(corpus).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
+		expect(corpus).not.toContain(
+			"Build the baseline lab first: reproduce the intended behavior, document the local boundary"
+		);
+		expect(corpus).not.toContain("Begin with the protected asset, the trust boundary, the unsafe assumption");
+		expect(corpus).not.toContain("Keep the work defensive and local. A strong concept note identifies");
+		expect(corpus).not.toContain(
+			"Finish by naming one remaining limitation without expanding beyond the provided local lab"
+		);
 		expect(corpus).toContain(
 			"Exploitability triage is a disciplined decision process"
 		);
@@ -3026,10 +3048,16 @@ describe("course text quality normalization", () => {
 			"Low-Level Security Lab 13: Exploitability Triage Studio"
 		);
 		expect(corpus).toContain(
+			"Build the **Low-Level Security Lab 13: Exploitability Triage Studio** baseline first"
+		);
+		expect(corpus).toContain(
 			"Low-Level Security Lab 14: Stack Corruption Hardening Studio"
 		);
 		expect(corpus).toContain(
 			"Low-Level Security Lab 17: Defensive Audit Capstone Studio"
+		);
+		expect(corpus).toContain(
+			"Finish **Low-Level Security Lab 17: Defensive Audit Capstone Studio** by naming one remaining limitation"
 		);
 		expect(corpus).toContain("Defensive Audit Extension Practice");
 	});
@@ -3900,7 +3928,10 @@ describe("course text quality normalization", () => {
 			/Low-Level Security Lab 9: Core Concepts/
 		);
 		expect(securityStudio.content).toContain(
-			"Name the allowed target, disallowed actions, evidence source, stop condition, and defensive purpose."
+			[
+				"For **Low-Level Security Lab 9: Binary Parser Hardening Studio**, name the allowed target,",
+				"disallowed actions, evidence source, stop condition, and defensive purpose before running commands."
+			].join(" ")
 		);
 		expect(securityStudio.content).not.toContain(
 			"For Low-Level Security Lab 9 Core Concepts, state the authorized local lab boundary"
