@@ -194,7 +194,7 @@ export function buildSupportSectionGuidance({
 			`The **${title}** evidence record makes the review reproducible: expected behavior, actual behavior, source of evidence, and the reason the evidence supports or weakens the conclusion.`
 		][variant];
 		const mismatchReview = [
-			`When the result differs from the expectation, classify the mismatch first: implementation bug, unclear requirement, invalid assumption, weak test case, or acceptable limitation. The classification determines the next check.`,
+			`When the **${title}** result differs from the expectation, classify the mismatch first: implementation bug, unclear requirement, invalid assumption, weak test case, or acceptable limitation. The classification determines the next check.`,
 			`If the **${title}** evidence does not match the target, identify the mismatch before revising the work: code or logic error, unclear requirement, wrong assumption, weak test, or real limitation.`,
 			`A mismatch in **${title}** produces a diagnosis before another edit: what failed, why it likely failed, and which smaller check can confirm the next change.`
 		][variant];

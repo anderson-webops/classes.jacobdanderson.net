@@ -4363,7 +4363,7 @@ function projectExpectations(context: CourseTextContext) {
 			subject => [
 				`- Start ${subject} from a concrete example call or object diagram, then generalize the class behavior.`,
 				`- Compile ${subject} after each public contract change and rerun the smallest example before adding another path.`,
-				`- State which type, method, or collection owns the most important responsibility.`
+				`- State which ${subject} type, method, or collection owns the most important responsibility.`
 			],
 			subject => [
 				`- Separate ${subject} model behavior from console, runner, or test harness behavior before adding extra features.`,
@@ -5477,17 +5477,6 @@ function compactGeneratedProjectSupport(
 			`the ${bareReference} $1`
 		],
 		[
-			new RegExp(`\\bA typical ${escapedSubject} case\\b`, "g"),
-			"A typical case"
-		],
-		[
-			new RegExp(
-				`\\bone ${escapedSubject} (normal path|awkward path|normal case|edge case|observation)\\b`,
-				"g"
-			),
-			"one $1"
-		],
-		[
 			new RegExp(
 				`\\bone the (${supportReferenceCleanupNames}) (example|case|input|path|run|trace|observation)\\b`,
 				"g"
@@ -5965,13 +5954,6 @@ function compactGeneratedProjectSupport(
 					"g"
 				),
 				"Change one rule or control in the $1 while preserving"
-			)
-			.replace(
-				new RegExp(
-					`\\bChange one success condition in the [A-Z0-9][^.!?\\n]{1,180}? (${supportReferenceCleanupNames}) and compare\\b`,
-					"g"
-				),
-				"Change one success condition in the $1 and compare"
 			)
 			.replace(/\b([A-Z][A-Z-]{3,})\s+\1\b/gi, "$1")
 			.replace(
@@ -6580,6 +6562,8 @@ function studioBuildSequence(context: CourseTextContext) {
 function studioCompletionChecks(context: CourseTextContext) {
 	const source = contextText(context);
 	const studioLabel = studioContextLabel(context);
+	const fallbackLabel =
+		studioLabel || context.course.name.trim() || context.courseId;
 
 	if (isScratchSource(source)) {
 		return variantLines(context, [
@@ -6710,7 +6694,7 @@ function studioCompletionChecks(context: CourseTextContext) {
 		() => [
 			`- ${studioLabel} defines the requirement, success signal, and evidence source clearly enough to review later.`,
 			`- ${studioLabel} includes at least one verification case beyond the provided sample.`,
-			`- The ${studioLabel} final note explains the confirmed behavior, the remaining limitation, and the next revision target.`
+			`- The ${fallbackLabel} final note explains the confirmed behavior, the remaining limitation, and the next revision target.`
 		],
 		() => [
 			`- ${studioLabel} has a stated starting condition, expected result, observed result, and interpretation.`,
@@ -6975,10 +6959,6 @@ function compactStudioSupportText(
 			.replace(
 				new RegExp(`\\bThe ${escapedLabel} protected boundary\\b`, "g"),
 				"The protected boundary"
-			)
-			.replace(
-				new RegExp(`\\bThe ${escapedLabel} final note\\b`, "g"),
-				"The final note"
 			)
 			.replace(new RegExp(`^${escapedLabel}:\\s*`, "g"), "")
 			.replace(new RegExp(`\\b${escapedLabel}\\b`, "g"), reference);
