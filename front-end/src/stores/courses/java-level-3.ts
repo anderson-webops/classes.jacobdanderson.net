@@ -484,7 +484,7 @@ export const javaLevel3Course: RawCourse = {
 
 **Practice targets:** Trace searches where the target is first, middle, last, and missing. Return either the matching index, the matching value, or a boolean result depending on the method contract.
 
-**Contract check:** Decide what the method promises before writing the loop. A method that returns an index should not also print the answer, and a method that returns true or false should not hide where the match occurred unless the caller only needs membership.
+**Contract check:** Decide what the method promises before writing the loop. A method that returns an index does not also print the answer, and a method that returns true or false keeps location details out of the contract when the caller only needs membership.
 
 **Evidence target:** Runtime reasoning distinguishes best case, worst case, and average case rather than treating every search as the same amount of work. A strong trace names how many comparisons happened and why the loop stopped.`
 				},
@@ -506,9 +506,9 @@ export const javaLevel3Course: RawCourse = {
 
 **Practice targets:** Classify constant, logarithmic, linear, linearithmic, quadratic, and exponential patterns. Simplify expressions by keeping the dominant term and dropping constants.
 
-**Comparison habit:** Use the same input variable when comparing algorithms. Searching one array of size n and then sorting a different list of size m should not be collapsed into one label unless the relationship between n and m is stated.
+**Comparison habit:** Use the same input variable when comparing algorithms. Searching one array of size n and then sorting a different list of size m uses separate labels unless the relationship between n and m is stated.
 
-**Evidence target:** A runtime claim is tied to a counted operation, a variable input size, and a reason the dominant term controls growth. The explanation should be able to predict what changes when the input doubles.`
+**Evidence target:** A runtime claim is tied to a counted operation, a variable input size, and a reason the dominant term controls growth. The explanation predicts what changes when the input doubles.`
 				},
 				{
 					title: "AJ5 Project 2: Big-O Practice",
@@ -577,7 +577,7 @@ export const javaLevel3Course: RawCourse = {
 
 **Implementation caution:** Bound updates must move past the midpoint after an unsuccessful comparison. If low or high can remain unchanged, a missing target may create an infinite loop even though the midpoint calculation looks reasonable.
 
-**Evidence target:** Correct binary search reasoning always names the sorted-data precondition and explains why each discarded half is safe to ignore. The final trace should show the interval shrinking until the target is found or no valid interval remains.`
+**Evidence target:** Correct binary search reasoning always names the sorted-data precondition and explains why each discarded half is safe to ignore. The final trace shows the interval shrinking until the target is found or no valid interval remains.`
 				},
 				{
 					title: "AJ6 Project 1: Binary Search with Iteration",
@@ -1352,7 +1352,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ12 Project 1: Implementing a Stack",
 					content:
-						"Implement a stack with array storage, a top pointer, and checks for overflow and underflow. The implementation should make each mutation of the top index explicit and include tests for pushing to capacity, popping to empty, and reading the top without removing it.",
+						"Implement a stack with array storage, a top pointer, and checks for overflow and underflow. The implementation makes each mutation of the top index explicit and includes tests for pushing to capacity, popping to empty, and reading the top without removing it.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ12-Stack-Starter",
 					solutionLink:
@@ -1386,7 +1386,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ12 Supplemental Project 2: Calculator with Stacks",
 					content:
-						"Build a stack-based calculator that treats operators as commands acting on the most recently entered numbers. The solution should document the command format, detect missing operands, and trace at least one multi-step expression so the stack state is visible after every operation.",
+						"Build a stack-based calculator that treats operators as commands acting on the most recently entered numbers. The solution documents the command format, detects missing operands, and traces at least one multi-step expression so the stack state is visible after every operation.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ12-Calculator-with-Stacks",
 					solutionLink:
@@ -1862,7 +1862,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Check-In #4: Additional Practice Project",
 					content:
-						"Extend a BST with a breadth-first search method that prints nodes level by level using a queue. The implementation should enqueue children in a deliberate order, handle an empty tree, and explain why BFS differs from preorder traversal.",
+						"Extend a BST with a breadth-first search method that prints nodes level by level using a queue. The implementation enqueues children in a deliberate order, handles an empty tree, and explains why BFS differs from preorder traversal.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ-Check-In-4-Additional-Practice-Project",
 					solutionLink:
@@ -2042,7 +2042,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "Extension: Exceptions Reference Lab",
 					content:
-						"Use the standalone exceptions folder for a cleaner error-handling example than the larger bakery or data-structures projects. Treat it as a focused reference for try-catch placement, custom exception naming, and deciding when an error should be handled locally.",
+						"Use the standalone exceptions folder for a cleaner error-handling example than the larger bakery or data-structures projects. Treat it as a focused reference for try-catch placement, custom exception naming, and deciding when an error is handled locally.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Exceptions"
 				},
@@ -2113,7 +2113,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ19 Project 1: Tested Gradebook Service",
 					content:
-						"Build a package-organized gradebook service with students, assignments, score validation, weighted averages, and a small test harness. The console runner should be thin; the gradebook logic should be independently testable.",
+						"Build a package-organized gradebook service with students, assignments, score validation, weighted averages, and a small test harness. The console runner stays thin; the gradebook logic remains independently testable.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ19-Tested-Gradebook-Service"
 				},
@@ -2203,7 +2203,7 @@ export const javaLevel3Course: RawCourse = {
 				{
 					title: "AJ21 Project 2: CSV Import Validator",
 					content:
-						"Build a CSV-style importer for records with required fields, type checks, duplicate detection, and a rejected-row report. The program should never corrupt the accepted-data set when a later row fails.",
+						"Build a CSV-style importer for records with required fields, type checks, duplicate detection, and a rejected-row report. The program never corrupts the accepted-data set when a later row fails.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ21-CSV-Import-Validator"
 				}

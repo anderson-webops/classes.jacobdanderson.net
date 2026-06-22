@@ -2007,6 +2007,7 @@ describe("course text quality normalization", () => {
 		expect(advancedTrackSource).not.toMatch(
 			/Start with a small buggy service/i
 		);
+		expect(source).not.toMatch(/\bshould\b/i);
 		expect(corpus).toContain(
 			"Package-organized Java projects separate source roots, package names, public APIs, helper classes, build commands, and test entry points"
 		);
