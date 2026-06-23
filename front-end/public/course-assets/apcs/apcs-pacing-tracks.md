@@ -1,6 +1,8 @@
 # AP Computer Science A Track Guide
 
-This guide compares routes through AP Computer Science A without losing the Java and AP exam skills that actually matter. The course can move slowly, normally, quickly, or as a challenge track; the track should be chosen from evidence, not from confidence alone.
+This guide compares routes through AP Computer Science A without losing the Java and AP exam skills that actually matter.
+
+The course can move slowly, normally, quickly, or as a challenge track; the track should be chosen from evidence, not from confidence alone.
 
 The track can change during the course. A learner might use the Quick Track for APCS1-4, slow down for classes and polymorphism, use the Challenge Track for collections, and switch to the Exam Track near the AP test.
 
@@ -163,7 +165,9 @@ This route fits a learner who already knows Python well, has C++ experience, and
 
 ## Today-Ready Recommendation
 
-For an advanced learner who recently covered Java setup, booleans, `Boolean`, `System.out` versus `System.err`, C++ arrays/vectors, signed and unsigned integer behavior, dynamic arrays, and build troubleshooting, the next APCS lesson should not repeat APCS1-4 slowly.
+This recommendation fits an advanced learner who recently covered Java setup, booleans, `Boolean`, `System.out` versus `System.err`, C++ arrays/vectors, signed and unsigned integer behavior, dynamic arrays, and build troubleshooting.
+
+The next APCS lesson should move past slow APCS1-4 repetition.
 
 Recommended next session:
 
