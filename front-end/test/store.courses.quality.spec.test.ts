@@ -5943,6 +5943,39 @@ describe("course text quality normalization", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
+	it(
+		"keeps simulation and video resources out of dataset links",
+		async () => {
+			const mediaInDatasetField: string[] = [];
+			const mediaDatasetPattern =
+				/\b(?:youtube\.com|youtu\.be|phet\.colorado\.edu|javalab\.org)\b/i;
+
+			for (const entry of courseCatalog) {
+				const course = await loadRawCourse(entry.id);
+				expect(course).not.toBeNull();
+
+				for (const module of course!.modules) {
+					for (const item of [
+						...module.curriculum,
+						...module.supplementalProjects
+					]) {
+						if (
+							item.datasetLink &&
+							mediaDatasetPattern.test(item.datasetLink)
+						) {
+							mediaInDatasetField.push(
+								`${entry.id} / ${module.title} / ${item.title}: ${item.datasetLink}`
+							);
+						}
+					}
+				}
+			}
+
+			expect(mediaInDatasetField).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
 	it("keeps physics addendum guidance topic-specific instead of template-generated", async () => {
 		const courseIds = ["intro-to-physics", "physics-level-2"];
 		const genericMisconceptionTemplate =
