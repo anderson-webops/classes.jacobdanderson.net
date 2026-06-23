@@ -4044,7 +4044,7 @@ describe("course text quality normalization", () => {
 							);
 						}
 						if (
-							/^(?:Concept Path|Build Requirements|Common Bug Patterns|Worked Example)$/i.test(
+							/^(?:Concept Path|Build Requirements|Common Bug Patterns|Diagnostic Checkpoint|Failure Modes|Worked Example)$/i.test(
 								item.title
 							)
 						) {
@@ -6233,12 +6233,12 @@ describe("course text quality normalization", () => {
 
 			const diagnostics = course!.modules.flatMap(module =>
 				module.supplementalProjects
-					.filter(item => item.title === "Diagnostic Checkpoint")
+					.filter(item => /Readiness Check$/i.test(item.title))
 					.map(item => item.content)
 			);
 			const misconceptions = course!.modules.flatMap(module =>
 				module.supplementalProjects
-					.filter(item => item.title === "Failure Modes")
+					.filter(item => /Failure Modes$/i.test(item.title))
 					.map(item => item.content)
 			);
 			const combined = [...diagnostics, ...misconceptions].join("\n");
@@ -6256,6 +6256,8 @@ describe("course text quality normalization", () => {
 			expect(combined).not.toMatch(genericCheckpointTemplate);
 			expect(combined).not.toMatch(/\bWatch for\b/i);
 			expect(courseText).toContain("Failure Modes");
+			expect(courseText).toContain("Readiness Check");
+			expect(courseText).not.toContain("Diagnostic Checkpoint");
 			expect(courseText).not.toContain("Misconception Watchlist");
 			expect(source).not.toMatch(/\bWatch for\b/i);
 			expect(source).not.toMatch(/The correction should replace/i);
