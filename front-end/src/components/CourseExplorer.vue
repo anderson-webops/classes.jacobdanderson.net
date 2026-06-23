@@ -1073,6 +1073,20 @@ function datasetLabel(url: string) {
 		return "Track guide";
 	}
 
+	if (normalizedUrl.includes("/course-assets/python/turtle-project-reference.md")) {
+		if (normalizedUrl.includes("game-template")) {
+			return "Turtle game template";
+		}
+		if (normalizedUrl.includes("boundaries")) {
+			return "Turtle boundary guide";
+		}
+		if (normalizedUrl.includes("score-turtle")) {
+			return "Score turtle guide";
+		}
+
+		return "Turtle reference";
+	}
+
 	if (
 		normalizedUrl.startsWith("/course-assets/") &&
 		(normalizedUrl.includes("answer-key") ||

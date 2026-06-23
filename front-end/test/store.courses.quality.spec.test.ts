@@ -2610,6 +2610,64 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it("links the Python Turtle reference to command, boundary, scoring, and game-template lessons", async () => {
+		const course = await loadRawCourse("python-level-1");
+		expect(course).not.toBeNull();
+
+		const linkedItems = [
+			{
+				title: /^Introduction and Setup$/,
+				link:
+					"/course-assets/python/turtle-project-reference.md#turtle-command-reference"
+			},
+			{
+				title: /^GrS13 Project 2: Stay Inbounds$/,
+				link:
+					"/course-assets/python/turtle-project-reference.md#boundaries-and-in-bounds-checks"
+			},
+			{
+				title: /^GrS13 Project 4: Bouncy Ball Room$/,
+				link:
+					"/course-assets/python/turtle-project-reference.md#game-template-with-score-boundaries-and-moving-triangles"
+			},
+			{
+				title: /^GrS13 Project 5: Turtle Collision$/,
+				link:
+					"/course-assets/python/turtle-project-reference.md#score-turtle-pattern"
+			},
+			{
+				title: /^GrS14 Project 1: Space Eater$/,
+				link:
+					"/course-assets/python/turtle-project-reference.md#game-template-with-score-boundaries-and-moving-triangles"
+			}
+		];
+
+		for (const { title, link } of linkedItems) {
+			const item = findItem(course!, title);
+			expect(item.datasetLink, item.title).toBe(link);
+		}
+
+		const reference = fs.readFileSync(
+			"public/course-assets/python/turtle-project-reference.md",
+			"utf8"
+		);
+
+		for (const phrase of [
+			"forward(distance)",
+			"pixels",
+			"left(degrees)",
+			"Project Organization",
+			"global score",
+			"score_turtle.clear()",
+			"is_inside_bounds",
+			"Moving Triangles Homework Extension",
+			"CodeHS supports uploaded files",
+			"built-in Turtle sound command"
+		]) {
+			expect(reference).toContain(phrase);
+		}
+	});
+
 	it("keeps Pythonic Design Patterns labels neutral and learner-readable", async () => {
 		const course = await loadRawCourse("pythonic-design-patterns");
 		expect(course).not.toBeNull();
