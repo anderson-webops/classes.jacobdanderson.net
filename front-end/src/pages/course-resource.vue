@@ -111,15 +111,25 @@ watch(
 <style scoped>
 .course-resource-page {
 	gap: clamp(1.5rem, 3vw, 2.25rem);
+	grid-template-columns: minmax(0, 1fr);
 }
 
 .course-resource-hero {
 	grid-template-columns: minmax(0, 1fr) auto;
 	align-items: end;
+	min-width: 0;
 }
 
 .course-resource-card {
 	padding: clamp(1rem, 3vw, 2rem);
+	min-width: 0;
+	overflow-x: hidden;
+}
+
+.course-resource-card :deep(.item-content-markdown) {
+	width: 100%;
+	max-width: 82ch;
+	min-width: 0;
 }
 
 .course-resource-status,
