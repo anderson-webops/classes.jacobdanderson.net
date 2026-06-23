@@ -1004,6 +1004,16 @@ function linkHost(url: string) {
 	}
 }
 
+function canonicalResourceTarget(url: string) {
+	const [base, fragment] = url.trim().split("#", 2);
+	const canonicalBase = base.replace(/\/+$/, "");
+	return fragment ? `${canonicalBase}#${fragment}` : canonicalBase;
+}
+
+function sameResourceTarget(left: string, right: string) {
+	return canonicalResourceTarget(left) === canonicalResourceTarget(right);
+}
+
 function projectLabel(item: CourseModuleItem, url: string) {
 	const normalizedTitle = item.title.toLowerCase();
 	const normalizedUrl = url.toLowerCase();
@@ -1253,7 +1263,11 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 		});
 	}
 
-	if (canViewSolutions.value && solutionUrl && solutionUrl !== projectUrl) {
+	if (
+		canViewSolutions.value &&
+		solutionUrl &&
+		(!projectUrl || !sameResourceTarget(solutionUrl, projectUrl))
+	) {
 		links.push({
 			kind: "solution",
 			label: solutionLabel(solutionUrl),
