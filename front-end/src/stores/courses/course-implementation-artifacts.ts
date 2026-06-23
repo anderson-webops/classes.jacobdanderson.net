@@ -2093,7 +2093,7 @@ function addAlgebraStandardsArchitectureModule(
 			labelExamples:
 				"Algebra 1A labels distinguish expression translation, linear-equation fluency, graph/table interpretation, systems reasoning, and introductory function notation.",
 			anchorFocus:
-				"a linear or systems model such as comparing phone plans, fundraising rates, taxi fares, break-even points, or two-constraint scheduling.",
+				"a linear or systems model such as comparing phone plans, fundraising rates, taxi fares, break-even points, or two-constraint scheduling",
 			anchorRepresentations:
 				"table, graph, equation, verbal rule, and solution-point interpretation",
 			practiceEmphasis:
@@ -2107,7 +2107,7 @@ function addAlgebraStandardsArchitectureModule(
 			labelExamples:
 				"Algebra 1B labels separate function notation, absolute-value or piecewise behavior, exponent rules, quadratic structure, and model comparison.",
 			anchorFocus:
-				"a quadratic or exponential comparison such as projectile height, revenue, savings growth, area optimization, or choosing between linear and nonlinear models.",
+				"a quadratic or exponential comparison such as projectile height, revenue, savings growth, area optimization, or choosing between linear and nonlinear models",
 			anchorRepresentations:
 				"function notation, table, graph, factored or vertex form, intercepts, and contextual meaning",
 			practiceEmphasis:
@@ -2121,7 +2121,7 @@ function addAlgebraStandardsArchitectureModule(
 			labelExamples:
 				"Algebra 2A labels identify sequence reasoning, parent-function transformations, composition/inverse work, exponential-logarithmic interpretation, and advanced quadratic methods.",
 			anchorFocus:
-				"a function-transformation or inverse-model project such as temperature conversion, dose decay, repeated discounts, transformed sensor readings, or comparing exact and approximate quadratic methods.",
+				"a function-transformation or inverse-model project such as temperature conversion, dose decay, repeated discounts, transformed sensor readings, or comparing exact and approximate quadratic methods",
 			anchorRepresentations:
 				"symbolic function rules, transformation descriptions, composition tables, inverse checks, logarithmic form, and graph behavior",
 			practiceEmphasis:
@@ -2135,7 +2135,7 @@ function addAlgebraStandardsArchitectureModule(
 			labelExamples:
 				"Algebra 2B labels distinguish polynomial behavior, rational restrictions, trigonometric modeling, probability/statistics, and cumulative model comparison.",
 			anchorFocus:
-				"a cumulative model such as periodic daylight, medication concentration, production cost, rational rate behavior, polynomial trend, or probability-based decision.",
+				"a cumulative model such as periodic daylight, medication concentration, production cost, rational rate behavior, polynomial trend, or probability-based decision",
 			anchorRepresentations:
 				"polynomial graph features, rational domain restrictions, trigonometric period/amplitude, probability tables, residuals, and written model limits",
 			practiceEmphasis:
@@ -2174,7 +2174,7 @@ function addAlgebraStandardsArchitectureModule(
 			{
 				title: "Required Anchor and Extension Projects",
 				content: [
-					`**Project goal:** Each algebra course includes one required anchor modeling project and one optional extension project. For this course, the anchor centers on ${details.anchorFocus} The project defines quantities, chooses representations, solves, interprets, and checks reasonableness. The extension keeps the same mathematical structure but changes one meaningful constraint, comparison, or method so transfer becomes visible.`,
+					`**Project goal:** Each algebra course includes one required anchor modeling project and one optional extension project. For this course, the anchor centers on ${details.anchorFocus}. The project defines quantities, chooses representations, solves, interprets, and checks reasonableness. The extension keeps the same mathematical structure but changes one meaningful constraint, comparison, or method so transfer becomes visible.`,
 					`**Anchor structure:**\n1. Name the context, variables, units, domain, and question being answered.\n2. Represent the relationship with ${details.anchorRepresentations}.\n3. Solve with visible algebra and explain why that method fits the context.\n4. Check the answer through substitution, graph inspection, units, estimation, or a boundary case.\n5. Write a conclusion that interprets the result rather than only reporting a value.`,
 					`**Extension structure:** ${details.extensionChange}. The extension records what stayed equivalent, what changed, and which representation made the change easiest to inspect.`,
 					"**Completion checks:**\n- At least two representations are used and compared.\n- The answer is interpreted in context with a reasonableness check.\n- The rubric separates procedure, representation, interpretation, and error-analysis evidence.\n- A targeted review note identifies the prerequisite skill to revisit if the anchor project breaks down."
