@@ -662,6 +662,64 @@ describe("implemented course development artifacts", () => {
 		}
 	});
 
+	it("keeps Machine Learning datasets course-owned instead of stale third-party dataset pages", async () => {
+		const course = await requireCourse("machine-learning");
+		const courseText = allText(course);
+		const datasetLinks = courseItems(course)
+			.map(item => item.datasetLink)
+			.filter((link): link is string => Boolean(link));
+		const staleDatasetPages = datasetLinks.filter(link =>
+			/^https:\/\/www\.kaggle\.com\/(?!datasets\/)/i.test(link)
+		);
+		const expectedCsvLinks = [
+			"AI-Level-2/blob/main/ML1-Customer-Segmentation-Starter-Updated/customers.csv",
+			"AI-Level-2/blob/main/ML1-Disney-Movie-Clustering-Starter-Updated/disney.csv",
+			"AI-Level-2/blob/main/ML2-KNN-Customer-Segmentation-Classification-Updated/customers.csv",
+			"AI-Level-2/blob/main/ML3-Email-Spam-Classification/emails.csv",
+			"AI-Level-2/blob/main/ML4-Diabetes-Diagnosis-With-Neural-Networks/diabetes.csv",
+			"AI-Level-2/blob/main/ML5-Predicting-Life-Expectancy/life_expectancy.csv"
+		];
+
+		expect(staleDatasetPages).toEqual([]);
+		expect(courseText).not.toContain("Upload the Kaggle");
+		expect(courseText).toContain(
+			"linked customer segmentation CSV from the course source repository"
+		);
+		for (const csvLink of expectedCsvLinks) {
+			expect(datasetLinks.some(link => link.includes(csvLink))).toBe(true);
+		}
+	});
+
+	it("keeps science remote resource links away from removed or blocked resource paths", async () => {
+		const serializedScienceCourses = await Promise.all(
+			[
+				"elementary-science",
+				"middle-school-integrated-science",
+				"intro-to-physics"
+			].map(async courseId =>
+				JSON.stringify(await requireCourse(courseId))
+			)
+		);
+		const scienceResourceText = serializedScienceCourses.join("\n");
+
+		expect(scienceResourceText).not.toContain("nasa.gov/stem-content");
+		expect(scienceResourceText).not.toContain(
+			"noaa.gov/education/resource-collections/weather-atmosphere"
+		);
+		expect(scienceResourceText).not.toContain(
+			"biointeractive.org/classroom-resources"
+		);
+		expect(scienceResourceText).toContain(
+			"https://climatekids.nasa.gov/weather-climate/"
+		);
+		expect(scienceResourceText).toContain(
+			"https://askabiologist.asu.edu/activities"
+		);
+		expect(scienceResourceText).toContain(
+			"https://www.nasa.gov/learning-resources/"
+		);
+	});
+
 	it("keeps Pythonic Design Patterns source links course-owned", async () => {
 		const serializedCourse = JSON.stringify(
 			await requireCourse("pythonic-design-patterns")

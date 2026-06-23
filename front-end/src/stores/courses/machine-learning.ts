@@ -83,7 +83,7 @@ export const machineLearningCourse: RawCourse = {
 
 **Setup:**
 - Create a dedicated Google Drive folder for machine-learning projects.
-- Upload the Kaggle customer segmentation dataset.
+- Download or open the linked customer segmentation CSV from the course source repository.
 - Mount Google Drive in Colab and read the CSV with pandas.
 - Inspect the columns and select annual income plus spending score as the two clustering features.
 
@@ -112,7 +112,7 @@ export const machineLearningCourse: RawCourse = {
 					solutionLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML1-Customer-Segmentation-Updated",
 					datasetLink:
-						"https://www.kaggle.com/vjchoudhary7/customer-segmentation-tutorial-in-python",
+						"https://github.com/instruction-material/AI-Level-2/blob/main/ML1-Customer-Segmentation-Starter-Updated/customers.csv",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ml1_project_1.mp4"
 				},
@@ -142,7 +142,7 @@ export const machineLearningCourse: RawCourse = {
 					solutionLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML1-Disney-Movie-Clustering-Updated",
 					datasetLink:
-						"https://www.kaggle.com/prateekmaj21/disney-movies",
+						"https://github.com/instruction-material/AI-Level-2/blob/main/ML1-Disney-Movie-Clustering-Starter-Updated/disney.csv",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ml1_project_2.mp4"
 				}
@@ -223,7 +223,7 @@ export const machineLearningCourse: RawCourse = {
 					solutionLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML2-KNN-Customer-Segmentation-Classification-Updated",
 					datasetLink:
-						"https://www.kaggle.com/vjchoudhary7/customer-segmentation-tutorial-in-python",
+						"https://github.com/instruction-material/AI-Level-2/blob/main/ML2-KNN-Customer-Segmentation-Classification-Updated/customers.csv",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ml2_project_1.mp4"
 				},
@@ -376,7 +376,7 @@ export const machineLearningCourse: RawCourse = {
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML3-Email-Spam-Classification",
 					datasetLink:
-						"https://www.kaggle.com/venky73/spam-mails-dataset",
+						"https://github.com/instruction-material/AI-Level-2/blob/main/ML3-Email-Spam-Classification/emails.csv",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ml3_project_2.mp4"
 				}
@@ -640,7 +640,7 @@ export const machineLearningCourse: RawCourse = {
 					solutionLink:
 						"https://colab.research.google.com/drive/1tlWrkVmPQC3KPPgfLXAz6l9pk70jkS5b",
 					datasetLink:
-						"https://www.kaggle.com/uciml/pima-indians-diabetes-database",
+						"https://github.com/instruction-material/AI-Level-2/blob/main/ML4-Diabetes-Diagnosis-With-Neural-Networks/diabetes.csv",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ml4_project_3.mp4"
 				}
@@ -788,7 +788,7 @@ export const machineLearningCourse: RawCourse = {
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML5-Predicting-Life-Expectancy",
 					datasetLink:
-						"https://www.kaggle.com/kumarajarshi/life-expectancy-who",
+						"https://github.com/instruction-material/AI-Level-2/blob/main/ML5-Predicting-Life-Expectancy/life_expectancy.csv",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ml5_project_3.mp4"
 				}
