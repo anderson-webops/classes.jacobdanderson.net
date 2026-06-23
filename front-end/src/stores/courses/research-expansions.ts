@@ -531,8 +531,8 @@ function buildSequencingModule(
 				title: `${courseLabel} Prerequisite Map`,
 				content: [
 					`**Map purpose:** The ${courseLabel} prerequisite map shows which modules unlock later projects and which topics work as optional enrichment.`,
-					`**Map reading:** Each ${courseLabel} node is a concrete skill or module, not a broad course label. Each ${courseLabel} edge explains the dependency in plain language, such as "requires arrays before 2D grids" or "requires variables before simulation state."`,
-					`**What the map clarifies:**\n- The main ${courseLabel} modules or topic clusters are visible in prerequisite order.\n- Each ${courseLabel} edge explains why one idea needs to come before another.\n- Risky ${profile.family} ordering decisions can be spotted before they interrupt a project.`
+					`**Map reading:** Each ${courseLabel} node is a concrete skill or module, not a broad course label. Each dependency edge in ${courseLabel} explains the prerequisite in plain language, such as "requires arrays before 2D grids" or "requires variables before simulation state."`,
+					`**What the map clarifies:**\n- The main ${courseLabel} modules or topic clusters are visible in prerequisite order.\n- Each dependency edge in ${courseLabel} explains why one idea needs to come before another.\n- Risky ${profile.family} ordering decisions can be spotted before they interrupt a project.`
 				].join("\n\n")
 			},
 			{

@@ -3,7 +3,7 @@ import type { RawCourse } from "./types";
 const APCS_REPO_BASE = "https://github.com/instruction-material/APCS/tree/main";
 const STATIC_MEDIA_BASE = "https://static.classes.jacobdanderson.net";
 const BARRONS_TEXTBOOK =
-	"https://www.amazon.com/Computer-Science-Premium-2024-Comprehensive-dp-1506287913/dp/1506287913/ref=dp_ob_title_bk";
+	"https://www.simonandschuster.com/books/AP-Computer-Science-A-Premium-13th-Edition-Prep-Book-with-6-Practice-Tests-%2B-Comprehensive-Review/Roselyn-Teukolsky/Barrons-AP-Prep/9798349700354";
 const AP_2022_FRQ =
 	"https://apcentral.collegeboard.org/media/pdf/ap22-frq-computer-science-a.pdf";
 const AP_2022_FRQ_SCORING =
@@ -136,7 +136,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Required Textbook",
 					content:
-						"Use the Barron's AP Computer Science A book for chapter-based multiple choice and free-response practice. Keep the textbook aligned with the course sequence instead of treating it as a separate study track. The useful pattern is to read or review the relevant chapter section after the Java concept appears in code, then answer a small set of questions with written justification. Mark any missed question by concept: syntax, tracing, object state, array/list traversal, recursion, runtime, or AP wording. Revisit those marks before each check-in so textbook practice feeds back into code work.",
+						"Use Barron's AP Computer Science A Premium, 13th Edition for chapter-based multiple choice and free-response practice aligned to the 2026 exam outline. Keep the textbook aligned with the course sequence instead of treating it as a separate study track. The useful pattern is to read or review the relevant chapter section after the Java concept appears in code, then answer a small set of questions with written justification. Mark any missed question by concept: syntax, tracing, object state, array/list traversal, recursion, runtime, or AP wording. Revisit those marks before each check-in so textbook practice feeds back into code work.",
 					projectLink: BARRONS_TEXTBOOK
 				},
 				{
