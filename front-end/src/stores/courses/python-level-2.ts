@@ -17,6 +17,41 @@ function conceptBrief({
 	].join("\n\n");
 }
 
+function stripFinalPunctuation(text: string) {
+	return text.trim().replace(/[.!?]+$/u, "");
+}
+
+function lowerFirst(text: string) {
+	const trimmed = stripFinalPunctuation(text);
+	return trimmed ? trimmed.charAt(0).toLowerCase() + trimmed.slice(1) : "";
+}
+
+function joinReadable(items: string[]) {
+	if (items.length <= 1) return items[0] ?? "";
+	if (items.length === 2) return `${items[0]} and ${items[1]}`;
+	return `${items.slice(0, -1).join(", ")}, and ${items.at(-1)}`;
+}
+
+function defaultProjectOutcome(checkpoints: string[]) {
+	const checkpointSummary = joinReadable(
+		checkpoints.slice(0, 2).map(lowerFirst)
+	);
+	const evidenceTarget =
+		checkpointSummary ||
+		"the result matches the stated goal and the code path can be traced";
+
+	return `The finished project is complete when ${evidenceTarget}, and the result can be explained from Python input or setup through state changes to final output.`;
+}
+
+function defaultProjectVerification(checkpoints: string[]) {
+	const stressTarget = checkpoints.at(-1);
+	const specificCheck = stressTarget
+		? ` The stress case is tied to this project check: ${stripFinalPunctuation(stressTarget)}.`
+		: "";
+
+	return `Run one straightforward case and one stress case that changes an input, boundary value, repeated value, empty collection, or formatting assumption.${specificCheck} Keep the sample input and output evidence with the project notes.`;
+}
+
 function projectBrief({
 	build,
 	checkpoints,
@@ -32,13 +67,10 @@ function projectBrief({
 }) {
 	return [
 		`**Goal:** ${goal}`,
-		`**Outcome:** ${
-			outcome ??
-			`The finished project proves the goal with a normal run, a boundary or awkward input run, and a short explanation of the Python feature or data structure that controls the result.`
-		}`,
+		`**Outcome:** ${outcome ?? defaultProjectOutcome(checkpoints)}`,
 		`**Build path:**\n${build.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
 		`**Checkpoints:**\n${checkpoints.map(checkpoint => `- ${checkpoint}`).join("\n")}`,
-		`**Verification:** Save or describe at least two sample runs: one that follows the expected path and one that tests a limit, invalid input, duplicate value, empty collection, or other edge case relevant to the project.`,
+		`**Verification:** ${defaultProjectVerification(checkpoints)}`,
 		extension ? `**Extension:** ${extension}` : ""
 	]
 		.filter(Boolean)
