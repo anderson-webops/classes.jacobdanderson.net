@@ -2806,6 +2806,9 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-direction: column;
 	gap: 1.85rem;
+	min-width: 0;
+	max-width: 100%;
+	overflow-x: hidden;
 	background: linear-gradient(
 		180deg,
 		rgba(255, 255, 255, 0.96),
@@ -2825,6 +2828,8 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-direction: column;
 	gap: 0.55rem;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .reader-link-groups {
@@ -2897,6 +2902,8 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-direction: column;
 	gap: 0.9rem;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .section-header {
@@ -2937,6 +2944,8 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+	min-width: 0;
+	max-width: 100%;
 	padding: clamp(1.2rem, 2.6vw, 1.5rem) 0;
 	border: none;
 	border-radius: 0;
