@@ -33,17 +33,15 @@ export function courseStatusBucketForUser(
 	user: Pick<User, "courseStatus"> | null | undefined,
 	courseId: string
 ): CourseAccessBucket {
-	const statusMap = user?.courseStatus;
-	const status = statusMap?.[courseId];
-	const normalizedStatus = normalizeStatus(status);
-	if (normalizedStatus === "available") {
+	const status = user?.courseStatus?.[courseId];
+	if (status === "available") {
 		return "other";
 	}
-	if (VALID_COURSE_STATUSES.has(status as CourseAccessStatus)) {
-		return normalizedStatus;
+	if (status === "past") {
+		return "past";
 	}
 
-	return statusMap ? "other" : "current";
+	return "current";
 }
 
 export function cleanCourseStatusMap(
