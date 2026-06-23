@@ -4047,6 +4047,9 @@ describe("course text quality normalization", () => {
 							/^(?:Application Check|Changed-Case Review|Concept Path|Core Concepts|Build Requirements|Common Bug Patterns|Diagnostic Checkpoint|Failure Modes|Graph, Diagram, or Data Exercise|Input Variation Practice|Interaction Variation|Project Brief|Reflection and Transfer Practice|State and Contract Practice|Trace and Boundary Case|Transfer Practice|Worked Example)$/i.test(
 								item.title
 							) ||
+							/^Check-In\s+#?\d+:\s+Additional Practice Project$/i.test(
+								item.title
+							) ||
 							/^Extension Challenge:\s*Check-In\s+\d+$/i.test(
 								item.title
 							)
