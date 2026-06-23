@@ -326,6 +326,47 @@ describe("user schedule and note-only routes", () => {
 		});
 	});
 
+	it("preserves available course status when staff update learner course access", async () => {
+		const save = vi.fn().mockResolvedValue(undefined);
+		const student = {
+			...makeStudent(),
+			courseAccess: ["python-level-1"],
+			courseStatus: { "python-level-1": "current" },
+			courseProgress: [],
+			save
+		};
+		modelMocks.userFindById.mockImplementation(() => queryWith(student));
+
+		await withUserRoutes(async baseUrl => {
+			const response = await putJson(
+				baseUrl,
+				`/users/${studentID}/courses`,
+				{
+					courseIDs: ["python-level-1", "ap-computer-science-a"],
+					courseStatus: {
+						"python-level-1": "past",
+						"ap-computer-science-a": "available"
+					}
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
+
+			expect(response.status).toBe(200);
+			await expect(response.json()).resolves.toEqual({
+				courseAccess: ["python-level-1", "ap-computer-science-a"],
+				courseStatus: {
+					"python-level-1": "past",
+					"ap-computer-science-a": "available"
+				}
+			});
+			expect(save).toHaveBeenCalledOnce();
+			expect(student.courseStatus).toEqual({
+				"python-level-1": "past",
+				"ap-computer-science-a": "available"
+			});
+		});
+	});
+
 	it("includes upcoming schedule items in the logged-in student's communications feed", async () => {
 		await withUserRoutes(async baseUrl => {
 			const response = await fetch(`${baseUrl}/users/loggedin/communications`, {

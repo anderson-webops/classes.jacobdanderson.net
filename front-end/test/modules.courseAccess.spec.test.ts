@@ -24,7 +24,8 @@ describe("course access grouping", () => {
 				],
 				courseStatus: {
 					"python-level-1": "past",
-					"intro-to-chemistry": "current"
+					"intro-to-chemistry": "current",
+					"ap-computer-science-a": "available"
 				}
 			},
 			{ includeOther: true }
@@ -62,6 +63,21 @@ describe("course access grouping", () => {
 			})
 		).toEqual({
 			"python-level-1": "past"
+		});
+	});
+
+	it("preserves explicitly available status for assigned view-only courses", () => {
+		expect(
+			cleanCourseStatusMap(
+				["ap-computer-science-a", "intro-to-chemistry"],
+				{
+					"ap-computer-science-a": "available",
+					"intro-to-chemistry": "current"
+				}
+			)
+		).toEqual({
+			"ap-computer-science-a": "available",
+			"intro-to-chemistry": "current"
 		});
 	});
 });

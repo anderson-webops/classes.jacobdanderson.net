@@ -18,7 +18,8 @@ describe("useLearnerCourseProgress", () => {
 				],
 				courseStatus: {
 					"python-level-1": "past" as const,
-					"ap-computer-science-a": "current" as const
+					"ap-computer-science-a": "current" as const,
+					"python-level-3": "available" as const
 				},
 				courseProgress: [],
 				editUsers: false,

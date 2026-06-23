@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import type { AdminRecipient } from "@/modules/adminRecipients";
-import type { CourseStatusMap } from "@/modules/courseAccess";
+import type {
+	CourseAccessStatus,
+	CourseStatusMap
+} from "@/modules/courseAccess";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
@@ -375,6 +378,12 @@ const userAllowedCourses = computed(() => {
 	return lookup;
 });
 
+function normalizeCourseStatus(status: string): CourseAccessStatus {
+	if (status === "past") return "past";
+	if (status === "available") return "available";
+	return "current";
+}
+
 function onUserCourseToggle(
 	userID: string,
 	courseID: string,
@@ -408,7 +417,7 @@ function onUserCourseStatusChange(
 		...userCourseStatuses.value,
 		[userID]: {
 			...(userCourseStatuses.value[userID] ?? {}),
-			[courseID]: status === "past" ? "past" : "current"
+			[courseID]: normalizeCourseStatus(status)
 		}
 	};
 }
@@ -1100,6 +1109,9 @@ function confirmDeleteAdmin() {
 													</option>
 													<option value="past">
 														Past
+													</option>
+													<option value="available">
+														Available
 													</option>
 												</select>
 											</div>
