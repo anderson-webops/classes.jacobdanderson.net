@@ -4044,7 +4044,7 @@ describe("course text quality normalization", () => {
 							);
 						}
 						if (
-							/^(?:Application Check|Changed-Case Review|Concept Path|Core Concepts|Build Requirements|Common Bug Patterns|Diagnostic Checkpoint|Failure Modes|Input Variation Practice|Interaction Variation|State and Contract Practice|Trace and Boundary Case|Transfer Practice|Worked Example)$/i.test(
+							/^(?:Application Check|Changed-Case Review|Concept Path|Core Concepts|Build Requirements|Common Bug Patterns|Diagnostic Checkpoint|Failure Modes|Input Variation Practice|Interaction Variation|Project Brief|State and Contract Practice|Trace and Boundary Case|Transfer Practice|Worked Example)$/i.test(
 								item.title
 							) ||
 							/^Extension Challenge:\s*Check-In\s+\d+$/i.test(

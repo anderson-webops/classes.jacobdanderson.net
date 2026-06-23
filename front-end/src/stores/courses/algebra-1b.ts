@@ -261,7 +261,7 @@ Rationalizing removes radicals from the denominator.
 		]),
 		createModule("AB4 Module Project: Smart and Elegant (with Amy Katz)", [
 			createLesson(
-				"Project Brief",
+				"Smart and Elegant Project Brief",
 				`
 This project applies polynomial modeling to event-planning revenue, cost, and competition.
 
@@ -626,7 +626,7 @@ For an inverse to exist as a function, each output of the original function must
 		]),
 		createModule("AB16 Module Project: J.T. Phone Home", [
 			createLesson(
-				"Project Brief",
+				"J.T. Phone Home Project Brief",
 				`
 This project uses composition and inverse functions to model a fictional wormhole system.
 
@@ -828,7 +828,7 @@ Residual = actual value minus predicted value.
 			"AB20 Module Project: The Mysteries of Light (with Blake Eaton)",
 			[
 				createLesson(
-					"Project Brief",
+					"Mysteries of Light Project Brief",
 					`
 This project connects interference patterns, data visualization, and inverse proportionality through a light-and-atoms theme.
 
@@ -888,7 +888,7 @@ Start by describing what the visual actually shows: counts, peaks, gaps, or a re
 		),
 		createModule("AB21 Module Project: Radiofungi (with Sunanda Sharma)", [
 			createLesson(
-				"Project Brief and Cleaned Answers",
+				"Radiofungi Project Brief and Answers",
 				`
 This project combines exponential growth with quadratic transformations.
 
