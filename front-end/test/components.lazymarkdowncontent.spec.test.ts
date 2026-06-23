@@ -83,4 +83,41 @@ describe("LazyMarkdownContent.vue", () => {
 		]);
 		expect(wrapper.text()).toContain("Checkpoint: The game restarts cleanly.");
 	});
+
+	it("does not rewrite fenced code blocks while formatting compact course text", async () => {
+		const wrapper = mount(LazyMarkdownContent, {
+			props: {
+				content: [
+					"**Build steps:** 1. Read the setup. 2. Run the code.",
+					"",
+					"```python",
+					"import turtle",
+					"",
+					"# Function definitions",
+					"def draw_border():",
+					"    for side in range(4):",
+					"        turtle.forward(100)",
+					"        turtle.left(90)",
+					"",
+					"# Continuous game logic",
+					"while True:",
+					"    draw_border()",
+					"```"
+				].join("\n")
+			}
+		});
+
+		await flushPromises();
+		await vi.waitFor(() => {
+			expect(wrapper.find("ol").exists()).toBe(true);
+			expect(wrapper.findAll("pre code")).toHaveLength(1);
+		});
+
+		const codeText = wrapper.find("pre code").text();
+		expect(codeText).toContain("# Function definitions");
+		expect(codeText).toContain("def draw_border():");
+		expect(codeText).toContain("# Continuous game logic");
+		expect(codeText).toContain("while True:");
+		expect(wrapper.findAll("pre code")).toHaveLength(1);
+	});
 });

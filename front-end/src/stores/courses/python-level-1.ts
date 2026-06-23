@@ -1,12 +1,10 @@
 import type { RawCourse } from "./types";
 
-const TURTLE_REFERENCE =
-	"/course-assets/python/turtle-project-reference.md";
+const TURTLE_REFERENCE = "/course-assets/python/turtle-project-reference.md";
 const TURTLE_COMMAND_REFERENCE = `${TURTLE_REFERENCE}#turtle-command-reference`;
 const TURTLE_BOUNDARY_REFERENCE = `${TURTLE_REFERENCE}#boundaries-and-in-bounds-checks`;
 const TURTLE_SCORE_REFERENCE = `${TURTLE_REFERENCE}#score-turtle-pattern`;
-const TURTLE_GAME_TEMPLATE_REFERENCE =
-	`${TURTLE_REFERENCE}#game-template-with-score-boundaries-and-moving-triangles`;
+const TURTLE_GAME_TEMPLATE_REFERENCE = `${TURTLE_REFERENCE}#game-template-with-score-boundaries-and-moving-triangles`;
 
 export const pythonLevel1Course: RawCourse = {
 	name: "Python Level 1",

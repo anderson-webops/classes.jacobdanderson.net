@@ -1073,7 +1073,11 @@ function datasetLabel(url: string) {
 		return "Track guide";
 	}
 
-	if (normalizedUrl.includes("/course-assets/python/turtle-project-reference.md")) {
+	if (
+		normalizedUrl.includes(
+			"/course-assets/python/turtle-project-reference.md"
+		)
+	) {
 		if (normalizedUrl.includes("game-template")) {
 			return "Turtle game template";
 		}
@@ -1910,15 +1914,15 @@ function writeStoredValue(key: string, value: string) {
 											)"
 											:key="`${item.id}-${resource.kind}`"
 										>
-												<a
-													class="resource-link"
-													:class="[`is-${resource.kind}`]"
-													:href="
-														resourceOpenUrl(resource)
-													"
-													rel="noopener noreferrer"
-													target="_blank"
-												>
+											<a
+												class="resource-link"
+												:class="[`is-${resource.kind}`]"
+												:href="
+													resourceOpenUrl(resource)
+												"
+												rel="noopener noreferrer"
+												target="_blank"
+											>
 												<span
 													class="resource-link-label"
 												>
@@ -2100,15 +2104,15 @@ function writeStoredValue(key: string, value: string) {
 											)"
 											:key="`${item.id}-${resource.kind}`"
 										>
-												<a
-													class="resource-link"
-													:class="[`is-${resource.kind}`]"
-													:href="
-														resourceOpenUrl(resource)
-													"
-													rel="noopener noreferrer"
-													target="_blank"
-												>
+											<a
+												class="resource-link"
+												:class="[`is-${resource.kind}`]"
+												:href="
+													resourceOpenUrl(resource)
+												"
+												rel="noopener noreferrer"
+												target="_blank"
+											>
 												<span
 													class="resource-link-label"
 												>
