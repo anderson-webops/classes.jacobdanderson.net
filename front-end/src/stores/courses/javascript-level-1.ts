@@ -783,15 +783,13 @@ export const javascriptLevel1Course: RawCourse = {
 					title: "JSS9 Supplemental Project 1: Practice with CSS Selectors",
 					content:
 						"Use CSS Diner to practice selector precision, not just clicking through the levels. Track examples of tag, class, id, descendant, child, adjacent-sibling, attribute, and pseudo-class selectors. After the practice, write three original selectors for a small HTML snippet and explain which elements each selector matches before testing it.",
-					projectLink: "https://flukeout.github.io/",
-					solutionLink: "https://flukeout.github.io/"
+					projectLink: "https://flukeout.github.io/"
 				},
 				{
 					title: "JSS9 Supplemental Project 2: Practice with Flexbox",
 					content:
 						"Use Flexbox Froggy as a layout reasoning drill. For each new property, record what changed about the main axis, cross axis, spacing, wrapping, or item order. Finish by building a small three-card layout in CodePen that uses at least `display: flex`, `justify-content`, `align-items`, `gap`, and one responsive wrapping behavior.",
-					projectLink: "https://flexboxfroggy.com/",
-					solutionLink: "https://flexboxfroggy.com/"
+					projectLink: "https://flexboxfroggy.com/"
 				},
 				{
 					title: "Introduction to HTML & CSS Extension Practice",
@@ -1003,8 +1001,6 @@ export const javascriptLevel1Course: RawCourse = {
 					content:
 						"Add another D3 piece to the JavaScript art page and reorganize the gallery with Materialize sections or containers. The new piece includes a title and description, and the page shows clearer grouping than the first version: sections, cards, or spacing help a visitor scan the work.",
 					projectLink:
-						"https://codepen.io/junilearning/pen/68f7db60fabe38f5ff48cf4cfa631a4c",
-					solutionLink:
 						"https://codepen.io/junilearning/pen/68f7db60fabe38f5ff48cf4cfa631a4c"
 				}
 			],
@@ -1086,8 +1082,6 @@ export const javascriptLevel1Course: RawCourse = {
 					content:
 						"Add another D3 piece to the art portfolio and reorganize the page with CSS Grid or the Materialize grid. Use cards with descriptions, and consider an alternating layout pattern so the page has visual rhythm. Verify that the layout still works at desktop and mobile widths.",
 					projectLink:
-						"https://codepen.io/junilearning/pen/4735eaf3e168cfb944a3daad063e287c",
-					solutionLink:
 						"https://codepen.io/junilearning/pen/4735eaf3e168cfb944a3daad063e287c"
 				}
 			],
@@ -1161,8 +1155,6 @@ export const javascriptLevel1Course: RawCourse = {
 					content:
 						"Pick three Materialize JavaScript components from the documentation and implement them on one page. For each component, include the required HTML structure, initialization code, and one sentence explaining what user interaction it supports. Test all three components after a page refresh.",
 					projectLink:
-						"https://codepen.io/junilearning/pen/e55b7c0d570df2c9943e06395a42c974",
-					solutionLink:
 						"https://codepen.io/junilearning/pen/e55b7c0d570df2c9943e06395a42c974"
 				},
 				{
@@ -1170,8 +1162,6 @@ export const javascriptLevel1Course: RawCourse = {
 					content:
 						"Add another D3 piece to the art portfolio and enhance the page with JavaScript-driven effects. Add a navigation area with a dropdown and scroll spy sections using the Materialize documentation. Verify that navigation links move to the correct sections and that the D3 piece still renders after the component scripts initialize.",
 					projectLink:
-						"https://codepen.io/junilearning/pen/68807d2000d19574d4c80d354eea197f",
-					solutionLink:
 						"https://codepen.io/junilearning/pen/68807d2000d19574d4c80d354eea197f"
 				}
 			],
@@ -1246,8 +1236,6 @@ export const javascriptLevel1Course: RawCourse = {
 					content:
 						"Build a restaurant splash page with a menu preview, location or hours section, and at least one Materialize parallax or card layout. The page communicates a clear restaurant identity through typography, color, images, and navigation rather than only placing empty starter sections.",
 					projectLink:
-						"https://codepen.io/junilearning/pen/eb5dc79c245ab907ddd8f56853cb817a",
-					solutionLink:
 						"https://codepen.io/junilearning/pen/eb5dc79c245ab907ddd8f56853cb817a"
 				},
 				{
@@ -1255,8 +1243,6 @@ export const javascriptLevel1Course: RawCourse = {
 					content:
 						"Build a news-style homepage with a headline area, story cards, categories, and a Materialize slider for featured stories. Use layout choices that make article priority clear, and include enough text hierarchy that readers can distinguish headlines, summaries, and metadata.",
 					projectLink:
-						"https://codepen.io/junilearning/pen/910d8fa54b43a581c779c8dfab792c60",
-					solutionLink:
 						"https://codepen.io/junilearning/pen/910d8fa54b43a581c779c8dfab792c60"
 				},
 				{
@@ -1264,8 +1250,6 @@ export const javascriptLevel1Course: RawCourse = {
 					content:
 						"Build a small e-commerce landing page with featured products, prices or descriptions, and a Materialize carousel or card grid. The page makes product browsing clear, includes at least one call-to-action, and remains readable on a narrow screen.",
 					projectLink:
-						"https://codepen.io/junilearning/pen/c8048a26149f2dc5c4340a2d6cdb0ce2",
-					solutionLink:
 						"https://codepen.io/junilearning/pen/c8048a26149f2dc5c4340a2d6cdb0ce2"
 				}
 			]

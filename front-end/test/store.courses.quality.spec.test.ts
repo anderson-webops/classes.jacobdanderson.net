@@ -159,6 +159,25 @@ function courseItemLinks(
 	);
 }
 
+function duplicateProjectSolutionLinksInSource(path: string) {
+	const source = fs.readFileSync(path, "utf8");
+	const itemBlocks = source.split(/\n\s*\},?\n/);
+
+	return itemBlocks.flatMap(block => {
+		const title = block.match(/title:\s*"([^"]+)"/)?.[1] ?? "Untitled item";
+		const projectLink = block
+			.match(/projectLink:\s*(?:\n\s*)?"([^"]+)"/)?.[1]
+			?.trim();
+		const solutionLink = block
+			.match(/solutionLink:\s*(?:\n\s*)?"([^"]+)"/)?.[1]
+			?.trim();
+
+		return projectLink && solutionLink === projectLink
+			? [`${path} / ${title}: ${projectLink}`]
+			: [];
+	});
+}
+
 function visibleCourseSourceCorpus() {
 	const excludedFiles = new Set([
 		"course-implementation-artifacts.ts",
@@ -2690,6 +2709,16 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("web-development workflow");
 		expect(corpus).not.toContain("object-oriented Java design");
 		expect(corpus).not.toContain("classes, method contracts, object state");
+	});
+
+	it("keeps JavaScript and Web raw source links free of duplicate solution aliases", () => {
+		const duplicateLinks = [
+			"src/stores/courses/javascript-level-1.ts",
+			"src/stores/courses/javascript-level-2.ts",
+			"src/stores/courses/web-development-foundations.ts"
+		].flatMap(duplicateProjectSolutionLinksInSource);
+
+		expect(duplicateLinks).toEqual([]);
 	});
 
 	it("keeps legacy JavaScript web prompts specific enough to stand alone", async () => {
