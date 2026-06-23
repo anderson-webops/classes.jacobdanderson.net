@@ -1811,7 +1811,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Heap allocation calls are explicit ownership decisions instead of generic ways to 'make more memory.'"
 		);
-		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain("C Systems Engineering Setup Transfer Practice");
 		expect(corpus).toContain("Representation Transfer Practice");
 		expect(corpus).toContain("Dispatch Extension Practice");
 		expect(corpus).toContain("Systems Build 14: Byte Inspector Studio");
@@ -2762,7 +2762,7 @@ describe("course text quality normalization", () => {
 
 		const checks = [
 			{
-				title: /^Check-In #1 Overview$/,
+				title: /^JavaScript Level 1: JavaScript Superstar Check-In 1 Overview$/,
 				required: ["runnable example", "which fundamentals are fluent"]
 			},
 			{
@@ -3240,7 +3240,7 @@ describe("course text quality normalization", () => {
 			"Penetration testing is an authorized defensive activity"
 		);
 		expect(corpus).toContain("never ask it to target unauthorized systems");
-		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain("Network Security Setup Transfer Practice");
 		expect(corpus).toContain("HTTP API Boundary Transfer Practice");
 		expect(corpus).toContain("Authorized Testing Transfer Practice");
 		expect(corpus).toContain(
@@ -3473,7 +3473,9 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Common mitigations are factors that change exploitability analysis"
 		);
-		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain(
+			"Low Level Security Part 2 Setup Transfer Practice"
+		);
 		expect(corpus).toContain("Stack Corruption Transfer Practice");
 		expect(corpus).toContain("Patch Workflow Extension Practice");
 		expect(corpus).toContain(
@@ -3563,7 +3565,9 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Browser fundamentals remain the technical base"
 		);
-		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain(
+			"Web Development Foundations Setup Transfer Practice"
+		);
 		expect(corpus).toContain("Course Path Transfer Practice");
 		expect(corpus).toContain("JavaScript Bridge Transfer Practice");
 		expect(corpus).toContain("Web Foundations Transfer Practice");
@@ -4047,7 +4051,22 @@ describe("course text quality normalization", () => {
 							/^(?:Application Check|Changed-Case Review|Concept Path|Core Concepts|Build Requirements|Common Bug Patterns|Diagnostic Checkpoint|Failure Modes|Graph, Diagram, or Data Exercise|Input Variation Practice|Interaction Variation|Project Brief|Reflection and Transfer Practice|State and Contract Practice|Trace and Boundary Case|Transfer Practice|Worked Example)$/i.test(
 								item.title
 							) ||
+							/^(?:Course Recap|Master Project Presentation)$/i.test(
+								item.title
+							) ||
+							/^Checkpoint:\s*Trace the Project State$/i.test(
+								item.title
+							) ||
+							/^Check-In\s+#?\d+\s+(?:Overview|Core Concepts|Extension Challenge)$/i.test(
+								item.title
+							) ||
 							/^Check-In\s+#?\d+:\s+Additional Practice Project$/i.test(
+								item.title
+							) ||
+							/^Master Project (?:Transfer Practice|Extension Practice)$/i.test(
+								item.title
+							) ||
+							/^Setup and Tooling (?:Transfer Practice|Extension Practice)$/i.test(
 								item.title
 							) ||
 							/^Extension Challenge:\s*Check-In\s+\d+$/i.test(
@@ -6376,7 +6395,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Instruction-level debugging treats a single machine instruction as the smallest meaningful step."
 		);
-		expect(corpus).toContain("Setup and Tooling Transfer Practice");
+		expect(corpus).toContain("Assembly Setup Transfer Practice");
 		expect(corpus).toContain("Register Flow Transfer Practice");
 		expect(corpus).toContain("Assembly Lab 15: Stack Trace Studio");
 		expect(corpus).toContain("Assembly Lab 16: ABI Integration Studio");

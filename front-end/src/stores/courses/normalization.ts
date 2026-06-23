@@ -222,32 +222,107 @@ function compactContextualTitleFocus(
 	return finalPart.length >= 4 ? finalPart : focus;
 }
 
+function contextualCheckInTitle(
+	courseTitle: string,
+	moduleTitle: string,
+	checkInNumber: string
+) {
+	const focus = compactContextualTitleFocus(
+		courseTitle,
+		moduleTitle,
+		moduleTitle
+	);
+	if (!/^Check-In\s+#?\d+$/i.test(focus)) {
+		return `${focus} Check-In ${checkInNumber}`;
+	}
+
+	const javaLevelMatch = moduleTitle.match(/^Java Level\s+(\d+):/i);
+	if (
+		javaLevelMatch &&
+		/^Java (?:with|without) Graphics$/i.test(courseTitle)
+	) {
+		return `${courseTitle} Level ${javaLevelMatch[1]} Check-In ${checkInNumber}`;
+	}
+
+	return `${courseTitle} Check-In ${checkInNumber}`;
+}
+
+function contextualModuleFocus(courseTitle: string, moduleTitle: string) {
+	const focus = compactContextualTitleFocus(
+		courseTitle,
+		moduleTitle,
+		moduleTitle
+	);
+	if (!/^Master Project$/i.test(focus)) return focus;
+
+	const javaLevelMatch = moduleTitle.match(/^Java Level\s+(\d+):/i);
+	if (
+		javaLevelMatch &&
+		/^Java (?:with|without) Graphics$/i.test(courseTitle)
+	) {
+		return `${courseTitle} Level ${javaLevelMatch[1]}`;
+	}
+
+	return courseTitle;
+}
+
 function compactGeneratedDisplayTitle(
 	courseTitle: string,
 	moduleTitle: string,
 	itemTitle: string
 ) {
+	if (/^Checkpoint:\s*Trace the Project State$/i.test(itemTitle)) {
+		return `State Trace: ${contextualModuleFocus(courseTitle, moduleTitle)}`;
+	}
+
+	const setupPracticeMatch = itemTitle.match(
+		/^Setup and Tooling (Transfer Practice|Extension Practice)$/i
+	);
+	if (setupPracticeMatch) {
+		return `${courseTitle} Setup ${setupPracticeMatch[1]}`;
+	}
+
+	const masterProjectPracticeMatch = itemTitle.match(
+		/^Master Project (Transfer Practice|Extension Practice)$/i
+	);
+	if (masterProjectPracticeMatch) {
+		return `${contextualModuleFocus(
+			courseTitle,
+			moduleTitle
+		)} Master Project ${masterProjectPracticeMatch[1]}`;
+	}
+
+	if (/^Course Recap$/i.test(itemTitle)) {
+		return `${contextualModuleFocus(courseTitle, moduleTitle)} Course Recap`;
+	}
+
+	if (/^Master Project Presentation$/i.test(itemTitle)) {
+		return `${contextualModuleFocus(
+			courseTitle,
+			moduleTitle
+		)} Master Project Presentation`;
+	}
+
+	const checkInLabelMatch = itemTitle.match(
+		/^Check-In\s+#?(\d+)\s+(Overview|Core Concepts|Extension Challenge)$/i
+	);
+	if (checkInLabelMatch) {
+		return `${contextualCheckInTitle(
+			courseTitle,
+			moduleTitle,
+			checkInLabelMatch[1]
+		)} ${checkInLabelMatch[2]}`;
+	}
+
 	const additionalPracticeMatch = itemTitle.match(
 		/^Check-In\s+#?(\d+):\s+Additional Practice Project$/i
 	);
 	if (additionalPracticeMatch) {
-		const checkInNumber = additionalPracticeMatch[1];
-		const focus = compactContextualTitleFocus(
+		return `${contextualCheckInTitle(
 			courseTitle,
 			moduleTitle,
-			moduleTitle
-		);
-		const javaLevelMatch = moduleTitle.match(/^Java Level\s+(\d+):/i);
-		let topic = `${focus} Check-In ${checkInNumber}`;
-		if (/^Check-In\s+#?\d+$/i.test(focus)) {
-			topic =
-				javaLevelMatch &&
-				/^Java (?:with|without) Graphics$/i.test(courseTitle)
-					? `${courseTitle} Level ${javaLevelMatch[1]} Check-In ${checkInNumber}`
-					: `${courseTitle} Check-In ${checkInNumber}`;
-		}
-
-		return `${topic} Practice Project`;
+			additionalPracticeMatch[1]
+		)} Practice Project`;
 	}
 
 	const labels = [
@@ -286,8 +361,13 @@ function compactGeneratedDisplayTitle(
 			itemTitle.slice(leadingLabel.length + 1).trim()
 		);
 
-		if (/^Check-In\s+#?\d+$/i.test(topic)) {
-			return `${topic} ${label}`;
+		const checkInTopicMatch = topic.match(/^Check-In\s+#?(\d+)$/i);
+		if (checkInTopicMatch) {
+			return `${contextualCheckInTitle(
+				courseTitle,
+				moduleTitle,
+				checkInTopicMatch[1]
+			)} ${label}`;
 		}
 
 		return `${label}: ${topic}`;
@@ -308,8 +388,14 @@ function compactGeneratedDisplayTitle(
 		moduleTitle
 	);
 
-	if (/^Check-In\s+#?\d+$/i.test(compactedTopic)) {
-		return `${compactedTopic} ${label}`;
+	const compactedCheckInTopicMatch =
+		compactedTopic.match(/^Check-In\s+#?(\d+)$/i);
+	if (compactedCheckInTopicMatch) {
+		return `${contextualCheckInTitle(
+			courseTitle,
+			moduleTitle,
+			compactedCheckInTopicMatch[1]
+		)} ${label}`;
 	}
 
 	return `${label}: ${compactedTopic}`;
