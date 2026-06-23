@@ -54,6 +54,48 @@ describe("course access grouping", () => {
 		).toEqual(["ap-computer-science-a"]);
 	});
 
+	it("keeps assigned courses current when a legacy status map is partial", () => {
+		const groups = groupCoursesByLearnerStatus(courses, {
+			courseAccess: [
+				"python-level-1",
+				"ap-computer-science-a",
+				"intro-to-chemistry"
+			],
+			courseStatus: {
+				"python-level-1": "past"
+			}
+		});
+
+		expect(groups.map(group => group.label)).toEqual([
+			"Current courses",
+			"Past courses"
+		]);
+		expect(
+			groups.map(group => group.courses.map(course => course.id))
+		).toEqual([
+			["ap-computer-science-a", "intro-to-chemistry"],
+			["python-level-1"]
+		]);
+	});
+
+	it("treats invalid saved course status values as current access", () => {
+		const groups = groupCoursesByLearnerStatus(courses, {
+			courseAccess: ["ap-computer-science-a", "python-level-3"],
+			courseStatus: {
+				"ap-computer-science-a": "unexpected" as any,
+				"python-level-3": "available"
+			}
+		});
+
+		expect(groups.map(group => group.label)).toEqual([
+			"Current courses",
+			"Other available courses"
+		]);
+		expect(
+			groups.map(group => group.courses.map(course => course.id))
+		).toEqual([["ap-computer-science-a"], ["python-level-3"]]);
+	});
+
 	it("keeps saved status maps scoped to currently viewable courses", () => {
 		expect(
 			cleanCourseStatusMap(["python-level-1"], {
