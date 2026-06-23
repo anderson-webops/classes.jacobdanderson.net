@@ -8,6 +8,7 @@ const testDir = dirname(fileURLToPath(import.meta.url));
 const frontEndDir = resolve(testDir, "..");
 const repoRoot = resolve(frontEndDir, "..");
 const coursesSourceDir = resolve(frontEndDir, "src/stores/courses");
+const courseAssetsDir = resolve(frontEndDir, "public/course-assets");
 const COURSE_SWEEP_TIMEOUT = 180000;
 
 const forbiddenStudentFacingPatterns = [
@@ -239,6 +240,16 @@ const rawCourseFiles = readdirSync(coursesSourceDir)
 	)
 	.map(file => resolve(coursesSourceDir, file));
 
+function markdownFilesIn(directory: string): string[] {
+	return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+		const path = resolve(directory, entry.name);
+		if (entry.isDirectory()) return markdownFilesIn(path);
+		return entry.isFile() && entry.name.endsWith(".md") ? [path] : [];
+	});
+}
+
+const courseAssetMarkdownFiles = markdownFilesIn(courseAssetsDir);
+
 function snippet(value: string, pattern: RegExp) {
 	const match = value.match(pattern);
 
@@ -310,6 +321,38 @@ describe("student-facing course copy", () => {
 				file.endsWith("rework-plan.md")
 		);
 		expect(planningFiles).toEqual([]);
+	});
+
+	it("keeps public course asset markdown free of internal recovery wording", () => {
+		const forbiddenAssetPatterns = [
+			/\bsource-backed\b/i,
+			/\brecovered source\b/i,
+			/\bsource dump\b/i,
+			/\boriginal prompt restored\b/i,
+			/\bhidden materials\b/i,
+			/\bversion-aware\b/i,
+			/\blearner-created\b/i,
+			/\bexpected readiness level\b/i,
+			/\bInstructor Note\b/i,
+			/\bHQ Support\b/i,
+			/\bSlack\b/i,
+			/\bRecording Studio\b/i
+		];
+		const failures: string[] = [];
+
+		for (const file of courseAssetMarkdownFiles) {
+			const source = readFileSync(file, "utf8");
+
+			for (const pattern of forbiddenAssetPatterns) {
+				if (!pattern.test(source)) continue;
+
+				failures.push(
+					`${file.replace(`${repoRoot}/`, "")}: ${snippet(source, pattern)}`
+				);
+			}
+		}
+
+		expect(failures).toEqual([]);
 	});
 
 	it(

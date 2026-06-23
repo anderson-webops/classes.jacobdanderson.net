@@ -471,7 +471,7 @@ const familyAssessmentCadence: Record<string, string[]> = {
 	],
 	programming: [
 		"Short code-tracing, debugging, or design check every module.",
-		"At least one source-backed project milestone per major concept cluster.",
+		"At least one documented project milestone per major concept cluster.",
 		"Project review includes a standard scenario, an edge case, and a written explanation.",
 		"Capstone or transfer task requires tests, run instructions, and reflection."
 	],
@@ -898,7 +898,7 @@ function assessmentCadenceFor(
 
 	return [
 		`${courseLabel} includes a short code-tracing, debugging, or design check every module.`,
-		`${courseLabel} has at least one source-backed project milestone per major concept cluster.`,
+		`${courseLabel} has at least one documented project milestone per major concept cluster.`,
 		`${courseLabel} project review includes a standard scenario, an edge case, and a written explanation.`,
 		`${courseLabel} capstone or transfer task requires tests, run instructions, and reflection.`
 	];
@@ -2418,7 +2418,7 @@ function addAdvancedPythonStudioModule(courseId: string, course: RawCourse) {
 			{
 				title: "Required Advanced Python Topics",
 				content:
-					"**Concept path:** Add iterators, generators, itertools, decorators for instrumentation or memoization, context managers, type hints, dataclasses, modules/packages, pytest, timeit, cProfile, tracemalloc, heapq, bisect, deque, and pathlib/csv/json as tools that unlock algorithmic projects. Each topic answers a practical engineering question such as how to stream data, measure cost, organize files, or make correctness easier to test.\n\n**Practice sequence:** Introduce one feature only when a project needs it, then immediately compare the feature against the simpler version it replaces. For example, a generator can replace a full in-memory list, a context manager can replace manual file closing, and `heapq` can replace repeated full sorting in a priority-style problem.\n\n**Evidence target:** Each advanced language feature is tied to a project need, not taught as isolated syntax."
+					"**Concept path:** Add iterators, generators, itertools, decorators for instrumentation or memoization, context managers, type hints, dataclasses, modules/packages, pytest, timeit, cProfile, tracemalloc, heapq, bisect, deque, and pathlib/csv/json as tools that unlock algorithmic projects. Each topic answers a practical engineering question such as how to stream data, measure cost, organize files, or make correctness easier to test.\n\n**Practice sequence:** Add one feature only when a project needs it, then immediately compare the feature against the simpler version it replaces. For example, a generator can replace a full in-memory list, a context manager can replace manual file closing, and `heapq` can replace repeated full sorting in a priority-style problem.\n\n**Evidence target:** Each advanced language feature is tied to a project need, not taught as isolated syntax."
 			},
 			{
 				title: "Project Ladder",
