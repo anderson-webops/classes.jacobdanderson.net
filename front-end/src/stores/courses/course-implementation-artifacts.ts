@@ -1701,7 +1701,7 @@ function addCppMatrixModule(courseId: string, course: RawCourse) {
 	> = {
 		"c-level-1": {
 			matrixUse:
-				"Use this from Level 1 as an acceleration and placement map: confirm syntax, functions, vectors, structs/classes, and file I/O before moving into memory-heavy Level 2 work.",
+				"Level 1 uses this as an acceleration and placement map: confirm syntax, functions, vectors, structs/classes, and file I/O before moving into memory-heavy Level 2 work.",
 			extractionUse:
 				"Level 1 borrows only the smallest CS235/CS236 ideas: representation vocabulary, simple invariants, and tiny command formats.",
 			boundary:
@@ -1715,7 +1715,7 @@ function addCppMatrixModule(courseId: string, course: RawCourse) {
 		},
 		"cpp-level-2": {
 			matrixUse:
-				"Use this from Level 2 as a memory and ownership placement map: confirm pointers, arrays, copy behavior, destructors, RAII, and STL fluency before larger architecture work.",
+				"Level 2 uses this as a memory and ownership placement map: confirm pointers, arrays, copy behavior, destructors, RAII, and STL fluency before larger architecture work.",
 			extractionUse:
 				"Level 2 extracts CS235 discipline around containers, ownership, copy/move behavior, and data-structure invariants.",
 			boundary:
@@ -1729,7 +1729,7 @@ function addCppMatrixModule(courseId: string, course: RawCourse) {
 		},
 		"cpp-level-3": {
 			matrixUse:
-				"Use this from Level 3 as an architecture placement map: confirm templates, interfaces, polymorphism, parsers, state machines, and medium-size project boundaries.",
+				"Level 3 uses this as an architecture placement map: confirm templates, interfaces, polymorphism, parsers, state machines, and medium-size project boundaries.",
 			extractionUse:
 				"Level 3 preserves the deeper CS235/CS236 ideas: scanner/parser design, relation operations, command architecture, and invariants across modules.",
 			boundary:
@@ -2690,7 +2690,7 @@ function addCppThreeCourseSpineModule(courseId: string, course: RawCourse) {
 			{
 				title: "Level-Specific Focus",
 				content: [
-					"**Concept path:** Use this spine to keep the three C++ courses from collapsing into one oversized repo. Each level has a distinct language and design responsibility.",
+					"**Concept path:** This spine keeps the three C++ courses from collapsing into one oversized repo. Each level has a distinct language and design responsibility.",
 					`**Focus:**\n${bullets(levelFocus[courseId])}`,
 					"**Evidence target:** The work demonstrates the ability to explain which C++ level owns the next concept and why it is not being moved into DS&A, C Systems, or AI/ML."
 				].join("\n\n")

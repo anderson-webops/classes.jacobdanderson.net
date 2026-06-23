@@ -367,7 +367,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Reference Pack",
 					content:
-						"Keep the conditionals, math-package, and random-number references available as short focused reviews instead of burying those examples inside larger projects. Use this pack when a larger project fails for a small reason: incorrect branch order, missing `else`, wrong `Math` return type, or an off-by-one random range. A completed reference pass names one exact decision point, one boundary value, and one printed result that proves the rule works. The pack is also useful for separating a syntax problem from a logic problem before continuing a larger project.",
+						"Keep the conditionals, math-package, and random-number references available as short focused reviews instead of burying those examples inside larger projects. This pack is useful when a larger project fails for a small reason: incorrect branch order, missing `else`, wrong `Math` return type, or an off-by-one random range. A completed reference pass names one exact decision point, one boundary value, and one printed result that proves the rule works. The pack is also useful for separating a syntax problem from a logic problem before continuing a larger project.",
 					projectLink: repo("APCS3-Conditionals-Reference/starter"),
 					solutionLink: repo("APCS3-Conditionals-Reference/solution")
 				}
@@ -431,7 +431,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Loop Reference Pack",
 					content:
-						"The loop references support targeted review on tracing, nested iteration, and pattern generation. They practice predicting output before execution and identifying which variable controls each repeated action. Use this pack before pattern-printing or array traversal if loop boundaries are still uncertain. A useful trace states the initialization, first condition check, body effect, update step, last successful iteration, and the variable value that finally stops the loop. For nested loops, also record the total number of inner-loop executions and the exact moment a newline or row transition occurs.",
+						"The loop references support targeted review on tracing, nested iteration, and pattern generation. They practice predicting output before execution and identifying which variable controls each repeated action. This pack is useful before pattern-printing or array traversal if loop boundaries are still uncertain. A useful trace states the initialization, first condition check, body effect, update step, last successful iteration, and the variable value that finally stops the loop. For nested loops, also record the total number of inner-loop executions and the exact moment a newline or row transition occurs.",
 					projectLink: repo("APCS4-Loops-Reference/starter"),
 					solutionLink: repo("APCS4-Loops-Reference/solution")
 				}

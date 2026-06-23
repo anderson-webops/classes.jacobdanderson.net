@@ -412,6 +412,39 @@ describe("course text quality normalization", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
+	it(
+		"keeps course-meta labels descriptive instead of directive",
+		async () => {
+			const directiveMetaLabels: string[] = [];
+			const patterns = [
+				/\*\*(?:Concept path|Course use|Learning path|Reference plan):\*\*\s+Use this\b/i,
+				/(?:^|\n)Use this (?:studio|pack|legacy)\b/i
+			];
+			const courses = await loadedCatalogCourses();
+
+			for (const { entry, course } of courses) {
+				for (const module of course.modules) {
+					for (const item of [
+						...module.curriculum,
+						...module.supplementalProjects
+					]) {
+						const pattern = patterns.find(pattern =>
+							pattern.test(item.content)
+						);
+						if (!pattern) continue;
+
+						directiveMetaLabels.push(
+							`${entry.id} > ${module.title} > ${item.title} > ${pattern}`
+						);
+					}
+				}
+			}
+
+			expect(directiveMetaLabels).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
 	it("keeps advanced bridge and reference cards substantive", async () => {
 		const samples = [
 			{
@@ -1983,7 +2016,7 @@ describe("course text quality normalization", () => {
 
 			const text = allCourseText(course);
 			const level = courseLevels[courseId];
-			expect(text, courseId).toContain(`Use this from ${level}`);
+			expect(text, courseId).toContain(`${level} uses this as`);
 			expect(text, courseId).toContain(`For ${level}`);
 		}
 

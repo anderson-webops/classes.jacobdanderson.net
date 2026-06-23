@@ -37,7 +37,7 @@ const appliedDataScienceLabs: AppliedDataScienceLab[] = [
 		title: "DSP10 Applied Studio: CSV Summaries and Sanity Checks",
 		focus: "CSV loading, numeric summaries, empty-dataset behavior, and sanity checks before a result is trusted.",
 		coreConcepts:
-			"Use this studio to make the smallest useful data pipeline explicit: load rows, convert text values into numbers, compute count, total, and mean, then verify that each number has the expected meaning. A summary is not just a calculator result; it is a claim about the rows that were actually read. Check the file path, column name, type conversion, row count, and empty-input behavior before interpreting the average.",
+			"This studio makes the smallest useful data pipeline explicit: load rows, convert text values into numbers, compute count, total, and mean, then verify that each number has the expected meaning. A summary is not just a calculator result; it is a claim about the rows that were actually read. Check the file path, column name, type conversion, row count, and empty-input behavior before interpreting the average.",
 		example:
 			"Trace a three-row CSV by hand before running the code. Write the expected list of values, expected total, expected count, and expected average, then compare that hand trace to the program output. Add one custom CSV with no rows or one row so the difference between normal data and boundary data is visible.",
 		coreProjectTitle: "CSV Summary Builder",

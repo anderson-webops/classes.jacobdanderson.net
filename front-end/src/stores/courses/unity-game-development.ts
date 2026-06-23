@@ -14,7 +14,7 @@ export const unityGameDevelopmentCourse: RawCourse = {
 				{
 					title: "GD6.1 Collision Commotion",
 					content:
-						"Use this legacy C# script snapshot as a focused collision-reading exercise. Identify which object moves, which object detects contact, whether the contact blocks movement or only triggers an event, and what evidence in the script proves that behavior. Treat the snapshot as reference practice before applying the same idea inside the full Unity project sequence.",
+						"This legacy C# script snapshot is a focused collision-reading exercise. Identify which object moves, which object detects contact, whether the contact blocks movement or only triggers an event, and what evidence in the script proves that behavior. Treat the snapshot as reference practice before applying the same idea inside the full Unity project sequence.",
 					projectLink: repo("UGD-06-01-collision-commotion")
 				},
 				{
