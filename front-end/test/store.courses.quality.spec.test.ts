@@ -377,6 +377,41 @@ describe("course text quality normalization", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
+	it(
+		"keeps generated checkpoint support from repeating directive checkpoint titles",
+		async () => {
+			const repetitiveCheckpointSupport: string[] = [];
+			const patterns = [
+				/\bUse this checkpoint\b/i,
+				/\bUse (?:the )?[^.?!\n]{0,120}? checkpoint (?:to|as)\b/i,
+				/\b(?:The|the|For the|In the) (?:[A-Z][A-Za-z0-9 +&:.-]{0,80}:\s*)?Check-?In\s+#?\d+(?:\s*:\s*[^.!?\n]{1,100})?(?:\s+Overview)?\s+checkpoint\b/,
+				/\bThis checkpoint explanation\b/i
+			];
+			const courses = await loadedCatalogCourses();
+
+			for (const { entry, course } of courses) {
+				for (const module of course.modules) {
+					for (const item of [
+						...module.curriculum,
+						...module.supplementalProjects
+					]) {
+						const pattern = patterns.find(pattern =>
+							pattern.test(item.content)
+						);
+						if (!pattern) continue;
+
+						repetitiveCheckpointSupport.push(
+							`${entry.id} > ${module.title} > ${item.title} > ${pattern}`
+						);
+					}
+				}
+			}
+
+			expect(repetitiveCheckpointSupport).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
 	it("keeps advanced bridge and reference cards substantive", async () => {
 		const samples = [
 			{

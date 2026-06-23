@@ -44,10 +44,7 @@ function normalizeInlineCourseMarkdown(content: string) {
 		.split(/\r?\n/)
 		.map(line => {
 			let normalized = line
-				.replace(
-					/(\S)\s+(\*\*[^*\n]{1,80}:\*\*)/g,
-					"$1\n\n$2"
-				)
+				.replace(/(\S)\s+(\*\*[^*\n]{1,80}:\*\*)/g, "$1\n\n$2")
 				.replace(
 					/(\*\*[^*\n]{1,80}:\*\*)\s+(?=(?:\d+\.|[-*])\s)/g,
 					"$1\n"
