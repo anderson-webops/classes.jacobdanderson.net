@@ -1583,12 +1583,12 @@ const useThisOpeningVerbMap: Record<string, string> = {
 function neutralizeUseThisOpening(text: string) {
 	return text
 		.replace(
-			/(^|\n)Use this (check-in|module|review module|review|final check-in|project) as a ([^.]+)\./gi,
+			/(^|\n)Use this (check-in|checkpoint|module|review module|review|final check-in|project) as a ([^.]+)\./gi,
 			(_match, prefix: string, subject: string, description: string) =>
 				`${prefix}This ${subject.toLowerCase()} is a ${description}.`
 		)
 		.replace(
-			/(^|\n)Use this (check-in|module|review module|review|final check-in|reference build|reference|project|build|one-line boolean exercise|supplemental build) to (compare|drill|force|highlight|reinforce|revisit|review|sharpen|tighten) ([^.]+)\./gi,
+			/(^|\n)Use this (check-in|checkpoint|module|review module|review|final check-in|reference build|reference|project|build|one-line boolean exercise|supplemental build) to (compare|drill|force|highlight|reinforce|revisit|review|sharpen|tighten) ([^.]+)\./gi,
 			(
 				_match,
 				prefix: string,
@@ -1599,17 +1599,17 @@ function neutralizeUseThisOpening(text: string) {
 				`${prefix}This ${subject.toLowerCase()} ${useThisOpeningVerbMap[verb.toLowerCase()]} ${detail}.`
 		)
 		.replace(
-			/(^|\n)Use this (checklist) when ([^.]+)\./gi,
+			/(^|\n)Use this (checklist|checkpoint) when ([^.]+)\./gi,
 			(_match, prefix: string, subject: string, detail: string) =>
 				`${prefix}This ${subject.toLowerCase()} supports ${detail}.`
 		)
 		.replace(
-			/(^|\n)Use this (project|build|reference|supplemental build) for ([^.]+)\./gi,
+			/(^|\n)Use this (checkpoint|project|build|reference|supplemental build) for ([^.]+)\./gi,
 			(_match, prefix: string, subject: string, detail: string) =>
 				`${prefix}This ${subject.toLowerCase()} focuses on ${detail}.`
 		)
 		.replace(
-			/(^|\n)Use this (reference|project|build|supplemental build) when ([^.]+)\./gi,
+			/(^|\n)Use this (checkpoint|reference|project|build|supplemental build) when ([^.]+)\./gi,
 			(_match, prefix: string, subject: string, detail: string) =>
 				`${prefix}This ${subject.toLowerCase()} is a reference point when ${detail}.`
 		)
@@ -3550,6 +3550,59 @@ function diagnosticCategories(context: CourseTextContext) {
 		return "event timing, state reset, controls, collision logic, scoring, or player feedback";
 
 	return "vocabulary, tracing, syntax, design, or test coverage";
+}
+
+const genericCheckInCheckpointReference =
+	"(?:[A-Z][A-Za-z0-9 +&:.-]{0,80}: )?Check-?[Ii]n #?\\d+(?:: [^.!?\\n]{1,100})?(?: Overview)? checkpoint";
+
+function polishDiagnosticSupportText(text: string) {
+	return text
+		.replace(
+			/\bUse (the [^.!?\n]{1,160}? checkpoint) to ([a-z])/g,
+			(_match: string, subject: string, first: string) =>
+				`For ${subject}, ${first}`
+		)
+		.replace(
+			/\bUse (the [^.!?\n]{1,160}? checkpoint) as ([^.?!\n]+)/g,
+			(_match: string, subject: string, detail: string) =>
+				`Treat ${subject} as ${detail}`
+		)
+		.replace(
+			new RegExp(
+				`\\bFor the ${genericCheckInCheckpointReference}\\b`,
+				"g"
+			),
+			"For this checkpoint"
+		)
+		.replace(
+			new RegExp(
+				`\\bIn the ${genericCheckInCheckpointReference}\\b`,
+				"g"
+			),
+			"In this checkpoint"
+		)
+		.replace(
+			new RegExp(`\\bThe ${genericCheckInCheckpointReference}\\b`, "g"),
+			"This checkpoint"
+		)
+		.replace(
+			new RegExp(`\\bthe ${genericCheckInCheckpointReference}\\b`, "g"),
+			"this checkpoint"
+		)
+		.replace(
+			/\bThis checkpoint independent attempt\b/g,
+			"The independent attempt"
+		)
+		.replace(
+			/\bthis checkpoint independent attempt\b/g,
+			"the independent attempt"
+		)
+		.replace(/\bThis checkpoint explanation\b/g, "The explanation")
+		.replace(/\bthis checkpoint explanation\b/g, "the explanation")
+		.replace(
+			/\b(Add a transfer example to|Create a second version of|Modify) this checkpoint\b/g,
+			"$1 the checkpoint"
+		);
 }
 
 function evidenceForSubject(subject: string, details: string) {
@@ -5950,6 +6003,30 @@ function compactGeneratedProjectSupport(
 				new RegExp(`\\bTurn ${escapedBareReference} into\\b`, "g"),
 				"Turn the work into"
 			)
+			.replace(
+				/\bUse (?:the )?[A-Z][^.!?\n]{1,180}? checkpoint to ([a-z])/g,
+				(_match: string, first: string) => capitalizeSentence(first)
+			)
+			.replace(
+				/\bThe [A-Z][^.!?\n]{1,180}? checkpoint checked cases include\b/g,
+				"The checked cases include"
+			)
+			.replace(
+				/\bThe [A-Z][^.!?\n]{1,180}? checkpoint explanation\b/g,
+				"The explanation"
+			)
+			.replace(
+				/\bThe [A-Z][^.!?\n]{1,180}? checkpoint (has|checks|produces|compiles|builds|starts|controls|includes|identifies)\b/g,
+				"The checkpoint $1"
+			)
+			.replace(
+				/\b([Cc]losing note) for the [A-Z][^.!?\n]{1,180}? checkpoint\b/g,
+				"$1"
+			)
+			.replace(
+				/\b(to|for|in) the [A-Z][^.!?\n]{1,180}? checkpoint\b/g,
+				"$1 the checkpoint"
+			)
 			.replace(/\bThe Evidence\b/g, "The evidence")
 			.replace(
 				new RegExp(`^- ${escapedReference} `),
@@ -6249,12 +6326,14 @@ function diagnosticSupport(context: CourseTextContext) {
 		])
 	);
 
-	return [
-		`**Readiness check:** ${readiness}`,
-		`**Evidence of proficiency:** ${compact(proficiencyEvidence(context))}`,
-		`**If this is difficult:** ${compact(remediationPrompt(context))}`,
-		`**Extension:** ${compact(diagnosticExtensionPrompt(context))}`
-	].join("\n\n");
+	return polishDiagnosticSupportText(
+		[
+			`**Readiness check:** ${readiness}`,
+			`**Evidence of proficiency:** ${compact(proficiencyEvidence(context))}`,
+			`**If this is difficult:** ${compact(remediationPrompt(context))}`,
+			`**Extension:** ${compact(diagnosticExtensionPrompt(context))}`
+		].join("\n\n")
+	);
 }
 
 function scienceCourseBand(context: CourseTextContext) {
@@ -7398,10 +7477,14 @@ function qualitySupportFor(context: CourseTextContext) {
 }
 
 function shortProjectReviewSupport(context: CourseTextContext) {
-	return [
+	const support = [
 		`**Completion checks:**\n${compactGeneratedProjectSupport(context, completionChecks(context)).join("\n")}`,
 		`**Extension:** ${compactGeneratedProjectSupport(context, [extensionPrompt(context)])[0]}`
 	].join("\n\n");
+
+	return isCheckInContext(context)
+		? polishDiagnosticSupportText(support)
+		: support;
 }
 
 function rewritePlaceholderCourseText(course: RawCourse, courseId: string) {
