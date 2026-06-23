@@ -208,13 +208,12 @@ const scienceResourceLinks: Record<
 	"elementary-science": {
 		catalogLink:
 			"https://phet.colorado.edu/en/simulations/filter?subjects=elementary-school",
-		datasetLink:
-			"https://www.noaa.gov/education/resource-collections/weather-atmosphere"
+		datasetLink: "https://climatekids.nasa.gov/weather-climate/"
 	},
 	"middle-school-integrated-science": {
 		catalogLink:
 			"https://phet.colorado.edu/en/simulations/filter?subjects=middle-school",
-		datasetLink: "https://www.biointeractive.org/classroom-resources"
+		datasetLink: "https://askabiologist.asu.edu/activities"
 	},
 	"intro-to-chemistry": {
 		catalogLink:
@@ -224,7 +223,7 @@ const scienceResourceLinks: Record<
 	"intro-to-physics": {
 		catalogLink:
 			"https://phet.colorado.edu/en/simulations/filter?subjects=physics",
-		datasetLink: "https://www.nasa.gov/stem-content/"
+		datasetLink: "https://www.nasa.gov/learning-resources/"
 	},
 	"physics-level-2": {
 		catalogLink:
