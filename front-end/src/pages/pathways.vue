@@ -49,10 +49,10 @@ function priorityLabel(priority: string) {
 				<p class="page-eyebrow">Course pathways</p>
 				<h1 class="page-title">Course Pathways</h1>
 				<p class="page-copy">
-					These pages summarize prerequisites, outcomes, project
-					expectations, assessment style, tooling, and safety
-					boundaries for each course family. Internal priorities and
-					expansion backlog details appear only for administrators.
+					Explore course families by readiness, outcomes, projects,
+					assessment style, tools, and safety boundaries. Use each
+					pathway to choose a reasonable next course and understand
+					what successful work looks like.
 				</p>
 			</div>
 			<div class="pathways-stats" aria-label="Pathway coverage summary">

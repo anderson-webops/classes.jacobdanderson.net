@@ -129,4 +129,39 @@ describe("course asset preview utilities", () => {
 		);
 		expect(source).toContain("width: 100%;");
 	});
+
+	it("contains inline course asset previews and Markdown tables inside the reader column", () => {
+		const previewSource = readFileSync(
+			resolve(__dirname, "../src/components/CourseAssetPreview.vue"),
+			"utf8"
+		);
+		const explorerSource = readFileSync(
+			resolve(__dirname, "../src/components/CourseExplorer.vue"),
+			"utf8"
+		);
+		const markdownSource = readFileSync(
+			resolve(__dirname, "../src/components/LazyMarkdownContent.vue"),
+			"utf8"
+		);
+
+		expect(previewSource).toContain(".course-asset-preview {");
+		expect(previewSource).toContain("min-width: 0;");
+		expect(previewSource).toContain("max-width: min(100%, 58rem);");
+		expect(previewSource).toContain(".course-asset-preview-panel {");
+		expect(previewSource).toContain("overflow-x: hidden;");
+		expect(previewSource).toContain(
+			".course-asset-preview-content :deep(.item-content-markdown)"
+		);
+		expect(explorerSource).toContain(".course-reader {");
+		expect(explorerSource).toContain("overflow-x: hidden;");
+		expect(explorerSource).toContain(".reader-section {");
+		expect(explorerSource).toContain(".lesson-card {");
+
+		expect(markdownSource).toContain("max-width: min(100%, 82ch);");
+		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
+		expect(markdownSource).toContain("width: 100%;");
+		expect(markdownSource).toContain("overflow-x: auto;");
+		expect(markdownSource).toContain(".item-content-markdown :deep(pre)");
+		expect(markdownSource).toContain("max-width: 100%;");
+	});
 });

@@ -150,5 +150,7 @@ describe("public course pathways", () => {
 		expect(wrapper.text()).toContain("Assessment, tooling, and safety");
 		expect(wrapper.text()).not.toContain("Build next");
 		expect(wrapper.text()).not.toContain("Expansion Backlog");
+		expect(wrapper.text()).not.toMatch(/internal priorit/i);
+		expect(wrapper.text()).not.toMatch(/expansion backlog/i);
 	});
 });

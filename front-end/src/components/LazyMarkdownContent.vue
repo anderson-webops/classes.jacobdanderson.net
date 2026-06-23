@@ -204,10 +204,12 @@ watch(
 		--course-table-row-alt-bg,
 		var(--color-surface-inset, rgba(15, 23, 42, 0.035))
 	);
-	max-width: 82ch;
+	min-width: 0;
+	max-width: min(100%, 82ch);
 	font-size: 1.02rem;
 	line-height: 1.8;
 	color: var(--markdown-text-soft);
+	overflow-wrap: break-word;
 }
 
 .item-content-markdown :deep(h1),
@@ -243,11 +245,13 @@ watch(
 
 .item-content-markdown :deep(table) {
 	display: block;
-	width: max-content;
+	width: 100%;
 	max-width: 100%;
+	min-width: 0;
 	border-spacing: 0;
 	border-collapse: separate;
 	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 	border: 1px solid var(--markdown-border);
 	border-radius: 14px;
 	background: var(--markdown-table-bg);
@@ -261,7 +265,8 @@ watch(
 	border-bottom: 1px solid var(--markdown-border);
 	text-align: left;
 	vertical-align: top;
-	min-width: 7.5rem;
+	min-width: min(7.5rem, 46vw);
+	overflow-wrap: anywhere;
 }
 
 .item-content-markdown :deep(th:last-child),
@@ -319,11 +324,13 @@ watch(
 }
 
 .item-content-markdown :deep(pre) {
+	max-width: 100%;
 	padding: 0.95rem 1rem;
 	border-radius: 16px;
 	background: #0f172a;
 	color: #e2e8f0;
 	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 }
 
 .item-content-markdown :deep(pre code) {

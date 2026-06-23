@@ -184,6 +184,7 @@ async function handleResourceChange() {
 	display: flex;
 	flex-direction: column;
 	gap: 0.65rem;
+	min-width: 0;
 	max-width: min(100%, 58rem);
 }
 
@@ -237,6 +238,9 @@ async function handleResourceChange() {
 	display: flex;
 	flex-direction: column;
 	gap: 0.85rem;
+	min-width: 0;
+	max-width: 100%;
+	overflow-x: hidden;
 	border: 1px solid
 		var(--course-asset-preview-border, rgba(13, 148, 136, 0.18));
 	border-radius: 18px;
@@ -296,6 +300,8 @@ async function handleResourceChange() {
 .course-asset-preview-content {
 	display: grid;
 	gap: 0.55rem;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .course-asset-preview-eyebrow {
@@ -317,5 +323,6 @@ async function handleResourceChange() {
 
 .course-asset-preview-content :deep(.item-content-markdown) {
 	max-width: 100%;
+	min-width: 0;
 }
 </style>
