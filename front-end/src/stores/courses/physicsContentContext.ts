@@ -34,7 +34,7 @@ const diagnosticCheckpointOverrides: Record<string, string> = {
 	"PHY22 Electromagnetic Applications and Signals":
 		"Readiness check: identify the physical quantity being sensed, the electrical signal representing it, the calibration step, and one source of noise. A strong response explains what a filter changes and what it cannot recover.",
 	"PHY23 Relativity and Reference Frames Preview":
-		"Readiness check: separate frame-dependent measurements from invariant relationships in a low-stakes relativity scenario. A strong response explains why classical intuition remains useful only inside its speed and scale limits.",
+		"Readiness check: separate frame-dependent measurements from invariant relationships in a low-stakes relativity scenario. Compare two observers describing the same event, identify which measurements could differ, and name the relationship that must remain consistent. Use everyday-speed examples first, then explain why the correction becomes important near light speed, across large distances, or when clocks and simultaneity matter. A strong response explains why classical intuition remains useful inside its speed and scale limits while still naming the conditions where a refined model is needed.",
 	"PHY24 Independent Physics Research Portfolio":
 		"Readiness check: define the research question, source quality, chosen model, graph evidence, limitation, and revision target. A strong response makes the scope narrow enough to defend with evidence."
 };
@@ -73,20 +73,27 @@ const misconceptionWatchlistOverrides: Record<string, string> = {
 	"PHY22 Electromagnetic Applications and Signals":
 		"Common failure modes include treating a sensor reading as the true value without calibration, assuming filters can remove noise without tradeoffs, and ignoring bandwidth or sampling limits.",
 	"PHY23 Relativity and Reference Frames Preview":
-		"Common failure modes include treating relativity as mere perception, expecting noticeable relativistic effects at ordinary speeds, and assuming reference-frame dependence means there are no objective predictions.",
+		"Common failure modes include treating relativity as mere perception, expecting noticeable relativistic effects at ordinary speeds, and assuming reference-frame dependence means there are no objective predictions. A complete correction distinguishes disagreement about measured quantities from disagreement about the physical event, then connects the claim to speed, scale, and reference frame. Good evidence includes a named observer, a measured quantity such as time interval or length, and a statement about what remains consistent across descriptions rather than a vague claim that everything is relative.",
 	"PHY24 Independent Physics Research Portfolio":
 		"Common failure modes include substituting a broad topic for a focused question, using citations instead of reasoning, and treating limitations as something to hide rather than as evidence of careful scope."
 };
 
+function physicsModuleTopic(title: string) {
+	return title.replace(/^PHY\d+\s+/u, "").trim();
+}
+
 function applyPhysicsSupplementOverrides(course: RawCourse) {
 	for (const module of course.modules) {
+		const topic = physicsModuleTopic(module.title);
 		for (const item of module.supplementalProjects) {
 			if (item.title === "Diagnostic Checkpoint") {
+				item.title = `${topic} Readiness Check`;
 				item.content =
 					diagnosticCheckpointOverrides[module.title] ?? item.content;
 			}
 
 			if (item.title === "Failure Modes") {
+				item.title = `${topic} Failure Modes`;
 				item.content =
 					misconceptionWatchlistOverrides[module.title] ??
 					item.content;
