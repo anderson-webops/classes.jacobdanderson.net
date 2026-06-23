@@ -182,12 +182,12 @@ export const elementaryScienceCourse: RawCourse = {
 				{
 					title: "Grade-Band Path: Matter and Materials",
 					content:
-						"K-2 path: sort visible examples by state or property and describe them with everyday words. Grades 3-5 path: use property data to justify material choices, compare reversible and irreversible changes, and explain tricky examples with particle or evidence language. No physical samples are required because images, tables, and simulations provide the evidence."
+						"K-2 path: sort visible examples by state or property and describe them with everyday words. Grades 3-5 path: use property data to justify material choices, compare reversible and irreversible changes, and explain tricky examples with particle or evidence language. No physical samples are required because images, tables, and simulations provide the evidence. The shared goal is to move from naming what is visible toward explaining why a material fits a purpose, what evidence supports the claim, and which examples are difficult because they combine several properties at once."
 				},
 				{
 					title: "Properties of Materials",
 					content:
-						"Material properties include color, texture, hardness, flexibility, transparency, absorbency, magnetism, and whether a material floats or sinks. Images and provided data can replace physical supplies while still supporting evidence-based choices."
+						"Material properties include color, texture, hardness, flexibility, transparency, absorbency, magnetism, and whether a material floats or sinks. Images and provided data can replace physical supplies while still supporting evidence-based choices. A useful comparison names both the property and the job the material needs to do: a window needs transparency, a bridge needs strength, and a towel needs absorbency. When two materials both seem reasonable, choose the one with stronger evidence and describe the tradeoff. The final claim uses because language: this material works because the evidence shows the needed property."
 				},
 				{
 					title: "Guided Practice: Choosing Materials for a Purpose",

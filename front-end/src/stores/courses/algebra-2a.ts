@@ -292,6 +292,8 @@ Use a graphing tool or the provided quadratic-transformation reference for graph
 - at least one directrix-focus reference image
 
 The written response identifies the transformation, asymptote, intercept, or focus/directrix relationship being tested.
+
+For each graph-only prompt, write one sentence naming the parent function or conic feature and one sentence tying that feature to visible evidence. For example, a vertical stretch is supported by narrower arms, a translation is supported by the shifted vertex, and a focus/directrix claim mentions equal distance from a point and a line. This keeps the graph interpretation mathematical even when exact coordinates are not provided.
 				`.trim(),
 				media.quadraticTransforms
 			)

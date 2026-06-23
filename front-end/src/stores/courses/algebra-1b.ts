@@ -879,6 +879,8 @@ The photon-count data for this activity is:
 					"Experiment Visual Reference",
 					`
 Use the photon-count graph or a simulator sketch to anchor the visual parts of the experiment. The written explanation still identifies the pattern, the likely best-fit shape, and how wavelength changes with mass and speed.
+
+Start by describing what the visual actually shows: counts, peaks, gaps, or a repeated wave pattern. Then connect the visual to the equation instead of treating the graph as decoration. A strong response explains why a heavier or faster object has a shorter wavelength, why the best-fit curve is a model rather than the raw data itself, and what detail would be needed before making a stronger experimental claim.
 				`.trim(),
 					media.photonCounts
 				)
@@ -1008,7 +1010,7 @@ Use a graphing tool or the provided function reference for graph-only prompts su
 - the inverse-existence graph in the advanced section
 - one additional practice graph used for extrema and intervals
 
-The key goal is to justify each decision from the graph feature being tested.
+The key goal is to justify each decision from the graph feature being tested. The vertical-line test checks whether one input has more than one output. An inverse-existence graph checks whether the original relation passes the horizontal-line test. Extrema and interval questions name the x-range being described and whether the graph is increasing, decreasing, positive, negative, or reaching a maximum or minimum there.
 				`.trim(),
 				media.checkIn2FunctionGraph
 			)

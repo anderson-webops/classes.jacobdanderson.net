@@ -81,7 +81,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 				{
 					title: "When the Textbook Form Still Helps",
 					content:
-						"Do not overcorrect into 'never use patterns in Python'. Explicit patterns still help when state, extension pressure, third-party integration, or team readability justify them."
+						"Do not overcorrect into 'never use patterns in Python'. Explicit patterns still help when state, extension pressure, third-party integration, or team readability justify them. The useful question is whether the pattern makes the next change safer and clearer than a direct function or small module would. Keep the textbook form when it names stable roles, isolates an external system, or makes variation explicit; simplify it when the class structure only adds ceremony without changing the behavior or maintenance story. A good comparison shows the simple version first, then explains the concrete pressure that made the pattern worthwhile."
 				},
 				{
 					title: "PDP1 Why Python Changes the Design-Patterns Conversation: Core Project",

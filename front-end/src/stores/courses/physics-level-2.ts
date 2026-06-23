@@ -750,7 +750,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Reference Frame Concepts",
 					content:
-						"Reference frames determine how position, velocity, time, and event order are described. Classical relative velocity works well at everyday speeds, but high-speed or high-precision cases require clearer domain limits and relativistic corrections. The aim is to see why a model can be accurate in one regime and incomplete in another."
+						"Reference frames determine how position, velocity, time, and event order are described. Classical relative velocity works well at everyday speeds, but high-speed or high-precision cases require clearer domain limits and relativistic corrections. The aim is to see why a model can be accurate in one regime and incomplete in another. For each scenario, name the observer, define what that observer measures, and avoid mixing measurements from different frames in the same equation. A good explanation can say both what stays consistent and what changes when the reference frame changes."
 				},
 				{
 					title: "Frame Reasoning Toolkit",

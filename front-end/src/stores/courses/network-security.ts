@@ -390,7 +390,7 @@ export const networkSecurityCourse: RawCourse = {
 				{
 					title: "Size Limits and Resource Exhaustion",
 					content:
-						"Body size, field count, array size, and connection cost are explicit security concerns. Validation connects to availability when oversized requests and repeated parse work become abuse vectors."
+						"Body size, field count, array size, and connection cost are explicit security concerns. Validation connects to availability when oversized requests and repeated parse work become abuse vectors. A safe boundary defines maximum request body size, maximum nesting depth, maximum list length, timeout behavior, and logging that records rejection without storing sensitive payloads. The defensive test includes one valid request near the limit and one oversized request that fails predictably. The result preserves service availability: the server rejects abusive input early, returns a controlled error, and remains responsive for the next normal request."
 				},
 				{
 					title: "Schema Validation and Safe Rejection",
