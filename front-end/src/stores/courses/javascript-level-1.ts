@@ -33,7 +33,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Check-In #1: Conditionals",
 					content:
-						"Review `if`, `else if`, and `else` branches. Write a program that asks for a number; if the number is less than or equal to 50, print a success message, otherwise print a sorry message. Create booleans for homework and chores; if both are true, print that going outside is allowed, otherwise print that it is not. Then update the condition to allow going outside if either value is true using `||`."
+						"Review `if`, `else if`, and `else` branches. Write a program that asks for a number; if the number is less than or equal to 50, print a success message, otherwise print a sorry message. Create booleans for reading and chores; if both are true, print that going outside is allowed, otherwise print that it is not. Then update the condition to allow going outside if either value is true using `||`."
 				},
 				{
 					title: "Check-In #1: Drawing in JavaScript",
@@ -317,9 +317,9 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/d004723cc01403a3db897db1206f449b"
 				},
 				{
-					title: "JSS2 Supplemental Project 4: Debugging Math Homework",
+					title: "JSS2 Supplemental Project 4: Debugging Math Practice",
 					content:
-						"Debug the math-homework program by first identifying the expected numeric result, then tracing each arithmetic step in the existing code. Fix one error at a time, rerun after each change, and leave the final version readable enough that the order of operations, rounding behavior, and printed answer are easy to verify.",
+						"Debug the math-practice program by first identifying the expected numeric result, then tracing each arithmetic step in the existing code. Fix one error at a time, rerun after each change, and leave the final version readable enough that the order of operations, rounding behavior, and printed answer are easy to verify.",
 					projectLink: "https://codepen.io/junilearning/pen/VwexoVL",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/f90710cc7e05de72ea7ff2b8b05a32bd"

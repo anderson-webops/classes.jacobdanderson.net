@@ -470,11 +470,11 @@ function buildStandardsModule(
 				].join("\n\n")
 			},
 			{
-				title: expansionTitle(courseLabel, "Sequence Map"),
+				title: expansionTitle(courseLabel, "Pathway Map"),
 				content: [
-					`**Sequence map:** The ${courseLabel} sequence organizes prerequisite skills, core lessons, project practice, assessments, enrichment, and reference material in dependency order.`,
-					`**Ordering rule:** ${courseLabel} sequence decisions are based on dependency, not convenience. If any ${courseLabel} project expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,
-					`**Sequence is clear when:**\n- Each prerequisite skill has a clear next action.\n- Required ${profile.family} skills appear before the project that depends on them.\n- Optional enrichment is labeled separately from required pacing.`
+					`**Pathway map:** The ${courseLabel} pathway organizes prerequisite skills, core concepts, project practice, assessments, enrichment, and reference material in dependency order.`,
+					`**Ordering rule:** ${courseLabel} pathway decisions are based on dependency, not convenience. If any ${courseLabel} project expects a skill that has not appeared in a worked example or smaller practice task, a bridge item belongs before that project.`,
+					`**Pathway is clear when:**\n- Each prerequisite skill has a clear next action.\n- Required ${profile.family} skills appear before the project that depends on them.\n- Optional enrichment is labeled separately from required pacing.`
 				].join("\n\n")
 			}
 		]
