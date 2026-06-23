@@ -1857,7 +1857,7 @@ function completionCheckSteps(
 			],
 			[
 				`${moduleTitle} has current compile evidence and a visible check for the main behavior.`,
-				`The ${moduleTitle} checks exercise constructor setup, public method behavior, and one awkward condition such as null risk, equality, or collection mutation where relevant.`,
+				`The ${moduleTitle} checks constructor setup, public method behavior, and one awkward condition such as null risk, equality, or collection mutation where relevant.`,
 				`The ${moduleTitle} summary separates syntax correctness from the API or object-design decision.`
 			],
 			[

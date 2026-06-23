@@ -5305,6 +5305,9 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(
 				/\bA concrete example establishes the (?:relevant )?vocabulary\b/i
 			);
+			expect(corpus).not.toMatch(/\bchecks exercise\b/i);
+			expect(corpus).not.toMatch(/\bchecks checks\b/i);
+			expect(corpus).not.toMatch(/\bexercise checks exercise\b/i);
 		},
 		COURSE_SWEEP_TIMEOUT
 	);
