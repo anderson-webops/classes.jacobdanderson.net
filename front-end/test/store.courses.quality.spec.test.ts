@@ -329,7 +329,8 @@ describe("course text quality normalization", () => {
 		const samples = [
 			{
 				courseId: "data-science-in-python",
-				itemTitle: "Reference Archive: Data Science in Python Workspace",
+				itemTitle:
+					"Reference Archive: Data Science in Python Workspace",
 				minWords: 85,
 				required: [/folder layout/i, /sample data/i, /limitation/i]
 			},
@@ -337,13 +338,22 @@ describe("course text quality normalization", () => {
 				courseId: "ai-level-1",
 				itemTitle: "Reference Archive: AI Level 1 Workspace",
 				minWords: 80,
-				required: [/state representation/i, /search order/i, /algorithm/i]
+				required: [
+					/state representation/i,
+					/search order/i,
+					/algorithm/i
+				]
 			},
 			{
 				courseId: "python-to-java-and-cpp-bridge",
 				itemTitle: "String Equality and Reference Habits",
 				minWords: 75,
-				required: [/\.equals\(\)/i, /==/i, /null/i, /reference identity/i]
+				required: [
+					/\.equals\(\)/i,
+					/==/i,
+					/null/i,
+					/reference identity/i
+				]
 			},
 			{
 				courseId: "cpp-level-2",
@@ -353,27 +363,48 @@ describe("course text quality normalization", () => {
 			},
 			{
 				courseId: "cpp-level-2",
-				itemTitle: "References, Lifetimes, and Evidence-Based Debugging",
+				itemTitle:
+					"References, Lifetimes, and Evidence-Based Debugging",
 				minWords: 85,
-				required: [/const/i, /alias diagram/i, /sanitizers/i, /lifetime/i]
+				required: [
+					/const/i,
+					/alias diagram/i,
+					/sanitizers/i,
+					/lifetime/i
+				]
 			},
 			{
 				courseId: "cpp-level-3",
 				itemTitle: "Scanning, Parsing, and Error Boundaries",
 				minWords: 90,
-				required: [/scanner/i, /parser/i, /accepted and rejected/i, /application state/i]
+				required: [
+					/scanner/i,
+					/parser/i,
+					/accepted and rejected/i,
+					/application state/i
+				]
 			},
 			{
 				courseId: "cpp-level-3",
 				itemTitle: "RAII and Single-Owner Resource Design",
 				minWords: 85,
-				required: [/destructors/i, /std::unique_ptr/i, /moving/i, /std::shared_ptr/i]
+				required: [
+					/destructors/i,
+					/std::unique_ptr/i,
+					/moving/i,
+					/std::shared_ptr/i
+				]
 			},
 			{
 				courseId: "cpp-level-3",
 				itemTitle: "Validation, Exceptions, and Resource Boundaries",
 				minWords: 85,
-				required: [/rollback/i, /basic guarantee/i, /temporary work/i, /RAII/i]
+				required: [
+					/rollback/i,
+					/basic guarantee/i,
+					/temporary work/i,
+					/RAII/i
+				]
 			},
 			{
 				courseId: "cpp-level-3",
@@ -390,7 +421,12 @@ describe("course text quality normalization", () => {
 				courseId: "java-level-2",
 				itemTitle: "Reference and Solution Boundaries",
 				minWords: 70,
-				required: [/starter-style/i, /solution-style/i, /course pacing/i, /current project/i]
+				required: [
+					/starter-style/i,
+					/solution-style/i,
+					/course pacing/i,
+					/current project/i
+				]
 			},
 			{
 				courseId: "java-level-2",
@@ -402,25 +438,45 @@ describe("course text quality normalization", () => {
 				courseId: "java-level-2",
 				itemTitle: "Reference: Try-Catch Example",
 				minWords: 80,
-				required: [/try/i, /catch/i, /checked exceptions/i, /safely continue/i]
+				required: [
+					/try/i,
+					/catch/i,
+					/checked exceptions/i,
+					/safely continue/i
+				]
 			},
 			{
 				courseId: "java-level-1",
 				itemTitle: "Java Level 1 Project: Console Object Model",
 				minWords: 95,
-				required: [/main/i, /object state/i, /field access/i, /Java-specific design/i]
+				required: [
+					/main/i,
+					/object state/i,
+					/field access/i,
+					/Java-specific design/i
+				]
 			},
 			{
 				courseId: "java-level-1",
 				itemTitle: "Java Level 1 Project: Record-backed Data Summary",
 				minWords: 95,
-				required: [/record components/i, /sample rows/i, /named components/i, /immutable/i]
+				required: [
+					/record components/i,
+					/sample rows/i,
+					/named components/i,
+					/immutable/i
+				]
 			},
 			{
 				courseId: "java-level-2",
 				itemTitle: "Collections and Contracts",
 				minWords: 105,
-				required: [/mutability/i, /duplicate/i, /lookup misses/i, /HashMap/i]
+				required: [
+					/mutability/i,
+					/duplicate/i,
+					/lookup misses/i,
+					/HashMap/i
+				]
 			},
 			{
 				courseId: "java-level-2",
@@ -437,7 +493,12 @@ describe("course text quality normalization", () => {
 				courseId: "java-level-2",
 				itemTitle: "Java Level 2 Project: Record-backed CSV Loader",
 				minWords: 95,
-				required: [/expected columns/i, /typed record/i, /accepted dataset/i, /domain logic/i]
+				required: [
+					/expected columns/i,
+					/typed record/i,
+					/accepted dataset/i,
+					/domain logic/i
+				]
 			},
 			{
 				courseId: "java-level-3",
@@ -466,13 +527,19 @@ describe("course text quality normalization", () => {
 		for (const sample of samples) {
 			const course = await loadRawCourse(sample.courseId);
 			expect(course, sample.courseId).not.toBeNull();
-			const item = findItem(course!, new RegExp(`^${sample.itemTitle}$`, "i"));
-
-			expect(wordCount(item.content), sample.itemTitle).toBeGreaterThanOrEqual(
-				sample.minWords
+			const item = findItem(
+				course!,
+				new RegExp(`^${sample.itemTitle}$`, "i")
 			);
+
+			expect(
+				wordCount(item.content),
+				sample.itemTitle
+			).toBeGreaterThanOrEqual(sample.minWords);
 			for (const pattern of sample.required) {
-				expect(item.content, `${sample.itemTitle}: ${pattern}`).toMatch(pattern);
+				expect(item.content, `${sample.itemTitle}: ${pattern}`).toMatch(
+					pattern
+				);
 			}
 		}
 	});
@@ -3171,12 +3238,18 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toContain(
 			"Build the baseline lab first: reproduce the intended behavior, document the local boundary"
 		);
-		expect(corpus).not.toContain("Begin with the protected asset, the trust boundary, the unsafe assumption");
-		expect(corpus).not.toContain("Keep the work defensive and local. A strong concept note identifies");
+		expect(corpus).not.toContain(
+			"Begin with the protected asset, the trust boundary, the unsafe assumption"
+		);
+		expect(corpus).not.toContain(
+			"Keep the work defensive and local. A strong concept note identifies"
+		);
 		expect(corpus).not.toContain(
 			"Finish by naming one remaining limitation without expanding beyond the provided local lab"
 		);
-		expect(corpus).toContain("Bug-finding starts by creating test inputs designed for rejection");
+		expect(corpus).toContain(
+			"Bug-finding starts by creating test inputs designed for rejection"
+		);
 		expect(corpus).toContain("Memory Layout Transfer Practice");
 		expect(corpus).toContain("Parser Hardening Transfer Practice");
 		expect(corpus).toContain("Patch Review Transfer Practice");
@@ -3213,8 +3286,12 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toContain(
 			"Build the baseline lab first: reproduce the intended behavior, document the local boundary"
 		);
-		expect(corpus).not.toContain("Begin with the protected asset, the trust boundary, the unsafe assumption");
-		expect(corpus).not.toContain("Keep the work defensive and local. A strong concept note identifies");
+		expect(corpus).not.toContain(
+			"Begin with the protected asset, the trust boundary, the unsafe assumption"
+		);
+		expect(corpus).not.toContain(
+			"Keep the work defensive and local. A strong concept note identifies"
+		);
 		expect(corpus).not.toContain(
 			"Finish by naming one remaining limitation without expanding beyond the provided local lab"
 		);
@@ -3866,7 +3943,10 @@ describe("course text quality normalization", () => {
 					(course?.modules ?? [])
 						.filter(module => module.kind !== "appendix")
 						.flatMap(module =>
-							[...module.curriculum, ...module.supplementalProjects]
+							[
+								...module.curriculum,
+								...module.supplementalProjects
+							]
 								.filter(item => wordCount(item.content) < 80)
 								.map(
 									item =>
@@ -4623,9 +4703,7 @@ describe("course text quality normalization", () => {
 			scratchLevel2!,
 			/Typing and Code Fluency/
 		);
-		expect(levelTwoTyping.content).toContain(
-			"Code-fluency transitions"
-		);
+		expect(levelTwoTyping.content).toContain("Code-fluency transitions");
 		expect(levelTwoTyping.content).toContain("score = score + 1");
 		expect(levelTwoTyping.content).not.toContain(
 			"Practice with the Keyboard - Typing Letters"
@@ -4668,13 +4746,19 @@ describe("course text quality normalization", () => {
 			/\bstays centered on sprite roles, event timing, broadcasts, clones, variables, stage behavior/i
 		);
 		expect(scratchCorpus).toContain(
-			"Focused drill for GS1 Starting in Scratch: rebuild the central behavior in a smaller scene"
+			"**Fluency goal:** Rebuild the central Hungry Hippo-style collection behavior"
 		);
 		expect(scratchCorpus).toContain(
+			"**Variant goal:** Build a new starter collection game variation"
+		);
+		expect(scratchCorpus).toContain(
+			"**Variant goal:** Build a new advanced Scratch capstone variation"
+		);
+		expect(scratchCorpus).not.toContain(
 			"Original variant for GS1 Starting in Scratch: change the theme, control rule, score condition, or feedback cue"
 		);
 		expect(scratchCorpus).toContain(
-			"defines a Scratch project slice around Scratch game design"
+			"Testing uses one normal word, one short word, and one input with spaces or repeated letters."
 		);
 		expect(allCourseText(webDevelopment)).not.toMatch(/\bbut Now\b/);
 	});
@@ -5258,12 +5342,15 @@ describe("course text quality normalization", () => {
 				.filter(item => {
 					const hasLinkedResource = Boolean(
 						item.projectLink ||
-							item.solutionLink ||
-							item.datasetLink ||
-							item.mediaLink
+						item.solutionLink ||
+						item.datasetLink ||
+						item.mediaLink
 					);
 
-					return hasLinkedResource && isInformationalResourceTitle(item.title);
+					return (
+						hasLinkedResource &&
+						isInformationalResourceTitle(item.title)
+					);
 				})
 				.filter(
 					item =>
@@ -5349,7 +5436,9 @@ describe("course text quality normalization", () => {
 				new RegExp(`^${title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`)
 			);
 			expect(wordCount(item.content), title).toBeGreaterThanOrEqual(85);
-			expect(item.content, title).toMatch(/trace|AP-style|Java|condition/i);
+			expect(item.content, title).toMatch(
+				/trace|AP-style|Java|condition/i
+			);
 			expect(item.content, title).not.toMatch(/\bshould\b/i);
 		}
 
@@ -5363,7 +5452,9 @@ describe("course text quality normalization", () => {
 
 		expect(registerWorksheets.length).toBeGreaterThanOrEqual(14);
 		for (const item of registerWorksheets) {
-			expect(wordCount(item.content), item.title).toBeGreaterThanOrEqual(85);
+			expect(wordCount(item.content), item.title).toBeGreaterThanOrEqual(
+				85
+			);
 			expect(item.content, item.title).toContain("instruction address");
 			expect(item.content, item.title).toContain(
 				"value before the instruction"
@@ -5371,7 +5462,9 @@ describe("course text quality normalization", () => {
 			expect(item.content, item.title).toContain(
 				"value after the instruction"
 			);
-			expect(item.content, item.title).toContain("branch, call, or return");
+			expect(item.content, item.title).toContain(
+				"branch, call, or return"
+			);
 			expect(item.content, item.title).not.toMatch(/\bshould\b/i);
 		}
 
@@ -5403,9 +5496,10 @@ describe("course text quality normalization", () => {
 			expect(course).not.toBeNull();
 			const item = findItem(course!, new RegExp(`^${sample.title}$`));
 
-			expect(wordCount(item.content), sample.title).toBeGreaterThanOrEqual(
-				75
-			);
+			expect(
+				wordCount(item.content),
+				sample.title
+			).toBeGreaterThanOrEqual(75);
 			expect(item.content, sample.title).toMatch(
 				/Evidence target|Remote investigation|What to show/
 			);
