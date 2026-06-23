@@ -1985,18 +1985,36 @@ describe("course text quality normalization", () => {
 	);
 
 	it(
-		"does not render unrelated non-composed course items as exact long-form duplicates",
+		"allows exact long-form duplicates only for composed Java split tracks",
 		async () => {
-			const excludedCourseIds = new Set([
+			const javaSplitCourseIds = new Set([
+				"java-level-1",
+				"java-level-2",
+				"java-level-3",
 				"java-without-graphics",
 				"java-with-graphics"
 			]);
+			const isAllowedComposedJavaDuplicate = (labels: string[]) => {
+				const courseIds = labels.map(label => label.split(" > ")[0]);
+				const uniqueCourseIds = new Set(courseIds);
+				const includesSplitTrack =
+					uniqueCourseIds.has("java-without-graphics") ||
+					uniqueCourseIds.has("java-with-graphics");
+
+				return (
+					includesSplitTrack &&
+					uniqueCourseIds.size === labels.length &&
+					courseIds.every(courseId =>
+						javaSplitCourseIds.has(courseId)
+					)
+				);
+			};
 			const contentGroups = new Map<string, string[]>();
 			const duplicateGroups: string[] = [];
 			const courses = await loadedCatalogCourses();
 
 			for (const { entry, course } of courses) {
-				if (!course || excludedCourseIds.has(entry.id)) continue;
+				if (!course) continue;
 
 				for (const module of course.modules) {
 					for (const item of [
@@ -2020,6 +2038,8 @@ describe("course text quality normalization", () => {
 
 			for (const labels of contentGroups.values()) {
 				if (labels.length < 2) continue;
+				if (isAllowedComposedJavaDuplicate(labels)) continue;
+
 				duplicateGroups.push(labels.join(" || "));
 			}
 
