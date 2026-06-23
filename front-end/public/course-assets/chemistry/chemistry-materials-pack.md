@@ -1,6 +1,8 @@
 # Intro to Chemistry Remote Materials Pack
 
-This packet supplies the card sets, data tables, and scenario lists referenced by the Intro to Chemistry course. All work can be completed with a browser, notes, paper, and shared-screen discussion. No household chemicals, heat, glassware, tasting, mixing, or outdoor collection is required.
+This packet supplies the card sets, data tables, and scenario lists referenced by the Intro to Chemistry course.
+
+All work can be completed with a browser, notes, paper, and shared-screen discussion. No household chemicals, heat, glassware, tasting, mixing, or outdoor collection is required.
 
 ## Measurement Tables and Unit Conversions
 
@@ -222,7 +224,9 @@ More than one periodic-table source is useful when a task needs property detail,
 | [IUPAC periodic table](https://iupac.org/what-we-do/periodic-table-of-elements/)       | Standard names, symbols, atomic numbers, and official periodic-table reference            | It is less activity-focused than classroom tables                                         |
 | [Ptable interactive periodic table](https://ptable.com/)                               | Fast interactive scanning, filtering, and quick comparison of element data                | Treat it as a tool for exploration; verify high-stakes details with an official reference |
 
-**Reference workflow:** Start with symbol, name, and atomic number. Then compare what each source adds: trend view, property note, standard naming, visual organization, or historical context. If a project uses a source, name the source and the exact fact it supported.
+**Reference workflow:** Start with symbol, name, and atomic number.
+
+Then compare what each source adds: trend view, property note, standard naming, visual organization, or historical context. If a project uses a source, name the source and the exact fact it supported.
 
 ## Bonding and Formula Cards
 
