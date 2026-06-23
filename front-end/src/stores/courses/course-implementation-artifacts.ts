@@ -1315,7 +1315,7 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 					`**Changed-condition prediction:** Predict what would happen if ${guidance.changedCondition} changed, then state what evidence would confirm or challenge that prediction.`,
 					"**Completion checks:**\n- The evidence comes from the shared source.\n- The reasoning explains why the evidence supports the claim.\n- The work includes a prediction for what would change if one variable changed."
 				].join("\n\n"),
-				datasetLink: links?.catalogLink
+				mediaLink: links?.catalogLink
 			},
 			{
 				title: "Resource Project: Model Critique",

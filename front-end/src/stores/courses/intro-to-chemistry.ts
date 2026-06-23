@@ -893,10 +893,10 @@ export const introToChemistryCourse: RawCourse = {
 					content: [
 						"**Project goal:** Preserve the original Elephant Toothpaste project as a remote-safe reaction-evidence case. The chemistry target is decomposition of hydrogen peroxide, gas production, catalysis, and foam as trapped oxygen gas.",
 						"**Requirements:** Use the provided video sources, diagrams, or a safe supervised observation. Identify the starting substances, the trigger or catalyst, the gas produced, why soap creates foam, and why changing amount can scale the visible result without changing the underlying chemistry.",
+						`**Source set:** Small-scale demo: ${REFERENCES.elephantToothpasteDemo}. Particle explanation clip: ${REFERENCES.elephantToothpasteAtomClip}. Scale-up demo: ${REFERENCES.elephantToothpasteScaleUp}. Use these as evidence sources, not as required physical experiments.`,
 						"**Activity prompt:** Compare the small-scale and large-scale elephant-toothpaste videos. Explain what is similar, what changes when the amount of material changes, and why the dramatic foam is interpreted through gas production and catalyst evidence rather than appearance alone.",
 						"**Completion checks:** The explanation uses catalyst, decomposition, oxygen, hydrogen peroxide, foam, rate, and evidence accurately, and it states why the catalyst changes reaction speed without being treated as the main product."
 					].join("\n\n"),
-					datasetLink: REFERENCES.elephantToothpasteAtomClip,
 					mediaLink: REFERENCES.elephantToothpasteDemo,
 					solutionLink: answerKey("original-reaction-projects-key")
 				},
@@ -1394,7 +1394,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Use:** A simulation counts as evidence only when a specific setting, observation, or screenshot is connected to a claim. A good simulation note records the variable changed, the visible result, and the particle-level interpretation.",
 						"**Evidence target:** Simulation-based work includes the variable changed, what was observed, what the observation supports, and one limitation of the model."
 					].join("\n\n"),
-					datasetLink:
+					mediaLink:
 						"https://phet.colorado.edu/en/simulations/filter?subjects=chemistry"
 				},
 				{
