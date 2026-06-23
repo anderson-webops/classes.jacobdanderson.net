@@ -55,4 +55,32 @@ describe("LazyMarkdownContent.vue", () => {
 			true
 		);
 	});
+
+	it("formats compact inline course steps as readable markdown lists", async () => {
+		const wrapper = mount(LazyMarkdownContent, {
+			props: {
+				content: [
+					"**Goal:** Build a small game. **Build steps:** 1. Create the player sprite. 2. Add keyboard movement. 3. Test the restart path. **Checkpoint:** The game restarts cleanly.",
+					"**Checks:** - The normal path works. - One boundary case is tested."
+				].join("\n")
+			}
+		});
+
+		await flushPromises();
+		await vi.waitFor(() => {
+			expect(wrapper.find("ol").exists()).toBe(true);
+			expect(wrapper.find("ul").exists()).toBe(true);
+		});
+
+		expect(wrapper.findAll("ol li").map(item => item.text())).toEqual([
+			"Create the player sprite.",
+			"Add keyboard movement.",
+			"Test the restart path."
+		]);
+		expect(wrapper.findAll("ul li").map(item => item.text())).toEqual([
+			"The normal path works.",
+			"One boundary case is tested."
+		]);
+		expect(wrapper.text()).toContain("Checkpoint: The game restarts cleanly.");
+	});
 });

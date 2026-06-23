@@ -39,6 +39,45 @@ interface MarkdownRendererInstance {
 
 let markdownRendererPromise: Promise<MarkdownRendererInstance> | null = null;
 
+function normalizeInlineCourseMarkdown(content: string) {
+	return content
+		.split(/\r?\n/)
+		.map(line => {
+			let normalized = line
+				.replace(
+					/(\S)\s+(\*\*[^*\n]{1,80}:\*\*)/g,
+					"$1\n\n$2"
+				)
+				.replace(
+					/(\*\*[^*\n]{1,80}:\*\*)\s+(?=(?:\d+\.|[-*])\s)/g,
+					"$1\n"
+				);
+			const orderedMarkerCount = (
+				normalized.match(/(?:^|\s)\d+\.\s+\S/g) ?? []
+			).length;
+			const bulletMarkerCount = (
+				normalized.match(/(?:^|\s)[-*]\s+\S/g) ?? []
+			).length;
+
+			if (orderedMarkerCount >= 2) {
+				normalized = normalized.replace(
+					/(?!^)\s+(\d+\.)\s+(?=\S)/g,
+					"\n$1 "
+				);
+			}
+
+			if (bulletMarkerCount >= 2) {
+				normalized = normalized.replace(
+					/(?!^)\s+([-*])\s+(?=\S)/g,
+					"\n$1 "
+				);
+			}
+
+			return normalized;
+		})
+		.join("\n");
+}
+
 function getMarkdownRenderer() {
 	if (!markdownRendererPromise) {
 		markdownRendererPromise = import("markdown-it").then(
@@ -102,7 +141,9 @@ watch(
 			return;
 		}
 
-		renderedHtml.value = markdown.render(content);
+		renderedHtml.value = markdown.render(
+			normalizeInlineCourseMarkdown(content)
+		);
 	},
 	{ immediate: true }
 );
