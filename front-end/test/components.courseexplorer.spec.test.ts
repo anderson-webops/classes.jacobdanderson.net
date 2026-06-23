@@ -1350,4 +1350,80 @@ describe("CourseExplorer.vue", () => {
 			"chemistry-rubrics-answer-key.md%23heating-curve-key&amp;label=Course+asset"
 		);
 	});
+
+	it("does not show a staff solution button for equivalent project and solution URLs", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+
+		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					curriculum: [
+						{
+							content:
+								"Use the shared graphics source as a reference build.",
+							id: "shared-graphics-source",
+							projectLink:
+								"https://github.com/instruction-material/Java-Level-1/tree/main/JS2-Rainbow/",
+							solutionLink:
+								"https://github.com/instruction-material/Java-Level-1/tree/main/JS2-Rainbow",
+							title: "Shared Graphics Source"
+						}
+					],
+					id: "module-1",
+					supplementalProjects: [],
+					title: "Module 1"
+				}
+			]
+		});
+
+		appStore.setCurrentTutor({
+			_id: "tutor-1",
+			name: "Tutor",
+			email: "tutor@example.com",
+			age: 30,
+			state: "GA",
+			usersOfTutorLength: 1,
+			coursePermissions: [assignedCourse.id],
+			editTutors: false,
+			saveEdit: "Save"
+		});
+
+		(api.get as any).mockResolvedValueOnce({
+			data: [
+				{
+					_id: "learner-1",
+					name: "Learner",
+					email: "learner@example.com",
+					age: 12,
+					state: "GA",
+					courseAccess: [assignedCourse.id],
+					courseProgress: [],
+					editUsers: false,
+					saveEdit: "Save"
+				}
+			]
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("Project repo");
+		});
+
+		expect(wrapper.text()).not.toContain("Solution repo");
+		expect(wrapper.findAll(".resource-link.is-project")).toHaveLength(1);
+		expect(wrapper.findAll(".resource-link.is-solution")).toHaveLength(0);
+	});
 });
