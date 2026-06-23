@@ -12,7 +12,8 @@ function conceptBrief({
 	return [
 		`**Focus:** ${focus}`,
 		`**Practice:**\n${practice.map((item, index) => `${index + 1}. ${item}`).join("\n")}`,
-		`**Evidence:** ${evidence}`
+		`**Evidence:** ${evidence}`,
+		`**Concept check:** The explanation is complete when the main idea is connected to a runnable example, one edge or awkward case, and the exact Python syntax or data structure that makes the result work.`
 	].join("\n\n");
 }
 
@@ -31,9 +32,13 @@ function projectBrief({
 }) {
 	return [
 		`**Goal:** ${goal}`,
-		outcome ? `**Outcome:** ${outcome}` : "",
+		`**Outcome:** ${
+			outcome ??
+			`The finished project proves the goal with a normal run, a boundary or awkward input run, and a short explanation of the Python feature or data structure that controls the result.`
+		}`,
 		`**Build path:**\n${build.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
 		`**Checkpoints:**\n${checkpoints.map(checkpoint => `- ${checkpoint}`).join("\n")}`,
+		`**Verification:** Save or describe at least two sample runs: one that follows the expected path and one that tests a limit, invalid input, duplicate value, empty collection, or other edge case relevant to the project.`,
 		extension ? `**Extension:** ${extension}` : ""
 	]
 		.filter(Boolean)

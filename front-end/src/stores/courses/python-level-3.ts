@@ -35,6 +35,7 @@ function projectBrief({
 		`**Goal:** ${goal}`,
 		`**Build path:**\n${build.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
 		`**Checkpoints:**\n${checkpoints.map(checkpoint => `- ${checkpoint}`).join("\n")}`,
+		`**Verification:** The finished project proves "${goal}" with a correctness trace, a normal case, a boundary or adversarial case, and a short note explaining the algorithmic or data-structure choice.`,
 		extension ? `**Extension:** ${extension}` : ""
 	]
 		.filter(Boolean)
@@ -727,6 +728,7 @@ export const pythonLevel3Course: RawCourse = {
 					title: "Selection Sort Introduction",
 					content: [
 						"Selection sort repeatedly finds the smallest item in the unsorted portion of a list and places it into the next position of the sorted portion. It is a straightforward first sorting algorithm and leads naturally into runtime analysis.",
+						"Read the algorithm as a sequence of passes: before each pass, the sorted prefix is already correct; during the pass, the minimum remaining value is found; after the pass, the sorted prefix grows by one item. The useful trace records the pass number, selected minimum, swap or append action, and list state.",
 						"The animation traces how the smallest remaining value is selected and moved into the next sorted position.",
 						SORT_ANIMATION_SOURCES.selection
 					].join("\n\n"),
@@ -762,6 +764,7 @@ export const pythonLevel3Course: RawCourse = {
 					title: "Insertion Sort Introduction",
 					content: [
 						"Insertion sort builds a sorted list one item at a time. Each new value is inserted into its proper location among the values already processed, often by swapping backward until the new value is in the correct place.",
+						"Read the algorithm as a growing sorted prefix. The current value moves left only as far as needed, so nearly sorted input produces fewer moves than reversed input. The useful trace records the current index, value being inserted, comparisons made, final position, and list state after the insertion.",
 						"The animation follows each new value moving left through the already sorted prefix until the prefix is ordered again.",
 						SORT_ANIMATION_SOURCES.insertion
 					].join("\n\n"),
@@ -906,6 +909,7 @@ export const pythonLevel3Course: RawCourse = {
 					title: "Bubble Sort Introduction",
 					content: [
 						"Bubble sort repeatedly walks through a list, compares adjacent items, and swaps them when they are out of order. One full pass moves a large value toward the end of the list, and repeated passes eventually sort the entire list.",
+						"Read the algorithm as repeated local repairs. Each adjacent comparison is small, but the repeated passes create a sorted suffix at the end of the list. The useful trace records comparison pairs, swaps, whether a pass made any changes, and why an early-exit flag can stop a sorted run.",
 						"The animation tracks adjacent comparisons and swaps as larger values move toward the end of the list.",
 						SORT_ANIMATION_SOURCES.bubble
 					].join("\n\n"),
@@ -969,6 +973,7 @@ export const pythonLevel3Course: RawCourse = {
 					title: "Merge Sort Introduction",
 					content: [
 						"Merge sort uses divide and conquer. Split a list into two halves, recursively sort each half, and then merge the two sorted halves back together. The key insight is that merging sorted lists is much faster than sorting from scratch.",
+						"Read the algorithm in two phases. The divide phase explains the recursion tree, and the merge phase explains where most of the work happens. The useful trace records the split boundaries, base cases, merged sublists, and the comparison that chooses the next output value.",
 						"The animation separates the two phases: repeated splitting into small pieces, then merging those pieces back into sorted order.",
 						SORT_ANIMATION_SOURCES.merge
 					].join("\n\n"),
@@ -1053,6 +1058,7 @@ export const pythonLevel3Course: RawCourse = {
 					title: "Quicksort Introduction",
 					content: [
 						"Quicksort chooses a pivot value, partitions the list into values less than, equal to, and greater than the pivot, then recursively sorts the outer partitions. It is another divide-and-conquer algorithm, but unlike merge sort it relies on partitioning rather than merging.",
+						"Read the algorithm through pivot quality. Balanced partitions create shallow recursion, while repeatedly poor pivots create deep recursion and quadratic behavior. The useful trace records the pivot, three partitions, recursive subproblems, and whether the chosen pivot created a balanced or lopsided split.",
 						"The animation tracks the pivot-driven partition steps and the smaller recursive sorting regions that follow.",
 						SORT_ANIMATION_SOURCES.quick
 					].join("\n\n"),
