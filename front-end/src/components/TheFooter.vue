@@ -25,7 +25,7 @@ import { warmSchedulerConnections } from "@/modules/scheduler";
 					<li>
 						<a
 							href="https://www.linkedin.com/in/jacoba1100254352/"
-							rel="noreferrer"
+							rel="noopener noreferrer"
 							target="_blank"
 						>
 							LinkedIn<span class="sr-only">
@@ -36,7 +36,7 @@ import { warmSchedulerConnections } from "@/modules/scheduler";
 					<li>
 						<a
 							href="https://github.com/jacoba1100254352"
-							rel="noreferrer"
+							rel="noopener noreferrer"
 							target="_blank"
 						>
 							GitHub<span class="sr-only">

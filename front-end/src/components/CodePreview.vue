@@ -204,7 +204,7 @@ async function handleFileChange() {
 					v-if="selectedResource"
 					class="code-preview-open-link"
 					:href="selectedResource.url"
-					rel="noreferrer"
+					rel="noopener noreferrer"
 					target="_blank"
 				>
 					Open on GitHub

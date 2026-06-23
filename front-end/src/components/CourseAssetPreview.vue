@@ -150,7 +150,7 @@ async function handleResourceChange() {
 					v-if="selectedResource"
 					class="course-asset-preview-open-link"
 					:href="selectedResourceViewerUrl"
-					rel="noreferrer"
+					rel="noopener noreferrer"
 					target="_blank"
 				>
 					Open full resource

@@ -25,7 +25,7 @@ const zoomMeetingUrl = "https://us06web.zoom.us/j/2543520025";
 				<a
 					class="site-button site-button--primary"
 					:href="zoomMeetingUrl"
-					rel="noopener"
+					rel="noopener noreferrer"
 					target="_blank"
 				>
 					Join on Zoom<span class="sr-only">
@@ -34,7 +34,11 @@ const zoomMeetingUrl = "https://us06web.zoom.us/j/2543520025";
 				</a>
 				<p class="fallback">
 					Direct link:
-					<a :href="zoomMeetingUrl" rel="noopener" target="_blank">
+					<a
+						:href="zoomMeetingUrl"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
 						{{ zoomMeetingUrl
 						}}<span class="sr-only"> (opens in a new tab)</span>
 					</a>
