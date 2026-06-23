@@ -263,6 +263,10 @@ function compactGeneratedDisplayTitle(
 			itemTitle.slice(leadingLabel.length + 1).trim()
 		);
 
+		if (/^Check-In\s+\d+$/i.test(topic)) {
+			return `${topic} ${label}`;
+		}
+
 		return `${label}: ${topic}`;
 	}
 
@@ -280,6 +284,10 @@ function compactGeneratedDisplayTitle(
 		moduleTitle,
 		moduleTitle
 	);
+
+	if (/^Check-In\s+\d+$/i.test(compactedTopic)) {
+		return `${compactedTopic} ${label}`;
+	}
 
 	return `${label}: ${compactedTopic}`;
 }
@@ -971,11 +979,29 @@ function hasAttachedResource(item: RawCourseModuleItem) {
 	);
 }
 
-function groupConceptLessons(items: RawCourseModuleItem[]) {
+function conceptGroupTitle(
+	course: RawCourse,
+	module: RawCourseModule,
+	label: "Core Concepts" | "Application Check"
+) {
+	const focus = compactContextualTitleFocus(
+		course.name,
+		module.title,
+		module.title
+	);
+
+	return `${focus} ${label}`;
+}
+
+function groupConceptLessons(
+	course: RawCourse,
+	module: RawCourseModule,
+	items: RawCourseModuleItem[]
+) {
 	if (items.length <= 4) {
 		return [
 			{
-				title: "Core Concepts",
+				title: conceptGroupTitle(course, module, "Core Concepts"),
 				content: lessonArcContent(items)
 			}
 		];
@@ -984,11 +1010,11 @@ function groupConceptLessons(items: RawCourseModuleItem[]) {
 	const midpoint = Math.ceil(items.length / 2);
 	return [
 		{
-			title: "Core Concepts",
+			title: conceptGroupTitle(course, module, "Core Concepts"),
 			content: lessonArcContent(items.slice(0, midpoint))
 		},
 		{
-			title: "Application Check",
+			title: conceptGroupTitle(course, module, "Application Check"),
 			content: lessonArcContent(items.slice(midpoint))
 		}
 	];
@@ -1020,7 +1046,11 @@ function normalizeModuleLessonShape(course: RawCourse) {
 			continue;
 		}
 
-		const groupedConcepts = groupConceptLessons(conceptItems);
+		const groupedConcepts = groupConceptLessons(
+			course,
+			module,
+			conceptItems
+		);
 		const nextCurriculum: RawCourseModuleItem[] = [];
 		let insertedConceptGroup = false;
 

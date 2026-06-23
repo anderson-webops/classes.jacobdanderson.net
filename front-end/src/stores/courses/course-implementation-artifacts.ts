@@ -3006,8 +3006,9 @@ function backfillReferenceSolutionLinks(courseId: string, course: RawCourse) {
 
 function fallbackSupplementalTopic(moduleTitle: string) {
 	const cleaned = moduleTitle
+		.replace(/^Java Level \d+:\s*/i, "")
 		.replace(
-			/^(?:AA|AB|ALA|ALB|AM|APCS|CHM|CPP[A-Z]?|GrS|ML|PS|UGD)\d+\s*/i,
+			/^(?:AA|AB|AJ|ALA|ALB|AM|APCS|CHM|CPP[A-Z]?|GrS|J\dX?|JM|ML|PS|UGD)\d+(?:\.\d+)?\s*/i,
 			""
 		)
 		.replace(/^Review:\s*/i, "")
@@ -3282,37 +3283,39 @@ function fallbackPracticeFocus(topic: string, courseId?: string) {
 function supplementalTransferTitle(topic: string) {
 	const lowerTopic = topic.toLowerCase();
 
-	if (/^check-?in|review/.test(lowerTopic)) return "Changed-Case Review";
+	if (/^check-?in|review/.test(lowerTopic)) {
+		return `${topic} Changed-Case Review`;
+	}
 	if (
 		/search|sort|algorithm|runtime|recursion|quicksort|merge|bubble|selection|insertion/.test(
 			lowerTopic
 		)
 	) {
-		return "Trace and Boundary Case";
+		return `${topic} Trace and Boundary Case`;
 	}
 	if (
 		/file|input|output|list|array|dictionar(?:y|ies)|data|csv|json|table/.test(
 			lowerTopic
 		)
 	) {
-		return "Input Variation Practice";
+		return `${topic} Input Variation Practice`;
 	}
 	if (
 		/class|object|method|inherit|interface|record|state|constructor/.test(
 			lowerTopic
 		)
 	) {
-		return "State and Contract Practice";
+		return `${topic} State and Contract Practice`;
 	}
 	if (
 		/game|graphics|ui|event|simulation|animation|sprite|unity|pygame|swift|app/.test(
 			lowerTopic
 		)
 	) {
-		return "Interaction Variation";
+		return `${topic} Interaction Variation`;
 	}
 
-	return "Transfer Practice";
+	return `${topic} Transfer Practice`;
 }
 
 function supplementalTransferContent(
