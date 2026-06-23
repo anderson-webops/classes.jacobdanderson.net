@@ -4109,7 +4109,7 @@ function projectExpectations(context: CourseTextContext) {
 			subject => [
 				`- Map ${subject} sprites to events, variables, costumes, sounds, broadcasts, or clone behavior before adding polish.`,
 				`- Test ${subject} startup, one normal play path, one reset path, and one scoring or boundary case.`,
-				`- For ${subject}, identify the block sequence that controls the visible result.`
+				`- For ${subject}, identify the block sequence that controls the stage result.`
 			],
 			subject => [
 				`- Identify the ${subject} player action, sprite response, state variable, and feedback shown on the stage.`,
@@ -4996,7 +4996,7 @@ function completionChecks(context: CourseTextContext) {
 				`- The ${subject} page remains readable and usable on mobile and desktop widths.`
 			],
 			subject => [
-				`- ${subject} can be reproduced after refresh with the same visible result or clear error feedback.`,
+				`- ${subject} can be reproduced after refresh with the same observable result or clear error feedback.`,
 				`- ${subject} handles the ordinary state plus one empty, invalid, loading, or failed state.`,
 				`- The interface remains usable with keyboard focus and at both narrow and wide viewport sizes.`
 			],
@@ -5021,7 +5021,7 @@ function completionChecks(context: CourseTextContext) {
 				`- Browser evidence includes layout, console, network, accessibility, or responsive behavior where it matters.`
 			],
 			subject => [
-				`- ${subject} reaches the expected visible result from a clean page load.`,
+				`- ${subject} reaches the expected observable result from a clean page load.`,
 				`- A changed input, empty state, validation path, or error path is checked before the task is complete.`,
 				`- The final review names the DOM, canvas, state, or API boundary that controlled the result.`
 			],
@@ -5060,7 +5060,7 @@ function completionChecks(context: CourseTextContext) {
 				`- Record the ${subject} helper, branch, loop, collection, or file rule that controlled correctness.`
 			],
 			subject => [
-				`- ${subject} can be rerun from the documented input and produces the same visible result.`,
+				`- ${subject} can be rerun from the documented input and produces the same observable result.`,
 				`- ${subject} covers an ordinary path, a boundary path, and one path involving missing, duplicate, or oddly formatted data.`,
 				`- The ${subject} explanation connects the output to a specific function, condition, loop, or data structure.`
 			],
@@ -5138,7 +5138,7 @@ function completionChecks(context: CourseTextContext) {
 				`- The ${subject} explanation separates language syntax from the design or data-structure choice.`
 			],
 			subject => [
-				`- ${subject} can be rebuilt and rerun with the same visible result from the documented setup.`,
+				`- ${subject} can be rebuilt and rerun with the same observable result from the documented setup.`,
 				`- ${subject} includes at least one standard scenario, one edge case, and one case tied to ownership, mutation, or algorithm behavior.`,
 				`- The final ${subject} note states why the selected abstraction or low-level mechanism fits the problem.`
 			]
@@ -5394,7 +5394,7 @@ function extensionPrompt(context: CourseTextContext) {
 			subject =>
 				`Add one loading, empty, invalid, or error state to ${subject} and verify it in the browser.`,
 			subject =>
-				`Add one responsive layout or keyboard path to ${subject} and record the visible result.`,
+				`Add one responsive layout or keyboard path to ${subject} and record the observable result.`,
 			subject =>
 				`Add one user-flow variation to ${subject} that changes input, state, API behavior, or persistence.`,
 			subject =>
@@ -5502,13 +5502,13 @@ function projectSupport(context: CourseTextContext) {
 	const capitalizedReference = capitalizeSentence(reference);
 	const goal = variantPrompt(context, [
 		() =>
-			`**Goal:** ${capitalizedReference} has a visible result, one standard path, and one boundary check.`,
+			`**Goal:** ${capitalizedReference} has an observable result, one standard path, and one boundary check.`,
 		() =>
 			`**Goal:** Make ${reference} easy to verify by stating expected behavior, observing actual behavior, and explaining one evidence point.`,
 		() =>
 			`**Goal:** Build a compact working version of ${reference}, then add one improvement or edge case.`,
 		() =>
-			`**Goal:** Show how ${reference} works through a visible result, trace, model, or interaction, then record what confirms it.`,
+			`**Goal:** Show how ${reference} works through an observable result, trace, model, or interaction, then record what confirms it.`,
 		() =>
 			`**Goal:** Verify ${reference} with one standard case and one boundary case that exposes the key concept.`,
 		() =>
@@ -6705,7 +6705,7 @@ function studioBuildSequence(context: CourseTextContext) {
 			() => [
 				`- Name the ${studioLabel} starting stage state, player input, sprite response, scoring or timing rule, and reset behavior.`,
 				`- Run ${studioLabel} from the green flag through a normal play path and one repeated-input or missed-input case.`,
-				`- Trace the ${studioLabel} visible result back to the event blocks, broadcasts, variables, or costume changes that caused it.`
+				`- Trace the ${studioLabel} stage result back to the event blocks, broadcasts, variables, or costume changes that caused it.`
 			],
 			() => [
 				`- Identify each ${studioLabel} sprite's job, the event that starts it, and the variable or broadcast that connects it to the game.`,
@@ -6774,7 +6774,7 @@ function studioBuildSequence(context: CourseTextContext) {
 	if (isSystemsContext(context)) {
 		return variantLines(context, [
 			() => [
-				`- Record the ${studioLabel} starting environment, command path, resource boundary, and expected visible result.`,
+				`- Record the ${studioLabel} starting environment, command path, resource boundary, and expected observable result.`,
 				`- Work through ${studioLabel} in short build, run, debug, or shell cycles so failures point to a specific boundary or assumption.`,
 				`- Verify ${studioLabel} with a standard path, a failure or edge path, and one log, trace, sanitizer, memory, process, register, or timing detail.`
 			],
@@ -6886,7 +6886,7 @@ function studioBuildSequence(context: CourseTextContext) {
 		() => [
 			`- Name the ${studioLabel} artifact, input surface, output surface, state change, and success condition before building.`,
 			`- Build ${studioLabel} in small observable steps, checking the result after each meaningful change.`,
-			`- Verify ${studioLabel} with a standard path, a boundary or failure path, and one case tied directly to the module concept.`
+			`- Verify ${studioLabel} with a standard path, a boundary or failure path, and one case tied directly to the main idea.`
 		],
 		() => [
 			`- Define the ${studioLabel} starting state, action, expected result, evidence source, and failure or edge condition.`,
@@ -7024,7 +7024,7 @@ function studioCompletionChecks(context: CourseTextContext) {
 
 	return variantLines(context, [
 		() => [
-			`- ${studioLabel} shows the target concept through output, tests, traces, logs, a diagram, or another inspectable result.`,
+			`- ${studioLabel} shows the core idea through output, tests, traces, logs, a diagram, or another inspectable result.`,
 			`- ${studioLabel} includes a named boundary, failure path, or changed-condition check beyond the provided sample.`,
 			`- Record one ${studioLabel} implementation, debugging, or reasoning choice that changed the final result.`
 		],
@@ -7154,7 +7154,7 @@ function studioExtensionPrompt(context: CourseTextContext) {
 			() =>
 				"Add one loading, empty, invalid, or error state and verify it in the browser.",
 			() =>
-				"Add one responsive layout or accessibility check that changes the visible result.",
+				"Add one responsive layout or accessibility check that changes the observable result.",
 			() =>
 				"Add one user-flow variation that changes input, state, API behavior, or persistence.",
 			() =>
@@ -7413,7 +7413,7 @@ function studioSupport(context: CourseTextContext) {
 		() =>
 			`For ${compactStudioReference}, define the artifact, prerequisite concepts, success criteria, and evidence before adding polish.`,
 		() =>
-			`Frame ${compactStudioReference} around one visible result, the constraints that shape it, and the evidence that confirms it works.`,
+			`Frame ${compactStudioReference} around one observable result, the constraints that shape it, and the evidence that confirms it works.`,
 		() =>
 			`Separate ${compactStudioReference} setup, core behavior, edge cases, and review notes so the finished artifact can be inspected later.`,
 		() =>

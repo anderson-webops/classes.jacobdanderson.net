@@ -1106,10 +1106,10 @@ function projectGoal(
 	}
 
 	return [
-		`**Project goal:** Create the ${adjectivalFamily} ${artifact} for **${moduleTitle}** with a visible result, a checked boundary case, and a short reasoning note.`,
+		`**Project goal:** Create the ${adjectivalFamily} ${artifact} for **${moduleTitle}** with an observable result, a checked boundary case, and a short reasoning note.`,
 		`**Project goal:** Complete **${moduleTitle}** as a ${artifact} for ${courseFamily} with a clear success condition and supporting evidence.`,
 		`**Project goal:** Build **${moduleTitle}** in small verifiable steps, then compare the expected result with the observed result.`,
-		`**Project goal:** Produce **${moduleTitle}** as a focused artifact that demonstrates the module concept and one important edge case.`
+		`**Project goal:** Produce **${moduleTitle}** as a focused artifact that demonstrates the core idea and one important edge case.`
 	][index];
 }
 
@@ -1210,7 +1210,7 @@ function familyFocus(
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
 	}
 
-	return "Connect the implementation to the module concept through observable behavior, a clear test path, and a short explanation of the reasoning behind the final design";
+	return "Connect the implementation to the main idea through observable behavior, a clear test path, and a short explanation of the reasoning behind the final design";
 }
 
 function javaFamilyFocus(
@@ -1362,7 +1362,7 @@ function requiredWorkSteps(
 			[
 				`Sketch the classes, methods, records, interfaces, or collections that own the main responsibilities in ${subject}.`,
 				`Implement one ${subject} constructor, method, branch, or test at a time, compiling after each meaningful change.`,
-				`Check ${subject} with a standard scenario, an edge case, and one object-state or method-dispatch case tied to the module concept.`
+				`Check ${subject} with a standard scenario, an edge case, and one object-state or method-dispatch case tied to the core Java idea.`
 			],
 			[
 				`For ${subject}, identify which type owns the state, which method exposes behavior, and which test or console trace proves it.`,
@@ -1416,7 +1416,7 @@ function requiredWorkSteps(
 			],
 			[
 				`Separate ${subject} into model behavior, runner or console behavior, and any collection or inheritance behavior.`,
-				`Implement the smallest observable ${subject} model behavior first, then add the extra path that carries the module concept.`,
+				`Implement the smallest observable ${subject} model behavior first, then add the extra path that carries the main idea.`,
 				`Confirm ${subject} with a concrete output, assertion, or trace for a typical case and a deliberately challenging case.`
 			],
 			[
@@ -1480,7 +1480,7 @@ function requiredWorkSteps(
 				`Check the program with representative data, smallest useful data, and one malformed or surprising case.`
 			],
 			[
-				`Before coding ${moduleTitle}, name the main function or loop, the data it receives, the data it changes, and the visible result it produces.`,
+				`Before coding ${moduleTitle}, name the main function or loop, the data it receives, the data it changes, and the observable result it produces.`,
 				`Build ${moduleTitle} from a tiny traceable case toward the full prompt, rerunning after each control-flow or data-structure change.`,
 				`Finish by testing one standard case, one edge case, and one case chosen because it might break the first design.`
 			]
@@ -1555,7 +1555,7 @@ function requiredWorkSteps(
 				`Check standard behavior for ${moduleTitle}, plus a boundary or invalid case and one diagnostic trace tied to the systems concept.`
 			],
 			[
-				`Start ${moduleTitle} by recording the starting state, command path, resource boundary, and expected visible result.`,
+				`Start ${moduleTitle} by recording the starting state, command path, resource boundary, and expected observable result.`,
 				`Implement ${moduleTitle} in short compile/run/debug cycles so failures point to a specific boundary or assumption.`,
 				`Check ${moduleTitle} with one standard path, one failure or edge path, and one memory, lifetime, performance, register, or process-state detail.`
 			],
@@ -1590,7 +1590,7 @@ function requiredWorkSteps(
 				`Compare a representative run with a failure-mode run and record the low-level evidence that explains the difference.`
 			],
 			[
-				`Name the ${moduleTitle} command path, toolchain flags, memory or process boundary, and visible result before coding.`,
+				`Name the ${moduleTitle} command path, toolchain flags, memory or process boundary, and observable result before coding.`,
 				`Change one ${moduleTitle} API, allocation, loop, branch, build setting, or diagnostic hook at a time.`,
 				`Finish ${moduleTitle} with a repeatable run plus one trace, warning, sanitizer result, debugger observation, or timing clue.`
 			],
@@ -1631,7 +1631,7 @@ function requiredWorkSteps(
 			],
 			[
 				`Decide the ${moduleTitle} state, data-flow, user-input, or platform behavior target before adding features.`,
-				`Run the app after each important view, model, binding, or persistence change and inspect the visible result.`,
+				`Run the app after each important view, model, binding, or persistence change and inspect the observable result.`,
 				`Finish with one ordinary interaction and one condition that checks whether the app path remains understandable.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 6)];
@@ -1640,7 +1640,7 @@ function requiredWorkSteps(
 	return [
 		`Name the ${moduleTitle} artifact, input surface, output surface, state change, and success condition before building.`,
 		`Build the ${moduleTitle} behavior in small observable steps, checking the result after each meaningful change.`,
-		`Verify ${moduleTitle} with a standard path, a boundary or failure path, and one case tied directly to the module concept.`
+		`Verify ${moduleTitle} with a standard path, a boundary or failure path, and one case tied directly to the main idea.`
 	];
 }
 
@@ -1821,7 +1821,7 @@ function completionCheckSteps(
 				`The final ${moduleTitle} note names the event, state, DOM/canvas/API, or user-flow decision that mattered.`
 			],
 			[
-				`${moduleTitle} can be reproduced after a fresh browser reload with the same visible result or error feedback.`,
+				`${moduleTitle} can be reproduced after a fresh browser reload with the same observable result or error feedback.`,
 				`Keyboard or screen-size behavior plus one invalid, empty, loading, or failed state has been checked.`,
 				`The final ${moduleTitle} note connects the user action to state, data, and rendered output.`
 			],
@@ -2148,7 +2148,7 @@ function completionCheckSteps(
 	}
 
 	return [
-		`The finished ${moduleTitle} artifact has a visible result tied to the module concept.`,
+		`The finished ${moduleTitle} artifact has an observable result tied to the main idea.`,
 		`A standard ${moduleTitle} case, a boundary or failure-mode check, and one transfer case have been checked.`,
 		`The final ${moduleTitle} note names one design, debugging, or reasoning decision that affected the outcome.`
 	];
@@ -2200,9 +2200,9 @@ function projectPathNote({
 			`**Path:** Transfer Practice. ${subject} changes one condition while preserving the main rule, making the difference visible in the result.`,
 			`**Path:** Transfer Practice. ${subject} asks whether the same reasoning still works after the input shape, model, or constraint shifts.`,
 			`**Path:** Transfer Practice. ${subject} compares the familiar case with a changed case before treating the idea as mastered.`,
-			`**Path:** Transfer Practice. ${subject} keeps the target concept stable while the surrounding details change enough to test understanding.`,
+			`**Path:** Transfer Practice. ${subject} keeps the core idea stable while the surrounding details change enough to test understanding.`,
 			`**Path:** Transfer Practice. ${subject} turns the example into a new scenario, then identifies what carried over and what had to change.`,
-			`**Path:** Transfer Practice. ${subject} checks whether the target concept survives a controlled variation rather than only a copied pattern.`
+			`**Path:** Transfer Practice. ${subject} checks whether the core idea survives a controlled variation rather than only a copied pattern.`
 		][index];
 	}
 
@@ -2225,7 +2225,7 @@ function projectPathNote({
 			`**Path:** Review check. ${subject} uses a small result to confirm whether the underlying vocabulary, trace, or procedure is stable.`,
 			`**Path:** Review check. ${subject} favors a compact evidence check over a large project so the next gap is easy to see.`,
 			`**Path:** Review check. ${subject} isolates the concept most likely to block later work and checks it directly.`,
-			`**Path:** Review check. ${subject} turns the target concept into a quick diagnostic before harder transfer or extension work.`,
+			`**Path:** Review check. ${subject} turns the core idea into a quick diagnostic before harder transfer or extension work.`,
 			`**Path:** Review check. ${subject} records whether the core skill is ready for a changed case, not only whether the first example was copied.`,
 			`**Path:** Review check. ${subject} uses a small artifact to separate recall, tracing, setup, and explanation gaps.`,
 			`**Path:** Review check. ${subject} confirms the next useful step by comparing expected behavior with observed evidence.`
@@ -2253,7 +2253,7 @@ function projectPathNote({
 			`**Path:** First version. ${subject} keeps the first version narrow enough to test before optional polish is added.`,
 			`**Path:** First version. ${subject} has a clear success condition and one edge case that tests more than syntax.`,
 			`**Path:** First version. ${subject} is checked against both the intended path and one small failure-mode path.`,
-			`**Path:** First version. ${subject} turns the module concept into a visible result with at least one edge check.`,
+			`**Path:** First version. ${subject} turns the core idea into an observable result with at least one edge check.`,
 			`**Path:** First version. ${subject} is considered ready only after the main result and one boundary condition are both explainable.`
 		][index];
 	}
