@@ -2670,6 +2670,10 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("function updateAutoSavePreference");
 		expect(pageSource).toContain("Autosave projects");
 		expect(pageSource).toContain('aria-label="Python IDE settings"');
+		expect(pageSource).toContain(
+			'aria-controls="python-ide-settings-panel"'
+		);
+		expect(pageSource).toContain('id="python-ide-settings-panel"');
 		expect(pageSource).toContain("Protect local saves");
 		expect(pageSource).toContain("function storageManagerWithPersistence");
 		expect(pageSource).toContain("navigator.storage?.persist");
@@ -3742,5 +3746,22 @@ describe("python IDE project helpers", () => {
 
 		project.activeFileName = "scores.csv";
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("main.py");
+	});
+
+	it("names repeated Python IDE file controls by the affected file", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			"utf8"
+		);
+
+		expect(pageSource).toContain(
+			':aria-label="`Delete file ${file.name}`"'
+		);
+		expect(pageSource).toContain(':title="`Delete ${file.name}`"');
+		expect(pageSource).not.toContain('aria-label="Delete file"');
+		expect(pageSource).toContain(
+			'aria-controls="python-ide-file-tools-panel"'
+		);
+		expect(pageSource).toContain('id="python-ide-file-tools-panel"');
 	});
 });
