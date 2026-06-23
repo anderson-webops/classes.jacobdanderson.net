@@ -728,6 +728,12 @@ function preferredLearnerIdForCourse(learners: User[], courseId: string) {
 	);
 }
 
+function learnerOptionLabel(learner: User, index: number) {
+	const name = learner.name?.trim() || `Learner ${index + 1}`;
+	const courseCount = learner.courseAccess?.length ?? 0;
+	return `${name} · ${courseCount} ${courseCount === 1 ? "course" : "courses"}`;
+}
+
 function moduleIdFromHash(modules: VisibleModule[]) {
 	const anchor = currentHashAnchor.value;
 	if (!anchor) return "";
@@ -1553,11 +1559,11 @@ function writeStoredValue(key: string, value: string) {
 							}}
 						</option>
 						<option
-							v-for="learner in managedLearners"
+							v-for="(learner, index) in managedLearners"
 							:key="learner._id"
 							:value="learner._id"
 						>
-							{{ learner.name }} · {{ learner.email }}
+							{{ learnerOptionLabel(learner, index) }}
 						</option>
 					</select>
 				</label>

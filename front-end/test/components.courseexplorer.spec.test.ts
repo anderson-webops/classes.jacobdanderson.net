@@ -562,9 +562,10 @@ describe("CourseExplorer.vue", () => {
 		await flushPromises();
 
 		await vi.waitFor(() => {
-			expect(wrapper.text()).toContain("Learner");
+			expect(wrapper.text()).toContain("Learner · 1 course");
 			expect(wrapper.text()).toContain(assignedCourse.name);
 		});
+		expect(wrapper.text()).not.toContain("learner@example.com");
 
 		await wrapper.find(".progress-toggle.is-module input").setValue(true);
 		expect(api.put).not.toHaveBeenCalled();
