@@ -1008,6 +1008,10 @@ function projectLabel(item: CourseModuleItem, url: string) {
 	const normalizedTitle = item.title.toLowerCase();
 	const normalizedUrl = url.toLowerCase();
 
+	if (normalizedUrl.startsWith("/course-assets/")) {
+		return datasetLabel(url);
+	}
+
 	if (REFERENCE_TITLE_RE.test(normalizedTitle)) {
 		return "Reference";
 	}
@@ -1059,9 +1063,26 @@ function datasetLabel(url: string) {
 		return "Track guide";
 	}
 
+	if (
+		normalizedUrl.startsWith("/course-assets/") &&
+		(normalizedUrl.includes("answer-key") ||
+			normalizedUrl.includes("rubric"))
+	) {
+		return "Rubric / answer key";
+	}
+
 	if (normalizedUrl.includes("chemistry-materials-pack")) {
 		if (normalizedUrl.includes("measurement")) {
 			return "Measurement tables";
+		}
+		if (normalizedUrl.includes("model-comparison")) {
+			return "Model cards";
+		}
+		if (normalizedUrl.includes("original-phenomena")) {
+			return "Phenomena cases";
+		}
+		if (normalizedUrl.includes("original-project-source")) {
+			return "Original source map";
 		}
 		if (normalizedUrl.includes("matter-and-classification")) {
 			return "Matter cards";
@@ -1087,8 +1108,14 @@ function datasetLabel(url: string) {
 		if (normalizedUrl.includes("bonding-and-formula")) {
 			return "Bonding cards";
 		}
+		if (normalizedUrl.includes("lewis-structure")) {
+			return "Lewis practice";
+		}
 		if (normalizedUrl.includes("heating-curve")) {
 			return "Heating curve data";
+		}
+		if (normalizedUrl.includes("phase-diagram")) {
+			return "Phase diagram data";
 		}
 		if (normalizedUrl.includes("gas-law")) {
 			return "Gas law scenarios";
@@ -1102,17 +1129,32 @@ function datasetLabel(url: string) {
 		if (normalizedUrl.includes("reaction-type")) {
 			return "Reaction cards";
 		}
+		if (normalizedUrl.includes("reaction-energy-and-rate")) {
+			return "Energy and rate cases";
+		}
+		if (normalizedUrl.includes("equilibrium")) {
+			return "Equilibrium cases";
+		}
+		if (normalizedUrl.includes("redox")) {
+			return "Redox cases";
+		}
 		if (normalizedUrl.includes("concentration-and-ph")) {
 			return "Solution tables";
 		}
 		if (normalizedUrl.includes("molar-mass")) {
 			return "Mole practice set";
 		}
+		if (normalizedUrl.includes("water-formation-stoichiometry")) {
+			return "Water stoichiometry case";
+		}
 		if (normalizedUrl.includes("quantitative-chemistry")) {
 			return "Quantitative checkpoint";
 		}
 		if (normalizedUrl.includes("stoichiometry-error")) {
 			return "Error cases";
+		}
+		if (normalizedUrl.includes("remote-investigation")) {
+			return "Investigation checklist";
 		}
 		if (normalizedUrl.includes("capstone-evidence")) {
 			return "Evidence seeds";
@@ -1202,7 +1244,9 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 
 	if (projectUrl) {
 		links.push({
-			kind: "project",
+			kind: projectUrl.startsWith("/course-assets/")
+				? "asset"
+				: "project",
 			label: projectLabel(item, projectUrl),
 			url: projectUrl,
 			host: linkHost(projectUrl)
