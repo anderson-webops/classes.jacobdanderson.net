@@ -3935,6 +3935,32 @@ describe("course text quality normalization", () => {
 		expect(calendarMachine.content).toContain("**Checkpoints:**");
 	});
 
+	it("keeps Python Level 2 project outcomes and verification project-specific", async () => {
+		const course = await loadRawCourse("python-level-2");
+		expect(course).not.toBeNull();
+		const corpus = allCourseText(course!);
+
+		expect(corpus).not.toContain(
+			"The finished project proves the goal with a normal run"
+		);
+		expect(corpus).not.toContain(
+			"Save or describe at least two sample runs"
+		);
+
+		const madLibs = findItem(course!, /Mad Libs/);
+		expect(madLibs.content).toContain(
+			"The finished project is complete when the story includes every requested word"
+		);
+		expect(madLibs.content).toContain(
+			"The stress case is tied to this project check: The explanation can trace one input prompt through to the final printed sentence"
+		);
+
+		const changeMachine = findItem(course!, /Change Machine/);
+		expect(changeMachine.content).toContain(
+			"Boundary cases such as 0, 4, 5, 10, 25, and 99 cents are tested"
+		);
+	});
+
 	it(
 		"keeps visible course cards above the thin-content floor",
 		async () => {
