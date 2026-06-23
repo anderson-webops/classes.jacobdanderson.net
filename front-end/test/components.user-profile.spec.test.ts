@@ -6,7 +6,7 @@ import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 
 describe("UserProfile", () => {
-	it("summarizes course access by current and past status", () => {
+	it("summarizes course access by current, past, and available status", () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -14,6 +14,7 @@ describe("UserProfile", () => {
 		const coursesStore = useCoursesStore();
 		const pastCourse = coursesStore.courses[0];
 		const currentCourse = coursesStore.courses[1];
+		const availableCourse = coursesStore.courses[2];
 
 		appStore.setCurrentUser({
 			_id: "learner-1",
@@ -21,10 +22,15 @@ describe("UserProfile", () => {
 			email: "learner@example.com",
 			age: 12,
 			state: "GA",
-			courseAccess: [pastCourse.id, currentCourse.id],
+			courseAccess: [
+				pastCourse.id,
+				currentCourse.id,
+				availableCourse.id
+			],
 			courseStatus: {
 				[pastCourse.id]: "past",
-				[currentCourse.id]: "current"
+				[currentCourse.id]: "current",
+				[availableCourse.id]: "available"
 			},
 			courseProgress: [],
 			editUsers: false,
@@ -44,5 +50,8 @@ describe("UserProfile", () => {
 
 		expect(wrapper.text()).toContain(`Current: ${currentCourse.name}`);
 		expect(wrapper.text()).toContain(`Past: ${pastCourse.name}`);
+		expect(wrapper.text()).toContain(
+			`Other available: ${availableCourse.name}`
+		);
 	});
 });

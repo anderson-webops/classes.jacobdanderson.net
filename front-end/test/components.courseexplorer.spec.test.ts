@@ -471,7 +471,8 @@ describe("CourseExplorer.vue", () => {
 			courseAccess: [currentCourse.id, pastCourse.id, availableCourse.id],
 			courseStatus: {
 				[pastCourse.id]: "past",
-				[currentCourse.id]: "current"
+				[currentCourse.id]: "current",
+				[availableCourse.id]: "available"
 			},
 			courseProgress: [],
 			editUsers: false,

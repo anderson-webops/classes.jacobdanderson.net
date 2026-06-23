@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import type { CourseStatusMap } from "@/modules/courseAccess";
+import type {
+	CourseAccessStatus,
+	CourseStatusMap
+} from "@/modules/courseAccess";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
@@ -158,6 +161,12 @@ function onCourseToggle(userID: string, courseID: string, checked: boolean) {
 	};
 }
 
+function normalizeCourseStatus(status: string): CourseAccessStatus {
+	if (status === "past") return "past";
+	if (status === "available") return "available";
+	return "current";
+}
+
 function onCourseStatusChange(
 	userID: string,
 	courseID: string,
@@ -168,7 +177,7 @@ function onCourseStatusChange(
 		...userCourseStatuses.value,
 		[userID]: {
 			...(userCourseStatuses.value[userID] ?? {}),
-			[courseID]: status === "past" ? "past" : "current"
+			[courseID]: normalizeCourseStatus(status)
 		}
 	};
 }
@@ -468,6 +477,9 @@ async function saveUserCourses(userID: string) {
 												Current
 											</option>
 											<option value="past">Past</option>
+											<option value="available">
+												Available
+											</option>
 										</select>
 									</div>
 								</div>

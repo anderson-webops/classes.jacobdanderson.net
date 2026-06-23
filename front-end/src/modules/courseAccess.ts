@@ -1,8 +1,8 @@
 import type { User } from "@/stores/app";
 import type { CourseSummary } from "@/stores/courses/types";
 
-export type CourseAccessStatus = "current" | "past";
-export type CourseAccessBucket = CourseAccessStatus | "other";
+export type CourseAccessStatus = "current" | "past" | "available";
+export type CourseAccessBucket = "current" | "past" | "other";
 export type CourseStatusMap = Record<string, CourseAccessStatus>;
 
 export interface CourseAccessGroup<T extends CourseSummary = CourseSummary> {
@@ -11,9 +11,14 @@ export interface CourseAccessGroup<T extends CourseSummary = CourseSummary> {
 	courses: T[];
 }
 
-const VALID_COURSE_STATUSES = new Set<CourseAccessStatus>(["current", "past"]);
+const VALID_COURSE_STATUSES = new Set<CourseAccessStatus>([
+	"current",
+	"past",
+	"available"
+]);
 
 function normalizeStatus(value: unknown): CourseAccessStatus {
+	if (value === "available") return "available";
 	return value === "past" ? "past" : "current";
 }
 
@@ -30,8 +35,12 @@ export function courseStatusBucketForUser(
 ): CourseAccessBucket {
 	const statusMap = user?.courseStatus;
 	const status = statusMap?.[courseId];
+	const normalizedStatus = normalizeStatus(status);
+	if (normalizedStatus === "available") {
+		return "other";
+	}
 	if (VALID_COURSE_STATUSES.has(status as CourseAccessStatus)) {
-		return status as CourseAccessStatus;
+		return normalizedStatus;
 	}
 
 	return statusMap ? "other" : "current";

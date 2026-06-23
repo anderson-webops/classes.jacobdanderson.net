@@ -14,7 +14,7 @@ type Displayable =
 	| Tutor[]
 	| (string | Tutor)[];
 
-export type CourseAccessStatus = "current" | "past";
+export type CourseAccessStatus = "current" | "past" | "available";
 export type CourseStatusMap = Record<string, CourseAccessStatus>;
 
 /* ------------------------------------------------------------------ */

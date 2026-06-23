@@ -38,6 +38,12 @@ function normalizeStringArray(value: unknown): string[] | null {
 	return [...new Set(value.map(item => (typeof item === "string" ? item.trim() : "")).filter(Boolean))];
 }
 
+function normalizeCourseStatus(value: unknown): CourseAccessStatus {
+	if (value === "available") return "available";
+	if (value === "past") return "past";
+	return "current";
+}
+
 function normalizeCourseStatusMap(value: unknown): Record<string, CourseAccessStatus> {
 	if (!value || typeof value !== "object" || Array.isArray(value)) return {};
 
@@ -45,7 +51,7 @@ function normalizeCourseStatusMap(value: unknown): Record<string, CourseAccessSt
 	for (const [courseId, status] of Object.entries(value as Record<string, unknown>)) {
 		const normalizedCourseId = courseId.trim();
 		if (!normalizedCourseId) continue;
-		statusMap[normalizedCourseId] = status === "past" ? "past" : "current";
+		statusMap[normalizedCourseId] = normalizeCourseStatus(status);
 	}
 	return statusMap;
 }

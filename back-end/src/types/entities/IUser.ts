@@ -15,7 +15,7 @@ export interface IUser extends IBaseUser {
 	role: string; // e.g. "user"
 }
 
-export type CourseAccessStatus = "current" | "past";
+export type CourseAccessStatus = "current" | "past" | "available";
 
 export interface CourseProgress {
 	courseId: string;
