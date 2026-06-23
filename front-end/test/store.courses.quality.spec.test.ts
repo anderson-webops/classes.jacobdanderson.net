@@ -2661,7 +2661,9 @@ describe("course text quality normalization", () => {
 			"score_turtle.clear()",
 			"is_inside_bounds",
 			"Moving Triangles Homework Extension",
-			"CodeHS supports uploaded files",
+			"CodeHS supports uploaded audio files",
+			"CodeHS file uploads",
+			"CodeHS Python Turtle commands",
 			"built-in Turtle sound command"
 		]) {
 			expect(reference).toContain(phrase);

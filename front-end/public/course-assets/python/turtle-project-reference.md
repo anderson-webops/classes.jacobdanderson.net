@@ -338,9 +338,15 @@ direction is stored as data, not hardcoded as one permanent movement command.
 
 ## Sound in CodeHS Turtle
 
-CodeHS supports uploaded files in programs. The Python Turtle command reference
-does not show a built-in Turtle sound command, so this reference does not
-include sound in the Turtle template.
+CodeHS supports uploaded audio files in programs, including common formats such
+as MP3, OGG, and WAV. The CodeHS Python Turtle command reference does not show a
+built-in Turtle sound command, so this reference does not include sound in the
+Turtle template.
+
+Official references:
+
+- [CodeHS file uploads](https://help.codehs.com/en/articles/2372009-uploading-a-file-to-your-program)
+- [CodeHS Python Turtle commands](https://codehs.com/documentation/new/python-turtle)
 
 For a Turtle project, use visual feedback first: score changes, color changes,
 stamps, messages, or movement changes. If sound becomes a requirement, test a
