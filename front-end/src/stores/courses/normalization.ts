@@ -5854,6 +5854,13 @@ function capitalizeSentence(value: string) {
 	return `${value.slice(0, 1).toUpperCase()}${value.slice(1)}`;
 }
 
+function markdownSafeGeneratedReference(value: string) {
+	return value
+		.replace(/\s+-\s+/g, ": ")
+		.replace(/\s{2,}/g, " ")
+		.trim();
+}
+
 function escapeStringForRegExp(value: string) {
 	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -5866,9 +5873,8 @@ function compactGeneratedProjectSupport(
 	if (!subject) return lines;
 
 	const escapedSubject = escapeStringForRegExp(subject);
-	const reference = projectSupportScopedReference(
-		context,
-		projectSupportReference(context)
+	const reference = markdownSafeGeneratedReference(
+		projectSupportScopedReference(context, projectSupportReference(context))
 	);
 	const capitalizedReference = capitalizeSentence(reference);
 	const bareReference = reference.replace(/^the\s+/i, "");

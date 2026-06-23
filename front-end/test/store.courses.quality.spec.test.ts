@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
+import { buildProjectGuidance } from "@/stores/courses/projectGuidance";
 import { buildSupportSectionGuidance } from "@/stores/courses/supportSectionGuidance";
 import {
 	parseCourseAssetUrl,
@@ -2552,6 +2553,39 @@ describe("course text quality normalization", () => {
 				expect(item.content, item.title).toContain(phrase);
 			}
 		}
+
+		const openEndedDrawing = findItem(
+			course!,
+			/Open Ended Project - Create a Drawing/
+		);
+		expect(openEndedDrawing.content).toContain(
+			"Open Ended Project: Create a Drawing"
+		);
+		expect(openEndedDrawing.content).not.toMatch(
+			/^- (?:For|Run|Keep|The )Open Ended Project - Create a Drawing/m
+		);
+		expect(openEndedDrawing.content).not.toMatch(
+			/^- (?:For|Run|Keep|The )Open Ended Project\s*\n- Create a Drawing/m
+		);
+	});
+
+	it("keeps generated guidance references with spaced hyphens Markdown-safe", () => {
+		const guidance = buildProjectGuidance({
+			courseFamily: "Python Level 1",
+			moduleTitle: "GrS1 Coordinates and Movement",
+			itemTitle:
+				"GrS1 Supplemental Project 2: Open Ended Project - Create a Drawing",
+			projectKind: "extension",
+			hasReference: false
+		});
+
+		expect(guidance).toContain("Open Ended Project: Create a Drawing");
+		expect(guidance).not.toMatch(
+			/^- .*Open Ended Project - Create a Drawing/m
+		);
+		expect(guidance).not.toMatch(
+			/^- .*Open Ended Project\s*\n- Create a Drawing/m
+		);
 	});
 
 	it("keeps later Python Turtle game prompts structured around state and verification", async () => {

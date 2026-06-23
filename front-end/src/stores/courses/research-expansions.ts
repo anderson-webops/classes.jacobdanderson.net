@@ -152,11 +152,20 @@ function projectEvidenceNote(courseLabel: string) {
 	return `**Project evidence:** Project work in ${courseLabel} is ready when the expected artifact, success criteria, standard scenario, edge case, explanation target, and extension path are clear without guessing what the work is meant to demonstrate.`;
 }
 
+function markdownSafeGeneratedReference(value: string) {
+	return value
+		.replace(/\s+-\s+/g, ": ")
+		.replace(/\s{2,}/g, " ")
+		.trim();
+}
+
 function projectDescription(project: string) {
-	return project
-		.trim()
-		.replace(/[.!?]+$/g, "")
-		.replace(/\btodo\b/gi, "to-do");
+	return markdownSafeGeneratedReference(
+		project
+			.trim()
+			.replace(/[.!?]+$/g, "")
+			.replace(/\btodo\b/gi, "to-do")
+	);
 }
 
 function titleCaseProjectWord(word: string, index: number) {

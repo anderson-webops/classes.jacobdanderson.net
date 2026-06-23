@@ -131,6 +131,13 @@ function capitalizeSentence(value: string) {
 	return `${value.slice(0, 1).toUpperCase()}${value.slice(1)}`;
 }
 
+function markdownSafeGeneratedReference(value: string) {
+	return value
+		.replace(/\s+-\s+/g, ": ")
+		.replace(/\s{2,}/g, " ")
+		.trim();
+}
+
 function guidanceReference(courseFamily: string, moduleTitle: string) {
 	const family = courseFamily.toLowerCase();
 
@@ -211,7 +218,7 @@ function scopedGuidanceReference(reference: string, moduleTitle: string) {
 			cleanTitle
 		)
 	) {
-		return cleanTitle;
+		return markdownSafeGeneratedReference(cleanTitle);
 	}
 
 	const [firstReferenceWord = "", ...remainingReferenceWords] =
@@ -239,11 +246,14 @@ function scopedGuidanceReference(reference: string, moduleTitle: string) {
 		]
 			.filter(Boolean)
 			.join(" ");
-		if (collapsedReference)
-			return `the ${cleanTitle} ${collapsedReference}`;
+		if (collapsedReference) {
+			return markdownSafeGeneratedReference(
+				`the ${cleanTitle} ${collapsedReference}`
+			);
+		}
 	}
 
-	return `the ${cleanTitle} ${bareReference}`;
+	return markdownSafeGeneratedReference(`the ${cleanTitle} ${bareReference}`);
 }
 
 function compactGuidanceBody(
@@ -2170,7 +2180,9 @@ function projectPathNote({
 >) {
 	const label = itemTitle?.toLowerCase() ?? "";
 	const reference = guidanceReference(courseFamily, moduleTitle);
-	const subject = guidanceModuleTitle(moduleTitle, itemTitle);
+	const subject = markdownSafeGeneratedReference(
+		guidanceModuleTitle(moduleTitle, itemTitle)
+	);
 	const index = pathVariantIndex(
 		courseFamily,
 		subject,
@@ -2290,7 +2302,9 @@ export function buildProjectGuidance({
 	projectKind,
 	hasReference
 }: ProjectGuidanceOptions) {
-	const scopedModuleTitle = guidanceModuleTitle(moduleTitle, itemTitle);
+	const scopedModuleTitle = markdownSafeGeneratedReference(
+		guidanceModuleTitle(moduleTitle, itemTitle)
+	);
 	const goal = projectGoal(courseFamily, scopedModuleTitle, projectKind);
 	const pathNote = projectPathNote({
 		courseFamily,
