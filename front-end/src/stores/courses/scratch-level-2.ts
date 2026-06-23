@@ -1217,7 +1217,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 			title: "GM12 Arcade Systems Studio",
 			curriculum: [
 				{
-					title: "Concept Path",
+					title: "Arcade Systems Concepts",
 					content:
 						"An arcade system depends on reusable structure: clone creation, list-backed state, custom blocks, broadcasts, and conditionals work together instead of living in separate one-off scripts. The project makes spawn rules, collisions, scoring, levels, and game-over cleanup traceable from the green flag."
 				},
@@ -1227,7 +1227,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Plan the project by listing the sprites, backdrops, variables, messages, custom blocks, controls, and end conditions. A clear map prevents a large Scratch project from becoming a collection of disconnected scripts."
 				},
 				{
-					title: "Build Requirements",
+					title: "Arcade Build Requirements",
 					content:
 						"Build spawn rules, collision rules, level progression, score state, difficulty changes, and game-over cleanup. Test the full game loop from green flag to restart so the systems can be inspected together."
 				},
@@ -1249,7 +1249,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Pick one moment during the project and name the current sprite positions, visible variables, active loops, and next event. This checks whether the project is understood as a system rather than as scattered blocks."
 				},
 				{
-					title: "Common Bug Patterns",
+					title: "Arcade Bug Patterns",
 					content:
 						"Look for scripts that do not reset on the green flag, messages that fire too early, variables that keep old values, clones that never delete, and forever loops that prevent the ending from appearing."
 				},
@@ -1264,7 +1264,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 			title: "GM13 Simulation and Data Studio",
 			curriculum: [
 				{
-					title: "Concept Path",
+					title: "Simulation Concepts",
 					content:
 						"A Scratch simulation uses variables and lists to represent a changing system over time. The important pieces are the starting values, repeated update rule, random or user-controlled event, visible display, and summary result that explains what happened."
 				},
@@ -1274,7 +1274,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Plan the project by listing the sprites, backdrops, variables, messages, custom blocks, controls, and end conditions. A clear map prevents a large Scratch project from becoming a collection of disconnected scripts."
 				},
 				{
-					title: "Build Requirements",
+					title: "Simulation Build Requirements",
 					content:
 						"Build population changes, resource collection, random events, graph-like list displays, and repeated trials. Run multiple trials from the green flag and compare how the data changes."
 				},
@@ -1296,7 +1296,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Pick one moment during the project and name the current sprite positions, visible variables, active loops, and next event. This checks whether the project is understood as a system rather than as scattered blocks."
 				},
 				{
-					title: "Common Bug Patterns",
+					title: "Simulation Bug Patterns",
 					content:
 						"Look for scripts that do not reset on the green flag, messages that fire too early, variables that keep old values, clones that never delete, and forever loops that prevent the ending from appearing."
 				},
@@ -1311,7 +1311,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 			title: "GM14 Code Organization and Debugging Studio",
 			curriculum: [
 				{
-					title: "Concept Path",
+					title: "Organization Concepts",
 					content:
 						"Larger Scratch projects need organization before they become difficult to debug. Named custom blocks, consistent broadcasts, reset scripts, and small subsystems make it possible to explain what starts the project, what changes state, what repeats, and what ends or advances the experience."
 				},
@@ -1321,7 +1321,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Plan the project by listing the sprites, backdrops, variables, messages, custom blocks, controls, and end conditions. A clear map prevents a large Scratch project from becoming a collection of disconnected scripts."
 				},
 				{
-					title: "Build Requirements",
+					title: "Refactor Build Requirements",
 					content:
 						"Repair duplicated scripts, unclear message names, stale variable state, hidden clones, and custom blocks that do too many things. Test each subsystem separately, then test the whole project from the green flag."
 				},
@@ -1343,7 +1343,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Pick one moment during the project and name the current sprite positions, visible variables, active loops, and next event. This checks whether the project is understood as a system rather than as scattered blocks."
 				},
 				{
-					title: "Common Bug Patterns",
+					title: "Organization Bug Patterns",
 					content:
 						"Look for scripts that do not reset on the green flag, messages that fire too early, variables that keep old values, clones that never delete, and forever loops that prevent the ending from appearing."
 				},
@@ -1358,7 +1358,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 			title: "GM15 Text-Based Programming Bridge",
 			curriculum: [
 				{
-					title: "Concept Path",
+					title: "Programming Bridge Concepts",
 					content:
 						"Advanced Scratch concepts map directly to Python readiness: lists store collections, custom blocks behave like functions, inputs resemble parameters, loops repeat actions, conditionals branch, and variables preserve state. The explanation translates a Scratch system into text-code terms without losing how the original project behaves."
 				},
@@ -1368,7 +1368,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Plan the project by listing the sprites, backdrops, variables, messages, custom blocks, controls, and end conditions. A clear map prevents a large Scratch project from becoming a collection of disconnected scripts."
 				},
 				{
-					title: "Build Requirements",
+					title: "Bridge Build Requirements",
 					content:
 						"Translate Scratch custom blocks into functions, list operations into Python-style list work, and broadcasts into function calls or state changes. Include a trace showing how one Scratch event becomes a text-code sequence."
 				},
@@ -1390,7 +1390,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Pick one moment during the project and name the current sprite positions, visible variables, active loops, and next event. This checks whether the project is understood as a system rather than as scattered blocks."
 				},
 				{
-					title: "Common Bug Patterns",
+					title: "Bridge Pitfalls",
 					content:
 						"Look for scripts that do not reset on the green flag, messages that fire too early, variables that keep old values, clones that never delete, and forever loops that prevent the ending from appearing."
 				},

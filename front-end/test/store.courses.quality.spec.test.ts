@@ -3991,6 +3991,7 @@ describe("course text quality normalization", () => {
 			const studioArticleGrammarResidue: string[] = [];
 			const genericFocusedPracticeTitles: string[] = [];
 			const genericExtensionProjectTitles: string[] = [];
+			const exactGenericSectionTitles: string[] = [];
 			const repeatedWords: string[] = [];
 			const courses = await loadedCatalogCourseList();
 			const corpus = await loadedCatalogText();
@@ -4039,6 +4040,15 @@ describe("course text quality normalization", () => {
 						}
 						if (item.title === "Extension Project") {
 							genericExtensionProjectTitles.push(
+								`${courseCatalog[courseIndex].id} / ${module.title} / ${item.title}`
+							);
+						}
+						if (
+							/^(?:Concept Path|Build Requirements|Common Bug Patterns|Worked Example)$/i.test(
+								item.title
+							)
+						) {
+							exactGenericSectionTitles.push(
 								`${courseCatalog[courseIndex].id} / ${module.title} / ${item.title}`
 							);
 						}
@@ -4129,6 +4139,7 @@ describe("course text quality normalization", () => {
 			expect(studioArticleGrammarResidue).toEqual([]);
 			expect(genericFocusedPracticeTitles).toEqual([]);
 			expect(genericExtensionProjectTitles).toEqual([]);
+			expect(exactGenericSectionTitles).toEqual([]);
 			expect(repeatedWords).toEqual([]);
 			expect(corpus).not.toMatch(/focused practice checkpoint/i);
 			expect(corpus).not.toMatch(/should use the checkpoint/i);
@@ -4410,8 +4421,8 @@ describe("course text quality normalization", () => {
 		expect(scratchStudio).toBeDefined();
 		expect(scratchStudio!.content).toContain("**Studio practice:**");
 		expect(scratchStudio!.content).toContain("\n**Checkpoints:**\n-");
-		expect(scratchStudio!.content).toContain(
-			"**Extension:** Add one feedback cue so the player can tell which state changed."
+		expect(scratchStudio!.content).toMatch(
+			/\*\*Extension:\*\* Add one (?:difficulty option|feedback cue)/
 		);
 		expect(scratchStudio!.content).toContain(
 			"\n\n2. **Design and Planning Map**"
@@ -4497,7 +4508,7 @@ describe("course text quality normalization", () => {
 
 		const csvStudio = findItem(
 			dataScience!,
-			/^Concept Path$/,
+			/^CSV Summaries and Sanity Checks Concepts$/,
 			/CSV loading, numeric summaries/
 		);
 		expect(csvStudio.content).toContain(
@@ -4509,8 +4520,9 @@ describe("course text quality normalization", () => {
 		expect(csvStudio.content).not.toContain(
 			"any larger dataset result is accepted.\n\n**Readable output:**"
 		);
-		expect(csvStudio.content).toContain(
-			"- Name the studio dataset or search space, target question, feature or column choices, and comparison point."
+		expect(csvStudio.content).toContain("**Build steps:**\n-");
+		expect(csvStudio.content).toMatch(
+			/(dataset or search space|hypothesis, evidence source|data source)/
 		);
 		expect(csvStudio.content).not.toContain(
 			"Define the Concept Path for DSP10"
@@ -4521,10 +4533,10 @@ describe("course text quality normalization", () => {
 			?.curriculum.find(item => item.title === "Core Concepts");
 		expect(scratchStudio).toBeDefined();
 		expect(scratchStudio.content).toContain(
-			"The studio starting position, visible state, score or timer, and reset behavior are predictable"
+			"Debug path for the studio: reproduce one realistic failure"
 		);
 		expect(scratchStudio.content).toContain(
-			"Review the studio by comparing the intended behavior with the evidence collected during the final run"
+			"The studio starts from a predictable green-flag state"
 		);
 		expect(scratchStudio.content).not.toContain(
 			"Check Concept Path against the stated success criteria"
