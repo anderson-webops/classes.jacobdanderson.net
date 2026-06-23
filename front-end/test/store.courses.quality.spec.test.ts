@@ -3971,6 +3971,8 @@ describe("course text quality normalization", () => {
 			);
 			const reviewStructurePattern =
 				/\*\*(?:Outcome|Required outcome|Success criteria|Completion checks|Checkpoints|Extension):\*\*/i;
+			const scratchSupportStructurePattern =
+				/\*\*Fluency goal:\*\*[\s\S]+\*\*Practice path:\*\*[\s\S]+\*\*Checkpoint:\*\*|\*\*Variant goal:\*\*[\s\S]+\*\*Design path:\*\*[\s\S]+\*\*Verification:\*\*/i;
 			const weakItems = courses.flatMap(({ id, course }) =>
 				(course?.modules ?? []).flatMap(module =>
 					[
@@ -3990,7 +3992,8 @@ describe("course text quality normalization", () => {
 						const shortWithoutReview =
 							projectLike &&
 							wordCount(item.content) < 95 &&
-							!reviewStructurePattern.test(item.content);
+							!reviewStructurePattern.test(item.content) &&
+							!scratchSupportStructurePattern.test(item.content);
 
 						return shortWithoutReview
 							? [
@@ -4747,6 +4750,17 @@ describe("course text quality normalization", () => {
 		);
 		expect(scratchCorpus).toContain(
 			"**Fluency goal:** Rebuild the central Hungry Hippo-style collection behavior"
+		);
+		const startingFluency = findItem(
+			scratchLevel1!,
+			/Fluency Drill/,
+			/Hungry Hippo-style/
+		);
+		expect(startingFluency.content).not.toContain(
+			"**Checkpoints:**\n- The Starting in Scratch project can be replayed"
+		);
+		expect(startingFluency.content).not.toContain(
+			"**Extension:** Add a difficulty option to the Starting in Scratch project"
 		);
 		expect(scratchCorpus).toContain(
 			"**Variant goal:** Build a new starter collection game variation"

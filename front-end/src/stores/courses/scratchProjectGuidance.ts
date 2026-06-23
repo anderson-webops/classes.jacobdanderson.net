@@ -20,7 +20,7 @@ export function buildScratchFluencyDrill({
 
 **Practice path:** Focus on ${focus}. Keep the sprite count low, name the variables or broadcasts clearly, and make each script visibly affect the stage.
 
-**Completion check:** Run the mini-project twice from the green flag. ${restartCheck}`;
+**Completion check:** Run the mini-project twice from the green flag. ${restartCheck} Record one sentence naming the Scratch block or variable most responsible for the result.`;
 }
 
 export function buildScratchOpenEndedVariant({
