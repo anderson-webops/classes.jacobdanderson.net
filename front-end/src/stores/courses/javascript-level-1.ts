@@ -987,7 +987,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Material Icons",
 					content:
-						"Add the Material Icons dependency, place icons using the documented markup, and treat each icon as a scalable visual label rather than a bitmap image. Verify that icon names render correctly, that icon size/color can be controlled with CSS or Materialize helpers, and that surrounding text still explains the action for readability."
+						"Add the Material Icons dependency, place icons using the documented markup, and treat each icon as a scalable visual label rather than a bitmap image. Verify that icon names render correctly, that icon size/color can be controlled with CSS or Materialize helpers, and that surrounding text still explains the action for readability. A complete page does not rely on icons alone: buttons, headings, and links keep readable text or labels so the visual icon improves scanning without becoming the only source of meaning."
 				},
 				{
 					title: "Mobile Wrappers",

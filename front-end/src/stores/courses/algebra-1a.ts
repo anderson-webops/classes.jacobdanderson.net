@@ -269,7 +269,7 @@ Build a film-production budget from expressions, equations, and unit-rate calcul
 - Cameras equation: \`35c = 105\`, so \`c = 3\`
 - Food cubed: \`10^3 = 1000\`
 
-The rest of the project is intentionally open ended. Justify the choices they make and check whether their numbers stay inside the total budget.
+The rest of the project is intentionally open ended. A strong response justifies the budget choices, keeps units attached to each cost, and checks whether the selected numbers stay inside the total budget. If a student's plan goes over budget, revise one variable at a time and explain which constraint changed. If the plan stays under budget, identify the unused amount and describe whether that leftover money is savings, contingency, or room for a justified upgrade.
 				`.trim()
 				)
 			]
@@ -507,6 +507,8 @@ This project combines slope classification with avalanche-risk interpretation.
 					"Reference Visual",
 					`
 Use the project graph or table to compare avalanche-risk curves. If a specific chart is unavailable, reconstruct the comparison from the given storm sizes, days, and risk percentages.
+
+Read the visual by naming the axes first, then compare one storm curve at a time. The important evidence is not only which curve is highest, but how quickly each risk drops below the reopening threshold. A complete interpretation identifies the day range where closure is still justified, explains any curve crossing, and notes that the graph represents a model of risk rather than a guarantee of mountain safety.
 				`.trim()
 				),
 				createLesson(
@@ -808,6 +810,8 @@ This project applies systems of equations to genetics-themed scenarios.
 - \`M + B + TL = 500\`
 - \`10M + 7B + 5TL = 4146\`
 - \`TL = 100\`, \`M = 282\`, \`B = 118\`
+
+The answer key is strongest when the numeric solution is checked in the original constraints. Mission 1 adds to \`46\` and satisfies the stability equation. Mission 2 adds all participant groups to \`500\` and recomputes the budget total. The open-ended distribution can differ, but it needs stated assumptions, the same total participant count, and an explanation of why the redesigned sample may reduce or introduce bias.
 				`.trim()
 				)
 			]
@@ -853,6 +857,8 @@ This project connects linear models and systems of equations to research output.
 - \`R + D = 22\`
 - Solution: \`K = 8\`, \`R = 9\`, \`D = 13\`
 - The lab qualifies because the quota check is satisfied.
+
+Check the result by substituting the three values into every relationship, not only the total equation. The competing-lab model in Mission 1 is open ended, but it must stay below \`12t + 7\` over the intended time interval. A strong explanation distinguishes exact systems of equations from modeling choices: the quota calculation has one fixed answer, while the comparison model needs a defended inequality and a clear domain.
 				`.trim()
 				)
 			]

@@ -204,7 +204,9 @@ export const scratchLevel1Course: RawCourse = {
 
 **Extension:** Trace shapes on other backdrops.
 
-**Completion check:** Each key draws only its assigned shape, and the green flag resets the drawing area cleanly.`,
+**Completion check:** Each key draws only its assigned shape, and the green flag resets the drawing area cleanly.
+
+**Reasoning check:** The square, triangle, and arrow work best as repeatable command patterns instead of copied random motion. Compare the number of turns and side lengths for each shape, then explain why changing the beetle's starting direction or position does not break the next shape command.`,
 					projectLink: "https://scratch.mit.edu/projects/288003770/",
 					solutionLink: "https://scratch.mit.edu/projects/287999903/"
 				}
@@ -396,7 +398,9 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 
 **Extension:** Add more sprites and make the ball pass among all players.
 
-**Completion check:** The ball moves to the correct next player based on who currently has it.`,
+**Completion check:** The ball moves to the correct next player based on who currently has it.
+
+**Reasoning check:** Treat the current holder as game state. Test at least two handoff moments and one restart, then explain which condition decides the next target and how the project avoids sending the ball to the wrong sprite after a repeated click or green-flag run.`,
 					projectLink: "https://scratch.mit.edu/projects/326211768/",
 					solutionLink: "https://scratch.mit.edu/projects/326211724/"
 				},

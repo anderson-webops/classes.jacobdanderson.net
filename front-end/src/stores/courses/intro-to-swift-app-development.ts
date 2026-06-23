@@ -1267,7 +1267,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Archive, Upload, and Release Checklists",
 					content:
-						"The final publishing path is an ordered workflow: archive build, upload process, App Store Connect checklists, TestFlight release, and review basics. Release is a sequence of visible checks rather than one mysterious final button."
+						"The final publishing path is an ordered workflow: archive build, upload process, App Store Connect checklists, TestFlight release, and review basics. Release is a sequence of visible checks rather than one mysterious final button. Track the bundle identifier, signing team, version number, build number, screenshots, privacy answers, tester notes, and crash-free smoke test as separate release evidence. Even when publishing is simulated, the walkthrough distinguishes local build validation, App Store Connect steps, and the requirements before another person can install the app."
 				},
 				{
 					title: "Practical Walkthrough: Build Metadata and Preflight Review",
@@ -1409,7 +1409,7 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 				{
 					title: "Reference Material, Not Core Scope",
 					content:
-						"Keep the older reference folders available only for demo recovery or scaffold comparison. These materials stay outside the main public course flow."
+						"Keep the older reference folders available only for demo recovery or scaffold comparison. These materials stay outside the main public course flow. When using a reference folder, identify the specific concept being compared, such as view layout, button actions, navigation structure, or asset organization. Do not treat the older folder names as required module order; the active path remains the `SAD` sequence, and reference material is only evidence for troubleshooting, enrichment, or migration decisions. If a reference project is used, end by naming what transfers conceptually and what stays out of the active project."
 				},
 				{
 					title: "Shapes Studio as Intentional Enrichment",

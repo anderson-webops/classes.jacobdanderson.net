@@ -91,7 +91,7 @@ export const designPatternsInCppCourse: RawCourse = {
 				{
 					title: "Value Semantics versus Reference Semantics",
 					content:
-						"A plain value type or small immutable object can remove the need for a pattern entirely. In C++, some creation and wrapper patterns only become justified once polymorphism, shared lifetime, or runtime variability is actually needed."
+						"A plain value type or small immutable object can remove the need for a pattern entirely. In C++, some creation and wrapper patterns only become justified once polymorphism, shared lifetime, or runtime variability is actually needed. Compare both designs before choosing: a value-based object is easier to copy, test, and reason about, while reference-based design can support shared identity, substitution, and late binding. The design decision names the lifetime owner, copy behavior, mutation boundary, and reason a simpler value type was or was not enough."
 				},
 				{
 					title: "Composition over Inheritance with Lifetime in View",

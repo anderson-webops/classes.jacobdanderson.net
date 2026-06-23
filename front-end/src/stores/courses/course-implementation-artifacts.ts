@@ -2908,7 +2908,7 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "Git LFS and Asset Attribution",
 				content:
-					"**Concept path:** Track source binaries and large media with Git LFS, commit package manifests/locks, and maintain `THIRD_PARTY_ASSETS.md` with source, license, date imported, modification note, and first branch/tag. Asset provenance is part of the build system because untracked media or unclear licenses can make an otherwise working project impossible to share.\n\n**Evidence target:** A clean clone has scripts, package locks, and asset provenance."
+					"**Concept path:** Track source binaries and large media with Git LFS, commit package manifests/locks, and maintain `THIRD_PARTY_ASSETS.md` with source, license, date imported, modification note, and first branch/tag. Asset provenance is part of the build system because untracked media or unclear licenses can make an otherwise working project impossible to share.\n\n**Review path:** Check textures, audio, models, fonts, packages, and generated build output separately. Source assets that are needed to rebuild the project are tracked or clearly restored; generated builds and caches stay out of the repo unless there is a deliberate release artifact policy.\n\n**Evidence target:** A clean clone has scripts, package locks, and asset provenance."
 			},
 			{
 				title: "Profiling and Bug Bash",
@@ -2958,7 +2958,7 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "UGD8 Project 1: Starter Repo Specification",
 				content:
-					"**Project goal:** Inspect and extend the full starter project baseline for one Unity module: scenes, scripts, prefabs, tests, packages, project settings, docs, LFS rules, and attribution file. The specification defines what belongs in the starter state, what belongs only in the review state, and how the project proves it can be opened from a clean clone.\n\n**Completion checks:**\n- The starter state is cloneable and playable.\n- Completed review work is not included in the starter state.\n- Validation steps are documented.",
+					"**Project goal:** Inspect and extend the full starter project baseline for one Unity module: scenes, scripts, prefabs, tests, packages, project settings, docs, LFS rules, and attribution file. The specification defines what belongs in the starter state, what belongs only in the review state, and how the project proves it can be opened from a clean clone.\n\n**Specification path:** List the minimum playable scene, the scripts that are intentionally incomplete, the placeholder assets, the expected package versions, and the first smoke test. Then identify which completed behaviors must stay out of the starter so the repo remains a legitimate starting point rather than a disguised solution.\n\n**Completion checks:**\n- The starter state is cloneable and playable.\n- Completed review work is not included in the starter state.\n- Validation steps are documented.",
 				projectLink: repoFolderUrl(
 					courseId,
 					"UGD-full-project-starter"
@@ -2971,7 +2971,7 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "UGD8 Project 2: Capstone Milestone Plan",
 				content:
-					"**Project goal:** Use the linked full-project baseline to write a capstone milestone plan from prototype to vertical slice, alpha, beta, final build, and demo. The plan identifies what is playable at each milestone, what can be cut safely, and which validation steps prevent late surprises.\n\n**Completion checks:**\n- Every milestone has a playable outcome.\n- Scope cuts are identified.\n- Testing/build/attribution tasks are scheduled before the final week.",
+					"**Project goal:** Use the linked full-project baseline to write a capstone milestone plan from prototype to vertical slice, alpha, beta, final build, and demo. The plan identifies what is playable at each milestone, what can be cut safely, and which validation steps prevent late surprises.\n\n**Planning path:** For each milestone, name the player-visible outcome, the smallest scene or system that proves it, the likely risk, and the evidence that the milestone is ready to build on. Keep stretch features separate from required mechanics so polish does not hide missing core gameplay.\n\n**Completion checks:**\n- Every milestone has a playable outcome.\n- Scope cuts are identified.\n- Testing/build/attribution tasks are scheduled before the final week.",
 				projectLink: repoFolderUrl(
 					courseId,
 					"UGD-full-project-starter"

@@ -3838,29 +3838,27 @@ describe("course text quality normalization", () => {
 		expect(calendarMachine.content).toContain("**Checkpoints:**");
 	});
 
-	it("keeps Python Level 2 and 3 course cards above the thin-content floor", async () => {
-		const courses = await Promise.all([
-			loadRawCourse("python-level-2"),
-			loadRawCourse("python-level-3")
-		]);
-		const thinItems = courses.flatMap(course => {
-			expect(course).not.toBeNull();
-			if (!course) return [];
-
-			return course.modules
-				.filter(module => module.kind !== "appendix")
-				.flatMap(module =>
-					[...module.curriculum, ...module.supplementalProjects]
-						.filter(item => wordCount(item.content) < 80)
-						.map(
-							item =>
-								`${course.name} / ${module.title} / ${item.title} / ${wordCount(item.content)} words`
+	it(
+		"keeps visible course cards above the thin-content floor",
+		async () => {
+			const thinItems = (await loadedCatalogCourses()).flatMap(
+				({ course, entry }) =>
+					(course?.modules ?? [])
+						.filter(module => module.kind !== "appendix")
+						.flatMap(module =>
+							[...module.curriculum, ...module.supplementalProjects]
+								.filter(item => wordCount(item.content) < 80)
+								.map(
+									item =>
+										`${entry.id} / ${module.title} / ${item.title} / ${wordCount(item.content)} words`
+								)
 						)
-				);
-		});
+			);
 
-		expect(thinItems).toEqual([]);
-	});
+			expect(thinItems).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
 
 	it(
 		"keeps short project-like items backed by review structure",

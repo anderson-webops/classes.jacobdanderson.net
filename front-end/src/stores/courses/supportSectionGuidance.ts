@@ -118,7 +118,8 @@ function scratchSupportSectionGuidance(
 			`**${title}** is checked by replaying the project from a clean green-flag start.`,
 			`The review compares expected and observed behavior for the ${sceneFocus}.`,
 			"Run one normal play path, one repeated-input or missed-input case, and one restart. The evidence identifies the block sequence or variable most responsible for the result, plus one remaining limitation or next polish idea.",
-			"A useful verification pass does not rely on the project looking mostly right. It names the expected stage state, the observed stage state, the input or event that produced it, and the Scratch block or variable that explains the match or mismatch."
+			"A useful verification pass does not rely on the project looking mostly right. It names the expected stage state, the observed stage state, the input or event that produced it, and the Scratch block or variable that explains the match or mismatch.",
+			"If the project uses a variable, clone, broadcast, costume, or pen state, include at least one check proving that value resets before the next run."
 		].join("\n\n");
 	}
 

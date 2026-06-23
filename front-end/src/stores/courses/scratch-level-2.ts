@@ -446,7 +446,7 @@ export const scratchLevel2Course: RawCourse = {
 				{
 					title: "Strings",
 					content:
-						"Programs can store different kinds of data. Earlier variables mainly held numbers for scores, timers, movement, and comparisons. Strings store text: words, letters, spaces, punctuation, and other characters.\nA string can be thought of as characters connected in order. Scratch string blocks make it possible to join text, read a specific character, and measure text length. Practice with `join __ __`, `letter __ of __`, and `length of __`. String length includes spaces and punctuation, not just letters."
+						"Programs can store different kinds of data. Earlier variables mainly held numbers for scores, timers, movement, and comparisons. Strings store text: words, letters, spaces, punctuation, and other characters.\nA string can be thought of as characters connected in order. Scratch string blocks make it possible to join text, read a specific character, and measure text length. Practice with `join __ __`, `letter __ of __`, and `length of __`. String length includes spaces and punctuation, not just letters. Good string reasoning always checks position and length: the first character, last character, an input that is too short, and an input with a space can all change the result."
 				},
 				{
 					title: "GM5 Project 1: Security Bot",
@@ -525,7 +525,7 @@ export const scratchLevel2Course: RawCourse = {
 				{
 					title: "Strings: Open-Ended Variant",
 					content:
-						"Create an original variation inspired by GM5 Strings. Keep the scope small, but require one meaningful design or reasoning choice."
+						"Create an original variation inspired by GM5 Strings. Keep the scope small, but require one meaningful design or reasoning choice. Good options include a username formatter, a secret-code phrase checker, a spelling helper, or a word game that reveals only selected letters. The finished project asks for text, stores the response, transforms or inspects part of the string, and shows a result that depends on the user's exact input. Verify one normal word, one short word, and one input with spaces or repeated letters so the string logic is not only tested on the easiest case."
 				}
 			]
 		},
