@@ -266,11 +266,31 @@ function contextualModuleFocus(courseTitle: string, moduleTitle: string) {
 	return courseTitle;
 }
 
+function courseTrackTitlePrefix(courseTitle: string, moduleTitle: string) {
+	const javaLevelMatch = moduleTitle.match(/^Java Level\s+(\d+):/i);
+	if (
+		javaLevelMatch &&
+		/^Java (?:with|without) Graphics$/i.test(courseTitle)
+	) {
+		return `${courseTitle} Level ${javaLevelMatch[1]}`;
+	}
+
+	return courseTitle;
+}
+
 function compactGeneratedDisplayTitle(
 	courseTitle: string,
 	moduleTitle: string,
 	itemTitle: string
 ) {
+	if (
+		/^(?:Maps|Using a Java Map|Conditionals|For Loops|While Loops|Stacks)$/i.test(
+			itemTitle
+		)
+	) {
+		return `${courseTrackTitlePrefix(courseTitle, moduleTitle)} ${itemTitle}`;
+	}
+
 	if (/^Checkpoint:\s*Trace the Project State$/i.test(itemTitle)) {
 		return `State Trace: ${contextualModuleFocus(courseTitle, moduleTitle)}`;
 	}
