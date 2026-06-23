@@ -61,7 +61,7 @@ function isActive(path: string) {
 							v-if="action?.external"
 							:href="action.href"
 							class="admin-shell__action"
-							rel="noreferrer"
+							rel="noopener noreferrer"
 							target="_blank"
 						>
 							{{ action.label }}

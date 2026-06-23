@@ -44,7 +44,7 @@ onBeforeUnmount(() => {
 			<a
 				class="wheel-link"
 				:href="wheelUrl"
-				rel="noopener"
+				rel="noopener noreferrer"
 				target="_blank"
 			>
 				Open wheel in new tab<span class="sr-only">

@@ -103,7 +103,7 @@ defineOptions({ name: "AboutPage" });
 				class="site-button site-button--secondary"
 				href="https://www.linkedin.com/in/jacoba1100254352/"
 				target="_blank"
-				rel="noreferrer"
+				rel="noopener noreferrer"
 			>
 				View LinkedIn<span class="sr-only"> (opens in a new tab)</span>
 			</a>

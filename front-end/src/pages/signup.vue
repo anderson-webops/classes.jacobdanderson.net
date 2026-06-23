@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
 				<a
 					class="text-link"
 					:href="schedulerUrl"
-					rel="noopener"
+					rel="noopener noreferrer"
 					target="_blank"
 				>
 					open the full scheduler in a new tab<span class="sr-only">
@@ -152,7 +152,7 @@ onBeforeUnmount(() => {
 					<a
 						class="text-link"
 						:href="customerPortalUrl"
-						rel="noopener"
+						rel="noopener noreferrer"
 						target="_blank"
 					>
 						{{ customerPortalLabel
@@ -203,7 +203,7 @@ onBeforeUnmount(() => {
 				<a
 					class="text-link"
 					:href="schedulerUrl"
-					rel="noopener"
+					rel="noopener noreferrer"
 					target="_blank"
 				>
 					Open it in a new tab<span class="sr-only">

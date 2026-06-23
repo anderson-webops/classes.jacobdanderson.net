@@ -75,7 +75,7 @@ useHead(
 				<a
 					class="site-button site-button--primary"
 					href="https://www.venmo.com/u/jacoba1100254352-classes"
-					rel="noreferrer"
+					rel="noopener noreferrer"
 					target="_blank"
 				>
 					Open Venmo<span class="sr-only"> (opens in a new tab)</span>

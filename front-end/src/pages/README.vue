@@ -10,7 +10,7 @@
 			<a
 				href="https://router.vuejs.org/guide/advanced/typed-routes.html"
 				target="_blank"
-				rel="noopener"
+				rel="noopener noreferrer"
 			>
 				Vue Router typed routes<span class="sr-only">
 					(opens in a new tab)</span
