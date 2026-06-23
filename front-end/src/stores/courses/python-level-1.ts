@@ -1,5 +1,13 @@
 import type { RawCourse } from "./types";
 
+const TURTLE_REFERENCE =
+	"/course-assets/python/turtle-project-reference.md";
+const TURTLE_COMMAND_REFERENCE = `${TURTLE_REFERENCE}#turtle-command-reference`;
+const TURTLE_BOUNDARY_REFERENCE = `${TURTLE_REFERENCE}#boundaries-and-in-bounds-checks`;
+const TURTLE_SCORE_REFERENCE = `${TURTLE_REFERENCE}#score-turtle-pattern`;
+const TURTLE_GAME_TEMPLATE_REFERENCE =
+	`${TURTLE_REFERENCE}#game-template-with-score-boundaries-and-moving-triangles`;
+
 export const pythonLevel1Course: RawCourse = {
 	name: "Python Level 1",
 	modules: [
@@ -9,7 +17,8 @@ export const pythonLevel1Course: RawCourse = {
 				{
 					title: "Introduction and Setup",
 					content:
-						"Get comfortable with the coding environment, the Turtle canvas, the console, and project instructions. Learn what Python is used for and how Turtle programs are organized."
+						"Get comfortable with the coding environment, the Turtle canvas, the console, and project instructions. Learn what Python is used for and how Turtle programs are organized.",
+					datasetLink: TURTLE_COMMAND_REFERENCE
 				},
 				{
 					title: "GrS1 Project 1: Turtle Exploration",
@@ -805,6 +814,7 @@ For each example, explain what kind of problem it solves. The recap makes clear 
 					title: "GrS13 Project 2: Stay Inbounds",
 					content:
 						"Draw a boundary, monitor a turtle's coordinates, and use a conditional plus `break` to end the game when the turtle leaves the allowed area.",
+					datasetLink: TURTLE_BOUNDARY_REFERENCE,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS13-Stay-Inbounds/solution"
 				},
@@ -820,6 +830,7 @@ Build a small animation loop that moves one or more turtles, calls \`screen.upda
 					title: "GrS13 Project 4: Bouncy Ball Room",
 					content:
 						"Create many moving turtles inside a boundary box, store them in a list, and write a collision helper that turns them around when they hit the walls.",
+					datasetLink: TURTLE_GAME_TEMPLATE_REFERENCE,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS13-Bouncy-Ball-Room/solution"
 				},
@@ -828,6 +839,7 @@ Build a small animation loop that moves one or more turtles, calls \`screen.upda
 					content: `Detect collisions by comparing two turtles' positions. Use absolute value or distance calculations to decide when their x and y coordinates are close enough to count as a hitbox overlap.
 
 Start with two turtles and print or display a message when they collide. Then test boundary cases: barely touching, almost touching, clearly overlapping, and far apart. A reliable collision check behaves consistently before it is added to a larger game.`,
+					datasetLink: TURTLE_SCORE_REFERENCE,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS14-Turtle-Collision/solution"
 				}
@@ -902,6 +914,7 @@ Use conditionals or collision checks to decide whether the launch succeeds. Incl
 					title: "GrS14 Project 1: Space Eater",
 					content:
 						"Bring together movement, lists, event listeners, collision logic, boundaries, scoring, and continuous loops to build a complete game where a player turtle eats moving targets.",
+					datasetLink: TURTLE_GAME_TEMPLATE_REFERENCE,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS14-Space-Eater/solution"
 				}

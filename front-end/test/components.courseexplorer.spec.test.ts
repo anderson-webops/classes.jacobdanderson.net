@@ -1103,6 +1103,13 @@ describe("CourseExplorer.vue", () => {
 								"/course-assets/examples/support-handout.md",
 							id: "local-support-handout",
 							title: "Support Handout"
+						},
+						{
+							content: "Use the Turtle scoring guide.",
+							datasetLink:
+								"/course-assets/python/turtle-project-reference.md#score-turtle-pattern",
+							id: "turtle-score-guide",
+							title: "Turtle Score Guide"
 						}
 					],
 					id: "module-1",
@@ -1133,10 +1140,12 @@ describe("CourseExplorer.vue", () => {
 
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("Track guide");
+			expect(wrapper.text()).toContain("Score turtle guide");
 			expect(wrapper.text()).toContain("Course asset");
 		});
 
 		expect(wrapper.text()).toContain("View Track guide");
+		expect(wrapper.text()).toContain("View Score turtle guide");
 		expect(wrapper.text()).toContain("View Course asset");
 		expect(wrapper.text()).not.toContain("Dataset");
 		expect(
