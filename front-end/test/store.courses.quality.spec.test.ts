@@ -378,6 +378,55 @@ describe("course text quality normalization", () => {
 	);
 
 	it(
+		"keeps loaded catalog copy free of mechanical generation artifacts",
+		async () => {
+			const failures: string[] = [];
+			const artifactChecks = [
+				{
+					name: "empty bullet",
+					pattern: /(?:^|\n)\s*[-*]\s*(?:\n|$)/
+				},
+				{
+					name: "stale generated run wording",
+					pattern:
+						/\b(?:Build the smallest reproducible|Build the core|Verify the intended) the [^.?!\n]+? (?:run|behavior) first\b/i
+				},
+				{
+					name: "duplicate generated word",
+					pattern: /\b([A-Za-z]{3,})\s+\1\b/i
+				},
+				{
+					name: "unfinished placeholder",
+					pattern: /\b(?:TODO|FIXME|TBD|lorem ipsum)\b/i
+				}
+			];
+
+			for (const { entry, course } of await loadedCatalogCourses()) {
+				for (const module of course.modules) {
+					for (const item of [
+						...module.curriculum,
+						...module.supplementalProjects
+					]) {
+						const text = item.content;
+
+						for (const { name, pattern } of artifactChecks) {
+							const match = text.match(pattern);
+							if (!match) continue;
+
+							failures.push(
+								`${name}: ${entry.id} > ${module.title} > ${item.title} (${match[0]})`
+							);
+						}
+					}
+				}
+			}
+
+			expect(failures).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
+	it(
 		"keeps generated checkpoint support from repeating directive checkpoint titles",
 		async () => {
 			const repetitiveCheckpointSupport: string[] = [];
@@ -6068,7 +6117,7 @@ describe("course text quality normalization", () => {
 		async () => {
 			const mediaInDatasetField: string[] = [];
 			const mediaDatasetPattern =
-				/\b(?:youtube\.com|youtu\.be|phet\.colorado\.edu|javalab\.org)\b/i;
+				/\b(?:youtube\.com|youtu\.be|phet\.colorado\.edu|javalab\.org|pbslearningmedia\.org|khanacademy\.org|contrib\.pbslearningmedia\.org)\b/i;
 
 			for (const entry of courseCatalog) {
 				const course = await loadRawCourse(entry.id);

@@ -373,12 +373,11 @@ export const introToChemistryCourse: RawCourse = {
 				{
 					title: "Project: Atom Simulation and Atom Builder Challenge",
 					content: [
-						"**Project goal:** Restore the original Atom Simulation project inside the current atomic-structure module. Use the PBS/ChemThink atomic-structure sequence or the PhET Build an Atom simulation to explain the parts of an atom and then create a challenge set using particle counts.",
+						`**Project goal:** Restore the original Atom Simulation project inside the current atomic-structure module. Use the [PBS/ChemThink atomic-structure sequence](${REFERENCES.pbsAtomSimulation}) or the [PhET Build an Atom simulation](${SIMULATIONS.buildAtom}) to explain the parts of an atom and then create a challenge set using particle counts.`,
 						"**Requirements:** Include a labeled atom diagram, definitions for proton, neutron, electron, nucleus, electron cloud, atomic number, atomic mass unit, and charge, plus at least eight build challenges: two neutral atoms, two isotopes, two positive ions, and two negative ions. Each challenge includes both a screenshot/sketch and the arithmetic used to determine identity, mass number, or charge.",
 						"**Analysis target:** Add one intentionally tricky challenge where the element identity stays the same even though charge changes, and one where mass number changes even though the element stays the same. These two cases force the distinction between isotope and ion.",
 						"**Completion checks:** Every answer includes proton, neutron, electron, mass number, atomic number, and charge evidence. The final explanation describes why changing electrons can change charge without changing the element."
 					].join("\n\n"),
-					datasetLink: REFERENCES.pbsAtomSimulation,
 					mediaLink: SIMULATIONS.buildAtom
 				},
 				{
@@ -780,11 +779,10 @@ export const introToChemistryCourse: RawCourse = {
 					title: "Project: Water Tension Experiment",
 					content: [
 						"**Project goal:** Preserve the original water-tension activity as a remote-safe explanation of cohesion and surface tension. The central question is why water can form a dome or bead before spilling, and why another liquid such as oil may behave differently.",
-						"**Requirements:** Use the Khan Academy water-cohesion reading, the optional video source, provided diagrams, or a safe supervised observation. Explain `H₂O` as two hydrogen atoms bonded to one oxygen atom, sketch a simple water-molecule model, define cohesion and surface tension, and connect those ideas to water droplets on a coin.",
+						`**Requirements:** Use the [Khan Academy water-cohesion reading](${REFERENCES.khanWaterCohesion}), the optional video source, provided diagrams, or a safe supervised observation. Explain \`H₂O\` as two hydrogen atoms bonded to one oxygen atom, sketch a simple water-molecule model, define cohesion and surface tension, and connect those ideas to water droplets on a coin.`,
 						"**Activity prompt:** Predict how many water droplets a coin could hold, compare water with oil or another provided liquid scenario, and explain whether a different coin size changes the result. Optional comparisons such as soda or honey are evidence prompts, not required materials.",
 						"**Completion checks:** The explanation connects visible droplet behavior to molecular attraction, uses cohesion and surface tension correctly, and states that the demonstration supports a model rather than directly showing individual molecules."
 					].join("\n\n"),
-					datasetLink: REFERENCES.khanWaterCohesion,
 					mediaLink: REFERENCES.waterTensionDemo
 				}
 			]
