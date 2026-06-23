@@ -1577,6 +1577,9 @@ describe("course text quality normalization", () => {
 
 		expect(corpus).not.toMatch(/linked Java (?:core|transfer)/i);
 		expect(corpus).not.toMatch(/courseFamily: "Java"/i);
+		expect(corpus).not.toMatch(/Debugging Math Homework/i);
+		expect(corpus).not.toMatch(/math-homework/i);
+		expect(corpus).not.toMatch(/homework and chores/i);
 		expect(corpus).toContain('courseFamily: "web development"');
 	});
 
@@ -3915,6 +3918,11 @@ describe("course text quality normalization", () => {
 		expect(templateCorpus).not.toMatch(/\bparent-supervised\b/i);
 		expect(templateCorpus).not.toMatch(/\bfast-track learner should\b/i);
 		expect(templateCorpus).not.toMatch(/\bEvery grade band should\b/i);
+		expect(templateCorpus).not.toMatch(/\bplaceholder assets\b/i);
+		expect(templateCorpus).not.toMatch(/\bcore lessons\b/i);
+		expect(templateCorpus).not.toMatch(/\bSequence Map\b/i);
+		expect(templateCorpus).not.toMatch(/\bStart with a deterministic\b/i);
+		expect(templateCorpus).not.toMatch(/\bStart with one plain\b/i);
 		expect(normalizerCorpus).toContain(
 			"Fast-track placement still requires"
 		);

@@ -948,7 +948,7 @@ function setCourseDevelopmentMetadata(courseId: string, course: RawCourse) {
 	const courseLabel = course.name.trim() || courseId;
 	const familyLabel = profile?.family ?? courseLabel;
 	const courseBoundaries = boundaryOverrides[courseId] ?? [
-		`${courseLabel} keeps prerequisites, core lessons, projects, targeted review, enrichment, and assessments labeled separately.`,
+		`${courseLabel} keeps prerequisites, core concepts, projects, targeted review, enrichment, and assessments labeled separately.`,
 		`${courseLabel} does not add adjacent-topic enrichment until the required ${familyLabel} project and completion check exist.`
 	];
 	const capstoneExpectations = capstoneFor(
@@ -2435,7 +2435,7 @@ function addAdvancedPythonStudioModule(courseId: string, course: RawCourse) {
 			{
 				title: "Studio Project: Local Document Search Engine",
 				content:
-					"**Project goal:** Read a folder of text/markdown/json files, build an inverted index, support keyword or prefix searches, rank results, and benchmark at least two query strategies. The project makes parsing, indexing, query behavior, and scoring visible enough to debug without guessing which file or token caused a result.\n\n**Implementation path:** Start with a deterministic fixture folder, normalize tokens, map each term to the files or positions where it appears, then add ranking only after raw lookup works. The first benchmark can compare scanning every file with querying the index. The design note explains what data is stored, what is intentionally ignored, and why that tradeoff fits a local search tool.\n\n**Completion checks:**\n- Parsing handles empty and malformed files.\n- Tests cover found, missing, repeated, and case-variant terms.\n- The report explains data structures and runtime."
+					"**Project goal:** Read a folder of text/markdown/json files, build an inverted index, support keyword or prefix searches, rank results, and benchmark at least two query strategies. The project makes parsing, indexing, query behavior, and scoring visible enough to debug without guessing which file or token caused a result.\n\n**Implementation path:** Begin from a deterministic fixture folder, normalize tokens, map each term to the files or positions where it appears, then add ranking only after raw lookup works. The first benchmark can compare scanning every file with querying the index. The design note explains what data is stored, what is intentionally ignored, and why that tradeoff fits a local search tool.\n\n**Completion checks:**\n- Parsing handles empty and malformed files.\n- Tests cover found, missing, repeated, and case-variant terms.\n- The report explains data structures and runtime."
 			},
 			{
 				title: "Studio Project: External Sort or Log Pipeline",
@@ -2471,7 +2471,7 @@ function addJavaBridgeModernModule(courseId: string, course: RawCourse) {
 				{
 					title: "Java Level 1 Project: Console Object Model",
 					content:
-						"**Project goal:** Convert a small Python-style console program into Java classes with fields, constructors, methods, and a testable main flow. The conversion shows why Java asks for explicit types, class structure, and method boundaries rather than simply translating syntax line by line.\n\n**Build path:** Start with one plain console flow, then identify the nouns that deserve fields and the actions that deserve methods. Keep `main` responsible for setup and demonstration, not for holding all of the program logic. The finished version makes object state visible through method calls and output, while keeping direct field access limited.\n\n**Completion checks:**\n- Input, stored state, and output responsibilities are separated.\n- At least one invalid or awkward input path is handled.\n- The explanation identifies one Java-specific design choice that did not exist in the Python version."
+						"**Project goal:** Convert a small Python-style console program into Java classes with fields, constructors, methods, and a testable main flow. The conversion shows why Java asks for explicit types, class structure, and method boundaries rather than simply translating syntax line by line.\n\n**Build path:** Begin from one plain console flow, then identify the nouns that deserve fields and the actions that deserve methods. Keep `main` responsible for setup and demonstration, not for holding all of the program logic. The finished version makes object state visible through method calls and output, while keeping direct field access limited.\n\n**Completion checks:**\n- Input, stored state, and output responsibilities are separated.\n- At least one invalid or awkward input path is handled.\n- The explanation identifies one Java-specific design choice that did not exist in the Python version."
 				},
 				{
 					title: "Java Level 1 Project: Record-backed Data Summary",
@@ -2958,7 +2958,7 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "UGD8 Project 1: Starter Repo Specification",
 				content:
-					"**Project goal:** Inspect and extend the full starter project baseline for one Unity module: scenes, scripts, prefabs, tests, packages, project settings, docs, LFS rules, and attribution file. The specification defines what belongs in the starter state, what belongs only in the review state, and how the project proves it can be opened from a clean clone.\n\n**Specification path:** List the minimum playable scene, the scripts that are intentionally incomplete, the placeholder assets, the expected package versions, and the first smoke test. Then identify which completed behaviors must stay out of the starter so the repo remains a legitimate starting point rather than a disguised solution.\n\n**Completion checks:**\n- The starter state is cloneable and playable.\n- Completed review work is not included in the starter state.\n- Validation steps are documented.",
+					"**Project goal:** Inspect and extend the full starter project baseline for one Unity module: scenes, scripts, prefabs, tests, packages, project settings, docs, LFS rules, and attribution file. The specification defines what belongs in the starter state, what belongs only in the review state, and how the project proves it can be opened from a clean clone.\n\n**Specification path:** List the minimum playable scene, the scripts that are intentionally incomplete, the temporary stand-in assets, the expected package versions, and the first smoke test. Then identify which completed behaviors must stay out of the starter so the repo remains a legitimate starting point rather than a disguised solution.\n\n**Completion checks:**\n- The starter state is cloneable and playable.\n- Completed review work is not included in the starter state.\n- Validation steps are documented.",
 				projectLink: repoFolderUrl(
 					courseId,
 					"UGD-full-project-starter"
