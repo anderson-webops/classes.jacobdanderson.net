@@ -239,7 +239,7 @@ If a variable is raised to a power, use the matching root. If a root is applied 
 			"AA3 Module Project: Movie Star Status (with Maddie Van Beek)",
 			[
 				createLesson(
-					"Project Brief",
+					"Movie Star Status Project Brief",
 					`
 Build a film-production budget from expressions, equations, and unit-rate calculations.
 
@@ -339,7 +339,7 @@ Addition and subtraction keep the inequality direction the same. Multiplying or 
 		]),
 		createModule("AA5 Module Project: Free Swag! (with Amisha Sisodiya)", [
 			createLesson(
-				"Project Brief",
+				"Free Swag Project Brief",
 				`
 Model a marketing campaign with algebraic expressions, equations, and inequalities.
 
@@ -412,7 +412,7 @@ Tie every slope computation back to a real rate such as deliveries per week, hei
 			"AA7 Module Project: Community Data Analysis (with Davin Lee)",
 			[
 				createLesson(
-					"Project Brief",
+					"Community Data Analysis Project Brief",
 					`
 This project uses community data to reason about rate of change, graph trends, and make a recommendation from the evidence.
 
@@ -486,7 +486,7 @@ The provided graph shows \`y > 2x + 5\`: shade the region above the dashed bound
 			"AA11 Module Project: Predicting Avalanches (with Ruby Lee)",
 			[
 				createLesson(
-					"Project Brief",
+					"Avalanche Prediction Project Brief",
 					`
 This project combines slope classification with avalanche-risk interpretation.
 
@@ -772,7 +772,7 @@ This module closes Algebra 1A and connects directly to the Algebra 1B sequence.
 			"AA15 Module Project: Cytogenetics Quest (with Dr. Renu Bajaj)",
 			[
 				createLesson(
-					"Project Brief",
+					"Cytogenetics Quest Project Brief",
 					`
 This project applies systems of equations to genetics-themed scenarios.
 
@@ -820,7 +820,7 @@ The answer key is strongest when the numeric solution is checked in the original
 			"AA16 Module Project: Battle of the Publications (with Konstantin Kaganovsky)",
 			[
 				createLesson(
-					"Project Brief",
+					"Battle of the Publications Project Brief",
 					`
 This project connects linear models and systems of equations to research output.
 
