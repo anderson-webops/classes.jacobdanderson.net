@@ -234,7 +234,13 @@ Common revision target: do not consume all available oxygen just because it is l
 
 ## Quantitative Chemistry Checkpoint Key
 
-`CaCO₃` is about `100 g/mol`: `40 + 12 + 3(16)`. `58.5 g NaCl` is `1.0 mol NaCl` using `58.5 g/mol`. In `2H₂ + O₂ → 2H₂O`, 4 mol `H₂` produces 4 mol `H₂O` because the ratio is `2:2`, or `1:1` after simplification. For `1 mol H₂` and `2 mol O₂`, hydrogen limits the reaction, `1.5 mol O₂` remains, `1 mol H₂O` forms, and about `285.8 kJ` is released if liquid water forms. For methane to water, the setup should go `g CH₄ → mol CH₄ → mol H₂O → g H₂O`; the `1:2` mole ratio comes from the balanced equation.
+Use these worked answers to check both the numerical result and the reasoning path:
+
+1. `CaCO₃` is about `100 g/mol`: `40 + 12 + 3(16)`.
+2. `58.5 g NaCl` is `1.0 mol NaCl` using `58.5 g/mol`.
+3. In `2H₂ + O₂ → 2H₂O`, `4 mol H₂` produces `4 mol H₂O` because the ratio is `2:2`, or `1:1` after simplification.
+4. For `1 mol H₂` and `2 mol O₂`, hydrogen limits the reaction, `1.5 mol O₂` remains, `1 mol H₂O` forms, and about `285.8 kJ` is released if liquid water forms.
+5. For methane to water, the setup should go `g CH₄ → mol CH₄ → mol H₂O → g H₂O`; the `1:2` mole ratio comes from the balanced equation.
 
 Common revision target: coefficients cannot be applied directly to grams because balanced equations compare particles or moles, not mass.
 
