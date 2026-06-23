@@ -2,10 +2,11 @@ import type { User } from "@/stores/app";
 import type { CourseSummary } from "@/stores/courses/types";
 
 export type CourseAccessStatus = "current" | "past";
+export type CourseAccessBucket = CourseAccessStatus | "other";
 export type CourseStatusMap = Record<string, CourseAccessStatus>;
 
 export interface CourseAccessGroup<T extends CourseSummary = CourseSummary> {
-	key: "current" | "past" | "other";
+	key: CourseAccessBucket;
 	label: string;
 	courses: T[];
 }
@@ -21,6 +22,19 @@ export function courseStatusForUser(
 	courseId: string
 ): CourseAccessStatus {
 	return normalizeStatus(user?.courseStatus?.[courseId]);
+}
+
+export function courseStatusBucketForUser(
+	user: Pick<User, "courseStatus"> | null | undefined,
+	courseId: string
+): CourseAccessBucket {
+	const statusMap = user?.courseStatus;
+	const status = statusMap?.[courseId];
+	if (VALID_COURSE_STATUSES.has(status as CourseAccessStatus)) {
+		return status as CourseAccessStatus;
+	}
+
+	return statusMap ? "other" : "current";
 }
 
 export function cleanCourseStatusMap(
@@ -67,8 +81,14 @@ export function groupCoursesByLearnerStatus<T extends CourseSummary>(
 			continue;
 		}
 
-		const status = courseStatusForUser(user, course.id);
-		groups[status === "past" ? 1 : 0].courses.push(course);
+		const status = courseStatusBucketForUser(user, course.id);
+		if (status === "past") {
+			groups[1].courses.push(course);
+		} else if (status === "other") {
+			groups[2].courses.push(course);
+		} else {
+			groups[0].courses.push(course);
+		}
 	}
 
 	return groups.filter(group => group.courses.length > 0);

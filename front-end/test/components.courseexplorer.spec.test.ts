@@ -442,14 +442,25 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("Complete");
 	});
 
-	it("groups learner course dropdown options by current and past status", async () => {
+	it("groups learner course dropdown options by current, past, and available status", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
 		const appStore = useAppStore();
 		const coursesStore = useCoursesStore();
-		const pastCourse = coursesStore.courses[0];
-		const currentCourse = coursesStore.courses[1];
+		const currentCourse = coursesStore.courses.find(
+			course => course.id === "python-level-1"
+		);
+		const pastCourse = coursesStore.courses.find(
+			course => course.id === "python-level-2"
+		);
+		const availableCourse = coursesStore.courses.find(
+			course => course.id === "python-level-3"
+		);
+
+		if (!currentCourse || !pastCourse || !availableCourse) {
+			throw new Error("Expected Python course fixtures.");
+		}
 
 		appStore.setCurrentUser({
 			_id: "user-1",
@@ -457,7 +468,7 @@ describe("CourseExplorer.vue", () => {
 			email: "student@example.com",
 			age: 12,
 			state: "GA",
-			courseAccess: [pastCourse.id, currentCourse.id],
+			courseAccess: [currentCourse.id, pastCourse.id, availableCourse.id],
 			courseStatus: {
 				[pastCourse.id]: "past",
 				[currentCourse.id]: "current"
@@ -481,7 +492,15 @@ describe("CourseExplorer.vue", () => {
 		const groups = wrapper.findAll("optgroup");
 		expect(groups.map(group => group.attributes("label"))).toEqual([
 			"Current courses",
-			"Past courses"
+			"Past courses",
+			"Other available courses"
+		]);
+		expect(
+			wrapper.findAll("#course-select option").map(option => option.text())
+		).toEqual([
+			currentCourse.name,
+			pastCourse.name,
+			availableCourse.name
 		]);
 		expect(
 			wrapper.find<HTMLSelectElement>("#course-select").element.value
