@@ -2236,7 +2236,7 @@ function addScienceGradeBandScopeModule(courseId: string, course: RawCourse) {
 				{
 					title: "Physical-Material Boundary",
 					content:
-						"**Remote investigation:** No activity requires beakers, chemicals, heat, food, kits, outdoor collection, or supervised construction. Optional observations must have an equivalent image, simulation, or data table.\n\n**Evidence target:** The core objective can be completed with only paper, notes, and browser/shared-screen access."
+						"**Remote investigation:** No activity requires beakers, chemicals, heat, food, kits, outdoor collection, or supervised construction. Optional observations must have an equivalent image, simulation, or data table. The course treats physical materials as optional context, not a requirement for participation or progress.\n\n**Evidence target:** The core objective can be completed with only paper, notes, and browser/shared-screen access. A complete activity names the evidence source, labels what was observed, and explains the pattern without depending on a household experiment."
 				}
 			],
 			supplementalProjects: [
@@ -2859,9 +2859,9 @@ function addSystemsSpecificSafetyModule(courseId: string, course: RawCourse) {
 			{
 				title: `${courseLabel} Prohibited Activity`,
 				content: [
-					`**Safety boundary:** These activities are outside ${courseLabel} scope even if they are technically possible.`,
+					`**Safety boundary:** These activities are outside ${courseLabel} scope even if they are technically possible. The allowed version of the work stays local, owned, reversible, and tied to defensive explanation or systems understanding rather than real-world impact.`,
 					`**Do not do:**\n${bullets(config.prohibited)}`,
-					`**Evidence target:** Any ambiguous ${courseLabel} target or action is paused until scope is narrowed.`
+					`**Evidence target:** Any ambiguous ${courseLabel} target or action is paused until scope is narrowed. A complete note names the owned lab target, the allowed observation, the prohibited boundary it avoids, and the rollback or cleanup step that keeps the work contained.`
 				].join("\n\n")
 			},
 			{
