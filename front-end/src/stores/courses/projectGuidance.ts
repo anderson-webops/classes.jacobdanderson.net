@@ -376,6 +376,11 @@ function compactGuidanceBody(
 			`${capitalizedScopedReference} $1`
 		)
 		.replace(new RegExp(escapedTitle, "g"), scopedReference)
+		.replace(new RegExp(`\\b${escapedScopedReference}\\b`, "g"), reference)
+		.replace(
+			new RegExp(`\\b${escapedBareScopedReference}\\b`, "g"),
+			bareReference
+		)
 		.replace(
 			/\b(After|after|Before|before|When|when|If|if|While|while|Once|once|Until|until|With|with|For|for|From|from|Against|against) The (program|project|artifact|app|lab|result|feature|pipeline)\b/g,
 			(_match: string, lead: string, item: string) =>
@@ -761,6 +766,29 @@ function compactGuidanceBody(
 		)
 		.replace(/\beach the [^.!?\n]{1,160}? Java type\b/g, "each Java type")
 		.replace(new RegExp(`\\b(${cleanupReferenceNames}) \\1\\b`, "gi"), "$1")
+		.replace(
+			new RegExp(
+				`\\bone intermediate the (${cleanupReferenceNames}) ` +
+					"(table|trace|metric|baseline|visualization|result|output|step)\\b",
+				"g"
+			),
+			"one intermediate $2"
+		)
+		.replace(
+			new RegExp(
+				`\\bhand-verifiable the (${cleanupReferenceNames}) case\\b`,
+				"g"
+			),
+			"hand-verifiable case"
+		)
+		.replace(
+			/\bsmall command-line build command-line checks\b/g,
+			"small command-line checks"
+		)
+		.replace(
+			/\bAfter the solution samples and custom cases pass\b/g,
+			"After official samples and custom cases pass"
+		)
 		.replace(/\b([A-Z][A-Z-]{3,})\s+\1\b/gi, "$1")
 		.replace(/\b(the final|The final|the closing|The closing) the\b/g, "$1")
 		.replace(
@@ -771,6 +799,15 @@ function compactGuidanceBody(
 			(_match: string, lead: string, noun: string) =>
 				`${lead} ${noun} for ${scopedReference}`
 		)
+		.replace(/\b[Tt]he final note should\b/g, "Record")
+		.replace(/\b[Tt]he final note names\b/g, "Record")
+		.replace(/\b[Tt]he final note identifies\b/g, "Record")
+		.replace(/\b[Tt]he final note states\b/g, "State")
+		.replace(/\b[Tt]he final note explains\b/g, "Explain")
+		.replace(/\b[Tt]he final note separates\b/g, "Separate")
+		.replace(/\b[Tt]he final note connects\b/g, "Connect")
+		.replace(/\b[Tt]he final note distinguishes\b/g, "Distinguish")
+		.replace(/\b[Tt]he final note limits\b/g, "Limit")
 		.replace(/(^|\s)- the\b/g, "$1- The")
 		.replace(
 			/\b(a|an) the ([A-Z][^.!?\n]{1,120}?)( verification note| review| summary| note)\b/g,
@@ -786,6 +823,7 @@ function compactGuidanceBody(
 			(_match: string, prefix: string, first: string) =>
 				`${prefix}- ${first.toUpperCase()}`
 		)
+		.replace(/(^|\n)- the\b/g, "$1- The")
 		.replace(
 			/(^|\n)(\d+\. )([a-z])/g,
 			(_match, prefix: string, marker: string, first: string) =>
@@ -813,6 +851,12 @@ function normalizeGeneratedGuidanceText(
 		.replace(new RegExp(`\\b(${cleanupReferenceNames}) \\1\\b`, "gi"), "$1")
 		.replace(/\b([A-Z][A-Z-]{3,})\s+\1\b/gi, "$1")
 		.replace(/\b(the final|The final|the closing|The closing) the\b/g, "$1")
+		.replace(/\bThe the ([a-z])/g, "The $1")
+		.replace(/\bthe the ([a-z])/g, "the $1")
+		.replace(
+			/\bAfter the solution samples and custom cases pass\b/g,
+			"After official samples and custom cases pass"
+		)
 		.replace(
 			new RegExp(
 				`\\b(final|Final|closing|Closing) the ([^\\n]{1,220}?) ` +
@@ -828,6 +872,15 @@ function normalizeGeneratedGuidanceText(
 				noun: string
 			) => `${lead} ${noun} for the ${subject} ${reference}`
 		)
+		.replace(/\b[Tt]he final note should\b/g, "Record")
+		.replace(/\b[Tt]he final note names\b/g, "Record")
+		.replace(/\b[Tt]he final note identifies\b/g, "Record")
+		.replace(/\b[Tt]he final note states\b/g, "State")
+		.replace(/\b[Tt]he final note explains\b/g, "Explain")
+		.replace(/\b[Tt]he final note separates\b/g, "Separate")
+		.replace(/\b[Tt]he final note connects\b/g, "Connect")
+		.replace(/\b[Tt]he final note distinguishes\b/g, "Distinguish")
+		.replace(/\b[Tt]he final note limits\b/g, "Limit")
 		.replace(
 			new RegExp(`\\b${escapedCourseFamily} the ([A-Z])`, "g"),
 			"the $1"
@@ -1236,7 +1289,7 @@ function requiredWorkSteps(
 			],
 			[
 				`Convert ${moduleTitle} into precise stdin/stdout behavior, a maintained invariant, and a target runtime before coding.`,
-				`Build the ${moduleTitle} solution around one hand-checkable case, then expand to the sample and one adversarial or boundary input.`,
+				`Use one hand-checkable ${moduleTitle} case first, then test the sample and one adversarial or boundary input.`,
 				`Record the constraint, edge case, or ordering detail in ${moduleTitle} that most influenced the algorithm.`
 			]
 		][variantIndex(courseFamily, moduleTitle, kind, 4)];
@@ -1626,7 +1679,7 @@ function referenceReviewStep(
 
 	if (family.includes("usaco")) {
 		return [
-			`After the ${moduleTitle} samples and custom cases pass, compare against the reference and record one difference in invariant, complexity, or edge-case handling.`,
+			`After ${moduleTitle} samples and custom cases pass, compare against the reference and record one difference in invariant, complexity, or edge-case handling.`,
 			`Use the ${moduleTitle} reference only after local tests pass, then note one difference in proof idea, bounds handling, or complexity.`,
 			`Compare ${moduleTitle} with the reference after the sample and edge case pass, focusing on invariant, implementation detail, or failure-mode check.`,
 			`After ${moduleTitle} behaves like a contest submission, use the reference to check one missed edge case or alternate invariant.`

@@ -3163,7 +3163,7 @@ function subjectFocus(context: CourseTextContext) {
 			"systems programming with machine representation, memory layout, build tooling, low-level debugging, and safe constraints"
 		);
 	}
-	if (isJavaContext(context)) {
+	if (isJavaContext(context) && !isCppContext(context)) {
 		return variantPrompt(context, [
 			() =>
 				topicScopedFocus(
@@ -3497,7 +3497,7 @@ function commonPitfalls(context: CourseTextContext) {
 				`For ${subject}, check whether data setup, transformation, and output are separated enough to test a standard scenario and a boundary scenario without guessing.`
 		]);
 	}
-	if (isJavaContext(context)) {
+	if (isJavaContext(context) && !isCppContext(context)) {
 		return variantPrompt(context, [
 			subject =>
 				`In ${subject}, common mistakes include confusing class and object responsibilities, using static state when instance state is needed, comparing objects incorrectly, or skipping compile/run feedback after a small change.`,
@@ -3797,7 +3797,7 @@ function proficiencyEvidence(context: CourseTextContext) {
 				`For ${subject}, demonstrate that the Python code is readable, runnable, and testable by showing the main path plus one case that would catch a common mistake.`
 		]);
 	}
-	if (isJavaContext(context)) {
+	if (isJavaContext(context) && !isCppContext(context)) {
 		return variantPrompt(context, [
 			subject =>
 				`Explain the object roles in ${subject}, show the method call or test that proves the behavior, and identify one state or type decision that matters.`,
@@ -4555,7 +4555,7 @@ function projectExpectations(context: CourseTextContext) {
 			]
 		]);
 	}
-	if (isJavaContext(context)) {
+	if (isJavaContext(context) && !isCppContext(context)) {
 		return variantLines(context, [
 			subject => [
 				`- Define the classes, object state, method inputs, return values, and expected console or test output for ${subject}.`,
@@ -6783,7 +6783,7 @@ function studioBuildSequence(context: CourseTextContext) {
 			]
 		]);
 	}
-	if (isJavaContext(context)) {
+	if (isJavaContext(context) && !isCppContext(context)) {
 		return variantLines(context, [
 			() => [
 				`- Assign each ${studioLabel} responsibility to a Java type, method contract, record, interface, or collection boundary.`,
@@ -7131,7 +7131,7 @@ function studioExtensionPrompt(context: CourseTextContext) {
 				"Add one interpretation note that separates evidence from speculation."
 		]);
 	}
-	if (isJavaContext(context)) {
+	if (isJavaContext(context) && !isCppContext(context)) {
 		const subjectReference = articleSafeStudioReference(
 			supportFocusTopic(context)
 		);
@@ -7339,11 +7339,8 @@ function studioSupport(context: CourseTextContext) {
 			supportLabel === "Applied lab" ? "this lab" : "this studio";
 	}
 	const compactStudioReference =
-		studioReference && !/^this (?:lab|studio)$/i.test(studioReference)
-			? studioReference
-			: supportLabel === "Applied lab"
-				? "the lab"
-				: "the studio";
+		supportLabel === "Applied lab" ? "the lab" : "the studio";
+	const sentenceStudioReference = capitalizeSentence(compactStudioReference);
 	const supportSubject = studioSupportSubject(context, supportNoun);
 	const compactStudio = (text: string) =>
 		compactStudioSupportText(
@@ -7362,36 +7359,34 @@ function studioSupport(context: CourseTextContext) {
 			"",
 			compactStudioReference
 		);
-	const compactScopedStudio = (text: string) =>
-		compactStudioSupportText(text, "", studioReference);
+	const compactScopedStudio = (text: string) => compactStudio(text);
 	const pathTitle =
 		`${itemTitle} ${context.item.projectLink ?? ""}`.toLowerCase();
-	const pathSubject = studioReference;
 	const studioFocus = variantPrompt(context, [
 		() =>
-			`For ${studioReference}, name the minimum working version first, then add extensions only after the required behavior is testable; ${studioReference} connects prerequisite ideas to a concrete result, a testable constraint, and a visible review point.`,
+			`For ${compactStudioReference}, name the minimum working version first, then add extensions only after the required behavior is testable; the work connects prerequisite ideas to a concrete result, a testable constraint, and a visible review point.`,
 		() =>
-			`For ${studioReference}, define the artifact, prerequisite concepts, success criteria, and evidence before adding polish.`,
+			`For ${compactStudioReference}, define the artifact, prerequisite concepts, success criteria, and evidence before adding polish.`,
 		() =>
-			`Frame ${studioReference} around one visible result, the constraints that shape it, and the evidence that confirms it works.`,
+			`Frame ${compactStudioReference} around one visible result, the constraints that shape it, and the evidence that confirms it works.`,
 		() =>
-			`Separate ${studioReference} setup, core behavior, edge cases, and review notes so the finished artifact can be inspected later.`,
+			`Separate ${compactStudioReference} setup, core behavior, edge cases, and review notes so the finished artifact can be inspected later.`,
 		() =>
-			`Build the smallest complete version of ${studioReference} first, then record evidence that shows it meets the named requirements.`,
+			`Build the smallest complete version of ${compactStudioReference} first, then record evidence that shows it meets the named requirements.`,
 		() =>
-			`Connect ${studioReference} prerequisites to a concrete result, a testable constraint, and a visible review point.`,
+			`Connect ${compactStudioReference} prerequisites to a concrete result, a testable constraint, and a visible review point.`,
 		() =>
-			`Define ${studioReference} by its required behavior, verification evidence, likely edge case, and final explanation target.`,
+			`Define ${compactStudioReference} by its required behavior, verification evidence, likely edge case, and final explanation target.`,
 		() =>
-			`Keep ${studioReference} organized around setup, implementation, verification, and one improvement or limitation.`,
+			`Keep ${compactStudioReference} organized around setup, implementation, verification, and one improvement or limitation.`,
 		() =>
-			`Use ${studioReference} to make the course concept visible through one artifact, one test case, and one explanation.`,
+			`Use ${compactStudioReference} to make the course concept visible through one artifact, one test case, and one explanation.`,
 		() =>
-			`Treat ${studioReference} as a compact build: define the result, check the result, then name the next safe change.`,
+			`Treat ${compactStudioReference} as a compact build: define the result, check the result, then name the next safe change.`,
 		() =>
-			`Anchor ${studioReference} in one observable behavior and one evidence source before adding optional complexity.`,
+			`Anchor ${compactStudioReference} in one observable behavior and one evidence source before adding optional complexity.`,
 		() =>
-			`Make ${studioReference} reviewable by naming the artifact, success signal, boundary case, and follow-up note.`
+			`Make ${compactStudioReference} reviewable by naming the artifact, success signal, boundary case, and follow-up note.`
 	]);
 	const reviewTarget = compactStudioReference;
 	const reviewStep = variantPrompt(context, [
@@ -7427,65 +7422,65 @@ function studioSupport(context: CourseTextContext) {
 	const compactExtension = compactStudioSupportText(
 		compactStudio(studioExtensionPrompt(context)),
 		"",
-		studioReference
+		compactStudioReference
 	);
 	const studioIntro = isScratchSource(contextText(context))
 		? `**${supportLabel}:** ${supportSubject} defines a Scratch project slice around ${unscopedSubjectFocus(context)}.`
 		: `**${supportLabel}:** ${supportSubject} produces ${studioArtifact(context)} connected to ${unscopedSubjectFocus(context)}.`;
 	const studioPath = (() => {
 		if (pathTitle.includes("build requirements")) {
-			return `Build path for ${pathSubject}: define the required parts, connect them into one runnable artifact, and verify the complete path rather than isolated pieces.`;
+			return `Build path for ${compactStudioReference}: define the required parts, connect them into one runnable artifact, and verify the complete path rather than isolated pieces.`;
 		}
 		if (
 			pathTitle.includes("common bug") ||
 			pathTitle.includes("debugging")
 		) {
-			return `Debug path for ${pathSubject}: reproduce one realistic failure, name the suspected cause, change the smallest relevant script or state rule, and verify the fix.`;
+			return `Debug path for ${compactStudioReference}: reproduce one realistic failure, name the suspected cause, change the smallest relevant script or state rule, and verify the fix.`;
 		}
 		if (
 			pathTitle.includes("share and explain") ||
 			pathTitle.includes("presentation")
 		) {
-			return `Explanation path for ${pathSubject}: connect the finished behavior to the main event chain, state variable, design choice, and remaining limitation.`;
+			return `Explanation path for ${compactStudioReference}: connect the finished behavior to the main event chain, state variable, design choice, and remaining limitation.`;
 		}
 		if (
 			pathTitle.includes("design and planning") ||
 			pathTitle.includes("planning map")
 		) {
-			return `Planning path for ${pathSubject}: map the pieces, first runnable checkpoint, verification evidence, and one likely risk before implementation expands.`;
+			return `Planning path for ${compactStudioReference}: map the pieces, first runnable checkpoint, verification evidence, and one likely risk before implementation expands.`;
 		}
 		if (pathTitle.includes("worked example")) {
-			return `Model path for ${pathSubject}: setup, one hand-checkable trace, expected output, and the reason the result is trustworthy.`;
+			return `Model path for ${compactStudioReference}: setup, one hand-checkable trace, expected output, and the reason the result is trustworthy.`;
 		}
 		if (pathTitle.includes("core project")) {
-			return `Required build path for ${pathSubject}: complete the required artifact first, then verify the standard case and one boundary case.`;
+			return `Required build path for ${compactStudioReference}: complete the required artifact first, then verify the standard case and one boundary case.`;
 		}
 		if (pathTitle.includes("review")) {
-			return `Review path for ${pathSubject}: inspect the result, name one limitation or bug risk, and record the next improvement.`;
+			return `Review path for ${compactStudioReference}: inspect the result, name one limitation or bug risk, and record the next improvement.`;
 		}
 		if (
 			pathTitle.includes("transfer") ||
 			pathTitle.includes("supplemental 2")
 		) {
-			return `Transfer path for ${pathSubject}: change one dataset, constraint, representation, or context and compare what still works.`;
+			return `Transfer path for ${compactStudioReference}: change one dataset, constraint, representation, or context and compare what still works.`;
 		}
 		if (
 			pathTitle.includes("extension") ||
 			pathTitle.includes("challenge") ||
 			pathTitle.includes("supplemental 3")
 		) {
-			return `Extension path for ${pathSubject}: add a harder case, second metric, alternate representation, or deeper limitation check after the base version works.`;
+			return `Extension path for ${compactStudioReference}: add a harder case, second metric, alternate representation, or deeper limitation check after the base version works.`;
 		}
 
 		return variantPrompt(context, [
 			() =>
-				`${pathSubject} connects the activity goal to a visible artifact, verification evidence, and one limitation that can be inspected later.`,
+				`${sentenceStudioReference} connects the activity goal to a visible artifact, verification evidence, and one limitation that can be inspected later.`,
 			() =>
-				`${pathSubject} starts from the intended result, then records the evidence, boundary behavior, and limitation that make the work reviewable.`,
+				`${sentenceStudioReference} starts from the intended result, then records the evidence, boundary behavior, and limitation that make the work reviewable.`,
 			() =>
-				`Use ${pathSubject} to produce a concrete result, verify it against the stated concept, and name one limitation before extending it.`,
+				`Use ${compactStudioReference} to produce a concrete result, verify it against the stated concept, and name one limitation before extending it.`,
 			() =>
-				`${pathSubject} leaves behind a runnable artifact, a specific verification note, and one improvement tied to the stated concept.`
+				`${sentenceStudioReference} leaves behind a runnable artifact, a specific verification note, and one improvement tied to the stated concept.`
 		]);
 	})();
 

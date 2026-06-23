@@ -36,6 +36,10 @@ function capitalizedDefiniteLabel(label: string) {
 	return `The **${articleSafeLabel(label)}**`;
 }
 
+function capitalizeSentence(value: string) {
+	return `${value.slice(0, 1).toUpperCase()}${value.slice(1)}`;
+}
+
 function familyFocus(courseFamily: string) {
 	const family = courseFamily.toLowerCase();
 
@@ -102,12 +106,10 @@ function familyFocus(courseFamily: string) {
 	return "inputs, state changes, system boundaries, observable behavior, edge cases, and verification evidence";
 }
 
-function referenceStep(label: string, artifact: string, hasReference = true) {
-	const artifactLabel = definiteLabel(label);
-
+function referenceStep(artifact: string, hasReference = true) {
 	return hasReference
-		? `Compare the finished **${label}** ${artifact} with the reference only after it works; record one meaningful difference in behavior, robustness, readability, or design.`
-		: `Write a verification note for ${artifactLabel} ${artifact} that identifies the evidence used to confirm the result.`;
+		? `Compare the finished ${artifact} with the reference only after it works; record one meaningful difference in behavior, robustness, readability, or design.`
+		: `Write a verification note for the ${artifact} that identifies the evidence used to confirm the result.`;
 }
 
 function variantIndex(
@@ -160,19 +162,19 @@ export function buildImplementationLabGuidance({
 			`A small **${label}** example comes first so the later build has a known baseline.`
 		][variant];
 		const traceStep = [
-			`Use the same vocabulary the later **${label}** work will use: inputs, state changes, boundaries, outputs, and the evidence that confirms each step.`,
-			`Connect the **${label}** example to the later build by naming the input, state transition, boundary, output, and verification evidence in order.`,
-			`Keep the **${label}** example inspectable: record what enters the system, what changes, where the boundary is, what comes out, and how the result is checked.`,
-			`Describe the **${label}** example as a reusable pattern, not a script to copy: starting condition, transition, result, and evidence all need names.`
+			"Use the same vocabulary the later work will use: inputs, state changes, boundaries, outputs, and the evidence that confirms each step.",
+			"Connect the example to the later build by naming the input, state transition, boundary, output, and verification evidence in order.",
+			"Keep the example inspectable: record what enters the system, what changes, where the boundary is, what comes out, and how the result is checked.",
+			"Describe the example as a reusable pattern, not a script to copy: starting condition, transition, result, and evidence all need names."
 		][variant];
 
 		return [
 			opener,
 			context?.exampleCase ??
-				`For **${label}**, record the starting files or commands, exact input, expected result, observed result, and a visible checkpoint that proves the code is moving in the right direction.`,
+				"Record the starting files or commands, exact input, expected result, observed result, and a visible checkpoint that proves the code is moving in the right direction.",
 			traceStep,
 			context?.boundaryCase ??
-				`Then add one **${label}** boundary or failure-mode check so the project has a clear comparison between standard behavior and the edge condition that most needs protection.`
+				"Then add one boundary or failure-mode check so the project has a clear comparison between standard behavior and the edge condition that most needs protection."
 		].join("\n\n");
 	}
 
@@ -188,6 +190,8 @@ export function buildImplementationLabGuidance({
 	const artifact =
 		section === "coreProject" ? "working version" : "extension version";
 	const artifactArticle = artifact.startsWith("extension") ? "an" : "a";
+	const artifactReference = `the ${artifact}`;
+	const capitalizedArtifactReference = capitalizeSentence(artifactReference);
 	const projectGoal = [
 		`**Project goal:** Build **${label}** as ${artifactArticle} ${artifact} with runnable behavior, inspectable evidence, and a clear boundary case.`,
 		`**Project goal:** Complete **${label}** as ${artifactArticle} ${artifact} that exposes the lab concept through a working run and one protected edge case.`,
@@ -199,13 +203,13 @@ export function buildImplementationLabGuidance({
 		projectGoal,
 		`**Focus:** ${focus}.`,
 		"**Core work:**",
-		`1. For ${definiteLabel(label)} ${artifact}, identify the concrete inputs, outputs, state changes, files, commands, services, or system boundaries involved.`,
-		`2. Build ${definiteLabel(label)} ${artifact} in small runnable steps, checking output, logs, traces, tests, or browser/runtime behavior after each meaningful change.`,
-		`3. Check ${definiteLabel(label)} ${artifact} with one standard path, one boundary or failure path, and one case tied directly to the lab's main concept.`,
-		`4. ${referenceStep(label, artifact, hasReference)}`,
+		`1. For ${artifactReference}, identify the concrete inputs, outputs, state changes, files, commands, services, or system boundaries involved.`,
+		`2. Build ${artifactReference} in small runnable steps, checking output, logs, traces, tests, or browser/runtime behavior after each meaningful change.`,
+		`3. Check ${artifactReference} with one standard path, one boundary or failure path, and one case tied directly to the lab's main concept.`,
+		`4. ${referenceStep(artifact, hasReference)}`,
 		"**Completion checks:**",
-		`- ${capitalizedDefiniteLabel(label)} ${artifact} demonstrates the lab concept through runnable behavior, output, tests, traces, logs, or another concrete result.`,
-		`- ${capitalizedDefiniteLabel(label)} ${artifact} includes a named boundary, failure path, or constraint check beyond the provided sample.`,
-		`- The final note for **${articleSafeLabel(label)}** identifies one implementation, debugging, or reasoning choice that materially affected the result.`
+		`- ${capitalizedArtifactReference} demonstrates the lab concept through runnable behavior, output, tests, traces, logs, or another concrete result.`,
+		`- ${capitalizedArtifactReference} includes a named boundary, failure path, or constraint check beyond the provided sample.`,
+		"- Record one implementation, debugging, or reasoning choice that materially affected the result."
 	].join("\n\n");
 }
