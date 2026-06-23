@@ -1391,9 +1391,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Simulation catalog:** https://phet.colorado.edu/en/simulations/filter?subjects=chemistry. Choose a specific simulation from the catalog before treating it as evidence; the course item or notebook entry names the simulation and the setting used.",
 						"**Use:** A simulation counts as evidence only when a specific setting, observation, or screenshot is connected to a claim. A good simulation note records the variable changed, the visible result, and the particle-level interpretation.",
 						"**Evidence target:** Simulation-based work includes the variable changed, what was observed, what the observation supports, and one limitation of the model."
-					].join("\n\n"),
-					mediaLink:
-						"https://phet.colorado.edu/en/simulations/filter?subjects=chemistry"
+					].join("\n\n")
 				},
 				{
 					title: "Remote-Safe Investigation Checklist",

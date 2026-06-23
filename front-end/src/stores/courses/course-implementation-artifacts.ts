@@ -1314,8 +1314,7 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 					`**Project goal:** ${guidance.projectGoal} Include ${guidance.observations}, one claim, evidence from the source, and reasoning that uses the target vocabulary.`,
 					`**Changed-condition prediction:** Predict what would happen if ${guidance.changedCondition} changed, then state what evidence would confirm or challenge that prediction.`,
 					"**Completion checks:**\n- The evidence comes from the shared source.\n- The reasoning explains why the evidence supports the claim.\n- The work includes a prediction for what would change if one variable changed."
-				].join("\n\n"),
-				mediaLink: links?.catalogLink
+				].join("\n\n")
 			},
 			{
 				title: "Resource Project: Model Critique",

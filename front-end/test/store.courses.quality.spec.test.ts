@@ -6080,7 +6080,12 @@ describe("course text quality normalization", () => {
 			...module.supplementalProjects
 		]);
 		const linkedItems = items.filter(
-			item => item.mediaLink || item.datasetLink || item.solutionLink
+			item =>
+				item.projectLink ||
+				item.mediaLink ||
+				item.datasetLink ||
+				item.solutionLink ||
+				/https?:\/\//i.test(item.content)
 		);
 		const thinItems = items.filter(item => item.content.length < 650);
 		const localMaterialLinks = items.filter(item =>
