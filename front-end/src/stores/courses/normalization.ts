@@ -191,6 +191,99 @@ function contextualGenericTitle(
 	return `${genericTitleLabel(label)}: ${focus}`;
 }
 
+function compactContextualTitleFocus(
+	courseTitle: string,
+	moduleTitle: string,
+	focusSource: string
+) {
+	const compacted = compactTitleFocus(focusSource, courseTitle)
+		.replace(/^Check-In\s+\d+:\s*/i, "")
+		.replace(/^Master Project:\s*/i, "")
+		.replace(/^Module Project:\s*/i, "")
+		.replace(/^Course\s+Path:\s*/i, "")
+		.replace(/^SADX\s+/i, "")
+		.replace(/^Defensive\s+/i, "")
+		.replace(/^Java Level \d+:\s*/i, "")
+		.replace(/^JavaScript Level \d+:\s*/i, "")
+		.replace(/^Algebra\s+\d+[AB]?\s+/i, "")
+		.replace(/^[A-Z]{1,6}\d+(?:\.\d+)?\s*[:.-]?\s*/i, "")
+		.replace(/\s{2,}/g, " ")
+		.trim();
+	const focus = compacted || compactTitleFocus(moduleTitle, courseTitle);
+
+	if (!focus.includes(":")) return focus;
+
+	const parts = focus
+		.split(":")
+		.map(part => part.trim())
+		.filter(Boolean);
+	const finalPart = parts.at(-1) ?? focus;
+
+	return finalPart.length >= 4 ? finalPart : focus;
+}
+
+function compactGeneratedDisplayTitle(
+	courseTitle: string,
+	moduleTitle: string,
+	itemTitle: string
+) {
+	const labels = [
+		"Applied Challenge",
+		"Challenge Lab",
+		"Challenge Practice",
+		"Core Project",
+		"Debugging and Failure Modes",
+		"Diagnostic Checkpoint",
+		"Understanding Check",
+		"Extension Challenge",
+		"Extension Lab",
+		"Extension Practice",
+		"Fluency Drill",
+		"Focused Practice",
+		"Modeling or Error Analysis",
+		"Open-Ended Variant",
+		"Planning and Architecture",
+		"Review",
+		"Review and Reflection",
+		"Standards Practice Set",
+		"Transfer Lab",
+		"Transfer Practice",
+		"Verification Review",
+		"Verification and Reflection"
+	].sort((left, right) => right.length - left.length);
+	const normalizedTitle = itemTitle.toLowerCase();
+	const leadingLabel = labels.find(label =>
+		normalizedTitle.startsWith(`${label.toLowerCase()}:`)
+	);
+	if (leadingLabel) {
+		const label = genericTitleLabel(leadingLabel);
+		const topic = compactContextualTitleFocus(
+			courseTitle,
+			moduleTitle,
+			itemTitle.slice(leadingLabel.length + 1).trim()
+		);
+
+		return `${label}: ${topic}`;
+	}
+
+	const trailingLabel = labels.find(label =>
+		normalizedTitle.endsWith(` ${label.toLowerCase()}`)
+	);
+	if (!trailingLabel) return itemTitle;
+
+	const topic = itemTitle.slice(0, -trailingLabel.length).trim();
+	if (!sameTitle(topic, moduleTitle)) return itemTitle;
+
+	const label = genericTitleLabel(trailingLabel);
+	const compactedTopic = compactContextualTitleFocus(
+		courseTitle,
+		moduleTitle,
+		moduleTitle
+	);
+
+	return `${label}: ${compactedTopic}`;
+}
+
 function cleanDisplayTitle(text: string) {
 	return cleanTitleText(text)
 		.replace(/\bTodo\b/g, "To-Do")
@@ -431,6 +524,21 @@ function contextualizeGenericDisplayTitles(course: RawCourse) {
 				course.name,
 				module.title,
 				colonSuffix,
+				item.title
+			);
+		}
+	}
+}
+
+function compactGeneratedDisplayTitles(course: RawCourse) {
+	for (const module of course.modules) {
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			item.title = compactGeneratedDisplayTitle(
+				course.name,
+				module.title,
 				item.title
 			);
 		}
@@ -8063,6 +8171,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	distinguishDuplicateGeneratedProjectGuidance(course);
 	normalizeLegacyBranding(course);
 	contextualizeGenericDisplayTitles(course);
+	compactGeneratedDisplayTitles(course);
 	formatVisibleCourseMarkdown(course);
 	cleanVisibleCourseGrammar(course);
 	return course;

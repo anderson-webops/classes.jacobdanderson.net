@@ -3803,6 +3803,8 @@ describe("course text quality normalization", () => {
 				/(?:Applied Challenge|Core Project|Debugging and Failure Modes|Diagnostic Checkpoint|Extension Challenge|Fluency Drill|Focused Practice|Modeling or Error Analysis|Open-Ended Variant|Planning and Architecture|Standards Practice Set|Supplemental(?: Project| Practice)? [23]|Verification and Reflection)$/i;
 			const genericColonTitlePattern =
 				/^.+:\s*(?:Applied Challenge|Core Project|Extension Challenge|Supplemental(?: Project| Practice)? [2-9])$/i;
+			const stackedGeneratedTitlePattern =
+				/\b(?:Supplemental Project \d+:\s*)?(?:Project|Practice|Extension|Transfer)\s*:\s*[^:]{15,}:\s*[^:]{15,}/i;
 			const generatedSupplementalResiduePattern =
 				/\bsupplemental\s+[2-9]\b/i;
 			const nestedBoldProjectGoalPattern =
@@ -3820,8 +3822,18 @@ describe("course text quality normalization", () => {
 						...module.curriculum,
 						...module.supplementalProjects
 					]) {
-						if (item.title.length > 105) {
+						if (item.title.length > 96) {
 							longItemTitles.push(
+								`${courseCatalog[courseIndex].id} / ${module.title} / ${item.title}`
+							);
+						}
+						if (
+							item.title
+								.toLowerCase()
+								.includes(module.title.toLowerCase()) &&
+							item.title.length > 55
+						) {
+							redundantGenericTitles.push(
 								`${courseCatalog[courseIndex].id} / ${module.title} / ${item.title}`
 							);
 						}
@@ -3848,6 +3860,7 @@ describe("course text quality normalization", () => {
 						}
 						if (
 							genericColonTitlePattern.test(item.title) ||
+							stackedGeneratedTitlePattern.test(item.title) ||
 							generatedSupplementalResiduePattern.test(item.title)
 						) {
 							redundantGenericTitles.push(
