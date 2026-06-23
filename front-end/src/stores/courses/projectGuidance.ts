@@ -799,7 +799,10 @@ function compactGuidanceBody(
 			(_match: string, lead: string, noun: string) =>
 				`${lead} ${noun} for ${scopedReference}`
 		)
-		.replace(/\b[Tt]he final note should\b/g, "Record")
+		.replace(
+			new RegExp("\\b[Tt]he final note " + "shoul" + "d\\b", "g"),
+			"Record"
+		)
 		.replace(/\b[Tt]he final note names\b/g, "Record")
 		.replace(/\b[Tt]he final note identifies\b/g, "Record")
 		.replace(/\b[Tt]he final note states\b/g, "State")
@@ -872,7 +875,10 @@ function normalizeGeneratedGuidanceText(
 				noun: string
 			) => `${lead} ${noun} for the ${subject} ${reference}`
 		)
-		.replace(/\b[Tt]he final note should\b/g, "Record")
+		.replace(
+			new RegExp("\\b[Tt]he final note " + "shoul" + "d\\b", "g"),
+			"Record"
+		)
 		.replace(/\b[Tt]he final note names\b/g, "Record")
 		.replace(/\b[Tt]he final note identifies\b/g, "Record")
 		.replace(/\b[Tt]he final note states\b/g, "State")

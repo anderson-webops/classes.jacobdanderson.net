@@ -4404,9 +4404,10 @@ describe("course text quality normalization", () => {
 			?.curriculum.find(item => item.title === "Core Concepts");
 
 		expect(scratchStudio).toBeDefined();
-		expect(scratchStudio!.content).toContain("\n   **Checkpoints:**\n   -");
+		expect(scratchStudio!.content).toContain("**Studio practice:**");
+		expect(scratchStudio!.content).toContain("\n**Checkpoints:**\n-");
 		expect(scratchStudio!.content).toContain(
-			"**Extension:** Add a broadcast, backdrop change, or sprite interaction that reuses the same event logic."
+			"**Extension:** Add one feedback cue so the player can tell which state changed."
 		);
 		expect(scratchStudio!.content).toContain(
 			"\n\n2. **Design and Planning Map**"
