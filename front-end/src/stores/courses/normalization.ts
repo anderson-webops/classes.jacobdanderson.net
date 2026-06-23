@@ -227,6 +227,29 @@ function compactGeneratedDisplayTitle(
 	moduleTitle: string,
 	itemTitle: string
 ) {
+	const additionalPracticeMatch = itemTitle.match(
+		/^Check-In\s+#?(\d+):\s+Additional Practice Project$/i
+	);
+	if (additionalPracticeMatch) {
+		const checkInNumber = additionalPracticeMatch[1];
+		const focus = compactContextualTitleFocus(
+			courseTitle,
+			moduleTitle,
+			moduleTitle
+		);
+		const javaLevelMatch = moduleTitle.match(/^Java Level\s+(\d+):/i);
+		let topic = `${focus} Check-In ${checkInNumber}`;
+		if (/^Check-In\s+#?\d+$/i.test(focus)) {
+			topic =
+				javaLevelMatch &&
+				/^Java (?:with|without) Graphics$/i.test(courseTitle)
+					? `${courseTitle} Level ${javaLevelMatch[1]} Check-In ${checkInNumber}`
+					: `${courseTitle} Check-In ${checkInNumber}`;
+		}
+
+		return `${topic} Practice Project`;
+	}
+
 	const labels = [
 		"Applied Challenge",
 		"Challenge Lab",
@@ -263,7 +286,7 @@ function compactGeneratedDisplayTitle(
 			itemTitle.slice(leadingLabel.length + 1).trim()
 		);
 
-		if (/^Check-In\s+\d+$/i.test(topic)) {
+		if (/^Check-In\s+#?\d+$/i.test(topic)) {
 			return `${topic} ${label}`;
 		}
 
@@ -285,7 +308,7 @@ function compactGeneratedDisplayTitle(
 		moduleTitle
 	);
 
-	if (/^Check-In\s+\d+$/i.test(compactedTopic)) {
+	if (/^Check-In\s+#?\d+$/i.test(compactedTopic)) {
 		return `${compactedTopic} ${label}`;
 	}
 
