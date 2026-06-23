@@ -314,6 +314,18 @@ function compactGeneratedDisplayTitle(
 		)} ${checkInLabelMatch[2]}`;
 	}
 
+	const checkInReviewHeadingMatch = itemTitle.match(
+		/^(Review Targets|Representative Review Problems)$/i
+	);
+	const moduleCheckInMatch = moduleTitle.match(/^Check-In\s+#?(\d+)$/i);
+	if (checkInReviewHeadingMatch && moduleCheckInMatch) {
+		return `${contextualCheckInTitle(
+			courseTitle,
+			moduleTitle,
+			moduleCheckInMatch[1]
+		)} ${checkInReviewHeadingMatch[1]}`;
+	}
+
 	const additionalPracticeMatch = itemTitle.match(
 		/^Check-In\s+#?(\d+):\s+Additional Practice Project$/i
 	);
