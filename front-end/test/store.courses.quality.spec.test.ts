@@ -3827,6 +3827,32 @@ describe("course text quality normalization", () => {
 	);
 
 	it(
+		"does not expose identical project and solution resources",
+		async () => {
+			const duplicateSolutionLinks = (await loadedCatalogCourses()).flatMap(
+				({ course, entry }) =>
+					course.modules.flatMap(module =>
+						[
+							...module.curriculum,
+							...module.supplementalProjects
+						].flatMap(item => {
+							const projectLink = item.projectLink?.trim();
+							const solutionLink = item.solutionLink?.trim();
+							return projectLink && solutionLink === projectLink
+								? [
+										`${entry.id} / ${module.title} / ${item.title}: ${projectLink}`
+									]
+								: [];
+						})
+					)
+			);
+
+			expect(duplicateSolutionLinks).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
+	it(
 		"keeps course source links migrated away from Replit and anchored to course-owned GitHub repos",
 		async () => {
 			const links = (await loadedCatalogCourses()).flatMap(
