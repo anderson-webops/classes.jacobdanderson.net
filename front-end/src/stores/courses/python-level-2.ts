@@ -1463,17 +1463,17 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "PS7 Supplemental Project 2: Test Scores",
 					content: projectBrief({
-						goal: "Store multiple test scores per student and compute average scores.",
+						goal: "Store multiple test scores per person and compute average scores.",
 						build: [
-							"Create a dictionary where each key is a student and each value is a list of scores.",
+							"Create a dictionary where each key is a person and each value is a list of scores.",
 							"Loop through the dictionary entries.",
-							"Compute each student's average.",
+							"Compute each person's average.",
 							"Store or print the average results."
 						],
 						checkpoints: [
 							"The values are lists, not a single overwritten score.",
-							"Each average divides by that student's score count.",
-							"The output identifies which average belongs to which student."
+							"Each average divides by that person's score count.",
+							"The output identifies which average belongs to which person."
 						]
 					}),
 					solutionLink:

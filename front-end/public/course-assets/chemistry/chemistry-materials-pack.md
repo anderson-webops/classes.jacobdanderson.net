@@ -79,7 +79,7 @@ These cases preserve the original course phenomena while keeping the current cou
 
 ## Original Project Source Index
 
-The current course preserves the original CHM1-CHM7 projects as source-backed, remote-safe lessons. These links serve as evidence sources, optional observation references, or comparison material. Video links are not required physical experiments.
+The current course preserves the original CHM1-CHM7 project ideas as remote-safe lessons. These links serve as evidence sources, optional observation references, or comparison material. Video links are not required physical experiments.
 
 | Original Project or Concept                     | Current Course Location               | Preserved Source or Reference                                                                                                                                                                                                                               | Main Restored Task                                                                                                             |
 | ----------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
