@@ -1633,6 +1633,49 @@ function neutralizeUseThisOpening(text: string) {
 		.replace(/\brather than as a\b/g, "rather than a");
 }
 
+const coreTopicStudioBlockStartPattern =
+	/^\s+\*\*(?:Applied lab|Applied studio|Lab|Studio):\*\*/i;
+
+function collapseRepeatedStudioSupportInCoreTopics(text: string) {
+	if (!text.includes("Core topics in this module:")) return text;
+
+	const [header, ...bodyParts] = text.split(/\n\n/);
+	const body = bodyParts.join("\n\n");
+	if (!body.trim()) return text;
+
+	const chunks = body.split(/\n\n(?=\d+\.\s+\*\*)/);
+	let supportBlock = "";
+	let supportCount = 0;
+	const collapsedChunks = chunks.map(chunk => {
+		const lines = chunk.split("\n");
+		const supportStart = lines.findIndex(line =>
+			coreTopicStudioBlockStartPattern.test(line)
+		);
+		if (supportStart < 0) return chunk;
+
+		supportCount += 1;
+		if (!supportBlock) {
+			supportBlock = lines
+				.slice(supportStart)
+				.map(line => line.replace(/^ {3}/, ""))
+				.join("\n")
+				.trim();
+		}
+
+		return lines.slice(0, supportStart).join("\n").trimEnd();
+	});
+
+	if (supportCount < 2 || !supportBlock) return text;
+
+	return [
+		header,
+		collapsedChunks.join("\n\n").trim(),
+		`**Studio practice:**\n\n${supportBlock}`
+	]
+		.filter(Boolean)
+		.join("\n\n");
+}
+
 function formatVisibleMarkdownStructure(text: string) {
 	const formatted = formatNamedCheckpointPrompts(
 		formatSupportLabels(
@@ -1644,8 +1687,10 @@ function formatVisibleMarkdownStructure(text: string) {
 		return polishVisibleGeneratedText(formatted);
 	}
 
+	const collapsed = collapseRepeatedStudioSupportInCoreTopics(formatted);
+
 	return polishVisibleGeneratedText(
-		formatted.replace(
+		collapsed.replace(
 			/\n\n(\*\*(?:Practice check|Evidence pattern|Main idea|Skill focus):\*\*)/g,
 			"\n\n   $1"
 		)
