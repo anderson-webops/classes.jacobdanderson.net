@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	courseAssetViewerUrl,
@@ -109,5 +111,22 @@ describe("course asset preview utilities", () => {
 		expect(section.title).toBe("Phase Diagram Data");
 		expect(section.content).toContain("Phase text.");
 		expect(section.content).not.toContain("Other text.");
+	});
+
+	it("keeps the full course resource page constrained on mobile", () => {
+		const source = readFileSync(
+			resolve(__dirname, "../src/pages/course-resource.vue"),
+			"utf8"
+		);
+
+		expect(source).toContain(
+			"grid-template-columns: minmax(0, 1fr);"
+		);
+		expect(source).toContain("min-width: 0;");
+		expect(source).toContain("overflow-x: hidden;");
+		expect(source).toContain(
+			".course-resource-card :deep(.item-content-markdown)"
+		);
+		expect(source).toContain("width: 100%;");
 	});
 });
