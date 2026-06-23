@@ -83,7 +83,12 @@ const courseAccessText = computed(() => {
 	const names = courseNameMap.value ?? {};
 	return courseAccessGroups.value
 		.map(group => {
-			const groupLabel = group.key === "past" ? "Past" : "Current";
+			const groupLabel =
+				group.key === "past"
+					? "Past"
+					: group.key === "other"
+						? "Other available"
+						: "Current";
 			const courseNames = group.courses
 				.map(course => names[course.id] ?? course.name ?? course.id)
 				.join(", ");

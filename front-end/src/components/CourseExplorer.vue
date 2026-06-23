@@ -18,7 +18,7 @@ import {
 } from "vue";
 import { api } from "@/api";
 import {
-	courseStatusForUser,
+	courseStatusBucketForUser,
 	groupCoursesByLearnerStatus,
 	orderedCoursesByLearnerStatus
 } from "@/modules/courseAccess";
@@ -176,7 +176,7 @@ const hasCourseAccess = computed(() => {
 
 const selectedCourseStatus = computed(() => {
 	if (props.publicCatalog || !selectedCourseId.value) return "";
-	return courseStatusForUser(
+	return courseStatusBucketForUser(
 		courseGroupingOwner.value,
 		selectedCourseId.value
 	);
@@ -184,9 +184,9 @@ const selectedCourseStatus = computed(() => {
 
 const courseEyebrow = computed(() => {
 	if (props.publicCatalog) return "Course preview";
-	return selectedCourseStatus.value === "past"
-		? "Past course"
-		: "Current course";
+	if (selectedCourseStatus.value === "past") return "Past course";
+	if (selectedCourseStatus.value === "other") return "Available course";
+	return "Current course";
 });
 
 const courseDescription = computed(() =>

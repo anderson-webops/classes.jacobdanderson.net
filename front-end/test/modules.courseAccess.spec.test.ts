@@ -8,15 +8,20 @@ import {
 const courses = [
 	{ id: "python-level-1", name: "Python Level 1" },
 	{ id: "ap-computer-science-a", name: "AP Computer Science A" },
-	{ id: "intro-to-chemistry", name: "Intro to Chemistry" }
+	{ id: "intro-to-chemistry", name: "Intro to Chemistry" },
+	{ id: "python-level-3", name: "Python Level 3" }
 ];
 
 describe("course access grouping", () => {
-	it("groups viewable courses as current first, then past, then unassigned courses", () => {
+	it("groups viewable courses as current first, then past, then other available courses", () => {
 		const groups = groupCoursesByLearnerStatus(
 			courses,
 			{
-				courseAccess: ["intro-to-chemistry", "python-level-1"],
+				courseAccess: [
+					"intro-to-chemistry",
+					"python-level-1",
+					"ap-computer-science-a"
+				],
 				courseStatus: {
 					"python-level-1": "past",
 					"intro-to-chemistry": "current"
@@ -35,7 +40,7 @@ describe("course access grouping", () => {
 		).toEqual([
 			["intro-to-chemistry"],
 			["python-level-1"],
-			["ap-computer-science-a"]
+			["ap-computer-science-a", "python-level-3"]
 		]);
 	});
 

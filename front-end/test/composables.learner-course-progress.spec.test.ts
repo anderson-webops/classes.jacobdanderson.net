@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useLearnerCourseProgress } from "@/composables/useLearnerCourseProgress";
 
 describe("useLearnerCourseProgress", () => {
-	it("orders progress course choices as current first, then past", () => {
+	it("orders progress course choices as current first, then past, then available", () => {
 		const users = ref([
 			{
 				_id: "learner-1",
@@ -11,7 +11,11 @@ describe("useLearnerCourseProgress", () => {
 				email: "learner@example.com",
 				age: 12,
 				state: "GA",
-				courseAccess: ["python-level-1", "ap-computer-science-a"],
+				courseAccess: [
+					"python-level-1",
+					"ap-computer-science-a",
+					"python-level-3"
+				],
 				courseStatus: {
 					"python-level-1": "past" as const,
 					"ap-computer-science-a": "current" as const
@@ -37,11 +41,17 @@ describe("useLearnerCourseProgress", () => {
 				key: "past",
 				label: "Past courses",
 				courseIds: ["python-level-1"]
+			},
+			{
+				key: "other",
+				label: "Other available courses",
+				courseIds: ["python-level-3"]
 			}
 		]);
 		expect(progress.assignedCourseIds("learner-1")).toEqual([
 			"ap-computer-science-a",
-			"python-level-1"
+			"python-level-1",
+			"python-level-3"
 		]);
 		expect(progress.selectedProgressCourseId("learner-1")).toBe(
 			"ap-computer-science-a"
