@@ -620,14 +620,26 @@ function compactGuidanceBody(
 				`\\bBuild the smallest reproducible ${escapedReference} run first\\b`,
 				"g"
 			),
-			"Build the smallest reproducible run first"
+			"Build the smallest reproducible version first"
 		)
 		.replace(
 			new RegExp(
 				`\\bBuild the smallest reproducible ${escapedBareReference} run first\\b`,
 				"g"
 			),
-			"Build the smallest reproducible run first"
+			"Build the smallest reproducible version first"
+		)
+		.replace(
+			/\bBuild the smallest reproducible the ([^.?!\n]+?) run first\b/g,
+			"Build the smallest reproducible version of $1 first"
+		)
+		.replace(
+			/\bBuild the core the ([^.?!\n]+?) run first\b/g,
+			"Build the core $1 first"
+		)
+		.replace(
+			/\bVerify the intended the ([^.?!\n]+?) behavior\b/g,
+			"Verify the intended $1 behavior"
 		)
 		.replace(
 			new RegExp(`\\bImplement one ${escapedReference} `, "g"),
@@ -1475,7 +1487,7 @@ function requiredWorkSteps(
 			],
 			[
 				`For ${moduleTitle}, name the command, file or memory boundary, expected runtime behavior, and evidence source before changing code.`,
-				`Build the smallest reproducible ${moduleTitle} run first, then add one diagnostic, data-structure, resource, or control-flow change at a time.`,
+				`Build the smallest reproducible version of ${moduleTitle} first, then add one diagnostic, data-structure, resource, or control-flow change at a time.`,
 				`Check ${moduleTitle} with a typical run, a smallest or failing run, and one observation from logs, debugger state, sanitizer output, timing, or memory state.`
 			],
 			[
@@ -1510,7 +1522,7 @@ function requiredWorkSteps(
 			],
 			[
 				`State the ${moduleTitle} source files, command, input fixture, resource ownership, and expected output before implementation.`,
-				`Build the core ${moduleTitle} run first, then add one diagnostic, error path, or data-structure detail at a time.`,
+				`Build the core ${moduleTitle} first, then add one diagnostic, error path, or data-structure detail at a time.`,
 				`Verify the intended ${moduleTitle} behavior plus one boundary case using terminal, debugger, sanitizer, trace, or log evidence.`
 			],
 			[

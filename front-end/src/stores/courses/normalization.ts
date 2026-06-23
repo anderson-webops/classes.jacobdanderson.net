@@ -820,6 +820,10 @@ function preservesBlockStructure(text: string) {
 	return /(?:^|\n)\s*(?:[-*]|\d+\.)\s+\S/.test(text);
 }
 
+function hasMarkdownSupportLabel(text: string) {
+	return /\*\*[^*\n]{2,80}:\*\*/.test(text);
+}
+
 function supportBaseContent(text: string) {
 	if (!preservesBlockStructure(text)) return compactWhitespace(text);
 
@@ -860,10 +864,7 @@ function cleanAppliedLabReferenceText(text: string) {
 }
 
 function neutralizeLessonPointText(text: string) {
-	const hasSupportLabel =
-		/\*\*(?:Focus|Goal|Outcome|Expected outcome|Verification focus|Readable output|Result quality|Project goal|Concept path|Readiness check|Common pitfalls|Failure modes|Common failure modes|Mastery check|Investigation|Remote investigation|Explanation|Science explanation|Studio focus|Build steps|Build sequence|Checkpoints|Completion checks|Evidence target|Evidence targets|Extension):?\*\*/i.test(
-			text
-		);
+	const hasSupportLabel = hasMarkdownSupportLabel(text);
 	const source =
 		preservesBlockStructure(text) || hasSupportLabel
 			? formatVisibleMarkdownStructure(text)
@@ -895,6 +896,7 @@ function formatLessonArcPointContent(content: string) {
 	const formatted = neutralizeLessonPointText(content);
 	if (
 		preservesBlockStructure(formatted) ||
+		hasMarkdownSupportLabel(formatted) ||
 		compactWhitespace(formatted).length < 650
 	) {
 		return formatted;
@@ -1562,6 +1564,21 @@ function normalizeRepeatedReferenceNouns(text: string) {
 	);
 }
 
+function polishVisibleGeneratedText(text: string) {
+	return normalizeRepeatedReferenceNouns(
+		normalizeSentenceStartReferences(text)
+			.replace(/\bFor For Loops\b/g, "For loops")
+			.replace(
+				/\bfor For Loop Practice\b/g,
+				"for the For Loop Practice project"
+			)
+			.replace(
+				/\b([A-Z][A-Za-z0-9:,'& -]+ App) app path\b/g,
+				"$1 application path"
+			)
+	);
+}
+
 function formatNamedCheckpointPrompts(text: string) {
 	return text
 		.replace(/\n([a-z][a-z ]*-\d+(?:,\d+)*:)\s*/gi, "\n\n- **$1** ")
@@ -1624,17 +1641,13 @@ function formatVisibleMarkdownStructure(text: string) {
 	);
 
 	if (!formatted.includes("Core topics in this module:")) {
-		return normalizeRepeatedReferenceNouns(
-			normalizeSentenceStartReferences(formatted)
-		);
+		return polishVisibleGeneratedText(formatted);
 	}
 
-	return normalizeRepeatedReferenceNouns(
-		normalizeSentenceStartReferences(
-			formatted.replace(
-				/\n\n(\*\*(?:Practice check|Evidence pattern|Main idea|Skill focus):\*\*)/g,
-				"\n\n   $1"
-			)
+	return polishVisibleGeneratedText(
+		formatted.replace(
+			/\n\n(\*\*(?:Practice check|Evidence pattern|Main idea|Skill focus):\*\*)/g,
+			"\n\n   $1"
 		)
 	);
 }
@@ -5614,7 +5627,11 @@ function projectSupportScopedReference(
 
 	return `the ${topic} ${bareReference}`
 		.replace(/\bBuild Build\b/g, "Build")
-		.replace(/\bclass class exercise\b/gi, "class exercise");
+		.replace(/\bclass class exercise\b/gi, "class exercise")
+		.replace(
+			/\b(the .+?) (diagnostic run|runtime check|runtime trace|memory trace|tooling check|command-line build) \2\b/gi,
+			"$1 $2"
+		);
 }
 
 function capitalizeSentence(value: string) {
@@ -6003,6 +6020,20 @@ function compactGeneratedProjectSupport(
 				new RegExp(`\\bTurn ${escapedBareReference} into\\b`, "g"),
 				"Turn the work into"
 			)
+			.replace(
+				/\bBuild the smallest reproducible the ([^.?!\n]+?) run first\b/g,
+				"Build the smallest reproducible version of $1 first"
+			)
+			.replace(
+				/\bBuild the core the ([^.?!\n]+?) run first\b/g,
+				"Build the core $1 first"
+			)
+			.replace(
+				/\bVerify the intended the ([^.?!\n]+?) behavior\b/g,
+				"Verify the intended $1 behavior"
+			)
+			.replace(/\bOnce The ([^.?!\n]+?) has\b/g, "Once the $1 has")
+			.replace(/\bFor For Loops\b/g, "For loops")
 			.replace(
 				/\bUse (?:the )?[A-Z][^.!?\n]{1,180}? checkpoint to ([a-z])/g,
 				(_match: string, first: string) => capitalizeSentence(first)
