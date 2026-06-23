@@ -8275,6 +8275,21 @@ function cleanVisibleCourseGrammar(course: RawCourse) {
 	}
 }
 
+function removeDuplicateSolutionLinks(course: RawCourse) {
+	for (const module of course.modules) {
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			const projectLink = item.projectLink?.trim();
+			const solutionLink = item.solutionLink?.trim();
+			if (projectLink && solutionLink === projectLink) {
+				delete item.solutionLink;
+			}
+		}
+	}
+}
+
 const normalizers: Record<string, (course: RawCourse) => void> = {
 	"ai-level-1": normalizeAiLevel1,
 	"algebra-1a": normalizeAlgebra1A,
@@ -8318,5 +8333,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	compactGeneratedDisplayTitles(course);
 	formatVisibleCourseMarkdown(course);
 	cleanVisibleCourseGrammar(course);
+	removeDuplicateSolutionLinks(course);
 	return course;
 }
