@@ -40,9 +40,31 @@ interface MarkdownRendererInstance {
 let markdownRendererPromise: Promise<MarkdownRendererInstance> | null = null;
 
 function normalizeInlineCourseMarkdown(content: string) {
+	let codeFence: string | null = null;
+
 	return content
 		.split(/\r?\n/)
 		.map(line => {
+			const fenceMatch = line.match(/^(\s*)(`{3,}|~{3,})/);
+
+			if (fenceMatch) {
+				const fence = fenceMatch[2];
+				if (!codeFence) {
+					codeFence = fence;
+				} else if (
+					fence.startsWith(codeFence[0]) &&
+					fence.length >= codeFence.length
+				) {
+					codeFence = null;
+				}
+
+				return line;
+			}
+
+			if (codeFence) {
+				return line;
+			}
+
 			let normalized = line
 				.replace(/(\S)\s+(\*\*[^*\n]{1,80}:\*\*)/g, "$1\n\n$2")
 				.replace(
