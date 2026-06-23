@@ -51,7 +51,7 @@ interface VisibleModule extends CourseModule {
 
 interface ResourceLink {
 	host: string;
-	kind: "project" | "solution" | "dataset" | "media";
+	kind: "project" | "solution" | "dataset" | "asset" | "media";
 	label: string;
 	url: string;
 }
@@ -1055,6 +1055,10 @@ function solutionLabel(url: string) {
 function datasetLabel(url: string) {
 	const normalizedUrl = url.toLowerCase();
 
+	if (normalizedUrl.includes("/course-assets/apcs/apcs-pacing-tracks.md")) {
+		return "Track guide";
+	}
+
 	if (normalizedUrl.includes("chemistry-materials-pack")) {
 		if (normalizedUrl.includes("measurement")) {
 			return "Measurement tables";
@@ -1118,6 +1122,10 @@ function datasetLabel(url: string) {
 		}
 
 		return "Chemistry materials";
+	}
+
+	if (normalizedUrl.startsWith("/course-assets/")) {
+		return "Course asset";
 	}
 
 	if (normalizedUrl.includes("periodictable")) {
@@ -1212,7 +1220,9 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 
 	if (datasetUrl) {
 		links.push({
-			kind: "dataset",
+			kind: datasetUrl.startsWith("/course-assets/")
+				? "asset"
+				: "dataset",
 			label: datasetLabel(datasetUrl),
 			url: datasetUrl,
 			host: linkHost(datasetUrl)
@@ -3000,6 +3010,19 @@ function writeStoredValue(key: string, value: string) {
 	);
 	--course-resource-text: var(--course-dataset-resource-text, #7c2d12);
 	--course-resource-host: var(--course-dataset-resource-host, #925f35);
+}
+
+.resource-link.is-asset {
+	--course-resource-bg: var(
+		--course-asset-resource-bg,
+		rgba(240, 253, 250, 0.94)
+	);
+	--course-resource-bg-hover: var(
+		--course-asset-resource-bg-hover,
+		rgba(204, 251, 241, 0.96)
+	);
+	--course-resource-text: var(--course-asset-resource-text, #115e59);
+	--course-resource-host: var(--course-asset-resource-host, #47736d);
 }
 
 .item-media {
