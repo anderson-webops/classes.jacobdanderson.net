@@ -952,6 +952,10 @@ describe("CourseExplorer.vue", () => {
 			"/course-assets/chemistry/chemistry-materials-pack.md#heating-curve-data";
 		const namingCardsLink =
 			"/course-assets/chemistry/chemistry-materials-pack.md#nomenclature-practice-cards";
+		const modelCardsLink =
+			"/course-assets/chemistry/chemistry-materials-pack.md#model-comparison-cards";
+		const sourceMapLink =
+			"/course-assets/chemistry/chemistry-materials-pack.md#original-project-source-index";
 		const answerKeyLink =
 			"/course-assets/chemistry/chemistry-rubrics-answer-key.md#heating-curve-key";
 		const phetLink =
@@ -982,6 +986,18 @@ describe("CourseExplorer.vue", () => {
 							datasetLink: namingCardsLink,
 							id: "naming-cards",
 							title: "Naming Cards"
+						},
+						{
+							content: "Compare model strengths and limits.",
+							datasetLink: modelCardsLink,
+							id: "model-cards",
+							title: "Model Cards"
+						},
+						{
+							content: "Use the restored source map.",
+							id: "source-map",
+							projectLink: sourceMapLink,
+							title: "Source Map"
 						}
 					],
 					id: "module-1",
@@ -1014,11 +1030,18 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain("ACS periodic table");
 			expect(wrapper.text()).toContain("Heating curve data");
 			expect(wrapper.text()).toContain("Naming cards");
+			expect(wrapper.text()).toContain("Model cards");
+			expect(wrapper.text()).toContain("Original source map");
 			expect(wrapper.text()).toContain("PhET simulation");
 			expect(wrapper.text()).toContain("Course asset");
 		});
 
-		for (const localAssetLink of [localMaterialLink, namingCardsLink]) {
+		for (const localAssetLink of [
+			localMaterialLink,
+			namingCardsLink,
+			modelCardsLink,
+			sourceMapLink
+		]) {
 			const rawAssetLink = wrapper.find(
 				`a.resource-link[href="${localAssetLink}"]`
 			);
@@ -1029,6 +1052,7 @@ describe("CourseExplorer.vue", () => {
 		);
 
 		expect(wrapper.text()).not.toContain("Rubric / answer key");
+		expect(wrapper.text()).not.toContain("Project link");
 		expect(wrapper.text()).not.toContain("Dataset");
 	});
 
@@ -1300,5 +1324,11 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("Heating curve data");
 		expect(wrapper.text()).toContain("Rubric / answer key");
 		expect(wrapper.text()).toContain("Course asset");
+		expect(wrapper.html()).toContain(
+			"chemistry-rubrics-answer-key.md%23heating-curve-key&amp;label=Rubric+%2F+answer+key"
+		);
+		expect(wrapper.html()).not.toContain(
+			"chemistry-rubrics-answer-key.md%23heating-curve-key&amp;label=Course+asset"
+		);
 	});
 });
