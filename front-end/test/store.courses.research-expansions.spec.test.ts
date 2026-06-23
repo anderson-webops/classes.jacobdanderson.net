@@ -200,6 +200,7 @@ describe("research-backed course family expansions", () => {
 				"**Useful module pattern:** A complete module states the concept, explains why it matters, includes one worked example, provides one practice task, checks understanding quickly, and offers one extension.",
 				"Links that are only background references are labeled that way so they do not look like required assignments.",
 				"Each edge explains the dependency in plain language, such as \"requires arrays before 2D grids\" or \"requires variables before simulation state.\"",
+				"AP Computer Science An edge",
 				"The first version stays narrow, demonstrable, and easy to verify before optional polish is added.",
 				"**Required capstone brief:** Name the target user or problem, the exact project result, the core concept being reused from earlier modules, the minimum viable first version, and the evidence that will prove the first version works."
 			];

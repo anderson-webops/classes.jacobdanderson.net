@@ -325,6 +325,21 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it("keeps the APCS textbook reference current and publisher-backed", async () => {
+		const course = await loadRawCourse("ap-computer-science-a");
+		expect(course).not.toBeNull();
+
+		const item = findItem(course!, /^Required Textbook$/);
+		expect(item.content).toContain(
+			"Barron's AP Computer Science A Premium, 13th Edition"
+		);
+		expect(item.content).toContain("2026 exam outline");
+		expect(item.projectLink).toContain("simonandschuster.com");
+		expect(item.projectLink).toContain("9798349700354");
+		expect(item.projectLink).not.toContain("1506287913");
+		expect(item.projectLink).not.toContain("amazon.com");
+	});
+
 	it(
 		"keeps support-labeled course content split into readable paragraphs",
 		async () => {
