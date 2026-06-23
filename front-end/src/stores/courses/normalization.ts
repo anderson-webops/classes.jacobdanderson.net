@@ -2706,9 +2706,35 @@ function isBriefContent(content: string) {
 	return wordCount(content) < 65 || compactWhitespace(content).length < 460;
 }
 
+function hasCompleteScratchSupportPrompt(context: CourseTextContext) {
+	const source = contextText(context);
+	if (!isScratchSource(source)) return false;
+
+	const title = context.item.title;
+	const content = context.item.content;
+	if (/Fluency Drill/i.test(title)) {
+		return (
+			/\*\*Fluency goal:\*\*/i.test(content) &&
+			/\*\*Practice path:\*\*/i.test(content) &&
+			/\*\*(?:Completion check|Checkpoint):\*\*/i.test(content)
+		);
+	}
+
+	if (/Open-Ended Variant/i.test(title)) {
+		return (
+			/\*\*Variant goal:\*\*/i.test(content) &&
+			/\*\*Design path:\*\*/i.test(content) &&
+			/\*\*Verification:\*\*/i.test(content)
+		);
+	}
+
+	return false;
+}
+
 function needsContentSupport(context: CourseTextContext) {
 	const content = context.item.content;
 	if (!content.trim()) return true;
+	if (hasCompleteScratchSupportPrompt(context)) return false;
 	if (structuredSupportPattern.test(content)) return false;
 	if (isInformationalResourceItem(context.item)) return false;
 
@@ -2741,6 +2767,7 @@ function needsShortProjectReviewSupport(context: CourseTextContext) {
 	const content = context.item.content;
 
 	return (
+		!hasCompleteScratchSupportPrompt(context) &&
 		isProjectLikeItem(context.item) &&
 		wordCount(content) < 95 &&
 		!projectReviewSupportPattern.test(content)
