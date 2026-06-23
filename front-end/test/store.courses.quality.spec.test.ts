@@ -1197,7 +1197,7 @@ describe("course text quality normalization", () => {
 				/Recheck [^.\n]+ after refresh, at another viewport width, and with one invalid or incomplete interaction/
 			);
 			expect(corpus).toMatch(
-				/Build the core [^.\n]+ run first, then add one diagnostic, error path, or data-structure detail at a time/
+				/Build the core [^.\n]+ first, then add one diagnostic, error path, or data-structure detail at a time/
 			);
 			expect(corpus).toContain(
 				"The page or app shows the expected state change, output, validation, or canvas behavior"
