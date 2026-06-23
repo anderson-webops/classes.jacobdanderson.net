@@ -387,7 +387,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use collisions, recoil, impact safety, and force-time graphs as the core examples. Each problem starts with a before-and-after sketch, a prediction about which object changes momentum most, the conservation or impulse calculation, and a reasonableness check on direction and units."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Momentum Graph and Data Exercise",
 					content:
 						"Create a representation for Momentum, Impulse, and Collisions with at least one graph, diagram sequence, or data table. Read a force-time graph and shade the impulse area, then compare it with a before-and-after momentum table. The useful representation shows whether momentum is conserved inside the chosen system or changed by an external impulse."
 				},
@@ -397,7 +397,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use a collision simulation, provided cart data, or a video case study of an impact safety design. The final explanation identifies the system, the momentum or impulse evidence, and one simplification such as friction, deformation, or measurement timing."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Momentum Transfer Reflection",
 					content:
 						"Transfer the model to a different collision or safety device and explain what changes when contact time increases. A strong transfer distinguishes reduced force from reduced momentum change."
 				}
@@ -439,7 +439,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use doors, wrenches, seesaws, balance beams, and rotating tools as the main examples. For each example, compare at least two force locations or angles so the lever-arm idea is tested instead of memorized."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Torque Diagram and Data Exercise",
 					content:
 						"Build a torque table with force, lever arm, torque direction, and net torque. A balance-beam diagram shows how equal forces can fail to balance when their distances from the pivot differ."
 				},
@@ -449,7 +449,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use a seesaw simulation, door-handle case, or paper balance model. The final explanation shows the pivot, identifies all torques, and states which small real-world effects were ignored, such as friction at the hinge."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Torque Transfer Reflection",
 					content:
 						"Transfer the model to a new object such as a steering wheel, wrench, or crane arm. Explain why a longer handle helps and when extra length would stop being the only important design factor."
 				}
@@ -491,7 +491,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use snowshoes, hydraulic lifts, boats, submarines, and sink-float data as the main examples. Compare cases where changing area changes pressure, changing volume changes density, or changing displaced fluid changes buoyant force."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Fluids Data Representation",
 					content:
 						"Create a density table or pressure comparison chart, then use it to predict floating, sinking, or surface pressure. A strong representation labels the material, volume, mass, area, and force so the conclusion is tied to measurable quantities."
 				},
@@ -501,7 +501,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use a buoyancy simulation, boat-shape design case, or provided fluid-density dataset. The final explanation identifies the displaced-fluid evidence and states one limitation, such as treating the fluid as still or ignoring object deformation."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Fluids Transfer Reflection",
 					content:
 						"Transfer the model to a new object such as a ship, balloon, submarine, or snowshoe. Explain whether pressure, density, or buoyancy is the main idea and what extra measurement would make the prediction stronger."
 				}
@@ -543,7 +543,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use insulation, cooling curves, heating curves, cooking, climate, and electronics as the main examples. Compare cases where temperature changes steadily with cases where added energy changes phase instead of temperature."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Thermal Graph and Data Exercise",
 					content:
 						"Read a heating or cooling curve and label warming segments, phase-change plateaus, and transfer direction. A data table connects mass, material, temperature change, and energy so the graph is more than a line shape."
 				},
@@ -553,7 +553,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use a thermal simulation, insulation design case, or provided temperature dataset. The final explanation states the transfer path, evidence for warming or cooling, and one uncontrolled factor such as airflow, contact area, or sensor delay."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Thermal Design Transfer Reflection",
 					content:
 						"Transfer the model to a new thermal design such as a cooler, phone heat sink, winter coat, or cooking container. Explain which transfer path dominates and what data would test that claim."
 				}
@@ -595,7 +595,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use mirrors, eyeglasses, cameras, projectors, telescopes, and lens simulations as the main examples. Compare real and virtual images, converging and diverging behavior, and cases where changing object distance changes the image."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Optics Ray-Diagram Exercise",
 					content:
 						"Draw ray diagrams for several object positions and record image orientation, relative size, and image type. The diagram shows reflection or refraction rules explicitly rather than only reporting an answer."
 				},
@@ -605,7 +605,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use a lens simulation, mirror case study, or provided optical-device diagram. The final explanation connects the ray model to the device purpose and names one limitation such as ideal thin lenses or ignoring lens thickness."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Optics Transfer Reflection",
 					content:
 						"Transfer the model to a new optical device and explain which ray behavior matters most. A strong response distinguishes what the ray diagram predicts from what a real device adds through materials, apertures, and alignment."
 				}
@@ -647,7 +647,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use electromagnets, speakers, relays, generators, wireless charging, and field diagrams as the main examples. For each example, trace current, magnetic field, motion or changing field, and the resulting energy transfer."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Electromagnetic Device Diagram",
 					content:
 						"Create a field-line sketch or input-output table for a magnetic device. The useful representation shows direction, relative strength, and what changes when current, coil turns, magnet motion, or distance changes."
 				},
@@ -657,7 +657,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use an electromagnet simulation, generator case study, or speaker/motor diagram. The final explanation identifies the field interaction and one simplification, such as ideal coils, uniform fields, or neglected losses."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Electromagnetism Transfer Reflection",
 					content:
 						"Transfer the model between a motor and a generator. Explain which direction the energy conversion runs, which parts stay analogous, and what evidence distinguishes mechanical-to-electrical from electrical-to-mechanical behavior."
 				}
@@ -699,7 +699,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use springs, pendulums, swings, instruments, bridges, and resonance graphs as the main examples. Compare free oscillation, damped oscillation, and driven oscillation so resonance is tied to evidence rather than treated as a dramatic word."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Oscillation Graph Exercise",
 					content:
 						"Read position-time or amplitude-frequency graphs and identify amplitude, period, frequency, damping, and resonance peaks. A strong graph explanation connects the shape to energy transfer and restoring motion."
 				},
@@ -709,7 +709,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use a pendulum simulation, spring dataset, sound resonance example, or bridge case study. The final explanation identifies the driving pattern, the response, and one factor that would add damping or shift the period."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Resonance Transfer Reflection",
 					content:
 						"Transfer the model to a different oscillating system and decide whether simple harmonic motion is a good approximation. Explain what would break the approximation, such as large angles, friction, nonlinear springs, or irregular driving."
 				}
@@ -751,7 +751,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use planetary data, satellite orbits, weight on other worlds, and orbit simulations as the main examples. For each example, connect the diagram to gravitational force direction and the motion that follows."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Orbit Data and Diagram Exercise",
 					content:
 						"Compare orbital radius, period, speed, or surface gravity using a table or scaled diagram. The representation reveals that distance and mass both matter, and that visual scale can be misleading without units."
 				},
@@ -761,7 +761,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use an orbit simulation, mission sketch, or provided planetary dataset. The final explanation shows force direction, velocity direction, and one simplification such as circular orbit assumptions or ignoring atmospheric drag."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Orbit Transfer Reflection",
 					content:
 						"Transfer the model from a satellite to a moon, planet, or spacecraft maneuver. Explain why orbiting is not escaping gravity and what data would be needed to compare two orbital paths."
 				}
@@ -803,7 +803,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use emission spectra, absorption, solar panels, lasers, semiconductors, and GPS timing as the main examples. For each example, identify the observed evidence, the classical idea that is insufficient, and the newer model feature that improves the explanation."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Modern Physics Evidence Diagram",
 					content:
 						"Read a spectrum, energy-level diagram, or device data table. The representation makes discrete energies, absorption/emission patterns, or model breakdown visible instead of only naming quantum vocabulary."
 				},
@@ -813,7 +813,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use a spectrum simulation, semiconductor case study, photoelectric-effect visualization, or GPS timing scenario. The final explanation connects evidence to model limits and avoids claiming more precision than the introductory model supports."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Model-Limit Transfer Reflection",
 					content:
 						"Transfer the model-limit idea to a new technology or observation. Explain which classical idea still helps, which part fails, and what evidence would justify introducing the newer model."
 				}
@@ -855,7 +855,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Review portfolio artifacts from motion, forces, circuits, collisions, waves, thermal systems, or space. For each artifact, identify the claim, the model used, the evidence, and the limitation that would need improvement in a second revision."
 				},
 				{
-					title: "Graph, Diagram, or Data Exercise",
+					title: "Portfolio Evidence Representation",
 					content:
 						"Select the graph, diagram, data table, or storyboard that best supports the final claim. The chosen representation makes the relationship visible and includes units, labels, and enough context for someone else to evaluate the evidence."
 				},
@@ -865,7 +865,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Use a safe remote simulation, provided dataset, video observation, or paper design case as the final evidence source. The final explanation states the claim, evidence, model, uncertainty, and revision decision in a single coherent argument."
 				},
 				{
-					title: "Reflection and Transfer Practice",
+					title: "Portfolio Transfer Reflection",
 					content:
 						"Close by transferring the portfolio model to a related design or investigation. Explain what would stay the same, what would need new evidence, and which assumption is most fragile."
 				}
