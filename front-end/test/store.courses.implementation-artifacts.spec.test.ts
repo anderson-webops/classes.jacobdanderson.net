@@ -1061,13 +1061,13 @@ describe("implemented course development artifacts", () => {
 	}, 30000);
 
 	it(
-		"backfills reference solution links for source-backed project links",
+		"keeps source-backed starter and solution links distinct",
 		async () => {
 			for (const courseId of Object.keys(
 				courseImplementationSourceRepos
 			)) {
 				const course = await requireCourse(courseId);
-				const missingSolutionItems = course.modules.flatMap(module =>
+				const missingStarterSolutions = course.modules.flatMap(module =>
 					[
 						...module.curriculum,
 						...module.supplementalProjects
@@ -1075,11 +1075,25 @@ describe("implemented course development artifacts", () => {
 						item =>
 							item.projectLink?.includes(
 								"github.com/instruction-material/"
-							) && !item.solutionLink
+							) &&
+							item.projectLink.includes("/starter") &&
+							!item.solutionLink?.includes("/solution")
+					)
+				);
+				const duplicateSolutionItems = course.modules.flatMap(module =>
+					[
+						...module.curriculum,
+						...module.supplementalProjects
+					].filter(
+						item =>
+							item.projectLink?.includes(
+								"github.com/instruction-material/"
+							) && item.projectLink === item.solutionLink
 					)
 				);
 
-				expect(missingSolutionItems, courseId).toHaveLength(0);
+				expect(missingStarterSolutions, courseId).toHaveLength(0);
+				expect(duplicateSolutionItems, courseId).toHaveLength(0);
 			}
 		},
 		COURSE_SWEEP_TIMEOUT

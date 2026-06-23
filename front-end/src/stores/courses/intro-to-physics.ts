@@ -345,6 +345,11 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 						"Include a short report, slideshow, poster, or recorded explanation with the question, setup, graph or table, claim, and evidence. Also explain one investigation limitation and one improvement that would matter with more time."
 				},
 				{
+					title: "Checkpoint: Capstone Evidence Review",
+					content:
+						"Before the final presentation, review the evidence chain from question to conclusion. Confirm that the independent variable, dependent variable, controlled variables, graph choice, and uncertainty notes are visible. A strong review identifies one claim the evidence supports, one claim the evidence does not fully prove, and one revision that would make the investigation more reliable."
+				},
+				{
 					title: "Reflection Question: How Has Your Physics Thinking Changed?",
 					content:
 						"Compare how evidence, graphs, and models were handled at the start of the course versus at the end. The reflection makes scientific growth visible, not just review vocabulary."
