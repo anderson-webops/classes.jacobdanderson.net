@@ -1,4 +1,8 @@
 import type { RawCourse } from "./types";
+import {
+	buildScratchFluencyDrill,
+	buildScratchOpenEndedVariant
+} from "./scratchProjectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
 export const scratchLevel1Course: RawCourse = {
@@ -58,13 +62,24 @@ export const scratchLevel1Course: RawCourse = {
 				},
 				{
 					title: "Starting in Scratch: Fluency Drill",
-					content:
-						"Repeat the core ideas from GS1 Starting in Scratch on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "Hungry Hippo-style collection",
+						focus: "green-flag setup, keyboard movement, score updates, and timer reset",
+						restartCheck:
+							"The score and timer reset cleanly, and collecting an item changes only the intended variable."
+					})
 				},
 				{
 					title: "Starting in Scratch: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS1 Starting in Scratch. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "starter collection game",
+						coreIdea:
+							"basic sprite control, scoring, and visible feedback",
+						variation:
+							"what gets collected, how points are earned, or how the countdown creates pressure",
+						evidence:
+							"The finished game makes the start script, score script, and end condition easy to identify."
+					})
 				}
 			]
 		},
@@ -139,13 +154,24 @@ export const scratchLevel1Course: RawCourse = {
 				},
 				{
 					title: "Event Listeners: Fluency Drill",
-					content:
-						"Repeat the core ideas from GS2 Event Listeners on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "event-listener reaction",
+						focus: "green-flag, keypress, click, and backdrop events that each cause a different visible response",
+						restartCheck:
+							"Every event still works after restart, and no event depends on another event being triggered first."
+					})
 				},
 				{
 					title: "Event Listeners: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS2 Event Listeners. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "event-driven interaction",
+						coreIdea:
+							"events as the connection between user actions and sprite behavior",
+						variation:
+							"which inputs trigger movement, sound, costume changes, messages, or backdrop changes",
+						evidence:
+							"At least three different event blocks produce distinct results without conflicting scripts."
+					})
 				}
 			]
 		},
@@ -224,13 +250,24 @@ export const scratchLevel1Course: RawCourse = {
 				},
 				{
 					title: "Pen with Event Listeners: Fluency Drill",
-					content:
-						"Repeat the core ideas from GS3 Pen with Event Listeners on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "pen-control drawing",
+						focus: "pen down, pen up, color change, clear, and movement events that make the drawing state visible",
+						restartCheck:
+							"The drawing clears when expected, and pen state changes do not accidentally continue across unrelated controls."
+					})
 				},
 				{
 					title: "Pen with Event Listeners: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS3 Pen with Event Listeners. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "interactive drawing tool",
+						coreIdea:
+							"event-controlled pen state and visual output",
+						variation:
+							"the drawing tool, color rule, erase behavior, or movement pattern used to create the image",
+						evidence:
+							"The project demonstrates clear pen-up and pen-down cases, plus one intentional way to reset or revise the drawing."
+					})
 				}
 			]
 		},
@@ -311,13 +348,24 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				},
 				{
 					title: "Loops: Fluency Drill",
-					content:
-						"Repeat the core ideas from GS4 Loops on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "loop-driven animation",
+						focus: "repeat counts, forever loops, timing, and the difference between one-time setup and repeated behavior",
+						restartCheck:
+							"The animation starts from the same state each run, and changing the loop count changes the repeated result predictably."
+					})
 				},
 				{
 					title: "Loops: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS4 Loops. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "loop-based motion or pattern",
+						coreIdea:
+							"repetition as a way to control timing, animation, and repeated actions",
+						variation:
+							"the repeated movement, timing rhythm, costume cycle, or pattern rule",
+						evidence:
+							"The loop is necessary for the behavior; removing it would make the project visibly incomplete or repetitive by hand."
+					})
 				}
 			]
 		},
@@ -406,8 +454,15 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				},
 				{
 					title: "Basic Conditionals: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS5 Basic Conditionals. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "conditional response game",
+						coreIdea:
+							"if blocks that choose behavior from current sprite or variable state",
+						variation:
+							"the touch condition, score threshold, color check, or message shown when a condition is met",
+						evidence:
+							"The project includes at least one case where the condition is true and one case where it is false."
+					})
 				}
 			]
 		},
@@ -491,8 +546,15 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				},
 				{
 					title: "Advanced Conditionals: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS6 Advanced Conditionals. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "multi-condition Scratch challenge",
+						coreIdea:
+							"nested or combined conditions that distinguish several game states",
+						variation:
+							"the rule that separates win, loss, near-miss, bonus, or warning outcomes",
+						evidence:
+							"Testing covers each branch, including the case where only part of the combined condition is true."
+					})
 				}
 			]
 		},
@@ -586,8 +648,15 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				},
 				{
 					title: "User Input: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS7 User Input. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "input-based quiz or customization",
+						coreIdea:
+							"ask-and-answer input that changes variables, messages, or game behavior",
+						variation:
+							"the prompt, accepted answers, scoring rule, or way the user's response changes the scene",
+						evidence:
+							"The result changes for at least two different inputs, and blank or unexpected input is handled deliberately."
+					})
 				}
 			]
 		},
@@ -677,8 +746,15 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				},
 				{
 					title: "X & Y Coordinates: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS8 X & Y Coordinates. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "coordinate-navigation scene",
+						coreIdea:
+							"x and y positions as visible control over sprite placement and movement",
+						variation:
+							"the target positions, movement bounds, spawn rule, or coordinate-based scoring condition",
+						evidence:
+							"The project uses both x and y values intentionally, not only drag-and-drop placement."
+					})
 				}
 			]
 		},
@@ -859,8 +935,15 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				},
 				{
 					title: "Message Broadcasting: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS10 Message Broadcasting. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "broadcast-coordinated scene",
+						coreIdea:
+							"messages that synchronize sprites, levels, or state changes",
+						variation:
+							"the message names, receiver responses, scene transition, or chain of actions after a broadcast",
+						evidence:
+							"Each broadcast has a clear sender, at least one receiver, and no receiver reacts to the wrong message."
+					})
 				}
 			]
 		},
@@ -930,13 +1013,23 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				},
 				{
 					title: "Hedgehog Race: Fluency Drill",
-					content:
-						"Repeat the core ideas from GS11 Hedgehog Race on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "race simulation",
+						focus: "random movement, finish-line detection, score or winner state, and clean restart behavior",
+						restartCheck:
+							"A winner is declared only once, and a new race does not preserve old positions or winner messages."
+					})
 				},
 				{
 					title: "Hedgehog Race: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS11 Hedgehog Race. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "randomized race game",
+						coreIdea: "random movement and finish-line logic",
+						variation:
+							"the racers, track layout, random speed range, obstacle rule, or winner display",
+						evidence:
+							"Multiple runs can produce different outcomes, and the finish condition remains fair and easy to observe."
+					})
 				}
 			]
 		},
@@ -997,13 +1090,24 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				},
 				{
 					title: "Asteroid Dodge: Fluency Drill",
-					content:
-						"Repeat the core ideas from GS12 Asteroid Dodge on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "dodge game",
+						focus: "player movement, falling hazards, collision detection, score or lives, and reset timing",
+						restartCheck:
+							"Hazards restart from sensible positions, and collisions affect the intended lives or score variable exactly once."
+					})
 				},
 				{
 					title: "Asteroid Dodge: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS12 Asteroid Dodge. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "avoidance challenge",
+						coreIdea:
+							"collision rules, movement control, and escalating pressure",
+						variation:
+							"the hazard pattern, player control scheme, scoring method, or difficulty curve",
+						evidence:
+							"The project has a clear safe state, danger state, and end condition that can be reproduced during testing."
+					})
 				}
 			]
 		},
@@ -1078,13 +1182,24 @@ Typing practice is not required to complete the Scratch course, but it can make 
 				},
 				{
 					title: "GS13 Master Project: Fluency Drill",
-					content:
-						"Repeat the core ideas from GS13 Master Project on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "master-project prototype",
+						focus: "one playable slice with controls, feedback, a rule for success or failure, and a visible reset path",
+						restartCheck:
+							"The prototype demonstrates the main mechanic without needing all final art, levels, or polish."
+					})
 				},
 				{
 					title: "GS13 Master Project: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GS13 Master Project. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "capstone game or interactive story",
+						coreIdea:
+							"a complete Scratch experience with player input, state, feedback, and replayability",
+						variation:
+							"the core mechanic, theme, level structure, scoring system, or story branch",
+						evidence:
+							"The final design includes a playable beginning, middle, and ending or replay loop, plus one tested extension beyond the base version."
+					})
 				}
 			]
 		},

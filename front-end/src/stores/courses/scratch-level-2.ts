@@ -1,4 +1,8 @@
 import type { RawCourse } from "./types";
+import {
+	buildScratchFluencyDrill,
+	buildScratchOpenEndedVariant
+} from "./scratchProjectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
 export const scratchLevel2Course: RawCourse = {
@@ -149,13 +153,24 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Review: Events, Loops, Conditionals, & Broadcasting: Fluency Drill",
-					content:
-						"Repeat the core ideas from GM1 Review: Events, Loops, Conditionals, & Broadcasting on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "multi-script review game",
+						focus: "events, loops, conditionals, broadcasts, and variables working together in one small scene",
+						restartCheck:
+							"The scene restarts without leftover broadcasts, stale variable values, or scripts that keep running unexpectedly."
+					})
 				},
 				{
 					title: "Review: Events, Loops, Conditionals, & Broadcasting: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM1 Review: Events, Loops, Conditionals, & Broadcasting. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "review challenge",
+						coreIdea:
+							"events, loops, conditionals, and broadcasts as one coordinated system",
+						variation:
+							"the input controls, repeated behavior, branch condition, or broadcast-driven scene change",
+						evidence:
+							"At least one event starts a loop, one condition changes the outcome, and one broadcast coordinates another sprite."
+					})
 				}
 			]
 		},
@@ -316,8 +331,15 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Complex Conditionals: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM3 Complex Conditionals. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "complex-conditional challenge",
+						coreIdea:
+							"AND, OR, NOT, or nested logic that separates similar-looking states",
+						variation:
+							"the combination of keys, touching states, score thresholds, or timer conditions that trigger an outcome",
+						evidence:
+							"Testing includes true, false, and partial-match cases so the combined logic is visibly necessary."
+					})
 				}
 			]
 		},
@@ -362,13 +384,24 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Cloning: Fluency Drill",
-					content:
-						"Repeat the core ideas from GM4 Cloning on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "clone-spawning scene",
+						focus: "clone creation, clone startup behavior, clone deletion, and avoiding duplicated main-sprite logic",
+						restartCheck:
+							"Clones appear only when intended, clean themselves up, and do not multiply uncontrollably after restart."
+					})
 				},
 				{
 					title: "Cloning: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM4 Cloning. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "clone-based game mechanic",
+						coreIdea:
+							"many similar objects controlled by one reusable script",
+						variation:
+							"the clone spawn pattern, movement behavior, lifetime, collision effect, or difficulty increase",
+						evidence:
+							"The main sprite and clones have distinct roles, and deleting a clone does not break future clone creation."
+					})
 				}
 			]
 		},
@@ -430,13 +463,24 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Check in #1: Fluency Drill",
-					content:
-						"Repeat the core ideas from Check-in #1 on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "checkpoint review slice",
+						focus: "events, loops, conditionals, broadcasts, and clones in the smallest playable project possible",
+						restartCheck:
+							"The review slice shows which concept controls each behavior, rather than hiding everything in one long script."
+					})
 				},
 				{
 					title: "Check in #1: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by Check-in #1. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "checkpoint remix",
+						coreIdea:
+							"a readable mini-project that combines first-half Scratch Level 2 concepts",
+						variation:
+							"one rule from a prior project, such as collision handling, message flow, clone behavior, or score logic",
+						evidence:
+							"The remix has a short explanation that names which concept each major script demonstrates."
+					})
 				}
 			]
 		},
@@ -524,8 +568,15 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Strings: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM5 Strings. Keep the scope small, but require one meaningful design or reasoning choice. Good options include a username formatter, a secret-code phrase checker, a spelling helper, or a word game that reveals only selected letters. The finished project asks for text, stores the response, transforms or inspects part of the string, and shows a result that depends on the user's exact input. Verify one normal word, one short word, and one input with spaces or repeated letters so the string logic is not only tested on the easiest case."
+					content: buildScratchOpenEndedVariant({
+						project: "string-input tool or word game",
+						coreIdea:
+							"text input, letter positions, string length, and response-specific output",
+						variation:
+							"the word rule, username formatter, secret-code checker, spelling helper, or revealed-letter pattern",
+						evidence:
+							"Testing uses one normal word, one short word, and one input with spaces or repeated letters."
+					})
 				}
 			]
 		},
@@ -598,8 +649,15 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Mathematical Operators: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM6 Mathematical Operators. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "math-driven game or calculator",
+						coreIdea:
+							"operators that compute values used by the program rather than values typed by hand",
+						variation:
+							"the formula, scoring rule, random number range, comparison threshold, or displayed calculation",
+						evidence:
+							"At least two input values produce different calculated outputs, and one edge case is checked for a sensible result."
+					})
 				}
 			]
 		},
@@ -712,8 +770,15 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Lists: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM7 Lists. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "list-backed quiz, inventory, or tracker",
+						coreIdea:
+							"lists as stored collections that can be read, updated, searched, or displayed",
+						variation:
+							"the list contents, add/remove rule, random selection rule, ranking behavior, or end-of-game summary",
+						evidence:
+							"The project shows the list changing during play and handles the first item, last item, or empty-list case deliberately."
+					})
 				}
 			]
 		},
@@ -810,8 +875,15 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Functions: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM8 Functions. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "custom-block project",
+						coreIdea:
+							"functions as reusable custom blocks with clear names and parameters where helpful",
+						variation:
+							"the repeated behavior placed in a block, the parameters, or the way multiple sprites reuse the same operation",
+						evidence:
+							"The project calls a custom block from more than one place or uses a parameter to avoid duplicate scripts."
+					})
 				}
 			]
 		},
@@ -893,13 +965,24 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Check in #2: Fluency Drill",
-					content:
-						"Repeat the core ideas from Check-in #2 on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "second checkpoint review",
+						focus: "strings, operators, lists, and custom blocks in a compact project with visible data flow",
+						restartCheck:
+							"The review project can be explained by tracing one input through storage, calculation, list update, and output."
+					})
 				},
 				{
 					title: "Check in #2: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by Check-in #2. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "data-and-functions remix",
+						coreIdea:
+							"stored data and reusable blocks that make the project easier to extend",
+						variation:
+							"the data source, calculation rule, list operation, or custom block interface",
+						evidence:
+							"The remix includes one visible data structure and one custom block that reduces repeated code."
+					})
 				}
 			]
 		},
@@ -968,13 +1051,24 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Fish Food: Fluency Drill",
-					content:
-						"Repeat the core ideas from GM9 Fish Food on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "collect-and-avoid game",
+						focus: "spawning, movement, collision, score or health state, and end-game feedback",
+						restartCheck:
+							"Food, hazards, score, and health reset consistently, and each collision affects the correct state once."
+					})
 				},
 				{
 					title: "Fish Food: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM9 Fish Food. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "resource-collection game",
+						coreIdea:
+							"balancing reward objects, danger objects, movement, and state variables",
+						variation:
+							"the collectible type, hazard rule, growth mechanic, difficulty change, or scoring method",
+						evidence:
+							"The game has one positive collision, one negative collision, and a clear state change after each."
+					})
 				}
 			]
 		},
@@ -1023,13 +1117,24 @@ export const scratchLevel2Course: RawCourse = {
 				},
 				{
 					title: "Treasure Cave: Fluency Drill",
-					content:
-						"Repeat the core ideas from GM10 Treasure Cave on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "maze or exploration scene",
+						focus: "movement bounds, treasure or goal detection, hazards, level state, and end-of-level feedback",
+						restartCheck:
+							"The player starts in the correct position, goals reset correctly, and old win or loss messages disappear."
+					})
 				},
 				{
 					title: "Treasure Cave: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM10 Treasure Cave. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "exploration challenge",
+						coreIdea:
+							"navigation, goals, hazards, and state changes across a playable space",
+						variation:
+							"the cave layout, treasure rule, hazard behavior, key-and-door mechanic, or level transition",
+						evidence:
+							"The player has a clear objective, at least one obstacle, and a tested path for success and failure."
+					})
 				}
 			]
 		},
@@ -1087,13 +1192,24 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 				},
 				{
 					title: "GM11 Master Project: Fluency Drill",
-					content:
-						"Repeat the core ideas from GM11 Master Project on a smaller problem to build speed, independence, and cleaner reasoning."
+					content: buildScratchFluencyDrill({
+						project: "advanced-project prototype",
+						focus: "one finished mechanic, one data or state system, one feedback loop, and one clean restart path",
+						restartCheck:
+							"The prototype proves the hardest mechanic before extra levels, art, or polish are added."
+					})
 				},
 				{
 					title: "GM11 Master Project: Open-Ended Variant",
-					content:
-						"Create an original variation inspired by GM11 Master Project. Keep the scope small, but require one meaningful design or reasoning choice."
+					content: buildScratchOpenEndedVariant({
+						project: "advanced Scratch capstone",
+						coreIdea:
+							"a polished project that combines events, control flow, state, data, and reusable scripts",
+						variation:
+							"the genre, progression system, data model, custom-block structure, or replay challenge",
+						evidence:
+							"The capstone has a tested core loop, a visible success condition, and one extension that makes the design meaningfully more original."
+					})
 				}
 			]
 		},
