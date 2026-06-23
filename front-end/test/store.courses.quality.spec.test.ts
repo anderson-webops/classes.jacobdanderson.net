@@ -325,6 +325,58 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it(
+		"keeps support-labeled course content split into readable paragraphs",
+		async () => {
+			const denseParagraphs: string[] = [];
+			const courses = await loadedCatalogCourses();
+
+			for (const { entry, course } of courses) {
+				for (const module of course.modules) {
+					for (const item of [
+						...module.curriculum,
+						...module.supplementalProjects
+					]) {
+						const paragraphs = item.content.split(/\n\s*\n/);
+
+						for (const [index, paragraph] of paragraphs.entries()) {
+							const text = paragraph.replace(/\s+/g, " ").trim();
+							if (
+								!text ||
+								/^[-*]\s|^\d+\.\s|^#{1,6}\s|^\|/.test(text)
+							) {
+								continue;
+							}
+
+							const numberedCount =
+								text.match(/(?:^|[;:.])\s*(?:\d+\)|\d+\.)\s+[A-Z0-9`]/g)
+									?.length ?? 0;
+							const semicolonSectionCount =
+								text.match(/;\s*(?:and\s+)?(?:then\s+)?[A-Z][^;]{20,}/g)
+									?.length ?? 0;
+							const boldLabelCount =
+								text.match(/\*\*[^*]{2,60}:\*\*/g)?.length ?? 0;
+
+							if (
+								text.length > 520 &&
+								(boldLabelCount >= 3 ||
+									numberedCount >= 2 ||
+									semicolonSectionCount >= 3)
+							) {
+								denseParagraphs.push(
+									`${entry.id} > ${module.title} > ${item.title} > paragraph ${index + 1}`
+								);
+							}
+						}
+					}
+				}
+			}
+
+			expect(denseParagraphs).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
 	it("keeps advanced bridge and reference cards substantive", async () => {
 		const samples = [
 			{
