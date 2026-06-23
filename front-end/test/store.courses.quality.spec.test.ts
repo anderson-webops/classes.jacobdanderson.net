@@ -5291,6 +5291,86 @@ describe("course text quality normalization", () => {
 		expect(guide).not.toMatch(/\bRequire\b|\bEncourage\b|\binstructor\b/i);
 	});
 
+	it("keeps reference worksheets and safety boundaries substantive", async () => {
+		const apcs = await loadRawCourse("ap-computer-science-a");
+		expect(apcs).not.toBeNull();
+
+		for (const title of [
+			"Variables Reference",
+			"Loops Reference",
+			"Chapter 2 Multiple Choice Focus",
+			"Loop Reference Pack",
+			"Reference: While Loops and Nested Loops"
+		]) {
+			const item = findItem(
+				apcs!,
+				new RegExp(`^${title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`)
+			);
+			expect(wordCount(item.content), title).toBeGreaterThanOrEqual(85);
+			expect(item.content, title).toMatch(/trace|AP-style|Java|condition/i);
+			expect(item.content, title).not.toMatch(/\bshould\b/i);
+		}
+
+		const assembly = await loadRawCourse("assembly");
+		expect(assembly).not.toBeNull();
+		const registerWorksheets = assembly!.modules.flatMap(module =>
+			module.supplementalProjects.filter(item =>
+				item.title.startsWith("Register-Trace Worksheet:")
+			)
+		);
+
+		expect(registerWorksheets.length).toBeGreaterThanOrEqual(14);
+		for (const item of registerWorksheets) {
+			expect(wordCount(item.content), item.title).toBeGreaterThanOrEqual(85);
+			expect(item.content, item.title).toContain("instruction address");
+			expect(item.content, item.title).toContain(
+				"value before the instruction"
+			);
+			expect(item.content, item.title).toContain(
+				"value after the instruction"
+			);
+			expect(item.content, item.title).toContain("branch, call, or return");
+			expect(item.content, item.title).not.toMatch(/\bshould\b/i);
+		}
+
+		const safetySamples = [
+			{
+				courseId: "assembly",
+				title: "Assembly Prohibited Activity"
+			},
+			{
+				courseId: "elementary-science",
+				title: "Physical-Material Boundary"
+			},
+			{
+				courseId: "linux-systems",
+				title: "Linux Systems Prohibited Activity"
+			},
+			{
+				courseId: "network-systems",
+				title: "Network Systems Prohibited Activity"
+			},
+			{
+				courseId: "network-security",
+				title: "Network Security Prohibited Activity"
+			}
+		];
+
+		for (const sample of safetySamples) {
+			const course = await loadRawCourse(sample.courseId);
+			expect(course).not.toBeNull();
+			const item = findItem(course!, new RegExp(`^${sample.title}$`));
+
+			expect(wordCount(item.content), sample.title).toBeGreaterThanOrEqual(
+				75
+			);
+			expect(item.content, sample.title).toMatch(
+				/Evidence target|Remote investigation|What to show/
+			);
+			expect(item.content, sample.title).not.toMatch(/\bshould\b/i);
+		}
+	});
+
 	it(
 		"keeps science investigations explicitly remote-safe and evidence-based",
 		async () => {
