@@ -3658,6 +3658,80 @@ describe("course text quality normalization", () => {
 	);
 
 	it(
+		"keeps course source links migrated away from Replit and anchored to course-owned GitHub repos",
+		async () => {
+			const links = (await loadedCatalogCourses()).flatMap(
+				({ course, entry }) => courseItemLinks(entry.id, course)
+			);
+			const courseText = await loadedCatalogText();
+			const legacyReplitPatterns = [
+				/repl\.it/i,
+				/replit\.com/i,
+				/skipMigration/i,
+				/@JuniLearning/i
+			];
+			const legacyLinkHits = links
+				.filter(({ link }) =>
+					legacyReplitPatterns.some(pattern => pattern.test(link))
+				)
+				.map(
+					({ course, module, item, link }) =>
+						`${course} / ${module} / ${item}: ${link}`
+				);
+			const malformedGithubLinks: string[] = [];
+			const externalGithubLinks: string[] = [];
+			const staleBranchLinks: string[] = [];
+			const githubLinks = links.filter(({ link }) =>
+				link.includes("github.com")
+			);
+
+			for (const pattern of legacyReplitPatterns) {
+				expect(courseText).not.toMatch(pattern);
+			}
+			expect(legacyLinkHits).toEqual([]);
+			expect(githubLinks.length).toBeGreaterThan(0);
+
+			for (const { course, module, item, link } of githubLinks) {
+				const label = `${course} / ${module} / ${item}: ${link}`;
+				let parsed: URL;
+
+				try {
+					parsed = new URL(link);
+				}
+				catch {
+					malformedGithubLinks.push(label);
+					continue;
+				}
+
+				const pathParts = parsed.pathname.split("/").filter(Boolean);
+				if (pathParts.length < 2) {
+					malformedGithubLinks.push(label);
+					continue;
+				}
+
+				if (pathParts[0] !== "instruction-material") {
+					externalGithubLinks.push(label);
+				}
+
+				const mode = pathParts[2];
+				const branch = pathParts[3];
+				if (
+					(mode === "tree" || mode === "blob") &&
+					branch &&
+					!["main", "master"].includes(branch)
+				) {
+					staleBranchLinks.push(label);
+				}
+			}
+
+			expect(malformedGithubLinks).toEqual([]);
+			expect(externalGithubLinks).toEqual([]);
+			expect(staleBranchLinks).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
+	it(
 		"keeps loaded course module and item titles unique within their visible scope",
 		async () => {
 			const duplicateLabels: string[] = [];
