@@ -1359,7 +1359,7 @@ function addAlgebraTaxonomyModule(courseId: string, course: RawCourse) {
 		supplementalProjects: [
 			{
 				title: `${courseLabel} Practice Set Conversion`,
-				content: `**Project goal:** Convert one ${courseLabel} module concept into a practice set with a worked example, three independent problems, one representation task, and one explanation prompt. The set makes the skill teachable without turning into a list of disconnected exercises.\n\n**Practice-set structure:**\n1. Begin with a worked example that shows the setup, the algebraic move, and a reasonableness check.\n2. Add one direct problem that follows the same structure so the core procedure is visible.\n3. Add one changed-number or changed-context problem that checks whether the method transfers.\n4. Add one graph, table, diagram, or verbal interpretation task so the relationship is not only symbolic.\n5. End with an explanation prompt asking why the method works or what common mistake it avoids.\n\n**Completion checks:**\n- Problems are sequenced from direct to transfer.\n- One problem requires graph, table, diagram, or context interpretation.\n- The answer key includes reasoning, not just final answers.`
+				content: `**Project goal:** Convert one ${courseLabel} topic into a practice set with a worked example, three independent problems, one representation task, and one explanation prompt. The set makes the skill teachable without turning into a list of disconnected exercises.\n\n**Practice-set structure:**\n1. Begin with a worked example that shows the setup, the algebraic move, and a reasonableness check.\n2. Add one direct problem that follows the same structure so the core procedure is visible.\n3. Add one changed-number or changed-context problem that checks whether the method transfers.\n4. Add one graph, table, diagram, or verbal interpretation task so the relationship is not only symbolic.\n5. End with an explanation prompt asking why the method works or what common mistake it avoids.\n\n**Completion checks:**\n- Problems are sequenced from direct to transfer.\n- One problem requires graph, table, diagram, or context interpretation.\n- The answer key includes reasoning, not just final answers.`
 			},
 			{
 				title: `${courseLabel} Modeling or Error-Analysis Task`,
@@ -3335,7 +3335,7 @@ function supplementalTransferContent(
 			]
 		},
 		{
-			goal: `Turn ${topic} into a short variation with a visible result, one boundary case, and a concise explanation.`,
+			goal: `Turn ${topic} into a short variation with an observable result, one boundary case, and a concise explanation.`,
 			sequence: [
 				"Name the concept or rule that must carry over.",
 				focus.sequence[1],

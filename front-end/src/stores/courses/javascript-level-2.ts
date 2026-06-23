@@ -1073,7 +1073,7 @@ export const javascriptLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Choosing a Game",
-					content: `**Project selection:** Choose one canvas game and treat it as a multi-session build. The goal is a playable loop with visible state, input handling, collision or scoring logic, and a clear win/loss or completion condition.
+					content: `**Project choice:** Choose one canvas game and treat it as a multi-session build. The goal is a playable loop with visible state, input handling, collision or scoring logic, and a clear win/loss or completion condition.
 
 **Scope path:** Define the smallest playable version first: one player action, one obstacle or target, one score or state display, and one restart or end condition. Extra art, levels, and polish belong after the core loop works.
 
