@@ -1356,35 +1356,61 @@ const supportLabelPattern = [
 	"Verification focus",
 	"Readable output",
 	"Result quality",
+	"Project focus",
 	"Project goal",
+	"Planning targets",
+	"Implementation options",
 	"Required outcome",
 	"Include",
 	"Required fields",
 	"Notes",
 	"Required notes",
+	"Details",
 	"Steps",
 	"Work sequence",
+	"Build plan",
 	"Build steps",
 	"Build sequence",
+	"What to show",
+	"Checkpoint",
+	"Checkpoint goal",
 	"Checkpoints",
 	"Completion checks",
 	"Evidence target",
 	"Evidence targets",
 	"Extension",
 	"Concept path",
+	"Core topics",
+	"Design checkpoint",
+	"Decision checkpoint",
 	"Common pitfalls",
 	"Common failure modes",
 	"Failure modes",
 	"Mastery check",
 	"Evidence",
 	"Readiness evidence",
+	"Readiness",
+	"Readiness target",
 	"Readiness check",
 	"Evidence of proficiency",
+	"Java-specific goals",
+	"Safety checkpoint",
+	"Review target",
+	"Scope boundary",
+	"Course boundary",
+	"Boundary",
+	"Boundary check",
 	"If this is difficult",
 	"Investigation",
 	"Remote investigation",
 	"Explanation",
 	"Science explanation",
+	"Tasks",
+	"Source set",
+	"Activity prompt",
+	"Analysis target",
+	"Mastery evidence",
+	"Revision trigger",
 	"Output",
 	"Practice check",
 	"Evidence pattern",
@@ -1402,19 +1428,23 @@ const supportLabelPattern = [
 ].join("|");
 
 function formatSupportLabels(text: string) {
-	return text.replace(
-		new RegExp(
-			`(\\S)[ \\t]+(\\*\\*(?:${supportLabelPattern}):\\*\\*)`,
-			"g"
-		),
-		(_match, prefix: string, label: string, offset: number) => {
-			const lineStart = text.lastIndexOf("\n", offset) + 1;
-			const indentation =
-				text.slice(lineStart, offset).match(/^[ \t]*/)?.[0] ?? "";
+	const supportLabelRegex = `\\*\\*(?:${supportLabelPattern}):\\*\\*`;
 
-			return `${prefix}\n\n${indentation}${label}`;
-		}
-	);
+	return text
+		.replace(
+			new RegExp(`(\\S)[ \\t]+(${supportLabelRegex})`, "g"),
+			(_match, prefix: string, label: string, offset: number) => {
+				const lineStart = text.lastIndexOf("\n", offset) + 1;
+				const indentation =
+					text.slice(lineStart, offset).match(/^[ \t]*/)?.[0] ?? "";
+
+				return `${prefix}\n\n${indentation}${label}`;
+			}
+		)
+		.replace(
+			new RegExp(`(?<!\\n)\\n([ \\t]*${supportLabelRegex})`, "g"),
+			"\n\n$1"
+		);
 }
 
 function normalizeSupportLabelText(text: string) {
