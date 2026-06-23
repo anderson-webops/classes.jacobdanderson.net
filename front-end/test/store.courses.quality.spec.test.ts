@@ -4044,7 +4044,10 @@ describe("course text quality normalization", () => {
 							);
 						}
 						if (
-							/^(?:Concept Path|Build Requirements|Common Bug Patterns|Diagnostic Checkpoint|Failure Modes|Worked Example)$/i.test(
+							/^(?:Application Check|Changed-Case Review|Concept Path|Core Concepts|Build Requirements|Common Bug Patterns|Diagnostic Checkpoint|Failure Modes|Input Variation Practice|Interaction Variation|State and Contract Practice|Trace and Boundary Case|Transfer Practice|Worked Example)$/i.test(
+								item.title
+							) ||
+							/^Extension Challenge:\s*Check-In\s+\d+$/i.test(
 								item.title
 							)
 						) {
@@ -4416,7 +4419,7 @@ describe("course text quality normalization", () => {
 
 		const scratchStudio = scratchCourse!.modules
 			.find(module => module.title === "GS16 Debugging and Remix Studio")
-			?.curriculum.find(item => item.title === "Core Concepts");
+			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 
 		expect(scratchStudio).toBeDefined();
 		expect(scratchStudio!.content).toContain("**Studio practice:**");
@@ -4438,7 +4441,7 @@ describe("course text quality normalization", () => {
 			.find(
 				module => module.title === "GS17 Text-Based Programming Bridge"
 			)
-			?.curriculum.find(item => item.title === "Core Concepts");
+			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 		expect(scratchBridge).toBeDefined();
 		expect(scratchBridge!.content).toContain(
 			"Scratch blocks can be translated into text-code ideas"
@@ -4449,7 +4452,7 @@ describe("course text quality normalization", () => {
 			.find(
 				module => module.title === "GM15 Text-Based Programming Bridge"
 			)
-			?.curriculum.find(item => item.title === "Core Concepts");
+			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 		expect(scratchLevel2Bridge).toBeDefined();
 		expect(scratchLevel2Bridge!.content).toContain(
 			"Advanced Scratch concepts map directly to Python readiness"
@@ -4465,7 +4468,7 @@ describe("course text quality normalization", () => {
 
 		const neuralNetworks = machineLearning!.modules
 			.find(module => module.title === "ML4 Neural Networks")
-			?.curriculum.find(item => item.title === "Core Concepts");
+			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 		expect(neuralNetworks).toBeDefined();
 		expect(neuralNetworks!.content).toContain(
 			"A sigmoid graph is useful here because the sigmoid function always returns a value between 0 and 1."
@@ -4481,7 +4484,7 @@ describe("course text quality normalization", () => {
 					module.title ===
 					"Unit 1: AI Landscape and State Representation"
 			)
-			?.curriculum.find(item => item.title === "Core Concepts");
+			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 		expect(aiLandscape).toBeDefined();
 		expect(aiLandscape!.content).toContain(
 			"Strong representations are easy to inspect"
@@ -4530,7 +4533,7 @@ describe("course text quality normalization", () => {
 
 		const scratchStudio = scratchLevel1!.modules
 			.find(module => module.title === "GS16 Debugging and Remix Studio")
-			?.curriculum.find(item => item.title === "Core Concepts");
+			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 		expect(scratchStudio).toBeDefined();
 		expect(scratchStudio.content).toContain(
 			"Debug path for the studio: reproduce one realistic failure"
