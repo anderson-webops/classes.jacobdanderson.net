@@ -5103,11 +5103,11 @@ onBeforeUnmount(() => {
 								}}</small>
 							</button>
 							<button
-								aria-label="Delete file"
+								:aria-label="`Delete file ${file.name}`"
 								class="file-delete"
 								:class="{ 'is-disabled': !canDeleteFile(file) }"
 								:disabled="!canDeleteFile(file)"
-								title="Delete file"
+								:title="`Delete ${file.name}`"
 								type="button"
 								@click="deleteFile(file)"
 							>
@@ -5118,6 +5118,7 @@ onBeforeUnmount(() => {
 					<div class="file-tools-footer">
 						<button
 							:aria-expanded="showFileTools"
+							aria-controls="python-ide-file-tools-panel"
 							aria-label="Add or import project files"
 							class="file-tool-toggle"
 							title="Add or import project files"
@@ -5130,7 +5131,11 @@ onBeforeUnmount(() => {
 							/>
 						</button>
 					</div>
-					<div v-if="showFileTools" class="file-tools-panel">
+					<div
+						v-if="showFileTools"
+						id="python-ide-file-tools-panel"
+						class="file-tools-panel"
+					>
 						<div class="new-file-row">
 							<input
 								v-model="newFileName"
@@ -5174,6 +5179,7 @@ onBeforeUnmount(() => {
 						<div class="ide-settings">
 							<button
 								:aria-expanded="showIdeSettings"
+								aria-controls="python-ide-settings-panel"
 								aria-label="Python IDE settings"
 								class="ide-settings-trigger"
 								title="Python IDE settings"
@@ -5184,6 +5190,7 @@ onBeforeUnmount(() => {
 							</button>
 							<div
 								v-if="showIdeSettings"
+								id="python-ide-settings-panel"
 								class="ide-settings-panel"
 								role="dialog"
 								aria-label="Python IDE settings"
