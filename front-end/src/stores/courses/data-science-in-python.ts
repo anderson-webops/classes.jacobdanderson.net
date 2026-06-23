@@ -218,6 +218,10 @@ function dataScienceAppliedSupplementUrl(
 	}-data-analysis-lab-${lab.number}-supplemental-${supplementNumber}/${kind}`;
 }
 
+function dataScienceAppliedTopic(lab: AppliedDataScienceLab) {
+	return lab.title.replace(/^DSP\d+\s+Applied Studio:\s*/u, "");
+}
+
 function dataScienceStudioContent(
 	lab: AppliedDataScienceLab,
 	sectionTitle: string,
@@ -253,7 +257,7 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 		module.title = lab.title;
 		module.curriculum = [
 			{
-				title: "Concept Path",
+				title: `${dataScienceAppliedTopic(lab)} Concepts`,
 				content: dataScienceStudioContent(
 					lab,
 					"Concept Path",
@@ -265,7 +269,7 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 				)
 			},
 			{
-				title: "Worked Example",
+				title: `${dataScienceAppliedTopic(lab)} Worked Example`,
 				content: dataScienceStudioContent(
 					lab,
 					"Worked Example",
