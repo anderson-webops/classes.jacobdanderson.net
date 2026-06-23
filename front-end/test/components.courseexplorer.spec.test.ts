@@ -1032,6 +1032,78 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).not.toContain("Dataset");
 	});
 
+	it("labels local non-chemistry course assets by purpose instead of as datasets", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+
+		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					curriculum: [
+						{
+							content: "Use the course pacing guide.",
+							datasetLink:
+								"/course-assets/apcs/apcs-pacing-tracks.md",
+							id: "apcs-track-guide",
+							title: "Track Guide"
+						},
+						{
+							content: "Use a local support handout.",
+							datasetLink:
+								"/course-assets/examples/support-handout.md",
+							id: "local-support-handout",
+							title: "Support Handout"
+						}
+					],
+					id: "module-1",
+					supplementalProjects: [],
+					title: "Module 1"
+				}
+			]
+		});
+
+		appStore.setCurrentUser({
+			_id: "user-1",
+			name: "Student",
+			email: "student@example.com",
+			age: 12,
+			state: "GA",
+			courseAccess: [assignedCourse.id],
+			courseProgress: [],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("Track guide");
+			expect(wrapper.text()).toContain("Course asset");
+		});
+
+		expect(wrapper.text()).toContain("View Track guide");
+		expect(wrapper.text()).toContain("View Course asset");
+		expect(wrapper.text()).not.toContain("Dataset");
+		expect(
+			wrapper.find('a.resource-link.is-asset[href*="apcs-pacing-tracks"]')
+				.exists()
+		).toBe(true);
+		expect(wrapper.find("a.resource-link.is-dataset").exists()).toBe(
+			false
+		);
+	});
+
 	it("renders local course asset fragments inside the course viewer", async () => {
 		const fetcher = vi.fn(async () => ({
 			ok: true,
