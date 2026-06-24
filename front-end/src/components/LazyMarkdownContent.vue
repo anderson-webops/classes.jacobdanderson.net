@@ -229,7 +229,9 @@ watch(
 		var(--color-surface-inset, rgba(15, 23, 42, 0.035))
 	);
 	min-width: 0;
+	width: 100%;
 	max-width: min(100%, 82ch);
+	box-sizing: border-box;
 	font-size: 1.02rem;
 	line-height: 1.8;
 	color: var(--markdown-text-soft);
@@ -268,9 +270,12 @@ watch(
 }
 
 .item-content-markdown :deep(.markdown-table-scroll) {
+	display: block;
 	width: 100%;
 	max-width: 100%;
 	min-width: 0;
+	box-sizing: border-box;
+	contain: inline-size;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 	border: 1px solid var(--markdown-border);
@@ -283,6 +288,7 @@ watch(
 	width: max-content;
 	min-width: 100%;
 	max-width: none;
+	box-sizing: border-box;
 	border-spacing: 0;
 	border-collapse: separate;
 	background: transparent;
@@ -354,7 +360,9 @@ watch(
 }
 
 .item-content-markdown :deep(pre) {
+	width: 100%;
 	max-width: 100%;
+	box-sizing: border-box;
 	padding: 0.95rem 1rem;
 	border-radius: 16px;
 	background: #0f172a;

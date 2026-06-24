@@ -146,8 +146,11 @@ describe("course asset preview utilities", () => {
 
 		expect(previewSource).toContain(".course-asset-preview {");
 		expect(previewSource).toContain("min-width: 0;");
+		expect(previewSource).toContain("width: 100%;");
 		expect(previewSource).toContain("max-width: min(100%, 58rem);");
+		expect(previewSource).toContain("box-sizing: border-box;");
 		expect(previewSource).toContain(".course-asset-preview-panel {");
+		expect(previewSource).toContain("contain: inline-size;");
 		expect(previewSource).toContain("overflow-x: hidden;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown)"
@@ -158,9 +161,11 @@ describe("course asset preview utilities", () => {
 		expect(explorerSource).toContain(".lesson-card {");
 
 		expect(markdownSource).toContain("max-width: min(100%, 82ch);");
+		expect(markdownSource).toContain("box-sizing: border-box;");
 		expect(markdownSource).toContain(
 			".item-content-markdown :deep(.markdown-table-scroll)"
 		);
+		expect(markdownSource).toContain("contain: inline-size;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
 		expect(markdownSource).toContain("width: max-content;");
 		expect(markdownSource).toContain("min-width: 100%;");
