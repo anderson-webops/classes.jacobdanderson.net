@@ -19,6 +19,9 @@ describe("LazyMarkdownContent.vue", () => {
 			expect(wrapper.find("table").exists()).toBe(true);
 		});
 
+		const tableWrapper = wrapper.find(".markdown-table-scroll");
+		expect(tableWrapper.exists()).toBe(true);
+		expect(tableWrapper.find("table").exists()).toBe(true);
 		expect(wrapper.findAll("th").map(cell => cell.text())).toEqual([
 			"Sample",
 			"Mass (g)",

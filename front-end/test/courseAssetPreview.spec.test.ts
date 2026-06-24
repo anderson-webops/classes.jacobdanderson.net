@@ -158,8 +158,12 @@ describe("course asset preview utilities", () => {
 		expect(explorerSource).toContain(".lesson-card {");
 
 		expect(markdownSource).toContain("max-width: min(100%, 82ch);");
+		expect(markdownSource).toContain(
+			".item-content-markdown :deep(.markdown-table-scroll)"
+		);
 		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
-		expect(markdownSource).toContain("width: 100%;");
+		expect(markdownSource).toContain("width: max-content;");
+		expect(markdownSource).toContain("min-width: 100%;");
 		expect(markdownSource).toContain("overflow-x: auto;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(pre)");
 		expect(markdownSource).toContain("max-width: 100%;");
