@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, "../dist");
 
-async function normalizeStaticRoutes() {
-	const entries = await fs.readdir(distDir, { withFileTypes: true });
+export async function normalizeStaticRoutes(targetDistDir = distDir) {
+	const entries = await fs.readdir(targetDistDir, { withFileTypes: true });
 
 	for (const entry of entries) {
 		if (!entry.isFile() || !entry.name.endsWith(".html")) {
@@ -14,21 +14,21 @@ async function normalizeStaticRoutes() {
 		}
 
 		const routeName = entry.name.slice(0, -".html".length);
-		const routeDirectory = path.join(distDir, routeName);
-		const targetIndexPath = path.join(routeDirectory, "index.html");
-
-		try {
-			const routeDirectoryStats = await fs.stat(routeDirectory);
-			if (!routeDirectoryStats.isDirectory()) {
-				continue;
-			}
-		} catch {
+		if (routeName === "index") {
 			continue;
 		}
 
-		await fs.copyFile(path.join(distDir, entry.name), targetIndexPath);
-		console.log(`[normalize-static-routes] wrote ${path.relative(distDir, targetIndexPath)}`);
+		const routeDirectory = path.join(targetDistDir, routeName);
+		const targetIndexPath = path.join(routeDirectory, "index.html");
+
+		await fs.mkdir(routeDirectory, { recursive: true });
+		await fs.copyFile(path.join(targetDistDir, entry.name), targetIndexPath);
+		console.log(
+			`[normalize-static-routes] wrote ${path.relative(targetDistDir, targetIndexPath)}`
+		);
 	}
 }
 
-await normalizeStaticRoutes();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+	await normalizeStaticRoutes();
+}

@@ -109,6 +109,14 @@ function getMarkdownRenderer() {
 					markdown.renderer.rules.link_open ??
 					((tokens, index, options, _env, self) =>
 						self.renderToken(tokens, index, options));
+				const defaultTableOpen =
+					markdown.renderer.rules.table_open ??
+					((tokens, index, options, _env, self) =>
+						self.renderToken(tokens, index, options));
+				const defaultTableClose =
+					markdown.renderer.rules.table_close ??
+					((tokens, index, options, _env, self) =>
+						self.renderToken(tokens, index, options));
 
 				markdown.renderer.rules.link_open = (
 					tokens,
@@ -130,6 +138,22 @@ function getMarkdownRenderer() {
 
 					return defaultLinkOpen(tokens, index, options, env, self);
 				};
+				markdown.renderer.rules.table_open = (
+					tokens,
+					index,
+					options,
+					env,
+					self
+				) =>
+					`<div class="markdown-table-scroll">${defaultTableOpen(tokens, index, options, env, self)}`;
+				markdown.renderer.rules.table_close = (
+					tokens,
+					index,
+					options,
+					env,
+					self
+				) =>
+					`${defaultTableClose(tokens, index, options, env, self)}</div>`;
 
 				return markdown;
 			}
@@ -243,19 +267,25 @@ watch(
 	list-style-type: decimal;
 }
 
-.item-content-markdown :deep(table) {
-	display: block;
+.item-content-markdown :deep(.markdown-table-scroll) {
 	width: 100%;
 	max-width: 100%;
 	min-width: 0;
-	border-spacing: 0;
-	border-collapse: separate;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 	border: 1px solid var(--markdown-border);
 	border-radius: 14px;
 	background: var(--markdown-table-bg);
 	box-shadow: 0 12px 26px -24px rgba(15, 23, 42, 0.28);
+}
+
+.item-content-markdown :deep(table) {
+	width: max-content;
+	min-width: 100%;
+	max-width: none;
+	border-spacing: 0;
+	border-collapse: separate;
+	background: transparent;
 }
 
 .item-content-markdown :deep(th),
