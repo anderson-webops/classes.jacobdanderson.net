@@ -2558,8 +2558,27 @@ describe("course text quality normalization", () => {
 			course!,
 			/Open Ended Project - Create a Drawing/
 		);
+		const turtleExploration = findItem(course!, /Turtle Exploration/);
+		const turtleRecap = findItem(course!, /Turtle Recap/);
+
+		for (const turtleItem of [
+			turtleExploration,
+			turtleRecap,
+			openEndedDrawing
+		]) {
+			expect(turtleItem.content, turtleItem.title).toMatch(
+				/canvas|Turtle|turtle|coordinate|drawing|visual/i
+			);
+			expect(turtleItem.content, turtleItem.title).not.toMatch(
+				/Name the input values|input surface|input parsing|printed output|awkward inputs?|empty or smallest/i
+			);
+		}
+
 		expect(openEndedDrawing.content).toContain(
 			"Open Ended Project: Create a Drawing"
+		);
+		expect(openEndedDrawing.content).toMatch(
+			/canvas setup|visible canvas behavior|Turtle plan|visible result/i
 		);
 		expect(openEndedDrawing.content).not.toMatch(
 			/^- (?:For|Run|Keep|The )Open Ended Project - Create a Drawing/m

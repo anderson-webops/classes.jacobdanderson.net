@@ -3320,10 +3320,10 @@ function subjectFocus(context: CourseTextContext) {
 			"AP CSA Java reasoning, including tracing code, explaining object state, writing method-level logic, and testing edge cases"
 		);
 	}
-	if (/python level 1|grs/.test(source)) {
+	if (isPythonTurtleContext(context) || /python level 1|grs/.test(source)) {
 		return topicScopedFocus(
 			context,
-			"beginner Python fluency with variables, input, conditionals, loops, functions, and readable console output"
+			"Turtle graphics and beginner Python fluency with coordinates, movement, loops, functions, event callbacks, canvas state, and readable code organization"
 		);
 	}
 	if (/python level 2|ps\d/.test(source)) {
@@ -3489,6 +3489,14 @@ function isNetworkSystemsSource(source: string) {
 
 function isPygameSource(source: string) {
 	return /pygames?|zrect|projectile|enemy ai|game loop/.test(source);
+}
+
+function isPythonTurtleContext(context: CourseTextContext) {
+	if (context.courseId !== "python-level-1") return false;
+
+	return /\b(?:grs\d+|turtle|coordinates?|movement|draw|drawing|canvas|shape|stamp|penup|pendown|goto|forward|left|right|event|collision|score|boundary|space eater|game mechanics)\b/.test(
+		contextText(context)
+	);
 }
 
 function isScratchSource(source: string) {
@@ -4727,6 +4735,30 @@ function projectExpectations(context: CourseTextContext) {
 			]
 		]);
 	}
+	if (isPythonTurtleContext(context)) {
+		return variantLines(context, [
+			subject => [
+				`- Plan ${subject} as visible canvas behavior: setup, turtle objects, movement or turn commands, repeated patterns or helper functions, and the expected drawing or game state.`,
+				`- Run ${subject} from a clean start and check a normal canvas path plus one boundary case such as a smallest shape, screen edge, repeated action, or reset when relevant.`,
+				`- Keep ${subject} explainable by separating canvas setup, turtle state, movement logic, and visible feedback.`
+			],
+			subject => [
+				`- For ${subject}, identify the turtle setup, coordinate or movement rule, loop or helper boundary, and the visible result that should appear on the canvas.`,
+				`- Test ${subject} with an ordinary drawing path, a smallest useful drawing or movement path, and one edge case such as pen state, screen boundary, repeated key press, or color/fill change.`,
+				`- Keep ${subject} organized so canvas setup, turtle commands, reusable helpers, and final visual feedback can be debugged separately.`
+			],
+			subject => [
+				`- Turn ${subject} into a small Turtle plan: canvas setup, turtle state, movement sequence, repeated logic, and evidence from the final drawing or animation.`,
+				`- Check ${subject} with a representative visual path, a boundary path near the canvas edge, and one state change such as pen up/down, color, score, or reset.`,
+				`- Keep the final ${subject} explanation tied to the coordinate rule, event callback, loop, function, or collision check that drives the result.`
+			],
+			subject => [
+				`- Before coding ${subject}, describe the expected starting state, turtle objects, key movement commands, and final visible result.`,
+				`- Begin with a tiny traceable drawing or movement, then add the standard version and one edge case that could go offscreen, repeat incorrectly, or leave the pen in the wrong state.`,
+				`- Keep ${subject} readable enough that the canvas behavior can be followed without rereading every line.`
+			]
+		]);
+	}
 	if (/python/.test(source)) {
 		return variantLines(context, [
 			subject => [
@@ -5200,6 +5232,30 @@ function completionChecks(context: CourseTextContext) {
 				`- ${subject} is verified through the rendered page with current browser evidence.`,
 				`- The result is checked at more than one screen width or interaction mode when layout or keyboard use matters.`,
 				`- The completion note separates event handling, data/state update, rendering, and error feedback.`
+			]
+		]);
+	}
+	if (isPythonTurtleContext(context)) {
+		return variantLines(context, [
+			subject => [
+				`- ${subject} can be rerun from a clean start and produces the expected drawing, animation, stamp, score, or game state.`,
+				`- ${subject} checks an ordinary canvas path and one boundary path such as a smallest shape, offscreen move, collision edge, color/pen state, or reset.`,
+				`- The ${subject} explanation names the turtle state, loop, helper, event callback, collision check, or coordinate rule that controls the result.`
+			],
+			subject => [
+				`- ${subject} produces the expected visual result from a fresh run, not from hidden interpreter or canvas state.`,
+				`- ${subject} checks a typical drawing or game path, a smallest useful path, and one edge case involving screen position, event timing, pen state, or reset behavior.`,
+				`- The ${subject} explanation names the setup, turtle command, helper function, loop, event callback, or canvas coordinate rule that controls the result.`
+			],
+			subject => [
+				`- ${subject} includes enough visible canvas evidence, comments, or trace notes to follow the Turtle state change.`,
+				`- ${subject} checks the intended visual case, a minimal drawing or movement case, and one case that challenges a coordinate, pen, color, score, or collision assumption.`,
+				`- Record the Python or Turtle construct that made the result easier to reason about.`
+			],
+			subject => [
+				`- ${subject} produces reproducible visual evidence from the current code, not a previous canvas run.`,
+				`- ${subject} checks one clean visual path, one canvas-boundary path, and one state issue such as repeated actions, key presses, color changes, or pen control.`,
+				`- The closing ${subject} note separates setup, movement/state logic, and visible feedback decisions.`
 			]
 		]);
 	}
