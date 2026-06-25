@@ -248,7 +248,7 @@ async function handleResourceChange() {
 	max-inline-size: 100%;
 	box-sizing: border-box;
 	contain: inline-size;
-	overflow-x: hidden;
+	overflow: hidden;
 	border: 1px solid
 		var(--course-asset-preview-border, rgba(13, 148, 136, 0.18));
 	border-radius: 18px;
@@ -307,6 +307,7 @@ async function handleResourceChange() {
 
 .course-asset-preview-content {
 	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	gap: 0.55rem;
 	min-width: 0;
 	min-inline-size: 0;
@@ -336,6 +337,7 @@ async function handleResourceChange() {
 }
 
 .course-asset-preview-content :deep(.item-content-markdown) {
+	display: block;
 	width: 100%;
 	inline-size: 100%;
 	max-width: 100%;
@@ -345,10 +347,29 @@ async function handleResourceChange() {
 	overflow-x: hidden;
 }
 
-.course-asset-preview-content :deep(.markdown-table-scroll),
+.course-asset-preview-content
+	:deep(.item-content-markdown .markdown-table-scroll),
 .course-asset-preview-content :deep(pre) {
+	display: block;
+	box-sizing: border-box;
 	inline-size: 100%;
 	max-inline-size: 100%;
 	min-inline-size: 0;
+	overflow-x: auto;
+	overflow-y: hidden;
+	overscroll-behavior-inline: contain;
+}
+
+.course-asset-preview-content :deep(.item-content-markdown table) {
+	width: 100%;
+	max-width: 100%;
+	min-width: 100%;
+	table-layout: auto;
+}
+
+.course-asset-preview-content :deep(.item-content-markdown th),
+.course-asset-preview-content :deep(.item-content-markdown td) {
+	min-width: 0;
+	max-width: min(28rem, 70vw);
 }
 </style>
