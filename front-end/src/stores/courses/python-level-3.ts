@@ -1,13 +1,12 @@
 import type { RawCourse } from "./types";
-
-const STATIC_MEDIA = "https://static.classes.jacobdanderson.net";
+import { staticMediaUrl, withPendingStaticMediaNotice } from "./staticMedia";
 
 const SORT_ANIMATIONS = {
-	bubble: `${STATIC_MEDIA}/py3_bubble_sort_wikimedia.gif`,
-	insertion: `${STATIC_MEDIA}/py3_insertion_sort_wikimedia.gif`,
-	merge: `${STATIC_MEDIA}/py3_merge_sort_wikimedia.gif`,
-	quick: `${STATIC_MEDIA}/py3_quicksort_wikimedia.gif`,
-	selection: `${STATIC_MEDIA}/py3_selection_sort_wikimedia.gif`
+	bubble: staticMediaUrl("py3_bubble_sort_wikimedia.gif"),
+	insertion: staticMediaUrl("py3_insertion_sort_wikimedia.gif"),
+	merge: staticMediaUrl("py3_merge_sort_wikimedia.gif"),
+	quick: staticMediaUrl("py3_quicksort_wikimedia.gif"),
+	selection: staticMediaUrl("py3_selection_sort_wikimedia.gif")
 } as const;
 
 const SORT_ANIMATION_SOURCES = {
@@ -71,7 +70,7 @@ const SOURCE_PROJECT_MEDIA_BY_TITLE: Record<string, string> = {
 };
 
 function sourceProjectMedia(filename: string) {
-	return `${STATIC_MEDIA}/${filename}`;
+	return staticMediaUrl(filename);
 }
 
 function withSourceProjectMedia(course: RawCourse): RawCourse {
@@ -84,6 +83,10 @@ function withSourceProjectMedia(course: RawCourse): RawCourse {
 
 			if (filename && !item.mediaLink) {
 				item.mediaLink = sourceProjectMedia(filename);
+				item.content = withPendingStaticMediaNotice(
+					item.content,
+					filename
+				);
 			}
 		}
 	}

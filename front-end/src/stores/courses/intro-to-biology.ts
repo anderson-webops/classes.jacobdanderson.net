@@ -1,10 +1,5 @@
 import type { RawCourse } from "./types";
-
-const STATIC_MEDIA = "https://static.classes.jacobdanderson.net";
-
-function staticAsset(filename: string) {
-	return `${STATIC_MEDIA}/${filename}`;
-}
+import { staticMediaUrl } from "./staticMedia";
 
 function concept({
 	evidence,
@@ -71,7 +66,7 @@ export const introToBiologyCourse: RawCourse = {
 							"Label skeletal, nervous, integumentary, respiratory, circulatory, digestive, excretory, endocrine, immune, and muscular examples.",
 						focus: "Trace one everyday action, such as running or eating, across at least three interacting systems."
 					}),
-					mediaLink: staticAsset("biomod1pro1im1.jpg")
+					mediaLink: staticMediaUrl("biomod1pro1im1.jpg")
 				},
 				{
 					title: "Body Systems Reference B",
@@ -83,7 +78,7 @@ export const introToBiologyCourse: RawCourse = {
 							"Use arrows to show which system receives information, which system moves material, and which system changes the body's response.",
 						focus: "Name one system interaction and explain what would break if either system stopped contributing."
 					}),
-					mediaLink: staticAsset("biomod1pro1im2.jpg")
+					mediaLink: staticMediaUrl("biomod1pro1im2.jpg")
 				},
 				{
 					title: "Scenario-Based System Interactions",
@@ -171,7 +166,7 @@ export const introToBiologyCourse: RawCourse = {
 							"Match each guest to a dish by naming the strongest graph clue and ruling out at least one alternative.",
 						focus: "Explain why a graph pattern supports a meal hypothesis without claiming certainty beyond the evidence."
 					}),
-					mediaLink: staticAsset("biomod2pro1im1.png")
+					mediaLink: staticMediaUrl("biomod2pro1im1.png")
 				},
 				{
 					title: "Nutrient Recipe Book",
