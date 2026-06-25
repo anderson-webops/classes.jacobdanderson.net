@@ -152,20 +152,36 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain(".course-asset-preview-panel {");
 		expect(previewSource).toContain("contain: inline-size;");
 		expect(previewSource).toContain("overflow-x: hidden;");
+		expect(previewSource).toContain("min-inline-size: 0;");
+		expect(previewSource).toContain("max-inline-size: 100%;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown)"
 		);
+		expect(previewSource).toContain(
+			".course-asset-preview-content :deep(.markdown-table-scroll)"
+		);
+		expect(previewSource).toContain(
+			".course-asset-preview-content :deep(pre)"
+		);
 		expect(explorerSource).toContain(".course-reader {");
+		expect(explorerSource).toContain("overflow-x: hidden;");
+		expect(explorerSource).toContain(".course-workspace > *");
+		expect(explorerSource).toContain(".lesson-list {");
+		expect(explorerSource).toContain(".lesson-item {");
 		expect(explorerSource).toContain("overflow-x: hidden;");
 		expect(explorerSource).toContain(".reader-section {");
 		expect(explorerSource).toContain(".lesson-card {");
 
 		expect(markdownSource).toContain("max-width: min(100%, 82ch);");
+		expect(markdownSource).toContain(
+			"max-inline-size: min(100%, 82ch);"
+		);
 		expect(markdownSource).toContain("box-sizing: border-box;");
 		expect(markdownSource).toContain(
 			".item-content-markdown :deep(.markdown-table-scroll)"
 		);
 		expect(markdownSource).toContain("contain: inline-size;");
+		expect(markdownSource).toContain("overscroll-behavior-inline: contain;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
 		expect(markdownSource).toContain("width: max-content;");
 		expect(markdownSource).toContain("min-width: 100%;");

@@ -2594,6 +2594,10 @@ function writeStoredValue(key: string, value: string) {
 	overflow: hidden;
 }
 
+.course-workspace > * {
+	min-width: 0;
+}
+
 .course-outline,
 .course-reader,
 .reader-empty {
@@ -2933,7 +2937,15 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-direction: column;
 	gap: 0;
+	min-width: 0;
+	max-width: 100%;
 	border-top: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.lesson-item {
+	min-width: 0;
+	max-width: 100%;
+	overflow-x: hidden;
 }
 
 .lesson-item + .lesson-item {
@@ -2962,6 +2974,8 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	align-items: flex-start;
 	gap: 0.9rem;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .item-complete-badge {
@@ -3026,6 +3040,8 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.75rem;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .resource-link {
