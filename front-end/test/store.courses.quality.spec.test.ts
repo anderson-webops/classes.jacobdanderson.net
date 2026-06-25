@@ -5712,6 +5712,15 @@ describe("course text quality normalization", () => {
 			);
 			expect(mathScienceCorpus).not.toMatch(/authorized scope/i);
 			expect(mathScienceCorpus).not.toMatch(/input shape/i);
+			expect(mathScienceCorpus).not.toMatch(/\b(?:cleaned|generated)\b/i);
+			expect(mathScienceCorpus).not.toMatch(/\bpreserved answers\b/i);
+			expect(mathScienceCorpus).not.toMatch(
+				/\b(?:restore|restores|restored|preserve|preserves|preserved)\s+the\s+original\b/i
+			);
+			expect(mathScienceCorpus).not.toMatch(
+				/\boriginal (?:project|course|version|phenomena)\b/i
+			);
+			expect(mathScienceCorpus).not.toMatch(/\bcourse material\b/i);
 			expect(mathScienceCorpus).toContain(
 				"vocabulary, representation choice, algebraic procedure"
 			);
@@ -6335,8 +6344,8 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("CHM10 Advanced Chemistry Map");
 		expect(text).toContain("Reference Appendix: Chemistry Resource Bank");
 		expect(text).toContain("Stoichiometry Error Analysis");
-		expect(text).toContain("Original Phenomena Case Library");
-		expect(text).toMatch(/original project source index/i);
+		expect(text).toContain("Phenomena Case Library");
+		expect(text).toMatch(/project source index/i);
 		expect(text).toContain("Everyday Chemistry Observation Log");
 		expect(text).toContain("Material Sorting Challenge");
 		expect(text).toContain("Heating and Cooling Diary");
@@ -6349,8 +6358,8 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Making a DIY Lava Lamp");
 		expect(text).toContain("Making Oobleck Case Analysis");
 		expect(text).toContain("States of Matter Simulation Report");
-		expect(text).toContain("Exploration of the Periodic Table");
-		expect(text).toContain("Name Making with the Periodic Table");
+		expect(text).toContain("Periodic Table Reference Set and Symbol Reading");
+		expect(text).toContain("Mystery Element Cards and Symbol Codes");
 		expect(text).toContain("Introduction to Chemical Reactions");
 		expect(text).toContain("Elephant Toothpaste Case Analysis");
 		expect(text).toContain("Making a Volcano Case Analysis");

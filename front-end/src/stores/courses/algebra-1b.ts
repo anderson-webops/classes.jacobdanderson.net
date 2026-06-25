@@ -284,7 +284,7 @@ This project applies polynomial modeling to event-planning revenue, cost, and co
 				`.trim()
 			),
 			createLesson(
-				"Answer Key and Cleaned Profit Models",
+				"Answer Key and Profit Models",
 				`
 **Base model**
 
@@ -859,7 +859,7 @@ The photon-count data for this activity is:
 - \`(3, 55)\`
 - \`(4, 29)\`
 
-**Cleaned observations**
+**Selected observations**
 
 - Highest measured count: \`x = 0\`
 - Lowest-likelihood positions in the zero-filled comparison line are the inserted half-step gaps such as \`x = -3.5, -2.5, ..., 3.5\`

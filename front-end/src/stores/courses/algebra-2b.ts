@@ -38,7 +38,7 @@ export const algebra2BCourse: RawCourse = {
 				`
 Logarithms undo exponentials. If \`b^x = a\`, then \`log_b(a) = x\`. The base stays the same; the answer to the exponent becomes the logarithm value.
 
-**Cleaned conversion examples**
+**Conversion examples**
 
 - \`3^x = 47\` -> \`x = log_3(47)\`
 - \`2^x = 13\` -> \`x = log_2(13)\`
@@ -72,7 +72,7 @@ Three identities do most of the work in this module:
 - quotient rule: \`log_b(m/n) = log_b(m) - log_b(n)\`
 - power rule: \`log_b(m^n) = n log_b(m)\`
 
-**Cleaned expansions and condensations**
+**Expansion and condensation examples**
 
 - \`log_5(2x) = log_5(2) + log_5(x)\`
 - \`ln(2x^3) = ln(2) + 3ln(x)\`
@@ -185,7 +185,7 @@ Some graph-reading prompts are easier to rebuild directly from the available equ
 An arithmetic sequence changes by a constant difference \`d\`. The nth-term formula is
 \`a_n = a_1 + d(n - 1)\`.
 
-**Cleaned examples**
+**Representative examples**
 
 - \`4, 7, 10, 13, ...\` has \`d = 3\`; next terms: \`16, 19, 22\`
 - \`2.7, 3.1, 3.5, 3.9, ...\` has \`d = 0.4\`
@@ -205,7 +205,7 @@ An arithmetic sequence changes by a constant difference \`d\`. The nth-term form
 - If \`a_1 = 5\`, \`d = 3\`, and \`a_n = 38\`, then \`n = 12\`
 - If \`a_1 = -0.25\`, \`d = 0.5\`, and \`a_n = 9.75\`, then \`n = 21\`
 
-The generated sequence graphic replaces the original plotted examples and the partially missing sum-pairing diagram.
+The sequence reference combines plotted terms with the sum-pairing pattern so both term-by-term and series reasoning are visible in one place.
 				`.trim(),
 				media.arithmeticReference
 			),
@@ -240,7 +240,7 @@ Keep the nth-term and sum formulas separate: one locates a single term, while th
 A geometric sequence changes by a constant ratio \`r\`. The nth-term formula is
 \`a_n = a_1 r^(n - 1)\`.
 
-**Cleaned identification examples**
+**Identification examples**
 
 - \`0.5, 1.5, 4.5, 13.5, ...\` -> geometric with \`r = 3\`
 - \`-5, 8, 21, ...\` -> arithmetic, not geometric
@@ -294,7 +294,7 @@ If \`|r| < 1\`, the infinite series converges to
 - Multiplier effect: \`1000 + 800 + 640 + ... = 5000\`
 - Bouncing ball total path: initial drop plus an infinite rebound series
 
-The original infinite-series area illustration was missing, so the new reference image includes a clean convergence panel instead.
+The reference image includes a convergence panel that connects shrinking geometric pieces to the infinite-series formula.
 				`.trim()
 			)
 		]),
@@ -317,7 +317,7 @@ For multiplication, the inner dimensions must match. A \`2 x 3\` matrix times a 
 - \`[[1, 2], [3, 4]] [[2, 0], [-1, 5]] = [[0, 10], [2, 20]]\`
 - \`[[2, -1, 3], [0, 4, 5]] [[1, 2], [3, 0], [-2, 1]] = [[-7, 7], [2, 5]]\`
 
-The replacement graphic summarizes dimension rules, row-by-column multiplication, and the inverse workflow used in the check-in set.
+The matrix workflow reference summarizes dimension rules, row-by-column multiplication, and the inverse process used in the check-in set.
 				`.trim(),
 				media.matrixWorkflow
 			),
@@ -343,7 +343,7 @@ Example:
 - If \`A = [[4, 7], [2, 6]]\` and \`B = [[3, 0], [1, 2]]\`, then
   \`A / B = A * B^(-1) = [[1/6, 3.5], [-1/3, 3]]\`
 
-This covers the matrix-inverse and quotient work needed for the cleaned Check-in #1 set.
+This covers the matrix-inverse and quotient work needed for Check-in #1.
 				`.trim()
 			)
 		]),
@@ -367,7 +367,7 @@ If work stalls, stop and revisit the specific skill instead of pressing through 
 			createLesson(
 				"Representative Review Problems",
 				`
-**Cleaned answer-key highlights**
+**Answer-key highlights**
 
 - \`7^x = 378\` -> \`x = log_7(378)\`
 - \`log_3.7(x) = 28\` -> \`3.7^28 = x\`
@@ -380,7 +380,7 @@ If work stalls, stop and revisit the specific skill instead of pressing through 
 - Geometric review: \`3, 21, 147, ...\` has \`r = 7\`
 - Infinite-series review: \`0.777777... = 7/9\`
 
-Reuse the generated exponential/logarithmic and matrix graphics while explaining each step aloud.
+Use the exponential/logarithmic and matrix references while explaining how each step follows from the relevant rule.
 				`.trim(),
 				media.expLogFamilies
 			)
@@ -443,7 +443,7 @@ Formulas:
 - \`P(n, r) = n! / (n - r)!\`
 - \`C(n, r) = n! / (r!(n - r)!)\`
 
-**Cleaned examples**
+**Representative examples**
 
 - \`P(11, 11) = 11! = 39,916,800\`
 - Choosing \`2\` friends from \`7\`: \`C(7, 2) = 21\`
@@ -451,7 +451,7 @@ Formulas:
 - Picking \`4\` marbles from \`16\`: \`C(16, 4)\`
 - Probability of a phone number starting with \`615\`: \`10^7 / 10^10 = 1/1000\`
 
-This is the cleaned version of the original probability module after removing the platform instructions and correcting several malformed table captions.
+This module focuses on probability notation, sample spaces, permutations, combinations, and interpreting results in context.
 				`.trim()
 			)
 		]),
@@ -482,7 +482,7 @@ Statistics helps you summarize data, notice trends, and decide how trustworthy a
 - For \`(1, 3), (4, 0), (5, 5), (8, 1)\`, \`r approx -0.23\`
 - For \`(3, 10), (5, 9), (8, 8), (9, 5), (10, 3)\`, \`r approx -0.91\`
 
-The replacement graphic includes positive, negative, and weak scatter-plot examples so the original screenshot-only prompts are no longer required.
+The scatter-plot reference includes positive, negative, and weak examples so correlation strength and direction can be compared visually.
 				`.trim(),
 				media.statisticsRegression
 			),
@@ -502,7 +502,7 @@ The regression line \`y = mx + b\` is the line of best fit. The slope \`m\` esti
 - Estimated line close to \`y = -2x + 11\` for a negative-trend scatter plot
 - For \`(2, 3), (6, 5), (9, 6)\`, the hand-computed line is \`y = 0.4x + 2.2\` with \`r approx 0.99\`
 - For \`(3, 5), (8, 2)\`, the line is \`y = -0.6x + 6.8\` with \`r = -1\`
-- For the cleaned Check-in #2 data set, a regression near \`y = 0.28x + 3.61\` gives \`r approx 0.78\` and \`r^2 approx 0.61\`
+- For the Check-in #2 data set, a regression near \`y = 0.28x + 3.61\` gives \`r approx 0.78\` and \`r^2 approx 0.61\`
 
 **Tooling note**
 
@@ -512,7 +512,7 @@ Desmos is an appropriate calculator for the larger tables in this module. Use a 
 			createLesson(
 				"Data Visual References",
 				`
-Use the cleaned data or the provided regression reference whenever a prompt needs a scatter plot, slope graph, or line-of-best-fit sketch.
+Use the regression data or visual reference whenever a prompt needs a scatter plot, slope graph, or line-of-best-fit sketch.
 				`.trim(),
 				media.statisticsRegression
 			)
@@ -550,7 +550,7 @@ The three basic trig ratios are:
 - \`1.5pi\` radians -> \`270\` degrees
 - \`0.875pi\` radians -> \`157.5\` degrees
 
-The generated unit-circle graphic replaces the original diagram links, triangle sketches, and special-angle screenshots.
+The unit-circle reference connects angle position, coordinates, special triangles, and common sine/cosine values.
 				`.trim(),
 				media.unitCircleTrig
 			),
@@ -592,7 +592,7 @@ In a right triangle, the two acute angles are complementary. That is why \`sin(A
 			createLesson(
 				"Triangle Diagram References",
 				`
-Use the cleaned written values or the unit-circle/special-triangle reference whenever a right-triangle or angle-finding exercise needs a diagram reference.
+Use the written values or the unit-circle and special-triangle reference whenever a right-triangle or angle-finding exercise needs a diagram.
 				`.trim(),
 				media.unitCircleTrig
 			)
@@ -684,7 +684,7 @@ This check-in revisits the second half of the course.
 			createLesson(
 				"Representative Review Problems",
 				`
-**Cleaned answer-key highlights**
+**Answer-key highlights**
 
 - Coin sample space: \`{Heads, Tails}\`
 - Standard deck sample-space size: \`52\`
