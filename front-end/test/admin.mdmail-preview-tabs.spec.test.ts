@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import MdMail from "@/pages/admin/mdmail.vue";
@@ -40,6 +42,36 @@ describe("Admin mail preview tabs", () => {
 		expect(previewBody.exists()).toBe(true);
 		expect(previewBody.html()).toContain("<strong>Hello</strong>");
 		expect(previewBody.html()).toContain("<em>world</em>");
+	});
+
+	it("renders homework bullets as an inset list in the preview", async () => {
+		const wrapper = mount(MdMail);
+
+		const mdInput = wrapper.find('[data-testid="md-input"]');
+		await mdInput.setValue(
+			[
+				"**Homework:**",
+				"- Add a start and pause feature.",
+				"- Add a timer mode."
+			].join("\n")
+		);
+
+		await wrapper.find('[data-testid="tab-preview"]').trigger("click");
+
+		const previewBody = findPreviewBody(wrapper);
+		expect(previewBody.findAll("ul li").map(item => item.text())).toEqual([
+			"Add a start and pause feature.",
+			"Add a timer mode."
+		]);
+
+		const source = readFileSync(
+			resolve(__dirname, "../src/pages/admin/mdmail.vue"),
+			"utf8"
+		);
+		expect(source).toContain(".preview-body :deep(ul),");
+		expect(source).toContain(".history-note__body :deep(ul),");
+		expect(source).toContain("padding-inline-start: 1.65rem;");
+		expect(source).toContain("list-style-position: outside;");
 	});
 
 	it("supports arrow-key tab navigation", async () => {

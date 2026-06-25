@@ -491,14 +491,23 @@ watch(
 }
 
 .record-body :deep(p),
-.record-body :deep(ul),
-.record-body :deep(ol) {
+.record-body :deep(blockquote) {
 	margin: 0.65em 0;
 }
 
 .record-body :deep(ul),
 .record-body :deep(ol) {
-	padding-left: 1.3rem;
+	margin: 0.75em 0 0.75em 0.25rem;
+	padding-inline-start: 1.65rem;
+	list-style-position: outside;
+}
+
+.record-body :deep(li) {
+	padding-inline-start: 0.25rem;
+}
+
+.record-body :deep(li + li) {
+	margin-top: 0.4em;
 }
 
 .record-body :deep(a) {

@@ -892,6 +892,21 @@ function parseDateIso(value: string): string | null {
 	color: #0f172a;
 }
 
+.history-note__body :deep(ul),
+.history-note__body :deep(ol) {
+	margin: 0.75em 0 0.75em 0.25rem;
+	padding-inline-start: 1.65rem;
+	list-style-position: outside;
+}
+
+.history-note__body :deep(li) {
+	padding-inline-start: 0.25rem;
+}
+
+.history-note__body :deep(li + li) {
+	margin-top: 0.4em;
+}
+
 .mail-card__header {
 	display: flex;
 	flex-wrap: wrap;
@@ -1116,17 +1131,25 @@ textarea {
 	margin-bottom: 12px;
 }
 .preview-body :deep(p),
-.preview-body :deep(ul),
-.preview-body :deep(ol) {
+.preview-body :deep(blockquote) {
 	margin: 0.6em 0;
 }
+
 .preview-body :deep(ul),
 .preview-body :deep(ol) {
-	padding-left: 1.4rem;
+	margin: 0.75em 0 0.75em 0.25rem;
+	padding-inline-start: 1.65rem;
+	list-style-position: outside;
 }
+
+.preview-body :deep(li) {
+	padding-inline-start: 0.25rem;
+}
+
 .preview-body :deep(li + li) {
-	margin-top: 0.35em;
+	margin-top: 0.4em;
 }
+
 .preview-body :deep(code) {
 	background: #f3f4f6;
 	color: #111827;
