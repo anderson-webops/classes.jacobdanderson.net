@@ -403,9 +403,7 @@ async function handleResourceChange() {
 	min-inline-size: 0;
 	contain: inline-size paint;
 	isolation: isolate;
-	overflow-x: auto;
 	overflow-y: hidden;
-	overflow-inline: auto;
 	overscroll-behavior-inline: contain;
 	scrollbar-gutter: stable;
 }
@@ -413,22 +411,31 @@ async function handleResourceChange() {
 .course-asset-preview-content
 	:deep(.item-content-markdown .markdown-table-scroll) {
 	border-radius: 14px;
+	overflow-x: hidden;
+	overflow-inline: hidden;
+}
+
+.course-asset-preview-content :deep(pre) {
+	overflow-x: auto;
+	overflow-inline: auto;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown table) {
-	width: max-content;
-	inline-size: max-content;
-	max-width: none;
-	max-inline-size: none;
-	min-width: 100%;
-	min-inline-size: 100%;
-	table-layout: auto;
+	width: 100%;
+	inline-size: 100%;
+	max-width: 100%;
+	max-inline-size: 100%;
+	min-width: 0;
+	min-inline-size: 0;
+	table-layout: fixed;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown th),
 .course-asset-preview-content :deep(.item-content-markdown td) {
 	min-width: 0;
-	max-width: min(32rem, 58vw);
+	min-inline-size: 0;
+	max-width: none;
+	max-inline-size: none;
 	overflow-wrap: anywhere;
 	word-break: break-word;
 }
