@@ -152,6 +152,7 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("contain: inline-size paint;");
 		expect(previewSource).toContain("overflow-x: hidden;");
 		expect(previewSource).toContain(".course-asset-preview-panel {");
+		expect(previewSource).toContain("justify-items: stretch;");
 		expect(previewSource).toContain("contain: inline-size layout paint;");
 		expect(previewSource).toContain("overflow: hidden;");
 		expect(previewSource).toContain("min-inline-size: 0;");
@@ -164,6 +165,10 @@ describe("course asset preview utilities", () => {
 		);
 		expect(previewSource).toContain(".course-asset-preview-scrollbox {");
 		expect(previewSource).toContain("position: relative;");
+		expect(previewSource).toContain(
+			".course-asset-preview-scrollbox :deep(.item-content-markdown)"
+		);
+		expect(previewSource).toContain("justify-self: stretch;");
 		expect(previewSource).toContain("contain: inline-size layout paint;");
 		expect(previewSource).toContain("isolation: isolate;");
 		expect(previewSource).toContain("overflow-x: auto;");
@@ -198,6 +203,8 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("overflow-wrap: anywhere;");
 		expect(previewSource).toContain("word-break: break-word;");
 		expect(explorerSource).toContain(".course-reader {");
+		expect(explorerSource).toContain("width: 100%;");
+		expect(explorerSource).toContain("inline-size: 100%;");
 		expect(explorerSource).toContain("overflow-x: hidden;");
 		expect(explorerSource).toContain(".course-workspace > *");
 		expect(explorerSource).toContain(".lesson-list {");
@@ -205,6 +212,7 @@ describe("course asset preview utilities", () => {
 		expect(explorerSource).toContain("overflow-x: hidden;");
 		expect(explorerSource).toContain(".reader-section {");
 		expect(explorerSource).toContain(".lesson-card {");
+		expect(explorerSource).toContain("box-sizing: border-box;");
 		expect(explorerSource).toContain(".lesson-card > *");
 		expect(explorerSource).toContain("min-inline-size: 0;");
 		expect(explorerSource).toContain("max-inline-size: 100%;");
