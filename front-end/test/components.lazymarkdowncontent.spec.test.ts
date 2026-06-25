@@ -87,6 +87,32 @@ describe("LazyMarkdownContent.vue", () => {
 		expect(wrapper.text()).toContain("Checkpoint: The game restarts cleanly.");
 	});
 
+	it("does not split hyphenated project titles into fake bullet items", async () => {
+		const wrapper = mount(LazyMarkdownContent, {
+			props: {
+				content: [
+					"**Outcome:** - For Open Ended Project - Create a Drawing, identify the visible canvas behavior.",
+					"- Run Open Ended Project - Create a Drawing with a Turtle plan.",
+					"- Keep Open Ended Project - Create a Drawing debuggable."
+				].join(" ")
+			}
+		});
+
+		await flushPromises();
+		await vi.waitFor(() => {
+			expect(wrapper.find("ul").exists()).toBe(true);
+		});
+
+		expect(wrapper.findAll("ul li").map(item => item.text())).toEqual([
+			"For Open Ended Project - Create a Drawing, identify the visible canvas behavior.",
+			"Run Open Ended Project - Create a Drawing with a Turtle plan.",
+			"Keep Open Ended Project - Create a Drawing debuggable."
+		]);
+		expect(wrapper.html()).not.toMatch(
+			/Open Ended Project\s*<\/li>\s*<li>Create a Drawing/
+		);
+	});
+
 	it("does not rewrite fenced code blocks while formatting compact course text", async () => {
 		const wrapper = mount(LazyMarkdownContent, {
 			props: {
