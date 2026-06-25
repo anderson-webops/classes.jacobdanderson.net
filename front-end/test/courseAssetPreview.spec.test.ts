@@ -197,10 +197,18 @@ describe("course asset preview utilities", () => {
 		expect(markdownSource).toContain("contain: inline-size layout paint;");
 		expect(markdownSource).toContain("overscroll-behavior-inline: contain;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
-		expect(markdownSource).toContain("width: max-content;");
+		expect(markdownSource).toContain("width: 100%;");
+		expect(markdownSource).toContain("inline-size: 100%;");
 		expect(markdownSource).toContain("min-width: 100%;");
-		expect(markdownSource).toContain("max-width: none;");
+		expect(markdownSource).toContain("max-width: 100%;");
+		expect(markdownSource).toContain("table-layout: fixed;");
+		expect(markdownSource).toContain("min-inline-size: 0;");
+		expect(markdownSource).toContain(
+			".item-content-markdown :deep(th code)"
+		);
+		expect(markdownSource).toContain("white-space: normal;");
 		expect(markdownSource).toContain("overflow-x: auto;");
+		expect(markdownSource).toContain("overflow-inline: auto;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(pre)");
 		expect(markdownSource).toContain("max-width: 100%;");
 	});
