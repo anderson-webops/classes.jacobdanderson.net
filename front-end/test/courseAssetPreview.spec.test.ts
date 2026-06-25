@@ -165,12 +165,18 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown table)"
 		);
-		expect(previewSource).toContain("width: max-content;");
-		expect(previewSource).toContain("max-width: none;");
-		expect(previewSource).toContain("table-layout: auto;");
+		expect(previewSource).toContain("width: 100%;");
+		expect(previewSource).toContain("inline-size: 100%;");
+		expect(previewSource).toContain("max-inline-size: 100%;");
+		expect(previewSource).toContain("table-layout: fixed;");
+		expect(previewSource).toContain("scrollbar-gutter: stable;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown th)"
 		);
+		expect(previewSource).toContain(
+			".course-asset-preview-content :deep(.item-content-markdown th code)"
+		);
+		expect(previewSource).toContain("overflow-wrap: anywhere;");
 		expect(explorerSource).toContain(".course-reader {");
 		expect(explorerSource).toContain("overflow-x: hidden;");
 		expect(explorerSource).toContain(".course-workspace > *");

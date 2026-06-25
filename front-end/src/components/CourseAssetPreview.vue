@@ -355,21 +355,34 @@ async function handleResourceChange() {
 	inline-size: 100%;
 	max-inline-size: 100%;
 	min-inline-size: 0;
+	contain: inline-size paint;
 	overflow-x: auto;
 	overflow-y: hidden;
 	overscroll-behavior-inline: contain;
+	scrollbar-gutter: stable;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown table) {
-	width: max-content;
-	max-width: none;
-	min-width: 100%;
-	table-layout: auto;
+	width: 100%;
+	inline-size: 100%;
+	max-width: 100%;
+	max-inline-size: 100%;
+	min-width: 0;
+	min-inline-size: 0;
+	table-layout: fixed;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown th),
 .course-asset-preview-content :deep(.item-content-markdown td) {
 	min-width: 0;
-	max-width: min(28rem, 70vw);
+	max-width: none;
+	overflow-wrap: anywhere;
+	word-break: normal;
+}
+
+.course-asset-preview-content :deep(.item-content-markdown th code),
+.course-asset-preview-content :deep(.item-content-markdown td code) {
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 </style>
