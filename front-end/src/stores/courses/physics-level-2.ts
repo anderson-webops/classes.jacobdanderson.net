@@ -458,7 +458,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Simulation Case Study",
 					content:
-						"Use a browser simulation, spreadsheet, or short Python notebook to model projectile drag, repeated acceleration updates, orbit-like motion, or another iterative system. Keep the case study remote-safe and evidence-based: include the update rule, sample rows or graph output, one validation check, and one reason the ideal model and corrected model differ."
+						"Use a browser simulation, spreadsheet, or short Python notebook to model projectile drag, repeated acceleration updates, orbit-like motion, or another iterative system. Keep the case study evidence-based and usable without special equipment: include the update rule, sample rows or graph output, one validation check, and one reason the ideal model and corrected model differ."
 				},
 				{
 					title: "Transfer Practice: Model Stability",
@@ -562,7 +562,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Coupled-System Case Study",
 					content:
-						"Use a remote-safe simulation, diagram set, or paper design case to analyze a connected system. The final explanation states the chosen system boundary, the constraint equation, the force model, and one realistic condition where the simplified constraint would stop working."
+						"Use a browser simulation, diagram set, or paper design case to analyze a connected system. The final explanation states the chosen system boundary, the constraint equation, the force model, and one realistic condition where the simplified constraint would stop working."
 				},
 				{
 					title: "Transfer Practice: Changing Constraints",
@@ -666,7 +666,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Thermal Case Study",
 					content:
-						"Use a remote-safe simulation, provided data, product specification, or paper design case to compare heat, work, and efficiency. The final explanation states the energy claim, the evidence used, the chosen sign convention, and one reason a real device cannot reach the ideal limit."
+						"Use a browser simulation, provided data, product specification, or paper design case to compare heat, work, and efficiency. The final explanation states the energy claim, the evidence used, the chosen sign convention, and one reason a real device cannot reach the ideal limit."
 				},
 				{
 					title: "Transfer Practice: Useful Energy",
@@ -718,7 +718,7 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Sensor Case Study",
 					content:
-						"Use a remote-safe data file, simulation, app sensor export, or device-spec case to analyze a signal. The final explanation states the physical quantity, transducer or measurement method, calibration evidence, noise treatment, and one test that would reveal whether the sensor is trustworthy."
+						"Use a provided data file, browser simulation, app sensor export, or device-spec case to analyze a signal. The final explanation states the physical quantity, transducer or measurement method, calibration evidence, noise treatment, and one test that would reveal whether the sensor is trustworthy."
 				},
 				{
 					title: "Transfer Practice: Measurement Trust",

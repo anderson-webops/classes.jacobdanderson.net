@@ -1363,7 +1363,7 @@ const chemistryProfile: ResearchExpansionProfile = {
 	priority: "urgent",
 	sources: ["NGSS Appendices", "ACS Chemistry Guidelines", "PhET"],
 	gaps: [
-		"Align to NGSS and ACS guidance while keeping all required work remote-safe.",
+		"Align to NGSS and ACS guidance while keeping all required work equipment-free.",
 		"Replace physical-lab assumptions with simulations, provided data, diagrams, videos, and paper modeling.",
 		"Build common-error checkpoints around particles, conservation, bonding, reactions, and stoichiometry."
 	],

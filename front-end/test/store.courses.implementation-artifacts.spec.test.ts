@@ -216,7 +216,7 @@ describe("implemented course development artifacts", () => {
 				const course = await requireCourse(courseId);
 				const text = allText(course);
 
-				expect(text, courseId).toContain("Remote Resource Bank");
+				expect(text, courseId).toContain("Digital Resource Bank");
 				expect(text, courseId).toContain("PhET");
 				expect(text, courseId).toMatch(
 					/does not require (?:beakers|household materials|physical lab supplies)|No physical lab supplies are required|No required project depends/i
@@ -241,7 +241,7 @@ describe("implemented course development artifacts", () => {
 			);
 			expect(chemistryText).toContain("Core Chemistry References");
 			expect(chemistryText).toContain(
-				"Remote-Safe Investigation Checklist"
+				"Investigation Safety Checklist"
 			);
 
 			expect(
@@ -1026,7 +1026,7 @@ describe("implemented course development artifacts", () => {
 		}
 
 		expect(allText(await requireCourse("elementary-science"))).toContain(
-			"K-2 and 3-5 Zoom-Safe Science Scope Map"
+				"K-2 and 3-5 Online Science Scope Map"
 		);
 		expect(
 			allText(await requireCourse("middle-school-integrated-science"))

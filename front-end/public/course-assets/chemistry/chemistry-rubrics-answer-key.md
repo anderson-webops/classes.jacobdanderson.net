@@ -422,7 +422,7 @@ Stoichiometry error checks:
 
 | Category           | Strong Evidence                                                                                               |
 | ------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Scope              | The topic is narrow enough to explain with course vocabulary and remote evidence                              |
+| Scope              | The topic is narrow enough to explain with course vocabulary and browser-based evidence                       |
 | Evidence           | At least two evidence types are used, such as a simulation, diagram, data table, equation, or reference       |
 | Model              | A particle, formula, equation, graph, or system model explains what cannot be seen directly                   |
 | Chemistry Accuracy | Terms such as atom, ion, molecule, solution, concentration, reaction, energy, and evidence are used correctly |

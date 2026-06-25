@@ -6726,11 +6726,11 @@ function scienceSupport(context: CourseTextContext) {
 		subject =>
 			`${subject} uses shared-screen materials and paper notes alongside ${evidenceFormat}; for ${topic}, any physical demonstration is replaceable with evidence from the named resource, so ${materialBoundary}.`,
 		subject =>
-			`${subject} is designed for a Zoom-safe ${band} workflow using ${evidenceFormat}. This ${band} evidence plan for ${topic} treats physical supplies as optional only when the same question can be answered from notes, diagrams, tables, or screen-shared resources.`,
+			`${subject} is designed for an online-session-safe ${band} workflow using ${evidenceFormat}. This ${band} evidence plan for ${topic} treats physical supplies as optional only when the same question can be answered from notes, diagrams, tables, or screen-shared resources.`,
 		subject =>
 			`${subject} can be completed with a notebook, pencil, and shared digital resources focused on ${topic}. If the ${band} example about ${topic} uses a physical demonstration, the required investigation still comes from data, diagrams, models, or simulations.`,
 		subject =>
-			`${subject} relies on accessible remote evidence: ${evidenceFormat}. For ${subject}, any optional observation stays simple and must be replaceable by the same evidence source named in the activity.`
+			`${subject} relies on accessible digital evidence: ${evidenceFormat}. For ${subject}, any optional observation stays simple and must be replaceable by the same evidence source named in the activity.`
 	]);
 	const output = variantPrompt(context, [
 		subject =>
@@ -6754,7 +6754,7 @@ function scienceSupport(context: CourseTextContext) {
 	]);
 
 	return [
-		`**Remote investigation:** ${compact(remoteInvestigation)}`,
+		`**Investigation:** ${compact(remoteInvestigation)}`,
 		`**Science explanation:** ${compact(scienceExplanation)}`,
 		`**Output:** ${compact(output)}`,
 		`**Completion checks:**\n${compactGeneratedProjectSupport(
@@ -6838,7 +6838,7 @@ function studioArtifact(context: CourseTextContext) {
 		return "a playable game checkpoint with scene behavior, state changes, player feedback, and playtest evidence";
 	}
 	if (/physics|chemistry|science/.test(source)) {
-		return "a remote-safe investigation writeup using provided data, a diagram, or a simulation";
+		return "an equipment-free investigation writeup using provided data, a diagram, or a simulation";
 	}
 	if (/security|offensive|network/.test(source)) {
 		return "a safe local security lab report with threat model, evidence, and mitigation";

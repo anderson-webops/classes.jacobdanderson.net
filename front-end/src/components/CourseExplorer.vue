@@ -68,6 +68,7 @@ const SOURCE_REPOSITORY_ROOT_RE =
 	/^https:\/\/github\.com\/instruction-material\/[^/]+\/tree\/main$/i;
 const REPOSITORY_ARCHIVE_RE =
 	/\b(?:reference archive|full repo|repo bank|problem bank|workspace archive|source archive)\b/i;
+const STATIC_CLASSES_HOST = "static.classes.jacobdanderson.net";
 const LEARNER_SELECTION_STORAGE_KEY =
 	"classes:course-explorer:selected-learner";
 const COURSE_SELECTION_STORAGE_KEY = "classes:course-explorer:selected-course";
@@ -88,6 +89,7 @@ const activeModuleId = ref("");
 const selectedCourse = shallowRef<CourseDefinition | null>(null);
 const courseLoadError = ref("");
 const isCourseLoading = ref(false);
+const unavailableStaticMediaUrls = ref<string[]>([]);
 const managedLearnersLoading = ref(false);
 const managedLearnersError = ref("");
 const progressSaveStatus = ref<
@@ -1000,6 +1002,44 @@ function isImage(link: string) {
 
 function isEmbeddedMedia(link: string) {
 	return isVideo(link) || isImage(link);
+}
+
+function isStaticClassesUrl(url: string) {
+	try {
+		return new URL(url).hostname === STATIC_CLASSES_HOST;
+	} catch {
+		return false;
+	}
+}
+
+function staticAssetName(url: string) {
+	try {
+		const pathname = new URL(url).pathname;
+		return decodeURIComponent(
+			pathname.split("/").filter(Boolean).pop() || pathname || url
+		);
+	} catch {
+		return url;
+	}
+}
+
+function isStaticMediaUnavailable(url: string) {
+	return (
+		isStaticClassesUrl(url) &&
+		unavailableStaticMediaUrls.value.includes(canonicalResourceTarget(url))
+	);
+}
+
+function markStaticMediaUnavailable(url: string) {
+	if (!isStaticClassesUrl(url)) return;
+
+	const target = canonicalResourceTarget(url);
+	if (unavailableStaticMediaUrls.value.includes(target)) return;
+
+	unavailableStaticMediaUrls.value = [
+		...unavailableStaticMediaUrls.value,
+		target
+	];
 }
 
 function linkHost(url: string) {
@@ -2034,7 +2074,10 @@ function writeStoredValue(key: string, value: string) {
 									<div
 										v-if="
 											item.mediaLink &&
-											isEmbeddedMedia(item.mediaLink)
+											isEmbeddedMedia(item.mediaLink) &&
+											!isStaticMediaUnavailable(
+												item.mediaLink
+											)
 										"
 										class="item-media"
 									>
@@ -2052,8 +2095,20 @@ function writeStoredValue(key: string, value: string) {
 													: 'auto'
 											"
 											:aria-label="`Demo video for ${item.title}`"
+											@error="
+												markStaticMediaUnavailable(
+													item.mediaLink
+												)
+											"
 										>
-											<source :src="item.mediaLink" />
+											<source
+												:src="item.mediaLink"
+												@error="
+													markStaticMediaUnavailable(
+														item.mediaLink
+													)
+												"
+											/>
 										</video>
 										<img
 											v-else-if="isImage(item.mediaLink)"
@@ -2061,7 +2116,42 @@ function writeStoredValue(key: string, value: string) {
 											:alt="`Project demo media for ${item.title}`"
 											class="item-media-image"
 											loading="lazy"
+											@error="
+												markStaticMediaUnavailable(
+													item.mediaLink
+												)
+											"
 										/>
+									</div>
+									<div
+										v-else-if="
+											item.mediaLink &&
+											isEmbeddedMedia(item.mediaLink) &&
+											isStaticMediaUnavailable(
+												item.mediaLink
+											)
+										"
+										class="item-media item-media-placeholder"
+										role="note"
+									>
+										<p class="item-media-placeholder-label">
+											Static asset pending
+										</p>
+										<p>
+											Space is reserved for
+											<strong>{{
+												staticAssetName(item.mediaLink)
+											}}</strong>
+											at the original static asset
+											location.
+										</p>
+										<a
+											:href="item.mediaLink"
+											rel="noopener noreferrer"
+											target="_blank"
+										>
+											{{ item.mediaLink }}
+										</a>
 									</div>
 								</article>
 							</li>
@@ -2224,7 +2314,10 @@ function writeStoredValue(key: string, value: string) {
 									<div
 										v-if="
 											item.mediaLink &&
-											isEmbeddedMedia(item.mediaLink)
+											isEmbeddedMedia(item.mediaLink) &&
+											!isStaticMediaUnavailable(
+												item.mediaLink
+											)
 										"
 										class="item-media"
 									>
@@ -2242,8 +2335,20 @@ function writeStoredValue(key: string, value: string) {
 													: 'auto'
 											"
 											:aria-label="`Demo video for ${item.title}`"
+											@error="
+												markStaticMediaUnavailable(
+													item.mediaLink
+												)
+											"
 										>
-											<source :src="item.mediaLink" />
+											<source
+												:src="item.mediaLink"
+												@error="
+													markStaticMediaUnavailable(
+														item.mediaLink
+													)
+												"
+											/>
 										</video>
 										<img
 											v-else-if="isImage(item.mediaLink)"
@@ -2251,7 +2356,42 @@ function writeStoredValue(key: string, value: string) {
 											:alt="`Project demo media for ${item.title}`"
 											class="item-media-image"
 											loading="lazy"
+											@error="
+												markStaticMediaUnavailable(
+													item.mediaLink
+												)
+											"
 										/>
+									</div>
+									<div
+										v-else-if="
+											item.mediaLink &&
+											isEmbeddedMedia(item.mediaLink) &&
+											isStaticMediaUnavailable(
+												item.mediaLink
+											)
+										"
+										class="item-media item-media-placeholder"
+										role="note"
+									>
+										<p class="item-media-placeholder-label">
+											Static asset pending
+										</p>
+										<p>
+											Space is reserved for
+											<strong>{{
+												staticAssetName(item.mediaLink)
+											}}</strong>
+											at the original static asset
+											location.
+										</p>
+										<a
+											:href="item.mediaLink"
+											rel="noopener noreferrer"
+											target="_blank"
+										>
+											{{ item.mediaLink }}
+										</a>
 									</div>
 								</article>
 							</li>
@@ -3235,6 +3375,42 @@ function writeStoredValue(key: string, value: string) {
 	height: auto;
 	border-radius: 14px;
 	background: #e2e8f0;
+}
+
+.item-media-placeholder {
+	display: grid;
+	gap: 0.75rem;
+	min-height: 14rem;
+	align-content: center;
+	padding: 1.25rem;
+	border: 1px dashed var(--course-border-strong, rgba(71, 85, 105, 0.42));
+	border-radius: 14px;
+	background: linear-gradient(
+		135deg,
+		var(--course-card-bg-soft, rgba(248, 250, 252, 0.88)),
+		var(--course-card-bg, rgba(255, 255, 255, 0.94))
+	);
+	color: var(--course-text, #0f172a);
+}
+
+.item-media-placeholder p {
+	margin: 0;
+	max-width: 68ch;
+}
+
+.item-media-placeholder-label {
+	font-family: var(--font-sans);
+	font-size: 0.78rem;
+	font-weight: 900;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--course-accent, #2563eb);
+}
+
+.item-media-placeholder a {
+	overflow-wrap: anywhere;
+	color: var(--course-link, #1d4ed8);
+	font-weight: 800;
 }
 
 .course-empty {
