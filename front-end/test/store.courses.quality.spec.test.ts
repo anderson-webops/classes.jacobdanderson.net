@@ -6281,6 +6281,7 @@ describe("course text quality normalization", () => {
 				loadRawCourse("elementary-science"),
 				loadRawCourse("middle-school-integrated-science"),
 				loadRawCourse("intro-to-biology"),
+				loadRawCourse("intro-to-environmental-science"),
 				loadRawCourse("intro-to-physics"),
 				loadRawCourse("intro-to-chemistry"),
 				loadRawCourse("physics-level-2")
@@ -6396,6 +6397,60 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("biomod1pro1im1.jpg");
 		expect(text).toContain("biomod1pro1im2.jpg");
 		expect(text).toContain("biomod2pro1im1.png");
+	});
+
+	it("adds Intro to Environmental Science from the original science source sequence", async () => {
+		const course = await loadRawCourse("intro-to-environmental-science");
+		expect(course).not.toBeNull();
+
+		const text = allCourseText(course);
+		const mediaLinks = course!.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(item => item.mediaLink)
+				.filter((link): link is string => Boolean(link))
+		);
+
+		expect(course!.modules.map(module => module.title)).toEqual([
+			"ES1 Ecosystems",
+			"ES2 Flora and Decomposers",
+			"ES3 Fauna",
+			"ES4 Weather and Climate",
+			"ES5 Geology and Oceanography",
+			"ES6 Humans and the Environment",
+			"ES7 Earth's Past, Present, and Future",
+			"ES8 Environmental Design Capstone"
+		]);
+		for (const module of course!.modules) {
+			expect(
+				module.curriculum.length + module.supplementalProjects.length,
+				module.title
+			).toBeGreaterThanOrEqual(4);
+			expect(
+				module.curriculum.length,
+				module.title
+			).toBeGreaterThanOrEqual(1);
+			expect(
+				module.supplementalProjects.length,
+				module.title
+			).toBeGreaterThanOrEqual(3);
+		}
+
+		expect(text).toContain("Project: Biome Travel Guide");
+		expect(text).toContain("Project: Ecosystem Reporter");
+		expect(text).toContain("Project: Climate Change Debate Response");
+		expect(text).toContain("Project: Transform Our Environment Proposal");
+		expect(text).toContain("core biome");
+		expect(text).toContain("NASA biome reference");
+		expect(text).toMatch(/Pending media/i);
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|Environmental Science Club|your instructor|Learning Targets/i
+		);
+		expect(mediaLinks).toEqual([
+			"https://static.classes.jacobdanderson.net/c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png"
+		]);
+		expect(text).toContain(
+			"c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png"
+		);
 	});
 
 	it("keeps Intro to Chemistry authored, deduplicated, and resource-specific", async () => {

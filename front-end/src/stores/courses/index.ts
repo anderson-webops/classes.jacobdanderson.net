@@ -277,6 +277,15 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			)
 	},
 	{
+		id: "intro-to-environmental-science",
+		name: "Intro to Environmental Science",
+		load: () =>
+			import("./intro-to-environmental-science").then(
+				({ introToEnvironmentalScienceCourse }) =>
+					introToEnvironmentalScienceCourse
+			)
+	},
+	{
 		id: "elementary-science",
 		name: "Elementary Science",
 		load: () =>

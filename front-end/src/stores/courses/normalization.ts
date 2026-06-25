@@ -3458,7 +3458,7 @@ function subjectFocus(context: CourseTextContext) {
 
 	return topicScopedFocus(
 		context,
-		"the module's core concept, a concrete worked example, and a testable artifact"
+		"the central idea, one traceable example, and evidence that the result works"
 	);
 }
 

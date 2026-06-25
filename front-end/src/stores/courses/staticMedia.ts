@@ -4,7 +4,8 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"am_12_file_io_with_dictionaries.mp4",
 	"biomod1pro1im1.jpg",
 	"biomod1pro1im2.jpg",
-	"biomod2pro1im1.png"
+	"biomod2pro1im1.png",
+	"c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png"
 ] as const;
 
 const knownPendingStaticMedia = new Set<string>(
