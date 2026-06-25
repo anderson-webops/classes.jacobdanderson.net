@@ -404,22 +404,28 @@ async function handleResourceChange() {
 	scrollbar-gutter: stable;
 }
 
+.course-asset-preview-content
+	:deep(.item-content-markdown .markdown-table-scroll) {
+	overflow-x: hidden;
+	overflow-inline: hidden;
+}
+
 .course-asset-preview-content :deep(.item-content-markdown table) {
-	width: max-content;
-	inline-size: max-content;
-	max-width: none;
-	max-inline-size: none;
+	width: 100%;
+	inline-size: 100%;
+	max-width: 100%;
+	max-inline-size: 100%;
 	min-width: 100%;
 	min-inline-size: 100%;
-	table-layout: auto;
+	table-layout: fixed;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown th),
 .course-asset-preview-content :deep(.item-content-markdown td) {
 	min-width: 0;
-	max-width: none;
+	max-width: 100%;
 	overflow-wrap: anywhere;
-	word-break: normal;
+	word-break: break-word;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown th code),
