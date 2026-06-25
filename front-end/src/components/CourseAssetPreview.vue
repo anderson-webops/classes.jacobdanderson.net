@@ -173,7 +173,9 @@ async function handleResourceChange() {
 					Course resource section
 				</p>
 				<p class="course-asset-preview-title">{{ title }}</p>
-				<LazyMarkdownContent :content="previewContent" />
+				<div class="course-asset-preview-scrollbox">
+					<LazyMarkdownContent :content="previewContent" />
+				</div>
 			</div>
 		</div>
 	</section>
@@ -249,6 +251,7 @@ async function handleResourceChange() {
 	box-sizing: border-box;
 	contain: inline-size;
 	overflow: hidden;
+	overflow: clip;
 	border: 1px solid
 		var(--course-asset-preview-border, rgba(13, 148, 136, 0.18));
 	border-radius: 18px;
@@ -319,6 +322,21 @@ async function handleResourceChange() {
 	overflow-x: hidden;
 }
 
+.course-asset-preview-scrollbox {
+	display: block;
+	width: 100%;
+	inline-size: 100%;
+	max-width: 100%;
+	max-inline-size: 100%;
+	min-width: 0;
+	min-inline-size: 0;
+	box-sizing: border-box;
+	overflow-x: auto;
+	overflow-y: hidden;
+	overscroll-behavior-inline: contain;
+	scrollbar-gutter: stable;
+}
+
 .course-asset-preview-eyebrow {
 	margin: 0;
 	color: var(--course-accent);
@@ -352,10 +370,15 @@ async function handleResourceChange() {
 .course-asset-preview-content :deep(pre) {
 	display: block;
 	box-sizing: border-box;
+	width: 100%;
 	inline-size: 100%;
+	max-width: 100%;
 	max-inline-size: 100%;
+	min-width: 0;
 	min-inline-size: 0;
 	contain: inline-size paint;
+	isolation: isolate;
+	clip-path: inset(0 round 14px);
 	overflow-x: auto;
 	overflow-y: hidden;
 	overscroll-behavior-inline: contain;

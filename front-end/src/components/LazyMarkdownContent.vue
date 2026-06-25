@@ -283,6 +283,8 @@ watch(
 	min-inline-size: 0;
 	box-sizing: border-box;
 	contain: inline-size layout paint;
+	isolation: isolate;
+	clip-path: inset(0 round 14px);
 	overflow-x: auto;
 	overflow-y: hidden;
 	overflow-inline: auto;
