@@ -240,6 +240,7 @@ watch(
 	color: var(--markdown-text-soft);
 	overflow-wrap: break-word;
 	overflow-x: hidden;
+	contain: inline-size;
 }
 
 .item-content-markdown :deep(h1),
@@ -298,14 +299,14 @@ watch(
 }
 
 .item-content-markdown :deep(table) {
-	width: 100%;
-	inline-size: 100%;
+	width: max-content;
+	inline-size: max-content;
 	min-width: 100%;
 	min-inline-size: 100%;
-	max-width: 100%;
-	max-inline-size: 100%;
+	max-width: none;
+	max-inline-size: none;
 	box-sizing: border-box;
-	table-layout: fixed;
+	table-layout: auto;
 	border-spacing: 0;
 	border-collapse: separate;
 	background: transparent;
