@@ -421,21 +421,21 @@ async function handleResourceChange() {
 }
 
 .course-asset-preview-content :deep(.item-content-markdown table) {
-	width: max-content;
-	inline-size: max-content;
+	width: 100%;
+	inline-size: 100%;
 	min-width: 100%;
 	min-inline-size: 100%;
-	max-width: none;
-	max-inline-size: none;
-	table-layout: auto;
+	max-width: 100%;
+	max-inline-size: 100%;
+	table-layout: fixed;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown th),
 .course-asset-preview-content :deep(.item-content-markdown td) {
 	min-width: 0;
 	min-inline-size: 0;
-	max-width: none;
-	max-inline-size: none;
+	max-width: 100%;
+	max-inline-size: 100%;
 	overflow-wrap: anywhere;
 	word-break: break-word;
 }
