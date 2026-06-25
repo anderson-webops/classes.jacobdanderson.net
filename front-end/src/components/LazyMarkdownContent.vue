@@ -302,14 +302,14 @@ watch(
 }
 
 .item-content-markdown :deep(table) {
-	width: max-content;
-	inline-size: max-content;
+	width: 100%;
+	inline-size: 100%;
 	min-width: 100%;
 	min-inline-size: 100%;
-	max-width: none;
-	max-inline-size: none;
+	max-width: 100%;
+	max-inline-size: 100%;
 	box-sizing: border-box;
-	table-layout: auto;
+	table-layout: fixed;
 	border-spacing: 0;
 	border-collapse: separate;
 	background: transparent;
