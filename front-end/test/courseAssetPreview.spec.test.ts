@@ -177,12 +177,13 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown table)"
 		);
-		expect(previewSource).toContain("width: max-content;");
-		expect(previewSource).toContain("inline-size: max-content;");
-		expect(previewSource).toContain("max-inline-size: none;");
+		expect(previewSource).toContain("width: 100%;");
+		expect(previewSource).toContain("inline-size: 100%;");
+		expect(previewSource).toContain("max-inline-size: 100%;");
 		expect(previewSource).toContain("min-inline-size: 100%;");
-		expect(previewSource).toContain("table-layout: auto;");
+		expect(previewSource).toContain("table-layout: fixed;");
 		expect(previewSource).toContain("scrollbar-gutter: stable;");
+		expect(previewSource).toContain("overflow-inline: hidden;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown th)"
 		);
@@ -190,6 +191,7 @@ describe("course asset preview utilities", () => {
 			".course-asset-preview-content :deep(.item-content-markdown th code)"
 		);
 		expect(previewSource).toContain("overflow-wrap: anywhere;");
+		expect(previewSource).toContain("word-break: break-word;");
 		expect(explorerSource).toContain(".course-reader {");
 		expect(explorerSource).toContain("overflow-x: hidden;");
 		expect(explorerSource).toContain(".course-workspace > *");
