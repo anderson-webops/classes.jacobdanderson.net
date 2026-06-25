@@ -1438,7 +1438,7 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.findAll(".resource-link.is-solution")).toHaveLength(0);
 	});
 
-	it("hides broad PyGame repo-root resources while preserving specific folders", async () => {
+	it("keeps repository-root resources from posing as starter or solution links", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -1467,6 +1467,13 @@ describe("CourseExplorer.vue", () => {
 							projectLink: rootUrl,
 							solutionLink: rootUrl,
 							title: "Broad PyGame Root"
+						},
+						{
+							content:
+								"This reference archive intentionally points to the full repo.",
+							id: "pygame-reference-archive",
+							projectLink: rootUrl,
+							title: "Reference Archive: PyGame Workspace"
 						},
 						{
 							content:
@@ -1521,11 +1528,23 @@ describe("CourseExplorer.vue", () => {
 
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("Broad PyGame Root");
+			expect(wrapper.text()).toContain(
+				"Reference Archive: PyGame Workspace"
+			);
 			expect(wrapper.text()).toContain("Specific PyGame Starter");
 		});
 
-		expect(wrapper.find(`a.resource-link[href="${rootUrl}"]`).exists()).toBe(
-			false
+		expect(
+			wrapper.find(`a.resource-link.is-project[href="${rootUrl}"]`).exists()
+		).toBe(false);
+		expect(
+			wrapper.find(`a.resource-link.is-solution[href="${rootUrl}"]`).exists()
+		).toBe(false);
+		expect(
+			wrapper.find(`a.resource-link.is-reference[href="${rootUrl}"]`).exists()
+		).toBe(true);
+		expect(wrapper.find(".resource-link.is-reference").text()).toContain(
+			"Source archive"
 		);
 		expect(
 			wrapper.find(`a.resource-link.is-project[href="${starterUrl}"]`).exists()
@@ -1537,5 +1556,6 @@ describe("CourseExplorer.vue", () => {
 		).toBe(true);
 		expect(wrapper.findAll(".resource-link.is-project")).toHaveLength(1);
 		expect(wrapper.findAll(".resource-link.is-solution")).toHaveLength(1);
+		expect(wrapper.findAll(".resource-link.is-reference")).toHaveLength(1);
 	});
 });
