@@ -64,6 +64,9 @@ const REFERENCE_TITLE_RE = /reference/i;
 const STARTER_RE = /starter/i;
 const CAPSTONE_TITLE_RE = /capstone|master project/i;
 const PROJECT_PREFIX_RE = /^Project:\s*/i;
+const BROAD_SOURCE_REPOSITORY_LINKS = new Set([
+	"https://github.com/instruction-material/PyGames/tree/main"
+]);
 const LEARNER_SELECTION_STORAGE_KEY =
 	"classes:course-explorer:selected-learner";
 const COURSE_SELECTION_STORAGE_KEY = "classes:course-explorer:selected-course";
@@ -1020,6 +1023,11 @@ function sameResourceTarget(left: string, right: string) {
 	return canonicalResourceTarget(left) === canonicalResourceTarget(right);
 }
 
+function isBroadSourceRepositoryLink(url: string) {
+	const base = canonicalResourceTarget(url).split("#", 1)[0];
+	return BROAD_SOURCE_REPOSITORY_LINKS.has(base);
+}
+
 function projectLabel(item: CourseModuleItem, url: string) {
 	const normalizedTitle = item.title.toLowerCase();
 	const normalizedUrl = url.toLowerCase();
@@ -1276,7 +1284,7 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 	const datasetUrl = item.datasetLink?.trim();
 	const mediaUrl = item.mediaLink?.trim();
 
-	if (projectUrl) {
+	if (projectUrl && !isBroadSourceRepositoryLink(projectUrl)) {
 		links.push({
 			kind: projectUrl.startsWith("/course-assets/")
 				? "asset"
@@ -1290,6 +1298,7 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 	if (
 		canViewSolutions.value &&
 		solutionUrl &&
+		!isBroadSourceRepositoryLink(solutionUrl) &&
 		(!projectUrl || !sameResourceTarget(solutionUrl, projectUrl))
 	) {
 		links.push({
