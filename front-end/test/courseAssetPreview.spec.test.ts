@@ -151,17 +151,23 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("box-sizing: border-box;");
 		expect(previewSource).toContain(".course-asset-preview-panel {");
 		expect(previewSource).toContain("contain: inline-size;");
-		expect(previewSource).toContain("overflow-x: hidden;");
+		expect(previewSource).toContain("overflow: hidden;");
 		expect(previewSource).toContain("min-inline-size: 0;");
 		expect(previewSource).toContain("max-inline-size: 100%;");
+		expect(previewSource).toContain("grid-template-columns: minmax(0, 1fr);");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown)"
 		);
+		expect(previewSource).toContain(".course-asset-preview-content");
 		expect(previewSource).toContain(
-			".course-asset-preview-content :deep(.markdown-table-scroll)"
+			":deep(.item-content-markdown .markdown-table-scroll)"
 		);
 		expect(previewSource).toContain(
-			".course-asset-preview-content :deep(pre)"
+			".course-asset-preview-content :deep(.item-content-markdown table)"
+		);
+		expect(previewSource).toContain("table-layout: auto;");
+		expect(previewSource).toContain(
+			".course-asset-preview-content :deep(.item-content-markdown th)"
 		);
 		expect(explorerSource).toContain(".course-reader {");
 		expect(explorerSource).toContain("overflow-x: hidden;");
@@ -180,11 +186,12 @@ describe("course asset preview utilities", () => {
 		expect(markdownSource).toContain(
 			".item-content-markdown :deep(.markdown-table-scroll)"
 		);
-		expect(markdownSource).toContain("contain: inline-size;");
+		expect(markdownSource).toContain("contain: inline-size layout paint;");
 		expect(markdownSource).toContain("overscroll-behavior-inline: contain;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
-		expect(markdownSource).toContain("width: max-content;");
+		expect(markdownSource).toContain("width: 100%;");
 		expect(markdownSource).toContain("min-width: 100%;");
+		expect(markdownSource).toContain("max-width: 100%;");
 		expect(markdownSource).toContain("overflow-x: auto;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(pre)");
 		expect(markdownSource).toContain("max-width: 100%;");

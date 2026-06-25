@@ -282,8 +282,9 @@ watch(
 	min-width: 0;
 	min-inline-size: 0;
 	box-sizing: border-box;
-	contain: inline-size;
+	contain: inline-size layout paint;
 	overflow-x: auto;
+	overflow-y: hidden;
 	overscroll-behavior-inline: contain;
 	-webkit-overflow-scrolling: touch;
 	border: 1px solid var(--markdown-border);
@@ -293,9 +294,9 @@ watch(
 }
 
 .item-content-markdown :deep(table) {
-	width: max-content;
+	width: 100%;
 	min-width: 100%;
-	max-width: none;
+	max-width: 100%;
 	box-sizing: border-box;
 	border-spacing: 0;
 	border-collapse: separate;
