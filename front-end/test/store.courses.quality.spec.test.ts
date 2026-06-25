@@ -4003,6 +4003,53 @@ describe("course text quality normalization", () => {
 	);
 
 	it(
+		"hides broad PyGames repo root pairs while preserving specific source folders",
+		async () => {
+			const pyGamesCourse = await loadRawCourse("pygames");
+			expect(pyGamesCourse).not.toBeNull();
+			if (!pyGamesCourse) return;
+
+			const root =
+				"https://github.com/instruction-material/PyGames/tree/main";
+			const allItems = pyGamesCourse.modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			const broadRootPairs = allItems
+				.filter(
+					item =>
+						item.projectLink === root &&
+						item.solutionLink === root
+				)
+				.map(item => item.title);
+			const generatedPracticeItem = allItems.find(
+				item =>
+					item.projectLink?.includes(
+						"/PG-03-pyg1-object-oriented-programming-actors-supplemental-2/starter"
+					) &&
+					item.solutionLink?.includes(
+						"/PG-03-pyg1-object-oriented-programming-actors-supplemental-2/solution"
+					)
+			);
+			const assetFolderItems = allItems.filter(item =>
+				[root + "/music", root + "/sounds", root + "/images"].includes(
+					item.projectLink ?? ""
+				)
+			);
+
+			expect(broadRootPairs).toEqual([]);
+			expect(generatedPracticeItem?.title).toBe(
+				"Object Oriented Programming: Actors Transfer Practice"
+			);
+			expect(assetFolderItems.length).toBeGreaterThan(0);
+			expect(
+				assetFolderItems.every(item => item.solutionLink === undefined)
+			).toBe(true);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
+	it(
 		"does not expose identical project and solution resources",
 		async () => {
 			const duplicateSolutionLinks = (await loadedCatalogCourses()).flatMap(

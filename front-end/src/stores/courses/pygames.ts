@@ -1,9 +1,40 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
-export const pyGamesCourse: RawCourse = {
+const PYGAMES_REPO_ROOT =
+	"https://github.com/instruction-material/PyGames/tree/main";
+
+function hideBroadPyGamesRootPair(item: RawCourseModuleItem) {
+	if (
+		item.projectLink !== PYGAMES_REPO_ROOT ||
+		item.solutionLink !== PYGAMES_REPO_ROOT
+	) {
+		return item;
+	}
+
+	const itemWithoutBroadLinks = { ...item };
+	delete itemWithoutBroadLinks.projectLink;
+	delete itemWithoutBroadLinks.solutionLink;
+
+	return itemWithoutBroadLinks;
+}
+
+function hideBroadPyGamesRootPairs(course: RawCourse): RawCourse {
+	return {
+		...course,
+		modules: course.modules.map(module => ({
+			...module,
+			curriculum: module.curriculum.map(hideBroadPyGamesRootPair),
+			supplementalProjects: module.supplementalProjects.map(
+				hideBroadPyGamesRootPair
+			)
+		}))
+	};
+}
+
+export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 	name: "PyGames",
 	modules: [
 		{
@@ -1724,4 +1755,4 @@ export const pyGamesCourse: RawCourse = {
 			]
 		}
 	]
-};
+});
