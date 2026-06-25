@@ -5296,6 +5296,38 @@ describe("course text quality normalization", () => {
 		);
 	});
 
+	it("keeps Scratch source links from reusing a learner project as its own solution", async () => {
+		const [scratchLevel1, scratchLevel2] = await Promise.all([
+			loadRawCourse("scratch-level-1"),
+			loadRawCourse("scratch-level-2")
+		]);
+		expect(scratchLevel1).not.toBeNull();
+		expect(scratchLevel2).not.toBeNull();
+
+		const duplicateScratchResources = [scratchLevel1, scratchLevel2]
+			.filter(Boolean)
+			.flatMap(course =>
+				course!.modules.flatMap(module =>
+					[
+						...module.curriculum,
+						...module.supplementalProjects
+					].flatMap(item => {
+						const projectLink = item.projectLink?.trim();
+						const solutionLink = item.solutionLink?.trim();
+						return projectLink && solutionLink === projectLink
+							? [`${module.title} / ${item.title}: ${projectLink}`]
+							: [];
+					})
+				)
+			);
+
+		expect(duplicateScratchResources).toEqual([]);
+		expect(findItem(scratchLevel2!, /Fish Food/).projectLink).toBe(
+			"https://scratch.mit.edu/projects/468227197"
+		);
+		expect(findItem(scratchLevel2!, /Fish Food/).solutionLink).toBeUndefined();
+	});
+
 	it("neutralizes repetitive generated supplemental project wording", async () => {
 		const [scratchLevel1, scratchLevel2, webDevelopment] =
 			await Promise.all([
