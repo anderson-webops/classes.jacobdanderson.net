@@ -3030,6 +3030,10 @@ describe("course text quality normalization", () => {
 			/Extend the core build with one extra requirement/i
 		);
 		expect(corpus).not.toMatch(/\bshould\b/i);
+		expect(corpus).not.toMatch(/offensive-security-lab-1[67]/i);
+		expect(corpus).not.toMatch(
+			/LLS-\d+-applied-studio-\d+-offensive-security-lab-1[67]/i
+		);
 		expect(corpus).toContain("securityLabConceptContent");
 		expect(corpus).toContain("securityLabExampleContent");
 		expect(corpus).toContain("securityLabReviewContent");
@@ -3597,8 +3601,8 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Memory Layout Transfer Practice");
 		expect(corpus).toContain("Parser Hardening Transfer Practice");
 		expect(corpus).toContain("Patch Review Transfer Practice");
-		expect(corpus).toContain("Defensive Exploitability Triage Studio");
-		expect(corpus).toContain("Defensive Hardening Audit Studio");
+		expect(corpus).not.toContain("Defensive Exploitability Triage Studio");
+		expect(corpus).not.toContain("Defensive Hardening Audit Studio");
 		expect(corpus).toContain(
 			"Low-Level Security Lab 7: Sanitizer Triage Studio"
 		);
