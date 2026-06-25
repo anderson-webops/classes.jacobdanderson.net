@@ -152,9 +152,15 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain(".course-asset-preview-panel {");
 		expect(previewSource).toContain("contain: inline-size;");
 		expect(previewSource).toContain("overflow: hidden;");
+		expect(previewSource).toContain("overflow: clip;");
 		expect(previewSource).toContain("min-inline-size: 0;");
 		expect(previewSource).toContain("max-inline-size: 100%;");
 		expect(previewSource).toContain("grid-template-columns: minmax(0, 1fr);");
+		expect(previewSource).toContain(
+			'<div class="course-asset-preview-scrollbox">'
+		);
+		expect(previewSource).toContain(".course-asset-preview-scrollbox {");
+		expect(previewSource).toContain("overflow-y: hidden;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown)"
 		);
@@ -169,6 +175,8 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("inline-size: 100%;");
 		expect(previewSource).toContain("max-inline-size: 100%;");
 		expect(previewSource).toContain("table-layout: fixed;");
+		expect(previewSource).toContain("clip-path: inset(0 round 14px);");
+		expect(previewSource).toContain("isolation: isolate;");
 		expect(previewSource).toContain("scrollbar-gutter: stable;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown th)"
@@ -185,6 +193,9 @@ describe("course asset preview utilities", () => {
 		expect(explorerSource).toContain("overflow-x: hidden;");
 		expect(explorerSource).toContain(".reader-section {");
 		expect(explorerSource).toContain(".lesson-card {");
+		expect(explorerSource).toContain(".lesson-card > *");
+		expect(explorerSource).toContain("min-inline-size: 0;");
+		expect(explorerSource).toContain("max-inline-size: 100%;");
 
 		expect(markdownSource).toContain("max-width: min(100%, 82ch);");
 		expect(markdownSource).toContain(
@@ -195,6 +206,8 @@ describe("course asset preview utilities", () => {
 			".item-content-markdown :deep(.markdown-table-scroll)"
 		);
 		expect(markdownSource).toContain("contain: inline-size layout paint;");
+		expect(markdownSource).toContain("clip-path: inset(0 round 14px);");
+		expect(markdownSource).toContain("isolation: isolate;");
 		expect(markdownSource).toContain("overscroll-behavior-inline: contain;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
 		expect(markdownSource).toContain("width: 100%;");

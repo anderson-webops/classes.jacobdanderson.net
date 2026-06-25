@@ -1173,6 +1173,10 @@ describe("CourseExplorer.vue", () => {
 					"",
 					"Flat regions can still involve energy transfer.",
 					"",
+					"| Sample | Temperature behavior | Evidence note |",
+					"| --- | --- | --- |",
+					"| Ice-water mixture | Stays near 0 C while melting | Energy changes phase before temperature rises |",
+					"",
 					"## Capstone Evidence Seeds",
 					"",
 					"Capstone text that should not appear."
@@ -1248,6 +1252,10 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain(
 				"Flat regions can still involve energy transfer."
 			);
+			expect(wrapper.find(".course-asset-preview-scrollbox").exists()).toBe(
+				true
+			);
+			expect(wrapper.find(".markdown-table-scroll").exists()).toBe(true);
 		});
 
 		const fullResourceLink = wrapper.find(

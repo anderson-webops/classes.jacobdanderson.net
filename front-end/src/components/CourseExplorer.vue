@@ -2990,6 +2990,13 @@ function writeStoredValue(key: string, value: string) {
 	box-shadow: none;
 }
 
+.lesson-card > * {
+	min-width: 0;
+	min-inline-size: 0;
+	max-width: 100%;
+	max-inline-size: 100%;
+}
+
 .lesson-card.is-supplemental {
 	padding-left: clamp(1rem, 2.2vw, 1.35rem);
 	border-left: 3px solid rgba(245, 158, 11, 0.22);
