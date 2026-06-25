@@ -976,7 +976,7 @@ describe("CourseExplorer.vue", () => {
 		const modelCardsLink =
 			"/course-assets/chemistry/chemistry-materials-pack.md#model-comparison-cards";
 		const sourceMapLink =
-			"/course-assets/chemistry/chemistry-materials-pack.md#original-project-source-index";
+			"/course-assets/chemistry/chemistry-materials-pack.md#project-reference-index";
 		const answerKeyLink =
 			"/course-assets/chemistry/chemistry-rubrics-answer-key.md#heating-curve-key";
 		const phetLink =
@@ -1015,7 +1015,7 @@ describe("CourseExplorer.vue", () => {
 							title: "Model Cards"
 						},
 						{
-							content: "Use the restored source map.",
+							content: "Use the project reference map.",
 							id: "source-map",
 							projectLink: sourceMapLink,
 							title: "Source Map"
@@ -1052,7 +1052,7 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain("Heating curve data");
 			expect(wrapper.text()).toContain("Naming cards");
 			expect(wrapper.text()).toContain("Model cards");
-			expect(wrapper.text()).toContain("Original source map");
+			expect(wrapper.text()).toContain("Project reference map");
 			expect(wrapper.text()).toContain("PhET simulation");
 			expect(wrapper.text()).toContain("Course asset");
 		});

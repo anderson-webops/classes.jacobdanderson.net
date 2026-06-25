@@ -90,7 +90,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Output:** A personal course overview listing the current module, the main concept, the project or case study, and one checkpoint question.",
 						"**CER checkpoint:** Explain how a chemistry project differs from a demonstration when the project includes evidence, a model, and a claim."
 					].join("\n\n"),
-					datasetLink: material("original-project-source-index")
+					datasetLink: material("project-reference-index")
 				},
 				{
 					title: "Chemistry as Evidence-Based Explanation",
@@ -234,10 +234,8 @@ export const introToChemistryCourse: RawCourse = {
 						"**Output:** Three case explanations, each with an observation, a chemistry vocabulary term, a particle-level or evidence-based model, and one limitation of the evidence source.",
 						"**CER checkpoint:** Explain why a familiar demonstration is not automatically a chemistry explanation until the evidence is connected to a model."
 					].join("\n\n"),
-					datasetLink: material("original-phenomena-case-library"),
-					solutionLink: answerKey(
-						"original-phenomena-case-library-key"
-					)
+					datasetLink: material("phenomena-case-library"),
+					solutionLink: answerKey("phenomena-case-library-key")
 				}
 			],
 			supplementalProjects: [
@@ -271,7 +269,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Activity prompt:** Describe what the material feels or looks like, decide whether it is best classified as solid, liquid, or borderline, and propose one practical use that depends on its unusual behavior. The proposal includes a feasibility note; an idea can be creative while still needing evidence.",
 						"**Completion checks:** The explanation uses viscosity, force, flow, solid, liquid, model, and limitation accurately, and it does not force the material into a category without explaining the evidence."
 					].join("\n\n"),
-					datasetLink: material("original-project-source-index"),
+					datasetLink: material("project-reference-index"),
 					mediaLink: REFERENCES.oobleckDemo
 				},
 				{
@@ -282,7 +280,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Activity prompt:** Connect density to real-world examples such as ships, submarines, vegetables floating in soup, and ice floating in water. The answer states that floating depends on density of the whole object or material system, not just on weight.",
 						"**Completion checks:** The final explanation includes density, volume, mass, layer, gas bubble, and particle-packing language, and it distinguishes density from weight."
 					].join("\n\n"),
-					datasetLink: material("original-project-source-index"),
+					datasetLink: material("project-reference-index"),
 					mediaLink: REFERENCES.lavaLampDemo
 				}
 			]
@@ -883,8 +881,8 @@ export const introToChemistryCourse: RawCourse = {
 						"**Activity prompt:** Sketch or describe iron and oxygen particles rearranging into iron oxide. The drawing does not need advanced molecular geometry, but it shows that atoms are conserved and rearranged rather than disappearing or being created.",
 						"**Completion checks:** The answer correctly identifies Fe as iron, distinguishes subscripts from coefficients, distinguishes phase labels from formulas, and explains why a phase change alone is not a chemical reaction."
 					].join("\n\n"),
-					datasetLink: material("original-project-source-index"),
-					solutionLink: answerKey("original-reaction-projects-key")
+					datasetLink: material("project-reference-index"),
+					solutionLink: answerKey("reaction-projects-key")
 				},
 				{
 					title: "Project: Elephant Toothpaste Case Analysis",
@@ -896,7 +894,7 @@ export const introToChemistryCourse: RawCourse = {
 						"**Completion checks:** The explanation uses catalyst, decomposition, oxygen, hydrogen peroxide, foam, rate, and evidence accurately, and it states why the catalyst changes reaction speed without being treated as the main product."
 					].join("\n\n"),
 					mediaLink: REFERENCES.elephantToothpasteDemo,
-					solutionLink: answerKey("original-reaction-projects-key")
+					solutionLink: answerKey("reaction-projects-key")
 				},
 				{
 					title: "Project: Making a Volcano Case Analysis",
@@ -906,9 +904,9 @@ export const introToChemistryCourse: RawCourse = {
 						"**Activity prompt:** Predict what will happen before vinegar is added, describe the visible evidence after mixing, and explain whether the model works the same way as a real volcano. The final answer names the chemistry model and the limitation of the analogy.",
 						"**Completion checks:** The explanation uses acid, base, carbon dioxide, product, gas, reaction evidence, and analogy limit accurately."
 					].join("\n\n"),
-					datasetLink: material("original-project-source-index"),
+					datasetLink: material("project-reference-index"),
 					mediaLink: REFERENCES.volcanoDemo,
-					solutionLink: answerKey("original-reaction-projects-key")
+					solutionLink: answerKey("reaction-projects-key")
 				}
 			]
 		},
@@ -1006,10 +1004,8 @@ export const introToChemistryCourse: RawCourse = {
 						"**Analysis target:** Explain why some mixtures are easy to separate mechanically while solutions require a particle-distribution explanation. The final map distinguishes familiar household names from chemistry categories.",
 						"**Completion checks:** Every material has a classification, evidence sentence, and separation or uncertainty note."
 					].join("\n\n"),
-					datasetLink: material("original-phenomena-case-library"),
-					solutionLink: answerKey(
-						"original-phenomena-case-library-key"
-					)
+					datasetLink: material("phenomena-case-library"),
+					solutionLink: answerKey("phenomena-case-library-key")
 				},
 				{
 					title: "Project: Making Invisible Ink Case Analysis",
@@ -1019,9 +1015,9 @@ export const introToChemistryCourse: RawCourse = {
 						"**Activity prompt:** Answer whether ink is a liquid, whether becoming invisible changes state of matter, what materials are mixed, why water is added instead of only lemon juice, and whether the resulting invisible ink is classified as a mixture or solution.",
 						"**Completion checks:** The final explanation separates solution vocabulary from reaction evidence and does not claim that the liquid disappears."
 					].join("\n\n"),
-					datasetLink: material("original-project-source-index"),
+					datasetLink: material("project-reference-index"),
 					mediaLink: REFERENCES.invisibleInkDemo,
-					solutionLink: answerKey("original-solutions-projects-key")
+					solutionLink: answerKey("solutions-projects-key")
 				},
 				{
 					title: "Project: Solution Simulation",
@@ -1031,9 +1027,9 @@ export const introToChemistryCourse: RawCourse = {
 						"**Activity prompt:** Draw or describe water molecules interacting with `KBr`, using different colors or labels for each part of the molecules and showing charge orientation where appropriate.",
 						"**Completion checks:** The response correctly identifies sugar or salt as solute and water as solvent in common examples, names elements from formulas, and connects plus/minus signs to attraction and repulsion."
 					].join("\n\n"),
-					datasetLink: material("original-project-source-index"),
+					datasetLink: material("project-reference-index"),
 					mediaLink: REFERENCES.javalabDissolution,
-					solutionLink: answerKey("original-solutions-projects-key")
+					solutionLink: answerKey("solutions-projects-key")
 				},
 				{
 					title: "Project: Separating Mixtures",
@@ -1043,9 +1039,9 @@ export const introToChemistryCourse: RawCourse = {
 						"**Activity prompt:** Explain why green and blue marbles can be separated by hand, why dissolved salt cannot be picked out manually, what water does to sodium chloride in a particle model, and how evaporation can recover salt from saltwater. The saltwater time-lapse source can be used as a visual reference.",
 						"**Completion checks:** The answer distinguishes mixture from solution, links method choice to particle size or solubility, and explains why separation method depends on how substances are distributed."
 					].join("\n\n"),
-					datasetLink: material("original-project-source-index"),
+					datasetLink: material("project-reference-index"),
 					mediaLink: REFERENCES.saltWaterEvaporationTimeLapse,
-					solutionLink: answerKey("original-solutions-projects-key")
+					solutionLink: answerKey("solutions-projects-key")
 				}
 			]
 		},

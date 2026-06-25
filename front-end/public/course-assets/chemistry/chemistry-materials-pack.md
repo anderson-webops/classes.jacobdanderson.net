@@ -1,4 +1,4 @@
-# Intro to Chemistry Remote Materials Pack
+# Intro to Chemistry Materials Pack
 
 This packet supplies the card sets, data tables, and scenario lists referenced by the Intro to Chemistry course.
 
@@ -61,11 +61,11 @@ These cards compare which representation is most useful for a specific chemistry
 
 **Representation note:** The representation should match the question. A formula is efficient for composition, a diagram is better for particle arrangement, and a graph is better for change over time.
 
-## Original Phenomena Case Library
+## Phenomena Case Library
 
-These cases preserve the original course phenomena while keeping the current course remote-safe. A diagram, description, simulation, data table, or vetted video clip can replace a physical demonstration when needed.
+These cases connect familiar chemistry phenomena to evidence that can be inspected during an online session. A diagram, description, simulation, data table, or vetted video clip can replace a physical demonstration when needed.
 
-| Original Case                      | Safe Course Version                                                                          | Main Chemistry Idea                                                 | Evidence Question                                                                         |
+| Case                               | Course Evidence Version                                                                      | Main Chemistry Idea                                                 | Evidence Question                                                                         |
 | ---------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | Water cohesion and surface tension | Analyze a diagram or short clip of water beading or forming a dome on a coin                 | Intermolecular attractions, cohesion, surface tension               | What visible behavior supports the model that water particles attract each other?         |
 | DIY lava lamp and density          | Read an oil-water-gas-bubble diagram                                                         | Density, immiscible liquids, gas bubbles, temporary buoyancy change | Why do the layers separate, and why can a gas bubble make colored water rise temporarily? |
@@ -79,11 +79,11 @@ These cases preserve the original course phenomena while keeping the current cou
 
 **Evidence note:** Each case needs one observation, one model, one chemistry term, and one limitation. A familiar demonstration becomes chemistry only when the evidence is connected to a particle-level or system-level explanation.
 
-## Original Project Source Index
+## Project Reference Index
 
-The current course preserves the original CHM1-CHM7 project ideas as remote-safe lessons. These links serve as evidence sources, optional observation references, or comparison material. Video links are not required physical experiments.
+These links support course projects as evidence sources, optional observation references, or comparison material. Video links are not required physical experiments.
 
-| Original Project or Concept                     | Current Course Location               | Preserved Source or Reference                                                                                                                                                                                                                               | Main Restored Task                                                                                                             |
+| Project or Concept                              | Course Location                       | Source or Reference                                                                                                                                                                                                                                         | Main Task                                                                                                                      |
 | ----------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Course introduction and structure               | CHM1 Course Map and Learning Workflow | Course module map and progress checkpoints                                                                                                                                                                                                                  | Understand module flow, project expectations, learning targets, and completion evidence                                        |
 | Atom Simulation                                 | CHM3 Atomic Structure                 | [PBS/ChemThink atom simulation](https://contrib.pbslearningmedia.org/WGBH/arct15/SimBucket/Simulations/chemthink-atomicstructure/content/index.html)                                                                                                        | Label atom parts, explain atomic mass unit and charge, and connect particle counts to identity                                 |
@@ -103,7 +103,7 @@ The current course preserves the original CHM1-CHM7 project ideas as remote-safe
 | Separating Mixtures                             | CHM8 Solutions                        | [saltwater evaporation time lapse](https://youtu.be/MrmpTO3FZdQ?si=LjzUUQUSqqrxHasm)                                                                                                                                                                        | Compare hand sorting, filtering, dissolving, and evaporation models                                                            |
 | Model Your Own Reaction                         | CHM11 Capstone                        | Capstone evidence seeds and source log                                                                                                                                                                                                                      | Choose a real-world chemistry topic, model one reaction, explain safety and significance                                       |
 
-**Remote-safe note:** When an original activity involved household materials, the default version is now a case study or evidence analysis. Optional physical observations are replaceable with the linked source, a diagram, or provided data.
+**Safety note:** When an activity would otherwise involve household materials, use a case study or evidence analysis by default. Optional physical observations are replaceable with the linked source, a diagram, or provided data.
 
 ## Matter and Classification Cards
 
@@ -487,7 +487,7 @@ This checklist belongs before any remote chemistry project.
 
 ## Capstone Evidence Seeds
 
-These topics are starting points when a capstone needs a remote-safe source set. Each topic still needs a narrowed claim and at least two evidence types.
+These topics are starting points when a capstone needs a browser-based source set. Each topic still needs a narrowed claim and at least two evidence types.
 
 | Topic               | Possible Evidence                                                                  | Useful Chemistry Ideas                                            | Better Narrow Claim                                                               |
 | ------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |

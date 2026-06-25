@@ -1137,11 +1137,17 @@ function datasetLabel(url: string) {
 		if (normalizedUrl.includes("model-comparison")) {
 			return "Model cards";
 		}
-		if (normalizedUrl.includes("original-phenomena")) {
+		if (
+			normalizedUrl.includes("phenomena-case") ||
+			normalizedUrl.includes("original-phenomena")
+		) {
 			return "Phenomena cases";
 		}
-		if (normalizedUrl.includes("original-project-source")) {
-			return "Original source map";
+		if (
+			normalizedUrl.includes("project-reference") ||
+			normalizedUrl.includes("original-project-source")
+		) {
+			return "Project reference map";
 		}
 		if (normalizedUrl.includes("matter-and-classification")) {
 			return "Matter cards";
