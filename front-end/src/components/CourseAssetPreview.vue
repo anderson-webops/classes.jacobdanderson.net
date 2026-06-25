@@ -241,8 +241,11 @@ async function handleResourceChange() {
 	flex-direction: column;
 	gap: 0.85rem;
 	min-width: 0;
+	min-inline-size: 0;
 	width: 100%;
+	inline-size: 100%;
 	max-width: 100%;
+	max-inline-size: 100%;
 	box-sizing: border-box;
 	contain: inline-size;
 	overflow-x: hidden;
@@ -306,9 +309,13 @@ async function handleResourceChange() {
 	display: grid;
 	gap: 0.55rem;
 	min-width: 0;
+	min-inline-size: 0;
 	width: 100%;
+	inline-size: 100%;
 	max-width: 100%;
+	max-inline-size: 100%;
 	box-sizing: border-box;
+	overflow-x: hidden;
 }
 
 .course-asset-preview-eyebrow {
@@ -330,7 +337,18 @@ async function handleResourceChange() {
 
 .course-asset-preview-content :deep(.item-content-markdown) {
 	width: 100%;
+	inline-size: 100%;
 	max-width: 100%;
+	max-inline-size: 100%;
 	min-width: 0;
+	min-inline-size: 0;
+	overflow-x: hidden;
+}
+
+.course-asset-preview-content :deep(.markdown-table-scroll),
+.course-asset-preview-content :deep(pre) {
+	inline-size: 100%;
+	max-inline-size: 100%;
+	min-inline-size: 0;
 }
 </style>

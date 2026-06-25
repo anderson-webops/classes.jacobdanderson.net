@@ -229,13 +229,17 @@ watch(
 		var(--color-surface-inset, rgba(15, 23, 42, 0.035))
 	);
 	min-width: 0;
+	min-inline-size: 0;
 	width: 100%;
+	inline-size: 100%;
 	max-width: min(100%, 82ch);
+	max-inline-size: min(100%, 82ch);
 	box-sizing: border-box;
 	font-size: 1.02rem;
 	line-height: 1.8;
 	color: var(--markdown-text-soft);
 	overflow-wrap: break-word;
+	overflow-x: hidden;
 }
 
 .item-content-markdown :deep(h1),
@@ -272,11 +276,15 @@ watch(
 .item-content-markdown :deep(.markdown-table-scroll) {
 	display: block;
 	width: 100%;
+	inline-size: 100%;
 	max-width: 100%;
+	max-inline-size: 100%;
 	min-width: 0;
+	min-inline-size: 0;
 	box-sizing: border-box;
 	contain: inline-size;
 	overflow-x: auto;
+	overscroll-behavior-inline: contain;
 	-webkit-overflow-scrolling: touch;
 	border: 1px solid var(--markdown-border);
 	border-radius: 14px;
@@ -361,13 +369,18 @@ watch(
 
 .item-content-markdown :deep(pre) {
 	width: 100%;
+	inline-size: 100%;
 	max-width: 100%;
+	max-inline-size: 100%;
+	min-width: 0;
+	min-inline-size: 0;
 	box-sizing: border-box;
 	padding: 0.95rem 1rem;
 	border-radius: 16px;
 	background: #0f172a;
 	color: #e2e8f0;
 	overflow-x: auto;
+	overscroll-behavior-inline: contain;
 	-webkit-overflow-scrolling: touch;
 }
 
