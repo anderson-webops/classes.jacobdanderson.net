@@ -2825,6 +2825,12 @@ describe("course text quality normalization", () => {
 			"Transfer Practice: Setup, Editors, and Asset Workflow"
 		);
 		expect(loadedCorpus).toContain("Master Project Extension Practice");
+		expect(loadedCorpus).toContain(
+			"The original shared asset pack is reserved at https://static.classes.jacobdanderson.net/assets.zip for future hosting"
+		);
+		expect(findItem(course!, /PyGame Setup with Mu/).datasetLink).toBe(
+			"https://static.classes.jacobdanderson.net/assets.zip"
+		);
 	});
 
 	it("keeps JavaScript normalization focused on web development instead of Java", async () => {
@@ -5453,6 +5459,43 @@ describe("course text quality normalization", () => {
 			/Application, Misconceptions, and Readiness Check/i
 		);
 		expect(corpus).not.toMatch(/Transfer or Extension Project/i);
+	});
+
+	it("links Python Level 3 projects to restored source demo media", async () => {
+		const course = await loadRawCourse("python-level-3");
+		expect(course).not.toBeNull();
+
+		const items = course!.modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		const byTitle = new Map(items.map(item => [item.title, item]));
+
+		expect(byTitle.get("AM1 Project 1: Mad Libs")?.mediaLink).toBe(
+			"https://static.classes.jacobdanderson.net/am_1_mad_libs.mp4"
+		);
+		expect(
+			byTitle.get("AM1 Project 2: Fictional Language Verifier")?.mediaLink
+		).toBe(
+			"https://static.classes.jacobdanderson.net/am_1_junian_language_verifier.mp4"
+		);
+		expect(
+			byTitle.get("AM12 Project 3: Word Translator with File I/O")
+				?.mediaLink
+		).toBe(
+			"https://static.classes.jacobdanderson.net/am_12_juni_latin.mp4"
+		);
+		expect(
+			byTitle.get("AM14 Project 4: Advanced Tic Tac Toe AI")?.mediaLink
+		).toBe(
+			"https://static.classes.jacobdanderson.net/am_14_tic_tac_toe_ai_with_forks.mp4"
+		);
+		expect(
+			items
+				.map(item => item.mediaLink)
+				.filter(Boolean)
+				.some(link => link?.includes("static.junilearning.com"))
+		).toBe(false);
 	});
 
 	it("keeps generated safety and resource cards substantive", async () => {

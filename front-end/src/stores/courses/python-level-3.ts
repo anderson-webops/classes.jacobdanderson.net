@@ -20,6 +20,81 @@ const SORT_ANIMATION_SOURCES = {
 		"**Animation source:** [Selection-Sort-Animation.gif](https://commons.wikimedia.org/wiki/File:Selection-Sort-Animation.gif), Joestape89 via Wikimedia Commons, CC BY-SA 3.0."
 } as const;
 
+const SOURCE_PROJECT_MEDIA_BY_TITLE: Record<string, string> = {
+	"AM1 Project 1: Mad Libs": "am_1_mad_libs.mp4",
+	"AM1 Project 2: Fictional Language Verifier":
+		"am_1_junian_language_verifier.mp4",
+	"AM1 Project 2: Junian Language Verifier":
+		"am_1_junian_language_verifier.mp4",
+	"AM1 Project 3: Command Assistant": "am_1_juni_assistant.mp4",
+	"AM1 Project 3: Juni Assistant": "am_1_juni_assistant.mp4",
+	"AM2 Project 1: Functions Practice": "am_2_functions_practice.mp4",
+	"AM2 Project 2: Lists Practice": "am_2_lists_practice.mp4",
+	"AM3 Project 1: Python Fundamentals Problem Set": "am_3_recap.mp4",
+	"AM4 Project 1: Recursive Factorials": "am_4_recursive_factorials.mp4",
+	"AM4 Project 2: Recursive Exponents": "am_4_recursive_exponents.mp4",
+	"AM4 Project 3: Recursive Fibonacci Numbers":
+		"am_4_recursive_fibonacci_numbers.mp4",
+	"AM4 Supplemental Project 1: Binary Converter": "am_4_binary_converter.mp4",
+	"AM5 Project 1: Recursive Cascade": "am_5_recursive_cascade.mp4",
+	"AM5 Project 2: Recursive Palindrome Checker":
+		"am_5_recursive_palindrome_checker.mp4",
+	"AM5 Project 3: Parentheses Validator": "am_5_parentheses_validator.mp4",
+	"AM5 Supplemental Project 1: Recursive Sum and Max":
+		"am_5_recursive_sum_and_max.mp4",
+	"AM5 Supplemental Project 2: Substring Generator":
+		"am_5_substring_generator.mp4",
+	"AM6 Project 1: Linear Search Implementation": "am_6_linear_search.mp4",
+	"AM7 Project 1: Binary Search Implementation": "am_7_binary_search.mp4",
+	"AM7 Project 2: Reverse Number Guesser": "am_7_reverse_number_guesser.mp4",
+	"AM7 Project 3: Runtime Comparator": "am_7_runtime_comparator.mp4",
+	"AM7 Supplemental Project 1: Number Guesser": "am_7_number_guesser.mp4",
+	"AM8 Project 1: Selection Sort": "am_8_selection_sort.mp4",
+	"AM8 Project 2: Insertion Sort": "am_8_insertion_sort.mp4",
+	"AM9 Project 1: Bubble Sort": "am_9_bubble_sort.mp4",
+	"AM9 Project 2: Baseball Analytics": "am_9_baseball_analytics.mp4",
+	"AM10 Project 1: Merge": "am_10_merge.mp4",
+	"AM10 Project 2: Split": "am_10_split.mp4",
+	"AM10 Project 3: Merge Sort": "am_10_merge_sort.mp4",
+	"AM11 Project 1: Partition": "am_11_partition.mp4",
+	"AM11 Project 2: Quicksort": "am_11_quicksort.mp4",
+	"AM11 Project 3: Sorting Comparison": "am_11_sorting_comparison.mp4",
+	"AM12 Project 1: Crazy Name Tags Printer": "am_12_crazy_name_tags.mp4",
+	"AM12 Project 2: File IO and Dictionaries":
+		"am_12_file_io_with_dictionaries.mp4",
+	"AM12 Project 3: Juni Latin with File IO": "am_12_juni_latin.mp4",
+	"AM12 Project 3: Word Translator with File I/O": "am_12_juni_latin.mp4",
+	"AM13 Project 1: Conway's Game of Life": "am_13_conways.mp4",
+	"AM13 Project 2: Two-Player Conway's Game of Life":
+		"am_13_two_player_conways.mp4",
+	"AM14 Project 1: Tic Tac Toe UI": "am_14_tic_tac_toe_ui.mp4",
+	"AM14 Project 2: Tic Tac Toe AI": "am_14_tic_tac_toe_ai.mp4",
+	"AM14 Project 3: Tic Tac Toe AI Test": "am_14_tic_tac_toe_ai_test.mp4",
+	"AM14 Project 4: Advanced Tic Tac Toe AI":
+		"am_14_tic_tac_toe_ai_with_forks.mp4"
+};
+
+function sourceProjectMedia(filename: string) {
+	return `${STATIC_MEDIA}/${filename}`;
+}
+
+function withSourceProjectMedia(course: RawCourse): RawCourse {
+	for (const module of course.modules) {
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			const filename = SOURCE_PROJECT_MEDIA_BY_TITLE[item.title];
+
+			if (filename && !item.mediaLink) {
+				item.mediaLink = sourceProjectMedia(filename);
+			}
+		}
+	}
+
+	return course;
+}
+
 function projectBrief({
 	build,
 	checkpoints,
@@ -58,7 +133,7 @@ function reviewBrief({
 	].join("\n\n");
 }
 
-export const pythonLevel3Course: RawCourse = {
+export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 	name: "Python Level 3",
 	modules: [
 		{
@@ -1504,4 +1579,4 @@ export const pythonLevel3Course: RawCourse = {
 			supplementalProjects: []
 		}
 	]
-};
+});
