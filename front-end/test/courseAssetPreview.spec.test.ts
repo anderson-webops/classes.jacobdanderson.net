@@ -149,8 +149,10 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("width: 100%;");
 		expect(previewSource).toContain("max-width: 100%;");
 		expect(previewSource).toContain("box-sizing: border-box;");
+		expect(previewSource).toContain("contain: inline-size paint;");
+		expect(previewSource).toContain("overflow-x: clip;");
 		expect(previewSource).toContain(".course-asset-preview-panel {");
-		expect(previewSource).toContain("contain: inline-size;");
+		expect(previewSource).toContain("contain: inline-size layout paint;");
 		expect(previewSource).toContain("overflow: hidden;");
 		expect(previewSource).toContain("overflow: clip;");
 		expect(previewSource).toContain("min-inline-size: 0;");
@@ -160,7 +162,12 @@ describe("course asset preview utilities", () => {
 			'<div class="course-asset-preview-scrollbox">'
 		);
 		expect(previewSource).toContain(".course-asset-preview-scrollbox {");
+		expect(previewSource).toContain("position: relative;");
+		expect(previewSource).toContain("contain: inline-size layout paint;");
+		expect(previewSource).toContain("isolation: isolate;");
+		expect(previewSource).toContain("clip-path: inset(0 round 14px);");
 		expect(previewSource).toContain("overflow-y: hidden;");
+		expect(previewSource).toContain("-webkit-overflow-scrolling: touch;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown)"
 		);
@@ -175,8 +182,6 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("inline-size: 100%;");
 		expect(previewSource).toContain("max-inline-size: 100%;");
 		expect(previewSource).toContain("table-layout: fixed;");
-		expect(previewSource).toContain("clip-path: inset(0 round 14px);");
-		expect(previewSource).toContain("isolation: isolate;");
 		expect(previewSource).toContain("scrollbar-gutter: stable;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown th)"

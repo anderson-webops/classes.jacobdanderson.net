@@ -190,6 +190,9 @@ async function handleResourceChange() {
 	width: 100%;
 	max-width: 100%;
 	box-sizing: border-box;
+	contain: inline-size paint;
+	overflow-x: hidden;
+	overflow-x: clip;
 }
 
 .course-asset-preview-toggle,
@@ -249,7 +252,7 @@ async function handleResourceChange() {
 	max-width: 100%;
 	max-inline-size: 100%;
 	box-sizing: border-box;
-	contain: inline-size;
+	contain: inline-size layout paint;
 	overflow: hidden;
 	overflow: clip;
 	border: 1px solid
@@ -320,10 +323,13 @@ async function handleResourceChange() {
 	max-inline-size: 100%;
 	box-sizing: border-box;
 	overflow-x: hidden;
+	overflow-x: clip;
+	contain: inline-size paint;
 }
 
 .course-asset-preview-scrollbox {
 	display: block;
+	position: relative;
 	width: 100%;
 	inline-size: 100%;
 	max-width: 100%;
@@ -331,9 +337,13 @@ async function handleResourceChange() {
 	min-width: 0;
 	min-inline-size: 0;
 	box-sizing: border-box;
+	contain: inline-size layout paint;
+	isolation: isolate;
+	clip-path: inset(0 round 14px);
 	overflow-x: auto;
 	overflow-y: hidden;
 	overscroll-behavior-inline: contain;
+	-webkit-overflow-scrolling: touch;
 	scrollbar-gutter: stable;
 }
 
