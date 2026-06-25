@@ -67,6 +67,14 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			import("./ai-level-1").then(({ aiLevel1Course }) => aiLevel1Course)
 	},
 	{
+		id: "pre-algebra-a",
+		name: "Pre-Algebra A",
+		load: () =>
+			import("./pre-algebra-a").then(
+				({ preAlgebraACourse }) => preAlgebraACourse
+			)
+	},
+	{
 		id: "algebra-1a",
 		name: "Algebra 1A",
 		load: () =>

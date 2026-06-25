@@ -2201,9 +2201,9 @@ function addAlgebraStandardsArchitectureModule(
 			{
 				title: "Extension Project: Changed Constraint",
 				content: [
-					`**Project goal:** Extend the anchor project by making this course-specific change: ${details.extensionChange}. The extension tests whether the method is understood structurally: a changed condition may preserve the same relationship, require a new representation, or expose where the original model was too narrow.`,
+					`**Project goal:** Extend the anchor project by making this course-specific change: ${details.extensionChange}. The extension tests whether the method is understood structurally: a changed condition may preserve the same relationship, require a new representation, or expose where the starting model was too narrow.`,
 					`**Comparison target:** Reuse ${details.anchorRepresentations} where useful, then explain which representation changes most clearly and which one hides the change.`,
-					`**Completion checks:**\n- The changed constraint is stated in the language of ${details.anchorFocus}.\n- The work explains why the original method still works or must change.\n- The result is compared against the original case with units, domain, or representation evidence.`
+					`**Completion checks:**\n- The changed constraint is stated in the language of ${details.anchorFocus}.\n- The work explains why the baseline method still works or must change.\n- The result is compared against the baseline case with units, domain, or representation evidence.`
 				].join("\n\n")
 			}
 		]
@@ -3273,7 +3273,7 @@ function fallbackPracticeFocus(topic: string, courseId?: string) {
 		],
 		checks: [
 			`The ${topic} variation states the changed input, representation, constraint, or context before showing the result.`,
-			`Evidence for ${topic} includes the original case and the changed case.`,
+			`Evidence for ${topic} includes the direct case and the changed case.`,
 			`The ${topic} explanation names what stayed stable and what had to change.`
 		]
 	};

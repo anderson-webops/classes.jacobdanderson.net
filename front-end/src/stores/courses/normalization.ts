@@ -5691,7 +5691,7 @@ function extensionPrompt(context: CourseTextContext) {
 		subject =>
 			`Add one transfer case to ${subject} that changes the input, representation, or success condition.`,
 		subject =>
-			`Add one verification example to ${subject} that would catch a different mistake than the original case.`,
+			`Add one verification example to ${subject} that would catch a different mistake than the baseline case.`,
 		subject =>
 			`Add one small feature to ${subject} and explain which concept it reuses rather than only decorating the output.`
 	]);
@@ -6621,11 +6621,11 @@ function diagnosticSupport(context: CourseTextContext) {
 			subject =>
 				`${subject} checks readiness for ${focus}. The first pass is independent, then any gap is classified as ${diagnosticCategories(context)}.`,
 			subject =>
-				`${subject} checks whether the core idea is ready for transfer. The ${subject} independent attempt comes first; the evidence identifies whether the next step is vocabulary, tracing, syntax, design, or testing support.`,
+				`${subject} checks whether the core idea is ready for transfer. The ${subject} independent attempt comes first; the evidence identifies whether the next step is ${diagnosticCategories(context)}.`,
 			subject =>
 				`${subject} is a low-stakes checkpoint: solve what is possible first, then identify the smallest missing piece before harder work.`,
 			subject =>
-				`${subject} locates the current bottleneck: vocabulary, setup, tracing, syntax, design, testing, or explanation.`,
+				`${subject} locates the current bottleneck: ${diagnosticCategories(context)}, or explanation.`,
 			subject =>
 				`A short independent attempt for ${subject} comes first, followed by comparison with the core concept before support is added.`,
 			subject =>
@@ -7451,7 +7451,7 @@ function studioExtensionPrompt(context: CourseTextContext) {
 		() =>
 			"Add one transfer case that changes the input, representation, or success condition.",
 		() =>
-			"Add one verification example that would catch a different mistake than the original case.",
+			"Add one verification example that would catch a different mistake than the baseline case.",
 		() =>
 			"Add one small feature and explain which concept it reuses rather than only decorating the output."
 	]);
