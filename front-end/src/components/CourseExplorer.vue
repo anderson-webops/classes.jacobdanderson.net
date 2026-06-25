@@ -1035,6 +1035,16 @@ function isRepositoryArchiveReference(item: CourseModuleItem) {
 	return REPOSITORY_ARCHIVE_RE.test(`${item.title} ${item.content ?? ""}`);
 }
 
+function repositoryArchiveLabel(item: CourseModuleItem) {
+	const combinedText = `${item.title} ${item.content ?? ""}`;
+
+	if (/\b(?:repo bank|problem bank)\b/i.test(combinedText)) {
+		return "Problem bank";
+	}
+
+	return "Source archive";
+}
+
 function projectLabel(item: CourseModuleItem, url: string) {
 	const normalizedTitle = item.title.toLowerCase();
 	const normalizedUrl = url.toLowerCase();
@@ -1295,7 +1305,7 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 		if (isRepositoryArchiveReference(item)) {
 			links.push({
 				kind: "reference",
-				label: "Source archive",
+				label: repositoryArchiveLabel(item),
 				url: projectUrl,
 				host: linkHost(projectUrl)
 			});
