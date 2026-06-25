@@ -2839,14 +2839,57 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toContain("classes, method contracts, object state");
 	});
 
-	it("keeps JavaScript and Web raw source links free of duplicate solution aliases", () => {
+	it("keeps JavaScript, Web, and Machine Learning raw source links free of duplicate solution aliases", () => {
 		const duplicateLinks = [
 			"src/stores/courses/javascript-level-1.ts",
 			"src/stores/courses/javascript-level-2.ts",
+			"src/stores/courses/machine-learning.ts",
 			"src/stores/courses/web-development-foundations.ts"
 		].flatMap(duplicateProjectSolutionLinksInSource);
 
 		expect(duplicateLinks).toEqual([]);
+	});
+
+	it("keeps AI, data science, and Pythonic root repository links archive-labeled", async () => {
+		const courseIds = [
+			"ai-level-1",
+			"data-science-in-python",
+			"pythonic-design-patterns"
+		];
+		const broadProjectRootLinks: string[] = [];
+
+		for (const courseId of courseIds) {
+			const course = await loadRawCourse(courseId);
+			expect(course).not.toBeNull();
+			if (!course) continue;
+
+			for (const module of course.modules) {
+				for (const item of [
+					...module.curriculum,
+					...module.supplementalProjects
+				]) {
+					const projectLink = item.projectLink?.trim() ?? "";
+					if (
+						!/^https:\/\/github\.com\/instruction-material\/[^/]+\/tree\/main\/?$/.test(
+							projectLink.replace(/\/+$/, "")
+						)
+					) {
+						continue;
+					}
+
+					const context = `${item.title}\n${item.content ?? ""}`;
+					const archiveContextPattern =
+						/\b(?:archive|reference|workspace|source map|repo bank|problem bank)\b/i;
+					if (!archiveContextPattern.test(context)) {
+						broadProjectRootLinks.push(
+							`${courseId} / ${module.title} / ${item.title}: ${projectLink}`
+						);
+					}
+				}
+			}
+		}
+
+		expect(broadProjectRootLinks).toEqual([]);
 	});
 
 	it("keeps legacy JavaScript web prompts specific enough to stand alone", async () => {

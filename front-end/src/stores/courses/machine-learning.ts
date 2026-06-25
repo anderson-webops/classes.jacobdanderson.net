@@ -220,8 +220,6 @@ export const machineLearningCourse: RawCourse = {
 **Reflection:** Explain how \`k\` was chosen, how well the classifier performed, and what might happen if the clusters from the previous project were noisy.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML2-KNN-Customer-Segmentation-Classification-Updated",
-					solutionLink:
-						"https://github.com/instruction-material/AI-Level-2/tree/main/ML2-KNN-Customer-Segmentation-Classification-Updated",
 					datasetLink:
 						"https://github.com/instruction-material/AI-Level-2/blob/main/ML2-KNN-Customer-Segmentation-Classification-Updated/customers.csv",
 					mediaLink:
@@ -272,8 +270,6 @@ export const machineLearningCourse: RawCourse = {
 						section: "extension"
 					}),
 					projectLink:
-						"https://github.com/instruction-material/AI-Level-2/tree/main/ML2-KNN-Customer-Segmentation-Classification-Updated",
-					solutionLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML2-KNN-Customer-Segmentation-Classification-Updated"
 				},
 				{
@@ -339,8 +335,6 @@ export const machineLearningCourse: RawCourse = {
 **Reflection:** Summarize the dataset, model accuracy, and any classifications that seemed surprising or uncertain.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML3-Naive-Bayes-Iris-Flowers-Classification",
-					solutionLink:
-						"https://github.com/instruction-material/AI-Level-2/tree/main/ML3-Naive-Bayes-Iris-Flowers-Classification",
 					datasetLink:
 						"https://gist.githubusercontent.com/curran/a08a1080b88344b0c8a7/raw/639388c2cbc2120a14dcf466e85730eb8be498bb/iris.csv",
 					mediaLink:
@@ -390,8 +384,6 @@ export const machineLearningCourse: RawCourse = {
 						section: "extension"
 					}),
 					projectLink:
-						"https://github.com/instruction-material/AI-Level-2/tree/main/ML3-Naive-Bayes-Iris-Flowers-Classification",
-					solutionLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML3-Naive-Bayes-Iris-Flowers-Classification"
 				},
 				{
@@ -552,8 +544,6 @@ export const machineLearningCourse: RawCourse = {
 - Change one weight and explain why the output changes.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Neuron-Implementation",
-					solutionLink:
-						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Neuron-Implementation",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ml4_project_1.mp4"
 				},
@@ -585,8 +575,6 @@ export const machineLearningCourse: RawCourse = {
 - Change the output activation function and compare the final output.
 - Explain why this network is still a simulation, not a trained model.`,
 					projectLink:
-						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Simple-Neural-Network",
-					solutionLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Simple-Neural-Network",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ml4_project_2.mp4"
@@ -654,8 +642,6 @@ export const machineLearningCourse: RawCourse = {
 						section: "extension"
 					}),
 					projectLink:
-						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Neuron-Implementation",
-					solutionLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Neuron-Implementation"
 				},
 				{

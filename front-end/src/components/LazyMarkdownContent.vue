@@ -230,6 +230,8 @@ watch(
 	);
 	min-width: 0;
 	min-inline-size: 0;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	width: 100%;
 	inline-size: 100%;
 	max-width: min(100%, 82ch);
@@ -240,6 +242,7 @@ watch(
 	color: var(--markdown-text-soft);
 	overflow-wrap: break-word;
 	overflow-x: hidden;
+	overflow-inline: hidden;
 	contain: inline-size;
 }
 

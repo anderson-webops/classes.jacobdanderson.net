@@ -2627,10 +2627,12 @@ function writeStoredValue(key: string, value: string) {
 	background: rgba(255, 255, 255, 0.92);
 	box-shadow: 0 28px 56px -44px rgba(15, 23, 42, 0.28);
 	overflow: hidden;
+	overflow-inline: hidden;
 }
 
 .course-workspace > * {
 	min-width: 0;
+	min-inline-size: 0;
 }
 
 .course-outline,
@@ -2848,6 +2850,7 @@ function writeStoredValue(key: string, value: string) {
 	min-width: 0;
 	max-width: 100%;
 	overflow-x: hidden;
+	overflow-inline: hidden;
 	background: linear-gradient(
 		180deg,
 		rgba(255, 255, 255, 0.96),
@@ -2979,8 +2982,11 @@ function writeStoredValue(key: string, value: string) {
 
 .lesson-item {
 	min-width: 0;
+	min-inline-size: 0;
 	max-width: 100%;
+	max-inline-size: 100%;
 	overflow-x: hidden;
+	overflow-inline: hidden;
 }
 
 .lesson-item + .lesson-item {

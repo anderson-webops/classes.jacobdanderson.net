@@ -34,18 +34,14 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						moduleTitle: "PDP0 Setup and Tooling",
 						projectKind: "core",
 						hasReference: false
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main"
+					})
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "Pattern Journal: Setup and Tooling",
 					content:
-						"Keep a compact journal for setup and tooling that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which workflow choices will make later refactors observable and safe. The habit is diagnosis first, pattern name second.",
-					projectLink:
-						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main"
+						"Keep a compact journal for setup and tooling that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which workflow choices will make later refactors observable and safe. The habit is diagnosis first, pattern name second."
 				},
 				{
 					title: "Pythonic Design Patterns",
@@ -54,9 +50,7 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						moduleTitle: "PDP0 Setup and Tooling",
 						projectKind: "core",
 						hasReference: false
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Pythonic-Design-Patterns/tree/main"
+					})
 				}
 			]
 		},
