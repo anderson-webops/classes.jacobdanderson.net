@@ -2222,10 +2222,10 @@ function projectPathNote({
 		return [
 			`**Path:** Extension Practice. ${subject} starts from a working base case, then adds a harder constraint, extra edge case, design variation, or deeper explanation target.`,
 			`**Path:** Extension Practice. ${subject} keeps the baseline behavior intact while one new requirement raises the difficulty.`,
-			`**Path:** Extension Practice. ${subject} extends the core result only after the original case has current evidence.`,
+			`**Path:** Extension Practice. ${subject} extends the core result only after the baseline case has current evidence.`,
 			`**Path:** Extension Practice. ${subject} adds complexity in one visible place so the new behavior can still be traced.`,
 			`**Path:** Extension Practice. ${subject} turns a correct base case into a sturdier result by adding an edge case or design tradeoff.`,
-			`**Path:** Extension Practice. ${subject} raises the challenge without losing the original success condition.`,
+			`**Path:** Extension Practice. ${subject} raises the challenge without losing the baseline success condition.`,
 			`**Path:** Extension Practice. ${subject} adds a deliberate constraint and then checks that the earlier behavior still works.`,
 			`**Path:** Extension Practice. ${subject} moves from working output to more robust output by naming the new rule and verifying it.`
 		][index];
@@ -2291,7 +2291,7 @@ function projectPathNote({
 		`**Path:** Independent practice. ${subject} keeps the work small enough to compare against the core case without copying it.`,
 		`**Path:** Independent practice. ${subject} checks what survives after the rule, input, representation, or constraint changes.`,
 		`**Path:** Independent practice. ${subject} uses one changed condition to separate memorized steps from transferable reasoning.`,
-		`**Path:** Independent practice. ${subject} ends with a short comparison between the original case and the modified case.`
+		`**Path:** Independent practice. ${subject} ends with a short comparison between the baseline case and the modified case.`
 	][index];
 }
 

@@ -1552,7 +1552,7 @@ describe("course text quality normalization", () => {
 				/\*\*Extension:\*\* Add a second (?:[^.\n]+ )?metric, comparison, or visualization[^.\n]*and explain what it changes/
 			);
 			expect(corpus).toMatch(
-				/The [^.\n]+ independent attempt comes first; the evidence identifies whether the next step is vocabulary, tracing, syntax, design, or testing support/
+				/the evidence identifies whether the next step is vocabulary, representation choice, algebraic procedure, graph or table reading, or reasonableness/i
 			);
 			expect(corpus).toMatch(
 				/\*\*Studio focus:\*\* For (?!the lab\b)[^.\n]+, name the minimum working version first, then add extensions only after the required behavior is testable/
@@ -5748,6 +5748,7 @@ describe("course text quality normalization", () => {
 		"keeps generated support text aligned to the course domain",
 		async () => {
 			const mathAndScienceCourses = await Promise.all([
+				loadRawCourse("pre-algebra-a"),
 				loadRawCourse("algebra-1a"),
 				loadRawCourse("algebra-1b"),
 				loadRawCourse("algebra-2a"),
@@ -5876,6 +5877,7 @@ describe("course text quality normalization", () => {
 		"keeps algebra supplemental projects specific, neutral, and topic-aware",
 		async () => {
 			const courses = await Promise.all([
+				loadRawCourse("pre-algebra-a"),
 				loadRawCourse("algebra-1a"),
 				loadRawCourse("algebra-1b"),
 				loadRawCourse("algebra-2a"),
@@ -5945,6 +5947,54 @@ describe("course text quality normalization", () => {
 		},
 		COURSE_SWEEP_TIMEOUT
 	);
+
+	it("adds Pre-Algebra A from the original math source sequence", async () => {
+		const course = await loadRawCourse("pre-algebra-a");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const mediaLinks = course.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(item => item.mediaLink)
+				.filter((link): link is string => Boolean(link))
+		);
+
+		expect(course.modules.map(module => module.title)).toEqual([
+			"Pre-Algebra A Kick-Off",
+			"PAA1-PAA2 Arithmetic Foundations",
+			"PAA3-PAA7 Fractions and Arithmetic",
+			"PAA8-PAA12 Decimals, Percents, Ratios, and Rates",
+			"Check-In #1",
+			"PAA13-PAA17 Expressions and Sequences",
+			"PAA18-PAA23 Exponents, Roots, and Scientific Notation",
+			"Check-In #2 and Capstone"
+		]);
+		expect(text).toContain("Project: Starting a Gardening Business");
+		expect(text).toContain("Project: Growing the Gardening Business");
+		expect(text).toContain("Project: High and Low Species");
+		expect(text).toContain("Project: Mochi's Product Adventure");
+		expect(text).toContain("Project: Cookie Catering");
+		expect(text).toContain("Project: Designing the Perfect Scanning Device");
+		expect(text).toContain("Project: Symptom Spree");
+		expect(text).toContain("Project: Red Hot Chilli Chicken");
+		expect(text).toContain("Master Project: Pre-Algebra A");
+		expect(text).toContain("signed numbers");
+		expect(text).toContain("d = rt");
+		expect(text).toContain("scientific notation");
+		expect(text).toContain("paa_kickoff_0.png");
+		expect(text).toContain("paa_kickoff_1.png");
+		expect(text).toMatch(/Pending media/i);
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(mediaLinks).toEqual([
+			"https://static.classes.jacobdanderson.net/paa_kickoff_0.png",
+			"https://static.classes.jacobdanderson.net/paa_kickoff_1.png",
+			"https://www.youtube.com/watch?v=8nKPC-WmLjU"
+		]);
+	});
 
 	it(
 		"keeps algebra standards architecture course-specific",

@@ -5,7 +5,9 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"biomod1pro1im1.jpg",
 	"biomod1pro1im2.jpg",
 	"biomod2pro1im1.png",
-	"c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png"
+	"c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png",
+	"paa_kickoff_0.png",
+	"paa_kickoff_1.png"
 ] as const;
 
 const knownPendingStaticMedia = new Set<string>(
