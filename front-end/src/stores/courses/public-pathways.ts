@@ -557,11 +557,12 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 	},
 	{
 		id: "science",
-		title: "Elementary, Middle School, Chemistry, and Physics",
+		title: "Science",
 		adminPriority: "urgent",
 		courseIds: [
 			"elementary-science",
 			"middle-school-integrated-science",
+			"intro-to-biology",
 			"intro-to-chemistry",
 			"intro-to-physics",
 			"physics-level-2"
@@ -569,7 +570,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		audience:
 			"Zoom-based science path built around explanations, diagrams, data, simulations, and claim-evidence-reasoning without physical lab requirements.",
 		prerequisiteSummary:
-			"Elementary Science splits K-2 and grades 3-5 expectations. Middle school science assumes basic reading, graphing, and explanation readiness. Chemistry and Physics assume stronger math and model reading.",
+			"Elementary Science splits K-2 and grades 3-5 expectations. Middle school science assumes basic reading, graphing, and explanation readiness. Biology, Chemistry, and Physics assume stronger model reading and evidence writing.",
 		outcomes: [
 			"Observations, provided images, graphs, data tables, simulations, and models explain phenomena.",
 			"Write claim-evidence-reasoning responses that distinguish observation from inference.",
@@ -578,7 +579,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		sequencingNotes: [
 			"Elementary Science stays one course with a K-2 path and a grades 3-5 path for each investigation.",
 			"Middle School Integrated Science aligns with NGSS-style practices across earth, life, physical, and engineering ideas.",
-			"Chemistry uses ACS and NGSS guidance; physics strengthens problem solving, graphing, units, and model limits."
+			"Biology uses body-system and life-science evidence models; chemistry uses ACS and NGSS guidance; physics strengthens graphing, units, and model limits."
 		],
 		projectExpectations: [
 			"Remote-safe investigation using a provided image, simulation, data table, or graph.",

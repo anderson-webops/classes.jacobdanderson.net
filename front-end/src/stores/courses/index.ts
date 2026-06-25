@@ -269,6 +269,14 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			)
 	},
 	{
+		id: "intro-to-biology",
+		name: "Intro to Biology",
+		load: () =>
+			import("./intro-to-biology").then(
+				({ introToBiologyCourse }) => introToBiologyCourse
+			)
+	},
+	{
 		id: "elementary-science",
 		name: "Elementary Science",
 		load: () =>
