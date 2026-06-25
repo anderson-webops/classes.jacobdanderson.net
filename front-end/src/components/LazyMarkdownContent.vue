@@ -75,7 +75,7 @@ function normalizeInlineCourseMarkdown(content: string) {
 				normalized.match(/(?:^|\s)\d+\.\s+\S/g) ?? []
 			).length;
 			const bulletMarkerCount = (
-				normalized.match(/(?:^|\s)[-*]\s+\S/g) ?? []
+				normalized.match(/(?:^|[:.;!?]\s+)[-*]\s+\S/gm) ?? []
 			).length;
 
 			if (orderedMarkerCount >= 2) {
@@ -87,8 +87,8 @@ function normalizeInlineCourseMarkdown(content: string) {
 
 			if (bulletMarkerCount >= 2) {
 				normalized = normalized.replace(
-					/(?!^)\s+([-*])\s+(?=\S)/g,
-					"\n$1 "
+					/([:.;!?])\s+([-*])\s+(?=\S)/g,
+					"$1\n$2 "
 				);
 			}
 
