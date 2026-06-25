@@ -224,7 +224,12 @@ function rawCourseSourceCorpus() {
 }
 
 function stripLinksFromSource(source: string) {
-	return source.replace(/https?:\/\/[^"',\s)]+/g, "");
+	return source
+		.replace(/https?:\/\/[^"',\s)]+/g, "")
+		.replace(
+			/["'`][^"'`]*\.(?:gif|jpe?g|mp4|png|svg|webm|zip)["'`]/gi,
+			'""'
+		);
 }
 
 function literalCourseIdsLoadedByTests() {
@@ -384,11 +389,13 @@ describe("course text quality normalization", () => {
 							}
 
 							const numberedCount =
-								text.match(/(?:^|[;:.])\s*(?:\d+\)|\d+\.)\s+[A-Z0-9`]/g)
-									?.length ?? 0;
+								text.match(
+									/(?:^|[;:.])\s*(?:\d+\)|\d+\.)\s+[A-Z0-9`]/g
+								)?.length ?? 0;
 							const semicolonSectionCount =
-								text.match(/;\s*(?:and\s+)?(?:then\s+)?[A-Z][^;]{20,}/g)
-									?.length ?? 0;
+								text.match(
+									/;\s*(?:and\s+)?(?:then\s+)?[A-Z][^;]{20,}/g
+								)?.length ?? 0;
 							const boldLabelCount =
 								text.match(/\*\*[^*]{2,60}:\*\*/g)?.length ?? 0;
 
@@ -1846,7 +1853,9 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Heap allocation calls are explicit ownership decisions instead of generic ways to 'make more memory.'"
 		);
-		expect(corpus).toContain("C Systems Engineering Setup Transfer Practice");
+		expect(corpus).toContain(
+			"C Systems Engineering Setup Transfer Practice"
+		);
 		expect(corpus).toContain("Representation Transfer Practice");
 		expect(corpus).toContain("Dispatch Extension Practice");
 		expect(corpus).toContain("Systems Build 14: Byte Inspector Studio");
@@ -2403,7 +2412,10 @@ describe("course text quality normalization", () => {
 		const course = await loadRawCourse("java-level-3");
 		expect(course).not.toBeNull();
 
-		const anythingArray = findItem(course!, /^AJ10 Project 2: Anything Array$/);
+		const anythingArray = findItem(
+			course!,
+			/^AJ10 Project 2: Anything Array$/
+		);
 
 		expect(anythingArray.projectLink).toBe(
 			"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Node-Class"
@@ -2685,28 +2697,23 @@ describe("course text quality normalization", () => {
 		const linkedItems = [
 			{
 				title: /^Introduction and Setup$/,
-				link:
-					"/course-assets/python/turtle-project-reference.md#turtle-command-reference"
+				link: "/course-assets/python/turtle-project-reference.md#turtle-command-reference"
 			},
 			{
 				title: /^GrS13 Project 2: Stay Inbounds$/,
-				link:
-					"/course-assets/python/turtle-project-reference.md#boundaries-and-in-bounds-checks"
+				link: "/course-assets/python/turtle-project-reference.md#boundaries-and-in-bounds-checks"
 			},
 			{
 				title: /^GrS13 Project 4: Bouncy Ball Room$/,
-				link:
-					"/course-assets/python/turtle-project-reference.md#game-template-with-score-boundaries-and-moving-triangles"
+				link: "/course-assets/python/turtle-project-reference.md#game-template-with-score-boundaries-and-moving-triangles"
 			},
 			{
 				title: /^GrS13 Project 5: Turtle Collision$/,
-				link:
-					"/course-assets/python/turtle-project-reference.md#score-turtle-pattern"
+				link: "/course-assets/python/turtle-project-reference.md#score-turtle-pattern"
 			},
 			{
 				title: /^GrS14 Project 1: Space Eater$/,
-				link:
-					"/course-assets/python/turtle-project-reference.md#game-template-with-score-boundaries-and-moving-triangles"
+				link: "/course-assets/python/turtle-project-reference.md#game-template-with-score-boundaries-and-moving-triangles"
 			}
 		];
 
@@ -4071,8 +4078,7 @@ describe("course text quality normalization", () => {
 			const broadRootPairs = allItems
 				.filter(
 					item =>
-						item.projectLink === root &&
-						item.solutionLink === root
+						item.projectLink === root && item.solutionLink === root
 				)
 				.map(item => item.title);
 			const generatedPracticeItem = allItems.find(
@@ -4105,22 +4111,23 @@ describe("course text quality normalization", () => {
 	it(
 		"does not expose identical project and solution resources",
 		async () => {
-			const duplicateSolutionLinks = (await loadedCatalogCourses()).flatMap(
-				({ course, entry }) =>
-					course.modules.flatMap(module =>
-						[
-							...module.curriculum,
-							...module.supplementalProjects
-						].flatMap(item => {
-							const projectLink = item.projectLink?.trim();
-							const solutionLink = item.solutionLink?.trim();
-							return projectLink && solutionLink === projectLink
-								? [
-										`${entry.id} / ${module.title} / ${item.title}: ${projectLink}`
-									]
-								: [];
-						})
-					)
+			const duplicateSolutionLinks = (
+				await loadedCatalogCourses()
+			).flatMap(({ course, entry }) =>
+				course.modules.flatMap(module =>
+					[
+						...module.curriculum,
+						...module.supplementalProjects
+					].flatMap(item => {
+						const projectLink = item.projectLink?.trim();
+						const solutionLink = item.solutionLink?.trim();
+						return projectLink && solutionLink === projectLink
+							? [
+									`${entry.id} / ${module.title} / ${item.title}: ${projectLink}`
+								]
+							: [];
+					})
+				)
 			);
 
 			expect(duplicateSolutionLinks).toEqual([]);
@@ -4168,8 +4175,7 @@ describe("course text quality normalization", () => {
 
 				try {
 					parsed = new URL(link);
-				}
-				catch {
+				} catch {
 					malformedGithubLinks.push(label);
 					continue;
 				}
@@ -5368,7 +5374,9 @@ describe("course text quality normalization", () => {
 						const projectLink = item.projectLink?.trim();
 						const solutionLink = item.solutionLink?.trim();
 						return projectLink && solutionLink === projectLink
-							? [`${module.title} / ${item.title}: ${projectLink}`]
+							? [
+									`${module.title} / ${item.title}: ${projectLink}`
+								]
 							: [];
 					})
 				)
@@ -5378,7 +5386,9 @@ describe("course text quality normalization", () => {
 		expect(findItem(scratchLevel2!, /Fish Food/).projectLink).toBe(
 			"https://scratch.mit.edu/projects/468227197"
 		);
-		expect(findItem(scratchLevel2!, /Fish Food/).solutionLink).toBeUndefined();
+		expect(
+			findItem(scratchLevel2!, /Fish Food/).solutionLink
+		).toBeUndefined();
 	});
 
 	it("neutralizes repetitive generated supplemental project wording", async () => {
@@ -5763,7 +5773,9 @@ describe("course text quality normalization", () => {
 			expect(mathScienceAndAssetCorpus).not.toMatch(
 				/wrong loop or condition/i
 			);
-			expect(mathScienceAndAssetCorpus).not.toMatch(/assuming hidden state/i);
+			expect(mathScienceAndAssetCorpus).not.toMatch(
+				/assuming hidden state/i
+			);
 			expect(mathScienceAndAssetCorpus).not.toMatch(
 				/syntax, design, or test coverage/i
 			);
@@ -5772,14 +5784,18 @@ describe("course text quality normalization", () => {
 			expect(mathScienceAndAssetCorpus).not.toMatch(
 				/\b(?:cleaned|generated)\b/i
 			);
-			expect(mathScienceAndAssetCorpus).not.toMatch(/\bpreserved answers\b/i);
+			expect(mathScienceAndAssetCorpus).not.toMatch(
+				/\bpreserved answers\b/i
+			);
 			expect(mathScienceAndAssetCorpus).not.toMatch(
 				/\b(?:restore|restores|restored|preserve|preserves|preserved)\s+the\s+original\b/i
 			);
 			expect(mathScienceAndAssetCorpus).not.toMatch(
 				/\boriginal (?:project|course|version|phenomena)\b/i
 			);
-			expect(mathScienceAndAssetCorpus).not.toMatch(/\bcourse material\b/i);
+			expect(mathScienceAndAssetCorpus).not.toMatch(
+				/\bcourse material\b/i
+			);
 			expect(mathScienceCorpus).toContain(
 				"vocabulary, representation choice, algebraic procedure"
 			);
@@ -6247,9 +6263,9 @@ describe("course text quality normalization", () => {
 				wordCount(item.content),
 				sample.title
 			).toBeGreaterThanOrEqual(75);
-				expect(item.content, sample.title).toMatch(
-					/Evidence target|Investigation|What to show/
-				);
+			expect(item.content, sample.title).toMatch(
+				/Evidence target|Investigation|What to show/
+			);
 			expect(item.content, sample.title).not.toMatch(/\bshould\b/i);
 		}
 	});
@@ -6260,6 +6276,7 @@ describe("course text quality normalization", () => {
 			const courses = await Promise.all([
 				loadRawCourse("elementary-science"),
 				loadRawCourse("middle-school-integrated-science"),
+				loadRawCourse("intro-to-biology"),
 				loadRawCourse("intro-to-physics"),
 				loadRawCourse("intro-to-chemistry"),
 				loadRawCourse("physics-level-2")
@@ -6327,6 +6344,55 @@ describe("course text quality normalization", () => {
 		},
 		COURSE_SWEEP_TIMEOUT
 	);
+
+	it("adds Intro to Biology from the original science source sequence", async () => {
+		const course = await loadRawCourse("intro-to-biology");
+		expect(course).not.toBeNull();
+
+		const text = allCourseText(course);
+		const mediaLinks = course!.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(item => item.mediaLink)
+				.filter((link): link is string => Boolean(link))
+		);
+
+		expect(course!.modules.map(module => module.title)).toEqual([
+			"BIO1 Human Body Systems",
+			"BIO2 Nutrients and Macromolecules",
+			"BIO3 Digestive Process",
+			"BIO4 Digestion and Absorption",
+			"BIO5 Energy Use and Storage",
+			"BIO6 Regulation of Digestion",
+			"BIO7 Elimination and Excretion",
+			"BIO8 Digestive Odyssey Capstone"
+		]);
+		for (const module of course!.modules) {
+			expect(
+				module.curriculum.length + module.supplementalProjects.length,
+				module.title
+			).toBeGreaterThanOrEqual(4);
+			expect(
+				module.supplementalProjects.length,
+				module.title
+			).toBeGreaterThanOrEqual(2);
+		}
+
+		expect(text).toContain("Project: Dinner Mystery");
+		expect(text).toContain("Project: Salad Clue Report");
+		expect(text).toContain("Project: Alien Venn Diagram");
+		expect(text).toContain("Project: Digestive Odyssey Exhibit");
+		expect(text).toContain("travel journal");
+		expect(text).toContain("No beakers, kits, dissections");
+		expect(text).not.toContain("static.junilearning.com");
+		expect(mediaLinks).toEqual([
+			"https://static.classes.jacobdanderson.net/biomod1pro1im1.jpg",
+			"https://static.classes.jacobdanderson.net/biomod1pro1im2.jpg",
+			"https://static.classes.jacobdanderson.net/biomod2pro1im1.png"
+		]);
+		expect(text).toContain("biomod1pro1im1.jpg");
+		expect(text).toContain("biomod1pro1im2.jpg");
+		expect(text).toContain("biomod2pro1im1.png");
+	});
 
 	it("keeps Intro to Chemistry authored, deduplicated, and resource-specific", async () => {
 		const course = await loadRawCourse("intro-to-chemistry");
@@ -6417,7 +6483,9 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Making a DIY Lava Lamp");
 		expect(text).toContain("Making Oobleck Case Analysis");
 		expect(text).toContain("States of Matter Simulation Report");
-		expect(text).toContain("Periodic Table Reference Set and Symbol Reading");
+		expect(text).toContain(
+			"Periodic Table Reference Set and Symbol Reading"
+		);
 		expect(text).toContain("Mystery Element Cards and Symbol Codes");
 		expect(text).toContain("Introduction to Chemical Reactions");
 		expect(text).toContain("Elephant Toothpaste Case Analysis");

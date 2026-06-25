@@ -24,10 +24,7 @@ const SOURCE_PROJECT_MEDIA_BY_TITLE: Record<string, string> = {
 	"AM1 Project 1: Mad Libs": "am_1_mad_libs.mp4",
 	"AM1 Project 2: Fictional Language Verifier":
 		"am_1_junian_language_verifier.mp4",
-	"AM1 Project 2: Junian Language Verifier":
-		"am_1_junian_language_verifier.mp4",
 	"AM1 Project 3: Command Assistant": "am_1_juni_assistant.mp4",
-	"AM1 Project 3: Juni Assistant": "am_1_juni_assistant.mp4",
 	"AM2 Project 1: Functions Practice": "am_2_functions_practice.mp4",
 	"AM2 Project 2: Lists Practice": "am_2_lists_practice.mp4",
 	"AM3 Project 1: Python Fundamentals Problem Set": "am_3_recap.mp4",
@@ -62,7 +59,6 @@ const SOURCE_PROJECT_MEDIA_BY_TITLE: Record<string, string> = {
 	"AM12 Project 1: Crazy Name Tags Printer": "am_12_crazy_name_tags.mp4",
 	"AM12 Project 2: File IO and Dictionaries":
 		"am_12_file_io_with_dictionaries.mp4",
-	"AM12 Project 3: Juni Latin with File IO": "am_12_juni_latin.mp4",
 	"AM12 Project 3: Word Translator with File I/O": "am_12_juni_latin.mp4",
 	"AM13 Project 1: Conway's Game of Life": "am_13_conways.mp4",
 	"AM13 Project 2: Two-Player Conway's Game of Life":
