@@ -564,22 +564,23 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"middle-school-integrated-science",
 			"intro-to-biology",
 			"intro-to-chemistry",
+			"intro-to-environmental-science",
 			"intro-to-physics",
 			"physics-level-2"
 		],
 		audience:
 			"Zoom-based science path built around explanations, diagrams, data, simulations, and claim-evidence-reasoning without physical lab requirements.",
 		prerequisiteSummary:
-			"Elementary Science splits K-2 and grades 3-5 expectations. Middle school science assumes basic reading, graphing, and explanation readiness. Biology, Chemistry, and Physics assume stronger model reading and evidence writing.",
+			"Elementary Science splits K-2 and grades 3-5 expectations. Middle school science assumes basic reading, graphing, and explanation readiness. Biology, Environmental Science, Chemistry, and Physics assume stronger model reading and evidence writing.",
 		outcomes: [
 			"Observations, provided images, graphs, data tables, simulations, and models explain phenomena.",
 			"Write claim-evidence-reasoning responses that distinguish observation from inference.",
-			"Connect grade-band science vocabulary to models in life science, earth/space science, physical science, chemistry, and physics."
+			"Connect grade-band science vocabulary to models in life science, environmental science, earth/space science, physical science, chemistry, and physics."
 		],
 		sequencingNotes: [
 			"Elementary Science stays one course with a K-2 path and a grades 3-5 path for each investigation.",
 			"Middle School Integrated Science aligns with NGSS-style practices across earth, life, physical, and engineering ideas.",
-			"Biology uses body-system and life-science evidence models; chemistry uses ACS and NGSS guidance; physics strengthens graphing, units, and model limits."
+			"Biology uses body-system and life-science evidence models; environmental science uses recurring biome case studies and evidence reports; chemistry uses ACS and NGSS guidance; physics strengthens graphing, units, and model limits."
 		],
 		projectExpectations: [
 			"Remote-safe investigation using a provided image, simulation, data table, or graph.",
@@ -608,6 +609,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Write a high-school science pathway after elementary and middle-school courses are stabilized.",
 			"Replace thin science lesson text with phenomenon, model, data, and CER sections.",
 			"Add source/resource registers for every science module.",
+			"Add a local Environmental Science reference pack with selected NASA, NOAA, USGS, EPA, and climate-data sources.",
 			"Add explicit coverage checks for waves, Earth and human activity, heredity/evolution, graphing, model revision, and engineering design."
 		]
 	},
