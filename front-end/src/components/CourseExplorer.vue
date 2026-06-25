@@ -2847,8 +2847,13 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-direction: column;
 	gap: 1.85rem;
+	width: 100%;
+	inline-size: 100%;
 	min-width: 0;
+	min-inline-size: 0;
 	max-width: 100%;
+	max-inline-size: 100%;
+	box-sizing: border-box;
 	overflow-x: hidden;
 	overflow-inline: hidden;
 	background: linear-gradient(
@@ -2944,8 +2949,13 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-direction: column;
 	gap: 0.9rem;
+	width: 100%;
+	inline-size: 100%;
 	min-width: 0;
+	min-inline-size: 0;
 	max-width: 100%;
+	max-inline-size: 100%;
+	box-sizing: border-box;
 }
 
 .section-header {
@@ -2975,16 +2985,24 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-direction: column;
 	gap: 0;
-	min-width: 0;
-	max-width: 100%;
-	border-top: 1px solid rgba(148, 163, 184, 0.16);
-}
-
-.lesson-item {
+	width: 100%;
+	inline-size: 100%;
 	min-width: 0;
 	min-inline-size: 0;
 	max-width: 100%;
 	max-inline-size: 100%;
+	box-sizing: border-box;
+	border-top: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.lesson-item {
+	width: 100%;
+	inline-size: 100%;
+	min-width: 0;
+	min-inline-size: 0;
+	max-width: 100%;
+	max-inline-size: 100%;
+	box-sizing: border-box;
 	overflow-x: hidden;
 	overflow-inline: hidden;
 }
@@ -2997,8 +3015,13 @@ function writeStoredValue(key: string, value: string) {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+	width: 100%;
+	inline-size: 100%;
 	min-width: 0;
+	min-inline-size: 0;
 	max-width: 100%;
+	max-inline-size: 100%;
+	box-sizing: border-box;
 	padding: clamp(1.2rem, 2.6vw, 1.5rem) 0;
 	border: none;
 	border-radius: 0;

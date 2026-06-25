@@ -248,6 +248,7 @@ async function handleResourceChange() {
 .course-asset-preview-panel {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
+	justify-items: stretch;
 	gap: 0.85rem;
 	justify-self: stretch;
 	align-self: stretch;
@@ -342,6 +343,7 @@ async function handleResourceChange() {
 .course-asset-preview-scrollbox {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
+	justify-items: stretch;
 	position: relative;
 	width: 100%;
 	inline-size: 100%;
@@ -358,6 +360,14 @@ async function handleResourceChange() {
 	overscroll-behavior-inline: contain;
 	-webkit-overflow-scrolling: touch;
 	scrollbar-gutter: stable;
+}
+
+.course-asset-preview-scrollbox :deep(.item-content-markdown) {
+	justify-self: stretch;
+	width: 100%;
+	inline-size: 100%;
+	max-width: 100%;
+	max-inline-size: 100%;
 }
 
 .course-asset-preview-eyebrow {
@@ -394,6 +404,7 @@ async function handleResourceChange() {
 	:deep(.item-content-markdown .markdown-table-scroll),
 .course-asset-preview-content :deep(pre) {
 	display: block;
+	justify-self: stretch;
 	box-sizing: border-box;
 	width: 100%;
 	inline-size: 100%;
