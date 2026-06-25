@@ -1437,4 +1437,105 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.findAll(".resource-link.is-project")).toHaveLength(1);
 		expect(wrapper.findAll(".resource-link.is-solution")).toHaveLength(0);
 	});
+
+	it("hides broad PyGame repo-root resources while preserving specific folders", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse =
+			coursesStore.courses.find(course => course.id === "pygames") ??
+			coursesStore.courses[0];
+		const rootUrl =
+			"https://github.com/instruction-material/PyGames/tree/main";
+		const starterUrl =
+			"https://github.com/instruction-material/PyGames/tree/main/PG-01-pyg0-setup-editors-and-asset-workflow-supplemental-2/starter";
+		const solutionUrl =
+			"https://github.com/instruction-material/PyGames/tree/main/PG-01-pyg0-setup-editors-and-asset-workflow-supplemental-2/solution";
+
+		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					curriculum: [
+						{
+							content:
+								"This item has only the broad repository root and should not show a resource action.",
+							id: "broad-pygame-root",
+							projectLink: rootUrl,
+							solutionLink: rootUrl,
+							title: "Broad PyGame Root"
+						},
+						{
+							content:
+								"This item points to a concrete starter and solution folder.",
+							id: "specific-pygame-folder",
+							projectLink: starterUrl,
+							solutionLink: solutionUrl,
+							title: "Specific PyGame Starter"
+						}
+					],
+					id: "module-1",
+					supplementalProjects: [],
+					title: "Module 1"
+				}
+			]
+		});
+
+		appStore.setCurrentTutor({
+			_id: "tutor-1",
+			name: "Tutor",
+			email: "tutor@example.com",
+			age: 30,
+			state: "GA",
+			usersOfTutorLength: 1,
+			coursePermissions: [assignedCourse.id],
+			editTutors: false,
+			saveEdit: "Save"
+		});
+
+		(api.get as any).mockResolvedValueOnce({
+			data: [
+				{
+					_id: "learner-1",
+					name: "Learner",
+					email: "learner@example.com",
+					age: 12,
+					state: "GA",
+					courseAccess: [assignedCourse.id],
+					courseProgress: [],
+					editUsers: false,
+					saveEdit: "Save"
+				}
+			]
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("Broad PyGame Root");
+			expect(wrapper.text()).toContain("Specific PyGame Starter");
+		});
+
+		expect(wrapper.find(`a.resource-link[href="${rootUrl}"]`).exists()).toBe(
+			false
+		);
+		expect(
+			wrapper.find(`a.resource-link.is-project[href="${starterUrl}"]`).exists()
+		).toBe(true);
+		expect(
+			wrapper
+				.find(`a.resource-link.is-solution[href="${solutionUrl}"]`)
+				.exists()
+		).toBe(true);
+		expect(wrapper.findAll(".resource-link.is-project")).toHaveLength(1);
+		expect(wrapper.findAll(".resource-link.is-solution")).toHaveLength(1);
+	});
 });
