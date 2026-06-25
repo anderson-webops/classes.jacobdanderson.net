@@ -285,6 +285,8 @@ watch(
 	contain: inline-size layout paint;
 	overflow-x: auto;
 	overflow-y: hidden;
+	overflow-inline: auto;
+	overflow-block: hidden;
 	overscroll-behavior-inline: contain;
 	-webkit-overflow-scrolling: touch;
 	border: 1px solid var(--markdown-border);
@@ -294,10 +296,14 @@ watch(
 }
 
 .item-content-markdown :deep(table) {
-	width: max-content;
+	width: 100%;
+	inline-size: 100%;
 	min-width: 100%;
-	max-width: none;
+	min-inline-size: 100%;
+	max-width: 100%;
+	max-inline-size: 100%;
 	box-sizing: border-box;
+	table-layout: fixed;
 	border-spacing: 0;
 	border-collapse: separate;
 	background: transparent;
@@ -310,8 +316,10 @@ watch(
 	border-bottom: 1px solid var(--markdown-border);
 	text-align: left;
 	vertical-align: top;
-	min-width: min(7.5rem, 46vw);
+	min-width: 0;
+	min-inline-size: 0;
 	overflow-wrap: anywhere;
+	word-break: normal;
 }
 
 .item-content-markdown :deep(th:last-child),
@@ -366,6 +374,13 @@ watch(
 	color: var(--markdown-code-text);
 	padding: 0.15rem 0.4rem;
 	border-radius: 0.35rem;
+}
+
+.item-content-markdown :deep(th code),
+.item-content-markdown :deep(td code) {
+	white-space: normal;
+	overflow-wrap: anywhere;
+	word-break: normal;
 }
 
 .item-content-markdown :deep(pre) {
