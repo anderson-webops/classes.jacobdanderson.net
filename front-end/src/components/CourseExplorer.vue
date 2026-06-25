@@ -51,7 +51,7 @@ interface VisibleModule extends CourseModule {
 
 interface ResourceLink {
 	host: string;
-	kind: "project" | "solution" | "dataset" | "asset" | "media";
+	kind: "project" | "solution" | "dataset" | "asset" | "media" | "reference";
 	label: string;
 	url: string;
 }
@@ -64,9 +64,10 @@ const REFERENCE_TITLE_RE = /reference/i;
 const STARTER_RE = /starter/i;
 const CAPSTONE_TITLE_RE = /capstone|master project/i;
 const PROJECT_PREFIX_RE = /^Project:\s*/i;
-const BROAD_SOURCE_REPOSITORY_LINKS = new Set([
-	"https://github.com/instruction-material/PyGames/tree/main"
-]);
+const SOURCE_REPOSITORY_ROOT_RE =
+	/^https:\/\/github\.com\/instruction-material\/[^/]+\/tree\/main$/i;
+const REPOSITORY_ARCHIVE_RE =
+	/\b(?:reference archive|full repo|repo bank|problem bank|workspace archive|source archive)\b/i;
 const LEARNER_SELECTION_STORAGE_KEY =
 	"classes:course-explorer:selected-learner";
 const COURSE_SELECTION_STORAGE_KEY = "classes:course-explorer:selected-course";
@@ -1023,9 +1024,15 @@ function sameResourceTarget(left: string, right: string) {
 	return canonicalResourceTarget(left) === canonicalResourceTarget(right);
 }
 
-function isBroadSourceRepositoryLink(url: string) {
-	const base = canonicalResourceTarget(url).split("#", 1)[0];
-	return BROAD_SOURCE_REPOSITORY_LINKS.has(base);
+function isSourceRepositoryRootLink(url: string) {
+	const base = canonicalResourceTarget(url)
+		.split("#", 1)[0]
+		.replace(/\/+$/, "");
+	return SOURCE_REPOSITORY_ROOT_RE.test(base);
+}
+
+function isRepositoryArchiveReference(item: CourseModuleItem) {
+	return REPOSITORY_ARCHIVE_RE.test(`${item.title} ${item.content ?? ""}`);
 }
 
 function projectLabel(item: CourseModuleItem, url: string) {
@@ -1284,7 +1291,16 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 	const datasetUrl = item.datasetLink?.trim();
 	const mediaUrl = item.mediaLink?.trim();
 
-	if (projectUrl && !isBroadSourceRepositoryLink(projectUrl)) {
+	if (projectUrl && isSourceRepositoryRootLink(projectUrl)) {
+		if (isRepositoryArchiveReference(item)) {
+			links.push({
+				kind: "reference",
+				label: "Source archive",
+				url: projectUrl,
+				host: linkHost(projectUrl)
+			});
+		}
+	} else if (projectUrl) {
 		links.push({
 			kind: projectUrl.startsWith("/course-assets/")
 				? "asset"
@@ -1298,7 +1314,7 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 	if (
 		canViewSolutions.value &&
 		solutionUrl &&
-		!isBroadSourceRepositoryLink(solutionUrl) &&
+		!isSourceRepositoryRootLink(solutionUrl) &&
 		(!projectUrl || !sameResourceTarget(solutionUrl, projectUrl))
 	) {
 		links.push({
@@ -3139,6 +3155,19 @@ function writeStoredValue(key: string, value: string) {
 	);
 	--course-resource-text: var(--course-asset-resource-text, #115e59);
 	--course-resource-host: var(--course-asset-resource-host, #47736d);
+}
+
+.resource-link.is-reference {
+	--course-resource-bg: var(
+		--course-reference-resource-bg,
+		rgba(248, 250, 252, 0.94)
+	);
+	--course-resource-bg-hover: var(
+		--course-reference-resource-bg-hover,
+		rgba(241, 245, 249, 0.96)
+	);
+	--course-resource-text: var(--course-reference-resource-text, #334155);
+	--course-resource-host: var(--course-reference-resource-host, #64748b);
 }
 
 .item-media {
