@@ -563,7 +563,7 @@ Using the equation \`y = 3x - 2\`, find and plot at least five points, then draw
 				`
 This check-in focuses on moving comfortably between slope-intercept, point-slope, and standard form.
 
-**Preserved answers**
+**Selected answers**
 
 - Pea plants sprouting at week \`2\` and growing \`3\` inches per week -> \`y = 3x - 6\`
 - Matt's peas, same growth rate, \`8\` inches tall at week \`6\` -> \`y - 8 = 3(x - 6)\`
@@ -578,7 +578,7 @@ This check-in focuses on moving comfortably between slope-intercept, point-slope
 			createLesson(
 				"Graphing Inequalities",
 				`
-**Preserved answers**
+**Selected answers**
 
 - \`-x/3 - 1 >= 5\` -> \`x <= -18\`
 - \`(2/3)x < (4/3)y + 6\` -> \`y > 2x - 8\`
@@ -592,7 +592,7 @@ This check-in focuses on moving comfortably between slope-intercept, point-slope
 			createLesson(
 				"Additional Practice",
 				`
-Use these preserved practice results to extend the check-in:
+Use these practice results to extend the check-in:
 
 - \`y = 2x - 1\` -> graph five points and draw the line
 - Slope between \`(-6, 2)\` and \`(2, -4)\` -> \`-3/4\`
@@ -885,7 +885,7 @@ The master project closes the course with a short independent explanation.
 			createLesson(
 				"Graphing Review",
 				`
-**Preserved answers**
+**Selected answers**
 
 - \`2x - y = 1\` and \`y = -x + 2\` -> \`(1, 1)\`
 - \`y = 3x + 2\` and \`6x - 2y = 10\` -> \`no solution\`
@@ -897,7 +897,7 @@ The master project closes the course with a short independent explanation.
 			createLesson(
 				"Substitution Review",
 				`
-**Preserved answers**
+**Selected answers**
 
 - \`2y - 4 = 2x - 5\`, \`y + 4 = 2x\` -> \`(7/2, 3)\`
 - \`(1/3)y - 2x = 2 - x\`, \`y - 6 = 3x\` -> \`infinite solutions\`
@@ -910,7 +910,7 @@ The master project closes the course with a short independent explanation.
 			createLesson(
 				"Elimination Review",
 				`
-**Preserved answers**
+**Selected answers**
 
 - \`-3x + 4y = 9\`, \`3x - 7y = 18\` -> \`(-15, -9)\`
 - \`2y - 4 = 3x - 5\`, \`y + 4 = 2x\` -> \`(7, 10)\`

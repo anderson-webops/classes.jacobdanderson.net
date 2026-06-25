@@ -36,7 +36,7 @@ export const algebra2ACourse: RawCourse = {
 				`
 Complex numbers extend the real-number system so square roots of negatives make sense. Use \`i = sqrt(-1)\`, and remember the power cycle \`1, i, -1, -i\`.
 
-**Cleaned examples**
+**Representative examples**
 
 - \`sqrt(-9) = 3i\`
 - \`sqrt(-16) = 4i\`
@@ -96,7 +96,7 @@ Write a complex number as \`a + bi\`. Plot it as the point \`(a, b)\`, where the
 				`
 Add and subtract by combining real parts with real parts and imaginary parts with imaginary parts. Multiply with distribution or FOIL. Divide by multiplying numerator and denominator by the conjugate.
 
-**Cleaned examples**
+**Representative examples**
 
 - \`(5i + 13) - (6i + 3) = 10 - i\`
 - \`(4i + 9) - 5i(4i + 2) = 29 - 6i\`
@@ -319,7 +319,7 @@ If work stalls, stop and revisit the specific method immediately.
 			createLesson(
 				"Representative Review Problems",
 				`
-**Cleaned answer-key highlights**
+**Answer-key highlights**
 
 - \`sqrt(-25) + 4i^27 = i\`
 - \`(4 - 3i)(2 - i) / (-5i) = 2 + i\`
@@ -330,7 +330,7 @@ If work stalls, stop and revisit the specific method immediately.
 - \`y = -(1/2)x^2\` -> down, wider
 - \`y = -(x - 3)^2 + 5\` is the result of flipping \`y = x^2 - 5\` across the x-axis and shifting right \`3\`
 
-Reuse the generated complex-plane and quadratic graph packs while explaining how each answer was found.
+Use the complex-plane and quadratic graph references while explaining how each answer was found.
 				`.trim(),
 				media.complexPlane
 			)
@@ -501,7 +501,7 @@ Treat the results as planning data for the next few sessions.
 			createLesson(
 				"Representative Review Problems",
 				`
-**Cleaned answer-key highlights**
+**Answer-key highlights**
 
 - Degree of \`7x - 36x^2 + 2x^7\` -> \`7\`
 - \`12x^4 + 2x^3 - 30x - 5 = (6x + 1)(2x^3 - 5)\`
@@ -525,7 +525,7 @@ Rational functions can have two kinds of breaks:
 - vertical asymptotes, caused by denominator zeros that do not cancel
 - removable discontinuities, caused by common factors that do cancel
 
-**Cleaned examples**
+**Representative examples**
 
 - \`[(x - 1)(x + 4)] / [(x - 1)(x - 2)]\` -> removable discontinuity at \`x = 1\`
 - \`(x^2 - 4) / [(x - 2)(x + 2)]\` -> removable discontinuities at \`x = -2, 2\`
@@ -760,7 +760,7 @@ This check-in closes the course by revisiting rational functions, rational opera
 			createLesson(
 				"Representative Review Problems",
 				`
-**Cleaned answer-key highlights**
+**Answer-key highlights**
 
 - An asymptote is a line the graph approaches but does not reach within the function's defined behavior
 - For \`f(x) = (x - 2)/(4x + 1)\`:

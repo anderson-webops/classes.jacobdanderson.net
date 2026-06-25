@@ -280,7 +280,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Graph and Data Exercise: Reading Waveforms",
 					content:
-						"Interpret snapshots of waves and wave-versus-time graphs so amplitude, period, and wavelength can be read from more than one representation. A generated sound waveform or provided screenshot can be compared with the sound it represents when audio is available. Use the exercise to reinforce that graphs describe measurable quantities, not artistic shapes."
+						"Interpret snapshots of waves and wave-versus-time graphs so amplitude, period, and wavelength can be read from more than one representation. A provided sound waveform or screenshot can be compared with the sound it represents when audio is available. Use the exercise to reinforce that graphs describe measurable quantities, not artistic shapes."
 				},
 				{
 					title: "Remote Investigation: Resonance and Sound",
