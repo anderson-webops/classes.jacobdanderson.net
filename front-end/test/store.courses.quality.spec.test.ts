@@ -3,6 +3,10 @@ import fs from "node:fs";
 import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
+import {
+	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
+	staticMediaUrl
+} from "@/stores/courses/staticMedia";
 import { buildProjectGuidance } from "@/stores/courses/projectGuidance";
 import { buildSupportSectionGuidance } from "@/stores/courses/supportSectionGuidance";
 import {
@@ -6624,6 +6628,61 @@ describe("course text quality normalization", () => {
 
 			expect(missingAssets).toEqual([]);
 			expect(missingFragments).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
+	it(
+		"keeps unavailable static source media represented by explicit placeholders",
+		async () => {
+			const pendingFilenames = new Set(
+				KNOWN_PENDING_STATIC_MEDIA_FILENAMES
+			);
+			const unresolvedPendingFilenames = new Set(pendingFilenames);
+			const missingPlaceholderNotes: string[] = [];
+			const missingPlaceholderLinks: string[] = [];
+			const placeholderNotePattern =
+				/\b(?:pending media|reserved|placeholder|available on the class static host)\b/i;
+
+			for (const entry of courseCatalog) {
+				const course = await loadRawCourse(entry.id);
+				expect(course).not.toBeNull();
+
+				for (const module of course!.modules) {
+					for (const item of [
+						...module.curriculum,
+						...module.supplementalProjects
+					]) {
+						const filename = item.mediaLink
+							? item.mediaLink.split("/").at(-1)
+							: undefined;
+
+						if (!filename || !pendingFilenames.has(filename))
+							continue;
+
+						unresolvedPendingFilenames.delete(filename);
+
+						if (item.mediaLink !== staticMediaUrl(filename)) {
+							missingPlaceholderLinks.push(
+								`${entry.id} / ${module.title} / ${item.title}: ${item.mediaLink}`
+							);
+						}
+
+						if (
+							!item.content.includes(filename) ||
+							!placeholderNotePattern.test(item.content)
+						) {
+							missingPlaceholderNotes.push(
+								`${entry.id} / ${module.title} / ${item.title}: ${filename}`
+							);
+						}
+					}
+				}
+			}
+
+			expect([...unresolvedPendingFilenames]).toEqual([]);
+			expect(missingPlaceholderLinks).toEqual([]);
+			expect(missingPlaceholderNotes).toEqual([]);
 		},
 		COURSE_SWEEP_TIMEOUT
 	);
