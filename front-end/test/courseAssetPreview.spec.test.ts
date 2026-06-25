@@ -156,7 +156,9 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("overflow: hidden;");
 		expect(previewSource).toContain("min-inline-size: 0;");
 		expect(previewSource).toContain("max-inline-size: 100%;");
-		expect(previewSource).toContain("grid-template-columns: minmax(0, 1fr);");
+		expect(previewSource).toContain(
+			"grid-template-columns: minmax(0, 1fr);"
+		);
 		expect(previewSource).toContain(
 			'<div class="course-asset-preview-scrollbox">'
 		);
@@ -164,7 +166,6 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("position: relative;");
 		expect(previewSource).toContain("contain: inline-size layout paint;");
 		expect(previewSource).toContain("isolation: isolate;");
-		expect(previewSource).toContain("clip-path: inset(0 round 14px);");
 		expect(previewSource).toContain("overflow-y: hidden;");
 		expect(previewSource).toContain("-webkit-overflow-scrolling: touch;");
 		expect(previewSource).toContain(
@@ -181,9 +182,13 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("inline-size: 100%;");
 		expect(previewSource).toContain("max-inline-size: 100%;");
 		expect(previewSource).toContain("min-inline-size: 100%;");
-		expect(previewSource).toContain("table-layout: fixed;");
+		expect(previewSource).toContain("width: max-content;");
+		expect(previewSource).toContain("inline-size: max-content;");
+		expect(previewSource).toContain("max-width: none;");
+		expect(previewSource).toContain("table-layout: auto;");
 		expect(previewSource).toContain("scrollbar-gutter: stable;");
 		expect(previewSource).toContain("overflow-inline: hidden;");
+		expect(previewSource).toContain("overflow-inline: auto;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown th)"
 		);
@@ -209,6 +214,10 @@ describe("course asset preview utilities", () => {
 			"max-inline-size: min(100%, 82ch);"
 		);
 		expect(markdownSource).toContain("box-sizing: border-box;");
+		expect(markdownSource).toContain("display: grid;");
+		expect(markdownSource).toContain(
+			"grid-template-columns: minmax(0, 1fr);"
+		);
 		expect(markdownSource).toContain(
 			".item-content-markdown :deep(.markdown-table-scroll)"
 		);

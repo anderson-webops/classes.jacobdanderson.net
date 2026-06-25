@@ -89,9 +89,7 @@ export const aiLevel1Course: RawCourse = {
 						moduleTitle: "FAI0 Setup and Tooling",
 						projectKind: "core",
 						hasReference: false
-					}),
-					projectLink:
-						"https://github.com/instruction-material/AI-Level-1/tree/main"
+					})
 				}
 			],
 			supplementalProjects: [

@@ -193,6 +193,7 @@ async function handleResourceChange() {
 	box-sizing: border-box;
 	contain: inline-size paint;
 	overflow-x: hidden;
+	overflow-inline: hidden;
 }
 
 .course-asset-preview-toggle,
@@ -245,8 +246,8 @@ async function handleResourceChange() {
 }
 
 .course-asset-preview-panel {
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	gap: 0.85rem;
 	justify-self: stretch;
 	align-self: stretch;
@@ -259,6 +260,7 @@ async function handleResourceChange() {
 	box-sizing: border-box;
 	contain: inline-size layout paint;
 	overflow: hidden;
+	overflow-inline: hidden;
 	border: 1px solid
 		var(--course-asset-preview-border, rgba(13, 148, 136, 0.18));
 	border-radius: 18px;
@@ -333,11 +335,13 @@ async function handleResourceChange() {
 	max-inline-size: 100%;
 	box-sizing: border-box;
 	overflow-x: hidden;
+	overflow-inline: hidden;
 	contain: inline-size paint;
 }
 
 .course-asset-preview-scrollbox {
-	display: block;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	position: relative;
 	width: 100%;
 	inline-size: 100%;
@@ -348,9 +352,9 @@ async function handleResourceChange() {
 	box-sizing: border-box;
 	contain: inline-size layout paint;
 	isolation: isolate;
-	clip-path: inset(0 round 14px);
-	overflow-x: auto;
+	overflow-x: hidden;
 	overflow-y: hidden;
+	overflow-inline: hidden;
 	overscroll-behavior-inline: contain;
 	-webkit-overflow-scrolling: touch;
 	scrollbar-gutter: stable;
@@ -374,7 +378,8 @@ async function handleResourceChange() {
 }
 
 .course-asset-preview-content :deep(.item-content-markdown) {
-	display: block;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	width: 100%;
 	inline-size: 100%;
 	max-width: 100%;
@@ -382,6 +387,7 @@ async function handleResourceChange() {
 	min-width: 0;
 	min-inline-size: 0;
 	overflow-x: hidden;
+	overflow-inline: hidden;
 }
 
 .course-asset-preview-content
@@ -397,33 +403,32 @@ async function handleResourceChange() {
 	min-inline-size: 0;
 	contain: inline-size paint;
 	isolation: isolate;
-	clip-path: inset(0 round 14px);
 	overflow-x: auto;
 	overflow-y: hidden;
+	overflow-inline: auto;
 	overscroll-behavior-inline: contain;
 	scrollbar-gutter: stable;
 }
 
 .course-asset-preview-content
 	:deep(.item-content-markdown .markdown-table-scroll) {
-	overflow-x: hidden;
-	overflow-inline: hidden;
+	border-radius: 14px;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown table) {
-	width: 100%;
-	inline-size: 100%;
-	max-width: 100%;
-	max-inline-size: 100%;
+	width: max-content;
+	inline-size: max-content;
+	max-width: none;
+	max-inline-size: none;
 	min-width: 100%;
 	min-inline-size: 100%;
-	table-layout: fixed;
+	table-layout: auto;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown th),
 .course-asset-preview-content :deep(.item-content-markdown td) {
 	min-width: 0;
-	max-width: 100%;
+	max-width: min(32rem, 58vw);
 	overflow-wrap: anywhere;
 	word-break: break-word;
 }

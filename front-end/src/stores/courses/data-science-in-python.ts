@@ -371,9 +371,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 						moduleTitle: "DSP0 Setup and Tooling",
 						projectKind: "core",
 						hasReference: false
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Data-Science/tree/main"
+					})
 				}
 			],
 			supplementalProjects: [
