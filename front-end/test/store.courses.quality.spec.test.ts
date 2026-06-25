@@ -2399,6 +2399,21 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Binary search relies on sorted data");
 	});
 
+	it("keeps Java Level 3 starter and solution links separate for generics projects", async () => {
+		const course = await loadRawCourse("java-level-3");
+		expect(course).not.toBeNull();
+
+		const anythingArray = findItem(course!, /^AJ10 Project 2: Anything Array$/);
+
+		expect(anythingArray.projectLink).toBe(
+			"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Node-Class"
+		);
+		expect(anythingArray.solutionLink).toBe(
+			"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Anything-Array"
+		);
+		expect(anythingArray.projectLink).not.toBe(anythingArray.solutionLink);
+	});
+
 	it("keeps Java Level 3 sorting modules substantive instead of one-line prompts", async () => {
 		const course = await loadRawCourse("java-level-3");
 		expect(course).not.toBeNull();

@@ -1199,7 +1199,7 @@ export const javaLevel3Course: RawCourse = {
 					content:
 						"Create a generic `Node`-style wrapper class, test it with several object types, and store those generic nodes inside an array.",
 					projectLink:
-						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Anything-Array",
+						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Node-Class",
 					solutionLink:
 						"https://github.com/instruction-material/Java-Level-3/tree/main/AJ10-Anything-Array"
 				},
