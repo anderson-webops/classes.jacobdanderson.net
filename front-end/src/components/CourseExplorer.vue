@@ -29,6 +29,7 @@ import {
 } from "@/modules/pythonIde";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import { isKnownPendingStaticMedia } from "@/stores/courses/staticMedia";
 import CodePreview from "./CodePreview.vue";
 import CourseAssetPreview from "./CourseAssetPreview.vue";
 import LazyMarkdownContent from "./LazyMarkdownContent.vue";
@@ -1023,10 +1024,20 @@ function staticAssetName(url: string) {
 	}
 }
 
+function isKnownPendingStaticMediaUrl(url: string) {
+	return (
+		isStaticClassesUrl(url) &&
+		isKnownPendingStaticMedia(staticAssetName(url))
+	);
+}
+
 function isStaticMediaUnavailable(url: string) {
 	return (
 		isStaticClassesUrl(url) &&
-		unavailableStaticMediaUrls.value.includes(canonicalResourceTarget(url))
+		(isKnownPendingStaticMediaUrl(url) ||
+			unavailableStaticMediaUrls.value.includes(
+				canonicalResourceTarget(url)
+			))
 	);
 }
 

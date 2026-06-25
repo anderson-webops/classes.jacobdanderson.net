@@ -7,6 +7,7 @@ import { resetCourseAssetPreviewCache } from "@/modules/courseAssetPreview";
 import CourseExplorer from "@/components/CourseExplorer.vue";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import { staticMediaUrl } from "@/stores/courses/staticMedia";
 
 vi.mock("@/api", () => ({
 	api: {
@@ -1021,6 +1022,65 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("original-demo-video.mp4");
 		expect(wrapper.text()).toContain(missingStaticVideo);
 		expect(wrapper.find(`a[href="${missingStaticVideo}"]`).exists()).toBe(
+			true
+		);
+	});
+
+	it("reserves known pending static media without first rendering a broken embed", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+		const pendingStaticImage = staticMediaUrl("biomod1pro1im1.jpg");
+
+		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					curriculum: [
+						{
+							content:
+								"Review the reserved body systems source image.",
+							id: "known-pending-static-demo",
+							mediaLink: pendingStaticImage,
+							title: "Known Pending Static Demo"
+						}
+					],
+					id: "module-1",
+					supplementalProjects: [],
+					title: "Module 1"
+				}
+			]
+		});
+
+		appStore.setCurrentUser({
+			_id: "user-1",
+			name: "Student",
+			email: "student@example.com",
+			age: 12,
+			state: "GA",
+			courseAccess: [assignedCourse.id],
+			courseProgress: [],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		expect(wrapper.find("img.item-media-image").exists()).toBe(false);
+		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
+		expect(wrapper.text()).toContain("Static asset pending");
+		expect(wrapper.text()).toContain("biomod1pro1im1.jpg");
+		expect(wrapper.text()).toContain(pendingStaticImage);
+		expect(wrapper.find(`a[href="${pendingStaticImage}"]`).exists()).toBe(
 			true
 		);
 	});
