@@ -470,9 +470,9 @@ Each flawed solution contains one main error.
 | C    | Converts grams directly to coefficients                  | skipped molar mass                     |
 | D    | Reports final answer as grams when target asks for moles | unit mismatch                          |
 
-## Remote Investigation Checklist
+## Investigation Safety Checklist
 
-This checklist belongs before any remote chemistry project.
+Use this checklist before any chemistry project that relies on a simulation, diagram, data table, image set, video clip, or optional observation.
 
 | Check           | Strong Version                                                                            | Red Flag                                                 |
 | --------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------- |

@@ -601,7 +601,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		safetyAndAccess: [
 			"No required beakers, kits, chemicals, household experiments, or physical supplies beyond notes and paper.",
 			"Any optional physical demo needs an equivalent diagram, simulation, or data table.",
-			"Age-appropriate content and remote-safe instructions are required."
+			"Age-appropriate content and online-session-safe instructions are required."
 		],
 		adminExpansionBacklog: [
 			"Write a high-school science pathway after elementary and middle-school courses are stabilized.",

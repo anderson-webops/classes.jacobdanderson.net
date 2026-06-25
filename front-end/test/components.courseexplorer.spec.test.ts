@@ -1,6 +1,7 @@
 import { flushPromises, mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 import { api } from "@/api";
 import { resetCourseAssetPreviewCache } from "@/modules/courseAssetPreview";
 import CourseExplorer from "@/components/CourseExplorer.vue";
@@ -958,6 +959,70 @@ describe("CourseExplorer.vue", () => {
 				false
 			);
 		}
+	});
+
+	it("shows a pending placeholder when hosted static media is unavailable", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+		const missingStaticVideo =
+			"https://static.classes.jacobdanderson.net/original-demo-video.mp4";
+
+		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					curriculum: [
+						{
+							content: "Review the project demo.",
+							id: "static-demo",
+							mediaLink: missingStaticVideo,
+							title: "Static Demo"
+						}
+					],
+					id: "module-1",
+					supplementalProjects: [],
+					title: "Module 1"
+				}
+			]
+		});
+
+		appStore.setCurrentUser({
+			_id: "user-1",
+			name: "Student",
+			email: "student@example.com",
+			age: 12,
+			state: "GA",
+			courseAccess: [assignedCourse.id],
+			courseProgress: [],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		const video = wrapper.find("video.item-media-video");
+		expect(video.exists()).toBe(true);
+
+		await video.trigger("error");
+		await nextTick();
+
+		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
+		expect(wrapper.text()).toContain("Static asset pending");
+		expect(wrapper.text()).toContain("original-demo-video.mp4");
+		expect(wrapper.text()).toContain(missingStaticVideo);
+		expect(wrapper.find(`a[href="${missingStaticVideo}"]`).exists()).toBe(
+			true
+		);
 	});
 
 	it("labels science reference links by purpose instead of calling every link a dataset", async () => {

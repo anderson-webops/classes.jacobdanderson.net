@@ -758,7 +758,7 @@ function safetyPolicyFor(
 	if (kind === "systems") return systemsSecurityPolicy(courseLabel);
 	if (kind === "science") {
 		return [
-			`${courseLabel} is Zoom-safe by default: no required beakers, heat, chemicals, electricity kits, outdoor access, food, or adult-managed supplies.`,
+			`${courseLabel} is online-session-safe by default: no required beakers, heat, chemicals, electricity kits, outdoor access, food, or adult-managed supplies.`,
 			`${familyLabel} work uses shared simulations, curated media, public datasets, sketches, graphs, and paper notebooks.`,
 			`Any optional ${courseLabel} household observation must have a fully equivalent provided-data or simulation alternative.`
 		];
@@ -807,7 +807,7 @@ function capstoneFor(
 	if (kind === "science") {
 		return [
 			`${courseLabel} ends with a phenomenon-based notebook portfolio with model revision, graph/data evidence, and CER response.`,
-			`${courseLabel} includes a Zoom-safe engineering or explanation task with no required physical lab materials.`
+			`${courseLabel} includes an online-session-safe engineering or explanation task with no required physical lab materials.`
 		];
 	}
 	if (kind === "data-ai-ml") {
@@ -1265,12 +1265,12 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 
 	appendModule(course, {
 		kind: "appendix",
-		title: "Remote Resource Bank",
+		title: "Digital Resource Bank",
 		curriculum: [
 			{
-				title: "Curated Remote Resource Bank",
+				title: "Curated Digital Resource Bank",
 				content: [
-					`**Remote investigation:** ${guidance.remoteInvestigation} ${guidance.safetyBoundary}`,
+					`**Investigation:** ${guidance.remoteInvestigation} ${guidance.safetyBoundary}`,
 					`**Resource shortlist:**\n${bullets(resources)}`,
 					links?.catalogLink
 						? `**Simulation catalog:** ${links.catalogLink}. Use the catalog to choose a specific simulation before recording observations, variables, and model limitations.`
@@ -1290,7 +1290,7 @@ function addScienceResourceModule(courseId: string, course: RawCourse) {
 				].join("\n\n")
 			},
 			{
-				title: "Remote Safety and Accessibility Check",
+				title: "Online Safety and Accessibility Check",
 				content: [
 					"**Concept path:** Required science projects are completable with notes, paper, a browser, and shared-screen material. Optional household observations need a fully equivalent data or simulation alternative.",
 					`**Course boundary:** ${guidance.safetyBoundary}`,
@@ -1393,7 +1393,7 @@ function addElementaryScienceDecision(courseId: string, course: RawCourse) {
 			{
 				title: "Shared Zoom Constraint",
 				content:
-					"**Remote investigation:** Both paths remain Zoom-first and paper/browser based. Optional household observations may be allowed only when a fully equivalent image, simulation, or data table is provided.\n\n**Evidence target:** The core objective can be completed through the shared online material even when no household observation is available."
+					"**Investigation:** Both paths remain Zoom-first and paper/browser based. Optional household observations may be allowed only when a fully equivalent image, simulation, or data table is provided.\n\n**Evidence target:** The core objective can be completed through the shared online material even when no household observation is available."
 			}
 		],
 		supplementalProjects: [
@@ -2214,17 +2214,17 @@ function addScienceGradeBandScopeModule(courseId: string, course: RawCourse) {
 	if (courseId === "elementary-science") {
 		appendModule(course, {
 			kind: "appendix",
-			title: "K-2 and 3-5 Zoom-Safe Science Scope Map",
+			title: "K-2 and 3-5 Online Science Scope Map",
 			curriculum: [
 				{
 					title: "K-2 Primary Science Path",
 					content:
-						"**Remote investigation:** K-2 activities emphasize concrete observation, picture sorting, labeled drawings, short oral explanation, simple patterns, and sentence frames. Core topics include pushes and pulls, light and sound, sky patterns, material properties, habitats, local weather, plant/animal needs, and simple engineering design.\n\n**Evidence target:** The work demonstrates the ability to observe, sort, sketch, and explain one pattern using simple evidence."
+						"**Investigation:** K-2 activities emphasize concrete observation, picture sorting, labeled drawings, short oral explanation, simple patterns, and sentence frames. Core topics include pushes and pulls, light and sound, sky patterns, material properties, habitats, local weather, plant/animal needs, and simple engineering design.\n\n**Evidence target:** The work demonstrates the ability to observe, sort, sketch, and explain one pattern using simple evidence."
 				},
 				{
 					title: "Grades 3-5 Upper Elementary Path",
 					content:
-						"**Remote investigation:** Grades 3-5 activities add fair-test reasoning, variables, data tables, bar or line graphs, model revision, cause/effect language, and fuller CER writing. Core topics include weather/climate patterns, natural hazards, forces/magnets, life cycles, fossils/adaptation, energy, waves, Earth features, particle models, ecosystems, water distribution, and sky patterns.\n\n**Evidence target:** The work uses data or a shared simulation to revise a model and write a short CER response."
+						"**Investigation:** Grades 3-5 activities add fair-test reasoning, variables, data tables, bar or line graphs, model revision, cause/effect language, and fuller CER writing. Core topics include weather/climate patterns, natural hazards, forces/magnets, life cycles, fossils/adaptation, energy, waves, Earth features, particle models, ecosystems, water distribution, and sky patterns.\n\n**Evidence target:** The work uses data or a shared simulation to revise a model and write a short CER response."
 				},
 				{
 					title: "Engineering Every Year",
@@ -2234,7 +2234,7 @@ function addScienceGradeBandScopeModule(courseId: string, course: RawCourse) {
 				{
 					title: "Physical-Material Boundary",
 					content:
-						"**Remote investigation:** No activity requires beakers, chemicals, heat, food, kits, outdoor collection, or supervised construction. Optional observations must have an equivalent image, simulation, or data table. The course treats physical materials as optional context, not a requirement for participation or progress.\n\n**Evidence target:** The core objective can be completed with only paper, notes, and browser/shared-screen access. A complete activity names the evidence source, labels what was observed, and explains the pattern without depending on a household experiment."
+						"**Investigation:** No activity requires beakers, chemicals, heat, food, kits, outdoor collection, or supervised construction. Optional observations must have an equivalent image, simulation, or data table. The course treats physical materials as optional context, not a requirement for participation or progress.\n\n**Evidence target:** The core objective can be completed with only paper, notes, and browser/shared-screen access. A complete activity names the evidence source, labels what was observed, and explains the pattern without depending on a household experiment."
 				}
 			],
 			supplementalProjects: [
@@ -2261,17 +2261,17 @@ function addScienceGradeBandScopeModule(courseId: string, course: RawCourse) {
 			{
 				title: "Grade 6 Theme: Systems Students Can See and Model",
 				content:
-					"**Remote investigation:** Grade 6 centers visible systems: cells and body systems, structure/function, Earth-sun-moon patterns, weather, water cycle, regional climate, hazard monitoring, and introductory engineering design.\n\n**Evidence target:** The work builds a model from a shared source and explains how one part of the system affects another."
+					"**Investigation:** Grade 6 centers visible systems: cells and body systems, structure/function, Earth-sun-moon patterns, weather, water cycle, regional climate, hazard monitoring, and introductory engineering design.\n\n**Evidence target:** The work builds a model from a shared source and explains how one part of the system affects another."
 			},
 			{
 				title: "Grade 7 Theme: Matter Moving Through Living and Earth Systems",
 				content:
-					"**Remote investigation:** Grade 7 centers atoms and molecules, substance properties, chemical reactions, conservation of atoms, ecosystems, photosynthesis/respiration conceptually, cycling of matter and energy, Earth materials, resources, and human impacts.\n\n**Evidence target:** The work traces matter or energy through a model and supports the explanation with data or simulation evidence."
+					"**Investigation:** Grade 7 centers atoms and molecules, substance properties, chemical reactions, conservation of atoms, ecosystems, photosynthesis/respiration conceptually, cycling of matter and energy, Earth materials, resources, and human impacts.\n\n**Evidence target:** The work traces matter or energy through a model and supports the explanation with data or simulation evidence."
 			},
 			{
 				title: "Grade 8 Theme: Forces, Waves, Heredity, and Evolutionary Change",
 				content:
-					"**Remote investigation:** Grade 8 centers one-dimensional forces and motion, collisions, fields qualitatively, energy and wave models, information transfer, inheritance and variation, mutations conceptually, natural selection, fossils, biodiversity, and human-impact solutions. The through-line is evidence comparison: different models or datasets may support different parts of the explanation.\n\n**Evidence target:** The work compares multiple lines of evidence and writes a CER or model critique."
+					"**Investigation:** Grade 8 centers one-dimensional forces and motion, collisions, fields qualitatively, energy and wave models, information transfer, inheritance and variation, mutations conceptually, natural selection, fossils, biodiversity, and human-impact solutions. The through-line is evidence comparison: different models or datasets may support different parts of the explanation.\n\n**Evidence target:** The work compares multiple lines of evidence and writes a CER or model critique."
 			},
 			{
 				title: "6-8 Coverage Guardrail",

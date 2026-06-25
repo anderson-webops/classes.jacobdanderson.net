@@ -312,7 +312,7 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Extension Project: Sound Wave or Resonance Demo",
 					content:
-						"Design a remote-safe demonstration, simulation walkthrough, or evidence brief that shows standing waves, resonance, or frequency changes clearly enough to be explained from the evidence. Include a prediction, an observation from the shared source, and a short explanation of what the wave model gets right."
+						"Design an online-session-safe demonstration, simulation walkthrough, or evidence brief that shows standing waves, resonance, or frequency changes clearly enough to be explained from the evidence. Include a prediction, an observation from the shared source, and a short explanation of what the wave model gets right."
 				}
 			]
 		},

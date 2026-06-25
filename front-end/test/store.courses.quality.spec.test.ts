@@ -872,7 +872,7 @@ describe("course text quality normalization", () => {
 			expect(corpus).toContain("Min-Max and Outlier Extension");
 			expect(corpus).toContain("Median and Mode Practice");
 			expect(dataScienceText).not.toContain(
-				"remote-safe investigation writeup"
+				"equipment-free investigation writeup"
 			);
 		},
 		COURSE_SWEEP_TIMEOUT
@@ -1375,7 +1375,7 @@ describe("course text quality normalization", () => {
 				/^Standards Map$/,
 				/^Course Roadmap$/,
 				/^Project Practice Guide$/,
-				/^Remote Resource Bank$/,
+				/^Digital Resource Bank$/,
 				/Project Taxonomy and Assessment Implementation$/,
 				/^Elementary Science Grade-Band Paths$/,
 				/^C\+\+ Levels 1-3 Concept Matrix and Placement$/,
@@ -1385,7 +1385,7 @@ describe("course text quality normalization", () => {
 				/Systems and Security Lab Safety Policy$/,
 				/Toolchain and Version Assumptions$/,
 				/^Standards-Mapped Algebra Architecture$/,
-				/^K-2 and 3-5 Zoom-Safe Science Scope Map$/,
+				/^K-2 and 3-5 Online Science Scope Map$/,
 				/^Middle School Integrated Science 6-8 Scope Map$/,
 				/^Data Science, AI Foundations, and Machine Learning Boundary Map$/,
 				/Defensive Lab Contract$/
@@ -6204,15 +6204,15 @@ describe("course text quality normalization", () => {
 				wordCount(item.content),
 				sample.title
 			).toBeGreaterThanOrEqual(75);
-			expect(item.content, sample.title).toMatch(
-				/Evidence target|Remote investigation|What to show/
-			);
+				expect(item.content, sample.title).toMatch(
+					/Evidence target|Investigation|What to show/
+				);
 			expect(item.content, sample.title).not.toMatch(/\bshould\b/i);
 		}
 	});
 
 	it(
-		"keeps science investigations explicitly remote-safe and evidence-based",
+		"keeps science investigations explicitly equipment-free and evidence-based",
 		async () => {
 			const courses = await Promise.all([
 				loadRawCourse("elementary-science"),
@@ -6224,7 +6224,7 @@ describe("course text quality normalization", () => {
 			const corpus = courses.map(allCourseText).join("\n");
 			const resourceBankBodies = courses.flatMap(course =>
 				course!.modules
-					.filter(module => module.title === "Remote Resource Bank")
+					.filter(module => module.title === "Digital Resource Bank")
 					.flatMap(module =>
 						[...module.curriculum, ...module.supplementalProjects]
 							.filter(item =>
@@ -6247,7 +6247,7 @@ describe("course text quality normalization", () => {
 				"**Output:** Complete a claim-evidence-reasoning response, a labeled diagram or data table, and one prediction about a changed condition"
 			);
 			expect(corpus).not.toContain(
-				"The activity should rely on accessible remote evidence"
+				"The activity should rely on accessible digital evidence"
 			);
 			expect(corpus).not.toContain(
 				"Any hands-on observation must be safe, simple, optional, and replaceable with an equivalent source."
@@ -6265,7 +6265,7 @@ describe("course text quality normalization", () => {
 				"uses shared-screen materials, notes, paper, pencil, and"
 			);
 			expect(corpus).toMatch(
-				/No beakers, kits, or required household materials are needed|Physical supplies are optional only|shared digital resources|accessible remote evidence/
+				/No beakers, kits, or required household materials are needed|Physical supplies are optional only|shared digital resources|accessible digital evidence/
 			);
 			expect(corpus).toContain("claim-evidence-reasoning");
 			expect(corpus).not.toContain(
@@ -6355,7 +6355,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Checkpoint: Capstone Defense");
 		expect(text).toContain("Reaction Energy and Rates");
 		expect(text).toContain("Redox, Batteries, and Electron Transfer");
-		expect(text).toContain("Remote-Safe Investigation Checklist");
+		expect(text).toContain("Investigation Safety Checklist");
 		expect(text).toContain("Chemistry Explanation Rubric");
 		expect(text).toContain("CHM10 Advanced Chemistry Map");
 		expect(text).toContain("Reference Appendix: Chemistry Resource Bank");
