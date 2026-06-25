@@ -294,9 +294,9 @@ watch(
 }
 
 .item-content-markdown :deep(table) {
-	width: 100%;
+	width: max-content;
 	min-width: 100%;
-	max-width: 100%;
+	max-width: none;
 	box-sizing: border-box;
 	border-spacing: 0;
 	border-collapse: separate;
