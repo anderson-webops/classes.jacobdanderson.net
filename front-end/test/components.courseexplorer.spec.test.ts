@@ -1457,6 +1457,8 @@ describe("CourseExplorer.vue", () => {
 			coursesStore.courses[0];
 		const rootUrl =
 			"https://github.com/instruction-material/PyGames/tree/main";
+		const usacoRootUrl =
+			"https://github.com/instruction-material/USACO-Bronze/tree/main";
 		const starterUrl =
 			"https://github.com/instruction-material/PyGames/tree/main/PG-01-pyg0-setup-editors-and-asset-workflow-supplemental-2/starter";
 		const solutionUrl =
@@ -1482,6 +1484,13 @@ describe("CourseExplorer.vue", () => {
 							id: "pygame-reference-archive",
 							projectLink: rootUrl,
 							title: "Reference Archive: PyGame Workspace"
+						},
+						{
+							content:
+								"Browse the full Bronze repo bank when the curated course spine is not enough practice.",
+							id: "usaco-problem-bank",
+							projectLink: usacoRootUrl,
+							title: "Problem Bank: Full Bronze Repo"
 						},
 						{
 							content:
@@ -1539,6 +1548,7 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain(
 				"Reference Archive: PyGame Workspace"
 			);
+			expect(wrapper.text()).toContain("Problem Bank: Full Bronze Repo");
 			expect(wrapper.text()).toContain("Specific PyGame Starter");
 		});
 
@@ -1551,9 +1561,23 @@ describe("CourseExplorer.vue", () => {
 		expect(
 			wrapper.find(`a.resource-link.is-reference[href="${rootUrl}"]`).exists()
 		).toBe(true);
-		expect(wrapper.find(".resource-link.is-reference").text()).toContain(
+		expect(
+			wrapper
+				.find(`a.resource-link.is-reference[href="${usacoRootUrl}"]`)
+				.exists()
+		).toBe(true);
+		expect(
+			wrapper
+				.find(`a.resource-link.is-reference[href="${rootUrl}"]`)
+				.text()
+		).toContain(
 			"Source archive"
 		);
+		expect(
+			wrapper
+				.find(`a.resource-link.is-reference[href="${usacoRootUrl}"]`)
+				.text()
+		).toContain("Problem bank");
 		expect(
 			wrapper.find(`a.resource-link.is-project[href="${starterUrl}"]`).exists()
 		).toBe(true);
@@ -1564,6 +1588,6 @@ describe("CourseExplorer.vue", () => {
 		).toBe(true);
 		expect(wrapper.findAll(".resource-link.is-project")).toHaveLength(1);
 		expect(wrapper.findAll(".resource-link.is-solution")).toHaveLength(1);
-		expect(wrapper.findAll(".resource-link.is-reference")).toHaveLength(1);
+		expect(wrapper.findAll(".resource-link.is-reference")).toHaveLength(2);
 	});
 });
