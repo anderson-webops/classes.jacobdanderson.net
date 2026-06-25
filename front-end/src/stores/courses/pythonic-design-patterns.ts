@@ -44,13 +44,9 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 						"Keep a compact journal for setup and tooling that records the design pressure, the simplest Python feature that might solve it, the named pattern if one is still justified, and one short note about which workflow choices will make later refactors observable and safe. The habit is diagnosis first, pattern name second."
 				},
 				{
-					title: "Pythonic Design Patterns",
-					content: buildProjectGuidance({
-						courseFamily: "Python",
-						moduleTitle: "PDP0 Setup and Tooling",
-						projectKind: "core",
-						hasReference: false
-					})
+					title: "Setup Snapshot: Pythonic Design Patterns",
+					content:
+						"Create a compact setup snapshot for the course workspace. Record the Python version, editor, virtual-environment command, project folder structure, and one repeatable test or run command. Add a small pattern-journal template with columns for design pressure, simplest Python feature, possible pattern name, and verification evidence. The final snapshot makes clear how future labs will be run, tested, and compared before any pattern names are introduced."
 				}
 			]
 		},
