@@ -186,7 +186,7 @@ async function handleResourceChange() {
 	gap: 0.65rem;
 	min-width: 0;
 	width: 100%;
-	max-width: min(100%, 58rem);
+	max-width: 100%;
 	box-sizing: border-box;
 }
 
@@ -361,8 +361,8 @@ async function handleResourceChange() {
 }
 
 .course-asset-preview-content :deep(.item-content-markdown table) {
-	width: 100%;
-	max-width: 100%;
+	width: max-content;
+	max-width: none;
 	min-width: 100%;
 	table-layout: auto;
 }

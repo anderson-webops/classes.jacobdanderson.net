@@ -147,7 +147,7 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain(".course-asset-preview {");
 		expect(previewSource).toContain("min-width: 0;");
 		expect(previewSource).toContain("width: 100%;");
-		expect(previewSource).toContain("max-width: min(100%, 58rem);");
+		expect(previewSource).toContain("max-width: 100%;");
 		expect(previewSource).toContain("box-sizing: border-box;");
 		expect(previewSource).toContain(".course-asset-preview-panel {");
 		expect(previewSource).toContain("contain: inline-size;");
@@ -165,6 +165,8 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown table)"
 		);
+		expect(previewSource).toContain("width: max-content;");
+		expect(previewSource).toContain("max-width: none;");
 		expect(previewSource).toContain("table-layout: auto;");
 		expect(previewSource).toContain(
 			".course-asset-preview-content :deep(.item-content-markdown th)"
@@ -189,9 +191,9 @@ describe("course asset preview utilities", () => {
 		expect(markdownSource).toContain("contain: inline-size layout paint;");
 		expect(markdownSource).toContain("overscroll-behavior-inline: contain;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
-		expect(markdownSource).toContain("width: 100%;");
+		expect(markdownSource).toContain("width: max-content;");
 		expect(markdownSource).toContain("min-width: 100%;");
-		expect(markdownSource).toContain("max-width: 100%;");
+		expect(markdownSource).toContain("max-width: none;");
 		expect(markdownSource).toContain("overflow-x: auto;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(pre)");
 		expect(markdownSource).toContain("max-width: 100%;");
