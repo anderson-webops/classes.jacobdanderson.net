@@ -63,7 +63,7 @@ Sample answer:
 1. A heating curve is best for explaining why temperature can pause during boiling because the flat graph region directly shows temperature over time.
 2. It is not enough by itself to show what particles are doing, so a particle diagram should be added for the reasoning part.
 
-## Original Phenomena Case Library Key
+## Phenomena Case Library Key
 
 Strong case explanations connect a visible observation to a model and name the evidence limit. Expected connections include:
 
@@ -79,9 +79,9 @@ Strong case explanations connect a visible observation to a model and name the e
 
 Common revision target: do not treat a dramatic demonstration as the explanation. The response should name the observation, chemistry idea, evidence, and model limit.
 
-## Original Reaction Projects Key
+## Reaction Projects Key
 
-Strong restored reaction-project responses should include:
+Strong reaction-project responses include:
 
 1. Introduction to Chemical Reactions:
    - Phase changes are physical changes unless evidence shows new substances.
@@ -100,9 +100,9 @@ Strong restored reaction-project responses should include:
 
 Common revision target: do not use dramatic appearance as the proof. The response should identify reactants, products or likely products, reaction evidence, and the limitation of the model or demonstration.
 
-## Original Solutions Projects Key
+## Solutions Projects Key
 
-Strong restored solutions-project responses should include:
+Strong solutions-project responses include:
 
 1. Making Invisible Ink:
    - Lemon juice and water form a mixture that can be discussed as a solution.

@@ -5704,23 +5704,39 @@ describe("course text quality normalization", () => {
 			const mathScienceCorpus = mathAndScienceCourses
 				.map(allCourseText)
 				.join("\n");
+			const chemistryAssetCorpus = [
+				"../public/course-assets/chemistry/chemistry-materials-pack.md",
+				"../public/course-assets/chemistry/chemistry-rubrics-answer-key.md"
+			]
+				.map(assetPath =>
+					fs.readFileSync(new URL(assetPath, import.meta.url), "utf8")
+				)
+				.join("\n");
+			const mathScienceAndAssetCorpus = [
+				mathScienceCorpus,
+				chemistryAssetCorpus
+			].join("\n");
 
-			expect(mathScienceCorpus).not.toMatch(/wrong loop or condition/i);
-			expect(mathScienceCorpus).not.toMatch(/assuming hidden state/i);
-			expect(mathScienceCorpus).not.toMatch(
+			expect(mathScienceAndAssetCorpus).not.toMatch(
+				/wrong loop or condition/i
+			);
+			expect(mathScienceAndAssetCorpus).not.toMatch(/assuming hidden state/i);
+			expect(mathScienceAndAssetCorpus).not.toMatch(
 				/syntax, design, or test coverage/i
 			);
-			expect(mathScienceCorpus).not.toMatch(/authorized scope/i);
-			expect(mathScienceCorpus).not.toMatch(/input shape/i);
-			expect(mathScienceCorpus).not.toMatch(/\b(?:cleaned|generated)\b/i);
-			expect(mathScienceCorpus).not.toMatch(/\bpreserved answers\b/i);
-			expect(mathScienceCorpus).not.toMatch(
+			expect(mathScienceAndAssetCorpus).not.toMatch(/authorized scope/i);
+			expect(mathScienceAndAssetCorpus).not.toMatch(/input shape/i);
+			expect(mathScienceAndAssetCorpus).not.toMatch(
+				/\b(?:cleaned|generated)\b/i
+			);
+			expect(mathScienceAndAssetCorpus).not.toMatch(/\bpreserved answers\b/i);
+			expect(mathScienceAndAssetCorpus).not.toMatch(
 				/\b(?:restore|restores|restored|preserve|preserves|preserved)\s+the\s+original\b/i
 			);
-			expect(mathScienceCorpus).not.toMatch(
+			expect(mathScienceAndAssetCorpus).not.toMatch(
 				/\boriginal (?:project|course|version|phenomena)\b/i
 			);
-			expect(mathScienceCorpus).not.toMatch(/\bcourse material\b/i);
+			expect(mathScienceAndAssetCorpus).not.toMatch(/\bcourse material\b/i);
 			expect(mathScienceCorpus).toContain(
 				"vocabulary, representation choice, algebraic procedure"
 			);
