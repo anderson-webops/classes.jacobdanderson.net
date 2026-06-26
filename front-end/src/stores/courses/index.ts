@@ -147,6 +147,14 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			)
 	},
 	{
+		id: "ap-calculus",
+		name: "AP Calculus",
+		load: () =>
+			import("./ap-calculus").then(
+				({ apCalculusCourse }) => apCalculusCourse
+			)
+	},
+	{
 		id: "python-to-java-and-cpp-bridge",
 		name: "Python to Java and C++ Bridge",
 		load: () =>

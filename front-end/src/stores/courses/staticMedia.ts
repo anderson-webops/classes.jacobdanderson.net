@@ -1,6 +1,7 @@
 export const STATIC_MEDIA_BASE = "https://static.classes.jacobdanderson.net";
+export const LEGACY_STATIC_MEDIA_BASE = "https://static.junilearning.com";
 const STATIC_MEDIA_URL_PATTERN =
-	/https:\/\/static\.classes\.jacobdanderson\.net\/[^\s<>"')\]]+/g;
+	/https:\/\/(?:static\.classes\.jacobdanderson\.net|static\.junilearning\.com)\/[^\s<>"')\]]+/g;
 export const PENDING_STATIC_MEDIA_NOTICE_PATTERN =
 	/\b(?:pending media|reserved|placeholder|not currently available|class static host)\b/i;
 
@@ -25,6 +26,14 @@ export function staticMediaUrl(filename: string) {
 	return `${STATIC_MEDIA_BASE}/${filename}`;
 }
 
+function trimStaticMediaUrl(url: string) {
+	const trimmed = url.replace(/[.,;:!?]+$/g, "");
+	return {
+		trailing: url.slice(trimmed.length),
+		url: trimmed
+	};
+}
+
 export function staticMediaFilename(url: string) {
 	try {
 		const pathname = new URL(url).pathname;
@@ -44,21 +53,44 @@ export function isStaticMediaUrl(url: string) {
 	}
 }
 
+export function isLegacyStaticMediaUrl(url: string) {
+	try {
+		return new URL(url).origin === LEGACY_STATIC_MEDIA_BASE;
+	} catch {
+		return false;
+	}
+}
+
+export function canonicalStaticMediaUrl(url: string) {
+	if (isStaticMediaUrl(url)) return url;
+	if (isLegacyStaticMediaUrl(url))
+		return staticMediaUrl(staticMediaFilename(url));
+	return null;
+}
+
 export function isKnownPendingStaticMedia(filename: string) {
 	return knownPendingStaticMedia.has(filename);
 }
 
 export function isKnownPendingStaticMediaUrl(url: string) {
 	return (
-		isStaticMediaUrl(url) &&
+		!!canonicalStaticMediaUrl(url) &&
 		isKnownPendingStaticMedia(staticMediaFilename(url))
 	);
 }
 
 export function staticMediaUrlsFromText(text: string) {
 	return [...text.matchAll(STATIC_MEDIA_URL_PATTERN)]
-		.map(match => match[0].replace(/[.,;:!?]+$/g, ""))
-		.filter(isStaticMediaUrl);
+		.map(match => trimStaticMediaUrl(match[0]).url)
+		.map(canonicalStaticMediaUrl)
+		.filter((url): url is string => Boolean(url));
+}
+
+export function normalizeStaticMediaUrlsInText(text: string) {
+	return text.replace(STATIC_MEDIA_URL_PATTERN, rawUrl => {
+		const { trailing, url } = trimStaticMediaUrl(rawUrl);
+		return `${canonicalStaticMediaUrl(url) ?? url}${trailing}`;
+	});
 }
 
 export function pendingStaticMediaNotice(filename: string) {

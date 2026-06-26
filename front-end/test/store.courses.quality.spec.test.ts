@@ -5,8 +5,10 @@ import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
 import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
+	canonicalStaticMediaUrl,
 	hasPendingStaticMediaNotice,
 	isStaticMediaUrl,
+	normalizeStaticMediaUrlsInText,
 	pendingStaticMediaNotice,
 	staticMediaFilename,
 	staticMediaUrlsFromText,
@@ -5763,6 +5765,7 @@ describe("course text quality normalization", () => {
 				loadRawCourse("algebra-2b"),
 				loadRawCourse("pre-calculus-a"),
 				loadRawCourse("pre-calculus-b"),
+				loadRawCourse("ap-calculus"),
 				loadRawCourse("elementary-science"),
 				loadRawCourse("middle-school-integrated-science"),
 				loadRawCourse("intro-to-chemistry"),
@@ -5896,7 +5899,8 @@ describe("course text quality normalization", () => {
 				loadRawCourse("algebra-2a"),
 				loadRawCourse("algebra-2b"),
 				loadRawCourse("pre-calculus-a"),
-				loadRawCourse("pre-calculus-b")
+				loadRawCourse("pre-calculus-b"),
+				loadRawCourse("ap-calculus")
 			]);
 			const corpus = courses.map(allCourseText).join("\n");
 			const supplementalCorpus = courses
@@ -6259,6 +6263,67 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Concept: Average Rate of Change and Derivative Preview");
 		expect(text).toContain("Capstone: Pre-Calculus B Modeling Portfolio");
 		expect(text).toContain("AP Calculus Readiness Map");
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(mediaLinks).toEqual([]);
+	});
+
+	it("adds AP Calculus from the source math sequence without legacy static embeds", async () => {
+		const course = await loadRawCourse("ap-calculus");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const mediaLinks = course.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(item => item.mediaLink)
+				.filter((link): link is string => Boolean(link))
+		);
+
+		expect(course.modules.map(module => module.title)).toEqual([
+			"APCA0 Preparing for AP Calculus",
+			"APC1 Introduction to Limits",
+			"APC2 Calculating Limits",
+			"APC3 Continuity",
+			"APC4 Limits and Continuity Topic Review",
+			"APC5 Introduction to Derivatives",
+			"APC6 Derivative Rules",
+			"APC7 Derivatives of Trigonometric and Other Functions",
+			"APC8 Derivatives of Composite, Implicit, and Inverse Functions",
+			"APC9 Differentiation Topic Review",
+			"APC10 Contextual Applications of Differentiation",
+			"APC11 Analytical Applications of Differentiation",
+			"APC12 A Function and Its Derivatives",
+			"APC13 Applications of Derivatives Topic Review",
+			"APC14 Accumulation of Change",
+			"APC15 Integrals",
+			"APC16 Integration and Accumulation of Change Topic Review",
+			"APC17 Introduction to Differential Equations",
+			"APC18 Solutions to Differential Equations",
+			"APC19 Differential Equations Topic Review",
+			"APC20 Interpreting Context for Definite Integrals",
+			"APC21 Volumes of Solids Using Integrals",
+			"APC22 Applications of Integration Topic Review",
+			"APC23 Parametric Equations, Polar Coordinates, and Vector-Valued Functions",
+			"APC24 Parametric Equations, Polar Coordinates, and Vector-Valued Functions Topic Review",
+			"APC25 Infinite Series",
+			"APC26 Infinite Sums and Representing Infinite Series",
+			"APC27 Infinite Sequences and Series Topic Review"
+		]);
+		expect(text).toContain("Introducing Calculus and Defining Limits");
+		expect(text).toContain("Properties and Procedures for Limits");
+		expect(text).toContain("Continuity and Limits Involving Infinity");
+		expect(text).toContain("Rates of Change and Derivative Definitions");
+		expect(text).toContain("Basic and Advanced Derivative Rules");
+		expect(text).toContain("Chain Rule, Implicit Differentiation, Inverses, and Higher-Order Derivatives");
+		expect(text).toContain("Riemann Sums and the Fundamental Theorem of Calculus");
+		expect(text).toContain("Antiderivatives, Evaluating Integrals, and Integration Methods");
+		expect(text).toContain("Differential Equations");
+		expect(text).toContain("Parametric Equations, Polar Coordinates, and Vector-Valued Calculus");
+		expect(text).toContain("Infinite Series and Convergence Tests");
+		expect(text).toContain("Power Series, Taylor Series");
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
 		);
@@ -7140,6 +7205,23 @@ describe("course text quality normalization", () => {
 		expect(notice).toMatch(/added later/i);
 	});
 
+	it("canonicalizes legacy static media URLs to class-host placeholders", () => {
+		const legacyUrl =
+			"https://static.junilearning.com/ap_calculus/original-static-demo.mp4?cache=1";
+		const futureUrl =
+			"https://static.classes.jacobdanderson.net/original-static-demo.mp4";
+
+		expect(canonicalStaticMediaUrl(legacyUrl)).toBe(futureUrl);
+		expect(
+			normalizeStaticMediaUrlsInText(
+				`Legacy media: ${legacyUrl}. Keep the period.`
+			)
+		).toBe(`Legacy media: ${futureUrl}. Keep the period.`);
+		expect(staticMediaUrlsFromText(`Legacy media: ${legacyUrl}.`)).toEqual([
+			futureUrl
+		]);
+	});
+
 	it("extracts static media URLs embedded in course prose", () => {
 		expect(
 			staticMediaUrlsFromText(
@@ -7149,6 +7231,51 @@ describe("course text quality normalization", () => {
 			"https://static.classes.jacobdanderson.net/original-static-demo.mp4"
 		]);
 	});
+
+	it(
+		"keeps legacy static media hosts out of raw and normalized course content",
+		async () => {
+			const legacyOccurrences: string[] = [];
+
+			for (const entry of courseCatalog) {
+				const rawCourse = await entry.load();
+				const normalizedCourse = await loadRawCourse(entry.id);
+
+				for (const [label, course] of [
+					["raw", rawCourse],
+					["normalized", normalizedCourse]
+				] as const) {
+					if (!course) continue;
+
+					for (const module of course.modules) {
+						for (const item of [
+							...module.curriculum,
+							...module.supplementalProjects
+						]) {
+							const corpus = [
+								item.content,
+								item.mediaLink,
+								item.datasetLink,
+								item.projectLink,
+								item.solutionLink
+							]
+								.filter(Boolean)
+								.join("\n");
+
+							if (corpus.includes("static.junilearning.com")) {
+								legacyOccurrences.push(
+									`${label} ${entry.id} / ${module.title} / ${item.title}`
+								);
+							}
+						}
+					}
+				}
+			}
+
+			expect(legacyOccurrences).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
 
 	it(
 		"keeps simulation and video resources out of dataset links",

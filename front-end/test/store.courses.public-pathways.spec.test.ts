@@ -71,17 +71,18 @@ describe("public course pathways", () => {
 		).toEqual([
 			"pre-algebra-a",
 			"pre-algebra-b",
-				"algebra-1a",
-				"algebra-1b",
-				"geometry-a",
-				"geometry-b",
-				"algebra-2a",
-				"algebra-2b",
-				"pre-calculus-a",
-				"pre-calculus-b"
+			"algebra-1a",
+			"algebra-1b",
+			"geometry-a",
+			"geometry-b",
+			"algebra-2a",
+			"algebra-2b",
+			"pre-calculus-a",
+			"pre-calculus-b",
+			"ap-calculus"
 		]);
 		expect(pathwayText("algebra")).toMatch(
-			/proof|coordinate geometry|right-triangle trigonometry|surface area|volume|Riemann|conics|polar|parametric|vectors|matrices|limits|rates/i
+			/proof|coordinate geometry|right-triangle trigonometry|surface area|volume|Riemann|conics|polar|parametric|vectors|matrices|limits|derivative|integral|differential|series|College Board/i
 		);
 
 		expect(pathwayText("web-javascript")).toMatch(/async|fetch/i);
