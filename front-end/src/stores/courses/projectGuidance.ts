@@ -200,7 +200,11 @@ function guidanceReference(courseFamily: string, moduleTitle: string) {
 }
 
 function scopedGuidanceReference(reference: string, moduleTitle: string) {
-	const cleanTitle = moduleTitle.trim();
+	const cleanTitle = moduleTitle
+		.trim()
+		.replace(/\breference solution\b/gi, "worked comparison")
+		.replace(/\bsolution\b/gi, "worked comparison")
+		.replace(/\s{2,}/g, " ");
 	if (!cleanTitle) return reference;
 
 	const bareReference = reference.replace(/^the\s+/i, "");

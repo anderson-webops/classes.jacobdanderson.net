@@ -501,7 +501,7 @@ export const preAlgebraACourse: RawCourse = {
 		]),
 		{
 			kind: "appendix",
-			title: "Source Activity Reference",
+			title: "Source Activity Archive",
 			curriculum: [
 				lesson(
 					"Pre-Algebra A Source Anchors",

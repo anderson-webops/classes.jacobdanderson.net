@@ -7595,7 +7595,7 @@ describe("course text quality normalization", () => {
 			"PAA13-PAA17 Expressions and Sequences",
 			"PAA18-PAA23 Exponents, Roots, and Scientific Notation",
 			"Check-In #2 and Capstone",
-				"Source Activity Reference",
+			"Source Activity Archive",
 			"Pending Static Assets"
 		]);
 		expect(text).toContain("Project: Starting a Gardening Business");
@@ -7678,7 +7678,7 @@ describe("course text quality normalization", () => {
 			"PAB15-PAB19 Factors, Multiples, and Number Structure",
 			"PAB20-PAB23 Counting, Probability, and Applied Modeling",
 			"Check-In #3 and Capstone: Pre-Algebra B",
-				"Source Activity Reference"
+			"Source Activity Archive"
 		]);
 		expect(text).toContain("Project: Exploring the World with Marco");
 		expect(text).toContain("Project: Gymnastics Geometry Challenge");
@@ -7747,6 +7747,104 @@ describe("course text quality normalization", () => {
 			"https://static.classes.jacobdanderson.net/pab14_0.png",
 			"https://static.classes.jacobdanderson.net/pab22_0.png"
 		]);
+	});
+
+	it("adds Algebra 1A source references from the original math sequence", async () => {
+		const course = await loadRawCourse("algebra-1a");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const moduleTitles = course.modules.map(module => module.title);
+
+		expect(moduleTitles).toContain("Source Activity Archive");
+		expect(text).toContain("Source Activity Anchors: Algebra 1A");
+		for (const originalReference of [
+			"Kick-off restaurant project",
+			"delivery-coordinate interpretation",
+			"Movie Star Status",
+			"Free Swag",
+			"Community Data Analysis",
+			"Predicting Avalanches",
+			"Cytogenetics Quest",
+			"Battle of the Publications",
+			"two self-authored problems",
+			"https://www.geogebra.org/geometry/gvdvu8g9",
+			"https://www.geogebra.org/geometry/nwcaepuc",
+			"https://www.desmos.com/calculator/zhckru7sxb",
+			"https://drive.google.com/file/d/1YBd552y9UR7QltUlogW00t9BRMtmb22s/view?usp=sharing",
+			"https://drive.google.com/file/d/1y5h6nw4yjbxRGTZKGQ3sY5nIDn4G5fnq/view?usp=drive_link"
+		]) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		for (const filename of [
+			"aa4_pset1_0.png",
+			"aa5_pset2_12.png",
+			"aa7_0.png",
+			"aa8_pset2_sol0.png",
+			"checkin2_app_2.png",
+			"checkin3_graphing_1.png"
+		]) {
+			expect(text, filename).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(text, filename)).toBe(true);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+	});
+
+	it("adds Algebra 1B source references from the original math sequence", async () => {
+		const course = await loadRawCourse("algebra-1b");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const moduleTitles = course.modules.map(module => module.title);
+
+		expect(moduleTitles).toContain("Source Activity Archive");
+		expect(text).toContain("Source Activity Anchors: Algebra 1B");
+		for (const originalReference of [
+			"Kick-off amusement-park project",
+			"Smart and Elegant",
+			"Half-Court Challenge",
+			"Put Me in Coach",
+			"The Mysteries of Light",
+			"particle-wave duality",
+			"Radiofungi",
+			"astrobiology context",
+			"two self-authored problems",
+			"https://www.desmos.com/calculator/i1r7bykug4",
+			"https://www.desmos.com/calculator/n04wtuzlfe",
+			"https://ophysics.com/l5.html",
+			"https://www.youtube.com/watch?v=eJTfcV1ZceE",
+			"https://www.youtube.com/watch?v=FJDWHm_ZjoM",
+			"https://drive.google.com/file/d/1b0Txmj4dY1UOadVDpPHM0oaccMvQEUTs/view?usp=sharing",
+			"https://drive.google.com/file/d/12FIj99-PelJqZS0frtjk9PNjv7hxjyBU/view?usp=sharing"
+		]) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		for (const filename of [
+			"ab_kickoff_0.png",
+			"ab9_0.png",
+			"ab9_2.png",
+			"ab13_concept2_0.png",
+			"ab15_pset1_14.png",
+			"ab20_4.png",
+			"checkin2_advanced_1_updated.png",
+			"checkin2_app_5.png"
+		]) {
+			expect(text, filename).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(text, filename)).toBe(true);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
 	});
 
 	it("adds Geometry A from the source math sequence", async () => {
