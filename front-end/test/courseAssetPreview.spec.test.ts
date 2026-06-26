@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flushPromises, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	courseAssetViewerUrl,
@@ -9,6 +10,7 @@ import {
 	resetCourseAssetPreviewCache,
 	slugMarkdownHeading
 } from "@/modules/courseAssetPreview";
+import CourseAssetPreview from "@/components/CourseAssetPreview.vue";
 
 describe("course asset preview utilities", () => {
 	beforeEach(() => {
@@ -113,6 +115,67 @@ describe("course asset preview utilities", () => {
 		expect(section.content).not.toContain("Other text.");
 	});
 
+	it("keeps wide embedded course resource markdown inside the preview scrollbox", async () => {
+		const fetcher = vi.fn(async () => ({
+			ok: true,
+			text: async () =>
+				[
+					"# Turtle Pack",
+					"",
+					"## Wide Resource",
+					"",
+					"| Command | Argument or unit | What it does |",
+					"| --- | --- | --- |",
+					"| `shape(\"triangle\")` | shape name | Common shapes include `turtle`, `arrow`, `circle`, `square`, and `triangle`, so this row intentionally uses enough inline code to challenge the preview width. |",
+					"",
+					"```python",
+					"player.forward(50)      # Move 50 pixels forward.",
+					"player.goto(-120, 80)   # Move to x = -120, y = 80 without drawing.",
+					"```"
+				].join("\n")
+		})) as any;
+		vi.stubGlobal("fetch", fetcher);
+
+		const wrapper = mount(CourseAssetPreview, {
+			props: {
+				resources: [
+					{
+						kind: "asset",
+						label: "Wide resource",
+						url: "/course-assets/python/turtle-project-reference.md#wide-resource"
+					}
+				]
+			}
+		});
+
+		await wrapper.find(".course-asset-preview-toggle").trigger("click");
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.find(".markdown-table-scroll").exists()).toBe(true);
+			expect(wrapper.find("pre").exists()).toBe(true);
+		});
+
+		const scrollbox = wrapper.find(".course-asset-preview-scrollbox");
+		const markdown = wrapper.find(".item-content-markdown");
+		const tableWrapper = wrapper.find(".markdown-table-scroll");
+		const table = wrapper.find("table");
+		const codeBlock = wrapper.find("pre");
+
+		expect(scrollbox.exists()).toBe(true);
+		expect(markdown.exists()).toBe(true);
+		expect(tableWrapper.exists()).toBe(true);
+		expect(table.exists()).toBe(true);
+		expect(codeBlock.exists()).toBe(true);
+		expect(scrollbox.element.contains(markdown.element)).toBe(true);
+		expect(scrollbox.element.contains(tableWrapper.element)).toBe(true);
+		expect(tableWrapper.element.contains(table.element)).toBe(true);
+		expect(scrollbox.element.contains(codeBlock.element)).toBe(true);
+		expect(fetcher).toHaveBeenCalledWith(
+			"/course-assets/python/turtle-project-reference.md"
+		);
+	});
+
 	it("keeps the full course resource page constrained on mobile", () => {
 		const source = readFileSync(
 			resolve(__dirname, "../src/pages/course-resource.vue"),
@@ -150,7 +213,9 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("max-width: 100%;");
 		expect(previewSource).toContain("box-sizing: border-box;");
 		expect(previewSource).toContain("contain: inline-size paint;");
+		expect(previewSource).toContain("container-type: inline-size;");
 		expect(previewSource).toContain("overflow-x: hidden;");
+		expect(previewSource).toContain("overflow: clip;");
 		expect(previewSource).toContain(".course-asset-preview-panel {");
 		expect(previewSource).toContain("justify-items: stretch;");
 		expect(previewSource).toContain("contain: inline-size layout paint;");
