@@ -371,6 +371,7 @@ const investingCourses = {
 		staticAssets: [
 			"ent3_project2_0.png",
 			"ent3_project2_1.png",
+			"ent4_project2_0.png",
 			"ent5_project1_0.png"
 		],
 		modules: [
@@ -393,7 +394,10 @@ const englishCourses = {
 		name: "Early Elementary A: Discovering the Joy of Reading",
 		area: "reading",
 		focus: "characters, plot, literature comprehension, informational texts, figurative language, and short reading responses",
-		staticAssets: ["jor2_disact_plotempty.png"],
+		staticAssets: [
+			"jor2_disact_plotempty.png",
+			"jor2_disact_plotexample.png"
+		],
 		modules: [
 			"JoR1 Characters",
 			"JoR2 Plot",
@@ -447,6 +451,7 @@ const englishCourses = {
 		name: "Middle School A: Reading and Analyzing Literature",
 		area: "literary analysis",
 		focus: "main ideas, supporting evidence, inference, showing versus telling, theme, point of view, word choice, rhyme, alliteration, figurative language, and final analysis writing",
+		staticAssets: ["msa1_concept1_mainideasupportingevidence.png"],
 		modules: [
 			"MSA1 Main Ideas & Supporting Evidence I",
 			"MSA2 Main Ideas & Supporting Evidence II",
@@ -467,6 +472,12 @@ const englishCourses = {
 		name: "Middle School B: Analytical and Creative Writing",
 		area: "writing",
 		focus: "arguments, evidence, counterclaims, evidence analysis, transitions, revision, character development, conflict, plot, point of view, and short-story drafting",
+		staticAssets: [
+			"msa15_concept2_transitionaldevices.png",
+			"msa17_concept2_nemochart.png",
+			"msa19_concept2_emptyplot.png",
+			"msa19_concept2_labeledplot.png"
+		],
 		modules: [
 			"MSB1 Arguments & Evidence",
 			"MSB2 Counterclaims",
@@ -488,6 +499,12 @@ const englishCourses = {
 		name: "Middle School B: Analytical and Creative Writing Retake",
 		area: "writing reinforcement",
 		focus: "targeted review of arguments, evidence, counterclaims, evidence analysis, transitions, revision, character development, conflict, plot, point of view, and short-story drafting",
+		staticAssets: [
+			"msa15_concept2_transitionaldevices.png",
+			"msa17_concept2_nemochart.png",
+			"msa19_concept2_emptyplot.png",
+			"msa19_concept2_labeledplot.png"
+		],
 		modules: [
 			"MSB1 Arguments & Evidence",
 			"MSB2 Counterclaims",
@@ -536,6 +553,10 @@ const englishCourses = {
 		name: "Novel Writing",
 		area: "long-form writing",
 		focus: "goal setting, protagonist and antagonist design, drafting, conflict, setting, plot structure, character development, narration, dialogue, and revision toward a complete story arc",
+		staticAssets: [
+			"nw6_blank_narrative_arc.jpg",
+			"nw6_narrative_arc_definitions.jpg"
+		],
 		modules: [
 			"NW1 Course Overview & Goal Setting",
 			"NW2 Developing a Protagonist and an Antagonist",
@@ -560,7 +581,20 @@ const elementaryMathCourses = {
 		name: "Early Elementary A: Discovering Numbers, Operations, and Measurement",
 		area: "early elementary math",
 		focus: "addition, subtraction, word problems, length, place value, equal groups, rectangles, time, money, data, polygons, circles, and visual math explanations",
-		staticAssets: ["module_project_1_0.png"],
+		staticAssets: [
+			"check_in_1_length_0.png",
+			"check_in_1_sums_0.png",
+			"check_in_1_sums_1.png",
+			"check_in_2_additional_0.png",
+			"check_in_2_money_1.png",
+			"check_in_2_multiplication_0.png",
+			"check_in_2_multiplication_1.png",
+			"check_in_2_multiplication_2.png",
+			"check_in_2_time_0.png",
+			"mfa18_pset1_0.png",
+			"module_example.png",
+			"module_project_1_0.png"
+		],
 		modules: [
 			"EEA1 Addition and Subtraction within 20",
 			"EEA2 Addition and Subtraction within 100",
@@ -590,7 +624,20 @@ const elementaryMathCourses = {
 		name: "Early Elementary B: Exploring Arithmetic, Fractions, and Geometry",
 		area: "early elementary math",
 		focus: "multi-digit operations, multiplication, division, word problems, measurement, area, fractions, data, perimeter, quadrilaterals, and geometric explanation",
-		staticAssets: ["mfb10_concept1_0.png"],
+		staticAssets: [
+			"checkin2_app_0.png",
+			"checkin2_gm_2.png",
+			"checkin2_gm_3.png",
+			"checkin2_gm_4.png",
+			"checkin2_ma_0.png",
+			"mfb10_concept1_0.png",
+			"mfb14_pset1_0.png",
+			"mfb14_pset1_1.png",
+			"mfb14_pset1_2.png",
+			"mfb14_pset1_3.png",
+			"mfb14_pset1_4.png",
+			"module_example.png"
+		],
 		modules: [
 			"EEB1 Adding and Subtracting within 1000",
 			"EEB2 Strategies to Add and Subtract within 1000",
@@ -617,7 +664,47 @@ const elementaryMathCourses = {
 		name: "Late Elementary A: Investigating Multiplication, Division, and Geometry",
 		area: "late elementary math",
 		focus: "place value, rounding, whole-number operations, factors, multiples, multiplication, division, lines, angles, triangles, polygons, perimeter, area, and volume",
-		staticAssets: ["module_project_1_0.png"],
+		staticAssets: [
+			"check_in_1_multiplication_0.png",
+			"check_in_1_multiplication_1.png",
+			"check_in_1_multiplication_3.png",
+			"check_in_2_lines_0.png",
+			"check_in_2_lines_2.png",
+			"check_in_2_lines_4.png",
+			"check_in_2_lines_5.png",
+			"checkin1_app_0.png",
+			"maa1_pset1_0.png",
+			"maa6_pset1_0.png",
+			"maa6_pset1_1.png",
+			"maa6_pset1_2.png",
+			"maa6_pset1_3.png",
+			"maa6_pset1_4.png",
+			"maa7_pset1_0.png",
+			"maa7_pset1_1.png",
+			"maa7_pset1_10.png",
+			"maa7_pset1_11.png",
+			"maa7_pset1_2.png",
+			"maa7_pset1_6.png",
+			"maa7_pset1_7.png",
+			"maa7_pset1_8.png",
+			"maa7_pset1_9.png",
+			"maa7_pset2_0.png",
+			"maa7_pset2_1.png",
+			"maa7_pset2_2.png",
+			"maa7_pset2_3.png",
+			"maa7_pset3_0.png",
+			"maa7_pset3_1.png",
+			"maa7_pset3_2.png",
+			"maa7_pset3_3.png",
+			"maa7_pset3_4.png",
+			"maa7_pset3_5.png",
+			"maa7_pset3_6.png",
+			"maa7_pset3_7.png",
+			"maa7_pset3_8.png",
+			"maa7_pset3_9.png",
+			"module_example.png",
+			"module_project_1_0.png"
+		],
 		modules: [
 			"LEA1 Place Value",
 			"LEA2 Comparing and Rounding",
@@ -644,7 +731,15 @@ const elementaryMathCourses = {
 		name: "Late Elementary B: Mastering Fractions, Decimals, Units, and Coordinates",
 		area: "late elementary math",
 		focus: "fractions, decimals, unit conversion, numerical expressions, multi-digit multiplication and division, coordinate planes, patterns, figures, and geometric reasoning",
-		staticAssets: ["leb16_concept1_0.png"],
+		staticAssets: [
+			"checkin1_fractions_0.png",
+			"checkin1_fractions_1.png",
+			"leb16_concept1_0.png",
+			"leb16_pset1_0.png",
+			"leb16_pset1_2.png",
+			"leb16_pset1_3.png",
+			"module_example.png"
+		],
 		modules: [
 			"LEB1 Equivalent Fractions",
 			"LEB2 Comparing and Ordering Fractions",
