@@ -59,6 +59,22 @@ function project({
 	].join("\n\n");
 }
 
+function sourceAnchor({
+	evidence,
+	references,
+	title
+}: {
+	evidence: string[];
+	references: string[];
+	title: string;
+}) {
+	return [
+		`**Source Activity Anchors: ${title}**`,
+		`**Original source details preserved:**\n${references.map(reference => `- ${reference}`).join("\n")}`,
+		`**Evidence record:**\n${evidence.map(item => `- ${item}`).join("\n")}`
+	].join("\n\n");
+}
+
 export const preAlgebraBCourse: RawCourse = {
 	name: "Pre-Algebra B",
 	modules: [
@@ -549,7 +565,134 @@ export const preAlgebraBCourse: RawCourse = {
 					})
 				)
 			]
-		)
+		),
+		module("Original Source Activity Anchors", [
+			lesson(
+				"Pre-Algebra B Source Anchors",
+				[
+					sourceAnchor({
+						title: "Kick-Off Project: United States Data, Geometry, Number Theory, and Probability",
+						references: [
+							"Task 1 uses 15 travel responses with a required range of 7 and mode of 1, then asks for median, first quartile, and third quartile.",
+							"The source answer set is 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8 with median 4, first quartile 2, and third quartile 6.",
+							"Additional values 50, 0, 38, and 9 are added to analyze changes in mean, range, and interquartile range.",
+							"The state survey uses 50 people and three state counts: 16, 23, and 11.",
+							"Task 2 uses a United States trip map, a right-triangle trip from Nashville to Birmingham to Atlanta, distances of 170 miles and 130 miles, and an approximate direct distance of 214 miles.",
+							"Task 2 also includes United States quadrilateral states, regular polygons with 5 through 9 sides, a trapezoid trip, a circle trip, and the Astor Place Alamo sculpture modeled as a cube with 15-foot side lengths.",
+							"Task 3 uses California population about 40 million, Albuquerque population about 560,000, and a bonus budget from $1.2 million to $1.7 million.",
+							"Task 4 uses a 40-person city-or-rural survey with 25 city responses and 18 rural responses, plus a move-choice sample space of Texas, Colorado, California, New York, Ohio, Kentucky, New Mexico, Pennsylvania, and Arizona."
+						],
+						evidence: [
+							"Data work preserves sorting, mean, range, IQR, graph choice, and outlier interpretation.",
+							"Geometry work preserves angle classification, congruence, polygon angle sums, perimeter, area, circle, surface-area, and volume checks.",
+							"Number-theory work preserves factors, multiples, prime/composite checks, GCF, and LCM.",
+							"Probability work preserves Venn-diagram overlap, single-outcome probability, and compound probability."
+						]
+					}),
+					sourceAnchor({
+						title: "Exploring the World with Marco",
+						references: [
+							"Original project coauthor context: Marco Satala, immigration attorney at Corporate Immigration Partners.",
+							"Advertising choices compare Facebook, Twitter, TikTok, Instagram, and YouTube.",
+							"The client-data task uses a 20-client age list to calculate mean, median, and mode for ad targeting.",
+							"The country-audience task uses a pie chart, top-3 country selection, and timing graph for ad interaction.",
+							"Original static asset preserved as pab5_0.png and reserved at static.classes.jacobdanderson.net/pab5_0.png."
+						],
+						evidence: [
+							"Recommendation cites platform, audience age, country distribution, posting time, and one data limitation.",
+							"Graph interpretation distinguishes what the timing graph supports from what it cannot prove."
+						]
+					}),
+					sourceAnchor({
+						title: "How Many Flips Does It Take To Win?",
+						references: [
+							"Original project coauthor context: Kara Christensen and a gymnastics-judging scenario.",
+							"Uneven-bars evidence compares turns of 351 degrees, 372 degrees, and 365 degrees against a 360-degree full turn.",
+							"Ribbon-performance evidence uses side lengths 4, 5, 3, and 7, then compares similarity and congruence.",
+							"Vault-height evidence compares 9.6 feet, 9.3 feet, and 10.1 feet against a 7.8-foot table height.",
+							"Final judging evidence includes horizontal distance, vertical distance, and diagonal-distance reasoning."
+						],
+						evidence: [
+							"Angle and turn reasoning explains why values above or below 360 degrees satisfy or miss the requirement.",
+							"Similarity and congruence reasoning identifies corresponding side lengths.",
+							"Right-triangle reasoning connects horizontal, vertical, and diagonal distance."
+						]
+					}),
+					sourceAnchor({
+						title: "Uber Internship Challenge",
+						references: [
+							"Original project coauthor context: Ben Dreier and a fictional Uber Flying Taxi test in New York City.",
+							"The first route map is preserved as pab14_0.png and reserved at static.classes.jacobdanderson.net/pab14_0.png.",
+							"Mission 1 identifies the route shape as a pentagon and compares flight paths for parallel structure.",
+							"Mission 1 uses distances of 1.5 miles from Empire State Building to Union Park, 3.0 miles from Whitney Museum to Upper West Side, and 0.75 miles from Union Square to Whitney.",
+							"Mission 1 source answers include total area about 2 square miles and total perimeter about 7 miles.",
+							"Mission 2 compares Path 1, Path 2, and Path 3 with area/perimeter results including 4 square miles and 10.8 miles, 2.23 square miles and 9.24 miles, and 4.4 square miles."
+						],
+						evidence: [
+							"Route work preserves polygon classification, parallel-line evidence, perimeter, area, and right-triangle reasoning.",
+							"Recommendation compares route efficiency using both number of hubs and shortest useful perimeter."
+						]
+					}),
+					sourceAnchor({
+						title: "The MARVELous Theme Park",
+						references: [
+							"Original project coauthor context: Akanksha Bajaj and a Marvel-themed amusement park planning scenario.",
+							"The entertainment plan creates two short attractions lasting 1 to 5 minutes, two medium attractions lasting 5 to 15 minutes, and two large attractions lasting more than 15 minutes.",
+							"Foot-traffic planning uses attraction timing conflicts such as a 30-minute tour and 15-minute arcade reset.",
+							"The parade-planning mission uses least common multiple reasoning to find times when most attractions can pause for a parade in a 12-hour day.",
+							"The source hint links GCF to neighboring attractions and LCM to repeating parade schedules."
+						],
+						evidence: [
+							"Park layout identifies one crowding risk and uses number structure to reduce timing conflict.",
+							"Parade timing distinguishes shared factors from shared multiples and connects the final schedule to the 12-hour day."
+						]
+					}),
+					sourceAnchor({
+						title: "eSmash",
+						references: [
+							"Original project coauthor context: Will Brooke from Electronic Arts and a Super Smash Bros. Melee tournament scenario.",
+							"Round-robin player table preserves C9 Mang0 8 games and 6 wins, TSM Leffen 7 and 5, Liquid Hungrybox 9 and 7, Mew2King 11 and 6, Tempo Axe 12 and 9, and CJ aMSa 13 and 8.",
+							"The round-robin analysis identifies Liquid Hungrybox as 7/9, or about 78%, from the source answer key.",
+							"The bracket setup is preserved as pab22_0.png and reserved at static.classes.jacobdanderson.net/pab22_0.png.",
+							"Bracket matchups preserve Mang0-Leffen 2-2, Mang0-Hungrybox 1-3, Mang0-Axe 3-1, Leffen-Hungrybox 2-2, Leffen-Axe 0-4, and Hungrybox-Axe 2-2.",
+							"Probability targets include (1/2)^5 = 1/32, (3/4)^5 = 243/1024, (1/4)^5 = 1/1024, and zero-probability outcomes from impossible Axe-Leffen win patterns."
+						],
+						evidence: [
+							"Round-robin counting preserves the one-match-against-each-other structure.",
+							"Bracket probability work preserves independent-game multiplication and impossible-outcome reasoning.",
+							"Format critique compares round-robin plus bracket fairness, excitement, and model limitations."
+						]
+					}),
+					sourceAnchor({
+						title: "Airtable Revamped",
+						references: [
+							"Original project coauthor context: Christine Yeh from Airtable and product-design data analysis.",
+							"Survey scores are 90, 43, 98, 18, 37, 24, 82, 53, 86, 75, 52, 40, 32, 54, 46, 73, 76, 66, 49, and 26.",
+							"The office-art rectangular prism uses dimensions 7 feet by 3 feet by 4 feet.",
+							"Encryption reasoning uses prime-factor examples, including 3763 = 53 * 71.",
+							"Composite-number checks include 753,943,372; 6,138,943,075; and 8,975,350.",
+							"Prime-search comparison asks whether the interval 1-33, 34-66, or 67-100 has the highest probability of containing a prime number."
+						],
+						evidence: [
+							"Product-data reasoning preserves mean, median, survey interpretation, and follow-up data-collection suggestions.",
+							"Geometry reasoning preserves volume and surface-area calculation for the rectangular prism.",
+							"Number-theory reasoning preserves prime/composite arguments and interval-based probability comparison."
+						]
+					}),
+					sourceAnchor({
+						title: "Master Project: Pre-Algebra B",
+						references: [
+							"The original capstone asks for one challenging or exciting course concept, real-world applications, and at least 2 original problems.",
+							"Eligible strands include data analysis, graphing, geometry, factors, multiples, GCF, LCM, counting, probability, and applied modeling."
+						],
+						evidence: [
+							"The final project explains the selected mathematical concept, includes real-world application, and solves at least 2 original problems.",
+							"The evidence record names which course strands are represented and which assumptions limit the conclusion."
+						]
+					})
+				].join("\n\n")
+			)
+		])
 	],
 	developmentMetadata: {
 		priority: "soon",
