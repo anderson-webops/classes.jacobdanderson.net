@@ -7,6 +7,17 @@ import { spawn } from "node:child_process";
 
 const auditSource = String.raw`
 import {
+	existsSync,
+	readFileSync,
+	readdirSync,
+	statSync
+} from "node:fs";
+import {
+	extname,
+	join,
+	relative
+} from "node:path";
+import {
 	courseCatalog,
 	loadRawCourse
 } from "@/stores/courses/index";
@@ -20,6 +31,36 @@ import {
 
 const knownPending = new Set(KNOWN_PENDING_STATIC_MEDIA_FILENAMES);
 const urls = new Map();
+const scanRoots = [
+	"back-end/.env.EXAMPLE",
+	"back-end/src",
+	"front-end/public",
+	"front-end/src",
+	"package.json"
+];
+const ignoredPathParts = new Set([
+	"__snapshots__",
+	"coverage",
+	"dist",
+	"node_modules",
+	"playwright-report",
+	"test-results"
+]);
+const textFileExtensions = new Set([
+	".css",
+	".env",
+	".example",
+	".html",
+	".js",
+	".json",
+	".md",
+	".mjs",
+	".ts",
+	".tsx",
+	".vue"
+]);
+const staticAssetPathPattern =
+	/\.(?:avif|csv|gif|jpe?g|json|md|mov|mp4|pdf|png|svg|webm|zip)(?:[?#].*)?$/i;
 
 function add(url, reference) {
 	if (!url) return;
@@ -31,6 +72,57 @@ function add(url, reference) {
 		...(canonicalUrl !== url ? { originalUrl: url } : {})
 	});
 	urls.set(canonicalUrl, references);
+}
+
+function isScannableStaticAssetUrl(url) {
+	try {
+		return staticAssetPathPattern.test(new URL(url).pathname);
+	} catch {
+		return false;
+	}
+}
+
+function shouldSkipPath(path) {
+	return path
+		.split("/")
+		.some(part => ignoredPathParts.has(part)) ||
+		/\.(?:spec|test)\.[cm]?[jt]sx?$/.test(path);
+}
+
+function isTextFile(path) {
+	return textFileExtensions.has(extname(path).toLowerCase());
+}
+
+function scanFile(path) {
+	if (!isTextFile(path) || shouldSkipPath(path)) return;
+
+	const content = readFileSync(path, "utf8");
+	const sourcePath = relative(process.cwd(), path);
+
+	for (const url of staticMediaUrlsFromText(content)) {
+		if (!isScannableStaticAssetUrl(url)) continue;
+
+		const line = content.slice(0, content.indexOf(url)).split("\n").length;
+		add(url, {
+			content,
+			key: "source-file",
+			source: sourcePath + ":" + line
+		});
+	}
+}
+
+function scanPath(path) {
+	if (!existsSync(path) || shouldSkipPath(path)) return;
+
+	const stats = statSync(path);
+	if (stats.isDirectory()) {
+		for (const entry of readdirSync(path)) {
+			scanPath(join(path, entry));
+		}
+		return;
+	}
+
+	if (stats.isFile()) scanFile(path);
 }
 
 for (const entry of courseCatalog) {
@@ -74,6 +166,10 @@ for (const entry of courseCatalog) {
 			}
 		}
 	}
+}
+
+for (const root of scanRoots) {
+	scanPath(join(process.cwd(), root));
 }
 
 const missing = [];
