@@ -74,10 +74,13 @@ describe("public course pathways", () => {
 			"algebra-1a",
 			"algebra-1b",
 			"geometry-a",
+			"geometry-b",
 			"algebra-2a",
 			"algebra-2b"
 		]);
-		expect(pathwayText("algebra")).toMatch(/proof|coordinate geometry|right-triangle trigonometry/i);
+		expect(pathwayText("algebra")).toMatch(
+			/proof|coordinate geometry|right-triangle trigonometry|surface area|volume/i
+		);
 
 		expect(pathwayText("web-javascript")).toMatch(/async|fetch/i);
 		expect(pathwayText("web-javascript")).toMatch(/accessibility/i);

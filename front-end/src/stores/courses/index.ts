@@ -107,6 +107,14 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			)
 	},
 	{
+		id: "geometry-b",
+		name: "Geometry B",
+		load: () =>
+			import("./geometry-b").then(
+				({ geometryBCourse }) => geometryBCourse
+			)
+	},
+	{
 		id: "algebra-2a",
 		name: "Algebra 2A",
 		load: () =>
