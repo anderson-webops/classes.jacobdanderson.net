@@ -6508,6 +6508,53 @@ describe("course text quality normalization", () => {
 		);
 	});
 
+	it("keeps all source-library-backed courses registered and neutral", async () => {
+		const sourceLibraryBackedCourseIds = [
+			"scratch-level-1-bootcamp",
+			"early-elementary-a-math",
+			"early-elementary-b-math",
+			"late-elementary-a-math",
+			"late-elementary-b-math",
+			"early-elementary-a-reading",
+			"early-elementary-b-picture-book",
+			"introduction-to-public-speaking",
+			"middle-school-a-literature",
+			"middle-school-b-writing",
+			"middle-school-b-writing-retake",
+			"middle-school-c-grammar",
+			"novel-writing",
+			"smart-money-personal-finance",
+			"money-minded-investing",
+			"entrepreneurship-101",
+			"usaco-bronze-on-demand"
+		] as const;
+		const catalogIds = new Set(courseCatalog.map(course => course.id));
+
+		for (const courseId of sourceLibraryBackedCourseIds) {
+			expect(catalogIds.has(courseId), courseId).toBe(true);
+
+			const course = await loadRawCourse(courseId);
+			expect(course, courseId).not.toBeNull();
+			if (!course) continue;
+
+			const teachingModules = course.modules.filter(
+				module => module.kind !== "appendix"
+			);
+			const text = allCourseText(course);
+
+			expect(teachingModules.length, courseId).toBeGreaterThanOrEqual(1);
+			expect(wordCount(text), courseId).toBeGreaterThan(600);
+			expect(text, courseId).toContain("**Concept path:**");
+			expect(text, courseId).toContain("Core topics in this module:");
+			expect(text, courseId).toContain("**Completion evidence:**");
+			expect(text, courseId).not.toMatch(
+				/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack/i
+			);
+			expect(text, courseId).not.toMatch(/\bshould\b/i);
+			expect(text, courseId).not.toContain("static.junilearning.com");
+		}
+	});
+
 	it("reserves source-library static assets from original source files", async () => {
 		const expectedAssetsByCourse = {
 			"early-elementary-a-math": [
