@@ -3398,6 +3398,284 @@ const lateElementaryAMathSourceAnchors: Record<string, SourceActivityAnchor[]> =
 		]
 	};
 
+const lateElementaryBMathSourceAnchors: Record<string, SourceActivityAnchor[]> =
+	{
+		"LEB1 Equivalent Fractions": [
+			{
+				title: "Hot Dog Contest Equivalent Fractions",
+				prompt: "Use the hot dog eating contest with 5 contestants and 20 hot dogs per plate to compare one half, 10 hot dogs, ten twentieths, two fourths, and three sixths. Represent each amount visually, then add three more equivalent fractions for the same amount.",
+				evidence: [
+					"Visual model showing 20 hot dogs for each contestant.",
+					"Comparison explaining that the listed amounts are equivalent.",
+					"Three additional equivalent fractions for one half of 20."
+				]
+			}
+		],
+		"LEB2 Comparing and Ordering Fractions": [
+			{
+				title: "Chore Ribbon Fraction Ordering",
+				prompt: "Use the chore ribbon scenario to compare 3/4 meter with 1/4 meter, then order 7/8 meter, 2/3 meter, and 4/5 meter from shortest to longest so each chore assignment is justified by fraction size.",
+				evidence: [
+					"Comparison of 3/4 meter and 1/4 meter with a diagram or common denominator.",
+					"Ordered list for 7/8, 2/3, and 4/5.",
+					"Chore assignment explanation tied to shortest, middle, and longest ribbon."
+				]
+			}
+		],
+		"LEB3 Adding and Subtracting Fractions": [
+			{
+				title: "Relay Race Fraction Progress",
+				prompt: "Use the relay race track to add completed race fractions after the first runner, an extra 1/8 of the race, a replacement runner, and a third runner who completes 3/16 before stopping.",
+				evidence: [
+					"Race diagram shaded after each runner's completed distance.",
+					"Fraction addition and subtraction work with common denominators.",
+					"Final equivalent fractions that represent the whole completed race."
+				]
+			}
+		],
+		"LEB4 Multiplying Fractions": [
+			{
+				title: "Fraction of a Fraction Models",
+				prompt: "Draw food or area models for one half of one half, one third of one third, two thirds of one fourth, and 2/5 x 1/2. Use the models to explain why the word 'of' connects to multiplication.",
+				evidence: [
+					"Area or food model for each fraction-of-a-fraction case.",
+					"Multiplication expression matched to each visual model.",
+					"Pattern statement connecting 'of' to multiplying numerators and denominators."
+				]
+			}
+		],
+		"LEB5 Dividing Fractions": [
+			{
+				title: "Pie Box Fraction Division",
+				prompt: "Use the six-flavor pie-box scenario to determine what fraction of a pie fits in one full box, one half box, and two thirds of a box. Record each case as a division or multiplication expression.",
+				evidence: [
+					"Drawing of one pie box with six different pie slices.",
+					"Expression for one full box, half a box, and two thirds of a box.",
+					"Pattern statement explaining how the box fraction changes the amount of pie."
+				]
+			}
+		],
+		"LEB6 Module Project: Saving the Environment One Cake at a Time": [
+			{
+				title: "Angela Tesla Footprint Report",
+				prompt: "Use Angela Kwok's Carbon Lighthouse report for Tesla to compare 175,000 tons of carbon emissions with 130,000 tons and $9 million in costs with a $3 million savings. Reduce each fraction and place the current-year values on number lines.",
+				evidence: [
+					"Reduced fraction for current carbon emissions compared with last year.",
+					"Reduced fraction for current operating cost compared with last year.",
+					"Two number lines showing the current-year carbon and cost positions relative to 1."
+				]
+			},
+			{
+				title: "Carbon Lighthouse Chiffon Cake Ratios",
+				prompt: "Use the Carbon Lighthouse celebration cake recipe with 36 cups of flour. Calculate baking powder, eggs, sugar, vegetable oil, milk, special ingredient, and salt from the listed ratios, then identify the selected flavor add-in.",
+				evidence: [
+					"Ingredient table scaled from 36 cups of flour.",
+					"Special ingredient amount for the chosen chocolate, vanilla, strawberry, matcha, cardamom, or lemon flavor.",
+					"Ratio calculation for at least three ingredients shown step by step."
+				]
+			}
+		],
+		"LEB7 Place Value with Decimals": [
+			{
+				title: "Phone Savings Decimal Exchange",
+				prompt: "Use the phone savings scenario with 9,450 pennies and 4,561 dimes to trade coins into dollar amounts, add the total, and decide whether the amount is enough for a phone.",
+				evidence: [
+					"Pennies converted to dollars and cents.",
+					"Dimes converted to dollars and cents.",
+					"Total savings amount with a phone-purchase decision."
+				]
+			}
+		],
+		"LEB8 Comparing and Rounding Decimals": [
+			{
+				title: "Race Time Decimal Ranking",
+				prompt: "Use the runner times 1.21, 1.28, 1.3, and 1.264 seconds to rank the runners from fastest to slowest, round each time to one decimal place, and propose two possible third-place times.",
+				evidence: [
+					"Fastest-to-slowest order using decimal place value.",
+					"Rounded newspaper results with one digit after the decimal.",
+					"Two possible times that fit a third-place finish."
+				]
+			}
+		],
+		"LEB9 Decimal Operations": [
+			{
+				title: "Birthday Salsa Decimal Budget",
+				prompt: "Use the salsa shopping list to calculate tomato, onion, lime, jalapeno, the $10.97 register total before tax, $0.83 tax, total cost, and change from a 20-dollar bill. Keep each decimal operation aligned to the relevant units and prices.",
+				evidence: [
+					"Tomato, onion, lime, and jalapeno cost calculations.",
+					"Decision about whether 0.35 kilograms of jalapenos were purchased.",
+					"Final total after $0.83 tax and change from $20."
+				]
+			}
+		],
+		"LEB10 Module Project: From Facebook to YouTube": [
+			{
+				title: "Rahul YouTube Views Table",
+				prompt: "Use Rahul Pandey's YouTube table to order the five videos by views, calculate total top-video views, identify which videos are below the 20,000-view monetization threshold, and compare the top-five total with about 178,000 channel views.",
+				evidence: [
+					"Ordered video list from most views to least views.",
+					"Additional views needed for each video under 20,000 views.",
+					"Fraction comparing top-five views with total channel views."
+				]
+			},
+			{
+				title: "Facebook Sharing Growth Goal",
+				prompt: "Use the Facebook sharing plan where Rahul starts at 178.603k channel views and each friend adds 1.2k views. Calculate how many shares are needed to pass 200,000 total views.",
+				evidence: [
+					"Difference between 200,000 and 178,603 views.",
+					"Division by 1,200 views per share.",
+					"Whole-number share count that actually passes the goal."
+				]
+			},
+			{
+				title: "Video Demographics Fraction Analysis",
+				prompt: "Use the 3,830-view demographics table with male, female, they, kids or teens, and adults to write fractions for selected audience groups and recommend a future-video strategy using the data.",
+				evidence: [
+					"Fractions for male viewers, other viewers, adults, and female adults.",
+					"Reduced or interpreted fractions with total 3,830 as the denominator when appropriate.",
+					"Recommendation connected directly to the demographic table."
+				]
+			}
+		],
+		"Check-in #1": [
+			{
+				title: "Fractions and Decimals Check",
+				prompt: "Use the first check-in to demonstrate equivalent fractions, fraction comparison, fraction addition and subtraction, fraction multiplication and division, decimal place value, decimal comparison, rounding, and decimal operations.",
+				evidence: [
+					"Fraction models and operations with visible denominators.",
+					"Decimal comparisons and rounded values with place names.",
+					"Multi-step word problems solved with labeled units."
+				]
+			}
+		],
+		"LEB11 Customary and Metric Units": [
+			{
+				title: "Guinness Unit Conversion Rankings",
+				prompt: "Use the Guinness record event to rank U.S. heights, U.K. heights, weightlifting amounts, and plank times after converting each group into common units.",
+				evidence: [
+					"U.S. height conversions for Lana, Rich, Gary, and Trey.",
+					"Metric height conversions for Oliver, Kara, Jack, and Amelia.",
+					"Weight and time rankings for Derek, Paul, Ethel, George, Steven, and Carl."
+				]
+			}
+		],
+		"LEB12 Module Project: From Factory Line to Test Drive": [
+			{
+				title: "Israel Argo AI Blueprint Conversion",
+				prompt: "Use Israel Kositsky's Argo AI blueprint with a 2,900-pound, 6.25-foot-wide, 17-foot-long, 5-foot-high car to convert the design for Volkswagen production in either ounces and yards or metric kilograms and meters.",
+				evidence: [
+					"Weight conversion from 2,900 pounds to the selected target unit.",
+					"Width, length, and height conversions from feet to the selected target unit.",
+					"Short standardization note comparing imperial and metric production records."
+				]
+			},
+			{
+				title: "Autonomous Test Drive Stop Map",
+				prompt: "Use the 1,000-mile autonomous test-drive goal with gas stops every 125 miles. Create a number-line or map record for the Ford route in miles and the Volkswagen route in kilometers using 1 mile = 1.61 kilometers.",
+				evidence: [
+					"Gas-stop markers every 125 miles through 1,000 miles.",
+					"Kilometer equivalents for the route or each major stop.",
+					"Final route record that distinguishes miles from kilometers."
+				]
+			}
+		],
+		"LEB13 Numerical Expressions": [
+			{
+				title: "Dice and Coin Score Expressions",
+				prompt: "Use the two-round dice and coin game to write expressions for round 1, round 2, total score, third place, and first place. Include parentheses where the order of operations controls the result.",
+				evidence: [
+					"Round 1 expression using the die roll, subtraction, doubling, addition, multiplication, and division.",
+					"Round 2 expression for the heads and tails cases.",
+					"Top-three score expressions showing second place, third place, and first place."
+				]
+			}
+		],
+		"LEB14 Multiplying by Two and Three Digit Numbers": [
+			{
+				title: "Donut Shop Production Plan",
+				prompt: "Use the donut shop internship to calculate weekly donuts for 326 daily customers, monthly catering donuts from 289 dozen-order requests, and sprinkles for the special frosted donuts.",
+				evidence: [
+					"326 customers multiplied across one week.",
+					"289 dozen catering orders converted to donuts.",
+					"Sprinkle total using half the catering donuts and 123 sprinkles per frosted donut."
+				]
+			}
+		],
+		"LEB15 Dividing by Two Digit Numbers": [
+			{
+				title: "Birthday Party Division Budget",
+				prompt: "Use the birthday party setup with 378 guests, 192 cars, 7 parking spaces per row, $78 large pizzas, $95 extra-large pizzas, and a $1,570 entertainment budget split across 25 services.",
+				evidence: [
+					"Parking-row calculation with quotient and remainder interpreted.",
+					"Large-pizza versus extra-large-pizza cost comparison for 378 guests.",
+					"Equal service-payment amount from a $1,570 budget."
+				]
+			}
+		],
+		"LEB16 The Coordinate Plane": [
+			{
+				title: "Town Map Coordinate Routes",
+				prompt: "Use the town map to describe eastbound train stops and northbound bus stops from home to the park, school, library, and town plaza at train stop 8 and bus stop 11.",
+				evidence: [
+					"Coordinate-style directions for the park, school, and library.",
+					"Town plaza location from train stop 8 and bus stop 11.",
+					"Explanation connecting horizontal movement to x-values and vertical movement to y-values."
+				]
+			}
+		],
+		"LEB17 Patterns, Figures and Shapes in the Coordinate Plane": [
+			{
+				title: "Zoo Animal Growth Coordinate Tables",
+				prompt: "Use Charlie the emperor penguin and Kondo the giant panda to create coordinate tables and plots: Charlie starts at 1 pound and doubles monthly through month 6, while Kondo starts at 145 pounds and loses 5 pounds per week.",
+				evidence: [
+					"Charlie weight table and coordinate plot through month 6.",
+					"Kondo weekly weight table and coordinate plot for two months.",
+					"Predictions for when Charlie reaches 24 pounds and Kondo reaches 100 pounds."
+				]
+			}
+		],
+		"LEB18 Module Project: Chanh's Space Adventure": [
+			{
+				title: "Chanh Tesla Orbit Measurement",
+				prompt: "Use Chanh Nguyen's Tesla-Retriever 9000 setup to sketch Tesla's orbit, record Tesla coordinates, calculate orbit radius and circumference in astronomical units, convert circumference using 98 million miles per AU, and calculate orbital period from speed.",
+				evidence: [
+					"Orbit sketch with Tesla coordinates and radius estimate.",
+					"Circumference calculation in AU and miles.",
+					"Period calculation using circumference, speed, and 24 hours per day."
+				]
+			},
+			{
+				title: "Tesla-Retriever Intercept Simulation",
+				prompt: "Use the orbit simulator to choose a starting radius between 0.5 and 3 AU for the TR9000, compare Tesla and TR9000 speeds, adjust speed in 150 mph increments, and estimate the intercept point.",
+				evidence: [
+					"Chosen TR9000 starting radius with reason.",
+					"Tesla and TR9000 speed comparison before adjustments.",
+					"Estimated intercept coordinate, speed, and radius after the simulation."
+				]
+			},
+			{
+				title: "Orbit Speed Comparison",
+				prompt: "Use the bonus orbit cases at 2 AU and 0.5 AU to compare speed and period, then apply the same reasoning to Earth at 1 AU and Mars at 1.6 AU with Mars moving at 50,000 mph.",
+				evidence: [
+					"Recorded speeds for the 2 AU and 0.5 AU trial orbits.",
+					"Comparison explaining which orbit is faster and which has a longer period.",
+					"Mars period calculation using 1.6 AU, 50,000 mph, and the period formula."
+				]
+			}
+		],
+		"Check-in #2": [
+			{
+				title: "Units, Expressions, and Coordinates Check",
+				prompt: "Use the second check-in to demonstrate unit conversion, numerical expressions, multi-digit multiplication, two-digit division, coordinate-plane graphing, patterns, figures, and project-style coordinate reasoning.",
+				evidence: [
+					"Unit conversions with common target units.",
+					"Expression, multiplication, and division work with visible order and remainders.",
+					"Coordinate-plane and pattern responses with labeled axes or ordered pairs."
+				]
+			}
+		]
+	};
+
 const elementaryMathCourses = {
 	earlyElementaryA: createSourceLibraryCourse({
 		name: "Early Elementary A: Discovering Numbers, Operations, and Measurement",
@@ -3556,6 +3834,7 @@ const elementaryMathCourses = {
 		name: "Late Elementary B: Mastering Fractions, Decimals, Units, and Coordinates",
 		area: "late elementary math",
 		focus: "fractions, decimals, unit conversion, numerical expressions, multi-digit multiplication and division, coordinate planes, patterns, figures, and geometric reasoning",
+		sourceActivityAnchors: lateElementaryBMathSourceAnchors,
 		staticAssets: [
 			"checkin1_fractions_0.png",
 			"checkin1_fractions_1.png",

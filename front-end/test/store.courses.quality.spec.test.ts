@@ -7039,6 +7039,108 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Late Elementary B math original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("late-elementary-b-math");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Hot Dog Contest Equivalent Fractions",
+			"Chore Ribbon Fraction Ordering",
+			"Relay Race Fraction Progress",
+			"Fraction of a Fraction Models",
+			"Pie Box Fraction Division",
+			"Angela Tesla Footprint Report",
+			"Carbon Lighthouse Chiffon Cake Ratios",
+			"Phone Savings Decimal Exchange",
+			"Race Time Decimal Ranking",
+			"Birthday Salsa Decimal Budget",
+			"Rahul YouTube Views Table",
+			"Facebook Sharing Growth Goal",
+			"Video Demographics Fraction Analysis",
+			"Fractions and Decimals Check",
+			"Guinness Unit Conversion Rankings",
+			"Israel Argo AI Blueprint Conversion",
+			"Autonomous Test Drive Stop Map",
+			"Dice and Coin Score Expressions",
+			"Donut Shop Production Plan",
+			"Birthday Party Division Budget",
+			"Town Map Coordinate Routes",
+			"Zoo Animal Growth Coordinate Tables",
+			"Chanh Tesla Orbit Measurement",
+			"Tesla-Retriever Intercept Simulation",
+			"Orbit Speed Comparison",
+			"Units, Expressions, and Coordinates Check"
+		];
+		const originalReferences = [
+			"hot dog",
+			"20 hot dogs",
+			"3/4 meter",
+			"7/8 meter",
+			"relay race",
+			"1/8",
+			"3/16",
+			"2/5 x 1/2",
+			"six-flavor pie",
+			"Angela Kwok",
+			"Carbon Lighthouse",
+			"Tesla",
+			"175,000 tons",
+			"130,000 tons",
+			"36 cups",
+			"9,450 pennies",
+			"4,561 dimes",
+			"1.264 seconds",
+			"salsa",
+			"$10.97",
+			"$0.83 tax",
+			"Rahul Pandey",
+			"YouTube",
+			"Facebook",
+			"178.603k",
+			"3,830",
+			"Guinness",
+			"Lana",
+			"Trey",
+			"Israel Kositsky",
+			"Argo AI",
+			"2,900-pound",
+			"1,000-mile",
+			"1.61 kilometers",
+			"donut shop",
+			"326 daily customers",
+			"378 guests",
+			"192 cars",
+			"train stop 8",
+			"bus stop 11",
+			"Charlie",
+			"emperor penguin",
+			"Kondo",
+			"giant panda",
+			"Chanh Nguyen",
+			"Tesla-Retriever 9000",
+			"98 million miles",
+			"0.5 and 3 AU",
+			"50,000 mph"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text, anchor).toContain(anchor);
+		}
+		for (const originalReference of originalReferences) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("preserves Joy of Reading original activity anchors with neutral wording", async () => {
 		const course = await loadRawCourse("early-elementary-a-reading");
 		expect(course).not.toBeNull();
