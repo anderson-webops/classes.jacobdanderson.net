@@ -3,8 +3,10 @@ import { applyCourseImplementationArtifacts } from "./course-implementation-arti
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyResearchBackedExpansions } from "./research-expansions";
 import {
+	canonicalStaticMediaUrl,
 	hasPendingStaticMediaNotice,
 	isKnownPendingStaticMediaUrl,
+	normalizeStaticMediaUrlsInText,
 	pendingStaticMediaNotice,
 	staticMediaFilename,
 	staticMediaUrlsFromText
@@ -117,6 +119,19 @@ function appendPendingStaticMediaNotices(course: RawCourse) {
 					.filter(Boolean)
 					.join("\n\n");
 			}
+		}
+	}
+}
+
+function normalizeStaticMediaUrls(course: RawCourse) {
+	updateCourseLinks(course, url => canonicalStaticMediaUrl(url) ?? url);
+
+	for (const module of course.modules) {
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			item.content = normalizeStaticMediaUrlsInText(item.content);
 		}
 	}
 }
@@ -8645,6 +8660,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	normalizeLegacyBranding(course);
 	contextualizeGenericDisplayTitles(course);
 	compactGeneratedDisplayTitles(course);
+	normalizeStaticMediaUrls(course);
 	appendPendingStaticMediaNotices(course);
 	formatVisibleCourseMarkdown(course);
 	cleanVisibleCourseGrammar(course);

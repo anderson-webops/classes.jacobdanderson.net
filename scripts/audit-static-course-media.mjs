@@ -12,21 +12,25 @@ import {
 } from "@/stores/courses/index";
 import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
-	STATIC_MEDIA_BASE,
+	canonicalStaticMediaUrl,
 	hasPendingStaticMediaNotice,
 	staticMediaFilename,
 	staticMediaUrlsFromText
 } from "@/stores/courses/staticMedia";
 
-const staticPrefix = STATIC_MEDIA_BASE + "/";
 const knownPending = new Set(KNOWN_PENDING_STATIC_MEDIA_FILENAMES);
 const urls = new Map();
 
 function add(url, reference) {
-	if (!url?.startsWith(staticPrefix)) return;
-	const references = urls.get(url) ?? [];
-	references.push(reference);
-	urls.set(url, references);
+	if (!url) return;
+	const canonicalUrl = canonicalStaticMediaUrl(url);
+	if (!canonicalUrl) return;
+	const references = urls.get(canonicalUrl) ?? [];
+	references.push({
+		...reference,
+		...(canonicalUrl !== url ? { originalUrl: url } : {})
+	});
+	urls.set(canonicalUrl, references);
 }
 
 for (const entry of courseCatalog) {
