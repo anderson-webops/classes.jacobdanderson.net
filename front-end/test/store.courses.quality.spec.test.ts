@@ -5754,6 +5754,7 @@ describe("course text quality normalization", () => {
 				loadRawCourse("algebra-1a"),
 				loadRawCourse("algebra-1b"),
 				loadRawCourse("geometry-a"),
+				loadRawCourse("geometry-b"),
 				loadRawCourse("algebra-2a"),
 				loadRawCourse("algebra-2b"),
 				loadRawCourse("elementary-science"),
@@ -5885,6 +5886,7 @@ describe("course text quality normalization", () => {
 				loadRawCourse("algebra-1a"),
 				loadRawCourse("algebra-1b"),
 				loadRawCourse("geometry-a"),
+				loadRawCourse("geometry-b"),
 				loadRawCourse("algebra-2a"),
 				loadRawCourse("algebra-2b")
 			]);
@@ -6096,6 +6098,55 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("unsupported visual assumption");
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(mediaLinks).toEqual([]);
+	});
+
+	it("adds Geometry B from the source math sequence", async () => {
+		const course = await loadRawCourse("geometry-b");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const mediaLinks = course.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(item => item.mediaLink)
+				.filter((link): link is string => Boolean(link))
+		);
+
+		expect(course.modules.map(module => module.title)).toEqual([
+			"GEOB1-GEOB2 Quadrilaterals and Parallelograms",
+			"GEOB3-GEOB4 Polygons and Circle Measurement",
+			"GEOB5-GEOB6 Circle Theorems and Challenge Problems",
+			"Check-In #1: Quadrilaterals, Polygons, and Circles",
+			"GEOB7-GEOB8 Transformations",
+			"GEOB9-GEOB10 Polyhedra and Round Solids",
+			"Check-In #2 and Geometry B Capstone"
+		]);
+		expect(text).toContain("GEOB1 Introduction to Quadrilaterals");
+		expect(text).toContain("GEOB1 Trapezoids");
+		expect(text).toContain("GEOB2 Parallelograms, Rhombi, Rectangles, and Squares");
+		expect(text).toContain("GEOB3 Properties and Area of Polygons");
+		expect(text).toContain("GEOB4 Circumference, Arcs, Chords, Areas, and Sectors");
+		expect(text).toContain("GEOB5 Inscribed, Central, Internal, and External Angles");
+		expect(text).toContain("GEOB5 Tangents");
+		expect(text).toContain("GEOB6 Challenge Circle Problems");
+		expect(text).toContain("GEOB7 Translations and Rotations");
+		expect(text).toContain("GEOB8 Reflections and Dilations");
+		expect(text).toContain("GEOB9 Polyhedra, Prisms, and Pyramids");
+		expect(text).toContain("GEOB10 Cylinders, Cones, and Spheres");
+		expect(text).toContain("Project: Quadrilateral Classification Case File");
+		expect(text).toContain("Project: Circle Measurement Design Brief");
+		expect(text).toContain("Project: Circle Challenge Walkthrough");
+		expect(text).toContain("Project: Transformation Rule Gallery");
+		expect(text).toContain("Project: Packaging Design Optimization");
+		expect(text).toContain("Capstone: Geometry B Design Defense");
+		expect(text).toContain("180(n - 2)");
+		expect(text).toContain("A = pi r^2");
+		expect(text).toContain("V - E + F = 2");
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
 		);
 		expect(text).not.toMatch(/\bshould\b/i);
 		expect(mediaLinks).toEqual([]);

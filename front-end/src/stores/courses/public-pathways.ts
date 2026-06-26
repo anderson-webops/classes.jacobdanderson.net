@@ -221,6 +221,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"algebra-1a",
 			"algebra-1b",
 			"geometry-a",
+			"geometry-b",
 			"algebra-2a",
 			"algebra-2b"
 		],
@@ -236,12 +237,14 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		sequencingNotes: [
 			"Common Core algebra domains provide the standards map, with representation changes kept visible.",
 			"Geometry A fits naturally after Algebra 1B and before Algebra 2A because proof, coordinate geometry, triangle relationships, and right-triangle trigonometry prepare later algebra and pre-calculus topics.",
+			"Geometry B completes the geometry bridge with quadrilaterals, polygons, circles, transformations, surface area, volume, and modeling constraints before Algebra 2A resumes heavier symbolic work.",
 			"Add cumulative mixed practice so older skills do not vanish after a unit ends.",
 			"Separate direct practice, modeling projects, error analysis, and enrichment rather than making every supplemental look the same."
 		],
 		projectExpectations: [
 			"Modeling task with scenario, equation, graph, diagram, or table, solution, and reasonableness check.",
 			"Geometry proof or design task with labeled givens, theorem selection, calculation or proof evidence, and one rejected unsupported visual assumption.",
+			"Measurement design task that uses circle, transformation, or solid-geometry formulas with unit checks and stated assumptions.",
 			"Error-analysis task that diagnoses a flawed solution and writes the corrected reasoning.",
 			"Cumulative mixed practice set with a short reflection on which representation helped most."
 		],
