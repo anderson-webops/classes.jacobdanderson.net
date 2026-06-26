@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-2b";
 
@@ -14,6 +15,61 @@ const media = {
 	trigGraphs: `${MEDIA_BASE}/alb9-trig-graphs.svg`
 } as const;
 
+const sourceStaticFilenames = [
+	"alb1_concept1_0.png",
+	"alb2_concept1_0.png",
+	"alb2_concept1_1.png",
+	"alb2_concept1_2.png",
+	"alb2_concept2_0.png",
+	"alb2_concept2_1.png",
+	"alb2_pset1_12.png",
+	"alb2_pset2_12.png",
+	"alb4_concept1_0.png",
+	"alb4_concept3_0.png",
+	"alb7_concept1_0.png",
+	"alb7_concept1_1.png",
+	"alb7_concept1_2.png",
+	"alb7_concept2_0.png",
+	"alb7_concept2_1.png",
+	"alb7_concept2_2.png",
+	"alb7_pset1_0.png",
+	"alb7_pset1_1.png",
+	"alb7_pset1_2.png",
+	"alb7_pset1_3.png",
+	"alb7_pset1_4.png",
+	"alb7_pset1_5.png",
+	"alb7_pset1_6.png",
+	"alb7_pset1_7.png",
+	"alb7_pset1_8.png",
+	"alb7_pset1_9.png",
+	"alb7_pset2_0.png",
+	"alb7_pset2_1.png",
+	"alb7_pset2_2.png",
+	"alb7_pset2_3.png",
+	"alb7_pset2_4.png",
+	"alb8_concept1_0.png",
+	"alb8_concept1_1.png",
+	"alb8_concept1_2.png",
+	"alb8_concept1_3.png",
+	"alb8_concept1_4.png",
+	"alb8_concept1_5.png",
+	"alb8_concept1_6.png",
+	"alb8_concept1_7.png",
+	"alb8_concept1_8.png",
+	"alb8_concept2_0.png",
+	"alb8_pset1_0.png",
+	"alb8_pset1_1.png",
+	"alb8_pset1_2.png",
+	"alb8_pset1_3.png",
+	"alb9_concept1_0.png",
+	"checkin2_app_0.png",
+	"checkin2_ds_0.png",
+	"checkin2_ds_1.png",
+	"checkin1_app_0.png",
+	"checkin1_trig_0.png",
+	"checkin1_trig_1.png"
+] as const;
+
 function createLesson(title: string, content: string, mediaLink?: string) {
 	return mediaLink ? { title, content, mediaLink } : { title, content };
 }
@@ -27,6 +83,15 @@ function createModule(
 		curriculum,
 		supplementalProjects: []
 	};
+}
+
+function sourceMediaReferences() {
+	return sourceStaticFilenames
+		.map(
+			filename =>
+				`- \`${filename}\` -> ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
 }
 
 export const algebra2BCourse: RawCourse = {
@@ -702,6 +767,39 @@ This check-in revisits the second half of the course.
 Reuse the probability, statistics, unit-circle, and trig-graph references while talking through each answer.
 				`.trim(),
 				media.trigGraphs
+			)
+		]),
+		createModule("Source Activity Archive", [
+			createLesson(
+				"Source Activity Anchors: Algebra 2B",
+				`
+These source anchors preserve activity context from the original Algebra 2B sequence while keeping the course wording neutral and the unavailable legacy media non-breaking.
+
+**Original-source concepts retained**
+
+- Logarithms and the natural logarithm: the source uses \`y = (1 + 1/x)^x\`, a value table approaching \`e\`, and the \`ln\` notation contrast with \`log_e\`.
+- Exponential and logarithmic graphing: the source compares growth and decay families, horizontal and vertical shifts, vertical and horizontal stretch factors, reflections, and asymptotes.
+- Growth applications: the Mars-colony prompt uses a \`75%\` annual growth model and Desmos to estimate when population reaches \`7.6\` billion.
+- Matrix operations: the source names MatrixCalc for larger inverse calculations after determinant and inverse workflows become tedious by hand.
+- Statistics and regression: the source includes scatter-plot interpretation, correlation strength, least-squares regression, \`r\`, \`r^2\`, and a lemonade-sales regression example.
+- Trigonometry: the source includes unit-circle diagrams, special-angle coordinates, right-triangle ratios, reciprocal identities, and transformed sine, cosine, and tangent graphs.
+
+**External source links**
+
+- Desmos Graphing Calculator: https://www.desmos.com/calculator
+- Least-squares regression visualization: https://www.desmos.com/calculator/lywhybetzt
+- Matrix calculator reference: https://matrixcalc.org/en/
+- Unit-circle angle diagram: https://www.geogebra.org/geometry/harzmnkp
+- Unit-circle coordinate diagram: https://www.geogebra.org/geometry/grcqk5kt
+
+**Source-preservation note**
+
+Legacy static media is not embedded directly because those files are not currently available on the class static host. Each filename below reserves the intended future URL on \`static.classes.jacobdanderson.net\` so the asset can be dropped in later without losing the original source mapping.
+				`.trim()
+			),
+			createLesson(
+				"Pending Static Asset Placeholders",
+				sourceMediaReferences()
 			)
 		])
 	]
