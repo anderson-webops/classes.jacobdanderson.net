@@ -6508,6 +6508,50 @@ describe("course text quality normalization", () => {
 		);
 	});
 
+	it("preserves Smart Money original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("smart-money-personal-finance");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Spend Like Bill Gates Constraint Ladder",
+			"Graduate Profile and First-Month Budget",
+			"Wealth-Building Research and Financial Perspectives",
+			"Income Streams Comparison",
+			"Salary Negotiation Case",
+			"Wild Card Ledger",
+			"Spending Style and Needs-versus-Wants Budget",
+			"Debt Growth and Credit Card Simulation",
+			"Credit Card Selection Case",
+			"Vehicle Purchase Decision",
+			"Checking-versus-Savings Allocation",
+			"Savings Account Offer Case",
+			"Retirement Savings Calculator",
+			"Investment Account Allocation",
+			"Ethical Spending and Investing",
+			"Cause-Aligned Business or Awareness Project",
+			"Financial Journey Portfolio",
+			"Next-Year Outlook"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("neal.fun/spend");
+		expect(text).toContain("$30,000 in student debt");
+		expect(text).toContain("Budget Planner");
+		expect(text).toContain("Expense Tracker");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text).toContain(anchor);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",
