@@ -453,6 +453,7 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"UB6.png",
 	"missionTitle2.png",
 	"nextStepTitle.png",
+	"treasure.txt",
 	"WhileLoopsExploration(1).mp4",
 	"wyb1_proj1_plotempty.png"
 ] as const;

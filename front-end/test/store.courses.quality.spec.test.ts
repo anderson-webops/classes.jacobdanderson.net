@@ -2831,6 +2831,40 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
+	it("reserves original USACO source assets on the class static host", async () => {
+		const bronzeOnDemand = await loadRawCourse("usaco-bronze-on-demand");
+		const gold = await loadRawCourse("usaco-gold");
+		expect(bronzeOnDemand).not.toBeNull();
+		expect(gold).not.toBeNull();
+
+		const bronzeModule = bronzeOnDemand!.modules.find(
+			module => module.title === "Original Asset Reservations"
+		);
+		const bronzeContent = bronzeModule?.curriculum
+			.map(item => item.content)
+			.join("\n\n") ?? "";
+
+		for (const filename of ["missionTitle2.png", "nextStepTitle.png"]) {
+			expect(bronzeContent).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(bronzeContent, filename)).toBe(true);
+		}
+
+		const goldModule = gold!.modules.find(
+			module => module.title === "Original Asset Reservations"
+		);
+		expect(goldModule?.kind).toBe("appendix");
+
+		const goldItem = goldModule?.curriculum.find(
+			item => item.title === "USACO Gold Source Asset Status"
+		);
+		expect(goldItem).toBeDefined();
+		const goldContent = goldItem?.content ?? "";
+
+		expect(goldContent).toContain(staticMediaUrl("treasure.txt"));
+		expect(hasPendingStaticMediaNotice(goldContent, "treasure.txt")).toBe(true);
+		expect(goldContent).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps generated guidance references with spaced hyphens Markdown-safe", () => {
 		const guidance = buildProjectGuidance({
 			courseFamily: "Python Level 1",
