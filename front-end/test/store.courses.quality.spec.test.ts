@@ -7595,6 +7595,7 @@ describe("course text quality normalization", () => {
 			"PAA13-PAA17 Expressions and Sequences",
 			"PAA18-PAA23 Exponents, Roots, and Scientific Notation",
 			"Check-In #2 and Capstone",
+			"Original Source Activity Anchors",
 			"Pending Static Assets"
 		]);
 		expect(text).toContain("Project: Starting a Gardening Business");
@@ -7606,6 +7607,37 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Symptom Spree");
 		expect(text).toContain("Project: Red Hot Chilli Chicken");
 		expect(text).toContain("Master Project: Pre-Algebra A");
+		expect(text).toContain("Source Activity Anchors:");
+		for (const originalReference of [
+			"$3000 starting investment",
+			"$1500 of inventory",
+			"$700 YouTube ad",
+			"four tenths of a bag",
+			"1,537 minutes",
+			"$.000000000265 x 10^9",
+			"Giselle Herrera",
+			"Rockaway Initiative for Sustainability & Equity",
+			"Nikita Jain",
+			"12 million pink ropes",
+			"20 million white and blue blankets",
+			"Chipidee Cookies",
+			"300 cookies",
+			"2.25 cups of flour",
+			"$1.35 for vanilla",
+			"Aviv Gilboa",
+			"finger scanning",
+			"face scanning",
+			"phone scanning",
+			"Michelle Lee",
+			"t^4",
+			"4, 16, 64, 256, and 1024",
+			"Red Hot Chilli Chicken",
+			"Dani California 615",
+			"53 new active orders per month",
+			"at least 2 original problems"
+		]) {
+			expect(text, originalReference).toContain(originalReference);
+		}
 		expect(text).toContain("signed numbers");
 		expect(text).toContain("d = rt");
 		expect(text).toContain("scientific notation");
