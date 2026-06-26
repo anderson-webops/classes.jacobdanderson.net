@@ -843,6 +843,235 @@ const investingCourses = {
 		name: "Be Your Own Boss: Entrepreneurship 101",
 		area: "entrepreneurship",
 		focus: "design thinking, problem discovery, customer definition, iteration, competitors, feasibility, marketing, social impact, and pitch development",
+		sourceActivityAnchors: {
+			"ENT1 Design Thinking Methodology": [
+				{
+					title: "Business Canvas Preview",
+					prompt: "Start the course by previewing the final business canvas. Use a Lean Canvas-style structure to connect the problem, solution, key metrics, value proposition, unfair advantage, channels, target customers, cost structure, and revenue streams.",
+					evidence: [
+						"Draft canvas with each major box labeled, even when some boxes still contain open questions.",
+						"Two feedback questions for an entrepreneur, business owner, or other knowledgeable reviewer.",
+						"Revision note explaining which business assumption needs the most evidence."
+					]
+				},
+				{
+					title: "Ideal Wallet Design Sprint",
+					prompt: "Run a short design-thinking sprint around a wallet or small everyday object. Interview a user, write a point-of-view statement, sketch three possible solutions, gather feedback, and revise the strongest design.",
+					evidence: [
+						"Interview notes naming what the user stores, worries about, or wants easier access to.",
+						"Point-of-view statement in the form: user needs a way to ___ because or but ___.",
+						"Three concept sketches plus a final iteration note based on feedback."
+					]
+				}
+			],
+			"ENT2 Learning What It Takes To Be An Entrepreneur": [
+				{
+					title: "Entrepreneur Strengths and Values Sketch",
+					prompt: "Create a founder profile that names three to five strengths and two to four values. Connect each strength or value to how a future customer, teammate, or investor might judge the business.",
+					evidence: [
+						"Founder sketch or profile with strengths, values, and one concrete behavior for each value.",
+						"Example of a real entrepreneur or company whose choices either reinforced or weakened trust.",
+						"Reflection explaining why values can become harder to protect as a company grows."
+					]
+				},
+				{
+					title: "Brand Foundation Website Page",
+					prompt: "Create an About or brand-foundation page for the developing business. Include founder values, a brief origin story, and the motivation behind the company before the product is fully defined.",
+					evidence: [
+						"About-page draft with founder strengths, values, and business motivation.",
+						"Customer-facing sentence explaining why those values matter to the buyer.",
+						"Revision note naming which claim sounds generic and how to make it more specific."
+					]
+				},
+				{
+					title: "Empathy Observation Persona",
+					prompt: "Observe a person, pet, or realistic daily routine and record pain points, frustrations, habits, and needs. Translate the observation into a simple persona that can guide later problem selection.",
+					evidence: [
+						"Observation notes organized into story, pain points, frustrations, habits, and needs.",
+						"Persona summary with one specific problem worth solving.",
+						"Evidence note separating observed behavior from assumptions about motivation."
+					]
+				}
+			],
+			"ENT3 Solving Problems Through Entrepreneurship": [
+				{
+					title: "Problem Statement and Initial Solution",
+					prompt: "Convert empathy notes into a concrete problem statement, then propose an initial product, service, or brand solution. Compare the statement to examples such as Duolingo, Airbnb, or Uber to check clarity.",
+					evidence: [
+						"Problem statement that names a target user, pain point, and reason the problem matters.",
+						"Initial solution statement that directly answers the problem rather than listing features only.",
+						"Search or market-interest notes, such as common questions people ask about the problem."
+					]
+				},
+				{
+					title: "Product or Service Prototype",
+					prompt: "Build a first prototype. A product idea can use a labeled sketch or simple 3D model; a service idea can use a customer flowchart from first request through delivery and follow-up.",
+					evidence: [
+						"Prototype artifact with labels explaining the important parts of the product or service.",
+						"Customer journey or use case showing how the prototype solves the selected problem.",
+						"Website or one-page description that explains the prototype in customer-facing language."
+					]
+				},
+				{
+					title: "Name, Logo, Tagline, and Feedback Survey",
+					prompt: "Give the company a recognizable identity and prepare feedback collection. Create a name, logo, and tagline, then write survey questions that gather specific reactions to the prototype.",
+					evidence: [
+						"Brand identity draft with name, logo concept, tagline, and reason each choice fits the customer.",
+						"Survey with open-ended questions about usefulness, price, concerns, and likelihood of use.",
+						"Feedback plan naming three to five possible respondents and what each can evaluate."
+					]
+				}
+			],
+			"ENT4 Identifying the Ideal Customer": [
+				{
+					title: "Coffee Shop Customer Needs Simulation",
+					prompt: "Use the coffee shop simulation at [coolmathgames.com/0-coffee-shop](https://www.coolmathgames.com/0-coffee-shop) as a customer-needs case study. Track how price, recipe, weather, and customer comments affect sales.",
+					evidence: [
+						"Daily notes recording price, recipe choices, sales, and customer feedback patterns.",
+						"Observation explaining how one customer complaint led to a changed business decision.",
+						"Conclusion about why a product that is technically good can still fail if the buyer rejects price or fit."
+					]
+				},
+				{
+					title: "Ideal Customer Persona Profile",
+					prompt: "Define one ideal customer with age range, income range, education or background, location, needs, values, blockers, habits, and motivators. The persona must be specific enough to guide product and marketing decisions.",
+					evidence: [
+						"Customer persona with demographic details, needs, motivators, blockers, and buying habits.",
+						"List of two to five real or realistic people who fit the persona.",
+						"Reasoning note explaining which persona detail changes the business plan the most."
+					]
+				},
+				{
+					title: "Customer Feedback Survey Draft",
+					prompt: "Write five to ten open-ended survey questions for potential customers. Include questions about willingness to pay, frequency of use, concerns, and desired changes without forcing yes-or-no answers.",
+					evidence: [
+						"Survey draft with open-ended wording and no leading answer choices.",
+						"Question map showing which product assumption each question tests.",
+						"Revision note improving one biased or vague question."
+					]
+				}
+			],
+			"ENT5 Iterating On Your Idea": [
+				{
+					title: "Feedback Interpretation and Iteration Plan",
+					prompt: "Review prototype and persona-survey feedback. Separate improvements, keepers, conflicting responses, and surprising results, then choose which feedback will drive the next prototype version.",
+					evidence: [
+						"Feedback table grouped by improvement, keep, conflict, and surprise.",
+						"Iteration plan with specific changes and the customer evidence behind each change.",
+						"Decision note explaining how conflicting feedback was resolved."
+					]
+				},
+				{
+					title: "Revised Prototype Evidence Summary",
+					prompt: "Revise the prototype using the iteration plan. Summarize what changed, what evidence caused the change, and which unresolved concern still needs testing.",
+					evidence: [
+						"Before-and-after prototype comparison.",
+						"Change log connecting each revision to survey or interview evidence.",
+						"Next-test question focused on the riskiest remaining assumption."
+					]
+				}
+			],
+			"ENT6 Conducting Competitor Analysis": [
+				{
+					title: "Competitor Positioning Matrix",
+					prompt: "Research similar companies and place them on a two-axis positioning matrix such as price versus quality. Use the map to identify the company niche and possible differentiation strategy.",
+					evidence: [
+						"Competitor list with two chosen comparison dimensions and notes for each company.",
+						"Positioning matrix showing where the new company fits relative to competitors.",
+						"Differentiation note naming whether the strategy resembles disruptive, new-market, integrative, or sustaining innovation."
+					]
+				},
+				{
+					title: "Competitor Question Research",
+					prompt: "Write questions for competitors or competitor research, then collect answers from public websites, product pages, reviews, or direct outreach when appropriate.",
+					evidence: [
+						"Question list about problem solved, target customer, product difference, functionality, and motivation to buy.",
+						"Research notes with source links or dates.",
+						"Prototype update based on one competitor strength and one competitor weakness."
+					]
+				}
+			],
+			"ENT7 Testing Financial Feasibility": [
+				{
+					title: "Price and Competitor Comparison",
+					prompt: "Choose a tentative price using customer feedback and competitor prices. Separate one-time purchases from recurring-fee models and explain why the selected model fits the product or service.",
+					evidence: [
+						"Pricing table with customer willingness-to-pay evidence and competitor prices.",
+						"Decision note explaining one-time versus recurring pricing.",
+						"Advertisement sketch or landing-page copy that displays the chosen price clearly."
+					]
+				},
+				{
+					title: "Production Cost and Profit Margin Forecast",
+					prompt: "Estimate the cost of production or service delivery, then calculate revenue, costs, profit, and profit margin for a first-year scenario with 1,000 customers.",
+					evidence: [
+						"Materials, tools, labor, software, or operating-cost list with estimated prices.",
+						"Profit-margin calculation and industry comparison note.",
+						"First-year forecast with revenue, total cost, profit, and margin at the final chosen price."
+					]
+				}
+			],
+			"ENT8 Building and Testing Marketing Strategies": [
+				{
+					title: "One-Sentence Value Proposition",
+					prompt: "Synthesize product experience, customer needs, competitor differences, and benefits into one clear value proposition. The statement must name what makes the offer useful and distinct.",
+					evidence: [
+						"Notes on customer feeling, features, benefits, persona needs, motivators, blockers, and competitor gaps.",
+						"One-sentence value proposition placed where a customer would see it first.",
+						"Revision note cutting vague or duplicate wording from the proposition."
+					]
+				},
+				{
+					title: "Channels and Launch Campaign Sketch",
+					prompt: "Choose sales and promotion channels based on the ideal customer's habits. Review consistent marketing from known companies, then sketch launch posts or website sections for the company.",
+					evidence: [
+						"Channel decision explaining online, in-store, website, social, marketplace, or retailer choices.",
+						"Marketing reference notes from at least three companies with clear brand consistency.",
+						"Launch campaign draft with offer, audience, call to action, and visual or written style notes."
+					]
+				}
+			],
+			"ENT9 Focusing on Social Impact": [
+				{
+					title: "Impact Risk and Alternative Materials Review",
+					prompt: "Identify possible environmental or community harms from production, labor, packaging, maintenance, or distribution. Research alternatives that reduce harm and update the cost assumptions accordingly.",
+					evidence: [
+						"Impact-risk list tied to specific materials, labor conditions, packaging, energy, or supply-chain choices.",
+						"Alternative-practice research with costs, benefits, and tradeoffs.",
+						"Updated price or cost calculation showing how the impact choice changes feasibility."
+					]
+				},
+				{
+					title: "Cause-Aligned Website Page and Campaign",
+					prompt: "Create a cause-aligned page or campaign that explains the company's social or environmental commitment with concrete evidence instead of vague claims.",
+					evidence: [
+						"Cause page draft with the chosen cause, business practice, and measurable evidence.",
+						"Promotional post or campaign outline focused on awareness and customer trust.",
+						"Credibility check naming which claim needs a source, number, or clearer boundary."
+					]
+				}
+			],
+			"ENT10 Be Your Own Boss Master Project": [
+				{
+					title: "Lean Business Canvas Portfolio",
+					prompt: "Finalize the business canvas by connecting work from the full course: problem, solution, metrics, value proposition, unfair advantage, channels, customers, costs, and revenue streams.",
+					evidence: [
+						"Completed canvas or slide deck with all major business-model sections.",
+						"Supporting artifacts from customer research, prototype iteration, competitor analysis, pricing, marketing, and impact work.",
+						"Final website or landing-page cleanup checklist."
+					]
+				},
+				{
+					title: "Entrepreneur Feedback and Pitch Revision",
+					prompt: "Present the business plan to an entrepreneur, business owner, or knowledgeable reviewer. Gather feedback on clarity, feasibility, differentiation, and presentation, then revise the pitch.",
+					evidence: [
+						"Feedback notes answering what works, what does not work, what is unclear, and what can improve.",
+						"Revision log showing what changed after feedback.",
+						"Final pitch outline with problem, customer, solution, proof, business model, and ask or next step."
+					]
+				}
+			]
+		},
 		staticAssets: [
 			"ent3_project2_0.png",
 			"ent3_project2_1.png",
