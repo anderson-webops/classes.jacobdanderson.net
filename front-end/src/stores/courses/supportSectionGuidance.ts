@@ -211,7 +211,7 @@ export function buildSupportSectionGuidance({
 
 	const opener = [
 		`**${title}** extends the ${courseFamily} work by changing one meaningful constraint rather than adding unrelated features.`,
-		`**${title}** adds one new constraint, input shape, or behavior that still fits the original goal.`,
+		`**${title}** adds one new constraint, data layout, or behavior that still fits the goal.`,
 		`**${title}** gains depth by making one requirement more realistic and then checking the result.`
 	][variant];
 

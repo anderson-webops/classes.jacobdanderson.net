@@ -217,6 +217,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		adminPriority: "urgent",
 		courseIds: [
 			"pre-algebra-a",
+			"pre-algebra-b",
 			"algebra-1a",
 			"algebra-1b",
 			"algebra-2a",
@@ -225,9 +226,9 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		audience:
 			"Structured support in pre-algebra readiness, school algebra, graph interpretation, modeling, written justification, and cumulative practice.",
 		prerequisiteSummary:
-			"Pre-Algebra A builds signed-number, fraction, decimal, percent, ratio, variable, and exponent readiness. Algebra 1A then assumes comfort with equations, graph reading, variables, and multi-step reasoning.",
+			"Pre-Algebra A builds signed-number, fraction, decimal, percent, ratio, variable, and exponent readiness. Pre-Algebra B adds statistics, geometry, factors, multiples, counting, probability, and applied modeling before Algebra 1A.",
 		outcomes: [
-			"Solve, model, graph, and explain pre-algebra, linear, quadratic, exponential, polynomial, rational, and function-based problems at the correct course level.",
+			"Solve, model, graph, measure, count, and explain pre-algebra, linear, quadratic, exponential, polynomial, rational, and function-based problems at the correct course level.",
 			"Connect symbolic, graphical, tabular, and verbal representations instead of treating procedures as isolated tricks.",
 			"Write enough justification to classify an error as arithmetic, notation, concept, or strategy."
 		],

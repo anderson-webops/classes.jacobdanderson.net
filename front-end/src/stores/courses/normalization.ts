@@ -745,9 +745,9 @@ function generatedGuidanceVariantFocus(
 
 	if (/transfer/i.test(item.title)) {
 		return [
-			`${subject} keeps the core concept intact while changing the input shape, representation, context, or constraint. The evidence shows whether the idea works outside the first example.`,
+			`${subject} keeps the core concept intact while changing the case structure, representation, context, or constraint. The evidence shows whether the idea works outside the first example.`,
 			`${subject} applies the same idea in a nearby setting, then names what changed, what stayed stable, and what evidence supports the transfer.`,
-			`${subject} tests whether the original reasoning survives a changed input, representation, or constraint by making the difference from the base task explicit.`,
+			`${subject} tests whether the base reasoning survives a changed value, representation, or constraint by making the difference from the base task explicit.`,
 			`${subject} moves the concept into a second context while preserving the main success condition, then explains which part transferred cleanly and which part needed adjustment.`
 		][variant];
 	}
@@ -4601,8 +4601,8 @@ function projectExpectations(context: CourseTextContext) {
 			],
 			subject => [
 				`- Record the ${subject} data before the run, after one important pass or recursive step, and after the final result.`,
-				`- Check ${subject} with duplicate values, nearly sorted data, and an input shape that stresses the algorithm.`,
-				"- Explain the best-case or worst-case input shape when the algorithm has one."
+				`- Check ${subject} with duplicate values, nearly sorted data, and a data layout that stresses the algorithm.`,
+				"- Explain the best-case or worst-case data layout when the algorithm has one."
 			],
 			subject => [
 				`- Use ${subject} to make the algorithm state visible: current index, partition, sorted prefix, temporary array, or merge window.`,
@@ -4782,7 +4782,7 @@ function projectExpectations(context: CourseTextContext) {
 				`- Keep the ${subject} implementation readable enough that the data flow can be followed without rereading every line.`
 			],
 			subject => [
-				`- State the ${subject} input shape, output shape, important variables, and helper or loop responsibility before coding.`,
+				`- State the ${subject} accepted data, output form, important variables, and helper or loop responsibility before coding.`,
 				`- Run a compact hand-checkable case, then compare it with a representative case and one malformed or surprising case.`,
 				`- For ${subject}, explain which branch, loop, helper, collection, or file step controls the result.`
 			],
@@ -5547,7 +5547,7 @@ function extensionPrompt(context: CourseTextContext) {
 			subject =>
 				`Add one file, list, dictionary, loop, or helper-function variation to ${subject} while keeping the output traceable.`,
 			subject =>
-				`Change the input shape for ${subject} and record how the validation or parsing logic responds.`,
+				`Change the accepted data pattern for ${subject} and record how the validation or parsing logic responds.`,
 			subject =>
 				`Add one edge case to ${subject} that exercises an empty value, duplicate value, casing issue, or punctuation issue.`,
 			subject =>
@@ -7980,11 +7980,11 @@ function normalizeImplementationLabLanguage(course: RawCourse) {
 					.replace(extensionPattern, "Extend the core build with")
 					.replace(
 						supplementalPattern,
-						"Use this supplemental task as adjacent practice. The linked repository gives a starting point; any reference link shows one complete solution path. Focus on the same core idea while handling a different input shape, constraint, or edge case."
+						"Use this supplemental task as adjacent practice. The linked repository gives a starting point; any reference link shows one complete solution path. Focus on the same core idea while handling a different data layout, constraint, or edge case."
 					)
 					.replace(
 						genericSupplementalPattern,
-						"Use this supplemental task as adjacent practice. The linked repository gives a starting point; any reference link shows one complete solution path. Focus on the same core idea while handling a different input shape, constraint, or edge case."
+						"Use this supplemental task as adjacent practice. The linked repository gives a starting point; any reference link shows one complete solution path. Focus on the same core idea while handling a different data layout, constraint, or edge case."
 					)
 					.replace(titlePattern, " applied lab")
 					.replace(implementationLabelPattern, "Applied lab");

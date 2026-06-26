@@ -3112,7 +3112,7 @@ function pythonCheckInPracticeFocus(
 					"trace-based reasoning"
 				],
 				transfer:
-					"trace one recursive or stack-based solution, then change the input shape to expose the base case or stack order.",
+					"trace one recursive or stack-based solution, then change the data layout to expose the base case or stack order.",
 				evidence:
 					"a frame/stack trace, a normal input, a boundary input, and a statement of the stopping condition"
 			},
@@ -3212,7 +3212,7 @@ function fallbackPracticeFocus(topic: string, courseId?: string) {
 		return {
 			goal: "practice moving data from input to representation to output without losing context.",
 			sequence: [
-				`Define the expected ${topic} input shape and one example record or value.`,
+				`Define the expected ${topic} data layout and one example record or value.`,
 				`Process a standard ${topic} scenario and a case with missing, empty, repeated, or unusually ordered data.`,
 				`Summarize what the ${topic} result proves about the representation or data-handling choice.`
 			],
@@ -3297,7 +3297,7 @@ function supplementalTransferTitle(topic: string) {
 			lowerTopic
 		)
 	) {
-		return `${topic} Input Variation Practice`;
+		return `${topic} Data Variation Practice`;
 	}
 	if (
 		/class|object|method|inherit|interface|record|state|constructor/.test(

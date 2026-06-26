@@ -96,7 +96,7 @@ function securityLabPurposeText(
 		},
 		"transfer-practice": {
 			artifact: "transfer-practice security lab",
-			path: `Move the **${label}** defensive method to a changed fixture, input shape, build flag, mitigation state, or report format so the invariant for ${focus} is tested outside the original example.`
+			path: `Move the **${label}** defensive method to a changed fixture, data layout, build flag, mitigation state, or report format so the invariant for ${focus} is tested outside the original example.`
 		},
 		"extension-practice": {
 			artifact: "extension-practice security lab",
