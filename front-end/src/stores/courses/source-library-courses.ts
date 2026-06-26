@@ -1582,6 +1582,142 @@ const sourceVariantCourses = {
 		name: "Scratch Level 1: Game Superstar Bootcamp",
 		area: "visual programming bootcamp",
 		focus: "Scratch setup, sounds, motion, costumes, backdrops, event listeners, loops, conditionals, variables, and a short master project sequence",
+		sourceActivityAnchors: {
+			"GS1 Event Listeners and Movement": [
+				{
+					title: "Scratch Account and First Project Tour",
+					prompt: "Create or open a Scratch project and identify the stage, sprite list, code area, costumes, sounds, and save state. Use this setup pass to connect the project workspace to later movement, sound, and event-listener work.",
+					evidence: [
+						"A project workspace is open and saved with a clear title.",
+						"The stage, sprites, costumes, sounds, and code blocks can be named from the interface.",
+						"One note explains how Scratch projects are saved and reopened."
+					]
+				},
+				{
+					title: "Dragonfly Event Listener Remix",
+					prompt: "Use the original dragonfly activity at https://scratch.mit.edu/projects/592006491/ as a reference for event-driven behavior. Add separate events for the green flag, space key, and sprite click so the dragonfly moves, plays a sound, and says a short message.",
+					evidence: [
+						"The green flag starts the project and moves the sprite to a random position.",
+						"The space key triggers a sound effect without needing another click.",
+						"Clicking the sprite produces a visible speech bubble or equivalent feedback."
+					]
+				},
+				{
+					title: "Beetle Keyboard Drawing Controls",
+					prompt: "Use https://scratch.mit.edu/projects/592008620/ as the shape-drawing reference. Build keyboard events that move a beetle with the arrow keys, reset the drawing with the green flag, and draw a square, triangle, and arrow from number-key events.",
+					evidence: [
+						"Arrow-key controls move the sprite in predictable directions.",
+						"The reset event clears the drawing and returns the beetle to a known starting position.",
+						"Each number-key event creates a different shape using repeated move and turn blocks."
+					]
+				},
+				{
+					title: "Pencil Drawing Program Controls",
+					prompt: "Use the drawing-program activity at https://scratch.mit.edu/projects/287738652/ to combine movement, turning, pen control, color changes, pen-size changes, and a reset event into one reusable drawing tool.",
+					evidence: [
+						"Forward, backward, left-turn, and right-turn controls are attached to key events.",
+						"Pen-up, pen-down, color, and size controls change the visible drawing behavior.",
+						"The green flag restores position, direction, pen size, and pen color."
+					]
+				},
+				{
+					title: "Arrow Direction and Mouse Targeting",
+					prompt: "Use https://scratch.mit.edu/projects/287920173/ as a reference for direction events. Program an arrow sprite to point in the four arrow-key directions, rotate with letter keys, and point toward the mouse when the space key is pressed.",
+					evidence: [
+						"The arrow keys map to up, down, left, and right headings.",
+						"Letter-key rotation changes the heading by a consistent number of degrees.",
+						"The mouse-targeting event visibly points the sprite toward the cursor."
+					]
+				},
+				{
+					title: "Ball Looks and Motion Event Set",
+					prompt: "Use https://scratch.mit.edu/projects/287924505/ to build a small event set for a ball sprite. Combine random starting position, movement with edge bounce, backdrop changes, size changes, sound, and color effects.",
+					evidence: [
+						"The green flag randomizes or resets the ball state.",
+						"Movement includes edge-bounce behavior instead of leaving the stage permanently.",
+						"At least three visible feedback events change sound, size, color, or backdrop."
+					]
+				}
+			],
+			"GS2 Loops": [
+				{
+					title: "Elephant Repeat and Forever Effects",
+					prompt: "Use https://scratch.mit.edu/projects/592014695/ as the loop-effects reference. Build key events that grow, shrink, change color, apply another visual effect, and repeatedly hide and show the elephant.",
+					evidence: [
+						"Growth and shrink actions use repeat blocks instead of duplicated manual blocks.",
+						"At least one visual effect runs in a forever loop.",
+						"The hide-wait-show sequence repeats with a visible timing pattern."
+					]
+				},
+				{
+					title: "Mouse Shape Loops",
+					prompt: "Use https://scratch.mit.edu/projects/601699148/ as the looped-shapes reference. Add a reset event, then use loops to draw a triangle, a circle-like shape, and at least one additional shape or design.",
+					evidence: [
+						"The reset event clears the previous drawing before a new drawing starts.",
+						"Shape scripts use repeated movement and turns rather than one block per side.",
+						"The extra design changes side count, turn amount, step size, or repetition count."
+					]
+				},
+				{
+					title: "Hot Cross Buns Music Loop",
+					prompt: "Use https://scratch.mit.edu/projects/291117784/ as the music-loop reference. Recreate the note pattern EDC twice, followed by CCCC, DDDD, and EDC, then use loops to reduce repetition and play the full phrase twice.",
+					evidence: [
+						"The Music extension is active or the project uses equivalent sound blocks.",
+						"Repeated note groups are represented with loops where possible.",
+						"The song plays twice from one green-flag start event."
+					]
+				}
+			],
+			"GS3 Conditionals and Variables": [
+				{
+					title: "Button Click Timer Game",
+					prompt: "Use https://scratch.mit.edu/projects/592019210/ as the variables reference. Build a timed button-click game with a click counter, countdown timer, start sequence, button feedback, and game-over hiding behavior.",
+					evidence: [
+						"A click-count variable resets at the start and increases only when the button is active.",
+						"A timer variable counts down from 10 to 0.",
+						"The ready-set-go sequence and game-over state are visible in the project."
+					]
+				},
+				{
+					title: "Crab Catching Game",
+					prompt: "Use https://scratch.mit.edu/projects/327610777/ as the falling-object game reference. Move the crab with arrow keys, make the cheesy puffs fall from random top positions, reset missed puffs, and increase a score when the crab catches one.",
+					evidence: [
+						"The crab movement stays responsive during the falling-object loop.",
+						"Cheesy puffs restart near the top after being caught or missed.",
+						"The score variable resets at the start and increases on a collision."
+					]
+				},
+				{
+					title: "Zebra Step Counter",
+					prompt: "Use https://scratch.mit.edu/projects/327635693/ as the step-count reference. Create a steps variable, reset it with the green flag, move the zebra with arrow keys, switch costumes during movement, and count each step.",
+					evidence: [
+						"The steps variable starts at zero on a fresh run.",
+						"Each movement event changes the costume or animation state.",
+						"The step count increases in sync with movement events."
+					]
+				}
+			],
+			"GS4 Master Project": [
+				{
+					title: "Bootcamp Game Selection",
+					prompt: "Choose a master-project direction from the original options: Spider Smash at https://scratch.mit.edu/projects/299272518/, Hungry Shark at https://scratch.mit.edu/projects/608768681/, or Save the Princess at https://scratch.mit.edu/projects/608770708/. Identify the core player action, objective, score or win condition, and main feedback loop before building.",
+					evidence: [
+						"The project plan names the selected game direction and its playable goal.",
+						"The plan includes events, loops, conditionals, variables, and visible feedback.",
+						"One risk note names the behavior most likely to break during implementation."
+					]
+				},
+				{
+					title: "Playable Scratch Game Build",
+					prompt: "Build a short original Scratch game that combines motion, events, loops, conditionals, variables, costumes or backdrops, sound or visual feedback, and a clear end state.",
+					evidence: [
+						"The game can be started from a fresh green-flag run.",
+						"Player action changes the game state in a way that can be seen or measured.",
+						"The final project includes a short explanation of controls, objective, scoring or success condition, and one improvement made after testing."
+					]
+				}
+			]
+		},
 		modules: [
 			"GS1 Event Listeners and Movement",
 			"GS2 Loops",

@@ -6698,6 +6698,47 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Scratch Bootcamp original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("scratch-level-1-bootcamp");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Scratch Account and First Project Tour",
+			"Dragonfly Event Listener Remix",
+			"Beetle Keyboard Drawing Controls",
+			"Pencil Drawing Program Controls",
+			"Arrow Direction and Mouse Targeting",
+			"Ball Looks and Motion Event Set",
+			"Elephant Repeat and Forever Effects",
+			"Mouse Shape Loops",
+			"Hot Cross Buns Music Loop",
+			"Button Click Timer Game",
+			"Crab Catching Game",
+			"Zebra Step Counter",
+			"Bootcamp Game Selection",
+			"Playable Scratch Game Build"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("scratch.mit.edu/projects/592006491");
+		expect(text).toContain("scratch.mit.edu/projects/287738652");
+		expect(text).toContain("scratch.mit.edu/projects/327610777");
+		expect(text).toContain("scratch.mit.edu/projects/299272518");
+		expect(text).toContain("events, loops, conditionals, variables");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text).toContain(anchor);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",
