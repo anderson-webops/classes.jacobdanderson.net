@@ -6786,6 +6786,47 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Joy of Reading original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("early-elementary-a-reading");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Character Investigator Report",
+			"Sweet Sixteen Character Evidence",
+			"Faithful Friend Plot Diagram",
+			"Happy Halloween Plot and Character Check",
+			"Groceries Storyboard",
+			"Megalodon News Report",
+			"Figurative Language Drawing Set",
+			"Kevin's Crafts Story Review",
+			"Lab-Grown Meat Main Idea Report",
+			"Bacon and Mittens Review or Figurative Art",
+			"Dinosaur Footprint Interview or News Report"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("The Secret Ingredient");
+		expect(text).toContain("Moira, Sunli, and Zaira");
+		expect(text).toContain("The Faithful Friend");
+		expect(text).toContain("Ancient megalodon sharks were huge!");
+		expect(text).toContain("hard nut to crack");
+		expect(text).toContain("Kevin's Crafts");
+		expect(text).toContain("Bacon and Mittens");
+		expect(text).toContain("Four-year-old makes a big discovery!");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text).toContain(anchor);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",

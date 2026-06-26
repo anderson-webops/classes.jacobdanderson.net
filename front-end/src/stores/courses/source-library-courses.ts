@@ -1098,6 +1098,123 @@ const englishCourses = {
 		name: "Early Elementary A: Discovering the Joy of Reading",
 		area: "reading",
 		focus: "characters, plot, literature comprehension, informational texts, figurative language, and short reading responses",
+		sourceActivityAnchors: {
+			"JoR1 Characters": [
+				{
+					title: "Character Investigator Report",
+					prompt: "Read The Secret Ingredient and track Moira, Sunli, and Zaira through appearance details, preparation actions, problem response, and story impact. Use the evidence to infer two character traits for each character and write a three-sentence report for each one.",
+					evidence: [
+						"Character notes for Moira, Sunli, and Zaira that separate appearance, actions, and response to the competition problem.",
+						"Two traits for each character with one action or quotation that supports the trait.",
+						"Three-sentence report for each character describing the character, explaining an important action, and predicting how the story would change without that character."
+					]
+				},
+				{
+					title: "Sweet Sixteen Character Evidence",
+					prompt: "Read Sweet Sixteen and compare Leonard, Frankie, and Morgan. Build a character sketch from descriptive details and then write short descriptions that use exact text evidence instead of only personal impressions.",
+					evidence: [
+						"Sketch or written profile for each triplet using details from the story and one inferred detail.",
+						"Three-to-five-sentence description of Leonard, Frankie, and Morgan.",
+						"At least one copied or quoted story detail for each description, with a note explaining how the detail supports the character claim."
+					]
+				}
+			],
+			"JoR2 Plot": [
+				{
+					title: "Faithful Friend Plot Diagram",
+					prompt: "Read The Faithful Friend and place the major story events on a plot diagram. The diagram identifies exposition, rising action, climax, and resolution, then explains why each event belongs in that location.",
+					evidence: [
+						"Completed plot diagram or text equivalent for The Faithful Friend.",
+						"Plain-language definitions for exposition, rising action, climax, and resolution.",
+						"Short explanation for at least two placements that connects the event to the story structure."
+					]
+				}
+			],
+			"JoR Check-In #1": [
+				{
+					title: "Happy Halloween Plot and Character Check",
+					prompt: "Read Happy Halloween and review both plot and character evidence. Track Jenny, Stacey, and Rebecca, then use a plot diagram to show how the haunted-house problem leads to the cookie-baking resolution.",
+					evidence: [
+						"Plot diagram or ordered event list with exposition, rising action, climax, and resolution.",
+						"Three-to-five-sentence descriptions of Jenny, Stacey, and Rebecca that include traits and actions.",
+						"Short oral or written review introducing the characters and explaining how the drawings or notes connect to traits and actions."
+					]
+				}
+			],
+			"JoR3 Reading Literature": [
+				{
+					title: "Groceries Storyboard",
+					prompt: "Read Groceries and choose the six most important moments for a storyboard. Each frame captures a meaningful event, and the final explanation names why those moments matter and what lesson the story suggests.",
+					evidence: [
+						"Six-frame storyboard or numbered scene list for the story.",
+						"Reason for choosing each scene as important to the plot.",
+						"One-sentence moral or lesson supported by a story event."
+					]
+				}
+			],
+			"JoR4 Reading Informational Texts": [
+				{
+					title: "Megalodon News Report",
+					prompt: "Read Ancient megalodon sharks were huge! and identify the who, what, when, where, why, and central message. Convert the article into a short news report that explains the discovery clearly for an audience.",
+					evidence: [
+						"Answers for who, what, when, where, why, and central message.",
+						"News-report script with an introduction, central message, key details, and closing.",
+						"Backdrop notes, image plan, or key-detail list that supports the report without replacing the explanation."
+					]
+				}
+			],
+			"JoR5 Figurative Language": [
+				{
+					title: "Figurative Language Drawing Set",
+					prompt: "Compare literal drawings with sentence context for idioms, similes, metaphors, and personification. Use phrases such as hard nut to crack, walk on eggshells, in a nutshell, as tall as a giraffe, The test was a breeze, and The wind whipped through my hair to infer the meaning of each type.",
+					evidence: [
+						"Drawing or written literal interpretation for each figurative phrase.",
+						"Definition of idiom, simile, metaphor, and personification using the phrase examples.",
+						"Explanation of the difference between literal and figurative meaning and why an author might use figurative language."
+					]
+				}
+			],
+			"JoR Check-In #2": [
+				{
+					title: "Kevin's Crafts Story Review",
+					prompt: "Read Kevin's Crafts and identify the moral, Kevin's character change, and at least three examples of figurative language. The review explains both what happened and how the language shapes the story.",
+					evidence: [
+						"Moral or overall lesson of Kevin's Crafts.",
+						"Three figurative-language examples labeled as metaphor, simile, idiom, or another appropriate type.",
+						"Story review that explains what the story is about, the moral, and whether the evidence supports the response."
+					]
+				},
+				{
+					title: "Lab-Grown Meat Main Idea Report",
+					prompt: "Read Is lab-grown meat a good idea? and separate the central idea from supporting details. Use both the possible benefits and concerns to build a balanced informational report.",
+					evidence: [
+						"Main idea sentence for the article.",
+						"Three key details copied or paraphrased from the text.",
+						"Short report explaining how the key details relate to the main idea."
+					]
+				}
+			],
+			"JoR6 Master Project": [
+				{
+					title: "Bacon and Mittens Review or Figurative Art",
+					prompt: "Read Bacon and Mittens and choose either a story review or a figurative-language art response. Both options require a summary, a moral or lesson, and evidence from the story.",
+					evidence: [
+						"Summary of what the story is about and the moral or lesson.",
+						"At least three figurative-language examples from the story, with meanings explained.",
+						"Response format selected: story review with opinion and reasons, or figurative-language art with explanation for each example."
+					]
+				},
+				{
+					title: "Dinosaur Footprint Interview or News Report",
+					prompt: "Read Four-year-old makes a big discovery! and choose either an interview script or a news report. The response uses article facts about Lily, the footprint, the scientists, and the protected beach site.",
+					evidence: [
+						"Interview questions with imagined answers grounded in article details, or a news script with introduction, main idea, key details, and closing.",
+						"Key-detail list that includes the discovery, estimated age, dinosaur information, and museum/protection context.",
+						"Explanation of how the selected format helps the audience understand the informational text."
+					]
+				}
+			]
+		},
 		staticAssets: [
 			"jor2_disact_plotempty.png",
 			"jor2_disact_plotexample.png"
