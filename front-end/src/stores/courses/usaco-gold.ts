@@ -1,6 +1,18 @@
 import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
+
+const usacoGoldPendingSourceAssets = ["treasure.txt"] as const;
+
+function pendingUsacoGoldAssetList(filenames: readonly string[]) {
+	return filenames
+		.map(
+			filename =>
+				`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
+}
 
 export const usacoGoldCourse: RawCourse = {
 	name: "USACO Gold",
@@ -1361,6 +1373,20 @@ export const usacoGoldCourse: RawCourse = {
 						"https://github.com/instruction-material/USACO-Gold/tree/main/UG-10-applied-studio-17-talent-show-supplemental-3/solution"
 				}
 			]
+		},
+		{
+			kind: "appendix",
+			title: "Original Asset Reservations",
+			curriculum: [
+				{
+					title: "USACO Gold Source Asset Status",
+					content: [
+						"The original USACO Gold source export referenced the data file below. It is reserved on the class static host with its original filename so a future upload can restore the link without changing course content.",
+						pendingUsacoGoldAssetList(usacoGoldPendingSourceAssets)
+					].join("\n\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };
