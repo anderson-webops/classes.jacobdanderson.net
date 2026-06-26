@@ -135,6 +135,28 @@ jobs:
             - name: Axe accessibility smoke checks
               run: npm run a11y
 
+    static-media:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22.x
+                  cache: npm
+
+            - name: Pin npm version
+              run: |
+                  npm i -g npm@11.12.0
+                  npm -v
+
+            - name: Install deps
+              run: npm ci
+
+            - name: Audit static course media
+              run: npm run audit:static-media
+
     test-e2e:
         runs-on: ubuntu-latest
         timeout-minutes: 15
