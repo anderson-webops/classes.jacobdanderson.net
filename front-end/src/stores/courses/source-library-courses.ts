@@ -312,6 +312,27 @@ const englishCourses = {
 			"MSB12 Master Project"
 		]
 	}),
+	middleSchoolWritingRetake: createSourceLibraryCourse({
+		name: "Middle School B: Analytical and Creative Writing Retake",
+		area: "writing reinforcement",
+		focus: "targeted review of arguments, evidence, counterclaims, evidence analysis, transitions, revision, character development, conflict, plot, point of view, and short-story drafting",
+		modules: [
+			"MSB1 Arguments & Evidence",
+			"MSB2 Counterclaims",
+			"MSB3 Integrating Evidence",
+			"MSB4 Analyzing Evidence",
+			"MSB5 Concluding Statements & Transitional Devices",
+			"MSB6 Color Coding & Revision",
+			"MSB Check-In #1",
+			"MSB7 Character Development",
+			"MSB8 Character Portraits",
+			"MSB9 Generating Conflict & Structuring Plot",
+			"MSB10 Manipulating Point of View",
+			"MSB11 Writing an Original Short Story",
+			"MSB Check-In #2",
+			"MSB12 Master Project"
+		]
+	}),
 	grammarMechanics: createSourceLibraryCourse({
 		name: "Middle School C: Grammar and Mechanics",
 		area: "grammar",
@@ -477,6 +498,90 @@ const elementaryMathCourses = {
 	})
 } as const;
 
+const sourceVariantCourses = {
+	scratchBootcamp: createSourceLibraryCourse({
+		name: "Scratch Level 1: Game Superstar Bootcamp",
+		area: "visual programming bootcamp",
+		focus: "Scratch setup, sounds, motion, costumes, backdrops, event listeners, loops, conditionals, variables, and a short master project sequence",
+		modules: [
+			"GS1 Event Listeners and Movement",
+			"GS2 Loops",
+			"GS3 Conditionals and Variables",
+			"GS4 Master Project"
+		]
+	}),
+	usacoBronzeOnDemand: createSourceLibraryCourse({
+		name: "USACO Bronze: On Demand",
+		area: "self-paced competitive programming",
+		focus: "USACO setup, file input and output, simulation, complete search, greedy reasoning, modular arithmetic, grids, strings, arrays, intervals, and contest postmortems",
+		staticAssets: [
+			"UB1.png",
+			"UB2.png",
+			"UB3.png",
+			"UB4.png",
+			"UB5.png",
+			"UB6.png",
+			"missionTitle2.png",
+			"nextStepTitle.png"
+		],
+		modules: [
+			"UB0 Welcome to USACO Bronze!",
+			"UB1 Square Pasture",
+			"UB2 Your Ride Is Here",
+			"UB3 Friday the Thirteenth",
+			"UB4 Broken Necklace",
+			"UB5 Greedy Gift Givers",
+			"UB6 Milking Cows",
+			"UB7 Name That Number",
+			"UB8 Palindromic Squares",
+			"UB9 Dual Palindromes",
+			"UB10 Transformations",
+			"UB11 Mixing Milk",
+			"UB12 Barn Repair",
+			"UB13 Combination Lock",
+			"UB14 Prime Cryptarithm",
+			"UB15 Ski Course Design",
+			"UB16 Wormholes",
+			"UB17 Block Game",
+			"UB18 The Cow-Signal",
+			"UB19 Don't Be Last",
+			"UB20 Hoof, Paper, Scissors",
+			"UB21 Cow Tipping",
+			"UB22 Why Did the Cow Cross the Road",
+			"UB23 Why Did the Cow Cross the Road II",
+			"UB24 Why Did the Cow Cross the Road III",
+			"UB25 The Lost Cow",
+			"UB26 Bovine Genomics",
+			"UB27 Modern Art",
+			"UB28 Fence Painting",
+			"UB29 Speeding Ticket",
+			"UB30 Contaminated Milk",
+			"UB31 Promotion Counting",
+			"UB32 Angry Cows",
+			"UB33 Mowing the Field",
+			"UB34 Milk Pails",
+			"UB35 Circular Barn",
+			"UB36 Load Balancing",
+			"UB37 Diamond Collector",
+			"UB38 Bull in a China Shop",
+			"UB39 Field Reduction",
+			"UB40 Blocked Billboard",
+			"UB41 The Bovine Shuffle",
+			"UB42 Milk Measurement",
+			"UB43 Blocked Billboard II",
+			"UB44 Lifeguards",
+			"UB45 Out of Place",
+			"UB46 Teleportation",
+			"UB47 Hoofball",
+			"UB48 Taming the Herd",
+			"UB49 Team Tic Tac Toe",
+			"UB50 Milking Order",
+			"UB51 Family Tree",
+			"UB52 Additional Practice Problems"
+		]
+	})
+} as const;
+
 export const smartMoneyPersonalFinanceCourse = investingCourses.smartMoney;
 export const moneyMindedInvestingCourse = investingCourses.moneyMinded;
 export const entrepreneurship101Course = investingCourses.entrepreneurship;
@@ -487,6 +592,8 @@ export const introductionToPublicSpeakingCourse = englishCourses.publicSpeaking;
 export const middleSchoolLiteratureCourse =
 	englishCourses.middleSchoolLiterature;
 export const middleSchoolWritingCourse = englishCourses.middleSchoolWriting;
+export const middleSchoolWritingRetakeCourse =
+	englishCourses.middleSchoolWritingRetake;
 export const grammarMechanicsCourse = englishCourses.grammarMechanics;
 export const novelWritingCourse = englishCourses.novelWriting;
 
@@ -496,3 +603,7 @@ export const earlyElementaryMathBCourse =
 	elementaryMathCourses.earlyElementaryB;
 export const lateElementaryMathACourse = elementaryMathCourses.lateElementaryA;
 export const lateElementaryMathBCourse = elementaryMathCourses.lateElementaryB;
+
+export const scratchLevel1BootcampCourse = sourceVariantCourses.scratchBootcamp;
+export const usacoBronzeOnDemandCourse =
+	sourceVariantCourses.usacoBronzeOnDemand;
