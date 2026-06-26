@@ -5762,6 +5762,7 @@ describe("course text quality normalization", () => {
 				loadRawCourse("algebra-2a"),
 				loadRawCourse("algebra-2b"),
 				loadRawCourse("pre-calculus-a"),
+				loadRawCourse("pre-calculus-b"),
 				loadRawCourse("elementary-science"),
 				loadRawCourse("middle-school-integrated-science"),
 				loadRawCourse("intro-to-chemistry"),
@@ -5894,7 +5895,8 @@ describe("course text quality normalization", () => {
 				loadRawCourse("geometry-b"),
 				loadRawCourse("algebra-2a"),
 				loadRawCourse("algebra-2b"),
-				loadRawCourse("pre-calculus-a")
+				loadRawCourse("pre-calculus-a"),
+				loadRawCourse("pre-calculus-b")
 			]);
 			const corpus = courses.map(allCourseText).join("\n");
 			const supplementalCorpus = courses
@@ -6206,6 +6208,57 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Pascal's triangle");
 		expect(text).toContain("domain restrictions");
 		expect(text).toContain("Capstone: Pre-Calculus A Modeling Portfolio");
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(mediaLinks).toEqual([]);
+	});
+
+	it("adds Pre-Calculus B from the source math sequence", async () => {
+		const course = await loadRawCourse("pre-calculus-b");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const mediaLinks = course.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(item => item.mediaLink)
+				.filter((link): link is string => Boolean(link))
+		);
+
+		expect(course.modules.map(module => module.title)).toEqual([
+			"PCTB1 Trigonometry Basics",
+			"PCTB2 Graphs of Sine and Cosine",
+			"PCTB3 Other Trigonometric Graphs",
+			"PCTB4 Trigonometric Equations and Identities",
+			"PCTB5 Polar Coordinates",
+			"PCTB6 Parametric Equations",
+			"Check-In #1: Trigonometry and Coordinate Models",
+			"PCTB7 Vectors",
+			"PCTB8 Matrices Review",
+			"PCTB9 Applications of Matrices",
+			"PCTB10 Partial Fraction Decomposition",
+			"PCTB11 Probability",
+			"PCTB12 Limits",
+			"PCTB13 Rates of Change",
+			"Check-In #2 and Pre-Calculus B Capstone"
+		]);
+		expect(text).toContain("Concept: The Unit Circle");
+		expect(text).toContain("Concept: Graphing Sine and Cosine");
+		expect(text).toContain("Concept: Tangent, Reciprocal, and Inverse Trigonometric Graphs");
+		expect(text).toContain("Concept: Trigonometric Identities and Equations");
+		expect(text).toContain("Concept: Polar Coordinates and Complex Numbers");
+		expect(text).toContain("Concept: Parametric Equations");
+		expect(text).toContain("Concept: Introduction to Vectors");
+		expect(text).toContain("Concept: Matrix Operations");
+		expect(text).toContain("Concept: Linear Systems with Matrices");
+		expect(text).toContain("Concept: Partial Fraction Decomposition");
+		expect(text).toContain("Concept: Probability, Permutations, and Combinations");
+		expect(text).toContain("Concept: Introduction to Limits and Continuity");
+		expect(text).toContain("Concept: Average Rate of Change and Derivative Preview");
+		expect(text).toContain("Capstone: Pre-Calculus B Modeling Portfolio");
+		expect(text).toContain("AP Calculus Readiness Map");
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
 		);

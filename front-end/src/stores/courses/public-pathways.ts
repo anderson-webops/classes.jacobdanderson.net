@@ -224,14 +224,15 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"geometry-b",
 			"algebra-2a",
 			"algebra-2b",
-			"pre-calculus-a"
+			"pre-calculus-a",
+			"pre-calculus-b"
 		],
 		audience:
 			"Structured support in pre-algebra readiness, school algebra, geometry, pre-calculus foundations, graph interpretation, modeling, written justification, and cumulative practice.",
 		prerequisiteSummary:
-			"Pre-Algebra A builds signed-number, fraction, decimal, percent, ratio, variable, and exponent readiness. Pre-Algebra B adds statistics, geometry, factors, multiples, counting, probability, and applied modeling before Algebra 1A. Pre-Calculus A assumes Algebra 2B-level function, polynomial, rational, exponential, and logarithmic readiness.",
+			"Pre-Algebra A builds signed-number, fraction, decimal, percent, ratio, variable, and exponent readiness. Pre-Algebra B adds statistics, geometry, factors, multiples, counting, probability, and applied modeling before Algebra 1A. Pre-Calculus A and B assume Algebra 2B-level function, polynomial, rational, exponential, logarithmic, graphing, and modeling readiness.",
 		outcomes: [
-			"Solve, model, graph, measure, count, and explain pre-algebra, geometry, linear, quadratic, exponential, polynomial, rational, logarithmic, sequence, conic, and function-based problems at the correct course level.",
+			"Solve, model, graph, measure, count, and explain pre-algebra, geometry, linear, quadratic, exponential, polynomial, rational, logarithmic, trigonometric, polar, parametric, vector, matrix, probability, limit, rate-of-change, sequence, conic, and function-based problems at the correct course level.",
 			"Connect symbolic, graphical, tabular, and verbal representations instead of treating procedures as isolated tricks.",
 			"Write enough justification to classify an error as arithmetic, notation, diagram evidence, proof structure, concept, or strategy."
 		],
@@ -240,6 +241,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Geometry A fits naturally after Algebra 1B and before Algebra 2A because proof, coordinate geometry, triangle relationships, and right-triangle trigonometry prepare later algebra and pre-calculus topics.",
 			"Geometry B completes the geometry bridge with quadrilaterals, polygons, circles, transformations, surface area, volume, and modeling constraints before Algebra 2A resumes heavier symbolic work.",
 			"Pre-Calculus A follows Algebra 2B with piecewise functions, higher-degree polynomials, polynomial division, zeros, graph behavior, sequences, Riemann-sum area estimates, binomial expansion, rational functions, logarithms, inverses, composition, and conics.",
+			"Pre-Calculus B completes the pre-calculus bridge with trigonometry, polar coordinates, parametric equations, vectors, matrices, probability, limits, and rates of change.",
 			"Add cumulative mixed practice so older skills do not vanish after a unit ends.",
 			"Separate direct practice, modeling projects, error analysis, and enrichment rather than making every supplemental look the same."
 		],
@@ -247,6 +249,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Modeling task with scenario, equation, graph, diagram, or table, solution, and reasonableness check.",
 			"Geometry proof or design task with labeled givens, theorem selection, calculation or proof evidence, and one rejected unsupported visual assumption.",
 			"Pre-calculus model or portfolio task that compares forms, states domain restrictions, checks feature evidence, and explains why a graph or equation matches the context.",
+			"Trigonometry and calculus-readiness portfolio task that compares rectangular, polar, parametric, vector, matrix, probability, limit, and rate-of-change evidence.",
 			"Measurement design task that uses circle, transformation, or solid-geometry formulas with unit checks and stated assumptions.",
 			"Error-analysis task that diagnoses a flawed solution and writes the corrected reasoning.",
 			"Cumulative mixed practice set with a short reflection on which representation helped most."
@@ -259,7 +262,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		sourceAndTooling: [
 			"Anchor standards to Common Core high-school algebra and functions domains where appropriate.",
 			"Graphing calculators or Desmos-style visuals are useful when they clarify representation changes.",
-			"Use tables, graphing tools, and optional spreadsheets for sequence, Riemann-sum, rational-function, logarithmic, and conic investigations.",
+			"Use tables, graphing tools, and optional spreadsheets for sequence, Riemann-sum, rational-function, logarithmic, conic, trigonometric, polar, parametric, limit, and rate investigations.",
 			"Track unresolved worksheet or image replacements explicitly until original source visuals are replaced with owned or source-safe materials."
 		],
 		safetyAndAccess: [
@@ -270,8 +273,8 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		adminExpansionBacklog: [
 			"Build a formal algebra project taxonomy for practice, modeling, error analysis, and enrichment.",
 			"Audit remaining unresolved image references and replace them with owned or source-safe visuals.",
-			"Add Pre-Calculus and Trigonometry B to complete the trigonometry, polar, vectors, matrices, probability, limits, and rates-of-change bridge into AP Calculus.",
-			"Add stronger cumulative assessments across Algebra 1B, 2A, 2B, and Pre-Calculus A."
+			"Add AP Calculus to extend the limit, derivative, integral, and modeling sequence after Pre-Calculus B.",
+			"Add stronger cumulative assessments across Algebra 1B, 2A, 2B, Pre-Calculus A, and Pre-Calculus B."
 		]
 	},
 	{

@@ -139,6 +139,14 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			)
 	},
 	{
+		id: "pre-calculus-b",
+		name: "Pre-Calculus and Trigonometry B",
+		load: () =>
+			import("./pre-calculus-b").then(
+				({ preCalculusBCourse }) => preCalculusBCourse
+			)
+	},
+	{
 		id: "python-to-java-and-cpp-bridge",
 		name: "Python to Java and C++ Bridge",
 		load: () =>
