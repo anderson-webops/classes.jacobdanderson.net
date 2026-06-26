@@ -6786,6 +6786,83 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Early Elementary A math original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("early-elementary-a-math");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Ladybug Number Bond Cases",
+			"Starfish Tank Regrouping",
+			"Birthday Candy Bag Model",
+			"Escape the Game Character Budget",
+			"Liang Escape Route Grid",
+			"Indiana Jones Length Expedition",
+			"Yarn Quilt Length Equations",
+			"Akshay Sandwich Number Line",
+			"Sandwich Sharing Record",
+			"Penguin Place Value Grouping",
+			"Bookshelf Regrouping Record",
+			"Arcade Ticket Goal Tracker",
+			"Millionaire Base-Ten Challenge",
+			"Skee-Ball Team Score Ledger",
+			"TikTok Creator Follower Analysis",
+			"Melody Test Launch Data",
+			"Addition, Length, and Place Value Check",
+			"Kickball Equal Groups",
+			"Board Game Rectangle Partitions",
+			"Deserted Island Time Record",
+			"Grocery Coin Exchange",
+			"Kitchen Utensil Data Display",
+			"Bakery Dessert Shape Fractions",
+			"Devyn iPhone Data Charts",
+			"Launch Party Array Cuts",
+			"Multiplication, Measurement, Data, and Shape Check"
+		];
+		const originalReferences = [
+			"ladybug",
+			"starfish",
+			"birthday candy",
+			"Escape the Game",
+			"Liang",
+			"Indiana Jones",
+			"yarn",
+			"Akshay",
+			"96-meter sandwich",
+			"penguins",
+			"bookshelf",
+			"arcade tickets",
+			"Who Wants To Be A Millionaire",
+			"skee-ball",
+			"TikTok",
+			"Melody",
+			"kickball",
+			"board game",
+			"deserted-island",
+			"grocery-store",
+			"kitchen utensil",
+			"bakery dessert",
+			"Devyn",
+			"iPhone"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text, anchor).toContain(anchor);
+		}
+		for (const originalReference of originalReferences) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("preserves Joy of Reading original activity anchors with neutral wording", async () => {
 		const course = await loadRawCourse("early-elementary-a-reading");
 		expect(course).not.toBeNull();
