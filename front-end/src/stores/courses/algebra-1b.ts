@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-1b";
 
@@ -16,6 +17,98 @@ const media = {
 	checkIn2FunctionGraph: `${MEDIA_BASE}/checkin-2-function-graph.svg`
 } as const;
 
+const sourceStaticFilenames = [
+	"ab_kickoff_0.png",
+	"ab2_pset1_0.png",
+	"ab2_concept2_0.png",
+	"ab8_concept1_0.png",
+	"ab8_concept1_1.png",
+	"ab8_concept1_2.png",
+	"ab8_concept1_3.png",
+	"ab9_0.png",
+	"ab9_1.png",
+	"ab9_2.png",
+	"ab10_pset1_0.png",
+	"ab10_pset2_0.png",
+	"ab10_pset2_2.png",
+	"ab10_pset2_3.png",
+	"ab10_pset2_4.png",
+	"ab10_pset3_1.png",
+	"ab10_pset3_3.png",
+	"ab11_pset2_0.png",
+	"ab11_pset2_1.png",
+	"ab11_pset2_2.png",
+	"ab11_pset2_3.png",
+	"ab11_pset2_4.png",
+	"ab11_pset2_5.png",
+	"ab11_pset2_6.png",
+	"ab11_pset2_7.png",
+	"ab11_pset2_8.png",
+	"ab11_pset2_9.png",
+	"ab11_pset2_10.png",
+	"ab11_pset2_11.png",
+	"ab11_pset2_12.png",
+	"ab11_pset2_13.png",
+	"ab11_pset2_14.png",
+	"ab11_pset2_15.png",
+	"ab11_pset2_16.png",
+	"ab11_pset2_17.png",
+	"ab11_pset2_18.png",
+	"ab11_pset2_19.png",
+	"ab11_pset3_0.png",
+	"ab11_pset3_1.png",
+	"ab11_pset3_2.png",
+	"ab11_pset3_3.png",
+	"ab11_pset3_4.png",
+	"ab11_pset3_5.png",
+	"ab11_pset3_6.png",
+	"ab11_pset3_7.png",
+	"ab11_pset3_8.png",
+	"ab11_pset3_9.png",
+	"ab12_pset2_0.png",
+	"ab12_pset2_1.png",
+	"ab12_pset2_2.png",
+	"ab13_concept1_0.png",
+	"ab13_concept2_0.png",
+	"ab15_pset1_0.png",
+	"ab15_pset1_1.png",
+	"ab15_pset1_2.png",
+	"ab15_pset1_3.png",
+	"ab15_pset1_4.png",
+	"ab15_pset1_5.png",
+	"ab15_pset1_6.png",
+	"ab15_pset1_7.png",
+	"ab15_pset1_8.png",
+	"ab15_pset1_9.png",
+	"ab15_pset1_10.png",
+	"ab15_pset1_11.png",
+	"ab15_pset1_12.png",
+	"ab15_pset1_13.png",
+	"ab15_pset1_14.png",
+	"ab15_pset2_0.png",
+	"ab15_pset2_1.png",
+	"ab15_pset2_2.png",
+	"ab15_pset2_3.png",
+	"ab15_pset2_4.png",
+	"ab15_pset2_5.png",
+	"ab15_pset2_6.png",
+	"ab15_pset2_7.png",
+	"ab15_pset2_8.png",
+	"ab15_pset2_9.png",
+	"ab15_pset2_10.png",
+	"ab15_pset2_12.png",
+	"ab20_0.png",
+	"ab20_1.png",
+	"ab20_2.png",
+	"ab20_3.png",
+	"ab20_4.png",
+	"checkin2_app_3.png",
+	"checkin2_advanced_0.png",
+	"checkin2_advanced_1_updated.png",
+	"checkin2_app_4.png",
+	"checkin2_app_5.png"
+] as const;
+
 function createLesson(title: string, content: string, mediaLink?: string) {
 	return mediaLink ? { title, content, mediaLink } : { title, content };
 }
@@ -29,6 +122,15 @@ function createModule(
 		curriculum,
 		supplementalProjects: []
 	};
+}
+
+function sourceMediaReferences() {
+	return sourceStaticFilenames
+		.map(
+			filename =>
+				`- \`${filename}\` -> ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
 }
 
 export const algebra1BCourse: RawCourse = {
@@ -1013,6 +1115,53 @@ Use a graphing tool or the provided function reference for graph-only prompts su
 The key goal is to justify each decision from the graph feature being tested. The vertical-line test checks whether one input has more than one output. An inverse-existence graph checks whether the original relation passes the horizontal-line test. Extrema and interval questions name the x-range being described and whether the graph is increasing, decreasing, positive, negative, or reaching a maximum or minimum there.
 				`.trim(),
 				media.checkIn2FunctionGraph
+			)
+		]),
+		createModule("Source Activity Archive", [
+			createLesson(
+				"Project Scenario and Context Links",
+				`
+**Source Activity Anchors: Algebra 1B**
+
+**Reference details:**
+
+- Kick-off amusement-park project: arcade ticket expressions, quadratic ride-time equations, ride-path vertex form, function composition, temperature conversion, tolerance inequalities, exponential pay growth, and line-of-best-fit residuals.
+- Smart and Elegant: event-planning profit functions, service-tier comparisons, cost and revenue modeling, and competitive pricing constraints.
+- Half-Court Challenge: basketball-robot projectile motion, physical interpretation of quadratic roots, unit conversion, and launch-speed constraints.
+- Put Me in Coach: rowing time-trial tables, corrupted-data recovery, graph interpretation, and transformation reasoning from athletic data.
+- AB17 exponential functions: the source Desmos exploration is retained as a link at https://www.desmos.com/calculator/i1r7bykug4.
+- AB19 data modeling: the source Desmos graph reference is retained as a link at https://www.desmos.com/calculator/n04wtuzlfe.
+- The Mysteries of Light: particle-wave duality, photon-count graphing, line-of-best-fit comparison, interference simulation work at https://ophysics.com/l5.html, and de Broglie wavelength calculations.
+- Radiofungi: astrobiology context, radiation-protection fungi, exponential growth targets, canopy transformations, and Earth-versus-space model comparisons.
+- Master project: choose one Algebra 1B concept, explain its purpose, connect it to a real use, create two self-authored problems, and present the explanation.
+
+**Context-note links:**
+
+- Smart and Elegant context note: https://drive.google.com/file/d/1b0Txmj4dY1UOadVDpPHM0oaccMvQEUTs/view?usp=sharing
+- Half-Court Challenge context note: https://drive.google.com/file/d/1SakBc9jM9nu6tDol29uN_8x18DZWRZuV/view?usp=sharing
+- Put Me in Coach context note: https://drive.google.com/file/d/1N57e11h7nGk-5DPx5l0yPkp8eKVH57QM/view?usp=sharing
+- The Mysteries of Light context note: https://drive.google.com/file/d/1zX-4MslPfpwloYg2GzPqY70n9TS_UC7m/view?usp=sharing
+- Radiofungi context note: https://drive.google.com/file/d/12FIj99-PelJqZS0frtjk9PNjv7hxjyBU/view?usp=sharing
+
+**Additional media references:**
+
+- Astrobiology overview: https://www.youtube.com/watch?v=eJTfcV1ZceE
+- Space radiation and melanin-producing organisms: https://www.youtube.com/watch?v=FJDWHm_ZjoM
+
+**Evidence record:**
+
+- The course keeps the amusement-park, event-planning, basketball-robot, rowing-data, light-and-photon, radiofungi, and capstone scenarios visible.
+- External Drive, Desmos, oPhysics, and YouTube resources are retained as links, not attempted image embeds.
+- Static image references are represented separately as future class-host placeholders when the file is not currently available.
+				`.trim()
+			),
+			createLesson(
+				"Pending Static Asset Placeholders",
+				`
+These source images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
+
+${sourceMediaReferences()}
+				`.trim()
 			)
 		])
 	]

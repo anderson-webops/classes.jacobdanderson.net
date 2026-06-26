@@ -1001,7 +1001,7 @@ Use the remaining source answers for a compact end-of-course review. Choose a me
 				`.trim()
 			)
 		]),
-		createModule("Source Activity Reference", [
+		createModule("Source Activity Archive", [
 			createLesson(
 				"Project Scenario and Context Links",
 				`

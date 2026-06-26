@@ -566,7 +566,7 @@ export const preAlgebraBCourse: RawCourse = {
 				)
 			]
 		),
-		module("Source Activity Reference", [
+		module("Source Activity Archive", [
 			lesson(
 				"Pre-Algebra B Source Anchors",
 				[
