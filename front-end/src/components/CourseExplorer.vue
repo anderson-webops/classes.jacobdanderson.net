@@ -30,6 +30,7 @@ import {
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import {
+	hasPendingStaticMediaNotice,
 	isKnownPendingStaticMediaUrl,
 	isStaticMediaUrl,
 	staticMediaFilename
@@ -1019,6 +1020,16 @@ function isStaticMediaUnavailable(url: string) {
 			unavailableStaticMediaUrls.value.includes(
 				canonicalResourceTarget(url)
 			))
+	);
+}
+
+function isItemStaticMediaUnavailable(item: CourseModuleItem) {
+	const url = item.mediaLink?.trim();
+	if (!url || !isStaticMediaUrl(url)) return false;
+
+	return (
+		isStaticMediaUnavailable(url) ||
+		hasPendingStaticMediaNotice(item.content, staticMediaFilename(url))
 	);
 }
 
@@ -2067,9 +2078,7 @@ function writeStoredValue(key: string, value: string) {
 										v-if="
 											item.mediaLink &&
 											isEmbeddedMedia(item.mediaLink) &&
-											!isStaticMediaUnavailable(
-												item.mediaLink
-											)
+											!isItemStaticMediaUnavailable(item)
 										"
 										class="item-media"
 									>
@@ -2119,9 +2128,7 @@ function writeStoredValue(key: string, value: string) {
 										v-else-if="
 											item.mediaLink &&
 											isEmbeddedMedia(item.mediaLink) &&
-											isStaticMediaUnavailable(
-												item.mediaLink
-											)
+											isItemStaticMediaUnavailable(item)
 										"
 										class="item-media item-media-placeholder"
 										role="note"
@@ -2315,9 +2322,7 @@ function writeStoredValue(key: string, value: string) {
 										v-if="
 											item.mediaLink &&
 											isEmbeddedMedia(item.mediaLink) &&
-											!isStaticMediaUnavailable(
-												item.mediaLink
-											)
+											!isItemStaticMediaUnavailable(item)
 										"
 										class="item-media"
 									>
@@ -2367,9 +2372,7 @@ function writeStoredValue(key: string, value: string) {
 										v-else-if="
 											item.mediaLink &&
 											isEmbeddedMedia(item.mediaLink) &&
-											isStaticMediaUnavailable(
-												item.mediaLink
-											)
+											isItemStaticMediaUnavailable(item)
 										"
 										class="item-media item-media-placeholder"
 										role="note"
