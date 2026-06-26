@@ -2626,6 +2626,33 @@ describe("course text quality normalization", () => {
 		);
 	});
 
+	it("reserves original Python Level 1 source media on the class static host", async () => {
+		const course = await loadRawCourse("python-level-1");
+		expect(course).not.toBeNull();
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Demo Media Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "Pending Python Level 1 Demo Media"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		for (const filename of [
+			"grs1_turtle_exploration(1).mp4",
+			"grs8_etch_a_sketch.gif",
+			"grs12_snake.gif"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps generated guidance references with spaced hyphens Markdown-safe", () => {
 		const guidance = buildProjectGuidance({
 			courseFamily: "Python Level 1",
