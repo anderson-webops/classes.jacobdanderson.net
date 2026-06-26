@@ -7,7 +7,10 @@ import { resetCourseAssetPreviewCache } from "@/modules/courseAssetPreview";
 import CourseExplorer from "@/components/CourseExplorer.vue";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
-import { staticMediaUrl } from "@/stores/courses/staticMedia";
+import {
+	pendingStaticMediaNotice,
+	staticMediaUrl
+} from "@/stores/courses/staticMedia";
 
 vi.mock("@/api", () => ({
 	api: {
@@ -1083,6 +1086,71 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("When the file becomes available");
 		expect(wrapper.text()).toContain(pendingStaticImage);
 		expect(wrapper.find(`a[href="${pendingStaticImage}"]`).exists()).toBe(
+			true
+		);
+	});
+
+	it("reserves source-noted pending static media before manifest updates", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+		const futureStaticImage = staticMediaUrl(
+			"future-original-demo-image.png"
+		);
+
+		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					curriculum: [
+						{
+							content: [
+								"Review the reserved demo image when it becomes available.",
+								pendingStaticMediaNotice(
+									"future-original-demo-image.png"
+								)
+							].join("\n\n"),
+							id: "source-noted-pending-static-demo",
+							mediaLink: futureStaticImage,
+							title: "Source-Noted Pending Static Demo"
+						}
+					],
+					id: "module-1",
+					supplementalProjects: [],
+					title: "Module 1"
+				}
+			]
+		});
+
+		appStore.setCurrentUser({
+			_id: "user-1",
+			name: "Student",
+			email: "student@example.com",
+			age: 12,
+			state: "GA",
+			courseAccess: [assignedCourse.id],
+			courseProgress: [],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		expect(wrapper.find("img.item-media-image").exists()).toBe(false);
+		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
+		expect(wrapper.text()).toContain("Static asset pending");
+		expect(wrapper.text()).toContain("future-original-demo-image.png");
+		expect(wrapper.text()).toContain(futureStaticImage);
+		expect(wrapper.find(`a[href="${futureStaticImage}"]`).exists()).toBe(
 			true
 		);
 	});
