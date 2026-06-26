@@ -6552,6 +6552,43 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Public Speaking original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("introduction-to-public-speaking");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Two-Minute Self Introduction",
+			"Introduce Another Person",
+			"Toast Outline and Delivery Notes",
+			"Annotated Keynote Performance",
+			"Personal Narrative Performance",
+			"Five-Minute Media Pitch",
+			"Happiness v. Money Case Argument",
+			"Stand-Up Routine Performance",
+			"Ideas Worth Spreading Analysis",
+			"TED-Style Talk Portfolio"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("opening, main points, and a closing summary");
+		expect(text).toContain("Eye-contact cues");
+		expect(text).toContain("Happiness v. Money");
+		expect(text).toContain("through-line");
+		expect(text).toContain("landscape framing");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text).toContain(anchor);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",
