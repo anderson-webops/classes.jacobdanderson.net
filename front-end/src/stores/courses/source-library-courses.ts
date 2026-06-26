@@ -26,29 +26,180 @@ function compactTopic(title: string) {
 		.trim();
 }
 
+function topicKeywords(topic: string) {
+	const stopWords = new Set([
+		"a",
+		"an",
+		"and",
+		"for",
+		"in",
+		"my",
+		"of",
+		"on",
+		"part",
+		"the",
+		"to",
+		"with",
+		"your"
+	]);
+	const words = topic
+		.replace(/[#:&/(),]/g, " ")
+		.split(/\s+/)
+		.map(word => word.trim())
+		.filter(word => word.length > 2 && !stopWords.has(word.toLowerCase()));
+
+	return [...new Set(words)].slice(0, 5);
+}
+
+function domainFrame(spec: SourceLibraryCourseSpec) {
+	const domain = `${spec.area} ${spec.focus}`.toLowerCase();
+
+	if (
+		/math|addition|subtraction|fraction|decimal|geometry|algebra|calculus|number|measurement|coordinate/.test(
+			domain
+		)
+	) {
+		return {
+			artifact:
+				"worked math record with diagrams, equations, labels, and a reasonableness check",
+			checks: [
+				"Each number has a label or unit when context matters.",
+				"The representation matches the operation or relationship being used.",
+				"The final answer is checked with estimation, substitution, inverse operation, or a second representation."
+			],
+			process:
+				"Translate the situation into a diagram, equation, table, or model before calculating. Keep intermediate steps visible so an arithmetic mistake can be found without restarting the whole problem.",
+			transfer:
+				"Change one number, unit, shape, graph feature, or condition and compare which parts of the solution method stay the same."
+		};
+	}
+
+	if (
+		/speaking|presentation|speech|toast|storyteller|radio|comedy/.test(
+			domain
+		)
+	) {
+		return {
+			artifact:
+				"speech outline with purpose, audience, structure, rehearsal notes, and delivery evidence",
+			checks: [
+				"The opening states the topic and gives the listener a reason to keep listening.",
+				"Main points are ordered intentionally and supported by concrete details.",
+				"Delivery notes address pacing, eye contact, gestures, vocal clarity, and revision after rehearsal."
+			],
+			process:
+				"Separate message design from delivery practice. First define the audience, central point, and evidence. Then rehearse with a small number of specific delivery goals instead of trying to improve everything at once.",
+			transfer:
+				"Change the audience, time limit, tone, or speaking purpose and revise the outline so the same idea still lands clearly."
+		};
+	}
+
+	if (
+		/reading|literary|literature|figurative|analysis|grammar|writing|novel|story|book|narrative/.test(
+			domain
+		)
+	) {
+		return {
+			artifact:
+				"reading or writing record with claim, evidence, draft choices, revision notes, and final reflection",
+			checks: [
+				"Claims point to a specific sentence, passage detail, grammar rule, or draft choice.",
+				"Explanations connect evidence to meaning instead of only quoting or naming a rule.",
+				"Revision changes are visible and tied to clarity, structure, voice, audience, or mechanics."
+			],
+			process:
+				"Start with the text or draft evidence, then explain the choice being made. For writing work, preserve at least one revision note so the final version shows how the idea improved.",
+			transfer:
+				"Apply the same reading, grammar, or writing move to a new passage, sentence, audience, scene, or draft section."
+		};
+	}
+
+	if (
+		/finance|invest|entrepreneur|business|credit|bank|portfolio|stock|income|spending/.test(
+			domain
+		)
+	) {
+		return {
+			artifact:
+				"decision record with assumptions, calculations, tradeoffs, risk notes, and a recommendation",
+			checks: [
+				"Financial assumptions are named before the calculation or decision.",
+				"Benefits, costs, risks, and time horizon are compared rather than listed separately.",
+				"The recommendation explains what evidence would change the decision."
+			],
+			process:
+				"Treat each scenario as a decision under constraints. Identify the goal, the available options, the numbers or evidence, and the tradeoff before choosing a recommendation.",
+			transfer:
+				"Change the budget, customer, risk level, time horizon, or market condition and compare how the recommendation changes."
+		};
+	}
+
+	if (
+		/usaco|competitive|programming|scratch|visual programming|simulation/.test(
+			domain
+		)
+	) {
+		return {
+			artifact:
+				"problem-solving record with inputs, state, algorithm, test cases, and debugging notes",
+			checks: [
+				"The input or event model is written before coding or constructing the solution.",
+				"The solution handles a normal case, a smallest case, and a case that stresses the key rule.",
+				"Debugging notes identify the state change, loop, condition, or representation that controls the result."
+			],
+			process:
+				"Name the data or event flow first. Then build the smallest working version, test it, and add only one rule or behavior at a time.",
+			transfer:
+				"Change a constraint, board state, input size, sprite behavior, or edge case and explain whether the same algorithm or event structure still works."
+		};
+	}
+
+	return {
+		artifact:
+			"learning record with vocabulary, example, evidence, revision, and reflection",
+		checks: [
+			"The main terms are defined with examples and non-examples.",
+			"The response includes evidence rather than only a final answer.",
+			"The final note explains what changed, what stayed stable, and what still needs verification."
+		],
+		process:
+			"Break the task into setup, evidence, result, and explanation. Keep each part visible so the reasoning can be checked without relying on hidden context.",
+		transfer:
+			"Change one condition and compare the new result to the original result."
+	};
+}
+
 function conceptContent(spec: SourceLibraryCourseSpec, moduleTitle: string) {
 	const topic = compactTopic(moduleTitle);
+	const keywords = topicKeywords(topic);
+	const frame = domainFrame(spec);
 
 	return `
-**Focus:** ${topic} connects to ${spec.focus}.
+**Concept path:** ${topic} is the central focus for this part of ${spec.name}. It connects to ${spec.focus}. The module record is a ${frame.artifact}, not just a completed answer.
 
 Core topics in this module:
 
 1. **Vocabulary and model**  
-   Key terms are defined in plain language, connected to a simple example, and checked against one non-example so the boundary of the idea is clear.
+   Define the important terms in plain language, connect them to a simple example, and include one non-example so the boundary of the idea is clear.${keywords.length ? ` Key terms to watch include ${keywords.join(", ")}.` : ""}
 
 2. **Worked example**  
-   A typical problem, reading passage, speech outline, business case, or number scenario is broken into smaller pieces. The record includes the known information, the decision point, and the evidence that supports the answer.
+   Break a typical problem, passage, speech outline, business case, or number scenario into smaller pieces. The record includes the known information, the decision point, and the evidence that supports the answer.
 
 3. **Transfer task**  
-   A second example changes one detail from the worked example. The comparison makes the transferable rule visible instead of treating the first example as a script to copy.
+   Change one detail from the worked example. The comparison makes the transferable rule visible instead of treating the first example as a script to copy.
 
-The ${spec.area} connection matters because ${spec.name} builds skill through repeated evidence: clear setup, an observable result, and a short explanation of why the result fits the question. Keep notes organized around claim, evidence, method, and revision so later modules can reuse the same habits.
+4. **Evidence check**
+   ${frame.process}
+
+**Evidence checklist:**
+
+${frame.checks.map(check => `- ${check}`).join("\n")}
 	`.trim();
 }
 
 function practiceContent(spec: SourceLibraryCourseSpec, moduleTitle: string) {
 	const topic = compactTopic(moduleTitle);
+	const frame = domainFrame(spec);
 	const planning = buildSupportSectionGuidance({
 		courseFamily: spec.name,
 		moduleTitle: topic,
@@ -56,14 +207,26 @@ function practiceContent(spec: SourceLibraryCourseSpec, moduleTitle: string) {
 	});
 
 	return [
-		`**Goal:** Create a short ${spec.name} practice record for ${topic} that includes one typical case and one changed case.`,
-		"The record names the information given, the strategy used, the result, and the reason the result is reasonable. If the work is writing or speaking, the evidence is a sentence, outline, revision note, or delivery choice. If the work is math, finance, or entrepreneurship, the evidence is a calculation, model, comparison, table, or decision note.",
+		`**Goal:** Create a short ${spec.name} practice record for ${topic} with one typical case and one changed case.`,
+		`**Setup:** Name the goal, the starting information, and the form of evidence needed. The expected product is a ${frame.artifact}.`,
+		[
+			"**Process:**",
+			"1. Record the givens, constraints, audience, source text, numbers, or starting state.",
+			"2. Build the first solution or draft with visible intermediate reasoning.",
+			"3. Run a second case with one changed detail and compare the result.",
+			"4. Write a short explanation of which rule, model, or evidence controlled the final answer."
+		].join("\n"),
+		[
+			"**Completion evidence:**",
+			...frame.checks.map(check => `- ${check}`)
+		].join("\n"),
 		planning
 	].join("\n\n");
 }
 
 function extensionContent(spec: SourceLibraryCourseSpec, moduleTitle: string) {
 	const topic = compactTopic(moduleTitle);
+	const frame = domainFrame(spec);
 	const verification = buildSupportSectionGuidance({
 		courseFamily: spec.name,
 		moduleTitle: topic,
@@ -72,6 +235,14 @@ function extensionContent(spec: SourceLibraryCourseSpec, moduleTitle: string) {
 
 	return [
 		`**Goal:** Extend ${topic} in ${spec.name} by changing one constraint, audience, number set, passage detail, scenario, or design choice.`,
+		`**Transfer move:** ${frame.transfer}`,
+		[
+			"**Extension choices:**",
+			"1. Add a more difficult input, passage detail, model constraint, or audience requirement.",
+			"2. Compare two solution methods, drafts, explanations, or recommendations and name the better fit for the goal.",
+			"3. Turn the final answer into a short presentation, annotated example, table, diagram, or revision note.",
+			"4. Add one reflection explaining what evidence would make the result more reliable."
+		].join("\n"),
 		"The extension keeps the original idea recognizable while testing whether the method still works under a new condition. The response includes the changed condition, the expected effect, the actual result, and one revision that would make the explanation or product stronger.",
 		verification
 	].join("\n\n");
