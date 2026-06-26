@@ -7677,7 +7677,8 @@ describe("course text quality normalization", () => {
 			"Check-In #2: Pre-Algebra B Geometry",
 			"PAB15-PAB19 Factors, Multiples, and Number Structure",
 			"PAB20-PAB23 Counting, Probability, and Applied Modeling",
-			"Check-In #3 and Capstone: Pre-Algebra B"
+			"Check-In #3 and Capstone: Pre-Algebra B",
+			"Original Source Activity Anchors"
 		]);
 		expect(text).toContain("Project: Exploring the World with Marco");
 		expect(text).toContain("Project: Gymnastics Geometry Challenge");
@@ -7686,6 +7687,49 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: eSmash");
 		expect(text).toContain("Project: Airtable Revamped");
 		expect(text).toContain("Master Project: Pre-Algebra B");
+		expect(text).toContain("Source Activity Anchors:");
+		for (const originalReference of [
+			"15 travel responses",
+			"range of 7",
+			"mode of 1",
+			"50, 0, 38, and 9",
+			"170 miles",
+			"130 miles",
+			"Astor Place Alamo sculpture",
+			"15-foot side lengths",
+			"40 million",
+			"560,000",
+			"$1.2 million",
+			"$1.7 million",
+			"25 city responses",
+			"18 rural responses",
+			"Texas, Colorado, California, New York, Ohio, Kentucky, New Mexico, Pennsylvania, and Arizona",
+			"Marco Satala",
+			"Corporate Immigration Partners",
+			"Kara Christensen",
+			"351 degrees",
+			"372 degrees",
+			"365 degrees",
+			"Ben Dreier",
+			"1.5 miles",
+			"3.0 miles",
+			"0.75 miles",
+			"Akanksha Bajaj",
+			"30-minute tour",
+			"15-minute arcade reset",
+			"Will Brooke",
+			"Electronic Arts",
+			"Liquid Hungrybox as 7/9",
+			"243/1024",
+			"Christine Yeh",
+			"90, 43, 98, 18",
+			"7 feet by 3 feet by 4 feet",
+			"3763 = 53 * 71",
+			"753,943,372",
+			"at least 2 original problems"
+		]) {
+			expect(text, originalReference).toContain(originalReference);
+		}
 		expect(text).toContain("range");
 		expect(text).toContain("Pythagorean theorem");
 		expect(text).toContain("probability");
