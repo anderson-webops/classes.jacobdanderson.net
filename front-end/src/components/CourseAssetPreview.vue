@@ -430,10 +430,10 @@ async function handleResourceChange() {
 .course-asset-preview-content :deep(.item-content-markdown table) {
 	width: 100%;
 	inline-size: 100%;
-	min-width: 42rem;
-	min-inline-size: 42rem;
-	max-width: none;
-	max-inline-size: none;
+	min-width: min(42rem, 100%);
+	min-inline-size: min(42rem, 100%);
+	max-width: 100%;
+	max-inline-size: 100%;
 	table-layout: fixed;
 }
 
