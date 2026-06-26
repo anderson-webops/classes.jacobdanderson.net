@@ -956,6 +956,78 @@ describe("implemented course development artifacts", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
+	it("keeps source-import next-work metadata aligned with visible catalog coverage", async () => {
+		const catalogIds = new Set(courseCatalog.map(course => course.id));
+
+		for (const courseId of [
+			"geometry-a",
+			"geometry-b",
+			"pre-calculus-a",
+			"pre-calculus-b",
+			"intro-to-environmental-science"
+		]) {
+			expect(catalogIds.has(courseId), courseId).toBe(true);
+		}
+
+		const staleNextWorkClaims = [
+			/Add Geometry A\/B and Pre-Calculus A\/B/i,
+			/Add Intro to Environmental Science from the same source corpus/i
+		];
+
+		for (const courseId of [
+			"pre-algebra-a",
+			"pre-algebra-b",
+			"intro-to-biology"
+		]) {
+			const course = await requireCourse(courseId);
+			const nextWork =
+				course.developmentMetadata?.recommendedNextWork.join("\n") ?? "";
+
+			for (const staleClaim of staleNextWorkClaims) {
+				expect(nextWork, courseId).not.toMatch(staleClaim);
+			}
+		}
+
+		const preAlgebraMetadata = (
+			await requireCourse("pre-algebra-a")
+		).developmentMetadata;
+		expect(preAlgebraMetadata?.assessmentCadence.join("\n")).toContain(
+			"retrieval spiral"
+		);
+		expect(preAlgebraMetadata?.recommendedNextWork.join("\n")).toContain(
+			"worksheet or Desmos"
+		);
+
+		const biologyMetadata = (
+			await requireCourse("intro-to-biology")
+		).developmentMetadata;
+		expect(biologyMetadata?.assessmentCadence.join("\n")).toContain(
+			"curated media"
+		);
+		expect(biologyMetadata?.recommendedNextWork.join("\n")).toContain(
+			"CER/model-rubric"
+		);
+
+		for (const courseId of [
+			"introduction-to-public-speaking",
+			"middle-school-c-grammar",
+			"smart-money-personal-finance",
+			"money-minded-investing"
+		]) {
+			const metadata = (await requireCourse(courseId)).developmentMetadata;
+			const metadataText = [
+				...(metadata?.assessmentCadence ?? []),
+				...(metadata?.safetyPolicy ?? []),
+				...(metadata?.capstoneExpectations ?? []),
+				...(metadata?.recommendedNextWork ?? [])
+			].join("\n");
+
+			expect(metadataText, courseId).not.toMatch(
+				/code-tracing|source repos with starter|destructive machine changes/i
+			);
+		}
+	});
+
 	it("implements current AP CSA four-unit and digital FRQ alignment", async () => {
 		const course = await requireCourse("ap-computer-science-a");
 		const text = allText(course);

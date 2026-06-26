@@ -750,7 +750,7 @@ export const introToBiologyCourse: RawCourse = {
 		recommendedNextWork: [
 			"Add vetted open biology reference links by module",
 			"Upload missing original biology images to static.classes",
-			"Add Intro to Environmental Science from the same source corpus"
+			"Cross-link Intro to Environmental Science where ecosystems, energy flow, and evidence modeling continue the biology sequence"
 		]
 	}
 };
