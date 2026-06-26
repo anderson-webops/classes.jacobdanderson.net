@@ -3,7 +3,13 @@ import {
 	buildScratchFluencyDrill,
 	buildScratchOpenEndedVariant
 } from "./scratchProjectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
+
+const SCRATCH_LEVEL_1_SOURCE_ASSETS = [
+	"scratch_level_1_concept.png",
+	"scratch_level_1_project.png"
+] as const;
 
 export const scratchLevel1Course: RawCourse = {
 	name: "Scratch Level 1",
@@ -1390,6 +1396,23 @@ Typing practice is not required to complete the Scratch course, but it can make 
 						"Create a Scratch-to-Python readiness portfolio with three translated scripts. Include the original Scratch idea, pseudocode, a Python-style version, and a short note explaining what changed during translation."
 				}
 			]
+		},
+		{
+			kind: "appendix",
+			title: "Original Asset Reservations",
+			curriculum: [
+				{
+					title: "Pending Scratch Level 1 Visual Assets",
+					content: [
+						"The original Scratch Level 1 source library referenced the visual assets below. These files are reserved on the class static host so they can be uploaded later without changing course links.",
+						...SCRATCH_LEVEL_1_SOURCE_ASSETS.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };

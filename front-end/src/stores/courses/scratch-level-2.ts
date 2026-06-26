@@ -3,7 +3,13 @@ import {
 	buildScratchFluencyDrill,
 	buildScratchOpenEndedVariant
 } from "./scratchProjectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
+
+const SCRATCH_LEVEL_2_SOURCE_ASSETS = [
+	"scratch_level_2_concept.png",
+	"scratch_level_2_project.png"
+] as const;
 
 export const scratchLevel2Course: RawCourse = {
 	name: "Scratch Level 2",
@@ -1399,6 +1405,23 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Create a bridge portfolio that translates one Scratch game mechanic into pseudocode and Python-style code. Include the original Scratch behavior, the translated steps, and one explanation of what was easier or harder to express in text."
 				}
 			]
+		},
+		{
+			kind: "appendix",
+			title: "Original Asset Reservations",
+			curriculum: [
+				{
+					title: "Pending Scratch Level 2 Visual Assets",
+					content: [
+						"The original Scratch Level 2 source library referenced the visual assets below. These files are reserved on the class static host so they can be uploaded later without changing course links.",
+						...SCRATCH_LEVEL_2_SOURCE_ASSETS.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };
