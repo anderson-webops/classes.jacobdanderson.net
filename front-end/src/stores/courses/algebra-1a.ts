@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-1a";
 
@@ -15,6 +16,53 @@ const media = {
 	checkIn3ParabolaLine: `${MEDIA_BASE}/checkin-3-parabola-line.svg`
 } as const;
 
+const sourceStaticFilenames = [
+	"aa4_pset1_0.png",
+	"aa5_pset2_0.png",
+	"aa5_pset2_1.png",
+	"aa5_pset2_2.png",
+	"aa5_pset2_3.png",
+	"aa5_pset2_4.png",
+	"aa5_pset2_5.png",
+	"aa5_pset2_6.png",
+	"aa5_pset2_7.png",
+	"aa5_pset2_8.png",
+	"aa5_pset2_9.png",
+	"aa5_pset2_10.png",
+	"aa5_pset2_11.png",
+	"aa5_pset2_12.png",
+	"aa6_pset1_0.png",
+	"aa6_pset1_1.png",
+	"aa6_pset1_2.png",
+	"aa6_pset1_3.png",
+	"aa6_pset1_4.png",
+	"aa6_pset2_0.png",
+	"aa6_pset2_1.png",
+	"aa6_pset2_2.png",
+	"aa6_pset2_3.png",
+	"aa6_pset2_4.png",
+	"aa7_0.png",
+	"aa7_pset1_0.png",
+	"aa7_pset1_1.png",
+	"aa7_pset1_2.png",
+	"aa7_pset1_3.png",
+	"aa7_pset1_4.png",
+	"aa8_pset1_0.png",
+	"aa8_pset1_1.png",
+	"aa8_pset2_0.png",
+	"aa8_pset2_sol0.png",
+	"aa11_0.png",
+	"aa11_1.png",
+	"aa11_2.png",
+	"aa11_3.png",
+	"aa11_4.png",
+	"checkin2_app_0.png",
+	"checkin2_app_2.png",
+	"checkin2_forms_0.png",
+	"checkin2_inequalities_1.png",
+	"checkin3_graphing_1.png"
+] as const;
+
 function createLesson(title: string, content: string, mediaLink?: string) {
 	return mediaLink ? { title, content, mediaLink } : { title, content };
 }
@@ -28,6 +76,15 @@ function createModule(
 		curriculum,
 		supplementalProjects: []
 	};
+}
+
+function sourceMediaReferences() {
+	return sourceStaticFilenames
+		.map(
+			filename =>
+				`- \`${filename}\` -> ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
 }
 
 export const algebra1ACourse: RawCourse = {
@@ -941,6 +998,49 @@ Use the remaining source answers for a compact end-of-course review. Choose a me
   - \`x + y = 3\`
   - \`0.11x + 0.05y = 0.27\`
   - \`x = 2\`, \`y = 1\`
+				`.trim()
+			)
+		]),
+		createModule("Source Activity Reference", [
+			createLesson(
+				"Project Scenario and Context Links",
+				`
+**Source Activity Anchors: Algebra 1A**
+
+**Reference details:**
+
+- Kick-off restaurant project: menu budgeting, delivery-coordinate interpretation, delivery-growth modeling, and systems of equations for kitchen scenarios.
+- Delivery graph links: [delivery locations](https://www.geogebra.org/geometry/gvdvu8g9) and [weekly delivery growth](https://www.geogebra.org/geometry/nwcaepuc).
+- Movie Star Status: film-production budgeting with expressions, one-step equations, unit rates, and open-ended budget justification.
+- Free Swag: marketing-campaign modeling with production-cost equations, item mix comparisons, and booth-time inequalities.
+- Community Data Analysis: rate-of-change interpretation from community data, including a local visual replacement at ${media.communityDataAnalysis}.
+- Predicting Avalanches: slope classification, storm-risk curves, reopening thresholds, and the [slope-angle comparison graph](https://www.desmos.com/calculator/zhckru7sxb).
+- Cytogenetics Quest: systems of equations in chromosome-count and oncology-testing contexts.
+- Battle of the Publications: publication-count functions, competing-lab inequalities, and quota systems.
+- Master project: choose one Algebra 1A concept, explain its purpose, connect it to a real use, create two self-authored problems, and present the explanation.
+
+**Context-note links:**
+
+- Movie Star Status context note: https://drive.google.com/file/d/1YBd552y9UR7QltUlogW00t9BRMtmb22s/view?usp=sharing
+- Free Swag context note: https://drive.google.com/file/d/1gFQfsZln3pWHTImAB4AkQHI-qEVZZ6VS/view?usp=sharing
+- Community Data Analysis context note: https://drive.google.com/file/d/1hLFimt1FZjRwrAqT3uIiRC3W4VKGNv70/view?usp=drive_link
+- Predicting Avalanches context note: https://drive.google.com/file/d/1pmYvw-cg50bdr1ZFfYueCbK4lqlnAzEJ/view?usp=drive_link
+- Cytogenetics Quest context note: https://drive.google.com/file/d/1gRJe5gYW8DupcXgAI1OqnrC5GALR-jB4/view?usp=drive_link
+- Battle of the Publications context note: https://drive.google.com/file/d/1y5h6nw4yjbxRGTZKGQ3sY5nIDn4G5fnq/view?usp=drive_link
+
+**Evidence record:**
+
+- The course keeps the restaurant, film-budget, marketing, community-data, avalanche-risk, cytogenetics, publication, and capstone scenarios visible.
+- External graph links are retained as links, not attempted image embeds.
+- Static image references are represented separately as future class-host placeholders when the file is not currently available.
+				`.trim()
+			),
+			createLesson(
+				"Pending Static Asset Placeholders",
+				`
+These source images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
+
+${sourceMediaReferences()}
 				`.trim()
 			)
 		])
