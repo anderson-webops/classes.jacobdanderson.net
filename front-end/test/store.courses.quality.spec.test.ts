@@ -6437,6 +6437,46 @@ describe("course text quality normalization", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
+	it("builds substantive neutral source-library course modules", async () => {
+		const courses = await Promise.all([
+			loadRawCourse("smart-money-personal-finance"),
+			loadRawCourse("introduction-to-public-speaking"),
+			loadRawCourse("early-elementary-a-math"),
+			loadRawCourse("early-elementary-a-reading"),
+			loadRawCourse("usaco-bronze-on-demand"),
+			loadRawCourse("scratch-level-1-bootcamp")
+		]);
+		const corpus = courses.map(allCourseText).join("\n");
+
+		for (const course of courses) {
+			expect(course).not.toBeNull();
+			if (!course) continue;
+
+			const text = allCourseText(course);
+			expect(text).toContain("**Concept path:**");
+			expect(text).toContain("Core topics in this module:");
+			expect(text).toContain("**Evidence checklist:**");
+			expect(text).toContain("**Setup:**");
+			expect(text).toContain("**Process:**");
+			expect(text).toContain("**Completion evidence:**");
+			expect(text).toContain("**Transfer move:**");
+			expect(text).toContain("**Extension choices:**");
+			expect(text).not.toMatch(
+				/The .* connection matters because .* builds skill through repeated evidence/i
+			);
+			expect(text).not.toMatch(
+				/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets/i
+			);
+			expect(text).not.toMatch(/\bshould\b/i);
+		}
+
+		expect(corpus).toContain("decision record with assumptions");
+		expect(corpus).toContain("speech outline with purpose");
+		expect(corpus).toContain("worked math record with diagrams");
+		expect(corpus).toContain("reading or writing record with claim");
+		expect(corpus).toContain("problem-solving record with inputs");
+	});
+
 	it("adds Pre-Algebra A from the original math source sequence", async () => {
 		const course = await loadRawCourse("pre-algebra-a");
 		expect(course).not.toBeNull();
