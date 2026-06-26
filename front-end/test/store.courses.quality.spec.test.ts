@@ -5,9 +5,11 @@ import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
 import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
+	hasPendingStaticMediaNotice,
 	isStaticMediaUrl,
 	pendingStaticMediaNotice,
 	staticMediaFilename,
+	staticMediaUrlsFromText,
 	staticMediaUrl
 } from "@/stores/courses/staticMedia";
 import { buildProjectGuidance } from "@/stores/courses/projectGuidance";
@@ -6904,9 +6906,6 @@ describe("course text quality normalization", () => {
 			const unresolvedPendingFilenames = new Set(pendingFilenames);
 			const missingPlaceholderNotes: string[] = [];
 			const missingPlaceholderLinks: string[] = [];
-			const placeholderNotePattern =
-				/\b(?:pending media|reserved|placeholder|not currently available|class static host)\b/i;
-
 			for (const entry of courseCatalog) {
 				const course = await loadRawCourse(entry.id);
 				expect(course).not.toBeNull();
@@ -6920,7 +6919,8 @@ describe("course text quality normalization", () => {
 							item.mediaLink,
 							item.datasetLink,
 							item.projectLink,
-							item.solutionLink
+							item.solutionLink,
+							...staticMediaUrlsFromText(item.content)
 						].filter(
 							(link): link is string =>
 								!!link && isStaticMediaUrl(link)
@@ -6939,11 +6939,10 @@ describe("course text quality normalization", () => {
 							}
 
 							if (
-								!item.content.includes(filename) ||
-								!item.content.includes(
-									staticMediaUrl(filename)
-								) ||
-								!placeholderNotePattern.test(item.content)
+								!hasPendingStaticMediaNotice(
+									item.content,
+									filename
+								)
 							) {
 								missingPlaceholderNotes.push(
 									`${entry.id} / ${module.title} / ${item.title}: ${filename}`
@@ -6970,6 +6969,16 @@ describe("course text quality normalization", () => {
 		);
 		expect(notice).toMatch(/not currently available/i);
 		expect(notice).toMatch(/added later/i);
+	});
+
+	it("extracts static media URLs embedded in course prose", () => {
+		expect(
+			staticMediaUrlsFromText(
+				"Reserve https://static.classes.jacobdanderson.net/original-static-demo.mp4, then continue."
+			)
+		).toEqual([
+			"https://static.classes.jacobdanderson.net/original-static-demo.mp4"
+		]);
 	});
 
 	it(

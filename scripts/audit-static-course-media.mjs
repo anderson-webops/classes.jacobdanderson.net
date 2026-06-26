@@ -13,15 +13,14 @@ import {
 import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
 	STATIC_MEDIA_BASE,
+	hasPendingStaticMediaNotice,
 	staticMediaFilename,
-	staticMediaUrl
+	staticMediaUrlsFromText
 } from "@/stores/courses/staticMedia";
 
 const staticPrefix = STATIC_MEDIA_BASE + "/";
 const knownPending = new Set(KNOWN_PENDING_STATIC_MEDIA_FILENAMES);
 const urls = new Map();
-const placeholderNotePattern =
-	/\b(?:pending media|reserved|placeholder|not currently available|class static host)\b/i;
 
 function add(url, reference) {
 	if (!url?.startsWith(staticPrefix)) return;
@@ -62,6 +61,13 @@ for (const entry of courseCatalog) {
 				key: "solutionLink",
 				source
 			});
+			for (const url of staticMediaUrlsFromText(item.content)) {
+				add(url, {
+					content: item.content,
+					key: "content",
+					source
+				});
+			}
 		}
 	}
 }
@@ -92,11 +98,7 @@ for (const [url, references] of [...urls].sort(([left], [right]) =>
 
 	const filename = staticMediaFilename(url);
 	const sourceIssues = references.flatMap(reference => {
-		if (
-			reference.content.includes(filename) &&
-			reference.content.includes(staticMediaUrl(filename)) &&
-			placeholderNotePattern.test(reference.content)
-		) {
+		if (hasPendingStaticMediaNotice(reference.content, filename)) {
 			return [];
 		}
 
@@ -110,8 +112,9 @@ for (const [url, references] of [...urls].sort(([left], [right]) =>
 	const row = {
 		filename,
 		isKnownPending: knownPending.has(filename),
-		sourceCount: references.length,
-		sources: references.map(reference => reference.source),
+		sourceCount: new Set(references.map(reference => reference.source))
+			.size,
+		sources: [...new Set(references.map(reference => reference.source))],
 		status,
 		url,
 		...(sourceIssues.length ? { sourceIssues } : {}),
