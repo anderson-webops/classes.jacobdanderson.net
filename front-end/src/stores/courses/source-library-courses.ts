@@ -678,6 +678,114 @@ const englishCourses = {
 		name: "Make Your Point: Introduction to Public Speaking",
 		area: "public speaking",
 		focus: "introductions, toast structure, speechwriting, keynote organization, storytelling, radio pitches, argument defense, comedy timing, and polished talk delivery",
+		sourceActivityAnchors: {
+			"MYP1 Personal Introductions": [
+				{
+					title: "Two-Minute Self Introduction",
+					prompt: "Prepare and deliver a two-minute introduction that includes basic identity details, background, and a few specific interests or experiences. Treat the introduction as a mini-speech with an opening, main points, and a closing summary.",
+					evidence: [
+						"Outline that separates opening, main points, and closing summary.",
+						"Delivery notes for confidence, pacing, and reduced filler words such as like and um.",
+						"Reflection comparing the first version with a revised version."
+					]
+				},
+				{
+					title: "Introduce Another Person",
+					prompt: "Create a short introduction for another real or fictional person. Include a visual support plan, the details that define who the person is, and the tone that fits the audience.",
+					evidence: [
+						"Profile notes naming the person's background, interests, and one memorable detail.",
+						"Visual support sketch or description that reinforces the introduction without replacing the speaker.",
+						"Delivery checklist for confident voice, clear structure, and controlled filler words."
+					]
+				}
+			],
+			"MYP2 Toastmaker": [
+				{
+					title: "Toast Outline and Delivery Notes",
+					prompt: "Turn a toast outline into a short performance plan. The speech honors a person or group, keeps a conversational tone, and uses notes rather than a word-for-word script.",
+					evidence: [
+						"Toast outline with opening, meaningful details, and closing sentiment.",
+						"Eye-contact cues placed at important moments in the outline.",
+						"Revision note explaining how tone, pacing, or eye contact changed after rehearsal."
+					]
+				}
+			],
+			"MYP4 Keynote Speaker": [
+				{
+					title: "Annotated Keynote Performance",
+					prompt: "Prepare a keynote speech from an annotated outline. Mark places for emphasis, gestures, enacted phrases, pacing, enunciation, and open posture.",
+					evidence: [
+						"Annotated outline with two emphasis cues and one enacted-gesture cue.",
+						"Visual theme or slide/backdrop plan connected to the speech topic.",
+						"Rehearsal note naming one pacing change, one clarity change, and one body-language change."
+					]
+				}
+			],
+			"MYP5 Storyteller": [
+				{
+					title: "Personal Narrative Performance",
+					prompt: "Build a true-story performance from a personal narrative outline. The performance uses a hook, a clear sequence of events, a lesson or point, and conversational delivery from notes.",
+					evidence: [
+						"Narrative outline with hook, key scene, conflict or turning point, and ending lesson.",
+						"Two eye-contact cues and two gesture or emphasis cues.",
+						"Delivery reflection on whether the story sounded conversational rather than read aloud."
+					]
+				}
+			],
+			"MYP6 Radio Pitch": [
+				{
+					title: "Five-Minute Media Pitch",
+					prompt: "Pitch a TV show or movie as the best choice for a specific audience. Limit the pitch to five minutes, organize the main details quickly, and revise the delivery after one feedback pass.",
+					evidence: [
+						"Three-minute planning outline with the title, audience, main claim, and strongest details.",
+						"Pitch structure with opening hook, reasons, examples, and closing recommendation.",
+						"Before-and-after note explaining what changed in the second delivery."
+					]
+				}
+			],
+			"MYP7 Defense Attorney": [
+				{
+					title: "Happiness v. Money Case Argument",
+					prompt: "Use the case question 'Can money buy happiness?' to prepare a courtroom-style argument. Build a claim, supporting evidence, counterargument, and closing statement for one side of the case.",
+					evidence: [
+						"Three pieces of evidence that support the chosen side.",
+						"Counterargument with a concise response supported by two reasons.",
+						"Closing statement that summarizes the argument and includes delivery notes for eye contact, pacing, enunciation, gestures, and posture."
+					]
+				}
+			],
+			"MYP8 Stand-up Comedian": [
+				{
+					title: "Stand-Up Routine Performance",
+					prompt: "Draft and perform a four-to-five-minute stand-up routine from an outline. Keep the tone conversational, mark gesture and eye-contact cues, and rehearse enough to speak from memory rather than reading line by line.",
+					evidence: [
+						"Routine outline with setup, joke sequence, transitions, and closing beat.",
+						"Two eye-contact cues and two gesture or emphasis cues.",
+						"Rehearsal note describing timing, filler-word control, and whether the routine landed clearly."
+					]
+				}
+			],
+			"MYP9 Master Project: Your TED-Ed Talk": [
+				{
+					title: "Ideas Worth Spreading Analysis",
+					prompt: "Analyze TED-Ed-style talks for through-line, body language, visual aids, emotional effect, and the qualities that make an idea worth spreading.",
+					evidence: [
+						"Notes from several talks naming through-line, gestures, visual aids, and audience effect.",
+						"Pattern list of qualities shared by strong ideas worth spreading.",
+						"Draft criteria for choosing a personal talk topic."
+					]
+				},
+				{
+					title: "TED-Style Talk Portfolio",
+					prompt: "Prepare a polished talk with a central idea, supporting stories or arguments, visual aids, rehearsal plan, delivery notes, and production-quality checklist.",
+					evidence: [
+						"Talk script or outline with through-line, supporting sections, and closing idea.",
+						"Visual-aid plan that highlights points without carrying the whole message.",
+						"Production checklist covering landscape framing, clear lighting, audible sound, clean edits, file format, and copyright-safe materials."
+					]
+				}
+			]
+		},
 		staticAssets: ["ted_ed_release.pdf"],
 		modules: [
 			"MYP1 Personal Introductions",
