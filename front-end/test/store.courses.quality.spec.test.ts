@@ -6827,6 +6827,53 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Middle School A literature source anchors with neutral wording", async () => {
+		const course = await loadRawCourse("middle-school-a-literature");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Lead Prankster Main Idea Model",
+			"Kyra's Fear Main Idea and Evidence",
+			"Soccer Summer Best Evidence Sort",
+			"Car Ride Inference Record",
+			"Show-Don't-Tell Paragraph Draft",
+			"Reading Literature Check-In Record",
+			"Theme Versus Main Idea Sort",
+			"Characters and Themes Analysis",
+			"Point of View Effects Lab",
+			"Connotation Nation Word Choice Record",
+			"Sound Pattern Annotation",
+			"Analysis Toolbox Paragraph",
+			"Analyzing Literature Check-In Record",
+			"Writing from an Image Literature Showcase"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Lead Prankster");
+		expect(text).toContain("Kyra's Fear");
+		expect(text).toContain("Soccer Summer");
+		expect(text).toContain("Car Ride");
+		expect(text).toContain("showing-versus-telling");
+		expect(text).toContain("Cinderella");
+		expect(text).toContain("Snow White");
+		expect(text).toContain("Connotation Nation");
+		expect(text).toContain("rhyme and alliteration");
+		expect(text).toContain("Analysis Toolbox");
+		expect(text).toContain("Writing from an Image");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text).toContain(anchor);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",
