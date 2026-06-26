@@ -1,4 +1,11 @@
 import type { RawCourse } from "./types";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
+
+const PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS = [
+	"python_level_2_check_in_questions.png",
+	"python_level_2_concept.png",
+	"python_level_2_project.png"
+];
 
 function conceptBrief({
 	evidence,
@@ -2327,6 +2334,23 @@ export const pythonLevel2Course: RawCourse = {
 						evidence:
 							"The next step follows from demonstrated strengths and gaps, not only from completing the last module."
 					})
+				}
+			],
+			supplementalProjects: []
+		},
+		{
+			kind: "appendix",
+			title: "Original Asset Reservations",
+			curriculum: [
+				{
+					title: "Pending Python Level 2 Source Assets",
+					content: [
+						"The original Python Level 2 source library referenced the visual assets below. The project demo media is already hosted on the class static host; these remaining source images are reserved so they can be uploaded later without changing course links.",
+						...PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
 				}
 			],
 			supplementalProjects: []
