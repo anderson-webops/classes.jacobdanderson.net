@@ -69,6 +69,10 @@ describe("public course pathways", () => {
 		expect(
 			coursePublicPathways.find(pathway => pathway.id === "algebra")?.courseIds
 		).toEqual([
+			"early-elementary-a-math",
+			"early-elementary-b-math",
+			"late-elementary-a-math",
+			"late-elementary-b-math",
 			"pre-algebra-a",
 			"pre-algebra-b",
 			"algebra-1a",

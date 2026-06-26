@@ -216,6 +216,10 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		title: "Pre-Algebra through AP Calculus",
 		adminPriority: "urgent",
 		courseIds: [
+			"early-elementary-a-math",
+			"early-elementary-b-math",
+			"late-elementary-a-math",
+			"late-elementary-b-math",
 			"pre-algebra-a",
 			"pre-algebra-b",
 			"algebra-1a",
@@ -279,6 +283,109 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Audit remaining unresolved image references and replace them with owned or source-safe visuals.",
 			"Add accelerated AB, BC, and exam-review pacing tracks for AP Calculus.",
 			"Add stronger cumulative assessments across Algebra 1B, 2A, 2B, Pre-Calculus A, and Pre-Calculus B."
+		]
+	},
+	{
+		id: "english-literacy",
+		title: "Reading, Writing, Speaking, and Novel Writing",
+		adminPriority: "soon",
+		courseIds: [
+			"early-elementary-a-reading",
+			"early-elementary-b-picture-book",
+			"introduction-to-public-speaking",
+			"middle-school-a-literature",
+			"middle-school-b-writing",
+			"middle-school-c-grammar",
+			"novel-writing"
+		],
+		audience:
+			"Literacy path for early readers, picture-book writers, middle-school readers and writers, public speakers, and long-form fiction projects that benefit from structured revision and evidence-based discussion.",
+		prerequisiteSummary:
+			"Early courses can begin with basic reading, sentence, and story readiness. Middle-school courses expect paragraph-level reading and writing stamina. Public speaking and novel writing work best when short outlines, drafts, and revision notes are manageable.",
+		outcomes: [
+			"Read fiction and informational text with attention to characters, plot, main ideas, evidence, inference, theme, point of view, figurative language, rhyme, alliteration, and word choice.",
+			"Write opinion, narrative, analytical, and creative pieces with grammar, mechanics, transitions, evidence, character, conflict, setting, dialogue, and revision records.",
+			"Plan and deliver short speeches or presentations with audience, structure, evidence, pacing, clarity, and reflection on delivery choices."
+		],
+		sequencingNotes: [
+			"Early reading and picture-book work can run before or alongside early writing mechanics because story structure and sentence clarity reinforce each other.",
+			"Middle School A focuses on reading and literary analysis before Middle School B asks for heavier analytical and creative writing.",
+			"Middle School C can run in parallel as a grammar and mechanics support course when written drafts need sentence-level polish.",
+			"Novel Writing belongs after basic narrative writing and character work are comfortable enough to sustain a multi-session draft."
+		],
+		projectExpectations: [
+			"Reading response with claim, quoted or paraphrased evidence, explanation, and one revised sentence.",
+			"Picture-book or short-story draft with characters, setting, conflict, sequence, and a revision note tied to a specific page or paragraph.",
+			"Speech or presentation outline with opening, support points, conclusion, delivery notes, and a short post-delivery reflection."
+		],
+		assessmentStyle: [
+			"Rubrics separate idea development, organization, evidence, word choice, conventions, and revision rather than only scoring a final draft.",
+			"Reading checks ask for evidence from the text and an explanation of how that evidence supports the claim.",
+			"Speaking checks include structure, clarity, pacing, audience fit, and one delivery improvement."
+		],
+		sourceAndTooling: [
+			"Course-native passages, draft templates, revision checklists, and short presentation outlines anchor the workflow.",
+			"Static story-planning templates from the original library are reserved on the class static host when the original asset is unavailable.",
+			"External videos, release forms, or presentation examples remain optional references rather than required platform steps."
+		],
+		safetyAndAccess: [
+			"Writing topics stay age-appropriate and avoid requiring personal disclosure.",
+			"Public sharing, recordings, competitions, and external submission forms are optional and require explicit approval.",
+			"Reading and writing materials need accessible alternatives when a visual organizer or template is unavailable."
+		],
+		adminExpansionBacklog: [
+			"Replace reserved static story-planning assets with owned or source-safe templates.",
+			"Add grade-band reading passages and writing exemplars with permissions documented.",
+			"Build clearer rubrics for short responses, analytical paragraphs, creative drafts, and presentations."
+		]
+	},
+	{
+		id: "finance-entrepreneurship",
+		title: "Personal Finance, Investing, and Entrepreneurship",
+		adminPriority: "soon",
+		courseIds: [
+			"smart-money-personal-finance",
+			"money-minded-investing",
+			"entrepreneurship-101"
+		],
+		audience:
+			"Applied decision-making path for financial literacy, investing context, and entrepreneurship projects that connect calculations, tradeoffs, customer needs, risk, and communication.",
+		prerequisiteSummary:
+			"Useful readiness includes percent, ratio, graph, table, and short written explanation comfort. Investing modules benefit from basic decimal and percentage fluency, while entrepreneurship modules benefit from comparing options and explaining a decision.",
+		outcomes: [
+			"Explain income, spending, saving, banking, credit, purchase decisions, compounding, risk, diversification, bonds, ETFs, shorting, cryptocurrency context, and long-term planning with numbers and plain-language tradeoffs.",
+			"Analyze a company, portfolio, product idea, customer segment, competitor set, financial feasibility estimate, marketing strategy, or social-impact goal using evidence instead of preference alone.",
+			"Create a decision record, portfolio note, business pitch, or feasibility check that names assumptions, calculations, risks, and next revisions."
+		],
+		sequencingNotes: [
+			"Personal Finance can run first because budgeting, credit, banking, and purchase decisions provide concrete contexts for percentage and tradeoff reasoning.",
+			"Investing follows naturally once compounding, risk, and diversification can be explained with numbers and examples.",
+			"Entrepreneurship can run alongside either finance course when product decisions, market evidence, and pitch communication are the main target."
+		],
+		projectExpectations: [
+			"Budget or purchase-decision comparison with assumptions, calculation, short-term effect, long-term effect, and one risk note.",
+			"Portfolio or company-analysis brief with returns, risk, diversification, evidence source, and a written limitation.",
+			"Entrepreneurship pitch with problem, customer, solution, competitor comparison, feasibility estimate, marketing idea, and revision based on feedback."
+		],
+		assessmentStyle: [
+			"Check calculations, assumptions, evidence quality, interpretation, and explanation of tradeoffs.",
+			"Separate financial facts from predictions, preferences, marketing claims, and ethical considerations.",
+			"Final projects include a decision or recommendation plus at least one reason the decision could change."
+		],
+		sourceAndTooling: [
+			"Spreadsheets, simple tables, sample budgets, portfolio examples, company profiles, and product-planning templates support the workflow.",
+			"Static decision-map and finance visual assets from the original library are reserved on the class static host when unavailable.",
+			"External market data remains a discussion input, not personalized financial advice."
+		],
+		safetyAndAccess: [
+			"Course material is educational and does not provide personalized investment, tax, legal, or banking advice.",
+			"Do not require real account balances, personal financial data, brokerage accounts, or purchases.",
+			"Investing examples use public information, mock portfolios, and clearly labeled assumptions."
+		],
+		adminExpansionBacklog: [
+			"Create source-safe budget, investing, and business-model templates.",
+			"Add age-appropriate disclaimers and mock-data fixtures to every finance or investing project.",
+			"Develop rubrics for decision quality, calculation accuracy, assumptions, evidence, and communication."
 		]
 	},
 	{
