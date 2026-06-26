@@ -6739,6 +6739,53 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Picture Book original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("early-elementary-b-picture-book");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Favorite Ideas Opinion Board",
+			"Opinion Book Seed",
+			"Parts of Speech Definition Map",
+			"Heads Up Word-Sort Game",
+			"Find the Capitalization Rule",
+			"Punctuation Treasure Hunt",
+			"Comma and Quotation Rule Card",
+			"Would You Rather Opinion Reasons",
+			"Opinion Paragraph Outline",
+			"Favorite Story Structure Review",
+			"Original Character and Conflict Seed",
+			"Subject-Verb Ambassador Sort",
+			"Which Word Works Context Cases",
+			"Word Choice Reflection",
+			"Gabby Tries Narrative Map",
+			"Brainstorm Bonanza Story Plan",
+			"Picture Book Plot Diagram",
+			"Strong Presentation Criteria",
+			"Dramatic Reading with Visual Backdrop",
+			"Picture Book Assembly Portfolio"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("opinion book");
+		expect(text).toContain("common noun and proper noun");
+		expect(text).toContain("markers, pens, colored pencils");
+		expect(text).toContain("beast, creature, and animal");
+		expect(text).toContain("Gabby Tries");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text).toContain(anchor);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",

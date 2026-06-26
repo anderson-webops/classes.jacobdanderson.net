@@ -1117,6 +1117,211 @@ const englishCourses = {
 		name: "Early Elementary B: Write Your Own Picture Book",
 		area: "writing",
 		focus: "story planning, parts of speech, capitalization, commas, quotation marks, opinion writing, agreement, word choice, narrative writing, presentation skills, and book revision",
+		sourceActivityAnchors: {
+			"WYB1 Book Brainstorm I": [
+				{
+					title: "Favorite Ideas Opinion Board",
+					prompt: "Draw or list favorite foods, places, and after-school activities, then identify which statements are opinions. Choose one opinion that could become a picture-book topic.",
+					evidence: [
+						"At least three favorite-topic sketches or notes.",
+						"Plain-language definition of opinion using one example and one non-example.",
+						"One opinion sentence with a matching picture idea that could support it."
+					]
+				},
+				{
+					title: "Opinion Book Seed",
+					prompt: "Turn one favorite-topic opinion into a first book seed. The seed names the opinion, the audience, and one picture that would help the reader understand the point.",
+					evidence: [
+						"Opinion sentence that can become the center of a short book.",
+						"Audience note naming who would enjoy or understand the topic.",
+						"Support-picture sketch or description connected to the opinion."
+					]
+				}
+			],
+			"WYB2 Parts of Speech": [
+				{
+					title: "Parts of Speech Definition Map",
+					prompt: "Create a map for nouns, adjectives, verbs, and adverbs. Include definitions, examples, and the difference between common nouns and proper nouns.",
+					evidence: [
+						"Definition for noun, adjective, verb, and adverb.",
+						"Examples that show the difference between a common noun and proper noun with capitalization shown correctly.",
+						"One sentence labeled with at least two parts of speech."
+					]
+				},
+				{
+					title: "Heads Up Word-Sort Game",
+					prompt: "Use short answer cards such as favorite food, weekend activity, ideal pet, artist, and self-description to sort real words by part of speech.",
+					evidence: [
+						"Card list with at least ten single-word answers.",
+						"Each selected card sorted as noun, proper noun, adjective, verb, or adverb.",
+						"Revision note for one word that could fit more than one category depending on sentence context."
+					]
+				}
+			],
+			"WYB3 Capitalization": [
+				{
+					title: "Find the Capitalization Rule",
+					prompt: "Begin with any capitalization rules already known, then study example sentences out loud, underline every capital letter, and infer the rules that explain the pattern. The activity ends by writing a clear rule list and using the rules to correct a new sentence, so capitalization is treated as evidence-based editing rather than memorizing an isolated list.",
+					evidence: [
+						"Starting rule list showing what was already known before the examples.",
+						"Annotated examples with capital letters marked.",
+						"Rule list for sentence beginnings, names, titles, places, and other proper nouns.",
+						"One corrected sentence showing which capitalization rule was applied and why."
+					]
+				}
+			],
+			"WYB4 Commas & Quotation Marks": [
+				{
+					title: "Punctuation Treasure Hunt",
+					prompt: "Solve punctuation puzzles by adding missing commas and quotation marks. Use the corrected sentences to build rules for lists, introductory phrases, and spoken dialogue.",
+					evidence: [
+						"Corrected versions of list sentences such as markers, pens, colored pencils, and a cutting machine.",
+						"Corrected versions of dialogue sentences such as the zoo sentence and the hamburger request.",
+						"Rule notes explaining when to use commas and when to use quotation marks."
+					]
+				},
+				{
+					title: "Comma and Quotation Rule Card",
+					prompt: "Create a compact rule card that separates comma jobs from quotation-mark jobs and includes one original example for each.",
+					evidence: [
+						"Comma rule with an original list or opening-phrase example.",
+						"Quotation-mark rule with an original dialogue example.",
+						"One sentence revised after noticing a missing punctuation mark."
+					]
+				}
+			],
+			"WYB5 Opinion Writing": [
+				{
+					title: "Would You Rather Opinion Reasons",
+					prompt: "Choose between two options, state an opinion, and support it with at least two reasons. Then write a new would-you-rather question and prepare reasons for one side.",
+					evidence: [
+						"Opinion answer with two supporting reasons.",
+						"Original would-you-rather question with a chosen side.",
+						"Reason note explaining how reasons differ from repeating the opinion."
+					]
+				},
+				{
+					title: "Opinion Paragraph Outline",
+					prompt: "Brainstorm favorite foods, subjects, places, books, shows, movies, or animals, then outline an opinion paragraph with a topic sentence, two strong reasons, linking words, and a closing sentence.",
+					evidence: [
+						"Brainstorm list with several possible opinion topics.",
+						"Outline naming the four parts of an opinion paragraph.",
+						"Two strongest reasons circled or labeled before drafting."
+					]
+				}
+			],
+			"WYB6 Book Brainstorm II": [
+				{
+					title: "Favorite Story Structure Review",
+					prompt: "Pick a familiar story and summarize what happens in the beginning, middle, and end. Identify the conflict and how the conflict is solved.",
+					evidence: [
+						"Beginning, middle, and end notes for the selected story.",
+						"Conflict sentence and solution sentence.",
+						"Character sketch or description connected to the story events."
+					]
+				},
+				{
+					title: "Original Character and Conflict Seed",
+					prompt: "Create an original character for a story picture book. Draw or describe the character, then write one possible conflict the character could face.",
+					evidence: [
+						"Original character name and visual or descriptive details.",
+						"One-sentence conflict that can drive a beginning, middle, and end.",
+						"Connection note explaining how the character and conflict fit together."
+					]
+				}
+			],
+			"WYB7 Subject-Verb Agreement": [
+				{
+					title: "Subject-Verb Ambassador Sort",
+					prompt: "Write sentences, identify subjects and verbs, and separate singular-subject examples from plural-subject examples. Use the sorted examples to explain agreement.",
+					evidence: [
+						"At least one sentence with the subject circled or labeled and the verb underlined or labeled.",
+						"Singular-subject and plural-subject examples with matching verbs.",
+						"Explanation of how the verb choice was selected for one blank."
+					]
+				}
+			],
+			"WYB8 Word Choice": [
+				{
+					title: "Which Word Works Context Cases",
+					prompt: "Compare synonym choices in short passages and choose the word that best fits the context. Use the cat, homework, and diary examples to explain how tone changes meaning.",
+					evidence: [
+						"Choice between beast, creature, and animal with a reason tied to the cat passage.",
+						"Choice between excuse, reason, and explanation with a reason tied to the homework passage.",
+						"Choice between nosy, curious, and inquisitive with a reason tied to the diary passage."
+					]
+				},
+				{
+					title: "Word Choice Reflection",
+					prompt: "Write a short reflection explaining why synonyms are not always interchangeable. Include one original sentence where two similar words would create different effects.",
+					evidence: [
+						"Definition of word choice using context and tone.",
+						"Original sentence pair showing how changing one word changes meaning.",
+						"Revision note choosing the stronger word for the intended effect."
+					]
+				}
+			],
+			"WYB9 Narrative Writing": [
+				{
+					title: "Gabby Tries Narrative Map",
+					prompt: "Use the story Gabby Tries to identify characters, setting, conflict, time-order words, dialogue, description, beginning, middle, end, and lesson.",
+					evidence: [
+						"Beginning, middle, and end notes for Gabby Tries.",
+						"List of time-order words from the story.",
+						"Character note with one dialogue example, one description example, and one sentence explaining the lesson."
+					]
+				},
+				{
+					title: "Brainstorm Bonanza Story Plan",
+					prompt: "Generate several settings, characters, and conflicts, then choose the strongest combination and plan a story with a beginning, middle, end, and lesson.",
+					evidence: [
+						"Setting, character, and conflict brainstorm lists.",
+						"Character entry with description and a sample line of dialogue.",
+						"Story plan with beginning, middle, end, conflict, solution, and lesson."
+					]
+				},
+				{
+					title: "Picture Book Plot Diagram",
+					prompt: "Use the course plot-diagram resource to organize the picture-book story idea. Fill in the major story parts and explain which narrative element each part represents.",
+					evidence: [
+						"Plot diagram draft for the original picture-book story.",
+						"Labelled narrative elements such as character, setting, conflict, solution, and lesson.",
+						"Revision note naming one missing or weak story part."
+					]
+				}
+			],
+			"WYB10 Presentation Skills": [
+				{
+					title: "Strong Presentation Criteria",
+					prompt: "Build a criteria list for strong presentation delivery. Use the list to evaluate a short practice reading and identify one concrete improvement.",
+					evidence: [
+						"Criteria list with voice, pacing, expression, posture or presence, and visual support.",
+						"Practice note naming one criterion that worked and one criterion to improve.",
+						"Improvement plan for the next reading."
+					]
+				},
+				{
+					title: "Dramatic Reading with Visual Backdrop",
+					prompt: "Prepare a dramatic reading of Gabby Tries or an original story excerpt. Add two or three backdrop drawings, rehearse once, and check the reading against the presentation criteria.",
+					evidence: [
+						"Reading excerpt or selected story section.",
+						"Two or three visual-backdrop sketches or descriptions.",
+						"Self-check against the presentation criteria after rehearsal."
+					]
+				}
+			],
+			"WYB11 Master Project": [
+				{
+					title: "Picture Book Assembly Portfolio",
+					prompt: "Assemble the final picture book from the course work. The book can be an opinion book or a story book, but it needs a clear central idea, organized pages, text-picture connection, mechanics revision, and presentation plan.",
+					evidence: [
+						"Book plan naming opinion-book or story-book format.",
+						"Draft pages with text and matching illustration notes.",
+						"Revision checklist covering capitalization, punctuation, word choice, page order, and presentation readiness."
+					]
+				}
+			]
+		},
 		staticAssets: ["wyb1_proj1_plotempty.png"],
 		modules: [
 			"WYB1 Book Brainstorm I",
