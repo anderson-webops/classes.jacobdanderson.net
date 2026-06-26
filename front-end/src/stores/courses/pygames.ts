@@ -1,10 +1,51 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
 const PYGAMES_REPO_ROOT =
 	"https://github.com/instruction-material/PyGames/tree/main";
+
+const PYGAMES_AVAILABLE_ORIGINAL_ASSETS = [
+	"pyg_1_bouncing_alien.mp4",
+	"pyg_1_rainbow_fill.mp4",
+	"pyg_1_wandering_ball.mp4",
+	"pyg_2_100_meter_dash.mp4",
+	"pyg_2_apple_collector.mp4",
+	"pyg_2_arrow_point.mp4",
+	"pyg_2_art_box.mp4",
+	"pyg_2_odd_square_out.mp4",
+	"pyg_3_beach_ball_chase.mp4",
+	"pyg_4_bouncy_ball_room.mp4",
+	"pyg_4_falling_squares.mp4",
+	"pyg_4_jewel_catch.mp4",
+	"pyg_5_ball_pit.mp4",
+	"pyg_5_golf.mp4",
+	"pyg_5_keep_up.mp4",
+	"pyg_6_falling_jump.mp4",
+	"pyg_6_platformer_game.mp4",
+	"pyg_6_stay_on_the_platform.mp4",
+	"pyg_7_alien_catch.mp4",
+	"pyg_7_diamond_chase.mp4",
+	"pyg_7_number_count.mp4",
+	"pyg_8_asteroid_shoot.mp4",
+	"pyg_8_target_shoot.mp4",
+	"pyg_9_shark_chase.mp4",
+	"pyg_9_space_battle.mp4",
+	"pyg_10_alien_vs_ninja.mp4",
+	"pyg_11_space_invaders.mp4"
+] as const;
+
+const PYGAMES_PENDING_ORIGINAL_ASSETS = [
+	"check_in_2_starter.py",
+	"check_in_3_starter.py",
+	"pyg_3_asteroid_dodge.mp4",
+	"pyg_3_light_control.mp4",
+	"pyg_3_zrect_art.mp4",
+	"pyg_7_beach_ball_dodge.mp4",
+	"pyg6_platformer_game.py"
+] as const;
 
 function hideBroadPyGamesRootPair(item: RawCourseModuleItem) {
 	if (
@@ -1755,6 +1796,28 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 						"https://github.com/instruction-material/PyGames/tree/main/PG-34-applied-studio-17-images-supplemental-3/solution"
 				}
 			]
+		},
+		{
+			kind: "appendix",
+			title: "Original Demo Media Reservations",
+			curriculum: [
+				{
+					title: "PyGame Source Media Status",
+					content: [
+						"The original PyGame source library referenced the student-facing assets below. Hosted entries are ready on the class static host; pending entries have reserved URLs so the original files can be added later without changing course links.",
+						"**Hosted source assets:**",
+						...PYGAMES_AVAILABLE_ORIGINAL_ASSETS.map(
+							filename => `- ${staticMediaUrl(filename)}`
+						),
+						"**Pending source assets:**",
+						...PYGAMES_PENDING_ORIGINAL_ASSETS.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 });
