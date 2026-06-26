@@ -3167,6 +3167,33 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
+	it("reserves original Java Level 3 source media on the class static host", async () => {
+		const course = await loadRawCourse("java-level-3");
+		expect(course).not.toBeNull();
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Demo Media Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "Pending Java Level 3 Demo Media"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		for (const filename of [
+			"aj_1_chatbot.mp4",
+			"aj_14_BST.mp4",
+			"aj_check-in_4.mp4"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps low-level security projects evidence-based instead of generic starter boilerplate", async () => {
 		const courses = await Promise.all([
 			loadRawCourse("low-level-security"),
