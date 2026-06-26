@@ -3223,6 +3223,44 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
+	it("records PyGame source media as hosted or pending on the class static host", async () => {
+		const course = await loadRawCourse("pygames");
+		expect(course).not.toBeNull();
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Demo Media Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "PyGame Source Media Status"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		for (const filename of [
+			"pyg_1_rainbow_fill.mp4",
+			"pyg_5_golf.mp4",
+			"pyg_11_space_invaders.mp4"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(content).not.toContain(
+				`original static asset \`${filename}\` is not currently available`
+			);
+		}
+
+		for (const filename of [
+			"check_in_2_starter.py",
+			"pyg_3_asteroid_dodge.mp4",
+			"pyg6_platformer_game.py"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps low-level security projects evidence-based instead of generic starter boilerplate", async () => {
 		const courses = await Promise.all([
 			loadRawCourse("low-level-security"),
