@@ -187,6 +187,7 @@ async function handleResourceChange() {
 	grid-template-columns: minmax(0, 1fr);
 	gap: 0.65rem;
 	align-self: stretch;
+	container-type: inline-size;
 	min-width: 0;
 	width: 100%;
 	max-width: 100%;
@@ -194,6 +195,7 @@ async function handleResourceChange() {
 	contain: inline-size paint;
 	overflow-x: hidden;
 	overflow-inline: hidden;
+	overflow: clip;
 }
 
 .course-asset-preview-toggle,
@@ -262,6 +264,7 @@ async function handleResourceChange() {
 	contain: inline-size layout paint;
 	overflow: hidden;
 	overflow-inline: hidden;
+	overflow: clip;
 	border: 1px solid
 		var(--course-asset-preview-border, rgba(13, 148, 136, 0.18));
 	border-radius: 18px;
@@ -337,6 +340,7 @@ async function handleResourceChange() {
 	box-sizing: border-box;
 	overflow-x: hidden;
 	overflow-inline: hidden;
+	overflow: clip;
 	contain: inline-size paint;
 }
 
