@@ -2653,6 +2653,88 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
+	it("records Python Level 2 source media as hosted or pending on the class static host", async () => {
+		const course = await loadRawCourse("python-level-2");
+		expect(course).not.toBeNull();
+
+		for (const titlePattern of [
+			/PS1 Project 1: Mad Libs/,
+			/PS6 Supplemental Project 5: Card Shuffler/,
+			/PS12 Project 1: Type Racer/
+		]) {
+			const item = findItem(course!, titlePattern);
+			expect(item.mediaLink).toMatch(/^https:\/\/static\.classes\.jacobdanderson\.net\//);
+			expect(item.mediaLink).not.toContain("static.junilearning.com");
+			expect(item.content).not.toContain("Pending media:");
+		}
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Asset Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "Pending Python Level 2 Source Assets"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		for (const filename of [
+			"python_level_2_check_in_questions.png",
+			"python_level_2_concept.png",
+			"python_level_2_project.png"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
+	it("records Python Level 3 source media as hosted or pending on the class static host", async () => {
+		const course = await loadRawCourse("python-level-3");
+		expect(course).not.toBeNull();
+
+		const hostedProject = findItem(course!, /AM1 Project 1: Mad Libs/);
+		expect(hostedProject.mediaLink).toBe(staticMediaUrl("am_1_mad_libs.mp4"));
+		expect(hostedProject.content).not.toContain("Pending media:");
+
+		const missingProject = findItem(
+			course!,
+			/AM12 Project 2: File IO and Dictionaries/
+		);
+		expect(missingProject.mediaLink).toBe(
+			staticMediaUrl("am_12_file_io_with_dictionaries.mp4")
+		);
+		expect(
+			hasPendingStaticMediaNotice(
+				missingProject.content,
+				"am_12_file_io_with_dictionaries.mp4"
+			)
+		).toBe(true);
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Asset Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "Pending Python Level 3 Source Assets"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		for (const filename of [
+			"python_level_3_concept.png",
+			"python_level_3_project.png"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps generated guidance references with spaced hyphens Markdown-safe", () => {
 		const guidance = buildProjectGuidance({
 			courseFamily: "Python Level 1",

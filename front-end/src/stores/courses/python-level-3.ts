@@ -1,5 +1,14 @@
 import type { RawCourse } from "./types";
-import { staticMediaUrl, withPendingStaticMediaNotice } from "./staticMedia";
+import {
+	pendingStaticMediaNotice,
+	staticMediaUrl,
+	withPendingStaticMediaNotice
+} from "./staticMedia";
+
+const PYTHON_LEVEL_3_PENDING_SOURCE_ASSETS = [
+	"python_level_3_concept.png",
+	"python_level_3_project.png"
+];
 
 const SORT_ANIMATIONS = {
 	bubble: staticMediaUrl("py3_bubble_sort_wikimedia.gif"),
@@ -1573,6 +1582,23 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						evidence:
 							"The recap connects at least three course concepts to projects completed during the course."
 					})
+				}
+			],
+			supplementalProjects: []
+		},
+		{
+			kind: "appendix",
+			title: "Original Asset Reservations",
+			curriculum: [
+				{
+					title: "Pending Python Level 3 Source Assets",
+					content: [
+						"The original Python Level 3 source library referenced the visual assets below. The available project demo media remains linked from the relevant project cards; these remaining source images are reserved so they can be uploaded later without changing course links.",
+						...PYTHON_LEVEL_3_PENDING_SOURCE_ASSETS.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
 				}
 			],
 			supplementalProjects: []
