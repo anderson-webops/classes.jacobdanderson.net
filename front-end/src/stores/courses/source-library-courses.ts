@@ -578,6 +578,181 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 	]
 };
 
+const novelWritingSourceAnchors: Record<string, SourceActivityAnchor[]> = {
+	"NW1 Course Overview & Goal Setting": [
+		{
+			title: "Novel Scope and Word-Count Plan",
+			prompt: "Choose a novel-writing scope before drafting begins: a short story, a novella-length project, a longer novel excerpt, or a complete long-form draft. Convert the choice into a target word count, a weekly writing rhythm, and a completion definition. The plan also names the story idea, genre, likely audience, and the kind of ending that would make the project feel complete rather than simply stopped.",
+			evidence: [
+				"Selected project scope with a target word count and a reason the scope matches the available writing time.",
+				"One-paragraph story premise that names the central character, central desire, likely obstacle, and possible ending direction.",
+				"Drafting plan that divides the total word count into checkpoints and explains how progress will be measured across the course."
+			]
+		}
+	],
+	"NW2 Developing a Protagonist and an Antagonist": [
+		{
+			title: "Protagonist, Antagonist, and Objective Portraits",
+			prompt: "Build character portraits for the protagonist and antagonist using character objective, motivation, strength, flaw, fear, and conflict pressure. A protagonist is not only the main character; the protagonist wants something badly enough to take action. An antagonist is not always a villain; the antagonist blocks, challenges, or complicates the protagonist's objective. The portraits explain why the two forces collide and what each character risks losing.",
+			evidence: [
+				"Profile for the protagonist naming objective, motivation, strength, flaw, fear, and first visible action.",
+				"Profile for the antagonist naming objective, motivation, pressure on the protagonist, and at least one sympathetic or understandable trait.",
+				"Conflict statement showing why both objectives cannot be fully satisfied at the same time."
+			]
+		}
+	],
+	"NW3 Novel Drafting: Introducing Your Characters": [
+		{
+			title: "Opening Scene Character Introduction",
+			prompt: "Draft the opening section of the novel so the reader meets the main character through action, voice, and choice rather than a list of facts. The first pages establish what normal life looks like, what the protagonist cares about, and what tension is already present. The draft can introduce the antagonist directly, hint at the antagonist's influence, or show the problem that will eventually connect both characters.",
+			evidence: [
+				"Opening-scene draft or excerpt that introduces the protagonist in a concrete situation.",
+				"Annotation identifying one action, one line of thought or dialogue, and one detail that reveals character.",
+				"Revision note naming where the opening feels active and where it relies too much on summary."
+			]
+		}
+	],
+	"NW4 Generating Conflict": [
+		{
+			title: "Conflict Ladder",
+			prompt: "Create a conflict ladder that starts with the protagonist's objective and then adds increasingly serious obstacles. Include at least one external obstacle, one interpersonal obstacle, and one internal obstacle. The ladder makes clear how conflict grows because of character choices, not random inconvenience. Each rung changes the protagonist's options, raises the cost of continuing, or reveals a weakness that makes the next scene harder.",
+			evidence: [
+				"Protagonist objective written as a clear want with a reason it matters.",
+				"Three-to-five conflict rungs showing external, interpersonal, and internal complications.",
+				"Short explanation of how one conflict rung causes or intensifies the next one."
+			]
+		}
+	],
+	"NW5 Novel Drafting: Setting the Scene": [
+		{
+			title: "Scene Placement and Atmosphere Draft",
+			prompt: "Draft a scene that places the reader in a specific location before major action happens. Setting includes more than a named place; it includes time, sensory detail, mood, available objects, social rules, and limits on what characters can do. The scene uses setting to shape character behavior, create pressure, or reveal a contrast between what the protagonist wants and what the environment allows.",
+			evidence: [
+				"Scene draft with a clear physical location, time context, and at least three sensory details.",
+				"Annotation explaining how one setting detail affects action, mood, or character decision-making.",
+				"Revision note identifying one generic location detail that was replaced with a more specific detail."
+			]
+		}
+	],
+	"NW6 Structuring Plot": [
+		{
+			title: "Narrative Arc Map",
+			prompt: "Map the novel on a narrative arc using exposition, rising action, conflict at greatest tension, falling action, and resolution. The arc is a planning tool, not a rigid formula. It helps reveal whether the story has enough escalation before the turning point and whether the ending answers the central conflict. The map can be revised as the draft changes, but each section needs a specific story event rather than a vague label.",
+			evidence: [
+				"Completed narrative arc with at least one concrete event in each section.",
+				"Explanation of the event that creates the highest tension and why it changes the protagonist's path.",
+				"Revision note naming one missing bridge between two plot points or one event that needs stronger cause and effect."
+			]
+		}
+	],
+	"NW7 Character Development": [
+		{
+			title: "Character Change and Rising Action Check",
+			prompt: "Track how the protagonist changes across the rising action. Character development can appear through decisions, reactions under pressure, relationship changes, mistakes, and new self-knowledge. Choose two scenes already drafted or planned, then compare what the protagonist believes, fears, or attempts in each one. The comparison helps determine whether the character is growing, resisting growth, or becoming more complicated.",
+			evidence: [
+				"Before-and-after character snapshot using two drafted or planned scenes.",
+				"Evidence from each scene showing a decision, reaction, or relationship shift.",
+				"Revision target for one scene where the protagonist's change needs to become more visible through action or dialogue."
+			]
+		}
+	],
+	"NW8 Narration": [
+		{
+			title: "Point-of-View Consistency Audit",
+			prompt: "Choose the story's point of view and audit a draft excerpt for consistency. First person, third-person limited, third-person omniscient, and other narration choices control what the reader can know, how close the reader feels to the character, and what information can stay hidden. The audit marks sentences that reveal thoughts, judgments, or information unavailable to the chosen narrator and revises them to match the intended point of view.",
+			evidence: [
+				"Selected point of view with a reason it fits the story's tension and character access.",
+				"Annotated excerpt marking narration that fits and narration that breaks the chosen viewpoint.",
+				"Revised passage that keeps knowledge, tone, and distance consistent."
+			]
+		}
+	],
+	"Check-In #1": [
+		{
+			title: "Midpoint Self-Assessment and Revision Plan",
+			prompt: "Select a meaningful excerpt from the draft and evaluate it against the course skills covered so far: goal clarity, protagonist and antagonist design, character introduction, conflict generation, plot structure, character development, and narration. The response identifies one strength that is already working and one revision target that would improve the next draft. The revision plan is specific enough to change sentences, scene structure, or character choices.",
+			evidence: [
+				"Selected excerpt with a note explaining why it represents important current work.",
+				"Self-assessment naming one strong skill and one developing skill from the first half of the course.",
+				"Revision plan with concrete changes to character, conflict, plot, or narration and a short explanation of why those changes matter."
+			]
+		},
+		{
+			title: "Revised Excerpt Reflection",
+			prompt: "Revise the selected excerpt using the midpoint plan, then compare the original and revised versions. The reflection explains what changed, what stayed the same, and how the revision affects the reader's understanding of character, conflict, or point of view. This turns revision into visible decision-making instead of simple proofreading.",
+			evidence: [
+				"Original excerpt and revised excerpt, or clearly labeled before-and-after sections.",
+				"Three revision choices labeled by purpose, such as clarity, tension, character, pacing, or narration.",
+				"Reflection explaining which revision had the greatest effect and what still needs another pass."
+			]
+		}
+	],
+	"NW9 Describing Setting": [
+		{
+			title: "Sensory Setting Expansion",
+			prompt: "Choose a setting from the novel and expand it with sensory language connected to story purpose. Sight, sound, smell, touch, temperature, movement, and spatial detail can all help, but the strongest setting description does more than decorate the scene. It supports mood, reveals character attention, creates danger or comfort, and gives the reader information needed for the action.",
+			evidence: [
+				"Original setting paragraph or scene notes plus an expanded version.",
+				"At least four sensory details, with each detail connected to mood, character, or plot usefulness.",
+				"Revision note identifying one detail that was cut because it was vivid but not useful to the scene."
+			]
+		}
+	],
+	"NW10 Writing Dialogue": [
+		{
+			title: "Dialogue Formatting and Subtext Pass",
+			prompt: "Write or revise a dialogue scene so each speaker has clear formatting, purposeful speech, and at least one layer of subtext. Dialogue can reveal information, create conflict, show relationships, and hide what a character is truly thinking. The pass checks paragraph breaks, quotation marks, speaker tags, action beats, and whether each line changes the scene in some way.",
+			evidence: [
+				"Dialogue excerpt with correct paragraphing, quotation marks, and speaker clarity.",
+				"Annotation for one line that reveals direct information and one line that suggests subtext.",
+				"Revision note replacing at least one filler line with speech or action that changes tension, relationship, or plot direction."
+			]
+		}
+	],
+	"NW11 Novel Drafting: Conflict": [
+		{
+			title: "Highest-Tension Conflict Draft",
+			prompt: "Draft or revise the section where the central conflict reaches its strongest pressure. The scene needs a clear objective, a serious obstacle, and a consequence that cannot be ignored afterward. The protagonist may succeed, fail, compromise, or discover a new problem, but the outcome changes the path toward the ending. This section tests whether the conflict has grown from earlier character choices and plot events.",
+			evidence: [
+				"Conflict-scene draft or detailed scene plan with objective, obstacle, choice, and consequence labeled.",
+				"Connection note explaining which earlier scene or decision made this conflict possible.",
+				"Revision target for increasing stakes, clarifying the protagonist's choice, or strengthening the consequence."
+			]
+		}
+	],
+	"NW12 Novel Drafting: Falling Action & Resolution": [
+		{
+			title: "Ending Cause-and-Effect Chain",
+			prompt: "Plan or draft the falling action and resolution as a cause-and-effect chain rather than a quick wrap-up. Falling action shows the consequences of the main conflict, and resolution shows what has changed by the end. The ending can be happy, sad, mixed, or open, but it needs to answer the central question created by the protagonist's objective and reveal what the journey cost or taught the character.",
+			evidence: [
+				"Cause-and-effect chain from the main conflict outcome to the final scene.",
+				"Ending draft or outline that identifies what changed externally and internally.",
+				"Revision note checking whether the ending answers the original objective, character arc, and main conflict."
+			]
+		}
+	],
+	"Check-In #2": [
+		{
+			title: "Final Revision Portfolio",
+			prompt: "Build a final revision portfolio from a selected excerpt or completed draft section. The portfolio evaluates setting, dialogue, conflict, falling action, resolution, and earlier craft skills. It names the strongest current feature of the novel, identifies the highest-priority next revision, and explains how the draft has changed from the first course plan to the current version.",
+			evidence: [
+				"Selected excerpt or draft section with notes tied to setting, dialogue, conflict, and resolution.",
+				"Self-assessment naming one polished craft strength and one high-impact revision priority.",
+				"Revision summary explaining how the novel changed across planning, drafting, midpoint revision, and final revision."
+			]
+		},
+		{
+			title: "Publication Readiness Reflection",
+			prompt: "Review the novel as a reader-facing project. The reflection checks whether the title, opening, character arc, conflict, ending, and formatting are ready for sharing. The publication readiness check does not mean the draft is perfect; it means the writer can explain what the story is, what revision work has already happened, and what the next realistic editing pass would address.",
+			evidence: [
+				"Reader-facing summary of the novel's premise, protagonist, conflict, and ending direction.",
+				"Checklist covering title, opening clarity, character arc, conflict resolution, dialogue formatting, and remaining copyedits.",
+				"Next-pass editing plan separating big-picture revision from sentence-level proofreading."
+			]
+		}
+	]
+};
+
 function compactTopic(title: string) {
 	return title
 		.replace(/^[A-Z]{2,}\s*\d+[A-Z]?\s*/i, "")
@@ -2405,6 +2580,7 @@ const englishCourses = {
 		name: "Novel Writing",
 		area: "long-form writing",
 		focus: "goal setting, protagonist and antagonist design, drafting, conflict, setting, plot structure, character development, narration, dialogue, and revision toward a complete story arc",
+		sourceActivityAnchors: novelWritingSourceAnchors,
 		staticAssets: [
 			"nw6_blank_narrative_arc.jpg",
 			"nw6_narrative_arc_definitions.jpg"

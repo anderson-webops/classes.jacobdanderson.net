@@ -7039,6 +7039,66 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Novel Writing source anchors with neutral wording", async () => {
+		const expectedAnchors = [
+			"Novel Scope and Word-Count Plan",
+			"Protagonist, Antagonist, and Objective Portraits",
+			"Opening Scene Character Introduction",
+			"Conflict Ladder",
+			"Scene Placement and Atmosphere Draft",
+			"Narrative Arc Map",
+			"Character Change and Rising Action Check",
+			"Point-of-View Consistency Audit",
+			"Midpoint Self-Assessment and Revision Plan",
+			"Revised Excerpt Reflection",
+			"Sensory Setting Expansion",
+			"Dialogue Formatting and Subtext Pass",
+			"Highest-Tension Conflict Draft",
+			"Ending Cause-and-Effect Chain",
+			"Final Revision Portfolio",
+			"Publication Readiness Reflection"
+		];
+		const originalReferences = [
+			"short story",
+			"word count",
+			"protagonist",
+			"antagonist",
+			"character objective",
+			"conflict",
+			"setting",
+			"narrative arc",
+			"rising action",
+			"point of view",
+			"revision plan",
+			"sensory language",
+			"dialogue",
+			"falling action",
+			"resolution",
+			"publication"
+		];
+
+		const course = await loadRawCourse("novel-writing");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text, anchor).toContain(anchor);
+		}
+		for (const originalReference of originalReferences) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",
