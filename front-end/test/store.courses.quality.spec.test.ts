@@ -3261,6 +3261,55 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
+	it("reserves original Scratch visual assets on the class static host", async () => {
+		const courses = await Promise.all([
+			loadRawCourse("scratch-level-1"),
+			loadRawCourse("scratch-level-2")
+		]);
+		for (const course of courses) {
+			expect(course).not.toBeNull();
+		}
+
+		const expectations = [
+			{
+				course: courses[0]!,
+				title: "Pending Scratch Level 1 Visual Assets",
+				files: [
+					"scratch_level_1_concept.png",
+					"scratch_level_1_project.png"
+				]
+			},
+			{
+				course: courses[1]!,
+				title: "Pending Scratch Level 2 Visual Assets",
+				files: [
+					"scratch_level_2_concept.png",
+					"scratch_level_2_project.png"
+				]
+			}
+		];
+
+		for (const { course, files, title } of expectations) {
+			const mediaModule = course.modules.find(
+				module => module.title === "Original Asset Reservations"
+			);
+			expect(mediaModule?.kind).toBe("appendix");
+
+			const mediaItem = mediaModule?.curriculum.find(
+				item => item.title === title
+			);
+			expect(mediaItem).toBeDefined();
+			const content = mediaItem?.content ?? "";
+
+			for (const filename of files) {
+				expect(content).toContain(staticMediaUrl(filename));
+				expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+			}
+
+			expect(content).not.toContain("static.junilearning.com");
+		}
+	});
+
 	it("keeps low-level security projects evidence-based instead of generic starter boilerplate", async () => {
 		const courses = await Promise.all([
 			loadRawCourse("low-level-security"),
