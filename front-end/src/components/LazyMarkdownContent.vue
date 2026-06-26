@@ -234,8 +234,8 @@ watch(
 	grid-template-columns: minmax(0, 1fr);
 	width: 100%;
 	inline-size: 100%;
-	max-width: min(100%, 82ch);
-	max-inline-size: min(100%, 82ch);
+	max-width: 100%;
+	max-inline-size: 100%;
 	box-sizing: border-box;
 	font-size: 1.02rem;
 	line-height: 1.8;
@@ -243,7 +243,6 @@ watch(
 	overflow-wrap: break-word;
 	overflow-x: hidden;
 	overflow-inline: hidden;
-	contain: inline-size;
 }
 
 .item-content-markdown :deep(h1),
@@ -260,6 +259,8 @@ watch(
 .item-content-markdown :deep(ol),
 .item-content-markdown :deep(blockquote) {
 	margin: 0 0 0.95rem;
+	max-width: 82ch;
+	max-inline-size: 82ch;
 }
 
 .item-content-markdown :deep(ul),
@@ -286,7 +287,6 @@ watch(
 	min-width: 0;
 	min-inline-size: 0;
 	box-sizing: border-box;
-	contain: inline-size layout paint;
 	isolation: isolate;
 	clip-path: inset(0 round 14px);
 	overflow-x: auto;
@@ -304,10 +304,10 @@ watch(
 .item-content-markdown :deep(table) {
 	width: 100%;
 	inline-size: 100%;
-	min-width: 100%;
-	min-inline-size: 100%;
-	max-width: 100%;
-	max-inline-size: 100%;
+	min-width: 42rem;
+	min-inline-size: 42rem;
+	max-width: none;
+	max-inline-size: none;
 	box-sizing: border-box;
 	table-layout: fixed;
 	border-spacing: 0;
