@@ -6470,11 +6470,42 @@ describe("course text quality normalization", () => {
 			expect(text).not.toMatch(/\bshould\b/i);
 		}
 
+		const [
+			smartMoney,
+			publicSpeaking,
+			earlyMath,
+			earlyReading
+		] = courses;
+		const nonProgrammingCorpus = [
+			smartMoney,
+			publicSpeaking,
+			earlyMath,
+			earlyReading
+		]
+			.filter(Boolean)
+			.map(course => allCourseText(course!))
+			.join("\n");
+
 		expect(corpus).toContain("decision record with assumptions");
 		expect(corpus).toContain("speech outline with purpose");
 		expect(corpus).toContain("worked math record with diagrams");
 		expect(corpus).toContain("reading or writing record with claim");
 		expect(corpus).toContain("problem-solving record with inputs");
+		expect(nonProgrammingCorpus).toContain(
+			"the known quantities, needed representation"
+		);
+		expect(nonProgrammingCorpus).toContain(
+			"the passage or draft section, claim or writing goal"
+		);
+		expect(nonProgrammingCorpus).toContain(
+			"the audience, purpose, central message"
+		);
+		expect(nonProgrammingCorpus).toContain(
+			"the goal, assumptions, available evidence"
+		);
+		expect(nonProgrammingCorpus).not.toMatch(
+			/core state, inputs, outputs|first runnable checkpoint|first runnable slice|data or state representation/i
+		);
 	});
 
 	it("adds Pre-Algebra A from the original math source sequence", async () => {

@@ -92,6 +92,188 @@ function familyFocus(courseFamily: string) {
 	return "inputs, state changes, boundaries, observable behavior, edge cases, and verification evidence";
 }
 
+interface AcademicSupportFrame {
+	evidenceTypes: string;
+	extensionFocus: string;
+	focus: string;
+	mismatchTypes: string;
+	planningNouns: string;
+	productCheckpoint: string;
+	reliabilityTarget: string;
+}
+
+function academicSupportFrame(
+	courseFamily: string
+): AcademicSupportFrame | null {
+	const family = courseFamily.toLowerCase();
+
+	if (
+		/math|algebra|geometry|calculus|pre-calculus|number|fraction|decimal|measurement|arithmetic/.test(
+			family
+		)
+	) {
+		return {
+			evidenceTypes:
+				"diagram, equation, table, graph, estimation check, inverse-operation check, or substitution check",
+			extensionFocus:
+				"a changed number, unit, representation, graph feature, shape condition, or reasonableness question",
+			focus: "given quantities, labels, diagrams, equations, representation choices, calculation checks, and reasonableness evidence",
+			mismatchTypes:
+				"arithmetic slip, missing label, wrong representation, invalid assumption, or answer that fails a reasonableness check",
+			planningNouns:
+				"the known quantities, needed representation, operation or relationship, units or labels, and answer check",
+			productCheckpoint:
+				"a worked example with visible steps, labels, and a reasonableness check",
+			reliabilityTarget:
+				"which representation, calculation, or check supports the answer"
+		};
+	}
+
+	if (
+		/speaking|presentation|speech|public speaking|storyteller|comedy|radio/.test(
+			family
+		)
+	) {
+		return {
+			evidenceTypes:
+				"outline, rehearsal note, timing check, delivery checklist, audience feedback note, or revised speaking cue",
+			extensionFocus:
+				"a changed audience, speaking purpose, time limit, tone, structure, or delivery constraint",
+			focus: "audience, purpose, central message, outline structure, supporting details, rehearsal evidence, and delivery choices",
+			mismatchTypes:
+				"unclear purpose, weak support, rushed pacing, missing transition, audience mismatch, or delivery choice that weakens the message",
+			planningNouns:
+				"the audience, purpose, central message, main points, support details, delivery focus, and revision evidence",
+			productCheckpoint:
+				"a short outline or rehearsal pass with a clear message and one delivery target",
+			reliabilityTarget:
+				"which outline choice, support detail, rehearsal note, or delivery adjustment improves the message"
+		};
+	}
+
+	if (
+		/reading|literary|literature|grammar|writing|novel|story|book|narrative|picture book|english/.test(
+			family
+		)
+	) {
+		return {
+			evidenceTypes:
+				"quoted detail, paraphrase, sentence revision, grammar rule, draft note, outline, annotation, or reflection",
+			extensionFocus:
+				"a changed passage, sentence pattern, audience, point of view, scene, structure, or revision goal",
+			focus: "text evidence, claim quality, sentence or draft choices, revision evidence, audience, voice, structure, and mechanics",
+			mismatchTypes:
+				"unsupported claim, vague evidence, grammar mismatch, unclear structure, audience mismatch, or revision that does not improve clarity",
+			planningNouns:
+				"the passage or draft section, claim or writing goal, evidence, rule or craft choice, revision target, and final reflection",
+			productCheckpoint:
+				"a short reading response, sentence revision, or draft section with visible evidence and one revision note",
+			reliabilityTarget:
+				"which text detail, grammar rule, draft choice, or revision note supports the response"
+		};
+	}
+
+	if (
+		/finance|invest|entrepreneur|business|credit|bank|portfolio|stock|income|spending/.test(
+			family
+		)
+	) {
+		return {
+			evidenceTypes:
+				"budget table, assumption list, calculation, comparison chart, risk note, customer evidence, or recommendation memo",
+			extensionFocus:
+				"a changed budget, customer, time horizon, risk level, market condition, cost, or revenue assumption",
+			focus: "goals, assumptions, numerical evidence, customer or market context, time horizon, tradeoffs, risks, and recommendation quality",
+			mismatchTypes:
+				"missing assumption, weak evidence, calculation error, ignored risk, unrealistic timeline, or recommendation that does not match the goal",
+			planningNouns:
+				"the goal, assumptions, available evidence, calculation path, tradeoffs, risks, and recommendation criteria",
+			productCheckpoint:
+				"a decision record with assumptions, calculations, tradeoffs, and a tentative recommendation",
+			reliabilityTarget:
+				"which assumption, calculation, comparison, or risk note supports the recommendation"
+		};
+	}
+
+	return null;
+}
+
+function academicSupportSectionGuidance(
+	courseFamily: string,
+	title: string,
+	section: SupportSectionKind,
+	variant: number,
+	frame: AcademicSupportFrame
+) {
+	if (section === "debugging") {
+		const opener = [
+			`**${title}** diagnoses likely confusion with evidence from the work sample.`,
+			`**${title}** narrows the mismatch before revising the answer, draft, or recommendation.`,
+			`**${title}** is a controlled review with evidence before and after the revision.`
+		][variant];
+
+		return [
+			opener,
+			`The **${title}** review checks ${frame.focus}.`,
+			`The ${courseFamily} evidence names the confusing result, the smallest example that shows it, the likely cause, the revision, and the evidence that confirms the result changed.`
+		].join("\n\n");
+	}
+
+	if (section === "planning") {
+		const opener = [
+			`**${title}** starts with a short map of the idea, evidence, and final product.`,
+			`**${title}** is divided into checkpoints that can be reviewed before the full response is complete.`,
+			`**${title}** begins with the key evidence and the first complete example.`
+		][variant];
+
+		return [
+			opener,
+			`The **${title}** plan names ${frame.planningNouns}.`,
+			`The work sequence for **${title}** produces ${frame.productCheckpoint} before adding depth.`,
+			`A complete plan separates required evidence from optional extension. It identifies the first useful example, the evidence source, the expected product, and the point where the work can pause with a readable record.`,
+			`Each checkpoint answers three questions: what claim or result is being made, what evidence supports it, and what revision or comparison would make it stronger.`
+		].join("\n\n");
+	}
+
+	if (section === "verification") {
+		const opener = [
+			`**${title}** ends with a concrete evidence review.`,
+			`**${title}** compares the expected result with the evidence in the finished work.`,
+			`**${title}** is reviewed through evidence, not only whether the final answer looks plausible.`
+		][variant];
+		const evidenceReview = [
+			`The verification note for **${title}** names the expected result, observed result, evidence source, and interpretation. The evidence type fits the work: ${frame.evidenceTypes}.`,
+			`A useful **${title}** check separates expectation, observation, and interpretation. The conclusion points to ${frame.evidenceTypes} that supports it.`,
+			`The **${title}** evidence record makes the review reproducible: expected result, actual result, source of evidence, and ${frame.reliabilityTarget}.`
+		][variant];
+		const mismatchReview = [
+			`When the **${title}** result differs from the expectation, classify the mismatch first: ${frame.mismatchTypes}. The classification determines the next revision.`,
+			`If the **${title}** evidence does not match the target, identify the mismatch before revising the work: ${frame.mismatchTypes}.`,
+			`A mismatch in **${title}** produces a diagnosis before another revision: what failed, why it likely failed, and which smaller evidence check can confirm the next change.`
+		][variant];
+
+		return [
+			opener,
+			`Expected and observed results in **${title}** are compared for ${frame.focus}.`,
+			`The **${title}** record includes the main result, one meaningful contrast case, one revision decision, and one limitation that would guide a later revision.`,
+			evidenceReview,
+			mismatchReview
+		].join("\n\n");
+	}
+
+	const opener = [
+		`**${title}** extends the ${courseFamily} work by changing one meaningful condition rather than adding unrelated material.`,
+		`**${title}** adds one new condition, audience, evidence source, or constraint that still fits the goal.`,
+		`**${title}** gains depth by making one requirement more realistic and then checking the result.`
+	][variant];
+
+	return [
+		opener,
+		`The **${title}** extension stays centered on ${frame.focus}.`,
+		`The new ${courseFamily} requirement in **${title}** remains checkable: the expected result is defined, one standard check and one contrast case are reviewed, and the change from the base version is recorded. The extension focus is ${frame.extensionFocus}.`
+	].join("\n\n");
+}
+
 function scratchSupportSectionGuidance(
 	title: string,
 	section: SupportSectionKind,
@@ -151,6 +333,17 @@ export function buildSupportSectionGuidance({
 
 	if (courseFamily.toLowerCase().includes("scratch")) {
 		return scratchSupportSectionGuidance(title, section, variant);
+	}
+
+	const academicFrame = academicSupportFrame(courseFamily);
+	if (academicFrame) {
+		return academicSupportSectionGuidance(
+			courseFamily,
+			title,
+			section,
+			variant,
+			academicFrame
+		);
 	}
 
 	if (section === "debugging") {
