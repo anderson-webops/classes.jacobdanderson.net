@@ -288,12 +288,12 @@ function createStaticAssetAppendix(
 	return [
 		{
 			kind: "appendix" as const,
-			title: "Original Asset Reservations",
+			title: "Pending Static Assets",
 			curriculum: [
 				{
 					title: "Static Asset Placeholders",
 					content: [
-						`Archived ${courseName} material referenced the static assets below. They are reserved on the class static host so the files can be added later without changing course links.`,
+						`${courseName} has placeholders for the static assets below. Each URL points to the class static host and can be filled when the matching file is available.`,
 						...uniqueAssets.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

@@ -558,7 +558,7 @@ export const preAlgebraBCourse: RawCourse = {
 			"Pre-algebra readiness for Geometry A and Algebra 1A"
 		],
 		sourcePolicy:
-			"Adapted from the Pre-Algebra B source sequence with neutral wording, source-backed projects, and static.classes placeholders for unavailable source images.",
+			"Adapted from the Pre-Algebra B sequence with neutral wording, course-linked projects, and static.classes placeholders for unavailable images.",
 		assessmentCadence: [
 			"Check-In #1 after statistics and graphs",
 			"Check-In #2 after geometry measurement",
@@ -568,7 +568,7 @@ export const preAlgebraBCourse: RawCourse = {
 			"Notebook or shared document",
 			"Spreadsheet or table tool for data summaries",
 			"Drawing or graphing tool for diagrams and graphs",
-			"Static-host placeholders for source diagrams and screenshots"
+			"Static-host placeholders for diagrams and screenshots"
 		],
 		safetyPolicy: [
 			"No physical materials required",
@@ -587,7 +587,7 @@ export const preAlgebraBCourse: RawCourse = {
 		],
 		recommendedNextWork: [
 			"Add Geometry A/B and Pre-Calculus A/B to complete the visible math pathway",
-			"Upload reserved Pre-Algebra B source images to the static classes host",
+			"Upload reserved Pre-Algebra B images to the static classes host",
 			"Review external map/video links for source-safe alternatives where useful"
 		]
 	}

@@ -1408,12 +1408,12 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 		},
 		{
 			kind: "appendix",
-			title: "Original Asset Reservations",
+			title: "Pending Static Assets",
 			curriculum: [
 				{
 					title: "Pending Scratch Level 2 Visual Assets",
 					content: [
-						"The original Scratch Level 2 source library referenced the visual assets below. These files are reserved on the class static host so they can be uploaded later without changing course links.",
+						"This course has placeholders for the visual assets below. Each URL points to the class static host and can be filled when the matching file is available.",
 						...SCRATCH_LEVEL_2_SOURCE_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

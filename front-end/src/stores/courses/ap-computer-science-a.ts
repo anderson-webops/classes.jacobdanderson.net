@@ -557,7 +557,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Core Project: Student Class",
 					content:
-						"The Student Class build is the main APCS5 implementation checkpoint because it is a clean class-with-state project from the source sequence.",
+						"The Student Class build is the main APCS5 implementation checkpoint because it is a clean class-with-state project in this course sequence.",
 					projectLink: repo("APCS5-Student-Class/starter"),
 					solutionLink: repo("APCS5-Student-Class/solution"),
 					mediaLink: media("apcs5-project-2-student-class.mp4")

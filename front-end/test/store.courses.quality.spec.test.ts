@@ -2626,12 +2626,12 @@ describe("course text quality normalization", () => {
 		);
 	});
 
-	it("reserves original Python Level 1 source media on the class static host", async () => {
+	it("reserves pending Python Level 1 media on the class static host", async () => {
 		const course = await loadRawCourse("python-level-1");
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Demo Media Reservations"
+			module => module.title === "Pending Demo Media"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
@@ -2653,7 +2653,7 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("records Python Level 2 source media as hosted or pending on the class static host", async () => {
+	it("records Python Level 2 media as hosted or pending on the class static host", async () => {
 		const course = await loadRawCourse("python-level-2");
 		expect(course).not.toBeNull();
 
@@ -2670,12 +2670,12 @@ describe("course text quality normalization", () => {
 		}
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Asset Reservations"
+			module => module.title === "Pending Static Assets"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
 		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "Pending Python Level 2 Source Assets"
+			item => item.title === "Pending Python Level 2 Assets"
 		);
 		expect(mediaItem).toBeDefined();
 		const content = mediaItem?.content ?? "";
@@ -2696,7 +2696,7 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("records Python Level 3 source media as hosted or pending on the class static host", async () => {
+	it("records Python Level 3 media as hosted or pending on the class static host", async () => {
 		const course = await loadRawCourse("python-level-3");
 		expect(course).not.toBeNull();
 
@@ -2719,12 +2719,12 @@ describe("course text quality normalization", () => {
 		).toBe(true);
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Asset Reservations"
+			module => module.title === "Pending Static Assets"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
 		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "Pending Python Level 3 Source Assets"
+			item => item.title === "Pending Python Level 3 Assets"
 		);
 		expect(mediaItem).toBeDefined();
 		const content = mediaItem?.content ?? "";
@@ -2740,24 +2740,24 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("records Data Science source datasets and images as hosted or pending on the class static host", async () => {
+	it("records Data Science datasets and images as hosted or pending on the class static host", async () => {
 		const course = await loadRawCourse("data-science-in-python");
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Data Asset Reservations"
+			module => module.title === "Static Data and Media Status"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
 		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "Data Science Source Asset Status"
+			item => item.title === "Data Science Asset Status"
 		);
 		expect(mediaItem).toBeDefined();
 		const content = mediaItem?.content ?? "";
 
 		expect(content).toContain(staticMediaUrl("life_expectancy.csv"));
 		expect(content).not.toContain(
-			"original static asset `life_expectancy.csv` is not currently available"
+			"file `life_expectancy.csv` is not currently available"
 		);
 
 		for (const filename of [
@@ -2773,17 +2773,17 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("reserves original AI Foundations source media on the class static host", async () => {
+	it("reserves pending AI Foundations media on the class static host", async () => {
 		const course = await loadRawCourse("ai-level-1");
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Asset Reservations"
+			module => module.title === "Pending Static Assets"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
 		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "AI Foundations Source Media Status"
+			item => item.title === "AI Foundations Media Status"
 		);
 		expect(mediaItem).toBeDefined();
 		const content = mediaItem?.content ?? "";
@@ -2802,17 +2802,17 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("records Machine Learning source media as hosted or pending on the class static host", async () => {
+	it("records Machine Learning media as hosted or pending on the class static host", async () => {
 		const course = await loadRawCourse("machine-learning");
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Asset Reservations"
+			module => module.title === "Pending Static Assets"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
 		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "Machine Learning Source Media Status"
+			item => item.title === "Machine Learning Media Status"
 		);
 		expect(mediaItem).toBeDefined();
 		const content = mediaItem?.content ?? "";
@@ -2824,7 +2824,7 @@ describe("course text quality normalization", () => {
 		]) {
 			expect(content).toContain(staticMediaUrl(filename));
 			expect(content).not.toContain(
-				`original static asset \`${filename}\` is not currently available`
+				`file \`${filename}\` is not currently available`
 			);
 		}
 
@@ -2836,14 +2836,14 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("reserves original USACO source assets on the class static host", async () => {
+	it("reserves pending USACO assets on the class static host", async () => {
 		const bronzeOnDemand = await loadRawCourse("usaco-bronze-on-demand");
 		const gold = await loadRawCourse("usaco-gold");
 		expect(bronzeOnDemand).not.toBeNull();
 		expect(gold).not.toBeNull();
 
 		const bronzeModule = bronzeOnDemand!.modules.find(
-			module => module.title === "Original Asset Reservations"
+			module => module.title === "Pending Static Assets"
 		);
 		const bronzeContent = bronzeModule?.curriculum
 			.map(item => item.content)
@@ -2855,12 +2855,12 @@ describe("course text quality normalization", () => {
 		}
 
 		const goldModule = gold!.modules.find(
-			module => module.title === "Original Asset Reservations"
+			module => module.title === "Pending Static Assets"
 		);
 		expect(goldModule?.kind).toBe("appendix");
 
 		const goldItem = goldModule?.curriculum.find(
-			item => item.title === "USACO Gold Source Asset Status"
+			item => item.title === "USACO Gold Asset Status"
 		);
 		expect(goldItem).toBeDefined();
 		const goldContent = goldItem?.content ?? "";
@@ -3301,14 +3301,14 @@ describe("course text quality normalization", () => {
 		}
 	});
 
-	it("reserves original JavaScript Level 1 source media on the class static host", async () => {
+	it("reserves pending JavaScript Level 1 media on the class static host", async () => {
 		const course = await loadRawCourse(
 			"javascript-level-1-javascript-superstar"
 		);
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Demo Media Reservations"
+			module => module.title === "Pending Demo Media"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
@@ -3330,14 +3330,14 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("reserves original JavaScript Level 2 source media on the class static host", async () => {
+	it("reserves pending JavaScript Level 2 media on the class static host", async () => {
 		const course = await loadRawCourse(
 			"javascript-level-2-javascript-master"
 		);
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Demo Media Reservations"
+			module => module.title === "Pending Demo Media"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
@@ -3359,12 +3359,12 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("reserves original Java Level 1 source media on the class static host", async () => {
+	it("reserves pending Java Level 1 media on the class static host", async () => {
 		const course = await loadRawCourse("java-level-1");
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Demo Media Reservations"
+			module => module.title === "Pending Demo Media"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
@@ -3386,12 +3386,12 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("reserves original Java Level 2 source media on the class static host", async () => {
+	it("reserves pending Java Level 2 media on the class static host", async () => {
 		const course = await loadRawCourse("java-level-2");
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Demo Media Reservations"
+			module => module.title === "Pending Demo Media"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
@@ -3413,12 +3413,12 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("reserves original Java Level 3 source media on the class static host", async () => {
+	it("reserves pending Java Level 3 media on the class static host", async () => {
 		const course = await loadRawCourse("java-level-3");
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Demo Media Reservations"
+			module => module.title === "Pending Demo Media"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
@@ -3440,17 +3440,17 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("records PyGame source media as hosted or pending on the class static host", async () => {
+	it("records PyGame media as hosted or pending on the class static host", async () => {
 		const course = await loadRawCourse("pygames");
 		expect(course).not.toBeNull();
 
 		const mediaModule = course!.modules.find(
-			module => module.title === "Original Demo Media Reservations"
+			module => module.title === "Demo Media Status"
 		);
 		expect(mediaModule?.kind).toBe("appendix");
 
 		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "PyGame Source Media Status"
+			item => item.title === "PyGame Media Status"
 		);
 		expect(mediaItem).toBeDefined();
 		const content = mediaItem?.content ?? "";
@@ -3462,7 +3462,7 @@ describe("course text quality normalization", () => {
 		]) {
 			expect(content).toContain(staticMediaUrl(filename));
 			expect(content).not.toContain(
-				`original static asset \`${filename}\` is not currently available`
+				`file \`${filename}\` is not currently available`
 			);
 		}
 
@@ -3508,7 +3508,7 @@ describe("course text quality normalization", () => {
 
 		for (const { course, files, title } of expectations) {
 			const mediaModule = course.modules.find(
-				module => module.title === "Original Asset Reservations"
+				module => module.title === "Pending Static Assets"
 			);
 			expect(mediaModule?.kind).toBe("appendix");
 
@@ -6498,7 +6498,7 @@ describe("course text quality normalization", () => {
 			"PAA13-PAA17 Expressions and Sequences",
 			"PAA18-PAA23 Exponents, Roots, and Scientific Notation",
 			"Check-In #2 and Capstone",
-			"Original Asset Reservations"
+			"Pending Static Assets"
 		]);
 		expect(text).toContain("Project: Starting a Gardening Business");
 		expect(text).toContain("Project: Growing the Gardening Business");
@@ -7706,12 +7706,12 @@ describe("course text quality normalization", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
-	it("documents pending static media with the original filename and future static URL", () => {
-		const notice = pendingStaticMediaNotice("original-static-demo.mp4");
+	it("documents pending static media with the filename and future static URL", () => {
+		const notice = pendingStaticMediaNotice("pending-static-demo.mp4");
 
-		expect(notice).toContain("original-static-demo.mp4");
+		expect(notice).toContain("pending-static-demo.mp4");
 		expect(notice).toContain(
-			"https://static.classes.jacobdanderson.net/original-static-demo.mp4"
+			"https://static.classes.jacobdanderson.net/pending-static-demo.mp4"
 		);
 		expect(notice).toMatch(/not currently available/i);
 		expect(notice).toMatch(/added later/i);

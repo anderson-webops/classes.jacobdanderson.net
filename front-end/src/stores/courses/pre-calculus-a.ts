@@ -1142,7 +1142,7 @@ export const preCalculusACourse: RawCourse = {
 			"Conic sections: circles, ellipses, parabolas, hyperbolas, and intersections"
 		],
 		sourcePolicy:
-			"Adapted from the Pre-Calculus and Trigonometry A source sequence with neutral wording, course-native explanations, and no legacy platform operations.",
+			"Built from the Pre-Calculus and Trigonometry A sequence with neutral wording, course-native explanations, and no legacy platform operations.",
 		assessmentCadence: [
 			"Check-In #1 after piecewise functions, polynomials, sequences, area approximation, and binomial theorem.",
 			"Check-In #2 after rational functions, logarithms, inverses, composition, and conics.",

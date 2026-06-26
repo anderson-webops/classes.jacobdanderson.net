@@ -1338,12 +1338,12 @@ export const javascriptLevel1Course: RawCourse = {
 		},
 		{
 			kind: "appendix",
-			title: "Original Demo Media Reservations",
+			title: "Pending Demo Media",
 			curriculum: [
 				{
 					title: "Pending JavaScript Level 1 Demo Media",
 					content: [
-						"The original JavaScript Level 1 source library referenced the demo media below. These files are reserved on the class static host so they can be uploaded later without changing course links.",
+						"This course has placeholders for the demo media below. Each URL points to the class static host and can be filled when the matching file is available.",
 						...JAVASCRIPT_LEVEL_1_ORIGINAL_MEDIA.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

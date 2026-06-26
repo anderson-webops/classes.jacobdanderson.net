@@ -1679,17 +1679,17 @@ export const dataScienceInPythonCourse: RawCourse = {
 		},
 		{
 			kind: "appendix",
-			title: "Original Data Asset Reservations",
+			title: "Static Data and Media Status",
 			curriculum: [
 				{
-					title: "Data Science Source Asset Status",
+					title: "Data Science Asset Status",
 					content: [
-						"The original Data Science in Python source library referenced the datasets and visual assets below. Hosted assets are available now; reserved assets keep stable class-static URLs for files that can be uploaded later without changing course links.",
-						"**Hosted source assets:**",
+						"This course uses the datasets and visual assets below. Hosted assets are available now; pending assets keep stable class-static URLs until the matching files are available.",
+						"**Hosted assets:**",
 						...DATA_SCIENCE_AVAILABLE_SOURCE_ASSETS.map(
 							filename => `- ${staticMediaUrl(filename)}`
 						),
-						"**Reserved source assets:**",
+						"**Pending assets:**",
 						...DATA_SCIENCE_PENDING_SOURCE_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

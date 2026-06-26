@@ -1376,12 +1376,12 @@ export const usacoGoldCourse: RawCourse = {
 		},
 		{
 			kind: "appendix",
-			title: "Original Asset Reservations",
+			title: "Pending Static Assets",
 			curriculum: [
 				{
-					title: "USACO Gold Source Asset Status",
+					title: "USACO Gold Asset Status",
 					content: [
-						"The original USACO Gold source export referenced the data file below. It is reserved on the class static host with its original filename so a future upload can restore the link without changing course content.",
+						"This course has a placeholder for the data file below. The URL points to the class static host and can be filled when the matching file is available.",
 						pendingUsacoGoldAssetList(usacoGoldPendingSourceAssets)
 					].join("\n\n")
 				}

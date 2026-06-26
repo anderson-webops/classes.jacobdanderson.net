@@ -2438,12 +2438,12 @@ export const pythonLevel2Course: RawCourse = {
 		},
 		{
 			kind: "appendix",
-			title: "Original Asset Reservations",
+			title: "Pending Static Assets",
 			curriculum: [
 				{
-					title: "Pending Python Level 2 Source Assets",
+					title: "Pending Python Level 2 Assets",
 					content: [
-						"The original Python Level 2 source library referenced the assets below. They are reserved on the class static host with their original filenames so future uploads can restore the links without changing course content.",
+						"This course has placeholders for the assets below. Each URL points to the class static host and can be filled when the matching file is available.",
 						...PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
