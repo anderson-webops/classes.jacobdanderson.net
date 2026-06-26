@@ -21,7 +21,11 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		id: "scratch-early-cs",
 		title: "Scratch and Early Computer Science",
 		adminPriority: "urgent",
-		courseIds: ["scratch-level-1", "scratch-level-2"],
+		courseIds: [
+			"scratch-level-1-bootcamp",
+			"scratch-level-1",
+			"scratch-level-2"
+		],
 		audience:
 			"Young learners who need visual programming, creative projects, and explicit computational-thinking language before moving into text programming.",
 		prerequisiteSummary:
@@ -32,6 +36,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Present a polished project with instructions, controls, replay state, and a short explanation of one bug they fixed."
 		],
 		sequencingNotes: [
+			"The bootcamp variant condenses setup, motion, sounds, costumes, event listeners, loops, variables, and conditionals into a shorter creative path.",
 			"Scratch Level 1 focuses on events, motion, loops, conditionals, variables, and visual debugging.",
 			"Scratch Level 2 adds broadcasts, clones, lists, multi-scene state, remix etiquette, and more formal project review.",
 			"The pathway treats Scratch as real computer science; every project names the computational idea being practiced."
@@ -295,6 +300,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"introduction-to-public-speaking",
 			"middle-school-a-literature",
 			"middle-school-b-writing",
+			"middle-school-b-writing-retake",
 			"middle-school-c-grammar",
 			"novel-writing"
 		],
@@ -309,7 +315,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		sequencingNotes: [
 			"Early reading and picture-book work can run before or alongside early writing mechanics because story structure and sentence clarity reinforce each other.",
-			"Middle School A focuses on reading and literary analysis before Middle School B asks for heavier analytical and creative writing.",
+			"Middle School A focuses on reading and literary analysis before Middle School B asks for heavier analytical and creative writing; the retake variant preserves that spine for targeted reinforcement.",
 			"Middle School C can run in parallel as a grammar and mechanics support course when written drafts need sentence-level polish.",
 			"Novel Writing belongs after basic narrative writing and character work are comfortable enough to sustain a multi-session draft."
 		],
@@ -594,7 +600,12 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		id: "usaco",
 		title: "USACO and Competitive Programming",
 		adminPriority: "soon",
-		courseIds: ["usaco-bronze", "usaco-silver", "usaco-gold"],
+		courseIds: [
+			"usaco-bronze",
+			"usaco-bronze-on-demand",
+			"usaco-silver",
+			"usaco-gold"
+		],
 		audience:
 			"Students who already have programming fluency and need disciplined contest problem solving, implementation speed, edge-case testing, and postmortems.",
 		prerequisiteSummary:
@@ -606,7 +617,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		sequencingNotes: [
 			"Official USACO problems and USACO Guide topics provide the sequencing authority.",
-			"Bronze emphasizes careful implementation before advanced algorithms.",
+			"Bronze emphasizes careful implementation before advanced algorithms, and the On Demand variant preserves a longer self-paced ladder of Bronze problem types.",
 			"Silver and Gold add topic ladders only after easier problems can be solved cleanly under time.",
 			"Avoid random chronological contest browsing; choose official problems by division, topic, and slot difficulty so each assignment has a specific purpose."
 		],

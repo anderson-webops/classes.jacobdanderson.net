@@ -30,6 +30,14 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"pab14_0.png",
 	"pab22_0.png",
 	"ted_ed_release.pdf",
+	"UB1.png",
+	"UB2.png",
+	"UB3.png",
+	"UB4.png",
+	"UB5.png",
+	"UB6.png",
+	"missionTitle2.png",
+	"nextStepTitle.png",
 	"wyb1_proj1_plotempty.png"
 ] as const;
 

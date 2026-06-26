@@ -15,6 +15,14 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			)
 	},
 	{
+		id: "scratch-level-1-bootcamp",
+		name: "Scratch Level 1: Game Superstar Bootcamp",
+		load: () =>
+			import("./source-library-courses").then(
+				({ scratchLevel1BootcampCourse }) => scratchLevel1BootcampCourse
+			)
+	},
+	{
 		id: "scratch-level-2",
 		name: "Scratch Level 2",
 		load: () =>
@@ -231,6 +239,15 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			)
 	},
 	{
+		id: "middle-school-b-writing-retake",
+		name: "Middle School B: Analytical and Creative Writing Retake",
+		load: () =>
+			import("./source-library-courses").then(
+				({ middleSchoolWritingRetakeCourse }) =>
+					middleSchoolWritingRetakeCourse
+			)
+	},
+	{
 		id: "middle-school-c-grammar",
 		name: "Middle School C: Grammar and Mechanics",
 		load: () =>
@@ -381,6 +398,14 @@ export const courseCatalog: CourseCatalogEntry[] = [
 		load: () =>
 			import("./usaco-bronze").then(
 				({ usacoBronzeCourse }) => usacoBronzeCourse
+			)
+	},
+	{
+		id: "usaco-bronze-on-demand",
+		name: "USACO Bronze: On Demand",
+		load: () =>
+			import("./source-library-courses").then(
+				({ usacoBronzeOnDemandCourse }) => usacoBronzeOnDemandCourse
 			)
 	},
 	{
