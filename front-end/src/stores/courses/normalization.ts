@@ -1679,6 +1679,14 @@ function formatSupportLabels(text: string) {
 function normalizeSupportLabelText(text: string) {
 	return text
 		.replace(/\*\*Project goal:\*\*/gi, "**Goal:**")
+		.replace(/\*\*Practice targets:\*\*/gi, "**Practice checks:**")
+		.replace(/\*\*Practice target:\*\*/gi, "**Practice check:**")
+		.replace(/\bPractice targets:/gi, "Practice checks:")
+		.replace(/\bPractice target:/gi, "Practice check:")
+		.replace(/\bPractice targets\b/g, "Practice checks")
+		.replace(/\bPractice target\b/g, "Practice check")
+		.replace(/\bpractice targets\b/g, "practice checks")
+		.replace(/\bpractice target\b/g, "practice check")
 		.replace(/\*\*Required outcome:\*\*/gi, "**Outcome:**")
 		.replace(/\*\*Required fields:\*\*/gi, "**Include:**")
 		.replace(/\*\*Required notes:\*\*/gi, "**Notes:**")

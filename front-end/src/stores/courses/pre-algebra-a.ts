@@ -64,6 +64,22 @@ function project({
 	].join("\n\n");
 }
 
+function sourceAnchor({
+	evidence,
+	references,
+	title
+}: {
+	evidence: string[];
+	references: string[];
+	title: string;
+}) {
+	return [
+		`**Source Activity Anchors: ${title}**`,
+		`**Original source details preserved:**\n${references.map(reference => `- ${reference}`).join("\n")}`,
+		`**Evidence record:**\n${evidence.map(item => `- ${item}`).join("\n")}`
+	].join("\n\n");
+}
+
 export const preAlgebraACourse: RawCourse = {
 	name: "Pre-Algebra A",
 	modules: [
@@ -92,6 +108,21 @@ export const preAlgebraACourse: RawCourse = {
 						evidence:
 							"The finished plan shows the spending expression, money remaining, absolute concrete amount, ordered category fractions, and soil-per-section fraction."
 					}),
+					sourceAnchor({
+						title: "Starting a Gardening Business",
+						references: [
+							"Garden business name and slogan with a $3000 starting investment.",
+							"Startup spending uses $1500 of inventory, 3 moving carts at $400 each, and a $700 YouTube ad.",
+							"Floor repair uses two holes that are -4 feet deep and three holes that are -2 feet deep.",
+							"Inventory choices include 4 plant or garden flower items, 3 gardening tools, 4 plant pots, and 2 miscellaneous items.",
+							"Plants and Garden Flowers spending is $736, and the soil question divides four tenths of a bag across 3 sections."
+						],
+						evidence: [
+							"Spending expression and remaining budget are labeled.",
+							"Absolute concrete amount treats depth as distance from the floor surface.",
+							"Category fractions are ordered, combined, and rewritten as a mixed number."
+						]
+					}),
 					pendingStaticMediaNotice(KICKOFF_INVENTORY)
 				].join("\n\n"),
 				staticMediaUrl(KICKOFF_INVENTORY)
@@ -111,6 +142,22 @@ export const preAlgebraACourse: RawCourse = {
 						],
 						evidence:
 							"The finished work includes revenue, profit reasoning, time conversion, wage calculation, sequence rule, exponent calculation, and corrected scientific notation."
+					}),
+					sourceAnchor({
+						title: "Growing the Gardening Business",
+						references: [
+							"First-week sales include 4 succulents, 3 flower bundles, 1 wheelbarrow, 5 pairs of gardening gloves, 1 basic plant pot, 1 multi-pot plant stand, 2 pairs of decorative garden lights, and 1 small garden tool shed.",
+							"Profit reasoning uses a 30% target for two items from the gardening tools category.",
+							"Payroll uses 1,537 minutes and a $13 hourly wage.",
+							"Plant sales follow 5, 9, 13, 17, 21, 25, 29, 33, 37, 41 with week-number variable w.",
+							"Flower bundling uses 500 flowers, and garden-light packaging compares boxes of 10, 12, and 8 for packing 24 lights.",
+							"Promotion math uses 5^2 flower bundles per box and 3^2 boxes, while register repair uses $.000000000265 x 10^9 and 2^-4 * 4^2 + ? = 33.52."
+						],
+						evidence: [
+							"Revenue and profit calculations are compared with the startup spending.",
+							"Sequence reasoning distinguishes the week number from the number of plants sold.",
+							"Exponent and scientific-notation corrections explain whether the receipt value is reasonable."
+						]
 					}),
 					pendingStaticMediaNotice(KICKOFF_PRICING)
 				].join("\n\n"),
@@ -434,8 +481,128 @@ export const preAlgebraACourse: RawCourse = {
 					evidence:
 						"The capstone contains multiple representations, labeled calculations, one error correction, and a final explanation connecting the scenario to the math."
 				})
+			),
+			lesson(
+				"Source Activity Anchors: Pre-Algebra A Capstone",
+				sourceAnchor({
+					title: "Pre-Algebra A Capstone",
+					references: [
+						"The original master project asks for one course module or concept that was especially challenging or exciting.",
+						"The final explanation covers purpose, real-world application, and at least 2 original problems using course content.",
+						"The neutral version keeps the same reflection and original-problem requirements without requiring platform-specific recording tools."
+					],
+					evidence: [
+						"Selected concept is named and connected to a real-world use.",
+						"At least 2 original problems include complete solutions.",
+						"Reflection identifies the strongest growth area and one remaining practice check."
+					]
+				})
 			)
 		]),
+		{
+			kind: "appendix",
+			title: "Original Source Activity Anchors",
+			curriculum: [
+				lesson(
+					"Pre-Algebra A Source Anchors",
+					[
+						sourceAnchor({
+							title: "High and Low Species",
+							references: [
+								"Giselle Herrera and the Rockaway Initiative for Sustainability & Equity frame the ecosystem and neighborhood-impact context.",
+								"Mission 1 asks for 3 animals that climb or fly high and 3 animals that dig or swim underground.",
+								"Animal elevation or depth is represented with positive and negative numbers on a vertical number line.",
+								"Mission 2 compares neighborhood buildings, crowding, and animal habitat impact before placing a tower with roosts.",
+								"The underground foundation calculation uses the lowest animal habitat depth, doubles that distance, then digs another 15 feet."
+							],
+							evidence: [
+								"Zero on the number line is defined as the reference elevation.",
+								"Animal positions and distances from ground are calculated.",
+								"Tower height, foundation depth, total tower length, and ecosystem recommendation are connected."
+							]
+						}),
+						sourceAnchor({
+							title: "Mochi's Amazon Adventure",
+							references: [
+								"Nikita Jain works as a product manager at Amazon, and Mochi inspires the pet-toy product line.",
+								"Warehouse supplies include 12 million pink ropes, 20 million white and blue blankets, 24 million stuffed rhinos, and 8 million treat toys.",
+								"Store preferences reference Cute Puppiez, Dogs 4 Lyfe, WoofWoof, and Who Let the Dogs Out?.",
+								"New demand uses multipliers including 12/10, 13/10, 5/4, 9/6, 14/11, 14/8, and 15/13.",
+								"The challenge asks for a pie chart showing the product breakdown from first and second orders."
+							],
+							evidence: [
+								"Allocation strategy is explained before store fractions are calculated.",
+								"Most-units and total-product fractions are recorded for each store or product.",
+								"Additional-production totals identify the most popular and least popular products."
+							]
+						}),
+						sourceAnchor({
+							title: "Cookie Catering",
+							references: [
+								"Chipidee Cookies supplies the event-catering context.",
+								"Cookie combinations draw from dough choices vanilla, chocolate, and strawberry; toppings chocolate chips, sprinkles, and marshmallows; colors purple, green, and pink; and shapes star, square, and classic circle.",
+								"The batch contains 300 cookies, 2 tablespoons of dough make 1 cookie, and the dough-to-topping ratio is 2 tablespoons to 1 tablespoon.",
+								"Flour scaling uses 2.25 cups of flour for 24 cookies and 0.29 pounds per cup.",
+								"Per-cookie dough costs are $1.35 for vanilla, $1.62 for chocolate, and $1.74 for strawberry.",
+								"Catering packages have base prices of $100, $150, and $250; the event sample uses 32 people taking one cookie type and 76 people taking the other."
+							],
+							evidence: [
+								"Cookie quantities, percentages, and drawings match the selected combinations.",
+								"Topping and flour calculations preserve the unit ratios.",
+								"Package prices include cookie cost plus at least 30% profit and the event-consumption fractions."
+							]
+						}),
+						sourceAnchor({
+							title: "Designing the Perfect Scanning Device",
+							references: [
+								"Aviv Gilboa and Ring frame the customer-discovery and smart-home-security context.",
+								"Device options include finger scanning, face scanning, and phone scanning.",
+								"Weekly prototype sales are finger scanner 4, 11, 18, 25; face scanner 7, 11, 15, 19; and phone scanner 2, 7, 12, 17.",
+								"The final product spec includes two color options, one shape, and different prices for each color.",
+								"Expression work includes 6 customers buying both colors and a voice-feature option with 8 original devices for every 6 voice-featured devices sold each week."
+							],
+							evidence: [
+								"Pros-and-cons notes and sketches distinguish the three scanner options.",
+								"Sequence predictions identify the most popular and least popular prototype after 6 weeks.",
+								"Variable expressions model color revenue and weekly original-plus-voice-feature sales."
+							]
+						}),
+						sourceAnchor({
+							title: "Symptom Spree",
+							references: [
+								"Michelle Lee's radiology-resident context compares side effects from x-rays, MRIs, PET scans, CT scans, and CAT scans.",
+								"The x-ray symptom-score table uses 10, 20, 30, 40, and 50 minutes with scores 4, 16, 64, 256, and 1024.",
+								"The x-ray baseline is modeled as t^4.",
+								"PET scans raise the baseline to the 1/5 power and multiply by t.",
+								"MRIs take the square root and divide by t^(3/2), CT scans multiply by t^-1 and take the 7th root, and CAT scans raise to the 3rd power then divide by t^(2/3).",
+								"Desmos is used as an optional graphing tool for comparing the trends."
+							],
+							evidence: [
+								"Research notes list 3 to 5 possible side effects from x-rays and PET scans.",
+								"Growth-pattern explanation connects the table to exponential notation.",
+								"Final growth-rate expressions and graph comparisons identify the most concerning trend."
+							]
+						}),
+						sourceAnchor({
+							title: "Red Hot Chilli Chicken",
+							references: [
+								"Juan Miguel Artal, Roman Perez, and Red Hot Chilli Chicken frame the sales-analysis context.",
+								"Mission 1 uses sandwich orders: Dani California 615, Tell Me Baby 123, Californication 246, The Classic 369, and total 1,353.",
+								"The new-sandwich analysis uses 1/3 of The Classic customers and a total-order increase to 2,706.",
+								"Pop-up shop comparisons use 2 weeks for 123 new orders in one neighborhood and 3 weeks for 246 new orders in another.",
+								"Mission 2 starts with 53 new active orders per month and models future months as 53^2, 53^3, and continuing powers until crossing 1 million and 1 billion orders."
+							],
+							evidence: [
+								"Order proportions are calculated for each sandwich.",
+								"New-sandwich audience and pop-up growth comparisons are shown with arithmetic.",
+								"Exponential growth estimate includes month counts for 1 million and 1 billion active orders."
+							]
+						})
+					].join("\n\n")
+				)
+			],
+			supplementalProjects: []
+		},
 		{
 			kind: "appendix",
 			title: "Pending Static Assets",
