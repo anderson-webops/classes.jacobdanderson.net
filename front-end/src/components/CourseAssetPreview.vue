@@ -350,6 +350,7 @@ async function handleResourceChange() {
 	min-width: 0;
 	min-inline-size: 0;
 	box-sizing: border-box;
+	contain: inline-size;
 	isolation: isolate;
 	overflow-x: auto;
 	overflow-y: hidden;
@@ -409,6 +410,7 @@ async function handleResourceChange() {
 	max-inline-size: 100%;
 	min-width: 0;
 	min-inline-size: 0;
+	contain: inline-size;
 	isolation: isolate;
 	overflow-y: hidden;
 	overscroll-behavior-inline: contain;
@@ -428,21 +430,21 @@ async function handleResourceChange() {
 }
 
 .course-asset-preview-content :deep(.item-content-markdown table) {
-	width: 100%;
-	inline-size: 100%;
-	min-width: min(42rem, 100%);
-	min-inline-size: min(42rem, 100%);
-	max-width: 100%;
-	max-inline-size: 100%;
-	table-layout: fixed;
+	width: max-content;
+	inline-size: max-content;
+	min-width: 100%;
+	min-inline-size: 100%;
+	max-width: none;
+	max-inline-size: none;
+	table-layout: auto;
 }
 
 .course-asset-preview-content :deep(.item-content-markdown th),
 .course-asset-preview-content :deep(.item-content-markdown td) {
-	min-width: 0;
-	min-inline-size: 0;
-	max-width: 100%;
-	max-inline-size: 100%;
+	min-width: 7rem;
+	min-inline-size: 7rem;
+	max-width: min(36rem, 72vw);
+	max-inline-size: min(36rem, 72vw);
 	overflow-wrap: anywhere;
 	word-break: break-word;
 }
