@@ -8035,7 +8035,9 @@ describe("course text quality normalization", () => {
 			"Check-In #1: Quadrilaterals, Polygons, and Circles",
 			"GEOB7-GEOB8 Transformations",
 			"GEOB9-GEOB10 Polyhedra and Round Solids",
-			"Check-In #2 and Geometry B Capstone"
+			"Check-In #2 and Geometry B Capstone",
+			"Source Activity Archive",
+			"Pending Static Assets"
 		]);
 		expect(text).toContain("GEOB1 Introduction to Quadrilaterals");
 		expect(text).toContain("GEOB1 Trapezoids");
@@ -8058,8 +8060,27 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("180(n - 2)");
 		expect(text).toContain("A = pi r^2");
 		expect(text).toContain("V - E + F = 2");
+		expect(text).toContain("Source Activity Anchors: Geometry B");
+		expect(text).toContain("Quadrilateral foundations");
+		expect(text).toContain("Circle measurement");
+		expect(text).toContain("Transformations");
+		expect(text).toContain("Three-dimensional solids");
+		expect(text).toContain("Geometry B Static Placeholders");
+		expect(text).toContain("http://pythagoreanmath.com/wp-content/uploads/2014/08/deriving-the-volume-of-a-pyramid.png");
+		expect(text).toContain("https://ds055uzetaobb.cloudfront.net/brioche/uploads/Fv9rxkzWWN-90675.svg?width=350");
+		expect(text).toContain("https://www.mathsisfun.com/geometry/images/sphere-cylinder-area2.svg");
+		for (const filename of [
+			"geob1_pset1_3(1).png",
+			"checkin1_angles_2.png",
+			"geob5_pset2_23.png",
+			"geob8_pset2_19.png",
+			"geob10_pset4_9.png"
+		]) {
+			expect(text, filename).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(text, filename)).toBe(true);
+		}
 		expect(text).not.toMatch(
-			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning|app\.junilearning/i
 		);
 		expect(text).not.toMatch(/\bshould\b/i);
 		expect(mediaLinks).toEqual([]);

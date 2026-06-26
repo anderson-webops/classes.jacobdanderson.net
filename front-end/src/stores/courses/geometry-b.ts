@@ -1,4 +1,9 @@
 import type { RawCourse } from "./types";
+import {
+	geometryBStaticFilenames,
+	pendingStaticMediaNotice,
+	staticMediaUrl
+} from "./staticMedia";
 
 function lesson(title: string, content: string) {
 	return { title, content };
@@ -7,13 +12,24 @@ function lesson(title: string, content: string) {
 function module(
 	title: string,
 	curriculum: ReturnType<typeof lesson>[],
-	supplementalProjects: ReturnType<typeof lesson>[] = []
+	supplementalProjects: ReturnType<typeof lesson>[] = [],
+	kind?: "module" | "appendix"
 ) {
 	return {
+		...(kind ? { kind } : {}),
 		title,
 		curriculum,
 		supplementalProjects
 	};
+}
+
+function sourceMediaReferences() {
+	return geometryBStaticFilenames
+		.map(
+			filename =>
+				`- \`${filename}\` -> ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
 }
 
 function overview({
@@ -613,6 +629,41 @@ export const geometryBCourse: RawCourse = {
 					})
 				)
 			]
+		),
+		module(
+			"Source Activity Archive",
+			[
+				lesson(
+					"Source Activity Anchors: Geometry B",
+					[
+						"These source anchors preserve activity context from the original Geometry B sequence while keeping the visible course neutral and avoiding unavailable legacy image embeds.",
+						[
+							"**Original-source concepts retained**",
+							"- Quadrilateral foundations: convex and concave quadrilaterals, trapezoids, kites, parallelograms, rectangles, rhombi, squares, angle sums, medians, diagonals, and classification from evidence.",
+							"- Polygon work: interior and exterior angle sums, regular-polygon angle formulas, area decomposition, composite regions, and formula selection based on the given information.",
+							"- Circle measurement: circumference, area, arc length, sector area, chords, central angles, inscribed angles, internal chord angles, external secant or tangent angles, and tangent-radius relationships.",
+							"- Transformations: translations, rotations, reflections, dilations, coordinate rules, orientation changes, congruence, similarity, scale factor, and transformation composition.",
+							"- Three-dimensional solids: polyhedra, prisms, pyramids, cylinders, cones, spheres, nets, Euler's formula, surface area, volume, slant height, vertical height, and composite solid modeling.",
+							"- Review and capstone work: mixed theorem selection, error diagnosis, design defense, portfolio audit, and cumulative geometry modeling across two-dimensional and three-dimensional settings."
+						].join("\n"),
+						[
+							"**External source links**",
+							"- Pyramid volume visualization: http://pythagoreanmath.com/wp-content/uploads/2014/08/deriving-the-volume-of-a-pyramid.png",
+							"- Sphere volume comparison visual: https://ds055uzetaobb.cloudfront.net/brioche/uploads/Fv9rxkzWWN-90675.svg?width=350",
+							"- Sphere surface-area comparison visual: https://www.mathsisfun.com/geometry/images/sphere-cylinder-area2.svg"
+						].join("\n"),
+						"**Source-preservation note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+					].join("\n\n")
+				)
+			],
+			[],
+			"appendix"
+		),
+		module(
+			"Pending Static Assets",
+			[lesson("Geometry B Static Placeholders", sourceMediaReferences())],
+			[],
+			"appendix"
 		)
 	],
 	developmentMetadata: {
