@@ -2,7 +2,58 @@ import type { ImplementationLabSection } from "./implementationLabGuidance";
 import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
+
+const JAVA_LEVEL_1_ORIGINAL_MEDIA = [
+	"js1_chatbot.mp4",
+	"js1_division_facts.mp4",
+	"js1_first_middle_last.mp4",
+	"js1_mad_libs.mp4",
+	"js2_basic_shapes.png",
+	"js2_happy_graphics.png",
+	"js2_rainbow.png",
+	"js2_snowman.png",
+	"js2_temperature_converter.mp4",
+	"js3_code_your_own_adventure.mp4",
+	"js3_color_mixer.mp4",
+	"js3_elevator_limits.mp4",
+	"js3_spreadsheet_width.mp4",
+	"js3_too_chicken_to_cross_the_road.mp4",
+	"js3_weather_activities.mp4",
+	"js3_which_shape.mp4",
+	"js4_checkout_calculator.mp4",
+	"js4_letter_square.mp4",
+	"js4_loops_practice.mp4",
+	"js4_nested_loops.mp4",
+	"js4_paintball.png",
+	"js5_letter_guesser.mp4",
+	"js5_mathematical_challenges.mp4",
+	"js5_number_guesser.mp4",
+	"js6_caught_speeding.png",
+	"js6_methods_practice.png",
+	"js6_min_and_max.png",
+	"js6_palindrome_checker.png",
+	"js6_picasso.png",
+	"js6_string_expander.mp4",
+	"js7_airline_management.mp4",
+	"js7_arithmetic_sequence.mp4",
+	"js7_fortuneteller.mp4",
+	"js7_high_score_list.mp4",
+	"js7_lucky_array.mp4",
+	"js7_practice_with_arraylists.mp4",
+	"js7_practice_with_arrays.png",
+	"js7_song_shuffler.mp4",
+	"js7_string_to_array.png",
+	"js7_too_much_reversing.png",
+	"js8_2d_array_to_string.png",
+	"js8_grid_drawer.mp4",
+	"js8_magic_square.png",
+	"js8_practice_with_2d_arrays.png",
+	"js8_square_of_squares.mp4",
+	"js9_advanced_battleship.mp4",
+	"js9_simple_battleship.mp4"
+];
 
 const javaFoundationBuildContexts = {
 	13: {
@@ -1404,6 +1455,24 @@ export const javaLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-22-applied-studio-17-temperature-converter-supplemental-3/solution"
 				}
 			]
+		},
+		{
+			title: "Original Demo Media Reservations",
+			kind: "appendix",
+			curriculum: [
+				{
+					title: "Pending Java Level 1 Demo Media",
+					content: [
+						"The original Java Level 1 source library referenced these demonstration videos and screenshots. They are reserved on the class static host so the course can link to the same filenames once the files are uploaded.",
+						"",
+						...JAVA_LEVEL_1_ORIGINAL_MEDIA.map(
+							filename =>
+								`- ${staticMediaUrl(filename)} - ${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };
