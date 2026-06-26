@@ -17,6 +17,227 @@ interface SourceActivityAnchor {
 	evidence: string[];
 }
 
+const middleSchoolBWritingSourceAnchors: Record<
+	string,
+	SourceActivityAnchor[]
+> = {
+	"MSB1 Arguments & Evidence": [
+		{
+			title: "Steph Curry Argument Parts Model",
+			prompt: "Use the Steph Curry example to separate a debatable claim, supporting reasons, and evidence. Then create argument records for the cell phones at school debate, TikTok dances as art, and the best pet comparison.",
+			evidence: [
+				"A debatable claim that can be reasonably opposed.",
+				"Two reasons connected to the claim with because or by.",
+				"Evidence that supports the reasons instead of repeating the claim."
+			]
+		}
+	],
+	"MSB2 Counterclaims": [
+		{
+			title: "Hypothetical Hannah Counterclaim Lab",
+			prompt: "Practice counterclaims by pairing each claim with an opposing but still reasonable argument. Use conditional verbs and contrast transitions such as still or however so the opposing perspective is clearly marked.",
+			evidence: [
+				"One original claim with reasoning and evidence.",
+				"One counterclaim with its own reasoning and evidence.",
+				"Conditional or contrast language that signals the counterclaim without abandoning the original position."
+			]
+		}
+	],
+	"MSB3 Integrating Evidence": [
+		{
+			title: "Colon and Comma Quote Integration",
+			prompt: "Integrate textual evidence in two ways: a complete sentence followed by a colon, and a short introductory phrase followed by a comma. Use the dog-versus-cat example as the model for punctuation and sentence flow.",
+			evidence: [
+				"One quote introduced by a complete sentence and colon.",
+				"One quote introduced by a short phrase and comma.",
+				"A note explaining why the punctuation matches the introductory wording."
+			]
+		}
+	],
+	"MSB4 Analyzing Evidence": [
+		{
+			title: "Car Ride Evidence Analysis Paragraph",
+			prompt: "Use Car Ride to build an analytical paragraph: make a debatable inference about Kazim's mood, select textual evidence, integrate the evidence, then explain how and why the evidence supports the claim.",
+			evidence: [
+				"A claim about Kazim's mood or attitude.",
+				"Integrated textual evidence from the passage.",
+				"Analysis that connects the evidence to the claim rather than ending at the quote."
+			]
+		},
+		{
+			title: "Arguing for the Opposition",
+			prompt: "Write from the opposing side of an argument by selecting evidence that could support a different interpretation. The goal is to make the alternative position credible before evaluating it.",
+			evidence: [
+				"An opposing claim that is debatable and plausible.",
+				"Evidence chosen specifically for that opposing claim.",
+				"Analysis explaining how the evidence supports the opposition."
+			]
+		}
+	],
+	"MSB5 Concluding Statements & Transitional Devices": [
+		{
+			title: "Conclusion and Transition Revision Pass",
+			prompt: "Revise an argumentative paragraph by adding a concluding statement that restates the argument in fresh language and extends it with a related idea. Then add transitional devices that clarify addition, contrast, cause, example, or conclusion relationships.",
+			evidence: [
+				"A revised conclusion that is not a copy of the topic sentence.",
+				"Transitions placed where relationships between ideas need to be clear.",
+				"A short explanation of how each transition changes the paragraph's flow."
+			]
+		}
+	],
+	"MSB6 Color Coding & Revision": [
+		{
+			title: "Color-Coded Argument Revision",
+			prompt: "Use color-coding to mark claim, reasoning, counterclaim, evidence, analysis, transitions, and conclusion in an argumentative paragraph. Revise any section that is missing, repetitive, unsupported, or out of order.",
+			evidence: [
+				"A color-coded paragraph or labeled outline.",
+				"At least one revision based on the color pattern.",
+				"A note naming which argument part improved and why."
+			]
+		},
+		{
+			title: "Opposition Paragraph Revision",
+			prompt: "Apply the same color-coding and revision process to an opposition paragraph. The paragraph needs a credible opposing claim, support, and analysis rather than a weak straw-person version.",
+			evidence: [
+				"A labeled opposition paragraph.",
+				"Evidence and analysis that make the opposition plausible.",
+				"One revision that improves clarity or balance."
+			]
+		}
+	],
+	"MSB Check-In #1": [
+		{
+			title: "Analytical Writing Check-In Record",
+			prompt: "Create an analytical writing record that demonstrates claim, reasoning, evidence integration, evidence analysis, counterclaim, transitions, conclusion, and revision. Keep the evidence record separate from self-assessment notes.",
+			evidence: [
+				"A complete argumentative paragraph or paragraph plan.",
+				"Textual evidence integrated with correct punctuation.",
+				"Revision evidence showing claim, support, analysis, and conclusion improvements."
+			]
+		}
+	],
+	"MSB7 Character Development": [
+		{
+			title: "Character Objective Bank",
+			prompt: "Use Harry Potter, Wonder Woman, Spider-Man, and a favorite character to practice identifying character objectives. Then create an original objective bank that can support a new character.",
+			evidence: [
+				"Objective statements written as what each character wants most.",
+				"Reasoning that connects background details to the objective.",
+				"An original objective bank with several possible story-driving goals."
+			]
+		},
+		{
+			title: "Nemo Objective-to-Qualities Flowchart",
+			prompt: "Use the Nemo chart model to connect objective, choices, thoughts, actions, speech, and character qualities. Then apply the same chain to an original character.",
+			evidence: [
+				"A flowchart from objective to choices, actions, speech, and qualities.",
+				"At least one explanation of how a choice follows from the objective.",
+				"Character qualities that are supported by the flowchart rather than assigned randomly."
+			]
+		}
+	],
+	"MSB8 Character Portraits": [
+		{
+			title: "Character Portrait Iceberg",
+			prompt: "Build a character portrait using the iceberg model: the visible story shows only a small part of the character, while the full portrait records objective, backstory, motivations, habits, contradictions, and details below the surface.",
+			evidence: [
+				"A detailed character portrait with objective, backstory, choices, and speech patterns.",
+				"A note distinguishing portrait details from details that belong directly in the story.",
+				"One scene-ready detail that shows the character instead of explaining every background fact."
+			]
+		}
+	],
+	"MSB9 Generating Conflict & Structuring Plot": [
+		{
+			title: "Objective-to-Conflict Generator",
+			prompt: "Start with a protagonist and objective, then create a major conflict that blocks the objective. Use a favorite book, movie, or show as a model before applying the same method to an original story.",
+			evidence: [
+				"A protagonist, objective, obstacle, and conflict statement.",
+				"An explanation of how the obstacle blocks the objective.",
+				"A comparison between the model story and the original story plan."
+			]
+		},
+		{
+			title: "Plot Curve Event Map",
+			prompt: "Use the labeled plot curve and blank plot curve models to organize beginning, middle, and end events. The beginning introduces protagonist and objective, the middle develops conflict, and the end resolves the conflict.",
+			evidence: [
+				"Three or more plot events placed on a beginning-middle-end structure.",
+				"One dramatic-tension note naming where investment is highest and why.",
+				"A plot map for an original story or a familiar movie."
+			]
+		}
+	],
+	"MSB10 Manipulating Point of View": [
+		{
+			title: "Jonah and Caleb Point-of-View Rewrite",
+			prompt: "Review first person, second person, third person objective, third person limited, and third person omniscient narration using the Jonah and Caleb examples. Then revise a scene to change reader access, sympathy, suspense, or humor.",
+			evidence: [
+				"Correct point-of-view labels with pronoun or narrator-access evidence.",
+				"A rewritten scene from a different point of view.",
+				"A note explaining how the changed point of view changes the reading experience."
+			]
+		}
+	],
+	"MSB11 Writing an Original Short Story": [
+		{
+			title: "Final Story Revision",
+			prompt: "Revise the final short story so it includes a three-dimensional protagonist, plausible conflict, logical plot, clear point of view, theme development, figurative language, and showing rather than direct explanation.",
+			evidence: [
+				"A complete short story draft.",
+				"Revision notes for protagonist, conflict, plot, point of view, theme, and figurative language.",
+				"At least one before-and-after revision showing added depth or clearer craft choices."
+			]
+		}
+	],
+	"MSB Check-In #2": [
+		{
+			title: "Fiction Writing Check-In Record",
+			prompt: "Create a fiction-writing record that demonstrates character objective, character portrait, conflict, plot structure, point of view, final story craft, theme, figurative language, and showing rather than direct explanation.",
+			evidence: [
+				"An original scene or story excerpt.",
+				"Planning evidence for objective, portrait, conflict, plot, and point of view.",
+				"Revision evidence for theme, figurative language, and showing."
+			]
+		}
+	],
+	"MSB12 Master Project": [
+		{
+			title: "Analytical Writing Presentation",
+			prompt: "Create a presentation arguing why a chosen athlete, musician, restaurant, pet, food, or similar category choice is the best option. The presentation includes claim, reasoning, evidence, counterclaim, conclusion, and speaker notes.",
+			evidence: [
+				"A claim with reasoning and supporting evidence.",
+				"A counterclaim with reasoning and supporting evidence.",
+				"Presentation notes that move from topic introduction to claim, counterclaim, and conclusion."
+			]
+		},
+		{
+			title: "Fiction Writing Presentation",
+			prompt: "Create a short fiction-writing lesson using the final story as evidence. The lesson defines fiction writing, explains why it matters, presents three core concepts, gives examples from the story, and ends with five practical writing tips.",
+			evidence: [
+				"A lesson outline with three fiction-writing concepts.",
+				"Examples from the final story connected to each concept.",
+				"Five writing tips and a closing reflection on the strongest part of the final story."
+			]
+		}
+	]
+};
+
+const middleSchoolBWritingRetakeSourceAnchors = Object.fromEntries(
+	Object.entries(middleSchoolBWritingSourceAnchors).map(
+		([module, anchors]) => [
+			module,
+			anchors.map(anchor => ({
+				...anchor,
+				prompt: `Retake focus: revisit this skill with a fresh passage, draft, or presentation example before repeating the original source pattern. ${anchor.prompt}`,
+				evidence: [
+					...anchor.evidence,
+					"A comparison note naming the skill that improved from the first course pass."
+				]
+			}))
+		]
+	)
+) as Record<string, SourceActivityAnchor[]>;
+
 function compactTopic(title: string) {
 	return title
 		.replace(/^[A-Z]{2,}\s*\d+[A-Z]?\s*/i, "")
@@ -1766,6 +1987,7 @@ const englishCourses = {
 			"msa19_concept2_emptyplot.png",
 			"msa19_concept2_labeledplot.png"
 		],
+		sourceActivityAnchors: middleSchoolBWritingRetakeSourceAnchors,
 		modules: [
 			"MSB1 Arguments & Evidence",
 			"MSB2 Counterclaims",
@@ -1793,6 +2015,7 @@ const englishCourses = {
 			"msa19_concept2_emptyplot.png",
 			"msa19_concept2_labeledplot.png"
 		],
+		sourceActivityAnchors: middleSchoolBWritingSourceAnchors,
 		modules: [
 			"MSB1 Arguments & Evidence",
 			"MSB2 Counterclaims",
