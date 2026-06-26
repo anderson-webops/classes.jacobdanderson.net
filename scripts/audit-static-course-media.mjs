@@ -12,18 +12,22 @@ import {
 } from "@/stores/courses/index";
 import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
-	STATIC_MEDIA_BASE
+	STATIC_MEDIA_BASE,
+	staticMediaFilename,
+	staticMediaUrl
 } from "@/stores/courses/staticMedia";
 
 const staticPrefix = STATIC_MEDIA_BASE + "/";
 const knownPending = new Set(KNOWN_PENDING_STATIC_MEDIA_FILENAMES);
 const urls = new Map();
+const placeholderNotePattern =
+	/\b(?:pending media|reserved|placeholder|not currently available|class static host)\b/i;
 
-function add(url, source) {
+function add(url, reference) {
 	if (!url?.startsWith(staticPrefix)) return;
-	const sources = urls.get(url) ?? [];
-	sources.push(source);
-	urls.set(url, sources);
+	const references = urls.get(url) ?? [];
+	references.push(reference);
+	urls.set(url, references);
 }
 
 for (const entry of courseCatalog) {
@@ -38,10 +42,26 @@ for (const entry of courseCatalog) {
 
 		for (const item of items) {
 			const source = [entry.id, module.title, item.title].join(" / ");
-			add(item.mediaLink, source);
-			add(item.datasetLink, source);
-			add(item.projectLink, source);
-			add(item.solutionLink, source);
+			add(item.mediaLink, {
+				content: item.content,
+				key: "mediaLink",
+				source
+			});
+			add(item.datasetLink, {
+				content: item.content,
+				key: "datasetLink",
+				source
+			});
+			add(item.projectLink, {
+				content: item.content,
+				key: "projectLink",
+				source
+			});
+			add(item.solutionLink, {
+				content: item.content,
+				key: "solutionLink",
+				source
+			});
 		}
 	}
 }
@@ -49,7 +69,7 @@ for (const entry of courseCatalog) {
 const missing = [];
 const available = [];
 
-for (const [url, sources] of [...urls].sort(([left], [right]) =>
+for (const [url, references] of [...urls].sort(([left], [right]) =>
 	left.localeCompare(right)
 )) {
 	let status = 0;
@@ -70,14 +90,31 @@ for (const [url, sources] of [...urls].sort(([left], [right]) =>
 		error = err instanceof Error ? err.message : String(err);
 	}
 
-	const filename = url.slice(staticPrefix.length);
+	const filename = staticMediaFilename(url);
+	const sourceIssues = references.flatMap(reference => {
+		if (
+			reference.content.includes(filename) &&
+			reference.content.includes(staticMediaUrl(filename)) &&
+			placeholderNotePattern.test(reference.content)
+		) {
+			return [];
+		}
+
+		return [
+			{
+				key: reference.key,
+				source: reference.source
+			}
+		];
+	});
 	const row = {
 		filename,
 		isKnownPending: knownPending.has(filename),
-		sourceCount: sources.length,
-		sources,
+		sourceCount: references.length,
+		sources: references.map(reference => reference.source),
 		status,
 		url,
+		...(sourceIssues.length ? { sourceIssues } : {}),
 		...(error ? { error } : {})
 	};
 
@@ -86,6 +123,9 @@ for (const [url, sources] of [...urls].sort(([left], [right]) =>
 }
 
 const unknownMissing = missing.filter(row => !row.isKnownPending);
+const unnotedPending = missing.filter(
+	row => row.isKnownPending && row.sourceIssues?.length
+);
 console.log(
 	JSON.stringify(
 		{
@@ -93,6 +133,7 @@ console.log(
 			checkedCount: urls.size,
 			missing,
 			missingCount: missing.length,
+			unnotedPending,
 			unknownMissing
 		},
 		null,
@@ -100,7 +141,7 @@ console.log(
 	)
 );
 
-if (unknownMissing.length > 0) {
+if (unknownMissing.length > 0 || unnotedPending.length > 0) {
 	process.exitCode = 1;
 }
 `;

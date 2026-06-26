@@ -21,8 +21,34 @@ export function staticMediaUrl(filename: string) {
 	return `${STATIC_MEDIA_BASE}/${filename}`;
 }
 
+export function staticMediaFilename(url: string) {
+	try {
+		const pathname = new URL(url).pathname;
+		return decodeURIComponent(
+			pathname.split("/").filter(Boolean).pop() || pathname || url
+		);
+	} catch {
+		return url;
+	}
+}
+
+export function isStaticMediaUrl(url: string) {
+	try {
+		return new URL(url).origin === STATIC_MEDIA_BASE;
+	} catch {
+		return false;
+	}
+}
+
 export function isKnownPendingStaticMedia(filename: string) {
 	return knownPendingStaticMedia.has(filename);
+}
+
+export function isKnownPendingStaticMediaUrl(url: string) {
+	return (
+		isStaticMediaUrl(url) &&
+		isKnownPendingStaticMedia(staticMediaFilename(url))
+	);
 }
 
 export function pendingStaticMediaNotice(filename: string) {

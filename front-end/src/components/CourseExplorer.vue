@@ -29,7 +29,11 @@ import {
 } from "@/modules/pythonIde";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
-import { isKnownPendingStaticMedia } from "@/stores/courses/staticMedia";
+import {
+	isKnownPendingStaticMediaUrl,
+	isStaticMediaUrl,
+	staticMediaFilename
+} from "@/stores/courses/staticMedia";
 import CodePreview from "./CodePreview.vue";
 import CourseAssetPreview from "./CourseAssetPreview.vue";
 import LazyMarkdownContent from "./LazyMarkdownContent.vue";
@@ -69,7 +73,6 @@ const SOURCE_REPOSITORY_ROOT_RE =
 	/^https:\/\/github\.com\/instruction-material\/[^/]+\/tree\/main$/i;
 const REPOSITORY_ARCHIVE_RE =
 	/\b(?:reference archive|full repo|repo bank|problem bank|workspace archive|source archive)\b/i;
-const STATIC_CLASSES_HOST = "static.classes.jacobdanderson.net";
 const LEARNER_SELECTION_STORAGE_KEY =
 	"classes:course-explorer:selected-learner";
 const COURSE_SELECTION_STORAGE_KEY = "classes:course-explorer:selected-course";
@@ -1005,35 +1008,13 @@ function isEmbeddedMedia(link: string) {
 	return isVideo(link) || isImage(link);
 }
 
-function isStaticClassesUrl(url: string) {
-	try {
-		return new URL(url).hostname === STATIC_CLASSES_HOST;
-	} catch {
-		return false;
-	}
-}
-
 function staticAssetName(url: string) {
-	try {
-		const pathname = new URL(url).pathname;
-		return decodeURIComponent(
-			pathname.split("/").filter(Boolean).pop() || pathname || url
-		);
-	} catch {
-		return url;
-	}
-}
-
-function isKnownPendingStaticMediaUrl(url: string) {
-	return (
-		isStaticClassesUrl(url) &&
-		isKnownPendingStaticMedia(staticAssetName(url))
-	);
+	return staticMediaFilename(url);
 }
 
 function isStaticMediaUnavailable(url: string) {
 	return (
-		isStaticClassesUrl(url) &&
+		isStaticMediaUrl(url) &&
 		(isKnownPendingStaticMediaUrl(url) ||
 			unavailableStaticMediaUrls.value.includes(
 				canonicalResourceTarget(url)
@@ -1042,7 +1023,7 @@ function isStaticMediaUnavailable(url: string) {
 }
 
 function markStaticMediaUnavailable(url: string) {
-	if (!isStaticClassesUrl(url)) return;
+	if (!isStaticMediaUrl(url)) return;
 
 	const target = canonicalResourceTarget(url);
 	if (unavailableStaticMediaUrls.value.includes(target)) return;

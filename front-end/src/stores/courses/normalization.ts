@@ -2,6 +2,12 @@ import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyResearchBackedExpansions } from "./research-expansions";
+import {
+	isKnownPendingStaticMediaUrl,
+	pendingStaticMediaNotice,
+	staticMediaFilename,
+	staticMediaUrl
+} from "./staticMedia";
 
 const INSTRUCTION_MATERIAL_BASE = "https://github.com/instruction-material";
 
@@ -75,6 +81,42 @@ function updateCourseLinks(
 				const value = item[key];
 				if (!value) continue;
 				item[key] = rewrite(value, { module, item, key });
+			}
+		}
+	}
+}
+
+function appendPendingStaticMediaNotices(course: RawCourse) {
+	for (const module of course.modules) {
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			const filenames = new Set(
+				itemLinkKeys
+					.map(key => item[key])
+					.filter(
+						(value): value is string =>
+							!!value && isKnownPendingStaticMediaUrl(value)
+					)
+					.map(staticMediaFilename)
+			);
+
+			for (const filename of filenames) {
+				const expectedUrl = staticMediaUrl(filename);
+				if (
+					item.content.includes(filename) &&
+					item.content.includes(expectedUrl)
+				) {
+					continue;
+				}
+
+				item.content = [
+					item.content.trim(),
+					pendingStaticMediaNotice(filename)
+				]
+					.filter(Boolean)
+					.join("\n\n");
 			}
 		}
 	}
@@ -8604,6 +8646,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	normalizeLegacyBranding(course);
 	contextualizeGenericDisplayTitles(course);
 	compactGeneratedDisplayTitles(course);
+	appendPendingStaticMediaNotices(course);
 	formatVisibleCourseMarkdown(course);
 	cleanVisibleCourseGrammar(course);
 	removeDuplicateSolutionLinks(course);

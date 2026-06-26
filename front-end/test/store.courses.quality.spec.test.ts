@@ -5,7 +5,9 @@ import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
 import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
+	isStaticMediaUrl,
 	pendingStaticMediaNotice,
+	staticMediaFilename,
 	staticMediaUrl
 } from "@/stores/courses/staticMedia";
 import { buildProjectGuidance } from "@/stores/courses/projectGuidance";
@@ -6903,7 +6905,7 @@ describe("course text quality normalization", () => {
 			const missingPlaceholderNotes: string[] = [];
 			const missingPlaceholderLinks: string[] = [];
 			const placeholderNotePattern =
-				/\b(?:pending media|reserved|placeholder|available on the class static host)\b/i;
+				/\b(?:pending media|reserved|placeholder|not currently available|class static host)\b/i;
 
 			for (const entry of courseCatalog) {
 				const course = await loadRawCourse(entry.id);
@@ -6914,28 +6916,39 @@ describe("course text quality normalization", () => {
 						...module.curriculum,
 						...module.supplementalProjects
 					]) {
-						const filename = item.mediaLink
-							? item.mediaLink.split("/").at(-1)
-							: undefined;
+						const links = [
+							item.mediaLink,
+							item.datasetLink,
+							item.projectLink,
+							item.solutionLink
+						].filter(
+							(link): link is string =>
+								!!link && isStaticMediaUrl(link)
+						);
 
-						if (!filename || !pendingFilenames.has(filename))
-							continue;
+						for (const link of links) {
+							const filename = staticMediaFilename(link);
+							if (!pendingFilenames.has(filename)) continue;
 
-						unresolvedPendingFilenames.delete(filename);
+							unresolvedPendingFilenames.delete(filename);
 
-						if (item.mediaLink !== staticMediaUrl(filename)) {
-							missingPlaceholderLinks.push(
-								`${entry.id} / ${module.title} / ${item.title}: ${item.mediaLink}`
-							);
-						}
+							if (link !== staticMediaUrl(filename)) {
+								missingPlaceholderLinks.push(
+									`${entry.id} / ${module.title} / ${item.title}: ${link}`
+								);
+							}
 
-						if (
-							!item.content.includes(filename) ||
-							!placeholderNotePattern.test(item.content)
-						) {
-							missingPlaceholderNotes.push(
-								`${entry.id} / ${module.title} / ${item.title}: ${filename}`
-							);
+							if (
+								!item.content.includes(filename) ||
+								!item.content.includes(
+									staticMediaUrl(filename)
+								) ||
+								!placeholderNotePattern.test(item.content)
+							) {
+								missingPlaceholderNotes.push(
+									`${entry.id} / ${module.title} / ${item.title}: ${filename}`
+								);
+							}
 						}
 					}
 				}
