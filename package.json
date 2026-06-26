@@ -14,6 +14,7 @@
 	],
 	"scripts": {
 		"audit": "npm audit --workspaces",
+		"audit:static-media": "node scripts/audit-static-course-media.mjs",
 		"audit-fix": "npm audit fix --workspaces",
 		"build": "npm run -w front-end build && npm run -w back-end build",
 		"dev": "npm run -w front-end dev",
