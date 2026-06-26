@@ -3,6 +3,12 @@ import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const KICKOFF_INVENTORY = "paa_kickoff_0.png";
 const KICKOFF_PRICING = "paa_kickoff_1.png";
+const PAA1_SIGNED_NUMBER_DIAGRAM = "paa1_pset1_0.png";
+const PRE_ALGEBRA_A_PENDING_SOURCE_ASSETS = [
+	KICKOFF_INVENTORY,
+	KICKOFF_PRICING,
+	PAA1_SIGNED_NUMBER_DIAGRAM
+] as const;
 
 function lesson(title: string, content: string, mediaLink?: string) {
 	return mediaLink ? { title, content, mediaLink } : { title, content };
@@ -429,7 +435,24 @@ export const preAlgebraACourse: RawCourse = {
 						"The capstone contains multiple representations, labeled calculations, one error correction, and a final explanation connecting the scenario to the math."
 				})
 			)
-		])
+		]),
+		{
+			kind: "appendix",
+			title: "Original Asset Reservations",
+			curriculum: [
+				lesson(
+					"Pre-Algebra A Source Asset Status",
+					[
+						"The original Pre-Algebra A source library referenced the static assets below. The kickoff images are already represented in project cards; the PAA1 problem-set diagram is reserved here so it can be uploaded to the class static host later without changing course content.",
+						...PRE_ALGEBRA_A_PENDING_SOURCE_ASSETS.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
+				)
+			],
+			supplementalProjects: []
+		}
 	],
 	developmentMetadata: {
 		priority: "soon",

@@ -516,6 +516,7 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"pf5_concept1_4.png",
 	"pf5_concept1_5.png",
 	"pf5_concept1_6.png",
+	"paa1_pset1_0.png",
 	"paa_kickoff_0.png",
 	"paa_kickoff_1.png",
 	"pab5_0.png",
