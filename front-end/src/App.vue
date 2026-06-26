@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { pageTitleForPath } from "@/modules/pageHead";
 import {
 	SCHEDULER_ORIGIN,
 	schedulerDnsPrefetchHref
@@ -20,6 +21,7 @@ const noindexMatchers = [
 const canonicalUrl = computed(() =>
 	new URL(route.path || "/", `${siteUrl}/`).toString()
 );
+const pageTitle = computed(() => pageTitleForPath(route.path || "/"));
 const robotsContent = computed(() =>
 	noindexMatchers.some(matcher => matcher.test(route.path))
 		? "noindex,nofollow"
@@ -45,7 +47,7 @@ const structuredData = computed(() => [
 useHead(
 	() =>
 		({
-			title: "Classes",
+			title: pageTitle.value,
 			meta: [
 				{
 					name: "description",
