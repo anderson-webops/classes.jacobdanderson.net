@@ -11,11 +11,26 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"biomod1pro1im2.jpg",
 	"biomod2pro1im1.png",
 	"c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png",
+	"ent3_project2_0.png",
+	"ent3_project2_1.png",
+	"ent5_project1_0.png",
+	"jor2_disact_plotempty.png",
+	"leb16_concept1_0.png",
+	"mfb10_concept1_0.png",
+	"module_project_1_0.png",
+	"pf5_concept1_1.png",
+	"pf5_concept1_2.png",
+	"pf5_concept1_3.png",
+	"pf5_concept1_4.png",
+	"pf5_concept1_5.png",
+	"pf5_concept1_6.png",
 	"paa_kickoff_0.png",
 	"paa_kickoff_1.png",
 	"pab5_0.png",
 	"pab14_0.png",
-	"pab22_0.png"
+	"pab22_0.png",
+	"ted_ed_release.pdf",
+	"wyb1_proj1_plotempty.png"
 ] as const;
 
 const knownPendingStaticMedia = new Set<string>(

@@ -67,6 +67,38 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			import("./ai-level-1").then(({ aiLevel1Course }) => aiLevel1Course)
 	},
 	{
+		id: "early-elementary-a-math",
+		name: "Early Elementary A: Numbers, Operations, and Measurement",
+		load: () =>
+			import("./source-library-courses").then(
+				({ earlyElementaryMathACourse }) => earlyElementaryMathACourse
+			)
+	},
+	{
+		id: "early-elementary-b-math",
+		name: "Early Elementary B: Arithmetic, Fractions, and Geometry",
+		load: () =>
+			import("./source-library-courses").then(
+				({ earlyElementaryMathBCourse }) => earlyElementaryMathBCourse
+			)
+	},
+	{
+		id: "late-elementary-a-math",
+		name: "Late Elementary A: Multiplication, Division, and Geometry",
+		load: () =>
+			import("./source-library-courses").then(
+				({ lateElementaryMathACourse }) => lateElementaryMathACourse
+			)
+	},
+	{
+		id: "late-elementary-b-math",
+		name: "Late Elementary B: Fractions, Decimals, Units, and Coordinates",
+		load: () =>
+			import("./source-library-courses").then(
+				({ lateElementaryMathBCourse }) => lateElementaryMathBCourse
+			)
+	},
+	{
 		id: "pre-algebra-a",
 		name: "Pre-Algebra A",
 		load: () =>
@@ -152,6 +184,91 @@ export const courseCatalog: CourseCatalogEntry[] = [
 		load: () =>
 			import("./ap-calculus").then(
 				({ apCalculusCourse }) => apCalculusCourse
+			)
+	},
+	{
+		id: "early-elementary-a-reading",
+		name: "Early Elementary A: Discovering the Joy of Reading",
+		load: () =>
+			import("./source-library-courses").then(
+				({ earlyElementaryJoyOfReadingCourse }) =>
+					earlyElementaryJoyOfReadingCourse
+			)
+	},
+	{
+		id: "early-elementary-b-picture-book",
+		name: "Early Elementary B: Write Your Own Picture Book",
+		load: () =>
+			import("./source-library-courses").then(
+				({ earlyElementaryPictureBookCourse }) =>
+					earlyElementaryPictureBookCourse
+			)
+	},
+	{
+		id: "introduction-to-public-speaking",
+		name: "Make Your Point: Introduction to Public Speaking",
+		load: () =>
+			import("./source-library-courses").then(
+				({ introductionToPublicSpeakingCourse }) =>
+					introductionToPublicSpeakingCourse
+			)
+	},
+	{
+		id: "middle-school-a-literature",
+		name: "Middle School A: Reading and Analyzing Literature",
+		load: () =>
+			import("./source-library-courses").then(
+				({ middleSchoolLiteratureCourse }) =>
+					middleSchoolLiteratureCourse
+			)
+	},
+	{
+		id: "middle-school-b-writing",
+		name: "Middle School B: Analytical and Creative Writing",
+		load: () =>
+			import("./source-library-courses").then(
+				({ middleSchoolWritingCourse }) => middleSchoolWritingCourse
+			)
+	},
+	{
+		id: "middle-school-c-grammar",
+		name: "Middle School C: Grammar and Mechanics",
+		load: () =>
+			import("./source-library-courses").then(
+				({ grammarMechanicsCourse }) => grammarMechanicsCourse
+			)
+	},
+	{
+		id: "novel-writing",
+		name: "Novel Writing",
+		load: () =>
+			import("./source-library-courses").then(
+				({ novelWritingCourse }) => novelWritingCourse
+			)
+	},
+	{
+		id: "smart-money-personal-finance",
+		name: "Smart Money: Introduction to Personal Finance",
+		load: () =>
+			import("./source-library-courses").then(
+				({ smartMoneyPersonalFinanceCourse }) =>
+					smartMoneyPersonalFinanceCourse
+			)
+	},
+	{
+		id: "money-minded-investing",
+		name: "Money-Minded: Investing in the Stock Market",
+		load: () =>
+			import("./source-library-courses").then(
+				({ moneyMindedInvestingCourse }) => moneyMindedInvestingCourse
+			)
+	},
+	{
+		id: "entrepreneurship-101",
+		name: "Be Your Own Boss: Entrepreneurship 101",
+		load: () =>
+			import("./source-library-courses").then(
+				({ entrepreneurship101Course }) => entrepreneurship101Course
 			)
 	},
 	{
