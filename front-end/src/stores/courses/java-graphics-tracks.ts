@@ -29,6 +29,7 @@ function cloneModule(
 	courseLabel: string
 ): RawCourseModule {
 	return {
+		...module,
 		title: `${courseLabel}: ${module.title}`,
 		curriculum: module.curriculum.map(cloneItem),
 		supplementalProjects: module.supplementalProjects.map(cloneItem)
@@ -50,6 +51,7 @@ function isGraphicsItem(item: RawCourseModuleItem) {
 
 function withoutGraphics(module: RawCourseModule, courseLabel: string) {
 	const filteredModule = {
+		...module,
 		title: `${courseLabel}: ${module.title}`,
 		curriculum: module.curriculum
 			.filter(item => !isGraphicsItem(item))
