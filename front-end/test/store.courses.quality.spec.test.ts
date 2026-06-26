@@ -7017,6 +7017,65 @@ describe("course text quality normalization", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
+	it(
+		"keeps raw course source placeholders for unavailable static media",
+		async () => {
+			const pendingFilenames = new Set(
+				KNOWN_PENDING_STATIC_MEDIA_FILENAMES
+			);
+			const missingRawPlaceholderNotes: string[] = [];
+			const missingRawPlaceholderLinks: string[] = [];
+
+			for (const entry of courseCatalog) {
+				const course = await entry.load();
+
+				for (const module of course.modules) {
+					for (const item of [
+						...module.curriculum,
+						...module.supplementalProjects
+					]) {
+						const links = [
+							item.mediaLink,
+							item.datasetLink,
+							item.projectLink,
+							item.solutionLink,
+							...staticMediaUrlsFromText(item.content)
+						].filter(
+							(link): link is string =>
+								!!link && isStaticMediaUrl(link)
+						);
+
+						for (const link of links) {
+							const filename = staticMediaFilename(link);
+							if (!pendingFilenames.has(filename)) continue;
+
+							if (link !== staticMediaUrl(filename)) {
+								missingRawPlaceholderLinks.push(
+									`${entry.id} / ${module.title} / ${item.title}: ${link}`
+								);
+							}
+
+							if (
+								!hasPendingStaticMediaNotice(
+									item.content,
+									filename
+								)
+							) {
+								missingRawPlaceholderNotes.push(
+									`${entry.id} / ${module.title} / ${item.title}: ${filename}`
+								);
+							}
+						}
+					}
+				}
+			}
+
+			expect(missingRawPlaceholderLinks).toEqual([]);
+			expect(missingRawPlaceholderNotes).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
 	it("documents pending static media with the original filename and future static URL", () => {
 		const notice = pendingStaticMediaNotice("original-static-demo.mp4");
 

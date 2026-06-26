@@ -1,5 +1,5 @@
 import type { RawCourse } from "./types";
-import { staticMediaUrl } from "./staticMedia";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 function concept({
 	evidence,
@@ -58,26 +58,32 @@ export const introToBiologyCourse: RawCourse = {
 				},
 				{
 					title: "Body Systems Reference A",
-					content: concept({
-						investigation:
-							"The original course used a human-body diagram to identify major organ systems. This placeholder reserves the original static asset name `biomod1pro1im1.jpg` at the class static host until the image is available.",
-						model: "Body systems are coordinated groups of organs. A useful systems map includes at least one representative organ and the main job for each system.",
-						evidence:
-							"Label skeletal, nervous, integumentary, respiratory, circulatory, digestive, excretory, endocrine, immune, and muscular examples.",
-						focus: "Trace one everyday action, such as running or eating, across at least three interacting systems."
-					}),
+					content: [
+						concept({
+							investigation:
+								"The original course used a human-body diagram to identify major organ systems. This placeholder reserves the original static asset name `biomod1pro1im1.jpg` at the class static host until the image is available.",
+							model: "Body systems are coordinated groups of organs. A useful systems map includes at least one representative organ and the main job for each system.",
+							evidence:
+								"Label skeletal, nervous, integumentary, respiratory, circulatory, digestive, excretory, endocrine, immune, and muscular examples.",
+							focus: "Trace one everyday action, such as running or eating, across at least three interacting systems."
+						}),
+						pendingStaticMediaNotice("biomod1pro1im1.jpg")
+					].join("\n\n"),
 					mediaLink: staticMediaUrl("biomod1pro1im1.jpg")
 				},
 				{
 					title: "Body Systems Reference B",
-					content: concept({
-						investigation:
-							"The second original body-systems reference is reserved as `biomod1pro1im2.jpg`. When the hosted file becomes available, the course viewer renders the image in this space automatically.",
-						model: "Systems overlap rather than operating as isolated boxes. Respiratory and circulatory systems exchange and transport gases; nervous and endocrine systems coordinate signals; immune and integumentary systems protect boundaries.",
-						evidence:
-							"Use arrows to show which system receives information, which system moves material, and which system changes the body's response.",
-						focus: "Name one system interaction and explain what would break if either system stopped contributing."
-					}),
+					content: [
+						concept({
+							investigation:
+								"The second original body-systems reference is reserved as `biomod1pro1im2.jpg`. When the hosted file becomes available, the course viewer renders the image in this space automatically.",
+							model: "Systems overlap rather than operating as isolated boxes. Respiratory and circulatory systems exchange and transport gases; nervous and endocrine systems coordinate signals; immune and integumentary systems protect boundaries.",
+							evidence:
+								"Use arrows to show which system receives information, which system moves material, and which system changes the body's response.",
+							focus: "Name one system interaction and explain what would break if either system stopped contributing."
+						}),
+						pendingStaticMediaNotice("biomod1pro1im2.jpg")
+					].join("\n\n"),
 					mediaLink: staticMediaUrl("biomod1pro1im2.jpg")
 				},
 				{
@@ -158,14 +164,17 @@ export const introToBiologyCourse: RawCourse = {
 				},
 				{
 					title: "Mission Dossier Graph",
-					content: concept({
-						investigation:
-							"The original source mission used a scrambled graph to match dinner guests with the dishes they ate. This placeholder reserves the original image filename `biomod2pro1im1.png`.",
-						model: "A graph can represent relative molecule levels before and after a meal. Changes in carbohydrate, amino-acid, and fatty-acid levels act as clues.",
-						evidence:
-							"Match each guest to a dish by naming the strongest graph clue and ruling out at least one alternative.",
-						focus: "Explain why a graph pattern supports a meal hypothesis without claiming certainty beyond the evidence."
-					}),
+					content: [
+						concept({
+							investigation:
+								"The original source mission used a scrambled graph to match dinner guests with the dishes they ate. This placeholder reserves the original image filename `biomod2pro1im1.png`.",
+							model: "A graph can represent relative molecule levels before and after a meal. Changes in carbohydrate, amino-acid, and fatty-acid levels act as clues.",
+							evidence:
+								"Match each guest to a dish by naming the strongest graph clue and ruling out at least one alternative.",
+							focus: "Explain why a graph pattern supports a meal hypothesis without claiming certainty beyond the evidence."
+						}),
+						pendingStaticMediaNotice("biomod2pro1im1.png")
+					].join("\n\n"),
 					mediaLink: staticMediaUrl("biomod2pro1im1.png")
 				},
 				{
