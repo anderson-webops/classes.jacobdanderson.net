@@ -2888,6 +2888,257 @@ const earlyElementaryAMathSourceAnchors: Record<
 	]
 };
 
+const earlyElementaryBMathSourceAnchors: Record<
+	string,
+	SourceActivityAnchor[]
+> = {
+	"EEB1 Adding and Subtracting within 1000": [
+		{
+			title: "Millionaire Block Strategy Review",
+			prompt: "Use the Who Wants To Be A Millionaire-style number-pieces activity to represent 119 and 232, then solve 119 + 232 and 232 - 119 with place-value blocks or expanded form.",
+			evidence: [
+				"Block or expanded-form representation for 119 and 232.",
+				"Addition work for 119 + 232 with regrouping named when it occurs.",
+				"Subtraction work for 232 - 119 with borrowing or decomposition visible."
+			]
+		}
+	],
+	"EEB2 Strategies to Add and Subtract within 1000": [
+		{
+			title: "Skee-Ball Record Challenge",
+			prompt: "Track the five-round skee-ball score where outer rings are 1 point, inner rings are 10 points, bullseyes are 100 points, missed holes lose 10 points, and balls outside the play area lose 100 points.",
+			evidence: [
+				"Running score after each round, including gains and penalties.",
+				"Place-value or number-block trade record that simplifies the score when possible.",
+				"Final comparison against the 870-point record with exact difference."
+			]
+		}
+	],
+	"EEB3 Multiplying and Dividing within 100": [
+		{
+			title: "Recycling Game Show Score Sheet",
+			prompt: "Use the recycling game show to compare box collections across rounds. Represent small, medium, and large boxes as different point values, write multiplication equations, and use division to recover a missing box count.",
+			evidence: [
+				"Round 1 score for 4 boxes and 5 boxes when each box is worth 2 points.",
+				"Comparison between 7 small boxes plus 1 medium box and 1 large box plus 5 small boxes.",
+				"Equation explaining how many 6-point boxes make a 42-point score."
+			]
+		}
+	],
+	"EEB4 Properties of Multiplication and Division": [
+		{
+			title: "Twenty-Seven Character Array Properties",
+			prompt: "Arrange 27 characters in rows and columns, then rearrange the same total to show commutativity. Add a related group to model the distributive property, then use 15 characters in groups of 5 to connect division and multiplication.",
+			evidence: [
+				"Two arrays for 27 with matching multiplication equations.",
+				"Three-factor expression and grouping comparison for associativity.",
+				"Distributive expression and inverse division/multiplication pair for 15 and 5."
+			]
+		}
+	],
+	"EEB5 Multiplication and Division Word Problems": [
+		{
+			title: "Cookout Equal Groups and Missing Amounts",
+			prompt: "Plan a cookout main dish for about 20 people, place two pieces of food on each plate, update the table after half the plates are gone, then solve dessert and goody-bag missing-quantity problems.",
+			evidence: [
+				"Box, plate, or array model showing enough food for 20 people.",
+				"Repeated-addition equation for the pieces of food left after half the plates are gone.",
+				"Missing-value work for ice cream sandwiches and 100 goody-bag items."
+			]
+		}
+	],
+	"EEB6 Applying the Four Operations": [
+		{
+			title: "Board Game Expression Tracker",
+			prompt: "Use the four-operations board game to record each dice roll and space effect as one expression. Apply multiplication and division before addition and subtraction, handle whole-number division limits, and compare parentheses placements.",
+			evidence: [
+				"Turn-by-turn expression record tied to spaces moved on the board.",
+				"At least one evaluated expression showing operation order.",
+				"Parentheses comparison showing whether the score changes when grouping changes."
+			]
+		}
+	],
+	"EEB7 Multiples of 10": [
+		{
+			title: "Multiples of Ten Block Comparison",
+			prompt: "Choose a number from 1 to 9, multiply it by single-digit factors, then compare each representation with the related factor that has a zero added. Repeat with x2, x4, and x6 to describe groups of ten.",
+			evidence: [
+				"Top-row number-block models for the original single-digit multiplications.",
+				"Bottom-row models for the related multiples of 10.",
+				"Pattern statement explaining how adding a zero changes the place-value representation."
+			]
+		}
+	],
+	"EEB8 Module Project: Using Science For Good": [
+		{
+			title: "Fritz Four-Week Dosage Budget",
+			prompt: "Use Fritz's Duchenne Muscular Dystrophy medicine table to calculate Vitamin D, Iron, CoQ10, and steroid amounts for a four-week trip. Include pill counts, steroid milligrams from kilograms of body weight, and total estimated cost.",
+			evidence: [
+				"Four-week quantity calculation for each medicine.",
+				"Steroid dosage using 16 kilograms and 1 milligram per kilogram.",
+				"Cost total using the per-pill and per-milligram prices."
+			]
+		},
+		{
+			title: "Fritz Updated Dosage Plan",
+			prompt: "Use the updated medicine table to determine how long a 96-pill Iron bottle lasts at 3 pills every 3 days, then calculate six weeks of steroids using Fritz's new 23-kilogram weight and the revised ratio.",
+			evidence: [
+				"Days covered by the 96-pill Iron bottle.",
+				"Steroid milligrams needed per day from 1 milligram per 2 kilograms.",
+				"Six-week steroid total for the new 23-kilogram weight."
+			]
+		}
+	],
+	"Check-in #1": [
+		{
+			title: "Operations and Multiplication Check",
+			prompt: "Use the first check-in to demonstrate addition and subtraction within 1,000, multiplication and division within 100, multiplication properties, word-problem representation, four-operation expressions, and multiples of 10.",
+			evidence: [
+				"Place-value addition and subtraction work with regrouping when needed.",
+				"Multiplication, division, and missing-value problems represented by equations or arrays.",
+				"Operation-order, property, and multiples-of-10 explanations with labeled work."
+			]
+		}
+	],
+	"EEB9 Units of Measurement": [
+		{
+			title: "Storm Cleanup Measurement Plan",
+			prompt: "Use the storm-cleanup scenario to reason about time, liters, cups, grams, kilograms, and container choice. Track the leak from 7:30 a.m. to 8:15 a.m., compare 1 liter with 4 cups, and estimate weights for paper, textbooks, and pizza.",
+			evidence: [
+				"Timeline for leak checks, bottle filling, and textbook distribution.",
+				"Unit comparison between liters and cups, plus grams and kilograms.",
+				"Measurement choices justified for paper weights, textbook stacks, and pizza weight."
+			]
+		}
+	],
+	"EEB10 Area": [
+		{
+			title: "House Decoration Square-Unit Designs",
+			prompt: "Choose four square or rectangular house decorations, model each with square units under 100, then estimate the area of a non-rectangular gift by decomposing or enclosing it with square units.",
+			evidence: [
+				"Four decoration names with square-unit area models.",
+				"Multiplication equation for each rectangular area.",
+				"Non-rectangular estimate that combines multiplication and addition."
+			]
+		}
+	],
+	"EEB11 Module Project: Investing for the Future": [
+		{
+			title: "Pear Investment Allocation",
+			prompt: "Use Mar Hershenson's Pear investment scenario to distribute $87 million among Xampla, Bear Flag Robotics, and Nextmind. Compare equal allocation with a reasoned recommendation for which company has the strongest growth case.",
+			evidence: [
+				"Equal funding amount for three companies from $87 million.",
+				"Selected company and evidence-based reason for the recommendation.",
+				"Clear distinction between equal allocation and preferred investment choice."
+			]
+		},
+		{
+			title: "Bear Flag Factory Area Budget",
+			prompt: "Use the Bear Flag Robotics factory blueprint to calculate total square-yard area, then multiply by $10 per square yard to estimate the factory cost.",
+			evidence: [
+				"Factory area split into rectangles or counted square-yard sections.",
+				"Total area in square yards.",
+				"Factory cost calculation at $10 per square yard."
+			]
+		}
+	],
+	"EEB12 Partitioning Shapes": [
+		{
+			title: "Mars Fraction Expedition",
+			prompt: "Use the Mars mission path to partition the planet into fourths, collect a hexagon rock, shade two tenths of a rectangular liquid sample, and describe oxygen-tank levels as fractions.",
+			evidence: [
+				"Planet partition showing one fourth, later explored portions, and the last section.",
+				"Hexagon, rectangle, and octagon samples partitioned into equal pieces.",
+				"Fraction statements for rock piece, liquid sample, plant half, and oxygen level."
+			]
+		}
+	],
+	"EEB13 Fractions as Numbers": [
+		{
+			title: "Foot-Long Sandwich Number Lines",
+			prompt: "Draw two foot-long sandwiches with number lines from 0 to 1 foot. Cut the sandwiches into different fractions, split each part again, then compare how much of each sandwich is eaten.",
+			evidence: [
+				"Two number lines with halves, thirds, or fourths marked correctly.",
+				"Updated tick marks after each part is cut in half.",
+				"Fractions eaten and remaining after 4 pieces from each sandwich are eaten."
+			]
+		}
+	],
+	"EEB14 Represent and Interpret Data": [
+		{
+			title: "Zoo Anniversary Scaled Graphs",
+			prompt: "Use the zoo anniversary scenario to organize two animal types across three event sections. Create scaled picture graphs for 20, 5, 15 and 16, 8, 12, then combine totals in a bar graph.",
+			evidence: [
+				"Section labels and scaled picture graph for the first animal.",
+				"Second scaled picture graph using a different scale or sticker value.",
+				"Combined bar graph identifying the highest and lowest section totals."
+			]
+		},
+		{
+			title: "Zoo Straw Measurement Line Plot",
+			prompt: "Represent collected straw pieces on a measurement line: 1 inch, 1 and a half inches, 1 and 3 quarters inches, half an inch, and 2 and one quarter inches. Decide how many pieces are at least 1 and a half inches.",
+			evidence: [
+				"Line plot or number-line record with every straw length represented.",
+				"Counts for each fractional inch length.",
+				"Total number of straws kept at 1 and a half inches or longer."
+			]
+		}
+	],
+	"EEB15 Perimeter": [
+		{
+			title: "Camping Perimeter Layout",
+			prompt: "Use the camping-trip setup to design two rectangular camp spaces with the same area and different side lengths, calculate LED light-strip perimeter for each, then add an equal-side triangular campfire barrier.",
+			evidence: [
+				"Two labeled rectangles with equal area and different dimensions.",
+				"Perimeter calculation for each rectangular camp space.",
+				"Triangular barrier dimensions and total distance around the campfire."
+			]
+		}
+	],
+	"EEB16 Quadrilaterals": [
+		{
+			title: "Four-Sided Object Scavenger Hunt",
+			prompt: "Use a scavenger-hunt record to compare at least three four-sided objects. Identify rectangles, squares, rhombuses, trapezoids, parallel sides, shared attributes, and unique attributes.",
+			evidence: [
+				"Drawings or descriptions of at least three four-sided objects.",
+				"Similarity and difference notes for side lengths, angles, and parallel sides.",
+				"Labels for rectangle, square, rhombus, trapezoid, or other quadrilateral categories."
+			]
+		}
+	],
+	"EEB17 Module Project: 2001: A Warehouse Odyssey": [
+		{
+			title: "Amazon Warehouse Restock Survey",
+			prompt: "Use Akshit Mehta's warehouse survey to decide which Amazon Fresh, Books, Electronics, Home & Kitchen, and Pet Supplies warehouses are below half capacity and need restocking.",
+			evidence: [
+				"Half-capacity comparison for each warehouse.",
+				"List of warehouses that need restocking.",
+				"Priority recommendation with a fraction or capacity reason."
+			]
+		},
+		{
+			title: "Warehouse Robot Area Proposal",
+			prompt: "Choose between Standard Rover, Grab-a-Tron, and R.A.Z.E for warehouse use. Calculate robot area from rectangular dimensions and connect the chosen model's movement, load, or magnetic constraints to the recommendation.",
+			evidence: [
+				"Area calculation for the selected robot model.",
+				"Reason for choosing the robot based on warehouse needs.",
+				"Customization idea that improves the robot's warehouse usefulness."
+			]
+		}
+	],
+	"Check-in #2": [
+		{
+			title: "Measurement, Fraction, Data, and Geometry Check",
+			prompt: "Use the second check-in to demonstrate measurement units, area, fractions, data displays, perimeter, quadrilateral attributes, and multi-step project reasoning.",
+			evidence: [
+				"Unit, area, and fraction responses with labels and diagrams.",
+				"Data display or interpretation response using a scale or measurement line.",
+				"Perimeter and quadrilateral responses naming side, angle, and parallel-side evidence."
+			]
+		}
+	]
+};
+
 const elementaryMathCourses = {
 	earlyElementaryA: createSourceLibraryCourse({
 		name: "Early Elementary A: Discovering Numbers, Operations, and Measurement",
@@ -2937,6 +3188,7 @@ const elementaryMathCourses = {
 		name: "Early Elementary B: Exploring Arithmetic, Fractions, and Geometry",
 		area: "early elementary math",
 		focus: "multi-digit operations, multiplication, division, word problems, measurement, area, fractions, data, perimeter, quadrilaterals, and geometric explanation",
+		sourceActivityAnchors: earlyElementaryBMathSourceAnchors,
 		staticAssets: [
 			"checkin2_app_0.png",
 			"checkin2_gm_2.png",

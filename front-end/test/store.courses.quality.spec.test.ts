@@ -6863,6 +6863,86 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Early Elementary B math original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("early-elementary-b-math");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Millionaire Block Strategy Review",
+			"Skee-Ball Record Challenge",
+			"Recycling Game Show Score Sheet",
+			"Twenty-Seven Character Array Properties",
+			"Cookout Equal Groups and Missing Amounts",
+			"Board Game Expression Tracker",
+			"Multiples of Ten Block Comparison",
+			"Fritz Four-Week Dosage Budget",
+			"Fritz Updated Dosage Plan",
+			"Operations and Multiplication Check",
+			"Storm Cleanup Measurement Plan",
+			"House Decoration Square-Unit Designs",
+			"Pear Investment Allocation",
+			"Bear Flag Factory Area Budget",
+			"Mars Fraction Expedition",
+			"Foot-Long Sandwich Number Lines",
+			"Zoo Anniversary Scaled Graphs",
+			"Zoo Straw Measurement Line Plot",
+			"Camping Perimeter Layout",
+			"Four-Sided Object Scavenger Hunt",
+			"Amazon Warehouse Restock Survey",
+			"Warehouse Robot Area Proposal",
+			"Measurement, Fraction, Data, and Geometry Check"
+		];
+		const originalReferences = [
+			"Who Wants To Be A Millionaire",
+			"skee-ball",
+			"recycling game show",
+			"27 characters",
+			"cookout",
+			"board game",
+			"multiples of 10",
+			"Fritz",
+			"Vitamin D",
+			"Iron",
+			"CoQ10",
+			"Duchenne",
+			"storm-cleanup",
+			"square units",
+			"Mar Hershenson",
+			"Pear",
+			"Xampla",
+			"Bear Flag Robotics",
+			"Nextmind",
+			"Mars",
+			"foot-long sandwiches",
+			"zoo anniversary",
+			"straw",
+			"camping-trip",
+			"quadrilateral",
+			"Akshit Mehta",
+			"Amazon Fresh",
+			"Standard Rover",
+			"Grab-a-Tron",
+			"R.A.Z.E"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text, anchor).toContain(anchor);
+		}
+		for (const originalReference of originalReferences) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("preserves Joy of Reading original activity anchors with neutral wording", async () => {
 		const course = await loadRawCourse("early-elementary-a-reading");
 		expect(course).not.toBeNull();
