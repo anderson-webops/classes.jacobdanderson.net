@@ -1,6 +1,33 @@
 import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
+
+const DATA_SCIENCE_AVAILABLE_SOURCE_ASSETS = ["life_expectancy.csv"];
+
+const DATA_SCIENCE_PENDING_SOURCE_ASSETS = [
+	"building_permits.csv",
+	"flight_delays.csv",
+	"api.png",
+	"boxplot.png",
+	"categorical_variables.png",
+	"cholera.csv",
+	"data_science_concept.png",
+	"data_science_project.png",
+	"height_and_weight.csv",
+	"mpg.csv",
+	"normal.png",
+	"palettes.png",
+	"percents.png",
+	"quantitative_variables.png",
+	"sat.csv",
+	"skew.png",
+	"std.png",
+	"tips.csv",
+	"unemployment.csv",
+	"us_county_incomes.csv",
+	"zoo_animals.csv"
+];
 
 interface AppliedDataScienceLab {
 	number: number;
@@ -1649,6 +1676,28 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-33-applied-studio-17-data-analysis-lab-17-supplemental-3/solution"
 				}
 			]
+		},
+		{
+			kind: "appendix",
+			title: "Original Data Asset Reservations",
+			curriculum: [
+				{
+					title: "Data Science Source Asset Status",
+					content: [
+						"The original Data Science in Python source library referenced the datasets and visual assets below. Hosted assets are available now; reserved assets keep stable class-static URLs for files that can be uploaded later without changing course links.",
+						"**Hosted source assets:**",
+						...DATA_SCIENCE_AVAILABLE_SOURCE_ASSETS.map(
+							filename => `- ${staticMediaUrl(filename)}`
+						),
+						"**Reserved source assets:**",
+						...DATA_SCIENCE_PENDING_SOURCE_ASSETS.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };
