@@ -586,7 +586,7 @@ export const preAlgebraBCourse: RawCourse = {
 			"One evidence-based recommendation with a limitation"
 		],
 		recommendedNextWork: [
-			"Add Geometry A/B and Pre-Calculus A/B to complete the visible math pathway",
+			"Cross-link Geometry A/B and Algebra 1A readiness checkpoints from the visible math pathway",
 			"Upload reserved Pre-Algebra B images to the static classes host",
 			"Review external map/video links for source-safe alternatives where useful"
 		]

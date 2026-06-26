@@ -462,6 +462,18 @@ const familyAssessmentCadence: Record<string, string[]> = {
 		"Weekly retrieval spiral plus mixed practice from older skills.",
 		"One required anchor modeling project and one optional extension per course."
 	],
+	humanities: [
+		"Short reading, writing, speaking, or mechanics artifact every module.",
+		"Recurring revision check tied to evidence, audience, clarity, or mechanics.",
+		"Portfolio review after each major draft, speech, analysis, or grammar cluster.",
+		"Final project includes planning evidence, revision evidence, and reflection."
+	],
+	finance: [
+		"Scenario setup before each calculation or recommendation.",
+		"Assumption, tradeoff, risk, and time-horizon check every module.",
+		"One comparison or decision record after each major finance or business cluster.",
+		"Final project includes evidence, recommendation, limitation, and revision."
+	],
 	ap: [
 		"Daily or near-daily MCQ/code-trace warmup.",
 		"Weekly partial FRQ typed without compiler support.",
@@ -501,19 +513,43 @@ const familyAssessmentCadence: Record<string, string[]> = {
 };
 
 const courseFamilyKind: Record<string, keyof typeof familyAssessmentCadence> = {
+	"ap-calculus": "algebra",
 	"algebra-1a": "algebra",
 	"algebra-1b": "algebra",
 	"algebra-2a": "algebra",
 	"algebra-2b": "algebra",
+	"early-elementary-a-math": "algebra",
+	"early-elementary-b-math": "algebra",
+	"geometry-a": "algebra",
+	"geometry-b": "algebra",
+	"late-elementary-a-math": "algebra",
+	"late-elementary-b-math": "algebra",
+	"pre-algebra-a": "algebra",
+	"pre-algebra-b": "algebra",
+	"pre-calculus-a": "algebra",
+	"pre-calculus-b": "algebra",
 	"ap-computer-science-a": "ap",
 	"ai-level-1": "data-ai-ml",
 	"data-science-in-python": "data-ai-ml",
 	"machine-learning": "data-ai-ml",
 	"elementary-science": "science",
+	"intro-to-biology": "science",
+	"intro-to-environmental-science": "science",
 	"middle-school-integrated-science": "science",
 	"intro-to-chemistry": "science",
 	"intro-to-physics": "science",
 	"physics-level-2": "science",
+	"early-elementary-a-reading": "humanities",
+	"early-elementary-b-picture-book": "humanities",
+	"introduction-to-public-speaking": "humanities",
+	"middle-school-a-literature": "humanities",
+	"middle-school-b-writing": "humanities",
+	"middle-school-b-writing-retake": "humanities",
+	"middle-school-c-grammar": "humanities",
+	"novel-writing": "humanities",
+	"smart-money-personal-finance": "finance",
+	"money-minded-investing": "finance",
+	"entrepreneurship-101": "finance",
 	"linux-systems": "systems",
 	"network-systems": "systems",
 	"network-security": "systems",
@@ -639,6 +675,16 @@ const nextWorkByKind: Record<keyof typeof familyAssessmentCadence, string[]> = {
 		"Create worksheet or Desmos asset packs for anchor projects.",
 		"Add answer keys for error-analysis and mixed-practice checkpoints."
 	],
+	humanities: [
+		"Attach per-item reading, writing, speaking, or grammar skill tags when the schema supports item-level metadata.",
+		"Create source-safe passage, mentor-text, rehearsal, and revision exemplars for reusable modules.",
+		"Add rubrics and model responses for analysis, draft revision, speech delivery, and mechanics checkpoints."
+	],
+	finance: [
+		"Attach per-item personal finance, investing, business, and decision-analysis tags when the schema supports item-level metadata.",
+		"Create reusable scenario cards, budget tables, portfolio snapshots, and pitch-planning templates.",
+		"Add answer keys or sample decision records for calculations, assumptions, risks, and tradeoff checkpoints."
+	],
 	ap: [
 		"Create current-family FRQ banks with row-scored rubrics.",
 		"Add Bluebook-style typed practice routines and no-compiler prompts.",
@@ -670,6 +716,35 @@ const nextWorkByKind: Record<keyof typeof familyAssessmentCadence, string[]> = {
 		"Promote script-snapshot links to full-project links as each module reaches project-repo readiness."
 	]
 };
+
+const sourceLibraryContentCourseIds = new Set([
+	"ap-calculus",
+	"early-elementary-a-math",
+	"early-elementary-b-math",
+	"late-elementary-a-math",
+	"late-elementary-b-math",
+	"pre-algebra-a",
+	"pre-algebra-b",
+	"geometry-a",
+	"geometry-b",
+	"pre-calculus-a",
+	"pre-calculus-b",
+	"intro-to-biology",
+	"intro-to-environmental-science",
+	"early-elementary-a-reading",
+	"early-elementary-b-picture-book",
+	"introduction-to-public-speaking",
+	"middle-school-a-literature",
+	"middle-school-b-writing",
+	"middle-school-b-writing-retake",
+	"middle-school-c-grammar",
+	"novel-writing",
+	"smart-money-personal-finance",
+	"money-minded-investing",
+	"entrepreneurship-101",
+	"scratch-level-1-bootcamp",
+	"usaco-bronze-on-demand"
+]);
 
 function repoUrl(courseId: string) {
 	const repo = courseImplementationSourceRepos[courseId];
@@ -744,6 +819,10 @@ function sourcePolicyFor(courseId: string) {
 		return `Source-backed course. Canonical source repository: ${url}. Starter/reference links remain synchronized with catalog projects.`;
 	}
 
+	if (sourceLibraryContentCourseIds.has(courseId)) {
+		return "Source-library content course. Original course material has been converted into neutral catalog wording with course-native projects, static-asset placeholders, and source-safe references where available.";
+	}
+
 	return (
 		courseContentOnlySourcePolicies[courseId] ??
 		"Catalog-authored course. Add a source repository, media register, worksheet register, or explicit external-platform policy before large reusable artifacts are introduced."
@@ -768,6 +847,20 @@ function safetyPolicyFor(
 			`${courseLabel} uses public, synthetic, or provided datasets only.`,
 			`Record ${familyLabel} source, license or usage assumption, sensitive fields, limitations, and intended use before analysis or modeling.`,
 			`Include human review and limitation notes for ${courseLabel} AI/ML/data outputs.`
+		];
+	}
+	if (kind === "humanities") {
+		return [
+			`${courseLabel} uses provided excerpts, student-created drafts, public-domain or licensed references, and neutral discussion prompts.`,
+			`${familyLabel} activities avoid requiring private personal stories as evidence; fictional, public, or hypothetical material is acceptable.`,
+			`Any published or shared ${courseLabel} artifact should identify source material, audience, and revision intent.`
+		];
+	}
+	if (kind === "finance") {
+		return [
+			`${courseLabel} uses fictional, public, delayed, or provided financial scenarios rather than personal account credentials or private financial data.`,
+			`${familyLabel} work is educational decision analysis, not personalized investment, tax, legal, or financial advice.`,
+			`Any ${courseLabel} recommendation must name assumptions, uncertainty, and what evidence would change the conclusion.`
 		];
 	}
 	if (kind === "game") {
@@ -816,6 +909,18 @@ function capstoneFor(
 			`${courseLabel} final reflection distinguishes data quality, algorithm behavior, and responsible-use risk.`
 		];
 	}
+	if (kind === "humanities") {
+		return [
+			`${courseLabel} ends with a polished reading, writing, speaking, or mechanics artifact supported by planning and revision evidence.`,
+			`${courseLabel} final reflection explains how audience, evidence, structure, word choice, or mechanics changed during revision.`
+		];
+	}
+	if (kind === "finance") {
+		return [
+			`${courseLabel} ends with a decision, portfolio, pitch, or planning artifact backed by assumptions, calculations, and risk analysis.`,
+			`${courseLabel} final reflection explains which evidence would change the recommendation or business decision.`
+		];
+	}
 	if (kind === "systems") {
 		return [
 			`${courseLabel} ends with a scoped local lab or tool with setup notes, logs/traces, validation evidence, and defensive remediation or hardening result.`,
@@ -852,6 +957,22 @@ function assessmentCadenceFor(
 			`${courseLabel} uses a low-stakes check-in after every three to five lessons.`,
 			`${familyLabel} pacing includes a weekly retrieval spiral plus mixed practice from older skills.`,
 			`${courseLabel} includes one required anchor modeling project and one optional extension.`
+		];
+	}
+	if (kind === "humanities") {
+		return [
+			`${courseLabel} starts with a short baseline artifact: reading response, draft sample, speech outline, or mechanics check.`,
+			`${courseLabel} uses recurring revision checkpoints tied to evidence, organization, clarity, audience, or mechanics.`,
+			`${familyLabel} pacing alternates new concept work with portfolio review so earlier writing or analysis remains visible.`,
+			`${courseLabel} includes a final artifact with planning evidence, revision evidence, and reflection.`
+		];
+	}
+	if (kind === "finance") {
+		return [
+			`${courseLabel} starts each scenario by naming the decision, assumptions, available evidence, and constraints.`,
+			`${courseLabel} checks calculations with units, time horizon, and reasonableness before making a recommendation.`,
+			`${familyLabel} pacing uses recurring comparison tasks so risks, costs, benefits, and alternatives stay connected.`,
+			`${courseLabel} final work includes an evidence-backed recommendation, limitation, and revision trigger.`
 		];
 	}
 	if (kind === "ap") {
