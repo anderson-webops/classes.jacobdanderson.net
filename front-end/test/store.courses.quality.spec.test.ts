@@ -5753,6 +5753,7 @@ describe("course text quality normalization", () => {
 				loadRawCourse("pre-algebra-b"),
 				loadRawCourse("algebra-1a"),
 				loadRawCourse("algebra-1b"),
+				loadRawCourse("geometry-a"),
 				loadRawCourse("algebra-2a"),
 				loadRawCourse("algebra-2b"),
 				loadRawCourse("elementary-science"),
@@ -5883,6 +5884,7 @@ describe("course text quality normalization", () => {
 				loadRawCourse("pre-algebra-b"),
 				loadRawCourse("algebra-1a"),
 				loadRawCourse("algebra-1b"),
+				loadRawCourse("geometry-a"),
 				loadRawCourse("algebra-2a"),
 				loadRawCourse("algebra-2b")
 			]);
@@ -6046,6 +6048,57 @@ describe("course text quality normalization", () => {
 			"https://static.classes.jacobdanderson.net/pab14_0.png",
 			"https://static.classes.jacobdanderson.net/pab22_0.png"
 		]);
+	});
+
+	it("adds Geometry A from the source math sequence", async () => {
+		const course = await loadRawCourse("geometry-a");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const mediaLinks = course.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(item => item.mediaLink)
+				.filter((link): link is string => Boolean(link))
+		);
+
+		expect(course.modules.map(module => module.title)).toEqual([
+			"Geometry A Foundations: Definitions, Logic, and Proofs",
+			"GEOA4-GEOA5 Lines, Angles, and Coordinate Geometry",
+			"Check-In #1: Foundations and Lines",
+			"GEOA6-GEOA9 Triangles, Congruence, Similarity, and Right Triangles",
+			"Check-In #2: Triangle Relationships",
+			"GEOA10-GEOA13 Triangle Centers, Inequalities, and Trigonometry",
+			"Check-In #3 and Geometry A Capstone"
+		]);
+		expect(text).toContain("GEOA1 Definitions and Notation");
+		expect(text).toContain("GEOA2 Logical Reasoning");
+		expect(text).toContain("GEOA3 Proofs");
+		expect(text).toContain("GEOA4 Parallel and Perpendicular Lines");
+		expect(text).toContain("GEOA5 Coordinate Geometry");
+		expect(text).toContain("GEOA6 Classifying Triangles");
+		expect(text).toContain("GEOA7-GEOA8 Congruence and Similarity");
+		expect(text).toContain("GEOA9 Right Triangles");
+		expect(text).toContain("GEOA10 Bisectors");
+		expect(text).toContain("GEOA11 Medians and Altitudes");
+		expect(text).toContain("GEOA12-GEOA13 Inequalities and Basic Trigonometry");
+		expect(text).toContain("Project: Geometry Notation Reference Map");
+		expect(text).toContain("Project: Proof Repair Lab");
+		expect(text).toContain("Project: Coordinate Line Design");
+		expect(text).toContain("Project: Parallel-Line Proof Case File");
+		expect(text).toContain("Project: Triangle Case File");
+		expect(text).toContain("Project: Similarity Scale Plan");
+		expect(text).toContain("Project: Triangle Center Blueprint");
+		expect(text).toContain("Project: Trigonometry Measurement Plan");
+		expect(text).toContain("Capstone: Geometry A Design Defense");
+		expect(text).toContain("a^2 + b^2 = c^2");
+		expect(text).toContain("SOH-CAH-TOA");
+		expect(text).toContain("unsupported visual assumption");
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(mediaLinks).toEqual([]);
 	});
 
 	it(

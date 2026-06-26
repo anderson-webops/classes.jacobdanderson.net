@@ -66,6 +66,19 @@ describe("public course pathways", () => {
 		expect(coursePublicPathways.find(pathway => pathway.id === "scratch-early-cs")?.adminPriority).toBe("urgent");
 		expect(pathwayText("scratch-early-cs")).toMatch(/blocks-to-pseudocode|pseudocode/i);
 
+		expect(
+			coursePublicPathways.find(pathway => pathway.id === "algebra")?.courseIds
+		).toEqual([
+			"pre-algebra-a",
+			"pre-algebra-b",
+			"algebra-1a",
+			"algebra-1b",
+			"geometry-a",
+			"algebra-2a",
+			"algebra-2b"
+		]);
+		expect(pathwayText("algebra")).toMatch(/proof|coordinate geometry|right-triangle trigonometry/i);
+
 		expect(pathwayText("web-javascript")).toMatch(/async|fetch/i);
 		expect(pathwayText("web-javascript")).toMatch(/accessibility/i);
 		expect(pathwayText("web-javascript")).toMatch(/HTTP|OWASP|deployment/i);

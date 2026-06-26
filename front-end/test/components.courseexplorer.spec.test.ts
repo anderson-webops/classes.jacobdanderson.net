@@ -1087,6 +1087,72 @@ describe("CourseExplorer.vue", () => {
 		);
 	});
 
+	it("points supplemental pending media to the future class static URL", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+		const pendingStaticVideo =
+			"https://static.classes.jacobdanderson.net/supplemental-demo.mp4";
+
+		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					curriculum: [],
+					id: "module-1",
+					supplementalProjects: [
+						{
+							content: "Review the supplemental project demo.",
+							id: "supplemental-static-demo",
+							mediaLink: pendingStaticVideo,
+							title: "Supplemental Static Demo"
+						}
+					],
+					title: "Module 1"
+				}
+			]
+		});
+
+		appStore.setCurrentUser({
+			_id: "user-1",
+			name: "Student",
+			email: "student@example.com",
+			age: 12,
+			state: "GA",
+			courseAccess: [assignedCourse.id],
+			courseProgress: [],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		const video = wrapper.find("video.item-media-video");
+		expect(video.exists()).toBe(true);
+
+		await video.trigger("error");
+		await nextTick();
+
+		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
+		expect(wrapper.text()).toContain("Static asset pending");
+		expect(wrapper.text()).toContain("supplemental-demo.mp4");
+		expect(wrapper.text()).toContain("class static host");
+		expect(wrapper.text()).toContain("When the file becomes available");
+		expect(wrapper.text()).toContain(pendingStaticVideo);
+		expect(wrapper.find(`a[href="${pendingStaticVideo}"]`).exists()).toBe(
+			true
+		);
+	});
+
 	it("labels science reference links by purpose instead of calling every link a dataset", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
