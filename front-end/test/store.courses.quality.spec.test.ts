@@ -6874,6 +6874,78 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Middle School B writing source anchors with neutral wording", async () => {
+		const expectedAnchors = [
+			"Steph Curry Argument Parts Model",
+			"Hypothetical Hannah Counterclaim Lab",
+			"Colon and Comma Quote Integration",
+			"Car Ride Evidence Analysis Paragraph",
+			"Arguing for the Opposition",
+			"Conclusion and Transition Revision Pass",
+			"Color-Coded Argument Revision",
+			"Opposition Paragraph Revision",
+			"Analytical Writing Check-In Record",
+			"Character Objective Bank",
+			"Nemo Objective-to-Qualities Flowchart",
+			"Character Portrait Iceberg",
+			"Objective-to-Conflict Generator",
+			"Plot Curve Event Map",
+			"Jonah and Caleb Point-of-View Rewrite",
+			"Final Story Revision",
+			"Fiction Writing Check-In Record",
+			"Analytical Writing Presentation",
+			"Fiction Writing Presentation"
+		];
+		const originalReferences = [
+			"Steph Curry",
+			"cell phones at school",
+			"TikTok dances",
+			"Hypothetical Hannah",
+			"dog-versus-cat",
+			"Car Ride",
+			"transitional devices",
+			"color-coding",
+			"Harry Potter",
+			"Wonder Woman",
+			"Spider-Man",
+			"Nemo",
+			"character portrait",
+			"plot curve",
+			"Jonah and Caleb",
+			"Final Story",
+			"Analytical Writing Presentation",
+			"Fiction Writing Presentation"
+		];
+
+		for (const courseId of [
+			"middle-school-b-writing",
+			"middle-school-b-writing-retake"
+		]) {
+			const course = await loadRawCourse(courseId);
+			expect(course, courseId).not.toBeNull();
+			if (!course) continue;
+
+			const text = allCourseText(course);
+
+			expect(text, courseId).toContain("Source Activity Anchors:");
+			expect(text, courseId).toContain("Evidence record:");
+			for (const anchor of expectedAnchors) {
+				expect(text, `${courseId}: ${anchor}`).toContain(anchor);
+			}
+			for (const originalReference of originalReferences) {
+				expect(text, `${courseId}: ${originalReference}`).toContain(
+					originalReference
+				);
+			}
+
+			expect(text, courseId).not.toMatch(
+				/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+			);
+			expect(text, courseId).not.toMatch(/\bshould\b/i);
+			expect(text, courseId).not.toContain("static.junilearning.com");
+		}
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",
@@ -6954,11 +7026,15 @@ describe("course text quality normalization", () => {
 			],
 			"middle-school-b-writing": [
 				"msa15_concept2_transitionaldevices.png",
+				"msa17_concept2_nemochart.png",
+				"msa19_concept2_emptyplot.png",
 				"msa19_concept2_labeledplot.png"
 			],
 			"middle-school-b-writing-retake": [
 				"msa15_concept2_transitionaldevices.png",
-				"msa19_concept2_emptyplot.png"
+				"msa17_concept2_nemochart.png",
+				"msa19_concept2_emptyplot.png",
+				"msa19_concept2_labeledplot.png"
 			],
 			"novel-writing": [
 				"nw6_blank_narrative_arc.jpg",
