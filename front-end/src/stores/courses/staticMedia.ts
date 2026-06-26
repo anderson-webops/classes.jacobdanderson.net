@@ -1,4 +1,8 @@
 export const STATIC_MEDIA_BASE = "https://static.classes.jacobdanderson.net";
+const STATIC_MEDIA_URL_PATTERN =
+	/https:\/\/static\.classes\.jacobdanderson\.net\/[^\s<>"')\]]+/g;
+export const PENDING_STATIC_MEDIA_NOTICE_PATTERN =
+	/\b(?:pending media|reserved|placeholder|not currently available|class static host)\b/i;
 
 export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"am_12_file_io_with_dictionaries.mp4",
@@ -51,8 +55,22 @@ export function isKnownPendingStaticMediaUrl(url: string) {
 	);
 }
 
+export function staticMediaUrlsFromText(text: string) {
+	return [...text.matchAll(STATIC_MEDIA_URL_PATTERN)]
+		.map(match => match[0].replace(/[.,;:!?]+$/g, ""))
+		.filter(isStaticMediaUrl);
+}
+
 export function pendingStaticMediaNotice(filename: string) {
 	return `**Pending media:** The original static asset \`${filename}\` is not currently available. Space is reserved for it at ${staticMediaUrl(filename)} so the asset can be added later without changing this course link.`;
+}
+
+export function hasPendingStaticMediaNotice(content: string, filename: string) {
+	return (
+		content.includes(filename) &&
+		content.includes(staticMediaUrl(filename)) &&
+		PENDING_STATIC_MEDIA_NOTICE_PATTERN.test(content)
+	);
 }
 
 export function withPendingStaticMediaNotice(
@@ -63,7 +81,7 @@ export function withPendingStaticMediaNotice(
 		return content;
 	}
 
-	if (content.includes(filename)) {
+	if (hasPendingStaticMediaNotice(content, filename)) {
 		return content;
 	}
 

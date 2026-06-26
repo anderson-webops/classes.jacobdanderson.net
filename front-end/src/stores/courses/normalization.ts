@@ -3,10 +3,11 @@ import { applyCourseImplementationArtifacts } from "./course-implementation-arti
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyResearchBackedExpansions } from "./research-expansions";
 import {
+	hasPendingStaticMediaNotice,
 	isKnownPendingStaticMediaUrl,
 	pendingStaticMediaNotice,
 	staticMediaFilename,
-	staticMediaUrl
+	staticMediaUrlsFromText
 } from "./staticMedia";
 
 const INSTRUCTION_MATERIAL_BASE = "https://github.com/instruction-material";
@@ -93,8 +94,10 @@ function appendPendingStaticMediaNotices(course: RawCourse) {
 			...module.supplementalProjects
 		]) {
 			const filenames = new Set(
-				itemLinkKeys
-					.map(key => item[key])
+				[
+					...itemLinkKeys.map(key => item[key]),
+					...staticMediaUrlsFromText(item.content)
+				]
 					.filter(
 						(value): value is string =>
 							!!value && isKnownPendingStaticMediaUrl(value)
@@ -103,11 +106,7 @@ function appendPendingStaticMediaNotices(course: RawCourse) {
 			);
 
 			for (const filename of filenames) {
-				const expectedUrl = staticMediaUrl(filename);
-				if (
-					item.content.includes(filename) &&
-					item.content.includes(expectedUrl)
-				) {
+				if (hasPendingStaticMediaNotice(item.content, filename)) {
 					continue;
 				}
 
