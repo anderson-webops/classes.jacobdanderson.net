@@ -1,6 +1,66 @@
 import type { RawCourse } from "./types";
 import { buildProjectGuidance } from "./projectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
+
+const JAVASCRIPT_LEVEL_2_ORIGINAL_MEDIA = [
+	"jsm_check_in_project_1.mp4",
+	"jsm_check_in_project_2.mp4",
+	"jsm1_project_1.mp4",
+	"jsm1_project_2.mp4",
+	"jsm1_project_3.mp4",
+	"jsm1_project_4.mp4",
+	"jsm1_project_5.mp4",
+	"jsm2_project_1.mp4",
+	"jsm2_project_2.mp4",
+	"jsm2_project_3.mp4",
+	"jsm2_supplemental_project_1.mp4",
+	"jsm2_supplemental_project_2.mp4",
+	"jsm2_supplemental_project_3.mp4",
+	"jsm2_supplemental_project_4.mp4",
+	"jsm3_project_1.mp4",
+	"jsm3_project_2.mp4",
+	"jsm3_project_3.mp4",
+	"jsm3_supplemental_project_1.mp4",
+	"jsm4_project_1.mp4",
+	"jsm4_project_2.mp4",
+	"jsm4_project_3.mp4",
+	"jsm4_supplemental_project_1.mp4",
+	"jsm4_supplemental_project_2.mp4",
+	"jsm5_project_1.mp4",
+	"jsm5_project_2.mp4",
+	"jsm5_project_3.mp4",
+	"jsm5_project_4.mp4",
+	"jsm5_supplemental_project_1.mp4",
+	"jsm5_supplemental_project_2.mp4",
+	"jsm6_project_1.mp4",
+	"jsm6_project_2.mp4",
+	"jsm6_project_3.mp4",
+	"jsm6_supplemental_project_1.mp4",
+	"jsm6_supplemental_project_2.mp4",
+	"jsm7_project_1.mp4",
+	"jsm7_project_2.mp4",
+	"jsm7_project_3.mp4",
+	"jsm7_supplemental_project_1.mp4",
+	"jsm7_supplemental_project_2.mp4",
+	"jsm8_project_1.mp4",
+	"jsm8_project_2.mp4",
+	"jsm8_project_3.mp4",
+	"jsm9_project_1.mp4",
+	"jsm9_supplemental_project_1.mp4",
+	"jsm9_supplemental_project_2.mp4",
+	"jsm9_supplemental_project_3.mp4",
+	"jsm10_project_1.mp4",
+	"jsm10_project_2.mp4",
+	"jsm10_project_3.mp4",
+	"jsm10_supplemental_project_1.mp4",
+	"jsm12_project_1.mp4",
+	"jsm12_project_2.mp4",
+	"jsm12_supplemental_project_1.mp4",
+	"jsm13_project_1.mp4",
+	"jsm13_supplemental_project_1.mp4",
+	"jsm14_project_1.mp4"
+] as const;
 
 export const javascriptLevel2Course: RawCourse = {
 	name: "JavaScript Level 2: JavaScript Master",
@@ -1637,6 +1697,23 @@ export const javascriptLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSM-26-jsm15-master-project-supplemental-3/solution"
 				}
 			]
+		},
+		{
+			kind: "appendix",
+			title: "Original Demo Media Reservations",
+			curriculum: [
+				{
+					title: "Pending JavaScript Level 2 Demo Media",
+					content: [
+						"The original JavaScript Level 2 source library referenced the demo media below. These files are reserved on the class static host so they can be uploaded later without changing course links.",
+						...JAVASCRIPT_LEVEL_2_ORIGINAL_MEDIA.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };
