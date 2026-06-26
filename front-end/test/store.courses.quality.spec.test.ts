@@ -5761,6 +5761,7 @@ describe("course text quality normalization", () => {
 				loadRawCourse("geometry-b"),
 				loadRawCourse("algebra-2a"),
 				loadRawCourse("algebra-2b"),
+				loadRawCourse("pre-calculus-a"),
 				loadRawCourse("elementary-science"),
 				loadRawCourse("middle-school-integrated-science"),
 				loadRawCourse("intro-to-chemistry"),
@@ -5892,7 +5893,8 @@ describe("course text quality normalization", () => {
 				loadRawCourse("geometry-a"),
 				loadRawCourse("geometry-b"),
 				loadRawCourse("algebra-2a"),
-				loadRawCourse("algebra-2b")
+				loadRawCourse("algebra-2b"),
+				loadRawCourse("pre-calculus-a")
 			]);
 			const corpus = courses.map(allCourseText).join("\n");
 			const supplementalCorpus = courses
@@ -6149,6 +6151,61 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("180(n - 2)");
 		expect(text).toContain("A = pi r^2");
 		expect(text).toContain("V - E + F = 2");
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(mediaLinks).toEqual([]);
+	});
+
+	it("adds Pre-Calculus A from the source math sequence", async () => {
+		const course = await loadRawCourse("pre-calculus-a");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const mediaLinks = course.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(item => item.mediaLink)
+				.filter((link): link is string => Boolean(link))
+		);
+
+		expect(course.modules.map(module => module.title)).toEqual([
+			"PCTA1 Piecewise Functions",
+			"PCTA2 Higher-Degree Polynomials",
+			"PCTA3 Polynomial Division",
+			"PCTA4 Zeros of Polynomials",
+			"PCTA5 Graphing Polynomials",
+			"PCTA6 Arithmetic and Geometric Sequences",
+			"PCTA7 Area Under a Curve",
+			"PCTA8 The Binomial Theorem",
+			"Check-In #1: Polynomial and Sequence Foundations",
+			"PCTA9 Rational Functions",
+			"PCTA10 Rational Function Operations",
+			"PCTA11 Logarithms and Exponents",
+			"PCTA12 Function Inverses and Composition",
+			"PCTA13 Circles and Ellipses",
+			"PCTA14 Parabolas and Hyperbolas",
+			"Check-In #2 and Pre-Calculus A Capstone"
+		]);
+		expect(text).toContain("Concept: Piecewise Functions");
+		expect(text).toContain("Concept: Polynomial Operations and Factoring");
+		expect(text).toContain("Concept: Polynomial Long Division and Synthetic Division");
+		expect(text).toContain("Concept: Zeros, Factors, and Polynomial Structure");
+		expect(text).toContain("Concept: Polynomial Graph Features");
+		expect(text).toContain("Concept: Sequences and Sums");
+		expect(text).toContain("Concept: Area Under a Curve");
+		expect(text).toContain("Concept: The Binomial Theorem");
+		expect(text).toContain("Concept: Graphing Rational Functions");
+		expect(text).toContain("Concept: Rational Expressions and Equations");
+		expect(text).toContain("Concept: Logarithms, Identities, and Graphs");
+		expect(text).toContain("Concept: Function Composition and Inverses");
+		expect(text).toContain("Concept: Circles and Ellipses");
+		expect(text).toContain("Concept: Parabolas, Hyperbolas, and Conic Intersections");
+		expect(text).toContain("Riemann");
+		expect(text).toContain("Pascal's triangle");
+		expect(text).toContain("domain restrictions");
+		expect(text).toContain("Capstone: Pre-Calculus A Modeling Portfolio");
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
 		);
