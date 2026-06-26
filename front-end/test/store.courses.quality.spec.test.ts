@@ -3084,6 +3084,35 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it("reserves original JavaScript Level 1 source media on the class static host", async () => {
+		const course = await loadRawCourse(
+			"javascript-level-1-javascript-superstar"
+		);
+		expect(course).not.toBeNull();
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Demo Media Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "Pending JavaScript Level 1 Demo Media"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		for (const filename of [
+			"js1_project_1.mp4",
+			"jss8_project_1.mp4",
+			"jss_check_in_2_project.mp4"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps low-level security projects evidence-based instead of generic starter boilerplate", async () => {
 		const courses = await Promise.all([
 			loadRawCourse("low-level-security"),
