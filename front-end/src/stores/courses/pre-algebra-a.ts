@@ -75,7 +75,7 @@ function sourceAnchor({
 }) {
 	return [
 		`**Source Activity Anchors: ${title}**`,
-		`**Original source details preserved:**\n${references.map(reference => `- ${reference}`).join("\n")}`,
+		`**Reference details:**\n${references.map(reference => `- ${reference}`).join("\n")}`,
 		`**Evidence record:**\n${evidence.map(item => `- ${item}`).join("\n")}`
 	].join("\n\n");
 }
@@ -487,13 +487,13 @@ export const preAlgebraACourse: RawCourse = {
 				sourceAnchor({
 					title: "Pre-Algebra A Capstone",
 					references: [
-						"The original master project asks for one course module or concept that was especially challenging or exciting.",
-						"The final explanation covers purpose, real-world application, and at least 2 original problems using course content.",
-						"The neutral version keeps the same reflection and original-problem requirements without requiring platform-specific recording tools."
+						"The capstone asks for one course module or concept that was especially challenging or exciting.",
+						"The final explanation covers purpose, real-world application, and at least 2 student-created problems using course content.",
+						"The current version keeps the same reflection and created-problem requirements without requiring platform-specific recording tools."
 					],
 					evidence: [
 						"Selected concept is named and connected to a real-world use.",
-						"At least 2 original problems include complete solutions.",
+						"At least 2 student-created problems include complete solutions.",
 						"Reflection identifies the strongest growth area and one remaining practice check."
 					]
 				})
@@ -501,7 +501,7 @@ export const preAlgebraACourse: RawCourse = {
 		]),
 		{
 			kind: "appendix",
-			title: "Original Source Activity Anchors",
+			title: "Source Activity Reference",
 			curriculum: [
 				lesson(
 					"Pre-Algebra A Source Anchors",

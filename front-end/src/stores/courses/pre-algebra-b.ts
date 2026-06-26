@@ -70,7 +70,7 @@ function sourceAnchor({
 }) {
 	return [
 		`**Source Activity Anchors: ${title}**`,
-		`**Original source details preserved:**\n${references.map(reference => `- ${reference}`).join("\n")}`,
+		`**Reference details:**\n${references.map(reference => `- ${reference}`).join("\n")}`,
 		`**Evidence record:**\n${evidence.map(item => `- ${item}`).join("\n")}`
 	].join("\n\n");
 }
@@ -566,7 +566,7 @@ export const preAlgebraBCourse: RawCourse = {
 				)
 			]
 		),
-		module("Original Source Activity Anchors", [
+		module("Source Activity Reference", [
 			lesson(
 				"Pre-Algebra B Source Anchors",
 				[
@@ -583,20 +583,20 @@ export const preAlgebraBCourse: RawCourse = {
 							"Task 4 uses a 40-person city-or-rural survey with 25 city responses and 18 rural responses, plus a move-choice sample space of Texas, Colorado, California, New York, Ohio, Kentucky, New Mexico, Pennsylvania, and Arizona."
 						],
 						evidence: [
-							"Data work preserves sorting, mean, range, IQR, graph choice, and outlier interpretation.",
-							"Geometry work preserves angle classification, congruence, polygon angle sums, perimeter, area, circle, surface-area, and volume checks.",
-							"Number-theory work preserves factors, multiples, prime/composite checks, GCF, and LCM.",
-							"Probability work preserves Venn-diagram overlap, single-outcome probability, and compound probability."
+							"Data work includes sorting, mean, range, IQR, graph choice, and outlier interpretation.",
+							"Geometry work includes angle classification, congruence, polygon angle sums, perimeter, area, circle, surface-area, and volume checks.",
+							"Number-theory work includes factors, multiples, prime/composite checks, GCF, and LCM.",
+							"Probability work includes Venn-diagram overlap, single-outcome probability, and compound probability."
 						]
 					}),
 					sourceAnchor({
 						title: "Exploring the World with Marco",
 						references: [
-							"Original project coauthor context: Marco Satala, immigration attorney at Corporate Immigration Partners.",
+							"Project context: Marco Satala, immigration attorney at Corporate Immigration Partners.",
 							"Advertising choices compare Facebook, Twitter, TikTok, Instagram, and YouTube.",
 							"The client-data task uses a 20-client age list to calculate mean, median, and mode for ad targeting.",
 							"The country-audience task uses a pie chart, top-3 country selection, and timing graph for ad interaction.",
-							"Original static asset preserved as pab5_0.png and reserved at static.classes.jacobdanderson.net/pab5_0.png."
+							"Source asset placeholder: pab5_0.png is reserved at static.classes.jacobdanderson.net/pab5_0.png."
 						],
 						evidence: [
 							"Recommendation cites platform, audience age, country distribution, posting time, and one data limitation.",
@@ -606,7 +606,7 @@ export const preAlgebraBCourse: RawCourse = {
 					sourceAnchor({
 						title: "How Many Flips Does It Take To Win?",
 						references: [
-							"Original project coauthor context: Kara Christensen and a gymnastics-judging scenario.",
+							"Project context: Kara Christensen and a gymnastics-judging scenario.",
 							"Uneven-bars evidence compares turns of 351 degrees, 372 degrees, and 365 degrees against a 360-degree full turn.",
 							"Ribbon-performance evidence uses side lengths 4, 5, 3, and 7, then compares similarity and congruence.",
 							"Vault-height evidence compares 9.6 feet, 9.3 feet, and 10.1 feet against a 7.8-foot table height.",
@@ -621,22 +621,22 @@ export const preAlgebraBCourse: RawCourse = {
 					sourceAnchor({
 						title: "Uber Internship Challenge",
 						references: [
-							"Original project coauthor context: Ben Dreier and a fictional Uber Flying Taxi test in New York City.",
-							"The first route map is preserved as pab14_0.png and reserved at static.classes.jacobdanderson.net/pab14_0.png.",
+							"Project context: Ben Dreier and a fictional Uber Flying Taxi test in New York City.",
+							"Source asset placeholder: pab14_0.png is reserved at static.classes.jacobdanderson.net/pab14_0.png.",
 							"Mission 1 identifies the route shape as a pentagon and compares flight paths for parallel structure.",
 							"Mission 1 uses distances of 1.5 miles from Empire State Building to Union Park, 3.0 miles from Whitney Museum to Upper West Side, and 0.75 miles from Union Square to Whitney.",
 							"Mission 1 source answers include total area about 2 square miles and total perimeter about 7 miles.",
 							"Mission 2 compares Path 1, Path 2, and Path 3 with area/perimeter results including 4 square miles and 10.8 miles, 2.23 square miles and 9.24 miles, and 4.4 square miles."
 						],
 						evidence: [
-							"Route work preserves polygon classification, parallel-line evidence, perimeter, area, and right-triangle reasoning.",
+							"Route work includes polygon classification, parallel-line evidence, perimeter, area, and right-triangle reasoning.",
 							"Recommendation compares route efficiency using both number of hubs and shortest useful perimeter."
 						]
 					}),
 					sourceAnchor({
 						title: "The MARVELous Theme Park",
 						references: [
-							"Original project coauthor context: Akanksha Bajaj and a Marvel-themed amusement park planning scenario.",
+							"Project context: Akanksha Bajaj and a Marvel-themed amusement park planning scenario.",
 							"The entertainment plan creates two short attractions lasting 1 to 5 minutes, two medium attractions lasting 5 to 15 minutes, and two large attractions lasting more than 15 minutes.",
 							"Foot-traffic planning uses attraction timing conflicts such as a 30-minute tour and 15-minute arcade reset.",
 							"The parade-planning mission uses least common multiple reasoning to find times when most attractions can pause for a parade in a 12-hour day.",
@@ -650,23 +650,23 @@ export const preAlgebraBCourse: RawCourse = {
 					sourceAnchor({
 						title: "eSmash",
 						references: [
-							"Original project coauthor context: Will Brooke from Electronic Arts and a Super Smash Bros. Melee tournament scenario.",
-							"Round-robin player table preserves C9 Mang0 8 games and 6 wins, TSM Leffen 7 and 5, Liquid Hungrybox 9 and 7, Mew2King 11 and 6, Tempo Axe 12 and 9, and CJ aMSa 13 and 8.",
+							"Project context: Will Brooke from Electronic Arts and a Super Smash Bros. Melee tournament scenario.",
+							"Round-robin player table includes C9 Mang0 8 games and 6 wins, TSM Leffen 7 and 5, Liquid Hungrybox 9 and 7, Mew2King 11 and 6, Tempo Axe 12 and 9, and CJ aMSa 13 and 8.",
 							"The round-robin analysis identifies Liquid Hungrybox as 7/9, or about 78%, from the source answer key.",
-							"The bracket setup is preserved as pab22_0.png and reserved at static.classes.jacobdanderson.net/pab22_0.png.",
-							"Bracket matchups preserve Mang0-Leffen 2-2, Mang0-Hungrybox 1-3, Mang0-Axe 3-1, Leffen-Hungrybox 2-2, Leffen-Axe 0-4, and Hungrybox-Axe 2-2.",
+							"Source asset placeholder: pab22_0.png is reserved at static.classes.jacobdanderson.net/pab22_0.png.",
+							"Bracket matchups include Mang0-Leffen 2-2, Mang0-Hungrybox 1-3, Mang0-Axe 3-1, Leffen-Hungrybox 2-2, Leffen-Axe 0-4, and Hungrybox-Axe 2-2.",
 							"Probability targets include (1/2)^5 = 1/32, (3/4)^5 = 243/1024, (1/4)^5 = 1/1024, and zero-probability outcomes from impossible Axe-Leffen win patterns."
 						],
 						evidence: [
-							"Round-robin counting preserves the one-match-against-each-other structure.",
-							"Bracket probability work preserves independent-game multiplication and impossible-outcome reasoning.",
+							"Round-robin counting uses the one-match-against-each-other structure.",
+							"Bracket probability work includes independent-game multiplication and impossible-outcome reasoning.",
 							"Format critique compares round-robin plus bracket fairness, excitement, and model limitations."
 						]
 					}),
 					sourceAnchor({
 						title: "Airtable Revamped",
 						references: [
-							"Original project coauthor context: Christine Yeh from Airtable and product-design data analysis.",
+							"Project context: Christine Yeh from Airtable and product-design data analysis.",
 							"Survey scores are 90, 43, 98, 18, 37, 24, 82, 53, 86, 75, 52, 40, 32, 54, 46, 73, 76, 66, 49, and 26.",
 							"The office-art rectangular prism uses dimensions 7 feet by 3 feet by 4 feet.",
 							"Encryption reasoning uses prime-factor examples, including 3763 = 53 * 71.",
@@ -674,9 +674,9 @@ export const preAlgebraBCourse: RawCourse = {
 							"Prime-search comparison asks whether the interval 1-33, 34-66, or 67-100 has the highest probability of containing a prime number."
 						],
 						evidence: [
-							"Product-data reasoning preserves mean, median, survey interpretation, and follow-up data-collection suggestions.",
-							"Geometry reasoning preserves volume and surface-area calculation for the rectangular prism.",
-							"Number-theory reasoning preserves prime/composite arguments and interval-based probability comparison."
+							"Product-data reasoning includes mean, median, survey interpretation, and follow-up data-collection suggestions.",
+							"Geometry reasoning includes volume and surface-area calculation for the rectangular prism.",
+							"Number-theory reasoning includes prime/composite arguments and interval-based probability comparison."
 						]
 					}),
 					sourceAnchor({

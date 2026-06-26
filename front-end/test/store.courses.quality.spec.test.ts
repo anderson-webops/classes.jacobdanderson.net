@@ -7595,7 +7595,7 @@ describe("course text quality normalization", () => {
 			"PAA13-PAA17 Expressions and Sequences",
 			"PAA18-PAA23 Exponents, Roots, and Scientific Notation",
 			"Check-In #2 and Capstone",
-			"Original Source Activity Anchors",
+				"Source Activity Reference",
 			"Pending Static Assets"
 		]);
 		expect(text).toContain("Project: Starting a Gardening Business");
@@ -7634,7 +7634,7 @@ describe("course text quality normalization", () => {
 			"Red Hot Chilli Chicken",
 			"Dani California 615",
 			"53 new active orders per month",
-			"at least 2 original problems"
+				"at least 2 student-created problems"
 		]) {
 			expect(text, originalReference).toContain(originalReference);
 		}
@@ -7678,7 +7678,7 @@ describe("course text quality normalization", () => {
 			"PAB15-PAB19 Factors, Multiples, and Number Structure",
 			"PAB20-PAB23 Counting, Probability, and Applied Modeling",
 			"Check-In #3 and Capstone: Pre-Algebra B",
-			"Original Source Activity Anchors"
+				"Source Activity Reference"
 		]);
 		expect(text).toContain("Project: Exploring the World with Marco");
 		expect(text).toContain("Project: Gymnastics Geometry Challenge");
