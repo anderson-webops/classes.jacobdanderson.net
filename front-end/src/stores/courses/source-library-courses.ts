@@ -7,7 +7,14 @@ interface SourceLibraryCourseSpec {
 	focus: string;
 	name: string;
 	modules: string[];
+	sourceActivityAnchors?: Record<string, SourceActivityAnchor[]>;
 	staticAssets?: string[];
+}
+
+interface SourceActivityAnchor {
+	title: string;
+	prompt: string;
+	evidence: string[];
 }
 
 function compactTopic(title: string) {
@@ -248,6 +255,33 @@ function extensionContent(spec: SourceLibraryCourseSpec, moduleTitle: string) {
 	].join("\n\n");
 }
 
+function createSourceActivityAnchorItems(
+	spec: SourceLibraryCourseSpec,
+	moduleTitle: string
+) {
+	const anchors = spec.sourceActivityAnchors?.[moduleTitle];
+	if (!anchors?.length) return [];
+
+	const topic = compactTopic(moduleTitle);
+
+	return [
+		{
+			title: `Source Activity Anchors: ${topic}`,
+			content: [
+				"The original source course used the concrete activity anchors below. This neutral version keeps the scenario structure, decision practice, and evidence requirements while removing platform-specific submission steps.",
+				...anchors.map((anchor, index) =>
+					[
+						`${index + 1}. **${anchor.title}**`,
+						anchor.prompt,
+						"Evidence record:",
+						...anchor.evidence.map(item => `- ${item}`)
+					].join("\n")
+				)
+			].join("\n\n")
+		}
+	];
+}
+
 function createSourceLibraryModule(
 	spec: SourceLibraryCourseSpec,
 	moduleTitle: string
@@ -260,7 +294,8 @@ function createSourceLibraryModule(
 			{
 				title: `Concepts: ${topic}`,
 				content: conceptContent(spec, moduleTitle)
-			}
+			},
+			...createSourceActivityAnchorItems(spec, moduleTitle)
 		],
 		supplementalProjects: [
 			{
@@ -323,6 +358,215 @@ const investingCourses = {
 		name: "Smart Money: Introduction to Personal Finance",
 		area: "personal finance",
 		focus: "income growth, spending plans, banking, credit, purchasing decisions, investing basics, and long-term financial tradeoffs",
+		sourceActivityAnchors: {
+			"PF1 Building Wealth Through Personal Finance": [
+				{
+					title: "Spend Like Bill Gates Constraint Ladder",
+					prompt: "Use the spending simulator at [neal.fun/spend](https://neal.fun/spend/) as a changing-constraint case study. Compare an unlimited receipt, a responsible-use receipt, and a $500,000 plan spread across 60 years.",
+					evidence: [
+						"List of purchases that stayed, changed, or disappeared as the constraint became stricter.",
+						"Five to seven personal values or future commitments that affect the revised spending plan.",
+						"One explanation of how long-term goals change a short-term purchase decision."
+					]
+				},
+				{
+					title: "Graduate Profile and First-Month Budget",
+					prompt: "Build a fictional post-graduation profile with fixed starting assumptions: $10,000 in savings, an old scooter, and $30,000 in student debt. Choose a city, starting salary, housing cost, and first-month expense plan.",
+					evidence: [
+						"Profile table with income, debt, savings, location, and housing assumptions.",
+						"First-month Budget Planner and Expense Tracker with income, necessities, wants, debt payments, and remaining cash.",
+						"Revision note explaining which profile assumption changed after the first budget pass."
+					]
+				},
+				{
+					title: "Wealth-Building Research and Financial Perspectives",
+					prompt: "Research one wealthy person or interview one to three trusted adults about financial habits. Compare income sources, assets, lifestyle choices, weekly or monthly money routines, and long-term goals.",
+					evidence: [
+						"Research or interview notes with source names, dates, and the specific financial behaviors observed.",
+						"Comparison table separating income, assets, spending habits, saving habits, and risk tolerance.",
+						"Reflection connecting at least one outside perspective to the Graduate Profile decisions."
+					]
+				}
+			],
+			"PF2 How to Grow My Income": [
+				{
+					title: "Income Streams Comparison",
+					prompt: "Compare different ways to make money, including salary growth, content revenue, part-time work, freelancing, entrepreneurship, and investing. Focus on time requirements, startup costs, skill requirements, reliability, and risk.",
+					evidence: [
+						"Pros and cons table for two income options beyond the main job.",
+						"Skill and time estimate for each option, including one hidden cost or limitation.",
+						"Decision note naming which option fits the profile and which option is too risky or impractical."
+					]
+				},
+				{
+					title: "Salary Negotiation Case",
+					prompt: "Create a mock salary-increase request from the employee and employer perspectives. The case includes three to five reasons the raise could make sense and two risks or objections from the employer side.",
+					evidence: [
+						"Raise request with value created, evidence of performance, and proposed new salary or raise range.",
+						"Employer objection list with calm responses tied to business value.",
+						"Updated income tracker showing the effect of a successful, partial, or unsuccessful negotiation."
+					]
+				},
+				{
+					title: "Wild Card Ledger",
+					prompt: "Track unexpected income or expense events as flat, per-month, or multi-month changes. Each event modifies the same financial profile rather than creating a separate disconnected example.",
+					evidence: [
+						"Ledger row with event name, amount, duration, affected month, and category.",
+						"Before-and-after monthly cash comparison.",
+						"Short note explaining whether the event changes the long-term recommendation."
+					]
+				}
+			],
+			"PF3 How to Manage My Spending": [
+				{
+					title: "Spending Style and Needs-versus-Wants Budget",
+					prompt: "Use a spending-style quiz, the Bean Game, or a fictional spending scenario to separate needs, wants, savings, and debt. Translate the result into a 50/30/20 or custom budget rule.",
+					evidence: [
+						"Needs-versus-wants criteria written as questions that can be reused for future purchases.",
+						"Budget allocation with necessities, wants, savings, and debt categories.",
+						"One tradeoff case where the budget blocks a purchase that still seems desirable."
+					]
+				},
+				{
+					title: "Profile Budget Revision",
+					prompt: "Use a salary estimate, income-tax calculator, and budget calculator to revise the Graduate Profile. Include yearly and monthly views so the budget can be checked at both scales.",
+					evidence: [
+						"Gross income, estimated taxes, net income, and monthly take-home pay.",
+						"Five necessities, five wants, and three debts with yearly or monthly cost estimates.",
+						"Revised expense tracker with leftover monthly cash and one possible savings decision."
+					]
+				}
+			],
+			"PF4 How to Build Credit: Making Your Small Purchases Count": [
+				{
+					title: "Debt Growth and Credit Card Simulation",
+					prompt: "Use a debt-growth game, credit-card simulator, or calculator to connect borrowing choices with APR, repayment time, credit limit, fees, and total paid over time.",
+					evidence: [
+						"Definition set for credit card, APR, introductory APR, minimum payment, credit limit, and unpaid balance.",
+						"Comparison of two borrowing scenarios with different interest rates or repayment behavior.",
+						"Debt-management rule that would reduce risk in the Graduate Profile."
+					]
+				},
+				{
+					title: "Credit Card Selection Case",
+					prompt: "Compare fictional card offers such as cash rewards, travel rewards, low APR, and high-reward/high-fee cards. Match card features to the profile holder's spending habits and debt risk.",
+					evidence: [
+						"Card comparison table with APR, fees, rewards, credit limit, and hidden risk.",
+						"Chosen card or cards with a reason tied to the profile rather than the largest reward headline.",
+						"Rejected-card note explaining who the card might fit better."
+					]
+				},
+				{
+					title: "Car Loan and Housing What-If",
+					prompt: "Use loan and housing calculators to test how credit score, interest rate, down payment, rent, and purchase price change monthly obligations.",
+					evidence: [
+						"Two loan outcomes with the same principal and different rates or credit assumptions.",
+						"Buy-versus-rent note that separates lifestyle preference from financial feasibility.",
+						"Profile update showing whether the monthly payment fits the existing budget."
+					]
+				}
+			],
+			"PF5 How to Make Smart Purchase Decisions": [
+				{
+					title: "Long-Run Purchase Value",
+					prompt: "Compare short-term cheap purchases with longer-lasting alternatives. Examples include toothbrushes, home drinks versus daily takeout, reusable dishware, groceries, furniture, and vehicle choices.",
+					evidence: [
+						"Cost-over-time comparison with purchase price, replacement frequency, and total cost.",
+						"Quality or convenience factor that cannot be captured by price alone.",
+						"Recommendation explaining when the cheaper option is actually more expensive."
+					]
+				},
+				{
+					title: "Vehicle Purchase Decision",
+					prompt: "Research a new or used four-wheeled vehicle, estimate financing terms, add insurance and maintenance, and decide whether the purchase belongs in the profile budget.",
+					evidence: [
+						"Vehicle comparison with purchase price, down payment, loan term, monthly payment, and total interest.",
+						"Recurring-cost estimate for insurance, maintenance, fuel or charging, and registration.",
+						"Expense-tracker update showing the effect of fixed and variable vehicle costs."
+					]
+				}
+			],
+			"PF6 How To Find Your Perfect Bank": [
+				{
+					title: "Checking-versus-Savings Allocation",
+					prompt: "Use a $5,000 prize scenario to decide how much belongs in checking, savings, or another account. Compare access, safety, interest, fees, minimum balances, and purpose.",
+					evidence: [
+						"Account allocation table matching common expenses to checking or savings.",
+						"One-year interest estimate for the savings portion using a compound-interest calculator.",
+						"Bank comparison with fees, interest rate, minimum balance, access, and account purpose."
+					]
+				},
+				{
+					title: "Savings Account Offer Case",
+					prompt: "Compare fictional bank and credit-union offers with opening bonuses, minimum balances, monthly fees, interest rates, and loan eligibility. Choose one or more accounts for the Graduate Profile.",
+					evidence: [
+						"Offer table with immediate bonus, interest rate, minimum balance, fees, and restrictions.",
+						"Cash-flow check showing whether the profile can maintain the required minimum balance.",
+						"Recommendation naming the account choice and the evidence that would change the choice."
+					]
+				}
+			],
+			"PF7 How to Plan for and Invest in Your Future": [
+				{
+					title: "Retirement Savings Calculator",
+					prompt: "Estimate an ideal retirement age, monthly living costs, health costs, discretionary spending, and savings rate. Compare conservative and aggressive assumptions with an investment calculator.",
+					evidence: [
+						"Monthly necessity, discretionary, and health-cost estimates for the target retirement location.",
+						"Calculator outputs for required savings and monthly contribution.",
+						"Comparison of conservative and aggressive assumptions with the risk tradeoff named clearly."
+					]
+				},
+				{
+					title: "Investment Account Allocation",
+					prompt: "Compare retirement account types such as Roth IRA and 401k, then allocate monthly savings between retirement accounts, self-directed investments, and bank savings.",
+					evidence: [
+						"Allocation table with account type, monthly contribution, tax treatment, access constraints, and risk level.",
+						"One explanation of why early access, taxes, employer match, or risk changes the recommendation.",
+						"Retirement-plan diagram or written summary tied back to the Graduate Profile."
+					]
+				}
+			],
+			"PF8 Making Your Money Count": [
+				{
+					title: "Ethical Spending and Investing",
+					prompt: "Research companies, charities, products, or funds connected to environmental or social goals. Separate marketing claims from evidence such as product materials, labor practices, charity ratings, and measurable impact.",
+					evidence: [
+						"Cause list with direct donation, spending-choice, investment, and non-financial support options.",
+						"Evidence comparison of two or more companies, charities, or products.",
+						"Budget update showing how much money, time, or attention the cause receives."
+					]
+				},
+				{
+					title: "Cause-Aligned Business or Awareness Project",
+					prompt: "Design a product, service, post, proposal, or awareness campaign that supports a cause while accounting for production costs, waste, community effect, and revenue or donation assumptions.",
+					evidence: [
+						"Mission statement with the cause, audience, and concrete action.",
+						"Budget or operations note naming expected costs, benefits, and possible unintended harm.",
+						"Revision note explaining how the idea becomes more financially realistic or socially responsible."
+					]
+				}
+			],
+			"PF9 Smart Money Master Project": [
+				{
+					title: "Financial Journey Portfolio",
+					prompt: "Create a final portfolio that traces the Graduate Profile from the initial goals through income, spending, debt, credit, banking, purchases, retirement planning, and values-based money choices.",
+					evidence: [
+						"Timeline of major decisions, including income changes, budget changes, wild cards, debts, and savings milestones.",
+						"Final balance sheet with savings, debt, monthly cash flow, retirement plan, and chosen accounts.",
+						"Reflection naming the best decision, weakest decision, and one profile assumption that would change with better evidence."
+					]
+				},
+				{
+					title: "Next-Year Outlook",
+					prompt: "Project the profile one year forward using the current budget, remaining debt, expected savings, recurring wild cards, and retirement contribution plan.",
+					evidence: [
+						"Projected monthly or annual table with income, required expenses, discretionary spending, savings, and debt.",
+						"Risk note for one or more emergency, job change, market change, or unexpected expense cases.",
+						"Final recommendation for the next financial move and the evidence that supports it."
+					]
+				}
+			]
+		},
 		staticAssets: [
 			"ent3_project2_0.png",
 			"ent3_project2_1.png",
