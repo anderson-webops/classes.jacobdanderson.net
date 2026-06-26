@@ -3113,6 +3113,35 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
+	it("reserves original JavaScript Level 2 source media on the class static host", async () => {
+		const course = await loadRawCourse(
+			"javascript-level-2-javascript-master"
+		);
+		expect(course).not.toBeNull();
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Demo Media Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "Pending JavaScript Level 2 Demo Media"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		for (const filename of [
+			"jsm_check_in_project_1.mp4",
+			"jsm5_project_4.mp4",
+			"jsm14_project_1.mp4"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
 	it("reserves original Java Level 1 source media on the class static host", async () => {
 		const course = await loadRawCourse("java-level-1");
 		expect(course).not.toBeNull();
