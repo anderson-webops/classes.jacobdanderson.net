@@ -1,6 +1,88 @@
 import type { RawCourse } from "./types";
 import { buildProjectGuidance } from "./projectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
+
+const JAVASCRIPT_LEVEL_1_ORIGINAL_MEDIA = [
+	"js1_project_1.mp4",
+	"js1_project_2.mp4",
+	"js1_supplemental_project_1.mp4",
+	"js1_supplemental_project_2.mp4",
+	"js1_supplemental_project_3.mp4",
+	"js2_project_1.mp4",
+	"js2_project_2.mp4",
+	"js2_project_3.mp4",
+	"js2_supplemental_project_1.mp4",
+	"js2_supplemental_project_2.mp4",
+	"js2_supplemental_project_3.mp4",
+	"js3_project_1.mp4",
+	"js3_project_2.mp4",
+	"js3_project_3.mp4",
+	"js3_supplemental_project_1.mp4",
+	"js3_supplemental_project_2.mp4",
+	"js3_supplemental_project_3.mp4",
+	"js4_project_1.mp4",
+	"js4_project_2.mp4",
+	"js4_project_3.mp4",
+	"js4_supplemental_project_1.mp4",
+	"js5_project_1.mp4",
+	"js5_project_2.mp4",
+	"js5_project_3.mp4",
+	"js5_supplemental_project_1.mp4",
+	"js5_supplemental_project_2.mp4",
+	"js5_supplemental_project_3.mp4",
+	"js6_project_1.mp4",
+	"js6_project_2.mp4",
+	"js6_project_3.mp4",
+	"js6_supplemental_project_1.mp4",
+	"js6_supplemental_project_2.mp4",
+	"js7_project_1.mp4",
+	"js7_project_2.mp4",
+	"js7_project_3.mp4",
+	"js7_supplemental_project_1.mp4",
+	"js7_supplemental_project_2.mp4",
+	"js7_supplemental_project_3.mp4",
+	"jss8_project_1.mp4",
+	"jss8_project_2.mp4",
+	"jss8_project_3.mp4",
+	"jss8_supplemental_project_1.mp4",
+	"jss8_supplemental_project_2.mp4",
+	"jss8_supplemental_project_3.mp4",
+	"jss9_project_1.mp4",
+	"jss9_project_2.mp4",
+	"jss10_project_1.mp4",
+	"jss10_project_2.mp4",
+	"jss10_project_3.mp4",
+	"jss10_supplemental_project_1.mp4",
+	"jss10_supplemental_project_2.mp4",
+	"jss11_project_1.mp4",
+	"jss11_project_2.mp4",
+	"jss11_project_3.mp4",
+	"jss11_supplemental_project_1.mp4",
+	"jss12_project_1.mp4",
+	"jss12_project_2.mp4",
+	"jss12_project_3.mp4",
+	"jss12_project_4.mp4",
+	"jss12_supplemental_project_1.mp4",
+	"jss13_project_1.mp4",
+	"jss13_project_2.mp4",
+	"jss13_project_3.mp4",
+	"jss13_project_4.mp4",
+	"jss13_supplemental_project_1.mp4",
+	"jss13_supplemental_project_2.mp4",
+	"jss14_project_1.mp4",
+	"jss14_project_2.mp4",
+	"jss14_project_3.mp4",
+	"jss14_project_4.mp4",
+	"jss14_supplemental_project_1.mp4",
+	"jss14_supplemental_project_2.mp4",
+	"jss15_project_1.mp4",
+	"jss15_supplemental_project_1.mp4",
+	"jss15_supplemental_project_2.mp4",
+	"jss15_supplemental_project_3.mp4",
+	"jss_check_in_1_project.mp4",
+	"jss_check_in_2_project.mp4"
+];
 
 export const javascriptLevel1Course: RawCourse = {
 	name: "JavaScript Level 1: JavaScript Superstar",
@@ -1253,6 +1335,23 @@ export const javascriptLevel1Course: RawCourse = {
 						"https://codepen.io/junilearning/pen/c8048a26149f2dc5c4340a2d6cdb0ce2"
 				}
 			]
+		},
+		{
+			kind: "appendix",
+			title: "Original Demo Media Reservations",
+			curriculum: [
+				{
+					title: "Pending JavaScript Level 1 Demo Media",
+					content: [
+						"The original JavaScript Level 1 source library referenced the demo media below. These files are reserved on the class static host so they can be uploaded later without changing course links.",
+						...JAVASCRIPT_LEVEL_1_ORIGINAL_MEDIA.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };
