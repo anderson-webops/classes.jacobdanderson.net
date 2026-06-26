@@ -194,6 +194,7 @@ export const introToEnvironmentalScienceCourse: RawCourse = {
 					title: "Photosynthesis Diagram Placeholder",
 					content: [
 						"The original Environmental Science source linked a photosynthesis diagram file. The course reserves that same original filename on the class static host so the visual can appear in this section when the asset is available.",
+						"Until the diagram is uploaded, use the reserved space to connect the process verbally: light energy is captured by chlorophyll, carbon dioxide enters from the air, water moves through the plant, glucose stores usable chemical energy, and oxygen is released. The important ecosystem idea is that producers convert non-food inputs into food-web energy that consumers and decomposers depend on.",
 						pendingStaticMediaNotice(PHOTOSYNTHESIS_DIAGRAM)
 					].join("\n\n"),
 					mediaLink: staticMediaUrl(PHOTOSYNTHESIS_DIAGRAM)

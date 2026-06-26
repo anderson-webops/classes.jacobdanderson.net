@@ -26,7 +26,7 @@ export function isKnownPendingStaticMedia(filename: string) {
 }
 
 export function pendingStaticMediaNotice(filename: string) {
-	return `**Pending media:** The original static asset filename \`${filename}\` is reserved at ${staticMediaUrl(filename)} until that file is available on the class static host.`;
+	return `**Pending media:** The original static asset \`${filename}\` is not currently available. Space is reserved for it at ${staticMediaUrl(filename)} so the asset can be added later without changing this course link.`;
 }
 
 export function withPendingStaticMediaNotice(

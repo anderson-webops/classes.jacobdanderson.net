@@ -2153,8 +2153,9 @@ function writeStoredValue(key: string, value: string) {
 											<strong>{{
 												staticAssetName(item.mediaLink)
 											}}</strong>
-											at the original static asset
-											location.
+											at the class static host. When the
+											file becomes available, it should
+											load from:
 										</p>
 										<a
 											:href="item.mediaLink"

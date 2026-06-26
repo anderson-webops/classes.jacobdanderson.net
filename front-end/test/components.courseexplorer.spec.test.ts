@@ -1020,6 +1020,7 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Static asset pending");
 		expect(wrapper.text()).toContain("original-demo-video.mp4");
+		expect(wrapper.text()).toContain("When the file becomes available");
 		expect(wrapper.text()).toContain(missingStaticVideo);
 		expect(wrapper.find(`a[href="${missingStaticVideo}"]`).exists()).toBe(
 			true
@@ -1079,6 +1080,7 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Static asset pending");
 		expect(wrapper.text()).toContain("biomod1pro1im1.jpg");
+		expect(wrapper.text()).toContain("When the file becomes available");
 		expect(wrapper.text()).toContain(pendingStaticImage);
 		expect(wrapper.find(`a[href="${pendingStaticImage}"]`).exists()).toBe(
 			true

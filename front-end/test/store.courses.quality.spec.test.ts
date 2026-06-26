@@ -5,6 +5,7 @@ import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
 import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
+	pendingStaticMediaNotice,
 	staticMediaUrl
 } from "@/stores/courses/staticMedia";
 import { buildProjectGuidance } from "@/stores/courses/projectGuidance";
@@ -6842,6 +6843,17 @@ describe("course text quality normalization", () => {
 		},
 		COURSE_SWEEP_TIMEOUT
 	);
+
+	it("documents pending static media with the original filename and future static URL", () => {
+		const notice = pendingStaticMediaNotice("original-static-demo.mp4");
+
+		expect(notice).toContain("original-static-demo.mp4");
+		expect(notice).toContain(
+			"https://static.classes.jacobdanderson.net/original-static-demo.mp4"
+		);
+		expect(notice).toMatch(/not currently available/i);
+		expect(notice).toMatch(/added later/i);
+	});
 
 	it(
 		"keeps simulation and video resources out of dataset links",
