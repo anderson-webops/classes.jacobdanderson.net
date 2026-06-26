@@ -1586,6 +1586,160 @@ const englishCourses = {
 		area: "literary analysis",
 		focus: "main ideas, supporting evidence, inference, showing versus telling, theme, point of view, word choice, rhyme, alliteration, figurative language, and final analysis writing",
 		staticAssets: ["msa1_concept1_mainideasupportingevidence.png"],
+		sourceActivityAnchors: {
+			"MSA1 Main Ideas & Supporting Evidence I": [
+				{
+					title: "Lead Prankster Main Idea Model",
+					prompt: "Plan a harmless class-prank scenario as a source model: list three or four specific details, then convert those details into a one- or two-sentence general plan. The general plan functions as the main idea, while the specific details function as supporting evidence.",
+					evidence: [
+						"A detail list naming the actors, setting, materials, sequence, or intended result.",
+						"A short general plan that is broader than any one detail but still specific enough to summarize the scenario.",
+						"A one-sentence explanation of how the details support the general plan."
+					]
+				},
+				{
+					title: "Kyra's Fear Main Idea and Evidence",
+					prompt: "Read the Kyra's Fear passage and choose a just-right main idea that is neither too broad nor too narrow. Separate the strongest main-idea sentence from evidence about the spider, the reaction to the hair movement, and Kyra's fear.",
+					evidence: [
+						"One main-idea sentence about the passage as a whole.",
+						"Two or more quoted or paraphrased details connected to the main idea.",
+						"A short note explaining why a detail is evidence rather than another main idea."
+					]
+				}
+			],
+			"MSA2 Main Ideas & Supporting Evidence II": [
+				{
+					title: "Soccer Summer Best Evidence Sort",
+					prompt: "Read Soccer Summer, write a one- or two-sentence main idea, then choose the two most impactful, detailed, and concise pieces of evidence. Compare the chosen evidence against less useful details so the final support is deliberate rather than random.",
+					evidence: [
+						"A concise main idea for the Soccer Summer passage.",
+						"Two selected quotes or paraphrases from the passage.",
+						"A comparison note explaining why each selected detail is stronger than an unused alternative."
+					]
+				}
+			],
+			"MSA3 Making Inferences": [
+				{
+					title: "Car Ride Inference Record",
+					prompt: "Use the smoke-house example to define inference, then read Car Ride and infer Kazim's mood from textual clues such as counting Mississippi seconds, sighing, losing phone access, repeating questions, and ignoring the atlas.",
+					evidence: [
+						"An inference about Kazim's mood or attitude during the trip.",
+						"At least two textual clues that make the inference reasonable.",
+						"A reasoning sentence that connects each clue to the conclusion."
+					]
+				}
+			],
+			"MSA4 Show; Don't Tell": [
+				{
+					title: "Show-Don't-Tell Paragraph Draft",
+					prompt: "Write or revise a paragraph that hints at a feeling, setting, relationship, or conflict through concrete actions, dialogue, sensory details, and description instead of naming the idea directly.",
+					evidence: [
+						"A before-and-after pair or a revised paragraph with the direct label removed.",
+						"Concrete details that reveal the intended feeling or idea through inference.",
+						"A short annotation naming what the paragraph reveals without directly stating it."
+					]
+				}
+			],
+			"MSA Check-In #1": [
+				{
+					title: "Reading Literature Check-In Record",
+					prompt: "Use one passage or original paragraph to demonstrate main idea, supporting evidence, inference, and showing-versus-telling. Keep the skill evidence separate from any self-assessment notes.",
+					evidence: [
+						"A main idea supported by at least two specific details.",
+						"An inference supported by textual or descriptive clues.",
+						"A show-versus-tell revision or explanation."
+					]
+				}
+			],
+			"MSA5 Identifying Themes": [
+				{
+					title: "Theme Versus Main Idea Sort",
+					prompt: "Compare main idea and theme by sorting statements into plot summaries and larger messages. Then infer one theme from a passage by using character change, conflict, and plot evidence.",
+					evidence: [
+						"Sorted examples that distinguish a passage summary from a broader theme.",
+						"One theme written as a complete idea rather than a single topic word.",
+						"Evidence showing how the plot or character choices develop that theme."
+					]
+				}
+			],
+			"MSA6 Analyzing & Developing Themes": [
+				{
+					title: "Characters and Themes Analysis",
+					prompt: "Analyze how character actions and qualities develop a theme. Use the Cinderella contrast as a model: kindness and cruelty create different outcomes and help explain the text's larger message.",
+					evidence: [
+						"A character trait or action connected to a theme.",
+						"Evidence from the plot showing the consequence of that trait or action.",
+						"A short explanation of how the character evidence develops the larger message."
+					]
+				}
+			],
+			"MSA7 Analyzing Point of View": [
+				{
+					title: "Point of View Effects Lab",
+					prompt: "Identify first person, second person, third person objective, third person limited, and third person omniscient narration. Then rewrite or compare the same plot from a different point of view, such as retelling Snow White from the queen's perspective, to observe changes in theme, suspense, humor, sympathy, or tone.",
+					evidence: [
+						"Point-of-view labels with evidence from pronouns, narrator access, or knowledge limits.",
+						"A rewritten or compared passage that changes the narrator's perspective.",
+						"A note describing how the new perspective changes reader interpretation."
+					]
+				}
+			],
+			"MSA8 Analyzing Words & Phrases": [
+				{
+					title: "Connotation Nation Word Choice Record",
+					prompt: "Distinguish denotation from connotation by comparing words with similar dictionary meanings but different emotional force. Use the comparison to explain how word choice changes tone and reader response.",
+					evidence: [
+						"Pairs or groups of related words with neutral, positive, or negative connotations.",
+						"One sentence revised with a different connotation.",
+						"An explanation of how the revised word changes tone or reader response."
+					]
+				}
+			],
+			"MSA9 Analyzing Rhyme & Alliteration": [
+				{
+					title: "Sound Pattern Annotation",
+					prompt: "Read a short text aloud and listen for conspicuous rhyme and alliteration. Mark each sound pattern and explain why the author may have drawn attention to those specific words.",
+					evidence: [
+						"Marked rhyming words and alliterative word groups.",
+						"A sentence explaining what the repeated sounds emphasize.",
+						"A note connecting the sound pattern to mood, meaning, humor, or rhythm."
+					]
+				}
+			],
+			"MSA10 Analyzing Figurative Language": [
+				{
+					title: "Analysis Toolbox Paragraph",
+					prompt: "Identify similes, metaphors, and other figurative language, then combine word choice, sound-pattern, and figurative-language observations into a paragraph about meaning and tone.",
+					evidence: [
+						"At least one simile, metaphor, or figurative phrase identified accurately.",
+						"Notes on word choice, sound, and figurative meaning.",
+						"A short analysis paragraph explaining how those choices shape meaning or tone."
+					]
+				}
+			],
+			"MSA Check-In #2": [
+				{
+					title: "Analyzing Literature Check-In Record",
+					prompt: "Use one passage to demonstrate theme, character-theme relationship, point of view, connotation, rhyme, alliteration, figurative language, and a final analysis paragraph about meaning and tone.",
+					evidence: [
+						"Annotations for theme, character evidence, point of view, word choice, sound, and figurative language.",
+						"A paragraph that combines multiple craft observations instead of listing them separately.",
+						"A self-check naming the strongest evidence and one area needing more support."
+					]
+				}
+			],
+			"MSA11 Master Project": [
+				{
+					title: "Writing from an Image Literature Showcase",
+					prompt: "Choose an image and write a short literary piece that intentionally uses point of view, theme, character action, word choice, sound, and figurative language. Add a brief analysis explaining how those craft choices shape interpretation.",
+					evidence: [
+						"An original short piece inspired by an image.",
+						"Visible use of point of view, theme development, word choice, sound, or figurative language.",
+						"A short reflection connecting craft choices to reader interpretation."
+					]
+				}
+			]
+		},
 		modules: [
 			"MSA1 Main Ideas & Supporting Evidence I",
 			"MSA2 Main Ideas & Supporting Evidence II",
