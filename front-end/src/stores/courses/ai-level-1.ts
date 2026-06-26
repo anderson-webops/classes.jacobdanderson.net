@@ -1,9 +1,74 @@
 import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
 type AiSearchSupplementalPurpose = "transfer" | "extension";
+
+const aiLevel1PendingSourceVideos = [
+	"fai1_project_1.mp4",
+	"fai1_project_2.mp4",
+	"fai1_project_3.mp4",
+	"fai2_project_1.mp4",
+	"FAI2_Project2_Updated.mp4",
+	"fai3_project_1.mp4",
+	"fai4_project_1.mp4",
+	"fai4_project_2.mp4",
+	"fai5_project_1.mp4",
+	"fai5_project_2.mp4",
+	"fai5_supplemental_project_1.mp4",
+	"fai6_project_1.mp4",
+	"fai6_project_2.mp4",
+	"fai6_supplemental_project_1.mp4",
+	"fai7_project_1.mp4",
+	"fai7_project_2.mp4",
+	"fai7_project_3.mp4",
+	"fai8_project_1.mp4",
+	"fai8_project_2.mp4",
+	"fai9_project_1.mp4",
+	"fai9_project_2.mp4",
+	"fai9_project_3.mp4",
+	"fai9_project_4.mp4",
+	"fai10_project_1.mp4",
+	"fai10_project_2.mp4",
+	"fai10_project_3.mp4",
+	"fai11_project_1.mp4"
+] as const;
+
+const aiLevel1PendingSourceImages = [
+	"fai3_1.png",
+	"fai3_2.png",
+	"fai3_4.png",
+	"fai3_5.png",
+	"fai3_6.png",
+	"fai5_example.png",
+	"fai6_1.png",
+	"fai7_1.png",
+	"fai7_2.png",
+	"fai7_3.png",
+	"fai7_4.png",
+	"fai7_5.png",
+	"fai7_6.png",
+	"fai7_7.png",
+	"fai9_1.png",
+	"fai9_2.png",
+	"fai9_3.png",
+	"fai9_4.png",
+	"fai9_5.png",
+	"fai10_1.png",
+	"fai10_2.png",
+	"fai11_1.png"
+] as const;
+
+function pendingAiLevel1AssetList(filenames: readonly string[]) {
+	return filenames
+		.map(
+			filename =>
+				`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
+}
 
 function aiSearchLabFocus(labNumber: number) {
 	const focusByLab: Record<number, string> = {
@@ -1299,6 +1364,23 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-18-applied-studio-17-the-marble-game-ai-copy-supplemental-3/solution"
 				}
 			]
+		},
+		{
+			kind: "appendix",
+			title: "Original Asset Reservations",
+			curriculum: [
+				{
+					title: "AI Foundations Source Media Status",
+					content: [
+						"The original AI Foundations source export referenced these project videos and concept images. They are reserved on the class static host with their original filenames so future uploads can restore them without reworking course links.",
+						"**Pending project videos:**",
+						pendingAiLevel1AssetList(aiLevel1PendingSourceVideos),
+						"**Pending concept and source images:**",
+						pendingAiLevel1AssetList(aiLevel1PendingSourceImages)
+					].join("\n\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };

@@ -1,7 +1,43 @@
 import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
+
+const machineLearningHostedSourceVideos = [
+	"ml1_project_1.mp4",
+	"ml1_project_2.mp4",
+	"ml1_supplemental_project_1.mp4",
+	"ml2_project_1.mp4",
+	"ml2_project_2.mp4",
+	"ml3_project_1.mp4",
+	"ml3_project_2.mp4",
+	"ml4_project_1.mp4",
+	"ml4_project_2.mp4",
+	"ml4_project_3.mp4",
+	"ml5_project_1.mp4",
+	"ml5_project_2.mp4",
+	"ml5_project_3.mp4",
+	"ml6_project_1.mp4",
+	"ml7_project_1.mp4"
+] as const;
+
+const machineLearningPendingSourceImages = ["ml3_1.png", "ml3_2.png"] as const;
+
+function hostedMachineLearningAssetList(filenames: readonly string[]) {
+	return filenames
+		.map(filename => `- ${staticMediaUrl(filename)}`)
+		.join("\n");
+}
+
+function pendingMachineLearningAssetList(filenames: readonly string[]) {
+	return filenames
+		.map(
+			filename =>
+				`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
+}
 
 export const machineLearningCourse: RawCourse = {
 	name: "Machine Learning",
@@ -1714,6 +1750,27 @@ export const machineLearningCourse: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML-30-applied-studio-17-knn-car-classification-supplemental-3/solution"
 				}
 			]
+		},
+		{
+			kind: "appendix",
+			title: "Original Asset Reservations",
+			curriculum: [
+				{
+					title: "Machine Learning Source Media Status",
+					content: [
+						"The original Machine Learning source export referenced these videos and images. Hosted videos are kept as direct class-static links; missing source images are reserved with their original filenames so they can be uploaded later without changing course content.",
+						"**Hosted project videos:**",
+						hostedMachineLearningAssetList(
+							machineLearningHostedSourceVideos
+						),
+						"**Pending concept and source images:**",
+						pendingMachineLearningAssetList(
+							machineLearningPendingSourceImages
+						)
+					].join("\n\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };

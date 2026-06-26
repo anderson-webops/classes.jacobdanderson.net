@@ -2768,6 +2768,69 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
+	it("reserves original AI Foundations source media on the class static host", async () => {
+		const course = await loadRawCourse("ai-level-1");
+		expect(course).not.toBeNull();
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Asset Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "AI Foundations Source Media Status"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		for (const filename of [
+			"fai1_project_1.mp4",
+			"FAI2_Project2_Updated.mp4",
+			"fai11_project_1.mp4",
+			"fai3_1.png",
+			"fai11_1.png"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
+	it("records Machine Learning source media as hosted or pending on the class static host", async () => {
+		const course = await loadRawCourse("machine-learning");
+		expect(course).not.toBeNull();
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Asset Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "Machine Learning Source Media Status"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		for (const filename of [
+			"ml1_project_1.mp4",
+			"ml4_project_3.mp4",
+			"ml7_project_1.mp4"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(content).not.toContain(
+				`original static asset \`${filename}\` is not currently available`
+			);
+		}
+
+		for (const filename of ["ml3_1.png", "ml3_2.png"]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps generated guidance references with spaced hyphens Markdown-safe", () => {
 		const guidance = buildProjectGuidance({
 			courseFamily: "Python Level 1",
