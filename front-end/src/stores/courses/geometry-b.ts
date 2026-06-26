@@ -615,21 +615,42 @@ export const geometryBCourse: RawCourse = {
 			]
 		)
 	],
-	standards: [
-		"Quadrilateral and polygon classification",
-		"Polygon angle sums and polygon area",
-		"Circle circumference, area, arcs, sectors, angles, and tangents",
-		"Transformations, congruence, similarity, and scale factor",
-		"Polyhedra, surface area, volume, and composite solids"
-	],
-	development: {
-		next: [
+	developmentMetadata: {
+		priority: "urgent",
+		standards: [
+			"Quadrilateral and polygon classification",
+			"Polygon angle sums and polygon area",
+			"Circle circumference, area, arcs, sectors, angles, and tangents",
+			"Transformations, congruence, similarity, and scale factor",
+			"Polyhedra, surface area, volume, and composite solids"
+		],
+		sourcePolicy:
+			"Adapted from the Geometry B source sequence with neutral wording and no direct legacy static image embeds.",
+		assessmentCadence: [
+			"Check-In #1 after quadrilaterals and polygon foundations.",
+			"Check-In #2 after circles, transformations, and symmetry.",
+			"Check-In #3 after solids and cumulative geometry modeling."
+		],
+		toolchain: [
+			"Paper or shared diagram sketches",
+			"Optional dynamic geometry workspace",
+			"Calculator for area, circumference, surface-area, and volume checks"
+		],
+		safetyPolicy: [
+			"No physical measurement setup is required for core work.",
+			"Any optional design task can be completed from provided dimensions, diagrams, or drawings."
+		],
+		courseBoundaries: [
+			"Geometry B assumes basic lines, angles, triangles, coordinate geometry, and right-triangle reasoning from Geometry A.",
+			"Transformations focus on geometric reasoning and composition rather than proof-heavy matrix notation."
+		],
+		capstoneExpectations: [
+			"A final Geometry B portfolio includes quadrilaterals, polygons or circles, transformations, and three-dimensional measurement evidence."
+		],
+		recommendedNextWork: [
 			"Replace legacy source diagrams with owned or source-safe static.classes assets when available.",
 			"Add optional dynamic-geometry exploration links for transformations and circle theorems.",
 			"Build a Geometry A to Geometry B cumulative assessment once both courses have rendered review evidence."
-		],
-		priority: "urgent",
-		sourcePolicy:
-			"Adapted from the Geometry B source sequence with neutral wording and no direct legacy static image embeds."
+		]
 	}
 };
