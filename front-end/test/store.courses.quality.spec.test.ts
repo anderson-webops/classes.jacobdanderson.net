@@ -7891,6 +7891,51 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(/\bshould\b/i);
 	});
 
+	it("adds Algebra 2B source references from the original math sequence", async () => {
+		const course = await loadRawCourse("algebra-2b");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const moduleTitles = course.modules.map(module => module.title);
+
+		expect(moduleTitles).toContain("Source Activity Archive");
+		expect(text).toContain("Source Activity Anchors: Algebra 2B");
+		for (const originalReference of [
+			"Logarithms and the natural logarithm",
+			"Growth applications",
+			"Matrix operations",
+			"Statistics and regression",
+			"Trigonometry",
+			"https://www.desmos.com/calculator",
+			"https://www.desmos.com/calculator/lywhybetzt",
+			"https://matrixcalc.org/en/",
+			"https://www.geogebra.org/geometry/harzmnkp",
+			"https://www.geogebra.org/geometry/grcqk5kt"
+		]) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		for (const filename of [
+			"alb1_concept1_0.png",
+			"alb2_concept1_2.png",
+			"alb7_concept2_2.png",
+			"alb7_pset2_4.png",
+			"alb8_concept1_8.png",
+			"alb9_concept1_0.png",
+			"checkin2_ds_1.png",
+			"checkin1_trig_1.png"
+		]) {
+			expect(text, filename).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(text, filename)).toBe(true);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+	});
+
 	it("adds Geometry A from the source math sequence", async () => {
 		const course = await loadRawCourse("geometry-a");
 		expect(course).not.toBeNull();
