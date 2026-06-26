@@ -2604,11 +2604,296 @@ const englishCourses = {
 	})
 } as const;
 
+const earlyElementaryAMathSourceAnchors: Record<
+	string,
+	SourceActivityAnchor[]
+> = {
+	"EEA1 Addition and Subtraction within 20": [
+		{
+			title: "Ladybug Number Bond Cases",
+			prompt: "Use the ladybug-box scenario to make different combinations that total 15. Move one ladybug between boxes, then create an equal-share case with one ladybug left in the net.",
+			evidence: [
+				"Drawing, frame, or table showing two addends that total 15.",
+				"Updated equation after one ladybug moves from one box to the other.",
+				"Equal-share equation with the leftover ladybug represented clearly."
+			]
+		}
+	],
+	"EEA2 Addition and Subtraction within 100": [
+		{
+			title: "Starfish Tank Regrouping",
+			prompt: "Use the starfish-tank scenario with 22 starfish in one tank and 16 in another. Group by tens, move leftovers into smaller tanks, then compare one tank against the combined amount in the other tanks.",
+			evidence: [
+				"Total starfish count from the starting tanks.",
+				"Regrouped representation separating tens and leftover ones.",
+				"Subtraction comparison after two starfish move back into Tank A."
+			]
+		}
+	],
+	"EEA3 Representing Word Problems": [
+		{
+			title: "Birthday Candy Bag Model",
+			prompt: "Model two birthday candy bags with fruity and chocolate candies, then update the model after sharing candy and receiving a late birthday bag.",
+			evidence: [
+				"Separate counts for fruity candy and chocolate candy in the first two bags.",
+				"Updated drawing or equation after sharing 2 fruity candies and 4 chocolate candies.",
+				"Final total after adding the late birthday bag with 10 candies and 2 fruity pieces."
+			]
+		}
+	],
+	"EEA4 Module Project: Escape the Game": [
+		{
+			title: "Escape the Game Character Budget",
+			prompt: "Design a video-game character with a 100-point budget. Choose hair, suit, and extra features from the original point table, then calculate points used and points left.",
+			evidence: [
+				"Character name and selected specs from each category.",
+				"Addition equation for total points used.",
+				"Subtraction equation for points remaining from the 100-point budget."
+			]
+		},
+		{
+			title: "Liang Escape Route Grid",
+			prompt: "Plan a grid route from the bottom-left corner to the top-right corner. The route uses at least 20 right jumps, 15 left jumps, 30 up jumps, and 5 down jumps.",
+			evidence: [
+				"Route sketch or coordinate-step list from start to exit.",
+				"Jump totals for right, left, up, and down directions.",
+				"Total jump count with evidence that every movement rule was met."
+			]
+		}
+	],
+	"EEA5 Measuring and Estimating Length in Standard Units": [
+		{
+			title: "Indiana Jones Length Expedition",
+			prompt: "Use the jungle-expedition scenario to compare inches, feet, yards, centimeters, and meters. Place the fruit, bug, tree, and gem along a one-yard path and answer distance questions.",
+			evidence: [
+				"Path model showing 36 inches as one yard.",
+				"Object lengths marked in inches, centimeters, or meters with comparisons.",
+				"Report answering distance in feet and comparing one foot with one yard."
+			]
+		}
+	],
+	"EEA6 Relating Addition and Subtraction to Length": [
+		{
+			title: "Yarn Quilt Length Equations",
+			prompt: "Use the mini-quilt yarn scenario to add 11-inch, 12-inch, 15-inch, and 7-inch pieces, then subtract 20 inches to find the last piece length.",
+			evidence: [
+				"Number-line or ruler model for each yarn segment.",
+				"Addition equations for total yarn before the final piece.",
+				"Subtraction equation for the final piece and a check of the 68-to-81-inch measurement error."
+			]
+		}
+	],
+	"EEA7 Module Project: The Longest Sandwich in California": [
+		{
+			title: "Akshay Sandwich Number Line",
+			prompt: "Plan a 96-meter sandwich by choosing ingredients, measuring each ingredient, ordering lengths from smallest to largest, and placing the sandwich on a 0-to-96-meter number line.",
+			evidence: [
+				"Ingredient list with lengths and units.",
+				"Ordered list from smallest ingredient length to largest ingredient length.",
+				"Number line from 0 meters to 96 meters showing the sandwich plan."
+			]
+		},
+		{
+			title: "Sandwich Sharing Record",
+			prompt: "Track the record-setting sandwich after donation and party sharing. Account for Monday donation, Tuesday eating totals, and Wednesday split of the remaining sandwich.",
+			evidence: [
+				"Equation for sandwich length left after Monday's donation.",
+				"Tuesday total eaten from the five people in the scenario and length remaining.",
+				"Wednesday equal split calculation for the final remaining sandwich."
+			]
+		}
+	],
+	"EEA8 Understanding Place Value": [
+		{
+			title: "Penguin Place Value Grouping",
+			prompt: "Use the penguin counting scenario to estimate first, then group penguins by tens and hundreds. Write totals in expanded form and reason about how many tens make 1,000.",
+			evidence: [
+				"Estimate and exact count comparison.",
+				"Groups of ten, groups of ten tens, and leftovers recorded separately.",
+				"Expanded form for 216 and a written pattern for reaching 1,000."
+			]
+		}
+	],
+	"EEA9 Adding and Subtracting within 200": [
+		{
+			title: "Bookshelf Regrouping Record",
+			prompt: "Use the classroom-bookshelf scenario to estimate book totals, regroup books by tens, reorganize reading books, and add 23 history books from storage.",
+			evidence: [
+				"Estimate and exact total for the starting shelves.",
+				"Regrouped equation after extras move to the extra-books shelf.",
+				"Updated equation after adding 23 history books and one rewritten equivalent expression."
+			]
+		}
+	],
+	"EEA10 Representing Advanced Word Problems": [
+		{
+			title: "Arcade Ticket Goal Tracker",
+			prompt: "Track arcade tickets through the prize goal, lunch purchases, a 30-ticket gift, and five final games. Decide whether the 200-ticket mega prize is reachable.",
+			evidence: [
+				"Ticket total before lunch and tickets still needed for the first goal.",
+				"Lunch item choices with ticket cost and remaining tickets.",
+				"Final ticket total after the five games and conclusion about the 200-ticket prize."
+			]
+		}
+	],
+	"EEA11 Adding and Subtracting within 1000": [
+		{
+			title: "Millionaire Base-Ten Challenge",
+			prompt: "Use the Who Wants To Be A Millionaire-style question set to solve addition and subtraction within 1,000 with base-ten blocks or equivalent place-value records.",
+			evidence: [
+				"Problem setup separating hundreds, tens, and ones.",
+				"Work record showing regrouping or decomposition when needed.",
+				"Final answer checked against the place-value representation."
+			]
+		}
+	],
+	"EEA12 Strategies to Add and Subtract within 1000": [
+		{
+			title: "Skee-Ball Team Score Ledger",
+			prompt: "Use the five-round skee-ball scenario to track points gained and lost from outer-ring holes, inner-ring holes, bullseyes, misses, and balls outside the play area. Keep the running score visible after each round so additions, penalties, trades, and the final record comparison can be checked without recalculating the entire game.",
+			evidence: [
+				"Round-by-round score ledger with gains and penalties.",
+				"Base-ten or expanded-form representation of the running score after at least two rounds.",
+				"Final comparison with the 870-point record, including the exact number of points over or under the record."
+			]
+		}
+	],
+	"EEA13 Module Project: Going TikTok Famous": [
+		{
+			title: "TikTok Creator Follower Analysis",
+			prompt: "Use Melody's creator table to order the top five TikTok creators, total their follower counts, and calculate how many followers each creator needs to reach one billion.",
+			evidence: [
+				"Creators ordered from most followers to fewest followers.",
+				"Combined follower total for the top five creators.",
+				"Difference from one billion followers for each creator."
+			]
+		},
+		{
+			title: "Melody Test Launch Data",
+			prompt: "Design a video idea for Melody's test launch, then track new followers gained from Monday through Thursday and add them to the starting 673 followers.",
+			evidence: [
+				"Video idea with one reason it could attract viewers or followers.",
+				"New-follower total from 37, 93, 334, and 158.",
+				"Final follower count after adding the new followers to 673."
+			]
+		}
+	],
+	"Check-in #1": [
+		{
+			title: "Addition, Length, and Place Value Check",
+			prompt: "Use the check-in problems to demonstrate sums and differences, length-unit addition and subtraction, place value comparison, expanded form, and operations within 1,000.",
+			evidence: [
+				"Backpacking, circle, rope, and ball-distance problems solved with diagrams or equations.",
+				"Place value comparisons using greater-than, less-than, or equal signs.",
+				"Addition and subtraction within 1,000 with the strategy named."
+			]
+		}
+	],
+	"EEA14 Working with Equal Groups": [
+		{
+			title: "Kickball Equal Groups",
+			prompt: "Use the kickball roster scenario to divide players into equal teams, update the roster when three more players arrive, and connect five groups of four points to repeated addition.",
+			evidence: [
+				"Roster count before and after the three late arrivals.",
+				"Team split showing whether the teams are equal at each stage.",
+				"Repeated-addition equation for five players each scoring four points."
+			]
+		}
+	],
+	"EEA15 Partitioning Rectangles": [
+		{
+			title: "Board Game Rectangle Partitions",
+			prompt: "Design a rectangular board game by partitioning a rectangle into rows and columns of equal-sized squares. Count the spaces and decide whether good and bad spaces can be split evenly.",
+			evidence: [
+				"Rectangle partitioned into equal rows and columns.",
+				"Addition or array count for total squares.",
+				"Good-space and bad-space count with an explanation of equal or unequal splitting."
+			]
+		}
+	],
+	"EEA16 Time": [
+		{
+			title: "Deserted Island Time Record",
+			prompt: "Use the deserted-island scenario to distinguish a.m. and p.m., analog and digital clocks, half past, quarter until, elapsed time, and a 40-minute delay.",
+			evidence: [
+				"Examples of a.m. and p.m. based on time-of-day clues.",
+				"Analog and digital clock readings for 8:30 and quarter until 10.",
+				"Elapsed-time calculation from 7:30 a.m. to rescue time plus the 40-minute delay."
+			]
+		}
+	],
+	"EEA17 Money": [
+		{
+			title: "Grocery Coin Exchange",
+			prompt: "Use the grocery-store scenario to represent item prices with dollars and coins, add up to four selected items, and exchange leftover coins for fewer coins or bills.",
+			evidence: [
+				"Coin combinations for selected grocery item prices.",
+				"Total cost for up to four chosen items.",
+				"Coin-exchange record for 3 quarters, 7 dimes, 10 nickels, and 20 pennies."
+			]
+		}
+	],
+	"EEA18 Visualizing Data": [
+		{
+			title: "Kitchen Utensil Data Display",
+			prompt: "Collect kitchen utensil counts for spoons, knives, and forks, choose a visual display, then update the display after adding 3 forks, 2 spoons, and 4 knives.",
+			evidence: [
+				"Original utensil counts by category.",
+				"Graph, table, or picture display showing all utensil categories.",
+				"Updated counts and comparison of largest and smallest categories after the new set."
+			]
+		}
+	],
+	"EEA19 Polygons and Circles": [
+		{
+			title: "Bakery Dessert Shape Fractions",
+			prompt: "Use the bakery dessert scenario to describe dessert shapes, then divide pies and ice cream cakes into two, three, and four equal parts for different party groups.",
+			evidence: [
+				"Shape observations naming sides, curves, corners, or equal parts.",
+				"Partition drawings or descriptions for halves, thirds, and fourths.",
+				"Explanation of how the parts stay equal for each dessert."
+			]
+		}
+	],
+	"EEA20 Module Project: The Next Hit iPhone": [
+		{
+			title: "Devyn iPhone Data Charts",
+			prompt: "Use Devyn's iPhone table to create charts for initial price, battery life, and customer satisfaction. Use the displays to recommend price and battery-life choices for a future iPhone.",
+			evidence: [
+				"Chart or table for initial price by model.",
+				"Chart or table for battery life and satisfaction by model.",
+				"Recommendation for a future price and battery-life target with data evidence."
+			]
+		},
+		{
+			title: "Launch Party Array Cuts",
+			prompt: "Use the launch-party dessert scenario to split square trays into exactly 15 brownies for the product team and 20 cake slices for the engineering team.",
+			evidence: [
+				"Array or partition plan for 15 equal brownie pieces.",
+				"Array or partition plan for 20 equal cake pieces.",
+				"Explanation connecting rows and columns to multiplication or repeated addition."
+			]
+		}
+	],
+	"Check-in #2": [
+		{
+			title: "Multiplication, Measurement, Data, and Shape Check",
+			prompt: "Use the second check-in to demonstrate even and odd reasoning, arrays, equal groups, length, money, data displays, time, shapes, fractions, and final subtraction.",
+			evidence: [
+				"Even or odd, equal-sum, array, and rectangle-area responses with reasoning.",
+				"Length, money, and picture-graph responses with labels and units.",
+				"Time, shape, equal-parts, and 500-pound switch problems solved with visible work."
+			]
+		}
+	]
+};
+
 const elementaryMathCourses = {
 	earlyElementaryA: createSourceLibraryCourse({
 		name: "Early Elementary A: Discovering Numbers, Operations, and Measurement",
 		area: "early elementary math",
 		focus: "addition, subtraction, word problems, length, place value, equal groups, rectangles, time, money, data, polygons, circles, and visual math explanations",
+		sourceActivityAnchors: earlyElementaryAMathSourceAnchors,
 		staticAssets: [
 			"check_in_1_length_0.png",
 			"check_in_1_sums_0.png",
