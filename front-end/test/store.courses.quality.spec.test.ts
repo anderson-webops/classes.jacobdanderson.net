@@ -6589,6 +6589,65 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Money-Minded original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("money-minded-investing");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Public Company and Stock Market Tour",
+			"First Simulated Portfolio Entry",
+			"Time-the-Market Comparison",
+			"Index and Portfolio Strategy Check",
+			"Compounding and Inflation Scenarios",
+			"Rule of 72 Portfolio Projection",
+			"Dice Risk Ledger",
+			"Sharpe Ratio Portfolio Review",
+			"Build Your Stax Diversification Review",
+			"ETF and Bond Fund Allocation",
+			"Stock Category and Sector Rotation Map",
+			"Category-Based Portfolio Diversification",
+			"Financial Statement and P/E Ratio Review",
+			"Undervalued Stock Candidate Review",
+			"Private Company Ranking Case",
+			"ESG Criteria and Reliability Review",
+			"Values-Aligned Portfolio Update",
+			"Short Selling and Short Squeeze Case",
+			"Overvalued Company Short Plan",
+			"Cryptocurrency Value Comparison",
+			"Bitcoin Historical Return Case",
+			"Investment Strategy Pitch",
+			"Private Company Re-Evaluation"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Apple (AAPL)");
+		expect(text).toContain("imaginary $100,000");
+		expect(text).toContain("S&P 500, Dow Jones, and Nasdaq");
+		expect(text).toContain("Rule of 72");
+		expect(text).toContain("Sharpe Ratio");
+		expect(text).toContain("SPY, QQQ, and DIA");
+		expect(text).toContain("BOTZ");
+		expect(text).toContain("cyclical, defensive, growth, blue-chip, or IPO");
+		expect(text).toContain("Tesla with GM");
+		expect(text).toContain("Republic.co");
+		expect(text).toContain("Alphabet, Disney, and PepsiCo");
+		expect(text).toContain("Jordans resale analogy");
+		expect(text).toContain("GameStop");
+		expect(text).toContain("Bitcoin, Ethereum, and Dogecoin");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text).toContain(anchor);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",

@@ -593,6 +593,237 @@ const investingCourses = {
 		name: "Money-Minded: Investing in the Stock Market",
 		area: "investing",
 		focus: "stock selection, compounding returns, risk, bonds, ETFs, diversification, company analysis, ethical investing, shorting, and cryptocurrency context",
+		sourceActivityAnchors: {
+			"INV 1 Picking My First Stock": [
+				{
+					title: "Public Company and Stock Market Tour",
+					prompt: "Use [Investopedia](https://www.investopedia.com/) to inspect Apple (AAPL), then compare Apple with another familiar company. Separate what makes a company popular from what makes it publicly traded, investable, and risky.",
+					evidence: [
+						"Definitions for stock market, public company, stock, investor benefit, and investor risk.",
+						"Apple (AAPL) observation notes naming business strength, popularity, and one possible weakness.",
+						"Pros-and-cons comparison of public markets from the company perspective and investor perspective."
+					]
+				},
+				{
+					title: "First Simulated Portfolio Entry",
+					prompt: "Create a simulated portfolio plan using an imaginary $100,000 starting balance. Choose a first stock, explain the purchase rationale, then identify two additional companies to research next.",
+					evidence: [
+						"First stock selection with ticker, estimated share count, allocation, and purchase rationale.",
+						"Expectation note naming what would count as a successful result and what evidence would cause a sell or hold decision.",
+						"Watchlist of three to five companies with one reason each company is worth researching."
+					]
+				}
+			],
+			"INV 2 Strategically Choosing My Stocks": [
+				{
+					title: "Time-the-Market Comparison",
+					prompt: "Use the Quartz time-the-market activity at [data.qz.com/2015/time-the-market](https://data.qz.com/2015/time-the-market/) to compare one buy-and-sell attempt with a hold-through-the-period strategy.",
+					evidence: [
+						"Two outcomes: active timing result and hold-only result.",
+						"Explanation of beat the market, index, bull market, bear market, crash, and long-term trend.",
+						"Strategy note explaining why short-term timing is difficult even when long-term market trends are visible."
+					]
+				},
+				{
+					title: "Index and Portfolio Strategy Check",
+					prompt: "Compare the S&P 500, Dow Jones, and Nasdaq over a one-year window, then decide whether current conditions look more bullish or bearish. Use that decision to refine a simulated stock list.",
+					evidence: [
+						"Index comparison with S&P 500, Dow Jones, and Nasdaq notes.",
+						"Trade plan for three to five stocks with share counts, estimated cost, and portfolio percentage.",
+						"Reflection comparing individual stock performance with an index such as S&P 500, DJI, or QQQ."
+					]
+				}
+			],
+			"INV 3 Understanding Compounding Returns": [
+				{
+					title: "Compounding and Inflation Scenarios",
+					prompt: "Compare a $100 birthday gift kept in a piggy bank, placed in savings at 2%, and invested with a 10% average return. Extend the comparison to 1, 5, and 10 years, then account for 2% inflation.",
+					evidence: [
+						"Table comparing piggy bank, savings, and investing outcomes after 1, 5, and 10 years.",
+						"Inflation-adjusted note explaining buying power rather than only nominal dollars.",
+						"Comparison of early investing and late investing using the age 25 versus age 35 scenarios from the source course."
+					]
+				},
+				{
+					title: "Rule of 72 Portfolio Projection",
+					prompt: "For each simulated stock, estimate one-year return with `(current value - value one year ago) / value one year ago * 100`, then use the Rule of 72 to estimate doubling time.",
+					evidence: [
+						"One-year return calculation for at least two stocks.",
+						"Rule of 72 doubling-time estimate for each calculated return.",
+						"Portfolio revision note explaining whether a 10% average return seems realistic for the chosen stocks."
+					]
+				}
+			],
+			"INV 4 Assessing My Portfolio's Risk": [
+				{
+					title: "Dice Risk Ledger",
+					prompt: "Model risk with a five-round dice game that starts at $20, costs $1 per round, and changes reward or loss based on how many guesses are allowed.",
+					evidence: [
+						"Five-round ledger with guesses allowed, result, money won or lost, and ending balance.",
+						"Risk-reward explanation using the source table: 6 guesses has low reward and low loss, while 1 guess has high reward and high loss.",
+						"Pressure and strategy note connecting the game to portfolio risk tolerance."
+					]
+				},
+				{
+					title: "Sharpe Ratio Portfolio Review",
+					prompt: "Calculate a portfolio risk review using stock returns, a risk-free comparison, and the Sharpe Ratio. Treat the ratio as one tool, not a complete investing decision.",
+					evidence: [
+						"List of stock percentage returns used in the Sharpe Ratio review.",
+						"Definition of investment portfolio, risk-free investment, return, volatility, and Sharpe Ratio.",
+						"Portfolio adjustment note explaining how the risk analysis changes or confirms the strategy."
+					]
+				}
+			],
+			"INV 5 Investing in Bonds and ETFs": [
+				{
+					title: "Build Your Stax Diversification Review",
+					prompt: "Use [Build Your Stax](https://buildyourstax.com/) as a diversification case study. Compare stocks with CDs, mutual funds, index funds, ETFs, and bond-like investments.",
+					evidence: [
+						"Investment-type comparison naming risk, return potential, liquidity, and diversification role.",
+						"Explanation of how diversification changes total portfolio risk.",
+						"Game result reflection identifying one decision that reduced risk and one decision that limited returns."
+					]
+				},
+				{
+					title: "ETF and Bond Fund Allocation",
+					prompt: "Allocate part of the imaginary $100,000 portfolio to ETFs and bond funds. Consider index ETFs such as SPY, QQQ, and DIA, thematic ETFs such as BOTZ, and one to three bond funds.",
+					evidence: [
+						"Allocation percentage for ETFs and bond funds with a reason tied to portfolio risk.",
+						"ETF table with ticker, category, expected role, and short-term or long-term purpose.",
+						"Bond fund table with ticker or fund name, expected role, and return expectation."
+					]
+				}
+			],
+			"INV 6 Diversifying My Stock Portfolio": [
+				{
+					title: "Stock Category and Sector Rotation Map",
+					prompt: "Classify stocks as cyclical, defensive, growth, blue-chip, or IPO, then connect those categories to sector rotation and the current stage of the economic cycle.",
+					evidence: [
+						"Definitions and examples for cyclical, defensive, growth, blue-chip, and IPO stocks.",
+						"Sector rotation map explaining which categories may perform better in different economic conditions.",
+						"Current-cycle note explaining which stock categories appear better aligned with the market environment."
+					]
+				},
+				{
+					title: "Category-Based Portfolio Diversification",
+					prompt: "Choose stocks from multiple categories and industries, then compare their historical performance with the role they serve in the simulated portfolio.",
+					evidence: [
+						"At least two researched stock options in each chosen category.",
+						"Purchase or watchlist table naming ticker, category, industry, reason for selection, and risk.",
+						"Diversification explanation that goes beyond owning several similar stocks."
+					]
+				}
+			],
+			"INV 7 Assessing a Company's Success": [
+				{
+					title: "Financial Statement and P/E Ratio Review",
+					prompt: "Use Tesla's public financial statements as a model for reading revenue, expenses, net income, and P/E ratio. Compare Tesla with GM to separate company performance from market valuation.",
+					evidence: [
+						"Definitions for revenue, expenses, net income, income statement, and P/E ratio.",
+						"Tesla trend notes for revenue and net income over multiple reporting periods.",
+						"Tesla-versus-GM comparison explaining why a higher valuation may or may not be justified."
+					]
+				},
+				{
+					title: "Undervalued Stock Candidate Review",
+					prompt: "Find one or two stocks that may be undervalued, review their income statements, calculate or look up their P/E ratios, and decide whether they belong in the simulated portfolio.",
+					evidence: [
+						"Candidate table with ticker, industry, revenue trend, net income trend, and P/E ratio.",
+						"Undervalued thesis explaining the evidence and the uncertainty.",
+						"Portfolio change note naming any additions, removals, or holds caused by the analysis."
+					]
+				},
+				{
+					title: "Private Company Ranking Case",
+					prompt: "Use [Republic.co](https://republic.co/) as a private-company research case. Rank three startup opportunities using differentiation, team, business/product evaluation, mission and impact, and one additional criterion.",
+					evidence: [
+						"Top-three ranking with evidence for differentiation, team, product value, and mission or impact.",
+						"Additional criteria list informed by startup failure patterns such as market need, business model, competition, or execution risk.",
+						"Final recommendation explaining why the top-ranked company is stronger than the runner-up."
+					]
+				}
+			],
+			"INV 8 Holding Companies Socially Responsible": [
+				{
+					title: "ESG Criteria and Reliability Review",
+					prompt: "Study environmental, social, and governance criteria, then compare sample ESG score evidence for companies such as Alphabet, Disney, and PepsiCo.",
+					evidence: [
+						"Definitions for environmental, social, governance, ESG score, and socially responsible investing.",
+						"Priority list naming two or three criteria that matter most for an investing decision.",
+						"Reliability note explaining why ESG scores are useful but incomplete."
+					]
+				},
+				{
+					title: "Values-Aligned Portfolio Update",
+					prompt: "Research companies whose practices align with priorities such as environmental responsibility, worker treatment, or community impact. Examples from the source include PLUG, FCEL, CRM, and ABNB.",
+					evidence: [
+						"Research notes for two or three companies with cited evidence of positive or negative practices.",
+						"Estimated ESG or values-alignment score with a clear reason.",
+						"Portfolio update explaining which shares are added, kept, or replaced because of the values screen."
+					]
+				}
+			],
+			"INV 9 Shorting Stocks": [
+				{
+					title: "Short Selling and Short Squeeze Case",
+					prompt: "Use the Jordans resale analogy to explain short selling, then analyze a short squeeze case such as GameStop. Separate potential profit from unlimited-loss risk.",
+					evidence: [
+						"Short-selling explanation with borrow, sell, price drop, buy back, and return steps.",
+						"Loss scenario showing what happens when the price rises instead of falls.",
+						"Short squeeze summary naming the mechanism, recent example, and risk lesson."
+					]
+				},
+				{
+					title: "Overvalued Company Short Plan",
+					prompt: "Find one to three companies that may be overvalued, use financial metrics or a research source such as Chartmill, and create a short-position plan with an exit rule.",
+					evidence: [
+						"Candidate table with overvaluation evidence and uncertainty.",
+						"Short-position plan naming share count, entry rationale, risk cap, and buy-to-cover exit condition.",
+						"Portfolio risk note explaining why each candidate is or is not appropriate for shorting."
+					]
+				}
+			],
+			"INV 10 Understanding the Value of Cryptocurrency": [
+				{
+					title: "Cryptocurrency Value Comparison",
+					prompt: "Define cryptocurrency, compare how fiat money and cryptocurrencies gain value, and inspect popular coins through a price list such as Coinbase's public price directory.",
+					evidence: [
+						"Definition of cryptocurrency, blockchain-based transfer, fiat currency, and market capitalization.",
+						"Comparison of Bitcoin, Ethereum, and Dogecoin by purpose, market capitalization, and coin issuance.",
+						"Advantages-and-disadvantages list covering volatility, access, decentralization, speculation, and practical use."
+					]
+				},
+				{
+					title: "Bitcoin Historical Return Case",
+					prompt: "Use a Bitcoin historical price chart such as [Coindesk's Bitcoin price page](https://www.coindesk.com/price/bitcoin) to compare buying near the 2018 peak, after the 2018 crash, and near the original low-price period.",
+					evidence: [
+						"Price comparison for a 2018 peak purchase, a post-crash purchase, and a 2010-style early-price scenario.",
+						"Percentage gain or loss calculation for at least one scenario.",
+						"Investment thesis explaining whether cryptocurrency fits the portfolio and what risk evidence limits the conclusion."
+					]
+				}
+			],
+			"INV 11 Money-Minded Master Project": [
+				{
+					title: "Investment Strategy Pitch",
+					prompt: "Create a final pitch for a hypothetical brokerage-account funding request. The pitch explains what the money will be invested in, how the portfolio is diversified, and how the strategy handles risk, growth, ethics, and possible cryptocurrency exposure.",
+					evidence: [
+						"Portfolio allocation with stocks, ETFs, bond funds, possible cryptocurrency, and cash or reserve assumptions.",
+						"Growth projection with expected return, time horizon, risk level, and evidence that could change the plan.",
+						"Implementation plan naming brokerage or app choice, profit-sharing or accountability rules, and responsible-use constraints."
+					]
+				},
+				{
+					title: "Private Company Re-Evaluation",
+					prompt: "Return to the Republic.co private-company ranking case and decide whether the original top-three choices still hold up when new opportunities or better criteria are available.",
+					evidence: [
+						"Updated top-three ranking with old and new company comparisons.",
+						"Criteria audit explaining which research criteria changed after completing the course.",
+						"Final decision note explaining whether the original ranking is confirmed or revised."
+					]
+				}
+			]
+		},
 		staticAssets: ["inv3_0.png"],
 		modules: [
 			"INV 1 Picking My First Stock",
