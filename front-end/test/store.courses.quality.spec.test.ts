@@ -2657,15 +2657,16 @@ describe("course text quality normalization", () => {
 		const course = await loadRawCourse("python-level-2");
 		expect(course).not.toBeNull();
 
-		for (const titlePattern of [
-			/PS1 Project 1: Mad Libs/,
-			/PS6 Supplemental Project 5: Card Shuffler/,
-			/PS12 Project 1: Type Racer/
-		]) {
+		const expectedPendingProjectMedia = [
+			[/PS1 Project 1: Mad Libs/, "ps1_mad_libs.gif"],
+			[/PS6 Supplemental Project 5: Card Shuffler/, "ps6_card_shuffler.mp4"],
+			[/PS12 Project 1: Type Racer/, "ps12_type_racer.mp4"]
+		] as const;
+
+		for (const [titlePattern, filename] of expectedPendingProjectMedia) {
 			const item = findItem(course!, titlePattern);
-			expect(item.mediaLink).toMatch(/^https:\/\/static\.classes\.jacobdanderson\.net\//);
-			expect(item.mediaLink).not.toContain("static.junilearning.com");
-			expect(item.content).not.toContain("Pending media:");
+			expect(item.mediaLink).toBe(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(item.content, filename)).toBe(true);
 		}
 
 		const mediaModule = course!.modules.find(
@@ -2680,6 +2681,10 @@ describe("course text quality normalization", () => {
 		const content = mediaItem?.content ?? "";
 
 		for (const filename of [
+			"ps1_index_picker.mp4",
+			"ps6_card_shuffler.mp4",
+			"ps12_type_racer.mp4",
+			"ps_15_master_project.mp4",
 			"python_level_2_check_in_questions.png",
 			"python_level_2_concept.png",
 			"python_level_2_project.png"
