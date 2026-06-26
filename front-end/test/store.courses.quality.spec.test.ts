@@ -6648,6 +6648,56 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Entrepreneurship original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("entrepreneurship-101");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Business Canvas Preview",
+			"Ideal Wallet Design Sprint",
+			"Entrepreneur Strengths and Values Sketch",
+			"Brand Foundation Website Page",
+			"Empathy Observation Persona",
+			"Problem Statement and Initial Solution",
+			"Product or Service Prototype",
+			"Name, Logo, Tagline, and Feedback Survey",
+			"Coffee Shop Customer Needs Simulation",
+			"Ideal Customer Persona Profile",
+			"Customer Feedback Survey Draft",
+			"Feedback Interpretation and Iteration Plan",
+			"Revised Prototype Evidence Summary",
+			"Competitor Positioning Matrix",
+			"Competitor Question Research",
+			"Price and Competitor Comparison",
+			"Production Cost and Profit Margin Forecast",
+			"One-Sentence Value Proposition",
+			"Channels and Launch Campaign Sketch",
+			"Impact Risk and Alternative Materials Review",
+			"Cause-Aligned Website Page and Campaign",
+			"Lean Business Canvas Portfolio",
+			"Entrepreneur Feedback and Pitch Revision"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Lean Canvas-style structure");
+		expect(text).toContain("coolmathgames.com/0-coffee-shop");
+		expect(text).toContain("Duolingo, Airbnb, or Uber");
+		expect(text).toContain("disruptive, new-market, integrative, or sustaining innovation");
+		expect(text).toContain("1,000 customers");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text).toContain(anchor);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",
