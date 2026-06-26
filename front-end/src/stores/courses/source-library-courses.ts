@@ -178,6 +178,7 @@ const investingCourses = {
 		name: "Money-Minded: Investing in the Stock Market",
 		area: "investing",
 		focus: "stock selection, compounding returns, risk, bonds, ETFs, diversification, company analysis, ethical investing, shorting, and cryptocurrency context",
+		staticAssets: ["inv3_0.png"],
 		modules: [
 			"INV 1 Picking My First Stock",
 			"INV 2 Strategically Choosing My Stocks",

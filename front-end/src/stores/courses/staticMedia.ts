@@ -14,6 +14,7 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"ent3_project2_0.png",
 	"ent3_project2_1.png",
 	"ent5_project1_0.png",
+	"inv3_0.png",
 	"jor2_disact_plotempty.png",
 	"leb16_concept1_0.png",
 	"mfb10_concept1_0.png",
