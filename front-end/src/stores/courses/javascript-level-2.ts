@@ -1,6 +1,11 @@
 import type { RawCourse } from "./types";
 import { buildProjectGuidance } from "./projectGuidance";
-import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
+import {
+	pendingStaticMediaNotice,
+	staticMediaFilename,
+	staticMediaUrl,
+	withPendingStaticMediaNotice
+} from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
 const JAVASCRIPT_LEVEL_2_ORIGINAL_MEDIA = [
@@ -61,6 +66,22 @@ const JAVASCRIPT_LEVEL_2_ORIGINAL_MEDIA = [
 	"jsm13_supplemental_project_1.mp4",
 	"jsm14_project_1.mp4"
 ] as const;
+
+function applyJavaScriptLevel2PendingMediaNotices(course: RawCourse) {
+	for (const module of course.modules) {
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			if (!item.mediaLink) continue;
+
+			const filename = staticMediaFilename(item.mediaLink);
+			if (!filename) continue;
+
+			item.content = withPendingStaticMediaNotice(item.content, filename);
+		}
+	}
+}
 
 export const javascriptLevel2Course: RawCourse = {
 	name: "JavaScript Level 2: JavaScript Master",
@@ -1717,3 +1738,5 @@ export const javascriptLevel2Course: RawCourse = {
 		}
 	]
 };
+
+applyJavaScriptLevel2PendingMediaNotices(javascriptLevel2Course);

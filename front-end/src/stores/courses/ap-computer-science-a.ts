@@ -1,4 +1,8 @@
 import type { RawCourse } from "./types";
+import {
+	staticMediaFilename,
+	withPendingStaticMediaNotice
+} from "./staticMedia";
 
 const APCS_REPO_BASE = "https://github.com/instruction-material/APCS/tree/main";
 const STATIC_MEDIA_BASE = "https://static.classes.jacobdanderson.net";
@@ -60,6 +64,22 @@ If VS Code still will not run Java, reopen only the assignment folder, re-check 
 
 const repo = (path: string) => `${APCS_REPO_BASE}/${path}`;
 const media = (file: string) => `${STATIC_MEDIA_BASE}/${file}`;
+
+function applyApcsPendingMediaNotices(course: RawCourse) {
+	for (const module of course.modules) {
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			if (!item.mediaLink) continue;
+
+			const filename = staticMediaFilename(item.mediaLink);
+			if (!filename) continue;
+
+			item.content = withPendingStaticMediaNotice(item.content, filename);
+		}
+	}
+}
 
 function apConcept({
 	evidence,
@@ -1616,3 +1636,5 @@ export const apComputerScienceACourse: RawCourse = {
 		}
 	]
 };
+
+applyApcsPendingMediaNotices(apComputerScienceACourse);
