@@ -1294,7 +1294,7 @@ function requiredWorkSteps(
 				`Implement the ${moduleTitle} approach incrementally, checking the sample, a custom edge case, and one bounds or ordering case.`
 			],
 			[
-				`Restate ${moduleTitle} as a contest contract: input shape, output shape, constraints, and the property preserved by the algorithm.`,
+				`Restate ${moduleTitle} as a contest contract: accepted data, output form, constraints, and the property preserved by the algorithm.`,
 				`Trace a smallest useful ${moduleTitle} case by hand before coding so the implementation has a known target.`,
 				`Run the ${moduleTitle} sample, one boundary case, and one duplicate, tie, ordering, or off-by-one case before comparing with the reference.`
 			],
@@ -1485,7 +1485,7 @@ function requiredWorkSteps(
 				`Verify the result with one hand-checkable example, one boundary example, and one example that could expose hidden state.`
 			],
 			[
-				`List the ${moduleTitle} assumptions about input shape, types, ordering, duplicates, missing data, and output format.`,
+				`List the ${moduleTitle} assumptions about accepted data, types, ordering, duplicates, missing data, and output format.`,
 				`Implement ${moduleTitle} in short runs that expose the current variables, collection contents, or helper return values.`,
 				`Check the program with representative data, smallest useful data, and one malformed or surprising case.`
 			],
@@ -2210,7 +2210,7 @@ function projectPathNote({
 			`**Path:** Transfer Practice. ${subject} keeps the core idea but changes the data, representation, constraint, or context so the reasoning is not tied to the first example.`,
 			`**Path:** Transfer Practice. ${subject} reuses the same concept in a nearby situation and records which part changed.`,
 			`**Path:** Transfer Practice. ${subject} changes one condition while preserving the main rule, making the difference visible in the result.`,
-			`**Path:** Transfer Practice. ${subject} asks whether the same reasoning still works after the input shape, model, or constraint shifts.`,
+			`**Path:** Transfer Practice. ${subject} asks whether the same reasoning still works after the data layout, model, or constraint shifts.`,
 			`**Path:** Transfer Practice. ${subject} compares the familiar case with a changed case before treating the idea as mastered.`,
 			`**Path:** Transfer Practice. ${subject} keeps the core idea stable while the surrounding details change enough to test understanding.`,
 			`**Path:** Transfer Practice. ${subject} turns the example into a new scenario, then identifies what carried over and what had to change.`,

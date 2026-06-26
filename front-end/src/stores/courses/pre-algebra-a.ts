@@ -463,7 +463,7 @@ export const preAlgebraACourse: RawCourse = {
 			"One error-analysis section with corrected reasoning"
 		],
 		recommendedNextWork: [
-			"Add Pre-Algebra B from the source sequence",
+			"Review Pre-Algebra B alongside Pre-Algebra A for sequencing gaps",
 			"Add Geometry A/B and Pre-Calculus A/B to complete the visible math pathway",
 			"Upload reserved kickoff source images to the static classes host"
 		]

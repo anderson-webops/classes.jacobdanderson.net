@@ -4330,7 +4330,7 @@ describe("course text quality normalization", () => {
 							);
 						}
 						if (
-							/^(?:Application Check|Changed-Case Review|Concept Path|Core Concepts|Build Requirements|Common Bug Patterns|Diagnostic Checkpoint|Failure Modes|Graph, Diagram, or Data Exercise|Input Variation Practice|Interaction Variation|Project Brief|Reflection and Transfer Practice|State and Contract Practice|Trace and Boundary Case|Transfer Practice|Worked Example)$/i.test(
+							/^(?:Application Check|Changed-Case Review|Concept Path|Core Concepts|Build Requirements|Common Bug Patterns|Data Variation Practice|Diagnostic Checkpoint|Failure Modes|Graph, Diagram, or Data Exercise|Interaction Variation|Project Brief|Reflection and Transfer Practice|State and Contract Practice|Trace and Boundary Case|Transfer Practice|Worked Example)$/i.test(
 								item.title
 							) ||
 							/^(?:Maps|Using a Java Map|Conditionals|For Loops|While Loops|Stacks)$/i.test(
@@ -5425,7 +5425,7 @@ describe("course text quality normalization", () => {
 			/\bproduces a playable Scratch project with clear event flow/i
 		);
 		expect(scratchCorpus).not.toMatch(
-			/\badds one new constraint, input shape, or behavior that still fits the original goal/i
+			/\badds one new constraint, data layout, or behavior that still fits the goal/i
 		);
 		expect(scratchCorpus).not.toMatch(
 			/\bstays centered on sprite roles, event timing, broadcasts, clones, variables, stage behavior/i
@@ -5466,7 +5466,7 @@ describe("course text quality normalization", () => {
 		const corpus = allCourseText(course);
 
 		expect(corpus).toContain("Core Concepts");
-		expect(corpus).toContain("Input Variation Practice");
+		expect(corpus).toContain("Data Variation Practice");
 		expect(corpus).not.toContain("Applied Challenge");
 		expect(corpus).not.toMatch(/Core Concepts and Learning Sequence/i);
 		expect(corpus).not.toMatch(
@@ -5749,6 +5749,7 @@ describe("course text quality normalization", () => {
 		async () => {
 			const mathAndScienceCourses = await Promise.all([
 				loadRawCourse("pre-algebra-a"),
+				loadRawCourse("pre-algebra-b"),
 				loadRawCourse("algebra-1a"),
 				loadRawCourse("algebra-1b"),
 				loadRawCourse("algebra-2a"),
@@ -5878,6 +5879,7 @@ describe("course text quality normalization", () => {
 		async () => {
 			const courses = await Promise.all([
 				loadRawCourse("pre-algebra-a"),
+				loadRawCourse("pre-algebra-b"),
 				loadRawCourse("algebra-1a"),
 				loadRawCourse("algebra-1b"),
 				loadRawCourse("algebra-2a"),
@@ -5993,6 +5995,55 @@ describe("course text quality normalization", () => {
 			"https://static.classes.jacobdanderson.net/paa_kickoff_0.png",
 			"https://static.classes.jacobdanderson.net/paa_kickoff_1.png",
 			"https://www.youtube.com/watch?v=8nKPC-WmLjU"
+		]);
+	});
+
+	it("adds Pre-Algebra B from the source math sequence", async () => {
+		const course = await loadRawCourse("pre-algebra-b");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const mediaLinks = course.modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(item => item.mediaLink)
+				.filter((link): link is string => Boolean(link))
+		);
+
+		expect(course.modules.map(module => module.title)).toEqual([
+			"Pre-Algebra B Kick-Off",
+			"PAB1-PAB5 Data, Averages, and Graphs",
+			"Check-In #1: Pre-Algebra B Data and Graphing",
+			"PAB6-PAB9 Lines, Angles, Triangles, and Similarity",
+			"PAB10-PAB14 Polygons, Area, Circles, and Solids",
+			"Check-In #2: Pre-Algebra B Geometry",
+			"PAB15-PAB19 Factors, Multiples, and Number Structure",
+			"PAB20-PAB23 Counting, Probability, and Applied Modeling",
+			"Check-In #3 and Capstone: Pre-Algebra B"
+		]);
+		expect(text).toContain("Project: Exploring the World with Marco");
+		expect(text).toContain("Project: Gymnastics Geometry Challenge");
+		expect(text).toContain("Project: Uber Internship Challenge");
+		expect(text).toContain("Project: The MARVELous Theme Park");
+		expect(text).toContain("Project: eSmash");
+		expect(text).toContain("Project: Airtable Revamped");
+		expect(text).toContain("Master Project: Pre-Algebra B");
+		expect(text).toContain("range");
+		expect(text).toContain("Pythagorean theorem");
+		expect(text).toContain("probability");
+		expect(text).toContain("pab5_0.png");
+		expect(text).toContain("pab14_0.png");
+		expect(text).toContain("pab22_0.png");
+		expect(text).toMatch(/Pending media/i);
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(mediaLinks).toEqual([
+			"https://static.classes.jacobdanderson.net/pab5_0.png",
+			"https://www.youtube.com/watch?v=SMLknNJt5Pk",
+			"https://static.classes.jacobdanderson.net/pab14_0.png",
+			"https://static.classes.jacobdanderson.net/pab22_0.png"
 		]);
 	});
 
