@@ -1130,7 +1130,7 @@ export const preCalculusBCourse: RawCourse = {
 			"Probability, permutations, combinations, limits, continuity, average rates of change, and derivative previews"
 		],
 		sourcePolicy:
-			"Adapted from the Pre-Calculus and Trigonometry B source sequence with neutral wording, course-native explanations, and no legacy platform operations.",
+			"Built from the Pre-Calculus and Trigonometry B sequence with neutral wording, course-native explanations, and no legacy platform operations.",
 		assessmentCadence: [
 			"Check-In #1 after trigonometry basics, graphing, identities, polar coordinates, and parametric equations.",
 			"Check-In #2 after vectors, matrices, partial fractions, probability, limits, and rates of change.",

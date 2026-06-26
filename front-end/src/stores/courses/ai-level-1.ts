@@ -1367,15 +1367,15 @@ export const aiLevel1Course: RawCourse = {
 		},
 		{
 			kind: "appendix",
-			title: "Original Asset Reservations",
+			title: "Pending Static Assets",
 			curriculum: [
 				{
-					title: "AI Foundations Source Media Status",
+					title: "AI Foundations Media Status",
 					content: [
-						"The original AI Foundations source export referenced these project videos and concept images. They are reserved on the class static host with their original filenames so future uploads can restore them without reworking course links.",
+						"This course has placeholders for these project videos and concept images. Each URL points to the class static host and can be filled when the matching file is available.",
 						"**Pending project videos:**",
 						pendingAiLevel1AssetList(aiLevel1PendingSourceVideos),
-						"**Pending concept and source images:**",
+						"**Pending concept images:**",
 						pendingAiLevel1AssetList(aiLevel1PendingSourceImages)
 					].join("\n\n")
 				}

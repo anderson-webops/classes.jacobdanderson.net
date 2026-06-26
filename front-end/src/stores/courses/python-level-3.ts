@@ -1588,12 +1588,12 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 		},
 		{
 			kind: "appendix",
-			title: "Original Asset Reservations",
+			title: "Pending Static Assets",
 			curriculum: [
 				{
-					title: "Pending Python Level 3 Source Assets",
+					title: "Pending Python Level 3 Assets",
 					content: [
-						"The original Python Level 3 source library referenced the visual assets below. The available project demo media remains linked from the relevant project cards; these remaining source images are reserved so they can be uploaded later without changing course links.",
+						"This course has placeholders for the visual assets below. Available project demo media remains linked from the relevant project cards; these pending images keep stable class-static URLs until the files are available.",
 						...PYTHON_LEVEL_3_PENDING_SOURCE_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

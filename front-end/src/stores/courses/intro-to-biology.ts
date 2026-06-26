@@ -61,7 +61,7 @@ export const introToBiologyCourse: RawCourse = {
 					content: [
 						concept({
 							investigation:
-								"The original course used a human-body diagram to identify major organ systems. This placeholder reserves the original static asset name `biomod1pro1im1.jpg` at the class static host until the image is available.",
+								"This section has a placeholder for the human-body diagram `biomod1pro1im1.jpg`. The class static host URL is reserved so the diagram can appear here when the file is available.",
 							model: "Body systems are coordinated groups of organs. A useful systems map includes at least one representative organ and the main job for each system.",
 							evidence:
 								"Label skeletal, nervous, integumentary, respiratory, circulatory, digestive, excretory, endocrine, immune, and muscular examples.",
@@ -76,7 +76,7 @@ export const introToBiologyCourse: RawCourse = {
 					content: [
 						concept({
 							investigation:
-								"The second original body-systems reference is reserved as `biomod1pro1im2.jpg`. When the hosted file becomes available, the course viewer renders the image in this space automatically.",
+								"This section has a placeholder for the body-systems reference `biomod1pro1im2.jpg`. When the hosted file becomes available, the course viewer renders the image in this space automatically.",
 							model: "Systems overlap rather than operating as isolated boxes. Respiratory and circulatory systems exchange and transport gases; nervous and endocrine systems coordinate signals; immune and integumentary systems protect boundaries.",
 							evidence:
 								"Use arrows to show which system receives information, which system moves material, and which system changes the body's response.",
@@ -344,7 +344,7 @@ export const introToBiologyCourse: RawCourse = {
 					title: "Salad Clue Case",
 					content: concept({
 						investigation:
-							"The source case describes a salad ingredient carrying a fictional poison that shuts down digestion only after reaching a specific location.",
+							"The case describes a salad ingredient carrying a fictional poison that shuts down digestion only after reaching a specific location.",
 						model: "A clue-based biological argument uses the digestive sequence to rule out impossible locations and identify likely ingredients.",
 						evidence:
 							"Use the clue that the mouth, throat, and esophagus are unaffected, then compare lettuce, tomatoes, chicken, and olive oil by nutrient category.",
@@ -355,7 +355,7 @@ export const introToBiologyCourse: RawCourse = {
 					title: "Digestive Model Case Study",
 					content: concept({
 						investigation:
-							"The original course included a messy physical digestion model. The online version treats it as a diagram, video still, or written case study unless safe materials are deliberately chosen outside the core assignment.",
+							"This online version treats the digestion model as a diagram, video still, or written case study unless safe materials are deliberately chosen outside the core assignment.",
 						model: "The model compares mouth, stomach, and intestine roles through mechanical breakdown, chemical environment, and filtering or absorption.",
 						evidence:
 							"Annotate what each part of the model represents and name one important limitation of the model.",
@@ -717,7 +717,7 @@ export const introToBiologyCourse: RawCourse = {
 			"Claim-evidence-reasoning"
 		],
 		sourcePolicy:
-			"Adapted from the original BIO1-BIO8 source sequence with neutral wording, equipment-free activities, and static.classes placeholder media for missing source images.",
+			"Adapted from the BIO1-BIO8 sequence with neutral wording, equipment-free activities, and static.classes placeholder media for missing images.",
 		assessmentCadence: [
 			"One diagram or model per module",
 			"One short CER or evidence explanation per module",

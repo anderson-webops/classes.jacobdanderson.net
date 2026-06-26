@@ -1799,17 +1799,17 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 		},
 		{
 			kind: "appendix",
-			title: "Original Demo Media Reservations",
+			title: "Demo Media Status",
 			curriculum: [
 				{
-					title: "PyGame Source Media Status",
+					title: "PyGame Media Status",
 					content: [
-						"The original PyGame source library referenced the student-facing assets below. Hosted entries are ready on the class static host; pending entries have reserved URLs so the original files can be added later without changing course links.",
-						"**Hosted source assets:**",
+						"This course uses the student-facing assets below. Hosted entries are ready on the class static host; pending entries keep stable class-static URLs until the matching files are available.",
+						"**Hosted assets:**",
 						...PYGAMES_AVAILABLE_ORIGINAL_ASSETS.map(
 							filename => `- ${staticMediaUrl(filename)}`
 						),
-						"**Pending source assets:**",
+						"**Pending assets:**",
 						...PYGAMES_PENDING_ORIGINAL_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

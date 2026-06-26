@@ -1399,12 +1399,12 @@ Typing practice is not required to complete the Scratch course, but it can make 
 		},
 		{
 			kind: "appendix",
-			title: "Original Asset Reservations",
+			title: "Pending Static Assets",
 			curriculum: [
 				{
 					title: "Pending Scratch Level 1 Visual Assets",
 					content: [
-						"The original Scratch Level 1 source library referenced the visual assets below. These files are reserved on the class static host so they can be uploaded later without changing course links.",
+						"This course has placeholders for the visual assets below. Each URL points to the class static host and can be filled when the matching file is available.",
 						...SCRATCH_LEVEL_1_SOURCE_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

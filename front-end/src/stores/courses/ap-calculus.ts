@@ -603,7 +603,7 @@ export const apCalculusCourse: RawCourse = {
 			"Mathematical practices using graphical, numerical, analytical, and verbal representations"
 		],
 		sourcePolicy:
-			"Adapted from the AP Calculus source sequence with neutral wording, course-native summaries, AP-style practice structure, and no direct legacy static image embeds.",
+			"Built from the AP Calculus sequence with neutral wording, course-native summaries, AP-style practice structure, and no direct legacy static image embeds.",
 		assessmentCadence: [
 			"Diagnostic readiness module before limits.",
 			"Topic reviews after limits and continuity, differentiation, applications of derivatives, integration and accumulation, differential equations, applications of integration, parametric/polar/vector-valued functions, and infinite series.",

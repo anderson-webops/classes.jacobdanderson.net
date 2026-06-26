@@ -83,7 +83,7 @@ export const geometryBCourse: RawCourse = {
 					overview({
 						title: "Trapezoids connect parallel bases, legs, base angles, medians, and area into a focused quadrilateral family.",
 						concepts: [
-							"A trapezoid has exactly one pair of parallel sides in the source sequence; those parallel sides are the bases.",
+							"In this course, a trapezoid has exactly one pair of parallel sides; those parallel sides are the bases.",
 							"An isosceles trapezoid has congruent legs, congruent base angles, and congruent diagonals.",
 							"The median or midsegment of a trapezoid is parallel to the bases and has length equal to the average of the base lengths.",
 							"Trapezoid area uses A = ((b1 + b2) / 2)h, so height must be perpendicular distance between the bases, not a slanted side."
@@ -625,7 +625,7 @@ export const geometryBCourse: RawCourse = {
 			"Polyhedra, surface area, volume, and composite solids"
 		],
 		sourcePolicy:
-			"Adapted from the Geometry B source sequence with neutral wording and no direct legacy static image embeds.",
+			"Built from the Geometry B sequence with neutral wording and no direct legacy static image embeds.",
 		assessmentCadence: [
 			"Check-In #1 after quadrilaterals and polygon foundations.",
 			"Check-In #2 after circles, transformations, and symmetry.",
@@ -648,7 +648,7 @@ export const geometryBCourse: RawCourse = {
 			"A final Geometry B portfolio includes quadrilaterals, polygons or circles, transformations, and three-dimensional measurement evidence."
 		],
 		recommendedNextWork: [
-			"Replace legacy source diagrams with owned or source-safe static.classes assets when available.",
+			"Replace legacy diagrams with owned or source-safe static.classes assets when available.",
 			"Add optional dynamic-geometry exploration links for transformations and circle theorems.",
 			"Build a Geometry A to Geometry B cumulative assessment once both courses have rendered review evidence."
 		]

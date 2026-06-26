@@ -193,7 +193,7 @@ export const introToEnvironmentalScienceCourse: RawCourse = {
 				{
 					title: "Photosynthesis Diagram Placeholder",
 					content: [
-						"The original Environmental Science source linked a photosynthesis diagram file. The course reserves that same original filename on the class static host so the visual can appear in this section when the asset is available.",
+						"This section has a placeholder for a photosynthesis diagram file. The class static host URL is reserved so the visual can appear here when the asset is available.",
 						"Until the diagram is uploaded, use the reserved space to connect the process verbally: light energy is captured by chlorophyll, carbon dioxide enters from the air, water moves through the plant, glucose stores usable chemical energy, and oxygen is released. The important ecosystem idea is that producers convert non-food inputs into food-web energy that consumers and decomposers depend on.",
 						pendingStaticMediaNotice(PHOTOSYNTHESIS_DIAGRAM)
 					].join("\n\n"),
@@ -868,7 +868,7 @@ export const introToEnvironmentalScienceCourse: RawCourse = {
 			"Claim-evidence-reasoning"
 		],
 		sourcePolicy:
-			"Adapted from the original ES1-ES8 source sequence with neutral wording, remote-safe activities, vetted public references, and a reserved static.classes placeholder for the original photosynthesis diagram.",
+			"Built from the ES1-ES8 sequence with neutral wording, remote-safe activities, vetted public references, and a reserved static.classes placeholder for the photosynthesis diagram.",
 		assessmentCadence: [
 			"One model, map, or report per module",
 			"One vocabulary-backed evidence explanation per module",

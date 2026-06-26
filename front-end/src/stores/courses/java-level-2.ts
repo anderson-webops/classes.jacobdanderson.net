@@ -1139,13 +1139,13 @@ export const javaLevel2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Original Demo Media Reservations",
+			title: "Pending Demo Media",
 			kind: "appendix",
 			curriculum: [
 				{
 					title: "Pending Java Level 2 Demo Media",
 					content: [
-						"The original Java Level 2 source library referenced these demonstration videos. They are reserved on the class static host so the course can link to the same filenames once the files are uploaded.",
+						"This course has placeholders for these demonstration videos. Each URL points to the class static host and can be filled when the matching file is available.",
 						"",
 						...JAVA_LEVEL_2_ORIGINAL_MEDIA.map(
 							filename =>

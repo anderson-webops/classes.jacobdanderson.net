@@ -1753,17 +1753,17 @@ export const machineLearningCourse: RawCourse = {
 		},
 		{
 			kind: "appendix",
-			title: "Original Asset Reservations",
+			title: "Pending Static Assets",
 			curriculum: [
 				{
-					title: "Machine Learning Source Media Status",
+					title: "Machine Learning Media Status",
 					content: [
-						"The original Machine Learning source export referenced these videos and images. Hosted videos are kept as direct class-static links; missing source images are reserved with their original filenames so they can be uploaded later without changing course content.",
+						"This course uses the videos and images below. Hosted videos are available as direct class-static links; pending images keep stable class-static URLs until the files are available.",
 						"**Hosted project videos:**",
 						hostedMachineLearningAssetList(
 							machineLearningHostedSourceVideos
 						),
-						"**Pending concept and source images:**",
+						"**Pending concept images:**",
 						pendingMachineLearningAssetList(
 							machineLearningPendingSourceImages
 						)

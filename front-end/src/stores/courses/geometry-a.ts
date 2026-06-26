@@ -604,7 +604,7 @@ export const geometryACourse: RawCourse = {
 			"Right triangles and trigonometry"
 		],
 		sourcePolicy:
-			"Adapted from the Geometry A source sequence with neutral wording and no direct legacy static image embeds.",
+			"Built from the Geometry A sequence with neutral wording and no direct legacy static image embeds.",
 		assessmentCadence: [
 			"Check-In #1 after definitions, logic, proofs, lines, and coordinate geometry.",
 			"Check-In #2 after triangle classification, congruence, similarity, and right triangles.",
@@ -628,7 +628,7 @@ export const geometryACourse: RawCourse = {
 		],
 		recommendedNextWork: [
 			"Add Geometry B to complete the visible geometry sequence.",
-			"Replace legacy source diagrams with owned or source-safe static.classes assets where diagrams materially improve the lesson.",
+			"Replace legacy diagrams with owned or source-safe static.classes assets where diagrams materially improve the lesson.",
 			"Add dynamic-geometry optional resources for proofs, triangle centers, and transformations."
 		]
 	}
