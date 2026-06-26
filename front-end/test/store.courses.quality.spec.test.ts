@@ -2735,6 +2735,39 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
+	it("records Data Science source datasets and images as hosted or pending on the class static host", async () => {
+		const course = await loadRawCourse("data-science-in-python");
+		expect(course).not.toBeNull();
+
+		const mediaModule = course!.modules.find(
+			module => module.title === "Original Data Asset Reservations"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
+
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "Data Science Source Asset Status"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
+
+		expect(content).toContain(staticMediaUrl("life_expectancy.csv"));
+		expect(content).not.toContain(
+			"original static asset `life_expectancy.csv` is not currently available"
+		);
+
+		for (const filename of [
+			"building_permits.csv",
+			"flight_delays.csv",
+			"data_science_concept.png",
+			"zoo_animals.csv"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+		}
+
+		expect(content).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps generated guidance references with spaced hyphens Markdown-safe", () => {
 		const guidance = buildProjectGuidance({
 			courseFamily: "Python Level 1",
