@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-2a";
 
@@ -11,6 +12,95 @@ const media = {
 	radicalFunctions: `${MEDIA_BASE}/ala10-radical-functions.svg`,
 	piecewiseFunctions: `${MEDIA_BASE}/ala11-piecewise-functions.svg`
 } as const;
+
+const sourceStaticFilenames = [
+	"ala1_concept2_0.png",
+	"ala1_concept2_1.png",
+	"ala1_concept3_0.png",
+	"ala1_pset2_16.png",
+	"ala1_pset2_17.png",
+	"ala1_pset4_1.png",
+	"ala1_pset4_2.png",
+	"ala2_concept1_0.png",
+	"ala4_pset1_0.png",
+	"ala4_pset1_1.png",
+	"ala4_pset1_2.png",
+	"ala4_pset1_3.png",
+	"ala4_pset1_4.png",
+	"ala6_pset1_0.png",
+	"ala7_concept1_0.png",
+	"ala7_concept1_1.png",
+	"ala7_concept1_2.png",
+	"ala7_concept1_3.png",
+	"ala7_concept1_4.png",
+	"ala7_concept1_5.png",
+	"ala7_concept1_6.png",
+	"ala7_concept1_7.png",
+	"ala7_concept2_0.png",
+	"ala7_concept2_1.png",
+	"ala7_pset1_0.png",
+	"ala7_pset1_1.png",
+	"ala7_pset1_3.png",
+	"ala7_pset1_4.png",
+	"ala7_pset1_11.png",
+	"ala7_pset1_12.png",
+	"ala7_pset1_13.png",
+	"ala7_pset1_14.png",
+	"ala7_pset2_0.png",
+	"ala7_pset2_1.png",
+	"ala7_pset2_2.png",
+	"ala8_concept1_0.png",
+	"ala8_concept1_1.png",
+	"ala8_concept1_2.png",
+	"ala8_concept1_3.png",
+	"ala8_concept1_4.png",
+	"ala8_concept1_5.png",
+	"ala8_concept1_6.png",
+	"ala8_concept1_7.png",
+	"ala8_concept1_8.png",
+	"ala8_pset1_0.png",
+	"ala8_pset1_1.png",
+	"ala8_pset1_2.png",
+	"ala8_pset1_3.png",
+	"ala8_pset1_4.png",
+	"ala8_pset2_0.png",
+	"ala8_pset2_1.png",
+	"ala8_pset2_2.png",
+	"ala8_pset2_3.png",
+	"ala8_pset2_4.png",
+	"ala9_concept3_0.png",
+	"ala10_concept1_0.png",
+	"ala10_concept1_1.png",
+	"ala10_concept1_2.png",
+	"ala10_concept1_3.png",
+	"ala10_concept1_4.png",
+	"ala10_concept1_5.png",
+	"ala10_concept1_6.png",
+	"ala10_concept2_0.png",
+	"ala10_pset2_0.png",
+	"ala10_pset2_1.png",
+	"ala10_pset2_2.png",
+	"ala10_pset2_3.png",
+	"ala10_pset2_4.png",
+	"ala10_pset2_5.png",
+	"ala10_pset2_7.png",
+	"ala10_pset2_8.png",
+	"ala10_pset2_9.png",
+	"ala11_concept1_0.png",
+	"ala11_concept1_1.png",
+	"ala11_concept1_2.png",
+	"ala11_concept1_3.png",
+	"ala11_pset1_10.png",
+	"ala11_pset1_11(1).png",
+	"ala11_pset1_12.png",
+	"ala11_pset1_13.png",
+	"ala11_pset1_14(1).png",
+	"checkin1_complex_0.png",
+	"checkin2_gp_0.png",
+	"checkin3_app_1.png",
+	"checkin3_piecewise_1.png",
+	"checkin3_rational_0.png"
+] as const;
 
 function createLesson(title: string, content: string, mediaLink?: string) {
 	return mediaLink ? { title, content, mediaLink } : { title, content };
@@ -25,6 +115,15 @@ function createModule(
 		curriculum,
 		supplementalProjects: []
 	};
+}
+
+function sourceMediaReferences() {
+	return sourceStaticFilenames
+		.map(
+			filename =>
+				`- \`${filename}\` -> ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
 }
 
 export const algebra2ACourse: RawCourse = {
@@ -792,6 +891,37 @@ Use a graphing tool or the provided rational/piecewise references for visual pro
 The important part is the explanation: name the graph feature and connect it to the equation or transformation.
 				`.trim(),
 				media.piecewiseFunctions
+			)
+		]),
+		createModule("Source Activity Archive", [
+			createLesson(
+				"Project Scenario and Context Links",
+				`
+**Source Activity Anchors: Algebra 2A**
+
+**Reference details:**
+
+- Complex numbers: original visual prompts include plotting \`a + bi\), interpreting distance and area on the complex plane, and connecting repeated powers of \`i\` to a four-step cycle.
+- Quadratics: original review material covers factoring, special products, completing the square, non-real roots, discriminant reasoning, and a quadratic-formula song reference at https://www.youtube.com/watch?v=2lbABbfU6Zc&feature=youtu.be.
+- Graphing quadratics: source explorations include GeoGebra transformation work at https://www.geogebra.org/calculator/py7khf9c and Desmos comparison work at https://www.desmos.com/calculator/250ny4ueuq.
+- Higher-degree polynomials: source prompts include polynomial operations, polynomial long division, synthetic division, the Fundamental Theorem of Algebra, rational zeros, Descartes' Rule of Signs, bounds on zeros, and end-behavior sketches.
+- Rational functions: the original analysis graph is retained as a Desmos link at https://www.desmos.com/calculator/auz2qerbgj.
+- Radical and piecewise functions: original visual prompts include square-root and odd-root domain/range comparisons, radical-equation checks for extraneous solutions, floor and ceiling functions, pay-rate models, candy-pricing models, and continuity constraints.
+
+**Evidence record:**
+
+- External YouTube, GeoGebra, and Desmos resources are retained as links, not attempted image embeds.
+- Original static image references are represented separately as future class-host placeholders when the file is not currently available.
+- Algebra 1B graph images reused by the original Algebra 2A export are already tracked as Algebra 1B pending static assets.
+				`.trim()
+			),
+			createLesson(
+				"Pending Static Asset Placeholders",
+				`
+These source images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
+
+${sourceMediaReferences()}
+				`.trim()
 			)
 		])
 	]

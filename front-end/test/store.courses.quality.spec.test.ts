@@ -7847,6 +7847,50 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(/\bshould\b/i);
 	});
 
+	it("adds Algebra 2A source references from the original math sequence", async () => {
+		const course = await loadRawCourse("algebra-2a");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const moduleTitles = course.modules.map(module => module.title);
+
+		expect(moduleTitles).toContain("Source Activity Archive");
+		expect(text).toContain("Source Activity Anchors: Algebra 2A");
+		for (const originalReference of [
+			"Complex numbers",
+			"Quadratics",
+			"Higher-degree polynomials",
+			"Rational functions",
+			"Radical and piecewise functions",
+			"https://www.youtube.com/watch?v=2lbABbfU6Zc&feature=youtu.be",
+			"https://www.geogebra.org/calculator/py7khf9c",
+			"https://www.desmos.com/calculator/250ny4ueuq",
+			"https://www.desmos.com/calculator/auz2qerbgj"
+		]) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		for (const filename of [
+			"ala1_concept2_0.png",
+			"ala2_concept1_0.png",
+			"ala7_concept1_7.png",
+			"ala8_concept1_8.png",
+			"ala10_pset2_9.png",
+			"ala11_pset1_14(1).png",
+			"checkin3_piecewise_1.png",
+			"checkin3_rational_0.png"
+		]) {
+			expect(text, filename).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(text, filename)).toBe(true);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+	});
+
 	it("adds Geometry A from the source math sequence", async () => {
 		const course = await loadRawCourse("geometry-a");
 		expect(course).not.toBeNull();
