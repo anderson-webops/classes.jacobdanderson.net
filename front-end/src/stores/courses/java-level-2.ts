@@ -1,7 +1,32 @@
 import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
+
+const JAVA_LEVEL_2_ORIGINAL_MEDIA = [
+	"jm_1_dog_class.mp4",
+	"jm_2_book_class.mp4",
+	"jm_2_person_class.mp4",
+	"jm_3_house_class.mp4",
+	"jm_3_quiz_class.mp4",
+	"jm_4_book_and_picturebook.mp4",
+	"jm_4_lesson_and_dancelesson.mp4",
+	"jm_4_rectangle_and_square.mp4",
+	"jm_5_first_train_class.mp4",
+	"jm_5_train_class.mp4",
+	"jm_6_mrs_pacman.mp4",
+	"jm_6_pacman_class.mp4",
+	"jm_7_bubble_maker.mp4",
+	"jm_7_click_circle.mp4",
+	"jm_8_disco_ball.mp4",
+	"jm_8_pacman_eater.mp4",
+	"jm_8_pacman_eater_animated.mp4",
+	"jm_9_block_game.mp4",
+	"jm_9_disco_floor.mp4",
+	"jm_9_falling_blocks.mp4",
+	"jm_10_tic_tac_toe.mp4"
+];
 
 export const javaLevel2Course: RawCourse = {
 	name: "Java Level 2",
@@ -1112,6 +1137,24 @@ export const javaLevel2Course: RawCourse = {
 						"https://github.com/instruction-material/Java-Level-2/tree/main/J2-22-applied-studio-15-jm-maze-runner-project-supplemental-3/solution"
 				}
 			]
+		},
+		{
+			title: "Original Demo Media Reservations",
+			kind: "appendix",
+			curriculum: [
+				{
+					title: "Pending Java Level 2 Demo Media",
+					content: [
+						"The original Java Level 2 source library referenced these demonstration videos. They are reserved on the class static host so the course can link to the same filenames once the files are uploaded.",
+						"",
+						...JAVA_LEVEL_2_ORIGINAL_MEDIA.map(
+							filename =>
+								`- ${staticMediaUrl(filename)} - ${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n")
+				}
+			],
+			supplementalProjects: []
 		}
 	]
 };
