@@ -6508,6 +6508,75 @@ describe("course text quality normalization", () => {
 		);
 	});
 
+	it("reserves source-library static assets from original source files", async () => {
+		const expectedAssetsByCourse = {
+			"early-elementary-a-math": [
+				"check_in_1_length_0.png",
+				"check_in_2_money_1.png",
+				"mfa18_pset1_0.png",
+				"module_example.png"
+			],
+			"early-elementary-b-math": [
+				"checkin2_gm_4.png",
+				"mfb14_pset1_4.png",
+				"module_example.png"
+			],
+			"late-elementary-a-math": [
+				"check_in_2_lines_5.png",
+				"maa7_pset1_10.png",
+				"maa7_pset3_9.png",
+				"module_example.png"
+			],
+			"late-elementary-b-math": [
+				"checkin1_fractions_0.png",
+				"leb16_pset1_3.png",
+				"module_example.png"
+			],
+			"early-elementary-a-reading": [
+				"jor2_disact_plotempty.png",
+				"jor2_disact_plotexample.png"
+			],
+			"middle-school-a-literature": [
+				"msa1_concept1_mainideasupportingevidence.png"
+			],
+			"middle-school-b-writing": [
+				"msa15_concept2_transitionaldevices.png",
+				"msa19_concept2_labeledplot.png"
+			],
+			"middle-school-b-writing-retake": [
+				"msa15_concept2_transitionaldevices.png",
+				"msa19_concept2_emptyplot.png"
+			],
+			"novel-writing": [
+				"nw6_blank_narrative_arc.jpg",
+				"nw6_narrative_arc_definitions.jpg"
+			],
+			"entrepreneurship-101": ["ent4_project2_0.png"]
+		} as const;
+
+		for (const [courseId, filenames] of Object.entries(
+			expectedAssetsByCourse
+		)) {
+			const course = await loadRawCourse(courseId);
+			expect(course).not.toBeNull();
+			if (!course) continue;
+
+			const mediaModule = course.modules.find(
+				module => module.title === "Pending Static Assets"
+			);
+			expect(mediaModule?.kind).toBe("appendix");
+			const content = mediaModule?.curriculum
+				.map(item => item.content)
+				.join("\n\n") ?? "";
+
+			for (const filename of filenames) {
+				expect(content).toContain(staticMediaUrl(filename));
+				expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+			}
+			expect(content).not.toContain("static.junilearning.com");
+		}
+	});
+
 	it("adds Pre-Algebra A from the original math source sequence", async () => {
 		const course = await loadRawCourse("pre-algebra-a");
 		expect(course).not.toBeNull();
