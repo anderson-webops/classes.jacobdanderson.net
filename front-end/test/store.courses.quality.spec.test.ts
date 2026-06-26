@@ -6943,6 +6943,102 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
+	it("preserves Late Elementary A math original activity anchors with neutral wording", async () => {
+		const course = await loadRawCourse("late-elementary-a-math");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+		const expectedAnchors = [
+			"Prize Money Place-Value Exchange",
+			"Party Food Rounding and Store Distance",
+			"Millionaire Addition and Subtraction Review",
+			"Soccer Season Team Skill Draft",
+			"Soccer Season Synergy Adjustment",
+			"Character Factor Arrangement",
+			"Halloween Candy One-Digit Multiplication",
+			"Birthday Treat Two-Digit Multiplication",
+			"Farm Egg Carton Division",
+			"Arielle Investment Stage Split",
+			"Arielle Company Portfolio Choice",
+			"Arielle Reinvestment Growth Plan",
+			"Multiplication and Operations Check",
+			"Lines, Segments, and Rays Sort",
+			"Compass Turn Angle Route",
+			"Triangle Attribute Sort",
+			"Obtuse Life Shape Photo Collection",
+			"Gallery Light Angle Setup",
+			"Puppy Pen Perimeter and Symmetry",
+			"Quadrilateral Attribute Sort",
+			"Backyard Pool Area and Volume",
+			"LA River Elevated Park Plan",
+			"LA River Pool and Hot Tub Volume Plan",
+			"Geometry and Measurement Check"
+		];
+		const originalReferences = [
+			"236 one-dollar bills",
+			"57 ten-dollar bills",
+			"3 hundred-dollar bills",
+			"$14.82",
+			"3,218 feet",
+			"3,253 feet",
+			"Who Wants To Be A Millionaire",
+			"Chandan Lodha",
+			"5v5 soccer",
+			"Oliver",
+			"Zai",
+			"factors",
+			"50",
+			"90",
+			"Halloween",
+			"Snickers",
+			"25 classmates",
+			"farm egg",
+			"122 eggs",
+			"Arielle Zuckerberg",
+			"$5,134,533",
+			"Xampla",
+			"Bear Flag Robotics",
+			"Nextmind",
+			"Playco",
+			"CookUnity",
+			"Air Protein",
+			"Spoon",
+			"Literati",
+			"SkyDrive",
+			"line segment",
+			"ray",
+			"compass",
+			"triangles",
+			"Bill Lee",
+			"Obtuse Life",
+			"perpendicular",
+			"23 degrees",
+			"puppy",
+			"quadrilateral",
+			"backyard pool",
+			"Dana McKinney",
+			"L.A. River",
+			"7,280 cubic feet",
+			"91-foot width"
+		];
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text, anchor).toContain(anchor);
+		}
+		for (const originalReference of originalReferences) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("preserves Joy of Reading original activity anchors with neutral wording", async () => {
 		const course = await loadRawCourse("early-elementary-a-reading");
 		expect(course).not.toBeNull();

@@ -3139,6 +3139,265 @@ const earlyElementaryBMathSourceAnchors: Record<
 	]
 };
 
+const lateElementaryAMathSourceAnchors: Record<string, SourceActivityAnchor[]> =
+	{
+		"LEA1 Place Value": [
+			{
+				title: "Prize Money Place-Value Exchange",
+				prompt: "Use the competition prize bag with 236 one-dollar bills, 57 ten-dollar bills, and 3 hundred-dollar bills to calculate the total value, then trade the money into the smallest number of hundreds, tens, and ones possible.",
+				evidence: [
+					"Expanded-form or place-value record for 236 ones, 57 tens, and 3 hundreds.",
+					"Total prize value written in standard form.",
+					"Exchange record comparing the original bag with the simplified hundreds, tens, and ones."
+				]
+			}
+		],
+		"LEA2 Comparing and Rounding": [
+			{
+				title: "Party Food Rounding and Store Distance",
+				prompt: "Use the party-food scenario to compare exact and rounded costs, then compare store distances of 3,218 feet and 3,253 feet to decide which option is closer and whether the price difference matters.",
+				evidence: [
+					"Rounded estimate for the $14.82 food purchase and comparison with about $15.",
+					"Comparison of 3,218 feet and 3,253 feet using place value.",
+					"Decision statement that uses both distance and cost evidence."
+				]
+			}
+		],
+		"LEA3 Addition and Subtraction": [
+			{
+				title: "Millionaire Addition and Subtraction Review",
+				prompt: "Use the Who Wants To Be A Millionaire number-pieces review to model multi-digit addition and subtraction with hundreds, tens, and ones before writing the standard algorithm.",
+				evidence: [
+					"Place-value model for each addend or minuend.",
+					"Addition or subtraction work showing regrouping when needed.",
+					"Check step that connects the number-pieces model to the written algorithm."
+				]
+			}
+		],
+		"LEA4 Module Project: Soccer Season": [
+			{
+				title: "Soccer Season Team Skill Draft",
+				prompt: "Use Chandan Lodha's 5v5 soccer draft to choose five players, add offensive and defensive skill points, round totals to the nearest ten, and compare teams with >, <, or =.",
+				evidence: [
+					"Selected five-player roster with offensive and defensive totals.",
+					"Rounded team totals to the nearest ten.",
+					"Comparison against another roster or Chandan's team using inequality symbols."
+				]
+			},
+			{
+				title: "Soccer Season Synergy Adjustment",
+				prompt: "Use the synergy table with Oliver, Zai, Malik, Jessica, Mary, Stephany, Greg, Edgar, Samantha, and Cadence to trade players, change positions, and explain how the total score changes.",
+				evidence: [
+					"Original team score before any trade or position change.",
+					"Updated score after applying at least one synergy adjustment.",
+					"Explanation of whether the new roster is stronger, weaker, or tied."
+				]
+			}
+		],
+		"LEA5 Factors and Multiples": [
+			{
+				title: "Character Factor Arrangement",
+				prompt: "Arrange 8, 18, and 25 characters into equal rows and columns, then use the arrangements to list factors, identify multiples, and compare factor patterns for 2, 3, 13, 50, and 90.",
+				evidence: [
+					"Array or rectangle arrangements for 8, 18, and 25.",
+					"Factor lists for 50 and 90 with shared factors identified.",
+					"Pattern statement about prime, composite, factor, or multiple relationships."
+				]
+			}
+		],
+		"LEA6 Multiplication by One-Digit Numbers": [
+			{
+				title: "Halloween Candy One-Digit Multiplication",
+				prompt: "Use the Halloween candy scenario with six friends, Snickers, and groups of hundreds, tens, and ones to model one-digit multiplication and decide whether a 1,000-candy estimate is reasonable.",
+				evidence: [
+					"Multiplication model for six friends and 3 Snickers each.",
+					"Comparison with a friend who has 3 times as many or 21 pieces.",
+					"Place-value multiplication record and reasonableness check for 1,000 candies."
+				]
+			}
+		],
+		"LEA7 Multiplication by Two-Digit Numbers": [
+			{
+				title: "Birthday Treat Two-Digit Multiplication",
+				prompt: "Use the birthday treat-bag scenario with 11 favorite foods and 25 classmates to compare 25 x 10 with 25 x 11, then calculate the total number of treats needed.",
+				evidence: [
+					"Partial-product or area model for 25 x 10.",
+					"Updated calculation for 25 x 11.",
+					"Sentence explaining how the extra group changes the total."
+				]
+			}
+		],
+		"LEA8 Division by One-Digit Numbers": [
+			{
+				title: "Farm Egg Carton Division",
+				prompt: "Use the farm egg scenario to pack 40 eggs into cartons of 4, 6, and 8, then pack 122 eggs into a chosen carton size and interpret any remainder.",
+				evidence: [
+					"Division work for 40 eggs with 4-, 6-, and 8-egg cartons.",
+					"Explanation of full cartons and leftover eggs.",
+					"122-egg plan with quotient, remainder, and carton-size decision."
+				]
+			}
+		],
+		"LEA9 Module Project: Invest-a-thon": [
+			{
+				title: "Arielle Investment Stage Split",
+				prompt: "Use Arielle Zuckerberg's Invest-a-thon scenario to split $5,134,533 evenly among Seed, Series A, and Series B companies, then decide how to handle any money left over.",
+				evidence: [
+					"Division calculation for three investment stages.",
+					"Remainder or leftover-money statement.",
+					"Stage allocation table with equal amounts clearly labeled."
+				]
+			},
+			{
+				title: "Arielle Company Portfolio Choice",
+				prompt: "Choose companies such as Xampla, Bear Flag Robotics, Nextmind, Playco, CookUnity, Air Protein, Spoon, Literati, or SkyDrive, then justify the Seed, Series A, and Series B portfolio choices with arithmetic and written reasoning.",
+				evidence: [
+					"Selected companies grouped by funding stage.",
+					"Funding amount per company in each selected stage.",
+					"Reasoning that connects company choice, stage, and available budget."
+				]
+			},
+			{
+				title: "Arielle Reinvestment Growth Plan",
+				prompt: "Model the 10-year prediction where Seed doubles, Series A grows 7 times, and Series B grows 19 times. Then quadruple the Series B investment and reallocate it so the Seed total is double the Series A total.",
+				evidence: [
+					"Growth expression for Seed, Series A, and Series B.",
+					"Quadrupled Series B total.",
+					"Reinvestment split that makes Seed funding double Series A funding."
+				]
+			}
+		],
+		"Check-in #1": [
+			{
+				title: "Multiplication and Operations Check",
+				prompt: "Use the first check-in to demonstrate place value, comparison, rounding, addition, subtraction, factors, multiples, one-digit multiplication, two-digit multiplication, division, and project-based multi-step arithmetic.",
+				evidence: [
+					"Place-value, rounding, and comparison problems solved with labels.",
+					"Addition, subtraction, multiplication, and division work with visible regrouping or remainders.",
+					"Factor, multiple, and project-style reasoning written in complete math statements."
+				]
+			}
+		],
+		"LEA10 Lines": [
+			{
+				title: "Lines, Segments, and Rays Sort",
+				prompt: "Use the GeoGebra-style drawing task to create and label a line, a line segment, and a ray, then compare what continues forever and what has endpoints.",
+				evidence: [
+					"One labeled line with arrows in both directions.",
+					"One labeled line segment with two endpoints.",
+					"One labeled ray with one endpoint and one continuing direction."
+				]
+			}
+		],
+		"LEA11 Angles": [
+			{
+				title: "Compass Turn Angle Route",
+				prompt: "Use the hiking compass route to track north, south, east, west, right turns, left turns, 90-degree turns, 45-degree turns, 180-degree turns, and 270-degree turns.",
+				evidence: [
+					"Route diagram or ordered list of compass directions.",
+					"Angle labels for each turn in degrees.",
+					"Final direction after the full route is traced."
+				]
+			}
+		],
+		"LEA12 Triangles": [
+			{
+				title: "Triangle Attribute Sort",
+				prompt: "Sort triangle cards into three groups twice: once by side lengths and once by angle type. Use the same triangles for both sorts so the comparison shows that one shape can be classified in multiple valid ways depending on the attribute being examined.",
+				evidence: [
+					"Triangle groups based on side lengths.",
+					"Triangle groups based on angles.",
+					"Comparison explaining how the same triangle can belong to different categories.",
+					"One example triangle described with both a side-length category and an angle category."
+				]
+			}
+		],
+		"LEA13 Module Project: An Obtuse Life": [
+			{
+				title: "Obtuse Life Shape Photo Collection",
+				prompt: "Use Bill Lee's gallery-photo scenario to identify rectangles, squares, diamonds, a star, a circle, one line of symmetry, an obtuse angle, a right triangle, no lines of symmetry, and a parallelogram.",
+				evidence: [
+					"Shape collection or sketch with each required geometry feature labeled.",
+					"Symmetry notes for examples with one line, no lines, or multiple lines.",
+					"Angle and triangle labels that distinguish right and obtuse examples."
+				]
+			},
+			{
+				title: "Gallery Light Angle Setup",
+				prompt: "Use the art-gallery lighting setup to place a light perpendicular to the ceiling, then rotate it left until it is 23 degrees from the ceiling and describe the new angle relationship.",
+				evidence: [
+					"Diagram of the original perpendicular light position.",
+					"Rotation record showing the 23-degree adjustment.",
+					"Explanation of how the angle changed from a right angle."
+				]
+			}
+		],
+		"LEA14 Polygons and Perimeter": [
+			{
+				title: "Puppy Pen Perimeter and Symmetry",
+				prompt: "Design a puppy pen with 4 to 8 equal sides where each side is 3 feet long, calculate the fencing needed, then design a puppy bed with line symmetry.",
+				evidence: [
+					"Chosen polygon with side count and side length labeled.",
+					"Perimeter calculation for the full pen.",
+					"Puppy-bed design with at least one line of symmetry marked."
+				]
+			}
+		],
+		"LEA15 Quadrilaterals": [
+			{
+				title: "Quadrilateral Attribute Sort",
+				prompt: "Sort quadrilaterals by two pairs of parallel sides, four equal sides, four right angles, and rectangles with four equal sides, then explain which categories can overlap.",
+				evidence: [
+					"Sorted quadrilateral groups with category labels.",
+					"At least one example that fits more than one category.",
+					"Explanation using side lengths, right angles, and parallel sides."
+				]
+			}
+		],
+		"LEA16 Area and Volume": [
+			{
+				title: "Backyard Pool Area and Volume",
+				prompt: "Use the backyard pool scenario with a rectangular pool perimeter of 30 feet. Choose length, width, and depth, then calculate tile area for the sides and bottom and water volume in cubic feet.",
+				evidence: [
+					"Length and width pair that gives a 30-foot perimeter.",
+					"Tile-area calculation for the bottom and side faces.",
+					"Volume calculation using length, width, and depth."
+				]
+			}
+		],
+		"LEA17 Module Project: The LA River Master Plan": [
+			{
+				title: "LA River Elevated Park Plan",
+				prompt: "Use Dana McKinney's L.A. River master-plan scenario to design an elevated park, split amenities into rectangles, calculate each amenity area, find remaining area, and calculate the park perimeter.",
+				evidence: [
+					"Park diagram with rectangular amenities labeled.",
+					"Area calculation for each amenity and total used area.",
+					"Remaining area and perimeter calculation for the park."
+				]
+			},
+			{
+				title: "LA River Pool and Hot Tub Volume Plan",
+				prompt: "Use the pool volume data where width is 260 feet, depth is 4 feet, and volume is 7,280 cubic feet to solve for length. Then design a hot tub with one-fifth the capacity and width 91 feet.",
+				evidence: [
+					"Pool-length calculation from 7,280 cubic feet, 260 feet, and 4 feet.",
+					"Hot-tub volume as one-fifth of the pool capacity.",
+					"Possible hot-tub length and depth pair using the 91-foot width."
+				]
+			}
+		],
+		"Check-in #2": [
+			{
+				title: "Geometry and Measurement Check",
+				prompt: "Use the second check-in to demonstrate lines, rays, segments, angles, triangles, polygons, perimeter, quadrilaterals, area, volume, and multi-step geometry reasoning.",
+				evidence: [
+					"Line, angle, triangle, and polygon responses with labels.",
+					"Perimeter, area, and volume calculations with units.",
+					"Quadrilateral and project-style reasoning that names the relevant geometric attributes."
+				]
+			}
+		]
+	};
+
 const elementaryMathCourses = {
 	earlyElementaryA: createSourceLibraryCourse({
 		name: "Early Elementary A: Discovering Numbers, Operations, and Measurement",
@@ -3229,6 +3488,7 @@ const elementaryMathCourses = {
 		name: "Late Elementary A: Investigating Multiplication, Division, and Geometry",
 		area: "late elementary math",
 		focus: "place value, rounding, whole-number operations, factors, multiples, multiplication, division, lines, angles, triangles, polygons, perimeter, area, and volume",
+		sourceActivityAnchors: lateElementaryAMathSourceAnchors,
 		staticAssets: [
 			"check_in_1_multiplication_0.png",
 			"check_in_1_multiplication_1.png",
