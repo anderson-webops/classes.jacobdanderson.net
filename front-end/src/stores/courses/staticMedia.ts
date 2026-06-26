@@ -7,6 +7,80 @@ export const PENDING_STATIC_MEDIA_NOTICE_PATTERN =
 
 export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"am_12_file_io_with_dictionaries.mp4",
+	"grs1_spirals.mp4",
+	"grs1_turtle_exploration(1).mp4",
+	"grs2_basic_shapes.mp4",
+	"grs2_bullseye.mp4",
+	"grs2_captain_american_shield.mp4",
+	"grs2_minion.mp4",
+	"grs2_more_shapes.mp4",
+	"grs2_smiley_face.mp4",
+	"grs2_taxi.mp4",
+	"grs2_watermelon_slice.mp4",
+	"grs3_awesome_angles.mp4",
+	"grs3_debugging_practice.mp4",
+	"grs3_random_bowtie.mp4",
+	"grs3_random_walk.mp4",
+	"grs3_surprise_me_square.mp4",
+	"grs4_find_your_turtle.mp4",
+	"grs4_fireworks.mp4",
+	"grs4_into_the_void.mp4",
+	"grs4_navigating_the_coordinate_plane.mp4",
+	"grs4_out_of_the_void.mp4",
+	"grs4_rainbow_ninja_star.mp4",
+	"grs5_circle_of_circles.mp4",
+	"grs5_pyramid.mp4",
+	"grs5_rainbow_flower.mp4",
+	"grs5_reverse_pyramid.mp4",
+	"grs5_reverse_square_inception.mp4",
+	"grs5_square_inception.mp4",
+	"grs5_square_spiral.mp4",
+	"grs6_dizzy_hexagon.mp4",
+	"grs6_project_1.mp4",
+	"grs6_project_2.mp4",
+	"grs6_rainbow_square_inception.mp4",
+	"grs6_randomly_random_shapes.mp4",
+	"grs6_snowflake.mp4",
+	"grs6_spiral_staircase.mp4",
+	"grs7_any_shape_staircase.mp4",
+	"grs7_debugging_functions.mp4",
+	"grs7_project_1.mp4",
+	"grs7_square_inception_with_functions.mp4",
+	"grs7_winter_wonderland.gif",
+	"grs7_zigzag.mp4",
+	"grs8_etch_a_sketch.gif",
+	"grs8_fruit_stand.gif",
+	"grs8_picasso_game.gif",
+	"grs8_polka_dot_game.gif",
+	"grs8_project_1.mp4",
+	"grs8_project_2.mp4",
+	"grs8_project_3.mp4",
+	"grs9_polkadots.mp4",
+	"grs9_project_1.mp4",
+	"grs9_random_age.gif",
+	"grs9_surprise_shape.gif",
+	"grs9_turtle_launch.gif",
+	"grs9_turtle_race.gif",
+	"grs10_bouncy_ball_room.gif",
+	"grs10_debugging_practice.gif",
+	"grs10_rainbow_path.gif",
+	"grs10_random_number_lists.gif",
+	"grs10_turtle_launch_with_lists.gif",
+	"grs10_which_way_turtles.gif",
+	"grs11_light_the_stars.gif",
+	"grs11_project_1.mp4",
+	"grs11_stay_inbounds.gif",
+	"grs11_turtle_collision.gif",
+	"grs12_fidget_spinner.gif",
+	"grs12_list_exploration.mp4",
+	"grs12_pong.gif",
+	"grs12_snake.gif",
+	"grs12_space_eater.gif",
+	"grs12_target_practice.gif",
+	"grs12_turtle_run.gif",
+	"grs13_dodgeball.mp4",
+	"grs13_fluid_motion.mp4",
+	"grs13_perpetual_motion.mp4",
 	"biomod1pro1im1.jpg",
 	"biomod1pro1im2.jpg",
 	"biomod2pro1im1.png",
@@ -39,6 +113,7 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"UB6.png",
 	"missionTitle2.png",
 	"nextStepTitle.png",
+	"WhileLoopsExploration(1).mp4",
 	"wyb1_proj1_plotempty.png"
 ] as const;
 
@@ -46,8 +121,19 @@ const knownPendingStaticMedia = new Set<string>(
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES
 );
 
+function encodeStaticMediaCharacter(character: string) {
+	return `%${character.charCodeAt(0).toString(16).toUpperCase()}`;
+}
+
+function staticMediaPathSegment(filename: string) {
+	return encodeURIComponent(filename).replace(
+		/[!'()*]/g,
+		encodeStaticMediaCharacter
+	);
+}
+
 export function staticMediaUrl(filename: string) {
-	return `${STATIC_MEDIA_BASE}/${filename}`;
+	return `${STATIC_MEDIA_BASE}/${staticMediaPathSegment(filename)}`;
 }
 
 function trimStaticMediaUrl(url: string) {

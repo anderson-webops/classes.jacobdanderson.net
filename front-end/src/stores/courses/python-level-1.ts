@@ -1,10 +1,89 @@
 import type { RawCourse } from "./types";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const TURTLE_REFERENCE = "/course-assets/python/turtle-project-reference.md";
 const TURTLE_COMMAND_REFERENCE = `${TURTLE_REFERENCE}#turtle-command-reference`;
 const TURTLE_BOUNDARY_REFERENCE = `${TURTLE_REFERENCE}#boundaries-and-in-bounds-checks`;
 const TURTLE_SCORE_REFERENCE = `${TURTLE_REFERENCE}#score-turtle-pattern`;
 const TURTLE_GAME_TEMPLATE_REFERENCE = `${TURTLE_REFERENCE}#game-template-with-score-boundaries-and-moving-triangles`;
+
+const PYTHON_LEVEL_1_ORIGINAL_MEDIA = [
+	"grs1_turtle_exploration(1).mp4",
+	"grs2_basic_shapes.mp4",
+	"grs2_smiley_face.mp4",
+	"grs2_more_shapes.mp4",
+	"grs2_bullseye.mp4",
+	"grs2_watermelon_slice.mp4",
+	"grs2_taxi.mp4",
+	"grs2_captain_american_shield.mp4",
+	"grs2_minion.mp4",
+	"grs3_awesome_angles.mp4",
+	"grs3_surprise_me_square.mp4",
+	"grs3_random_walk.mp4",
+	"grs3_random_bowtie.mp4",
+	"grs3_debugging_practice.mp4",
+	"grs9_surprise_shape.gif",
+	"grs4_find_your_turtle.mp4",
+	"grs4_navigating_the_coordinate_plane.mp4",
+	"grs7_zigzag.mp4",
+	"grs4_fireworks.mp4",
+	"WhileLoopsExploration(1).mp4",
+	"grs5_square_spiral.mp4",
+	"grs4_rainbow_ninja_star.mp4",
+	"grs4_into_the_void.mp4",
+	"grs4_out_of_the_void.mp4",
+	"grs9_turtle_race.gif",
+	"grs9_project_1.mp4",
+	"grs5_square_inception.mp4",
+	"grs5_pyramid.mp4",
+	"grs5_reverse_pyramid.mp4",
+	"grs5_reverse_square_inception.mp4",
+	"grs5_rainbow_flower.mp4",
+	"grs5_circle_of_circles.mp4",
+	"grs1_spirals.mp4",
+	"grs6_project_1.mp4",
+	"grs6_project_2.mp4",
+	"grs6_randomly_random_shapes.mp4",
+	"grs7_project_1.mp4",
+	"grs8_etch_a_sketch.gif",
+	"grs8_picasso_game.gif",
+	"grs8_polka_dot_game.gif",
+	"grs8_fruit_stand.gif",
+	"grs8_project_1.mp4",
+	"grs8_project_2.mp4",
+	"grs9_polkadots.mp4",
+	"grs8_project_3.mp4",
+	"grs7_any_shape_staircase.mp4",
+	"grs7_debugging_functions.mp4",
+	"grs7_square_inception_with_functions.mp4",
+	"grs6_rainbow_square_inception.mp4",
+	"grs6_snowflake.mp4",
+	"grs7_winter_wonderland.gif",
+	"grs6_spiral_staircase.mp4",
+	"grs6_dizzy_hexagon.mp4",
+	"grs11_project_1.mp4",
+	"grs9_random_age.gif",
+	"grs9_turtle_launch.gif",
+	"grs12_list_exploration.mp4",
+	"grs10_which_way_turtles.gif",
+	"grs10_random_number_lists.gif",
+	"grs10_turtle_launch_with_lists.gif",
+	"grs10_rainbow_path.gif",
+	"grs10_debugging_practice.gif",
+	"grs13_perpetual_motion.mp4",
+	"grs11_stay_inbounds.gif",
+	"grs13_fluid_motion.mp4",
+	"grs10_bouncy_ball_room.gif",
+	"grs11_turtle_collision.gif",
+	"grs11_light_the_stars.gif",
+	"grs13_dodgeball.mp4",
+	"grs12_space_eater.gif",
+	"grs12_turtle_run.gif",
+	"grs12_target_practice.gif",
+	"grs12_pong.gif",
+	"grs12_fidget_spinner.gif",
+	"grs12_snake.gif"
+];
 
 export const pythonLevel1Course: RawCourse = {
 	name: "Python Level 1",
@@ -986,6 +1065,23 @@ Track the game-over conditions explicitly: hitting a wall, colliding with the sn
 						"https://github.com/instruction-material/Python-Level-1/tree/main/End-of-Course-Reflection/starter",
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/End-of-Course-Reflection/solution"
+				}
+			],
+			supplementalProjects: []
+		},
+		{
+			kind: "appendix",
+			title: "Original Demo Media Reservations",
+			curriculum: [
+				{
+					title: "Pending Python Level 1 Demo Media",
+					content: [
+						"The original Python Level 1 source library referenced the demo media below. These files are reserved on the class static host so they can be uploaded later without changing course links.",
+						...PYTHON_LEVEL_1_ORIGINAL_MEDIA.map(
+							filename =>
+								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+						)
+					].join("\n\n")
 				}
 			],
 			supplementalProjects: []
