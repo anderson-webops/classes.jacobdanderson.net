@@ -853,7 +853,7 @@ function safetyPolicyFor(
 		return [
 			`${courseLabel} uses provided excerpts, student-created drafts, public-domain or licensed references, and neutral discussion prompts.`,
 			`${familyLabel} activities avoid requiring private personal stories as evidence; fictional, public, or hypothetical material is acceptable.`,
-			`Any published or shared ${courseLabel} artifact should identify source material, audience, and revision intent.`
+			`Any published or shared ${courseLabel} artifact identifies source material, audience, and revision intent.`
 		];
 	}
 	if (kind === "finance") {
