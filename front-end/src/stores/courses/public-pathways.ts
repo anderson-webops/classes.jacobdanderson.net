@@ -220,6 +220,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"pre-algebra-b",
 			"algebra-1a",
 			"algebra-1b",
+			"geometry-a",
 			"algebra-2a",
 			"algebra-2b"
 		],
@@ -228,17 +229,19 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		prerequisiteSummary:
 			"Pre-Algebra A builds signed-number, fraction, decimal, percent, ratio, variable, and exponent readiness. Pre-Algebra B adds statistics, geometry, factors, multiples, counting, probability, and applied modeling before Algebra 1A.",
 		outcomes: [
-			"Solve, model, graph, measure, count, and explain pre-algebra, linear, quadratic, exponential, polynomial, rational, and function-based problems at the correct course level.",
+			"Solve, model, graph, measure, count, and explain pre-algebra, geometry, linear, quadratic, exponential, polynomial, rational, and function-based problems at the correct course level.",
 			"Connect symbolic, graphical, tabular, and verbal representations instead of treating procedures as isolated tricks.",
-			"Write enough justification to classify an error as arithmetic, notation, concept, or strategy."
+			"Write enough justification to classify an error as arithmetic, notation, diagram evidence, proof structure, concept, or strategy."
 		],
 		sequencingNotes: [
 			"Common Core algebra domains provide the standards map, with representation changes kept visible.",
+			"Geometry A fits naturally after Algebra 1B and before Algebra 2A because proof, coordinate geometry, triangle relationships, and right-triangle trigonometry prepare later algebra and pre-calculus topics.",
 			"Add cumulative mixed practice so older skills do not vanish after a unit ends.",
 			"Separate direct practice, modeling projects, error analysis, and enrichment rather than making every supplemental look the same."
 		],
 		projectExpectations: [
-			"Modeling task with scenario, equation, graph or table, solution, and reasonableness check.",
+			"Modeling task with scenario, equation, graph, diagram, or table, solution, and reasonableness check.",
+			"Geometry proof or design task with labeled givens, theorem selection, calculation or proof evidence, and one rejected unsupported visual assumption.",
 			"Error-analysis task that diagnoses a flawed solution and writes the corrected reasoning.",
 			"Cumulative mixed practice set with a short reflection on which representation helped most."
 		],
