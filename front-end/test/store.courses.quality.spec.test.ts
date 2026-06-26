@@ -6457,7 +6457,8 @@ describe("course text quality normalization", () => {
 			"Check-In #1",
 			"PAA13-PAA17 Expressions and Sequences",
 			"PAA18-PAA23 Exponents, Roots, and Scientific Notation",
-			"Check-In #2 and Capstone"
+			"Check-In #2 and Capstone",
+			"Original Asset Reservations"
 		]);
 		expect(text).toContain("Project: Starting a Gardening Business");
 		expect(text).toContain("Project: Growing the Gardening Business");
@@ -6473,6 +6474,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("scientific notation");
 		expect(text).toContain("paa_kickoff_0.png");
 		expect(text).toContain("paa_kickoff_1.png");
+		expect(text).toContain("paa1_pset1_0.png");
 		expect(text).toMatch(/Pending media/i);
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets/i
