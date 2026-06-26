@@ -238,6 +238,346 @@ const middleSchoolBWritingRetakeSourceAnchors = Object.fromEntries(
 	)
 ) as Record<string, SourceActivityAnchor[]>;
 
+const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
+	"MSC1 Nouns, Pronouns & Adjectives": [
+		{
+			title: "Snow Day Parts-of-Speech Sort",
+			prompt: "Use the snow day paragraph to identify nouns, pronouns, and adjectives. The sort separates words by job, not by where they appear in the sentence.",
+			evidence: [
+				"Five nouns, five pronouns, and five adjectives from the passage.",
+				"A one-sentence definition of each part of speech.",
+				"One original sentence labeled for noun, pronoun, and adjective use."
+			]
+		},
+		{
+			title: "Pronoun Agreement Repair",
+			prompt: "Map each pronoun to its antecedent, then revise any sentence with an inappropriate shift in number or person. The corrected version keeps singular antecedents with singular pronouns and plural antecedents with plural pronouns.",
+			evidence: [
+				"An antecedent-pronoun map for each sentence.",
+				"Corrections for number shifts and person shifts.",
+				"A note explaining why the corrected pronoun now agrees."
+			]
+		}
+	],
+	"MSC2 Verbs, Adverbs & Verbals": [
+		{
+			title: "Verb and Adverb Action Sort",
+			prompt: "Identify action words and modifier words, then explain how each adverb changes the verb's meaning. The record distinguishes the action itself from details such as how, when, where, or to what degree the action happens.",
+			evidence: [
+				"A list of verbs from sample sentences.",
+				"A matching list of adverbs and the verbs they modify.",
+				"One revised sentence where changing the adverb changes the meaning."
+			]
+		},
+		{
+			title: "Gerund, Participle, and Infinitive Identification",
+			prompt: "Classify verbals as gerunds, participles, or infinitives by checking the job they perform in the sentence. A gerund acts as a noun, a participle acts as an adjective, and an infinitive begins with to plus a verb.",
+			evidence: [
+				"At least three labeled verbals.",
+				"The sentence job for each verbal.",
+				"One original sentence using each verbal type."
+			]
+		}
+	],
+	"MSC3 Prepositions & Interjections": [
+		{
+			title: "Preposition Phrase and Interjection Sort",
+			prompt: "Identify prepositions, the objects of prepositions, complete prepositional phrases, and interjections. The sort separates words that show relationships from words that express sudden feeling.",
+			evidence: [
+				"Three prepositional phrases with the preposition and object labeled.",
+				"Two interjections with punctuation that fits the strength of feeling.",
+				"One original sentence combining a prepositional phrase and an interjection."
+			]
+		}
+	],
+	"MSC4 Coordinating & Subordinating Conjunctions": [
+		{
+			title: "FANBOYS and Subordination Contrast",
+			prompt: "Use FANBOYS to join equal ideas, then use subordinating conjunctions to make one idea dependent on another. The contrast shows the difference between coordination and dependency.",
+			evidence: [
+				"One compound sentence joined with a coordinating conjunction.",
+				"One complex sentence using a subordinating conjunction.",
+				"A note explaining which idea is independent and which idea depends on another."
+			]
+		},
+		{
+			title: "Conjunction and Comma Practice",
+			prompt: "Revise sentences that use conjunctions and commas together. The finished examples show when a comma is needed before a coordinating conjunction and when a dependent clause needs a comma after it.",
+			evidence: [
+				"Two corrected coordinating-conjunction examples.",
+				"Two corrected subordinating-conjunction examples.",
+				"Rule labels explaining the comma choice."
+			]
+		}
+	],
+	"MSC Check-In #1": [
+		{
+			title: "Parts-of-Speech Concept Review",
+			prompt: "Create a concept review for nouns, pronouns, adjectives, verbs, adverbs, verbals, prepositions, interjections, coordinating conjunctions, and subordinating conjunctions. Each definition is paired with an original example.",
+			evidence: [
+				"A definition and example for each reviewed term.",
+				"At least one corrected sentence involving pronoun agreement.",
+				"At least one sentence that uses a conjunction and comma correctly."
+			]
+		},
+		{
+			title: "Parts-of-Speech Application Passage",
+			prompt: "Apply the parts-of-speech review to a short passage by labeling targeted words and revising any sentence-level issue that appears.",
+			evidence: [
+				"Labeled examples from a passage.",
+				"One revision that improves agreement, clarity, or sentence joining.",
+				"A short explanation of the rule used for the revision."
+			]
+		}
+	],
+	"MSC5 Capitalization": [
+		{
+			title: "Capitalization Repair Pass",
+			prompt: "Repair capitalization for proper nouns, titles and headings, sentence starts, and the pronoun I. The revision separates rules for names and titles from rules for sentence boundaries.",
+			evidence: [
+				"Corrections for proper nouns and the pronoun I.",
+				"Corrections for titles, headings, and sentence starts.",
+				"Rule labels that explain each capitalization change."
+			]
+		}
+	],
+	"MSC6 Periods, Question Marks, Exclamation Points & Quotation Marks": [
+		{
+			title: "End-Mark and Quotation Repair",
+			prompt: "Choose periods, question marks, exclamation points, and quotation marks based on sentence purpose and speaker words. Dialogue punctuation stays attached to the quoted material.",
+			evidence: [
+				"Three sentences with corrected end marks.",
+				"Two dialogue examples with quotation marks and punctuation placed correctly.",
+				"A note explaining how sentence purpose controlled the punctuation."
+			]
+		}
+	],
+	"MSC7 Phrases & Clauses I": [
+		{
+			title: "Phrase vs. Clause Independence Test",
+			prompt: "Separate phrases from clauses by checking for a subject-verb pair and then testing whether the words can stand alone as a complete idea.",
+			evidence: [
+				"Three phrases labeled as missing a subject, verb, or complete thought.",
+				"Three clauses labeled as independent or dependent.",
+				"One dependent clause revised into a complete sentence."
+			]
+		},
+		{
+			title: "Dependent Clause Practice",
+			prompt: "Use dependent clauses to add context without creating sentence fragments. Each example connects the dependent clause to an independent clause that can stand alone.",
+			evidence: [
+				"Two dependent clauses attached to independent clauses.",
+				"One fragment repair.",
+				"A comma decision explained for a dependent clause at the beginning or end."
+			]
+		}
+	],
+	"MSC8 Commas": [
+		{
+			title: "Comma Rule Diagnosis",
+			prompt: "Diagnose comma use by naming the rule before adding punctuation. Practice commas in lists, introductory elements, direct address, interrupters, and joined clauses.",
+			evidence: [
+				"Five corrected sentences with rule labels.",
+				"One sentence where a comma was removed because no rule supported it.",
+				"A comparison between a pause in speech and a grammar-based comma."
+			]
+		},
+		{
+			title: "More Practice with Commas",
+			prompt: "Use a mixed set of comma sentences to decide whether the sentence needs no comma, one comma, or a pair of commas.",
+			evidence: [
+				"A mixed correction set with rule labels.",
+				"One sentence using a pair of commas around extra information.",
+				"One explanation distinguishing necessary information from extra information."
+			]
+		}
+	],
+	"MSC9 Semicolons": [
+		{
+			title: "Semicolon Independent-Clause Join",
+			prompt: "Use semicolons to join closely related independent clauses. Each side of the semicolon must be able to stand alone as a complete sentence.",
+			evidence: [
+				"Two semicolon joins between independent clauses.",
+				"One correction where a semicolon was replaced because one side was not independent.",
+				"A note explaining the relationship between the two joined clauses."
+			]
+		}
+	],
+	"MSC10 Colons": [
+		{
+			title: "Colon List, Explanation, and Quotation Starter",
+			prompt: "Use colons after a complete sentence to introduce a list, explanation, or quoted material. The words before the colon must prepare the reader for what follows.",
+			evidence: [
+				"One colon introducing a list.",
+				"One colon introducing an explanation or example.",
+				"One correction where a colon was removed because the starter was incomplete."
+			]
+		}
+	],
+	"MSC11 Common Punctuation Errors": [
+		{
+			title: "Comma Splice and Run-On Repair",
+			prompt: "Find comma splices and run-on sentences, then repair them with a period, semicolon, coordinating conjunction, or subordinating conjunction.",
+			evidence: [
+				"Two comma-splice repairs.",
+				"Two run-on repairs.",
+				"A note explaining why the chosen repair creates a complete sentence boundary."
+			]
+		},
+		{
+			title: "Coordinate vs. Cumulative Adjective Test",
+			prompt: "Decide whether adjectives are coordinate or cumulative by testing whether and can fit between them and whether their order can change without changing the meaning.",
+			evidence: [
+				"Two coordinate-adjective examples with commas.",
+				"Two cumulative-adjective examples without commas.",
+				"One and-test or order-test explanation."
+			]
+		},
+		{
+			title: "Common Errors Passage Edit",
+			prompt: "Edit a passage for comma splices, run-ons, adjective punctuation, capitalization after colons, and missing punctuation. The edit log names each error category rather than only marking the final answer.",
+			evidence: [
+				"A corrected passage.",
+				"An error log grouped by rule.",
+				"One revision that improves clarity beyond basic punctuation."
+			]
+		}
+	],
+	"MSC12 Pauses & Breaks": [
+		{
+			title: "Dashes, Parentheses, and Ellipses Meaning Check",
+			prompt: "Compare dashes, parentheses, and ellipses as different kinds of interruptions or omissions. The choice depends on emphasis, side information, or trailing/incomplete thought.",
+			evidence: [
+				"One sentence using dashes for emphasis or interruption.",
+				"One sentence using parentheses for side information.",
+				"One sentence using an ellipsis for omission or trailing thought, with a note explaining the effect."
+			]
+		}
+	],
+	"MSC Check-In #2": [
+		{
+			title: "Punctuation Concept Review",
+			prompt: "Review capitalization, end marks, quotation marks, phrases, clauses, commas, semicolons, colons, common punctuation errors, dashes, parentheses, and ellipses.",
+			evidence: [
+				"A definition or rule summary for each punctuation category.",
+				"At least one corrected sentence for each major punctuation mark.",
+				"One explanation of how punctuation changes meaning or sentence structure."
+			]
+		},
+		{
+			title: "Punctuation Application Passage",
+			prompt: "Apply punctuation rules to a passage by correcting errors and labeling the reason for each change.",
+			evidence: [
+				"A corrected passage.",
+				"Rule labels for capitalization, commas, semicolons, colons, quotation marks, or pause punctuation.",
+				"One reflection naming the error type that was hardest to identify."
+			]
+		}
+	],
+	"MSC13 Subjects & Predicates": [
+		{
+			title: "Subject-Predicate Core Map",
+			prompt: "Find the subject and predicate by identifying who or what the sentence is about and what that subject does or is. The core map removes extra phrases before labeling the sentence backbone.",
+			evidence: [
+				"Three complete subjects and complete predicates.",
+				"Three simple subjects and simple predicates.",
+				"One sentence with extra phrases removed to reveal the core."
+			]
+		}
+	],
+	"MSC14 Direct & Indirect Objects": [
+		{
+			title: "Direct and Indirect Object Sentence Diagram",
+			prompt: "Diagram sentences by finding the verb, direct object, and indirect object. The direct object receives the action; the indirect object receives or benefits from the direct object.",
+			evidence: [
+				"Three sentences labeled for verb and direct object.",
+				"Two sentences labeled for indirect object.",
+				"One explanation using the questions what, whom, or to/for whom."
+			]
+		},
+		{
+			title: "Subjects, Predicates, and Objects Practice",
+			prompt: "Combine subject-predicate work with object identification so each sentence has a clear structure map.",
+			evidence: [
+				"A structure map for three sentences.",
+				"Labels for subject, predicate, direct object, and indirect object when present.",
+				"One corrected incomplete sentence."
+			]
+		}
+	],
+	"MSC15 Phrases & Clauses II": [
+		{
+			title: "Phrase-and-Clause Sentence Expansion",
+			prompt: "Expand sentences with phrases and clauses while keeping the sentence complete and punctuated correctly. The expansion adds detail without losing the main subject-predicate structure.",
+			evidence: [
+				"One sentence expanded with a phrase.",
+				"One sentence expanded with a dependent clause.",
+				"One revision note explaining how the added detail changes the sentence."
+			]
+		}
+	],
+	"MSC16 Sentence Types": [
+		{
+			title: "Sentence Type Identification and Rewrite",
+			prompt: "Identify simple, compound, complex, and compound-complex sentences, then rewrite a basic idea in more than one sentence type.",
+			evidence: [
+				"Four labeled sentences, one for each sentence type.",
+				"One idea rewritten as simple, compound, complex, and compound-complex.",
+				"Clause labels showing why each sentence type is correct."
+			]
+		},
+		{
+			title: "More Practice with Sentence Types",
+			prompt: "Use a mixed sentence set to classify sentence types, repair fragments or run-ons, and revise a paragraph so the sentence pattern varies on purpose instead of repeating the same structure.",
+			evidence: [
+				"A mixed classification set with clause labels.",
+				"One repaired fragment or run-on sentence.",
+				"A short paragraph revision that uses at least two different sentence types."
+			]
+		}
+	],
+	"MSC Check-In #3": [
+		{
+			title: "Sentence Structure Concept Review",
+			prompt: "Review subjects, predicates, direct objects, indirect objects, phrases, clauses, and sentence types as connected sentence-structure tools.",
+			evidence: [
+				"A definition and example for each structure term.",
+				"One complete sentence map.",
+				"One sentence rewritten into a different sentence type."
+			]
+		},
+		{
+			title: "Sentence Structure Application Passage",
+			prompt: "Apply sentence-structure tools to a short passage by identifying sentence parts and revising at least one sentence for structure variety.",
+			evidence: [
+				"Sentence-part labels for the passage.",
+				"One revised sentence that changes type or structure.",
+				"An explanation of how the revision affects clarity, rhythm, or emphasis."
+			]
+		}
+	],
+	"MSC17 Master Project": [
+		{
+			title: "Grammar and Mechanics Presentation",
+			prompt: "Create a short grammar lesson using three selected concepts from the course. Each concept includes a definition, an example with visuals or labels, a 3-5 question practice exercise, and speaker notes.",
+			evidence: [
+				"Three selected concepts with definitions and examples.",
+				"Practice questions with an answer key.",
+				"Presentation notes that explain the rules in a logical sequence."
+			]
+		},
+		{
+			title: "Personal Narrative Mechanics Portfolio",
+			prompt: "Write or revise a personal narrative that demonstrates grammar and mechanics control. The portfolio highlights capitalization, punctuation, sentence boundaries, sentence variety, and selected parts-of-speech choices.",
+			evidence: [
+				"A complete personal narrative draft or revision.",
+				"An annotation record naming grammar and mechanics choices.",
+				"Before-and-after revisions for at least three sentence-level improvements."
+			]
+		}
+	]
+};
+
 function compactTopic(title: string) {
 	return title
 		.replace(/^[A-Z]{2,}\s*\d+[A-Z]?\s*/i, "")
@@ -2037,6 +2377,7 @@ const englishCourses = {
 		name: "Middle School C: Grammar and Mechanics",
 		area: "grammar",
 		focus: "parts of speech, capitalization, punctuation, phrases, clauses, subjects, predicates, objects, sentence types, and mechanics revision",
+		sourceActivityAnchors: grammarMechanicsSourceAnchors,
 		modules: [
 			"MSC1 Nouns, Pronouns & Adjectives",
 			"MSC2 Verbs, Adverbs & Verbals",

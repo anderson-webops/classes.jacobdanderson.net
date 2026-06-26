@@ -6946,6 +6946,99 @@ describe("course text quality normalization", () => {
 		}
 	});
 
+	it("preserves Middle School C grammar source anchors with neutral wording", async () => {
+		const expectedAnchors = [
+			"Snow Day Parts-of-Speech Sort",
+			"Pronoun Agreement Repair",
+			"Verb and Adverb Action Sort",
+			"Gerund, Participle, and Infinitive Identification",
+			"Preposition Phrase and Interjection Sort",
+			"FANBOYS and Subordination Contrast",
+			"Conjunction and Comma Practice",
+			"Parts-of-Speech Concept Review",
+			"Parts-of-Speech Application Passage",
+			"Capitalization Repair Pass",
+			"End-Mark and Quotation Repair",
+			"Phrase vs. Clause Independence Test",
+			"Dependent Clause Practice",
+			"Comma Rule Diagnosis",
+			"More Practice with Commas",
+			"Semicolon Independent-Clause Join",
+			"Colon List, Explanation, and Quotation Starter",
+			"Comma Splice and Run-On Repair",
+			"Coordinate vs. Cumulative Adjective Test",
+			"Common Errors Passage Edit",
+			"Dashes, Parentheses, and Ellipses Meaning Check",
+			"Punctuation Concept Review",
+			"Punctuation Application Passage",
+			"Subject-Predicate Core Map",
+			"Direct and Indirect Object Sentence Diagram",
+			"Subjects, Predicates, and Objects Practice",
+			"Phrase-and-Clause Sentence Expansion",
+			"Sentence Type Identification and Rewrite",
+			"More Practice with Sentence Types",
+			"Sentence Structure Concept Review",
+			"Sentence Structure Application Passage",
+			"Grammar and Mechanics Presentation",
+			"Personal Narrative Mechanics Portfolio"
+		];
+		const originalReferences = [
+			"snow day",
+			"antecedent",
+			"gerund",
+			"participle",
+			"infinitive",
+			"prepositional phrases",
+			"interjections",
+			"FANBOYS",
+			"subordinating conjunction",
+			"capitalization",
+			"quotation marks",
+			"phrases",
+			"clauses",
+			"commas",
+			"semicolons",
+			"colons",
+			"comma splices",
+			"run-on",
+			"coordinate",
+			"cumulative",
+			"dashes",
+			"parentheses",
+			"ellipses",
+			"subjects",
+			"predicates",
+			"direct object",
+			"indirect object",
+			"simple",
+			"compound",
+			"complex",
+			"Grammar and Mechanics Presentation",
+			"Personal Narrative"
+		];
+
+		const course = await loadRawCourse("middle-school-c-grammar");
+		expect(course).not.toBeNull();
+		if (!course) return;
+
+		const text = allCourseText(course);
+
+		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Evidence record:");
+		for (const anchor of expectedAnchors) {
+			expect(text, anchor).toContain(anchor);
+		}
+		for (const originalReference of originalReferences) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		expect(text).not.toMatch(
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
+		);
+		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toContain("static.junilearning.com");
+	});
+
 	it("keeps all source-library-backed courses registered and neutral", async () => {
 		const sourceLibraryBackedCourseIds = [
 			"scratch-level-1-bootcamp",
