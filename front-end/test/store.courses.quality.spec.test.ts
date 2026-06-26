@@ -7955,7 +7955,9 @@ describe("course text quality normalization", () => {
 			"GEOA6-GEOA9 Triangles, Congruence, Similarity, and Right Triangles",
 			"Check-In #2: Triangle Relationships",
 			"GEOA10-GEOA13 Triangle Centers, Inequalities, and Trigonometry",
-			"Check-In #3 and Geometry A Capstone"
+			"Check-In #3 and Geometry A Capstone",
+			"Source Activity Archive",
+			"Pending Static Assets"
 		]);
 		expect(text).toContain("GEOA1 Definitions and Notation");
 		expect(text).toContain("GEOA2 Logical Reasoning");
@@ -7977,11 +7979,38 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Triangle Center Blueprint");
 		expect(text).toContain("Project: Trigonometry Measurement Plan");
 		expect(text).toContain("Capstone: Geometry A Design Defense");
+		expect(text).toContain("Source Activity Anchors: Geometry A");
 		expect(text).toContain("a^2 + b^2 = c^2");
 		expect(text).toContain("SOH-CAH-TOA");
 		expect(text).toContain("unsupported visual assumption");
+		for (const originalReference of [
+			"Geometry foundations",
+			"Logical reasoning",
+			"Proofs",
+			"Lines and angles",
+			"Coordinate geometry",
+			"Triangle work",
+			"https://www.khanacademy.org/math/geometry-home/geometric-constructions/geo-bisectors/v/constructing-a-perpendicular-line-using-a-compass-and-straightedge?modal=1",
+			"https://www.khanacademy.org/math/geometry-home/geometric-constructions/polygons-inscribed-in-circles/v/constructing-equilateral-triangle-inscribed-in-circle?modal=1",
+			"http://math2.org/math/trig/tables.htm",
+			"https://www.desmos.com/scientific"
+		]) {
+			expect(text, originalReference).toContain(originalReference);
+		}
+
+		for (const filename of [
+			"geoa1_concept3_0.png",
+			"geoa4_concept2_1.png",
+			"geoa7_pset4_22.png",
+			"geoa8_pset2_21.png",
+			"geoa13_concept2_4.png",
+			"checkin3_trig_0.png"
+		]) {
+			expect(text, filename).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(text, filename)).toBe(true);
+		}
 		expect(text).not.toMatch(
-			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets/i
+			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
 		);
 		expect(text).not.toMatch(/\bshould\b/i);
 		expect(mediaLinks).toEqual([]);

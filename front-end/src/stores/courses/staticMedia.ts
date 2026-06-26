@@ -5,6 +5,104 @@ const STATIC_MEDIA_URL_PATTERN =
 export const PENDING_STATIC_MEDIA_NOTICE_PATTERN =
 	/\b(?:pending media|reserved|placeholder|not currently available|class static host)\b/i;
 
+function numberedStaticFilenames(
+	prefix: string,
+	numbers: readonly number[],
+	extension = "png"
+) {
+	return numbers.map(number => `${prefix}${number}.${extension}`);
+}
+
+export const geometryAStaticFilenames = [
+	"checkin1_app_0.png",
+	"checkin1_basics_0.png",
+	"checkin1_lines_0.png",
+	"checkin1_lines_1.png",
+	"checkin1_proofs_0.png",
+	"checkin1_proofs_1.png",
+	"checkin1_proofs_2.png",
+	"checkin2_app_0.png",
+	"checkin2_app_1.png",
+	"checkin2_congruence_0.png",
+	"checkin2_congruence_1.png",
+	"checkin2_congruence_2.png",
+	"checkin2_similarity_0.png",
+	"checkin2_similarity_1.png",
+	"checkin3_app_0.png",
+	"checkin3_bisectors_0.png",
+	"checkin3_inequality_0.png",
+	"checkin3_trig_0.png",
+	...numberedStaticFilenames("geoa10_concept1_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames("geoa10_concept2_", [0, 1, 2, 3]),
+	...numberedStaticFilenames("geoa10_pset2_", [0, 1, 2, 3, 4, 5, 6]),
+	...numberedStaticFilenames("geoa11_concept1_", [0, 1]),
+	...numberedStaticFilenames("geoa11_concept2_", [0, 1, 2, 3]),
+	...numberedStaticFilenames("geoa11_pset1_", [0, 2]),
+	...numberedStaticFilenames("geoa12_concept1_", [0, 1]),
+	...numberedStaticFilenames("geoa12_concept2_", [0, 1]),
+	...numberedStaticFilenames("geoa12_concept3_", [0, 1]),
+	...numberedStaticFilenames("geoa12_pset1_", [0, 1, 2, 3, 4, 5]),
+	"geoa13_concept1_0.png",
+	...numberedStaticFilenames("geoa13_concept2_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames("geoa13_pset1_", [0, 1, 2, 3]),
+	"geoa13_pset2_4.png",
+	...numberedStaticFilenames("geoa1_concept2_", [1, 2]),
+	...numberedStaticFilenames("geoa1_concept3_", [0, 1, 2, 3]),
+	...numberedStaticFilenames("geoa1_pset1_", [0, 1, 2, 3, 4, 5, 6, 7]),
+	"geoa1_pset2_0.png",
+	...numberedStaticFilenames("geoa1_pset3_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames("geoa2_pset1_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames("geoa3_concept1_", [0, 1, 2, 3]),
+	...numberedStaticFilenames("geoa3_concept3_", [0, 1]),
+	...numberedStaticFilenames("geoa3_pset1_", [0, 1, 2, 3, 4, 5, 6]),
+	...numberedStaticFilenames("geoa3_pset2_", [0, 1]),
+	...numberedStaticFilenames("geoa3_pset3_", [0, 1, 3, 4]),
+	...numberedStaticFilenames("geoa4_concept1_", [1, 2]),
+	...numberedStaticFilenames("geoa4_concept2_", [0, 1]),
+	...numberedStaticFilenames("geoa4_pset1_", [0, 2]),
+	...numberedStaticFilenames("geoa4_pset2_", [0, 1, 2, 3, 4, 5]),
+	...numberedStaticFilenames("geoa5_concept1_", [0, 1, 2, 3]),
+	...numberedStaticFilenames("geoa5_pset1_", [0, 1, 2, 3, 4, 5, 6, 7]),
+	...numberedStaticFilenames("geoa6_concept1_", [0, 1]),
+	"geoa6_concept2_0.png",
+	...numberedStaticFilenames("geoa6_pset1_", [0, 1]),
+	"geoa6_pset2_0.png",
+	...numberedStaticFilenames("geoa7_concept1_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames("geoa7_concept2_", [0, 1, 2]),
+	...numberedStaticFilenames("geoa7_concept3_", [0, 1, 2]),
+	...numberedStaticFilenames(
+		"geoa7_pset1_",
+		[0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 16, 17, 18, 20]
+	),
+	...numberedStaticFilenames(
+		"geoa7_pset2_",
+		[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+	),
+	...numberedStaticFilenames(
+		"geoa7_pset3_",
+		[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+	),
+	...numberedStaticFilenames(
+		"geoa7_pset4_",
+		[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+	),
+	...numberedStaticFilenames("geoa7_pset4_", [18, 19, 20, 21, 22]),
+	...numberedStaticFilenames("geoa8_concept1_", [0, 1, 2]),
+	...numberedStaticFilenames("geoa8_concept2_", [0, 1, 2, 3]),
+	...numberedStaticFilenames(
+		"geoa8_pset1_",
+		[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15]
+	),
+	...numberedStaticFilenames(
+		"geoa8_pset2_",
+		[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 18, 19, 20, 21]
+	),
+	"geoa9_concept1_0.png",
+	...numberedStaticFilenames("geoa9_concept2_", [0, 1]),
+	...numberedStaticFilenames("geoa9_pset1_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames("geoa9_pset2_", [0, 1, 2, 3, 4, 5, 6, 7, 8])
+] as const;
+
 export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"aj_1_chatbot.mp4",
 	"aj_2_array_practice.mp4",
@@ -873,7 +971,8 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"nextStepTitle.png",
 	"treasure.txt",
 	"WhileLoopsExploration(1).mp4",
-	"wyb1_proj1_plotempty.png"
+	"wyb1_proj1_plotempty.png",
+	...geometryAStaticFilenames
 ] as const;
 
 const knownPendingStaticMedia = new Set<string>(
