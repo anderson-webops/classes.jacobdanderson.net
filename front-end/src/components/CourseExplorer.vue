@@ -2130,14 +2130,16 @@ function writeStoredValue(key: string, value: string) {
 											Static asset pending
 										</p>
 										<p>
-											Space is reserved for
-											<strong>{{
-												staticAssetName(item.mediaLink)
-											}}</strong>
-											at the class static host. When the
-											file becomes available, it will load
-											from:
+											Original static asset:
+											<strong>
+												{{
+													staticAssetName(
+														item.mediaLink
+													)
+												}}</strong
+											>.
 										</p>
+										<p>Reserved class static host URL:</p>
 										<a
 											:href="item.mediaLink"
 											rel="noopener noreferrer"
@@ -2145,6 +2147,11 @@ function writeStoredValue(key: string, value: string) {
 										>
 											{{ item.mediaLink }}
 										</a>
+										<p>
+											When the file becomes available,
+											this media space will show the image
+											or video automatically.
+										</p>
 									</div>
 								</article>
 							</li>
@@ -2371,14 +2378,16 @@ function writeStoredValue(key: string, value: string) {
 											Static asset pending
 										</p>
 										<p>
-											Space is reserved for
-											<strong>{{
-												staticAssetName(item.mediaLink)
-											}}</strong>
-											at the class static host. When the
-											file becomes available, it will load
-											from:
+											Original static asset:
+											<strong>
+												{{
+													staticAssetName(
+														item.mediaLink
+													)
+												}}</strong
+											>.
 										</p>
+										<p>Reserved class static host URL:</p>
 										<a
 											:href="item.mediaLink"
 											rel="noopener noreferrer"
@@ -2386,6 +2395,11 @@ function writeStoredValue(key: string, value: string) {
 										>
 											{{ item.mediaLink }}
 										</a>
+										<p>
+											When the file becomes available,
+											this media space will show the image
+											or video automatically.
+										</p>
 									</div>
 								</article>
 							</li>
