@@ -212,13 +212,12 @@ describe("course asset preview utilities", () => {
 		expect(previewSource).toContain("width: 100%;");
 		expect(previewSource).toContain("max-width: 100%;");
 		expect(previewSource).toContain("box-sizing: border-box;");
-		expect(previewSource).toContain("contain: inline-size paint;");
 		expect(previewSource).toContain("container-type: inline-size;");
 		expect(previewSource).toContain("overflow-x: hidden;");
-		expect(previewSource).toContain("overflow: clip;");
+		expect(previewSource).not.toContain("overflow: clip;");
+		expect(previewSource).not.toContain("contain: inline-size");
 		expect(previewSource).toContain(".course-asset-preview-panel {");
 		expect(previewSource).toContain("justify-items: stretch;");
-		expect(previewSource).toContain("contain: inline-size layout paint;");
 		expect(previewSource).toContain("overflow: hidden;");
 		expect(previewSource).toContain("min-inline-size: 0;");
 		expect(previewSource).toContain("max-inline-size: 100%;");
@@ -234,7 +233,6 @@ describe("course asset preview utilities", () => {
 			".course-asset-preview-scrollbox :deep(.item-content-markdown)"
 		);
 		expect(previewSource).toContain("justify-self: stretch;");
-		expect(previewSource).toContain("contain: inline-size layout paint;");
 		expect(previewSource).toContain("isolation: isolate;");
 		expect(previewSource).toContain("overflow-x: auto;");
 		expect(previewSource).toContain("overflow-y: hidden;");
@@ -252,8 +250,10 @@ describe("course asset preview utilities", () => {
 		);
 		expect(previewSource).toContain("width: 100%;");
 		expect(previewSource).toContain("inline-size: 100%;");
-		expect(previewSource).toContain("min-inline-size: 100%;");
-		expect(previewSource).toContain("max-inline-size: 100%;");
+		expect(previewSource).toContain("min-width: 42rem;");
+		expect(previewSource).toContain("min-inline-size: 42rem;");
+		expect(previewSource).toContain("max-width: none;");
+		expect(previewSource).toContain("max-inline-size: none;");
 		expect(previewSource).toContain("table-layout: fixed;");
 		expect(previewSource).not.toContain("width: max-content;");
 		expect(previewSource).not.toContain("inline-size: max-content;");
@@ -282,10 +282,10 @@ describe("course asset preview utilities", () => {
 		expect(explorerSource).toContain("min-inline-size: 0;");
 		expect(explorerSource).toContain("max-inline-size: 100%;");
 
-		expect(markdownSource).toContain("max-width: min(100%, 82ch);");
-		expect(markdownSource).toContain(
-			"max-inline-size: min(100%, 82ch);"
-		);
+		expect(markdownSource).toContain("max-width: 100%;");
+		expect(markdownSource).toContain("max-inline-size: 100%;");
+		expect(markdownSource).toContain("max-width: 82ch;");
+		expect(markdownSource).toContain("max-inline-size: 82ch;");
 		expect(markdownSource).toContain("box-sizing: border-box;");
 		expect(markdownSource).toContain("display: grid;");
 		expect(markdownSource).toContain(
@@ -294,15 +294,17 @@ describe("course asset preview utilities", () => {
 		expect(markdownSource).toContain(
 			".item-content-markdown :deep(.markdown-table-scroll)"
 		);
-		expect(markdownSource).toContain("contain: inline-size layout paint;");
+		expect(markdownSource).not.toContain("contain: inline-size");
 		expect(markdownSource).toContain("clip-path: inset(0 round 14px);");
 		expect(markdownSource).toContain("isolation: isolate;");
 		expect(markdownSource).toContain("overscroll-behavior-inline: contain;");
 		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
 		expect(markdownSource).toContain("width: 100%;");
 		expect(markdownSource).toContain("inline-size: 100%;");
-		expect(markdownSource).toContain("min-width: 100%;");
-		expect(markdownSource).toContain("max-width: 100%;");
+		expect(markdownSource).toContain("min-width: 42rem;");
+		expect(markdownSource).toContain("min-inline-size: 42rem;");
+		expect(markdownSource).toContain("max-width: none;");
+		expect(markdownSource).toContain("max-inline-size: none;");
 		expect(markdownSource).toContain("table-layout: fixed;");
 		expect(markdownSource).not.toContain("width: max-content;");
 		expect(markdownSource).not.toContain("inline-size: max-content;");

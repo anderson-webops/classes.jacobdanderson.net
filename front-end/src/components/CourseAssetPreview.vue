@@ -192,10 +192,8 @@ async function handleResourceChange() {
 	width: 100%;
 	max-width: 100%;
 	box-sizing: border-box;
-	contain: inline-size paint;
 	overflow-x: hidden;
 	overflow-inline: hidden;
-	overflow: clip;
 }
 
 .course-asset-preview-toggle,
@@ -261,10 +259,8 @@ async function handleResourceChange() {
 	max-width: 100%;
 	max-inline-size: 100%;
 	box-sizing: border-box;
-	contain: inline-size layout paint;
 	overflow: hidden;
 	overflow-inline: hidden;
-	overflow: clip;
 	border: 1px solid
 		var(--course-asset-preview-border, rgba(13, 148, 136, 0.18));
 	border-radius: 18px;
@@ -340,8 +336,6 @@ async function handleResourceChange() {
 	box-sizing: border-box;
 	overflow-x: hidden;
 	overflow-inline: hidden;
-	overflow: clip;
-	contain: inline-size paint;
 }
 
 .course-asset-preview-scrollbox {
@@ -356,7 +350,6 @@ async function handleResourceChange() {
 	min-width: 0;
 	min-inline-size: 0;
 	box-sizing: border-box;
-	contain: inline-size layout paint;
 	isolation: isolate;
 	overflow-x: auto;
 	overflow-y: hidden;
@@ -416,7 +409,6 @@ async function handleResourceChange() {
 	max-inline-size: 100%;
 	min-width: 0;
 	min-inline-size: 0;
-	contain: inline-size paint;
 	isolation: isolate;
 	overflow-y: hidden;
 	overscroll-behavior-inline: contain;
@@ -438,10 +430,10 @@ async function handleResourceChange() {
 .course-asset-preview-content :deep(.item-content-markdown table) {
 	width: 100%;
 	inline-size: 100%;
-	min-width: 100%;
-	min-inline-size: 100%;
-	max-width: 100%;
-	max-inline-size: 100%;
+	min-width: 42rem;
+	min-inline-size: 42rem;
+	max-width: none;
+	max-inline-size: none;
 	table-layout: fixed;
 }
 

@@ -128,7 +128,7 @@ watch(
 
 .course-resource-card :deep(.item-content-markdown) {
 	width: 100%;
-	max-width: 82ch;
+	max-width: 100%;
 	min-width: 0;
 }
 
