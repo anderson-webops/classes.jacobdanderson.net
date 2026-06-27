@@ -649,7 +649,7 @@ html.dark body :is(.workspace-header, .workspace-sheet, .directory-section, .dir
 	color: var(--color-ink);
 }
 
-html.dark body :is(.workspace-stats, .sheet-panel, .summary-block, .stat-pill, .record-card, .record-item, .progress-outline, .progress-module, .recipient-preview, .subject-preview, .preview-pane, .history-note, .association-summary, .status-banner, .modal-content, .container, .dialog-close) {
+html.dark body :is(.workspace-stats, .sheet-panel, .summary-block, .stat-pill, .code-review-tools, .record-card, .record-item, .progress-outline, .progress-module, .recipient-preview, .subject-preview, .preview-pane, .history-note, .association-summary, .status-banner, .modal-content, .container, .dialog-close) {
 	background: var(--color-surface-muted);
 	border-color: var(--color-border);
 	box-shadow: var(--shadow-inset-soft);
