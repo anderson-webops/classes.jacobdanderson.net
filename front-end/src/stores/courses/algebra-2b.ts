@@ -769,22 +769,22 @@ Reuse the probability, statistics, unit-circle, and trig-graph references while 
 				media.trigGraphs
 			)
 		]),
-		createModule("Source Activity Archive", [
+		createModule("Algebra 2B Reference Archive", [
 			createLesson(
-				"Source Activity Anchors: Algebra 2B",
+				"Algebra 2B Reference Map",
 				`
-These source anchors preserve activity context from the original Algebra 2B sequence while keeping the course wording neutral and the unavailable legacy media non-breaking.
+This reference map summarizes Algebra 2B topic coverage and static media slots without embedding diagram files that are not yet on the class static host.
 
-**Original-source concepts retained**
+**Course concept map**
 
-- Logarithms and the natural logarithm: the source uses \`y = (1 + 1/x)^x\`, a value table approaching \`e\`, and the \`ln\` notation contrast with \`log_e\`.
-- Exponential and logarithmic graphing: the source compares growth and decay families, horizontal and vertical shifts, vertical and horizontal stretch factors, reflections, and asymptotes.
+- Logarithms and the natural logarithm: the reference uses \`y = (1 + 1/x)^x\`, a value table approaching \`e\`, and the \`ln\` notation contrast with \`log_e\`.
+- Exponential and logarithmic graphing: the reference compares growth and decay families, horizontal and vertical shifts, vertical and horizontal stretch factors, reflections, and asymptotes.
 - Growth applications: the Mars-colony prompt uses a \`75%\` annual growth model and Desmos to estimate when population reaches \`7.6\` billion.
-- Matrix operations: the source names MatrixCalc for larger inverse calculations after determinant and inverse workflows become tedious by hand.
-- Statistics and regression: the source includes scatter-plot interpretation, correlation strength, least-squares regression, \`r\`, \`r^2\`, and a lemonade-sales regression example.
-- Trigonometry: the source includes unit-circle diagrams, special-angle coordinates, right-triangle ratios, reciprocal identities, and transformed sine, cosine, and tangent graphs.
+- Matrix operations: the reference names MatrixCalc for larger inverse calculations after determinant and inverse workflows become tedious by hand.
+- Statistics and regression: the reference includes scatter-plot interpretation, correlation strength, least-squares regression, \`r\`, \`r^2\`, and a lemonade-sales regression example.
+- Trigonometry: the reference includes unit-circle diagrams, special-angle coordinates, right-triangle ratios, reciprocal identities, and transformed sine, cosine, and tangent graphs.
 
-**External source links**
+**Reference links**
 
 - Desmos Graphing Calculator: https://www.desmos.com/calculator
 - Least-squares regression visualization: https://www.desmos.com/calculator/lywhybetzt
@@ -792,9 +792,9 @@ These source anchors preserve activity context from the original Algebra 2B sequ
 - Unit-circle angle diagram: https://www.geogebra.org/geometry/harzmnkp
 - Unit-circle coordinate diagram: https://www.geogebra.org/geometry/grcqk5kt
 
-**Source-preservation note**
+**Static-media note**
 
-Legacy static media is not embedded directly because those files are not currently available on the class static host. Each filename below reserves the intended future URL on \`static.classes.jacobdanderson.net\` so the asset can be dropped in later without losing the original source mapping.
+Legacy static media is not embedded directly because those files are not currently available on the class static host. Each filename below reserves the intended future URL on \`static.classes.jacobdanderson.net\` so the asset can be dropped in later without changing course references.
 				`.trim()
 			),
 			createLesson(

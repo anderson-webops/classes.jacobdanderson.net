@@ -7574,7 +7574,7 @@ describe("course text quality normalization", () => {
 		}
 	});
 
-	it("adds Pre-Algebra A from the original math source sequence", async () => {
+	it("adds Pre-Algebra A reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("pre-algebra-a");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -7595,7 +7595,7 @@ describe("course text quality normalization", () => {
 			"PAA13-PAA17 Expressions and Sequences",
 			"PAA18-PAA23 Exponents, Roots, and Scientific Notation",
 			"Check-In #2 and Capstone",
-			"Source Activity Archive",
+			"Pre-Algebra A Reference Archive",
 			"Pending Static Assets"
 		]);
 		expect(text).toContain("Project: Starting a Gardening Business");
@@ -7607,7 +7607,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Symptom Spree");
 		expect(text).toContain("Project: Red Hot Chilli Chicken");
 		expect(text).toContain("Master Project: Pre-Algebra A");
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Reference map:");
 		for (const originalReference of [
 			"$3000 starting investment",
 			"$1500 of inventory",
@@ -7656,7 +7656,7 @@ describe("course text quality normalization", () => {
 		]);
 	});
 
-	it("adds Pre-Algebra B from the source math sequence", async () => {
+	it("adds Pre-Algebra B reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("pre-algebra-b");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -7678,7 +7678,7 @@ describe("course text quality normalization", () => {
 			"PAB15-PAB19 Factors, Multiples, and Number Structure",
 			"PAB20-PAB23 Counting, Probability, and Applied Modeling",
 			"Check-In #3 and Capstone: Pre-Algebra B",
-			"Source Activity Archive"
+			"Pre-Algebra B Reference Archive"
 		]);
 		expect(text).toContain("Project: Exploring the World with Marco");
 		expect(text).toContain("Project: Gymnastics Geometry Challenge");
@@ -7687,7 +7687,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: eSmash");
 		expect(text).toContain("Project: Airtable Revamped");
 		expect(text).toContain("Master Project: Pre-Algebra B");
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).toContain("Reference map:");
 		for (const originalReference of [
 			"15 travel responses",
 			"range of 7",
@@ -7749,7 +7749,7 @@ describe("course text quality normalization", () => {
 		]);
 	});
 
-	it("adds Algebra 1A source references from the original math sequence", async () => {
+	it("adds Algebra 1A reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("algebra-1a");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -7757,8 +7757,8 @@ describe("course text quality normalization", () => {
 		const text = allCourseText(course);
 		const moduleTitles = course.modules.map(module => module.title);
 
-		expect(moduleTitles).toContain("Source Activity Archive");
-		expect(text).toContain("Source Activity Anchors: Algebra 1A");
+		expect(moduleTitles).toContain("Algebra 1A Reference Archive");
+		expect(text).toContain("Algebra 1A Reference Map");
 		for (const originalReference of [
 			"Kick-off restaurant project",
 			"delivery-coordinate interpretation",
@@ -7796,7 +7796,7 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(/\bshould\b/i);
 	});
 
-	it("adds Algebra 1B source references from the original math sequence", async () => {
+	it("adds Algebra 1B reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("algebra-1b");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -7804,8 +7804,8 @@ describe("course text quality normalization", () => {
 		const text = allCourseText(course);
 		const moduleTitles = course.modules.map(module => module.title);
 
-		expect(moduleTitles).toContain("Source Activity Archive");
-		expect(text).toContain("Source Activity Anchors: Algebra 1B");
+		expect(moduleTitles).toContain("Algebra 1B Reference Archive");
+		expect(text).toContain("Algebra 1B Reference Map");
 		for (const originalReference of [
 			"Kick-off amusement-park project",
 			"Smart and Elegant",
@@ -7847,7 +7847,7 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(/\bshould\b/i);
 	});
 
-	it("adds Algebra 2A source references from the original math sequence", async () => {
+	it("adds Algebra 2A reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("algebra-2a");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -7855,8 +7855,8 @@ describe("course text quality normalization", () => {
 		const text = allCourseText(course);
 		const moduleTitles = course.modules.map(module => module.title);
 
-		expect(moduleTitles).toContain("Source Activity Archive");
-		expect(text).toContain("Source Activity Anchors: Algebra 2A");
+		expect(moduleTitles).toContain("Algebra 2A Reference Archive");
+		expect(text).toContain("Algebra 2A Reference Map");
 		for (const originalReference of [
 			"Complex numbers",
 			"Quadratics",
@@ -7891,7 +7891,7 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(/\bshould\b/i);
 	});
 
-	it("adds Algebra 2B source references from the original math sequence", async () => {
+	it("adds Algebra 2B reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("algebra-2b");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -7899,8 +7899,8 @@ describe("course text quality normalization", () => {
 		const text = allCourseText(course);
 		const moduleTitles = course.modules.map(module => module.title);
 
-		expect(moduleTitles).toContain("Source Activity Archive");
-		expect(text).toContain("Source Activity Anchors: Algebra 2B");
+		expect(moduleTitles).toContain("Algebra 2B Reference Archive");
+		expect(text).toContain("Algebra 2B Reference Map");
 		for (const originalReference of [
 			"Logarithms and the natural logarithm",
 			"Growth applications",
@@ -7936,7 +7936,7 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(/\bshould\b/i);
 	});
 
-	it("adds Geometry A from the source math sequence", async () => {
+	it("adds Geometry A reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("geometry-a");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -7956,7 +7956,7 @@ describe("course text quality normalization", () => {
 			"Check-In #2: Triangle Relationships",
 			"GEOA10-GEOA13 Triangle Centers, Inequalities, and Trigonometry",
 			"Check-In #3 and Geometry A Capstone",
-			"Source Activity Archive",
+			"Geometry A Reference Archive",
 			"Pending Static Assets"
 		]);
 		expect(text).toContain("GEOA1 Definitions and Notation");
@@ -7979,7 +7979,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Triangle Center Blueprint");
 		expect(text).toContain("Project: Trigonometry Measurement Plan");
 		expect(text).toContain("Capstone: Geometry A Design Defense");
-		expect(text).toContain("Source Activity Anchors: Geometry A");
+		expect(text).toContain("Geometry A Reference Map");
 		expect(text).toContain("a^2 + b^2 = c^2");
 		expect(text).toContain("SOH-CAH-TOA");
 		expect(text).toContain("unsupported visual assumption");
@@ -8016,7 +8016,7 @@ describe("course text quality normalization", () => {
 		expect(mediaLinks).toEqual([]);
 	});
 
-	it("adds Geometry B from the source math sequence", async () => {
+	it("adds Geometry B reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("geometry-b");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -8036,7 +8036,7 @@ describe("course text quality normalization", () => {
 			"GEOB7-GEOB8 Transformations",
 			"GEOB9-GEOB10 Polyhedra and Round Solids",
 			"Check-In #2 and Geometry B Capstone",
-			"Source Activity Archive",
+			"Geometry B Reference Archive",
 			"Pending Static Assets"
 		]);
 		expect(text).toContain("GEOB1 Introduction to Quadrilaterals");
@@ -8060,7 +8060,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("180(n - 2)");
 		expect(text).toContain("A = pi r^2");
 		expect(text).toContain("V - E + F = 2");
-		expect(text).toContain("Source Activity Anchors: Geometry B");
+		expect(text).toContain("Geometry B Reference Map");
 		expect(text).toContain("Quadrilateral foundations");
 		expect(text).toContain("Circle measurement");
 		expect(text).toContain("Transformations");
@@ -8086,7 +8086,7 @@ describe("course text quality normalization", () => {
 		expect(mediaLinks).toEqual([]);
 	});
 
-	it("adds Pre-Calculus A from the source math sequence", async () => {
+	it("adds Pre-Calculus A reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("pre-calculus-a");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -8115,7 +8115,7 @@ describe("course text quality normalization", () => {
 			"PCTA13 Circles and Ellipses",
 			"PCTA14 Parabolas and Hyperbolas",
 			"Check-In #2 and Pre-Calculus A Capstone",
-			"Source Activity Archive",
+			"Pre-Calculus A Reference Archive",
 			"Pending Static Assets"
 		]);
 		expect(text).toContain("Concept: Piecewise Functions");
@@ -8136,7 +8136,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Pascal's triangle");
 		expect(text).toContain("domain restrictions");
 		expect(text).toContain("Capstone: Pre-Calculus A Modeling Portfolio");
-		expect(text).toContain("Source Activity Anchors: Pre-Calculus A");
+		expect(text).toContain("Pre-Calculus A Reference Map");
 		expect(text).toContain("Polynomial zeros and graphs");
 		expect(text).toContain("Sequences and accumulation");
 		expect(text).toContain("Rational functions and expressions");
@@ -8162,7 +8162,7 @@ describe("course text quality normalization", () => {
 		expect(mediaLinks).toEqual([]);
 	});
 
-	it("adds Pre-Calculus B from the source math sequence", async () => {
+	it("adds Pre-Calculus B reference archive from the math sequence", async () => {
 		const course = await loadRawCourse("pre-calculus-b");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -8190,7 +8190,7 @@ describe("course text quality normalization", () => {
 			"PCTB12 Limits",
 			"PCTB13 Rates of Change",
 			"Check-In #2 and Pre-Calculus B Capstone",
-			"Source Activity Archive",
+			"Pre-Calculus B Reference Archive",
 			"Pending Static Assets"
 		]);
 		expect(text).toContain("Concept: The Unit Circle");
@@ -8220,7 +8220,7 @@ describe("course text quality normalization", () => {
 		);
 		expect(text).toContain("Capstone: Pre-Calculus B Modeling Portfolio");
 		expect(text).toContain("AP Calculus Readiness Map");
-		expect(text).toContain("Source Activity Anchors: Pre-Calculus B");
+		expect(text).toContain("Pre-Calculus B Reference Map");
 		expect(text).toContain("Pre-Calculus B Static Placeholders");
 		expect(text).toContain("Trigonometric graphs");
 		expect(text).toContain("Linear-algebra previews");
@@ -8245,6 +8245,28 @@ describe("course text quality normalization", () => {
 		);
 		expect(text).not.toMatch(/\bshould\b/i);
 		expect(mediaLinks).toEqual([]);
+	});
+
+	it("keeps math reference archives student-facing", async () => {
+		for (const courseId of [
+			"pre-algebra-a",
+			"pre-algebra-b",
+			"algebra-1a",
+			"algebra-1b",
+			"algebra-2a",
+			"algebra-2b",
+			"geometry-a",
+			"geometry-b",
+			"pre-calculus-a",
+			"pre-calculus-b"
+		]) {
+			const course = await loadRawCourse(courseId);
+			const text = allCourseText(course);
+
+			expect(text, courseId).not.toMatch(
+				/source activity archive|source activity anchors|source anchors preserve|original-source|source sequence|source-preservation|source project/i
+			);
+		}
 	});
 
 	it("adds AP Calculus reference anchors with reserved static media", async () => {

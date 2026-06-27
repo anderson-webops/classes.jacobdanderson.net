@@ -1117,11 +1117,11 @@ The key goal is to justify each decision from the graph feature being tested. Th
 				media.checkIn2FunctionGraph
 			)
 		]),
-		createModule("Source Activity Archive", [
+		createModule("Algebra 1B Reference Archive", [
 			createLesson(
 				"Project Scenario and Context Links",
 				`
-**Source Activity Anchors: Algebra 1B**
+**Algebra 1B Reference Map**
 
 **Reference details:**
 
@@ -1129,8 +1129,8 @@ The key goal is to justify each decision from the graph feature being tested. Th
 - Smart and Elegant: event-planning profit functions, service-tier comparisons, cost and revenue modeling, and competitive pricing constraints.
 - Half-Court Challenge: basketball-robot projectile motion, physical interpretation of quadratic roots, unit conversion, and launch-speed constraints.
 - Put Me in Coach: rowing time-trial tables, corrupted-data recovery, graph interpretation, and transformation reasoning from athletic data.
-- AB17 exponential functions: the source Desmos exploration is retained as a link at https://www.desmos.com/calculator/i1r7bykug4.
-- AB19 data modeling: the source Desmos graph reference is retained as a link at https://www.desmos.com/calculator/n04wtuzlfe.
+- AB17 exponential functions: the Desmos exploration is retained as a link at https://www.desmos.com/calculator/i1r7bykug4.
+- AB19 data modeling: the Desmos graph reference is retained as a link at https://www.desmos.com/calculator/n04wtuzlfe.
 - The Mysteries of Light: particle-wave duality, photon-count graphing, line-of-best-fit comparison, interference simulation work at https://ophysics.com/l5.html, and de Broglie wavelength calculations.
 - Radiofungi: astrobiology context, radiation-protection fungi, exponential growth targets, canopy transformations, and Earth-versus-space model comparisons.
 - Master project: choose one Algebra 1B concept, explain its purpose, connect it to a real use, create two self-authored problems, and present the explanation.
@@ -1158,7 +1158,7 @@ The key goal is to justify each decision from the graph feature being tested. Th
 			createLesson(
 				"Pending Static Asset Placeholders",
 				`
-These source images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
+These static images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
 
 ${sourceMediaReferences()}
 				`.trim()

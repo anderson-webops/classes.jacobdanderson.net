@@ -609,14 +609,14 @@ export const geometryACourse: RawCourse = {
 			]
 		),
 		module(
-			"Source Activity Archive",
+			"Geometry A Reference Archive",
 			[
 				lesson(
-					"Source Activity Anchors: Geometry A",
+					"Geometry A Reference Map",
 					[
-						"These source anchors preserve activity context from the original Geometry A sequence while keeping the visible course neutral and avoiding unavailable legacy image embeds.",
+						"This reference map summarizes Geometry A topic coverage and static media slots without embedding diagram files that are not yet on the class static host.",
 						[
-							"**Original-source concepts retained**",
+							"**Course concept map**",
 							"- Geometry foundations: points, lines, rays, segments, planes, angle notation, collinearity, coplanarity, and diagram-supported versus unsupported claims.",
 							"- Logical reasoning: inductive and deductive reasoning, conditional statements, converse/inverse/contrapositive comparisons, counterexamples, and proof readiness.",
 							"- Proofs: algebraic proof properties, segment and angle addition, midpoint and bisector definitions, vertical angles, complementary and supplementary relationships, and proof repair.",
@@ -625,14 +625,14 @@ export const geometryACourse: RawCourse = {
 							"- Triangle work: classification, triangle sum, exterior angles, congruence shortcuts, similarity, right-triangle reasoning, Pythagorean theorem, triangle centers, inequalities, and introductory trigonometry."
 						].join("\n"),
 						[
-							"**External source links**",
+							"**Reference links**",
 							"- Perpendicular-line construction: https://www.khanacademy.org/math/geometry-home/geometric-constructions/geo-bisectors/v/constructing-a-perpendicular-line-using-a-compass-and-straightedge?modal=1",
 							"- Perpendicular-bisector construction: https://www.khanacademy.org/math/geometry-home/geometric-constructions/geo-bisectors/v/constructing-a-perpendicular-line-using-a-compass-and-straightedge?modal=1",
 							"- Equilateral-triangle construction: https://www.khanacademy.org/math/geometry-home/geometric-constructions/polygons-inscribed-in-circles/v/constructing-equilateral-triangle-inscribed-in-circle?modal=1",
 							"- Trigonometry table reference: http://math2.org/math/trig/tables.htm",
 							"- Scientific calculator reference: https://www.desmos.com/scientific"
 						].join("\n"),
-						"**Source-preservation note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+						"**Static-media note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
 					].join("\n\n")
 				)
 			],

@@ -1148,14 +1148,14 @@ export const preCalculusACourse: RawCourse = {
 			]
 		),
 		module(
-			"Source Activity Archive",
+			"Pre-Calculus A Reference Archive",
 			[
 				lesson(
-					"Source Activity Anchors: Pre-Calculus A",
+					"Pre-Calculus A Reference Map",
 					[
-						"These source anchors preserve activity context from the original Pre-Calculus and Trigonometry A sequence while keeping the visible course neutral and avoiding unavailable legacy image embeds.",
+						"This reference map summarizes Pre-Calculus and Trigonometry A topic coverage and static media slots without embedding diagram files that are not yet on the class static host.",
 						[
-							"**Original-source concepts retained**",
+							"**Course concept map**",
 							"- Piecewise functions: conditional definitions, open and closed endpoints, discontinuities, absolute value as a piecewise function, step functions, floor and ceiling behavior, domain, and range.",
 							"- Higher-degree polynomials: operations, standard form, factoring by common factors, grouping, special products, quadratic form, polynomial long division, synthetic division, remainders, and factor checks.",
 							"- Polynomial zeros and graphs: number of zeros, rational zero candidates, multiplicity, end behavior, turning-point limits, graph transformations, and technology as a verification tool.",
@@ -1166,13 +1166,13 @@ export const preCalculusACourse: RawCourse = {
 							"- Composition, inverses, and conics: function pipelines, inverse verification, horizontal-line reasoning, circles, ellipses, parabolas, hyperbolas, completing the square, foci, directrices, asymptotes, and conic intersections."
 						].join("\n"),
 						[
-							"**External source links**",
+							"**Reference links**",
 							"- Riemann sum visualization: https://www.geogebra.org/m/RCVce5W4",
 							"- Desmos area-under-curve prompt: https://www.desmos.com/calculator/tgyr42ezjq",
 							"- Desmos graphing calculator for exponential/log modeling: https://www.desmos.com/calculator",
 							"- Rational-function graph reference: https://www.desmos.com/calculator/auz2qerbgj"
 						].join("\n"),
-						"**Source-preservation note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+						"**Static-media note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
 					].join("\n\n")
 				)
 			],
