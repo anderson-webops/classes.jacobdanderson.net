@@ -769,7 +769,7 @@ Reuse the probability, statistics, unit-circle, and trig-graph references while 
 				media.trigGraphs
 			)
 		]),
-		createModule("Algebra 2B Reference Archive", [
+		createModule("Reference Archive: Algebra 2B", [
 			createLesson(
 				"Algebra 2B Reference Map",
 				`

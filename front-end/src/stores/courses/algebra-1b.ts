@@ -1117,7 +1117,7 @@ The key goal is to justify each decision from the graph feature being tested. Th
 				media.checkIn2FunctionGraph
 			)
 		]),
-		createModule("Algebra 1B Reference Archive", [
+		createModule("Reference Archive: Algebra 1B", [
 			createLesson(
 				"Project Scenario and Context Links",
 				`

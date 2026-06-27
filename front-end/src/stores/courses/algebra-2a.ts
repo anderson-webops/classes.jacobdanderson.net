@@ -893,7 +893,7 @@ The important part is the explanation: name the graph feature and connect it to 
 				media.piecewiseFunctions
 			)
 		]),
-		createModule("Algebra 2A Reference Archive", [
+		createModule("Reference Archive: Algebra 2A", [
 			createLesson(
 				"Project Scenario and Context Links",
 				`

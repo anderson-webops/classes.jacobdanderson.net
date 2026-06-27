@@ -1001,7 +1001,7 @@ Use the remaining selected answers for a compact end-of-course review. Choose a 
 				`.trim()
 			)
 		]),
-		createModule("Algebra 1A Reference Archive", [
+		createModule("Reference Archive: Algebra 1A", [
 			createLesson(
 				"Project Scenario and Context Links",
 				`
