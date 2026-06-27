@@ -8247,7 +8247,7 @@ describe("course text quality normalization", () => {
 		expect(mediaLinks).toEqual([]);
 	});
 
-	it("adds AP Calculus source anchors with reserved source media", async () => {
+	it("adds AP Calculus reference anchors with reserved static media", async () => {
 		const course = await loadRawCourse("ap-calculus");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -8288,7 +8288,7 @@ describe("course text quality normalization", () => {
 			"APC25 Infinite Series",
 			"APC26 Infinite Sums and Representing Infinite Series",
 			"APC27 Infinite Sequences and Series Topic Review",
-			"Source Activity Archive",
+			"AP Calculus Reference Archive",
 			"Pending Static Assets"
 		]);
 		expect(text).toContain("Introducing Calculus and Defining Limits");
@@ -8303,7 +8303,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Parametric Equations, Polar Coordinates, and Vector-Valued Calculus");
 		expect(text).toContain("Infinite Series and Convergence Tests");
 		expect(text).toContain("Power Series, Taylor Series");
-		expect(text).toContain("Source Activity Anchors: AP Calculus");
+		expect(text).toContain("AP Calculus Reference Map");
 		expect(text).toContain("AP Calculus Static Placeholders");
 		expect(text).toContain("AB/BC path selection");
 		expect(text).toContain("Applications of integration");
@@ -8330,6 +8330,9 @@ describe("course text quality normalization", () => {
 		}
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
+		);
+		expect(text).not.toMatch(
+			/source activity archive|source activity anchors|source anchors preserve|original-source|source sequence|source-preservation/i
 		);
 		expect(text).not.toMatch(/\bshould\b/i);
 		expect(mediaLinks).toEqual([]);
