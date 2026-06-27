@@ -8189,23 +8189,57 @@ describe("course text quality normalization", () => {
 			"PCTB11 Probability",
 			"PCTB12 Limits",
 			"PCTB13 Rates of Change",
-			"Check-In #2 and Pre-Calculus B Capstone"
+			"Check-In #2 and Pre-Calculus B Capstone",
+			"Source Activity Archive",
+			"Pending Static Assets"
 		]);
 		expect(text).toContain("Concept: The Unit Circle");
 		expect(text).toContain("Concept: Graphing Sine and Cosine");
-		expect(text).toContain("Concept: Tangent, Reciprocal, and Inverse Trigonometric Graphs");
-		expect(text).toContain("Concept: Trigonometric Identities and Equations");
-		expect(text).toContain("Concept: Polar Coordinates and Complex Numbers");
+		expect(text).toContain(
+			"Concept: Tangent, Reciprocal, and Inverse Trigonometric Graphs"
+		);
+		expect(text).toContain(
+			"Concept: Trigonometric Identities and Equations"
+		);
+		expect(text).toContain(
+			"Concept: Polar Coordinates and Complex Numbers"
+		);
 		expect(text).toContain("Concept: Parametric Equations");
 		expect(text).toContain("Concept: Introduction to Vectors");
 		expect(text).toContain("Concept: Matrix Operations");
 		expect(text).toContain("Concept: Linear Systems with Matrices");
 		expect(text).toContain("Concept: Partial Fraction Decomposition");
-		expect(text).toContain("Concept: Probability, Permutations, and Combinations");
-		expect(text).toContain("Concept: Introduction to Limits and Continuity");
-		expect(text).toContain("Concept: Average Rate of Change and Derivative Preview");
+		expect(text).toContain(
+			"Concept: Probability, Permutations, and Combinations"
+		);
+		expect(text).toContain(
+			"Concept: Introduction to Limits and Continuity"
+		);
+		expect(text).toContain(
+			"Concept: Average Rate of Change and Derivative Preview"
+		);
 		expect(text).toContain("Capstone: Pre-Calculus B Modeling Portfolio");
 		expect(text).toContain("AP Calculus Readiness Map");
+		expect(text).toContain("Source Activity Anchors: Pre-Calculus B");
+		expect(text).toContain("Pre-Calculus B Static Placeholders");
+		expect(text).toContain("Trigonometric graphs");
+		expect(text).toContain("Linear-algebra previews");
+		expect(text).toContain("https://www.geogebra.org/m/keqhdkaj");
+		expect(text).toContain("https://www.desmos.com/calculator/ombx9pxa7j");
+		expect(text).toContain("https://matrixcalc.org/en/");
+		expect(text).toContain("https://www.geogebra.org/m/nzv8jj9g");
+		for (const filename of [
+			"pctb1_concept1_0.png",
+			"pctb1_pset3_19.png",
+			"pctb3_pset4_20.png",
+			"pctb7_pset2_2.png",
+			"pctb13_concept1_2.png",
+			"apc3_pset1_7.png",
+			"checkin1_trig_3.png"
+		]) {
+			expect(text, filename).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(text, filename)).toBe(true);
+		}
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
 		);
