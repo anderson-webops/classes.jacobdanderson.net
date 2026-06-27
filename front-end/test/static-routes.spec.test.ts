@@ -2,6 +2,12 @@ import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import {
+	SITEMAP_EXCLUDED_ROUTES,
+	SITE_URL,
+	generateProductionSitemap,
+	sitemapOptions
+} from "../scripts/sitemap.mts";
 
 const tempDirs: string[] = [];
 
@@ -35,5 +41,31 @@ describe("static route normalization", () => {
 		await expect(readFile(join(tempDir, "about", "index.html"), "utf8"))
 			.resolves.toBe("<main>About</main>");
 		await expect(stat(join(tempDir, "index", "index.html"))).rejects.toThrow();
+	});
+
+	it("configures the production sitemap without localhost or private routes", () => {
+		const options = sitemapOptions();
+		const calls: unknown[] = [];
+
+		generateProductionSitemap(options => calls.push(options));
+
+		expect(options.hostname).toBe(SITE_URL);
+		expect(options.hostname).toBe("https://classes.jacobdanderson.net");
+		expect(options.hostname).not.toContain("localhost");
+		expect(options.generateRobotsTxt).toBe(false);
+		expect(options.exclude).toEqual(SITEMAP_EXCLUDED_ROUTES);
+		expect(options.exclude).toEqual(
+			expect.arrayContaining([
+				"/admin",
+				"/admin/mdmail",
+				"/admin/people",
+				"/admin/student-management",
+				"/course-resource",
+				"/profile",
+				"/python-ide",
+				"/README"
+			])
+		);
+		expect(calls).toEqual([options]);
 	});
 });
