@@ -1404,7 +1404,7 @@ Typing practice is not required to complete the Scratch course, but it can make 
 				{
 					title: "Pending Scratch Level 1 Visual Assets",
 					content: [
-						"This course has placeholders for the visual assets below. Each URL points to the class static host and can be filled when the matching file is available.",
+						"This course lists pending visual assets below. Each entry keeps a stable static media URL so the matching file can be added without changing course links.",
 						...SCRATCH_LEVEL_1_SOURCE_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

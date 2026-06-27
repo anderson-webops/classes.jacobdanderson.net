@@ -1758,7 +1758,7 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Machine Learning Media Status",
 					content: [
-						"This course uses the videos and images below. Hosted videos are available as direct class-static links; pending images keep stable class-static URLs until the files are available.",
+						"This course uses the videos and images below. Hosted videos are available as direct static media links; pending images keep stable static media URLs until the files are added.",
 						"**Hosted project videos:**",
 						hostedMachineLearningAssetList(
 							machineLearningHostedSourceVideos

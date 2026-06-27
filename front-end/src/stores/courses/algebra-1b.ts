@@ -1152,11 +1152,11 @@ The key goal is to justify each decision from the graph feature being tested. Th
 
 - The course keeps the amusement-park, event-planning, basketball-robot, rowing-data, light-and-photon, radiofungi, and capstone scenarios visible.
 - External Drive, Desmos, oPhysics, and YouTube resources are retained as links, not attempted image embeds.
-- Static image references are represented separately as future class-host placeholders when the file is not currently available.
+- Static image references are represented separately as pending static media when the file is not yet available.
 				`.trim()
 			),
 			createLesson(
-				"Pending Static Asset Placeholders",
+				"Pending Static Assets",
 				`
 These static images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
 

@@ -1684,7 +1684,7 @@ export const dataScienceInPythonCourse: RawCourse = {
 				{
 					title: "Data Science Asset Status",
 					content: [
-						"This course uses the datasets and visual assets below. Hosted assets are available now; pending assets keep stable class-static URLs until the matching files are available.",
+						"This course uses the datasets and visual assets below. Hosted assets are available now; pending assets keep stable static media URLs until the matching files are added.",
 						"**Hosted assets:**",
 						...DATA_SCIENCE_AVAILABLE_SOURCE_ASSETS.map(
 							filename => `- ${staticMediaUrl(filename)}`

@@ -822,6 +822,55 @@ describe("course text quality normalization", () => {
 	);
 
 	it(
+		"keeps pending static media notes free of implementation-facing placeholder copy",
+		async () => {
+			const failures: string[] = [];
+			const staleStaticMediaCopyPattern = new RegExp(
+				[
+					"has placeholders? for",
+					"placeholder appendix",
+					"placeholder for (?:a |the )?(?:asset|data file|demo media|diagram|image|static|visual)",
+					"static asset placeholder",
+					"static image placeholders",
+					"static-host placeholders",
+					"future class-host placeholders",
+					"class static host",
+					"class-static URL",
+					"static\\.classes placeholders?",
+					"when the matching file is available",
+					"when the asset is available"
+				].join("|"),
+				"i"
+			);
+
+			for (const { entry, course } of await loadedCatalogCourses()) {
+				for (const module of course.modules) {
+					for (const item of [
+						...module.curriculum,
+						...module.supplementalProjects
+					]) {
+						const match = [
+							module.title,
+							item.title,
+							item.content
+						].join("\n").match(
+							staleStaticMediaCopyPattern
+						);
+						if (!match) continue;
+
+						failures.push(
+							`${entry.id} / ${module.title} / ${item.title}: ${match[0]}`
+						);
+					}
+				}
+			}
+
+			expect(failures).toEqual([]);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
+
+	it(
 		"keeps generated support card titles topic-specific",
 		async () => {
 			const genericStandaloneTitles = new Set([
@@ -8065,7 +8114,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Circle measurement");
 		expect(text).toContain("Transformations");
 		expect(text).toContain("Three-dimensional solids");
-		expect(text).toContain("Geometry B Static Placeholders");
+		expect(text).toContain("Geometry B Pending Static Assets");
 		expect(text).toContain("http://pythagoreanmath.com/wp-content/uploads/2014/08/deriving-the-volume-of-a-pyramid.png");
 		expect(text).toContain("https://ds055uzetaobb.cloudfront.net/brioche/uploads/Fv9rxkzWWN-90675.svg?width=350");
 		expect(text).toContain("https://www.mathsisfun.com/geometry/images/sphere-cylinder-area2.svg");
@@ -8141,7 +8190,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Sequences and accumulation");
 		expect(text).toContain("Rational functions and expressions");
 		expect(text).toContain("Composition, inverses, and conics");
-		expect(text).toContain("Pre-Calculus A Static Placeholders");
+		expect(text).toContain("Pre-Calculus A Pending Static Assets");
 		expect(text).toContain("https://www.geogebra.org/m/RCVce5W4");
 		expect(text).toContain("https://www.desmos.com/calculator/tgyr42ezjq");
 		expect(text).toContain("https://www.desmos.com/calculator/auz2qerbgj");
@@ -8221,7 +8270,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Capstone: Pre-Calculus B Modeling Portfolio");
 		expect(text).toContain("AP Calculus Readiness Map");
 		expect(text).toContain("Pre-Calculus B Reference Map");
-		expect(text).toContain("Pre-Calculus B Static Placeholders");
+		expect(text).toContain("Pre-Calculus B Pending Static Assets");
 		expect(text).toContain("Trigonometric graphs");
 		expect(text).toContain("Linear-algebra previews");
 		expect(text).toContain("https://www.geogebra.org/m/keqhdkaj");
@@ -8326,7 +8375,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Infinite Series and Convergence Tests");
 		expect(text).toContain("Power Series, Taylor Series");
 		expect(text).toContain("AP Calculus Reference Map");
-		expect(text).toContain("AP Calculus Static Placeholders");
+		expect(text).toContain("AP Calculus Pending Static Assets");
 		expect(text).toContain("AB/BC path selection");
 		expect(text).toContain("Applications of integration");
 		expect(text).toContain("BC representation and series topics");

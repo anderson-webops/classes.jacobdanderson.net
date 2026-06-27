@@ -911,12 +911,12 @@ The important part is the explanation: name the graph feature and connect it to 
 **Evidence record:**
 
 - External YouTube, GeoGebra, and Desmos resources are retained as links, not attempted image embeds.
-- Static image references are represented separately as future class-host placeholders when the file is not currently available.
+- Static image references are represented separately as pending static media when the file is not yet available.
 - Algebra 1B graph images reused in this Algebra 2A reference set are already tracked as Algebra 1B pending static assets.
 				`.trim()
 			),
 			createLesson(
-				"Pending Static Asset Placeholders",
+				"Pending Static Assets",
 				`
 These static images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
 

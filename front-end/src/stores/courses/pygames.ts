@@ -1804,7 +1804,7 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 				{
 					title: "PyGame Media Status",
 					content: [
-						"This course uses the student-facing assets below. Hosted entries are ready on the class static host; pending entries keep stable class-static URLs until the matching files are available.",
+						"This course uses the student-facing assets below. Hosted entries are ready as static media links; pending entries keep stable static media URLs until the matching files are added.",
 						"**Hosted assets:**",
 						...PYGAMES_AVAILABLE_ORIGINAL_ASSETS.map(
 							filename => `- ${staticMediaUrl(filename)}`

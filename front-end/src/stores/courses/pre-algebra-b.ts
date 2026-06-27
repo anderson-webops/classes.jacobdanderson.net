@@ -596,7 +596,7 @@ export const preAlgebraBCourse: RawCourse = {
 							"Advertising choices compare Facebook, Twitter, TikTok, Instagram, and YouTube.",
 							"The client-data task uses a 20-client age list to calculate mean, median, and mode for ad targeting.",
 							"The country-audience task uses a pie chart, top-3 country selection, and timing graph for ad interaction.",
-							"Static asset placeholder: pab5_0.png is reserved at static.classes.jacobdanderson.net/pab5_0.png."
+							"Pending static asset: pab5_0.png uses the static media URL static.classes.jacobdanderson.net/pab5_0.png."
 						],
 						evidence: [
 							"Recommendation cites platform, audience age, country distribution, posting time, and one data limitation.",
@@ -622,7 +622,7 @@ export const preAlgebraBCourse: RawCourse = {
 						title: "Uber Internship Challenge",
 						references: [
 							"Project context: Ben Dreier and a fictional Uber Flying Taxi test in New York City.",
-							"Static asset placeholder: pab14_0.png is reserved at static.classes.jacobdanderson.net/pab14_0.png.",
+							"Pending static asset: pab14_0.png uses the static media URL static.classes.jacobdanderson.net/pab14_0.png.",
 							"Mission 1 identifies the route shape as a pentagon and compares flight paths for parallel structure.",
 							"Mission 1 uses distances of 1.5 miles from Empire State Building to Union Park, 3.0 miles from Whitney Museum to Upper West Side, and 0.75 miles from Union Square to Whitney.",
 							"Mission 1 reference answers include total area about 2 square miles and total perimeter about 7 miles.",
@@ -653,7 +653,7 @@ export const preAlgebraBCourse: RawCourse = {
 							"Project context: Will Brooke from Electronic Arts and a Super Smash Bros. Melee tournament scenario.",
 							"Round-robin player table includes C9 Mang0 8 games and 6 wins, TSM Leffen 7 and 5, Liquid Hungrybox 9 and 7, Mew2King 11 and 6, Tempo Axe 12 and 9, and CJ aMSa 13 and 8.",
 							"The round-robin analysis identifies Liquid Hungrybox as 7/9, or about 78%, from the answer key.",
-							"Static asset placeholder: pab22_0.png is reserved at static.classes.jacobdanderson.net/pab22_0.png.",
+							"Pending static asset: pab22_0.png uses the static media URL static.classes.jacobdanderson.net/pab22_0.png.",
 							"Bracket matchups include Mang0-Leffen 2-2, Mang0-Hungrybox 1-3, Mang0-Axe 3-1, Leffen-Hungrybox 2-2, Leffen-Axe 0-4, and Hungrybox-Axe 2-2.",
 							"Probability targets include (1/2)^5 = 1/32, (3/4)^5 = 243/1024, (1/4)^5 = 1/1024, and zero-probability outcomes from impossible Axe-Leffen win patterns."
 						],
@@ -701,7 +701,7 @@ export const preAlgebraBCourse: RawCourse = {
 			"Pre-algebra readiness for Geometry A and Algebra 1A"
 		],
 		sourcePolicy:
-			"Adapted from the Pre-Algebra B sequence with neutral wording, course-linked projects, and static.classes placeholders for unavailable images.",
+			"Adapted from the Pre-Algebra B sequence with neutral wording, course-linked projects, and pending static-media entries for unavailable images.",
 		assessmentCadence: [
 			"Check-In #1 after statistics and graphs",
 			"Check-In #2 after geometry measurement",
@@ -711,7 +711,7 @@ export const preAlgebraBCourse: RawCourse = {
 			"Notebook or shared document",
 			"Spreadsheet or table tool for data summaries",
 			"Drawing or graphing tool for diagrams and graphs",
-			"Static-host placeholders for diagrams and screenshots"
+			"Pending static-media entries for diagrams and screenshots"
 		],
 		safetyPolicy: [
 			"No physical materials required",

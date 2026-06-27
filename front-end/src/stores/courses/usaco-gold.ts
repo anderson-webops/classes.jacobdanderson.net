@@ -1381,7 +1381,7 @@ export const usacoGoldCourse: RawCourse = {
 				{
 					title: "USACO Gold Asset Status",
 					content: [
-						"This course has a placeholder for the data file below. The URL points to the class static host and can be filled when the matching file is available.",
+						"This course lists the pending data file below. The entry keeps a stable static media URL so the matching file can be added without changing course links.",
 						pendingUsacoGoldAssetList(usacoGoldPendingSourceAssets)
 					].join("\n\n")
 				}
