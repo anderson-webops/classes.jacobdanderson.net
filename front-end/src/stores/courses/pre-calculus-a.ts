@@ -1,4 +1,9 @@
 import type { RawCourse } from "./types";
+import {
+	pendingStaticMediaNotice,
+	preCalculusAStaticFilenames,
+	staticMediaUrl
+} from "./staticMedia";
 
 function lesson(title: string, content: string) {
 	return { title, content };
@@ -7,13 +12,24 @@ function lesson(title: string, content: string) {
 function module(
 	title: string,
 	curriculum: ReturnType<typeof lesson>[],
-	supplementalProjects: ReturnType<typeof lesson>[] = []
+	supplementalProjects: ReturnType<typeof lesson>[] = [],
+	kind?: "module" | "appendix"
 ) {
 	return {
+		...(kind ? { kind } : {}),
 		title,
 		curriculum,
 		supplementalProjects
 	};
+}
+
+function sourceMediaReferences() {
+	return preCalculusAStaticFilenames
+		.map(
+			filename =>
+				`- \`${filename}\` -> ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
 }
 
 function overview({
@@ -1130,6 +1146,49 @@ export const preCalculusACourse: RawCourse = {
 					})
 				)
 			]
+		),
+		module(
+			"Source Activity Archive",
+			[
+				lesson(
+					"Source Activity Anchors: Pre-Calculus A",
+					[
+						"These source anchors preserve activity context from the original Pre-Calculus and Trigonometry A sequence while keeping the visible course neutral and avoiding unavailable legacy image embeds.",
+						[
+							"**Original-source concepts retained**",
+							"- Piecewise functions: conditional definitions, open and closed endpoints, discontinuities, absolute value as a piecewise function, step functions, floor and ceiling behavior, domain, and range.",
+							"- Higher-degree polynomials: operations, standard form, factoring by common factors, grouping, special products, quadratic form, polynomial long division, synthetic division, remainders, and factor checks.",
+							"- Polynomial zeros and graphs: number of zeros, rational zero candidates, multiplicity, end behavior, turning-point limits, graph transformations, and technology as a verification tool.",
+							"- Sequences and accumulation: arithmetic sequences, geometric sequences, finite sums, infinite geometric sums, convergence conditions, Riemann sums, rectangle estimates, trapezoid estimates, and units for accumulated quantities.",
+							"- Binomial theorem: Pascal's triangle, combination notation, coefficient patterns, exponent patterns, selected-term shortcuts, and sign tracking in subtraction cases.",
+							"- Rational functions and expressions: holes, vertical asymptotes, horizontal or slant behavior, roots, restrictions, multiplying, dividing, adding, subtracting, equation solving, and extraneous-value checks.",
+							"- Logarithms and exponents: exponential-log equivalence, log identities, graph transformations, inverse graph relationships, base requirements, positive-argument domains, and exponential growth modeling.",
+							"- Composition, inverses, and conics: function pipelines, inverse verification, horizontal-line reasoning, circles, ellipses, parabolas, hyperbolas, completing the square, foci, directrices, asymptotes, and conic intersections."
+						].join("\n"),
+						[
+							"**External source links**",
+							"- Riemann sum visualization: https://www.geogebra.org/m/RCVce5W4",
+							"- Desmos area-under-curve prompt: https://www.desmos.com/calculator/tgyr42ezjq",
+							"- Desmos graphing calculator for exponential/log modeling: https://www.desmos.com/calculator",
+							"- Rational-function graph reference: https://www.desmos.com/calculator/auz2qerbgj"
+						].join("\n"),
+						"**Source-preservation note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+					].join("\n\n")
+				)
+			],
+			[],
+			"appendix"
+		),
+		module(
+			"Pending Static Assets",
+			[
+				lesson(
+					"Pre-Calculus A Static Placeholders",
+					sourceMediaReferences()
+				)
+			],
+			[],
+			"appendix"
 		)
 	],
 	developmentMetadata: {

@@ -443,6 +443,49 @@ export const geometryBStaticFilenames = [
 	"geob10_pset4_9.png"
 ] as const;
 
+export const preCalculusAStaticFilenames = [
+	...numberedStaticFilenames("ala11_concept1_", [0, 1, 2, 3]),
+	"ala11_pset1_2.png",
+	...numberedStaticFilenames("ala11_pset1_", [10, 11, 12, 13, 14]),
+	...numberedStaticFilenames("ala4_pset1_", [0, 1, 2, 3, 4]),
+	"ala6_pset1_0.png",
+	...numberedStaticFilenames("ala7_concept1_", [0, 1, 2, 3, 4, 5, 6, 7]),
+	...numberedStaticFilenames("ala7_concept2_", [0, 1]),
+	...numberedStaticFilenames("ala7_pset1_", [0, 1, 3, 4, 11, 12, 13, 14]),
+	...numberedStaticFilenames("ala7_pset2_", [0, 1, 2]),
+	...numberedStaticFilenames("ala8_concept1_", [0, 1, 2, 3, 4, 5, 6, 7, 8]),
+	...numberedStaticFilenames("ala8_pset1_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames("ala8_pset2_", [1, 2, 3, 4]),
+	"ala9_concept3_0.png",
+	"alb1_concept1_0.png",
+	...numberedStaticFilenames("alb2_concept1_", [0, 1, 2]),
+	...numberedStaticFilenames("alb2_concept2_", [0, 1]),
+	"alb2_pset1_12.png",
+	"checkin1_graphing_0.png",
+	"checkin2_rational_0.png",
+	"pct6_concept1_0.png",
+	"pcta6_concept3_0.png",
+	...numberedStaticFilenames("pcta7_concept1_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames(
+		"pcta7_pset1_",
+		[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+	),
+	...numberedStaticFilenames("pcta12_concept1_", [0, 1]),
+	...numberedStaticFilenames("pcta12_concept2_", [0, 1, 2, 3]),
+	...numberedStaticFilenames(
+		"pcta12_pset2_",
+		Array.from({ length: 41 }, (_, number) => number)
+	),
+	...numberedStaticFilenames("pcta13_concept1_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames("pcta13_concept2_", [0, 1, 2, 3]),
+	...numberedStaticFilenames("pcta13_pset1_", [0, 1, 2, 3, 4, 5]),
+	...numberedStaticFilenames("pcta14_concept1_", [0, 1, 2, 3, 4]),
+	...numberedStaticFilenames("pcta14_concept2_", [0, 1, 2]),
+	...numberedStaticFilenames("pcta14_concept3_", [0, 1, 2, 3, 4, 5, 6, 7]),
+	"pcta14_pset1_0.png",
+	...numberedStaticFilenames("pcta14_pset3_", [0, 1, 2, 4])
+] as const;
+
 export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"aj_1_chatbot.mp4",
 	"aj_2_array_practice.mp4",
@@ -1313,7 +1356,8 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"WhileLoopsExploration(1).mp4",
 	"wyb1_proj1_plotempty.png",
 	...geometryAStaticFilenames,
-	...geometryBStaticFilenames
+	...geometryBStaticFilenames,
+	...preCalculusAStaticFilenames
 ] as const;
 
 const knownPendingStaticMedia = new Set<string>(

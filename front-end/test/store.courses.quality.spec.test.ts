@@ -8114,7 +8114,9 @@ describe("course text quality normalization", () => {
 			"PCTA12 Function Inverses and Composition",
 			"PCTA13 Circles and Ellipses",
 			"PCTA14 Parabolas and Hyperbolas",
-			"Check-In #2 and Pre-Calculus A Capstone"
+			"Check-In #2 and Pre-Calculus A Capstone",
+			"Source Activity Archive",
+			"Pending Static Assets"
 		]);
 		expect(text).toContain("Concept: Piecewise Functions");
 		expect(text).toContain("Concept: Polynomial Operations and Factoring");
@@ -8134,6 +8136,25 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Pascal's triangle");
 		expect(text).toContain("domain restrictions");
 		expect(text).toContain("Capstone: Pre-Calculus A Modeling Portfolio");
+		expect(text).toContain("Source Activity Anchors: Pre-Calculus A");
+		expect(text).toContain("Polynomial zeros and graphs");
+		expect(text).toContain("Sequences and accumulation");
+		expect(text).toContain("Rational functions and expressions");
+		expect(text).toContain("Composition, inverses, and conics");
+		expect(text).toContain("Pre-Calculus A Static Placeholders");
+		expect(text).toContain("https://www.geogebra.org/m/RCVce5W4");
+		expect(text).toContain("https://www.desmos.com/calculator/tgyr42ezjq");
+		expect(text).toContain("https://www.desmos.com/calculator/auz2qerbgj");
+		for (const filename of [
+			"ala11_concept1_0.png",
+			"pcta7_pset1_17.png",
+			"pcta12_pset2_40.png",
+			"pcta14_concept3_7.png",
+			"checkin2_rational_0.png"
+		]) {
+			expect(text, filename).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(text, filename)).toBe(true);
+		}
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
 		);
