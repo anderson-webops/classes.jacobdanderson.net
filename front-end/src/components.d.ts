@@ -20,6 +20,7 @@ declare module 'vue' {
     CourseAssetPreview: typeof import('./components/CourseAssetPreview.vue')['default']
     CourseExplorer: typeof import('./components/CourseExplorer.vue')['default']
     LazyMarkdownContent: typeof import('./components/LazyMarkdownContent.vue')['default']
+    LearnerCodeReviewTools: typeof import('./components/LearnerCodeReviewTools.vue')['default']
     LearnerCourseProgressEditor: typeof import('./components/LearnerCourseProgressEditor.vue')['default']
     LearnerSessionTools: typeof import('./components/LearnerSessionTools.vue')['default']
     ProfileDetailsCard: typeof import('./components/ProfileDetailsCard.vue')['default']

@@ -9,6 +9,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
 import AccessibleDialog from "@/components/AccessibleDialog.vue";
 import AccountSecurity from "@/components/AccountSecurity.vue";
+import LearnerCodeReviewTools from "@/components/LearnerCodeReviewTools.vue";
 import LearnerSessionTools from "@/components/LearnerSessionTools.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
@@ -947,6 +948,12 @@ function confirmDeleteAdmin() {
 						</div>
 
 						<LearnerSessionTools
+							:user-email="u.email"
+							:user-id="String(u._id)"
+							:user-name="u.name"
+						/>
+
+						<LearnerCodeReviewTools
 							:user-email="u.email"
 							:user-id="String(u._id)"
 							:user-name="u.name"

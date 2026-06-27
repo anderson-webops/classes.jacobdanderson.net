@@ -187,7 +187,9 @@ describe("Python project routes", () => {
 		const serverSource = readFileSync(resolve(__dirname, "../src/server.ts"), "utf8");
 
 		expect(serverSource).toContain("PYTHON_IDE_PROJECT_BODY_LIMIT");
-		expect(serverSource).toContain('"/users/loggedin/python-projects"');
+		expect(serverSource).toContain("pythonProjectJsonRoute");
+		expect(serverSource).toContain("loggedin\\/python-projects");
+		expect(serverSource).toContain("[^/]+\\/python-projects");
 		expect(serverSource).toContain("bodyParser.json({ limit: pythonProjectJsonBodyLimit })");
 		expect(serverSource).toContain('bodyParser.json({ limit: "1mb" })');
 	});
