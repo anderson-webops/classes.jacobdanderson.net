@@ -51,6 +51,17 @@ const userCourseAccessLimiter = createUserCourseAccessLimiter();
 // Create a user
 router.post("/", createUser);
 
+// Get logged in user communications
+router.get("/loggedin/communications", validUser, getLoggedInUserCommunications);
+
+// Persist logged-in student Python IDE projects. Keep these before the
+// managed /:userID/python-projects routes so "loggedin" is not parsed as an ID.
+router.get("/loggedin/python-projects", validUser, listPythonProjects);
+router.post("/loggedin/python-projects", validUser, createPythonProject);
+router.put("/loggedin/python-projects/:projectID", validUser, updatePythonProject);
+router.delete("/loggedin/python-projects/:projectID", validUser, deletePythonProject);
+router.get("/loggedin/python-project-reviews", validUser, listVisiblePythonProjectReviews);
+
 // Get users belonging to a given tutor
 router.get("/oftutor/:tutorID", getUsersOfTutor);
 
@@ -96,16 +107,6 @@ router.delete("/tutor/:userID", validTutor, deleteUserAsTutor);
 
 // Delete the user by the admin
 router.delete("/admin/:userID", validAdmin, deleteUserAsAdmin);
-
-// Get logged in user
-router.get("/loggedin/communications", validUser, getLoggedInUserCommunications);
-
-// Persist logged-in student Python IDE projects
-router.get("/loggedin/python-projects", validUser, listPythonProjects);
-router.post("/loggedin/python-projects", validUser, createPythonProject);
-router.put("/loggedin/python-projects/:projectID", validUser, updatePythonProject);
-router.delete("/loggedin/python-projects/:projectID", validUser, deletePythonProject);
-router.get("/loggedin/python-project-reviews", validUser, listVisiblePythonProjectReviews);
 
 // Get logged in user
 router.get("/loggedin", validUser, getLoggedInUser);

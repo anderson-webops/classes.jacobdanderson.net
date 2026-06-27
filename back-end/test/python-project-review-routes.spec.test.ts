@@ -211,6 +211,20 @@ describe("Python project review routes", () => {
 		modelMocks.pythonProjectReviewCreate.mockImplementation(async payload => makeReview(payload));
 	});
 
+	it("lets signed-in students list their own Python IDE projects", async () => {
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(`${baseUrl}/users/loggedin/python-projects`, {
+				headers: { "x-user-id": studentID.toString() }
+			});
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(modelMocks.pythonProjectFind).toHaveBeenCalledWith({ user: studentID });
+			expect(body.projects).toHaveLength(1);
+			expect(body.projects[0].files[0].content).toBe("print('student')\n");
+		});
+	});
+
 	it("lets admins list saved projects with their staff review copies", async () => {
 		await withUserRoutes(async baseUrl => {
 			const response = await fetch(`${baseUrl}/users/${studentID}/python-projects`, {
