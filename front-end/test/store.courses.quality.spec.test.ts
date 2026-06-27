@@ -8811,6 +8811,9 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(
 			/original source|original image filename|source mission|source scenario|source alien/i
 		);
+		expect(text).not.toMatch(
+			/\bplaceholder\b|class static host URL|hosted file becomes available|when the file is available/i
+		);
 		expect(recommendedNextWork).not.toMatch(/original biology images/i);
 		expect(mediaLinks).toEqual([
 			"https://static.classes.jacobdanderson.net/biomod1pro1im1.jpg",

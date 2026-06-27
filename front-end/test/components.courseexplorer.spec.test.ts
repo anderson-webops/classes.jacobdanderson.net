@@ -1025,7 +1025,10 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("Pending static asset");
 		expect(wrapper.text()).not.toContain("Original static asset");
 		expect(wrapper.text()).toContain("original-demo-video.mp4");
-		expect(wrapper.text()).toContain("When the file becomes available");
+		expect(wrapper.text()).toContain("Static media URL");
+		expect(wrapper.text()).toContain(
+			"This preview will show the image or video here once the static media file is added."
+		);
 		expect(wrapper.text()).toContain(missingStaticVideo);
 		expect(wrapper.find(`a[href="${missingStaticVideo}"]`).exists()).toBe(
 			true
@@ -1087,7 +1090,10 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("Pending static asset");
 		expect(wrapper.text()).not.toContain("Original static asset");
 		expect(wrapper.text()).toContain("biomod1pro1im1.jpg");
-		expect(wrapper.text()).toContain("When the file becomes available");
+		expect(wrapper.text()).toContain("Static media URL");
+		expect(wrapper.text()).toContain(
+			"This preview will show the image or video here once the static media file is added."
+		);
 		expect(wrapper.text()).toContain(pendingStaticImage);
 		expect(wrapper.find(`a[href="${pendingStaticImage}"]`).exists()).toBe(
 			true
@@ -1365,8 +1371,10 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("Pending static asset");
 		expect(wrapper.text()).not.toContain("Original static asset");
 		expect(wrapper.text()).toContain("supplemental-demo.mp4");
-		expect(wrapper.text()).toContain("class static host");
-		expect(wrapper.text()).toContain("When the file becomes available");
+		expect(wrapper.text()).toContain("Static media URL");
+		expect(wrapper.text()).toContain(
+			"This preview will show the image or video here once the static media file is added."
+		);
 		expect(wrapper.text()).toContain(pendingStaticVideo);
 		expect(wrapper.find(`a[href="${pendingStaticVideo}"]`).exists()).toBe(
 			true
