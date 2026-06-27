@@ -4,9 +4,13 @@ import express from "express";
 import { logout as logoutUser } from "../controllers/auth/authController.js";
 import {
 	createPythonProject,
+	createPythonProjectReview,
 	deletePythonProject,
+	listManagedPythonProjects,
 	listPythonProjects,
-	updatePythonProject
+	listVisiblePythonProjectReviews,
+	updatePythonProject,
+	updatePythonProjectReview
 } from "../controllers/users/pythonProjectController.js";
 import {
 	createUser,
@@ -79,6 +83,11 @@ router.put("/:userID/schedule/:sessionID", validTutorOrAdminSession, updateUserS
 router.get("/:userID/session-notes/recent", validTutorOrAdminSession, getUserRecentSessionNotes);
 router.post("/:userID/session-notes", validTutorOrAdminSession, createUserSessionNote);
 
+// Allow tutors and admins to review saved student Python IDE projects without editing student-owned files
+router.get("/:userID/python-projects", validTutorOrAdminSession, listManagedPythonProjects);
+router.post("/:userID/python-projects/:projectID/review", validTutorOrAdminSession, createPythonProjectReview);
+router.put("/:userID/python-projects/:projectID/review/:reviewID", validTutorOrAdminSession, updatePythonProjectReview);
+
 // Delete the user by the user themselves
 router.delete("/user/:userID", validUser, deleteOwnUser);
 
@@ -96,6 +105,7 @@ router.get("/loggedin/python-projects", validUser, listPythonProjects);
 router.post("/loggedin/python-projects", validUser, createPythonProject);
 router.put("/loggedin/python-projects/:projectID", validUser, updatePythonProject);
 router.delete("/loggedin/python-projects/:projectID", validUser, deletePythonProject);
+router.get("/loggedin/python-project-reviews", validUser, listVisiblePythonProjectReviews);
 
 // Get logged in user
 router.get("/loggedin", validUser, getLoggedInUser);

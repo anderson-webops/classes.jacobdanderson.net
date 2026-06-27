@@ -5,7 +5,8 @@ import type { PythonCodeMirrorAssetCompletionNames } from "@/modules/pythonCodeM
 import type {
 	PythonIdeFile,
 	PythonIdeMode,
-	PythonIdeProject
+	PythonIdeProject,
+	PythonIdeProjectReview
 } from "@/modules/pythonIde";
 import type { PythonIdeCourseAssetPack } from "@/modules/pythonIdeCourseAssets";
 import type {
@@ -29,6 +30,7 @@ import {
 	createRemotePythonIdeProject,
 	deleteRemotePythonIdeProject,
 	fetchPythonIdeProjects,
+	fetchVisiblePythonIdeProjectReviews,
 	getPythonIdeAssetDataUrl,
 	getPythonIdeDefaultFileContent,
 	getPythonIdeFileKindLabel,
@@ -457,7 +459,9 @@ const route = useRoute();
 const { currentUser } = storeToRefs(app);
 
 const projects = ref<PythonIdeProject[]>([]);
+const visibleProjectReviews = ref<PythonIdeProjectReview[]>([]);
 const selectedProjectID = ref("");
+const selectedReviewFileName = ref("");
 const newFileName = ref("");
 const inputText = ref("");
 const outputLines = ref<OutputLine[]>([]);
@@ -804,6 +808,36 @@ const activeFilePreviewKind = computed(() => {
 	if (activeFileDataUrl.value.startsWith("data:image/")) return "image";
 	if (activeFileDataUrl.value.startsWith("data:audio/")) return "audio";
 	return "";
+});
+
+const selectedVisibleReview = computed(
+	() =>
+		visibleProjectReviews.value.find(
+			review => review.sourceProject === selectedProject.value?._id
+		) ?? null
+);
+const visibleReviewFiles = computed(
+	() => selectedVisibleReview.value?.files ?? []
+);
+const activeVisibleReviewFile = computed(() => {
+	const review = selectedVisibleReview.value;
+	if (!review) return null;
+	const activeFileName =
+		selectedReviewFileName.value &&
+		review.files.some(file => file.name === selectedReviewFileName.value)
+			? selectedReviewFileName.value
+			: resolvePythonIdeActiveFileName(
+					review.files,
+					review.activeFileName
+				);
+	return review.files.find(file => file.name === activeFileName) ?? null;
+});
+const activeVisibleReviewFileContent = computed(() => {
+	const file = activeVisibleReviewFile.value;
+	if (!file) return "";
+	if (isPythonIdeBinaryAssetFile(file))
+		return `[Imported asset: ${file.name}]`;
+	return file.content;
 });
 
 const canSyncToAccount = computed(() => !!currentUser.value?._id);
@@ -1310,6 +1344,8 @@ async function loadProjects() {
 		if (canSyncToAccount.value) {
 			const remoteProjects = await fetchPythonIdeProjects();
 			if (!projectLoadIsCurrent(loadRunID)) return;
+			visibleProjectReviews.value =
+				await fetchVisiblePythonIdeProjectReviews().catch(() => []);
 			const localProjects = await loadLocalPythonProjectsAsync(
 				storageUserID.value
 			);
@@ -1364,6 +1400,7 @@ async function loadProjects() {
 			return;
 		}
 
+		visibleProjectReviews.value = [];
 		const localProjects = await loadLocalPythonProjectsAsync(
 			storageUserID.value
 		);
@@ -1392,6 +1429,7 @@ async function loadProjects() {
 		if (!projectLoadIsCurrent(loadRunID)) return;
 		saveMessage.value =
 			error instanceof Error ? error.message : "Using local workspace";
+		visibleProjectReviews.value = [];
 	} finally {
 		if (projectLoadIsCurrent(loadRunID)) {
 			await nextTick();
@@ -4772,6 +4810,19 @@ watch(selectedProjectID, (projectID, previousProjectID) => {
 });
 
 watch(
+	selectedVisibleReview,
+	review => {
+		selectedReviewFileName.value = review
+			? resolvePythonIdeActiveFileName(
+					review.files,
+					review.activeFileName
+				)
+			: "";
+	},
+	{ immediate: true }
+);
+
+watch(
 	() =>
 		`${selectedProjectID.value}:${activeFile.value?.name ?? ""}:${activeFileIsBinaryAsset.value}`,
 	() => {
@@ -5254,6 +5305,40 @@ onBeforeUnmount(() => {
 						</button>
 					</div>
 				</div>
+
+				<section
+					v-if="selectedVisibleReview"
+					class="visible-review-panel"
+					aria-label="Visible tutor review copy"
+				>
+					<div class="visible-review-header">
+						<div>
+							<p class="visible-review-eyebrow">
+								Staff review copy
+							</p>
+							<h2>{{ selectedVisibleReview.title }}</h2>
+							<p v-if="selectedVisibleReview.note">
+								{{ selectedVisibleReview.note }}
+							</p>
+						</div>
+						<label v-if="visibleReviewFiles.length">
+							<span>Review file</span>
+							<select v-model="selectedReviewFileName">
+								<option
+									v-for="file in visibleReviewFiles"
+									:key="file.name"
+									:value="file.name"
+								>
+									{{ file.name }}
+								</option>
+							</select>
+						</label>
+					</div>
+					<pre
+						v-if="activeVisibleReviewFile"
+						class="visible-review-code"
+					><code>{{ activeVisibleReviewFileContent }}</code></pre>
+				</section>
 
 				<div
 					class="ide-grid"
@@ -6186,6 +6271,81 @@ html.dark .file-delete:disabled::after {
 	display: flex;
 	gap: 0.65rem;
 	align-items: end;
+}
+
+.visible-review-panel {
+	display: grid;
+	gap: 0.9rem;
+	padding: 1rem;
+	border: 1px solid rgba(20, 184, 166, 0.28);
+	border-radius: 18px;
+	background: rgba(240, 253, 250, 0.74);
+}
+
+.visible-review-header {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(11rem, 16rem);
+	gap: 1rem;
+	align-items: end;
+}
+
+.visible-review-header h2,
+.visible-review-header p {
+	margin: 0;
+}
+
+.visible-review-header h2 {
+	margin-top: 0.15rem;
+	color: var(--color-ink-strong);
+	font-size: 1.1rem;
+	letter-spacing: 0;
+}
+
+.visible-review-header p:not(.visible-review-eyebrow) {
+	margin-top: 0.45rem;
+	color: var(--color-ink);
+	line-height: 1.55;
+}
+
+.visible-review-eyebrow {
+	color: #0f766e;
+	font-size: 0.74rem;
+	font-weight: 900;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.visible-review-header label {
+	display: grid;
+	gap: 0.35rem;
+	color: var(--color-ink-strong);
+	font-size: 0.82rem;
+	font-weight: 800;
+}
+
+.visible-review-header select {
+	width: 100%;
+	padding: 0.62rem 0.72rem;
+	border: 1px solid var(--color-border);
+	border-radius: 12px;
+	background: #fff;
+	color: var(--color-ink-strong);
+	font: inherit;
+}
+
+.visible-review-code {
+	max-height: 20rem;
+	margin: 0;
+	padding: 0.9rem;
+	overflow: auto;
+	border-radius: 14px;
+	background: #0f172a;
+	color: #e2e8f0;
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+	font-size: 0.82rem;
+	line-height: 1.55;
+	white-space: pre;
+	tab-size: 4;
 }
 
 .ide-settings {

@@ -67,6 +67,34 @@ export interface PythonIdeProject {
 	updatedAt?: string;
 }
 
+export type PythonIdeProjectReviewRole = "admin" | "tutor";
+
+export interface PythonIdeProjectReview {
+	_id: string;
+	sourceProject: string;
+	title: string;
+	mode: PythonIdeMode;
+	files: PythonIdeFile[];
+	activeFileName: string;
+	courseID?: string;
+	courseProjectKey?: string;
+	courseProjectTitle?: string;
+	reviewerRole: PythonIdeProjectReviewRole;
+	reviewerName?: string;
+	lastEditedByRole?: PythonIdeProjectReviewRole;
+	lastEditedByName?: string;
+	visibleToStudent: boolean;
+	note?: string;
+	sourceUpdatedAt?: string;
+	createdAt?: string;
+	updatedAt?: string;
+}
+
+export interface ManagedPythonIdeProject {
+	project: PythonIdeProject;
+	review: PythonIdeProjectReview | null;
+}
+
 export interface PythonIdeProjectPayload {
 	title?: string;
 	mode?: PythonIdeMode;
@@ -853,6 +881,20 @@ export async function fetchPythonIdeProjects() {
 	return data.projects;
 }
 
+export async function fetchVisiblePythonIdeProjectReviews() {
+	const { data } = await api.get<{ reviews: PythonIdeProjectReview[] }>(
+		"/users/loggedin/python-project-reviews"
+	);
+	return data.reviews;
+}
+
+export async function fetchManagedPythonIdeProjects(userID: string) {
+	const { data } = await api.get<{ projects: ManagedPythonIdeProject[] }>(
+		`/users/${userID}/python-projects`
+	);
+	return data.projects;
+}
+
 export async function createRemotePythonIdeProject(
 	payload: PythonIdeProjectPayload
 ) {
@@ -861,6 +903,38 @@ export async function createRemotePythonIdeProject(
 		payload
 	);
 	return data.project;
+}
+
+export async function createPythonIdeProjectReview(
+	userID: string,
+	projectID: string
+) {
+	const { data } = await api.post<{
+		project: PythonIdeProject;
+		review: PythonIdeProjectReview;
+	}>(`/users/${userID}/python-projects/${projectID}/review`, {});
+	return data;
+}
+
+export async function updatePythonIdeProjectReview(
+	userID: string,
+	projectID: string,
+	reviewID: string,
+	payload: {
+		activeFileName?: string;
+		files?: PythonIdeFile[];
+		note?: string;
+		visibleToStudent?: boolean;
+	}
+) {
+	const { data } = await api.put<{
+		project: PythonIdeProject;
+		review: PythonIdeProjectReview;
+	}>(
+		`/users/${userID}/python-projects/${projectID}/review/${reviewID}`,
+		payload
+	);
+	return data;
 }
 
 export async function updateRemotePythonIdeProject(
