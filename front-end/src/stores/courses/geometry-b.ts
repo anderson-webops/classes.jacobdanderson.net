@@ -631,14 +631,14 @@ export const geometryBCourse: RawCourse = {
 			]
 		),
 		module(
-			"Source Activity Archive",
+			"Geometry B Reference Archive",
 			[
 				lesson(
-					"Source Activity Anchors: Geometry B",
+					"Geometry B Reference Map",
 					[
-						"These source anchors preserve activity context from the original Geometry B sequence while keeping the visible course neutral and avoiding unavailable legacy image embeds.",
+						"This reference map summarizes Geometry B topic coverage and static media slots without embedding diagram files that are not yet on the class static host.",
 						[
-							"**Original-source concepts retained**",
+							"**Course concept map**",
 							"- Quadrilateral foundations: convex and concave quadrilaterals, trapezoids, kites, parallelograms, rectangles, rhombi, squares, angle sums, medians, diagonals, and classification from evidence.",
 							"- Polygon work: interior and exterior angle sums, regular-polygon angle formulas, area decomposition, composite regions, and formula selection based on the given information.",
 							"- Circle measurement: circumference, area, arc length, sector area, chords, central angles, inscribed angles, internal chord angles, external secant or tangent angles, and tangent-radius relationships.",
@@ -647,12 +647,12 @@ export const geometryBCourse: RawCourse = {
 							"- Review and capstone work: mixed theorem selection, error diagnosis, design defense, portfolio audit, and cumulative geometry modeling across two-dimensional and three-dimensional settings."
 						].join("\n"),
 						[
-							"**External source links**",
+							"**Reference links**",
 							"- Pyramid volume visualization: http://pythagoreanmath.com/wp-content/uploads/2014/08/deriving-the-volume-of-a-pyramid.png",
 							"- Sphere volume comparison visual: https://ds055uzetaobb.cloudfront.net/brioche/uploads/Fv9rxkzWWN-90675.svg?width=350",
 							"- Sphere surface-area comparison visual: https://www.mathsisfun.com/geometry/images/sphere-cylinder-area2.svg"
 						].join("\n"),
-						"**Source-preservation note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+						"**Static-media note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
 					].join("\n\n")
 				)
 			],

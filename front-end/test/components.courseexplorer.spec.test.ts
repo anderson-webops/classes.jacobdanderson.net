@@ -1161,7 +1161,7 @@ describe("CourseExplorer.vue", () => {
 		);
 	});
 
-	it("surfaces Pre-Calculus A reserved source media through reference search", async () => {
+	it("surfaces Pre-Calculus A reserved static media through reference search", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -1199,15 +1199,17 @@ describe("CourseExplorer.vue", () => {
 		});
 		expect(wrapper.text()).toContain("References");
 		expect(wrapper.text()).toContain("Pre-Calculus A Static Placeholders");
-		expect(wrapper.text()).toContain("pcta12_pset2_40.png");
-		expect(wrapper.text()).toContain("Pending media");
-		expect(wrapper.text()).toContain(pendingSourceImage);
-		expect(wrapper.find(`a[href="${pendingSourceImage}"]`).exists()).toBe(
-			true
-		);
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("pcta12_pset2_40.png");
+			expect(wrapper.text()).toContain("Pending media");
+			expect(wrapper.text()).toContain(pendingSourceImage);
+			expect(
+				wrapper.find(`a[href="${pendingSourceImage}"]`).exists()
+			).toBe(true);
+		});
 	});
 
-	it("surfaces Pre-Calculus B reserved source media through reference search", async () => {
+	it("surfaces Pre-Calculus B reserved static media through reference search", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -1245,12 +1247,14 @@ describe("CourseExplorer.vue", () => {
 		});
 		expect(wrapper.text()).toContain("References");
 		expect(wrapper.text()).toContain("Pre-Calculus B Static Placeholders");
-		expect(wrapper.text()).toContain("pctb3_pset4_20.png");
-		expect(wrapper.text()).toContain("Pending media");
-		expect(wrapper.text()).toContain(pendingSourceImage);
-		expect(wrapper.find(`a[href="${pendingSourceImage}"]`).exists()).toBe(
-			true
-		);
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("pctb3_pset4_20.png");
+			expect(wrapper.text()).toContain("Pending media");
+			expect(wrapper.text()).toContain(pendingSourceImage);
+			expect(
+				wrapper.find(`a[href="${pendingSourceImage}"]`).exists()
+			).toBe(true);
+		});
 	});
 
 	it("surfaces AP Calculus reserved static media through reference search", async () => {

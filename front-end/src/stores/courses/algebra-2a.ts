@@ -893,32 +893,32 @@ The important part is the explanation: name the graph feature and connect it to 
 				media.piecewiseFunctions
 			)
 		]),
-		createModule("Source Activity Archive", [
+		createModule("Algebra 2A Reference Archive", [
 			createLesson(
 				"Project Scenario and Context Links",
 				`
-**Source Activity Anchors: Algebra 2A**
+**Algebra 2A Reference Map**
 
 **Reference details:**
 
-- Complex numbers: original visual prompts include plotting \`a + bi\), interpreting distance and area on the complex plane, and connecting repeated powers of \`i\` to a four-step cycle.
-- Quadratics: original review material covers factoring, special products, completing the square, non-real roots, discriminant reasoning, and a quadratic-formula song reference at https://www.youtube.com/watch?v=2lbABbfU6Zc&feature=youtu.be.
-- Graphing quadratics: source explorations include GeoGebra transformation work at https://www.geogebra.org/calculator/py7khf9c and Desmos comparison work at https://www.desmos.com/calculator/250ny4ueuq.
-- Higher-degree polynomials: source prompts include polynomial operations, polynomial long division, synthetic division, the Fundamental Theorem of Algebra, rational zeros, Descartes' Rule of Signs, bounds on zeros, and end-behavior sketches.
-- Rational functions: the original analysis graph is retained as a Desmos link at https://www.desmos.com/calculator/auz2qerbgj.
-- Radical and piecewise functions: original visual prompts include square-root and odd-root domain/range comparisons, radical-equation checks for extraneous solutions, floor and ceiling functions, pay-rate models, candy-pricing models, and continuity constraints.
+- Complex numbers: visual prompts include plotting \`a + bi\`, interpreting distance and area on the complex plane, and connecting repeated powers of \`i\` to a four-step cycle.
+- Quadratics: review material covers factoring, special products, completing the square, non-real roots, discriminant reasoning, and a quadratic-formula song reference at https://www.youtube.com/watch?v=2lbABbfU6Zc&feature=youtu.be.
+- Graphing quadratics: reference explorations include GeoGebra transformation work at https://www.geogebra.org/calculator/py7khf9c and Desmos comparison work at https://www.desmos.com/calculator/250ny4ueuq.
+- Higher-degree polynomials: course prompts include polynomial operations, polynomial long division, synthetic division, the Fundamental Theorem of Algebra, rational zeros, Descartes' Rule of Signs, bounds on zeros, and end-behavior sketches.
+- Rational functions: the analysis graph is retained as a Desmos link at https://www.desmos.com/calculator/auz2qerbgj.
+- Radical and piecewise functions: visual prompts include square-root and odd-root domain/range comparisons, radical-equation checks for extraneous solutions, floor and ceiling functions, pay-rate models, candy-pricing models, and continuity constraints.
 
 **Evidence record:**
 
 - External YouTube, GeoGebra, and Desmos resources are retained as links, not attempted image embeds.
-- Original static image references are represented separately as future class-host placeholders when the file is not currently available.
-- Algebra 1B graph images reused by the original Algebra 2A export are already tracked as Algebra 1B pending static assets.
+- Static image references are represented separately as future class-host placeholders when the file is not currently available.
+- Algebra 1B graph images reused in this Algebra 2A reference set are already tracked as Algebra 1B pending static assets.
 				`.trim()
 			),
 			createLesson(
 				"Pending Static Asset Placeholders",
 				`
-These source images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
+These static images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
 
 ${sourceMediaReferences()}
 				`.trim()

@@ -60,7 +60,7 @@ function project({
 		`**Project goal:** ${goal}`,
 		`**Work path:**\n${steps.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
 		`**Evidence of completion:** ${evidence}`,
-		`**Source project:** ${title}`
+		`**Project reference:** ${title}`
 	].join("\n\n");
 }
 
@@ -74,7 +74,7 @@ function sourceAnchor({
 	title: string;
 }) {
 	return [
-		`**Source Activity Anchors: ${title}**`,
+		`**Reference map: ${title}**`,
 		`**Reference details:**\n${references.map(reference => `- ${reference}`).join("\n")}`,
 		`**Evidence record:**\n${evidence.map(item => `- ${item}`).join("\n")}`
 	].join("\n\n");
@@ -483,7 +483,7 @@ export const preAlgebraACourse: RawCourse = {
 				})
 			),
 			lesson(
-				"Source Activity Anchors: Pre-Algebra A Capstone",
+				"Pre-Algebra A Capstone Reference Map",
 				sourceAnchor({
 					title: "Pre-Algebra A Capstone",
 					references: [
@@ -501,10 +501,10 @@ export const preAlgebraACourse: RawCourse = {
 		]),
 		{
 			kind: "appendix",
-			title: "Source Activity Archive",
+			title: "Pre-Algebra A Reference Archive",
 			curriculum: [
 				lesson(
-					"Pre-Algebra A Source Anchors",
+					"Pre-Algebra A Reference Map",
 					[
 						sourceAnchor({
 							title: "High and Low Species",

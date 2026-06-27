@@ -639,7 +639,7 @@ This check-in focuses on moving comfortably between slope-intercept, point-slope
 
 - \`-x/3 - 1 >= 5\` -> \`x <= -18\`
 - \`(2/3)x < (4/3)y + 6\` -> \`y > 2x - 8\`
-- The graphed inequality from the source was \`y <= -x + 7\`
+- Selected graphed inequality: \`y <= -x + 7\`
 - Convenience-store word problem:
   - \`2 + 5 + 1.5b >= 10\`
   - minimum bags of chips: \`2\`
@@ -659,7 +659,7 @@ Use these practice results to extend the check-in:
 - Convert \`3x - 4y = 16\`:
   - slope-intercept form -> \`y = (3/4)x - 4\`
   - one point-slope form -> \`y + 1 = (3/4)(x - 4)\`
-- Graphed inequality answer from the source: \`y < 3x - 4\`
+- Graphed inequality answer: \`y < 3x - 4\`
 				`.trim()
 			)
 		]),
@@ -750,7 +750,7 @@ Rewrite one equation so a variable is isolated, substitute that expression into 
 
 Substitution works best when one equation already gives \`x =\` or \`y =\`, or when a variable has coefficient \`1\` or \`-1\`. After substitution, the two-variable system becomes a one-variable equation. A normal numeric answer gives one ordered pair. A contradiction such as \`0 = 2\` means no solution. An identity such as \`0 = 0\` means the two equations represent the same line and there are infinitely many solutions.
 
-The final step is always to substitute the solved value back into one original equation, not only into the rewritten equation, so the ordered pair is checked against the source system.
+The final step is always to substitute the solved value back into one original equation, not only into the rewritten equation, so the ordered pair is checked against the given system.
 
 **Representative results**
 
@@ -977,7 +977,7 @@ The master project closes the course with a short independent explanation.
 			createLesson(
 				"Additional Practice",
 				`
-Use the remaining source answers for a compact end-of-course review. Choose a method deliberately: graphing for visual interpretation, substitution when a variable is already isolated, and elimination when terms can cancel cleanly. Check each answer in both original equations. When the result is \`no solution\` or \`infinite solutions\`, explain the line relationship instead of treating the answer like a missing ordered pair.
+Use the remaining selected answers for a compact end-of-course review. Choose a method deliberately: graphing for visual interpretation, substitution when a variable is already isolated, and elimination when terms can cancel cleanly. Check each answer in both original equations. When the result is \`no solution\` or \`infinite solutions\`, explain the line relationship instead of treating the answer like a missing ordered pair.
 
 **Selected answers**
 
@@ -1001,11 +1001,11 @@ Use the remaining source answers for a compact end-of-course review. Choose a me
 				`.trim()
 			)
 		]),
-		createModule("Source Activity Archive", [
+		createModule("Algebra 1A Reference Archive", [
 			createLesson(
 				"Project Scenario and Context Links",
 				`
-**Source Activity Anchors: Algebra 1A**
+**Algebra 1A Reference Map**
 
 **Reference details:**
 
@@ -1038,7 +1038,7 @@ Use the remaining source answers for a compact end-of-course review. Choose a me
 			createLesson(
 				"Pending Static Asset Placeholders",
 				`
-These source images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
+These static images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
 
 ${sourceMediaReferences()}
 				`.trim()
