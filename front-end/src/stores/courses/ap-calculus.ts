@@ -622,13 +622,13 @@ export const apCalculusCourse: RawCourse = {
 	name: "AP Calculus",
 	modules: [
 		...moduleData.map(module),
-		appendixModule("Source Activity Archive", [
+		appendixModule("AP Calculus Reference Archive", [
 			lesson(
-				"Source Activity Anchors: AP Calculus",
+				"AP Calculus Reference Map",
 				[
-					"These source anchors preserve activity context from the original AP Calculus sequence while keeping the visible course neutral and avoiding unavailable legacy image embeds.",
+					"This reference map summarizes AP Calculus pacing, topic coverage, and static media slots without embedding diagram files that are not yet on the class static host.",
 					[
-						"**Original-source concepts retained**",
+						"**Course concept map**",
 						"- Course setup: AB/BC path selection, exam registration handled through the student's school or family, calculator policy checks, diagnostic readiness, and weekly homework expectations.",
 						"- Limits and continuity: one-sided limits, graphical and tabular estimation, algebraic limit procedures, removable and infinite discontinuities, continuity conditions, and Intermediate Value Theorem reasoning.",
 						"- Derivatives: average and instantaneous rates of change, derivative notation, derivative rules, trigonometric/exponential/logarithmic derivatives, chain rule, implicit differentiation, inverse-function derivatives, and higher-order derivatives.",
@@ -638,16 +638,16 @@ export const apCalculusCourse: RawCourse = {
 						"- BC representation and series topics: parametric equations, polar coordinates, vector-valued functions, infinite series, convergence tests, power series, Taylor polynomials, interval of convergence, and approximation error."
 					].join("\n"),
 					[
-						"**External source links**",
+						"**Reference links**",
 						"- College Board calculator policy: https://apstudents.collegeboard.org/exam-policies-guidelines/calculator-policies",
-						"- College Board exam dates page used by the source sequence: https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
-						"- Barron's AP Calculus Premium book reference used by the source sequence: https://www.amazon.com/AP-Calculus-Premium-Practice-Barrons/dp/1506261906",
+						"- College Board exam dates page for planning AP exam timing: https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
+						"- Barron's AP Calculus Premium book reference for optional practice planning: https://www.amazon.com/AP-Calculus-Premium-Practice-Barrons/dp/1506261906",
 						"- Khan Academy p-series convergence proof reference: https://www.khanacademy.org/math/ap-calculus-bc/bc-series-new/bc-10-5/a/proof-of-p-series-convergence-criteria",
 						"- Khan Academy Taylor polynomial error reference: https://www.khanacademy.org/math/ap-calculus-bc/bc-series-new/bc-10-12/v/error-or-remainder-of-a-taylor-polynomial-approximation",
 						"- Khan Academy Taylor polynomial error proof reference: https://www.khanacademy.org/math/ap-calculus-bc/bc-series-new/bc-10-12/v/proof-bounding-the-error-or-remainder-of-a-taylor-polynomial-approximation"
 					].join("\n"),
-					"**Source citation note:** The source sequence cited College Board AP Calculus resources and a published Barron's practice book for pacing, practice-exam planning, and selected problem references. No proprietary book, AP Classroom, or private-document content is reproduced in this course.",
-					"**Source-preservation note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+					"**Reference note:** College Board AP Calculus resources and a published Barron's practice book support pacing, practice-exam planning, and selected problem-reference decisions. No proprietary book, AP Classroom, or private-document content is reproduced in this course.",
+					"**Static-media note:** Diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves intended `static.classes.jacobdanderson.net` URLs by diagram filename so the diagrams can be added later without changing course references."
 				].join("\n\n")
 			)
 		]),
@@ -663,7 +663,7 @@ export const apCalculusCourse: RawCourse = {
 			"Mathematical practices using graphical, numerical, analytical, and verbal representations"
 		],
 		sourcePolicy:
-			"Built from the AP Calculus sequence with neutral wording, course-native summaries, AP-style practice structure, and no direct legacy static image embeds.",
+			"Built as a neutral AP Calculus course with course-native summaries, AP-style practice structure, and no direct static image embeds.",
 		assessmentCadence: [
 			"Diagnostic readiness module before limits.",
 			"Topic reviews after limits and continuity, differentiation, applications of derivatives, integration and accumulation, differential equations, applications of integration, parametric/polar/vector-valued functions, and infinite series.",
@@ -692,7 +692,7 @@ export const apCalculusCourse: RawCourse = {
 		recommendedNextWork: [
 			"Add owned or source-safe graph cards for common AP Calculus visual prompts.",
 			"Add separate accelerated AB, BC, and exam-review pacing tracks.",
-			"Restore selected original AP Calculus diagrams on the class static host as assets become available."
+			"Add selected AP Calculus diagrams on the class static host as assets become available."
 		]
 	}
 };

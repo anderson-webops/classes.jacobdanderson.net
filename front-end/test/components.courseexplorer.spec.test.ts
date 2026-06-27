@@ -1253,7 +1253,7 @@ describe("CourseExplorer.vue", () => {
 		);
 	});
 
-	it("surfaces AP Calculus reserved source media through reference search", async () => {
+	it("surfaces AP Calculus reserved static media through reference search", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -1291,12 +1291,14 @@ describe("CourseExplorer.vue", () => {
 		});
 		expect(wrapper.text()).toContain("References");
 		expect(wrapper.text()).toContain("AP Calculus Static Placeholders");
-		expect(wrapper.text()).toContain("apc21_concept3_24.png");
-		expect(wrapper.text()).toContain("Pending media");
-		expect(wrapper.text()).toContain(pendingSourceImage);
-		expect(wrapper.find(`a[href="${pendingSourceImage}"]`).exists()).toBe(
-			true
-		);
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("apc21_concept3_24.png");
+			expect(wrapper.text()).toContain("Pending media");
+			expect(wrapper.text()).toContain(pendingSourceImage);
+			expect(
+				wrapper.find(`a[href="${pendingSourceImage}"]`).exists()
+			).toBe(true);
+		});
 	});
 
 	it("points supplemental pending media to the future class static URL", async () => {
