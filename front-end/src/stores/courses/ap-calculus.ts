@@ -1,4 +1,9 @@
 import type { RawCourse } from "./types";
+import {
+	apCalculusStaticFilenames,
+	pendingStaticMediaNotice,
+	staticMediaUrl
+} from "./staticMedia";
 
 interface CalculusModuleData {
 	title: string;
@@ -106,6 +111,27 @@ function module({
 			)
 		]
 	};
+}
+
+function appendixModule(
+	title: string,
+	curriculum: ReturnType<typeof lesson>[]
+) {
+	return {
+		kind: "appendix" as const,
+		title,
+		curriculum,
+		supplementalProjects: []
+	};
+}
+
+function sourceMediaReferences() {
+	return apCalculusStaticFilenames
+		.map(
+			filename =>
+				`- \`${filename}\` -> ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
 }
 
 const moduleData: CalculusModuleData[] = [
@@ -594,7 +620,41 @@ const moduleData: CalculusModuleData[] = [
 
 export const apCalculusCourse: RawCourse = {
 	name: "AP Calculus",
-	modules: moduleData.map(module),
+	modules: [
+		...moduleData.map(module),
+		appendixModule("Source Activity Archive", [
+			lesson(
+				"Source Activity Anchors: AP Calculus",
+				[
+					"These source anchors preserve activity context from the original AP Calculus sequence while keeping the visible course neutral and avoiding unavailable legacy image embeds.",
+					[
+						"**Original-source concepts retained**",
+						"- Course setup: AB/BC path selection, exam registration handled through the student's school or family, calculator policy checks, diagnostic readiness, and weekly homework expectations.",
+						"- Limits and continuity: one-sided limits, graphical and tabular estimation, algebraic limit procedures, removable and infinite discontinuities, continuity conditions, and Intermediate Value Theorem reasoning.",
+						"- Derivatives: average and instantaneous rates of change, derivative notation, derivative rules, trigonometric/exponential/logarithmic derivatives, chain rule, implicit differentiation, inverse-function derivatives, and higher-order derivatives.",
+						"- Applications of derivatives: contextual rates, related rates, tangent-line approximation, Mean Value Theorem, function analysis, concavity, optimization, and graph relationships between a function and its derivatives.",
+						"- Integration and differential equations: Riemann sums, Fundamental Theorem of Calculus, antiderivatives, integration methods, slope fields, Euler's Method, separation of variables, exponential models, and logistic-model extensions.",
+						"- Applications of integration: contextual accumulation, area between curves, volumes with cross sections, disk and washer methods, and BC-only arc-length extensions.",
+						"- BC representation and series topics: parametric equations, polar coordinates, vector-valued functions, infinite series, convergence tests, power series, Taylor polynomials, interval of convergence, and approximation error."
+					].join("\n"),
+					[
+						"**External source links**",
+						"- College Board calculator policy: https://apstudents.collegeboard.org/exam-policies-guidelines/calculator-policies",
+						"- College Board exam dates page used by the source sequence: https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
+						"- Barron's AP Calculus Premium book reference used by the source sequence: https://www.amazon.com/AP-Calculus-Premium-Practice-Barrons/dp/1506261906",
+						"- Khan Academy p-series convergence proof reference: https://www.khanacademy.org/math/ap-calculus-bc/bc-series-new/bc-10-5/a/proof-of-p-series-convergence-criteria",
+						"- Khan Academy Taylor polynomial error reference: https://www.khanacademy.org/math/ap-calculus-bc/bc-series-new/bc-10-12/v/error-or-remainder-of-a-taylor-polynomial-approximation",
+						"- Khan Academy Taylor polynomial error proof reference: https://www.khanacademy.org/math/ap-calculus-bc/bc-series-new/bc-10-12/v/proof-bounding-the-error-or-remainder-of-a-taylor-polynomial-approximation"
+					].join("\n"),
+					"**Source citation note:** The source sequence cited College Board AP Calculus resources and a published Barron's practice book for pacing, practice-exam planning, and selected problem references. No proprietary book, AP Classroom, or private-document content is reproduced in this course.",
+					"**Source-preservation note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+				].join("\n\n")
+			)
+		]),
+		appendixModule("Pending Static Assets", [
+			lesson("AP Calculus Static Placeholders", sourceMediaReferences())
+		])
+	],
 	developmentMetadata: {
 		priority: "urgent",
 		standards: [
@@ -632,7 +692,7 @@ export const apCalculusCourse: RawCourse = {
 		recommendedNextWork: [
 			"Add owned or source-safe graph cards for common AP Calculus visual prompts.",
 			"Add separate accelerated AB, BC, and exam-review pacing tracks.",
-			"Add static media placeholders only for specific original AP Calculus images selected for future restoration."
+			"Restore selected original AP Calculus diagrams on the class static host as assets become available."
 		]
 	}
 };

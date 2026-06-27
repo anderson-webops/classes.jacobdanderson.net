@@ -8247,7 +8247,7 @@ describe("course text quality normalization", () => {
 		expect(mediaLinks).toEqual([]);
 	});
 
-	it("adds AP Calculus from the source math sequence without legacy static embeds", async () => {
+	it("adds AP Calculus source anchors with reserved source media", async () => {
 		const course = await loadRawCourse("ap-calculus");
 		expect(course).not.toBeNull();
 		if (!course) return;
@@ -8287,7 +8287,9 @@ describe("course text quality normalization", () => {
 			"APC24 Parametric Equations, Polar Coordinates, and Vector-Valued Functions Topic Review",
 			"APC25 Infinite Series",
 			"APC26 Infinite Sums and Representing Infinite Series",
-			"APC27 Infinite Sequences and Series Topic Review"
+			"APC27 Infinite Sequences and Series Topic Review",
+			"Source Activity Archive",
+			"Pending Static Assets"
 		]);
 		expect(text).toContain("Introducing Calculus and Defining Limits");
 		expect(text).toContain("Properties and Procedures for Limits");
@@ -8301,6 +8303,31 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Parametric Equations, Polar Coordinates, and Vector-Valued Calculus");
 		expect(text).toContain("Infinite Series and Convergence Tests");
 		expect(text).toContain("Power Series, Taylor Series");
+		expect(text).toContain("Source Activity Anchors: AP Calculus");
+		expect(text).toContain("AP Calculus Static Placeholders");
+		expect(text).toContain("AB/BC path selection");
+		expect(text).toContain("Applications of integration");
+		expect(text).toContain("BC representation and series topics");
+		expect(text).toContain(
+			"https://apstudents.collegeboard.org/exam-policies-guidelines/calculator-policies"
+		);
+		expect(text).toContain(
+			"https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates"
+		);
+		expect(text).toContain(
+			"https://www.khanacademy.org/math/ap-calculus-bc/bc-series-new/bc-10-12/v/error-or-remainder-of-a-taylor-polynomial-approximation"
+		);
+		for (const filename of [
+			"apc1_concept1_0.png",
+			"apc10_pset1_24.png",
+			"apc16_concept1_12.png",
+			"apc21_concept3_24.png",
+			"apc23_concept3_5.png",
+			"applicationsofintegrals_topicreview_multiplechoice_1.png"
+		]) {
+			expect(text, filename).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(text, filename)).toBe(true);
+		}
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|static\.junilearning/i
 		);
