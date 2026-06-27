@@ -1201,6 +1201,52 @@ describe("CourseExplorer.vue", () => {
 		);
 	});
 
+	it("surfaces Pre-Calculus B reserved source media through reference search", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const pendingSourceImage = staticMediaUrl("pctb3_pset4_20.png");
+
+		appStore.setCurrentUser({
+			_id: "user-1",
+			name: "Student",
+			email: "student@example.com",
+			age: 12,
+			state: "GA",
+			courseAccess: ["pre-calculus-b"],
+			courseProgress: [],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("Pre-Calculus and Trigonometry B");
+		});
+
+		await wrapper.get("#course-search").setValue("pctb3_pset4_20.png");
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("Pending Static Assets");
+		});
+		expect(wrapper.text()).toContain("References");
+		expect(wrapper.text()).toContain("Pre-Calculus B Static Placeholders");
+		expect(wrapper.text()).toContain("pctb3_pset4_20.png");
+		expect(wrapper.text()).toContain("Pending media");
+		expect(wrapper.text()).toContain(pendingSourceImage);
+		expect(wrapper.find(`a[href="${pendingSourceImage}"]`).exists()).toBe(
+			true
+		);
+	});
+
 	it("points supplemental pending media to the future class static URL", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);

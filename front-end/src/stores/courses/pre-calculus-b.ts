@@ -1,4 +1,9 @@
 import type { RawCourse } from "./types";
+import {
+	pendingStaticMediaNotice,
+	preCalculusBStaticFilenames,
+	staticMediaUrl
+} from "./staticMedia";
 
 function lesson(title: string, content: string) {
 	return { title, content };
@@ -7,13 +12,24 @@ function lesson(title: string, content: string) {
 function module(
 	title: string,
 	curriculum: ReturnType<typeof lesson>[],
-	supplementalProjects: ReturnType<typeof lesson>[] = []
+	supplementalProjects: ReturnType<typeof lesson>[] = [],
+	kind?: "module" | "appendix"
 ) {
 	return {
+		...(kind ? { kind } : {}),
 		title,
 		curriculum,
 		supplementalProjects
 	};
+}
+
+function sourceMediaReferences() {
+	return preCalculusBStaticFilenames
+		.map(
+			filename =>
+				`- \`${filename}\` -> ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
+		)
+		.join("\n\n");
 }
 
 function overview({
@@ -1118,6 +1134,51 @@ export const preCalculusBCourse: RawCourse = {
 					})
 				)
 			]
+		),
+		module(
+			"Source Activity Archive",
+			[
+				lesson(
+					"Source Activity Anchors: Pre-Calculus B",
+					[
+						"These source anchors preserve activity context from the original Pre-Calculus and Trigonometry B sequence while keeping the visible course neutral and avoiding unavailable legacy image embeds.",
+						[
+							"**Original-source concepts retained**",
+							"- Trigonometry basics: radians and degrees, unit-circle coordinates, reference angles, exact trigonometric values, reciprocal ratios, law of sines, law of cosines, and non-right-triangle cases.",
+							"- Trigonometric graphs: sine, cosine, tangent, reciprocal, and inverse-trigonometric graph behavior; amplitude, period, midline, phase shift, asymptotes, restricted domains, and graph transformations.",
+							"- Trigonometric equations and identities: reciprocal, quotient, and Pythagorean identities; identity proofs; equation solving; interval-complete solutions; and extraneous-solution checks.",
+							"- Coordinate representations: polar points, equivalent polar coordinates, rectangular-polar conversion, polar graphs, complex numbers in polar form, parametric equations, parameter restrictions, and traced direction.",
+							"- Linear-algebra previews: vector components, magnitude, direction, scalar multiplication, dot products, matrix dimensions, matrix operations, inverse matrices, row operations, augmented matrices, and solution-type interpretation.",
+							"- Probability and calculus readiness: sample spaces, permutations, combinations, complements, compound probability, one-sided and two-sided limits, continuity, average rate of change, secant slopes, derivative notation, and units."
+						].join("\n"),
+						[
+							"**External source links**",
+							"- Geogebra trigonometric-ratio exploration: https://www.geogebra.org/m/keqhdkaj",
+							"- Desmos sine and cosine exploration: https://www.desmos.com/calculator/ombx9pxa7j",
+							"- Desmos trigonometric graph transformations: https://www.desmos.com/calculator/y3xtkmytl4",
+							"- Desmos parametric circle example: https://www.desmos.com/calculator/shd1bivrff",
+							"- Desmos parametric pattern example: https://www.desmos.com/calculator/dyz4iw3ioi",
+							"- Matrix calculator reference: https://matrixcalc.org/en/",
+							"- Geogebra derivative demonstration: https://www.geogebra.org/m/nzv8jj9g"
+						].join("\n"),
+						"**Source citation note:** The source sequence cited a published AP Calculus practice book for selected rate-of-change and derivative-preview problems. No proprietary book content is reproduced in this course.",
+						"**Source-preservation note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+					].join("\n\n")
+				)
+			],
+			[],
+			"appendix"
+		),
+		module(
+			"Pending Static Assets",
+			[
+				lesson(
+					"Pre-Calculus B Static Placeholders",
+					sourceMediaReferences()
+				)
+			],
+			[],
+			"appendix"
 		)
 	],
 	developmentMetadata: {
