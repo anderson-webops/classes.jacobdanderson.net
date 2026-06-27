@@ -61,7 +61,7 @@ export const introToBiologyCourse: RawCourse = {
 					content: [
 						concept({
 							investigation:
-								"This section has a placeholder for the human-body diagram `biomod1pro1im1.jpg`. The class static host URL is reserved so the diagram can appear here when the file is available.",
+								"Use the human-body diagram file `biomod1pro1im1.jpg` as the reference image for this body-systems map when it is included in the course materials.",
 							model: "Body systems are coordinated groups of organs. A useful systems map includes at least one representative organ and the main job for each system.",
 							evidence:
 								"Label skeletal, nervous, integumentary, respiratory, circulatory, digestive, excretory, endocrine, immune, and muscular examples.",
@@ -76,7 +76,7 @@ export const introToBiologyCourse: RawCourse = {
 					content: [
 						concept({
 							investigation:
-								"This section has a placeholder for the body-systems reference `biomod1pro1im2.jpg`. When the hosted file becomes available, the course viewer renders the image in this space automatically.",
+								"Use the body-systems reference file `biomod1pro1im2.jpg` to compare how major systems overlap and coordinate responses.",
 							model: "Systems overlap rather than operating as isolated boxes. Respiratory and circulatory systems exchange and transport gases; nervous and endocrine systems coordinate signals; immune and integumentary systems protect boundaries.",
 							evidence:
 								"Use arrows to show which system receives information, which system moves material, and which system changes the body's response.",
@@ -167,7 +167,7 @@ export const introToBiologyCourse: RawCourse = {
 					content: [
 						concept({
 							investigation:
-								"A dinner-mystery graph can match guests with the dishes they ate by comparing nutrient clues. This placeholder reserves the graph image filename `biomod2pro1im1.png`.",
+								"A dinner-mystery graph can match guests with the dishes they ate by comparing nutrient clues. The graph image file is `biomod2pro1im1.png`.",
 							model: "A graph can represent relative molecule levels before and after a meal. Changes in carbohydrate, amino-acid, and fatty-acid levels act as clues.",
 							evidence:
 								"Match each guest to a dish by naming the strongest graph clue and ruling out at least one alternative.",

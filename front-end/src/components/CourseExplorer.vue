@@ -2146,7 +2146,7 @@ function writeStoredValue(key: string, value: string) {
 												}}</strong
 											>.
 										</p>
-										<p>Reserved class static host URL:</p>
+										<p>Static media URL:</p>
 										<a
 											:href="item.mediaLink"
 											rel="noopener noreferrer"
@@ -2155,9 +2155,9 @@ function writeStoredValue(key: string, value: string) {
 											{{ item.mediaLink }}
 										</a>
 										<p>
-											When the file becomes available,
-											this media space will show the image
-											or video automatically.
+											This preview will show the image or
+											video here once the static media
+											file is added.
 										</p>
 									</div>
 								</article>
@@ -2390,7 +2390,7 @@ function writeStoredValue(key: string, value: string) {
 												}}</strong
 											>.
 										</p>
-										<p>Reserved class static host URL:</p>
+										<p>Static media URL:</p>
 										<a
 											:href="item.mediaLink"
 											rel="noopener noreferrer"
@@ -2399,9 +2399,9 @@ function writeStoredValue(key: string, value: string) {
 											{{ item.mediaLink }}
 										</a>
 										<p>
-											When the file becomes available,
-											this media space will show the image
-											or video automatically.
+											This preview will show the image or
+											video here once the static media
+											file is added.
 										</p>
 									</div>
 								</article>
