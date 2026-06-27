@@ -4256,6 +4256,24 @@ describe("course text quality normalization", () => {
 			"Finish **Low-Level Security Lab 17: Defensive Audit Capstone Studio** by naming one remaining limitation"
 		);
 		expect(corpus).toContain("Defensive Audit Extension Practice");
+
+		const auditPacket = findItem(
+			course!,
+			/Deliver an Audit Packet and Mitigation Summary/
+		);
+		expect(auditPacket.content).toContain(
+			"findings ranked by impact, attacker assumptions"
+		);
+		expect(auditPacket.content).toContain(
+			"safe security analysis with local-only test fixtures"
+		);
+		expect(auditPacket.content).not.toMatch(
+			/hosts, addresses, ports, routes, protocols/i
+		);
+		expect(auditPacket.content).not.toMatch(/packet\/service evidence/i);
+		expect(auditPacket.content).not.toMatch(
+			/packet, port, DNS, route, or service result/i
+		);
 	});
 
 	it("keeps Linux Systems guidance operational and specific", async () => {
