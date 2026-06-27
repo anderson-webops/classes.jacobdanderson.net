@@ -773,7 +773,7 @@ Reuse the probability, statistics, unit-circle, and trig-graph references while 
 			createLesson(
 				"Algebra 2B Reference Map",
 				`
-This reference map summarizes Algebra 2B topic coverage and static media slots without embedding diagram files that are not yet on the class static host.
+This reference map summarizes Algebra 2B topic coverage and static media slots without embedding diagram files that are still pending in the class asset library.
 
 **Course concept map**
 
@@ -794,13 +794,10 @@ This reference map summarizes Algebra 2B topic coverage and static media slots w
 
 **Static-media note**
 
-Legacy static media is not embedded directly because those files are not currently available on the class static host. Each filename below reserves the intended future URL on \`static.classes.jacobdanderson.net\` so the asset can be dropped in later without changing course references.
+Legacy static media is not embedded directly while those files are pending. Each filename below keeps the intended static media URL so the asset can be added later without changing course references.
 				`.trim()
 			),
-			createLesson(
-				"Pending Static Asset Placeholders",
-				sourceMediaReferences()
-			)
+			createLesson("Pending Static Assets", sourceMediaReferences())
 		])
 	]
 };

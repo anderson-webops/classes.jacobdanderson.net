@@ -1032,11 +1032,11 @@ Use the remaining selected answers for a compact end-of-course review. Choose a 
 
 - The course keeps the restaurant, film-budget, marketing, community-data, avalanche-risk, cytogenetics, publication, and capstone scenarios visible.
 - External graph links are retained as links, not attempted image embeds.
-- Static image references are represented separately as future class-host placeholders when the file is not currently available.
+- Static image references are represented separately as pending static media when the file is not yet available.
 				`.trim()
 			),
 			createLesson(
-				"Pending Static Asset Placeholders",
+				"Pending Static Assets",
 				`
 These static images are not currently available in the site static repository. Each filename has a reserved class-host URL so the asset can be uploaded later without changing course links.
 

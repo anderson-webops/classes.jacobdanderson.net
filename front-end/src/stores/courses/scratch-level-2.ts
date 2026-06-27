@@ -1413,7 +1413,7 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 				{
 					title: "Pending Scratch Level 2 Visual Assets",
 					content: [
-						"This course has placeholders for the visual assets below. Each URL points to the class static host and can be filled when the matching file is available.",
+						"This course lists pending visual assets below. Each entry keeps a stable static media URL so the matching file can be added without changing course links.",
 						...SCRATCH_LEVEL_2_SOURCE_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

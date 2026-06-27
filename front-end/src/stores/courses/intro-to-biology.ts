@@ -717,7 +717,7 @@ export const introToBiologyCourse: RawCourse = {
 			"Claim-evidence-reasoning"
 		],
 		sourcePolicy:
-			"Adapted from the BIO1-BIO8 sequence with neutral wording, equipment-free activities, and static.classes placeholder media for missing images.",
+			"Adapted from the BIO1-BIO8 sequence with neutral wording, equipment-free activities, and pending static-media entries for missing images.",
 		assessmentCadence: [
 			"One diagram or model per module",
 			"One short CER or evidence explanation per module",
@@ -728,7 +728,7 @@ export const introToBiologyCourse: RawCourse = {
 			"Notebook or digital document",
 			"Diagrams",
 			"Provided case scenarios",
-			"Static image placeholders"
+			"Pending static images"
 		],
 		safetyPolicy: [
 			"No required food handling",

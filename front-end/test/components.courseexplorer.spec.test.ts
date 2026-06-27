@@ -1204,7 +1204,7 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain("Pending Static Assets");
 		});
 		expect(wrapper.text()).toContain("References");
-		expect(wrapper.text()).toContain("Pre-Calculus A Static Placeholders");
+		expect(wrapper.text()).toContain("Pre-Calculus A Pending Static Assets");
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("pcta12_pset2_40.png");
 			expect(wrapper.text()).toContain("Pending media");
@@ -1252,7 +1252,7 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain("Pending Static Assets");
 		});
 		expect(wrapper.text()).toContain("References");
-		expect(wrapper.text()).toContain("Pre-Calculus B Static Placeholders");
+		expect(wrapper.text()).toContain("Pre-Calculus B Pending Static Assets");
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("pctb3_pset4_20.png");
 			expect(wrapper.text()).toContain("Pending media");
@@ -1300,7 +1300,7 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain("Pending Static Assets");
 		});
 		expect(wrapper.text()).toContain("References");
-		expect(wrapper.text()).toContain("AP Calculus Static Placeholders");
+		expect(wrapper.text()).toContain("AP Calculus Pending Static Assets");
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("apc21_concept3_24.png");
 			expect(wrapper.text()).toContain("Pending media");

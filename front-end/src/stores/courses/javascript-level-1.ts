@@ -1343,7 +1343,7 @@ export const javascriptLevel1Course: RawCourse = {
 				{
 					title: "Pending JavaScript Level 1 Demo Media",
 					content: [
-						"This course has placeholders for the demo media below. Each URL points to the class static host and can be filled when the matching file is available.",
+						"This course lists pending demo media below. Each entry keeps a stable static media URL so the matching file can be added without changing course links.",
 						...JAVASCRIPT_LEVEL_1_ORIGINAL_MEDIA.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

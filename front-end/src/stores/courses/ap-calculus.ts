@@ -626,7 +626,7 @@ export const apCalculusCourse: RawCourse = {
 			lesson(
 				"AP Calculus Reference Map",
 				[
-					"This reference map summarizes AP Calculus pacing, topic coverage, and static media slots without embedding diagram files that are not yet on the class static host.",
+					"This reference map summarizes AP Calculus pacing, topic coverage, and static media slots without embedding diagram files that are still pending in the class asset library.",
 					[
 						"**Course concept map**",
 						"- Course setup: AB/BC path selection, exam registration handled through the student's school or family, calculator policy checks, diagnostic readiness, and weekly homework expectations.",
@@ -647,12 +647,12 @@ export const apCalculusCourse: RawCourse = {
 						"- Khan Academy Taylor polynomial error proof reference: https://www.khanacademy.org/math/ap-calculus-bc/bc-series-new/bc-10-12/v/proof-bounding-the-error-or-remainder-of-a-taylor-polynomial-approximation"
 					].join("\n"),
 					"**Reference note:** College Board AP Calculus resources and a published Barron's practice book support pacing, practice-exam planning, and selected problem-reference decisions. No proprietary book, AP Classroom, or private-document content is reproduced in this course.",
-					"**Static-media note:** Diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves intended `static.classes.jacobdanderson.net` URLs by diagram filename so the diagrams can be added later without changing course references."
+					"**Static-media note:** Diagrams are not embedded directly while those files are pending. The appendix lists stable static media URLs by diagram filename so diagrams can be added later without changing course references."
 				].join("\n\n")
 			)
 		]),
 		appendixModule("Pending Static Assets", [
-			lesson("AP Calculus Static Placeholders", sourceMediaReferences())
+			lesson("AP Calculus Pending Static Assets", sourceMediaReferences())
 		])
 	],
 	developmentMetadata: {
@@ -692,7 +692,7 @@ export const apCalculusCourse: RawCourse = {
 		recommendedNextWork: [
 			"Add owned or source-safe graph cards for common AP Calculus visual prompts.",
 			"Add separate accelerated AB, BC, and exam-review pacing tracks.",
-			"Add selected AP Calculus diagrams on the class static host as assets become available."
+			"Add selected AP Calculus diagrams as static media assets become available."
 		]
 	}
 };

@@ -1372,7 +1372,7 @@ export const aiLevel1Course: RawCourse = {
 				{
 					title: "AI Foundations Media Status",
 					content: [
-						"This course has placeholders for these project videos and concept images. Each URL points to the class static host and can be filled when the matching file is available.",
+						"This course lists pending project videos and concept images below. Each entry keeps a stable static media URL so the matching file can be added without changing course links.",
 						"**Pending project videos:**",
 						pendingAiLevel1AssetList(aiLevel1PendingSourceVideos),
 						"**Pending concept images:**",

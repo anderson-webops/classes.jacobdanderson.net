@@ -610,7 +610,7 @@ export const preAlgebraACourse: RawCourse = {
 				lesson(
 					"Pre-Algebra A Asset Status",
 					[
-						"This course has placeholders for the static assets below. The kickoff images are already represented in project cards; the PAA1 problem-set diagram keeps a stable class-static URL until the file is available.",
+						"This course lists pending static assets below. The kickoff images are already represented in project cards; the PAA1 problem-set diagram keeps a stable static media URL until the file is added.",
 						...PRE_ALGEBRA_A_PENDING_SOURCE_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
@@ -628,7 +628,7 @@ export const preAlgebraACourse: RawCourse = {
 			"Pre-algebra readiness for Algebra 1A"
 		],
 		sourcePolicy:
-			"Adapted from the Pre-Algebra A sequence with neutral wording, course-linked projects, and reserved static placeholders for unavailable kickoff images.",
+			"Adapted from the Pre-Algebra A sequence with neutral wording, course-linked projects, and pending static-media entries for unavailable kickoff images.",
 		assessmentCadence: [
 			"Kickoff readiness map",
 			"Check-In #1 after arithmetic, fractions, decimals, percents, ratios, and rates",
@@ -637,7 +637,7 @@ export const preAlgebraACourse: RawCourse = {
 		toolchain: [
 			"Notebook or shared document",
 			"Calculator when arithmetic is not the target skill",
-			"Static-host placeholders for diagrams and tables"
+			"Pending static-media entries for diagrams and tables"
 		],
 		safetyPolicy: [
 			"No physical materials required",

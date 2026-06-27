@@ -636,7 +636,7 @@ export const geometryBCourse: RawCourse = {
 				lesson(
 					"Geometry B Reference Map",
 					[
-						"This reference map summarizes Geometry B topic coverage and static media slots without embedding diagram files that are not yet on the class static host.",
+						"This reference map summarizes Geometry B topic coverage and static media slots without embedding diagram files that are still pending in the class asset library.",
 						[
 							"**Course concept map**",
 							"- Quadrilateral foundations: convex and concave quadrilaterals, trapezoids, kites, parallelograms, rectangles, rhombi, squares, angle sums, medians, diagonals, and classification from evidence.",
@@ -652,7 +652,7 @@ export const geometryBCourse: RawCourse = {
 							"- Sphere volume comparison visual: https://ds055uzetaobb.cloudfront.net/brioche/uploads/Fv9rxkzWWN-90675.svg?width=350",
 							"- Sphere surface-area comparison visual: https://www.mathsisfun.com/geometry/images/sphere-cylinder-area2.svg"
 						].join("\n"),
-						"**Static-media note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+						"**Static-media note:** Legacy static diagrams are not embedded directly while those files are pending. The appendix lists stable static media URLs by original filename so diagrams can be added later without changing course references."
 					].join("\n\n")
 				)
 			],
@@ -661,7 +661,12 @@ export const geometryBCourse: RawCourse = {
 		),
 		module(
 			"Pending Static Assets",
-			[lesson("Geometry B Static Placeholders", sourceMediaReferences())],
+			[
+				lesson(
+					"Geometry B Pending Static Assets",
+					sourceMediaReferences()
+				)
+			],
 			[],
 			"appendix"
 		)

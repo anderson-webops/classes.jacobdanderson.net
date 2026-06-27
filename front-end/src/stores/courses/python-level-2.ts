@@ -2443,7 +2443,7 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "Pending Python Level 2 Assets",
 					content: [
-						"This course has placeholders for the assets below. Each URL points to the class static host and can be filled when the matching file is available.",
+						"This course lists pending assets below. Each entry keeps a stable static media URL so the matching file can be added without changing course links.",
 						...PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS.map(
 							filename =>
 								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`

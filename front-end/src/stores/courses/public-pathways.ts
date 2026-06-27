@@ -331,7 +331,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		sourceAndTooling: [
 			"Course-native passages, draft templates, revision checklists, and short presentation outlines anchor the workflow.",
-			"Static story-planning templates from the original library are reserved on the class static host when the original asset is unavailable.",
+			"Static story-planning templates from the original library are listed as pending static media when the original asset is unavailable.",
 			"External videos, release forms, or presentation examples remain optional references rather than required platform steps."
 		],
 		safetyAndAccess: [
@@ -380,7 +380,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		],
 		sourceAndTooling: [
 			"Spreadsheets, simple tables, sample budgets, portfolio examples, company profiles, and product-planning templates support the workflow.",
-			"Static decision-map and finance visual assets from the original library are reserved on the class static host when unavailable.",
+			"Static decision-map and finance visual assets from the original library are listed as pending static media when unavailable.",
 			"External market data remains a discussion input, not personalized financial advice."
 		],
 		safetyAndAccess: [

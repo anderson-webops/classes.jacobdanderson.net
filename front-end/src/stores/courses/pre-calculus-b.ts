@@ -1141,7 +1141,7 @@ export const preCalculusBCourse: RawCourse = {
 				lesson(
 					"Pre-Calculus B Reference Map",
 					[
-						"This reference map summarizes Pre-Calculus and Trigonometry B topic coverage and static media slots without embedding diagram files that are not yet on the class static host.",
+						"This reference map summarizes Pre-Calculus and Trigonometry B topic coverage and static media slots without embedding diagram files that are still pending in the class asset library.",
 						[
 							"**Course concept map**",
 							"- Trigonometry basics: radians and degrees, unit-circle coordinates, reference angles, exact trigonometric values, reciprocal ratios, law of sines, law of cosines, and non-right-triangle cases.",
@@ -1162,7 +1162,7 @@ export const preCalculusBCourse: RawCourse = {
 							"- Geogebra derivative demonstration: https://www.geogebra.org/m/nzv8jj9g"
 						].join("\n"),
 						"**Reference note:** Earlier planning notes cited a published AP Calculus practice book for selected rate-of-change and derivative-preview problems. No proprietary book content is reproduced in this course.",
-						"**Static-media note:** Legacy static diagrams are not embedded directly because those files are not currently available on the class static host. The placeholder appendix reserves the intended `static.classes.jacobdanderson.net` URLs by original filename so the diagrams can be added later without changing course references."
+						"**Static-media note:** Legacy static diagrams are not embedded directly while those files are pending. The appendix lists stable static media URLs by original filename so diagrams can be added later without changing course references."
 					].join("\n\n")
 				)
 			],
@@ -1173,7 +1173,7 @@ export const preCalculusBCourse: RawCourse = {
 			"Pending Static Assets",
 			[
 				lesson(
-					"Pre-Calculus B Static Placeholders",
+					"Pre-Calculus B Pending Static Assets",
 					sourceMediaReferences()
 				)
 			],
