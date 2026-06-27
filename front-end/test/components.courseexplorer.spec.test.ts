@@ -1022,6 +1022,8 @@ describe("CourseExplorer.vue", () => {
 
 		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Static asset pending");
+		expect(wrapper.text()).toContain("Pending static asset");
+		expect(wrapper.text()).not.toContain("Original static asset");
 		expect(wrapper.text()).toContain("original-demo-video.mp4");
 		expect(wrapper.text()).toContain("When the file becomes available");
 		expect(wrapper.text()).toContain(missingStaticVideo);
@@ -1082,6 +1084,8 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.find("img.item-media-image").exists()).toBe(false);
 		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Static asset pending");
+		expect(wrapper.text()).toContain("Pending static asset");
+		expect(wrapper.text()).not.toContain("Original static asset");
 		expect(wrapper.text()).toContain("biomod1pro1im1.jpg");
 		expect(wrapper.text()).toContain("When the file becomes available");
 		expect(wrapper.text()).toContain(pendingStaticImage);
@@ -1148,6 +1152,8 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.find("img.item-media-image").exists()).toBe(false);
 		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Static asset pending");
+		expect(wrapper.text()).toContain("Pending static asset");
+		expect(wrapper.text()).not.toContain("Original static asset");
 		expect(wrapper.text()).toContain("future-original-demo-image.png");
 		expect(wrapper.text()).toContain(futureStaticImage);
 		expect(wrapper.find(`a[href="${futureStaticImage}"]`).exists()).toBe(
@@ -1350,6 +1356,8 @@ describe("CourseExplorer.vue", () => {
 
 		expect(wrapper.find("video.item-media-video").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Static asset pending");
+		expect(wrapper.text()).toContain("Pending static asset");
+		expect(wrapper.text()).not.toContain("Original static asset");
 		expect(wrapper.text()).toContain("supplemental-demo.mp4");
 		expect(wrapper.text()).toContain("class static host");
 		expect(wrapper.text()).toContain("When the file becomes available");

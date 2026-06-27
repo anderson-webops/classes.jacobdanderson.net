@@ -90,7 +90,7 @@ export const introToBiologyCourse: RawCourse = {
 					title: "Scenario-Based System Interactions",
 					content: concept({
 						investigation:
-							"Three source scenarios anchor this module: exercising on a hot day, a food-allergy reaction, and calcium intake from milk or another calcium source.",
+							"Three scenario prompts anchor this module: exercising on a hot day, a food-allergy reaction, and calcium intake from milk or another calcium source.",
 						model: "Each scenario is a cause-and-effect chain. The event changes internal conditions, body systems detect or respond to the change, and organs coordinate a response that helps maintain stability.",
 						evidence:
 							"Highlight the systems involved, add arrows for information or material flow, and write one sentence explaining how the response helps the body.",
@@ -167,7 +167,7 @@ export const introToBiologyCourse: RawCourse = {
 					content: [
 						concept({
 							investigation:
-								"The original source mission used a scrambled graph to match dinner guests with the dishes they ate. This placeholder reserves the original image filename `biomod2pro1im1.png`.",
+								"A dinner-mystery graph can match guests with the dishes they ate by comparing nutrient clues. This placeholder reserves the graph image filename `biomod2pro1im1.png`.",
 							model: "A graph can represent relative molecule levels before and after a meal. Changes in carbohydrate, amino-acid, and fatty-acid levels act as clues.",
 							evidence:
 								"Match each guest to a dish by naming the strongest graph clue and ruling out at least one alternative.",
@@ -205,7 +205,7 @@ export const introToBiologyCourse: RawCourse = {
 					title: "Project: Dinner Mystery",
 					content: project({
 						investigation:
-							"Use nutrient clues to match fictional guests with dishes from the source mission.",
+							"Use nutrient clues to match fictional guests with dishes from the dinner-mystery prompt.",
 						artifact:
 							"A table with one row per guest, one predicted dish, the strongest clue, and one rejected alternative.",
 						evidence:
@@ -583,7 +583,7 @@ export const introToBiologyCourse: RawCourse = {
 					title: "Alien Biology Comparison",
 					content: concept({
 						investigation:
-							"The source scenario describes an alien with missing digestive structures but similar excretory organs.",
+							"A comparison scenario describes an alien with missing digestive structures but similar excretory organs.",
 						model: "A Venn diagram compares how two organisms handle undigested material and metabolic waste.",
 						evidence:
 							"Classify similarities and differences using digestive and excretory vocabulary.",
@@ -608,7 +608,7 @@ export const introToBiologyCourse: RawCourse = {
 					title: "Project: Alien Venn Diagram",
 					content: project({
 						investigation:
-							"Compare a human and the source alien that lacks part of the digestive tract.",
+							"Compare a human and the scenario alien that lacks part of the digestive tract.",
 						artifact:
 							"A Venn diagram plus a short explanation of elimination and excretion differences.",
 						evidence:
@@ -727,7 +727,7 @@ export const introToBiologyCourse: RawCourse = {
 			"Shared screen",
 			"Notebook or digital document",
 			"Diagrams",
-			"Provided source scenarios",
+			"Provided case scenarios",
 			"Static image placeholders"
 		],
 		safetyPolicy: [
@@ -749,7 +749,7 @@ export const introToBiologyCourse: RawCourse = {
 		],
 		recommendedNextWork: [
 			"Add vetted open biology reference links by module",
-			"Upload missing original biology images to static.classes",
+			"Upload missing biology diagrams to static.classes",
 			"Cross-link Intro to Environmental Science where ecosystems, energy flow, and evidence modeling continue the biology sequence"
 		]
 	}

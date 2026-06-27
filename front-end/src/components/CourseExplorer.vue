@@ -2137,7 +2137,7 @@ function writeStoredValue(key: string, value: string) {
 											Static asset pending
 										</p>
 										<p>
-											Original static asset:
+											Pending static asset:
 											<strong>
 												{{
 													staticAssetName(
@@ -2381,7 +2381,7 @@ function writeStoredValue(key: string, value: string) {
 											Static asset pending
 										</p>
 										<p>
-											Original static asset:
+											Pending static asset:
 											<strong>
 												{{
 													staticAssetName(

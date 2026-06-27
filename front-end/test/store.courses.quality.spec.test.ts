@@ -8739,11 +8739,13 @@ describe("course text quality normalization", () => {
 		COURSE_SWEEP_TIMEOUT
 	);
 
-	it("adds Intro to Biology from the original science source sequence", async () => {
+	it("adds Intro to Biology from the science source sequence with neutral wording", async () => {
 		const course = await loadRawCourse("intro-to-biology");
 		expect(course).not.toBeNull();
 
 		const text = allCourseText(course);
+		const recommendedNextWork =
+			course!.developmentMetadata?.recommendedNextWork.join("\n") ?? "";
 		const mediaLinks = course!.modules.flatMap(module =>
 			[...module.curriculum, ...module.supplementalProjects]
 				.map(item => item.mediaLink)
@@ -8777,7 +8779,14 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Digestive Odyssey Exhibit");
 		expect(text).toContain("travel journal");
 		expect(text).toContain("No beakers, kits, dissections");
+		expect(text).toContain("Three scenario prompts anchor this module");
+		expect(text).toContain("A dinner-mystery graph can match guests");
+		expect(text).toContain("A comparison scenario describes an alien");
 		expect(text).not.toContain("static.junilearning.com");
+		expect(text).not.toMatch(
+			/original source|original image filename|source mission|source scenario|source alien/i
+		);
+		expect(recommendedNextWork).not.toMatch(/original biology images/i);
 		expect(mediaLinks).toEqual([
 			"https://static.classes.jacobdanderson.net/biomod1pro1im1.jpg",
 			"https://static.classes.jacobdanderson.net/biomod1pro1im2.jpg",
