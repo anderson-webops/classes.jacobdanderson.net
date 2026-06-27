@@ -7757,7 +7757,7 @@ describe("course text quality normalization", () => {
 		const text = allCourseText(course);
 		const moduleTitles = course.modules.map(module => module.title);
 
-		expect(moduleTitles).toContain("Algebra 1A Reference Archive");
+		expect(moduleTitles).toContain("Reference Archive: Algebra 1A");
 		expect(text).toContain("Algebra 1A Reference Map");
 		for (const originalReference of [
 			"Kick-off restaurant project",
@@ -7804,7 +7804,7 @@ describe("course text quality normalization", () => {
 		const text = allCourseText(course);
 		const moduleTitles = course.modules.map(module => module.title);
 
-		expect(moduleTitles).toContain("Algebra 1B Reference Archive");
+		expect(moduleTitles).toContain("Reference Archive: Algebra 1B");
 		expect(text).toContain("Algebra 1B Reference Map");
 		for (const originalReference of [
 			"Kick-off amusement-park project",
@@ -7855,7 +7855,7 @@ describe("course text quality normalization", () => {
 		const text = allCourseText(course);
 		const moduleTitles = course.modules.map(module => module.title);
 
-		expect(moduleTitles).toContain("Algebra 2A Reference Archive");
+		expect(moduleTitles).toContain("Reference Archive: Algebra 2A");
 		expect(text).toContain("Algebra 2A Reference Map");
 		for (const originalReference of [
 			"Complex numbers",
@@ -7899,7 +7899,7 @@ describe("course text quality normalization", () => {
 		const text = allCourseText(course);
 		const moduleTitles = course.modules.map(module => module.title);
 
-		expect(moduleTitles).toContain("Algebra 2B Reference Archive");
+		expect(moduleTitles).toContain("Reference Archive: Algebra 2B");
 		expect(text).toContain("Algebra 2B Reference Map");
 		for (const originalReference of [
 			"Logarithms and the natural logarithm",
