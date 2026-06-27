@@ -12,6 +12,7 @@ import Layouts from "vite-plugin-vue-layouts-next";
 import generateSitemap from "vite-ssg-sitemap";
 import { VueRouterAutoImports } from "vue-router/unplugin";
 import VueRouter from "vue-router/vite";
+import { generateProductionSitemap } from "./scripts/sitemap.mts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pythonIdePreloadChunkRE = /(?:^|\/)python-ide-runtime-[^/]+\.js$/;
@@ -88,7 +89,7 @@ export default defineConfig(({ command }) => ({
 			reduceInlineStyles: false
 		},
 		onFinished() {
-			generateSitemap();
+			generateProductionSitemap(generateSitemap);
 		}
 	},
 
