@@ -470,11 +470,14 @@ async function createSessionNote() {
 	padding: 1rem 1.05rem;
 	cursor: pointer;
 	color: #10263a;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .tools-summary span:first-child {
 	display: grid;
 	gap: 0.2rem;
+	min-width: 0;
 }
 
 .tools-summary strong {
@@ -487,6 +490,7 @@ async function createSessionNote() {
 .muted-copy {
 	color: #5f7a8e;
 	line-height: 1.5;
+	overflow-wrap: anywhere;
 }
 
 .summary-count {

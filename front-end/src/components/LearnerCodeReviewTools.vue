@@ -450,6 +450,8 @@ watch([selectedReview, selectedFileName], syncDrafts, { immediate: true });
 	padding: 1rem 1.1rem;
 	cursor: pointer;
 	list-style: none;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .tools-summary::-webkit-details-marker {
@@ -459,6 +461,7 @@ watch([selectedReview, selectedFileName], syncDrafts, { immediate: true });
 .tools-summary span:first-child {
 	display: grid;
 	gap: 0.2rem;
+	min-width: 0;
 }
 
 .tools-summary strong {
@@ -471,6 +474,7 @@ watch([selectedReview, selectedFileName], syncDrafts, { immediate: true });
 .project-meta,
 .code-pane small {
 	color: #526779;
+	overflow-wrap: anywhere;
 }
 
 .summary-count {

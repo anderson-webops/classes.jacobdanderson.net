@@ -1354,6 +1354,17 @@ function confirmDeleteAdmin() {
 	box-shadow: 0 28px 60px -44px rgba(15, 23, 42, 0.44);
 }
 
+.workspace-header,
+.workspace-sheet,
+.directory-section,
+.directory-card,
+.section-heading,
+.directory-grid,
+.workspace-stats {
+	min-width: 0;
+	max-width: 100%;
+}
+
 .workspace-header > div:first-child {
 	display: grid;
 	gap: 0.75rem;
@@ -1366,6 +1377,8 @@ function confirmDeleteAdmin() {
 	flex-wrap: wrap;
 	justify-content: space-between;
 	gap: 1rem;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .section-heading {
@@ -1603,6 +1616,8 @@ function confirmDeleteAdmin() {
 	align-items: baseline;
 	justify-content: space-between;
 	gap: 1rem;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .directory-card-name-row h4 {
@@ -1616,7 +1631,12 @@ function confirmDeleteAdmin() {
 	font-weight: 600;
 	line-height: 1.4;
 	text-align: right;
-	white-space: nowrap;
+	overflow-wrap: anywhere;
+}
+
+.directory-card-header p,
+.summary-list li {
+	overflow-wrap: anywhere;
 }
 
 .field-stack {
@@ -1652,7 +1672,7 @@ function confirmDeleteAdmin() {
 
 .directory-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
 	gap: 1rem;
 }
 
@@ -1747,7 +1767,7 @@ function confirmDeleteAdmin() {
 
 .checkbox-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
 	gap: 0.65rem;
 }
 
@@ -1820,6 +1840,31 @@ function confirmDeleteAdmin() {
 
 	.action-row {
 		flex-direction: column;
+	}
+
+	.directory-card-name-row {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.recipient-association {
+		text-align: left;
+	}
+}
+
+@media (max-width: 380px) {
+	.workspace-stats {
+		grid-template-columns: 1fr;
+	}
+
+	.stat-pill {
+		border-right: none;
+		border-bottom: 1px solid rgba(203, 213, 225, 0.78);
+	}
+
+	.stat-pill:last-child {
+		border-bottom: none;
 	}
 }
 </style>

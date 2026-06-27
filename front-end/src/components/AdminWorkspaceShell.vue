@@ -101,6 +101,7 @@ function isActive(path: string) {
 .admin-shell {
 	margin: 0;
 	padding: clamp(2.5rem, 5vw, 4.5rem) 1.25rem 4.5rem;
+	box-sizing: border-box;
 	background:
 		radial-gradient(
 			circle at 5% 0%,
@@ -116,10 +117,12 @@ function isActive(path: string) {
 }
 
 .admin-shell__frame {
+	width: 100%;
 	max-width: 1180px;
 	margin: 0 auto;
 	display: grid;
 	gap: 1rem;
+	min-width: 0;
 }
 
 .admin-shell__hero {
@@ -130,6 +133,9 @@ function isActive(path: string) {
 	padding: clamp(1.35rem, 3vw, 2rem);
 	border: 1px solid rgba(191, 219, 254, 0.18);
 	border-radius: 28px;
+	box-sizing: border-box;
+	min-width: 0;
+	max-width: 100%;
 	background:
 		linear-gradient(
 			140deg,
@@ -147,6 +153,7 @@ function isActive(path: string) {
 .admin-shell__copy {
 	display: grid;
 	gap: 0.7rem;
+	min-width: 0;
 	color: #e2e8f0;
 }
 
@@ -182,6 +189,8 @@ function isActive(path: string) {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	box-sizing: border-box;
+	max-width: 100%;
 	padding: 0.85rem 1.15rem;
 	border-radius: 999px;
 	border: 1px solid rgba(147, 197, 253, 0.42);
@@ -205,6 +214,8 @@ function isActive(path: string) {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.75rem;
+	min-width: 0;
+	max-width: 100%;
 	padding: 0.2rem 0;
 }
 
@@ -212,6 +223,8 @@ function isActive(path: string) {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	box-sizing: border-box;
+	max-width: 100%;
 	padding: 0.75rem 1rem;
 	border-radius: 999px;
 	border: 1px solid rgba(191, 219, 254, 0.18);
@@ -237,6 +250,9 @@ function isActive(path: string) {
 .admin-shell__body {
 	padding: clamp(1.15rem, 3vw, 1.75rem);
 	border-radius: 28px;
+	box-sizing: border-box;
+	min-width: 0;
+	max-width: 100%;
 	background: rgba(255, 255, 255, 0.96);
 	border: 1px solid rgba(203, 213, 225, 0.7);
 	box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
