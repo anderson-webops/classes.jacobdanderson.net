@@ -3479,7 +3479,7 @@ function subjectFocus(context: CourseTextContext) {
 			"safe security analysis with local-only test fixtures, threat modeling, evidence collection, and defensive remediation"
 		);
 	}
-	if (isNetworkSystemsSource(source)) {
+	if (isNetworkSystemsContext(context, source)) {
 		return topicScopedFocus(
 			context,
 			"network systems practice with addressing, routing, ports, DNS, packet evidence, service exposure, and diagnostic reasoning"
@@ -3549,6 +3549,10 @@ function isNetworkSystemsSource(source: string) {
 	return /\b(?:network systems|dns|routing|packets?|tcpdump|ipv6|nat)\b/.test(
 		source
 	);
+}
+
+function isNetworkSystemsContext(context: CourseTextContext, source: string) {
+	return !isSecurityContext(context) && isNetworkSystemsSource(source);
 }
 
 function isPygameSource(source: string) {
@@ -4444,7 +4448,7 @@ function projectExpectations(context: CourseTextContext) {
 			`- Keep a short ${subject} operations note with the exact commands used and the evidence that the system reached the intended state.`
 		];
 	}
-	if (isNetworkSystemsSource(source)) {
+	if (isNetworkSystemsContext(context, source)) {
 		return [
 			`- Define the ${subject} hosts, addresses, ports, routes, protocols, and trust boundaries before running diagnostics.`,
 			`- Test ${subject} local behavior, remote or cross-host behavior, and one failure-mode case using command output or packet/service evidence.`,
@@ -5122,7 +5126,7 @@ function completionChecks(context: CourseTextContext) {
 			]
 		]);
 	}
-	if (isNetworkSystemsSource(source)) {
+	if (isNetworkSystemsContext(context, source)) {
 		return [
 			`- The ${subject} topology, host roles, addresses, ports, protocols, or firewall boundaries are named explicitly.`,
 			`- ${subject} diagnostic evidence shows both expected behavior and at least one failure or blocked-path condition.`,
@@ -5668,7 +5672,7 @@ function extensionPrompt(context: CourseTextContext) {
 				`Add one failure-mode check to ${subject} and record the command that distinguishes it from the healthy state.`
 		]);
 	}
-	if (isNetworkSystemsSource(source)) {
+	if (isNetworkSystemsContext(context, source)) {
 		return variantPrompt(context, [
 			subject =>
 				`Extend ${subject} with one diagnostic variation using a different host, port, route, or DNS answer.`,
@@ -6872,7 +6876,7 @@ function studioArtifact(context: CourseTextContext) {
 	) {
 		return "a repeatable Linux systems checkpoint with commands, evidence, logs, and troubleshooting notes";
 	}
-	if (isNetworkSystemsSource(source)) {
+	if (isNetworkSystemsContext(context, source)) {
 		return "a network-systems checkpoint with topology, commands, packet or service evidence, and interpretation";
 	}
 	if (/assembly/.test(source)) {
