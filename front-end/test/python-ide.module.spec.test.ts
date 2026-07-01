@@ -1552,6 +1552,26 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("maxOutputLines - 1");
 	});
 
+	it("clears the active canvas when clearing Python output", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			"utf8"
+		);
+		const clearOutputStart = pageSource.indexOf("function clearOutput()");
+		const clearOutputSource = pageSource.slice(
+			clearOutputStart,
+			pageSource.indexOf(
+				"function refreshActiveTurtleEventHandlerCount",
+				clearOutputStart
+			)
+		);
+
+		expect(clearOutputSource).toContain("outputLines.value = [];");
+		expect(clearOutputSource).toContain("runtimeArtifacts.value = [];");
+		expect(clearOutputSource).toContain("resetActiveCanvas();");
+		expect(pageSource).toContain('@click="clearOutput"');
+	});
+
 	it("bounds runtime artifacts so chart-heavy runs stay responsive", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),

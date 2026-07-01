@@ -2328,6 +2328,7 @@ function clearOutput() {
 	outputLines.value = [];
 	runtimeArtifacts.value = [];
 	gameAudioPlaybackBlockedNoticeShown = false;
+	resetActiveCanvas();
 }
 
 function refreshActiveTurtleEventHandlerCount() {
