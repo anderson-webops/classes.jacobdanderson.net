@@ -16,7 +16,7 @@ import type {
 	RuntimeArtifact,
 	TurtleBridge
 } from "@/modules/pythonIdeRuntime";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faGear, faGripLinesVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { storeToRefs } from "pinia";
 import {
@@ -369,8 +369,16 @@ const maxCodeEditorViewStates = 120;
 const pythonIdeAutoSaveStorageKey = "classes-python-ide-autosave";
 const pythonIdeCodeRecommendationsStorageKey =
 	"classes-python-ide-code-recommendations";
+const pythonIdeEditorLineWrapStorageKey = "classes-python-ide-editor-line-wrap";
 const pythonIdeEditorViewStateStoragePrefix =
 	"classes-python-ide-editor-view-state";
+const pythonIdeExpandedWorkspaceStorageKey =
+	"classes-python-ide-expanded-workspace";
+const pythonIdeSplitPercentStorageKey = "classes-python-ide-split-percent";
+const defaultCodeSplitPercent = 54;
+const defaultDrawingCodeSplitPercent = 42;
+const minCodeSplitPercent = 28;
+const maxCodeSplitPercent = 72;
 const turtleAnimationInitialFrameCreditMs = 16;
 const turtleInstantStepMaxDurationMs = 16;
 const turtleTurnStepDurationMs = turtleInstantStepMaxDurationMs;
@@ -501,6 +509,10 @@ const autoSaveEnabled = ref(loadPythonIdeAutoSavePreference());
 const codeRecommendationsEnabled = ref(
 	loadPythonIdeCodeRecommendationsPreference()
 );
+const editorLineWrapEnabled = ref(loadPythonIdeEditorLineWrapPreference());
+const ideExpanded = ref(loadPythonIdeExpandedWorkspacePreference());
+const ideSplitPercent = ref(loadPythonIdeSplitPercentPreference());
+const isResizingIdeSplit = ref(false);
 const deleteCandidateProjectID = ref("");
 const deleteConfirmText = ref("");
 const sidebarCollapsed = ref(false);
@@ -513,6 +525,7 @@ const storagePersistenceStatus = ref<
 	"best-effort" | "checking" | "persistent" | "unsupported"
 >("checking");
 const codeEditorHostRef = ref<HTMLDivElement | null>(null);
+const ideGridRef = ref<HTMLDivElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const editorCursorCount = ref(1);
 const artifactCounter = ref(0);
@@ -582,6 +595,7 @@ let pythonRuntimeModulePromise: Promise<PythonRuntimeModule> | null = null;
 let codeEditorResetToken = 0;
 let activeCodeEditorViewStateKey = "";
 let projectLoadRunID = 0;
+let ideSplitPointerID: number | null = null;
 
 function loadPythonCodeEditorModules() {
 	codeEditorModulesPromise ??= Promise.all([
@@ -623,6 +637,54 @@ function persistPythonIdeCodeRecommendationsPreference(enabled: boolean) {
 	window.localStorage.setItem(
 		pythonIdeCodeRecommendationsStorageKey,
 		enabled ? "on" : "off"
+	);
+}
+
+function loadPythonIdeEditorLineWrapPreference() {
+	if (typeof window === "undefined") return true;
+	return (
+		window.localStorage.getItem(pythonIdeEditorLineWrapStorageKey) !== "off"
+	);
+}
+
+function persistPythonIdeEditorLineWrapPreference(enabled: boolean) {
+	if (typeof window === "undefined") return;
+	window.localStorage.setItem(
+		pythonIdeEditorLineWrapStorageKey,
+		enabled ? "on" : "off"
+	);
+}
+
+function loadPythonIdeExpandedWorkspacePreference() {
+	if (typeof window === "undefined") return false;
+	return (
+		window.localStorage.getItem(pythonIdeExpandedWorkspaceStorageKey) ===
+		"on"
+	);
+}
+
+function persistPythonIdeExpandedWorkspacePreference(enabled: boolean) {
+	if (typeof window === "undefined") return;
+	window.localStorage.setItem(
+		pythonIdeExpandedWorkspaceStorageKey,
+		enabled ? "on" : "off"
+	);
+}
+
+function loadPythonIdeSplitPercentPreference() {
+	if (typeof window === "undefined") return null;
+	const value = Number(
+		window.localStorage.getItem(pythonIdeSplitPercentStorageKey)
+	);
+	if (!Number.isFinite(value)) return null;
+	return clampIdeSplitPercent(value);
+}
+
+function persistPythonIdeSplitPercentPreference(value: number) {
+	if (typeof window === "undefined") return;
+	window.localStorage.setItem(
+		pythonIdeSplitPercentStorageKey,
+		String(Math.round(value))
 	);
 }
 
@@ -908,6 +970,16 @@ const usesKarelWorld = computed(() => selectedProject.value?.mode === "karel");
 const usesVisualOutput = computed(
 	() => usesDrawingCanvas.value || usesKarelWorld.value
 );
+const activeIdeSplitPercent = computed(
+	() =>
+		ideSplitPercent.value ??
+		(usesVisualOutput.value
+			? defaultDrawingCodeSplitPercent
+			: defaultCodeSplitPercent)
+);
+const ideGridStyle = computed(() => ({
+	"--python-ide-code-column": `${activeIdeSplitPercent.value}%`
+}));
 const drawingCanvasStyle = computed(() => {
 	if (!usesGameCanvas.value) return {};
 	const aspect = gameState.width / gameState.height;
@@ -1833,6 +1905,96 @@ function updateCodeRecommendationsPreference(event: Event) {
 	void nextTick(resetCodeEditor);
 }
 
+function updateEditorLineWrapPreference(event: Event) {
+	const enabled = (event.target as HTMLInputElement).checked;
+	editorLineWrapEnabled.value = enabled;
+	persistPythonIdeEditorLineWrapPreference(enabled);
+	useFreshCodeEditorStateOnNextReset = true;
+	void nextTick(resetCodeEditor);
+}
+
+function updateExpandedIdePreference(event: Event) {
+	const enabled = (event.target as HTMLInputElement).checked;
+	ideExpanded.value = enabled;
+	persistPythonIdeExpandedWorkspacePreference(enabled);
+	void nextTick(refreshResizableIdeLayout);
+}
+
+function clampIdeSplitPercent(value: number) {
+	return Math.min(maxCodeSplitPercent, Math.max(minCodeSplitPercent, value));
+}
+
+function refreshResizableIdeLayout() {
+	codeEditorView?.requestMeasure();
+	redrawActiveCanvas();
+}
+
+function setIdeSplitPercent(value: number) {
+	ideSplitPercent.value = clampIdeSplitPercent(value);
+	persistPythonIdeSplitPercentPreference(ideSplitPercent.value);
+	void nextTick(refreshResizableIdeLayout);
+}
+
+function updateIdeSplitFromClientX(clientX: number) {
+	const grid = ideGridRef.value;
+	if (!grid) return;
+	const rect = grid.getBoundingClientRect();
+	if (!rect.width) return;
+	setIdeSplitPercent(((clientX - rect.left) / rect.width) * 100);
+}
+
+function startIdeSplitResize(event: PointerEvent) {
+	if (!ideGridRef.value) return;
+	event.preventDefault();
+	ideSplitPointerID = event.pointerId;
+	isResizingIdeSplit.value = true;
+	(event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId);
+	updateIdeSplitFromClientX(event.clientX);
+	window.addEventListener("pointermove", handleIdeSplitPointerMove);
+	window.addEventListener("pointerup", stopIdeSplitResize);
+	window.addEventListener("pointercancel", stopIdeSplitResize);
+}
+
+function handleIdeSplitPointerMove(event: PointerEvent) {
+	if (
+		!isResizingIdeSplit.value ||
+		(ideSplitPointerID !== null && event.pointerId !== ideSplitPointerID)
+	) {
+		return;
+	}
+	updateIdeSplitFromClientX(event.clientX);
+}
+
+function stopIdeSplitResize() {
+	if (!isResizingIdeSplit.value) return;
+	isResizingIdeSplit.value = false;
+	ideSplitPointerID = null;
+	window.removeEventListener("pointermove", handleIdeSplitPointerMove);
+	window.removeEventListener("pointerup", stopIdeSplitResize);
+	window.removeEventListener("pointercancel", stopIdeSplitResize);
+	void nextTick(refreshResizableIdeLayout);
+}
+
+function handleIdeSplitKeydown(event: KeyboardEvent) {
+	const wideStep = event.shiftKey ? 8 : 3;
+	if (event.key === "ArrowLeft") {
+		event.preventDefault();
+		setIdeSplitPercent(activeIdeSplitPercent.value - wideStep);
+	}
+	if (event.key === "ArrowRight") {
+		event.preventDefault();
+		setIdeSplitPercent(activeIdeSplitPercent.value + wideStep);
+	}
+	if (event.key === "Home") {
+		event.preventDefault();
+		setIdeSplitPercent(minCodeSplitPercent);
+	}
+	if (event.key === "End") {
+		event.preventDefault();
+		setIdeSplitPercent(maxCodeSplitPercent);
+	}
+}
+
 async function updateProjectSharePreference(event: Event) {
 	const input = event.target as HTMLInputElement;
 	const shared = input.checked;
@@ -2156,6 +2318,7 @@ async function resetCodeEditor() {
 	useFreshCodeEditorStateOnNextReset = false;
 	const extensions = createPythonCodeMirrorExtensions({
 		assetCompletions: loadPythonCodeMirrorAssetCompletions,
+		lineWrappingEnabled: editorLineWrapEnabled.value,
 		mode: selectedProject.value?.mode ?? "python",
 		onChange(content) {
 			syncingCodeMirrorContent = true;
@@ -5157,6 +5320,7 @@ onBeforeUnmount(() => {
 	flushPendingProjectSave();
 	saveCodeEditorViewState();
 	codeEditorView?.destroy();
+	stopIdeSplitResize();
 	window.removeEventListener("pagehide", flushPendingProjectSave);
 	document.removeEventListener(
 		"visibilitychange",
@@ -5173,7 +5337,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<section class="python-ide-page page-shell page-shell--wide">
+	<section
+		class="python-ide-page page-shell page-shell--wide"
+		:class="{ 'python-ide-page--expanded': ideExpanded }"
+	>
 		<div class="python-ide-hero">
 			<div>
 				<p class="python-ide-eyebrow">Code IDE</p>
@@ -5643,6 +5810,35 @@ onBeforeUnmount(() => {
 										</small>
 									</span>
 								</label>
+								<label class="ide-setting-toggle">
+									<input
+										:checked="editorLineWrapEnabled"
+										type="checkbox"
+										@change="updateEditorLineWrapPreference"
+									/>
+									<span>
+										<strong>Wrap editor text</strong>
+										<small>
+											Wrap long code lines inside the
+											editor. Turn this off to scroll
+											horizontally.
+										</small>
+									</span>
+								</label>
+								<label class="ide-setting-toggle">
+									<input
+										:checked="ideExpanded"
+										type="checkbox"
+										@change="updateExpandedIdePreference"
+									/>
+									<span>
+										<strong>Expanded IDE layout</strong>
+										<small>
+											Use more browser width and height
+											for coding and canvas work.
+										</small>
+									</span>
+								</label>
 								<div class="ide-setting-share">
 									<label class="ide-setting-toggle">
 										<input
@@ -5779,8 +5975,13 @@ onBeforeUnmount(() => {
 				</section>
 
 				<div
+					ref="ideGridRef"
 					class="ide-grid"
-					:class="{ 'ide-grid--drawing': usesVisualOutput }"
+					:class="{
+						'ide-grid--drawing': usesVisualOutput,
+						'is-resizing': isResizingIdeSplit
+					}"
+					:style="ideGridStyle"
 				>
 					<section class="code-panel" aria-label="Code editor">
 						<div class="panel-header">
@@ -5861,6 +6062,25 @@ onBeforeUnmount(() => {
 							/>
 						</div>
 					</section>
+
+					<button
+						class="ide-splitter"
+						type="button"
+						role="separator"
+						aria-label="Resize code and output panels"
+						aria-orientation="vertical"
+						:aria-valuemin="minCodeSplitPercent"
+						:aria-valuemax="maxCodeSplitPercent"
+						:aria-valuenow="Math.round(activeIdeSplitPercent)"
+						title="Drag to resize code and output panels"
+						@keydown="handleIdeSplitKeydown"
+						@pointerdown="startIdeSplitResize"
+					>
+						<FontAwesomeIcon
+							:icon="faGripLinesVertical"
+							aria-hidden="true"
+						/>
+					</button>
 
 					<section class="result-panel" aria-label="Code output">
 						<div class="panel-header">
@@ -6072,6 +6292,23 @@ onBeforeUnmount(() => {
 
 .python-ide-page {
 	letter-spacing: 0;
+}
+
+.python-ide-page--expanded {
+	width: min(100% - 0.75rem, 100vw);
+	gap: 0.75rem;
+}
+
+.python-ide-page--expanded .python-ide-hero {
+	display: none;
+}
+
+.python-ide-page--expanded .python-ide-workspace {
+	min-height: calc(100vh - 1.5rem);
+}
+
+.python-ide-page--expanded .python-ide-main {
+	padding: 0.75rem;
 }
 
 .python-ide-page :is(section, p, label, input, textarea, select, button) {
@@ -7006,16 +7243,31 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-grid {
+	--python-ide-splitter-width: 0.9rem;
 	min-height: 38rem;
 	height: clamp(38rem, 76vh, 54rem);
 	display: grid;
-	grid-template-columns: minmax(0, 1.08fr) minmax(24rem, 0.92fr);
-	gap: 1rem;
+	grid-template-columns:
+		minmax(18rem, var(--python-ide-code-column, 54%))
+		var(--python-ide-splitter-width) minmax(24rem, 1fr);
+	column-gap: 0.55rem;
 }
 
 .ide-grid--drawing {
 	height: clamp(40rem, 78vh, 56rem);
-	grid-template-columns: minmax(0, 0.82fr) minmax(28rem, 1.18fr);
+	grid-template-columns:
+		minmax(16rem, var(--python-ide-code-column, 42%))
+		var(--python-ide-splitter-width) minmax(28rem, 1fr);
+}
+
+.python-ide-page--expanded .ide-grid,
+.python-ide-page--expanded .ide-grid--drawing {
+	height: clamp(42rem, calc(100vh - 7.5rem), 72rem);
+}
+
+.ide-grid.is-resizing {
+	cursor: col-resize;
+	user-select: none;
 }
 
 .code-panel,
@@ -7029,6 +7281,55 @@ html.dark .file-delete:disabled::after {
 
 .code-panel {
 	overflow: hidden;
+}
+
+.ide-splitter {
+	width: var(--python-ide-splitter-width);
+	min-width: var(--python-ide-splitter-width);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	align-self: stretch;
+	padding: 0;
+	border: 1px solid var(--color-border);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.68);
+	color: #0f766e;
+	cursor: col-resize;
+	touch-action: none;
+	transition:
+		background-color 150ms ease,
+		border-color 150ms ease,
+		box-shadow 150ms ease,
+		color 150ms ease;
+}
+
+.ide-splitter:hover,
+.ide-splitter:focus-visible,
+.ide-grid.is-resizing .ide-splitter {
+	border-color: rgba(20, 184, 166, 0.56);
+	background: rgba(240, 253, 250, 0.94);
+	box-shadow: 0 0 0 3px var(--python-focus-glow);
+	color: #0d9488;
+}
+
+.ide-splitter svg {
+	width: 0.7rem;
+	height: 1.5rem;
+	pointer-events: none;
+}
+
+html.dark .ide-splitter {
+	border-color: rgba(148, 163, 184, 0.28);
+	background: rgba(8, 17, 31, 0.88);
+	color: #2dd4bf;
+}
+
+html.dark .ide-splitter:hover,
+html.dark .ide-splitter:focus-visible,
+html.dark .ide-grid.is-resizing .ide-splitter {
+	border-color: rgba(94, 234, 212, 0.5);
+	background: rgba(15, 23, 42, 0.96);
 }
 
 .panel-header {
@@ -7472,6 +7773,10 @@ html.dark .editor-shortcuts ul {
 	.ide-grid,
 	.ide-grid--drawing {
 		height: auto;
+	}
+
+	.ide-splitter {
+		display: none;
 	}
 
 	.code-panel {

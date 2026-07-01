@@ -61,6 +61,7 @@ interface PythonCodeMirrorOptions {
 	onChange: (content: string) => void;
 	onCursorCountChange: (count: number) => void;
 	assetCompletions?: PythonCodeMirrorAssetCompletionProvider;
+	lineWrappingEnabled?: boolean;
 	mode?: PythonIdeMode;
 	onRun?: () => void;
 	onSave?: () => void;
@@ -1921,6 +1922,7 @@ export function createPythonCodeMirrorExtensions(
 	const mode = options.mode ?? "python";
 	const isPythonMode = isPythonCodeMirrorMode(mode);
 	const isJavaMode = isJavaCodeMirrorMode(mode);
+	const lineWrappingEnabled = options.lineWrappingEnabled ?? true;
 	const recommendationsEnabled = options.recommendationsEnabled ?? true;
 
 	return [
@@ -1959,7 +1961,7 @@ export function createPythonCodeMirrorExtensions(
 		Prec.highest(pythonEditorActionKeymap(options)),
 		Prec.highest(keymap.of([indentWithTab])),
 		Prec.high(wrapSelectionKeymap),
-		EditorView.lineWrapping,
+		lineWrappingEnabled ? EditorView.lineWrapping : [],
 		EditorView.contentAttributes.of({
 			"aria-label": "Code editor",
 			autocapitalize: "off",

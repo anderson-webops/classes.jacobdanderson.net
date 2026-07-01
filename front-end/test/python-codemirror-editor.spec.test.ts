@@ -242,6 +242,10 @@ describe("python IDE CodeMirror editor", () => {
 		expect(editorSource).toContain("python()");
 		expect(editorSource).toContain("indentWithTab");
 		expect(editorSource).toContain("indentUnit.of(pythonIndentText)");
+		expect(editorSource).toContain("lineWrappingEnabled?: boolean;");
+		expect(editorSource).toContain(
+			"lineWrappingEnabled ? EditorView.lineWrapping : []"
+		);
 		expect(editorSource).toContain(
 			"codeMirrorInsertNewlineAndIndent(view)"
 		);
