@@ -2858,19 +2858,34 @@ describe("python IDE project helpers", () => {
 			'const pythonIdeCodeRecommendationsStorageKey ='
 		);
 		expect(pageSource).toContain(
+			'const pythonIdeEditorLineWrapStorageKey ='
+		);
+		expect(pageSource).toContain(
+			'const pythonIdeExpandedWorkspaceStorageKey ='
+		);
+		expect(pageSource).toContain(
 			"const autoSaveEnabled = ref(loadPythonIdeAutoSavePreference());"
 		);
 		expect(pageSource).toContain(
 			"const codeRecommendationsEnabled = ref("
 		);
+		expect(pageSource).toContain("const editorLineWrapEnabled = ref(");
+		expect(pageSource).toContain("const ideExpanded = ref(");
 		expect(pageSource).toContain("function updateAutoSavePreference");
 		expect(pageSource).toContain(
 			"function updateCodeRecommendationsPreference"
 		);
+		expect(pageSource).toContain("function updateEditorLineWrapPreference");
+		expect(pageSource).toContain("function updateExpandedIdePreference");
 		expect(pageSource).toContain("Autosave projects");
 		expect(pageSource).toContain("Recommendations as you type");
+		expect(pageSource).toContain("Wrap editor text");
+		expect(pageSource).toContain("Expanded IDE layout");
 		expect(pageSource).toContain(
 			"recommendationsEnabled: codeRecommendationsEnabled.value"
+		);
+		expect(pageSource).toContain(
+			"lineWrappingEnabled: editorLineWrapEnabled.value"
 		);
 		expect(pageSource).toContain('aria-label="Code IDE settings"');
 		expect(pageSource).toContain(
@@ -2969,14 +2984,47 @@ describe("python IDE project helpers", () => {
 			"!useFreshCodeEditorStateOnNextReset &&"
 		);
 		expect(codeMirrorSource).toContain("recommendationsEnabled?: boolean;");
+		expect(codeMirrorSource).toContain("lineWrappingEnabled?: boolean;");
+		expect(codeMirrorSource).toContain(
+			"const lineWrappingEnabled = options.lineWrappingEnabled ?? true;"
+		);
 		expect(codeMirrorSource).toContain(
 			"const recommendationsEnabled = options.recommendationsEnabled ?? true;"
 		);
 		expect(codeMirrorSource).toContain(
 			"activateOnTyping: recommendationsEnabled"
 		);
+		expect(codeMirrorSource).toContain(
+			"lineWrappingEnabled ? EditorView.lineWrapping : []"
+		);
 		expect(codeMirrorSource).toContain("javaIdeCompletionSource(mode)");
 		expect(codeMirrorSource).toContain("...completionKeymap");
+	});
+
+	it("wires a resizable Python IDE editor and output split", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			"utf8"
+		);
+
+		expect(pageSource).toContain(
+			'const pythonIdeSplitPercentStorageKey = "classes-python-ide-split-percent";'
+		);
+		expect(pageSource).toContain("const ideGridRef = ref");
+		expect(pageSource).toContain("const activeIdeSplitPercent = computed");
+		expect(pageSource).toContain("function startIdeSplitResize");
+		expect(pageSource).toContain("function handleIdeSplitPointerMove");
+		expect(pageSource).toContain("function handleIdeSplitKeydown");
+		expect(pageSource).toContain("role=\"separator\"");
+		expect(pageSource).toContain("aria-orientation=\"vertical\"");
+		expect(pageSource).toContain("@pointerdown=\"startIdeSplitResize\"");
+		expect(pageSource).toContain("@keydown=\"handleIdeSplitKeydown\"");
+		expect(pageSource).toContain("faGripLinesVertical");
+		expect(pageSource).toContain(".ide-splitter");
+		expect(pageSource).toContain("--python-ide-code-column");
+		expect(pageSource).toContain(
+			"stopIdeSplitResize();"
+		);
 	});
 
 	it("wires Python IDE project sharing through settings and shared links", () => {
