@@ -155,6 +155,45 @@ describe("Python project routes", () => {
 		});
 	});
 
+	it("rejects Java and Karel IDE payloads before any server-side project work", async () => {
+		await withPythonProjectRoute(async baseUrl => {
+			for (const payload of [
+				{
+					activeFileName: "Main.java",
+					files: [
+						{
+							content: "public class Main { public static void main(String[] args) {} }",
+							name: "Main.java"
+						}
+					],
+					mode: "java",
+					title: "Java browser project"
+				},
+				{
+					activeFileName: "Algo.java",
+					files: [
+						{
+							content: "public class Algo { public static void main(String[] args) {} }",
+							name: "Algo.java"
+						},
+						{
+							content: "Dimension: (10, 10)",
+							name: "world.txt"
+						}
+					],
+					mode: "karel",
+					title: "Karel browser project"
+				}
+			]) {
+				const response = await postJson(baseUrl, payload);
+
+				expect(response.status).toBe(400);
+			}
+		});
+
+		expect(modelMocks.pythonProjectCreate).not.toHaveBeenCalled();
+	});
+
 	it("accepts a base64 asset at the editor's 2 MB binary import limit", async () => {
 		const twoMegabyteBase64 = "A".repeat(Math.ceil((2 * 1024 * 1024) / 3) * 4);
 
@@ -225,5 +264,39 @@ describe("Python project routes", () => {
 		});
 
 		expect(modelMocks.pythonProjectCreate).not.toHaveBeenCalled();
+	});
+
+	it("keeps health and project APIs free of Java execution primitives", () => {
+		const sources = [
+			readFileSync(resolve(__dirname, "../src/server.ts"), "utf8"),
+			readFileSync(
+				resolve(__dirname, "../src/routes/userRoutes.ts"),
+				"utf8"
+			),
+			readFileSync(
+				resolve(
+					__dirname,
+					"../src/controllers/users/pythonProjectController.ts"
+				),
+				"utf8"
+			),
+			readFileSync(
+				resolve(__dirname, "../src/types/entities/IPythonProject.ts"),
+				"utf8"
+			)
+		].join("\n");
+
+		expect(sources).toContain('app.get("/healthz"');
+		expect(sources).toContain(
+			'const projectModeSchema = z.enum(["data", "pgzero", "python", "turtle"])'
+		);
+		expect(sources).toContain(
+			'export type PythonProjectMode = "data" | "pgzero" | "python" | "turtle";'
+		);
+		expect(sources).not.toMatch(/node:child_process|child_process/);
+		expect(sources).not.toMatch(/\bworker_threads\b|\bnew\s+Worker\b/);
+		expect(sources).not.toMatch(/\bjavaIdeRuntime\b|\brunJavaIdeProject\b/);
+		expect(sources).not.toMatch(/\bjavac\b|\bdocker\b/i);
+		expect(sources).not.toMatch(/\bspawn\s*\(|\bfork\s*\(|\bexecFile(?:Sync)?\s*\(/);
 	});
 });

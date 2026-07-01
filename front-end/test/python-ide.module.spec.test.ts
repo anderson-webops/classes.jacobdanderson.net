@@ -204,11 +204,17 @@ describe("python IDE project helpers", () => {
 		]);
 	});
 
-	it("creates Python Level 1 and PyGame Zero outline templates", () => {
+	it("creates Python Level 1, PyGame Zero, Java, and Karel outline templates", () => {
 		const turtleOutline = createPythonIdeProject("turtle", {
 			template: "outline"
 		});
 		const pgzeroOutline = createPythonIdeProject("pgzero", {
+			template: "outline"
+		});
+		const javaOutline = createPythonIdeProject("java", {
+			template: "outline"
+		});
+		const karelOutline = createPythonIdeProject("karel", {
 			template: "outline"
 		});
 
@@ -239,6 +245,16 @@ describe("python IDE project helpers", () => {
 			name: "images/student.svg",
 			content: pgzeroStudentSvg
 		});
+
+		expect(javaOutline.title).toBe("Java Outline");
+		expect(javaOutline.files).toEqual([
+			{ name: "Main.java", content: javaStarterCode }
+		]);
+		expect(karelOutline.title).toBe("Karel Java Outline");
+		expect(karelOutline.files).toEqual([
+			{ name: "Algo.java", content: karelStarterCode },
+			{ name: "world.txt", content: karelStarterWorld }
+		]);
 	});
 
 	it("colors visible bracket pairs using document-wide nesting context", () => {
