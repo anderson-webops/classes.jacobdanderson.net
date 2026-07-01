@@ -63,6 +63,7 @@ interface PythonCodeMirrorOptions {
 	mode?: PythonIdeMode;
 	onRun?: () => void;
 	onSave?: () => void;
+	recommendationsEnabled?: boolean;
 }
 
 interface PythonIdeCompletionContext {
@@ -1419,7 +1420,6 @@ const pythonEditorBaseSetup: Extension[] = [
 	syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
 	bracketMatching(),
 	closeBrackets(),
-	autocompletion(),
 	linter(view => pythonSyntaxDiagnostics(view.state)),
 	pythonRuntimeDiagnosticsField,
 	linter(view => view.state.field(pythonRuntimeDiagnosticsField), {
@@ -1449,6 +1449,8 @@ const pythonEditorBaseSetup: Extension[] = [
 export function createPythonCodeMirrorExtensions(
 	options: PythonCodeMirrorOptions
 ): Extension[] {
+	const recommendationsEnabled = options.recommendationsEnabled ?? true;
+
 	return [
 		pythonEditorBaseSetup,
 		python(),
@@ -1458,6 +1460,7 @@ export function createPythonCodeMirrorExtensions(
 				options.assetCompletions
 			)
 		}),
+		autocompletion({ activateOnTyping: recommendationsEnabled }),
 		EditorState.tabSize.of(4),
 		indentUnit.of(pythonIndentText),
 		EditorState.allowMultipleSelections.of(true),

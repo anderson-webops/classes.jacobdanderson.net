@@ -350,6 +350,8 @@ const maxRuntimeArtifactTextLength = 500000;
 const maxRuntimeArtifactBase64Length = 1500000;
 const maxCodeEditorViewStates = 120;
 const pythonIdeAutoSaveStorageKey = "classes-python-ide-autosave";
+const pythonIdeCodeRecommendationsStorageKey =
+	"classes-python-ide-code-recommendations";
 const pythonIdeEditorViewStateStoragePrefix =
 	"classes-python-ide-editor-view-state";
 const turtleAnimationInitialFrameCreditMs = 16;
@@ -477,6 +479,9 @@ const showProjectMenu = ref(false);
 const showFileTools = ref(false);
 const showIdeSettings = ref(false);
 const autoSaveEnabled = ref(loadPythonIdeAutoSavePreference());
+const codeRecommendationsEnabled = ref(
+	loadPythonIdeCodeRecommendationsPreference()
+);
 const deleteCandidateProjectID = ref("");
 const deleteConfirmText = ref("");
 const sidebarCollapsed = ref(false);
@@ -544,6 +549,7 @@ let gameToneCounter = 0;
 let gameAudioPlaybackBlockedNoticeShown = false;
 let codeEditorView: CodeEditorView | null = null;
 let syncingCodeMirrorContent = false;
+let useFreshCodeEditorStateOnNextReset = false;
 let gameCourseAssetPack: PythonIdeCourseAssetPack | null = null;
 let gameCourseAssetPackLoadFailed = false;
 let gameCourseAssetPackSilentLoadFailed = false;
@@ -580,6 +586,22 @@ function persistPythonIdeAutoSavePreference(enabled: boolean) {
 	if (typeof window === "undefined") return;
 	window.localStorage.setItem(
 		pythonIdeAutoSaveStorageKey,
+		enabled ? "on" : "off"
+	);
+}
+
+function loadPythonIdeCodeRecommendationsPreference() {
+	if (typeof window === "undefined") return true;
+	return (
+		window.localStorage.getItem(pythonIdeCodeRecommendationsStorageKey) !==
+		"off"
+	);
+}
+
+function persistPythonIdeCodeRecommendationsPreference(enabled: boolean) {
+	if (typeof window === "undefined") return;
+	window.localStorage.setItem(
+		pythonIdeCodeRecommendationsStorageKey,
 		enabled ? "on" : "off"
 	);
 }
@@ -1643,6 +1665,14 @@ function updateAutoSavePreference(event: Event) {
 	flushPendingProjectSave();
 }
 
+function updateCodeRecommendationsPreference(event: Event) {
+	const enabled = (event.target as HTMLInputElement).checked;
+	codeRecommendationsEnabled.value = enabled;
+	persistPythonIdeCodeRecommendationsPreference(enabled);
+	useFreshCodeEditorStateOnNextReset = true;
+	void nextTick(resetCodeEditor);
+}
+
 async function createProject(
 	mode: PythonIdeMode,
 	template: "blank" | "demo" = "blank"
@@ -1895,9 +1925,11 @@ async function resetCodeEditor() {
 		? codeEditorStateSnapshots.get(viewStateKey)
 		: null;
 	const restoredState =
+		!useFreshCodeEditorStateOnNextReset &&
 		savedState?.doc.toString() === activeFileContent.value
 			? savedState
 			: null;
+	useFreshCodeEditorStateOnNextReset = false;
 	const extensions = createPythonCodeMirrorExtensions({
 		assetCompletions: loadPythonCodeMirrorAssetCompletions,
 		mode: selectedProject.value?.mode ?? "python",
@@ -1914,7 +1946,8 @@ async function resetCodeEditor() {
 		onRun: activateRunControl,
 		onSave: () => {
 			void saveSelectedProject({ force: true });
-		}
+		},
+		recommendationsEnabled: codeRecommendationsEnabled.value
 	});
 	codeEditorView = restoredState
 		? new EditorView({
@@ -5261,6 +5294,25 @@ onBeforeUnmount(() => {
 										</small>
 									</span>
 								</label>
+								<label class="ide-setting-toggle">
+									<input
+										:checked="codeRecommendationsEnabled"
+										type="checkbox"
+										@change="
+											updateCodeRecommendationsPreference
+										"
+									/>
+									<span>
+										<strong>
+											Recommendations as you type
+										</strong>
+										<small>
+											Show code suggestions while typing.
+											Turn this off to use Ctrl+Space
+											only.
+										</small>
+									</span>
+								</label>
 								<div class="ide-setting-storage">
 									<button
 										class="ide-setting-action"
@@ -6355,6 +6407,7 @@ html.dark .file-delete:disabled::after {
 .ide-settings-trigger {
 	width: 2.8rem;
 	height: 2.8rem;
+	padding: 0;
 	display: grid;
 	place-items: center;
 	border: 1px solid var(--color-border);
@@ -6363,6 +6416,15 @@ html.dark .file-delete:disabled::after {
 	color: var(--color-ink-strong);
 	font-size: 1.15rem;
 	font-weight: 900;
+}
+
+.ide-settings-trigger span {
+	width: 100%;
+	height: 100%;
+	display: grid;
+	place-items: center;
+	font-size: 2rem;
+	line-height: 1;
 }
 
 .ide-settings-panel {
@@ -6384,6 +6446,12 @@ html.dark .file-delete:disabled::after {
 	gap: 0.7rem;
 	align-items: start;
 	color: var(--color-ink);
+}
+
+.ide-setting-toggle + .ide-setting-toggle {
+	margin-top: 0.8rem;
+	padding-top: 0.8rem;
+	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-storage {
@@ -6834,6 +6902,11 @@ html.dark .editor-shortcuts ul {
 
 	.python-ide-status {
 		min-width: 0;
+	}
+
+	.ide-settings-panel {
+		right: auto;
+		left: 0;
 	}
 
 	.turtle-canvas:not(.turtle-canvas--game) {
