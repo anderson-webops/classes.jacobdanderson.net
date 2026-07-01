@@ -44,7 +44,7 @@ const PYTHON_IDE_PROJECT_STORE = "projectStores";
 export type PythonIdeFileEncoding = "text" | "base64";
 
 export type PythonIdeMode = "data" | "pgzero" | "python" | "turtle";
-export type PythonIdeProjectTemplate = "blank" | "course" | "demo";
+export type PythonIdeProjectTemplate = "blank" | "course" | "demo" | "outline";
 
 export interface PythonIdeFile {
 	name: string;
@@ -227,6 +227,74 @@ screen.ontimer(animate, 16)
 screen.listen()
 `;
 
+export const pythonLevel1OutlineStarterCode = `import turtle # from turtle import Turtle, Screen
+import random # from random import randint
+
+#####################
+###   FUNCTIONS   ###
+#####################
+def function_name(param1, param2):
+    pass
+
+def action1():
+    pass
+
+def action2():
+    pass
+
+
+#####################
+###   VARIABLES   ###
+#####################
+# Constants
+NUM_TURTLES=0
+DISTANCE=1
+
+# Global Variables
+t=turtle.Turtle() # t=Turtle()
+# TURTLE ATTRIBUTES HERE
+
+# Create Screen
+screen=turtle.Screen() # screen=Screen()
+
+###   More variables here as needed   ###
+
+# List of Turtles
+turtles=[]
+for _ in range(NUM_TURTLES):
+    tmp_t=turtle.Turtle()
+    # TURTLE ATTRIBUTES HERE
+    turtles.append(tmp_t)
+
+
+###########################
+###   EVENT LISTENERS   ###
+###########################
+screen.onkey(action1, "KEY_HERE")
+screen.onkey(action2, "KEY_HERE")
+# any other event listeners desired here
+
+screen.listen()
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+condition = True
+while condition:
+    t.forward(DISTANCE)
+
+    # Conditions and additional actions here
+    # e.g., if t.ycor()<-200: t...
+
+    # Comment here
+    for tmp_t in turtles:
+        tmp_t.forward(DISTANCE)
+
+        # Conditions and additional actions here
+        # e.g., if tmp_t.xcor()>3: tmp_t...
+`;
+
 export const pgzeroStarterCode = `import pgzrun
 
 WIDTH = 640
@@ -252,6 +320,67 @@ def update():
 \t\tplayer.y += 4
 
 pgzrun.go()
+`;
+
+export const pgzeroOutlineStarterCode = `WIDTH = 640
+HEIGHT = 400
+
+#####################
+###   FUNCTIONS   ###
+#####################
+def draw():
+    screen.clear()
+    screen.draw.text("Game title here", (24, 24), color="white", fontsize=32)
+    player.draw()
+
+    # Draw other actors and UI here
+
+def update():
+    # Update player, enemies, score, and game state here
+    pass
+
+def action1():
+    pass
+
+def action2():
+    pass
+
+def reset_game():
+    pass
+
+
+#####################
+###   VARIABLES   ###
+#####################
+# Constants
+PLAYER_SPEED = 4
+ENEMY_SPEED = 2
+
+# Global Variables
+player = Actor("student", (WIDTH / 2, HEIGHT / 2))
+score = 0
+game_over = False
+
+###   More variables here as needed   ###
+
+# List of Actors
+actors = []
+for _ in range(0):
+    tmp_actor = Actor("student", (WIDTH / 2, HEIGHT / 2))
+    # ACTOR ATTRIBUTES HERE
+    actors.append(tmp_actor)
+
+
+###########################
+###   EVENT HANDLERS   ###
+###########################
+def on_key_down(key):
+    if key == keys.SPACE:
+        action1()
+    elif key == keys.RETURN:
+        action2()
+
+# Add other handlers here, such as on_mouse_down(pos)
 `;
 
 export const pgzeroCourseStarterCode = `WIDTH = 640
@@ -363,11 +492,33 @@ function getDemoStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 	return files;
 }
 
+function getOutlineStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	const files = [
+		{
+			name: "main.py",
+			content:
+				mode === "pgzero"
+					? pgzeroOutlineStarterCode
+					: pythonLevel1OutlineStarterCode
+		}
+	];
+
+	if (mode === "pgzero") {
+		files.push({
+			name: "images/student.svg",
+			content: pgzeroStudentSvg
+		});
+	}
+
+	return files;
+}
+
 function getStarterFilesForTemplate(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate
 ) {
 	if (template === "demo") return getDemoStarterFiles(mode);
+	if (template === "outline") return getOutlineStarterFiles(mode);
 	if (template === "course") return getCourseStarterFiles(mode);
 	return getBlankStarterFiles(mode);
 }
@@ -385,7 +536,16 @@ export function resolvePythonIdeActiveFileName(
 	);
 }
 
-function projectTitleForMode(mode: PythonIdeMode) {
+function projectTitleForMode(
+	mode: PythonIdeMode,
+	template: PythonIdeProjectTemplate = "blank"
+) {
+	if (template === "outline") {
+		if (mode === "turtle") return "Python Level 1 Outline";
+		if (mode === "pgzero") return "PyGame Zero Outline";
+		return `${getPythonIdeModeLabel(mode)} Outline`;
+	}
+
 	return mode === "data"
 		? "Data / AI Notebook"
 		: mode === "pgzero"
@@ -406,7 +566,7 @@ export function createPythonIdeProject(
 		: getStarterFilesForTemplate(mode, template);
 	return {
 		_id: `local-${crypto.randomUUID()}`,
-		title: options.title ?? projectTitleForMode(mode),
+		title: options.title ?? projectTitleForMode(mode, template),
 		mode,
 		files,
 		activeFileName: resolvePythonIdeActiveFileName(files),

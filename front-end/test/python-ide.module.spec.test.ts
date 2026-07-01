@@ -30,9 +30,11 @@ import {
 	loadLocalPythonProjects,
 	loadLocalPythonProjectsAsync,
 	normalizePythonFileName,
+	pgzeroOutlineStarterCode,
 	pythonIdeModeForCourseId,
 	pythonIdeProjectToPayload,
 	pythonIdeStorageKey,
+	pythonLevel1OutlineStarterCode,
 	resolvePythonIdeActiveFileName,
 	saveLocalPythonProjects,
 	saveLocalPythonProjectsAsync,
@@ -169,6 +171,43 @@ describe("python IDE project helpers", () => {
 		expect(turtleProject.files[0]?.content).toContain("screen.onclick");
 		expect(turtleProject.files[0]?.content).toContain("screen.ontimer");
 		expect(turtleProject.files[0]?.content).toContain("pen.ondrag");
+	});
+
+	it("creates Python Level 1 and PyGame Zero outline templates", () => {
+		const turtleOutline = createPythonIdeProject("turtle", {
+			template: "outline"
+		});
+		const pgzeroOutline = createPythonIdeProject("pgzero", {
+			template: "outline"
+		});
+
+		expect(turtleOutline.title).toBe("Python Level 1 Outline");
+		expect(turtleOutline.files).toEqual([
+			{
+				name: "main.py",
+				content: pythonLevel1OutlineStarterCode
+			}
+		]);
+		expect(turtleOutline.files[0]?.content).toContain(
+			"###   EVENT LISTENERS   ###"
+		);
+		expect(turtleOutline.files[0]?.content).toContain("while condition:");
+		expect(turtleOutline.files[0]?.content).toContain(
+			"for tmp_t in turtles:"
+		);
+
+		expect(pgzeroOutline.title).toBe("PyGame Zero Outline");
+		expect(pgzeroOutline.files[0]).toEqual({
+			name: "main.py",
+			content: pgzeroOutlineStarterCode
+		});
+		expect(pgzeroOutline.files[0]?.content).toContain("def draw():");
+		expect(pgzeroOutline.files[0]?.content).toContain("def update():");
+		expect(pgzeroOutline.files[0]?.content).toContain("on_key_down");
+		expect(pgzeroOutline.files[1]).toEqual({
+			name: "images/student.svg",
+			content: pgzeroStudentSvg
+		});
 	});
 
 	it("colors visible bracket pairs using document-wide nesting context", () => {
@@ -2865,6 +2904,36 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Shared project link");
 		expect(pageSource).toContain("Sign in to share projects.");
 		expect(pageSource).toContain("ide-share-link-row");
+	});
+
+	it("wires Python IDE outline templates through the project menu", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			"utf8"
+		);
+		const moduleSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIde.ts"),
+			"utf8"
+		);
+
+		expect(moduleSource).toContain(
+			'export type PythonIdeProjectTemplate = "blank" | "course" | "demo" | "outline";'
+		);
+		expect(moduleSource).toContain(
+			"export const pythonLevel1OutlineStarterCode"
+		);
+		expect(moduleSource).toContain("export const pgzeroOutlineStarterCode");
+		expect(moduleSource).toContain("function getOutlineStarterFiles");
+		expect(moduleSource).toContain('if (template === "outline")');
+		expect(pageSource).toContain("Template project");
+		expect(pageSource).toContain("Python Level 1 Outline");
+		expect(pageSource).toContain("PyGame Zero Outline");
+		expect(pageSource).toMatch(
+			/createProjectFromMenu\(\s*'turtle',\s*'outline'/
+		);
+		expect(pageSource).toMatch(
+			/createProjectFromMenu\(\s*'pgzero',\s*'outline'/
+		);
 	});
 
 	it("persists CodeMirror view state across reloads and project ID migration", () => {

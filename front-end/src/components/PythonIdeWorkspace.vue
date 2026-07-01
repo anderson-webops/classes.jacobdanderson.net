@@ -6,7 +6,8 @@ import type {
 	PythonIdeFile,
 	PythonIdeMode,
 	PythonIdeProject,
-	PythonIdeProjectReview
+	PythonIdeProjectReview,
+	PythonIdeProjectTemplate
 } from "@/modules/pythonIde";
 import type { PythonIdeCourseAssetPack } from "@/modules/pythonIdeCourseAssets";
 import type {
@@ -1823,7 +1824,7 @@ function selectProjectShareLink(event: FocusEvent) {
 
 async function createProject(
 	mode: PythonIdeMode,
-	template: "blank" | "demo" = "blank"
+	template: PythonIdeProjectTemplate = "blank"
 ) {
 	const starter = createPythonIdeProject(mode, { template });
 	suppressAutoSave = true;
@@ -1846,7 +1847,7 @@ async function createProject(
 
 async function createProjectFromMenu(
 	mode: PythonIdeMode,
-	template: "blank" | "demo" = "blank"
+	template: PythonIdeProjectTemplate = "blank"
 ) {
 	showProjectMenu.value = false;
 	await createProject(mode, template);
@@ -5168,6 +5169,31 @@ onBeforeUnmount(() => {
 										@click="createProjectFromMenu('pgzero')"
 									>
 										PyGame Zero
+									</button>
+									<span>Template project</span>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'outline'
+											)
+										"
+									>
+										Python Level 1 Outline
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'pgzero',
+												'outline'
+											)
+										"
+									>
+										PyGame Zero Outline
 									</button>
 									<span>Demo project</span>
 									<button
