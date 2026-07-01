@@ -39,7 +39,17 @@ const pythonProjectSchema: Schema<IPythonProject> = new Schema(
 		courseProjectKey: { type: String, trim: true, maxlength: 240 },
 		courseProjectTitle: { type: String, trim: true, maxlength: 160 },
 		starterLabel: { type: String, trim: true, maxlength: 80 },
-		starterUrl: { type: String, trim: true, maxlength: 500 }
+		starterUrl: { type: String, trim: true, maxlength: 500 },
+		shared: { type: Boolean, default: false, index: true },
+		shareID: {
+			type: String,
+			trim: true,
+			maxlength: 80,
+			unique: true,
+			sparse: true
+		},
+		shareCreatedAt: { type: Date },
+		sharedSourceID: { type: String, trim: true, maxlength: 80 }
 	},
 	{ timestamps: true }
 );
@@ -49,6 +59,7 @@ pythonProjectSchema.index(
 	{ user: 1, courseProjectKey: 1 },
 	{ sparse: true }
 );
+pythonProjectSchema.index({ shared: 1, shareID: 1 });
 
 export const PythonProject: Model<IPythonProject> = mongoose.model<IPythonProject>(
 	"PythonProject",

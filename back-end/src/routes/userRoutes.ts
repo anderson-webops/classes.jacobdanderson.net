@@ -6,11 +6,13 @@ import {
 	createPythonProject,
 	createPythonProjectReview,
 	deletePythonProject,
+	getSharedPythonProject,
 	listManagedPythonProjects,
 	listPythonProjects,
 	listVisiblePythonProjectReviews,
 	updatePythonProject,
-	updatePythonProjectReview
+	updatePythonProjectReview,
+	updatePythonProjectShare
 } from "../controllers/users/pythonProjectController.js";
 import {
 	createUser,
@@ -54,11 +56,15 @@ router.post("/", createUser);
 // Get logged in user communications
 router.get("/loggedin/communications", validUser, getLoggedInUserCommunications);
 
+// Read-only public Python IDE project links created by signed-in students.
+router.get("/python-projects/shared/:shareID", getSharedPythonProject);
+
 // Persist logged-in student Python IDE projects. Keep these before the
 // managed /:userID/python-projects routes so "loggedin" is not parsed as an ID.
 router.get("/loggedin/python-projects", validUser, listPythonProjects);
 router.post("/loggedin/python-projects", validUser, createPythonProject);
 router.put("/loggedin/python-projects/:projectID", validUser, updatePythonProject);
+router.put("/loggedin/python-projects/:projectID/share", validUser, updatePythonProjectShare);
 router.delete("/loggedin/python-projects/:projectID", validUser, deletePythonProject);
 router.get("/loggedin/python-project-reviews", validUser, listVisiblePythonProjectReviews);
 

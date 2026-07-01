@@ -519,6 +519,35 @@ describe("python IDE project helpers", () => {
 		expect(payload).not.toHaveProperty("updatedAt");
 	});
 
+	it("serializes imported shared project copies with their source share ID", () => {
+		const project = createPythonIdeProject("python", {
+			files: [
+				{
+					name: "main.py",
+					content: "print('shared copy')\n"
+				}
+			],
+			sharedSourceID: "share_ABC1234567890_xyz",
+			starterLabel: "Shared project",
+			starterUrl:
+				"https://classes.jacobdanderson.net/python-ide?share=share_ABC1234567890_xyz",
+			title: "Copy of Functions Practice"
+		});
+		const payload = pythonIdeProjectToPayload(project);
+
+		expect(project.shared).toBe(false);
+		expect(payload).toEqual(
+			expect.objectContaining({
+				sharedSourceID: "share_ABC1234567890_xyz",
+				starterLabel: "Shared project",
+				starterUrl:
+					"https://classes.jacobdanderson.net/python-ide?share=share_ABC1234567890_xyz"
+			})
+		);
+		expect(payload).not.toHaveProperty("shared");
+		expect(payload).not.toHaveProperty("shareID");
+	});
+
 	it("keeps remote project payload titles valid when the name is blank", () => {
 		const project = createPythonIdeProject("python");
 		project.title = "   ";
@@ -2788,6 +2817,56 @@ describe("python IDE project helpers", () => {
 		expect(codeMirrorSource).toContain("...completionKeymap");
 	});
 
+	it("wires Python IDE project sharing through settings and shared links", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			"utf8"
+		);
+		const moduleSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIde.ts"),
+			"utf8"
+		);
+
+		expect(moduleSource).toContain(
+			"export async function fetchSharedPythonIdeProject"
+		);
+		expect(moduleSource).toContain(
+			"`/users/python-projects/shared/${encodeURIComponent(shareID)}`"
+		);
+		expect(moduleSource).toContain(
+			"export async function updateRemotePythonIdeProjectShare"
+		);
+		expect(moduleSource).toContain(
+			"`/users/loggedin/python-projects/${projectID}/share`"
+		);
+		expect(pageSource).toContain("const isSharing = ref(false);");
+		expect(pageSource).toContain("const shareMessage = ref(\"\");");
+		expect(pageSource).toContain("const requestedShareID = computed");
+		expect(pageSource).toContain("function pythonIdeShareUrl");
+		expect(pageSource).toContain(
+			"const selectedProjectShareLink = computed"
+		);
+		expect(pageSource).toContain(
+			"async function importSharedProjectFromRouteIfNeeded"
+		);
+		expect(pageSource).toContain(
+			"const sharedProject = await fetchSharedPythonIdeProject(shareID);"
+		);
+		expect(pageSource).toContain("sharedSourceID: shareID");
+		expect(pageSource).toContain(
+			"title: `Copy of ${sharedProject.title || \"Shared Project\"}`"
+		);
+		expect(pageSource).toContain(
+			"await updateRemotePythonIdeProjectShare("
+		);
+		expect(pageSource).toContain("async function copySelectedProjectShareLink");
+		expect(pageSource).toContain("navigator.clipboard.writeText");
+		expect(pageSource).toContain("Share project");
+		expect(pageSource).toContain("Shared project link");
+		expect(pageSource).toContain("Sign in to share projects.");
+		expect(pageSource).toContain("ide-share-link-row");
+	});
+
 	it("persists CodeMirror view state across reloads and project ID migration", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
@@ -2881,11 +2960,17 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"if (!projectLoadIsCurrent(loadRunID)) return;"
 		);
+		expect(pageSource).toContain("const requestedShareID = computed");
+		expect(pageSource).toContain("async function openRouteProjectIfNeeded");
 		expect(pageSource).toContain(
-			"await openRequestedCourseProjectIfNeeded(false, loadRunID);"
+			"return importSharedProjectFromRouteIfNeeded(localOnly, loadRunID);"
+		);
+		expect(pageSource).toContain("route.query.share");
+		expect(pageSource).toContain(
+			"await openRouteProjectIfNeeded(false, loadRunID);"
 		);
 		expect(pageSource).toContain(
-			"await openRequestedCourseProjectIfNeeded(true, loadRunID);"
+			"await openRouteProjectIfNeeded(true, loadRunID);"
 		);
 		expect(pageSource).toContain(
 			"await saveNewProject(requestedProject, localOnly, loadRunID);"
