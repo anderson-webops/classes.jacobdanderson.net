@@ -17,6 +17,7 @@ import {
 	historyKeymap,
 	indentWithTab
 } from "@codemirror/commands";
+import { java, javaLanguage } from "@codemirror/lang-java";
 import { python, pythonLanguage } from "@codemirror/lang-python";
 import {
 	bracketMatching,
@@ -126,9 +127,14 @@ const pythonCompletionBlockedNodeNames = new Set([
 	"FormatString",
 	"String"
 ]);
-const pythonBracketPairIgnoredNodeNames = new Set(
-	pythonCompletionBlockedNodeNames
-);
+const pythonBracketPairIgnoredNodeNames = new Set([
+	...pythonCompletionBlockedNodeNames,
+	"BlockComment",
+	"CharacterLiteral",
+	"LineComment",
+	"StringLiteral",
+	"TextBlock"
+]);
 const pgzeroAssetStringCompletionPatterns: Array<{
 	folder: PythonIdeAssetCompletionFolder;
 	pattern: RegExp;
@@ -1297,6 +1303,10 @@ function isPythonCodeMirrorMode(mode: PythonIdeMode = "python") {
 	return mode !== "java" && mode !== "karel";
 }
 
+function isJavaCodeMirrorMode(mode: PythonIdeMode = "python") {
+	return mode === "java" || mode === "karel";
+}
+
 export function pythonIdeCompletionsForMode(
 	mode: PythonIdeMode = "python",
 	receiver?: string,
@@ -1440,26 +1450,154 @@ export function pythonIdeCompletionSource(
 }
 
 const javaKeywordCompletions = [
-	"public",
+	"abstract",
+	"assert",
+	"break",
+	"case",
+	"catch",
 	"class",
-	"static",
-	"void",
-	"main",
-	"String",
-	"int",
-	"double",
-	"boolean",
-	"if",
+	"continue",
+	"default",
+	"do",
 	"else",
+	"enum",
+	"extends",
+	"false",
+	"final",
+	"finally",
 	"for",
-	"while",
-	"return",
+	"if",
+	"implements",
+	"import",
+	"instanceof",
+	"interface",
 	"new",
-	"System.out.print",
-	"System.out.println",
+	"null",
+	"private",
+	"protected",
+	"public",
+	"return",
+	"static",
+	"super",
+	"switch",
+	"this",
+	"throws",
+	"true",
+	"try",
+	"void",
+	"while",
+	"boolean",
+	"char",
+	"double",
+	"float",
+	"int",
+	"long",
+	"String",
+	"main",
 	"Scanner",
-	"ArrayList"
+	"ArrayList",
+	"Math",
+	"System.out.print",
+	"System.out.println"
 ].map(label => completion(label, "keyword", "Java", 70));
+
+const javaMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
+	Math: [
+		completion("abs", "method", "absolute value", 70),
+		completion("ceil", "method", "round up", 70),
+		completion("floor", "method", "round down", 70),
+		completion("max", "method", "larger value", 70),
+		completion("min", "method", "smaller value", 70),
+		completion("pow", "method", "power", 70),
+		completion("random", "method", "random double from 0 to 1", 75),
+		completion("round", "method", "nearest integer", 70),
+		completion("sqrt", "method", "square root", 70)
+	],
+	"System.out": [
+		completion("print", "method", "print without newline", 90),
+		completion("println", "method", "print with newline", 95),
+		completion("printf", "method", "formatted print", 70)
+	]
+};
+
+const javaSnippetCompletions = [
+	pythonSnippet(
+		"main",
+		"Java main method",
+		snippetLines(
+			"public static void main(String[] args) {",
+			`    ${snippetField("body")}`,
+			"}",
+			snippetEnd
+		),
+		95
+	),
+	pythonSnippet(
+		"class_main",
+		"Java class with main",
+		snippetLines(
+			`public class ${snippetField("ClassName")} {`,
+			"    public static void main(String[] args) {",
+			`        ${snippetField("body")}`,
+			"    }",
+			"}",
+			snippetEnd
+		),
+		90
+	),
+	pythonSnippet(
+		"sout",
+		"System.out.println",
+		`System.out.println(${snippetField("value")});${snippetEnd}`,
+		90
+	),
+	pythonSnippet(
+		"scanner",
+		"Scanner setup",
+		snippetLines(
+			"Scanner input = new Scanner(System.in);",
+			`${snippetField("type")} ${snippetField("name")} = ` +
+				`input.next${snippetField("Method")}();`,
+			snippetEnd
+		),
+		75
+	),
+	pythonSnippet(
+		"fori",
+		"counting for loop",
+		snippetLines(
+			`for (int ${snippetField("i")} = 0; ` +
+				`${snippetField("i")} < ${snippetField("limit")}; ` +
+				`${snippetField("i")}++) {`,
+			`    ${snippetField("body")}`,
+			"}",
+			snippetEnd
+		),
+		80
+	),
+	pythonSnippet(
+		"while",
+		"while loop",
+		snippetLines(
+			`while (${snippetField("condition")}) {`,
+			`    ${snippetField("body")}`,
+			"}",
+			snippetEnd
+		),
+		78
+	),
+	pythonSnippet(
+		"method",
+		"static helper method",
+		snippetLines(
+			`public static ${snippetField("returnType")} ${snippetField("methodName")}(${snippetField("parameters")}) {`,
+			`    ${snippetField("body")}`,
+			"}",
+			snippetEnd
+		),
+		75
+	)
+];
 
 const karelKeywordCompletions = [
 	"UrRobot",
@@ -1477,30 +1615,102 @@ const karelKeywordCompletions = [
 	"pickBeeper"
 ].map(label => completion(label, "keyword", "Karel", 80));
 
+const karelSnippetCompletions = [
+	pythonSnippet(
+		"karel_setup",
+		"Karel imports and world setup",
+		snippetLines(
+			"import kareltherobot.UrRobot;",
+			"import kareltherobot.World;",
+			"import kareltherobot.Directions;",
+			"",
+			`public class ${snippetField("Algo")} implements Directions {`,
+			"    public static void main(String[] args) {",
+			`        UrRobot ${snippetField("robot")} = new UrRobot(` +
+				`${snippetField("street")}, ${snippetField("avenue")}, ` +
+				`${snippetField("East")}, ${snippetField("beepers")});`,
+			`        ${snippetField("body")}`,
+			"    }",
+			"}",
+			snippetEnd
+		),
+		95
+	),
+	pythonSnippet(
+		"turnRight",
+		"Karel turnRight helper",
+		snippetLines(
+			"static void turnRight(UrRobot robot) {",
+			"    robot.turnLeft();",
+			"    robot.turnLeft();",
+			"    robot.turnLeft();",
+			"}",
+			snippetEnd
+		),
+		88
+	),
+	pythonSnippet(
+		"robot_method",
+		"Karel helper method",
+		snippetLines(
+			`static void ${snippetField("methodName")}(UrRobot robot) {`,
+			`    ${snippetField("body")}`,
+			"}",
+			snippetEnd
+		),
+		82
+	)
+];
+
+export function javaIdeCompletionsForMode(
+	mode: PythonIdeMode = "java",
+	receiver?: string
+) {
+	if (receiver) return javaMemberCompletions[receiver] ?? [];
+	const baseCompletions = [
+		...javaKeywordCompletions,
+		...javaSnippetCompletions
+	];
+	return mode === "karel"
+		? [
+				...baseCompletions,
+				...karelKeywordCompletions,
+				...karelSnippetCompletions
+			]
+		: baseCompletions;
+}
+
 function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 	return (context: PythonIdeCompletionContext) => {
 		const word = context.matchBefore(/(?:[A-Z_]\w*\.){0,3}[A-Z_]\w*$/i);
+		const javaCompletions = javaIdeCompletionsForMode(mode);
 		if (!word) {
 			if (!context.explicit) return null;
 			return {
 				from: context.pos,
-				options:
-					mode === "karel"
-						? [
-								...javaKeywordCompletions,
-								...karelKeywordCompletions
-							]
-						: javaKeywordCompletions,
+				options: javaCompletions,
 				validFor: /^[A-Z_.]*$/i
 			};
 		}
 		if (word.from === word.to && !context.explicit) return null;
+
+		const parts = word.text.split(".");
+		if (parts.length > 1) {
+			const memberPrefix = parts.at(-1) ?? "";
+			const receiver = parts.slice(0, -1).join(".");
+			const options = javaIdeCompletionsForMode(mode, receiver);
+			if (!options.length) return null;
+
+			return {
+				from: word.to - memberPrefix.length,
+				options,
+				validFor: /^[A-Z_]*$/i
+			};
+		}
+
 		return {
 			from: word.from,
-			options:
-				mode === "karel"
-					? [...javaKeywordCompletions, ...karelKeywordCompletions]
-					: javaKeywordCompletions,
+			options: javaCompletions,
 			validFor: /^[A-Z_.]*$/i
 		};
 	};
@@ -1690,6 +1900,7 @@ export function createPythonCodeMirrorExtensions(
 ): Extension[] {
 	const mode = options.mode ?? "python";
 	const isPythonMode = isPythonCodeMirrorMode(mode);
+	const isJavaMode = isJavaCodeMirrorMode(mode);
 	const recommendationsEnabled = options.recommendationsEnabled ?? true;
 
 	return [
@@ -1706,9 +1917,16 @@ export function createPythonCodeMirrorExtensions(
 					})
 				]
 			: [],
+		isJavaMode
+			? [
+					java(),
+					javaLanguage.data.of({
+						autocomplete: javaIdeCompletionSource(mode)
+					})
+				]
+			: [],
 		autocompletion({
-			activateOnTyping: recommendationsEnabled,
-			override: isPythonMode ? undefined : [javaIdeCompletionSource(mode)]
+			activateOnTyping: recommendationsEnabled
 		}),
 		EditorState.tabSize.of(4),
 		indentUnit.of(pythonIndentText),
