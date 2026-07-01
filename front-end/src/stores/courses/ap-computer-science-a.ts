@@ -133,6 +133,11 @@ export const apComputerScienceACourse: RawCourse = {
 						"AP Computer Science A is a Java course built around problem solving, object-oriented design, arrays, ArrayLists, inheritance, recursion, and exam-style tracing. It functions as both a real programming class and a specific AP exam prep track."
 				},
 				{
+					title: "Visual Java Bridge",
+					content:
+						"The revised Java Level 1 path carries Carol/Karel and BlueJ habits into AP CSA: track object state, predict method effects, and read compiler feedback carefully. Visual tools do not replace AP evidence; each visual demonstration becomes a written trace, console trace, or FRQ-style explanation before exam practice."
+				},
+				{
 					title: "Track Guide",
 					content: [
 						"The APCS track guide is the course pacing readme. It separates the course into Slow/Supported, Medium/Standard, Fast/Quick, Hard/Challenge, and Exam-focused tracks, with concrete module decisions, project-load choices, and advancement rules for each route.",
