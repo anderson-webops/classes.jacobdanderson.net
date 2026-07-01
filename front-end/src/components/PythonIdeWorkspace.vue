@@ -16,6 +16,8 @@ import type {
 	RuntimeArtifact,
 	TurtleBridge
 } from "@/modules/pythonIdeRuntime";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { storeToRefs } from "pinia";
 import {
 	computed,
@@ -5594,7 +5596,11 @@ onBeforeUnmount(() => {
 								type="button"
 								@click="showIdeSettings = !showIdeSettings"
 							>
-								<span aria-hidden="true">⚙</span>
+								<FontAwesomeIcon
+									:icon="faGear"
+									class="ide-settings-icon"
+									aria-hidden="true"
+								/>
 							</button>
 							<div
 								v-if="showIdeSettings"
@@ -6031,6 +6037,9 @@ onBeforeUnmount(() => {
 .python-ide-page {
 	width: min(1680px, calc(100% - clamp(2rem, 4vw, 4rem)));
 	gap: 1.25rem;
+	--python-ide-toolbar-control-size: 3.5rem;
+	--python-ide-toolbar-button-width: 6.75rem;
+	--python-ide-toolbar-control-radius: 16px;
 	--python-code-bg: #f8fafc;
 	--python-code-ink: #1e293b;
 	--python-code-muted: #64748b;
@@ -6710,7 +6719,7 @@ html.dark .file-delete:disabled::after {
 }
 
 .run-control {
-	width: 5rem;
+	width: var(--python-ide-toolbar-button-width);
 	justify-content: center;
 	text-align: center;
 }
@@ -6759,7 +6768,21 @@ html.dark .file-delete:disabled::after {
 	position: relative;
 	display: flex;
 	gap: 0.65rem;
-	align-items: end;
+	align-items: stretch;
+	justify-content: flex-end;
+}
+
+.editor-toolbar > label input,
+.editor-actions > .site-button,
+.ide-settings-trigger {
+	min-height: var(--python-ide-toolbar-control-size);
+	border-radius: var(--python-ide-toolbar-control-radius);
+}
+
+.editor-actions > .site-button {
+	width: var(--python-ide-toolbar-button-width);
+	padding: 0 1.2rem;
+	line-height: 1;
 }
 
 .visible-review-panel {
@@ -6839,29 +6862,30 @@ html.dark .file-delete:disabled::after {
 
 .ide-settings {
 	position: relative;
+	display: flex;
+	align-items: stretch;
 }
 
 .ide-settings-trigger {
-	width: 2.8rem;
-	height: 2.8rem;
+	width: var(--python-ide-toolbar-control-size);
+	height: var(--python-ide-toolbar-control-size);
+	flex: 0 0 var(--python-ide-toolbar-control-size);
 	padding: 0;
-	display: grid;
-	place-items: center;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	border: 1px solid var(--color-border);
-	border-radius: 14px;
 	background: rgba(255, 255, 255, 0.84);
-	color: var(--color-ink-strong);
-	font-size: 1.15rem;
+	color: #0f766e;
 	font-weight: 900;
+	line-height: 1;
 }
 
-.ide-settings-trigger span {
-	width: 100%;
-	height: 100%;
-	display: grid;
-	place-items: center;
-	font-size: 2rem;
-	line-height: 1;
+.ide-settings-icon {
+	width: 1.35rem;
+	height: 1.35rem;
+	display: block;
+	color: currentColor;
 }
 
 .ide-settings-panel {
