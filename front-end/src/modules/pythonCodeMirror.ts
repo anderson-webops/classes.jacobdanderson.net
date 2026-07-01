@@ -1615,6 +1615,18 @@ const karelKeywordCompletions = [
 	"pickBeeper"
 ].map(label => completion(label, "keyword", "Karel", 80));
 
+const karelRobotMemberCompletions = [
+	completion("move", "method", "move forward one square", 95),
+	completion("turnLeft", "method", "turn 90 degrees left", 95),
+	completion("turnRight", "method", "turn 90 degrees right", 90),
+	completion("turnAround", "method", "turn 180 degrees", 90),
+	completion("putBeeper", "method", "place one beeper", 90),
+	completion("pickBeeper", "method", "pick up one beeper", 90)
+];
+const karelMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
+	World: [completion("readWorld", "method", "load a Karel world file", 90)]
+};
+
 const karelSnippetCompletions = [
 	pythonSnippet(
 		"karel_setup",
@@ -1666,7 +1678,15 @@ export function javaIdeCompletionsForMode(
 	mode: PythonIdeMode = "java",
 	receiver?: string
 ) {
-	if (receiver) return javaMemberCompletions[receiver] ?? [];
+	if (receiver) {
+		return (
+			javaMemberCompletions[receiver] ??
+			karelMemberCompletions[receiver] ??
+			(mode === "karel" && /^[A-Z_]\w*$/i.test(receiver)
+				? karelRobotMemberCompletions
+				: [])
+		);
+	}
 	const baseCompletions = [
 		...javaKeywordCompletions,
 		...javaSnippetCompletions
@@ -1682,7 +1702,7 @@ export function javaIdeCompletionsForMode(
 
 function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 	return (context: PythonIdeCompletionContext) => {
-		const word = context.matchBefore(/(?:[A-Z_]\w*\.){0,3}[A-Z_]\w*$/i);
+		const word = context.matchBefore(/(?:[A-Z_]\w*\.){0,3}[A-Z_]\w*\.?$/i);
 		const javaCompletions = javaIdeCompletionsForMode(mode);
 		if (!word) {
 			if (!context.explicit) return null;

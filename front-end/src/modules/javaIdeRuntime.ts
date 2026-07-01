@@ -100,7 +100,7 @@ function getActiveJavaFile(options: JavaIdeRunOptions) {
 }
 
 function runConsoleJavaProject(file: PythonIdeFile): JavaIdeRunResult {
-	const stdout = javaPrintOutput(file.content);
+	const stdout = javaPrintOutput(stripJavaComments(file.content));
 	return {
 		stderr: stdout.length
 			? []
@@ -316,7 +316,64 @@ function runKarelProject(
 }
 
 function stripJavaComments(source: string) {
-	return source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+	let output = "";
+	let index = 0;
+	let quote: '"' | "'" | null = null;
+	let escaped = false;
+
+	while (index < source.length) {
+		const character = source[index] ?? "";
+		const nextCharacter = source[index + 1] ?? "";
+
+		if (quote) {
+			output += character;
+			if (escaped) {
+				escaped = false;
+			} else if (character === "\\") {
+				escaped = true;
+			} else if (character === quote) {
+				quote = null;
+			}
+			index += 1;
+			continue;
+		}
+
+		if (character === '"' || character === "'") {
+			quote = character;
+			output += character;
+			index += 1;
+			continue;
+		}
+
+		if (character === "/" && nextCharacter === "/") {
+			index += 2;
+			while (index < source.length && !/[\r\n]/.test(source[index] ?? ""))
+				index += 1;
+			continue;
+		}
+
+		if (character === "/" && nextCharacter === "*") {
+			index += 2;
+			while (index < source.length) {
+				const blockCharacter = source[index] ?? "";
+				if (blockCharacter === "\n") output += "\n";
+				if (
+					blockCharacter === "*" &&
+					(source[index + 1] ?? "") === "/"
+				) {
+					index += 2;
+					break;
+				}
+				index += 1;
+			}
+			continue;
+		}
+
+		output += character;
+		index += 1;
+	}
+
+	return output;
 }
 
 function parseKarelWorld(files: PythonIdeFile[], source: string) {

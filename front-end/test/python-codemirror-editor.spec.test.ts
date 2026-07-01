@@ -1,11 +1,13 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import type { Completion } from "@codemirror/autocomplete";
 import type { StateCommand, Transaction } from "@codemirror/state";
 import { indentLess, indentMore, toggleComment } from "@codemirror/commands";
 import { python } from "@codemirror/lang-python";
 import { getIndentUnit } from "@codemirror/language";
 import { EditorSelection, EditorState } from "@codemirror/state";
 import { describe, expect, it, vi } from "vitest";
+import type { PythonIdeMode } from "../src/modules/pythonIde";
 import {
 	canSkipExistingClosingToken,
 	createPythonCodeMirrorExtensions,
@@ -42,6 +44,51 @@ function runStateCommand(state: EditorState, command: StateCommand) {
 		state
 	});
 	return { result, state: nextState };
+}
+
+interface TestCompletionContext {
+	explicit: boolean;
+	pos: number;
+	state: EditorState;
+	matchBefore: (expression: RegExp) => {
+		from: number;
+		text: string;
+		to: number;
+	} | null;
+}
+
+interface TestCompletionResult {
+	options?: Completion[];
+}
+
+type TestCompletionSource = (
+	context: TestCompletionContext
+) => TestCompletionResult | null;
+
+function autocompleteLabelsForDoc(mode: PythonIdeMode, doc: string) {
+	const state = EditorState.create({
+		doc,
+		extensions: createPythonCodeMirrorExtensions({
+			mode,
+			onChange: vi.fn(),
+			onCursorCountChange: vi.fn()
+		})
+	});
+	const sources = state.languageDataAt<TestCompletionSource>(
+		"autocomplete",
+		doc.length
+	);
+
+	return sources.flatMap(source => {
+		const result = source({
+			explicit: true,
+			matchBefore: expression =>
+				completionMatchBefore(doc, doc.length, expression),
+			pos: doc.length,
+			state
+		});
+		return result?.options?.map(option => option.label) ?? [];
+	});
 }
 
 describe("python IDE CodeMirror editor", () => {
@@ -279,6 +326,28 @@ describe("python IDE CodeMirror editor", () => {
 		const dedented = runStateCommand(indented.state, indentLess);
 		expect(dedented.result).toBe(true);
 		expect(dedented.state.doc.toString()).toBe(doc);
+	});
+
+	it("offers Java and Karel member completions immediately after a dot", () => {
+		expect(autocompleteLabelsForDoc("java", "System.out.")).toEqual(
+			expect.arrayContaining(["print", "println", "printf"])
+		);
+		expect(autocompleteLabelsForDoc("java", "Math.")).toEqual(
+			expect.arrayContaining(["random", "sqrt"])
+		);
+		expect(autocompleteLabelsForDoc("karel", "World.")).toEqual(
+			expect.arrayContaining(["readWorld"])
+		);
+		expect(autocompleteLabelsForDoc("karel", "sam.")).toEqual(
+			expect.arrayContaining([
+				"move",
+				"turnLeft",
+				"turnRight",
+				"turnAround",
+				"putBeeper",
+				"pickBeeper"
+			])
+		);
 	});
 
 	it("adds Karel Java snippets and ignores Java comment/string brackets", () => {
