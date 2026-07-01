@@ -2665,10 +2665,23 @@ describe("python IDE project helpers", () => {
 			'const pythonIdeAutoSaveStorageKey = "classes-python-ide-autosave";'
 		);
 		expect(pageSource).toContain(
+			'const pythonIdeCodeRecommendationsStorageKey ='
+		);
+		expect(pageSource).toContain(
 			"const autoSaveEnabled = ref(loadPythonIdeAutoSavePreference());"
 		);
+		expect(pageSource).toContain(
+			"const codeRecommendationsEnabled = ref("
+		);
 		expect(pageSource).toContain("function updateAutoSavePreference");
+		expect(pageSource).toContain(
+			"function updateCodeRecommendationsPreference"
+		);
 		expect(pageSource).toContain("Autosave projects");
+		expect(pageSource).toContain("Recommendations as you type");
+		expect(pageSource).toContain(
+			"recommendationsEnabled: codeRecommendationsEnabled.value"
+		);
 		expect(pageSource).toContain('aria-label="Python IDE settings"');
 		expect(pageSource).toContain(
 			'aria-controls="python-ide-settings-panel"'
@@ -2732,6 +2745,47 @@ describe("python IDE project helpers", () => {
 		);
 		expect(pageSource).toContain("flushPendingProjectSave();");
 		expect(pageSource).toContain("saveLocalProjectSnapshot();");
+	});
+
+	it("keeps Python code recommendations enabled by default with manual completion fallback", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			"utf8"
+		);
+		const codeMirrorSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonCodeMirror.ts"),
+			"utf8"
+		);
+
+		expect(pageSource).toContain(
+			"function loadPythonIdeCodeRecommendationsPreference"
+		);
+		expect(pageSource).toContain(
+			"function persistPythonIdeCodeRecommendationsPreference"
+		);
+		expect(pageSource).toContain(
+			"let useFreshCodeEditorStateOnNextReset = false;"
+		);
+		expect(pageSource).toContain(
+			"useFreshCodeEditorStateOnNextReset = true;"
+		);
+		expect(pageSource).toContain(
+			'window.localStorage.getItem(pythonIdeCodeRecommendationsStorageKey) !=='
+		);
+		expect(pageSource).toContain(
+			"void nextTick(resetCodeEditor);"
+		);
+		expect(pageSource).toContain(
+			"!useFreshCodeEditorStateOnNextReset &&"
+		);
+		expect(codeMirrorSource).toContain("recommendationsEnabled?: boolean;");
+		expect(codeMirrorSource).toContain(
+			"const recommendationsEnabled = options.recommendationsEnabled ?? true;"
+		);
+		expect(codeMirrorSource).toContain(
+			"autocompletion({ activateOnTyping: recommendationsEnabled })"
+		);
+		expect(codeMirrorSource).toContain("...completionKeymap");
 	});
 
 	it("persists CodeMirror view state across reloads and project ID migration", () => {
