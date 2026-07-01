@@ -46,6 +46,9 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("keeps the route page as a lightweight async workspace wrapper", () => {
 		const routeSource = sourceFile("../src/pages/python-ide.vue");
+		const workspaceSource = sourceFile(
+			"../src/components/PythonIdeWorkspace.vue"
+		);
 
 		expect(routeSource).toContain("defineAsyncComponent");
 		expect(routeSource).toContain(
@@ -53,6 +56,9 @@ describe("python IDE CodeMirror editor", () => {
 		);
 		expect(routeSource).not.toContain("new EditorView");
 		expect(routeSource).not.toContain("loadPythonIdeRuntime");
+		expect(workspaceSource).toContain(
+			"<h1>Code, run, and draw in Python or Java</h1>"
+		);
 	});
 
 	it("does not force CodeMirror through a fragile manual editor chunk", () => {
@@ -167,7 +173,10 @@ describe("python IDE CodeMirror editor", () => {
 		expect(editorSource).toContain("lineNumbers()");
 		expect(editorSource).toContain("history()");
 		expect(editorSource).toContain(
-			"autocompletion({ activateOnTyping: recommendationsEnabled })"
+			"activateOnTyping: recommendationsEnabled"
+		);
+		expect(editorSource).toContain(
+			"override: isPythonMode ? undefined : [javaIdeCompletionSource(mode)]"
 		);
 		expect(editorSource).toContain("snippetCompletion");
 		expect(editorSource).toContain("highlightSelectionMatches()");
@@ -264,6 +273,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(createMenuSource).toContain("createProjectFromMenu('data')");
 		expect(createMenuSource).toContain("createProjectFromMenu('turtle')");
 		expect(createMenuSource).toContain("createProjectFromMenu('pgzero')");
+		expect(createMenuSource).toContain("createProjectFromMenu('java')");
+		expect(createMenuSource).toContain("createProjectFromMenu('karel')");
+		expect(createMenuSource).toContain("Karel Java");
 
 		expect(
 			pythonIdeCompletionsForMode("pgzero").map(option => option.label)
