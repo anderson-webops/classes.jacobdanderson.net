@@ -1,13 +1,16 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { EditorSelection, EditorState } from "@codemirror/state";
+import type { StateCommand, Transaction } from "@codemirror/state";
+import { indentLess, indentMore, toggleComment } from "@codemirror/commands";
 import { python } from "@codemirror/lang-python";
 import { getIndentUnit } from "@codemirror/language";
+import { EditorSelection, EditorState } from "@codemirror/state";
 import { describe, expect, it, vi } from "vitest";
 import {
 	canSkipExistingClosingToken,
 	createPythonCodeMirrorExtensions,
 	isPythonBracketPairIgnoredAt,
+	javaIdeCompletionsForMode,
 	pythonIdeCompletionSource,
 	pythonIdeCompletionsForMode,
 	pythonNewlineIndentText,
@@ -28,6 +31,17 @@ function completionMatchBefore(doc: string, pos: number, expression: RegExp) {
 		text: match[0],
 		to: pos
 	};
+}
+
+function runStateCommand(state: EditorState, command: StateCommand) {
+	let nextState = state;
+	const result = command({
+		dispatch(transaction: Transaction) {
+			nextState = transaction.state;
+		},
+		state
+	});
+	return { result, state: nextState };
 }
 
 describe("python IDE CodeMirror editor", () => {
@@ -175,9 +189,6 @@ describe("python IDE CodeMirror editor", () => {
 		expect(editorSource).toContain(
 			"activateOnTyping: recommendationsEnabled"
 		);
-		expect(editorSource).toContain(
-			"override: isPythonMode ? undefined : [javaIdeCompletionSource(mode)]"
-		);
 		expect(editorSource).toContain("snippetCompletion");
 		expect(editorSource).toContain("highlightSelectionMatches()");
 		expect(editorSource).not.toContain('from "codemirror"');
@@ -209,6 +220,105 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).toContain(
 			'mode: selectedProject.value?.mode ?? "python"'
 		);
+	});
+
+	it("enables Java parsing, comments, completions, and multiline indentation", () => {
+		const editorSource = sourceFile("../src/modules/pythonCodeMirror.ts");
+		const doc = "public class Main {\nint x = 1;\nint y = 2;\n}\n";
+		const extensions = createPythonCodeMirrorExtensions({
+			mode: "java",
+			onChange: vi.fn(),
+			onCursorCountChange: vi.fn()
+		});
+		const selectedBodyLines = EditorState.create({
+			doc,
+			extensions,
+			selection: EditorSelection.range(
+				doc.indexOf("int x"),
+				doc.indexOf("}\n")
+			)
+		});
+
+		expect(editorSource).toContain('from "@codemirror/lang-java"');
+		expect(editorSource).toContain("java()");
+		expect(editorSource).toContain("javaLanguage.data.of");
+		expect(editorSource).toContain("javaIdeCompletionSource(mode)");
+		expect(editorSource).not.toContain("override: isPythonMode");
+
+		const javaLabels = javaIdeCompletionsForMode("java").map(
+			option => option.label
+		);
+		expect(javaLabels).toEqual(
+			expect.arrayContaining([
+				"class",
+				"main",
+				"class_main",
+				"fori",
+				"method",
+				"sout",
+				"System.out.println"
+			])
+		);
+		expect(
+			javaIdeCompletionsForMode("java", "System.out").map(
+				option => option.label
+			)
+		).toEqual(expect.arrayContaining(["print", "println", "printf"]));
+
+		const commented = runStateCommand(selectedBodyLines, toggleComment);
+		expect(commented.result).toBe(true);
+		expect(commented.state.doc.toString()).toBe(
+			"public class Main {\n// int x = 1;\n// int y = 2;\n}\n"
+		);
+
+		const indented = runStateCommand(selectedBodyLines, indentMore);
+		expect(indented.result).toBe(true);
+		expect(indented.state.doc.toString()).toBe(
+			"public class Main {\n    int x = 1;\n    int y = 2;\n}\n"
+		);
+		const dedented = runStateCommand(indented.state, indentLess);
+		expect(dedented.result).toBe(true);
+		expect(dedented.state.doc.toString()).toBe(doc);
+	});
+
+	it("adds Karel Java snippets and ignores Java comment/string brackets", () => {
+		const karelLabels = javaIdeCompletionsForMode("karel").map(
+			option => option.label
+		);
+		const doc = [
+			"public class Main {",
+			"    // comment [ignored]",
+			'    String label = "[";',
+			"    int[] values = {1, 2};",
+			"}"
+		].join("\n");
+		const state = EditorState.create({
+			doc,
+			extensions: createPythonCodeMirrorExtensions({
+				mode: "karel",
+				onChange: vi.fn(),
+				onCursorCountChange: vi.fn()
+			})
+		});
+
+		expect(karelLabels).toEqual(
+			expect.arrayContaining([
+				"UrRobot",
+				"World",
+				"karel_setup",
+				"robot_method",
+				"turnRight"
+			])
+		);
+		expect(isPythonBracketPairIgnoredAt(state, doc.indexOf("["))).toBe(
+			true
+		);
+		expect(
+			isPythonBracketPairIgnoredAt(state, doc.indexOf('"["') + 1)
+		).toBe(true);
+		expect(
+			isPythonBracketPairIgnoredAt(state, doc.indexOf("values") + 3)
+		).toBe(false);
 	});
 
 	it("keeps bracket-pair colors from changing editor text metrics", () => {
