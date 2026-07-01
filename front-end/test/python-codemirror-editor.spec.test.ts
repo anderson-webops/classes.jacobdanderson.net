@@ -166,7 +166,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(editorSource).toContain("pythonEditorBaseSetup");
 		expect(editorSource).toContain("lineNumbers()");
 		expect(editorSource).toContain("history()");
-		expect(editorSource).toContain("autocompletion()");
+		expect(editorSource).toContain(
+			"autocompletion({ activateOnTyping: recommendationsEnabled })"
+		);
 		expect(editorSource).toContain("snippetCompletion");
 		expect(editorSource).toContain("highlightSelectionMatches()");
 		expect(editorSource).not.toContain('from "codemirror"');
@@ -669,6 +671,53 @@ describe("python IDE CodeMirror editor", () => {
 				"turtle"
 			])
 		);
+	});
+
+	it("offers Trinket Turtle color completions inside background and object color calls", () => {
+		const cases = [
+			{
+				doc: 'screen.bgcolor("light s',
+				from: 'screen.bgcolor("'.length,
+				labels: ["light sky blue", "light slate gray"]
+			},
+			{
+				doc: 't.color("rebecca p',
+				from: 't.color("'.length,
+				labels: ["rebecca purple"]
+			},
+			{
+				doc: 't.color("red", "deep s',
+				from: 't.color("red", "'.length,
+				labels: ["deep sky blue"]
+			},
+			{
+				doc: 't.fillcolor("medium s',
+				from: 't.fillcolor("'.length,
+				labels: ["medium sea green", "medium slate blue", "medium spring green"]
+			},
+			{
+				doc: 't.dot(24, "dark o',
+				from: 't.dot(24, "'.length,
+				labels: ["dark olive green", "dark orange"]
+			}
+		];
+
+		for (const { doc, from, labels } of cases) {
+			const state = EditorState.create({ doc });
+			const result = pythonIdeCompletionSource("turtle")({
+				explicit: false,
+				pos: doc.length,
+				state,
+				matchBefore: expression =>
+					completionMatchBefore(doc, doc.length, expression)
+			});
+
+			expect(result?.from).toBe(from);
+			expect(result?.options.map(option => option.label)).toEqual(
+				expect.arrayContaining(labels)
+			);
+			expect(result?.validFor.test(doc.slice(from))).toBe(true);
+		}
 	});
 
 	it("bounds custom bracket-pair colorization to the visible editor range", () => {

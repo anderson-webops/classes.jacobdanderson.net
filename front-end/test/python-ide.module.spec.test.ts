@@ -949,6 +949,22 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("normalizes spaced Turtle color names for browser canvas rendering", () => {
+		const runtimeSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
+			"utf8"
+		);
+		const normalizeStart = runtimeSource.indexOf(
+			"def _normalize_color(*values):"
+		);
+		const normalizeSource = runtimeSource.slice(
+			normalizeStart,
+			runtimeSource.indexOf("def _looks_like_color(value):", normalizeStart)
+		);
+
+		expect(normalizeSource).toContain('return value.replace(" ", "")');
+	});
+
 	it("renders the original Turtle built-in shapes with classic as default", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),

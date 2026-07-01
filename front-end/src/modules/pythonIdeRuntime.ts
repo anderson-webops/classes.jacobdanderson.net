@@ -1024,7 +1024,7 @@ def _normalize_color(*values):
     if len(values) == 1:
         value = values[0]
         if isinstance(value, str):
-            return value
+            return value.replace(" ", "")
         try:
             sequence = list(value)
         except TypeError:
