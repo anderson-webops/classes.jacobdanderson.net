@@ -90,8 +90,12 @@ function makeProject(overrides: Record<string, unknown> = {}) {
 		courseID: "python-level-2",
 		courseProjectKey: "python-level-2:loops:starter",
 		courseProjectTitle: "Loops practice",
+		shared: false,
+		shareID: undefined,
+		shareCreatedAt: undefined,
 		createdAt: now,
 		updatedAt: now,
+		save: vi.fn().mockResolvedValue(undefined),
 		...overrides
 	};
 }
@@ -342,6 +346,74 @@ describe("Python project review routes", () => {
 			expect(body.reviews).toHaveLength(1);
 			expect(body.reviews[0].sourceProject).toBe(projectID.toString());
 			expect(body.reviews[0].note).toBe("Tutor comments are in the code.");
+		});
+	});
+
+	it("lets signed-in students create and disable a share link for their own project", async () => {
+		const project = makeProject();
+		modelMocks.pythonProjectFindOne.mockResolvedValue(project);
+
+		await withUserRoutes(async baseUrl => {
+			const enableResponse = await putJson(
+				baseUrl,
+				`/users/loggedin/python-projects/${projectID}/share`,
+				{ shared: true },
+				{ "x-user-id": studentID.toString() }
+			);
+			const enableBody = await enableResponse.json();
+
+			expect(enableResponse.status).toBe(200);
+			expect(modelMocks.pythonProjectFindOne).toHaveBeenCalledWith({
+				_id: new Types.ObjectId(projectID),
+				user: studentID
+			});
+			expect(project.shared).toBe(true);
+			expect(project.shareID).toMatch(/^[\w-]{20,80}$/);
+			expect(project.shareCreatedAt).toBeInstanceOf(Date);
+			expect(project.save).toHaveBeenCalled();
+			expect(enableBody.project.shared).toBe(true);
+			expect(enableBody.project.shareID).toBe(project.shareID);
+
+			const disableResponse = await putJson(
+				baseUrl,
+				`/users/loggedin/python-projects/${projectID}/share`,
+				{ shared: false },
+				{ "x-user-id": studentID.toString() }
+			);
+			const disableBody = await disableResponse.json();
+
+			expect(disableResponse.status).toBe(200);
+			expect(project.shared).toBe(false);
+			expect(disableBody.project.shared).toBe(false);
+			expect(disableBody.project.shareID).toBeUndefined();
+		});
+	});
+
+	it("serves only enabled shared Python IDE project links without a login", async () => {
+		const shareID = "share_ABC1234567890_xyz";
+		modelMocks.pythonProjectFindOne.mockResolvedValue(
+			makeProject({
+				shared: true,
+				shareID,
+				shareCreatedAt: now
+			})
+		);
+
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(
+				`${baseUrl}/users/python-projects/shared/${shareID}`
+			);
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(modelMocks.pythonProjectFindOne).toHaveBeenCalledWith({
+				shareID,
+				shared: true
+			});
+			expect(body.project.title).toBe("Loops practice");
+			expect(body.project.files[0].content).toBe("print('student')\n");
+			expect(body.project.shared).toBe(true);
+			expect(body.project.shareID).toBe(shareID);
 		});
 	});
 });

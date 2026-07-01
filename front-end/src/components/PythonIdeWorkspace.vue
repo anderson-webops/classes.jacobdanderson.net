@@ -30,6 +30,7 @@ import {
 	createRemotePythonIdeProject,
 	deleteRemotePythonIdeProject,
 	fetchPythonIdeProjects,
+	fetchSharedPythonIdeProject,
 	fetchVisiblePythonIdeProjectReviews,
 	getPythonIdeAssetDataUrl,
 	getPythonIdeDefaultFileContent,
@@ -52,7 +53,8 @@ import {
 	resolvePythonIdeActiveFileName,
 	saveLocalPythonProjects,
 	saveLocalPythonProjectsAsync,
-	updateRemotePythonIdeProject
+	updateRemotePythonIdeProject,
+	updateRemotePythonIdeProjectShare
 } from "@/modules/pythonIde";
 import {
 	findPythonIdeCourseAsset,
@@ -470,6 +472,7 @@ const outputLines = ref<OutputLine[]>([]);
 const runtimeArtifacts = ref<RuntimeArtifactView[]>([]);
 const isLoading = ref(true);
 const isSaving = ref(false);
+const isSharing = ref(false);
 const isRunning = ref(false);
 const isGameLoopActive = ref(false);
 const activeTurtleTimerCount = ref(0);
@@ -488,6 +491,7 @@ const sidebarCollapsed = ref(false);
 const stopRequested = ref(false);
 const saveMessage = ref("Loading workspace");
 const runMessage = ref("Ready");
+const shareMessage = ref("");
 const storagePersistenceMessage = ref("Checking local save protection");
 const storagePersistenceStatus = ref<
 	"best-effort" | "checking" | "persistent" | "unsupported"
@@ -908,12 +912,28 @@ const requestedStarterLabel = computed(() =>
 	typeof route.query.starterLabel === "string" ? route.query.starterLabel : ""
 );
 const requestedCourseStarter = computed(() => route.query.starter === "course");
+const requestedShareID = computed(() =>
+	typeof route.query.share === "string" ? route.query.share.trim() : ""
+);
 const requestedStarterMode = computed(() => {
 	const rawMode =
 		typeof route.query.mode === "string" ? route.query.mode : "";
 	const courseMode = pythonIdeModeForCourseId(requestedCourseId.value);
 	return normalizePythonIdeMode(rawMode, courseMode ?? "turtle");
 });
+const selectedProjectShareLink = computed(() => {
+	const shareID =
+		selectedProject.value?.shared && selectedProject.value.shareID
+			? selectedProject.value.shareID
+			: "";
+	return shareID ? pythonIdeShareUrl(shareID) : "";
+});
+
+function pythonIdeShareUrl(shareID: string) {
+	const sharePath = `/python-ide?share=${encodeURIComponent(shareID)}`;
+	if (typeof window === "undefined") return sharePath;
+	return new URL(sharePath, window.location.origin).toString();
+}
 
 function appendOutput(kind: OutputLine["kind"], text: string) {
 	if (!text) return;
@@ -1184,6 +1204,70 @@ async function createRequestedCourseProject() {
 	});
 }
 
+async function importSharedProjectFromRouteIfNeeded(
+	localOnly = false,
+	loadRunID?: number
+) {
+	const shareID = requestedShareID.value;
+	if (!shareID || !projectLoadIsCurrent(loadRunID)) return false;
+
+	const existingProject = projects.value.find(
+		project => project.sharedSourceID === shareID
+	);
+	if (existingProject) {
+		selectedProjectID.value = existingProject._id;
+		return true;
+	}
+
+	try {
+		const sharedProject = await fetchSharedPythonIdeProject(shareID);
+		if (!projectLoadIsCurrent(loadRunID)) return false;
+
+		const files = sharedProject.files.map(file => ({
+			name: file.name,
+			content: file.content,
+			encoding: file.encoding
+		}));
+		const project = createPythonIdeProject(sharedProject.mode, {
+			files,
+			sharedSourceID: shareID,
+			starterLabel: "Shared project",
+			starterUrl: pythonIdeShareUrl(shareID),
+			template: "blank",
+			title: `Copy of ${sharedProject.title || "Shared Project"}`
+		});
+		project.activeFileName = resolvePythonIdeActiveFileName(
+			project.files,
+			sharedProject.activeFileName
+		);
+
+		await saveNewProject(project, localOnly, loadRunID);
+		if (!projectLoadIsCurrent(loadRunID)) return false;
+		appendOutput("system", "Imported a copy of the shared project.");
+		saveMessage.value = canSyncToAccount.value
+			? "Imported shared project copy"
+			: "Imported shared project locally";
+		return true;
+	} catch (error) {
+		if (!projectLoadIsCurrent(loadRunID)) return false;
+		const message =
+			error instanceof Error
+				? error.message
+				: "Could not open the shared project.";
+		appendOutput("stderr", message);
+		saveMessage.value = "Shared project unavailable";
+		return false;
+	}
+}
+
+async function openRouteProjectIfNeeded(localOnly = false, loadRunID?: number) {
+	if (requestedShareID.value) {
+		return importSharedProjectFromRouteIfNeeded(localOnly, loadRunID);
+	}
+
+	return openRequestedCourseProjectIfNeeded(localOnly, loadRunID);
+}
+
 function projectLoadIsCurrent(loadRunID?: number) {
 	return loadRunID === undefined || loadRunID === projectLoadRunID;
 }
@@ -1380,7 +1464,7 @@ async function loadProjects() {
 					setProjects(syncedProjects);
 					await discardLocalProjectSnapshot();
 					if (!projectLoadIsCurrent(loadRunID)) return;
-					await openRequestedCourseProjectIfNeeded(false, loadRunID);
+					await openRouteProjectIfNeeded(false, loadRunID);
 					if (!projectLoadIsCurrent(loadRunID)) return;
 					saveMessage.value = "Synced recovered local edits";
 					return;
@@ -1395,7 +1479,7 @@ async function loadProjects() {
 					);
 				}
 
-				await openRequestedCourseProjectIfNeeded(false, loadRunID);
+				await openRouteProjectIfNeeded(false, loadRunID);
 				if (!projectLoadIsCurrent(loadRunID)) return;
 				saveMessage.value = "Recovered local edits";
 				return;
@@ -1403,7 +1487,7 @@ async function loadProjects() {
 
 			if (remoteProjects.length) {
 				setProjects(remoteProjects);
-				await openRequestedCourseProjectIfNeeded(false, loadRunID);
+				await openRouteProjectIfNeeded(false, loadRunID);
 				if (!projectLoadIsCurrent(loadRunID)) return;
 				saveMessage.value = "Synced to account";
 				return;
@@ -1433,7 +1517,7 @@ async function loadProjects() {
 				: [await createInitialProject()]
 		);
 		if (!projectLoadIsCurrent(loadRunID)) return;
-		await openRequestedCourseProjectIfNeeded(false, loadRunID);
+		await openRouteProjectIfNeeded(false, loadRunID);
 		if (!projectLoadIsCurrent(loadRunID)) return;
 		await persistLocalProjects();
 	} catch (error) {
@@ -1447,7 +1531,7 @@ async function loadProjects() {
 				: [await createInitialProject()]
 		);
 		if (!projectLoadIsCurrent(loadRunID)) return;
-		await openRequestedCourseProjectIfNeeded(true, loadRunID);
+		await openRouteProjectIfNeeded(true, loadRunID);
 		if (!projectLoadIsCurrent(loadRunID)) return;
 		saveMessage.value =
 			error instanceof Error ? error.message : "Using local workspace";
@@ -1671,6 +1755,70 @@ function updateCodeRecommendationsPreference(event: Event) {
 	persistPythonIdeCodeRecommendationsPreference(enabled);
 	useFreshCodeEditorStateOnNextReset = true;
 	void nextTick(resetCodeEditor);
+}
+
+async function updateProjectSharePreference(event: Event) {
+	const input = event.target as HTMLInputElement;
+	const shared = input.checked;
+
+	if (!selectedProject.value) return;
+	if (!canSyncToAccount.value) {
+		input.checked = false;
+		shareMessage.value = "Sign in to share projects.";
+		appendOutput("system", shareMessage.value);
+		return;
+	}
+
+	isSharing.value = true;
+	shareMessage.value = shared ? "Creating share link" : "Turning sharing off";
+	try {
+		await saveSelectedProject({ force: true });
+		const project = selectedProject.value;
+		if (!project || project._id.startsWith("local-")) {
+			throw new Error("Save the project to your account before sharing.");
+		}
+
+		const updatedProject = await updateRemotePythonIdeProjectShare(
+			project._id,
+			shared
+		);
+		const projectIndex = projects.value.findIndex(
+			candidate => candidate._id === project._id
+		);
+		if (projectIndex >= 0) {
+			projects.value.splice(projectIndex, 1, updatedProject);
+			selectedProjectID.value = updatedProject._id;
+		}
+		await discardLocalProjectSnapshotIfSafe();
+		shareMessage.value = shared
+			? "Share link ready"
+			: "Project sharing off";
+	} catch (error) {
+		input.checked = !shared;
+		shareMessage.value =
+			error instanceof Error
+				? error.message
+				: "Could not update project sharing.";
+		appendOutput("stderr", shareMessage.value);
+	} finally {
+		isSharing.value = false;
+	}
+}
+
+async function copySelectedProjectShareLink() {
+	const shareLink = selectedProjectShareLink.value;
+	if (!shareLink) return;
+
+	try {
+		await navigator.clipboard.writeText(shareLink);
+		shareMessage.value = "Share link copied";
+	} catch {
+		shareMessage.value = "Copy failed; select the link manually.";
+	}
+}
+
+function selectProjectShareLink(event: FocusEvent) {
+	if (event.target instanceof HTMLInputElement) event.target.select();
 }
 
 async function createProject(
@@ -4809,6 +4957,7 @@ watch(
 			route.query.course,
 			route.query.mode,
 			route.query.projectKey,
+			route.query.share,
 			route.query.starter,
 			route.query.starterLabel,
 			route.query.starterTitle,
@@ -5313,6 +5462,62 @@ onBeforeUnmount(() => {
 										</small>
 									</span>
 								</label>
+								<div class="ide-setting-share">
+									<label class="ide-setting-toggle">
+										<input
+											:checked="
+												selectedProject.shared ?? false
+											"
+											:disabled="
+												isSharing || !canSyncToAccount
+											"
+											type="checkbox"
+											@change="
+												updateProjectSharePreference
+											"
+										/>
+										<span>
+											<strong>Share project</strong>
+											<small>
+												Create a link that lets someone
+												else open an editable copy.
+											</small>
+										</span>
+									</label>
+									<div
+										v-if="selectedProjectShareLink"
+										class="ide-share-link-row"
+									>
+										<input
+											:value="selectedProjectShareLink"
+											aria-label="Shared project link"
+											readonly
+											type="text"
+											@focus="selectProjectShareLink"
+										/>
+										<button
+											class="ide-setting-action"
+											type="button"
+											@click="
+												copySelectedProjectShareLink
+											"
+										>
+											Copy
+										</button>
+									</div>
+									<small
+										v-if="!canSyncToAccount"
+										class="ide-setting-note"
+									>
+										Sign in to share projects.
+									</small>
+									<small
+										v-else-if="shareMessage"
+										class="ide-setting-note"
+									>
+										{{ shareMessage }}
+									</small>
+								</div>
 								<div class="ide-setting-storage">
 									<button
 										class="ide-setting-action"
@@ -5741,6 +5946,11 @@ html.dark .ide-setting-toggle strong {
 
 html.dark .ide-setting-toggle small {
 	color: #c8dce6;
+}
+
+html.dark .ide-share-link-row input {
+	background: rgba(15, 23, 42, 0.76);
+	color: #f8fbff;
 }
 
 html.dark .ide-setting-action {
@@ -6433,6 +6643,9 @@ html.dark .file-delete:disabled::after {
 	top: calc(100% + 0.55rem);
 	right: 0;
 	width: min(20rem, calc(100vw - 2rem));
+	max-height: min(20rem, calc(100vh - 2rem));
+	overflow: auto;
+	overscroll-behavior: contain;
 	padding: 0.85rem;
 	border: 1px solid var(--color-border);
 	border-radius: 16px;
@@ -6452,6 +6665,38 @@ html.dark .file-delete:disabled::after {
 	margin-top: 0.8rem;
 	padding-top: 0.8rem;
 	border-top: 1px solid var(--color-border);
+}
+
+.ide-setting-share {
+	display: grid;
+	gap: 0.65rem;
+	margin-top: 0.8rem;
+	padding-top: 0.8rem;
+	border-top: 1px solid var(--color-border);
+}
+
+.ide-share-link-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.ide-share-link-row input {
+	min-width: 0;
+	min-height: 2.35rem;
+	padding: 0.45rem 0.6rem;
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.8);
+	color: var(--color-ink);
+	font-size: 0.78rem;
+}
+
+.ide-setting-note {
+	color: var(--color-muted);
+	font-size: 0.76rem;
+	font-weight: 700;
 }
 
 .ide-setting-storage {

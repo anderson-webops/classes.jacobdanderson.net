@@ -63,6 +63,10 @@ export interface PythonIdeProject {
 	courseProjectTitle?: string;
 	starterLabel?: string;
 	starterUrl?: string;
+	shared?: boolean;
+	shareID?: string;
+	shareCreatedAt?: string;
+	sharedSourceID?: string;
 	createdAt?: string;
 	updatedAt?: string;
 }
@@ -105,6 +109,7 @@ export interface PythonIdeProjectPayload {
 	courseProjectTitle?: string;
 	starterLabel?: string;
 	starterUrl?: string;
+	sharedSourceID?: string;
 }
 
 export interface CreatePythonIdeProjectOptions {
@@ -112,6 +117,7 @@ export interface CreatePythonIdeProjectOptions {
 	courseProjectKey?: string;
 	courseProjectTitle?: string;
 	files?: PythonIdeFile[];
+	sharedSourceID?: string;
 	starterLabel?: string;
 	starterUrl?: string;
 	template?: PythonIdeProjectTemplate;
@@ -409,6 +415,8 @@ export function createPythonIdeProject(
 		courseProjectTitle: options.courseProjectTitle,
 		starterLabel: options.starterLabel,
 		starterUrl: options.starterUrl,
+		shared: false,
+		sharedSourceID: options.sharedSourceID,
 		createdAt: now,
 		updatedAt: now
 	};
@@ -417,7 +425,7 @@ export function createPythonIdeProject(
 export function pythonIdeProjectToPayload(
 	project: PythonIdeProject
 ): PythonIdeProjectPayload {
-	return {
+	const payload: PythonIdeProjectPayload = {
 		title: project.title.trim() || "Untitled Python Project",
 		mode: project.mode,
 		files: project.files,
@@ -431,6 +439,8 @@ export function pythonIdeProjectToPayload(
 		starterLabel: project.starterLabel,
 		starterUrl: project.starterUrl
 	};
+	if (project.sharedSourceID) payload.sharedSourceID = project.sharedSourceID;
+	return payload;
 }
 
 export function pythonIdeStorageKey(userID?: string | null) {
@@ -881,6 +891,13 @@ export async function fetchPythonIdeProjects() {
 	return data.projects;
 }
 
+export async function fetchSharedPythonIdeProject(shareID: string) {
+	const { data } = await api.get<{ project: PythonIdeProject }>(
+		`/users/python-projects/shared/${encodeURIComponent(shareID)}`
+	);
+	return data.project;
+}
+
 export async function fetchVisiblePythonIdeProjectReviews() {
 	const { data } = await api.get<{ reviews: PythonIdeProjectReview[] }>(
 		"/users/loggedin/python-project-reviews"
@@ -944,6 +961,17 @@ export async function updateRemotePythonIdeProject(
 	const { data } = await api.put<{ project: PythonIdeProject }>(
 		`/users/loggedin/python-projects/${projectID}`,
 		payload
+	);
+	return data.project;
+}
+
+export async function updateRemotePythonIdeProjectShare(
+	projectID: string,
+	shared: boolean
+) {
+	const { data } = await api.put<{ project: PythonIdeProject }>(
+		`/users/loggedin/python-projects/${projectID}/share`,
+		{ shared }
 	);
 	return data.project;
 }

@@ -4,6 +4,7 @@ import type {
 	IPythonProjectReview,
 	PythonProjectReviewRole
 } from "../../types/entities/IPythonProjectReview.js";
+import { randomBytes } from "node:crypto";
 import { Types } from "mongoose";
 import { z } from "zod";
 import { PythonProject } from "../../models/schemas/PythonProject.js";
@@ -34,6 +35,7 @@ const RUNTIME_RESERVED_ROOTS = new Set(["keras", "pgzero", "tensorflow"]);
 const MAX_PROJECT_FILES = 40;
 const MAX_FILE_LENGTH = 3_000_000;
 const MAX_PROJECT_LENGTH = 12_000_000;
+const SHARE_ID_RE = /^[\w-]{20,80}$/;
 const DEFAULT_PROJECT_FILE: PythonProjectFile = {
 	name: "main.py",
 	content: ""
@@ -107,7 +109,11 @@ const projectPayloadSchema = z.object({
 	courseProjectKey: z.string().trim().min(1).max(240).optional(),
 	courseProjectTitle: z.string().trim().min(1).max(160).optional(),
 	starterLabel: z.string().trim().min(1).max(80).optional(),
-	starterUrl: z.string().trim().url().max(500).optional()
+	starterUrl: z.string().trim().url().max(500).optional(),
+	sharedSourceID: z.string().trim().regex(SHARE_ID_RE).optional()
+});
+const projectSharePayloadSchema = z.object({
+	shared: z.boolean()
 });
 const projectReviewPayloadSchema = z.object({
 	files: projectFilesSchema.optional(),
@@ -128,6 +134,10 @@ function serializePythonProject(project: IPythonProject) {
 		courseProjectTitle: project.courseProjectTitle,
 		starterLabel: project.starterLabel,
 		starterUrl: project.starterUrl,
+		shared: project.shared ?? false,
+		shareID: project.shared ? project.shareID : undefined,
+		shareCreatedAt: project.shared ? project.shareCreatedAt : undefined,
+		sharedSourceID: project.sharedSourceID,
 		createdAt: project.createdAt,
 		updatedAt: project.updatedAt
 	};
@@ -181,6 +191,10 @@ function normalizeActiveFileName(activeFileName: string | undefined, files: Pyth
 	return files[0]?.name ?? DEFAULT_PROJECT_FILE.name;
 }
 
+function createPythonProjectShareID() {
+	return randomBytes(18).toString("base64url");
+}
+
 function getProjectIDParam(req: Parameters<RequestHandler>[0], res: Parameters<RequestHandler>[1]) {
 	const paramProjectID = req.params.projectID;
 	const projectID = Array.isArray(paramProjectID) ? paramProjectID[0] : paramProjectID;
@@ -203,6 +217,18 @@ function getUserIDParam(req: Parameters<RequestHandler>[0], res: Parameters<Requ
 	}
 
 	return userID;
+}
+
+function getShareIDParam(req: Parameters<RequestHandler>[0], res: Parameters<RequestHandler>[1]) {
+	const paramShareID = req.params.shareID;
+	const shareID = Array.isArray(paramShareID) ? paramShareID[0] : paramShareID;
+
+	if (typeof shareID !== "string" || !SHARE_ID_RE.test(shareID)) {
+		res.status(400).json({ message: "Invalid share link" });
+		return null;
+	}
+
+	return shareID;
 }
 
 function getReviewIDParam(req: Parameters<RequestHandler>[0], res: Parameters<RequestHandler>[1]) {
@@ -372,7 +398,8 @@ export const createPythonProject: RequestHandler = async (req, res) => {
 		courseProjectKey: parsed.data.courseProjectKey,
 		courseProjectTitle: parsed.data.courseProjectTitle,
 		starterLabel: parsed.data.starterLabel,
-		starterUrl: parsed.data.starterUrl
+		starterUrl: parsed.data.starterUrl,
+		sharedSourceID: parsed.data.sharedSourceID
 	});
 
 	res.status(201).json({ project: serializePythonProject(project) });
@@ -451,9 +478,42 @@ export const updatePythonProject: RequestHandler = async (req, res) => {
 	if (parsed.data.courseProjectTitle) project.courseProjectTitle = parsed.data.courseProjectTitle;
 	if (parsed.data.starterLabel) project.starterLabel = parsed.data.starterLabel;
 	if (parsed.data.starterUrl) project.starterUrl = parsed.data.starterUrl;
+	if (parsed.data.sharedSourceID) project.sharedSourceID = parsed.data.sharedSourceID;
 	project.activeFileName = nextActiveFileName;
 
 	await project.save();
+	res.json({ project: serializePythonProject(project) });
+};
+
+export const updatePythonProjectShare: RequestHandler = async (req, res) => {
+	const project = await findOwnedProject(req, res);
+	if (!project) return;
+
+	const parsed = projectSharePayloadSchema.safeParse(req.body ?? {});
+	if (!parsed.success) {
+		return res.status(400).json({ message: "Invalid share payload", issues: parsed.error.issues });
+	}
+
+	project.shared = parsed.data.shared;
+	if (project.shared && !project.shareID) {
+		project.shareID = createPythonProjectShareID();
+		project.shareCreatedAt = new Date();
+	}
+
+	await project.save();
+	res.json({ project: serializePythonProject(project) });
+};
+
+export const getSharedPythonProject: RequestHandler = async (req, res) => {
+	const shareID = getShareIDParam(req, res);
+	if (!shareID) return;
+
+	const project = await PythonProject.findOne({
+		shareID,
+		shared: true
+	});
+
+	if (!project) return res.sendStatus(404);
 	res.json({ project: serializePythonProject(project) });
 };
 

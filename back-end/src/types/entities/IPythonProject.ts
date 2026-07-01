@@ -21,6 +21,10 @@ export interface IPythonProject {
 	courseProjectTitle?: string;
 	starterLabel?: string;
 	starterUrl?: string;
+	shared?: boolean;
+	shareID?: string;
+	shareCreatedAt?: Date;
+	sharedSourceID?: string;
 	createdAt: Date;
 	updatedAt: Date;
 }
