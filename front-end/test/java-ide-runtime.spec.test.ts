@@ -32,6 +32,34 @@ describe("java IDE runtime", () => {
 		expect(result.stdout).toEqual(["Hello, Java 5"]);
 	});
 
+	it("ignores Java console prints inside comments", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        // System.out.println("hidden line");
+        /*
+           System.out.println("hidden block");
+        */
+        System.out.println("https://classes.example/java");
+        System.out.println("literal /* not a comment */ text");
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual([
+			"https://classes.example/java",
+			"literal /* not a comment */ text"
+		]);
+	});
+
 	it("runs the beginner Karel command subset into a visual world state", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
