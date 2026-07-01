@@ -509,18 +509,21 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"java-with-graphics"
 		],
 		audience:
-			"Students moving from introductory Java into stronger object-oriented design, inheritance, interfaces, abstract classes, records, graphics, and non-graphics application work.",
+			"Students moving from visual Java robot worlds into text Java, object-oriented design, inheritance, interfaces, abstract classes, records, graphics, and non-graphics application work.",
 		prerequisiteSummary:
-			"The advanced tracks expect variables, control flow, methods, arrays or ArrayLists, and basic class construction.",
+			"Java Level 1 can start from no Java experience by using Carol/Karel-style visual robot worlds. The advanced tracks expect variables, control flow, methods, arrays or ArrayLists, and basic class construction.",
 		outcomes: [
+			"Use a visual robot world to connect Java syntax, compiler feedback, object state, method calls, parameters, and debugging before moving into console-only code.",
 			"Write Java classes with encapsulation, constructors, methods, inheritance, polymorphism, abstract classes, interfaces, and records where appropriate.",
 			"Choose between graphics and non-graphics tracks depending on whether the next project emphasizes visual interaction or deeper backend/model design.",
 			"Tests, tracing, and design explanations show object state and method contracts."
 		],
 		sequencingNotes: [
-			"Java Level 1-3 remains the general pathway for syntax, classes, inheritance, data structures, and project fluency.",
-			"Java without Graphics is the post-C++ bridge for CLI tools, models, records, collections, interfaces, and robust tests.",
-			"Java with Graphics is the visual track, but graphics does not replace object-model rigor."
+			"Java Level 1 now begins with Carol/Karel robot worlds, then bridges into console variables, input, conditionals, loops, methods, arrays, and grid projects.",
+			"Java Level 2 turns the same object-state reasoning into custom classes, constructors, `toString()`, inheritance, maps, files, and larger multi-class projects.",
+			"Java Level 3 audits the visual-to-text foundation before advanced review, algorithms, data structures, generics, interfaces, records, files, streams, and capstone architecture.",
+			"Java without Graphics keeps the shared robot launch but de-emphasizes static drawing projects in favor of CLI tools, models, records, collections, interfaces, and robust tests.",
+			"Java with Graphics adds drawing and scene-composition work after the robot launch, but graphics does not replace object-model rigor."
 		],
 		projectExpectations: [
 			"Record-backed inventory, scheduler, or catalog CLI with validation and tests.",
@@ -533,6 +536,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Include unit tests or small driver programs for normal, empty, duplicate, invalid, and boundary cases."
 		],
 		sourceAndTooling: [
+			"BlueJ supports classrooms that can install it for visual object inspection and Carol/Karel-style work; CodeHS or the browser Code IDE provides the outside-class fallback.",
 			"JDK tooling, simple command-line builds or IDE projects, and explicit starter plus review source folders support Java course work.",
 			"Keep Java records covered as immutable data carriers, not as a replacement for every class.",
 			"Maintain separate source links for graphics and non-graphics tracks."
@@ -563,6 +567,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Prepare for the current digital AP testing environment, including Bluebook-style pacing and the four major FRQ families."
 		],
 		sequencingNotes: [
+			"The revised Java pathway uses Carol/Karel or BlueJ object-state examples as a bridge into AP tracing, but visual demos must become written traces or FRQ-style explanations.",
 			"Keep the AP scope distinct from the broader Java courses.",
 			"Map every module to College Board unit expectations and exam task types.",
 			"Barron's or other exam-prep material remains supplemental, not uncited course text."

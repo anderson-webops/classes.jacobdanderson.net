@@ -32,17 +32,49 @@ export const javaLevel2Course: RawCourse = {
 	name: "Java Level 2",
 	modules: [
 		{
+			title: "JM0 Visual-to-OOP Bridge",
+			curriculum: [
+				{
+					title: "Bridge from Robot Objects to Custom Classes",
+					content:
+						"Start Java Level 2 by revisiting the visible robot object from Java Level 1. The robot had state, constructor arguments, and methods; now students design their own classes with the same ideas made explicit in fields, constructors, and instance methods."
+				},
+				{
+					title: "BlueJ Object Bench and Console Fallback",
+					content:
+						"BlueJ's object bench supports in-class object instantiation, field inspection, and method calls before a larger driver program is written. CodeHS or the browser Code IDE provides the outside-class fallback, with small `main()` traces and `toString()` output replacing object-bench inspection."
+				},
+				{
+					title: "Object State Trace",
+					content:
+						"Before the `Dog`, `Person`, or `Book` projects, a written trace shows constructor call, initial field values, one method call, and the resulting state change. This keeps object-oriented programming tied to visible evidence instead of vocabulary alone."
+				}
+			],
+			supplementalProjects: [
+				{
+					title: "JM0 Supplemental Project 1: Robot-to-Dog Mapping",
+					content:
+						"Make a two-column map from robot ideas to class-design ideas: street/avenue to fields, constructor arguments to initial state, movement commands to methods, and world output to `toString()` or printed traces."
+				},
+				{
+					title: "JM0 Supplemental Project 2: Constructor Trace Card",
+					content:
+						"Pick one upcoming class project and write three constructor calls with expected field values before coding. The completed class makes those predictions visible through getters or `toString()`."
+				}
+			]
+		},
+		{
 			title: "JM1 Instance Variables, Constructors, and Methods",
 			curriculum: [
 				{
 					title: "Introductions and Java Setup",
 					content:
-						"Get comfortable with the Java workspace, the console, custom Java files, and the shift from procedural Java to object-oriented programming. Review the role of `main()` while starting to define additional classes in separate files."
+						"Get comfortable with the Java workspace, custom Java files, and the shift from visual object use to object-oriented class design. Review the role of `main()` as a testing driver while starting to define additional classes in separate files."
 				},
 				{
 					title: "Objects vs. Classes",
 					content:
-						"Learn how a class acts as a template and an object acts as an instance with its own data and behavior. This module connects class design to real-world entities."
+						"Learn how a class acts as a template and an object acts as an instance with its own data and behavior. Connect this directly to the earlier robot object: constructor arguments create object state, and method calls change or report that state."
 				},
 				{
 					title: "JM1 Project 1: Dog Class",

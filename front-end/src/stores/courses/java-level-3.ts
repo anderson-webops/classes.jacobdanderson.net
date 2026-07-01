@@ -61,6 +61,33 @@ export const javaLevel3Course: RawCourse = {
 	name: "Java Level 3",
 	modules: [
 		{
+			title: "AJ0 Visual Foundations Audit",
+			curriculum: [
+				{
+					title: "Confirm the Visual-to-Text Progression",
+					content:
+						"This short audit precedes advanced Java work. A ready explanation traces the path from a visible robot object, to console variables and methods, to custom classes and collections. When that path is weak, the relevant Java Level 1 or Level 2 bridge comes before recursion, algorithms, or data structures."
+				},
+				{
+					title: "Tool Choice for Advanced Work",
+					content:
+						"BlueJ remains useful for object inspection and quick class experiments, while Java Level 3 mostly runs in the same environment used for larger projects: CodeHS, VS Code, or the browser Code IDE depending on school restrictions. Choose the tool that makes compile errors, tests, files, and multiple classes easiest to inspect."
+				},
+				{
+					title: "Readiness Evidence",
+					content:
+						"Before moving into the review modules, the evidence set includes one runnable console program, one custom class with constructors and methods, and one collection trace. Each artifact is explained through state, method calls, and evidence from output or tests."
+				}
+			],
+			supplementalProjects: [
+				{
+					title: "AJ0 Supplemental Project 1: Trace Translation",
+					content:
+						"Translate a short robot trace into a console/object trace: initial state, method call, changed state, and output. The result proves transfer between visual and non-visual evidence."
+				}
+			]
+		},
+		{
 			title: "AJ1 Review: Variables, Strings, and Input",
 			curriculum: [
 				{

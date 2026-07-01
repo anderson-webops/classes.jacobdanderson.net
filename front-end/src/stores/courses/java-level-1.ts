@@ -153,12 +153,89 @@ export const javaLevel1Course: RawCourse = {
 	name: "Java Level 1",
 	modules: [
 		{
-			title: "JS1 Variable Types & Input/Output",
+			title: "J1A Visual Java Launch: Carol/Karel Robot Worlds",
+			curriculum: [
+				{
+					title: "Course Launch: Start Java Visually",
+					content:
+						"The opening Java sequence starts in a visible robot world before switching to console-only programs. A first run shows an object on a grid, one small command, and compiler feedback connected to a visible result. BlueJ with Carol/Karel fits classroom work, while the browser Code IDE or CodeHS Karel provides an outside-class fallback when device installs are unavailable.",
+					projectLink: "/python-ide?mode=karel"
+				},
+				{
+					title: "Compile, Run, Observe, Repair",
+					content:
+						"Missing semicolons, mismatched braces, wrong capitalization, and blocked robot moves become intentional first errors. The goal is not only to fix syntax, but to learn that Java reports a file, line, and symbol before the program runs. One-line changes, reruns, and short explanations separate compile-time, runtime, and logic errors."
+				},
+				{
+					title: "Robot State: Street, Avenue, Direction, Beepers",
+					content:
+						"The robot is the first inspectable Java object in the course. Track its street, avenue, direction, and beeper count after each call to `move()`, `turnLeft()`, `pickBeeper()`, or `putBeeper()`. This gives variables and object state a visible meaning before those ideas move into console variables."
+				},
+				{
+					title: "J1A Project 1: Robot Walkthrough",
+					content:
+						"Create a short robot program that starts Carol/Karel at a known location, moves around one obstacle, and ends at a named target square. Include a written trace with the robot's street, avenue, and direction after each major step.",
+					projectLink: "/python-ide?mode=karel"
+				}
+			],
+			supplementalProjects: [
+				{
+					title: "J1A Supplemental Project 1: Beeper Delivery",
+					content:
+						"Place one beeper at a start square, move it to a target square, and explain how the robot's visible state proves the program worked. Add one blocked-path case if the world supports walls."
+				},
+				{
+					title: "J1A Supplemental Project 2: Error Journal",
+					content:
+						"Collect three intentional errors from the robot project: one syntax error, one runtime/world error, and one logic error. For each, record the message or symptom, the cause, and the smallest code change that fixed it."
+				}
+			]
+		},
+		{
+			title: "J1B Visual Java Syntax: Types, Objects, and Methods",
+			curriculum: [
+				{
+					title: "Main Method and Program Skeleton",
+					content:
+						"`public static void main(String[] args)` is introduced as the place where a Java program starts, with the explanation attached to a running robot program. The checkpoint identifies the class name, braces, method header, statements, and semicolons before memorized terminology becomes the focus."
+				},
+				{
+					title: "Primitives vs. Objects with Visual Inspection",
+					content:
+						"Use BlueJ object inspection or equivalent diagrams to contrast primitive values such as `int`, `double`, `char`, and `boolean` with object references such as `String` or a robot object. The key distinction is that objects carry methods and state, while primitives store direct values."
+				},
+				{
+					title: "Parameters and Arguments from Robot Construction",
+					content:
+						"Parameters begin with visible robot setup: street, avenue, direction, and beeper count. The checkpoint explains how changing one constructor argument changes the robot's starting state, then transfers that idea to ordinary method calls."
+				},
+				{
+					title: "J1B Project 1: Parameterized Robot Moves",
+					content:
+						"Refactor a repeated robot path into helper methods such as `turnRight()`, `moveTwice()`, or `moveToWall()`. Then add at least one method with a parameter, making repeated visual behavior reusable through code.",
+					projectLink: "/python-ide?mode=karel"
+				}
+			],
+			supplementalProjects: [
+				{
+					title: "J1B Supplemental Project 1: String Object Inspection",
+					content:
+						"Create several `String` values and inspect or diagram their methods, length, and characters. Connect this to why `length()`, `charAt()`, and `substring()` use method-call syntax while primitive values do not."
+				},
+				{
+					title: "J1B Supplemental Project 2: Constructor Swap",
+					content:
+						"Run the same robot program with different starting constructor arguments. Record which changes affected the starting position, facing direction, beeper count, and final behavior."
+				}
+			]
+		},
+		{
+			title: "J1C Text Bridge: Variables, Strings, and Input",
 			curriculum: [
 				{
 					title: "Introductions and Java Setup",
 					content:
-						"Get comfortable with the Java workspace, the console, project instructions, and a reference project for reusable examples. Start by writing code inside `main()` and using the console to run and inspect output."
+						"Move from visual robot programs into console Java. Keep the same compile-run-observe habit, now using `main()`, `System.out.print`, variables, and typed input to make program state visible through output."
 				},
 				{
 					title: "Optional Python-to-Java Bridge",
@@ -236,7 +313,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "JS2 Casting and Operators",
+			title: "J1D Text Bridge: Casting, Operators, and Coordinate Reasoning",
 			curriculum: [
 				{
 					title: "Casting",
@@ -319,7 +396,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "JS3 Conditionals",
+			title: "J1E Branching Logic: Console Choices and Visual Decisions",
 			curriculum: [
 				{
 					title: "Conditionals",
@@ -402,7 +479,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "JS4 Loops",
+			title: "J1F Repetition: Console Patterns and Grid Moves",
 			curriculum: [
 				{
 					title: "For Loops",
@@ -473,7 +550,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "JS5 Practice with Loops & Conditionals",
+			title: "J1G Loops, Conditionals, and Randomized Games",
 			curriculum: [
 				{
 					title: "Random Numbers and Letters",
@@ -550,7 +627,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "Check-In #1",
+			title: "J1H Check-In: Visual-to-Text Foundations",
 			curriculum: [
 				{
 					title: "Check-In #1 Overview",
@@ -630,7 +707,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "JS6 Methods",
+			title: "J1I Methods: Helpers, Parameters, and Reuse",
 			curriculum: [
 				{
 					title: "Methods",
@@ -712,7 +789,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "JS7 Arrays and ArrayLists",
+			title: "J1J Lists of State: Arrays and ArrayLists",
 			curriculum: [
 				{
 					title: "Arrays",
@@ -819,7 +896,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "JS8 Two-Dimensional Arrays",
+			title: "J1K Grid Data: Two-Dimensional Arrays",
 			curriculum: [
 				{
 					title: "Two-Dimensional Arrays",
@@ -884,7 +961,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "Check-In #2",
+			title: "J1L Check-In: Methods and Data Structures",
 			curriculum: [
 				{
 					title: "Check-In #2 Overview",
@@ -961,7 +1038,7 @@ export const javaLevel1Course: RawCourse = {
 			]
 		},
 		{
-			title: "JS9 Master Project: Battleship",
+			title: "J1M Master Project: Battleship Grid Game",
 			curriculum: [
 				{
 					title: "JS9 Master Project: Simple Battleship",

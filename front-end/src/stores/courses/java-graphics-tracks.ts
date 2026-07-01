@@ -4,7 +4,6 @@ import { javaLevel2Course } from "./java-level-2";
 import { javaLevel3Course } from "./java-level-3";
 
 const graphicsTerms = [
-	"bluej",
 	"graphics",
 	"fillrect",
 	"filloval",
@@ -83,7 +82,7 @@ const noGraphicsIntroModule: RawCourseModule = {
 		{
 			title: "Console-First Java Path",
 			content:
-				"**Concept path:** This track keeps Java focused on console programs, data modeling, files, collections, algorithms, testing habits, and larger service-style projects. It intentionally removes optional BlueJ/static drawing projects so the sequence works cleanly without graphics setup or coordinate-drawing work.\n\n**What changes:** Visual feedback is replaced with stronger command-line evidence: prompts, output transcripts, saved files, test fixtures, and small service objects that can be exercised without a UI. The result is better preparation for backend tools, AP CSA review, data processing, and design-pattern work.\n\n**Pacing note:** The track can move quickly through drawing-only projects while preserving the design decisions those projects sometimes hide: naming state, decomposing helpers, validating inputs, and proving behavior with repeatable examples."
+				"**Concept path:** This track still begins with the visual Carol/Karel robot launch from Java Level 1, then moves quickly into console programs, data modeling, files, collections, algorithms, testing habits, and larger service-style projects. It intentionally removes optional static drawing projects so the sequence works cleanly without a graphics library or coordinate-drawing setup.\n\n**What changes:** After the robot launch, visual feedback is replaced with stronger command-line evidence: prompts, output transcripts, saved files, test fixtures, and small service objects that can be exercised without a UI. The result is better preparation for backend tools, AP CSA review, data processing, and design-pattern work.\n\n**Pacing note:** The track can move quickly through drawing-only projects while preserving the design decisions those projects sometimes hide: naming state, decomposing helpers, validating inputs, and proving behavior with repeatable examples."
 		},
 		{
 			title: "What This Track Keeps",
@@ -111,7 +110,7 @@ const graphicsIntroModule: RawCourseModule = {
 		{
 			title: "Graphics Track Positioning",
 			content:
-				"**Concept path:** This track keeps the same core Java foundations but preserves and highlights drawing-based projects. Use it for work that benefits from coordinates, color, visual feedback, and scene composition alongside console and data-structure practice.\n\n**Design guardrail:** Graphics make program state easier to inspect; they do not replace reasoning about state. Strong projects still name their inputs, model values, helper methods, and edge cases before adding visual polish.\n\n**Evidence target:** A graphics project is complete when the visual output can be explained from code structure: which method draws each part, which variables control placement or size, and what change would produce a predictable new result."
+				"**Concept path:** This track starts with the Carol/Karel robot world, then keeps the same core Java foundations while preserving and highlighting drawing-based projects. Use it for work that benefits from coordinates, color, visual feedback, and scene composition alongside console and data-structure practice.\n\n**Design guardrail:** Visual output makes program state easier to inspect; it does not replace reasoning about state. Strong projects still name their inputs, model values, helper methods, and edge cases before adding visual polish.\n\n**Evidence target:** A graphics project is complete when the visual output can be explained from code structure: which method draws each part, which variables control placement or size, and what change would produce a predictable new result."
 		},
 		{
 			title: "Graphics Setup Expectations",
