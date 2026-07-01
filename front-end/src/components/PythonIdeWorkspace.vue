@@ -2449,8 +2449,7 @@ function interpolateTurtlePose(
 }
 
 function turtleMovementDuration(fromPose: TurtlePose, toPose: TurtlePose) {
-	if (!turtleTracerEnabled || fromPose.speed === 0)
-		return turtleInstantStepMaxDurationMs;
+	if (!turtleTracerEnabled || fromPose.speed === 0) return 0;
 
 	const speedScale = turtleAnimationSpeedScale(fromPose.speed);
 	const distance = Math.hypot(toPose.x - fromPose.x, toPose.y - fromPose.y);
@@ -2779,8 +2778,9 @@ function turtleAnimationBacklogStepCount(turtleID: string) {
 
 function shouldFastForwardTurtleBacklog(step: TurtleAnimationStep) {
 	return (
+		!isVisibleTurtleTrailStep(step) &&
 		turtleAnimationBacklogStepCount(step.turtleID) >=
-		turtleBacklogFastForwardStepThreshold
+			turtleBacklogFastForwardStepThreshold
 	);
 }
 
@@ -2858,6 +2858,8 @@ function runTurtleAnimationFrame(timestamp: number) {
 }
 
 function isInstantTurtleAnimationStep(step: TurtleAnimationStep) {
+	if (step.durationMs <= 0) return true;
+
 	return (
 		!isVisibleTurtleTrailStep(step) &&
 		step.durationMs <= turtleInstantStepMaxDurationMs &&
@@ -2934,6 +2936,7 @@ function flushBackloggedTurtleAnimationSteps(timestamp: number) {
 	while (
 		activeTurtleAnimationStep &&
 		activeTurtleAnimationStep.turtleID === synchronizedTurtleID &&
+		shouldFastForwardTurtleBacklog(activeTurtleAnimationStep) &&
 		consumedSteps < turtleBacklogFrameStepBudget &&
 		(consumedDistance < turtleBacklogFrameDistanceBudget ||
 			consumedSteps === 0)

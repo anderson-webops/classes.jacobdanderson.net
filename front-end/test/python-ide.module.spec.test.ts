@@ -1180,7 +1180,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"if (!turtleTracerEnabled || fromPose.speed === 0)"
 		);
+		expect(pageSource).toContain("return 0;");
 		expect(pageSource).toContain("const speedScale = turtleAnimationSpeedScale");
+		expect(pageSource).toContain("if (step.durationMs <= 0)");
 		expect(pageSource).toContain("Math.max(1, Math.min(10, speed))");
 		expect(pageSource).toContain("setSpeed(speed: number)");
 		expect(pageSource).toContain("setTracer(value: number)");
@@ -1410,6 +1412,16 @@ describe("python IDE project helpers", () => {
 				runFrameStart
 			)
 		);
+		const shouldFastForwardStart = pageSource.indexOf(
+			"function shouldFastForwardTurtleBacklog"
+		);
+		const shouldFastForwardSource = pageSource.slice(
+			shouldFastForwardStart,
+			pageSource.indexOf(
+				"function resolveActiveTurtleAnimation",
+				shouldFastForwardStart
+			)
+		);
 		const lineCommandStart = pageSource.indexOf(
 			'if (command.kind === "line")'
 		);
@@ -1424,6 +1436,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"function shouldFastForwardTurtleBacklog"
 		);
+		expect(shouldFastForwardSource).toContain(
+			"!isVisibleTurtleTrailStep(step)"
+		);
 		expect(pageSource).toContain(
 			"function turtleAnimationBacklogStepCount"
 		);
@@ -1435,6 +1450,9 @@ describe("python IDE project helpers", () => {
 		);
 		expect(backlogSource).toContain(
 			"activeTurtleAnimationStep.turtleID === synchronizedTurtleID"
+		);
+		expect(backlogSource).toContain(
+			"shouldFastForwardTurtleBacklog(activeTurtleAnimationStep)"
 		);
 		expect(backlogSource).toContain(
 			"consumedSteps < turtleBacklogFrameStepBudget"
