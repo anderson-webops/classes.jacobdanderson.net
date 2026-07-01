@@ -19,11 +19,16 @@ import {
 	getPythonIdeFileKindLabel,
 	getPythonIdeModeLabel,
 	getPythonIdeRunnableFile,
+	isPythonIdeJavaFile,
 	isPythonIdeBinaryAssetFile,
 	isPythonIdePythonFile,
+	isPythonIdeRunnableFile,
 	isPythonIdeRuntimeReservedPath,
 	isPythonIdeTextFile,
 	isValidPythonFileName,
+	javaStarterCode,
+	karelStarterCode,
+	karelStarterWorld,
 	normalizeImportedPythonIdeFileName,
 	normalizePythonIdeMode,
 	loadPythonIdeStarterFilesFromGitHub,
@@ -119,6 +124,8 @@ describe("python IDE project helpers", () => {
 		const dataProject = createPythonIdeProject("data");
 		const turtleProject = createPythonIdeProject("turtle");
 		const pgzeroProject = createPythonIdeProject("pgzero");
+		const javaProject = createPythonIdeProject("java");
+		const karelProject = createPythonIdeProject("karel");
 
 		expect(pythonProject.files).toEqual([{ name: "main.py", content: "" }]);
 		expect(dataProject.files).toEqual([{ name: "main.py", content: "" }]);
@@ -129,6 +136,11 @@ describe("python IDE project helpers", () => {
 		expect(pgzeroProject.files[0]?.content).toContain("WIDTH = 640");
 		expect(pgzeroProject.files[0]?.content).toContain("HEIGHT = 400");
 		expect(pgzeroProject.files[0]?.content).not.toContain("Actor(");
+		expect(javaProject.files).toEqual([{ name: "Main.java", content: "" }]);
+		expect(karelProject.files).toEqual([
+			{ name: "Algo.java", content: karelStarterCode },
+			{ name: "world.txt", content: karelStarterWorld }
+		]);
 	});
 
 	it("creates demo project templates only when requested", () => {
@@ -139,6 +151,12 @@ describe("python IDE project helpers", () => {
 			template: "demo"
 		});
 		const turtleProject = createPythonIdeProject("turtle", {
+			template: "demo"
+		});
+		const javaProject = createPythonIdeProject("java", {
+			template: "demo"
+		});
+		const karelProject = createPythonIdeProject("karel", {
 			template: "demo"
 		});
 
@@ -171,6 +189,19 @@ describe("python IDE project helpers", () => {
 		expect(turtleProject.files[0]?.content).toContain("screen.onclick");
 		expect(turtleProject.files[0]?.content).toContain("screen.ontimer");
 		expect(turtleProject.files[0]?.content).toContain("pen.ondrag");
+
+		expect(javaProject.mode).toBe("java");
+		expect(javaProject.title).toBe("Java Practice");
+		expect(javaProject.files).toEqual([
+			{ name: "Main.java", content: javaStarterCode }
+		]);
+
+		expect(karelProject.mode).toBe("karel");
+		expect(karelProject.title).toBe("Karel Java World");
+		expect(karelProject.files).toEqual([
+			{ name: "Algo.java", content: karelStarterCode },
+			{ name: "world.txt", content: karelStarterWorld }
+		]);
 	});
 
 	it("creates Python Level 1 and PyGame Zero outline templates", () => {
@@ -669,19 +700,40 @@ describe("python IDE project helpers", () => {
 
 	it("labels supported runtime modes", () => {
 		expect(getPythonIdeModeLabel("data")).toBe("Data / AI");
+		expect(getPythonIdeModeLabel("java")).toBe("Java");
+		expect(getPythonIdeModeLabel("karel")).toBe("Karel Java");
 		expect(getPythonIdeModeLabel("python")).toBe("Python");
 		expect(getPythonIdeModeLabel("turtle")).toBe("Turtle");
 		expect(getPythonIdeModeLabel("pgzero")).toBe("PyGame Zero");
 	});
 
-	it("maps Python-family courses to the right IDE starter modes", () => {
+	it("renames the main navigation entry to Code IDE", () => {
+		const headerSource = readFileSync(
+			resolve(__dirname, "../src/components/TheHeader.vue"),
+			"utf8"
+		);
+		const pageHeadSource = readFileSync(
+			resolve(__dirname, "../src/modules/pageHead.ts"),
+			"utf8"
+		);
+
+		expect(headerSource).toContain('{ label: "Code IDE", to: "/python-ide"');
+		expect(pageHeadSource).toContain('[/^\\/python-ide(?:\\/|$)/, "Code IDE"]');
+	});
+
+	it("maps course families to the right IDE starter modes", () => {
 		expect(pythonIdeModeForCourseId("python-level-1")).toBe("turtle");
 		expect(pythonIdeModeForCourseId("pygames")).toBe("pgzero");
 		expect(pythonIdeModeForCourseId("data-science-in-python")).toBe("data");
 		expect(pythonIdeModeForCourseId("machine-learning")).toBe("data");
 		expect(pythonIdeModeForCourseId("python-level-3")).toBe("python");
+		expect(pythonIdeModeForCourseId("java-level-1")).toBe("karel");
+		expect(pythonIdeModeForCourseId("java-level-2")).toBe("java");
+		expect(pythonIdeModeForCourseId("ap-computer-science-a")).toBe("java");
 		expect(pythonIdeModeForCourseId("scratch-level-1")).toBeNull();
 		expect(normalizePythonIdeMode("pgzero", "turtle")).toBe("pgzero");
+		expect(normalizePythonIdeMode("java", "turtle")).toBe("java");
+		expect(normalizePythonIdeMode("karel", "python")).toBe("karel");
 		expect(normalizePythonIdeMode("unknown", "turtle")).toBe("turtle");
 	});
 
@@ -2212,7 +2264,7 @@ describe("python IDE project helpers", () => {
 		);
 		const gameCanvasSource = pageSource.slice(
 			gameCanvasStart,
-			pageSource.indexOf(".artifact-list", gameCanvasStart)
+			pageSource.indexOf(".karel-shell", gameCanvasStart)
 		);
 
 		expect(gameFrameSource).toContain(
@@ -2804,7 +2856,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"recommendationsEnabled: codeRecommendationsEnabled.value"
 		);
-		expect(pageSource).toContain('aria-label="Python IDE settings"');
+		expect(pageSource).toContain('aria-label="Code IDE settings"');
 		expect(pageSource).toContain(
 			'aria-controls="python-ide-settings-panel"'
 		);
@@ -2905,8 +2957,9 @@ describe("python IDE project helpers", () => {
 			"const recommendationsEnabled = options.recommendationsEnabled ?? true;"
 		);
 		expect(codeMirrorSource).toContain(
-			"autocompletion({ activateOnTyping: recommendationsEnabled })"
+			"activateOnTyping: recommendationsEnabled"
 		);
+		expect(codeMirrorSource).toContain("javaIdeCompletionSource(mode)");
 		expect(codeMirrorSource).toContain("...completionKeymap");
 	});
 
@@ -3295,10 +3348,16 @@ describe("python IDE project helpers", () => {
 		expect(normalizePythonFileName("lesson data.CSV")).toBe(
 			"lesson_data.csv"
 		);
+		expect(normalizePythonFileName("Main", ".java")).toBe("Main.java");
+		expect(normalizePythonFileName("src/Main", ".java")).toBe(
+			"src/Main.java"
+		);
 		expect(isValidPythonFileName("helper_tools.py")).toBe(true);
 		expect(isValidPythonFileName("package/__init__.py")).toBe(true);
 		expect(isValidPythonFileName("package/util.py")).toBe(true);
 		expect(isValidPythonFileName("package/submodule/tools.py")).toBe(true);
+		expect(isValidPythonFileName("Main.java")).toBe(true);
+		expect(isValidPythonFileName("src/main/java/Main.java")).toBe(true);
 		expect(isValidPythonFileName("scores.csv")).toBe(true);
 		expect(isValidPythonFileName("notes.md")).toBe(true);
 		expect(isValidPythonFileName("images/player.svg")).toBe(true);
@@ -3310,6 +3369,7 @@ describe("python IDE project helpers", () => {
 		expect(isValidPythonFileName("package/.hidden.py")).toBe(false);
 		expect(isValidPythonFileName("images/../player.svg")).toBe(false);
 		expect(isValidPythonFileName("images/player.py")).toBe(false);
+		expect(isValidPythonFileName("images/Robot.java")).toBe(false);
 		expect(isValidPythonFileName("sounds/eep.py")).toBe(false);
 		expect(isValidPythonFileName("package/data.csv")).toBe(false);
 		expect(isValidPythonFileName("script.exe")).toBe(false);
@@ -3330,6 +3390,7 @@ describe("python IDE project helpers", () => {
 
 	it("labels file kinds and creates safe default content", () => {
 		expect(getPythonIdeFileKindLabel("scores.csv")).toBe("CSV");
+		expect(getPythonIdeFileKindLabel("Main.java")).toBe("Java");
 		expect(getPythonIdeFileKindLabel("notes.md")).toBe("Markdown");
 		expect(getPythonIdeFileKindLabel("images/player.png")).toBe("Image");
 		expect(getPythonIdeFileKindLabel("sounds/eep.wav")).toBe("Sound");
@@ -3340,6 +3401,14 @@ describe("python IDE project helpers", () => {
 		expect(getPythonIdeDefaultFileContent("main.py")).toContain(
 			"Python code"
 		);
+		expect(getPythonIdeDefaultFileContent("Main.java")).toContain(
+			"public class Main"
+		);
+		expect(isPythonIdeJavaFile("Main.java")).toBe(true);
+		expect(isPythonIdeJavaFile("main.py")).toBe(false);
+		expect(isPythonIdeRunnableFile("Main.java", "java")).toBe(true);
+		expect(isPythonIdeRunnableFile("main.py", "java")).toBe(false);
+		expect(isPythonIdeRunnableFile("main.py", "python")).toBe(true);
 		expect(isPythonIdePythonFile("main.py")).toBe(true);
 		expect(isPythonIdePythonFile("scores.csv")).toBe(false);
 	});
@@ -4008,6 +4077,15 @@ describe("python IDE project helpers", () => {
 
 		project.activeFileName = "scores.csv";
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("main.py");
+	});
+
+	it("runs the selected Java file or falls back from world files", () => {
+		const project = createPythonIdeProject("karel");
+
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("Algo.java");
+
+		project.activeFileName = "world.txt";
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("Algo.java");
 	});
 
 	it("names repeated Python IDE file controls by the affected file", () => {
