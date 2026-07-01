@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { EditorState as CodeEditorState } from "@codemirror/state";
 import type { EditorView as CodeEditorView } from "@codemirror/view";
+import type { KarelWallSide, KarelWorldState } from "@/modules/javaIdeRuntime";
 import type { PythonCodeMirrorAssetCompletionNames } from "@/modules/pythonCodeMirror";
 import type {
 	PythonIdeFile,
@@ -25,6 +26,7 @@ import {
 	watch
 } from "vue";
 import { useRoute } from "vue-router";
+import { runJavaIdeProject } from "@/modules/javaIdeRuntime";
 import {
 	clearLocalPythonProjectsAsync,
 	createPythonIdeProject,
@@ -39,7 +41,7 @@ import {
 	getPythonIdeModeLabel,
 	getPythonIdeRunnableFile,
 	isPythonIdeBinaryAssetFile,
-	isPythonIdePythonFile,
+	isPythonIdeRunnableFile,
 	isPythonIdeTextFile,
 	isValidPythonFileName,
 	loadLocalPythonProjectsAsync,
@@ -89,6 +91,16 @@ interface RuntimeArtifactView {
 	dataUrl?: string;
 	srcdoc?: string;
 	text?: string;
+}
+
+interface KarelWorldCell {
+	avenue: number;
+	beeperCount: number;
+	isRobot: boolean;
+	key: string;
+	robotDirection: string;
+	street: number;
+	walls: Record<KarelWallSide, boolean>;
 }
 
 interface TurtleState {
@@ -471,6 +483,7 @@ const newFileName = ref("");
 const inputText = ref("");
 const outputLines = ref<OutputLine[]>([]);
 const runtimeArtifacts = ref<RuntimeArtifactView[]>([]);
+const karelWorld = ref<KarelWorldState | null>(null);
 const isLoading = ref(true);
 const isSaving = ref(false);
 const isSharing = ref(false);
@@ -881,7 +894,7 @@ const runControlIsStop = computed(
 const selectedModeLabel = computed(() =>
 	selectedProject.value
 		? getPythonIdeModeLabel(selectedProject.value.mode)
-		: "Python"
+		: "Code"
 );
 const usesDrawingCanvas = computed(
 	() =>
@@ -889,6 +902,10 @@ const usesDrawingCanvas = computed(
 		selectedProject.value?.mode === "pgzero"
 );
 const usesGameCanvas = computed(() => selectedProject.value?.mode === "pgzero");
+const usesKarelWorld = computed(() => selectedProject.value?.mode === "karel");
+const usesVisualOutput = computed(
+	() => usesDrawingCanvas.value || usesKarelWorld.value
+);
 const drawingCanvasStyle = computed(() => {
 	if (!usesGameCanvas.value) return {};
 	const aspect = gameState.width / gameState.height;
@@ -896,6 +913,54 @@ const drawingCanvasStyle = computed(() => {
 		"--python-game-aspect": `${gameState.width} / ${gameState.height}`,
 		"--python-game-max-width": `${Math.min(68, Math.max(18, aspect * 34))}rem`
 	};
+});
+const karelWorldStyle = computed(() => ({
+	"--karel-cols": `${karelWorld.value?.cols ?? 10}`,
+	"--karel-rows": `${karelWorld.value?.rows ?? 10}`
+}));
+const karelWorldCells = computed<KarelWorldCell[]>(() => {
+	const world = karelWorld.value;
+	if (!world) return [];
+
+	const beepers = new Map(
+		world.beepers.map(beeper => [
+			karelCellKey(beeper.street, beeper.avenue),
+			beeper.count
+		])
+	);
+	const wallMap = new Map<string, Set<KarelWallSide>>();
+	for (const wall of world.walls) {
+		const key = karelCellKey(wall.street, wall.avenue);
+		const walls = wallMap.get(key) ?? new Set<KarelWallSide>();
+		walls.add(wall.side);
+		wallMap.set(key, walls);
+	}
+
+	const cells: KarelWorldCell[] = [];
+	for (let street = world.rows; street >= 1; street -= 1) {
+		for (let avenue = 1; avenue <= world.cols; avenue += 1) {
+			const key = karelCellKey(street, avenue);
+			const walls = wallMap.get(key) ?? new Set<KarelWallSide>();
+			const isRobot =
+				world.robot?.street === street &&
+				world.robot?.avenue === avenue;
+			cells.push({
+				avenue,
+				beeperCount: beepers.get(key) ?? 0,
+				isRobot,
+				key,
+				robotDirection: world.robot?.direction.toLowerCase() ?? "east",
+				street,
+				walls: {
+					east: walls.has("east"),
+					north: walls.has("north"),
+					south: walls.has("south"),
+					west: walls.has("west")
+				}
+			});
+		}
+	}
+	return cells;
 });
 const requestedCourseId = computed(() =>
 	typeof route.query.course === "string" ? route.query.course : ""
@@ -934,6 +999,14 @@ function pythonIdeShareUrl(shareID: string) {
 	const sharePath = `/python-ide?share=${encodeURIComponent(shareID)}`;
 	if (typeof window === "undefined") return sharePath;
 	return new URL(sharePath, window.location.origin).toString();
+}
+
+function karelCellKey(street: number, avenue: number) {
+	return `${street}:${avenue}`;
+}
+
+function isJavaIdeMode(mode: PythonIdeMode): mode is "java" | "karel" {
+	return mode === "java" || mode === "karel";
 }
 
 function appendOutput(kind: OutputLine["kind"], text: string) {
@@ -2145,7 +2218,10 @@ function selectFile(fileName: string) {
 
 function addFile() {
 	if (!selectedProject.value) return;
-	const fileName = normalizePythonFileName(newFileName.value);
+	const fileName = normalizePythonFileName(
+		newFileName.value,
+		isJavaIdeMode(selectedProject.value.mode) ? ".java" : ".py"
+	);
 	if (!isValidPythonFileName(fileName)) {
 		appendOutput(
 			"stderr",
@@ -2292,13 +2368,16 @@ async function importProjectFiles(event: Event) {
 function deleteFile(file: PythonIdeFile) {
 	const project = selectedProject.value;
 	if (!project) return;
-	const pythonFileCount = project.files.filter(file =>
-		isPythonIdePythonFile(file.name)
+	const runnableFileCount = project.files.filter(candidate =>
+		isPythonIdeRunnableFile(candidate.name, project.mode)
 	).length;
-	if (isPythonIdePythonFile(file.name) && pythonFileCount <= 1) {
+	if (
+		isPythonIdeRunnableFile(file.name, project.mode) &&
+		runnableFileCount <= 1
+	) {
 		appendOutput(
 			"system",
-			"Keep at least one Python file so the project can run."
+			`Keep at least one ${isJavaIdeMode(project.mode) ? "Java" : "Python"} file so the project can run.`
 		);
 		return;
 	}
@@ -2318,15 +2397,19 @@ function canDeleteFile(file: PythonIdeFile) {
 	const project = selectedProject.value;
 	if (!project) return false;
 	if (project.files.length <= 1) return false;
-	const pythonFileCount = project.files.filter(candidate =>
-		isPythonIdePythonFile(candidate.name)
+	const runnableFileCount = project.files.filter(candidate =>
+		isPythonIdeRunnableFile(candidate.name, project.mode)
 	).length;
-	return !(isPythonIdePythonFile(file.name) && pythonFileCount <= 1);
+	return !(
+		isPythonIdeRunnableFile(file.name, project.mode) &&
+		runnableFileCount <= 1
+	);
 }
 
 function clearOutput() {
 	outputLines.value = [];
 	runtimeArtifacts.value = [];
+	karelWorld.value = null;
 	gameAudioPlaybackBlockedNoticeShown = false;
 	resetActiveCanvas();
 }
@@ -4613,17 +4696,40 @@ async function runCurrentProject() {
 	clearOutput();
 	const runnableFile = getPythonIdeRunnableFile(project);
 	if (!runnableFile) {
-		runMessage.value = "No Python file";
-		appendOutput("stderr", "Add a .py file before running this project.");
+		const fileType = isJavaIdeMode(project.mode) ? "Java" : "Python";
+		runMessage.value = `No ${fileType} file`;
+		appendOutput(
+			"stderr",
+			`Add a ${isJavaIdeMode(project.mode) ? ".java" : ".py"} file before running this project.`
+		);
 		return;
 	}
 
 	isRunning.value = true;
-	runMessage.value = "Starting Python";
+	runMessage.value = isJavaIdeMode(project.mode)
+		? "Starting Java"
+		: "Starting Python";
 	appendOutput("system", `Running ${runnableFile.name}`);
 	clearPythonRuntimeDiagnosticInEditor();
 
 	try {
+		if (isJavaIdeMode(project.mode)) {
+			const result = runJavaIdeProject({
+				activeFileName: runnableFile.name,
+				files: project.files,
+				mode: project.mode
+			});
+			karelWorld.value = result.karelWorld ?? null;
+			for (const line of result.stdout) appendOutput("stdout", line);
+			for (const line of result.stderr) appendOutput("stderr", line);
+			runMessage.value = result.stderr.length
+				? "Run finished with issues"
+				: project.mode === "karel"
+					? "Karel world ready"
+					: "Run complete";
+			return;
+		}
+
 		if (project.mode === "pgzero") {
 			runMessage.value = "Loading assets";
 			await ensureGameCourseAssetsLoaded();
@@ -5068,13 +5174,14 @@ onBeforeUnmount(() => {
 	<section class="python-ide-page page-shell page-shell--wide">
 		<div class="python-ide-hero">
 			<div>
-				<p class="python-ide-eyebrow">Python IDE</p>
-				<h1>Code, run, and draw in Python</h1>
+				<p class="python-ide-eyebrow">Code IDE</p>
+				<h1>Code, run, and draw in Python or Java</h1>
 				<p>
 					Build multi-file Python projects, run standard Python code,
 					and use the Turtle canvas for drawing and keyboard-driven
-					lessons, PyGame Zero game projects, or data/AI notebooks
-					with rendered charts.
+					lessons, PyGame Zero game projects, data/AI notebooks with
+					rendered charts, Java console programs, or Karel robot
+					worlds.
 				</p>
 			</div>
 			<div class="python-ide-status" aria-live="polite">
@@ -5084,7 +5191,7 @@ onBeforeUnmount(() => {
 		</div>
 
 		<div v-if="isLoading" class="python-ide-loading site-surface">
-			Loading Python workspace...
+			Loading code workspace...
 		</div>
 
 		<div
@@ -5108,7 +5215,7 @@ onBeforeUnmount(() => {
 				v-else
 				id="python-ide-sidebar"
 				class="python-ide-sidebar"
-				aria-label="Python projects and files"
+				aria-label="Code projects and files"
 			>
 				<div class="sidebar-block">
 					<div class="sidebar-heading">
@@ -5173,6 +5280,20 @@ onBeforeUnmount(() => {
 										@click="createProjectFromMenu('pgzero')"
 									>
 										PyGame Zero
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="createProjectFromMenu('java')"
+									>
+										Java
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="createProjectFromMenu('karel')"
+									>
+										Karel Java
 									</button>
 									<span>Template project</span>
 									<button
@@ -5247,6 +5368,30 @@ onBeforeUnmount(() => {
 										"
 									>
 										Demo PyGame Zero
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'java',
+												'demo'
+											)
+										"
+									>
+										Demo Java
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'karel',
+												'demo'
+											)
+										"
+									>
+										Demo Karel Java
 									</button>
 								</div>
 							</div>
@@ -5443,7 +5588,7 @@ onBeforeUnmount(() => {
 							<button
 								:aria-expanded="showIdeSettings"
 								aria-controls="python-ide-settings-panel"
-								aria-label="Python IDE settings"
+								aria-label="Code IDE settings"
 								class="ide-settings-trigger"
 								title="Python IDE settings"
 								type="button"
@@ -5456,7 +5601,7 @@ onBeforeUnmount(() => {
 								id="python-ide-settings-panel"
 								class="ide-settings-panel"
 								role="dialog"
-								aria-label="Python IDE settings"
+								aria-label="Code IDE settings"
 							>
 								<label class="ide-setting-toggle">
 									<input
@@ -5629,7 +5774,7 @@ onBeforeUnmount(() => {
 
 				<div
 					class="ide-grid"
-					:class="{ 'ide-grid--drawing': usesDrawingCanvas }"
+					:class="{ 'ide-grid--drawing': usesVisualOutput }"
 				>
 					<section class="code-panel" aria-label="Code editor">
 						<div class="panel-header">
@@ -5711,12 +5856,14 @@ onBeforeUnmount(() => {
 						</div>
 					</section>
 
-					<section class="result-panel" aria-label="Python output">
+					<section class="result-panel" aria-label="Code output">
 						<div class="panel-header">
 							<span>{{
-								usesDrawingCanvas
-									? `${selectedModeLabel} canvas`
-									: "Runtime"
+								usesKarelWorld
+									? "Karel world"
+									: usesDrawingCanvas
+										? `${selectedModeLabel} canvas`
+										: "Runtime"
 							}}</span>
 							<button
 								class="panel-link"
@@ -5725,6 +5872,48 @@ onBeforeUnmount(() => {
 							>
 								Clear output
 							</button>
+						</div>
+
+						<div
+							v-show="usesKarelWorld"
+							class="karel-shell"
+							aria-label="Karel world"
+						>
+							<div
+								v-if="karelWorld"
+								class="karel-world"
+								:style="karelWorldStyle"
+							>
+								<div
+									v-for="cell in karelWorldCells"
+									:key="cell.key"
+									class="karel-cell"
+									:class="{
+										'has-wall-east': cell.walls.east,
+										'has-wall-north': cell.walls.north,
+										'has-wall-south': cell.walls.south,
+										'has-wall-west': cell.walls.west
+									}"
+									:aria-label="`Street ${cell.street}, avenue ${cell.avenue}`"
+								>
+									<span
+										v-if="cell.isRobot"
+										class="karel-robot"
+										:class="`karel-robot--${cell.robotDirection}`"
+										aria-label="Karel robot"
+									/>
+									<span
+										v-if="cell.beeperCount"
+										class="karel-beeper"
+										aria-label="Beeper"
+									>
+										{{ cell.beeperCount }}
+									</span>
+								</div>
+							</div>
+							<div v-else class="karel-empty">
+								Run Karel code to render the world.
+							</div>
 						</div>
 
 						<div
@@ -5812,7 +6001,7 @@ onBeforeUnmount(() => {
 								<span>Input</span>
 								<textarea
 									v-model="inputText"
-									placeholder="One input() value per line"
+									placeholder="One input or Scanner value per line"
 								/>
 							</label>
 
@@ -6022,6 +6211,14 @@ html.dark .python-ide-page {
 	--syntax-bracket-pair-4: hsl(190 95% 74%);
 	--syntax-bracket-pair-5: hsl(327.5 95% 74%);
 	--syntax-bracket-pair-6: hsl(105 95% 74%);
+}
+
+html.dark .karel-shell {
+	background: #0f172a;
+}
+
+html.dark .karel-empty {
+	color: #c8dce6;
 }
 
 .python-ide-loading,
@@ -7018,6 +7215,114 @@ html.dark .editor-shortcuts ul {
 .turtle-canvas--game {
 	width: 100%;
 	height: 100%;
+}
+
+.karel-shell {
+	display: grid;
+	place-items: center;
+	min-height: 26rem;
+	padding: 1rem;
+	border-bottom: 1px solid var(--color-border);
+	background: #f8fafc;
+}
+
+.karel-world {
+	display: grid;
+	grid-template-columns: repeat(var(--karel-cols), minmax(0, 1fr));
+	width: min(100%, 34rem);
+	aspect-ratio: var(--karel-cols) / var(--karel-rows);
+	border: 3px solid #111827;
+	background: #fff;
+	box-shadow: 0 18px 34px rgba(15, 23, 42, 0.14);
+}
+
+.karel-cell {
+	position: relative;
+	min-width: 0;
+	min-height: 0;
+	border-right: 1px solid #ef4444;
+	border-bottom: 1px solid #ef4444;
+}
+
+.karel-cell.has-wall-east {
+	border-right: 4px solid #111827;
+}
+
+.karel-cell.has-wall-north {
+	border-top: 4px solid #111827;
+}
+
+.karel-cell.has-wall-south {
+	border-bottom: 4px solid #111827;
+}
+
+.karel-cell.has-wall-west {
+	border-left: 4px solid #111827;
+}
+
+.karel-robot {
+	position: absolute;
+	z-index: 3;
+	inset: 21%;
+	border: 2px solid #1d4ed8;
+	border-radius: 5px;
+	background: #fde047;
+	box-shadow: 0 2px 0 #111827;
+}
+
+.karel-robot::after {
+	position: absolute;
+	top: 50%;
+	right: -0.42rem;
+	width: 0;
+	height: 0;
+	border-top: 0.35rem solid transparent;
+	border-bottom: 0.35rem solid transparent;
+	border-left: 0.55rem solid #111827;
+	content: "";
+	transform: translateY(-50%);
+}
+
+.karel-robot--north {
+	transform: rotate(-90deg);
+}
+
+.karel-robot--south {
+	transform: rotate(90deg);
+}
+
+.karel-robot--west {
+	transform: rotate(180deg);
+}
+
+.karel-beeper {
+	position: absolute;
+	z-index: 2;
+	top: 50%;
+	left: 50%;
+	display: grid;
+	width: 1.25rem;
+	height: 1.25rem;
+	place-items: center;
+	border-radius: 999px;
+	background: #111827;
+	color: #fff;
+	font-size: 0.68rem;
+	font-weight: 800;
+	transform: translate(-50%, -50%);
+}
+
+.karel-empty {
+	display: grid;
+	width: min(100%, 34rem);
+	min-height: 20rem;
+	place-items: center;
+	border: 1px dashed var(--color-border);
+	border-radius: 14px;
+	color: #64748b;
+	font-family:
+		"SFMono-Regular", "Cascadia Code", "Liberation Mono", monospace;
+	font-size: 0.9rem;
 }
 
 .artifact-list {

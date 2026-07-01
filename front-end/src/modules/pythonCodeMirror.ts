@@ -1293,6 +1293,10 @@ function memberCompletionMapForMode(mode: PythonIdeMode = "python") {
 	return sharedMemberCompletions;
 }
 
+function isPythonCodeMirrorMode(mode: PythonIdeMode = "python") {
+	return mode !== "java" && mode !== "karel";
+}
+
 export function pythonIdeCompletionsForMode(
 	mode: PythonIdeMode = "python",
 	receiver?: string,
@@ -1431,6 +1435,73 @@ export function pythonIdeCompletionSource(
 			from: word.from,
 			options: pythonIdeCompletionsForMode(mode),
 			validFor: pythonCompletionGlobalValidForRegex
+		};
+	};
+}
+
+const javaKeywordCompletions = [
+	"public",
+	"class",
+	"static",
+	"void",
+	"main",
+	"String",
+	"int",
+	"double",
+	"boolean",
+	"if",
+	"else",
+	"for",
+	"while",
+	"return",
+	"new",
+	"System.out.print",
+	"System.out.println",
+	"Scanner",
+	"ArrayList"
+].map(label => completion(label, "keyword", "Java", 70));
+
+const karelKeywordCompletions = [
+	"UrRobot",
+	"World",
+	"Directions",
+	"North",
+	"East",
+	"South",
+	"West",
+	"move",
+	"turnLeft",
+	"turnRight",
+	"turnAround",
+	"putBeeper",
+	"pickBeeper"
+].map(label => completion(label, "keyword", "Karel", 80));
+
+function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
+	return (context: PythonIdeCompletionContext) => {
+		const word = context.matchBefore(/(?:[A-Z_]\w*\.){0,3}[A-Z_]\w*$/i);
+		if (!word) {
+			if (!context.explicit) return null;
+			return {
+				from: context.pos,
+				options:
+					mode === "karel"
+						? [
+								...javaKeywordCompletions,
+								...karelKeywordCompletions
+							]
+						: javaKeywordCompletions,
+				validFor: /^[A-Z_.]*$/i
+			};
+		}
+		if (word.from === word.to && !context.explicit) return null;
+		return {
+			from: word.from,
+			options:
+				mode === "karel"
+					? [...javaKeywordCompletions, ...karelKeywordCompletions]
+					: javaKeywordCompletions,
+			validFor: /^[A-Z_.]*$/i
 		};
 	};
 }
@@ -1585,17 +1656,6 @@ const pythonEditorBaseSetup: Extension[] = [
 	syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
 	bracketMatching(),
 	closeBrackets(),
-	linter(view => pythonSyntaxDiagnostics(view.state)),
-	pythonRuntimeDiagnosticsField,
-	linter(view => view.state.field(pythonRuntimeDiagnosticsField), {
-		needsRefresh(update) {
-			return update.transactions.some(transaction =>
-				transaction.effects.some(effect =>
-					effect.is(pythonRuntimeDiagnosticEffect)
-				)
-			);
-		}
-	}),
 	rectangularSelection(),
 	crosshairCursor(),
 	highlightActiveLine(),
@@ -1611,21 +1671,45 @@ const pythonEditorBaseSetup: Extension[] = [
 	])
 ];
 
+const pythonEditorDiagnosticsSetup: Extension[] = [
+	linter(view => pythonSyntaxDiagnostics(view.state)),
+	pythonRuntimeDiagnosticsField,
+	linter(view => view.state.field(pythonRuntimeDiagnosticsField), {
+		needsRefresh(update) {
+			return update.transactions.some(transaction =>
+				transaction.effects.some(effect =>
+					effect.is(pythonRuntimeDiagnosticEffect)
+				)
+			);
+		}
+	})
+];
+
 export function createPythonCodeMirrorExtensions(
 	options: PythonCodeMirrorOptions
 ): Extension[] {
+	const mode = options.mode ?? "python";
+	const isPythonMode = isPythonCodeMirrorMode(mode);
 	const recommendationsEnabled = options.recommendationsEnabled ?? true;
 
 	return [
 		pythonEditorBaseSetup,
-		python(),
-		pythonLanguage.data.of({
-			autocomplete: pythonIdeCompletionSource(
-				options.mode,
-				options.assetCompletions
-			)
+		isPythonMode ? pythonEditorDiagnosticsSetup : [],
+		isPythonMode
+			? [
+					python(),
+					pythonLanguage.data.of({
+						autocomplete: pythonIdeCompletionSource(
+							mode,
+							options.assetCompletions
+						)
+					})
+				]
+			: [],
+		autocompletion({
+			activateOnTyping: recommendationsEnabled,
+			override: isPythonMode ? undefined : [javaIdeCompletionSource(mode)]
 		}),
-		autocompletion({ activateOnTyping: recommendationsEnabled }),
 		EditorState.tabSize.of(4),
 		indentUnit.of(pythonIndentText),
 		EditorState.allowMultipleSelections.of(true),

@@ -7,9 +7,11 @@ import {
 
 const WHITESPACE_RE = /\s+/g;
 const FILE_EXTENSION_RE = /\.[\dA-Z]+$/i;
+const JAVA_EXTENSION_RE = /\.java$/i;
 const PYTHON_EXTENSION_RE = /\.py$/i;
+const CODE_EXTENSION_RE = /\.(?:java|py)$/i;
 const SAFE_FILE_SEGMENT_RE = /^\w[\w.-]*$/;
-const ROOT_TEXT_FILE_RE = /^\w[\w.-]*\.(?:csv|json|md|py|txt)$/i;
+const ROOT_TEXT_FILE_RE = /^\w[\w.-]*\.(?:csv|java|json|md|py|txt)$/i;
 const IMAGE_FILE_RE = /^images\/\w[\w.-]*\.(?:gif|jpe?g|png|svg|webp)$/i;
 const AUDIO_FILE_RE = /^(?:music|sounds)\/\w[\w.-]*\.(?:mp3|ogg|wav)$/i;
 const ASSET_DIRECTORY_NAMES = new Set(["images", "music", "sounds"]);
@@ -32,7 +34,7 @@ const PYTHON_IDE_RUNTIME_RESERVED_ROOTS = new Set([
 	"pgzero",
 	"tensorflow"
 ]);
-const TEXT_FILE_RE = /\.(?:csv|json|md|py|txt|svg)$/i;
+const TEXT_FILE_RE = /\.(?:csv|java|json|md|py|txt|svg)$/i;
 const IMAGE_EXTENSION_RE = /\.(?:gif|jpe?g|png|svg|webp)$/i;
 const SOUND_EXTENSION_RE = /\.wav$/i;
 const MUSIC_EXTENSION_RE = /\.(?:mp3|ogg)$/i;
@@ -43,7 +45,13 @@ const PYTHON_IDE_PROJECT_STORE = "projectStores";
 
 export type PythonIdeFileEncoding = "text" | "base64";
 
-export type PythonIdeMode = "data" | "pgzero" | "python" | "turtle";
+export type PythonIdeMode =
+	| "data"
+	| "java"
+	| "karel"
+	| "pgzero"
+	| "python"
+	| "turtle";
 export type PythonIdeProjectTemplate = "blank" | "course" | "demo" | "outline";
 
 export interface PythonIdeFile {
@@ -133,6 +141,7 @@ interface PythonIdeProjectStorageRecord {
 export const pythonIdeStorageNamespace = "classes-python-ide-projects";
 export const pythonIdeAllowedFileExtensions = [
 	".py",
+	".java",
 	".csv",
 	".json",
 	".txt",
@@ -154,7 +163,15 @@ let pythonIdeStorageDbPromise: Promise<IDBDatabase> | null = null;
 
 const pythonIdeCourseModes: Record<string, PythonIdeMode> = {
 	"ai-level-1": "data",
+	"ap-computer-science-a": "java",
 	"data-science-in-python": "data",
+	"design-patterns-in-java": "java",
+	"design-patterns-in-java-part-2": "java",
+	"java-level-1": "karel",
+	"java-level-2": "java",
+	"java-level-3": "java",
+	"java-with-graphics": "karel",
+	"java-without-graphics": "java",
 	"machine-learning": "data",
 	pygames: "pgzero",
 	"python-level-1": "turtle",
@@ -168,8 +185,15 @@ export function normalizePythonIdeMode(
 	value: string | null | undefined,
 	fallback: PythonIdeMode = "python"
 ): PythonIdeMode {
-	if (value === "data" || value === "pgzero" || value === "turtle")
+	if (
+		value === "data" ||
+		value === "java" ||
+		value === "karel" ||
+		value === "pgzero" ||
+		value === "turtle"
+	) {
 		return value;
+	}
 	if (value === "python") return "python";
 	return fallback;
 }
@@ -322,6 +346,52 @@ def update():
 pgzrun.go()
 `;
 
+export const javaStarterCode = `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java!");
+    }
+}
+`;
+
+export const karelStarterCode = `import kareltherobot.UrRobot;
+import kareltherobot.World;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(6, 7, East, 0);
+        sam.turnLeft();
+        sam.turnLeft();
+        sam.move();
+        sam.move();
+        sam.move();
+    }
+
+    static {
+        World.setVisible(true);
+        World.readWorld("world.txt");
+    }
+}
+`;
+
+export const karelStarterWorld = `rows=10
+cols=10
+wall 4 4 east
+wall 4 5 south
+wall 5 7 east
+wall 7 4 north
+wall 7 4 east
+wall 7 5 north
+wall 7 6 north
+wall 7 7 north
+wall 6 7 east
+wall 5 4 east
+wall 5 5 south
+wall 5 6 south
+wall 5 7 south
+beeper 6 9 1
+`;
+
 export const pgzeroOutlineStarterCode = `WIDTH = 640
 HEIGHT = 400
 
@@ -423,6 +493,8 @@ plt.tight_layout()
 
 export function getPythonIdeModeLabel(mode: PythonIdeMode) {
 	if (mode === "data") return "Data / AI";
+	if (mode === "java") return "Java";
+	if (mode === "karel") return "Karel Java";
 	if (mode === "pgzero") return "PyGame Zero";
 	if (mode === "turtle") return "Turtle";
 	return "Python";
@@ -430,6 +502,8 @@ export function getPythonIdeModeLabel(mode: PythonIdeMode) {
 
 function getDemoStarterCode(mode: PythonIdeMode) {
 	if (mode === "data") return dataScienceStarterCode;
+	if (mode === "java") return javaStarterCode;
+	if (mode === "karel") return karelStarterCode;
 	if (mode === "pgzero") return pgzeroStarterCode;
 	if (mode === "turtle") return turtleStarterCode;
 	return pythonStarterCode;
@@ -445,6 +519,15 @@ function clonePythonIdeFiles(files: PythonIdeFile[]) {
 
 function getBlankStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 	if (mode === "pgzero") return getCourseStarterFiles(mode);
+	if (mode === "java") {
+		return [
+			{
+				name: "Main.java",
+				content: ""
+			}
+		];
+	}
+	if (mode === "karel") return getCourseStarterFiles(mode);
 
 	return [
 		{
@@ -455,6 +538,28 @@ function getBlankStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getCourseStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "java") {
+		return [
+			{
+				name: "Main.java",
+				content: javaStarterCode
+			}
+		];
+	}
+
+	if (mode === "karel") {
+		return [
+			{
+				name: "Algo.java",
+				content: karelStarterCode
+			},
+			{
+				name: "world.txt",
+				content: karelStarterWorld
+			}
+		];
+	}
+
 	if (mode === "pgzero") {
 		return [
 			{
@@ -468,6 +573,8 @@ function getCourseStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getDemoStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "java" || mode === "karel") return getCourseStarterFiles(mode);
+
 	const files = [
 		{
 			name: "main.py",
@@ -493,6 +600,8 @@ function getDemoStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getOutlineStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "java" || mode === "karel") return getCourseStarterFiles(mode);
+
 	const files = [
 		{
 			name: "main.py",
@@ -529,7 +638,10 @@ export function resolvePythonIdeActiveFileName(
 ) {
 	return (
 		files.find(file => file.name === preferredFileName)?.name ??
+		files.find(file => file.name === "Main.java")?.name ??
+		files.find(file => file.name === "Algo.java")?.name ??
 		files.find(file => file.name === "main.py")?.name ??
+		files.find(file => isPythonIdeJavaFile(file.name))?.name ??
 		files.find(file => isPythonIdePythonFile(file.name))?.name ??
 		files[0]?.name ??
 		"main.py"
@@ -548,11 +660,15 @@ function projectTitleForMode(
 
 	return mode === "data"
 		? "Data / AI Notebook"
-		: mode === "pgzero"
-			? "PyGame Zero Game"
-			: mode === "turtle"
-				? "Turtle Drawing"
-				: "Python Practice";
+		: mode === "java"
+			? "Java Practice"
+			: mode === "karel"
+				? "Karel Java World"
+				: mode === "pgzero"
+					? "PyGame Zero Game"
+					: mode === "turtle"
+						? "Turtle Drawing"
+						: "Python Practice";
 }
 
 export function createPythonIdeProject(
@@ -607,7 +723,10 @@ export function pythonIdeStorageKey(userID?: string | null) {
 	return `${pythonIdeStorageNamespace}:${userID || "anonymous"}`;
 }
 
-export function normalizePythonFileName(value: string) {
+export function normalizePythonFileName(
+	value: string,
+	defaultExtension = ".py"
+) {
 	const cleaned = value
 		.trim()
 		.replaceAll("\\", "/")
@@ -621,7 +740,7 @@ export function normalizePythonFileName(value: string) {
 	if (!segments.length) return "";
 	const fileName = segments[segments.length - 1] ?? "";
 	const extensionMatch = fileName.match(FILE_EXTENSION_RE);
-	if (!extensionMatch) return `${segments.join("/")}.py`;
+	if (!extensionMatch) return `${segments.join("/")}${defaultExtension}`;
 	const extension = extensionMatch[0].toLowerCase();
 	const stem = fileName.slice(0, -extensionMatch[0].length);
 	segments[segments.length - 1] = `${stem}${extension}`;
@@ -657,7 +776,7 @@ export function isValidPythonFileName(value: string) {
 
 	if (isPythonIdeRuntimeReservedPath(value)) return false;
 
-	if (PYTHON_EXTENSION_RE.test(value)) {
+	if (CODE_EXTENSION_RE.test(value)) {
 		const rootDirectory = segments[0]?.toLowerCase();
 		return !rootDirectory || !ASSET_DIRECTORY_NAMES.has(rootDirectory);
 	}
@@ -669,6 +788,19 @@ export function isValidPythonFileName(value: string) {
 
 export function isPythonIdePythonFile(value: string) {
 	return PYTHON_EXTENSION_RE.test(value);
+}
+
+export function isPythonIdeJavaFile(value: string) {
+	return JAVA_EXTENSION_RE.test(value);
+}
+
+export function isPythonIdeRunnableFile(
+	value: string,
+	mode: PythonIdeMode = "python"
+) {
+	return mode === "java" || mode === "karel"
+		? isPythonIdeJavaFile(value)
+		: isPythonIdePythonFile(value);
 }
 
 export function isPythonIdeTextFile(value: string) {
@@ -717,6 +849,7 @@ export function getPythonIdeAssetDataUrl(file: PythonIdeFile) {
 export function getPythonIdeFileKindLabel(value: string) {
 	const extension = value.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
 	if (extension === ".csv") return "CSV";
+	if (extension === ".java") return "Java";
 	if (extension === ".json") return "JSON";
 	if (extension === ".md") return "Markdown";
 	if (extension === ".txt") return "Text";
@@ -729,6 +862,8 @@ export function getPythonIdeFileKindLabel(value: string) {
 export function getPythonIdeDefaultFileContent(fileName: string) {
 	const extension = fileName.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
 	if (extension === ".csv") return "name,value\nsample,1\n";
+	if (extension === ".java")
+		return "public class Main {\n    public static void main(String[] args) {\n        \n    }\n}\n";
 	if (extension === ".json") return '{\n\t"items": []\n}\n';
 	if (extension === ".md") return "# Notes\n\n";
 	if (extension === ".txt") return "";
@@ -806,7 +941,7 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 	}
 
 	const runnableFileIndex = starterFiles.findIndex(file =>
-		isPythonIdePythonFile(file.name)
+		CODE_EXTENSION_RE.test(file.name)
 	);
 	if (runnableFileIndex <= 0) return starterFiles;
 
@@ -816,15 +951,17 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 }
 
 export function getPythonIdeRunnableFile(
-	project: Pick<PythonIdeProject, "activeFileName" | "files">
+	project: Pick<PythonIdeProject, "activeFileName" | "files"> &
+		Partial<Pick<PythonIdeProject, "mode">>
 ) {
+	const mode = project.mode ?? "python";
 	return (
 		project.files.find(
 			file =>
 				file.name === project.activeFileName &&
-				isPythonIdePythonFile(file.name)
+				isPythonIdeRunnableFile(file.name, mode)
 		) ??
-		project.files.find(file => isPythonIdePythonFile(file.name)) ??
+		project.files.find(file => isPythonIdeRunnableFile(file.name, mode)) ??
 		null
 	);
 }
