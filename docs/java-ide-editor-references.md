@@ -97,7 +97,7 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   arithmetic, simple casts including beginner `char` / ASCII casts and
   character arithmetic, common `Math` helpers and constants such as
   `Math.PI` and `Math.E`, `Math.random()` and beginner `java.util.Random`
-  calls, `Scanner` reads from the IDE input box with
+  calls, declared `Scanner` receivers reading from the IDE input box with
   Java-like token-versus-line behavior for `next()`,
   `nextInt()`, `nextDouble()`, `nextBoolean()`, and `nextLine()`, basic
   `hasNext...()` validation predicates, basic `if` / `else if` / `else`

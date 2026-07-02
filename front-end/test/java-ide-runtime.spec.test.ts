@@ -325,6 +325,29 @@ public class Main {
 		expect(result.stdout).toEqual(["oops:5:true"]);
 	});
 
+	it("only consumes IDE input from declared Scanner receivers", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        String label = "not a scanner";
+        int value = label.nextInt();
+        System.out.println(value);
+    }
+}`
+				}
+			],
+			inputText: "42",
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["label.nextInt()"]);
+	});
+
 	it("previews Java console if/else decisions from stored input", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
