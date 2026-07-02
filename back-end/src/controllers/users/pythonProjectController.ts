@@ -64,7 +64,7 @@ function isSafeProjectFileName(value: string) {
 
 	if (isRuntimeReservedProjectPath(value)) return false;
 
-	if (PYTHON_FILE_NAME_RE.test(value)) {
+	if (PYTHON_FILE_NAME_RE.test(value) || JAVA_FILE_NAME_RE.test(value)) {
 		const rootDirectory = segments[0]?.toLowerCase();
 		return !rootDirectory || !ASSET_DIRECTORY_NAMES.has(rootDirectory);
 	}

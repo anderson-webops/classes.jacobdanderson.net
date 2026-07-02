@@ -118,6 +118,52 @@ describe("Python project routes", () => {
 		});
 	});
 
+	it("accepts nested Java package files for signed-in IDE projects", async () => {
+		await withPythonProjectRoute(async baseUrl => {
+			const response = await postJson(baseUrl, {
+				activeFileName: "src/main/java/Main.java",
+				files: [
+					{
+						content: "package main.java;\npublic class Helper {}\n",
+						name: "src/main/java/Helper.java"
+					},
+					{
+						content: "package main.java;\npublic class Main { public static void main(String[] args) {} }\n",
+						name: "src/main/java/Main.java"
+					}
+				],
+				mode: "java",
+				title: "Java package demo"
+			});
+			const body = await response.json();
+
+			expect(response.status).toBe(201);
+			expect(modelMocks.pythonProjectCreate).toHaveBeenCalledWith(
+				expect.objectContaining({
+					activeFileName: "src/main/java/Main.java",
+					files: [
+						{
+							content: "package main.java;\npublic class Helper {}\n",
+							encoding: "text",
+							name: "src/main/java/Helper.java"
+						},
+						{
+							content: "package main.java;\npublic class Main { public static void main(String[] args) {} }\n",
+							encoding: "text",
+							name: "src/main/java/Main.java"
+						}
+					],
+					mode: "java",
+					user: userID
+				})
+			);
+			expect(body.project.files.map((file: { name: string }) => file.name)).toEqual([
+				"src/main/java/Helper.java",
+				"src/main/java/Main.java"
+			]);
+		});
+	});
+
 	it("accepts the editor's 40-file project limit", async () => {
 		await withPythonProjectRoute(async baseUrl => {
 			const files = Array.from({ length: 40 }, (_value, index) => ({
