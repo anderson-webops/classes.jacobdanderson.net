@@ -511,20 +511,20 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).toContain(
 			"grid-template-columns: minmax(15rem, 1fr) auto;"
 		);
-		expect(pageSource).toContain(
-			"grid-template-rows: 0.75rem var(--python-ide-toolbar-control-size);"
+		expect(pageSource).toMatch(
+			/\.editor-toolbar\s*{[\s\S]*align-items: end;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar\s*{[\s\S]*align-items: start;/
+			/\.project-title-field\s*{[\s\S]*min-width: 0;[\s\S]*display: grid;[\s\S]*gap: 0\.5rem;/
 		);
 		expect(pageSource).toMatch(
-			/\.project-title-label\s*{[\s\S]*grid-column: 1;[\s\S]*grid-row: 1;[\s\S]*height: 0\.75rem;/
+			/\.project-title-label\s*{[\s\S]*font-size: 0\.75rem;[\s\S]*text-transform: uppercase;[\s\S]*line-height: 1;/
 		);
 		expect(pageSource).toMatch(
-			/\.project-title-input\s*{[\s\S]*grid-column: 1;[\s\S]*grid-row: 2;[\s\S]*align-self: start;/
+			/\.project-title-input\s*{[\s\S]*min-width: 0;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-actions\s*{[\s\S]*grid-column: 2;[\s\S]*grid-row: 2;[\s\S]*align-self: start;[\s\S]*height: var\(--python-ide-toolbar-control-size\);/
+			/\.editor-actions\s*{[\s\S]*grid-column: 2;[\s\S]*align-self: end;[\s\S]*height: var\(--python-ide-toolbar-control-size\);/
 		);
 		expect(pageSource).toMatch(/\.ide-settings\s*{[\s\S]*height: 100%;/);
 		expect(pageSource).toContain("box-sizing: border-box;");
