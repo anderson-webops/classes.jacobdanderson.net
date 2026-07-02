@@ -361,6 +361,44 @@ public class Main {
 		expect(result.stdout).toEqual(["1", "Linus", "7", "false"]);
 	});
 
+	it("previews beginner Java enhanced for loops over arrays and ArrayLists", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] scores = {2, 4, 6};
+        int total = 0;
+        for (int score : scores) {
+            total += score;
+        }
+
+        ArrayList<String> names = new ArrayList<>();
+        names.add("Ada");
+        names.add("Grace");
+
+        String initials = "";
+        for (String name : names) {
+            initials += name.charAt(0);
+        }
+
+        System.out.println(total);
+        System.out.println(initials);
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["12", "AG"]);
+	});
+
 	it("runs the beginner Karel command subset into a visual world state", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
