@@ -57,6 +57,7 @@ interface JavaMethodDefinition {
 	body: string;
 	name: string;
 	parameters: string[];
+	returnType: string;
 }
 
 interface KarelCommandPlan {
@@ -77,6 +78,8 @@ interface JavaForLoopIterations {
 
 interface JavaConsoleContext {
 	input: JavaScannerInput;
+	methodCallDepth: number;
+	methods: Map<string, JavaMethodDefinition>;
 	stderr: string[];
 	variables: Map<string, JavaConsoleValue>;
 }
@@ -117,8 +120,18 @@ type JavaConsoleValue =
 			value: string;
 	  };
 
+type JavaConsoleSignal =
+	| "break"
+	| "continue"
+	| {
+			kind: "return";
+			value: JavaConsoleValue;
+	  }
+	| null;
+
 const DEFAULT_WORLD_SIZE = 10;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
+const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
 const JAVA_PRINT_RE = /System\.out\.(print|println)\s*\(([\s\S]*?)\)\s*;/g;
 const JAVA_SCANNER_READ_RE =
@@ -223,16 +236,19 @@ function runConsoleJavaProject(
 }
 
 function javaConsoleOutput(source: string, inputText: string) {
+	const methods = parseJavaMethods(source);
 	const context: JavaConsoleContext = {
 		input: {
 			index: 0,
 			values: inputText.split(/\r?\n/).map(value => value.trimEnd())
 		},
+		methodCallDepth: 0,
+		methods,
 		stderr: [],
 		variables: new Map()
 	};
 	const output: JavaConsoleOutputState = { pendingLine: "", stdout: [] };
-	const mainBody = parseJavaVoidMethods(source).get("main")?.body ?? source;
+	const mainBody = methods.get("main")?.body ?? source;
 	executeJavaConsoleBody(mainBody, context, output);
 
 	if (output.pendingLine) output.stdout.push(output.pendingLine);
@@ -244,7 +260,7 @@ function executeJavaConsoleBody(
 	context: JavaConsoleContext,
 	output: JavaConsoleOutputState,
 	depth = 0
-): "break" | "continue" | null {
+): JavaConsoleSignal {
 	if (depth > 30) {
 		context.stderr.push("Stopped Java preview after nested control flow.");
 		return null;
@@ -260,7 +276,8 @@ function executeJavaConsoleBody(
 			if (parsedIf) {
 				const branchBody = evaluateJavaBooleanExpression(
 					parsedIf.condition,
-					context
+					context,
+					output
 				)
 					? parsedIf.body
 					: parsedIf.elseBody;
@@ -290,7 +307,8 @@ function executeJavaConsoleBody(
 					let count = 0;
 					evaluateJavaBooleanExpression(
 						parsedLoop.condition,
-						context
+						context,
+						output
 					);
 					count += 1
 				) {
@@ -307,6 +325,7 @@ function executeJavaConsoleBody(
 						depth + 1
 					);
 					if (signal === "break") break;
+					if (signal && signal !== "continue") return signal;
 					executeJavaConsoleStatement(
 						`${parsedLoop.update};`,
 						context,
@@ -326,7 +345,8 @@ function executeJavaConsoleBody(
 					let count = 0;
 					evaluateJavaBooleanExpression(
 						parsedLoop.condition,
-						context
+						context,
+						output
 					);
 					count += 1
 				) {
@@ -343,6 +363,7 @@ function executeJavaConsoleBody(
 						depth + 1
 					);
 					if (signal === "break") break;
+					if (signal && signal !== "continue") return signal;
 					if (signal === "continue") continue;
 				}
 				index = parsedLoop.nextIndex;
@@ -382,16 +403,32 @@ function executeJavaConsoleStatement(
 	statement: string,
 	context: JavaConsoleContext,
 	output: JavaConsoleOutputState
-): "break" | "continue" | null {
+): JavaConsoleSignal {
 	const trimmed = statement.trim().replace(/;$/, "").trim();
 	if (trimmed === "break") return "break";
 	if (trimmed === "continue") return "continue";
+	if (trimmed === "return") {
+		return {
+			kind: "return",
+			value: { type: "null", value: null }
+		};
+	}
+	if (trimmed.startsWith("return ")) {
+		return {
+			kind: "return",
+			value: evaluateJavaExpression(
+				trimmed.slice("return ".length),
+				context,
+				output
+			)
+		};
+	}
 
 	for (const match of statement.matchAll(JAVA_PRINT_RE)) {
 		const method = match[1];
 		const expression = match[2] ?? "";
 		const value = javaValueToString(
-			evaluateJavaExpression(expression, context)
+			evaluateJavaExpression(expression, context, output)
 		);
 		if (method === "print") {
 			output.pendingLine += value;
@@ -402,13 +439,34 @@ function executeJavaConsoleStatement(
 		output.pendingLine = "";
 	}
 
-	storeJavaVariableFromStatement(statement, context);
+	if (executeJavaConsoleMethodStatement(trimmed, context, output))
+		return null;
+
+	storeJavaVariableFromStatement(statement, context, output);
 	return null;
+}
+
+function executeJavaConsoleMethodStatement(
+	statement: string,
+	context: JavaConsoleContext,
+	output: JavaConsoleOutputState
+) {
+	const methodCall = statement.match(/^([A-Z_]\w*)\s*\(([\s\S]*)\)$/i);
+	const methodName = methodCall?.[1];
+	if (!methodName || !context.methods.has(methodName)) return false;
+	executeJavaConsoleMethodCall(
+		methodName,
+		methodCall?.[2] ?? "",
+		context,
+		output
+	);
+	return true;
 }
 
 function storeJavaVariableFromStatement(
 	statement: string,
-	context: JavaConsoleContext
+	context: JavaConsoleContext,
+	output?: JavaConsoleOutputState
 ) {
 	const trimmed = statement.trim().replace(/;$/, "").trim();
 	const increment = trimmed.match(JAVA_INCREMENT_RE);
@@ -438,7 +496,8 @@ function storeJavaVariableFromStatement(
 				compound[2],
 				evaluateJavaExpression(
 					trimmed.slice(compound[0].length),
-					context
+					context,
+					output
 				)
 			)
 		);
@@ -451,7 +510,8 @@ function storeJavaVariableFromStatement(
 			declaration[1],
 			evaluateJavaExpression(
 				trimmed.slice(declaration[0].length),
-				context
+				context,
+				output
 			)
 		);
 		return;
@@ -461,7 +521,11 @@ function storeJavaVariableFromStatement(
 	if (assignment?.[1]) {
 		context.variables.set(
 			assignment[1],
-			evaluateJavaExpression(trimmed.slice(assignment[0].length), context)
+			evaluateJavaExpression(
+				trimmed.slice(assignment[0].length),
+				context,
+				output
+			)
 		);
 	}
 }
@@ -498,7 +562,8 @@ function applyJavaCompoundAssignment(
 
 function evaluateJavaExpression(
 	expression: string,
-	context?: JavaConsoleContext
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
 ): JavaConsoleValue {
 	const trimmed = expression.trim();
 	if (!trimmed) return { type: "string", value: "" };
@@ -506,19 +571,38 @@ function evaluateJavaExpression(
 	const scannerValue = evaluateJavaScannerRead(trimmed, context);
 	if (scannerValue) return scannerValue;
 
-	const castValue = evaluateJavaCastExpression(trimmed, context);
+	const castValue = evaluateJavaCastExpression(trimmed, context, output);
 	if (castValue) return castValue;
 
-	const mathMethodValue = evaluateJavaMathMethodExpression(trimmed, context);
+	const mathMethodValue = evaluateJavaMathMethodExpression(
+		trimmed,
+		context,
+		output
+	);
 	if (mathMethodValue) return mathMethodValue;
 
 	const stringMethodValue = evaluateJavaStringMethodExpression(
 		trimmed,
-		context
+		context,
+		output
 	);
 	if (stringMethodValue) return stringMethodValue;
 
-	const numericValue = evaluateNumericExpression(trimmed, context);
+	const methodCallValue = evaluateJavaMethodCallExpression(
+		trimmed,
+		context,
+		output
+	);
+	if (methodCallValue) return methodCallValue;
+
+	const booleanValue = evaluateJavaBooleanValueExpression(
+		trimmed,
+		context,
+		output
+	);
+	if (booleanValue) return booleanValue;
+
+	const numericValue = evaluateNumericExpression(trimmed, context, output);
 	if (numericValue !== null) return { type: "number", value: numericValue };
 
 	const parts = splitJavaConcat(trimmed);
@@ -527,7 +611,9 @@ function evaluateJavaExpression(
 			type: "string",
 			value: parts
 				.map(part =>
-					javaValueToString(evaluateJavaExpression(part, context))
+					javaValueToString(
+						evaluateJavaExpression(part, context, output)
+					)
 				)
 				.join("")
 		};
@@ -604,7 +690,8 @@ function javaValueToNumber(value: JavaConsoleValue) {
 
 function evaluateJavaCastExpression(
 	expression: string,
-	context?: JavaConsoleContext
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
 ): JavaConsoleValue | null {
 	if (!expression.startsWith("(")) return null;
 	const castEnd = findMatchingDelimiter(expression, 0, "(", ")");
@@ -612,7 +699,11 @@ function evaluateJavaCastExpression(
 	const castType = expression.slice(1, castEnd).trim().toLowerCase();
 	if (castType !== "int" && castType !== "double") return null;
 	const value = javaValueToNumber(
-		evaluateJavaExpression(expression.slice(castEnd + 1).trim(), context)
+		evaluateJavaExpression(
+			expression.slice(castEnd + 1).trim(),
+			context,
+			output
+		)
 	);
 	return {
 		type: "number",
@@ -622,12 +713,13 @@ function evaluateJavaCastExpression(
 
 function evaluateJavaMathMethodExpression(
 	expression: string,
-	context?: JavaConsoleContext
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
 ): JavaConsoleValue | null {
 	const match = expression.match(/^Math\.(\w+)\s*\(([\s\S]*)\)$/);
 	if (!match?.[1]) return null;
 	const args = splitJavaArguments(match[2] ?? "").map(arg =>
-		javaValueToNumber(evaluateJavaExpression(arg, context))
+		javaValueToNumber(evaluateJavaExpression(arg, context, output))
 	);
 	const method = match[1];
 	switch (method) {
@@ -656,17 +748,20 @@ function evaluateJavaMathMethodExpression(
 
 function evaluateJavaStringMethodExpression(
 	expression: string,
-	context?: JavaConsoleContext
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
 ): JavaConsoleValue | null {
 	const match = expression.match(
 		/^([\s\S]+)\.(length|charAt|substring)\s*\(([\s\S]*)\)$/i
 	);
 	if (!match?.[1] || !match[2]) return null;
 	const receiver = javaValueToString(
-		evaluateJavaExpression(match[1], context)
+		evaluateJavaExpression(match[1], context, output)
 	);
 	const args = splitJavaArguments(match[3] ?? "").map(arg =>
-		Math.trunc(javaValueToNumber(evaluateJavaExpression(arg, context)))
+		Math.trunc(
+			javaValueToNumber(evaluateJavaExpression(arg, context, output))
+		)
 	);
 	const method = match[2].toLowerCase();
 	if (method === "length") return { type: "number", value: receiver.length };
@@ -679,6 +774,112 @@ function evaluateJavaStringMethodExpression(
 	return {
 		type: "string",
 		value: receiver.slice(args[0] ?? 0, args[1] ?? receiver.length)
+	};
+}
+
+function evaluateJavaMethodCallExpression(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue | null {
+	const methodCall = expression.match(/^([A-Z_]\w*)\s*\(([\s\S]*)\)$/i);
+	const methodName = methodCall?.[1];
+	if (!methodName || !context?.methods.has(methodName)) return null;
+	return executeJavaConsoleMethodCall(
+		methodName,
+		methodCall?.[2] ?? "",
+		context,
+		output
+	);
+}
+
+function executeJavaConsoleMethodCall(
+	methodName: string,
+	rawArguments: string,
+	context: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue {
+	const method = context.methods.get(methodName);
+	if (!method) return { type: "null", value: null };
+	if (context.methodCallDepth >= MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH) {
+		context.stderr.push(
+			`Stopped Java preview after ${MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH} nested method calls.`
+		);
+		return { type: "null", value: null };
+	}
+
+	const localContext: JavaConsoleContext = {
+		input: context.input,
+		methodCallDepth: context.methodCallDepth + 1,
+		methods: context.methods,
+		stderr: context.stderr,
+		variables: new Map()
+	};
+	const args = splitJavaArguments(rawArguments);
+	method.parameters.forEach((parameter, parameterIndex) => {
+		localContext.variables.set(
+			parameter,
+			evaluateJavaExpression(args[parameterIndex] ?? "", context, output)
+		);
+	});
+
+	const signal = executeJavaConsoleBody(
+		method.body,
+		localContext,
+		output ?? { pendingLine: "", stdout: [] }
+	);
+	if (signal && typeof signal === "object" && signal.kind === "return")
+		return signal.value;
+	return { type: "null", value: null };
+}
+
+function evaluateJavaBooleanValueExpression(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue | null {
+	if (!context) return null;
+	const trimmed = stripJavaOuterParens(expression.trim());
+	const orParts = splitJavaTopLevel(trimmed, "||");
+	if (orParts.length > 1) {
+		return {
+			type: "boolean",
+			value: orParts.some(part =>
+				evaluateJavaBooleanExpression(part, context, output)
+			)
+		};
+	}
+
+	const andParts = splitJavaTopLevel(trimmed, "&&");
+	if (andParts.length > 1) {
+		return {
+			type: "boolean",
+			value: andParts.every(part =>
+				evaluateJavaBooleanExpression(part, context, output)
+			)
+		};
+	}
+
+	if (trimmed.startsWith("!")) {
+		return {
+			type: "boolean",
+			value: !evaluateJavaBooleanExpression(
+				trimmed.slice(1),
+				context,
+				output
+			)
+		};
+	}
+
+	const comparison = splitJavaComparison(trimmed);
+	if (!comparison) return null;
+	return {
+		type: "boolean",
+		value: evaluateJavaComparison(
+			evaluateJavaExpression(comparison.left, context, output),
+			comparison.operator,
+			evaluateJavaExpression(comparison.right, context, output)
+		)
 	};
 }
 
@@ -709,7 +910,8 @@ function parseJavaConsoleForLoop(
 
 function evaluateJavaBooleanExpression(
 	expression: string,
-	context: JavaConsoleContext
+	context: JavaConsoleContext,
+	output?: JavaConsoleOutputState
 ): boolean {
 	const trimmed = stripJavaOuterParens(expression.trim());
 	if (!trimmed) return false;
@@ -717,19 +919,23 @@ function evaluateJavaBooleanExpression(
 	const orParts = splitJavaTopLevel(trimmed, "||");
 	if (orParts.length > 1) {
 		return orParts.some(part =>
-			evaluateJavaBooleanExpression(part, context)
+			evaluateJavaBooleanExpression(part, context, output)
 		);
 	}
 
 	const andParts = splitJavaTopLevel(trimmed, "&&");
 	if (andParts.length > 1) {
 		return andParts.every(part =>
-			evaluateJavaBooleanExpression(part, context)
+			evaluateJavaBooleanExpression(part, context, output)
 		);
 	}
 
 	if (trimmed.startsWith("!")) {
-		return !evaluateJavaBooleanExpression(trimmed.slice(1), context);
+		return !evaluateJavaBooleanExpression(
+			trimmed.slice(1),
+			context,
+			output
+		);
 	}
 
 	const equalityCall = trimmed.match(
@@ -737,8 +943,8 @@ function evaluateJavaBooleanExpression(
 	);
 	if (equalityCall?.[1] && equalityCall[2] && equalityCall[3]) {
 		return javaValuesAreEqual(
-			evaluateJavaExpression(equalityCall[1], context),
-			evaluateJavaExpression(equalityCall[3], context),
+			evaluateJavaExpression(equalityCall[1], context, output),
+			evaluateJavaExpression(equalityCall[3], context, output),
 			equalityCall[2].toLowerCase() === "equalsignorecase"
 		);
 	}
@@ -746,13 +952,13 @@ function evaluateJavaBooleanExpression(
 	const comparison = splitJavaComparison(trimmed);
 	if (comparison) {
 		return evaluateJavaComparison(
-			evaluateJavaExpression(comparison.left, context),
+			evaluateJavaExpression(comparison.left, context, output),
 			comparison.operator,
-			evaluateJavaExpression(comparison.right, context)
+			evaluateJavaExpression(comparison.right, context, output)
 		);
 	}
 
-	const value = evaluateJavaExpression(trimmed, context);
+	const value = evaluateJavaExpression(trimmed, context, output);
 	if (value.type === "boolean") return value.value;
 	if (value.type === "number") return value.value !== 0;
 	if (value.type === "null") return false;
@@ -894,11 +1100,18 @@ function topLevelJavaDelimiterIndexes(
 
 function evaluateNumericExpression(
 	expression: string,
-	context?: JavaConsoleContext
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
 ) {
-	const tokens = expression.match(/\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi);
-	if (!tokens || tokens.join("") !== expression.replace(/\s+/g, ""))
+	const tokens = expression.match(
+		/(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)|\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi
+	);
+	if (
+		!tokens ||
+		tokens.join("").replace(/\s+/g, "") !== expression.replace(/\s+/g, "")
+	) {
 		return null;
+	}
 	let index = 0;
 
 	const parser = {
@@ -929,6 +1142,11 @@ function evaluateNumericExpression(
 				return value;
 			}
 			index += 1;
+			if (/^(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\(/i.test(token ?? "")) {
+				return javaValueToNumber(
+					evaluateJavaExpression(token ?? "", context, output)
+				);
+			}
 			const variable = context?.variables.get(token ?? "");
 			const value =
 				variable?.type === "number" ? variable.value : Number(token);
@@ -1246,11 +1464,20 @@ function karelCommandsForRobot(
 }
 
 function parseJavaVoidMethods(source: string) {
+	return new Map(
+		[...parseJavaMethods(source)].filter(
+			([, method]) => method.returnType === "void"
+		)
+	);
+}
+
+function parseJavaMethods(source: string) {
 	const methods = new Map<string, JavaMethodDefinition>();
 	const methodPattern =
-		/\b(?:public|private|protected|static|final|\s)*void\s+([A-Z_]\w*)\s*\(([^)]*)\)\s*\{/gi;
+		/\b(?:public|private|protected|static|final|abstract|synchronized|\s)*([A-Z_]\w*(?:\s*<[^>(){};]*>)?(?:\s*\[\s*\])?)\s+([A-Z_]\w*)\s*\(([^)]*)\)\s*\{/gi;
 	for (const match of source.matchAll(methodPattern)) {
-		const name = match[1];
+		const returnType = match[1]?.replace(/\s+/g, " ").trim() ?? "";
+		const name = match[2];
 		if (!name) continue;
 		const openingBrace = (match.index ?? 0) + match[0].length - 1;
 		const closingBrace = findMatchingDelimiter(
@@ -1263,7 +1490,8 @@ function parseJavaVoidMethods(source: string) {
 		methods.set(name, {
 			body: source.slice(openingBrace + 1, closingBrace),
 			name,
-			parameters: parseJavaParameterNames(match[2] ?? "")
+			parameters: parseJavaParameterNames(match[3] ?? ""),
+			returnType
 		});
 	}
 	return methods;

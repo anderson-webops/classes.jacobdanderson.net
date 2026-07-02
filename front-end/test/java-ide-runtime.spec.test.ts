@@ -207,6 +207,89 @@ public class Main {
 		expect(result.stdout).toEqual(["6", "t", "yth", "3", "7"]);
 	});
 
+	it("previews beginner Java static methods with parameters and returns", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("sum=" + sum(2, 3));
+        System.out.println("max=" + max(9, 4));
+        System.out.println("even=" + isEven(sum(1, 5)));
+        System.out.println("next=" + (sum(2, 3) + 1));
+        say("done");
+    }
+
+    public static int sum(int a, int b) {
+        return a + b;
+    }
+
+    public static int max(int a, int b) {
+        if (a > b) {
+            return a;
+        }
+        return b;
+    }
+
+    public static boolean isEven(int value) {
+        return value % 2 == 0;
+    }
+
+    public static void say(String text) {
+        System.out.println(text);
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual([
+			"sum=5",
+			"max=9",
+			"even=true",
+			"next=6",
+			"done"
+		]);
+	});
+
+	it("previews recursive Java return methods with a browser call-depth cap", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("factorial=" + factorial(5));
+        System.out.println("capped=" + neverDone(0));
+    }
+
+    public static int factorial(int value) {
+        if (value <= 1) {
+            return 1;
+        }
+        return value * factorial(value - 1);
+    }
+
+    public static int neverDone(int value) {
+        return neverDone(value + 1);
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toContain(
+			"Stopped Java preview after 40 nested method calls."
+		);
+		expect(result.stdout).toEqual(["factorial=120", "capped=null"]);
+	});
+
 	it("runs the beginner Karel command subset into a visual world state", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
