@@ -5490,6 +5490,30 @@ onBeforeUnmount(() => {
 									>
 										PyGame Zero Outline
 									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'java',
+												'outline'
+											)
+										"
+									>
+										Java Outline
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'karel',
+												'outline'
+											)
+										"
+									>
+										Karel Java Outline
+									</button>
 									<span>Demo project</span>
 									<button
 										type="button"

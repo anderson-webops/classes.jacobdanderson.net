@@ -26,7 +26,10 @@ import {
 	isPythonIdeRuntimeReservedPath,
 	isPythonIdeTextFile,
 	isValidPythonFileName,
+	javaOutlineStarterCode,
 	javaStarterCode,
+	karelOutlineStarterCode,
+	karelOutlineWorld,
 	karelStarterCode,
 	karelStarterWorld,
 	normalizeImportedPythonIdeFileName,
@@ -248,13 +251,23 @@ describe("python IDE project helpers", () => {
 
 		expect(javaOutline.title).toBe("Java Outline");
 		expect(javaOutline.files).toEqual([
-			{ name: "Main.java", content: javaStarterCode }
+			{ name: "Main.java", content: javaOutlineStarterCode }
 		]);
+		expect(javaOutline.files[0]?.content).toContain("Scanner input");
+		expect(javaOutline.files[0]?.content).toContain("ArrayList<String>");
+		expect(javaOutline.files[0]?.content).toContain("makeNote");
 		expect(karelOutline.title).toBe("Karel Java Outline");
 		expect(karelOutline.files).toEqual([
-			{ name: "Algo.java", content: karelStarterCode },
-			{ name: "world.txt", content: karelStarterWorld }
+			{ name: "MyProgram.java", content: karelOutlineStarterCode },
+			{ name: "world.txt", content: karelOutlineWorld }
 		]);
+		expect(karelOutline.files[0]?.content).toContain("public void run()");
+		expect(karelOutline.files[0]?.content).toContain(
+			"frontIsClear() && noBallsPresent()"
+		);
+		expect(karelOutline.files[0]?.content).toContain(
+			"while (frontIsClear())"
+		);
 	});
 
 	it("colors visible bracket pairs using document-wide nesting context", () => {
@@ -3112,16 +3125,27 @@ describe("python IDE project helpers", () => {
 			"export const pythonLevel1OutlineStarterCode"
 		);
 		expect(moduleSource).toContain("export const pgzeroOutlineStarterCode");
+		expect(moduleSource).toContain("export const javaOutlineStarterCode");
+		expect(moduleSource).toContain("export const karelOutlineStarterCode");
+		expect(moduleSource).toContain("export const karelOutlineWorld");
 		expect(moduleSource).toContain("function getOutlineStarterFiles");
 		expect(moduleSource).toContain('if (template === "outline")');
 		expect(pageSource).toContain("Template project");
 		expect(pageSource).toContain("Python Level 1 Outline");
 		expect(pageSource).toContain("PyGame Zero Outline");
+		expect(pageSource).toContain("Java Outline");
+		expect(pageSource).toContain("Karel Java Outline");
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'turtle',\s*'outline'/
 		);
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'pgzero',\s*'outline'/
+		);
+		expect(pageSource).toMatch(
+			/createProjectFromMenu\(\s*'java',\s*'outline'/
+		);
+		expect(pageSource).toMatch(
+			/createProjectFromMenu\(\s*'karel',\s*'outline'/
 		);
 	});
 

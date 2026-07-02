@@ -353,6 +353,40 @@ export const javaStarterCode = `public class Main {
 }
 `;
 
+export const javaOutlineStarterCode = `import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        int score = 0;
+        String name = "Student";
+        ArrayList<String> notes = new ArrayList<>();
+
+        // Prompt, update variables, and call helper methods here.
+        // String answer = input.nextLine();
+        notes.add(makeNote(name, score));
+
+        for (String note : notes) {
+            System.out.println(note);
+        }
+    }
+
+    static String makeNote(String name, int score) {
+        return name + ": " + score;
+    }
+
+    static void actionOne() {
+        // Add an action here.
+    }
+
+    static void actionTwo() {
+        // Add another action here.
+    }
+}
+`;
+
 export const karelStarterCode = `import kareltherobot.UrRobot;
 import kareltherobot.World;
 import kareltherobot.Directions;
@@ -390,6 +424,37 @@ wall 5 5 south
 wall 5 6 south
 wall 5 7 south
 beeper 6 9 1
+`;
+
+export const karelOutlineStarterCode = `public class MyProgram extends SuperKarel {
+    public void run() {
+        if (frontIsClear() && noBallsPresent()) {
+            move();
+        }
+
+        while (frontIsClear()) {
+            move();
+        }
+
+        turnAround();
+    }
+
+    private void turnRight() {
+        turnLeft();
+        turnLeft();
+        turnLeft();
+    }
+
+    private void turnAround() {
+        turnLeft();
+        turnLeft();
+    }
+}
+`;
+
+export const karelOutlineWorld = `rows=5
+cols=5
+beeper 1 4 1
 `;
 
 export const pgzeroOutlineStarterCode = `WIDTH = 640
@@ -600,7 +665,27 @@ function getDemoStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getOutlineStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
-	if (mode === "java" || mode === "karel") return getCourseStarterFiles(mode);
+	if (mode === "java") {
+		return [
+			{
+				name: "Main.java",
+				content: javaOutlineStarterCode
+			}
+		];
+	}
+
+	if (mode === "karel") {
+		return [
+			{
+				name: "MyProgram.java",
+				content: karelOutlineStarterCode
+			},
+			{
+				name: "world.txt",
+				content: karelOutlineWorld
+			}
+		];
+	}
 
 	const files = [
 		{
