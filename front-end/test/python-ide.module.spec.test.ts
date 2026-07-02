@@ -2909,7 +2909,15 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Suggestions");
 		expect(pageSource).toContain("Line wrap");
 		expect(pageSource).toContain("Expanded layout");
+		expect(pageSource).not.toContain("Autosave projects");
+		expect(pageSource).not.toContain("Recommendations as you type");
+		expect(pageSource).toContain("width: min(30rem, calc(100vw - 2rem));");
 		expect(pageSource).toContain("max-height: calc(100vh - 2rem);");
+		expect(pageSource).toContain(
+			".editor-toolbar .ide-settings-panel :where(*)"
+		);
+		expect(pageSource).toContain("padding: 1.15rem;");
+		expect(pageSource).toContain("margin-top: 0.95rem;");
 		expect(pageSource).toContain("font-variant: normal;");
 		expect(pageSource).toContain("text-transform: none;");
 		expect(pageSource).toContain(
