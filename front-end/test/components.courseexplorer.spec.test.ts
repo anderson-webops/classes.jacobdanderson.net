@@ -102,7 +102,7 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("Complete");
 	});
 
-	it("links Python-family courses to the integrated Python IDE", async () => {
+	it("links Python-family courses to the integrated Code IDE", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -162,7 +162,7 @@ describe("CourseExplorer.vue", () => {
 		expect(link?.exists()).toBe(true);
 		const href = link?.attributes("href") ?? "";
 		const query = new URLSearchParams(href.split("?")[1] ?? "");
-		expect(href.startsWith("/python-ide?")).toBe(true);
+		expect(href.startsWith("/ide?")).toBe(true);
 		expect(query.get("course")).toBe("python-level-1");
 		expect(query.get("mode")).toBe("turtle");
 	});
@@ -229,7 +229,7 @@ describe("CourseExplorer.vue", () => {
 		expect(link?.exists()).toBe(true);
 		const href = link?.attributes("href") ?? "";
 		const query = new URLSearchParams(href.split("?")[1] ?? "");
-		expect(href.startsWith("/python-ide?")).toBe(true);
+		expect(href.startsWith("/ide?")).toBe(true);
 		expect(query.get("course")).toBe("python-level-1");
 		expect(query.get("mode")).toBe("turtle");
 		expect(query.get("projectKey")).toBe(

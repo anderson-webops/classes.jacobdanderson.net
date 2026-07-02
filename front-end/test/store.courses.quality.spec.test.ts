@@ -5626,11 +5626,11 @@ describe("course text quality normalization", () => {
 		expect(
 			findItem(javaLevel1!, /Course Launch: Start Java Visually/)
 				.projectLink
-		).toBe("/python-ide?mode=karel");
+		).toBe("/ide?mode=karel");
 		expect(
 			findItem(javaLevel1!, /J1A Project 1: Robot Walkthrough/)
 				.projectLink
-		).toBe("/python-ide?mode=karel");
+		).toBe("/ide?mode=karel");
 		expect(javaLevel1Text).toContain("BlueJ with Carol/Karel");
 		expect(javaLevel1Text).toContain("visible robot world");
 		expect(javaLevel1Text).toContain(

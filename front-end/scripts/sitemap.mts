@@ -7,6 +7,7 @@ export const SITEMAP_EXCLUDED_ROUTES = [
 	"/admin/people",
 	"/admin/student-management",
 	"/course-resource",
+	"/ide",
 	"/profile",
 	"/python-ide",
 	"/wheel"

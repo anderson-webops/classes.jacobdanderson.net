@@ -1,6 +1,6 @@
 const origin = process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderson.net";
 const timeoutMs = Number(process.env.CLASSES_SITE_SMOKE_TIMEOUT_MS || 15000);
-const pageUrl = new URL("/python-ide", origin);
+const pageUrl = new URL("/ide", origin);
 
 async function fetchText(url) {
 	const controller = new AbortController();

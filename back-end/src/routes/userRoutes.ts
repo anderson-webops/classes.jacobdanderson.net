@@ -56,10 +56,10 @@ router.post("/", createUser);
 // Get logged in user communications
 router.get("/loggedin/communications", validUser, getLoggedInUserCommunications);
 
-// Read-only public Python IDE project links created by signed-in students.
+// Read-only public Code IDE project links created by signed-in students.
 router.get("/python-projects/shared/:shareID", getSharedPythonProject);
 
-// Persist logged-in student Python IDE projects. Keep these before the
+// Persist logged-in student Code IDE projects. Keep these before the
 // managed /:userID/python-projects routes so "loggedin" is not parsed as an ID.
 router.get("/loggedin/python-projects", validUser, listPythonProjects);
 router.post("/loggedin/python-projects", validUser, createPythonProject);
@@ -100,7 +100,7 @@ router.put("/:userID/schedule/:sessionID", validTutorOrAdminSession, updateUserS
 router.get("/:userID/session-notes/recent", validTutorOrAdminSession, getUserRecentSessionNotes);
 router.post("/:userID/session-notes", validTutorOrAdminSession, createUserSessionNote);
 
-// Allow tutors and admins to review saved student Python IDE projects without editing student-owned files
+// Allow tutors and admins to review saved student Code IDE projects without editing student-owned files
 router.get("/:userID/python-projects", validTutorOrAdminSession, listManagedPythonProjects);
 router.post("/:userID/python-projects/:projectID/review", validTutorOrAdminSession, createPythonProjectReview);
 router.put("/:userID/python-projects/:projectID/review/:reviewID", validTutorOrAdminSession, updatePythonProjectReview);

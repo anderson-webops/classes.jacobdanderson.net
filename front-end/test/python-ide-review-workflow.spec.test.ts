@@ -6,7 +6,7 @@ function sourceFile(path: string) {
 	return readFileSync(resolve(__dirname, path), "utf8");
 }
 
-describe("Python IDE review workflow wiring", () => {
+describe("Code IDE review workflow wiring", () => {
 	it("keeps staff review copies on managed-project endpoints separate from student saves", () => {
 		const moduleSource = sourceFile("../src/modules/pythonIde.ts");
 
@@ -19,8 +19,8 @@ describe("Python IDE review workflow wiring", () => {
 		expect(moduleSource).toContain('"/users/loggedin/python-project-reviews"');
 	});
 
-	it("renders visible staff copies inside the learner Python IDE without autosave state", () => {
-		const pageSource = sourceFile("../src/components/PythonIdeWorkspace.vue");
+	it("renders visible staff copies inside the learner Code IDE without autosave state", () => {
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 
 		expect(pageSource).toContain("const visibleProjectReviews = ref<PythonIdeProjectReview[]>([]);");
 		expect(pageSource).toContain("fetchVisiblePythonIdeProjectReviews().catch(() => [])");

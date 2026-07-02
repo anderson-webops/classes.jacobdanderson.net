@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from "vue";
+import { onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-const PythonIdeWorkspace = defineAsyncComponent(
-	() => import("@/components/PythonIdeWorkspace.vue")
-);
+const route = useRoute();
+const router = useRouter();
+
+onMounted(() => {
+	router.replace({
+		hash: route.hash,
+		path: "/ide",
+		query: route.query
+	});
+});
 </script>
 
 <template>
-	<PythonIdeWorkspace />
+	<p class="sr-only">Opening the Code IDE.</p>
 </template>

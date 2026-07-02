@@ -42,7 +42,7 @@ function fetchUrl(input: Parameters<typeof fetch>[0]) {
 	return input.url;
 }
 
-describe("Python IDE assets proxy", () => {
+describe("Code IDE assets proxy", () => {
 	afterEach(() => {
 		fetchSpy.mockReset();
 	});

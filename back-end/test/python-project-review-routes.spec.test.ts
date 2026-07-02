@@ -215,7 +215,7 @@ describe("Python project review routes", () => {
 		modelMocks.pythonProjectReviewCreate.mockImplementation(async payload => makeReview(payload));
 	});
 
-	it("lets signed-in students list their own Python IDE projects", async () => {
+	it("lets signed-in students list their own Code IDE projects", async () => {
 		await withUserRoutes(async baseUrl => {
 			const response = await fetch(`${baseUrl}/users/loggedin/python-projects`, {
 				headers: { "x-user-id": studentID.toString() }
@@ -479,7 +479,7 @@ describe("Python project review routes", () => {
 		});
 	});
 
-	it("serves only enabled shared Python IDE project links without a login", async () => {
+	it("serves only enabled shared Code IDE project links without a login", async () => {
 		const shareID = "share_ABC1234567890_xyz";
 		modelMocks.pythonProjectFindOne.mockResolvedValue(
 			makeProject({

@@ -987,7 +987,7 @@ const activeIdeSplitPercent = computed(
 			: defaultCodeSplitPercent)
 );
 const ideGridStyle = computed(() => ({
-	"--python-ide-code-column": `${activeIdeSplitPercent.value}%`
+	"--code-ide-code-column": `${activeIdeSplitPercent.value}%`
 }));
 const drawingCanvasStyle = computed(() => {
 	if (!usesGameCanvas.value) return {};
@@ -1090,11 +1090,11 @@ const selectedProjectShareLink = computed(() => {
 		selectedProject.value?.shared && selectedProject.value.shareID
 			? selectedProject.value.shareID
 			: "";
-	return shareID ? pythonIdeShareUrl(shareID) : "";
+	return shareID ? codeIdeShareUrl(shareID) : "";
 });
 
-function pythonIdeShareUrl(shareID: string) {
-	const sharePath = `/python-ide?share=${encodeURIComponent(shareID)}`;
+function codeIdeShareUrl(shareID: string) {
+	const sharePath = `/ide?share=${encodeURIComponent(shareID)}`;
 	if (typeof window === "undefined") return sharePath;
 	return new URL(sharePath, window.location.origin).toString();
 }
@@ -1404,7 +1404,7 @@ async function importSharedProjectFromRouteIfNeeded(
 			files,
 			sharedSourceID: shareID,
 			starterLabel: "Shared project",
-			starterUrl: pythonIdeShareUrl(shareID),
+			starterUrl: codeIdeShareUrl(shareID),
 			template: "blank",
 			title: `Copy of ${sharedProject.title || "Shared Project"}`
 		});
@@ -5382,12 +5382,12 @@ onBeforeUnmount(() => {
 
 <template>
 	<section
-		class="python-ide-page page-shell page-shell--wide"
-		:class="{ 'python-ide-page--expanded': ideExpanded }"
+		class="code-ide-page page-shell page-shell--wide"
+		:class="{ 'code-ide-page--expanded': ideExpanded }"
 	>
-		<div class="python-ide-hero">
+		<div class="code-ide-hero">
 			<div>
-				<p class="python-ide-eyebrow">Code IDE</p>
+				<p class="code-ide-eyebrow">Code IDE</p>
 				<h1>Code, run, and draw in Python or Java</h1>
 				<p>
 					Build multi-file Python and Java projects, use the Turtle
@@ -5397,26 +5397,26 @@ onBeforeUnmount(() => {
 					worlds.
 				</p>
 			</div>
-			<div class="python-ide-status" aria-live="polite">
+			<div class="code-ide-status" aria-live="polite">
 				<span>{{ saveMessage }}</span>
 				<strong>{{ runMessage }}</strong>
 			</div>
 		</div>
 
-		<div v-if="isLoading" class="python-ide-loading site-surface">
+		<div v-if="isLoading" class="code-ide-loading site-surface">
 			Loading code workspace...
 		</div>
 
 		<div
 			v-else
-			class="python-ide-workspace"
+			class="code-ide-workspace"
 			:class="{ 'is-sidebar-collapsed': sidebarCollapsed }"
 		>
 			<button
 				v-if="sidebarCollapsed"
 				:aria-expanded="!sidebarCollapsed"
 				aria-label="Expand project sidebar"
-				aria-controls="python-ide-sidebar"
+				aria-controls="code-ide-sidebar"
 				class="sidebar-collapse-toggle sidebar-collapse-toggle--rail"
 				title="Expand project sidebar"
 				type="button"
@@ -5426,8 +5426,8 @@ onBeforeUnmount(() => {
 			</button>
 			<aside
 				v-else
-				id="python-ide-sidebar"
-				class="python-ide-sidebar"
+				id="code-ide-sidebar"
+				class="code-ide-sidebar"
 				aria-label="Code projects and files"
 			>
 				<div class="sidebar-block">
@@ -5437,7 +5437,7 @@ onBeforeUnmount(() => {
 							<button
 								:aria-expanded="!sidebarCollapsed"
 								aria-label="Collapse project sidebar"
-								aria-controls="python-ide-sidebar"
+								aria-controls="code-ide-sidebar"
 								class="sidebar-collapse-toggle sidebar-collapse-toggle--inline"
 								title="Collapse project sidebar"
 								type="button"
@@ -5763,7 +5763,7 @@ onBeforeUnmount(() => {
 					<div class="file-tools-footer">
 						<button
 							:aria-expanded="showFileTools"
-							aria-controls="python-ide-file-tools-panel"
+							aria-controls="code-ide-file-tools-panel"
 							aria-label="Add or import project files"
 							class="file-tool-toggle"
 							title="Add or import project files"
@@ -5778,7 +5778,7 @@ onBeforeUnmount(() => {
 					</div>
 					<div
 						v-if="showFileTools"
-						id="python-ide-file-tools-panel"
+						id="code-ide-file-tools-panel"
 						class="file-tools-panel"
 					>
 						<div class="new-file-row">
@@ -5810,17 +5810,17 @@ onBeforeUnmount(() => {
 				</div>
 			</aside>
 
-			<main v-if="selectedProject" class="python-ide-main">
+			<main v-if="selectedProject" class="code-ide-main">
 				<div class="editor-toolbar">
 					<div class="project-title-field">
 						<label
 							class="project-title-label"
-							for="python-ide-project-title"
+							for="code-ide-project-title"
 						>
 							Project name
 						</label>
 						<input
-							id="python-ide-project-title"
+							id="code-ide-project-title"
 							class="project-title-input"
 							:value="selectedProject.title"
 							type="text"
@@ -5831,7 +5831,7 @@ onBeforeUnmount(() => {
 						<div ref="ideSettingsRef" class="ide-settings">
 							<button
 								:aria-expanded="showIdeSettings"
-								aria-controls="python-ide-settings-panel"
+								aria-controls="code-ide-settings-panel"
 								aria-label="Code IDE settings"
 								class="ide-settings-trigger"
 								title="Code IDE settings"
@@ -5846,7 +5846,7 @@ onBeforeUnmount(() => {
 							</button>
 							<div
 								v-if="showIdeSettings"
-								id="python-ide-settings-panel"
+								id="code-ide-settings-panel"
 								class="ide-settings-panel"
 								role="dialog"
 								aria-label="Code IDE settings"
@@ -6333,12 +6333,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.python-ide-page {
+.code-ide-page {
 	width: min(1680px, calc(100% - clamp(2rem, 4vw, 4rem)));
 	gap: 1.25rem;
-	--python-ide-toolbar-control-size: 3.5rem;
-	--python-ide-toolbar-button-width: 6.75rem;
-	--python-ide-toolbar-control-radius: 16px;
+	--code-ide-toolbar-control-size: 3.5rem;
+	--code-ide-toolbar-button-width: 6.75rem;
+	--code-ide-toolbar-control-radius: 16px;
 	--python-code-bg: #f8fafc;
 	--python-code-ink: #1e293b;
 	--python-code-muted: #64748b;
@@ -6369,33 +6369,33 @@ onBeforeUnmount(() => {
 	--syntax-bracket-pair-6: #0891b2;
 }
 
-.python-ide-page {
+.code-ide-page {
 	letter-spacing: 0;
 }
 
-.python-ide-page--expanded {
+.code-ide-page--expanded {
 	width: min(100% - 0.75rem, 100vw);
 	gap: 0.75rem;
 }
 
-.python-ide-page--expanded .python-ide-hero {
+.code-ide-page--expanded .code-ide-hero {
 	display: none;
 }
 
-.python-ide-page--expanded .python-ide-workspace {
+.code-ide-page--expanded .code-ide-workspace {
 	min-height: calc(100vh - 1.5rem);
 }
 
-.python-ide-page--expanded .python-ide-main {
+.code-ide-page--expanded .code-ide-main {
 	padding: 0.75rem;
 }
 
-.python-ide-page :is(section, p, label, input, textarea, select, button) {
+.code-ide-page :is(section, p, label, input, textarea, select, button) {
 	margin: 0;
 	letter-spacing: 0;
 }
 
-.python-ide-hero {
+.code-ide-hero {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) auto;
 	gap: 1.25rem;
@@ -6411,7 +6411,7 @@ onBeforeUnmount(() => {
 	box-shadow: var(--shadow-soft);
 }
 
-.python-ide-eyebrow,
+.code-ide-eyebrow,
 .sidebar-heading,
 .panel-header,
 .editor-toolbar > span,
@@ -6423,13 +6423,13 @@ onBeforeUnmount(() => {
 	color: #0f766e;
 }
 
-.python-ide-hero h1 {
+.code-ide-hero h1 {
 	margin-top: 0.35rem;
 	font-size: clamp(2.4rem, 4vw, 4.5rem);
 	color: var(--color-ink-strong);
 }
 
-.python-ide-hero p:not(.python-ide-eyebrow) {
+.code-ide-hero p:not(.code-ide-eyebrow) {
 	max-width: 58rem;
 	margin-top: 0.75rem;
 	color: var(--color-ink-soft);
@@ -6437,7 +6437,7 @@ onBeforeUnmount(() => {
 	line-height: 1.7;
 }
 
-.python-ide-status {
+.code-ide-status {
 	min-width: 14rem;
 	display: grid;
 	gap: 0.35rem;
@@ -6448,12 +6448,12 @@ onBeforeUnmount(() => {
 	color: var(--color-ink-soft);
 }
 
-.python-ide-status strong {
+.code-ide-status strong {
 	color: var(--color-ink-strong);
 	font-size: 1.1rem;
 }
 
-html.dark .python-ide-hero {
+html.dark .code-ide-hero {
 	background: linear-gradient(
 		135deg,
 		rgba(8, 32, 43, 0.98),
@@ -6461,20 +6461,20 @@ html.dark .python-ide-hero {
 	);
 }
 
-html.dark .python-ide-hero h1 {
+html.dark .code-ide-hero h1 {
 	color: #f8fbff;
 }
 
-html.dark .python-ide-hero p:not(.python-ide-eyebrow) {
+html.dark .code-ide-hero p:not(.code-ide-eyebrow) {
 	color: #c8dce6;
 }
 
-html.dark .python-ide-status {
+html.dark .code-ide-status {
 	background: rgba(8, 17, 31, 0.8);
 	color: #c8dce6;
 }
 
-html.dark .python-ide-status strong {
+html.dark .code-ide-status strong {
 	color: #f8fbff;
 }
 
@@ -6514,7 +6514,7 @@ html.dark .ide-setting-storage small {
 	color: #c8dce6;
 }
 
-html.dark .python-ide-page {
+html.dark .code-ide-page {
 	--python-code-bg: #07111f;
 	--python-code-ink: #d7fbe8;
 	--python-code-muted: #94a3b8;
@@ -6553,30 +6553,30 @@ html.dark .karel-empty {
 	color: #c8dce6;
 }
 
-.python-ide-loading,
-.python-ide-workspace {
+.code-ide-loading,
+.code-ide-workspace {
 	min-height: 42rem;
 }
 
-.python-ide-loading {
+.code-ide-loading {
 	display: grid;
 	place-items: center;
 	color: var(--color-ink-soft);
 }
 
-.python-ide-workspace {
+.code-ide-workspace {
 	display: grid;
 	grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
 	gap: 1rem;
 	align-items: stretch;
 }
 
-.python-ide-workspace.is-sidebar-collapsed {
+.code-ide-workspace.is-sidebar-collapsed {
 	grid-template-columns: auto minmax(0, 1fr);
 }
 
-.python-ide-sidebar,
-.python-ide-main,
+.code-ide-sidebar,
+.code-ide-main,
 .code-panel,
 .result-panel {
 	border: 1px solid var(--color-border);
@@ -6585,7 +6585,7 @@ html.dark .karel-empty {
 	box-shadow: var(--shadow-soft);
 }
 
-.python-ide-sidebar {
+.code-ide-sidebar {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
@@ -6633,7 +6633,7 @@ html.dark .karel-empty {
 	content: "";
 }
 
-.python-ide-workspace.is-sidebar-collapsed .sidebar-collapse-icon::before {
+.code-ide-workspace.is-sidebar-collapsed .sidebar-collapse-icon::before {
 	right: 0.22rem;
 	left: auto;
 }
@@ -7042,7 +7042,7 @@ html.dark .file-delete:disabled::after {
 }
 
 .run-control {
-	width: var(--python-ide-toolbar-button-width);
+	width: var(--code-ide-toolbar-button-width);
 	justify-content: center;
 	text-align: center;
 }
@@ -7058,7 +7058,7 @@ html.dark .file-delete:disabled::after {
 	background: #991b1b;
 }
 
-.python-ide-main {
+.code-ide-main {
 	min-width: 0;
 	display: grid;
 	gap: 1rem;
@@ -7105,20 +7105,20 @@ html.dark .file-delete:disabled::after {
 	gap: 0.65rem;
 	align-items: stretch;
 	justify-content: flex-end;
-	height: var(--python-ide-toolbar-control-size);
+	height: var(--code-ide-toolbar-control-size);
 }
 
 .project-title-input,
 .editor-actions > .site-button,
 .ide-settings-trigger {
 	box-sizing: border-box;
-	height: var(--python-ide-toolbar-control-size);
-	min-height: var(--python-ide-toolbar-control-size);
-	border-radius: var(--python-ide-toolbar-control-radius);
+	height: var(--code-ide-toolbar-control-size);
+	min-height: var(--code-ide-toolbar-control-size);
+	border-radius: var(--code-ide-toolbar-control-radius);
 }
 
 .editor-actions > .site-button {
-	width: var(--python-ide-toolbar-button-width);
+	width: var(--code-ide-toolbar-button-width);
 	padding: 0 1.2rem;
 	line-height: 1;
 }
@@ -7206,9 +7206,9 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-settings-trigger {
-	width: var(--python-ide-toolbar-control-size);
-	height: var(--python-ide-toolbar-control-size);
-	flex: 0 0 var(--python-ide-toolbar-control-size);
+	width: var(--code-ide-toolbar-control-size);
+	height: var(--code-ide-toolbar-control-size);
+	flex: 0 0 var(--code-ide-toolbar-control-size);
 	padding: 0;
 	display: inline-flex;
 	align-items: center;
@@ -7400,25 +7400,25 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-grid {
-	--python-ide-splitter-width: 0.55rem;
+	--code-ide-splitter-width: 0.55rem;
 	min-height: 38rem;
 	height: clamp(38rem, 76vh, 54rem);
 	display: grid;
 	grid-template-columns:
-		minmax(18rem, var(--python-ide-code-column, 54%))
-		var(--python-ide-splitter-width) minmax(24rem, 1fr);
+		minmax(18rem, var(--code-ide-code-column, 54%))
+		var(--code-ide-splitter-width) minmax(24rem, 1fr);
 	column-gap: 0.3rem;
 }
 
 .ide-grid--drawing {
 	height: clamp(40rem, 78vh, 56rem);
 	grid-template-columns:
-		minmax(16rem, var(--python-ide-code-column, 42%))
-		var(--python-ide-splitter-width) minmax(28rem, 1fr);
+		minmax(16rem, var(--code-ide-code-column, 42%))
+		var(--code-ide-splitter-width) minmax(28rem, 1fr);
 }
 
-.python-ide-page--expanded .ide-grid,
-.python-ide-page--expanded .ide-grid--drawing {
+.code-ide-page--expanded .ide-grid,
+.code-ide-page--expanded .ide-grid--drawing {
 	height: clamp(42rem, calc(100vh - 7.5rem), 72rem);
 }
 
@@ -7441,8 +7441,8 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-splitter {
-	width: var(--python-ide-splitter-width);
-	min-width: var(--python-ide-splitter-width);
+	width: var(--code-ide-splitter-width);
+	min-width: var(--code-ide-splitter-width);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -7912,7 +7912,7 @@ html.dark .editor-shortcuts ul {
 }
 
 @media (max-width: 1180px) {
-	.python-ide-workspace,
+	.code-ide-workspace,
 	.ide-grid {
 		grid-template-columns: 1fr;
 	}
@@ -7934,11 +7934,11 @@ html.dark .editor-shortcuts ul {
 		height: clamp(30rem, 68vh, 42rem);
 	}
 
-	.python-ide-workspace.is-sidebar-collapsed {
+	.code-ide-workspace.is-sidebar-collapsed {
 		grid-template-columns: auto minmax(0, 1fr);
 	}
 
-	.python-ide-sidebar {
+	.code-ide-sidebar {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		align-items: start;
@@ -7946,13 +7946,13 @@ html.dark .editor-shortcuts ul {
 }
 
 @media (max-width: 820px) {
-	.python-ide-page {
+	.code-ide-page {
 		width: min(100% - 1.25rem, 1680px);
 	}
 
-	.python-ide-hero,
+	.code-ide-hero,
 	.editor-toolbar,
-	.python-ide-sidebar {
+	.code-ide-sidebar {
 		grid-template-columns: 1fr;
 	}
 
@@ -7976,7 +7976,7 @@ html.dark .editor-shortcuts ul {
 		flex: 1 1 0;
 	}
 
-	.python-ide-status {
+	.code-ide-status {
 		min-width: 0;
 	}
 

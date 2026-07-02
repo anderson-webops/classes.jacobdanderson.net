@@ -335,7 +335,7 @@ describe("Python project routes", () => {
 		});
 	});
 
-	it("keeps a larger JSON parser limit scoped to Python IDE project routes", () => {
+	it("keeps a larger JSON parser limit scoped to Code IDE project routes", () => {
 		const serverSource = readFileSync(resolve(__dirname, "../src/server.ts"), "utf8");
 
 		expect(serverSource).toContain("PYTHON_IDE_PROJECT_BODY_LIMIT");

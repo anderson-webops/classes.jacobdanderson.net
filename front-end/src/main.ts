@@ -34,7 +34,7 @@ export const createApp = ViteSSG(
 		ctx.app.component("font-awesome-icon", FontAwesomeIcon);
 
 		// Auto-install only app plugin modules. Broad eager globs pull feature
-		// modules like the Python IDE runtime into the startup bundle.
+		// modules like the IDE runtime into the startup bundle.
 		Object.values(
 			import.meta.glob<UserModule>(
 				[
