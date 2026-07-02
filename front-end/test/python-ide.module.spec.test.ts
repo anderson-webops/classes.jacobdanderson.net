@@ -2906,7 +2906,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("function updateEditorLineWrapPreference");
 		expect(pageSource).toContain("function updateExpandedIdePreference");
 		expect(pageSource).toContain("Autosave");
-		expect(pageSource).toContain("Recommendations");
+		expect(pageSource).toContain("Suggestions");
 		expect(pageSource).toContain("Line wrap");
 		expect(pageSource).toContain("Expanded layout");
 		expect(pageSource).toContain(
