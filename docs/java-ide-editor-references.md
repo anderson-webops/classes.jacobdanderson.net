@@ -36,8 +36,11 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `Math` helpers, line-based `Scanner` reads from the IDE input box, basic
   `if` / `else if` / `else` decisions, bounded `for` / `while` loops, void
   helper calls, and simple static methods with parameters, `return` values,
-  arithmetic use, boolean helpers, and capped recursion. It remains a browser
-  teaching preview rather than a compiler.
+  arithmetic use, boolean helpers, capped recursion, one-dimensional arrays,
+  `Arrays.toString(...)`, `array.length`, indexed array access and assignment,
+  and beginner `ArrayList` calls such as `add`, `get`, `set`, `remove`,
+  `size`, and `isEmpty`. It remains a browser teaching preview rather than a
+  compiler.
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/) is a useful
   comparison point for browser editor UX, but its deeper Java IntelliSense path
   usually implies a language-server architecture. That is intentionally outside
