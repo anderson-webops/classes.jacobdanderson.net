@@ -94,6 +94,11 @@ interface JavaConsoleOutputState {
 	stdout: string[];
 }
 
+interface JavaMapEntry {
+	key: JavaConsoleValue;
+	value: JavaConsoleValue;
+}
+
 interface JavaConsoleIndexForLoop {
 	body: string;
 	condition: string;
@@ -131,6 +136,10 @@ type JavaConsoleValue =
 	| {
 			type: "char";
 			value: string;
+	  }
+	| {
+			type: "map";
+			value: JavaMapEntry[];
 	  }
 	| {
 			type: "null";
@@ -541,6 +550,33 @@ function executeJavaCollectionMutationStatement(
 		if (value?.type !== "array") return false;
 		value.value.sort(compareJavaArrayValuesForSort);
 		return true;
+	}
+
+	const mapMutation = statement.match(
+		/^([A-Z_]\w*)\.(put|putIfAbsent|remove|clear)\s*\(([\s\S]*)\)$/i
+	);
+	if (mapMutation?.[1] && mapMutation[2]) {
+		const map = context.variables.get(mapMutation[1]);
+		if (map?.type === "map") {
+			const args = splitJavaArguments(mapMutation[3] ?? "");
+			const method = mapMutation[2].toLowerCase();
+			if (method === "clear") {
+				map.value.splice(0);
+				return true;
+			}
+			const key = evaluateJavaExpression(args[0] ?? "", context, output);
+			if (method === "remove") {
+				removeJavaMapEntry(map, key);
+				return true;
+			}
+			const value = evaluateJavaExpression(
+				args[1] ?? "",
+				context,
+				output
+			);
+			setJavaMapEntry(map, key, value, method === "putifabsent");
+			return true;
+		}
 	}
 
 	const match = statement.match(
@@ -1234,6 +1270,11 @@ function evaluateJavaCollectionExpression(
 	);
 	if (arrayList) return javaArrayListValue();
 
+	const hashMap = expression.match(
+		/^new\s+HashMap(?:\s*<[^>]*>)?\s*\(\s*\)$/i
+	);
+	if (hashMap) return javaMapValue();
+
 	const arraysCopyOf = expression.match(/^Arrays\.copyOf\s*\(([\s\S]*)\)$/i);
 	if (arraysCopyOf?.[1]) {
 		const args = splitJavaArguments(arraysCopyOf[1]);
@@ -1258,7 +1299,9 @@ function evaluateJavaCollectionExpression(
 		return {
 			type: "string",
 			value:
-				value.type === "array" || value.type === "arrayList"
+				value.type === "array" ||
+				value.type === "arrayList" ||
+				value.type === "map"
 					? javaCollectionToString(value)
 					: javaValueToString(value)
 		};
@@ -1292,30 +1335,66 @@ function evaluateJavaCollectionExpression(
 	const listMethod = expression.match(
 		/^([A-Z_]\w*)\.(get|size|isEmpty|contains)\s*\(([^()]*)\)$/i
 	);
-	if (!listMethod?.[1] || !listMethod[2]) return null;
-	const value = context?.variables.get(listMethod[1]);
-	if (value?.type !== "arrayList") return null;
-	const method = listMethod[2].toLowerCase();
+	if (listMethod?.[1] && listMethod[2]) {
+		const value = context?.variables.get(listMethod[1]);
+		if (value?.type === "arrayList") {
+			const method = listMethod[2].toLowerCase();
+			if (method === "size")
+				return { type: "number", value: value.value.length };
+			if (method === "isempty") {
+				return { type: "boolean", value: value.value.length === 0 };
+			}
+			if (method === "contains") {
+				const target = evaluateJavaExpression(
+					listMethod[3] ?? "",
+					context,
+					output
+				);
+				return {
+					type: "boolean",
+					value: value.value.some(item =>
+						javaValuesAreEqual(item, target)
+					)
+				};
+			}
+			return (
+				value.value[
+					javaExpressionToIndex(listMethod[3] ?? "0", context, output)
+				] ?? { type: "null", value: null }
+			);
+		}
+	}
+
+	const mapMethod = expression.match(
+		/^([A-Z_]\w*)\.(get|containsKey|getOrDefault|keySet|values|size|isEmpty)\s*\(([^()]*)\)$/i
+	);
+	if (!mapMethod?.[1] || !mapMethod[2]) return null;
+	const value = context?.variables.get(mapMethod[1]);
+	if (value?.type !== "map") return null;
+	const method = mapMethod[2].toLowerCase();
 	if (method === "size") return { type: "number", value: value.value.length };
 	if (method === "isempty") {
 		return { type: "boolean", value: value.value.length === 0 };
 	}
-	if (method === "contains") {
-		const target = evaluateJavaExpression(
-			listMethod[3] ?? "",
-			context,
-			output
-		);
-		return {
-			type: "boolean",
-			value: value.value.some(item => javaValuesAreEqual(item, target))
-		};
+	if (method === "keyset") {
+		return javaArrayListValue(value.value.map(entry => entry.key));
 	}
-	return (
-		value.value[
-			javaExpressionToIndex(listMethod[3] ?? "0", context, output)
-		] ?? { type: "null", value: null }
-	);
+	if (method === "values") {
+		return javaArrayListValue(value.value.map(entry => entry.value));
+	}
+	const args = splitJavaArguments(mapMethod[3] ?? "");
+	const key = evaluateJavaExpression(args[0] ?? "", context, output);
+	const entry = findJavaMapEntry(value, key);
+	if (method === "containskey") {
+		return { type: "boolean", value: Boolean(entry) };
+	}
+	if (method === "getordefault") {
+		return (
+			entry?.value ??
+			evaluateJavaExpression(args[1] ?? "", context, output)
+		);
+	}
+	return entry?.value ?? { type: "null", value: null };
 }
 
 function evaluateJavaArrayLiteral(
@@ -1335,8 +1414,13 @@ function evaluateJavaArrayLiteral(
 }
 
 function javaValueToString(value: JavaConsoleValue): string {
-	if (value.type === "array" || value.type === "arrayList")
+	if (
+		value.type === "array" ||
+		value.type === "arrayList" ||
+		value.type === "map"
+	) {
 		return javaCollectionToString(value);
+	}
 	if (value.type === "null") return "null";
 	return String(value.value);
 }
@@ -1344,15 +1428,28 @@ function javaValueToString(value: JavaConsoleValue): string {
 function javaValueToNumber(value: JavaConsoleValue): number {
 	if (value.type === "number") return value.value;
 	if (value.type === "char") return value.value.codePointAt(0) ?? 0;
-	if (value.type === "array" || value.type === "arrayList")
+	if (
+		value.type === "array" ||
+		value.type === "arrayList" ||
+		value.type === "map"
+	) {
 		return value.value.length;
+	}
 	const parsed = Number(javaValueToString(value).trim());
 	return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function javaCollectionToString(
-	value: Extract<JavaConsoleValue, { type: "array" | "arrayList" }>
+	value: Extract<JavaConsoleValue, { type: "array" | "arrayList" | "map" }>
 ): string {
+	if (value.type === "map") {
+		return `{${value.value
+			.map(
+				entry =>
+					`${javaValueToString(entry.key)}=${javaValueToString(entry.value)}`
+			)
+			.join(", ")}}`;
+	}
 	return `[${value.value.map(javaValueToString).join(", ")}]`;
 }
 
@@ -1448,6 +1545,44 @@ function javaArrayListValue(value: JavaConsoleValue[] = []): JavaConsoleValue {
 		type: "arrayList",
 		value
 	};
+}
+
+function javaMapValue(value: JavaMapEntry[] = []): JavaConsoleValue {
+	return {
+		type: "map",
+		value
+	};
+}
+
+function findJavaMapEntry(
+	map: Extract<JavaConsoleValue, { type: "map" }>,
+	key: JavaConsoleValue
+) {
+	return map.value.find(entry => javaValuesAreEqual(entry.key, key));
+}
+
+function setJavaMapEntry(
+	map: Extract<JavaConsoleValue, { type: "map" }>,
+	key: JavaConsoleValue,
+	value: JavaConsoleValue,
+	onlyIfAbsent = false
+) {
+	const entry = findJavaMapEntry(map, key);
+	if (entry) {
+		if (!onlyIfAbsent) entry.value = value;
+		return;
+	}
+	map.value.push({ key, value });
+}
+
+function removeJavaMapEntry(
+	map: Extract<JavaConsoleValue, { type: "map" }>,
+	key: JavaConsoleValue
+) {
+	const index = map.value.findIndex(entry =>
+		javaValuesAreEqual(entry.key, key)
+	);
+	if (index >= 0) map.value.splice(index, 1);
 }
 
 function defaultJavaValueForType(type: string): JavaConsoleValue {

@@ -659,6 +659,52 @@ public class Main {
 		]);
 	});
 
+	it("previews beginner Java HashMaps with core map methods", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.HashMap;
+
+public class Main {
+    public static void main(String[] args) {
+        HashMap<String, Integer> counts = new HashMap<>();
+        counts.put("Ada", 2);
+        counts.put("Linus", 1);
+        counts.putIfAbsent("Ada", 9);
+        counts.putIfAbsent("Grace", 3);
+
+        System.out.println(counts.get("Ada"));
+        System.out.println(counts.getOrDefault("Karel", 0));
+        System.out.println(counts.containsKey("Grace"));
+        System.out.println(counts.size());
+        System.out.println(counts.keySet());
+        System.out.println(counts.values());
+        System.out.println(counts);
+        counts.remove("Linus");
+        counts.clear();
+        System.out.println(counts.isEmpty());
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual([
+			"2",
+			"0",
+			"true",
+			"3",
+			"[Ada, Linus, Grace]",
+			"[2, 1, 3]",
+			"{Ada=2, Linus=1, Grace=3}",
+			"true"
+		]);
+	});
+
 	it("previews beginner Java enhanced for loops over arrays and ArrayLists", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
