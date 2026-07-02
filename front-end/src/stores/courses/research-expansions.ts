@@ -712,7 +712,7 @@ const pythonProfile: ResearchExpansionProfile = {
 		"Text analyzer with word frequencies and stop words.",
 		"CLI flashcard trainer.",
 		"Recursive puzzle solver.",
-		"Object-oriented game model without graphics."
+		"Object-oriented model-only game."
 	],
 	assessments: [
 		"Write function-level tests for normal and edge cases.",
@@ -832,7 +832,7 @@ const pythonLevel3Profile: ResearchExpansionProfile = {
 		"Search benchmark over generated and file-backed data.",
 		"Sorting visualizer or logging harness.",
 		"Mini data-structure library with tests.",
-		"Object-oriented game or simulation model without graphics."
+		"Object-oriented model-only game or simulation."
 	],
 	assessments: [
 		"Trace recursive calls and identify the base case.",
@@ -1196,7 +1196,7 @@ const javaProfile: ResearchExpansionProfile = {
 	priority: "soon",
 	sources: ["College Board AP CSA", "CSTA K-12 Standards"],
 	gaps: [
-		"Keep Java with Graphics and Java without Graphics coherent while sharing a strong core.",
+		"Keep optional graphics, service, and AP-style Java work coherent inside the Level 1-3 sequence.",
 		"Make advanced Java sufficient after C++ Level 3.",
 		"Do not treat AP CSA as the only advanced Java path."
 	],
@@ -1959,8 +1959,6 @@ export const researchBackedExpansionProfiles: Record<
 	"java-level-1": javaProfile,
 	"java-level-2": javaProfile,
 	"java-level-3": javaProfile,
-	"java-with-graphics": javaProfile,
-	"java-without-graphics": javaProfile,
 	"javascript-level-1-javascript-superstar": javaScriptProfile,
 	"javascript-level-2-javascript-master": javaScriptProfile,
 	"linux-systems": linuxProfile,

@@ -5482,11 +5482,7 @@ function extensionSubject(context: CourseTextContext) {
 		return itemSubject;
 	}
 
-	if (
-		isCheckInContext(context) ||
-		context.courseId === "java-without-graphics" ||
-		context.courseId === "java-with-graphics"
-	) {
+	if (isCheckInContext(context)) {
 		return withCourseContext(context.course.name, context.module.title);
 	}
 

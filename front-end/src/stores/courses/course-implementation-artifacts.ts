@@ -72,10 +72,6 @@ export const courseContentOnlySourcePolicies: Record<string, string> = {
 		"Content and media course. Source parity means every lab-style activity has a remote simulation/data alternative and no required household chemistry materials.",
 	"intro-to-physics":
 		"Content and media course. Source parity means every lab-style activity has a simulation, graph dataset, or paper-model alternative.",
-	"java-with-graphics":
-		"Composed Java track. Source parity is inherited from Java Level 1, Java Level 2, Java Level 3, and the graphics track notes in the catalog.",
-	"java-without-graphics":
-		"Composed Java track. Source parity is inherited from Java Level 1, Java Level 2, and Java Level 3.",
 	"javascript-level-1-javascript-superstar":
 		"Legacy/catalog-owned JavaScript course. Keep project specs in the catalog until a JavaScript source repo is created.",
 	"javascript-level-2-javascript-master":
@@ -636,14 +632,6 @@ const boundaryOverrides: Record<string, string[]> = {
 	"java-level-3": [
 		"Owns modern Java application design, streams, NIO, JUnit, service/plugin architecture, and larger projects."
 	],
-	"java-without-graphics": [
-		"Routes advanced Java work into services, data processing, concurrency, testing, and architecture.",
-		"Default pathway after strong post-C++ preparation."
-	],
-	"java-with-graphics": [
-		"Routes motivated Java work into JavaFX/event-driven projects after shared Java core.",
-		"Graphics is an application branch, not a substitute for modern Java core."
-	],
 	"unity-game-development": [
 		"Uses full Unity project workflow with scenes, settings, packages, assets, tests, attribution, and reproducible builds.",
 		"Targets small, shippable, portfolio-friendly 2D vertical slices."
@@ -656,13 +644,8 @@ const capstoneOverrides: Record<string, string[]> = {
 		"Recommended defaults: local document search, external sort pipeline, puzzle solver suite, route planner, or simplified compressor."
 	],
 	"java-level-3": [
-		"Modern Java application with records/classes, collections or streams, file/API boundary, JUnit tests, and architecture review."
-	],
-	"java-without-graphics": [
-		"REST-like service, plugin-based processing pipeline, filesystem indexer, or concurrent crawler/downloader with tests."
-	],
-	"java-with-graphics": [
-		"JavaFX dashboard, simulation viewer, turn-based board game, or graph/pathfinding visualizer with model-view separation."
+		"Modern Java application with records/classes, collections or streams, file/API boundary, JUnit tests, and architecture review.",
+		"Recommended defaults: filesystem indexer, plugin-based processing pipeline, CLI inventory service, JavaFX dashboard, simulation viewer, or graph/pathfinding visualizer with model-view separation."
 	],
 	"unity-game-development": [
 		"Small Unity 2D vertical slice with title/play/fail-or-win/restart flow, tests or smoke checks, build profile, and asset attribution."
@@ -2648,6 +2631,26 @@ function addJavaBridgeModernModule(courseId: string, course: RawCourse) {
 					title: "Extension Architecture",
 					content:
 						"**Concept path:** ServiceLoader, explicit factories, or plugin-style registries are useful only when the project has multiple behaviors worth swapping. Architecture is justified by the change story, not by pattern vocabulary. A useful extension point has a stable interface, at least two implementations, and a small driver that does not need to know each implementation's internals.\n\n**Design test:** Before adding an extension mechanism, name the future change it supports. Good examples include adding a new file parser, report formatter, scoring rule, command, or validation strategy. Weak examples are extensions that only rename a class or move the same hard-coded conditional into a different file.\n\n**Evidence target:** Adding a new processor, command, or report type does not require rewriting the application driver."
+				},
+				{
+					title: "Service-First Application Scope",
+					content:
+						"**Concept path:** Some Java Level 3 projects keep the UI minimal and put effort into model-layer design, command-line workflows, file I/O, validation, tests, and maintainable package boundaries. This is a good fit when the goal is backend tools, data processing, AP-plus Java depth, or systems-adjacent application work.\n\n**Scope rules:** Put business rules in services or model classes, not in terminal prompts. Keep file loaders separate from validation and reporting. Define command behavior for normal input, missing data, malformed data, and repeated operations. The CLI exposes the model, and it is not the only place where the model can run.\n\n**Evidence target:** The visible behavior can be tested without clicking through an interface."
+				},
+				{
+					title: "Persistence and Validation",
+					content:
+						"**Concept path:** Use records/classes for data, services for behavior, repositories or loaders for persistence, and tests for expected behavior. Keep validation close to input boundaries so the rest of the program can rely on cleaner data.\n\n**Validation path:** Parse raw text into a typed shape, validate required fields and ranges, report row-level or command-level errors, and pass only clean values into the service layer. Persistence code preserves enough information to reload the same state and handles missing files or corrupt rows deliberately.\n\n**Evidence target:** The same model can be exercised by tests, a CLI, or a later UI without duplicating business logic."
+				},
+				{
+					title: "Event-driven UI Scope",
+					content:
+						"**Concept path:** Other Java Level 3 projects add JavaFX scenes, controls, layout, events, observable state, background-work boundaries, and persistence. Graphics are used to practice architecture and feedback loops, not to avoid core Java design.\n\n**UI architecture:** Define the model state before building controls. Keep event handlers short: read input, call model or service behavior, then render the result or error. Use observable state only where the view needs to react. Long-running or file-backed work has a clear boundary so the interface remains predictable.\n\n**Evidence target:** UI code delegates meaningful behavior to model or service classes that can be tested separately."
+				},
+				{
+					title: "Event-driven State",
+					content:
+						"**Concept path:** Treat each user action as a state transition. Define the starting state, user event, model change, rendered result, and error/empty state before adding visual polish. This keeps JavaFX work from becoming disconnected button wiring and makes it possible to test model behavior outside the view.\n\n**State trace:** For each important button or control, write the before-state, event, validation rule, model update, and rendered after-state. This trace prevents UI code from hiding business rules inside anonymous event handlers.\n\n**Evidence target:** A normal click path, an empty/invalid path, and one persistence or refresh path are verified."
 				}
 			],
 			supplementalProjects: [
@@ -2660,58 +2663,24 @@ function addJavaBridgeModernModule(courseId: string, course: RawCourse) {
 					title: "Java Level 3 Project: Service Pipeline",
 					content:
 						"**Project goal:** Build a plugin-style processor using interfaces, packages, ServiceLoader or explicit factories, and tests. The pipeline has a clear input object, processing contract, output object, and registration mechanism so new processors can be added deliberately.\n\n**Required structure:** Define the processor interface first, implement at least two processors with different behavior, and keep registration separate from processing. The driver selects or iterates processors without depending on their concrete class details.\n\n**Completion checks:**\n- Interface and implementation roles are separate.\n- Adding a new processor does not require rewriting the core loop.\n- The work explains why this is not just inheritance for its own sake."
-				}
-			]
-		},
-		"java-without-graphics": {
-			title: "Java Without Graphics: Application Services Track",
-			curriculum: [
-				{
-					title: "Service-First Scope",
-					content:
-						"**Concept path:** This track keeps the UI minimal and puts effort into model-layer design, command-line workflows, file I/O, validation, tests, and maintainable package boundaries. It is a better fit when the goal is backend, tools, data processing, or AP-plus Java depth.\n\n**Scope rules:** Put business rules in services or model classes, not in terminal prompts. Keep file loaders separate from validation and reporting. Define command behavior for normal input, missing data, malformed data, and repeated operations. The CLI exposes the model, and it is not the only place where the model can run.\n\n**Evidence target:** The visible behavior can be tested without clicking through a graphical interface."
 				},
 				{
-					title: "Persistence and Validation",
-					content:
-						"**Concept path:** Use records/classes for data, services for behavior, repositories or loaders for persistence, and tests for expected behavior. Keep validation close to input boundaries so the rest of the program can rely on cleaner data.\n\n**Validation path:** Parse raw text into a typed shape, validate required fields and ranges, report row-level or command-level errors, and pass only clean values into the service layer. Persistence code preserves enough information to reload the same state and handles missing files or corrupt rows deliberately.\n\n**Evidence target:** The same model can be exercised by tests, a CLI, or a later UI without duplicating business logic."
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "No-Graphics Java Project: CLI Inventory Service",
+					title: "Java Level 3 Project: CLI Inventory Service",
 					content:
 						"**Project goal:** Build a command-line inventory or library manager with records/classes, validation, file persistence, and tests. The CLI is a thin shell over a testable model/service layer, not the place where all state and business rules are hidden.\n\n**Required structure:** Represent stored items with a record or class, route commands through a service object, and isolate persistence behind load/save methods. The terminal runner translates text commands into service calls and does not own the inventory rules.\n\n**Completion checks:**\n- Add, update, search, save, and load paths are covered.\n- Invalid commands and malformed saved data have defined outcomes.\n- The model layer can be tested without terminal input."
 				},
 				{
-					title: "No-Graphics Java Project: Batch Report Tool",
+					title: "Java Level 3 Project: Batch Report Tool",
 					content:
 						"**Project goal:** Read one or more local files, validate records, compute summaries, and write a compact report. The report includes both successful results and warnings so data-quality problems are visible instead of silently skipped.\n\n**Required structure:** Keep raw file reading, record parsing, summary calculation, and report formatting in separate methods or classes. That separation makes it possible to test malformed data without rereading the filesystem every time.\n\n**Completion checks:**\n- Empty and malformed files are handled.\n- The report includes counts, warnings, and at least one derived metric.\n- Tests use deterministic fixtures instead of depending on manual input."
-				}
-			]
-		},
-		"java-with-graphics": {
-			title: "Java With Graphics: JavaFX Application Track",
-			curriculum: [
-				{
-					title: "UI Scope",
-					content:
-						"**Concept path:** This track keeps shared Java fundamentals intact, then adds JavaFX scenes, controls, layout, events, observable state, background work boundaries, and persistence. Graphics are used to practice architecture and feedback loops, not to avoid core Java design.\n\n**UI architecture:** Define the model state before building controls. Keep event handlers short: read input, call model or service behavior, then render the result or error. Use observable state only where the view needs to react. Long-running or file-backed work has a clear boundary so the interface remains predictable.\n\n**Evidence target:** UI code delegates meaningful behavior to model or service classes that can be tested separately."
 				},
 				{
-					title: "Event-driven State",
-					content:
-						"**Concept path:** Treat each user action as a state transition. Define the starting state, user event, model change, rendered result, and error/empty state before adding visual polish. This keeps JavaFX work from becoming disconnected button wiring and makes it possible to test model behavior outside the view.\n\n**State trace:** For each important button or control, write the before-state, event, validation rule, model update, and rendered after-state. This trace prevents UI code from hiding business rules inside anonymous event handlers.\n\n**Evidence target:** A normal click path, an empty/invalid path, and one persistence or refresh path are verified."
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Graphics Java Project: JavaFX Tracker",
+					title: "Java Level 3 Project: JavaFX Tracker",
 					content:
 						"**Project goal:** Build a JavaFX task, habit, or inventory tracker backed by a model layer and local persistence. The interface shows state clearly, while validation, saving, filtering, and updates remain in code that can be reasoned about separately from layout.\n\n**Required structure:** Keep item data in records/classes, state transitions in model or service methods, and JavaFX controls focused on displaying and collecting values. Add a visible empty state and a validation message so the interface is understandable before any data exists.\n\n**Completion checks:**\n- Add, edit, delete, filter, and empty-state behavior are visible.\n- Model logic is separated from controller/view code.\n- Saved data reloads correctly after restart."
 				},
 				{
-					title: "Graphics Java Project: Event-driven Simulation",
+					title: "Java Level 3 Project: Event-driven Simulation",
 					content:
 						"**Project goal:** Build a small JavaFX simulation where controls change model state and the view updates predictably. The simulation makes the model's rules observable through the UI while still keeping the rules in ordinary Java classes.\n\n**Required structure:** Define the simulation state, update rule, event controls, and rendering path before styling. Use a timer, button, or slider only when it maps to a named state transition, and include one limit case such as zero speed, maximum count, or reset after completion.\n\n**Completion checks:**\n- The simulation has pause/reset or equivalent state controls.\n- Invalid or extreme values are handled visibly.\n- The final note explains the event-to-state-to-render path."
 				}

@@ -499,36 +499,28 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 	},
 	{
 		id: "java-pathway",
-		title: "Java Core, Graphics Tracks, and Advanced OOP",
+		title: "Java Core, Visual Extensions, and Advanced OOP",
 		adminPriority: "soon",
-		courseIds: [
-			"java-level-1",
-			"java-level-2",
-			"java-level-3",
-			"java-without-graphics",
-			"java-with-graphics"
-		],
+		courseIds: ["java-level-1", "java-level-2", "java-level-3"],
 		audience:
-			"Students moving from visual Java robot worlds into text Java, object-oriented design, inheritance, interfaces, abstract classes, records, graphics, and non-graphics application work.",
+			"Students moving from visual Java robot worlds into text Java, object-oriented design, inheritance, interfaces, abstract classes, records, optional graphics projects, and application work.",
 		prerequisiteSummary:
-			"Java Level 1 can start from no Java experience by using Carol/Karel-style visual robot worlds. The advanced tracks expect variables, control flow, methods, arrays or ArrayLists, and basic class construction.",
+			"Java Level 1 can start from no Java experience by using Carol/Karel-style visual robot worlds. Java Level 2 and Level 3 expect variables, control flow, methods, arrays or ArrayLists, and basic class construction.",
 		outcomes: [
 			"Use a visual robot world to connect Java syntax, compiler feedback, object state, method calls, parameters, and debugging before moving into console-only code.",
 			"Write Java classes with encapsulation, constructors, methods, inheritance, polymorphism, abstract classes, interfaces, and records where appropriate.",
-			"Choose between graphics and non-graphics tracks depending on whether the next project emphasizes visual interaction or deeper backend/model design.",
+			"Use optional graphics extensions as project variants while keeping the core Java sequence in Level 1, Level 2, and Level 3.",
 			"Tests, tracing, and design explanations show object state and method contracts."
 		],
 		sequencingNotes: [
-			"Java Level 1 now begins with Carol/Karel robot worlds, then bridges into console variables, input, conditionals, loops, methods, arrays, and grid projects.",
+			"Java Level 1 now begins with Carol/Karel robot worlds, then bridges into console variables, input, conditionals, loops, methods, arrays, grid projects, and optional coordinate-drawing extensions.",
 			"Java Level 2 turns the same object-state reasoning into custom classes, constructors, `toString()`, inheritance, maps, files, and larger multi-class projects.",
-			"Java Level 3 audits the visual-to-text foundation before advanced review, algorithms, data structures, generics, interfaces, records, files, streams, and capstone architecture.",
-			"Java without Graphics keeps the shared robot launch but de-emphasizes static drawing projects in favor of CLI tools, models, records, collections, interfaces, and robust tests.",
-			"Java with Graphics adds drawing and scene-composition work after the robot launch, but graphics does not replace object-model rigor."
+			"Java Level 3 audits the visual-to-text foundation before advanced review, algorithms, data structures, generics, interfaces, records, files, streams, UI or service project options, and capstone architecture."
 		],
 		projectExpectations: [
 			"Record-backed inventory, scheduler, or catalog CLI with validation and tests.",
 			"Interface or abstract-class project with multiple implementations and polymorphic behavior.",
-			"Graphics project with separated model state, UI rendering, and user input."
+			"Optional visual project with separated model state, rendering, and user input."
 		],
 		assessmentStyle: [
 			"Trace object state before and after method calls.",
@@ -539,7 +531,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"BlueJ supports classrooms that can install it for visual object inspection and Carol/Karel-style work; CodeHS or the browser Code IDE provides the outside-class fallback.",
 			"JDK tooling, simple command-line builds or IDE projects, and explicit starter plus review source folders support Java course work.",
 			"Keep Java records covered as immutable data carriers, not as a replacement for every class.",
-			"Maintain separate source links for graphics and non-graphics tracks."
+			"Keep optional graphics source links inside Java Level 1 rather than publishing separate Java course tracks."
 		],
 		safetyAndAccess: [
 			"Avoid requiring graphics libraries that are unavailable on the working machine unless a fallback exists.",
@@ -549,7 +541,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		adminExpansionBacklog: [
 			"Finish a distinct advanced Java course suitable after C++ Level 3.",
 			"Add more records, interface, abstract-class, and collection-heavy source examples.",
-			"Keep Java graphics and non-graphics pathways visibly separate in public course descriptions."
+			"Add more optional graphics and UI examples inside the Level 1-3 sequence without creating separate Java course tracks."
 		]
 	},
 	{

@@ -617,25 +617,19 @@ describe("implemented course development artifacts", () => {
 	});
 
 	it("keeps Java Level 1 check-in links away from ambiguous repo roots", async () => {
-		for (const courseId of [
-			"java-level-1",
-			"java-without-graphics",
-			"java-with-graphics"
-		]) {
-			const serializedCourse = JSON.stringify(
-				await requireCourse(courseId)
-			);
-			const rootOnlyLinks = [
-				...serializedCourse.matchAll(
-					/https:\/\/github\.com\/instruction-material\/Java-Level-1(?=["\\])/g
-				)
-			];
+		const serializedCourse = JSON.stringify(
+			await requireCourse("java-level-1")
+		);
+		const rootOnlyLinks = [
+			...serializedCourse.matchAll(
+				/https:\/\/github\.com\/instruction-material\/Java-Level-1(?=["\\])/g
+			)
+		];
 
-			expect(rootOnlyLinks, courseId).toHaveLength(0);
-			expect(serializedCourse).toContain(
-				"Java-Level-1/tree/main/JS7-Practice-with-Arrays"
-			);
-		}
+		expect(rootOnlyLinks).toHaveLength(0);
+		expect(serializedCourse).toContain(
+			"Java-Level-1/tree/main/JS7-Practice-with-Arrays"
+		);
 	});
 
 	it("keeps broad PhET subject catalogs as resource links rather than media embeds", async () => {
@@ -783,12 +777,6 @@ describe("implemented course development artifacts", () => {
 	it("keeps cross-course split-folder source references out of ambiguous roots", async () => {
 		const javaLevel1 = JSON.stringify(await requireCourse("java-level-1"));
 		const javaLevel3 = JSON.stringify(await requireCourse("java-level-3"));
-		const javaWithoutGraphics = JSON.stringify(
-			await requireCourse("java-without-graphics")
-		);
-		const javaWithGraphics = JSON.stringify(
-			await requireCourse("java-with-graphics")
-		);
 		const scratchLevel1 = JSON.stringify(
 			await requireCourse("scratch-level-1")
 		);
@@ -808,18 +796,10 @@ describe("implemented course development artifacts", () => {
 		expect(javaLevel3).not.toContain(
 			'Java-Level-3/tree/main/AJ20-Generic-Repository"'
 		);
-		for (const serializedCourse of [
-			javaLevel3,
-			javaWithoutGraphics,
-			javaWithGraphics
-		]) {
-			expect(serializedCourse).toContain(
-				"Java-Level-3/tree/main/AJ13-Class-Rank"
-			);
-			expect(serializedCourse).not.toContain(
-				"Python-Level-3/tree/main/AM13-Priority-Queue"
-			);
-		}
+		expect(javaLevel3).toContain("Java-Level-3/tree/main/AJ13-Class-Rank");
+		expect(javaLevel3).not.toContain(
+			"Python-Level-3/tree/main/AM13-Priority-Queue"
+		);
 		for (const serializedCourse of [scratchLevel1, scratchLevel2]) {
 			expect(serializedCourse).toContain(
 				"Python-Level-2/tree/main/PS12-Type-Racer/starter"
@@ -1078,9 +1058,7 @@ describe("implemented course development artifacts", () => {
 		for (const courseId of [
 			"java-level-1",
 			"java-level-2",
-			"java-level-3",
-			"java-without-graphics",
-			"java-with-graphics"
+			"java-level-3"
 		]) {
 			expect(allText(await requireCourse(courseId)), courseId).toContain(
 				"Bridge"
