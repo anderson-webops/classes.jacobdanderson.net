@@ -7196,14 +7196,14 @@ html.dark .file-delete:disabled::after {
 	max-height: calc(100vh - 2rem);
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 1.25rem;
+	padding: 1rem;
 	border: 1px solid var(--color-border);
-	border-radius: 16px;
+	border-radius: 14px;
 	background: #fff;
 	box-shadow: var(--shadow-soft);
 	font-family: var(--font-sans);
-	font-size: 0.94rem;
-	line-height: 1.5;
+	font-size: 0.9rem;
+	line-height: 1.45;
 	font-variant: normal;
 	font-weight: 400;
 	text-align: left;
@@ -7220,7 +7220,7 @@ html.dark .file-delete:disabled::after {
 	font-variant: normal;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.5;
+	line-height: 1.45;
 	text-transform: none;
 	overflow-wrap: normal;
 	word-break: normal;
@@ -7229,23 +7229,23 @@ html.dark .file-delete:disabled::after {
 .ide-setting-toggle {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
-	column-gap: 0.75rem;
-	row-gap: 0.45rem;
+	column-gap: 0.65rem;
+	row-gap: 0.3rem;
 	align-items: start;
 	color: var(--color-ink);
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
-	margin-top: 1.05rem;
-	padding-top: 1.05rem;
+	margin-top: 0.85rem;
+	padding-top: 0.85rem;
 	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-share {
 	display: grid;
 	gap: 0.8rem;
-	margin-top: 0.95rem;
-	padding-top: 0.95rem;
+	margin-top: 0.85rem;
+	padding-top: 0.85rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7276,8 +7276,8 @@ html.dark .file-delete:disabled::after {
 .ide-setting-storage {
 	display: grid;
 	gap: 0.65rem;
-	margin-top: 0.95rem;
-	padding-top: 0.95rem;
+	margin-top: 0.85rem;
+	padding-top: 0.85rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7299,8 +7299,8 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-setting-toggle input {
-	width: 1.15rem;
-	height: 1.15rem;
+	width: 1rem;
+	height: 1rem;
 	margin: 0;
 	margin-top: 0.12rem;
 	accent-color: #0f766e;
@@ -7309,16 +7309,16 @@ html.dark .file-delete:disabled::after {
 .ide-setting-toggle > span {
 	min-width: 0;
 	display: grid;
-	gap: 0.22rem;
+	gap: 0.14rem;
 }
 
 .editor-toolbar .ide-settings-panel .ide-setting-title {
 	display: block;
 	color: var(--color-ink-strong);
-	font-size: 0.95rem;
-	font-weight: 600;
+	font-size: 0.9rem;
+	font-weight: 550;
 	letter-spacing: 0;
-	line-height: 1.3;
+	line-height: 1.25;
 	font-variant: normal;
 	text-transform: none;
 }
@@ -7326,10 +7326,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar .ide-settings-panel .ide-setting-toggle small {
 	display: block;
 	color: var(--color-ink-soft);
-	font-size: 0.86rem;
+	font-size: 0.8rem;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.5;
+	line-height: 1.38;
 	font-variant: normal;
 	text-transform: none;
 }
