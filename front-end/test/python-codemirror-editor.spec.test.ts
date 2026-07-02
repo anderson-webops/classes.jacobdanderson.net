@@ -361,7 +361,14 @@ describe("python IDE CodeMirror editor", () => {
 			javaIdeCompletionsForMode("java", "Arrays").map(
 				option => option.label
 			)
-		).toEqual(expect.arrayContaining(["toString", "deepToString", "sort"]));
+		).toEqual(
+			expect.arrayContaining([
+				"toString",
+				"deepToString",
+				"sort",
+				"copyOf"
+			])
+		);
 		expect(
 			javaIdeCompletionsForMode("java", "names").map(
 				option => option.label
@@ -441,7 +448,12 @@ describe("python IDE CodeMirror editor", () => {
 			])
 		);
 		expect(autocompleteLabelsForDoc("java", "Arrays.")).toEqual(
-			expect.arrayContaining(["toString", "deepToString", "sort"])
+			expect.arrayContaining([
+				"toString",
+				"deepToString",
+				"sort",
+				"copyOf"
+			])
 		);
 		expect(autocompleteLabelsForDoc("karel", "World.")).toEqual(
 			expect.arrayContaining(["readWorld"])

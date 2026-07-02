@@ -1414,8 +1414,7 @@ function defaultJavaValueForType(type: string): JavaConsoleValue {
 		return { type: "number", value: 0 };
 	}
 	if (normalized === "boolean") return { type: "boolean", value: false };
-	if (normalized === "char" || normalized === "string")
-		return { type: "string", value: "" };
+	if (normalized === "char") return { type: "string", value: "" };
 	return { type: "null", value: null };
 }
 
