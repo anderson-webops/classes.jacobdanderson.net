@@ -124,7 +124,7 @@ import kareltherobot.Directions;
 
 public class Algo implements Directions {
     public static void main(String[] args) {
-        UrRobot sam = new UrRobot(6, 7, East, 0);
+        UrRobot sam = new UrRobot(6, 7, Directions.East, 0);
         turnRight(sam);
         moveTwice(sam);
         for (int i = 0; i < 2; i++) {

@@ -78,7 +78,7 @@ const DEFAULT_WORLD_SIZE = 10;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const JAVA_PRINT_RE = /System\.out\.(print|println)\s*\(([\s\S]*?)\)\s*;/g;
 const ROBOT_DECLARATION_RE =
-	/\bUrRobot\s+([A-Z_]\w*)\s*=\s*new\s+UrRobot\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*([A-Z_]\w*)\s*,\s*(\d+)\s*\)/i;
+	/\bUrRobot\s+([A-Z_]\w*)\s*=\s*new\s+UrRobot\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*([A-Z_]\w*(?:\s*\.\s*[A-Z_]\w*)?)\s*,\s*(\d+)\s*\)/i;
 const WORLD_READ_RE = /\bWorld\.readWorld\s*\(\s*"([^"]+)"\s*\)/;
 const KAREL_COMMANDS = [
 	"move",
@@ -486,7 +486,11 @@ function positiveInteger(value: string | undefined, fallback: number) {
 }
 
 function normalizeDirection(value: string): KarelDirection {
-	const normalized = value.toLowerCase();
+	const normalized = value
+		.replace(/\s+/g, "")
+		.split(".")
+		.pop()
+		?.toLowerCase();
 	if (normalized === "north") return "North";
 	if (normalized === "south") return "South";
 	if (normalized === "west") return "West";
