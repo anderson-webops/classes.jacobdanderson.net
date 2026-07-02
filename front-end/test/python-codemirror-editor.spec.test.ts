@@ -421,9 +421,13 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.util.TreeMap",
 				"import java.util.Map",
 				"import java.util.Comparator",
+				"import java.awt.Color",
 				"import java.io.File",
 				"import java.io.FileWriter",
 				"import java.io.IOException",
+				"import kareltherobot.UrRobot",
+				"import kareltherobot.World",
+				"import kareltherobot.Directions",
 				"System.out.println"
 			])
 		);
@@ -901,10 +905,24 @@ describe("python IDE CodeMirror editor", () => {
 			expect.arrayContaining(["move", "turnLeft"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "Color.")).toEqual(
-			expect.arrayContaining(["RED", "BLUE", "GREEN"])
+			expect.arrayContaining([
+				"RED",
+				"BLUE",
+				"GREEN",
+				"red",
+				"purple",
+				"random"
+			])
 		);
 		expect(autocompleteLabelsForDoc("karel", "java.awt.Color.")).toEqual(
-			expect.arrayContaining(["RED", "BLUE", "GREEN"])
+			expect.arrayContaining([
+				"RED",
+				"BLUE",
+				"GREEN",
+				"red",
+				"purple",
+				"random"
+			])
 		);
 		expect(autocompleteLabelsForDoc("karel", "sam.")).toEqual(
 			expect.arrayContaining([
@@ -965,6 +983,32 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.io.File",
 				"import java.io.FileWriter",
 				"import java.io.IOException"
+			])
+		);
+
+		const colorDoc = "import java.awt.Col";
+		const [colorResult] = autocompleteResultsForDocAt(
+			"karel",
+			colorDoc,
+			colorDoc.length
+		);
+		expect(colorResult?.from).toBe(0);
+		expect(colorResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining(["import java.awt.Color"])
+		);
+
+		const karelImportDoc = "import kareltherobot.Wo";
+		const [karelImportResult] = autocompleteResultsForDocAt(
+			"karel",
+			karelImportDoc,
+			karelImportDoc.length
+		);
+		expect(karelImportResult?.from).toBe(0);
+		expect(karelImportResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining([
+				"import kareltherobot.UrRobot",
+				"import kareltherobot.World",
+				"import kareltherobot.Directions"
 			])
 		);
 	});

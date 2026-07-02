@@ -26,8 +26,13 @@ server-side compilation, `javac`, Docker, or long-running execution services.
 - Treat Karel static receiver completions separately from robot-object
   completions. `Directions.` should suggest `North`, `East`, `South`, and
   `West`, while robot variables such as `sam.` should suggest movement and
-  beeper/ball commands. `Color.` may offer common `java.awt.Color` constants
-  for CodeHS/Karel examples that import `java.awt.Color`.
+  beeper/ball commands. `Color.` should offer common uppercase and lowercase
+  `java.awt.Color` constants, plus CodeHS-style `purple` and `random()` color
+  help for Karel examples that use `Color.red` / `Color.random()`.
+- Keep Karel import completions aligned with the starter templates:
+  `import kareltherobot.UrRobot`, `import kareltherobot.World`,
+  `import kareltherobot.Directions`, and `import java.awt.Color` should be
+  available when students type imports by hand.
 - Keep beginner collection completions aligned with the course sequence:
   array declarations, enhanced `for` loops, `Arrays.toString(...)`,
   `Arrays.deepToString(...)`, `Arrays.sort(...)`, `Arrays.copyOf(...)`, 2D
