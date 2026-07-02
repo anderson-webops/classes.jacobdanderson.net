@@ -1623,6 +1623,29 @@ const javaRandomMemberCompletions = [
 	completion("setSeed", "method", "reset the random sequence", 64)
 ];
 
+const javaScannerMemberCompletions = [
+	completion("next", "method", "read the next Scanner token", 78),
+	completion("nextLine", "method", "read the current Scanner line", 78),
+	completion("nextInt", "method", "read the next Scanner int", 78),
+	completion("nextDouble", "method", "read the next Scanner double", 78),
+	completion("nextBoolean", "method", "read the next Scanner boolean", 78),
+	completion("hasNext", "method", "whether Scanner has another token", 74),
+	completion("hasNextLine", "method", "whether Scanner has another line", 74),
+	completion("hasNextInt", "method", "whether Scanner has an int token", 74),
+	completion(
+		"hasNextDouble",
+		"method",
+		"whether Scanner has a double token",
+		74
+	),
+	completion(
+		"hasNextBoolean",
+		"method",
+		"whether Scanner has a boolean token",
+		74
+	)
+];
+
 const javaVariableMemberCompletions = [
 	completion("length", "property", "array or string length", 70),
 	completion("charAt", "method", "character at an index", 70),
@@ -2236,9 +2259,14 @@ function javaDeclaredReceiverCompletions(
 	const randomDeclarationPattern = new RegExp(
 		`\\b(?:java\\.util\\.)?Random\\s+${escapedReceiver}\\b`
 	);
-	return randomDeclarationPattern.test(state.doc.toString())
-		? javaRandomMemberCompletions
-		: null;
+	const scannerDeclarationPattern = new RegExp(
+		`\\b(?:java\\.util\\.)?Scanner\\s+${escapedReceiver}\\b`
+	);
+	const doc = state.doc.toString();
+	if (randomDeclarationPattern.test(doc)) return javaRandomMemberCompletions;
+	if (scannerDeclarationPattern.test(doc))
+		return javaScannerMemberCompletions;
+	return null;
 }
 
 function isLikelyJavaRandomReceiver(receiver: string) {

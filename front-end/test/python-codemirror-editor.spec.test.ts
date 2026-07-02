@@ -648,6 +648,36 @@ describe("python IDE CodeMirror editor", () => {
 				"setSeed"
 			])
 		);
+		const declaredScannerDoc = [
+			"import java.util.Scanner;",
+			"public class Main {",
+			"    public static void main(String[] args) {",
+			"        Scanner input = new Scanner(System.in);",
+			"        input.|",
+			"    }",
+			"}"
+		].join("\n");
+		const declaredScannerLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			declaredScannerDoc
+		);
+		expect(declaredScannerLabels).toEqual(
+			expect.arrayContaining([
+				"next",
+				"nextLine",
+				"nextInt",
+				"nextDouble",
+				"nextBoolean",
+				"hasNext",
+				"hasNextLine",
+				"hasNextInt",
+				"hasNextDouble",
+				"hasNextBoolean"
+			])
+		);
+		expect(declaredScannerLabels).not.toEqual(
+			expect.arrayContaining(["charAt", "put", "keySet"])
+		);
 		expect(autocompleteLabelsForDoc("java", "names.")).toEqual(
 			expect.arrayContaining([
 				"equals",
