@@ -153,14 +153,15 @@ const JAVA_PRINT_RE = /System\.out\.(print|println)\s*\(([\s\S]*?)\)\s*;/g;
 const JAVA_SCANNER_READ_RE =
 	/\b[A-Z_]\w*\.next(Line|Int|Double|Boolean)?\s*\(\s*\)/i;
 const JAVA_VARIABLE_DECLARATION_START_RE =
-	/^[A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])?\s+([A-Z_]\w*)\s*=/i;
+	/^[A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])*\s+([A-Z_]\w*)\s*=/i;
 const JAVA_VARIABLE_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*=/i;
 const JAVA_COMPOUND_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*(\+=|-=|\*=|\/=|%=)/i;
-const JAVA_INDEXED_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*\[([\s\S]+)\]\s*=/i;
+const JAVA_INDEXED_ASSIGNMENT_START_RE =
+	/^([A-Z_]\w*)((?:\s*\[[^\][]+\])+)\s*=/i;
 const JAVA_INDEXED_COMPOUND_ASSIGNMENT_START_RE =
-	/^([A-Z_]\w*)\s*\[([\s\S]+)\]\s*(\+=|-=|\*=|\/=|%=)/i;
+	/^([A-Z_]\w*)((?:\s*\[[^\][]+\])+)\s*(\+=|-=|\*=|\/=|%=)/i;
 const JAVA_INDEXED_INCREMENT_RE =
-	/^(?:\+\+([A-Z_]\w*)\s*\[([\s\S]+)\]|([A-Z_]\w*)\s*\[([\s\S]+)\]\+\+|--([A-Z_]\w*)\s*\[([\s\S]+)\]|([A-Z_]\w*)\s*\[([\s\S]+)\]--)$/i;
+	/^(?:\+\+([A-Z_]\w*)((?:\s*\[[^\][]+\])+)|([A-Z_]\w*)((?:\s*\[[^\][]+\])+)\+\+|--([A-Z_]\w*)((?:\s*\[[^\][]+\])+)|([A-Z_]\w*)((?:\s*\[[^\][]+\])+)--)$/i;
 const JAVA_INCREMENT_RE =
 	/^(?:\+\+([A-Z_]\w*)|([A-Z_]\w*)\+\+|--([A-Z_]\w*)|([A-Z_]\w*)--)$/i;
 const ROBOT_DECLARATION_RE =
@@ -876,16 +877,13 @@ function evaluateJavaCollectionExpression(
 		);
 	}
 
-	const newArray = expression.match(/^new\s+([A-Z_]\w*)\s*\[([^\]]+)\]$/i);
-	if (newArray?.[1]) {
-		const elementType = newArray[1];
-		const length = Math.max(
-			0,
-			javaExpressionToIndex(newArray[2] ?? "0", context, output)
-		);
-		return javaArrayValue(
-			elementType,
-			Array.from({ length }, () => defaultJavaValueForType(elementType))
+	const newArray = parseJavaNewArrayExpression(expression);
+	if (newArray) {
+		return javaArrayValueForDimensions(
+			newArray.elementType,
+			newArray.dimensions,
+			context,
+			output
 		);
 	}
 
@@ -895,7 +893,7 @@ function evaluateJavaCollectionExpression(
 	if (arrayList) return javaArrayListValue();
 
 	const arraysToString = expression.match(
-		/^Arrays\.toString\s*\(([^()]*)\)$/i
+		/^Arrays\.(?:toString|deepToString)\s*\(([^()]*)\)$/i
 	);
 	if (arraysToString?.[1]) {
 		const value = evaluateJavaExpression(
@@ -912,15 +910,22 @@ function evaluateJavaCollectionExpression(
 		};
 	}
 
-	const lengthMatch = expression.match(/^([A-Z_]\w*)\.length$/i);
+	const lengthMatch = expression.match(
+		/^([A-Z_]\w*)((?:\s*\[[^\][]+\])*)\.length$/i
+	);
 	if (lengthMatch?.[1]) {
-		const value = context?.variables.get(lengthMatch[1]);
+		const rawIndexes = lengthMatch[2] ?? "";
+		const value = rawIndexes.trim()
+			? getJavaIndexedValue(lengthMatch[1], rawIndexes, context, output)
+			: context?.variables.get(lengthMatch[1]);
 		if (value?.type === "array") {
 			return { type: "number", value: value.value.length };
 		}
 	}
 
-	const arrayAccess = expression.match(/^([A-Z_]\w*)\s*\[([\s\S]+)\]$/i);
+	const arrayAccess = expression.match(
+		/^([A-Z_]\w*)((?:\s*\[[^\][]+\])+)\s*$/i
+	);
 	if (arrayAccess?.[1] && arrayAccess[2]) {
 		return getJavaIndexedValue(
 			arrayAccess[1],
@@ -991,6 +996,47 @@ function javaIterableValues(value: JavaConsoleValue) {
 		: [];
 }
 
+function parseJavaNewArrayExpression(expression: string) {
+	const trimmed = expression.trim();
+	if (!/^new\s+/i.test(trimmed)) return null;
+	const afterNew = trimmed.replace(/^new\s+/i, "");
+	const typeMatch = afterNew.match(/^([A-Z_]\w*)/i);
+	if (!typeMatch?.[1]) return null;
+	const dimensions = afterNew.slice(typeMatch[0].length).trim();
+	if (!dimensions.startsWith("[")) return null;
+	const parsedDimensions = parseJavaIndexExpressions(dimensions);
+	if (!parsedDimensions.length) return null;
+	return {
+		dimensions: parsedDimensions,
+		elementType: typeMatch[1]
+	};
+}
+
+function javaArrayValueForDimensions(
+	elementType: string,
+	dimensions: string[],
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue {
+	const [rawLength = "0", ...remainingDimensions] = dimensions;
+	const length = Math.max(
+		0,
+		javaExpressionToIndex(rawLength || "0", context, output)
+	);
+	const defaultValue = () => {
+		if (!remainingDimensions.length)
+			return defaultJavaValueForType(elementType);
+		return javaArrayValueForDimensions(
+			elementType,
+			remainingDimensions,
+			context,
+			output
+		);
+	};
+	const values = Array.from({ length }, defaultValue);
+	return javaArrayValue(elementType, values);
+}
+
 function javaArrayValue(
 	elementType: string,
 	value: JavaConsoleValue[]
@@ -1040,33 +1086,56 @@ function javaExpressionToIndex(
 
 function getJavaIndexedValue(
 	variableName: string,
-	rawIndex: string,
+	rawIndexes: string,
 	context?: JavaConsoleContext,
 	output?: JavaConsoleOutputState
 ): JavaConsoleValue {
-	const collection = context?.variables.get(variableName);
-	if (collection?.type !== "array" && collection?.type !== "arrayList") {
-		return { type: "null", value: null };
-	}
-	return (
-		collection.value[javaExpressionToIndex(rawIndex, context, output)] ?? {
-			type: "null",
-			value: null
+	let current = context?.variables.get(variableName);
+	for (const rawIndex of parseJavaIndexExpressions(rawIndexes)) {
+		if (current?.type !== "array" && current?.type !== "arrayList") {
+			return { type: "null", value: null };
 		}
-	);
+		current = current.value[
+			javaExpressionToIndex(rawIndex, context, output)
+		] ?? { type: "null", value: null };
+	}
+	return current ?? { type: "null", value: null };
 }
 
 function setJavaIndexedValue(
 	variableName: string,
-	rawIndex: string,
+	rawIndexes: string,
 	value: JavaConsoleValue,
 	context: JavaConsoleContext,
 	output?: JavaConsoleOutputState
 ) {
-	const collection = context.variables.get(variableName);
+	const indexes = parseJavaIndexExpressions(rawIndexes);
+	const finalIndex = indexes.at(-1);
+	if (!finalIndex) return;
+	let collection = context.variables.get(variableName);
+	for (const rawIndex of indexes.slice(0, -1)) {
+		if (collection?.type !== "array" && collection?.type !== "arrayList")
+			return;
+		collection =
+			collection.value[javaExpressionToIndex(rawIndex, context, output)];
+	}
 	if (collection?.type !== "array" && collection?.type !== "arrayList")
 		return;
-	collection.value[javaExpressionToIndex(rawIndex, context, output)] = value;
+	collection.value[javaExpressionToIndex(finalIndex, context, output)] =
+		value;
+}
+
+function parseJavaIndexExpressions(rawIndexes: string) {
+	const indexes: string[] = [];
+	let index = skipWhitespace(rawIndexes, 0);
+	while (index < rawIndexes.length) {
+		if (rawIndexes[index] !== "[") return [];
+		const end = findMatchingDelimiter(rawIndexes, index, "[", "]");
+		if (end < 0) return [];
+		indexes.push(rawIndexes.slice(index + 1, end).trim());
+		index = skipWhitespace(rawIndexes, end + 1);
+	}
+	return indexes;
 }
 
 function evaluateJavaCastExpression(
@@ -1523,7 +1592,7 @@ function evaluateNumericExpression(
 	output?: JavaConsoleOutputState
 ) {
 	const tokens = expression.match(
-		/[A-Z_]\w*\s*\[[^\][]+\]|(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)|\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi
+		/[A-Z_]\w*(?:\s*\[[^\][]+\])+|(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)|\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi
 	);
 	if (
 		!tokens ||
@@ -1921,7 +1990,7 @@ function parseJavaVoidMethods(source: string) {
 function parseJavaMethods(source: string) {
 	const methods = new Map<string, JavaMethodDefinition>();
 	const methodPattern =
-		/\b(?:public|private|protected|static|final|abstract|synchronized|\s)*([A-Z_]\w*(?:\s*<[^>(){};]*>)?(?:\s*\[\s*\])?)\s+([A-Z_]\w*)\s*\(([^)]*)\)\s*\{/gi;
+		/\b(?:public|private|protected|static|final|abstract|synchronized|\s)*([A-Z_]\w*(?:\s*<[^>(){};]*>)?(?:\s*\[\s*\])*)\s+([A-Z_]\w*)\s*\(([^)]*)\)\s*\{/gi;
 	for (const match of source.matchAll(methodPattern)) {
 		const returnType = match[1]?.replace(/\s+/g, " ").trim() ?? "";
 		const name = match[2];
@@ -1947,7 +2016,7 @@ function parseJavaMethods(source: string) {
 function parseJavaParameterNames(parameters: string) {
 	return splitJavaArguments(parameters)
 		.map(
-			parameter => parameter.match(/\b([A-Z_]\w*)\s*(?:\[\s*\])?$/i)?.[1]
+			parameter => parameter.match(/\b([A-Z_]\w*)\s*(?:\[\s*\])*$/i)?.[1]
 		)
 		.filter((parameter): parameter is string => Boolean(parameter));
 }
@@ -2398,8 +2467,8 @@ function findJavaStatementEnd(source: string, start: number) {
 function findMatchingDelimiter(
 	source: string,
 	start: number,
-	open: "(" | "{",
-	close: ")" | "}"
+	open: "(" | "[" | "{",
+	close: ")" | "]" | "}"
 ) {
 	let depth = 0;
 	let quote: '"' | "'" | null = null;
