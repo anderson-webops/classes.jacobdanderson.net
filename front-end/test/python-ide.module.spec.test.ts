@@ -3124,6 +3124,13 @@ describe("python IDE project helpers", () => {
 		);
 		expect(pageSource).toContain("const isSharing = ref(false);");
 		expect(pageSource).toContain('const shareMessage = ref("");');
+		expect(pageSource).toContain("const activeAccount = computed");
+		expect(pageSource).toContain(
+			"const canSyncToAccount = computed(() => !!activeAccount.value);"
+		);
+		expect(pageSource).toContain(
+			'return account.role === "user"\n\t\t? account.id\n\t\t: `${account.role}:${account.id}`;'
+		);
 		expect(pageSource).toContain("const requestedShareID = computed");
 		expect(pageSource).toContain("function codeIdeShareUrl");
 		expect(pageSource).toContain(

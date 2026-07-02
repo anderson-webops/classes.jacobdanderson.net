@@ -38,6 +38,7 @@ import {
 	updateUserScheduledSession
 } from "../controllers/users/userExtraController.js";
 import {
+	validAccountSession,
 	validAdmin,
 	validTutor,
 	validTutorOrAdminSession,
@@ -59,14 +60,14 @@ router.get("/loggedin/communications", validUser, getLoggedInUserCommunications)
 // Read-only public Code IDE project links created by signed-in students.
 router.get("/python-projects/shared/:shareID", getSharedPythonProject);
 
-// Persist logged-in student Code IDE projects. Keep these before the
+// Persist logged-in account Code IDE projects. Keep these before the
 // managed /:userID/python-projects routes so "loggedin" is not parsed as an ID.
-router.get("/loggedin/python-projects", validUser, listPythonProjects);
-router.post("/loggedin/python-projects", validUser, createPythonProject);
-router.put("/loggedin/python-projects/:projectID", validUser, updatePythonProject);
-router.put("/loggedin/python-projects/:projectID/share", validUser, updatePythonProjectShare);
-router.delete("/loggedin/python-projects/:projectID", validUser, deletePythonProject);
-router.get("/loggedin/python-project-reviews", validUser, listVisiblePythonProjectReviews);
+router.get("/loggedin/python-projects", validAccountSession, listPythonProjects);
+router.post("/loggedin/python-projects", validAccountSession, createPythonProject);
+router.put("/loggedin/python-projects/:projectID", validAccountSession, updatePythonProject);
+router.put("/loggedin/python-projects/:projectID/share", validAccountSession, updatePythonProjectShare);
+router.delete("/loggedin/python-projects/:projectID", validAccountSession, deletePythonProject);
+router.get("/loggedin/python-project-reviews", validAccountSession, listVisiblePythonProjectReviews);
 
 // Get users belonging to a given tutor
 router.get("/oftutor/:tutorID", getUsersOfTutor);

@@ -1,5 +1,10 @@
 import type { RequestHandler } from "express";
-import type { IPythonProject, PythonProjectFile, PythonProjectMode } from "../../types/entities/IPythonProject.js";
+import type {
+	IPythonProject,
+	PythonProjectFile,
+	PythonProjectMode,
+	PythonProjectOwnerRole
+} from "../../types/entities/IPythonProject.js";
 import type {
 	IPythonProjectReview,
 	PythonProjectReviewRole
@@ -302,6 +307,56 @@ function documentID(value: unknown) {
 	return value?.toString() ?? "";
 }
 
+function currentProjectOwner(req: Parameters<RequestHandler>[0], res: Parameters<RequestHandler>[1]) {
+	if (req.currentAdmin) {
+		return {
+			id: req.currentAdmin._id,
+			role: "admin" as const
+		};
+	}
+
+	if (req.currentTutor) {
+		return {
+			id: req.currentTutor._id,
+			role: "tutor" as const
+		};
+	}
+
+	if (req.currentUser) {
+		return {
+			id: req.currentUser._id,
+			role: "user" as const
+		};
+	}
+
+	res.status(403).json({ message: "Signed-in account required" });
+	return null;
+}
+
+function ownerRoleClause(role: PythonProjectOwnerRole) {
+	if (role === "user") {
+		return {
+			$or: [{ ownerRole: "user" }, { ownerRole: { $exists: false } }]
+		};
+	}
+
+	return { ownerRole: role };
+}
+
+function projectOwnerQuery(owner: { id: Types.ObjectId; role: PythonProjectOwnerRole }) {
+	return {
+		user: owner.id,
+		...ownerRoleClause(owner.role)
+	};
+}
+
+function studentProjectOwnerQuery(userID: Types.ObjectId) {
+	return {
+		user: userID,
+		...ownerRoleClause("user")
+	};
+}
+
 function tutorOwnsUser(user: { tutors?: unknown[] } | null, tutorID: string) {
 	return user?.tutors?.some(tutor => documentID(tutor) === tutorID) ?? false;
 }
@@ -365,15 +420,12 @@ async function findOwnedProject(req: Parameters<RequestHandler>[0], res: Paramet
 	const projectID = getProjectIDParam(req, res);
 	if (!projectID) return null;
 
-	const userID = req.currentUser?._id;
-	if (!userID) {
-		res.status(403).json({ message: "Student session required" });
-		return null;
-	}
+	const owner = currentProjectOwner(req, res);
+	if (!owner) return null;
 
 	const project = await PythonProject.findOne({
 		_id: new Types.ObjectId(projectID),
-		user: userID
+		...projectOwnerQuery(owner)
 	});
 
 	if (!project) {
@@ -385,17 +437,17 @@ async function findOwnedProject(req: Parameters<RequestHandler>[0], res: Paramet
 }
 
 export const listPythonProjects: RequestHandler = async (req, res) => {
-	const userID = req.currentUser?._id;
-	if (!userID) return res.status(403).json({ message: "Student session required" });
+	const owner = currentProjectOwner(req, res);
+	if (!owner) return;
 
-	const projects = await PythonProject.find({ user: userID }).sort({ updatedAt: -1 }).limit(100);
+	const projects = await PythonProject.find(projectOwnerQuery(owner)).sort({ updatedAt: -1 }).limit(100);
 
 	res.json({ projects: projects.map(serializePythonProject) });
 };
 
 export const listVisiblePythonProjectReviews: RequestHandler = async (req, res) => {
 	const userID = req.currentUser?._id;
-	if (!userID) return res.status(403).json({ message: "Student session required" });
+	if (!userID) return res.json({ reviews: [] });
 
 	const reviews = await PythonProjectReview.find({
 		user: userID,
@@ -412,7 +464,7 @@ export const listManagedPythonProjects: RequestHandler = async (req, res) => {
 	if (!user) return;
 
 	const [projects, reviews] = await Promise.all([
-		PythonProject.find({ user: user._id }).sort({ updatedAt: -1 }).limit(100),
+		PythonProject.find(studentProjectOwnerQuery(user._id)).sort({ updatedAt: -1 }).limit(100),
 		PythonProjectReview.find({ user: user._id }).sort({ updatedAt: -1 }).limit(100)
 	]);
 	const reviewsByProject = new Map(
@@ -428,8 +480,8 @@ export const listManagedPythonProjects: RequestHandler = async (req, res) => {
 };
 
 export const createPythonProject: RequestHandler = async (req, res) => {
-	const userID = req.currentUser?._id;
-	if (!userID) return res.status(403).json({ message: "Student session required" });
+	const owner = currentProjectOwner(req, res);
+	if (!owner) return;
 
 	const parsed = projectPayloadSchema.safeParse(req.body ?? {});
 	if (!parsed.success) {
@@ -441,7 +493,8 @@ export const createPythonProject: RequestHandler = async (req, res) => {
 	if (rejectProjectFilesForMode(res, files, mode, "Invalid project payload")) return;
 	const activeFileName = normalizeActiveFileName(parsed.data.activeFileName, files);
 	const project = await PythonProject.create({
-		user: userID,
+		user: owner.id,
+		ownerRole: owner.role,
 		title: parsed.data.title ?? "Untitled Python Project",
 		mode,
 		files,
@@ -467,7 +520,7 @@ export const createPythonProjectReview: RequestHandler = async (req, res) => {
 
 	const project = await PythonProject.findOne({
 		_id: new Types.ObjectId(projectID),
-		user: user._id
+		...studentProjectOwnerQuery(user._id)
 	});
 	if (!project) return res.sendStatus(404);
 
@@ -533,6 +586,7 @@ export const updatePythonProject: RequestHandler = async (req, res) => {
 	if (parsed.data.starterLabel) project.starterLabel = parsed.data.starterLabel;
 	if (parsed.data.starterUrl) project.starterUrl = parsed.data.starterUrl;
 	if (parsed.data.sharedSourceID) project.sharedSourceID = parsed.data.sharedSourceID;
+	project.ownerRole ??= "user";
 	project.activeFileName = nextActiveFileName;
 
 	await project.save();
@@ -549,6 +603,7 @@ export const updatePythonProjectShare: RequestHandler = async (req, res) => {
 	}
 
 	project.shared = parsed.data.shared;
+	project.ownerRole ??= "user";
 	if (project.shared && !project.shareID) {
 		project.shareID = createPythonProjectShareID();
 		project.shareCreatedAt = new Date();
@@ -589,7 +644,7 @@ export const updatePythonProjectReview: RequestHandler = async (req, res) => {
 	const [project, review] = await Promise.all([
 		PythonProject.findOne({
 			_id: new Types.ObjectId(projectID),
-			user: user._id
+			...studentProjectOwnerQuery(user._id)
 		}),
 		PythonProjectReview.findOne({
 			_id: new Types.ObjectId(reviewID),
