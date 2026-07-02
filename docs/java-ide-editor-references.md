@@ -51,6 +51,10 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `toUpperCase()`, and `trim()` should appear as member completions.
 - Include beginner `Scanner` member completions for token reads, line reads,
   numeric/boolean reads, and validation predicates such as `hasNextInt()`.
+  Declared `Scanner` receivers such as `Scanner input = new Scanner(...)` or
+  `java.util.Scanner input = ...` should receive focused Scanner-only member
+  suggestions, matching the runtime rule that IDE input is consumed only
+  through declared Scanner receivers.
 - Include beginner formatted-output completions for `System.out.printf`,
   `System.out.format`, and `String.format`.
 - Keep Java and Karel starter/outline templates executable by the same
