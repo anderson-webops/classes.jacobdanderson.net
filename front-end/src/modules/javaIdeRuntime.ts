@@ -116,7 +116,12 @@ type JavaConsoleForLoop = JavaConsoleEnhancedForLoop | JavaConsoleIndexForLoop;
 type JavaConsoleValue =
 	| {
 			elementType: string;
-			type: "array" | "arrayList";
+			type: "array";
+			value: JavaConsoleValue[];
+	  }
+	| {
+			elementType: string;
+			type: "arrayList";
 			value: JavaConsoleValue[];
 	  }
 	| {
@@ -155,7 +160,7 @@ const JAVA_PRINT_RE =
 const JAVA_SCANNER_METHOD_RE =
 	/^[A-Z_]\w*\.(next(?:Line|Int|Double|Boolean)?|hasNext(?:Line|Int|Double|Boolean)?)\s*\(\s*\)$/i;
 const JAVA_VARIABLE_DECLARATION_START_RE =
-	/^[A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])*\s+([A-Z_]\w*)\s*=/i;
+	/^([A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])*)\s+([A-Z_]\w*)\s*=/i;
 const JAVA_VARIABLE_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*=/i;
 const JAVA_COMPOUND_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*(\+=|-=|\*=|\/=|%=)/i;
 const JAVA_INDEXED_ASSIGNMENT_START_RE =
@@ -713,14 +718,15 @@ function storeJavaVariableFromStatement(
 	}
 
 	const declaration = trimmed.match(JAVA_VARIABLE_DECLARATION_START_RE);
-	if (declaration?.[1]) {
+	if (declaration?.[1] && declaration[2]) {
+		const value = evaluateJavaExpression(
+			trimmed.slice(declaration[0].length),
+			context,
+			output
+		);
 		context.variables.set(
-			declaration[1],
-			evaluateJavaExpression(
-				trimmed.slice(declaration[0].length),
-				context,
-				output
-			)
+			declaration[2],
+			applyDeclaredJavaType(value, declaration[1])
 		);
 		return;
 	}
@@ -1187,6 +1193,18 @@ function evaluateJavaCollectionExpression(
 	);
 	if (arrayList) return javaArrayListValue();
 
+	const arraysCopyOf = expression.match(/^Arrays\.copyOf\s*\(([\s\S]*)\)$/i);
+	if (arraysCopyOf?.[1]) {
+		const args = splitJavaArguments(arraysCopyOf[1]);
+		const original = evaluateJavaExpression(args[0] ?? "", context, output);
+		if (original.type === "array") {
+			return copyJavaArrayValue(
+				original,
+				javaExpressionToIndex(args[1] ?? "0", context, output)
+			);
+		}
+	}
+
 	const arraysToString = expression.match(
 		/^Arrays\.(?:toString|deepToString)\s*\(([^()]*)\)$/i
 	);
@@ -1352,6 +1370,27 @@ function javaArrayValue(
 		type: "array",
 		value
 	};
+}
+
+function copyJavaArrayValue(
+	original: Extract<JavaConsoleValue, { type: "array" }>,
+	rawLength: number
+): JavaConsoleValue {
+	const length = Math.max(0, rawLength);
+	const value = original.value.slice(0, length);
+	while (value.length < length) {
+		value.push(defaultJavaValueForType(original.elementType));
+	}
+	return javaArrayValue(original.elementType, value);
+}
+
+function applyDeclaredJavaType(
+	value: JavaConsoleValue,
+	declaredType: string
+): JavaConsoleValue {
+	if (value.type !== "array" || !/\[\s*\]/.test(declaredType)) return value;
+	const elementType = declaredType.match(/^([A-Z_]\w*)/i)?.[1];
+	return elementType ? { ...value, elementType } : value;
 }
 
 function javaArrayListValue(value: JavaConsoleValue[] = []): JavaConsoleValue {

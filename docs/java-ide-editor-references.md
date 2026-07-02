@@ -28,8 +28,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   for CodeHS/Karel examples that import `java.awt.Color`.
 - Keep beginner collection completions aligned with the course sequence:
   array declarations, enhanced `for` loops, `Arrays.toString(...)`,
-  `Arrays.deepToString(...)`, `Arrays.sort(...)`, 2D array setup, and
-  `ArrayList` creation and core methods should be available from the editor.
+  `Arrays.deepToString(...)`, `Arrays.sort(...)`, `Arrays.copyOf(...)`, 2D
+  array setup, and `ArrayList` creation and core methods should be available
+  from the editor.
 - Keep beginner `String` completions aligned with Java Level 1, AP CSA, and
   sorting lessons: `length()`, `charAt()`, `substring()`, `equals()`,
   `equalsIgnoreCase()`, `compareTo()`, `indexOf()`, `toLowerCase()`,
@@ -77,6 +78,7 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   decisions, bounded `for` / `while` loops, void helper calls, and simple
   static methods with parameters, `return` values, arithmetic use, boolean
   helpers, capped recursion, one-dimensional arrays, `Arrays.toString(...)`,
+  `Arrays.copyOf(...)` for one-dimensional array copies,
   `Arrays.sort(...)` for one-dimensional arrays, `array.length`, indexed array
   access and assignment, enhanced `for` loops over arrays and `ArrayList`s,
   beginner two-dimensional arrays with nested loops, row `.length`, chained
