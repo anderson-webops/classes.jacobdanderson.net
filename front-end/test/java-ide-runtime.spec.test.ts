@@ -72,6 +72,67 @@ describe("java IDE runtime", () => {
 		expect(result.stdout).toEqual(["Hello, Java 5"]);
 	});
 
+	it("runs the Java driver file when a helper class is active", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Dog.java",
+			files: [
+				{
+					name: "Dog.java",
+					content: `public class Dog {
+    // main(String[] args) belongs in Main.java.
+    String reminder = "main(String[] args)";
+}
+`
+				},
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("driver");
+    }
+}
+`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["driver"]);
+	});
+
+	it("runs the Karel driver file when a helper class is active", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Helper.java",
+			files: [
+				{
+					name: "Helper.java",
+					content: `public class Helper {
+    // run() belongs in MyProgram.java.
+    String reminder = "run()";
+}
+`
+				},
+				{
+					name: "MyProgram.java",
+					content: karelOutlineStarterCode
+				},
+				{
+					name: "world.txt",
+					content: karelOutlineWorld
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 5,
+			direction: "West",
+			street: 1
+		});
+	});
+
 	it("explains the beginner Java preview scope when no main body runs", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
