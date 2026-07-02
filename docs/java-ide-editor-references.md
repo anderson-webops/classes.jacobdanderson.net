@@ -5,9 +5,11 @@ server-side compilation, `javac`, Docker, or long-running execution services.
 
 ## Editor Implementation
 
-- Use [`@codemirror/lang-java`](https://github.com/codemirror/lang-java) for
-  Java parsing, indentation, folding, highlighting, and `//` / `/* */` comment
-  language data.
+- Use [`@codemirror/lang-java`](https://code.haverbeke.berlin/codemirror/lang-java)
+  and the [CodeMirror Java API reference](https://codemirror.net/docs/ref/#lang-java.java)
+  for Java parsing, indentation, folding, highlighting, and `//` / `/* */`
+  comment language data. The old GitHub mirror is archived, so prefer the
+  current CodeMirror source and reference pages when checking behavior.
 - Keep the existing CodeMirror shell for shared editing behavior: search,
   history, multi-cursor state, bracket matching, bracket pair coloring,
   wrap-selection typing, Tab / Shift+Tab indentation, and command shortcuts.
