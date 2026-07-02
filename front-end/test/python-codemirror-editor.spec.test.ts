@@ -473,14 +473,20 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).toContain(
 			"grid-template-columns: minmax(15rem, 1fr) auto;"
 		);
-		expect(pageSource).toMatch(
-			/\.editor-toolbar\s*{[\s\S]*align-items: end;/
+		expect(pageSource).toContain(
+			"grid-template-rows: auto var(--python-ide-toolbar-control-size);"
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar > label\s*{[\s\S]*display: grid;[\s\S]*gap: 0\.35rem;/
+			/\.editor-toolbar\s*{[\s\S]*align-items: stretch;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-actions\s*{[\s\S]*align-self: end;[\s\S]*height: var\(--python-ide-toolbar-control-size\);/
+			/\.project-title-label\s*{[\s\S]*grid-column: 1;[\s\S]*grid-row: 1;/
+		);
+		expect(pageSource).toMatch(
+			/\.project-title-input\s*{[\s\S]*grid-column: 1;[\s\S]*grid-row: 2;/
+		);
+		expect(pageSource).toMatch(
+			/\.editor-actions\s*{[\s\S]*grid-column: 2;[\s\S]*grid-row: 2;[\s\S]*align-self: stretch;[\s\S]*height: var\(--python-ide-toolbar-control-size\);/
 		);
 		expect(pageSource).toMatch(/\.ide-settings\s*{[\s\S]*height: 100%;/);
 		expect(pageSource).toContain("box-sizing: border-box;");
@@ -488,9 +494,7 @@ describe("python IDE CodeMirror editor", () => {
 			".editor-actions > .site-button"
 		);
 		expect(pageSource).not.toContain("display: contents;");
-		expect(pageSource).toContain(
-			".editor-toolbar > label input:focus-visible"
-		);
+		expect(pageSource).toContain(".project-title-input:focus-visible");
 		expect(pageSource).not.toContain(
 			".editor-toolbar > label:focus-within"
 		);
