@@ -89,6 +89,10 @@ interface JavaScannerInput {
 	source: string;
 }
 
+interface JavaRandomState {
+	seed: number | null;
+}
+
 interface JavaConsoleOutputState {
 	pendingLine: string;
 	stdout: string[];
@@ -155,6 +159,10 @@ type JavaConsoleValue =
 			value: number;
 	  }
 	| {
+			type: "random";
+			value: JavaRandomState;
+	  }
+	| {
 			type: "string";
 			value: string;
 	  };
@@ -178,7 +186,7 @@ const JAVA_PRINT_RE =
 const JAVA_SCANNER_METHOD_RE =
 	/^[A-Z_]\w*\.(next(?:Line|Int|Double|Boolean)?|hasNext(?:Line|Int|Double|Boolean)?)\s*\(\s*\)$/i;
 const JAVA_VARIABLE_DECLARATION_START_RE =
-	/^([A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])*)\s+([A-Z_]\w*)\s*=/i;
+	/^((?:[A-Z_]\w*\.)*[A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])*)\s+([A-Z_]\w*)\s*=/i;
 const JAVA_VARIABLE_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*=/i;
 const JAVA_COMPOUND_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*(\+=|-=|\*=|\/=|%=)/i;
 const JAVA_INDEXED_ASSIGNMENT_START_RE =
@@ -508,6 +516,7 @@ function executeJavaConsoleStatement(
 
 	if (executeJavaConsoleMethodStatement(trimmed, context, output))
 		return null;
+	if (executeJavaRandomStatement(trimmed, context, output)) return null;
 	if (executeJavaCollectionMutationStatement(trimmed, context, output))
 		return null;
 
@@ -530,6 +539,16 @@ function executeJavaConsoleMethodStatement(
 		output
 	);
 	return true;
+}
+
+function executeJavaRandomStatement(
+	statement: string,
+	context: JavaConsoleContext,
+	output: JavaConsoleOutputState
+) {
+	return Boolean(
+		evaluateJavaRandomMethodExpression(statement, context, output)
+	);
 }
 
 function executeJavaCollectionMutationStatement(
@@ -816,6 +835,13 @@ function evaluateJavaExpression(
 ): JavaConsoleValue {
 	const trimmed = expression.trim();
 	if (!trimmed) return { type: "string", value: "" };
+
+	const randomValue = evaluateJavaRandomMethodExpression(
+		trimmed,
+		context,
+		output
+	);
+	if (randomValue) return randomValue;
 
 	const scannerValue = evaluateJavaScannerRead(trimmed, context);
 	if (scannerValue) return scannerValue;
@@ -1275,6 +1301,16 @@ function evaluateJavaCollectionExpression(
 		);
 	}
 
+	const random = expression.match(
+		/^new\s+(?:java\.util\.)?Random\s*\(([\s\S]*)\)$/i
+	);
+	if (random) {
+		const args = splitJavaArguments(random[1] ?? "");
+		return javaRandomValue(
+			args[0] ? evaluateJavaExpression(args[0], context, output) : null
+		);
+	}
+
 	const arraysCopyOf = expression.match(/^Arrays\.copyOf\s*\(([\s\S]*)\)$/i);
 	if (arraysCopyOf?.[1]) {
 		const args = splitJavaArguments(arraysCopyOf[1]);
@@ -1440,6 +1476,7 @@ function javaValueToString(value: JavaConsoleValue): string {
 	if (value.type === "mapEntry") {
 		return `${javaValueToString(value.value.key)}=${javaValueToString(value.value.value)}`;
 	}
+	if (value.type === "random") return "Random";
 	if (value.type === "null") return "null";
 	return String(value.value);
 }
@@ -1450,9 +1487,10 @@ function javaValueToNumber(value: JavaConsoleValue): number {
 	if (
 		value.type === "array" ||
 		value.type === "arrayList" ||
-		value.type === "map"
+		value.type === "map" ||
+		value.type === "random"
 	) {
-		return value.value.length;
+		return value.type === "random" ? 0 : value.value.length;
 	}
 	const parsed = Number(javaValueToString(value).trim());
 	return Number.isFinite(parsed) ? parsed : 0;
@@ -1574,6 +1612,17 @@ function javaMapValue(
 		mapKind,
 		type: "map",
 		value
+	};
+}
+
+function javaRandomValue(
+	seedValue: JavaConsoleValue | null = null
+): JavaConsoleValue {
+	return {
+		type: "random",
+		value: {
+			seed: seedValue ? normalizeJavaRandomSeed(seedValue) : null
+		}
 	};
 }
 
@@ -1731,6 +1780,69 @@ function evaluateJavaCastExpression(
 		type: "number",
 		value: castType === "int" ? Math.trunc(value) : value
 	};
+}
+
+function evaluateJavaRandomMethodExpression(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue | null {
+	const match = expression.match(
+		/^([A-Z_]\w*)\.(nextInt|nextDouble|nextBoolean|nextLong|nextFloat|setSeed)\s*\(([\s\S]*)\)$/i
+	);
+	if (!match?.[1] || !match[2] || !context) return null;
+	const random = context.variables.get(match[1]);
+	if (random?.type !== "random") return null;
+	const args = splitJavaArguments(match[3] ?? "");
+	const method = match[2].toLowerCase();
+	if (method === "setseed") {
+		random.value.seed = normalizeJavaRandomSeed(
+			evaluateJavaExpression(args[0] ?? "0", context, output)
+		);
+		return { type: "null", value: null };
+	}
+
+	const unit = nextJavaRandomUnit(random.value);
+	if (method === "nextboolean") {
+		return { type: "boolean", value: unit >= 0.5 };
+	}
+	if (method === "nextdouble" || method === "nextfloat") {
+		return { type: "number", value: unit };
+	}
+	if (method === "nextlong") {
+		return {
+			type: "number",
+			value: Math.trunc((unit * 2 - 1) * Number.MAX_SAFE_INTEGER)
+		};
+	}
+
+	const boundExpression = args[0]?.trim();
+	if (!boundExpression) {
+		return {
+			type: "number",
+			value: Math.trunc(unit * 0x100000000) - 0x80000000
+		};
+	}
+	const bound = Math.trunc(
+		javaValueToNumber(
+			evaluateJavaExpression(boundExpression, context, output)
+		)
+	);
+	if (bound <= 0) {
+		context.stderr.push("Random.nextInt(bound) requires a positive bound.");
+		return { type: "number", value: 0 };
+	}
+	return { type: "number", value: Math.floor(unit * bound) };
+}
+
+function nextJavaRandomUnit(random: JavaRandomState) {
+	if (random.seed === null) return Math.random();
+	random.seed = (Math.imul(random.seed, 1664525) + 1013904223) >>> 0;
+	return random.seed / 0x100000000;
+}
+
+function normalizeJavaRandomSeed(value: JavaConsoleValue) {
+	return Math.trunc(javaValueToNumber(value)) >>> 0;
 }
 
 function evaluateJavaMathMethodExpression(

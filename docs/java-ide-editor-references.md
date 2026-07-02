@@ -35,9 +35,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `TreeMap` creation and core `Map` methods should be available from the editor.
 - Include `java.util.Random` type/import/snippet help and Random instance member
   completions (`nextInt`, `nextDouble`, `nextBoolean`, `setSeed`) for declared
-  or clearly named random receivers. The browser preview may still model
-  randomness through `Math.random()` rather than a full `Random` object
-  implementation.
+  or clearly named random receivers. The browser preview supports the beginner
+  `Random` subset used by the course: `new Random(...)`, `nextInt(...)`,
+  `nextDouble()`, `nextBoolean()`, `nextFloat()`, `nextLong()`, and `setSeed(...)`.
 - Keep Java Level 2 and Java Level 3 writing support broader than the browser
   preview runtime. The editor should help students type custom-class and
   collection-design work such as constructors, getters, setters, `toString`,
@@ -96,7 +96,8 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `indexOf()`, `toLowerCase()`, `toUpperCase()`, and `trim()`, numeric
   arithmetic, simple casts including beginner `char` / ASCII casts and
   character arithmetic, common `Math` helpers and constants such as
-  `Math.PI` and `Math.E`, `Scanner` reads from the IDE input box with
+  `Math.PI` and `Math.E`, `Math.random()` and beginner `java.util.Random`
+  calls, `Scanner` reads from the IDE input box with
   Java-like token-versus-line behavior for `next()`,
   `nextInt()`, `nextDouble()`, `nextBoolean()`, and `nextLine()`, basic
   `hasNext...()` validation predicates, basic `if` / `else if` / `else`

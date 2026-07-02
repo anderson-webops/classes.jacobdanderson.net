@@ -462,6 +462,52 @@ public class Main {
 		]);
 	});
 
+	it("previews beginner java.util.Random expressions in the browser subset", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Random;
+
+public class Main {
+    public static void main(String[] args) {
+        Random generator = new Random(4);
+        int first = generator.nextInt(6);
+        int second = generator.nextInt(6);
+        generator.setSeed(4);
+        boolean repeatsFirst = first == generator.nextInt(6);
+        double decimal = generator.nextDouble();
+        boolean coin = generator.nextBoolean();
+        float floatValue = generator.nextFloat();
+        java.util.Random fixed = new java.util.Random(9);
+
+        System.out.println(first >= 0 && first < 6);
+        System.out.println(second >= 0 && second < 6);
+        System.out.println(repeatsFirst);
+        System.out.println(decimal >= 0 && decimal < 1);
+        System.out.println(coin == true || coin == false);
+        System.out.println(floatValue >= 0 && floatValue < 1);
+        System.out.println(fixed.nextInt(1));
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual([
+			"true",
+			"true",
+			"true",
+			"true",
+			"true",
+			"true",
+			"0"
+		]);
+	});
+
 	it("previews beginner Java static methods with parameters and returns", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
