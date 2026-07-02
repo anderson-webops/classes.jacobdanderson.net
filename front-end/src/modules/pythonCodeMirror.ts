@@ -1646,6 +1646,80 @@ const javaScannerMemberCompletions = [
 	)
 ];
 
+const javaStringInstanceMemberCompletions = [
+	completion("length", "method", "string length", 78),
+	completion("charAt", "method", "character at an index", 78),
+	completion("substring", "method", "string slice", 78),
+	completion("equals", "method", "string equality", 78),
+	completion("equalsIgnoreCase", "method", "case-insensitive equality", 76),
+	completion("compareTo", "method", "string ordering", 76),
+	completion("indexOf", "method", "find text position", 74),
+	completion("toLowerCase", "method", "lowercase string", 72),
+	completion("toUpperCase", "method", "uppercase string", 72),
+	completion("trim", "method", "remove outside spaces", 70)
+];
+
+const javaArrayMemberCompletions = [
+	completion("length", "property", "array length", 78),
+	completion("clone", "method", "copy the array", 64)
+];
+
+const javaCollectionMemberCompletions = [
+	completion("add", "method", "append or insert an item", 78),
+	completion("remove", "method", "remove an item", 76),
+	completion("contains", "method", "whether an item is present", 76),
+	completion("containsAll", "method", "whether all items are present", 70),
+	completion(
+		"addAll",
+		"method",
+		"add every item from another collection",
+		70
+	),
+	completion("removeAll", "method", "remove matching collection items", 68),
+	completion("retainAll", "method", "keep matching collection items", 68),
+	completion("clear", "method", "remove all items", 70),
+	completion("iterator", "method", "collection iterator", 66),
+	completion("toArray", "method", "copy items into an array", 66),
+	completion("size", "method", "item count", 76),
+	completion("isEmpty", "method", "whether the collection is empty", 76)
+];
+
+const javaListMemberCompletions = [
+	completion("get", "method", "read an item by index", 82),
+	completion("set", "method", "replace an item by index", 80),
+	...javaCollectionMemberCompletions
+];
+
+const javaSetMemberCompletions = javaCollectionMemberCompletions;
+
+const javaQueueMemberCompletions = [
+	completion("offer", "method", "add a queue item", 82),
+	completion("poll", "method", "remove and return the next queue item", 82),
+	completion("peek", "method", "read the next queue item", 80),
+	completion("element", "method", "read the next queue item", 76),
+	...javaCollectionMemberCompletions
+];
+
+const javaMapMemberCompletions = [
+	completion("put", "method", "add or replace a map value", 82),
+	completion("putIfAbsent", "method", "add a map value only if missing", 80),
+	completion("get", "method", "read a map value", 80),
+	completion("getOrDefault", "method", "read a value or fallback", 78),
+	completion("remove", "method", "remove a map key", 76),
+	completion("containsKey", "method", "whether the map has a key", 76),
+	completion("keySet", "method", "all map keys", 74),
+	completion("values", "method", "all map values", 74),
+	completion("entrySet", "method", "all map entries", 74),
+	completion("clear", "method", "remove all map entries", 70),
+	completion("size", "method", "map entry count", 76),
+	completion("isEmpty", "method", "whether the map is empty", 76)
+];
+
+const javaMapEntryMemberCompletions = [
+	completion("getKey", "method", "map entry key", 82),
+	completion("getValue", "method", "map entry value", 82)
+];
+
 const javaVariableMemberCompletions = [
 	completion("length", "property", "array or string length", 70),
 	completion("charAt", "method", "character at an index", 70),
@@ -2262,10 +2336,41 @@ function javaDeclaredReceiverCompletions(
 	const scannerDeclarationPattern = new RegExp(
 		`\\b(?:java\\.util\\.)?Scanner\\s+${escapedReceiver}\\b`
 	);
+	const stringDeclarationPattern = new RegExp(
+		`\\bString\\s+${escapedReceiver}\\b`
+	);
+	const arrayDeclarationPattern = new RegExp(
+		`\\b[A-Z_]\\w*(?:\\s*<[^;>{}]+>)?\\s*\\[\\s*\\]\\s+${escapedReceiver}\\b`,
+		"i"
+	);
+	const listDeclarationPattern = new RegExp(
+		`\\b(?:java\\.util\\.)?(?:ArrayList|List|LinkedList)\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+	);
+	const setDeclarationPattern = new RegExp(
+		`\\b(?:java\\.util\\.)?(?:HashSet|TreeSet|Set)\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+	);
+	const queueDeclarationPattern = new RegExp(
+		`\\b(?:java\\.util\\.)?(?:PriorityQueue|Queue)\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+	);
+	const mapDeclarationPattern = new RegExp(
+		`\\b(?:java\\.util\\.)?(?:HashMap|TreeMap|Map)\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+	);
+	const mapEntryDeclarationPattern = new RegExp(
+		`\\b(?:java\\.util\\.)?Map\\.Entry\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+	);
 	const doc = state.doc.toString();
 	if (randomDeclarationPattern.test(doc)) return javaRandomMemberCompletions;
 	if (scannerDeclarationPattern.test(doc))
 		return javaScannerMemberCompletions;
+	if (stringDeclarationPattern.test(doc))
+		return javaStringInstanceMemberCompletions;
+	if (arrayDeclarationPattern.test(doc)) return javaArrayMemberCompletions;
+	if (listDeclarationPattern.test(doc)) return javaListMemberCompletions;
+	if (setDeclarationPattern.test(doc)) return javaSetMemberCompletions;
+	if (queueDeclarationPattern.test(doc)) return javaQueueMemberCompletions;
+	if (mapEntryDeclarationPattern.test(doc))
+		return javaMapEntryMemberCompletions;
+	if (mapDeclarationPattern.test(doc)) return javaMapMemberCompletions;
 	return null;
 }
 
