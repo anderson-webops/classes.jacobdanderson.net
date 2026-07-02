@@ -1549,6 +1549,26 @@ const javaVariableMemberCompletions = [
 	completion("toLowerCase", "method", "lowercase string", 70),
 	completion("toUpperCase", "method", "uppercase string", 70),
 	completion("trim", "method", "remove outside spaces", 70),
+	completion("next", "method", "read the next Scanner token", 70),
+	completion("nextLine", "method", "read the current Scanner line", 70),
+	completion("nextInt", "method", "read the next Scanner int", 70),
+	completion("nextDouble", "method", "read the next Scanner double", 70),
+	completion("nextBoolean", "method", "read the next Scanner boolean", 70),
+	completion("hasNext", "method", "whether Scanner has another token", 70),
+	completion("hasNextLine", "method", "whether Scanner has another line", 70),
+	completion("hasNextInt", "method", "whether Scanner has an int token", 70),
+	completion(
+		"hasNextDouble",
+		"method",
+		"whether Scanner has a double token",
+		70
+	),
+	completion(
+		"hasNextBoolean",
+		"method",
+		"whether Scanner has a boolean token",
+		70
+	),
 	completion("add", "method", "append or insert an ArrayList item", 70),
 	completion("get", "method", "read an ArrayList item", 70),
 	completion("set", "method", "replace an ArrayList item", 70),

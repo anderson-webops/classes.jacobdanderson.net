@@ -117,6 +117,65 @@ public class Main {
 		expect(result.stdout).toEqual(["Age: 0"]);
 	});
 
+	it("previews Scanner token reads and nextLine newline behavior", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String name = input.next();
+        int age = input.nextInt();
+        String leftover = input.nextLine();
+        String city = input.nextLine();
+        double temp = input.nextDouble();
+        boolean ready = input.nextBoolean();
+        System.out.println(name + "|" + age + "|" + leftover + "|" + city + "|" + temp + "|" + ready);
+    }
+}`
+				}
+			],
+			inputText: "Ada 36\nSeattle WA\n98.6 true",
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["Ada|36||Seattle WA|98.6|true"]);
+	});
+
+	it("previews Scanner hasNext validation without consuming tokens", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String skipped = "";
+        while (!input.hasNextInt() && input.hasNext()) {
+            skipped = input.next();
+        }
+        int value = input.nextInt();
+        System.out.println(skipped + ":" + value + ":" + input.hasNextLine());
+    }
+}`
+				}
+			],
+			inputText: "oops 5\nnext line",
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["oops:5:true"]);
+	});
+
 	it("previews Java console if/else decisions from stored input", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
