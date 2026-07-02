@@ -779,6 +779,8 @@ const pythonEditorNativeSelectionStyle = {
 	backgroundColor: "var(--python-code-selection) !important",
 	color: "var(--python-code-selection-ink) !important"
 };
+const javaSyntaxErrorMessage =
+	"Java syntax error. Check this line before running the project.";
 const pythonSyntaxErrorMessage =
 	"Python syntax error. Check this line before running the project.";
 const pythonRuntimeErrorSource = "Python runtime";
@@ -922,6 +924,26 @@ export function pythonSyntaxDiagnostics(state: EditorState): Diagnostic[] {
 			),
 			severity: "error",
 			message: pythonSyntaxErrorMessage
+		});
+	} while (cursor.next());
+
+	return diagnostics;
+}
+
+export function javaSyntaxDiagnostics(state: EditorState): Diagnostic[] {
+	const diagnostics: Diagnostic[] = [];
+	const cursor = syntaxTree(state).cursor();
+
+	do {
+		if (!cursor.type.isError) continue;
+		diagnostics.push({
+			from: cursor.from,
+			to: Math.max(
+				cursor.to,
+				Math.min(cursor.from + 1, state.doc.length)
+			),
+			severity: "error",
+			message: javaSyntaxErrorMessage
 		});
 	} while (cursor.next());
 
@@ -2137,6 +2159,9 @@ const pythonEditorDiagnosticsSetup: Extension[] = [
 		}
 	})
 ];
+const javaEditorDiagnosticsSetup: Extension[] = [
+	linter(view => javaSyntaxDiagnostics(view.state))
+];
 
 export function createPythonCodeMirrorExtensions(
 	options: PythonCodeMirrorOptions
@@ -2150,6 +2175,7 @@ export function createPythonCodeMirrorExtensions(
 	return [
 		pythonEditorBaseSetup,
 		isPythonMode ? pythonEditorDiagnosticsSetup : [],
+		isJavaMode ? javaEditorDiagnosticsSetup : [],
 		isPythonMode
 			? [
 					python(),

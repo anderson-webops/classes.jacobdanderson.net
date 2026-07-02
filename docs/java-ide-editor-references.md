@@ -18,6 +18,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   comments, string literals, character literals, and text blocks. This matches
   the Python editor expectation that prose/comment text should not trigger code
   completions while the student is typing.
+- Surface parser-backed Java/Karel syntax diagnostics through the same
+  CodeMirror lint-gutter path used by Python so missing braces and malformed
+  statements are visible before the student presses Run.
 - Treat Karel static receiver completions separately from robot-object
   completions. `Directions.` should suggest `North`, `East`, `South`, and
   `West`, while robot variables such as `sam.` should suggest movement and

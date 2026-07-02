@@ -13,6 +13,7 @@ import {
 	createPythonCodeMirrorExtensions,
 	isPythonBracketPairIgnoredAt,
 	javaIdeCompletionsForMode,
+	javaSyntaxDiagnostics,
 	pythonIdeCompletionSource,
 	pythonIdeCompletionsForMode,
 	pythonNewlineIndentText,
@@ -311,6 +312,8 @@ describe("python IDE CodeMirror editor", () => {
 		expect(editorSource).toContain("java()");
 		expect(editorSource).toContain("javaLanguage.data.of");
 		expect(editorSource).toContain("javaIdeCompletionSource(mode)");
+		expect(editorSource).toContain("javaEditorDiagnosticsSetup");
+		expect(editorSource).toContain("javaSyntaxDiagnostics");
 		expect(editorSource).not.toContain("override: isPythonMode");
 
 		const javaLabels = javaIdeCompletionsForMode("java").map(
@@ -1326,6 +1329,38 @@ describe("python IDE CodeMirror editor", () => {
 			severity: "error",
 			message:
 				"Python syntax error. Check this line before running the project."
+		});
+		expect(diagnostics[0]?.to).toBeGreaterThanOrEqual(
+			diagnostics[0]?.from ?? 0
+		);
+	});
+
+	it("surfaces parser-backed Java syntax diagnostics before run", () => {
+		const validState = EditorState.create({
+			doc: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"ok\");\n    }\n}\n",
+			extensions: createPythonCodeMirrorExtensions({
+				mode: "java",
+				onChange: vi.fn(),
+				onCursorCountChange: vi.fn()
+			})
+		});
+		const invalidState = EditorState.create({
+			doc: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"missing brace\");\n    \n",
+			extensions: createPythonCodeMirrorExtensions({
+				mode: "java",
+				onChange: vi.fn(),
+				onCursorCountChange: vi.fn()
+			})
+		});
+
+		expect(javaSyntaxDiagnostics(validState)).toEqual([]);
+		const diagnostics = javaSyntaxDiagnostics(invalidState);
+
+		expect(diagnostics.length).toBeGreaterThan(0);
+		expect(diagnostics[0]).toMatchObject({
+			severity: "error",
+			message:
+				"Java syntax error. Check this line before running the project."
 		});
 		expect(diagnostics[0]?.to).toBeGreaterThanOrEqual(
 			diagnostics[0]?.from ?? 0
