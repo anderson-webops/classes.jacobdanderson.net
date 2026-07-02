@@ -1597,6 +1597,8 @@ const javaVariableMemberCompletions = [
 	completion("get", "method", "read an ArrayList item", 70),
 	completion("set", "method", "replace an ArrayList item", 70),
 	completion("remove", "method", "remove an ArrayList item", 70),
+	completion("contains", "method", "whether the ArrayList has an item", 70),
+	completion("clear", "method", "remove all ArrayList items", 70),
 	completion("size", "method", "ArrayList item count", 70),
 	completion("isEmpty", "method", "whether the ArrayList is empty", 70)
 ];

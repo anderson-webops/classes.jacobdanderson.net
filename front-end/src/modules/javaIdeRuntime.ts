@@ -533,9 +533,16 @@ function executeJavaCollectionMutationStatement(
 	const args = splitJavaArguments(match[3] ?? "");
 	const method = match[2].toLowerCase();
 	if (method === "add") {
-		collection.value.push(
-			evaluateJavaExpression(args.at(-1) ?? "", context, output)
-		);
+		const item = evaluateJavaExpression(args.at(-1) ?? "", context, output);
+		if (args.length >= 2) {
+			collection.value.splice(
+				javaExpressionToIndex(args[0] ?? "0", context, output),
+				0,
+				item
+			);
+		} else {
+			collection.value.push(item);
+		}
 		return true;
 	}
 	if (method === "set") {
@@ -548,10 +555,19 @@ function executeJavaCollectionMutationStatement(
 		return true;
 	}
 	if (method === "remove") {
-		collection.value.splice(
-			javaExpressionToIndex(args[0] ?? "", context, output),
-			1
-		);
+		const rawArgument = args[0] ?? "";
+		const argument = evaluateJavaExpression(rawArgument, context, output);
+		if (argument.type === "number") {
+			collection.value.splice(
+				javaExpressionToIndex(rawArgument, context, output),
+				1
+			);
+		} else {
+			const index = collection.value.findIndex(value =>
+				javaValuesAreEqual(value, argument)
+			);
+			if (index >= 0) collection.value.splice(index, 1);
+		}
 		return true;
 	}
 	collection.value.splice(0);
@@ -1195,7 +1211,7 @@ function evaluateJavaCollectionExpression(
 	}
 
 	const listMethod = expression.match(
-		/^([A-Z_]\w*)\.(get|size|isEmpty)\s*\(([^()]*)\)$/i
+		/^([A-Z_]\w*)\.(get|size|isEmpty|contains)\s*\(([^()]*)\)$/i
 	);
 	if (!listMethod?.[1] || !listMethod[2]) return null;
 	const value = context?.variables.get(listMethod[1]);
@@ -1204,6 +1220,17 @@ function evaluateJavaCollectionExpression(
 	if (method === "size") return { type: "number", value: value.value.length };
 	if (method === "isempty") {
 		return { type: "boolean", value: value.value.length === 0 };
+	}
+	if (method === "contains") {
+		const target = evaluateJavaExpression(
+			listMethod[3] ?? "",
+			context,
+			output
+		);
+		return {
+			type: "boolean",
+			value: value.value.some(item => javaValuesAreEqual(item, target))
+		};
 	}
 	return (
 		value.value[

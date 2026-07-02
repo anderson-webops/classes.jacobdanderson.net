@@ -388,6 +388,8 @@ describe("python IDE CodeMirror editor", () => {
 				"get",
 				"set",
 				"remove",
+				"contains",
+				"clear",
 				"size",
 				"isEmpty"
 			])
