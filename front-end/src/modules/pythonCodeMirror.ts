@@ -124,17 +124,17 @@ const pythonTurtleColorStringCompletionValidForRegex = /^[A-Z_ ]*$/i;
 const pythonIdentifierRegex = /^[A-Z_]\w*$/i;
 const closingBrackets = new Set(Object.values(openingBracketToClosingBracket));
 const pythonCompletionBlockedNodeNames = new Set([
-	"Comment",
-	"FormatString",
-	"String"
-]);
-const pythonBracketPairIgnoredNodeNames = new Set([
-	...pythonCompletionBlockedNodeNames,
 	"BlockComment",
 	"CharacterLiteral",
+	"Comment",
+	"FormatString",
 	"LineComment",
+	"String",
 	"StringLiteral",
 	"TextBlock"
+]);
+const pythonBracketPairIgnoredNodeNames = new Set([
+	...pythonCompletionBlockedNodeNames
 ]);
 const pgzeroAssetStringCompletionPatterns: Array<{
 	folder: PythonIdeAssetCompletionFolder;
@@ -1922,6 +1922,9 @@ export function javaIdeCompletionsForMode(
 
 function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 	return (context: PythonIdeCompletionContext) => {
+		const node = syntaxTree(context.state).resolveInner(context.pos, -1);
+		if (pythonCompletionBlockedNodeNames.has(node.name)) return null;
+
 		const word = context.matchBefore(/(?:[A-Z_]\w*\.){0,3}[A-Z_]\w*\.?$/i);
 		const javaCompletions = javaIdeCompletionsForMode(mode);
 		if (!word) {
