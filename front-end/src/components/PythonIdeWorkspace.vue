@@ -7212,79 +7212,77 @@ html.dark .file-delete:disabled::after {
 	z-index: 8;
 	top: 1rem;
 	right: 1rem;
-	width: min(34rem, calc(100vw - 2rem));
+	width: min(26rem, calc(100vw - 2rem));
 	max-height: calc(100vh - 2rem);
 	display: grid;
-	gap: 0.75rem;
+	gap: 0.45rem;
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 1rem;
+	padding: 0.8rem;
 	border: 1px solid var(--color-border);
-	border-radius: 14px;
+	border-radius: 12px;
 	background: #fff;
 	box-shadow: var(--shadow-soft);
 	font-family: var(--font-sans);
-	font-size: 0.875rem;
-	line-height: 1.5;
+	font-size: 0.84rem;
+	line-height: 1.42;
 	font-variant: normal;
 	font-weight: 400;
 	text-align: left;
 	text-transform: none;
-	letter-spacing: 0;
+	letter-spacing: normal;
 	overflow-wrap: normal;
 	word-break: normal;
 }
 
-.editor-toolbar .ide-settings-panel,
-.editor-toolbar .ide-settings-panel :where(*) {
+.ide-settings-panel,
+.ide-settings-panel :where(*) {
 	color: inherit;
 	font-family: var(--font-sans);
 	font-variant: normal;
-	font-weight: 400;
-	letter-spacing: 0;
-	line-height: 1.5;
-	text-transform: none;
+	letter-spacing: normal !important;
+	text-transform: none !important;
 	overflow-wrap: normal;
 	word-break: normal;
 }
 
-.ide-settings-panel :is(label, span, small, button, input),
-.editor-toolbar .ide-settings-panel .ide-setting-copy,
-.editor-toolbar .ide-settings-panel .ide-setting-title,
-.editor-toolbar .ide-settings-panel .ide-setting-description {
+.ide-settings-panel :is(label, span, small, button),
+.ide-settings-panel .ide-setting-copy,
+.ide-settings-panel .ide-setting-title,
+.ide-settings-panel .ide-setting-description {
 	font-variant: normal;
-	letter-spacing: 0;
-	text-transform: none;
+	letter-spacing: normal !important;
+	text-transform: none !important;
 }
 
 .ide-setting-toggle {
 	display: grid;
-	grid-template-columns: 1.15rem minmax(0, 1fr);
-	column-gap: 0.85rem;
-	row-gap: 0.2rem;
+	grid-template-columns: 1rem minmax(0, 1fr);
+	column-gap: 0.65rem;
+	row-gap: 0.16rem;
 	align-items: start;
-	padding: 0.82rem 0.9rem;
-	border-radius: 10px;
+	padding: 0.62rem 0.7rem;
+	border-radius: 8px;
 	color: var(--color-ink);
 	cursor: pointer;
-	font-size: 0.875rem;
+	font-size: 0.84rem;
 	font-weight: 400;
-	line-height: 1.5;
+	line-height: 1.42;
 	text-align: left;
 	text-transform: none;
-	letter-spacing: 0;
+	letter-spacing: normal;
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
-	margin-top: 0.35rem;
+	margin-top: 0.15rem;
 	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-share {
 	display: grid;
-	gap: 0.75rem;
-	margin-top: 0.35rem;
-	padding-top: 0.35rem;
+	gap: 0.45rem;
+	margin-top: 0.15rem;
+	padding-top: 0.25rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7315,9 +7313,9 @@ html.dark .file-delete:disabled::after {
 
 .ide-setting-storage {
 	display: grid;
-	gap: 0.55rem;
-	margin-top: 0.25rem;
-	padding: 0.65rem 0.7rem 0;
+	gap: 0.42rem;
+	margin-top: 0.15rem;
+	padding: 0.52rem 0.7rem 0;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7329,8 +7327,8 @@ html.dark .file-delete:disabled::after {
 	background: rgba(15, 118, 110, 0.1);
 	color: #0f766e;
 	font-size: 0.78rem;
-	font-weight: 650;
-	letter-spacing: 0;
+	font-weight: 600;
+	letter-spacing: normal;
 }
 
 .ide-setting-action:disabled {
@@ -7339,10 +7337,10 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-setting-toggle input[type="checkbox"] {
-	width: 1.05rem;
-	height: 1.05rem;
+	width: 1rem;
+	height: 1rem;
 	margin: 0;
-	margin-top: 0.08rem;
+	margin-top: 0.07rem;
 	accent-color: #0f766e;
 	transform: none;
 }
@@ -7350,29 +7348,29 @@ html.dark .file-delete:disabled::after {
 .ide-setting-copy {
 	min-width: 0;
 	display: grid;
-	gap: 0.28rem;
+	gap: 0.18rem;
 }
 
-.editor-toolbar .ide-settings-panel .ide-setting-title {
+.ide-settings-panel .ide-setting-title {
 	display: block;
 	color: var(--color-ink-strong);
-	font-size: 0.88rem;
+	font-size: 0.86rem;
 	font-weight: 550;
-	letter-spacing: 0;
-	line-height: 1.32;
+	letter-spacing: normal !important;
+	line-height: 1.28;
 	font-variant: normal;
-	text-transform: none;
+	text-transform: none !important;
 }
 
-.editor-toolbar .ide-settings-panel .ide-setting-description {
+.ide-settings-panel .ide-setting-description {
 	display: block;
 	color: var(--color-ink-soft);
-	font-size: 0.78rem;
+	font-size: 0.76rem;
 	font-weight: 400;
-	letter-spacing: 0;
-	line-height: 1.48;
+	letter-spacing: normal !important;
+	line-height: 1.36;
 	font-variant: normal;
-	text-transform: none;
+	text-transform: none !important;
 }
 
 .ide-setting-storage small {
