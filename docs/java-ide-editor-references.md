@@ -14,6 +14,11 @@ server-side compilation, `javac`, Docker, or long-running execution services.
 - Add Java and Karel-specific completion entries and snippets in
   `front-end/src/modules/pythonCodeMirror.ts`; do not introduce backend
   language services or worker pools without explicit approval.
+- Treat Karel static receiver completions separately from robot-object
+  completions. `Directions.` should suggest `North`, `East`, `South`, and
+  `West`, while robot variables such as `sam.` should suggest movement and
+  beeper/ball commands. `Color.` may offer common `java.awt.Color` constants
+  for CodeHS/Karel examples that import `java.awt.Color`.
 - Keep beginner collection completions aligned with the course sequence:
   array declarations, enhanced `for` loops, `Arrays.toString(...)`, and
   `Arrays.deepToString(...)`, 2D array setup, and `ArrayList` creation and
@@ -32,6 +37,10 @@ server-side compilation, `javac`, Docker, or long-running execution services.
 - [BlueJ / Greenfoot](https://github.com/k-pet-group/BlueJ-Greenfoot) remains
   the classroom reference for visual Java object inspection. It is useful for
   course sequencing, but not something this site embeds or runs server-side.
+- [Monaco Editor](https://github.com/microsoft/monaco-editor) is a useful
+  comparison point for browser editor UX because it is the editor from VS Code.
+  Its deeper Java IntelliSense path generally implies language-server or worker
+  architecture, so it remains a reference rather than the current implementation.
 - [CodeHS Java Karel docs](https://codehs.com/documentation/javaKarel) inform
   Karel command vocabulary, method patterns, comments, conditions, and loops.
   The local Karel preview follows `UrRobot` commands from `main`, CodeHS-style
@@ -64,7 +73,15 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   is the reference point for formatted output. The browser preview implements a
   small teaching subset: `%s`, `%d`, `%f` with optional width/precision, `%%`,
   and `%n`.
-- [Monaco Editor](https://microsoft.github.io/monaco-editor/) is a useful
-  comparison point for browser editor UX, but its deeper Java IntelliSense path
-  usually implies a language-server architecture. That is intentionally outside
-  the current client-only scope.
+
+## Online Editor Boundary
+
+- CodeHS and BlueJ/Greenfoot are course-sequencing references for Karel,
+  visual state, and novice Java object inspection.
+- CodeMirror is the implementation choice for the Classes browser editor
+  because it provides Java parsing and editing features without requiring
+  server compilation.
+- Online Java compilers and full IDEs that execute arbitrary Java generally
+  require server-side compilation or hosted sandboxes. Do not connect those to
+  the Classes backend unless a future task explicitly approves a bounded
+  execution service with resource limits.

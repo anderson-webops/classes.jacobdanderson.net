@@ -5602,6 +5602,54 @@ describe("course text quality normalization", () => {
 		).toContain("divisibility checks");
 	});
 
+	it("keeps the Java course sequence anchored to the visual Karel and BlueJ bridge", async () => {
+		const [javaLevel1, javaLevel2, javaLevel3, apCsa] = await Promise.all([
+			loadRawCourse("java-level-1"),
+			loadRawCourse("java-level-2"),
+			loadRawCourse("java-level-3"),
+			loadRawCourse("ap-computer-science-a")
+		]);
+
+		expect(javaLevel1).not.toBeNull();
+		expect(javaLevel2).not.toBeNull();
+		expect(javaLevel3).not.toBeNull();
+		expect(apCsa).not.toBeNull();
+
+		const javaLevel1Text = allCourseText(javaLevel1);
+		const javaLevel2Text = allCourseText(javaLevel2);
+		const javaLevel3Text = allCourseText(javaLevel3);
+		const apCsaText = allCourseText(apCsa);
+
+		expect(javaLevel1!.modules[0]?.title).toBe(
+			"J1A Visual Java Launch: Carol/Karel Robot Worlds"
+		);
+		expect(
+			findItem(javaLevel1!, /Course Launch: Start Java Visually/)
+				.projectLink
+		).toBe("/python-ide?mode=karel");
+		expect(
+			findItem(javaLevel1!, /J1A Project 1: Robot Walkthrough/)
+				.projectLink
+		).toBe("/python-ide?mode=karel");
+		expect(javaLevel1Text).toContain("BlueJ with Carol/Karel");
+		expect(javaLevel1Text).toContain("visible robot world");
+		expect(javaLevel1Text).toContain(
+			"Text Bridge: Variables, Strings, and Input"
+		);
+		expect(javaLevel1Text).toContain("Optional Python-to-Java Bridge");
+
+		expect(javaLevel2!.modules[0]?.title).toBe("JM0 Visual-to-OOP Bridge");
+		expect(javaLevel2Text).toContain("BlueJ Object Bench");
+		expect(javaLevel2Text).toContain("Object State Trace");
+
+		expect(javaLevel3!.modules[0]?.title).toBe(
+			"AJ0 Visual Foundations Audit"
+		);
+		expect(javaLevel3Text).toContain("visible robot object");
+		expect(apCsaText).toContain("Visual Java Bridge");
+		expect(apCsaText).toContain("Carol/Karel and BlueJ habits");
+	});
+
 	it("keeps Java graphics split tracks neutral and project-rich", async () => {
 		const [javaWithoutGraphics, javaWithGraphics] = await Promise.all([
 			loadRawCourse("java-without-graphics"),
