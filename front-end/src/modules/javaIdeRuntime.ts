@@ -2670,7 +2670,15 @@ function evaluateKarelCondition(
 	condition: string,
 	execution: KarelPreviewExecution
 ): boolean {
-	const trimmed = condition.trim().replace(/\s+/g, "");
+	const trimmed = stripJavaOuterParens(condition.trim().replace(/\s+/g, ""));
+	const orParts = splitJavaTopLevel(trimmed, "||");
+	if (orParts.length > 1)
+		return orParts.some(part => evaluateKarelCondition(part, execution));
+
+	const andParts = splitJavaTopLevel(trimmed, "&&");
+	if (andParts.length > 1)
+		return andParts.every(part => evaluateKarelCondition(part, execution));
+
 	if (trimmed.startsWith("!"))
 		return !evaluateKarelCondition(trimmed.slice(1), execution);
 
