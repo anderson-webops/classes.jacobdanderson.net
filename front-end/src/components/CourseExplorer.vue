@@ -207,14 +207,14 @@ const courseDescription = computed(() =>
 			? "Choose a learner, open one of their assigned courses, and mark progress directly inside the syllabus."
 			: "Use the controls below to switch courses or search inside this syllabus."
 );
-const pythonIdeCourseMode = computed(() =>
+const ideCourseMode = computed(() =>
 	pythonIdeModeForCourseId(selectedCourse.value?.id)
 );
-const pythonIdeCourseHref = computed(() => {
-	if (!selectedCourse.value || !pythonIdeCourseMode.value) return "";
+const ideCourseHref = computed(() => {
+	if (!selectedCourse.value || !ideCourseMode.value) return "";
 	const params = new URLSearchParams({
 		course: selectedCourse.value.id,
-		mode: pythonIdeCourseMode.value
+		mode: ideCourseMode.value
 	});
 	if (selectedCourse.value.id === "pygames") {
 		params.set("starter", "course");
@@ -222,11 +222,11 @@ const pythonIdeCourseHref = computed(() => {
 		params.set("starterTitle", `${selectedCourse.value.name} Starter`);
 		params.set("starterLabel", "Course starter");
 	}
-	return `/python-ide?${params.toString()}`;
+	return `/ide?${params.toString()}`;
 });
-const pythonIdeCourseLabel = computed(() =>
-	pythonIdeCourseMode.value
-		? `Open ${getPythonIdeModeLabel(pythonIdeCourseMode.value)} IDE`
+const ideCourseLabel = computed(() =>
+	ideCourseMode.value
+		? `Open ${getPythonIdeModeLabel(ideCourseMode.value)} IDE`
 		: ""
 );
 
@@ -1426,10 +1426,10 @@ function codePreviewResources(item: CourseModuleItem): CodePreviewResource[] {
 		}));
 }
 
-function pythonIdeStarterHref(item: CourseModuleItem, resource: ResourceLink) {
+function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 	if (
 		!selectedCourse.value ||
-		!pythonIdeCourseMode.value ||
+		!ideCourseMode.value ||
 		resource.kind !== "project" ||
 		resource.host !== "github.com" ||
 		!STARTER_RE.test(`${resource.label} ${resource.url}`)
@@ -1439,13 +1439,13 @@ function pythonIdeStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 
 	const params = new URLSearchParams({
 		course: selectedCourse.value.id,
-		mode: pythonIdeCourseMode.value,
+		mode: ideCourseMode.value,
 		projectKey: `${selectedCourse.value.id}:${item.id}:starter`,
 		starterUrl: resource.url,
 		starterTitle: item.title,
 		starterLabel: resource.label
 	});
-	return `/python-ide?${params.toString()}`;
+	return `/ide?${params.toString()}`;
 }
 
 function courseAssetPreviewResources(
@@ -1573,12 +1573,12 @@ function writeStoredValue(key: string, value: string) {
 					<p class="course-description">
 						{{ courseDescription }}
 					</p>
-					<div v-if="pythonIdeCourseHref" class="course-ide-action">
+					<div v-if="ideCourseHref" class="course-ide-action">
 						<a
 							class="site-button site-button--secondary course-ide-link"
-							:href="pythonIdeCourseHref"
+							:href="ideCourseHref"
 						>
-							{{ pythonIdeCourseLabel }}
+							{{ ideCourseLabel }}
 						</a>
 						<span>
 							Use the browser workspace for this course's code,
@@ -2029,14 +2029,14 @@ function writeStoredValue(key: string, value: string) {
 											</a>
 											<a
 												v-if="
-													pythonIdeStarterHref(
+													ideStarterHref(
 														item,
 														resource
 													)
 												"
 												class="resource-link is-ide-starter"
 												:href="
-													pythonIdeStarterHref(
+													ideStarterHref(
 														item,
 														resource
 													)
@@ -2273,14 +2273,14 @@ function writeStoredValue(key: string, value: string) {
 											</a>
 											<a
 												v-if="
-													pythonIdeStarterHref(
+													ideStarterHref(
 														item,
 														resource
 													)
 												"
 												class="resource-link is-ide-starter"
 												:href="
-													pythonIdeStarterHref(
+													ideStarterHref(
 														item,
 														resource
 													)

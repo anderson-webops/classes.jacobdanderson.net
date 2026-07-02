@@ -93,6 +93,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/ide': RouteRecordInfo<
+      '/ide',
+      '/ide',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/pathways': RouteRecordInfo<
       '/pathways',
       '/pathways',
@@ -227,6 +234,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/courses.vue': {
       routes:
         | '/courses'
+      views:
+        | never
+    }
+    'src/pages/ide.vue': {
+      routes:
+        | '/ide'
       views:
         | never
     }

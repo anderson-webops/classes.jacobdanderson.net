@@ -15,6 +15,7 @@ const route = useRoute();
 const noindexMatchers = [
 	/^\/admin(?:\/|$)/,
 	/^\/profile(?:\/|$)/,
+	/^\/ide(?:\/|$)/,
 	/^\/python-ide(?:\/|$)/,
 	/^\/api(?:\/|$)/
 ];

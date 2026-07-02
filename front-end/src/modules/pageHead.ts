@@ -5,6 +5,7 @@ const ROUTE_TITLES: Array<[RegExp, string]> = [
 	[/^\/courses(?:\/|$)/, "Courses"],
 	[/^\/pathways(?:\/|$)/, "Pathways"],
 	[/^\/course-resource(?:\/|$)/, "Course Resource"],
+	[/^\/ide(?:\/|$)/, "Code IDE"],
 	[/^\/python-ide(?:\/|$)/, "Code IDE"],
 	[/^\/zoom(?:\/|$)/, "Zoom"],
 	[/^\/signup(?:\/|$)/, "Book a Class"],

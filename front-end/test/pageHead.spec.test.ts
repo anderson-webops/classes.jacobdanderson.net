@@ -10,6 +10,7 @@ describe("page head helpers", () => {
 			"/course-resource?asset=/course-assets/python/reference.md",
 			"Course Resource | Classes with Jacob"
 		],
+		["/ide", "Code IDE | Classes with Jacob"],
 		["/python-ide", "Code IDE | Classes with Jacob"],
 		["/signup", "Book a Class | Classes with Jacob"],
 		["/payment/", "Tuition | Classes with Jacob"],

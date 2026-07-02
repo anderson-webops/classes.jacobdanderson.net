@@ -629,7 +629,7 @@ describe("python IDE project helpers", () => {
 			sharedSourceID: "share_ABC1234567890_xyz",
 			starterLabel: "Shared project",
 			starterUrl:
-				"https://classes.jacobdanderson.net/python-ide?share=share_ABC1234567890_xyz",
+				"https://classes.jacobdanderson.net/ide?share=share_ABC1234567890_xyz",
 			title: "Copy of Functions Practice"
 		});
 		const payload = pythonIdeProjectToPayload(project);
@@ -640,7 +640,7 @@ describe("python IDE project helpers", () => {
 				sharedSourceID: "share_ABC1234567890_xyz",
 				starterLabel: "Shared project",
 				starterUrl:
-					"https://classes.jacobdanderson.net/python-ide?share=share_ABC1234567890_xyz"
+					"https://classes.jacobdanderson.net/ide?share=share_ABC1234567890_xyz"
 			})
 		);
 		expect(payload).not.toHaveProperty("shared");
@@ -736,7 +736,7 @@ describe("python IDE project helpers", () => {
 		expect(getPythonIdeModeLabel("pgzero")).toBe("PyGame Zero");
 	});
 
-	it("renames the main navigation entry to Code IDE", () => {
+	it("uses the generalized Code IDE route in navigation and page titles", () => {
 		const headerSource = readFileSync(
 			resolve(__dirname, "../src/components/TheHeader.vue"),
 			"utf8"
@@ -747,7 +747,10 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(headerSource).toContain(
-			'{ label: "Code IDE", to: "/python-ide"'
+			'{ label: "Code IDE", to: "/ide"'
+		);
+		expect(pageHeadSource).toContain(
+			'[/^\\/ide(?:\\/|$)/, "Code IDE"]'
 		);
 		expect(pageHeadSource).toContain(
 			'[/^\\/python-ide(?:\\/|$)/, "Code IDE"]'
@@ -776,7 +779,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -795,7 +798,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -822,7 +825,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps the Run control stable while Turtle callbacks or handlers remain active", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const runControlStart = pageSource.indexOf(
@@ -878,7 +881,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps Turtle runs animated with a visible cursor marker", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -894,7 +897,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps Turtle trail drawing synchronized to the visible cursor pose", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const runtimeSource = readFileSync(
@@ -1049,7 +1052,7 @@ describe("python IDE project helpers", () => {
 
 	it("renders the original Turtle built-in shapes with classic as default", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const runtimeSource = readFileSync(
@@ -1107,7 +1110,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -1179,7 +1182,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps tiny Turtle animation steps responsive for continuous movement", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -1236,7 +1239,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps repeated Turtle turn controls off the slow animation queue", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -1250,7 +1253,7 @@ describe("python IDE project helpers", () => {
 
 	it("supports Turtle speed and tracer animation controls", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const runtimeSource = readFileSync(
@@ -1286,7 +1289,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps the Turtle cursor drawn directly above its trail", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const markerStart = pageSource.indexOf("function drawTurtleMarker");
@@ -1320,7 +1323,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps visible Turtle trail steps out of instant batching", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const instantStart = pageSource.indexOf(
@@ -1362,7 +1365,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps separate browser poses for independent Turtle instances", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const runtimeSource = readFileSync(
@@ -1400,7 +1403,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps Turtle clear and reset scoped to the active Turtle", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const runtimeSource = readFileSync(
@@ -1447,7 +1450,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps visible Turtle trail movement on the synchronized animation path", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const instantStart = pageSource.indexOf(
@@ -1480,7 +1483,7 @@ describe("python IDE project helpers", () => {
 
 	it("fast-forwards stale Turtle animation backlog without making every line instant", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const backlogStart = pageSource.indexOf(
@@ -1558,7 +1561,7 @@ describe("python IDE project helpers", () => {
 
 	it("redraws Turtle canvas resizes without resetting active drawings", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const resizeCanvasStart = pageSource.indexOf(
@@ -1594,7 +1597,7 @@ describe("python IDE project helpers", () => {
 
 	it("maps Turtle coordinates without repeated layout reads per command", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const coordinateMapperStart = pageSource.indexOf(
@@ -1641,7 +1644,7 @@ describe("python IDE project helpers", () => {
 
 	it("bounds output rendering so print-heavy runs stay responsive", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -1658,7 +1661,7 @@ describe("python IDE project helpers", () => {
 
 	it("clears the active canvas when clearing Python output", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const clearOutputStart = pageSource.indexOf("function clearOutput()");
@@ -1678,7 +1681,7 @@ describe("python IDE project helpers", () => {
 
 	it("bounds runtime artifacts so chart-heavy runs stay responsive", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -1705,7 +1708,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps rendered HTML artifacts isolated from the IDE page", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const iframeStart = pageSource.indexOf("<iframe");
@@ -1721,7 +1724,7 @@ describe("python IDE project helpers", () => {
 
 	it("bounds imported project files before local storage writes", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -1753,7 +1756,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const captureIndex = runtimeSource.indexOf(
@@ -1807,7 +1810,7 @@ describe("python IDE project helpers", () => {
 
 	it("prevents stale async IDE runs from reviving after stop or project switch", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const runStart = pageSource.indexOf("async function runCurrentProject");
@@ -1898,7 +1901,7 @@ describe("python IDE project helpers", () => {
 
 	it("guards PyGame Zero bridge calls to the active run", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const guardStart = pageSource.indexOf(
@@ -1930,7 +1933,7 @@ describe("python IDE project helpers", () => {
 
 	it("guards PyGame Zero loop ticks from stale async completions", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const startGameLoopStart = pageSource.indexOf("function startGameLoop");
@@ -1987,7 +1990,7 @@ describe("python IDE project helpers", () => {
 
 	it("guards Turtle bridge calls to the active run", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const guardStart = pageSource.indexOf(
@@ -2020,7 +2023,7 @@ describe("python IDE project helpers", () => {
 
 	it("stops active IDE runtime surfaces when the selected project changes", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const projectSwitchStart = pageSource.indexOf(
@@ -2056,7 +2059,7 @@ describe("python IDE project helpers", () => {
 
 	it("allows local-to-remote project ID sync without cancelling the current IDE run", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const saveStart = pageSource.indexOf("async function saveProjectOnce");
@@ -2097,7 +2100,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps PyGame Zero image cache entries reusable across canvas resets", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const resetGameCanvasStart = pageSource.indexOf(
@@ -2142,7 +2145,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -2290,7 +2293,7 @@ describe("python IDE project helpers", () => {
 
 	it("preserves PyGame Zero canvas aspect ratio instead of stretching", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -2329,7 +2332,7 @@ describe("python IDE project helpers", () => {
 
 	it("bounds the IDE editor grid so long files scroll inside CodeMirror", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const gridStart = pageSource.indexOf(".ide-grid {");
@@ -2380,7 +2383,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps PyGame Zero actor angles anticlockwise like Pygame Zero", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const actorStart = pageSource.indexOf("function drawGameActor");
@@ -2794,7 +2797,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const mergeStart = pageSource.indexOf(
@@ -2828,7 +2831,7 @@ describe("python IDE project helpers", () => {
 
 	it("uses the current selected project after forced save before running", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const runStart = pageSource.indexOf("async function runCurrentProject");
@@ -2857,7 +2860,7 @@ describe("python IDE project helpers", () => {
 
 	it("clears stale local account fallback after successful remote syncs", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -2875,9 +2878,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("const isRemoteProject =");
 	});
 
-	it("autosaves Python IDE projects by default with a settings toggle", () => {
+	it("autosaves Code IDE projects by default with a settings toggle", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -2937,9 +2940,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain('aria-label="Code IDE settings"');
 		expect(pageSource).toContain('title="Code IDE settings"');
 		expect(pageSource).toContain(
-			'aria-controls="python-ide-settings-panel"'
+			'aria-controls="code-ide-settings-panel"'
 		);
-		expect(pageSource).toContain('id="python-ide-settings-panel"');
+		expect(pageSource).toContain('id="code-ide-settings-panel"');
 		expect(pageSource).toContain(
 			'ref="ideSettingsRef" class="ide-settings"'
 		);
@@ -3029,7 +3032,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps Python code recommendations enabled by default with manual completion fallback", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const codeMirrorSource = readFileSync(
@@ -3072,9 +3075,9 @@ describe("python IDE project helpers", () => {
 		expect(codeMirrorSource).toContain("...completionKeymap");
 	});
 
-	it("wires a resizable Python IDE editor and output split", () => {
+	it("wires a resizable Code IDE editor and output split", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -3093,13 +3096,13 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).not.toContain("faGripLinesVertical");
 		expect(pageSource).not.toContain(".ide-splitter svg");
 		expect(pageSource).toContain(".ide-splitter");
-		expect(pageSource).toContain("--python-ide-code-column");
+		expect(pageSource).toContain("--code-ide-code-column");
 		expect(pageSource).toContain("stopIdeSplitResize();");
 	});
 
-	it("wires Python IDE project sharing through settings and shared links", () => {
+	it("wires Code IDE project sharing through settings and shared links", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const moduleSource = readFileSync(
@@ -3122,7 +3125,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("const isSharing = ref(false);");
 		expect(pageSource).toContain('const shareMessage = ref("");');
 		expect(pageSource).toContain("const requestedShareID = computed");
-		expect(pageSource).toContain("function pythonIdeShareUrl");
+		expect(pageSource).toContain("function codeIdeShareUrl");
 		expect(pageSource).toContain(
 			"const selectedProjectShareLink = computed"
 		);
@@ -3149,9 +3152,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("ide-share-link-row");
 	});
 
-	it("wires Python IDE outline templates through the project menu", () => {
+	it("wires Code IDE outline templates through the project menu", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const moduleSource = readFileSync(
@@ -3192,7 +3195,7 @@ describe("python IDE project helpers", () => {
 
 	it("persists CodeMirror view state across reloads and project ID migration", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -3230,7 +3233,7 @@ describe("python IDE project helpers", () => {
 
 	it("documents the enabled CodeMirror editor shortcuts in the IDE help", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const codeMirrorSource = readFileSync(
@@ -3279,7 +3282,7 @@ describe("python IDE project helpers", () => {
 
 	it("ignores stale async project loads before mutating the workspace", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -3308,7 +3311,7 @@ describe("python IDE project helpers", () => {
 
 	it("suppresses CodeMirror-originated echo updates through the Vue flush", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const onChangeStart = pageSource.indexOf("onChange(content) {");
@@ -3327,7 +3330,7 @@ describe("python IDE project helpers", () => {
 
 	it("normalizes loaded project active files before rendering or saving", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const setProjectsStart = pageSource.indexOf("function setProjects");
@@ -3356,7 +3359,7 @@ describe("python IDE project helpers", () => {
 
 	it("serializes saves and protects newer edits from stale remote responses", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -3385,7 +3388,7 @@ describe("python IDE project helpers", () => {
 
 	it("keeps canvas keyboard handlers separate from editor and input focus", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -3417,7 +3420,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -3441,7 +3444,7 @@ describe("python IDE project helpers", () => {
 
 	it("tracks overlapping PyGame Zero sound instances for cleanup", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -3460,7 +3463,7 @@ describe("python IDE project helpers", () => {
 
 	it("cleans up PyGame Zero tone timers and suspends idle audio context", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 		const stopAllGameAudioStart = pageSource.indexOf(
@@ -3908,7 +3911,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -4334,7 +4337,7 @@ describe("python IDE project helpers", () => {
 
 	it("renders Karel painted cells in the visual world grid", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -4348,9 +4351,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(".karel-cell.has-paint");
 	});
 
-	it("names repeated Python IDE file controls by the affected file", () => {
+	it("names repeated Code IDE file controls by the affected file", () => {
 		const pageSource = readFileSync(
-			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
@@ -4374,8 +4377,8 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(':title="`Delete ${file.name}`"');
 		expect(pageSource).not.toContain('aria-label="Delete file"');
 		expect(pageSource).toContain(
-			'aria-controls="python-ide-file-tools-panel"'
+			'aria-controls="code-ide-file-tools-panel"'
 		);
-		expect(pageSource).toContain('id="python-ide-file-tools-panel"');
+		expect(pageSource).toContain('id="code-ide-file-tools-panel"');
 	});
 });

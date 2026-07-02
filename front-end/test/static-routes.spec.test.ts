@@ -61,6 +61,7 @@ describe("static route normalization", () => {
 				"/admin/people",
 				"/admin/student-management",
 				"/course-resource",
+				"/ide",
 				"/profile",
 				"/python-ide",
 				"/README"

@@ -141,17 +141,20 @@ describe("python IDE CodeMirror editor", () => {
 	});
 
 	it("keeps the route page as a lightweight async workspace wrapper", () => {
-		const routeSource = sourceFile("../src/pages/python-ide.vue");
+		const routeSource = sourceFile("../src/pages/ide.vue");
+		const legacyRouteSource = sourceFile("../src/pages/python-ide.vue");
 		const workspaceSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 
 		expect(routeSource).toContain("defineAsyncComponent");
 		expect(routeSource).toContain(
-			'() => import("@/components/PythonIdeWorkspace.vue")'
+			'() => import("@/components/CodeIdeWorkspace.vue")'
 		);
 		expect(routeSource).not.toContain("new EditorView");
 		expect(routeSource).not.toContain("loadPythonIdeRuntime");
+		expect(legacyRouteSource).toContain('path: "/ide"');
+		expect(legacyRouteSource).not.toContain("CodeIdeWorkspace");
 		expect(workspaceSource).toContain(
 			"<h1>Code, run, and draw in Python or Java</h1>"
 		);
@@ -175,7 +178,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("does not import the heavy Pyodide runtime before running code", () => {
 		const pageSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 		const runtimeSource = sourceFile("../src/modules/pythonIdeRuntime.ts");
 		const hintSource = sourceFile(
@@ -208,7 +211,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("mounts CodeMirror instead of the old textarea highlight overlay", () => {
 		const pageSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 
 		expect(pageSource).toContain("createPythonCodeMirrorExtensions");
@@ -222,7 +225,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("preserves CodeMirror state, cursor, scroll, and history per IDE file", () => {
 		const pageSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 		const resetStart = pageSource.indexOf("async function resetCodeEditor");
 		const resetSource = pageSource.slice(
@@ -272,7 +275,7 @@ describe("python IDE CodeMirror editor", () => {
 	it("enables Python parsing and typical IDE editing behavior", () => {
 		const editorSource = sourceFile("../src/modules/pythonCodeMirror.ts");
 		const pageSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 
 		expect(editorSource).toContain("pythonEditorBaseSetup");
@@ -1429,7 +1432,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("surfaces the built-in editor shortcuts in the IDE chrome", () => {
 		const pageSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 
 		expect(pageSource).toContain('class="editor-shortcuts"');
@@ -1452,7 +1455,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("keeps IDE toolbar controls on a shared visual baseline", () => {
 		const pageSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 
 		expect(pageSource).toContain(
@@ -1471,7 +1474,7 @@ describe("python IDE CodeMirror editor", () => {
 			/\.project-title-input\s*{[\s\S]*min-width: 0;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-actions\s*{[\s\S]*grid-column: 2;[\s\S]*align-self: end;[\s\S]*height: var\(--python-ide-toolbar-control-size\);/
+			/\.editor-actions\s*{[\s\S]*grid-column: 2;[\s\S]*align-self: end;[\s\S]*height: var\(--code-ide-toolbar-control-size\);/
 		);
 		expect(pageSource).toMatch(/\.ide-settings\s*{[\s\S]*height: 100%;/);
 		expect(pageSource).toContain("box-sizing: border-box;");
@@ -1485,7 +1488,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("keeps the IDE splitter as a single discreet separator", () => {
 		const pageSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 		const splitterSource =
 			pageSource.match(
@@ -1496,7 +1499,7 @@ describe("python IDE CodeMirror editor", () => {
 		expect(splitterSource).not.toContain("FontAwesomeIcon");
 		expect(pageSource).not.toContain("faGripLinesVertical");
 		expect(pageSource).toMatch(
-			/\.ide-grid\s*{[\s\S]*--python-ide-splitter-width: 0\.55rem;/
+			/\.ide-grid\s*{[\s\S]*--code-ide-splitter-width: 0\.55rem;/
 		);
 		expect(pageSource).toMatch(
 			/\.ide-splitter\s*{[\s\S]*border: 0;[\s\S]*background: transparent;/
@@ -1512,7 +1515,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("keeps IDE settings copy readable and spacious instead of all-caps", () => {
 		const pageSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 
 		expect(pageSource).toMatch(
@@ -1584,7 +1587,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("offers course-runtime completions by immutable project mode", () => {
 		const pageSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 		const toolbarSource =
 			pageSource.match(

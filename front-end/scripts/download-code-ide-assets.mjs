@@ -29,25 +29,32 @@ const MIME_TYPES = new Map([
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const frontEndDir = path.resolve(scriptDir, "..");
+// Keep the legacy public path so existing asset URLs remain valid.
 const assetsOutputDir = path.join(frontEndDir, "public", "python-ide", "assets");
 const manifestPath = path.join(assetsOutputDir, "manifest.json");
 const stalePublicZipPath = path.join(frontEndDir, "public", "python-ide", "assets.zip");
 const cacheDir = path.join(frontEndDir, ".cache");
-const cachePath = path.join(cacheDir, "python-ide-assets.json");
-const cacheZipPath = path.join(cacheDir, "python-ide-assets.zip");
-const sourceUrl = process.env.PYTHON_IDE_ASSETS_ZIP_URL || DEFAULT_ASSETS_ZIP_URL;
+const cachePath = path.join(cacheDir, "code-ide-assets.json");
+const cacheZipPath = path.join(cacheDir, "code-ide-assets.zip");
+const sourceUrl =
+	process.env.CODE_IDE_ASSETS_ZIP_URL ||
+	process.env.PYTHON_IDE_ASSETS_ZIP_URL ||
+	DEFAULT_ASSETS_ZIP_URL;
 const forceRefresh =
 	process.argv.includes("--force") ||
+	process.env.CODE_IDE_ASSETS_REFRESH === "always" ||
 	process.env.PYTHON_IDE_ASSETS_REFRESH === "always";
-const skipDownload = process.env.PYTHON_IDE_ASSETS_DOWNLOAD === "skip";
+const skipDownload =
+	process.env.CODE_IDE_ASSETS_DOWNLOAD === "skip" ||
+	process.env.PYTHON_IDE_ASSETS_DOWNLOAD === "skip";
 
-await stagePythonIdeAssets();
+await stageCodeIdeAssets();
 
-async function stagePythonIdeAssets() {
+async function stageCodeIdeAssets() {
 	await rm(stalePublicZipPath, { force: true });
 
 	if (skipDownload) {
-		console.log("[python-ide-assets] skipped by PYTHON_IDE_ASSETS_DOWNLOAD=skip");
+		console.log("[code-ide-assets] skipped by CODE_IDE_ASSETS_DOWNLOAD=skip");
 		return;
 	}
 
@@ -55,14 +62,14 @@ async function stagePythonIdeAssets() {
 		localAssetInfo(),
 		remoteAssetInfo().catch(error => {
 			console.warn(
-				`[python-ide-assets] could not read remote metadata: ${formatError(error)}`
+				`[code-ide-assets] could not read remote metadata: ${formatError(error)}`
 			);
 			return null;
 		})
 	]);
 
 	if (!forceRefresh && isCurrent(localInfo, remoteInfo)) {
-		console.log(`[python-ide-assets] using extracted ${relativeManifestPath()}`);
+		console.log(`[code-ide-assets] using extracted ${relativeManifestPath()}`);
 		return;
 	}
 
@@ -95,13 +102,13 @@ async function stagePythonIdeAssets() {
 		);
 
 		console.log(
-			`[python-ide-assets] extracted ${manifest.assets.length} files from ${formatBytes(bytes.byteLength)} into ${relativeAssetsPath()}`
+			`[code-ide-assets] extracted ${manifest.assets.length} files from ${formatBytes(bytes.byteLength)} into ${relativeAssetsPath()}`
 		);
 	}
 	catch (error) {
 		if (localInfo.exists) {
 			console.warn(
-				`[python-ide-assets] download failed, using existing ${relativeManifestPath()}: ${formatError(error)}`
+				`[code-ide-assets] download failed, using existing ${relativeManifestPath()}: ${formatError(error)}`
 			);
 			return;
 		}

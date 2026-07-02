@@ -1259,13 +1259,13 @@ paint 2 3 purple`
 	});
 
 	it("loads Java and Karel execution through the client IDE workspace", () => {
-		const routeSource = sourceFile("../src/pages/python-ide.vue");
+		const routeSource = sourceFile("../src/pages/ide.vue");
 		const workspaceSource = sourceFile(
-			"../src/components/PythonIdeWorkspace.vue"
+			"../src/components/CodeIdeWorkspace.vue"
 		);
 
 		expect(routeSource).toContain(
-			'() => import("@/components/PythonIdeWorkspace.vue")'
+			'() => import("@/components/CodeIdeWorkspace.vue")'
 		);
 		expect(workspaceSource).toContain(
 			'import { runJavaIdeProject } from "@/modules/javaIdeRuntime";'

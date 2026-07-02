@@ -11,7 +11,7 @@ export const pythonIdeAssetsProxy = Router().get("/assets.zip", async (_req, res
 		const upstream = await fetch(PYTHON_IDE_ASSETS_ZIP_URL);
 		if (!upstream.ok || !upstream.body) {
 			const body = await upstream.text().catch(() => "");
-			return res.status(upstream.status || 502).send(body || "Unable to load Python IDE asset pack.");
+			return res.status(upstream.status || 502).send(body || "Unable to load Code IDE asset pack.");
 		}
 
 		const contentType = upstream.headers.get("content-type") || "application/zip";
@@ -29,6 +29,6 @@ export const pythonIdeAssetsProxy = Router().get("/assets.zip", async (_req, res
 	}
 	catch (err) {
 		console.error("python ide assets proxy failed:", err);
-		res.status(502).json({ error: "Unable to reach Python IDE asset pack" });
+		res.status(502).json({ error: "Unable to reach Code IDE asset pack" });
 	}
 });

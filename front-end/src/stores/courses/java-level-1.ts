@@ -159,7 +159,7 @@ export const javaLevel1Course: RawCourse = {
 					title: "Course Launch: Start Java Visually",
 					content:
 						"The opening Java sequence starts in a visible robot world before switching to console-only programs. A first run shows an object on a grid, one small command, and compiler feedback connected to a visible result. BlueJ with Carol/Karel fits classroom work, while the browser Code IDE or CodeHS Karel provides an outside-class fallback when device installs are unavailable.",
-					projectLink: "/python-ide?mode=karel"
+					projectLink: "/ide?mode=karel"
 				},
 				{
 					title: "Compile, Run, Observe, Repair",
@@ -175,7 +175,7 @@ export const javaLevel1Course: RawCourse = {
 					title: "J1A Project 1: Robot Walkthrough",
 					content:
 						"Create a short robot program that starts Carol/Karel at a known location, moves around one obstacle, and ends at a named target square. Include a written trace with the robot's street, avenue, and direction after each major step.",
-					projectLink: "/python-ide?mode=karel"
+					projectLink: "/ide?mode=karel"
 				}
 			],
 			supplementalProjects: [
@@ -213,7 +213,7 @@ export const javaLevel1Course: RawCourse = {
 					title: "J1B Project 1: Parameterized Robot Moves",
 					content:
 						"Refactor a repeated robot path into helper methods such as `turnRight()`, `moveTwice()`, or `moveToWall()`. Then add at least one method with a parameter, making repeated visual behavior reusable through code.",
-					projectLink: "/python-ide?mode=karel"
+					projectLink: "/ide?mode=karel"
 				}
 			],
 			supplementalProjects: [
