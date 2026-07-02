@@ -5598,8 +5598,21 @@ describe("course text quality normalization", () => {
 			findItem(javaLevel1!, /J1A Project 1: Robot Walkthrough/)
 				.projectLink
 		).toBe("/ide?mode=karel");
-		expect(javaLevel1Text).toContain("BlueJ with Carol/Karel");
+		expect(javaLevel1Text).toContain("BlueJ in class");
 		expect(javaLevel1Text).toContain("visible robot world");
+		expect(javaLevel1Text).toContain(
+			"first week or roughly first three class meetings"
+		);
+		expect(javaLevel1Text).toContain(
+			"CodeHS or the browser Code IDE outside class"
+		);
+		expect(javaLevel1Text).toContain("First-Week Carol/Karel Cadence");
+		expect(javaLevel1Text).toContain("Five-Robot Warm-Up Set");
+		expect(javaLevel1Text).toContain(
+			"Visual Exit Ticket: Ready for Text"
+		);
+		expect(javaLevel1Text).toContain("int x = 7; x = 9");
+		expect(javaLevel1Text).toContain("moveMany(3)");
 		expect(javaLevel1Text).toContain(
 			"Text Bridge: Variables, Strings, and Input"
 		);
