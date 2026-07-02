@@ -1532,6 +1532,8 @@ const javaKeywordCompletions = [
 
 const javaMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 	Math: [
+		completion("PI", "constant", "circle constant", 78),
+		completion("E", "constant", "Euler's number", 76),
 		completion("abs", "method", "absolute value", 70),
 		completion("ceil", "method", "round up", 70),
 		completion("floor", "method", "round down", 70),
