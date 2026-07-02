@@ -1263,7 +1263,7 @@ describe("python IDE CodeMirror editor", () => {
 		);
 
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel\s*{[\s\S]*position: fixed;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*width: min\(34rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: calc\(100vh - 2rem\);[\s\S]*display: grid;[\s\S]*gap: 0\.4rem;[\s\S]*padding: 1rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.9rem;[\s\S]*line-height: 1\.5;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
+			/\.ide-settings-panel\s*{[\s\S]*position: fixed;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*width: min\(28rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: calc\(100vh - 2rem\);[\s\S]*display: grid;[\s\S]*gap: 0\.55rem;[\s\S]*padding: 0\.85rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.86rem;[\s\S]*line-height: 1\.45;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
 		);
 		expect(pageSource).toContain("Autosave");
 		expect(pageSource).toContain("Suggestions");
@@ -1286,25 +1286,25 @@ describe("python IDE CodeMirror editor", () => {
 			"html.dark .ide-settings-panel {\n\tbackground: #08111f;"
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel,\s*\.editor-toolbar \.ide-settings-panel :where\(\*\)\s*{[\s\S]*color: inherit;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.5;[\s\S]*text-transform: none;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
+			/\.editor-toolbar \.ide-settings-panel,\s*\.editor-toolbar \.ide-settings-panel :where\(\*\)\s*{[\s\S]*color: inherit;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.45;[\s\S]*text-transform: none;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
 		);
 		expect(pageSource).toMatch(
 			/\.ide-settings-panel :is\(label, span, small, button, input\)\s*{[\s\S]*font-variant: normal;[\s\S]*letter-spacing: 0;[\s\S]*text-transform: none;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle\s*{[\s\S]*grid-template-columns: 1\.15rem minmax\(0, 1fr\);[\s\S]*column-gap: 0\.85rem;[\s\S]*row-gap: 0\.35rem;[\s\S]*align-items: start;[\s\S]*padding: 0\.85rem 0\.9rem;/
+			/\.ide-setting-toggle\s*{[\s\S]*grid-template-columns: 1rem minmax\(0, 1fr\);[\s\S]*column-gap: 0\.65rem;[\s\S]*row-gap: 0\.2rem;[\s\S]*align-items: start;[\s\S]*padding: 0\.68rem 0\.72rem;[\s\S]*font-size: 0\.86rem;[\s\S]*font-weight: 400;/
 		);
 		expect(pageSource).toMatch(
 			/\.ide-setting-toggle \+ \.ide-setting-toggle\s*{[\s\S]*margin-top: 0\.25rem;[\s\S]*border-top: 1px solid var\(--color-border\);/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle input\s*{[\s\S]*width: 1\.05rem;[\s\S]*height: 1\.05rem;/
+			/\.ide-setting-toggle input\[type="checkbox"\]\s*{[\s\S]*width: 0\.95rem;[\s\S]*height: 0\.95rem;[\s\S]*transform: none;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.96rem;[\s\S]*font-weight: 650;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.28;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
+			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.9rem;[\s\S]*font-weight: 600;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.25;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.82rem;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.48;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
+			/\.editor-toolbar \.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.74rem;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.42;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
 		);
 	});
 

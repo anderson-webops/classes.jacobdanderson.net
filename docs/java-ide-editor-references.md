@@ -107,6 +107,10 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `ballsPresent()`, compound `&&` / `||` / `!` Karel conditions, bounded
   `while` loops, and bounded numeric `for` loops. It is still a teaching
   preview, not a full Java compiler or VM.
+- [CodeHS UltraKarel docs](https://codehs.com/documentation/new/ultrakarel)
+  inform the browser-side painted-cell preview: `paint(Color.red)`,
+  `paint(Color.random())`, `colorIs(color)`, and `colorIsNot(color)` should
+  update or inspect the visual Karel grid without introducing server-side Java.
 - [CodeHS Java docs](https://codehs.com/documentation/new/java-main) inform
   beginner Java console vocabulary such as printing, variables, methods,
   input, comparisons, math, and random numbers. The local console preview

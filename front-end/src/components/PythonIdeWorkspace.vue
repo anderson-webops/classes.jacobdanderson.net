@@ -100,6 +100,7 @@ interface KarelWorldCell {
 	beeperCount: number;
 	isRobot: boolean;
 	key: string;
+	paintColor: string;
 	robotDirection: string;
 	street: number;
 	walls: Record<KarelWallSide, boolean>;
@@ -999,6 +1000,14 @@ const karelWorldStyle = computed(() => ({
 	"--karel-cols": `${karelWorld.value?.cols ?? 10}`,
 	"--karel-rows": `${karelWorld.value?.rows ?? 10}`
 }));
+function karelCellStyle(cell: KarelWorldCell) {
+	if (!cell.paintColor) return undefined;
+	return { "--karel-cell-color": cell.paintColor };
+}
+function karelCellAriaLabel(cell: KarelWorldCell) {
+	const label = `Street ${cell.street}, avenue ${cell.avenue}`;
+	return cell.paintColor ? `${label}, painted ${cell.paintColor}` : label;
+}
 const karelWorldCells = computed<KarelWorldCell[]>(() => {
 	const world = karelWorld.value;
 	if (!world) return [];
@@ -1007,6 +1016,12 @@ const karelWorldCells = computed<KarelWorldCell[]>(() => {
 		world.beepers.map(beeper => [
 			karelCellKey(beeper.street, beeper.avenue),
 			beeper.count
+		])
+	);
+	const paints = new Map(
+		(world.paints ?? []).map(paint => [
+			karelCellKey(paint.street, paint.avenue),
+			paint.color
 		])
 	);
 	const wallMap = new Map<string, Set<KarelWallSide>>();
@@ -1030,6 +1045,7 @@ const karelWorldCells = computed<KarelWorldCell[]>(() => {
 				beeperCount: beepers.get(key) ?? 0,
 				isRobot,
 				key,
+				paintColor: paints.get(key) ?? "",
 				robotDirection: world.robot?.direction.toLowerCase() ?? "east",
 				street,
 				walls: {
@@ -6154,12 +6170,14 @@ onBeforeUnmount(() => {
 									:key="cell.key"
 									class="karel-cell"
 									:class="{
+										'has-paint': Boolean(cell.paintColor),
 										'has-wall-east': cell.walls.east,
 										'has-wall-north': cell.walls.north,
 										'has-wall-south': cell.walls.south,
 										'has-wall-west': cell.walls.west
 									}"
-									:aria-label="`Street ${cell.street}, avenue ${cell.avenue}`"
+									:style="karelCellStyle(cell)"
+									:aria-label="karelCellAriaLabel(cell)"
 								>
 									<span
 										v-if="cell.isRobot"
@@ -7192,20 +7210,20 @@ html.dark .file-delete:disabled::after {
 	z-index: 8;
 	top: 1rem;
 	right: 1rem;
-	width: min(34rem, calc(100vw - 2rem));
+	width: min(28rem, calc(100vw - 2rem));
 	max-height: calc(100vh - 2rem);
 	display: grid;
-	gap: 0.4rem;
+	gap: 0.55rem;
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 1rem;
+	padding: 0.85rem;
 	border: 1px solid var(--color-border);
 	border-radius: 14px;
 	background: #fff;
 	box-shadow: var(--shadow-soft);
 	font-family: var(--font-sans);
-	font-size: 0.9rem;
-	line-height: 1.5;
+	font-size: 0.86rem;
+	line-height: 1.45;
 	font-variant: normal;
 	font-weight: 400;
 	text-align: left;
@@ -7222,7 +7240,7 @@ html.dark .file-delete:disabled::after {
 	font-variant: normal;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.5;
+	line-height: 1.45;
 	text-transform: none;
 	overflow-wrap: normal;
 	word-break: normal;
@@ -7236,14 +7254,20 @@ html.dark .file-delete:disabled::after {
 
 .ide-setting-toggle {
 	display: grid;
-	grid-template-columns: 1.15rem minmax(0, 1fr);
-	column-gap: 0.85rem;
-	row-gap: 0.35rem;
+	grid-template-columns: 1rem minmax(0, 1fr);
+	column-gap: 0.65rem;
+	row-gap: 0.2rem;
 	align-items: start;
-	padding: 0.85rem 0.9rem;
+	padding: 0.68rem 0.72rem;
 	border-radius: 10px;
 	color: var(--color-ink);
+	cursor: pointer;
+	font-size: 0.86rem;
+	font-weight: 400;
+	line-height: 1.45;
 	text-align: left;
+	text-transform: none;
+	letter-spacing: 0;
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
@@ -7309,12 +7333,13 @@ html.dark .file-delete:disabled::after {
 	opacity: 0.65;
 }
 
-.ide-setting-toggle input {
-	width: 1.05rem;
-	height: 1.05rem;
+.ide-setting-toggle input[type="checkbox"] {
+	width: 0.95rem;
+	height: 0.95rem;
 	margin: 0;
-	margin-top: 0.14rem;
+	margin-top: 0.08rem;
 	accent-color: #0f766e;
+	transform: none;
 }
 
 .ide-setting-toggle > span {
@@ -7326,10 +7351,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar .ide-settings-panel .ide-setting-title {
 	display: block;
 	color: var(--color-ink-strong);
-	font-size: 0.96rem;
-	font-weight: 650;
+	font-size: 0.9rem;
+	font-weight: 600;
 	letter-spacing: 0;
-	line-height: 1.28;
+	line-height: 1.25;
 	font-variant: normal;
 	text-transform: none;
 }
@@ -7337,10 +7362,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar .ide-settings-panel .ide-setting-toggle small {
 	display: block;
 	color: var(--color-ink-soft);
-	font-size: 0.82rem;
+	font-size: 0.74rem;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.48;
+	line-height: 1.42;
 	font-variant: normal;
 	text-transform: none;
 }
@@ -7662,6 +7687,10 @@ html.dark .editor-shortcuts ul {
 	min-height: 0;
 	border-right: 1px solid #ef4444;
 	border-bottom: 1px solid #ef4444;
+}
+
+.karel-cell.has-paint {
+	background: var(--karel-cell-color);
 }
 
 .karel-cell.has-wall-east {

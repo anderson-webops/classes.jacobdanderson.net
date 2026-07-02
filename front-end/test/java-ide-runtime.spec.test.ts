@@ -1209,6 +1209,55 @@ beeper 1 1 1`
 		]);
 	});
 
+	it("previews CodeHS-style Karel painted cells and color conditions", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "MyProgram.java",
+			files: [
+				{
+					name: "MyProgram.java",
+					content: `public class MyProgram extends SuperKarel {
+    public void run() {
+        paint(Color.red);
+        if (colorIs(Color.red)) {
+            move();
+            paint(Color.blue);
+        }
+        if (colorIsNot(Color.red)) {
+            paint(Color.random());
+        }
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=2
+cols=3
+paint 2 3 purple`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 2,
+			direction: "East",
+			street: 1
+		});
+		expect(result.karelWorld?.paints).toEqual(
+			expect.arrayContaining([
+				{ avenue: 1, color: "#dc2626", street: 1 },
+				{ avenue: 3, color: "#9333ea", street: 2 }
+			])
+		);
+		const randomPaint = result.karelWorld?.paints.find(
+			paint => paint.street === 1 && paint.avenue === 2
+		);
+		expect(randomPaint?.color).toMatch(/^#[0-9a-f]{6}$/);
+		expect(randomPaint?.color).not.toBe("#2563eb");
+		expect(result.stdout).toHaveLength(5);
+	});
+
 	it("loads Java and Karel execution through the client IDE workspace", () => {
 		const routeSource = sourceFile("../src/pages/python-ide.vue");
 		const workspaceSource = sourceFile(
