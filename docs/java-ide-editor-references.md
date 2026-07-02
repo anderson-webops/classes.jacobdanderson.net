@@ -59,8 +59,10 @@ server-side compilation, `javac`, Docker, or long-running execution services.
 - Include editor-only control-flow and exception scaffolding for Java Level 3,
   AP CSA, and design-pattern modules that discuss switch statements, switch
   expressions, custom exceptions, `throw` / `throws`, and Optional boundaries.
-  These completions support writing normal Java for external IDEs and do not
-  add server-side Java execution.
+  Include `Optional.ofNullable(...)` starter help and focused Optional receiver
+  completions such as `isPresent`, `isEmpty`, `orElse`, `map`, `filter`, and
+  `ifPresent`. These completions support writing normal Java for external IDEs
+  and do not add server-side Java execution.
 - Include editor-only lambda and stream scaffolding for the advanced Java
   pipeline modules: `Predicate`, `Function`, `Stream`, `Collectors`,
   `filter`, `map`, `sorted`, `collect`, `groupingBy`, and simple lambda /
