@@ -349,7 +349,9 @@ describe("python IDE CodeMirror editor", () => {
 				"turnRight",
 				"turnAround",
 				"putBeeper",
-				"pickBeeper"
+				"pickBeeper",
+				"putBall",
+				"takeBall"
 			])
 		);
 	});
@@ -378,9 +380,14 @@ describe("python IDE CodeMirror editor", () => {
 			expect.arrayContaining([
 				"UrRobot",
 				"World",
+				"SuperKarel",
 				"karel_setup",
+				"codehs_run",
+				"codehs_turnRight",
 				"robot_method",
-				"turnRight"
+				"turnRight",
+				"putBall",
+				"takeBall"
 			])
 		);
 		expect(isPythonBracketPairIgnoredAt(state, doc.indexOf("["))).toBe(

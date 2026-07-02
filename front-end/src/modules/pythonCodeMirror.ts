@@ -1613,7 +1613,10 @@ const karelKeywordCompletions = [
 	"turnRight",
 	"turnAround",
 	"putBeeper",
-	"pickBeeper"
+	"pickBeeper",
+	"putBall",
+	"takeBall",
+	"SuperKarel"
 ].map(label => completion(label, "keyword", "Karel", 80));
 
 const karelRobotMemberCompletions = [
@@ -1622,7 +1625,9 @@ const karelRobotMemberCompletions = [
 	completion("turnRight", "method", "turn 90 degrees right", 90),
 	completion("turnAround", "method", "turn 180 degrees", 90),
 	completion("putBeeper", "method", "place one beeper", 90),
-	completion("pickBeeper", "method", "pick up one beeper", 90)
+	completion("pickBeeper", "method", "pick up one beeper", 90),
+	completion("putBall", "method", "CodeHS alias for placing one ball", 82),
+	completion("takeBall", "method", "CodeHS alias for taking one ball", 82)
 ];
 const karelMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 	World: [completion("readWorld", "method", "load a Karel world file", 90)]
@@ -1661,6 +1666,32 @@ const karelSnippetCompletions = [
 			snippetEnd
 		),
 		88
+	),
+	pythonSnippet(
+		"codehs_run",
+		"CodeHS-style Karel run method",
+		snippetLines(
+			`public class ${snippetField("MyProgram")} extends SuperKarel {`,
+			"    public void run() {",
+			`        ${snippetField("body")}`,
+			"    }",
+			"}",
+			snippetEnd
+		),
+		86
+	),
+	pythonSnippet(
+		"codehs_turnRight",
+		"CodeHS-style turnRight helper",
+		snippetLines(
+			"private void turnRight() {",
+			"    turnLeft();",
+			"    turnLeft();",
+			"    turnLeft();",
+			"}",
+			snippetEnd
+		),
+		84
 	),
 	pythonSnippet(
 		"robot_method",
