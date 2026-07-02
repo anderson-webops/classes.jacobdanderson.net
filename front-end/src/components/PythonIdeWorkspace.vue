@@ -5819,9 +5819,8 @@ onBeforeUnmount(() => {
 											Autosave
 										</span>
 										<small>
-											Save project edits locally right
-											away, then sync them to your account
-											when possible.
+											Save edits locally, then sync to
+											your account when available.
 										</small>
 									</span>
 								</label>
@@ -5835,12 +5834,11 @@ onBeforeUnmount(() => {
 									/>
 									<span>
 										<span class="ide-setting-title">
-											Recommendations
+											Suggestions
 										</span>
 										<small>
-											Show code suggestions while typing.
-											Turn this off to use Ctrl+Space
-											only.
+											Show suggestions as you type. Turn
+											off for Ctrl+Space only.
 										</small>
 									</span>
 								</label>
@@ -5855,8 +5853,7 @@ onBeforeUnmount(() => {
 											Line wrap
 										</span>
 										<small>
-											Wrap long code lines inside the
-											editor. Turn this off to scroll
+											Wrap long lines instead of scrolling
 											horizontally.
 										</small>
 									</span>
@@ -5872,8 +5869,8 @@ onBeforeUnmount(() => {
 											Expanded layout
 										</span>
 										<small>
-											Use more browser width and height
-											for coding and canvas work.
+											Use more window space for the editor
+											and canvas.
 										</small>
 									</span>
 								</label>
@@ -5896,8 +5893,8 @@ onBeforeUnmount(() => {
 												Share
 											</span>
 											<small>
-												Create a link that lets someone
-												else open an editable copy.
+												Create a link others can open as
+												an editable copy.
 											</small>
 										</span>
 									</label>
@@ -7188,26 +7185,28 @@ html.dark .file-delete:disabled::after {
 	z-index: 8;
 	top: calc(100% + 0.55rem);
 	right: 0;
-	width: min(32rem, calc(100vw - 1.25rem));
-	max-height: min(32rem, calc(100vh - 1.5rem));
+	width: min(28rem, calc(100vw - 1.25rem));
+	max-height: min(31rem, calc(100vh - 1.5rem));
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 1.5rem;
+	padding: 1.25rem;
 	border: 1px solid var(--color-border);
 	border-radius: 16px;
 	background: #fff;
 	box-shadow: var(--shadow-soft);
-	font-size: 0.98rem;
-	line-height: 1.65;
+	font-family: var(--font-sans);
+	font-size: 0.94rem;
+	line-height: 1.55;
 	font-weight: 400;
 	text-align: left;
 	text-transform: none;
 	letter-spacing: 0;
 }
 
-.ide-settings-panel span,
-.ide-settings-panel .ide-setting-title,
-.ide-settings-panel small {
+.editor-toolbar .ide-settings-panel,
+.editor-toolbar .ide-settings-panel :is(label, span, small, input, button) {
+	font-family: var(--font-sans);
+	font-weight: 400;
 	letter-spacing: 0;
 	text-transform: none;
 }
@@ -7215,22 +7214,22 @@ html.dark .file-delete:disabled::after {
 .ide-setting-toggle {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
-	gap: 1rem;
+	gap: 0.85rem;
 	align-items: start;
 	color: var(--color-ink);
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
-	margin-top: 1.45rem;
-	padding-top: 1.45rem;
+	margin-top: 1.2rem;
+	padding-top: 1.2rem;
 	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-share {
 	display: grid;
-	gap: 0.95rem;
-	margin-top: 1.45rem;
-	padding-top: 1.45rem;
+	gap: 0.85rem;
+	margin-top: 1.2rem;
+	padding-top: 1.2rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7284,9 +7283,9 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-setting-toggle input {
-	width: 1.05rem;
-	height: 1.05rem;
-	margin-top: 0.18rem;
+	width: 1.15rem;
+	height: 1.15rem;
+	margin-top: 0.12rem;
 	accent-color: #0f766e;
 }
 
@@ -7300,16 +7299,16 @@ html.dark .file-delete:disabled::after {
 	display: block;
 	color: var(--color-ink-strong);
 	font-size: 1rem;
-	font-weight: 550;
+	font-weight: 650;
 	line-height: 1.35;
 }
 
 .ide-settings-panel .ide-setting-toggle small {
 	display: block;
 	color: var(--color-ink-soft);
-	font-size: 0.9rem;
+	font-size: 0.88rem;
 	font-weight: 400;
-	line-height: 1.6;
+	line-height: 1.5;
 }
 
 .ide-setting-storage small {
