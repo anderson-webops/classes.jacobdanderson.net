@@ -89,6 +89,17 @@ const PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS = [
 	"python_level_2_project.png"
 ];
 
+const PYTHON_STRING_METHOD_REFERENCE =
+	"https://www.w3schools.com/python/python_ref_string.asp";
+const PYTHON_LIST_METHOD_REFERENCE =
+	"https://www.w3schools.com/python/python_ref_list.asp";
+const PYTHON_DICTIONARY_METHOD_REFERENCE =
+	"https://www.w3schools.com/python/python_ref_dictionary.asp";
+const PYTHON_TUPLE_METHOD_REFERENCE =
+	"https://www.w3schools.com/python/python_ref_tuple.asp";
+const PYTHON_SET_METHOD_REFERENCE =
+	"https://www.w3schools.com/python/python_ref_set.asp";
+
 function conceptBrief({
 	evidence,
 	focus,
@@ -219,7 +230,7 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "Variables and Strings",
-					content: conceptBrief({
+					content: `${conceptBrief({
 						focus: "Variables give names to values so later code can reuse or transform them. Strings are ordered sequences of characters, so they support length checks, indexing, and combination with other strings.",
 						practice: [
 							"Store a name, word, or short phrase in a variable and print it more than once.",
@@ -228,7 +239,9 @@ export const pythonLevel2Course: RawCourse = {
 						],
 						evidence:
 							"A complete explanation distinguishes the variable name from the value it stores and explains why string indexes begin at 0."
-					})
+					})}
+
+**Reference:** W3Schools Python string methods: ${PYTHON_STRING_METHOD_REFERENCE}`
 				},
 				{
 					title: "Asking the User for Input",
@@ -1265,7 +1278,7 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Lists",
-					content: conceptBrief({
+					content: `${conceptBrief({
 						focus: "Lists store ordered collections. They are useful when the number of values can grow, when positions matter, or when a program needs to process many related items with one loop.",
 						practice: [
 							"Create empty and pre-filled lists.",
@@ -1275,7 +1288,9 @@ export const pythonLevel2Course: RawCourse = {
 						],
 						evidence:
 							"A list-based solution is justified when it avoids many separate variables and allows the same logic to process every item."
-					})
+					})}
+
+**Reference:** W3Schools Python list methods: ${PYTHON_LIST_METHOD_REFERENCE}`
 				},
 				{
 					title: "PS6 Project 1: Lists Practice",
@@ -1484,7 +1499,7 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Dictionaries",
-					content: conceptBrief({
+					content: `${conceptBrief({
 						focus: "Dictionaries map keys to values. They are usually clearer than parallel lists when one value is looked up by name, code, category, or identifier.",
 						practice: [
 							"Create a dictionary with several key-value pairs.",
@@ -1494,7 +1509,9 @@ export const pythonLevel2Course: RawCourse = {
 						],
 						evidence:
 							"A dictionary design is justified when the key explains how the program finds the value."
-					})
+					})}
+
+**Reference:** W3Schools Python dictionary methods: ${PYTHON_DICTIONARY_METHOD_REFERENCE}`
 				},
 				{
 					title: "PS7 Project 1: Dictionaries Practice",
@@ -1611,7 +1628,7 @@ export const pythonLevel2Course: RawCourse = {
 				},
 				{
 					title: "PS7 Supplemental Project 4: Dictionary Indexing",
-					content: projectBrief({
+					content: `${projectBrief({
 						goal: "Trace nested data structures and extract target values from dictionaries, lists, and tuples.",
 						build: [
 							"Inspect the outer data structure before writing code.",
@@ -1624,7 +1641,9 @@ export const pythonLevel2Course: RawCourse = {
 							"The code does not rely on trial-and-error guessing.",
 							"The final output is supported by a trace of how each word was reached."
 						]
-					}),
+					})}
+
+**Reference:** W3Schools Python tuple methods: ${PYTHON_TUPLE_METHOD_REFERENCE}`,
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Dictionary-Indexing/starter",
 					solutionLink:
@@ -1691,7 +1710,7 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Sets",
-					content: conceptBrief({
+					content: `${conceptBrief({
 						focus: "Sets store unique values without preserving a meaningful order. They are useful for membership tests, deduplication, and comparing groups.",
 						practice: [
 							"Create sets directly and from lists or strings.",
@@ -1701,7 +1720,9 @@ export const pythonLevel2Course: RawCourse = {
 						],
 						evidence:
 							"A set-based solution is appropriate when uniqueness or group comparison matters more than order."
-					})
+					})}
+
+**Reference:** W3Schools Python set methods: ${PYTHON_SET_METHOD_REFERENCE}`
 				},
 				{
 					title: "PS9 Project 1: Sets Practice",
