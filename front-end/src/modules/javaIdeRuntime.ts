@@ -1,5 +1,5 @@
 import type { PythonIdeFile, PythonIdeMode } from "@/modules/pythonIde";
-import { isPythonIdeJavaFile } from "@/modules/pythonIde";
+import { getPythonIdeRunnableFile } from "@/modules/pythonIde";
 
 export type KarelDirection = "North" | "East" | "South" | "West";
 export type KarelWallSide = "north" | "east" | "south" | "west";
@@ -240,7 +240,7 @@ const karelFacingConditions: Record<string, KarelDirection> = {
 export function runJavaIdeProject(
 	options: JavaIdeRunOptions
 ): JavaIdeRunResult {
-	const activeFile = getActiveJavaFile(options);
+	const activeFile = getPythonIdeRunnableFile(options);
 	if (!activeFile) {
 		return {
 			stderr: ["Add a .java file before running this project."],
@@ -251,16 +251,6 @@ export function runJavaIdeProject(
 	return options.mode === "karel"
 		? runKarelProject(options.files, activeFile)
 		: runConsoleJavaProject(activeFile, options.inputText ?? "");
-}
-
-function getActiveJavaFile(options: JavaIdeRunOptions) {
-	return (
-		options.files.find(
-			file =>
-				file.name === options.activeFileName &&
-				isPythonIdeJavaFile(file.name)
-		) ?? options.files.find(file => isPythonIdeJavaFile(file.name))
-	);
 }
 
 function runConsoleJavaProject(
