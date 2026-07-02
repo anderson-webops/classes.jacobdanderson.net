@@ -220,16 +220,18 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).toContain("function restoreCodeEditorViewState");
 		expect(pageSource).toContain("function restoreCodeEditorScroll");
 		expect(pageSource).toContain("function deleteCodeEditorStateForFile");
-		expect(pageSource).toContain("function deleteCodeEditorStateForProject");
+		expect(pageSource).toContain(
+			"function deleteCodeEditorStateForProject"
+		);
 		expect(pageSource).toContain("codeEditorView.scrollDOM.scrollTop");
-		expect(pageSource).toContain("view.scrollDOM.scrollTop = state.scrollTop");
+		expect(pageSource).toContain(
+			"view.scrollDOM.scrollTop = state.scrollTop"
+		);
 		expect(pageSource).toContain("clampCodeEditorPosition");
 		expect(pageSource).toContain(
 			"codeEditorViewStates.set(nextKey, state);"
 		);
-		expect(pageSource).toContain(
-			"activeCodeEditorViewStateKey = nextKey;"
-		);
+		expect(pageSource).toContain("activeCodeEditorViewStateKey = nextKey;");
 		expect(pageSource).toContain('import("@codemirror/state")');
 		expect(pageSource).toContain(
 			"savedState?.doc.toString() === activeFileContent.value"
@@ -238,7 +240,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).toContain("restoreCodeEditorScroll(");
 		expect(resetSource).toContain("saveCodeEditorViewState();");
 		expect(resetSource).toContain("codeEditorView?.destroy();");
-		expect(resetSource).toContain("const viewStateKey = codeEditorViewStateKey();");
+		expect(resetSource).toContain(
+			"const viewStateKey = codeEditorViewStateKey();"
+		);
 		expect(resetSource).toContain("restoreCodeEditorViewState(");
 	});
 
@@ -464,22 +468,13 @@ describe("python IDE CodeMirror editor", () => {
 			])
 		);
 		expect(autocompleteLabelsForDoc("karel", "front")).toEqual(
-			expect.arrayContaining([
-				"frontIsClear",
-				"frontIsBlocked"
-			])
+			expect.arrayContaining(["frontIsClear", "frontIsBlocked"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "balls")).toEqual(
-			expect.arrayContaining([
-				"ballsPresent",
-				"noBallsPresent"
-			])
+			expect.arrayContaining(["ballsPresent", "noBallsPresent"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "facing")).toEqual(
-			expect.arrayContaining([
-				"facingEast",
-				"notFacingWest"
-			])
+			expect.arrayContaining(["facingEast", "notFacingWest"])
 		);
 	});
 
@@ -563,9 +558,15 @@ describe("python IDE CodeMirror editor", () => {
 
 		expect(editorSource).toContain("cm-bracket-pair-1");
 		expect(editorSource).toContain("syntax-bracket-pair-6");
-		expect(editorSource).not.toContain('tag: tags.bracket, color: "var(--syntax-bracket)", fontWeight');
-		expect(editorSource).not.toContain("tag: tags.angleBracket,\n\t\tcolor: \"var(--syntax-bracket)\",\n\t\tfontWeight");
-		expect(editorSource).not.toContain('".cm-bracket-pair": {\n\t\t\tfontWeight');
+		expect(editorSource).not.toContain(
+			'tag: tags.bracket, color: "var(--syntax-bracket)", fontWeight'
+		);
+		expect(editorSource).not.toContain(
+			'tag: tags.angleBracket,\n\t\tcolor: "var(--syntax-bracket)",\n\t\tfontWeight'
+		);
+		expect(editorSource).not.toContain(
+			'".cm-bracket-pair": {\n\t\t\tfontWeight'
+		);
 	});
 
 	it("configures CodeMirror's native indentation unit to four spaces", () => {
@@ -626,9 +627,7 @@ describe("python IDE CodeMirror editor", () => {
 		);
 		expect(pageSource).toMatch(/\.ide-settings\s*{[\s\S]*height: 100%;/);
 		expect(pageSource).toContain("box-sizing: border-box;");
-		expect(pageSource).toContain(
-			".editor-actions > .site-button"
-		);
+		expect(pageSource).toContain(".editor-actions > .site-button");
 		expect(pageSource).not.toContain("display: contents;");
 		expect(pageSource).toContain(".project-title-input:focus-visible");
 		expect(pageSource).not.toContain(
@@ -669,16 +668,16 @@ describe("python IDE CodeMirror editor", () => {
 		);
 
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel\s*{[\s\S]*width: min\(28rem, calc\(100vw - 1\.5rem\)\);[\s\S]*font-size: 0\.9rem;[\s\S]*line-height: 1\.5;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
+			/\.ide-settings-panel\s*{[\s\S]*width: min\(30rem, calc\(100vw - 1\.25rem\)\);[\s\S]*font-size: 0\.95rem;[\s\S]*line-height: 1\.55;[\s\S]*font-weight: 400;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
 		);
 		expect(pageSource).toMatch(
 			/\.ide-settings-panel span,\s*\.ide-settings-panel \.ide-setting-title,\s*\.ide-settings-panel small\s*{[\s\S]*letter-spacing: 0;[\s\S]*text-transform: none;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-title\s*{[\s\S]*font-size: 0\.92rem;[\s\S]*font-weight: 650;[\s\S]*line-height: 1\.25;/
+			/\.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.98rem;[\s\S]*font-weight: 600;[\s\S]*line-height: 1\.3;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.78rem;[\s\S]*font-weight: 500;[\s\S]*line-height: 1\.45;/
+			/\.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.84rem;[\s\S]*font-weight: 400;[\s\S]*line-height: 1\.55;/
 		);
 	});
 
@@ -875,7 +874,7 @@ describe("python IDE CodeMirror editor", () => {
 		const findSnippet = (label: string, completions = pythonCompletions) =>
 			completions.find(
 				option => option.label === label && option.type === "snippet"
-		);
+			);
 
 		expect(pythonCompletions.map(option => option.label)).toEqual(
 			expect.arrayContaining(["main_guard"])
@@ -1133,7 +1132,11 @@ describe("python IDE CodeMirror editor", () => {
 			{
 				doc: 't.fillcolor("medium s',
 				from: 't.fillcolor("'.length,
-				labels: ["medium sea green", "medium slate blue", "medium spring green"]
+				labels: [
+					"medium sea green",
+					"medium slate blue",
+					"medium spring green"
+				]
 			},
 			{
 				doc: 't.dot(24, "dark o',
@@ -1193,12 +1196,12 @@ describe("python IDE CodeMirror editor", () => {
 		expect(isPythonBracketPairIgnoredAt(state, doc.indexOf("["))).toBe(
 			true
 		);
-		expect(
-			isPythonBracketPairIgnoredAt(state, doc.lastIndexOf("["))
-		).toBe(false);
-		expect(
-			isPythonBracketPairIgnoredAt(state, doc.lastIndexOf("]"))
-		).toBe(false);
+		expect(isPythonBracketPairIgnoredAt(state, doc.lastIndexOf("["))).toBe(
+			false
+		);
+		expect(isPythonBracketPairIgnoredAt(state, doc.lastIndexOf("]"))).toBe(
+			false
+		);
 	});
 
 	it("skips existing auto-inserted closing tokens instead of duplicating them", () => {
@@ -1339,7 +1342,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("surfaces parser-backed Java syntax diagnostics before run", () => {
 		const validState = EditorState.create({
-			doc: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"ok\");\n    }\n}\n",
+			doc: 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("ok");\n    }\n}\n',
 			extensions: createPythonCodeMirrorExtensions({
 				mode: "java",
 				onChange: vi.fn(),
@@ -1347,7 +1350,7 @@ describe("python IDE CodeMirror editor", () => {
 			})
 		});
 		const invalidState = EditorState.create({
-			doc: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"missing brace\");\n    \n",
+			doc: 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("missing brace");\n    \n',
 			extensions: createPythonCodeMirrorExtensions({
 				mode: "java",
 				onChange: vi.fn(),

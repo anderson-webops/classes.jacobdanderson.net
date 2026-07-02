@@ -733,8 +733,12 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 
-		expect(headerSource).toContain('{ label: "Code IDE", to: "/python-ide"');
-		expect(pageHeadSource).toContain('[/^\\/python-ide(?:\\/|$)/, "Code IDE"]');
+		expect(headerSource).toContain(
+			'{ label: "Code IDE", to: "/python-ide"'
+		);
+		expect(pageHeadSource).toContain(
+			'[/^\\/python-ide(?:\\/|$)/, "Code IDE"]'
+		);
 	});
 
 	it("maps course families to the right IDE starter modes", () => {
@@ -815,9 +819,7 @@ describe("python IDE project helpers", () => {
 			runControlStart,
 			pageSource.indexOf("const selectedModeLabel", runControlStart)
 		);
-		const registerStart = pageSource.indexOf(
-			"registerKey(key: string"
-		);
+		const registerStart = pageSource.indexOf("registerKey(key: string");
 		const registerSource = pageSource.slice(
 			registerStart,
 			pageSource.indexOf("listen()", registerStart)
@@ -839,9 +841,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"function refreshActiveTurtleEventHandlerCount"
 		);
-		expect(runControlSource).toContain(
-			"activeTurtleTimerCount.value > 0"
-		);
+		expect(runControlSource).toContain("activeTurtleTimerCount.value > 0");
 		expect(runControlSource).toContain(
 			"activeTurtleTimerCallbackCount.value > 0"
 		);
@@ -860,9 +860,7 @@ describe("python IDE project helpers", () => {
 		expect(stopSource).toContain("keyHandlers.clear();");
 		expect(stopSource).toContain("turtleClickHandlers.clear();");
 		expect(stopSource).toContain("turtleDragHandlers.clear();");
-		expect(stopSource).toContain(
-			"refreshActiveTurtleEventHandlerCount();"
-		);
+		expect(stopSource).toContain("refreshActiveTurtleEventHandlerCount();");
 	});
 
 	it("keeps Turtle runs animated with a visible cursor marker", () => {
@@ -1027,7 +1025,10 @@ describe("python IDE project helpers", () => {
 		);
 		const normalizeSource = runtimeSource.slice(
 			normalizeStart,
-			runtimeSource.indexOf("def _looks_like_color(value):", normalizeStart)
+			runtimeSource.indexOf(
+				"def _looks_like_color(value):",
+				normalizeStart
+			)
 		);
 
 		expect(normalizeSource).toContain('return value.replace(" ", "")');
@@ -1173,10 +1174,10 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"const turtleDistanceDurationMsPerPixelAtDefaultSpeed = 5"
 		);
+		expect(pageSource).toContain("function turtleAnimationSpeedScale");
 		expect(pageSource).toContain(
-			"function turtleAnimationSpeedScale"
+			"return turtleDefaultSpeed / normalizedSpeed;"
 		);
-		expect(pageSource).toContain("return turtleDefaultSpeed / normalizedSpeed;");
 		expect(pageSource).toContain(
 			"distance *\n\t\t\t\t\tturtleDistanceDurationMsPerPixelAtDefaultSpeed *\n\t\t\t\t\tspeedScale"
 		);
@@ -1249,7 +1250,9 @@ describe("python IDE project helpers", () => {
 			"if (!turtleTracerEnabled || fromPose.speed === 0)"
 		);
 		expect(pageSource).toContain("return 0;");
-		expect(pageSource).toContain("const speedScale = turtleAnimationSpeedScale");
+		expect(pageSource).toContain(
+			"const speedScale = turtleAnimationSpeedScale"
+		);
 		expect(pageSource).toContain("if (step.durationMs <= 0)");
 		expect(pageSource).toContain("Math.max(1, Math.min(10, speed))");
 		expect(pageSource).toContain("setSpeed(speed: number)");
@@ -1259,9 +1262,13 @@ describe("python IDE project helpers", () => {
 		expect(runtimeSource).toContain(
 			"def tracer(*args): return _screen.tracer(*args)"
 		);
-		expect(runtimeSource).toContain("def update(): return _screen.update()");
+		expect(runtimeSource).toContain(
+			"def update(): return _screen.update()"
+		);
 		expect(runtimeSource).toContain("_bridge.setSpeed(float(self._speed))");
-		expect(runtimeSource).toContain("_bridge.setTracer(float(_tracer_value))");
+		expect(runtimeSource).toContain(
+			"_bridge.setTracer(float(_tracer_value))"
+		);
 	});
 
 	it("keeps the Turtle cursor drawn directly above its trail", () => {
@@ -1501,9 +1508,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"const turtleBacklogFastForwardStepThreshold = 18"
 		);
-		expect(pageSource).toContain(
-			"function shouldFastForwardTurtleBacklog"
-		);
+		expect(pageSource).toContain("function shouldFastForwardTurtleBacklog");
 		expect(shouldFastForwardSource).toContain(
 			"!isVisibleTurtleTrailStep(step)"
 		);
@@ -1513,9 +1518,9 @@ describe("python IDE project helpers", () => {
 		expect(runFrameSource).toContain(
 			"if (shouldFastForwardTurtleBacklog(step))"
 		);
-		expect(runFrameSource.indexOf("shouldFastForwardTurtleBacklog")).toBeLessThan(
-			runFrameSource.indexOf("isInstantTurtleAnimationStep")
-		);
+		expect(
+			runFrameSource.indexOf("shouldFastForwardTurtleBacklog")
+		).toBeLessThan(runFrameSource.indexOf("isInstantTurtleAnimationStep"));
 		expect(backlogSource).toContain(
 			"activeTurtleAnimationStep.turtleID === synchronizedTurtleID"
 		);
@@ -1797,7 +1802,9 @@ describe("python IDE project helpers", () => {
 			runStart,
 			pageSource.indexOf("function stopCurrentProject", runStart)
 		);
-		const stopStart = pageSource.indexOf("function stopActiveRuntimeSurfaces");
+		const stopStart = pageSource.indexOf(
+			"function stopActiveRuntimeSurfaces"
+		);
 		const stopSource = pageSource.slice(
 			stopStart,
 			pageSource.indexOf("function activateRunControl", stopStart)
@@ -1810,7 +1817,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("function shouldStopPythonIdeRun");
 		expect(runSource).toContain("const runID = nextPythonIdeRunID();");
 		expect(runSource.indexOf("await saveSelectedProject")).toBeLessThan(
-			runSource.indexOf("if (shouldStopPythonIdeRun(runID, project._id)) return;")
+			runSource.indexOf(
+				"if (shouldStopPythonIdeRun(runID, project._id)) return;"
+			)
 		);
 		expect(runSource).toContain(
 			"await ensureGameCourseAssetsLoaded();\n\t\t\tif (shouldStopPythonIdeRun(runID, project._id)) return;"
@@ -1845,7 +1854,9 @@ describe("python IDE project helpers", () => {
 		);
 		const runSource = runtimeSource.slice(runSourceStart);
 
-		expect(inputBootstrapSource).toContain("def _classes_reset_main_namespace():");
+		expect(inputBootstrapSource).toContain(
+			"def _classes_reset_main_namespace():"
+		);
 		expect(inputBootstrapSource).toContain(
 			'classes_main = classes_bootstrap_sys.modules["__main__"]'
 		);
@@ -1864,7 +1875,9 @@ describe("python IDE project helpers", () => {
 		expect(inputBootstrapSource).toContain(
 			'classes_main.__dict__["__name__"] = "__main__"'
 		);
-		expect(inputBootstrapSource).toContain("_classes_reset_main_namespace()");
+		expect(inputBootstrapSource).toContain(
+			"_classes_reset_main_namespace()"
+		);
 		expect(runSource).toContain('__main__.__dict__["__file__"] =');
 		expect(runSource).toContain("__classes_compile_student_source(");
 		expect(runSource).toContain("__main__.__dict__,");
@@ -2062,7 +2075,9 @@ describe("python IDE project helpers", () => {
 		expect(projectSwitchSource).toContain(
 			"previousProjectID === expectedMigration.from"
 		);
-		expect(projectSwitchSource).toContain("projectID === expectedMigration.to");
+		expect(projectSwitchSource).toContain(
+			"projectID === expectedMigration.to"
+		);
 		expect(migrationReturnIndex).toBeGreaterThan(0);
 		expect(runtimeStopIndex).toBeGreaterThan(migrationReturnIndex);
 	});
@@ -2230,17 +2245,17 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(loadScriptSource).toContain(
-			"existing.dataset.classesPythonIdeLoadState === \"error\""
+			'existing.dataset.classesPythonIdeLoadState === "error"'
 		);
 		expect(loadScriptSource).toContain(
-			"existing.dataset.classesPythonIdeLoadState === \"loaded\""
+			'existing.dataset.classesPythonIdeLoadState === "loaded"'
 		);
 		expect(loadScriptSource).toContain("existing.remove();");
 		expect(loadScriptSource).toContain(
-			"script.dataset.classesPythonIdeLoadState = \"loading\";"
+			'script.dataset.classesPythonIdeLoadState = "loading";'
 		);
 		expect(loadScriptSource).toContain(
-			"script.dataset.classesPythonIdeLoadState = \"error\";"
+			'script.dataset.classesPythonIdeLoadState = "error";'
 		);
 		expect(loadScriptSource).toContain("script.remove();");
 		expect(loadScriptSource).toContain(
@@ -2249,7 +2264,9 @@ describe("python IDE project helpers", () => {
 		expect(runtimeSource).toContain(
 			"function removeUninitializedPyodideScript"
 		);
-		expect(loadRuntimeSource).toContain("const runtimePromise = (async () =>");
+		expect(loadRuntimeSource).toContain(
+			"const runtimePromise = (async () =>"
+		);
 		expect(loadRuntimeSource).toContain("pyodidePromise = runtimePromise;");
 		expect(loadRuntimeSource).toContain("runtimePromise.catch(() =>");
 		expect(loadRuntimeSource).toContain("pyodidePromise = null;");
@@ -2564,9 +2581,7 @@ describe("python IDE project helpers", () => {
 		expect(runtimeSource).toContain(
 			"sys.modules.pop(__classes_module_name, None)"
 		);
-		expect(captureSource).toContain(
-			"const capturedFiles = files.filter("
-		);
+		expect(captureSource).toContain("const capturedFiles = files.filter(");
 		expect(captureSource).toContain(
 			"for (const file of capturedFiles) lastProjectFileNames.add(file.name);"
 		);
@@ -2812,7 +2827,9 @@ describe("python IDE project helpers", () => {
 		const saveIndex = runSource.indexOf(
 			"await saveSelectedProject({ force: true });"
 		);
-		const projectIndex = runSource.indexOf("const project = selectedProject.value;");
+		const projectIndex = runSource.indexOf(
+			"const project = selectedProject.value;"
+		);
 		const runnableIndex = runSource.indexOf(
 			"const runnableFile = getPythonIdeRunnableFile(project);"
 		);
@@ -2855,20 +2872,18 @@ describe("python IDE project helpers", () => {
 			'const pythonIdeAutoSaveStorageKey = "classes-python-ide-autosave";'
 		);
 		expect(pageSource).toContain(
-			'const pythonIdeCodeRecommendationsStorageKey ='
+			"const pythonIdeCodeRecommendationsStorageKey ="
 		);
 		expect(pageSource).toContain(
-			'const pythonIdeEditorLineWrapStorageKey ='
+			"const pythonIdeEditorLineWrapStorageKey ="
 		);
 		expect(pageSource).toContain(
-			'const pythonIdeExpandedWorkspaceStorageKey ='
+			"const pythonIdeExpandedWorkspaceStorageKey ="
 		);
 		expect(pageSource).toContain(
 			"const autoSaveEnabled = ref(loadPythonIdeAutoSavePreference());"
 		);
-		expect(pageSource).toContain(
-			"const codeRecommendationsEnabled = ref("
-		);
+		expect(pageSource).toContain("const codeRecommendationsEnabled = ref(");
 		expect(pageSource).toContain("const editorLineWrapEnabled = ref(");
 		expect(pageSource).toContain("const ideExpanded = ref(");
 		expect(pageSource).toContain("function updateAutoSavePreference");
@@ -2877,10 +2892,10 @@ describe("python IDE project helpers", () => {
 		);
 		expect(pageSource).toContain("function updateEditorLineWrapPreference");
 		expect(pageSource).toContain("function updateExpandedIdePreference");
-		expect(pageSource).toContain("Autosave projects");
-		expect(pageSource).toContain("Recommendations as you type");
-		expect(pageSource).toContain("Wrap editor text");
-		expect(pageSource).toContain("Expanded IDE layout");
+		expect(pageSource).toContain("Autosave");
+		expect(pageSource).toContain("Recommendations");
+		expect(pageSource).toContain("Line wrap");
+		expect(pageSource).toContain("Expanded layout");
 		expect(pageSource).toContain(
 			"recommendationsEnabled: codeRecommendationsEnabled.value"
 		);
@@ -2918,12 +2933,18 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("interface SaveProjectOptions");
 		expect(pageSource).toContain("async function savePendingProjects");
 		expect(pageSource).toContain("pendingSaveProjectIDs.add(projectID);");
-		expect(pageSource).toContain("unsyncedProjectIDs.add(startedProjectID);");
+		expect(pageSource).toContain(
+			"unsyncedProjectIDs.add(startedProjectID);"
+		);
 		expect(pageSource).toContain("void savePendingProjects();");
 		expect(pageSource).toContain("saveSelectedProject({ force: true })");
 		expect(pageSource).toContain("let localSnapshotTimer:");
-		expect(pageSource).toContain("async function persistLocalProjectSnapshot");
-		expect(pageSource).toContain("async function discardLocalProjectSnapshot");
+		expect(pageSource).toContain(
+			"async function persistLocalProjectSnapshot"
+		);
+		expect(pageSource).toContain(
+			"async function discardLocalProjectSnapshot"
+		);
 		expect(pageSource).toContain(
 			"async function discardLocalProjectSnapshotIfSafe"
 		);
@@ -2975,14 +2996,10 @@ describe("python IDE project helpers", () => {
 			"useFreshCodeEditorStateOnNextReset = true;"
 		);
 		expect(pageSource).toContain(
-			'window.localStorage.getItem(pythonIdeCodeRecommendationsStorageKey) !=='
+			"window.localStorage.getItem(pythonIdeCodeRecommendationsStorageKey) !=="
 		);
-		expect(pageSource).toContain(
-			"void nextTick(resetCodeEditor);"
-		);
-		expect(pageSource).toContain(
-			"!useFreshCodeEditorStateOnNextReset &&"
-		);
+		expect(pageSource).toContain("void nextTick(resetCodeEditor);");
+		expect(pageSource).toContain("!useFreshCodeEditorStateOnNextReset &&");
 		expect(codeMirrorSource).toContain("recommendationsEnabled?: boolean;");
 		expect(codeMirrorSource).toContain("lineWrappingEnabled?: boolean;");
 		expect(codeMirrorSource).toContain(
@@ -3015,16 +3032,15 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("function startIdeSplitResize");
 		expect(pageSource).toContain("function handleIdeSplitPointerMove");
 		expect(pageSource).toContain("function handleIdeSplitKeydown");
-		expect(pageSource).toContain("role=\"separator\"");
-		expect(pageSource).toContain("aria-orientation=\"vertical\"");
-		expect(pageSource).toContain("@pointerdown=\"startIdeSplitResize\"");
-		expect(pageSource).toContain("@keydown=\"handleIdeSplitKeydown\"");
-		expect(pageSource).toContain("faGripLinesVertical");
+		expect(pageSource).toContain('role="separator"');
+		expect(pageSource).toContain('aria-orientation="vertical"');
+		expect(pageSource).toContain('@pointerdown="startIdeSplitResize"');
+		expect(pageSource).toContain('@keydown="handleIdeSplitKeydown"');
+		expect(pageSource).not.toContain("faGripLinesVertical");
+		expect(pageSource).not.toContain(".ide-splitter svg");
 		expect(pageSource).toContain(".ide-splitter");
 		expect(pageSource).toContain("--python-ide-code-column");
-		expect(pageSource).toContain(
-			"stopIdeSplitResize();"
-		);
+		expect(pageSource).toContain("stopIdeSplitResize();");
 	});
 
 	it("wires Python IDE project sharing through settings and shared links", () => {
@@ -3050,7 +3066,7 @@ describe("python IDE project helpers", () => {
 			"`/users/loggedin/python-projects/${projectID}/share`"
 		);
 		expect(pageSource).toContain("const isSharing = ref(false);");
-		expect(pageSource).toContain("const shareMessage = ref(\"\");");
+		expect(pageSource).toContain('const shareMessage = ref("");');
 		expect(pageSource).toContain("const requestedShareID = computed");
 		expect(pageSource).toContain("function pythonIdeShareUrl");
 		expect(pageSource).toContain(
@@ -3064,14 +3080,16 @@ describe("python IDE project helpers", () => {
 		);
 		expect(pageSource).toContain("sharedSourceID: shareID");
 		expect(pageSource).toContain(
-			"title: `Copy of ${sharedProject.title || \"Shared Project\"}`"
+			'title: `Copy of ${sharedProject.title || "Shared Project"}`'
 		);
 		expect(pageSource).toContain(
 			"await updateRemotePythonIdeProjectShare("
 		);
-		expect(pageSource).toContain("async function copySelectedProjectShareLink");
+		expect(pageSource).toContain(
+			"async function copySelectedProjectShareLink"
+		);
 		expect(pageSource).toContain("navigator.clipboard.writeText");
-		expect(pageSource).toContain("Share project");
+		expect(pageSource).toContain("Share");
 		expect(pageSource).toContain("Shared project link");
 		expect(pageSource).toContain("Sign in to share projects.");
 		expect(pageSource).toContain("ide-share-link-row");
@@ -3114,7 +3132,7 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(pageSource).toContain(
-			'const pythonIdeEditorViewStateStoragePrefix ='
+			"const pythonIdeEditorViewStateStoragePrefix ="
 		);
 		expect(pageSource).toContain(
 			"const codeEditorStateSnapshots = new Map<string, CodeEditorState>();"
@@ -3126,10 +3144,10 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("function isCodeEditorViewState");
 		expect(pageSource).toContain("function restoreCodeEditorScroll");
 		expect(pageSource).toContain("function deleteCodeEditorStateForFile");
-		expect(pageSource).toContain("function deleteCodeEditorStateForProject");
 		expect(pageSource).toContain(
-			'CodeEditorViewState["ranges"][number]'
+			"function deleteCodeEditorStateForProject"
 		);
+		expect(pageSource).toContain('CodeEditorViewState["ranges"][number]');
 		expect(pageSource).toContain(
 			"savedState?.doc.toString() === activeFileContent.value"
 		);
@@ -3159,8 +3177,12 @@ describe("python IDE project helpers", () => {
 		expect(codeMirrorSource).toContain("...defaultKeymap");
 		expect(codeMirrorSource).toContain("...closeBracketsKeymap");
 		expect(codeMirrorSource).toContain("rectangularSelection()");
-		expect(codeMirrorSource).toContain("EditorState.allowMultipleSelections.of(true)");
-		expect(codeMirrorSource).toContain("Prec.highest(keymap.of([indentWithTab]))");
+		expect(codeMirrorSource).toContain(
+			"EditorState.allowMultipleSelections.of(true)"
+		);
+		expect(codeMirrorSource).toContain(
+			"Prec.highest(keymap.of([indentWithTab]))"
+		);
 		expect(helpTextSource).toContain(".code-panel { overflow: hidden;");
 		expect(helpTextSource).toContain("max-height: min(24rem, 44vh);");
 		expect(helpTextSource).toContain("overscroll-behavior: contain;");
@@ -3659,9 +3681,7 @@ describe("python IDE project helpers", () => {
 		expect(alien?.url).toBe("/python-ide/assets/images/alien.png");
 		expect(alien?.width).toBe(20);
 		expect(alien?.height).toBe(18);
-		expect(alienLeft?.url).toBe(
-			"/python-ide/assets/images/alien-left.png"
-		);
+		expect(alienLeft?.url).toBe("/python-ide/assets/images/alien-left.png");
 	});
 
 	it("keeps zip parsing out of the normal course asset loader chunk", () => {
@@ -4108,12 +4128,8 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"let gameAudioPlaybackBlockedNoticeShown = false;"
 		);
-		expect(pageSource).toContain(
-			"function reportGameAudioPlaybackBlocked"
-		);
-		expect(pageSource).toContain(
-			"Audio is waiting for a browser gesture."
-		);
+		expect(pageSource).toContain("function reportGameAudioPlaybackBlocked");
+		expect(pageSource).toContain("Audio is waiting for a browser gesture.");
 		expect(pageSource).not.toContain(
 			"Audio playback was blocked: ${error.message}"
 		);
