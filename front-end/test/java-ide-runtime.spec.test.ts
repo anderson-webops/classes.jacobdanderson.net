@@ -357,6 +357,8 @@ public class Main {
         System.out.println(Math.max(4, 7));
         System.out.println(Math.round(Math.PI * 100));
         System.out.println((int) Math.E);
+        System.out.println(2 + 3 + " points");
+        System.out.println("points " + 2 + 3);
     }
 }`
 				}
@@ -383,7 +385,9 @@ public class Main {
 			"3",
 			"7",
 			"314",
-			"2"
+			"2",
+			"5 points",
+			"points 23"
 		]);
 	});
 
