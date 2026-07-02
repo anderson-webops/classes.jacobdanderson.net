@@ -175,8 +175,6 @@ const pythonIdeCourseModes: Record<string, PythonIdeMode> = {
 	"java-level-1": "karel",
 	"java-level-2": "java",
 	"java-level-3": "java",
-	"java-with-graphics": "karel",
-	"java-without-graphics": "java",
 	"machine-learning": "data",
 	pygames: "pgzero",
 	"python-level-1": "turtle",

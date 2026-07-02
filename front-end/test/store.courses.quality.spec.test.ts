@@ -306,6 +306,16 @@ describe("course text quality normalization", () => {
 		expect(unknownIds).toEqual([]);
 	});
 
+	it("keeps the Java catalog track consolidated to Java Level 1 through Level 3", () => {
+		const catalogIds = courseCatalog.map(entry => entry.id);
+
+		expect(catalogIds).not.toContain("java-without-graphics");
+		expect(catalogIds).not.toContain("java-with-graphics");
+		expect(
+			catalogIds.filter(courseId => courseId.startsWith("java-level-"))
+		).toEqual(["java-level-1", "java-level-2", "java-level-3"]);
+	});
+
 	it("keeps informational resource cards free of generated project scaffolds", async () => {
 		const samples = [
 			{
@@ -2328,30 +2338,8 @@ describe("course text quality normalization", () => {
 	);
 
 	it(
-		"allows exact long-form duplicates only for composed Java split tracks",
+		"keeps exact long-form content unique across catalog courses",
 		async () => {
-			const javaSplitCourseIds = new Set([
-				"java-level-1",
-				"java-level-2",
-				"java-level-3",
-				"java-without-graphics",
-				"java-with-graphics"
-			]);
-			const isAllowedComposedJavaDuplicate = (labels: string[]) => {
-				const courseIds = labels.map(label => label.split(" > ")[0]);
-				const uniqueCourseIds = new Set(courseIds);
-				const includesSplitTrack =
-					uniqueCourseIds.has("java-without-graphics") ||
-					uniqueCourseIds.has("java-with-graphics");
-
-				return (
-					includesSplitTrack &&
-					uniqueCourseIds.size === labels.length &&
-					courseIds.every(courseId =>
-						javaSplitCourseIds.has(courseId)
-					)
-				);
-			};
 			const contentGroups = new Map<string, string[]>();
 			const duplicateGroups: string[] = [];
 			const courses = await loadedCatalogCourses();
@@ -2381,7 +2369,6 @@ describe("course text quality normalization", () => {
 
 			for (const labels of contentGroups.values()) {
 				if (labels.length < 2) continue;
-				if (isAllowedComposedJavaDuplicate(labels)) continue;
 
 				duplicateGroups.push(labels.join(" || "));
 			}
@@ -5564,15 +5551,8 @@ describe("course text quality normalization", () => {
 	});
 
 	it("keeps Java foundation implementation builds tied to distinct source projects", async () => {
-		const [javaLevel1, javaWithoutGraphics, javaWithGraphics] =
-			await Promise.all([
-				loadRawCourse("java-level-1"),
-				loadRawCourse("java-without-graphics"),
-				loadRawCourse("java-with-graphics")
-			]);
+		const javaLevel1 = await loadRawCourse("java-level-1");
 		expect(javaLevel1).not.toBeNull();
-		expect(javaWithoutGraphics).not.toBeNull();
-		expect(javaWithGraphics).not.toBeNull();
 
 		const concepts = [13, 14, 15, 16, 17].map(build =>
 			findItem(
@@ -5587,19 +5567,6 @@ describe("course text quality normalization", () => {
 		expect(concepts[2].content).toContain("inclusive range checks");
 		expect(concepts[3].content).toContain("adjacent list access");
 		expect(concepts[4].content).toContain("two-pass list processing");
-
-		expect(
-			findItem(
-				javaWithoutGraphics!,
-				/Java Foundations Build 17: Core Concepts/
-			).content
-		).toContain("empty-list handling");
-		expect(
-			findItem(
-				javaWithGraphics!,
-				/Java Foundations Build 13: Core Concepts/
-			).content
-		).toContain("divisibility checks");
 	});
 
 	it("keeps the Java course sequence anchored to the visual Karel and BlueJ bridge", async () => {
@@ -5650,45 +5617,35 @@ describe("course text quality normalization", () => {
 		expect(apCsaText).toContain("Carol/Karel and BlueJ habits");
 	});
 
-	it("keeps Java graphics split tracks neutral and project-rich", async () => {
-		const [javaWithoutGraphics, javaWithGraphics] = await Promise.all([
-			loadRawCourse("java-without-graphics"),
-			loadRawCourse("java-with-graphics")
-		]);
-		expect(javaWithoutGraphics).not.toBeNull();
-		expect(javaWithGraphics).not.toBeNull();
+	it("keeps Java Level 1 graphics extensions neutral and project-rich", async () => {
+		const javaLevel1 = await loadRawCourse("java-level-1");
+		expect(javaLevel1).not.toBeNull();
 
-		const noGraphicsText = allCourseText(javaWithoutGraphics);
-		const graphicsText = allCourseText(javaWithGraphics);
-		const combinedText = `${noGraphicsText}\n${graphicsText}`;
+		const javaLevel1Text = allCourseText(javaLevel1);
 
-		expect(noGraphicsText).toContain("Java Track Map: Without Graphics");
-		expect(noGraphicsText).toContain("What This Track Keeps");
-		expect(noGraphicsText).toContain(
-			"Track Checkpoint: Console Project Choice"
+		expect(javaLevel1Text).toContain("Graphics Extension Positioning");
+		expect(javaLevel1Text).toContain(
+			"Java Level 1 Graphics Extension: Coordinates, Color, and Shapes"
 		);
-		expect(graphicsText).toContain("Java Track Map: With Graphics");
-		expect(graphicsText).toContain("Graphics Track Positioning");
-		expect(graphicsText).toContain(
-			"Java Graphics Track 1: Coordinates, Color, and Shapes"
-		);
-		expect(graphicsText).toContain(
+		expect(javaLevel1Text).toContain(
 			"Java Graphics Extension: Coordinate Refactor"
 		);
-		expect(graphicsText).toContain(
+		expect(javaLevel1Text).toContain(
 			"Java Graphics Extension: Pattern Parameter Swap"
 		);
 
-		expect(combinedText).not.toContain("What This Branch Keeps");
-		expect(combinedText).not.toContain("Graphics Branch Positioning");
-		expect(combinedText).not.toContain("Java Graphics Branch");
-		expect(combinedText).not.toMatch(/\bbranch should\b/i);
-		expect(combinedText).not.toMatch(/\bgraphics should\b/i);
+		expect(javaLevel1Text).not.toContain("Java Track Map: Without Graphics");
+		expect(javaLevel1Text).not.toContain("Java Track Map: With Graphics");
+		expect(javaLevel1Text).not.toContain("What This Branch Keeps");
+		expect(javaLevel1Text).not.toContain("Graphics Branch Positioning");
+		expect(javaLevel1Text).not.toContain("Java Graphics Branch");
+		expect(javaLevel1Text).not.toMatch(/\bbranch should\b/i);
+		expect(javaLevel1Text).not.toMatch(/\bgraphics should\b/i);
 
-		const customGraphicsModules = javaWithGraphics!.modules.filter(module =>
-			/^Java Graphics Track [12]:/.test(module.title)
+		const customGraphicsModules = javaLevel1!.modules.filter(module =>
+			/^Java Level 1 Graphics Extension:/.test(module.title)
 		);
-		expect(customGraphicsModules).toHaveLength(2);
+		expect(customGraphicsModules).toHaveLength(3);
 
 		for (const module of customGraphicsModules) {
 			expect(

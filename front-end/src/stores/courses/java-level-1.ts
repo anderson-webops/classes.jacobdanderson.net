@@ -1,6 +1,7 @@
 import type { ImplementationLabSection } from "./implementationLabGuidance";
 import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
+import { javaLevel1GraphicsExtensionModules } from "./java-graphics-extensions";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
@@ -291,7 +292,7 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "JS1 Supplemental Project 2: Division Facts",
 					content:
-						"Ask the user for two numbers, then compute the quotient and remainder without using the `%` operator.",
+						"Build Division Facts as an object-design exercise that asks for two numbers, computes the quotient and remainder without using the `%` operator, and explains the arithmetic rule in code. Verify the Division Facts object-design exercise with one standard case and one boundary case that exposes the key concept.",
 					projectLink:
 						"https://github.com/instruction-material/Java-Level-1/tree/main/JS1-Division-Facts",
 					solutionLink:
@@ -1533,6 +1534,7 @@ export const javaLevel1Course: RawCourse = {
 				}
 			]
 		},
+		...javaLevel1GraphicsExtensionModules,
 		{
 			title: "Pending Demo Media",
 			kind: "appendix",
