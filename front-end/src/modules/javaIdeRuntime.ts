@@ -129,6 +129,10 @@ type JavaConsoleValue =
 			value: boolean;
 	  }
 	| {
+			type: "char";
+			value: string;
+	  }
+	| {
 			type: "null";
 			value: null;
 	  }
@@ -848,7 +852,7 @@ function evaluateJavaExpression(
 	}
 	if (/^'(?:\\.|[^'\\])'$/.test(trimmed)) {
 		return {
-			type: "string",
+			type: "char",
 			value: unescapeJavaString(trimmed.slice(1, -1))
 		};
 	}
@@ -1021,13 +1025,20 @@ function combineJavaAdditionValues(
 			value: `${javaValueToString(left)}${javaValueToString(right)}`
 		};
 	}
-	if (left.type === "number" && right.type === "number") {
-		return { type: "number", value: left.value + right.value };
+	if (isJavaNumericAdditionValue(left) && isJavaNumericAdditionValue(right)) {
+		return {
+			type: "number",
+			value: javaValueToNumber(left) + javaValueToNumber(right)
+		};
 	}
 	return {
 		type: "string",
 		value: `${javaValueToString(left)}${javaValueToString(right)}`
 	};
+}
+
+function isJavaNumericAdditionValue(value: JavaConsoleValue) {
+	return value.type === "number" || value.type === "char";
 }
 
 function formatJavaConsoleExpression(
@@ -1332,6 +1343,7 @@ function javaValueToString(value: JavaConsoleValue): string {
 
 function javaValueToNumber(value: JavaConsoleValue): number {
 	if (value.type === "number") return value.value;
+	if (value.type === "char") return value.value.codePointAt(0) ?? 0;
 	if (value.type === "array" || value.type === "arrayList")
 		return value.value.length;
 	const parsed = Number(javaValueToString(value).trim());
@@ -1418,6 +1430,13 @@ function applyDeclaredJavaType(
 	value: JavaConsoleValue,
 	declaredType: string
 ): JavaConsoleValue {
+	if (/^char\b/i.test(declaredType)) {
+		if (value.type === "char") return value;
+		return {
+			type: "char",
+			value: String.fromCodePoint(Math.trunc(javaValueToNumber(value)))
+		};
+	}
 	if (value.type !== "array" || !/\[\s*\]/.test(declaredType)) return value;
 	const elementType = declaredType.match(/^([A-Z_]\w*)/i)?.[1];
 	return elementType ? { ...value, elementType } : value;
@@ -1444,7 +1463,7 @@ function defaultJavaValueForType(type: string): JavaConsoleValue {
 		return { type: "number", value: 0 };
 	}
 	if (normalized === "boolean") return { type: "boolean", value: false };
-	if (normalized === "char") return { type: "string", value: "" };
+	if (normalized === "char") return { type: "char", value: "" };
 	return { type: "null", value: null };
 }
 
@@ -1521,7 +1540,8 @@ function evaluateJavaCastExpression(
 	const castEnd = findMatchingDelimiter(expression, 0, "(", ")");
 	if (castEnd < 0) return null;
 	const castType = expression.slice(1, castEnd).trim().toLowerCase();
-	if (castType !== "int" && castType !== "double") return null;
+	if (castType !== "int" && castType !== "double" && castType !== "char")
+		return null;
 	const value = javaValueToNumber(
 		evaluateJavaExpression(
 			expression.slice(castEnd + 1).trim(),
@@ -1529,6 +1549,9 @@ function evaluateJavaCastExpression(
 			output
 		)
 	);
+	if (castType === "char") {
+		return { type: "char", value: String.fromCodePoint(Math.trunc(value)) };
+	}
 	return {
 		type: "number",
 		value: castType === "int" ? Math.trunc(value) : value
@@ -2039,12 +2062,18 @@ function evaluateNumericExpression(
 	context?: JavaConsoleContext,
 	output?: JavaConsoleOutputState
 ) {
-	const tokens = expression.match(
-		/[A-Z_]\w*(?:\s*\[[^\][]+\])+|(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)|[A-Z_]\w*\.[A-Z_]\w*|\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi
+	const trimmed = expression.trim();
+	if (/^'(?:\\.|[^'\\])'$/.test(trimmed)) return null;
+	if (/^[A-Z_]\w*$/i.test(trimmed)) return null;
+	if (/^[A-Z_]\w*(?:\s*\[[^\][]+\])+$/i.test(trimmed)) return null;
+	if (/^(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)$/i.test(trimmed)) return null;
+
+	const tokens = trimmed.match(
+		/[A-Z_]\w*(?:\s*\[[^\][]+\])+|(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)|[A-Z_]\w*\.[A-Z_]\w*|'(?:\\.|[^'\\])'|\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi
 	);
 	if (
 		!tokens ||
-		tokens.join("").replace(/\s+/g, "") !== expression.replace(/\s+/g, "")
+		tokens.join("").replace(/\s+/g, "") !== trimmed.replace(/\s+/g, "")
 	) {
 		return null;
 	}
@@ -2078,6 +2107,13 @@ function evaluateNumericExpression(
 				return value;
 			}
 			index += 1;
+			if (/^'(?:\\.|[^'\\])'$/.test(token ?? "")) {
+				return (
+					unescapeJavaString((token ?? "").slice(1, -1)).codePointAt(
+						0
+					) ?? 0
+				);
+			}
 			if (
 				/^(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\(/i.test(token ?? "") ||
 				/^[A-Z_]\w*\s*\[/i.test(token ?? "")
@@ -2089,8 +2125,9 @@ function evaluateNumericExpression(
 			const constant = javaMathConstantValue(token ?? "");
 			if (constant !== null) return constant;
 			const variable = context?.variables.get(token ?? "");
-			const value =
-				variable?.type === "number" ? variable.value : Number(token);
+			const value = variable
+				? javaValueToNumber(variable)
+				: Number(token);
 			if (!Number.isFinite(value)) throw new Error("Invalid number");
 			return value;
 		},
