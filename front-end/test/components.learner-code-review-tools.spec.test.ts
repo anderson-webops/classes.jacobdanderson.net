@@ -101,6 +101,17 @@ describe("LearnerCodeReviewTools", () => {
 			.toContain("Try a loop here");
 	});
 
+	it("uses Code IDE copy when learner projects fail to load", async () => {
+		moduleMocks.fetchProjects.mockRejectedValue(new Error());
+		const wrapper = mountTools();
+		await openTools(wrapper);
+
+		expect(wrapper.text()).toContain(
+			"Unable to load saved Code IDE projects."
+		);
+		expect(wrapper.text()).not.toContain("Unable to load saved Python projects.");
+	});
+
 	it("saves edits, notes, and learner visibility only to the review copy", async () => {
 		moduleMocks.fetchProjects.mockResolvedValue([{ project, review }]);
 		const wrapper = mountTools();

@@ -148,9 +148,9 @@ async function loadProjectReviews() {
 		loaded.value = true;
 	} catch (err: any) {
 		error.value =
-			err.response?.data?.message ??
-			err.message ??
-			"Unable to load saved Python projects.";
+			err.response?.data?.message ||
+			err.message ||
+			"Unable to load saved Code IDE projects.";
 		records.value = [];
 	} finally {
 		loading.value = false;
