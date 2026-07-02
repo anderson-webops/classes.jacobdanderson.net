@@ -1194,7 +1194,12 @@ describe("CourseExplorer.vue", () => {
 		await flushPromises();
 
 		await vi.waitFor(() => {
-			expect(wrapper.text()).toContain("Pre-Calculus and Trigonometry A");
+			const heading = wrapper.find(".course-hero h2");
+			expect(heading.exists()).toBe(true);
+			expect(heading.text()).toContain(
+				"Pre-Calculus and Trigonometry A"
+			);
+			expect(wrapper.text()).not.toContain("Loading course");
 		});
 
 		await wrapper.get("#course-search").setValue("pcta12_pset2_40.png");
@@ -1242,7 +1247,12 @@ describe("CourseExplorer.vue", () => {
 		await flushPromises();
 
 		await vi.waitFor(() => {
-			expect(wrapper.text()).toContain("Pre-Calculus and Trigonometry B");
+			const heading = wrapper.find(".course-hero h2");
+			expect(heading.exists()).toBe(true);
+			expect(heading.text()).toContain(
+				"Pre-Calculus and Trigonometry B"
+			);
+			expect(wrapper.text()).not.toContain("Loading course");
 		});
 
 		await wrapper.get("#course-search").setValue("pctb3_pset4_20.png");
@@ -1290,7 +1300,10 @@ describe("CourseExplorer.vue", () => {
 		await flushPromises();
 
 		await vi.waitFor(() => {
-			expect(wrapper.text()).toContain("AP Calculus");
+			const heading = wrapper.find(".course-hero h2");
+			expect(heading.exists()).toBe(true);
+			expect(heading.text()).toContain("AP Calculus");
+			expect(wrapper.text()).not.toContain("Loading course");
 		});
 
 		await wrapper.get("#course-search").setValue("apc21_concept3_24.png");
