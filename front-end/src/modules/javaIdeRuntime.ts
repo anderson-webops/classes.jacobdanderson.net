@@ -104,6 +104,11 @@ interface JavaConsoleForLoop {
 
 type JavaConsoleValue =
 	| {
+			elementType: string;
+			type: "array" | "arrayList";
+			value: JavaConsoleValue[];
+	  }
+	| {
 			type: "boolean";
 			value: boolean;
 	  }
@@ -137,9 +142,14 @@ const JAVA_PRINT_RE = /System\.out\.(print|println)\s*\(([\s\S]*?)\)\s*;/g;
 const JAVA_SCANNER_READ_RE =
 	/\b[A-Z_]\w*\.next(Line|Int|Double|Boolean)?\s*\(\s*\)/i;
 const JAVA_VARIABLE_DECLARATION_START_RE =
-	/^(?:String|int|double|boolean|char|var)\s+([A-Z_]\w*)\s*=/i;
+	/^[A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])?\s+([A-Z_]\w*)\s*=/i;
 const JAVA_VARIABLE_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*=/i;
 const JAVA_COMPOUND_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*(\+=|-=|\*=|\/=|%=)/i;
+const JAVA_INDEXED_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*\[([\s\S]+)\]\s*=/i;
+const JAVA_INDEXED_COMPOUND_ASSIGNMENT_START_RE =
+	/^([A-Z_]\w*)\s*\[([\s\S]+)\]\s*(\+=|-=|\*=|\/=|%=)/i;
+const JAVA_INDEXED_INCREMENT_RE =
+	/^(?:\+\+([A-Z_]\w*)\s*\[([\s\S]+)\]|([A-Z_]\w*)\s*\[([\s\S]+)\]\+\+|--([A-Z_]\w*)\s*\[([\s\S]+)\]|([A-Z_]\w*)\s*\[([\s\S]+)\]--)$/i;
 const JAVA_INCREMENT_RE =
 	/^(?:\+\+([A-Z_]\w*)|([A-Z_]\w*)\+\+|--([A-Z_]\w*)|([A-Z_]\w*)--)$/i;
 const ROBOT_DECLARATION_RE =
@@ -441,6 +451,8 @@ function executeJavaConsoleStatement(
 
 	if (executeJavaConsoleMethodStatement(trimmed, context, output))
 		return null;
+	if (executeJavaCollectionMutationStatement(trimmed, context, output))
+		return null;
 
 	storeJavaVariableFromStatement(statement, context, output);
 	return null;
@@ -463,12 +475,128 @@ function executeJavaConsoleMethodStatement(
 	return true;
 }
 
+function executeJavaCollectionMutationStatement(
+	statement: string,
+	context: JavaConsoleContext,
+	output: JavaConsoleOutputState
+) {
+	const match = statement.match(
+		/^([A-Z_]\w*)\.(add|set|remove|clear)\s*\(([\s\S]*)\)$/i
+	);
+	if (!match?.[1] || !match[2]) return false;
+	const collection = context.variables.get(match[1]);
+	if (collection?.type !== "arrayList") return false;
+	const args = splitJavaArguments(match[3] ?? "");
+	const method = match[2].toLowerCase();
+	if (method === "add") {
+		collection.value.push(
+			evaluateJavaExpression(args.at(-1) ?? "", context, output)
+		);
+		return true;
+	}
+	if (method === "set") {
+		const index = javaExpressionToIndex(args[0] ?? "", context, output);
+		collection.value[index] = evaluateJavaExpression(
+			args[1] ?? "",
+			context,
+			output
+		);
+		return true;
+	}
+	if (method === "remove") {
+		collection.value.splice(
+			javaExpressionToIndex(args[0] ?? "", context, output),
+			1
+		);
+		return true;
+	}
+	collection.value.splice(0);
+	return true;
+}
+
 function storeJavaVariableFromStatement(
 	statement: string,
 	context: JavaConsoleContext,
 	output?: JavaConsoleOutputState
 ) {
 	const trimmed = statement.trim().replace(/;$/, "").trim();
+	const indexedIncrement = trimmed.match(JAVA_INDEXED_INCREMENT_RE);
+	if (indexedIncrement) {
+		const variableName =
+			indexedIncrement[1] ??
+			indexedIncrement[3] ??
+			indexedIncrement[5] ??
+			indexedIncrement[7];
+		const rawIndex =
+			indexedIncrement[2] ??
+			indexedIncrement[4] ??
+			indexedIncrement[6] ??
+			indexedIncrement[8] ??
+			"";
+		if (!variableName) return;
+		const currentValue = getJavaIndexedValue(
+			variableName,
+			rawIndex,
+			context,
+			output
+		);
+		const direction = trimmed.includes("--") ? -1 : 1;
+		setJavaIndexedValue(
+			variableName,
+			rawIndex,
+			{
+				type: "number",
+				value: javaValueToNumber(currentValue) + direction
+			},
+			context,
+			output
+		);
+		return;
+	}
+
+	const indexedCompound = trimmed.match(
+		JAVA_INDEXED_COMPOUND_ASSIGNMENT_START_RE
+	);
+	if (indexedCompound?.[1] && indexedCompound[2] && indexedCompound[3]) {
+		setJavaIndexedValue(
+			indexedCompound[1],
+			indexedCompound[2],
+			applyJavaCompoundAssignment(
+				getJavaIndexedValue(
+					indexedCompound[1],
+					indexedCompound[2],
+					context,
+					output
+				),
+				indexedCompound[3],
+				evaluateJavaExpression(
+					trimmed.slice(indexedCompound[0].length),
+					context,
+					output
+				)
+			),
+			context,
+			output
+		);
+		return;
+	}
+
+	const indexedAssignment = trimmed.match(JAVA_INDEXED_ASSIGNMENT_START_RE);
+	if (indexedAssignment?.[1] && indexedAssignment[2]) {
+		setJavaIndexedValue(
+			indexedAssignment[1],
+			indexedAssignment[2],
+			evaluateJavaExpression(
+				trimmed.slice(indexedAssignment[0].length),
+				context,
+				output
+			),
+			context,
+			output
+		);
+		return;
+	}
+
 	const increment = trimmed.match(JAVA_INCREMENT_RE);
 	if (increment) {
 		const variableName = increment.slice(1).find(Boolean);
@@ -570,6 +698,13 @@ function evaluateJavaExpression(
 
 	const scannerValue = evaluateJavaScannerRead(trimmed, context);
 	if (scannerValue) return scannerValue;
+
+	const collectionValue = evaluateJavaCollectionExpression(
+		trimmed,
+		context,
+		output
+	);
+	if (collectionValue) return collectionValue;
 
 	const castValue = evaluateJavaCastExpression(trimmed, context, output);
 	if (castValue) return castValue;
@@ -677,15 +812,211 @@ function evaluateJavaScannerRead(
 	return { type: "string", value: raw };
 }
 
+function evaluateJavaCollectionExpression(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue | null {
+	const arrayLiteral = evaluateJavaArrayLiteral(expression, context, output);
+	if (arrayLiteral) return arrayLiteral;
+
+	const newArrayLiteral = expression.match(
+		/^new\s+([A-Z_]\w*)\s*\[\s*\]\s*\{([^{}]*)\}$/i
+	);
+	if (newArrayLiteral?.[1]) {
+		return javaArrayValue(
+			newArrayLiteral[1],
+			splitJavaArguments(newArrayLiteral[2] ?? "").map(arg =>
+				evaluateJavaExpression(arg, context, output)
+			)
+		);
+	}
+
+	const newArray = expression.match(/^new\s+([A-Z_]\w*)\s*\[([^\]]+)\]$/i);
+	if (newArray?.[1]) {
+		const elementType = newArray[1];
+		const length = Math.max(
+			0,
+			javaExpressionToIndex(newArray[2] ?? "0", context, output)
+		);
+		return javaArrayValue(
+			elementType,
+			Array.from({ length }, () => defaultJavaValueForType(elementType))
+		);
+	}
+
+	const arrayList = expression.match(
+		/^new\s+ArrayList(?:\s*<[^>]*>)?\s*\(\s*\)$/i
+	);
+	if (arrayList) return javaArrayListValue();
+
+	const arraysToString = expression.match(
+		/^Arrays\.toString\s*\(([^()]*)\)$/i
+	);
+	if (arraysToString?.[1]) {
+		const value = evaluateJavaExpression(
+			arraysToString[1],
+			context,
+			output
+		);
+		return {
+			type: "string",
+			value:
+				value.type === "array" || value.type === "arrayList"
+					? javaCollectionToString(value)
+					: javaValueToString(value)
+		};
+	}
+
+	const lengthMatch = expression.match(/^([A-Z_]\w*)\.length$/i);
+	if (lengthMatch?.[1]) {
+		const value = context?.variables.get(lengthMatch[1]);
+		if (value?.type === "array") {
+			return { type: "number", value: value.value.length };
+		}
+	}
+
+	const arrayAccess = expression.match(/^([A-Z_]\w*)\s*\[([\s\S]+)\]$/i);
+	if (arrayAccess?.[1] && arrayAccess[2]) {
+		return getJavaIndexedValue(
+			arrayAccess[1],
+			arrayAccess[2],
+			context,
+			output
+		);
+	}
+
+	const listMethod = expression.match(
+		/^([A-Z_]\w*)\.(get|size|isEmpty)\s*\(([^()]*)\)$/i
+	);
+	if (!listMethod?.[1] || !listMethod[2]) return null;
+	const value = context?.variables.get(listMethod[1]);
+	if (value?.type !== "arrayList") return null;
+	const method = listMethod[2].toLowerCase();
+	if (method === "size") return { type: "number", value: value.value.length };
+	if (method === "isempty") {
+		return { type: "boolean", value: value.value.length === 0 };
+	}
+	return (
+		value.value[
+			javaExpressionToIndex(listMethod[3] ?? "0", context, output)
+		] ?? { type: "null", value: null }
+	);
+}
+
+function evaluateJavaArrayLiteral(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue | null {
+	if (!expression.startsWith("{")) return null;
+	const close = findMatchingDelimiter(expression, 0, "{", "}");
+	if (close !== expression.length - 1) return null;
+	return javaArrayValue(
+		"var",
+		splitJavaArguments(expression.slice(1, -1)).map(arg =>
+			evaluateJavaExpression(arg, context, output)
+		)
+	);
+}
+
 function javaValueToString(value: JavaConsoleValue) {
+	if (value.type === "array" || value.type === "arrayList")
+		return javaCollectionToString(value);
 	if (value.type === "null") return "null";
 	return String(value.value);
 }
 
 function javaValueToNumber(value: JavaConsoleValue) {
 	if (value.type === "number") return value.value;
+	if (value.type === "array" || value.type === "arrayList")
+		return value.value.length;
 	const parsed = Number(javaValueToString(value).trim());
 	return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function javaCollectionToString(
+	value: Extract<JavaConsoleValue, { type: "array" | "arrayList" }>
+) {
+	return `[${value.value.map(javaValueToString).join(", ")}]`;
+}
+
+function javaArrayValue(
+	elementType: string,
+	value: JavaConsoleValue[]
+): JavaConsoleValue {
+	return {
+		elementType,
+		type: "array",
+		value
+	};
+}
+
+function javaArrayListValue(value: JavaConsoleValue[] = []): JavaConsoleValue {
+	return {
+		elementType: "Object",
+		type: "arrayList",
+		value
+	};
+}
+
+function defaultJavaValueForType(type: string): JavaConsoleValue {
+	const normalized = type.toLowerCase();
+	if (
+		normalized === "int" ||
+		normalized === "double" ||
+		normalized === "float" ||
+		normalized === "long" ||
+		normalized === "short" ||
+		normalized === "byte"
+	) {
+		return { type: "number", value: 0 };
+	}
+	if (normalized === "boolean") return { type: "boolean", value: false };
+	if (normalized === "char" || normalized === "string")
+		return { type: "string", value: "" };
+	return { type: "null", value: null };
+}
+
+function javaExpressionToIndex(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+) {
+	return Math.trunc(
+		javaValueToNumber(evaluateJavaExpression(expression, context, output))
+	);
+}
+
+function getJavaIndexedValue(
+	variableName: string,
+	rawIndex: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue {
+	const collection = context?.variables.get(variableName);
+	if (collection?.type !== "array" && collection?.type !== "arrayList") {
+		return { type: "null", value: null };
+	}
+	return (
+		collection.value[javaExpressionToIndex(rawIndex, context, output)] ?? {
+			type: "null",
+			value: null
+		}
+	);
+}
+
+function setJavaIndexedValue(
+	variableName: string,
+	rawIndex: string,
+	value: JavaConsoleValue,
+	context: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+) {
+	const collection = context.variables.get(variableName);
+	if (collection?.type !== "array" && collection?.type !== "arrayList")
+		return;
+	collection.value[javaExpressionToIndex(rawIndex, context, output)] = value;
 }
 
 function evaluateJavaCastExpression(
@@ -1059,6 +1390,8 @@ function topLevelJavaDelimiterIndexes(
 	let quote: '"' | "'" | null = null;
 	let escaped = false;
 	let parenDepth = 0;
+	let bracketDepth = 0;
+	let braceDepth = 0;
 
 	for (let index = 0; index < expression.length; index += 1) {
 		const character = expression[index] ?? "";
@@ -1086,7 +1419,23 @@ function topLevelJavaDelimiterIndexes(
 			parenDepth = Math.max(0, parenDepth - 1);
 			continue;
 		}
-		if (parenDepth > 0) continue;
+		if (character === "[") {
+			bracketDepth += 1;
+			continue;
+		}
+		if (character === "]") {
+			bracketDepth = Math.max(0, bracketDepth - 1);
+			continue;
+		}
+		if (character === "{") {
+			braceDepth += 1;
+			continue;
+		}
+		if (character === "}") {
+			braceDepth = Math.max(0, braceDepth - 1);
+			continue;
+		}
+		if (parenDepth > 0 || bracketDepth > 0 || braceDepth > 0) continue;
 		const delimiter = delimiterOptions.find(candidate =>
 			expression.startsWith(candidate, index)
 		);
@@ -1104,7 +1453,7 @@ function evaluateNumericExpression(
 	output?: JavaConsoleOutputState
 ) {
 	const tokens = expression.match(
-		/(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)|\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi
+		/[A-Z_]\w*\s*\[[^\][]+\]|(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)|\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi
 	);
 	if (
 		!tokens ||
@@ -1142,7 +1491,10 @@ function evaluateNumericExpression(
 				return value;
 			}
 			index += 1;
-			if (/^(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\(/i.test(token ?? "")) {
+			if (
+				/^(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\(/i.test(token ?? "") ||
+				/^[A-Z_]\w*\s*\[/i.test(token ?? "")
+			) {
 				return javaValueToNumber(
 					evaluateJavaExpression(token ?? "", context, output)
 				);
@@ -1186,6 +1538,8 @@ function splitJavaConcat(expression: string) {
 	let start = 0;
 	let escaped = false;
 	let parenDepth = 0;
+	let bracketDepth = 0;
+	let braceDepth = 0;
 
 	for (let index = 0; index < expression.length; index += 1) {
 		const character = expression[index];
@@ -1213,7 +1567,30 @@ function splitJavaConcat(expression: string) {
 			parenDepth = Math.max(0, parenDepth - 1);
 			continue;
 		}
-		if (character !== "+" || parenDepth > 0) continue;
+		if (character === "[") {
+			bracketDepth += 1;
+			continue;
+		}
+		if (character === "]") {
+			bracketDepth = Math.max(0, bracketDepth - 1);
+			continue;
+		}
+		if (character === "{") {
+			braceDepth += 1;
+			continue;
+		}
+		if (character === "}") {
+			braceDepth = Math.max(0, braceDepth - 1);
+			continue;
+		}
+		if (
+			character !== "+" ||
+			parenDepth > 0 ||
+			bracketDepth > 0 ||
+			braceDepth > 0
+		) {
+			continue;
+		}
 		parts.push(expression.slice(start, index).trim());
 		start = index + 1;
 	}
@@ -1990,6 +2367,8 @@ function splitJavaArguments(args: string) {
 	let start = 0;
 	let escaped = false;
 	let parenDepth = 0;
+	let bracketDepth = 0;
+	let braceDepth = 0;
 	for (let index = 0; index < args.length; index += 1) {
 		const character = args[index] ?? "";
 		if (escaped) {
@@ -2010,7 +2389,18 @@ function splitJavaArguments(args: string) {
 		}
 		if (character === "(") parenDepth += 1;
 		if (character === ")") parenDepth = Math.max(0, parenDepth - 1);
-		if (character !== "," || parenDepth > 0) continue;
+		if (character === "[") bracketDepth += 1;
+		if (character === "]") bracketDepth = Math.max(0, bracketDepth - 1);
+		if (character === "{") braceDepth += 1;
+		if (character === "}") braceDepth = Math.max(0, braceDepth - 1);
+		if (
+			character !== "," ||
+			parenDepth > 0 ||
+			bracketDepth > 0 ||
+			braceDepth > 0
+		) {
+			continue;
+		}
 		parts.push(args.slice(start, index).trim());
 		start = index + 1;
 	}

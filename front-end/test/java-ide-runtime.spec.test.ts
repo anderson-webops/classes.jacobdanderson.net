@@ -290,6 +290,77 @@ public class Main {
 		expect(result.stdout).toEqual(["factorial=120", "capped=null"]);
 	});
 
+	it("previews beginner Java arrays with indexing, length, and loops", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] scores = {2, 4, 6};
+        scores[1] = scores[0] + 5;
+
+        int total = 0;
+        for (int i = 0; i < scores.length; i++) {
+            total += scores[i];
+        }
+
+        String[] names = new String[2];
+        names[0] = "Ada";
+        names[1] = "Grace";
+
+        System.out.println(Arrays.toString(scores));
+        System.out.println("total=" + total);
+        System.out.println(names[1]);
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["[2, 7, 6]", "total=15", "Grace"]);
+	});
+
+	it("previews beginner Java ArrayLists with add, get, set, remove, and size", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<String> names = new ArrayList<>();
+        names.add("Ada");
+        names.add("Grace");
+        names.set(1, "Linus");
+        names.remove(0);
+
+        ArrayList<Integer> points = new ArrayList<Integer>();
+        points.add(3);
+        points.add(4);
+
+        System.out.println(names.size());
+        System.out.println(names.get(0));
+        System.out.println(points.get(0) + points.get(1));
+        System.out.println(names.isEmpty());
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["1", "Linus", "7", "false"]);
+	});
+
 	it("runs the beginner Karel command subset into a visual world state", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
