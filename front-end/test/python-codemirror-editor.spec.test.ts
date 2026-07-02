@@ -354,6 +354,24 @@ describe("python IDE CodeMirror editor", () => {
 				"takeBall"
 			])
 		);
+		expect(autocompleteLabelsForDoc("karel", "front")).toEqual(
+			expect.arrayContaining([
+				"frontIsClear",
+				"frontIsBlocked"
+			])
+		);
+		expect(autocompleteLabelsForDoc("karel", "balls")).toEqual(
+			expect.arrayContaining([
+				"ballsPresent",
+				"noBallsPresent"
+			])
+		);
+		expect(autocompleteLabelsForDoc("karel", "facing")).toEqual(
+			expect.arrayContaining([
+				"facingEast",
+				"notFacingWest"
+			])
+		);
 	});
 
 	it("adds Karel Java snippets and ignores Java comment/string brackets", () => {
@@ -384,6 +402,9 @@ describe("python IDE CodeMirror editor", () => {
 				"karel_setup",
 				"codehs_run",
 				"codehs_turnRight",
+				"while_front_clear",
+				"if_front_clear",
+				"if_balls_present",
 				"robot_method",
 				"turnRight",
 				"putBall",
@@ -449,7 +470,11 @@ describe("python IDE CodeMirror editor", () => {
 			"../src/components/PythonIdeWorkspace.vue"
 		);
 
-		expect(pageSource).toContain("align-items: flex-end;");
+		expect(pageSource).toContain(
+			"grid-template-rows: auto var(--python-ide-toolbar-control-size);"
+		);
+		expect(pageSource).toContain("align-items: stretch;");
+		expect(pageSource).toContain("grid-row: 2;");
 		expect(pageSource).toContain("box-sizing: border-box;");
 		expect(pageSource).toContain(
 			"height: var(--python-ide-toolbar-control-size);"

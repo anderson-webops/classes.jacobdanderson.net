@@ -63,6 +63,12 @@ interface KarelCommandPlan {
 	warnings: string[];
 }
 
+interface KarelPreviewExecution {
+	robot: KarelRobotState;
+	stopped: boolean;
+	world: MutableKarelWorld;
+}
+
 interface JavaForLoopIterations {
 	capped: boolean;
 	count: number;
@@ -107,6 +113,16 @@ const wallOpposites: Record<KarelWallSide, KarelWallSide> = {
 	north: "south",
 	south: "north",
 	west: "east"
+};
+const karelFacingConditions: Record<string, KarelDirection> = {
+	facingEast: "East",
+	facingNorth: "North",
+	facingSouth: "South",
+	facingWest: "West",
+	notFacingEast: "East",
+	notFacingNorth: "North",
+	notFacingSouth: "South",
+	notFacingWest: "West"
 };
 
 export function runJavaIdeProject(
@@ -314,8 +330,22 @@ function runKarelProject(
 	const world = parseKarelWorld(files, source);
 	const stderr: string[] = [];
 	const trace: string[] = [];
-	const plan = karelCommandsForRobot(source, declaration?.[1] ?? "karel");
 
+	const robot: KarelRobotState = {
+		name: declaration?.[1] ?? "karel",
+		street: Number(declaration?.[2] ?? 1),
+		avenue: Number(declaration?.[3] ?? 1),
+		direction: normalizeDirection(declaration?.[4] ?? "East"),
+		beepers: Number(declaration?.[5] ?? MAX_KAREL_PREVIEW_COMMANDS)
+	};
+	clampRobotToWorld(robot, world);
+
+	const previewExecution: KarelPreviewExecution = {
+		robot: cloneKarelRobot(robot),
+		stopped: false,
+		world: cloneMutableKarelWorld(world)
+	};
+	const plan = karelCommandsForRobot(source, robot.name, previewExecution);
 	if (!declaration && !plan.commands.length) {
 		const karelWorld = serializeKarelWorld(world, null, trace);
 		return {
@@ -327,16 +357,7 @@ function runKarelProject(
 		};
 	}
 
-	const robot: KarelRobotState = {
-		name: declaration?.[1] ?? "karel",
-		street: Number(declaration?.[2] ?? 1),
-		avenue: Number(declaration?.[3] ?? 1),
-		direction: normalizeDirection(declaration?.[4] ?? "East"),
-		beepers: Number(declaration?.[5] ?? MAX_KAREL_PREVIEW_COMMANDS)
-	};
-	clampRobotToWorld(robot, world);
 	trace.push(formatRobotTrace(robot));
-
 	for (const command of plan.commands) {
 		const error = applyKarelCommand(world, robot, command);
 		trace.push(formatRobotTrace(robot));
@@ -490,12 +511,40 @@ function clampRobotToWorld(robot: KarelRobotState, world: MutableKarelWorld) {
 	robot.avenue = Math.min(Math.max(robot.avenue, 1), world.cols);
 }
 
-function karelCommandsForRobot(source: string, robotName: string) {
+function cloneKarelRobot(robot: KarelRobotState): KarelRobotState {
+	return { ...robot };
+}
+
+function cloneMutableKarelWorld(world: MutableKarelWorld): MutableKarelWorld {
+	return {
+		beepers: new Map(
+			[...world.beepers.entries()].map(([key, beeper]) => [
+				key,
+				{ ...beeper }
+			])
+		),
+		cols: world.cols,
+		rows: world.rows,
+		walls: world.walls.map(wall => ({ ...wall }))
+	};
+}
+
+function karelCommandsForRobot(
+	source: string,
+	robotName: string,
+	execution: KarelPreviewExecution
+) {
 	const methods = parseJavaVoidMethods(source);
 	const mainBody =
 		methods.get("main")?.body ?? methods.get("run")?.body ?? source;
 	const plan: KarelCommandPlan = { commands: [], warnings: [] };
-	collectKarelCommandsFromBody(mainBody, methods, new Set([robotName]), plan);
+	collectKarelCommandsFromBody(
+		mainBody,
+		methods,
+		new Set([robotName]),
+		plan,
+		execution
+	);
 	return plan;
 }
 
@@ -536,6 +585,7 @@ function collectKarelCommandsFromBody(
 	methods: Map<string, JavaMethodDefinition>,
 	robotAliases: Set<string>,
 	plan: KarelCommandPlan,
+	execution: KarelPreviewExecution,
 	depth = 0
 ) {
 	if (depth > 20) {
@@ -547,9 +597,77 @@ function collectKarelCommandsFromBody(
 	}
 
 	let index = 0;
-	while (index < body.length && canAddKarelCommand(plan)) {
+	while (
+		index < body.length &&
+		canAddKarelCommand(plan) &&
+		!execution.stopped
+	) {
 		index = skipWhitespace(body, index);
 		if (index >= body.length) break;
+
+		if (wordAt(body, index, "if")) {
+			const parsedIf = parseJavaIfStatement(body, index);
+			if (parsedIf) {
+				const branchBody = evaluateKarelCondition(
+					parsedIf.condition,
+					execution
+				)
+					? parsedIf.body
+					: parsedIf.elseBody;
+				if (branchBody) {
+					collectKarelCommandsFromBody(
+						branchBody,
+						methods,
+						robotAliases,
+						plan,
+						execution,
+						depth + 1
+					);
+				}
+				index = parsedIf.nextIndex;
+				continue;
+			}
+		}
+
+		if (wordAt(body, index, "while")) {
+			const parsedLoop = parseJavaConditionalLoop(body, index);
+			if (parsedLoop) {
+				let loopCount = 0;
+				let previousCommandCount = plan.commands.length;
+				while (
+					evaluateKarelCondition(parsedLoop.condition, execution) &&
+					canAddKarelCommand(plan) &&
+					!execution.stopped
+				) {
+					collectKarelCommandsFromBody(
+						parsedLoop.body,
+						methods,
+						robotAliases,
+						plan,
+						execution,
+						depth + 1
+					);
+					loopCount += 1;
+					if (plan.commands.length === previousCommandCount) {
+						addKarelWarning(
+							plan,
+							"Stopped Karel preview after a while loop made no visible progress."
+						);
+						break;
+					}
+					previousCommandCount = plan.commands.length;
+					if (loopCount >= MAX_KAREL_PREVIEW_COMMANDS) {
+						addKarelWarning(
+							plan,
+							`Stopped Karel preview after ${MAX_KAREL_PREVIEW_COMMANDS} loop iterations.`
+						);
+						break;
+					}
+				}
+				index = parsedLoop.nextIndex;
+				continue;
+			}
+		}
 
 		if (wordAt(body, index, "for")) {
 			const parsedLoop = parseJavaForLoop(body, index);
@@ -564,6 +682,7 @@ function collectKarelCommandsFromBody(
 						methods,
 						robotAliases,
 						plan,
+						execution,
 						depth + 1
 					);
 				}
@@ -589,6 +708,7 @@ function collectKarelCommandsFromBody(
 				methods,
 				robotAliases,
 				plan,
+				execution,
 				depth + 1
 			);
 			index = closingBrace + 1;
@@ -602,6 +722,7 @@ function collectKarelCommandsFromBody(
 			methods,
 			robotAliases,
 			plan,
+			execution,
 			depth
 		);
 		index = statementEnd + 1;
@@ -613,6 +734,7 @@ function collectKarelCommandsFromStatement(
 	methods: Map<string, JavaMethodDefinition>,
 	robotAliases: Set<string>,
 	plan: KarelCommandPlan,
+	execution: KarelPreviewExecution,
 	depth: number
 ) {
 	const commandMatch = statement.match(
@@ -624,7 +746,7 @@ function collectKarelCommandsFromStatement(
 	if (commandMatch) {
 		if (robotAliases.has(commandMatch[1] ?? "")) {
 			const command = karelCommandForName(commandMatch[2] ?? "");
-			if (command) addKarelCommand(plan, command);
+			if (command) addKarelCommand(plan, command, execution);
 		}
 		return;
 	}
@@ -636,7 +758,7 @@ function collectKarelCommandsFromStatement(
 
 	if (!method && methodName && !methodCall[2]?.trim()) {
 		const command = karelCommandForName(methodName);
-		if (command) addKarelCommand(plan, command);
+		if (command) addKarelCommand(plan, command, execution);
 		return;
 	}
 
@@ -653,8 +775,61 @@ function collectKarelCommandsFromStatement(
 		methods,
 		nextAliases,
 		plan,
+		execution,
 		depth + 1
 	);
+}
+
+function parseJavaIfStatement(source: string, start: number) {
+	const parenStart = skipWhitespace(source, start + 2);
+	if (source[parenStart] !== "(") return null;
+	const parenEnd = findMatchingDelimiter(source, parenStart, "(", ")");
+	if (parenEnd < 0) return null;
+	const bodyStart = skipWhitespace(source, parenEnd + 1);
+	const parsedBody = parseJavaControlBody(source, bodyStart);
+	if (!parsedBody) return null;
+
+	let nextIndex = parsedBody.nextIndex;
+	let elseBody = "";
+	const elseStart = skipWhitespace(source, nextIndex);
+	if (wordAt(source, elseStart, "else")) {
+		const elseBodyStart = skipWhitespace(source, elseStart + 4);
+		if (wordAt(source, elseBodyStart, "if")) {
+			const parsedElseIf = parseJavaIfStatement(source, elseBodyStart);
+			if (parsedElseIf) {
+				elseBody = source.slice(elseBodyStart, parsedElseIf.nextIndex);
+				nextIndex = parsedElseIf.nextIndex;
+			}
+		} else {
+			const parsedElseBody = parseJavaControlBody(source, elseBodyStart);
+			if (parsedElseBody) {
+				elseBody = parsedElseBody.body;
+				nextIndex = parsedElseBody.nextIndex;
+			}
+		}
+	}
+
+	return {
+		body: parsedBody.body,
+		condition: source.slice(parenStart + 1, parenEnd),
+		elseBody,
+		nextIndex
+	};
+}
+
+function parseJavaConditionalLoop(source: string, start: number) {
+	const parenStart = skipWhitespace(source, start + 5);
+	if (source[parenStart] !== "(") return null;
+	const parenEnd = findMatchingDelimiter(source, parenStart, "(", ")");
+	if (parenEnd < 0) return null;
+	const bodyStart = skipWhitespace(source, parenEnd + 1);
+	const parsedBody = parseJavaControlBody(source, bodyStart);
+	if (!parsedBody) return null;
+	return {
+		body: parsedBody.body,
+		condition: source.slice(parenStart + 1, parenEnd),
+		nextIndex: parsedBody.nextIndex
+	};
 }
 
 function parseJavaForLoop(source: string, start: number) {
@@ -666,7 +841,7 @@ function parseJavaForLoop(source: string, start: number) {
 		source.slice(parenStart + 1, parenEnd)
 	);
 	const bodyStart = skipWhitespace(source, parenEnd + 1);
-	const parsedBody = parseJavaLoopBody(source, bodyStart);
+	const parsedBody = parseJavaControlBody(source, bodyStart);
 	if (!parsedBody) return null;
 	return {
 		body: parsedBody.body,
@@ -676,7 +851,7 @@ function parseJavaForLoop(source: string, start: number) {
 	};
 }
 
-function parseJavaLoopBody(source: string, start: number) {
+function parseJavaControlBody(source: string, start: number) {
 	if (source[start] === "{") {
 		const end = findMatchingDelimiter(source, start, "{", "}");
 		if (end < 0) return null;
@@ -686,6 +861,95 @@ function parseJavaLoopBody(source: string, start: number) {
 	const end = findJavaStatementEnd(source, start);
 	if (end < 0) return null;
 	return { body: source.slice(start, end + 1), nextIndex: end + 1 };
+}
+
+function evaluateKarelCondition(
+	condition: string,
+	execution: KarelPreviewExecution
+): boolean {
+	const trimmed = condition.trim().replace(/\s+/g, "");
+	if (trimmed.startsWith("!"))
+		return !evaluateKarelCondition(trimmed.slice(1), execution);
+
+	const conditionName = trimmed.match(/^([A-Z_]\w*)\(\)$/i)?.[1];
+	if (!conditionName) return false;
+
+	if (conditionName === "frontIsClear")
+		return karelDirectionIsClear(execution, execution.robot.direction);
+	if (conditionName === "frontIsBlocked")
+		return !karelDirectionIsClear(execution, execution.robot.direction);
+	if (conditionName === "leftIsClear") {
+		return karelDirectionIsClear(
+			execution,
+			turnRobot(execution.robot.direction, -1)
+		);
+	}
+	if (conditionName === "leftIsBlocked") {
+		return !karelDirectionIsClear(
+			execution,
+			turnRobot(execution.robot.direction, -1)
+		);
+	}
+	if (conditionName === "rightIsClear") {
+		return karelDirectionIsClear(
+			execution,
+			turnRobot(execution.robot.direction, 1)
+		);
+	}
+	if (conditionName === "rightIsBlocked") {
+		return !karelDirectionIsClear(
+			execution,
+			turnRobot(execution.robot.direction, 1)
+		);
+	}
+	const facingDirection = karelFacingConditions[conditionName];
+	if (facingDirection) {
+		return conditionName.startsWith("not")
+			? execution.robot.direction !== facingDirection
+			: execution.robot.direction === facingDirection;
+	}
+	if (
+		conditionName === "ballsPresent" ||
+		conditionName === "beepersPresent"
+	) {
+		return karelBeepersAtRobot(execution) > 0;
+	}
+	if (
+		conditionName === "noBallsPresent" ||
+		conditionName === "noBeepersPresent"
+	) {
+		return karelBeepersAtRobot(execution) <= 0;
+	}
+
+	return false;
+}
+
+function karelDirectionIsClear(
+	execution: KarelPreviewExecution,
+	direction: KarelDirection
+) {
+	const robot = { ...execution.robot, direction };
+	const next = nextKarelPosition(robot);
+	return (
+		next.street >= 1 &&
+		next.street <= execution.world.rows &&
+		next.avenue >= 1 &&
+		next.avenue <= execution.world.cols &&
+		!hasWallBetween(
+			execution.world,
+			execution.robot.street,
+			execution.robot.avenue,
+			sideForDirection(direction)
+		)
+	);
+}
+
+function karelBeepersAtRobot(execution: KarelPreviewExecution) {
+	return (
+		execution.world.beepers.get(
+			beeperKey(execution.robot.street, execution.robot.avenue)
+		)?.count ?? 0
+	);
 }
 
 function evaluateSimpleForLoopIterations(
@@ -854,9 +1118,16 @@ function canAddKarelCommand(plan: KarelCommandPlan) {
 	return false;
 }
 
-function addKarelCommand(plan: KarelCommandPlan, command: KarelCommand) {
+function addKarelCommand(
+	plan: KarelCommandPlan,
+	command: KarelCommand,
+	execution?: KarelPreviewExecution
+) {
 	if (!canAddKarelCommand(plan)) return;
 	plan.commands.push(command);
+	if (!execution || execution.stopped) return;
+	const error = applyKarelCommand(execution.world, execution.robot, command);
+	if (error) execution.stopped = true;
 }
 
 function addKarelWarning(plan: KarelCommandPlan, warning: string) {

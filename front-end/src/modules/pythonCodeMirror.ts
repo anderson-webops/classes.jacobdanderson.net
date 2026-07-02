@@ -1616,7 +1616,25 @@ const karelKeywordCompletions = [
 	"pickBeeper",
 	"putBall",
 	"takeBall",
-	"SuperKarel"
+	"SuperKarel",
+	"frontIsClear",
+	"frontIsBlocked",
+	"leftIsClear",
+	"leftIsBlocked",
+	"rightIsClear",
+	"rightIsBlocked",
+	"ballsPresent",
+	"noBallsPresent",
+	"beepersPresent",
+	"noBeepersPresent",
+	"facingNorth",
+	"facingSouth",
+	"facingEast",
+	"facingWest",
+	"notFacingNorth",
+	"notFacingSouth",
+	"notFacingEast",
+	"notFacingWest"
 ].map(label => completion(label, "keyword", "Karel", 80));
 
 const karelRobotMemberCompletions = [
@@ -1692,6 +1710,41 @@ const karelSnippetCompletions = [
 			snippetEnd
 		),
 		84
+	),
+	pythonSnippet(
+		"while_front_clear",
+		"Karel while front is clear",
+		snippetLines(
+			"while (frontIsClear()) {",
+			`    ${snippetField("body")}`,
+			"}",
+			snippetEnd
+		),
+		83
+	),
+	pythonSnippet(
+		"if_front_clear",
+		"Karel if front is clear",
+		snippetLines(
+			"if (frontIsClear()) {",
+			`    ${snippetField("body")}`,
+			"}",
+			snippetEnd
+		),
+		82
+	),
+	pythonSnippet(
+		"if_balls_present",
+		"Karel if balls are present",
+		snippetLines(
+			"if (ballsPresent()) {",
+			`    ${snippetField("body")}`,
+			"} else {",
+			`    ${snippetField("fallback")}`,
+			"}",
+			snippetEnd
+		),
+		82
 	),
 	pythonSnippet(
 		"robot_method",
