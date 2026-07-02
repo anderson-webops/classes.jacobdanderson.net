@@ -154,6 +154,12 @@ describe("python IDE CodeMirror editor", () => {
 		expect(workspaceSource).toContain(
 			"<h1>Code, run, and draw in Python or Java</h1>"
 		);
+		expect(workspaceSource).toContain(
+			"Build multi-file Python and Java projects"
+		);
+		expect(workspaceSource).toContain(
+			"preview Java console programs or Karel robot"
+		);
 	});
 
 	it("does not force CodeMirror through a fragile manual editor chunk", () => {
