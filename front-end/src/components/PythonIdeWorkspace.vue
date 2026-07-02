@@ -960,6 +960,13 @@ const selectedModeLabel = computed(() =>
 		? getPythonIdeModeLabel(selectedProject.value.mode)
 		: "Code"
 );
+const newFileNamePlaceholder = computed(() => {
+	if (selectedProject.value?.mode === "karel")
+		return "MyProgram.java, helpers/Helper.java, or world.txt";
+	if (selectedProject.value?.mode === "java")
+		return "Main.java or src/main/java/Helper.java";
+	return "helper.py, helpers/math_tools.py, or data.csv";
+});
 const usesDrawingCanvas = computed(
 	() =>
 		selectedProject.value?.mode === "turtle" ||
@@ -5742,7 +5749,7 @@ onBeforeUnmount(() => {
 							<input
 								v-model="newFileName"
 								aria-label="New project file name"
-								placeholder="helper.py, helpers/math_tools.py, or data.csv"
+								:placeholder="newFileNamePlaceholder"
 								type="text"
 								@keyup.enter="addFile"
 							/>
