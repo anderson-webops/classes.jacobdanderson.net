@@ -471,14 +471,23 @@ describe("python IDE CodeMirror editor", () => {
 		);
 
 		expect(pageSource).toContain(
-			"grid-template-rows: auto var(--python-ide-toolbar-control-size);"
+			"grid-template-columns: minmax(15rem, 1fr) auto;"
 		);
-		expect(pageSource).toContain("align-items: stretch;");
-		expect(pageSource).toContain("grid-row: 2;");
+		expect(pageSource).toMatch(
+			/\.editor-toolbar\s*{[\s\S]*align-items: end;/
+		);
+		expect(pageSource).toMatch(
+			/\.editor-toolbar > label\s*{[\s\S]*display: grid;[\s\S]*gap: 0\.35rem;/
+		);
+		expect(pageSource).toMatch(
+			/\.editor-actions\s*{[\s\S]*align-self: end;[\s\S]*height: var\(--python-ide-toolbar-control-size\);/
+		);
+		expect(pageSource).toMatch(/\.ide-settings\s*{[\s\S]*height: 100%;/);
 		expect(pageSource).toContain("box-sizing: border-box;");
 		expect(pageSource).toContain(
-			"height: var(--python-ide-toolbar-control-size);"
+			".editor-actions > .site-button"
 		);
+		expect(pageSource).not.toContain("display: contents;");
 		expect(pageSource).toContain(
 			".editor-toolbar > label input:focus-visible"
 		);

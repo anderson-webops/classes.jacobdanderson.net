@@ -29,7 +29,11 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   is still a teaching preview, not a full Java compiler or VM.
 - [CodeHS Java docs](https://codehs.com/documentation/new/java-main) inform
   beginner Java console vocabulary such as printing, variables, methods,
-  input, comparisons, math, and random numbers.
+  input, comparisons, math, and random numbers. The local console preview
+  follows a small beginner subset: `System.out.print` / `println`, simple
+  variables, string concatenation, numeric arithmetic, and line-based
+  `Scanner` reads from the IDE input box. It remains a browser teaching
+  preview rather than a compiler.
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/) is a useful
   comparison point for browser editor UX, but its deeper Java IntelliSense path
   usually implies a language-server architecture. That is intentionally outside
