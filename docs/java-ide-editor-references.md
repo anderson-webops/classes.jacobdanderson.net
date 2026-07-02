@@ -45,6 +45,13 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `HashSet`, `TreeSet`, `Queue`, `PriorityQueue`, and `Collections` helpers.
   These entries are editor scaffolding, not a promise that every advanced
   concept runs in the browser preview.
+- When the editor can see a declared Java receiver, prefer focused member
+  completions over the broad beginner fallback: `String` receivers should show
+  string methods, arrays should show array members, `ArrayList` / `List`
+  receivers should show list methods, `Set` receivers should show set methods,
+  `Queue` / `PriorityQueue` receivers should show queue methods, `HashMap` /
+  `TreeMap` / `Map` receivers should show map methods, and `Map.Entry`
+  receivers should show entry methods.
 - Keep beginner `String` completions aligned with Java Level 1, AP CSA, and
   sorting lessons: `length()`, `charAt()`, `substring()`, `equals()`,
   `equalsIgnoreCase()`, `compareTo()`, `indexOf()`, `toLowerCase()`,

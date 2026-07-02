@@ -678,6 +678,142 @@ describe("python IDE CodeMirror editor", () => {
 		expect(declaredScannerLabels).not.toEqual(
 			expect.arrayContaining(["charAt", "put", "keySet"])
 		);
+		const declaredStringLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			[
+				"public class Main {",
+				"    public static void main(String[] args) {",
+				'        String name = "Ada";',
+				"        name.|",
+				"    }",
+				"}"
+			].join("\n")
+		);
+		expect(declaredStringLabels).toEqual(
+			expect.arrayContaining(["charAt", "substring", "trim"])
+		);
+		expect(declaredStringLabels).not.toEqual(
+			expect.arrayContaining(["nextInt", "put", "keySet"])
+		);
+
+		const declaredArrayLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			[
+				"public class Main {",
+				"    public static void main(String[] args) {",
+				"        int[] scores = {1, 2, 3};",
+				"        scores.|",
+				"    }",
+				"}"
+			].join("\n")
+		);
+		expect(declaredArrayLabels).toEqual(
+			expect.arrayContaining(["length", "clone"])
+		);
+		expect(declaredArrayLabels).not.toEqual(
+			expect.arrayContaining(["nextInt", "put", "keySet"])
+		);
+
+		const declaredListLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			[
+				"import java.util.ArrayList;",
+				"public class Main {",
+				"    public static void main(String[] args) {",
+				"        ArrayList<String> names = new ArrayList<>();",
+				"        names.|",
+				"    }",
+				"}"
+			].join("\n")
+		);
+		expect(declaredListLabels).toEqual(
+			expect.arrayContaining(["add", "get", "set", "size", "isEmpty"])
+		);
+		expect(declaredListLabels).not.toEqual(
+			expect.arrayContaining(["nextInt", "put", "keySet"])
+		);
+
+		const declaredSetLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			[
+				"import java.util.HashSet;",
+				"public class Main {",
+				"    public static void main(String[] args) {",
+				"        HashSet<String> seen = new HashSet<>();",
+				"        seen.|",
+				"    }",
+				"}"
+			].join("\n")
+		);
+		expect(declaredSetLabels).toEqual(
+			expect.arrayContaining(["add", "contains", "size", "isEmpty"])
+		);
+		expect(declaredSetLabels).not.toEqual(
+			expect.arrayContaining(["nextInt", "get", "put", "keySet"])
+		);
+
+		const declaredQueueLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			[
+				"import java.util.PriorityQueue;",
+				"public class Main {",
+				"    public static void main(String[] args) {",
+				"        PriorityQueue<String> tasks = new PriorityQueue<>();",
+				"        tasks.|",
+				"    }",
+				"}"
+			].join("\n")
+		);
+		expect(declaredQueueLabels).toEqual(
+			expect.arrayContaining(["offer", "poll", "peek", "size"])
+		);
+		expect(declaredQueueLabels).not.toEqual(
+			expect.arrayContaining(["nextInt", "get", "put", "keySet"])
+		);
+
+		const declaredMapLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			[
+				"import java.util.HashMap;",
+				"public class Main {",
+				"    public static void main(String[] args) {",
+				"        HashMap<String, Integer> counts = new HashMap<>();",
+				"        counts.|",
+				"    }",
+				"}"
+			].join("\n")
+		);
+		expect(declaredMapLabels).toEqual(
+			expect.arrayContaining([
+				"put",
+				"getOrDefault",
+				"containsKey",
+				"keySet",
+				"entrySet"
+			])
+		);
+		expect(declaredMapLabels).not.toEqual(
+			expect.arrayContaining(["charAt", "nextInt", "poll"])
+		);
+
+		const declaredMapEntryLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			[
+				"import java.util.Map;",
+				"public class Main {",
+				"    public static void main(String[] args) {",
+				"        Map.Entry<String, Integer> entry = null;",
+				"        entry.|",
+				"    }",
+				"}"
+			].join("\n")
+		);
+		expect(declaredMapEntryLabels).toEqual(
+			expect.arrayContaining(["getKey", "getValue"])
+		);
+		expect(declaredMapEntryLabels).not.toEqual(
+			expect.arrayContaining(["charAt", "nextInt", "put"])
+		);
 		expect(autocompleteLabelsForDoc("java", "names.")).toEqual(
 			expect.arrayContaining([
 				"equals",
