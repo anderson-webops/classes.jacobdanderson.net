@@ -276,7 +276,7 @@ watch([selectedReview, selectedFileName], syncDrafts, { immediate: true });
 
 		<div class="tools-body">
 			<p v-if="loading" class="muted-copy">
-				Loading saved Python projects...
+				Loading saved Code IDE projects...
 			</p>
 			<p v-if="error" class="error-copy" role="alert">{{ error }}</p>
 			<p
@@ -289,8 +289,7 @@ watch([selectedReview, selectedFileName], syncDrafts, { immediate: true });
 			</p>
 
 			<p v-if="loaded && records.length === 0" class="muted-copy">
-				No synced Python IDE projects are available for this learner
-				yet.
+				No synced Code IDE projects are available for this learner yet.
 			</p>
 
 			<div v-else-if="selectedProject" class="review-workspace">

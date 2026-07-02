@@ -1199,7 +1199,7 @@ export async function saveLocalPythonProjectsAsync(
 			saveLocalPythonProjects(projects, userID);
 		} catch {
 			throw new Error(
-				`Could not save Python IDE projects locally. Browser project storage may be full or unavailable. (${formatStorageError(indexedDbError)})`
+				`Could not save Code IDE projects locally. Browser project storage may be full or unavailable. (${formatStorageError(indexedDbError)})`
 			);
 		}
 	}
@@ -1291,7 +1291,7 @@ function openPythonIdeStorageDb() {
 			request.onblocked = () =>
 				reject(
 					new Error(
-						"Python IDE project storage is blocked by another tab."
+						"Code IDE project storage is blocked by another tab."
 					)
 				);
 		}
