@@ -26,7 +26,7 @@ const pythonProjectSchema: Schema<IPythonProject> = new Schema(
 		title: { type: String, required: true, trim: true, maxlength: 120 },
 		mode: {
 			type: String,
-			enum: ["data", "pgzero", "python", "turtle"],
+			enum: ["data", "java", "karel", "pgzero", "python", "turtle"],
 			default: "python",
 			required: true
 		},

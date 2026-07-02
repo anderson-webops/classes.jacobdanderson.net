@@ -51,6 +51,10 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   collections, `Scanner`, CodeHS-style `run()` methods, and Karel conditions,
   but should not depend on server compilation or unsupported language-service
   behavior.
+- The backend project APIs may persist Java and Karel source files, share links,
+  and staff review copies, but they remain storage-only APIs. They should
+  validate safe file names and mode-appropriate code files without importing
+  the Java preview runtime or executing Java.
 - In multi-file projects, keep Run pointed at the driver file instead of the
   active helper class. Java projects should prefer active files with
   `main(...)`, then `Main.java`, then another file with `main(...)`; Karel

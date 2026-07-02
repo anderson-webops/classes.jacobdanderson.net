@@ -275,6 +275,96 @@ describe("Python project review routes", () => {
 		});
 	});
 
+	it("lets staff create and edit Java IDE review copies without backend execution", async () => {
+		const javaFiles = [
+			{
+				name: "Main.java",
+				content: "public class Main { public static void main(String[] args) {} }",
+				encoding: "text"
+			},
+			{
+				name: "Helper.java",
+				content: "public class Helper {}",
+				encoding: "text"
+			}
+		];
+		const javaProject = makeProject({
+			activeFileName: "Main.java",
+			files: javaFiles,
+			mode: "java",
+			title: "Java classes"
+		});
+		const javaReview = makeReview({
+			activeFileName: "Main.java",
+			files: javaFiles,
+			mode: "java",
+			title: "Java classes"
+		});
+		modelMocks.pythonProjectFindOne.mockResolvedValueOnce(javaProject);
+		modelMocks.pythonProjectReviewFindOne.mockResolvedValueOnce(null);
+		modelMocks.pythonProjectReviewCreate.mockImplementationOnce(async payload => makeReview(payload));
+
+		await withUserRoutes(async baseUrl => {
+			const createResponse = await postJson(
+				baseUrl,
+				`/users/${studentID}/python-projects/${projectID}/review`,
+				{},
+				{ "x-admin-id": adminID.toString() }
+			);
+			const createBody = await createResponse.json();
+
+			expect(createResponse.status).toBe(201);
+			expect(modelMocks.pythonProjectReviewCreate).toHaveBeenCalledWith(
+				expect.objectContaining({
+					activeFileName: "Main.java",
+					files: javaFiles,
+					mode: "java",
+					title: "Java classes"
+				})
+			);
+			expect(createBody.review.mode).toBe("java");
+			expect(createBody.review.files.map((file: { name: string }) => file.name)).toEqual([
+				"Main.java",
+				"Helper.java"
+			]);
+		});
+
+		modelMocks.pythonProjectFindOne.mockResolvedValue(javaProject);
+		modelMocks.pythonProjectReviewFindOne.mockResolvedValue(javaReview);
+
+		await withUserRoutes(async baseUrl => {
+			const updateResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/python-projects/${projectID}/review/${reviewID}`,
+				{
+					activeFileName: "Main.java",
+					files: [
+						{
+							name: "Main.java",
+							content: "public class Main { public static void main(String[] args) { System.out.println(\"reviewed\"); } }"
+						}
+					],
+					visibleToStudent: true
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
+			const updateBody = await updateResponse.json();
+
+			expect(updateResponse.status).toBe(200);
+			expect(javaReview.save).toHaveBeenCalled();
+			expect(updateBody.project.files).toEqual(javaFiles);
+			expect(updateBody.review.mode).toBe("java");
+			expect(updateBody.review.files).toEqual([
+				{
+					name: "Main.java",
+					content: "public class Main { public static void main(String[] args) { System.out.println(\"reviewed\"); } }",
+					encoding: "text"
+				}
+			]);
+			expect(updateBody.review.visibleToStudent).toBe(true);
+		});
+	});
+
 	it("blocks tutors from reviewing code for students not assigned to them", async () => {
 		modelMocks.userFindById.mockImplementation(() => queryWith(makeStudent([otherTutorID])));
 

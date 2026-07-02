@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-export type PythonProjectMode = "data" | "pgzero" | "python" | "turtle";
+export type PythonProjectMode = "data" | "java" | "karel" | "pgzero" | "python" | "turtle";
 export type PythonProjectFileEncoding = "text" | "base64";
 
 export interface PythonProjectFile {
