@@ -832,8 +832,11 @@ describe("python IDE CodeMirror editor", () => {
 		);
 
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel\s*{[\s\S]*width: min\(31rem, calc\(100vw - 1\.25rem\)\);[\s\S]*max-height: min\(31rem, calc\(100vh - 1\.5rem\), 44vh\);[\s\S]*padding: 1\.1rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.9rem;[\s\S]*line-height: 1\.45;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
+			/\.ide-settings-panel\s*{[\s\S]*position: fixed;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*width: min\(35rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: calc\(100vh - 2rem\);[\s\S]*padding: 0\.95rem 1rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.9rem;[\s\S]*line-height: 1\.45;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
 		);
+		expect(pageSource).toContain("Save locally and sync when possible.");
+		expect(pageSource).toContain("Show code suggestions while typing.");
+		expect(pageSource).toContain("Wrap long lines in the editor.");
 		expect(pageSource).toContain(".editor-toolbar > span");
 		expect(pageSource).not.toContain(
 			".editor-toolbar span,\n.stdin-panel span"
@@ -845,13 +848,16 @@ describe("python IDE CodeMirror editor", () => {
 			/\.editor-toolbar \.ide-settings-panel,\s*\.editor-toolbar \.ide-settings-panel :is\(label, span, small, input, button\)\s*{[\s\S]*color: inherit;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.45;[\s\S]*text-transform: none;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle \+ \.ide-setting-toggle\s*{[\s\S]*margin-top: 0\.95rem;[\s\S]*padding-top: 0\.95rem;/
+			/\.ide-setting-toggle\s*{[\s\S]*gap: 0\.65rem;[\s\S]*align-items: center;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.94rem;[\s\S]*font-weight: 600;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.35;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
+			/\.ide-setting-toggle \+ \.ide-setting-toggle\s*{[\s\S]*margin-top: 0\.7rem;[\s\S]*padding-top: 0\.7rem;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.82rem;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.45;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
+			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.9rem;[\s\S]*font-weight: 500;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.3;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
+		);
+		expect(pageSource).toMatch(
+			/\.editor-toolbar \.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.8rem;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.4;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
 		);
 	});
 

@@ -5819,8 +5819,7 @@ onBeforeUnmount(() => {
 											Autosave
 										</span>
 										<small>
-											Save edits locally, then sync to
-											your account when available.
+											Save locally and sync when possible.
 										</small>
 									</span>
 								</label>
@@ -5837,8 +5836,7 @@ onBeforeUnmount(() => {
 											Suggestions
 										</span>
 										<small>
-											Show suggestions as you type. Turn
-											off for Ctrl+Space only.
+											Show code suggestions while typing.
 										</small>
 									</span>
 								</label>
@@ -5853,8 +5851,7 @@ onBeforeUnmount(() => {
 											Line wrap
 										</span>
 										<small>
-											Wrap long lines instead of scrolling
-											horizontally.
+											Wrap long lines in the editor.
 										</small>
 									</span>
 								</label>
@@ -5869,8 +5866,8 @@ onBeforeUnmount(() => {
 											Expanded layout
 										</span>
 										<small>
-											Use more window space for the editor
-											and canvas.
+											Use more space for editor and
+											output.
 										</small>
 									</span>
 								</label>
@@ -5893,8 +5890,8 @@ onBeforeUnmount(() => {
 												Share
 											</span>
 											<small>
-												Create a link others can open as
-												an editable copy.
+												Let others open an editable
+												copy.
 											</small>
 										</span>
 									</label>
@@ -7181,15 +7178,15 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-settings-panel {
-	position: absolute;
+	position: fixed;
 	z-index: 8;
-	top: calc(100% + 0.55rem);
-	right: 0;
-	width: min(31rem, calc(100vw - 1.25rem));
-	max-height: min(31rem, calc(100vh - 1.5rem), 44vh);
+	top: 1rem;
+	right: 1rem;
+	width: min(35rem, calc(100vw - 2rem));
+	max-height: calc(100vh - 2rem);
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 1.1rem;
+	padding: 0.95rem 1rem;
 	border: 1px solid var(--color-border);
 	border-radius: 16px;
 	background: #fff;
@@ -7218,22 +7215,22 @@ html.dark .file-delete:disabled::after {
 .ide-setting-toggle {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
-	gap: 0.75rem;
-	align-items: start;
+	gap: 0.65rem;
+	align-items: center;
 	color: var(--color-ink);
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
-	margin-top: 0.95rem;
-	padding-top: 0.95rem;
+	margin-top: 0.7rem;
+	padding-top: 0.7rem;
 	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-share {
 	display: grid;
-	gap: 0.7rem;
-	margin-top: 0.95rem;
-	padding-top: 0.95rem;
+	gap: 0.65rem;
+	margin-top: 0.7rem;
+	padding-top: 0.7rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7264,8 +7261,8 @@ html.dark .file-delete:disabled::after {
 .ide-setting-storage {
 	display: grid;
 	gap: 0.5rem;
-	margin-top: 0.95rem;
-	padding-top: 0.95rem;
+	margin-top: 0.7rem;
+	padding-top: 0.7rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7287,9 +7284,9 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-setting-toggle input {
-	width: 1.15rem;
-	height: 1.15rem;
-	margin-top: 0.08rem;
+	width: 1.05rem;
+	height: 1.05rem;
+	margin: 0;
 	accent-color: #0f766e;
 }
 
@@ -7302,10 +7299,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar .ide-settings-panel .ide-setting-title {
 	display: block;
 	color: var(--color-ink-strong);
-	font-size: 0.94rem;
-	font-weight: 600;
+	font-size: 0.9rem;
+	font-weight: 500;
 	letter-spacing: 0;
-	line-height: 1.35;
+	line-height: 1.3;
 	font-variant: normal;
 	text-transform: none;
 }
@@ -7313,10 +7310,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar .ide-settings-panel .ide-setting-toggle small {
 	display: block;
 	color: var(--color-ink-soft);
-	font-size: 0.82rem;
+	font-size: 0.8rem;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.45;
+	line-height: 1.4;
 	font-variant: normal;
 	text-transform: none;
 }
@@ -7905,9 +7902,9 @@ html.dark .editor-shortcuts ul {
 	}
 
 	.ide-settings-panel {
-		right: auto;
-		left: 0;
-		width: min(30rem, calc(100vw - 2.5rem));
+		right: 1rem;
+		left: 1rem;
+		width: auto;
 	}
 
 	.turtle-canvas:not(.turtle-canvas--game) {
