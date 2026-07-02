@@ -86,6 +86,19 @@ interface JavaScannerInput {
 	values: string[];
 }
 
+interface JavaConsoleOutputState {
+	pendingLine: string;
+	stdout: string[];
+}
+
+interface JavaConsoleForLoop {
+	body: string;
+	condition: string;
+	initializer: string;
+	nextIndex: number;
+	update: string;
+}
+
 type JavaConsoleValue =
 	| {
 			type: "boolean";
@@ -106,12 +119,16 @@ type JavaConsoleValue =
 
 const DEFAULT_WORLD_SIZE = 10;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
+const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
 const JAVA_PRINT_RE = /System\.out\.(print|println)\s*\(([\s\S]*?)\)\s*;/g;
 const JAVA_SCANNER_READ_RE =
 	/\b[A-Z_]\w*\.next(Line|Int|Double|Boolean)?\s*\(\s*\)/i;
 const JAVA_VARIABLE_DECLARATION_START_RE =
 	/^(?:String|int|double|boolean|char|var)\s+([A-Z_]\w*)\s*=/i;
 const JAVA_VARIABLE_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*=/i;
+const JAVA_COMPOUND_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*(\+=|-=|\*=|\/=|%=)/i;
+const JAVA_INCREMENT_RE =
+	/^(?:\+\+([A-Z_]\w*)|([A-Z_]\w*)\+\+|--([A-Z_]\w*)|([A-Z_]\w*)--)$/i;
 const ROBOT_DECLARATION_RE =
 	/\bUrRobot\s+([A-Z_]\w*)\s*=\s*new\s+UrRobot\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*([A-Z_]\w*(?:\s*\.\s*[A-Z_]\w*)?)\s*,\s*(\d+)\s*\)/i;
 const WORLD_READ_RE = /\bWorld\.readWorld\s*\(\s*"([^"]+)"\s*\)/;
@@ -214,43 +231,179 @@ function javaConsoleOutput(source: string, inputText: string) {
 		stderr: [],
 		variables: new Map()
 	};
-	const outputLines: string[] = [];
-	let pendingLine = "";
-	for (const statement of javaStatements(source)) {
-		for (const match of statement.matchAll(JAVA_PRINT_RE)) {
-			const method = match[1];
-			const expression = match[2] ?? "";
-			const value = javaValueToString(
-				evaluateJavaExpression(expression, context)
-			);
-			if (method === "print") {
-				pendingLine += value;
-				continue;
-			}
+	const output: JavaConsoleOutputState = { pendingLine: "", stdout: [] };
+	const mainBody = parseJavaVoidMethods(source).get("main")?.body ?? source;
+	executeJavaConsoleBody(mainBody, context, output);
 
-			outputLines.push(`${pendingLine}${value}`);
-			pendingLine = "";
-		}
-
-		storeJavaVariableFromStatement(statement, context);
-	}
-
-	if (pendingLine) outputLines.push(pendingLine);
-	return { stderr: context.stderr, stdout: outputLines };
+	if (output.pendingLine) output.stdout.push(output.pendingLine);
+	return { stderr: context.stderr, stdout: output.stdout };
 }
 
-function javaStatements(source: string) {
-	const statements: string[] = [];
+function executeJavaConsoleBody(
+	body: string,
+	context: JavaConsoleContext,
+	output: JavaConsoleOutputState,
+	depth = 0
+): "break" | "continue" | null {
+	if (depth > 30) {
+		context.stderr.push("Stopped Java preview after nested control flow.");
+		return null;
+	}
+
 	let index = 0;
-	while (index < source.length) {
-		index = skipWhitespace(source, index);
-		if (index >= source.length) break;
-		const end = findJavaStatementEnd(source, index);
+	while (index < body.length) {
+		index = skipWhitespace(body, index);
+		if (index >= body.length) break;
+
+		if (wordAt(body, index, "if")) {
+			const parsedIf = parseJavaIfStatement(body, index);
+			if (parsedIf) {
+				const branchBody = evaluateJavaBooleanExpression(
+					parsedIf.condition,
+					context
+				)
+					? parsedIf.body
+					: parsedIf.elseBody;
+				if (branchBody) {
+					const signal = executeJavaConsoleBody(
+						branchBody,
+						context,
+						output,
+						depth + 1
+					);
+					if (signal) return signal;
+				}
+				index = parsedIf.nextIndex;
+				continue;
+			}
+		}
+
+		if (wordAt(body, index, "for")) {
+			const parsedLoop = parseJavaConsoleForLoop(body, index);
+			if (parsedLoop) {
+				executeJavaConsoleStatement(
+					`${parsedLoop.initializer};`,
+					context,
+					output
+				);
+				for (
+					let count = 0;
+					evaluateJavaBooleanExpression(
+						parsedLoop.condition,
+						context
+					);
+					count += 1
+				) {
+					if (count >= MAX_JAVA_CONSOLE_LOOP_ITERATIONS) {
+						context.stderr.push(
+							`Stopped Java preview after ${MAX_JAVA_CONSOLE_LOOP_ITERATIONS} loop iterations.`
+						);
+						break;
+					}
+					const signal = executeJavaConsoleBody(
+						parsedLoop.body,
+						context,
+						output,
+						depth + 1
+					);
+					if (signal === "break") break;
+					executeJavaConsoleStatement(
+						`${parsedLoop.update};`,
+						context,
+						output
+					);
+					if (signal === "continue") continue;
+				}
+				index = parsedLoop.nextIndex;
+				continue;
+			}
+		}
+
+		if (wordAt(body, index, "while")) {
+			const parsedLoop = parseJavaConditionalLoop(body, index);
+			if (parsedLoop) {
+				for (
+					let count = 0;
+					evaluateJavaBooleanExpression(
+						parsedLoop.condition,
+						context
+					);
+					count += 1
+				) {
+					if (count >= MAX_JAVA_CONSOLE_LOOP_ITERATIONS) {
+						context.stderr.push(
+							`Stopped Java preview after ${MAX_JAVA_CONSOLE_LOOP_ITERATIONS} loop iterations.`
+						);
+						break;
+					}
+					const signal = executeJavaConsoleBody(
+						parsedLoop.body,
+						context,
+						output,
+						depth + 1
+					);
+					if (signal === "break") break;
+					if (signal === "continue") continue;
+				}
+				index = parsedLoop.nextIndex;
+				continue;
+			}
+		}
+
+		if (body[index] === "{") {
+			const closingBrace = findMatchingDelimiter(body, index, "{", "}");
+			if (closingBrace < 0) break;
+			const signal = executeJavaConsoleBody(
+				body.slice(index + 1, closingBrace),
+				context,
+				output,
+				depth + 1
+			);
+			if (signal) return signal;
+			index = closingBrace + 1;
+			continue;
+		}
+
+		const end = findJavaStatementEnd(body, index);
 		if (end < 0) break;
-		statements.push(source.slice(index, end + 1).trim());
+		const signal = executeJavaConsoleStatement(
+			body.slice(index, end + 1).trim(),
+			context,
+			output
+		);
+		if (signal) return signal;
 		index = end + 1;
 	}
-	return statements;
+
+	return null;
+}
+
+function executeJavaConsoleStatement(
+	statement: string,
+	context: JavaConsoleContext,
+	output: JavaConsoleOutputState
+): "break" | "continue" | null {
+	const trimmed = statement.trim().replace(/;$/, "").trim();
+	if (trimmed === "break") return "break";
+	if (trimmed === "continue") return "continue";
+
+	for (const match of statement.matchAll(JAVA_PRINT_RE)) {
+		const method = match[1];
+		const expression = match[2] ?? "";
+		const value = javaValueToString(
+			evaluateJavaExpression(expression, context)
+		);
+		if (method === "print") {
+			output.pendingLine += value;
+			continue;
+		}
+
+		output.stdout.push(`${output.pendingLine}${value}`);
+		output.pendingLine = "";
+	}
+
+	storeJavaVariableFromStatement(statement, context);
+	return null;
 }
 
 function storeJavaVariableFromStatement(
@@ -258,6 +411,40 @@ function storeJavaVariableFromStatement(
 	context: JavaConsoleContext
 ) {
 	const trimmed = statement.trim().replace(/;$/, "").trim();
+	const increment = trimmed.match(JAVA_INCREMENT_RE);
+	if (increment) {
+		const variableName = increment.slice(1).find(Boolean);
+		if (!variableName) return;
+		const currentValue = context.variables.get(variableName);
+		const currentNumber =
+			currentValue?.type === "number" ? currentValue.value : 0;
+		const direction = trimmed.includes("--") ? -1 : 1;
+		context.variables.set(variableName, {
+			type: "number",
+			value: currentNumber + direction
+		});
+		return;
+	}
+
+	const compound = trimmed.match(JAVA_COMPOUND_ASSIGNMENT_START_RE);
+	if (compound?.[1] && compound[2]) {
+		context.variables.set(
+			compound[1],
+			applyJavaCompoundAssignment(
+				context.variables.get(compound[1]) ?? {
+					type: "number",
+					value: 0
+				},
+				compound[2],
+				evaluateJavaExpression(
+					trimmed.slice(compound[0].length),
+					context
+				)
+			)
+		);
+		return;
+	}
+
 	const declaration = trimmed.match(JAVA_VARIABLE_DECLARATION_START_RE);
 	if (declaration?.[1]) {
 		context.variables.set(
@@ -279,6 +466,36 @@ function storeJavaVariableFromStatement(
 	}
 }
 
+function applyJavaCompoundAssignment(
+	currentValue: JavaConsoleValue,
+	operator: string,
+	nextValue: JavaConsoleValue
+): JavaConsoleValue {
+	if (operator === "+=") {
+		if (currentValue.type === "string" || nextValue.type === "string") {
+			return {
+				type: "string",
+				value: `${javaValueToString(currentValue)}${javaValueToString(nextValue)}`
+			};
+		}
+		return {
+			type: "number",
+			value:
+				javaValueToNumber(currentValue) + javaValueToNumber(nextValue)
+		};
+	}
+
+	const currentNumber = javaValueToNumber(currentValue);
+	const nextNumber = javaValueToNumber(nextValue);
+	if (operator === "-=")
+		return { type: "number", value: currentNumber - nextNumber };
+	if (operator === "*=")
+		return { type: "number", value: currentNumber * nextNumber };
+	if (operator === "/=")
+		return { type: "number", value: currentNumber / nextNumber };
+	return { type: "number", value: currentNumber % nextNumber };
+}
+
 function evaluateJavaExpression(
 	expression: string,
 	context?: JavaConsoleContext
@@ -288,6 +505,18 @@ function evaluateJavaExpression(
 
 	const scannerValue = evaluateJavaScannerRead(trimmed, context);
 	if (scannerValue) return scannerValue;
+
+	const castValue = evaluateJavaCastExpression(trimmed, context);
+	if (castValue) return castValue;
+
+	const mathMethodValue = evaluateJavaMathMethodExpression(trimmed, context);
+	if (mathMethodValue) return mathMethodValue;
+
+	const stringMethodValue = evaluateJavaStringMethodExpression(
+		trimmed,
+		context
+	);
+	if (stringMethodValue) return stringMethodValue;
 
 	const numericValue = evaluateNumericExpression(trimmed, context);
 	if (numericValue !== null) return { type: "number", value: numericValue };
@@ -365,6 +594,302 @@ function evaluateJavaScannerRead(
 function javaValueToString(value: JavaConsoleValue) {
 	if (value.type === "null") return "null";
 	return String(value.value);
+}
+
+function javaValueToNumber(value: JavaConsoleValue) {
+	if (value.type === "number") return value.value;
+	const parsed = Number(javaValueToString(value).trim());
+	return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function evaluateJavaCastExpression(
+	expression: string,
+	context?: JavaConsoleContext
+): JavaConsoleValue | null {
+	if (!expression.startsWith("(")) return null;
+	const castEnd = findMatchingDelimiter(expression, 0, "(", ")");
+	if (castEnd < 0) return null;
+	const castType = expression.slice(1, castEnd).trim().toLowerCase();
+	if (castType !== "int" && castType !== "double") return null;
+	const value = javaValueToNumber(
+		evaluateJavaExpression(expression.slice(castEnd + 1).trim(), context)
+	);
+	return {
+		type: "number",
+		value: castType === "int" ? Math.trunc(value) : value
+	};
+}
+
+function evaluateJavaMathMethodExpression(
+	expression: string,
+	context?: JavaConsoleContext
+): JavaConsoleValue | null {
+	const match = expression.match(/^Math\.(\w+)\s*\(([\s\S]*)\)$/);
+	if (!match?.[1]) return null;
+	const args = splitJavaArguments(match[2] ?? "").map(arg =>
+		javaValueToNumber(evaluateJavaExpression(arg, context))
+	);
+	const method = match[1];
+	switch (method) {
+		case "abs":
+			return { type: "number", value: Math.abs(args[0] ?? 0) };
+		case "ceil":
+			return { type: "number", value: Math.ceil(args[0] ?? 0) };
+		case "floor":
+			return { type: "number", value: Math.floor(args[0] ?? 0) };
+		case "max":
+			return { type: "number", value: Math.max(...args) };
+		case "min":
+			return { type: "number", value: Math.min(...args) };
+		case "pow":
+			return { type: "number", value: (args[0] ?? 0) ** (args[1] ?? 0) };
+		case "random":
+			return { type: "number", value: Math.random() };
+		case "round":
+			return { type: "number", value: Math.round(args[0] ?? 0) };
+		case "sqrt":
+			return { type: "number", value: Math.sqrt(args[0] ?? 0) };
+		default:
+			return null;
+	}
+}
+
+function evaluateJavaStringMethodExpression(
+	expression: string,
+	context?: JavaConsoleContext
+): JavaConsoleValue | null {
+	const match = expression.match(
+		/^([\s\S]+)\.(length|charAt|substring)\s*\(([\s\S]*)\)$/i
+	);
+	if (!match?.[1] || !match[2]) return null;
+	const receiver = javaValueToString(
+		evaluateJavaExpression(match[1], context)
+	);
+	const args = splitJavaArguments(match[3] ?? "").map(arg =>
+		Math.trunc(javaValueToNumber(evaluateJavaExpression(arg, context)))
+	);
+	const method = match[2].toLowerCase();
+	if (method === "length") return { type: "number", value: receiver.length };
+	if (method === "charat") {
+		return {
+			type: "string",
+			value: receiver[args[0] ?? 0] ?? ""
+		};
+	}
+	return {
+		type: "string",
+		value: receiver.slice(args[0] ?? 0, args[1] ?? receiver.length)
+	};
+}
+
+function parseJavaConsoleForLoop(
+	source: string,
+	start: number
+): JavaConsoleForLoop | null {
+	const parenStart = skipWhitespace(source, start + 3);
+	if (source[parenStart] !== "(") return null;
+	const parenEnd = findMatchingDelimiter(source, parenStart, "(", ")");
+	if (parenEnd < 0) return null;
+	const headerParts = splitJavaTopLevel(
+		source.slice(parenStart + 1, parenEnd),
+		";"
+	);
+	if (headerParts.length !== 3) return null;
+	const bodyStart = skipWhitespace(source, parenEnd + 1);
+	const parsedBody = parseJavaControlBody(source, bodyStart);
+	if (!parsedBody) return null;
+	return {
+		body: parsedBody.body,
+		condition: headerParts[1] ?? "",
+		initializer: headerParts[0] ?? "",
+		nextIndex: parsedBody.nextIndex,
+		update: headerParts[2] ?? ""
+	};
+}
+
+function evaluateJavaBooleanExpression(
+	expression: string,
+	context: JavaConsoleContext
+): boolean {
+	const trimmed = stripJavaOuterParens(expression.trim());
+	if (!trimmed) return false;
+
+	const orParts = splitJavaTopLevel(trimmed, "||");
+	if (orParts.length > 1) {
+		return orParts.some(part =>
+			evaluateJavaBooleanExpression(part, context)
+		);
+	}
+
+	const andParts = splitJavaTopLevel(trimmed, "&&");
+	if (andParts.length > 1) {
+		return andParts.every(part =>
+			evaluateJavaBooleanExpression(part, context)
+		);
+	}
+
+	if (trimmed.startsWith("!")) {
+		return !evaluateJavaBooleanExpression(trimmed.slice(1), context);
+	}
+
+	const equalityCall = trimmed.match(
+		/^([\s\S]+)\.(equals|equalsIgnoreCase)\s*\(([\s\S]*)\)$/i
+	);
+	if (equalityCall?.[1] && equalityCall[2] && equalityCall[3]) {
+		return javaValuesAreEqual(
+			evaluateJavaExpression(equalityCall[1], context),
+			evaluateJavaExpression(equalityCall[3], context),
+			equalityCall[2].toLowerCase() === "equalsignorecase"
+		);
+	}
+
+	const comparison = splitJavaComparison(trimmed);
+	if (comparison) {
+		return evaluateJavaComparison(
+			evaluateJavaExpression(comparison.left, context),
+			comparison.operator,
+			evaluateJavaExpression(comparison.right, context)
+		);
+	}
+
+	const value = evaluateJavaExpression(trimmed, context);
+	if (value.type === "boolean") return value.value;
+	if (value.type === "number") return value.value !== 0;
+	if (value.type === "null") return false;
+	return Boolean(value.value);
+}
+
+function javaValuesAreEqual(
+	left: JavaConsoleValue,
+	right: JavaConsoleValue,
+	ignoreCase = false
+) {
+	if (left.type === "number" || right.type === "number") {
+		return javaValueToNumber(left) === javaValueToNumber(right);
+	}
+	if (left.type === "boolean" || right.type === "boolean") {
+		return javaValueToString(left) === javaValueToString(right);
+	}
+	const leftString = javaValueToString(left);
+	const rightString = javaValueToString(right);
+	return ignoreCase
+		? leftString.toLowerCase() === rightString.toLowerCase()
+		: leftString === rightString;
+}
+
+function evaluateJavaComparison(
+	left: JavaConsoleValue,
+	operator: string,
+	right: JavaConsoleValue
+) {
+	if (operator === "==") return javaValuesAreEqual(left, right);
+	if (operator === "!=") return !javaValuesAreEqual(left, right);
+	const leftNumber = javaValueToNumber(left);
+	const rightNumber = javaValueToNumber(right);
+	if (operator === "<") return leftNumber < rightNumber;
+	if (operator === "<=") return leftNumber <= rightNumber;
+	if (operator === ">") return leftNumber > rightNumber;
+	return leftNumber >= rightNumber;
+}
+
+function splitJavaComparison(expression: string) {
+	const operator = findTopLevelJavaOperator(expression, [
+		"==",
+		"!=",
+		">=",
+		"<=",
+		">",
+		"<"
+	]);
+	if (!operator) return null;
+	return {
+		left: expression.slice(0, operator.index).trim(),
+		operator: operator.operator,
+		right: expression
+			.slice(operator.index + operator.operator.length)
+			.trim()
+	};
+}
+
+function stripJavaOuterParens(expression: string): string {
+	let trimmed = expression;
+	while (trimmed.startsWith("(")) {
+		const closing = findMatchingDelimiter(trimmed, 0, "(", ")");
+		if (closing !== trimmed.length - 1) break;
+		trimmed = trimmed.slice(1, -1).trim();
+	}
+	return trimmed;
+}
+
+function splitJavaTopLevel(expression: string, delimiter: string) {
+	const parts: string[] = [];
+	let start = 0;
+	for (const index of topLevelJavaDelimiterIndexes(expression, delimiter)) {
+		parts.push(expression.slice(start, index).trim());
+		start = index + delimiter.length;
+	}
+	parts.push(expression.slice(start).trim());
+	return parts;
+}
+
+function findTopLevelJavaOperator(expression: string, operators: string[]) {
+	for (const index of topLevelJavaDelimiterIndexes(expression, operators)) {
+		const operator = operators.find(candidate =>
+			expression.startsWith(candidate, index)
+		);
+		if (operator) return { index, operator };
+	}
+	return null;
+}
+
+function topLevelJavaDelimiterIndexes(
+	expression: string,
+	delimiters: string | string[]
+) {
+	const delimiterOptions = Array.isArray(delimiters)
+		? [...delimiters].sort((a, b) => b.length - a.length)
+		: [delimiters];
+	const indexes: number[] = [];
+	let quote: '"' | "'" | null = null;
+	let escaped = false;
+	let parenDepth = 0;
+
+	for (let index = 0; index < expression.length; index += 1) {
+		const character = expression[index] ?? "";
+		if (escaped) {
+			escaped = false;
+			continue;
+		}
+		if (character === "\\") {
+			escaped = true;
+			continue;
+		}
+		if (quote) {
+			if (character === quote) quote = null;
+			continue;
+		}
+		if (character === '"' || character === "'") {
+			quote = character;
+			continue;
+		}
+		if (character === "(") {
+			parenDepth += 1;
+			continue;
+		}
+		if (character === ")") {
+			parenDepth = Math.max(0, parenDepth - 1);
+			continue;
+		}
+		if (parenDepth > 0) continue;
+		const delimiter = delimiterOptions.find(candidate =>
+			expression.startsWith(candidate, index)
+		);
+		if (!delimiter) continue;
+		indexes.push(index);
+		index += delimiter.length - 1;
+	}
+
+	return indexes;
 }
 
 function evaluateNumericExpression(

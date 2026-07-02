@@ -117,6 +117,96 @@ public class Main {
 		expect(result.stdout).toEqual(["Age: 0"]);
 	});
 
+	it("previews Java console if/else decisions from stored input", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String color = input.nextLine();
+        int age = input.nextInt();
+        boolean hasTicket = input.nextBoolean();
+
+        if (color.equalsIgnoreCase("blue") && age >= 13 && hasTicket) {
+            System.out.println("Enter the blue room");
+        } else if (age < 13) {
+            System.out.println("Come back later");
+        } else {
+            System.out.println("Try another line");
+        }
+    }
+}`
+				}
+			],
+			inputText: "Blue\n14\ntrue",
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["Enter the blue room"]);
+	});
+
+	it("previews bounded Java console for and while loops", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        int total = 0;
+        for (int i = 1; i <= 3; i++) {
+            total += i;
+            System.out.print(i);
+        }
+        System.out.println(" total=" + total);
+
+        int count = 0;
+        while (count < 2) {
+            System.out.print(" w" + count);
+            count++;
+        }
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["123 total=6", " w0 w1"]);
+	});
+
+	it("previews beginner string, cast, and Math expressions", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        String word = "Python";
+        System.out.println(word.length());
+        System.out.println(word.charAt(2));
+        System.out.println(word.substring(1, 4));
+        System.out.println((int) 3.9);
+        System.out.println(Math.max(4, 7));
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["6", "t", "yth", "3", "7"]);
+	});
+
 	it("runs the beginner Karel command subset into a visual world state", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
