@@ -52,7 +52,24 @@ interface MutableKarelWorld {
 	walls: KarelWallState[];
 }
 
+interface JavaMethodDefinition {
+	body: string;
+	name: string;
+	parameters: string[];
+}
+
+interface KarelCommandPlan {
+	commands: Array<(typeof KAREL_COMMANDS)[number]>;
+	warnings: string[];
+}
+
+interface JavaForLoopIterations {
+	capped: boolean;
+	count: number;
+}
+
 const DEFAULT_WORLD_SIZE = 10;
+const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const JAVA_PRINT_RE = /System\.out\.(print|println)\s*\(([\s\S]*?)\)\s*;/g;
 const ROBOT_DECLARATION_RE =
 	/\bUrRobot\s+([A-Z_]\w*)\s*=\s*new\s+UrRobot\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*([A-Z_]\w*)\s*,\s*(\d+)\s*\)/i;
@@ -300,13 +317,15 @@ function runKarelProject(
 	clampRobotToWorld(robot, world);
 	trace.push(formatRobotTrace(robot));
 
-	for (const command of karelCommandsForRobot(source, robot.name)) {
+	const plan = karelCommandsForRobot(source, robot.name);
+	for (const command of plan.commands) {
 		const error = applyKarelCommand(world, robot, command);
 		trace.push(formatRobotTrace(robot));
 		if (!error) continue;
 		stderr.push(error);
 		break;
 	}
+	stderr.push(...plan.warnings);
 
 	return {
 		karelWorld: serializeKarelWorld(world, robot, trace),
@@ -453,17 +472,372 @@ function clampRobotToWorld(robot: KarelRobotState, world: MutableKarelWorld) {
 }
 
 function karelCommandsForRobot(source: string, robotName: string) {
-	const commandPattern = new RegExp(
-		`\\b${escapeRegExp(robotName)}\\.(${KAREL_COMMANDS.join("|")})\\s*\\(\\s*\\)\\s*;`,
-		"g"
+	const methods = parseJavaVoidMethods(source);
+	const mainBody = methods.get("main")?.body ?? source;
+	const plan: KarelCommandPlan = { commands: [], warnings: [] };
+	collectKarelCommandsFromBody(mainBody, methods, new Set([robotName]), plan);
+	return plan;
+}
+
+function parseJavaVoidMethods(source: string) {
+	const methods = new Map<string, JavaMethodDefinition>();
+	const methodPattern =
+		/\b(?:public|private|protected|static|final|\s)*void\s+([A-Z_]\w*)\s*\(([^)]*)\)\s*\{/gi;
+	for (const match of source.matchAll(methodPattern)) {
+		const name = match[1];
+		if (!name) continue;
+		const openingBrace = (match.index ?? 0) + match[0].length - 1;
+		const closingBrace = findMatchingDelimiter(
+			source,
+			openingBrace,
+			"{",
+			"}"
+		);
+		if (closingBrace < 0) continue;
+		methods.set(name, {
+			body: source.slice(openingBrace + 1, closingBrace),
+			name,
+			parameters: parseJavaParameterNames(match[2] ?? "")
+		});
+	}
+	return methods;
+}
+
+function parseJavaParameterNames(parameters: string) {
+	return splitJavaArguments(parameters)
+		.map(
+			parameter => parameter.match(/\b([A-Z_]\w*)\s*(?:\[\s*\])?$/i)?.[1]
+		)
+		.filter((parameter): parameter is string => Boolean(parameter));
+}
+
+function collectKarelCommandsFromBody(
+	body: string,
+	methods: Map<string, JavaMethodDefinition>,
+	robotAliases: Set<string>,
+	plan: KarelCommandPlan,
+	depth = 0
+) {
+	if (depth > 20) {
+		addKarelWarning(
+			plan,
+			"Stopped Karel preview after nested helper calls."
+		);
+		return;
+	}
+
+	let index = 0;
+	while (index < body.length && canAddKarelCommand(plan)) {
+		index = skipWhitespace(body, index);
+		if (index >= body.length) break;
+
+		if (wordAt(body, index, "for")) {
+			const parsedLoop = parseJavaForLoop(body, index);
+			if (parsedLoop) {
+				for (
+					let count = 0;
+					count < parsedLoop.iterations && canAddKarelCommand(plan);
+					count += 1
+				) {
+					collectKarelCommandsFromBody(
+						parsedLoop.body,
+						methods,
+						robotAliases,
+						plan,
+						depth + 1
+					);
+				}
+				if (
+					parsedLoop.capped &&
+					plan.commands.length >= MAX_KAREL_PREVIEW_COMMANDS
+				) {
+					addKarelWarning(
+						plan,
+						`Stopped Karel preview after ${MAX_KAREL_PREVIEW_COMMANDS} commands.`
+					);
+				}
+				index = parsedLoop.nextIndex;
+				continue;
+			}
+		}
+
+		if (body[index] === "{") {
+			const closingBrace = findMatchingDelimiter(body, index, "{", "}");
+			if (closingBrace < 0) break;
+			collectKarelCommandsFromBody(
+				body.slice(index + 1, closingBrace),
+				methods,
+				robotAliases,
+				plan,
+				depth + 1
+			);
+			index = closingBrace + 1;
+			continue;
+		}
+
+		const statementEnd = findJavaStatementEnd(body, index);
+		if (statementEnd < 0) break;
+		collectKarelCommandsFromStatement(
+			body.slice(index, statementEnd).trim(),
+			methods,
+			robotAliases,
+			plan,
+			depth
+		);
+		index = statementEnd + 1;
+	}
+}
+
+function collectKarelCommandsFromStatement(
+	statement: string,
+	methods: Map<string, JavaMethodDefinition>,
+	robotAliases: Set<string>,
+	plan: KarelCommandPlan,
+	depth: number
+) {
+	const commandMatch = statement.match(
+		new RegExp(
+			`^([A-Z_]\\w*)\\.(${KAREL_COMMANDS.join("|")})\\s*\\(\\s*\\)$`,
+			"i"
+		)
 	);
-	return [...source.matchAll(commandPattern)].map(
-		match => match[1] as (typeof KAREL_COMMANDS)[number]
+	if (commandMatch) {
+		if (robotAliases.has(commandMatch[1] ?? "")) {
+			addKarelCommand(
+				plan,
+				commandMatch[2] as (typeof KAREL_COMMANDS)[number]
+			);
+		}
+		return;
+	}
+
+	const methodCall = statement.match(/^([A-Z_]\w*)\s*\(([\s\S]*)\)$/i);
+	const methodName = methodCall?.[1];
+	const method = methodName ? methods.get(methodName) : null;
+	if (!method || !methodCall) return;
+
+	const args = splitJavaArguments(methodCall[2] ?? "");
+	const nextAliases = new Set(robotAliases);
+	method.parameters.forEach((parameter, parameterIndex) => {
+		const arg = args[parameterIndex]?.trim();
+		if (arg && robotAliases.has(arg)) nextAliases.add(parameter);
+	});
+	collectKarelCommandsFromBody(
+		method.body,
+		methods,
+		nextAliases,
+		plan,
+		depth + 1
 	);
 }
 
-function escapeRegExp(value: string) {
-	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function parseJavaForLoop(source: string, start: number) {
+	const parenStart = skipWhitespace(source, start + 3);
+	if (source[parenStart] !== "(") return null;
+	const parenEnd = findMatchingDelimiter(source, parenStart, "(", ")");
+	if (parenEnd < 0) return null;
+	const iterations = evaluateSimpleForLoopIterations(
+		source.slice(parenStart + 1, parenEnd)
+	);
+	const bodyStart = skipWhitespace(source, parenEnd + 1);
+	const parsedBody = parseJavaLoopBody(source, bodyStart);
+	if (!parsedBody) return null;
+	return {
+		body: parsedBody.body,
+		capped: iterations.capped,
+		iterations: iterations.count,
+		nextIndex: parsedBody.nextIndex
+	};
+}
+
+function parseJavaLoopBody(source: string, start: number) {
+	if (source[start] === "{") {
+		const end = findMatchingDelimiter(source, start, "{", "}");
+		if (end < 0) return null;
+		return { body: source.slice(start + 1, end), nextIndex: end + 1 };
+	}
+
+	const end = findJavaStatementEnd(source, start);
+	if (end < 0) return null;
+	return { body: source.slice(start, end + 1), nextIndex: end + 1 };
+}
+
+function evaluateSimpleForLoopIterations(
+	header: string
+): JavaForLoopIterations {
+	const match = header.match(
+		/^\s*(?:int\s+)?([A-Z_]\w*)\s*=\s*(-?\d+)\s*;\s*\1\s*(<=|<|>=|>)\s*(-?\d+)\s*;\s*(\+\+\1|\1\+\+|--\1|\1--|\1\s*(\+=|-=)\s*(\d+))\s*$/i
+	);
+	if (!match) return { capped: false, count: 0 };
+
+	const start = Number(match[2]);
+	const operator = match[3] ?? "<";
+	const end = Number(match[4]);
+	const updateExpression = match[5] ?? "";
+	const compoundOperator = match[6];
+	const compoundStep = Number(match[7] ?? 1);
+	const step =
+		compoundOperator === "+="
+			? compoundStep
+			: compoundOperator === "-="
+				? -compoundStep
+				: updateExpression.includes("--")
+					? -1
+					: 1;
+	if (!Number.isFinite(step) || step === 0)
+		return { capped: false, count: 0 };
+
+	let count = 0;
+	let value = start;
+	while (forLoopConditionIsTrue(value, operator, end)) {
+		if (count >= MAX_KAREL_PREVIEW_COMMANDS) return { capped: true, count };
+		count += 1;
+		value += step;
+	}
+	return { capped: false, count };
+}
+
+function forLoopConditionIsTrue(value: number, operator: string, end: number) {
+	if (operator === "<") return value < end;
+	if (operator === "<=") return value <= end;
+	if (operator === ">") return value > end;
+	return value >= end;
+}
+
+function findJavaStatementEnd(source: string, start: number) {
+	let quote: '"' | "'" | null = null;
+	let escaped = false;
+	let parenDepth = 0;
+	for (let index = start; index < source.length; index += 1) {
+		const character = source[index] ?? "";
+		if (escaped) {
+			escaped = false;
+			continue;
+		}
+		if (character === "\\") {
+			escaped = true;
+			continue;
+		}
+		if (quote) {
+			if (character === quote) quote = null;
+			continue;
+		}
+		if (character === '"' || character === "'") {
+			quote = character;
+			continue;
+		}
+		if (character === "(") parenDepth += 1;
+		if (character === ")") parenDepth = Math.max(0, parenDepth - 1);
+		if (character === ";" && parenDepth === 0) return index;
+	}
+	return -1;
+}
+
+function findMatchingDelimiter(
+	source: string,
+	start: number,
+	open: "(" | "{",
+	close: ")" | "}"
+) {
+	let depth = 0;
+	let quote: '"' | "'" | null = null;
+	let escaped = false;
+	for (let index = start; index < source.length; index += 1) {
+		const character = source[index] ?? "";
+		if (escaped) {
+			escaped = false;
+			continue;
+		}
+		if (character === "\\") {
+			escaped = true;
+			continue;
+		}
+		if (quote) {
+			if (character === quote) quote = null;
+			continue;
+		}
+		if (character === '"' || character === "'") {
+			quote = character;
+			continue;
+		}
+		if (character === open) depth += 1;
+		if (character === close) {
+			depth -= 1;
+			if (depth === 0) return index;
+		}
+	}
+	return -1;
+}
+
+function splitJavaArguments(args: string) {
+	const parts: string[] = [];
+	let quote: '"' | "'" | null = null;
+	let start = 0;
+	let escaped = false;
+	let parenDepth = 0;
+	for (let index = 0; index < args.length; index += 1) {
+		const character = args[index] ?? "";
+		if (escaped) {
+			escaped = false;
+			continue;
+		}
+		if (character === "\\") {
+			escaped = true;
+			continue;
+		}
+		if (quote) {
+			if (character === quote) quote = null;
+			continue;
+		}
+		if (character === '"' || character === "'") {
+			quote = character;
+			continue;
+		}
+		if (character === "(") parenDepth += 1;
+		if (character === ")") parenDepth = Math.max(0, parenDepth - 1);
+		if (character !== "," || parenDepth > 0) continue;
+		parts.push(args.slice(start, index).trim());
+		start = index + 1;
+	}
+	const last = args.slice(start).trim();
+	if (last) parts.push(last);
+	return parts;
+}
+
+function wordAt(source: string, index: number, word: string) {
+	return (
+		source.slice(index, index + word.length) === word &&
+		!/\w/.test(source[index - 1] ?? "") &&
+		!/\w/.test(source[index + word.length] ?? "")
+	);
+}
+
+function skipWhitespace(source: string, index: number) {
+	let cursor = index;
+	while (cursor < source.length && /\s/.test(source[cursor] ?? ""))
+		cursor += 1;
+	return cursor;
+}
+
+function canAddKarelCommand(plan: KarelCommandPlan) {
+	if (plan.commands.length < MAX_KAREL_PREVIEW_COMMANDS) return true;
+	addKarelWarning(
+		plan,
+		`Stopped Karel preview after ${MAX_KAREL_PREVIEW_COMMANDS} commands.`
+	);
+	return false;
+}
+
+function addKarelCommand(
+	plan: KarelCommandPlan,
+	command: (typeof KAREL_COMMANDS)[number]
+) {
+	if (!canAddKarelCommand(plan)) return;
+	plan.commands.push(command);
+}
+
+function addKarelWarning(plan: KarelCommandPlan, warning: string) {
+	if (!plan.warnings.includes(warning)) plan.warnings.push(warning);
 }
 
 function applyKarelCommand(

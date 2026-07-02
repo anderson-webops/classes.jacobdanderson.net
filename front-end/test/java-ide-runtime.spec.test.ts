@@ -112,6 +112,88 @@ describe("java IDE runtime", () => {
 		});
 	});
 
+	it("runs Karel helper methods and simple loops from main only", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.World;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(6, 7, East, 0);
+        turnRight(sam);
+        moveTwice(sam);
+        for (int i = 0; i < 2; i++) {
+            sam.turnLeft();
+        }
+    }
+
+    static void turnRight(UrRobot robot) {
+        robot.turnLeft();
+        robot.turnLeft();
+        robot.turnLeft();
+    }
+
+    static void moveTwice(UrRobot robot) {
+        robot.move();
+        robot.move();
+    }
+
+    static void hidden(UrRobot robot) {
+        robot.move();
+    }
+
+    static {
+        World.setVisible(true);
+    }
+}`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 7,
+			direction: "North",
+			street: 4
+		});
+		expect(result.stdout).toHaveLength(8);
+	});
+
+	it("caps long Karel preview loops in the browser runner", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(6, 7, East, 0);
+        for (int i = 0; i < 600; i++) {
+            sam.turnLeft();
+        }
+    }
+}`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([
+			"Stopped Karel preview after 500 commands."
+		]);
+		expect(result.stdout).toHaveLength(501);
+		expect(result.karelWorld?.robot?.direction).toBe("East");
+	});
+
 	it("loads Java and Karel execution through the client IDE workspace", () => {
 		const routeSource = sourceFile("../src/pages/python-ide.vue");
 		const workspaceSource = sourceFile(
