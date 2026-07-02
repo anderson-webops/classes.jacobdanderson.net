@@ -385,9 +385,16 @@ describe("python IDE CodeMirror editor", () => {
 				"to_string",
 				"comparable_class",
 				"comparator",
+				"lambda_expression",
+				"predicate",
+				"stream_pipeline",
+				"grouping_by",
 				"interface_type",
 				"record_type",
 				"enum_type",
+				"switch_statement",
+				"switch_expression",
+				"throw_exception",
 				"try_catch",
 				"try_with_resources",
 				"file_scanner",
@@ -406,6 +413,12 @@ describe("python IDE CodeMirror editor", () => {
 				"TreeMap",
 				"Map",
 				"Map.Entry",
+				"Stream",
+				"Collectors",
+				"Predicate",
+				"Function",
+				"Consumer",
+				"Supplier",
 				"Comparable",
 				"Comparator",
 				"Override",
@@ -415,7 +428,12 @@ describe("python IDE CodeMirror editor", () => {
 				"FileWriter",
 				"BufferedReader",
 				"PrintWriter",
+				"Optional",
+				"Exception",
+				"RuntimeException",
+				"IllegalArgumentException",
 				"IOException",
+				"FileNotFoundException",
 				"import java.util.ArrayList",
 				"import java.util.Arrays",
 				"import java.util.Collections",
@@ -429,17 +447,32 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.util.HashMap",
 				"import java.util.TreeMap",
 				"import java.util.Map",
+				"import java.util.Optional",
 				"import java.util.Comparator",
+				"import java.util.stream.Stream",
+				"import java.util.stream.Collectors",
+				"import java.util.function.Predicate",
+				"import java.util.function.Function",
+				"import java.util.function.Consumer",
+				"import java.util.function.Supplier",
 				"import java.awt.Color",
 				"import java.io.BufferedReader",
 				"import java.io.File",
 				"import java.io.FileReader",
 				"import java.io.FileWriter",
 				"import java.io.IOException",
+				"import java.io.FileNotFoundException",
 				"import java.io.PrintWriter",
 				"System.out.println"
 			])
 		);
+		expect(editorSource).toContain("switch_statement");
+		expect(editorSource).toContain("switch_expression");
+		expect(editorSource).toContain("throw_exception");
+		expect(editorSource).toContain("throw new IllegalArgumentException");
+		expect(editorSource).toContain("lambda_expression");
+		expect(editorSource).toContain("stream_pipeline");
+		expect(editorSource).toContain("Collectors.groupingBy");
 		expect(editorSource).toContain("try_with_resources");
 		expect(editorSource).toContain("file_scanner");
 		expect(editorSource).toContain("file_writer");
@@ -774,7 +807,14 @@ describe("python IDE CodeMirror editor", () => {
 			].join("\n")
 		);
 		expect(declaredListLabels).toEqual(
-			expect.arrayContaining(["add", "get", "set", "size", "isEmpty"])
+			expect.arrayContaining([
+				"add",
+				"get",
+				"set",
+				"stream",
+				"size",
+				"isEmpty"
+			])
 		);
 		expect(declaredListLabels).not.toEqual(
 			expect.arrayContaining(["nextInt", "put", "keySet"])
@@ -793,7 +833,13 @@ describe("python IDE CodeMirror editor", () => {
 			].join("\n")
 		);
 		expect(declaredSetLabels).toEqual(
-			expect.arrayContaining(["add", "contains", "size", "isEmpty"])
+			expect.arrayContaining([
+				"add",
+				"contains",
+				"stream",
+				"size",
+				"isEmpty"
+			])
 		);
 		expect(declaredSetLabels).not.toEqual(
 			expect.arrayContaining(["nextInt", "get", "put", "keySet"])
@@ -812,7 +858,7 @@ describe("python IDE CodeMirror editor", () => {
 			].join("\n")
 		);
 		expect(declaredQueueLabels).toEqual(
-			expect.arrayContaining(["offer", "poll", "peek", "size"])
+			expect.arrayContaining(["offer", "poll", "peek", "stream", "size"])
 		);
 		expect(declaredQueueLabels).not.toEqual(
 			expect.arrayContaining(["nextInt", "get", "put", "keySet"])
@@ -861,6 +907,33 @@ describe("python IDE CodeMirror editor", () => {
 		expect(declaredMapEntryLabels).not.toEqual(
 			expect.arrayContaining(["charAt", "nextInt", "put"])
 		);
+
+		const declaredStreamLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			[
+				"import java.util.stream.Stream;",
+				"public class Main {",
+				"    public static void main(String[] args) {",
+				"        Stream<String> names = Stream.of(\"Ada\", \"Grace\");",
+				"        names.|",
+				"    }",
+				"}"
+			].join("\n")
+		);
+		expect(declaredStreamLabels).toEqual(
+			expect.arrayContaining([
+				"filter",
+				"map",
+				"sorted",
+				"collect",
+				"toList",
+				"forEach",
+				"count"
+			])
+		);
+		expect(declaredStreamLabels).not.toEqual(
+			expect.arrayContaining(["nextInt", "put", "keySet"])
+		);
 		expect(autocompleteLabelsForDoc("java", "names.")).toEqual(
 			expect.arrayContaining([
 				"equals",
@@ -883,6 +956,11 @@ describe("python IDE CodeMirror editor", () => {
 				"getKey",
 				"getValue",
 				"toArray",
+				"stream",
+				"filter",
+				"map",
+				"sorted",
+				"collect",
 				"size",
 				"isEmpty"
 			])
@@ -921,6 +999,32 @@ describe("python IDE CodeMirror editor", () => {
 				"comparing",
 				"comparingInt",
 				"reverseOrder"
+			])
+		);
+		expect(autocompleteLabelsForDoc("java", "Stream.")).toEqual(
+			expect.arrayContaining(["of", "empty", "generate", "iterate"])
+		);
+		expect(
+			autocompleteLabelsForDoc("java", "java.util.stream.Stream.")
+		).toEqual(
+			expect.arrayContaining(["of", "empty", "generate", "iterate"])
+		);
+		expect(autocompleteLabelsForDoc("java", "Collectors.")).toEqual(
+			expect.arrayContaining([
+				"toList",
+				"toSet",
+				"joining",
+				"groupingBy"
+			])
+		);
+		expect(
+			autocompleteLabelsForDoc("java", "java.util.stream.Collectors.")
+		).toEqual(
+			expect.arrayContaining([
+				"toList",
+				"toSet",
+				"joining",
+				"groupingBy"
 			])
 		);
 		expect(autocompleteLabelsForDoc("karel", "World.")).toEqual(
@@ -1012,6 +1116,37 @@ describe("python IDE CodeMirror editor", () => {
 			expect.arrayContaining(["import java.util.Random"])
 		);
 
+		const streamDoc = "import java.util.stream.Col";
+		const [streamResult] = autocompleteResultsForDocAt(
+			"java",
+			streamDoc,
+			streamDoc.length
+		);
+		expect(streamResult?.from).toBe(0);
+		expect(streamResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining([
+				"import java.util.stream.Collectors",
+				"import java.util.stream.Stream"
+			])
+		);
+		expect(streamResult?.options?.map(option => option.label)).not.toEqual(
+			expect.arrayContaining(["import java.util.Comparator"])
+		);
+
+		const functionDoc = "import java.util.function.Pred";
+		const [functionResult] = autocompleteResultsForDocAt(
+			"java",
+			functionDoc,
+			functionDoc.length
+		);
+		expect(functionResult?.from).toBe(0);
+		expect(functionResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining([
+				"import java.util.function.Predicate",
+				"import java.util.function.Function"
+			])
+		);
+
 		const ioDoc = "import java.io.FileW";
 		const [ioResult] = autocompleteResultsForDocAt(
 			"java",
@@ -1026,6 +1161,7 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.io.FileReader",
 				"import java.io.FileWriter",
 				"import java.io.IOException",
+				"import java.io.FileNotFoundException",
 				"import java.io.PrintWriter"
 			])
 		);

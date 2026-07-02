@@ -121,6 +121,16 @@ const pythonCompletionMemberValidForRegex = /^\w*$/;
 const javaCompletionGlobalValidForRegex = /^[\w.]*$/;
 const javaCompletionMemberValidForRegex = /^\w*$/;
 const javaIdentifierRegex = /^[A-Z_]\w*$/i;
+const javaImportPackagePattern =
+	"(?:java\\.util(?:\\.(?:stream|function))?|java\\.io|java\\.awt|kareltherobot)";
+const javaImportCompletionRegex = new RegExp(
+	`import\\s+${javaImportPackagePattern}\\.\\w*$`,
+	"i"
+);
+const javaImportPackagePrefixRegex = new RegExp(
+	`^import\\s+(${javaImportPackagePattern}\\.)`,
+	"i"
+);
 const pythonAssetStringCompletionValidForRegex = /^[\w.-]*$/;
 const pythonTurtleShapeStringCompletionValidForRegex = /^[A-Z_]*$/i;
 const pythonTurtleColorStringCompletionValidForRegex = /^[A-Z_ ]*$/i;
@@ -1507,6 +1517,7 @@ const javaKeywordCompletions = [
 	"super",
 	"switch",
 	"this",
+	"throw",
 	"throws",
 	"true",
 	"try",
@@ -1538,6 +1549,12 @@ const javaKeywordCompletions = [
 	"TreeMap",
 	"Map",
 	"Map.Entry",
+	"Stream",
+	"Collectors",
+	"Predicate",
+	"Function",
+	"Consumer",
+	"Supplier",
 	"Comparable",
 	"Comparator",
 	"Override",
@@ -1547,7 +1564,12 @@ const javaKeywordCompletions = [
 	"FileWriter",
 	"BufferedReader",
 	"PrintWriter",
+	"Optional",
+	"Exception",
+	"RuntimeException",
+	"IllegalArgumentException",
 	"IOException",
+	"FileNotFoundException",
 	"Math",
 	"import java.util.Arrays",
 	"import java.util.Collections",
@@ -1562,13 +1584,21 @@ const javaKeywordCompletions = [
 	"import java.util.HashMap",
 	"import java.util.TreeMap",
 	"import java.util.Map",
+	"import java.util.Optional",
 	"import java.util.Comparator",
+	"import java.util.stream.Stream",
+	"import java.util.stream.Collectors",
+	"import java.util.function.Predicate",
+	"import java.util.function.Function",
+	"import java.util.function.Consumer",
+	"import java.util.function.Supplier",
 	"import java.awt.Color",
 	"import java.io.BufferedReader",
 	"import java.io.File",
 	"import java.io.FileReader",
 	"import java.io.FileWriter",
 	"import java.io.IOException",
+	"import java.io.FileNotFoundException",
 	"import java.io.PrintWriter",
 	"System.out.print",
 	"System.out.println"
@@ -1614,6 +1644,20 @@ const javaMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 		completion("comparingDouble", "method", "compare by double key", 74),
 		completion("naturalOrder", "method", "natural ordering", 70),
 		completion("reverseOrder", "method", "reverse ordering", 70)
+	],
+	Stream: [
+		completion("of", "method", "create a stream from values", 76),
+		completion("empty", "method", "create an empty stream", 72),
+		completion("generate", "method", "create a generated stream", 68),
+		completion("iterate", "method", "create an iterative stream", 68)
+	],
+	Collectors: [
+		completion("toList", "method", "collect into a List", 78),
+		completion("toSet", "method", "collect into a Set", 76),
+		completion("joining", "method", "join strings", 74),
+		completion("groupingBy", "method", "group items by key", 72),
+		completion("counting", "method", "count grouped items", 70),
+		completion("mapping", "method", "map before collecting", 68)
 	],
 	"System.out": [
 		completion("print", "method", "print without newline", 90),
@@ -1690,6 +1734,7 @@ const javaCollectionMemberCompletions = [
 	completion("clear", "method", "remove all items", 70),
 	completion("iterator", "method", "collection iterator", 66),
 	completion("toArray", "method", "copy items into an array", 66),
+	completion("stream", "method", "create a Stream view", 68),
 	completion("size", "method", "item count", 76),
 	completion("isEmpty", "method", "whether the collection is empty", 76)
 ];
@@ -1728,6 +1773,21 @@ const javaMapMemberCompletions = [
 const javaMapEntryMemberCompletions = [
 	completion("getKey", "method", "map entry key", 82),
 	completion("getValue", "method", "map entry value", 82)
+];
+
+const javaStreamMemberCompletions = [
+	completion("filter", "method", "keep matching stream items", 82),
+	completion("map", "method", "transform stream items", 82),
+	completion("sorted", "method", "sort stream items", 78),
+	completion("collect", "method", "collect stream items", 78),
+	completion("toList", "method", "collect stream items into a List", 76),
+	completion("forEach", "method", "visit each stream item", 76),
+	completion("count", "method", "count stream items", 74),
+	completion("anyMatch", "method", "whether any item matches", 72),
+	completion("allMatch", "method", "whether every item matches", 72),
+	completion("noneMatch", "method", "whether no item matches", 70),
+	completion("findFirst", "method", "get the first stream item", 70),
+	completion("limit", "method", "keep a maximum number of items", 68)
 ];
 
 const javaVariableMemberCompletions = [
@@ -1782,6 +1842,7 @@ const javaVariableMemberCompletions = [
 	),
 	completion("removeAll", "method", "remove matching collection items", 66),
 	completion("retainAll", "method", "keep matching collection items", 66),
+	completion("stream", "method", "create a Stream view", 66),
 	completion("keySet", "method", "all map keys", 70),
 	completion("values", "method", "all map values", 70),
 	completion("entrySet", "method", "all map entries", 70),
@@ -1793,6 +1854,7 @@ const javaVariableMemberCompletions = [
 	completion("toArray", "method", "copy collection items into an array", 64),
 	completion("size", "method", "collection item count", 70),
 	completion("isEmpty", "method", "whether the collection is empty", 70),
+	...javaStreamMemberCompletions,
 	completion("compare", "method", "comparator comparison", 66),
 	completion("hashCode", "method", "hash code for maps and sets", 64),
 	completion("toString", "method", "readable object summary", 64)
@@ -2024,6 +2086,40 @@ const javaSnippetCompletions = [
 		72
 	),
 	pythonSnippet(
+		"lambda_expression",
+		"lambda expression",
+		`(${snippetField("parameters")}) -> ${snippetField("expression")}${snippetEnd}`,
+		72
+	),
+	pythonSnippet(
+		"predicate",
+		"Predicate lambda",
+		`Predicate<${snippetField("Type")}> ${snippetField("name")} = ${snippetField("item")} -> ${snippetField("condition")};${snippetEnd}`,
+		72
+	),
+	pythonSnippet(
+		"stream_pipeline",
+		"stream pipeline",
+		snippetLines(
+			`List<${snippetField("Type")}> ${snippetField("result")} = ${snippetField("collection")}.stream()`,
+			`    .filter(${snippetField("item")} -> ${snippetField("condition")})`,
+			`    .map(${snippetField("item")} -> ${snippetField("mapping")})`,
+			"    .toList();",
+			snippetEnd
+		),
+		72
+	),
+	pythonSnippet(
+		"grouping_by",
+		"Collectors.groupingBy pipeline",
+		snippetLines(
+			`Map<${snippetField("KeyType")}, List<${snippetField("ItemType")}>> ${snippetField("groups")} = ${snippetField("collection")}.stream()`,
+			`    .collect(Collectors.groupingBy(${snippetField("item")} -> ${snippetField("key")}));`,
+			snippetEnd
+		),
+		71
+	),
+	pythonSnippet(
 		"interface_type",
 		"interface skeleton",
 		snippetLines(
@@ -2049,6 +2145,39 @@ const javaSnippetCompletions = [
 			"}",
 			snippetEnd
 		),
+		70
+	),
+	pythonSnippet(
+		"switch_statement",
+		"switch statement",
+		snippetLines(
+			`switch (${snippetField("expression")}) {`,
+			`    case ${snippetField("value")}:`,
+			`        ${snippetField("body")}`,
+			"        break;",
+			"    default:",
+			`        ${snippetField("defaultBody")}`,
+			"}",
+			snippetEnd
+		),
+		70
+	),
+	pythonSnippet(
+		"switch_expression",
+		"switch expression",
+		snippetLines(
+			`${snippetField("Type")} ${snippetField("result")} = switch (${snippetField("expression")}) {`,
+			`    case ${snippetField("value")} -> ${snippetField("caseResult")};`,
+			`    default -> ${snippetField("defaultResult")};`,
+			"};",
+			snippetEnd
+		),
+		70
+	),
+	pythonSnippet(
+		"throw_exception",
+		"throw an exception",
+		`throw new IllegalArgumentException("${snippetField("message")}");${snippetEnd}`,
 		70
 	),
 	pythonSnippet(
@@ -2211,6 +2340,8 @@ const javaStaticMemberCompletionAliases: Record<string, string> = {
 	"java.util.Arrays": "Arrays",
 	"java.util.Collections": "Collections",
 	"java.util.Comparator": "Comparator",
+	"java.util.stream.Collectors": "Collectors",
+	"java.util.stream.Stream": "Stream",
 	"kareltherobot.Directions": "Directions",
 	"kareltherobot.World": "World"
 };
@@ -2362,12 +2493,10 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 
 		const word = context.matchBefore(/(?:[A-Z_]\w*\.){0,3}[A-Z_]\w*\.?$/i);
 		const javaCompletions = javaIdeCompletionsForMode(mode);
-		const importWord = context.matchBefore(
-			/import\s+(?:java\.util|java\.io|java\.awt|kareltherobot)\.\w*$/i
-		);
+		const importWord = context.matchBefore(javaImportCompletionRegex);
 		if (importWord) {
 			const importPackageMatch = importWord.text.match(
-				/^import\s+((?:java\.util|java\.io|java\.awt|kareltherobot)\.)/i
+				javaImportPackagePrefixRegex
 			);
 			const importPackagePrefix = importPackageMatch?.[1]?.toLowerCase();
 			const importOptions = javaCompletions.filter(
@@ -2383,8 +2512,7 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 			return {
 				from: importWord.from,
 				options: importOptions,
-				validFor:
-					/^import\s+(?:java\.util|java\.io|java\.awt|kareltherobot)\.\w*$/i
+				validFor: javaImportCompletionRegex
 			};
 		}
 		if (!word) {
@@ -2460,6 +2588,9 @@ function javaDeclaredReceiverCompletions(
 	const mapEntryDeclarationPattern = new RegExp(
 		`\\b(?:java\\.util\\.)?Map\\.Entry\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
 	);
+	const streamDeclarationPattern = new RegExp(
+		`\\b(?:java\\.util\\.stream\\.)?Stream\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+	);
 	const doc = state.doc.toString();
 	if (randomDeclarationPattern.test(doc)) return javaRandomMemberCompletions;
 	if (scannerDeclarationPattern.test(doc))
@@ -2473,6 +2604,7 @@ function javaDeclaredReceiverCompletions(
 	if (mapEntryDeclarationPattern.test(doc))
 		return javaMapEntryMemberCompletions;
 	if (mapDeclarationPattern.test(doc)) return javaMapMemberCompletions;
+	if (streamDeclarationPattern.test(doc)) return javaStreamMemberCompletions;
 	return null;
 }
 
