@@ -801,7 +801,7 @@ function persistCodeEditorViewStates(userID: string | null) {
 			JSON.stringify([...codeEditorViewStates])
 		);
 	} catch (error) {
-		console.warn("Could not persist Python IDE editor view state.", error);
+		console.warn("Could not persist Code IDE editor view state.", error);
 	}
 }
 
