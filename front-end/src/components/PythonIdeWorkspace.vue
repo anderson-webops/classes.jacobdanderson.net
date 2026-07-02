@@ -6032,7 +6032,10 @@ onBeforeUnmount(() => {
 											Cmd/Ctrl+Enter runs the project.
 										</li>
 										<li>Cmd/Ctrl+S saves the project.</li>
-										<li>Cmd/Ctrl+/ toggles comments.</li>
+										<li>
+											Cmd/Ctrl+/ toggles comments for the
+											line or selection.
+										</li>
 										<li>
 											Ctrl+Space opens completions; Enter
 											accepts the highlighted option.
