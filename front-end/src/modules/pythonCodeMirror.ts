@@ -1557,9 +1557,13 @@ const javaKeywordCompletions = [
 	"import java.util.TreeMap",
 	"import java.util.Map",
 	"import java.util.Comparator",
+	"import java.awt.Color",
 	"import java.io.File",
 	"import java.io.FileWriter",
 	"import java.io.IOException",
+	"import kareltherobot.UrRobot",
+	"import kareltherobot.World",
+	"import kareltherobot.Directions",
 	"System.out.print",
 	"System.out.println"
 ].map(label => completion(label, "keyword", "Java", 70));
@@ -2122,7 +2126,22 @@ const javaColorMemberCompletions = [
 	completion("PINK", "constant", "java.awt.Color pink", 70),
 	completion("RED", "constant", "java.awt.Color red", 70),
 	completion("WHITE", "constant", "java.awt.Color white", 70),
-	completion("YELLOW", "constant", "java.awt.Color yellow", 70)
+	completion("YELLOW", "constant", "java.awt.Color yellow", 70),
+	completion("black", "constant", "java.awt.Color black", 68),
+	completion("blue", "constant", "java.awt.Color blue", 68),
+	completion("cyan", "constant", "java.awt.Color cyan", 68),
+	completion("darkGray", "constant", "java.awt.Color dark gray", 68),
+	completion("gray", "constant", "java.awt.Color gray", 68),
+	completion("green", "constant", "java.awt.Color green", 68),
+	completion("lightGray", "constant", "java.awt.Color light gray", 68),
+	completion("magenta", "constant", "java.awt.Color magenta", 68),
+	completion("orange", "constant", "java.awt.Color orange", 68),
+	completion("pink", "constant", "java.awt.Color pink", 68),
+	completion("red", "constant", "java.awt.Color red", 68),
+	completion("white", "constant", "java.awt.Color white", 68),
+	completion("yellow", "constant", "java.awt.Color yellow", 68),
+	completion("purple", "constant", "CodeHS Karel purple", 62),
+	completion("random", "method", "CodeHS Karel random color", 62)
 ];
 const karelMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 	Color: javaColorMemberCompletions,
@@ -2289,7 +2308,7 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 		const word = context.matchBefore(/(?:[A-Z_]\w*\.){0,3}[A-Z_]\w*\.?$/i);
 		const javaCompletions = javaIdeCompletionsForMode(mode);
 		const importWord = context.matchBefore(
-			/import\s+(?:java\.util|java\.io)\.\w*$/i
+			/import\s+(?:java\.util|java\.io|java\.awt|kareltherobot)\.\w*$/i
 		);
 		if (importWord) {
 			return {
@@ -2297,7 +2316,8 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 				options: javaCompletions.filter(option =>
 					option.label.startsWith("import ")
 				),
-				validFor: /^import\s+(?:java\.util|java\.io)\.\w*$/i
+				validFor:
+					/^import\s+(?:java\.util|java\.io|java\.awt|kareltherobot)\.\w*$/i
 			};
 		}
 		if (!word) {
