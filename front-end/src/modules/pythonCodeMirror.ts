@@ -118,6 +118,8 @@ const lineLeadingWhitespaceRegex = /^[\t ]*/;
 const pythonCompletionTokenRegex = /(?:[A-Z_]\w*\.){0,2}[A-Z_]\w*$/i;
 const pythonCompletionGlobalValidForRegex = /^[A-Z_]\w*$/i;
 const pythonCompletionMemberValidForRegex = /^\w*$/;
+const javaCompletionGlobalValidForRegex = /^[\w.]*$/;
+const javaCompletionMemberValidForRegex = /^\w*$/;
 const pythonAssetStringCompletionValidForRegex = /^[\w.-]*$/;
 const pythonTurtleShapeStringCompletionValidForRegex = /^[A-Z_]*$/i;
 const pythonTurtleColorStringCompletionValidForRegex = /^[A-Z_ ]*$/i;
@@ -2180,7 +2182,7 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 			return {
 				from: context.pos,
 				options: javaCompletions,
-				validFor: /^[A-Z_.]*$/i
+				validFor: javaCompletionGlobalValidForRegex
 			};
 		}
 		if (word.from === word.to && !context.explicit) return null;
@@ -2195,14 +2197,14 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 			return {
 				from: word.to - memberPrefix.length,
 				options,
-				validFor: /^[A-Z_]*$/i
+				validFor: javaCompletionMemberValidForRegex
 			};
 		}
 
 		return {
 			from: word.from,
 			options: javaCompletions,
-			validFor: /^[A-Z_.]*$/i
+			validFor: javaCompletionGlobalValidForRegex
 		};
 	};
 }

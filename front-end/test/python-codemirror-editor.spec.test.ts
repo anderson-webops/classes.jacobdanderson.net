@@ -66,6 +66,7 @@ interface TestCompletionContext {
 
 interface TestCompletionResult {
 	options?: Completion[];
+	validFor?: RegExp;
 }
 
 type TestCompletionSource = (
@@ -733,6 +734,39 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.io.IOException"
 			])
 		);
+	});
+
+	it("keeps Java completions active for digit-bearing snippets and receiver names", () => {
+		const [arrayResult] = autocompleteResultsForDocAt(
+			"java",
+			"array2",
+			"array2".length
+		);
+		expect(arrayResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining(["array2d", "array2d_values"])
+		);
+		expect(arrayResult?.validFor?.test("array2")).toBe(true);
+		expect(arrayResult?.validFor?.test("array2d_values")).toBe(true);
+
+		const [javaMemberResult] = autocompleteResultsForDocAt(
+			"java",
+			"names2.",
+			"names2.".length
+		);
+		expect(javaMemberResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining(["charAt", "nextInt", "get", "put"])
+		);
+		expect(javaMemberResult?.validFor?.test("next2")).toBe(true);
+
+		const [karelMemberResult] = autocompleteResultsForDocAt(
+			"karel",
+			"robot2.",
+			"robot2.".length
+		);
+		expect(karelMemberResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining(["move", "turnLeft", "putBeeper"])
+		);
+		expect(karelMemberResult?.validFor?.test("turn2")).toBe(true);
 	});
 
 	it("suppresses Java and Karel recommendations inside comments and strings", () => {
