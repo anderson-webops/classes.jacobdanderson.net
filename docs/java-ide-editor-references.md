@@ -56,6 +56,16 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `HashSet`, `TreeSet`, `Queue`, `PriorityQueue`, and `Collections` helpers.
   These entries are editor scaffolding, not a promise that every advanced
   concept runs in the browser preview.
+- Include editor-only control-flow and exception scaffolding for Java Level 3,
+  AP CSA, and design-pattern modules that discuss switch statements, switch
+  expressions, custom exceptions, `throw` / `throws`, and Optional boundaries.
+  These completions support writing normal Java for external IDEs and do not
+  add server-side Java execution.
+- Include editor-only lambda and stream scaffolding for the advanced Java
+  pipeline modules: `Predicate`, `Function`, `Stream`, `Collectors`,
+  `filter`, `map`, `sorted`, `collect`, `groupingBy`, and simple lambda /
+  stream-pipeline snippets. These are writing aids only; stream execution still
+  belongs in CodeHS, BlueJ, VS Code, IntelliJ, or another real Java runtime.
 - Include editor-only file-I/O scaffolding for the Java Level 2/3 modules that
   use files: `File`, `FileReader`, `FileWriter`, `BufferedReader`,
   `PrintWriter`, `IOException`, `try` / `catch`, try-with-resources, Scanner
