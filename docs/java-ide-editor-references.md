@@ -24,8 +24,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   Karel command vocabulary, method patterns, comments, conditions, and loops.
   The local Karel preview follows `UrRobot` commands from `main`, CodeHS-style
   commands from `main` or `run`, simple helper methods, `putBall` / `takeBall`
-  aliases, and bounded numeric `for` loops. It is still a teaching preview, not
-  a full Java compiler or VM.
+  aliases, `if` / `else`, Karel conditions such as `frontIsClear()` and
+  `ballsPresent()`, bounded `while` loops, and bounded numeric `for` loops. It
+  is still a teaching preview, not a full Java compiler or VM.
 - [CodeHS Java docs](https://codehs.com/documentation/new/java-main) inform
   beginner Java console vocabulary such as printing, variables, methods,
   input, comparisons, math, and random numbers.

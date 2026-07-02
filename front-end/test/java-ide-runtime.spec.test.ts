@@ -237,6 +237,97 @@ public class Algo implements Directions {
 		expect(result.stdout).toHaveLength(6);
 	});
 
+	it("runs CodeHS-style Karel if/else and while conditions", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "MyProgram.java",
+			files: [
+				{
+					name: "MyProgram.java",
+					content: `public class MyProgram extends SuperKarel {
+    public void run() {
+        if (ballsPresent()) {
+            takeBall();
+        } else {
+            move();
+        }
+
+        while (frontIsClear()) {
+            move();
+        }
+
+        if (frontIsBlocked()) {
+            turnLeft();
+        }
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=3
+cols=4`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 4,
+			direction: "North",
+			name: "karel",
+			street: 1
+		});
+		expect(result.karelWorld?.beepers).toEqual([]);
+		expect(result.stdout).toHaveLength(5);
+	});
+
+	it("evaluates Karel ball and facing conditions against preview state", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "MyProgram.java",
+			files: [
+				{
+					name: "MyProgram.java",
+					content: `public class MyProgram extends SuperKarel {
+    public void run() {
+        if (ballsPresent()) {
+            takeBall();
+        }
+        if (noBallsPresent()) {
+            putBall();
+        }
+        if (facingEast()) {
+            turnLeft();
+        }
+        if (!notFacingNorth()) {
+            move();
+        }
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=3
+cols=4
+beeper 1 1 1`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 1,
+			direction: "North",
+			street: 2
+		});
+		expect(result.karelWorld?.beepers).toContainEqual({
+			avenue: 1,
+			count: 1,
+			street: 1
+		});
+		expect(result.stdout).toHaveLength(5);
+	});
+
 	it("loads Java and Karel execution through the client IDE workspace", () => {
 		const routeSource = sourceFile("../src/pages/python-ide.vue");
 		const workspaceSource = sourceFile(
