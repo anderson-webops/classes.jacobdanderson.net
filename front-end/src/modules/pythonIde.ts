@@ -42,6 +42,9 @@ const STARTER_RELATIVE_PREFIX_RE = /^(?:starter|src)\//i;
 const PYTHON_IDE_INDEXED_DB_NAME = "classes-python-ide";
 const PYTHON_IDE_INDEXED_DB_VERSION = 1;
 const PYTHON_IDE_PROJECT_STORE = "projectStores";
+const JAVA_MAIN_METHOD_RE =
+	/\bmain\s*\(\s*(?:\w+\s*\[\s*\]\s+\w+|\w+\s+\w+\s*\[\s*\]|\w+\s*\.\.\.\s+\w+)\s*\)/;
+const KAREL_RUN_METHOD_RE = /\brun\s*\(\s*\)/;
 
 export type PythonIdeFileEncoding = "text" | "base64";
 
@@ -1040,6 +1043,9 @@ export function getPythonIdeRunnableFile(
 		Partial<Pick<PythonIdeProject, "mode">>
 ) {
 	const mode = project.mode ?? "python";
+	if (mode === "java") return getJavaIdeRunnableFile(project);
+	if (mode === "karel") return getKarelIdeRunnableFile(project);
+
 	return (
 		project.files.find(
 			file =>
@@ -1049,6 +1055,64 @@ export function getPythonIdeRunnableFile(
 		project.files.find(file => isPythonIdeRunnableFile(file.name, mode)) ??
 		null
 	);
+}
+
+function getJavaIdeRunnableFile(
+	project: Pick<PythonIdeProject, "activeFileName" | "files">
+) {
+	const javaFiles = project.files.filter(file =>
+		isPythonIdeJavaFile(file.name)
+	);
+	const activeFile = javaFiles.find(
+		file => file.name === project.activeFileName
+	);
+	const mainFile = javaFiles.find(file => file.name === "Main.java");
+
+	return (
+		(activeFile && hasJavaMainMethod(activeFile)
+			? activeFile
+			: undefined) ||
+		mainFile ||
+		javaFiles.find(hasJavaMainMethod) ||
+		activeFile ||
+		javaFiles[0] ||
+		null
+	);
+}
+
+function getKarelIdeRunnableFile(
+	project: Pick<PythonIdeProject, "activeFileName" | "files">
+) {
+	const javaFiles = project.files.filter(file =>
+		isPythonIdeJavaFile(file.name)
+	);
+	const activeFile = javaFiles.find(
+		file => file.name === project.activeFileName
+	);
+	const myProgramFile = javaFiles.find(
+		file => file.name === "MyProgram.java"
+	);
+	const algoFile = javaFiles.find(file => file.name === "Algo.java");
+
+	return (
+		(activeFile && isLikelyKarelEntryFile(activeFile)
+			? activeFile
+			: undefined) ||
+		myProgramFile ||
+		algoFile ||
+		javaFiles.find(isLikelyKarelEntryFile) ||
+		activeFile ||
+		javaFiles[0] ||
+		null
+	);
+}
+
+function hasJavaMainMethod(file: Pick<PythonIdeFile, "content">) {
+	return JAVA_MAIN_METHOD_RE.test(file.content);
+}
+
+function isLikelyKarelEntryFile(file: Pick<PythonIdeFile, "content">) {
+	return hasJavaMainMethod(file) || KAREL_RUN_METHOD_RE.test(file.content);
 }
 
 export function loadLocalPythonProjects(userID?: string | null) {

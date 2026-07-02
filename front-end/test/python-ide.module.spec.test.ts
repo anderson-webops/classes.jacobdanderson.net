@@ -2909,9 +2909,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Suggestions");
 		expect(pageSource).toContain("Line wrap");
 		expect(pageSource).toContain("Expanded layout");
-		expect(pageSource).toContain(
-			"max-height: min(31rem, calc(100vh - 1.5rem), 44vh);"
-		);
+		expect(pageSource).toContain("max-height: calc(100vh - 2rem);");
 		expect(pageSource).toContain("font-variant: normal;");
 		expect(pageSource).toContain("text-transform: none;");
 		expect(pageSource).toContain(
@@ -4194,6 +4192,77 @@ describe("python IDE project helpers", () => {
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("Algo.java");
 
 		project.activeFileName = "world.txt";
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("Algo.java");
+	});
+
+	it("runs Java entry-point files instead of active helper classes", () => {
+		const project = createPythonIdeProject("java");
+		project.files = [
+			{ name: "Main.java", content: javaStarterCode },
+			{
+				name: "Dog.java",
+				content: `public class Dog {
+    private String name;
+
+    public Dog(String name) {
+        this.name = name;
+    }
+}
+`
+			}
+		];
+		project.activeFileName = "Dog.java";
+
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("Main.java");
+
+		project.files = [
+			project.files[1]!,
+			{
+				name: "App.java",
+				content: `public class App {
+    public static void main(String[] args) {
+        System.out.println("Run app");
+    }
+}
+`
+			}
+		];
+		project.activeFileName = "Dog.java";
+
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
+	});
+
+	it("runs Karel driver files instead of active helper classes", () => {
+		const project = createPythonIdeProject("karel", {
+			template: "outline"
+		});
+		project.files.push({
+			name: "Helper.java",
+			content: `public class Helper {
+    void turnRight(MyProgram karel) {
+        karel.turnLeft();
+        karel.turnLeft();
+        karel.turnLeft();
+    }
+}
+`
+		});
+		project.activeFileName = "Helper.java";
+
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("MyProgram.java");
+
+		project.files = [
+			{
+				name: "Helper.java",
+				content: `public class Helper {
+}
+`
+			},
+			{ name: "Algo.java", content: karelStarterCode },
+			{ name: "world.txt", content: karelStarterWorld }
+		];
+		project.activeFileName = "Helper.java";
+
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("Algo.java");
 	});
 

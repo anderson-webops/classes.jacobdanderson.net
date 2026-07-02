@@ -51,6 +51,11 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   collections, `Scanner`, CodeHS-style `run()` methods, and Karel conditions,
   but should not depend on server compilation or unsupported language-service
   behavior.
+- In multi-file projects, keep Run pointed at the driver file instead of the
+  active helper class. Java projects should prefer active files with
+  `main(...)`, then `Main.java`, then another file with `main(...)`; Karel
+  projects should prefer active Karel entry files, then `MyProgram.java` /
+  `Algo.java`, then another file with `run()` or `main(...)`.
 
 ## Teaching and Runtime References
 
