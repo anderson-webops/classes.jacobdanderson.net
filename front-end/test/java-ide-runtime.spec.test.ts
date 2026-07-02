@@ -857,6 +857,55 @@ beeper 1 1 1`
 		expect(result.stdout).toHaveLength(5);
 	});
 
+	it("evaluates compound Karel Java conditions in preview control flow", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "MyProgram.java",
+			files: [
+				{
+					name: "MyProgram.java",
+					content: `public class MyProgram extends SuperKarel {
+    public void run() {
+        if (frontIsClear() && ballsPresent()) {
+            takeBall();
+            move();
+        }
+
+        if (frontIsBlocked() || noBallsPresent()) {
+            turnLeft();
+        }
+
+        while (frontIsClear() && noBallsPresent()) {
+            move();
+        }
+
+        if (!(ballsPresent() || facingWest()) && facingNorth()) {
+            putBall();
+        }
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=2
+cols=3
+beeper 1 1 1`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 2,
+			direction: "North",
+			name: "karel",
+			street: 2
+		});
+		expect(result.karelWorld?.beepers).toEqual([
+			{ avenue: 2, count: 1, street: 2 }
+		]);
+	});
+
 	it("loads Java and Karel execution through the client IDE workspace", () => {
 		const routeSource = sourceFile("../src/pages/python-ide.vue");
 		const workspaceSource = sourceFile(
