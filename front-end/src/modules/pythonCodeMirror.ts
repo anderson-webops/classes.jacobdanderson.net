@@ -1638,6 +1638,16 @@ const javaMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 		completion("frequency", "method", "count matching items", 64),
 		completion("reverseOrder", "method", "reverse comparator", 64)
 	],
+	Optional: [
+		completion("of", "method", "create a present Optional", 76),
+		completion(
+			"ofNullable",
+			"method",
+			"create an Optional that may be empty",
+			76
+		),
+		completion("empty", "method", "create an empty Optional", 72)
+	],
 	Comparator: [
 		completion("comparing", "method", "compare by extracted key", 78),
 		completion("comparingInt", "method", "compare by int key", 76),
@@ -1775,6 +1785,16 @@ const javaMapEntryMemberCompletions = [
 	completion("getValue", "method", "map entry value", 82)
 ];
 
+const javaOptionalMemberCompletions = [
+	completion("isPresent", "method", "whether a value is present", 82),
+	completion("isEmpty", "method", "whether no value is present", 80),
+	completion("orElse", "method", "fallback value", 78),
+	completion("orElseGet", "method", "fallback supplier", 76),
+	completion("map", "method", "transform a present value", 74),
+	completion("filter", "method", "keep a matching value", 72),
+	completion("ifPresent", "method", "run code for a present value", 72)
+];
+
 const javaStreamMemberCompletions = [
 	completion("filter", "method", "keep matching stream items", 82),
 	completion("map", "method", "transform stream items", 82),
@@ -1854,6 +1874,7 @@ const javaVariableMemberCompletions = [
 	completion("toArray", "method", "copy collection items into an array", 64),
 	completion("size", "method", "collection item count", 70),
 	completion("isEmpty", "method", "whether the collection is empty", 70),
+	...javaOptionalMemberCompletions,
 	...javaStreamMemberCompletions,
 	completion("compare", "method", "comparator comparison", 66),
 	completion("hashCode", "method", "hash code for maps and sets", 64),
@@ -2095,6 +2116,12 @@ const javaSnippetCompletions = [
 		"predicate",
 		"Predicate lambda",
 		`Predicate<${snippetField("Type")}> ${snippetField("name")} = ${snippetField("item")} -> ${snippetField("condition")};${snippetEnd}`,
+		72
+	),
+	pythonSnippet(
+		"optional_value",
+		"Optional.ofNullable value",
+		`Optional<${snippetField("Type")}> ${snippetField("name")} = Optional.ofNullable(${snippetField("value")});${snippetEnd}`,
 		72
 	),
 	pythonSnippet(
@@ -2340,6 +2367,7 @@ const javaStaticMemberCompletionAliases: Record<string, string> = {
 	"java.util.Arrays": "Arrays",
 	"java.util.Collections": "Collections",
 	"java.util.Comparator": "Comparator",
+	"java.util.Optional": "Optional",
 	"java.util.stream.Collectors": "Collectors",
 	"java.util.stream.Stream": "Stream",
 	"kareltherobot.Directions": "Directions",
@@ -2588,6 +2616,9 @@ function javaDeclaredReceiverCompletions(
 	const mapEntryDeclarationPattern = new RegExp(
 		`\\b(?:java\\.util\\.)?Map\\.Entry\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
 	);
+	const optionalDeclarationPattern = new RegExp(
+		`\\b(?:java\\.util\\.)?Optional\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+	);
 	const streamDeclarationPattern = new RegExp(
 		`\\b(?:java\\.util\\.stream\\.)?Stream\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
 	);
@@ -2604,6 +2635,8 @@ function javaDeclaredReceiverCompletions(
 	if (mapEntryDeclarationPattern.test(doc))
 		return javaMapEntryMemberCompletions;
 	if (mapDeclarationPattern.test(doc)) return javaMapMemberCompletions;
+	if (optionalDeclarationPattern.test(doc))
+		return javaOptionalMemberCompletions;
 	if (streamDeclarationPattern.test(doc)) return javaStreamMemberCompletions;
 	return null;
 }

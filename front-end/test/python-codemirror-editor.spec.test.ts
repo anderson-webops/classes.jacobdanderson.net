@@ -387,6 +387,7 @@ describe("python IDE CodeMirror editor", () => {
 				"comparator",
 				"lambda_expression",
 				"predicate",
+				"optional_value",
 				"stream_pipeline",
 				"grouping_by",
 				"interface_type",
@@ -471,6 +472,8 @@ describe("python IDE CodeMirror editor", () => {
 		expect(editorSource).toContain("throw_exception");
 		expect(editorSource).toContain("throw new IllegalArgumentException");
 		expect(editorSource).toContain("lambda_expression");
+		expect(editorSource).toContain("optional_value");
+		expect(editorSource).toContain("Optional.ofNullable");
 		expect(editorSource).toContain("stream_pipeline");
 		expect(editorSource).toContain("Collectors.groupingBy");
 		expect(editorSource).toContain("try_with_resources");
@@ -908,6 +911,33 @@ describe("python IDE CodeMirror editor", () => {
 			expect.arrayContaining(["charAt", "nextInt", "put"])
 		);
 
+		const declaredOptionalLabels = autocompleteLabelsForMarkedDoc(
+			"java",
+			[
+				"import java.util.Optional;",
+				"public class Main {",
+				"    public static void main(String[] args) {",
+				"        Optional<String> name = Optional.ofNullable(\"Ada\");",
+				"        name.|",
+				"    }",
+				"}"
+			].join("\n")
+		);
+		expect(declaredOptionalLabels).toEqual(
+			expect.arrayContaining([
+				"isPresent",
+				"isEmpty",
+				"orElse",
+				"orElseGet",
+				"map",
+				"filter",
+				"ifPresent"
+			])
+		);
+		expect(declaredOptionalLabels).not.toEqual(
+			expect.arrayContaining(["nextInt", "put", "keySet"])
+		);
+
 		const declaredStreamLabels = autocompleteLabelsForMarkedDoc(
 			"java",
 			[
@@ -957,6 +987,8 @@ describe("python IDE CodeMirror editor", () => {
 				"getValue",
 				"toArray",
 				"stream",
+				"isPresent",
+				"orElse",
 				"filter",
 				"map",
 				"sorted",
@@ -1000,6 +1032,12 @@ describe("python IDE CodeMirror editor", () => {
 				"comparingInt",
 				"reverseOrder"
 			])
+		);
+		expect(autocompleteLabelsForDoc("java", "Optional.")).toEqual(
+			expect.arrayContaining(["of", "ofNullable", "empty"])
+		);
+		expect(autocompleteLabelsForDoc("java", "java.util.Optional.")).toEqual(
+			expect.arrayContaining(["of", "ofNullable", "empty"])
 		);
 		expect(autocompleteLabelsForDoc("java", "Stream.")).toEqual(
 			expect.arrayContaining(["of", "empty", "generate", "iterate"])
@@ -1114,6 +1152,17 @@ describe("python IDE CodeMirror editor", () => {
 		expect(randomResult?.from).toBe(0);
 		expect(randomResult?.options?.map(option => option.label)).toEqual(
 			expect.arrayContaining(["import java.util.Random"])
+		);
+
+		const optionalDoc = "import java.util.Opt";
+		const [optionalResult] = autocompleteResultsForDocAt(
+			"java",
+			optionalDoc,
+			optionalDoc.length
+		);
+		expect(optionalResult?.from).toBe(0);
+		expect(optionalResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining(["import java.util.Optional"])
 		);
 
 		const streamDoc = "import java.util.stream.Col";
