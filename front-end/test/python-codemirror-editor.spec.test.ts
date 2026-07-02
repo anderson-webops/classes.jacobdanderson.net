@@ -319,6 +319,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("enables Java parsing, comments, completions, and multiline indentation", () => {
 		const editorSource = sourceFile("../src/modules/pythonCodeMirror.ts");
+		const referenceSource = sourceFile("../../docs/java-ide-editor-references.md");
 		const doc = "public class Main {\nint x = 1;\nint y = 2;\n}\n";
 		const extensions = createPythonCodeMirrorExtensions({
 			mode: "java",
@@ -341,6 +342,15 @@ describe("python IDE CodeMirror editor", () => {
 		expect(editorSource).toContain("javaEditorDiagnosticsSetup");
 		expect(editorSource).toContain("javaSyntaxDiagnostics");
 		expect(editorSource).not.toContain("override: isPythonMode");
+		expect(referenceSource).toContain(
+			"https://code.haverbeke.berlin/codemirror/lang-java"
+		);
+		expect(referenceSource).toContain(
+			"https://codemirror.net/docs/ref/#lang-java.java"
+		);
+		expect(referenceSource).not.toContain(
+			"https://github.com/codemirror/lang-java"
+		);
 
 		const javaLabels = javaIdeCompletionsForMode("java").map(
 			option => option.label
