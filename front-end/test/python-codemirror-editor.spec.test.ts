@@ -894,7 +894,7 @@ describe("python IDE CodeMirror editor", () => {
 		);
 
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel\s*{[\s\S]*position: fixed;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*width: min\(30rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: calc\(100vh - 2rem\);[\s\S]*padding: 1\.15rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.94rem;[\s\S]*line-height: 1\.55;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
+			/\.ide-settings-panel\s*{[\s\S]*position: fixed;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*width: min\(34rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: calc\(100vh - 2rem\);[\s\S]*padding: 1\.25rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.94rem;[\s\S]*line-height: 1\.5;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
 		);
 		expect(pageSource).toContain("Save locally and sync when possible.");
 		expect(pageSource).toContain("Show code suggestions while typing.");
@@ -907,16 +907,16 @@ describe("python IDE CodeMirror editor", () => {
 			"html.dark .ide-settings-panel {\n\tbackground: #08111f;"
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel,\s*\.editor-toolbar \.ide-settings-panel :where\(\*\)\s*{[\s\S]*color: inherit;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.55;[\s\S]*text-transform: none;/
+			/\.editor-toolbar \.ide-settings-panel,\s*\.editor-toolbar \.ide-settings-panel :where\(\*\)\s*{[\s\S]*color: inherit;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.5;[\s\S]*text-transform: none;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle\s*{[\s\S]*column-gap: 0\.85rem;[\s\S]*row-gap: 0\.35rem;[\s\S]*align-items: start;/
+			/\.ide-setting-toggle\s*{[\s\S]*column-gap: 0\.75rem;[\s\S]*row-gap: 0\.45rem;[\s\S]*align-items: start;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle \+ \.ide-setting-toggle\s*{[\s\S]*margin-top: 0\.95rem;[\s\S]*padding-top: 0\.95rem;/
+			/\.ide-setting-toggle \+ \.ide-setting-toggle\s*{[\s\S]*margin-top: 1\.05rem;[\s\S]*padding-top: 1\.05rem;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.98rem;[\s\S]*font-weight: 650;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.35;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
+			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.95rem;[\s\S]*font-weight: 600;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.3;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
 		);
 		expect(pageSource).toMatch(
 			/\.editor-toolbar \.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.86rem;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.5;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
