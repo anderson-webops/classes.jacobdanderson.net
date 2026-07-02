@@ -18,6 +18,12 @@ export interface KarelBeeperState {
 	street: number;
 }
 
+export interface KarelPaintState {
+	avenue: number;
+	color: string;
+	street: number;
+}
+
 export interface KarelWallState {
 	avenue: number;
 	side: KarelWallSide;
@@ -27,6 +33,7 @@ export interface KarelWallState {
 export interface KarelWorldState {
 	beepers: KarelBeeperState[];
 	cols: number;
+	paints: KarelPaintState[];
 	robot: KarelRobotState | null;
 	rows: number;
 	trace: string[];
@@ -49,6 +56,7 @@ interface JavaIdeRunResult {
 interface MutableKarelWorld {
 	beepers: Map<string, KarelBeeperState>;
 	cols: number;
+	paints: Map<string, KarelPaintState>;
 	rows: number;
 	walls: KarelWallState[];
 }
@@ -204,7 +212,7 @@ const JAVA_INCREMENT_RE =
 const ROBOT_DECLARATION_RE =
 	/\bUrRobot\s+([A-Z_]\w*)\s*=\s*new\s+UrRobot\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*([A-Z_]\w*(?:\s*\.\s*[A-Z_]\w*)?)\s*,\s*(\d+)\s*\)/i;
 const WORLD_READ_RE = /\bWorld\.readWorld\s*\(\s*"([^"]+)"\s*\)/;
-const KAREL_COMMANDS = [
+const KAREL_SIMPLE_COMMANDS = [
 	"move",
 	"turnLeft",
 	"turnRight",
@@ -214,13 +222,19 @@ const KAREL_COMMANDS = [
 	"putBall",
 	"takeBall"
 ] as const;
-type KarelCommand =
+type KarelSimpleCommand =
 	| "move"
 	| "pickBeeper"
 	| "putBeeper"
 	| "turnAround"
 	| "turnLeft"
 	| "turnRight";
+type KarelCommand =
+	| KarelSimpleCommand
+	| {
+			color: string;
+			kind: "paint";
+	  };
 const KAREL_COMMAND_ALIASES = {
 	move: "move",
 	pickBeeper: "pickBeeper",
@@ -230,7 +244,35 @@ const KAREL_COMMAND_ALIASES = {
 	turnAround: "turnAround",
 	turnLeft: "turnLeft",
 	turnRight: "turnRight"
-} satisfies Record<(typeof KAREL_COMMANDS)[number], KarelCommand>;
+} satisfies Record<(typeof KAREL_SIMPLE_COMMANDS)[number], KarelSimpleCommand>;
+const karelPaintColors: Record<string, string> = {
+	black: "#111827",
+	blue: "#2563eb",
+	cyan: "#06b6d4",
+	dark_gray: "#374151",
+	darkgray: "#374151",
+	gray: "#6b7280",
+	green: "#16a34a",
+	light_gray: "#d1d5db",
+	lightgray: "#d1d5db",
+	magenta: "#d946ef",
+	orange: "#f97316",
+	pink: "#ec4899",
+	purple: "#9333ea",
+	red: "#dc2626",
+	white: "#ffffff",
+	yellow: "#facc15"
+};
+const karelRandomPaintPalette = [
+	"red",
+	"blue",
+	"green",
+	"yellow",
+	"cyan",
+	"orange",
+	"purple",
+	"pink"
+];
 const directionOrder: KarelDirection[] = ["North", "East", "South", "West"];
 const wallOpposites: Record<KarelWallSide, KarelWallSide> = {
 	east: "west",
@@ -2672,6 +2714,7 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 	const world: MutableKarelWorld = {
 		beepers: new Map(),
 		cols: DEFAULT_WORLD_SIZE,
+		paints: new Map(),
 		rows: DEFAULT_WORLD_SIZE,
 		walls: []
 	};
@@ -2705,6 +2748,21 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 			const avenue = positiveInteger(args[1], 1);
 			const side = normalizeWallSide(args[2]);
 			if (side) world.walls.push({ avenue, side, street });
+		}
+		if (command === "paint" || command === "color") {
+			const street = positiveInteger(args[0], 1);
+			const avenue = positiveInteger(args[1], 1);
+			const colorName = normalizeKarelPaintColor(args[2] ?? "");
+			const color = colorName
+				? resolveKarelPaintColor(colorName, street, avenue, world)
+				: null;
+			if (color) {
+				world.paints.set(beeperKey(street, avenue), {
+					avenue,
+					color,
+					street
+				});
+			}
 		}
 	}
 
@@ -2759,6 +2817,12 @@ function cloneMutableKarelWorld(world: MutableKarelWorld): MutableKarelWorld {
 			])
 		),
 		cols: world.cols,
+		paints: new Map(
+			[...world.paints.entries()].map(([key, paint]) => [
+				key,
+				{ ...paint }
+			])
+		),
 		rows: world.rows,
 		walls: world.walls.map(wall => ({ ...wall }))
 	};
@@ -2982,9 +3046,15 @@ function collectKarelCommandsFromStatement(
 	execution: KarelPreviewExecution,
 	depth: number
 ) {
+	const paintCommand = karelPaintCommandForStatement(statement, robotAliases);
+	if (paintCommand) {
+		addKarelCommand(plan, paintCommand, execution);
+		return;
+	}
+
 	const commandMatch = statement.match(
 		new RegExp(
-			`^([A-Z_]\\w*)\\.(${KAREL_COMMANDS.join("|")})\\s*\\(\\s*\\)$`,
+			`^([A-Z_]\\w*)\\.(${KAREL_SIMPLE_COMMANDS.join("|")})\\s*\\(\\s*\\)$`,
 			"i"
 		)
 	);
@@ -3023,6 +3093,22 @@ function collectKarelCommandsFromStatement(
 		execution,
 		depth + 1
 	);
+}
+
+function karelPaintCommandForStatement(
+	statement: string,
+	robotAliases: Set<string>
+): KarelCommand | null {
+	const paintMatch = statement.match(
+		/^(?:([A-Z_]\w*)\.)?paint\s*\(([\s\S]+)\)$/i
+	);
+	if (!paintMatch) return null;
+
+	const receiver = paintMatch[1];
+	if (receiver && !robotAliases.has(receiver)) return null;
+
+	const color = normalizeKarelPaintColor(paintMatch[2] ?? "");
+	return color ? { color, kind: "paint" } : null;
 }
 
 function parseJavaIfStatement(source: string, start: number) {
@@ -3124,7 +3210,8 @@ function evaluateKarelCondition(
 	if (trimmed.startsWith("!"))
 		return !evaluateKarelCondition(trimmed.slice(1), execution);
 
-	const conditionName = trimmed.match(/^([A-Z_]\w*)\(\)$/i)?.[1];
+	const conditionCall = trimmed.match(/^([A-Z_]\w*)\(([\s\S]*)\)$/i);
+	const conditionName = conditionCall?.[1];
 	if (!conditionName) return false;
 
 	if (conditionName === "frontIsClear")
@@ -3172,6 +3259,23 @@ function evaluateKarelCondition(
 		conditionName === "noBeepersPresent"
 	) {
 		return karelBeepersAtRobot(execution) <= 0;
+	}
+	if (conditionName === "colorIs" || conditionName === "colorIsNot") {
+		const color = normalizeKarelPaintColor(conditionCall?.[2] ?? "");
+		const expected = color
+			? resolveKarelPaintColor(
+					color,
+					execution.robot.street,
+					execution.robot.avenue,
+					execution.world
+				)
+			: null;
+		const current =
+			execution.world.paints.get(
+				beeperKey(execution.robot.street, execution.robot.avenue)
+			)?.color ?? "";
+		const matches = Boolean(expected) && current === expected;
+		return conditionName === "colorIs" ? matches : !matches;
 	}
 
 	return false;
@@ -3402,7 +3506,8 @@ function addKarelWarning(plan: KarelCommandPlan, warning: string) {
 
 function karelCommandForName(name: string): KarelCommand | null {
 	return (
-		KAREL_COMMAND_ALIASES[name as (typeof KAREL_COMMANDS)[number]] ?? null
+		KAREL_COMMAND_ALIASES[name as (typeof KAREL_SIMPLE_COMMANDS)[number]] ??
+		null
 	);
 }
 
@@ -3411,6 +3516,8 @@ function applyKarelCommand(
 	robot: KarelRobotState,
 	command: KarelCommand
 ) {
+	if (typeof command !== "string")
+		return paintKarelCell(world, robot, command);
 	if (command === "turnLeft") {
 		robot.direction = turnRobot(robot.direction, -1);
 		return "";
@@ -3426,6 +3533,25 @@ function applyKarelCommand(
 	if (command === "putBeeper") return putBeeper(world, robot);
 	if (command === "pickBeeper") return pickBeeper(world, robot);
 	return moveRobot(world, robot);
+}
+
+function paintKarelCell(
+	world: MutableKarelWorld,
+	robot: KarelRobotState,
+	command: Extract<KarelCommand, { kind: "paint" }>
+) {
+	const color = resolveKarelPaintColor(
+		command.color,
+		robot.street,
+		robot.avenue,
+		world
+	);
+	world.paints.set(beeperKey(robot.street, robot.avenue), {
+		avenue: robot.avenue,
+		color,
+		street: robot.street
+	});
+	return "";
 }
 
 function turnRobot(direction: KarelDirection, step: number) {
@@ -3541,6 +3667,35 @@ function beeperKey(street: number, avenue: number) {
 	return `${street}:${avenue}`;
 }
 
+function normalizeKarelPaintColor(expression: string) {
+	const normalized = expression
+		.trim()
+		.replace(/\s+/g, "")
+		.replace(/^(?:java\.awt\.)?Color\./i, "");
+	if (/^random\(\)$/i.test(normalized)) return "random";
+	const colorName = normalized.toLowerCase();
+	return karelPaintColors[colorName] ? colorName : null;
+}
+
+function resolveKarelPaintColor(
+	color: string,
+	street: number,
+	avenue: number,
+	world: MutableKarelWorld
+) {
+	if (color === "random") {
+		const paletteIndex =
+			(street * 31 + avenue * 17 + world.paints.size) %
+			karelRandomPaintPalette.length;
+		return (
+			karelPaintColors[
+				karelRandomPaintPalette[paletteIndex] ?? "purple"
+			] ?? "#9333ea"
+		);
+	}
+	return karelPaintColors[color] ?? "#9333ea";
+}
+
 function serializeKarelWorld(
 	world: MutableKarelWorld,
 	robot: KarelRobotState | null,
@@ -3551,6 +3706,9 @@ function serializeKarelWorld(
 			(a, b) => a.street - b.street || a.avenue - b.avenue
 		),
 		cols: world.cols,
+		paints: [...world.paints.values()].sort(
+			(a, b) => a.street - b.street || a.avenue - b.avenue
+		),
 		robot,
 		rows: world.rows,
 		trace,

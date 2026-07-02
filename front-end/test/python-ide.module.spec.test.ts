@@ -2911,13 +2911,13 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Expanded layout");
 		expect(pageSource).not.toContain("Autosave projects");
 		expect(pageSource).not.toContain("Recommendations as you type");
-		expect(pageSource).toContain("width: min(34rem, calc(100vw - 2rem));");
+		expect(pageSource).toContain("width: min(28rem, calc(100vw - 2rem));");
 		expect(pageSource).toContain("max-height: calc(100vh - 2rem);");
 		expect(pageSource).toContain(
 			".editor-toolbar .ide-settings-panel :where(*)"
 		);
-		expect(pageSource).toContain("padding: 1rem;");
-		expect(pageSource).toContain("padding: 0.85rem 0.9rem;");
+		expect(pageSource).toContain("padding: 0.85rem;");
+		expect(pageSource).toContain("padding: 0.68rem 0.72rem;");
 		expect(pageSource).toContain("margin-top: 0.25rem;");
 		expect(pageSource).toContain("font-variant: normal;");
 		expect(pageSource).toContain("text-transform: none;");
@@ -4303,6 +4303,22 @@ describe("python IDE project helpers", () => {
 		project.activeFileName = "Helper.java";
 
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("Algo.java");
+	});
+
+	it("renders Karel painted cells in the visual world grid", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/PythonIdeWorkspace.vue"),
+			"utf8"
+		);
+
+		expect(pageSource).toContain("paintColor: string;");
+		expect(pageSource).toContain("const paints = new Map(");
+		expect(pageSource).toContain("function karelCellStyle");
+		expect(pageSource).toContain("function karelCellAriaLabel");
+		expect(pageSource).toContain("paintColor: paints.get(key) ?? \"\"");
+		expect(pageSource).toContain("'has-paint': Boolean(");
+		expect(pageSource).toContain("\"--karel-cell-color\"");
+		expect(pageSource).toContain(".karel-cell.has-paint");
 	});
 
 	it("names repeated Python IDE file controls by the affected file", () => {
