@@ -320,7 +320,9 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("enables Java parsing, comments, completions, and multiline indentation", () => {
 		const editorSource = sourceFile("../src/modules/pythonCodeMirror.ts");
-		const referenceSource = sourceFile("../../docs/java-ide-editor-references.md");
+		const referenceSource = sourceFile(
+			"../../docs/java-ide-editor-references.md"
+		);
 		const doc = "public class Main {\nint x = 1;\nint y = 2;\n}\n";
 		const extensions = createPythonCodeMirrorExtensions({
 			mode: "java",
@@ -616,6 +618,35 @@ describe("python IDE CodeMirror editor", () => {
 		);
 		expect(autocompleteLabelsForDoc("java", "Math.")).toEqual(
 			expect.arrayContaining(["PI", "E", "random", "sqrt"])
+		);
+		expect(autocompleteLabelsForDoc("java", "random.")).toEqual(
+			expect.arrayContaining([
+				"nextInt",
+				"nextDouble",
+				"nextBoolean",
+				"nextLong",
+				"setSeed"
+			])
+		);
+		const declaredRandomDoc = [
+			"import java.util.Random;",
+			"public class Main {",
+			"    public static void main(String[] args) {",
+			"        Random generator = new Random();",
+			"        generator.|",
+			"    }",
+			"}"
+		].join("\n");
+		expect(
+			autocompleteLabelsForMarkedDoc("java", declaredRandomDoc)
+		).toEqual(
+			expect.arrayContaining([
+				"nextInt",
+				"nextDouble",
+				"nextBoolean",
+				"nextLong",
+				"setSeed"
+			])
 		);
 		expect(autocompleteLabelsForDoc("java", "names.")).toEqual(
 			expect.arrayContaining([
@@ -962,7 +993,7 @@ describe("python IDE CodeMirror editor", () => {
 		);
 
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel\s*{[\s\S]*position: fixed;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*width: min\(34rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: calc\(100vh - 2rem\);[\s\S]*padding: 1rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.9rem;[\s\S]*line-height: 1\.45;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
+			/\.ide-settings-panel\s*{[\s\S]*position: fixed;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*width: min\(34rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: calc\(100vh - 2rem\);[\s\S]*padding: 1\.25rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.88rem;[\s\S]*line-height: 1\.5;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
 		);
 		expect(pageSource).toContain("Autosave");
 		expect(pageSource).toContain("Suggestions");
@@ -974,7 +1005,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).not.toContain("Recommendations as You Type");
 		expect(pageSource).not.toContain("Wrap Editor Text");
 		expect(pageSource).not.toContain("Save edits locally right away");
-		expect(pageSource).not.toContain("Turn this off to use Ctrl+Space only");
+		expect(pageSource).not.toContain(
+			"Turn this off to use Ctrl+Space only"
+		);
 		expect(pageSource).toContain(".editor-toolbar > span");
 		expect(pageSource).not.toContain(
 			".editor-toolbar span,\n.stdin-panel span"
@@ -983,19 +1016,25 @@ describe("python IDE CodeMirror editor", () => {
 			"html.dark .ide-settings-panel {\n\tbackground: #08111f;"
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel,\s*\.editor-toolbar \.ide-settings-panel :where\(\*\)\s*{[\s\S]*color: inherit;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.45;[\s\S]*text-transform: none;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
+			/\.editor-toolbar \.ide-settings-panel,\s*\.editor-toolbar \.ide-settings-panel :where\(\*\)\s*{[\s\S]*color: inherit;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.5;[\s\S]*text-transform: none;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle\s*{[\s\S]*column-gap: 0\.65rem;[\s\S]*row-gap: 0\.3rem;[\s\S]*align-items: start;/
+			/\.ide-settings-panel :is\(label, span, small, button, input\)\s*{[\s\S]*font-variant: normal;[\s\S]*letter-spacing: 0;[\s\S]*text-transform: none;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle \+ \.ide-setting-toggle\s*{[\s\S]*margin-top: 0\.85rem;[\s\S]*padding-top: 0\.85rem;/
+			/\.ide-setting-toggle\s*{[\s\S]*column-gap: 0\.75rem;[\s\S]*row-gap: 0\.25rem;[\s\S]*align-items: start;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.9rem;[\s\S]*font-weight: 550;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.25;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
+			/\.ide-setting-toggle \+ \.ide-setting-toggle\s*{[\s\S]*margin-top: 1\.05rem;[\s\S]*padding-top: 1\.05rem;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.8rem;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.38;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
+			/\.ide-setting-toggle input\s*{[\s\S]*width: 1\.05rem;[\s\S]*height: 1\.05rem;/
+		);
+		expect(pageSource).toMatch(
+			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.92rem;[\s\S]*font-weight: 600;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.3;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
+		);
+		expect(pageSource).toMatch(
+			/\.editor-toolbar \.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.8rem;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.48;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
 		);
 	});
 
