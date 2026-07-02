@@ -120,6 +120,7 @@ const pythonCompletionGlobalValidForRegex = /^[A-Z_]\w*$/i;
 const pythonCompletionMemberValidForRegex = /^\w*$/;
 const javaCompletionGlobalValidForRegex = /^[\w.]*$/;
 const javaCompletionMemberValidForRegex = /^\w*$/;
+const javaIdentifierRegex = /^[A-Z_]\w*$/i;
 const pythonAssetStringCompletionValidForRegex = /^[\w.-]*$/;
 const pythonTurtleShapeStringCompletionValidForRegex = /^[A-Z_]*$/i;
 const pythonTurtleColorStringCompletionValidForRegex = /^[A-Z_ ]*$/i;
@@ -1613,6 +1614,15 @@ const javaMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 	String: [completion("format", "method", "formatted string", 72)]
 };
 
+const javaRandomMemberCompletions = [
+	completion("nextInt", "method", "random int, optionally bounded", 78),
+	completion("nextDouble", "method", "random double from 0 to 1", 76),
+	completion("nextBoolean", "method", "random boolean", 74),
+	completion("nextLong", "method", "random long", 70),
+	completion("nextFloat", "method", "random float from 0 to 1", 68),
+	completion("setSeed", "method", "reset the random sequence", 64)
+];
+
 const javaVariableMemberCompletions = [
 	completion("length", "property", "array or string length", 70),
 	completion("charAt", "method", "character at an index", 70),
@@ -2139,6 +2149,8 @@ export function javaIdeCompletionsForMode(
 		const specificOptions =
 			javaMemberCompletions[receiver] ?? karelMemberCompletions[receiver];
 		if (specificOptions) return specificOptions;
+		if (mode === "java" && isLikelyJavaRandomReceiver(receiver))
+			return javaRandomMemberCompletions;
 		if (mode === "karel" && /^[A-Z_]\w*$/i.test(receiver))
 			return karelRobotMemberCompletions;
 		return /^[A-Z_]\w*$/i.test(receiver)
@@ -2191,7 +2203,12 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 		if (parts.length > 1) {
 			const memberPrefix = parts.at(-1) ?? "";
 			const receiver = parts.slice(0, -1).join(".");
-			const options = javaIdeCompletionsForMode(mode, receiver);
+			const options =
+				javaDeclaredReceiverCompletions(
+					context.state,
+					mode,
+					receiver
+				) ?? javaIdeCompletionsForMode(mode, receiver);
 			if (!options.length) return null;
 
 			return {
@@ -2207,6 +2224,29 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 			validFor: javaCompletionGlobalValidForRegex
 		};
 	};
+}
+
+function javaDeclaredReceiverCompletions(
+	state: EditorState,
+	mode: PythonIdeMode,
+	receiver: string
+) {
+	if (mode !== "java" || !javaIdentifierRegex.test(receiver)) return null;
+	const escapedReceiver = escapeRegExpText(receiver);
+	const randomDeclarationPattern = new RegExp(
+		`\\b(?:java\\.util\\.)?Random\\s+${escapedReceiver}\\b`
+	);
+	return randomDeclarationPattern.test(state.doc.toString())
+		? javaRandomMemberCompletions
+		: null;
+}
+
+function isLikelyJavaRandomReceiver(receiver: string) {
+	return /(?:^|_)(?:rand|rng|random)(?:$|[A-Z_])/i.test(receiver);
+}
+
+function escapeRegExpText(value: string) {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function withPythonAssetCompletions<T>(

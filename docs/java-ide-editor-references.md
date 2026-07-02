@@ -33,10 +33,11 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `Arrays.deepToString(...)`, `Arrays.sort(...)`, `Arrays.copyOf(...)`, 2D
   array setup, `ArrayList` creation and core methods, and beginner `HashMap` /
   `TreeMap` creation and core `Map` methods should be available from the editor.
-- Include `java.util.Random` type/import/snippet help as editor scaffolding for
-  random card, random data, and AP random-range lessons. The browser preview may
-  still model randomness through `Math.random()` rather than a full `Random`
-  object implementation.
+- Include `java.util.Random` type/import/snippet help and Random instance member
+  completions (`nextInt`, `nextDouble`, `nextBoolean`, `setSeed`) for declared
+  or clearly named random receivers. The browser preview may still model
+  randomness through `Math.random()` rather than a full `Random` object
+  implementation.
 - Keep Java Level 2 and Java Level 3 writing support broader than the browser
   preview runtime. The editor should help students type custom-class and
   collection-design work such as constructors, getters, setters, `toString`,
