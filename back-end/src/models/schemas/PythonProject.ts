@@ -23,6 +23,12 @@ const pythonProjectSchema: Schema<IPythonProject> = new Schema(
 			required: true,
 			index: true
 		},
+		ownerRole: {
+			type: String,
+			enum: ["admin", "tutor", "user"],
+			default: "user",
+			index: true
+		},
 		title: { type: String, required: true, trim: true, maxlength: 120 },
 		mode: {
 			type: String,
@@ -54,7 +60,7 @@ const pythonProjectSchema: Schema<IPythonProject> = new Schema(
 	{ timestamps: true }
 );
 
-pythonProjectSchema.index({ user: 1, updatedAt: -1 });
+pythonProjectSchema.index({ user: 1, ownerRole: 1, updatedAt: -1 });
 pythonProjectSchema.index(
 	{ user: 1, courseProjectKey: 1 },
 	{ sparse: true }

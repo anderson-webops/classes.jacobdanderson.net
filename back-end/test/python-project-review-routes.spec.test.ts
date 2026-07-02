@@ -7,6 +7,7 @@ const modelMocks = vi.hoisted(() => ({
 	adminFindById: vi.fn(),
 	tutorFindById: vi.fn(),
 	userFindById: vi.fn(),
+	pythonProjectCreate: vi.fn(),
 	pythonProjectFind: vi.fn(),
 	pythonProjectFindOne: vi.fn(),
 	pythonProjectReviewFind: vi.fn(),
@@ -28,6 +29,7 @@ vi.mock("../src/models/schemas/User.js", () => ({
 
 vi.mock("../src/models/schemas/PythonProject.js", () => ({
 	PythonProject: {
+		create: modelMocks.pythonProjectCreate,
 		find: modelMocks.pythonProjectFind,
 		findOne: modelMocks.pythonProjectFindOne
 	}
@@ -50,6 +52,23 @@ const studentID = new Types.ObjectId();
 const projectID = new Types.ObjectId();
 const reviewID = new Types.ObjectId();
 const now = new Date("2026-06-20T12:00:00.000Z");
+const userOwnerClause = {
+	$or: [{ ownerRole: "user" }, { ownerRole: { $exists: false } }]
+};
+
+function ownedProjectQuery(ownerID: Types.ObjectId, ownerRole: "admin" | "tutor" | "user") {
+	if (ownerRole === "user") {
+		return {
+			user: ownerID,
+			...userOwnerClause
+		};
+	}
+
+	return {
+		user: ownerID,
+		ownerRole
+	};
+}
 
 function queryWith<T>(result: T) {
 	const query = {
@@ -208,6 +227,14 @@ describe("Python project review routes", () => {
 				: Promise.resolve(null)
 		);
 		modelMocks.userFindById.mockImplementation(() => queryWith(makeStudent()));
+		modelMocks.pythonProjectCreate.mockImplementation(async payload =>
+			makeProject({
+				_id: new Types.ObjectId(),
+				createdAt: now,
+				updatedAt: now,
+				...payload
+			})
+		);
 		modelMocks.pythonProjectFind.mockReturnValue(queryWith([makeProject()]));
 		modelMocks.pythonProjectFindOne.mockResolvedValue(makeProject());
 		modelMocks.pythonProjectReviewFind.mockReturnValue(queryWith([makeReview()]));
@@ -223,7 +250,7 @@ describe("Python project review routes", () => {
 			const body = await response.json();
 
 			expect(response.status).toBe(200);
-			expect(modelMocks.pythonProjectFind).toHaveBeenCalledWith({ user: studentID });
+			expect(modelMocks.pythonProjectFind).toHaveBeenCalledWith(ownedProjectQuery(studentID, "user"));
 			expect(body.projects).toHaveLength(1);
 			expect(body.projects[0].files[0].content).toBe("print('student')\n");
 		});
@@ -237,7 +264,7 @@ describe("Python project review routes", () => {
 			const body = await response.json();
 
 			expect(response.status).toBe(200);
-			expect(modelMocks.pythonProjectFind).toHaveBeenCalledWith({ user: studentID });
+			expect(modelMocks.pythonProjectFind).toHaveBeenCalledWith(ownedProjectQuery(studentID, "user"));
 			expect(modelMocks.pythonProjectReviewFind).toHaveBeenCalledWith({ user: studentID });
 			expect(body.projects).toHaveLength(1);
 			expect(body.projects[0].project.files[0].content).toBe("print('student')\n");
@@ -455,7 +482,7 @@ describe("Python project review routes", () => {
 			expect(enableResponse.status).toBe(200);
 			expect(modelMocks.pythonProjectFindOne).toHaveBeenCalledWith({
 				_id: new Types.ObjectId(projectID),
-				user: studentID
+				...ownedProjectQuery(studentID, "user")
 			});
 			expect(project.shared).toBe(true);
 			expect(project.shareID).toMatch(/^[\w-]{20,80}$/);
@@ -476,6 +503,63 @@ describe("Python project review routes", () => {
 			expect(project.shared).toBe(false);
 			expect(disableBody.project.shared).toBe(false);
 			expect(disableBody.project.shareID).toBeUndefined();
+		});
+	});
+
+	it("lets signed-in admins create and share their own Code IDE projects", async () => {
+		const adminProject = makeProject({
+			_id: projectID,
+			user: adminID,
+			ownerRole: "admin"
+		});
+		modelMocks.pythonProjectFindOne.mockResolvedValue(adminProject);
+
+		await withUserRoutes(async baseUrl => {
+			const createResponse = await postJson(
+				baseUrl,
+				"/users/loggedin/python-projects",
+				{
+					files: [
+						{
+							content: "print('admin project')\n",
+							name: "main.py"
+						}
+					],
+					mode: "python",
+					title: "Admin project"
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
+			const createBody = await createResponse.json();
+
+			expect(createResponse.status).toBe(201);
+			expect(modelMocks.pythonProjectCreate).toHaveBeenCalledWith(
+				expect.objectContaining({
+					ownerRole: "admin",
+					title: "Admin project",
+					user: adminID
+				})
+			);
+			expect(createBody.project.title).toBe("Admin project");
+
+			const shareResponse = await putJson(
+				baseUrl,
+				`/users/loggedin/python-projects/${projectID}/share`,
+				{ shared: true },
+				{ "x-admin-id": adminID.toString() }
+			);
+			const shareBody = await shareResponse.json();
+
+			expect(shareResponse.status).toBe(200);
+			expect(modelMocks.pythonProjectFindOne).toHaveBeenCalledWith({
+				_id: new Types.ObjectId(projectID),
+				...ownedProjectQuery(adminID, "admin")
+			});
+			expect(adminProject.shared).toBe(true);
+			expect(adminProject.shareID).toMatch(/^[\w-]{20,80}$/);
+			expect(adminProject.save).toHaveBeenCalled();
+			expect(shareBody.project.shared).toBe(true);
+			expect(shareBody.project.shareID).toBe(adminProject.shareID);
 		});
 	});
 

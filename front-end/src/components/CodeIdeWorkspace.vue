@@ -484,7 +484,7 @@ for (let digit = 0; digit <= 9; digit += 1) {
 
 const app = useAppStore();
 const route = useRoute();
-const { currentUser } = storeToRefs(app);
+const { currentAdmin, currentTutor, currentUser } = storeToRefs(app);
 
 const projects = ref<PythonIdeProject[]>([]);
 const visibleProjectReviews = ref<PythonIdeProjectReview[]>([]);
@@ -946,8 +946,35 @@ const activeVisibleReviewFileContent = computed(() => {
 	return file.content;
 });
 
-const canSyncToAccount = computed(() => !!currentUser.value?._id);
-const storageUserID = computed(() => currentUser.value?._id ?? null);
+const activeAccount = computed(() => {
+	if (currentAdmin.value?._id) {
+		return {
+			id: currentAdmin.value._id,
+			role: "admin" as const
+		};
+	}
+	if (currentTutor.value?._id) {
+		return {
+			id: currentTutor.value._id,
+			role: "tutor" as const
+		};
+	}
+	if (currentUser.value?._id) {
+		return {
+			id: currentUser.value._id,
+			role: "user" as const
+		};
+	}
+	return null;
+});
+const canSyncToAccount = computed(() => !!activeAccount.value);
+const storageUserID = computed(() => {
+	const account = activeAccount.value;
+	if (!account) return null;
+	return account.role === "user"
+		? account.id
+		: `${account.role}:${account.id}`;
+});
 const sortedProjects = computed(() => [...projects.value]);
 const runControlIsStop = computed(
 	() =>
@@ -1622,8 +1649,9 @@ async function loadProjects() {
 		if (canSyncToAccount.value) {
 			const remoteProjects = await fetchPythonIdeProjects();
 			if (!projectLoadIsCurrent(loadRunID)) return;
-			visibleProjectReviews.value =
-				await fetchVisiblePythonIdeProjectReviews().catch(() => []);
+			visibleProjectReviews.value = currentUser.value?._id
+				? await fetchVisiblePythonIdeProjectReviews().catch(() => [])
+				: [];
 			const localProjects = await loadLocalPythonProjectsAsync(
 				storageUserID.value
 			);
@@ -5257,7 +5285,7 @@ function clearCanvasKeyboardState() {
 }
 
 watch(
-	() => currentUser.value?._id,
+	() => storageUserID.value,
 	() => {
 		void loadProjects();
 	}
