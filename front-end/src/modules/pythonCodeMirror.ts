@@ -1522,17 +1522,39 @@ const javaKeywordCompletions = [
 	"main",
 	"Scanner",
 	"Arrays",
+	"Collections",
 	"ArrayList",
+	"List",
+	"Set",
+	"HashSet",
+	"TreeSet",
+	"Queue",
+	"PriorityQueue",
 	"HashMap",
 	"TreeMap",
 	"Map",
 	"Map.Entry",
+	"Comparable",
+	"Comparator",
+	"Override",
+	"record",
 	"Math",
 	"import java.util.Arrays",
+	"import java.util.Collections",
 	"import java.util.ArrayList",
+	"import java.util.List",
+	"import java.util.Set",
+	"import java.util.HashSet",
+	"import java.util.TreeSet",
+	"import java.util.Queue",
+	"import java.util.PriorityQueue",
 	"import java.util.HashMap",
 	"import java.util.TreeMap",
 	"import java.util.Map",
+	"import java.util.Comparator",
+	"import java.io.File",
+	"import java.io.FileWriter",
+	"import java.io.IOException",
 	"System.out.print",
 	"System.out.println"
 ].map(label => completion(label, "keyword", "Java", 70));
@@ -1561,6 +1583,22 @@ const javaMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 		),
 		completion("sort", "method", "sort an array", 70),
 		completion("copyOf", "method", "copy an array", 65)
+	],
+	Collections: [
+		completion("sort", "method", "sort a List", 78),
+		completion("reverse", "method", "reverse a List", 70),
+		completion("shuffle", "method", "shuffle a List", 68),
+		completion("min", "method", "smallest collection item", 66),
+		completion("max", "method", "largest collection item", 66),
+		completion("frequency", "method", "count matching items", 64),
+		completion("reverseOrder", "method", "reverse comparator", 64)
+	],
+	Comparator: [
+		completion("comparing", "method", "compare by extracted key", 78),
+		completion("comparingInt", "method", "compare by int key", 76),
+		completion("comparingDouble", "method", "compare by double key", 74),
+		completion("naturalOrder", "method", "natural ordering", 70),
+		completion("reverseOrder", "method", "reverse ordering", 70)
 	],
 	"System.out": [
 		completion("print", "method", "print without newline", 90),
@@ -1603,13 +1641,26 @@ const javaVariableMemberCompletions = [
 		70
 	),
 	completion("add", "method", "append or insert an ArrayList item", 70),
+	completion("offer", "method", "add a queue item", 70),
+	completion("poll", "method", "remove and return the next queue item", 70),
+	completion("peek", "method", "read the next queue item", 70),
+	completion("element", "method", "read the next queue item", 68),
 	completion("get", "method", "read an ArrayList item or map value", 70),
 	completion("set", "method", "replace an ArrayList item", 70),
 	completion("put", "method", "add or replace a map value", 70),
 	completion("putIfAbsent", "method", "add a map value only if missing", 70),
 	completion("remove", "method", "remove a collection item or map key", 70),
 	completion("contains", "method", "whether the ArrayList has an item", 70),
+	completion("containsAll", "method", "whether all items are present", 66),
 	completion("containsKey", "method", "whether the map has a key", 70),
+	completion(
+		"addAll",
+		"method",
+		"add every item from another collection",
+		66
+	),
+	completion("removeAll", "method", "remove matching collection items", 66),
+	completion("retainAll", "method", "keep matching collection items", 66),
 	completion("keySet", "method", "all map keys", 70),
 	completion("values", "method", "all map values", 70),
 	completion("entrySet", "method", "all map entries", 70),
@@ -1617,8 +1668,13 @@ const javaVariableMemberCompletions = [
 	completion("getKey", "method", "map entry key", 70),
 	completion("getValue", "method", "map entry value", 70),
 	completion("clear", "method", "remove all collection items", 70),
+	completion("iterator", "method", "collection iterator", 64),
+	completion("toArray", "method", "copy collection items into an array", 64),
 	completion("size", "method", "collection item count", 70),
-	completion("isEmpty", "method", "whether the collection is empty", 70)
+	completion("isEmpty", "method", "whether the collection is empty", 70),
+	completion("compare", "method", "comparator comparison", 66),
+	completion("hashCode", "method", "hash code for maps and sets", 64),
+	completion("toString", "method", "readable object summary", 64)
 ];
 
 const javaSnippetCompletions = [
@@ -1729,6 +1785,18 @@ const javaSnippetCompletions = [
 		77
 	),
 	pythonSnippet(
+		"hashset",
+		"HashSet declaration",
+		`HashSet<${snippetField("Type")}> ${snippetField("name")} = new HashSet<>();${snippetEnd}`,
+		76
+	),
+	pythonSnippet(
+		"priority_queue",
+		"PriorityQueue declaration",
+		`PriorityQueue<${snippetField("Type")}> ${snippetField("name")} = new PriorityQueue<>();${snippetEnd}`,
+		76
+	),
+	pythonSnippet(
 		"hashmap",
 		"HashMap declaration",
 		`HashMap<${snippetField("KeyType")}, ${snippetField("ValueType")}> ${snippetField("name")} = new HashMap<>();${snippetEnd}`,
@@ -1762,6 +1830,112 @@ const javaSnippetCompletions = [
 			snippetEnd
 		),
 		75
+	),
+	pythonSnippet(
+		"constructor",
+		"constructor skeleton",
+		snippetLines(
+			`public ${snippetField("ClassName")}(${snippetField("parameters")}) {`,
+			`    ${snippetField("body")}`,
+			"}",
+			snippetEnd
+		),
+		74
+	),
+	pythonSnippet(
+		"getter",
+		"getter method",
+		snippetLines(
+			`public ${snippetField("Type")} get${snippetField("Name")}() {`,
+			`    return ${snippetField("field")};`,
+			"}",
+			snippetEnd
+		),
+		73
+	),
+	pythonSnippet(
+		"setter",
+		"setter method",
+		snippetLines(
+			`public void set${snippetField("Name")}(${snippetField("Type")} ${snippetField("field")}) {`,
+			`    this.${snippetField("field")} = ${snippetField("field")};`,
+			"}",
+			snippetEnd
+		),
+		73
+	),
+	pythonSnippet(
+		"to_string",
+		"toString override",
+		snippetLines(
+			"@Override",
+			"public String toString() {",
+			`    return ${snippetField("summary")};`,
+			"}",
+			snippetEnd
+		),
+		73
+	),
+	pythonSnippet(
+		"comparable_class",
+		"Comparable class skeleton",
+		snippetLines(
+			`public class ${snippetField("ClassName")} implements Comparable<${snippetField("ClassName")}> {`,
+			"    @Override",
+			`    public int compareTo(${snippetField("ClassName")} other) {`,
+			`        return ${snippetField("comparison")};`,
+			"    }",
+			"}",
+			snippetEnd
+		),
+		72
+	),
+	pythonSnippet(
+		"comparator",
+		"Comparator lambda",
+		`Comparator<${snippetField("Type")}> ${snippetField("name")} = (${snippetField("left")}, ${snippetField("right")}) -> ${snippetField("comparison")};${snippetEnd}`,
+		72
+	),
+	pythonSnippet(
+		"interface_type",
+		"interface skeleton",
+		snippetLines(
+			`public interface ${snippetField("Name")} {`,
+			`    ${snippetField("returnType")} ${snippetField("methodName")}(${snippetField("parameters")});`,
+			"}",
+			snippetEnd
+		),
+		71
+	),
+	pythonSnippet(
+		"record_type",
+		"record skeleton",
+		`public record ${snippetField("Name")}(${snippetField("components")}) {${snippetEnd}}`,
+		71
+	),
+	pythonSnippet(
+		"enum_type",
+		"enum skeleton",
+		snippetLines(
+			`public enum ${snippetField("Name")} {`,
+			`    ${snippetField("VALUE")}`,
+			"}",
+			snippetEnd
+		),
+		70
+	),
+	pythonSnippet(
+		"try_catch",
+		"try/catch block",
+		snippetLines(
+			"try {",
+			`    ${snippetField("body")}`,
+			`} catch (${snippetField("Exception")} ${snippetField("error")}) {`,
+			`    ${snippetField("handler")}`,
+			"}",
+			snippetEnd
+		),
+		70
 	)
 ];
 
@@ -1981,6 +2155,18 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 
 		const word = context.matchBefore(/(?:[A-Z_]\w*\.){0,3}[A-Z_]\w*\.?$/i);
 		const javaCompletions = javaIdeCompletionsForMode(mode);
+		const importWord = context.matchBefore(
+			/import\s+(?:java\.util|java\.io)\.\w*$/i
+		);
+		if (importWord) {
+			return {
+				from: importWord.from,
+				options: javaCompletions.filter(option =>
+					option.label.startsWith("import ")
+				),
+				validFor: /^import\s+(?:java\.util|java\.io)\.\w*$/i
+			};
+		}
 		if (!word) {
 			if (!context.explicit) return null;
 			return {

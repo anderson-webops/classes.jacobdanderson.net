@@ -84,6 +84,16 @@ function autocompleteLabelsForDocAt(
 	doc: string,
 	pos: number
 ) {
+	return autocompleteResultsForDocAt(mode, doc, pos).flatMap(
+		result => result.options?.map(option => option.label) ?? []
+	);
+}
+
+function autocompleteResultsForDocAt(
+	mode: PythonIdeMode,
+	doc: string,
+	pos: number
+) {
 	const state = EditorState.create({
 		doc,
 		extensions: createPythonCodeMirrorExtensions({
@@ -105,7 +115,7 @@ function autocompleteLabelsForDocAt(
 			pos,
 			state
 		});
-		return result?.options?.map(option => option.label) ?? [];
+		return result ? [result] : [];
 	});
 }
 
@@ -333,6 +343,8 @@ describe("python IDE CodeMirror editor", () => {
 				"array2d",
 				"array2d_values",
 				"arraylist",
+				"hashset",
+				"priority_queue",
 				"hashmap",
 				"treemap",
 				"array_to_string",
@@ -340,17 +352,49 @@ describe("python IDE CodeMirror editor", () => {
 				"foreach",
 				"fori",
 				"method",
+				"constructor",
+				"getter",
+				"setter",
+				"to_string",
+				"comparable_class",
+				"comparator",
+				"interface_type",
+				"record_type",
+				"enum_type",
+				"try_catch",
 				"sout",
 				"Arrays",
+				"Collections",
+				"List",
+				"Set",
+				"HashSet",
+				"TreeSet",
+				"Queue",
+				"PriorityQueue",
 				"HashMap",
 				"TreeMap",
 				"Map",
 				"Map.Entry",
+				"Comparable",
+				"Comparator",
+				"Override",
+				"record",
 				"import java.util.ArrayList",
 				"import java.util.Arrays",
+				"import java.util.Collections",
+				"import java.util.List",
+				"import java.util.Set",
+				"import java.util.HashSet",
+				"import java.util.TreeSet",
+				"import java.util.Queue",
+				"import java.util.PriorityQueue",
 				"import java.util.HashMap",
 				"import java.util.TreeMap",
 				"import java.util.Map",
+				"import java.util.Comparator",
+				"import java.io.File",
+				"import java.io.FileWriter",
+				"import java.io.IOException",
 				"System.out.println"
 			])
 		);
@@ -376,6 +420,34 @@ describe("python IDE CodeMirror editor", () => {
 				"deepToString",
 				"sort",
 				"copyOf"
+			])
+		);
+		expect(
+			javaIdeCompletionsForMode("java", "Collections").map(
+				option => option.label
+			)
+		).toEqual(
+			expect.arrayContaining([
+				"sort",
+				"reverse",
+				"shuffle",
+				"min",
+				"max",
+				"frequency",
+				"reverseOrder"
+			])
+		);
+		expect(
+			javaIdeCompletionsForMode("java", "Comparator").map(
+				option => option.label
+			)
+		).toEqual(
+			expect.arrayContaining([
+				"comparing",
+				"comparingInt",
+				"comparingDouble",
+				"naturalOrder",
+				"reverseOrder"
 			])
 		);
 		expect(
@@ -405,13 +477,21 @@ describe("python IDE CodeMirror editor", () => {
 				"hasNextDouble",
 				"hasNextBoolean",
 				"add",
+				"offer",
+				"poll",
+				"peek",
+				"element",
 				"get",
 				"set",
 				"put",
 				"putIfAbsent",
 				"remove",
 				"contains",
+				"containsAll",
 				"containsKey",
+				"addAll",
+				"removeAll",
+				"retainAll",
 				"keySet",
 				"values",
 				"entrySet",
@@ -419,8 +499,12 @@ describe("python IDE CodeMirror editor", () => {
 				"getKey",
 				"getValue",
 				"clear",
+				"iterator",
+				"toArray",
 				"size",
-				"isEmpty"
+				"isEmpty",
+				"hashCode",
+				"toString"
 			])
 		);
 
@@ -461,6 +545,9 @@ describe("python IDE CodeMirror editor", () => {
 				"hasNextInt",
 				"get",
 				"set",
+				"offer",
+				"poll",
+				"peek",
 				"put",
 				"containsKey",
 				"keySet",
@@ -468,6 +555,7 @@ describe("python IDE CodeMirror editor", () => {
 				"entrySet",
 				"getKey",
 				"getValue",
+				"toArray",
 				"size",
 				"isEmpty"
 			])
@@ -478,6 +566,16 @@ describe("python IDE CodeMirror editor", () => {
 				"deepToString",
 				"sort",
 				"copyOf"
+			])
+		);
+		expect(autocompleteLabelsForDoc("java", "Collections.")).toEqual(
+			expect.arrayContaining(["sort", "reverse", "shuffle", "max"])
+		);
+		expect(autocompleteLabelsForDoc("java", "Comparator.")).toEqual(
+			expect.arrayContaining([
+				"comparing",
+				"comparingInt",
+				"reverseOrder"
 			])
 		);
 		expect(autocompleteLabelsForDoc("karel", "World.")).toEqual(
@@ -512,6 +610,35 @@ describe("python IDE CodeMirror editor", () => {
 		);
 		expect(autocompleteLabelsForDoc("karel", "facing")).toEqual(
 			expect.arrayContaining(["facingEast", "notFacingWest"])
+		);
+	});
+
+	it("replaces the full Java import statement when completing typed imports", () => {
+		const doc = "import java.util.Pri";
+		const [result] = autocompleteResultsForDocAt("java", doc, doc.length);
+
+		expect(result?.from).toBe(0);
+		expect(result?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining([
+				"import java.util.PriorityQueue",
+				"import java.util.HashSet",
+				"import java.util.Comparator"
+			])
+		);
+
+		const ioDoc = "import java.io.FileW";
+		const [ioResult] = autocompleteResultsForDocAt(
+			"java",
+			ioDoc,
+			ioDoc.length
+		);
+		expect(ioResult?.from).toBe(0);
+		expect(ioResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining([
+				"import java.io.File",
+				"import java.io.FileWriter",
+				"import java.io.IOException"
+			])
 		);
 	});
 
@@ -705,7 +832,7 @@ describe("python IDE CodeMirror editor", () => {
 		);
 
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel\s*{[\s\S]*width: min\(34rem, calc\(100vw - 1\.25rem\)\);[\s\S]*padding: 1\.45rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.94rem;[\s\S]*line-height: 1\.55;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
+			/\.ide-settings-panel\s*{[\s\S]*width: min\(31rem, calc\(100vw - 1\.25rem\)\);[\s\S]*max-height: min\(31rem, calc\(100vh - 1\.5rem\), 44vh\);[\s\S]*padding: 1\.1rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.9rem;[\s\S]*line-height: 1\.45;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
 		);
 		expect(pageSource).toContain(".editor-toolbar > span");
 		expect(pageSource).not.toContain(
@@ -715,16 +842,16 @@ describe("python IDE CodeMirror editor", () => {
 			"html.dark .ide-settings-panel {\n\tbackground: #08111f;"
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel,\s*\.editor-toolbar \.ide-settings-panel :is\(label, span, small, input, button\)\s*{[\s\S]*color: inherit;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.5;[\s\S]*text-transform: none;/
+			/\.editor-toolbar \.ide-settings-panel,\s*\.editor-toolbar \.ide-settings-panel :is\(label, span, small, input, button\)\s*{[\s\S]*color: inherit;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.45;[\s\S]*text-transform: none;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle \+ \.ide-setting-toggle\s*{[\s\S]*margin-top: 1\.35rem;[\s\S]*padding-top: 1\.35rem;/
+			/\.ide-setting-toggle \+ \.ide-setting-toggle\s*{[\s\S]*margin-top: 0\.95rem;[\s\S]*padding-top: 0\.95rem;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.98rem;[\s\S]*font-weight: 600;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.35;[\s\S]*text-transform: none;/
+			/\.editor-toolbar \.ide-settings-panel \.ide-setting-title\s*{[\s\S]*font-size: 0\.94rem;[\s\S]*font-weight: 600;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.35;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar \.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.9rem;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.55;[\s\S]*text-transform: none;/
+			/\.editor-toolbar \.ide-settings-panel \.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.82rem;[\s\S]*font-weight: 400;[\s\S]*letter-spacing: 0;[\s\S]*line-height: 1\.45;[\s\S]*font-variant: normal;[\s\S]*text-transform: none;/
 		);
 	});
 

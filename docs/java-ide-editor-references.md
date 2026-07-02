@@ -31,6 +31,13 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `Arrays.deepToString(...)`, `Arrays.sort(...)`, `Arrays.copyOf(...)`, 2D
   array setup, `ArrayList` creation and core methods, and beginner `HashMap` /
   `TreeMap` creation and core `Map` methods should be available from the editor.
+- Keep Java Level 2 and Java Level 3 writing support broader than the browser
+  preview runtime. The editor should help students type custom-class and
+  collection-design work such as constructors, getters, setters, `toString`,
+  `Comparable`, `Comparator`, interfaces, enums, records, `List`, `Set`,
+  `HashSet`, `TreeSet`, `Queue`, `PriorityQueue`, and `Collections` helpers.
+  These entries are editor scaffolding, not a promise that every advanced
+  concept runs in the browser preview.
 - Keep beginner `String` completions aligned with Java Level 1, AP CSA, and
   sorting lessons: `length()`, `charAt()`, `substring()`, `equals()`,
   `equalsIgnoreCase()`, `compareTo()`, `indexOf()`, `toLowerCase()`,
@@ -92,6 +99,17 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `values`, `entrySet`, `Map.Entry.getKey()`, `Map.Entry.getValue()`, `clear`,
   `size`, and `isEmpty`. It remains a browser teaching preview rather than a
   compiler.
+- [Java SE 21 `java.util` API docs](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/package-summary.html)
+  inform the editor-only advanced collection vocabulary. `HashSet`, `Set`,
+  `Queue`, `PriorityQueue`, `Comparator`, `Collections`, `List`, and related
+  methods appear as writing assistance because the Java Level 2/3 courses ask
+  students to read and write that code even when the local browser preview does
+  not execute the full Java Collections Framework.
+- [Java SE 21 `Record` docs](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html)
+  inform the record snippet and keyword completion used by the advanced Java
+  course's immutable-data-carrier module. Records are supported as editor
+  scaffolding only; they still require a real Java compiler outside the browser
+  preview for execution.
 - [Java Formatter syntax](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Formatter.html)
   is the reference point for formatted output. The browser preview implements a
   small teaching subset: `%s`, `%d`, `%f` with optional width/precision, `%%`,
