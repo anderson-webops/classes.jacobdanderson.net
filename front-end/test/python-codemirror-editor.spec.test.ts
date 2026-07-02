@@ -817,6 +817,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).toContain("Cmd/Ctrl+F opens search.");
 		expect(pageSource).toMatch(/Cmd\/Ctrl\+Enter\s+runs the project\./);
 		expect(pageSource).toContain("Cmd/Ctrl+S saves the project.");
+		expect(pageSource).toMatch(
+			/Cmd\/Ctrl\+\/\s+toggles comments for the\s+line or selection\./
+		);
 		expect(pageSource).toContain("Ctrl+Space opens completions");
 		expect(pageSource).toContain("main_guard");
 		expect(pageSource).toContain("turtle_screen");
