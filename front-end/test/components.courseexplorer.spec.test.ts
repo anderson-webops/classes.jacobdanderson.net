@@ -516,6 +516,130 @@ describe("CourseExplorer.vue", () => {
 		});
 	});
 
+	it("lets admins choose an all learner context and browse every course", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+		const unassignedCourse =
+			coursesStore.courses.find(course => course.id !== assignedCourse.id) ??
+			coursesStore.courses[1];
+
+		if (!assignedCourse || !unassignedCourse) {
+			throw new Error("Expected course fixtures.");
+		}
+
+		appStore.setCurrentAdmin({
+			_id: "admin-1",
+			name: "Admin",
+			email: "admin@example.com",
+			editAdmins: false,
+			saveEdit: "Save"
+		});
+
+		(api.get as any).mockResolvedValueOnce({
+			data: [
+				{
+					_id: "learner-1",
+					name: "Learner",
+					email: "learner@example.com",
+					age: 12,
+					state: "GA",
+					courseAccess: [assignedCourse.id],
+					courseProgress: [],
+					editUsers: false,
+					saveEdit: "Save"
+				}
+			]
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(
+				wrapper.findAll("#learner-select option").map(option => option.text())
+			).toContain("All");
+		});
+
+		const allOption = wrapper
+			.findAll("#learner-select option")
+			.find(option => option.text() === "All");
+		expect(allOption?.exists()).toBe(true);
+
+		await wrapper
+			.find<HTMLSelectElement>("#learner-select")
+			.setValue(allOption?.attributes("value") ?? "");
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("Viewing all courses");
+			expect(
+				wrapper.findAll("#course-select option").map(option => option.text())
+			).toContain(unassignedCourse.name);
+		});
+		expect(wrapper.find("#course-select optgroup").attributes("label")).toBe(
+			"All courses"
+		);
+	});
+
+	it("keeps the all learner context hidden from tutors", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+
+		appStore.setCurrentTutor({
+			_id: "tutor-1",
+			name: "Tutor",
+			email: "tutor@example.com",
+			age: 30,
+			state: "GA",
+			usersOfTutorLength: 1,
+			coursePermissions: [assignedCourse.id],
+			editTutors: false,
+			saveEdit: "Save"
+		});
+
+		(api.get as any).mockResolvedValueOnce({
+			data: [
+				{
+					_id: "learner-1",
+					name: "Learner",
+					email: "learner@example.com",
+					age: 12,
+					state: "GA",
+					courseAccess: [assignedCourse.id],
+					courseProgress: [],
+					editUsers: false,
+					saveEdit: "Save"
+				}
+			]
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("Learner");
+		});
+		expect(
+			wrapper.findAll("#learner-select option").map(option => option.text())
+		).not.toContain("All");
+	});
+
 	it("lets staff mark selected learner progress with debounced autosave", async () => {
 		vi.useFakeTimers();
 		const pinia = createPinia();
