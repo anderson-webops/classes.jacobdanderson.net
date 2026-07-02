@@ -6,6 +6,7 @@ import {
 	defaultKeymap,
 	indentLess,
 	indentMore,
+	indentWithTab,
 	toggleComment
 } from "@codemirror/commands";
 import { python } from "@codemirror/lang-python";
@@ -552,6 +553,37 @@ describe("python IDE CodeMirror editor", () => {
 		expect(commented.state.doc.toString()).toBe(
 			"public class Main {\n// int x = 1;\n// int y = 2;\n}\n"
 		);
+	});
+
+	it("wires Tab and Shift+Tab indentation for Java selections", () => {
+		expect(indentWithTab.key).toBe("Tab");
+		expect(indentWithTab.run).toBe(indentMore);
+		expect(indentWithTab.shift).toBe(indentLess);
+
+		const doc = "public class Main {\nint x = 1;\nint y = 2;\n}\n";
+		const selectedBodyLines = EditorState.create({
+			doc,
+			extensions: createPythonCodeMirrorExtensions({ mode: "java" }),
+			selection: EditorSelection.create([
+				EditorSelection.range(doc.indexOf("int x"), doc.indexOf("}\n"))
+			])
+		});
+
+		const indented = runStateCommand(
+			selectedBodyLines,
+			indentWithTab.run as StateCommand
+		);
+		expect(indented.result).toBe(true);
+		expect(indented.state.doc.toString()).toBe(
+			"public class Main {\n    int x = 1;\n    int y = 2;\n}\n"
+		);
+
+		const dedented = runStateCommand(
+			indented.state,
+			indentWithTab.shift as StateCommand
+		);
+		expect(dedented.result).toBe(true);
+		expect(dedented.state.doc.toString()).toBe(doc);
 	});
 
 	it("offers Java and Karel member completions immediately after a dot", () => {
