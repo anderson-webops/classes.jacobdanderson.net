@@ -1561,9 +1561,6 @@ const javaKeywordCompletions = [
 	"import java.io.File",
 	"import java.io.FileWriter",
 	"import java.io.IOException",
-	"import kareltherobot.UrRobot",
-	"import kareltherobot.World",
-	"import kareltherobot.Directions",
 	"System.out.print",
 	"System.out.println"
 ].map(label => completion(label, "keyword", "Java", 70));
@@ -2094,7 +2091,10 @@ const karelKeywordCompletions = [
 	"notFacingNorth",
 	"notFacingSouth",
 	"notFacingEast",
-	"notFacingWest"
+	"notFacingWest",
+	"import kareltherobot.UrRobot",
+	"import kareltherobot.World",
+	"import kareltherobot.Directions"
 ].map(label => completion(label, "keyword", "Karel", 80));
 
 const karelRobotMemberCompletions = [
@@ -2311,11 +2311,23 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 			/import\s+(?:java\.util|java\.io|java\.awt|kareltherobot)\.\w*$/i
 		);
 		if (importWord) {
+			const importPackageMatch = importWord.text.match(
+				/^import\s+((?:java\.util|java\.io|java\.awt|kareltherobot)\.)/i
+			);
+			const importPackagePrefix = importPackageMatch?.[1]?.toLowerCase();
+			const importOptions = javaCompletions.filter(
+				option =>
+					option.label.startsWith("import ") &&
+					(!importPackagePrefix ||
+						option.label
+							.toLowerCase()
+							.startsWith(`import ${importPackagePrefix}`))
+			);
+			if (!importOptions.length) return null;
+
 			return {
 				from: importWord.from,
-				options: javaCompletions.filter(option =>
-					option.label.startsWith("import ")
-				),
+				options: importOptions,
 				validFor:
 					/^import\s+(?:java\.util|java\.io|java\.awt|kareltherobot)\.\w*$/i
 			};

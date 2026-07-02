@@ -425,10 +425,25 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.io.File",
 				"import java.io.FileWriter",
 				"import java.io.IOException",
+				"System.out.println"
+			])
+		);
+		expect(javaLabels).not.toEqual(
+			expect.arrayContaining([
 				"import kareltherobot.UrRobot",
 				"import kareltherobot.World",
-				"import kareltherobot.Directions",
-				"System.out.println"
+				"import kareltherobot.Directions"
+			])
+		);
+		const karelLabels = javaIdeCompletionsForMode("karel").map(
+			option => option.label
+		);
+		expect(karelLabels).toEqual(
+			expect.arrayContaining([
+				"import java.awt.Color",
+				"import kareltherobot.UrRobot",
+				"import kareltherobot.World",
+				"import kareltherobot.Directions"
 			])
 		);
 		expect(
@@ -959,6 +974,9 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.util.Comparator"
 			])
 		);
+		expect(result?.options?.map(option => option.label)).not.toEqual(
+			expect.arrayContaining(["import java.io.File"])
+		);
 
 		const randomDoc = "import java.util.Ran";
 		const [randomResult] = autocompleteResultsForDocAt(
@@ -1011,6 +1029,12 @@ describe("python IDE CodeMirror editor", () => {
 				"import kareltherobot.Directions"
 			])
 		);
+		expect(karelImportResult?.options?.map(option => option.label)).not.toEqual(
+			expect.arrayContaining(["import java.awt.Color"])
+		);
+		expect(
+			autocompleteResultsForDocAt("java", karelImportDoc, karelImportDoc.length)
+		).toEqual([]);
 	});
 
 	it("keeps Java completions active for digit-bearing snippets and receiver names", () => {
