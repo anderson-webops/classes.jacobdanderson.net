@@ -316,6 +316,30 @@ describe("course text quality normalization", () => {
 		).toEqual(["java-level-1", "java-level-2", "java-level-3"]);
 	});
 
+	it("keeps Python course reference links available for colors and data methods", async () => {
+		const [pythonLevel1, pythonLevel2] = await Promise.all([
+			loadRawCourse("python-level-1"),
+			loadRawCourse("python-level-2")
+		]);
+		const pythonLevel1Text = allCourseText(pythonLevel1);
+		const pythonLevel2Text = allCourseText(pythonLevel2);
+
+		expect(pythonLevel1Text).toContain("https://trinket.io/docs/colors");
+		expect(pythonLevel1Text).toContain(
+			"https://www.w3schools.com/python/python_ref_list.asp"
+		);
+
+		for (const referenceUrl of [
+			"https://www.w3schools.com/python/python_ref_string.asp",
+			"https://www.w3schools.com/python/python_ref_list.asp",
+			"https://www.w3schools.com/python/python_ref_dictionary.asp",
+			"https://www.w3schools.com/python/python_ref_tuple.asp",
+			"https://www.w3schools.com/python/python_ref_set.asp"
+		]) {
+			expect(pythonLevel2Text).toContain(referenceUrl);
+		}
+	});
+
 	it("keeps informational resource cards free of generated project scaffolds", async () => {
 		const samples = [
 			{

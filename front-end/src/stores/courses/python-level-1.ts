@@ -6,6 +6,9 @@ const TURTLE_COMMAND_REFERENCE = `${TURTLE_REFERENCE}#turtle-command-reference`;
 const TURTLE_BOUNDARY_REFERENCE = `${TURTLE_REFERENCE}#boundaries-and-in-bounds-checks`;
 const TURTLE_SCORE_REFERENCE = `${TURTLE_REFERENCE}#score-turtle-pattern`;
 const TURTLE_GAME_TEMPLATE_REFERENCE = `${TURTLE_REFERENCE}#game-template-with-score-boundaries-and-moving-triangles`;
+const TURTLE_COLOR_REFERENCE = "https://trinket.io/docs/colors";
+const PYTHON_LIST_METHOD_REFERENCE =
+	"https://www.w3schools.com/python/python_ref_list.asp";
 
 const PYTHON_LEVEL_1_ORIGINAL_MEDIA = [
 	"grs1_turtle_exploration(1).mp4",
@@ -93,8 +96,9 @@ export const pythonLevel1Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Introduction and Setup",
-					content:
-						"Get comfortable with the coding environment, the Turtle canvas, the console, and project instructions. Learn what Python is used for and how Turtle programs are organized.",
+					content: `Get comfortable with the coding environment, the Turtle canvas, the console, and project instructions. Learn what Python is used for and how Turtle programs are organized.
+
+Color reference: use Trinket's Turtle color table when choosing Turtle names, CSS names, hex codes, or RGB values: ${TURTLE_COLOR_REFERENCE}`,
 					datasetLink: TURTLE_COMMAND_REFERENCE
 				},
 				{
@@ -213,8 +217,9 @@ export const pythonLevel1Course: RawCourse = {
 				},
 				{
 					title: "GrS3 Project 2: Surprise Me Square",
-					content:
-						"Replace hardcoded coordinates, side lengths, and RGB values with variables, then use `random.randint()` to generate random locations, sizes, and colors for a square.",
+					content: `Replace hardcoded coordinates, side lengths, and RGB values with variables, then use \`random.randint()\` to generate random locations, sizes, and colors for a square.
+
+Color reference: compare Turtle color names and RGB values with ${TURTLE_COLOR_REFERENCE}`,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/Surprise-Me-Square/solution"
 				},
@@ -820,8 +825,9 @@ Include one original example with at least three possible outcomes. A strong rec
 			curriculum: [
 				{
 					title: "GrS12 Project 1: List Exploration",
-					content:
-						"Create empty lists, append values, loop through list items, and check whether a value is present with the `in` operator.",
+					content: `Create empty lists, append values, loop through list items, and check whether a value is present with the \`in\` operator.
+
+Method reference: use W3Schools' Python list methods page when checking what list operations such as \`.append()\` and \`.remove()\` do: ${PYTHON_LIST_METHOD_REFERENCE}`,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS12-List-Exploration/solution"
 				},
@@ -851,8 +857,9 @@ The list removes repeated launch code. Completion means adding another turtle on
 				},
 				{
 					title: "GrS12 Supplemental Project 2: Rainbow Path",
-					content:
-						"Store color strings in a list and iterate through them to create a path with changing colors and random turns.",
+					content: `Store color strings in a list and iterate through them to create a path with changing colors and random turns.
+
+Color reference: choose color strings from ${TURTLE_COLOR_REFERENCE}`,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS12-Rainbow-Path/solution"
 				},
