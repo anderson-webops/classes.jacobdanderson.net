@@ -14,6 +14,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
 - Add Java and Karel-specific completion entries and snippets in
   `front-end/src/modules/pythonCodeMirror.ts`; do not introduce backend
   language services or worker pools without explicit approval.
+- Keep beginner collection completions aligned with the course sequence:
+  array declarations, enhanced `for` loops, `Arrays.toString(...)`, and
+  `ArrayList` creation and core methods should be available from the editor.
 
 ## Teaching and Runtime References
 
@@ -38,9 +41,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   helper calls, and simple static methods with parameters, `return` values,
   arithmetic use, boolean helpers, capped recursion, one-dimensional arrays,
   `Arrays.toString(...)`, `array.length`, indexed array access and assignment,
-  and beginner `ArrayList` calls such as `add`, `get`, `set`, `remove`,
-  `size`, and `isEmpty`. It remains a browser teaching preview rather than a
-  compiler.
+  enhanced `for` loops over arrays and `ArrayList`s, and beginner `ArrayList`
+  calls such as `add`, `get`, `set`, `remove`, `size`, and `isEmpty`. It
+  remains a browser teaching preview rather than a compiler.
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/) is a useful
   comparison point for browser editor UX, but its deeper Java IntelliSense path
   usually implies a language-server architecture. That is intentionally outside

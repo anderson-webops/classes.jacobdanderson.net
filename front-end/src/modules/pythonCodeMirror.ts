@@ -1494,10 +1494,16 @@ const javaKeywordCompletions = [
 	"int",
 	"long",
 	"String",
+	"Integer",
+	"Double",
+	"Boolean",
 	"main",
 	"Scanner",
+	"Arrays",
 	"ArrayList",
 	"Math",
+	"import java.util.Arrays",
+	"import java.util.ArrayList",
 	"System.out.print",
 	"System.out.println"
 ].map(label => completion(label, "keyword", "Java", 70));
@@ -1514,12 +1520,29 @@ const javaMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 		completion("round", "method", "nearest integer", 70),
 		completion("sqrt", "method", "square root", 70)
 	],
+	Arrays: [
+		completion("toString", "method", "array string representation", 85),
+		completion("sort", "method", "sort an array", 70),
+		completion("copyOf", "method", "copy an array", 65)
+	],
 	"System.out": [
 		completion("print", "method", "print without newline", 90),
 		completion("println", "method", "print with newline", 95),
 		completion("printf", "method", "formatted print", 70)
 	]
 };
+
+const javaVariableMemberCompletions = [
+	completion("length", "property", "array or string length", 70),
+	completion("charAt", "method", "character at an index", 70),
+	completion("substring", "method", "string slice", 70),
+	completion("add", "method", "append or insert an ArrayList item", 70),
+	completion("get", "method", "read an ArrayList item", 70),
+	completion("set", "method", "replace an ArrayList item", 70),
+	completion("remove", "method", "remove an ArrayList item", 70),
+	completion("size", "method", "ArrayList item count", 70),
+	completion("isEmpty", "method", "whether the ArrayList is empty", 70)
+];
 
 const javaSnippetCompletions = [
 	pythonSnippet(
@@ -1577,6 +1600,17 @@ const javaSnippetCompletions = [
 		80
 	),
 	pythonSnippet(
+		"foreach",
+		"enhanced for loop",
+		snippetLines(
+			`for (${snippetField("type")} ${snippetField("item")} : ${snippetField("collection")}) {`,
+			`    ${snippetField("body")}`,
+			"}",
+			snippetEnd
+		),
+		82
+	),
+	pythonSnippet(
 		"while",
 		"while loop",
 		snippetLines(
@@ -1586,6 +1620,30 @@ const javaSnippetCompletions = [
 			snippetEnd
 		),
 		78
+	),
+	pythonSnippet(
+		"array",
+		"fixed-size array",
+		`${snippetField("type")}[] ${snippetField("name")} = new ${snippetField("type")}[${snippetField("size")}];${snippetEnd}`,
+		78
+	),
+	pythonSnippet(
+		"array_values",
+		"array with initial values",
+		`${snippetField("type")}[] ${snippetField("name")} = {${snippetField("values")}};${snippetEnd}`,
+		77
+	),
+	pythonSnippet(
+		"arraylist",
+		"ArrayList declaration",
+		`ArrayList<${snippetField("Type")}> ${snippetField("name")} = new ArrayList<>();${snippetEnd}`,
+		77
+	),
+	pythonSnippet(
+		"array_to_string",
+		"Arrays.toString call",
+		`Arrays.toString(${snippetField("array")})${snippetEnd}`,
+		76
 	),
 	pythonSnippet(
 		"method",
@@ -1764,13 +1822,14 @@ export function javaIdeCompletionsForMode(
 	receiver?: string
 ) {
 	if (receiver) {
-		return (
-			javaMemberCompletions[receiver] ??
-			karelMemberCompletions[receiver] ??
-			(mode === "karel" && /^[A-Z_]\w*$/i.test(receiver)
-				? karelRobotMemberCompletions
-				: [])
-		);
+		const specificOptions =
+			javaMemberCompletions[receiver] ?? karelMemberCompletions[receiver];
+		if (specificOptions) return specificOptions;
+		if (mode === "karel" && /^[A-Z_]\w*$/i.test(receiver))
+			return karelRobotMemberCompletions;
+		return /^[A-Z_]\w*$/i.test(receiver)
+			? javaVariableMemberCompletions
+			: [];
 	}
 	const baseCompletions = [
 		...javaKeywordCompletions,

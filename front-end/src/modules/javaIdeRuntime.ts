@@ -94,13 +94,24 @@ interface JavaConsoleOutputState {
 	stdout: string[];
 }
 
-interface JavaConsoleForLoop {
+interface JavaConsoleIndexForLoop {
 	body: string;
 	condition: string;
 	initializer: string;
+	kind: "index";
 	nextIndex: number;
 	update: string;
 }
+
+interface JavaConsoleEnhancedForLoop {
+	body: string;
+	iterableExpression: string;
+	itemName: string;
+	kind: "enhanced";
+	nextIndex: number;
+}
+
+type JavaConsoleForLoop = JavaConsoleEnhancedForLoop | JavaConsoleIndexForLoop;
 
 type JavaConsoleValue =
 	| {
@@ -308,6 +319,39 @@ function executeJavaConsoleBody(
 		if (wordAt(body, index, "for")) {
 			const parsedLoop = parseJavaConsoleForLoop(body, index);
 			if (parsedLoop) {
+				if (parsedLoop.kind === "enhanced") {
+					const values = javaIterableValues(
+						evaluateJavaExpression(
+							parsedLoop.iterableExpression,
+							context,
+							output
+						)
+					);
+					for (let count = 0; count < values.length; count += 1) {
+						if (count >= MAX_JAVA_CONSOLE_LOOP_ITERATIONS) {
+							context.stderr.push(
+								`Stopped Java preview after ${MAX_JAVA_CONSOLE_LOOP_ITERATIONS} loop iterations.`
+							);
+							break;
+						}
+						context.variables.set(
+							parsedLoop.itemName,
+							values[count] ?? { type: "null", value: null }
+						);
+						const signal = executeJavaConsoleBody(
+							parsedLoop.body,
+							context,
+							output,
+							depth + 1
+						);
+						if (signal === "break") break;
+						if (signal && signal !== "continue") return signal;
+						if (signal === "continue") continue;
+					}
+					index = parsedLoop.nextIndex;
+					continue;
+				}
+
 				executeJavaConsoleStatement(
 					`${parsedLoop.initializer};`,
 					context,
@@ -941,6 +985,12 @@ function javaCollectionToString(
 	return `[${value.value.map(javaValueToString).join(", ")}]`;
 }
 
+function javaIterableValues(value: JavaConsoleValue) {
+	return value.type === "array" || value.type === "arrayList"
+		? value.value
+		: [];
+}
+
 function javaArrayValue(
 	elementType: string,
 	value: JavaConsoleValue[]
@@ -1222,21 +1272,41 @@ function parseJavaConsoleForLoop(
 	if (source[parenStart] !== "(") return null;
 	const parenEnd = findMatchingDelimiter(source, parenStart, "(", ")");
 	if (parenEnd < 0) return null;
-	const headerParts = splitJavaTopLevel(
-		source.slice(parenStart + 1, parenEnd),
-		";"
-	);
-	if (headerParts.length !== 3) return null;
+	const header = source.slice(parenStart + 1, parenEnd);
 	const bodyStart = skipWhitespace(source, parenEnd + 1);
 	const parsedBody = parseJavaControlBody(source, bodyStart);
 	if (!parsedBody) return null;
+
+	const enhancedHeader = parseJavaEnhancedForHeader(header);
+	if (enhancedHeader) {
+		return {
+			body: parsedBody.body,
+			iterableExpression: enhancedHeader.iterableExpression,
+			itemName: enhancedHeader.itemName,
+			kind: "enhanced",
+			nextIndex: parsedBody.nextIndex
+		};
+	}
+
+	const headerParts = splitJavaTopLevel(header, ";");
+	if (headerParts.length !== 3) return null;
 	return {
 		body: parsedBody.body,
 		condition: headerParts[1] ?? "",
 		initializer: headerParts[0] ?? "",
+		kind: "index",
 		nextIndex: parsedBody.nextIndex,
 		update: headerParts[2] ?? ""
 	};
+}
+
+function parseJavaEnhancedForHeader(header: string) {
+	const headerParts = splitJavaTopLevel(header, ":");
+	if (headerParts.length !== 2) return null;
+	const itemName = headerParts[0]?.match(/\b([A-Z_]\w*)\s*$/i)?.[1];
+	const iterableExpression = headerParts[1]?.trim();
+	if (!itemName || !iterableExpression) return null;
+	return { itemName, iterableExpression };
 }
 
 function evaluateJavaBooleanExpression(

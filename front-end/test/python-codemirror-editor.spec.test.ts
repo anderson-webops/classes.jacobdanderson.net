@@ -304,9 +304,17 @@ describe("python IDE CodeMirror editor", () => {
 				"class",
 				"main",
 				"class_main",
+				"array",
+				"array_values",
+				"arraylist",
+				"array_to_string",
+				"foreach",
 				"fori",
 				"method",
 				"sout",
+				"Arrays",
+				"import java.util.ArrayList",
+				"import java.util.Arrays",
 				"System.out.println"
 			])
 		);
@@ -315,6 +323,27 @@ describe("python IDE CodeMirror editor", () => {
 				option => option.label
 			)
 		).toEqual(expect.arrayContaining(["print", "println", "printf"]));
+		expect(
+			javaIdeCompletionsForMode("java", "Arrays").map(
+				option => option.label
+			)
+		).toEqual(expect.arrayContaining(["toString", "sort"]));
+		expect(
+			javaIdeCompletionsForMode("java", "names").map(
+				option => option.label
+			)
+		).toEqual(
+			expect.arrayContaining([
+				"length",
+				"charAt",
+				"add",
+				"get",
+				"set",
+				"remove",
+				"size",
+				"isEmpty"
+			])
+		);
 
 		const commented = runStateCommand(selectedBodyLines, toggleComment);
 		expect(commented.result).toBe(true);
@@ -338,6 +367,12 @@ describe("python IDE CodeMirror editor", () => {
 		);
 		expect(autocompleteLabelsForDoc("java", "Math.")).toEqual(
 			expect.arrayContaining(["random", "sqrt"])
+		);
+		expect(autocompleteLabelsForDoc("java", "names.")).toEqual(
+			expect.arrayContaining(["get", "set", "size", "isEmpty"])
+		);
+		expect(autocompleteLabelsForDoc("java", "Arrays.")).toEqual(
+			expect.arrayContaining(["toString", "sort"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "World.")).toEqual(
 			expect.arrayContaining(["readWorld"])
