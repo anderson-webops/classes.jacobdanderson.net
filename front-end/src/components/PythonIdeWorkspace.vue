@@ -4882,6 +4882,7 @@ async function runCurrentProject() {
 			const result = runJavaIdeProject({
 				activeFileName: runnableFile.name,
 				files: project.files,
+				inputText: inputText.value,
 				mode: project.mode
 			});
 			karelWorld.value = result.karelWorld ?? null;
@@ -6982,10 +6983,9 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar {
 	display: grid;
 	grid-template-columns: minmax(15rem, 1fr) auto;
-	grid-template-rows: auto var(--python-ide-toolbar-control-size);
 	column-gap: 0.75rem;
-	row-gap: 0.35rem;
-	align-items: start;
+	row-gap: 0.75rem;
+	align-items: end;
 }
 
 .stdin-panel {
@@ -6994,32 +6994,27 @@ html.dark .file-delete:disabled::after {
 }
 
 .editor-toolbar > label {
-	display: contents;
 	min-width: 0;
+	display: grid;
+	gap: 0.35rem;
 }
 
 .editor-toolbar > label span {
-	grid-column: 1;
-	grid-row: 1;
-	align-self: end;
 	line-height: 1;
 }
 
 .editor-toolbar > label input {
-	grid-column: 1;
-	grid-row: 2;
 	min-width: 0;
 }
 
 .editor-actions {
 	position: relative;
-	grid-column: 2;
-	grid-row: 2;
-	align-self: stretch;
+	align-self: end;
 	display: flex;
 	gap: 0.65rem;
 	align-items: stretch;
 	justify-content: flex-end;
+	height: var(--python-ide-toolbar-control-size);
 }
 
 .editor-toolbar > label input,
@@ -7116,6 +7111,7 @@ html.dark .file-delete:disabled::after {
 	position: relative;
 	display: flex;
 	align-items: stretch;
+	height: 100%;
 }
 
 .ide-settings-trigger {
@@ -7825,24 +7821,11 @@ html.dark .editor-shortcuts ul {
 	}
 
 	.editor-toolbar {
-		grid-template-rows:
-			auto var(--python-ide-toolbar-control-size)
-			auto;
-	}
-
-	.editor-toolbar > label span {
-		grid-column: 1;
-		grid-row: 1;
-	}
-
-	.editor-toolbar > label input {
-		grid-column: 1;
-		grid-row: 2;
+		align-items: stretch;
 	}
 
 	.editor-actions {
-		grid-column: 1;
-		grid-row: 3;
+		align-self: stretch;
 		justify-content: stretch;
 	}
 

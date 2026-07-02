@@ -60,6 +60,63 @@ describe("java IDE runtime", () => {
 		]);
 	});
 
+	it("previews simple Scanner input and beginner variables", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Name: ");
+        String name = input.nextLine();
+        System.out.print("Age: ");
+        int age = input.nextInt();
+        System.out.println("Hi " + name + ", next year you will be " + (age + 1));
+    }
+}`
+				}
+			],
+			inputText: "Jacob\n14",
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual([
+			"Name: Age: Hi Jacob, next year you will be 15"
+		]);
+	});
+
+	it("reports invalid Scanner numeric input without server execution", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int age = input.nextInt();
+        System.out.println("Age: " + age);
+    }
+}`
+				}
+			],
+			inputText: "not-a-number",
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([
+			'Scanner could not read int from "not-a-number".'
+		]);
+		expect(result.stdout).toEqual(["Age: 0"]);
+	});
+
 	it("runs the beginner Karel command subset into a visual world state", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
@@ -343,6 +400,7 @@ beeper 1 1 1`
 		expect(workspaceSource).toContain(
 			"const result = runJavaIdeProject({"
 		);
+		expect(workspaceSource).toContain("inputText: inputText.value");
 		expect(workspaceSource).toContain("mode: project.mode");
 		expect(workspaceSource).not.toContain("javac");
 		expect(workspaceSource).not.toContain("child_process");

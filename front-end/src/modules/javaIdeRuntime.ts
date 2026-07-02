@@ -36,6 +36,7 @@ export interface KarelWorldState {
 interface JavaIdeRunOptions {
 	activeFileName: string;
 	files: PythonIdeFile[];
+	inputText?: string;
 	mode: Extract<PythonIdeMode, "java" | "karel">;
 }
 
@@ -74,9 +75,43 @@ interface JavaForLoopIterations {
 	count: number;
 }
 
+interface JavaConsoleContext {
+	input: JavaScannerInput;
+	stderr: string[];
+	variables: Map<string, JavaConsoleValue>;
+}
+
+interface JavaScannerInput {
+	index: number;
+	values: string[];
+}
+
+type JavaConsoleValue =
+	| {
+			type: "boolean";
+			value: boolean;
+	  }
+	| {
+			type: "null";
+			value: null;
+	  }
+	| {
+			type: "number";
+			value: number;
+	  }
+	| {
+			type: "string";
+			value: string;
+	  };
+
 const DEFAULT_WORLD_SIZE = 10;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const JAVA_PRINT_RE = /System\.out\.(print|println)\s*\(([\s\S]*?)\)\s*;/g;
+const JAVA_SCANNER_READ_RE =
+	/\b[A-Z_]\w*\.next(Line|Int|Double|Boolean)?\s*\(\s*\)/i;
+const JAVA_VARIABLE_DECLARATION_START_RE =
+	/^(?:String|int|double|boolean|char|var)\s+([A-Z_]\w*)\s*=/i;
+const JAVA_VARIABLE_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*=/i;
 const ROBOT_DECLARATION_RE =
 	/\bUrRobot\s+([A-Z_]\w*)\s*=\s*new\s+UrRobot\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*([A-Z_]\w*(?:\s*\.\s*[A-Z_]\w*)?)\s*,\s*(\d+)\s*\)/i;
 const WORLD_READ_RE = /\bWorld\.readWorld\s*\(\s*"([^"]+)"\s*\)/;
@@ -138,7 +173,7 @@ export function runJavaIdeProject(
 
 	return options.mode === "karel"
 		? runKarelProject(options.files, activeFile)
-		: runConsoleJavaProject(activeFile);
+		: runConsoleJavaProject(activeFile, options.inputText ?? "");
 }
 
 function getActiveJavaFile(options: JavaIdeRunOptions) {
@@ -151,61 +186,192 @@ function getActiveJavaFile(options: JavaIdeRunOptions) {
 	);
 }
 
-function runConsoleJavaProject(file: PythonIdeFile): JavaIdeRunResult {
-	const stdout = javaPrintOutput(stripJavaComments(file.content));
+function runConsoleJavaProject(
+	file: PythonIdeFile,
+	inputText = ""
+): JavaIdeRunResult {
+	const { stderr, stdout } = javaConsoleOutput(
+		stripJavaComments(file.content),
+		inputText
+	);
 	return {
-		stderr: stdout.length
-			? []
-			: [
-					"The browser Java runner can preview System.out.print and System.out.println output."
-				],
+		stderr:
+			stdout.length || stderr.length
+				? stderr
+				: [
+						"The browser Java runner can preview System.out.print, System.out.println, simple variables, and Scanner input."
+					],
 		stdout
 	};
 }
 
-function javaPrintOutput(source: string) {
+function javaConsoleOutput(source: string, inputText: string) {
+	const context: JavaConsoleContext = {
+		input: {
+			index: 0,
+			values: inputText.split(/\r?\n/).map(value => value.trimEnd())
+		},
+		stderr: [],
+		variables: new Map()
+	};
 	const outputLines: string[] = [];
 	let pendingLine = "";
-	for (const match of source.matchAll(JAVA_PRINT_RE)) {
-		const method = match[1];
-		const expression = match[2] ?? "";
-		const value = evaluateJavaPrintExpression(expression);
-		if (method === "print") {
-			pendingLine += value;
-			continue;
+	for (const statement of javaStatements(source)) {
+		for (const match of statement.matchAll(JAVA_PRINT_RE)) {
+			const method = match[1];
+			const expression = match[2] ?? "";
+			const value = javaValueToString(
+				evaluateJavaExpression(expression, context)
+			);
+			if (method === "print") {
+				pendingLine += value;
+				continue;
+			}
+
+			outputLines.push(`${pendingLine}${value}`);
+			pendingLine = "";
 		}
 
-		outputLines.push(`${pendingLine}${value}`);
-		pendingLine = "";
+		storeJavaVariableFromStatement(statement, context);
 	}
 
 	if (pendingLine) outputLines.push(pendingLine);
-	return outputLines;
+	return { stderr: context.stderr, stdout: outputLines };
 }
 
-function evaluateJavaPrintExpression(expression: string): string {
-	const trimmed = expression.trim();
-	if (!trimmed) return "";
+function javaStatements(source: string) {
+	const statements: string[] = [];
+	let index = 0;
+	while (index < source.length) {
+		index = skipWhitespace(source, index);
+		if (index >= source.length) break;
+		const end = findJavaStatementEnd(source, index);
+		if (end < 0) break;
+		statements.push(source.slice(index, end + 1).trim());
+		index = end + 1;
+	}
+	return statements;
+}
 
-	const parts = splitJavaConcat(trimmed);
-	if (parts.length > 1)
-		return parts.map(part => evaluateJavaPrintExpression(part)).join("");
-
-	if (/^"(?:\\.|[^"\\])*"$/.test(trimmed))
-		return unescapeJavaString(trimmed.slice(1, -1));
-	if (/^'(?:\\.|[^'\\])'$/.test(trimmed))
-		return unescapeJavaString(trimmed.slice(1, -1));
-	if (/^(?:true|false|null)$/i.test(trimmed)) return trimmed.toLowerCase();
-	if (/^[\d\s+\-*/%().]+$/.test(trimmed)) {
-		const value = evaluateNumericExpression(trimmed);
-		if (value !== null) return value;
+function storeJavaVariableFromStatement(
+	statement: string,
+	context: JavaConsoleContext
+) {
+	const trimmed = statement.trim().replace(/;$/, "").trim();
+	const declaration = trimmed.match(JAVA_VARIABLE_DECLARATION_START_RE);
+	if (declaration?.[1]) {
+		context.variables.set(
+			declaration[1],
+			evaluateJavaExpression(
+				trimmed.slice(declaration[0].length),
+				context
+			)
+		);
+		return;
 	}
 
-	return trimmed;
+	const assignment = trimmed.match(JAVA_VARIABLE_ASSIGNMENT_START_RE);
+	if (assignment?.[1]) {
+		context.variables.set(
+			assignment[1],
+			evaluateJavaExpression(trimmed.slice(assignment[0].length), context)
+		);
+	}
 }
 
-function evaluateNumericExpression(expression: string) {
-	const tokens = expression.match(/\d+(?:\.\d+)?|[()+\-*/%]/g);
+function evaluateJavaExpression(
+	expression: string,
+	context?: JavaConsoleContext
+): JavaConsoleValue {
+	const trimmed = expression.trim();
+	if (!trimmed) return { type: "string", value: "" };
+
+	const scannerValue = evaluateJavaScannerRead(trimmed, context);
+	if (scannerValue) return scannerValue;
+
+	const numericValue = evaluateNumericExpression(trimmed, context);
+	if (numericValue !== null) return { type: "number", value: numericValue };
+
+	const parts = splitJavaConcat(trimmed);
+	if (parts.length > 1) {
+		return {
+			type: "string",
+			value: parts
+				.map(part =>
+					javaValueToString(evaluateJavaExpression(part, context))
+				)
+				.join("")
+		};
+	}
+
+	if (/^"(?:\\.|[^"\\])*"$/.test(trimmed)) {
+		return {
+			type: "string",
+			value: unescapeJavaString(trimmed.slice(1, -1))
+		};
+	}
+	if (/^'(?:\\.|[^'\\])'$/.test(trimmed)) {
+		return {
+			type: "string",
+			value: unescapeJavaString(trimmed.slice(1, -1))
+		};
+	}
+	if (/^(?:true|false)$/i.test(trimmed)) {
+		return { type: "boolean", value: trimmed.toLowerCase() === "true" };
+	}
+	if (/^null$/i.test(trimmed)) return { type: "null", value: null };
+
+	const variable = context?.variables.get(trimmed);
+	if (variable) return variable;
+
+	return { type: "string", value: trimmed };
+}
+
+function evaluateJavaScannerRead(
+	expression: string,
+	context: JavaConsoleContext | undefined
+): JavaConsoleValue | null {
+	const match = expression.match(JAVA_SCANNER_READ_RE);
+	if (!match || !context) return null;
+	const method = match[1] ?? "";
+	const raw = context.input.values[context.input.index] ?? "";
+	context.input.index += 1;
+
+	if (raw === "" && context.input.index > context.input.values.length) {
+		context.stderr.push(`Scanner input ran out for next${method}().`);
+	}
+
+	if (method === "Int") {
+		const value = Number.parseInt(raw.trim(), 10);
+		if (Number.isFinite(value)) return { type: "number", value };
+		context.stderr.push(`Scanner could not read int from "${raw}".`);
+		return { type: "number", value: 0 };
+	}
+
+	if (method === "Double") {
+		const value = Number.parseFloat(raw.trim());
+		if (Number.isFinite(value)) return { type: "number", value };
+		context.stderr.push(`Scanner could not read double from "${raw}".`);
+		return { type: "number", value: 0 };
+	}
+
+	if (method === "Boolean") {
+		return { type: "boolean", value: raw.trim().toLowerCase() === "true" };
+	}
+
+	return { type: "string", value: raw };
+}
+
+function javaValueToString(value: JavaConsoleValue) {
+	if (value.type === "null") return "null";
+	return String(value.value);
+}
+
+function evaluateNumericExpression(
+	expression: string,
+	context?: JavaConsoleContext
+) {
+	const tokens = expression.match(/\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi);
 	if (!tokens || tokens.join("") !== expression.replace(/\s+/g, ""))
 		return null;
 	let index = 0;
@@ -238,7 +404,9 @@ function evaluateNumericExpression(expression: string) {
 				return value;
 			}
 			index += 1;
-			const value = Number(token);
+			const variable = context?.variables.get(token ?? "");
+			const value =
+				variable?.type === "number" ? variable.value : Number(token);
 			if (!Number.isFinite(value)) throw new Error("Invalid number");
 			return value;
 		},
@@ -263,7 +431,7 @@ function evaluateNumericExpression(expression: string) {
 	try {
 		const value = parser.parseExpression();
 		if (index !== tokens.length || !Number.isFinite(value)) return null;
-		return String(value);
+		return value;
 	} catch {
 		return null;
 	}
