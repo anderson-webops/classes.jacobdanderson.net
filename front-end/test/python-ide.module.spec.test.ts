@@ -4230,6 +4230,21 @@ describe("python IDE project helpers", () => {
 		project.activeFileName = "Dog.java";
 
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
+
+		project.files = [
+			{
+				name: "Notes.java",
+				content: `public class Notes {
+    // public static void main(String[] args) belongs in App.java.
+    String reminder = "main(String[] args)";
+}
+`
+			},
+			project.files[1]!
+		];
+		project.activeFileName = "Notes.java";
+
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
 	});
 
 	it("runs Karel driver files instead of active helper classes", () => {
@@ -4248,6 +4263,17 @@ describe("python IDE project helpers", () => {
 `
 		});
 		project.activeFileName = "Helper.java";
+
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("MyProgram.java");
+
+		project.files[2] = {
+			name: "Helper.java",
+			content: `public class Helper {
+    // public void run() stays in MyProgram.java.
+    String reminder = "run()";
+}
+`
+		};
 
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("MyProgram.java");
 

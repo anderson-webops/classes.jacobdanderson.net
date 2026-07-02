@@ -42,6 +42,8 @@ const STARTER_RELATIVE_PREFIX_RE = /^(?:starter|src)\//i;
 const PYTHON_IDE_INDEXED_DB_NAME = "classes-python-ide";
 const PYTHON_IDE_INDEXED_DB_VERSION = 1;
 const PYTHON_IDE_PROJECT_STORE = "projectStores";
+const JAVA_ENTRY_POINT_IGNORED_TEXT_RE =
+	/"""[\s\S]*?"""|\/\*[\s\S]*?\*\/|\/\/[^\n\r]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g;
 const JAVA_MAIN_METHOD_RE =
 	/\bmain\s*\(\s*(?:\w+\s*\[\s*\]\s+\w+|\w+\s+\w+\s*\[\s*\]|\w+\s*\.\.\.\s+\w+)\s*\)/;
 const KAREL_RUN_METHOD_RE = /\brun\s*\(\s*\)/;
@@ -1108,11 +1110,19 @@ function getKarelIdeRunnableFile(
 }
 
 function hasJavaMainMethod(file: Pick<PythonIdeFile, "content">) {
-	return JAVA_MAIN_METHOD_RE.test(file.content);
+	return JAVA_MAIN_METHOD_RE.test(javaEntryPointSearchText(file));
 }
 
 function isLikelyKarelEntryFile(file: Pick<PythonIdeFile, "content">) {
-	return hasJavaMainMethod(file) || KAREL_RUN_METHOD_RE.test(file.content);
+	const searchText = javaEntryPointSearchText(file);
+	return (
+		JAVA_MAIN_METHOD_RE.test(searchText) ||
+		KAREL_RUN_METHOD_RE.test(searchText)
+	);
+}
+
+function javaEntryPointSearchText(file: Pick<PythonIdeFile, "content">) {
+	return file.content.replace(JAVA_ENTRY_POINT_IGNORED_TEXT_RE, " ");
 }
 
 export function loadLocalPythonProjects(userID?: string | null) {
