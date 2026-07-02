@@ -2,7 +2,10 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+	javaOutlineStarterCode,
 	javaStarterCode,
+	karelOutlineStarterCode,
+	karelOutlineWorld,
 	karelStarterCode,
 	karelStarterWorld
 } from "../src/modules/pythonIde";
@@ -13,6 +16,43 @@ function sourceFile(path: string) {
 }
 
 describe("java IDE runtime", () => {
+	it("previews the Java and Karel outline templates in the browser subset", () => {
+		const javaResult = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: javaOutlineStarterCode
+				}
+			],
+			mode: "java"
+		});
+		const karelResult = runJavaIdeProject({
+			activeFileName: "MyProgram.java",
+			files: [
+				{
+					name: "MyProgram.java",
+					content: karelOutlineStarterCode
+				},
+				{
+					name: "world.txt",
+					content: karelOutlineWorld
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(javaResult.stderr).toEqual([]);
+		expect(javaResult.stdout).toEqual(["Student: 0"]);
+		expect(karelResult.stderr).toEqual([]);
+		expect(karelResult.karelWorld?.robot).toMatchObject({
+			avenue: 5,
+			direction: "West",
+			street: 1
+		});
+		expect(karelResult.stdout.at(-1)).toContain("direction: West");
+	});
+
 	it("previews Java console print output", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
@@ -548,7 +588,13 @@ public class Main {
 		});
 
 		expect(result.stderr).toEqual([]);
-		expect(result.stdout).toEqual(["2", "Linus", "7", "true:false", "true"]);
+		expect(result.stdout).toEqual([
+			"2",
+			"Linus",
+			"7",
+			"true:false",
+			"true"
+		]);
 	});
 
 	it("previews beginner Java enhanced for loops over arrays and ArrayLists", () => {
@@ -634,7 +680,9 @@ public class Main {
 			mode: "karel"
 		});
 
-		expect(result.stderr).toEqual(["sam.move() hit the edge of the world."]);
+		expect(result.stderr).toEqual([
+			"sam.move() hit the edge of the world."
+		]);
 		expect(result.karelWorld?.robot).toMatchObject({
 			avenue: 1,
 			street: 6
@@ -918,9 +966,7 @@ beeper 1 1 1`
 		expect(workspaceSource).toContain(
 			'import { runJavaIdeProject } from "@/modules/javaIdeRuntime";'
 		);
-		expect(workspaceSource).toContain(
-			"const result = runJavaIdeProject({"
-		);
+		expect(workspaceSource).toContain("const result = runJavaIdeProject({");
 		expect(workspaceSource).toContain("inputText: inputText.value");
 		expect(workspaceSource).toContain("mode: project.mode");
 		expect(workspaceSource).not.toContain("javac");
@@ -933,7 +979,9 @@ beeper 1 1 1`
 		expect(runtimeSource).not.toMatch(/\bfetch\s*\(/);
 		expect(runtimeSource).not.toMatch(/\bnew\s+Worker\b|\bWorker\s*\(/);
 		expect(runtimeSource).not.toContain("child_process");
-		expect(runtimeSource).not.toMatch(/\bspawn\s*\(|\bexec\s*\(|\bfork\s*\(/);
+		expect(runtimeSource).not.toMatch(
+			/\bspawn\s*\(|\bexec\s*\(|\bfork\s*\(/
+		);
 		expect(runtimeSource).not.toMatch(/\bjavac\b|\bdocker\b/i);
 	});
 });

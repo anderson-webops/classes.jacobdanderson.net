@@ -38,6 +38,11 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   numeric/boolean reads, and validation predicates such as `hasNextInt()`.
 - Include beginner formatted-output completions for `System.out.printf`,
   `System.out.format`, and `String.format`.
+- Keep Java and Karel starter/outline templates executable by the same
+  browser preview subset. Templates may scaffold imports, helper methods,
+  collections, `Scanner`, CodeHS-style `run()` methods, and Karel conditions,
+  but should not depend on server compilation or unsupported language-service
+  behavior.
 
 ## Teaching and Runtime References
 
