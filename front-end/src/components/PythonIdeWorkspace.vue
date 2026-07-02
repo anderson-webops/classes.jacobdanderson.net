@@ -5347,10 +5347,10 @@ onBeforeUnmount(() => {
 				<p class="python-ide-eyebrow">Code IDE</p>
 				<h1>Code, run, and draw in Python or Java</h1>
 				<p>
-					Build multi-file Python projects, run standard Python code,
-					and use the Turtle canvas for drawing and keyboard-driven
-					lessons, PyGame Zero game projects, data/AI notebooks with
-					rendered charts, Java console programs, or Karel robot
+					Build multi-file Python and Java projects, use the Turtle
+					canvas for drawing and keyboard-driven lessons, explore
+					PyGame Zero games and data/AI notebooks with rendered
+					charts, and preview Java console programs or Karel robot
 					worlds.
 				</p>
 			</div>
