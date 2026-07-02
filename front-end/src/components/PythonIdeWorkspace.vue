@@ -7192,20 +7192,20 @@ html.dark .file-delete:disabled::after {
 	z-index: 8;
 	top: 1rem;
 	right: 1rem;
-	width: min(28rem, calc(100vw - 2rem));
+	width: min(34rem, calc(100vw - 2rem));
 	max-height: calc(100vh - 2rem);
 	display: grid;
-	gap: 0.25rem;
+	gap: 0.4rem;
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 0.85rem;
+	padding: 1rem;
 	border: 1px solid var(--color-border);
 	border-radius: 14px;
 	background: #fff;
 	box-shadow: var(--shadow-soft);
 	font-family: var(--font-sans);
-	font-size: 0.82rem;
-	line-height: 1.42;
+	font-size: 0.9rem;
+	line-height: 1.5;
 	font-variant: normal;
 	font-weight: 400;
 	text-align: left;
@@ -7222,7 +7222,7 @@ html.dark .file-delete:disabled::after {
 	font-variant: normal;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.42;
+	line-height: 1.5;
 	text-transform: none;
 	overflow-wrap: normal;
 	word-break: normal;
@@ -7236,11 +7236,11 @@ html.dark .file-delete:disabled::after {
 
 .ide-setting-toggle {
 	display: grid;
-	grid-template-columns: 1rem minmax(0, 1fr);
-	column-gap: 0.65rem;
-	row-gap: 0.25rem;
+	grid-template-columns: 1.15rem minmax(0, 1fr);
+	column-gap: 0.85rem;
+	row-gap: 0.35rem;
 	align-items: start;
-	padding: 0.65rem 0.7rem;
+	padding: 0.85rem 0.9rem;
 	border-radius: 10px;
 	color: var(--color-ink);
 	text-align: left;
@@ -7310,10 +7310,10 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-setting-toggle input {
-	width: 0.95rem;
-	height: 0.95rem;
+	width: 1.05rem;
+	height: 1.05rem;
 	margin: 0;
-	margin-top: 0.12rem;
+	margin-top: 0.14rem;
 	accent-color: #0f766e;
 }
 
@@ -7326,10 +7326,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar .ide-settings-panel .ide-setting-title {
 	display: block;
 	color: var(--color-ink-strong);
-	font-size: 0.86rem;
-	font-weight: 600;
+	font-size: 0.96rem;
+	font-weight: 650;
 	letter-spacing: 0;
-	line-height: 1.24;
+	line-height: 1.28;
 	font-variant: normal;
 	text-transform: none;
 }
@@ -7337,10 +7337,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar .ide-settings-panel .ide-setting-toggle small {
 	display: block;
 	color: var(--color-ink-soft);
-	font-size: 0.74rem;
+	font-size: 0.82rem;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.4;
+	line-height: 1.48;
 	font-variant: normal;
 	text-transform: none;
 }
