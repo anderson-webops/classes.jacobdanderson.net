@@ -155,9 +155,9 @@ describe("Python project routes", () => {
 		});
 	});
 
-	it("rejects Java and Karel IDE payloads before any server-side project work", async () => {
+	it("accepts Java and Karel IDE payloads as browser-only stored projects", async () => {
 		await withPythonProjectRoute(async baseUrl => {
-			for (const payload of [
+			const payloads = [
 				{
 					activeFileName: "Main.java",
 					files: [
@@ -184,10 +184,77 @@ describe("Python project routes", () => {
 					mode: "karel",
 					title: "Karel browser project"
 				}
+			];
+
+			for (const payload of payloads) {
+				const response = await postJson(baseUrl, payload);
+				const body = await response.json();
+
+				expect(response.status).toBe(201);
+				expect(body.project.mode).toBe(payload.mode);
+				expect(body.project.activeFileName).toBe(payload.activeFileName);
+			}
+		});
+
+		expect(modelMocks.pythonProjectCreate).toHaveBeenCalledTimes(2);
+		expect(modelMocks.pythonProjectCreate).toHaveBeenNthCalledWith(
+			1,
+			expect.objectContaining({
+				activeFileName: "Main.java",
+				files: [
+					{
+						content: "public class Main { public static void main(String[] args) {} }",
+						encoding: "text",
+						name: "Main.java"
+					}
+				],
+				mode: "java",
+				title: "Java browser project",
+				user: userID
+			})
+		);
+		expect(modelMocks.pythonProjectCreate).toHaveBeenNthCalledWith(
+			2,
+			expect.objectContaining({
+				activeFileName: "Algo.java",
+				files: [
+					{
+						content: "public class Algo { public static void main(String[] args) {} }",
+						encoding: "text",
+						name: "Algo.java"
+					},
+					{
+						content: "Dimension: (10, 10)",
+						encoding: "text",
+						name: "world.txt"
+					}
+				],
+				mode: "karel",
+				title: "Karel browser project",
+				user: userID
+			})
+		);
+	});
+
+	it("rejects project payloads that do not include a code file for the selected mode", async () => {
+		await withPythonProjectRoute(async baseUrl => {
+			for (const payload of [
+				{
+					files: [{ content: "print('wrong mode')\n", name: "main.py" }],
+					mode: "java",
+					title: "Missing Java file"
+				},
+				{
+					files: [{ content: "public class Main {}", name: "Main.java" }],
+					mode: "python",
+					title: "Missing Python file"
+				}
 			]) {
 				const response = await postJson(baseUrl, payload);
+				const body = await response.json();
 
 				expect(response.status).toBe(400);
+				expect(body.issues[0].path).toEqual(["files"]);
 			}
 		});
 
@@ -283,16 +350,29 @@ describe("Python project routes", () => {
 			readFileSync(
 				resolve(__dirname, "../src/types/entities/IPythonProject.ts"),
 				"utf8"
+			),
+			readFileSync(
+				resolve(__dirname, "../src/models/schemas/PythonProject.ts"),
+				"utf8"
+			),
+			readFileSync(
+				resolve(__dirname, "../src/models/schemas/PythonProjectReview.ts"),
+				"utf8"
 			)
 		].join("\n");
 
 		expect(sources).toContain('app.get("/healthz"');
 		expect(sources).toContain(
-			'const projectModeSchema = z.enum(["data", "pgzero", "python", "turtle"])'
+			'const projectModeSchema = z.enum(["data", "java", "karel", "pgzero", "python", "turtle"])'
 		);
 		expect(sources).toContain(
-			'export type PythonProjectMode = "data" | "pgzero" | "python" | "turtle";'
+			'export type PythonProjectMode = "data" | "java" | "karel" | "pgzero" | "python" | "turtle";'
 		);
+		expect(sources).toContain(
+			'enum: ["data", "java", "karel", "pgzero", "python", "turtle"]'
+		);
+		expect(sources).toContain("ROOT_TEXT_FILE_RE =");
+		expect(sources).toContain("java|json");
 		expect(sources).not.toMatch(/node:child_process|child_process/);
 		expect(sources).not.toMatch(/\bworker_threads\b|\bnew\s+Worker\b/);
 		expect(sources).not.toMatch(/\bjavaIdeRuntime\b|\brunJavaIdeProject\b/);

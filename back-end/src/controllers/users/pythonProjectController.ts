@@ -12,10 +12,11 @@ import { PythonProjectReview } from "../../models/schemas/PythonProjectReview.js
 import { User } from "../../models/schemas/User.js";
 
 const SAFE_FILE_SEGMENT_RE = /^\w[\w.-]*$/;
-const ROOT_TEXT_FILE_RE = /^\w[\w.-]*\.(?:csv|json|md|py|txt)$/i;
+const ROOT_TEXT_FILE_RE = /^\w[\w.-]*\.(?:csv|java|json|md|py|txt)$/i;
 const IMAGE_FILE_RE = /^images\/\w[\w.-]*\.(?:gif|jpe?g|png|svg|webp)$/i;
 const AUDIO_FILE_RE = /^(?:music|sounds)\/\w[\w.-]*\.(?:mp3|ogg|wav)$/i;
 const PYTHON_FILE_NAME_RE = /\.py$/i;
+const JAVA_FILE_NAME_RE = /\.java$/i;
 const ASSET_DIRECTORY_NAMES = new Set(["images", "music", "sounds"]);
 const RUNTIME_RESERVED_FILE_NAMES = new Set([
 	"_classes_artifacts.py",
@@ -73,7 +74,7 @@ function isSafeProjectFileName(value: string) {
 	return IMAGE_FILE_RE.test(value) || AUDIO_FILE_RE.test(value);
 }
 
-const projectModeSchema = z.enum(["data", "pgzero", "python", "turtle"]);
+const projectModeSchema = z.enum(["data", "java", "karel", "pgzero", "python", "turtle"]);
 const projectFileSchema = z.object({
 	name: z
 		.string()
@@ -82,7 +83,7 @@ const projectFileSchema = z.object({
 		.max(80)
 		.refine(
 			isSafeProjectFileName,
-			"Use a safe .py file, root data/text file, or images/, sounds/, or music/ asset file that does not use a runtime-reserved module name"
+			"Use a safe code file, root data/text file, or images/, sounds/, or music/ asset file that does not use a runtime-reserved module name"
 		),
 	content: z.string().max(MAX_FILE_LENGTH),
 	encoding: z.enum(["text", "base64"]).optional()
@@ -94,10 +95,6 @@ const projectFilesSchema = z
 	.refine(
 		files => files.reduce((total, file) => total + file.name.length + file.content.length, 0) <= MAX_PROJECT_LENGTH,
 		`Project files must be ${MAX_PROJECT_LENGTH} characters or less in total`
-	)
-	.refine(
-		files => files.some(file => PYTHON_FILE_NAME_RE.test(file.name)),
-		"Project must include at least one Python file"
 	);
 
 const projectPayloadSchema = z.object({
@@ -166,8 +163,61 @@ function serializePythonProjectReview(review: IPythonProjectReview) {
 	};
 }
 
-function normalizeProjectFiles(files: PythonProjectFile[] | undefined) {
-	const sourceFiles = files?.length ? files : [DEFAULT_PROJECT_FILE];
+function defaultProjectFileForMode(mode: PythonProjectMode): PythonProjectFile {
+	if (mode === "java") {
+		return {
+			name: "Main.java",
+			content: ""
+		};
+	}
+
+	if (mode === "karel") {
+		return {
+			name: "MyProgram.java",
+			content: ""
+		};
+	}
+
+	return DEFAULT_PROJECT_FILE;
+}
+
+function requiredCodeFileMessage(mode: PythonProjectMode) {
+	if (mode === "java" || mode === "karel") {
+		return "Project must include at least one Java file";
+	}
+
+	return "Project must include at least one Python file";
+}
+
+function projectFilesMatchMode(files: PythonProjectFile[], mode: PythonProjectMode) {
+	const codeFileRe = mode === "java" || mode === "karel" ? JAVA_FILE_NAME_RE : PYTHON_FILE_NAME_RE;
+	return files.some(file => codeFileRe.test(file.name));
+}
+
+function rejectProjectFilesForMode(
+	res: Parameters<RequestHandler>[1],
+	files: PythonProjectFile[],
+	mode: PythonProjectMode,
+	message: "Invalid project payload" | "Invalid review payload"
+) {
+	if (projectFilesMatchMode(files, mode)) return false;
+
+	res.status(400).json({
+		message,
+		issues: [
+			{
+				code: "custom",
+				message: requiredCodeFileMessage(mode),
+				path: ["files"]
+			}
+		]
+	});
+	return true;
+}
+
+function normalizeProjectFiles(files: PythonProjectFile[] | undefined, mode: PythonProjectMode = "python") {
+	const defaultFile = defaultProjectFileForMode(mode);
+	const sourceFiles = files?.length ? files : [defaultFile];
 	const seen = new Set<string>();
 	const cleanFiles: PythonProjectFile[] = [];
 
@@ -182,7 +232,7 @@ function normalizeProjectFiles(files: PythonProjectFile[] | undefined) {
 		});
 	}
 
-	return cleanFiles.length ? cleanFiles : [DEFAULT_PROJECT_FILE];
+	return cleanFiles.length ? cleanFiles : [defaultFile];
 }
 
 function normalizeActiveFileName(activeFileName: string | undefined, files: PythonProjectFile[]) {
@@ -386,12 +436,14 @@ export const createPythonProject: RequestHandler = async (req, res) => {
 		return res.status(400).json({ message: "Invalid project payload", issues: parsed.error.issues });
 	}
 
-	const files = normalizeProjectFiles(parsed.data.files);
+	const mode = parsed.data.mode ?? "python";
+	const files = normalizeProjectFiles(parsed.data.files, mode);
+	if (rejectProjectFilesForMode(res, files, mode, "Invalid project payload")) return;
 	const activeFileName = normalizeActiveFileName(parsed.data.activeFileName, files);
 	const project = await PythonProject.create({
 		user: userID,
 		title: parsed.data.title ?? "Untitled Python Project",
-		mode: parsed.data.mode ?? "python",
+		mode,
 		files,
 		activeFileName,
 		courseID: parsed.data.courseID,
@@ -430,7 +482,7 @@ export const createPythonProjectReview: RequestHandler = async (req, res) => {
 		});
 	}
 
-	const files = normalizeProjectFiles(project.files);
+	const files = normalizeProjectFiles(project.files, project.mode);
 	const review = await PythonProjectReview.create({
 		user: user._id,
 		sourceProject: project._id,
@@ -467,7 +519,9 @@ export const updatePythonProject: RequestHandler = async (req, res) => {
 		return res.status(400).json({ message: "Invalid project payload", issues: parsed.error.issues });
 	}
 
-	const nextFiles = parsed.data.files ? normalizeProjectFiles(parsed.data.files) : project.files;
+	const nextMode = parsed.data.mode ?? project.mode;
+	const nextFiles = parsed.data.files ? normalizeProjectFiles(parsed.data.files, nextMode) : project.files;
+	if (rejectProjectFilesForMode(res, nextFiles, nextMode, "Invalid project payload")) return;
 	const nextActiveFileName = normalizeActiveFileName(parsed.data.activeFileName ?? project.activeFileName, nextFiles);
 
 	if (parsed.data.title) project.title = parsed.data.title;
@@ -545,7 +599,8 @@ export const updatePythonProjectReview: RequestHandler = async (req, res) => {
 	]);
 	if (!project || !review) return res.sendStatus(404);
 
-	const nextFiles = parsed.data.files ? normalizeProjectFiles(parsed.data.files) : review.files;
+	const nextFiles = parsed.data.files ? normalizeProjectFiles(parsed.data.files, review.mode) : review.files;
+	if (rejectProjectFilesForMode(res, nextFiles, review.mode, "Invalid review payload")) return;
 	const nextActiveFileName = normalizeActiveFileName(parsed.data.activeFileName ?? review.activeFileName, nextFiles);
 
 	if (parsed.data.files) review.files = nextFiles;
