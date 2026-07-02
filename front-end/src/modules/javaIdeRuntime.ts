@@ -1202,29 +1202,74 @@ function evaluateJavaStringMethodExpression(
 	output?: JavaConsoleOutputState
 ): JavaConsoleValue | null {
 	const match = expression.match(
-		/^([\s\S]+)\.(length|charAt|substring)\s*\(([\s\S]*)\)$/i
+		/^([\s\S]+)\.(length|charAt|substring|equals|equalsIgnoreCase|compareTo|indexOf|toLowerCase|toUpperCase|trim)\s*\(([\s\S]*)\)$/i
 	);
 	if (!match?.[1] || !match[2]) return null;
 	const receiver = javaValueToString(
 		evaluateJavaExpression(match[1], context, output)
 	);
-	const args = splitJavaArguments(match[3] ?? "").map(arg =>
-		Math.trunc(
-			javaValueToNumber(evaluateJavaExpression(arg, context, output))
-		)
+	const argValues = splitJavaArguments(match[3] ?? "").map(arg =>
+		evaluateJavaExpression(arg, context, output)
+	);
+	const numericArgs = argValues.map(value =>
+		Math.trunc(javaValueToNumber(value))
 	);
 	const method = match[2].toLowerCase();
 	if (method === "length") return { type: "number", value: receiver.length };
 	if (method === "charat") {
 		return {
 			type: "string",
-			value: receiver[args[0] ?? 0] ?? ""
+			value: receiver[numericArgs[0] ?? 0] ?? ""
 		};
 	}
-	return {
-		type: "string",
-		value: receiver.slice(args[0] ?? 0, args[1] ?? receiver.length)
-	};
+	if (method === "substring") {
+		return {
+			type: "string",
+			value: receiver.slice(
+				numericArgs[0] ?? 0,
+				numericArgs[1] ?? receiver.length
+			)
+		};
+	}
+	if (method === "equals" || method === "equalsignorecase") {
+		return {
+			type: "boolean",
+			value: javaStringsAreEqual(
+				receiver,
+				javaValueToString(
+					argValues[0] ?? { type: "null", value: null }
+				),
+				method === "equalsignorecase"
+			)
+		};
+	}
+	if (method === "compareto") {
+		return {
+			type: "number",
+			value: compareJavaStrings(
+				receiver,
+				javaValueToString(argValues[0] ?? { type: "string", value: "" })
+			)
+		};
+	}
+	if (method === "indexof") {
+		return {
+			type: "number",
+			value: receiver.indexOf(
+				javaValueToString(
+					argValues[0] ?? { type: "string", value: "" }
+				),
+				numericArgs[1] ?? 0
+			)
+		};
+	}
+	if (method === "tolowercase") {
+		return { type: "string", value: receiver.toLowerCase() };
+	}
+	if (method === "touppercase") {
+		return { type: "string", value: receiver.toUpperCase() };
+	}
+	return { type: "string", value: receiver.trim() };
 }
 
 function evaluateJavaMethodCallExpression(
@@ -1412,9 +1457,13 @@ function evaluateJavaBooleanExpression(
 		/^([\s\S]+)\.(equals|equalsIgnoreCase)\s*\(([\s\S]*)\)$/i
 	);
 	if (equalityCall?.[1] && equalityCall[2] && equalityCall[3]) {
-		return javaValuesAreEqual(
-			evaluateJavaExpression(equalityCall[1], context, output),
-			evaluateJavaExpression(equalityCall[3], context, output),
+		return javaStringsAreEqual(
+			javaValueToString(
+				evaluateJavaExpression(equalityCall[1], context, output)
+			),
+			javaValueToString(
+				evaluateJavaExpression(equalityCall[3], context, output)
+			),
 			equalityCall[2].toLowerCase() === "equalsignorecase"
 		);
 	}
@@ -1451,6 +1500,21 @@ function javaValuesAreEqual(
 	return ignoreCase
 		? leftString.toLowerCase() === rightString.toLowerCase()
 		: leftString === rightString;
+}
+
+function javaStringsAreEqual(left: string, right: string, ignoreCase = false) {
+	return ignoreCase
+		? left.toLowerCase() === right.toLowerCase()
+		: left === right;
+}
+
+function compareJavaStrings(left: string, right: string) {
+	const length = Math.min(left.length, right.length);
+	for (let index = 0; index < length; index += 1) {
+		const difference = left.charCodeAt(index) - right.charCodeAt(index);
+		if (difference) return difference;
+	}
+	return left.length - right.length;
 }
 
 function evaluateJavaComparison(
