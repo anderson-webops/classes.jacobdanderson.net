@@ -5745,14 +5745,19 @@ onBeforeUnmount(() => {
 
 			<main v-if="selectedProject" class="python-ide-main">
 				<div class="editor-toolbar">
-					<label>
-						<span>Project name</span>
-						<input
-							:value="selectedProject.title"
-							type="text"
-							@input="updateProjectTitle"
-						/>
+					<label
+						class="project-title-label"
+						for="python-ide-project-title"
+					>
+						Project name
 					</label>
+					<input
+						id="python-ide-project-title"
+						class="project-title-input"
+						:value="selectedProject.title"
+						type="text"
+						@input="updateProjectTitle"
+					/>
 					<div class="editor-actions">
 						<div class="ide-settings">
 							<button
@@ -6934,7 +6939,7 @@ html.dark .file-delete:disabled::after {
 
 .new-file-row input,
 .project-delete-confirm input,
-.editor-toolbar > label input,
+.project-title-input,
 .stdin-panel textarea {
 	width: 100%;
 	border: 1px solid var(--color-border);
@@ -6945,7 +6950,7 @@ html.dark .file-delete:disabled::after {
 
 .new-file-row input,
 .project-delete-confirm input,
-.editor-toolbar > label input {
+.project-title-input {
 	min-height: 2.8rem;
 	padding: 0.55rem 0.75rem;
 }
@@ -6983,9 +6988,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar {
 	display: grid;
 	grid-template-columns: minmax(15rem, 1fr) auto;
+	grid-template-rows: auto var(--python-ide-toolbar-control-size);
 	column-gap: 0.75rem;
-	row-gap: 0.75rem;
-	align-items: end;
+	row-gap: 0.35rem;
+	align-items: stretch;
 }
 
 .stdin-panel {
@@ -6993,23 +6999,24 @@ html.dark .file-delete:disabled::after {
 	gap: 0.35rem;
 }
 
-.editor-toolbar > label {
+.project-title-label {
 	min-width: 0;
-	display: grid;
-	gap: 0.35rem;
-}
-
-.editor-toolbar > label span {
+	grid-column: 1;
+	grid-row: 1;
 	line-height: 1;
 }
 
-.editor-toolbar > label input {
+.project-title-input {
+	grid-column: 1;
+	grid-row: 2;
 	min-width: 0;
 }
 
 .editor-actions {
 	position: relative;
-	align-self: end;
+	grid-column: 2;
+	grid-row: 2;
+	align-self: stretch;
 	display: flex;
 	gap: 0.65rem;
 	align-items: stretch;
@@ -7017,7 +7024,7 @@ html.dark .file-delete:disabled::after {
 	height: var(--python-ide-toolbar-control-size);
 }
 
-.editor-toolbar > label input,
+.project-title-input,
 .editor-actions > .site-button,
 .ide-settings-trigger {
 	box-sizing: border-box;
@@ -7459,7 +7466,7 @@ html.dark .editor-shortcuts ul {
 .code-editor-shell:focus-within,
 .canvas-shell:focus-within,
 .stdin-panel:focus-within,
-.editor-toolbar > label input:focus-visible {
+.project-title-input:focus-visible {
 	border-color: var(--python-focus-ring);
 	box-shadow:
 		0 0 0 3px var(--python-focus-glow),
@@ -7821,7 +7828,15 @@ html.dark .editor-shortcuts ul {
 	}
 
 	.editor-toolbar {
+		grid-template-rows: auto;
 		align-items: stretch;
+	}
+
+	.project-title-label,
+	.project-title-input,
+	.editor-actions {
+		grid-column: 1;
+		grid-row: auto;
 	}
 
 	.editor-actions {
