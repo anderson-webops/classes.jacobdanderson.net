@@ -24,6 +24,8 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `toUpperCase()`, and `trim()` should appear as member completions.
 - Include beginner `Scanner` member completions for token reads, line reads,
   numeric/boolean reads, and validation predicates such as `hasNextInt()`.
+- Include beginner formatted-output completions for `System.out.printf`,
+  `System.out.format`, and `String.format`.
 
 ## Teaching and Runtime References
 
@@ -40,8 +42,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
 - [CodeHS Java docs](https://codehs.com/documentation/new/java-main) inform
   beginner Java console vocabulary such as printing, variables, methods,
   input, comparisons, math, and random numbers. The local console preview
-  follows a small beginner subset: `System.out.print` / `println`, simple
-  variables, string concatenation, string methods such as `length()`,
+  follows a small beginner subset: `System.out.print` / `println`, formatted
+  output through `System.out.printf`, `System.out.format`, and `String.format`,
+  simple variables, string concatenation, string methods such as `length()`,
   `charAt()`, `substring()`, `equals()`, `equalsIgnoreCase()`, `compareTo()`,
   `indexOf()`, `toLowerCase()`, `toUpperCase()`, and `trim()`, numeric
   arithmetic, simple casts, common `Math` helpers, `Scanner` reads from the IDE
@@ -57,6 +60,10 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `Arrays.deepToString(...)`, and beginner `ArrayList` calls such as `add`,
   `get`, `set`, `remove`, `size`, and `isEmpty`. It remains a browser teaching
   preview rather than a compiler.
+- [Java Formatter syntax](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Formatter.html)
+  is the reference point for formatted output. The browser preview implements a
+  small teaching subset: `%s`, `%d`, `%f` with optional width/precision, `%%`,
+  and `%n`.
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/) is a useful
   comparison point for browser editor UX, but its deeper Java IntelliSense path
   usually implies a language-server architecture. That is intentionally outside

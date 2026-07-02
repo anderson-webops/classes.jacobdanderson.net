@@ -1534,8 +1534,10 @@ const javaMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 	"System.out": [
 		completion("print", "method", "print without newline", 90),
 		completion("println", "method", "print with newline", 95),
-		completion("printf", "method", "formatted print", 70)
-	]
+		completion("printf", "method", "formatted print", 70),
+		completion("format", "method", "formatted print", 68)
+	],
+	String: [completion("format", "method", "formatted string", 72)]
 };
 
 const javaVariableMemberCompletions = [
