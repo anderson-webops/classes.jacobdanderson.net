@@ -339,6 +339,8 @@ public class Main {
     public static void main(String[] args) {
         String word = "Python";
         String padded = "  grid  ";
+        char letter = (char) ('a' + 2);
+        char upper = 'A';
         System.out.println(word.length());
         System.out.println(word.charAt(2));
         System.out.println(word.substring(1, 4));
@@ -359,6 +361,10 @@ public class Main {
         System.out.println((int) Math.E);
         System.out.println(2 + 3 + " points");
         System.out.println("points " + 2 + 3);
+        System.out.println(letter);
+        System.out.println((int) upper);
+        System.out.println(upper + 2);
+        System.out.println('Z');
     }
 }`
 				}
@@ -387,7 +393,11 @@ public class Main {
 			"314",
 			"2",
 			"5 points",
-			"points 23"
+			"points 23",
+			"c",
+			"65",
+			"67",
+			"Z"
 		]);
 	});
 
