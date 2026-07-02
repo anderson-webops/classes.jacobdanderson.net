@@ -1526,6 +1526,7 @@ const javaKeywordCompletions = [
 	"ArrayList",
 	"List",
 	"Set",
+	"Random",
 	"HashSet",
 	"TreeSet",
 	"Queue",
@@ -1544,6 +1545,7 @@ const javaKeywordCompletions = [
 	"import java.util.ArrayList",
 	"import java.util.List",
 	"import java.util.Set",
+	"import java.util.Random",
 	"import java.util.HashSet",
 	"import java.util.TreeSet",
 	"import java.util.Queue",
@@ -1782,6 +1784,12 @@ const javaSnippetCompletions = [
 		"arraylist",
 		"ArrayList declaration",
 		`ArrayList<${snippetField("Type")}> ${snippetField("name")} = new ArrayList<>();${snippetEnd}`,
+		77
+	),
+	pythonSnippet(
+		"random_generator",
+		"java.util.Random declaration",
+		`Random ${snippetField("random")} = new Random();${snippetEnd}`,
 		77
 	),
 	pythonSnippet(

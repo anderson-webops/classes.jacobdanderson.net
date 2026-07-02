@@ -351,6 +351,7 @@ describe("python IDE CodeMirror editor", () => {
 		expect(referenceSource).not.toContain(
 			"https://github.com/codemirror/lang-java"
 		);
+		expect(referenceSource).toContain("java.util.Random");
 
 		const javaLabels = javaIdeCompletionsForMode("java").map(
 			option => option.label
@@ -365,6 +366,7 @@ describe("python IDE CodeMirror editor", () => {
 				"array2d",
 				"array2d_values",
 				"arraylist",
+				"random_generator",
 				"hashset",
 				"priority_queue",
 				"hashmap",
@@ -389,6 +391,7 @@ describe("python IDE CodeMirror editor", () => {
 				"Collections",
 				"List",
 				"Set",
+				"Random",
 				"HashSet",
 				"TreeSet",
 				"Queue",
@@ -406,6 +409,7 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.util.Collections",
 				"import java.util.List",
 				"import java.util.Set",
+				"import java.util.Random",
 				"import java.util.HashSet",
 				"import java.util.TreeSet",
 				"import java.util.Queue",
@@ -702,6 +706,17 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.util.HashSet",
 				"import java.util.Comparator"
 			])
+		);
+
+		const randomDoc = "import java.util.Ran";
+		const [randomResult] = autocompleteResultsForDocAt(
+			"java",
+			randomDoc,
+			randomDoc.length
+		);
+		expect(randomResult?.from).toBe(0);
+		expect(randomResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining(["import java.util.Random"])
 		);
 
 		const ioDoc = "import java.io.FileW";
