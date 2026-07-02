@@ -3223,7 +3223,9 @@ describe("python IDE project helpers", () => {
 		expect(helpTextSource).toContain(".code-panel { overflow: hidden;");
 		expect(helpTextSource).toContain("max-height: min(24rem, 44vh);");
 		expect(helpTextSource).toContain("overscroll-behavior: contain;");
-		expect(helpTextSource).toContain("Cmd/Ctrl+/ toggles comments.");
+		expect(helpTextSource).toContain(
+			"Cmd/Ctrl+/ toggles comments for the line or selection."
+		);
 		expect(helpTextSource).toContain(
 			"Ctrl+Space opens completions; Enter accepts the highlighted option."
 		);
@@ -4308,6 +4310,20 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 
+		expect(pageSource).toContain("const newFileNamePlaceholder = computed");
+		expect(pageSource).toContain(
+			'return "MyProgram.java, helpers/Helper.java, or world.txt";'
+		);
+		expect(pageSource).toContain(
+			'return "Main.java or src/main/java/Helper.java";'
+		);
+		expect(pageSource).toContain(
+			'return "helper.py, helpers/math_tools.py, or data.csv";'
+		);
+		expect(pageSource).toContain(':placeholder="newFileNamePlaceholder"');
+		expect(pageSource).not.toContain(
+			'placeholder="helper.py, helpers/math_tools.py, or data.csv"'
+		);
 		expect(pageSource).toContain(
 			':aria-label="`Delete file ${file.name}`"'
 		);
