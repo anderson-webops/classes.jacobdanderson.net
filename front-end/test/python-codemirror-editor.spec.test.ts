@@ -325,7 +325,14 @@ describe("python IDE CodeMirror editor", () => {
 			javaIdeCompletionsForMode("java", "System.out").map(
 				option => option.label
 			)
-		).toEqual(expect.arrayContaining(["print", "println", "printf"]));
+		).toEqual(
+			expect.arrayContaining(["print", "println", "printf", "format"])
+		);
+		expect(
+			javaIdeCompletionsForMode("java", "String").map(
+				option => option.label
+			)
+		).toEqual(expect.arrayContaining(["format"]));
 		expect(
 			javaIdeCompletionsForMode("java", "Arrays").map(
 				option => option.label
@@ -384,7 +391,10 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("offers Java and Karel member completions immediately after a dot", () => {
 		expect(autocompleteLabelsForDoc("java", "System.out.")).toEqual(
-			expect.arrayContaining(["print", "println", "printf"])
+			expect.arrayContaining(["print", "println", "printf", "format"])
+		);
+		expect(autocompleteLabelsForDoc("java", "String.")).toEqual(
+			expect.arrayContaining(["format"])
 		);
 		expect(autocompleteLabelsForDoc("java", "Math.")).toEqual(
 			expect.arrayContaining(["random", "sqrt"])
@@ -592,6 +602,25 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).not.toContain(".ide-splitter svg");
 		expect(pageSource).toMatch(
 			/\.ide-grid\.is-resizing \.ide-splitter\s*{[\s\S]*box-shadow: none;/
+		);
+	});
+
+	it("keeps IDE settings copy readable instead of all-caps", () => {
+		const pageSource = sourceFile(
+			"../src/components/PythonIdeWorkspace.vue"
+		);
+
+		expect(pageSource).toMatch(
+			/\.ide-settings-panel\s*{[\s\S]*width: min\(24rem, calc\(100vw - 1\.5rem\)\);[\s\S]*line-height: 1\.45;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
+		);
+		expect(pageSource).toMatch(
+			/\.ide-settings-panel span,\s*\.ide-settings-panel strong,\s*\.ide-settings-panel small\s*{[\s\S]*letter-spacing: 0;[\s\S]*text-transform: none;/
+		);
+		expect(pageSource).toMatch(
+			/\.ide-setting-toggle strong\s*{[\s\S]*font-weight: 700;/
+		);
+		expect(pageSource).toMatch(
+			/\.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.82rem;[\s\S]*font-weight: 500;[\s\S]*line-height: 1\.5;/
 		);
 	});
 

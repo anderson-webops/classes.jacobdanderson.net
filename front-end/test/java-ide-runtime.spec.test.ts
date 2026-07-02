@@ -32,6 +32,36 @@ describe("java IDE runtime", () => {
 		expect(result.stdout).toEqual(["Hello, Java 5"]);
 	});
 
+	it("previews beginner Java formatted console output", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        String name = "Ada";
+        int score = 7;
+        double ratio = 2.0 / 3.0;
+        System.out.printf("%s scored %03d%n", name, score);
+        System.out.format("ratio=%.2f done=%b", ratio, true);
+        System.out.println();
+        System.out.println(String.format("[%6s] %.1f%%", name, ratio * 100));
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual([
+			"Ada scored 007",
+			"ratio=0.67 done=true",
+			"[   Ada] 66.7%"
+		]);
+	});
+
 	it("ignores Java console prints inside comments", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",

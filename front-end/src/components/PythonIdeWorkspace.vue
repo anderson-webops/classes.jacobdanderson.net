@@ -7149,36 +7149,47 @@ html.dark .file-delete:disabled::after {
 	z-index: 8;
 	top: calc(100% + 0.55rem);
 	right: 0;
-	width: min(20rem, calc(100vw - 2rem));
-	max-height: min(20rem, calc(100vh - 2rem));
+	width: min(24rem, calc(100vw - 1.5rem));
+	max-height: min(28rem, calc(100vh - 2rem));
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 0.85rem;
+	padding: 1rem;
 	border: 1px solid var(--color-border);
 	border-radius: 16px;
 	background: rgba(255, 255, 255, 0.96);
 	box-shadow: var(--shadow-soft);
+	font-size: 0.95rem;
+	line-height: 1.45;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+.ide-settings-panel span,
+.ide-settings-panel strong,
+.ide-settings-panel small {
+	letter-spacing: 0;
+	text-transform: none;
 }
 
 .ide-setting-toggle {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
-	gap: 0.7rem;
+	gap: 0.85rem;
 	align-items: start;
 	color: var(--color-ink);
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
-	margin-top: 0.8rem;
-	padding-top: 0.8rem;
+	margin-top: 0.95rem;
+	padding-top: 0.95rem;
 	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-share {
 	display: grid;
-	gap: 0.65rem;
-	margin-top: 0.8rem;
-	padding-top: 0.8rem;
+	gap: 0.75rem;
+	margin-top: 0.95rem;
+	padding-top: 0.95rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7208,9 +7219,9 @@ html.dark .file-delete:disabled::after {
 
 .ide-setting-storage {
 	display: grid;
-	gap: 0.45rem;
-	margin-top: 0.8rem;
-	padding-top: 0.8rem;
+	gap: 0.5rem;
+	margin-top: 0.95rem;
+	padding-top: 0.95rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7246,13 +7257,15 @@ html.dark .file-delete:disabled::after {
 .ide-setting-toggle strong {
 	color: var(--color-ink-strong);
 	font-size: 0.95rem;
+	font-weight: 700;
 }
 
 .ide-setting-toggle small {
-	margin-top: 0.2rem;
+	margin-top: 0.28rem;
 	color: var(--color-ink-soft);
-	font-size: 0.78rem;
-	line-height: 1.45;
+	font-size: 0.82rem;
+	font-weight: 500;
+	line-height: 1.5;
 }
 
 .ide-setting-storage small {

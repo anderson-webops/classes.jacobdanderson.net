@@ -149,7 +149,9 @@ const DEFAULT_WORLD_SIZE = 10;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
-const JAVA_PRINT_RE = /System\.out\.(print|println)\s*\(([\s\S]*?)\)\s*;/g;
+const javaFormatConversions = "bcdefgosx";
+const JAVA_PRINT_RE =
+	/System\.out\.(print|println|printf|format)\s*\(([\s\S]*?)\)\s*;/g;
 const JAVA_SCANNER_METHOD_RE =
 	/^[A-Z_]\w*\.(next(?:Line|Int|Double|Boolean)?|hasNext(?:Line|Int|Double|Boolean)?)\s*\(\s*\)$/i;
 const JAVA_VARIABLE_DECLARATION_START_RE =
@@ -480,18 +482,15 @@ function executeJavaConsoleStatement(
 	}
 
 	for (const match of statement.matchAll(JAVA_PRINT_RE)) {
-		const method = match[1];
+		const method = match[1]?.toLowerCase() ?? "print";
 		const expression = match[2] ?? "";
-		const value = javaValueToString(
-			evaluateJavaExpression(expression, context, output)
-		);
-		if (method === "print") {
-			output.pendingLine += value;
-			continue;
-		}
-
-		output.stdout.push(`${output.pendingLine}${value}`);
-		output.pendingLine = "";
+		const value =
+			method === "printf" || method === "format"
+				? formatJavaConsoleExpression(expression, context, output)
+				: javaValueToString(
+						evaluateJavaExpression(expression, context, output)
+					);
+		appendJavaConsoleText(output, value, method === "println");
 	}
 
 	if (executeJavaConsoleMethodStatement(trimmed, context, output))
@@ -751,6 +750,13 @@ function evaluateJavaExpression(
 	);
 	if (collectionValue) return collectionValue;
 
+	const stringFormatValue = evaluateJavaStringFormatExpression(
+		trimmed,
+		context,
+		output
+	);
+	if (stringFormatValue) return stringFormatValue;
+
 	const castValue = evaluateJavaCastExpression(trimmed, context, output);
 	if (castValue) return castValue;
 
@@ -937,6 +943,161 @@ function parseJavaScannerInt(raw: string) {
 function parseJavaScannerDouble(raw: string) {
 	if (!isJavaScannerDoubleToken(raw)) return Number.NaN;
 	return Number.parseFloat(raw);
+}
+
+function evaluateJavaStringFormatExpression(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue | null {
+	const match = expression.match(/^String\.format\s*\(([\s\S]*)\)$/i);
+	if (!match) return null;
+	return {
+		type: "string",
+		value: formatJavaConsoleExpression(match[1] ?? "", context, output)
+	};
+}
+
+function formatJavaConsoleExpression(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+) {
+	const args = splitJavaArguments(expression);
+	const formatText = javaValueToString(
+		evaluateJavaExpression(args[0] ?? "", context, output)
+	);
+	const values = args
+		.slice(1)
+		.map(arg => evaluateJavaExpression(arg, context, output));
+	return formatJavaConsoleText(formatText, values);
+}
+
+function formatJavaConsoleText(formatText: string, values: JavaConsoleValue[]) {
+	let valueIndex = 0;
+	let formatted = "";
+	for (let index = 0; index < formatText.length; index += 1) {
+		const character = formatText[index] ?? "";
+		if (character !== "%") {
+			formatted += character;
+			continue;
+		}
+
+		const token = parseJavaFormatToken(formatText, index);
+		if (!token) {
+			formatted += character;
+			continue;
+		}
+		index = token.end;
+		if (token.conversion === "%") {
+			formatted += "%";
+			continue;
+		}
+		if (token.conversion === "n") {
+			formatted += "\n";
+			continue;
+		}
+
+		const value = values[valueIndex] ?? { type: "string", value: "" };
+		valueIndex += 1;
+		formatted += formatJavaFormatValue(value, token);
+	}
+	return formatted;
+}
+
+function parseJavaFormatToken(formatText: string, percentIndex: number) {
+	let index = percentIndex + 1;
+	if (index >= formatText.length) return null;
+	if (formatText[index] === "%" || formatText[index] === "n") {
+		return {
+			conversion: formatText[index] ?? "",
+			end: index,
+			flags: "",
+			precision: null,
+			width: null
+		};
+	}
+
+	const flagsStart = index;
+	while ("-+ 0,(".includes(formatText[index] ?? "")) index += 1;
+	const flags = formatText.slice(flagsStart, index);
+	const widthStart = index;
+	while (/\d/.test(formatText[index] ?? "")) index += 1;
+	const width =
+		index > widthStart
+			? Number.parseInt(formatText.slice(widthStart, index), 10)
+			: null;
+	let precision: number | null = null;
+	if (formatText[index] === ".") {
+		index += 1;
+		const precisionStart = index;
+		while (/\d/.test(formatText[index] ?? "")) index += 1;
+		precision =
+			index > precisionStart
+				? Number.parseInt(formatText.slice(precisionStart, index), 10)
+				: 0;
+	}
+
+	const conversion = formatText[index] ?? "";
+	return javaFormatConversions.includes(conversion.toLowerCase())
+		? { conversion, end: index, flags, precision, width }
+		: null;
+}
+
+function formatJavaFormatValue(
+	value: JavaConsoleValue,
+	token: {
+		conversion: string;
+		flags: string;
+		precision: number | null;
+		width: number | null;
+	}
+) {
+	const conversion = token.conversion.toLowerCase();
+	let text: string;
+	if (conversion === "d") {
+		text = String(Math.trunc(javaValueToNumber(value)));
+	} else if (conversion === "f") {
+		const number = javaValueToNumber(value);
+		text =
+			token.precision === null
+				? number.toFixed(6)
+				: number.toFixed(token.precision);
+	} else if (conversion === "b") {
+		text =
+			value.type === "boolean"
+				? String(value.value)
+				: String(value.type !== "null" && Boolean(value.value));
+	} else {
+		text = javaValueToString(value);
+		if (token.precision !== null) text = text.slice(0, token.precision);
+	}
+	if (!token.width || text.length >= token.width) return text;
+	const padding = (token.flags.includes("0") ? "0" : " ").repeat(
+		token.width - text.length
+	);
+	return token.flags.includes("-")
+		? `${text}${padding}`
+		: `${padding}${text}`;
+}
+
+function appendJavaConsoleText(
+	output: JavaConsoleOutputState,
+	text: string,
+	flushEnd = false
+) {
+	const lines = text.split("\n");
+	lines.forEach((line, index) => {
+		if (index > 0) {
+			output.stdout.push(output.pendingLine);
+			output.pendingLine = "";
+		}
+		output.pendingLine += line;
+	});
+	if (flushEnd) {
+		output.stdout.push(output.pendingLine);
+		output.pendingLine = "";
+	}
 }
 
 function isJavaScannerDoubleToken(raw: string) {
