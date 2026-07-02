@@ -334,6 +334,7 @@ describe("python IDE CodeMirror editor", () => {
 				"array2d_values",
 				"arraylist",
 				"hashmap",
+				"treemap",
 				"array_to_string",
 				"array_deep_to_string",
 				"foreach",
@@ -342,9 +343,14 @@ describe("python IDE CodeMirror editor", () => {
 				"sout",
 				"Arrays",
 				"HashMap",
+				"TreeMap",
+				"Map",
+				"Map.Entry",
 				"import java.util.ArrayList",
 				"import java.util.Arrays",
 				"import java.util.HashMap",
+				"import java.util.TreeMap",
+				"import java.util.Map",
 				"System.out.println"
 			])
 		);
@@ -408,7 +414,10 @@ describe("python IDE CodeMirror editor", () => {
 				"containsKey",
 				"keySet",
 				"values",
+				"entrySet",
 				"getOrDefault",
+				"getKey",
+				"getValue",
 				"clear",
 				"size",
 				"isEmpty"
@@ -456,6 +465,9 @@ describe("python IDE CodeMirror editor", () => {
 				"containsKey",
 				"keySet",
 				"values",
+				"entrySet",
+				"getKey",
+				"getValue",
 				"size",
 				"isEmpty"
 			])

@@ -138,6 +138,11 @@ type JavaConsoleValue =
 			value: string;
 	  }
 	| {
+			type: "mapEntry";
+			value: JavaMapEntry;
+	  }
+	| {
+			mapKind: "hashMap" | "treeMap";
 			type: "map";
 			value: JavaMapEntry[];
 	  }
@@ -271,7 +276,7 @@ function runConsoleJavaProject(
 			stdout.length || stderr.length
 				? stderr
 				: [
-						"The browser Java runner previews beginner console Java from main: System.out output, variables, Scanner input, decisions, loops, helper methods, arrays, and ArrayLists."
+						"The browser Java runner previews beginner console Java from main: System.out output, variables, Scanner input, decisions, loops, helper methods, arrays, ArrayLists, and maps."
 					],
 		stdout
 	};
@@ -1270,10 +1275,15 @@ function evaluateJavaCollectionExpression(
 	);
 	if (arrayList) return javaArrayListValue();
 
-	const hashMap = expression.match(
-		/^new\s+HashMap(?:\s*<[^>]*>)?\s*\(\s*\)$/i
+	const map = expression.match(
+		/^new\s+(HashMap|TreeMap)(?:\s*<[^>]*>)?\s*\(\s*\)$/i
 	);
-	if (hashMap) return javaMapValue();
+	if (map) {
+		return javaMapValue(
+			[],
+			map[1]?.toLowerCase() === "treemap" ? "treeMap" : "hashMap"
+		);
+	}
 
 	const arraysCopyOf = expression.match(/^Arrays\.copyOf\s*\(([\s\S]*)\)$/i);
 	if (arraysCopyOf?.[1]) {
@@ -1365,8 +1375,19 @@ function evaluateJavaCollectionExpression(
 		}
 	}
 
+	const mapEntryMethod = expression.match(
+		/^([A-Z_]\w*)\.(getKey|getValue)\s*\(\s*\)$/i
+	);
+	if (mapEntryMethod?.[1] && mapEntryMethod[2]) {
+		const value = context?.variables.get(mapEntryMethod[1]);
+		if (value?.type !== "mapEntry") return null;
+		return mapEntryMethod[2].toLowerCase() === "getkey"
+			? value.value.key
+			: value.value.value;
+	}
+
 	const mapMethod = expression.match(
-		/^([A-Z_]\w*)\.(get|containsKey|getOrDefault|keySet|values|size|isEmpty)\s*\(([^()]*)\)$/i
+		/^([A-Z_]\w*)\.(get|containsKey|getOrDefault|keySet|values|entrySet|size|isEmpty)\s*\(([^()]*)\)$/i
 	);
 	if (!mapMethod?.[1] || !mapMethod[2]) return null;
 	const value = context?.variables.get(mapMethod[1]);
@@ -1381,6 +1402,11 @@ function evaluateJavaCollectionExpression(
 	}
 	if (method === "values") {
 		return javaArrayListValue(value.value.map(entry => entry.value));
+	}
+	if (method === "entryset") {
+		return javaArrayListValue(
+			value.value.map(entry => javaMapEntryValue(entry))
+		);
 	}
 	const args = splitJavaArguments(mapMethod[3] ?? "");
 	const key = evaluateJavaExpression(args[0] ?? "", context, output);
@@ -1420,6 +1446,9 @@ function javaValueToString(value: JavaConsoleValue): string {
 		value.type === "map"
 	) {
 		return javaCollectionToString(value);
+	}
+	if (value.type === "mapEntry") {
+		return `${javaValueToString(value.value.key)}=${javaValueToString(value.value.value)}`;
 	}
 	if (value.type === "null") return "null";
 	return String(value.value);
@@ -1547,9 +1576,20 @@ function javaArrayListValue(value: JavaConsoleValue[] = []): JavaConsoleValue {
 	};
 }
 
-function javaMapValue(value: JavaMapEntry[] = []): JavaConsoleValue {
+function javaMapValue(
+	value: JavaMapEntry[] = [],
+	mapKind: "hashMap" | "treeMap" = "hashMap"
+): JavaConsoleValue {
 	return {
+		mapKind,
 		type: "map",
+		value
+	};
+}
+
+function javaMapEntryValue(value: JavaMapEntry): JavaConsoleValue {
+	return {
+		type: "mapEntry",
 		value
 	};
 }
@@ -1573,6 +1613,7 @@ function setJavaMapEntry(
 		return;
 	}
 	map.value.push({ key, value });
+	sortJavaMapEntriesIfNeeded(map);
 }
 
 function removeJavaMapEntry(
@@ -1583,6 +1624,15 @@ function removeJavaMapEntry(
 		javaValuesAreEqual(entry.key, key)
 	);
 	if (index >= 0) map.value.splice(index, 1);
+}
+
+function sortJavaMapEntriesIfNeeded(
+	map: Extract<JavaConsoleValue, { type: "map" }>
+) {
+	if (map.mapKind !== "treeMap") return;
+	map.value.sort((left, right) =>
+		compareJavaArrayValuesForSort(left.key, right.key)
+	);
 }
 
 function defaultJavaValueForType(type: string): JavaConsoleValue {

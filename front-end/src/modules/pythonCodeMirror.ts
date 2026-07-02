@@ -1524,10 +1524,15 @@ const javaKeywordCompletions = [
 	"Arrays",
 	"ArrayList",
 	"HashMap",
+	"TreeMap",
+	"Map",
+	"Map.Entry",
 	"Math",
 	"import java.util.Arrays",
 	"import java.util.ArrayList",
 	"import java.util.HashMap",
+	"import java.util.TreeMap",
+	"import java.util.Map",
 	"System.out.print",
 	"System.out.println"
 ].map(label => completion(label, "keyword", "Java", 70));
@@ -1598,26 +1603,19 @@ const javaVariableMemberCompletions = [
 		70
 	),
 	completion("add", "method", "append or insert an ArrayList item", 70),
-	completion("get", "method", "read an ArrayList item or HashMap value", 70),
+	completion("get", "method", "read an ArrayList item or map value", 70),
 	completion("set", "method", "replace an ArrayList item", 70),
-	completion("put", "method", "add or replace a HashMap value", 70),
-	completion(
-		"putIfAbsent",
-		"method",
-		"add a HashMap value only if missing",
-		70
-	),
-	completion(
-		"remove",
-		"method",
-		"remove a collection item or HashMap key",
-		70
-	),
+	completion("put", "method", "add or replace a map value", 70),
+	completion("putIfAbsent", "method", "add a map value only if missing", 70),
+	completion("remove", "method", "remove a collection item or map key", 70),
 	completion("contains", "method", "whether the ArrayList has an item", 70),
-	completion("containsKey", "method", "whether the HashMap has a key", 70),
-	completion("keySet", "method", "all HashMap keys", 70),
-	completion("values", "method", "all HashMap values", 70),
+	completion("containsKey", "method", "whether the map has a key", 70),
+	completion("keySet", "method", "all map keys", 70),
+	completion("values", "method", "all map values", 70),
+	completion("entrySet", "method", "all map entries", 70),
 	completion("getOrDefault", "method", "read a value or fallback", 70),
+	completion("getKey", "method", "map entry key", 70),
+	completion("getValue", "method", "map entry value", 70),
 	completion("clear", "method", "remove all collection items", 70),
 	completion("size", "method", "collection item count", 70),
 	completion("isEmpty", "method", "whether the collection is empty", 70)
@@ -1735,6 +1733,12 @@ const javaSnippetCompletions = [
 		"HashMap declaration",
 		`HashMap<${snippetField("KeyType")}, ${snippetField("ValueType")}> ${snippetField("name")} = new HashMap<>();${snippetEnd}`,
 		76
+	),
+	pythonSnippet(
+		"treemap",
+		"TreeMap declaration",
+		`TreeMap<${snippetField("KeyType")}, ${snippetField("ValueType")}> ${snippetField("name")} = new TreeMap<>();${snippetEnd}`,
+		75
 	),
 	pythonSnippet(
 		"array_to_string",
