@@ -29,8 +29,8 @@ server-side compilation, `javac`, Docker, or long-running execution services.
 - Keep beginner collection completions aligned with the course sequence:
   array declarations, enhanced `for` loops, `Arrays.toString(...)`,
   `Arrays.deepToString(...)`, `Arrays.sort(...)`, `Arrays.copyOf(...)`, 2D
-  array setup, `ArrayList` creation and core methods, and beginner `HashMap`
-  creation and core methods should be available from the editor.
+  array setup, `ArrayList` creation and core methods, and beginner `HashMap` /
+  `TreeMap` creation and core `Map` methods should be available from the editor.
 - Keep beginner `String` completions aligned with Java Level 1, AP CSA, and
   sorting lessons: `length()`, `charAt()`, `substring()`, `equals()`,
   `equalsIgnoreCase()`, `compareTo()`, `indexOf()`, `toLowerCase()`,
@@ -87,9 +87,11 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   loops, row `.length`, chained row/column indexing, and
   `Arrays.deepToString(...)`, and beginner `ArrayList` calls such as `add`,
   indexed `add`, `get`, `set`, `remove`, `contains`, `clear`, `size`, and
-  `isEmpty`, plus beginner `HashMap` calls such as `put`, `putIfAbsent`, `get`,
-  `getOrDefault`, `containsKey`, `remove`, `keySet`, `values`, `clear`, `size`,
-  and `isEmpty`. It remains a browser teaching preview rather than a compiler.
+  `isEmpty`, plus beginner map calls on `HashMap` and `TreeMap` such as `put`,
+  `putIfAbsent`, `get`, `getOrDefault`, `containsKey`, `remove`, `keySet`,
+  `values`, `entrySet`, `Map.Entry.getKey()`, `Map.Entry.getValue()`, `clear`,
+  `size`, and `isEmpty`. It remains a browser teaching preview rather than a
+  compiler.
 - [Java Formatter syntax](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Formatter.html)
   is the reference point for formatted output. The browser preview implements a
   small teaching subset: `%s`, `%d`, `%f` with optional width/precision, `%%`,

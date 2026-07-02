@@ -85,7 +85,7 @@ describe("java IDE runtime", () => {
 		});
 
 		expect(result.stderr).toEqual([
-			"The browser Java runner previews beginner console Java from main: System.out output, variables, Scanner input, decisions, loops, helper methods, arrays, and ArrayLists."
+			"The browser Java runner previews beginner console Java from main: System.out output, variables, Scanner input, decisions, loops, helper methods, arrays, ArrayLists, and maps."
 		]);
 		expect(result.stdout).toEqual([]);
 	});
@@ -659,13 +659,15 @@ public class Main {
 		]);
 	});
 
-	it("previews beginner Java HashMaps with core map methods", () => {
+	it("previews beginner Java maps with core map methods and entry iteration", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
 			files: [
 				{
 					name: "Main.java",
 					content: `import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Main {
     public static void main(String[] args) {
@@ -675,12 +677,24 @@ public class Main {
         counts.putIfAbsent("Ada", 9);
         counts.putIfAbsent("Grace", 3);
 
+        String trace = "";
+        for (Map.Entry<String, Integer> entry : counts.entrySet()) {
+            trace += entry.getKey() + "=" + entry.getValue() + ";";
+        }
+
+        Map<String, Integer> sorted = new TreeMap<>();
+        sorted.put("Linus", 1);
+        sorted.put("Ada", 2);
+
         System.out.println(counts.get("Ada"));
         System.out.println(counts.getOrDefault("Karel", 0));
         System.out.println(counts.containsKey("Grace"));
         System.out.println(counts.size());
         System.out.println(counts.keySet());
         System.out.println(counts.values());
+        System.out.println(counts.entrySet());
+        System.out.println(trace);
+        System.out.println(sorted.keySet());
         System.out.println(counts);
         counts.remove("Linus");
         counts.clear();
@@ -700,6 +714,9 @@ public class Main {
 			"3",
 			"[Ada, Linus, Grace]",
 			"[2, 1, 3]",
+			"[Ada=2, Linus=1, Grace=3]",
+			"Ada=2;Linus=1;Grace=3;",
+			"[Ada, Linus]",
 			"{Ada=2, Linus=1, Grace=3}",
 			"true"
 		]);
