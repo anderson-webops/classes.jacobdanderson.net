@@ -2910,6 +2910,11 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Line wrap");
 		expect(pageSource).toContain("Expanded layout");
 		expect(pageSource).toContain(
+			"max-height: min(31rem, calc(100vh - 1.5rem), 44vh);"
+		);
+		expect(pageSource).toContain("font-variant: normal;");
+		expect(pageSource).toContain("text-transform: none;");
+		expect(pageSource).toContain(
 			"recommendationsEnabled: codeRecommendationsEnabled.value"
 		);
 		expect(pageSource).toContain(
