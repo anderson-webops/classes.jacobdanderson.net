@@ -524,6 +524,16 @@ function executeJavaCollectionMutationStatement(
 	context: JavaConsoleContext,
 	output: JavaConsoleOutputState
 ) {
+	const arraySort = statement.match(
+		/^Arrays\.sort\s*\(\s*([A-Z_]\w*)\s*\)$/i
+	);
+	if (arraySort?.[1]) {
+		const value = context.variables.get(arraySort[1]);
+		if (value?.type !== "array") return false;
+		value.value.sort(compareJavaArrayValuesForSort);
+		return true;
+	}
+
 	const match = statement.match(
 		/^([A-Z_]\w*)\.(add|set|remove|clear)\s*\(([\s\S]*)\)$/i
 	);
@@ -572,6 +582,16 @@ function executeJavaCollectionMutationStatement(
 	}
 	collection.value.splice(0);
 	return true;
+}
+
+function compareJavaArrayValuesForSort(
+	left: JavaConsoleValue,
+	right: JavaConsoleValue
+) {
+	if (left.type === "number" && right.type === "number") {
+		return left.value - right.value;
+	}
+	return javaValueToString(left).localeCompare(javaValueToString(right));
 }
 
 function storeJavaVariableFromStatement(
