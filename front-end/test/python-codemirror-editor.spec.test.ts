@@ -474,19 +474,19 @@ describe("python IDE CodeMirror editor", () => {
 			"grid-template-columns: minmax(15rem, 1fr) auto;"
 		);
 		expect(pageSource).toContain(
-			"grid-template-rows: auto var(--python-ide-toolbar-control-size);"
+			"grid-template-rows: 0.75rem var(--python-ide-toolbar-control-size);"
 		);
 		expect(pageSource).toMatch(
-			/\.editor-toolbar\s*{[\s\S]*align-items: stretch;/
+			/\.editor-toolbar\s*{[\s\S]*align-items: start;/
 		);
 		expect(pageSource).toMatch(
-			/\.project-title-label\s*{[\s\S]*grid-column: 1;[\s\S]*grid-row: 1;/
+			/\.project-title-label\s*{[\s\S]*grid-column: 1;[\s\S]*grid-row: 1;[\s\S]*height: 0\.75rem;/
 		);
 		expect(pageSource).toMatch(
-			/\.project-title-input\s*{[\s\S]*grid-column: 1;[\s\S]*grid-row: 2;/
+			/\.project-title-input\s*{[\s\S]*grid-column: 1;[\s\S]*grid-row: 2;[\s\S]*align-self: start;/
 		);
 		expect(pageSource).toMatch(
-			/\.editor-actions\s*{[\s\S]*grid-column: 2;[\s\S]*grid-row: 2;[\s\S]*align-self: stretch;[\s\S]*height: var\(--python-ide-toolbar-control-size\);/
+			/\.editor-actions\s*{[\s\S]*grid-column: 2;[\s\S]*grid-row: 2;[\s\S]*align-self: start;[\s\S]*height: var\(--python-ide-toolbar-control-size\);/
 		);
 		expect(pageSource).toMatch(/\.ide-settings\s*{[\s\S]*height: 100%;/);
 		expect(pageSource).toContain("box-sizing: border-box;");
