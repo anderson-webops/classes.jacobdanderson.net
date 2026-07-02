@@ -159,13 +159,18 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "Course Launch: Start Java Visually",
 					content:
-						"The opening Java sequence starts in a visible robot world before switching to console-only programs. A first run shows an object on a grid, one small command, and compiler feedback connected to a visible result. BlueJ with Carol/Karel fits classroom work, while the browser Code IDE or CodeHS Karel provides an outside-class fallback when device installs are unavailable.",
+						"The opening Java sequence starts in a visible robot world before switching to console-only programs. For the first week or roughly first three class meetings, Carol/Karel makes the object on a grid, one small command, and compiler feedback visible together. BlueJ in class fits the object-bench and Carol/Karel workflow, while CodeHS or the browser Code IDE outside class provides the fallback when device installs are unavailable.",
 					projectLink: "/ide?mode=karel"
+				},
+				{
+					title: "First-Week Carol/Karel Cadence",
+					content:
+						"Repeat several short robot exercises before the text bridge: one movement trace, one blocked-move error, one beeper or wall task, one helper-method refactor, and one parameterized movement. This keeps Java visual long enough for syntax, main method structure, state, method calls, and errors to become concrete without turning the whole course into a robot course."
 				},
 				{
 					title: "Compile, Run, Observe, Repair",
 					content:
-						"Missing semicolons, mismatched braces, wrong capitalization, and blocked robot moves become intentional first errors. The goal is not only to fix syntax, but to learn that Java reports a file, line, and symbol before the program runs. One-line changes, reruns, and short explanations separate compile-time, runtime, and logic errors."
+						"Missing semicolons, mismatched braces, wrong capitalization, and blocked robot moves become intentional first errors. The repair routine reads the Java file, line, and symbol before the program runs, then uses one-line changes, reruns, and short explanations to separate compile-time, runtime, and logic errors."
 				},
 				{
 					title: "Robot State: Street, Avenue, Direction, Beepers",
@@ -177,6 +182,11 @@ export const javaLevel1Course: RawCourse = {
 					content:
 						"Create a short robot program that starts Carol/Karel at a known location, moves around one obstacle, and ends at a named target square. Include a written trace with the robot's street, avenue, and direction after each major step.",
 					projectLink: "/ide?mode=karel"
+				},
+				{
+					title: "Visual Exit Ticket: Ready for Text",
+					content:
+						"Before moving to console-only Java, the exit ticket explains one robot program from class name to `main()`, statement order, constructor arguments, state changes, and final grid evidence. A ready explanation can fast-forward into the text bridge while keeping the visual model available for debugging later."
 				}
 			],
 			supplementalProjects: [
@@ -189,6 +199,16 @@ export const javaLevel1Course: RawCourse = {
 					title: "J1A Supplemental Project 2: Error Journal",
 					content:
 						"Collect three intentional errors from the robot project: one syntax error, one runtime/world error, and one logic error. For each, record the message or symptom, the cause, and the smallest code change that fixed it."
+				},
+				{
+					title: "J1A Supplemental Project 3: Blocked Move Debugging",
+					content:
+						"Create one world where a robot move fails because of a wall or boundary. Predict the failure, run the program, record the message or visual symptom, then repair the path with the smallest code change that still reaches the target."
+				},
+				{
+					title: "J1A Supplemental Project 4: Five-Robot Warm-Up Set",
+					content:
+						"Complete five small Carol/Karel warm-ups: straight path, turn sequence, beeper pickup, blocked-path repair, and target-square challenge. The set is finished when each program has a short state trace and one sentence explaining what changed visually."
 				}
 			]
 		},
@@ -203,12 +223,12 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "Primitives vs. Objects with Visual Inspection",
 					content:
-						"Use BlueJ object inspection or equivalent diagrams to contrast primitive values such as `int`, `double`, `char`, and `boolean` with object references such as `String` or a robot object. The key distinction is that objects carry methods and state, while primitives store direct values."
+						"Use BlueJ object inspection or equivalent diagrams to contrast primitive values such as `int`, `double`, `char`, and `boolean` with object references such as `String` or a robot object. Include a concrete replacement trace such as `int x = 7; x = 9;` to show that primitives store direct values, while objects come from classes, carry methods, and preserve inspectable state."
 				},
 				{
 					title: "Parameters and Arguments from Robot Construction",
 					content:
-						"Parameters begin with visible robot setup: street, avenue, direction, and beeper count. The checkpoint explains how changing one constructor argument changes the robot's starting state, then transfers that idea to ordinary method calls."
+						"Parameters begin with visible robot setup: street, avenue, direction, and beeper count. The checkpoint explains how changing one constructor argument changes the robot's starting state, then transfers that idea to ordinary method calls and to helpers such as `moveMany(3)` instead of three copied move statements."
 				},
 				{
 					title: "J1B Project 1: Parameterized Robot Moves",
@@ -227,6 +247,11 @@ export const javaLevel1Course: RawCourse = {
 					title: "J1B Supplemental Project 2: Constructor Swap",
 					content:
 						"Run the same robot program with different starting constructor arguments. Record which changes affected the starting position, facing direction, beeper count, and final behavior."
+				},
+				{
+					title: "J1B Supplemental Project 3: Primitive Replacement Trace",
+					content:
+						"Trace a primitive variable before and after reassignment, then contrast it with a `String` or robot object that exposes methods. The finished note names which values are direct primitive storage and which behavior comes from a class-defined object."
 				}
 			]
 		},
@@ -236,7 +261,7 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "Introductions and Java Setup",
 					content:
-						"Move from visual robot programs into console Java. Keep the same compile-run-observe habit, now using `main()`, `System.out.print`, variables, and typed input to make program state visible through output."
+						"Move from visual robot programs into console Java only after the robot trace is comfortable. Keep the same compile-run-observe habit, now using `main()`, `System.out.print`, variables, and typed input to make program state visible through output instead of a grid."
 				},
 				{
 					title: "Optional Python-to-Java Bridge",
@@ -633,7 +658,7 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "Check-In #1 Overview",
 					content:
-						"This module is a low-pressure review of variables, strings, conditionals, and loops. Work through the prompts independently first, then revisit any ideas that need reinforcement.",
+						"This module is a low-pressure review of variables, strings, conditionals, and loops after the visual-to-text bridge. Work through the prompts independently first, then revisit any ideas that need reinforcement by translating the text output back to state changes, method calls, and visible evidence.",
 					projectLink:
 						"https://github.com/instruction-material/APCS/tree/main/APCS-Check-in-1/starter",
 					solutionLink:

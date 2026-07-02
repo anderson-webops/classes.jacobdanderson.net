@@ -105,6 +105,11 @@ describe("public course pathways", () => {
 		expect(pathwayText("ap-csa")).toMatch(/Bluebook|digital AP/i);
 		expect(pathwayText("ap-csa")).toMatch(/FRQ|MCQ/i);
 
+		expect(pathwayText("java-pathway")).toMatch(/Visual-First/i);
+		expect(pathwayText("java-pathway")).toMatch(/first-week Carol\/Karel/i);
+		expect(pathwayText("java-pathway")).toMatch(/visual exit ticket/i);
+		expect(pathwayText("java-pathway")).toMatch(/CodeHS or the browser Code IDE/i);
+
 		expect(pathwayText("usaco")).toMatch(/P1, one P2, and one P3/i);
 		expect(pathwayText("usaco")).toMatch(/USACO Official|USACO Guide/i);
 		expect(pathwayText("usaco")).toMatch(/postmortem/i);

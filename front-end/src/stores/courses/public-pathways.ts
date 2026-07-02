@@ -499,21 +499,21 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 	},
 	{
 		id: "java-pathway",
-		title: "Java Core, Visual Extensions, and Advanced OOP",
+		title: "Java Visual-First Core and Advanced OOP",
 		adminPriority: "soon",
 		courseIds: ["java-level-1", "java-level-2", "java-level-3"],
 		audience:
-			"Students moving from visual Java robot worlds into text Java, object-oriented design, inheritance, interfaces, abstract classes, records, optional graphics projects, and application work.",
+			"Students moving from first-week Carol/Karel robot worlds into text Java, object-oriented design, inheritance, interfaces, abstract classes, records, optional graphics projects, and application work.",
 		prerequisiteSummary:
-			"Java Level 1 can start from no Java experience by using Carol/Karel-style visual robot worlds. Java Level 2 and Level 3 expect variables, control flow, methods, arrays or ArrayLists, and basic class construction.",
+			"Java Level 1 can start from no Java experience by using Carol/Karel-style visual robot worlds before the console bridge. Java Level 2 and Level 3 expect variables, control flow, methods, arrays or ArrayLists, and basic class construction.",
 		outcomes: [
-			"Use a visual robot world to connect Java syntax, compiler feedback, object state, method calls, parameters, and debugging before moving into console-only code.",
+			"Use a first-week visual robot world to connect Java syntax, compiler feedback, object state, method calls, constructor arguments, parameters, and debugging before moving into console-only code.",
 			"Write Java classes with encapsulation, constructors, methods, inheritance, polymorphism, abstract classes, interfaces, and records where appropriate.",
 			"Use optional graphics extensions as project variants while keeping the core Java sequence in Level 1, Level 2, and Level 3.",
 			"Tests, tracing, and design explanations show object state and method contracts."
 		],
 		sequencingNotes: [
-			"Java Level 1 now begins with Carol/Karel robot worlds, then bridges into console variables, input, conditionals, loops, methods, arrays, grid projects, and optional coordinate-drawing extensions.",
+			"Java Level 1 now begins with several Carol/Karel robot exercises, a primitive-versus-object inspection pass, and a visual exit ticket before bridging into console variables, input, conditionals, loops, methods, arrays, grid projects, and optional coordinate-drawing extensions.",
 			"Java Level 2 turns the same object-state reasoning into custom classes, constructors, `toString()`, inheritance, maps, files, and larger multi-class projects.",
 			"Java Level 3 audits the visual-to-text foundation before advanced review, algorithms, data structures, generics, interfaces, records, files, streams, UI or service project options, and capstone architecture."
 		],
@@ -528,7 +528,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Include unit tests or small driver programs for normal, empty, duplicate, invalid, and boundary cases."
 		],
 		sourceAndTooling: [
-			"BlueJ supports classrooms that can install it for visual object inspection and Carol/Karel-style work; CodeHS or the browser Code IDE provides the outside-class fallback.",
+			"BlueJ supports classrooms that can install it for visual object inspection and Carol/Karel-style work; CodeHS or the browser Code IDE provides the outside-class fallback for students on locked-down school or home devices.",
 			"JDK tooling, simple command-line builds or IDE projects, and explicit starter plus review source folders support Java course work.",
 			"Keep Java records covered as immutable data carriers, not as a replacement for every class.",
 			"Keep optional graphics source links inside Java Level 1 rather than publishing separate Java course tracks."
@@ -541,7 +541,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		adminExpansionBacklog: [
 			"Finish a distinct advanced Java course suitable after C++ Level 3.",
 			"Add more records, interface, abstract-class, and collection-heavy source examples.",
-			"Add more optional graphics and UI examples inside the Level 1-3 sequence without creating separate Java course tracks."
+			"Add more Carol/Karel/BlueJ starter labs, optional graphics, and UI examples inside the Level 1-3 sequence without creating separate Java course tracks."
 		]
 	},
 	{
