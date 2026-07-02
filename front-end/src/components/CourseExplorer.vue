@@ -403,7 +403,7 @@ watch(
 		}
 
 		if (!selectedStillValid) {
-			selectedLearnerId.value = value[0]._id;
+			selectedLearnerId.value = defaultLearnerContextId(value);
 		}
 	},
 	{ immediate: true }
@@ -794,6 +794,11 @@ function isSelectableLearnerContextId(value: string, learners: User[]) {
 		isAllLearnersSelection(value) ||
 		learners.some(learner => learner._id === value)
 	);
+}
+
+function defaultLearnerContextId(learners: User[]) {
+	if (canUseAllLearnersContext.value) return ALL_LEARNERS_CONTEXT_ID;
+	return learners[0]?._id ?? "";
 }
 
 function preferredLearnerIdForCourse(learners: User[], courseId: string) {
