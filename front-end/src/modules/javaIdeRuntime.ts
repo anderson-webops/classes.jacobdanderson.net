@@ -163,6 +163,10 @@ type JavaConsoleValue =
 			value: JavaRandomState;
 	  }
 	| {
+			type: "scanner";
+			value: null;
+	  }
+	| {
 			type: "string";
 			value: string;
 	  };
@@ -184,7 +188,7 @@ const javaFormatConversions = "bcdefgosx";
 const JAVA_PRINT_RE =
 	/System\.out\.(print|println|printf|format)\s*\(([\s\S]*?)\)\s*;/g;
 const JAVA_SCANNER_METHOD_RE =
-	/^[A-Z_]\w*\.(next(?:Line|Int|Double|Boolean)?|hasNext(?:Line|Int|Double|Boolean)?)\s*\(\s*\)$/i;
+	/^([A-Z_]\w*)\.(next(?:Line|Int|Double|Boolean)?|hasNext(?:Line|Int|Double|Boolean)?)\s*\(\s*\)$/i;
 const JAVA_VARIABLE_DECLARATION_START_RE =
 	/^((?:[A-Z_]\w*\.)*[A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])*)\s+([A-Z_]\w*)\s*=/i;
 const JAVA_VARIABLE_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*=/i;
@@ -836,6 +840,9 @@ function evaluateJavaExpression(
 	const trimmed = expression.trim();
 	if (!trimmed) return { type: "string", value: "" };
 
+	const objectValue = evaluateJavaObjectExpression(trimmed, context, output);
+	if (objectValue) return objectValue;
+
 	const randomValue = evaluateJavaRandomMethodExpression(
 		trimmed,
 		context,
@@ -930,7 +937,9 @@ function evaluateJavaScannerRead(
 ): JavaConsoleValue | null {
 	const match = expression.match(JAVA_SCANNER_METHOD_RE);
 	if (!match || !context) return null;
-	const rawMethod = match[1] ?? "";
+	const receiver = match[1] ?? "";
+	if (context.variables.get(receiver)?.type !== "scanner") return null;
+	const rawMethod = match[2] ?? "";
 	const method = rawMethod.toLowerCase();
 	if (method.startsWith("hasnext")) {
 		return {
@@ -973,6 +982,26 @@ function evaluateJavaScannerRead(
 	}
 
 	return { type: "string", value: raw };
+}
+
+function evaluateJavaObjectExpression(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue | null {
+	if (/^new\s+(?:java\.util\.)?Scanner\s*\([\s\S]*\)$/i.test(expression)) {
+		return javaScannerValue();
+	}
+	const random = expression.match(
+		/^new\s+(?:java\.util\.)?Random\s*\(([\s\S]*)\)$/i
+	);
+	if (random) {
+		const args = splitJavaArguments(random[1] ?? "");
+		return javaRandomValue(
+			args[0] ? evaluateJavaExpression(args[0], context, output) : null
+		);
+	}
+	return null;
 }
 
 function javaScannerHasNext(input: JavaScannerInput, method: string) {
@@ -1301,16 +1330,6 @@ function evaluateJavaCollectionExpression(
 		);
 	}
 
-	const random = expression.match(
-		/^new\s+(?:java\.util\.)?Random\s*\(([\s\S]*)\)$/i
-	);
-	if (random) {
-		const args = splitJavaArguments(random[1] ?? "");
-		return javaRandomValue(
-			args[0] ? evaluateJavaExpression(args[0], context, output) : null
-		);
-	}
-
 	const arraysCopyOf = expression.match(/^Arrays\.copyOf\s*\(([\s\S]*)\)$/i);
 	if (arraysCopyOf?.[1]) {
 		const args = splitJavaArguments(arraysCopyOf[1]);
@@ -1477,6 +1496,7 @@ function javaValueToString(value: JavaConsoleValue): string {
 		return `${javaValueToString(value.value.key)}=${javaValueToString(value.value.value)}`;
 	}
 	if (value.type === "random") return "Random";
+	if (value.type === "scanner") return "Scanner";
 	if (value.type === "null") return "null";
 	return String(value.value);
 }
@@ -1488,9 +1508,12 @@ function javaValueToNumber(value: JavaConsoleValue): number {
 		value.type === "array" ||
 		value.type === "arrayList" ||
 		value.type === "map" ||
-		value.type === "random"
+		value.type === "random" ||
+		value.type === "scanner"
 	) {
-		return value.type === "random" ? 0 : value.value.length;
+		return value.type === "random" || value.type === "scanner"
+			? 0
+			: value.value.length;
 	}
 	const parsed = Number(javaValueToString(value).trim());
 	return Number.isFinite(parsed) ? parsed : 0;
@@ -1612,6 +1635,13 @@ function javaMapValue(
 		mapKind,
 		type: "map",
 		value
+	};
+}
+
+function javaScannerValue(): JavaConsoleValue {
+	return {
+		type: "scanner",
+		value: null
 	};
 }
 
