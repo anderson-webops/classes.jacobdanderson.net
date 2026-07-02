@@ -1522,6 +1522,12 @@ const javaMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 	],
 	Arrays: [
 		completion("toString", "method", "array string representation", 85),
+		completion(
+			"deepToString",
+			"method",
+			"nested array string representation",
+			84
+		),
 		completion("sort", "method", "sort an array", 70),
 		completion("copyOf", "method", "copy an array", 65)
 	],
@@ -1634,6 +1640,18 @@ const javaSnippetCompletions = [
 		77
 	),
 	pythonSnippet(
+		"array2d",
+		"two-dimensional array",
+		`${snippetField("type")}[][] ${snippetField("name")} = new ${snippetField("type")}[${snippetField("rows")}][${snippetField("cols")}];${snippetEnd}`,
+		77
+	),
+	pythonSnippet(
+		"array2d_values",
+		"two-dimensional array with initial values",
+		`${snippetField("type")}[][] ${snippetField("name")} = {{${snippetField("row1")}}, {${snippetField("row2")}}};${snippetEnd}`,
+		76
+	),
+	pythonSnippet(
 		"arraylist",
 		"ArrayList declaration",
 		`ArrayList<${snippetField("Type")}> ${snippetField("name")} = new ArrayList<>();${snippetEnd}`,
@@ -1644,6 +1662,12 @@ const javaSnippetCompletions = [
 		"Arrays.toString call",
 		`Arrays.toString(${snippetField("array")})${snippetEnd}`,
 		76
+	),
+	pythonSnippet(
+		"array_deep_to_string",
+		"Arrays.deepToString call",
+		`Arrays.deepToString(${snippetField("array")})${snippetEnd}`,
+		75
 	),
 	pythonSnippet(
 		"method",

@@ -326,6 +326,51 @@ public class Main {
 		expect(result.stdout).toEqual(["[2, 7, 6]", "total=15", "Grace"]);
 	});
 
+	it("previews beginner Java two-dimensional arrays with row and column indexing", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        int[][] grid = {{1, 2, 3}, {4, 5, 6}};
+        grid[1][2] = grid[0][1] + 7;
+
+        int total = 0;
+        for (int row = 0; row < grid.length; row++) {
+            for (int col = 0; col < grid[row].length; col++) {
+                total += grid[row][col];
+            }
+        }
+
+        int[][] blank = new int[2][2];
+        blank[0][1] = total;
+
+        System.out.println(grid.length);
+        System.out.println(grid[0].length);
+        System.out.println(total);
+        System.out.println(Arrays.deepToString(grid));
+        System.out.println(Arrays.deepToString(blank));
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual([
+			"2",
+			"3",
+			"24",
+			"[[1, 2, 3], [4, 5, 9]]",
+			"[[0, 24], [0, 0]]"
+		]);
+	});
+
 	it("previews beginner Java ArrayLists with add, get, set, remove, and size", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
