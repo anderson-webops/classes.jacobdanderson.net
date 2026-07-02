@@ -2919,6 +2919,7 @@ describe("python IDE project helpers", () => {
 			"lineWrappingEnabled: editorLineWrapEnabled.value"
 		);
 		expect(pageSource).toContain('aria-label="Code IDE settings"');
+		expect(pageSource).toContain('title="Code IDE settings"');
 		expect(pageSource).toContain(
 			'aria-controls="python-ide-settings-panel"'
 		);

@@ -1510,7 +1510,7 @@ function saveLocalProjectSnapshot() {
 	try {
 		saveLocalPythonProjects(projects.value, storageUserID.value);
 	} catch (error) {
-		console.warn("Could not write Python IDE local snapshot.", error);
+		console.warn("Could not write Code IDE local snapshot.", error);
 	}
 }
 
@@ -1534,7 +1534,7 @@ async function persistLocalProjectSnapshot() {
 	try {
 		await localSnapshotInFlight;
 	} catch (error) {
-		console.warn("Could not write Python IDE local snapshot.", error);
+		console.warn("Could not write Code IDE local snapshot.", error);
 	} finally {
 		localSnapshotInFlight = null;
 	}
@@ -5791,7 +5791,7 @@ onBeforeUnmount(() => {
 								aria-controls="python-ide-settings-panel"
 								aria-label="Code IDE settings"
 								class="ide-settings-trigger"
-								title="Python IDE settings"
+								title="Code IDE settings"
 								type="button"
 								@click="showIdeSettings = !showIdeSettings"
 							>
