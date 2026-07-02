@@ -29,7 +29,7 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   beeper/ball commands. `Color.` should offer common uppercase and lowercase
   `java.awt.Color` constants, plus CodeHS-style `purple` and `random()` color
   help for Karel examples that use `Color.red` / `Color.random()`.
-- Keep Karel import completions aligned with the starter templates:
+- Keep Karel-mode import completions aligned with the starter templates:
   `import kareltherobot.UrRobot`, `import kareltherobot.World`,
   `import kareltherobot.Directions`, and `import java.awt.Color` should be
   available when students type imports by hand.
