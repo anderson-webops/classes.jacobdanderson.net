@@ -14,6 +14,10 @@ server-side compilation, `javac`, Docker, or long-running execution services.
 - Add Java and Karel-specific completion entries and snippets in
   `front-end/src/modules/pythonCodeMirror.ts`; do not introduce backend
   language services or worker pools without explicit approval.
+- Keep Java/Karel recommendations quiet inside Java line comments, block
+  comments, string literals, character literals, and text blocks. This matches
+  the Python editor expectation that prose/comment text should not trigger code
+  completions while the student is typing.
 - Treat Karel static receiver completions separately from robot-object
   completions. `Directions.` should suggest `North`, `East`, `South`, and
   `West`, while robot variables such as `sam.` should suggest movement and

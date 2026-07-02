@@ -66,6 +66,23 @@ type TestCompletionSource = (
 ) => TestCompletionResult | null;
 
 function autocompleteLabelsForDoc(mode: PythonIdeMode, doc: string) {
+	return autocompleteLabelsForDocAt(mode, doc, doc.length);
+}
+
+function autocompleteLabelsForMarkedDoc(
+	mode: PythonIdeMode,
+	markedDoc: string
+) {
+	const pos = markedDoc.indexOf("|");
+	expect(pos).toBeGreaterThanOrEqual(0);
+	return autocompleteLabelsForDocAt(mode, markedDoc.replace("|", ""), pos);
+}
+
+function autocompleteLabelsForDocAt(
+	mode: PythonIdeMode,
+	doc: string,
+	pos: number
+) {
 	const state = EditorState.create({
 		doc,
 		extensions: createPythonCodeMirrorExtensions({
@@ -76,15 +93,15 @@ function autocompleteLabelsForDoc(mode: PythonIdeMode, doc: string) {
 	});
 	const sources = state.languageDataAt<TestCompletionSource>(
 		"autocomplete",
-		doc.length
+		pos
 	);
 
 	return sources.flatMap(source => {
 		const result = source({
 			explicit: true,
 			matchBefore: expression =>
-				completionMatchBefore(doc, doc.length, expression),
-			pos: doc.length,
+				completionMatchBefore(doc, pos, expression),
+			pos,
 			state
 		});
 		return result?.options?.map(option => option.label) ?? [];
@@ -459,6 +476,33 @@ describe("python IDE CodeMirror editor", () => {
 				"notFacingWest"
 			])
 		);
+	});
+
+	it("suppresses Java and Karel recommendations inside comments and strings", () => {
+		expect(
+			autocompleteLabelsForMarkedDoc(
+				"java",
+				"public class Main { void run() { // System.out.| } }"
+			)
+		).toEqual([]);
+		expect(
+			autocompleteLabelsForMarkedDoc(
+				"java",
+				"public class Main { void run() { /* Math.| */ } }"
+			)
+		).toEqual([]);
+		expect(
+			autocompleteLabelsForMarkedDoc(
+				"java",
+				'public class Main { void run() { String text = "System.out.|"; } }'
+			)
+		).toEqual([]);
+		expect(
+			autocompleteLabelsForMarkedDoc(
+				"karel",
+				"public class MyProgram extends SuperKarel { public void run() { // sam.| } }"
+			)
+		).toEqual([]);
 	});
 
 	it("adds Karel Java snippets and ignores Java comment/string brackets", () => {
