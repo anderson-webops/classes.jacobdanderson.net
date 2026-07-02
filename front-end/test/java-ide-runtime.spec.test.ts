@@ -470,7 +470,7 @@ public class Main {
 		expect(result.stdout).toEqual(["factorial=120", "capped=null"]);
 	});
 
-	it("previews beginner Java arrays with indexing, length, and loops", () => {
+	it("previews beginner Java arrays with indexing, copyOf, length, and loops", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
 			files: [
@@ -492,7 +492,13 @@ public class Main {
         names[0] = "Ada";
         names[1] = "Grace";
 
+        int[] padded = Arrays.copyOf(scores, 5);
+        int[] trimmed = Arrays.copyOf(scores, 2);
+        padded[0] = 99;
+
         System.out.println(Arrays.toString(scores));
+        System.out.println(Arrays.toString(padded));
+        System.out.println(Arrays.toString(trimmed));
         System.out.println("total=" + total);
         System.out.println(names[1]);
     }
@@ -503,7 +509,13 @@ public class Main {
 		});
 
 		expect(result.stderr).toEqual([]);
-		expect(result.stdout).toEqual(["[2, 7, 6]", "total=15", "Grace"]);
+		expect(result.stdout).toEqual([
+			"[2, 7, 6]",
+			"[99, 7, 6, 0, 0]",
+			"[2, 7]",
+			"total=15",
+			"Grace"
+		]);
 	});
 
 	it("previews beginner Java Arrays.sort mutations for one-dimensional arrays", () => {
