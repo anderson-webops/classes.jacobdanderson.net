@@ -420,6 +420,15 @@ describe("python IDE CodeMirror editor", () => {
 		expect(autocompleteLabelsForDoc("karel", "World.")).toEqual(
 			expect.arrayContaining(["readWorld"])
 		);
+		expect(autocompleteLabelsForDoc("karel", "Directions.")).toEqual(
+			expect.arrayContaining(["North", "East", "South", "West"])
+		);
+		expect(autocompleteLabelsForDoc("karel", "Directions.")).not.toEqual(
+			expect.arrayContaining(["move", "turnLeft"])
+		);
+		expect(autocompleteLabelsForDoc("karel", "Color.")).toEqual(
+			expect.arrayContaining(["RED", "BLUE", "GREEN"])
+		);
 		expect(autocompleteLabelsForDoc("karel", "sam.")).toEqual(
 			expect.arrayContaining([
 				"move",

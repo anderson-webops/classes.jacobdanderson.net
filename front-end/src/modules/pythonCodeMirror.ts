@@ -1758,7 +1758,30 @@ const karelRobotMemberCompletions = [
 	completion("putBall", "method", "CodeHS alias for placing one ball", 82),
 	completion("takeBall", "method", "CodeHS alias for taking one ball", 82)
 ];
+const karelDirectionMemberCompletions = [
+	completion("North", "constant", "Karel north direction", 90),
+	completion("East", "constant", "Karel east direction", 90),
+	completion("South", "constant", "Karel south direction", 90),
+	completion("West", "constant", "Karel west direction", 90)
+];
+const javaColorMemberCompletions = [
+	completion("BLACK", "constant", "java.awt.Color black", 70),
+	completion("BLUE", "constant", "java.awt.Color blue", 70),
+	completion("CYAN", "constant", "java.awt.Color cyan", 70),
+	completion("DARK_GRAY", "constant", "java.awt.Color dark gray", 70),
+	completion("GRAY", "constant", "java.awt.Color gray", 70),
+	completion("GREEN", "constant", "java.awt.Color green", 70),
+	completion("LIGHT_GRAY", "constant", "java.awt.Color light gray", 70),
+	completion("MAGENTA", "constant", "java.awt.Color magenta", 70),
+	completion("ORANGE", "constant", "java.awt.Color orange", 70),
+	completion("PINK", "constant", "java.awt.Color pink", 70),
+	completion("RED", "constant", "java.awt.Color red", 70),
+	completion("WHITE", "constant", "java.awt.Color white", 70),
+	completion("YELLOW", "constant", "java.awt.Color yellow", 70)
+];
 const karelMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
+	Color: javaColorMemberCompletions,
+	Directions: karelDirectionMemberCompletions,
 	World: [completion("readWorld", "method", "load a Karel world file", 90)]
 };
 

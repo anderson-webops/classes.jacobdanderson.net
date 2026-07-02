@@ -253,7 +253,7 @@ function runConsoleJavaProject(
 			stdout.length || stderr.length
 				? stderr
 				: [
-						"The browser Java runner can preview System.out.print, System.out.println, simple variables, and Scanner input."
+						"The browser Java runner previews beginner console Java from main: System.out output, variables, Scanner input, decisions, loops, helper methods, arrays, and ArrayLists."
 					],
 		stdout
 	};
@@ -1228,14 +1228,14 @@ function evaluateJavaArrayLiteral(
 	);
 }
 
-function javaValueToString(value: JavaConsoleValue) {
+function javaValueToString(value: JavaConsoleValue): string {
 	if (value.type === "array" || value.type === "arrayList")
 		return javaCollectionToString(value);
 	if (value.type === "null") return "null";
 	return String(value.value);
 }
 
-function javaValueToNumber(value: JavaConsoleValue) {
+function javaValueToNumber(value: JavaConsoleValue): number {
 	if (value.type === "number") return value.value;
 	if (value.type === "array" || value.type === "arrayList")
 		return value.value.length;
@@ -1245,11 +1245,11 @@ function javaValueToNumber(value: JavaConsoleValue) {
 
 function javaCollectionToString(
 	value: Extract<JavaConsoleValue, { type: "array" | "arrayList" }>
-) {
+): string {
 	return `[${value.value.map(javaValueToString).join(", ")}]`;
 }
 
-function javaIterableValues(value: JavaConsoleValue) {
+function javaIterableValues(value: JavaConsoleValue): JavaConsoleValue[] {
 	return value.type === "array" || value.type === "arrayList"
 		? value.value
 		: [];

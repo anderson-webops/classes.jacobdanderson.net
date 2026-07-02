@@ -32,6 +32,24 @@ describe("java IDE runtime", () => {
 		expect(result.stdout).toEqual(["Hello, Java 5"]);
 	});
 
+	it("explains the beginner Java preview scope when no main body runs", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: "public class Main {\n}\n"
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([
+			"The browser Java runner previews beginner console Java from main: System.out output, variables, Scanner input, decisions, loops, helper methods, arrays, and ArrayLists."
+		]);
+		expect(result.stdout).toEqual([]);
+	});
+
 	it("previews beginner Java formatted console output", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
