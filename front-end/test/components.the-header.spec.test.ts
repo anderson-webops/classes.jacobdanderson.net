@@ -28,14 +28,14 @@ describe("TheHeader.vue", () => {
 		});
 	}
 
-	it("shows Zoom and Pathways in the primary navigation for visitors", () => {
+	it("shows Zoom but keeps Pathways out of the primary navigation for visitors", () => {
 		const wrapper = mountHeader();
 
 		expect(wrapper.text()).toContain("Zoom");
-		expect(wrapper.text()).toContain("Pathways");
+		expect(wrapper.text()).not.toContain("Pathways");
 	});
 
-	it("keeps Pathways visible for admins without adding public booking links", () => {
+	it("keeps Pathways out of the admin navigation without adding public booking links", () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 		const app = useAppStore();
@@ -50,7 +50,7 @@ describe("TheHeader.vue", () => {
 		const wrapper = mountHeader(pinia);
 
 		expect(wrapper.text()).toContain("Zoom");
-		expect(wrapper.text()).toContain("Pathways");
+		expect(wrapper.text()).not.toContain("Pathways");
 		expect(wrapper.text()).toContain("Account");
 		expect(wrapper.text()).not.toContain("Book a Class");
 	});

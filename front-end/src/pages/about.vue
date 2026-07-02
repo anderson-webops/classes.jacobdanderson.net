@@ -107,6 +107,12 @@ defineOptions({ name: "AboutPage" });
 			>
 				View LinkedIn<span class="sr-only"> (opens in a new tab)</span>
 			</a>
+			<RouterLink
+				class="site-button site-button--secondary"
+				to="/pathways"
+			>
+				View Course Pathways
+			</RouterLink>
 		</section>
 	</section>
 </template>
