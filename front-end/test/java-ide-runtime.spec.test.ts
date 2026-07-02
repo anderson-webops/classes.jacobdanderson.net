@@ -482,6 +482,7 @@ public class Main {
     public static void main(String[] args) {
         int[] scores = {2, 4, 6};
         scores[1] = scores[0] + 5;
+        boolean[] flags = {true};
 
         int total = 0;
         for (int i = 0; i < scores.length; i++) {
@@ -494,11 +495,15 @@ public class Main {
 
         int[] padded = Arrays.copyOf(scores, 5);
         int[] trimmed = Arrays.copyOf(scores, 2);
+        String[] moreNames = Arrays.copyOf(names, 3);
+        boolean[] moreFlags = Arrays.copyOf(flags, 3);
         padded[0] = 99;
 
         System.out.println(Arrays.toString(scores));
         System.out.println(Arrays.toString(padded));
         System.out.println(Arrays.toString(trimmed));
+        System.out.println(Arrays.toString(moreNames));
+        System.out.println(Arrays.toString(moreFlags));
         System.out.println("total=" + total);
         System.out.println(names[1]);
     }
@@ -513,6 +518,8 @@ public class Main {
 			"[2, 7, 6]",
 			"[99, 7, 6, 0, 0]",
 			"[2, 7]",
+			"[Ada, Grace, null]",
+			"[true, false, false]",
 			"total=15",
 			"Grace"
 		]);

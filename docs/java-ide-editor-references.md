@@ -78,11 +78,11 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   decisions, bounded `for` / `while` loops, void helper calls, and simple
   static methods with parameters, `return` values, arithmetic use, boolean
   helpers, capped recursion, one-dimensional arrays, `Arrays.toString(...)`,
-  `Arrays.copyOf(...)` for one-dimensional array copies,
-  `Arrays.sort(...)` for one-dimensional arrays, `array.length`, indexed array
-  access and assignment, enhanced `for` loops over arrays and `ArrayList`s,
-  beginner two-dimensional arrays with nested loops, row `.length`, chained
-  row/column indexing, and
+  `Arrays.copyOf(...)` for one-dimensional array copies with Java-style
+  truncate-or-pad behavior, `Arrays.sort(...)` for one-dimensional arrays,
+  `array.length`, indexed array access and assignment, enhanced `for` loops
+  over arrays and `ArrayList`s, beginner two-dimensional arrays with nested
+  loops, row `.length`, chained row/column indexing, and
   `Arrays.deepToString(...)`, and beginner `ArrayList` calls such as `add`,
   indexed `add`, `get`, `set`, `remove`, `contains`, `clear`, `size`, and
   `isEmpty`. It remains a browser teaching preview rather than a compiler.
