@@ -572,6 +572,9 @@ describe("CourseExplorer.vue", () => {
 			.findAll("#learner-select option")
 			.find(option => option.text() === "All");
 		expect(allOption?.exists()).toBe(true);
+		expect(
+			wrapper.find<HTMLSelectElement>("#learner-select").element.value
+		).toBe(allOption?.attributes("value"));
 
 		await wrapper
 			.find<HTMLSelectElement>("#learner-select")
