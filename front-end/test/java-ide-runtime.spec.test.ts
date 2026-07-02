@@ -191,9 +191,21 @@ public class Main {
 					content: `public class Main {
     public static void main(String[] args) {
         String word = "Python";
+        String padded = "  grid  ";
         System.out.println(word.length());
         System.out.println(word.charAt(2));
         System.out.println(word.substring(1, 4));
+        System.out.println(word.equals("Python"));
+        System.out.println(word.equalsIgnoreCase("PYTHON"));
+        System.out.println(word.toLowerCase());
+        System.out.println(word.toUpperCase());
+        System.out.println(padded.trim());
+        System.out.println(word.indexOf("th"));
+        System.out.println(word.indexOf("x"));
+        System.out.println(word.compareTo("Java"));
+        System.out.println(word.compareTo("Python"));
+        System.out.println(word.toUpperCase().indexOf("TH"));
+        System.out.println(word.compareTo("Java") > 0);
         System.out.println((int) 3.9);
         System.out.println(Math.max(4, 7));
     }
@@ -204,7 +216,24 @@ public class Main {
 		});
 
 		expect(result.stderr).toEqual([]);
-		expect(result.stdout).toEqual(["6", "t", "yth", "3", "7"]);
+		expect(result.stdout).toEqual([
+			"6",
+			"t",
+			"yth",
+			"true",
+			"true",
+			"python",
+			"PYTHON",
+			"grid",
+			"2",
+			"-1",
+			"6",
+			"0",
+			"2",
+			"true",
+			"3",
+			"7"
+		]);
 	});
 
 	it("previews beginner Java static methods with parameters and returns", () => {

@@ -339,6 +339,14 @@ describe("python IDE CodeMirror editor", () => {
 			expect.arrayContaining([
 				"length",
 				"charAt",
+				"substring",
+				"equals",
+				"equalsIgnoreCase",
+				"compareTo",
+				"indexOf",
+				"toLowerCase",
+				"toUpperCase",
+				"trim",
 				"add",
 				"get",
 				"set",
@@ -372,7 +380,16 @@ describe("python IDE CodeMirror editor", () => {
 			expect.arrayContaining(["random", "sqrt"])
 		);
 		expect(autocompleteLabelsForDoc("java", "names.")).toEqual(
-			expect.arrayContaining(["get", "set", "size", "isEmpty"])
+			expect.arrayContaining([
+				"equals",
+				"compareTo",
+				"indexOf",
+				"toLowerCase",
+				"get",
+				"set",
+				"size",
+				"isEmpty"
+			])
 		);
 		expect(autocompleteLabelsForDoc("java", "Arrays.")).toEqual(
 			expect.arrayContaining(["toString", "deepToString", "sort"])
