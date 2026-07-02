@@ -74,8 +74,8 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   over arrays and `ArrayList`s, beginner two-dimensional arrays with nested
   loops, row `.length`, chained row/column indexing, and
   `Arrays.deepToString(...)`, and beginner `ArrayList` calls such as `add`,
-  `get`, `set`, `remove`, `size`, and `isEmpty`. It remains a browser teaching
-  preview rather than a compiler.
+  indexed `add`, `get`, `set`, `remove`, `contains`, `clear`, `size`, and
+  `isEmpty`. It remains a browser teaching preview rather than a compiler.
 - [Java Formatter syntax](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Formatter.html)
   is the reference point for formatted output. The browser preview implements a
   small teaching subset: `%s`, `%d`, `%f` with optional width/precision, `%%`,

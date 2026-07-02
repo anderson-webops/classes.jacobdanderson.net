@@ -507,7 +507,7 @@ public class Main {
 		]);
 	});
 
-	it("previews beginner Java ArrayLists with add, get, set, remove, and size", () => {
+	it("previews beginner Java ArrayLists with add, get, set, remove, contains, clear, and size", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
 			files: [
@@ -520,16 +520,21 @@ public class Main {
         ArrayList<String> names = new ArrayList<>();
         names.add("Ada");
         names.add("Grace");
+        names.add(1, "Katherine");
         names.set(1, "Linus");
-        names.remove(0);
+        names.remove("Grace");
+        boolean hadAda = names.contains("Ada");
+        boolean hadGrace = names.contains("Grace");
 
         ArrayList<Integer> points = new ArrayList<Integer>();
         points.add(3);
         points.add(4);
 
         System.out.println(names.size());
-        System.out.println(names.get(0));
+        System.out.println(names.get(1));
         System.out.println(points.get(0) + points.get(1));
+        System.out.println(hadAda + ":" + hadGrace);
+        names.clear();
         System.out.println(names.isEmpty());
     }
 }`
@@ -539,7 +544,7 @@ public class Main {
 		});
 
 		expect(result.stderr).toEqual([]);
-		expect(result.stdout).toEqual(["1", "Linus", "7", "false"]);
+		expect(result.stdout).toEqual(["2", "Linus", "7", "true:false", "true"]);
 	});
 
 	it("previews beginner Java enhanced for loops over arrays and ArrayLists", () => {
