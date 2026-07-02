@@ -667,16 +667,16 @@ describe("python IDE CodeMirror editor", () => {
 		);
 
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel\s*{[\s\S]*width: min\(24rem, calc\(100vw - 1\.5rem\)\);[\s\S]*line-height: 1\.45;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
+			/\.ide-settings-panel\s*{[\s\S]*width: min\(28rem, calc\(100vw - 1\.5rem\)\);[\s\S]*font-size: 0\.9rem;[\s\S]*line-height: 1\.5;[\s\S]*text-transform: none;[\s\S]*letter-spacing: 0;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel span,\s*\.ide-settings-panel strong,\s*\.ide-settings-panel small\s*{[\s\S]*letter-spacing: 0;[\s\S]*text-transform: none;/
+			/\.ide-settings-panel span,\s*\.ide-settings-panel \.ide-setting-title,\s*\.ide-settings-panel small\s*{[\s\S]*letter-spacing: 0;[\s\S]*text-transform: none;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle strong\s*{[\s\S]*font-weight: 700;/
+			/\.ide-setting-title\s*{[\s\S]*font-size: 0\.92rem;[\s\S]*font-weight: 650;[\s\S]*line-height: 1\.25;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.82rem;[\s\S]*font-weight: 500;[\s\S]*line-height: 1\.5;/
+			/\.ide-setting-toggle small\s*{[\s\S]*font-size: 0\.78rem;[\s\S]*font-weight: 500;[\s\S]*line-height: 1\.45;/
 		);
 	});
 

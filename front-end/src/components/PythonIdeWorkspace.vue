@@ -5791,7 +5791,9 @@ onBeforeUnmount(() => {
 										@change="updateAutoSavePreference"
 									/>
 									<span>
-										<strong>Autosave projects</strong>
+										<span class="ide-setting-title">
+											Autosave projects
+										</span>
 										<small>
 											Save edits locally right away and
 											sync them to your account when
@@ -5808,9 +5810,9 @@ onBeforeUnmount(() => {
 										"
 									/>
 									<span>
-										<strong>
+										<span class="ide-setting-title">
 											Recommendations as you type
-										</strong>
+										</span>
 										<small>
 											Show code suggestions while typing.
 											Turn this off to use Ctrl+Space
@@ -5825,7 +5827,9 @@ onBeforeUnmount(() => {
 										@change="updateEditorLineWrapPreference"
 									/>
 									<span>
-										<strong>Wrap editor text</strong>
+										<span class="ide-setting-title">
+											Wrap editor text
+										</span>
 										<small>
 											Wrap long code lines inside the
 											editor. Turn this off to scroll
@@ -5840,7 +5844,9 @@ onBeforeUnmount(() => {
 										@change="updateExpandedIdePreference"
 									/>
 									<span>
-										<strong>Expanded IDE layout</strong>
+										<span class="ide-setting-title">
+											Expanded IDE layout
+										</span>
 										<small>
 											Use more browser width and height
 											for coding and canvas work.
@@ -5862,7 +5868,9 @@ onBeforeUnmount(() => {
 											"
 										/>
 										<span>
-											<strong>Share project</strong>
+											<span class="ide-setting-title">
+												Share project
+											</span>
 											<small>
 												Create a link that lets someone
 												else open an editable copy.
@@ -6408,7 +6416,7 @@ html.dark .ide-settings-panel {
 	color: #f8fbff;
 }
 
-html.dark .ide-setting-toggle strong {
+html.dark .ide-setting-title {
 	color: #f8fbff;
 }
 
@@ -7149,23 +7157,23 @@ html.dark .file-delete:disabled::after {
 	z-index: 8;
 	top: calc(100% + 0.55rem);
 	right: 0;
-	width: min(24rem, calc(100vw - 1.5rem));
+	width: min(28rem, calc(100vw - 1.5rem));
 	max-height: min(28rem, calc(100vh - 2rem));
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 1rem;
+	padding: 1.15rem;
 	border: 1px solid var(--color-border);
 	border-radius: 16px;
 	background: rgba(255, 255, 255, 0.96);
 	box-shadow: var(--shadow-soft);
-	font-size: 0.95rem;
-	line-height: 1.45;
+	font-size: 0.9rem;
+	line-height: 1.5;
 	text-transform: none;
 	letter-spacing: 0;
 }
 
 .ide-settings-panel span,
-.ide-settings-panel strong,
+.ide-settings-panel .ide-setting-title,
 .ide-settings-panel small {
 	letter-spacing: 0;
 	text-transform: none;
@@ -7174,22 +7182,22 @@ html.dark .file-delete:disabled::after {
 .ide-setting-toggle {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
-	gap: 0.85rem;
+	gap: 0.75rem;
 	align-items: start;
 	color: var(--color-ink);
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
-	margin-top: 0.95rem;
-	padding-top: 0.95rem;
+	margin-top: 1.1rem;
+	padding-top: 1.1rem;
 	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-share {
 	display: grid;
 	gap: 0.75rem;
-	margin-top: 0.95rem;
-	padding-top: 0.95rem;
+	margin-top: 1.1rem;
+	padding-top: 1.1rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7220,8 +7228,8 @@ html.dark .file-delete:disabled::after {
 .ide-setting-storage {
 	display: grid;
 	gap: 0.5rem;
-	margin-top: 0.95rem;
-	padding-top: 0.95rem;
+	margin-top: 1.1rem;
+	padding-top: 1.1rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7243,29 +7251,32 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-setting-toggle input {
-	width: 1.1rem;
-	height: 1.1rem;
-	margin-top: 0.2rem;
+	width: 1rem;
+	height: 1rem;
+	margin-top: 0.15rem;
 	accent-color: #0f766e;
 }
 
-.ide-setting-toggle strong,
+.ide-setting-toggle > span {
+	min-width: 0;
+	display: grid;
+	gap: 0.3rem;
+}
+
+.ide-setting-title {
+	display: block;
+	color: var(--color-ink-strong);
+	font-size: 0.92rem;
+	font-weight: 650;
+	line-height: 1.25;
+}
+
 .ide-setting-toggle small {
 	display: block;
-}
-
-.ide-setting-toggle strong {
-	color: var(--color-ink-strong);
-	font-size: 0.95rem;
-	font-weight: 700;
-}
-
-.ide-setting-toggle small {
-	margin-top: 0.28rem;
 	color: var(--color-ink-soft);
-	font-size: 0.82rem;
+	font-size: 0.78rem;
 	font-weight: 500;
-	line-height: 1.5;
+	line-height: 1.45;
 }
 
 .ide-setting-storage small {
