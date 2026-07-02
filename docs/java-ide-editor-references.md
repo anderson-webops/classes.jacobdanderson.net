@@ -27,9 +27,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   beeper/ball commands. `Color.` may offer common `java.awt.Color` constants
   for CodeHS/Karel examples that import `java.awt.Color`.
 - Keep beginner collection completions aligned with the course sequence:
-  array declarations, enhanced `for` loops, `Arrays.toString(...)`, and
-  `Arrays.deepToString(...)`, 2D array setup, and `ArrayList` creation and
-  core methods should be available from the editor.
+  array declarations, enhanced `for` loops, `Arrays.toString(...)`,
+  `Arrays.deepToString(...)`, `Arrays.sort(...)`, 2D array setup, and
+  `ArrayList` creation and core methods should be available from the editor.
 - Keep beginner `String` completions aligned with Java Level 1, AP CSA, and
   sorting lessons: `length()`, `charAt()`, `substring()`, `equals()`,
   `equalsIgnoreCase()`, `compareTo()`, `indexOf()`, `toLowerCase()`,
@@ -77,9 +77,10 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   decisions, bounded `for` / `while` loops, void helper calls, and simple
   static methods with parameters, `return` values, arithmetic use, boolean
   helpers, capped recursion, one-dimensional arrays, `Arrays.toString(...)`,
-  `array.length`, indexed array access and assignment, enhanced `for` loops
-  over arrays and `ArrayList`s, beginner two-dimensional arrays with nested
-  loops, row `.length`, chained row/column indexing, and
+  `Arrays.sort(...)` for one-dimensional arrays, `array.length`, indexed array
+  access and assignment, enhanced `for` loops over arrays and `ArrayList`s,
+  beginner two-dimensional arrays with nested loops, row `.length`, chained
+  row/column indexing, and
   `Arrays.deepToString(...)`, and beginner `ArrayList` calls such as `add`,
   indexed `add`, `get`, `set`, `remove`, `contains`, `clear`, `size`, and
   `isEmpty`. It remains a browser teaching preview rather than a compiler.
@@ -99,3 +100,13 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   require server-side compilation or hosted sandboxes. Do not connect those to
   the Classes backend unless a future task explicitly approves a bounded
   execution service with resource limits.
+- Open-source browser IDE platforms such as [Eclipse Theia](https://theia-ide.org/),
+  [Eclipse Che](https://www.eclipse.org/che/), and
+  [OpenVSCode Server](https://github.com/gitpod-io/openvscode-server) are useful
+  references for larger editor/workspace designs, but their Java story typically
+  implies remote workspaces, extensions, language servers, containers, or server
+  processes. They remain architecture references, not dependencies.
+- Open-source online execution systems such as
+  [Judge0](https://github.com/judge0/judge0) are a future option only if the
+  project intentionally adds a bounded sandbox service. They do not fit the
+  current browser-only Java/Karel preview boundary.

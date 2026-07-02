@@ -506,6 +506,35 @@ public class Main {
 		expect(result.stdout).toEqual(["[2, 7, 6]", "total=15", "Grace"]);
 	});
 
+	it("previews beginner Java Arrays.sort mutations for one-dimensional arrays", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] scores = {7, 2, 6};
+        String[] names = {"Grace", "Ada", "Linus"};
+
+        Arrays.sort(scores);
+        Arrays.sort(names);
+
+        System.out.println(Arrays.toString(scores));
+        System.out.println(Arrays.toString(names));
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["[2, 6, 7]", "[Ada, Grace, Linus]"]);
+	});
+
 	it("previews beginner Java two-dimensional arrays with row and column indexing", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
