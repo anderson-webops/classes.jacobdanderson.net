@@ -1542,6 +1542,12 @@ const javaKeywordCompletions = [
 	"Comparator",
 	"Override",
 	"record",
+	"File",
+	"FileReader",
+	"FileWriter",
+	"BufferedReader",
+	"PrintWriter",
+	"IOException",
 	"Math",
 	"import java.util.Arrays",
 	"import java.util.Collections",
@@ -1558,9 +1564,12 @@ const javaKeywordCompletions = [
 	"import java.util.Map",
 	"import java.util.Comparator",
 	"import java.awt.Color",
+	"import java.io.BufferedReader",
 	"import java.io.File",
+	"import java.io.FileReader",
 	"import java.io.FileWriter",
 	"import java.io.IOException",
+	"import java.io.PrintWriter",
 	"System.out.print",
 	"System.out.println"
 ].map(label => completion(label, "keyword", "Java", 70));
@@ -2054,6 +2063,48 @@ const javaSnippetCompletions = [
 			snippetEnd
 		),
 		70
+	),
+	pythonSnippet(
+		"try_with_resources",
+		"try-with-resources block",
+		snippetLines(
+			`try (${snippetField("ResourceType")} ${snippetField("resource")} = ${snippetField("resourceExpression")}) {`,
+			`    ${snippetField("body")}`,
+			`} catch (${snippetField("Exception")} ${snippetField("error")}) {`,
+			`    ${snippetField("handler")}`,
+			"}",
+			snippetEnd
+		),
+		70
+	),
+	pythonSnippet(
+		"file_scanner",
+		"Scanner over a file",
+		snippetLines(
+			`try (Scanner ${snippetField("scanner")} = new Scanner(new File("${snippetField("file")}.txt"))) {`,
+			`    while (${snippetField("scanner")}.hasNextLine()) {`,
+			`        String ${snippetField("line")} = ${snippetField("scanner")}.nextLine();`,
+			`        ${snippetField("body")}`,
+			"    }",
+			"} catch (IOException error) {",
+			'    System.out.println("Could not read file: " + error.getMessage());',
+			"}",
+			snippetEnd
+		),
+		69
+	),
+	pythonSnippet(
+		"file_writer",
+		"FileWriter output",
+		snippetLines(
+			`try (FileWriter ${snippetField("writer")} = new FileWriter("${snippetField("file")}.txt")) {`,
+			`    ${snippetField("writer")}.write("${snippetField("text")}");`,
+			"} catch (IOException error) {",
+			'    System.out.println("Could not write file: " + error.getMessage());',
+			"}",
+			snippetEnd
+		),
+		69
 	)
 ];
 

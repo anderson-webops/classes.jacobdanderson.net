@@ -56,6 +56,12 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `HashSet`, `TreeSet`, `Queue`, `PriorityQueue`, and `Collections` helpers.
   These entries are editor scaffolding, not a promise that every advanced
   concept runs in the browser preview.
+- Include editor-only file-I/O scaffolding for the Java Level 2/3 modules that
+  use files: `File`, `FileReader`, `FileWriter`, `BufferedReader`,
+  `PrintWriter`, `IOException`, `try` / `catch`, try-with-resources, Scanner
+  over a `File`, and simple file-writing snippets. These completions help
+  students write normal Java in CodeHS, BlueJ, VS Code, or IntelliJ, but they
+  do not add browser filesystem access or server-side Java execution.
 - When the editor can see a declared Java receiver, prefer focused member
   completions over the broad beginner fallback: `String` receivers should show
   string methods, arrays should show array members, `ArrayList` / `List`

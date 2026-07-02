@@ -389,6 +389,9 @@ describe("python IDE CodeMirror editor", () => {
 				"record_type",
 				"enum_type",
 				"try_catch",
+				"try_with_resources",
+				"file_scanner",
+				"file_writer",
 				"sout",
 				"Arrays",
 				"Collections",
@@ -407,6 +410,12 @@ describe("python IDE CodeMirror editor", () => {
 				"Comparator",
 				"Override",
 				"record",
+				"File",
+				"FileReader",
+				"FileWriter",
+				"BufferedReader",
+				"PrintWriter",
+				"IOException",
 				"import java.util.ArrayList",
 				"import java.util.Arrays",
 				"import java.util.Collections",
@@ -422,11 +431,21 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.util.Map",
 				"import java.util.Comparator",
 				"import java.awt.Color",
+				"import java.io.BufferedReader",
 				"import java.io.File",
+				"import java.io.FileReader",
 				"import java.io.FileWriter",
 				"import java.io.IOException",
+				"import java.io.PrintWriter",
 				"System.out.println"
 			])
+		);
+		expect(editorSource).toContain("try_with_resources");
+		expect(editorSource).toContain("file_scanner");
+		expect(editorSource).toContain("file_writer");
+		expect(editorSource).toContain('new File("${snippetField("file")}.txt")');
+		expect(editorSource).toContain(
+			'new FileWriter("${snippetField("file")}.txt")'
 		);
 		expect(javaLabels).not.toEqual(
 			expect.arrayContaining([
@@ -1002,9 +1021,12 @@ describe("python IDE CodeMirror editor", () => {
 		expect(ioResult?.from).toBe(0);
 		expect(ioResult?.options?.map(option => option.label)).toEqual(
 			expect.arrayContaining([
+				"import java.io.BufferedReader",
 				"import java.io.File",
+				"import java.io.FileReader",
 				"import java.io.FileWriter",
-				"import java.io.IOException"
+				"import java.io.IOException",
+				"import java.io.PrintWriter"
 			])
 		);
 
