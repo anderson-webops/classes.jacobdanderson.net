@@ -2129,6 +2129,17 @@ const karelMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 	Directions: karelDirectionMemberCompletions,
 	World: [completion("readWorld", "method", "load a Karel world file", 90)]
 };
+const javaStaticMemberCompletionAliases: Record<string, string> = {
+	"java.awt.Color": "Color",
+	"java.lang.Math": "Math",
+	"java.lang.String": "String",
+	"java.lang.System.out": "System.out",
+	"java.util.Arrays": "Arrays",
+	"java.util.Collections": "Collections",
+	"java.util.Comparator": "Comparator",
+	"kareltherobot.Directions": "Directions",
+	"kareltherobot.World": "World"
+};
 
 const karelSnippetCompletions = [
 	pythonSnippet(
@@ -2243,8 +2254,11 @@ export function javaIdeCompletionsForMode(
 	receiver?: string
 ) {
 	if (receiver) {
+		const normalizedReceiver =
+			javaStaticMemberCompletionAliases[receiver] ?? receiver;
 		const specificOptions =
-			javaMemberCompletions[receiver] ?? karelMemberCompletions[receiver];
+			javaMemberCompletions[normalizedReceiver] ??
+			karelMemberCompletions[normalizedReceiver];
 		if (specificOptions) return specificOptions;
 		if (mode === "java" && isLikelyJavaRandomReceiver(receiver))
 			return javaRandomMemberCompletions;
