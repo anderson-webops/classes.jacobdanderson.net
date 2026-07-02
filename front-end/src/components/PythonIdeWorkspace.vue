@@ -527,6 +527,7 @@ const storagePersistenceStatus = ref<
 >("checking");
 const codeEditorHostRef = ref<HTMLDivElement | null>(null);
 const ideGridRef = ref<HTMLDivElement | null>(null);
+const ideSettingsRef = ref<HTMLDivElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const editorCursorCount = ref(1);
 const artifactCounter = ref(0);
@@ -1941,6 +1942,17 @@ function updateExpandedIdePreference(event: Event) {
 	ideExpanded.value = enabled;
 	persistPythonIdeExpandedWorkspacePreference(enabled);
 	void nextTick(refreshResizableIdeLayout);
+}
+
+function handleIdeSettingsOutsidePointerDown(event: PointerEvent) {
+	if (!showIdeSettings.value) return;
+
+	const target = event.target;
+	if (target instanceof Node && ideSettingsRef.value?.contains(target)) {
+		return;
+	}
+
+	showIdeSettings.value = false;
 }
 
 function clampIdeSplitPercent(value: number) {
@@ -5333,6 +5345,10 @@ onMounted(() => {
 	window.addEventListener("keydown", handleKeyDown);
 	window.addEventListener("keyup", handleKeyUp);
 	window.addEventListener("mouseup", clearTurtleDrag);
+	document.addEventListener(
+		"pointerdown",
+		handleIdeSettingsOutsidePointerDown
+	);
 
 	if (canvasRef.value) {
 		resizeObserver = new ResizeObserver(() => redrawActiveCanvas());
@@ -5353,6 +5369,10 @@ onBeforeUnmount(() => {
 	window.removeEventListener("keydown", handleKeyDown);
 	window.removeEventListener("keyup", handleKeyUp);
 	window.removeEventListener("mouseup", clearTurtleDrag);
+	document.removeEventListener(
+		"pointerdown",
+		handleIdeSettingsOutsidePointerDown
+	);
 	stopRequested.value = true;
 	stopActiveRuntimeSurfaces();
 	releaseLoadedPythonRuntimeCallbacks();
@@ -5808,7 +5828,7 @@ onBeforeUnmount(() => {
 						/>
 					</div>
 					<div class="editor-actions">
-						<div class="ide-settings">
+						<div ref="ideSettingsRef" class="ide-settings">
 							<button
 								:aria-expanded="showIdeSettings"
 								aria-controls="python-ide-settings-panel"
@@ -7208,12 +7228,12 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-settings-panel {
-	position: fixed;
-	z-index: 8;
-	top: 1rem;
-	right: 1rem;
+	position: absolute;
+	z-index: 18;
+	top: calc(100% + 0.6rem);
+	right: 0;
 	width: min(26rem, calc(100vw - 2rem));
-	max-height: calc(100vh - 2rem);
+	max-height: min(36rem, calc(100vh - 8rem));
 	display: grid;
 	gap: 0.45rem;
 	overflow: auto;
@@ -7961,9 +7981,9 @@ html.dark .editor-shortcuts ul {
 	}
 
 	.ide-settings-panel {
-		right: 1rem;
-		left: 1rem;
-		width: auto;
+		right: auto;
+		left: 0;
+		width: min(26rem, calc(100vw - 2rem));
 	}
 
 	.turtle-canvas:not(.turtle-canvas--game) {

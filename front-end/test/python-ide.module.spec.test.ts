@@ -2911,8 +2911,14 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Expanded layout");
 		expect(pageSource).not.toContain("Autosave projects");
 		expect(pageSource).not.toContain("Recommendations as you type");
+		expect(pageSource).toContain("position: absolute;");
+		expect(pageSource).toContain("top: calc(100% + 0.6rem);");
 		expect(pageSource).toContain("width: min(26rem, calc(100vw - 2rem));");
-		expect(pageSource).toContain("max-height: calc(100vh - 2rem);");
+		expect(pageSource).toContain("right: auto;");
+		expect(pageSource).toContain("left: 0;");
+		expect(pageSource).toContain(
+			"max-height: min(36rem, calc(100vh - 8rem));"
+		);
 		expect(pageSource).toContain(".ide-settings-panel :where(*)");
 		expect(pageSource).toContain(".ide-setting-copy");
 		expect(pageSource).toContain(".ide-setting-description");
@@ -2934,6 +2940,27 @@ describe("python IDE project helpers", () => {
 			'aria-controls="python-ide-settings-panel"'
 		);
 		expect(pageSource).toContain('id="python-ide-settings-panel"');
+		expect(pageSource).toContain(
+			'ref="ideSettingsRef" class="ide-settings"'
+		);
+		expect(pageSource).toContain(
+			"const ideSettingsRef = ref<HTMLDivElement | null>(null);"
+		);
+		expect(pageSource).toContain(
+			"function handleIdeSettingsOutsidePointerDown"
+		);
+		expect(pageSource).toContain(
+			"ideSettingsRef.value?.contains(target)"
+		);
+		expect(pageSource).toContain(
+			"showIdeSettings.value = false;"
+		);
+		expect(pageSource).toContain(
+			"document.addEventListener(\n\t\t\"pointerdown\",\n\t\thandleIdeSettingsOutsidePointerDown\n\t);"
+		);
+		expect(pageSource).toContain(
+			"document.removeEventListener(\n\t\t\"pointerdown\",\n\t\thandleIdeSettingsOutsidePointerDown\n\t);"
+		);
 		expect(pageSource).toContain("Protect local saves");
 		expect(pageSource).toContain("function storageManagerWithPersistence");
 		expect(pageSource).toContain("navigator.storage?.persist");

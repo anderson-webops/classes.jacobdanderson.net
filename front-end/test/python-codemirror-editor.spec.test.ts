@@ -1516,7 +1516,28 @@ describe("python IDE CodeMirror editor", () => {
 		);
 
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel\s*{[\s\S]*position: fixed;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*width: min\(26rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: calc\(100vh - 2rem\);[\s\S]*display: grid;[\s\S]*gap: 0\.45rem;[\s\S]*padding: 0\.8rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.84rem;[\s\S]*line-height: 1\.42;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: normal;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
+			/\.ide-settings-panel\s*{[\s\S]*position: absolute;[\s\S]*z-index: 18;[\s\S]*top: calc\(100% \+ 0\.6rem\);[\s\S]*right: 0;[\s\S]*width: min\(26rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: min\(36rem, calc\(100vh - 8rem\)\);[\s\S]*display: grid;[\s\S]*gap: 0\.45rem;[\s\S]*padding: 0\.8rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.84rem;[\s\S]*line-height: 1\.42;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: normal;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
+		);
+		expect(pageSource).toMatch(
+			/\.ide-settings-panel\s*{[\s\S]*right: auto;[\s\S]*left: 0;[\s\S]*width: min\(26rem, calc\(100vw - 2rem\)\);/
+		);
+		expect(pageSource).toContain(
+			'ref="ideSettingsRef" class="ide-settings"'
+		);
+		expect(pageSource).toContain(
+			"const ideSettingsRef = ref<HTMLDivElement | null>(null);"
+		);
+		expect(pageSource).toContain(
+			"function handleIdeSettingsOutsidePointerDown"
+		);
+		expect(pageSource).toContain(
+			'@click="showIdeSettings = !showIdeSettings"'
+		);
+		expect(pageSource).toContain(
+			"document.addEventListener(\n\t\t\"pointerdown\",\n\t\thandleIdeSettingsOutsidePointerDown\n\t);"
+		);
+		expect(pageSource).toContain(
+			"document.removeEventListener(\n\t\t\"pointerdown\",\n\t\thandleIdeSettingsOutsidePointerDown\n\t);"
 		);
 		expect(pageSource).toContain("Autosave");
 		expect(pageSource).toContain("Suggestions");
