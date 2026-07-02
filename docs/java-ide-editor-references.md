@@ -22,6 +22,8 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   sorting lessons: `length()`, `charAt()`, `substring()`, `equals()`,
   `equalsIgnoreCase()`, `compareTo()`, `indexOf()`, `toLowerCase()`,
   `toUpperCase()`, and `trim()` should appear as member completions.
+- Include beginner `Scanner` member completions for token reads, line reads,
+  numeric/boolean reads, and validation predicates such as `hasNextInt()`.
 
 ## Teaching and Runtime References
 
@@ -42,16 +44,19 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   variables, string concatenation, string methods such as `length()`,
   `charAt()`, `substring()`, `equals()`, `equalsIgnoreCase()`, `compareTo()`,
   `indexOf()`, `toLowerCase()`, `toUpperCase()`, and `trim()`, numeric
-  arithmetic, simple casts, common `Math` helpers, line-based `Scanner` reads
-  from the IDE input box, basic `if` / `else if` / `else` decisions, bounded
-  `for` / `while` loops, void helper calls, and simple static methods with
-  parameters, `return` values, arithmetic use, boolean helpers, capped
-  recursion, one-dimensional arrays, `Arrays.toString(...)`, `array.length`,
-  indexed array access and assignment, enhanced `for` loops over arrays and
-  `ArrayList`s, beginner two-dimensional arrays with nested loops, row
-  `.length`, chained row/column indexing, and `Arrays.deepToString(...)`, and
-  beginner `ArrayList` calls such as `add`, `get`, `set`, `remove`, `size`,
-  and `isEmpty`. It remains a browser teaching preview rather than a compiler.
+  arithmetic, simple casts, common `Math` helpers, `Scanner` reads from the IDE
+  input box with Java-like token-versus-line behavior for `next()`,
+  `nextInt()`, `nextDouble()`, `nextBoolean()`, and `nextLine()`, basic
+  `hasNext...()` validation predicates, basic `if` / `else if` / `else`
+  decisions, bounded `for` / `while` loops, void helper calls, and simple
+  static methods with parameters, `return` values, arithmetic use, boolean
+  helpers, capped recursion, one-dimensional arrays, `Arrays.toString(...)`,
+  `array.length`, indexed array access and assignment, enhanced `for` loops
+  over arrays and `ArrayList`s, beginner two-dimensional arrays with nested
+  loops, row `.length`, chained row/column indexing, and
+  `Arrays.deepToString(...)`, and beginner `ArrayList` calls such as `add`,
+  `get`, `set`, `remove`, `size`, and `isEmpty`. It remains a browser teaching
+  preview rather than a compiler.
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/) is a useful
   comparison point for browser editor UX, but its deeper Java IntelliSense path
   usually implies a language-server architecture. That is intentionally outside

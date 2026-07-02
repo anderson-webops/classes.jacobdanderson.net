@@ -16,7 +16,7 @@ import type {
 	RuntimeArtifact,
 	TurtleBridge
 } from "@/modules/pythonIdeRuntime";
-import { faGear, faGripLinesVertical } from "@fortawesome/free-solid-svg-icons";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { storeToRefs } from "pinia";
 import {
@@ -6083,12 +6083,7 @@ onBeforeUnmount(() => {
 						title="Drag to resize code and output panels"
 						@keydown="handleIdeSplitKeydown"
 						@pointerdown="startIdeSplitResize"
-					>
-						<FontAwesomeIcon
-							:icon="faGripLinesVertical"
-							aria-hidden="true"
-						/>
-					</button>
+					/>
 
 					<section class="result-panel" aria-label="Code output">
 						<div class="panel-header">
@@ -7267,14 +7262,14 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-grid {
-	--python-ide-splitter-width: 0.9rem;
+	--python-ide-splitter-width: 0.55rem;
 	min-height: 38rem;
 	height: clamp(38rem, 76vh, 54rem);
 	display: grid;
 	grid-template-columns:
 		minmax(18rem, var(--python-ide-code-column, 54%))
 		var(--python-ide-splitter-width) minmax(24rem, 1fr);
-	column-gap: 0.55rem;
+	column-gap: 0.3rem;
 }
 
 .ide-grid--drawing {
@@ -7315,45 +7310,31 @@ html.dark .file-delete:disabled::after {
 	justify-content: center;
 	align-self: stretch;
 	padding: 0;
-	border: 1px solid var(--color-border);
-	border-radius: 999px;
-	background: rgba(255, 255, 255, 0.68);
-	color: #0f766e;
+	border: 0;
+	background: transparent;
 	cursor: col-resize;
 	touch-action: none;
-	transition:
-		background-color 150ms ease,
-		border-color 150ms ease,
-		box-shadow 150ms ease,
-		color 150ms ease;
+}
+
+.ide-splitter::before {
+	width: 2px;
+	height: 100%;
+	border-radius: 999px;
+	background: rgba(15, 118, 110, 0.46);
+	content: "";
+	pointer-events: none;
 }
 
 .ide-splitter:hover,
 .ide-splitter:focus-visible,
 .ide-grid.is-resizing .ide-splitter {
-	border-color: rgba(20, 184, 166, 0.56);
-	background: rgba(240, 253, 250, 0.94);
-	box-shadow: 0 0 0 3px var(--python-focus-glow);
-	color: #0d9488;
+	background: transparent;
+	box-shadow: none;
+	outline: 0;
 }
 
-.ide-splitter svg {
-	width: 0.7rem;
-	height: 1.5rem;
-	pointer-events: none;
-}
-
-html.dark .ide-splitter {
-	border-color: rgba(148, 163, 184, 0.28);
-	background: rgba(8, 17, 31, 0.88);
-	color: #2dd4bf;
-}
-
-html.dark .ide-splitter:hover,
-html.dark .ide-splitter:focus-visible,
-html.dark .ide-grid.is-resizing .ide-splitter {
-	border-color: rgba(94, 234, 212, 0.5);
-	background: rgba(15, 23, 42, 0.96);
+html.dark .ide-splitter::before {
+	background: rgba(94, 234, 212, 0.52);
 }
 
 .panel-header {

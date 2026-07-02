@@ -85,8 +85,8 @@ interface JavaConsoleContext {
 }
 
 interface JavaScannerInput {
-	index: number;
-	values: string[];
+	position: number;
+	source: string;
 }
 
 interface JavaConsoleOutputState {
@@ -150,8 +150,8 @@ const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
 const JAVA_PRINT_RE = /System\.out\.(print|println)\s*\(([\s\S]*?)\)\s*;/g;
-const JAVA_SCANNER_READ_RE =
-	/\b[A-Z_]\w*\.next(Line|Int|Double|Boolean)?\s*\(\s*\)/i;
+const JAVA_SCANNER_METHOD_RE =
+	/^[A-Z_]\w*\.(next(?:Line|Int|Double|Boolean)?|hasNext(?:Line|Int|Double|Boolean)?)\s*\(\s*\)$/i;
 const JAVA_VARIABLE_DECLARATION_START_RE =
 	/^[A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])*\s+([A-Z_]\w*)\s*=/i;
 const JAVA_VARIABLE_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*=/i;
@@ -261,8 +261,8 @@ function javaConsoleOutput(source: string, inputText: string) {
 	const methods = parseJavaMethods(source);
 	const context: JavaConsoleContext = {
 		input: {
-			index: 0,
-			values: inputText.split(/\r?\n/).map(value => value.trimEnd())
+			position: 0,
+			source: inputText.replace(/\r\n?/g, "\n")
 		},
 		methodCallDepth: 0,
 		methods,
@@ -826,35 +826,133 @@ function evaluateJavaScannerRead(
 	expression: string,
 	context: JavaConsoleContext | undefined
 ): JavaConsoleValue | null {
-	const match = expression.match(JAVA_SCANNER_READ_RE);
+	const match = expression.match(JAVA_SCANNER_METHOD_RE);
 	if (!match || !context) return null;
-	const method = match[1] ?? "";
-	const raw = context.input.values[context.input.index] ?? "";
-	context.input.index += 1;
-
-	if (raw === "" && context.input.index > context.input.values.length) {
-		context.stderr.push(`Scanner input ran out for next${method}().`);
+	const rawMethod = match[1] ?? "";
+	const method = rawMethod.toLowerCase();
+	if (method.startsWith("hasnext")) {
+		return {
+			type: "boolean",
+			value: javaScannerHasNext(context.input, method)
+		};
 	}
 
-	if (method === "Int") {
-		const value = Number.parseInt(raw.trim(), 10);
+	const raw =
+		method === "nextline"
+			? readJavaScannerLine(context.input)
+			: readJavaScannerToken(context.input);
+
+	if (raw === null) {
+		context.stderr.push(`Scanner input ran out for ${rawMethod}().`);
+		return scannerFallbackValue(method);
+	}
+
+	if (method === "nextint") {
+		const value = parseJavaScannerInt(raw);
 		if (Number.isFinite(value)) return { type: "number", value };
 		context.stderr.push(`Scanner could not read int from "${raw}".`);
 		return { type: "number", value: 0 };
 	}
 
-	if (method === "Double") {
-		const value = Number.parseFloat(raw.trim());
+	if (method === "nextdouble") {
+		const value = parseJavaScannerDouble(raw);
 		if (Number.isFinite(value)) return { type: "number", value };
 		context.stderr.push(`Scanner could not read double from "${raw}".`);
 		return { type: "number", value: 0 };
 	}
 
-	if (method === "Boolean") {
-		return { type: "boolean", value: raw.trim().toLowerCase() === "true" };
+	if (method === "nextboolean") {
+		const normalized = raw.toLowerCase();
+		if (normalized === "true" || normalized === "false") {
+			return { type: "boolean", value: normalized === "true" };
+		}
+		context.stderr.push(`Scanner could not read boolean from "${raw}".`);
+		return { type: "boolean", value: false };
 	}
 
 	return { type: "string", value: raw };
+}
+
+function javaScannerHasNext(input: JavaScannerInput, method: string) {
+	if (method === "hasnextline") return input.position < input.source.length;
+	const token = peekJavaScannerToken(input);
+	if (token === null) return false;
+	if (method === "hasnextint")
+		return Number.isFinite(parseJavaScannerInt(token));
+	if (method === "hasnextdouble")
+		return Number.isFinite(parseJavaScannerDouble(token));
+	if (method === "hasnextboolean") return /^(?:true|false)$/i.test(token);
+	return true;
+}
+
+function scannerFallbackValue(method: string): JavaConsoleValue {
+	if (method === "nextint" || method === "nextdouble")
+		return { type: "number", value: 0 };
+	if (method === "nextboolean") return { type: "boolean", value: false };
+	return { type: "string", value: "" };
+}
+
+function readJavaScannerLine(input: JavaScannerInput) {
+	if (input.position >= input.source.length) return null;
+	const newline = input.source.indexOf("\n", input.position);
+	if (newline < 0) {
+		const line = input.source.slice(input.position);
+		input.position = input.source.length;
+		return line;
+	}
+	const line = input.source.slice(input.position, newline);
+	input.position = newline + 1;
+	return line;
+}
+
+function peekJavaScannerToken(input: JavaScannerInput) {
+	const bounds = javaScannerTokenBounds(input);
+	return bounds ? input.source.slice(bounds.start, bounds.end) : null;
+}
+
+function readJavaScannerToken(input: JavaScannerInput) {
+	const bounds = javaScannerTokenBounds(input);
+	if (!bounds) return null;
+	input.position = bounds.end;
+	return input.source.slice(bounds.start, bounds.end);
+}
+
+function javaScannerTokenBounds(input: JavaScannerInput) {
+	let start = input.position;
+	while (start < input.source.length && /\s/.test(input.source[start] ?? ""))
+		start += 1;
+	if (start >= input.source.length) return null;
+
+	let end = start;
+	while (end < input.source.length && !/\s/.test(input.source[end] ?? ""))
+		end += 1;
+	return { end, start };
+}
+
+function parseJavaScannerInt(raw: string) {
+	if (!/^[+-]?\d+$/.test(raw)) return Number.NaN;
+	return Number.parseInt(raw, 10);
+}
+
+function parseJavaScannerDouble(raw: string) {
+	if (!isJavaScannerDoubleToken(raw)) return Number.NaN;
+	return Number.parseFloat(raw);
+}
+
+function isJavaScannerDoubleToken(raw: string) {
+	let token = raw.toLowerCase();
+	if (token.startsWith("+") || token.startsWith("-")) token = token.slice(1);
+	const exponentParts = token.split("e");
+	if (exponentParts.length > 2) return false;
+	const [mantissa = "", exponent] = exponentParts;
+	if (exponent !== undefined && !/^[+-]?\d+$/.test(exponent)) return false;
+	const decimalParts = mantissa.split(".");
+	if (decimalParts.length > 2) return false;
+	const [whole = "", fraction = ""] = decimalParts;
+	if (decimalParts.length === 1) return /^\d+$/.test(whole);
+	if (whole && !/^\d+$/.test(whole)) return false;
+	if (fraction && !/^\d+$/.test(fraction)) return false;
+	return Boolean(whole || fraction) && Boolean(whole || fraction.length);
 }
 
 function evaluateJavaCollectionExpression(

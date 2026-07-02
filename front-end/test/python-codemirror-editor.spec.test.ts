@@ -347,6 +347,16 @@ describe("python IDE CodeMirror editor", () => {
 				"toLowerCase",
 				"toUpperCase",
 				"trim",
+				"next",
+				"nextLine",
+				"nextInt",
+				"nextDouble",
+				"nextBoolean",
+				"hasNext",
+				"hasNextLine",
+				"hasNextInt",
+				"hasNextDouble",
+				"hasNextBoolean",
 				"add",
 				"get",
 				"set",
@@ -385,6 +395,9 @@ describe("python IDE CodeMirror editor", () => {
 				"compareTo",
 				"indexOf",
 				"toLowerCase",
+				"nextLine",
+				"nextInt",
+				"hasNextInt",
 				"get",
 				"set",
 				"size",
@@ -552,6 +565,33 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).toContain(".project-title-input:focus-visible");
 		expect(pageSource).not.toContain(
 			".editor-toolbar > label:focus-within"
+		);
+	});
+
+	it("keeps the IDE splitter as a single discreet separator", () => {
+		const pageSource = sourceFile(
+			"../src/components/PythonIdeWorkspace.vue"
+		);
+		const splitterSource =
+			pageSource.match(
+				/class="ide-splitter"[\s\S]*?@pointerdown="startIdeSplitResize"[\s\S]*?\/>/
+			)?.[0] ?? "";
+
+		expect(splitterSource).toContain('role="separator"');
+		expect(splitterSource).not.toContain("FontAwesomeIcon");
+		expect(pageSource).not.toContain("faGripLinesVertical");
+		expect(pageSource).toMatch(
+			/\.ide-grid\s*{[\s\S]*--python-ide-splitter-width: 0\.55rem;/
+		);
+		expect(pageSource).toMatch(
+			/\.ide-splitter\s*{[\s\S]*border: 0;[\s\S]*background: transparent;/
+		);
+		expect(pageSource).toMatch(
+			/\.ide-splitter::before\s*{[\s\S]*width: 2px;[\s\S]*height: 100%;/
+		);
+		expect(pageSource).not.toContain(".ide-splitter svg");
+		expect(pageSource).toMatch(
+			/\.ide-grid\.is-resizing \.ide-splitter\s*{[\s\S]*box-shadow: none;/
 		);
 	});
 
