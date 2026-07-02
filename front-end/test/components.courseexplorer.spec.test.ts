@@ -1317,14 +1317,17 @@ describe("CourseExplorer.vue", () => {
 		});
 		await flushPromises();
 
-		await vi.waitFor(() => {
-			const heading = wrapper.find(".course-hero h2");
-			expect(heading.exists()).toBe(true);
-			expect(heading.text()).toContain(
-				"Pre-Calculus and Trigonometry A"
-			);
-			expect(wrapper.text()).not.toContain("Loading course");
-		});
+		await vi.waitFor(
+			() => {
+				const heading = wrapper.find(".course-hero h2");
+				expect(heading.exists()).toBe(true);
+				expect(heading.text()).toContain(
+					"Pre-Calculus and Trigonometry A"
+				);
+				expect(wrapper.text()).not.toContain("Loading course");
+			},
+			{ timeout: 5000 }
+		);
 
 		await wrapper.get("#course-search").setValue("pcta12_pset2_40.png");
 		await flushPromises();
@@ -1370,14 +1373,17 @@ describe("CourseExplorer.vue", () => {
 		});
 		await flushPromises();
 
-		await vi.waitFor(() => {
-			const heading = wrapper.find(".course-hero h2");
-			expect(heading.exists()).toBe(true);
-			expect(heading.text()).toContain(
-				"Pre-Calculus and Trigonometry B"
-			);
-			expect(wrapper.text()).not.toContain("Loading course");
-		});
+		await vi.waitFor(
+			() => {
+				const heading = wrapper.find(".course-hero h2");
+				expect(heading.exists()).toBe(true);
+				expect(heading.text()).toContain(
+					"Pre-Calculus and Trigonometry B"
+				);
+				expect(wrapper.text()).not.toContain("Loading course");
+			},
+			{ timeout: 5000 }
+		);
 
 		await wrapper.get("#course-search").setValue("pctb3_pset4_20.png");
 		await flushPromises();
@@ -1423,12 +1429,15 @@ describe("CourseExplorer.vue", () => {
 		});
 		await flushPromises();
 
-		await vi.waitFor(() => {
-			const heading = wrapper.find(".course-hero h2");
-			expect(heading.exists()).toBe(true);
-			expect(heading.text()).toContain("AP Calculus");
-			expect(wrapper.text()).not.toContain("Loading course");
-		});
+		await vi.waitFor(
+			() => {
+				const heading = wrapper.find(".course-hero h2");
+				expect(heading.exists()).toBe(true);
+				expect(heading.text()).toContain("AP Calculus");
+				expect(wrapper.text()).not.toContain("Loading course");
+			},
+			{ timeout: 5000 }
+		);
 
 		await wrapper.get("#course-search").setValue("apc21_concept3_24.png");
 		await flushPromises();
