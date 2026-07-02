@@ -613,10 +613,19 @@ describe("python IDE CodeMirror editor", () => {
 		expect(autocompleteLabelsForDoc("java", "System.out.")).toEqual(
 			expect.arrayContaining(["print", "println", "printf", "format"])
 		);
+		expect(autocompleteLabelsForDoc("java", "java.lang.System.out.")).toEqual(
+			expect.arrayContaining(["print", "println", "printf", "format"])
+		);
 		expect(autocompleteLabelsForDoc("java", "String.")).toEqual(
 			expect.arrayContaining(["format"])
 		);
+		expect(autocompleteLabelsForDoc("java", "java.lang.String.")).toEqual(
+			expect.arrayContaining(["format"])
+		);
 		expect(autocompleteLabelsForDoc("java", "Math.")).toEqual(
+			expect.arrayContaining(["PI", "E", "random", "sqrt"])
+		);
+		expect(autocompleteLabelsForDoc("java", "java.lang.Math.")).toEqual(
 			expect.arrayContaining(["PI", "E", "random", "sqrt"])
 		);
 		expect(autocompleteLabelsForDoc("java", "random.")).toEqual(
@@ -848,7 +857,18 @@ describe("python IDE CodeMirror editor", () => {
 				"copyOf"
 			])
 		);
+		expect(autocompleteLabelsForDoc("java", "java.util.Arrays.")).toEqual(
+			expect.arrayContaining([
+				"toString",
+				"deepToString",
+				"sort",
+				"copyOf"
+			])
+		);
 		expect(autocompleteLabelsForDoc("java", "Collections.")).toEqual(
+			expect.arrayContaining(["sort", "reverse", "shuffle", "max"])
+		);
+		expect(autocompleteLabelsForDoc("java", "java.util.Collections.")).toEqual(
 			expect.arrayContaining(["sort", "reverse", "shuffle", "max"])
 		);
 		expect(autocompleteLabelsForDoc("java", "Comparator.")).toEqual(
@@ -858,16 +878,32 @@ describe("python IDE CodeMirror editor", () => {
 				"reverseOrder"
 			])
 		);
+		expect(autocompleteLabelsForDoc("java", "java.util.Comparator.")).toEqual(
+			expect.arrayContaining([
+				"comparing",
+				"comparingInt",
+				"reverseOrder"
+			])
+		);
 		expect(autocompleteLabelsForDoc("karel", "World.")).toEqual(
+			expect.arrayContaining(["readWorld"])
+		);
+		expect(autocompleteLabelsForDoc("karel", "kareltherobot.World.")).toEqual(
 			expect.arrayContaining(["readWorld"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "Directions.")).toEqual(
 			expect.arrayContaining(["North", "East", "South", "West"])
 		);
+		expect(
+			autocompleteLabelsForDoc("karel", "kareltherobot.Directions.")
+		).toEqual(expect.arrayContaining(["North", "East", "South", "West"]));
 		expect(autocompleteLabelsForDoc("karel", "Directions.")).not.toEqual(
 			expect.arrayContaining(["move", "turnLeft"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "Color.")).toEqual(
+			expect.arrayContaining(["RED", "BLUE", "GREEN"])
+		);
+		expect(autocompleteLabelsForDoc("karel", "java.awt.Color.")).toEqual(
 			expect.arrayContaining(["RED", "BLUE", "GREEN"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "sam.")).toEqual(

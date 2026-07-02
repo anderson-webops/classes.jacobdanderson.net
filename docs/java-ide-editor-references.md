@@ -33,6 +33,12 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   `Arrays.deepToString(...)`, `Arrays.sort(...)`, `Arrays.copyOf(...)`, 2D
   array setup, `ArrayList` creation and core methods, and beginner `HashMap` /
   `TreeMap` creation and core `Map` methods should be available from the editor.
+- Keep completions available when students use fully qualified receivers instead
+  of imports. `java.util.Arrays.`, `java.util.Collections.`,
+  `java.util.Comparator.`, `java.lang.Math.`, `java.lang.String.`,
+  `java.lang.System.out.`, `java.awt.Color.`, `kareltherobot.World.`, and
+  `kareltherobot.Directions.` should resolve to the same local completion
+  families as their imported short names.
 - Include `java.util.Random` type/import/snippet help and Random instance member
   completions (`nextInt`, `nextDouble`, `nextBoolean`, `setSeed`) for declared
   or clearly named random receivers. The browser preview supports the beginner
