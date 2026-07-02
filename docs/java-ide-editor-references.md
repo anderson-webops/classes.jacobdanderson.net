@@ -67,7 +67,8 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   input, comparisons, math, and random numbers. The local console preview
   follows a small beginner subset: `System.out.print` / `println`, formatted
   output through `System.out.printf`, `System.out.format`, and `String.format`,
-  simple variables, string concatenation, string methods such as `length()`,
+  simple variables, string concatenation with Java-style left-to-right numeric
+  addition before the first string operand, string methods such as `length()`,
   `charAt()`, `substring()`, `equals()`, `equalsIgnoreCase()`, `compareTo()`,
   `indexOf()`, `toLowerCase()`, `toUpperCase()`, and `trim()`, numeric
   arithmetic, simple casts, common `Math` helpers and constants such as

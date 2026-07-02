@@ -833,19 +833,12 @@ function evaluateJavaExpression(
 	const numericValue = evaluateNumericExpression(trimmed, context, output);
 	if (numericValue !== null) return { type: "number", value: numericValue };
 
-	const parts = splitJavaConcat(trimmed);
-	if (parts.length > 1) {
-		return {
-			type: "string",
-			value: parts
-				.map(part =>
-					javaValueToString(
-						evaluateJavaExpression(part, context, output)
-					)
-				)
-				.join("")
-		};
-	}
+	const mixedAdditionValue = evaluateJavaMixedAdditionExpression(
+		trimmed,
+		context,
+		output
+	);
+	if (mixedAdditionValue) return mixedAdditionValue;
 
 	if (/^"(?:\\.|[^"\\])*"$/.test(trimmed)) {
 		return {
@@ -997,6 +990,43 @@ function evaluateJavaStringFormatExpression(
 	return {
 		type: "string",
 		value: formatJavaConsoleExpression(match[1] ?? "", context, output)
+	};
+}
+
+function evaluateJavaMixedAdditionExpression(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue | null {
+	const parts = splitJavaConcat(expression);
+	if (parts.length <= 1) return null;
+
+	let value = evaluateJavaExpression(parts[0] ?? "", context, output);
+	for (const part of parts.slice(1)) {
+		value = combineJavaAdditionValues(
+			value,
+			evaluateJavaExpression(part, context, output)
+		);
+	}
+	return value;
+}
+
+function combineJavaAdditionValues(
+	left: JavaConsoleValue,
+	right: JavaConsoleValue
+): JavaConsoleValue {
+	if (left.type === "string" || right.type === "string") {
+		return {
+			type: "string",
+			value: `${javaValueToString(left)}${javaValueToString(right)}`
+		};
+	}
+	if (left.type === "number" && right.type === "number") {
+		return { type: "number", value: left.value + right.value };
+	}
+	return {
+		type: "string",
+		value: `${javaValueToString(left)}${javaValueToString(right)}`
 	};
 }
 
