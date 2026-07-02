@@ -63,8 +63,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   simple variables, string concatenation, string methods such as `length()`,
   `charAt()`, `substring()`, `equals()`, `equalsIgnoreCase()`, `compareTo()`,
   `indexOf()`, `toLowerCase()`, `toUpperCase()`, and `trim()`, numeric
-  arithmetic, simple casts, common `Math` helpers, `Scanner` reads from the IDE
-  input box with Java-like token-versus-line behavior for `next()`,
+  arithmetic, simple casts, common `Math` helpers and constants such as
+  `Math.PI` and `Math.E`, `Scanner` reads from the IDE input box with
+  Java-like token-versus-line behavior for `next()`,
   `nextInt()`, `nextDouble()`, `nextBoolean()`, and `nextLine()`, basic
   `hasNext...()` validation predicates, basic `if` / `else if` / `else`
   decisions, bounded `for` / `while` loops, void helper calls, and simple

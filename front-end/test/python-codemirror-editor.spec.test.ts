@@ -419,7 +419,7 @@ describe("python IDE CodeMirror editor", () => {
 			expect.arrayContaining(["format"])
 		);
 		expect(autocompleteLabelsForDoc("java", "Math.")).toEqual(
-			expect.arrayContaining(["random", "sqrt"])
+			expect.arrayContaining(["PI", "E", "random", "sqrt"])
 		);
 		expect(autocompleteLabelsForDoc("java", "names.")).toEqual(
 			expect.arrayContaining([

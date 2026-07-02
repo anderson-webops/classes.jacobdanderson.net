@@ -1452,6 +1452,9 @@ function evaluateJavaMathMethodExpression(
 	context?: JavaConsoleContext,
 	output?: JavaConsoleOutputState
 ): JavaConsoleValue | null {
+	const constant = javaMathConstantValue(expression);
+	if (constant !== null) return { type: "number", value: constant };
+
 	const match = expression.match(/^Math\.(\w+)\s*\(([\s\S]*)\)$/);
 	if (!match?.[1]) return null;
 	const args = splitJavaArguments(match[2] ?? "").map(arg =>
@@ -1480,6 +1483,13 @@ function evaluateJavaMathMethodExpression(
 		default:
 			return null;
 	}
+}
+
+function javaMathConstantValue(expression: string): number | null {
+	const normalized = expression.trim().toLowerCase();
+	if (normalized === "math.pi") return Math.PI;
+	if (normalized === "math.e") return Math.E;
+	return null;
 }
 
 function evaluateJavaStringMethodExpression(
@@ -1942,7 +1952,7 @@ function evaluateNumericExpression(
 	output?: JavaConsoleOutputState
 ) {
 	const tokens = expression.match(
-		/[A-Z_]\w*(?:\s*\[[^\][]+\])+|(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)|\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi
+		/[A-Z_]\w*(?:\s*\[[^\][]+\])+|(?:[A-Z_]\w*\.)?[A-Z_]\w*\s*\([^()]*\)|[A-Z_]\w*\.[A-Z_]\w*|\d+(?:\.\d+)?|[A-Z_]\w*|[()+\-*/%]/gi
 	);
 	if (
 		!tokens ||
@@ -1988,6 +1998,8 @@ function evaluateNumericExpression(
 					evaluateJavaExpression(token ?? "", context, output)
 				);
 			}
+			const constant = javaMathConstantValue(token ?? "");
+			if (constant !== null) return constant;
 			const variable = context?.variables.get(token ?? "");
 			const value =
 				variable?.type === "number" ? variable.value : Number(token);

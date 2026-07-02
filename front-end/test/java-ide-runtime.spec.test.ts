@@ -315,6 +315,8 @@ public class Main {
         System.out.println(word.compareTo("Java") > 0);
         System.out.println((int) 3.9);
         System.out.println(Math.max(4, 7));
+        System.out.println(Math.round(Math.PI * 100));
+        System.out.println((int) Math.E);
     }
 }`
 				}
@@ -339,7 +341,9 @@ public class Main {
 			"2",
 			"true",
 			"3",
-			"7"
+			"7",
+			"314",
+			"2"
 		]);
 	});
 
