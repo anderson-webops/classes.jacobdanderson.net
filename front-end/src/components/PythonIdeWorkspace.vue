@@ -6367,7 +6367,7 @@ onBeforeUnmount(() => {
 .python-ide-eyebrow,
 .sidebar-heading,
 .panel-header,
-.editor-toolbar span,
+.editor-toolbar > span,
 .stdin-panel span {
 	font-size: 0.75rem;
 	font-weight: 800;
@@ -7185,11 +7185,11 @@ html.dark .file-delete:disabled::after {
 	z-index: 8;
 	top: calc(100% + 0.55rem);
 	right: 0;
-	width: min(28rem, calc(100vw - 1.25rem));
+	width: min(34rem, calc(100vw - 1.25rem));
 	max-height: min(31rem, calc(100vh - 1.5rem));
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 1.25rem;
+	padding: 1.45rem;
 	border: 1px solid var(--color-border);
 	border-radius: 16px;
 	background: #fff;
@@ -7205,31 +7205,33 @@ html.dark .file-delete:disabled::after {
 
 .editor-toolbar .ide-settings-panel,
 .editor-toolbar .ide-settings-panel :is(label, span, small, input, button) {
+	color: inherit;
 	font-family: var(--font-sans);
 	font-weight: 400;
 	letter-spacing: 0;
+	line-height: 1.5;
 	text-transform: none;
 }
 
 .ide-setting-toggle {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
-	gap: 0.85rem;
+	gap: 1rem;
 	align-items: start;
 	color: var(--color-ink);
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
-	margin-top: 1.2rem;
-	padding-top: 1.2rem;
+	margin-top: 1.35rem;
+	padding-top: 1.35rem;
 	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-share {
 	display: grid;
 	gap: 0.85rem;
-	margin-top: 1.2rem;
-	padding-top: 1.2rem;
+	margin-top: 1.35rem;
+	padding-top: 1.35rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7260,8 +7262,8 @@ html.dark .file-delete:disabled::after {
 .ide-setting-storage {
 	display: grid;
 	gap: 0.5rem;
-	margin-top: 1.25rem;
-	padding-top: 1.25rem;
+	margin-top: 1.35rem;
+	padding-top: 1.35rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7295,20 +7297,24 @@ html.dark .file-delete:disabled::after {
 	gap: 0.48rem;
 }
 
-.ide-settings-panel .ide-setting-title {
+.editor-toolbar .ide-settings-panel .ide-setting-title {
 	display: block;
 	color: var(--color-ink-strong);
-	font-size: 1rem;
-	font-weight: 650;
+	font-size: 0.98rem;
+	font-weight: 600;
+	letter-spacing: 0;
 	line-height: 1.35;
+	text-transform: none;
 }
 
-.ide-settings-panel .ide-setting-toggle small {
+.editor-toolbar .ide-settings-panel .ide-setting-toggle small {
 	display: block;
 	color: var(--color-ink-soft);
-	font-size: 0.88rem;
+	font-size: 0.9rem;
 	font-weight: 400;
-	line-height: 1.5;
+	letter-spacing: 0;
+	line-height: 1.55;
+	text-transform: none;
 }
 
 .ide-setting-storage small {
