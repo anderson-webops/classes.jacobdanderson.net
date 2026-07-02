@@ -5837,11 +5837,11 @@ onBeforeUnmount(() => {
 										type="checkbox"
 										@change="updateAutoSavePreference"
 									/>
-									<span>
+									<span class="ide-setting-copy">
 										<span class="ide-setting-title">
 											Autosave
 										</span>
-										<small>
+										<small class="ide-setting-description">
 											Save locally and sync when possible.
 										</small>
 									</span>
@@ -5854,11 +5854,11 @@ onBeforeUnmount(() => {
 											updateCodeRecommendationsPreference
 										"
 									/>
-									<span>
+									<span class="ide-setting-copy">
 										<span class="ide-setting-title">
 											Suggestions
 										</span>
-										<small>
+										<small class="ide-setting-description">
 											Show code suggestions while typing.
 										</small>
 									</span>
@@ -5869,11 +5869,11 @@ onBeforeUnmount(() => {
 										type="checkbox"
 										@change="updateEditorLineWrapPreference"
 									/>
-									<span>
+									<span class="ide-setting-copy">
 										<span class="ide-setting-title">
 											Line wrap
 										</span>
-										<small>
+										<small class="ide-setting-description">
 											Wrap long lines in the editor.
 										</small>
 									</span>
@@ -5884,11 +5884,11 @@ onBeforeUnmount(() => {
 										type="checkbox"
 										@change="updateExpandedIdePreference"
 									/>
-									<span>
+									<span class="ide-setting-copy">
 										<span class="ide-setting-title">
 											Expanded layout
 										</span>
-										<small>
+										<small class="ide-setting-description">
 											Use more space for editor and
 											output.
 										</small>
@@ -5908,11 +5908,13 @@ onBeforeUnmount(() => {
 												updateProjectSharePreference
 											"
 										/>
-										<span>
+										<span class="ide-setting-copy">
 											<span class="ide-setting-title">
 												Share
 											</span>
-											<small>
+											<small
+												class="ide-setting-description"
+											>
 												Let others open an editable
 												copy.
 											</small>
@@ -7210,20 +7212,20 @@ html.dark .file-delete:disabled::after {
 	z-index: 8;
 	top: 1rem;
 	right: 1rem;
-	width: min(28rem, calc(100vw - 2rem));
+	width: min(34rem, calc(100vw - 2rem));
 	max-height: calc(100vh - 2rem);
 	display: grid;
-	gap: 0.55rem;
+	gap: 0.75rem;
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 0.85rem;
+	padding: 1rem;
 	border: 1px solid var(--color-border);
 	border-radius: 14px;
 	background: #fff;
 	box-shadow: var(--shadow-soft);
 	font-family: var(--font-sans);
-	font-size: 0.86rem;
-	line-height: 1.45;
+	font-size: 0.875rem;
+	line-height: 1.5;
 	font-variant: normal;
 	font-weight: 400;
 	text-align: left;
@@ -7240,13 +7242,16 @@ html.dark .file-delete:disabled::after {
 	font-variant: normal;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.45;
+	line-height: 1.5;
 	text-transform: none;
 	overflow-wrap: normal;
 	word-break: normal;
 }
 
-.ide-settings-panel :is(label, span, small, button, input) {
+.ide-settings-panel :is(label, span, small, button, input),
+.editor-toolbar .ide-settings-panel .ide-setting-copy,
+.editor-toolbar .ide-settings-panel .ide-setting-title,
+.editor-toolbar .ide-settings-panel .ide-setting-description {
 	font-variant: normal;
 	letter-spacing: 0;
 	text-transform: none;
@@ -7254,32 +7259,32 @@ html.dark .file-delete:disabled::after {
 
 .ide-setting-toggle {
 	display: grid;
-	grid-template-columns: 1rem minmax(0, 1fr);
-	column-gap: 0.65rem;
+	grid-template-columns: 1.15rem minmax(0, 1fr);
+	column-gap: 0.85rem;
 	row-gap: 0.2rem;
 	align-items: start;
-	padding: 0.68rem 0.72rem;
+	padding: 0.82rem 0.9rem;
 	border-radius: 10px;
 	color: var(--color-ink);
 	cursor: pointer;
-	font-size: 0.86rem;
+	font-size: 0.875rem;
 	font-weight: 400;
-	line-height: 1.45;
+	line-height: 1.5;
 	text-align: left;
 	text-transform: none;
 	letter-spacing: 0;
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
-	margin-top: 0.25rem;
+	margin-top: 0.35rem;
 	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-share {
 	display: grid;
-	gap: 0.65rem;
-	margin-top: 0.25rem;
-	padding-top: 0.25rem;
+	gap: 0.75rem;
+	margin-top: 0.35rem;
+	padding-top: 0.35rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7334,38 +7339,38 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-setting-toggle input[type="checkbox"] {
-	width: 0.95rem;
-	height: 0.95rem;
+	width: 1.05rem;
+	height: 1.05rem;
 	margin: 0;
 	margin-top: 0.08rem;
 	accent-color: #0f766e;
 	transform: none;
 }
 
-.ide-setting-toggle > span {
+.ide-setting-copy {
 	min-width: 0;
 	display: grid;
-	gap: 0.2rem;
+	gap: 0.28rem;
 }
 
 .editor-toolbar .ide-settings-panel .ide-setting-title {
 	display: block;
 	color: var(--color-ink-strong);
-	font-size: 0.9rem;
-	font-weight: 600;
+	font-size: 0.88rem;
+	font-weight: 550;
 	letter-spacing: 0;
-	line-height: 1.25;
+	line-height: 1.32;
 	font-variant: normal;
 	text-transform: none;
 }
 
-.editor-toolbar .ide-settings-panel .ide-setting-toggle small {
+.editor-toolbar .ide-settings-panel .ide-setting-description {
 	display: block;
 	color: var(--color-ink-soft);
-	font-size: 0.74rem;
+	font-size: 0.78rem;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.42;
+	line-height: 1.48;
 	font-variant: normal;
 	text-transform: none;
 }
