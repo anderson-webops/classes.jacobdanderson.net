@@ -194,6 +194,49 @@ public class Algo implements Directions {
 		expect(result.karelWorld?.robot?.direction).toBe("East");
 	});
 
+	it("runs CodeHS-style Karel commands from run methods", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "MyProgram.java",
+			files: [
+				{
+					name: "MyProgram.java",
+					content: `public class MyProgram extends SuperKarel {
+    public void run() {
+        putBall();
+        move();
+        turnRight();
+    }
+
+    private void turnRight() {
+        turnLeft();
+        turnLeft();
+        turnLeft();
+    }
+
+    private void hidden() {
+        move();
+    }
+}`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 2,
+			direction: "South",
+			name: "karel",
+			street: 1
+		});
+		expect(result.karelWorld?.beepers).toContainEqual({
+			avenue: 1,
+			count: 1,
+			street: 1
+		});
+		expect(result.stdout).toHaveLength(6);
+	});
+
 	it("loads Java and Karel execution through the client IDE workspace", () => {
 		const routeSource = sourceFile("../src/pages/python-ide.vue");
 		const workspaceSource = sourceFile(

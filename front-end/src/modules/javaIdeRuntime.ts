@@ -59,7 +59,7 @@ interface JavaMethodDefinition {
 }
 
 interface KarelCommandPlan {
-	commands: Array<(typeof KAREL_COMMANDS)[number]>;
+	commands: KarelCommand[];
 	warnings: string[];
 }
 
@@ -80,8 +80,27 @@ const KAREL_COMMANDS = [
 	"turnRight",
 	"turnAround",
 	"putBeeper",
-	"pickBeeper"
+	"pickBeeper",
+	"putBall",
+	"takeBall"
 ] as const;
+type KarelCommand =
+	| "move"
+	| "pickBeeper"
+	| "putBeeper"
+	| "turnAround"
+	| "turnLeft"
+	| "turnRight";
+const KAREL_COMMAND_ALIASES = {
+	move: "move",
+	pickBeeper: "pickBeeper",
+	putBeeper: "putBeeper",
+	putBall: "putBeeper",
+	takeBall: "pickBeeper",
+	turnAround: "turnAround",
+	turnLeft: "turnLeft",
+	turnRight: "turnRight"
+} satisfies Record<(typeof KAREL_COMMANDS)[number], KarelCommand>;
 const directionOrder: KarelDirection[] = ["North", "East", "South", "West"];
 const wallOpposites: Record<KarelWallSide, KarelWallSide> = {
 	east: "west",
@@ -295,29 +314,29 @@ function runKarelProject(
 	const world = parseKarelWorld(files, source);
 	const stderr: string[] = [];
 	const trace: string[] = [];
+	const plan = karelCommandsForRobot(source, declaration?.[1] ?? "karel");
 
-	if (!declaration) {
+	if (!declaration && !plan.commands.length) {
 		const karelWorld = serializeKarelWorld(world, null, trace);
 		return {
 			karelWorld,
 			stderr: [
-				"Create a Karel robot with new UrRobot(street, avenue, Direction, beepers)."
+				"Create a Karel robot with new UrRobot(street, avenue, Direction, beepers), or write CodeHS-style Karel commands in main() or run()."
 			],
 			stdout: []
 		};
 	}
 
 	const robot: KarelRobotState = {
-		name: declaration[1] ?? "robot",
-		street: Number(declaration[2] ?? 1),
-		avenue: Number(declaration[3] ?? 1),
-		direction: normalizeDirection(declaration[4] ?? "East"),
-		beepers: Number(declaration[5] ?? 0)
+		name: declaration?.[1] ?? "karel",
+		street: Number(declaration?.[2] ?? 1),
+		avenue: Number(declaration?.[3] ?? 1),
+		direction: normalizeDirection(declaration?.[4] ?? "East"),
+		beepers: Number(declaration?.[5] ?? MAX_KAREL_PREVIEW_COMMANDS)
 	};
 	clampRobotToWorld(robot, world);
 	trace.push(formatRobotTrace(robot));
 
-	const plan = karelCommandsForRobot(source, robot.name);
 	for (const command of plan.commands) {
 		const error = applyKarelCommand(world, robot, command);
 		trace.push(formatRobotTrace(robot));
@@ -473,7 +492,8 @@ function clampRobotToWorld(robot: KarelRobotState, world: MutableKarelWorld) {
 
 function karelCommandsForRobot(source: string, robotName: string) {
 	const methods = parseJavaVoidMethods(source);
-	const mainBody = methods.get("main")?.body ?? source;
+	const mainBody =
+		methods.get("main")?.body ?? methods.get("run")?.body ?? source;
 	const plan: KarelCommandPlan = { commands: [], warnings: [] };
 	collectKarelCommandsFromBody(mainBody, methods, new Set([robotName]), plan);
 	return plan;
@@ -603,10 +623,8 @@ function collectKarelCommandsFromStatement(
 	);
 	if (commandMatch) {
 		if (robotAliases.has(commandMatch[1] ?? "")) {
-			addKarelCommand(
-				plan,
-				commandMatch[2] as (typeof KAREL_COMMANDS)[number]
-			);
+			const command = karelCommandForName(commandMatch[2] ?? "");
+			if (command) addKarelCommand(plan, command);
 		}
 		return;
 	}
@@ -614,7 +632,15 @@ function collectKarelCommandsFromStatement(
 	const methodCall = statement.match(/^([A-Z_]\w*)\s*\(([\s\S]*)\)$/i);
 	const methodName = methodCall?.[1];
 	const method = methodName ? methods.get(methodName) : null;
-	if (!method || !methodCall) return;
+	if (!methodCall) return;
+
+	if (!method && methodName && !methodCall[2]?.trim()) {
+		const command = karelCommandForName(methodName);
+		if (command) addKarelCommand(plan, command);
+		return;
+	}
+
+	if (!method) return;
 
 	const args = splitJavaArguments(methodCall[2] ?? "");
 	const nextAliases = new Set(robotAliases);
@@ -828,10 +854,7 @@ function canAddKarelCommand(plan: KarelCommandPlan) {
 	return false;
 }
 
-function addKarelCommand(
-	plan: KarelCommandPlan,
-	command: (typeof KAREL_COMMANDS)[number]
-) {
+function addKarelCommand(plan: KarelCommandPlan, command: KarelCommand) {
 	if (!canAddKarelCommand(plan)) return;
 	plan.commands.push(command);
 }
@@ -840,10 +863,16 @@ function addKarelWarning(plan: KarelCommandPlan, warning: string) {
 	if (!plan.warnings.includes(warning)) plan.warnings.push(warning);
 }
 
+function karelCommandForName(name: string): KarelCommand | null {
+	return (
+		KAREL_COMMAND_ALIASES[name as (typeof KAREL_COMMANDS)[number]] ?? null
+	);
+}
+
 function applyKarelCommand(
 	world: MutableKarelWorld,
 	robot: KarelRobotState,
-	command: (typeof KAREL_COMMANDS)[number]
+	command: KarelCommand
 ) {
 	if (command === "turnLeft") {
 		robot.direction = turnRobot(robot.direction, -1);
