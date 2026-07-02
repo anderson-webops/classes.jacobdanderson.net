@@ -7182,18 +7182,18 @@ html.dark .file-delete:disabled::after {
 	z-index: 8;
 	top: 1rem;
 	right: 1rem;
-	width: min(35rem, calc(100vw - 2rem));
+	width: min(30rem, calc(100vw - 2rem));
 	max-height: calc(100vh - 2rem);
 	overflow: auto;
 	overscroll-behavior: contain;
-	padding: 0.95rem 1rem;
+	padding: 1.15rem;
 	border: 1px solid var(--color-border);
 	border-radius: 16px;
 	background: #fff;
 	box-shadow: var(--shadow-soft);
 	font-family: var(--font-sans);
-	font-size: 0.9rem;
-	line-height: 1.45;
+	font-size: 0.94rem;
+	line-height: 1.55;
 	font-variant: normal;
 	font-weight: 400;
 	text-align: left;
@@ -7202,35 +7202,36 @@ html.dark .file-delete:disabled::after {
 }
 
 .editor-toolbar .ide-settings-panel,
-.editor-toolbar .ide-settings-panel :is(label, span, small, input, button) {
+.editor-toolbar .ide-settings-panel :where(*) {
 	color: inherit;
 	font-family: var(--font-sans);
 	font-variant: normal;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.45;
+	line-height: 1.55;
 	text-transform: none;
 }
 
 .ide-setting-toggle {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
-	gap: 0.65rem;
-	align-items: center;
+	column-gap: 0.85rem;
+	row-gap: 0.35rem;
+	align-items: start;
 	color: var(--color-ink);
 }
 
 .ide-setting-toggle + .ide-setting-toggle {
-	margin-top: 0.7rem;
-	padding-top: 0.7rem;
+	margin-top: 0.95rem;
+	padding-top: 0.95rem;
 	border-top: 1px solid var(--color-border);
 }
 
 .ide-setting-share {
 	display: grid;
-	gap: 0.65rem;
-	margin-top: 0.7rem;
-	padding-top: 0.7rem;
+	gap: 0.8rem;
+	margin-top: 0.95rem;
+	padding-top: 0.95rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7260,9 +7261,9 @@ html.dark .file-delete:disabled::after {
 
 .ide-setting-storage {
 	display: grid;
-	gap: 0.5rem;
-	margin-top: 0.7rem;
-	padding-top: 0.7rem;
+	gap: 0.65rem;
+	margin-top: 0.95rem;
+	padding-top: 0.95rem;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -7274,8 +7275,8 @@ html.dark .file-delete:disabled::after {
 	background: rgba(15, 118, 110, 0.1);
 	color: #0f766e;
 	font-size: 0.78rem;
-	font-weight: 900;
-	letter-spacing: 0.02em;
+	font-weight: 650;
+	letter-spacing: 0;
 }
 
 .ide-setting-action:disabled {
@@ -7284,25 +7285,26 @@ html.dark .file-delete:disabled::after {
 }
 
 .ide-setting-toggle input {
-	width: 1.05rem;
-	height: 1.05rem;
+	width: 1.15rem;
+	height: 1.15rem;
 	margin: 0;
+	margin-top: 0.12rem;
 	accent-color: #0f766e;
 }
 
 .ide-setting-toggle > span {
 	min-width: 0;
 	display: grid;
-	gap: 0.3rem;
+	gap: 0.22rem;
 }
 
 .editor-toolbar .ide-settings-panel .ide-setting-title {
 	display: block;
 	color: var(--color-ink-strong);
-	font-size: 0.9rem;
-	font-weight: 500;
+	font-size: 0.98rem;
+	font-weight: 650;
 	letter-spacing: 0;
-	line-height: 1.3;
+	line-height: 1.35;
 	font-variant: normal;
 	text-transform: none;
 }
@@ -7310,10 +7312,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar .ide-settings-panel .ide-setting-toggle small {
 	display: block;
 	color: var(--color-ink-soft);
-	font-size: 0.8rem;
+	font-size: 0.86rem;
 	font-weight: 400;
 	letter-spacing: 0;
-	line-height: 1.4;
+	line-height: 1.5;
 	font-variant: normal;
 	text-transform: none;
 }
