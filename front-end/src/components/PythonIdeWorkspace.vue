@@ -5745,19 +5745,21 @@ onBeforeUnmount(() => {
 
 			<main v-if="selectedProject" class="python-ide-main">
 				<div class="editor-toolbar">
-					<label
-						class="project-title-label"
-						for="python-ide-project-title"
-					>
-						Project name
-					</label>
-					<input
-						id="python-ide-project-title"
-						class="project-title-input"
-						:value="selectedProject.title"
-						type="text"
-						@input="updateProjectTitle"
-					/>
+					<div class="project-title-field">
+						<label
+							class="project-title-label"
+							for="python-ide-project-title"
+						>
+							Project name
+						</label>
+						<input
+							id="python-ide-project-title"
+							class="project-title-input"
+							:value="selectedProject.title"
+							type="text"
+							@input="updateProjectTitle"
+						/>
+					</div>
 					<div class="editor-actions">
 						<div class="ide-settings">
 							<button
@@ -6988,10 +6990,8 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar {
 	display: grid;
 	grid-template-columns: minmax(15rem, 1fr) auto;
-	grid-template-rows: 0.75rem var(--python-ide-toolbar-control-size);
-	column-gap: 0.75rem;
-	row-gap: 0.5rem;
-	align-items: start;
+	gap: 0.75rem;
+	align-items: end;
 }
 
 .stdin-panel {
@@ -6999,26 +6999,30 @@ html.dark .file-delete:disabled::after {
 	gap: 0.35rem;
 }
 
+.project-title-field {
+	min-width: 0;
+	display: grid;
+	gap: 0.5rem;
+}
+
 .project-title-label {
 	min-width: 0;
-	grid-column: 1;
-	grid-row: 1;
-	height: 0.75rem;
+	color: #0f766e;
+	font-size: 0.75rem;
+	font-weight: 800;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
 	line-height: 1;
 }
 
 .project-title-input {
-	grid-column: 1;
-	grid-row: 2;
-	align-self: start;
 	min-width: 0;
 }
 
 .editor-actions {
 	position: relative;
 	grid-column: 2;
-	grid-row: 2;
-	align-self: start;
+	align-self: end;
 	display: flex;
 	gap: 0.65rem;
 	align-items: stretch;
@@ -7834,8 +7838,7 @@ html.dark .editor-shortcuts ul {
 		align-items: stretch;
 	}
 
-	.project-title-label,
-	.project-title-input,
+	.project-title-field,
 	.editor-actions {
 		grid-column: 1;
 		grid-row: auto;
