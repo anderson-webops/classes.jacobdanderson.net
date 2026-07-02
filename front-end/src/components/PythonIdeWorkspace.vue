@@ -6988,10 +6988,10 @@ html.dark .file-delete:disabled::after {
 .editor-toolbar {
 	display: grid;
 	grid-template-columns: minmax(15rem, 1fr) auto;
-	grid-template-rows: auto var(--python-ide-toolbar-control-size);
+	grid-template-rows: 0.75rem var(--python-ide-toolbar-control-size);
 	column-gap: 0.75rem;
-	row-gap: 0.35rem;
-	align-items: stretch;
+	row-gap: 0.5rem;
+	align-items: start;
 }
 
 .stdin-panel {
@@ -7003,12 +7003,14 @@ html.dark .file-delete:disabled::after {
 	min-width: 0;
 	grid-column: 1;
 	grid-row: 1;
+	height: 0.75rem;
 	line-height: 1;
 }
 
 .project-title-input {
 	grid-column: 1;
 	grid-row: 2;
+	align-self: start;
 	min-width: 0;
 }
 
@@ -7016,7 +7018,7 @@ html.dark .file-delete:disabled::after {
 	position: relative;
 	grid-column: 2;
 	grid-row: 2;
-	align-self: stretch;
+	align-self: start;
 	display: flex;
 	gap: 0.65rem;
 	align-items: stretch;
