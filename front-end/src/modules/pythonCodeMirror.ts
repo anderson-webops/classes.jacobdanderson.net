@@ -2073,6 +2073,9 @@ const karelKeywordCompletions = [
 	"pickBeeper",
 	"putBall",
 	"takeBall",
+	"paint",
+	"colorIs",
+	"colorIsNot",
 	"SuperKarel",
 	"frontIsClear",
 	"frontIsBlocked",
@@ -2105,7 +2108,8 @@ const karelRobotMemberCompletions = [
 	completion("putBeeper", "method", "place one beeper", 90),
 	completion("pickBeeper", "method", "pick up one beeper", 90),
 	completion("putBall", "method", "CodeHS alias for placing one ball", 82),
-	completion("takeBall", "method", "CodeHS alias for taking one ball", 82)
+	completion("takeBall", "method", "CodeHS alias for taking one ball", 82),
+	completion("paint", "method", "paint the current Karel square", 82)
 ];
 const karelDirectionMemberCompletions = [
 	completion("North", "constant", "Karel north direction", 90),
@@ -2141,7 +2145,7 @@ const javaColorMemberCompletions = [
 	completion("white", "constant", "java.awt.Color white", 68),
 	completion("yellow", "constant", "java.awt.Color yellow", 68),
 	completion("purple", "constant", "CodeHS Karel purple", 62),
-	completion("random", "method", "CodeHS Karel random color", 62)
+	completion("random()", "method", "CodeHS Karel random color", 62)
 ];
 const karelMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 	Color: javaColorMemberCompletions,
@@ -2374,7 +2378,8 @@ function javaDeclaredReceiverCompletions(
 	mode: PythonIdeMode,
 	receiver: string
 ) {
-	if (mode !== "java" || !javaIdentifierRegex.test(receiver)) return null;
+	if (!isJavaCodeMirrorMode(mode) || !javaIdentifierRegex.test(receiver))
+		return null;
 	const escapedReceiver = escapeRegExpText(receiver);
 	const randomDeclarationPattern = new RegExp(
 		`\\b(?:java\\.util\\.)?Random\\s+${escapedReceiver}\\b`

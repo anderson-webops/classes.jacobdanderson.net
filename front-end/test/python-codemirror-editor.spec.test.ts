@@ -926,7 +926,7 @@ describe("python IDE CodeMirror editor", () => {
 				"GREEN",
 				"red",
 				"purple",
-				"random"
+				"random()"
 			])
 		);
 		expect(autocompleteLabelsForDoc("karel", "java.awt.Color.")).toEqual(
@@ -936,7 +936,7 @@ describe("python IDE CodeMirror editor", () => {
 				"GREEN",
 				"red",
 				"purple",
-				"random"
+				"random()"
 			])
 		);
 		expect(autocompleteLabelsForDoc("karel", "sam.")).toEqual(
@@ -948,8 +948,12 @@ describe("python IDE CodeMirror editor", () => {
 				"putBeeper",
 				"pickBeeper",
 				"putBall",
-				"takeBall"
+				"takeBall",
+				"paint"
 			])
+		);
+		expect(autocompleteLabelsForDoc("karel", "paint")).toEqual(
+			expect.arrayContaining(["paint", "colorIs", "colorIsNot"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "front")).toEqual(
 			expect.arrayContaining(["frontIsClear", "frontIsBlocked"])
@@ -1068,6 +1072,45 @@ describe("python IDE CodeMirror editor", () => {
 			expect.arrayContaining(["move", "turnLeft", "putBeeper"])
 		);
 		expect(karelMemberResult?.validFor?.test("turn2")).toBe(true);
+
+		const karelStringDoc = [
+			"public class MyProgram extends SuperKarel {",
+			"public void run() {",
+			'String message = "hi";',
+			"message.",
+			"}",
+			"}"
+		].join(" ");
+		const karelStringPosition = karelStringDoc.indexOf("message.") + 8;
+		const [karelStringResult] = autocompleteResultsForDocAt(
+			"karel",
+			karelStringDoc,
+			karelStringPosition
+		);
+		expect(karelStringResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining(["length", "charAt", "substring"])
+		);
+		expect(karelStringResult?.options?.map(option => option.label)).not.toEqual(
+			expect.arrayContaining(["move", "turnLeft", "putBeeper"])
+		);
+
+		const karelRandomDoc = [
+			"public class MyProgram extends SuperKarel {",
+			"public void run() {",
+			"Random rng = new Random();",
+			"rng.",
+			"}",
+			"}"
+		].join(" ");
+		const karelRandomPosition = karelRandomDoc.indexOf("rng.") + 4;
+		const [karelRandomResult] = autocompleteResultsForDocAt(
+			"karel",
+			karelRandomDoc,
+			karelRandomPosition
+		);
+		expect(karelRandomResult?.options?.map(option => option.label)).toEqual(
+			expect.arrayContaining(["nextInt", "nextDouble", "setSeed"])
+		);
 	});
 
 	it("suppresses Java and Karel recommendations inside comments and strings", () => {
@@ -1131,7 +1174,10 @@ describe("python IDE CodeMirror editor", () => {
 				"robot_method",
 				"turnRight",
 				"putBall",
-				"takeBall"
+				"takeBall",
+				"paint",
+				"colorIs",
+				"colorIsNot"
 			])
 		);
 		expect(isPythonBracketPairIgnoredAt(state, doc.indexOf("["))).toBe(
