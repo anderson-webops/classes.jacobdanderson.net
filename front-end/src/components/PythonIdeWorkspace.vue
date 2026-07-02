@@ -6993,25 +6993,22 @@ html.dark .file-delete:disabled::after {
 }
 
 .editor-toolbar > label {
-	padding: 0.2rem;
-	border: 1px solid transparent;
-	border-radius: 14px;
-	transition:
-		border-color 150ms ease,
-		box-shadow 150ms ease;
+	min-width: 0;
 }
 
 .editor-actions {
 	position: relative;
 	display: flex;
 	gap: 0.65rem;
-	align-items: stretch;
+	align-items: flex-end;
 	justify-content: flex-end;
 }
 
 .editor-toolbar > label input,
 .editor-actions > .site-button,
 .ide-settings-trigger {
+	box-sizing: border-box;
+	height: var(--python-ide-toolbar-control-size);
 	min-height: var(--python-ide-toolbar-control-size);
 	border-radius: var(--python-ide-toolbar-control-radius);
 }
@@ -7448,7 +7445,7 @@ html.dark .editor-shortcuts ul {
 .code-editor-shell:focus-within,
 .canvas-shell:focus-within,
 .stdin-panel:focus-within,
-.editor-toolbar > label:focus-within {
+.editor-toolbar > label input:focus-visible {
 	border-color: var(--python-focus-ring);
 	box-shadow:
 		0 0 0 3px var(--python-focus-glow),

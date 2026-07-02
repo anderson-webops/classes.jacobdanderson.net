@@ -22,6 +22,9 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   course sequencing, but not something this site embeds or runs server-side.
 - [CodeHS Java Karel docs](https://codehs.com/documentation/javaKarel) inform
   Karel command vocabulary, method patterns, comments, conditions, and loops.
+  The local Karel preview follows direct robot commands from `main`, simple
+  helper methods that receive the robot, and bounded numeric `for` loops. It is
+  still a teaching preview, not a full Java compiler or VM.
 - [CodeHS Java docs](https://codehs.com/documentation/new/java-main) inform
   beginner Java console vocabulary such as printing, variables, methods,
   input, comparisons, math, and random numbers.

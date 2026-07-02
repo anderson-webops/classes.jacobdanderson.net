@@ -437,6 +437,24 @@ describe("python IDE CodeMirror editor", () => {
 		expect(pageSource).toContain("Quotes and brackets wrap highlighted");
 	});
 
+	it("keeps IDE toolbar controls on a shared visual baseline", () => {
+		const pageSource = sourceFile(
+			"../src/components/PythonIdeWorkspace.vue"
+		);
+
+		expect(pageSource).toContain("align-items: flex-end;");
+		expect(pageSource).toContain("box-sizing: border-box;");
+		expect(pageSource).toContain(
+			"height: var(--python-ide-toolbar-control-size);"
+		);
+		expect(pageSource).toContain(
+			".editor-toolbar > label input:focus-visible"
+		);
+		expect(pageSource).not.toContain(
+			".editor-toolbar > label:focus-within"
+		);
+	});
+
 	it("offers course-runtime completions by immutable project mode", () => {
 		const pageSource = sourceFile(
 			"../src/components/PythonIdeWorkspace.vue"
