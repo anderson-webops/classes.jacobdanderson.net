@@ -76,6 +76,7 @@ const REPOSITORY_ARCHIVE_RE =
 	/\b(?:reference archive|full repo|repo bank|problem bank|workspace archive|source archive)\b/i;
 const LEARNER_SELECTION_STORAGE_KEY =
 	"classes:course-explorer:selected-learner";
+const ALL_LEARNERS_CONTEXT_ID = "__all__";
 const COURSE_SELECTION_STORAGE_KEY = "classes:course-explorer:selected-course";
 const MODULE_SELECTION_STORAGE_KEY_PREFIX =
 	"classes:course-explorer:active-module:";
@@ -124,8 +125,22 @@ const isStaffContext = computed(
 	() => !props.publicCatalog && (!!currentTutor.value || !!currentAdmin.value)
 );
 
+const canUseAllLearnersContext = computed(
+	() => isStaffContext.value && !!currentAdmin.value
+);
+
+const isAllLearnersContext = computed(
+	() =>
+		canUseAllLearnersContext.value &&
+		selectedLearnerId.value === ALL_LEARNERS_CONTEXT_ID
+);
+
 const managedLearners = computed(() =>
 	isStaffContext.value ? users.value : []
+);
+
+const hasLearnerContextOptions = computed(
+	() => canUseAllLearnersContext.value || managedLearners.value.length > 0
 );
 
 const selectedLearner = computed(
@@ -136,12 +151,18 @@ const selectedLearner = computed(
 );
 
 const progressOwner = computed<User | null>(() => {
-	if (isStaffContext.value) return selectedLearner.value;
+	if (isStaffContext.value) {
+		if (isAllLearnersContext.value) return null;
+		return selectedLearner.value;
+	}
 	return currentUser.value;
 });
 
 const permittedCourseIds = computed(() => {
 	if (isStaffContext.value) {
+		if (isAllLearnersContext.value) {
+			return allCourses.value.map(course => course.id);
+		}
 		return selectedLearner.value?.courseAccess ?? [];
 	}
 	if (currentTutor.value) return currentTutor.value.coursePermissions ?? [];
@@ -150,12 +171,14 @@ const permittedCourseIds = computed(() => {
 });
 
 const courseGroupingOwner = computed<User | null>(() => {
+	if (isAllLearnersContext.value) return null;
 	if (isStaffContext.value) return selectedLearner.value;
 	return currentUser.value;
 });
 
 const courseList = computed(() => {
 	if (props.publicCatalog) return allCourses.value;
+	if (isAllLearnersContext.value) return allCourses.value;
 	const allowed = new Set(permittedCourseIds.value);
 	return orderedCoursesByLearnerStatus(
 		allCourses.value.filter(course => allowed.has(course.id)),
@@ -174,6 +197,16 @@ const courseGroups = computed(() => {
 		].filter(group => group.courses.length > 0);
 	}
 
+	if (isAllLearnersContext.value) {
+		return [
+			{
+				key: "other" as const,
+				label: "All courses",
+				courses: courseList.value
+			}
+		].filter(group => group.courses.length > 0);
+	}
+
 	return groupCoursesByLearnerStatus(
 		courseList.value,
 		courseGroupingOwner.value
@@ -186,7 +219,13 @@ const hasCourseAccess = computed(() => {
 });
 
 const selectedCourseStatus = computed(() => {
-	if (props.publicCatalog || !selectedCourseId.value) return "";
+	if (
+		props.publicCatalog ||
+		isAllLearnersContext.value ||
+		!selectedCourseId.value
+	) {
+		return "";
+	}
 	return courseStatusBucketForUser(
 		courseGroupingOwner.value,
 		selectedCourseId.value
@@ -195,6 +234,7 @@ const selectedCourseStatus = computed(() => {
 
 const courseEyebrow = computed(() => {
 	if (props.publicCatalog) return "Course preview";
+	if (isAllLearnersContext.value) return "Course catalog";
 	if (selectedCourseStatus.value === "past") return "Past course";
 	if (selectedCourseStatus.value === "other") return "Available course";
 	return "Current course";
@@ -203,9 +243,11 @@ const courseEyebrow = computed(() => {
 const courseDescription = computed(() =>
 	props.publicCatalog
 		? "Open modules, projects, and supplemental resources from this course."
-		: isStaffContext.value
-			? "Choose a learner, open one of their assigned courses, and mark progress directly inside the syllabus."
-			: "Use the controls below to switch courses or search inside this syllabus."
+		: isAllLearnersContext.value
+			? "Browse every course without assigning progress to a learner."
+			: isStaffContext.value
+				? "Choose a learner, open one of their assigned courses, and mark progress directly inside the syllabus."
+				: "Use the controls below to switch courses or search inside this syllabus."
 );
 const ideCourseMode = computed(() =>
 	pythonIdeModeForCourseId(selectedCourse.value?.id)
@@ -264,6 +306,7 @@ const progressSaveStatusText = computed(() => {
 		case "error":
 			return progressSaveError.value || "Couldn't save progress";
 		default:
+			if (isAllLearnersContext.value) return "Viewing all courses";
 			return selectedLearner.value
 				? "Progress ready"
 				: "Select a learner";
@@ -296,14 +339,18 @@ watch(
 		if (!isStaffContext.value) return;
 
 		if (value.length === 0) {
-			selectedLearnerId.value = "";
+			if (!storageReady || managedLearnersLoading.value) return;
+			selectedLearnerId.value = canUseAllLearnersContext.value
+				? ALL_LEARNERS_CONTEXT_ID
+				: "";
 			return;
 		}
 
 		if (!storageReady) return;
 
-		const selectedStillValid = value.some(
-			user => user._id === selectedLearnerId.value
+		const selectedStillValid = isSelectableLearnerContextId(
+			selectedLearnerId.value,
+			value
 		);
 		const hashCourseId = courseIdFromHash(
 			allCourses.value.map(course => course.id)
@@ -311,9 +358,15 @@ watch(
 		const learnerForHash = preferredLearnerIdForCourse(value, hashCourseId);
 		const storedLearnerId = readStoredValue(LEARNER_SELECTION_STORAGE_KEY);
 		const storedLearner = value.find(user => user._id === storedLearnerId);
+		const storedAllLearners = isAllLearnersSelection(storedLearnerId);
 
 		if (!hasRestoredStoredLearner.value) {
 			hasRestoredStoredLearner.value = true;
+
+			if (storedAllLearners) {
+				selectedLearnerId.value = ALL_LEARNERS_CONTEXT_ID;
+				return;
+			}
 
 			if (
 				storedLearner &&
@@ -338,6 +391,7 @@ watch(
 		if (
 			selectedStillValid &&
 			(!hashCourseId ||
+				isAllLearnersSelection(selectedLearnerId.value) ||
 				learnerCanAccessCourse(selectedLearner.value, hashCourseId))
 		) {
 			return;
@@ -729,6 +783,17 @@ function learnerCanAccessCourse(
 	courseId: string
 ) {
 	return !!learner && (learner.courseAccess ?? []).includes(courseId);
+}
+
+function isAllLearnersSelection(value: string | null | undefined) {
+	return value === ALL_LEARNERS_CONTEXT_ID && canUseAllLearnersContext.value;
+}
+
+function isSelectableLearnerContextId(value: string, learners: User[]) {
+	return (
+		isAllLearnersSelection(value) ||
+		learners.some(learner => learner._id === value)
+	);
 }
 
 function preferredLearnerIdForCourse(learners: User[], courseId: string) {
@@ -1631,8 +1696,7 @@ function writeStoredValue(key: string, value: string) {
 						v-model="selectedLearnerId"
 						class="course-select"
 						:disabled="
-							managedLearnersLoading ||
-							managedLearners.length === 0
+							managedLearnersLoading || !hasLearnerContextOptions
 						"
 					>
 						<option disabled value="">
@@ -1641,6 +1705,12 @@ function writeStoredValue(key: string, value: string) {
 									? "Loading learners..."
 									: "Select a learner"
 							}}
+						</option>
+						<option
+							v-if="canUseAllLearnersContext"
+							:value="ALL_LEARNERS_CONTEXT_ID"
+						>
+							All
 						</option>
 						<option
 							v-for="(learner, index) in managedLearners"
