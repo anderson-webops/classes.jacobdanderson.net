@@ -1126,6 +1126,17 @@ const selectedProjectShareLink = computed(() => {
 const selectedProjectCanExportToBlueJ = computed(() =>
 	selectedProject.value ? selectedProject.value.mode === "java" : false
 );
+const selectedProjectCanShowBlueJIntegration = computed(() =>
+	selectedProject.value
+		? selectedProject.value.mode === "java" ||
+			selectedProject.value.mode === "karel"
+		: false
+);
+const selectedProjectBlueJDescription = computed(() =>
+	selectedProjectCanExportToBlueJ.value
+		? "Use the object-oriented starter or export this Java project as a BlueJ-ready ZIP."
+		: "Use Karel here for browser practice, or start a BlueJ object-bench project for in-class Java inspection."
+);
 
 function codeIdeShareUrl(shareID: string) {
 	const sharePath = `/ide?share=${encodeURIComponent(shareID)}`;
@@ -6229,17 +6240,14 @@ onBeforeUnmount(() => {
 				</div>
 
 				<section
-					v-if="selectedProjectCanExportToBlueJ"
+					v-if="selectedProjectCanShowBlueJIntegration"
 					class="bluej-integration-panel"
 					aria-label="BlueJ integration"
 				>
 					<div>
 						<p class="bluej-integration-eyebrow">BlueJ</p>
 						<h2>BlueJ Java Project</h2>
-						<p>
-							Use the object-oriented starter or export this Java
-							project as a BlueJ-ready ZIP.
-						</p>
+						<p>{{ selectedProjectBlueJDescription }}</p>
 					</div>
 					<div class="bluej-integration-actions">
 						<button
@@ -6250,12 +6258,16 @@ onBeforeUnmount(() => {
 							New BlueJ project
 						</button>
 						<button
+							v-if="selectedProjectCanExportToBlueJ"
 							class="site-button site-button--secondary compact-button"
 							type="button"
 							@click="downloadSelectedProjectForBlueJ"
 						>
 							Download for BlueJ
 						</button>
+						<small v-else class="bluej-integration-note">
+							Standard Java project required for ZIP export.
+						</small>
 						<a
 							class="bluej-integration-link"
 							:href="blueJHomeUrl"
@@ -6270,7 +6282,7 @@ onBeforeUnmount(() => {
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							Source
+							BlueJ source
 						</a>
 					</div>
 				</section>
@@ -7081,6 +7093,10 @@ html.dark .bluej-integration-panel p:not(.bluej-integration-eyebrow) {
 	color: #cbd5e1;
 }
 
+html.dark .bluej-integration-note {
+	color: #94a3b8;
+}
+
 html.dark .bluej-integration-eyebrow,
 html.dark .bluej-integration-link {
 	color: #5eead4;
@@ -7474,6 +7490,15 @@ html.dark .file-delete:disabled::after {
 	gap: 0.5rem;
 	align-items: center;
 	justify-content: flex-end;
+}
+
+.bluej-integration-note {
+	max-width: 12rem;
+	color: var(--color-ink-muted);
+	font-size: 0.8rem;
+	font-weight: 700;
+	line-height: 1.35;
+	text-align: right;
 }
 
 .bluej-integration-link {

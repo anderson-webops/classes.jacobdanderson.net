@@ -3449,8 +3449,13 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(pageSource).toContain("selectedProjectCanExportToBlueJ");
+		expect(pageSource).toContain("selectedProjectCanShowBlueJIntegration");
 		expect(pageSource).toContain('selectedProject.value.mode === "java"');
+		expect(pageSource).toContain('selectedProject.value.mode === "karel"');
 		expect(pageSource).toContain('if (project.mode !== "java")');
+		expect(pageSource).toContain(
+			'v-if="selectedProjectCanShowBlueJIntegration"'
+		);
 		expect(pageSource).toContain('class="bluej-integration-panel"');
 		expect(pageSource).toContain("blueJSourceUrl");
 		expect(pageSource).toContain("New BlueJ project");
@@ -3458,8 +3463,12 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("async function downloadSelectedProjectForBlueJ");
 		expect(pageSource).toContain('import("@/modules/blueJProjectExport")');
 		expect(pageSource).toContain("Download for BlueJ");
+		expect(pageSource).toContain(
+			"Standard Java project required for ZIP export."
+		);
 		expect(pageSource).toContain(":href=\"blueJHomeUrl\"");
 		expect(pageSource).toContain(":href=\"blueJSourceUrl\"");
+		expect(pageSource).toContain("BlueJ source");
 		expect(pageSource).toContain("createBlueJProjectArchive(project)");
 		expect(exportSource).toContain('from "fflate"');
 		expect(exportSource).toContain("zipSync(entries)");
