@@ -114,5 +114,7 @@ describe("Code IDE assets proxy", () => {
 
 		expect(controllerSource).toContain("CODE_IDE_ASSETS_ZIP_URL");
 		expect(controllerSource).toContain("PYTHON_IDE_ASSETS_ZIP_URL");
+		expect(controllerSource).toContain("Code IDE assets proxy failed");
+		expect(controllerSource).not.toContain("python ide assets proxy failed");
 	});
 });
