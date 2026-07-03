@@ -57,7 +57,12 @@ export type PythonIdeMode =
 	| "pgzero"
 	| "python"
 	| "turtle";
-export type PythonIdeProjectTemplate = "blank" | "course" | "demo" | "outline";
+export type PythonIdeProjectTemplate =
+	| "blank"
+	| "bluej"
+	| "course"
+	| "demo"
+	| "outline";
 
 export interface PythonIdeFile {
 	name: string;
@@ -390,6 +395,59 @@ public class Main {
 }
 `;
 
+export const blueJMainStarterCode = `public class Main {
+    public static void main(String[] args) {
+        Student student = new Student("Ada", 9);
+        student.addScore(88);
+        student.addScore(94);
+        student.printSummary();
+    }
+}
+`;
+
+export const blueJStudentStarterCode = `import java.util.ArrayList;
+
+public class Student {
+    private String name;
+    private int gradeLevel;
+    private ArrayList<Integer> scores;
+
+    public Student(String name, int gradeLevel) {
+        this.name = name;
+        this.gradeLevel = gradeLevel;
+        this.scores = new ArrayList<>();
+    }
+
+    public void addScore(int score) {
+        scores.add(score);
+    }
+
+    public double averageScore() {
+        if (scores.isEmpty()) {
+            return 0;
+        }
+
+        int total = 0;
+        for (int score : scores) {
+            total += score;
+        }
+        return (double) total / scores.size();
+    }
+
+    public void printSummary() {
+        System.out.println(name + " is in grade " + gradeLevel);
+        System.out.println("Average: " + averageScore());
+    }
+}
+`;
+
+export const blueJReadmeStarterText = `BlueJ Java Project
+
+This folder is ready to open in BlueJ after downloading it from the Classes Code IDE.
+
+Start with Main.java, then inspect Student.java to see the object's fields and methods.
+`;
+
 export const karelStarterCode = `import kareltherobot.UrRobot;
 import kareltherobot.World;
 import kareltherobot.Directions;
@@ -710,10 +768,30 @@ function getOutlineStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 	return files;
 }
 
+function getBlueJStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode !== "java") return getOutlineStarterFiles(mode);
+
+	return [
+		{
+			name: "Main.java",
+			content: blueJMainStarterCode
+		},
+		{
+			name: "Student.java",
+			content: blueJStudentStarterCode
+		},
+		{
+			name: "README.TXT",
+			content: blueJReadmeStarterText
+		}
+	];
+}
+
 function getStarterFilesForTemplate(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate
 ) {
+	if (template === "bluej") return getBlueJStarterFiles(mode);
 	if (template === "demo") return getDemoStarterFiles(mode);
 	if (template === "outline") return getOutlineStarterFiles(mode);
 	if (template === "course") return getCourseStarterFiles(mode);
@@ -740,6 +818,8 @@ function projectTitleForMode(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate = "blank"
 ) {
+	if (template === "bluej" && mode === "java") return "BlueJ Java Project";
+
 	if (template === "outline") {
 		if (mode === "turtle") return "Python Level 1 Outline";
 		if (mode === "pgzero") return "PyGame Zero Outline";

@@ -376,6 +376,7 @@ const pythonIdeEditorViewStateStoragePrefix =
 const pythonIdeExpandedWorkspaceStorageKey =
 	"classes-python-ide-expanded-workspace";
 const pythonIdeSplitPercentStorageKey = "classes-python-ide-split-percent";
+const blueJHomeUrl = "https://www.bluej.org/";
 const defaultCodeSplitPercent = 54;
 const defaultDrawingCodeSplitPercent = 42;
 const minCodeSplitPercent = 28;
@@ -1121,6 +1122,9 @@ const selectedProjectShareLink = computed(() => {
 			: "";
 	return shareID ? codeIdeShareUrl(shareID) : "";
 });
+const selectedProjectCanExportToBlueJ = computed(() =>
+	selectedProject.value ? isJavaIdeMode(selectedProject.value.mode) : false
+);
 
 function codeIdeShareUrl(shareID: string) {
 	const sharePath = `/ide?share=${encodeURIComponent(shareID)}`;
@@ -2188,6 +2192,51 @@ async function createProjectFromMenu(
 ) {
 	showProjectMenu.value = false;
 	await createProject(mode, template);
+}
+
+function bytesToArrayBuffer(bytes: Uint8Array) {
+	const copy = new Uint8Array(bytes.byteLength);
+	copy.set(bytes);
+	return copy.buffer;
+}
+
+async function downloadSelectedProjectForBlueJ() {
+	const project = selectedProject.value;
+	if (!project) return;
+	if (!isJavaIdeMode(project.mode)) {
+		appendOutput("system", "BlueJ export is available for Java projects.");
+		return;
+	}
+
+	try {
+		const { blueJProjectArchiveName, createBlueJProjectArchive } =
+			await import("@/modules/blueJProjectExport");
+		const archiveBytes = createBlueJProjectArchive(project);
+		const archiveUrl = URL.createObjectURL(
+			new Blob([bytesToArrayBuffer(archiveBytes)], {
+				type: "application/zip"
+			})
+		);
+		const link = document.createElement("a");
+		link.href = archiveUrl;
+		link.download = blueJProjectArchiveName(project);
+		link.rel = "noopener";
+		document.body.append(link);
+		link.click();
+		link.remove();
+		window.setTimeout(() => URL.revokeObjectURL(archiveUrl), 1000);
+		appendOutput(
+			"system",
+			"Downloaded a BlueJ project ZIP for this Java project."
+		);
+	} catch (error) {
+		appendOutput(
+			"stderr",
+			error instanceof Error
+				? error.message
+				: "Could not download the BlueJ project."
+		);
+	}
 }
 
 function projectLabel(project: PythonIdeProject) {
@@ -5677,6 +5726,18 @@ onBeforeUnmount(() => {
 										role="menuitem"
 										@click="
 											createProjectFromMenu(
+												'java',
+												'bluej'
+											)
+										"
+									>
+										BlueJ Java Project
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
 												'karel',
 												'outline'
 											)
@@ -5933,6 +5994,25 @@ onBeforeUnmount(() => {
 								@change="importProjectFiles"
 							/>
 						</label>
+						<div
+							v-if="selectedProjectCanExportToBlueJ"
+							class="file-export-row"
+						>
+							<button
+								class="site-button site-button--secondary compact-button"
+								type="button"
+								@click="downloadSelectedProjectForBlueJ"
+							>
+								Download for BlueJ
+							</button>
+							<a
+								:href="blueJHomeUrl"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								BlueJ
+							</a>
+						</div>
 					</div>
 				</div>
 			</aside>
@@ -7142,6 +7222,27 @@ html.dark .file-delete:disabled::after {
 	color: var(--color-ink-muted);
 	font-size: 0.84rem;
 	font-weight: 600;
+}
+
+.file-export-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	align-items: center;
+	padding-top: 0.45rem;
+	border-top: 1px solid var(--color-border);
+}
+
+.file-export-row a {
+	color: #0f766e;
+	font-size: 0.78rem;
+	font-weight: 800;
+	text-decoration: none;
+}
+
+.file-export-row a:hover,
+.file-export-row a:focus-visible {
+	text-decoration: underline;
 }
 
 .new-file-row input,
