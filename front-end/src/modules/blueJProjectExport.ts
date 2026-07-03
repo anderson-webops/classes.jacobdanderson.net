@@ -116,27 +116,36 @@ function isBlueJExportableTextFile(file: PythonIdeFile) {
 		file.encoding !== "base64" &&
 		isValidPythonFileName(file.name) &&
 		isPythonIdeTextFile(file.name) &&
-		file.name !== BLUEJ_PROJECT_FILE_NAME
+		file.name.toLowerCase() !== BLUEJ_PROJECT_FILE_NAME
 	);
+}
+
+function blueJExportFileName(file: PythonIdeFile) {
+	return file.name.toUpperCase() === BLUEJ_README_FILE_NAME
+		? BLUEJ_README_FILE_NAME
+		: file.name;
 }
 
 export function createBlueJProjectFiles(
 	project: Pick<PythonIdeProject, "files" | "title">
 ): BlueJProjectExportFile[] {
-	const files = project.files.filter(isBlueJExportableTextFile).map(file => ({
-		name: file.name,
-		content: file.content
-	}));
-	const readmeIndex = files.findIndex(
-		file => file.name.toUpperCase() === BLUEJ_README_FILE_NAME
-	);
+	const files: BlueJProjectExportFile[] = [];
+	const usedFileNames = new Set<string>();
 
-	if (readmeIndex >= 0) {
-		files[readmeIndex] = {
-			name: BLUEJ_README_FILE_NAME,
-			content: files[readmeIndex]?.content ?? defaultBlueJReadme(project)
-		};
-	} else {
+	for (const file of project.files) {
+		if (!isBlueJExportableTextFile(file)) continue;
+
+		const name = blueJExportFileName(file);
+		if (usedFileNames.has(name)) continue;
+
+		usedFileNames.add(name);
+		files.push({
+			name,
+			content: file.content
+		});
+	}
+
+	if (!usedFileNames.has(BLUEJ_README_FILE_NAME)) {
 		files.push({
 			name: BLUEJ_README_FILE_NAME,
 			content: defaultBlueJReadme(project)

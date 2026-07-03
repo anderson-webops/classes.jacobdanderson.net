@@ -324,6 +324,32 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("normalizes duplicate README variants in BlueJ export archives", () => {
+		const project = createPythonIdeProject("java", {
+			files: [
+				{ name: "Main.java", content: "public class Main {}" },
+				{ name: "readme.txt", content: "Open this first." },
+				{ name: "README.TXT", content: "Duplicate readme." }
+			],
+			title: "Readme BlueJ Export"
+		});
+
+		const files = createBlueJProjectFiles(project);
+		const readmeFiles = files.filter(file => file.name === "README.TXT");
+		const archive = unzipSync(createBlueJProjectArchive(project));
+		const archiveNames = Object.keys(archive).sort();
+
+		expect(readmeFiles).toEqual([
+			{ name: "README.TXT", content: "Open this first." }
+		]);
+		expect(archiveNames.filter(name => name.endsWith("/README.TXT"))).toEqual([
+			"Readme-BlueJ-Export/README.TXT"
+		]);
+		expect(strFromU8(archive["Readme-BlueJ-Export/README.TXT"]!)).toBe(
+			"Open this first."
+		);
+	});
+
 	it("omits unsafe or binary files from BlueJ export archives", () => {
 		const project = createPythonIdeProject("java", {
 			files: [
