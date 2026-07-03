@@ -491,6 +491,7 @@ describe("Python project review routes", () => {
 			expect(enableBody.project.shared).toBe(true);
 			expect(enableBody.project.shareID).toBe(project.shareID);
 
+			const firstShareID = project.shareID;
 			const disableResponse = await putJson(
 				baseUrl,
 				`/users/loggedin/python-projects/${projectID}/share`,
@@ -501,8 +502,25 @@ describe("Python project review routes", () => {
 
 			expect(disableResponse.status).toBe(200);
 			expect(project.shared).toBe(false);
+			expect(project.shareID).toBeUndefined();
+			expect(project.shareCreatedAt).toBeUndefined();
 			expect(disableBody.project.shared).toBe(false);
 			expect(disableBody.project.shareID).toBeUndefined();
+
+			const reenableResponse = await putJson(
+				baseUrl,
+				`/users/loggedin/python-projects/${projectID}/share`,
+				{ shared: true },
+				{ "x-user-id": studentID.toString() }
+			);
+			const reenableBody = await reenableResponse.json();
+
+			expect(reenableResponse.status).toBe(200);
+			expect(project.shared).toBe(true);
+			expect(project.shareID).toMatch(/^[\w-]{20,80}$/);
+			expect(project.shareID).not.toBe(firstShareID);
+			expect(project.shareCreatedAt).toBeInstanceOf(Date);
+			expect(reenableBody.project.shareID).toBe(project.shareID);
 		});
 	});
 
