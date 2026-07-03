@@ -298,7 +298,7 @@ describe("python IDE project helpers", () => {
 		expect(project.files[1]?.content).toContain("private ArrayList");
 	});
 
-	it("exports Java projects as BlueJ-openable ZIP contents", () => {
+	it("exports Java projects as BlueJ-ready ZIP contents", () => {
 		const project = createPythonIdeProject("java", {
 			template: "bluej"
 		});
@@ -311,6 +311,9 @@ describe("python IDE project helpers", () => {
 		expect(packageFile?.content).toContain("package.numTargets=2");
 		expect(packageFile?.content).toContain("target1.name=Main");
 		expect(packageFile?.content).toContain("target2.name=Student");
+		expect(files.find(file => file.name === "README.TXT")?.content).toContain(
+			"https://github.com/k-pet-group/BlueJ-Greenfoot"
+		);
 
 		const archive = unzipSync(createBlueJProjectArchive(project));
 		expect(Object.keys(archive).sort()).toEqual([
@@ -907,6 +910,7 @@ describe("python IDE project helpers", () => {
 		expect(normalizePythonIdeMode("pgzero", "turtle")).toBe("pgzero");
 		expect(normalizePythonIdeMode("java", "turtle")).toBe("java");
 		expect(normalizePythonIdeMode("karel", "python")).toBe("karel");
+		expect(normalizePythonIdeMode("bluej", "python")).toBe("java");
 		expect(normalizePythonIdeMode("unknown", "turtle")).toBe("turtle");
 	});
 
@@ -3532,26 +3536,31 @@ describe("python IDE project helpers", () => {
 
 		expect(pageSource).toContain("selectedProjectCanExportToBlueJ");
 		expect(pageSource).toContain("selectedProjectCanShowBlueJIntegration");
+		expect(pageSource).toContain("requestedTemplate");
+		expect(pageSource).toContain('rawMode === "bluej"');
+		expect(pageSource).toContain('requestedTemplate.value === "bluej"');
+		expect(pageSource).toContain('"ide-template:bluej"');
+		expect(pageSource).toContain("openRequestedStandaloneProjectIfNeeded");
 		expect(pageSource).toContain('selectedProject.value.mode === "java"');
 		expect(pageSource).toContain('selectedProject.value.mode === "karel"');
 		expect(pageSource).toContain('if (project.mode !== "java")');
 		expect(pageSource).toContain(
 			'v-if="selectedProjectCanShowBlueJIntegration"'
 		);
-		expect(pageSource).toContain(
-			"download Java projects as BlueJ-openable ZIPs"
-		);
+		expect(pageSource).toContain("create BlueJ desktop projects");
+		expect(pageSource).toContain("BlueJ-ready ZIPs");
+		expect(pageSource).toContain("BlueJ starter");
 		expect(pageSource).toContain('class="java-tools-card"');
 		expect(pageSource).toContain('aria-label="Java and BlueJ tools"');
-		expect(pageSource).toContain("Java tools");
-		expect(pageSource).toContain("BlueJ object bench");
+		expect(pageSource).toContain("Java / BlueJ tools");
+		expect(pageSource).toContain("BlueJ object-bench starter");
 		expect(pageSource).toContain('class="bluej-integration-panel"');
 		expect(pageSource).toContain("blueJSourceUrl");
-		expect(pageSource).toContain("New BlueJ project");
+		expect(pageSource).toContain("New BlueJ desktop project");
 		expect(pageSource).toMatch(/createProject\(\s*'java',\s*'bluej'\s*\)/);
 		expect(pageSource).toContain("async function downloadSelectedProjectForBlueJ");
 		expect(pageSource).toContain('import("@/modules/blueJProjectExport")');
-		expect(pageSource).toContain("Download for BlueJ");
+		expect(pageSource).toContain("Download BlueJ ZIP");
 		expect(pageSource).toContain(
 			"Standard Java project required for ZIP export."
 		);
@@ -3563,6 +3572,7 @@ describe("python IDE project helpers", () => {
 		expect(exportSource).toContain("zipSync(entries)");
 		expect(exportSource).toContain("package.bluej");
 		expect(exportSource).toContain("README.TXT");
+		expect(exportSource).toContain("BLUEJ_SOURCE_URL");
 	});
 
 	it("persists CodeMirror view state across reloads and project ID migration", () => {

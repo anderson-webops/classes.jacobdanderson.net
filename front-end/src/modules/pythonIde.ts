@@ -193,6 +193,7 @@ export function normalizePythonIdeMode(
 	value: string | null | undefined,
 	fallback: PythonIdeMode = "python"
 ): PythonIdeMode {
+	if (value === "bluej") return "java";
 	if (
 		value === "data" ||
 		value === "java" ||
@@ -472,6 +473,9 @@ This folder is ready to open in BlueJ after downloading it from the Classes Code
 
 Start with Main.java, then inspect Student.java to see the object's fields and methods.
 The browser Run button previews the same state with console-friendly code in Main.java.
+
+BlueJ: https://www.bluej.org/
+BlueJ source: https://github.com/k-pet-group/BlueJ-Greenfoot
 `;
 
 export const karelStarterCode = `import kareltherobot.UrRobot;

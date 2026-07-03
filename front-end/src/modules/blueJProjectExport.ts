@@ -9,9 +9,10 @@ import {
 const BLUEJ_PROJECT_FILE_NAME = "package.bluej";
 const BLUEJ_README_FILE_NAME = "README.TXT";
 const BLUEJ_HOME_URL = "https://www.bluej.org/";
+const BLUEJ_SOURCE_URL = "https://github.com/k-pet-group/BlueJ-Greenfoot";
 const JAVA_IDENTIFIER_RE = /^[A-Z_$][\w$]*$/i;
 
-export { BLUEJ_HOME_URL };
+export { BLUEJ_HOME_URL, BLUEJ_SOURCE_URL };
 
 export interface BlueJProjectExportFile {
 	name: string;
@@ -108,6 +109,8 @@ function defaultBlueJReadme(project: Pick<PythonIdeProject, "title">) {
 Project: ${project.title || "Untitled Java Project"}
 
 Open this ZIP in BlueJ with File > Open Project, or unzip it and open the project folder.
+BlueJ: ${BLUEJ_HOME_URL}
+BlueJ source: ${BLUEJ_SOURCE_URL}
 `;
 }
 

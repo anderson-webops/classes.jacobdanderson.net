@@ -1116,6 +1116,18 @@ const requestedCourseStarter = computed(() => route.query.starter === "course");
 const requestedShareID = computed(() =>
 	typeof route.query.share === "string" ? route.query.share.trim() : ""
 );
+const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
+	const rawTemplate =
+		typeof route.query.template === "string" ? route.query.template : "";
+	const rawMode =
+		typeof route.query.mode === "string" ? route.query.mode : "";
+	if (rawTemplate === "bluej" || rawMode === "bluej") return "bluej";
+	if (rawTemplate === "course" && requestedCourseStarter.value)
+		return "course";
+	if (rawTemplate === "demo") return "demo";
+	if (rawTemplate === "outline") return "outline";
+	return "blank";
+});
 const requestedStarterMode = computed(() => {
 	const rawMode =
 		typeof route.query.mode === "string" ? route.query.mode : "";
@@ -1140,8 +1152,8 @@ const selectedProjectCanShowBlueJIntegration = computed(() =>
 );
 const selectedProjectBlueJDescription = computed(() =>
 	selectedProjectCanExportToBlueJ.value
-		? "Use the object-oriented starter or export this Java project as a BlueJ-ready ZIP."
-		: "Use Karel here for browser practice, or start a BlueJ object-bench project for in-class Java inspection."
+		? "Download a BlueJ-ready ZIP with package.bluej, Java source files, and README notes."
+		: "Practice Karel in the browser, or open a BlueJ object-bench starter for desktop Java inspection."
 );
 
 function codeIdeShareUrl(shareID: string) {
@@ -1408,6 +1420,19 @@ function projectForRoute(projectList: PythonIdeProject[]) {
 	);
 }
 
+function requestedStandaloneProjectKey() {
+	if (requestedShareID.value || requestedCourseProjectKey.value) return "";
+	return requestedTemplate.value === "bluej" ? "ide-template:bluej" : "";
+}
+
+function standaloneProjectForRoute(projectList: PythonIdeProject[]) {
+	const key = requestedStandaloneProjectKey();
+	if (!key) return null;
+	return (
+		projectList.find(project => project.courseProjectKey === key) ?? null
+	);
+}
+
 async function createRequestedCourseProject() {
 	const request = requestedCourseProject();
 	if (!request) return null;
@@ -1433,7 +1458,9 @@ async function createRequestedCourseProject() {
 		...request,
 		files: starterFiles,
 		template:
-			starterFiles || requestedCourseStarter.value ? "course" : "blank",
+			starterFiles || requestedCourseStarter.value
+				? "course"
+				: requestedTemplate.value,
 		title: request.courseProjectTitle
 	});
 }
@@ -1499,7 +1526,13 @@ async function openRouteProjectIfNeeded(localOnly = false, loadRunID?: number) {
 		return importSharedProjectFromRouteIfNeeded(localOnly, loadRunID);
 	}
 
-	return openRequestedCourseProjectIfNeeded(localOnly, loadRunID);
+	const openedCourseProject = await openRequestedCourseProjectIfNeeded(
+		localOnly,
+		loadRunID
+	);
+	if (openedCourseProject) return true;
+
+	return openRequestedStandaloneProjectIfNeeded(localOnly, loadRunID);
 }
 
 function projectLoadIsCurrent(loadRunID?: number) {
@@ -1552,10 +1585,45 @@ async function openRequestedCourseProjectIfNeeded(
 	return projectLoadIsCurrent(loadRunID);
 }
 
+async function openRequestedStandaloneProjectIfNeeded(
+	localOnly = false,
+	loadRunID?: number
+) {
+	if (!projectLoadIsCurrent(loadRunID)) return false;
+
+	const key = requestedStandaloneProjectKey();
+	if (!key) return false;
+
+	const existingProject = standaloneProjectForRoute(projects.value);
+	if (existingProject) {
+		selectedProjectID.value = existingProject._id;
+		return true;
+	}
+
+	const project = createPythonIdeProject(requestedStarterMode.value, {
+		courseProjectKey: key,
+		courseProjectTitle: "BlueJ Java Project",
+		starterLabel: "BlueJ starter",
+		template: requestedTemplate.value,
+		title: "BlueJ Java Project"
+	});
+	await saveNewProject(project, localOnly, loadRunID);
+	return projectLoadIsCurrent(loadRunID);
+}
+
 async function createInitialProject() {
 	const requestedProject = await createRequestedCourseProject();
 	if (requestedProject) return requestedProject;
-	return createPythonIdeProject(requestedStarterMode.value);
+	return createPythonIdeProject(requestedStarterMode.value, {
+		courseProjectKey: requestedStandaloneProjectKey() || undefined,
+		courseProjectTitle:
+			requestedTemplate.value === "bluej"
+				? "BlueJ Java Project"
+				: undefined,
+		starterLabel:
+			requestedTemplate.value === "bluej" ? "BlueJ starter" : undefined,
+		template: requestedTemplate.value
+	});
 }
 
 function setProjects(nextProjects: PythonIdeProject[]) {
@@ -1567,7 +1635,10 @@ function setProjects(nextProjects: PythonIdeProject[]) {
 		)
 	}));
 	selectedProjectID.value =
-		projectForRoute(projects.value)?._id ?? projects.value[0]?._id ?? "";
+		projectForRoute(projects.value)?._id ??
+		standaloneProjectForRoute(projects.value)?._id ??
+		projects.value[0]?._id ??
+		"";
 }
 
 async function persistLocalProjects(
@@ -5475,7 +5546,8 @@ watch(
 			route.query.starter,
 			route.query.starterLabel,
 			route.query.starterTitle,
-			route.query.starterUrl
+			route.query.starterUrl,
+			route.query.template
 		].join(":"),
 	() => {
 		void loadProjects();
@@ -5596,12 +5668,22 @@ onBeforeUnmount(() => {
 					canvas for drawing and keyboard-driven lessons, explore
 					PyGame Zero games and data/AI notebooks with rendered
 					charts, preview Java console programs or Karel robot worlds,
-					and download Java projects as BlueJ-openable ZIPs.
+					create BlueJ desktop projects, and download Java projects as
+					BlueJ-ready ZIPs.
 				</p>
 			</div>
-			<div class="code-ide-status" aria-live="polite">
-				<span>{{ saveMessage }}</span>
-				<strong>{{ runMessage }}</strong>
+			<div class="code-ide-status">
+				<div aria-live="polite">
+					<span>{{ saveMessage }}</span>
+					<strong>{{ runMessage }}</strong>
+				</div>
+				<button
+					class="site-button site-button--secondary compact-button code-ide-status-action"
+					type="button"
+					@click="createProject('java', 'bluej')"
+				>
+					BlueJ starter
+				</button>
 			</div>
 		</div>
 
@@ -5867,8 +5949,11 @@ onBeforeUnmount(() => {
 						aria-label="Java and BlueJ tools"
 					>
 						<div>
-							<strong>Java tools</strong>
-							<small>BlueJ object bench</small>
+							<strong>Java / BlueJ tools</strong>
+							<small>
+								BlueJ object-bench starter and package.bluej
+								export
+							</small>
 						</div>
 						<div class="java-tools-actions">
 							<button
@@ -5876,7 +5961,7 @@ onBeforeUnmount(() => {
 								type="button"
 								@click="createProject('java', 'bluej')"
 							>
-								New BlueJ project
+								New BlueJ desktop project
 							</button>
 							<button
 								v-if="selectedProjectCanExportToBlueJ"
@@ -5884,7 +5969,7 @@ onBeforeUnmount(() => {
 								type="button"
 								@click="downloadSelectedProjectForBlueJ"
 							>
-								Download for BlueJ
+								Download BlueJ ZIP
 							</button>
 							<a
 								:href="blueJHomeUrl"
@@ -6083,7 +6168,7 @@ onBeforeUnmount(() => {
 								type="button"
 								@click="downloadSelectedProjectForBlueJ"
 							>
-								Download for BlueJ
+								Download BlueJ ZIP
 							</button>
 							<a
 								:href="blueJHomeUrl"
@@ -6091,6 +6176,13 @@ onBeforeUnmount(() => {
 								rel="noopener noreferrer"
 							>
 								BlueJ
+							</a>
+							<a
+								:href="blueJSourceUrl"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								Source
 							</a>
 						</div>
 					</div>
@@ -6322,7 +6414,7 @@ onBeforeUnmount(() => {
 							type="button"
 							@click="createProject('java', 'bluej')"
 						>
-							New BlueJ project
+							New BlueJ desktop project
 						</button>
 						<button
 							v-if="selectedProjectCanExportToBlueJ"
@@ -6330,7 +6422,7 @@ onBeforeUnmount(() => {
 							type="button"
 							@click="downloadSelectedProjectForBlueJ"
 						>
-							Download for BlueJ
+							Download BlueJ ZIP
 						</button>
 						<small v-else class="bluej-integration-note">
 							Standard Java project required for ZIP export.
@@ -6775,7 +6867,7 @@ onBeforeUnmount(() => {
 .code-ide-status {
 	min-width: 14rem;
 	display: grid;
-	gap: 0.35rem;
+	gap: 0.75rem;
 	padding: 1rem;
 	border: 1px solid var(--color-border);
 	border-radius: 18px;
@@ -6783,9 +6875,18 @@ onBeforeUnmount(() => {
 	color: var(--color-ink-soft);
 }
 
+.code-ide-status > div {
+	display: grid;
+	gap: 0.35rem;
+}
+
 .code-ide-status strong {
 	color: var(--color-ink-strong);
 	font-size: 1.1rem;
+}
+
+.code-ide-status-action {
+	justify-self: stretch;
 }
 
 html.dark .code-ide-hero {
