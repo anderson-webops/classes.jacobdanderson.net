@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
 
@@ -20,14 +19,14 @@ import {
 import {
 	courseCatalog,
 	loadRawCourse
-} from "@/stores/courses/index";
+} from "../src/stores/courses/index";
 import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
 	canonicalStaticMediaUrl,
 	hasPendingStaticMediaNotice,
 	staticMediaFilename,
 	staticMediaUrlsFromText
-} from "@/stores/courses/staticMedia";
+} from "../src/stores/courses/staticMedia";
 
 const knownPending = new Set(KNOWN_PENDING_STATIC_MEDIA_FILENAMES);
 const urls = new Map();
@@ -315,20 +314,16 @@ if (unknownMissing.length > 0 || unnotedPending.length > 0) {
 }
 `;
 
-const tempDir = await mkdtemp(join(tmpdir(), "classes-static-media-"));
+const tempDir = await mkdtemp(join(process.cwd(), "front-end", ".static-media-audit-"));
 const auditFile = join(tempDir, "audit.ts");
 
 try {
 	await writeFile(auditFile, auditSource);
 
 	const child = spawn(
-		"npm",
-		["exec", "-w", "front-end", "--", "vite-node", auditFile],
+		process.execPath,
+		["back-end/node_modules/tsx/dist/cli.mjs", auditFile],
 		{
-			env: {
-				...process.env,
-				STATIC_MEDIA_AUDIT: "true"
-			},
 			stdio: "inherit"
 		}
 	);
