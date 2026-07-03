@@ -27,7 +27,10 @@ describe("production Code IDE smoke helpers", () => {
 		const currentIdeBundle = [
 			"Code, run, and draw in Python or Java",
 			"preview Java console programs or Karel robot",
+			"BlueJ-openable ZIPs",
 			"Karel world ready",
+			"Java tools",
+			"BlueJ object bench",
 			"BlueJ Java Project",
 			"New BlueJ project",
 			"Download for BlueJ",
