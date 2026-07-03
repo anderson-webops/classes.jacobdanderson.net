@@ -550,6 +550,7 @@ const codeEditorStateSnapshots = new Map<string, CodeEditorState>();
 let saveTimer: ReturnType<typeof window.setTimeout> | null = null;
 let localSnapshotTimer: ReturnType<typeof window.setTimeout> | null = null;
 let karelWorldPlaybackTimer: ReturnType<typeof window.setTimeout> | null = null;
+let resolveKarelWorldPlayback: ((completed: boolean) => void) | null = null;
 let saveInFlight: Promise<void> | null = null;
 let localSnapshotInFlight: Promise<void> | null = null;
 let localSnapshotQueued = false;
@@ -1149,38 +1150,60 @@ function karelCellKey(street: number, avenue: number) {
 }
 
 function clearKarelWorldPlayback() {
-	if (karelWorldPlaybackTimer === null) return;
-	window.clearTimeout(karelWorldPlaybackTimer);
+	if (karelWorldPlaybackTimer !== null) {
+		window.clearTimeout(karelWorldPlaybackTimer);
+	}
 	karelWorldPlaybackTimer = null;
+	if (!resolveKarelWorldPlayback) return;
+	resolveKarelWorldPlayback(false);
+	resolveKarelWorldPlayback = null;
 }
 
-function playKarelWorldSteps(steps: KarelWorldState[] | undefined) {
+function playKarelWorldSteps(
+	steps: KarelWorldState[] | undefined,
+	shouldContinue: () => boolean
+) {
 	clearKarelWorldPlayback();
-	if (!steps?.length) return false;
+	if (!steps?.length) return Promise.resolve(false);
 
-	let index = 0;
-	const showNextStep = () => {
-		const step = steps[index];
-		if (!step) {
+	return new Promise<boolean>(resolve => {
+		let index = 0;
+		const finish = (completed: boolean) => {
+			if (karelWorldPlaybackTimer !== null) {
+				window.clearTimeout(karelWorldPlaybackTimer);
+			}
 			karelWorldPlaybackTimer = null;
-			return;
-		}
+			resolveKarelWorldPlayback = null;
+			resolve(completed);
+		};
+		resolveKarelWorldPlayback = finish;
+		const showNextStep = () => {
+			if (!shouldContinue()) {
+				finish(false);
+				return;
+			}
 
-		karelWorld.value = step;
-		index += 1;
-		if (index >= steps.length) {
-			karelWorldPlaybackTimer = null;
-			return;
-		}
+			const step = steps[index];
+			if (!step) {
+				finish(true);
+				return;
+			}
 
-		karelWorldPlaybackTimer = window.setTimeout(
-			showNextStep,
-			karelPlaybackFrameDelayMs
-		);
-	};
+			karelWorld.value = step;
+			index += 1;
+			if (index >= steps.length) {
+				finish(true);
+				return;
+			}
 
-	showNextStep();
-	return true;
+			karelWorldPlaybackTimer = window.setTimeout(
+				showNextStep,
+				karelPlaybackFrameDelayMs
+			);
+		};
+
+		showNextStep();
+	});
 }
 
 function isJavaIdeMode(mode: PythonIdeMode): mode is "java" | "karel" {
@@ -5070,14 +5093,27 @@ async function runCurrentProject() {
 				inputText: inputText.value,
 				mode: project.mode
 			});
-			if (
-				project.mode !== "karel" ||
-				!playKarelWorldSteps(result.karelWorldSteps)
-			) {
-				karelWorld.value = result.karelWorld ?? null;
-			}
 			for (const line of result.stdout) appendOutput("stdout", line);
 			for (const line of result.stderr) appendOutput("stderr", line);
+			if (project.mode === "karel" && result.karelWorldSteps?.length) {
+				runMessage.value = "Animating Karel world";
+				const completedPlayback = await playKarelWorldSteps(
+					result.karelWorldSteps,
+					() => !shouldStopPythonIdeRun(runID, project._id)
+				);
+				if (
+					!completedPlayback &&
+					shouldStopPythonIdeRun(runID, project._id)
+				) {
+					return;
+				}
+				if (!completedPlayback) {
+					karelWorld.value = result.karelWorld ?? null;
+				}
+			} else {
+				karelWorld.value = result.karelWorld ?? null;
+			}
+			if (shouldStopPythonIdeRun(runID, project._id)) return;
 			runMessage.value = result.stderr.length
 				? "Run finished with issues"
 				: project.mode === "karel"
