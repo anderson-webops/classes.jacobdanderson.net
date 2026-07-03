@@ -1091,6 +1091,9 @@ describe("python IDE project helpers", () => {
 		expect(focusSource).toContain('projectMode !== "turtle"');
 		expect(focusSource).toContain('projectMode !== "pgzero"');
 		expect(focusSource).toContain("canvasRef.value?.focus({ preventScroll: true })");
+		expect(focusSource.indexOf("canvasRef.value?.focus")).toBeLessThan(
+			focusSource.indexOf("window.requestAnimationFrame")
+		);
 		expect(pageSource).toContain("focusVisualCanvasForRun();");
 		expect(pageSource).toContain(
 			"void runCurrentProject().finally(focusVisualCanvasForRun);"
