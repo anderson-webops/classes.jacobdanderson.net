@@ -3533,7 +3533,7 @@ function teleportTurtle(x: number, y: number, fillGap = false) {
 
 	const toPose = currentTurtlePose();
 	queueTurtleStep({
-		durationMs: turtleMovementDuration(fromPose, toPose),
+		durationMs: 0,
 		fromPose,
 		toPose
 	});
