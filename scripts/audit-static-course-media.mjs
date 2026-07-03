@@ -61,6 +61,12 @@ const textFileExtensions = new Set([
 ]);
 const staticAssetPathPattern =
 	/\.(?:avif|csv|gif|jpe?g|json|md|mov|mp4|pdf|png|svg|webm|zip)(?:[?#].*)?$/i;
+const maxFetchAttempts = 3;
+const fetchRetryDelayMs = 250;
+
+function delay(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function add(url, reference) {
 	if (!url) return;
@@ -182,18 +188,29 @@ for (const [url, references] of [...urls].sort(([left], [right]) =>
 	let ok = false;
 	let error = "";
 
-	try {
-		let response = await fetch(url, { method: "HEAD" });
-		if (response.status === 405 || response.status === 403) {
-			response = await fetch(url, {
-				headers: { Range: "bytes=0-0" },
-				method: "GET"
-			});
+	for (let attempt = 1; attempt <= maxFetchAttempts; attempt += 1) {
+		try {
+			let response = await fetch(url, { method: "HEAD" });
+			if (response.status === 405 || response.status === 403) {
+				response = await fetch(url, {
+					headers: { Range: "bytes=0-0" },
+					method: "GET"
+				});
+			}
+			status = response.status;
+			ok = response.ok || response.status === 206;
+			error = "";
+
+			if (ok || ![0, 408, 425, 429, 500, 502, 503, 504].includes(status))
+				break;
+		} catch (err) {
+			status = 0;
+			error = err instanceof Error ? err.message : String(err);
 		}
-		status = response.status;
-		ok = response.ok || response.status === 206;
-	} catch (err) {
-		error = err instanceof Error ? err.message : String(err);
+
+		if (attempt < maxFetchAttempts) {
+			await delay(fetchRetryDelayMs * attempt);
+		}
 	}
 
 	const filename = staticMediaFilename(url);
