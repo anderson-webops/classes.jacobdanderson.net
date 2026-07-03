@@ -607,7 +607,8 @@ export const updatePythonProjectShare: RequestHandler = async (req, res) => {
 	if (project.shared && !project.shareID) {
 		project.shareID = createPythonProjectShareID();
 		project.shareCreatedAt = new Date();
-	} else if (!project.shared) {
+	}
+	else if (!project.shared) {
 		project.shareID = undefined;
 		project.shareCreatedAt = undefined;
 	}
