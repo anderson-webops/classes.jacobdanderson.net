@@ -10,7 +10,6 @@ import {
 	transformerVariantGroup
 } from "unocss";
 
-const isStaticMediaAudit = process.env.STATIC_MEDIA_AUDIT === "true";
 const isVitest = process.env.VITEST === "true";
 
 export default defineConfig({
@@ -31,7 +30,7 @@ export default defineConfig({
 			scale: 1.2
 		}),
 		presetTypography(),
-		...(isVitest || isStaticMediaAudit
+		...(isVitest
 			? []
 			: [
 					presetWebFonts({
