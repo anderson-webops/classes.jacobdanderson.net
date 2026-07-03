@@ -62,10 +62,18 @@ const textFileExtensions = new Set([
 const staticAssetPathPattern =
 	/\.(?:avif|csv|gif|jpe?g|json|md|mov|mp4|pdf|png|svg|webm|zip)(?:[?#].*)?$/i;
 const maxFetchAttempts = 3;
+const fetchTimeoutMs = 5000;
 const fetchRetryDelayMs = 250;
 
 function delay(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function fetchWithTimeout(url, options = {}) {
+	return fetch(url, {
+		...options,
+		signal: AbortSignal.timeout(fetchTimeoutMs)
+	});
 }
 
 function add(url, reference) {
@@ -178,21 +186,50 @@ for (const root of scanRoots) {
 	scanPath(join(process.cwd(), root));
 }
 
-const missing = [];
 const available = [];
+const knownPendingNotChecked = [];
+const missing = [];
 
 for (const [url, references] of [...urls].sort(([left], [right]) =>
 	left.localeCompare(right)
 )) {
+	const filename = staticMediaFilename(url);
+	const sourceIssues = references.flatMap(reference => {
+		if (hasPendingStaticMediaNotice(reference.content, filename)) {
+			return [];
+		}
+
+		return [
+			{
+				key: reference.key,
+				source: reference.source
+			}
+		];
+	});
+	const baseRow = {
+		filename,
+		isKnownPending: knownPending.has(filename),
+		sourceCount: new Set(references.map(reference => reference.source))
+			.size,
+		sources: [...new Set(references.map(reference => reference.source))],
+		url,
+		...(sourceIssues.length ? { sourceIssues } : {})
+	};
+
+	if (baseRow.isKnownPending && sourceIssues.length === 0) {
+		knownPendingNotChecked.push(baseRow);
+		continue;
+	}
+
 	let status = 0;
 	let ok = false;
 	let error = "";
 
 	for (let attempt = 1; attempt <= maxFetchAttempts; attempt += 1) {
 		try {
-			let response = await fetch(url, { method: "HEAD" });
+			let response = await fetchWithTimeout(url, { method: "HEAD" });
 			if (response.status === 405 || response.status === 403) {
-				response = await fetch(url, {
+				response = await fetchWithTimeout(url, {
 					headers: { Range: "bytes=0-0" },
 					method: "GET"
 				});
@@ -213,28 +250,9 @@ for (const [url, references] of [...urls].sort(([left], [right]) =>
 		}
 	}
 
-	const filename = staticMediaFilename(url);
-	const sourceIssues = references.flatMap(reference => {
-		if (hasPendingStaticMediaNotice(reference.content, filename)) {
-			return [];
-		}
-
-		return [
-			{
-				key: reference.key,
-				source: reference.source
-			}
-		];
-	});
 	const row = {
-		filename,
-		isKnownPending: knownPending.has(filename),
-		sourceCount: new Set(references.map(reference => reference.source))
-			.size,
-		sources: [...new Set(references.map(reference => reference.source))],
+		...baseRow,
 		status,
-		url,
-		...(sourceIssues.length ? { sourceIssues } : {}),
 		...(error ? { error } : {})
 	};
 
@@ -274,12 +292,14 @@ console.log(
 	JSON.stringify(
 		{
 			availableCount: available.length,
-			checkedCount: urls.size,
+			checkedCount: available.length + missing.length,
 			confirmedMissingCount: confirmedMissing.length,
 			knownPendingMissing: summarizeRows(knownPendingMissing),
+			knownPendingNotChecked: summarizeRows(knownPendingNotChecked),
 			missingCount: missing.length,
 			networkIndeterminate: summarizeRows(networkIndeterminate),
 			networkIndeterminateCount: networkIndeterminate.length,
+			referencedCount: urls.size,
 			networkIndeterminateKnownPending: summarizeRows(networkIndeterminateKnownPending),
 			networkIndeterminateUnknown: summarizeRows(networkIndeterminateUnknown),
 			unnotedPending,
