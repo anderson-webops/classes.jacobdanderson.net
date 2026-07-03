@@ -3178,6 +3178,20 @@ describe("python IDE project helpers", () => {
 			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
+		const settingsPanelCssStart = pageSource.indexOf(".ide-settings-panel {");
+		const settingsPanelCss = pageSource.slice(
+			settingsPanelCssStart,
+			pageSource.indexOf(".ide-settings-panel,", settingsPanelCssStart)
+		);
+		const mobileCssStart = pageSource.indexOf("@media (max-width: 820px)");
+		const mobileSettingsPanelCssStart = pageSource.indexOf(
+			".ide-settings-panel {",
+			mobileCssStart
+		);
+		const mobileSettingsPanelCss = pageSource.slice(
+			mobileSettingsPanelCssStart,
+			pageSource.indexOf("}", mobileSettingsPanelCssStart)
+		);
 
 		expect(pageSource).toContain(
 			'const pythonIdeAutoSaveStorageKey = "classes-python-ide-autosave";'
@@ -3209,14 +3223,17 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Expanded layout");
 		expect(pageSource).not.toContain("Autosave projects");
 		expect(pageSource).not.toContain("Recommendations as you type");
-		expect(pageSource).toContain("position: absolute;");
-		expect(pageSource).toContain("top: calc(100% + 0.6rem);");
-		expect(pageSource).toContain("width: min(26rem, calc(100vw - 2rem));");
-		expect(pageSource).toContain("right: auto;");
-		expect(pageSource).toContain("left: 0;");
-		expect(pageSource).toContain(
+		expect(settingsPanelCss).toContain("position: absolute;");
+		expect(settingsPanelCss).toContain("top: calc(100% + 0.6rem);");
+		expect(settingsPanelCss).toContain("right: 0;");
+		expect(settingsPanelCss).toContain(
+			"width: min(26rem, calc(100vw - 2rem));"
+		);
+		expect(settingsPanelCss).toContain(
 			"max-height: min(36rem, calc(100vh - 8rem));"
 		);
+		expect(mobileSettingsPanelCss).toContain("right: auto;");
+		expect(mobileSettingsPanelCss).toContain("left: 0;");
 		expect(pageSource).toContain(".ide-settings-panel :where(*)");
 		expect(pageSource).toContain(".ide-setting-copy");
 		expect(pageSource).toContain(".ide-setting-description");
