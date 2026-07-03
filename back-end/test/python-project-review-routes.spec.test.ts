@@ -12,7 +12,8 @@ const modelMocks = vi.hoisted(() => ({
 	pythonProjectFindOne: vi.fn(),
 	pythonProjectReviewFind: vi.fn(),
 	pythonProjectReviewFindOne: vi.fn(),
-	pythonProjectReviewCreate: vi.fn()
+	pythonProjectReviewCreate: vi.fn(),
+	pythonProjectReviewDeleteMany: vi.fn()
 }));
 
 vi.mock("../src/models/schemas/Admin.js", () => ({
@@ -38,6 +39,7 @@ vi.mock("../src/models/schemas/PythonProject.js", () => ({
 vi.mock("../src/models/schemas/PythonProjectReview.js", () => ({
 	PythonProjectReview: {
 		create: modelMocks.pythonProjectReviewCreate,
+		deleteMany: modelMocks.pythonProjectReviewDeleteMany,
 		find: modelMocks.pythonProjectReviewFind,
 		findOne: modelMocks.pythonProjectReviewFindOne
 	}
@@ -114,6 +116,7 @@ function makeProject(overrides: Record<string, unknown> = {}) {
 		shareCreatedAt: undefined,
 		createdAt: now,
 		updatedAt: now,
+		deleteOne: vi.fn().mockResolvedValue(undefined),
 		save: vi.fn().mockResolvedValue(undefined),
 		...overrides
 	};
@@ -240,6 +243,7 @@ describe("Python project review routes", () => {
 		modelMocks.pythonProjectReviewFind.mockReturnValue(queryWith([makeReview()]));
 		modelMocks.pythonProjectReviewFindOne.mockResolvedValue(makeReview());
 		modelMocks.pythonProjectReviewCreate.mockImplementation(async payload => makeReview(payload));
+		modelMocks.pythonProjectReviewDeleteMany.mockResolvedValue({ deletedCount: 1 });
 	});
 
 	it("lets signed-in students list their own Code IDE projects", async () => {
@@ -606,6 +610,31 @@ describe("Python project review routes", () => {
 			expect(body.project.files[0].content).toBe("print('student')\n");
 			expect(body.project.shared).toBe(true);
 			expect(body.project.shareID).toBe(shareID);
+		});
+	});
+
+	it("deletes staff review copies when the source project is deleted", async () => {
+		const project = makeProject();
+		modelMocks.pythonProjectFindOne.mockResolvedValue(project);
+
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(
+				`${baseUrl}/users/loggedin/python-projects/${projectID}`,
+				{
+					headers: { "x-user-id": studentID.toString() },
+					method: "DELETE"
+				}
+			);
+
+			expect(response.status).toBe(204);
+			expect(modelMocks.pythonProjectFindOne).toHaveBeenCalledWith({
+				_id: new Types.ObjectId(projectID),
+				...ownedProjectQuery(studentID, "user")
+			});
+			expect(project.deleteOne).toHaveBeenCalled();
+			expect(modelMocks.pythonProjectReviewDeleteMany).toHaveBeenCalledWith({
+				sourceProject: projectID
+			});
 		});
 	});
 });

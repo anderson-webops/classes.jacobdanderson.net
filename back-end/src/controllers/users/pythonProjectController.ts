@@ -681,6 +681,9 @@ export const deletePythonProject: RequestHandler = async (req, res) => {
 	const project = await findOwnedProject(req, res);
 	if (!project) return;
 
-	await project.deleteOne();
+	await Promise.all([
+		project.deleteOne(),
+		PythonProjectReview.deleteMany({ sourceProject: project._id })
+	]);
 	res.sendStatus(204);
 };
