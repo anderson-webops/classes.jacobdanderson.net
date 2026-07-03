@@ -3541,6 +3541,10 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain('requestedTemplate.value === "bluej"');
 		expect(pageSource).toContain('"ide-template:bluej"');
 		expect(pageSource).toContain("openRequestedStandaloneProjectIfNeeded");
+		expect(pageSource).toContain("async function openBlueJStarterProject");
+		expect(pageSource).toContain(
+			'project.courseProjectKey === "ide-template:bluej"'
+		);
 		expect(pageSource).toContain('selectedProject.value.mode === "java"');
 		expect(pageSource).toContain('selectedProject.value.mode === "karel"');
 		expect(pageSource).toContain('if (project.mode !== "java")');
