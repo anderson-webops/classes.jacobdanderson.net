@@ -9,6 +9,7 @@ import {
 const BLUEJ_PROJECT_FILE_NAME = "package.bluej";
 const BLUEJ_README_FILE_NAME = "README.TXT";
 const BLUEJ_HOME_URL = "https://www.bluej.org/";
+const JAVA_IDENTIFIER_RE = /^[A-Z_$][\w$]*$/i;
 
 export { BLUEJ_HOME_URL };
 
@@ -45,6 +46,12 @@ function javaClassNameForBlueJTarget(fileName: string) {
 	);
 }
 
+function isBlueJTargetJavaFile(file: PythonIdeFile) {
+	if (!isPythonIdeJavaFile(file.name) || file.name.includes("/"))
+		return false;
+	return JAVA_IDENTIFIER_RE.test(javaClassNameForBlueJTarget(file.name));
+}
+
 function blueJTargetLines(file: PythonIdeFile, index: number) {
 	const targetNumber = index + 1;
 	const column = index % 4;
@@ -63,7 +70,7 @@ function blueJTargetLines(file: PythonIdeFile, index: number) {
 }
 
 export function createBlueJPackageFile(files: PythonIdeFile[]) {
-	const javaFiles = files.filter(file => isPythonIdeJavaFile(file.name));
+	const javaFiles = files.filter(isBlueJTargetJavaFile);
 	return [
 		"#BlueJ package file",
 		"editor.fx.0.height=0",
