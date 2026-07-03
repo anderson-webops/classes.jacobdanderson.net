@@ -5618,8 +5618,8 @@ onBeforeUnmount(() => {
 					Build multi-file Python and Java projects, use the Turtle
 					canvas for drawing and keyboard-driven lessons, explore
 					PyGame Zero games and data/AI notebooks with rendered
-					charts, and preview Java console programs or Karel robot
-					worlds.
+					charts, preview Java console programs or Karel robot worlds,
+					and download Java projects as BlueJ-openable ZIPs.
 				</p>
 			</div>
 			<div class="code-ide-status" aria-live="polite">
@@ -5725,6 +5725,18 @@ onBeforeUnmount(() => {
 										@click="createProjectFromMenu('java')"
 									>
 										Java
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'java',
+												'bluej'
+											)
+										"
+									>
+										BlueJ Java
 									</button>
 									<button
 										type="button"
@@ -5869,6 +5881,48 @@ onBeforeUnmount(() => {
 									</button>
 								</div>
 							</div>
+						</div>
+					</div>
+
+					<div
+						v-if="selectedProject"
+						class="java-tools-card"
+						aria-label="Java and BlueJ tools"
+					>
+						<div>
+							<strong>Java tools</strong>
+							<small>BlueJ object bench</small>
+						</div>
+						<div class="java-tools-actions">
+							<button
+								class="site-button site-button--secondary compact-button"
+								type="button"
+								@click="createProject('java', 'bluej')"
+							>
+								New BlueJ project
+							</button>
+							<button
+								v-if="selectedProjectCanExportToBlueJ"
+								class="site-button site-button--secondary compact-button"
+								type="button"
+								@click="downloadSelectedProjectForBlueJ"
+							>
+								Download for BlueJ
+							</button>
+							<a
+								:href="blueJHomeUrl"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								BlueJ
+							</a>
+							<a
+								:href="blueJSourceUrl"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								Source
+							</a>
 						</div>
 					</div>
 
@@ -7116,6 +7170,23 @@ html.dark .project-create-menu button:focus-visible {
 	background: #164e4b;
 }
 
+html.dark .java-tools-card {
+	border-color: rgba(94, 234, 212, 0.22);
+	background: rgba(15, 23, 42, 0.58);
+}
+
+html.dark .java-tools-card strong {
+	color: #f8fafc;
+}
+
+html.dark .java-tools-card small {
+	color: #c8dce6;
+}
+
+html.dark .java-tools-actions a {
+	color: #5eead4;
+}
+
 html.dark .bluej-integration-panel {
 	border-color: rgba(94, 234, 212, 0.24);
 	background: rgba(15, 23, 42, 0.52);
@@ -7372,6 +7443,52 @@ html.dark .file-delete:disabled::after {
 
 .file-export-row a:hover,
 .file-export-row a:focus-visible {
+	text-decoration: underline;
+}
+
+.java-tools-card {
+	display: grid;
+	gap: 0.65rem;
+	padding: 0.75rem;
+	border: 1px solid var(--color-border);
+	border-radius: 12px;
+	background: rgba(248, 250, 252, 0.74);
+}
+
+.java-tools-card strong,
+.java-tools-card small {
+	display: block;
+}
+
+.java-tools-card strong {
+	color: var(--color-ink-strong);
+	font-size: 0.95rem;
+}
+
+.java-tools-card small {
+	margin-top: 0.12rem;
+	color: var(--color-ink-soft);
+	font-size: 0.78rem;
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.java-tools-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	align-items: center;
+}
+
+.java-tools-actions a {
+	color: #0f766e;
+	font-size: 0.78rem;
+	font-weight: 800;
+	text-decoration: none;
+}
+
+.java-tools-actions a:hover,
+.java-tools-actions a:focus-visible {
 	text-decoration: underline;
 }
 

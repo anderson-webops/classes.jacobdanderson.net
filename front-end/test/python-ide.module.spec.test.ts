@@ -3427,6 +3427,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Python Level 1 Outline");
 		expect(pageSource).toContain("PyGame Zero Outline");
 		expect(pageSource).toContain("Java Outline");
+		expect(pageSource).toContain("BlueJ Java");
 		expect(pageSource).toContain("BlueJ Java Project");
 		expect(pageSource).toContain("Karel Java Outline");
 		expect(pageSource).toMatch(
@@ -3464,6 +3465,13 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			'v-if="selectedProjectCanShowBlueJIntegration"'
 		);
+		expect(pageSource).toContain(
+			"download Java projects as BlueJ-openable ZIPs"
+		);
+		expect(pageSource).toContain('class="java-tools-card"');
+		expect(pageSource).toContain('aria-label="Java and BlueJ tools"');
+		expect(pageSource).toContain("Java tools");
+		expect(pageSource).toContain("BlueJ object bench");
 		expect(pageSource).toContain('class="bluej-integration-panel"');
 		expect(pageSource).toContain("blueJSourceUrl");
 		expect(pageSource).toContain("New BlueJ project");
