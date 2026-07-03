@@ -5177,6 +5177,7 @@ function focusVisualCanvasForRun() {
 	const projectMode = selectedProject.value?.mode;
 	if (projectMode !== "turtle" && projectMode !== "pgzero") return;
 
+	canvasRef.value?.focus({ preventScroll: true });
 	window.requestAnimationFrame(() =>
 		canvasRef.value?.focus({ preventScroll: true })
 	);
