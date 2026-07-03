@@ -70,6 +70,7 @@ import {
 	pythonIdeAssetCandidateNames,
 	pythonIdeCourseAssetsManifestUrl,
 	pythonIdeCourseAssetsZipUrl,
+	pythonIdeLegacyCourseAssetsManifestUrl,
 	pythonIdeLegacyCourseAssetsZipUrl,
 	resetPythonIdeCourseAssetPackCache
 } from "../src/modules/pythonIdeCourseAssets";
@@ -4109,7 +4110,49 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
-	it("falls back to the same-origin zip proxy when the extracted manifest is missing", async () => {
+	it("falls back to the legacy extracted manifest when the Code IDE manifest is missing", async () => {
+		const requestedUrls: string[] = [];
+		const pack = await loadPythonIdeCourseAssetPack({
+			fetcher: async url => {
+				requestedUrls.push(url);
+				if (url === pythonIdeCourseAssetsManifestUrl) {
+					return {
+						arrayBuffer: async () => new ArrayBuffer(0),
+						ok: false,
+						status: 404
+					};
+				}
+
+				expect(url).toBe(pythonIdeLegacyCourseAssetsManifestUrl);
+				return {
+					arrayBuffer: async () => new ArrayBuffer(0),
+					json: async () => ({
+						assets: [
+							{
+								height: 18,
+								mimeType: "image/png",
+								name: "images/alien.png",
+								url: "/python-ide/assets/images/alien.png",
+								width: 20
+							}
+						]
+					}),
+					ok: true,
+					status: 200
+				};
+			}
+		});
+
+		expect(requestedUrls).toEqual([
+			pythonIdeCourseAssetsManifestUrl,
+			pythonIdeLegacyCourseAssetsManifestUrl
+		]);
+		expect(pack.assets.get("images/alien.png")?.url).toBe(
+			"/python-ide/assets/images/alien.png"
+		);
+	});
+
+	it("falls back to the same-origin zip proxy when extracted manifests are missing", async () => {
 		const zipBytes = zipSync({
 			"images/alien.png": oneByOnePngBytes
 		});
@@ -4117,7 +4160,10 @@ describe("python IDE project helpers", () => {
 		const pack = await loadPythonIdeCourseAssetPack({
 			fetcher: async url => {
 				requestedUrls.push(url);
-				if (url === pythonIdeCourseAssetsManifestUrl) {
+				if (
+					url === pythonIdeCourseAssetsManifestUrl ||
+					url === pythonIdeLegacyCourseAssetsManifestUrl
+				) {
 					return {
 						arrayBuffer: async () => new ArrayBuffer(0),
 						ok: false,
@@ -4136,6 +4182,7 @@ describe("python IDE project helpers", () => {
 
 		expect(requestedUrls).toEqual([
 			pythonIdeCourseAssetsManifestUrl,
+			pythonIdeLegacyCourseAssetsManifestUrl,
 			pythonIdeCourseAssetsZipUrl
 		]);
 		expect(pack.assets.has("images/alien.png")).toBe(true);
@@ -4149,7 +4196,10 @@ describe("python IDE project helpers", () => {
 		const pack = await loadPythonIdeCourseAssetPack({
 			fetcher: async url => {
 				requestedUrls.push(url);
-				if (url === pythonIdeCourseAssetsManifestUrl) {
+				if (
+					url === pythonIdeCourseAssetsManifestUrl ||
+					url === pythonIdeLegacyCourseAssetsManifestUrl
+				) {
 					return {
 						arrayBuffer: async () => new ArrayBuffer(0),
 						ok: false,
@@ -4176,6 +4226,7 @@ describe("python IDE project helpers", () => {
 
 		expect(requestedUrls).toEqual([
 			pythonIdeCourseAssetsManifestUrl,
+			pythonIdeLegacyCourseAssetsManifestUrl,
 			pythonIdeCourseAssetsZipUrl,
 			pythonIdeLegacyCourseAssetsZipUrl
 		]);
@@ -4190,7 +4241,10 @@ describe("python IDE project helpers", () => {
 		const pack = await loadPythonIdeCourseAssetPack({
 			fetcher: async url => {
 				requestedUrls.push(url);
-				if (url === pythonIdeCourseAssetsManifestUrl) {
+				if (
+					url === pythonIdeCourseAssetsManifestUrl ||
+					url === pythonIdeLegacyCourseAssetsManifestUrl
+				) {
 					return {
 						arrayBuffer: async () => new ArrayBuffer(0),
 						json: async () => ({
@@ -4218,6 +4272,7 @@ describe("python IDE project helpers", () => {
 
 		expect(requestedUrls).toEqual([
 			pythonIdeCourseAssetsManifestUrl,
+			pythonIdeLegacyCourseAssetsManifestUrl,
 			pythonIdeCourseAssetsZipUrl
 		]);
 		expect(pack.assets.has("images/alien.png")).toBe(true);
@@ -4231,7 +4286,10 @@ describe("python IDE project helpers", () => {
 		const pack = await loadPythonIdeCourseAssetPack({
 			fetcher: async url => {
 				requestedUrls.push(url);
-				if (url === pythonIdeCourseAssetsManifestUrl) {
+				if (
+					url === pythonIdeCourseAssetsManifestUrl ||
+					url === pythonIdeLegacyCourseAssetsManifestUrl
+				) {
 					throw new TypeError("manifest network failure");
 				}
 
@@ -4246,6 +4304,7 @@ describe("python IDE project helpers", () => {
 
 		expect(requestedUrls).toEqual([
 			pythonIdeCourseAssetsManifestUrl,
+			pythonIdeLegacyCourseAssetsManifestUrl,
 			pythonIdeCourseAssetsZipUrl
 		]);
 		expect(pack.assets.has("images/alien.png")).toBe(true);

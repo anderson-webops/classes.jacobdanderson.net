@@ -1,0 +1,1173 @@
+{
+	"assets": [
+		{
+			"byteLength": 4914,
+			"height": 57,
+			"mimeType": "image/png",
+			"name": "images/10.png",
+			"url": "/python-ide/assets/images/10.png",
+			"width": 55
+		},
+		{
+			"byteLength": 4370,
+			"height": 54,
+			"mimeType": "image/png",
+			"name": "images/11.png",
+			"url": "/python-ide/assets/images/11.png",
+			"width": 55
+		},
+		{
+			"byteLength": 4757,
+			"height": 55,
+			"mimeType": "image/png",
+			"name": "images/12.png",
+			"url": "/python-ide/assets/images/12.png",
+			"width": 55
+		},
+		{
+			"byteLength": 4898,
+			"height": 56,
+			"mimeType": "image/png",
+			"name": "images/13.png",
+			"url": "/python-ide/assets/images/13.png",
+			"width": 55
+		},
+		{
+			"byteLength": 4614,
+			"height": 57,
+			"mimeType": "image/png",
+			"name": "images/14.png",
+			"url": "/python-ide/assets/images/14.png",
+			"width": 53
+		},
+		{
+			"byteLength": 4815,
+			"height": 57,
+			"mimeType": "image/png",
+			"name": "images/15.png",
+			"url": "/python-ide/assets/images/15.png",
+			"width": 55
+		},
+		{
+			"byteLength": 2816,
+			"height": 92,
+			"mimeType": "image/png",
+			"name": "images/alien_hurt.png",
+			"url": "/python-ide/assets/images/alien_hurt.png",
+			"width": 69
+		},
+		{
+			"byteLength": 2611,
+			"height": 64,
+			"mimeType": "image/png",
+			"name": "images/alien_ship.png",
+			"url": "/python-ide/assets/images/alien_ship.png",
+			"width": 64
+		},
+		{
+			"byteLength": 2182,
+			"height": 38,
+			"mimeType": "image/png",
+			"name": "images/alien_ship2.png",
+			"url": "/python-ide/assets/images/alien_ship2.png",
+			"width": 38
+		},
+		{
+			"byteLength": 2220,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/alien-left.png",
+			"url": "/python-ide/assets/images/alien-left.png",
+			"width": 36
+		},
+		{
+			"byteLength": 2240,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/alien-right.png",
+			"url": "/python-ide/assets/images/alien-right.png",
+			"width": 36
+		},
+		{
+			"byteLength": 2781,
+			"height": 92,
+			"mimeType": "image/png",
+			"name": "images/alien.png",
+			"url": "/python-ide/assets/images/alien.png",
+			"width": 66
+		},
+		{
+			"byteLength": 3165,
+			"height": 39,
+			"mimeType": "image/png",
+			"name": "images/alien2.png",
+			"url": "/python-ide/assets/images/alien2.png",
+			"width": 48
+		},
+		{
+			"byteLength": 2184,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/alien3.png",
+			"url": "/python-ide/assets/images/alien3.png",
+			"width": 35
+		},
+		{
+			"byteLength": 1509,
+			"height": 34,
+			"mimeType": "image/png",
+			"name": "images/apple.png",
+			"url": "/python-ide/assets/images/apple.png",
+			"width": 30
+		},
+		{
+			"byteLength": 1752,
+			"height": 128,
+			"mimeType": "image/png",
+			"name": "images/arrow.png",
+			"url": "/python-ide/assets/images/arrow.png",
+			"width": 128
+		},
+		{
+			"byteLength": 690853,
+			"height": 548,
+			"mimeType": "image/png",
+			"name": "images/asteroid_spritesheet.png",
+			"url": "/python-ide/assets/images/asteroid_spritesheet.png",
+			"width": 564
+		},
+		{
+			"byteLength": 49721,
+			"height": 708,
+			"mimeType": "image/png",
+			"name": "images/background.png",
+			"url": "/python-ide/assets/images/background.png",
+			"width": 400
+		},
+		{
+			"byteLength": 2666,
+			"height": 48,
+			"mimeType": "image/png",
+			"name": "images/battery.png",
+			"url": "/python-ide/assets/images/battery.png",
+			"width": 80
+		},
+		{
+			"byteLength": 5750,
+			"height": 60,
+			"mimeType": "image/png",
+			"name": "images/beach_ball.png",
+			"url": "/python-ide/assets/images/beach_ball.png",
+			"width": 60
+		},
+		{
+			"byteLength": 22540,
+			"height": 141,
+			"mimeType": "image/png",
+			"name": "images/big_gray.png",
+			"url": "/python-ide/assets/images/big_gray.png",
+			"width": 150
+		},
+		{
+			"byteLength": 6552,
+			"height": 80,
+			"mimeType": "image/png",
+			"name": "images/bigfoot.png",
+			"url": "/python-ide/assets/images/bigfoot.png",
+			"width": 65
+		},
+		{
+			"byteLength": 3488,
+			"height": 30,
+			"mimeType": "image/png",
+			"name": "images/bird0.png",
+			"url": "/python-ide/assets/images/bird0.png",
+			"width": 40
+		},
+		{
+			"byteLength": 3540,
+			"height": 29,
+			"mimeType": "image/png",
+			"name": "images/bird1.png",
+			"url": "/python-ide/assets/images/bird1.png",
+			"width": 40
+		},
+		{
+			"byteLength": 3591,
+			"height": 30,
+			"mimeType": "image/png",
+			"name": "images/bird2.png",
+			"url": "/python-ide/assets/images/bird2.png",
+			"width": 41
+		},
+		{
+			"byteLength": 3869,
+			"height": 38,
+			"mimeType": "image/png",
+			"name": "images/birddead.png",
+			"url": "/python-ide/assets/images/birddead.png",
+			"width": 45
+		},
+		{
+			"byteLength": 3859,
+			"height": 52,
+			"mimeType": "image/png",
+			"name": "images/blank.png",
+			"url": "/python-ide/assets/images/blank.png",
+			"width": 50
+		},
+		{
+			"byteLength": 918,
+			"height": 64,
+			"mimeType": "image/png",
+			"name": "images/blue_square.png",
+			"url": "/python-ide/assets/images/blue_square.png",
+			"width": 64
+		},
+		{
+			"byteLength": 4262,
+			"height": 63,
+			"mimeType": "image/png",
+			"name": "images/blue.png",
+			"url": "/python-ide/assets/images/blue.png",
+			"width": 63
+		},
+		{
+			"byteLength": 4627,
+			"height": 60,
+			"mimeType": "image/png",
+			"name": "images/bomb.png",
+			"url": "/python-ide/assets/images/bomb.png",
+			"width": 59
+		},
+		{
+			"byteLength": 9339,
+			"height": 500,
+			"mimeType": "image/png",
+			"name": "images/bottom.png",
+			"url": "/python-ide/assets/images/bottom.png",
+			"width": 98
+		},
+		{
+			"byteLength": 8433,
+			"height": 101,
+			"mimeType": "image/png",
+			"name": "images/box.png",
+			"url": "/python-ide/assets/images/box.png",
+			"width": 100
+		},
+		{
+			"byteLength": 973,
+			"height": 64,
+			"mimeType": "image/png",
+			"name": "images/brown_square.png",
+			"url": "/python-ide/assets/images/brown_square.png",
+			"width": 64
+		},
+		{
+			"byteLength": 1057,
+			"height": 32,
+			"mimeType": "image/png",
+			"name": "images/bullet.png",
+			"url": "/python-ide/assets/images/bullet.png",
+			"width": 32
+		},
+		{
+			"byteLength": 1982,
+			"height": 65,
+			"mimeType": "image/png",
+			"name": "images/cannon.png",
+			"url": "/python-ide/assets/images/cannon.png",
+			"width": 130
+		},
+		{
+			"byteLength": 242,
+			"height": 20,
+			"mimeType": "image/png",
+			"name": "images/cannonball.png",
+			"url": "/python-ide/assets/images/cannonball.png",
+			"width": 20
+		},
+		{
+			"byteLength": 61903,
+			"height": 165,
+			"mimeType": "image/png",
+			"name": "images/cat1.png",
+			"url": "/python-ide/assets/images/cat1.png",
+			"width": 256
+		},
+		{
+			"byteLength": 63095,
+			"height": 155,
+			"mimeType": "image/png",
+			"name": "images/cat2.png",
+			"url": "/python-ide/assets/images/cat2.png",
+			"width": 256
+		},
+		{
+			"byteLength": 72009,
+			"height": 256,
+			"mimeType": "image/png",
+			"name": "images/cat3.png",
+			"url": "/python-ide/assets/images/cat3.png",
+			"width": 227
+		},
+		{
+			"byteLength": 90299,
+			"height": 221,
+			"mimeType": "image/png",
+			"name": "images/cat4.png",
+			"url": "/python-ide/assets/images/cat4.png",
+			"width": 256
+		},
+		{
+			"byteLength": 9937,
+			"height": 625,
+			"mimeType": "image/png",
+			"name": "images/claw_sprites.png",
+			"url": "/python-ide/assets/images/claw_sprites.png",
+			"width": 900
+		},
+		{
+			"byteLength": 679,
+			"height": 121,
+			"mimeType": "image/png",
+			"name": "images/claw.png",
+			"url": "/python-ide/assets/images/claw.png",
+			"width": 140
+		},
+		{
+			"byteLength": 2131,
+			"height": 43,
+			"mimeType": "image/png",
+			"name": "images/coin.png",
+			"url": "/python-ide/assets/images/coin.png",
+			"width": 42
+		},
+		{
+			"byteLength": 7604,
+			"height": 80,
+			"mimeType": "image/png",
+			"name": "images/colorwheel.png",
+			"url": "/python-ide/assets/images/colorwheel.png",
+			"width": 80
+		},
+		{
+			"byteLength": 3171,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/diamond_s.png",
+			"url": "/python-ide/assets/images/diamond_s.png",
+			"width": 53
+		},
+		{
+			"byteLength": 5209,
+			"height": 34,
+			"mimeType": "image/png",
+			"name": "images/diver-left.png",
+			"url": "/python-ide/assets/images/diver-left.png",
+			"width": 94
+		},
+		{
+			"byteLength": 5134,
+			"height": 34,
+			"mimeType": "image/png",
+			"name": "images/diver-right.png",
+			"url": "/python-ide/assets/images/diver-right.png",
+			"width": 94
+		},
+		{
+			"byteLength": 14034,
+			"height": 120,
+			"mimeType": "image/png",
+			"name": "images/explosion-big.png",
+			"url": "/python-ide/assets/images/explosion-big.png",
+			"width": 120
+		},
+		{
+			"byteLength": 2353,
+			"height": 40,
+			"mimeType": "image/png",
+			"name": "images/explosion-small.png",
+			"url": "/python-ide/assets/images/explosion-small.png",
+			"width": 40
+		},
+		{
+			"byteLength": 185422,
+			"height": 512,
+			"mimeType": "image/png",
+			"name": "images/explosion.png",
+			"url": "/python-ide/assets/images/explosion.png",
+			"width": 512
+		},
+		{
+			"byteLength": 1158,
+			"height": 30,
+			"mimeType": "image/png",
+			"name": "images/fish.png",
+			"url": "/python-ide/assets/images/fish.png",
+			"width": 50
+		},
+		{
+			"byteLength": 3234,
+			"height": 65,
+			"mimeType": "image/png",
+			"name": "images/ghost-left.png",
+			"url": "/python-ide/assets/images/ghost-left.png",
+			"width": 62
+		},
+		{
+			"byteLength": 3223,
+			"height": 65,
+			"mimeType": "image/png",
+			"name": "images/ghost-right.png",
+			"url": "/python-ide/assets/images/ghost-right.png",
+			"width": 62
+		},
+		{
+			"byteLength": 33787,
+			"height": 595,
+			"mimeType": "image/jpeg",
+			"name": "images/ghost.jpg",
+			"url": "/python-ide/assets/images/ghost.jpg",
+			"width": 569
+		},
+		{
+			"byteLength": 1264,
+			"height": 21,
+			"mimeType": "image/png",
+			"name": "images/golf_ball.png",
+			"url": "/python-ide/assets/images/golf_ball.png",
+			"width": 21
+		},
+		{
+			"byteLength": 603,
+			"height": 75,
+			"mimeType": "image/png",
+			"name": "images/golf_flag.png",
+			"url": "/python-ide/assets/images/golf_flag.png",
+			"width": 33
+		},
+		{
+			"byteLength": 967,
+			"height": 12,
+			"mimeType": "image/png",
+			"name": "images/golf_hole.png",
+			"url": "/python-ide/assets/images/golf_hole.png",
+			"width": 32
+		},
+		{
+			"byteLength": 3517,
+			"height": 92,
+			"mimeType": "image/png",
+			"name": "images/green_alien.png",
+			"url": "/python-ide/assets/images/green_alien.png",
+			"width": 66
+		},
+		{
+			"byteLength": 170565,
+			"height": 500,
+			"mimeType": "image/png",
+			"name": "images/green_apple.png",
+			"url": "/python-ide/assets/images/green_apple.png",
+			"width": 493
+		},
+		{
+			"byteLength": 1019,
+			"height": 17,
+			"mimeType": "image/png",
+			"name": "images/green_bolt.png",
+			"url": "/python-ide/assets/images/green_bolt.png",
+			"width": 142
+		},
+		{
+			"byteLength": 3658,
+			"height": 62,
+			"mimeType": "image/png",
+			"name": "images/green.png",
+			"url": "/python-ide/assets/images/green.png",
+			"width": 62
+		},
+		{
+			"byteLength": 286,
+			"height": 14,
+			"mimeType": "image/png",
+			"name": "images/heart.png",
+			"url": "/python-ide/assets/images/heart.png",
+			"width": 15
+		},
+		{
+			"byteLength": 3953,
+			"height": 74,
+			"mimeType": "image/png",
+			"name": "images/jellyfish.png",
+			"url": "/python-ide/assets/images/jellyfish.png",
+			"width": 50
+		},
+		{
+			"byteLength": 2916,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/jumper-1.png",
+			"url": "/python-ide/assets/images/jumper-1.png",
+			"width": 24
+		},
+		{
+			"byteLength": 3535,
+			"height": 80,
+			"mimeType": "image/png",
+			"name": "images/jumper-fall.png",
+			"url": "/python-ide/assets/images/jumper-fall.png",
+			"width": 41
+		},
+		{
+			"byteLength": 3608,
+			"height": 80,
+			"mimeType": "image/png",
+			"name": "images/jumper-fall2.png",
+			"url": "/python-ide/assets/images/jumper-fall2.png",
+			"width": 41
+		},
+		{
+			"byteLength": 4053,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/jumper-jleft.png",
+			"url": "/python-ide/assets/images/jumper-jleft.png",
+			"width": 49
+		},
+		{
+			"byteLength": 4014,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/jumper-jright.png",
+			"url": "/python-ide/assets/images/jumper-jright.png",
+			"width": 49
+		},
+		{
+			"byteLength": 3110,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/jumper-left-stealth.png",
+			"url": "/python-ide/assets/images/jumper-left-stealth.png",
+			"width": 36
+		},
+		{
+			"byteLength": 3306,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/jumper-left.png",
+			"url": "/python-ide/assets/images/jumper-left.png",
+			"width": 36
+		},
+		{
+			"byteLength": 3128,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/jumper-right-stealth.png",
+			"url": "/python-ide/assets/images/jumper-right-stealth.png",
+			"width": 36
+		},
+		{
+			"byteLength": 3281,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/jumper-right.png",
+			"url": "/python-ide/assets/images/jumper-right.png",
+			"width": 36
+		},
+		{
+			"byteLength": 3396,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/jumper-up.png",
+			"url": "/python-ide/assets/images/jumper-up.png",
+			"width": 41
+		},
+		{
+			"byteLength": 654,
+			"height": 100,
+			"mimeType": "image/png",
+			"name": "images/juni_logo.png",
+			"url": "/python-ide/assets/images/juni_logo.png",
+			"width": 100
+		},
+		{
+			"byteLength": 452,
+			"height": 7,
+			"mimeType": "image/png",
+			"name": "images/laser-horizontal.png",
+			"url": "/python-ide/assets/images/laser-horizontal.png",
+			"width": 20
+		},
+		{
+			"byteLength": 473,
+			"height": 20,
+			"mimeType": "image/png",
+			"name": "images/laser.png",
+			"url": "/python-ide/assets/images/laser.png",
+			"width": 7
+		},
+		{
+			"byteLength": 27994,
+			"height": 178,
+			"mimeType": "image/png",
+			"name": "images/LightSabers.png",
+			"url": "/python-ide/assets/images/LightSabers.png",
+			"width": 500
+		},
+		{
+			"byteLength": 7826,
+			"height": 61,
+			"mimeType": "image/png",
+			"name": "images/med_gray.png",
+			"url": "/python-ide/assets/images/med_gray.png",
+			"width": 61
+		},
+		{
+			"byteLength": 79770,
+			"height": 360,
+			"mimeType": "image/jpeg",
+			"name": "images/milky-way.jpg",
+			"url": "/python-ide/assets/images/milky-way.jpg",
+			"width": 640
+		},
+		{
+			"byteLength": 372145,
+			"height": 600,
+			"mimeType": "image/png",
+			"name": "images/mountain.png",
+			"url": "/python-ide/assets/images/mountain.png",
+			"width": 1224
+		},
+		{
+			"byteLength": 4763,
+			"height": 71,
+			"mimeType": "image/png",
+			"name": "images/music.png",
+			"url": "/python-ide/assets/images/music.png",
+			"width": 82
+		},
+		{
+			"byteLength": 659,
+			"height": 11,
+			"mimeType": "image/png",
+			"name": "images/ninja_star.png",
+			"url": "/python-ide/assets/images/ninja_star.png",
+			"width": 12
+		},
+		{
+			"byteLength": 7034,
+			"height": 65,
+			"mimeType": "image/png",
+			"name": "images/no_music.png",
+			"url": "/python-ide/assets/images/no_music.png",
+			"width": 83
+		},
+		{
+			"byteLength": 1425,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/no_volume.png",
+			"url": "/python-ide/assets/images/no_volume.png",
+			"width": 44
+		},
+		{
+			"byteLength": 9844,
+			"height": 120,
+			"mimeType": "image/png",
+			"name": "images/off_bulb.png",
+			"url": "/python-ide/assets/images/off_bulb.png",
+			"width": 76
+		},
+		{
+			"byteLength": 12757,
+			"height": 120,
+			"mimeType": "image/png",
+			"name": "images/on_bulb.png",
+			"url": "/python-ide/assets/images/on_bulb.png",
+			"width": 84
+		},
+		{
+			"byteLength": 4077,
+			"height": 62,
+			"mimeType": "image/png",
+			"name": "images/orange (2).png",
+			"url": "/python-ide/assets/images/orange%20(2).png",
+			"width": 63
+		},
+		{
+			"byteLength": 3423,
+			"height": 59,
+			"mimeType": "image/png",
+			"name": "images/orange.png",
+			"url": "/python-ide/assets/images/orange.png",
+			"width": 60
+		},
+		{
+			"byteLength": 4342,
+			"height": 34,
+			"mimeType": "image/png",
+			"name": "images/pause.png",
+			"url": "/python-ide/assets/images/pause.png",
+			"width": 32
+		},
+		{
+			"byteLength": 5913,
+			"height": 60,
+			"mimeType": "image/png",
+			"name": "images/piranha.png",
+			"url": "/python-ide/assets/images/piranha.png",
+			"width": 60
+		},
+		{
+			"byteLength": 157574,
+			"height": 439,
+			"mimeType": "image/png",
+			"name": "images/planet.png",
+			"url": "/python-ide/assets/images/planet.png",
+			"width": 600
+		},
+		{
+			"byteLength": 7218,
+			"height": 33,
+			"mimeType": "image/png",
+			"name": "images/platform-rock.png",
+			"url": "/python-ide/assets/images/platform-rock.png",
+			"width": 100
+		},
+		{
+			"byteLength": 8263,
+			"height": 57,
+			"mimeType": "image/png",
+			"name": "images/puck.png",
+			"url": "/python-ide/assets/images/puck.png",
+			"width": 60
+		},
+		{
+			"byteLength": 3724,
+			"height": 61,
+			"mimeType": "image/png",
+			"name": "images/purple.png",
+			"url": "/python-ide/assets/images/purple.png",
+			"width": 62
+		},
+		{
+			"byteLength": 2508,
+			"height": 92,
+			"mimeType": "image/png",
+			"name": "images/red_alien.png",
+			"url": "/python-ide/assets/images/red_alien.png",
+			"width": 66
+		},
+		{
+			"byteLength": 3652,
+			"height": 62,
+			"mimeType": "image/png",
+			"name": "images/red.png",
+			"url": "/python-ide/assets/images/red.png",
+			"width": 62
+		},
+		{
+			"byteLength": 6510,
+			"height": 80,
+			"mimeType": "image/png",
+			"name": "images/rocket-left.png",
+			"url": "/python-ide/assets/images/rocket-left.png",
+			"width": 43
+		},
+		{
+			"byteLength": 5197,
+			"height": 67,
+			"mimeType": "image/png",
+			"name": "images/rocket-right.png",
+			"url": "/python-ide/assets/images/rocket-right.png",
+			"width": 50
+		},
+		{
+			"byteLength": 6600,
+			"height": 63,
+			"mimeType": "image/png",
+			"name": "images/rocket.png",
+			"url": "/python-ide/assets/images/rocket.png",
+			"width": 46
+		},
+		{
+			"byteLength": 7606,
+			"height": 64,
+			"mimeType": "image/png",
+			"name": "images/rocks.png",
+			"url": "/python-ide/assets/images/rocks.png",
+			"width": 102
+		},
+		{
+			"byteLength": 5248,
+			"height": 49,
+			"mimeType": "image/png",
+			"name": "images/rocks2.png",
+			"url": "/python-ide/assets/images/rocks2.png",
+			"width": 87
+		},
+		{
+			"byteLength": 7898,
+			"height": 80,
+			"mimeType": "image/png",
+			"name": "images/rocks3.png",
+			"url": "/python-ide/assets/images/rocks3.png",
+			"width": 114
+		},
+		{
+			"byteLength": 8461,
+			"height": 138,
+			"mimeType": "image/png",
+			"name": "images/runner-1.png",
+			"url": "/python-ide/assets/images/runner-1.png",
+			"width": 106
+		},
+		{
+			"byteLength": 9635,
+			"height": 138,
+			"mimeType": "image/png",
+			"name": "images/runner-2.png",
+			"url": "/python-ide/assets/images/runner-2.png",
+			"width": 106
+		},
+		{
+			"byteLength": 12934,
+			"height": 190,
+			"mimeType": "image/png",
+			"name": "images/seaweed-publicdomainvectors.org/seaweed.png",
+			"url": "/python-ide/assets/images/seaweed-publicdomainvectors.org/seaweed.png",
+			"width": 225
+		},
+		{
+			"byteLength": 13071,
+			"height": 190,
+			"mimeType": "image/png",
+			"name": "images/seaweed.png",
+			"url": "/python-ide/assets/images/seaweed.png",
+			"width": 150
+		},
+		{
+			"byteLength": 3411,
+			"height": 43,
+			"mimeType": "image/png",
+			"name": "images/shark-left.png",
+			"url": "/python-ide/assets/images/shark-left.png",
+			"width": 120
+		},
+		{
+			"byteLength": 3408,
+			"height": 43,
+			"mimeType": "image/png",
+			"name": "images/shark-right.png",
+			"url": "/python-ide/assets/images/shark-right.png",
+			"width": 120
+		},
+		{
+			"byteLength": 65811,
+			"height": 400,
+			"mimeType": "image/png",
+			"name": "images/shuffleboard.png",
+			"url": "/python-ide/assets/images/shuffleboard.png",
+			"width": 600
+		},
+		{
+			"byteLength": 341664,
+			"height": 600,
+			"mimeType": "image/png",
+			"name": "images/skyline_large.png",
+			"url": "/python-ide/assets/images/skyline_large.png",
+			"width": 1000
+		},
+		{
+			"byteLength": 2240,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/small_alien.png",
+			"url": "/python-ide/assets/images/small_alien.png",
+			"width": 36
+		},
+		{
+			"byteLength": 4821,
+			"height": 37,
+			"mimeType": "image/png",
+			"name": "images/small_gray.png",
+			"url": "/python-ide/assets/images/small_gray.png",
+			"width": 37
+		},
+		{
+			"byteLength": 2681,
+			"height": 46,
+			"mimeType": "image/png",
+			"name": "images/small_rocket.png",
+			"url": "/python-ide/assets/images/small_rocket.png",
+			"width": 27
+		},
+		{
+			"byteLength": 5231,
+			"height": 88,
+			"mimeType": "image/png",
+			"name": "images/spaceship.png",
+			"url": "/python-ide/assets/images/spaceship.png",
+			"width": 50
+		},
+		{
+			"byteLength": 3051,
+			"height": 30,
+			"mimeType": "image/png",
+			"name": "images/spikes.png",
+			"url": "/python-ide/assets/images/spikes.png",
+			"width": 58
+		},
+		{
+			"byteLength": 14437,
+			"height": 128,
+			"mimeType": "image/png",
+			"name": "images/splat.png",
+			"url": "/python-ide/assets/images/splat.png",
+			"width": 128
+		},
+		{
+			"byteLength": 5975,
+			"height": 128,
+			"mimeType": "image/png",
+			"name": "images/sport.png",
+			"url": "/python-ide/assets/images/sport.png",
+			"width": 128
+		},
+		{
+			"byteLength": 4740861,
+			"height": 2482,
+			"mimeType": "image/jpeg",
+			"name": "images/stars.jpg",
+			"url": "/python-ide/assets/images/stars.jpg",
+			"width": 3877
+		},
+		{
+			"byteLength": 2407,
+			"height": 38,
+			"mimeType": "image/png",
+			"name": "images/target.png",
+			"url": "/python-ide/assets/images/target.png",
+			"width": 36
+		},
+		{
+			"byteLength": 5630,
+			"height": 75,
+			"mimeType": "image/png",
+			"name": "images/teddy.png",
+			"url": "/python-ide/assets/images/teddy.png",
+			"width": 75
+		},
+		{
+			"byteLength": 25040,
+			"height": 354,
+			"mimeType": "image/png",
+			"name": "images/theater.png",
+			"url": "/python-ide/assets/images/theater.png",
+			"width": 500
+		},
+		{
+			"byteLength": 7621,
+			"height": 500,
+			"mimeType": "image/png",
+			"name": "images/top.png",
+			"url": "/python-ide/assets/images/top.png",
+			"width": 100
+		},
+		{
+			"byteLength": 6890,
+			"height": 62,
+			"mimeType": "image/png",
+			"name": "images/ufo.png",
+			"url": "/python-ide/assets/images/ufo.png",
+			"width": 100
+		},
+		{
+			"byteLength": 1255,
+			"height": 128,
+			"mimeType": "image/png",
+			"name": "images/up-arrow.png",
+			"url": "/python-ide/assets/images/up-arrow.png",
+			"width": 128
+		},
+		{
+			"byteLength": 4291,
+			"height": 64,
+			"mimeType": "image/png",
+			"name": "images/volleyball.png",
+			"url": "/python-ide/assets/images/volleyball.png",
+			"width": 64
+		},
+		{
+			"byteLength": 1800,
+			"height": 50,
+			"mimeType": "image/png",
+			"name": "images/volume.png",
+			"url": "/python-ide/assets/images/volume.png",
+			"width": 45
+		},
+		{
+			"byteLength": 3814,
+			"height": 62,
+			"mimeType": "image/png",
+			"name": "images/yellow.png",
+			"url": "/python-ide/assets/images/yellow.png",
+			"width": 61
+		},
+		{
+			"byteLength": 2774457,
+			"mimeType": "audio/mpeg",
+			"name": "music/battle_theme.mp3",
+			"url": "/python-ide/assets/music/battle_theme.mp3"
+		},
+		{
+			"byteLength": 641820,
+			"mimeType": "audio/mpeg",
+			"name": "music/tune.mp3",
+			"url": "/python-ide/assets/music/tune.mp3"
+		},
+		{
+			"byteLength": 136716,
+			"mimeType": "audio/mpeg",
+			"name": "music/water_theme.mp3",
+			"url": "/python-ide/assets/music/water_theme.mp3"
+		},
+		{
+			"byteLength": 14402,
+			"mimeType": "audio/ogg",
+			"name": "sounds/bubbles.ogg",
+			"url": "/python-ide/assets/sounds/bubbles.ogg"
+		},
+		{
+			"byteLength": 110988,
+			"mimeType": "audio/ogg",
+			"name": "sounds/buzz.ogg",
+			"url": "/python-ide/assets/sounds/buzz.ogg"
+		},
+		{
+			"byteLength": 23382,
+			"mimeType": "audio/wav",
+			"name": "sounds/damage.wav",
+			"url": "/python-ide/assets/sounds/damage.wav"
+		},
+		{
+			"byteLength": 51104,
+			"mimeType": "audio/wav",
+			"name": "sounds/eep.wav",
+			"url": "/python-ide/assets/sounds/eep.wav"
+		},
+		{
+			"byteLength": 45013,
+			"mimeType": "audio/mpeg",
+			"name": "sounds/explosion.mp3",
+			"url": "/python-ide/assets/sounds/explosion.mp3"
+		},
+		{
+			"byteLength": 534572,
+			"mimeType": "audio/wav",
+			"name": "sounds/explosion.wav",
+			"url": "/python-ide/assets/sounds/explosion.wav"
+		},
+		{
+			"byteLength": 12408,
+			"mimeType": "audio/wav",
+			"name": "sounds/gem.wav",
+			"url": "/python-ide/assets/sounds/gem.wav"
+		},
+		{
+			"byteLength": 26848,
+			"mimeType": "audio/wav",
+			"name": "sounds/jump.wav",
+			"url": "/python-ide/assets/sounds/jump.wav"
+		},
+		{
+			"byteLength": 14399,
+			"mimeType": "audio/ogg",
+			"name": "sounds/laser.ogg",
+			"url": "/python-ide/assets/sounds/laser.ogg"
+		},
+		{
+			"byteLength": 7892,
+			"mimeType": "audio/ogg",
+			"name": "sounds/laser2.ogg",
+			"url": "/python-ide/assets/sounds/laser2.ogg"
+		},
+		{
+			"byteLength": 150808,
+			"mimeType": "audio/wav",
+			"name": "sounds/meow1.wav",
+			"url": "/python-ide/assets/sounds/meow1.wav"
+		},
+		{
+			"byteLength": 209216,
+			"mimeType": "audio/wav",
+			"name": "sounds/meow2.wav",
+			"url": "/python-ide/assets/sounds/meow2.wav"
+		},
+		{
+			"byteLength": 113636,
+			"mimeType": "audio/wav",
+			"name": "sounds/meow3.wav",
+			"url": "/python-ide/assets/sounds/meow3.wav"
+		},
+		{
+			"byteLength": 261812,
+			"mimeType": "audio/wav",
+			"name": "sounds/meow4.wav",
+			"url": "/python-ide/assets/sounds/meow4.wav"
+		},
+		{
+			"byteLength": 8215,
+			"mimeType": "audio/ogg",
+			"name": "sounds/ouch_alien.ogg",
+			"url": "/python-ide/assets/sounds/ouch_alien.ogg"
+		},
+		{
+			"byteLength": 9288,
+			"mimeType": "audio/ogg",
+			"name": "sounds/ouch_ninja.ogg",
+			"url": "/python-ide/assets/sounds/ouch_ninja.ogg"
+		},
+		{
+			"byteLength": 8413,
+			"mimeType": "audio/ogg",
+			"name": "sounds/pop.ogg",
+			"url": "/python-ide/assets/sounds/pop.ogg"
+		},
+		{
+			"byteLength": 19934,
+			"mimeType": "audio/ogg",
+			"name": "sounds/scream.ogg",
+			"url": "/python-ide/assets/sounds/scream.ogg"
+		},
+		{
+			"byteLength": 31990,
+			"mimeType": "audio/ogg",
+			"name": "sounds/sink_hole.ogg",
+			"url": "/python-ide/assets/sounds/sink_hole.ogg"
+		},
+		{
+			"byteLength": 36824,
+			"mimeType": "audio/wav",
+			"name": "sounds/splat.wav",
+			"url": "/python-ide/assets/sounds/splat.wav"
+		},
+		{
+			"byteLength": 7638,
+			"mimeType": "audio/ogg",
+			"name": "sounds/swing.ogg",
+			"url": "/python-ide/assets/sounds/swing.ogg"
+		},
+		{
+			"byteLength": 8948,
+			"mimeType": "audio/ogg",
+			"name": "sounds/whoosh.ogg",
+			"url": "/python-ide/assets/sounds/whoosh.ogg"
+		}
+	],
+	"generatedAt": "2026-07-02T14:22:56.601Z",
+	"sourceUrl": "https://static.classes.jacobdanderson.net/assets.zip",
+	"version": 1
+}

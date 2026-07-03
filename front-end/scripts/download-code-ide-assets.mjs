@@ -29,9 +29,16 @@ const MIME_TYPES = new Map([
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const frontEndDir = path.resolve(scriptDir, "..");
-// Keep the legacy public path so existing asset URLs remain valid.
+// Keep media under the legacy public path so existing asset URLs remain valid.
 const assetsOutputDir = path.join(frontEndDir, "public", "python-ide", "assets");
 const manifestPath = path.join(assetsOutputDir, "manifest.json");
+const codeIdeManifestPath = path.join(
+	frontEndDir,
+	"public",
+	"ide",
+	"assets",
+	"manifest.json"
+);
 const stalePublicZipPath = path.join(frontEndDir, "public", "python-ide", "assets.zip");
 const cacheDir = path.join(frontEndDir, ".cache");
 const cachePath = path.join(cacheDir, "code-ide-assets.json");
@@ -54,6 +61,7 @@ async function stageCodeIdeAssets() {
 	await rm(stalePublicZipPath, { force: true });
 
 	if (skipDownload) {
+		await ensureCodeIdeManifestAlias();
 		console.log("[code-ide-assets] skipped by CODE_IDE_ASSETS_DOWNLOAD=skip");
 		return;
 	}
@@ -69,6 +77,7 @@ async function stageCodeIdeAssets() {
 	]);
 
 	if (!forceRefresh && isCurrent(localInfo, remoteInfo)) {
+		await ensureCodeIdeManifestAlias();
 		console.log(`[code-ide-assets] using extracted ${relativeManifestPath()}`);
 		return;
 	}
@@ -107,6 +116,7 @@ async function stageCodeIdeAssets() {
 	}
 	catch (error) {
 		if (localInfo.exists) {
+			await ensureCodeIdeManifestAlias();
 			console.warn(
 				`[code-ide-assets] download failed, using existing ${relativeManifestPath()}: ${formatError(error)}`
 			);
@@ -157,8 +167,25 @@ async function extractAssets(zipBytes) {
 		sourceUrl,
 		version: 1
 	};
-	await writeFile(manifestPath, `${JSON.stringify(manifest, null, "\t")}\n`);
+	await writeManifestFiles(manifest);
 	return manifest;
+}
+
+async function writeManifestFiles(manifest) {
+	const content = `${JSON.stringify(manifest, null, "\t")}\n`;
+	await Promise.all([
+		writeFile(manifestPath, content),
+		mkdir(path.dirname(codeIdeManifestPath), { recursive: true }).then(() =>
+			writeFile(codeIdeManifestPath, content)
+		)
+	]);
+}
+
+async function ensureCodeIdeManifestAlias() {
+	const content = await readFile(manifestPath, "utf8").catch(() => "");
+	if (!content) return;
+	await mkdir(path.dirname(codeIdeManifestPath), { recursive: true });
+	await writeFile(codeIdeManifestPath, content);
 }
 
 async function localAssetInfo() {
