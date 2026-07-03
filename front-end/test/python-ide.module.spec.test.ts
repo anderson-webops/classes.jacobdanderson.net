@@ -78,6 +78,7 @@ import {
 	pythonIdeProjectModuleNames,
 	warmPythonRuntime
 } from "../src/modules/pythonIdeRuntime";
+import { runJavaIdeProject } from "../src/modules/javaIdeRuntime";
 import { primePythonRuntimeConnection } from "../src/modules/pythonIdeRuntimeHints";
 import {
 	pythonStandardLibraryModules,
@@ -4678,6 +4679,44 @@ describe("python IDE project helpers", () => {
 		project.activeFileName = "Helper.java";
 
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("Algo.java");
+	});
+
+	it("runs the Karel starter through visible world snapshots", () => {
+		const project = createPythonIdeProject("karel", {
+			template: "demo"
+		});
+		const runnableFile = getPythonIdeRunnableFile(project);
+
+		expect(runnableFile?.name).toBe("Algo.java");
+		const result = runJavaIdeProject({
+			activeFileName: runnableFile?.name ?? "",
+			files: project.files,
+			mode: "karel"
+		});
+		const firstStep = result.karelWorldSteps?.[0];
+		const lastStep = result.karelWorldSteps?.at(-1);
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorldSteps).toHaveLength(6);
+		expect(firstStep?.robot).toEqual(
+			expect.objectContaining({
+				avenue: 7,
+				direction: "East",
+				name: "sam",
+				street: 6
+			})
+		);
+		expect(lastStep?.robot).toEqual(
+			expect.objectContaining({
+				avenue: 4,
+				direction: "West",
+				name: "sam",
+				street: 6
+			})
+		);
+		expect(result.karelWorld?.robot).toEqual(lastStep?.robot);
+		expect(result.stdout.at(-1)).toContain("street: 6");
+		expect(result.stdout.at(-1)).toContain("avenue: 4");
 	});
 
 	it("renders Karel painted cells in the visual world grid", () => {
