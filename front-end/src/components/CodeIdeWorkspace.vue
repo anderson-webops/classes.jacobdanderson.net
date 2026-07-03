@@ -5182,19 +5182,19 @@ async function runCurrentProject() {
 
 function stopCurrentProject() {
 	if (!runControlIsStop.value) return;
-	const hadPythonRunInFlight = isRunning.value;
+	const hadRunInFlight = isRunning.value;
 	stopRequested.value = true;
 	stopActiveRuntimeSurfaces();
 	runMessage.value = "Stopped";
 	appendOutput(
 		"system",
-		hadPythonRunInFlight
+		hadRunInFlight
 			? selectedProject.value?.mode === "python"
 				? "Stop requested. Plain Python worker is being terminated."
-				: "Stop requested. Python will halt at the next runtime checkpoint."
+				: "Stop requested. The current run will halt at the next runtime checkpoint."
 			: "Stopped active canvas handlers."
 	);
-	if (!hadPythonRunInFlight) {
+	if (!hadRunInFlight) {
 		releaseIdlePythonRuntimeCallbacks();
 		stopRequested.value = false;
 	}
@@ -5517,11 +5517,11 @@ watch(selectedProjectID, (projectID, previousProjectID) => {
 		return;
 	}
 
-	const hadPythonRunInFlight = isRunning.value;
+	const hadRunInFlight = isRunning.value;
 	stopRequested.value = true;
 	stopActiveRuntimeSurfaces();
 	runMessage.value = "Ready";
-	if (!hadPythonRunInFlight) {
+	if (!hadRunInFlight) {
 		releaseIdlePythonRuntimeCallbacks();
 		stopRequested.value = false;
 	}

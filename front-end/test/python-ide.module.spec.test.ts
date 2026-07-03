@@ -2032,7 +2032,7 @@ describe("python IDE project helpers", () => {
 			"shouldStop: () => shouldStopPythonIdeRun(runID, project._id)"
 		);
 		expect(pageSource).toContain(
-			"Python will halt at the next runtime checkpoint."
+			"The current run will halt at the next runtime checkpoint."
 		);
 		expect(pageSource).toContain("function stopActiveRuntimeSurfaces");
 		expect(pageSource).toContain("invalidatePythonIdeRuns();");
@@ -2281,7 +2281,7 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(projectSwitchSource).toContain(
-			"const hadPythonRunInFlight = isRunning.value;"
+			"const hadRunInFlight = isRunning.value;"
 		);
 		expect(projectSwitchSource).toContain("stopRequested.value = true;");
 		expect(projectSwitchSource).toContain("stopActiveRuntimeSurfaces();");
@@ -2315,7 +2315,7 @@ describe("python IDE project helpers", () => {
 		);
 		const migrationReturnIndex = projectSwitchSource.indexOf("return;");
 		const runtimeStopIndex = projectSwitchSource.indexOf(
-			"const hadPythonRunInFlight = isRunning.value;"
+			"const hadRunInFlight = isRunning.value;"
 		);
 
 		expect(pageSource).toContain(
