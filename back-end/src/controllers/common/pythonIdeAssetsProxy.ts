@@ -4,11 +4,12 @@ import { Readable } from "node:stream";
 import { Router } from "express";
 
 const DEFAULT_ASSETS_ZIP_URL = "https://static.classes.jacobdanderson.net/assets.zip";
-const PYTHON_IDE_ASSETS_ZIP_URL = env.PYTHON_IDE_ASSETS_ZIP_URL || DEFAULT_ASSETS_ZIP_URL;
+const CODE_IDE_ASSETS_ZIP_URL
+	= env.CODE_IDE_ASSETS_ZIP_URL || env.PYTHON_IDE_ASSETS_ZIP_URL || DEFAULT_ASSETS_ZIP_URL;
 
-export const pythonIdeAssetsProxy = Router().get("/assets.zip", async (_req, res) => {
+export const codeIdeAssetsProxy = Router().get("/assets.zip", async (_req, res) => {
 	try {
-		const upstream = await fetch(PYTHON_IDE_ASSETS_ZIP_URL);
+		const upstream = await fetch(CODE_IDE_ASSETS_ZIP_URL);
 		if (!upstream.ok || !upstream.body) {
 			const body = await upstream.text().catch(() => "");
 			return res.status(upstream.status || 502).send(body || "Unable to load Code IDE asset pack.");
@@ -32,3 +33,5 @@ export const pythonIdeAssetsProxy = Router().get("/assets.zip", async (_req, res
 		res.status(502).json({ error: "Unable to reach Code IDE asset pack" });
 	}
 });
+
+export const pythonIdeAssetsProxy = codeIdeAssetsProxy;

@@ -70,6 +70,7 @@ import {
 	pythonIdeAssetCandidateNames,
 	pythonIdeCourseAssetsManifestUrl,
 	pythonIdeCourseAssetsZipUrl,
+	pythonIdeLegacyCourseAssetsZipUrl,
 	resetPythonIdeCourseAssetPackCache
 } from "../src/modules/pythonIdeCourseAssets";
 import {
@@ -4093,6 +4094,47 @@ describe("python IDE project helpers", () => {
 		expect(requestedUrls).toEqual([
 			pythonIdeCourseAssetsManifestUrl,
 			pythonIdeCourseAssetsZipUrl
+		]);
+		expect(pack.assets.has("images/alien.png")).toBe(true);
+	});
+
+	it("falls back to the legacy same-origin zip proxy when the Code IDE proxy is unavailable", async () => {
+		const zipBytes = zipSync({
+			"images/alien.png": oneByOnePngBytes
+		});
+		const requestedUrls: string[] = [];
+		const pack = await loadPythonIdeCourseAssetPack({
+			fetcher: async url => {
+				requestedUrls.push(url);
+				if (url === pythonIdeCourseAssetsManifestUrl) {
+					return {
+						arrayBuffer: async () => new ArrayBuffer(0),
+						ok: false,
+						status: 404
+					};
+				}
+
+				if (url === pythonIdeCourseAssetsZipUrl) {
+					return {
+						arrayBuffer: async () => new ArrayBuffer(0),
+						ok: false,
+						status: 404
+					};
+				}
+
+				expect(url).toBe(pythonIdeLegacyCourseAssetsZipUrl);
+				return {
+					arrayBuffer: async () => zipBytes.buffer.slice(0),
+					ok: true,
+					status: 200
+				};
+			}
+		});
+
+		expect(requestedUrls).toEqual([
+			pythonIdeCourseAssetsManifestUrl,
+			pythonIdeCourseAssetsZipUrl,
+			pythonIdeLegacyCourseAssetsZipUrl
 		]);
 		expect(pack.assets.has("images/alien.png")).toBe(true);
 	});
