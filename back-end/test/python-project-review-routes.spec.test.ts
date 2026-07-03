@@ -613,6 +613,60 @@ describe("Python project review routes", () => {
 		});
 	});
 
+	it("keeps revoked share URLs unavailable when sharing is re-enabled", async () => {
+		const revokedShareID = "share_REVOKED1234567890_xyz";
+		const project = makeProject({
+			shared: false,
+			shareID: revokedShareID,
+			shareCreatedAt: now
+		});
+		modelMocks.pythonProjectFindOne.mockImplementation(
+			async (query: Record<string, unknown>) => {
+				if ("shareID" in query) {
+					return query.shareID === project.shareID && project.shared
+						? project
+						: null;
+				}
+
+				return project;
+			}
+		);
+
+		await withUserRoutes(async baseUrl => {
+			const revokedBeforeResponse = await fetch(
+				`${baseUrl}/users/python-projects/shared/${revokedShareID}`
+			);
+
+			expect(revokedBeforeResponse.status).toBe(404);
+
+			const enableResponse = await putJson(
+				baseUrl,
+				`/users/loggedin/python-projects/${projectID}/share`,
+				{ shared: true },
+				{ "x-user-id": studentID.toString() }
+			);
+			const enableBody = await enableResponse.json();
+
+			expect(enableResponse.status).toBe(200);
+			expect(project.shared).toBe(true);
+			expect(project.shareID).toMatch(/^[\w-]{20,80}$/);
+			expect(project.shareID).not.toBe(revokedShareID);
+			expect(enableBody.project.shareID).toBe(project.shareID);
+
+			const revokedAfterResponse = await fetch(
+				`${baseUrl}/users/python-projects/shared/${revokedShareID}`
+			);
+			const freshShareResponse = await fetch(
+				`${baseUrl}/users/python-projects/shared/${project.shareID}`
+			);
+			const freshShareBody = await freshShareResponse.json();
+
+			expect(revokedAfterResponse.status).toBe(404);
+			expect(freshShareResponse.status).toBe(200);
+			expect(freshShareBody.project.shareID).toBe(project.shareID);
+		});
+	});
+
 	it("deletes staff review copies when the source project is deleted", async () => {
 		const project = makeProject();
 		modelMocks.pythonProjectFindOne.mockResolvedValue(project);

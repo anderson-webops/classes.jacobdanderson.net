@@ -602,9 +602,10 @@ export const updatePythonProjectShare: RequestHandler = async (req, res) => {
 		return res.status(400).json({ message: "Invalid share payload", issues: parsed.error.issues });
 	}
 
+	const wasShared = project.shared === true;
 	project.shared = parsed.data.shared;
 	project.ownerRole ??= "user";
-	if (project.shared && !project.shareID) {
+	if (project.shared && (!wasShared || !project.shareID)) {
 		project.shareID = createPythonProjectShareID();
 		project.shareCreatedAt = new Date();
 	}
