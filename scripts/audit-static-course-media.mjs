@@ -325,6 +325,10 @@ try {
 		"npm",
 		["exec", "-w", "front-end", "--", "vite-node", auditFile],
 		{
+			env: {
+				...process.env,
+				STATIC_MEDIA_AUDIT: "true"
+			},
 			stdio: "inherit"
 		}
 	);
