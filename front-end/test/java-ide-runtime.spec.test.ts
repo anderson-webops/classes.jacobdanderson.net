@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+	blueJMainStarterCode,
+	blueJStudentStarterCode,
 	javaOutlineStarterCode,
 	javaStarterCode,
 	karelOutlineStarterCode,
@@ -69,7 +71,30 @@ describe("java IDE runtime", () => {
 		});
 
 		expect(result.stderr).toEqual([]);
-		expect(result.stdout).toEqual(["Hello, Java 5"]);
+	expect(result.stdout).toEqual(["Hello, Java 5"]);
+});
+
+	it("previews the BlueJ starter through browser-friendly console output", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: blueJMainStarterCode
+				},
+				{
+					name: "Student.java",
+					content: blueJStudentStarterCode
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual([
+			"Ada is in grade 9",
+			"Average: 91"
+		]);
 	});
 
 	it("runs the Java driver file when a helper class is active", () => {
