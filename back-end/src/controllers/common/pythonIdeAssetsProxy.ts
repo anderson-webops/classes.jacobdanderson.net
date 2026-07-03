@@ -29,7 +29,7 @@ export const codeIdeAssetsProxy = Router().get("/assets.zip", async (_req, res) 
 		Readable.fromWeb(upstream.body as unknown as NodeReadableStream<Uint8Array>).pipe(res);
 	}
 	catch (err) {
-		console.error("python ide assets proxy failed:", err);
+		console.error("Code IDE assets proxy failed:", err);
 		res.status(502).json({ error: "Unable to reach Code IDE asset pack" });
 	}
 });
