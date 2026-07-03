@@ -1,12 +1,17 @@
 import type { Server } from "node:http";
+import { readFile } from "node:fs/promises";
 import express from "express";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { pythonIdeAssetsProxy } from "../src/controllers/common/pythonIdeAssetsProxy.js";
+import {
+	codeIdeAssetsProxy,
+	pythonIdeAssetsProxy
+} from "../src/controllers/common/pythonIdeAssetsProxy.js";
 
 async function withPythonAssetsProxy<T>(
 	run: (baseUrl: string) => Promise<T>
 ): Promise<T> {
 	const app = express();
+	app.use("/code-ide-assets", codeIdeAssetsProxy);
 	app.use("/python-assets", pythonIdeAssetsProxy);
 
 	const server = await new Promise<Server>(resolve => {
@@ -47,7 +52,7 @@ describe("Code IDE assets proxy", () => {
 		fetchSpy.mockReset();
 	});
 
-	it("streams the shared static assets zip through the same-origin API", async () => {
+	it("streams the shared static assets zip through the generalized same-origin API", async () => {
 		const zipBytes = new Uint8Array([0x50, 0x4b, 0x03, 0x04, 0x14, 0x00]);
 		fetchSpy.mockImplementation((input, init) => {
 			if (fetchUrl(input) !== staticAssetsZipUrl) return realFetch(input, init);
@@ -66,7 +71,7 @@ describe("Code IDE assets proxy", () => {
 		});
 
 		await withPythonAssetsProxy(async baseUrl => {
-			const response = await fetch(`${baseUrl}/python-assets/assets.zip`);
+			const response = await fetch(`${baseUrl}/code-ide-assets/assets.zip`);
 
 			expect(response.status).toBe(200);
 			expect(response.headers.get("content-type")).toContain("application/zip");
@@ -77,5 +82,37 @@ describe("Code IDE assets proxy", () => {
 		});
 
 		expect(fetchSpy).toHaveBeenCalledWith(staticAssetsZipUrl);
+	});
+
+	it("keeps the legacy python-assets route available", async () => {
+		const zipBytes = new Uint8Array([0x50, 0x4b, 0x03, 0x04, 0x14, 0x00]);
+		fetchSpy.mockResolvedValue(
+			new Response(zipBytes, {
+				headers: {
+					"content-type": "application/zip"
+				},
+				status: 200
+			})
+		);
+
+		await withPythonAssetsProxy(async baseUrl => {
+			const response = await fetch(`${baseUrl}/python-assets/assets.zip`);
+
+			expect(response.status).toBe(200);
+			expect(new Uint8Array(await response.arrayBuffer())).toEqual(zipBytes);
+		});
+	});
+
+	it("supports the generalized Code IDE asset source environment variable", async () => {
+		const controllerSource = await readFile(
+			new URL(
+				"../src/controllers/common/pythonIdeAssetsProxy.ts",
+				import.meta.url
+			),
+			"utf8"
+		);
+
+		expect(controllerSource).toContain("CODE_IDE_ASSETS_ZIP_URL");
+		expect(controllerSource).toContain("PYTHON_IDE_ASSETS_ZIP_URL");
 	});
 });

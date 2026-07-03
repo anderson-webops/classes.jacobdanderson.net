@@ -2,8 +2,13 @@ import { getPythonIdeFileMimeType } from "@/modules/pythonIde";
 
 export const pythonIdeCourseAssetsManifestUrl =
 	"/python-ide/assets/manifest.json";
-export const pythonIdeCourseAssetsZipUrl = "/api/python-assets/assets.zip";
-export const pythonIdeCourseAssetZipSourceUrls = [pythonIdeCourseAssetsZipUrl];
+export const pythonIdeCourseAssetsZipUrl = "/api/code-ide-assets/assets.zip";
+export const pythonIdeLegacyCourseAssetsZipUrl =
+	"/api/python-assets/assets.zip";
+export const pythonIdeCourseAssetZipSourceUrls = [
+	pythonIdeCourseAssetsZipUrl,
+	pythonIdeLegacyCourseAssetsZipUrl
+];
 
 const ASSET_PATH_RE = /^(?:images|music|sounds)\/[^/].+\.[\dA-Z]+$/i;
 const ASSET_PATH_EXTENSION_RE = /\.[\dA-Z]+$/i;
