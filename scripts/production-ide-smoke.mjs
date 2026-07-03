@@ -57,7 +57,9 @@ export function containsCurrentIdeBundleMarkers(source) {
 		source.includes("preview Java console programs or Karel robot") &&
 		source.includes("Karel world ready") &&
 		source.includes("BlueJ Java Project") &&
-		source.includes("Download for BlueJ")
+		source.includes("New BlueJ project") &&
+		source.includes("Download for BlueJ") &&
+		source.includes("https://github.com/k-pet-group/BlueJ-Greenfoot")
 	);
 }
 

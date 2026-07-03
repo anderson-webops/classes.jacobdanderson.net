@@ -29,7 +29,9 @@ describe("production Code IDE smoke helpers", () => {
 			"preview Java console programs or Karel robot",
 			"Karel world ready",
 			"BlueJ Java Project",
-			"Download for BlueJ"
+			"New BlueJ project",
+			"Download for BlueJ",
+			"https://github.com/k-pet-group/BlueJ-Greenfoot"
 		].join("\n");
 
 		expect(containsJavaModeCopy(genericJavaCourseAsset)).toBe(true);
