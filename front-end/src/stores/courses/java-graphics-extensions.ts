@@ -7,7 +7,7 @@ export const javaLevel1GraphicsExtensionModules: RawCourseModule[] = [
 			{
 				title: "Graphics Extension Positioning",
 				content:
-					"**Concept path:** Graphics projects are optional extensions inside Java Level 1. They start after the Carol/Karel robot launch and reuse the same foundations: variables, conditionals, loops, methods, coordinate reasoning, and object-state explanations.\n\n**Design guardrail:** Visual output makes program state easier to inspect; it does not replace reasoning about state. Strong projects still name their inputs, model values, helper methods, and edge cases before adding visual polish.\n\n**Evidence target:** A graphics project is complete when the visual output can be explained from code structure: which method draws each part, which variables control placement or size, and what change would produce a predictable new result."
+					"**Concept path:** Graphics projects are optional extensions inside Java Level 1. They start after the Karel robot launch and reuse the same foundations: variables, conditionals, loops, methods, coordinate reasoning, and object-state explanations.\n\n**Design guardrail:** Visual output makes program state easier to inspect; it does not replace reasoning about state. Strong projects still name their inputs, model values, helper methods, and edge cases before adding visual polish.\n\n**Evidence target:** A graphics project is complete when the visual output can be explained from code structure: which method draws each part, which variables control placement or size, and what change would produce a predictable new result."
 			},
 			{
 				title: "Graphics Setup Expectations",

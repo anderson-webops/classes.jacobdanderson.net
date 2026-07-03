@@ -5612,7 +5612,7 @@ describe("course text quality normalization", () => {
 		const apCsaText = allCourseText(apCsa);
 
 		expect(javaLevel1!.modules[0]?.title).toBe(
-			"J1A Visual Java Launch: Carol/Karel Robot Worlds"
+			"J1A Visual Java Launch: Karel Robot Worlds"
 		);
 		expect(
 			findItem(javaLevel1!, /Course Launch: Start Java Visually/)
@@ -5630,7 +5630,8 @@ describe("course text quality normalization", () => {
 		expect(javaLevel1Text).toContain(
 			"CodeHS or the browser Code IDE outside class"
 		);
-		expect(javaLevel1Text).toContain("First-Week Carol/Karel Cadence");
+		expect(javaLevel1Text).toContain("First-Week Karel Cadence");
+		expect(javaLevel1Text).not.toContain("Carol/Karel");
 		expect(javaLevel1Text).toContain("Five-Robot Warm-Up Set");
 		expect(javaLevel1Text).toContain(
 			"Visual Exit Ticket: Ready for Text"
@@ -5651,7 +5652,7 @@ describe("course text quality normalization", () => {
 		);
 		expect(javaLevel3Text).toContain("visible robot object");
 		expect(apCsaText).toContain("Visual Java Bridge");
-		expect(apCsaText).toContain("Carol/Karel and BlueJ habits");
+		expect(apCsaText).toContain("Karel and BlueJ habits");
 	});
 
 	it("keeps Java Level 1 graphics extensions neutral and project-rich", async () => {

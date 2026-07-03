@@ -154,16 +154,16 @@ export const javaLevel1Course: RawCourse = {
 	name: "Java Level 1",
 	modules: [
 		{
-			title: "J1A Visual Java Launch: Carol/Karel Robot Worlds",
+			title: "J1A Visual Java Launch: Karel Robot Worlds",
 			curriculum: [
 				{
 					title: "Course Launch: Start Java Visually",
 					content:
-						"The opening Java sequence starts in a visible robot world before switching to console-only programs. For the first week or roughly first three class meetings, Carol/Karel makes the object on a grid, one small command, and compiler feedback visible together. BlueJ in class fits the object-bench and Carol/Karel workflow, while CodeHS or the browser Code IDE outside class provides the fallback when device installs are unavailable.",
+						"The opening Java sequence starts in a visible robot world before switching to console-only programs. For the first week or roughly first three class meetings, Karel makes the object on a grid, one small command, and compiler feedback visible together. BlueJ in class fits the object-bench and Karel workflow, while CodeHS or the browser Code IDE outside class provides the fallback when device installs are unavailable.",
 					projectLink: "/ide?mode=karel"
 				},
 				{
-					title: "First-Week Carol/Karel Cadence",
+					title: "First-Week Karel Cadence",
 					content:
 						"Repeat several short robot exercises before the text bridge: one movement trace, one blocked-move error, one beeper or wall task, one helper-method refactor, and one parameterized movement. This keeps Java visual long enough for syntax, main method structure, state, method calls, and errors to become concrete without turning the whole course into a robot course."
 				},
@@ -180,7 +180,7 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "J1A Project 1: Robot Walkthrough",
 					content:
-						"Create a short robot program that starts Carol/Karel at a known location, moves around one obstacle, and ends at a named target square. Include a written trace with the robot's street, avenue, and direction after each major step.",
+						"Create a short robot program that starts Karel at a known location, moves around one obstacle, and ends at a named target square. Include a written trace with the robot's street, avenue, and direction after each major step.",
 					projectLink: "/ide?mode=karel"
 				},
 				{
@@ -208,7 +208,7 @@ export const javaLevel1Course: RawCourse = {
 				{
 					title: "J1A Supplemental Project 4: Five-Robot Warm-Up Set",
 					content:
-						"Complete five small Carol/Karel warm-ups: straight path, turn sequence, beeper pickup, blocked-path repair, and target-square challenge. The set is finished when each program has a short state trace and one sentence explaining what changed visually."
+						"Complete five small Karel warm-ups: straight path, turn sequence, beeper pickup, blocked-path repair, and target-square challenge. The set is finished when each program has a short state trace and one sentence explaining what changed visually."
 				}
 			]
 		},
