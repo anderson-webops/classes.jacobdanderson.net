@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { defineAsyncComponent, onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+const CodeIdeWorkspace = defineAsyncComponent(
+	() => import("@/components/CodeIdeWorkspace.vue")
+);
 const route = useRoute();
 const router = useRouter();
 
-onMounted(() => {
+onBeforeMount(() => {
 	router.replace({
 		hash: route.hash,
 		path: "/ide",
@@ -15,5 +18,5 @@ onMounted(() => {
 </script>
 
 <template>
-	<p class="sr-only">Opening the Code IDE.</p>
+	<CodeIdeWorkspace />
 </template>
