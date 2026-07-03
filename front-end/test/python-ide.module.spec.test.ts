@@ -328,6 +328,8 @@ describe("python IDE project helpers", () => {
 				{ name: "Main.java", content: "public class Main {}" },
 				{ name: "Helper.java", content: "public class Helper {}" },
 				{ name: "../Escape.java", content: "public class Escape {}" },
+				{ name: "lesson-1.java", content: "class LessonOne {}" },
+				{ name: "src/PackageMain.java", content: "class PackageMain {}" },
 				{ name: "package.bluej", content: "stale package data" },
 				{ name: "notes.md", content: "Safe project notes" },
 				{
@@ -345,13 +347,17 @@ describe("python IDE project helpers", () => {
 			"Helper.java",
 			"Main.java",
 			"README.TXT",
+			"lesson-1.java",
 			"notes.md",
-			"package.bluej"
+			"package.bluej",
+			"src/PackageMain.java"
 		]);
 		expect(packageFile?.content).toContain("package.numTargets=2");
 		expect(packageFile?.content).toContain("target1.name=Main");
 		expect(packageFile?.content).toContain("target2.name=Helper");
 		expect(packageFile?.content).not.toContain("Escape");
+		expect(packageFile?.content).not.toContain("lesson-1");
+		expect(packageFile?.content).not.toContain("PackageMain");
 
 		const archiveNames = Object.keys(
 			unzipSync(createBlueJProjectArchive(project))
@@ -360,8 +366,10 @@ describe("python IDE project helpers", () => {
 			"Unsafe-BlueJ-Export/Helper.java",
 			"Unsafe-BlueJ-Export/Main.java",
 			"Unsafe-BlueJ-Export/README.TXT",
+			"Unsafe-BlueJ-Export/lesson-1.java",
 			"Unsafe-BlueJ-Export/notes.md",
-			"Unsafe-BlueJ-Export/package.bluej"
+			"Unsafe-BlueJ-Export/package.bluej",
+			"Unsafe-BlueJ-Export/src/PackageMain.java"
 		]);
 		expect(archiveNames.every(name => !name.includes(".."))).toBe(true);
 	});
