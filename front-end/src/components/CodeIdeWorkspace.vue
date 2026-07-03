@@ -4610,8 +4610,26 @@ const turtleBridge: TurtleBridge = {
 	},
 	teleport: teleportTurtle,
 	home() {
-		this.goto(0, 0);
+		const fromPose = currentTurtlePose();
+		turtleState.x = 0;
+		turtleState.y = 0;
 		turtleState.heading = 0;
+		const toPose = currentTurtlePose();
+		trackTurtleFillPoint(0, 0);
+		queueTurtleStep({
+			command: turtleState.penDown
+				? {
+						color: turtleState.penColor,
+						from: { x: fromPose.x, y: fromPose.y },
+						kind: "line",
+						to: { x: toPose.x, y: toPose.y },
+						width: turtleState.lineWidth
+					}
+				: undefined,
+			durationMs: turtleMovementDuration(fromPose, toPose),
+			fromPose,
+			toPose
+		});
 	},
 	penup() {
 		turtleState.penDown = false;

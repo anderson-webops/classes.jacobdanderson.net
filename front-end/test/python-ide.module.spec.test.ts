@@ -1000,6 +1000,29 @@ describe("python IDE project helpers", () => {
 		expect(teleportSource).toContain("durationMs: 0");
 	});
 
+	it("queues Turtle home with the reset heading in the animated pose", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+		const bridgeStart = pageSource.indexOf("const turtleBridge: TurtleBridge =");
+		const homeStart = pageSource.indexOf("\n\thome() {", bridgeStart);
+		const homeSource = pageSource.slice(
+			homeStart,
+			pageSource.indexOf("\n\tpenup()", homeStart)
+		);
+
+		expect(homeSource).toContain("const fromPose = currentTurtlePose();");
+		expect(homeSource).toContain("turtleState.x = 0;");
+		expect(homeSource).toContain("turtleState.y = 0;");
+		expect(homeSource).toContain("turtleState.heading = 0;");
+		expect(homeSource).toContain("const toPose = currentTurtlePose();");
+		expect(homeSource).toContain("trackTurtleFillPoint(0, 0);");
+		expect(homeSource).toContain('kind: "line"');
+		expect(homeSource).toContain("durationMs: turtleMovementDuration(fromPose, toPose)");
+		expect(homeSource).not.toContain("this.goto(0, 0);");
+	});
+
 	it("keeps Turtle timer hooks wired in the runtime bridge", () => {
 		const runtimeSource = readFileSync(
 			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
