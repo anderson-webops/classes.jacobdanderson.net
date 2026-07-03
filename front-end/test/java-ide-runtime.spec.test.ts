@@ -914,6 +914,19 @@ public class Main {
 			count: 1,
 			street: 6
 		});
+		expect(result.karelWorldSteps).toHaveLength(6);
+		expect(result.karelWorldSteps?.[0]?.robot).toMatchObject({
+			avenue: 7,
+			direction: "East",
+			street: 6
+		});
+		expect(result.karelWorldSteps?.[1]?.robot?.direction).toBe("North");
+		expect(result.karelWorldSteps?.[2]?.robot?.direction).toBe("West");
+		expect(result.karelWorldSteps?.at(-1)?.robot).toMatchObject({
+			avenue: 4,
+			direction: "West",
+			street: 6
+		});
 		expect(result.stdout.at(-1)).toContain("(avenue: 4)");
 	});
 
