@@ -2251,6 +2251,44 @@ async function createProject(
 	}
 }
 
+async function openBlueJStarterProject() {
+	const existingProject = projects.value.find(
+		project => project.courseProjectKey === "ide-template:bluej"
+	);
+	if (existingProject) {
+		selectedProjectID.value = existingProject._id;
+		await nextTick();
+		resetActiveCanvas();
+		return;
+	}
+
+	const starter = createPythonIdeProject("java", {
+		courseProjectKey: "ide-template:bluej",
+		courseProjectTitle: "BlueJ Java Project",
+		starterLabel: "BlueJ starter",
+		template: "bluej",
+		title: "BlueJ Java Project"
+	});
+	suppressAutoSave = true;
+	try {
+		await saveNewProject(starter);
+	} catch (error) {
+		projects.value.unshift(starter);
+		selectedProjectID.value = starter._id;
+		await persistLocalProjects();
+		appendOutput(
+			"system",
+			error instanceof Error
+				? error.message
+				: "BlueJ starter created locally."
+		);
+	} finally {
+		suppressAutoSave = false;
+		await nextTick();
+		resetActiveCanvas();
+	}
+}
+
 async function createProjectFromMenu(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate = "blank"
@@ -5680,7 +5718,7 @@ onBeforeUnmount(() => {
 				<button
 					class="site-button site-button--secondary compact-button code-ide-status-action"
 					type="button"
-					@click="createProject('java', 'bluej')"
+					@click="openBlueJStarterProject"
 				>
 					BlueJ starter
 				</button>
