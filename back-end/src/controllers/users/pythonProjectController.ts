@@ -495,7 +495,7 @@ export const createPythonProject: RequestHandler = async (req, res) => {
 	const project = await PythonProject.create({
 		user: owner.id,
 		ownerRole: owner.role,
-		title: parsed.data.title ?? "Untitled Python Project",
+		title: parsed.data.title ?? "Untitled Code Project",
 		mode,
 		files,
 		activeFileName,

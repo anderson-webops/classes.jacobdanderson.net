@@ -282,6 +282,62 @@ describe("Python project routes", () => {
 		);
 	});
 
+	it("uses generalized fallback titles for untitled Code IDE projects", async () => {
+		await withPythonProjectRoute(async baseUrl => {
+			const defaultResponse = await postJson(baseUrl, {});
+			const javaResponse = await postJson(baseUrl, {
+				activeFileName: "Main.java",
+				files: [
+					{
+						content: "public class Main { public static void main(String[] args) {} }",
+						name: "Main.java"
+					}
+				],
+				mode: "java"
+			});
+			const defaultBody = await defaultResponse.json();
+			const javaBody = await javaResponse.json();
+
+			expect(defaultResponse.status).toBe(201);
+			expect(javaResponse.status).toBe(201);
+			expect(defaultBody.project.title).toBe("Untitled Code Project");
+			expect(javaBody.project.title).toBe("Untitled Code Project");
+		});
+
+		expect(modelMocks.pythonProjectCreate).toHaveBeenNthCalledWith(
+			1,
+			expect.objectContaining({
+				activeFileName: "main.py",
+				files: [
+					{
+						content: "",
+						encoding: "text",
+						name: "main.py"
+					}
+				],
+				mode: "python",
+				title: "Untitled Code Project",
+				user: userID
+			})
+		);
+		expect(modelMocks.pythonProjectCreate).toHaveBeenNthCalledWith(
+			2,
+			expect.objectContaining({
+				activeFileName: "Main.java",
+				files: [
+					{
+						content: "public class Main { public static void main(String[] args) {} }",
+						encoding: "text",
+						name: "Main.java"
+					}
+				],
+				mode: "java",
+				title: "Untitled Code Project",
+				user: userID
+			})
+		);
+	});
+
 	it("rejects project payloads that do not include a code file for the selected mode", async () => {
 		await withPythonProjectRoute(async baseUrl => {
 			for (const payload of [
