@@ -3434,7 +3434,7 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
-	it("wires BlueJ download through the client IDE file tools", () => {
+	it("wires BlueJ starter and download actions through the client IDE", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
@@ -3445,9 +3445,15 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(pageSource).toContain("selectedProjectCanExportToBlueJ");
+		expect(pageSource).toContain('class="bluej-integration-panel"');
+		expect(pageSource).toContain("blueJSourceUrl");
+		expect(pageSource).toContain("New BlueJ project");
+		expect(pageSource).toMatch(/createProject\(\s*'java',\s*'bluej'\s*\)/);
 		expect(pageSource).toContain("async function downloadSelectedProjectForBlueJ");
 		expect(pageSource).toContain('import("@/modules/blueJProjectExport")');
 		expect(pageSource).toContain("Download for BlueJ");
+		expect(pageSource).toContain(":href=\"blueJHomeUrl\"");
+		expect(pageSource).toContain(":href=\"blueJSourceUrl\"");
 		expect(pageSource).toContain("createBlueJProjectArchive(project)");
 		expect(exportSource).toContain('from "fflate"');
 		expect(exportSource).toContain("zipSync(entries)");

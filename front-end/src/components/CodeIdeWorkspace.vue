@@ -377,6 +377,7 @@ const pythonIdeExpandedWorkspaceStorageKey =
 	"classes-python-ide-expanded-workspace";
 const pythonIdeSplitPercentStorageKey = "classes-python-ide-split-percent";
 const blueJHomeUrl = "https://www.bluej.org/";
+const blueJSourceUrl = "https://github.com/k-pet-group/BlueJ-Greenfoot";
 const defaultCodeSplitPercent = 54;
 const defaultDrawingCodeSplitPercent = 42;
 const minCodeSplitPercent = 28;
@@ -6227,6 +6228,53 @@ onBeforeUnmount(() => {
 				</div>
 
 				<section
+					v-if="selectedProjectCanExportToBlueJ"
+					class="bluej-integration-panel"
+					aria-label="BlueJ integration"
+				>
+					<div>
+						<p class="bluej-integration-eyebrow">BlueJ</p>
+						<h2>BlueJ Java Project</h2>
+						<p>
+							Use the object-oriented starter or export this Java
+							project as a BlueJ-ready ZIP.
+						</p>
+					</div>
+					<div class="bluej-integration-actions">
+						<button
+							class="site-button site-button--secondary compact-button"
+							type="button"
+							@click="createProject('java', 'bluej')"
+						>
+							New BlueJ project
+						</button>
+						<button
+							class="site-button site-button--secondary compact-button"
+							type="button"
+							@click="downloadSelectedProjectForBlueJ"
+						>
+							Download for BlueJ
+						</button>
+						<a
+							class="bluej-integration-link"
+							:href="blueJHomeUrl"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							BlueJ
+						</a>
+						<a
+							class="bluej-integration-link"
+							:href="blueJSourceUrl"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Source
+						</a>
+					</div>
+				</section>
+
+				<section
 					v-if="selectedVisibleReview"
 					class="visible-review-panel"
 					aria-label="Visible tutor review copy"
@@ -7019,6 +7067,35 @@ html.dark .project-create-menu button:focus-visible {
 	background: #164e4b;
 }
 
+html.dark .bluej-integration-panel {
+	border-color: rgba(94, 234, 212, 0.24);
+	background: rgba(15, 23, 42, 0.52);
+}
+
+html.dark .bluej-integration-panel h2 {
+	color: #f8fafc;
+}
+
+html.dark .bluej-integration-panel p:not(.bluej-integration-eyebrow) {
+	color: #cbd5e1;
+}
+
+html.dark .bluej-integration-eyebrow,
+html.dark .bluej-integration-link {
+	color: #5eead4;
+}
+
+html.dark .bluej-integration-link {
+	border-color: rgba(94, 234, 212, 0.2);
+	background: rgba(15, 23, 42, 0.28);
+}
+
+html.dark .bluej-integration-link:hover,
+html.dark .bluej-integration-link:focus-visible {
+	border-color: rgba(94, 234, 212, 0.45);
+	background: rgba(20, 78, 75, 0.52);
+}
+
 html.dark .icon-action,
 html.dark .file-tool-toggle,
 html.dark .sidebar-collapse-toggle {
@@ -7349,6 +7426,72 @@ html.dark .file-delete:disabled::after {
 	width: var(--code-ide-toolbar-button-width);
 	padding: 0 1.2rem;
 	line-height: 1;
+}
+
+.bluej-integration-panel {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 1rem;
+	align-items: center;
+	padding: 0.85rem 1rem;
+	border: 1px solid rgba(20, 184, 166, 0.28);
+	border-radius: 14px;
+	background: rgba(240, 253, 250, 0.68);
+}
+
+.bluej-integration-panel h2,
+.bluej-integration-panel p {
+	margin: 0;
+}
+
+.bluej-integration-panel h2 {
+	margin-top: 0.12rem;
+	color: var(--color-ink-strong);
+	font-size: 1rem;
+	letter-spacing: 0;
+	line-height: 1.25;
+}
+
+.bluej-integration-panel p:not(.bluej-integration-eyebrow) {
+	margin-top: 0.28rem;
+	color: var(--color-ink);
+	font-size: 0.86rem;
+	line-height: 1.45;
+}
+
+.bluej-integration-eyebrow {
+	color: #0f766e;
+	font-size: 0.72rem;
+	font-weight: 900;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.bluej-integration-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.bluej-integration-link {
+	min-height: 2.8rem;
+	display: inline-flex;
+	align-items: center;
+	padding: 0.55rem 0.75rem;
+	border: 1px solid rgba(15, 118, 110, 0.22);
+	border-radius: 12px;
+	color: #0f766e;
+	font-weight: 800;
+	text-decoration: none;
+}
+
+.bluej-integration-link:hover,
+.bluej-integration-link:focus-visible {
+	border-color: rgba(15, 118, 110, 0.42);
+	background: rgba(204, 251, 241, 0.45);
+	text-decoration: none;
 }
 
 .visible-review-panel {
@@ -8187,6 +8330,15 @@ html.dark .editor-shortcuts ul {
 	.editor-toolbar {
 		grid-template-rows: auto;
 		align-items: stretch;
+	}
+
+	.bluej-integration-panel {
+		grid-template-columns: 1fr;
+		align-items: stretch;
+	}
+
+	.bluej-integration-actions {
+		justify-content: flex-start;
 	}
 
 	.project-title-field,
