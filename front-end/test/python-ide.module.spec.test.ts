@@ -751,12 +751,17 @@ describe("python IDE project helpers", () => {
 		expect(payload).not.toHaveProperty("shareID");
 	});
 
-	it("keeps remote project payload titles valid when the name is blank", () => {
+	it("keeps remote project payload titles valid without Python-only fallback wording", () => {
 		const project = createPythonIdeProject("python");
+		const javaProject = createPythonIdeProject("java");
 		project.title = "   ";
+		javaProject.title = "   ";
 
 		expect(pythonIdeProjectToPayload(project).title).toBe(
-			"Untitled Python Project"
+			"Untitled Code Project"
+		);
+		expect(pythonIdeProjectToPayload(javaProject).title).toBe(
+			"Untitled Code Project"
 		);
 	});
 

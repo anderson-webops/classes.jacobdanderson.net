@@ -896,7 +896,7 @@ export function pythonIdeProjectToPayload(
 	project: PythonIdeProject
 ): PythonIdeProjectPayload {
 	const payload: PythonIdeProjectPayload = {
-		title: project.title.trim() || "Untitled Python Project",
+		title: project.title.trim() || "Untitled Code Project",
 		mode: project.mode,
 		files: project.files,
 		activeFileName: resolvePythonIdeActiveFileName(
