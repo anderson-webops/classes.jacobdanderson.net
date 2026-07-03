@@ -242,17 +242,46 @@ for (const [url, references] of [...urls].sort(([left], [right]) =>
 	else missing.push(row);
 }
 
-const unknownMissing = missing.filter(row => !row.isKnownPending);
-const unnotedPending = missing.filter(
+function isNetworkIndeterminate(row) {
+	return row.status === 0 && Boolean(row.error);
+}
+
+const networkIndeterminate = missing.filter(isNetworkIndeterminate);
+const confirmedMissing = missing.filter(row => !isNetworkIndeterminate(row));
+const knownPendingMissing = confirmedMissing.filter(
+	row => row.isKnownPending && !row.sourceIssues?.length
+);
+const unknownMissing = confirmedMissing.filter(row => !row.isKnownPending);
+const unnotedPending = confirmedMissing.filter(
 	row => row.isKnownPending && row.sourceIssues?.length
 );
+const networkIndeterminateUnknown = networkIndeterminate.filter(row => !row.isKnownPending);
+const networkIndeterminateKnownPending = networkIndeterminate.filter(
+	row => row.isKnownPending
+);
+
+function summarizeRows(rows) {
+	const maxLoggedRows = 50;
+
+	return {
+		count: rows.length,
+		rows: rows.slice(0, maxLoggedRows),
+		truncatedCount: Math.max(0, rows.length - maxLoggedRows)
+	};
+}
+
 console.log(
 	JSON.stringify(
 		{
 			availableCount: available.length,
 			checkedCount: urls.size,
-			missing,
+			confirmedMissingCount: confirmedMissing.length,
+			knownPendingMissing: summarizeRows(knownPendingMissing),
 			missingCount: missing.length,
+			networkIndeterminate: summarizeRows(networkIndeterminate),
+			networkIndeterminateCount: networkIndeterminate.length,
+			networkIndeterminateKnownPending: summarizeRows(networkIndeterminateKnownPending),
+			networkIndeterminateUnknown: summarizeRows(networkIndeterminateUnknown),
 			unnotedPending,
 			unknownMissing
 		},
