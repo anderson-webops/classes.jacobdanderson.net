@@ -1124,7 +1124,7 @@ const selectedProjectShareLink = computed(() => {
 	return shareID ? codeIdeShareUrl(shareID) : "";
 });
 const selectedProjectCanExportToBlueJ = computed(() =>
-	selectedProject.value ? isJavaIdeMode(selectedProject.value.mode) : false
+	selectedProject.value ? selectedProject.value.mode === "java" : false
 );
 
 function codeIdeShareUrl(shareID: string) {
@@ -2204,7 +2204,7 @@ function bytesToArrayBuffer(bytes: Uint8Array) {
 async function downloadSelectedProjectForBlueJ() {
 	const project = selectedProject.value;
 	if (!project) return;
-	if (!isJavaIdeMode(project.mode)) {
+	if (project.mode !== "java") {
 		appendOutput("system", "BlueJ export is available for Java projects.");
 		return;
 	}

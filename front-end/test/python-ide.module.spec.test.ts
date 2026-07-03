@@ -3445,6 +3445,8 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(pageSource).toContain("selectedProjectCanExportToBlueJ");
+		expect(pageSource).toContain('selectedProject.value.mode === "java"');
+		expect(pageSource).toContain('if (project.mode !== "java")');
 		expect(pageSource).toContain('class="bluej-integration-panel"');
 		expect(pageSource).toContain("blueJSourceUrl");
 		expect(pageSource).toContain("New BlueJ project");
