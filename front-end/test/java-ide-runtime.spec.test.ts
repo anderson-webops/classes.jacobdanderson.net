@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import type { KarelWorldState } from "../src/modules/javaIdeRuntime";
 import {
 	blueJMainStarterCode,
 	blueJStudentStarterCode,
@@ -12,12 +13,35 @@ import {
 	karelStarterWorld
 } from "../src/modules/pythonIde";
 import { runJavaIdeProject } from "../src/modules/javaIdeRuntime";
+import { createKarelWorldPlaybackController } from "../src/modules/karelWorldPlayback";
 
 function sourceFile(path: string) {
 	return readFileSync(resolve(__dirname, path), "utf8");
 }
 
+function karelStep(label: string): KarelWorldState {
+	return {
+		beepers: [],
+		cols: 3,
+		paints: [],
+		robot: {
+			avenue: label === "initial" ? 1 : label === "middle" ? 2 : 3,
+			beepers: 0,
+			direction: "East",
+			name: "karel",
+			street: 1
+		},
+		rows: 3,
+		trace: [label],
+		walls: []
+	};
+}
+
 describe("java IDE runtime", () => {
+	afterEach(() => {
+		vi.useRealTimers();
+	});
+
 	it("previews the Java and Karel outline templates in the browser subset", () => {
 		const javaResult = runJavaIdeProject({
 			activeFileName: "Main.java",
@@ -1294,6 +1318,43 @@ paint 2 3 purple`
 		expect(randomPaint?.color).toMatch(/^#[0-9a-f]{6}$/);
 		expect(randomPaint?.color).not.toBe("#2563eb");
 		expect(result.stdout).toHaveLength(5);
+	});
+
+	it("plays Karel world snapshots frame by frame and supports cancellation", async () => {
+		vi.useFakeTimers();
+		const shownSteps: KarelWorldState[] = [];
+		const controller = createKarelWorldPlaybackController({
+			delayMs: 350,
+			showStep: step => shownSteps.push(step)
+		});
+		const steps = [
+			karelStep("initial"),
+			karelStep("middle"),
+			karelStep("final")
+		];
+
+		const playback = controller.play(steps, () => true);
+
+		expect(shownSteps.map(step => step.trace[0])).toEqual(["initial"]);
+		await vi.advanceTimersByTimeAsync(349);
+		expect(shownSteps.map(step => step.trace[0])).toEqual(["initial"]);
+		await vi.advanceTimersByTimeAsync(1);
+		expect(shownSteps.map(step => step.trace[0])).toEqual([
+			"initial",
+			"middle"
+		]);
+		await vi.advanceTimersByTimeAsync(350);
+		expect(shownSteps.map(step => step.trace[0])).toEqual([
+			"initial",
+			"middle",
+			"final"
+		]);
+		await expect(playback).resolves.toBe(true);
+
+		const cancelledPlayback = controller.play(steps, () => true);
+		controller.clear();
+		await expect(cancelledPlayback).resolves.toBe(false);
+		expect(vi.getTimerCount()).toBe(0);
 	});
 
 	it("loads Java and Karel execution through the client IDE workspace", () => {

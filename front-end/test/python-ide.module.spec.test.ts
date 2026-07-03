@@ -4868,16 +4868,18 @@ describe("python IDE project helpers", () => {
 
 		expect(pageSource).toContain("const karelPlaybackFrameDelayMs = 350;");
 		expect(pageSource).toContain(
-			"let karelWorldPlaybackTimer: ReturnType<typeof window.setTimeout> | null ="
+			'import { createKarelWorldPlaybackController } from "@/modules/karelWorldPlayback";'
 		);
 		expect(pageSource).toContain(
-			"let resolveKarelWorldPlayback: ((completed: boolean) => void) | null ="
+			"const karelWorldPlaybackController = createKarelWorldPlaybackController({"
 		);
 		expect(pageSource).toContain("function clearKarelWorldPlayback()");
-		expect(pageSource).toContain("resolveKarelWorldPlayback(false);");
+		expect(pageSource).toContain("karelWorldPlaybackController.clear();");
 		expect(pageSource).toContain("shouldContinue: () => boolean");
-		expect(pageSource).toContain("return new Promise<boolean>(resolve =>");
-		expect(pageSource).toContain("finish(true);");
+		expect(pageSource).toContain(
+			"return karelWorldPlaybackController.play(steps, shouldContinue);"
+		);
+		expect(pageSource).toContain("showStep(step)");
 		expect(pageSource).toContain("karelWorld.value = step;");
 		expect(pageSource).toContain('runMessage.value = "Animating Karel world";');
 		expect(pageSource).toContain(

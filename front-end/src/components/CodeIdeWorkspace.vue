@@ -29,6 +29,7 @@ import {
 } from "vue";
 import { useRoute } from "vue-router";
 import { runJavaIdeProject } from "@/modules/javaIdeRuntime";
+import { createKarelWorldPlaybackController } from "@/modules/karelWorldPlayback";
 import {
 	clearLocalPythonProjectsAsync,
 	createPythonIdeProject,
@@ -546,11 +547,15 @@ const gameSoundAudio = new Map<string, Set<HTMLAudioElement>>();
 const gameToneAudio = new Map<number, GameToneHandle>();
 const codeEditorViewStates = new Map<string, CodeEditorViewState>();
 const codeEditorStateSnapshots = new Map<string, CodeEditorState>();
+const karelWorldPlaybackController = createKarelWorldPlaybackController({
+	delayMs: karelPlaybackFrameDelayMs,
+	showStep(step) {
+		karelWorld.value = step;
+	}
+});
 
 let saveTimer: ReturnType<typeof window.setTimeout> | null = null;
 let localSnapshotTimer: ReturnType<typeof window.setTimeout> | null = null;
-let karelWorldPlaybackTimer: ReturnType<typeof window.setTimeout> | null = null;
-let resolveKarelWorldPlayback: ((completed: boolean) => void) | null = null;
 let saveInFlight: Promise<void> | null = null;
 let localSnapshotInFlight: Promise<void> | null = null;
 let localSnapshotQueued = false;
@@ -1150,60 +1155,14 @@ function karelCellKey(street: number, avenue: number) {
 }
 
 function clearKarelWorldPlayback() {
-	if (karelWorldPlaybackTimer !== null) {
-		window.clearTimeout(karelWorldPlaybackTimer);
-	}
-	karelWorldPlaybackTimer = null;
-	if (!resolveKarelWorldPlayback) return;
-	resolveKarelWorldPlayback(false);
-	resolveKarelWorldPlayback = null;
+	karelWorldPlaybackController.clear();
 }
 
 function playKarelWorldSteps(
 	steps: KarelWorldState[] | undefined,
 	shouldContinue: () => boolean
 ) {
-	clearKarelWorldPlayback();
-	if (!steps?.length) return Promise.resolve(false);
-
-	return new Promise<boolean>(resolve => {
-		let index = 0;
-		const finish = (completed: boolean) => {
-			if (karelWorldPlaybackTimer !== null) {
-				window.clearTimeout(karelWorldPlaybackTimer);
-			}
-			karelWorldPlaybackTimer = null;
-			resolveKarelWorldPlayback = null;
-			resolve(completed);
-		};
-		resolveKarelWorldPlayback = finish;
-		const showNextStep = () => {
-			if (!shouldContinue()) {
-				finish(false);
-				return;
-			}
-
-			const step = steps[index];
-			if (!step) {
-				finish(true);
-				return;
-			}
-
-			karelWorld.value = step;
-			index += 1;
-			if (index >= steps.length) {
-				finish(true);
-				return;
-			}
-
-			karelWorldPlaybackTimer = window.setTimeout(
-				showNextStep,
-				karelPlaybackFrameDelayMs
-			);
-		};
-
-		showNextStep();
-	});
+	return karelWorldPlaybackController.play(steps, shouldContinue);
 }
 
 function isJavaIdeMode(mode: PythonIdeMode): mode is "java" | "karel" {
