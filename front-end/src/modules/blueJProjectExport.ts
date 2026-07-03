@@ -1,6 +1,10 @@
 import type { PythonIdeFile, PythonIdeProject } from "@/modules/pythonIde";
 import { strToU8, zipSync } from "fflate";
-import { isPythonIdeJavaFile, isPythonIdeTextFile } from "@/modules/pythonIde";
+import {
+	isPythonIdeJavaFile,
+	isPythonIdeTextFile,
+	isValidPythonFileName
+} from "@/modules/pythonIde";
 
 const BLUEJ_PROJECT_FILE_NAME = "package.bluej";
 const BLUEJ_README_FILE_NAME = "README.TXT";
@@ -100,16 +104,22 @@ Open this ZIP in BlueJ with File > Open Project, or unzip it and open the projec
 `;
 }
 
+function isBlueJExportableTextFile(file: PythonIdeFile) {
+	return (
+		file.encoding !== "base64" &&
+		isValidPythonFileName(file.name) &&
+		isPythonIdeTextFile(file.name) &&
+		file.name !== BLUEJ_PROJECT_FILE_NAME
+	);
+}
+
 export function createBlueJProjectFiles(
 	project: Pick<PythonIdeProject, "files" | "title">
 ): BlueJProjectExportFile[] {
-	const files = project.files
-		.filter(file => isPythonIdeTextFile(file.name))
-		.filter(file => file.name !== BLUEJ_PROJECT_FILE_NAME)
-		.map(file => ({
-			name: file.name,
-			content: file.content
-		}));
+	const files = project.files.filter(isBlueJExportableTextFile).map(file => ({
+		name: file.name,
+		content: file.content
+	}));
 	const readmeIndex = files.findIndex(
 		file => file.name.toUpperCase() === BLUEJ_README_FILE_NAME
 	);
@@ -128,7 +138,7 @@ export function createBlueJProjectFiles(
 
 	files.push({
 		name: BLUEJ_PROJECT_FILE_NAME,
-		content: createBlueJPackageFile(project.files)
+		content: createBlueJPackageFile(files)
 	});
 
 	return files;
