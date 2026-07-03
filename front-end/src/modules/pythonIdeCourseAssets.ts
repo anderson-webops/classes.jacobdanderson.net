@@ -1,6 +1,7 @@
 import { getPythonIdeFileMimeType } from "@/modules/pythonIde";
 
-export const pythonIdeCourseAssetsManifestUrl =
+export const pythonIdeCourseAssetsManifestUrl = "/ide/assets/manifest.json";
+export const pythonIdeLegacyCourseAssetsManifestUrl =
 	"/python-ide/assets/manifest.json";
 export const pythonIdeCourseAssetsZipUrl = "/api/code-ide-assets/assets.zip";
 export const pythonIdeLegacyCourseAssetsZipUrl =
@@ -61,7 +62,10 @@ export async function loadPythonIdeCourseAssetPack(
 
 	const manifestUrls = options.manifestUrl
 		? [options.manifestUrl]
-		: (options.manifestUrls ?? [pythonIdeCourseAssetsManifestUrl]);
+		: (options.manifestUrls ?? [
+				pythonIdeCourseAssetsManifestUrl,
+				pythonIdeLegacyCourseAssetsManifestUrl
+			]);
 	const zipSourceUrls = options.url
 		? [options.url]
 		: (options.urls ?? pythonIdeCourseAssetZipSourceUrls);
