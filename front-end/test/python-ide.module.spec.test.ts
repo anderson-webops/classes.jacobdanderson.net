@@ -982,6 +982,7 @@ describe("python IDE project helpers", () => {
 			"if (isActiveRun()) turtleBridge.teleport(x, y, fillGap);"
 		);
 		expect(teleportSource).not.toContain('kind: "line"');
+		expect(teleportSource).toContain("durationMs: 0");
 	});
 
 	it("keeps Turtle timer hooks wired in the runtime bridge", () => {
