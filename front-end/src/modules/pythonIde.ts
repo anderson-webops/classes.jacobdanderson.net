@@ -395,12 +395,37 @@ public class Main {
 }
 `;
 
-export const blueJMainStarterCode = `public class Main {
+export const blueJMainStarterCode = `import java.util.ArrayList;
+
+public class Main {
     public static void main(String[] args) {
-        Student student = new Student("Ada", 9);
-        student.addScore(88);
-        student.addScore(94);
+        String name = "Ada";
+        int gradeLevel = 9;
+        ArrayList<Integer> scores = new ArrayList<>();
+        scores.add(88);
+        scores.add(94);
+
+        // Open this project in BlueJ to inspect the Student object directly.
+        Student student = new Student(name, gradeLevel);
+        student.addScore(scores.get(0));
+        student.addScore(scores.get(1));
         student.printSummary();
+
+        // The browser preview mirrors the same state with console-friendly code.
+        System.out.println(name + " is in grade " + gradeLevel);
+        System.out.println("Average: " + averageScore(scores));
+    }
+
+    static double averageScore(ArrayList<Integer> scores) {
+        if (scores.isEmpty()) {
+            return 0;
+        }
+
+        int total = 0;
+        for (int score : scores) {
+            total += score;
+        }
+        return (double) total / scores.size();
     }
 }
 `;
@@ -446,6 +471,7 @@ export const blueJReadmeStarterText = `BlueJ Java Project
 This folder is ready to open in BlueJ after downloading it from the Classes Code IDE.
 
 Start with Main.java, then inspect Student.java to see the object's fields and methods.
+The browser Run button previews the same state with console-friendly code in Main.java.
 `;
 
 export const karelStarterCode = `import kareltherobot.UrRobot;
