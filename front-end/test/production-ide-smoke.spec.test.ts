@@ -27,13 +27,15 @@ describe("production Code IDE smoke helpers", () => {
 		const currentIdeBundle = [
 			"Code, run, and draw in Python or Java",
 			"preview Java console programs or Karel robot",
-			"BlueJ-openable ZIPs",
+			"create BlueJ desktop projects",
+			"BlueJ-ready ZIPs",
 			"Karel world ready",
-			"Java tools",
-			"BlueJ object bench",
+			"Java / BlueJ tools",
+			"BlueJ object-bench starter",
 			"BlueJ Java Project",
-			"New BlueJ project",
-			"Download for BlueJ",
+			"BlueJ starter",
+			"New BlueJ desktop project",
+			"Download BlueJ ZIP",
 			"https://github.com/k-pet-group/BlueJ-Greenfoot"
 		].join("\n");
 
