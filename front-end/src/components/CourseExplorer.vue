@@ -1715,7 +1715,7 @@ function writeStoredValue(key: string, value: string) {
 							v-if="canUseAllLearnersContext"
 							:value="ALL_LEARNERS_CONTEXT_ID"
 						>
-							All
+							All learners
 						</option>
 						<option
 							v-for="(learner, index) in managedLearners"

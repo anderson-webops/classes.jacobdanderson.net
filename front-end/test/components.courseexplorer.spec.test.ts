@@ -565,12 +565,12 @@ describe("CourseExplorer.vue", () => {
 		await vi.waitFor(() => {
 			expect(
 				wrapper.findAll("#learner-select option").map(option => option.text())
-			).toContain("All");
+			).toContain("All learners");
 		});
 
 		const allOption = wrapper
 			.findAll("#learner-select option")
-			.find(option => option.text() === "All");
+			.find(option => option.text() === "All learners");
 		expect(allOption?.exists()).toBe(true);
 		expect(
 			wrapper.find<HTMLSelectElement>("#learner-select").element.value
@@ -590,6 +590,9 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.find("#course-select optgroup").attributes("label")).toBe(
 			"All courses"
 		);
+		expect(wrapper.findAll(".progress-toggle")).toHaveLength(0);
+		expect(wrapper.find(".course-stats").text()).not.toContain("Done");
+		expect(api.put).not.toHaveBeenCalled();
 	});
 
 	it("keeps the all learner context hidden from tutors", async () => {
@@ -640,7 +643,7 @@ describe("CourseExplorer.vue", () => {
 		});
 		expect(
 			wrapper.findAll("#learner-select option").map(option => option.text())
-		).not.toContain("All");
+		).not.toContain("All learners");
 	});
 
 	it("lets staff mark selected learner progress with debounced autosave", async () => {
