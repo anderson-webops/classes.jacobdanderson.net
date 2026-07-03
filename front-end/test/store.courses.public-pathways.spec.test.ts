@@ -106,7 +106,8 @@ describe("public course pathways", () => {
 		expect(pathwayText("ap-csa")).toMatch(/FRQ|MCQ/i);
 
 		expect(pathwayText("java-pathway")).toMatch(/Visual-First/i);
-		expect(pathwayText("java-pathway")).toMatch(/first-week Carol\/Karel/i);
+		expect(pathwayText("java-pathway")).toMatch(/first-week Karel robot worlds/i);
+		expect(pathwayText("java-pathway")).not.toMatch(/Carol\/Karel/i);
 		expect(pathwayText("java-pathway")).toMatch(/visual exit ticket/i);
 		expect(pathwayText("java-pathway")).toMatch(/CodeHS or the browser Code IDE/i);
 
