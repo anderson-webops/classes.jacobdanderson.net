@@ -3,12 +3,20 @@ import { python } from "@codemirror/lang-python";
 import { EditorState } from "@codemirror/state";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { strToU8, zipSync } from "fflate";
+import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
+import {
+	blueJProjectArchiveName,
+	createBlueJProjectArchive,
+	createBlueJProjectFiles
+} from "../src/modules/blueJProjectExport";
 import {
 	pythonBracketPairColorRanges,
 	pythonBracketPairIgnoredRanges
 } from "../src/modules/pythonCodeMirror";
 import {
+	blueJMainStarterCode,
+	blueJReadmeStarterText,
+	blueJStudentStarterCode,
 	clearLocalPythonProjects,
 	clearLocalPythonProjectsAsync,
 	createPythonIdeProject,
@@ -265,8 +273,51 @@ describe("python IDE project helpers", () => {
 		expect(karelOutline.files[0]?.content).toContain(
 			"frontIsClear() && noBallsPresent()"
 		);
-		expect(karelOutline.files[0]?.content).toContain(
-			"while (frontIsClear())"
+	expect(karelOutline.files[0]?.content).toContain(
+		"while (frontIsClear())"
+	);
+});
+
+	it("creates a BlueJ Java template with beginner object files", () => {
+		const project = createPythonIdeProject("java", {
+			template: "bluej"
+		});
+
+		expect(project.mode).toBe("java");
+		expect(project.title).toBe("BlueJ Java Project");
+		expect(project.activeFileName).toBe("Main.java");
+		expect(project.files).toEqual([
+			{ name: "Main.java", content: blueJMainStarterCode },
+			{ name: "Student.java", content: blueJStudentStarterCode },
+			{ name: "README.TXT", content: blueJReadmeStarterText }
+		]);
+		expect(project.files[0]?.content).toContain("new Student");
+		expect(project.files[1]?.content).toContain("private ArrayList");
+	});
+
+	it("exports Java projects as BlueJ-openable ZIP contents", () => {
+		const project = createPythonIdeProject("java", {
+			template: "bluej"
+		});
+
+		const files = createBlueJProjectFiles(project);
+		const packageFile = files.find(file => file.name === "package.bluej");
+		expect(blueJProjectArchiveName(project)).toBe("BlueJ-Java-Project.zip");
+		expect(files.map(file => file.name)).toContain("README.TXT");
+		expect(packageFile?.content).toContain("#BlueJ package file");
+		expect(packageFile?.content).toContain("package.numTargets=2");
+		expect(packageFile?.content).toContain("target1.name=Main");
+		expect(packageFile?.content).toContain("target2.name=Student");
+
+		const archive = unzipSync(createBlueJProjectArchive(project));
+		expect(Object.keys(archive).sort()).toEqual([
+			"BlueJ-Java-Project/Main.java",
+			"BlueJ-Java-Project/README.TXT",
+			"BlueJ-Java-Project/Student.java",
+			"BlueJ-Java-Project/package.bluej"
+		]);
+		expect(strFromU8(archive["BlueJ-Java-Project/package.bluej"]!)).toContain(
+			"project.charset=UTF-8"
 		);
 	});
 
@@ -3301,21 +3352,25 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(moduleSource).toContain(
-			'export type PythonIdeProjectTemplate = "blank" | "course" | "demo" | "outline";'
+			'export type PythonIdeProjectTemplate =\n\t| "blank"\n\t| "bluej"\n\t| "course"\n\t| "demo"\n\t| "outline";'
 		);
 		expect(moduleSource).toContain(
 			"export const pythonLevel1OutlineStarterCode"
 		);
 		expect(moduleSource).toContain("export const pgzeroOutlineStarterCode");
 		expect(moduleSource).toContain("export const javaOutlineStarterCode");
+		expect(moduleSource).toContain("export const blueJMainStarterCode");
+		expect(moduleSource).toContain("function getBlueJStarterFiles");
 		expect(moduleSource).toContain("export const karelOutlineStarterCode");
 		expect(moduleSource).toContain("export const karelOutlineWorld");
 		expect(moduleSource).toContain("function getOutlineStarterFiles");
 		expect(moduleSource).toContain('if (template === "outline")');
+		expect(moduleSource).toContain('if (template === "bluej")');
 		expect(pageSource).toContain("Template project");
 		expect(pageSource).toContain("Python Level 1 Outline");
 		expect(pageSource).toContain("PyGame Zero Outline");
 		expect(pageSource).toContain("Java Outline");
+		expect(pageSource).toContain("BlueJ Java Project");
 		expect(pageSource).toContain("Karel Java Outline");
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'turtle',\s*'outline'/
@@ -3327,8 +3382,32 @@ describe("python IDE project helpers", () => {
 			/createProjectFromMenu\(\s*'java',\s*'outline'/
 		);
 		expect(pageSource).toMatch(
+			/createProjectFromMenu\(\s*'java',\s*'bluej'/
+		);
+		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'karel',\s*'outline'/
 		);
+	});
+
+	it("wires BlueJ download through the client IDE file tools", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+		const exportSource = readFileSync(
+			resolve(__dirname, "../src/modules/blueJProjectExport.ts"),
+			"utf8"
+		);
+
+		expect(pageSource).toContain("selectedProjectCanExportToBlueJ");
+		expect(pageSource).toContain("async function downloadSelectedProjectForBlueJ");
+		expect(pageSource).toContain('import("@/modules/blueJProjectExport")');
+		expect(pageSource).toContain("Download for BlueJ");
+		expect(pageSource).toContain("createBlueJProjectArchive(project)");
+		expect(exportSource).toContain('from "fflate"');
+		expect(exportSource).toContain("zipSync(entries)");
+		expect(exportSource).toContain("package.bluej");
+		expect(exportSource).toContain("README.TXT");
 	});
 
 	it("persists CodeMirror view state across reloads and project ID migration", () => {
