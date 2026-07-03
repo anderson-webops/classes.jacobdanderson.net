@@ -1,4 +1,7 @@
-const origin = process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderson.net";
+import { pathToFileURL } from "node:url";
+
+const origin =
+	process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderson.net";
 const timeoutMs = Number(process.env.CLASSES_SITE_SMOKE_TIMEOUT_MS || 15000);
 const pageUrl = new URL("/ide", origin);
 
@@ -25,22 +28,22 @@ async function fetchText(url) {
 	}
 }
 
-function pageAssetUrls(html) {
+export function pageAssetUrls(html, baseUrl = pageUrl) {
 	const urls = new Set();
 	const assetAttributeRE = /\b(?:href|src)="([^"]+)"/g;
 	for (const match of html.matchAll(assetAttributeRE)) {
 		const value = match[1];
 		if (!value || !value.includes(".js")) continue;
 
-		const url = new URL(value, pageUrl);
-		if (url.origin !== pageUrl.origin) continue;
+		const url = new URL(value, baseUrl);
+		if (url.origin !== baseUrl.origin) continue;
 		urls.add(url.href);
 	}
 
 	return [...urls];
 }
 
-function containsJavaModeCopy(source) {
+export function containsJavaModeCopy(source) {
 	return (
 		source.includes("Python or Java") ||
 		source.includes("Karel Java") ||
@@ -48,11 +51,23 @@ function containsJavaModeCopy(source) {
 	);
 }
 
-async function main() {
+export function containsCurrentIdeBundleMarkers(source) {
+	return (
+		source.includes("Code, run, and draw in Python or Java") &&
+		source.includes("preview Java console programs or Karel robot") &&
+		source.includes("Karel world ready") &&
+		source.includes("BlueJ Java Project") &&
+		source.includes("Download for BlueJ")
+	);
+}
+
+export async function runProductionIdeSmoke() {
 	const html = await fetchText(pageUrl);
 	const assetUrls = pageAssetUrls(html);
 	if (!assetUrls.length) {
-		throw new Error(`${pageUrl.href} did not reference any same-origin JavaScript assets`);
+		throw new Error(
+			`${pageUrl.href} did not reference any same-origin JavaScript assets`
+		);
 	}
 
 	const assetSources = await Promise.all(
@@ -61,10 +76,14 @@ async function main() {
 			url
 		}))
 	);
-	const ideAsset = assetSources.find(asset => containsJavaModeCopy(asset.source));
-	const hasJavaModeCopy = containsJavaModeCopy(html) || Boolean(ideAsset);
+	const ideAsset = assetSources.find(asset =>
+		containsCurrentIdeBundleMarkers(asset.source)
+	);
 
-	if (!hasJavaModeCopy) {
+	if (
+		!containsJavaModeCopy(html) &&
+		!assetSources.some(asset => containsJavaModeCopy(asset.source))
+	) {
 		throw new Error(
 			`${pageUrl.href} did not include Java mode copy in the HTML or referenced IDE bundle`
 		);
@@ -72,16 +91,19 @@ async function main() {
 
 	if (!ideAsset) {
 		throw new Error(
-			`${pageUrl.href} included Java mode copy but no referenced asset matched the current IDE bundle`
+			`${pageUrl.href} did not reference a current Code IDE bundle with Java and BlueJ runtime markers`
 		);
 	}
 
 	console.log(
-		`OK: ${pageUrl.href} references ${ideAsset.url} with Java IDE mode copy/runtime markers`
+		`OK: ${pageUrl.href} references ${ideAsset.url} with current Code IDE Java/BlueJ markers`
 	);
 }
 
-main().catch(error => {
-	console.error(error instanceof Error ? error.message : error);
-	process.exitCode = 1;
-});
+const invokedUrl = process.argv[1] ? pathToFileURL(process.argv[1]).href : "";
+if (import.meta.url === invokedUrl) {
+	runProductionIdeSmoke().catch(error => {
+		console.error(error instanceof Error ? error.message : error);
+		process.exitCode = 1;
+	});
+}
