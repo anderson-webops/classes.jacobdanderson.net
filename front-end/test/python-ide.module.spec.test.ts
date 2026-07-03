@@ -321,6 +321,50 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("omits unsafe or binary files from BlueJ export archives", () => {
+		const project = createPythonIdeProject("java", {
+			files: [
+				{ name: "Main.java", content: "public class Main {}" },
+				{ name: "Helper.java", content: "public class Helper {}" },
+				{ name: "../Escape.java", content: "public class Escape {}" },
+				{ name: "package.bluej", content: "stale package data" },
+				{ name: "notes.md", content: "Safe project notes" },
+				{
+					name: "images/logo.svg",
+					content: "PHN2Zy8+",
+					encoding: "base64"
+				}
+			],
+			title: "Unsafe BlueJ Export"
+		});
+
+		const files = createBlueJProjectFiles(project);
+		const packageFile = files.find(file => file.name === "package.bluej");
+		expect(files.map(file => file.name).sort()).toEqual([
+			"Helper.java",
+			"Main.java",
+			"README.TXT",
+			"notes.md",
+			"package.bluej"
+		]);
+		expect(packageFile?.content).toContain("package.numTargets=2");
+		expect(packageFile?.content).toContain("target1.name=Main");
+		expect(packageFile?.content).toContain("target2.name=Helper");
+		expect(packageFile?.content).not.toContain("Escape");
+
+		const archiveNames = Object.keys(
+			unzipSync(createBlueJProjectArchive(project))
+		).sort();
+		expect(archiveNames).toEqual([
+			"Unsafe-BlueJ-Export/Helper.java",
+			"Unsafe-BlueJ-Export/Main.java",
+			"Unsafe-BlueJ-Export/README.TXT",
+			"Unsafe-BlueJ-Export/notes.md",
+			"Unsafe-BlueJ-Export/package.bluej"
+		]);
+		expect(archiveNames.every(name => !name.includes(".."))).toBe(true);
+	});
+
 	it("colors visible bracket pairs using document-wide nesting context", () => {
 		const filler = Array.from(
 			{ length: 350 },
