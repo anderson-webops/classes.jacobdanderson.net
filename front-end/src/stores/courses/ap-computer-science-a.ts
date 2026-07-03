@@ -135,7 +135,7 @@ export const apComputerScienceACourse: RawCourse = {
 				{
 					title: "Visual Java Bridge",
 					content:
-						"The revised Java Level 1 path carries Carol/Karel and BlueJ habits into AP CSA: track object state, predict method effects, and read compiler feedback carefully. Visual tools do not replace AP evidence; each visual demonstration becomes a written trace, console trace, or FRQ-style explanation before exam practice."
+						"The revised Java Level 1 path carries Karel and BlueJ habits into AP CSA: track object state, predict method effects, and read compiler feedback carefully. Visual tools do not replace AP evidence; each visual demonstration becomes a written trace, console trace, or FRQ-style explanation before exam practice."
 				},
 				{
 					title: "Track Guide",
