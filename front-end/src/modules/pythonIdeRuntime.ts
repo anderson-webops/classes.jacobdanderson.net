@@ -189,6 +189,7 @@ export interface TurtleBridge {
 	xcor: () => number;
 	ycor: () => number;
 	goto: (x: number, y: number) => void;
+	teleport: (x: number, y: number, fillGap?: boolean) => void;
 	home: () => void;
 	penup: () => void;
 	pendown: () => void;
@@ -649,43 +650,86 @@ if isinstance(__classes_existing_turtle_loop_proxies, dict):
     __classes_existing_turtle_loop_proxies.clear()
 __classes_turtle_loop_proxies = {}
 __classes_turtle_animation_call_names = {
+    "addshape",
     "back",
     "backward",
     "bgcolor",
+    "begin_fill",
+    "begin_poly",
     "bk",
     "circle",
     "clear",
+    "clearstamp",
+    "clearstamps",
+    "clearscreen",
     "color",
+    "degrees",
     "dot",
     "down",
+    "end_fill",
+    "end_poly",
+    "fill",
     "fd",
     "fillcolor",
+    "filling",
     "forward",
     "goto",
+    "hideturtle",
+    "goto",
+    "ht",
     "home",
+    "isvisible",
     "left",
     "listen",
     "lt",
+    "mode",
+    "no_animation",
     "onclick",
     "ondrag",
     "onkey",
+    "onkeyrelease",
     "onkeypress",
+    "onrelease",
     "onscreenclick",
     "ontimer",
     "pd",
+    "pen",
     "pendown",
     "pensize",
     "pencolor",
     "penup",
+    "poly",
+    "pos",
+    "position",
     "pu",
+    "radians",
+    "register_shape",
+    "resetscreen",
+    "resizemode",
     "right",
     "rt",
+    "screensize",
     "setheading",
     "seth",
     "setpos",
     "setposition",
+    "setx",
+    "sety",
+    "shape",
+    "shapesize",
+    "shearfactor",
+    "showturtle",
     "stamp",
+    "st",
+    "teleport",
+    "tilt",
+    "tiltangle",
+    "tracer",
+    "turtlesize",
+    "undo",
     "up",
+    "update",
+    "width",
     "write",
 }
 _classes_turtle_animation_call_names = __classes_turtle_animation_call_names
@@ -993,12 +1037,24 @@ from js import window
 from pyodide.ffi import create_proxy
 
 _bridge = window.__classesPythonIdeTurtle
+__classes_turtle_api_version__ = "3.14"
 _callback_proxies = {}
+_angle_fullcircle = 360.0
+_background_color = "white"
+_bgpic = "nopic"
 _color_mode = 1.0
+_delay_value = 10
+_screen_height = 480
+_screen_mode = "standard"
+_screen_title = ""
+_screen_width = 640
 _tracer_value = 1.0
 _timer_counter = 0
 _turtle_counter = 0
+_world_coordinates = None
 _builtin_shapes = {"arrow", "blank", "circle", "classic", "fancy", "square", "triangle", "turtle"}
+_registered_shapes = set(_builtin_shapes)
+_turtles = []
 _speed_values = {
     "fastest": 0.0,
     "fast": 10.0,
@@ -1065,6 +1121,12 @@ def _normalize_turtle_speed(value):
         return 0.0
     return max(0.0, min(10.0, speed))
 
+def _angle_to_degrees(value):
+    return float(value) * 360.0 / _angle_fullcircle
+
+def _degrees_to_angle(value):
+    return float(value) * _angle_fullcircle / 360.0
+
 def _set_color_mode(cmode=None):
     global _color_mode
     if cmode is None:
@@ -1110,22 +1172,75 @@ def _release_all_callbacks():
         _release_proxy(proxy)
     _callback_proxies.clear()
 
+class _NoAnimationContext:
+    def __init__(self, screen):
+        self._screen = screen
+        self._previous = None
+
+    def __enter__(self):
+        self._previous = self._screen.tracer()
+        self._screen.tracer(0)
+        return self
+
+    def __exit__(self, *_exc):
+        if self._previous is not None:
+            self._screen.tracer(self._previous)
+        self._screen.update()
+        return False
+
 class _Screen:
-    def bgcolor(self, color):
-        _bridge.bgcolor(_normalize_color(color))
+    def bgcolor(self, *color):
+        global _background_color
+        if len(color) == 0:
+            return _background_color
+        _background_color = _normalize_color(*color)
+        _bridge.bgcolor(_background_color)
+
+    def bgpic(self, picname=None):
+        global _bgpic
+        if picname is None:
+            return _bgpic
+        _bgpic = str(picname)
+        return None
 
     def clear(self):
         _bridge.clear()
 
+    def clearscreen(self):
+        self.clear()
+
     def reset(self):
         _release_all_callbacks()
         _bridge.reset()
+
+    def resetscreen(self):
+        self.reset()
+
+    def screensize(self, canvwidth=None, canvheight=None, bg=None):
+        global _screen_width, _screen_height
+        if canvwidth is None and canvheight is None and bg is None:
+            return (_screen_width, _screen_height)
+        if canvwidth is not None:
+            _screen_width = int(canvwidth)
+        if canvheight is not None:
+            _screen_height = int(canvheight)
+        if bg is not None:
+            self.bgcolor(bg)
+        return None
+
+    def setworldcoordinates(self, llx, lly, urx, ury):
+        global _world_coordinates
+        _world_coordinates = (float(llx), float(lly), float(urx), float(ury))
+        return None
 
     def listen(self):
         _bridge.listen()
 
     def onkey(self, function, key):
         _bridge.registerKey(str(key), _stored_callback("key", key, function))
+
+    def onkeyrelease(self, function, key):
+        self.onkey(function, key)
 
     def onkeypress(self, function, key=None):
         _bridge.registerKey(str(key or ""), _stored_callback("key", key or "", function))
@@ -1139,14 +1254,20 @@ class _Screen:
     def onscreenclick(self, function, btn=1, add=None):
         self.onclick(function, btn, add)
 
-    def title(self, *_args):
-        return None
+    def no_animation(self):
+        return _NoAnimationContext(self)
 
-    def setup(self, *_args, **_kwargs):
+    def delay(self, delay=None):
+        global _delay_value
+        if delay is None:
+            return _delay_value
+        _delay_value = int(delay)
         return None
 
     def tracer(self, n=None, delay=None):
         global _tracer_value
+        if delay is not None:
+            self.delay(delay)
         if n is None:
             return _tracer_value
         _tracer_value = float(n)
@@ -1157,19 +1278,110 @@ class _Screen:
         _bridge.update()
         return None
 
-    def mainloop(self):
-        return None
-
-    def exitonclick(self):
+    def mode(self, mode=None):
+        global _screen_mode
+        if mode is None:
+            return _screen_mode
+        normalized = str(mode).lower()
+        if normalized not in ("standard", "logo", "world"):
+            raise ValueError("mode must be 'standard', 'logo', or 'world'")
+        _screen_mode = normalized
         return None
 
     def colormode(self, cmode=None):
         return _set_color_mode(cmode)
 
+    def getcanvas(self):
+        return None
+
+    def getshapes(self):
+        return tuple(sorted(_registered_shapes))
+
+    def register_shape(self, name, shape=None):
+        _registered_shapes.add(str(name).lower())
+        return None
+
+    def addshape(self, name, shape=None):
+        return self.register_shape(name, shape)
+
+    def turtles(self):
+        return list(_turtles)
+
+    def window_height(self):
+        return _screen_height
+
+    def window_width(self):
+        return _screen_width
+
+    def textinput(self, title, prompt):
+        try:
+            result = window.prompt(str(prompt), "")
+        except Exception:
+            return None
+        return None if result is None else str(result)
+
+    def numinput(self, title, prompt, default=None, minval=None, maxval=None):
+        default_text = "" if default is None else str(default)
+        try:
+            result = window.prompt(str(prompt), default_text)
+        except Exception:
+            return None
+        if result is None or str(result).strip() == "":
+            return None
+        try:
+            number = float(result)
+        except Exception:
+            return None
+        if minval is not None and number < float(minval):
+            return None
+        if maxval is not None and number > float(maxval):
+            return None
+        return number
+
+    def bye(self):
+        _release_all_callbacks()
+        return None
+
+    def exitonclick(self):
+        return None
+
+    def mainloop(self):
+        return None
+
+    def save(self, filename, overwrite=False):
+        return None
+
+    def setup(self, width=None, height=None, startx=None, starty=None):
+        global _screen_width, _screen_height
+        if isinstance(width, (int, float)):
+            _screen_width = int(width)
+        if isinstance(height, (int, float)):
+            _screen_height = int(height)
+        return None
+
+    def title(self, title=None):
+        global _screen_title
+        if title is None:
+            return _screen_title
+        _screen_title = str(title)
+        return None
+
 _screen = _Screen()
 
 def Screen():
     return _screen
+
+class _FillContext:
+    def __init__(self, turtle):
+        self._turtle = turtle
+
+    def __enter__(self):
+        self._turtle.begin_fill()
+        return self._turtle
+
+    def __exit__(self, *_exc):
+        self._turtle.end_fill()
+        return False
 
 class Turtle:
     def __init__(self, *_args, **_kwargs):
@@ -1186,6 +1398,18 @@ class Turtle:
         self._shape = "classic"
         self._speed = 3.0
         self._visible = True
+        self._filling = False
+        self._outline = 1.0
+        self._poly_points = []
+        self._poly_recording = False
+        self._resizemode = "noresize"
+        self._shearfactor = 0.0
+        self._shape_transform = (1.0, 0.0, 0.0, 1.0)
+        self._stamps = []
+        self._stretch_len = 1.0
+        self._stretch_wid = 1.0
+        self._tilt = 0.0
+        _turtles.append(self)
 
     def _sync_bridge(self):
         _bridge.activate(str(self._bridge_id))
@@ -1205,6 +1429,17 @@ class Turtle:
     def _set_position(self, x, y):
         self._x = float(x)
         self._y = float(y)
+        self._record_poly_point()
+
+    def _record_poly_point(self):
+        if self._poly_recording:
+            point = (self._x, self._y)
+            if not self._poly_points or self._poly_points[-1] != point:
+                self._poly_points.append(point)
+
+    def _turn_left_degrees(self, degrees):
+        self._heading += float(degrees)
+        self._sync_bridge()
 
     def forward(self, distance):
         amount = float(distance)
@@ -1228,28 +1463,27 @@ class Turtle:
         self.backward(distance)
 
     def right(self, degrees):
-        self._heading -= float(degrees)
+        self._heading -= _angle_to_degrees(degrees)
         self._sync_bridge()
 
     def rt(self, degrees):
         self.right(degrees)
 
     def left(self, degrees):
-        self._heading += float(degrees)
-        self._sync_bridge()
+        self._turn_left_degrees(_angle_to_degrees(degrees))
 
     def lt(self, degrees):
         self.left(degrees)
 
     def setheading(self, degrees):
-        self._heading = float(degrees)
+        self._heading = _angle_to_degrees(degrees)
         self._sync_bridge()
 
     def seth(self, degrees):
         self.setheading(degrees)
 
     def heading(self):
-        return self._heading
+        return _degrees_to_angle(self._heading)
 
     def xcor(self):
         return self._x
@@ -1270,6 +1504,20 @@ class Turtle:
         self._set_position(x, y)
         _bridge.goto(float(x), float(y))
 
+    def teleport(self, x=None, y=None, *, fill_gap=False):
+        if x is None:
+            x = self.xcor()
+        elif y is None:
+            try:
+                x, y = x
+            except TypeError:
+                y = self.ycor()
+        if y is None:
+            y = self.ycor()
+        self._sync_bridge()
+        self._set_position(x, y)
+        _bridge.teleport(float(x), float(y), bool(fill_gap))
+
     def setpos(self, x, y=None):
         self.goto(x, y)
 
@@ -1286,6 +1534,14 @@ class Turtle:
         self.goto(0, 0)
         self._heading = 0.0
         self._sync_bridge()
+
+    def degrees(self, fullcircle=360.0):
+        global _angle_fullcircle
+        _angle_fullcircle = float(fullcircle)
+        return None
+
+    def radians(self):
+        return self.degrees(math.tau)
 
     def penup(self):
         self._pen_down = False
@@ -1318,6 +1574,50 @@ class Turtle:
 
     def width(self, width=None):
         return self.pensize(width)
+
+    def pen(self, pen=None, **pendict):
+        if pen is None and not pendict:
+            return {
+                "shown": self._visible,
+                "pendown": self._pen_down,
+                "pencolor": self._pen_color,
+                "fillcolor": self._fill_color,
+                "pensize": self._line_width,
+                "speed": self._speed,
+                "resizemode": self._resizemode,
+                "stretchfactor": (self._stretch_wid, self._stretch_len),
+                "outline": self._outline,
+                "tilt": self._tilt,
+            }
+        settings = {}
+        if pen is not None:
+            try:
+                settings.update(dict(pen))
+            except Exception:
+                pass
+        settings.update(pendict)
+        if "shown" in settings:
+            self._visible = bool(settings["shown"])
+        if "pendown" in settings:
+            self._pen_down = bool(settings["pendown"])
+        if "pencolor" in settings:
+            self._pen_color = _normalize_color(settings["pencolor"])
+        if "fillcolor" in settings:
+            self._fill_color = _normalize_color(settings["fillcolor"])
+        if "pensize" in settings:
+            self._line_width = max(1.0, float(settings["pensize"]))
+        if "speed" in settings:
+            self._speed = _normalize_turtle_speed(settings["speed"])
+        if "resizemode" in settings:
+            self._resizemode = str(settings["resizemode"])
+        if "stretchfactor" in settings:
+            self.shapesize(*settings["stretchfactor"])
+        if "outline" in settings:
+            self._outline = float(settings["outline"])
+        if "tilt" in settings:
+            self._tilt = float(settings["tilt"])
+        self._sync_bridge()
+        return None
 
     def _default_dot_size(self):
         return self._line_width + max(self._line_width, 4.0)
@@ -1353,16 +1653,16 @@ class Turtle:
     def circle(self, radius, extent=None, steps=None):
         radius = float(radius)
         if extent is None:
-            extent = 360.0
+            extent_degrees = 360.0
         else:
-            extent = float(extent)
+            extent_degrees = _angle_to_degrees(extent)
         if steps is None:
-            fraction = abs(extent) / 360.0
+            fraction = abs(extent_degrees) / 360.0
             steps = 1 + int(min(11 + abs(radius) / 6.0, 59.0) * fraction)
         else:
             steps = int(steps)
 
-        turn = extent / steps
+        turn = extent_degrees / steps
         half_turn = turn * 0.5
         side_length = 2.0 * radius * math.sin(math.radians(half_turn))
         if radius < 0:
@@ -1370,11 +1670,11 @@ class Turtle:
             turn = -turn
             half_turn = -half_turn
 
-        self.left(half_turn)
+        self._turn_left_degrees(half_turn)
         for _ in range(steps):
             self.forward(side_length)
-            self.left(turn)
-        self.left(-half_turn)
+            self._turn_left_degrees(turn)
+        self._turn_left_degrees(-half_turn)
 
     def dot(self, size=None, *color):
         self._sync_bridge()
@@ -1392,7 +1692,30 @@ class Turtle:
 
     def stamp(self):
         self._sync_bridge()
-        return _bridge.stamp()
+        stamp_id = _bridge.stamp()
+        self._stamps.append(stamp_id)
+        return stamp_id
+
+    def clearstamp(self, stampid):
+        try:
+            self._stamps.remove(stampid)
+        except ValueError:
+            pass
+        return None
+
+    def clearstamps(self, n=None):
+        if n is None:
+            self._stamps.clear()
+        else:
+            count = int(n)
+            if count >= 0:
+                del self._stamps[:count]
+            else:
+                del self._stamps[count:]
+        return None
+
+    def undo(self):
+        return None
 
     def write(self, text, *_args, **_kwargs):
         self._sync_bridge()
@@ -1401,6 +1724,10 @@ class Turtle:
     def onclick(self, function, btn=1, add=None):
         self._sync_bridge()
         _bridge.registerClick(str(btn), _stored_callback("turtle-click", btn, function))
+
+    def onrelease(self, function, btn=1, add=None):
+        self._sync_bridge()
+        _bridge.registerClick(str(btn), _stored_callback("turtle-release", btn, function))
 
     def ondrag(self, function, btn=1, add=None):
         self._sync_bridge()
@@ -1417,11 +1744,75 @@ class Turtle:
         if len(_args) == 0:
             return self._shape
         shape_name = str(_args[0]).lower()
-        if shape_name not in _builtin_shapes:
+        if shape_name not in _registered_shapes:
             raise ValueError("Unknown turtle shape: {}".format(_args[0]))
         self._shape = shape_name
         self._sync_bridge()
         return None
+
+    def resizemode(self, rmode=None):
+        if rmode is None:
+            return self._resizemode
+        normalized = str(rmode).lower()
+        if normalized not in ("auto", "user", "noresize"):
+            raise ValueError("resizemode must be 'auto', 'user', or 'noresize'")
+        self._resizemode = normalized
+        return None
+
+    def shapesize(self, stretch_wid=None, stretch_len=None, outline=None):
+        if stretch_wid is None and stretch_len is None and outline is None:
+            return (self._stretch_wid, self._stretch_len, self._outline)
+        if stretch_wid is not None:
+            self._stretch_wid = float(stretch_wid)
+        if stretch_len is None:
+            stretch_len = stretch_wid
+        if stretch_len is not None:
+            self._stretch_len = float(stretch_len)
+        if outline is not None:
+            self._outline = float(outline)
+        self._resizemode = "user"
+        self._sync_bridge()
+        return None
+
+    def turtlesize(self, stretch_wid=None, stretch_len=None, outline=None):
+        return self.shapesize(stretch_wid, stretch_len, outline)
+
+    def shearfactor(self, shear=None):
+        if shear is None:
+            return self._shearfactor
+        self._shearfactor = float(shear)
+        return None
+
+    def tiltangle(self, angle=None):
+        if angle is None:
+            return _degrees_to_angle(self._tilt)
+        self._tilt = _angle_to_degrees(angle)
+        self._sync_bridge()
+        return None
+
+    def tilt(self, angle):
+        self._tilt += _angle_to_degrees(angle)
+        self._sync_bridge()
+        return None
+
+    def shapetransform(self, t11=None, t12=None, t21=None, t22=None):
+        if t11 is None and t12 is None and t21 is None and t22 is None:
+            return self._shape_transform
+        self._shape_transform = (float(t11), float(t12), float(t21), float(t22))
+        self._resizemode = "user"
+        return None
+
+    def get_shapepoly(self):
+        if self._shape == "square":
+            return ((-10, -10), (10, -10), (10, 10), (-10, 10))
+        if self._shape == "triangle":
+            return ((-10, -8), (10, -8), (0, 12))
+        if self._shape == "circle":
+            return tuple(
+                (10 * math.cos(math.tau * index / 16), 10 * math.sin(math.tau * index / 16))
+                for index in range(16)
+            )
+        return ((0, 12), (-8, -10), (0, -6), (8, -10))
 
     def clear(self):
         _bridge.activate(str(self._bridge_id))
@@ -1438,6 +1829,7 @@ class Turtle:
         self._line_width = 3.0
         self._shape = "classic"
         self._visible = True
+        self._filling = False
         _bridge.resetTurtle()
 
     def distance(self, x, y=None):
@@ -1456,28 +1848,84 @@ class Turtle:
             target_x, target_y = x
         else:
             target_x, target_y = x, y
-        return math.degrees(math.atan2(float(target_y) - self.ycor(), float(target_x) - self.xcor()))
+        return _degrees_to_angle(math.degrees(math.atan2(float(target_y) - self.ycor(), float(target_x) - self.xcor())))
 
     def hideturtle(self):
         self._visible = False
         self._sync_bridge()
         return None
 
+    def ht(self):
+        return self.hideturtle()
+
     def showturtle(self):
         self._visible = True
         self._sync_bridge()
         return None
+
+    def st(self):
+        return self.showturtle()
 
     def isvisible(self):
         return self._visible
 
     def begin_fill(self):
         self._sync_bridge()
+        self._filling = True
         _bridge.beginFill()
 
     def end_fill(self):
         self._sync_bridge()
+        self._filling = False
         _bridge.endFill()
+
+    def filling(self):
+        return self._filling
+
+    def fill(self):
+        return _FillContext(self)
+
+    def begin_poly(self):
+        self._poly_recording = True
+        self._poly_points = [(self._x, self._y)]
+        return None
+
+    def end_poly(self):
+        self._poly_recording = False
+        return None
+
+    def get_poly(self):
+        return tuple(self._poly_points)
+
+    def clone(self):
+        clone = Turtle()
+        clone._x = self._x
+        clone._y = self._y
+        clone._heading = self._heading
+        clone._pen_down = self._pen_down
+        clone._pen_color = self._pen_color
+        clone._fill_color = self._fill_color
+        clone._line_width = self._line_width
+        clone._shape = self._shape
+        clone._speed = self._speed
+        clone._visible = self._visible
+        clone._sync_bridge()
+        return clone
+
+    def getturtle(self):
+        return self
+
+    def getpen(self):
+        return self
+
+    def getscreen(self):
+        return _screen
+
+    def setundobuffer(self, size):
+        return None
+
+    def undobufferentries(self):
+        return 0
 
 _default = Turtle()
 
@@ -1500,9 +1948,12 @@ def pos(): return _default.position()
 def goto(x, y=None): _default.goto(x, y)
 def setpos(x, y=None): _default.goto(x, y)
 def setposition(x, y=None): _default.goto(x, y)
+def teleport(x=None, y=None, *, fill_gap=False): _default.teleport(x, y, fill_gap=fill_gap)
 def setx(x): _default.setx(x)
 def sety(y): _default.sety(y)
 def home(): _default.home()
+def degrees(fullcircle=360.0): return _default.degrees(fullcircle)
+def radians(): return _default.radians()
 def penup(): _default.penup()
 def pu(): _default.penup()
 def up(): _default.penup()
@@ -1512,12 +1963,16 @@ def down(): _default.pendown()
 def isdown(): return _default.isdown()
 def pensize(width=None): return _default.pensize(width)
 def width(width=None): return _default.pensize(width)
+def pen(pen=None, **pendict): return _default.pen(pen, **pendict)
 def pencolor(*color): return _default.pencolor(*color)
 def fillcolor(*color): return _default.fillcolor(*color)
 def color(*colors): return _default.color(*colors)
 def circle(radius, *args, **kwargs): _default.circle(radius, *args, **kwargs)
 def dot(size=None, *color): _default.dot(size, *color)
 def stamp(): return _default.stamp()
+def clearstamp(stampid): return _default.clearstamp(stampid)
+def clearstamps(n=None): return _default.clearstamps(n)
+def undo(): return _default.undo()
 def write(text, *args, **kwargs): _default.write(text, *args, **kwargs)
 def clear(): _default.clear()
 def reset(): _default.reset()
@@ -1525,15 +1980,25 @@ def distance(x, y=None): return _default.distance(x, y)
 def towards(x, y=None): return _default.towards(x, y)
 def listen(): _screen.listen()
 def onkey(function, key): _screen.onkey(function, key)
+def onkeyrelease(function, key): _screen.onkeyrelease(function, key)
 def onkeypress(function, key=None): _screen.onkeypress(function, key)
 def ontimer(function, t=0): _screen.ontimer(function, t)
 def onclick(function, btn=1, add=None): _screen.onclick(function, btn, add)
 def onscreenclick(function, btn=1, add=None): _screen.onscreenclick(function, btn, add)
+def onrelease(function, btn=1, add=None): _default.onrelease(function, btn, add)
 def ondrag(function, btn=1, add=None): _default.ondrag(function, btn, add)
 def speed(*args): return _default.speed(*args)
-def tracer(*args): return _screen.tracer(*args)
+def tracer(n=None, delay=None): return _screen.tracer(n, delay)
 def update(): return _screen.update()
 def shape(*args): return _default.shape(*args)
+def resizemode(rmode=None): return _default.resizemode(rmode)
+def shapesize(stretch_wid=None, stretch_len=None, outline=None): return _default.shapesize(stretch_wid, stretch_len, outline)
+def turtlesize(stretch_wid=None, stretch_len=None, outline=None): return _default.turtlesize(stretch_wid, stretch_len, outline)
+def shearfactor(shear=None): return _default.shearfactor(shear)
+def tiltangle(angle=None): return _default.tiltangle(angle)
+def tilt(angle): return _default.tilt(angle)
+def shapetransform(t11=None, t12=None, t21=None, t22=None): return _default.shapetransform(t11, t12, t21, t22)
+def get_shapepoly(): return _default.get_shapepoly()
 def hideturtle(): return _default.hideturtle()
 def ht(): return _default.hideturtle()
 def showturtle(): return _default.showturtle()
@@ -1541,9 +2006,47 @@ def st(): return _default.showturtle()
 def isvisible(): return _default.isvisible()
 def begin_fill(): return _default.begin_fill()
 def end_fill(): return _default.end_fill()
+def filling(): return _default.filling()
+def fill(): return _default.fill()
+def begin_poly(): return _default.begin_poly()
+def end_poly(): return _default.end_poly()
+def get_poly(): return _default.get_poly()
+def clone(): return _default.clone()
+def getturtle(): return _default.getturtle()
+def getpen(): return _default.getpen()
+def getscreen(): return _default.getscreen()
+def setundobuffer(size): return _default.setundobuffer(size)
+def undobufferentries(): return _default.undobufferentries()
+def bgcolor(*color): return _screen.bgcolor(*color)
+def bgpic(picname=None): return _screen.bgpic(picname)
+def clearscreen(): return _screen.clearscreen()
+def resetscreen(): return _screen.resetscreen()
+def screensize(canvwidth=None, canvheight=None, bg=None): return _screen.screensize(canvwidth, canvheight, bg)
+def setworldcoordinates(llx, lly, urx, ury): return _screen.setworldcoordinates(llx, lly, urx, ury)
+def no_animation(): return _screen.no_animation()
+def delay(delay=None): return _screen.delay(delay)
+def mode(mode=None): return _screen.mode(mode)
+def colormode(cmode=None): return _set_color_mode(cmode)
+def getcanvas(): return _screen.getcanvas()
+def getshapes(): return _screen.getshapes()
+def register_shape(name, shape=None): return _screen.register_shape(name, shape)
+def addshape(name, shape=None): return _screen.addshape(name, shape)
+def turtles(): return _screen.turtles()
+def window_height(): return _screen.window_height()
+def window_width(): return _screen.window_width()
+def textinput(title, prompt): return _screen.textinput(title, prompt)
+def numinput(title, prompt, default=None, minval=None, maxval=None): return _screen.numinput(title, prompt, default, minval, maxval)
+def bye(): return _screen.bye()
+def exitonclick(): return _screen.exitonclick()
+def save(filename, overwrite=False): return _screen.save(filename, overwrite)
+def setup(width=None, height=None, startx=None, starty=None): return _screen.setup(width, height, startx, starty)
+def title(title=None): return _screen.title(title)
 def mainloop(): _screen.mainloop()
 def done(): _screen.mainloop()
-def colormode(cmode=None): return _set_color_mode(cmode)
+RawTurtle = Turtle
+RawPen = Turtle
+Pen = Turtle
+TurtleScreen = _Screen
 `;
 
 const pgzeroShim = `

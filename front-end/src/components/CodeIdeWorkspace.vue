@@ -391,6 +391,7 @@ const turtleInstantFrameStepBudget = 24;
 const turtleBacklogFastForwardStepThreshold = 18;
 const turtleBacklogFrameDistanceBudget = 420;
 const turtleBacklogFrameStepBudget = 140;
+const karelPlaybackFrameDelayMs = 350;
 const turtleMarkerHaloLineWidth = 4;
 const turtleMarkerStrokeLineWidth = 1.2;
 const outputEntryTruncatedMessage =
@@ -546,6 +547,7 @@ const codeEditorStateSnapshots = new Map<string, CodeEditorState>();
 
 let saveTimer: ReturnType<typeof window.setTimeout> | null = null;
 let localSnapshotTimer: ReturnType<typeof window.setTimeout> | null = null;
+let karelWorldPlaybackTimer: ReturnType<typeof window.setTimeout> | null = null;
 let saveInFlight: Promise<void> | null = null;
 let localSnapshotInFlight: Promise<void> | null = null;
 let localSnapshotQueued = false;
@@ -1128,6 +1130,41 @@ function codeIdeShareUrl(shareID: string) {
 
 function karelCellKey(street: number, avenue: number) {
 	return `${street}:${avenue}`;
+}
+
+function clearKarelWorldPlayback() {
+	if (karelWorldPlaybackTimer === null) return;
+	window.clearTimeout(karelWorldPlaybackTimer);
+	karelWorldPlaybackTimer = null;
+}
+
+function playKarelWorldSteps(steps: KarelWorldState[] | undefined) {
+	clearKarelWorldPlayback();
+	if (!steps?.length) return false;
+
+	let index = 0;
+	const showNextStep = () => {
+		const step = steps[index];
+		if (!step) {
+			karelWorldPlaybackTimer = null;
+			return;
+		}
+
+		karelWorld.value = step;
+		index += 1;
+		if (index >= steps.length) {
+			karelWorldPlaybackTimer = null;
+			return;
+		}
+
+		karelWorldPlaybackTimer = window.setTimeout(
+			showNextStep,
+			karelPlaybackFrameDelayMs
+		);
+	};
+
+	showNextStep();
+	return true;
 }
 
 function isJavaIdeMode(mode: PythonIdeMode): mode is "java" | "karel" {
@@ -2635,6 +2672,7 @@ function canDeleteFile(file: PythonIdeFile) {
 }
 
 function clearOutput() {
+	clearKarelWorldPlayback();
 	outputLines.value = [];
 	runtimeArtifacts.value = [];
 	karelWorld.value = null;
@@ -3432,6 +3470,25 @@ function trackTurtleFillPoint(x: number, y: number) {
 	const previous = turtleFillState.points.at(-1);
 	if (previous && previous.x === x && previous.y === y) return;
 	turtleFillState.points.push({ x, y });
+}
+
+function teleportTurtle(x: number, y: number, fillGap = false) {
+	const fromPose = currentTurtlePose();
+	const wasFilling = turtleFillState.active;
+	if (wasFilling && !fillGap) endTurtleFill();
+
+	turtleState.x = x;
+	turtleState.y = y;
+	if (wasFilling && fillGap) trackTurtleFillPoint(x, y);
+
+	const toPose = currentTurtlePose();
+	queueTurtleStep({
+		durationMs: turtleMovementDuration(fromPose, toPose),
+		fromPose,
+		toPose
+	});
+
+	if (wasFilling && !fillGap) beginTurtleFill();
 }
 
 function beginTurtleFill() {
@@ -4467,6 +4524,7 @@ const turtleBridge: TurtleBridge = {
 			toPose
 		});
 	},
+	teleport: teleportTurtle,
 	home() {
 		this.goto(0, 0);
 		turtleState.heading = 0;
@@ -4555,7 +4613,7 @@ const turtleBridge: TurtleBridge = {
 		activeTurtleTimerCount.value = turtleTimerHandles.size;
 	},
 	listen() {
-		canvasRef.value?.focus();
+		canvasRef.value?.focus({ preventScroll: true });
 	},
 	setShape(shape: string) {
 		const fromPose = currentTurtlePose();
@@ -4653,6 +4711,9 @@ function createGuardedTurtleBridgeRun(): TurtleBridge {
 		},
 		goto(x: number, y: number) {
 			if (isActiveRun()) turtleBridge.goto(x, y);
+		},
+		teleport(x: number, y: number, fillGap?: boolean) {
+			if (isActiveRun()) turtleBridge.teleport(x, y, fillGap);
 		},
 		home() {
 			if (isActiveRun()) turtleBridge.home();
@@ -4948,7 +5009,12 @@ async function runCurrentProject() {
 				inputText: inputText.value,
 				mode: project.mode
 			});
-			karelWorld.value = result.karelWorld ?? null;
+			if (
+				project.mode !== "karel" ||
+				!playKarelWorldSteps(result.karelWorldSteps)
+			) {
+				karelWorld.value = result.karelWorld ?? null;
+			}
 			for (const line of result.stdout) appendOutput("stdout", line);
 			for (const line of result.stderr) appendOutput("stderr", line);
 			runMessage.value = result.stderr.length
@@ -5040,6 +5106,7 @@ function stopCurrentProject() {
 function stopActiveRuntimeSurfaces() {
 	invalidatePythonIdeRuns();
 	isRunning.value = false;
+	clearKarelWorldPlayback();
 	invalidateTurtleBridgeRuns();
 	invalidateGameBridgeRuns();
 	stopLoadedPythonRuntimeRun();
@@ -5056,12 +5123,22 @@ function stopActiveRuntimeSurfaces() {
 	activeTurtleDragButton = null;
 }
 
+function focusVisualCanvasForRun() {
+	const projectMode = selectedProject.value?.mode;
+	if (projectMode !== "turtle" && projectMode !== "pgzero") return;
+
+	window.requestAnimationFrame(() =>
+		canvasRef.value?.focus({ preventScroll: true })
+	);
+}
+
 function activateRunControl() {
 	if (runControlIsStop.value) {
 		stopCurrentProject();
 		return;
 	}
-	void runCurrentProject();
+	focusVisualCanvasForRun();
+	void runCurrentProject().finally(focusVisualCanvasForRun);
 }
 
 function canvasOwnsKeyboardEvent(event: KeyboardEvent) {
@@ -5071,10 +5148,32 @@ function canvasOwnsKeyboardEvent(event: KeyboardEvent) {
 	);
 }
 
+function isCanvasScrollKey(key: string) {
+	return [
+		"down",
+		"end",
+		"home",
+		"left",
+		"pagedown",
+		"pageup",
+		"right",
+		"space",
+		"up"
+	].includes(key);
+}
+
 function handleKeyDown(event: KeyboardEvent) {
 	if (!canvasOwnsKeyboardEvent(event)) return;
 
-	const handler = keyHandlers.get(normalizeKey(event.key));
+	const normalizedTurtleKey = normalizeKey(event.key);
+	if (
+		selectedProject.value?.mode === "turtle" &&
+		isCanvasScrollKey(normalizedTurtleKey)
+	) {
+		event.preventDefault();
+	}
+
+	const handler = keyHandlers.get(normalizedTurtleKey);
 	if (handler) {
 		event.preventDefault();
 		try {
@@ -5105,7 +5204,7 @@ function handleKeyDown(event: KeyboardEvent) {
 		requestGameTick();
 	}
 
-	if (["down", "left", "right", "space", "up"].includes(normalizedKey)) {
+	if (isCanvasScrollKey(normalizedKey)) {
 		event.preventDefault();
 	}
 }

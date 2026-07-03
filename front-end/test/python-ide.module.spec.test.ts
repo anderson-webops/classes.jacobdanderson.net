@@ -792,6 +792,102 @@ describe("python IDE project helpers", () => {
 		expect(runtimeSource).toContain("_bridge.endFill()");
 	});
 
+	it("keeps the browser Turtle shim aligned with Python 3.14 API names", () => {
+		const runtimeSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
+			"utf8"
+		);
+		const expectedModuleFunctions = [
+			"addshape",
+			"begin_poly",
+			"bgpic",
+			"bye",
+			"clearstamp",
+			"clearstamps",
+			"clearscreen",
+			"degrees",
+			"end_poly",
+			"exitonclick",
+			"fill",
+			"filling",
+			"get_poly",
+			"getcanvas",
+			"getpen",
+			"getscreen",
+			"getshapes",
+			"get_shapepoly",
+			"mode",
+			"no_animation",
+			"numinput",
+			"onkeyrelease",
+			"onrelease",
+			"pen",
+			"radians",
+			"register_shape",
+			"resetscreen",
+			"resizemode",
+			"save",
+			"screensize",
+			"setundobuffer",
+			"setworldcoordinates",
+			"shapesize",
+			"shapetransform",
+			"shearfactor",
+			"teleport",
+			"textinput",
+			"tilt",
+			"tiltangle",
+			"turtles",
+			"turtlesize",
+			"undobufferentries",
+			"undo",
+			"window_height",
+			"window_width"
+		];
+
+		expect(runtimeSource).toContain(
+			'__classes_turtle_api_version__ = "3.14"'
+		);
+		expect(runtimeSource).toContain("class _FillContext:");
+		expect(runtimeSource).toContain("class _NoAnimationContext:");
+		for (const functionName of expectedModuleFunctions) {
+			expect(runtimeSource).toContain(`def ${functionName}(`);
+		}
+		expect(runtimeSource).toContain("RawTurtle = Turtle");
+		expect(runtimeSource).toContain("TurtleScreen = _Screen");
+	});
+
+	it("supports Turtle teleport without drawing a pen line", () => {
+		const runtimeSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
+			"utf8"
+		);
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+		const teleportStart = pageSource.indexOf("function teleportTurtle");
+		const teleportSource = pageSource.slice(
+			teleportStart,
+			pageSource.indexOf("function beginTurtleFill", teleportStart)
+		);
+
+		expect(runtimeSource).toContain(
+			"def teleport(self, x=None, y=None, *, fill_gap=False):"
+		);
+		expect(runtimeSource).toContain(
+			"_bridge.teleport(float(x), float(y), bool(fill_gap))"
+		);
+		expect(runtimeSource).toContain(
+			"teleport: (x: number, y: number, fillGap?: boolean) => void;"
+		);
+		expect(pageSource).toContain("teleport: teleportTurtle");
+		expect(pageSource).toContain(
+			"if (isActiveRun()) turtleBridge.teleport(x, y, fillGap);"
+		);
+		expect(teleportSource).not.toContain('kind: "line"');
+	});
+
 	it("keeps Turtle timer hooks wired in the runtime bridge", () => {
 		const runtimeSource = readFileSync(
 			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
@@ -877,6 +973,38 @@ describe("python IDE project helpers", () => {
 		expect(stopSource).toContain("turtleClickHandlers.clear();");
 		expect(stopSource).toContain("turtleDragHandlers.clear();");
 		expect(stopSource).toContain("refreshActiveTurtleEventHandlerCount();");
+	});
+
+	it("focuses the visual canvas on Run and captures scroll keys there", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+		const focusStart = pageSource.indexOf("function focusVisualCanvasForRun");
+		const focusSource = pageSource.slice(
+			focusStart,
+			pageSource.indexOf("function activateRunControl", focusStart)
+		);
+		const keydownStart = pageSource.indexOf("function handleKeyDown");
+		const keydownSource = pageSource.slice(
+			keydownStart,
+			pageSource.indexOf("function handleKeyUp", keydownStart)
+		);
+
+		expect(focusSource).toContain('projectMode !== "turtle"');
+		expect(focusSource).toContain('projectMode !== "pgzero"');
+		expect(focusSource).toContain("canvasRef.value?.focus({ preventScroll: true })");
+		expect(pageSource).toContain("focusVisualCanvasForRun();");
+		expect(pageSource).toContain(
+			"void runCurrentProject().finally(focusVisualCanvasForRun);"
+		);
+		expect(pageSource).toContain("function isCanvasScrollKey");
+		expect(keydownSource).toContain('selectedProject.value?.mode === "turtle"');
+		expect(keydownSource).toContain(
+			"isCanvasScrollKey(normalizedTurtleKey)"
+		);
+		expect(keydownSource).toContain("event.preventDefault();");
+		expect(keydownSource).toContain("if (isCanvasScrollKey(normalizedKey))");
 	});
 
 	it("keeps Turtle runs animated with a visible cursor marker", () => {
@@ -979,19 +1107,22 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(circleSource).toContain("if extent is None:");
-		expect(circleSource).toContain("extent = 360.0");
+		expect(circleSource).toContain("extent_degrees = 360.0");
+		expect(circleSource).toContain(
+			"extent_degrees = _angle_to_degrees(extent)"
+		);
 		expect(circleSource).toContain("steps = 1 + int(");
-		expect(circleSource).toContain("turn = extent / steps");
+		expect(circleSource).toContain("turn = extent_degrees / steps");
 		expect(circleSource).toContain("half_turn = turn * 0.5");
 		expect(circleSource).toContain(
 			"side_length = 2.0 * radius * math.sin(math.radians(half_turn))"
 		);
 		expect(circleSource).toContain("if radius < 0:");
-		expect(circleSource).toContain("self.left(half_turn)");
+		expect(circleSource).toContain("self._turn_left_degrees(half_turn)");
 		expect(circleSource).toContain("for _ in range(steps):");
 		expect(circleSource).toContain("self.forward(side_length)");
-		expect(circleSource).toContain("self.left(turn)");
-		expect(circleSource).toContain("self.left(-half_turn)");
+		expect(circleSource).toContain("self._turn_left_degrees(turn)");
+		expect(circleSource).toContain("self._turn_left_degrees(-half_turn)");
 		expect(circleSource).not.toContain("_bridge.circle(float(radius))");
 	});
 
@@ -1276,7 +1407,7 @@ describe("python IDE project helpers", () => {
 		expect(runtimeSource).toContain("def _normalize_turtle_speed(value):");
 		expect(runtimeSource).toContain('"fastest": 0.0');
 		expect(runtimeSource).toContain(
-			"def tracer(*args): return _screen.tracer(*args)"
+			"def tracer(n=None, delay=None): return _screen.tracer(n, delay)"
 		);
 		expect(runtimeSource).toContain(
 			"def update(): return _screen.update()"
@@ -3404,17 +3535,17 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"if (!canvasOwnsKeyboardEvent(event)) return;"
 		);
-		expect(
+		expect(pageSource.indexOf("function isCanvasScrollKey")).toBeLessThan(
 			pageSource.indexOf("if (!canvasOwnsKeyboardEvent(event)) return;")
-		).toBeLessThan(
-			pageSource.indexOf('["down", "left", "right", "space", "up"]')
 		);
 		expect(pageSource).toContain("function pythonGameKeyFromEvent");
 		expect(pageSource).toContain("function gameKeyModifierMask");
 		expect(pageSource).toContain("mod: gameKeyModifierMask(event)");
 		expect(pageSource).toContain("unicode: gameKeyUnicode(event)");
 		expect(pageSource).toContain('@blur="clearCanvasKeyboardState"');
-		expect(pageSource).toContain("canvasRef.value?.focus();");
+		expect(pageSource).toContain(
+			"canvasRef.value?.focus({ preventScroll: true })"
+		);
 		expect(pageSource).toContain("--python-focus-ring");
 		expect(pageSource).toContain(".code-editor-shell:focus-within");
 		expect(pageSource).toContain(".canvas-shell:focus-within");
@@ -4356,6 +4487,27 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("'has-paint': Boolean(");
 		expect(pageSource).toContain("\"--karel-cell-color\"");
 		expect(pageSource).toContain(".karel-cell.has-paint");
+	});
+
+	it("plays Karel world snapshots instead of only showing the final state", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+
+		expect(pageSource).toContain("const karelPlaybackFrameDelayMs = 350;");
+		expect(pageSource).toContain(
+			"let karelWorldPlaybackTimer: ReturnType<typeof window.setTimeout> | null ="
+		);
+		expect(pageSource).toContain("function clearKarelWorldPlayback()");
+		expect(pageSource).toContain(
+			"function playKarelWorldSteps(steps: KarelWorldState[] | undefined)"
+		);
+		expect(pageSource).toContain("karelWorld.value = step;");
+		expect(pageSource).toContain(
+			"!playKarelWorldSteps(result.karelWorldSteps)"
+		);
+		expect(pageSource).toContain("clearKarelWorldPlayback();");
 	});
 
 	it("names repeated Code IDE file controls by the affected file", () => {

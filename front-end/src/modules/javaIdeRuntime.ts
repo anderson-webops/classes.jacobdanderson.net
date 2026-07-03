@@ -49,6 +49,7 @@ interface JavaIdeRunOptions {
 
 interface JavaIdeRunResult {
 	karelWorld?: KarelWorldState;
+	karelWorldSteps?: KarelWorldState[];
 	stderr: string[];
 	stdout: string[];
 }
@@ -2603,6 +2604,7 @@ function runKarelProject(
 	const world = parseKarelWorld(files, source);
 	const stderr: string[] = [];
 	const trace: string[] = [];
+	const karelWorldSteps: KarelWorldState[] = [];
 
 	const robot: KarelRobotState = {
 		name: declaration?.[1] ?? "karel",
@@ -2631,9 +2633,15 @@ function runKarelProject(
 	}
 
 	trace.push(formatRobotTrace(robot));
+	karelWorldSteps.push(
+		serializeKarelWorld(world, cloneKarelRobot(robot), [...trace])
+	);
 	for (const command of plan.commands) {
 		const error = applyKarelCommand(world, robot, command);
 		trace.push(formatRobotTrace(robot));
+		karelWorldSteps.push(
+			serializeKarelWorld(world, cloneKarelRobot(robot), [...trace])
+		);
 		if (!error) continue;
 		stderr.push(error);
 		break;
@@ -2642,6 +2650,7 @@ function runKarelProject(
 
 	return {
 		karelWorld: serializeKarelWorld(world, robot, trace),
+		karelWorldSteps,
 		stderr,
 		stdout: trace
 	};
