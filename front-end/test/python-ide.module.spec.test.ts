@@ -4685,13 +4685,21 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"let karelWorldPlaybackTimer: ReturnType<typeof window.setTimeout> | null ="
 		);
-		expect(pageSource).toContain("function clearKarelWorldPlayback()");
 		expect(pageSource).toContain(
-			"function playKarelWorldSteps(steps: KarelWorldState[] | undefined)"
+			"let resolveKarelWorldPlayback: ((completed: boolean) => void) | null ="
 		);
+		expect(pageSource).toContain("function clearKarelWorldPlayback()");
+		expect(pageSource).toContain("resolveKarelWorldPlayback(false);");
+		expect(pageSource).toContain("shouldContinue: () => boolean");
+		expect(pageSource).toContain("return new Promise<boolean>(resolve =>");
+		expect(pageSource).toContain("finish(true);");
 		expect(pageSource).toContain("karelWorld.value = step;");
+		expect(pageSource).toContain('runMessage.value = "Animating Karel world";');
 		expect(pageSource).toContain(
-			"!playKarelWorldSteps(result.karelWorldSteps)"
+			"const completedPlayback = await playKarelWorldSteps("
+		);
+		expect(pageSource).toContain(
+			"() => !shouldStopPythonIdeRun(runID, project._id)"
 		);
 		expect(pageSource).toContain("clearKarelWorldPlayback();");
 	});
