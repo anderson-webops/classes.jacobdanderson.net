@@ -153,8 +153,14 @@ describe("python IDE CodeMirror editor", () => {
 		);
 		expect(routeSource).not.toContain("new EditorView");
 		expect(routeSource).not.toContain("loadPythonIdeRuntime");
+		expect(legacyRouteSource).toContain("defineAsyncComponent");
+		expect(legacyRouteSource).toContain(
+			'() => import("@/components/CodeIdeWorkspace.vue")'
+		);
 		expect(legacyRouteSource).toContain('path: "/ide"');
-		expect(legacyRouteSource).not.toContain("CodeIdeWorkspace");
+		expect(legacyRouteSource).toContain("<CodeIdeWorkspace />");
+		expect(legacyRouteSource).not.toContain("new EditorView");
+		expect(legacyRouteSource).not.toContain("loadPythonIdeRuntime");
 		expect(workspaceSource).toContain(
 			"<h1>Code, run, and draw in Python or Java</h1>"
 		);
