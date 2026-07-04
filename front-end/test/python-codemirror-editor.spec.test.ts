@@ -1121,11 +1121,18 @@ describe("python IDE CodeMirror editor", () => {
 				"pickBeeper",
 				"putBall",
 				"takeBall",
-				"paint"
+				"paint",
+				"paintCorner"
 			])
 		);
 		expect(autocompleteLabelsForDoc("karel", "paint")).toEqual(
-			expect.arrayContaining(["paint", "colorIs", "colorIsNot"])
+			expect.arrayContaining(["paint", "paintCorner"])
+		);
+		expect(autocompleteLabelsForDoc("karel", "corner")).toEqual(
+			expect.arrayContaining(["cornerColorIs", "cornerColorIsNot"])
+		);
+		expect(autocompleteLabelsForDoc("karel", "color")).toEqual(
+			expect.arrayContaining(["colorIs", "colorIsNot"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "front")).toEqual(
 			expect.arrayContaining(["frontIsClear", "frontIsBlocked"])
