@@ -302,6 +302,54 @@ describe("Python project review routes", () => {
 		});
 	});
 
+	it("sanitizes legacy stored files when updating owned project metadata", async () => {
+		const project = makeProject({
+			activeFileName: "../secret.py",
+			files: [
+				{
+					name: "main.py",
+					content: "print('safe')\n",
+					encoding: "text"
+				},
+				{
+					name: "../secret.py",
+					content: "print('secret')\n",
+					encoding: "text"
+				},
+				{
+					name: "turtle.py",
+					content: "print('reserved')\n",
+					encoding: "text"
+				}
+			]
+		});
+		modelMocks.pythonProjectFindOne.mockResolvedValue(project);
+
+		await withUserRoutes(async baseUrl => {
+			const response = await putJson(
+				baseUrl,
+				`/users/loggedin/python-projects/${projectID}`,
+				{ title: "Cleaned loops practice" },
+				{ "x-user-id": studentID.toString() }
+			);
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(project.files).toEqual([
+				{
+					name: "main.py",
+					content: "print('safe')\n",
+					encoding: "text"
+				}
+			]);
+			expect(project.activeFileName).toBe("main.py");
+			expect(project.save).toHaveBeenCalled();
+			expect(body.project.title).toBe("Cleaned loops practice");
+			expect(body.project.files).toEqual(project.files);
+			expect(body.project.activeFileName).toBe("main.py");
+		});
+	});
+
 	it("lets admins list saved projects with their staff review copies", async () => {
 		await withUserRoutes(async baseUrl => {
 			const response = await fetch(`${baseUrl}/users/${studentID}/python-projects`, {
@@ -550,6 +598,54 @@ describe("Python project review routes", () => {
 		});
 	});
 
+	it("sanitizes legacy review files when changing visibility without replacing files", async () => {
+		const review = makeReview({
+			activeFileName: "../secret.py",
+			files: [
+				{
+					name: "main.py",
+					content: "# Safe review note.\nprint('review')\n",
+					encoding: "text"
+				},
+				{
+					name: "../secret.py",
+					content: "# Hidden legacy file.\n",
+					encoding: "text"
+				},
+				{
+					name: "pygame.py",
+					content: "# Runtime-reserved module.\n",
+					encoding: "text"
+				}
+			]
+		});
+		modelMocks.pythonProjectReviewFindOne.mockResolvedValue(review);
+
+		await withUserRoutes(async baseUrl => {
+			const response = await putJson(
+				baseUrl,
+				`/users/${studentID}/python-projects/${projectID}/review/${reviewID}`,
+				{ visibleToStudent: true },
+				{ "x-admin-id": adminID.toString() }
+			);
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(review.files).toEqual([
+				{
+					name: "main.py",
+					content: "# Safe review note.\nprint('review')\n",
+					encoding: "text"
+				}
+			]);
+			expect(review.activeFileName).toBe("main.py");
+			expect(review.visibleToStudent).toBe(true);
+			expect(review.save).toHaveBeenCalled();
+			expect(body.review.files).toEqual(review.files);
+			expect(body.review.activeFileName).toBe("main.py");
+		});
+	});
+
 	it("lists only visible review copies for the logged-in student", async () => {
 		modelMocks.pythonProjectReviewFind.mockReturnValue(queryWith([
 			makeReview({
@@ -630,6 +726,53 @@ describe("Python project review routes", () => {
 			expect(project.shareID).not.toBe(firstShareID);
 			expect(project.shareCreatedAt).toBeInstanceOf(Date);
 			expect(reenableBody.project.shareID).toBe(project.shareID);
+		});
+	});
+
+	it("sanitizes legacy stored files before refreshing an enabled share link", async () => {
+		const shareID = "share_EXISTING123456789_xyz";
+		const project = makeProject({
+			activeFileName: "../secret.py",
+			files: [
+				{
+					name: "main.py",
+					content: "print('safe shared code')\n",
+					encoding: "text"
+				},
+				{
+					name: "../secret.py",
+					content: "print('secret')\n",
+					encoding: "text"
+				}
+			],
+			shared: true,
+			shareID,
+			shareCreatedAt: now
+		});
+		modelMocks.pythonProjectFindOne.mockResolvedValue(project);
+
+		await withUserRoutes(async baseUrl => {
+			const response = await putJson(
+				baseUrl,
+				`/users/loggedin/python-projects/${projectID}/share`,
+				{ shared: true },
+				{ "x-user-id": studentID.toString() }
+			);
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(project.files).toEqual([
+				{
+					name: "main.py",
+					content: "print('safe shared code')\n",
+					encoding: "text"
+				}
+			]);
+			expect(project.activeFileName).toBe("main.py");
+			expect(project.shareID).toBe(shareID);
+			expect(project.save).toHaveBeenCalled();
+			expect(body.project.files).toEqual(project.files);
+			expect(body.project.activeFileName).toBe("main.py");
 		});
 	});
 
