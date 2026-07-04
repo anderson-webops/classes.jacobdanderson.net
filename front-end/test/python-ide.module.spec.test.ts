@@ -285,10 +285,46 @@ describe("python IDE project helpers", () => {
 		expect(karelOutline.files[0]?.content).toContain(
 			"frontIsClear() && noBallsPresent()"
 		);
-	expect(karelOutline.files[0]?.content).toContain(
-		"while (frontIsClear())"
-	);
-});
+		expect(karelOutline.files[0]?.content).toContain(
+			"while (frontIsClear())"
+		);
+	});
+
+	it("keeps built-in IDE demos and templates aligned with the classroom coding standard", () => {
+		expect(javaStarterCode).toContain(
+			"@brief Demonstrate the minimal Java console project shape"
+		);
+		expect(javaOutlineStarterCode).toContain(
+			"@brief Organize a beginner Java console project with helpers and lists"
+		);
+		expect(blueJMainStarterCode).toContain(
+			"@brief Demonstrate a small BlueJ object-oriented project"
+		);
+		expect(blueJStudentStarterCode).toContain(
+			"@brief Store one student's grade level and score history"
+		);
+		expect(karelStarterCode).toContain(
+			"@brief Demonstrate a Karel robot program with a loaded world file"
+		);
+		expect(karelOutlineStarterCode).toContain(
+			"@brief Run the main Karel command sequence"
+		);
+		expect(turtleStarterCode).toContain(
+			"# Move only while the project is in its active motion state"
+		);
+		expect(pythonLevel1OutlineStarterCode).toContain(
+			"# Build each extra turtle before the animation loop starts"
+		);
+		expect(pgzeroStarterCode).toContain(
+			"# Move left while the left arrow key is held"
+		);
+		expect(pgzeroOutlineStarterCode).toContain(
+			"# Create each extra actor before the game loop starts"
+		);
+		expect(getPythonIdeDefaultFileContent("Main.java")).toContain(
+			"@param args Command-line arguments"
+		);
+	});
 
 	it("creates a BlueJ Java template with beginner object files", () => {
 		const project = createPythonIdeProject("java", {
