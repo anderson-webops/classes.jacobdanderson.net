@@ -385,6 +385,10 @@ const blueJProjectArchiveUploadAccept =
 	".zip,application/zip,application/x-zip-compressed";
 const blueJHomeUrl = "https://www.bluej.org/";
 const blueJSourceUrl = "https://github.com/k-pet-group/BlueJ-Greenfoot";
+const blueJClassNameRegex =
+	/\b(?:public\s+)?(?:abstract\s+|final\s+)?class\s+([A-Z_$][\w$]*)/;
+const blueJMainMethodRegex =
+	/\bmain\s*\(\s*(?:\w+\s*\[\s*\]\s+\w+|\w+\s+\w+\s*\[\s*\]|\w+\s*\.\.\.\s+\w+)/;
 const defaultCodeSplitPercent = 54;
 const defaultDrawingCodeSplitPercent = 42;
 const minCodeSplitPercent = 28;
@@ -1176,6 +1180,28 @@ const selectedProjectBlueJDescription = computed(() => {
 		return "Export this Java project as a BlueJ-ready ZIP with package.bluej, source files, and README notes.";
 	}
 	return "Practice Karel in the browser, or open a BlueJ desktop starter for object-bench inspection.";
+});
+const selectedBlueJClassTargets = computed(() => {
+	const project = selectedProject.value;
+	if (!project) return [];
+
+	return project.files
+		.filter(file => isPythonIdeJavaFile(file.name))
+		.map(file => {
+			const fallbackName =
+				file.name
+					.split("/")
+					.filter(Boolean)
+					.at(-1)
+					?.replace(/\.java$/i, "") || file.name;
+			return {
+				fileName: file.name,
+				hasMainMethod: blueJMainMethodRegex.test(file.content),
+				name:
+					file.content.match(blueJClassNameRegex)?.[1] ?? fallbackName
+			};
+		})
+		.slice(0, 8);
 });
 const codeIdeHeroContent = computed(() =>
 	isBlueJIdeRoute.value
@@ -2345,6 +2371,11 @@ async function createProjectFromMenu(
 ) {
 	showProjectMenu.value = false;
 	await createProject(mode, template);
+}
+
+function openBlueJArchiveImporterFromMenu() {
+	showProjectMenu.value = false;
+	openBlueJArchiveImporter();
 }
 
 function bytesToArrayBuffer(bytes: Uint8Array) {
@@ -6026,6 +6057,28 @@ onBeforeUnmount(() => {
 									class="project-create-menu"
 									role="menu"
 								>
+									<span>BlueJ desktop bridge</span>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'java',
+												'bluej'
+											)
+										"
+									>
+										New BlueJ project
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											openBlueJArchiveImporterFromMenu
+										"
+									>
+										Import BlueJ ZIP
+									</button>
 									<span>New project</span>
 									<button
 										type="button"
@@ -6233,6 +6286,12 @@ onBeforeUnmount(() => {
 							</small>
 						</div>
 						<div class="java-tools-actions">
+							<RouterLink
+								class="site-button site-button--secondary compact-button"
+								to="/bluej"
+							>
+								BlueJ workspace
+							</RouterLink>
 							<button
 								class="site-button site-button--secondary compact-button"
 								type="button"
@@ -6692,7 +6751,37 @@ onBeforeUnmount(() => {
 						<h2>BlueJ Desktop Integration</h2>
 						<p>{{ selectedProjectBlueJDescription }}</p>
 					</div>
+					<div
+						v-if="selectedBlueJClassTargets.length"
+						class="bluej-class-map"
+						aria-label="BlueJ class diagram preview"
+					>
+						<span class="bluej-class-map-label">
+							Class diagram preview
+						</span>
+						<div class="bluej-class-targets">
+							<div
+								v-for="target in selectedBlueJClassTargets"
+								:key="target.fileName"
+								class="bluej-class-target"
+							>
+								<strong>{{ target.name }}</strong>
+								<small>{{
+									target.hasMainMethod
+										? "Runs main"
+										: "Object bench class"
+								}}</small>
+							</div>
+						</div>
+					</div>
 					<div class="bluej-integration-actions">
+						<RouterLink
+							v-if="!isBlueJIdeRoute"
+							class="site-button site-button--secondary compact-button"
+							to="/bluej"
+						>
+							BlueJ workspace
+						</RouterLink>
 						<button
 							class="site-button site-button--secondary compact-button"
 							type="button"
@@ -7580,6 +7669,23 @@ html.dark .bluej-integration-link {
 	color: #5eead4;
 }
 
+html.dark .bluej-class-map-label {
+	color: #5eead4;
+}
+
+html.dark .bluej-class-target {
+	border-color: rgba(94, 234, 212, 0.32);
+	background: rgba(8, 17, 31, 0.74);
+}
+
+html.dark .bluej-class-target strong {
+	color: #f8fafc;
+}
+
+html.dark .bluej-class-target small {
+	color: #c8dce6;
+}
+
 html.dark .bluej-integration-link {
 	border-color: rgba(94, 234, 212, 0.2);
 	background: rgba(15, 23, 42, 0.28);
@@ -7998,6 +8104,54 @@ html.dark .file-delete:disabled::after {
 	color: var(--color-ink);
 	font-size: 0.86rem;
 	line-height: 1.45;
+}
+
+.bluej-class-map {
+	display: grid;
+	gap: 0.55rem;
+	min-width: min(100%, 20rem);
+}
+
+.bluej-class-map-label {
+	color: #0f766e;
+	font-size: 0.68rem;
+	font-weight: 900;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.bluej-class-targets {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.bluej-class-target {
+	min-width: 7.25rem;
+	display: grid;
+	gap: 0.15rem;
+	place-items: center;
+	padding: 0.65rem 0.75rem;
+	border: 1px solid rgba(15, 118, 110, 0.22);
+	border-radius: 10px;
+	background: rgba(236, 253, 245, 0.74);
+	text-align: center;
+}
+
+.bluej-class-target strong,
+.bluej-class-target small {
+	display: block;
+}
+
+.bluej-class-target strong {
+	color: var(--color-ink-strong);
+	font-size: 0.88rem;
+}
+
+.bluej-class-target small {
+	color: var(--color-ink-soft);
+	font-size: 0.72rem;
+	font-weight: 700;
 }
 
 .bluej-integration-eyebrow {
