@@ -11,6 +11,8 @@ const BLUEJ_README_FILE_NAME = "README.TXT";
 const BLUEJ_HOME_URL = "https://www.bluej.org/";
 const BLUEJ_SOURCE_URL = "https://github.com/k-pet-group/BlueJ-Greenfoot";
 const JAVA_IDENTIFIER_RE = /^[A-Z_$][\w$]*$/i;
+const DEFAULT_BLUEJ_EXPORT_MAX_FILES = 40;
+const DEFAULT_BLUEJ_EXPORT_MAX_TEXT_FILE_BYTES = 512 * 1024;
 const DEFAULT_BLUEJ_IMPORT_MAX_FILES = 40;
 const DEFAULT_BLUEJ_IMPORT_MAX_TEXT_FILE_BYTES = 512 * 1024;
 
@@ -138,12 +140,21 @@ BlueJ source: ${BLUEJ_SOURCE_URL}
 `;
 }
 
+function isWithinBlueJExportByteLimit(content: string) {
+	if (content.length > DEFAULT_BLUEJ_EXPORT_MAX_TEXT_FILE_BYTES) return false;
+	return (
+		new TextEncoder().encode(content).byteLength <=
+		DEFAULT_BLUEJ_EXPORT_MAX_TEXT_FILE_BYTES
+	);
+}
+
 function isBlueJExportableTextFile(file: PythonIdeFile) {
 	return (
 		file.encoding !== "base64" &&
 		isValidPythonFileName(file.name) &&
 		isPythonIdeTextFile(file.name) &&
-		file.name.toLowerCase() !== BLUEJ_PROJECT_FILE_NAME
+		file.name.toLowerCase() !== BLUEJ_PROJECT_FILE_NAME &&
+		isWithinBlueJExportByteLimit(file.content)
 	);
 }
 
@@ -160,6 +171,7 @@ export function createBlueJProjectFiles(
 	const usedFileNames = new Set<string>();
 
 	for (const file of project.files) {
+		if (files.length >= DEFAULT_BLUEJ_EXPORT_MAX_FILES) break;
 		if (!isBlueJExportableTextFile(file)) continue;
 
 		const name = blueJExportFileName(file);
