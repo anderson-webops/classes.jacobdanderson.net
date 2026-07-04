@@ -56,6 +56,7 @@ import {
 	pythonIdeModeForCourseId,
 	pythonIdeProjectToPayload,
 	pythonIdeStorageKey,
+	pythonStarterCode,
 	pythonLevel1OutlineStarterCode,
 	resolvePythonIdeActiveFileName,
 	saveLocalPythonProjects,
@@ -309,6 +310,12 @@ describe("python IDE project helpers", () => {
 		expect(karelOutlineStarterCode).toContain(
 			"@brief Run the main Karel command sequence"
 		);
+		expect(pythonStarterCode).toContain("###   CONSTANTS   ###");
+		expect(pythonStarterCode).toContain("GREETING_MESSAGE");
+		expect(dataScienceStarterCode).toContain("###   MAIN CODE   ###");
+		expect(dataScienceStarterCode).toContain(
+			"# Build the chart from named configuration values"
+		);
 		expect(turtleStarterCode).toContain(
 			"# Move only while the project is in its active motion state"
 		);
@@ -323,6 +330,9 @@ describe("python IDE project helpers", () => {
 		);
 		expect(getPythonIdeDefaultFileContent("Main.java")).toContain(
 			"@param args Command-line arguments"
+		);
+		expect(getPythonIdeDefaultFileContent("main.py")).toContain(
+			"###   CONSTANTS   ###"
 		);
 	});
 
@@ -4529,7 +4539,7 @@ describe("python IDE project helpers", () => {
 			'"items"'
 		);
 		expect(getPythonIdeDefaultFileContent("main.py")).toContain(
-			"Python code"
+			"###   CONSTANTS   ###"
 		);
 		expect(getPythonIdeDefaultFileContent("Main.java")).toContain(
 			"public class Main"
