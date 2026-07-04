@@ -540,6 +540,7 @@ const ideGridRef = ref<HTMLDivElement | null>(null);
 const ideSettingsRef = ref<HTMLDivElement | null>(null);
 const blueJArchiveInputRef = ref<HTMLInputElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
+const karelWorldRef = ref<HTMLDivElement | null>(null);
 const editorCursorCount = ref(1);
 const artifactCounter = ref(0);
 const outputCounter = ref(0);
@@ -5483,13 +5484,21 @@ function stopActiveRuntimeSurfaces() {
 	activeTurtleDragButton = null;
 }
 
-function focusVisualCanvasForRun() {
+function focusVisualOutputForRun() {
 	const projectMode = selectedProject.value?.mode;
-	if (projectMode !== "turtle" && projectMode !== "pgzero") return;
+	const visualOutput =
+		projectMode === "karel" ? karelWorldRef.value : canvasRef.value;
+	if (
+		projectMode !== "turtle" &&
+		projectMode !== "pgzero" &&
+		projectMode !== "karel"
+	) {
+		return;
+	}
 
-	canvasRef.value?.focus({ preventScroll: true });
+	visualOutput?.focus({ preventScroll: true });
 	window.requestAnimationFrame(() =>
-		canvasRef.value?.focus({ preventScroll: true })
+		visualOutput?.focus({ preventScroll: true })
 	);
 }
 
@@ -5498,15 +5507,20 @@ function activateRunControl() {
 		stopCurrentProject();
 		return;
 	}
-	focusVisualCanvasForRun();
-	void runCurrentProject().finally(focusVisualCanvasForRun);
+	focusVisualOutputForRun();
+	void runCurrentProject().finally(focusVisualOutputForRun);
 }
 
-function canvasOwnsKeyboardEvent(event: KeyboardEvent) {
+function visualOutputOwnsKeyboardEvent(event: KeyboardEvent) {
 	const canvas = canvasRef.value;
-	return Boolean(
+	const karelWorld = karelWorldRef.value;
+	const canvasOwnsEvent = Boolean(
 		canvas && (event.target === canvas || document.activeElement === canvas)
 	);
+	const karelWorldOwnsEvent =
+		Boolean(karelWorld) &&
+		(event.target === karelWorld || document.activeElement === karelWorld);
+	return canvasOwnsEvent || karelWorldOwnsEvent;
 }
 
 function isCanvasScrollKey(key: string) {
@@ -5524,9 +5538,17 @@ function isCanvasScrollKey(key: string) {
 }
 
 function handleKeyDown(event: KeyboardEvent) {
-	if (!canvasOwnsKeyboardEvent(event)) return;
+	if (!visualOutputOwnsKeyboardEvent(event)) return;
 
 	const normalizedTurtleKey = normalizeKey(event.key);
+	if (
+		selectedProject.value?.mode === "karel" &&
+		isCanvasScrollKey(normalizedTurtleKey)
+	) {
+		event.preventDefault();
+		return;
+	}
+
 	if (
 		selectedProject.value?.mode === "turtle" &&
 		isCanvasScrollKey(normalizedTurtleKey)
@@ -5571,7 +5593,7 @@ function handleKeyDown(event: KeyboardEvent) {
 }
 
 function handleKeyUp(event: KeyboardEvent) {
-	if (!canvasOwnsKeyboardEvent(event)) return;
+	if (!visualOutputOwnsKeyboardEvent(event)) return;
 	if (selectedProject.value?.mode !== "pgzero") return;
 
 	const normalizedKey = normalizeKey(pythonGameKeyFromEvent(event));
@@ -6875,8 +6897,10 @@ onBeforeUnmount(() => {
 
 						<div
 							v-show="usesKarelWorld"
+							ref="karelWorldRef"
 							class="karel-shell"
 							aria-label="Karel world"
+							tabindex="0"
 						>
 							<div
 								v-if="karelWorld"
@@ -8487,6 +8511,7 @@ html.dark .editor-shortcuts ul {
 
 .code-editor-shell:focus-within,
 .canvas-shell:focus-within,
+.karel-shell:focus-visible,
 .stdin-panel:focus-within,
 .project-title-input:focus-visible {
 	border-color: var(--python-focus-ring);
@@ -8587,8 +8612,13 @@ html.dark .editor-shortcuts ul {
 	place-items: center;
 	min-height: 26rem;
 	padding: 1rem;
+	border: 1px solid transparent;
 	border-bottom: 1px solid var(--color-border);
 	background: #f8fafc;
+	outline: none;
+	transition:
+		border-color 150ms ease,
+		box-shadow 150ms ease;
 }
 
 .karel-world {
