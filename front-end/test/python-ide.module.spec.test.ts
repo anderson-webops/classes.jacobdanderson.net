@@ -659,6 +659,21 @@ describe("python IDE project helpers", () => {
 		expect(result.skippedFiles).toEqual(["Huge.java (too large)"]);
 	});
 
+	it("rejects oversized BlueJ archives before ZIP extraction", () => {
+		const archiveBytes = zipSync({
+			"Student-Lab/Main.java": strToU8("public class Main {}"),
+			"Student-Lab/package.bluej": strToU8("#BlueJ package file")
+		});
+
+		expect(() =>
+			importBlueJProjectArchive(archiveBytes, {
+				maxArchiveBytes: 1,
+				maxFiles: 10,
+				maxTextFileBytes: 1024
+			})
+		).toThrow("BlueJ ZIP is larger than 1 byte.");
+	});
+
 	it("applies safe BlueJ import defaults when options are omitted", () => {
 		const boundedEntries: Record<string, Uint8Array> = {
 			"Student-Lab/Huge.java": strToU8(
@@ -683,6 +698,14 @@ describe("python IDE project helpers", () => {
 				"File41.java (too many files)"
 			])
 		);
+	});
+
+	it("keeps BlueJ archive byte limits bounded when callers pass unsafe option values", () => {
+		expect(() =>
+			importBlueJProjectArchive(new Uint8Array(4 * 1024 * 1024 + 1), {
+				maxArchiveBytes: Number.POSITIVE_INFINITY
+			})
+		).toThrow("BlueJ ZIP is larger than 4,194,304 bytes.");
 	});
 
 	it("keeps BlueJ import limits bounded when callers pass unsafe option values", () => {
@@ -721,6 +744,13 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(exportSource).toContain("unzipSync(archiveBytes, {");
+		expect(exportSource).toContain(
+			"DEFAULT_BLUEJ_IMPORT_MAX_ARCHIVE_BYTES"
+		);
+		expect(exportSource).toContain(
+			"archiveBytes.byteLength > maxArchiveBytes"
+		);
+		expect(exportSource).toContain("boundedBlueJImportArchiveByteLimit");
 		expect(exportSource).toContain("filter(file)");
 		expect(exportSource).toContain("boundedBlueJImportLimit");
 		expect(exportSource).toContain("file.originalSize > maxTextFileBytes");
@@ -3991,6 +4021,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("openBlueJArchiveImporter");
 		expect(pageSource).toContain("blueJArchiveInputRef");
 		expect(pageSource).toContain("importBlueJProjectArchiveFromInput");
+		expect(pageSource).toContain(
+			"maxArchiveBytes: maxImportedBlueJArchiveBytes"
+		);
 		expect(pageSource).toContain("function requestedStandaloneProjectKey");
 		expect(pageSource).toContain("project.courseProjectKey === key");
 		expect(pageSource).toContain('selectedProject.value.mode === "java"');

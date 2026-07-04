@@ -2451,6 +2451,7 @@ async function importBlueJProjectArchiveFromInput(event: Event) {
 		const result = importBlueJProjectArchive(
 			new Uint8Array(await file.arrayBuffer()),
 			{
+				maxArchiveBytes: maxImportedBlueJArchiveBytes,
 				maxFiles: maxPythonIdeProjectFiles,
 				maxTextFileBytes: maxImportedTextFileBytes
 			}
