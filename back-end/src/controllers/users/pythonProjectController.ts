@@ -146,11 +146,12 @@ function serializePythonProject(project: IPythonProject) {
 }
 
 function serializeSharedPythonProject(project: IPythonProject) {
+	const files = safeSerializedProjectFiles(project);
 	return {
 		title: project.title,
 		mode: project.mode,
-		files: project.files,
-		activeFileName: project.activeFileName,
+		files,
+		activeFileName: normalizeActiveFileName(project.activeFileName, files),
 		courseID: project.courseID,
 		courseProjectKey: project.courseProjectKey,
 		courseProjectTitle: project.courseProjectTitle,
@@ -252,6 +253,39 @@ function normalizeProjectFiles(files: PythonProjectFile[] | undefined, mode: Pyt
 	}
 
 	return cleanFiles.length ? cleanFiles : [defaultFile];
+}
+
+function safeSerializedProjectFiles(project: IPythonProject) {
+	const files: PythonProjectFile[] = [];
+	const seen = new Set<string>();
+	let totalLength = 0;
+
+	for (const file of project.files ?? []) {
+		if (files.length >= MAX_PROJECT_FILES) break;
+
+		const parsed = projectFileSchema.safeParse(file);
+		if (!parsed.success) continue;
+
+		const name = parsed.data.name.trim();
+		if (seen.has(name)) continue;
+
+		const nextLength = totalLength + name.length + parsed.data.content.length;
+		if (nextLength > MAX_PROJECT_LENGTH) break;
+
+		seen.add(name);
+		totalLength = nextLength;
+		files.push({
+			name,
+			content: parsed.data.content,
+			encoding: parsed.data.encoding ?? "text"
+		});
+	}
+
+	if (!projectFilesMatchMode(files, project.mode)) {
+		return normalizeProjectFiles(undefined, project.mode);
+	}
+
+	return normalizeProjectFiles(files, project.mode);
 }
 
 function normalizeActiveFileName(activeFileName: string | undefined, files: PythonProjectFile[]) {

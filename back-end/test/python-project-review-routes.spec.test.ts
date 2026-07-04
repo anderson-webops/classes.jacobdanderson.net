@@ -619,6 +619,57 @@ describe("Python project review routes", () => {
 		});
 	});
 
+	it("sanitizes stored file records before serving public shared project links", async () => {
+		const shareID = "share_SAFE1234567890_xyz";
+		modelMocks.pythonProjectFindOne.mockResolvedValue(
+			makeProject({
+				activeFileName: "../secret.py",
+				files: [
+					{
+						name: "main.py",
+						content: "print('safe')\n",
+						encoding: "text"
+					},
+					{
+						name: "../secret.py",
+						content: "print('secret')\n",
+						encoding: "text"
+					},
+					{
+						name: "images/../secret.png",
+						content: "secret-image",
+						encoding: "base64"
+					},
+					{
+						name: "turtle.py",
+						content: "print('reserved')\n",
+						encoding: "text"
+					}
+				],
+				shared: true,
+				shareID,
+				shareCreatedAt: now
+			})
+		);
+
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(
+				`${baseUrl}/users/python-projects/shared/${shareID}`
+			);
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(body.project.files).toEqual([
+				{
+					name: "main.py",
+					content: "print('safe')\n",
+					encoding: "text"
+				}
+			]);
+			expect(body.project.activeFileName).toBe("main.py");
+		});
+	});
+
 	it("keeps revoked share URLs unavailable when sharing is re-enabled", async () => {
 		const revokedShareID = "share_REVOKED1234567890_xyz";
 		const project = makeProject({
