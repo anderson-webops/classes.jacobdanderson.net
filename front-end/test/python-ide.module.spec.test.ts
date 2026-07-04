@@ -1003,6 +1003,32 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("opens explicit standalone Code IDE template routes over saved local projects", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+
+		expect(pageSource).toContain(
+			'return `ide-template:${requestedStarterMode.value}:${template}`;'
+		);
+		expect(pageSource).toContain(
+			"function standaloneProjectStarterLabel"
+		);
+		expect(pageSource).toContain(
+			'if (template === "demo") return "Demo project";'
+		);
+		expect(pageSource).toContain(
+			"function applyStandaloneRouteMetadata"
+		);
+		expect(pageSource).toContain(
+			"project.courseProjectTitle = project.title;"
+		);
+		expect(pageSource).toContain(
+			"const existingProject = standaloneProjectForRoute(projects.value);"
+		);
+	});
+
 	it("maps course families to the right IDE starter modes", () => {
 		expect(pythonIdeModeForCourseId("python-level-1")).toBe("turtle");
 		expect(pythonIdeModeForCourseId("pygames")).toBe("pgzero");
@@ -3698,7 +3724,12 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("requestedTemplate");
 		expect(pageSource).toContain('route.path === "/bluej"');
 		expect(pageSource).toContain('rawMode === "bluej"');
-		expect(pageSource).toContain('requestedTemplate.value === "bluej"');
+		expect(pageSource).toContain(
+			'if (template === "bluej") return "ide-template:bluej";'
+		);
+		expect(pageSource).toContain(
+			'if (template === "bluej") return "BlueJ starter";'
+		);
 		expect(pageSource).toContain('"ide-template:bluej"');
 		expect(pageSource).toContain("openRequestedStandaloneProjectIfNeeded");
 		expect(pageSource).toContain("openBlueJArchiveImporter");

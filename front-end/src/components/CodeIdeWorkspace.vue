@@ -1433,7 +1433,12 @@ function projectForRoute(projectList: PythonIdeProject[]) {
 
 function requestedStandaloneProjectKey() {
 	if (requestedShareID.value || requestedCourseProjectKey.value) return "";
-	return requestedTemplate.value === "bluej" ? "ide-template:bluej" : "";
+	const template = requestedTemplate.value;
+	if (template === "bluej") return "ide-template:bluej";
+	if (template === "demo" || template === "outline") {
+		return `ide-template:${requestedStarterMode.value}:${template}`;
+	}
+	return "";
 }
 
 function standaloneProjectForRoute(projectList: PythonIdeProject[]) {
@@ -1442,6 +1447,25 @@ function standaloneProjectForRoute(projectList: PythonIdeProject[]) {
 	return (
 		projectList.find(project => project.courseProjectKey === key) ?? null
 	);
+}
+
+function standaloneProjectStarterLabel(template: PythonIdeProjectTemplate) {
+	if (template === "bluej") return "BlueJ starter";
+	if (template === "demo") return "Demo project";
+	if (template === "outline") return "Template project";
+	return undefined;
+}
+
+function applyStandaloneRouteMetadata(project: PythonIdeProject) {
+	const key = requestedStandaloneProjectKey();
+	if (!key) return project;
+
+	project.courseProjectKey = key;
+	project.courseProjectTitle = project.title;
+	project.starterLabel = standaloneProjectStarterLabel(
+		requestedTemplate.value
+	);
+	return project;
 }
 
 async function createRequestedCourseProject() {
@@ -1611,13 +1635,12 @@ async function openRequestedStandaloneProjectIfNeeded(
 		return true;
 	}
 
-	const project = createPythonIdeProject(requestedStarterMode.value, {
-		courseProjectKey: key,
-		courseProjectTitle: "BlueJ Java Project",
-		starterLabel: "BlueJ starter",
-		template: requestedTemplate.value,
-		title: "BlueJ Java Project"
-	});
+	const project = applyStandaloneRouteMetadata(
+		createPythonIdeProject(requestedStarterMode.value, {
+			courseProjectKey: key,
+			template: requestedTemplate.value
+		})
+	);
 	await saveNewProject(project, localOnly, loadRunID);
 	return projectLoadIsCurrent(loadRunID);
 }
@@ -1625,16 +1648,12 @@ async function openRequestedStandaloneProjectIfNeeded(
 async function createInitialProject() {
 	const requestedProject = await createRequestedCourseProject();
 	if (requestedProject) return requestedProject;
-	return createPythonIdeProject(requestedStarterMode.value, {
-		courseProjectKey: requestedStandaloneProjectKey() || undefined,
-		courseProjectTitle:
-			requestedTemplate.value === "bluej"
-				? "BlueJ Java Project"
-				: undefined,
-		starterLabel:
-			requestedTemplate.value === "bluej" ? "BlueJ starter" : undefined,
-		template: requestedTemplate.value
-	});
+	return applyStandaloneRouteMetadata(
+		createPythonIdeProject(requestedStarterMode.value, {
+			courseProjectKey: requestedStandaloneProjectKey() || undefined,
+			template: requestedTemplate.value
+		})
+	);
 }
 
 function setProjects(nextProjects: PythonIdeProject[]) {
