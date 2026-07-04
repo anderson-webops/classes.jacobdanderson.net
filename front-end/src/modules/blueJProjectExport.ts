@@ -1,5 +1,5 @@
 import type { PythonIdeFile, PythonIdeProject } from "@/modules/pythonIde";
-import { strToU8, zipSync } from "fflate";
+import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
 import {
 	isPythonIdeJavaFile,
 	isPythonIdeTextFile,
@@ -17,6 +17,17 @@ export { BLUEJ_HOME_URL, BLUEJ_SOURCE_URL };
 export interface BlueJProjectExportFile {
 	name: string;
 	content: string;
+}
+
+export interface BlueJProjectImportResult {
+	files: PythonIdeFile[];
+	hasBlueJPackage: boolean;
+	skippedFiles: string[];
+}
+
+export interface BlueJProjectImportOptions {
+	maxFiles?: number;
+	maxTextFileBytes?: number;
 }
 
 function safeBlueJProjectName(value: string) {
@@ -172,4 +183,108 @@ export function createBlueJProjectArchive(project: PythonIdeProject) {
 		])
 	);
 	return zipSync(entries);
+}
+
+function normalizedBlueJArchivePath(value: string) {
+	return value
+		.trim()
+		.replaceAll("\\", "/")
+		.replace(/^\.\/+/, "")
+		.replace(/\/+/g, "/");
+}
+
+function blueJArchivePathSegments(value: string) {
+	return normalizedBlueJArchivePath(value).split("/").filter(Boolean);
+}
+
+function commonBlueJArchiveRoot(paths: string[]) {
+	const segmentLists = paths
+		.map(blueJArchivePathSegments)
+		.filter(segments => segments.length > 1 && segments[0] !== "__MACOSX");
+	if (!segmentLists.length) return "";
+
+	const root = segmentLists[0]?.[0] ?? "";
+	if (!root || root.includes(".")) return "";
+	return segmentLists.every(segments => segments[0] === root) ? root : "";
+}
+
+function blueJArchiveProjectPath(archivePath: string, commonRoot: string) {
+	const segments = blueJArchivePathSegments(archivePath);
+	if (!segments.length || segments[0] === "__MACOSX") return "";
+	if (commonRoot && segments[0] === commonRoot) segments.shift();
+	return segments.join("/");
+}
+
+export function blueJProjectTitleFromArchiveName(fileName: string) {
+	const baseName = fileName
+		.split(/[\\/]/)
+		.pop()
+		?.replace(/\.zip$/i, "")
+		.replaceAll(/[-_]+/g, " ")
+		.trim();
+	if (!baseName) return "Imported BlueJ Project";
+	return /bluej/i.test(baseName) ? baseName : `${baseName} BlueJ Project`;
+}
+
+export function importBlueJProjectArchive(
+	archiveBytes: Uint8Array,
+	options: BlueJProjectImportOptions = {}
+): BlueJProjectImportResult {
+	const archive = unzipSync(archiveBytes);
+	const archivePaths = Object.keys(archive).filter(
+		path => !normalizedBlueJArchivePath(path).endsWith("/")
+	);
+	const commonRoot = commonBlueJArchiveRoot(archivePaths);
+	const files: PythonIdeFile[] = [];
+	const skippedFiles: string[] = [];
+	const usedFileNames = new Set<string>();
+	let hasBlueJPackage = false;
+
+	for (const archivePath of archivePaths) {
+		const projectPath = blueJArchiveProjectPath(archivePath, commonRoot);
+		if (!projectPath) continue;
+
+		const lowerPath = projectPath.toLowerCase();
+		if (lowerPath === BLUEJ_PROJECT_FILE_NAME) {
+			hasBlueJPackage = true;
+			continue;
+		}
+		if (lowerPath.endsWith(".ctxt") || lowerPath === "team.defs") continue;
+
+		if (
+			!isValidPythonFileName(projectPath) ||
+			!isPythonIdeTextFile(projectPath)
+		) {
+			skippedFiles.push(projectPath);
+			continue;
+		}
+		if (usedFileNames.has(projectPath)) continue;
+		if (
+			options.maxTextFileBytes !== undefined &&
+			archive[archivePath]!.byteLength > options.maxTextFileBytes
+		) {
+			skippedFiles.push(`${projectPath} (too large)`);
+			continue;
+		}
+		if (
+			options.maxFiles !== undefined &&
+			files.length >= options.maxFiles
+		) {
+			skippedFiles.push(`${projectPath} (too many files)`);
+			continue;
+		}
+
+		usedFileNames.add(projectPath);
+		files.push({
+			name: projectPath,
+			content: strFromU8(archive[archivePath]!),
+			encoding: "text"
+		});
+	}
+
+	return {
+		files,
+		hasBlueJPackage,
+		skippedFiles
+	};
 }

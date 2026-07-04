@@ -35,6 +35,7 @@ describe("production Code IDE smoke helpers", () => {
 			"BlueJ Java Project",
 			"BlueJ starter",
 			"New BlueJ desktop project",
+			"Import BlueJ ZIP",
 			"Download BlueJ ZIP",
 			"https://github.com/k-pet-group/BlueJ-Greenfoot"
 		].join("\n");
