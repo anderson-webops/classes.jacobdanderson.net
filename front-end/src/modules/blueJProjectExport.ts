@@ -273,7 +273,6 @@ export function importBlueJProjectArchive(
 			const archivePath = normalizedBlueJArchivePath(file.name);
 			if (!archivePath || archivePath.endsWith("/")) return false;
 
-			archivePathsForRoot.push(archivePath);
 			const candidateProjectPaths =
 				blueJArchiveCandidateProjectPaths(archivePath);
 			if (
@@ -283,6 +282,7 @@ export function importBlueJProjectArchive(
 				return false;
 			}
 			if (candidateProjectPaths.some(isBlueJArchivePackagePath)) {
+				archivePathsForRoot.push(archivePath);
 				hasBlueJPackage = true;
 				return false;
 			}
@@ -296,16 +296,17 @@ export function importBlueJProjectArchive(
 			) {
 				return false;
 			}
-			if (
-				!candidateProjectPaths.some(
-					projectPath =>
-						isValidPythonFileName(projectPath) &&
-						isPythonIdeTextFile(projectPath)
-				)
-			) {
+			const hasImportableTextPath = candidateProjectPaths.some(
+				projectPath =>
+					isValidPythonFileName(projectPath) &&
+					isPythonIdeTextFile(projectPath)
+			);
+			if (!hasImportableTextPath) {
 				prefilteredSkippedFiles.push({ archivePath });
 				return false;
 			}
+
+			archivePathsForRoot.push(archivePath);
 			if (
 				options.maxTextFileBytes !== undefined &&
 				file.originalSize > options.maxTextFileBytes
