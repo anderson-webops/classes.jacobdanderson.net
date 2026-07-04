@@ -397,6 +397,19 @@ describe("user schedule and note-only routes", () => {
 				},
 				{ "x-admin-id": adminID.toString() }
 			);
+			const tooManyDuplicateIdsResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/course-progress`,
+				{
+					courseId: "javascript-level-1",
+					completedModuleIds: Array.from(
+						{ length: 1001 },
+						() => "module-1"
+					),
+					completedItemIds: []
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
 			const tooLongCourseResponse = await putJson(
 				baseUrl,
 				`/users/${studentID}/course-progress`,
@@ -430,6 +443,7 @@ describe("user schedule and note-only routes", () => {
 
 			expect(tooLongIdResponse.status).toBe(400);
 			expect(tooManyIdsResponse.status).toBe(400);
+			expect(tooManyDuplicateIdsResponse.status).toBe(400);
 			expect(tooLongCourseResponse.status).toBe(400);
 			expect(nonStringIdResponse.status).toBe(400);
 			expect(blankIdResponse.status).toBe(400);
@@ -498,10 +512,22 @@ describe("user schedule and note-only routes", () => {
 				{ courseIDs: ["c".repeat(161)] },
 				{ "x-admin-id": adminID.toString() }
 			);
+			const tooManyDuplicateResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/courses`,
+				{
+					courseIDs: Array.from(
+						{ length: 1001 },
+						() => "python-level-1"
+					)
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
 
 			expect(nonStringResponse.status).toBe(400);
 			expect(blankResponse.status).toBe(400);
 			expect(tooLongResponse.status).toBe(400);
+			expect(tooManyDuplicateResponse.status).toBe(400);
 			expect(modelMocks.userFindById).not.toHaveBeenCalled();
 		});
 	});
@@ -526,10 +552,22 @@ describe("user schedule and note-only routes", () => {
 				{ courseIDs: ["c".repeat(161)] },
 				{ "x-admin-id": adminID.toString() }
 			);
+			const tooManyDuplicateResponse = await putJson(
+				baseUrl,
+				`/tutors/${tutorID}/courses`,
+				{
+					courseIDs: Array.from(
+						{ length: 1001 },
+						() => "python-level-1"
+					)
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
 
 			expect(nonStringResponse.status).toBe(400);
 			expect(blankResponse.status).toBe(400);
 			expect(tooLongResponse.status).toBe(400);
+			expect(tooManyDuplicateResponse.status).toBe(400);
 			expect(modelMocks.tutorFindById).not.toHaveBeenCalled();
 		});
 	});
