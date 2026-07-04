@@ -229,12 +229,21 @@ export function isValidPythonIdeShareID(value: string | null | undefined) {
 	return typeof value === "string" && PYTHON_IDE_SHARE_ID_RE.test(value);
 }
 
-export const pythonStarterCode = `# Store reusable text in named variables before printing
-greeting_message = "Hello, Python!"
-print(greeting_message)
+export const pythonStarterCode = `#####################
+###   CONSTANTS   ###
+#####################
+GREETING_MESSAGE = "Hello, Python!"
+NAME_PROMPT = "What is your name? "
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+# Store reusable text in named variables before printing
+print(GREETING_MESSAGE)
 
 # Collect one user value and use its name clearly
-student_name = input("What is your name? ")
+student_name = input(NAME_PROMPT)
 print(f"Nice to meet you, {student_name}.")
 `;
 
@@ -829,10 +838,17 @@ Dev,80,90
 export const dataScienceStarterCode = `import matplotlib.pyplot as plt
 import pandas as pd
 
+#####################
+###   CONSTANTS   ###
+#####################
 DATA_FILE = "scores.csv"
 FIGURE_SIZE = (7, 4)
 BAR_COLOR = "#0f766e"
 
+
+#####################
+###   MAIN CODE   ###
+#####################
 scores = pd.read_csv(DATA_FILE)
 
 # Store the growth calculation in a named column for reuse
@@ -1295,11 +1311,11 @@ export function getPythonIdeDefaultFileContent(fileName: string) {
 	const extension = fileName.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
 	if (extension === ".csv") return "name,value\nsample,1\n";
 	if (extension === ".java")
-		return "/**\n * @brief Write a small Java console program\n */\npublic class Main {\n    /**\n     * @brief Run the Java program\n     *\n     * @param args Command-line arguments\n     */\n    public static void main(String[] args) {\n        \n    }\n}\n";
+		return '/**\n * @brief Write a small Java console program\n */\npublic class Main {\n    private static final String GREETING_MESSAGE = "Hello, Java!";\n\n    /**\n     * @brief Run the Java program\n     *\n     * @param args Command-line arguments\n     */\n    public static void main(String[] args) {\n        System.out.println(GREETING_MESSAGE);\n    }\n}\n';
 	if (extension === ".json") return '{\n\t"items": []\n}\n';
 	if (extension === ".md") return "# Notes\n\n";
 	if (extension === ".txt") return "";
-	return "# Add your Python code here.\n";
+	return '#####################\n###   CONSTANTS   ###\n#####################\nGREETING_MESSAGE = "Hello, Python!"\n\n\n#####################\n###   MAIN CODE   ###\n#####################\n# Store reusable text in a named constant before printing\nprint(GREETING_MESSAGE)\n';
 }
 
 function baseName(path: string) {
