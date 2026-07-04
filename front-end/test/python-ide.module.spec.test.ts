@@ -459,6 +459,38 @@ describe("python IDE project helpers", () => {
 		expect(archiveNames.every(name => !name.includes(".."))).toBe(true);
 	});
 
+	it("bounds BlueJ export file count and text size before ZIP creation", () => {
+		const project = createPythonIdeProject("java", {
+			files: [
+				{
+					name: "Huge.java",
+					content: `class Huge {\n${"// filler\n".repeat(60000)}}`
+				},
+				...Array.from({ length: 42 }, (_, index) => ({
+					name: `File${index}.java`,
+					content: `class File${index} {}`
+				}))
+			],
+			title: "Bounded BlueJ Export"
+		});
+
+		const files = createBlueJProjectFiles(project);
+		const archive = unzipSync(createBlueJProjectArchive(project));
+		const archiveNames = Object.keys(archive).sort();
+		const packageFile = files.find(file => file.name === "package.bluej");
+
+		expect(files).toHaveLength(42);
+		expect(files.map(file => file.name)).not.toContain("Huge.java");
+		expect(files.map(file => file.name)).not.toContain("File40.java");
+		expect(files.map(file => file.name)).not.toContain("File41.java");
+		expect(packageFile?.content).toContain("package.numTargets=40");
+		expect(archiveNames).toContain("Bounded-BlueJ-Export/File0.java");
+		expect(archiveNames).toContain("Bounded-BlueJ-Export/File39.java");
+		expect(archiveNames).not.toContain("Bounded-BlueJ-Export/Huge.java");
+		expect(archiveNames).not.toContain("Bounded-BlueJ-Export/File40.java");
+		expect(archiveNames).toContain("Bounded-BlueJ-Export/package.bluej");
+	});
+
 	it("imports BlueJ project ZIPs into safe Java project files", () => {
 		const archiveBytes = zipSync({
 			"Student-Lab/Main.java": strToU8(
