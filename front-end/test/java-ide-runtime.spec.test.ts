@@ -1163,6 +1163,49 @@ public class Algo implements Directions {
 		expect(result.karelWorld?.paints).toEqual([]);
 	});
 
+	it("skips oversized Karel world text before splitting lines", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.World;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(1, 1, East, 0);
+    }
+
+    static {
+        World.readWorld("world.txt");
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=40\n${"wall 1 1 east ".repeat(20000)}`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([
+			"Skipped Karel world files over 200,000 characters."
+		]);
+		expect(result.karelWorld).toMatchObject({
+			cols: 10,
+			rows: 10,
+			robot: {
+				avenue: 1,
+				direction: "East",
+				street: 1
+			}
+		});
+		expect(result.karelWorld?.walls).toEqual([]);
+	});
+
 	it("parses CodeHS-style labeled Karel world files", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
