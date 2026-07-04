@@ -81,7 +81,12 @@ describe("Code IDE assets proxy", () => {
 			expect(new Uint8Array(await response.arrayBuffer())).toEqual(zipBytes);
 		});
 
-		expect(fetchSpy).toHaveBeenCalledWith(staticAssetsZipUrl);
+		expect(fetchSpy).toHaveBeenCalledWith(
+			staticAssetsZipUrl,
+			expect.objectContaining({
+				signal: expect.any(AbortSignal)
+			})
+		);
 	});
 
 	it("keeps the legacy python-assets route available", async () => {
@@ -103,6 +108,41 @@ describe("Code IDE assets proxy", () => {
 		});
 	});
 
+	it("times out stalled upstream asset requests", async () => {
+		const originalTimeout = process.env.CODE_IDE_ASSETS_FETCH_TIMEOUT_MS;
+		process.env.CODE_IDE_ASSETS_FETCH_TIMEOUT_MS = "1";
+		fetchSpy.mockImplementation((input, init) => {
+			if (fetchUrl(input) !== staticAssetsZipUrl) {
+				return realFetch(input, init);
+			}
+
+			const signal = init?.signal;
+			return new Promise<Response>((_resolve, reject) => {
+				signal?.addEventListener("abort", () => {
+					reject(new DOMException("Aborted", "AbortError"));
+				});
+			});
+		});
+
+		try {
+			await withPythonAssetsProxy(async baseUrl => {
+				const response = await fetch(`${baseUrl}/code-ide-assets/assets.zip`);
+				const body = await response.json() as { error?: string };
+
+				expect(response.status).toBe(504);
+				expect(body.error).toBe("Code IDE asset pack request timed out");
+			});
+		}
+		finally {
+			if (originalTimeout === undefined) {
+				delete process.env.CODE_IDE_ASSETS_FETCH_TIMEOUT_MS;
+			}
+			else {
+				process.env.CODE_IDE_ASSETS_FETCH_TIMEOUT_MS = originalTimeout;
+			}
+		}
+	});
+
 	it("supports the generalized Code IDE asset source environment variable", async () => {
 		const controllerSource = await readFile(
 			new URL(
@@ -114,6 +154,9 @@ describe("Code IDE assets proxy", () => {
 
 		expect(controllerSource).toContain("CODE_IDE_ASSETS_ZIP_URL");
 		expect(controllerSource).toContain("PYTHON_IDE_ASSETS_ZIP_URL");
+		expect(controllerSource).toContain("CODE_IDE_ASSETS_FETCH_TIMEOUT_MS");
+		expect(controllerSource).toContain("PYTHON_IDE_ASSETS_FETCH_TIMEOUT_MS");
+		expect(controllerSource).toContain("AbortController");
 		expect(controllerSource).toContain("Code IDE assets proxy failed");
 		expect(controllerSource).not.toContain("python ide assets proxy failed");
 	});
