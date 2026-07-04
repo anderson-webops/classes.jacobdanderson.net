@@ -478,6 +478,39 @@ describe("python IDE project helpers", () => {
 		expect(result.skippedFiles).toEqual(["images/logo.png"]);
 	});
 
+	it("skips oversized BlueJ archive entries before import", () => {
+		const archiveBytes = zipSync({
+			"Student-Lab/Main.java": strToU8("public class Main {}"),
+			"Student-Lab/Huge.java": strToU8(`class Huge {\n${"// filler\n".repeat(64)}}`)
+		});
+
+		const result = importBlueJProjectArchive(archiveBytes, {
+			maxFiles: 10,
+			maxTextFileBytes: 64
+		});
+
+		expect(result.files).toEqual([
+			{
+				content: "public class Main {}",
+				encoding: "text",
+				name: "Main.java"
+			}
+		]);
+		expect(result.skippedFiles).toEqual(["Huge.java (too large)"]);
+	});
+
+	it("keeps BlueJ ZIP extraction filtered before file inflation", () => {
+		const exportSource = readFileSync(
+			resolve(__dirname, "../src/modules/blueJProjectExport.ts"),
+			"utf8"
+		);
+
+		expect(exportSource).toContain("unzipSync(archiveBytes, {");
+		expect(exportSource).toContain("filter(file)");
+		expect(exportSource).toContain("file.originalSize > options.maxTextFileBytes");
+		expect(exportSource).toContain("prefilteredSkippedFiles.push");
+	});
+
 	it("colors visible bracket pairs using document-wide nesting context", () => {
 		const filler = Array.from(
 			{ length: 350 },
@@ -3694,7 +3727,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("BlueJ source");
 		expect(pageSource).toContain("createBlueJProjectArchive(project)");
 		expect(exportSource).toContain('from "fflate"');
-		expect(exportSource).toContain("unzipSync(archiveBytes)");
+		expect(exportSource).toContain("unzipSync(archiveBytes, {");
 		expect(exportSource).toContain("importBlueJProjectArchive");
 		expect(exportSource).toContain("zipSync(entries)");
 		expect(exportSource).toContain("package.bluej");

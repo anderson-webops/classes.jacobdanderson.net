@@ -30,6 +30,11 @@ export interface BlueJProjectImportOptions {
 	maxTextFileBytes?: number;
 }
 
+interface PrefilteredBlueJArchiveFile {
+	archivePath: string;
+	reason?: "too large" | "too many files";
+}
+
 function safeBlueJProjectName(value: string) {
 	const normalized = value
 		.trim()
@@ -215,6 +220,19 @@ function blueJArchiveProjectPath(archivePath: string, commonRoot: string) {
 	return segments.join("/");
 }
 
+function blueJArchiveCandidateProjectPaths(archivePath: string) {
+	const segments = blueJArchivePathSegments(archivePath);
+	const candidates = [segments.join("/")];
+	if (segments.length > 1 && segments[0] !== "__MACOSX") {
+		candidates.push(segments.slice(1).join("/"));
+	}
+	return candidates.filter(Boolean);
+}
+
+function isBlueJArchivePackagePath(projectPath: string) {
+	return projectPath.toLowerCase() === BLUEJ_PROJECT_FILE_NAME;
+}
+
 function isBlueJArchiveMetadataPath(projectPath: string) {
 	const segments = projectPath.split("/").filter(Boolean);
 	const normalizedSegments = segments.map(segment => segment.toLowerCase());
@@ -241,15 +259,81 @@ export function importBlueJProjectArchive(
 	archiveBytes: Uint8Array,
 	options: BlueJProjectImportOptions = {}
 ): BlueJProjectImportResult {
-	const archive = unzipSync(archiveBytes);
-	const archivePaths = Object.keys(archive).filter(
-		path => !normalizedBlueJArchivePath(path).endsWith("/")
-	);
-	const commonRoot = commonBlueJArchiveRoot(archivePaths);
+	const archivePathsForRoot: string[] = [];
+	const prefilteredSkippedFiles: PrefilteredBlueJArchiveFile[] = [];
 	const files: PythonIdeFile[] = [];
 	const skippedFiles: string[] = [];
 	const usedFileNames = new Set<string>();
 	let hasBlueJPackage = false;
+	let extractedFileCount = 0;
+
+	const archive = unzipSync(archiveBytes, {
+		filter(file) {
+			const archivePath = normalizedBlueJArchivePath(file.name);
+			if (!archivePath || archivePath.endsWith("/")) return false;
+
+			archivePathsForRoot.push(archivePath);
+			const candidateProjectPaths =
+				blueJArchiveCandidateProjectPaths(archivePath);
+			if (
+				candidateProjectPaths.some(isBlueJArchiveMetadataPath) ||
+				!candidateProjectPaths.length
+			) {
+				return false;
+			}
+			if (candidateProjectPaths.some(isBlueJArchivePackagePath)) {
+				hasBlueJPackage = true;
+				return false;
+			}
+			if (
+				candidateProjectPaths.some(projectPath => {
+					const lowerPath = projectPath.toLowerCase();
+					return (
+						lowerPath.endsWith(".ctxt") || lowerPath === "team.defs"
+					);
+				})
+			) {
+				return false;
+			}
+			if (
+				!candidateProjectPaths.some(
+					projectPath =>
+						isValidPythonFileName(projectPath) &&
+						isPythonIdeTextFile(projectPath)
+				)
+			) {
+				prefilteredSkippedFiles.push({ archivePath });
+				return false;
+			}
+			if (
+				options.maxTextFileBytes !== undefined &&
+				file.originalSize > options.maxTextFileBytes
+			) {
+				prefilteredSkippedFiles.push({
+					archivePath,
+					reason: "too large"
+				});
+				return false;
+			}
+			if (
+				options.maxFiles !== undefined &&
+				extractedFileCount >= options.maxFiles
+			) {
+				prefilteredSkippedFiles.push({
+					archivePath,
+					reason: "too many files"
+				});
+				return false;
+			}
+
+			extractedFileCount += 1;
+			return true;
+		}
+	});
+	const archivePaths = Object.keys(archive).filter(
+		path => !normalizedBlueJArchivePath(path).endsWith("/")
+	);
+	const commonRoot = commonBlueJArchiveRoot(archivePathsForRoot);
 
 	for (const archivePath of archivePaths) {
 		const projectPath = blueJArchiveProjectPath(archivePath, commonRoot);
@@ -257,7 +341,7 @@ export function importBlueJProjectArchive(
 
 		const lowerPath = projectPath.toLowerCase();
 		if (isBlueJArchiveMetadataPath(projectPath)) continue;
-		if (lowerPath === BLUEJ_PROJECT_FILE_NAME) {
+		if (isBlueJArchivePackagePath(lowerPath)) {
 			hasBlueJPackage = true;
 			continue;
 		}
@@ -292,6 +376,19 @@ export function importBlueJProjectArchive(
 			content: strFromU8(archive[archivePath]!),
 			encoding: "text"
 		});
+	}
+
+	for (const skippedFile of prefilteredSkippedFiles) {
+		const projectPath = blueJArchiveProjectPath(
+			skippedFile.archivePath,
+			commonRoot
+		);
+		if (!projectPath || isBlueJArchiveMetadataPath(projectPath)) continue;
+		skippedFiles.push(
+			skippedFile.reason
+				? `${projectPath} (${skippedFile.reason})`
+				: projectPath
+		);
 	}
 
 	return {
