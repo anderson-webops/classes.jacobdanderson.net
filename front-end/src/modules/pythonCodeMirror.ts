@@ -2281,8 +2281,11 @@ const karelKeywordCompletions = [
 	"putBall",
 	"takeBall",
 	"paint",
+	"paintCorner",
 	"colorIs",
 	"colorIsNot",
+	"cornerColorIs",
+	"cornerColorIsNot",
 	"SuperKarel",
 	"frontIsClear",
 	"frontIsBlocked",
@@ -2316,7 +2319,13 @@ const karelRobotMemberCompletions = [
 	completion("pickBeeper", "method", "pick up one beeper", 90),
 	completion("putBall", "method", "CodeHS alias for placing one ball", 82),
 	completion("takeBall", "method", "CodeHS alias for taking one ball", 82),
-	completion("paint", "method", "paint the current Karel square", 82)
+	completion("paint", "method", "paint the current Karel square", 82),
+	completion(
+		"paintCorner",
+		"method",
+		"CodeHS alias for painting a corner",
+		82
+	)
 ];
 const karelDirectionMemberCompletions = [
 	completion("North", "constant", "Karel north direction", 90),
