@@ -189,7 +189,10 @@ describe("python IDE project helpers", () => {
 		});
 		expect(dataProject.files[0]?.content).toContain("pandas");
 		expect(dataProject.files[0]?.content).toContain(
-			'read_csv("scores.csv")'
+			'DATA_FILE = "scores.csv"'
+		);
+		expect(dataProject.files[0]?.content).toContain(
+			"pd.read_csv(DATA_FILE)"
 		);
 		expect(dataProject.files[0]?.content).toContain("plt.bar");
 
@@ -250,7 +253,7 @@ describe("python IDE project helpers", () => {
 		);
 		expect(turtleOutline.files[0]?.content).toContain("while condition:");
 		expect(turtleOutline.files[0]?.content).toContain(
-			"for tmp_t in turtles:"
+			"for current_turtle in turtle_list:"
 		);
 
 		expect(pgzeroOutline.title).toBe("PyGame Zero Outline");
@@ -301,7 +304,9 @@ describe("python IDE project helpers", () => {
 			{ name: "README.TXT", content: blueJReadmeStarterText }
 		]);
 		expect(project.files[0]?.content).toContain("new Student");
-		expect(project.files[1]?.content).toContain("private ArrayList");
+		expect(project.files[1]?.content).toContain(
+			"private final ArrayList"
+		);
 		expect(isPythonIdeBlueJProject(project)).toBe(true);
 		expect(getPythonIdeProjectKindLabel(project)).toBe("BlueJ Java");
 		expect(getPythonIdeModeLabel(project.mode)).toBe("Java");
