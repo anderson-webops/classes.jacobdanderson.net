@@ -3887,6 +3887,43 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("opens anonymous route projects before creating a default local project", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+		const loadProjectsStart = pageSource.indexOf(
+			"async function loadProjects()"
+		);
+		const loadProjectsSource = pageSource.slice(
+			loadProjectsStart,
+			pageSource.indexOf("interface SaveProjectOptions", loadProjectsStart)
+		);
+		const localProjectsStart = loadProjectsSource.indexOf(
+			"visibleProjectReviews.value = [];\n\t\tconst localProjects = await loadLocalPythonProjectsAsync"
+		);
+		const localProjectsSource = loadProjectsSource.slice(
+			localProjectsStart,
+			loadProjectsSource.indexOf("\t} catch (error)", localProjectsStart)
+		);
+
+		expect(localProjectsSource).toContain("if (localProjects.length) {");
+		expect(localProjectsSource).toContain("setProjects([]);");
+		expect(localProjectsSource).toContain(
+			"const openedRouteProject = await openRouteProjectIfNeeded("
+		);
+		expect(
+			localProjectsSource.indexOf(
+				"const openedRouteProject = await openRouteProjectIfNeeded("
+			)
+		).toBeLessThan(
+			localProjectsSource.indexOf(
+				"const initialProject = await createInitialProject();"
+			)
+		);
+		expect(localProjectsSource).toContain("if (openedRouteProject) return;");
+	});
+
 	it("suppresses CodeMirror-originated echo updates through the Vue flush", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),

@@ -1831,27 +1831,46 @@ async function loadProjects() {
 			storageUserID.value
 		);
 		if (!projectLoadIsCurrent(loadRunID)) return;
-		setProjects(
-			localProjects.length
-				? localProjects
-				: [await createInitialProject()]
+		if (localProjects.length) {
+			setProjects(localProjects);
+			await openRouteProjectIfNeeded(false, loadRunID);
+			if (!projectLoadIsCurrent(loadRunID)) return;
+			await persistLocalProjects();
+			return;
+		}
+
+		setProjects([]);
+		const openedRouteProject = await openRouteProjectIfNeeded(
+			false,
+			loadRunID
 		);
 		if (!projectLoadIsCurrent(loadRunID)) return;
-		await openRouteProjectIfNeeded(false, loadRunID);
+		if (openedRouteProject) return;
+
+		const initialProject = await createInitialProject();
 		if (!projectLoadIsCurrent(loadRunID)) return;
-		await persistLocalProjects();
+		await saveNewProject(initialProject, false, loadRunID);
 	} catch (error) {
 		const localProjects = await loadLocalPythonProjectsAsync(
 			storageUserID.value
 		);
 		if (!projectLoadIsCurrent(loadRunID)) return;
-		setProjects(
-			localProjects.length
-				? localProjects
-				: [await createInitialProject()]
-		);
-		if (!projectLoadIsCurrent(loadRunID)) return;
-		await openRouteProjectIfNeeded(true, loadRunID);
+		if (localProjects.length) {
+			setProjects(localProjects);
+			await openRouteProjectIfNeeded(true, loadRunID);
+		} else {
+			setProjects([]);
+			const openedRouteProject = await openRouteProjectIfNeeded(
+				true,
+				loadRunID
+			);
+			if (!projectLoadIsCurrent(loadRunID)) return;
+			if (!openedRouteProject) {
+				const initialProject = await createInitialProject();
+				if (!projectLoadIsCurrent(loadRunID)) return;
+				await saveNewProject(initialProject, true, loadRunID);
+			}
+		}
 		if (!projectLoadIsCurrent(loadRunID)) return;
 		saveMessage.value =
 			error instanceof Error ? error.message : "Using local workspace";
