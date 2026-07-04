@@ -190,6 +190,7 @@ type JavaConsoleSignal =
 	| null;
 
 const DEFAULT_WORLD_SIZE = 10;
+const MAX_KAREL_WORLD_SIZE = 40;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
@@ -2734,18 +2735,29 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 		if (!line || line.startsWith("#")) continue;
 
 		const [command = "", ...args] = line.split(/\s+/);
-		if (command === "rows")
-			world.rows = positiveInteger(args[0], world.rows);
-		if (command === "cols")
-			world.cols = positiveInteger(args[0], world.cols);
-		if (line.startsWith("rows="))
-			world.rows = positiveInteger(line.split("=", 2)[1], world.rows);
-		if (line.startsWith("cols="))
-			world.cols = positiveInteger(line.split("=", 2)[1], world.cols);
+		if (command === "rows") {
+			world.rows = boundedPositiveInteger(args[0], world.rows);
+		}
+		if (command === "cols") {
+			world.cols = boundedPositiveInteger(args[0], world.cols);
+		}
+		if (line.startsWith("rows=")) {
+			world.rows = boundedPositiveInteger(
+				line.split("=", 2)[1],
+				world.rows
+			);
+		}
+		if (line.startsWith("cols=")) {
+			world.cols = boundedPositiveInteger(
+				line.split("=", 2)[1],
+				world.cols
+			);
+		}
 		if (command === "beeper") {
 			const street = positiveInteger(args[0], 1);
 			const avenue = positiveInteger(args[1], 1);
 			const count = positiveInteger(args[2], 1);
+			if (!isKarelWorldCoordinate(world, street, avenue)) continue;
 			world.beepers.set(beeperKey(street, avenue), {
 				avenue,
 				count,
@@ -2756,11 +2768,14 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 			const street = positiveInteger(args[0], 1);
 			const avenue = positiveInteger(args[1], 1);
 			const side = normalizeWallSide(args[2]);
-			if (side) world.walls.push({ avenue, side, street });
+			if (side && isKarelWorldCoordinate(world, street, avenue)) {
+				addKarelWall(world, street, avenue, side);
+			}
 		}
 		if (command === "paint" || command === "color") {
 			const street = positiveInteger(args[0], 1);
 			const avenue = positiveInteger(args[1], 1);
+			if (!isKarelWorldCoordinate(world, street, avenue)) continue;
 			const colorName = normalizeKarelPaintColor(args[2] ?? "");
 			const color = colorName
 				? resolveKarelPaintColor(colorName, street, avenue, world)
@@ -2781,6 +2796,43 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 function positiveInteger(value: string | undefined, fallback: number) {
 	const parsed = Number.parseInt(value ?? "", 10);
 	return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function boundedPositiveInteger(value: string | undefined, fallback: number) {
+	return Math.min(MAX_KAREL_WORLD_SIZE, positiveInteger(value, fallback));
+}
+
+function isKarelWorldCoordinate(
+	world: MutableKarelWorld,
+	street: number,
+	avenue: number
+) {
+	return (
+		street >= 1 &&
+		street <= world.rows &&
+		avenue >= 1 &&
+		avenue <= world.cols
+	);
+}
+
+function addKarelWall(
+	world: MutableKarelWorld,
+	street: number,
+	avenue: number,
+	side: KarelWallSide
+) {
+	if (
+		world.walls.some(
+			wall =>
+				wall.street === street &&
+				wall.avenue === avenue &&
+				wall.side === side
+		)
+	) {
+		return;
+	}
+
+	world.walls.push({ avenue, side, street });
 }
 
 function normalizeDirection(value: string): KarelDirection {

@@ -1006,6 +1006,78 @@ public class Main {
 		});
 	});
 
+	it("bounds oversized Karel world files before rendering snapshots", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.World;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(999, 999, East, 0);
+    }
+
+    static {
+        World.readWorld("world.txt");
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=999
+cols=500
+beeper 40 40 1
+beeper 41 40 2
+wall 40 40 east
+wall 40 40 east
+wall 41 40 west
+paint 40 40 red
+paint 40 41 blue`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld).toMatchObject({
+			cols: 40,
+			rows: 40,
+			robot: {
+				avenue: 40,
+				street: 40
+			}
+		});
+		expect(result.karelWorld?.beepers).toEqual([
+			{
+				avenue: 40,
+				count: 1,
+				street: 40
+			}
+		]);
+		expect(result.karelWorld?.paints).toEqual([
+			{
+				avenue: 40,
+				color: "#dc2626",
+				street: 40
+			}
+		]);
+		expect(result.karelWorld?.walls).toEqual([
+			{
+				avenue: 40,
+				side: "east",
+				street: 40
+			}
+		]);
+		expect(result.karelWorldSteps?.[0]).toMatchObject({
+			cols: 40,
+			rows: 40
+		});
+	});
+
 	it("keeps Karel animation snapshots independent as beeper counts change", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
