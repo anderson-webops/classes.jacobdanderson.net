@@ -1453,6 +1453,50 @@ cols=4`
 		expect(result.stdout).toHaveLength(5);
 	});
 
+	it("evaluates Karel conditions through object receivers", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(1, 1, East, 0);
+        if (sam.frontIsClear()) {
+            sam.move();
+        }
+        if (sam.leftIsClear()) {
+            sam.turnLeft();
+        }
+        while (sam.frontIsClear()) {
+            sam.move();
+        }
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=3
+cols=3`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 2,
+			direction: "North",
+			name: "sam",
+			street: 3
+		});
+		expect(result.karelWorldSteps).toHaveLength(5);
+		expect(result.stdout).toHaveLength(5);
+	});
+
 	it("runs CodeHS-style Karel if/else and while conditions", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "MyProgram.java",
