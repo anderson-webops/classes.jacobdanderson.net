@@ -6,6 +6,7 @@ import { User } from "../../models/schemas/User.js";
 
 const MAX_COURSE_ID_LENGTH = 160;
 const MAX_COURSE_IDS = 1000;
+const RESERVED_COURSE_CONTEXT_IDS = new Set(["__all__"]);
 
 function normalizeCourseAccessIDs(value: unknown): string[] | null {
 	if (!Array.isArray(value)) return null;
@@ -16,7 +17,13 @@ function normalizeCourseAccessIDs(value: unknown): string[] | null {
 	for (const item of value) {
 		if (typeof item !== "string") return null;
 		const id = item.trim();
-		if (!id || id.length > MAX_COURSE_ID_LENGTH) return null;
+		if (
+			!id
+			|| id.length > MAX_COURSE_ID_LENGTH
+			|| RESERVED_COURSE_CONTEXT_IDS.has(id)
+		) {
+			return null;
+		}
 		if (seen.has(id)) continue;
 		seen.add(id);
 		ids.push(id);

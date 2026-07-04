@@ -420,6 +420,16 @@ describe("user schedule and note-only routes", () => {
 				},
 				{ "x-admin-id": adminID.toString() }
 			);
+			const reservedCourseResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/course-progress`,
+				{
+					courseId: "__all__",
+					completedModuleIds: [],
+					completedItemIds: []
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
 			const nonStringIdResponse = await putJson(
 				baseUrl,
 				`/users/${studentID}/course-progress`,
@@ -445,6 +455,7 @@ describe("user schedule and note-only routes", () => {
 			expect(tooManyIdsResponse.status).toBe(400);
 			expect(tooManyDuplicateIdsResponse.status).toBe(400);
 			expect(tooLongCourseResponse.status).toBe(400);
+			expect(reservedCourseResponse.status).toBe(400);
 			expect(nonStringIdResponse.status).toBe(400);
 			expect(blankIdResponse.status).toBe(400);
 			expect(save).not.toHaveBeenCalled();
@@ -512,6 +523,12 @@ describe("user schedule and note-only routes", () => {
 				{ courseIDs: ["c".repeat(161)] },
 				{ "x-admin-id": adminID.toString() }
 			);
+			const reservedContextResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/courses`,
+				{ courseIDs: ["__all__"] },
+				{ "x-admin-id": adminID.toString() }
+			);
 			const tooManyDuplicateResponse = await putJson(
 				baseUrl,
 				`/users/${studentID}/courses`,
@@ -527,6 +544,7 @@ describe("user schedule and note-only routes", () => {
 			expect(nonStringResponse.status).toBe(400);
 			expect(blankResponse.status).toBe(400);
 			expect(tooLongResponse.status).toBe(400);
+			expect(reservedContextResponse.status).toBe(400);
 			expect(tooManyDuplicateResponse.status).toBe(400);
 			expect(modelMocks.userFindById).not.toHaveBeenCalled();
 		});
@@ -552,6 +570,12 @@ describe("user schedule and note-only routes", () => {
 				{ courseIDs: ["c".repeat(161)] },
 				{ "x-admin-id": adminID.toString() }
 			);
+			const reservedContextResponse = await putJson(
+				baseUrl,
+				`/tutors/${tutorID}/courses`,
+				{ courseIDs: ["__all__"] },
+				{ "x-admin-id": adminID.toString() }
+			);
 			const tooManyDuplicateResponse = await putJson(
 				baseUrl,
 				`/tutors/${tutorID}/courses`,
@@ -567,6 +591,7 @@ describe("user schedule and note-only routes", () => {
 			expect(nonStringResponse.status).toBe(400);
 			expect(blankResponse.status).toBe(400);
 			expect(tooLongResponse.status).toBe(400);
+			expect(reservedContextResponse.status).toBe(400);
 			expect(tooManyDuplicateResponse.status).toBe(400);
 			expect(modelMocks.tutorFindById).not.toHaveBeenCalled();
 		});
