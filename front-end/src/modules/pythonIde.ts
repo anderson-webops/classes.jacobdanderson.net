@@ -229,68 +229,105 @@ export function isValidPythonIdeShareID(value: string | null | undefined) {
 	return typeof value === "string" && PYTHON_IDE_SHARE_ID_RE.test(value);
 }
 
-export const pythonStarterCode = `print("Hello, Python!")
+export const pythonStarterCode = `# Store reusable text in named variables before printing
+greeting_message = "Hello, Python!"
+print(greeting_message)
 
-name = input("What is your name? ")
-print(f"Nice to meet you, {name}.")
+# Collect one user value and use its name clearly
+student_name = input("What is your name? ")
+print(f"Nice to meet you, {student_name}.")
 `;
 
 export const turtleStarterCode = `import turtle
 
+#####################
+###   CONSTANTS   ###
+#####################
+BACKGROUND_COLOR = "white"
+PEN_COLOR = "teal"
+PEN_SIZE = 3
+FORWARD_STEP = 30
+TURN_ANGLE = 20
+ANIMATION_STEP = 2
+ANIMATION_DELAY_MS = 16
+DOT_SIZE = 18
+DOT_COLOR = "coral"
+
+
+#####################
+###   VARIABLES   ###
+#####################
 screen = turtle.Screen()
-screen.bgcolor("white")
+screen.bgcolor(BACKGROUND_COLOR)
 
 pen = turtle.Turtle()
-pen.color("teal")
-pen.pensize(3)
+pen.color(PEN_COLOR)
+pen.pensize(PEN_SIZE)
 is_moving = True
 
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Move the turtle by one visible step
 def move_forward():
-\tpen.forward(30)
+    pen.forward(FORWARD_STEP)
 
+# Rotate the turtle by one visible turn
 def turn_left():
-\tpen.left(20)
+    pen.left(TURN_ANGLE)
 
+# Switch the animation loop between moving and paused
 def toggle_motion():
-\tglobal is_moving
-\tis_moving = not is_moving
+    global is_moving
+    is_moving = not is_moving
 
+# Advance the animation frame when motion is enabled
 def animate():
-\tif is_moving:
-\t\tpen.forward(2)
-\tscreen.ontimer(animate, 16)
+    if is_moving:
+        pen.forward(ANIMATION_STEP)
+    screen.ontimer(animate, ANIMATION_DELAY_MS)
 
+# Draw a dot where the user clicks
 def draw_dot(x, y):
-\tpen.penup()
-\tpen.goto(x, y)
-\tpen.pendown()
-\tpen.dot(18, "coral")
+    pen.penup()
+    pen.goto(x, y)
+    pen.pendown()
+    pen.dot(DOT_SIZE, DOT_COLOR)
 
+# Move the pen while the turtle is dragged
 def drag_pen(x, y):
-\tpen.goto(x, y)
+    pen.goto(x, y)
 
+
+###########################
+###   EVENT LISTENERS   ###
+###########################
 screen.onkey(move_forward, "Up")
 screen.onkey(turn_left, "Left")
 screen.onkey(toggle_motion, "space")
 screen.onclick(draw_dot)
 pen.ondrag(drag_pen)
-screen.ontimer(animate, 16)
+screen.ontimer(animate, ANIMATION_DELAY_MS)
 screen.listen()
 `;
 
-export const pythonLevel1OutlineStarterCode = `import turtle # from turtle import Turtle, Screen
-import random # from random import randint
+export const pythonLevel1OutlineStarterCode = `import turtle
+import random
 
 #####################
 ###   FUNCTIONS   ###
 #####################
-def function_name(param1, param2):
+# Configure one turtle before the main program starts
+def setup_turtle(current_turtle, color_name):
     pass
 
-def action1():
+# Run the first keyboard or mouse action
+def action_one():
     pass
 
-def action2():
+# Run the second keyboard or mouse action
+def action_two():
     pass
 
 
@@ -298,32 +335,32 @@ def action2():
 ###   VARIABLES   ###
 #####################
 # Constants
-NUM_TURTLES=0
-DISTANCE=1
+NUM_TURTLES = 0
+MOVE_DISTANCE = 1
 
 # Global Variables
-t=turtle.Turtle() # t=Turtle()
-# TURTLE ATTRIBUTES HERE
+main_turtle = turtle.Turtle()
+# Turtle attributes here
 
 # Create Screen
-screen=turtle.Screen() # screen=Screen()
+screen = turtle.Screen()
 
-###   More variables here as needed   ###
+###   MORE VARIABLES HERE AS NEEDED   ###
 
 # List of Turtles
-turtles=[]
-for _ in range(NUM_TURTLES):
-    tmp_t=turtle.Turtle()
-    # TURTLE ATTRIBUTES HERE
-    turtles.append(tmp_t)
+turtle_list = []
+for turtle_index in range(NUM_TURTLES):
+    new_turtle = turtle.Turtle()
+    # Turtle attributes here
+    turtle_list.append(new_turtle)
 
 
 ###########################
 ###   EVENT LISTENERS   ###
 ###########################
-screen.onkey(action1, "KEY_HERE")
-screen.onkey(action2, "KEY_HERE")
-# any other event listeners desired here
+screen.onkey(action_one, "KEY_HERE")
+screen.onkey(action_two, "KEY_HERE")
+# Add any other event listeners here
 
 screen.listen()
 
@@ -332,50 +369,70 @@ screen.listen()
 ###   MAIN CODE   ###
 #####################
 condition = True
+
+# Keep the main animation running while the condition is true
 while condition:
-    t.forward(DISTANCE)
+    main_turtle.forward(MOVE_DISTANCE)
 
     # Conditions and additional actions here
-    # e.g., if t.ycor()<-200: t...
+    # Example if main_turtle.ycor() < -200
 
-    # Comment here
-    for tmp_t in turtles:
-        tmp_t.forward(DISTANCE)
+    # Update each extra turtle in the list
+    for current_turtle in turtle_list:
+        current_turtle.forward(MOVE_DISTANCE)
 
         # Conditions and additional actions here
-        # e.g., if tmp_t.xcor()>3: tmp_t...
+        # Example if current_turtle.xcor() > 3
 `;
 
 export const pgzeroStarterCode = `import pgzrun
 
 WIDTH = 640
 HEIGHT = 400
+PLAYER_SIZE = 72
+PLAYER_SPEED = 4
+INSTRUCTION_POSITION = (24, 24)
+INSTRUCTION_SIZE = 28
+INSTRUCTION_COLOR = "white"
 
 player = Actor("student", (WIDTH / 2, HEIGHT / 2))
-player.width = 72
-player.height = 72
+player.width = PLAYER_SIZE
+player.height = PLAYER_SIZE
 
+# Draw the current frame
 def draw():
-\tscreen.clear()
-\tscreen.draw.text("Use the arrow keys to move.", (24, 24), color="white", fontsize=28)
-\tplayer.draw()
+    screen.clear()
+    screen.draw.text(
+        "Use the arrow keys to move",
+        INSTRUCTION_POSITION,
+        color=INSTRUCTION_COLOR,
+        fontsize=INSTRUCTION_SIZE
+    )
+    player.draw()
 
+# Update player movement from held keys
 def update():
-\tif keyboard.left:
-\t\tplayer.x -= 4
-\tif keyboard.right:
-\t\tplayer.x += 4
-\tif keyboard.up:
-\t\tplayer.y -= 4
-\tif keyboard.down:
-\t\tplayer.y += 4
+    if keyboard.left:
+        player.x -= PLAYER_SPEED
+    if keyboard.right:
+        player.x += PLAYER_SPEED
+    if keyboard.up:
+        player.y -= PLAYER_SPEED
+    if keyboard.down:
+        player.y += PLAYER_SPEED
 
 pgzrun.go()
 `;
 
 export const javaStarterCode = `public class Main {
+    /**
+     * @brief Run the starter console program
+     *
+     * @param args Command-line arguments
+     */
     public static void main(String[] args) {
-        System.out.println("Hello, Java!");
+        String greetingMessage = "Hello, Java!";
+        System.out.println(greetingMessage);
     }
 }
 `;
@@ -384,32 +441,49 @@ export const javaOutlineStarterCode = `import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+    /**
+     * @brief Run the starter console program
+     *
+     * @param args Command-line arguments
+     */
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
         int score = 0;
-        String name = "Student";
+        String studentName = "Student";
         ArrayList<String> notes = new ArrayList<>();
 
-        // Prompt, update variables, and call helper methods here.
+        // Prompt, update variables, and call helper methods here
         // String answer = input.nextLine();
-        notes.add(makeNote(name, score));
+        notes.add(makeNote(studentName, score));
 
+        // Print each saved note on its own line
         for (String note : notes) {
             System.out.println(note);
         }
     }
 
-    static String makeNote(String name, int score) {
-        return name + ": " + score;
+    /**
+     * @brief Build a readable note from a student name and score
+     *
+     * @param studentName Name to show in the note
+     *
+     * @param score Current score value
+     *
+     * @return Formatted note text
+     */
+    static String makeNote(String studentName, int score) {
+        return studentName + ": " + score;
     }
 
+    // Run the first custom action
     static void actionOne() {
-        // Add an action here.
+        // Add an action here
     }
 
+    // Run the second custom action
     static void actionTwo() {
-        // Add another action here.
+        // Add another action here
     }
 }
 `;
@@ -417,33 +491,49 @@ public class Main {
 export const blueJMainStarterCode = `import java.util.ArrayList;
 
 public class Main {
+    /**
+     * @brief Build and preview a small object-oriented BlueJ project
+     *
+     * @param args Command-line arguments
+     */
     public static void main(String[] args) {
-        String name = "Ada";
+        String studentName = "Ada";
         int gradeLevel = 9;
         ArrayList<Integer> scores = new ArrayList<>();
         scores.add(88);
         scores.add(94);
 
-        // Open this project in BlueJ to inspect the Student object directly.
-        Student student = new Student(name, gradeLevel);
+        // Open this project in BlueJ to inspect the Student object directly
+        Student student = new Student(studentName, gradeLevel);
         student.addScore(scores.get(0));
         student.addScore(scores.get(1));
         student.printSummary();
 
-        // The browser preview mirrors the same state with console-friendly code.
-        System.out.println(name + " is in grade " + gradeLevel);
+        // Mirror the same state with console-friendly browser output
+        System.out.println(studentName + " is in grade " + gradeLevel);
         System.out.println("Average: " + averageScore(scores));
     }
 
+    /**
+     * @brief Calculate the average score for a list of grades
+     *
+     * @param scores Scores to average
+     *
+     * @return Average score or 0 when the list is empty
+     */
     static double averageScore(ArrayList<Integer> scores) {
+        // Avoid dividing by zero when no scores have been recorded
         if (scores.isEmpty()) {
             return 0;
         }
 
         int total = 0;
+
+        // Add each score into the running total
         for (int score : scores) {
             total += score;
         }
+
         return (double) total / scores.size();
     }
 }
@@ -452,32 +542,56 @@ public class Main {
 export const blueJStudentStarterCode = `import java.util.ArrayList;
 
 public class Student {
-    private String name;
-    private int gradeLevel;
-    private ArrayList<Integer> scores;
+    private final String name;
+    private final int gradeLevel;
+    private final ArrayList<Integer> scores;
 
+    /**
+     * @brief Create a student with an empty score list
+     *
+     * @param name Student name
+     *
+     * @param gradeLevel Student grade level
+     */
     public Student(String name, int gradeLevel) {
         this.name = name;
         this.gradeLevel = gradeLevel;
         this.scores = new ArrayList<>();
     }
 
+    /**
+     * @brief Add one score to the student record
+     *
+     * @param score Score to add
+     */
     public void addScore(int score) {
         scores.add(score);
     }
 
+    /**
+     * @brief Calculate the student's average score
+     *
+     * @return Average score or 0 when the list is empty
+     */
     public double averageScore() {
+        // Avoid dividing by zero when no scores have been recorded
         if (scores.isEmpty()) {
             return 0;
         }
 
         int total = 0;
+
+        // Add each score into the running total
         for (int score : scores) {
             total += score;
         }
+
         return (double) total / scores.size();
     }
 
+    /**
+     * @brief Print the student summary to the console
+     */
     public void printSummary() {
         System.out.println(name + " is in grade " + gradeLevel);
         System.out.println("Average: " + averageScore());
@@ -501,15 +615,26 @@ import kareltherobot.World;
 import kareltherobot.Directions;
 
 public class Algo implements Directions {
+    /**
+     * @brief Move one robot through the sample world
+     *
+     * @param args Command-line arguments
+     */
     public static void main(String[] args) {
+        // Start Sam at street 6 avenue 7 facing east with no beepers
         UrRobot sam = new UrRobot(6, 7, East, 0);
+
+        // Turn Sam around before moving west
         sam.turnLeft();
         sam.turnLeft();
+
+        // Move Sam three corners across the world
         sam.move();
         sam.move();
         sam.move();
     }
 
+    // Load the Karel world before the robot program runs
     static {
         World.setVisible(true);
         World.readWorld("world.txt");
@@ -537,23 +662,28 @@ beeper 6 9 1
 
 export const karelOutlineStarterCode = `public class MyProgram extends SuperKarel {
     public void run() {
+        // Move once when the path is open and this corner has no balls
         if (frontIsClear() && noBallsPresent()) {
             move();
         }
 
+        // Continue moving until Karel reaches a blocked edge
         while (frontIsClear()) {
             move();
         }
 
+        // Face the opposite direction before the program ends
         turnAround();
     }
 
+    // Rotate Karel right using three left turns
     private void turnRight() {
         turnLeft();
         turnLeft();
         turnLeft();
     }
 
+    // Rotate Karel to face the opposite direction
     private void turnAround() {
         turnLeft();
         turnLeft();
@@ -570,25 +700,44 @@ export const pgzeroOutlineStarterCode = `WIDTH = 640
 HEIGHT = 400
 
 #####################
+###   CONSTANTS   ###
+#####################
+PLAYER_SPEED = 4
+ENEMY_SPEED = 2
+TITLE_POSITION = (24, 24)
+TITLE_SIZE = 32
+TITLE_COLOR = "white"
+
+
+#####################
 ###   FUNCTIONS   ###
 #####################
+# Draw the current game frame
 def draw():
     screen.clear()
-    screen.draw.text("Game title here", (24, 24), color="white", fontsize=32)
+    screen.draw.text(
+        "Game title here",
+        TITLE_POSITION,
+        color=TITLE_COLOR,
+        fontsize=TITLE_SIZE
+    )
     player.draw()
 
     # Draw other actors and UI here
 
+# Update player, enemies, score, and game state
 def update():
-    # Update player, enemies, score, and game state here
     pass
 
-def action1():
+# Run the first input action
+def action_one():
     pass
 
-def action2():
+# Run the second input action
+def action_two():
     pass
 
+# Restore the game to its starting state
 def reset_game():
     pass
 
@@ -596,38 +745,36 @@ def reset_game():
 #####################
 ###   VARIABLES   ###
 #####################
-# Constants
-PLAYER_SPEED = 4
-ENEMY_SPEED = 2
-
 # Global Variables
 player = Actor("student", (WIDTH / 2, HEIGHT / 2))
 score = 0
 game_over = False
 
-###   More variables here as needed   ###
+###   MORE VARIABLES HERE AS NEEDED   ###
 
 # List of Actors
 actors = []
-for _ in range(0):
-    tmp_actor = Actor("student", (WIDTH / 2, HEIGHT / 2))
-    # ACTOR ATTRIBUTES HERE
-    actors.append(tmp_actor)
+for actor_index in range(0):
+    new_actor = Actor("student", (WIDTH / 2, HEIGHT / 2))
+    # Actor attributes here
+    actors.append(new_actor)
 
 
 ###########################
 ###   EVENT HANDLERS   ###
 ###########################
 def on_key_down(key):
+    # Route space and return keys to named actions
     if key == keys.SPACE:
-        action1()
+        action_one()
     elif key == keys.RETURN:
-        action2()
+        action_two()
 
 # Add other handlers here, such as on_mouse_down(pos)
 `;
 
-export const pgzeroCourseStarterCode = `WIDTH = 640
+export const pgzeroCourseStarterCode = `# Pygame Zero reads WIDTH and HEIGHT when the game starts
+WIDTH = 640
 HEIGHT = 400
 `;
 
@@ -647,18 +794,23 @@ Dev,80,90
 `;
 
 export const dataScienceStarterCode = `import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
-scores = pd.read_csv("scores.csv")
+DATA_FILE = "scores.csv"
+FIGURE_SIZE = (7, 4)
+BAR_COLOR = "#0f766e"
 
+scores = pd.read_csv(DATA_FILE)
+
+# Store the growth calculation in a named column for reuse
 scores["growth"] = scores["post"] - scores["pre"]
 print(scores)
 print()
 print("Average growth:", round(scores["growth"].mean(), 2))
 
-plt.figure(figsize=(7, 4))
-plt.bar(scores["student"], scores["growth"], color="#0f766e")
+# Build the chart from named configuration values
+plt.figure(figsize=FIGURE_SIZE)
+plt.bar(scores["student"], scores["growth"], color=BAR_COLOR)
 plt.title("Growth from pre-check to post-check")
 plt.xlabel("Student")
 plt.ylabel("Point growth")

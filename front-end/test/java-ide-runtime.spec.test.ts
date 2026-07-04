@@ -86,7 +86,7 @@ describe("java IDE runtime", () => {
 				{
 					name: "Main.java",
 					content: javaStarterCode.replace(
-						'System.out.println("Hello, Java!");',
+						"System.out.println(greetingMessage);",
 						'System.out.print("Hello, ");\n        System.out.println("Java " + (2 + 3));'
 					)
 				}
@@ -95,8 +95,8 @@ describe("java IDE runtime", () => {
 		});
 
 		expect(result.stderr).toEqual([]);
-	expect(result.stdout).toEqual(["Hello, Java 5"]);
-});
+		expect(result.stdout).toEqual(["Hello, Java 5"]);
+	});
 
 	it("previews the BlueJ starter through browser-friendly console output", () => {
 		const result = runJavaIdeProject({
