@@ -3543,6 +3543,10 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			'const pythonIdeSplitPercentStorageKey = "classes-python-ide-split-percent";'
 		);
+		expect(pageSource).toContain(
+			"const storedValue = window.localStorage.getItem("
+		);
+		expect(pageSource).toContain("if (!storedValue?.trim()) return null;");
 		expect(pageSource).toContain("const ideGridRef = ref");
 		expect(pageSource).toContain("const activeIdeSplitPercent = computed");
 		expect(pageSource).toContain("function startIdeSplitResize");

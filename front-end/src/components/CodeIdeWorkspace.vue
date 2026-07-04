@@ -691,9 +691,11 @@ function persistPythonIdeExpandedWorkspacePreference(enabled: boolean) {
 
 function loadPythonIdeSplitPercentPreference() {
 	if (typeof window === "undefined") return null;
-	const value = Number(
-		window.localStorage.getItem(pythonIdeSplitPercentStorageKey)
+	const storedValue = window.localStorage.getItem(
+		pythonIdeSplitPercentStorageKey
 	);
+	if (!storedValue?.trim()) return null;
+	const value = Number(storedValue);
 	if (!Number.isFinite(value)) return null;
 	return clampIdeSplitPercent(value);
 }
