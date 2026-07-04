@@ -3187,10 +3187,30 @@ function collectKarelCommandsFromStatement(
 		)
 	);
 	if (commandMatch) {
-		if (robotAliases.has(commandMatch[1] ?? "")) {
+		if (isKarelCommandReceiver(commandMatch[1] ?? "", robotAliases)) {
 			const command = karelCommandForName(commandMatch[2] ?? "");
 			if (command) addKarelCommand(plan, command, execution);
 		}
+		return;
+	}
+
+	const receiverMethodCall = statement.match(
+		/^([A-Z_]\w*)\.([A-Z_]\w*)\s*\(([\s\S]*)\)$/i
+	);
+	if (receiverMethodCall) {
+		if (!isKarelClassReceiver(receiverMethodCall[1] ?? "")) return;
+		const methodName = receiverMethodCall[2] ?? "";
+		const method = methods.get(methodName);
+		if (!method) return;
+		collectKarelHelperMethodCall(
+			method,
+			receiverMethodCall[3] ?? "",
+			methods,
+			robotAliases,
+			plan,
+			execution,
+			depth
+		);
 		return;
 	}
 
@@ -3207,7 +3227,35 @@ function collectKarelCommandsFromStatement(
 
 	if (!method) return;
 
-	const args = splitJavaArguments(methodCall[2] ?? "");
+	collectKarelHelperMethodCall(
+		method,
+		methodCall[2] ?? "",
+		methods,
+		robotAliases,
+		plan,
+		execution,
+		depth
+	);
+}
+
+function isKarelClassReceiver(receiver: string) {
+	return /^(?:super|this)$/i.test(receiver);
+}
+
+function isKarelCommandReceiver(receiver: string, robotAliases: Set<string>) {
+	return isKarelClassReceiver(receiver) || robotAliases.has(receiver);
+}
+
+function collectKarelHelperMethodCall(
+	method: JavaMethodDefinition,
+	rawArgs: string,
+	methods: Map<string, JavaMethodDefinition>,
+	robotAliases: Set<string>,
+	plan: KarelCommandPlan,
+	execution: KarelPreviewExecution,
+	depth: number
+) {
+	const args = splitJavaArguments(rawArgs);
 	const nextAliases = new Set(robotAliases);
 	method.parameters.forEach((parameter, parameterIndex) => {
 		const arg = args[parameterIndex]?.trim();
@@ -3233,7 +3281,8 @@ function karelPaintCommandForStatement(
 	if (!paintMatch) return null;
 
 	const receiver = paintMatch[1];
-	if (receiver && !robotAliases.has(receiver)) return null;
+	if (receiver && !isKarelCommandReceiver(receiver, robotAliases))
+		return null;
 
 	const color = normalizeKarelPaintColor(paintMatch[2] ?? "");
 	return color ? { color, kind: "paint" } : null;
@@ -3338,7 +3387,9 @@ function evaluateKarelCondition(
 	if (trimmed.startsWith("!"))
 		return !evaluateKarelCondition(trimmed.slice(1), execution);
 
-	const conditionCall = trimmed.match(/^([A-Z_]\w*)\(([\s\S]*)\)$/i);
+	const conditionCall = trimmed.match(
+		/^(?:(?:super|this)\.)?([A-Z_]\w*)\(([\s\S]*)\)$/i
+	);
 	const conditionName = conditionCall?.[1];
 	if (!conditionName) return false;
 
