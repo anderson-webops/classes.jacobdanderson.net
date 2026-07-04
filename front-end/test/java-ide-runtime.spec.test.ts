@@ -266,6 +266,61 @@ describe("java IDE runtime", () => {
 		]);
 	});
 
+	it("bounds Java console output lines in the browser runner", () => {
+		const printLines = Array.from(
+			{ length: 520 },
+			(_, index) => `        System.out.println("line ${index}");`
+		).join("\n");
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+${printLines}
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stdout).toHaveLength(500);
+		expect(result.stdout[0]).toBe("line 0");
+		expect(result.stdout.at(-1)).toBe("line 499");
+		expect(result.stderr).toContain(
+			"Stopped Java preview after 500 output lines."
+		);
+	});
+
+	it("bounds individual Java console output lines in the browser runner", () => {
+		const longText = "x".repeat(13000);
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("${longText}");
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stdout).toHaveLength(1);
+		expect(result.stdout[0]?.length).toBeLessThan(longText.length);
+		expect(result.stdout[0]).toContain(
+			"[Output truncated to keep the browser responsive.]"
+		);
+		expect(result.stderr).toContain(
+			"Truncated Java output lines after 12,000 characters."
+		);
+	});
+
 	it("ignores Java console prints inside comments", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",

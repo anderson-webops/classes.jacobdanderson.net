@@ -103,6 +103,8 @@ interface JavaRandomState {
 }
 
 interface JavaConsoleOutputState {
+	lineTruncated: boolean;
+	linesTruncated: boolean;
 	pendingLine: string;
 	stdout: string[];
 }
@@ -197,6 +199,10 @@ const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const MAX_JAVA_RUNTIME_SOURCE_CHARS = 200000;
 const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
+const MAX_JAVA_CONSOLE_OUTPUT_LINES = 500;
+const MAX_JAVA_CONSOLE_OUTPUT_LINE_CHARS = 12000;
+const JAVA_CONSOLE_OUTPUT_LINE_TRUNCATED_MESSAGE =
+	"\n[Output truncated to keep the browser responsive.]";
 const javaFormatConversions = "bcdefgosx";
 const JAVA_PRINT_RE =
 	/System\.out\.(print|println|printf|format)\s*\(([\s\S]*?)\)\s*;/g;
@@ -352,11 +358,26 @@ function javaConsoleOutput(source: string, inputText: string) {
 		stderr: [],
 		variables: new Map()
 	};
-	const output: JavaConsoleOutputState = { pendingLine: "", stdout: [] };
+	const output: JavaConsoleOutputState = {
+		lineTruncated: false,
+		linesTruncated: false,
+		pendingLine: "",
+		stdout: []
+	};
 	const mainBody = methods.get("main")?.body ?? source;
 	executeJavaConsoleBody(mainBody, context, output);
 
-	if (output.pendingLine) output.stdout.push(output.pendingLine);
+	if (output.pendingLine) flushJavaConsoleLine(output);
+	if (output.lineTruncated) {
+		context.stderr.push(
+			`Truncated Java output lines after ${MAX_JAVA_CONSOLE_OUTPUT_LINE_CHARS.toLocaleString()} characters.`
+		);
+	}
+	if (output.linesTruncated) {
+		context.stderr.push(
+			`Stopped Java preview after ${MAX_JAVA_CONSOLE_OUTPUT_LINES.toLocaleString()} output lines.`
+		);
+	}
 	return { stderr: context.stderr, stdout: output.stdout };
 }
 
@@ -1311,18 +1332,45 @@ function appendJavaConsoleText(
 	text: string,
 	flushEnd = false
 ) {
+	if (output.linesTruncated) return;
+
 	const lines = text.split("\n");
 	lines.forEach((line, index) => {
 		if (index > 0) {
-			output.stdout.push(output.pendingLine);
+			flushJavaConsoleLine(output);
+			if (output.linesTruncated) return;
 			output.pendingLine = "";
 		}
-		output.pendingLine += line;
+		appendJavaConsolePendingText(output, line);
 	});
 	if (flushEnd) {
-		output.stdout.push(output.pendingLine);
+		flushJavaConsoleLine(output);
 		output.pendingLine = "";
 	}
+}
+
+function appendJavaConsolePendingText(
+	output: JavaConsoleOutputState,
+	text: string
+) {
+	const nextLine = `${output.pendingLine}${text}`;
+	if (nextLine.length <= MAX_JAVA_CONSOLE_OUTPUT_LINE_CHARS) {
+		output.pendingLine = nextLine;
+		return;
+	}
+
+	output.pendingLine = `${nextLine.slice(0, MAX_JAVA_CONSOLE_OUTPUT_LINE_CHARS)}${JAVA_CONSOLE_OUTPUT_LINE_TRUNCATED_MESSAGE}`;
+	output.lineTruncated = true;
+}
+
+function flushJavaConsoleLine(output: JavaConsoleOutputState) {
+	if (output.stdout.length >= MAX_JAVA_CONSOLE_OUTPUT_LINES) {
+		output.linesTruncated = true;
+		output.pendingLine = "";
+		return;
+	}
+
+	output.stdout.push(output.pendingLine);
 }
 
 function isJavaScannerDoubleToken(raw: string) {
