@@ -1,5 +1,8 @@
 import type { PythonIdeFile, PythonIdeMode } from "@/modules/pythonIde";
-import { getPythonIdeRunnableFile } from "@/modules/pythonIde";
+import {
+	getPythonIdeRunnableFile,
+	isPythonIdeJavaFile
+} from "@/modules/pythonIde";
 
 export type KarelDirection = "North" | "East" | "South" | "West";
 export type KarelWallSide = "north" | "east" | "south" | "west";
@@ -197,6 +200,7 @@ const MAX_KAREL_WORLD_FILE_CHARS = 200000;
 const MAX_KAREL_WORLD_LINES = 2000;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const MAX_JAVA_RUNTIME_SOURCE_CHARS = 200000;
+const MAX_JAVA_RUNTIME_PROJECT_SOURCE_CHARS = 800000;
 const MAX_JAVA_CONSOLE_INPUT_CHARS = 200000;
 const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
@@ -306,19 +310,18 @@ const karelFacingConditions: Record<string, KarelDirection> = {
 export function runJavaIdeProject(
 	options: JavaIdeRunOptions
 ): JavaIdeRunResult {
-	const activeFile = getPythonIdeRunnableFile(options);
-	if (!activeFile) {
+	const sourceBoundsError = javaRuntimeSourceBoundsError(options.files);
+	if (sourceBoundsError) {
 		return {
-			stderr: ["Add a .java file before running this project."],
+			stderr: [sourceBoundsError],
 			stdout: []
 		};
 	}
 
-	if (activeFile.content.length > MAX_JAVA_RUNTIME_SOURCE_CHARS) {
+	const activeFile = getPythonIdeRunnableFile(options);
+	if (!activeFile) {
 		return {
-			stderr: [
-				`Java preview skipped files over ${MAX_JAVA_RUNTIME_SOURCE_CHARS.toLocaleString()} characters. Split the project into smaller files or run it in a desktop Java IDE.`
-			],
+			stderr: ["Add a .java file before running this project."],
 			stdout: []
 		};
 	}
@@ -338,6 +341,21 @@ export function runJavaIdeProject(
 	return options.mode === "karel"
 		? runKarelProject(options.files, activeFile)
 		: runConsoleJavaProject(activeFile, options.inputText ?? "");
+}
+
+function javaRuntimeSourceBoundsError(files: PythonIdeFile[]) {
+	let totalSourceChars = 0;
+	for (const file of files) {
+		if (!isPythonIdeJavaFile(file.name)) continue;
+		totalSourceChars += file.content.length;
+		if (file.content.length > MAX_JAVA_RUNTIME_SOURCE_CHARS) {
+			return `Java preview skipped files over ${MAX_JAVA_RUNTIME_SOURCE_CHARS.toLocaleString()} characters. Split the project into smaller files or run it in a desktop Java IDE.`;
+		}
+		if (totalSourceChars > MAX_JAVA_RUNTIME_PROJECT_SOURCE_CHARS) {
+			return `Java preview skipped projects over ${MAX_JAVA_RUNTIME_PROJECT_SOURCE_CHARS.toLocaleString()} total Java characters. Run larger projects in BlueJ or a desktop Java IDE.`;
+		}
+	}
+	return "";
 }
 
 function runConsoleJavaProject(
@@ -2162,7 +2180,12 @@ function executeJavaConsoleMethodCall(
 	const signal = executeJavaConsoleBody(
 		method.body,
 		localContext,
-		output ?? { pendingLine: "", stdout: [] }
+		output ?? {
+			lineTruncated: false,
+			linesTruncated: false,
+			pendingLine: "",
+			stdout: []
+		}
 	);
 	if (signal && typeof signal === "object" && signal.kind === "return")
 		return signal.value;
