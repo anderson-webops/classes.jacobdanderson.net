@@ -674,6 +674,35 @@ export function getPythonIdeModeLabel(mode: PythonIdeMode) {
 	return "Python";
 }
 
+export function isPythonIdeBlueJProject(
+	project: Pick<
+		PythonIdeProject,
+		"courseProjectKey" | "files" | "mode" | "starterLabel" | "title"
+	>
+) {
+	if (project.mode !== "java") return false;
+
+	const starterLabel = project.starterLabel?.toLowerCase() ?? "";
+	const title = project.title.toLowerCase();
+	return (
+		project.courseProjectKey === "ide-template:bluej" ||
+		starterLabel.includes("bluej") ||
+		title.includes("bluej") ||
+		project.files.some(file => file.name.toLowerCase() === "package.bluej")
+	);
+}
+
+export function getPythonIdeProjectKindLabel(
+	project: Pick<
+		PythonIdeProject,
+		"courseProjectKey" | "files" | "mode" | "starterLabel" | "title"
+	>
+) {
+	return isPythonIdeBlueJProject(project)
+		? "BlueJ Java"
+		: getPythonIdeModeLabel(project.mode);
+}
+
 function getDemoStarterCode(mode: PythonIdeMode) {
 	if (mode === "data") return dataScienceStarterCode;
 	if (mode === "java") return javaStarterCode;

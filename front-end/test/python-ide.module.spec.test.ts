@@ -29,9 +29,11 @@ import {
 	getPythonIdeDefaultFileContent,
 	getPythonIdeFileKindLabel,
 	getPythonIdeModeLabel,
+	getPythonIdeProjectKindLabel,
 	getPythonIdeRunnableFile,
-	isPythonIdeJavaFile,
 	isPythonIdeBinaryAssetFile,
+	isPythonIdeBlueJProject,
+	isPythonIdeJavaFile,
 	isPythonIdePythonFile,
 	isPythonIdeRunnableFile,
 	isPythonIdeRuntimeReservedPath,
@@ -300,6 +302,13 @@ describe("python IDE project helpers", () => {
 		]);
 		expect(project.files[0]?.content).toContain("new Student");
 		expect(project.files[1]?.content).toContain("private ArrayList");
+		expect(isPythonIdeBlueJProject(project)).toBe(true);
+		expect(getPythonIdeProjectKindLabel(project)).toBe("BlueJ Java");
+		expect(getPythonIdeModeLabel(project.mode)).toBe("Java");
+
+		const plainJavaProject = createPythonIdeProject("java");
+		expect(isPythonIdeBlueJProject(plainJavaProject)).toBe(false);
+		expect(getPythonIdeProjectKindLabel(plainJavaProject)).toBe("Java");
 	});
 
 	it("exports Java projects as BlueJ-ready ZIP contents", () => {
@@ -3853,8 +3862,10 @@ describe("python IDE project helpers", () => {
 
 		expect(pageSource).toContain("selectedProjectCanExportToBlueJ");
 		expect(pageSource).toContain("selectedProjectCanShowBlueJIntegration");
+		expect(pageSource).toContain("selectedProjectIsBlueJ");
 		expect(pageSource).toContain("isBlueJIdeRoute");
 		expect(pageSource).toContain("requestedTemplate");
+		expect(pageSource).toContain("getPythonIdeProjectKindLabel(project)");
 		expect(pageSource).toContain('route.path === "/bluej"');
 		expect(pageSource).toContain('rawMode === "bluej"');
 		expect(pageSource).toContain(
@@ -3909,6 +3920,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(":href=\"blueJHomeUrl\"");
 		expect(pageSource).toContain(":href=\"blueJSourceUrl\"");
 		expect(pageSource).toContain("BlueJ source");
+		expect(pageSource).toContain("This project is BlueJ-ready");
 		expect(pageSource).toContain("createBlueJProjectArchive(project)");
 		expect(exportSource).toContain('from "fflate"');
 		expect(exportSource).toContain("unzipSync(archiveBytes, {");

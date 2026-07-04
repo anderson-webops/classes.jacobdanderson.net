@@ -32,6 +32,8 @@ describe("TheHeader.vue", () => {
 		const wrapper = mountHeader();
 
 		expect(wrapper.text()).toContain("Zoom");
+		expect(wrapper.text()).toContain("Code IDE");
+		expect(wrapper.text()).toContain("BlueJ");
 		expect(wrapper.text()).not.toContain("Pathways");
 	});
 
@@ -50,6 +52,8 @@ describe("TheHeader.vue", () => {
 		const wrapper = mountHeader(pinia);
 
 		expect(wrapper.text()).toContain("Zoom");
+		expect(wrapper.text()).toContain("Code IDE");
+		expect(wrapper.text()).toContain("BlueJ");
 		expect(wrapper.text()).not.toContain("Pathways");
 		expect(wrapper.text()).toContain("Account");
 		expect(wrapper.text()).not.toContain("Book a Class");
