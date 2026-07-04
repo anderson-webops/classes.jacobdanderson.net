@@ -101,10 +101,8 @@ interface RuntimeArtifactView {
 interface KarelWorldCell {
 	avenue: number;
 	beeperCount: number;
-	isRobot: boolean;
 	key: string;
 	paintColor: string;
-	robotDirection: string;
 	street: number;
 	walls: Record<KarelWallSide, boolean>;
 }
@@ -1052,6 +1050,29 @@ const karelWorldStyle = computed(() => ({
 	"--karel-cols": `${karelWorld.value?.cols ?? 10}`,
 	"--karel-rows": `${karelWorld.value?.rows ?? 10}`
 }));
+const karelRobotStyle = computed(() => {
+	const world = karelWorld.value;
+	const robot = world?.robot;
+	if (!world || !robot) return {};
+
+	const insetRatio = 0.21;
+	const sizeRatio = 0.58;
+	const leftPercent = ((robot.avenue - 1 + insetRatio) / world.cols) * 100;
+	const topPercent =
+		((world.rows - robot.street + insetRatio) / world.rows) * 100;
+
+	return {
+		height: `${(sizeRatio / world.rows) * 100}%`,
+		left: `${leftPercent}%`,
+		top: `${topPercent}%`,
+		width: `${(sizeRatio / world.cols) * 100}%`
+	};
+});
+const karelRobotDirectionClass = computed(() => {
+	const direction =
+		karelWorld.value?.robot?.direction.toLowerCase() ?? "east";
+	return `karel-robot--${direction}`;
+});
 function karelCellStyle(cell: KarelWorldCell) {
 	if (!cell.paintColor) return undefined;
 	return { "--karel-cell-color": cell.paintColor };
@@ -1089,16 +1110,11 @@ const karelWorldCells = computed<KarelWorldCell[]>(() => {
 		for (let avenue = 1; avenue <= world.cols; avenue += 1) {
 			const key = karelCellKey(street, avenue);
 			const walls = wallMap.get(key) ?? new Set<KarelWallSide>();
-			const isRobot =
-				world.robot?.street === street &&
-				world.robot?.avenue === avenue;
 			cells.push({
 				avenue,
 				beeperCount: beepers.get(key) ?? 0,
-				isRobot,
 				key,
 				paintColor: paints.get(key) ?? "",
-				robotDirection: world.robot?.direction.toLowerCase() ?? "east",
 				street,
 				walls: {
 					east: walls.has("east"),
@@ -7012,12 +7028,6 @@ onBeforeUnmount(() => {
 									:aria-label="karelCellAriaLabel(cell)"
 								>
 									<span
-										v-if="cell.isRobot"
-										class="karel-robot"
-										:class="`karel-robot--${cell.robotDirection}`"
-										aria-label="Karel robot"
-									/>
-									<span
 										v-if="cell.beeperCount"
 										class="karel-beeper"
 										aria-label="Beeper"
@@ -7025,6 +7035,13 @@ onBeforeUnmount(() => {
 										{{ cell.beeperCount }}
 									</span>
 								</div>
+								<span
+									v-if="karelWorld.robot"
+									class="karel-robot"
+									:class="karelRobotDirectionClass"
+									:style="karelRobotStyle"
+									aria-label="Karel robot"
+								/>
 							</div>
 							<div v-else class="karel-empty">
 								Run Karel code to render the world.
@@ -8777,6 +8794,7 @@ html.dark .editor-shortcuts ul {
 }
 
 .karel-world {
+	position: relative;
 	display: grid;
 	grid-template-columns: repeat(var(--karel-cols), minmax(0, 1fr));
 	width: min(100%, 34rem);
@@ -8817,11 +8835,15 @@ html.dark .editor-shortcuts ul {
 .karel-robot {
 	position: absolute;
 	z-index: 3;
-	inset: 21%;
 	border: 2px solid #1d4ed8;
 	border-radius: 5px;
 	background: #fde047;
 	box-shadow: 0 2px 0 #111827;
+	transition:
+		left 240ms ease,
+		top 240ms ease,
+		transform 180ms ease;
+	will-change: left, top, transform;
 }
 
 .karel-robot::after {
