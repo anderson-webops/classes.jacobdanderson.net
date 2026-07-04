@@ -161,8 +161,10 @@ describe("python IDE CodeMirror editor", () => {
 		expect(legacyRouteSource).toContain("<CodeIdeWorkspace />");
 		expect(legacyRouteSource).not.toContain("new EditorView");
 		expect(legacyRouteSource).not.toContain("loadPythonIdeRuntime");
+		expect(workspaceSource).toContain("codeIdeHeroContent");
+		expect(workspaceSource).toContain("<h1>{{ codeIdeHeroContent.title }}</h1>");
 		expect(workspaceSource).toContain(
-			"<h1>Code, run, and draw in Python or Java</h1>"
+			'title: "Code, run, and draw in Python or Java"'
 		);
 		expect(workspaceSource).toContain(
 			"Build multi-file Python and Java projects"
