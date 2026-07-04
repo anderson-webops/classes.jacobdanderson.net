@@ -653,6 +653,35 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("keeps BlueJ import limits bounded when callers pass unsafe option values", () => {
+		const boundedEntries: Record<string, Uint8Array> = {
+			"Student-Lab/Huge.java": strToU8(
+				`class Huge {\n${"// filler\n".repeat(60000)}}`
+			)
+		};
+		for (let index = 0; index < 42; index += 1) {
+			boundedEntries[`Student-Lab/File${index}.java`] = strToU8(
+				`class File${index} {}`
+			);
+		}
+
+		const result = importBlueJProjectArchive(zipSync(boundedEntries), {
+			maxFiles: Number.POSITIVE_INFINITY,
+			maxTextFileBytes: Number.POSITIVE_INFINITY
+		});
+
+		expect(result.files).toHaveLength(40);
+		expect(result.files.map(file => file.name)).not.toContain("Huge.java");
+		expect(result.files.map(file => file.name)).not.toContain("File40.java");
+		expect(result.skippedFiles).toEqual(
+			expect.arrayContaining([
+				"Huge.java (too large)",
+				"File40.java (too many files)",
+				"File41.java (too many files)"
+			])
+		);
+	});
+
 	it("keeps BlueJ ZIP extraction filtered before file inflation", () => {
 		const exportSource = readFileSync(
 			resolve(__dirname, "../src/modules/blueJProjectExport.ts"),
@@ -661,6 +690,7 @@ describe("python IDE project helpers", () => {
 
 		expect(exportSource).toContain("unzipSync(archiveBytes, {");
 		expect(exportSource).toContain("filter(file)");
+		expect(exportSource).toContain("boundedBlueJImportLimit");
 		expect(exportSource).toContain("file.originalSize > maxTextFileBytes");
 		expect(exportSource).toContain("prefilteredSkippedFiles.push");
 		expect(exportSource).toContain("DEFAULT_BLUEJ_IMPORT_MAX_FILES");
