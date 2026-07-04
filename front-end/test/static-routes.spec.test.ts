@@ -60,6 +60,7 @@ describe("static route normalization", () => {
 				"/admin/mdmail",
 				"/admin/people",
 				"/admin/student-management",
+				"/bluej",
 				"/course-resource",
 				"/ide",
 				"/profile",

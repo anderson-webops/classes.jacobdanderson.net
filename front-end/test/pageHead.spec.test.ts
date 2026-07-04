@@ -4,6 +4,7 @@ import { pageTitleForPath } from "@/modules/pageHead";
 describe("page head helpers", () => {
 	it.each([
 		["/", "Classes with Jacob"],
+		["/bluej", "BlueJ IDE | Classes with Jacob"],
 		["/courses", "Courses | Classes with Jacob"],
 		["/pathways", "Pathways | Classes with Jacob"],
 		[

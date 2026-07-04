@@ -14,6 +14,7 @@ const siteDescription =
 const route = useRoute();
 const noindexMatchers = [
 	/^\/admin(?:\/|$)/,
+	/^\/bluej(?:\/|$)/,
 	/^\/profile(?:\/|$)/,
 	/^\/ide(?:\/|$)/,
 	/^\/python-ide(?:\/|$)/,

@@ -6,6 +6,7 @@ export const SITEMAP_EXCLUDED_ROUTES = [
 	"/admin/mdmail",
 	"/admin/people",
 	"/admin/student-management",
+	"/bluej",
 	"/course-resource",
 	"/ide",
 	"/profile",

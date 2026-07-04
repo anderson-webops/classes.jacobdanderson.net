@@ -1124,12 +1124,14 @@ const requestedCourseStarter = computed(() => route.query.starter === "course");
 const requestedShareID = computed(() =>
 	typeof route.query.share === "string" ? route.query.share.trim() : ""
 );
+const isBlueJIdeRoute = computed(() => route.path === "/bluej");
 const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
 	const rawTemplate =
 		typeof route.query.template === "string" ? route.query.template : "";
 	const rawMode =
 		typeof route.query.mode === "string" ? route.query.mode : "";
-	if (rawTemplate === "bluej" || rawMode === "bluej") return "bluej";
+	if (isBlueJIdeRoute.value || rawTemplate === "bluej" || rawMode === "bluej")
+		return "bluej";
 	if (rawTemplate === "course" && requestedCourseStarter.value)
 		return "course";
 	if (rawTemplate === "demo") return "demo";
@@ -1139,6 +1141,7 @@ const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
 const requestedStarterMode = computed(() => {
 	const rawMode =
 		typeof route.query.mode === "string" ? route.query.mode : "";
+	if (!rawMode && isBlueJIdeRoute.value) return "java";
 	const courseMode = pythonIdeModeForCourseId(requestedCourseId.value);
 	return normalizePythonIdeMode(rawMode, courseMode ?? "turtle");
 });
@@ -1160,8 +1163,8 @@ const selectedProjectCanShowBlueJIntegration = computed(() =>
 );
 const selectedProjectBlueJDescription = computed(() =>
 	selectedProjectCanExportToBlueJ.value
-		? "Download a BlueJ-ready ZIP with package.bluej, Java source files, and README notes."
-		: "Practice Karel in the browser, or open a BlueJ object-bench starter for desktop Java inspection."
+		? "Export this Java project as a BlueJ-ready ZIP with package.bluej, source files, and README notes."
+		: "Practice Karel in the browser, or open a BlueJ desktop starter for object-bench inspection."
 );
 
 function codeIdeShareUrl(shareID: string) {
@@ -2278,44 +2281,6 @@ async function createProject(
 		appendOutput(
 			"system",
 			error instanceof Error ? error.message : "Project created locally."
-		);
-	} finally {
-		suppressAutoSave = false;
-		await nextTick();
-		resetActiveCanvas();
-	}
-}
-
-async function openBlueJStarterProject() {
-	const existingProject = projects.value.find(
-		project => project.courseProjectKey === "ide-template:bluej"
-	);
-	if (existingProject) {
-		selectedProjectID.value = existingProject._id;
-		await nextTick();
-		resetActiveCanvas();
-		return;
-	}
-
-	const starter = createPythonIdeProject("java", {
-		courseProjectKey: "ide-template:bluej",
-		courseProjectTitle: "BlueJ Java Project",
-		starterLabel: "BlueJ starter",
-		template: "bluej",
-		title: "BlueJ Java Project"
-	});
-	suppressAutoSave = true;
-	try {
-		await saveNewProject(starter);
-	} catch (error) {
-		projects.value.unshift(starter);
-		selectedProjectID.value = starter._id;
-		await persistLocalProjects();
-		appendOutput(
-			"system",
-			error instanceof Error
-				? error.message
-				: "BlueJ starter created locally."
 		);
 	} finally {
 		suppressAutoSave = false;
@@ -5741,6 +5706,7 @@ watch(
 	() =>
 		[
 			route.query.course,
+			route.path,
 			route.query.mode,
 			route.query.projectKey,
 			route.query.share,
@@ -5876,8 +5842,8 @@ onBeforeUnmount(() => {
 					canvas for drawing and keyboard-driven lessons, explore
 					PyGame Zero games and data/AI notebooks with rendered
 					charts, preview Java console programs or Karel robot worlds,
-					create BlueJ desktop projects, and download Java projects as
-					BlueJ-ready ZIPs.
+					and use BlueJ integration for desktop object-bench projects,
+					ZIP import, and package.bluej export.
 				</p>
 			</div>
 			<div class="code-ide-status">
@@ -5885,13 +5851,12 @@ onBeforeUnmount(() => {
 					<span>{{ saveMessage }}</span>
 					<strong>{{ runMessage }}</strong>
 				</div>
-				<button
+				<RouterLink
 					class="site-button site-button--secondary compact-button code-ide-status-action"
-					type="button"
-					@click="openBlueJStarterProject"
+					to="/bluej"
 				>
-					BlueJ starter
-				</button>
+					BlueJ workspace
+				</RouterLink>
 				<button
 					class="site-button site-button--secondary compact-button code-ide-status-action"
 					type="button"
@@ -6164,10 +6129,10 @@ onBeforeUnmount(() => {
 						aria-label="Java and BlueJ tools"
 					>
 						<div>
-							<strong>Java / BlueJ tools</strong>
+							<strong>BlueJ integration</strong>
 							<small>
-								BlueJ object-bench starter and package.bluej
-								export
+								Open-source desktop workflow with ZIP import,
+								starter projects, and package.bluej export.
 							</small>
 						</div>
 						<div class="java-tools-actions">
@@ -6176,7 +6141,7 @@ onBeforeUnmount(() => {
 								type="button"
 								@click="createProject('java', 'bluej')"
 							>
-								New BlueJ desktop project
+								New BlueJ project
 							</button>
 							<button
 								class="site-button site-button--secondary compact-button"
@@ -6627,7 +6592,7 @@ onBeforeUnmount(() => {
 				>
 					<div>
 						<p class="bluej-integration-eyebrow">BlueJ</p>
-						<h2>BlueJ Java Project</h2>
+						<h2>BlueJ Desktop Integration</h2>
 						<p>{{ selectedProjectBlueJDescription }}</p>
 					</div>
 					<div class="bluej-integration-actions">
@@ -6636,7 +6601,7 @@ onBeforeUnmount(() => {
 							type="button"
 							@click="createProject('java', 'bluej')"
 						>
-							New BlueJ desktop project
+							New BlueJ project
 						</button>
 						<button
 							class="site-button site-button--secondary compact-button"

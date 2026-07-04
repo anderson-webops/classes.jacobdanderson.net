@@ -3694,35 +3694,39 @@ describe("python IDE project helpers", () => {
 
 		expect(pageSource).toContain("selectedProjectCanExportToBlueJ");
 		expect(pageSource).toContain("selectedProjectCanShowBlueJIntegration");
+		expect(pageSource).toContain("isBlueJIdeRoute");
 		expect(pageSource).toContain("requestedTemplate");
+		expect(pageSource).toContain('route.path === "/bluej"');
 		expect(pageSource).toContain('rawMode === "bluej"');
 		expect(pageSource).toContain('requestedTemplate.value === "bluej"');
 		expect(pageSource).toContain('"ide-template:bluej"');
 		expect(pageSource).toContain("openRequestedStandaloneProjectIfNeeded");
-		expect(pageSource).toContain("async function openBlueJStarterProject");
 		expect(pageSource).toContain("openBlueJArchiveImporter");
 		expect(pageSource).toContain("blueJArchiveInputRef");
 		expect(pageSource).toContain("importBlueJProjectArchiveFromInput");
-		expect(pageSource).toContain(
-			'project.courseProjectKey === "ide-template:bluej"'
-		);
+		expect(pageSource).toContain("function requestedStandaloneProjectKey");
+		expect(pageSource).toContain("project.courseProjectKey === key");
 		expect(pageSource).toContain('selectedProject.value.mode === "java"');
 		expect(pageSource).toContain('selectedProject.value.mode === "karel"');
 		expect(pageSource).toContain('if (project.mode !== "java")');
 		expect(pageSource).toContain(
 			'v-if="selectedProjectCanShowBlueJIntegration"'
 		);
-		expect(pageSource).toContain("create BlueJ desktop projects");
-		expect(pageSource).toContain("BlueJ-ready ZIPs");
-		expect(pageSource).toContain("BlueJ starter");
+		expect(pageSource).toContain(
+			"BlueJ integration for desktop object-bench projects"
+		);
+		expect(pageSource).toContain("package.bluej export");
+		expect(pageSource).toContain('to="/bluej"');
+		expect(pageSource).toContain("BlueJ workspace");
 		expect(pageSource).toContain('class="java-tools-card"');
 		expect(pageSource).toContain('aria-label="Java and BlueJ tools"');
-		expect(pageSource).toContain("Java / BlueJ tools");
-		expect(pageSource).toContain("BlueJ object-bench starter");
+		expect(pageSource).toContain("BlueJ integration");
+		expect(pageSource).toContain("Open-source desktop workflow");
 		expect(pageSource).toContain("Import BlueJ ZIP");
 		expect(pageSource).toContain('class="bluej-integration-panel"');
+		expect(pageSource).toContain("BlueJ Desktop Integration");
 		expect(pageSource).toContain("blueJSourceUrl");
-		expect(pageSource).toContain("New BlueJ desktop project");
+		expect(pageSource).toContain("New BlueJ project");
 		expect(pageSource).toMatch(/createProject\(\s*'java',\s*'bluej'\s*\)/);
 		expect(pageSource).toContain("async function downloadSelectedProjectForBlueJ");
 		expect(pageSource).toContain('import("@/modules/blueJProjectExport")');
