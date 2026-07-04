@@ -3,7 +3,7 @@ import { pathToFileURL } from "node:url";
 const origin =
 	process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderson.net";
 const timeoutMs = Number(process.env.CLASSES_SITE_SMOKE_TIMEOUT_MS || 15000);
-const smokePaths = ["/ide", "/bluej"];
+const smokePaths = ["/ide", "/python-ide", "/bluej"];
 const pageUrl = new URL(smokePaths[0], origin);
 
 async function fetchText(url) {
@@ -81,7 +81,7 @@ export function containsCurrentIdeBundleMarkers(source) {
 
 async function assertProductionIdePage(pageUrl) {
 	const html = await fetchText(pageUrl);
-	const assetUrls = pageAssetUrls(html);
+	const assetUrls = pageAssetUrls(html, pageUrl);
 	if (!assetUrls.length) {
 		throw new Error(
 			`${pageUrl.href} did not reference any same-origin JavaScript assets`
