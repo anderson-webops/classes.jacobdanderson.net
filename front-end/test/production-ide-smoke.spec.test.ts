@@ -2,10 +2,19 @@ import { describe, expect, it } from "vitest";
 import {
 	containsCurrentIdeBundleMarkers,
 	containsJavaModeCopy,
-	pageAssetUrls
+	pageAssetUrls,
+	productionIdeSmokePageUrls
 } from "../../scripts/production-ide-smoke.mjs";
 
 describe("production Code IDE smoke helpers", () => {
+	it("checks both generalized Code IDE and BlueJ entry routes", () => {
+		expect(
+			productionIdeSmokePageUrls("https://classes.jacobdanderson.net").map(
+				url => url.pathname
+			)
+		).toEqual(["/ide", "/bluej"]);
+	});
+
 	it("extracts same-origin JavaScript assets from the IDE page HTML", () => {
 		const baseUrl = new URL("https://classes.jacobdanderson.net/ide");
 		const html = [
