@@ -146,13 +146,16 @@ function serializePythonProject(project: IPythonProject) {
 }
 
 function serializeSharedPythonProject(project: IPythonProject) {
-	const serialized = serializePythonProject(project);
 	return {
-		...serialized,
-		shared: undefined,
-		shareCreatedAt: undefined,
-		sharedSourceID: undefined,
-		shareID: undefined
+		title: project.title,
+		mode: project.mode,
+		files: project.files,
+		activeFileName: project.activeFileName,
+		courseID: project.courseID,
+		courseProjectKey: project.courseProjectKey,
+		courseProjectTitle: project.courseProjectTitle,
+		starterLabel: project.starterLabel,
+		starterUrl: project.starterUrl
 	};
 }
 

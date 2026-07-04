@@ -609,10 +609,13 @@ describe("Python project review routes", () => {
 			});
 			expect(body.project.title).toBe("Loops practice");
 			expect(body.project.files[0].content).toBe("print('student')\n");
+			expect(body.project).not.toHaveProperty("_id");
 			expect(body.project).not.toHaveProperty("shared");
 			expect(body.project).not.toHaveProperty("shareID");
 			expect(body.project).not.toHaveProperty("shareCreatedAt");
 			expect(body.project).not.toHaveProperty("sharedSourceID");
+			expect(body.project).not.toHaveProperty("createdAt");
+			expect(body.project).not.toHaveProperty("updatedAt");
 		});
 	});
 

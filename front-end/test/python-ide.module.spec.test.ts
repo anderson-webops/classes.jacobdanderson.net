@@ -3572,6 +3572,10 @@ describe("python IDE project helpers", () => {
 		expect(moduleSource).toContain(
 			"export async function fetchSharedPythonIdeProject"
 		);
+		expect(moduleSource).toContain("export type SharedPythonIdeProject");
+		expect(moduleSource).toContain(
+			"api.get<{ project: SharedPythonIdeProject }>"
+		);
 		expect(moduleSource).toContain(
 			"`/users/python-projects/shared/${encodeURIComponent(shareID)}`"
 		);
