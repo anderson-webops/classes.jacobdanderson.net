@@ -326,7 +326,7 @@ describe("user schedule and note-only routes", () => {
 		});
 	});
 
-	it("rejects oversized learner course progress autosave payloads", async () => {
+	it("rejects malformed or oversized learner course progress autosave payloads", async () => {
 		const save = vi.fn().mockResolvedValue(undefined);
 		const student = {
 			...makeStudent(),
@@ -370,10 +370,32 @@ describe("user schedule and note-only routes", () => {
 				},
 				{ "x-admin-id": adminID.toString() }
 			);
+			const nonStringIdResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/course-progress`,
+				{
+					courseId: "javascript-level-1",
+					completedModuleIds: [123],
+					completedItemIds: []
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
+			const blankIdResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/course-progress`,
+				{
+					courseId: "javascript-level-1",
+					completedModuleIds: [" "],
+					completedItemIds: []
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
 
 			expect(tooLongIdResponse.status).toBe(400);
 			expect(tooManyIdsResponse.status).toBe(400);
 			expect(tooLongCourseResponse.status).toBe(400);
+			expect(nonStringIdResponse.status).toBe(400);
+			expect(blankIdResponse.status).toBe(400);
 			expect(save).not.toHaveBeenCalled();
 		});
 	});

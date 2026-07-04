@@ -42,10 +42,19 @@ function normalizeStringArray(value: unknown): string[] | null {
 }
 
 function normalizeCourseProgressIDs(value: unknown): string[] | null {
-	const ids = normalizeStringArray(value);
-	if (!ids) return null;
+	if (!Array.isArray(value)) return null;
+
+	const ids: string[] = [];
+	const seen = new Set<string>();
+	for (const item of value) {
+		if (typeof item !== "string") return null;
+		const id = item.trim();
+		if (!id || id.length > MAX_COURSE_PROGRESS_ID_LENGTH) return null;
+		if (seen.has(id)) continue;
+		seen.add(id);
+		ids.push(id);
+	}
 	if (ids.length > MAX_COURSE_PROGRESS_IDS) return null;
-	if (ids.some(id => id.length > MAX_COURSE_PROGRESS_ID_LENGTH)) return null;
 	return ids;
 }
 
@@ -323,7 +332,7 @@ export const setUserCourseProgress: RequestHandler = async (req, res) => {
 
 	if (!completedModuleIds || !completedItemIds) {
 		return res.status(400).json({
-			message: `Completed IDs must be arrays with at most ${MAX_COURSE_PROGRESS_IDS} IDs of ${MAX_COURSE_PROGRESS_ID_LENGTH} characters or fewer`
+			message: `Completed IDs must be arrays with at most ${MAX_COURSE_PROGRESS_IDS} non-empty string IDs of ${MAX_COURSE_PROGRESS_ID_LENGTH} characters or fewer`
 		});
 	}
 
