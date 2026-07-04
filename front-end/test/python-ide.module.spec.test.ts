@@ -4940,7 +4940,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 
-		expect(pageSource).toContain("const karelPlaybackFrameDelayMs = 350;");
+		expect(pageSource).toContain("const karelPlaybackFrameDelayMs = 650;");
 		expect(pageSource).toContain(
 			'import { createKarelWorldPlaybackController } from "@/modules/karelWorldPlayback";'
 		);
