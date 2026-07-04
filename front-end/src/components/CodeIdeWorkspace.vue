@@ -41,9 +41,10 @@ import {
 	getPythonIdeAssetDataUrl,
 	getPythonIdeDefaultFileContent,
 	getPythonIdeFileKindLabel,
-	getPythonIdeModeLabel,
+	getPythonIdeProjectKindLabel,
 	getPythonIdeRunnableFile,
 	isPythonIdeBinaryAssetFile,
+	isPythonIdeBlueJProject,
 	isPythonIdeJavaFile,
 	isPythonIdeRunnableFile,
 	isPythonIdeTextFile,
@@ -1004,7 +1005,7 @@ const runControlIsStop = computed(
 );
 const selectedModeLabel = computed(() =>
 	selectedProject.value
-		? getPythonIdeModeLabel(selectedProject.value.mode)
+		? getPythonIdeProjectKindLabel(selectedProject.value)
 		: "Code"
 );
 const newFileNamePlaceholder = computed(() => {
@@ -1161,11 +1162,20 @@ const selectedProjectCanShowBlueJIntegration = computed(() =>
 			selectedProject.value.mode === "karel"
 		: false
 );
-const selectedProjectBlueJDescription = computed(() =>
-	selectedProjectCanExportToBlueJ.value
-		? "Export this Java project as a BlueJ-ready ZIP with package.bluej, source files, and README notes."
-		: "Practice Karel in the browser, or open a BlueJ desktop starter for object-bench inspection."
+const selectedProjectIsBlueJ = computed(() =>
+	selectedProject.value
+		? isPythonIdeBlueJProject(selectedProject.value)
+		: false
 );
+const selectedProjectBlueJDescription = computed(() => {
+	if (selectedProjectIsBlueJ.value) {
+		return "This project is BlueJ-ready: download a ZIP with package.bluej for desktop object-bench work, then import the ZIP back here after class.";
+	}
+	if (selectedProjectCanExportToBlueJ.value) {
+		return "Export this Java project as a BlueJ-ready ZIP with package.bluej, source files, and README notes.";
+	}
+	return "Practice Karel in the browser, or open a BlueJ desktop starter for object-bench inspection.";
+});
 const codeIdeHeroContent = computed(() =>
 	isBlueJIdeRoute.value
 		? {
@@ -5892,7 +5902,6 @@ onBeforeUnmount(() => {
 					BlueJ workspace
 				</RouterLink>
 				<button
-					v-else
 					class="site-button site-button--secondary compact-button code-ide-status-action"
 					type="button"
 					@click="createProject('java', 'bluej')"
@@ -6263,7 +6272,7 @@ onBeforeUnmount(() => {
 								>
 									<span>{{ projectLabel(project) }}</span>
 									<small>{{
-										getPythonIdeModeLabel(project.mode)
+										getPythonIdeProjectKindLabel(project)
 									}}</small>
 								</button>
 								<button
