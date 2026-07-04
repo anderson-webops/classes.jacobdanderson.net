@@ -1805,6 +1805,14 @@ async function loadProjects() {
 				return;
 			}
 
+			setProjects([]);
+			const openedRouteProject = await openRouteProjectIfNeeded(
+				false,
+				loadRunID
+			);
+			if (!projectLoadIsCurrent(loadRunID)) return;
+			if (openedRouteProject) return;
+
 			const initialProject = await createInitialProject();
 			if (!projectLoadIsCurrent(loadRunID)) return;
 			const remoteProject = await createRemotePythonIdeProject(

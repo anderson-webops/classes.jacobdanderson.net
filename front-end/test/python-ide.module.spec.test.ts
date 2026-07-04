@@ -3818,6 +3818,42 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("opens requested route projects before creating a default account project", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+		const loadProjectsStart = pageSource.indexOf(
+			"async function loadProjects()"
+		);
+		const loadProjectsSource = pageSource.slice(
+			loadProjectsStart,
+			pageSource.indexOf("interface SaveProjectOptions", loadProjectsStart)
+		);
+		const noRemoteProjectsStart = loadProjectsSource.indexOf(
+			"if (remoteProjects.length) {"
+		);
+		const emptyRemoteProjectsSource =
+			loadProjectsSource.slice(noRemoteProjectsStart);
+
+		expect(emptyRemoteProjectsSource).toContain("setProjects([]);");
+		expect(emptyRemoteProjectsSource).toContain(
+			"const openedRouteProject = await openRouteProjectIfNeeded("
+		);
+		expect(
+			emptyRemoteProjectsSource.indexOf(
+				"const openedRouteProject = await openRouteProjectIfNeeded("
+			)
+		).toBeLessThan(
+			emptyRemoteProjectsSource.indexOf(
+				"const initialProject = await createInitialProject();"
+			)
+		);
+		expect(emptyRemoteProjectsSource).toContain(
+			"if (openedRouteProject) return;"
+		);
+	});
+
 	it("suppresses CodeMirror-originated echo updates through the Vue flush", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
