@@ -793,6 +793,36 @@ public class Main {
 		]);
 	});
 
+	it("shares Java class constants with helper methods instead of caller locals", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    private static final String SCORE_LABEL = "Score";
+    private static final int SCORE_BONUS = 4;
+
+    public static void main(String[] args) {
+        String SCORE_LABEL = "Local";
+        int SCORE_BONUS = 99;
+        print_score(6);
+        System.out.println("Main: " + SCORE_LABEL + " " + SCORE_BONUS);
+    }
+
+    static void print_score(int score) {
+        System.out.println(SCORE_LABEL + ": " + (score + SCORE_BONUS));
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["Score: 10", "Main: Local 99"]);
+	});
+
 	it("previews recursive Java return methods with a browser call-depth cap", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
