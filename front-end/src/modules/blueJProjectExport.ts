@@ -13,6 +13,7 @@ const BLUEJ_SOURCE_URL = "https://github.com/k-pet-group/BlueJ-Greenfoot";
 const JAVA_IDENTIFIER_RE = /^[A-Z_$][\w$]*$/i;
 const DEFAULT_BLUEJ_EXPORT_MAX_FILES = 40;
 const DEFAULT_BLUEJ_EXPORT_MAX_TEXT_FILE_BYTES = 512 * 1024;
+const DEFAULT_BLUEJ_IMPORT_MAX_ARCHIVE_BYTES = 4 * 1024 * 1024;
 const DEFAULT_BLUEJ_IMPORT_MAX_FILES = 40;
 const DEFAULT_BLUEJ_IMPORT_MAX_TEXT_FILE_BYTES = 512 * 1024;
 
@@ -30,6 +31,7 @@ export interface BlueJProjectImportResult {
 }
 
 export interface BlueJProjectImportOptions {
+	maxArchiveBytes?: number;
 	maxFiles?: number;
 	maxTextFileBytes?: number;
 }
@@ -51,6 +53,17 @@ function boundedBlueJImportLimit(value: number | undefined, fallback: number) {
 	if (value === undefined) return fallback;
 	if (!Number.isFinite(value) || value < 1) return fallback;
 	return Math.floor(value);
+}
+
+function boundedBlueJImportArchiveByteLimit(value: number | undefined) {
+	return Math.min(
+		boundedBlueJImportLimit(value, DEFAULT_BLUEJ_IMPORT_MAX_ARCHIVE_BYTES),
+		DEFAULT_BLUEJ_IMPORT_MAX_ARCHIVE_BYTES
+	);
+}
+
+function blueJArchiveByteLimitLabel(value: number) {
+	return `${value.toLocaleString()} byte${value === 1 ? "" : "s"}`;
 }
 
 export function blueJProjectArchiveName(
@@ -309,6 +322,15 @@ export function importBlueJProjectArchive(
 	archiveBytes: Uint8Array,
 	options: BlueJProjectImportOptions = {}
 ): BlueJProjectImportResult {
+	const maxArchiveBytes = boundedBlueJImportArchiveByteLimit(
+		options.maxArchiveBytes
+	);
+	if (archiveBytes.byteLength > maxArchiveBytes) {
+		throw new Error(
+			`BlueJ ZIP is larger than ${blueJArchiveByteLimitLabel(maxArchiveBytes)}.`
+		);
+	}
+
 	const maxFiles = boundedBlueJImportLimit(
 		options.maxFiles,
 		DEFAULT_BLUEJ_IMPORT_MAX_FILES
