@@ -1472,17 +1472,17 @@ async function importSharedProjectFromRouteIfNeeded(
 	const shareID = requestedShareID.value;
 	if (!shareID || !projectLoadIsCurrent(loadRunID)) return false;
 
-	const existingProject = projects.value.find(
-		project => project.sharedSourceID === shareID
-	);
-	if (existingProject) {
-		selectedProjectID.value = existingProject._id;
-		return true;
-	}
-
 	try {
 		const sharedProject = await fetchSharedPythonIdeProject(shareID);
 		if (!projectLoadIsCurrent(loadRunID)) return false;
+
+		const existingProject = projects.value.find(
+			project => project.sharedSourceID === shareID
+		);
+		if (existingProject) {
+			selectedProjectID.value = existingProject._id;
+			return true;
+		}
 
 		const files = sharedProject.files.map(file => ({
 			name: file.name,

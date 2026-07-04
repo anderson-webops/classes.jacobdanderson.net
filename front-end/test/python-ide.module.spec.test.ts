@@ -3458,6 +3458,13 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"const sharedProject = await fetchSharedPythonIdeProject(shareID);"
 		);
+		expect(
+			pageSource.indexOf("fetchSharedPythonIdeProject(shareID)")
+		).toBeLessThan(
+			pageSource.indexOf(
+				"const existingProject = projects.value.find(\n\t\t\tproject => project.sharedSourceID === shareID"
+			)
+		);
 		expect(pageSource).toContain("sharedSourceID: shareID");
 		expect(pageSource).toContain(
 			'title: `Copy of ${sharedProject.title || "Shared Project"}`'
