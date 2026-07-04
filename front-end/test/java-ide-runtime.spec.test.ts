@@ -1142,6 +1142,55 @@ Color: (2, 2); Blue`
 		]);
 	});
 
+	it("ignores inline comments before parsing Karel world objects", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.World;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(1, 1, East, 0);
+        sam.move();
+    }
+
+    static {
+        World.readWorld("world.txt");
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=2 // keep this small
+cols=3 # keep this narrow
+Beeper: (1, 1); 2 // this count stays two
+Wall: (1, 1); // East should stay a comment
+Color: (1, 2); // Blue should stay a comment`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 2,
+			street: 1
+		});
+		expect(result.karelWorld?.beepers).toEqual([
+			{
+				avenue: 1,
+				count: 2,
+				street: 1
+			}
+		]);
+		expect(result.karelWorld?.walls).toEqual([]);
+		expect(result.karelWorld?.paints).toEqual([]);
+	});
+
 	it("applies Karel dimensions before parsing world objects", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",

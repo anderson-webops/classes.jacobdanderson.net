@@ -2732,7 +2732,7 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 
 	const lines = worldFile.content
 		.split(/\r?\n/)
-		.map(line => line.trim())
+		.map(line => stripKarelWorldLineComment(line).trim())
 		.filter(line => line && !line.startsWith("#"));
 
 	for (const line of lines) {
@@ -2789,6 +2789,15 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 	}
 
 	return world;
+}
+
+function stripKarelWorldLineComment(line: string) {
+	const hashIndex = line.indexOf("#");
+	const slashIndex = line.indexOf("//");
+	const commentIndexes = [hashIndex, slashIndex].filter(index => index >= 0);
+	if (!commentIndexes.length) return line;
+	const commentStart = Math.min(...commentIndexes);
+	return line.slice(0, commentStart);
 }
 
 function applyKarelWorldDimensionLine(world: MutableKarelWorld, line: string) {
