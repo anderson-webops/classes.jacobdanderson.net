@@ -1403,6 +1403,56 @@ public class Algo implements Directions {
 		expect(result.stdout).toHaveLength(6);
 	});
 
+	it("runs CodeHS-style Karel commands and helpers through this or super receivers", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "MyProgram.java",
+			files: [
+				{
+					name: "MyProgram.java",
+					content: `public class MyProgram extends SuperKarel {
+    public void run() {
+        if (this.frontIsClear()) {
+            this.stepAndPaint();
+        }
+
+        super.turnLeft();
+
+        if (this.leftIsClear()) {
+            this.move();
+        }
+    }
+
+    private void stepAndPaint() {
+        this.move();
+        this.paint(Color.green);
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=3
+cols=4`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 2,
+			direction: "North",
+			name: "karel",
+			street: 2
+		});
+		expect(result.karelWorld?.paints).toContainEqual({
+			avenue: 2,
+			color: "#16a34a",
+			street: 1
+		});
+		expect(result.karelWorldSteps).toHaveLength(5);
+		expect(result.stdout).toHaveLength(5);
+	});
+
 	it("runs CodeHS-style Karel if/else and while conditions", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "MyProgram.java",
