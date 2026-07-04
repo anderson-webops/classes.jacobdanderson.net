@@ -319,8 +319,7 @@ export const setUserCourseAccess: RequestHandler = async (req, res) => {
 			return res.status(403).json({ message: "Tutor session required" });
 		}
 
-		const tutorOwnsUser = user.tutors.some(t => t.toString() === actingTutor._id.toString());
-		if (!tutorOwnsUser) {
+		if (!tutorOwnsUser(user, actingTutor._id.toString())) {
 			return res.status(403).json({ message: "You can only assign courses for your own students" });
 		}
 
@@ -670,8 +669,7 @@ export const deleteUserAsTutor: RequestHandler = async (req, res) => {
 	const user = await User.findById(userID).populate("tutors", "_id");
 	if (!user) return res.sendStatus(404);
 
-	const tutorOwnsUser = user.tutors.some(t => t.toString() === actingTutor._id.toString());
-	if (!tutorOwnsUser) {
+	if (!tutorOwnsUser(user, actingTutor._id.toString())) {
 		return res.status(403).json({ message: "You can only delete your own students" });
 	}
 
