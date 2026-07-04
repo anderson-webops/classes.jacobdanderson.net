@@ -125,12 +125,13 @@ const projectReviewPayloadSchema = z.object({
 });
 
 function serializePythonProject(project: IPythonProject) {
+	const files = safeSerializedProjectFiles(project);
 	return {
 		_id: project._id.toString(),
 		title: project.title,
 		mode: project.mode,
-		files: project.files,
-		activeFileName: project.activeFileName,
+		files,
+		activeFileName: normalizeActiveFileName(project.activeFileName, files),
 		courseID: project.courseID,
 		courseProjectKey: project.courseProjectKey,
 		courseProjectTitle: project.courseProjectTitle,
@@ -161,13 +162,14 @@ function serializeSharedPythonProject(project: IPythonProject) {
 }
 
 function serializePythonProjectReview(review: IPythonProjectReview) {
+	const files = safeSerializedProjectFiles(review);
 	return {
 		_id: review._id.toString(),
 		sourceProject: review.sourceProject.toString(),
 		title: review.title,
 		mode: review.mode,
-		files: review.files,
-		activeFileName: review.activeFileName,
+		files,
+		activeFileName: normalizeActiveFileName(review.activeFileName, files),
 		courseID: review.courseID,
 		courseProjectKey: review.courseProjectKey,
 		courseProjectTitle: review.courseProjectTitle,
@@ -255,7 +257,7 @@ function normalizeProjectFiles(files: PythonProjectFile[] | undefined, mode: Pyt
 	return cleanFiles.length ? cleanFiles : [defaultFile];
 }
 
-function safeSerializedProjectFiles(project: IPythonProject) {
+function safeSerializedProjectFiles(project: Pick<IPythonProject, "files" | "mode">) {
 	const files: PythonProjectFile[] = [];
 	const seen = new Set<string>();
 	let totalLength = 0;
@@ -583,7 +585,7 @@ export const createPythonProjectReview: RequestHandler = async (req, res) => {
 		});
 	}
 
-	const files = normalizeProjectFiles(project.files, project.mode);
+	const files = safeSerializedProjectFiles(project);
 	const review = await PythonProjectReview.create({
 		user: user._id,
 		sourceProject: project._id,

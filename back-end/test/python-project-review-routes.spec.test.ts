@@ -260,6 +260,48 @@ describe("Python project review routes", () => {
 		});
 	});
 
+	it("sanitizes legacy stored files before listing owned Code IDE projects", async () => {
+		modelMocks.pythonProjectFind.mockReturnValue(queryWith([
+			makeProject({
+				activeFileName: "../secret.py",
+				files: [
+					{
+						name: "main.py",
+						content: "print('safe')\n",
+						encoding: "text"
+					},
+					{
+						name: "../secret.py",
+						content: "print('secret')\n",
+						encoding: "text"
+					},
+					{
+						name: "turtle.py",
+						content: "print('reserved')\n",
+						encoding: "text"
+					}
+				]
+			})
+		]));
+
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(`${baseUrl}/users/loggedin/python-projects`, {
+				headers: { "x-user-id": studentID.toString() }
+			});
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(body.projects[0].files).toEqual([
+				{
+					name: "main.py",
+					content: "print('safe')\n",
+					encoding: "text"
+				}
+			]);
+			expect(body.projects[0].activeFileName).toBe("main.py");
+		});
+	});
+
 	it("lets admins list saved projects with their staff review copies", async () => {
 		await withUserRoutes(async baseUrl => {
 			const response = await fetch(`${baseUrl}/users/${studentID}/python-projects`, {
@@ -303,6 +345,69 @@ describe("Python project review routes", () => {
 			);
 			expect(body.review.sourceProject).toBe(projectID.toString());
 			expect(body.review.visibleToStudent).toBe(false);
+		});
+	});
+
+	it("sanitizes legacy stored files before creating a staff review copy", async () => {
+		const unsafeProject = makeProject({
+			activeFileName: "../secret.py",
+			files: [
+				{
+					name: "main.py",
+					content: "print('safe')\n",
+					encoding: "text"
+				},
+				{
+					name: "../secret.py",
+					content: "print('secret')\n",
+					encoding: "text"
+				},
+				{
+					name: "images/../secret.png",
+					content: "secret-image",
+					encoding: "base64"
+				}
+			]
+		});
+		modelMocks.pythonProjectFindOne.mockResolvedValue(unsafeProject);
+		modelMocks.pythonProjectReviewFindOne.mockResolvedValue(null);
+
+		await withUserRoutes(async baseUrl => {
+			const response = await postJson(
+				baseUrl,
+				`/users/${studentID}/python-projects/${projectID}/review`,
+				{},
+				{ "x-admin-id": adminID.toString() }
+			);
+			const body = await response.json();
+
+			expect(response.status).toBe(201);
+			expect(modelMocks.pythonProjectReviewCreate).toHaveBeenCalledWith(
+				expect.objectContaining({
+					activeFileName: "main.py",
+					files: [
+						{
+							name: "main.py",
+							content: "print('safe')\n",
+							encoding: "text"
+						}
+					]
+				})
+			);
+			expect(body.project.files).toEqual([
+				{
+					name: "main.py",
+					content: "print('safe')\n",
+					encoding: "text"
+				}
+			]);
+			expect(body.review.files).toEqual([
+				{
+					name: "main.py",
+					content: "print('safe')\n",
+					encoding: "text"
+				}
+			]);
 		});
 	});
 
