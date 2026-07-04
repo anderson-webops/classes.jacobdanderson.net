@@ -3931,6 +3931,12 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("BlueJ source");
 		expect(pageSource).toContain("This project is BlueJ-ready");
 		expect(pageSource).toContain("createBlueJProjectArchive(project)");
+		expect(pageSource).toContain("selectedBlueJClassTargets");
+		expect(pageSource).toContain("BlueJ class diagram preview");
+		expect(pageSource).toContain("Class diagram preview");
+		expect(pageSource).toContain("Object bench class");
+		expect(pageSource).toContain("BlueJ desktop bridge");
+		expect(pageSource).toContain("openBlueJArchiveImporterFromMenu");
 		expect(exportSource).toContain('from "fflate"');
 		expect(exportSource).toContain("unzipSync(archiveBytes, {");
 		expect(exportSource).toContain("importBlueJProjectArchive");
@@ -3946,7 +3952,7 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 
-		expect(headerSource).toContain('{ label: "BlueJ", to: "/bluej"');
+		expect(headerSource).toContain('{ label: "BlueJ IDE", to: "/bluej"');
 	});
 
 	it("persists CodeMirror view state across reloads and project ID migration", () => {

@@ -69,6 +69,9 @@ export function containsCurrentIdeBundleMarkers(source) {
 		source.includes("Full Code IDE") &&
 		source.includes("BlueJ integration") &&
 		source.includes("BlueJ Desktop Integration") &&
+		source.includes("BlueJ desktop bridge") &&
+		source.includes("Class diagram preview") &&
+		source.includes("Object bench class") &&
 		source.includes("New BlueJ project") &&
 		source.includes("Import BlueJ ZIP") &&
 		source.includes("Download BlueJ ZIP") &&
