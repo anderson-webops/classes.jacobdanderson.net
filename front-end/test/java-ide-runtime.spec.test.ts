@@ -2136,6 +2136,21 @@ cols=3`
 		]);
 	});
 
+	it("renders Karel playback with one transitioning robot overlay", () => {
+		const workspaceSource = sourceFile(
+			"../src/components/CodeIdeWorkspace.vue"
+		);
+
+		expect(workspaceSource).toContain(
+			"const karelRobotStyle = computed(() => {"
+		);
+		expect(workspaceSource).toContain(':style="karelRobotStyle"');
+		expect(workspaceSource).toContain(':class="karelRobotDirectionClass"');
+		expect(workspaceSource).toContain("left 240ms ease");
+		expect(workspaceSource).toContain("top 240ms ease");
+		expect(workspaceSource).not.toContain('v-if="cell.isRobot"');
+	});
+
 	it("loads Java and Karel execution through the client IDE workspace", () => {
 		const routeSource = sourceFile("../src/pages/ide.vue");
 		const workspaceSource = sourceFile(
