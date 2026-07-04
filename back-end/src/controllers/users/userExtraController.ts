@@ -58,6 +58,22 @@ function normalizeCourseProgressIDs(value: unknown): string[] | null {
 	return ids;
 }
 
+function normalizeCourseAccessIDs(value: unknown): string[] | null {
+	if (!Array.isArray(value)) return null;
+
+	const ids: string[] = [];
+	const seen = new Set<string>();
+	for (const item of value) {
+		if (typeof item !== "string") return null;
+		const id = item.trim();
+		if (!id || id.length > MAX_COURSE_PROGRESS_ID_LENGTH) return null;
+		if (seen.has(id)) continue;
+		seen.add(id);
+		ids.push(id);
+	}
+	return ids;
+}
+
 function normalizeCourseStatus(value: unknown): CourseAccessStatus {
 	if (value === "available") return "available";
 	if (value === "past") return "past";
@@ -278,10 +294,15 @@ export const setUserCourseAccess: RequestHandler = async (req, res) => {
 	if (!Types.ObjectId.isValid(userID)) return res.status(400).json({ message: "Invalid user ID" });
 	if (!Array.isArray(courseIDs)) return res.status(400).json({ message: "courseIDs must be an array" });
 
+	const uniqueCourses = normalizeCourseAccessIDs(courseIDs);
+	if (!uniqueCourses) {
+		return res.status(400).json({
+			message: `courseIDs must contain non-empty string IDs of ${MAX_COURSE_PROGRESS_ID_LENGTH} characters or fewer`
+		});
+	}
+
 	const user = await User.findById(userID).populate("tutors", "_id");
 	if (!user) return res.sendStatus(404);
-
-	const uniqueCourses = [...new Set(courseIDs.map(id => id?.trim()).filter(Boolean))] as string[];
 
 	const actingTutor = req.currentTutor;
 	const actingAdmin = req.currentAdmin;
