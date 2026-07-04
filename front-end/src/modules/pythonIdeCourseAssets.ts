@@ -150,14 +150,18 @@ export function parsePythonIdeCourseAssetManifest(
 
 		const mimeType =
 			manifestAsset.mimeType || getPythonIdeFileMimeType(name);
-		if (!mimeType || !manifestAsset.url) continue;
+		const url = safePythonIdeCourseAssetManifestUrl(
+			manifestAsset.url,
+			name
+		);
+		if (!mimeType || !url) continue;
 
 		const lookupPath = normalizePythonIdeAssetLookupPath(name);
 		assets.set(lookupPath, {
 			height: numberOrUndefined(manifestAsset.height),
 			mimeType,
 			name,
-			url: manifestAsset.url,
+			url,
 			width: numberOrUndefined(manifestAsset.width)
 		});
 		registerPythonIdeAssetAliases(aliases, lookupPath, name);
@@ -336,4 +340,26 @@ function isIgnoredZipAssetName(path: string) {
 		IGNORED_ZIP_PATH_RE.test(path) ||
 		path.split("/").some(part => part.startsWith("."))
 	);
+}
+
+function safePythonIdeCourseAssetManifestUrl(value: string, name: string) {
+	const match = value.match(/^\/(?:ide|python-ide)\/assets\/(.+)$/i);
+	if (!match?.[1]) return "";
+
+	const rawSegments = match[1].split("/");
+	const nameSegments = name.split("/");
+	if (rawSegments.length !== nameSegments.length) return "";
+
+	for (let index = 0; index < rawSegments.length; index += 1) {
+		const rawSegment = rawSegments[index] ?? "";
+		let decodedSegment = "";
+		try {
+			decodedSegment = decodeURIComponent(rawSegment);
+		} catch {
+			return "";
+		}
+		if (decodedSegment !== nameSegments[index]) return "";
+	}
+
+	return value;
 }
