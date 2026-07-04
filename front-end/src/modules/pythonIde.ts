@@ -460,7 +460,16 @@ export const javaStarterCode = `/**
  * @brief Demonstrate the minimal Java console project shape
  */
 public class Main {
+/*****************
+*   CONSTANTS   *
+*****************/
+
     private static final String GREETING_MESSAGE = "Hello, Java!";
+
+
+/*****************
+*   FUNCTIONS   *
+*****************/
 
     /**
      * @brief Run the starter console program
@@ -480,8 +489,17 @@ import java.util.Scanner;
  * @brief Organize a beginner Java console project with helpers and lists
  */
 public class Main {
+/*****************
+*   CONSTANTS   *
+*****************/
+
     private static final int STARTING_SCORE = 0;
     private static final String STARTING_STUDENT_NAME = "Student";
+
+
+/*****************
+*   FUNCTIONS   *
+*****************/
 
     /**
      * @brief Run the starter console program
@@ -518,12 +536,16 @@ public class Main {
         return student_name + ": " + score;
     }
 
-    // Run the first custom action
+    /**
+     * @brief Run the first custom action
+     */
     static void action_one() {
         // Add an action here
     }
 
-    // Run the second custom action
+    /**
+     * @brief Run the second custom action
+     */
     static void action_two() {
         // Add another action here
     }
@@ -536,10 +558,19 @@ export const blueJMainStarterCode = `import java.util.ArrayList;
  * @brief Demonstrate a small BlueJ object-oriented project
  */
 public class Main {
+/*****************
+*   CONSTANTS   *
+*****************/
+
     private static final String STUDENT_NAME = "Ada";
     private static final int GRADE_LEVEL = 9;
     private static final int FIRST_SCORE = 88;
     private static final int SECOND_SCORE = 94;
+
+
+/*****************
+*   FUNCTIONS   *
+*****************/
 
     /**
      * @brief Build and preview a small object-oriented BlueJ project
@@ -593,9 +624,18 @@ export const blueJStudentStarterCode = `import java.util.ArrayList;
  * @brief Store one student's grade level and score history
  */
 public class Student {
+/*****************
+*   VARIABLES   *
+*****************/
+
     private final String name;
     private final int grade_level;
     private final ArrayList<Integer> scores;
+
+
+/*****************
+*   FUNCTIONS   *
+*****************/
 
     /**
      * @brief Create a student with an empty score list
@@ -669,9 +709,19 @@ import kareltherobot.Directions;
  * @brief Demonstrate a Karel robot program with a loaded world file
  */
 public class Algo implements Directions {
+/*****************
+*   CONSTANTS   *
+*****************/
+
     private static final int START_STREET = 6;
     private static final int START_AVENUE = 7;
     private static final int START_BEEPERS = 0;
+    private static final int MOVE_COUNT = 3;
+
+
+/*****************
+*   FUNCTIONS   *
+*****************/
 
     /**
      * @brief Move one robot through the sample world
@@ -686,10 +736,10 @@ public class Algo implements Directions {
         sam.turnLeft();
         sam.turnLeft();
 
-        // Move Sam three corners across the world
-        sam.move();
-        sam.move();
-        sam.move();
+        // Move Sam across the world using the named move count
+        for (int move_index = 0; move_index < MOVE_COUNT; move_index++) {
+            sam.move();
+        }
     }
 
     // Load the Karel world before the robot program runs
@@ -722,6 +772,10 @@ export const karelOutlineStarterCode = `/**
  * @brief Organize a CodeHS-style Karel program with helper methods
  */
 public class MyProgram extends SuperKarel {
+/*****************
+*   FUNCTIONS   *
+*****************/
+
     /**
      * @brief Run the main Karel command sequence
      */
@@ -740,14 +794,18 @@ public class MyProgram extends SuperKarel {
         turnAround();
     }
 
-    // Rotate Karel right using three left turns
+    /**
+     * @brief Rotate Karel right using three left turns
+     */
     private void turnRight() {
         turnLeft();
         turnLeft();
         turnLeft();
     }
 
-    // Rotate Karel to face the opposite direction
+    /**
+     * @brief Rotate Karel to face the opposite direction
+     */
     private void turnAround() {
         turnLeft();
         turnLeft();
@@ -1339,7 +1397,7 @@ export function getPythonIdeDefaultFileContent(fileName: string) {
 	const extension = fileName.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
 	if (extension === ".csv") return "name,value\nsample,1\n";
 	if (extension === ".java")
-		return '/**\n * @brief Write a small Java console program\n */\npublic class Main {\n    private static final String GREETING_MESSAGE = "Hello, Java!";\n\n    /**\n     * @brief Run the Java program\n     *\n     * @param args Command-line arguments\n     */\n    public static void main(String[] args) {\n        System.out.println(GREETING_MESSAGE);\n    }\n}\n';
+		return '/**\n * @brief Write a small Java console program\n */\npublic class Main {\n/*****************\n*   CONSTANTS   *\n*****************/\n\n    private static final String GREETING_MESSAGE = "Hello, Java!";\n\n\n/*****************\n*   FUNCTIONS   *\n*****************/\n\n    /**\n     * @brief Run the Java program\n     *\n     * @param args Command-line arguments\n     */\n    public static void main(String[] args) {\n        System.out.println(GREETING_MESSAGE);\n    }\n}\n';
 	if (extension === ".json") return '{\n\t"items": []\n}\n';
 	if (extension === ".md") return "# Notes\n\n";
 	if (extension === ".txt") return "";

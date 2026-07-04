@@ -1180,10 +1180,8 @@ public class Main {
 				{
 					name: "Algo.java",
 					content: karelStarterCode.replace(
-						"sam.move();\n        sam.move();\n        sam.move();",
-						Array.from({ length: 10 }, () => "sam.move();").join(
-							"\n        "
-						)
+						"private static final int MOVE_COUNT = 3;",
+						"private static final int MOVE_COUNT = 10;"
 					)
 				},
 				{ name: "world.txt", content: karelStarterWorld }

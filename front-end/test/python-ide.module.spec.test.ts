@@ -97,6 +97,10 @@ const oneByOnePngBytes = new Uint8Array([
 	0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
 	0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01
 ]);
+const COMMENT_END_PUNCTUATION_RE = /[.!?]$/;
+const INLINE_COMMENT_RE = /^\s*(?:#|\/\/)\s+(.+)$/;
+const JAVADOC_TAG_RE = /^\s+\*\s+@(brief|param|return)\s+(.+)$/;
+const SECTION_HEADER_RE = /^\s*(?:[#/*]+\s*)?[A-Z][A-Z\s/]+(?:\s*[#/*]+)?\s*$/;
 
 function pythonEditorState(doc: string) {
 	return EditorState.create({
@@ -292,10 +296,56 @@ describe("python IDE project helpers", () => {
 	});
 
 	it("keeps built-in IDE demos and templates aligned with the classroom coding standard", () => {
+		const builtInTemplateSources = [
+			javaStarterCode,
+			javaOutlineStarterCode,
+			blueJMainStarterCode,
+			blueJStudentStarterCode,
+			karelStarterCode,
+			karelOutlineStarterCode,
+			pythonStarterCode,
+			dataScienceStarterCode,
+			turtleStarterCode,
+			pythonLevel1OutlineStarterCode,
+			pgzeroStarterCode,
+			pgzeroOutlineStarterCode,
+			pgzeroCourseStarterCode,
+			getPythonIdeDefaultFileContent("Main.java"),
+			getPythonIdeDefaultFileContent("main.py")
+		];
+
+		for (const source of builtInTemplateSources) {
+			expect(source).toMatch(/(?:CONSTANTS|VARIABLES|FUNCTIONS|MAIN CODE)/);
+			for (const line of source.split("\n")) {
+				const commentText =
+					line.match(INLINE_COMMENT_RE)?.[1] ??
+					line.match(JAVADOC_TAG_RE)?.[2] ??
+					"";
+				if (!commentText || SECTION_HEADER_RE.test(commentText))
+					continue;
+
+				expect(
+					COMMENT_END_PUNCTUATION_RE.test(commentText.trim()),
+					commentText
+				).toBe(false);
+			}
+		}
+
+		for (const javaTemplate of [
+			javaStarterCode,
+			javaOutlineStarterCode,
+			blueJMainStarterCode,
+			blueJStudentStarterCode,
+			karelStarterCode,
+			karelOutlineStarterCode
+		]) {
+			expect(javaTemplate).toContain("*   FUNCTIONS   *");
+		}
+
+		expect(javaStarterCode).toContain("GREETING_MESSAGE");
 		expect(javaStarterCode).toContain(
 			"@brief Demonstrate the minimal Java console project shape"
 		);
-		expect(javaStarterCode).toContain("GREETING_MESSAGE");
 		expect(javaOutlineStarterCode).toContain(
 			"@brief Organize a beginner Java console project with helpers and lists"
 		);
@@ -310,6 +360,7 @@ describe("python IDE project helpers", () => {
 		expect(karelStarterCode).toContain(
 			"@brief Demonstrate a Karel robot program with a loaded world file"
 		);
+		expect(karelStarterCode).toContain("MOVE_COUNT");
 		expect(karelOutlineStarterCode).toContain(
 			"@brief Run the main Karel command sequence"
 		);
