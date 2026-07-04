@@ -17,6 +17,7 @@ import {
 
 const MAX_COURSE_PROGRESS_ID_LENGTH = 160;
 const MAX_COURSE_PROGRESS_IDS = 1000;
+const MAX_COURSE_IDS = 1000;
 
 function getUserIDParam(req: { params: { userID?: string | string[] } }, res: any): string | null {
 	const paramUserID = req.params.userID;
@@ -43,6 +44,7 @@ function normalizeStringArray(value: unknown): string[] | null {
 
 function normalizeCourseProgressIDs(value: unknown): string[] | null {
 	if (!Array.isArray(value)) return null;
+	if (value.length > MAX_COURSE_PROGRESS_IDS) return null;
 
 	const ids: string[] = [];
 	const seen = new Set<string>();
@@ -54,12 +56,12 @@ function normalizeCourseProgressIDs(value: unknown): string[] | null {
 		seen.add(id);
 		ids.push(id);
 	}
-	if (ids.length > MAX_COURSE_PROGRESS_IDS) return null;
 	return ids;
 }
 
 function normalizeCourseAccessIDs(value: unknown): string[] | null {
 	if (!Array.isArray(value)) return null;
+	if (value.length > MAX_COURSE_IDS) return null;
 
 	const ids: string[] = [];
 	const seen = new Set<string>();
@@ -80,27 +82,25 @@ function normalizeCourseStatus(value: unknown): CourseAccessStatus {
 	return "current";
 }
 
-function normalizeCourseStatusMap(value: unknown): Record<string, CourseAccessStatus> {
-	if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+function courseStatusFromMap(value: unknown, courseId: string): CourseAccessStatus | undefined {
+	if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
 
-	const statusMap: Record<string, CourseAccessStatus> = {};
-	for (const [courseId, status] of Object.entries(value as Record<string, unknown>)) {
-		const normalizedCourseId = courseId.trim();
-		if (!normalizedCourseId) continue;
-		statusMap[normalizedCourseId] = normalizeCourseStatus(status);
-	}
-	return statusMap;
+	const status = (value as Record<string, unknown>)[courseId];
+	if (typeof status === "undefined") return undefined;
+	return normalizeCourseStatus(status);
 }
 
 function courseStatusForAccess(
 	courseIds: string[],
-	requestedStatus: Record<string, CourseAccessStatus>,
-	existingStatus: Record<string, CourseAccessStatus>,
+	requestedStatus: unknown,
+	existingStatus: unknown,
 	hasRequestedStatus: boolean
 ) {
 	const nextStatus: Record<string, CourseAccessStatus> = {};
 	for (const courseId of courseIds) {
-		nextStatus[courseId] = (hasRequestedStatus ? requestedStatus[courseId] : existingStatus[courseId]) ?? "current";
+		nextStatus[courseId] = (hasRequestedStatus
+			? courseStatusFromMap(requestedStatus, courseId)
+			: courseStatusFromMap(existingStatus, courseId)) ?? "current";
 	}
 	return nextStatus;
 }
@@ -297,7 +297,7 @@ export const setUserCourseAccess: RequestHandler = async (req, res) => {
 	const uniqueCourses = normalizeCourseAccessIDs(courseIDs);
 	if (!uniqueCourses) {
 		return res.status(400).json({
-			message: `courseIDs must contain non-empty string IDs of ${MAX_COURSE_PROGRESS_ID_LENGTH} characters or fewer`
+			message: `courseIDs must contain at most ${MAX_COURSE_IDS} non-empty string IDs of ${MAX_COURSE_PROGRESS_ID_LENGTH} characters or fewer`
 		});
 	}
 
@@ -327,8 +327,8 @@ export const setUserCourseAccess: RequestHandler = async (req, res) => {
 	user.courseAccess = uniqueCourses;
 	user.courseStatus = courseStatusForAccess(
 		uniqueCourses,
-		normalizeCourseStatusMap(req.body?.courseStatus),
-		normalizeCourseStatusMap(user.courseStatus),
+		req.body?.courseStatus,
+		user.courseStatus,
 		!!req.body?.courseStatus
 	);
 	const allowedCourses = new Set(uniqueCourses);

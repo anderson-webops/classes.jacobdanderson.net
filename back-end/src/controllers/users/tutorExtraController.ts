@@ -5,9 +5,11 @@ import { Tutor } from "../../models/schemas/Tutor.js";
 import { User } from "../../models/schemas/User.js";
 
 const MAX_COURSE_ID_LENGTH = 160;
+const MAX_COURSE_IDS = 1000;
 
 function normalizeCourseAccessIDs(value: unknown): string[] | null {
 	if (!Array.isArray(value)) return null;
+	if (value.length > MAX_COURSE_IDS) return null;
 
 	const ids: string[] = [];
 	const seen = new Set<string>();
@@ -35,7 +37,7 @@ export const updateTutorCoursePermissions: RequestHandler = async (req, res) => 
 	const uniqueCourses = normalizeCourseAccessIDs(courseIDs);
 	if (!uniqueCourses) {
 		return res.status(400).json({
-			message: `courseIDs must contain non-empty string IDs of ${MAX_COURSE_ID_LENGTH} characters or fewer`
+			message: `courseIDs must contain at most ${MAX_COURSE_IDS} non-empty string IDs of ${MAX_COURSE_ID_LENGTH} characters or fewer`
 		});
 	}
 
