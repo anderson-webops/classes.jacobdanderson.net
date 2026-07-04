@@ -719,6 +719,105 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("Saved");
 	});
 
+	it("keeps learner progress changes queued while a save is in flight", async () => {
+		vi.useFakeTimers();
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+		const course = await coursesStore.loadCourseById(assignedCourse.id);
+		const firstModule = course?.modules[0];
+
+		if (!firstModule) throw new Error("Expected test course module.");
+
+		appStore.setCurrentTutor({
+			_id: "tutor-1",
+			name: "Tutor",
+			email: "tutor@example.com",
+			age: 30,
+			state: "GA",
+			usersOfTutorLength: 1,
+			coursePermissions: [assignedCourse.id],
+			editTutors: false,
+			saveEdit: "Save"
+		});
+
+		(api.get as any).mockResolvedValueOnce({
+			data: [
+				{
+					_id: "learner-1",
+					name: "Learner",
+					email: "learner@example.com",
+					age: 12,
+					state: "GA",
+					courseAccess: [assignedCourse.id],
+					courseProgress: [],
+					editUsers: false,
+					saveEdit: "Save"
+				}
+			]
+		});
+		let resolveFirstSave!: (value: unknown) => void;
+		(api.put as any)
+			.mockImplementationOnce(
+				() =>
+					new Promise(resolve => {
+						resolveFirstSave = resolve;
+					})
+			)
+			.mockResolvedValueOnce({ data: {} });
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+
+		await flushPromises();
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("Learner · 1 course");
+		});
+
+		const moduleProgress = wrapper.find(".progress-toggle.is-module input");
+		await moduleProgress.setValue(true);
+		await vi.advanceTimersByTimeAsync(701);
+		await flushPromises();
+
+		expect(api.put).toHaveBeenCalledTimes(1);
+		expect(api.put).toHaveBeenNthCalledWith(
+			1,
+			"/users/learner-1/course-progress",
+			{
+				courseId: assignedCourse.id,
+				completedModuleIds: [firstModule.id],
+				completedItemIds: []
+			}
+		);
+
+		await moduleProgress.setValue(false);
+		await vi.advanceTimersByTimeAsync(701);
+		expect(api.put).toHaveBeenCalledTimes(1);
+
+		resolveFirstSave({ data: {} });
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(api.put).toHaveBeenCalledTimes(2);
+		});
+		expect(api.put).toHaveBeenNthCalledWith(
+			2,
+			"/users/learner-1/course-progress",
+			{
+				courseId: assignedCourse.id,
+				completedModuleIds: [],
+				completedItemIds: []
+			}
+		);
+		expect(wrapper.text()).toContain("Saved");
+	});
+
 	it("restores staff learner, course, and module context on deep-link refresh", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
