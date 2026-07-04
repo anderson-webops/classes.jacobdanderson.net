@@ -5307,6 +5307,9 @@ describe("python IDE project helpers", () => {
 			"() => !shouldStopPythonIdeRun(runID, project._id)"
 		);
 		expect(pageSource).toContain("clearKarelWorldPlayback();");
+		expect(pageSource).toMatch(
+			/expectedMigration[\s\S]*nextTick\(resetActiveCanvas\);[\s\S]*return;[\s\S]*stopActiveRuntimeSurfaces\(\);\n\tkarelWorld\.value = null;/
+		);
 	});
 
 	it("names repeated Code IDE file controls by the affected file", () => {

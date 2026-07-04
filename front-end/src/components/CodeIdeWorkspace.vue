@@ -5775,6 +5775,7 @@ watch(selectedProjectID, (projectID, previousProjectID) => {
 	const hadRunInFlight = isRunning.value;
 	stopRequested.value = true;
 	stopActiveRuntimeSurfaces();
+	karelWorld.value = null;
 	runMessage.value = "Ready";
 	if (!hadRunInFlight) {
 		releaseIdlePythonRuntimeCallbacks();
