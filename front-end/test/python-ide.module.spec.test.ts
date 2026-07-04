@@ -4562,6 +4562,38 @@ describe("python IDE project helpers", () => {
 		expect(alienLeft?.url).toBe("/python-ide/assets/images/alien-left.png");
 	});
 
+	it("rejects manifest asset URLs outside the Code IDE asset paths", () => {
+		const pack = parsePythonIdeCourseAssetManifest({
+			assets: [
+				{
+					mimeType: "image/png",
+					name: "images/alien.png",
+					url: "https://cdn.example.test/images/alien.png"
+				},
+				{
+					mimeType: "image/png",
+					name: "images/alien.png",
+					url: "/ide/assets/images/other.png"
+				},
+				{
+					mimeType: "image/png",
+					name: "images/alien.png",
+					url: "/ide/assets/images%2Falien.png"
+				},
+				{
+					mimeType: "image/png",
+					name: "images/orange (2).png",
+					url: "/ide/assets/images/orange%20(2).png"
+				}
+			]
+		});
+
+		expect(pack.assets.size).toBe(1);
+		expect(pack.assets.get("images/orange (2).png")?.url).toBe(
+			"/ide/assets/images/orange%20(2).png"
+		);
+	});
+
 	it("keeps the Code IDE extracted asset manifest mirrored and file-backed", () => {
 		const codeIdeManifestSource = readFileSync(
 			resolve(__dirname, "../public/ide/assets/manifest.json"),
