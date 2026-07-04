@@ -45,6 +45,12 @@ function safeBlueJProjectName(value: string) {
 	return normalized || "classes-bluej-project";
 }
 
+function boundedBlueJImportLimit(value: number | undefined, fallback: number) {
+	if (value === undefined) return fallback;
+	if (!Number.isFinite(value) || value < 1) return fallback;
+	return Math.floor(value);
+}
+
 export function blueJProjectArchiveName(
 	project: Pick<PythonIdeProject, "title">
 ) {
@@ -291,9 +297,14 @@ export function importBlueJProjectArchive(
 	archiveBytes: Uint8Array,
 	options: BlueJProjectImportOptions = {}
 ): BlueJProjectImportResult {
-	const maxFiles = options.maxFiles ?? DEFAULT_BLUEJ_IMPORT_MAX_FILES;
-	const maxTextFileBytes =
-		options.maxTextFileBytes ?? DEFAULT_BLUEJ_IMPORT_MAX_TEXT_FILE_BYTES;
+	const maxFiles = boundedBlueJImportLimit(
+		options.maxFiles,
+		DEFAULT_BLUEJ_IMPORT_MAX_FILES
+	);
+	const maxTextFileBytes = boundedBlueJImportLimit(
+		options.maxTextFileBytes,
+		DEFAULT_BLUEJ_IMPORT_MAX_TEXT_FILE_BYTES
+	);
 	const packageRoots = collectBlueJPackageRoots(archiveBytes);
 	const blueJProjectRoot = packageRoots.length === 1 ? packageRoots[0]! : "";
 	const archivePathsForRoot: string[] = [];
