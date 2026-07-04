@@ -284,6 +284,7 @@ def toggle_motion():
 
 # Advance the animation frame when motion is enabled
 def animate():
+    # Move only while the project is in its active motion state
     if is_moving:
         pen.forward(ANIMATION_STEP)
     screen.ontimer(animate, ANIMATION_DELAY_MS)
@@ -349,6 +350,7 @@ screen = turtle.Screen()
 
 # List of Turtles
 turtle_list = []
+# Build each extra turtle before the animation loop starts
 for turtle_index in range(NUM_TURTLES):
     new_turtle = turtle.Turtle()
     # Turtle attributes here
@@ -412,19 +414,29 @@ def draw():
 
 # Update player movement from held keys
 def update():
+    # Move left while the left arrow key is held
     if keyboard.left:
         player.x -= PLAYER_SPEED
+
+    # Move right while the right arrow key is held
     if keyboard.right:
         player.x += PLAYER_SPEED
+
+    # Move up while the up arrow key is held
     if keyboard.up:
         player.y -= PLAYER_SPEED
+
+    # Move down while the down arrow key is held
     if keyboard.down:
         player.y += PLAYER_SPEED
 
 pgzrun.go()
 `;
 
-export const javaStarterCode = `public class Main {
+export const javaStarterCode = `/**
+ * @brief Demonstrate the minimal Java console project shape
+ */
+public class Main {
     /**
      * @brief Run the starter console program
      *
@@ -440,6 +452,9 @@ export const javaStarterCode = `public class Main {
 export const javaOutlineStarterCode = `import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * @brief Organize a beginner Java console project with helpers and lists
+ */
 public class Main {
     /**
      * @brief Run the starter console program
@@ -490,6 +505,9 @@ public class Main {
 
 export const blueJMainStarterCode = `import java.util.ArrayList;
 
+/**
+ * @brief Demonstrate a small BlueJ object-oriented project
+ */
 public class Main {
     /**
      * @brief Build and preview a small object-oriented BlueJ project
@@ -541,6 +559,9 @@ public class Main {
 
 export const blueJStudentStarterCode = `import java.util.ArrayList;
 
+/**
+ * @brief Store one student's grade level and score history
+ */
 public class Student {
     private final String name;
     private final int gradeLevel;
@@ -614,6 +635,9 @@ export const karelStarterCode = `import kareltherobot.UrRobot;
 import kareltherobot.World;
 import kareltherobot.Directions;
 
+/**
+ * @brief Demonstrate a Karel robot program with a loaded world file
+ */
 public class Algo implements Directions {
     /**
      * @brief Move one robot through the sample world
@@ -660,7 +684,13 @@ wall 5 7 south
 beeper 6 9 1
 `;
 
-export const karelOutlineStarterCode = `public class MyProgram extends SuperKarel {
+export const karelOutlineStarterCode = `/**
+ * @brief Organize a CodeHS-style Karel program with helper methods
+ */
+public class MyProgram extends SuperKarel {
+    /**
+     * @brief Run the main Karel command sequence
+     */
     public void run() {
         // Move once when the path is open and this corner has no balls
         if (frontIsClear() && noBallsPresent()) {
@@ -754,6 +784,7 @@ game_over = False
 
 # List of Actors
 actors = []
+# Create each extra actor before the game loop starts
 for actor_index in range(0):
     new_actor = Actor("student", (WIDTH / 2, HEIGHT / 2))
     # Actor attributes here
@@ -767,6 +798,8 @@ def on_key_down(key):
     # Route space and return keys to named actions
     if key == keys.SPACE:
         action_one()
+
+    # Route return to the second named action
     elif key == keys.RETURN:
         action_two()
 
@@ -1262,7 +1295,7 @@ export function getPythonIdeDefaultFileContent(fileName: string) {
 	const extension = fileName.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
 	if (extension === ".csv") return "name,value\nsample,1\n";
 	if (extension === ".java")
-		return "public class Main {\n    public static void main(String[] args) {\n        \n    }\n}\n";
+		return "/**\n * @brief Write a small Java console program\n */\npublic class Main {\n    /**\n     * @brief Run the Java program\n     *\n     * @param args Command-line arguments\n     */\n    public static void main(String[] args) {\n        \n    }\n}\n";
 	if (extension === ".json") return '{\n\t"items": []\n}\n';
 	if (extension === ".md") return "# Notes\n\n";
 	if (extension === ".txt") return "";
