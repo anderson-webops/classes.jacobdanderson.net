@@ -78,6 +78,53 @@ describe("java IDE runtime", () => {
 		expect(karelResult.stderr).toEqual(javaResult.stderr);
 	});
 
+	it("skips oversized active Java helpers before entry-point selection", () => {
+		const oversizedHelper = `public class Helper {\n${"// helper padding\n".repeat(13000)}}`;
+		const result = runJavaIdeProject({
+			activeFileName: "Helper.java",
+			files: [
+				{
+					name: "Helper.java",
+					content: oversizedHelper
+				},
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("safe main");
+    }
+}
+`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stdout).toEqual([]);
+		expect(result.stderr).toEqual([
+			expect.stringContaining("Java preview skipped files over")
+		]);
+	});
+
+	it("skips oversized combined Java projects before preview parsing", () => {
+		const files = Array.from({ length: 5 }, (_, index) => ({
+			content: `public class Helper${index} {\n${"// project padding\n".repeat(10000)}}`,
+			name: `Helper${index}.java`
+		}));
+		const result = runJavaIdeProject({
+			activeFileName: "Helper0.java",
+			files,
+			mode: "java"
+		});
+
+		expect(result.stdout).toEqual([]);
+		expect(result.stderr).toEqual([
+			expect.stringContaining(
+				"Java preview skipped projects over 800,000 total Java characters"
+			)
+		]);
+	});
+
 	it("previews the Java and Karel outline templates in the browser subset", () => {
 		const javaResult = runJavaIdeProject({
 			activeFileName: "Main.java",
