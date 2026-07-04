@@ -193,6 +193,7 @@ const DEFAULT_WORLD_SIZE = 10;
 const MAX_KAREL_WORLD_SIZE = 40;
 const MAX_KAREL_WORLD_LINES = 2000;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
+const MAX_JAVA_RUNTIME_SOURCE_CHARS = 200000;
 const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
 const javaFormatConversions = "bcdefgosx";
@@ -301,6 +302,15 @@ export function runJavaIdeProject(
 	if (!activeFile) {
 		return {
 			stderr: ["Add a .java file before running this project."],
+			stdout: []
+		};
+	}
+
+	if (activeFile.content.length > MAX_JAVA_RUNTIME_SOURCE_CHARS) {
+		return {
+			stderr: [
+				`Java preview skipped files over ${MAX_JAVA_RUNTIME_SOURCE_CHARS.toLocaleString()} characters. Split the project into smaller files or run it in a desktop Java IDE.`
+			],
 			stdout: []
 		};
 	}
