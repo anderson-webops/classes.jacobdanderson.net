@@ -1558,6 +1558,7 @@ export async function updatePythonIdeProjectReview(
 		activeFileName?: string;
 		files?: PythonIdeFile[];
 		note?: string;
+		refreshFromSource?: boolean;
 		visibleToStudent?: boolean;
 	}
 ) {

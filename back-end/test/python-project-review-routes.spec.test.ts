@@ -598,6 +598,72 @@ describe("Python project review routes", () => {
 		});
 	});
 
+	it("refreshes a stale staff review copy from the current student project only", async () => {
+		const latestSourceUpdatedAt = new Date("2026-06-20T12:45:00.000Z");
+		const latestFiles = [
+			{
+				name: "main.py",
+				content: "print('latest student code')\n",
+				encoding: "text"
+			},
+			{
+				name: "helper.py",
+				content: "def help_student():\n\treturn True\n",
+				encoding: "text"
+			}
+		];
+		const project = makeProject({
+			activeFileName: "helper.py",
+			courseProjectTitle: "Latest loops practice",
+			files: latestFiles,
+			title: "Latest loops practice",
+			updatedAt: latestSourceUpdatedAt
+		});
+		const review = makeReview({
+			files: [
+				{
+					name: "main.py",
+					content: "# stale copy\nprint('review')\n",
+					encoding: "text"
+				}
+			],
+			sourceUpdatedAt: now
+		});
+		modelMocks.pythonProjectFindOne.mockResolvedValue(project);
+		modelMocks.pythonProjectReviewFindOne.mockResolvedValue(review);
+
+		await withUserRoutes(async baseUrl => {
+			const response = await putJson(
+				baseUrl,
+				`/users/${studentID}/python-projects/${projectID}/review/${reviewID}`,
+				{
+					note: "Refreshing before review.",
+					refreshFromSource: true,
+					visibleToStudent: true
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(project.files).toEqual(latestFiles);
+			expect(project.save).not.toHaveBeenCalled();
+			expect(review.files).toEqual(latestFiles);
+			expect(review.activeFileName).toBe("helper.py");
+			expect(review.sourceUpdatedAt).toBe(latestSourceUpdatedAt);
+			expect(review.title).toBe("Latest loops practice");
+			expect(review.courseProjectTitle).toBe("Latest loops practice");
+			expect(review.note).toBe("Refreshing before review.");
+			expect(review.visibleToStudent).toBe(true);
+			expect(review.save).toHaveBeenCalled();
+			expect(body.project.files).toEqual(latestFiles);
+			expect(body.review.files).toEqual(latestFiles);
+			expect(body.review.sourceUpdatedAt).toBe(
+				latestSourceUpdatedAt.toISOString()
+			);
+		});
+	});
+
 	it("sanitizes legacy review files when changing visibility without replacing files", async () => {
 		const review = makeReview({
 			activeFileName: "../secret.py",
