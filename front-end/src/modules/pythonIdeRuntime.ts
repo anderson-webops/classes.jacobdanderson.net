@@ -201,6 +201,7 @@ export interface TurtleBridge {
 	circle: (radius: number) => void;
 	dot: (size: number, color?: string) => void;
 	stamp: () => number;
+	clearStamp: (stampID: number) => void;
 	write: (text: string) => void;
 	registerKey: (key: string, callback: (() => void) | null) => void;
 	registerClick: (
@@ -1697,21 +1698,31 @@ class Turtle:
         return stamp_id
 
     def clearstamp(self, stampid):
+        removed = False
         try:
             self._stamps.remove(stampid)
+            removed = True
         except ValueError:
             pass
+        if removed:
+            _bridge.clearStamp(int(stampid))
         return None
 
     def clearstamps(self, n=None):
+        removed_stamps = []
         if n is None:
+            removed_stamps = list(self._stamps)
             self._stamps.clear()
         else:
             count = int(n)
             if count >= 0:
+                removed_stamps = self._stamps[:count]
                 del self._stamps[:count]
             else:
+                removed_stamps = self._stamps[count:]
                 del self._stamps[count:]
+        for stampid in removed_stamps:
+            _bridge.clearStamp(int(stampid))
         return None
 
     def undo(self):

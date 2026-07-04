@@ -1377,6 +1377,43 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("clears Turtle stamps from the visible canvas bridge", () => {
+		const runtimeSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
+			"utf8"
+		);
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+		const clearStampStart = runtimeSource.indexOf(
+			"    def clearstamp(self, stampid):"
+		);
+		const clearStampSource = runtimeSource.slice(
+			clearStampStart,
+			runtimeSource.indexOf("    def undo(self):", clearStampStart)
+		);
+
+		expect(runtimeSource).toContain(
+			"clearStamp: (stampID: number) => void;"
+		);
+		expect(clearStampSource).toContain("removed = False");
+		expect(clearStampSource).toContain("_bridge.clearStamp(int(stampid))");
+		expect(clearStampSource).toContain("removed_stamps = []");
+		expect(clearStampSource).toContain("for stampid in removed_stamps:");
+		expect(pageSource).toContain("stampID: number;");
+		expect(pageSource).toContain(
+			"function clearTurtleStamp(stampID: number)"
+		);
+		expect(pageSource).toContain(
+			'command.kind === "stamp" && command.stampID === stampID'
+		);
+		expect(pageSource).toContain("clearStamp: clearTurtleStamp");
+		expect(pageSource).toContain(
+			"if (isActiveRun()) turtleBridge.clearStamp(stampID);"
+		);
+	});
+
 	it("normalizes spaced Turtle color names for browser canvas rendering", () => {
 		const runtimeSource = readFileSync(
 			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),

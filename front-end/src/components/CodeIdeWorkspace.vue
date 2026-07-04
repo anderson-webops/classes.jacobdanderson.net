@@ -178,6 +178,7 @@ type TurtleRenderCommand =
 			heading: number;
 			kind: "stamp";
 			shape: TurtleShapeName;
+			stampID: number;
 			x: number;
 			y: number;
 	  }
@@ -3824,12 +3825,14 @@ function drawDot(size: number, color?: string) {
 
 function stampTurtle() {
 	const pose = currentTurtlePose();
+	const stampID = ++turtleStampCounter;
 	queueTurtleStep({
 		command: {
 			color: turtleState.penColor,
 			heading: turtleState.heading,
 			kind: "stamp",
 			shape: turtleState.shape,
+			stampID,
 			x: turtleState.x,
 			y: turtleState.y
 		},
@@ -3838,7 +3841,39 @@ function stampTurtle() {
 		toPose: pose
 	});
 
-	return ++turtleStampCounter;
+	return stampID;
+}
+
+function removeTurtleStampCommands(stampID: number) {
+	const commandMatchesStamp = (command: TurtleRenderCommand) =>
+		command.kind === "stamp" && command.stampID === stampID;
+	let removed = false;
+	const completedCount = turtleCompletedCommands.length;
+	turtleCompletedCommands = turtleCompletedCommands.filter(
+		completed => !commandMatchesStamp(completed.command)
+	);
+	removed ||= completedCount !== turtleCompletedCommands.length;
+	const queuedCount = turtleQueuedSteps.length;
+	turtleQueuedSteps = turtleQueuedSteps.filter(
+		step => !step.command || !commandMatchesStamp(step.command)
+	);
+	removed ||= queuedCount !== turtleQueuedSteps.length;
+	if (
+		activeTurtleAnimationStep?.command &&
+		commandMatchesStamp(activeTurtleAnimationStep.command)
+	) {
+		activeTurtleAnimationStep = null;
+		turtleAnimationStepStartedAt = 0;
+		removed = true;
+	}
+	return removed;
+}
+
+function clearTurtleStamp(stampID: number) {
+	if (!removeTurtleStampCommands(stampID)) return;
+	renderTurtleScene();
+	if (activeTurtleAnimationStep || turtleQueuedSteps.length > 0)
+		void scheduleTurtleAnimation();
 }
 
 function drawText(text: string) {
@@ -4817,6 +4852,7 @@ const turtleBridge: TurtleBridge = {
 	circle: drawCircle,
 	dot: drawDot,
 	stamp: stampTurtle,
+	clearStamp: clearTurtleStamp,
 	write: drawText,
 	registerKey(key: string, callback: (() => void) | null) {
 		if (!callback) {
@@ -5012,6 +5048,9 @@ function createGuardedTurtleBridgeRun(): TurtleBridge {
 		},
 		stamp() {
 			return isActiveRun() ? turtleBridge.stamp() : 0;
+		},
+		clearStamp(stampID: number) {
+			if (isActiveRun()) turtleBridge.clearStamp(stampID);
 		},
 		write(text: string) {
 			if (isActiveRun()) turtleBridge.write(text);
