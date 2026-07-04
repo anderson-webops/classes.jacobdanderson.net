@@ -11,6 +11,8 @@ const BLUEJ_README_FILE_NAME = "README.TXT";
 const BLUEJ_HOME_URL = "https://www.bluej.org/";
 const BLUEJ_SOURCE_URL = "https://github.com/k-pet-group/BlueJ-Greenfoot";
 const JAVA_IDENTIFIER_RE = /^[A-Z_$][\w$]*$/i;
+const DEFAULT_BLUEJ_IMPORT_MAX_FILES = 40;
+const DEFAULT_BLUEJ_IMPORT_MAX_TEXT_FILE_BYTES = 512 * 1024;
 
 export { BLUEJ_HOME_URL, BLUEJ_SOURCE_URL };
 
@@ -260,6 +262,9 @@ export function importBlueJProjectArchive(
 	archiveBytes: Uint8Array,
 	options: BlueJProjectImportOptions = {}
 ): BlueJProjectImportResult {
+	const maxFiles = options.maxFiles ?? DEFAULT_BLUEJ_IMPORT_MAX_FILES;
+	const maxTextFileBytes =
+		options.maxTextFileBytes ?? DEFAULT_BLUEJ_IMPORT_MAX_TEXT_FILE_BYTES;
 	const archivePathsForRoot: string[] = [];
 	const prefilteredSkippedFiles: PrefilteredBlueJArchiveFile[] = [];
 	const files: PythonIdeFile[] = [];
@@ -307,20 +312,14 @@ export function importBlueJProjectArchive(
 			}
 
 			archivePathsForRoot.push(archivePath);
-			if (
-				options.maxTextFileBytes !== undefined &&
-				file.originalSize > options.maxTextFileBytes
-			) {
+			if (file.originalSize > maxTextFileBytes) {
 				prefilteredSkippedFiles.push({
 					archivePath,
 					reason: "too large"
 				});
 				return false;
 			}
-			if (
-				options.maxFiles !== undefined &&
-				extractedFileCount >= options.maxFiles
-			) {
+			if (extractedFileCount >= maxFiles) {
 				prefilteredSkippedFiles.push({
 					archivePath,
 					reason: "too many files"
@@ -357,17 +356,11 @@ export function importBlueJProjectArchive(
 			continue;
 		}
 		if (usedFileNames.has(projectPath)) continue;
-		if (
-			options.maxTextFileBytes !== undefined &&
-			archive[archivePath]!.byteLength > options.maxTextFileBytes
-		) {
+		if (archive[archivePath]!.byteLength > maxTextFileBytes) {
 			skippedFiles.push(`${projectPath} (too large)`);
 			continue;
 		}
-		if (
-			options.maxFiles !== undefined &&
-			files.length >= options.maxFiles
-		) {
+		if (files.length >= maxFiles) {
 			skippedFiles.push(`${projectPath} (too many files)`);
 			continue;
 		}
