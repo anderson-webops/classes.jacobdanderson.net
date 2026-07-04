@@ -24,6 +24,7 @@ import {
 	createPythonIdeProject,
 	dataScienceSampleCsv,
 	dataScienceStarterCode,
+	fetchSharedPythonIdeProject,
 	getPythonIdeAssetDataUrl,
 	getPythonIdeDefaultFileContent,
 	getPythonIdeFileKindLabel,
@@ -36,6 +37,7 @@ import {
 	isPythonIdeRuntimeReservedPath,
 	isPythonIdeTextFile,
 	isValidPythonFileName,
+	isValidPythonIdeShareID,
 	javaOutlineStarterCode,
 	javaStarterCode,
 	karelOutlineStarterCode,
@@ -989,6 +991,34 @@ describe("python IDE project helpers", () => {
 		);
 		expect(payload).not.toHaveProperty("shared");
 		expect(payload).not.toHaveProperty("shareID");
+	});
+
+	it("rejects malformed Code IDE share IDs before storing source links", async () => {
+		expect(isValidPythonIdeShareID("share_ABC1234567890_xyz")).toBe(true);
+		expect(isValidPythonIdeShareID("short")).toBe(false);
+		expect(isValidPythonIdeShareID("../share_ABC1234567890_xyz")).toBe(
+			false
+		);
+		expect(isValidPythonIdeShareID("share_ABC1234567890_xyz?x=1")).toBe(
+			false
+		);
+
+		const project = createPythonIdeProject("python", {
+			files: [
+				{
+					name: "main.py",
+					content: "print('shared copy')\n"
+				}
+			],
+			sharedSourceID: "../share_ABC1234567890_xyz",
+			title: "Copy of Malformed Link"
+		});
+		const payload = pythonIdeProjectToPayload(project);
+
+		expect(payload).not.toHaveProperty("sharedSourceID");
+		await expect(fetchSharedPythonIdeProject("short")).rejects.toThrow(
+			"Invalid share link."
+		);
 	});
 
 	it("keeps remote project payload titles valid without Python-only fallback wording", () => {

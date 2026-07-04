@@ -47,6 +47,7 @@ const JAVA_ENTRY_POINT_IGNORED_TEXT_RE =
 const JAVA_MAIN_METHOD_RE =
 	/\bmain\s*\(\s*(?:\w+\s*\[\s*\]\s+\w+|\w+\s+\w+\s*\[\s*\]|\w+\s*\.\.\.\s+\w+)\s*\)/;
 const KAREL_RUN_METHOD_RE = /\brun\s*\(\s*\)/;
+const PYTHON_IDE_SHARE_ID_RE = /^[\w-]{20,80}$/;
 
 export type PythonIdeFileEncoding = "text" | "base64";
 
@@ -222,6 +223,10 @@ export function normalizePythonIdeMode(
 
 export function pythonIdeModeForCourseId(courseId: string | null | undefined) {
 	return courseId ? (pythonIdeCourseModes[courseId] ?? null) : null;
+}
+
+export function isValidPythonIdeShareID(value: string | null | undefined) {
+	return typeof value === "string" && PYTHON_IDE_SHARE_ID_RE.test(value);
 }
 
 export const pythonStarterCode = `print("Hello, Python!")
@@ -926,7 +931,9 @@ export function pythonIdeProjectToPayload(
 		starterLabel: project.starterLabel,
 		starterUrl: project.starterUrl
 	};
-	if (project.sharedSourceID) payload.sharedSourceID = project.sharedSourceID;
+	if (isValidPythonIdeShareID(project.sharedSourceID)) {
+		payload.sharedSourceID = project.sharedSourceID;
+	}
 	return payload;
 }
 
@@ -1469,6 +1476,10 @@ export async function fetchPythonIdeProjects() {
 }
 
 export async function fetchSharedPythonIdeProject(shareID: string) {
+	if (!isValidPythonIdeShareID(shareID)) {
+		throw new Error("Invalid share link.");
+	}
+
 	const { data } = await api.get<{ project: SharedPythonIdeProject }>(
 		`/users/python-projects/shared/${encodeURIComponent(shareID)}`
 	);
