@@ -89,6 +89,7 @@ interface JavaForLoopIterations {
 }
 
 interface JavaConsoleContext {
+	constants: Map<string, JavaConsoleValue>;
 	input: JavaScannerInput;
 	methodCallDepth: number;
 	methods: Map<string, JavaMethodDefinition>;
@@ -380,6 +381,7 @@ function runConsoleJavaProject(
 function javaConsoleOutput(source: string, inputText: string) {
 	const methods = parseJavaMethods(source);
 	const context: JavaConsoleContext = {
+		constants: new Map(),
 		input: {
 			position: 0,
 			source: inputText.replace(/\r\n?/g, "\n")
@@ -450,10 +452,9 @@ function seedJavaLiteralConstants(
 		if (!name) {
 			continue;
 		}
-		context.variables.set(
-			name,
-			evaluateJavaExpression(rawValue, context, output)
-		);
+		const value = evaluateJavaExpression(rawValue, context, output);
+		context.variables.set(name, value);
+		context.constants.set(name, value);
 	}
 }
 
@@ -2208,11 +2209,12 @@ function executeJavaConsoleMethodCall(
 	}
 
 	const localContext: JavaConsoleContext = {
+		constants: context.constants,
 		input: context.input,
 		methodCallDepth: context.methodCallDepth + 1,
 		methods: context.methods,
 		stderr: context.stderr,
-		variables: new Map()
+		variables: new Map(context.constants)
 	};
 	const args = splitJavaArguments(rawArguments);
 	method.parameters.forEach((parameter, parameterIndex) => {
@@ -2745,6 +2747,7 @@ function runKarelProject(
 	const declaration = source.match(ROBOT_DECLARATION_RE);
 	const declarationArgs = splitJavaArguments(declaration?.[2] ?? "");
 	const constantsContext: JavaConsoleContext = {
+		constants: new Map(),
 		input: {
 			position: 0,
 			source: ""
