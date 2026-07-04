@@ -209,7 +209,8 @@ function commonBlueJArchiveRoot(paths: string[]) {
 	if (!segmentLists.length) return "";
 
 	const root = segmentLists[0]?.[0] ?? "";
-	if (!root || root.includes(".")) return "";
+	if (!root || root === "." || root === ".." || root.startsWith("."))
+		return "";
 	return segmentLists.every(segments => segments[0] === root) ? root : "";
 }
 

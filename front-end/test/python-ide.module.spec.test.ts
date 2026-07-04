@@ -478,6 +478,34 @@ describe("python IDE project helpers", () => {
 		expect(result.skippedFiles).toEqual(["images/logo.png"]);
 	});
 
+	it("strips dotted BlueJ project folder names during import", () => {
+		const archiveBytes = zipSync({
+			"student.lab/Main.java": strToU8("public class Main {}"),
+			"student.lab/Student.java": strToU8("public class Student {}"),
+			"student.lab/package.bluej": strToU8("#BlueJ package file")
+		});
+
+		const result = importBlueJProjectArchive(archiveBytes, {
+			maxFiles: 10,
+			maxTextFileBytes: 1024
+		});
+
+		expect(result.hasBlueJPackage).toBe(true);
+		expect(result.files).toEqual([
+			{
+				content: "public class Main {}",
+				encoding: "text",
+				name: "Main.java"
+			},
+			{
+				content: "public class Student {}",
+				encoding: "text",
+				name: "Student.java"
+			}
+		]);
+		expect(result.skippedFiles).toEqual([]);
+	});
+
 	it("skips oversized BlueJ archive entries before import", () => {
 		const archiveBytes = zipSync({
 			"Student-Lab/Main.java": strToU8("public class Main {}"),
