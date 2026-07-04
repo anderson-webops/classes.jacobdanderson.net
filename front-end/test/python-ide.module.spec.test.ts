@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { python } from "@codemirror/lang-python";
 import { EditorState } from "@codemirror/state";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
 import {
@@ -4297,6 +4297,43 @@ describe("python IDE project helpers", () => {
 		expect(alien?.width).toBe(20);
 		expect(alien?.height).toBe(18);
 		expect(alienLeft?.url).toBe("/python-ide/assets/images/alien-left.png");
+	});
+
+	it("keeps the Code IDE extracted asset manifest mirrored and file-backed", () => {
+		const codeIdeManifestSource = readFileSync(
+			resolve(__dirname, "../public/ide/assets/manifest.json"),
+			"utf8"
+		);
+		const legacyManifestSource = readFileSync(
+			resolve(__dirname, "../public/python-ide/assets/manifest.json"),
+			"utf8"
+		);
+		const manifest = JSON.parse(codeIdeManifestSource) as {
+			assets: Array<{
+				name: string;
+				url: string;
+			}>;
+		};
+
+		expect(codeIdeManifestSource).toBe(legacyManifestSource);
+		expect(manifest.assets.length).toBeGreaterThan(100);
+		for (const asset of manifest.assets) {
+			expect(asset.name).toMatch(/^(?:images|music|sounds)\//);
+			expect(asset.url).toMatch(
+				/^\/(?:ide|python-ide)\/assets\/(?:images|music|sounds)\//
+			);
+			expect(
+				existsSync(
+					resolve(
+						__dirname,
+						`../public${asset.url
+							.split("/")
+							.map(segment => decodeURIComponent(segment))
+							.join("/")}`
+					)
+				)
+			).toBe(true);
+		}
 	});
 
 	it("keeps zip parsing out of the normal course asset loader chunk", () => {
