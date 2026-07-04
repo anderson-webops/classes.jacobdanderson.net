@@ -134,6 +134,7 @@ const javaImportPackagePrefixRegex = new RegExp(
 const pythonAssetStringCompletionValidForRegex = /^[\w.-]*$/;
 const pythonTurtleShapeStringCompletionValidForRegex = /^[A-Z_]*$/i;
 const pythonTurtleColorStringCompletionValidForRegex = /^[A-Z_ ]*$/i;
+const karelColorStringCompletionValidForRegex = /^[A-Z_ ]*$/i;
 const pythonIdentifierRegex = /^[A-Z_]\w*$/i;
 const closingBrackets = new Set(Object.values(openingBracketToClosingBracket));
 const pythonCompletionBlockedNodeNames = new Set([
@@ -168,6 +169,12 @@ const turtleColorStringCompletionPattern = new RegExp(
 	String.raw`\b(?:bgcolor|pencolor|fillcolor|color|dot|` +
 		String.raw`[A-Z_]\w*\.(?:bgcolor|pencolor|fillcolor|color|dot))` +
 		String.raw`\s*\((?:[^"'\n]|["'][^"'\n]*["'])*["']([^"'\n]*)$`,
+	"i"
+);
+const karelColorStringCompletionPattern = new RegExp(
+	String.raw`\b(?:[A-Z_]\w*\.)?` +
+		String.raw`(?:paint|paintCorner|colorIs|colorIsNot|` +
+		String.raw`cornerColorIs|cornerColorIsNot)\s*\(\s*["']([^"'\n]*)$`,
 	"i"
 );
 const turtleShapeCompletions = [
@@ -326,6 +333,23 @@ const trinketTurtleColorNames = [
 const turtleColorCompletions = trinketTurtleColorNames.map(color =>
 	completion(color, "constant", "Turtle color", 75)
 );
+const karelColorStringCompletions = [
+	"black",
+	"blue",
+	"cyan",
+	"dark gray",
+	"gray",
+	"green",
+	"light gray",
+	"magenta",
+	"orange",
+	"pink",
+	"purple",
+	"red",
+	"white",
+	"yellow",
+	"random()"
+].map(color => completion(color, "constant", "Karel color", 75));
 const bracketPairDecorations = [
 	bracketDecorationForIndex(0),
 	bracketDecorationForIndex(1),
@@ -2525,6 +2549,19 @@ export function javaIdeCompletionsForMode(
 
 function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 	return (context: PythonIdeCompletionContext) => {
+		const stringCompletion = javaIdeStringCompletionContext(
+			context.state,
+			context.pos,
+			mode
+		);
+		if (stringCompletion) {
+			return {
+				from: stringCompletion.from,
+				options: stringCompletion.options,
+				validFor: stringCompletion.validFor
+			};
+		}
+
 		const node = syntaxTree(context.state).resolveInner(context.pos, -1);
 		if (pythonCompletionBlockedNodeNames.has(node.name)) return null;
 
@@ -2586,6 +2623,28 @@ function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 			options: javaCompletions,
 			validFor: javaCompletionGlobalValidForRegex
 		};
+	};
+}
+
+function javaIdeStringCompletionContext(
+	state: EditorState,
+	position: number,
+	mode: PythonIdeMode
+): PythonIdeStringCompletionContext | null {
+	if (mode !== "karel") return null;
+
+	const line = state.doc.lineAt(position);
+	const lineBeforeCursor = line.text.slice(0, position - line.from);
+	const colorMatch = lineBeforeCursor.match(
+		karelColorStringCompletionPattern
+	);
+	if (!colorMatch) return null;
+
+	const partial = colorMatch[1] ?? "";
+	return {
+		from: position - partial.length,
+		options: karelColorStringCompletions,
+		validFor: karelColorStringCompletionValidForRegex
 	};
 }
 
