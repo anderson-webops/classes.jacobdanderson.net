@@ -34,7 +34,7 @@ export interface BlueJProjectImportOptions {
 
 interface PrefilteredBlueJArchiveFile {
 	archivePath: string;
-	reason?: "too large" | "too many files";
+	reason?: "outside BlueJ project" | "too large" | "too many files";
 }
 
 function safeBlueJProjectName(value: string) {
@@ -236,6 +236,35 @@ function isBlueJArchivePackagePath(projectPath: string) {
 	return projectPath.toLowerCase() === BLUEJ_PROJECT_FILE_NAME;
 }
 
+function blueJArchivePackageRoot(archivePath: string) {
+	const segments = blueJArchivePathSegments(archivePath);
+	if (!segments.length || segments[0] === "__MACOSX") return null;
+	if (isBlueJArchiveMetadataPath(segments.join("/"))) return null;
+	if (segments.at(-1)?.toLowerCase() !== BLUEJ_PROJECT_FILE_NAME) return null;
+	return segments.slice(0, -1).join("/");
+}
+
+function collectBlueJPackageRoots(archiveBytes: Uint8Array) {
+	const roots = new Set<string>();
+	unzipSync(archiveBytes, {
+		filter(file) {
+			const root = blueJArchivePackageRoot(file.name);
+			if (root !== null) roots.add(root);
+			return false;
+		}
+	});
+	return Array.from(roots);
+}
+
+function isInsideBlueJArchiveRoot(archivePath: string, root: string) {
+	if (!root) return true;
+	const normalizedArchivePath = normalizedBlueJArchivePath(archivePath);
+	return (
+		normalizedArchivePath === root ||
+		normalizedArchivePath.startsWith(`${root}/`)
+	);
+}
+
 function isBlueJArchiveMetadataPath(projectPath: string) {
 	const segments = projectPath.split("/").filter(Boolean);
 	const normalizedSegments = segments.map(segment => segment.toLowerCase());
@@ -265,6 +294,8 @@ export function importBlueJProjectArchive(
 	const maxFiles = options.maxFiles ?? DEFAULT_BLUEJ_IMPORT_MAX_FILES;
 	const maxTextFileBytes =
 		options.maxTextFileBytes ?? DEFAULT_BLUEJ_IMPORT_MAX_TEXT_FILE_BYTES;
+	const packageRoots = collectBlueJPackageRoots(archiveBytes);
+	const blueJProjectRoot = packageRoots.length === 1 ? packageRoots[0]! : "";
 	const archivePathsForRoot: string[] = [];
 	const prefilteredSkippedFiles: PrefilteredBlueJArchiveFile[] = [];
 	const files: PythonIdeFile[] = [];
@@ -310,6 +341,16 @@ export function importBlueJProjectArchive(
 				prefilteredSkippedFiles.push({ archivePath });
 				return false;
 			}
+			if (
+				blueJProjectRoot &&
+				!isInsideBlueJArchiveRoot(archivePath, blueJProjectRoot)
+			) {
+				prefilteredSkippedFiles.push({
+					archivePath,
+					reason: "outside BlueJ project"
+				});
+				return false;
+			}
 
 			archivePathsForRoot.push(archivePath);
 			if (file.originalSize > maxTextFileBytes) {
@@ -334,7 +375,8 @@ export function importBlueJProjectArchive(
 	const archivePaths = Object.keys(archive).filter(
 		path => !normalizedBlueJArchivePath(path).endsWith("/")
 	);
-	const commonRoot = commonBlueJArchiveRoot(archivePathsForRoot);
+	const commonRoot =
+		blueJProjectRoot || commonBlueJArchiveRoot(archivePathsForRoot);
 
 	for (const archivePath of archivePaths) {
 		const projectPath = blueJArchiveProjectPath(archivePath, commonRoot);
