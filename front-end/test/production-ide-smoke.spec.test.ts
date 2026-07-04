@@ -9,24 +9,27 @@ import {
 describe("production Code IDE smoke helpers", () => {
 	it("checks generalized, legacy, and BlueJ entry routes", () => {
 		expect(
-			productionIdeSmokePageUrls("https://classes.jacobdanderson.net").map(
-				url => url.pathname
-			)
+			productionIdeSmokePageUrls(
+				"https://classes.jacobdanderson.net"
+			).map(url => url.pathname)
 		).toEqual(["/ide", "/python-ide", "/bluej"]);
 	});
 
-	it("extracts same-origin JavaScript assets from the IDE page HTML", () => {
+	it("extracts same-origin JavaScript and CSS assets from the IDE page HTML", () => {
 		const baseUrl = new URL("https://classes.jacobdanderson.net/ide");
 		const html = [
 			'<link rel="stylesheet" href="/assets/app.css">',
 			'<script type="module" src="/assets/CodeIdeWorkspace-a1b2.js"></script>',
 			'<script src="https://classes.jacobdanderson.net/assets/app-c3d4.js"></script>',
+			'<link rel="stylesheet" href="https://classes.jacobdanderson.net/assets/CodeIdeWorkspace-e5f6.css">',
 			'<script src="https://cdn.example.test/external.js"></script>'
 		].join("");
 
 		expect(pageAssetUrls(html, baseUrl)).toEqual([
+			"https://classes.jacobdanderson.net/assets/app.css",
 			"https://classes.jacobdanderson.net/assets/CodeIdeWorkspace-a1b2.js",
-			"https://classes.jacobdanderson.net/assets/app-c3d4.js"
+			"https://classes.jacobdanderson.net/assets/app-c3d4.js",
+			"https://classes.jacobdanderson.net/assets/CodeIdeWorkspace-e5f6.css"
 		]);
 	});
 
@@ -53,9 +56,12 @@ describe("production Code IDE smoke helpers", () => {
 			"Download BlueJ ZIP",
 			"Java preview skipped projects over",
 			"total Java characters",
-			"karelRobotStyle",
-			"karelRobotDirectionClass",
-			"left 240ms ease",
+			"karel-robot--",
+			".karel-robot",
+			".karel-robot--north",
+			"position:absolute",
+			"transition:left .24s",
+			"will-change:left, top, transform",
 			"https://github.com/k-pet-group/BlueJ-Greenfoot"
 		].join("\n");
 
