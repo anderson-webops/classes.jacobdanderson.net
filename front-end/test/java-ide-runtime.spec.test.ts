@@ -1896,6 +1896,58 @@ cols=3`
 		expect(vi.getTimerCount()).toBe(0);
 	});
 
+	it("ignores stale Karel playback callbacks after a newer run starts", async () => {
+		const scheduledCallbacks: Array<() => void> = [];
+		const shownSteps: KarelWorldState[] = [];
+		const scheduler = {
+			clearTimeout: () => {},
+			setTimeout: (callback: () => void) => {
+				scheduledCallbacks.push(callback);
+				return scheduledCallbacks.length as unknown as ReturnType<
+					typeof globalThis.setTimeout
+				>;
+			}
+		};
+		const controller = createKarelWorldPlaybackController({
+			delayMs: 350,
+			scheduler,
+			showStep: step => shownSteps.push(step)
+		});
+		const firstPlayback = controller.play(
+			[karelStep("initial"), karelStep("middle")],
+			() => true
+		);
+		let secondResolved: boolean | null = null;
+
+		const staleCallback = scheduledCallbacks[0]!;
+		const secondPlayback = controller.play(
+			[karelStep("final"), karelStep("middle")],
+			() => true
+		);
+		secondPlayback.then(completed => {
+			secondResolved = completed;
+		});
+
+		staleCallback();
+		await Promise.resolve();
+
+		expect(shownSteps.map(step => step.trace[0])).toEqual([
+			"initial",
+			"final"
+		]);
+		expect(secondResolved).toBeNull();
+
+		scheduledCallbacks[1]!();
+
+		await expect(firstPlayback).resolves.toBe(false);
+		await expect(secondPlayback).resolves.toBe(true);
+		expect(shownSteps.map(step => step.trace[0])).toEqual([
+			"initial",
+			"final",
+			"middle"
+		]);
+	});
+
 	it("loads Java and Karel execution through the client IDE workspace", () => {
 		const routeSource = sourceFile("../src/pages/ide.vue");
 		const workspaceSource = sourceFile(

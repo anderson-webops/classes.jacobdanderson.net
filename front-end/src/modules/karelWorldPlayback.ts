@@ -26,14 +26,16 @@ export function createKarelWorldPlaybackController({
 	showStep
 }: KarelWorldPlaybackControllerOptions) {
 	let timer: KarelWorldPlaybackTimer | null = null;
+	let playbackID = 0;
 	let resolvePlayback: ((completed: boolean) => void) | null = null;
 
 	function clear() {
 		if (timer !== null) scheduler.clearTimeout(timer);
 		timer = null;
-		if (!resolvePlayback) return;
-		resolvePlayback(false);
+		const resolveCurrentPlayback = resolvePlayback;
+		if (resolveCurrentPlayback) resolveCurrentPlayback(false);
 		resolvePlayback = null;
+		playbackID += 1;
 	}
 
 	function play(
@@ -44,8 +46,10 @@ export function createKarelWorldPlaybackController({
 		if (!steps?.length) return Promise.resolve(false);
 
 		return new Promise<boolean>(resolve => {
+			const currentPlaybackID = playbackID;
 			let index = 0;
 			const finish = (completed: boolean) => {
+				if (currentPlaybackID !== playbackID) return;
 				if (timer !== null) scheduler.clearTimeout(timer);
 				timer = null;
 				resolvePlayback = null;
@@ -54,6 +58,7 @@ export function createKarelWorldPlaybackController({
 			resolvePlayback = finish;
 
 			const showNextStep = () => {
+				if (currentPlaybackID !== playbackID) return;
 				if (!shouldContinue()) {
 					finish(false);
 					return;
