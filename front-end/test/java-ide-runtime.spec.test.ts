@@ -1883,4 +1883,32 @@ cols=3`
 		);
 		expect(runtimeSource).not.toMatch(/\bjavac\b|\bdocker\b/i);
 	});
+
+	it("keeps backend health and project APIs separate from Java execution", () => {
+		const backendSource = [
+			sourceFile("../../back-end/src/server.ts"),
+			sourceFile("../../back-end/src/routes/userRoutes.ts"),
+			sourceFile(
+				"../../back-end/src/controllers/users/pythonProjectController.ts"
+			)
+		].join("\n");
+
+		expect(backendSource).toContain('app.get("/healthz"');
+		expect(backendSource).toContain(
+			'router.post("/loggedin/python-projects"'
+		);
+		expect(backendSource).toContain(
+			'router.put("/loggedin/python-projects/:projectID"'
+		);
+		expect(backendSource).toContain(
+			'router.get("/python-projects/shared/:shareID"'
+		);
+		expect(backendSource).not.toContain("runJavaIdeProject");
+		expect(backendSource).not.toContain("javaIdeRuntime");
+		expect(backendSource).not.toContain("node:child_process");
+		expect(backendSource).not.toMatch(
+			/\bspawn\s*\(|\bexec\s*\(|\bexecFile\s*\(|\bfork\s*\(/
+		);
+		expect(backendSource).not.toMatch(/\bjavac\b|\bdocker\b/i);
+	});
 });
