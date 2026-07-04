@@ -4,6 +4,24 @@ import { Types } from "mongoose";
 import { Tutor } from "../../models/schemas/Tutor.js";
 import { User } from "../../models/schemas/User.js";
 
+const MAX_COURSE_ID_LENGTH = 160;
+
+function normalizeCourseAccessIDs(value: unknown): string[] | null {
+	if (!Array.isArray(value)) return null;
+
+	const ids: string[] = [];
+	const seen = new Set<string>();
+	for (const item of value) {
+		if (typeof item !== "string") return null;
+		const id = item.trim();
+		if (!id || id.length > MAX_COURSE_ID_LENGTH) return null;
+		if (seen.has(id)) continue;
+		seen.add(id);
+		ids.push(id);
+	}
+	return ids;
+}
+
 export const updateTutorCoursePermissions: RequestHandler = async (req, res) => {
 	const paramTutorID = req.params.tutorID;
 	const tutorID = Array.isArray(paramTutorID) ? paramTutorID[0] : paramTutorID;
@@ -14,10 +32,16 @@ export const updateTutorCoursePermissions: RequestHandler = async (req, res) => 
 	if (!Types.ObjectId.isValid(tutorID)) return res.status(400).json({ message: "Invalid tutor ID" });
 	if (!Array.isArray(courseIDs)) return res.status(400).json({ message: "courseIDs must be an array" });
 
+	const uniqueCourses = normalizeCourseAccessIDs(courseIDs);
+	if (!uniqueCourses) {
+		return res.status(400).json({
+			message: `courseIDs must contain non-empty string IDs of ${MAX_COURSE_ID_LENGTH} characters or fewer`
+		});
+	}
+
 	const tutor = await Tutor.findById(tutorID);
 	if (!tutor) return res.sendStatus(404);
 
-	const uniqueCourses = [...new Set(courseIDs.map(id => id?.trim()).filter(Boolean))] as string[];
 	tutor.coursePermissions = uniqueCourses;
 	await tutor.save();
 

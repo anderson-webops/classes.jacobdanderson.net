@@ -47,6 +47,7 @@ vi.mock("../src/models/schemas/InternalEmail.js", () => ({
 }));
 
 const { userRoutes } = await import("../src/routes/userRoutes.js");
+const { tutorRoutes } = await import("../src/routes/tutorRoutes.js");
 
 const tutorID = new Types.ObjectId();
 const otherTutorID = new Types.ObjectId();
@@ -125,6 +126,42 @@ async function withUserRoutes<T>(run: (baseUrl: string) => Promise<T>): Promise<
 		next();
 	});
 	app.use("/users", userRoutes);
+
+	const server = await new Promise<Server>(resolve => {
+		const instance = app.listen(0, "127.0.0.1", () => resolve(instance));
+	});
+	const address = server.address();
+	if (!address || typeof address === "string") {
+		throw new TypeError("Test server did not bind to an IPv4 port");
+	}
+
+	try {
+		return await run(`http://127.0.0.1:${address.port}`);
+	} finally {
+		await new Promise<void>((resolve, reject) => {
+			server.close(error => {
+				if (error) {
+					reject(error);
+					return;
+				}
+				resolve();
+			});
+		});
+	}
+}
+
+async function withTutorRoutes<T>(run: (baseUrl: string) => Promise<T>): Promise<T> {
+	const app = express();
+	app.use(express.json());
+	app.use((req: any, _res, next) => {
+		req.session = {
+			adminID: req.get("x-admin-id") || undefined,
+			tutorID: req.get("x-tutor-id") || undefined,
+			userID: req.get("x-user-id") || undefined
+		};
+		next();
+	});
+	app.use("/tutors", tutorRoutes);
 
 	const server = await new Promise<Server>(resolve => {
 		const instance = app.listen(0, "127.0.0.1", () => resolve(instance));
@@ -438,6 +475,62 @@ describe("user schedule and note-only routes", () => {
 				"python-level-1": "past",
 				"ap-computer-science-a": "available"
 			});
+		});
+	});
+
+	it("rejects malformed learner course access IDs before loading the student", async () => {
+		await withUserRoutes(async baseUrl => {
+			const nonStringResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/courses`,
+				{ courseIDs: [123] },
+				{ "x-admin-id": adminID.toString() }
+			);
+			const blankResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/courses`,
+				{ courseIDs: [" "] },
+				{ "x-admin-id": adminID.toString() }
+			);
+			const tooLongResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/courses`,
+				{ courseIDs: ["c".repeat(161)] },
+				{ "x-admin-id": adminID.toString() }
+			);
+
+			expect(nonStringResponse.status).toBe(400);
+			expect(blankResponse.status).toBe(400);
+			expect(tooLongResponse.status).toBe(400);
+			expect(modelMocks.userFindById).not.toHaveBeenCalled();
+		});
+	});
+
+	it("rejects malformed tutor course permission IDs before loading the tutor", async () => {
+		await withTutorRoutes(async baseUrl => {
+			const nonStringResponse = await putJson(
+				baseUrl,
+				`/tutors/${tutorID}/courses`,
+				{ courseIDs: [123] },
+				{ "x-admin-id": adminID.toString() }
+			);
+			const blankResponse = await putJson(
+				baseUrl,
+				`/tutors/${tutorID}/courses`,
+				{ courseIDs: [" "] },
+				{ "x-admin-id": adminID.toString() }
+			);
+			const tooLongResponse = await putJson(
+				baseUrl,
+				`/tutors/${tutorID}/courses`,
+				{ courseIDs: ["c".repeat(161)] },
+				{ "x-admin-id": adminID.toString() }
+			);
+
+			expect(nonStringResponse.status).toBe(400);
+			expect(blankResponse.status).toBe(400);
+			expect(tooLongResponse.status).toBe(400);
+			expect(modelMocks.tutorFindById).not.toHaveBeenCalled();
 		});
 	});
 
