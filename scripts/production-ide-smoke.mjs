@@ -55,14 +55,14 @@ export function containsCurrentIdeBundleMarkers(source) {
 	return (
 		source.includes("Code, run, and draw in Python or Java") &&
 		source.includes("preview Java console programs or Karel robot") &&
-		source.includes("create BlueJ desktop projects") &&
-		source.includes("BlueJ-ready ZIPs") &&
+		source.includes("BlueJ integration for desktop object-bench projects") &&
+		source.includes("ZIP import") &&
+		source.includes("package.bluej export") &&
 		source.includes("Karel world ready") &&
-		source.includes("Java / BlueJ tools") &&
-		source.includes("BlueJ object-bench starter") &&
-		source.includes("BlueJ Java Project") &&
-		source.includes("BlueJ starter") &&
-		source.includes("New BlueJ desktop project") &&
+		source.includes("BlueJ workspace") &&
+		source.includes("BlueJ integration") &&
+		source.includes("BlueJ Desktop Integration") &&
+		source.includes("New BlueJ project") &&
 		source.includes("Import BlueJ ZIP") &&
 		source.includes("Download BlueJ ZIP") &&
 		source.includes("https://github.com/k-pet-group/BlueJ-Greenfoot")
