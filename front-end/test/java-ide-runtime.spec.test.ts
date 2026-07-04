@@ -42,6 +42,42 @@ describe("java IDE runtime", () => {
 		vi.useRealTimers();
 	});
 
+	it("skips oversized Java and Karel sources before preview parsing", () => {
+		const oversizedSource = `public class Main {\n${"// source padding\n".repeat(13000)}}`;
+		const javaResult = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: oversizedSource
+				}
+			],
+			mode: "java"
+		});
+		const karelResult = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: oversizedSource.replace("Main", "Algo")
+				},
+				{
+					name: "world.txt",
+					content: karelStarterWorld
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(javaResult.stdout).toEqual([]);
+		expect(javaResult.stderr).toEqual([
+			expect.stringContaining("Java preview skipped files over")
+		]);
+		expect(karelResult.stdout).toEqual([]);
+		expect(karelResult.karelWorld).toBeUndefined();
+		expect(karelResult.stderr).toEqual(javaResult.stderr);
+	});
+
 	it("previews the Java and Karel outline templates in the browser subset", () => {
 		const javaResult = runJavaIdeProject({
 			activeFileName: "Main.java",
