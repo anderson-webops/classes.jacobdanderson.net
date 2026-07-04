@@ -215,6 +215,17 @@ function blueJArchiveProjectPath(archivePath: string, commonRoot: string) {
 	return segments.join("/");
 }
 
+function isBlueJArchiveMetadataPath(projectPath: string) {
+	const segments = projectPath.split("/").filter(Boolean);
+	const normalizedSegments = segments.map(segment => segment.toLowerCase());
+	const fileName = normalizedSegments.at(-1);
+	return (
+		normalizedSegments.includes("__macosx") ||
+		normalizedSegments.some(segment => segment.startsWith("._")) ||
+		fileName === ".ds_store"
+	);
+}
+
 export function blueJProjectTitleFromArchiveName(fileName: string) {
 	const baseName = fileName
 		.split(/[\\/]/)
@@ -245,6 +256,7 @@ export function importBlueJProjectArchive(
 		if (!projectPath) continue;
 
 		const lowerPath = projectPath.toLowerCase();
+		if (isBlueJArchiveMetadataPath(projectPath)) continue;
 		if (lowerPath === BLUEJ_PROJECT_FILE_NAME) {
 			hasBlueJPackage = true;
 			continue;

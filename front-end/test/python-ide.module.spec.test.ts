@@ -452,6 +452,32 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("ignores BlueJ archive metadata after stripping the project root", () => {
+		const archiveBytes = zipSync({
+			"Student-Lab/Main.java": strToU8("public class Main {}"),
+			"Student-Lab/__MACOSX/Ghost.java": strToU8(
+				"public class Ghost {}"
+			),
+			"Student-Lab/src/._Helper.java": strToU8("metadata"),
+			"Student-Lab/.DS_Store": strToU8("metadata"),
+			"Student-Lab/images/logo.png": strToU8("not text")
+		});
+
+		const result = importBlueJProjectArchive(archiveBytes, {
+			maxFiles: 10,
+			maxTextFileBytes: 1024
+		});
+
+		expect(result.files).toEqual([
+			{
+				content: "public class Main {}",
+				encoding: "text",
+				name: "Main.java"
+			}
+		]);
+		expect(result.skippedFiles).toEqual(["images/logo.png"]);
+	});
+
 	it("colors visible bracket pairs using document-wide nesting context", () => {
 		const filler = Array.from(
 			{ length: 350 },
