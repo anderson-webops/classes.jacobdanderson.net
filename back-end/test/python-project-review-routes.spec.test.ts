@@ -591,7 +591,8 @@ describe("Python project review routes", () => {
 			makeProject({
 				shared: true,
 				shareID,
-				shareCreatedAt: now
+				shareCreatedAt: now,
+				sharedSourceID: "share_IMPORTED123456789_xyz"
 			})
 		);
 
@@ -608,8 +609,10 @@ describe("Python project review routes", () => {
 			});
 			expect(body.project.title).toBe("Loops practice");
 			expect(body.project.files[0].content).toBe("print('student')\n");
-			expect(body.project.shared).toBe(true);
-			expect(body.project.shareID).toBe(shareID);
+			expect(body.project).not.toHaveProperty("shared");
+			expect(body.project).not.toHaveProperty("shareID");
+			expect(body.project).not.toHaveProperty("shareCreatedAt");
+			expect(body.project).not.toHaveProperty("sharedSourceID");
 		});
 	});
 
@@ -663,7 +666,8 @@ describe("Python project review routes", () => {
 
 			expect(revokedAfterResponse.status).toBe(404);
 			expect(freshShareResponse.status).toBe(200);
-			expect(freshShareBody.project.shareID).toBe(project.shareID);
+			expect(freshShareBody.project.title).toBe(project.title);
+			expect(freshShareBody.project).not.toHaveProperty("shareID");
 		});
 	});
 

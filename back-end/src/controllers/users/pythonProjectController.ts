@@ -145,6 +145,17 @@ function serializePythonProject(project: IPythonProject) {
 	};
 }
 
+function serializeSharedPythonProject(project: IPythonProject) {
+	const serialized = serializePythonProject(project);
+	return {
+		...serialized,
+		shared: undefined,
+		shareCreatedAt: undefined,
+		sharedSourceID: undefined,
+		shareID: undefined
+	};
+}
+
 function serializePythonProjectReview(review: IPythonProjectReview) {
 	return {
 		_id: review._id.toString(),
@@ -628,7 +639,7 @@ export const getSharedPythonProject: RequestHandler = async (req, res) => {
 	});
 
 	if (!project) return res.sendStatus(404);
-	res.json({ project: serializePythonProject(project) });
+	res.json({ project: serializeSharedPythonProject(project) });
 };
 
 export const updatePythonProjectReview: RequestHandler = async (req, res) => {
