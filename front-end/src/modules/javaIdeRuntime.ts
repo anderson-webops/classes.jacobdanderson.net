@@ -78,6 +78,8 @@ interface KarelCommandPlan {
 }
 
 interface KarelPreviewExecution {
+	constantsContext: JavaConsoleContext;
+	constantsOutput: JavaConsoleOutputState;
 	robot: KarelRobotState;
 	stopped: boolean;
 	world: MutableKarelWorld;
@@ -2805,6 +2807,8 @@ function runKarelProject(
 	clampRobotToWorld(robot, world);
 
 	const previewExecution: KarelPreviewExecution = {
+		constantsContext,
+		constantsOutput,
 		robot: cloneKarelRobot(robot),
 		stopped: false,
 		world: cloneMutableKarelWorld(world)
@@ -3316,7 +3320,12 @@ function collectKarelCommandsFromBody(
 		}
 
 		if (wordAt(body, index, "for")) {
-			const parsedLoop = parseJavaForLoop(body, index);
+			const parsedLoop = parseJavaForLoop(
+				body,
+				index,
+				execution.constantsContext,
+				execution.constantsOutput
+			);
 			if (parsedLoop) {
 				for (
 					let count = 0;
@@ -3549,13 +3558,20 @@ function parseJavaConditionalLoop(source: string, start: number) {
 	};
 }
 
-function parseJavaForLoop(source: string, start: number) {
+function parseJavaForLoop(
+	source: string,
+	start: number,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+) {
 	const parenStart = skipWhitespace(source, start + 3);
 	if (source[parenStart] !== "(") return null;
 	const parenEnd = findMatchingDelimiter(source, parenStart, "(", ")");
 	if (parenEnd < 0) return null;
 	const iterations = evaluateSimpleForLoopIterations(
-		source.slice(parenStart + 1, parenEnd)
+		source.slice(parenStart + 1, parenEnd),
+		context,
+		output
 	);
 	const bodyStart = skipWhitespace(source, parenEnd + 1);
 	const parsedBody = parseJavaControlBody(source, bodyStart);
@@ -3723,28 +3739,44 @@ function karelBeepersAtRobot(execution: KarelPreviewExecution) {
 }
 
 function evaluateSimpleForLoopIterations(
-	header: string
+	header: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
 ): JavaForLoopIterations {
-	const match = header.match(
-		/^\s*(?:int\s+)?([A-Z_]\w*)\s*=\s*(-?\d+)\s*;\s*\1\s*(<=|<|>=|>)\s*(-?\d+)\s*;\s*(\+\+\1|\1\+\+|--\1|\1--|\1\s*(\+=|-=)\s*(\d+))\s*$/i
-	);
-	if (!match) return { capped: false, count: 0 };
+	const headerParts = splitJavaTopLevel(header, ";");
+	if (headerParts.length !== 3) return { capped: false, count: 0 };
 
-	const start = Number(match[2]);
-	const operator = match[3] ?? "<";
-	const end = Number(match[4]);
-	const updateExpression = match[5] ?? "";
-	const compoundOperator = match[6];
-	const compoundStep = Number(match[7] ?? 1);
-	const step =
-		compoundOperator === "+="
-			? compoundStep
-			: compoundOperator === "-="
-				? -compoundStep
-				: updateExpression.includes("--")
-					? -1
-					: 1;
+	const initializer = headerParts[0] ?? "";
+	const condition = headerParts[1] ?? "";
+	const update = headerParts[2] ?? "";
+	const initializerParts = splitJavaTopLevel(initializer, "=");
+	if (initializerParts.length !== 2) return { capped: false, count: 0 };
+	const loopVariable = (initializerParts[0] ?? "")
+		.trim()
+		.replace(/^int\s+/i, "");
+	const rawStart = initializerParts[1]?.trim();
+	if (!loopVariable || !rawStart) return { capped: false, count: 0 };
+	if (!/^[A-Z_]\w*$/i.test(loopVariable)) return { capped: false, count: 0 };
+
+	const comparison = splitJavaComparison(condition);
+	const operator = comparison?.operator;
+	const rawEnd = comparison?.right;
+	if (!operator || !rawEnd) return { capped: false, count: 0 };
+	if (comparison?.left !== loopVariable) return { capped: false, count: 0 };
+	if (!["<", "<=", ">", ">="].includes(operator)) {
+		return { capped: false, count: 0 };
+	}
+
+	const step = simpleForLoopStep(update, loopVariable, context, output);
+	const start = javaValueToNumber(
+		evaluateJavaExpression(rawStart, context, output)
+	);
+	const end = javaValueToNumber(
+		evaluateJavaExpression(rawEnd, context, output)
+	);
 	if (!Number.isFinite(step) || step === 0)
+		return { capped: false, count: 0 };
+	if (!Number.isFinite(start) || !Number.isFinite(end))
 		return { capped: false, count: 0 };
 
 	let count = 0;
@@ -3755,6 +3787,41 @@ function evaluateSimpleForLoopIterations(
 		value += step;
 	}
 	return { capped: false, count };
+}
+
+function simpleForLoopStep(
+	update: string,
+	loopVariable: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+) {
+	const compactUpdate = update.replace(/\s+/g, "");
+	if (
+		compactUpdate === `++${loopVariable}` ||
+		compactUpdate === `${loopVariable}++`
+	) {
+		return 1;
+	}
+	if (
+		compactUpdate === `--${loopVariable}` ||
+		compactUpdate === `${loopVariable}--`
+	) {
+		return -1;
+	}
+
+	const operator = update.includes("+=")
+		? "+="
+		: update.includes("-=")
+			? "-="
+			: "";
+	const updateParts = operator ? splitJavaTopLevel(update, operator) : [];
+	const rawStep = updateParts[1];
+	if (updateParts[0]?.trim() !== loopVariable) return Number.NaN;
+	if (!operator || !rawStep) return Number.NaN;
+	const step = javaValueToNumber(
+		evaluateJavaExpression(rawStep, context, output)
+	);
+	return operator === "-=" ? -step : step;
 }
 
 function forLoopConditionIsTrue(value: number, operator: string, end: number) {
