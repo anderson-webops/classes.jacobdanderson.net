@@ -11,6 +11,7 @@ import { User } from "../../models/schemas/User.js";
 import { renderMarkdownEmailHtml } from "../../utils/markdownEmail.js";
 import {
 	defaultSessionNoteSubject,
+	documentReferenceID,
 	parseScheduledSessionPayload,
 	serializeScheduledSession
 } from "../../utils/scheduledSessions.js";
@@ -114,11 +115,8 @@ function courseStatusForAccess(
 
 function tutorOwnsUser(user: { tutors?: unknown[] } | null, tutorID: string) {
 	return (
-		user?.tutors?.some((tutor) => {
-			const id = tutor && typeof tutor === "object" && "_id" in tutor ? tutor._id : tutor;
-			if (!id) return false;
-			return id.toString() === tutorID;
-		}) ?? false
+		user?.tutors?.some(tutor => documentReferenceID(tutor) === tutorID)
+		?? false
 	);
 }
 
@@ -520,7 +518,7 @@ export const updateUserScheduledSession: RequestHandler = async (req, res) => {
 		return res.status(400).json({ message: err instanceof Error ? err.message : "Invalid scheduled session" });
 	}
 
-	let tutorID = parsed.tutorId ?? scheduledSession.tutor?.toString();
+	let tutorID = parsed.tutorId ?? documentReferenceID(scheduledSession.tutor);
 	if (req.currentTutor) {
 		if (tutorID && tutorID !== req.currentTutor._id.toString()) {
 			return res.status(403).json({ message: "Tutors can only assign themselves to sessions" });

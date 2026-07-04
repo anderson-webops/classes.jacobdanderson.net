@@ -53,6 +53,15 @@ export interface SerializedScheduledSession {
 	updatedAt: Date;
 }
 
+export function documentReferenceID(value: unknown) {
+	if (value && typeof value === "object" && "_id" in value) {
+		const id = (value as { _id?: unknown })._id;
+		return id?.toString() ?? "";
+	}
+
+	return value?.toString() ?? "";
+}
+
 function cleanOptionalString(value: unknown): string | undefined {
 	if (typeof value !== "string") return undefined;
 	const trimmed = value.trim();
@@ -131,8 +140,8 @@ export function serializeScheduledSession(
 ): SerializedScheduledSession {
 	return {
 		_id: String(session._id),
-		user: String(session.user),
-		tutor: session.tutor ? String(session.tutor) : null,
+		user: documentReferenceID(session.user),
+		tutor: session.tutor ? documentReferenceID(session.tutor) || null : null,
 		title: session.title,
 		courseId: session.courseId ?? null,
 		startAt: session.startAt,
