@@ -3047,7 +3047,8 @@ function collectKarelCommandsFromBody(
 			if (parsedIf) {
 				const branchBody = evaluateKarelCondition(
 					parsedIf.condition,
-					execution
+					execution,
+					robotAliases
 				)
 					? parsedIf.body
 					: parsedIf.elseBody;
@@ -3072,7 +3073,11 @@ function collectKarelCommandsFromBody(
 				let loopCount = 0;
 				let previousCommandCount = plan.commands.length;
 				while (
-					evaluateKarelCondition(parsedLoop.condition, execution) &&
+					evaluateKarelCondition(
+						parsedLoop.condition,
+						execution,
+						robotAliases
+					) &&
 					canAddKarelCommand(plan) &&
 					!execution.stopped
 				) {
@@ -3373,24 +3378,44 @@ function parseJavaControlBody(source: string, start: number) {
 
 function evaluateKarelCondition(
 	condition: string,
-	execution: KarelPreviewExecution
+	execution: KarelPreviewExecution,
+	robotAliases: Set<string>
 ): boolean {
 	const trimmed = stripJavaOuterParens(condition.trim().replace(/\s+/g, ""));
 	const orParts = splitJavaTopLevel(trimmed, "||");
-	if (orParts.length > 1)
-		return orParts.some(part => evaluateKarelCondition(part, execution));
+	if (orParts.length > 1) {
+		return orParts.some(part =>
+			evaluateKarelCondition(part, execution, robotAliases)
+		);
+	}
 
 	const andParts = splitJavaTopLevel(trimmed, "&&");
-	if (andParts.length > 1)
-		return andParts.every(part => evaluateKarelCondition(part, execution));
+	if (andParts.length > 1) {
+		return andParts.every(part =>
+			evaluateKarelCondition(part, execution, robotAliases)
+		);
+	}
 
-	if (trimmed.startsWith("!"))
-		return !evaluateKarelCondition(trimmed.slice(1), execution);
+	if (trimmed.startsWith("!")) {
+		return !evaluateKarelCondition(
+			trimmed.slice(1),
+			execution,
+			robotAliases
+		);
+	}
 
 	const conditionCall = trimmed.match(
-		/^(?:(?:super|this)\.)?([A-Z_]\w*)\(([\s\S]*)\)$/i
+		/^(?:([A-Z_]\w*)\.)?([A-Z_]\w*)\(([\s\S]*)\)$/i
 	);
-	const conditionName = conditionCall?.[1];
+	const conditionReceiver = conditionCall?.[1] ?? "";
+	if (
+		conditionReceiver &&
+		!isKarelCommandReceiver(conditionReceiver, robotAliases)
+	) {
+		return false;
+	}
+
+	const conditionName = conditionCall?.[2];
 	if (!conditionName) return false;
 
 	if (conditionName === "frontIsClear")
@@ -3440,7 +3465,7 @@ function evaluateKarelCondition(
 		return karelBeepersAtRobot(execution) <= 0;
 	}
 	if (conditionName === "colorIs" || conditionName === "colorIsNot") {
-		const color = normalizeKarelPaintColor(conditionCall?.[2] ?? "");
+		const color = normalizeKarelPaintColor(conditionCall?.[3] ?? "");
 		const expected = color
 			? resolveKarelPaintColor(
 					color,
