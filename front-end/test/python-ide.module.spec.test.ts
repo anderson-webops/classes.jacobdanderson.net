@@ -1414,12 +1414,12 @@ describe("python IDE project helpers", () => {
 		expect(stopSource).toContain("refreshActiveTurtleEventHandlerCount();");
 	});
 
-	it("focuses the visual canvas on Run and captures scroll keys there", () => {
+	it("focuses the visual output on Run and captures scroll keys there", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
-		const focusStart = pageSource.indexOf("function focusVisualCanvasForRun");
+		const focusStart = pageSource.indexOf("function focusVisualOutputForRun");
 		const focusSource = pageSource.slice(
 			focusStart,
 			pageSource.indexOf("function activateRunControl", focusStart)
@@ -1432,15 +1432,24 @@ describe("python IDE project helpers", () => {
 
 		expect(focusSource).toContain('projectMode !== "turtle"');
 		expect(focusSource).toContain('projectMode !== "pgzero"');
-		expect(focusSource).toContain("canvasRef.value?.focus({ preventScroll: true })");
-		expect(focusSource.indexOf("canvasRef.value?.focus")).toBeLessThan(
+		expect(focusSource).toContain('projectMode !== "karel"');
+		expect(focusSource).toContain(
+			'projectMode === "karel" ? karelWorldRef.value : canvasRef.value'
+		);
+		expect(focusSource).toContain("visualOutput?.focus({ preventScroll: true })");
+		expect(focusSource.indexOf("visualOutput?.focus")).toBeLessThan(
 			focusSource.indexOf("window.requestAnimationFrame")
 		);
-		expect(pageSource).toContain("focusVisualCanvasForRun();");
+		expect(pageSource).toContain("focusVisualOutputForRun();");
 		expect(pageSource).toContain(
-			"void runCurrentProject().finally(focusVisualCanvasForRun);"
+			"void runCurrentProject().finally(focusVisualOutputForRun);"
 		);
+		expect(pageSource).toContain('ref="karelWorldRef"');
+		expect(pageSource).toContain('aria-label="Karel world"');
+		expect(pageSource).toContain('tabindex="0"');
+		expect(pageSource).toContain(".karel-shell:focus-visible");
 		expect(pageSource).toContain("function isCanvasScrollKey");
+		expect(keydownSource).toContain('selectedProject.value?.mode === "karel"');
 		expect(keydownSource).toContain('selectedProject.value?.mode === "turtle"');
 		expect(keydownSource).toContain(
 			"isCanvasScrollKey(normalizedTurtleKey)"
@@ -4206,19 +4215,22 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
-	it("keeps canvas keyboard handlers separate from editor and input focus", () => {
+	it("keeps visual output keyboard handlers separate from editor and input focus", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
-		expect(pageSource).toContain("function canvasOwnsKeyboardEvent");
+		expect(pageSource).toContain("function visualOutputOwnsKeyboardEvent");
 		expect(pageSource).toContain("document.activeElement === canvas");
+		expect(pageSource).toContain("document.activeElement === karelWorld");
 		expect(pageSource).toContain(
-			"if (!canvasOwnsKeyboardEvent(event)) return;"
+			"if (!visualOutputOwnsKeyboardEvent(event)) return;"
 		);
 		expect(pageSource.indexOf("function isCanvasScrollKey")).toBeLessThan(
-			pageSource.indexOf("if (!canvasOwnsKeyboardEvent(event)) return;")
+			pageSource.indexOf(
+				"if (!visualOutputOwnsKeyboardEvent(event)) return;"
+			)
 		);
 		expect(pageSource).toContain("function pythonGameKeyFromEvent");
 		expect(pageSource).toContain("function gameKeyModifierMask");
@@ -4226,7 +4238,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("unicode: gameKeyUnicode(event)");
 		expect(pageSource).toContain('@blur="clearCanvasKeyboardState"');
 		expect(pageSource).toContain(
-			"canvasRef.value?.focus({ preventScroll: true })"
+			"visualOutput?.focus({ preventScroll: true })"
 		);
 		expect(pageSource).toContain("--python-focus-ring");
 		expect(pageSource).toContain(".code-editor-shell:focus-within");
