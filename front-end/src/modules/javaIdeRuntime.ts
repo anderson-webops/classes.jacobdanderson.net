@@ -3281,7 +3281,7 @@ function karelPaintCommandForStatement(
 	robotAliases: Set<string>
 ): KarelCommand | null {
 	const paintMatch = statement.match(
-		/^(?:([A-Z_]\w*)\.)?paint\s*\(([\s\S]+)\)$/i
+		/^(?:([A-Z_]\w*)\.)?(?:paint|paintCorner)\s*\(([\s\S]+)\)$/i
 	);
 	if (!paintMatch) return null;
 
@@ -3464,7 +3464,12 @@ function evaluateKarelCondition(
 	) {
 		return karelBeepersAtRobot(execution) <= 0;
 	}
-	if (conditionName === "colorIs" || conditionName === "colorIsNot") {
+	if (
+		conditionName === "colorIs" ||
+		conditionName === "colorIsNot" ||
+		conditionName === "cornerColorIs" ||
+		conditionName === "cornerColorIsNot"
+	) {
 		const color = normalizeKarelPaintColor(conditionCall?.[3] ?? "");
 		const expected = color
 			? resolveKarelPaintColor(
@@ -3479,7 +3484,7 @@ function evaluateKarelCondition(
 				beeperKey(execution.robot.street, execution.robot.avenue)
 			)?.color ?? "";
 		const matches = Boolean(expected) && current === expected;
-		return conditionName === "colorIs" ? matches : !matches;
+		return conditionName.endsWith("Is") ? matches : !matches;
 	}
 
 	return false;
@@ -3875,7 +3880,8 @@ function normalizeKarelPaintColor(expression: string) {
 	const normalized = expression
 		.trim()
 		.replace(/\s+/g, "")
-		.replace(/^(?:java\.awt\.)?Color\./i, "");
+		.replace(/^(?:java\.awt\.)?Color\./i, "")
+		.replace(/^["']|["']$/g, "");
 	if (/^random\(\)$/i.test(normalized)) return "random";
 	const colorName = normalized.toLowerCase();
 	return karelPaintColors[colorName] ? colorName : null;

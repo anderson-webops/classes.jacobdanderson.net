@@ -1686,6 +1686,51 @@ paint 2 3 purple`
 		expect(result.stdout).toHaveLength(5);
 	});
 
+	it("previews Karel paintCorner aliases and quoted corner colors", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "MyProgram.java",
+			files: [
+				{
+					name: "MyProgram.java",
+					content: `public class MyProgram extends SuperKarel {
+    public void run() {
+        paintCorner("red");
+        if (cornerColorIs("red")) {
+            move();
+            paintCorner(Color.BLUE);
+        }
+        if (cornerColorIsNot(Color.red)) {
+            move();
+            paintCorner("green");
+        }
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `rows=1
+cols=3`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 3,
+			direction: "East",
+			street: 1
+		});
+		expect(result.karelWorld?.paints).toEqual(
+			expect.arrayContaining([
+				{ avenue: 1, color: "#dc2626", street: 1 },
+				{ avenue: 2, color: "#2563eb", street: 1 },
+				{ avenue: 3, color: "#16a34a", street: 1 }
+			])
+		);
+		expect(result.karelWorldSteps).toHaveLength(6);
+	});
+
 	it("plays Karel world snapshots frame by frame and supports cancellation", async () => {
 		vi.useFakeTimers();
 		const shownSteps: KarelWorldState[] = [];
