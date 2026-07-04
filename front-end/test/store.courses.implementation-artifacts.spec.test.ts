@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
 import {
@@ -120,6 +121,10 @@ function authoredCourseItems(
 	]);
 }
 
+function frontEndSource(path: string) {
+	return readFileSync(resolve(__dirname, "..", path), "utf8");
+}
+
 function expectAuthoredSourcePair(
 	course: Awaited<ReturnType<typeof requireAuthoredCourse>>,
 	title: string,
@@ -136,6 +141,51 @@ function expectAuthoredSourcePair(
 }
 
 describe("implemented course development artifacts", () => {
+	it("keeps generated starter and solution code aligned with the coding standard", () => {
+		const source = frontEndSource(
+			"scripts/materialize-course-expansions.ts"
+		);
+
+		for (const solutionPath of [
+			"solution/routine.S",
+			"solution/main.c",
+			"solution/main.cpp",
+			"solution/Main.java",
+			"solution/task.sh",
+			"solution/main.py",
+			"solution/src/main.rs",
+			"solution/ContentView.swift",
+			"solution/script.js"
+		]) {
+			expect(source).toContain(`"${solutionPath}":`);
+		}
+
+		for (const requiredName of [
+			"VALUE_COUNT",
+			"record_t",
+			"transform_values",
+			"compute_score",
+			"price_for",
+			"MIN_PORT_NUMBER",
+			"MAX_PORT_NUMBER",
+			"SAMPLE_INPUT",
+			"is_complete",
+			"entry_count"
+		]) {
+			expect(source).toContain(requiredName);
+		}
+
+		for (const oldName of [
+			"transformValues",
+			"computeScore",
+			"priceFor",
+			"makeUpper",
+			"isComplete"
+		]) {
+			expect(source).not.toContain(oldName);
+		}
+	});
+
 	it(
 		"keeps course-development planning scaffolds internal while retaining metadata",
 		async () => {

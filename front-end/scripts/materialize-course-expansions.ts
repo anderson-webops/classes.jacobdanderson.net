@@ -749,41 +749,64 @@ function buildProjectFiles(
 		assembly: {
 			"starter/main.c": `#include <stdio.h>
 
+#define VALUE_COUNT 4
+
 extern int transform_value(int value);
 
+/**
+ * @brief Run the assembly helper across a small sample set
+ *
+ * @return Zero when the program completes
+ */
 int main(void) {
-\tint values[] = {3, 7, 11, 19};
+\tconst int values[VALUE_COUNT] = {3, 7, 11, 19};
 \tint total = 0;
-\tfor (int i = 0; i < 4; i++) {
-\t\ttotal += transform_value(values[i]);
+
+\t// Add each transformed value into the running total
+\tfor (int value_index = 0; value_index < VALUE_COUNT; value_index++) {
+\t\ttotal += transform_value(values[value_index]);
 \t}
+
 \tprintf("total=%d\\n", total);
 \treturn 0;
 }
 `,
 			"starter/routine.S": `.global transform_value
 transform_value:
-\t# TODO: load the input value, apply a simple transform, and return it in eax
+\t# TODO: Load the input value, apply a simple transform, and return it in eax
 \tmovl %edi, %eax
 \tret
 `,
 			"solution/main.c": `#include <stdio.h>
 
+#define VALUE_COUNT 4
+
 extern int transform_value(int value);
 
+/**
+ * @brief Run the assembly helper across a small sample set
+ *
+ * @return Zero when the program completes
+ */
 int main(void) {
-\tint values[] = {3, 7, 11, 19};
+\tconst int values[VALUE_COUNT] = {3, 7, 11, 19};
 \tint total = 0;
-\tfor (int i = 0; i < 4; i++) {
-\t\ttotal += transform_value(values[i]);
+
+\t// Add each transformed value into the running total
+\tfor (int value_index = 0; value_index < VALUE_COUNT; value_index++) {
+\t\ttotal += transform_value(values[value_index]);
 \t}
+
 \tprintf("total=%d\\n", total);
 \treturn 0;
 }
 `,
-			"solution/routine.S": `.global transform_value
+			"solution/routine.S": `.equ TRANSFORM_OFFSET, 5
+
+.global transform_value
 transform_value:
-\tleal 5(%rdi,%rdi), %eax
+\t# Return input * 2 + TRANSFORM_OFFSET in eax
+\tleal TRANSFORM_OFFSET(%rdi,%rdi), %eax
 \tret
 `
 		},
@@ -791,57 +814,95 @@ transform_value:
 			"starter/main.c": `#include <stdio.h>
 #include <string.h>
 
-typedef struct {
-\tchar label[32];
-\tint value;
-} Record;
+enum {
+\tMAX_LABEL_LENGTH = 32,
+\tRECORD_COUNT = 3
+};
 
-int summarize_records(const Record *records, int count) {
+// Store one labeled integer record
+typedef struct {
+\tchar label[MAX_LABEL_LENGTH];
+\tint value;
+} record_t;
+
+// Summarize records after the learner adds the target rule
+static int summarize_records(const record_t *records, int record_count) {
 \tint total = 0;
-\tfor (int i = 0; i < count; i++) {
-\t\t// TODO: fold the current record into the total in a safer, clearer way.
+
+\t// Fold each record into the running summary
+\tfor (int record_index = 0; record_index < record_count; record_index++) {
+\t\t// TODO: Fold the current record into the total in a safer, clearer way
 \t\t(void)records;
 \t}
+
 \treturn total;
 }
 
+/**
+ * @brief Run the record summary example
+ *
+ * @return Zero when the program completes
+ */
 int main(void) {
-\tRecord records[] = {
+\tconst record_t records[RECORD_COUNT] = {
 \t\t{"alpha", 4},
 \t\t{"beta", 9},
 \t\t{"gamma", 15},
 \t};
-\tprintf("summary=%d\\n", summarize_records(records, 3));
+
+\tprintf("summary=%d\\n", summarize_records(records, RECORD_COUNT));
 \treturn 0;
 }
 `,
 			"solution/main.c": `#include <stdio.h>
 #include <string.h>
 
-typedef struct {
-\tchar label[32];
-\tint value;
-} Record;
+enum {
+\tMAX_LABEL_LENGTH = 32,
+\tRECORD_COUNT = 3
+};
 
-int summarize_records(const Record *records, int count) {
+static const int DEFAULT_RECORD_WEIGHT = 1;
+static const int BETA_RECORD_WEIGHT = 2;
+
+// Store one labeled integer record
+typedef struct {
+\tchar label[MAX_LABEL_LENGTH];
+\tint value;
+} record_t;
+
+// Summarize records with a special weight for beta records
+static int summarize_records(const record_t *records, int record_count) {
 \tint total = 0;
-\tfor (int i = 0; i < count; i++) {
-\t\tif (strncmp(records[i].label, "beta", sizeof(records[i].label)) == 0) {
-\t\t\ttotal += records[i].value * 2;
+
+\t// Fold each record into the running summary
+\tfor (int record_index = 0; record_index < record_count; record_index++) {
+\t\tconst record_t *current_record = &records[record_index];
+
+\t\t// Apply the higher beta weight when the label matches
+\t\tif (strncmp(current_record->label, "beta", sizeof(current_record->label)) == 0) {
+\t\t\ttotal += current_record->value * BETA_RECORD_WEIGHT;
 \t\t} else {
-\t\t\ttotal += records[i].value;
+\t\t\ttotal += current_record->value * DEFAULT_RECORD_WEIGHT;
 \t\t}
 \t}
+
 \treturn total;
 }
 
+/**
+ * @brief Run the record summary example
+ *
+ * @return Zero when the program completes
+ */
 int main(void) {
-\tRecord records[] = {
+\tconst record_t records[RECORD_COUNT] = {
 \t\t{"alpha", 4},
 \t\t{"beta", 9},
 \t\t{"gamma", 15},
 \t};
-\tprintf("summary=%d\\n", summarize_records(records, 3));
+
+\tprintf("summary=%d\\n", summarize_records(records, RECORD_COUNT));
 \treturn 0;
 }
 `
@@ -852,20 +913,43 @@ int main(void) {
 #include <string>
 #include <vector>
 
-std::vector<int> transformValues(const std::vector<int>& values) {
+constexpr int TRANSFORM_MULTIPLIER = 2;
+constexpr int TRANSFORM_OFFSET = 1;
+
+/**
+ * @brief Transform each input value into a new output vector
+ *
+ * @param values Source values to transform
+ *
+ * @return Transformed values
+ */
+std::vector<int> transform_values(const std::vector<int>& values) {
 \tstd::vector<int> result;
+
+\t// Transform each value and store the result
 \tfor (int value : values) {
-\t\t// TODO: transform each value and push it into result.
-\t\t(void)value;
+\t\t// TODO: Transform each value and push it into result
+\t\tconst int transformed_value = value * TRANSFORM_MULTIPLIER + TRANSFORM_OFFSET;
+\t\t(void)transformed_value;
 \t}
+
 \treturn result;
 }
 
+/**
+ * @brief Run the vector transformation example
+ *
+ * @return Zero when the program completes
+ */
 int main() {
 \tconst std::vector<int> values {3, 8, 13, 21};
-\tfor (int value : transformValues(values)) {
+
+\t// Print each transformed value on its own line
+\tfor (int value : transform_values(values)) {
 \t\tstd::cout << value << "\\n";
 \t}
+
+\treturn 0;
 }
 `,
 			"solution/main.cpp": `#include <algorithm>
@@ -873,20 +957,42 @@ int main() {
 #include <string>
 #include <vector>
 
-std::vector<int> transformValues(const std::vector<int>& values) {
+constexpr int TRANSFORM_MULTIPLIER = 2;
+constexpr int TRANSFORM_OFFSET = 1;
+
+/**
+ * @brief Transform each input value into a new output vector
+ *
+ * @param values Source values to transform
+ *
+ * @return Transformed values
+ */
+std::vector<int> transform_values(const std::vector<int>& values) {
 \tstd::vector<int> result;
 \tresult.reserve(values.size());
+
+\t// Transform each value and store the result
 \tfor (int value : values) {
-\t\tresult.push_back(value * 2 + 1);
+\t\tresult.push_back(value * TRANSFORM_MULTIPLIER + TRANSFORM_OFFSET);
 \t}
+
 \treturn result;
 }
 
+/**
+ * @brief Run the vector transformation example
+ *
+ * @return Zero when the program completes
+ */
 int main() {
 \tconst std::vector<int> values {3, 8, 13, 21};
-\tfor (int value : transformValues(values)) {
+
+\t// Print each transformed value on its own line
+\tfor (int value : transform_values(values)) {
 \t\tstd::cout << value << "\\n";
 \t}
+
+\treturn 0;
 }
 `
 		},
@@ -895,23 +1001,34 @@ int main() {
 #include <memory>
 #include <string>
 
+// Define the shared formatter interface
 class Formatter {
 public:
 \tvirtual ~Formatter() = default;
+
+\t// Format text using the selected strategy
 \tvirtual std::string format(const std::string& input) const = 0;
 };
 
+// Keep the title-formatting implementation separate from the caller
 class TitleFormatter : public Formatter {
 public:
+\t// Return the original input until the learner implements the strategy
 \tstd::string format(const std::string& input) const override {
-\t\t// TODO: return a transformed representation.
+\t\t// TODO: Return a transformed representation
 \t\treturn input;
 \t}
 };
 
+/**
+ * @brief Run the formatter strategy example
+ *
+ * @return Zero when the program completes
+ */
 int main() {
 \tstd::unique_ptr<Formatter> formatter = std::make_unique<TitleFormatter>();
 \tstd::cout << formatter->format("design patterns") << "\\n";
+\treturn 0;
 }
 `,
 			"solution/main.cpp": `#include <cctype>
@@ -919,112 +1036,246 @@ int main() {
 #include <memory>
 #include <string>
 
+// Define the shared formatter interface
 class Formatter {
 public:
 \tvirtual ~Formatter() = default;
+
+\t// Format text using the selected strategy
 \tvirtual std::string format(const std::string& input) const = 0;
 };
 
+// Keep the title-formatting implementation separate from the caller
 class TitleFormatter : public Formatter {
 public:
+\t// Format the input as title-style text
 \tstd::string format(const std::string& input) const override {
 \t\tstd::string output = input;
-\t\tbool makeUpper = true;
+\t\tbool make_upper = true;
+
+\t\t// Promote the first character after each word boundary
 \t\tfor (char& ch : output) {
+\t\t\t// Start a new word after whitespace
 \t\t\tif (std::isspace(static_cast<unsigned char>(ch))) {
-\t\t\t\tmakeUpper = true;
+\t\t\t\tmake_upper = true;
 \t\t\t\tcontinue;
 \t\t\t}
-\t\t\tif (makeUpper) {
+
+\t\t\t// Convert the first character of each word to uppercase
+\t\t\tif (make_upper) {
 \t\t\t\tch = static_cast<char>(std::toupper(static_cast<unsigned char>(ch)));
-\t\t\t\tmakeUpper = false;
+\t\t\t\tmake_upper = false;
 \t\t\t}
 \t\t}
+
 \t\treturn output;
 \t}
 };
 
+/**
+ * @brief Run the formatter strategy example
+ *
+ * @return Zero when the program completes
+ */
 int main() {
 \tstd::unique_ptr<Formatter> formatter = std::make_unique<TitleFormatter>();
 \tstd::cout << formatter->format("design patterns") << "\\n";
+\treturn 0;
 }
 `
 		},
 		java: {
 			"starter/Main.java": `import java.util.List;
 
+/**
+ * @brief Practice list traversal with a named scoring helper
+ */
 public class Main {
-\tprivate static int computeScore(List<Integer> values) {
+\tprivate static final List<Integer> DEFAULT_VALUES = List.of(2, 5, 8, 13);
+
+\t/**
+\t * @brief Compute a score from a list of values
+\t *
+\t * @param values Values to score
+\t *
+\t * @return Total score
+\t */
+\tprivate static int compute_score(List<Integer> values) {
 \t\tint total = 0;
+
+\t\t// Fold each value into the running total
 \t\tfor (int value : values) {
-\t\t\t// TODO: update the scoring rule.
+\t\t\t// TODO: Update the scoring rule
 \t\t}
+
 \t\treturn total;
 \t}
 
+\t/**
+\t * @brief Run the scoring example
+\t *
+\t * @param args Command-line arguments
+\t */
 \tpublic static void main(String[] args) {
-\t\tSystem.out.println(computeScore(List.of(2, 5, 8, 13)));
+\t\tSystem.out.println(compute_score(DEFAULT_VALUES));
 \t}
 }
 `,
 			"solution/Main.java": `import java.util.List;
 
+/**
+ * @brief Practice list traversal with a named scoring helper
+ */
 public class Main {
-\tprivate static int computeScore(List<Integer> values) {
+\tprivate static final int EVEN_DIVISOR = 2;
+\tprivate static final int ODD_MULTIPLIER = 2;
+\tprivate static final List<Integer> DEFAULT_VALUES = List.of(2, 5, 8, 13);
+
+\t/**
+\t * @brief Compute a score from a list of values
+\t *
+\t * @param values Values to score
+\t *
+\t * @return Total score
+\t */
+\tprivate static int compute_score(List<Integer> values) {
 \t\tint total = 0;
+
+\t\t// Fold each value into the running total
 \t\tfor (int value : values) {
-\t\t\ttotal += value % 2 == 0 ? value / 2 : value * 2;
+\t\t\t// Score even values differently from odd values
+\t\t\tif (value % EVEN_DIVISOR == 0) {
+\t\t\t\ttotal += value / EVEN_DIVISOR;
+\t\t\t} else {
+\t\t\t\ttotal += value * ODD_MULTIPLIER;
+\t\t\t}
 \t\t}
+
 \t\treturn total;
 \t}
 
+\t/**
+\t * @brief Run the scoring example
+\t *
+\t * @param args Command-line arguments
+\t */
 \tpublic static void main(String[] args) {
-\t\tSystem.out.println(computeScore(List.of(2, 5, 8, 13)));
+\t\tSystem.out.println(compute_score(DEFAULT_VALUES));
 \t}
 }
 `
 		},
 		"java-pattern": {
-			"starter/Main.java": `interface PricingStrategy {
-\tdouble priceFor(int units);
+			"starter/Main.java": `/**
+ * @brief Define the pricing behavior shared by all strategies
+ */
+interface PricingStrategy {
+\t/**
+\t * @brief Compute a price for the requested unit count
+\t *
+\t * @param units Number of units being purchased
+\t *
+\t * @return Total price
+\t */
+\tdouble price_for(int units);
 }
 
+/**
+ * @brief Apply bulk-pricing behavior behind a shared interface
+ */
 final class BulkPricingStrategy implements PricingStrategy {
+\t/**
+\t * @brief Compute a price for the requested unit count
+\t *
+\t * @param units Number of units being purchased
+\t *
+\t * @return Total price
+\t */
 \t@Override
-\tpublic double priceFor(int units) {
-\t\t// TODO: apply a smarter pricing strategy.
+\tpublic double price_for(int units) {
+\t\t// TODO: Apply a smarter pricing strategy
 \t\treturn units;
 \t}
 }
 
+/**
+ * @brief Run the pricing strategy example
+ */
 public class Main {
+\tprivate static final int SAMPLE_UNITS = 6;
+
+\t/**
+\t * @brief Run the pricing strategy example
+\t *
+\t * @param args Command-line arguments
+\t */
 \tpublic static void main(String[] args) {
 \t\tPricingStrategy strategy = new BulkPricingStrategy();
-\t\tSystem.out.println(strategy.priceFor(6));
+\t\tSystem.out.println(strategy.price_for(SAMPLE_UNITS));
 \t}
 }
 `,
-			"solution/Main.java": `interface PricingStrategy {
-\tdouble priceFor(int units);
+			"solution/Main.java": `/**
+ * @brief Define the pricing behavior shared by all strategies
+ */
+interface PricingStrategy {
+\t/**
+\t * @brief Compute a price for the requested unit count
+\t *
+\t * @param units Number of units being purchased
+\t *
+\t * @return Total price
+\t */
+\tdouble price_for(int units);
 }
 
+/**
+ * @brief Apply bulk-pricing behavior behind a shared interface
+ */
 final class BulkPricingStrategy implements PricingStrategy {
+\tprivate static final int LARGE_ORDER_THRESHOLD = 10;
+\tprivate static final int MEDIUM_ORDER_THRESHOLD = 5;
+\tprivate static final double LARGE_ORDER_UNIT_PRICE = 2.5;
+\tprivate static final double MEDIUM_ORDER_UNIT_PRICE = 3.0;
+\tprivate static final double SMALL_ORDER_UNIT_PRICE = 3.5;
+
+\t/**
+\t * @brief Compute a price for the requested unit count
+\t *
+\t * @param units Number of units being purchased
+\t *
+\t * @return Total price
+\t */
 \t@Override
-\tpublic double priceFor(int units) {
-\t\tif (units >= 10) {
-\t\t\treturn units * 2.5;
+\tpublic double price_for(int units) {
+\t\t// Apply the largest-order price first
+\t\tif (units >= LARGE_ORDER_THRESHOLD) {
+\t\t\treturn units * LARGE_ORDER_UNIT_PRICE;
 \t\t}
-\t\tif (units >= 5) {
-\t\t\treturn units * 3.0;
+
+\t\t// Apply the medium-order price before the fallback
+\t\tif (units >= MEDIUM_ORDER_THRESHOLD) {
+\t\t\treturn units * MEDIUM_ORDER_UNIT_PRICE;
 \t\t}
-\t\treturn units * 3.5;
+
+\t\treturn units * SMALL_ORDER_UNIT_PRICE;
 \t}
 }
 
+/**
+ * @brief Run the pricing strategy example
+ */
 public class Main {
+\tprivate static final int SAMPLE_UNITS = 6;
+
+\t/**
+\t * @brief Run the pricing strategy example
+\t *
+\t * @param args Command-line arguments
+\t */
 \tpublic static void main(String[] args) {
 \t\tPricingStrategy strategy = new BulkPricingStrategy();
-\t\tSystem.out.println(strategy.priceFor(6));
+\t\tSystem.out.println(strategy.price_for(SAMPLE_UNITS));
 \t}
 }
 `
@@ -1033,8 +1284,11 @@ public class Main {
 			"starter/task.sh": `#!/usr/bin/env bash
 set -euo pipefail
 
-# TODO: summarize the log file more carefully.
-grep -c "ERROR" sample.log
+readonly LOG_FILE="sample.log"
+readonly ERROR_PATTERN="ERROR"
+
+# TODO: Summarize the log file more carefully
+grep -c "$ERROR_PATTERN" "$LOG_FILE"
 `,
 			"starter/sample.log": `INFO booting
 WARNING low-disk
@@ -1045,8 +1299,14 @@ ERROR timeout
 			"solution/task.sh": `#!/usr/bin/env bash
 set -euo pipefail
 
-error_count=$(grep -c "ERROR" sample.log || true)
-warning_count=$(grep -c "WARNING" sample.log || true)
+readonly LOG_FILE="sample.log"
+readonly ERROR_PATTERN="ERROR"
+readonly WARNING_PATTERN="WARNING"
+
+# Count error and warning lines without failing on zero matches
+error_count=$(grep -c "$ERROR_PATTERN" "$LOG_FILE" || true)
+warning_count=$(grep -c "$WARNING_PATTERN" "$LOG_FILE" || true)
+
 printf 'errors=%s warnings=%s\\n' "$error_count" "$warning_count"
 `,
 			"solution/sample.log": `INFO booting
@@ -1057,61 +1317,76 @@ ERROR timeout
 `
 		},
 		python: {
-			"starter/main.py": `def transform(values: list[int]) -> list[int]:
+			"starter/main.py": `#####################
+###   CONSTANTS   ###
+#####################
+SAMPLE_VALUES = [3, 7, 11, 19]
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Transform each source value into a result list
+def transform(values: list[int]) -> list[int]:
 \tresult: list[int] = []
+
+\t# Visit each value before deciding how to transform it
 \tfor value in values:
-\t\t# TODO: transform the current value and append it to result.
+\t\t# TODO: Transform the current value and append it to result
 \t\tpass
+
 \treturn result
 
 
+# Run the sample transformation
 def main() -> None:
-\tprint(transform([3, 7, 11, 19]))
+\tprint(transform(SAMPLE_VALUES))
 
 
+#####################
+###   MAIN CODE   ###
+#####################
 if __name__ == "__main__":
 \tmain()
 `,
-			"solution/main.py": `def transform(values: list[int]) -> list[int]:
+			"solution/main.py": `#####################
+###   CONSTANTS   ###
+#####################
+SAMPLE_VALUES = [3, 7, 11, 19]
+TRANSFORM_MULTIPLIER = 2
+TRANSFORM_OFFSET = 1
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Transform each source value into a result list
+def transform(values: list[int]) -> list[int]:
 \tresult: list[int] = []
+
+\t# Visit each value before applying the transform
 \tfor value in values:
-\t\tresult.append(value * 2 + 1)
+\t\tresult.append(value * TRANSFORM_MULTIPLIER + TRANSFORM_OFFSET)
+
 \treturn result
 
 
+# Run the sample transformation
 def main() -> None:
-\tprint(transform([3, 7, 11, 19]))
+\tprint(transform(SAMPLE_VALUES))
 
 
+#####################
+###   MAIN CODE   ###
+#####################
 if __name__ == "__main__":
 \tmain()
 `
 		},
 		"python-ai": {
-			"starter/main.py": `GRAPH = {
-\t"A": ["B", "C"],
-\t"B": ["D"],
-\t"C": ["E", "F"],
-\t"D": [],
-\t"E": [],
-\t"F": [],
-}
-
-
-def breadth_first_path(start: str, goal: str) -> list[str]:
-\t# TODO: return one path from start to goal.
-\treturn []
-
-
-def main() -> None:
-\tprint(breadth_first_path("A", "F"))
-
-
-if __name__ == "__main__":
-\tmain()
-`,
-			"solution/main.py": `from collections import deque
-
+			"starter/main.py": `#####################
+###   CONSTANTS   ###
+#####################
 GRAPH = {
 \t"A": ["B", "C"],
 \t"B": ["D"],
@@ -1120,27 +1395,82 @@ GRAPH = {
 \t"E": [],
 \t"F": [],
 }
+START_NODE = "A"
+GOAL_NODE = "F"
 
 
+#####################
+###   FUNCTIONS   ###
+#####################
+# Find one breadth-first path from the start node to the goal node
 def breadth_first_path(start: str, goal: str) -> list[str]:
-\tqueue: deque[list[str]] = deque([[start]])
-\tvisited = {start}
-\twhile queue:
-\t\tpath = queue.popleft()
-\t\tnode = path[-1]
-\t\tif node == goal:
-\t\t\treturn path
-\t\tfor neighbor in GRAPH[node]:
-\t\t\tif neighbor not in visited:
-\t\t\t\tvisited.add(neighbor)
-\t\t\t\tqueue.append([*path, neighbor])
+\t# TODO: Return one path from start to goal
 \treturn []
 
 
+# Run the sample search
 def main() -> None:
-\tprint(breadth_first_path("A", "F"))
+\tprint(breadth_first_path(START_NODE, GOAL_NODE))
 
 
+#####################
+###   MAIN CODE   ###
+#####################
+if __name__ == "__main__":
+\tmain()
+`,
+			"solution/main.py": `from collections import deque
+
+#####################
+###   CONSTANTS   ###
+#####################
+GRAPH = {
+\t"A": ["B", "C"],
+\t"B": ["D"],
+\t"C": ["E", "F"],
+\t"D": [],
+\t"E": [],
+\t"F": [],
+}
+START_NODE = "A"
+GOAL_NODE = "F"
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Find one breadth-first path from the start node to the goal node
+def breadth_first_path(start: str, goal: str) -> list[str]:
+\tqueue: deque[list[str]] = deque([[start]])
+\tvisited = {start}
+
+\t# Explore queued paths until a goal path is found
+\twhile queue:
+\t\tpath = queue.popleft()
+\t\tnode = path[-1]
+
+\t\t# Stop when the current path reaches the goal
+\t\tif node == goal:
+\t\t\treturn path
+
+\t\t# Add each unvisited neighbor as a new candidate path
+\t\tfor neighbor in GRAPH[node]:
+\t\t\t# Skip neighbors that already have a queued path
+\t\t\tif neighbor not in visited:
+\t\t\t\tvisited.add(neighbor)
+\t\t\t\tqueue.append([*path, neighbor])
+
+\treturn []
+
+
+# Run the sample search
+def main() -> None:
+\tprint(breadth_first_path(START_NODE, GOAL_NODE))
+
+
+#####################
+###   MAIN CODE   ###
+#####################
 if __name__ == "__main__":
 \tmain()
 `
@@ -1155,22 +1485,36 @@ delta,17
 			"starter/main.py": `import csv
 from pathlib import Path
 
+#####################
+###   CONSTANTS   ###
+#####################
+DATA_FILE = Path("data/sample.csv")
 
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Load integer values from the sample CSV file
 def load_values() -> list[int]:
-\twith Path("data/sample.csv").open() as handle:
+\twith DATA_FILE.open() as handle:
 \t\treader = csv.DictReader(handle)
 \t\treturn [int(row["value"]) for row in reader]
 
 
+# Build summary statistics for a value list
 def summarize(values: list[int]) -> dict[str, float]:
-\t# TODO: compute count, total, and average.
+\t# TODO: Compute count, total, and average
 \treturn {"count": 0, "total": 0, "average": 0.0}
 
 
+# Run the sample data summary
 def main() -> None:
 \tprint(summarize(load_values()))
 
 
+#####################
+###   MAIN CODE   ###
+#####################
 if __name__ == "__main__":
 \tmain()
 `,
@@ -1183,96 +1527,190 @@ delta,17
 			"solution/main.py": `import csv
 from pathlib import Path
 
+#####################
+###   CONSTANTS   ###
+#####################
+DATA_FILE = Path("data/sample.csv")
+COUNT_KEY = "count"
+TOTAL_KEY = "total"
+AVERAGE_KEY = "average"
 
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Load integer values from the sample CSV file
 def load_values() -> list[int]:
-\twith Path("data/sample.csv").open() as handle:
+\twith DATA_FILE.open() as handle:
 \t\treader = csv.DictReader(handle)
 \t\treturn [int(row["value"]) for row in reader]
 
 
+# Build summary statistics for a value list
 def summarize(values: list[int]) -> dict[str, float]:
 \ttotal = sum(values)
 \tcount = len(values)
 \taverage = total / count if count else 0.0
-\treturn {"count": count, "total": total, "average": average}
+
+\treturn {COUNT_KEY: count, TOTAL_KEY: total, AVERAGE_KEY: average}
 
 
+# Run the sample data summary
 def main() -> None:
 \tprint(summarize(load_values()))
 
 
+#####################
+###   MAIN CODE   ###
+#####################
 if __name__ == "__main__":
 \tmain()
 `
 		},
 		"python-pattern": {
-			"starter/main.py": `class Formatter:
+			"starter/main.py": `#####################
+###   CONSTANTS   ###
+#####################
+SAMPLE_TEXT = "design patterns"
+
+
+#####################
+###   CLASSES   ###
+#####################
+# Define the shared formatter contract
+class Formatter:
 \tdef format(self, text: str) -> str:
 \t\traise NotImplementedError
 
 
+# Define the title-formatting implementation
 class TitleFormatter(Formatter):
 \tdef format(self, text: str) -> str:
-\t\t# TODO: return a transformed string.
+\t\t# TODO: Return a transformed string
 \t\treturn text
 
 
+#####################
+###   FUNCTIONS   ###
+#####################
+# Run the formatter example
 def main() -> None:
-\tprint(TitleFormatter().format("design patterns"))
+\tprint(TitleFormatter().format(SAMPLE_TEXT))
 
 
+#####################
+###   MAIN CODE   ###
+#####################
 if __name__ == "__main__":
 \tmain()
 `,
-			"solution/main.py": `class Formatter:
+			"solution/main.py": `#####################
+###   CONSTANTS   ###
+#####################
+SAMPLE_TEXT = "design patterns"
+
+
+#####################
+###   CLASSES   ###
+#####################
+# Define the shared formatter contract
+class Formatter:
 \tdef format(self, text: str) -> str:
 \t\traise NotImplementedError
 
 
+# Define the title-formatting implementation
 class TitleFormatter(Formatter):
 \tdef format(self, text: str) -> str:
 \t\treturn text.title()
 
 
+#####################
+###   FUNCTIONS   ###
+#####################
+# Run the formatter example
 def main() -> None:
-\tprint(TitleFormatter().format("design patterns"))
+\tprint(TitleFormatter().format(SAMPLE_TEXT))
 
 
+#####################
+###   MAIN CODE   ###
+#####################
 if __name__ == "__main__":
 \tmain()
 `
 		},
 		"python-security": {
-			"starter/main.py": `def normalize_ports(raw_values: list[str]) -> list[int]:
+			"starter/main.py": `#####################
+###   CONSTANTS   ###
+#####################
+SAMPLE_RAW_PORTS = ["22", "443", "8080", "bad"]
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Normalize raw port strings into integer ports
+def normalize_ports(raw_values: list[str]) -> list[int]:
 \tnormalized: list[int] = []
+
+\t# Review each raw value before adding it to the result
 \tfor raw_value in raw_values:
-\t\t# TODO: parse the current entry, reject invalid ports, and append safe values.
+\t\t# TODO: Parse the current entry, reject invalid ports, and append safe values
 \t\tpass
+
 \treturn normalized
 
 
+# Run the sample port normalization
 def main() -> None:
-\tprint(normalize_ports(["22", "443", "8080", "bad"]))
+\tprint(normalize_ports(SAMPLE_RAW_PORTS))
 
 
+#####################
+###   MAIN CODE   ###
+#####################
 if __name__ == "__main__":
 \tmain()
 `,
-			"solution/main.py": `def normalize_ports(raw_values: list[str]) -> list[int]:
+			"solution/main.py": `#####################
+###   CONSTANTS   ###
+#####################
+MIN_PORT_NUMBER = 1
+MAX_PORT_NUMBER = 65535
+SAMPLE_RAW_PORTS = ["22", "443", "8080", "bad"]
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Normalize raw port strings into integer ports
+def normalize_ports(raw_values: list[str]) -> list[int]:
 \tnormalized: list[int] = []
+
+\t# Review each raw value before adding it to the result
 \tfor raw_value in raw_values:
+\t\t# Skip values that are not written as digits
 \t\tif not raw_value.isdigit():
 \t\t\tcontinue
+
 \t\tport = int(raw_value)
-\t\tif 1 <= port <= 65535:
+
+\t\t# Accept only values inside the valid TCP/UDP port range
+\t\tif MIN_PORT_NUMBER <= port <= MAX_PORT_NUMBER:
 \t\t\tnormalized.append(port)
+
 \treturn normalized
 
 
+# Run the sample port normalization
 def main() -> None:
-\tprint(normalize_ports(["22", "443", "8080", "bad"]))
+\tprint(normalize_ports(SAMPLE_RAW_PORTS))
 
 
+#####################
+###   MAIN CODE   ###
+#####################
 if __name__ == "__main__":
 \tmain()
 `
@@ -1283,13 +1721,17 @@ name = "rust_systems_security_lab"
 version = "0.1.0"
 edition = "2021"
 `,
-			"starter/src/main.rs": `fn sanitize(input: &str) -> String {
-\t// TODO: keep only ASCII alphanumeric characters and dashes.
+			"starter/src/main.rs": `const SAMPLE_INPUT: &str = "packet-42!";
+
+// Sanitize one input string for safe display
+fn sanitize(input: &str) -> String {
+\t// TODO: Keep only ASCII alphanumeric characters and dashes
 \tinput.to_string()
 }
 
+// Run the sanitizer example
 fn main() {
-\tprintln!("{}", sanitize("packet-42!"));
+\tprintln!("{}", sanitize(SAMPLE_INPUT));
 }
 `,
 			"solution/Cargo.toml": `[package]
@@ -1297,23 +1739,30 @@ name = "rust_systems_security_lab"
 version = "0.1.0"
 edition = "2021"
 `,
-			"solution/src/main.rs": `fn sanitize(input: &str) -> String {
+			"solution/src/main.rs": `const SAMPLE_INPUT: &str = "packet-42!";
+
+// Sanitize one input string for safe display
+fn sanitize(input: &str) -> String {
+\t// Keep only characters allowed in the sanitized identifier
 \tinput
 \t\t.chars()
 \t\t.filter(|ch| ch.is_ascii_alphanumeric() || *ch == '-')
 \t\t.collect()
 }
 
+// Run the sanitizer example
 fn main() {
-\tprintln!("{}", sanitize("packet-42!"));
+\tprintln!("{}", sanitize(SAMPLE_INPUT));
 }
 `
 		},
 		swift: {
 			"starter/App.swift": `import SwiftUI
 
+// Define the starter SwiftUI app entry point
 @main
 struct StarterApp: App {
+\t// Create the main app scene
 \tvar body: some Scene {
 \t\tWindowGroup {
 \t\t\tContentView()
@@ -1323,11 +1772,17 @@ struct StarterApp: App {
 `,
 			"starter/ContentView.swift": `import SwiftUI
 
+private let PROJECT_TITLE = "${projectTitle}"
+private let TODO_MESSAGE = "TODO: replace this with the module UI"
+private let CONTENT_SPACING = 16.0
+
+// Define the starter content view
 struct ContentView: View {
+\t// Build the visible starter interface
 \tvar body: some View {
-\t\tVStack(spacing: 16) {
-\t\t\tText("${projectTitle}")
-\t\t\tText("TODO: replace this with the module UI.")
+\t\tVStack(spacing: CONTENT_SPACING) {
+\t\t\tText(PROJECT_TITLE)
+\t\t\tText(TODO_MESSAGE)
 \t\t}
 \t\t.padding()
 \t}
@@ -1335,8 +1790,10 @@ struct ContentView: View {
 `,
 			"solution/App.swift": `import SwiftUI
 
+// Define the solution SwiftUI app entry point
 @main
 struct SolutionApp: App {
+\t// Create the main app scene
 \tvar body: some Scene {
 \t\tWindowGroup {
 \t\t\tContentView()
@@ -1346,15 +1803,23 @@ struct SolutionApp: App {
 `,
 			"solution/ContentView.swift": `import SwiftUI
 
-struct ContentView: View {
-\t@State private var isComplete = false
+private let PROJECT_TITLE = "${projectTitle}"
+private let READY_MESSAGE = "Ready for extension work"
+private let START_MESSAGE = "Work through the core requirements first"
+private let TOGGLE_BUTTON_LABEL = "Toggle Status"
+private let CONTENT_SPACING = 16.0
 
+// Define the solution content view
+struct ContentView: View {
+\t@State private var is_complete = false
+
+\t// Build the visible solution interface
 \tvar body: some View {
-\t\tVStack(spacing: 16) {
-\t\t\tText("${projectTitle}")
-\t\t\tText(isComplete ? "Ready for extension work." : "Work through the core requirements first.")
-\t\t\tButton("Toggle Status") {
-\t\t\t\tisComplete.toggle()
+\t\tVStack(spacing: CONTENT_SPACING) {
+\t\t\tText(PROJECT_TITLE)
+\t\t\tText(is_complete ? READY_MESSAGE : START_MESSAGE)
+\t\t\tButton(TOGGLE_BUTTON_LABEL) {
+\t\t\t\tis_complete.toggle()
 \t\t\t}
 \t\t}
 \t\t.padding()
@@ -1398,11 +1863,12 @@ struct ContentView: View {
 \tbox-shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
 }
 `,
-			"starter/script.js": `const button = document.querySelector("#action");
-const entries = document.querySelector("#entries");
+			"starter/script.js": `const action_button = document.querySelector("#action");
+const entry_list = document.querySelector("#entries");
 
-button.addEventListener("click", () => {
-\t// TODO: append a new list item that reflects the module work.
+// Add a new checkpoint entry when the button is clicked
+action_button.addEventListener("click", () => {
+\t// TODO: Append a new list item that reflects the module work
 });
 `,
 			"solution/index.html": `<!doctype html>
@@ -1444,16 +1910,17 @@ li + li {
 \tmargin-top: 10px;
 }
 `,
-			"solution/script.js": `const button = document.querySelector("#action");
-const entries = document.querySelector("#entries");
+			"solution/script.js": `const action_button = document.querySelector("#action");
+const entry_list = document.querySelector("#entries");
 
-let count = 0;
+let entry_count = 0;
 
-button.addEventListener("click", () => {
-\tcount += 1;
+// Add a new checkpoint entry when the button is clicked
+action_button.addEventListener("click", () => {
+\tentry_count += 1;
 \tconst item = document.createElement("li");
-\titem.textContent = \`Entry \${count}: module checkpoint recorded.\`;
-\tentries.append(item);
+\titem.textContent = \`Entry \${entry_count}: module checkpoint recorded\`;
+\tentry_list.append(item);
 });
 `
 		}
