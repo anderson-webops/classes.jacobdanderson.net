@@ -1,6 +1,7 @@
 import type { Server } from "node:http";
 import type { RequestHandler } from "express";
 import express from "express";
+import { Types } from "mongoose";
 import { describe, expect, it } from "vitest";
 import {
 	createAdminMailLimiter,
@@ -9,7 +10,9 @@ import {
 import { renderMarkdownEmailHtml } from "../src/utils/markdownEmail.js";
 import {
 	defaultSessionNoteSubject,
-	parseScheduledSessionPayload
+	documentReferenceID,
+	parseScheduledSessionPayload,
+	serializeScheduledSession
 } from "../src/utils/scheduledSessions.js";
 
 async function withServer<T>(
@@ -145,6 +148,30 @@ describe("security dependency regressions", () => {
 				endAt: "2026-05-12T18:00:00.000Z"
 			})
 		).toThrow("endAt must be after startAt");
+	});
+
+	it("serializes scheduled sessions with populated document references", () => {
+		const userID = new Types.ObjectId();
+		const tutorID = new Types.ObjectId();
+		const sessionID = new Types.ObjectId();
+		const date = new Date("2026-05-12T18:00:00.000Z");
+		const session = {
+			_id: sessionID,
+			user: { _id: userID },
+			tutor: { _id: tutorID },
+			title: "Class session",
+			startAt: date,
+			endAt: new Date(date.getTime() + 60 * 60_000),
+			timezone: "America/New_York",
+			status: "scheduled",
+			createdAt: date,
+			updatedAt: date
+		} as unknown as Parameters<typeof serializeScheduledSession>[0];
+		const serialized = serializeScheduledSession(session);
+
+		expect(documentReferenceID({ _id: tutorID })).toBe(tutorID.toString());
+		expect(serialized.user).toBe(userID.toString());
+		expect(serialized.tutor).toBe(tutorID.toString());
 	});
 
 	it("creates stable default session-note subjects from UTC dates", () => {

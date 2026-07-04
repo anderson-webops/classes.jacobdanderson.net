@@ -53,6 +53,7 @@ const tutorID = new Types.ObjectId();
 const otherTutorID = new Types.ObjectId();
 const adminID = new Types.ObjectId();
 const studentID = new Types.ObjectId();
+const sessionID = new Types.ObjectId();
 const now = new Date("2026-05-12T18:00:00.000Z");
 
 function queryWith<T>(result: T) {
@@ -80,7 +81,7 @@ function makeStudent(tutors: unknown[] = [tutorID]) {
 
 function makeSession(overrides: Record<string, unknown> = {}) {
 	return {
-		_id: new Types.ObjectId(),
+		_id: sessionID,
 		user: studentID,
 		tutor: tutorID,
 		title: "Class session",
@@ -256,6 +257,40 @@ describe("user schedule and note-only routes", () => {
 					sourceEmail: "student@example.com"
 				})
 			);
+		});
+	});
+
+	it("updates scheduled sessions whose existing tutor record is populated", async () => {
+		const save = vi.fn().mockResolvedValue(undefined);
+		const session = makeSession({
+			tutor: { _id: tutorID, name: "Tutor" },
+			save
+		});
+		modelMocks.scheduledSessionFindOne.mockResolvedValue(session);
+
+		await withUserRoutes(async baseUrl => {
+			const response = await putJson(
+				baseUrl,
+				`/users/${studentID}/schedule/${sessionID}`,
+				{
+					title: "Updated C++ lesson",
+					startAt: "2026-05-12T18:30:00.000Z",
+					endAt: "2026-05-12T19:30:00.000Z",
+					timezone: "America/New_York"
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(modelMocks.scheduledSessionFindOne).toHaveBeenCalledWith({
+				_id: sessionID.toString(),
+				user: studentID
+			});
+			expect(save).toHaveBeenCalledOnce();
+			expect(session.title).toBe("Updated C++ lesson");
+			expect(session.tutor).toEqual(tutorID);
+			expect(body.scheduledSession.tutor).toBe(tutorID.toString());
 		});
 	});
 
