@@ -1006,6 +1006,41 @@ public class Main {
 		});
 	});
 
+	it("keeps Karel animation snapshots independent as beeper counts change", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.World;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(1, 1, East, 2);
+        sam.putBeeper();
+        sam.putBeeper();
+    }
+
+    static {
+        World.readWorld("world.txt");
+    }
+}`
+				},
+				{ name: "world.txt", content: "rows=3\ncols=3\n" }
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorldSteps?.map(step => step.beepers[0]?.count)).toEqual([
+			undefined,
+			1,
+			2
+		]);
+	});
+
 	it("runs Karel helper methods and simple loops from main only", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
