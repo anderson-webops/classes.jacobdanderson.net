@@ -506,6 +506,29 @@ describe("python IDE project helpers", () => {
 		expect(result.skippedFiles).toEqual([]);
 	});
 
+	it("keeps BlueJ project root stripping stable when unsupported sibling folders are present", () => {
+		const archiveBytes = zipSync({
+			"Student-Lab/Main.java": strToU8("public class Main {}"),
+			"Student-Lab/package.bluej": strToU8("#BlueJ package file"),
+			"Screenshots/logo.png": strToU8("not importable")
+		});
+
+		const result = importBlueJProjectArchive(archiveBytes, {
+			maxFiles: 10,
+			maxTextFileBytes: 1024
+		});
+
+		expect(result.hasBlueJPackage).toBe(true);
+		expect(result.files).toEqual([
+			{
+				content: "public class Main {}",
+				encoding: "text",
+				name: "Main.java"
+			}
+		]);
+		expect(result.skippedFiles).toEqual(["Screenshots/logo.png"]);
+	});
+
 	it("skips oversized BlueJ archive entries before import", () => {
 		const archiveBytes = zipSync({
 			"Student-Lab/Main.java": strToU8("public class Main {}"),
