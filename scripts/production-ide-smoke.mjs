@@ -3,7 +3,8 @@ import { pathToFileURL } from "node:url";
 const origin =
 	process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderson.net";
 const timeoutMs = Number(process.env.CLASSES_SITE_SMOKE_TIMEOUT_MS || 15000);
-const pageUrl = new URL("/ide", origin);
+const smokePaths = ["/ide", "/bluej"];
+const pageUrl = new URL(smokePaths[0], origin);
 
 async function fetchText(url) {
 	const controller = new AbortController();
@@ -43,6 +44,10 @@ export function pageAssetUrls(html, baseUrl = pageUrl) {
 	return [...urls];
 }
 
+export function productionIdeSmokePageUrls(baseOrigin = origin) {
+	return smokePaths.map(path => new URL(path, baseOrigin));
+}
+
 export function containsJavaModeCopy(source) {
 	return (
 		source.includes("Python or Java") ||
@@ -71,7 +76,7 @@ export function containsCurrentIdeBundleMarkers(source) {
 	);
 }
 
-export async function runProductionIdeSmoke() {
+async function assertProductionIdePage(pageUrl) {
 	const html = await fetchText(pageUrl);
 	const assetUrls = pageAssetUrls(html);
 	if (!assetUrls.length) {
@@ -108,6 +113,12 @@ export async function runProductionIdeSmoke() {
 	console.log(
 		`OK: ${pageUrl.href} references ${ideAsset.url} with current Code IDE Java/BlueJ markers`
 	);
+}
+
+export async function runProductionIdeSmoke() {
+	for (const smokePageUrl of productionIdeSmokePageUrls()) {
+		await assertProductionIdePage(smokePageUrl);
+	}
 }
 
 const invokedUrl = process.argv[1] ? pathToFileURL(process.argv[1]).href : "";
