@@ -59,6 +59,25 @@ const review = {
 	updatedAt: "2026-06-20T12:05:00.000Z"
 };
 
+const staleProject = {
+	...project,
+	files: [
+		{
+			name: "main.py",
+			content: "print('student latest')\n",
+			encoding: "text"
+		}
+	],
+	updatedAt: "2026-06-20T12:30:00.000Z"
+};
+
+const refreshedReview = {
+	...review,
+	files: staleProject.files,
+	sourceUpdatedAt: staleProject.updatedAt,
+	updatedAt: "2026-06-20T12:31:00.000Z"
+};
+
 function mountTools() {
 	return mount(LearnerCodeReviewTools, {
 		props: {
@@ -141,5 +160,44 @@ describe("LearnerCodeReviewTools", () => {
 				]
 			})
 		);
+	});
+
+	it("warns when the student project changed and refreshes the whole review copy", async () => {
+		moduleMocks.fetchProjects.mockResolvedValue([{ project: staleProject, review }]);
+		moduleMocks.updateReview.mockResolvedValue({
+			project: staleProject,
+			review: refreshedReview
+		});
+		const wrapper = mountTools();
+		await openTools(wrapper);
+
+		expect(wrapper.text()).toContain(
+			"Student code changed after this review copy was created"
+		);
+
+		const refreshButton = wrapper
+			.findAll("button")
+			.find(button => button.text() === "Refresh copy from student");
+		expect(refreshButton).toBeTruthy();
+
+		await refreshButton!.trigger("click");
+		await flushPromises();
+
+		expect(moduleMocks.updateReview).toHaveBeenCalledWith(
+			"student-1",
+			"project-1",
+			"review-1",
+			expect.objectContaining({
+				note: "",
+				refreshFromSource: true,
+				visibleToStudent: false
+			})
+		);
+		expect(
+			(
+				wrapper.find("textarea[aria-label='Edit staff review copy']")
+					.element as HTMLTextAreaElement
+			).value
+		).toContain("student latest");
 	});
 });

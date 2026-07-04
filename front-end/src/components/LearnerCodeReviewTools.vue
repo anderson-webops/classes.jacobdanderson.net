@@ -251,6 +251,41 @@ async function saveReviewCopy() {
 	}
 }
 
+async function refreshReviewCopyFromStudent() {
+	const project = selectedProject.value;
+	const review = selectedReview.value;
+	if (!project || !review) return;
+
+	saving.value = true;
+	error.value = "";
+	success.value = "";
+
+	try {
+		const { project: savedProject, review: savedReview } =
+			await updatePythonIdeProjectReview(
+				props.userId,
+				project._id,
+				review._id,
+				{
+					note: noteDraft.value,
+					refreshFromSource: true,
+					visibleToStudent: visibleDraft.value
+				}
+			);
+		replaceRecord(savedProject, savedReview);
+		selectedFileName.value = savedReview.activeFileName;
+		success.value =
+			"Staff review copy refreshed from the student's current project.";
+	} catch (err: any) {
+		error.value =
+			err.response?.data?.message ??
+			err.message ??
+			"Unable to refresh the review copy.";
+	} finally {
+		saving.value = false;
+	}
+}
+
 function resetFileFromStudent() {
 	editFileContent.value = filePreview(selectedStudentFile.value);
 }
@@ -330,7 +365,7 @@ watch([selectedReview, selectedFileName], syncDrafts, { immediate: true });
 						Review saved {{ formatDate(selectedReview.updatedAt) }}
 					</span>
 					<span v-if="sourceIsNewer" class="is-warning">
-						Student code changed after the review copy was created
+						Student code changed after this review copy was created
 					</span>
 				</div>
 
@@ -418,6 +453,14 @@ watch([selectedReview, selectedFileName], syncDrafts, { immediate: true });
 						@click="resetFileFromStudent"
 					>
 						Reset file from student
+					</button>
+					<button
+						class="btn-secondary btn"
+						:disabled="saving"
+						type="button"
+						@click="refreshReviewCopyFromStudent"
+					>
+						Refresh copy from student
 					</button>
 					<button
 						class="btn-primary btn"

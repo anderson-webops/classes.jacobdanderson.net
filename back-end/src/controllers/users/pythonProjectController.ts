@@ -121,7 +121,8 @@ const projectReviewPayloadSchema = z.object({
 	files: projectFilesSchema.optional(),
 	activeFileName: z.string().trim().min(1).max(80).optional(),
 	visibleToStudent: z.boolean().optional(),
-	note: z.string().trim().max(20000).optional()
+	note: z.string().trim().max(20000).optional(),
+	refreshFromSource: z.boolean().optional()
 });
 
 function serializePythonProject(project: IPythonProject) {
@@ -714,11 +715,28 @@ export const updatePythonProjectReview: RequestHandler = async (req, res) => {
 	]);
 	if (!project || !review) return res.sendStatus(404);
 
-	const nextFiles = parsed.data.files ? normalizeProjectFiles(parsed.data.files, review.mode) : safeSerializedProjectFiles(review);
-	if (rejectProjectFilesForMode(res, nextFiles, review.mode, "Invalid review payload")) return;
-	const nextActiveFileName = normalizeActiveFileName(parsed.data.activeFileName ?? review.activeFileName, nextFiles);
+	const refreshFromSource = parsed.data.refreshFromSource === true;
+	const nextMode = refreshFromSource ? project.mode : review.mode;
+	const nextFiles = refreshFromSource
+		? safeSerializedProjectFiles(project)
+		: parsed.data.files
+			? normalizeProjectFiles(parsed.data.files, review.mode)
+			: safeSerializedProjectFiles(review);
+	if (rejectProjectFilesForMode(res, nextFiles, nextMode, "Invalid review payload")) return;
+	const nextActiveFileName = normalizeActiveFileName(
+		refreshFromSource ? project.activeFileName : parsed.data.activeFileName ?? review.activeFileName,
+		nextFiles
+	);
 
 	review.files = nextFiles;
+	if (refreshFromSource) {
+		review.title = project.title;
+		review.mode = project.mode;
+		review.courseID = project.courseID;
+		review.courseProjectKey = project.courseProjectKey;
+		review.courseProjectTitle = project.courseProjectTitle;
+		review.sourceUpdatedAt = project.updatedAt;
+	}
 	if (parsed.data.visibleToStudent !== undefined) review.visibleToStudent = parsed.data.visibleToStudent;
 	if (parsed.data.note !== undefined) review.note = parsed.data.note;
 	review.activeFileName = nextActiveFileName;
