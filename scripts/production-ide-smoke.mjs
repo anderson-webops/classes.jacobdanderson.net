@@ -54,12 +54,14 @@ export function containsJavaModeCopy(source) {
 export function containsCurrentIdeBundleMarkers(source) {
 	return (
 		source.includes("Code, run, and draw in Python or Java") &&
+		source.includes("Create and exchange BlueJ Java projects") &&
 		source.includes("preview Java console programs or Karel robot") &&
 		source.includes("BlueJ integration for desktop object-bench projects") &&
 		source.includes("ZIP import") &&
 		source.includes("package.bluej export") &&
 		source.includes("Karel world ready") &&
 		source.includes("BlueJ workspace") &&
+		source.includes("Full Code IDE") &&
 		source.includes("BlueJ integration") &&
 		source.includes("BlueJ Desktop Integration") &&
 		source.includes("New BlueJ project") &&

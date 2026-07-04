@@ -1166,6 +1166,26 @@ const selectedProjectBlueJDescription = computed(() =>
 		? "Export this Java project as a BlueJ-ready ZIP with package.bluej, source files, and README notes."
 		: "Practice Karel in the browser, or open a BlueJ desktop starter for object-bench inspection."
 );
+const codeIdeHeroContent = computed(() =>
+	isBlueJIdeRoute.value
+		? {
+				eyebrow: "BlueJ workspace",
+				title: "Create and exchange BlueJ Java projects",
+				description:
+					"Start from a BlueJ-ready Java project, import BlueJ ZIPs from the desktop app, " +
+					"and download package.bluej archives that open back in BlueJ. The browser preview " +
+					"stays client-side while BlueJ handles desktop object-bench work."
+			}
+		: {
+				eyebrow: "Code IDE",
+				title: "Code, run, and draw in Python or Java",
+				description:
+					"Build multi-file Python and Java projects, use the Turtle canvas for drawing and " +
+					"keyboard-driven lessons, explore PyGame Zero games and data/AI notebooks with " +
+					"rendered charts, preview Java console programs or Karel robot worlds, and use " +
+					"BlueJ integration for desktop object-bench projects, ZIP import, and package.bluej export."
+			}
+);
 
 function codeIdeShareUrl(shareID: string) {
 	const sharePath = `/ide?share=${encodeURIComponent(shareID)}`;
@@ -5854,16 +5874,9 @@ onBeforeUnmount(() => {
 		/>
 		<div class="code-ide-hero">
 			<div>
-				<p class="code-ide-eyebrow">Code IDE</p>
-				<h1>Code, run, and draw in Python or Java</h1>
-				<p>
-					Build multi-file Python and Java projects, use the Turtle
-					canvas for drawing and keyboard-driven lessons, explore
-					PyGame Zero games and data/AI notebooks with rendered
-					charts, preview Java console programs or Karel robot worlds,
-					and use BlueJ integration for desktop object-bench projects,
-					ZIP import, and package.bluej export.
-				</p>
+				<p class="code-ide-eyebrow">{{ codeIdeHeroContent.eyebrow }}</p>
+				<h1>{{ codeIdeHeroContent.title }}</h1>
+				<p>{{ codeIdeHeroContent.description }}</p>
 			</div>
 			<div class="code-ide-status">
 				<div aria-live="polite">
@@ -5871,11 +5884,20 @@ onBeforeUnmount(() => {
 					<strong>{{ runMessage }}</strong>
 				</div>
 				<RouterLink
+					v-if="!isBlueJIdeRoute"
 					class="site-button site-button--secondary compact-button code-ide-status-action"
 					to="/bluej"
 				>
 					BlueJ workspace
 				</RouterLink>
+				<button
+					v-else
+					class="site-button site-button--secondary compact-button code-ide-status-action"
+					type="button"
+					@click="createProject('java', 'bluej')"
+				>
+					New BlueJ project
+				</button>
 				<button
 					class="site-button site-button--secondary compact-button code-ide-status-action"
 					type="button"
@@ -5883,6 +5905,30 @@ onBeforeUnmount(() => {
 				>
 					Import BlueJ ZIP
 				</button>
+				<button
+					v-if="isBlueJIdeRoute && selectedProjectCanExportToBlueJ"
+					class="site-button site-button--secondary compact-button code-ide-status-action"
+					type="button"
+					@click="downloadSelectedProjectForBlueJ"
+				>
+					Download BlueJ ZIP
+				</button>
+				<RouterLink
+					v-if="isBlueJIdeRoute"
+					class="site-button site-button--secondary compact-button code-ide-status-action"
+					to="/ide"
+				>
+					Full Code IDE
+				</RouterLink>
+				<a
+					v-if="isBlueJIdeRoute"
+					:href="blueJSourceUrl"
+					class="site-button site-button--secondary compact-button code-ide-status-action"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					BlueJ source
+				</a>
 			</div>
 		</div>
 
