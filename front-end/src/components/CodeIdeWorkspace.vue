@@ -44,6 +44,7 @@ import {
 	getPythonIdeModeLabel,
 	getPythonIdeRunnableFile,
 	isPythonIdeBinaryAssetFile,
+	isPythonIdeJavaFile,
 	isPythonIdeRunnableFile,
 	isPythonIdeTextFile,
 	isValidPythonFileName,
@@ -362,6 +363,7 @@ const turtleOriginalShapePolygons = {
 const maxPythonIdeProjectFiles = 40;
 const maxImportedTextFileBytes = 512 * 1024;
 const maxImportedBinaryFileBytes = 2 * 1024 * 1024;
+const maxImportedBlueJArchiveBytes = 4 * 1024 * 1024;
 const maxOutputLines = 500;
 const maxOutputTextLength = 12000;
 const maxRuntimeArtifacts = 12;
@@ -377,6 +379,8 @@ const pythonIdeEditorViewStateStoragePrefix =
 const pythonIdeExpandedWorkspaceStorageKey =
 	"classes-python-ide-expanded-workspace";
 const pythonIdeSplitPercentStorageKey = "classes-python-ide-split-percent";
+const blueJProjectArchiveUploadAccept =
+	".zip,application/zip,application/x-zip-compressed";
 const blueJHomeUrl = "https://www.bluej.org/";
 const blueJSourceUrl = "https://github.com/k-pet-group/BlueJ-Greenfoot";
 const defaultCodeSplitPercent = 54;
@@ -532,6 +536,7 @@ const storagePersistenceStatus = ref<
 const codeEditorHostRef = ref<HTMLDivElement | null>(null);
 const ideGridRef = ref<HTMLDivElement | null>(null);
 const ideSettingsRef = ref<HTMLDivElement | null>(null);
+const blueJArchiveInputRef = ref<HTMLInputElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const editorCursorCount = ref(1);
 const artifactCounter = ref(0);
@@ -2338,6 +2343,96 @@ async function downloadSelectedProjectForBlueJ() {
 			error instanceof Error
 				? error.message
 				: "Could not download the BlueJ project."
+		);
+	}
+}
+
+function openBlueJArchiveImporter() {
+	blueJArchiveInputRef.value?.click();
+}
+
+async function importBlueJProjectArchiveFromInput(event: Event) {
+	const input = event.target as HTMLInputElement;
+	const file = input.files?.[0];
+	input.value = "";
+	if (!file) return;
+
+	if (!/\.zip$/i.test(file.name)) {
+		appendOutput("stderr", "Choose a BlueJ project ZIP file.");
+		return;
+	}
+	if (file.size > maxImportedBlueJArchiveBytes) {
+		appendOutput(
+			"stderr",
+			`BlueJ ZIP is larger than ${formatFileSize(maxImportedBlueJArchiveBytes)}.`
+		);
+		return;
+	}
+
+	try {
+		const { blueJProjectTitleFromArchiveName, importBlueJProjectArchive } =
+			await import("@/modules/blueJProjectExport");
+		const result = importBlueJProjectArchive(
+			new Uint8Array(await file.arrayBuffer()),
+			{
+				maxFiles: maxPythonIdeProjectFiles,
+				maxTextFileBytes: maxImportedTextFileBytes
+			}
+		);
+		if (
+			!result.files.some(projectFile =>
+				isPythonIdeJavaFile(projectFile.name)
+			)
+		) {
+			throw new Error(
+				"No safe Java source files were found in that BlueJ ZIP."
+			);
+		}
+
+		const importedProject = createPythonIdeProject("java", {
+			courseProjectTitle: "Imported BlueJ Project",
+			files: result.files,
+			starterLabel: result.hasBlueJPackage
+				? "Imported BlueJ ZIP"
+				: "Imported Java ZIP",
+			title: blueJProjectTitleFromArchiveName(file.name)
+		});
+
+		suppressAutoSave = true;
+		try {
+			await saveNewProject(importedProject);
+		} catch (error) {
+			projects.value.unshift(importedProject);
+			selectedProjectID.value = importedProject._id;
+			await persistLocalProjects();
+			appendOutput(
+				"system",
+				error instanceof Error
+					? error.message
+					: "Imported BlueJ project saved locally."
+			);
+		} finally {
+			suppressAutoSave = false;
+			await nextTick();
+			resetActiveCanvas();
+		}
+
+		appendOutput(
+			"system",
+			`Imported ${result.files.length} file${result.files.length === 1 ? "" : "s"} from ${result.hasBlueJPackage ? "a BlueJ project ZIP" : "a Java ZIP"}.`
+		);
+		if (result.skippedFiles.length) {
+			appendOutput(
+				"stderr",
+				`Skipped unsupported BlueJ archive file${result.skippedFiles.length === 1 ? "" : "s"}: ${result.skippedFiles.join(", ")}.`
+			);
+		}
+	} catch (error) {
+		appendOutput(
+			"stderr",
+			error instanceof Error
+				? error.message
+				: "Could not import the BlueJ project ZIP."
 		);
 	}
 }
@@ -5697,6 +5792,13 @@ onBeforeUnmount(() => {
 		class="code-ide-page page-shell page-shell--wide"
 		:class="{ 'code-ide-page--expanded': ideExpanded }"
 	>
+		<input
+			ref="blueJArchiveInputRef"
+			:accept="blueJProjectArchiveUploadAccept"
+			class="sr-only"
+			type="file"
+			@change="importBlueJProjectArchiveFromInput"
+		/>
 		<div class="code-ide-hero">
 			<div>
 				<p class="code-ide-eyebrow">Code IDE</p>
@@ -5721,6 +5823,13 @@ onBeforeUnmount(() => {
 					@click="openBlueJStarterProject"
 				>
 					BlueJ starter
+				</button>
+				<button
+					class="site-button site-button--secondary compact-button code-ide-status-action"
+					type="button"
+					@click="openBlueJArchiveImporter"
+				>
+					Import BlueJ ZIP
 				</button>
 			</div>
 		</div>
@@ -6000,6 +6109,13 @@ onBeforeUnmount(() => {
 								@click="createProject('java', 'bluej')"
 							>
 								New BlueJ desktop project
+							</button>
+							<button
+								class="site-button site-button--secondary compact-button"
+								type="button"
+								@click="openBlueJArchiveImporter"
+							>
+								Import BlueJ ZIP
 							</button>
 							<button
 								v-if="selectedProjectCanExportToBlueJ"
@@ -6453,6 +6569,13 @@ onBeforeUnmount(() => {
 							@click="createProject('java', 'bluej')"
 						>
 							New BlueJ desktop project
+						</button>
+						<button
+							class="site-button site-button--secondary compact-button"
+							type="button"
+							@click="openBlueJArchiveImporter"
+						>
+							Import BlueJ ZIP
 						</button>
 						<button
 							v-if="selectedProjectCanExportToBlueJ"
@@ -7716,9 +7839,9 @@ html.dark .file-delete:disabled::after {
 
 .bluej-integration-panel {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-columns: 1fr;
 	gap: 1rem;
-	align-items: center;
+	align-items: stretch;
 	padding: 0.85rem 1rem;
 	border: 1px solid rgba(20, 184, 166, 0.28);
 	border-radius: 14px;
@@ -7758,7 +7881,7 @@ html.dark .file-delete:disabled::after {
 	flex-wrap: wrap;
 	gap: 0.5rem;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content: flex-start;
 }
 
 .bluej-integration-note {

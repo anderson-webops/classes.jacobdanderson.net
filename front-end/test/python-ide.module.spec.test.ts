@@ -6,8 +6,10 @@ import { resolve } from "node:path";
 import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
 import {
 	blueJProjectArchiveName,
+	blueJProjectTitleFromArchiveName,
 	createBlueJProjectArchive,
-	createBlueJProjectFiles
+	createBlueJProjectFiles,
+	importBlueJProjectArchive
 } from "../src/modules/blueJProjectExport";
 import {
 	pythonBracketPairColorRanges,
@@ -403,6 +405,51 @@ describe("python IDE project helpers", () => {
 			"Unsafe-BlueJ-Export/src/PackageMain.java"
 		]);
 		expect(archiveNames.every(name => !name.includes(".."))).toBe(true);
+	});
+
+	it("imports BlueJ project ZIPs into safe Java project files", () => {
+		const archiveBytes = zipSync({
+			"Student-Lab/Main.java": strToU8(
+				"public class Main { public static void main(String[] args) {} }"
+			),
+			"Student-Lab/Student.java": strToU8("public class Student {}"),
+			"Student-Lab/README.TXT": strToU8("Open this in BlueJ."),
+			"Student-Lab/package.bluej": strToU8("#BlueJ package file"),
+			"Student-Lab/Main.ctxt": strToU8("generated BlueJ context"),
+			"Student-Lab/images/logo.png": strToU8("not text"),
+			"__MACOSX/Student-Lab/._Main.java": strToU8("metadata")
+		});
+
+		const result = importBlueJProjectArchive(archiveBytes, {
+			maxFiles: 4,
+			maxTextFileBytes: 1024
+		});
+
+		expect(result.hasBlueJPackage).toBe(true);
+		expect(result.files).toEqual([
+			{
+				content: "public class Main { public static void main(String[] args) {} }",
+				encoding: "text",
+				name: "Main.java"
+			},
+			{
+				content: "public class Student {}",
+				encoding: "text",
+				name: "Student.java"
+			},
+			{
+				content: "Open this in BlueJ.",
+				encoding: "text",
+				name: "README.TXT"
+			}
+		]);
+		expect(result.skippedFiles).toEqual(["images/logo.png"]);
+		expect(blueJProjectTitleFromArchiveName("Student-Lab.zip")).toBe(
+			"Student Lab BlueJ Project"
+		);
+		expect(blueJProjectTitleFromArchiveName("BlueJ-Java-Project.zip")).toBe(
+			"BlueJ Java Project"
+		);
 	});
 
 	it("colors visible bracket pairs using document-wide nesting context", () => {
@@ -3549,6 +3596,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain('"ide-template:bluej"');
 		expect(pageSource).toContain("openRequestedStandaloneProjectIfNeeded");
 		expect(pageSource).toContain("async function openBlueJStarterProject");
+		expect(pageSource).toContain("openBlueJArchiveImporter");
+		expect(pageSource).toContain("blueJArchiveInputRef");
+		expect(pageSource).toContain("importBlueJProjectArchiveFromInput");
 		expect(pageSource).toContain(
 			'project.courseProjectKey === "ide-template:bluej"'
 		);
@@ -3565,6 +3615,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain('aria-label="Java and BlueJ tools"');
 		expect(pageSource).toContain("Java / BlueJ tools");
 		expect(pageSource).toContain("BlueJ object-bench starter");
+		expect(pageSource).toContain("Import BlueJ ZIP");
 		expect(pageSource).toContain('class="bluej-integration-panel"');
 		expect(pageSource).toContain("blueJSourceUrl");
 		expect(pageSource).toContain("New BlueJ desktop project");
@@ -3580,6 +3631,8 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("BlueJ source");
 		expect(pageSource).toContain("createBlueJProjectArchive(project)");
 		expect(exportSource).toContain('from "fflate"');
+		expect(exportSource).toContain("unzipSync(archiveBytes)");
+		expect(exportSource).toContain("importBlueJProjectArchive");
 		expect(exportSource).toContain("zipSync(entries)");
 		expect(exportSource).toContain("package.bluej");
 		expect(exportSource).toContain("README.TXT");
