@@ -169,7 +169,7 @@ describe("java IDE runtime", () => {
 				{
 					name: "Main.java",
 					content: javaStarterCode.replace(
-						"System.out.println(greetingMessage);",
+						"System.out.println(GREETING_MESSAGE);",
 						'System.out.print("Hello, ");\n        System.out.println("Java " + (2 + 3));'
 					)
 				}

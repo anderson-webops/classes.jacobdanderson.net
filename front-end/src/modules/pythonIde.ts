@@ -242,7 +242,7 @@ NAME_PROMPT = "What is your name? "
 # Store reusable text in named variables before printing
 print(GREETING_MESSAGE)
 
-# Collect one user value and use its name clearly
+# Collect one user value and use the name clearly
 student_name = input(NAME_PROMPT)
 print(f"Nice to meet you, {student_name}.")
 `;
@@ -282,7 +282,7 @@ is_moving = True
 def move_forward():
     pen.forward(FORWARD_STEP)
 
-# Rotate the turtle by one visible turn
+# Turn the turtle by one visible amount
 def turn_left():
     pen.left(TURN_ANGLE)
 
@@ -326,6 +326,13 @@ export const pythonLevel1OutlineStarterCode = `import turtle
 import random
 
 #####################
+###   CONSTANTS   ###
+#####################
+NUM_TURTLES = 0
+MOVE_DISTANCE = 1
+
+
+#####################
 ###   FUNCTIONS   ###
 #####################
 # Configure one turtle before the main program starts
@@ -344,11 +351,6 @@ def action_two():
 #####################
 ###   VARIABLES   ###
 #####################
-# Constants
-NUM_TURTLES = 0
-MOVE_DISTANCE = 1
-
-# Global Variables
 main_turtle = turtle.Turtle()
 # Turtle attributes here
 
@@ -359,6 +361,7 @@ screen = turtle.Screen()
 
 # List of Turtles
 turtle_list = []
+
 # Build each extra turtle before the animation loop starts
 for turtle_index in range(NUM_TURTLES):
     new_turtle = turtle.Turtle()
@@ -398,6 +401,9 @@ while condition:
 
 export const pgzeroStarterCode = `import pgzrun
 
+#####################
+###   CONSTANTS   ###
+#####################
 WIDTH = 640
 HEIGHT = 400
 PLAYER_SIZE = 72
@@ -406,10 +412,18 @@ INSTRUCTION_POSITION = (24, 24)
 INSTRUCTION_SIZE = 28
 INSTRUCTION_COLOR = "white"
 
+
+#####################
+###   VARIABLES   ###
+#####################
 player = Actor("student", (WIDTH / 2, HEIGHT / 2))
 player.width = PLAYER_SIZE
 player.height = PLAYER_SIZE
 
+
+#####################
+###   FUNCTIONS   ###
+#####################
 # Draw the current frame
 def draw():
     screen.clear()
@@ -446,14 +460,15 @@ export const javaStarterCode = `/**
  * @brief Demonstrate the minimal Java console project shape
  */
 public class Main {
+    private static final String GREETING_MESSAGE = "Hello, Java!";
+
     /**
      * @brief Run the starter console program
      *
      * @param args Command-line arguments
      */
     public static void main(String[] args) {
-        String greetingMessage = "Hello, Java!";
-        System.out.println(greetingMessage);
+        System.out.println(GREETING_MESSAGE);
     }
 }
 `;
@@ -465,6 +480,9 @@ import java.util.Scanner;
  * @brief Organize a beginner Java console project with helpers and lists
  */
 public class Main {
+    private static final int STARTING_SCORE = 0;
+    private static final String STARTING_STUDENT_NAME = "Student";
+
     /**
      * @brief Run the starter console program
      *
@@ -473,13 +491,13 @@ public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
-        int score = 0;
-        String studentName = "Student";
+        int score = STARTING_SCORE;
+        String student_name = STARTING_STUDENT_NAME;
         ArrayList<String> notes = new ArrayList<>();
 
         // Prompt, update variables, and call helper methods here
         // String answer = input.nextLine();
-        notes.add(makeNote(studentName, score));
+        notes.add(make_note(student_name, score));
 
         // Print each saved note on its own line
         for (String note : notes) {
@@ -490,23 +508,23 @@ public class Main {
     /**
      * @brief Build a readable note from a student name and score
      *
-     * @param studentName Name to show in the note
+     * @param student_name Name to show in the note
      *
      * @param score Current score value
      *
      * @return Formatted note text
      */
-    static String makeNote(String studentName, int score) {
-        return studentName + ": " + score;
+    static String make_note(String student_name, int score) {
+        return student_name + ": " + score;
     }
 
     // Run the first custom action
-    static void actionOne() {
+    static void action_one() {
         // Add an action here
     }
 
     // Run the second custom action
-    static void actionTwo() {
+    static void action_two() {
         // Add another action here
     }
 }
@@ -518,27 +536,30 @@ export const blueJMainStarterCode = `import java.util.ArrayList;
  * @brief Demonstrate a small BlueJ object-oriented project
  */
 public class Main {
+    private static final String STUDENT_NAME = "Ada";
+    private static final int GRADE_LEVEL = 9;
+    private static final int FIRST_SCORE = 88;
+    private static final int SECOND_SCORE = 94;
+
     /**
      * @brief Build and preview a small object-oriented BlueJ project
      *
      * @param args Command-line arguments
      */
     public static void main(String[] args) {
-        String studentName = "Ada";
-        int gradeLevel = 9;
         ArrayList<Integer> scores = new ArrayList<>();
-        scores.add(88);
-        scores.add(94);
+        scores.add(FIRST_SCORE);
+        scores.add(SECOND_SCORE);
 
         // Open this project in BlueJ to inspect the Student object directly
-        Student student = new Student(studentName, gradeLevel);
-        student.addScore(scores.get(0));
-        student.addScore(scores.get(1));
-        student.printSummary();
+        Student student = new Student(STUDENT_NAME, GRADE_LEVEL);
+        student.add_score(scores.get(0));
+        student.add_score(scores.get(1));
+        student.print_summary();
 
         // Mirror the same state with console-friendly browser output
-        System.out.println(studentName + " is in grade " + gradeLevel);
-        System.out.println("Average: " + averageScore(scores));
+        System.out.println(STUDENT_NAME + " is in grade " + GRADE_LEVEL);
+        System.out.println("Average: " + average_score(scores));
     }
 
     /**
@@ -548,7 +569,7 @@ public class Main {
      *
      * @return Average score or 0 when the list is empty
      */
-    static double averageScore(ArrayList<Integer> scores) {
+    static double average_score(ArrayList<Integer> scores) {
         // Avoid dividing by zero when no scores have been recorded
         if (scores.isEmpty()) {
             return 0;
@@ -573,7 +594,7 @@ export const blueJStudentStarterCode = `import java.util.ArrayList;
  */
 public class Student {
     private final String name;
-    private final int gradeLevel;
+    private final int grade_level;
     private final ArrayList<Integer> scores;
 
     /**
@@ -581,11 +602,11 @@ public class Student {
      *
      * @param name Student name
      *
-     * @param gradeLevel Student grade level
+     * @param grade_level Student grade level
      */
-    public Student(String name, int gradeLevel) {
+    public Student(String name, int grade_level) {
         this.name = name;
-        this.gradeLevel = gradeLevel;
+        this.grade_level = grade_level;
         this.scores = new ArrayList<>();
     }
 
@@ -594,7 +615,7 @@ public class Student {
      *
      * @param score Score to add
      */
-    public void addScore(int score) {
+    public void add_score(int score) {
         scores.add(score);
     }
 
@@ -603,7 +624,7 @@ public class Student {
      *
      * @return Average score or 0 when the list is empty
      */
-    public double averageScore() {
+    public double average_score() {
         // Avoid dividing by zero when no scores have been recorded
         if (scores.isEmpty()) {
             return 0;
@@ -622,9 +643,9 @@ public class Student {
     /**
      * @brief Print the student summary to the console
      */
-    public void printSummary() {
-        System.out.println(name + " is in grade " + gradeLevel);
-        System.out.println("Average: " + averageScore());
+    public void print_summary() {
+        System.out.println(name + " is in grade " + grade_level);
+        System.out.println("Average: " + average_score());
     }
 }
 `;
@@ -648,6 +669,10 @@ import kareltherobot.Directions;
  * @brief Demonstrate a Karel robot program with a loaded world file
  */
 public class Algo implements Directions {
+    private static final int START_STREET = 6;
+    private static final int START_AVENUE = 7;
+    private static final int START_BEEPERS = 0;
+
     /**
      * @brief Move one robot through the sample world
      *
@@ -655,7 +680,7 @@ public class Algo implements Directions {
      */
     public static void main(String[] args) {
         // Start Sam at street 6 avenue 7 facing east with no beepers
-        UrRobot sam = new UrRobot(6, 7, East, 0);
+        UrRobot sam = new UrRobot(START_STREET, START_AVENUE, East, START_BEEPERS);
 
         // Turn Sam around before moving west
         sam.turnLeft();
@@ -735,12 +760,11 @@ cols=5
 beeper 1 4 1
 `;
 
-export const pgzeroOutlineStarterCode = `WIDTH = 640
-HEIGHT = 400
-
-#####################
+export const pgzeroOutlineStarterCode = `#####################
 ###   CONSTANTS   ###
 #####################
+WIDTH = 640
+HEIGHT = 400
 PLAYER_SPEED = 4
 ENEMY_SPEED = 2
 TITLE_POSITION = (24, 24)
@@ -816,6 +840,10 @@ def on_key_down(key):
 `;
 
 export const pgzeroCourseStarterCode = `# Pygame Zero reads WIDTH and HEIGHT when the game starts
+
+#####################
+###   CONSTANTS   ###
+#####################
 WIDTH = 640
 HEIGHT = 400
 `;

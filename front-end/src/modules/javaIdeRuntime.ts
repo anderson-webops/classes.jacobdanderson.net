@@ -226,7 +226,7 @@ const JAVA_INDEXED_INCREMENT_RE =
 const JAVA_INCREMENT_RE =
 	/^(?:\+\+([A-Z_]\w*)|([A-Z_]\w*)\+\+|--([A-Z_]\w*)|([A-Z_]\w*)--)$/i;
 const ROBOT_DECLARATION_RE =
-	/\bUrRobot\s+([A-Z_]\w*)\s*=\s*new\s+UrRobot\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*([A-Z_]\w*(?:\s*\.\s*[A-Z_]\w*)?)\s*,\s*(\d+)\s*\)/i;
+	/\bUrRobot\s+([A-Z_]\w*)\s*=\s*new\s+UrRobot\s*\(([^)]*)\)/i;
 const WORLD_READ_RE = /\bWorld\.readWorld\s*\(\s*"([^"]+)"\s*\)/;
 const KAREL_SIMPLE_COMMANDS = [
 	"move",
@@ -395,6 +395,7 @@ function javaConsoleOutput(source: string, inputText: string) {
 		pendingLine: "",
 		stdout: []
 	};
+	seedJavaLiteralConstants(source, context, output);
 	const mainBody = methods.get("main")?.body ?? source;
 	executeJavaConsoleBody(mainBody, context, output);
 
@@ -410,6 +411,50 @@ function javaConsoleOutput(source: string, inputText: string) {
 		);
 	}
 	return { stderr: context.stderr, stdout: output.stdout };
+}
+
+function seedJavaLiteralConstants(
+	source: string,
+	context: JavaConsoleContext,
+	output: JavaConsoleOutputState
+) {
+	const constantLeftSidePattern =
+		/^(?:(?:public|private|protected|static|final)\s+)*(?:String|int|long|double|float|boolean|char)\s+([A-Z_]\w*)$/i;
+
+	for (const rawLine of source.split(/\r?\n/)) {
+		const line = rawLine.trim();
+		if (
+			!line.includes("final") ||
+			!line.includes("=") ||
+			!line.endsWith(";") ||
+			line.includes("{") ||
+			line.includes("}")
+		) {
+			continue;
+		}
+
+		const declaration = line.slice(0, -1);
+		const separatorIndex = declaration.indexOf("=");
+		if (separatorIndex <= 0) {
+			continue;
+		}
+
+		const leftSide = declaration.slice(0, separatorIndex).trim();
+		const rawValue = declaration.slice(separatorIndex + 1).trim();
+		if (!/\bfinal\b/i.test(leftSide) || !rawValue) {
+			continue;
+		}
+
+		const match = leftSide.match(constantLeftSidePattern);
+		const name = match?.[1];
+		if (!name) {
+			continue;
+		}
+		context.variables.set(
+			name,
+			evaluateJavaExpression(rawValue, context, output)
+		);
+	}
 }
 
 function executeJavaConsoleBody(
@@ -2698,6 +2743,24 @@ function runKarelProject(
 ): JavaIdeRunResult {
 	const source = stripJavaComments(activeFile.content);
 	const declaration = source.match(ROBOT_DECLARATION_RE);
+	const declarationArgs = splitJavaArguments(declaration?.[2] ?? "");
+	const constantsContext: JavaConsoleContext = {
+		input: {
+			position: 0,
+			source: ""
+		},
+		methodCallDepth: 0,
+		methods: new Map(),
+		stderr: [],
+		variables: new Map()
+	};
+	const constantsOutput: JavaConsoleOutputState = {
+		lineTruncated: false,
+		linesTruncated: false,
+		pendingLine: "",
+		stdout: []
+	};
+	seedJavaLiteralConstants(source, constantsContext, constantsOutput);
 	const { warnings: worldWarnings, world } = parseKarelWorld(files, source);
 	const stderr: string[] = [];
 	const trace: string[] = [];
@@ -2705,10 +2768,36 @@ function runKarelProject(
 
 	const robot: KarelRobotState = {
 		name: declaration?.[1] ?? "karel",
-		street: Number(declaration?.[2] ?? 1),
-		avenue: Number(declaration?.[3] ?? 1),
-		direction: normalizeDirection(declaration?.[4] ?? "East"),
-		beepers: Number(declaration?.[5] ?? MAX_KAREL_PREVIEW_COMMANDS)
+		street: javaValueToNumber(
+			evaluateJavaExpression(
+				declarationArgs[0] ?? "1",
+				constantsContext,
+				constantsOutput
+			)
+		),
+		avenue: javaValueToNumber(
+			evaluateJavaExpression(
+				declarationArgs[1] ?? "1",
+				constantsContext,
+				constantsOutput
+			)
+		),
+		direction: normalizeDirection(
+			javaValueToString(
+				evaluateJavaExpression(
+					declarationArgs[2] ?? "East",
+					constantsContext,
+					constantsOutput
+				)
+			)
+		),
+		beepers: javaValueToNumber(
+			evaluateJavaExpression(
+				declarationArgs[3] ?? String(MAX_KAREL_PREVIEW_COMMANDS),
+				constantsContext,
+				constantsOutput
+			)
+		)
 	};
 	clampRobotToWorld(robot, world);
 
