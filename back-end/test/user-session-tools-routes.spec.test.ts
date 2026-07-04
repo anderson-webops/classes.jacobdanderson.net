@@ -69,7 +69,7 @@ function queryWith<T>(result: T) {
 	return query;
 }
 
-function makeStudent(tutors: Types.ObjectId[] = [tutorID]) {
+function makeStudent(tutors: unknown[] = [tutorID]) {
 	return {
 		_id: studentID,
 		name: "Student One",
@@ -503,6 +503,45 @@ describe("user schedule and note-only routes", () => {
 		});
 	});
 
+	it("lets assigned tutors update course access when tutor records are populated", async () => {
+		const save = vi.fn().mockResolvedValue(undefined);
+		const student = {
+			...makeStudent([{ _id: tutorID }]),
+			courseAccess: [],
+			courseProgress: [],
+			courseStatus: {},
+			save
+		};
+		modelMocks.tutorFindById.mockImplementation((id: string) =>
+			id === tutorID.toString()
+				? Promise.resolve({
+						_id: tutorID,
+						name: "Tutor",
+						email: "tutor@example.com",
+						coursePermissions: ["python-level-1"]
+					})
+				: Promise.resolve(null)
+		);
+		modelMocks.userFindById.mockImplementation(() => queryWith(student));
+
+		await withUserRoutes(async baseUrl => {
+			const response = await putJson(
+				baseUrl,
+				`/users/${studentID}/courses`,
+				{ courseIDs: ["python-level-1"] },
+				{ "x-tutor-id": tutorID.toString() }
+			);
+
+			expect(response.status).toBe(200);
+			await expect(response.json()).resolves.toEqual({
+				courseAccess: ["python-level-1"],
+				courseStatus: { "python-level-1": "current" }
+			});
+			expect(save).toHaveBeenCalledOnce();
+			expect(student.courseAccess).toEqual(["python-level-1"]);
+		});
+	});
+
 	it("rejects malformed learner course access IDs before loading the student", async () => {
 		await withUserRoutes(async baseUrl => {
 			const nonStringResponse = await putJson(
@@ -594,6 +633,25 @@ describe("user schedule and note-only routes", () => {
 			expect(reservedContextResponse.status).toBe(400);
 			expect(tooManyDuplicateResponse.status).toBe(400);
 			expect(modelMocks.tutorFindById).not.toHaveBeenCalled();
+		});
+	});
+
+	it("lets assigned tutors delete their own students when tutor records are populated", async () => {
+		const deleteOne = vi.fn().mockResolvedValue(undefined);
+		const student = {
+			...makeStudent([{ _id: tutorID }]),
+			deleteOne
+		};
+		modelMocks.userFindById.mockImplementation(() => queryWith(student));
+
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(`${baseUrl}/users/tutor/${studentID}`, {
+				headers: { "x-tutor-id": tutorID.toString() },
+				method: "DELETE"
+			});
+
+			expect(response.status).toBe(200);
+			expect(deleteOne).toHaveBeenCalledOnce();
 		});
 	});
 
