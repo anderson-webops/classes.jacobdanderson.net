@@ -3794,6 +3794,14 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			'v-if="selectedProjectCanShowBlueJIntegration"'
 		);
+		expect(pageSource).toContain("codeIdeHeroContent");
+		expect(pageSource).toContain("BlueJ workspace");
+		expect(pageSource).toContain("Create and exchange BlueJ Java projects");
+		expect(pageSource).toContain(
+			"Start from a BlueJ-ready Java project"
+		);
+		expect(pageSource).toContain("Full Code IDE");
+		expect(pageSource).toContain('v-if="isBlueJIdeRoute"');
 		expect(pageSource).toContain(
 			"BlueJ integration for desktop object-bench projects"
 		);
@@ -3827,6 +3835,15 @@ describe("python IDE project helpers", () => {
 		expect(exportSource).toContain("package.bluej");
 		expect(exportSource).toContain("README.TXT");
 		expect(exportSource).toContain("BLUEJ_SOURCE_URL");
+	});
+
+	it("exposes the BlueJ workspace from the main navigation", () => {
+		const headerSource = readFileSync(
+			resolve(__dirname, "../src/components/TheHeader.vue"),
+			"utf8"
+		);
+
+		expect(headerSource).toContain('{ label: "BlueJ", to: "/bluej"');
 	});
 
 	it("persists CodeMirror view state across reloads and project ID migration", () => {

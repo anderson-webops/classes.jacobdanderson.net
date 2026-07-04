@@ -26,12 +26,14 @@ describe("production Code IDE smoke helpers", () => {
 			"Java Level 1 mentions Karel Java and a BlueJ Java Project.";
 		const currentIdeBundle = [
 			"Code, run, and draw in Python or Java",
+			"Create and exchange BlueJ Java projects",
 			"preview Java console programs or Karel robot",
 			"BlueJ integration for desktop object-bench projects",
 			"ZIP import",
 			"package.bluej export",
 			"Karel world ready",
 			"BlueJ workspace",
+			"Full Code IDE",
 			"BlueJ integration",
 			"BlueJ Desktop Integration",
 			"New BlueJ project",
