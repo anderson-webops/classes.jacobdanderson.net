@@ -1617,6 +1617,38 @@ public class Algo implements Directions {
 		expect(result.stdout).toHaveLength(8);
 	});
 
+	it("previews Karel for loops that use class constants", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "MyProgram.java",
+			files: [
+				{
+					name: "MyProgram.java",
+					content: `public class MyProgram extends SuperKarel {
+    private static final int START_INDEX = 0;
+    private static final int MOVE_COUNT = 4;
+    private static final int STEP_AMOUNT = 2;
+
+    public void run() {
+        for (int step = START_INDEX; step < MOVE_COUNT; step += STEP_AMOUNT) {
+            move();
+        }
+    }
+}`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({
+			avenue: 3,
+			direction: "East",
+			name: "karel",
+			street: 1
+		});
+		expect(result.stdout).toHaveLength(3);
+	});
+
 	it("caps long Karel preview loops in the browser runner", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
