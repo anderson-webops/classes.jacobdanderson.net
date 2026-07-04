@@ -77,6 +77,9 @@ export function containsCurrentIdeBundleMarkers(source) {
 		source.includes("Download BlueJ ZIP") &&
 		source.includes("Java preview skipped projects over") &&
 		source.includes("total Java characters") &&
+		source.includes("karelRobotStyle") &&
+		source.includes("karelRobotDirectionClass") &&
+		source.includes("left 240ms ease") &&
 		source.includes("https://github.com/k-pet-group/BlueJ-Greenfoot")
 	);
 }
