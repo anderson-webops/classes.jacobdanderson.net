@@ -623,13 +623,13 @@ export const updatePythonProject: RequestHandler = async (req, res) => {
 	}
 
 	const nextMode = parsed.data.mode ?? project.mode;
-	const nextFiles = parsed.data.files ? normalizeProjectFiles(parsed.data.files, nextMode) : project.files;
+	const nextFiles = parsed.data.files ? normalizeProjectFiles(parsed.data.files, nextMode) : safeSerializedProjectFiles(project);
 	if (rejectProjectFilesForMode(res, nextFiles, nextMode, "Invalid project payload")) return;
 	const nextActiveFileName = normalizeActiveFileName(parsed.data.activeFileName ?? project.activeFileName, nextFiles);
 
 	if (parsed.data.title) project.title = parsed.data.title;
 	if (parsed.data.mode) project.mode = parsed.data.mode as PythonProjectMode;
-	if (parsed.data.files) project.files = nextFiles;
+	project.files = nextFiles;
 	if (parsed.data.courseID) project.courseID = parsed.data.courseID;
 	if (parsed.data.courseProjectKey) project.courseProjectKey = parsed.data.courseProjectKey;
 	if (parsed.data.courseProjectTitle) project.courseProjectTitle = parsed.data.courseProjectTitle;
@@ -655,9 +655,14 @@ export const updatePythonProjectShare: RequestHandler = async (req, res) => {
 	const wasShared = project.shared === true;
 	project.shared = parsed.data.shared;
 	project.ownerRole ??= "user";
-	if (project.shared && (!wasShared || !project.shareID)) {
-		project.shareID = createPythonProjectShareID();
-		project.shareCreatedAt = new Date();
+	if (project.shared) {
+		const files = safeSerializedProjectFiles(project);
+		project.files = files;
+		project.activeFileName = normalizeActiveFileName(project.activeFileName, files);
+		if (!wasShared || !project.shareID) {
+			project.shareID = createPythonProjectShareID();
+			project.shareCreatedAt = new Date();
+		}
 	}
 	else if (!project.shared) {
 		project.shareID = undefined;
@@ -709,11 +714,11 @@ export const updatePythonProjectReview: RequestHandler = async (req, res) => {
 	]);
 	if (!project || !review) return res.sendStatus(404);
 
-	const nextFiles = parsed.data.files ? normalizeProjectFiles(parsed.data.files, review.mode) : review.files;
+	const nextFiles = parsed.data.files ? normalizeProjectFiles(parsed.data.files, review.mode) : safeSerializedProjectFiles(review);
 	if (rejectProjectFilesForMode(res, nextFiles, review.mode, "Invalid review payload")) return;
 	const nextActiveFileName = normalizeActiveFileName(parsed.data.activeFileName ?? review.activeFileName, nextFiles);
 
-	if (parsed.data.files) review.files = nextFiles;
+	review.files = nextFiles;
 	if (parsed.data.visibleToStudent !== undefined) review.visibleToStudent = parsed.data.visibleToStudent;
 	if (parsed.data.note !== undefined) review.note = parsed.data.note;
 	review.activeFileName = nextActiveFileName;
