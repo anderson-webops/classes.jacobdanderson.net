@@ -109,6 +109,7 @@ const currentHashAnchor = ref(readCurrentHashAnchor());
 const prefersReducedMotion = ref(false);
 let reducedMotionQuery: MediaQueryList | null = null;
 let progressSaveTimer: ReturnType<typeof setTimeout> | null = null;
+let progressSaveInFlight: Promise<void> | null = null;
 let pendingProgressSave: {
 	courseId: string;
 	progress: CourseProgress;
@@ -1005,17 +1006,27 @@ function queueProgressSave(
 }
 
 async function flushPendingProgressSave() {
-	if (!pendingProgressSave) return;
 	if (progressSaveTimer) {
 		clearTimeout(progressSaveTimer);
 		progressSaveTimer = null;
 	}
+	if (progressSaveInFlight) {
+		try {
+			await progressSaveInFlight;
+		} catch {
+			// The flush that owns the request updates the visible error state.
+		}
+		if (pendingProgressSave) await flushPendingProgressSave();
+		return;
+	}
+	if (!pendingProgressSave) return;
 
 	const pending = pendingProgressSave;
+	pendingProgressSave = null;
 	progressSaveStatus.value = "saving";
 	progressSaveError.value = "";
 
-	try {
+	const saveRequest = (async () => {
 		await api.put(`/users/${pending.userID}/course-progress`, {
 			courseId: pending.courseId,
 			completedModuleIds: pending.progress.completedModuleIds,
@@ -1026,14 +1037,21 @@ async function flushPendingProgressSave() {
 			pending.userID,
 			cleanProgress(pending.progress)
 		);
-		pendingProgressSave = null;
-		progressSaveStatus.value = "saved";
+		progressSaveStatus.value = pendingProgressSave ? "unsaved" : "saved";
+	})();
+
+	progressSaveInFlight = saveRequest;
+	try {
+		await saveRequest;
 	} catch (error: any) {
+		if (!pendingProgressSave) pendingProgressSave = pending;
 		progressSaveStatus.value = "error";
 		progressSaveError.value =
 			error.response?.data?.message ??
 			error.message ??
 			"Couldn't save progress.";
+	} finally {
+		if (progressSaveInFlight === saveRequest) progressSaveInFlight = null;
 	}
 }
 
