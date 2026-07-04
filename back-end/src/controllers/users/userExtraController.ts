@@ -15,6 +15,9 @@ import {
 	serializeScheduledSession
 } from "../../utils/scheduledSessions.js";
 
+const MAX_COURSE_PROGRESS_ID_LENGTH = 160;
+const MAX_COURSE_PROGRESS_IDS = 1000;
+
 function getUserIDParam(req: { params: { userID?: string | string[] } }, res: any): string | null {
 	const paramUserID = req.params.userID;
 	const userID = Array.isArray(paramUserID) ? paramUserID[0] : paramUserID;
@@ -36,6 +39,14 @@ function normalizeRecipientName(value: string): string {
 function normalizeStringArray(value: unknown): string[] | null {
 	if (!Array.isArray(value)) return null;
 	return [...new Set(value.map(item => (typeof item === "string" ? item.trim() : "")).filter(Boolean))];
+}
+
+function normalizeCourseProgressIDs(value: unknown): string[] | null {
+	const ids = normalizeStringArray(value);
+	if (!ids) return null;
+	if (ids.length > MAX_COURSE_PROGRESS_IDS) return null;
+	if (ids.some(id => id.length > MAX_COURSE_PROGRESS_ID_LENGTH)) return null;
+	return ids;
 }
 
 function normalizeCourseStatus(value: unknown): CourseAccessStatus {
@@ -301,15 +312,19 @@ export const setUserCourseProgress: RequestHandler = async (req, res) => {
 	if (!userID) return;
 
 	const courseId = typeof req.body?.courseId === "string" ? req.body.courseId.trim() : "";
-	const completedModuleIds = normalizeStringArray(req.body?.completedModuleIds ?? []);
-	const completedItemIds = normalizeStringArray(req.body?.completedItemIds ?? []);
+	const completedModuleIds = normalizeCourseProgressIDs(req.body?.completedModuleIds ?? []);
+	const completedItemIds = normalizeCourseProgressIDs(req.body?.completedItemIds ?? []);
 
-	if (!courseId) {
-		return res.status(400).json({ message: "courseId is required" });
+	if (!courseId || courseId.length > MAX_COURSE_PROGRESS_ID_LENGTH) {
+		return res.status(400).json({
+			message: `courseId is required and must be ${MAX_COURSE_PROGRESS_ID_LENGTH} characters or fewer`
+		});
 	}
 
 	if (!completedModuleIds || !completedItemIds) {
-		return res.status(400).json({ message: "Completed IDs must be arrays" });
+		return res.status(400).json({
+			message: `Completed IDs must be arrays with at most ${MAX_COURSE_PROGRESS_IDS} IDs of ${MAX_COURSE_PROGRESS_ID_LENGTH} characters or fewer`
+		});
 	}
 
 	const user = await User.findById(userID).populate("tutors", "_id");
