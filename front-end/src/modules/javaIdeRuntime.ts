@@ -191,6 +191,7 @@ type JavaConsoleSignal =
 
 const DEFAULT_WORLD_SIZE = 10;
 const MAX_KAREL_WORLD_SIZE = 40;
+const MAX_KAREL_WORLD_FILE_CHARS = 200000;
 const MAX_KAREL_WORLD_LINES = 2000;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const MAX_JAVA_RUNTIME_SOURCE_CHARS = 200000;
@@ -2743,6 +2744,13 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 		walls: []
 	};
 	if (!worldFile) return { warnings, world };
+
+	if (worldFile.content.length > MAX_KAREL_WORLD_FILE_CHARS) {
+		warnings.push(
+			`Skipped Karel world files over ${MAX_KAREL_WORLD_FILE_CHARS.toLocaleString()} characters.`
+		);
+		return { warnings, world };
+	}
 
 	const rawLines = worldFile.content
 		.split(/\r?\n/)
