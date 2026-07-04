@@ -602,6 +602,10 @@ describe("CourseExplorer.vue", () => {
 		const appStore = useAppStore();
 		const coursesStore = useCoursesStore();
 		const assignedCourse = coursesStore.courses[0];
+		window.localStorage.setItem(
+			"classes:course-explorer:selected-learner",
+			"__all__"
+		);
 
 		appStore.setCurrentTutor({
 			_id: "tutor-1",
@@ -644,6 +648,12 @@ describe("CourseExplorer.vue", () => {
 		expect(
 			wrapper.findAll("#learner-select option").map(option => option.text())
 		).not.toContain("All learners");
+		expect(
+			wrapper.find<HTMLSelectElement>("#learner-select").element.value
+		).toBe("learner-1");
+		expect(
+			wrapper.findAll("#course-select option").map(option => option.text())
+		).toContain(assignedCourse.name);
 	});
 
 	it("lets staff mark selected learner progress with debounced autosave", async () => {

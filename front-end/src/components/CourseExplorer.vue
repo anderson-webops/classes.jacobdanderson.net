@@ -392,7 +392,7 @@ watch(
 		if (
 			selectedStillValid &&
 			(!hashCourseId ||
-				isAllLearnersSelection(selectedLearnerId.value) ||
+				isAllLearnersContext.value ||
 				learnerCanAccessCourse(selectedLearner.value, hashCourseId))
 		) {
 			return;
