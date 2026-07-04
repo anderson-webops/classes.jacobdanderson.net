@@ -1,9 +1,11 @@
 import { mkdir, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { argv, env } from "node:process";
 import { fileURLToPath } from "node:url";
 import { strFromU8, unzipSync } from "fflate";
 
-const DEFAULT_ASSETS_ZIP_URL = "https://static.classes.jacobdanderson.net/assets.zip";
+const DEFAULT_ASSETS_ZIP_URL =
+	"https://static.classes.jacobdanderson.net/assets.zip";
 const MINIMUM_ZIP_BYTES = 1024;
 const ZIP_HEADER = [0x50, 0x4b];
 const ASSET_PATH_RE = /^(?:images|music|sounds)\/[^/].+\.[\dA-Z]+$/i;
@@ -28,9 +30,16 @@ const MIME_TYPES = new Map([
 ]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const frontEndDir = path.resolve(scriptDir, "..");
+const frontEndDir = env.CODE_IDE_ASSETS_FRONT_END_DIR
+	? path.resolve(env.CODE_IDE_ASSETS_FRONT_END_DIR)
+	: path.resolve(scriptDir, "..");
 // Keep media under the legacy public path so existing asset URLs remain valid.
-const assetsOutputDir = path.join(frontEndDir, "public", "python-ide", "assets");
+const assetsOutputDir = path.join(
+	frontEndDir,
+	"public",
+	"python-ide",
+	"assets"
+);
 const manifestPath = path.join(assetsOutputDir, "manifest.json");
 const codeIdeManifestPath = path.join(
 	frontEndDir,
@@ -39,21 +48,26 @@ const codeIdeManifestPath = path.join(
 	"assets",
 	"manifest.json"
 );
-const stalePublicZipPath = path.join(frontEndDir, "public", "python-ide", "assets.zip");
+const stalePublicZipPath = path.join(
+	frontEndDir,
+	"public",
+	"python-ide",
+	"assets.zip"
+);
 const cacheDir = path.join(frontEndDir, ".cache");
 const cachePath = path.join(cacheDir, "code-ide-assets.json");
 const cacheZipPath = path.join(cacheDir, "code-ide-assets.zip");
 const sourceUrl =
-	process.env.CODE_IDE_ASSETS_ZIP_URL ||
-	process.env.PYTHON_IDE_ASSETS_ZIP_URL ||
+	env.CODE_IDE_ASSETS_ZIP_URL ||
+	env.PYTHON_IDE_ASSETS_ZIP_URL ||
 	DEFAULT_ASSETS_ZIP_URL;
 const forceRefresh =
-	process.argv.includes("--force") ||
-	process.env.CODE_IDE_ASSETS_REFRESH === "always" ||
-	process.env.PYTHON_IDE_ASSETS_REFRESH === "always";
+	argv.includes("--force") ||
+	env.CODE_IDE_ASSETS_REFRESH === "always" ||
+	env.PYTHON_IDE_ASSETS_REFRESH === "always";
 const skipDownload =
-	process.env.CODE_IDE_ASSETS_DOWNLOAD === "skip" ||
-	process.env.PYTHON_IDE_ASSETS_DOWNLOAD === "skip";
+	env.CODE_IDE_ASSETS_DOWNLOAD === "skip" ||
+	env.PYTHON_IDE_ASSETS_DOWNLOAD === "skip";
 
 await stageCodeIdeAssets();
 
@@ -62,7 +76,9 @@ async function stageCodeIdeAssets() {
 
 	if (skipDownload) {
 		await ensureCodeIdeManifestAlias();
-		console.log("[code-ide-assets] skipped by CODE_IDE_ASSETS_DOWNLOAD=skip");
+		console.log(
+			"[code-ide-assets] skipped by CODE_IDE_ASSETS_DOWNLOAD=skip"
+		);
 		return;
 	}
 
@@ -78,7 +94,9 @@ async function stageCodeIdeAssets() {
 
 	if (!forceRefresh && isCurrent(localInfo, remoteInfo)) {
 		await ensureCodeIdeManifestAlias();
-		console.log(`[code-ide-assets] using extracted ${relativeManifestPath()}`);
+		console.log(
+			`[code-ide-assets] using extracted ${relativeManifestPath()}`
+		);
 		return;
 	}
 
@@ -99,22 +117,26 @@ async function stageCodeIdeAssets() {
 		const manifest = await extractAssets(bytes);
 		await writeFile(
 			cachePath,
-			`${JSON.stringify({
-				assetCount: manifest.assets.length,
-				contentLength:
-					response.headers.get("content-length") ?? String(bytes.byteLength),
-				downloadedAt: new Date().toISOString(),
-				etag: response.headers.get("etag"),
-				lastModified: response.headers.get("last-modified"),
-				sourceUrl
-			}, null, "\t")}\n`
+			`${JSON.stringify(
+				{
+					assetCount: manifest.assets.length,
+					contentLength:
+						response.headers.get("content-length") ??
+						String(bytes.byteLength),
+					downloadedAt: new Date().toISOString(),
+					etag: response.headers.get("etag"),
+					lastModified: response.headers.get("last-modified"),
+					sourceUrl
+				},
+				null,
+				"\t"
+			)}\n`
 		);
 
 		console.log(
 			`[code-ide-assets] extracted ${manifest.assets.length} files from ${formatBytes(bytes.byteLength)} into ${relativeAssetsPath()}`
 		);
-	}
-	catch (error) {
+	} catch (error) {
 		if (localInfo.exists) {
 			await ensureCodeIdeManifestAlias();
 			console.warn(
@@ -183,8 +205,11 @@ async function writeManifestFiles(manifest) {
 
 async function ensureCodeIdeManifestAlias() {
 	const content = await readFile(manifestPath, "utf8").catch(() => "");
-	if (!content) return;
 	await mkdir(path.dirname(codeIdeManifestPath), { recursive: true });
+	if (!content) {
+		await rm(codeIdeManifestPath, { force: true });
+		return;
+	}
 	await writeFile(codeIdeManifestPath, content);
 }
 
@@ -203,7 +228,9 @@ async function localAssetInfo() {
 async function remoteAssetInfo() {
 	const response = await fetch(sourceUrl, { method: "HEAD" });
 	if (!response.ok) {
-		throw new Error(`metadata request failed with status ${response.status}`);
+		throw new Error(
+			`metadata request failed with status ${response.status}`
+		);
 	}
 
 	return {
