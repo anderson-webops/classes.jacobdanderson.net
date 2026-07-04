@@ -1078,6 +1078,122 @@ paint 40 41 blue`
 		});
 	});
 
+	it("parses CodeHS-style labeled Karel world files", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.World;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(1, 1, East, 0);
+        sam.move();
+    }
+
+    static {
+        World.readWorld("world.txt");
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `Dimension: (3, 4)
+Beeper: (1, 1); 2
+Wall: (1, 1); East
+Color: (2, 2); Blue`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual(["sam.move() hit a wall."]);
+		expect(result.karelWorld).toMatchObject({
+			cols: 4,
+			rows: 3,
+			robot: {
+				avenue: 1,
+				street: 1
+			}
+		});
+		expect(result.karelWorld?.beepers).toEqual([
+			{
+				avenue: 1,
+				count: 2,
+				street: 1
+			}
+		]);
+		expect(result.karelWorld?.paints).toEqual([
+			{
+				avenue: 2,
+				color: "#2563eb",
+				street: 2
+			}
+		]);
+		expect(result.karelWorld?.walls).toEqual([
+			{
+				avenue: 1,
+				side: "east",
+				street: 1
+			}
+		]);
+	});
+
+	it("applies Karel dimensions before parsing world objects", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.World;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(20, 20, East, 0);
+    }
+
+    static {
+        World.readWorld("world.txt");
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: `beeper 20 20 1
+wall 20 20 north
+rows=20
+cols=20`
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld).toMatchObject({
+			cols: 20,
+			rows: 20,
+			robot: {
+				avenue: 20,
+				street: 20
+			}
+		});
+		expect(result.karelWorld?.beepers).toContainEqual({
+			avenue: 20,
+			count: 1,
+			street: 20
+		});
+		expect(result.karelWorld?.walls).toContainEqual({
+			avenue: 20,
+			side: "north",
+			street: 20
+		});
+	});
+
 	it("keeps Karel animation snapshots independent as beeper counts change", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
