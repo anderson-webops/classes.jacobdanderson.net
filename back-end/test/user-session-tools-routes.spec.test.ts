@@ -326,6 +326,58 @@ describe("user schedule and note-only routes", () => {
 		});
 	});
 
+	it("rejects oversized learner course progress autosave payloads", async () => {
+		const save = vi.fn().mockResolvedValue(undefined);
+		const student = {
+			...makeStudent(),
+			courseAccess: ["javascript-level-1"],
+			courseProgress: [],
+			save
+		};
+		modelMocks.userFindById.mockImplementation(() => queryWith(student));
+
+		await withUserRoutes(async baseUrl => {
+			const tooLongIdResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/course-progress`,
+				{
+					courseId: "javascript-level-1",
+					completedModuleIds: ["m".repeat(161)],
+					completedItemIds: []
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
+			const tooManyIdsResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/course-progress`,
+				{
+					courseId: "javascript-level-1",
+					completedModuleIds: Array.from(
+						{ length: 1001 },
+						(_value, index) => `module-${index}`
+					),
+					completedItemIds: []
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
+			const tooLongCourseResponse = await putJson(
+				baseUrl,
+				`/users/${studentID}/course-progress`,
+				{
+					courseId: "c".repeat(161),
+					completedModuleIds: [],
+					completedItemIds: []
+				},
+				{ "x-admin-id": adminID.toString() }
+			);
+
+			expect(tooLongIdResponse.status).toBe(400);
+			expect(tooManyIdsResponse.status).toBe(400);
+			expect(tooLongCourseResponse.status).toBe(400);
+			expect(save).not.toHaveBeenCalled();
+		});
+	});
+
 	it("preserves available course status when staff update learner course access", async () => {
 		const save = vi.fn().mockResolvedValue(undefined);
 		const student = {
