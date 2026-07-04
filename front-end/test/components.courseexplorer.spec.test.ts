@@ -656,6 +656,96 @@ describe("CourseExplorer.vue", () => {
 		).toContain(assignedCourse.name);
 	});
 
+	it("keeps progress controls hidden while learner course context realigns", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+
+		if (!assignedCourse) throw new Error("Expected course fixtures.");
+
+		const unassignedCourse =
+			coursesStore.courses.find(course => course.id !== assignedCourse.id) ??
+			coursesStore.courses[1];
+
+		if (!unassignedCourse) throw new Error("Expected course fixtures.");
+
+		const unassignedCourseDefinition = await coursesStore.loadCourseById(
+			unassignedCourse.id
+		);
+
+		if (!unassignedCourseDefinition) throw new Error("Expected course fixtures.");
+
+		window.localStorage.setItem(
+			"classes:course-explorer:selected-course",
+			unassignedCourse.id
+		);
+		appStore.setCurrentAdmin({
+			_id: "admin-1",
+			name: "Admin",
+			email: "admin@example.com",
+			editAdmins: false,
+			saveEdit: "Save"
+		});
+
+		(api.get as any).mockResolvedValueOnce({
+			data: [
+				{
+					_id: "learner-1",
+					name: "Learner",
+					email: "learner@example.com",
+					age: 12,
+					state: "GA",
+					courseAccess: [assignedCourse.id],
+					courseProgress: [],
+					editUsers: false,
+					saveEdit: "Save"
+				}
+			]
+		});
+		vi.spyOn(coursesStore, "loadCourseById").mockImplementation(
+			async courseId => {
+				if (courseId === unassignedCourse.id) {
+					return unassignedCourseDefinition;
+				}
+				if (courseId === assignedCourse.id) {
+					return new Promise(() => {});
+				}
+				return null;
+			}
+		);
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(
+				wrapper.find<HTMLSelectElement>("#course-select").element.value
+			).toBe(unassignedCourse.id);
+		});
+		expect(wrapper.text()).toContain("Viewing all courses");
+		expect(wrapper.findAll(".progress-toggle")).toHaveLength(0);
+
+		await wrapper.find<HTMLSelectElement>("#learner-select").setValue(
+			"learner-1"
+		);
+		await nextTick();
+
+		await vi.waitFor(() => {
+			expect(
+				wrapper.find<HTMLSelectElement>("#course-select").element.value
+			).toBe(assignedCourse.id);
+		});
+		expect(wrapper.findAll(".progress-toggle")).toHaveLength(0);
+		expect(api.put).not.toHaveBeenCalled();
+	});
+
 	it("lets staff mark selected learner progress with debounced autosave", async () => {
 		vi.useFakeTimers();
 		const pinia = createPinia();

@@ -289,12 +289,19 @@ const emptyHint = computed(() =>
 			: "Email if access should already be enabled."
 );
 
-const canEditProgress = computed(
-	() =>
+const canEditProgress = computed(() => {
+	const learner = selectedLearner.value;
+	const courseId = selectedCourseId.value;
+	const course = selectedCourse.value;
+	return (
 		isStaffContext.value &&
-		!!selectedLearner.value &&
-		!!selectedCourseId.value
-);
+		!!learner &&
+		!!courseId &&
+		!!course &&
+		course.id === courseId &&
+		learnerCanAccessCourse(learner, courseId)
+	);
+});
 
 const progressSaveStatusText = computed(() => {
 	switch (progressSaveStatus.value) {
