@@ -3711,17 +3711,17 @@ function serializeKarelWorld(
 	trace: string[]
 ): KarelWorldState {
 	return {
-		beepers: [...world.beepers.values()].sort(
-			(a, b) => a.street - b.street || a.avenue - b.avenue
-		),
+		beepers: [...world.beepers.values()]
+			.map(beeper => ({ ...beeper }))
+			.sort((a, b) => a.street - b.street || a.avenue - b.avenue),
 		cols: world.cols,
-		paints: [...world.paints.values()].sort(
-			(a, b) => a.street - b.street || a.avenue - b.avenue
-		),
-		robot,
+		paints: [...world.paints.values()]
+			.map(paint => ({ ...paint }))
+			.sort((a, b) => a.street - b.street || a.avenue - b.avenue),
+		robot: robot ? cloneKarelRobot(robot) : null,
 		rows: world.rows,
-		trace,
-		walls: world.walls
+		trace: [...trace],
+		walls: world.walls.map(wall => ({ ...wall }))
 	};
 }
 
