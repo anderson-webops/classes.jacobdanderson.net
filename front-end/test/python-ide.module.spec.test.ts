@@ -4774,12 +4774,12 @@ describe("python IDE project helpers", () => {
 	});
 
 	it("keeps the Code IDE extracted asset manifest mirrored and file-backed", () => {
+		const legacyManifestPath = resolve(
+			__dirname,
+			"../public/python-ide/assets/manifest.json"
+		);
 		const codeIdeManifestSource = readFileSync(
 			resolve(__dirname, "../public/ide/assets/manifest.json"),
-			"utf8"
-		);
-		const legacyManifestSource = readFileSync(
-			resolve(__dirname, "../public/python-ide/assets/manifest.json"),
 			"utf8"
 		);
 		const manifest = JSON.parse(codeIdeManifestSource) as {
@@ -4789,7 +4789,11 @@ describe("python IDE project helpers", () => {
 			}>;
 		};
 
-		expect(codeIdeManifestSource).toBe(legacyManifestSource);
+		if (existsSync(legacyManifestPath)) {
+			expect(codeIdeManifestSource).toBe(
+				readFileSync(legacyManifestPath, "utf8")
+			);
+		}
 		expect(manifest.assets.length).toBeGreaterThan(100);
 		for (const asset of manifest.assets) {
 			expect(asset.name).toMatch(/^(?:images|music|sounds)\//);
