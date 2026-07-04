@@ -276,7 +276,7 @@ describe("python IDE project helpers", () => {
 		]);
 		expect(javaOutline.files[0]?.content).toContain("Scanner input");
 		expect(javaOutline.files[0]?.content).toContain("ArrayList<String>");
-		expect(javaOutline.files[0]?.content).toContain("makeNote");
+		expect(javaOutline.files[0]?.content).toContain("make_note");
 		expect(karelOutline.title).toBe("Karel Java Outline");
 		expect(karelOutline.files).toEqual([
 			{ name: "MyProgram.java", content: karelOutlineStarterCode },
@@ -295,12 +295,15 @@ describe("python IDE project helpers", () => {
 		expect(javaStarterCode).toContain(
 			"@brief Demonstrate the minimal Java console project shape"
 		);
+		expect(javaStarterCode).toContain("GREETING_MESSAGE");
 		expect(javaOutlineStarterCode).toContain(
 			"@brief Organize a beginner Java console project with helpers and lists"
 		);
+		expect(javaOutlineStarterCode).toContain("STARTING_SCORE");
 		expect(blueJMainStarterCode).toContain(
 			"@brief Demonstrate a small BlueJ object-oriented project"
 		);
+		expect(blueJMainStarterCode).toContain("FIRST_SCORE");
 		expect(blueJStudentStarterCode).toContain(
 			"@brief Store one student's grade level and score history"
 		);
