@@ -2730,33 +2730,31 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 	};
 	if (!worldFile) return world;
 
-	for (const rawLine of worldFile.content.split(/\r?\n/)) {
-		const line = rawLine.trim();
-		if (!line || line.startsWith("#")) continue;
+	const lines = worldFile.content
+		.split(/\r?\n/)
+		.map(line => line.trim())
+		.filter(line => line && !line.startsWith("#"));
 
-		const [command = "", ...args] = line.split(/\s+/);
+	for (const line of lines) {
+		applyKarelWorldDimensionLine(world, line);
+	}
+
+	for (const line of lines) {
+		const { args, command } = parseKarelWorldLine(line);
+		const integers = karelWorldLineIntegers(line);
 		if (command === "rows") {
-			world.rows = boundedPositiveInteger(args[0], world.rows);
+			continue;
 		}
 		if (command === "cols") {
-			world.cols = boundedPositiveInteger(args[0], world.cols);
+			continue;
 		}
-		if (line.startsWith("rows=")) {
-			world.rows = boundedPositiveInteger(
-				line.split("=", 2)[1],
-				world.rows
-			);
-		}
-		if (line.startsWith("cols=")) {
-			world.cols = boundedPositiveInteger(
-				line.split("=", 2)[1],
-				world.cols
-			);
+		if (command === "dimension") {
+			continue;
 		}
 		if (command === "beeper") {
-			const street = positiveInteger(args[0], 1);
-			const avenue = positiveInteger(args[1], 1);
-			const count = positiveInteger(args[2], 1);
+			const street = positiveInteger(integers[0], 1);
+			const avenue = positiveInteger(integers[1], 1);
+			const count = positiveInteger(integers[2], 1);
 			if (!isKarelWorldCoordinate(world, street, avenue)) continue;
 			world.beepers.set(beeperKey(street, avenue), {
 				avenue,
@@ -2765,18 +2763,18 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 			});
 		}
 		if (command === "wall") {
-			const street = positiveInteger(args[0], 1);
-			const avenue = positiveInteger(args[1], 1);
-			const side = normalizeWallSide(args[2]);
+			const street = positiveInteger(integers[0], 1);
+			const avenue = positiveInteger(integers[1], 1);
+			const side = karelWorldLineWallSide(line, args[2]);
 			if (side && isKarelWorldCoordinate(world, street, avenue)) {
 				addKarelWall(world, street, avenue, side);
 			}
 		}
 		if (command === "paint" || command === "color") {
-			const street = positiveInteger(args[0], 1);
-			const avenue = positiveInteger(args[1], 1);
+			const street = positiveInteger(integers[0], 1);
+			const avenue = positiveInteger(integers[1], 1);
 			if (!isKarelWorldCoordinate(world, street, avenue)) continue;
-			const colorName = normalizeKarelPaintColor(args[2] ?? "");
+			const colorName = karelWorldLinePaintColor(line, args[2]);
 			const color = colorName
 				? resolveKarelPaintColor(colorName, street, avenue, world)
 				: null;
@@ -2791,6 +2789,66 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 	}
 
 	return world;
+}
+
+function applyKarelWorldDimensionLine(world: MutableKarelWorld, line: string) {
+	const { args, command } = parseKarelWorldLine(line);
+	const integers = karelWorldLineIntegers(line);
+
+	if (command === "rows") {
+		world.rows = boundedPositiveInteger(args[0] ?? integers[0], world.rows);
+	}
+	if (command === "cols") {
+		world.cols = boundedPositiveInteger(args[0] ?? integers[0], world.cols);
+	}
+	if (line.toLowerCase().startsWith("rows=")) {
+		world.rows = boundedPositiveInteger(line.split("=", 2)[1], world.rows);
+	}
+	if (line.toLowerCase().startsWith("cols=")) {
+		world.cols = boundedPositiveInteger(line.split("=", 2)[1], world.cols);
+	}
+	if (command === "dimension") {
+		world.rows = boundedPositiveInteger(integers[0], world.rows);
+		world.cols = boundedPositiveInteger(integers[1], world.cols);
+	}
+}
+
+function parseKarelWorldLine(line: string) {
+	const [rawCommand = "", ...args] = line.split(/\s+/);
+	const command = rawCommand.replace(/:$/, "").toLowerCase();
+	return { args, command };
+}
+
+function karelWorldLineIntegers(line: string) {
+	return [...line.matchAll(/\d+/g)].map(match => match[0]);
+}
+
+function karelWorldLineWords(line: string) {
+	return [...line.matchAll(/[A-Z_]\w*/gi)].map(match => match[0]);
+}
+
+function karelWorldLineWallSide(line: string, fallback: string | undefined) {
+	const side = normalizeWallSide(fallback);
+	if (side) return side;
+
+	for (const word of karelWorldLineWords(line).reverse()) {
+		const side = normalizeWallSide(word);
+		if (side) return side;
+	}
+
+	return null;
+}
+
+function karelWorldLinePaintColor(line: string, fallback: string | undefined) {
+	const color = normalizeKarelPaintColor(fallback ?? "");
+	if (color) return color;
+
+	for (const word of karelWorldLineWords(line).reverse()) {
+		const color = normalizeKarelPaintColor(word);
+		if (color) return color;
+	}
+
+	return null;
 }
 
 function positiveInteger(value: string | undefined, fallback: number) {
