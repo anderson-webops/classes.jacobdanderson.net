@@ -197,6 +197,7 @@ const MAX_KAREL_WORLD_FILE_CHARS = 200000;
 const MAX_KAREL_WORLD_LINES = 2000;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const MAX_JAVA_RUNTIME_SOURCE_CHARS = 200000;
+const MAX_JAVA_CONSOLE_INPUT_CHARS = 200000;
 const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
 const MAX_JAVA_CONSOLE_OUTPUT_LINES = 500;
@@ -317,6 +318,18 @@ export function runJavaIdeProject(
 		return {
 			stderr: [
 				`Java preview skipped files over ${MAX_JAVA_RUNTIME_SOURCE_CHARS.toLocaleString()} characters. Split the project into smaller files or run it in a desktop Java IDE.`
+			],
+			stdout: []
+		};
+	}
+
+	if (
+		options.mode === "java" &&
+		(options.inputText?.length ?? 0) > MAX_JAVA_CONSOLE_INPUT_CHARS
+	) {
+		return {
+			stderr: [
+				`Java preview skipped input over ${MAX_JAVA_CONSOLE_INPUT_CHARS.toLocaleString()} characters. Shorten the input before running in the browser.`
 			],
 			stdout: []
 		};

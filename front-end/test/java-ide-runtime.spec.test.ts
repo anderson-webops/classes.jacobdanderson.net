@@ -379,6 +379,32 @@ public class Main {
 		]);
 	});
 
+	it("skips oversized Java console input before scanner parsing", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.println(input.nextLine());
+    }
+}`
+				}
+			],
+			inputText: "x".repeat(200001),
+			mode: "java"
+		});
+
+		expect(result.stdout).toEqual([]);
+		expect(result.stderr).toEqual([
+			"Java preview skipped input over 200,000 characters. Shorten the input before running in the browser."
+		]);
+	});
+
 	it("reports invalid Scanner numeric input without server execution", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
