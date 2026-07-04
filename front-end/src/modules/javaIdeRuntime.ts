@@ -191,6 +191,7 @@ type JavaConsoleSignal =
 
 const DEFAULT_WORLD_SIZE = 10;
 const MAX_KAREL_WORLD_SIZE = 40;
+const MAX_KAREL_WORLD_LINES = 2000;
 const MAX_KAREL_PREVIEW_COMMANDS = 500;
 const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
@@ -2602,7 +2603,7 @@ function runKarelProject(
 ): JavaIdeRunResult {
 	const source = stripJavaComments(activeFile.content);
 	const declaration = source.match(ROBOT_DECLARATION_RE);
-	const world = parseKarelWorld(files, source);
+	const { warnings: worldWarnings, world } = parseKarelWorld(files, source);
 	const stderr: string[] = [];
 	const trace: string[] = [];
 	const karelWorldSteps: KarelWorldState[] = [];
@@ -2627,6 +2628,7 @@ function runKarelProject(
 		return {
 			karelWorld,
 			stderr: [
+				...worldWarnings,
 				"Create a Karel robot with new UrRobot(street, avenue, Direction, beepers), or write CodeHS-style Karel commands in main() or run()."
 			],
 			stdout: []
@@ -2648,6 +2650,7 @@ function runKarelProject(
 		break;
 	}
 	stderr.push(...plan.warnings);
+	stderr.push(...worldWarnings);
 
 	return {
 		karelWorld: serializeKarelWorld(world, robot, trace),
@@ -2721,6 +2724,7 @@ function stripJavaComments(source: string) {
 function parseKarelWorld(files: PythonIdeFile[], source: string) {
 	const readWorldFileName = source.match(WORLD_READ_RE)?.[1] ?? "world.txt";
 	const worldFile = files.find(file => file.name === readWorldFileName);
+	const warnings: string[] = [];
 	const world: MutableKarelWorld = {
 		beepers: new Map(),
 		cols: DEFAULT_WORLD_SIZE,
@@ -2728,12 +2732,18 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 		rows: DEFAULT_WORLD_SIZE,
 		walls: []
 	};
-	if (!worldFile) return world;
+	if (!worldFile) return { warnings, world };
 
-	const lines = worldFile.content
+	const rawLines = worldFile.content
 		.split(/\r?\n/)
 		.map(line => stripKarelWorldLineComment(line).trim())
 		.filter(line => line && !line.startsWith("#"));
+	const lines = rawLines.slice(0, MAX_KAREL_WORLD_LINES);
+	if (rawLines.length > MAX_KAREL_WORLD_LINES) {
+		warnings.push(
+			`Stopped reading Karel world after ${MAX_KAREL_WORLD_LINES} lines.`
+		);
+	}
 
 	for (const line of lines) {
 		applyKarelWorldDimensionLine(world, line);
@@ -2788,7 +2798,7 @@ function parseKarelWorld(files: PythonIdeFile[], source: string) {
 		}
 	}
 
-	return world;
+	return { warnings, world };
 }
 
 function stripKarelWorldLineComment(line: string) {

@@ -1078,6 +1078,55 @@ paint 40 41 blue`
 		});
 	});
 
+	it("caps oversized Karel world line counts before parsing late objects", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: `import kareltherobot.UrRobot;
+import kareltherobot.World;
+import kareltherobot.Directions;
+
+public class Algo implements Directions {
+    public static void main(String[] args) {
+        UrRobot sam = new UrRobot(1, 1, East, 0);
+    }
+
+    static {
+        World.readWorld("world.txt");
+    }
+}`
+				},
+				{
+					name: "world.txt",
+					content: [
+						"rows=5",
+						"cols=5",
+						...Array.from(
+							{ length: 2100 },
+							() => "wall 1 1 north"
+						),
+						"paint 1 1 red"
+					].join("\n")
+				}
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([
+			"Stopped reading Karel world after 2000 lines."
+		]);
+		expect(result.karelWorld?.walls).toEqual([
+			{
+				avenue: 1,
+				side: "north",
+				street: 1
+			}
+		]);
+		expect(result.karelWorld?.paints).toEqual([]);
+	});
+
 	it("parses CodeHS-style labeled Karel world files", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",
