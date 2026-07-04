@@ -53,6 +53,9 @@ describe("production Code IDE smoke helpers", () => {
 			"Download BlueJ ZIP",
 			"Java preview skipped projects over",
 			"total Java characters",
+			"karelRobotStyle",
+			"karelRobotDirectionClass",
+			"left 240ms ease",
 			"https://github.com/k-pet-group/BlueJ-Greenfoot"
 		].join("\n");
 
