@@ -89,6 +89,19 @@ export interface PythonIdeProject {
 	updatedAt?: string;
 }
 
+export type SharedPythonIdeProject = Pick<
+	PythonIdeProject,
+	| "activeFileName"
+	| "courseID"
+	| "courseProjectKey"
+	| "courseProjectTitle"
+	| "files"
+	| "mode"
+	| "starterLabel"
+	| "starterUrl"
+	| "title"
+>;
+
 export type PythonIdeProjectReviewRole = "admin" | "tutor";
 
 export interface PythonIdeProjectReview {
@@ -1456,7 +1469,7 @@ export async function fetchPythonIdeProjects() {
 }
 
 export async function fetchSharedPythonIdeProject(shareID: string) {
-	const { data } = await api.get<{ project: PythonIdeProject }>(
+	const { data } = await api.get<{ project: SharedPythonIdeProject }>(
 		`/users/python-projects/shared/${encodeURIComponent(shareID)}`
 	);
 	return data.project;
