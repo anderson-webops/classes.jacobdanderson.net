@@ -559,8 +559,9 @@ const codeEditorViewStates = new Map<string, CodeEditorViewState>();
 const codeEditorStateSnapshots = new Map<string, CodeEditorState>();
 const karelWorldPlaybackController = createKarelWorldPlaybackController({
 	delayMs: karelPlaybackFrameDelayMs,
-	showStep(step) {
+	showStep(step, stepNumber, stepCount) {
 		karelWorld.value = step;
+		runMessage.value = `Karel step ${stepNumber} of ${stepCount}`;
 	}
 });
 
@@ -4770,9 +4771,11 @@ function drawGameCircle(
 
 function normalizeKey(key: string | null | undefined) {
 	if (!key) return "";
-	const normalized = key
-		.toLowerCase()
-		.replace(keyboardKeyWhitespaceRegex, "");
+	const lowercaseKey = key.toLowerCase();
+	const directAlias = keyboardKeyAliasMap[lowercaseKey];
+	if (directAlias) return directAlias;
+
+	const normalized = lowercaseKey.replace(keyboardKeyWhitespaceRegex, "");
 	return keyboardKeyAliasMap[normalized] ?? normalized;
 }
 
@@ -5550,6 +5553,12 @@ function focusVisualOutputForRun() {
 	);
 }
 
+function focusKarelWorldOutput(event: PointerEvent) {
+	const output = event.currentTarget;
+	if (!(output instanceof HTMLElement)) return;
+	output.focus({ preventScroll: true });
+}
+
 function activateRunControl() {
 	if (runControlIsStop.value) {
 		stopCurrentProject();
@@ -5903,8 +5912,8 @@ onMounted(() => {
 		"visibilitychange",
 		flushPendingProjectSaveOnVisibilityChange
 	);
-	window.addEventListener("keydown", handleKeyDown);
-	window.addEventListener("keyup", handleKeyUp);
+	window.addEventListener("keydown", handleKeyDown, true);
+	window.addEventListener("keyup", handleKeyUp, true);
 	window.addEventListener("mouseup", clearTurtleDrag);
 	document.addEventListener(
 		"pointerdown",
@@ -5927,8 +5936,8 @@ onBeforeUnmount(() => {
 		"visibilitychange",
 		flushPendingProjectSaveOnVisibilityChange
 	);
-	window.removeEventListener("keydown", handleKeyDown);
-	window.removeEventListener("keyup", handleKeyUp);
+	window.removeEventListener("keydown", handleKeyDown, true);
+	window.removeEventListener("keyup", handleKeyUp, true);
 	window.removeEventListener("mouseup", clearTurtleDrag);
 	document.removeEventListener(
 		"pointerdown",
@@ -7007,6 +7016,7 @@ onBeforeUnmount(() => {
 							class="karel-shell"
 							aria-label="Karel world"
 							tabindex="0"
+							@pointerdown="focusKarelWorldOutput"
 						>
 							<div
 								v-if="karelWorld"
