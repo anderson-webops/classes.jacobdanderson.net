@@ -1646,6 +1646,11 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain('tabindex="0"');
 		expect(pageSource).toContain(".karel-shell:focus-visible");
 		expect(pageSource).toContain("function isCanvasScrollKey");
+		expect(pageSource).toContain("const directAlias = keyboardKeyAliasMap[lowercaseKey]");
+		expect(pageSource).toContain('@pointerdown="focusKarelWorldOutput"');
+		expect(pageSource).toContain(
+			'window.addEventListener("keydown", handleKeyDown, true);'
+		);
 		expect(keydownSource).toContain('selectedProject.value?.mode === "karel"');
 		expect(keydownSource).toContain('selectedProject.value?.mode === "turtle"');
 		expect(keydownSource).toContain(
@@ -5625,8 +5630,11 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"return karelWorldPlaybackController.play(steps, shouldContinue);"
 		);
-		expect(pageSource).toContain("showStep(step)");
+		expect(pageSource).toContain("showStep(step, stepNumber, stepCount)");
 		expect(pageSource).toContain("karelWorld.value = step;");
+		expect(pageSource).toContain(
+			"runMessage.value = `Karel step ${stepNumber} of ${stepCount}`;"
+		);
 		expect(pageSource).toContain('runMessage.value = "Animating Karel world";');
 		expect(pageSource).toContain(
 			"const completedPlayback = await playKarelWorldSteps("
