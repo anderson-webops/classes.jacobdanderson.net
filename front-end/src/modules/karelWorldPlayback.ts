@@ -13,7 +13,11 @@ export interface KarelWorldPlaybackScheduler {
 interface KarelWorldPlaybackControllerOptions {
 	delayMs: number;
 	scheduler?: KarelWorldPlaybackScheduler;
-	showStep: (step: KarelWorldState, stepNumber: number, stepCount: number) => void;
+	showStep: (
+		step: KarelWorldState,
+		stepNumber: number,
+		stepCount: number
+	) => void;
 }
 
 export function createKarelWorldPlaybackController({

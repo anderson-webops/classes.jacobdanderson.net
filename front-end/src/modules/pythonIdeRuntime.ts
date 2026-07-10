@@ -17,7 +17,7 @@ export { pythonIdeImportedTopLevelModules } from "@/modules/pythonImportScanner"
 
 const PROJECT_ROOT = "/home/pyodide/classes_project";
 const PYTHON_IDE_RUNTIME_BOOTSTRAP_VERSION =
-	"2026-06-19-stale-import-hook-reset";
+	"2026-07-09-python-314-turtle-parity";
 const PYTHON_EXTENSION_RE = /\.py$/i;
 const FOR_LOOP_ITERATION_LIMIT = 500000;
 const WHILE_LOOP_ITERATION_LIMIT = 25000;
@@ -170,6 +170,16 @@ export interface TurtleBridge {
 	resetTurtle: () => void;
 	clearTurtle: () => void;
 	bgcolor: (color: string) => void;
+	bgpic: (name: string) => void;
+	setScreenSize: (width: number, height: number) => void;
+	setDelay: (delayMs: number) => void;
+	setWorldCoordinates: (
+		left: number,
+		bottom: number,
+		right: number,
+		top: number
+	) => void;
+	resetWorldCoordinates: () => void;
 	beginFill: () => void;
 	endFill: () => void;
 	forward: (distance: number) => void;
@@ -202,9 +212,39 @@ export interface TurtleBridge {
 	dot: (size: number, color?: string) => void;
 	stamp: () => number;
 	clearStamp: (stampID: number) => void;
-	write: (text: string) => void;
-	registerKey: (key: string, callback: (() => void) | null) => void;
+	undo: (count?: number) => void;
+	write: (
+		text: string,
+		align?: string,
+		fontName?: string,
+		fontSize?: number,
+		fontStyle?: string
+	) => number;
+	registerKey: (
+		key: string,
+		callback: (() => void) | null,
+		eventType?: "press" | "release"
+	) => void;
 	registerClick: (
+		button: string,
+		callback: ((x: number, y: number) => void) | null
+	) => void;
+	registerRelease: (
+		button: string,
+		callback: ((x: number, y: number) => void) | null
+	) => void;
+	registerTurtleClick: (
+		turtleID: string,
+		button: string,
+		callback: ((x: number, y: number) => void) | null
+	) => void;
+	registerTurtleRelease: (
+		turtleID: string,
+		button: string,
+		callback: ((x: number, y: number) => void) | null
+	) => void;
+	registerTurtleDrag: (
+		turtleID: string,
 		button: string,
 		callback: ((x: number, y: number) => void) | null
 	) => void;
@@ -214,11 +254,24 @@ export interface TurtleBridge {
 	) => void;
 	scheduleTimer: (delayMs: number, callback: (() => void) | null) => void;
 	listen: () => void;
+	registerShape: (name: string, definitionJson: string) => void;
 	setShape: (shape: string) => void;
+	setShapeTransform: (
+		stretchWidth: number,
+		stretchLength: number,
+		outlineWidth: number,
+		shearFactor: number,
+		tilt: number,
+		t11: number,
+		t12: number,
+		t21: number,
+		t22: number
+	) => void;
 	setSpeed: (speed: number) => void;
 	setTracer: (value: number) => void;
 	setVisible: (visible: boolean) => void;
 	update: () => void;
+	exportPostScript: () => string;
 }
 
 export interface RunPythonProjectOptions {
@@ -1033,14 +1086,17 @@ builtins.__classes_schedule_turtle_loop = __classes_schedule_turtle_loop
 }
 
 const turtleShim = `
+from contextlib import contextmanager
+import json
 import math
+from pathlib import Path
 from js import window
 from pyodide.ffi import create_proxy
 
 _bridge = window.__classesPythonIdeTurtle
 __classes_turtle_api_version__ = "3.14"
 _callback_proxies = {}
-_angle_fullcircle = 360.0
+_callback_functions = {}
 _background_color = "white"
 _bgpic = "nopic"
 _color_mode = 1.0
@@ -1054,7 +1110,26 @@ _timer_counter = 0
 _turtle_counter = 0
 _world_coordinates = None
 _builtin_shapes = {"arrow", "blank", "circle", "classic", "fancy", "square", "triangle", "turtle"}
-_registered_shapes = set(_builtin_shapes)
+_registered_shapes = {name: {"kind": "builtin"} for name in _builtin_shapes}
+_builtin_shape_points = {
+    "arrow": ((-10, 0), (10, 0), (0, 10)),
+    "circle": (
+        (10, 0), (9.51, 3.09), (8.09, 5.88), (5.88, 8.09),
+        (3.09, 9.51), (0, 10), (-3.09, 9.51), (-5.88, 8.09),
+        (-8.09, 5.88), (-9.51, 3.09), (-10, 0), (-9.51, -3.09),
+        (-8.09, -5.88), (-5.88, -8.09), (-3.09, -9.51), (0, -10),
+        (3.09, -9.51), (5.88, -8.09), (8.09, -5.88), (9.51, -3.09),
+    ),
+    "classic": ((0, 0), (-5, -9), (0, -7), (5, -9)),
+    "square": ((10, -10), (10, 10), (-10, 10), (-10, -10)),
+    "triangle": ((10, -5.77), (0, 11.55), (-10, -5.77)),
+    "turtle": (
+        (0, 16), (-2, 14), (-1, 10), (-4, 7), (-7, 9), (-9, 8),
+        (-6, 5), (-7, 1), (-5, -3), (-8, -6), (-6, -8), (-4, -5),
+        (0, -7), (4, -5), (6, -8), (8, -6), (5, -3), (7, 1),
+        (6, 5), (9, 8), (7, 9), (4, 7), (1, 10), (2, 14),
+    ),
+}
 _turtles = []
 _speed_values = {
     "fastest": 0.0,
@@ -1073,9 +1148,11 @@ def _is_number(value):
 
 def _color_channel(value):
     number = float(value)
-    if _color_mode == 1.0 and 0 <= number <= 1:
+    if number < 0 or number > float(_color_mode):
+        raise TurtleGraphicsError("bad color sequence: {}".format(value))
+    if _color_mode == 1.0:
         number *= 255
-    return max(0, min(255, int(round(number))))
+    return int(round(number))
 
 def _normalize_color(*values):
     if len(values) == 1:
@@ -1103,6 +1180,28 @@ def _normalize_color(*values):
 
     return str(values[0]) if values else "black"
 
+def _color_result(value):
+    text = str(value)
+    channels = None
+    if text.startswith("rgb(") and text.endswith(")"):
+        try:
+            channels = [float(part.strip()) for part in text[4:-1].split(",")[:3]]
+        except Exception:
+            channels = None
+    elif text.startswith("#") and len(text) in (4, 7):
+        try:
+            if len(text) == 4:
+                channels = [int(character * 2, 16) for character in text[1:]]
+            else:
+                channels = [int(text[index : index + 2], 16) for index in (1, 3, 5)]
+        except Exception:
+            channels = None
+    if channels is None:
+        return value
+    if _color_mode == 1.0:
+        return tuple(channel / 255.0 for channel in channels)
+    return tuple(channels)
+
 def _looks_like_color(value):
     if isinstance(value, str):
         return True
@@ -1118,35 +1217,139 @@ def _normalize_turtle_speed(value):
         if speed_name in _speed_values:
             return _speed_values[speed_name]
     speed = float(value)
-    if speed > 10.0 or speed < 0.5:
-        return 0.0
-    return max(0.0, min(10.0, speed))
-
-def _angle_to_degrees(value):
-    return float(value) * 360.0 / _angle_fullcircle
-
-def _degrees_to_angle(value):
-    return float(value) * _angle_fullcircle / 360.0
+    if 0.5 < speed < 10.5:
+        return float(int(round(speed)))
+    return 0.0
 
 def _set_color_mode(cmode=None):
     global _color_mode
     if cmode is None:
         return _color_mode
-    _color_mode = float(cmode)
+    numeric_mode = float(cmode)
+    if numeric_mode not in (1.0, 255.0):
+        raise TurtleGraphicsError("colormode must be 1.0 or 255")
+    _color_mode = int(numeric_mode) if numeric_mode == 255 else 1.0
     return _color_mode
+
+class TurtleGraphicsError(Exception):
+    pass
+
+class Terminator(Exception):
+    pass
+
+class Vec2D(tuple):
+    def __new__(cls, x, y):
+        return tuple.__new__(cls, (x, y))
+
+    def __add__(self, other):
+        return Vec2D(self[0] + other[0], self[1] + other[1])
+
+    def __sub__(self, other):
+        return Vec2D(self[0] - other[0], self[1] - other[1])
+
+    def __mul__(self, other):
+        if isinstance(other, Vec2D):
+            return self[0] * other[0] + self[1] * other[1]
+        return Vec2D(self[0] * other, self[1] * other)
+
+    def __rmul__(self, other):
+        if isinstance(other, (int, float)):
+            return Vec2D(self[0] * other, self[1] * other)
+        return NotImplemented
+
+    def __neg__(self):
+        return Vec2D(-self[0], -self[1])
+
+    def __abs__(self):
+        return math.hypot(*self)
+
+    def rotate(self, angle):
+        radians = math.radians(angle)
+        cosine = math.cos(radians)
+        sine = math.sin(radians)
+        return Vec2D(
+            self[0] * cosine - self[1] * sine,
+            self[0] * sine + self[1] * cosine,
+        )
+
+    def __getnewargs__(self):
+        return (self[0], self[1])
+
+    def __repr__(self):
+        return "(%.2f,%.2f)" % self
+
+class Shape:
+    def __init__(self, type_, data=None):
+        if type_ not in ("compound", "image", "polygon"):
+            raise TurtleGraphicsError("There is no shape type {}".format(type_))
+        self._type = type_
+        self._data = [] if type_ == "compound" else data
+
+    def addcomponent(self, poly, fill, outline=None):
+        if self._type != "compound":
+            raise TurtleGraphicsError("Cannot add component to {} Shape".format(self._type))
+        self._data.append((tuple(poly), fill, fill if outline is None else outline))
+
+    def _definition(self):
+        if self._type == "image":
+            return {"kind": "image", "name": str(self._data)}
+        if self._type == "polygon":
+            return {"kind": "polygon", "points": [list(point) for point in self._data]}
+        return {
+            "kind": "compound",
+            "components": [
+                {
+                    "points": [list(point) for point in polygon],
+                    "fill": _normalize_color(fill),
+                    "outline": _normalize_color(outline),
+                }
+                for polygon, fill, outline in self._data
+            ],
+        }
+
+class _CanvasProxy:
+    def __init__(self, *_args, **_kwargs):
+        pass
+
+    def postscript(self, **_kwargs):
+        return str(_bridge.exportPostScript())
+
+    def winfo_width(self):
+        return _screen_width
+
+    def winfo_height(self):
+        return _screen_height
+
+    def focus_force(self):
+        _bridge.listen()
+
+    def bind(self, *_args, **_kwargs):
+        return None
+
+    def unbind(self, *_args, **_kwargs):
+        return None
 
 def _release_proxy(proxy):
     if proxy is not None and hasattr(proxy, "destroy"):
         proxy.destroy()
 
-def _stored_callback(kind, key, function):
+def _stored_callback(kind, key, function, add=None):
     storage_key = (kind, str(key))
     _release_proxy(_callback_proxies.pop(storage_key, None))
 
     if function is None:
+        _callback_functions.pop(storage_key, None)
         return None
 
-    proxy = create_proxy(function)
+    callbacks = _callback_functions.get(storage_key, []) if add else []
+    callbacks.append(function)
+    _callback_functions[storage_key] = callbacks
+
+    def dispatch(*args):
+        for callback in list(_callback_functions.get(storage_key, [])):
+            callback(*args)
+
+    proxy = create_proxy(dispatch)
     _callback_proxies[storage_key] = proxy
     return proxy
 
@@ -1172,6 +1375,7 @@ def _release_all_callbacks():
     for proxy in list(_callback_proxies.values()):
         _release_proxy(proxy)
     _callback_proxies.clear()
+    _callback_functions.clear()
 
 class _NoAnimationContext:
     def __init__(self, screen):
@@ -1190,10 +1394,13 @@ class _NoAnimationContext:
         return False
 
 class _Screen:
+    def __init__(self, *_args, **_kwargs):
+        pass
+
     def bgcolor(self, *color):
         global _background_color
         if len(color) == 0:
-            return _background_color
+            return _color_result(_background_color)
         _background_color = _normalize_color(*color)
         _bridge.bgcolor(_background_color)
 
@@ -1202,17 +1409,33 @@ class _Screen:
         if picname is None:
             return _bgpic
         _bgpic = str(picname)
+        _bridge.bgpic(_bgpic)
         return None
 
     def clear(self):
+        global _background_color, _bgpic, _color_mode, _delay_value
+        global _screen_mode, _tracer_value, _world_coordinates
+        _release_all_callbacks()
+        _background_color = "white"
+        _bgpic = "nopic"
+        _color_mode = 1.0
+        _delay_value = 10
+        _screen_mode = "standard"
+        _tracer_value = 1.0
+        _world_coordinates = None
+        for turtle in list(_turtles):
+            turtle._reset_state(sync=False)
+        _turtles.clear()
         _bridge.clear()
+        return None
 
     def clearscreen(self):
         self.clear()
 
     def reset(self):
-        _release_all_callbacks()
-        _bridge.reset()
+        for turtle in list(_turtles):
+            turtle.reset()
+        return None
 
     def resetscreen(self):
         self.reset()
@@ -1227,30 +1450,47 @@ class _Screen:
             _screen_height = int(canvheight)
         if bg is not None:
             self.bgcolor(bg)
+        _bridge.setScreenSize(float(_screen_width), float(_screen_height))
         return None
 
     def setworldcoordinates(self, llx, lly, urx, ury):
-        global _world_coordinates
+        global _screen_mode, _world_coordinates
+        if float(urx) == float(llx) or float(ury) == float(lly):
+            raise TurtleGraphicsError("world coordinates must span a non-zero area")
+        if _screen_mode != "world":
+            self.mode("world")
         _world_coordinates = (float(llx), float(lly), float(urx), float(ury))
+        _bridge.setWorldCoordinates(*_world_coordinates)
         return None
 
     def listen(self):
         _bridge.listen()
 
     def onkey(self, function, key):
-        _bridge.registerKey(str(key), _stored_callback("key", key, function))
+        _bridge.registerKey(
+            str(key),
+            _stored_callback("key-release", key, function),
+            "release",
+        )
 
     def onkeyrelease(self, function, key):
         self.onkey(function, key)
 
     def onkeypress(self, function, key=None):
-        _bridge.registerKey(str(key or ""), _stored_callback("key", key or "", function))
+        _bridge.registerKey(
+            str(key or ""),
+            _stored_callback("key-press", key or "", function),
+            "press",
+        )
 
     def ontimer(self, function, t=0):
         _bridge.scheduleTimer(float(t), _timer_callback(function))
 
     def onclick(self, function, btn=1, add=None):
-        _bridge.registerClick(str(btn), _stored_callback("click", btn, function))
+        _bridge.registerClick(
+            str(btn),
+            _stored_callback("screen-click", btn, function, add),
+        )
 
     def onscreenclick(self, function, btn=1, add=None):
         self.onclick(function, btn, add)
@@ -1263,6 +1503,7 @@ class _Screen:
         if delay is None:
             return _delay_value
         _delay_value = int(delay)
+        _bridge.setDelay(float(_delay_value))
         return None
 
     def tracer(self, n=None, delay=None):
@@ -1280,26 +1521,41 @@ class _Screen:
         return None
 
     def mode(self, mode=None):
-        global _screen_mode
+        global _screen_mode, _world_coordinates
         if mode is None:
             return _screen_mode
         normalized = str(mode).lower()
         if normalized not in ("standard", "logo", "world"):
-            raise ValueError("mode must be 'standard', 'logo', or 'world'")
+            raise TurtleGraphicsError("mode must be 'standard', 'logo', or 'world'")
         _screen_mode = normalized
+        if normalized != "world":
+            _world_coordinates = None
+            _bridge.resetWorldCoordinates()
+        self.reset()
         return None
 
     def colormode(self, cmode=None):
         return _set_color_mode(cmode)
 
     def getcanvas(self):
-        return None
+        return _CanvasProxy()
 
     def getshapes(self):
-        return tuple(sorted(_registered_shapes))
+        return sorted(_registered_shapes)
 
     def register_shape(self, name, shape=None):
-        _registered_shapes.add(str(name).lower())
+        shape_name = str(name)
+        if shape is None:
+            definition = Shape("image", shape_name)
+        elif isinstance(shape, str):
+            definition = Shape("image", shape)
+        elif isinstance(shape, Shape):
+            definition = shape
+        else:
+            definition = Shape("polygon", tuple(shape))
+        serialized = definition._definition()
+        _registered_shapes[shape_name] = serialized
+        _bridge.registerShape(shape_name, json.dumps(serialized))
         return None
 
     def addshape(self, name, shape=None):
@@ -1341,23 +1597,46 @@ class _Screen:
 
     def bye(self):
         _release_all_callbacks()
+        _bridge.clear()
         return None
 
     def exitonclick(self):
+        self.onclick(lambda _x, _y: self.bye())
+        self.listen()
         return None
 
     def mainloop(self):
+        self.listen()
         return None
 
-    def save(self, filename, overwrite=False):
+    def save(self, filename, *, overwrite=False):
+        path = Path(filename)
+        if path.suffix.lower() not in (".ps", ".eps"):
+            raise ValueError("filename must end with .ps or .eps")
+        if not path.parent.exists():
+            raise FileNotFoundError("The directory '{}' does not exist.".format(path.parent))
+        if path.exists() and not overwrite:
+            raise FileExistsError("The file '{}' already exists.".format(path))
+        path.write_text(str(_bridge.exportPostScript()), encoding="utf-8")
         return None
 
-    def setup(self, width=None, height=None, startx=None, starty=None):
+    def setup(self, width=0.5, height=0.75, startx=None, starty=None):
         global _screen_width, _screen_height
         if isinstance(width, (int, float)):
-            _screen_width = int(width)
+            numeric_width = float(width)
+            if 0 < numeric_width <= 1:
+                _screen_width = int(float(window.innerWidth) * numeric_width)
+            else:
+                _screen_width = int(numeric_width)
         if isinstance(height, (int, float)):
-            _screen_height = int(height)
+            numeric_height = float(height)
+            if 0 < numeric_height <= 1:
+                _screen_height = int(float(window.innerHeight) * numeric_height)
+            else:
+                _screen_height = int(numeric_height)
+        _screen_width = max(1, _screen_width)
+        _screen_height = max(1, _screen_height)
+        _bridge.setScreenSize(float(_screen_width), float(_screen_height))
         return None
 
     def title(self, title=None):
@@ -1385,17 +1664,39 @@ class _FillContext:
         return False
 
 class Turtle:
-    def __init__(self, *_args, **_kwargs):
+    def __init__(self, shape="classic", undobuffersize=1000, visible=True):
         global _turtle_counter
+        shape_name = str(shape)
+        if shape_name not in _registered_shapes and shape_name.lower() in _registered_shapes:
+            shape_name = shape_name.lower()
+        if shape_name not in _registered_shapes:
+            raise TurtleGraphicsError("Unknown turtle shape: {}".format(shape))
         _turtle_counter += 1
         self._bridge_id = str(_turtle_counter)
+        self.screen = _screen
+        self._undo_size = 0 if undobuffersize is None else max(0, int(undobuffersize))
+        self._undo_stack = []
+        self._suspend_undo = 0
+        self._reset_state(sync=False)
+        self._shape = shape_name
+        self._visible = bool(visible)
+        _turtles.append(self)
+        self._sync_bridge()
+
+    def _reset_state(self, sync=True, preserve_angle=False):
+        fullcircle = (
+            self._fullcircle
+            if preserve_angle and hasattr(self, "_fullcircle")
+            else 360.0
+        )
         self._x = 0.0
         self._y = 0.0
-        self._heading = 0.0
+        self._heading = 90.0 if _screen_mode == "logo" else 0.0
+        self._fullcircle = fullcircle
         self._pen_down = True
         self._pen_color = "#000000"
         self._fill_color = "#000000"
-        self._line_width = 3.0
+        self._line_width = 1.0
         self._shape = "classic"
         self._speed = 3.0
         self._visible = True
@@ -1410,9 +1711,84 @@ class Turtle:
         self._stretch_len = 1.0
         self._stretch_wid = 1.0
         self._tilt = 0.0
-        _turtles.append(self)
+        self._undo_stack.clear()
+        if sync:
+            self._sync_bridge()
+
+    def _snapshot(self, render_count=0):
+        return {
+            "render_count": int(render_count),
+            "x": self._x,
+            "y": self._y,
+            "heading": self._heading,
+            "fullcircle": self._fullcircle,
+            "pen_down": self._pen_down,
+            "pen_color": self._pen_color,
+            "fill_color": self._fill_color,
+            "line_width": self._line_width,
+            "shape": self._shape,
+            "speed": self._speed,
+            "visible": self._visible,
+            "filling": self._filling,
+            "outline": self._outline,
+            "poly_points": list(self._poly_points),
+            "poly_recording": self._poly_recording,
+            "resizemode": self._resizemode,
+            "shearfactor": self._shearfactor,
+            "shape_transform": tuple(self._shape_transform),
+            "stamps": list(self._stamps),
+            "stretch_len": self._stretch_len,
+            "stretch_wid": self._stretch_wid,
+            "tilt": self._tilt,
+        }
+
+    def _push_undo(self, render_count=0):
+        if self._suspend_undo or self._undo_size <= 0:
+            return
+        self._undo_stack.append(self._snapshot(render_count))
+        if len(self._undo_stack) > self._undo_size:
+            del self._undo_stack[0 : len(self._undo_stack) - self._undo_size]
+
+    def _restore_snapshot(self, snapshot):
+        for key, value in snapshot.items():
+            if key == "render_count":
+                continue
+            setattr(self, "_" + key, value)
+        self._sync_bridge()
+
+    def _angle_to_degrees(self, value):
+        return float(value) * 360.0 / self._fullcircle
+
+    def _degrees_to_angle(self, value):
+        return float(value) * self._fullcircle / 360.0
+
+    def _public_heading(self, internal_degrees):
+        normalized = float(internal_degrees) % 360.0
+        if _screen_mode == "logo":
+            normalized = (90.0 - normalized) % 360.0
+        return self._degrees_to_angle(normalized) % self._fullcircle
+
+    def _internal_heading(self, public_angle):
+        degrees = self._angle_to_degrees(public_angle) % 360.0
+        return (90.0 - degrees) % 360.0 if _screen_mode == "logo" else degrees
 
     def _sync_bridge(self):
+        if self not in _turtles:
+            _turtles.append(self)
+        shape_kind = _registered_shapes.get(self._shape, {}).get("kind")
+        if shape_kind == "image":
+            shape_transform = (1.0, 0.0, 0.0, 1.0)
+            outline = 1.0
+        elif self._resizemode == "auto" and shape_kind != "compound":
+            scale = max(1.0, self._line_width / 5.0)
+            shape_transform = (scale, 0.0, 0.0, scale)
+            outline = self._line_width
+        elif self._resizemode == "noresize" and shape_kind != "compound":
+            shape_transform = (1.0, 0.0, 0.0, 1.0)
+            outline = 1.0
+        else:
+            shape_transform = self._shape_transform
+            outline = self._outline
         _bridge.activate(str(self._bridge_id))
         _bridge.setShape(str(self._shape))
         _bridge.setSpeed(float(self._speed))
@@ -1425,6 +1801,25 @@ class Turtle:
             str(self._pen_color),
             str(self._fill_color),
             float(self._line_width),
+        )
+        _bridge.setShapeTransform(
+            1.0,
+            1.0,
+            float(outline),
+            0.0,
+            0.0,
+            *[float(value) for value in shape_transform],
+        )
+
+    def _refresh_shape_transform(self):
+        radians = math.radians(self._tilt)
+        sine = math.sin(radians)
+        cosine = math.cos(radians)
+        self._shape_transform = (
+            self._stretch_wid * cosine,
+            self._stretch_len * (self._shearfactor * cosine + sine),
+            -self._stretch_wid * sine,
+            self._stretch_len * (cosine - self._shearfactor * sine),
         )
 
     def _set_position(self, x, y):
@@ -1443,6 +1838,7 @@ class Turtle:
         self._sync_bridge()
 
     def forward(self, distance):
+        self._push_undo(1 if self._pen_down else 0)
         amount = float(distance)
         self._sync_bridge()
         radians = math.radians(self._heading)
@@ -1464,27 +1860,30 @@ class Turtle:
         self.backward(distance)
 
     def right(self, degrees):
-        self._heading -= _angle_to_degrees(degrees)
+        self._push_undo()
+        self._heading -= self._angle_to_degrees(degrees)
         self._sync_bridge()
 
     def rt(self, degrees):
         self.right(degrees)
 
     def left(self, degrees):
-        self._turn_left_degrees(_angle_to_degrees(degrees))
+        self._push_undo()
+        self._turn_left_degrees(self._angle_to_degrees(degrees))
 
     def lt(self, degrees):
         self.left(degrees)
 
     def setheading(self, degrees):
-        self._heading = _angle_to_degrees(degrees)
+        self._push_undo()
+        self._heading = self._internal_heading(degrees)
         self._sync_bridge()
 
     def seth(self, degrees):
         self.setheading(degrees)
 
     def heading(self):
-        return _degrees_to_angle(self._heading)
+        return round(self._public_heading(self._heading), 10)
 
     def xcor(self):
         return self._x
@@ -1493,7 +1892,7 @@ class Turtle:
         return self._y
 
     def position(self):
-        return (self.xcor(), self.ycor())
+        return Vec2D(self.xcor(), self.ycor())
 
     def pos(self):
         return self.position()
@@ -1501,6 +1900,7 @@ class Turtle:
     def goto(self, x, y=None):
         if y is None:
             x, y = x
+        self._push_undo(1 if self._pen_down else 0)
         self._sync_bridge()
         self._set_position(x, y)
         _bridge.goto(float(x), float(y))
@@ -1515,6 +1915,7 @@ class Turtle:
                 y = self.ycor()
         if y is None:
             y = self.ycor()
+        self._push_undo(1 if self._filling and not fill_gap else 0)
         self._sync_bridge()
         self._set_position(x, y)
         _bridge.teleport(float(x), float(y), bool(fill_gap))
@@ -1532,19 +1933,28 @@ class Turtle:
         self.goto(self.xcor(), float(y))
 
     def home(self):
-        self.goto(0, 0)
-        self._heading = 0.0
+        self._push_undo(1 if self._pen_down else 0)
+        self._sync_bridge()
+        self._set_position(0, 0)
+        _bridge.goto(0.0, 0.0)
+        self._heading = 90.0 if _screen_mode == "logo" else 0.0
         self._sync_bridge()
 
     def degrees(self, fullcircle=360.0):
-        global _angle_fullcircle
-        _angle_fullcircle = float(fullcircle)
+        fullcircle = float(fullcircle)
+        if fullcircle == 0:
+            raise ValueError("fullcircle must not be zero")
+        self._fullcircle = fullcircle
         return None
 
     def radians(self):
-        return self.degrees(math.tau)
+        self._fullcircle = math.tau
+        return None
 
     def penup(self):
+        if not self._pen_down:
+            return None
+        self._push_undo()
         self._pen_down = False
         self._sync_bridge()
 
@@ -1555,6 +1965,9 @@ class Turtle:
         self.penup()
 
     def pendown(self):
+        if self._pen_down:
+            return None
+        self._push_undo()
         self._pen_down = True
         self._sync_bridge()
 
@@ -1570,7 +1983,11 @@ class Turtle:
     def pensize(self, width=None):
         if width is None:
             return self._line_width
-        self._line_width = max(1.0, float(width))
+        normalized_width = float(width)
+        if normalized_width <= 0:
+            raise TurtleGraphicsError("pensize must be positive")
+        self._push_undo()
+        self._line_width = normalized_width
         self._sync_bridge()
 
     def width(self, width=None):
@@ -1587,8 +2004,9 @@ class Turtle:
                 "speed": self._speed,
                 "resizemode": self._resizemode,
                 "stretchfactor": (self._stretch_wid, self._stretch_len),
+                "shearfactor": self._shearfactor,
                 "outline": self._outline,
-                "tilt": self._tilt,
+                "tilt": math.radians(self._tilt),
             }
         settings = {}
         if pen is not None:
@@ -1597,6 +2015,7 @@ class Turtle:
             except Exception:
                 pass
         settings.update(pendict)
+        self._push_undo()
         if "shown" in settings:
             self._visible = bool(settings["shown"])
         if "pendown" in settings:
@@ -1606,17 +2025,31 @@ class Turtle:
         if "fillcolor" in settings:
             self._fill_color = _normalize_color(settings["fillcolor"])
         if "pensize" in settings:
-            self._line_width = max(1.0, float(settings["pensize"]))
+            normalized_width = float(settings["pensize"])
+            if normalized_width <= 0:
+                raise TurtleGraphicsError("pensize must be positive")
+            self._line_width = normalized_width
         if "speed" in settings:
             self._speed = _normalize_turtle_speed(settings["speed"])
         if "resizemode" in settings:
-            self._resizemode = str(settings["resizemode"])
+            normalized_mode = str(settings["resizemode"]).lower()
+            if normalized_mode not in ("auto", "user", "noresize"):
+                raise TurtleGraphicsError("resizemode must be 'auto', 'user', or 'noresize'")
+            self._resizemode = normalized_mode
         if "stretchfactor" in settings:
-            self.shapesize(*settings["stretchfactor"])
+            stretch_wid, stretch_len = settings["stretchfactor"]
+            if float(stretch_wid) == 0 or float(stretch_len) == 0:
+                raise TurtleGraphicsError("stretch_wid/stretch_len must not be zero")
+            self._stretch_wid = float(stretch_wid)
+            self._stretch_len = float(stretch_len)
+        if "shearfactor" in settings:
+            self._shearfactor = float(settings["shearfactor"])
         if "outline" in settings:
             self._outline = float(settings["outline"])
         if "tilt" in settings:
-            self._tilt = float(settings["tilt"])
+            self._tilt = math.degrees(float(settings["tilt"]))
+        if any(key in settings for key in ("stretchfactor", "shearfactor", "tilt")):
+            self._refresh_shape_transform()
         self._sync_bridge()
         return None
 
@@ -1625,19 +2058,22 @@ class Turtle:
 
     def pencolor(self, *color):
         if len(color) == 0:
-            return self._pen_color
+            return _color_result(self._pen_color)
+        self._push_undo()
         self._pen_color = _normalize_color(*color)
         self._sync_bridge()
 
     def fillcolor(self, *color):
         if len(color) == 0:
-            return self._fill_color
+            return _color_result(self._fill_color)
+        self._push_undo()
         self._fill_color = _normalize_color(*color)
         self._sync_bridge()
 
     def color(self, *colors):
         if len(colors) == 0:
-            return (self._pen_color, self._fill_color)
+            return (_color_result(self._pen_color), _color_result(self._fill_color))
+        self._push_undo()
         if len(colors) == 1:
             normalized = _normalize_color(colors[0])
             self._pen_color = normalized
@@ -1656,28 +2092,35 @@ class Turtle:
         if extent is None:
             extent_degrees = 360.0
         else:
-            extent_degrees = _angle_to_degrees(extent)
+            extent_degrees = self._angle_to_degrees(extent)
         if steps is None:
             fraction = abs(extent_degrees) / 360.0
             steps = 1 + int(min(11 + abs(radius) / 6.0, 59.0) * fraction)
         else:
             steps = int(steps)
 
-        turn = extent_degrees / steps
-        half_turn = turn * 0.5
-        side_length = 2.0 * radius * math.sin(math.radians(half_turn))
-        if radius < 0:
-            side_length = -side_length
-            turn = -turn
-            half_turn = -half_turn
+        self._push_undo(steps if self._pen_down else 0)
+        self._suspend_undo += 1
 
-        self._turn_left_degrees(half_turn)
-        for _ in range(steps):
-            self.forward(side_length)
-            self._turn_left_degrees(turn)
-        self._turn_left_degrees(-half_turn)
+        try:
+            turn = extent_degrees / steps
+            half_turn = turn * 0.5
+            side_length = 2.0 * radius * math.sin(math.radians(half_turn))
+            if radius < 0:
+                side_length = -side_length
+                turn = -turn
+                half_turn = -half_turn
+
+            self._turn_left_degrees(half_turn)
+            for _ in range(steps):
+                self.forward(side_length)
+                self._turn_left_degrees(turn)
+            self._turn_left_degrees(-half_turn)
+        finally:
+            self._suspend_undo = max(0, self._suspend_undo - 1)
 
     def dot(self, size=None, *color):
+        self._push_undo(1)
         self._sync_bridge()
         if len(color) == 0:
             if _looks_like_color(size):
@@ -1692,6 +2135,7 @@ class Turtle:
         _bridge.dot(float(dot_size), str(dot_color))
 
     def stamp(self):
+        self._push_undo(1)
         self._sync_bridge()
         stamp_id = _bridge.stamp()
         self._stamps.append(stamp_id)
@@ -1726,27 +2170,69 @@ class Turtle:
         return None
 
     def undo(self):
+        if not self._undo_stack:
+            return None
+        snapshot = self._undo_stack.pop()
+        _bridge.activate(str(self._bridge_id))
+        _bridge.undo(int(snapshot.get("render_count", 0)))
+        self._restore_snapshot(snapshot)
         return None
 
-    def write(self, text, *_args, **_kwargs):
+    def write(self, text, move=False, align="left", font=("Arial", 8, "normal")):
+        normalized_align = str(align).lower()
+        if normalized_align not in ("left", "center", "right"):
+            raise TurtleGraphicsError("align must be 'left', 'center', or 'right'")
+        try:
+            font_name, font_size, font_style = font
+        except Exception as error:
+            raise TurtleGraphicsError("font must be a (name, size, style) tuple") from error
+        self._push_undo(1)
         self._sync_bridge()
-        _bridge.write(str(text))
+        width = float(
+            _bridge.write(
+                str(text),
+                normalized_align,
+                str(font_name),
+                float(font_size),
+                str(font_style),
+            )
+        )
+        if move:
+            self._suspend_undo += 1
+            try:
+                self.goto(self.xcor() + width, self.ycor())
+            finally:
+                self._suspend_undo = max(0, self._suspend_undo - 1)
+        return None
 
     def onclick(self, function, btn=1, add=None):
         self._sync_bridge()
-        _bridge.registerClick(str(btn), _stored_callback("turtle-click", btn, function))
+        _bridge.registerTurtleClick(
+            str(self._bridge_id),
+            str(btn),
+            _stored_callback("turtle-click", "{}:{}".format(self._bridge_id, btn), function, add),
+        )
 
     def onrelease(self, function, btn=1, add=None):
         self._sync_bridge()
-        _bridge.registerClick(str(btn), _stored_callback("turtle-release", btn, function))
+        _bridge.registerTurtleRelease(
+            str(self._bridge_id),
+            str(btn),
+            _stored_callback("turtle-release", "{}:{}".format(self._bridge_id, btn), function, add),
+        )
 
     def ondrag(self, function, btn=1, add=None):
         self._sync_bridge()
-        _bridge.registerDrag(str(btn), _stored_callback("drag", btn, function))
+        _bridge.registerTurtleDrag(
+            str(self._bridge_id),
+            str(btn),
+            _stored_callback("drag", "{}:{}".format(self._bridge_id, btn), function, add),
+        )
 
     def speed(self, *_args):
         if len(_args) == 0:
             return self._speed
+        self._push_undo()
         self._speed = _normalize_turtle_speed(_args[0])
         self._sync_bridge()
         return None
@@ -1754,9 +2240,12 @@ class Turtle:
     def shape(self, *_args):
         if len(_args) == 0:
             return self._shape
-        shape_name = str(_args[0]).lower()
+        shape_name = str(_args[0])
+        if shape_name not in _registered_shapes and shape_name.lower() in _registered_shapes:
+            shape_name = shape_name.lower()
         if shape_name not in _registered_shapes:
-            raise ValueError("Unknown turtle shape: {}".format(_args[0]))
+            raise TurtleGraphicsError("Unknown turtle shape: {}".format(_args[0]))
+        self._push_undo()
         self._shape = shape_name
         self._sync_bridge()
         return None
@@ -1766,13 +2255,21 @@ class Turtle:
             return self._resizemode
         normalized = str(rmode).lower()
         if normalized not in ("auto", "user", "noresize"):
-            raise ValueError("resizemode must be 'auto', 'user', or 'noresize'")
+            raise TurtleGraphicsError("resizemode must be 'auto', 'user', or 'noresize'")
+        self._push_undo()
         self._resizemode = normalized
+        self._sync_bridge()
         return None
 
     def shapesize(self, stretch_wid=None, stretch_len=None, outline=None):
         if stretch_wid is None and stretch_len is None and outline is None:
             return (self._stretch_wid, self._stretch_len, self._outline)
+        if (
+            (stretch_wid is not None and float(stretch_wid) == 0)
+            or (stretch_len is not None and float(stretch_len) == 0)
+        ):
+            raise TurtleGraphicsError("stretch_wid/stretch_len must not be zero")
+        self._push_undo()
         if stretch_wid is not None:
             self._stretch_wid = float(stretch_wid)
         if stretch_len is None:
@@ -1780,8 +2277,12 @@ class Turtle:
         if stretch_len is not None:
             self._stretch_len = float(stretch_len)
         if outline is not None:
-            self._outline = float(outline)
+            normalized_outline = float(outline)
+            if normalized_outline <= 0:
+                raise TurtleGraphicsError("outline must be positive")
+            self._outline = normalized_outline
         self._resizemode = "user"
+        self._refresh_shape_transform()
         self._sync_bridge()
         return None
 
@@ -1791,57 +2292,89 @@ class Turtle:
     def shearfactor(self, shear=None):
         if shear is None:
             return self._shearfactor
+        self._push_undo()
         self._shearfactor = float(shear)
+        self._resizemode = "user"
+        self._refresh_shape_transform()
+        self._sync_bridge()
         return None
 
     def tiltangle(self, angle=None):
+        angle_orientation = -1.0 if _screen_mode == "logo" else 1.0
         if angle is None:
-            return _degrees_to_angle(self._tilt)
-        self._tilt = _angle_to_degrees(angle)
+            public_degrees = -self._tilt * angle_orientation
+            return self._degrees_to_angle(public_degrees) % self._fullcircle
+        self._push_undo()
+        self._tilt = -self._angle_to_degrees(angle) * angle_orientation
+        self._resizemode = "user"
+        self._refresh_shape_transform()
         self._sync_bridge()
         return None
 
     def tilt(self, angle):
-        self._tilt += _angle_to_degrees(angle)
-        self._sync_bridge()
-        return None
+        return self.tiltangle(float(angle) + self.tiltangle())
 
     def shapetransform(self, t11=None, t12=None, t21=None, t22=None):
         if t11 is None and t12 is None and t21 is None and t22 is None:
             return self._shape_transform
-        self._shape_transform = (float(t11), float(t12), float(t21), float(t22))
+        m11, m12, m21, m22 = self._shape_transform
+        m11 = m11 if t11 is None else float(t11)
+        m12 = m12 if t12 is None else float(t12)
+        m21 = m21 if t21 is None else float(t21)
+        m22 = m22 if t22 is None else float(t22)
+        determinant = m11 * m22 - m12 * m21
+        if determinant == 0:
+            raise TurtleGraphicsError("bad shape transform matrix: must not be singular")
+        tilt_radians = math.atan2(-m21, m11) % math.tau
+        sine = math.sin(tilt_radians)
+        cosine = math.cos(tilt_radians)
+        transformed_11 = cosine * m11 - sine * m21
+        transformed_12 = cosine * m12 - sine * m22
+        transformed_22 = sine * m12 + cosine * m22
+        if abs(transformed_22) < 1e-12:
+            raise TurtleGraphicsError("bad shape transform matrix: cannot resolve stretch factor")
+        self._push_undo()
+        self._shape_transform = (m11, m12, m21, m22)
+        self._stretch_wid = transformed_11
+        self._stretch_len = transformed_22
+        self._shearfactor = transformed_12 / transformed_22
+        self._tilt = math.degrees(tilt_radians)
         self._resizemode = "user"
+        self._sync_bridge()
         return None
 
     def get_shapepoly(self):
-        if self._shape == "square":
-            return ((-10, -10), (10, -10), (10, 10), (-10, 10))
-        if self._shape == "triangle":
-            return ((-10, -8), (10, -8), (0, 12))
-        if self._shape == "circle":
-            return tuple(
-                (10 * math.cos(math.tau * index / 16), 10 * math.sin(math.tau * index / 16))
-                for index in range(16)
-            )
-        return ((0, 12), (-8, -10), (0, -6), (8, -10))
+        definition = _registered_shapes.get(self._shape, {})
+        if definition.get("kind") == "polygon":
+            points = tuple(tuple(point) for point in definition.get("points", []))
+        else:
+            points = _builtin_shape_points.get(self._shape)
+        if points is None:
+            return None
+        if self._resizemode == "user":
+            transform = self._shape_transform
+        elif self._resizemode == "auto":
+            scale = max(1.0, self._line_width / 5.0)
+            transform = (scale, 0.0, 0.0, scale)
+        else:
+            transform = (1.0, 0.0, 0.0, 1.0)
+        m11, m12, m21, m22 = transform
+        return tuple(
+            Vec2D(m11 * x + m12 * y, m21 * x + m22 * y)
+            for x, y in points
+        )
 
     def clear(self):
         _bridge.activate(str(self._bridge_id))
         _bridge.clearTurtle()
+        self._stamps = []
+        self._undo_stack = []
 
     def reset(self):
         _bridge.activate(str(self._bridge_id))
-        self._x = 0.0
-        self._y = 0.0
-        self._heading = 0.0
-        self._pen_down = True
-        self._pen_color = "#000000"
-        self._fill_color = "#000000"
-        self._line_width = 3.0
-        self._shape = "classic"
-        self._visible = True
-        self._filling = False
+        self._reset_state(sync=False, preserve_angle=True)
         _bridge.resetTurtle()
+        self._sync_bridge()
 
     def distance(self, x, y=None):
         if hasattr(x, "xcor") and hasattr(x, "ycor") and y is None:
@@ -1859,9 +2392,15 @@ class Turtle:
             target_x, target_y = x
         else:
             target_x, target_y = x, y
-        return _degrees_to_angle(math.degrees(math.atan2(float(target_y) - self.ycor(), float(target_x) - self.xcor())))
+        internal = math.degrees(
+            math.atan2(float(target_y) - self.ycor(), float(target_x) - self.xcor())
+        )
+        return round(self._public_heading(internal), 10)
 
     def hideturtle(self):
+        if not self._visible:
+            return None
+        self._push_undo()
         self._visible = False
         self._sync_bridge()
         return None
@@ -1870,6 +2409,9 @@ class Turtle:
         return self.hideturtle()
 
     def showturtle(self):
+        if self._visible:
+            return None
+        self._push_undo()
         self._visible = True
         self._sync_bridge()
         return None
@@ -1881,11 +2423,13 @@ class Turtle:
         return self._visible
 
     def begin_fill(self):
+        self._push_undo()
         self._sync_bridge()
         self._filling = True
         _bridge.beginFill()
 
     def end_fill(self):
+        self._push_undo(1)
         self._sync_bridge()
         self._filling = False
         _bridge.endFill()
@@ -1897,6 +2441,7 @@ class Turtle:
         return _FillContext(self)
 
     def begin_poly(self):
+        self._push_undo()
         self._poly_recording = True
         self._poly_points = [(self._x, self._y)]
         return None
@@ -1906,20 +2451,22 @@ class Turtle:
         return None
 
     def get_poly(self):
-        return tuple(self._poly_points)
+        return tuple(Vec2D(*point) for point in self._poly_points)
+
+    @contextmanager
+    def poly(self):
+        self.begin_poly()
+        try:
+            yield self
+        finally:
+            self.end_poly()
 
     def clone(self):
         clone = Turtle()
-        clone._x = self._x
-        clone._y = self._y
-        clone._heading = self._heading
-        clone._pen_down = self._pen_down
-        clone._pen_color = self._pen_color
-        clone._fill_color = self._fill_color
-        clone._line_width = self._line_width
-        clone._shape = self._shape
-        clone._speed = self._speed
-        clone._visible = self._visible
+        snapshot = self._snapshot()
+        clone._restore_snapshot(snapshot)
+        clone._undo_size = self._undo_size
+        clone._undo_stack = []
         clone._sync_bridge()
         return clone
 
@@ -1933,101 +2480,117 @@ class Turtle:
         return _screen
 
     def setundobuffer(self, size):
+        if size is None:
+            self._undo_size = 0
+            self._undo_stack = []
+            return None
+        self._undo_size = max(0, int(size))
+        if self._undo_size == 0:
+            self._undo_stack = []
+        elif len(self._undo_stack) > self._undo_size:
+            self._undo_stack = self._undo_stack[-self._undo_size :]
         return None
 
     def undobufferentries(self):
-        return 0
+        return len(self._undo_stack)
 
-_default = Turtle()
+_default = None
 
-def forward(distance): _default.forward(distance)
-def fd(distance): _default.forward(distance)
-def backward(distance): _default.backward(distance)
-def back(distance): _default.backward(distance)
-def bk(distance): _default.backward(distance)
-def right(degrees): _default.right(degrees)
-def rt(degrees): _default.right(degrees)
-def left(degrees): _default.left(degrees)
-def lt(degrees): _default.left(degrees)
-def setheading(degrees): _default.setheading(degrees)
-def seth(degrees): _default.setheading(degrees)
-def heading(): return _default.heading()
-def xcor(): return _default.xcor()
-def ycor(): return _default.ycor()
-def position(): return _default.position()
-def pos(): return _default.position()
-def goto(x, y=None): _default.goto(x, y)
-def setpos(x, y=None): _default.goto(x, y)
-def setposition(x, y=None): _default.goto(x, y)
-def teleport(x=None, y=None, *, fill_gap=False): _default.teleport(x, y, fill_gap=fill_gap)
-def setx(x): _default.setx(x)
-def sety(y): _default.sety(y)
-def home(): _default.home()
-def degrees(fullcircle=360.0): return _default.degrees(fullcircle)
-def radians(): return _default.radians()
-def penup(): _default.penup()
-def pu(): _default.penup()
-def up(): _default.penup()
-def pendown(): _default.pendown()
-def pd(): _default.pendown()
-def down(): _default.pendown()
-def isdown(): return _default.isdown()
-def pensize(width=None): return _default.pensize(width)
-def width(width=None): return _default.pensize(width)
-def pen(pen=None, **pendict): return _default.pen(pen, **pendict)
-def pencolor(*color): return _default.pencolor(*color)
-def fillcolor(*color): return _default.fillcolor(*color)
-def color(*colors): return _default.color(*colors)
-def circle(radius, *args, **kwargs): _default.circle(radius, *args, **kwargs)
-def dot(size=None, *color): _default.dot(size, *color)
-def stamp(): return _default.stamp()
-def clearstamp(stampid): return _default.clearstamp(stampid)
-def clearstamps(n=None): return _default.clearstamps(n)
-def undo(): return _default.undo()
-def write(text, *args, **kwargs): _default.write(text, *args, **kwargs)
-def clear(): _default.clear()
-def reset(): _default.reset()
-def distance(x, y=None): return _default.distance(x, y)
-def towards(x, y=None): return _default.towards(x, y)
+def _get_default():
+    global _default
+    if _default is None or _default not in _turtles:
+        _default = Turtle()
+    return _default
+
+def forward(distance): _get_default().forward(distance)
+def fd(distance): _get_default().forward(distance)
+def backward(distance): _get_default().backward(distance)
+def back(distance): _get_default().backward(distance)
+def bk(distance): _get_default().backward(distance)
+def right(degrees): _get_default().right(degrees)
+def rt(degrees): _get_default().right(degrees)
+def left(degrees): _get_default().left(degrees)
+def lt(degrees): _get_default().left(degrees)
+def setheading(degrees): _get_default().setheading(degrees)
+def seth(degrees): _get_default().setheading(degrees)
+def heading(): return _get_default().heading()
+def xcor(): return _get_default().xcor()
+def ycor(): return _get_default().ycor()
+def position(): return _get_default().position()
+def pos(): return _get_default().position()
+def goto(x, y=None): _get_default().goto(x, y)
+def setpos(x, y=None): _get_default().goto(x, y)
+def setposition(x, y=None): _get_default().goto(x, y)
+def teleport(x=None, y=None, *, fill_gap=False): _get_default().teleport(x, y, fill_gap=fill_gap)
+def setx(x): _get_default().setx(x)
+def sety(y): _get_default().sety(y)
+def home(): _get_default().home()
+def degrees(fullcircle=360.0): return _get_default().degrees(fullcircle)
+def radians(): return _get_default().radians()
+def penup(): _get_default().penup()
+def pu(): _get_default().penup()
+def up(): _get_default().penup()
+def pendown(): _get_default().pendown()
+def pd(): _get_default().pendown()
+def down(): _get_default().pendown()
+def isdown(): return _get_default().isdown()
+def pensize(width=None): return _get_default().pensize(width)
+def width(width=None): return _get_default().pensize(width)
+def pen(pen=None, **pendict): return _get_default().pen(pen, **pendict)
+def pencolor(*color): return _get_default().pencolor(*color)
+def fillcolor(*color): return _get_default().fillcolor(*color)
+def color(*colors): return _get_default().color(*colors)
+def circle(radius, *args, **kwargs): _get_default().circle(radius, *args, **kwargs)
+def dot(size=None, *color): _get_default().dot(size, *color)
+def stamp(): return _get_default().stamp()
+def clearstamp(stampid): return _get_default().clearstamp(stampid)
+def clearstamps(n=None): return _get_default().clearstamps(n)
+def undo(): return _get_default().undo()
+def write(text, *args, **kwargs): _get_default().write(text, *args, **kwargs)
+def clear(): _get_default().clear()
+def reset(): _get_default().reset()
+def distance(x, y=None): return _get_default().distance(x, y)
+def towards(x, y=None): return _get_default().towards(x, y)
 def listen(): _screen.listen()
 def onkey(function, key): _screen.onkey(function, key)
 def onkeyrelease(function, key): _screen.onkeyrelease(function, key)
 def onkeypress(function, key=None): _screen.onkeypress(function, key)
 def ontimer(function, t=0): _screen.ontimer(function, t)
-def onclick(function, btn=1, add=None): _screen.onclick(function, btn, add)
+def onclick(function, btn=1, add=None): _get_default().onclick(function, btn, add)
 def onscreenclick(function, btn=1, add=None): _screen.onscreenclick(function, btn, add)
-def onrelease(function, btn=1, add=None): _default.onrelease(function, btn, add)
-def ondrag(function, btn=1, add=None): _default.ondrag(function, btn, add)
-def speed(*args): return _default.speed(*args)
+def onrelease(function, btn=1, add=None): _get_default().onrelease(function, btn, add)
+def ondrag(function, btn=1, add=None): _get_default().ondrag(function, btn, add)
+def speed(*args): return _get_default().speed(*args)
 def tracer(n=None, delay=None): return _screen.tracer(n, delay)
 def update(): return _screen.update()
-def shape(*args): return _default.shape(*args)
-def resizemode(rmode=None): return _default.resizemode(rmode)
-def shapesize(stretch_wid=None, stretch_len=None, outline=None): return _default.shapesize(stretch_wid, stretch_len, outline)
-def turtlesize(stretch_wid=None, stretch_len=None, outline=None): return _default.turtlesize(stretch_wid, stretch_len, outline)
-def shearfactor(shear=None): return _default.shearfactor(shear)
-def tiltangle(angle=None): return _default.tiltangle(angle)
-def tilt(angle): return _default.tilt(angle)
-def shapetransform(t11=None, t12=None, t21=None, t22=None): return _default.shapetransform(t11, t12, t21, t22)
-def get_shapepoly(): return _default.get_shapepoly()
-def hideturtle(): return _default.hideturtle()
-def ht(): return _default.hideturtle()
-def showturtle(): return _default.showturtle()
-def st(): return _default.showturtle()
-def isvisible(): return _default.isvisible()
-def begin_fill(): return _default.begin_fill()
-def end_fill(): return _default.end_fill()
-def filling(): return _default.filling()
-def fill(): return _default.fill()
-def begin_poly(): return _default.begin_poly()
-def end_poly(): return _default.end_poly()
-def get_poly(): return _default.get_poly()
-def clone(): return _default.clone()
-def getturtle(): return _default.getturtle()
-def getpen(): return _default.getpen()
-def getscreen(): return _default.getscreen()
-def setundobuffer(size): return _default.setundobuffer(size)
-def undobufferentries(): return _default.undobufferentries()
+def shape(*args): return _get_default().shape(*args)
+def resizemode(rmode=None): return _get_default().resizemode(rmode)
+def shapesize(stretch_wid=None, stretch_len=None, outline=None): return _get_default().shapesize(stretch_wid, stretch_len, outline)
+def turtlesize(stretch_wid=None, stretch_len=None, outline=None): return _get_default().turtlesize(stretch_wid, stretch_len, outline)
+def shearfactor(shear=None): return _get_default().shearfactor(shear)
+def tiltangle(angle=None): return _get_default().tiltangle(angle)
+def tilt(angle): return _get_default().tilt(angle)
+def shapetransform(t11=None, t12=None, t21=None, t22=None): return _get_default().shapetransform(t11, t12, t21, t22)
+def get_shapepoly(): return _get_default().get_shapepoly()
+def hideturtle(): return _get_default().hideturtle()
+def ht(): return _get_default().hideturtle()
+def showturtle(): return _get_default().showturtle()
+def st(): return _get_default().showturtle()
+def isvisible(): return _get_default().isvisible()
+def begin_fill(): return _get_default().begin_fill()
+def end_fill(): return _get_default().end_fill()
+def filling(): return _get_default().filling()
+def fill(): return _get_default().fill()
+def poly(): return _get_default().poly()
+def begin_poly(): return _get_default().begin_poly()
+def end_poly(): return _get_default().end_poly()
+def get_poly(): return _get_default().get_poly()
+def clone(): return _get_default().clone()
+def getturtle(): return _get_default().getturtle()
+def getpen(): return _get_default().getpen()
+def getscreen(): return _get_default().getscreen()
+def setundobuffer(size): return _get_default().setundobuffer(size)
+def undobufferentries(): return _get_default().undobufferentries()
 def bgcolor(*color): return _screen.bgcolor(*color)
 def bgpic(picname=None): return _screen.bgpic(picname)
 def clearscreen(): return _screen.clearscreen()
@@ -2049,15 +2612,62 @@ def textinput(title, prompt): return _screen.textinput(title, prompt)
 def numinput(title, prompt, default=None, minval=None, maxval=None): return _screen.numinput(title, prompt, default, minval, maxval)
 def bye(): return _screen.bye()
 def exitonclick(): return _screen.exitonclick()
-def save(filename, overwrite=False): return _screen.save(filename, overwrite)
-def setup(width=None, height=None, startx=None, starty=None): return _screen.setup(width, height, startx, starty)
+def save(filename, *, overwrite=False): return _screen.save(filename, overwrite=overwrite)
+def setup(width=0.5, height=0.75, startx=None, starty=None): return _screen.setup(width, height, startx, starty)
 def title(title=None): return _screen.title(title)
 def mainloop(): _screen.mainloop()
 def done(): _screen.mainloop()
-RawTurtle = Turtle
-RawPen = Turtle
+
+def write_docstringdict(filename="turtle_docstringdict"):
+    screen_methods = [
+        "addshape", "bgcolor", "bgpic", "bye", "clearscreen", "colormode",
+        "delay", "exitonclick", "getcanvas", "getshapes", "listen", "mainloop",
+        "mode", "no_animation", "numinput", "onkey", "onkeypress",
+        "onkeyrelease", "onscreenclick", "ontimer", "register_shape",
+        "resetscreen", "save", "screensize", "setup", "setworldcoordinates",
+        "textinput", "title", "tracer", "turtles", "update", "window_height",
+        "window_width",
+    ]
+    turtle_methods = [
+        "back", "backward", "begin_fill", "begin_poly", "bk", "circle",
+        "clear", "clearstamp", "clearstamps", "clone", "color", "degrees",
+        "distance", "dot", "down", "end_fill", "end_poly", "fd", "fill",
+        "fillcolor", "filling", "forward", "get_poly", "getpen", "getscreen",
+        "get_shapepoly", "getturtle", "goto", "heading", "hideturtle", "home",
+        "ht", "isdown", "isvisible", "left", "lt", "onclick", "ondrag",
+        "onrelease", "pd", "pen", "pencolor", "pendown", "pensize", "penup",
+        "poly", "pos", "position", "pu", "radians", "reset", "resizemode",
+        "right", "rt", "seth", "setheading", "setpos", "setposition",
+        "setundobuffer", "setx", "sety", "shape", "shapesize",
+        "shapetransform", "shearfactor", "showturtle", "speed", "st", "stamp",
+        "teleport", "tilt", "tiltangle", "towards", "turtlesize", "undo",
+        "undobufferentries", "up", "width", "write", "xcor", "ycor",
+    ]
+    aliases = {
+        "addshape", "backward", "bk", "fd", "ht", "lt", "pd", "pos", "pu",
+        "rt", "seth", "setpos", "setposition", "st", "turtlesize", "up", "width",
+    }
+    docstrings = {}
+    for method_name in screen_methods:
+        if method_name not in aliases:
+            docstrings["_Screen." + method_name] = getattr(_Screen, method_name).__doc__
+    for method_name in turtle_methods:
+        if method_name not in aliases:
+            docstrings["Turtle." + method_name] = getattr(Turtle, method_name).__doc__
+    output_path = Path(str(filename) + ".py")
+    output_path.write_text("docsdict = " + repr(docstrings) + "\\n", encoding="utf-8")
+    return None
+
+class RawTurtle(Turtle):
+    def __init__(self, canvas=None, shape="classic", undobuffersize=1000, visible=True):
+        super().__init__(shape=shape, undobuffersize=undobuffersize, visible=visible)
+
+class RawPen(RawTurtle):
+    pass
+
 Pen = Turtle
 TurtleScreen = _Screen
+ScrolledCanvas = _CanvasProxy
 `;
 
 const pgzeroShim = `
@@ -4555,7 +5165,7 @@ __classes_reserved_files = {
     "zrect.py",
 }
 __classes_reserved_dirs = {"__pycache__", "keras", "pgzero", "tensorflow"}
-__classes_text_suffixes = {".csv", ".json", ".md", ".py", ".svg", ".txt"}
+__classes_text_suffixes = {".csv", ".eps", ".json", ".md", ".ps", ".py", ".svg", ".txt"}
 __classes_files = []
 
 for __classes_path in sorted(__classes_project_root.rglob("*")):

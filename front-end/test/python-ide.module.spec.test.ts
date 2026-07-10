@@ -1409,52 +1409,131 @@ describe("python IDE project helpers", () => {
 			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
 			"utf8"
 		);
-		const expectedModuleFunctions = [
+		const expectedScreenFunctions = [
 			"addshape",
-			"begin_poly",
+			"bgcolor",
 			"bgpic",
 			"bye",
-			"clearstamp",
-			"clearstamps",
 			"clearscreen",
-			"degrees",
-			"end_poly",
+			"colormode",
+			"delay",
 			"exitonclick",
-			"fill",
-			"filling",
-			"get_poly",
 			"getcanvas",
-			"getpen",
-			"getscreen",
 			"getshapes",
-			"get_shapepoly",
+			"listen",
+			"mainloop",
 			"mode",
 			"no_animation",
 			"numinput",
+			"onkey",
+			"onkeypress",
 			"onkeyrelease",
-			"onrelease",
-			"pen",
-			"radians",
+			"onscreenclick",
+			"ontimer",
 			"register_shape",
 			"resetscreen",
-			"resizemode",
 			"save",
 			"screensize",
-			"setundobuffer",
+			"setup",
 			"setworldcoordinates",
+			"textinput",
+			"title",
+			"tracer",
+			"turtles",
+			"update",
+			"window_height",
+			"window_width"
+		];
+		const expectedTurtleFunctions = [
+			"back",
+			"backward",
+			"begin_fill",
+			"begin_poly",
+			"bk",
+			"circle",
+			"clear",
+			"clearstamp",
+			"clearstamps",
+			"clone",
+			"color",
+			"degrees",
+			"distance",
+			"dot",
+			"down",
+			"end_fill",
+			"end_poly",
+			"fd",
+			"fill",
+			"fillcolor",
+			"filling",
+			"forward",
+			"get_poly",
+			"getpen",
+			"getscreen",
+			"get_shapepoly",
+			"getturtle",
+			"goto",
+			"heading",
+			"hideturtle",
+			"home",
+			"ht",
+			"isdown",
+			"isvisible",
+			"left",
+			"lt",
+			"onclick",
+			"ondrag",
+			"onrelease",
+			"pd",
+			"pen",
+			"pencolor",
+			"pendown",
+			"pensize",
+			"penup",
+			"poly",
+			"pos",
+			"position",
+			"pu",
+			"radians",
+			"reset",
+			"resizemode",
+			"right",
+			"rt",
+			"seth",
+			"setheading",
+			"setpos",
+			"setposition",
+			"setundobuffer",
+			"setx",
+			"sety",
+			"shape",
 			"shapesize",
 			"shapetransform",
 			"shearfactor",
+			"showturtle",
+			"speed",
+			"st",
+			"stamp",
 			"teleport",
-			"textinput",
 			"tilt",
 			"tiltangle",
-			"turtles",
+			"towards",
 			"turtlesize",
-			"undobufferentries",
 			"undo",
-			"window_height",
-			"window_width"
+			"undobufferentries",
+			"up",
+			"width",
+			"write",
+			"xcor",
+			"ycor"
+		];
+		const expectedModuleFunctions = [
+			...new Set([
+				...expectedScreenFunctions,
+				...expectedTurtleFunctions,
+				"done",
+				"write_docstringdict"
+			])
 		];
 
 		expect(runtimeSource).toContain(
@@ -1462,11 +1541,16 @@ describe("python IDE project helpers", () => {
 		);
 		expect(runtimeSource).toContain("class _FillContext:");
 		expect(runtimeSource).toContain("class _NoAnimationContext:");
+		expect(runtimeSource).toContain("class Vec2D(tuple):");
+		expect(runtimeSource).toContain("class Shape:");
+		expect(runtimeSource).toContain("class _CanvasProxy:");
+		expect(runtimeSource).toContain("class RawTurtle(Turtle):");
+		expect(runtimeSource).toContain("class RawPen(RawTurtle):");
 		for (const functionName of expectedModuleFunctions) {
 			expect(runtimeSource).toContain(`def ${functionName}(`);
 		}
-		expect(runtimeSource).toContain("RawTurtle = Turtle");
 		expect(runtimeSource).toContain("TurtleScreen = _Screen");
+		expect(runtimeSource).toContain("ScrolledCanvas = _CanvasProxy");
 	});
 
 	it("supports Turtle teleport without drawing a pen line", () => {
@@ -1499,6 +1583,60 @@ describe("python IDE project helpers", () => {
 		);
 		expect(teleportSource).not.toContain('kind: "line"');
 		expect(teleportSource).toContain("durationMs: 0");
+	});
+
+	it("implements the Python 3.14 Turtle methods that previously used compatibility stubs", () => {
+		const runtimeSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
+			"utf8"
+		);
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+
+		for (const marker of [
+			"return _CanvasProxy()",
+			"_bridge.bgpic(_bgpic)",
+			"_bridge.setScreenSize(",
+			"_bridge.setDelay(float(_delay_value))",
+			"_bridge.setWorldCoordinates(*_world_coordinates)",
+			"_bridge.resetWorldCoordinates()",
+			"_bridge.registerShape(shape_name, json.dumps(serialized))",
+			"path.write_text(str(_bridge.exportPostScript()), encoding=\"utf-8\")",
+			'def __init__(self, shape="classic", undobuffersize=1000, visible=True):',
+			"_turtles.clear()",
+			"0 < numeric_width <= 1",
+			"self._undo_stack.append(self._snapshot(render_count))",
+			"_bridge.undo(int(snapshot.get(\"render_count\", 0)))",
+			"def write(self, text, move=False, align=\"left\"",
+			"@contextmanager\n    def poly(self):",
+			"self.screen = _screen",
+			"return Vec2D(self.xcor(), self.ycor())",
+			"def _get_default():",
+			"def onclick(function, btn=1, add=None): _get_default().onclick(",
+			'"{}:{}".format(self._bridge_id, btn)',
+			"self._refresh_shape_transform()",
+			"m11 * x + m12 * y",
+			"self._reset_state(sync=False, preserve_angle=True)"
+		]) {
+			expect(runtimeSource).toContain(marker);
+		}
+
+		for (const marker of [
+			"function registerTurtleShape",
+			"function setTurtleWorldCoordinates",
+			"function resetTurtleWorldCoordinates",
+			"function flushTurtleAnimation",
+			"function exportTurtlePostScript",
+			"function undoTurtleDrawing",
+			"registerTurtleRelease(",
+			"setShapeTransform: setTurtleShapeTransform",
+			"context.transform(t22, t12, t21, t11, 0, 0)",
+			"context.moveTo(firstPoint[1], firstPoint[0])"
+		]) {
+			expect(pageSource).toContain(marker);
+		}
 	});
 
 	it("queues Turtle home with the reset heading in the animated pose", () => {
@@ -1567,7 +1705,8 @@ describe("python IDE project helpers", () => {
 			runControlStart,
 			pageSource.indexOf("const selectedModeLabel", runControlStart)
 		);
-		const registerStart = pageSource.indexOf("registerKey(key: string");
+		const bridgeStart = pageSource.indexOf("const turtleBridge: TurtleBridge =");
+		const registerStart = pageSource.indexOf("\n\tregisterKey(", bridgeStart);
 		const registerSource = pageSource.slice(
 			registerStart,
 			pageSource.indexOf("listen()", registerStart)
@@ -1605,7 +1744,8 @@ describe("python IDE project helpers", () => {
 		expect(registerSource).toContain(
 			"refreshActiveTurtleEventHandlerCount();"
 		);
-		expect(stopSource).toContain("keyHandlers.clear();");
+		expect(stopSource).toContain("turtleKeyPressHandlers.clear();");
+		expect(stopSource).toContain("turtleKeyReleaseHandlers.clear();");
 		expect(stopSource).toContain("turtleClickHandlers.clear();");
 		expect(stopSource).toContain("turtleDragHandlers.clear();");
 		expect(stopSource).toContain("refreshActiveTurtleEventHandlerCount();");
@@ -1754,7 +1894,7 @@ describe("python IDE project helpers", () => {
 		const circleSource = runtimeSource.slice(
 			circleStart,
 			runtimeSource.indexOf(
-				"    def dot(self, size=8, color=None):",
+				"    def dot(self, size=None, *color):",
 				circleStart
 			)
 		);
@@ -1762,7 +1902,7 @@ describe("python IDE project helpers", () => {
 		expect(circleSource).toContain("if extent is None:");
 		expect(circleSource).toContain("extent_degrees = 360.0");
 		expect(circleSource).toContain(
-			"extent_degrees = _angle_to_degrees(extent)"
+			"extent_degrees = self._angle_to_degrees(extent)"
 		);
 		expect(circleSource).toContain("steps = 1 + int(");
 		expect(circleSource).toContain("turn = extent_degrees / steps");
@@ -1811,7 +1951,7 @@ describe("python IDE project helpers", () => {
 			"_bridge.dot(float(dot_size), str(dot_color))"
 		);
 		expect(runtimeSource).toContain(
-			"def dot(size=None, *color): _default.dot(size, *color)"
+			"def dot(size=None, *color): _get_default().dot(size, *color)"
 		);
 	});
 
@@ -1921,7 +2061,7 @@ describe("python IDE project helpers", () => {
 		expect(runtimeSource).toContain("def showturtle(self):");
 		expect(runtimeSource).toContain("def isvisible(self):");
 		expect(runtimeSource).toContain(
-			"def hideturtle(): return _default.hideturtle()"
+			"def hideturtle(): return _get_default().hideturtle()"
 		);
 	});
 
@@ -1940,7 +2080,7 @@ describe("python IDE project helpers", () => {
 			"const PYTHON_IDE_RUNTIME_BOOTSTRAP_VERSION"
 		);
 		expect(runtimeSource).toContain("__classes_runtime_bootstrap_version");
-		expect(runtimeSource).toContain("2026-06-19-stale-import-hook-reset");
+		expect(runtimeSource).toContain("2026-07-09-python-314-turtle-parity");
 		expect(runtimeSource).toContain("const WHILE_LOOP_ITERATION_LIMIT");
 		expect(runtimeSource).toContain(
 			"const TURTLE_COOPERATIVE_WHILE_LOOP_ITERATION_LIMIT"
@@ -2065,7 +2205,7 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(pageSource).toContain(
-			"if (headingDelta > 0)\n\t\treturn Math.max(1, turtleTurnStepDurationMs * speedScale);"
+			"if (headingDelta > 0)\n\t\treturn Math.max(1, turtleTurnStepDurationMs * speedScale * delayScale);"
 		);
 		expect(pageSource).not.toContain(
 			"return Math.min(260, Math.max(90, headingDelta * 1.5));"
@@ -2094,6 +2234,9 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Math.max(1, Math.min(10, speed))");
 		expect(pageSource).toContain("setSpeed(speed: number)");
 		expect(pageSource).toContain("setTracer(value: number)");
+		expect(pageSource).toContain("setDelay(delayMs: number)");
+		expect(pageSource).toContain("const delayScale =");
+		expect(pageSource).toContain("update: flushTurtleAnimation");
 		expect(runtimeSource).toContain("def _normalize_turtle_speed(value):");
 		expect(runtimeSource).toContain('"fastest": 0.0');
 		expect(runtimeSource).toContain(
@@ -2233,7 +2376,7 @@ describe("python IDE project helpers", () => {
 		);
 		const turtleClearStart = runtimeSource.indexOf(
 			"    def clear(self):",
-			runtimeSource.indexOf("class Turtle")
+				runtimeSource.indexOf("class Turtle:")
 		);
 		const turtleClearSource = runtimeSource.slice(
 			turtleClearStart,
@@ -4557,8 +4700,10 @@ describe("python IDE project helpers", () => {
 		expect(isValidPythonFileName("package/submodule/tools.py")).toBe(true);
 		expect(isValidPythonFileName("Main.java")).toBe(true);
 		expect(isValidPythonFileName("src/main/java/Main.java")).toBe(true);
-		expect(isValidPythonFileName("scores.csv")).toBe(true);
-		expect(isValidPythonFileName("notes.md")).toBe(true);
+			expect(isValidPythonFileName("scores.csv")).toBe(true);
+			expect(isValidPythonFileName("notes.md")).toBe(true);
+			expect(isValidPythonFileName("drawing.eps")).toBe(true);
+			expect(isValidPythonFileName("drawing.ps")).toBe(true);
 		expect(isValidPythonFileName("images/player.svg")).toBe(true);
 		expect(isValidPythonFileName("sounds/eep.wav")).toBe(true);
 		expect(isValidPythonFileName("music/theme.mp3")).toBe(true);
@@ -4622,7 +4767,9 @@ describe("python IDE project helpers", () => {
 		expect(normalizeImportedPythonIdeFileName("theme.MP3")).toBe(
 			"music/theme.mp3"
 		);
-		expect(isPythonIdeTextFile("images/player.svg")).toBe(true);
+			expect(isPythonIdeTextFile("images/player.svg")).toBe(true);
+			expect(isPythonIdeTextFile("drawing.eps")).toBe(true);
+			expect(isPythonIdeTextFile("drawing.ps")).toBe(true);
 		expect(isPythonIdeTextFile("images/player.png")).toBe(false);
 		expect(isPythonIdeBinaryAssetFile({ encoding: "base64" })).toBe(true);
 	});
