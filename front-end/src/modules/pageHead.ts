@@ -2,12 +2,12 @@ const SITE_TITLE = "Classes with Jacob";
 
 const ROUTE_TITLES: Array<[RegExp, string]> = [
 	[/^\/$/, SITE_TITLE],
-	[/^\/bluej(?:\/|$)/, "BlueJ IDE"],
+	[/^\/bluej(?:\/|$)/, "IDE"],
 	[/^\/courses(?:\/|$)/, "Courses"],
 	[/^\/pathways(?:\/|$)/, "Pathways"],
 	[/^\/course-resource(?:\/|$)/, "Course Resource"],
-	[/^\/ide(?:\/|$)/, "Code IDE"],
-	[/^\/python-ide(?:\/|$)/, "Code IDE"],
+	[/^\/ide(?:\/|$)/, "IDE"],
+	[/^\/python-ide(?:\/|$)/, "IDE"],
 	[/^\/zoom(?:\/|$)/, "Zoom"],
 	[/^\/signup(?:\/|$)/, "Book a Class"],
 	[/^\/payment(?:\/|$)/, "Tuition"],

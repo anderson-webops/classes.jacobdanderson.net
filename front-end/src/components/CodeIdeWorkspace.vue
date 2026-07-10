@@ -278,6 +278,20 @@ interface GameToneHandle {
 }
 
 type PythonIdeAssetFolder = "images" | "music" | "sounds";
+type CodeIdeWorkspacePresetID = PythonIdeMode | "bluej";
+
+interface CodeIdeWorkspacePreset {
+	id: CodeIdeWorkspacePresetID;
+	label: string;
+	mode: PythonIdeMode;
+	template: PythonIdeProjectTemplate;
+}
+
+interface CodeIdeWorkspacePresetGroup {
+	label: string;
+	presets: CodeIdeWorkspacePreset[];
+}
+
 type BuiltinTurtleShapeName =
 	| "arrow"
 	| "blank"
@@ -406,6 +420,58 @@ const blueJProjectArchiveUploadAccept =
 	".zip,application/zip,application/x-zip-compressed";
 const blueJHomeUrl = "https://www.bluej.org/";
 const blueJSourceUrl = "https://github.com/k-pet-group/BlueJ-Greenfoot";
+const codeIdeWorkspacePresetGroups: CodeIdeWorkspacePresetGroup[] = [
+	{
+		label: "Browser IDE",
+		presets: [
+			{
+				id: "python",
+				label: "Python",
+				mode: "python",
+				template: "blank"
+			},
+			{
+				id: "turtle",
+				label: "Python Turtle",
+				mode: "turtle",
+				template: "blank"
+			},
+			{
+				id: "pgzero",
+				label: "PyGame Zero",
+				mode: "pgzero",
+				template: "blank"
+			},
+			{
+				id: "data",
+				label: "Data / AI",
+				mode: "data",
+				template: "blank"
+			},
+			{ id: "java", label: "Java", mode: "java", template: "blank" },
+			{
+				id: "karel",
+				label: "Karel Java",
+				mode: "karel",
+				template: "blank"
+			}
+		]
+	},
+	{
+		label: "BlueJ integration",
+		presets: [
+			{
+				id: "bluej",
+				label: "BlueJ Java",
+				mode: "java",
+				template: "bluej"
+			}
+		]
+	}
+];
+const codeIdeWorkspacePresets = codeIdeWorkspacePresetGroups.flatMap(
+	group => group.presets
+);
 const blueJClassNameRegex =
 	/\b(?:public\s+)?(?:abstract\s+|final\s+)?class\s+([A-Z_$][\w$]*)/;
 const blueJMainMethodRegex =
@@ -541,6 +607,7 @@ const activeTurtleEventHandlerCount = ref(0);
 const showProjectMenu = ref(false);
 const showFileTools = ref(false);
 const showIdeSettings = ref(false);
+const newWorkspacePresetID = ref<CodeIdeWorkspacePresetID>("turtle");
 const autoSaveEnabled = ref(loadPythonIdeAutoSavePreference());
 const codeRecommendationsEnabled = ref(
 	loadPythonIdeCodeRecommendationsPreference()
@@ -1201,14 +1268,12 @@ const requestedCourseStarter = computed(() => route.query.starter === "course");
 const requestedShareID = computed(() =>
 	typeof route.query.share === "string" ? route.query.share.trim() : ""
 );
-const isBlueJIdeRoute = computed(() => route.path === "/bluej");
 const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
 	const rawTemplate =
 		typeof route.query.template === "string" ? route.query.template : "";
 	const rawMode =
 		typeof route.query.mode === "string" ? route.query.mode : "";
-	if (isBlueJIdeRoute.value || rawTemplate === "bluej" || rawMode === "bluej")
-		return "bluej";
+	if (rawTemplate === "bluej" || rawMode === "bluej") return "bluej";
 	if (rawTemplate === "course" && requestedCourseStarter.value)
 		return "course";
 	if (rawTemplate === "demo") return "demo";
@@ -1218,7 +1283,6 @@ const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
 const requestedStarterMode = computed(() => {
 	const rawMode =
 		typeof route.query.mode === "string" ? route.query.mode : "";
-	if (!rawMode && isBlueJIdeRoute.value) return "java";
 	const courseMode = pythonIdeModeForCourseId(requestedCourseId.value);
 	return normalizePythonIdeMode(rawMode, courseMode ?? "turtle");
 });
@@ -1274,26 +1338,15 @@ const selectedBlueJClassTargets = computed(() => {
 		})
 		.slice(0, 8);
 });
-const codeIdeHeroContent = computed(() =>
-	isBlueJIdeRoute.value
-		? {
-				eyebrow: "BlueJ workspace",
-				title: "Create and exchange BlueJ Java projects",
-				description:
-					"Start from a BlueJ-ready Java project, import BlueJ ZIPs from the desktop app, " +
-					"and download package.bluej archives that open back in BlueJ. The browser preview " +
-					"stays client-side while BlueJ handles desktop object-bench work."
-			}
-		: {
-				eyebrow: "Code IDE",
-				title: "Code, run, and draw in Python or Java",
-				description:
-					"Build multi-file Python and Java projects, use the Turtle canvas for drawing and " +
-					"keyboard-driven lessons, explore PyGame Zero games and data/AI notebooks with " +
-					"rendered charts, preview Java console programs or Karel robot worlds, and use " +
-					"BlueJ integration for desktop object-bench projects, ZIP import, and package.bluej export."
-			}
-);
+const codeIdeHeroContent = {
+	eyebrow: "IDE",
+	title: "Code, run, and draw in Python or Java",
+	description:
+		"Build multi-file Python and Java projects, use the Turtle canvas for drawing and " +
+		"keyboard-driven lessons, explore PyGame Zero games and data/AI notebooks with " +
+		"rendered charts, preview Java console programs or Karel robot worlds, and use " +
+		"BlueJ integration for desktop object-bench projects, ZIP import, and package.bluej export."
+};
 
 function codeIdeShareUrl(shareID: string) {
 	const sharePath = `/ide?share=${encodeURIComponent(shareID)}`;
@@ -2434,6 +2487,14 @@ async function createProject(
 		await nextTick();
 		resetActiveCanvas();
 	}
+}
+
+async function createSelectedWorkspaceProject() {
+	const preset = codeIdeWorkspacePresets.find(
+		candidate => candidate.id === newWorkspacePresetID.value
+	);
+	if (!preset) return;
+	await createProject(preset.mode, preset.template);
 }
 
 async function createProjectFromMenu(
@@ -6554,6 +6615,17 @@ watch(
 	}
 );
 
+watch(
+	selectedProject,
+	project => {
+		if (!project) return;
+		newWorkspacePresetID.value = isPythonIdeBlueJProject(project)
+			? "bluej"
+			: project.mode;
+	},
+	{ immediate: true }
+);
+
 watch(selectedProjectID, (projectID, previousProjectID) => {
 	const expectedMigration = expectedSelectedProjectIDMigration;
 	expectedSelectedProjectIDMigration = null;
@@ -6678,51 +6750,6 @@ onBeforeUnmount(() => {
 					<span>{{ saveMessage }}</span>
 					<strong>{{ runMessage }}</strong>
 				</div>
-				<RouterLink
-					v-if="!isBlueJIdeRoute"
-					class="site-button site-button--secondary compact-button code-ide-status-action"
-					to="/bluej"
-				>
-					BlueJ workspace
-				</RouterLink>
-				<button
-					class="site-button site-button--secondary compact-button code-ide-status-action"
-					type="button"
-					@click="createProject('java', 'bluej')"
-				>
-					New BlueJ project
-				</button>
-				<button
-					class="site-button site-button--secondary compact-button code-ide-status-action"
-					type="button"
-					@click="openBlueJArchiveImporter"
-				>
-					Import BlueJ ZIP
-				</button>
-				<button
-					v-if="isBlueJIdeRoute && selectedProjectCanExportToBlueJ"
-					class="site-button site-button--secondary compact-button code-ide-status-action"
-					type="button"
-					@click="downloadSelectedProjectForBlueJ"
-				>
-					Download BlueJ ZIP
-				</button>
-				<RouterLink
-					v-if="isBlueJIdeRoute"
-					class="site-button site-button--secondary compact-button code-ide-status-action"
-					to="/ide"
-				>
-					Full Code IDE
-				</RouterLink>
-				<a
-					v-if="isBlueJIdeRoute"
-					:href="blueJSourceUrl"
-					class="site-button site-button--secondary compact-button code-ide-status-action"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					BlueJ source
-				</a>
 			</div>
 		</div>
 
@@ -6775,9 +6802,9 @@ onBeforeUnmount(() => {
 								<button
 									:aria-expanded="showProjectMenu"
 									aria-haspopup="menu"
-									aria-label="Create new project"
+									aria-label="More project options"
 									class="icon-action icon-action--add"
-									title="Create new project"
+									title="More project options"
 									type="button"
 									@click="showProjectMenu = !showProjectMenu"
 								>
@@ -6788,19 +6815,7 @@ onBeforeUnmount(() => {
 									class="project-create-menu"
 									role="menu"
 								>
-									<span>BlueJ desktop bridge</span>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'java',
-												'bluej'
-											)
-										"
-									>
-										New BlueJ project
-									</button>
+									<span>Import project</span>
 									<button
 										type="button"
 										role="menuitem"
@@ -6809,61 +6824,6 @@ onBeforeUnmount(() => {
 										"
 									>
 										Import BlueJ ZIP
-									</button>
-									<span>New project</span>
-									<button
-										type="button"
-										role="menuitem"
-										@click="createProjectFromMenu('python')"
-									>
-										Python
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="createProjectFromMenu('data')"
-									>
-										Data / AI notebook
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="createProjectFromMenu('turtle')"
-									>
-										Python Turtle
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="createProjectFromMenu('pgzero')"
-									>
-										PyGame Zero
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="createProjectFromMenu('java')"
-									>
-										Java
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'java',
-												'bluej'
-											)
-										"
-									>
-										BlueJ Java
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="createProjectFromMenu('karel')"
-									>
-										Karel Java
 									</button>
 									<span>Template project</span>
 									<button
@@ -7005,61 +6965,35 @@ onBeforeUnmount(() => {
 					</div>
 
 					<div
-						v-if="selectedProject"
-						class="java-tools-card"
-						aria-label="Java and BlueJ tools"
+						class="workspace-type-control"
+						aria-label="IDE and language selector"
+						role="group"
 					>
-						<div>
-							<strong>BlueJ integration</strong>
-							<small>
-								Open-source desktop workflow with ZIP import,
-								starter projects, and package.bluej export.
-							</small>
-						</div>
-						<div class="java-tools-actions">
-							<RouterLink
-								class="site-button site-button--secondary compact-button"
-								to="/bluej"
-							>
-								BlueJ workspace
-							</RouterLink>
-							<button
-								class="site-button site-button--secondary compact-button"
-								type="button"
-								@click="createProject('java', 'bluej')"
-							>
-								New BlueJ project
-							</button>
-							<button
-								class="site-button site-button--secondary compact-button"
-								type="button"
-								@click="openBlueJArchiveImporter"
-							>
-								Import BlueJ ZIP
-							</button>
-							<button
-								v-if="selectedProjectCanExportToBlueJ"
-								class="site-button site-button--secondary compact-button"
-								type="button"
-								@click="downloadSelectedProjectForBlueJ"
-							>
-								Download BlueJ ZIP
-							</button>
-							<a
-								:href="blueJHomeUrl"
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								BlueJ
-							</a>
-							<a
-								:href="blueJSourceUrl"
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								Source
-							</a>
-						</div>
+						<label class="workspace-type-label">
+							<span>Workspace type</span>
+							<select v-model="newWorkspacePresetID">
+								<optgroup
+									v-for="group in codeIdeWorkspacePresetGroups"
+									:key="group.label"
+									:label="group.label"
+								>
+									<option
+										v-for="preset in group.presets"
+										:key="preset.id"
+										:value="preset.id"
+									>
+										{{ preset.label }}
+									</option>
+								</optgroup>
+							</select>
+						</label>
+						<button
+							class="site-button site-button--secondary compact-button workspace-type-create"
+							type="button"
+							@click="createSelectedWorkspaceProject"
+						>
+							New project
+						</button>
 					</div>
 
 					<div class="project-list">
@@ -7285,9 +7219,9 @@ onBeforeUnmount(() => {
 							<button
 								:aria-expanded="showIdeSettings"
 								aria-controls="code-ide-settings-panel"
-								aria-label="Code IDE settings"
+								aria-label="IDE settings"
 								class="ide-settings-trigger"
-								title="Code IDE settings"
+								title="IDE settings"
 								type="button"
 								@click="showIdeSettings = !showIdeSettings"
 							>
@@ -7302,7 +7236,7 @@ onBeforeUnmount(() => {
 								id="code-ide-settings-panel"
 								class="ide-settings-panel"
 								role="dialog"
-								aria-label="Code IDE settings"
+								aria-label="IDE settings"
 							>
 								<label class="ide-setting-toggle">
 									<input
@@ -7506,13 +7440,6 @@ onBeforeUnmount(() => {
 						</div>
 					</div>
 					<div class="bluej-integration-actions">
-						<RouterLink
-							v-if="!isBlueJIdeRoute"
-							class="site-button site-button--secondary compact-button"
-							to="/bluej"
-						>
-							BlueJ workspace
-						</RouterLink>
 						<button
 							class="site-button site-button--secondary compact-button"
 							type="button"
@@ -8000,10 +7927,6 @@ onBeforeUnmount(() => {
 	font-size: 1.1rem;
 }
 
-.code-ide-status-action {
-	justify-self: stretch;
-}
-
 html.dark .code-ide-hero {
 	background: linear-gradient(
 		135deg,
@@ -8211,6 +8134,44 @@ html.dark .karel-empty {
 	position: relative;
 }
 
+.workspace-type-control {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 0.5rem;
+	align-items: end;
+}
+
+.workspace-type-label {
+	min-width: 0;
+	display: grid;
+	gap: 0.35rem;
+}
+
+.workspace-type-label span {
+	color: var(--color-ink-soft);
+	font-size: 0.72rem;
+	font-weight: 800;
+}
+
+.workspace-type-label select {
+	width: 100%;
+	min-width: 0;
+	height: 2.55rem;
+	padding: 0 2rem 0 0.7rem;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.84);
+	color: var(--color-ink);
+	font: inherit;
+	font-size: 0.82rem;
+	font-weight: 700;
+}
+
+.workspace-type-create {
+	min-height: 2.55rem;
+	white-space: nowrap;
+}
+
 .icon-action {
 	width: 2.1rem;
 	height: 2.1rem;
@@ -8363,21 +8324,10 @@ html.dark .project-create-menu button:focus-visible {
 	background: #164e4b;
 }
 
-html.dark .java-tools-card {
+html.dark .workspace-type-label select {
 	border-color: rgba(94, 234, 212, 0.22);
-	background: rgba(15, 23, 42, 0.58);
-}
-
-html.dark .java-tools-card strong {
+	background: #0f1b2a;
 	color: #f8fafc;
-}
-
-html.dark .java-tools-card small {
-	color: #c8dce6;
-}
-
-html.dark .java-tools-actions a {
-	color: #5eead4;
 }
 
 html.dark .bluej-integration-panel {
@@ -8653,52 +8603,6 @@ html.dark .file-delete:disabled::after {
 
 .file-export-row a:hover,
 .file-export-row a:focus-visible {
-	text-decoration: underline;
-}
-
-.java-tools-card {
-	display: grid;
-	gap: 0.65rem;
-	padding: 0.75rem;
-	border: 1px solid var(--color-border);
-	border-radius: 12px;
-	background: rgba(248, 250, 252, 0.74);
-}
-
-.java-tools-card strong,
-.java-tools-card small {
-	display: block;
-}
-
-.java-tools-card strong {
-	color: var(--color-ink-strong);
-	font-size: 0.95rem;
-}
-
-.java-tools-card small {
-	margin-top: 0.12rem;
-	color: var(--color-ink-soft);
-	font-size: 0.78rem;
-	font-weight: 600;
-	line-height: 1.35;
-}
-
-.java-tools-actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.45rem;
-	align-items: center;
-}
-
-.java-tools-actions a {
-	color: #0f766e;
-	font-size: 0.78rem;
-	font-weight: 800;
-	text-decoration: none;
-}
-
-.java-tools-actions a:hover,
-.java-tools-actions a:focus-visible {
 	text-decoration: underline;
 }
 

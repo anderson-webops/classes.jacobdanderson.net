@@ -2,7 +2,7 @@ import { pathToFileURL } from "node:url";
 
 const origin = process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderson.net";
 const timeoutMs = Number(process.env.CLASSES_SITE_SMOKE_TIMEOUT_MS || 15000);
-const smokePaths = ["/ide", "/python-ide", "/bluej"];
+const smokePaths = ["/ide"];
 const pageUrl = new URL(smokePaths[0], origin);
 
 async function fetchText(url) {
@@ -61,17 +61,16 @@ export function containsCurrentIdeBundleMarkers(source) {
 
 	return (
 		source.includes("Code, run, and draw in Python or Java") &&
-		source.includes("Create and exchange BlueJ Java projects") &&
+		source.includes("Workspace type") &&
+		source.includes("Browser IDE") &&
+		source.includes("BlueJ Java") &&
 		source.includes("preview Java console programs or Karel robot") &&
 		source.includes("BlueJ integration for desktop object-bench projects") &&
 		source.includes("ZIP import") &&
 		source.includes("package.bluej export") &&
 		source.includes("Karel world ready") &&
-		source.includes("BlueJ workspace") &&
-		source.includes("Full Code IDE") &&
 		source.includes("BlueJ integration") &&
 		source.includes("BlueJ Desktop Integration") &&
-		source.includes("BlueJ desktop bridge") &&
 		source.includes("Class diagram preview") &&
 		source.includes("Object bench class") &&
 		source.includes("New BlueJ project") &&

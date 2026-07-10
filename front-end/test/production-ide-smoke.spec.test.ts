@@ -7,12 +7,12 @@ import {
 } from "../../scripts/production-ide-smoke.mjs";
 
 describe("production Code IDE smoke helpers", () => {
-	it("checks generalized, legacy, and BlueJ entry routes", () => {
+	it("checks the single generalized IDE entry route", () => {
 		expect(
 			productionIdeSmokePageUrls(
 				"https://classes.jacobdanderson.net"
 			).map(url => url.pathname)
-		).toEqual(["/ide", "/python-ide", "/bluej"]);
+		).toEqual(["/ide"]);
 	});
 
 	it("extracts same-origin JavaScript and CSS assets from the IDE page HTML", () => {
@@ -38,17 +38,16 @@ describe("production Code IDE smoke helpers", () => {
 			"Java Level 1 mentions Karel Java and a BlueJ Java Project.";
 		const currentIdeBundle = [
 			"Code, run, and draw in Python or Java",
-			"Create and exchange BlueJ Java projects",
+			"Workspace type",
+			"Browser IDE",
+			"BlueJ Java",
 			"preview Java console programs or Karel robot",
 			"BlueJ integration for desktop object-bench projects",
 			"ZIP import",
 			"package.bluej export",
 			"Karel world ready",
-			"BlueJ workspace",
-			"Full Code IDE",
 			"BlueJ integration",
 			"BlueJ Desktop Integration",
-			"BlueJ desktop bridge",
 			"Class diagram preview",
 			"Object bench class",
 			"New BlueJ project",

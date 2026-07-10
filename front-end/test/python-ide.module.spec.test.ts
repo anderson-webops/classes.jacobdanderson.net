@@ -1321,7 +1321,7 @@ describe("python IDE project helpers", () => {
 		expect(getPythonIdeModeLabel("pgzero")).toBe("PyGame Zero");
 	});
 
-	it("uses the generalized Code IDE route in navigation and page titles", () => {
+	it("uses one generalized IDE route in navigation and page titles", () => {
 		const headerSource = readFileSync(
 			resolve(__dirname, "../src/components/TheHeader.vue"),
 			"utf8"
@@ -1331,14 +1331,16 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 
-		expect(headerSource).toContain(
-			'{ label: "Code IDE", to: "/ide"'
+		expect(headerSource).toContain('{ label: "IDE", to: "/ide"');
+		expect(headerSource).not.toContain('label: "BlueJ IDE"');
+		expect(pageHeadSource).toContain(
+			'[/^\\/ide(?:\\/|$)/, "IDE"]'
 		);
 		expect(pageHeadSource).toContain(
-			'[/^\\/ide(?:\\/|$)/, "Code IDE"]'
+			'[/^\\/python-ide(?:\\/|$)/, "IDE"]'
 		);
 		expect(pageHeadSource).toContain(
-			'[/^\\/python-ide(?:\\/|$)/, "Code IDE"]'
+			'[/^\\/bluej(?:\\/|$)/, "IDE"]'
 		);
 	});
 
@@ -3918,8 +3920,8 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain(
 			"lineWrappingEnabled: editorLineWrapEnabled.value"
 		);
-		expect(pageSource).toContain('aria-label="Code IDE settings"');
-		expect(pageSource).toContain('title="Code IDE settings"');
+		expect(pageSource).toContain('aria-label="IDE settings"');
+		expect(pageSource).toContain('title="IDE settings"');
 		expect(pageSource).toContain(
 			'aria-controls="code-ide-settings-panel"'
 		);
@@ -4213,14 +4215,17 @@ describe("python IDE project helpers", () => {
 			resolve(__dirname, "../src/modules/blueJProjectExport.ts"),
 			"utf8"
 		);
+		const blueJLegacyRouteSource = readFileSync(
+			resolve(__dirname, "../src/pages/bluej.vue"),
+			"utf8"
+		);
 
 		expect(pageSource).toContain("selectedProjectCanExportToBlueJ");
 		expect(pageSource).toContain("selectedProjectCanShowBlueJIntegration");
 		expect(pageSource).toContain("selectedProjectIsBlueJ");
-		expect(pageSource).toContain("isBlueJIdeRoute");
 		expect(pageSource).toContain("requestedTemplate");
 		expect(pageSource).toContain("getPythonIdeProjectKindLabel(project)");
-		expect(pageSource).toContain('route.path === "/bluej"');
+		expect(pageSource).not.toContain('route.path === "/bluej"');
 		expect(pageSource).toContain('rawMode === "bluej"');
 		expect(pageSource).toContain(
 			'if (template === "bluej") return "ide-template:bluej";'
@@ -4245,23 +4250,21 @@ describe("python IDE project helpers", () => {
 			'v-if="selectedProjectCanShowBlueJIntegration"'
 		);
 		expect(pageSource).toContain("codeIdeHeroContent");
-		expect(pageSource).toContain("BlueJ workspace");
-		expect(pageSource).toContain("Create and exchange BlueJ Java projects");
-		expect(pageSource).toContain(
-			"Start from a BlueJ-ready Java project"
-		);
-		expect(pageSource).toContain("Full Code IDE");
-		expect(pageSource).toContain('v-if="isBlueJIdeRoute"');
+		expect(pageSource).toContain('eyebrow: "IDE"');
+		expect(pageSource).toContain("codeIdeWorkspacePresetGroups");
+		expect(pageSource).toContain('label: "Browser IDE"');
+		expect(pageSource).toContain('label: "BlueJ integration"');
+		expect(pageSource).toContain('label: "BlueJ Java"');
+		expect(pageSource).toContain('class="workspace-type-control"');
+		expect(pageSource).toContain('aria-label="IDE and language selector"');
+		expect(pageSource).toContain('v-model="newWorkspacePresetID"');
+		expect(pageSource).toContain("createSelectedWorkspaceProject");
 		expect(pageSource).toContain(
 			"BlueJ integration for desktop object-bench projects"
 		);
 		expect(pageSource).toContain("package.bluej export");
-		expect(pageSource).toContain('to="/bluej"');
-		expect(pageSource).toContain("BlueJ workspace");
-		expect(pageSource).toContain('class="java-tools-card"');
-		expect(pageSource).toContain('aria-label="Java and BlueJ tools"');
+		expect(pageSource).not.toContain('to="/bluej"');
 		expect(pageSource).toContain("BlueJ integration");
-		expect(pageSource).toContain("Open-source desktop workflow");
 		expect(pageSource).toContain("Import BlueJ ZIP");
 		expect(pageSource).toContain('class="bluej-integration-panel"');
 		expect(pageSource).toContain("BlueJ Desktop Integration");
@@ -4283,8 +4286,12 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("BlueJ class diagram preview");
 		expect(pageSource).toContain("Class diagram preview");
 		expect(pageSource).toContain("Object bench class");
-		expect(pageSource).toContain("BlueJ desktop bridge");
+		expect(pageSource).toContain("Import project");
 		expect(pageSource).toContain("openBlueJArchiveImporterFromMenu");
+		expect(blueJLegacyRouteSource).toContain('path: "/ide"');
+		expect(blueJLegacyRouteSource).toContain(
+			'mode: route.query.mode ?? "bluej"'
+		);
 		expect(exportSource).toContain('from "fflate"');
 		expect(exportSource).toContain("unzipSync(archiveBytes, {");
 		expect(exportSource).toContain("importBlueJProjectArchive");
@@ -4294,13 +4301,15 @@ describe("python IDE project helpers", () => {
 		expect(exportSource).toContain("BLUEJ_SOURCE_URL");
 	});
 
-	it("exposes the BlueJ workspace from the main navigation", () => {
+	it("keeps one IDE entry in the main navigation", () => {
 		const headerSource = readFileSync(
 			resolve(__dirname, "../src/components/TheHeader.vue"),
 			"utf8"
 		);
 
-		expect(headerSource).toContain('{ label: "BlueJ IDE", to: "/bluej"');
+		expect(headerSource).toContain('{ label: "IDE", to: "/ide"');
+		expect(headerSource).not.toContain('to: "/bluej"');
+		expect(headerSource).not.toContain('label: "BlueJ IDE"');
 	});
 
 	it("persists CodeMirror view state across reloads and project ID migration", () => {
