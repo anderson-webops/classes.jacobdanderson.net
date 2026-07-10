@@ -143,6 +143,7 @@ describe("python IDE CodeMirror editor", () => {
 	it("keeps the route page as a lightweight async workspace wrapper", () => {
 		const routeSource = sourceFile("../src/pages/ide.vue");
 		const legacyRouteSource = sourceFile("../src/pages/python-ide.vue");
+		const blueJLegacyRouteSource = sourceFile("../src/pages/bluej.vue");
 		const workspaceSource = sourceFile(
 			"../src/components/CodeIdeWorkspace.vue"
 		);
@@ -161,7 +162,14 @@ describe("python IDE CodeMirror editor", () => {
 		expect(legacyRouteSource).toContain("<CodeIdeWorkspace />");
 		expect(legacyRouteSource).not.toContain("new EditorView");
 		expect(legacyRouteSource).not.toContain("loadPythonIdeRuntime");
+		expect(blueJLegacyRouteSource).toContain("defineAsyncComponent");
+		expect(blueJLegacyRouteSource).toContain('path: "/ide"');
+		expect(blueJLegacyRouteSource).toContain(
+			'mode: route.query.mode ?? "bluej"'
+		);
+		expect(blueJLegacyRouteSource).toContain("<CodeIdeWorkspace />");
 		expect(workspaceSource).toContain("codeIdeHeroContent");
+		expect(workspaceSource).not.toContain('route.path === "/bluej"');
 		expect(workspaceSource).toContain("<h1>{{ codeIdeHeroContent.title }}</h1>");
 		expect(workspaceSource).toContain(
 			'title: "Code, run, and draw in Python or Java"'
@@ -1620,20 +1628,39 @@ describe("python IDE CodeMirror editor", () => {
 			pageSource.match(
 				/class="editor-toolbar"[\s\S]*?<div class="ide-grid">/
 			)?.[0] ?? "";
-		const createMenuSource =
+		const workspaceSelectorSource =
 			pageSource.match(
-				/class="project-create-menu"[\s\S]*?<div class="project-list">/
+				/class="workspace-type-control"[\s\S]*?<div class="project-list">/
 			)?.[0] ?? "";
 
 		expect(toolbarSource).not.toContain("<select");
 		expect(toolbarSource).not.toContain("selectedProject.mode");
-		expect(createMenuSource).toContain("createProjectFromMenu('python')");
-		expect(createMenuSource).toContain("createProjectFromMenu('data')");
-		expect(createMenuSource).toContain("createProjectFromMenu('turtle')");
-		expect(createMenuSource).toContain("createProjectFromMenu('pgzero')");
-		expect(createMenuSource).toContain("createProjectFromMenu('java')");
-		expect(createMenuSource).toContain("createProjectFromMenu('karel')");
-		expect(createMenuSource).toContain("Karel Java");
+		expect(workspaceSelectorSource).toContain(
+			'v-model="newWorkspacePresetID"'
+		);
+		expect(workspaceSelectorSource).toContain(
+			"codeIdeWorkspacePresetGroups"
+		);
+		expect(workspaceSelectorSource).toContain(
+			"createSelectedWorkspaceProject"
+		);
+		for (const presetID of [
+			"python",
+			"data",
+			"turtle",
+			"pgzero",
+			"java",
+			"karel",
+			"bluej"
+		]) {
+			expect(pageSource).toContain(`id: "${presetID}"`);
+		}
+		expect(pageSource).toContain(
+			"await createProject(preset.mode, preset.template);"
+		);
+		expect(pageSource).not.toContain(
+			"selectedProject.value.mode = newWorkspacePresetID.value"
+		);
 
 		expect(
 			pythonIdeCompletionsForMode("pgzero").map(option => option.label)
