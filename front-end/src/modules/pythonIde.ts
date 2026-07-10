@@ -11,7 +11,7 @@ const JAVA_EXTENSION_RE = /\.java$/i;
 const PYTHON_EXTENSION_RE = /\.py$/i;
 const CODE_EXTENSION_RE = /\.(?:java|py)$/i;
 const SAFE_FILE_SEGMENT_RE = /^\w[\w.-]*$/;
-const ROOT_TEXT_FILE_RE = /^\w[\w.-]*\.(?:csv|java|json|md|py|txt)$/i;
+const ROOT_TEXT_FILE_RE = /^\w[\w.-]*\.(?:csv|eps|java|json|md|ps|py|txt)$/i;
 const IMAGE_FILE_RE = /^images\/\w[\w.-]*\.(?:gif|jpe?g|png|svg|webp)$/i;
 const AUDIO_FILE_RE = /^(?:music|sounds)\/\w[\w.-]*\.(?:mp3|ogg|wav)$/i;
 const ASSET_DIRECTORY_NAMES = new Set(["images", "music", "sounds"]);
@@ -34,7 +34,7 @@ const PYTHON_IDE_RUNTIME_RESERVED_ROOTS = new Set([
 	"pgzero",
 	"tensorflow"
 ]);
-const TEXT_FILE_RE = /\.(?:csv|java|json|md|py|txt|svg)$/i;
+const TEXT_FILE_RE = /\.(?:csv|eps|java|json|md|ps|py|txt|svg)$/i;
 const IMAGE_EXTENSION_RE = /\.(?:gif|jpe?g|png|svg|webp)$/i;
 const SOUND_EXTENSION_RE = /\.wav$/i;
 const MUSIC_EXTENSION_RE = /\.(?:mp3|ogg)$/i;
@@ -170,6 +170,8 @@ export const pythonIdeAllowedFileExtensions = [
 	".json",
 	".txt",
 	".md",
+	".ps",
+	".eps",
 	".png",
 	".jpg",
 	".jpeg",

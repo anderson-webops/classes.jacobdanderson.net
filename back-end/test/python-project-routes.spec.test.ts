@@ -164,6 +164,35 @@ describe("Python project routes", () => {
 		});
 	});
 
+	it("accepts Turtle PostScript files saved by the browser runtime", async () => {
+		await withPythonProjectRoute(async baseUrl => {
+			const response = await postJson(baseUrl, {
+				activeFileName: "main.py",
+				files: [
+					{ content: "import turtle\n", name: "main.py" },
+					{
+						content: "%!PS-Adobe-3.0 EPSF-3.0\nshowpage\n",
+						name: "drawing.eps"
+					}
+				],
+				mode: "turtle",
+				title: "Saved Turtle drawing"
+			});
+
+			expect(response.status).toBe(201);
+			expect(modelMocks.pythonProjectCreate).toHaveBeenCalledWith(
+				expect.objectContaining({
+					files: expect.arrayContaining([
+						expect.objectContaining({
+							encoding: "text",
+							name: "drawing.eps"
+						})
+					])
+				})
+			);
+		});
+	});
+
 	it("accepts the editor's 40-file project limit", async () => {
 		await withPythonProjectRoute(async baseUrl => {
 			const files = Array.from({ length: 40 }, (_value, index) => ({
