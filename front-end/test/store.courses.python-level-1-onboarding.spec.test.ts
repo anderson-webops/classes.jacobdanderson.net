@@ -21,7 +21,12 @@ describe("Python Level 1 first-days onboarding", () => {
 			"/ide?mode=turtle&template=picasso"
 		);
 		expect(firstModule.curriculum[0]?.content).toContain("Begin by pressing Run");
-		expect(firstModule.curriculum[1]?.content).toContain("complete only the missing loop inside `draw_square()`");
+		expect(firstModule.curriculum[1]?.content).toContain(
+			"Replace the `draw_square()` placeholder with the complete drawing function"
+		);
+		expect(firstModule.curriculum[1]?.content).toContain(
+			"change both the function definition and the name passed to `screen.onkey()` so they match"
+		);
 		expect(firstModule.curriculum[2]?.content).toContain("first red squiggle or first error line");
 		expect(firstModule.curriculum[3]?.content).toContain("continue into GrS1");
 		expect(course!.modules[1]?.title).toBe("GrS1 Coordinates and Movement");

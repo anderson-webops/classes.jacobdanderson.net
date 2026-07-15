@@ -103,7 +103,7 @@ export const pythonLevel1Course: RawCourse = {
 				{
 					title: "Quick Start Project 2: Picasso Keyboard Painter",
 					content:
-						"Open the prepared keyboard-art starter, complete only the missing loop inside `draw_square()`, run the project, click the canvas, and press or hold S to paint overlapping squares. Keep imports, colors, screen setup, the Turtle object, event wiring, and the clear action supplied during the first pass. After the square works, remix one feature at a time: change the side length, bind a triangle or circle to another key, add an arrow-key movement function, or expand the color list. Press Space between trials to clear the art without rebuilding the project. Finish by tracing the S key from `screen.onkey()` to the named function and then to the visible drawing.",
+						"Open the prepared keyboard-art starter. It supplies the `Screen` and `Turtle` imports, `choice`, the color list, black canvas, Turtle setup, `screen.onkey()`, and `screen.listen()`. Replace the `draw_square()` placeholder with the complete drawing function. Keep the name `draw_square`, or change both the function definition and the name passed to `screen.onkey()` so they match. Inside the function, choose the pen size and outline/fill colors, begin the fill, draw and turn four times, and end the fill. Run the project, click the canvas, and press or hold S to paint overlapping squares. After it works, remix one feature at a time: change the side length, add a clear function on Space, bind another shape to a new key, add arrow-key movement, or expand the color list. Finish by tracing the S key from `screen.onkey()` to the student-created function and then to the visible drawing.",
 					projectLink: "/ide?mode=turtle&template=picasso"
 				},
 				{
