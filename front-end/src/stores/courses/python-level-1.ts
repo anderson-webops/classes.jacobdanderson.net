@@ -92,6 +92,34 @@ export const pythonLevel1Course: RawCourse = {
 	name: "Python Level 1",
 	modules: [
 		{
+			title: "First 10 Days: Show, Play, Then Explain",
+			curriculum: [
+				{
+					title: "Quick Start Project 1: Color Circle Art",
+					content: `**Focus:** Begin by pressing Run so the first experience is a complete, colorful result rather than a list of definitions. Change the color list, circle count, radius, and three drawing positions, then predict and observe one result after each small edit. Trace the finished program from constants to the outer position loop, the circle loop, the drawing functions, and the pen-up, goto, pen-down movement pattern. Connect the visible repetition to loops and the reusable drawing actions to functions only after the design has been explored. Use ${TURTLE_COLOR_REFERENCE} to choose additional colors that work in Turtle. Finish by identifying one constant, one function call, and one repeated action in the code.`,
+					projectLink: "/ide?mode=turtle&template=circle-art",
+					datasetLink: TURTLE_COLOR_REFERENCE
+				},
+				{
+					title: "Quick Start Project 2: Picasso Keyboard Painter",
+					content:
+						"Open the prepared keyboard-art starter, complete only the missing loop inside `draw_square()`, run the project, click the canvas, and press or hold S to paint overlapping squares. Keep imports, colors, screen setup, the Turtle object, event wiring, and the clear action supplied during the first pass. After the square works, remix one feature at a time: change the side length, bind a triangle or circle to another key, add an arrow-key movement function, or expand the color list. Press Space between trials to clear the art without rebuilding the project. Finish by tracing the S key from `screen.onkey()` to the named function and then to the visible drawing.",
+					projectLink: "/ide?mode=turtle&template=picasso"
+				},
+				{
+					title: "Debugging Habit: Read the First Red Squiggle",
+					content:
+						"Treat editor marks and error messages as instructions rather than failure. Stop at the first red squiggle or first error line, read the message aloud, locate the named line, and change one thing before running again. Practice with a missing colon, mismatched indentation, a misspelled variable, and an event function called with parentheses. Compare each broken version with the last working version to build a repeatable debugging routine before projects become larger. Record the symptom, the first useful clue, the single edit, and the new result for each repair. If another error remains, restart the same process from the new first message instead of changing several lines at once."
+				},
+				{
+					title: "Reflection: Name the Ideas After Play",
+					content:
+						"After changing and rerunning both projects, connect each observation to vocabulary: repeated drawing steps are iteration, named reusable actions are functions, values passed into actions are parameters, key presses are events, and constants provide safe remix controls. Predict one visible change before an edit, explain the actual result afterward, and point to the line or block that caused it. Compare the two starters by identifying what runs once, what repeats, and what waits for input. Then continue into GrS1 for the formal coordinate, movement, pen-control, and program-structure sequence. The later Circle of Circles and Picasso projects revisit these previews with less scaffolding, more planning, and fuller independence."
+				}
+			],
+			supplementalProjects: []
+		},
+		{
 			title: "GrS1 Coordinates and Movement",
 			curriculum: [
 				{

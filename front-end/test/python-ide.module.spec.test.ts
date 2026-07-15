@@ -64,6 +64,8 @@ import {
 	pgzeroCourseStarterCode,
 	pgzeroStudentSvg,
 	pgzeroStarterCode,
+	turtleCircleArtStarterCode,
+	turtlePicassoStarterCode,
 	turtleStarterCode
 } from "../src/modules/pythonIde";
 import { resetCodePreviewCaches } from "../src/modules/codePreview";
@@ -295,6 +297,33 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
+	it("creates the guided beginner Turtle art templates", () => {
+		const circleArt = createPythonIdeProject("turtle", {
+			template: "circle-art"
+		});
+		const picasso = createPythonIdeProject("turtle", {
+			template: "picasso"
+		});
+
+		expect(circleArt.title).toBe("Color Circle Art");
+		expect(circleArt.files).toEqual([
+			{ name: "main.py", content: turtleCircleArtStarterCode }
+		]);
+		expect(circleArt.files[0]?.content).toContain("random.choice(ART_COLORS)");
+		expect(circleArt.files[0]?.content).toContain("artist.begin_fill()");
+		expect(circleArt.files[0]?.content).toContain("artist.goto(x_position, y_position)");
+		expect(circleArt.files[0]?.content).toContain("artist.speed(DRAWING_SPEED)");
+
+		expect(picasso.title).toBe("Picasso Keyboard Painter");
+		expect(picasso.files).toEqual([
+			{ name: "main.py", content: turtlePicassoStarterCode }
+		]);
+		expect(picasso.files[0]?.content).toContain("def draw_square():");
+		expect(picasso.files[0]?.content).toContain('screen.onkey(draw_square, "s")');
+		expect(picasso.files[0]?.content).toContain('screen.onkey(clear_art, "space")');
+		expect(picasso.files[0]?.content).toContain("artist.speed(DRAWING_SPEED)");
+	});
+
 	it("keeps built-in IDE demos and templates aligned with the classroom coding standard", () => {
 		const builtInTemplateSources = [
 			javaStarterCode,
@@ -307,6 +336,8 @@ describe("python IDE project helpers", () => {
 			dataScienceStarterCode,
 			turtleStarterCode,
 			pythonLevel1OutlineStarterCode,
+			turtleCircleArtStarterCode,
+			turtlePicassoStarterCode,
 			pgzeroStarterCode,
 			pgzeroOutlineStarterCode,
 			pgzeroCourseStarterCode,
@@ -4168,7 +4199,7 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(moduleSource).toContain(
-			'export type PythonIdeProjectTemplate =\n\t| "blank"\n\t| "bluej"\n\t| "course"\n\t| "demo"\n\t| "outline";'
+			'export type PythonIdeProjectTemplate =\n\t| "blank"\n\t| "bluej"\n\t| "circle-art"\n\t| "course"\n\t| "demo"\n\t| "outline"\n\t| "picasso";'
 		);
 		expect(moduleSource).toContain(
 			"export const pythonLevel1OutlineStarterCode"
@@ -4184,6 +4215,8 @@ describe("python IDE project helpers", () => {
 		expect(moduleSource).toContain('if (template === "bluej")');
 		expect(pageSource).toContain("Template project");
 		expect(pageSource).toContain("Python Level 1 Outline");
+		expect(pageSource).toContain("Color Circle Art");
+		expect(pageSource).toContain("Picasso Keyboard Painter");
 		expect(pageSource).toContain("PyGame Zero Outline");
 		expect(pageSource).toContain("Java Outline");
 		expect(pageSource).toContain("BlueJ Java");
@@ -4191,6 +4224,12 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Karel Java Outline");
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'turtle',\s*'outline'/
+		);
+		expect(pageSource).toMatch(
+			/createProjectFromMenu\(\s*'turtle',\s*'circle-art'/
+		);
+		expect(pageSource).toMatch(
+			/createProjectFromMenu\(\s*'turtle',\s*'picasso'/
 		);
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'pgzero',\s*'outline'/
