@@ -2,7 +2,10 @@
 import type { RequestHandler } from "express";
 import { Types } from "mongoose";
 import { Tutor } from "../../models/schemas/Tutor.js";
-import { User } from "../../models/schemas/User.js";
+import {
+	AccountRoleTransferError,
+	demoteTutorAccount
+} from "../../utils/accountRoleTransfer.js";
 
 const MAX_COURSE_ID_LENGTH = 160;
 const MAX_COURSE_IDS = 1000;
@@ -65,25 +68,15 @@ export const demoteTutorToUser: RequestHandler = async (req, res) => {
 	}
 	if (!Types.ObjectId.isValid(tutorID)) return res.status(400).json({ message: "Invalid tutor ID" });
 
-	const tutor = await Tutor.findById(tutorID);
-	if (!tutor) return res.sendStatus(404);
-
-	if (await User.exists({ email: tutor.email })) {
-		return res.status(409).json({ message: "User with this email already exists" });
+	try {
+		const user = await demoteTutorAccount(tutorID);
+		return res.status(201).json({ user });
 	}
-
-	const user = new User({
-		name: tutor.name,
-		email: tutor.email,
-		age: tutor.age,
-		state: tutor.state,
-		password: tutor.password,
-		role: "user"
-	} as any);
-	(user as any).skipPasswordHash = true;
-
-	await user.save();
-	await tutor.deleteOne();
-
-	res.status(201).json({ user });
+	catch (error) {
+		if (error instanceof AccountRoleTransferError) {
+			if (error.statusCode === 404) return res.sendStatus(404);
+			return res.status(error.statusCode).json({ message: error.message });
+		}
+		throw error;
+	}
 };
