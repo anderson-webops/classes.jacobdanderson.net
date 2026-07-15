@@ -318,10 +318,21 @@ describe("python IDE project helpers", () => {
 		expect(picasso.files).toEqual([
 			{ name: "main.py", content: turtlePicassoStarterCode }
 		]);
-		expect(picasso.files[0]?.content).toContain("def draw_square():");
+		expect(picasso.files[0]?.content).toContain("from random import choice");
+		expect(picasso.files[0]?.content).toContain("from turtle import Screen, Turtle");
+		expect(picasso.files[0]?.content).toContain(
+			'colors = ["red", "light blue", "green", "yellow", "white", "orange"]'
+		);
+		expect(picasso.files[0]?.content).toContain('screen.bgcolor("black")');
+		expect(picasso.files[0]?.content).toContain("t = Turtle()");
+		expect(picasso.files[0]?.content).toContain("def draw_square():\n    pass");
+		expect(picasso.files[0]?.content).toContain(
+			"Keep the name draw_square or update screen.onkey() below to match"
+		);
 		expect(picasso.files[0]?.content).toContain('screen.onkey(draw_square, "s")');
-		expect(picasso.files[0]?.content).toContain('screen.onkey(clear_art, "space")');
-		expect(picasso.files[0]?.content).toContain("artist.speed(DRAWING_SPEED)");
+		expect(picasso.files[0]?.content).toContain("screen.listen()");
+		expect(picasso.files[0]?.content).not.toContain("t.forward(");
+		expect(picasso.files[0]?.content).not.toContain("def clear_art");
 	});
 
 	it("keeps built-in IDE demos and templates aligned with the classroom coding standard", () => {

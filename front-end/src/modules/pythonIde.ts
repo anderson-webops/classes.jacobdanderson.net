@@ -475,58 +475,36 @@ for art_position in ART_POSITIONS:
 artist.hideturtle()
 `;
 
-export const turtlePicassoStarterCode = `import random
-import turtle
+export const turtlePicassoStarterCode = `from random import choice
+from turtle import Screen, Turtle
 
 #######################
-###   CONSTANTS     ###
+###   VARIABLES     ###
 #######################
-BACKGROUND_COLOR = "white"
-ART_COLORS = ["red", "orange", "gold", "green", "blue", "purple"]
-SQUARE_SIDE = 60
-SQUARE_TURN = 90
-PEN_SIZE = 4
-DRAWING_SPEED = 8
+colors = ["red", "light blue", "green", "yellow", "white", "orange"]
+
+screen = Screen()
+screen.bgcolor("black")
+screen.title("Picasso Keyboard Painter")
+
+t = Turtle()
+t.speed(5)
 
 
 #######################
 ###   FUNCTIONS     ###
 #######################
-# Complete this function first, then press or hold S on the canvas
+# STUDENT TASK: Replace this placeholder with your draw_square() function
+# Keep the name draw_square or update screen.onkey() below to match
 def draw_square():
-    artist.color(random.choice(ART_COLORS))
-
-    # Add a for loop that repeats forward and left four times
-
-# Clear the drawing without rerunning the project
-def clear_art():
-    artist.clear()
-
-
-#######################
-###   VARIABLES     ###
-#######################
-screen = turtle.Screen()
-screen.bgcolor(BACKGROUND_COLOR)
-screen.title("Picasso Keyboard Painter")
-
-artist = turtle.Turtle()
-artist.pensize(PEN_SIZE)
-artist.speed(DRAWING_SPEED)
+    pass
 
 
 ###########################
 ###   EVENT LISTENERS   ###
 ###########################
 screen.onkey(draw_square, "s")
-screen.onkey(clear_art, "space")
 screen.listen()
-
-
-#######################
-###   MAIN CODE     ###
-#######################
-# Click the canvas, press S to draw, and press Space to clear
 `;
 
 export const pgzeroStarterCode = `import pgzrun
