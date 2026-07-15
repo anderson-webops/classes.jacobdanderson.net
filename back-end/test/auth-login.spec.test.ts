@@ -6,21 +6,24 @@ import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const modelMocks = vi.hoisted(() => ({
+	adminExists: vi.fn(),
 	adminFindOne: vi.fn(),
+	tutorExists: vi.fn(),
 	tutorFindOne: vi.fn(),
+	userExists: vi.fn(),
 	userFindOne: vi.fn()
 }));
 
 vi.mock("../src/models/schemas/Admin.js", () => ({
-	Admin: { findOne: modelMocks.adminFindOne }
+	Admin: { exists: modelMocks.adminExists, findOne: modelMocks.adminFindOne }
 }));
 
 vi.mock("../src/models/schemas/Tutor.js", () => ({
-	Tutor: { findOne: modelMocks.tutorFindOne }
+	Tutor: { exists: modelMocks.tutorExists, findOne: modelMocks.tutorFindOne }
 }));
 
 vi.mock("../src/models/schemas/User.js", () => ({
-	User: { findOne: modelMocks.userFindOne }
+	User: { exists: modelMocks.userExists, findOne: modelMocks.userFindOne }
 }));
 
 const { accountRoutes } = await import("../src/routes/accountRoutes.js");
@@ -69,6 +72,26 @@ function mockAccounts({
 	modelMocks.userFindOne.mockReturnValue(queryWith(user));
 }
 
+function mockExistingSessionAccounts({
+	admin = null,
+	tutor = null,
+	user = null
+}: {
+	admin?: TestLoginEntity | null;
+	tutor?: TestLoginEntity | null;
+	user?: TestLoginEntity | null;
+}) {
+	modelMocks.adminExists.mockImplementation(async query =>
+		admin && query._id === admin._id.toString() ? { _id: admin._id } : null
+	);
+	modelMocks.tutorExists.mockImplementation(async query =>
+		tutor && query._id === tutor._id.toString() ? { _id: tutor._id } : null
+	);
+	modelMocks.userExists.mockImplementation(async query =>
+		user && query._id === user._id.toString() ? { _id: user._id } : null
+	);
+}
+
 function sessionSnapshot(session: CustomSession) {
 	return {
 		adminID: session.adminID ?? null,
@@ -95,7 +118,7 @@ async function withAccountRoutes<T>(run: (baseUrl: string) => Promise<T>): Promi
 	app.use("/accounts", accountRoutes);
 
 	const server = await new Promise<Server>(resolve => {
-		const instance = app.listen(0, "127.0.0.1", () => resolve(instance));
+		const instance = app.listen({ host: "127.0.0.1", port: 0 }, () => resolve(instance));
 	});
 	const address = server.address();
 	if (!address || typeof address === "string") {
@@ -152,6 +175,7 @@ describe("account login role transfer", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockAccounts({});
+		mockExistingSessionAccounts({});
 	});
 
 	it("does not let a stale user record shadow a tutor login with the same email", async () => {
@@ -205,6 +229,7 @@ describe("account login role transfer", () => {
 	it("reports only tutorID from /accounts/me after tutor login", async () => {
 		const tutor = makeEntity("tutor", "tutor-password");
 		mockAccounts({ tutor });
+		mockExistingSessionAccounts({ tutor });
 
 		await withAccountRoutes(async baseUrl => {
 			const staleCookie = await seedStaleUserSession(baseUrl);
@@ -218,6 +243,31 @@ describe("account login role transfer", () => {
 			await expect(meResponse.json()).resolves.toEqual({
 				adminID: null,
 				tutorID: tutor._id.toString(),
+				userID: null
+			});
+		});
+	});
+
+	it("clears stale deleted user IDs from /accounts/me after a role transfer", async () => {
+		await withAccountRoutes(async baseUrl => {
+			const staleCookie = await seedStaleUserSession(baseUrl);
+			const meResponse = await fetch(`${baseUrl}/accounts/me`, {
+				headers: { cookie: staleCookie }
+			});
+			const cleanedCookie = responseCookie(meResponse);
+			const sessionResponse = await fetch(`${baseUrl}/test/session`, {
+				headers: { cookie: cleanedCookie }
+			});
+
+			expect(meResponse.status).toBe(200);
+			await expect(meResponse.json()).resolves.toEqual({
+				adminID: null,
+				tutorID: null,
+				userID: null
+			});
+			await expect(sessionResponse.json()).resolves.toEqual({
+				adminID: null,
+				tutorID: null,
 				userID: null
 			});
 		});
