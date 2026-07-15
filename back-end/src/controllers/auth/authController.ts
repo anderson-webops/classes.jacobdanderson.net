@@ -11,16 +11,29 @@ import { User } from "../../models/schemas/User.js";
 
 // union of the three document types
 type Entity = IUser | ITutor | IAdmin;
+type SessionRoleKey = "adminID" | "tutorID" | "userID";
+type LoginResponseKey = "currentAdmin" | "currentTutor" | "currentUser";
+
+interface LoginCandidate {
+	entity: Entity | null;
+	sessionKey: SessionRoleKey;
+	responseKey: LoginResponseKey;
+}
+
+type SelectedLoginCandidate = Omit<LoginCandidate, "entity"> & { entity: Entity };
 
 const THIRTY_DAYS_MS: number = 30 * 24 * 60 * 60 * 1000;
 
-// type‐guard: filters out `null` and tells TS that `u` is an Entity
-function isEntity(u: any): u is Entity {
-	return u != null && typeof u.comparePassword === "function";
-}
-
 function getEntityId(entity: Entity) {
 	return entity._id.toString();
+}
+
+function serializeLoginEntity(entity: Entity): Record<string, unknown> {
+	const serializableEntity = "toJSON" in entity && typeof entity.toJSON === "function"
+		? entity.toJSON()
+		: { ...entity };
+	const { password: _password, ...safeEntity } = serializableEntity as Record<string, unknown>;
+	return safeEntity;
 }
 
 function canMutate(session: CustomSession, entity: Entity) {
@@ -41,45 +54,42 @@ export const login: RequestHandler = async (req, res) => {
 	};
 	if (!email || !password) return res.sendStatus(400);
 
-	const e = email.trim().toLowerCase();
+	const normalizedEmail = email.trim().toLowerCase();
 
-	// fetch all three, we’ll pick whichever isn’t null
-	const results = (await Promise.all([
-		User.findOne({ email: e }).exec(),
-		Tutor.findOne({ email: e }).exec(),
-		Admin.findOne({ email: e }).exec()
+	const [user, tutor, admin] = (await Promise.all([
+		User.findOne({ email: normalizedEmail }).exec(),
+		Tutor.findOne({ email: normalizedEmail }).exec(),
+		Admin.findOne({ email: normalizedEmail }).exec()
 	])) as Array<IUser | ITutor | IAdmin | null>;
 
-	// pick the first non‐null
-	const entity = results.find(isEntity);
-	if (!entity || !(await entity.comparePassword(password))) {
+	const candidates: LoginCandidate[] = [
+		{ entity: admin, sessionKey: "adminID", responseKey: "currentAdmin" },
+		{ entity: tutor, sessionKey: "tutorID", responseKey: "currentTutor" },
+		{ entity: user, sessionKey: "userID", responseKey: "currentUser" }
+	];
+	let selectedCandidate: SelectedLoginCandidate | undefined;
+	for (const candidate of candidates) {
+		if (candidate.entity && await candidate.entity.comparePassword(password)) {
+			selectedCandidate = { ...candidate, entity: candidate.entity };
+			break;
+		}
+	}
+
+	if (!selectedCandidate) {
 		return res.status(403).json({ message: "Bad credentials" });
 	}
 
-	// figure out whether it’s an admin/tutor/user
 	const session = req.session as CustomSession;
-	let sessionKey: keyof CustomSession;
-	let responseKey: "currentAdmin" | "currentTutor" | "currentUser";
-
-	if (entity instanceof Admin) {
-		sessionKey = "adminID";
-		responseKey = "currentAdmin";
-	}
-	else if (entity instanceof Tutor) {
-		sessionKey = "tutorID";
-		responseKey = "currentTutor";
-	}
-	else {
-		sessionKey = "userID";
-		responseKey = "currentUser";
-	}
-
-	// sign‐in
-	session[sessionKey] = entity._id.toString();
+	delete session.adminID;
+	delete session.tutorID;
+	delete session.userID;
+	session[selectedCandidate.sessionKey] = getEntityId(selectedCandidate.entity);
 
 	const options = ((req as any).sessionOptions ??= {});
 	options.maxAge = remember ? THIRTY_DAYS_MS : undefined;
-	return res.json({ [responseKey]: entity });
+	return res.json({
+		[selectedCandidate.responseKey]: serializeLoginEntity(selectedCandidate.entity)
+	});
 };
 
 /** LOGOUT */
