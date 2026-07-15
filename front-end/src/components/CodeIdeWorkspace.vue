@@ -1274,10 +1274,12 @@ const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
 	const rawMode =
 		typeof route.query.mode === "string" ? route.query.mode : "";
 	if (rawTemplate === "bluej" || rawMode === "bluej") return "bluej";
+	if (rawTemplate === "circle-art") return "circle-art";
 	if (rawTemplate === "course" && requestedCourseStarter.value)
 		return "course";
 	if (rawTemplate === "demo") return "demo";
 	if (rawTemplate === "outline") return "outline";
+	if (rawTemplate === "picasso") return "picasso";
 	return "blank";
 });
 const requestedStarterMode = computed(() => {
@@ -1616,7 +1618,12 @@ function requestedStandaloneProjectKey() {
 	if (requestedShareID.value || requestedCourseProjectKey.value) return "";
 	const template = requestedTemplate.value;
 	if (template === "bluej") return "ide-template:bluej";
-	if (template === "demo" || template === "outline") {
+	if (
+		template === "circle-art" ||
+		template === "demo" ||
+		template === "outline" ||
+		template === "picasso"
+	) {
 		return `ide-template:${requestedStarterMode.value}:${template}`;
 	}
 	return "";
@@ -1632,8 +1639,10 @@ function standaloneProjectForRoute(projectList: PythonIdeProject[]) {
 
 function standaloneProjectStarterLabel(template: PythonIdeProjectTemplate) {
 	if (template === "bluej") return "BlueJ starter";
+	if (template === "circle-art") return "Guided Turtle project";
 	if (template === "demo") return "Demo project";
 	if (template === "outline") return "Template project";
+	if (template === "picasso") return "Guided Turtle project";
 	return undefined;
 }
 
@@ -6826,6 +6835,30 @@ onBeforeUnmount(() => {
 										Import BlueJ ZIP
 									</button>
 									<span>Template project</span>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'circle-art'
+											)
+										"
+									>
+										Color Circle Art
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'picasso'
+											)
+										"
+									>
+										Picasso Keyboard Painter
+									</button>
 									<button
 										type="button"
 										role="menuitem"

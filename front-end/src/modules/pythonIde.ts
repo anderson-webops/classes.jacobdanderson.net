@@ -61,9 +61,11 @@ export type PythonIdeMode =
 export type PythonIdeProjectTemplate =
 	| "blank"
 	| "bluej"
+	| "circle-art"
 	| "course"
 	| "demo"
-	| "outline";
+	| "outline"
+	| "picasso";
 
 export interface PythonIdeFile {
 	name: string;
@@ -399,6 +401,132 @@ while condition:
 
         # Conditions and additional actions here
         # Example if current_turtle.xcor() > 3
+`;
+
+export const turtleCircleArtStarterCode = `import random
+import turtle
+
+#######################
+###   CONSTANTS     ###
+#######################
+BACKGROUND_COLOR = "midnightblue"
+ART_COLORS = [
+    "red",
+    "orange",
+    "gold",
+    "limegreen",
+    "deepskyblue",
+    "blueviolet",
+    "hotpink"
+]
+CIRCLE_COUNT = 24
+CIRCLE_RADIUS = 55
+TURN_ANGLE = 360 / CIRCLE_COUNT
+PEN_SIZE = 2
+DRAWING_SPEED = 8
+ART_POSITIONS = [(-170, 40), (0, -35), (170, 40)]
+
+
+#######################
+###   FUNCTIONS     ###
+#######################
+# Move without drawing a connecting line
+def move_to(x_position, y_position):
+    artist.penup()
+    artist.goto(x_position, y_position)
+    artist.pendown()
+
+# Draw one filled circle with a chosen color
+def draw_filled_circle(radius, color_name):
+    artist.color(color_name)
+    artist.begin_fill()
+    artist.circle(radius)
+    artist.end_fill()
+
+# Build one burst from repeated circles and turns
+def draw_circle_burst(x_position, y_position):
+    move_to(x_position, y_position)
+
+    for circle_index in range(CIRCLE_COUNT):
+        circle_color = random.choice(ART_COLORS)
+        draw_filled_circle(CIRCLE_RADIUS, circle_color)
+        artist.right(TURN_ANGLE)
+
+
+#######################
+###   VARIABLES     ###
+#######################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Color Circle Art")
+
+artist = turtle.Turtle()
+artist.pensize(PEN_SIZE)
+artist.speed(DRAWING_SPEED)
+
+
+#######################
+###   MAIN CODE     ###
+#######################
+# Run the finished design once, then remix the constants above
+for art_position in ART_POSITIONS:
+    draw_circle_burst(art_position[0], art_position[1])
+
+artist.hideturtle()
+`;
+
+export const turtlePicassoStarterCode = `import random
+import turtle
+
+#######################
+###   CONSTANTS     ###
+#######################
+BACKGROUND_COLOR = "white"
+ART_COLORS = ["red", "orange", "gold", "green", "blue", "purple"]
+SQUARE_SIDE = 60
+SQUARE_TURN = 90
+PEN_SIZE = 4
+DRAWING_SPEED = 8
+
+
+#######################
+###   FUNCTIONS     ###
+#######################
+# Complete this function first, then press or hold S on the canvas
+def draw_square():
+    artist.color(random.choice(ART_COLORS))
+
+    # Add a for loop that repeats forward and left four times
+
+# Clear the drawing without rerunning the project
+def clear_art():
+    artist.clear()
+
+
+#######################
+###   VARIABLES     ###
+#######################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Picasso Keyboard Painter")
+
+artist = turtle.Turtle()
+artist.pensize(PEN_SIZE)
+artist.speed(DRAWING_SPEED)
+
+
+###########################
+###   EVENT LISTENERS   ###
+###########################
+screen.onkey(draw_square, "s")
+screen.onkey(clear_art, "space")
+screen.listen()
+
+
+#######################
+###   MAIN CODE     ###
+#######################
+# Click the canvas, press S to draw, and press Space to clear
 `;
 
 export const pgzeroStarterCode = `import pgzrun
@@ -1153,13 +1281,33 @@ function getBlueJStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 	];
 }
 
+function getGuidedTurtleStarterFiles(
+	mode: PythonIdeMode,
+	starterCode: string
+): PythonIdeFile[] {
+	if (mode !== "turtle") return getOutlineStarterFiles(mode);
+
+	return [
+		{
+			name: "main.py",
+			content: starterCode
+		}
+	];
+}
+
 function getStarterFilesForTemplate(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate
 ) {
 	if (template === "bluej") return getBlueJStarterFiles(mode);
+	if (template === "circle-art") {
+		return getGuidedTurtleStarterFiles(mode, turtleCircleArtStarterCode);
+	}
 	if (template === "demo") return getDemoStarterFiles(mode);
 	if (template === "outline") return getOutlineStarterFiles(mode);
+	if (template === "picasso") {
+		return getGuidedTurtleStarterFiles(mode, turtlePicassoStarterCode);
+	}
 	if (template === "course") return getCourseStarterFiles(mode);
 	return getBlankStarterFiles(mode);
 }
@@ -1185,6 +1333,10 @@ function projectTitleForMode(
 	template: PythonIdeProjectTemplate = "blank"
 ) {
 	if (template === "bluej" && mode === "java") return "BlueJ Java Project";
+	if (template === "circle-art" && mode === "turtle")
+		return "Color Circle Art";
+	if (template === "picasso" && mode === "turtle")
+		return "Picasso Keyboard Painter";
 
 	if (template === "outline") {
 		if (mode === "turtle") return "Python Level 1 Outline";
