@@ -3,15 +3,28 @@
 import type { RequestHandler } from "express";
 import type { CustomSession } from "../types/session/CustomSession.js";
 import { Router } from "express";
-import { changeEmail, changePassword, checkEmail, login, logout } from "../controllers/auth/authController.js";
+import {
+	changeEmail,
+	changePassword,
+	checkEmail,
+	confirmPasswordReset,
+	login,
+	logout,
+	requestPasswordReset
+} from "../controllers/auth/authController.js";
+import { createPasswordResetLimiter } from "../middleware/rateLimiters.js";
 import { Admin } from "../models/schemas/Admin.js";
 import { Tutor } from "../models/schemas/Tutor.js";
 import { User } from "../models/schemas/User.js";
 
 const router = Router();
 const objectIdPattern = /^[a-f\d]{24}$/i;
+const passwordResetLimiter = createPasswordResetLimiter();
 
-async function validExistingSessionId(Model: { exists: (query: { _id: string }) => PromiseLike<unknown> | unknown }, id: unknown): Promise<string | null> {
+async function validExistingSessionId(
+	Model: { exists: (query: { _id: string }) => PromiseLike<unknown> | unknown },
+	id: unknown
+): Promise<string | null> {
 	if (typeof id !== "string" || !objectIdPattern.test(id)) {
 		return null;
 	}
@@ -30,6 +43,9 @@ router.post("/changePassword/:ID", changePassword);
 
 // Route to handle login
 router.post("/login", login);
+
+router.post("/password-reset/request", passwordResetLimiter, requestPasswordReset);
+router.post("/password-reset/confirm", passwordResetLimiter, confirmPasswordReset);
 
 router.delete("/logout", logout);
 

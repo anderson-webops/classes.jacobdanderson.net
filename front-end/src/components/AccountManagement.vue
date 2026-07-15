@@ -16,14 +16,70 @@ const loginEmail = ref("");
 const loginPassword = ref("");
 const rememberMe = ref(false);
 const errorLogin = ref("");
+const loginView = ref<"login" | "password-reset">("login");
+const resetEmail = ref("");
+const resetMessage = ref("");
+const resetError = ref("");
+const resetSubmitting = ref(false);
+const loginDialogTitle = computed(() =>
+	loginView.value === "login" ? "Log in" : "Reset your password"
+);
+const loginDialogDescription = computed(() =>
+	loginView.value === "login"
+		? "Log in with the email and password connected to your classes account."
+		: "Request a one-time password reset link for your classes account."
+);
 
 function changeLoginView(show: boolean) {
+	if (!show) {
+		loginView.value = "login";
+		resetMessage.value = "";
+		resetError.value = "";
+	}
 	app.setLoginBlock(show);
 }
 
 function openSignupFromLogin() {
 	changeLoginView(false);
 	changeSignupView(true);
+}
+
+function openPasswordReset() {
+	resetEmail.value = loginEmail.value;
+	resetMessage.value = "";
+	resetError.value = "";
+	loginView.value = "password-reset";
+}
+
+function returnToLogin() {
+	resetMessage.value = "";
+	resetError.value = "";
+	loginView.value = "login";
+}
+
+async function requestPasswordReset() {
+	resetMessage.value = "";
+	resetError.value = "";
+	resetSubmitting.value = true;
+
+	try {
+		const { data } = await api.post(
+			"/accounts/password-reset/request",
+			{ email: resetEmail.value },
+			{ withCredentials: true }
+		);
+		resetMessage.value =
+			data.message ??
+			"If an account uses that email, a password reset link is on its way.";
+	} catch (err: unknown) {
+		const e = err as AxiosError<{ message?: string }>;
+		resetError.value =
+			e.response?.data?.message ??
+			e.message ??
+			"Unable to request a password reset.";
+	} finally {
+		resetSubmitting.value = false;
+	}
 }
 
 async function loginTutor() {
@@ -118,13 +174,17 @@ async function addSignup() {
 	<div>
 		<AccessibleDialog
 			close-label="Close login dialog"
-			description="Log in with the email and password connected to your classes account."
+			:description="loginDialogDescription"
 			dialog-id="login-dialog"
 			:open="loginBlock"
-			title="Log in"
+			:title="loginDialogTitle"
 			@close="changeLoginView(false)"
 		>
-			<form class="auth-form loginForm" @submit.prevent="loginTutor">
+			<form
+				v-if="loginView === 'login'"
+				class="auth-form loginForm"
+				@submit.prevent="loginTutor"
+			>
 				<label for="uname">Email</label>
 				<input
 					id="uname"
@@ -185,11 +245,60 @@ async function addSignup() {
 					</button>
 				</p>
 				<p class="auth-help">
-					Forgot your password? Email
-					<a href="mailto:classes@jacobdanderson.net">
-						classes@jacobdanderson.net </a
+					Forgot your password?
+					<button
+						class="text-button"
+						type="button"
+						@click="openPasswordReset"
+					>
+						Reset it securely</button
 					>.
 				</p>
+			</form>
+
+			<form
+				v-else
+				class="auth-form password-reset-form"
+				@submit.prevent="requestPasswordReset"
+			>
+				<p class="auth-help">
+					Enter your account email. If it matches an account, you will
+					receive a one-time link that expires in 30 minutes.
+				</p>
+
+				<label for="reset-email">Email</label>
+				<input
+					id="reset-email"
+					v-model="resetEmail"
+					autocomplete="email"
+					placeholder="Enter Email"
+					required
+					type="email"
+				/>
+
+				<p v-if="resetMessage" class="success" role="status">
+					{{ resetMessage }}
+				</p>
+				<p v-if="resetError" class="error" role="alert">
+					{{ resetError }}
+				</p>
+
+				<div class="auth-actions">
+					<button
+						class="button"
+						:disabled="resetSubmitting"
+						type="submit"
+					>
+						{{ resetSubmitting ? "Sending…" : "Send reset link" }}
+					</button>
+					<button
+						class="button secondary"
+						type="button"
+						@click="returnToLogin"
+					>
+						Back to login
+					</button>
+				</div>
 			</form>
 		</AccessibleDialog>
 
@@ -366,6 +475,7 @@ async function addSignup() {
 .auth-switch,
 .auth-help,
 .error,
+.success,
 .passwordMatchError {
 	margin: 0;
 	line-height: 1.55;
@@ -385,6 +495,16 @@ async function addSignup() {
 .passwordMatchError {
 	color: #b91c1c;
 	font-weight: 800;
+}
+
+.success {
+	color: #047857;
+	font-weight: 800;
+}
+
+.button:disabled {
+	cursor: wait;
+	opacity: 0.7;
 }
 
 .button:hover,

@@ -1,13 +1,19 @@
 // src/controllers/auth/authController.ts
 import type { RequestHandler } from "express";
+import type { Model } from "mongoose";
+import type { PasswordResetRole } from "../../models/schemas/PasswordResetToken.js";
 import type { IAdmin } from "../../types/entities/IAdmin.js";
 import type { ITutor } from "../../types/entities/ITutor.js";
-import type { IUser } from "../../types/entities/IUser.js";
 
+import type { IUser } from "../../types/entities/IUser.js";
 import type { CustomSession } from "../../types/session/CustomSession.js";
+import { createHash, randomBytes } from "node:crypto";
+import { env } from "node:process";
 import { Admin } from "../../models/schemas/Admin.js";
+import { PasswordResetToken } from "../../models/schemas/PasswordResetToken.js";
 import { Tutor } from "../../models/schemas/Tutor.js";
 import { User } from "../../models/schemas/User.js";
+import { sendTransactionalEmail } from "../../utils/transactionalEmail.js";
 
 // union of the three document types
 type Entity = IUser | ITutor | IAdmin;
@@ -23,6 +29,118 @@ interface LoginCandidate {
 type SelectedLoginCandidate = Omit<LoginCandidate, "entity"> & { entity: Entity };
 
 const THIRTY_DAYS_MS: number = 30 * 24 * 60 * 60 * 1000;
+const PASSWORD_RESET_EXPIRY_MS = 30 * 60 * 1000;
+const PASSWORD_RESET_TOKEN_PATTERN = /^[a-f\d]{64}$/i;
+const PASSWORD_RESET_RESPONSE = {
+	message: "If an account uses that email, a password reset link is on its way."
+};
+const DEFAULT_SITE_ORIGIN = "https://classes.jacobdanderson.net";
+
+interface AccountsByRole {
+	admin: IAdmin | null;
+	tutor: ITutor | null;
+	user: IUser | null;
+}
+
+async function findAccountsByEmail(normalizedEmail: string): Promise<AccountsByRole> {
+	const [user, tutor, admin] = (await Promise.all([
+		User.findOne({ email: normalizedEmail }).exec(),
+		Tutor.findOne({ email: normalizedEmail }).exec(),
+		Admin.findOne({ email: normalizedEmail }).exec()
+	])) as [IUser | null, ITutor | null, IAdmin | null];
+
+	return { admin, tutor, user };
+}
+
+function clearSessionRoles(session: CustomSession) {
+	delete session.adminID;
+	delete session.tutorID;
+	delete session.userID;
+}
+
+function hashResetToken(token: string) {
+	return createHash("sha256").update(token).digest("hex");
+}
+
+function isValidEmailAddress(email: string) {
+	const atIndex = email.indexOf("@");
+	const domain = email.slice(atIndex + 1);
+	return email.length <= 320
+		&& atIndex > 0
+		&& atIndex === email.lastIndexOf("@")
+		&& !/\s/u.test(email)
+		&& domain.includes(".")
+		&& !domain.startsWith(".")
+		&& !domain.endsWith(".");
+}
+
+function getPasswordResetUrl(token: string) {
+	const configuredOrigin = env.PASSWORD_RESET_ORIGIN?.trim() || DEFAULT_SITE_ORIGIN;
+	let origin = DEFAULT_SITE_ORIGIN;
+	try {
+		origin = new URL(configuredOrigin).origin;
+	}
+	catch {
+		console.warn("PASSWORD_RESET_ORIGIN is invalid; using the production site origin.");
+	}
+
+	const resetUrl = new URL("/reset-password", origin);
+	resetUrl.searchParams.set("token", token);
+	return resetUrl.toString();
+}
+
+async function deliverPasswordReset(normalizedEmail: string) {
+	const accounts = await findAccountsByEmail(normalizedEmail);
+	const candidate = [
+		{ entity: accounts.admin, role: "admin" as const },
+		{ entity: accounts.tutor, role: "tutor" as const },
+		{ entity: accounts.user, role: "user" as const }
+	].find(item => item.entity);
+
+	if (!candidate?.entity) return;
+
+	const token = randomBytes(32).toString("hex");
+	const tokenHash = hashResetToken(token);
+	const expiresAt = new Date(Date.now() + PASSWORD_RESET_EXPIRY_MS);
+
+	await PasswordResetToken.findOneAndUpdate(
+		{ role: candidate.role, accountID: candidate.entity._id },
+		{
+			$set: {
+				email: normalizedEmail,
+				expiresAt,
+				tokenHash
+			}
+		},
+		{ new: true, setDefaultsOnInsert: true, upsert: true }
+	).exec();
+
+	const resetUrl = getPasswordResetUrl(token);
+	try {
+		await sendTransactionalEmail({
+			to: normalizedEmail,
+			subject: "Reset your Classes with Jacob password",
+			text: [
+				"Use the link below to choose a new password for your Classes with Jacob account.",
+				"",
+				resetUrl,
+				"",
+				"This link expires in 30 minutes and can be used once.",
+				"If you did not request this reset, you can ignore this email."
+			].join("\n"),
+			html: [
+				"<p>Use the link below to choose a new password for your Classes with Jacob account.</p>",
+				`<p><a href="${resetUrl}">Choose a new password</a></p>`,
+				"<p>This link expires in 30 minutes and can be used once.</p>",
+				"<p>If you did not request this reset, you can ignore this email.</p>"
+			].join("")
+		});
+	}
+	catch (error) {
+		await PasswordResetToken.deleteOne({ tokenHash }).exec();
+		throw error;
+	}
+}
 
 function getEntityId(entity: Entity) {
 	return entity._id.toString();
@@ -56,11 +174,7 @@ export const login: RequestHandler = async (req, res) => {
 
 	const normalizedEmail = email.trim().toLowerCase();
 
-	const [user, tutor, admin] = (await Promise.all([
-		User.findOne({ email: normalizedEmail }).exec(),
-		Tutor.findOne({ email: normalizedEmail }).exec(),
-		Admin.findOne({ email: normalizedEmail }).exec()
-	])) as Array<IUser | ITutor | IAdmin | null>;
+	const { admin, tutor, user } = await findAccountsByEmail(normalizedEmail);
 
 	const candidates: LoginCandidate[] = [
 		{ entity: admin, sessionKey: "adminID", responseKey: "currentAdmin" },
@@ -80,9 +194,7 @@ export const login: RequestHandler = async (req, res) => {
 	}
 
 	const session = req.session as CustomSession;
-	delete session.adminID;
-	delete session.tutorID;
-	delete session.userID;
+	clearSessionRoles(session);
 	session[selectedCandidate.sessionKey] = getEntityId(selectedCandidate.entity);
 
 	const options = ((req as any).sessionOptions ??= {});
@@ -90,6 +202,58 @@ export const login: RequestHandler = async (req, res) => {
 	return res.json({
 		[selectedCandidate.responseKey]: serializeLoginEntity(selectedCandidate.entity)
 	});
+};
+
+export const requestPasswordReset: RequestHandler = (req, res) => {
+	const email = typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase() : "";
+	if (!isValidEmailAddress(email)) {
+		return res.status(400).json({ message: "Enter a valid email address." });
+	}
+
+	void deliverPasswordReset(email).catch((error: unknown) => {
+		console.error(
+			"Password reset delivery failed:",
+			error instanceof Error ? error.message : "Unknown delivery error"
+		);
+	});
+
+	return res.status(202).json(PASSWORD_RESET_RESPONSE);
+};
+
+export const confirmPasswordReset: RequestHandler = async (req, res) => {
+	const token = typeof req.body?.token === "string" ? req.body.token.trim() : "";
+	const newPassword = typeof req.body?.newPassword === "string" ? req.body.newPassword : "";
+
+	if (!PASSWORD_RESET_TOKEN_PATTERN.test(token)) {
+		return res.status(400).json({ message: "This password reset link is invalid or expired." });
+	}
+	if (newPassword.length < 8 || newPassword.length > 256) {
+		return res.status(400).json({ message: "Use a password between 8 and 256 characters." });
+	}
+
+	const resetRecord = await PasswordResetToken.findOneAndDelete({
+		tokenHash: hashResetToken(token),
+		expiresAt: { $gt: new Date() }
+	}).exec();
+	if (!resetRecord) {
+		return res.status(400).json({ message: "This password reset link is invalid or expired." });
+	}
+
+	const models: Record<PasswordResetRole, Model<any>> = {
+		admin: Admin,
+		tutor: Tutor,
+		user: User
+	};
+	const account = await models[resetRecord.role].findById(resetRecord.accountID).exec();
+	if (!account) {
+		return res.status(400).json({ message: "This password reset link is invalid or expired." });
+	}
+
+	account.password = newPassword;
+	await account.save();
+	clearSessionRoles(req.session as CustomSession);
+
+	return res.json({ message: "Password updated. You can now log in with your new password." });
 };
 
 /** LOGOUT */

@@ -34,3 +34,17 @@ export function createAdminMailLimiter(
 		...options
 	});
 }
+
+export function createPasswordResetLimiter(
+	options: TunableRateLimitOptions = {}
+): RateLimitRequestHandler {
+	return rateLimit({
+		windowMs: Number(env.PASSWORD_RESET_RATE_WINDOW_MS || 15 * 60 * 1000),
+		limit: Number(env.PASSWORD_RESET_RATE_MAX || 5),
+		...standardRateLimitHeaders,
+		message: {
+			message: "Too many password reset attempts. Please wait and try again."
+		},
+		...options
+	});
+}
