@@ -142,6 +142,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/reset-password': RouteRecordInfo<
+      '/reset-password',
+      '/reset-password',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/signup': RouteRecordInfo<
       '/signup',
       '/signup',
@@ -283,6 +290,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/README.vue': {
       routes:
         | '/README'
+      views:
+        | never
+    }
+    'src/pages/reset-password.vue': {
+      routes:
+        | '/reset-password'
       views:
         | never
     }

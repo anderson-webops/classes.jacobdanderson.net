@@ -101,4 +101,42 @@ describe("AccountManagement.vue login (happy path)", () => {
 		expect(document.querySelector("#signup-dialog")).not.toBeNull();
 		wrapper.unmount();
 	});
+
+	it("requests a self-service password reset without revealing account existence", async () => {
+		const app = useAppStore();
+		app.setLoginBlock(true);
+		(apiMod.api.post as any).mockResolvedValueOnce({
+			data: {
+				message: "If an account uses that email, a password reset link is on its way."
+			}
+		});
+
+		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
+			global: { stubs: { teleport: true } }
+		});
+
+		await wrapper.get("#uname").setValue("julio@example.com");
+		const resetButton = wrapper
+			.findAll("button")
+			.find(button => button.text() === "Reset it securely");
+		if (!resetButton) throw new Error("Password reset button was not rendered.");
+		await resetButton.trigger("click");
+
+		expect(wrapper.get("#reset-email").element).toHaveProperty("value", "julio@example.com");
+		await wrapper.get(".password-reset-form").trigger("submit.prevent");
+
+		expect(apiMod.api.post).toHaveBeenCalledWith(
+			"/accounts/password-reset/request",
+			{ email: "julio@example.com" },
+			{ withCredentials: true }
+		);
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain(
+				"If an account uses that email, a password reset link is on its way."
+			);
+		});
+		expect(wrapper.find('a[href^="mailto:"]').exists()).toBe(false);
+		wrapper.unmount();
+	});
 });

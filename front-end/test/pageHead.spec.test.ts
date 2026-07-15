@@ -16,6 +16,7 @@ describe("page head helpers", () => {
 		["/signup", "Book a Class | Classes with Jacob"],
 		["/payment/", "Tuition | Classes with Jacob"],
 		["/profile", "Account | Classes with Jacob"],
+		["/reset-password?token=secret", "Reset Password | Classes with Jacob"],
 		["/admin/mdmail", "Mail Tools | Classes with Jacob"],
 		[
 			"/admin/student-management",
