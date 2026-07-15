@@ -8,6 +8,10 @@ import { ScheduledSession } from "../../models/schemas/ScheduledSession.js";
 import { SessionNote } from "../../models/schemas/SessionNote.js";
 import { Tutor } from "../../models/schemas/Tutor.js";
 import { User } from "../../models/schemas/User.js";
+import {
+	AccountRoleTransferError,
+	promoteUserAccount
+} from "../../utils/accountRoleTransfer.js";
 import { renderMarkdownEmailHtml } from "../../utils/markdownEmail.js";
 import {
 	defaultSessionNoteSubject,
@@ -612,27 +616,17 @@ export const promoteUserToTutor: RequestHandler = async (req, res) => {
 		return res.status(400).json({ message: "Invalid user ID" });
 	}
 	if (!Types.ObjectId.isValid(userID)) return res.status(400).json({ message: "Invalid user ID" });
-	const user = await User.findById(userID);
-	if (!user) return res.sendStatus(404);
-
-	if (await Tutor.exists({ email: user.email })) {
-		return res.status(409).json({ message: "Tutor with this email already exists" });
+	try {
+		const tutor = await promoteUserAccount(userID);
+		return res.status(201).json({ tutor });
 	}
-
-	const tutor = new Tutor({
-		name: user.name,
-		email: user.email,
-		age: user.age,
-		state: user.state,
-		password: user.password,
-		role: "tutor"
-	} as any);
-	(tutor as any).skipPasswordHash = true;
-
-	await tutor.save();
-	await user.deleteOne();
-
-	res.status(201).json({ tutor });
+	catch (error) {
+		if (error instanceof AccountRoleTransferError) {
+			if (error.statusCode === 404) return res.sendStatus(404);
+			return res.status(error.statusCode).json({ message: error.message });
+		}
+		throw error;
+	}
 };
 
 export const deleteOwnUser: RequestHandler = async (req, res) => {
