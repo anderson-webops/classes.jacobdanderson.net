@@ -598,6 +598,7 @@ const runtimeArtifacts = ref<RuntimeArtifactView[]>([]);
 const karelWorld = ref<KarelWorldState | null>(null);
 const isLoading = ref(true);
 const isSaving = ref(false);
+const isDownloading = ref(false);
 const isSharing = ref(false);
 const isRunning = ref(false);
 const isGameLoopActive = ref(false);
@@ -2525,6 +2526,49 @@ function bytesToArrayBuffer(bytes: Uint8Array) {
 	return copy.buffer;
 }
 
+function downloadZipArchive(archiveBytes: Uint8Array, archiveName: string) {
+	const archiveUrl = URL.createObjectURL(
+		new Blob([bytesToArrayBuffer(archiveBytes)], {
+			type: "application/zip"
+		})
+	);
+	const link = document.createElement("a");
+	link.href = archiveUrl;
+	link.download = archiveName;
+	link.rel = "noopener";
+	document.body.append(link);
+	link.click();
+	link.remove();
+	window.setTimeout(() => URL.revokeObjectURL(archiveUrl), 1000);
+}
+
+async function downloadSelectedProject() {
+	const project = selectedProject.value;
+	if (!project || isDownloading.value) return;
+
+	isDownloading.value = true;
+	try {
+		const { createProjectArchive, projectArchiveName } =
+			await import("@/modules/projectArchive");
+		const archiveBytes = createProjectArchive(project);
+		const archiveName = projectArchiveName(project);
+		downloadZipArchive(archiveBytes, archiveName);
+		appendOutput(
+			"system",
+			`Downloaded ${archiveName} with ${project.files.length} file${project.files.length === 1 ? "" : "s"}.`
+		);
+	} catch (error) {
+		appendOutput(
+			"stderr",
+			error instanceof Error
+				? error.message
+				: "Could not download the project."
+		);
+	} finally {
+		isDownloading.value = false;
+	}
+}
+
 async function downloadSelectedProjectForBlueJ() {
 	const project = selectedProject.value;
 	if (!project) return;
@@ -2537,19 +2581,7 @@ async function downloadSelectedProjectForBlueJ() {
 		const { blueJProjectArchiveName, createBlueJProjectArchive } =
 			await import("@/modules/blueJProjectExport");
 		const archiveBytes = createBlueJProjectArchive(project);
-		const archiveUrl = URL.createObjectURL(
-			new Blob([bytesToArrayBuffer(archiveBytes)], {
-				type: "application/zip"
-			})
-		);
-		const link = document.createElement("a");
-		link.href = archiveUrl;
-		link.download = blueJProjectArchiveName(project);
-		link.rel = "noopener";
-		document.body.append(link);
-		link.click();
-		link.remove();
-		window.setTimeout(() => URL.revokeObjectURL(archiveUrl), 1000);
+		downloadZipArchive(archiveBytes, blueJProjectArchiveName(project));
 		appendOutput(
 			"system",
 			"Downloaded a BlueJ project ZIP for this Java project."
@@ -7419,6 +7451,16 @@ onBeforeUnmount(() => {
 								</div>
 							</div>
 						</div>
+						<button
+							aria-label="Download project ZIP"
+							class="site-button site-button--secondary"
+							:disabled="isDownloading"
+							title="Download project ZIP"
+							type="button"
+							@click="downloadSelectedProject"
+						>
+							{{ isDownloading ? "Preparing" : "Download ZIP" }}
+						</button>
 						<button
 							class="site-button site-button--secondary"
 							:disabled="isSaving"
