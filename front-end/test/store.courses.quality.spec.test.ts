@@ -2,7 +2,10 @@ import { beforeEach, describe, expect, it } from "vitest";
 import fs from "node:fs";
 import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
-import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
+import {
+	courseCatalog,
+	loadRawCourse as loadRawCourseWithoutCache
+} from "@/stores/courses/index";
 import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
 	canonicalStaticMediaUrl,
@@ -22,6 +25,19 @@ import {
 } from "@/modules/courseAssetPreview";
 
 const COURSE_SWEEP_TIMEOUT = 180000;
+const normalizedCoursePromises = new Map<
+	string,
+	ReturnType<typeof loadRawCourseWithoutCache>
+>();
+
+function loadRawCourse(id: string) {
+	const cachedCourse = normalizedCoursePromises.get(id);
+	if (cachedCourse) return cachedCourse;
+
+	const coursePromise = loadRawCourseWithoutCache(id);
+	normalizedCoursePromises.set(id, coursePromise);
+	return coursePromise;
+}
 
 function allCourseText(course: Awaited<ReturnType<typeof loadRawCourse>>) {
 	expect(course).not.toBeNull();
