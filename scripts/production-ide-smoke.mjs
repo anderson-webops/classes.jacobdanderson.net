@@ -75,6 +75,7 @@ export function containsCurrentIdeBundleMarkers(source) {
 		source.includes("Object bench class") &&
 		source.includes("New BlueJ project") &&
 		source.includes("Import BlueJ ZIP") &&
+		source.includes("Download project ZIP") &&
 		source.includes("Download BlueJ ZIP") &&
 		source.includes("Java preview skipped projects over") &&
 		source.includes("total Java characters") &&

@@ -4351,6 +4351,20 @@ describe("python IDE project helpers", () => {
 		expect(exportSource).toContain("BLUEJ_SOURCE_URL");
 	});
 
+	it("downloads every Code IDE project as a project-named ZIP", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+
+		expect(pageSource).toContain("async function downloadSelectedProject");
+		expect(pageSource).toContain('import("@/modules/projectArchive")');
+		expect(pageSource).toContain("createProjectArchive(project)");
+		expect(pageSource).toContain("projectArchiveName(project)");
+		expect(pageSource).toContain('aria-label="Download project ZIP"');
+		expect(pageSource).toContain("Download ZIP");
+	});
+
 	it("keeps one IDE entry in the main navigation", () => {
 		const headerSource = readFileSync(
 			resolve(__dirname, "../src/components/TheHeader.vue"),
