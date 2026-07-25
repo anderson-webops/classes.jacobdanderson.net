@@ -21,13 +21,14 @@ const routeScenarios = [
 					"/",
 					"/about",
 					"/courses",
+					"/graph-sketcher",
 					"/pathways",
 					"/signup",
 					"/payment",
 					"/zoom",
 					"/wheel"
 				]
-			: ["/", "/courses", "/signup", "/zoom"]
+			: ["/", "/courses", "/graph-sketcher", "/signup", "/zoom"]
 	},
 	{
 		name: "student",

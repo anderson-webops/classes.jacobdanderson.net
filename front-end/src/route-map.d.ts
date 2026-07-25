@@ -100,6 +100,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/graph-sketcher': RouteRecordInfo<
+      '/graph-sketcher',
+      '/graph-sketcher',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/ide': RouteRecordInfo<
       '/ide',
       '/ide',
@@ -254,6 +261,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/courses.vue': {
       routes:
         | '/courses'
+      views:
+        | never
+    }
+    'src/pages/graph-sketcher.vue': {
+      routes:
+        | '/graph-sketcher'
       views:
         | never
     }
