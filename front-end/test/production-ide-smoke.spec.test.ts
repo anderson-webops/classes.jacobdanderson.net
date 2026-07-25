@@ -53,6 +53,7 @@ describe("production Code IDE smoke helpers", () => {
 			"New BlueJ project",
 			"Import BlueJ ZIP",
 			"Download project ZIP",
+			"Triangle Motion Starter",
 			"Download BlueJ ZIP",
 			"Java preview skipped projects over",
 			"total Java characters",

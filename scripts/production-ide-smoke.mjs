@@ -76,6 +76,7 @@ export function containsCurrentIdeBundleMarkers(source) {
 		source.includes("New BlueJ project") &&
 		source.includes("Import BlueJ ZIP") &&
 		source.includes("Download project ZIP") &&
+		source.includes("Triangle Motion Starter") &&
 		source.includes("Download BlueJ ZIP") &&
 		source.includes("Java preview skipped projects over") &&
 		source.includes("total Java characters") &&

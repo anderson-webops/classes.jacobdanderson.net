@@ -66,6 +66,7 @@ import {
 	pgzeroStarterCode,
 	turtleCircleArtStarterCode,
 	turtlePicassoStarterCode,
+	turtleTriangleMotionStarterCode,
 	turtleStarterCode
 } from "../src/modules/pythonIde";
 import { resetCodePreviewCaches } from "../src/modules/codePreview";
@@ -304,6 +305,9 @@ describe("python IDE project helpers", () => {
 		const picasso = createPythonIdeProject("turtle", {
 			template: "picasso"
 		});
+		const triangleMotion = createPythonIdeProject("turtle", {
+			template: "triangle-motion"
+		});
 
 		expect(circleArt.title).toBe("Color Circle Art");
 		expect(circleArt.files).toEqual([
@@ -333,6 +337,34 @@ describe("python IDE project helpers", () => {
 		expect(picasso.files[0]?.content).toContain("screen.listen()");
 		expect(picasso.files[0]?.content).not.toContain("t.forward(");
 		expect(picasso.files[0]?.content).not.toContain("def clear_art");
+
+		expect(triangleMotion.title).toBe("Triangle Motion Starter");
+		expect(triangleMotion.files).toEqual([
+			{ name: "main.py", content: turtleTriangleMotionStarterCode }
+		]);
+		expect(triangleMotion.files[0]?.content).toContain(
+			"def draw_triangle():\n    pass"
+		);
+		expect(triangleMotion.files[0]?.content).toContain(
+			"Use TRIANGLE_SIDE_LENGTH and TURN_ANGLE to draw three equal sides"
+		);
+		expect(triangleMotion.files[0]?.content).toContain(
+			'artist.goto(artist.xcor() + MOVE_DISTANCE, artist.ycor())'
+		);
+		expect(triangleMotion.files[0]?.content).toContain(
+			'artist.goto(artist.xcor() - MOVE_DISTANCE, artist.ycor())'
+		);
+		expect(triangleMotion.files[0]?.content).toContain(
+			'screen.onkey(move_right_and_draw, "Right")'
+		);
+		expect(triangleMotion.files[0]?.content).toContain(
+			'screen.onkey(move_left_and_draw, "Left")'
+		);
+		expect(triangleMotion.files[0]?.content).toContain("screen.listen()");
+		expect(triangleMotion.files[0]?.content).not.toContain(
+			"artist.forward("
+		);
+		expect(triangleMotion.files[0]?.content).not.toContain("artist.left(");
 	});
 
 	it("keeps built-in IDE demos and templates aligned with the classroom coding standard", () => {
@@ -349,6 +381,7 @@ describe("python IDE project helpers", () => {
 			pythonLevel1OutlineStarterCode,
 			turtleCircleArtStarterCode,
 			turtlePicassoStarterCode,
+			turtleTriangleMotionStarterCode,
 			pgzeroStarterCode,
 			pgzeroOutlineStarterCode,
 			pgzeroCourseStarterCode,
@@ -4210,7 +4243,7 @@ describe("python IDE project helpers", () => {
 		);
 
 		expect(moduleSource).toContain(
-			'export type PythonIdeProjectTemplate =\n\t| "blank"\n\t| "bluej"\n\t| "circle-art"\n\t| "course"\n\t| "demo"\n\t| "outline"\n\t| "picasso";'
+			'export type PythonIdeProjectTemplate =\n\t| "blank"\n\t| "bluej"\n\t| "circle-art"\n\t| "course"\n\t| "demo"\n\t| "outline"\n\t| "picasso"\n\t| "triangle-motion";'
 		);
 		expect(moduleSource).toContain(
 			"export const pythonLevel1OutlineStarterCode"
@@ -4228,6 +4261,7 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toContain("Python Level 1 Outline");
 		expect(pageSource).toContain("Color Circle Art");
 		expect(pageSource).toContain("Picasso Keyboard Painter");
+		expect(pageSource).toContain("Triangle Motion Starter");
 		expect(pageSource).toContain("PyGame Zero Outline");
 		expect(pageSource).toContain("Java Outline");
 		expect(pageSource).toContain("BlueJ Java");
@@ -4241,6 +4275,9 @@ describe("python IDE project helpers", () => {
 		);
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'turtle',\s*'picasso'/
+		);
+		expect(pageSource).toMatch(
+			/createProjectFromMenu\(\s*'turtle',\s*'triangle-motion'/
 		);
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'pgzero',\s*'outline'/

@@ -65,7 +65,8 @@ export type PythonIdeProjectTemplate =
 	| "course"
 	| "demo"
 	| "outline"
-	| "picasso";
+	| "picasso"
+	| "triangle-motion";
 
 export interface PythonIdeFile {
 	name: string;
@@ -505,6 +506,76 @@ def draw_square():
 ###########################
 screen.onkey(draw_square, "s")
 screen.listen()
+`;
+
+export const turtleTriangleMotionStarterCode = `import turtle
+
+#####################
+###   CONSTANTS   ###
+#####################
+BACKGROUND_COLOR = "yellow"
+OUTLINE_COLOR = "blue"
+FILL_COLOR = "deepskyblue"
+MOVE_DISTANCE = 20
+TRIANGLE_SIDE_LENGTH = 60
+TURN_ANGLE = 120
+
+
+#####################
+###   VARIABLES   ###
+#####################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Triangle Motion Starter")
+screen.tracer(0)
+
+artist = turtle.Turtle()
+artist.hideturtle()
+artist.color(OUTLINE_COLOR, FILL_COLOR)
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# STUDENT TASK: Replace this placeholder with code that draws one triangle
+# Use TRIANGLE_SIDE_LENGTH and TURN_ANGLE to draw three equal sides
+# Add begin_fill() and end_fill() if the triangle should be filled
+def draw_triangle():
+    pass
+
+# Clear the previous triangle and redraw it at the current position
+def redraw_triangle():
+    artist.clear()
+    artist.pendown()
+    draw_triangle()
+    screen.update()
+
+# Move right without drawing a connecting line
+def move_right_and_draw():
+    artist.penup()
+    artist.goto(artist.xcor() + MOVE_DISTANCE, artist.ycor())
+    redraw_triangle()
+
+# Move left without drawing a connecting line
+def move_left_and_draw():
+    artist.penup()
+    artist.goto(artist.xcor() - MOVE_DISTANCE, artist.ycor())
+    redraw_triangle()
+
+
+###########################
+###   EVENT LISTENERS   ###
+###########################
+screen.onkey(move_right_and_draw, "Right")
+screen.onkey(move_left_and_draw, "Left")
+screen.listen()
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+# Draw once after the student completes draw_triangle()
+redraw_triangle()
 `;
 
 export const pgzeroStarterCode = `import pgzrun
@@ -1286,6 +1357,12 @@ function getStarterFilesForTemplate(
 	if (template === "picasso") {
 		return getGuidedTurtleStarterFiles(mode, turtlePicassoStarterCode);
 	}
+	if (template === "triangle-motion") {
+		return getGuidedTurtleStarterFiles(
+			mode,
+			turtleTriangleMotionStarterCode
+		);
+	}
 	if (template === "course") return getCourseStarterFiles(mode);
 	return getBlankStarterFiles(mode);
 }
@@ -1315,6 +1392,8 @@ function projectTitleForMode(
 		return "Color Circle Art";
 	if (template === "picasso" && mode === "turtle")
 		return "Picasso Keyboard Painter";
+	if (template === "triangle-motion" && mode === "turtle")
+		return "Triangle Motion Starter";
 
 	if (template === "outline") {
 		if (mode === "turtle") return "Python Level 1 Outline";

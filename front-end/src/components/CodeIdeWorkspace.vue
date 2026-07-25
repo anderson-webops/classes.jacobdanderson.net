@@ -1281,6 +1281,7 @@ const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
 	if (rawTemplate === "demo") return "demo";
 	if (rawTemplate === "outline") return "outline";
 	if (rawTemplate === "picasso") return "picasso";
+	if (rawTemplate === "triangle-motion") return "triangle-motion";
 	return "blank";
 });
 const requestedStarterMode = computed(() => {
@@ -1623,7 +1624,8 @@ function requestedStandaloneProjectKey() {
 		template === "circle-art" ||
 		template === "demo" ||
 		template === "outline" ||
-		template === "picasso"
+		template === "picasso" ||
+		template === "triangle-motion"
 	) {
 		return `ide-template:${requestedStarterMode.value}:${template}`;
 	}
@@ -1644,6 +1646,7 @@ function standaloneProjectStarterLabel(template: PythonIdeProjectTemplate) {
 	if (template === "demo") return "Demo project";
 	if (template === "outline") return "Template project";
 	if (template === "picasso") return "Guided Turtle project";
+	if (template === "triangle-motion") return "Guided Turtle project";
 	return undefined;
 }
 
@@ -6890,6 +6893,18 @@ onBeforeUnmount(() => {
 										"
 									>
 										Picasso Keyboard Painter
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'triangle-motion'
+											)
+										"
+									>
+										Triangle Motion Starter
 									</button>
 									<button
 										type="button"
