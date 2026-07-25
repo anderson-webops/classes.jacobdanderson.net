@@ -31,6 +31,7 @@ import { useRoute } from "vue-router";
 import { runJavaIdeProject } from "@/modules/javaIdeRuntime";
 import { createKarelWorldPlaybackController } from "@/modules/karelWorldPlayback";
 import {
+	addPythonIdeClassroomSections,
 	clearLocalPythonProjectsAsync,
 	createPythonIdeProject,
 	createRemotePythonIdeProject,
@@ -1256,15 +1257,32 @@ const requestedCourseId = computed(() =>
 const requestedCourseProjectKey = computed(() =>
 	typeof route.query.projectKey === "string" ? route.query.projectKey : ""
 );
-const requestedStarterUrl = computed(() =>
-	typeof route.query.starterUrl === "string" ? route.query.starterUrl : ""
+const requestedClassroomSource = computed(() =>
+	typeof route.query.classroomSource === "string"
+		? route.query.classroomSource
+		: ""
 );
+const requestedStarterUrl = computed(() => {
+	if (typeof route.query.starterUrl === "string")
+		return route.query.starterUrl;
+
+	const classroomSource = requestedClassroomSource.value;
+	if (
+		!classroomSource ||
+		classroomSource.includes("..") ||
+		!/^[\w./-]+$/.test(classroomSource)
+	) {
+		return "";
+	}
+	return `https://github.com/instruction-material/${classroomSource}`;
+});
 const requestedStarterTitle = computed(() =>
 	typeof route.query.starterTitle === "string" ? route.query.starterTitle : ""
 );
 const requestedStarterLabel = computed(() =>
 	typeof route.query.starterLabel === "string" ? route.query.starterLabel : ""
 );
+const requestedClassroomProject = computed(() => route.query.classroom === "1");
 const requestedCourseStarter = computed(() => route.query.starter === "course");
 const requestedShareID = computed(() =>
 	typeof route.query.share === "string" ? route.query.share.trim() : ""
@@ -1276,11 +1294,18 @@ const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
 		typeof route.query.mode === "string" ? route.query.mode : "";
 	if (rawTemplate === "bluej" || rawMode === "bluej") return "bluej";
 	if (rawTemplate === "circle-art") return "circle-art";
+	if (rawTemplate === "classroom-project") return "classroom-project";
 	if (rawTemplate === "course" && requestedCourseStarter.value)
 		return "course";
 	if (rawTemplate === "demo") return "demo";
+	if (rawTemplate === "firework-festival") return "firework-festival";
+	if (rawTemplate === "flower-garden") return "flower-garden";
+	if (rawTemplate === "maze-explorer") return "maze-explorer";
+	if (rawTemplate === "neon-trail") return "neon-trail";
 	if (rawTemplate === "outline") return "outline";
 	if (rawTemplate === "picasso") return "picasso";
+	if (rawTemplate === "spiral-galaxy") return "spiral-galaxy";
+	if (rawTemplate === "turtle-race") return "turtle-race";
 	if (rawTemplate === "triangle-motion") return "triangle-motion";
 	return "blank";
 });
@@ -1622,9 +1647,16 @@ function requestedStandaloneProjectKey() {
 	if (template === "bluej") return "ide-template:bluej";
 	if (
 		template === "circle-art" ||
+		template === "classroom-project" ||
 		template === "demo" ||
+		template === "firework-festival" ||
+		template === "flower-garden" ||
+		template === "maze-explorer" ||
+		template === "neon-trail" ||
 		template === "outline" ||
 		template === "picasso" ||
+		template === "spiral-galaxy" ||
+		template === "turtle-race" ||
 		template === "triangle-motion"
 	) {
 		return `ide-template:${requestedStarterMode.value}:${template}`;
@@ -1642,11 +1674,22 @@ function standaloneProjectForRoute(projectList: PythonIdeProject[]) {
 
 function standaloneProjectStarterLabel(template: PythonIdeProjectTemplate) {
 	if (template === "bluej") return "BlueJ starter";
-	if (template === "circle-art") return "Guided Turtle project";
+	if (
+		template === "circle-art" ||
+		template === "classroom-project" ||
+		template === "firework-festival" ||
+		template === "flower-garden" ||
+		template === "maze-explorer" ||
+		template === "neon-trail" ||
+		template === "picasso" ||
+		template === "spiral-galaxy" ||
+		template === "turtle-race" ||
+		template === "triangle-motion"
+	) {
+		return "Guided Turtle project";
+	}
 	if (template === "demo") return "Demo project";
 	if (template === "outline") return "Template project";
-	if (template === "picasso") return "Guided Turtle project";
-	if (template === "triangle-motion") return "Guided Turtle project";
 	return undefined;
 }
 
@@ -1672,7 +1715,11 @@ async function createRequestedCourseProject() {
 			const loadedFiles = await loadPythonIdeStarterFilesFromGitHub(
 				request.starterUrl
 			);
-			starterFiles = loadedFiles.length ? loadedFiles : undefined;
+			starterFiles = loadedFiles.length
+				? requestedClassroomProject.value
+					? addPythonIdeClassroomSections(loadedFiles)
+					: loadedFiles
+				: undefined;
 		} catch (error) {
 			appendOutput(
 				"stderr",
@@ -6869,7 +6916,7 @@ onBeforeUnmount(() => {
 									>
 										Import BlueJ ZIP
 									</button>
-									<span>Template project</span>
+									<span>Classroom projects</span>
 									<button
 										type="button"
 										role="menuitem"
@@ -6906,6 +6953,91 @@ onBeforeUnmount(() => {
 									>
 										Triangle Motion Starter
 									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'neon-trail'
+											)
+										"
+									>
+										Neon Trail Painter
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'firework-festival'
+											)
+										"
+									>
+										Firework Festival
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'spiral-galaxy'
+											)
+										"
+									>
+										Spiral Galaxy
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'turtle-race'
+											)
+										"
+									>
+										Turtle Race Day
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'flower-garden'
+											)
+										"
+									>
+										Flower Garden Clicker
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'maze-explorer'
+											)
+										"
+									>
+										Maze Explorer
+									</button>
+									<button
+										type="button"
+										role="menuitem"
+										@click="
+											createProjectFromMenu(
+												'turtle',
+												'classroom-project'
+											)
+										"
+									>
+										Classroom Turtle Studio
+									</button>
+									<span>Template project</span>
 									<button
 										type="button"
 										role="menuitem"

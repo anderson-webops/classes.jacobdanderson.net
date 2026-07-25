@@ -73,6 +73,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		adminPriority: "urgent",
 		courseIds: [
 			"python-level-1",
+			"python-level-1-classroom",
 			"python-level-2",
 			"python-level-3",
 			"python-to-java-and-cpp-bridge"
@@ -87,7 +88,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 			"Explain how Python choices map to Java and C++ choices when moving into stronger typing, classes, and memory-aware programming."
 		],
 		sequencingNotes: [
-			"Level 1 emphasizes fluency and confidence with small programs.",
+			"Level 1 emphasizes fluency and confidence with small programs; the Classroom Edition follows the same sequence with completed frameworks and separate Normal and Hard work areas.",
 			"Level 2 turns fluency into structured projects with nested data, validation, and test cases.",
 			"Level 3 covers algorithms, files, APIs, command-line tools, and object design, not just more syntax."
 		],

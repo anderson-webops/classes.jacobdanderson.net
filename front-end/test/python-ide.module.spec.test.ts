@@ -16,6 +16,8 @@ import {
 	pythonBracketPairIgnoredRanges
 } from "../src/modules/pythonCodeMirror";
 import {
+	addPythonIdeClassroomSections,
+	addPythonIdeClassroomSectionsToSource,
 	blueJMainStarterCode,
 	blueJReadmeStarterText,
 	blueJStudentStarterCode,
@@ -65,7 +67,14 @@ import {
 	pgzeroStudentSvg,
 	pgzeroStarterCode,
 	turtleCircleArtStarterCode,
+	turtleClassroomProjectStarterCode,
+	turtleFireworkFestivalStarterCode,
+	turtleFlowerGardenStarterCode,
+	turtleMazeExplorerStarterCode,
+	turtleNeonTrailStarterCode,
 	turtlePicassoStarterCode,
+	turtleRaceDayStarterCode,
+	turtleSpiralGalaxyStarterCode,
 	turtleTriangleMotionStarterCode,
 	turtleStarterCode
 } from "../src/modules/pythonIde";
@@ -298,7 +307,7 @@ describe("python IDE project helpers", () => {
 		);
 	});
 
-	it("creates the guided beginner Turtle art templates", () => {
+	it("creates the guided Turtle art templates with Normal and Hard sections", () => {
 		const circleArt = createPythonIdeProject("turtle", {
 			template: "circle-art"
 		});
@@ -317,6 +326,8 @@ describe("python IDE project helpers", () => {
 		expect(circleArt.files[0]?.content).toContain("artist.begin_fill()");
 		expect(circleArt.files[0]?.content).toContain("artist.goto(x_position, y_position)");
 		expect(circleArt.files[0]?.content).toContain("artist.speed(DRAWING_SPEED)");
+		expect(circleArt.files[0]?.content).toContain("###   NORMAL SECTION");
+		expect(circleArt.files[0]?.content).toContain("###   HARD SECTION");
 
 		expect(picasso.title).toBe("Picasso Keyboard Painter");
 		expect(picasso.files).toEqual([
@@ -335,6 +346,7 @@ describe("python IDE project helpers", () => {
 		);
 		expect(picasso.files[0]?.content).toContain('screen.onkey(draw_square, "s")');
 		expect(picasso.files[0]?.content).toContain("screen.listen()");
+		expect(picasso.files[0]?.content).toContain("def draw_bonus_shape():\n    pass");
 		expect(picasso.files[0]?.content).not.toContain("t.forward(");
 		expect(picasso.files[0]?.content).not.toContain("def clear_art");
 
@@ -361,10 +373,122 @@ describe("python IDE project helpers", () => {
 			'screen.onkey(move_left_and_draw, "Left")'
 		);
 		expect(triangleMotion.files[0]?.content).toContain("screen.listen()");
+		expect(triangleMotion.files[0]?.content).toContain(
+			"def add_triangle_detail():\n    pass"
+		);
 		expect(triangleMotion.files[0]?.content).not.toContain(
 			"artist.forward("
 		);
 		expect(triangleMotion.files[0]?.content).not.toContain("artist.left(");
+	});
+
+	it("creates the classroom Turtle project collection", () => {
+		const templates = [
+			{
+				template: "classroom-project" as const,
+				title: "Classroom Turtle Studio",
+				source: turtleClassroomProjectStarterCode
+			},
+			{
+				template: "neon-trail" as const,
+				title: "Neon Trail Painter",
+				source: turtleNeonTrailStarterCode
+			},
+			{
+				template: "firework-festival" as const,
+				title: "Firework Festival",
+				source: turtleFireworkFestivalStarterCode
+			},
+			{
+				template: "spiral-galaxy" as const,
+				title: "Spiral Galaxy",
+				source: turtleSpiralGalaxyStarterCode
+			},
+			{
+				template: "turtle-race" as const,
+				title: "Turtle Race Day",
+				source: turtleRaceDayStarterCode
+			},
+			{
+				template: "flower-garden" as const,
+				title: "Flower Garden Clicker",
+				source: turtleFlowerGardenStarterCode
+			},
+			{
+				template: "maze-explorer" as const,
+				title: "Maze Explorer",
+				source: turtleMazeExplorerStarterCode
+			}
+		];
+
+		for (const { source, template, title } of templates) {
+			const project = createPythonIdeProject("turtle", { template });
+			expect(project.title).toBe(title);
+			expect(project.files).toEqual([{ name: "main.py", content: source }]);
+			expect(source, title).toContain("###   NORMAL SECTION");
+			expect(source, title).toContain("###   HARD SECTION");
+			expect(source, title).toMatch(/def \w+\([^)]*\):\n    pass/);
+			expect(source, title).toContain("###   MAIN CODE");
+		}
+
+		expect(turtleNeonTrailStarterCode).toContain(
+			'screen.onkey(add_special_effect, "space")'
+		);
+		expect(turtleFireworkFestivalStarterCode).toContain(
+			"screen.onclick(draw_firework)"
+		);
+		expect(turtleSpiralGalaxyStarterCode).toContain("draw_galaxy()");
+		expect(turtleRaceDayStarterCode).toContain(
+			"screen.ontimer(race_step, RACE_DELAY_MS)"
+		);
+		expect(turtleFlowerGardenStarterCode).toContain(
+			"screen.onclick(draw_flower)"
+		);
+		expect(turtleMazeExplorerStarterCode).toContain(
+			"return inside_canvas and not point_touches_wall("
+		);
+	});
+
+	it("adds classroom sections to completed Python starter files", () => {
+		const originalSource = `import turtle
+
+screen = turtle.Screen()
+artist = turtle.Turtle()
+artist.forward(40)
+screen.listen()
+`;
+		const adaptedSource =
+			addPythonIdeClassroomSectionsToSource(originalSource);
+		const normalDefinitionIndex = adaptedSource.indexOf(
+			"def normal_addition():"
+		);
+		const completedDrawingIndex = adaptedSource.indexOf(
+			"artist.forward(40)"
+		);
+		const normalCallIndex = adaptedSource.indexOf(
+			"\nnormal_addition()",
+			completedDrawingIndex
+		);
+		const listenIndex = adaptedSource.indexOf("screen.listen()");
+
+		expect(normalDefinitionIndex).toBeGreaterThanOrEqual(0);
+		expect(completedDrawingIndex).toBeGreaterThan(normalDefinitionIndex);
+		expect(normalCallIndex).toBeGreaterThan(completedDrawingIndex);
+		expect(listenIndex).toBeGreaterThan(normalCallIndex);
+		expect(adaptedSource).toContain("###   NORMAL SECTION");
+		expect(adaptedSource).toContain("###   HARD SECTION");
+		expect(
+			addPythonIdeClassroomSectionsToSource(adaptedSource)
+		).toBe(adaptedSource);
+
+		const files = addPythonIdeClassroomSections([
+			{ name: "helpers.py", content: "VALUE = 1\n" },
+			{ name: "main.py", content: originalSource },
+			{ name: "notes.txt", content: "Keep this file" }
+		]);
+		expect(files[0]?.content).toBe("VALUE = 1\n");
+		expect(files[1]?.content).toContain("def hard_addition():");
+		expect(files[2]?.content).toBe("Keep this file");
 	});
 
 	it("keeps built-in IDE demos and templates aligned with the classroom coding standard", () => {
@@ -380,7 +504,14 @@ describe("python IDE project helpers", () => {
 			turtleStarterCode,
 			pythonLevel1OutlineStarterCode,
 			turtleCircleArtStarterCode,
+			turtleClassroomProjectStarterCode,
+			turtleFireworkFestivalStarterCode,
+			turtleFlowerGardenStarterCode,
+			turtleMazeExplorerStarterCode,
+			turtleNeonTrailStarterCode,
 			turtlePicassoStarterCode,
+			turtleRaceDayStarterCode,
+			turtleSpiralGalaxyStarterCode,
 			turtleTriangleMotionStarterCode,
 			pgzeroStarterCode,
 			pgzeroOutlineStarterCode,
@@ -422,7 +553,7 @@ describe("python IDE project helpers", () => {
 			"@brief Demonstrate the minimal Java console project shape"
 		);
 		expect(javaOutlineStarterCode).toContain(
-			"@brief Organize a beginner Java console project with helpers and lists"
+			"@brief Organize an introductory Java console project with helpers and lists"
 		);
 		expect(javaOutlineStarterCode).toContain("STARTING_SCORE");
 		expect(blueJMainStarterCode).toContain(
@@ -1447,6 +1578,9 @@ describe("python IDE project helpers", () => {
 
 	it("maps course families to the right IDE starter modes", () => {
 		expect(pythonIdeModeForCourseId("python-level-1")).toBe("turtle");
+		expect(pythonIdeModeForCourseId("python-level-1-classroom")).toBe(
+			"turtle"
+		);
 		expect(pythonIdeModeForCourseId("pygames")).toBe("pgzero");
 		expect(pythonIdeModeForCourseId("data-science-in-python")).toBe("data");
 		expect(pythonIdeModeForCourseId("machine-learning")).toBe("data");
@@ -4242,9 +4376,20 @@ describe("python IDE project helpers", () => {
 			"utf8"
 		);
 
-		expect(moduleSource).toContain(
-			'export type PythonIdeProjectTemplate =\n\t| "blank"\n\t| "bluej"\n\t| "circle-art"\n\t| "course"\n\t| "demo"\n\t| "outline"\n\t| "picasso"\n\t| "triangle-motion";'
-		);
+		for (const template of [
+			"classroom-project",
+			"circle-art",
+			"firework-festival",
+			"flower-garden",
+			"maze-explorer",
+			"neon-trail",
+			"picasso",
+			"spiral-galaxy",
+			"triangle-motion",
+			"turtle-race"
+		]) {
+			expect(moduleSource).toContain(`| "${template}"`);
+		}
 		expect(moduleSource).toContain(
 			"export const pythonLevel1OutlineStarterCode"
 		);
@@ -4258,15 +4403,27 @@ describe("python IDE project helpers", () => {
 		expect(moduleSource).toContain('if (template === "outline")');
 		expect(moduleSource).toContain('if (template === "bluej")');
 		expect(pageSource).toContain("Template project");
+		expect(pageSource).toContain("Classroom projects");
+		expect(pageSource).toContain("Classroom Turtle Studio");
 		expect(pageSource).toContain("Python Level 1 Outline");
 		expect(pageSource).toContain("Color Circle Art");
+		expect(pageSource).toContain("Firework Festival");
+		expect(pageSource).toContain("Flower Garden Clicker");
+		expect(pageSource).toContain("Maze Explorer");
+		expect(pageSource).toContain("Neon Trail Painter");
 		expect(pageSource).toContain("Picasso Keyboard Painter");
+		expect(pageSource).toContain("Spiral Galaxy");
+		expect(pageSource).toContain("Turtle Race Day");
 		expect(pageSource).toContain("Triangle Motion Starter");
 		expect(pageSource).toContain("PyGame Zero Outline");
 		expect(pageSource).toContain("Java Outline");
 		expect(pageSource).toContain("BlueJ Java");
 		expect(pageSource).toContain("BlueJ Java Project");
 		expect(pageSource).toContain("Karel Java Outline");
+		expect(pageSource).toContain("requestedClassroomProject");
+		expect(pageSource).toContain(
+			"addPythonIdeClassroomSections(loadedFiles)"
+		);
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'turtle',\s*'outline'/
 		);
@@ -4279,6 +4436,21 @@ describe("python IDE project helpers", () => {
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'turtle',\s*'triangle-motion'/
 		);
+		for (const template of [
+			"classroom-project",
+			"firework-festival",
+			"flower-garden",
+			"maze-explorer",
+			"neon-trail",
+			"spiral-galaxy",
+			"turtle-race"
+		]) {
+			expect(pageSource).toMatch(
+				new RegExp(
+					`createProjectFromMenu\\(\\s*'turtle',\\s*'${template}'`
+				)
+			);
+		}
 		expect(pageSource).toMatch(
 			/createProjectFromMenu\(\s*'pgzero',\s*'outline'/
 		);

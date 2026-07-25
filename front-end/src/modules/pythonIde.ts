@@ -62,10 +62,17 @@ export type PythonIdeProjectTemplate =
 	| "blank"
 	| "bluej"
 	| "circle-art"
+	| "classroom-project"
 	| "course"
 	| "demo"
+	| "firework-festival"
+	| "flower-garden"
+	| "maze-explorer"
+	| "neon-trail"
 	| "outline"
 	| "picasso"
+	| "spiral-galaxy"
+	| "turtle-race"
 	| "triangle-motion";
 
 export interface PythonIdeFile {
@@ -202,6 +209,7 @@ const pythonIdeCourseModes: Record<string, PythonIdeMode> = {
 	"machine-learning": "data",
 	pygames: "pgzero",
 	"python-level-1": "turtle",
+	"python-level-1-classroom": "turtle",
 	"python-level-2": "python",
 	"python-level-3": "python",
 	"python-to-java-and-cpp-bridge": "python",
@@ -428,6 +436,23 @@ DRAWING_SPEED = 8
 ART_POSITIONS = [(-170, 40), (0, -35), (170, 40)]
 
 
+########################
+###   NORMAL SECTION  ###
+########################
+# Return one color from ART_COLORS
+# Use circle_index to create a repeating pattern
+def choose_circle_color(circle_index):
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Add a center, border, label, or another detail to each burst
+def add_burst_detail(x_position, y_position):
+    pass
+
+
 #######################
 ###   FUNCTIONS     ###
 #######################
@@ -449,9 +474,13 @@ def draw_circle_burst(x_position, y_position):
     move_to(x_position, y_position)
 
     for circle_index in range(CIRCLE_COUNT):
-        circle_color = random.choice(ART_COLORS)
+        circle_color = choose_circle_color(circle_index)
+        if circle_color not in ART_COLORS:
+            circle_color = random.choice(ART_COLORS)
         draw_filled_circle(CIRCLE_RADIUS, circle_color)
         artist.right(TURN_ANGLE)
+
+    add_burst_detail(x_position, y_position)
 
 
 #######################
@@ -492,12 +521,20 @@ t = Turtle()
 t.speed(5)
 
 
-#######################
-###   FUNCTIONS     ###
-#######################
-# STUDENT TASK: Replace this placeholder with your draw_square() function
+########################
+###   NORMAL SECTION  ###
+########################
+# Replace this placeholder with your draw_square() function
 # Keep the name draw_square or update screen.onkey() below to match
 def draw_square():
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Add another shape or effect for the B key
+def draw_bonus_shape():
     pass
 
 
@@ -505,6 +542,7 @@ def draw_square():
 ###   EVENT LISTENERS   ###
 ###########################
 screen.onkey(draw_square, "s")
+screen.onkey(draw_bonus_shape, "b")
 screen.listen()
 `;
 
@@ -534,20 +572,33 @@ artist.hideturtle()
 artist.color(OUTLINE_COLOR, FILL_COLOR)
 
 
-#####################
-###   FUNCTIONS   ###
-#####################
-# STUDENT TASK: Replace this placeholder with code that draws one triangle
+########################
+###   NORMAL SECTION  ###
+########################
+# Replace this placeholder with code that draws one triangle
 # Use TRIANGLE_SIDE_LENGTH and TURN_ANGLE to draw three equal sides
 # Add begin_fill() and end_fill() if the triangle should be filled
 def draw_triangle():
     pass
 
+
+######################
+###   HARD SECTION  ###
+######################
+# Add an interior design or a second movable shape
+def add_triangle_detail():
+    pass
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
 # Clear the previous triangle and redraw it at the current position
 def redraw_triangle():
     artist.clear()
     artist.pendown()
     draw_triangle()
+    add_triangle_detail()
     screen.update()
 
 # Move right without drawing a connecting line
@@ -576,6 +627,805 @@ screen.listen()
 #####################
 # Draw once after the student completes draw_triangle()
 redraw_triangle()
+`;
+
+export const turtleNeonTrailStarterCode = `import random
+import turtle
+
+#####################
+###   CONSTANTS   ###
+#####################
+BACKGROUND_COLOR = "black"
+TRAIL_COLORS = ["cyan", "magenta", "yellow", "lime", "orange"]
+DEFAULT_TRAIL_COLOR = "cyan"
+MOVE_DISTANCE = 28
+TURN_ANGLE = 30
+DOT_SIZE = 10
+
+
+#####################
+###   VARIABLES   ###
+#####################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Neon Trail Painter")
+
+artist = turtle.Turtle()
+artist.shape("turtle")
+artist.pensize(4)
+artist.speed(6)
+
+
+########################
+###   NORMAL SECTION  ###
+########################
+# Return one color from TRAIL_COLORS
+# Try returning your favorite color first
+def choose_trail_color():
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Add a stamp, shape, or short pattern for the space bar
+def add_special_effect():
+    pass
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Use the student choice or choose a friendly fallback
+def next_trail_color():
+    color_name = choose_trail_color()
+    if color_name not in TRAIL_COLORS:
+        color_name = random.choice(TRAIL_COLORS)
+    return color_name
+
+# Move forward and leave a bright trail
+def move_forward():
+    artist.color(next_trail_color())
+    artist.pendown()
+    artist.forward(MOVE_DISTANCE)
+    artist.dot(DOT_SIZE)
+
+# Move backward and leave a bright trail
+def move_backward():
+    artist.color(next_trail_color())
+    artist.pendown()
+    artist.backward(MOVE_DISTANCE)
+    artist.dot(DOT_SIZE)
+
+# Turn left without moving
+def turn_left():
+    artist.left(TURN_ANGLE)
+
+# Turn right without moving
+def turn_right():
+    artist.right(TURN_ANGLE)
+
+# Remove the drawing while keeping the controls ready
+def clear_trail():
+    artist.clear()
+
+
+###########################
+###   EVENT LISTENERS   ###
+###########################
+screen.onkey(move_forward, "Up")
+screen.onkey(move_backward, "Down")
+screen.onkey(turn_left, "Left")
+screen.onkey(turn_right, "Right")
+screen.onkey(add_special_effect, "space")
+screen.onkey(clear_trail, "c")
+screen.listen()
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+# Give the painter a bright starting point
+artist.color(DEFAULT_TRAIL_COLOR)
+artist.dot(DOT_SIZE)
+`;
+
+export const turtleFireworkFestivalStarterCode = `import random
+import turtle
+
+#####################
+###   CONSTANTS   ###
+#####################
+BACKGROUND_COLOR = "midnight blue"
+FIREWORK_COLORS = ["gold", "cyan", "magenta", "orange", "lime", "white"]
+DEFAULT_FIREWORK_COLOR = "gold"
+RAY_COUNT = 16
+RAY_LENGTH = 54
+FULL_TURN = 360
+CENTER_SIZE = 16
+
+
+#####################
+###   VARIABLES   ###
+#####################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Firework Festival")
+screen.tracer(0)
+
+artist = turtle.Turtle()
+artist.hideturtle()
+artist.speed(0)
+artist.pensize(3)
+
+
+########################
+###   NORMAL SECTION  ###
+########################
+# Return one color from FIREWORK_COLORS
+# Try using random.choice for a surprise color
+def choose_firework_color():
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Add a second ring, center design, or sparkling trail
+def add_bonus_sparks(x_position, y_position, color_name):
+    pass
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Use the student choice or choose a friendly fallback
+def next_firework_color():
+    color_name = choose_firework_color()
+    if color_name not in FIREWORK_COLORS:
+        color_name = random.choice(FIREWORK_COLORS)
+    return color_name
+
+# Draw one complete firework around a clicked point
+def draw_firework(x_position, y_position):
+    color_name = next_firework_color()
+    artist.color(color_name)
+
+    for ray_number in range(RAY_COUNT):
+        artist.penup()
+        artist.goto(x_position, y_position)
+        artist.setheading(ray_number * FULL_TURN / RAY_COUNT)
+        artist.pendown()
+        artist.forward(RAY_LENGTH)
+
+    artist.penup()
+    artist.goto(x_position, y_position)
+    artist.dot(CENTER_SIZE, color_name)
+    add_bonus_sparks(x_position, y_position, color_name)
+    screen.update()
+
+# Clear the sky for a new festival
+def clear_sky():
+    artist.clear()
+    screen.update()
+
+
+###########################
+###   EVENT LISTENERS   ###
+###########################
+screen.onclick(draw_firework)
+screen.onkey(clear_sky, "c")
+screen.listen()
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+# Start with two finished fireworks and invite more clicks
+draw_firework(-130, 60)
+draw_firework(110, -30)
+`;
+
+export const turtleSpiralGalaxyStarterCode = `import turtle
+
+#####################
+###   CONSTANTS   ###
+#####################
+BACKGROUND_COLOR = "black"
+STAR_COLORS = ["white", "cyan", "gold", "violet", "deep sky blue"]
+DEFAULT_STAR_COLOR = "white"
+SPIRAL_STEPS = 105
+START_DISTANCE = 2
+DISTANCE_GROWTH = 0.34
+TURN_ANGLE = 91
+STAR_GAP = 4
+STAR_SIZE = 5
+
+
+#####################
+###   VARIABLES   ###
+#####################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Spiral Galaxy")
+screen.tracer(0)
+
+artist = turtle.Turtle()
+artist.hideturtle()
+artist.speed(0)
+artist.pensize(2)
+
+
+########################
+###   NORMAL SECTION  ###
+########################
+# Return one color from STAR_COLORS
+# Use step_number to alternate between two colors
+def choose_star_color(step_number):
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Add a planet, moon, comet, or another galaxy
+def add_space_feature():
+    pass
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Use the student choice or cycle through the palette
+def star_color_for(step_number):
+    color_name = choose_star_color(step_number)
+    if color_name not in STAR_COLORS:
+        color_name = STAR_COLORS[step_number % len(STAR_COLORS)]
+    return color_name
+
+# Draw a colorful mathematical spiral
+def draw_galaxy():
+    for step_number in range(SPIRAL_STEPS):
+        artist.color(star_color_for(step_number))
+        artist.forward(START_DISTANCE + step_number * DISTANCE_GROWTH)
+        artist.left(TURN_ANGLE)
+
+        if step_number % STAR_GAP == 0:
+            artist.dot(STAR_SIZE)
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+# The completed framework creates the galaxy
+draw_galaxy()
+add_space_feature()
+screen.update()
+`;
+
+export const turtleRaceDayStarterCode = `import random
+import turtle
+
+#####################
+###   CONSTANTS   ###
+#####################
+BACKGROUND_COLOR = "light cyan"
+TRACK_COLOR = "slate gray"
+RACER_COLORS = ["red", "blue", "green", "purple"]
+START_X = -270
+FINISH_X = 250
+START_Y = -120
+LANE_GAP = 80
+RACER_COUNT = 4
+MIN_STEP = 2
+MAX_STEP = 10
+RACE_DELAY_MS = 55
+
+
+#####################
+###   VARIABLES   ###
+#####################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Turtle Race Day")
+
+finish_line = turtle.Turtle()
+finish_line.hideturtle()
+finish_line.color(TRACK_COLOR)
+finish_line.pensize(3)
+
+announcer = turtle.Turtle()
+announcer.hideturtle()
+announcer.color("navy")
+announcer.penup()
+
+racers = []
+race_running = False
+
+
+########################
+###   NORMAL SECTION  ###
+########################
+# Return a color for each racer number
+# Racer numbers begin at zero
+def choose_racer_color(racer_number):
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Add confetti, a victory lap, or a winner message
+def add_finish_celebration(winner):
+    pass
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Use the student choice or the finished race palette
+def racer_color_for(racer_number):
+    color_name = choose_racer_color(racer_number)
+    if color_name not in RACER_COLORS:
+        color_name = RACER_COLORS[racer_number % len(RACER_COLORS)]
+    return color_name
+
+# Draw a dashed finish line
+def draw_finish_line():
+    finish_line.penup()
+    finish_line.goto(FINISH_X, -180)
+    finish_line.setheading(90)
+
+    for _ in range(15):
+        finish_line.pendown()
+        finish_line.forward(12)
+        finish_line.penup()
+        finish_line.forward(12)
+
+# Create the racers and place them in their lanes
+def create_racers():
+    for racer_number in range(RACER_COUNT):
+        racer = turtle.Turtle()
+        racer.shape("turtle")
+        racer.color(racer_color_for(racer_number))
+        racer.penup()
+        racer.goto(START_X, START_Y + racer_number * LANE_GAP)
+        racers.append(racer)
+
+# Move every racer by one random step
+def race_step():
+    global race_running
+    if not race_running:
+        return
+
+    for racer in racers:
+        racer.forward(random.randint(MIN_STEP, MAX_STEP))
+        if racer.xcor() >= FINISH_X:
+            race_running = False
+            announcer.goto(0, 165)
+            announcer.write(
+                "We have a winner!",
+                align="center",
+                font=("Arial", 20, "bold")
+            )
+            add_finish_celebration(racer)
+            return
+
+    screen.ontimer(race_step, RACE_DELAY_MS)
+
+# Reset every racer and start a fresh race
+def start_race():
+    global race_running
+    if race_running:
+        return
+
+    announcer.clear()
+    for racer_number in range(len(racers)):
+        racers[racer_number].goto(
+            START_X,
+            START_Y + racer_number * LANE_GAP
+        )
+
+    race_running = True
+    screen.ontimer(race_step, RACE_DELAY_MS)
+
+
+###########################
+###   EVENT LISTENERS   ###
+###########################
+screen.onkey(start_race, "space")
+screen.listen()
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+# Build the track and begin the first race
+draw_finish_line()
+create_racers()
+start_race()
+`;
+
+export const turtleFlowerGardenStarterCode = `import random
+import turtle
+
+#####################
+###   CONSTANTS   ###
+#####################
+BACKGROUND_COLOR = "light cyan"
+PETAL_COLORS = ["hot pink", "gold", "violet", "orange", "deep sky blue"]
+DEFAULT_PETAL_COLOR = "hot pink"
+STEM_COLOR = "forest green"
+CENTER_COLOR = "goldenrod"
+PETAL_COUNT = 8
+PETAL_DISTANCE = 18
+PETAL_SIZE = 24
+CENTER_SIZE = 18
+STEM_LENGTH = 55
+FULL_TURN = 360
+
+
+#####################
+###   VARIABLES   ###
+#####################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Flower Garden Clicker")
+screen.tracer(0)
+
+artist = turtle.Turtle()
+artist.hideturtle()
+artist.speed(0)
+artist.pensize(4)
+
+
+########################
+###   NORMAL SECTION  ###
+########################
+# Return one color from PETAL_COLORS
+# Use x_position or y_position to make a pattern
+def choose_petal_color(x_position, y_position):
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Add a leaf, butterfly, face, or another garden detail
+def add_garden_detail(x_position, y_position):
+    pass
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Use the student choice or choose a friendly fallback
+def petal_color_for(x_position, y_position):
+    color_name = choose_petal_color(x_position, y_position)
+    if color_name not in PETAL_COLORS:
+        color_name = random.choice(PETAL_COLORS)
+    return color_name
+
+# Draw one flower centered on the selected point
+def draw_flower(x_position, y_position):
+    petal_color = petal_color_for(x_position, y_position)
+
+    artist.color(STEM_COLOR)
+    artist.penup()
+    artist.goto(x_position, y_position - STEM_LENGTH)
+    artist.pendown()
+    artist.goto(x_position, y_position)
+
+    artist.penup()
+    for petal_number in range(PETAL_COUNT):
+        artist.goto(x_position, y_position)
+        artist.setheading(petal_number * FULL_TURN / PETAL_COUNT)
+        artist.forward(PETAL_DISTANCE)
+        artist.dot(PETAL_SIZE, petal_color)
+
+    artist.goto(x_position, y_position)
+    artist.dot(CENTER_SIZE, CENTER_COLOR)
+    add_garden_detail(x_position, y_position)
+    screen.update()
+
+# Clear the canvas to plant a new garden
+def clear_garden():
+    artist.clear()
+    screen.update()
+
+
+###########################
+###   EVENT LISTENERS   ###
+###########################
+screen.onclick(draw_flower)
+screen.onkey(clear_garden, "c")
+screen.listen()
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+# Begin with a small finished garden
+draw_flower(-130, -20)
+draw_flower(0, 65)
+draw_flower(135, -35)
+`;
+
+export const turtleMazeExplorerStarterCode = `import turtle
+
+#####################
+###   CONSTANTS   ###
+#####################
+BACKGROUND_COLOR = "alice blue"
+WALL_COLOR = "navy"
+PLAYER_COLORS = ["orange", "red", "purple", "green"]
+DEFAULT_PLAYER_COLOR = "orange"
+GOAL_COLOR = "gold"
+GOAL_SIZE = 28
+MOVE_DISTANCE = 20
+PLAYER_RADIUS = 9
+LEFT_BOUNDARY = -280
+RIGHT_BOUNDARY = 280
+BOTTOM_BOUNDARY = -190
+TOP_BOUNDARY = 190
+START_POSITION = (-240, -140)
+GOAL_POSITION = (240, 140)
+WALLS = [
+    (-150, -170, -120, 100),
+    (-20, -80, 10, 180),
+    (100, -180, 130, 60)
+]
+
+
+#####################
+###   VARIABLES   ###
+#####################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Maze Explorer")
+screen.tracer(0)
+
+wall_artist = turtle.Turtle()
+wall_artist.hideturtle()
+wall_artist.color(WALL_COLOR)
+wall_artist.speed(0)
+
+goal = turtle.Turtle()
+goal.hideturtle()
+goal.penup()
+goal.goto(GOAL_POSITION)
+
+player = turtle.Turtle()
+player.shape("turtle")
+player.penup()
+player.goto(START_POSITION)
+
+status = turtle.Turtle()
+status.hideturtle()
+status.penup()
+status.color(WALL_COLOR)
+
+
+########################
+###   NORMAL SECTION  ###
+########################
+# Return one color from PLAYER_COLORS
+# Try a favorite color before changing anything else
+def choose_player_color():
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Add a victory drawing, message, or animation
+def add_victory_art():
+    pass
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Use the student choice or the finished explorer color
+def player_color():
+    color_name = choose_player_color()
+    if color_name not in PLAYER_COLORS:
+        color_name = DEFAULT_PLAYER_COLOR
+    return color_name
+
+# Draw one rectangular maze wall
+def draw_wall(wall):
+    left, bottom, right, top = wall
+    wall_artist.penup()
+    wall_artist.goto(left, bottom)
+    wall_artist.pendown()
+    wall_artist.begin_fill()
+    wall_artist.goto(right, bottom)
+    wall_artist.goto(right, top)
+    wall_artist.goto(left, top)
+    wall_artist.goto(left, bottom)
+    wall_artist.end_fill()
+
+# Check whether a point overlaps a maze wall
+def point_touches_wall(x_position, y_position):
+    for wall in WALLS:
+        left, bottom, right, top = wall
+        inside_horizontal = (
+            left - PLAYER_RADIUS
+            <= x_position
+            <= right + PLAYER_RADIUS
+        )
+        inside_vertical = (
+            bottom - PLAYER_RADIUS
+            <= y_position
+            <= top + PLAYER_RADIUS
+        )
+        if inside_horizontal and inside_vertical:
+            return True
+    return False
+
+# Check the canvas boundaries and internal walls
+def can_move_to(x_position, y_position):
+    inside_canvas = (
+        LEFT_BOUNDARY + PLAYER_RADIUS
+        <= x_position
+        <= RIGHT_BOUNDARY - PLAYER_RADIUS
+        and BOTTOM_BOUNDARY + PLAYER_RADIUS
+        <= y_position
+        <= TOP_BOUNDARY - PLAYER_RADIUS
+    )
+    return inside_canvas and not point_touches_wall(
+        x_position,
+        y_position
+    )
+
+# Check whether the explorer reached the goal
+def check_goal():
+    goal_x, goal_y = GOAL_POSITION
+    if (
+        abs(player.xcor() - goal_x) <= MOVE_DISTANCE
+        and abs(player.ycor() - goal_y) <= MOVE_DISTANCE
+    ):
+        status.clear()
+        status.goto(0, 165)
+        status.write(
+            "Maze complete!",
+            align="center",
+            font=("Arial", 20, "bold")
+        )
+        add_victory_art()
+
+# Move only when the next position is open
+def move_by(x_change, y_change):
+    next_x = player.xcor() + x_change
+    next_y = player.ycor() + y_change
+    if can_move_to(next_x, next_y):
+        player.goto(next_x, next_y)
+        check_goal()
+    screen.update()
+
+# Face and move in each arrow-key direction
+def move_up():
+    player.setheading(90)
+    move_by(0, MOVE_DISTANCE)
+
+def move_down():
+    player.setheading(270)
+    move_by(0, -MOVE_DISTANCE)
+
+def move_left():
+    player.setheading(180)
+    move_by(-MOVE_DISTANCE, 0)
+
+def move_right():
+    player.setheading(0)
+    move_by(MOVE_DISTANCE, 0)
+
+
+###########################
+###   EVENT LISTENERS   ###
+###########################
+screen.onkey(move_up, "Up")
+screen.onkey(move_down, "Down")
+screen.onkey(move_left, "Left")
+screen.onkey(move_right, "Right")
+screen.listen()
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+# Draw the finished maze and prepare the explorer
+for maze_wall in WALLS:
+    draw_wall(maze_wall)
+
+player.color(player_color())
+goal.dot(GOAL_SIZE, GOAL_COLOR)
+screen.update()
+`;
+
+export const turtleClassroomProjectStarterCode = `import turtle
+
+#####################
+###   CONSTANTS   ###
+#####################
+BACKGROUND_COLOR = "midnight blue"
+SCENE_COLORS = ["cyan", "gold", "hot pink", "lime"]
+STAR_SIZE = 42
+STAR_POINTS = 5
+STAR_TURN = 144
+SCENE_POSITIONS = [(-170, 70), (0, -20), (170, 70)]
+
+
+#####################
+###   VARIABLES   ###
+#####################
+screen = turtle.Screen()
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Classroom Turtle Studio")
+screen.tracer(0)
+
+artist = turtle.Turtle()
+artist.hideturtle()
+artist.speed(0)
+artist.pensize(3)
+
+
+########################
+###   NORMAL SECTION  ###
+########################
+# Complete the Normal task from the course project card
+# The completed scene below still runs while this function is empty
+def normal_addition():
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Complete the Hard task after the Normal version works
+# This section can remain empty without breaking the project
+def hard_addition():
+    pass
+
+
+#####################
+###   FUNCTIONS   ###
+#####################
+# Move without leaving a connecting line
+def move_to(x_position, y_position):
+    artist.penup()
+    artist.goto(x_position, y_position)
+    artist.pendown()
+
+# Draw one filled star from the completed framework
+def draw_star(x_position, y_position, color_name):
+    move_to(x_position, y_position)
+    artist.color(color_name)
+    artist.begin_fill()
+
+    for _ in range(STAR_POINTS):
+        artist.forward(STAR_SIZE)
+        artist.right(STAR_TURN)
+
+    artist.end_fill()
+
+# Draw the completed scene before student additions
+def draw_finished_scene():
+    for scene_index in range(len(SCENE_POSITIONS)):
+        x_position, y_position = SCENE_POSITIONS[scene_index]
+        color_name = SCENE_COLORS[scene_index % len(SCENE_COLORS)]
+        draw_star(x_position, y_position, color_name)
+
+
+#####################
+###   MAIN CODE   ###
+#####################
+# Keep the finished framework working at every challenge level
+draw_finished_scene()
+normal_addition()
+hard_addition()
+screen.update()
 `;
 
 export const pgzeroStarterCode = `import pgzrun
@@ -665,7 +1515,7 @@ export const javaOutlineStarterCode = `import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * @brief Organize a beginner Java console project with helpers and lists
+ * @brief Organize an introductory Java console project with helpers and lists
  */
 public class Main {
 /*****************
@@ -1344,6 +2194,97 @@ function getGuidedTurtleStarterFiles(
 	];
 }
 
+export const pythonIdeClassroomSectionsCode = `########################
+###   NORMAL SECTION  ###
+########################
+# Complete the Normal task from the course project card
+# The completed project still runs while this function is empty
+def normal_addition():
+    pass
+
+
+######################
+###   HARD SECTION  ###
+######################
+# Complete the Hard task after the Normal version works
+# This section can remain empty without breaking the project
+def hard_addition():
+    pass
+`;
+
+const PYTHON_IDE_CLASSROOM_CALLS = `# Run both classroom additions after the completed setup
+normal_addition()
+hard_addition()
+`;
+const PYTHON_IDE_CLASSROOM_BLOCKING_RE =
+	/^(?:while\b[^\n]*:|(?:\w+\.)*(?:done|exitonclick|listen|mainloop)\s*\()/m;
+
+function pythonIdeClassroomDefinitionIndex(source: string) {
+	const lines = source.split("\n");
+	let index = 0;
+
+	for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
+		const line = lines[lineIndex] ?? "";
+		const trimmedLine = line.trim();
+		if (
+			trimmedLine &&
+			!trimmedLine.startsWith("#") &&
+			!trimmedLine.startsWith("from __future__ import ")
+		) {
+			break;
+		}
+		index += line.length;
+		if (lineIndex < lines.length - 1) index += 1;
+	}
+
+	return index;
+}
+
+export function addPythonIdeClassroomSectionsToSource(source: string) {
+	if (
+		source.includes("###   NORMAL SECTION") &&
+		source.includes("###   HARD SECTION")
+	) {
+		return source;
+	}
+
+	const blockerIndex = source.search(PYTHON_IDE_CLASSROOM_BLOCKING_RE);
+	const completedFramework =
+		blockerIndex >= 0
+			? `${source.slice(0, blockerIndex)}${PYTHON_IDE_CLASSROOM_CALLS}\n${source.slice(blockerIndex)}`
+			: `${source.trimEnd()}\n\n\n${PYTHON_IDE_CLASSROOM_CALLS}`;
+	const definitionIndex =
+		pythonIdeClassroomDefinitionIndex(completedFramework);
+
+	return `${completedFramework.slice(0, definitionIndex)}${pythonIdeClassroomSectionsCode}\n\n\n${completedFramework.slice(definitionIndex)}`;
+}
+
+export function addPythonIdeClassroomSections(
+	files: PythonIdeFile[]
+): PythonIdeFile[] {
+	const targetIndex = files.findIndex(
+		file =>
+			(file.encoding ?? "text") === "text" &&
+			file.name.toLowerCase() === "main.py"
+	);
+	const fallbackIndex = files.findIndex(
+		file =>
+			(file.encoding ?? "text") === "text" &&
+			file.name.toLowerCase().endsWith(".py")
+	);
+	const fileIndex = targetIndex >= 0 ? targetIndex : fallbackIndex;
+	if (fileIndex < 0) return files.map(file => ({ ...file }));
+
+	return files.map((file, index) =>
+		index === fileIndex
+			? {
+					...file,
+					content: addPythonIdeClassroomSectionsToSource(file.content)
+				}
+			: { ...file }
+	);
+}
+
 function getStarterFilesForTemplate(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate
@@ -1352,10 +2293,37 @@ function getStarterFilesForTemplate(
 	if (template === "circle-art") {
 		return getGuidedTurtleStarterFiles(mode, turtleCircleArtStarterCode);
 	}
+	if (template === "classroom-project") {
+		return getGuidedTurtleStarterFiles(
+			mode,
+			turtleClassroomProjectStarterCode
+		);
+	}
 	if (template === "demo") return getDemoStarterFiles(mode);
+	if (template === "firework-festival") {
+		return getGuidedTurtleStarterFiles(
+			mode,
+			turtleFireworkFestivalStarterCode
+		);
+	}
+	if (template === "flower-garden") {
+		return getGuidedTurtleStarterFiles(mode, turtleFlowerGardenStarterCode);
+	}
+	if (template === "maze-explorer") {
+		return getGuidedTurtleStarterFiles(mode, turtleMazeExplorerStarterCode);
+	}
+	if (template === "neon-trail") {
+		return getGuidedTurtleStarterFiles(mode, turtleNeonTrailStarterCode);
+	}
 	if (template === "outline") return getOutlineStarterFiles(mode);
 	if (template === "picasso") {
 		return getGuidedTurtleStarterFiles(mode, turtlePicassoStarterCode);
+	}
+	if (template === "spiral-galaxy") {
+		return getGuidedTurtleStarterFiles(mode, turtleSpiralGalaxyStarterCode);
+	}
+	if (template === "turtle-race") {
+		return getGuidedTurtleStarterFiles(mode, turtleRaceDayStarterCode);
 	}
 	if (template === "triangle-motion") {
 		return getGuidedTurtleStarterFiles(
@@ -1390,8 +2358,22 @@ function projectTitleForMode(
 	if (template === "bluej" && mode === "java") return "BlueJ Java Project";
 	if (template === "circle-art" && mode === "turtle")
 		return "Color Circle Art";
+	if (template === "classroom-project" && mode === "turtle")
+		return "Classroom Turtle Studio";
+	if (template === "firework-festival" && mode === "turtle")
+		return "Firework Festival";
+	if (template === "flower-garden" && mode === "turtle")
+		return "Flower Garden Clicker";
+	if (template === "maze-explorer" && mode === "turtle")
+		return "Maze Explorer";
+	if (template === "neon-trail" && mode === "turtle")
+		return "Neon Trail Painter";
 	if (template === "picasso" && mode === "turtle")
 		return "Picasso Keyboard Painter";
+	if (template === "spiral-galaxy" && mode === "turtle")
+		return "Spiral Galaxy";
+	if (template === "turtle-race" && mode === "turtle")
+		return "Turtle Race Day";
 	if (template === "triangle-motion" && mode === "turtle")
 		return "Triangle Motion Starter";
 
