@@ -68,6 +68,7 @@ describe("static route normalization", () => {
 				"/README"
 			])
 		);
+		expect(options.exclude).not.toContain("/graph-sketcher");
 		expect(calls).toEqual([options]);
 	});
 });

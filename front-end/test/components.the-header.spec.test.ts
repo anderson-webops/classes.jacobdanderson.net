@@ -33,6 +33,7 @@ describe("TheHeader.vue", () => {
 
 		expect(wrapper.text()).toContain("Zoom");
 		expect(wrapper.text()).toContain("IDE");
+		expect(wrapper.text()).toContain("Graphing");
 		expect(wrapper.text()).not.toContain("BlueJ");
 		expect(wrapper.text()).not.toContain("Pathways");
 	});
@@ -53,6 +54,7 @@ describe("TheHeader.vue", () => {
 
 		expect(wrapper.text()).toContain("Zoom");
 		expect(wrapper.text()).toContain("IDE");
+		expect(wrapper.text()).toContain("Graphing");
 		expect(wrapper.text()).not.toContain("BlueJ");
 		expect(wrapper.text()).not.toContain("Pathways");
 		expect(wrapper.text()).toContain("Account");

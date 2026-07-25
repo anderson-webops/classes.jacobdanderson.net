@@ -11,6 +11,7 @@ describe("page head helpers", () => {
 			"/course-resource?asset=/course-assets/python/reference.md",
 			"Course Resource | Classes with Jacob"
 		],
+		["/graph-sketcher", "Graph Sketcher | Classes with Jacob"],
 		["/ide", "IDE | Classes with Jacob"],
 		["/python-ide", "IDE | Classes with Jacob"],
 		["/signup", "Book a Class | Classes with Jacob"],

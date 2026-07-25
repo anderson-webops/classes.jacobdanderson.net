@@ -26,6 +26,7 @@ const primaryLinks = computed<NavLink[]>(() => {
 	const links: NavLink[] = [
 		{ label: "Home", to: "/", exact: true },
 		{ label: "Courses", to: "/courses", exact: true },
+		{ label: "Graphing", to: "/graph-sketcher", exact: true },
 		{ label: "IDE", to: "/ide", exact: true },
 		{ label: "Zoom", to: "/zoom", exact: true }
 	];

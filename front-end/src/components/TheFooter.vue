@@ -64,6 +64,11 @@ import { warmSchedulerConnections } from "@/modules/scheduler";
 						<RouterLink to="/payment">View Tuition</RouterLink>
 					</li>
 					<li>
+						<RouterLink to="/graph-sketcher"
+							>Graph Sketcher</RouterLink
+						>
+					</li>
+					<li>
 						<RouterLink to="/about">About Jacob</RouterLink>
 					</li>
 				</ul>
