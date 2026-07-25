@@ -70,12 +70,13 @@ export async function runProductionGraphSketcherSmoke() {
 		);
 	}
 
-	const assetSources = await Promise.all(
-		assetUrls.map(async url => ({
+	const assetSources = [];
+	for (const url of assetUrls) {
+		assetSources.push({
 			source: await fetchText(url),
 			url
-		}))
-	);
+		});
+	}
 	const combinedSource = [
 		html,
 		...assetSources.map(asset => asset.source)
