@@ -7,6 +7,8 @@ Website and supporting API for `classes.jacobdanderson.net`.
 - `front-end/` - Vite SSG application
 - `back-end/` - Express + MongoDB API
 - `HEALTHCHECKS.md` - monitor endpoints and expected `200`/`503` behavior
+- `docs/social-login-setup.md` - Google and Apple login configuration and
+  account-linking behavior
 
 ## Curriculum Paths
 

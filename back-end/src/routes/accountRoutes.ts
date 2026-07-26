@@ -12,7 +12,15 @@ import {
 	logout,
 	requestPasswordReset
 } from "../controllers/auth/authController.js";
-import { createPasswordResetLimiter } from "../middleware/rateLimiters.js";
+import {
+	finishOAuthLogin,
+	getOAuthProviders,
+	startOAuthLogin
+} from "../controllers/auth/oauthController.js";
+import {
+	createOAuthLoginLimiter,
+	createPasswordResetLimiter
+} from "../middleware/rateLimiters.js";
 import { Admin } from "../models/schemas/Admin.js";
 import { Tutor } from "../models/schemas/Tutor.js";
 import { User } from "../models/schemas/User.js";
@@ -20,6 +28,7 @@ import { User } from "../models/schemas/User.js";
 const router = Router();
 const objectIdPattern = /^[a-f\d]{24}$/i;
 const passwordResetLimiter = createPasswordResetLimiter();
+const oauthLoginLimiter = createOAuthLoginLimiter();
 
 async function validExistingSessionId(
 	Model: { exists: (query: { _id: string }) => PromiseLike<unknown> | unknown },
@@ -46,6 +55,10 @@ router.post("/login", login);
 
 router.post("/password-reset/request", passwordResetLimiter, requestPasswordReset);
 router.post("/password-reset/confirm", passwordResetLimiter, confirmPasswordReset);
+router.get("/oauth/providers", getOAuthProviders);
+router.get("/oauth/:provider/start", oauthLoginLimiter, startOAuthLogin);
+router.get("/oauth/:provider/callback", oauthLoginLimiter, finishOAuthLogin);
+router.post("/oauth/:provider/callback", oauthLoginLimiter, finishOAuthLogin);
 
 router.delete("/logout", logout);
 

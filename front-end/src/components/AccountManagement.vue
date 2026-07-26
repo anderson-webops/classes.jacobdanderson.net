@@ -1,10 +1,18 @@
 <!-- src/components/AccountManagement.vue -->
 <script lang="ts" setup>
 import type { AxiosError } from "axios";
+import { faApple, faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
 import AccessibleDialog from "@/components/AccessibleDialog.vue";
+import {
+	emptyOAuthProviderAvailability,
+	fetchOAuthProviderAvailability,
+	oauthErrorMessages,
+	oauthLoginHref
+} from "@/modules/oauthLogin";
 import { useAppStore } from "@/stores/app";
 
 const app = useAppStore();
@@ -21,14 +29,58 @@ const resetEmail = ref("");
 const resetMessage = ref("");
 const resetError = ref("");
 const resetSubmitting = ref(false);
+const oauthProviders = ref({ ...emptyOAuthProviderAvailability });
+const oauthProvidersLoaded = ref(false);
+const hasOAuthProviders = computed(
+	() => oauthProviders.value.apple || oauthProviders.value.google
+);
 const loginDialogTitle = computed(() =>
 	loginView.value === "login" ? "Log in" : "Reset your password"
 );
 const loginDialogDescription = computed(() =>
 	loginView.value === "login"
-		? "Log in with the email and password connected to your classes account."
+		? "Log in to the account connected to your classes."
 		: "Request a one-time password reset link for your classes account."
 );
+
+async function loadOAuthProviders() {
+	if (oauthProvidersLoaded.value) return;
+	oauthProvidersLoaded.value = true;
+	try {
+		oauthProviders.value = await fetchOAuthProviderAvailability();
+	} catch {
+		oauthProviders.value = { ...emptyOAuthProviderAvailability };
+	}
+}
+
+watch(
+	loginBlock,
+	show => {
+		if (show) void loadOAuthProviders();
+	},
+	{ immediate: true }
+);
+
+onMounted(() => {
+	const current = new URL(window.location.href);
+	const oauthError = current.searchParams.get("oauthError");
+	const hasOAuthResult =
+		oauthError !== null || current.searchParams.has("oauthStatus");
+	if (!hasOAuthResult) return;
+
+	if (oauthError) {
+		errorLogin.value =
+			oauthErrorMessages[oauthError] ?? oauthErrorMessages.provider_error;
+		app.setLoginBlock(true);
+	}
+	current.searchParams.delete("oauthError");
+	current.searchParams.delete("oauthStatus");
+	window.history.replaceState(
+		window.history.state,
+		"",
+		`${current.pathname}${current.search}${current.hash}`
+	);
+});
 
 function changeLoginView(show: boolean) {
 	if (!show) {
@@ -193,6 +245,29 @@ async function addSignup() {
 				class="auth-form loginForm"
 				@submit.prevent="loginTutor"
 			>
+				<div v-if="hasOAuthProviders" class="oauth-actions">
+					<a
+						v-if="oauthProviders.google"
+						class="oauth-button google"
+						:href="oauthLoginHref('google', rememberMe)"
+					>
+						<FontAwesomeIcon :icon="faGoogle" aria-hidden="true" />
+						Continue with Google
+					</a>
+					<a
+						v-if="oauthProviders.apple"
+						class="oauth-button apple"
+						:href="oauthLoginHref('apple', rememberMe)"
+					>
+						<FontAwesomeIcon :icon="faApple" aria-hidden="true" />
+						Continue with Apple
+					</a>
+				</div>
+
+				<div v-if="hasOAuthProviders" class="auth-separator">
+					<span>or use email and password</span>
+				</div>
+
 				<label for="uname">Email</label>
 				<input
 					id="uname"
@@ -411,6 +486,55 @@ async function addSignup() {
 	gap: 0.8rem;
 }
 
+.oauth-actions {
+	display: grid;
+	gap: 0.65rem;
+}
+
+.oauth-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.7rem;
+	min-height: 3rem;
+	border: 1px solid var(--color-border, rgba(148, 163, 184, 0.45));
+	border-radius: 999px;
+	padding: 0.7rem 1rem;
+	font-weight: 800;
+	text-decoration: none;
+}
+
+.oauth-button.google {
+	background: #fff;
+	color: #1f2937;
+}
+
+.oauth-button.apple {
+	border-color: #000;
+	background: #000;
+	color: #fff;
+}
+
+.auth-separator {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	color: var(--color-ink-soft, #526779);
+	font-size: 0.86rem;
+	text-align: center;
+}
+
+.auth-separator::before,
+.auth-separator::after {
+	content: "";
+	flex: 1;
+	border-top: 1px solid var(--color-border, rgba(148, 163, 184, 0.45));
+}
+
+.auth-separator span {
+	flex: 0 0 auto;
+}
+
 .auth-form label {
 	display: grid;
 	gap: 0.35rem;
@@ -516,6 +640,7 @@ async function addSignup() {
 }
 
 .button:hover,
+.oauth-button:hover,
 .text-button:hover {
 	filter: brightness(0.96);
 }

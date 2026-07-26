@@ -1,5 +1,6 @@
 import type { ClientSession } from "mongoose";
 import mongoose from "mongoose";
+import { ExternalIdentity } from "../models/schemas/ExternalIdentity.js";
 import { Tutor } from "../models/schemas/Tutor.js";
 import { User } from "../models/schemas/User.js";
 
@@ -81,6 +82,16 @@ export async function promoteUserAccount(userID: string) {
 
 		await tutor.save({ session });
 		assertPasswordHashPreserved(passwordHash, tutor.password);
+		await ExternalIdentity.updateMany(
+			{ accountID: user._id, accountRole: "user" },
+			{
+				$set: {
+					accountID: tutor._id,
+					accountRole: "tutor"
+				}
+			},
+			{ session }
+		).exec();
 
 		const deletion = await user.deleteOne({ session });
 		if (deletion.deletedCount !== 1) {
@@ -116,6 +127,16 @@ export async function demoteTutorAccount(tutorID: string) {
 
 		await user.save({ session });
 		assertPasswordHashPreserved(passwordHash, user.password);
+		await ExternalIdentity.updateMany(
+			{ accountID: tutor._id, accountRole: "tutor" },
+			{
+				$set: {
+					accountID: user._id,
+					accountRole: "user"
+				}
+			},
+			{ session }
+		).exec();
 
 		const deletion = await tutor.deleteOne({ session });
 		if (deletion.deletedCount !== 1) {

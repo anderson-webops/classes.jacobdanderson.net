@@ -49,6 +49,20 @@ export function createPasswordResetLimiter(
 	});
 }
 
+export function createOAuthLoginLimiter(
+	options: TunableRateLimitOptions = {}
+): RateLimitRequestHandler {
+	return rateLimit({
+		windowMs: Number(env.OAUTH_RATE_WINDOW_MS || 15 * 60 * 1000),
+		limit: Number(env.OAUTH_RATE_MAX || 30),
+		...standardRateLimitHeaders,
+		message: {
+			message: "Too many login attempts. Please wait and try again."
+		},
+		...options
+	});
+}
+
 export function createCourseCodeRedemptionLimiter(
 	options: TunableRateLimitOptions = {}
 ): RateLimitRequestHandler {
