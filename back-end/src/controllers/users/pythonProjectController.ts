@@ -1,4 +1,5 @@
 import type { RequestHandler } from "express";
+import type { QueryFilter } from "mongoose";
 import type {
 	IPythonProject,
 	PythonProjectFile,
@@ -392,7 +393,9 @@ function currentProjectOwner(req: Parameters<RequestHandler>[0], res: Parameters
 	return null;
 }
 
-function ownerRoleClause(role: PythonProjectOwnerRole) {
+function ownerRoleClause(
+	role: PythonProjectOwnerRole
+): QueryFilter<IPythonProject> {
 	if (role === "user") {
 		return {
 			$or: [{ ownerRole: "user" }, { ownerRole: { $exists: false } }]
@@ -402,14 +405,18 @@ function ownerRoleClause(role: PythonProjectOwnerRole) {
 	return { ownerRole: role };
 }
 
-function projectOwnerQuery(owner: { id: Types.ObjectId; role: PythonProjectOwnerRole }) {
+function projectOwnerQuery(
+	owner: { id: Types.ObjectId; role: PythonProjectOwnerRole }
+): QueryFilter<IPythonProject> {
 	return {
 		user: owner.id,
 		...ownerRoleClause(owner.role)
 	};
 }
 
-function studentProjectOwnerQuery(userID: Types.ObjectId) {
+function studentProjectOwnerQuery(
+	userID: Types.ObjectId
+): QueryFilter<IPythonProject> {
 	return {
 		user: userID,
 		...ownerRoleClause("user")

@@ -21,8 +21,93 @@ vi.mock("@/api", () => {
 describe("AccountManagement.vue login (happy path)", () => {
 	beforeEach(() => {
 		document.body.innerHTML = "";
+		window.history.replaceState({}, "", "/");
 		setActivePinia(createPinia());
 		vi.clearAllMocks();
+	});
+
+	it("offers only configured Google and Apple login choices and preserves Remember me", async () => {
+		const app = useAppStore();
+		app.setLoginBlock(true);
+		window.history.replaceState({}, "", "/courses?view=current#python");
+		(apiMod.api.get as any).mockResolvedValueOnce({
+			data: { apple: true, google: true }
+		});
+
+		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
+			global: { stubs: { teleport: true } }
+		});
+
+		await vi.waitFor(() => {
+			expect(wrapper.find(".oauth-button.google").exists()).toBe(true);
+			expect(wrapper.find(".oauth-button.apple").exists()).toBe(true);
+		});
+		const google = wrapper.get<HTMLAnchorElement>(".oauth-button.google");
+		const googleUrl = new URL(google.attributes("href"), window.location.origin);
+		expect(google.text()).toContain("Continue with Google");
+		expect(googleUrl.pathname).toBe("/api/accounts/oauth/google/start");
+		expect(googleUrl.searchParams.get("returnTo"))
+			.toBe("/courses?view=current#python");
+		expect(googleUrl.searchParams.get("remember")).toBe("false");
+
+		await wrapper.get('input[name="remember"]').setValue(true);
+		const rememberedUrl = new URL(
+			wrapper.get(".oauth-button.apple").attributes("href"),
+			window.location.origin
+		);
+		expect(rememberedUrl.searchParams.get("remember")).toBe("true");
+		wrapper.unmount();
+	});
+
+	it("hides social login choices when providers are not fully configured", async () => {
+		const app = useAppStore();
+		app.setLoginBlock(true);
+		(apiMod.api.get as any).mockResolvedValueOnce({
+			data: { apple: false, google: false }
+		});
+
+		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
+			global: { stubs: { teleport: true } }
+		});
+
+		await vi.waitFor(() => {
+			expect(apiMod.api.get).toHaveBeenCalledWith(
+				"/accounts/oauth/providers"
+			);
+		});
+		expect(wrapper.find(".oauth-actions").exists()).toBe(false);
+		expect(wrapper.text()).not.toContain("Continue with Google");
+		expect(wrapper.text()).not.toContain("Continue with Apple");
+		wrapper.unmount();
+	});
+
+	it("shows a safe OAuth callback error and removes it from the address bar", async () => {
+		window.history.replaceState(
+			{},
+			"",
+			"/courses?oauthError=account_not_found"
+		);
+		(apiMod.api.get as any).mockResolvedValueOnce({
+			data: { apple: false, google: false }
+		});
+
+		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
+			global: { stubs: { teleport: true } }
+		});
+		const app = useAppStore();
+
+		await vi.waitFor(() => {
+			expect(app.loginBlock).toBe(true);
+			expect(wrapper.text()).toContain(
+				"No Classes account uses that provider email yet."
+			);
+		});
+		expect(window.location.pathname).toBe("/courses");
+		expect(window.location.search).toBe("");
+		wrapper.unmount();
 	});
 
 	it("logs in a user, updates the store, and closes the login modal", async () => {

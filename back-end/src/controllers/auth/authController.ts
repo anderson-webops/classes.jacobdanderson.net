@@ -2,10 +2,6 @@
 import type { RequestHandler } from "express";
 import type { Model } from "mongoose";
 import type { PasswordResetRole } from "../../models/schemas/PasswordResetToken.js";
-import type { IAdmin } from "../../types/entities/IAdmin.js";
-import type { ITutor } from "../../types/entities/ITutor.js";
-
-import type { IUser } from "../../types/entities/IUser.js";
 import type { CustomSession } from "../../types/session/CustomSession.js";
 import { createHash, randomBytes } from "node:crypto";
 import { env } from "node:process";
@@ -13,20 +9,20 @@ import { Admin } from "../../models/schemas/Admin.js";
 import { PasswordResetToken } from "../../models/schemas/PasswordResetToken.js";
 import { Tutor } from "../../models/schemas/Tutor.js";
 import { User } from "../../models/schemas/User.js";
+import {
+	accountCandidatesByPriority,
+	clearSessionRoles,
+	establishAccountSession,
+	findAccountsByEmail,
+	getAccountID,
+	serializeAccountEntity
+} from "../../utils/accountSessions.js";
 import { sendTransactionalEmail } from "../../utils/transactionalEmail.js";
 
-// union of the three document types
-type Entity = IUser | ITutor | IAdmin;
-type SessionRoleKey = "adminID" | "tutorID" | "userID";
-type LoginResponseKey = "currentAdmin" | "currentTutor" | "currentUser";
-
-interface LoginCandidate {
-	entity: Entity | null;
-	sessionKey: SessionRoleKey;
-	responseKey: LoginResponseKey;
-}
-
-type SelectedLoginCandidate = Omit<LoginCandidate, "entity"> & { entity: Entity };
+type Entity = Parameters<typeof getAccountID>[0];
+type SelectedLoginCandidate = ReturnType<typeof accountCandidatesByPriority>[number] & {
+	entity: Entity;
+};
 
 const THIRTY_DAYS_MS: number = 30 * 24 * 60 * 60 * 1000;
 const PASSWORD_RESET_EXPIRY_MS = 30 * 60 * 1000;
@@ -35,29 +31,6 @@ const PASSWORD_RESET_RESPONSE = {
 	message: "If an account uses that email, a password reset link is on its way."
 };
 const DEFAULT_SITE_ORIGIN = "https://classes.jacobdanderson.net";
-
-interface AccountsByRole {
-	admin: IAdmin | null;
-	tutor: ITutor | null;
-	user: IUser | null;
-}
-
-async function findAccountsByEmail(normalizedEmail: string): Promise<AccountsByRole> {
-	const [user, tutor, admin] = (await Promise.all([
-		User.findOne({ email: normalizedEmail }).exec(),
-		Tutor.findOne({ email: normalizedEmail }).exec(),
-		Admin.findOne({ email: normalizedEmail }).exec()
-	])) as [IUser | null, ITutor | null, IAdmin | null];
-
-	return { admin, tutor, user };
-}
-
-function clearSessionRoles(session: CustomSession) {
-	delete session.adminID;
-	delete session.tutorID;
-	delete session.userID;
-	delete session.courseCodeLearnerID;
-}
 
 function hashResetToken(token: string) {
 	return createHash("sha256").update(token).digest("hex");
@@ -143,21 +116,9 @@ async function deliverPasswordReset(normalizedEmail: string) {
 	}
 }
 
-function getEntityId(entity: Entity) {
-	return entity._id.toString();
-}
-
-function serializeLoginEntity(entity: Entity): Record<string, unknown> {
-	const serializableEntity = "toJSON" in entity && typeof entity.toJSON === "function"
-		? entity.toJSON()
-		: { ...entity };
-	const { password: _password, ...safeEntity } = serializableEntity as Record<string, unknown>;
-	return safeEntity;
-}
-
 function canMutate(session: CustomSession, entity: Entity) {
 	if (session.adminID) return true;
-	const entityId: string = getEntityId(entity);
+	const entityId: string = getAccountID(entity);
 	if (entity instanceof Admin) return session.adminID === entityId;
 	if (entity instanceof Tutor) return session.tutorID === entityId;
 	if (entity instanceof User) return session.userID === entityId;
@@ -177,11 +138,7 @@ export const login: RequestHandler = async (req, res) => {
 
 	const { admin, tutor, user } = await findAccountsByEmail(normalizedEmail);
 
-	const candidates: LoginCandidate[] = [
-		{ entity: admin, sessionKey: "adminID", responseKey: "currentAdmin" },
-		{ entity: tutor, sessionKey: "tutorID", responseKey: "currentTutor" },
-		{ entity: user, sessionKey: "userID", responseKey: "currentUser" }
-	];
+	const candidates = accountCandidatesByPriority({ admin, tutor, user });
 	let selectedCandidate: SelectedLoginCandidate | undefined;
 	for (const candidate of candidates) {
 		if (candidate.entity && await candidate.entity.comparePassword(password)) {
@@ -195,13 +152,13 @@ export const login: RequestHandler = async (req, res) => {
 	}
 
 	const session = req.session as CustomSession;
-	clearSessionRoles(session);
-	session[selectedCandidate.sessionKey] = getEntityId(selectedCandidate.entity);
+	establishAccountSession(session, selectedCandidate);
 
 	const options = ((req as any).sessionOptions ??= {});
 	options.maxAge = remember ? THIRTY_DAYS_MS : undefined;
 	return res.json({
-		[selectedCandidate.responseKey]: serializeLoginEntity(selectedCandidate.entity)
+		[selectedCandidate.responseKey]:
+			serializeAccountEntity(selectedCandidate.entity)
 	});
 };
 

@@ -1,4 +1,5 @@
 import type { RequestHandler } from "express";
+import type { QueryFilter } from "mongoose";
 import type { ICourseAccessCode } from "../../types/entities/ICourseAccessCode.js";
 import type { ICourseCodeLearner } from "../../types/entities/ICourseCodeLearner.js";
 import type { CustomSession } from "../../types/session/CustomSession.js";
@@ -85,8 +86,11 @@ function getCodeIDParam(
 	return codeID;
 }
 
-function staffCodeQuery(req: Parameters<RequestHandler>[0], codeID?: string) {
-	const query: Record<string, unknown> = {};
+function staffCodeQuery(
+	req: Parameters<RequestHandler>[0],
+	codeID?: string
+): QueryFilter<ICourseAccessCode> | null {
+	const query: QueryFilter<ICourseAccessCode> = {};
 	if (codeID) query._id = new Types.ObjectId(codeID);
 	if (req.currentAdmin) return query;
 	if (!req.currentTutor) return null;

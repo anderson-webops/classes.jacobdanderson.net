@@ -19,6 +19,7 @@ const transactionMocks = vi.hoisted(() => ({
 }));
 
 const modelMocks = vi.hoisted(() => ({
+	externalIdentityUpdateMany: vi.fn(),
 	tutorConstructed: vi.fn(),
 	tutorDelete: vi.fn(),
 	tutorExists: vi.fn(),
@@ -29,6 +30,12 @@ const modelMocks = vi.hoisted(() => ({
 	userExists: vi.fn(),
 	userFindById: vi.fn(),
 	userSave: vi.fn()
+}));
+
+vi.mock("../src/models/schemas/ExternalIdentity.js", () => ({
+	ExternalIdentity: {
+		updateMany: modelMocks.externalIdentityUpdateMany
+	}
 }));
 
 vi.mock("mongoose", () => ({
@@ -121,6 +128,9 @@ describe("account role transfer transactions", () => {
 		);
 		modelMocks.tutorExists.mockReturnValue(queryWith(null));
 		modelMocks.userExists.mockReturnValue(queryWith(null));
+		modelMocks.externalIdentityUpdateMany.mockReturnValue({
+			exec: vi.fn().mockResolvedValue({ modifiedCount: 1 })
+		});
 		modelMocks.tutorDelete.mockResolvedValue({ deletedCount: 1 });
 		modelMocks.userDelete.mockResolvedValue({ deletedCount: 1 });
 		modelMocks.tutorSave.mockImplementation(async (account: MockAccount) => {
@@ -144,6 +154,17 @@ describe("account role transfer transactions", () => {
 
 		expect(promotedTutor.password).toBe(passwordHash);
 		expect(modelMocks.tutorSave).toHaveBeenCalledWith(promotedTutor, { session });
+		expect(modelMocks.externalIdentityUpdateMany).toHaveBeenNthCalledWith(
+			1,
+			{ accountID: originalUser._id, accountRole: "user" },
+			{
+				$set: {
+					accountID: promotedTutor._id,
+					accountRole: "tutor"
+				}
+			},
+			{ session }
+		);
 		expect(modelMocks.userDelete).toHaveBeenCalledWith(originalUser, { session });
 
 		modelMocks.tutorFindById.mockReturnValue(queryWith(promotedTutor));
@@ -152,6 +173,17 @@ describe("account role transfer transactions", () => {
 		expect(demotedUser.password).toBe(passwordHash);
 		expect(demotedUser.password).toBe(originalUser.password);
 		expect(modelMocks.userSave).toHaveBeenCalledWith(demotedUser, { session });
+		expect(modelMocks.externalIdentityUpdateMany).toHaveBeenNthCalledWith(
+			2,
+			{ accountID: promotedTutor._id, accountRole: "tutor" },
+			{
+				$set: {
+					accountID: demotedUser._id,
+					accountRole: "user"
+				}
+			},
+			{ session }
+		);
 		expect(modelMocks.tutorDelete).toHaveBeenCalledWith(promotedTutor, { session });
 		expect(transactionMocks.transaction).toHaveBeenCalledTimes(2);
 		expect(transactionMocks.transaction).toHaveBeenNthCalledWith(1, expect.any(Function), {
