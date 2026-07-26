@@ -1814,6 +1814,29 @@ function confirmDeleteAdmin() {
 	font: inherit;
 }
 
+:global(html.dark .admin-workspace .course-choice),
+:global(html.dark .admin-workspace .checkbox-grid > label) {
+	background: var(--color-surface-muted);
+	box-shadow: inset 0 0 0 1px var(--color-border-strong);
+	color: var(--color-ink);
+}
+
+:global(html.dark .admin-workspace .checkbox-grid label) {
+	color: var(--color-ink);
+}
+
+:global(html.dark .admin-workspace .summary-group-label),
+:global(html.dark .admin-workspace .course-access-group-title) {
+	color: var(--color-accent);
+}
+
+:global(html.dark .admin-workspace .editor-select),
+:global(html.dark .admin-workspace .course-status-select) {
+	border-color: var(--color-border-strong);
+	background: var(--color-surface-inset);
+	color: var(--color-ink);
+}
+
 .error {
 	color: red;
 	margin-top: 10px;

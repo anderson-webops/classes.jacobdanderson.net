@@ -256,14 +256,67 @@ onMounted(loadCodes);
 
 <style scoped>
 .course-code-manager {
+	--manager-accent: #0f766e;
+	--manager-border: rgba(148, 163, 184, 0.3);
+	--manager-border-strong: #cbd5e1;
+	--manager-card-border: #d8e3ed;
+	--manager-danger-border: #fecaca;
+	--manager-danger-text: #b42318;
+	--manager-error-surface: #fef2f2;
+	--manager-error-text: #b42318;
+	--manager-ink: #10263a;
+	--manager-ink-muted: #64748b;
+	--manager-ink-soft: #526779;
+	--manager-new-code-border: #5eead4;
+	--manager-new-code-surface: #f0fdfa;
+	--manager-primary-border: #0f766e;
+	--manager-primary-surface: #0f766e;
+	--manager-primary-text: #fff;
+	--manager-shadow: 0 24px 55px -44px rgba(15, 23, 42, 0.45);
+	--manager-status-active-surface: #d1fae5;
+	--manager-status-inactive-surface: #e2e8f0;
+	--manager-status-inactive-text: #475569;
+	--manager-success-surface: #ecfdf5;
+	--manager-success-text: #166534;
+	--manager-surface: rgba(255, 255, 255, 0.88);
+	--manager-surface-muted: #f8fafc;
+	--manager-surface-strong: #fff;
 	display: grid;
 	gap: 1.2rem;
 	padding: clamp(1.35rem, 2.1vw, 1.8rem);
-	border: 1px solid rgba(148, 163, 184, 0.3);
+	border: 1px solid var(--manager-border);
 	border-radius: 26px;
-	background: rgba(255, 255, 255, 0.88);
-	box-shadow: 0 24px 55px -44px rgba(15, 23, 42, 0.45);
-	color: #10263a;
+	background: var(--manager-surface);
+	box-shadow: var(--manager-shadow);
+	color: var(--manager-ink);
+}
+
+:global(html.dark .course-code-manager) {
+	--manager-accent: var(--color-accent);
+	--manager-border: var(--color-border);
+	--manager-border-strong: var(--color-border-strong);
+	--manager-card-border: var(--color-border);
+	--manager-danger-border: var(--color-error-border);
+	--manager-danger-text: var(--color-error-text);
+	--manager-error-surface: var(--color-error-surface);
+	--manager-error-text: var(--color-error-text);
+	--manager-ink: var(--color-ink);
+	--manager-ink-muted: var(--color-ink-muted);
+	--manager-ink-soft: var(--color-ink-soft);
+	--manager-new-code-border: rgba(94, 234, 212, 0.34);
+	--manager-new-code-surface: var(--color-surface-muted);
+	--manager-primary-border: rgba(125, 199, 255, 0.42);
+	--manager-primary-surface: #1f6fa6;
+	--manager-primary-text: var(--color-button-primary-text);
+	--manager-shadow: 0 28px 58px -40px rgba(0, 0, 0, 0.74);
+	--manager-status-active-surface: var(--color-success-surface);
+	--manager-status-inactive-surface: var(--color-surface-inset);
+	--manager-status-inactive-text: var(--color-ink-soft);
+	--manager-success-surface: var(--color-success-surface);
+	--manager-success-text: var(--color-success-text);
+	--manager-surface: var(--color-surface);
+	--manager-surface-muted: var(--color-surface-muted);
+	--manager-surface-strong: var(--color-surface-strong);
 }
 
 .manager-heading {
@@ -284,7 +337,7 @@ onMounted(loadCodes);
 	font-weight: 700;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
-	color: #0f766e;
+	color: var(--manager-accent);
 }
 
 .manager-heading h3,
@@ -304,7 +357,7 @@ onMounted(loadCodes);
 .privacy-note,
 .empty-copy,
 .code-card p {
-	color: #526779;
+	color: var(--manager-ink-soft);
 	line-height: 1.6;
 }
 
@@ -323,7 +376,7 @@ onMounted(loadCodes);
 
 .code-creation-form small {
 	font-weight: 500;
-	color: #64748b;
+	color: var(--manager-ink-muted);
 }
 
 .code-creation-form input,
@@ -331,31 +384,31 @@ onMounted(loadCodes);
 	width: 100%;
 	min-height: 2.8rem;
 	padding: 0.7rem 0.85rem;
-	border: 1px solid #cbd5e1;
+	border: 1px solid var(--manager-border-strong);
 	border-radius: 12px;
-	background: #fff;
-	color: #10263a;
+	background: var(--manager-surface-strong);
+	color: var(--manager-ink);
 }
 
 .manager-button {
 	min-height: 2.75rem;
 	padding: 0.65rem 1rem;
-	border: 1px solid #b8c8d8;
+	border: 1px solid var(--manager-border-strong);
 	border-radius: 12px;
-	background: #fff;
-	color: #17324b;
+	background: var(--manager-surface-strong);
+	color: var(--manager-ink);
 	font-weight: 700;
 }
 
 .manager-button.is-primary {
-	border-color: #0f766e;
-	background: #0f766e;
-	color: #fff;
+	border-color: var(--manager-primary-border);
+	background: var(--manager-primary-surface);
+	color: var(--manager-primary-text);
 }
 
 .manager-button.is-danger {
-	border-color: #fecaca;
-	color: #b42318;
+	border-color: var(--manager-danger-border);
+	color: var(--manager-danger-text);
 }
 
 .manager-button:disabled {
@@ -375,9 +428,9 @@ onMounted(loadCodes);
 .new-code-panel {
 	flex-wrap: wrap;
 	padding: 1rem;
-	border: 1px solid #5eead4;
+	border: 1px solid var(--manager-new-code-border);
 	border-radius: 16px;
-	background: #f0fdfa;
+	background: var(--manager-new-code-surface);
 }
 
 .new-code-panel > div {
@@ -386,7 +439,7 @@ onMounted(loadCodes);
 }
 
 .new-code-panel span {
-	color: #526779;
+	color: var(--manager-ink-soft);
 	font-size: 0.84rem;
 }
 
@@ -404,13 +457,13 @@ onMounted(loadCodes);
 }
 
 .manager-status.is-success {
-	background: #ecfdf5;
-	color: #166534;
+	background: var(--manager-success-surface);
+	color: var(--manager-success-text);
 }
 
 .manager-status.is-error {
-	background: #fef2f2;
-	color: #b42318;
+	background: var(--manager-error-surface);
+	color: var(--manager-error-text);
 }
 
 .code-list {
@@ -420,9 +473,9 @@ onMounted(loadCodes);
 
 .code-card {
 	padding: 1rem;
-	border: 1px solid #d8e3ed;
+	border: 1px solid var(--manager-card-border);
 	border-radius: 16px;
-	background: #f8fafc;
+	background: var(--manager-surface-muted);
 }
 
 .code-card-title {
@@ -441,15 +494,15 @@ onMounted(loadCodes);
 .status-chip {
 	padding: 0.25rem 0.55rem;
 	border-radius: 999px;
-	background: #d1fae5;
-	color: #166534;
+	background: var(--manager-status-active-surface);
+	color: var(--manager-success-text);
 	font-size: 0.75rem;
 	font-weight: 700;
 }
 
 .status-chip.is-inactive {
-	background: #e2e8f0;
-	color: #475569;
+	background: var(--manager-status-inactive-surface);
+	color: var(--manager-status-inactive-text);
 }
 
 .privacy-note {
