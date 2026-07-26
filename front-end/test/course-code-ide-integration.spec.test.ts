@@ -30,4 +30,24 @@ describe("course-code IDE integration", () => {
 		expect(workspace).toContain("fetchPythonIdeProjects()");
 		expect(workspace).toContain("createRemotePythonIdeProject");
 	});
+
+	it("uses dark theme surfaces for course-code and learner assignment controls", () => {
+		const manager = source("src/components/CourseAccessCodeManager.vue");
+		const adminProfile = source("src/components/AdminProfile.vue");
+
+		expect(manager).toContain(":global(html.dark .course-code-manager)");
+		expect(manager).toContain("--manager-surface: var(--color-surface);");
+		expect(manager).toContain(
+			"--manager-surface-muted: var(--color-surface-muted);"
+		);
+		expect(adminProfile).toContain(
+			":global(html.dark .admin-workspace .course-choice)"
+		);
+		expect(adminProfile).toContain(
+			"background: var(--color-surface-muted);"
+		);
+		expect(adminProfile).toContain(
+			":global(html.dark .admin-workspace .course-access-group-title)"
+		);
+	});
 });
