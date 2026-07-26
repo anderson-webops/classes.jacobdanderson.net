@@ -27,7 +27,8 @@ describe("courses page access gate", () => {
 		});
 
 		await flushPromises();
-		expect(wrapper.text()).toContain("Log In");
+		expect(wrapper.text()).toContain("Open Your Courses");
+		expect(wrapper.text()).toContain("Use a course code");
 
 		await wrapper.get("button").trigger("click");
 
@@ -103,5 +104,45 @@ describe("courses page access gate", () => {
 
 		expect(wrapper.text()).toContain("Your Courses");
 		expect(wrapper.text()).not.toContain("Book a Class");
+	});
+
+	it("opens only the assigned course for a course-code learner", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+		const app = useAppStore();
+		app.setCurrentCourseLearner({
+			_id: "course-learner-1",
+			username: "Student One",
+			courseID: "python-level-1",
+			courseAccess: ["python-level-1"],
+			courseStatus: { "python-level-1": "current" },
+			role: "course-code",
+			codeLabel: "Period 2",
+			createdAt: "2026-07-25T12:00:00.000Z",
+			lastSeenAt: "2026-07-25T12:00:00.000Z"
+		});
+
+		const wrapper = mount(CoursesPage, {
+			global: {
+				plugins: [pinia],
+				stubs: {
+					CourseExplorer: {
+						template: "<div>Course explorer</div>"
+					},
+					RouterLink: {
+						props: ["to"],
+						template: "<a><slot /></a>"
+					}
+				}
+			}
+		});
+
+		await flushPromises();
+
+		expect(wrapper.text()).toContain("Your Course");
+		expect(wrapper.text()).toContain("Signed in as Student One");
+		expect(wrapper.text()).toContain("Course explorer");
+		expect(wrapper.text()).not.toContain("Go to Account");
+		expect(wrapper.text()).not.toContain("Use a course code");
 	});
 });

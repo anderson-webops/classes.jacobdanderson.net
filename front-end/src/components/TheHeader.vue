@@ -12,8 +12,14 @@ const emit = defineEmits<{
 
 const app = useAppStore();
 const route = useRoute();
-const { currentAdmin, currentTutor, currentUser, isLoggedIn, isAdmin } =
-	storeToRefs(app);
+const {
+	currentAdmin,
+	currentCourseLearner,
+	currentTutor,
+	currentUser,
+	isLoggedIn,
+	isAdmin
+} = storeToRefs(app);
 
 interface NavLink {
 	label: string;
@@ -61,7 +67,7 @@ const workspaceLinks = computed<NavLink[]>(() => {
 		links.push({ label: "Teaching", to: "/teaching", exact: false });
 	}
 
-	if (isLoggedIn.value) {
+	if (currentAdmin.value || currentTutor.value || currentUser.value) {
 		links.push({ label: "Account", to: "/profile", exact: false });
 	}
 
@@ -72,6 +78,9 @@ const accountBadge = computed(() => {
 	if (currentAdmin.value) return "Administrator";
 	if (currentTutor.value) return "Tutor";
 	if (currentUser.value) return "Student";
+	if (currentCourseLearner.value) {
+		return `Classroom: ${currentCourseLearner.value.username}`;
+	}
 	return null;
 });
 

@@ -16,7 +16,8 @@ const UserProfile = defineAsyncComponent(
 );
 
 const app = useAppStore();
-const { currentAdmin, currentTutor, currentUser } = storeToRefs(app);
+const { currentAdmin, currentCourseLearner, currentTutor, currentUser } =
+	storeToRefs(app);
 
 const activeProfileComponent = computed(() => {
 	if (currentAdmin.value) return AdminProfile;
@@ -30,6 +31,7 @@ const displayName = computed(
 		currentAdmin.value?.name ||
 		currentTutor.value?.name ||
 		currentUser.value?.name ||
+		currentCourseLearner.value?.username ||
 		""
 );
 
@@ -37,6 +39,7 @@ const profileRole = computed(() => {
 	if (currentAdmin.value) return "Administrator";
 	if (currentTutor.value) return "Tutor";
 	if (currentUser.value) return "Student";
+	if (currentCourseLearner.value) return "Classroom";
 	return null;
 });
 
@@ -59,6 +62,11 @@ const heroTitle = computed(() => {
 			? `${displayName.value}'s account.`
 			: "Student account.";
 	}
+	if (profileRole.value === "Classroom") {
+		return displayName.value
+			? `${displayName.value}'s classroom workspace.`
+			: "Classroom workspace.";
+	}
 	return "Account access.";
 });
 
@@ -70,6 +78,8 @@ const heroSubtitle = computed(() => {
 			return "Manage your own login and security details here. Learner operations live in the Teaching workspace and course progress is tracked inside Courses.";
 		case "Student":
 			return "Check your account information, assigned tutors, course access, and communication settings.";
+		case "Classroom":
+			return "This email-free workspace keeps the assigned course and IDE projects connected to your course code and username.";
 		default:
 			return "Sign in or create an account to view personalized account details.";
 	}
@@ -91,6 +101,10 @@ const profileComponentProps = computed(() => {
 
 function openAuthModal() {
 	app.setLoginBlock(true);
+}
+
+function leaveClassroom() {
+	void app.logout();
 }
 </script>
 
@@ -124,7 +138,30 @@ function openAuthModal() {
 			</div>
 
 			<div v-else class="profile-empty">
-				<div class="empty-card">
+				<div v-if="currentCourseLearner" class="empty-card">
+					<h2>Email-free classroom access</h2>
+					<p>
+						Your course and saved IDE projects are connected to
+						<strong>{{ currentCourseLearner.username }}</strong>
+						under this classroom code.
+					</p>
+					<div class="profile-actions">
+						<RouterLink class="action primary" to="/courses">
+							Open course
+						</RouterLink>
+						<RouterLink class="action secondary" to="/ide">
+							Open IDE
+						</RouterLink>
+						<button
+							class="action secondary"
+							type="button"
+							@click="leaveClassroom"
+						>
+							Leave classroom
+						</button>
+					</div>
+				</div>
+				<div v-else class="empty-card">
 					<h2>You're almost there</h2>
 					<p>
 						Log in to access your personalized profile, manage

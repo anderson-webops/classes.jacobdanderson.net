@@ -41,4 +41,36 @@ describe("Profile page account routing", () => {
 		expect(wrapper.text()).not.toContain("Course library");
 		wrapper.unmount();
 	});
+
+	it("explains the email-free workspace to a course-code learner", () => {
+		const app = useAppStore();
+		app.setCurrentCourseLearner({
+			_id: "course-learner-1",
+			username: "Student One",
+			courseID: "python-level-1",
+			courseAccess: ["python-level-1"],
+			courseStatus: { "python-level-1": "current" },
+			role: "course-code",
+			createdAt: "2026-07-25T12:00:00.000Z",
+			lastSeenAt: "2026-07-25T12:00:00.000Z"
+		});
+
+		const wrapper = mount(ProfilePage, {
+			global: {
+				stubs: {
+					RouterLink: {
+						props: ["to"],
+						template: "<a><slot /></a>"
+					}
+				}
+			}
+		});
+
+		expect(wrapper.text()).toContain("Student One's classroom workspace.");
+		expect(wrapper.text()).toContain("Email-free classroom access");
+		expect(wrapper.text()).toContain("Open course");
+		expect(wrapper.text()).toContain("Open IDE");
+		expect(wrapper.text()).not.toContain("Create an account");
+		wrapper.unmount();
+	});
 });

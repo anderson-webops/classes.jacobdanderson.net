@@ -102,6 +102,56 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("Complete");
 	});
 
+	it("limits a course-code learner to the course granted by that code", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses.find(
+			course => course.id === "python-level-1"
+		);
+		const otherCourse = coursesStore.courses.find(
+			course => course.id !== assignedCourse?.id
+		);
+		if (!assignedCourse || !otherCourse) {
+			throw new Error("Expected at least two course catalog entries.");
+		}
+		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					curriculum: [],
+					id: "python-module-1",
+					supplementalProjects: [],
+					title: "Python Turtle"
+				}
+			]
+		});
+		appStore.setCurrentCourseLearner({
+			_id: "course-learner-1",
+			username: "Student One",
+			courseID: assignedCourse.id,
+			courseAccess: [assignedCourse.id],
+			courseStatus: { [assignedCourse.id]: "current" },
+			role: "course-code",
+			createdAt: "2026-07-25T12:00:00.000Z",
+			lastSeenAt: "2026-07-25T12:00:00.000Z"
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: { plugins: [pinia] }
+		});
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain(assignedCourse.name);
+		});
+		expect(wrapper.text()).not.toContain(otherCourse.name);
+		expect(wrapper.text()).not.toContain("Mark module complete");
+	});
+
 	it("links Python-family courses to the integrated Code IDE", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);

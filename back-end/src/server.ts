@@ -14,6 +14,7 @@ import { createAdminMailLimiter } from "./middleware/rateLimiters.js";
 import { accountRoutes } from "./routes/accountRoutes.js";
 import { adminMailRoutes } from "./routes/adminMailRoutes.js";
 import { adminRoutes } from "./routes/adminRoutes.js";
+import { courseAccessCodeRoutes } from "./routes/courseAccessCodeRoutes.js";
 import { tutorRoutes } from "./routes/tutorRoutes.js";
 
 import { userRoutes } from "./routes/userRoutes.js";
@@ -76,7 +77,11 @@ async function main() {
 
 	// 3) cache-control for auth endpoints
 	app.use((req, res, next) => {
-		if (req.path.startsWith("/accounts") || req.path.endsWith("/loggedin")) {
+		if (
+			req.path.startsWith("/accounts")
+			|| req.path.startsWith("/course-access")
+			|| req.path.endsWith("/loggedin")
+		) {
 			res.setHeader("Cache-Control", "no-store");
 		}
 		next();
@@ -128,7 +133,11 @@ async function main() {
 
 	// cache-control for auth endpoints
 	app.use((req, res, next) => {
-		if (req.path.startsWith("/accounts") || req.path.endsWith("/loggedin")) {
+		if (
+			req.path.startsWith("/accounts")
+			|| req.path.startsWith("/course-access")
+			|| req.path.endsWith("/loggedin")
+		) {
 			res.setHeader("Cache-Control", "no-store");
 		}
 		next();
@@ -189,6 +198,7 @@ async function main() {
 	app.use("/users", userRoutes);
 	app.use("/admins", adminRoutes);
 	app.use("/accounts", accountRoutes);
+	app.use("/course-access", courseAccessCodeRoutes);
 
 	// after your session middleware in server.ts
 	app.get("/accounts/me", (req, res) => {

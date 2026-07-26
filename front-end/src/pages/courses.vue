@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { computed, defineAsyncComponent } from "vue";
+import CourseCodeAccessForm from "@/components/CourseCodeAccessForm.vue";
 import { warmSchedulerConnections } from "@/modules/scheduler";
 import { useAppStore } from "@/stores/app";
 
@@ -11,8 +12,13 @@ const CourseExplorer = defineAsyncComponent(
 );
 
 const app = useAppStore();
-const { currentAdmin, currentTutor, currentUser, isLoggedIn } =
-	storeToRefs(app);
+const {
+	currentAdmin,
+	currentCourseLearner,
+	currentTutor,
+	currentUser,
+	isLoggedIn
+} = storeToRefs(app);
 
 const hasAssignedCourseAccess = computed(() => {
 	if (currentAdmin.value) return true;
@@ -22,20 +28,28 @@ const hasAssignedCourseAccess = computed(() => {
 	if (currentUser.value) {
 		return (currentUser.value.courseAccess?.length ?? 0) > 0;
 	}
+	if (currentCourseLearner.value) {
+		return currentCourseLearner.value.courseAccess.length > 0;
+	}
 	return false;
 });
 
 const heroEyebrow = computed(() => "Course library");
 
 const heroTitle = computed(() => {
-	if (!isLoggedIn.value) return "Log In";
+	if (!isLoggedIn.value) return "Open Your Courses";
+	if (currentCourseLearner.value) return "Your Course";
 	if (hasAssignedCourseAccess.value) return "Your Courses";
 	return "No Courses Yet";
 });
 
 const heroCopy = computed(() => {
 	if (!isLoggedIn.value) {
-		return "Only the courses assigned to your account appear here.";
+		return "Log in with an account or use the classroom code and username supplied by your tutor.";
+	}
+
+	if (currentCourseLearner.value) {
+		return `Signed in as ${currentCourseLearner.value.username}. Your IDE projects sync to this classroom workspace.`;
 	}
 
 	if (hasAssignedCourseAccess.value) {
@@ -105,16 +119,8 @@ function openSignup() {
 			</div>
 		</header>
 
-		<section
-			v-if="!isLoggedIn"
-			class="courses-gate site-surface site-surface--soft"
-			role="status"
-		>
-			<h2>New here?</h2>
-			<p>
-				Create an account first, then assigned courses can be added
-				after enrollment.
-			</p>
+		<section v-if="!isLoggedIn" class="courses-code-entry">
+			<CourseCodeAccessForm />
 		</section>
 
 		<section

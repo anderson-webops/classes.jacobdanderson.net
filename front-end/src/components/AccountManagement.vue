@@ -95,6 +95,10 @@ async function loginTutor() {
 			},
 			{ withCredentials: true }
 		);
+		app.setCurrentAdmin(null);
+		app.setCurrentTutor(null);
+		app.setCurrentUser(null);
+		app.setCurrentCourseLearner(null);
 		if (data.currentTutor) app.setCurrentTutor(data.currentTutor);
 		if (data.currentUser) app.setCurrentUser(data.currentUser);
 		if (data.currentAdmin) app.setCurrentAdmin(data.currentAdmin);
@@ -155,6 +159,10 @@ async function addSignup() {
 		);
 
 		// immediately stash the newly-created user/tutor into Pinia
+		app.setCurrentAdmin(null);
+		app.setCurrentTutor(null);
+		app.setCurrentUser(null);
+		app.setCurrentCourseLearner(null);
 		if (res.data.currentTutor) {
 			app.setCurrentTutor(res.data.currentTutor);
 		} else if (res.data.currentUser) {

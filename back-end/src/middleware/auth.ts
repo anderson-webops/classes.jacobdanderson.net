@@ -1,8 +1,21 @@
 // src/middleware/auth.ts
 import type { RequestHandler } from "express";
 import { Admin } from "../models/schemas/Admin.js";
+import { CourseCodeLearner } from "../models/schemas/CourseCodeLearner.js";
 import { Tutor } from "../models/schemas/Tutor.js";
 import { User } from "../models/schemas/User.js";
+import { findUsableCourseAccessCodeByID } from "../utils/courseAccessCodes.js";
+
+async function loadValidCourseCodeLearner(learnerID: string) {
+	const learner = await CourseCodeLearner.findById(learnerID);
+	if (!learner) return null;
+
+	const accessCode = await findUsableCourseAccessCodeByID(
+		learner.accessCode.toString()
+	);
+	if (!accessCode || accessCode.courseID !== learner.courseID) return null;
+	return learner;
+}
 
 // Middleware to validate User
 export const validUser: RequestHandler = async (req, res, next) => {
@@ -134,6 +147,33 @@ export const validAccountSession: RequestHandler = async (req, res, next) => {
 		catch (error) {
 			console.error("Error in validAccountSession middleware (user):", error);
 			res.status(500).json({ message: "Server error while validating user" });
+		}
+		return;
+	}
+
+	if (req.session?.courseCodeLearnerID) {
+		try {
+			const learner = await loadValidCourseCodeLearner(
+				req.session.courseCodeLearnerID
+			);
+			if (!learner) {
+				delete req.session.courseCodeLearnerID;
+				res.status(403).json({
+					message: "Course code session not found or no longer active"
+				});
+				return;
+			}
+			req.currentCourseCodeLearner = learner;
+			next();
+		}
+		catch (error) {
+			console.error(
+				"Error in validAccountSession middleware (course code learner):",
+				error
+			);
+			res.status(500).json({
+				message: "Server error while validating course code session"
+			});
 		}
 		return;
 	}

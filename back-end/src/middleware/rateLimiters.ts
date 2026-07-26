@@ -48,3 +48,17 @@ export function createPasswordResetLimiter(
 		...options
 	});
 }
+
+export function createCourseCodeRedemptionLimiter(
+	options: TunableRateLimitOptions = {}
+): RateLimitRequestHandler {
+	return rateLimit({
+		windowMs: Number(env.COURSE_CODE_RATE_WINDOW_MS || 15 * 60 * 1000),
+		limit: Number(env.COURSE_CODE_RATE_MAX || 60),
+		...standardRateLimitHeaders,
+		message: {
+			message: "Too many course code attempts. Please wait and try again."
+		},
+		...options
+	});
+}

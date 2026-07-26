@@ -56,6 +56,7 @@ function clearSessionRoles(session: CustomSession) {
 	delete session.adminID;
 	delete session.tutorID;
 	delete session.userID;
+	delete session.courseCodeLearnerID;
 }
 
 function hashResetToken(token: string) {

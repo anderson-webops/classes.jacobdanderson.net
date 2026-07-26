@@ -29,7 +29,12 @@ export function makeEntityController<T extends EntityDoc>({
 		try {
 			await entity.save();
 			// sign them in right away:
-			(req.session as any)[sessionKey] = (entity as any)._id.toString();
+			const session = req.session as any;
+			delete session.adminID;
+			delete session.tutorID;
+			delete session.userID;
+			delete session.courseCodeLearnerID;
+			session[sessionKey] = (entity as any)._id.toString();
 			res.status(201).json({ [responseKey]: entity });
 		}
 		catch (err: any) {

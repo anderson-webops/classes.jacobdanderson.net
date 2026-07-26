@@ -1,4 +1,5 @@
 // src/stores/app.ts
+import type { CourseCodeLearner } from "@/modules/courseAccessCodes";
 import { defineStore } from "pinia";
 import { api } from "@/api";
 
@@ -79,6 +80,7 @@ export const useAppStore = defineStore("app", {
 		currentUser: null as User | null,
 		currentTutor: null as Tutor | null,
 		currentAdmin: null as Admin | null,
+		currentCourseLearner: null as CourseCodeLearner | null,
 
 		loginBlock: false,
 		signupBlock: false,
@@ -89,7 +91,10 @@ export const useAppStore = defineStore("app", {
 
 	getters: {
 		isLoggedIn: state =>
-			!!state.currentUser || !!state.currentTutor || !!state.currentAdmin,
+			!!state.currentUser ||
+			!!state.currentTutor ||
+			!!state.currentAdmin ||
+			!!state.currentCourseLearner,
 
 		isAdmin: state => !!state.currentAdmin
 	},
@@ -109,23 +114,28 @@ export const useAppStore = defineStore("app", {
 					await this.refreshCurrentAdmin();
 					this.setCurrentTutor(null);
 					this.setCurrentUser(null);
+					this.setCurrentCourseLearner(null);
 				} else if (data.tutorID) {
 					await this.refreshCurrentTutor();
 					this.setCurrentAdmin(null);
 					this.setCurrentUser(null);
+					this.setCurrentCourseLearner(null);
 				} else if (data.userID) {
 					await this.refreshCurrentUser();
 					this.setCurrentAdmin(null);
 					this.setCurrentTutor(null);
+					this.setCurrentCourseLearner(null);
 				} else {
 					this.setCurrentAdmin(null);
 					this.setCurrentTutor(null);
 					this.setCurrentUser(null);
+					await this.refreshCurrentCourseLearner();
 				}
 			} catch {
 				this.setCurrentAdmin(null);
 				this.setCurrentTutor(null);
 				this.setCurrentUser(null);
+				this.setCurrentCourseLearner(null);
 			}
 		},
 
@@ -147,6 +157,9 @@ export const useAppStore = defineStore("app", {
 		},
 		setCurrentAdmin(a: Admin | null) {
 			this.currentAdmin = a;
+		},
+		setCurrentCourseLearner(learner: CourseCodeLearner | null) {
+			this.currentCourseLearner = learner;
 		},
 		setLoginBlock(v: boolean) {
 			this.loginBlock = v;
@@ -199,6 +212,7 @@ export const useAppStore = defineStore("app", {
 				this.setCurrentTutor(null);
 				this.setCurrentUser(null);
 				this.setCurrentAdmin(null);
+				this.setCurrentCourseLearner(null);
 				this.setError(null);
 			} catch (e: any) {
 				this.setError(e.message);
@@ -236,6 +250,28 @@ export const useAppStore = defineStore("app", {
 			} catch {
 				this.setCurrentAdmin(null);
 			}
+		},
+
+		async refreshCurrentCourseLearner() {
+			try {
+				const { data } = await api.get<{
+					currentCourseLearner: CourseCodeLearner | null;
+				}>("/course-access/me");
+				this.setCurrentCourseLearner(data.currentCourseLearner);
+			} catch {
+				this.setCurrentCourseLearner(null);
+			}
+		},
+
+		async redeemCourseAccessCode(code: string, username: string) {
+			const { data } = await api.post<{
+				currentCourseLearner: CourseCodeLearner;
+			}>("/course-access/redeem", { code, username });
+			this.setCurrentAdmin(null);
+			this.setCurrentTutor(null);
+			this.setCurrentUser(null);
+			this.setCurrentCourseLearner(data.currentCourseLearner);
+			return data.currentCourseLearner;
 		}
 	}
 });

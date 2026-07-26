@@ -380,6 +380,14 @@ function currentProjectOwner(req: Parameters<RequestHandler>[0], res: Parameters
 		};
 	}
 
+	if (req.currentCourseCodeLearner) {
+		return {
+			courseID: req.currentCourseCodeLearner.courseID,
+			id: req.currentCourseCodeLearner._id,
+			role: "courseCodeLearner" as const
+		};
+	}
+
 	res.status(403).json({ message: "Signed-in account required" });
 	return null;
 }
@@ -550,7 +558,9 @@ export const createPythonProject: RequestHandler = async (req, res) => {
 		mode,
 		files,
 		activeFileName,
-		courseID: parsed.data.courseID,
+		courseID: owner.role === "courseCodeLearner"
+			? owner.courseID
+			: parsed.data.courseID,
 		courseProjectKey: parsed.data.courseProjectKey,
 		courseProjectTitle: parsed.data.courseProjectTitle,
 		starterLabel: parsed.data.starterLabel,
@@ -615,6 +625,8 @@ export const createPythonProjectReview: RequestHandler = async (req, res) => {
 };
 
 export const updatePythonProject: RequestHandler = async (req, res) => {
+	const owner = currentProjectOwner(req, res);
+	if (!owner) return;
 	const project = await findOwnedProject(req, res);
 	if (!project) return;
 
@@ -631,7 +643,12 @@ export const updatePythonProject: RequestHandler = async (req, res) => {
 	if (parsed.data.title) project.title = parsed.data.title;
 	if (parsed.data.mode) project.mode = parsed.data.mode as PythonProjectMode;
 	project.files = nextFiles;
-	if (parsed.data.courseID) project.courseID = parsed.data.courseID;
+	if (owner.role === "courseCodeLearner") {
+		project.courseID = owner.courseID;
+	}
+	else if (parsed.data.courseID) {
+		project.courseID = parsed.data.courseID;
+	}
 	if (parsed.data.courseProjectKey) project.courseProjectKey = parsed.data.courseProjectKey;
 	if (parsed.data.courseProjectTitle) project.courseProjectTitle = parsed.data.courseProjectTitle;
 	if (parsed.data.starterLabel) project.starterLabel = parsed.data.starterLabel;

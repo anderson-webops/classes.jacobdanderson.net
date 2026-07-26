@@ -17,14 +17,26 @@ vi.mock("../src/models/schemas/PythonProject.js", () => ({
 }));
 
 const userID = new Types.ObjectId();
+const courseCodeLearnerID = new Types.ObjectId();
 
-async function withPythonProjectRoute<T>(run: (baseUrl: string) => Promise<T>): Promise<T> {
+async function withPythonProjectRoute<T>(
+	run: (baseUrl: string) => Promise<T>,
+	owner: "course-code" | "user" = "user"
+): Promise<T> {
 	const app = express();
 	app.use(express.json({ limit: "15mb" }));
 	app.use((req: any, _res, next) => {
-		req.currentUser = {
-			_id: userID
-		};
+		if (owner === "course-code") {
+			req.currentCourseCodeLearner = {
+				_id: courseCodeLearnerID,
+				courseID: "python-level-1"
+			};
+		}
+		else {
+			req.currentUser = {
+				_id: userID
+			};
+		}
 		next();
 	});
 	app.post("/users/loggedin/python-projects", createPythonProject);
@@ -116,6 +128,30 @@ describe("Python project routes", () => {
 				"package/util.py"
 			]);
 		});
+	});
+
+	it("stores a course-code learner project under only the granted course", async () => {
+		await withPythonProjectRoute(
+			async baseUrl => {
+				const response = await postJson(baseUrl, {
+					activeFileName: "main.py",
+					courseID: "java-level-1",
+					files: [{ content: "print('classroom')\n", name: "main.py" }],
+					mode: "python",
+					title: "Classroom project"
+				});
+
+				expect(response.status).toBe(201);
+				expect(modelMocks.pythonProjectCreate).toHaveBeenCalledWith(
+					expect.objectContaining({
+						courseID: "python-level-1",
+						ownerRole: "courseCodeLearner",
+						user: courseCodeLearnerID
+					})
+				);
+			},
+			"course-code"
+		);
 	});
 
 	it("accepts nested Java package files for signed-in IDE projects", async () => {
