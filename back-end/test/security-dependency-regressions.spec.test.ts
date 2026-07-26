@@ -5,6 +5,7 @@ import { Types } from "mongoose";
 import { describe, expect, it } from "vitest";
 import {
 	createAdminMailLimiter,
+	createCourseCodeRedemptionLimiter,
 	createPasswordResetLimiter,
 	createUserCourseAccessLimiter
 } from "../src/middleware/rateLimiters.js";
@@ -108,6 +109,28 @@ describe("security dependency regressions", () => {
 				expect(second.headers.get("x-ratelimit-limit")).toBeNull();
 				await expect(second.json()).resolves.toEqual({
 					message: "Too many password reset attempts. Please wait and try again."
+				});
+			}
+		);
+	});
+
+	it("rate limits repeated classroom code attempts without legacy headers", async () => {
+		await withServer(
+			createCourseCodeRedemptionLimiter({
+				limit: 1,
+				windowMs: 60_000
+			}),
+			async baseUrl => {
+				const first = await requestLimitedEndpoint(baseUrl);
+				const second = await requestLimitedEndpoint(baseUrl);
+
+				expect(first.status).toBe(200);
+				expect(second.status).toBe(429);
+				expect(getStandardRateLimitHeader(second)).toBeTruthy();
+				expect(second.headers.get("x-ratelimit-limit")).toBeNull();
+				await expect(second.json()).resolves.toEqual({
+					message:
+						"Too many course code attempts. Please wait and try again."
 				});
 			}
 		);

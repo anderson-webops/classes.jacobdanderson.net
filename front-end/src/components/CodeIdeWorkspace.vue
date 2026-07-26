@@ -586,7 +586,8 @@ for (let digit = 0; digit <= 9; digit += 1) {
 
 const app = useAppStore();
 const route = useRoute();
-const { currentAdmin, currentTutor, currentUser } = storeToRefs(app);
+const { currentAdmin, currentCourseLearner, currentTutor, currentUser } =
+	storeToRefs(app);
 
 const projects = ref<PythonIdeProject[]>([]);
 const visibleProjectReviews = ref<PythonIdeProjectReview[]>([]);
@@ -1106,9 +1107,21 @@ const activeAccount = computed(() => {
 			role: "user" as const
 		};
 	}
+	if (currentCourseLearner.value?._id) {
+		return {
+			id: currentCourseLearner.value._id,
+			role: "courseCodeLearner" as const
+		};
+	}
 	return null;
 });
 const canSyncToAccount = computed(() => !!activeAccount.value);
+const syncDestinationLabel = computed(() =>
+	currentCourseLearner.value ? "course workspace" : "account"
+);
+const syncedSaveMessage = computed(
+	() => `Synced to ${syncDestinationLabel.value}`
+);
 const storageUserID = computed(() => {
 	const account = activeAccount.value;
 	if (!account) return null;
@@ -1831,7 +1844,7 @@ async function saveNewProject(
 		selectedProjectID.value = remoteProject._id;
 		await discardLocalProjectSnapshotIfSafe();
 		if (!projectLoadIsCurrent(loadRunID)) return;
-		saveMessage.value = "Synced to account";
+		saveMessage.value = syncedSaveMessage.value;
 		return;
 	}
 
@@ -2066,7 +2079,7 @@ async function loadProjects() {
 				setProjects(remoteProjects);
 				await openRouteProjectIfNeeded(false, loadRunID);
 				if (!projectLoadIsCurrent(loadRunID)) return;
-				saveMessage.value = "Synced to account";
+				saveMessage.value = syncedSaveMessage.value;
 				return;
 			}
 
@@ -2087,7 +2100,7 @@ async function loadProjects() {
 			setProjects([remoteProject]);
 			await discardLocalProjectSnapshot();
 			if (!projectLoadIsCurrent(loadRunID)) return;
-			saveMessage.value = "Synced to account";
+			saveMessage.value = syncedSaveMessage.value;
 			return;
 		}
 
@@ -2273,7 +2286,7 @@ async function savePendingProjects(options: SaveProjectOptions = {}) {
 			!unsyncedProjectIDs.size
 		) {
 			await discardLocalProjectSnapshot();
-			saveMessage.value = "Synced to account";
+			saveMessage.value = syncedSaveMessage.value;
 		}
 	})();
 
@@ -2307,7 +2320,7 @@ function scheduleSave() {
 
 	scheduleLocalProjectSnapshot();
 	saveMessage.value = canSyncToAccount.value
-		? "Autosaving to account"
+		? `Autosaving to ${syncDestinationLabel.value}`
 		: "Autosaving locally";
 	if (saveTimer) window.clearTimeout(saveTimer);
 	saveTimer = window.setTimeout(() => {
@@ -2480,7 +2493,9 @@ async function updateProjectSharePreference(event: Event) {
 		await saveSelectedProject({ force: true });
 		const project = selectedProject.value;
 		if (!project || project._id.startsWith("local-")) {
-			throw new Error("Save the project to your account before sharing.");
+			throw new Error(
+				`Save the project to your ${syncDestinationLabel.value} before sharing.`
+			);
 		}
 
 		const updatedProject = await updateRemotePythonIdeProjectShare(
@@ -2781,7 +2796,7 @@ async function deleteProject(project: PythonIdeProject) {
 		selectedProjectID.value = projects.value[0]?._id ?? "";
 		if (isRemoteProject) {
 			await discardLocalProjectSnapshotIfSafe();
-			saveMessage.value = "Synced to account";
+			saveMessage.value = syncedSaveMessage.value;
 		} else {
 			await persistLocalProjects();
 		}

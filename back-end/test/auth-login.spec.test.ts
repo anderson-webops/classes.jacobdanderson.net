@@ -95,6 +95,7 @@ function mockExistingSessionAccounts({
 function sessionSnapshot(session: CustomSession) {
 	return {
 		adminID: session.adminID ?? null,
+		courseCodeLearnerID: session.courseCodeLearnerID ?? null,
 		tutorID: session.tutorID ?? null,
 		userID: session.userID ?? null
 	};
@@ -110,6 +111,11 @@ async function withAccountRoutes<T>(run: (baseUrl: string) => Promise<T>): Promi
 	app.post("/test/session/stale-user", (req, res) => {
 		const session = req.session as CustomSession;
 		session.userID = "stale-user-id";
+		res.sendStatus(204);
+	});
+	app.post("/test/session/stale-course-code", (req, res) => {
+		const session = req.session as CustomSession;
+		session.courseCodeLearnerID = "stale-course-code-learner-id";
 		res.sendStatus(204);
 	});
 	app.get("/test/session", (req, res) => {
@@ -171,6 +177,15 @@ async function seedStaleUserSession(baseUrl: string): Promise<string> {
 	return responseCookie(response);
 }
 
+async function seedStaleCourseCodeSession(baseUrl: string): Promise<string> {
+	const response = await fetch(
+		`${baseUrl}/test/session/stale-course-code`,
+		{ method: "POST" }
+	);
+	expect(response.status).toBe(204);
+	return responseCookie(response);
+}
+
 describe("account login role transfer", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
@@ -220,6 +235,33 @@ describe("account login role transfer", () => {
 			expect(loginResponse.status).toBe(200);
 			await expect(sessionResponse.json()).resolves.toEqual({
 				adminID: null,
+				courseCodeLearnerID: null,
+				tutorID: tutor._id.toString(),
+				userID: null
+			});
+		});
+	});
+
+	it("replaces a classroom code session with the selected account role", async () => {
+		const tutor = makeEntity("tutor", "tutor-password");
+		mockAccounts({ tutor });
+
+		await withAccountRoutes(async baseUrl => {
+			const classroomCookie = await seedStaleCourseCodeSession(baseUrl);
+			const loginResponse = await loginRequest(
+				baseUrl,
+				"tutor-password",
+				classroomCookie
+			);
+			const tutorCookie = responseCookie(loginResponse);
+			const sessionResponse = await fetch(`${baseUrl}/test/session`, {
+				headers: { cookie: tutorCookie }
+			});
+
+			expect(loginResponse.status).toBe(200);
+			await expect(sessionResponse.json()).resolves.toEqual({
+				adminID: null,
+				courseCodeLearnerID: null,
 				tutorID: tutor._id.toString(),
 				userID: null
 			});
@@ -267,6 +309,7 @@ describe("account login role transfer", () => {
 			});
 			await expect(sessionResponse.json()).resolves.toEqual({
 				adminID: null,
+				courseCodeLearnerID: null,
 				tutorID: null,
 				userID: null
 			});

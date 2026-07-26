@@ -25,7 +25,7 @@ const pythonProjectSchema: Schema<IPythonProject> = new Schema(
 		},
 		ownerRole: {
 			type: String,
-			enum: ["admin", "tutor", "user"],
+			enum: ["admin", "courseCodeLearner", "tutor", "user"],
 			default: "user",
 			index: true
 		},

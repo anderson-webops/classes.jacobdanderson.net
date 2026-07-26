@@ -4,6 +4,7 @@
 import type { IAdmin } from "./IAdmin.js";
 import type { ITutor } from "./ITutor.js";
 import type { IUser } from "./IUser.js";
+import type { ICourseCodeLearner } from "../entities/ICourseCodeLearner.js";
 
 /**
  * Extend express-session's SessionData interface
@@ -13,6 +14,7 @@ declare module "express-session" {
 		adminID?: string;
 		tutorID?: string;
 		userID?: string;
+		courseCodeLearnerID?: string;
 	}
 }
 
@@ -25,6 +27,7 @@ declare global {
 			currentAdmin?: IAdmin;
 			currentTutor?: ITutor;
 			currentUser?: IUser;
+			currentCourseCodeLearner?: ICourseCodeLearner;
 		}
 	}
 }

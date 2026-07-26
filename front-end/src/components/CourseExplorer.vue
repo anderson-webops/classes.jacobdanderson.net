@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { CodePreviewResource } from "@/modules/codePreview";
+import type { CourseCodeLearner } from "@/modules/courseAccessCodes";
 import type { CourseAssetResource } from "@/modules/courseAssetPreview";
 import type { CourseProgress, User } from "@/stores/app";
 import type {
@@ -85,7 +86,7 @@ const coursesStore = useCoursesStore();
 const { courses } = storeToRefs(coursesStore);
 
 const appStore = useAppStore();
-const { currentTutor, currentAdmin, currentUser, users } =
+const { currentTutor, currentAdmin, currentCourseLearner, currentUser, users } =
 	storeToRefs(appStore);
 
 const searchQuery = ref("");
@@ -168,13 +169,18 @@ const permittedCourseIds = computed(() => {
 	}
 	if (currentTutor.value) return currentTutor.value.coursePermissions ?? [];
 	if (currentUser.value) return currentUser.value.courseAccess ?? [];
+	if (currentCourseLearner.value) {
+		return currentCourseLearner.value.courseAccess;
+	}
 	return [];
 });
 
-const courseGroupingOwner = computed<User | null>(() => {
+const courseGroupingOwner = computed<
+	Pick<User, "courseAccess" | "courseStatus"> | CourseCodeLearner | null
+>(() => {
 	if (isAllLearnersContext.value) return null;
 	if (isStaffContext.value) return selectedLearner.value;
-	return currentUser.value;
+	return currentUser.value ?? currentCourseLearner.value;
 });
 
 const courseList = computed(() => {

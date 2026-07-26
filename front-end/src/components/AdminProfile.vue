@@ -9,6 +9,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
 import AccessibleDialog from "@/components/AccessibleDialog.vue";
 import AccountSecurity from "@/components/AccountSecurity.vue";
+import CourseAccessCodeManager from "@/components/CourseAccessCodeManager.vue";
 import LearnerCodeReviewTools from "@/components/LearnerCodeReviewTools.vue";
 import LearnerSessionTools from "@/components/LearnerSessionTools.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
@@ -721,6 +722,8 @@ function confirmDeleteAdmin() {
 		</template>
 
 		<template v-else>
+			<CourseAccessCodeManager :courses="courseOptions" />
+
 			<section class="directory-section">
 				<div class="section-heading">
 					<div>
