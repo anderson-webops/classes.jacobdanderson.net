@@ -1816,13 +1816,20 @@ function confirmDeleteAdmin() {
 
 :global(html.dark .admin-workspace .course-choice),
 :global(html.dark .admin-workspace .checkbox-grid > label) {
-	background: var(--color-surface-muted);
+	background: var(--color-surface-soft);
 	box-shadow: inset 0 0 0 1px var(--color-border-strong);
 	color: var(--color-ink);
 }
 
 :global(html.dark .admin-workspace .checkbox-grid label) {
+	background: transparent;
 	color: var(--color-ink);
+}
+
+:global(html.dark .admin-workspace .assignment-editor),
+:global(html.dark .admin-workspace .course-editor),
+:global(html.dark .admin-workspace .editor-block) {
+	background: transparent;
 }
 
 :global(html.dark .admin-workspace .summary-group-label),
@@ -1833,7 +1840,7 @@ function confirmDeleteAdmin() {
 :global(html.dark .admin-workspace .editor-select),
 :global(html.dark .admin-workspace .course-status-select) {
 	border-color: var(--color-border-strong);
-	background: var(--color-surface-inset);
+	background: var(--color-surface-muted);
 	color: var(--color-ink);
 }
 
