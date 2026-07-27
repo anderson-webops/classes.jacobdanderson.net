@@ -34,6 +34,7 @@ describe("course-code IDE integration", () => {
 	it("uses dark theme surfaces for course-code and learner assignment controls", () => {
 		const manager = source("src/components/CourseAccessCodeManager.vue");
 		const adminProfile = source("src/components/AdminProfile.vue");
+		const mainStyles = source("src/styles/main.css");
 
 		expect(manager).toContain(":global(html.dark .course-code-manager)");
 		expect(manager).toContain("--manager-surface: var(--color-surface);");
@@ -44,10 +45,37 @@ describe("course-code IDE integration", () => {
 			":global(html.dark .admin-workspace .course-choice)"
 		);
 		expect(adminProfile).toContain(
+			"background: var(--color-surface-soft);"
+		);
+		expect(adminProfile).toContain(
+			":global(html.dark .admin-workspace .assignment-editor)"
+		);
+		expect(adminProfile).toContain(
+			":global(html.dark .admin-workspace .editor-block)"
+		);
+		expect(adminProfile).toContain(
+			"background: transparent;"
+		);
+		expect(adminProfile).toContain(
 			"background: var(--color-surface-muted);"
 		);
 		expect(adminProfile).toContain(
 			":global(html.dark .admin-workspace .course-access-group-title)"
+		);
+		expect(mainStyles).toContain(
+			"html.dark body :is(.assignment-editor, .course-editor, .editor-block)"
+		);
+		expect(mainStyles).toContain(
+			"html.dark body .checkbox-grid label"
+		);
+		expect(mainStyles).toContain(
+			"html.dark body :is(.course-choice, .checkbox-grid > label)"
+		);
+		expect(mainStyles).toContain(
+			":is(.admin-workspace, .profile-workspace)"
+		);
+		expect(mainStyles).toContain(
+			"select:is(.editor-select, .course-status-select)"
 		);
 	});
 });
