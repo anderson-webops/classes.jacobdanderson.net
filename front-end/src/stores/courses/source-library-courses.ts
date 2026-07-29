@@ -2803,12 +2803,170 @@ const englishCourses = {
 		name: "Middle School A: Reading and Analyzing Literature",
 		area: "literary analysis",
 		focus: "main ideas, supporting evidence, inference, showing versus telling, theme, point of view, word choice, rhyme, alliteration, figurative language, and final analysis writing",
-		staticAssets: ["msa1_concept1_mainideasupportingevidence.png"],
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"MSA1 Main Ideas & Supporting Evidence I": {
+				estimatedTime: "3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"topic / main idea",
+					"supporting detail",
+					"too broad / too narrow",
+					"quotation / paraphrase",
+					"evidence link"
+				],
+				flowNote:
+					"Use the prank only as a fictional planning model and never carry it out. Confirm a lawful classroom copy of Kyra's Fear or use an equivalent passage, then distinguish the main idea from details that support it."
+			},
+			"MSA2 Main Ideas & Supporting Evidence II": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"just-right main idea",
+					"impactful evidence",
+					"detailed evidence",
+					"concise evidence",
+					"evidence comparison"
+				],
+				flowNote:
+					"Use a lawful copy of Soccer Summer or an equivalent passage. Select evidence by comparing it with weaker alternatives and explain why each chosen detail is the better support."
+			},
+			"MSA3 Making Inferences": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"text clue",
+					"background knowledge",
+					"inference",
+					"reasoning link",
+					"alternate inference"
+				],
+				flowNote:
+					"Use a lawful copy of Car Ride or an equivalent passage. Separate what the text states from what is inferred, cite at least two clues, and test one plausible alternative interpretation."
+			},
+			"MSA4 Show; Don't Tell": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"action",
+					"dialogue",
+					"sensory detail",
+					"inference",
+					"before / after revision"
+				],
+				flowNote:
+					"Begin with a direct telling sentence, revise it through observable details, and annotate which details allow the reader to infer the intended feeling or situation."
+			},
+			"MSA Check-In #1": {
+				estimatedTime: "1–2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"main idea",
+					"supporting evidence",
+					"inference",
+					"show / tell",
+					"self-assessment"
+				],
+				flowNote:
+					"Use one accessible passage or original paragraph to collect separate evidence for all four skills. Assign review only for a missing or unsupported skill."
+			},
+			"MSA5 Identifying Themes": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"topic",
+					"main idea",
+					"theme statement",
+					"character change",
+					"plot evidence"
+				],
+				flowNote:
+					"Sort summary statements from larger messages, write theme as a complete transferable idea, and support it with character change or conflict evidence."
+			},
+			"MSA6 Analyzing & Developing Themes": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"character quality",
+					"choice / consequence",
+					"theme development",
+					"plot evidence",
+					"analysis link"
+				],
+				flowNote:
+					"Use a lawful public-domain or classroom-provided version of the model story. Trace one character choice through its consequence and explain how that pattern develops the theme."
+			},
+			"MSA7 Analyzing Point of View": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"narrator",
+					"pronoun",
+					"knowledge access",
+					"point-of-view type",
+					"reader effect"
+				],
+				flowNote:
+					"Label point of view from narrator access rather than pronouns alone, then use a lawful public-domain or supplied passage to compare how a rewrite changes sympathy, suspense, humor, theme, or tone."
+			},
+			"MSA8 Analyzing Words & Phrases": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"denotation",
+					"connotation",
+					"positive / neutral / negative",
+					"tone",
+					"word-choice revision"
+				],
+				flowNote:
+					"Compare words with similar dictionary meanings, locate the emotional association in context, and preserve a before-and-after sentence showing the change in tone."
+			},
+			"MSA9 Analyzing Rhyme & Alliteration": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"rhyme",
+					"alliteration",
+					"sound pattern",
+					"emphasis",
+					"meaning / mood"
+				],
+				flowNote:
+					"Use a short lawful or instructor-supplied text, mark only clear sound patterns, and explain what the repeated sounds emphasize rather than stopping at identification."
+			},
+			"MSA10 Analyzing Figurative Language": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"simile / metaphor",
+					"literal / figurative",
+					"word choice",
+					"sound",
+					"meaning / tone paragraph"
+				],
+				flowNote:
+					"Annotate one short accessible passage for word, sound, and figurative choices, then combine the observations into one claim-driven paragraph about meaning or tone."
+			},
+			"MSA Check-In #2": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"theme",
+					"point of view",
+					"connotation",
+					"sound / figurative language",
+					"integrated analysis"
+				],
+				flowNote:
+					"Use one accessible passage and require an integrated analysis, not a checklist of devices. The paragraph must connect at least two craft choices to one interpretation."
+			},
+			"MSA11 Master Project": {
+				estimatedTime: "3–4 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"copyright-safe image",
+					"point of view",
+					"theme / character action",
+					"intentional craft",
+					"analysis reflection"
+				],
+				flowNote:
+					"Choose an instructor-provided, original, public-domain, or otherwise copyright-safe image. Avoid claims about real people in the image; create a fictional piece, then analyze how its craft choices guide interpretation."
+			}
+		},
 		sourceActivityAnchors: {
 			"MSA1 Main Ideas & Supporting Evidence I": [
 				{
 					title: "Lead Prankster Main Idea Model",
-					prompt: "Plan a harmless class-prank scenario as a source model: list three or four specific details, then convert those details into a one- or two-sentence general plan. The general plan functions as the main idea, while the specific details function as supporting evidence.",
+					prompt: "Plan a fictional harmless class-prank scenario as a source model without carrying it out: list three or four specific details, then convert those details into a one- or two-sentence general plan. The general plan functions as the main idea, while the specific details function as supporting evidence.",
 					evidence: [
 						"A detail list naming the actors, setting, materials, sequence, or intended result.",
 						"A short general plan that is broader than any one detail but still specific enough to summarize the scenario.",
@@ -2949,7 +3107,7 @@ const englishCourses = {
 			"MSA11 Master Project": [
 				{
 					title: "Writing from an Image Literature Showcase",
-					prompt: "Choose an image and write a short literary piece that intentionally uses point of view, theme, character action, word choice, sound, and figurative language. Add a brief analysis explaining how those craft choices shape interpretation.",
+					prompt: "Choose an original, public-domain, instructor-provided, or otherwise copyright-safe image and write a fictional literary piece that intentionally uses point of view, theme, character action, word choice, sound, and figurative language. Do not infer facts about real people shown in an image. Add a brief analysis explaining how the craft choices shape interpretation.",
 					evidence: [
 						"An original short piece inspired by an image.",
 						"Visible use of point of view, theme development, word choice, sound, or figurative language.",
