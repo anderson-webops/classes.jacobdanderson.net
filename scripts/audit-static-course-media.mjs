@@ -3,6 +3,7 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 const auditSource = String.raw`
 import {
@@ -319,14 +320,11 @@ const auditFile = join(tempDir, "audit.ts");
 
 try {
 	await writeFile(auditFile, auditSource);
+	const tsxCli = fileURLToPath(import.meta.resolve("tsx/cli"));
 
-	const child = spawn(
-		process.execPath,
-		["back-end/node_modules/tsx/dist/cli.mjs", auditFile],
-		{
-			stdio: "inherit"
-		}
-	);
+	const child = spawn(process.execPath, [tsxCli, auditFile], {
+		stdio: "inherit"
+	});
 
 	const exitCode = await new Promise((resolve, reject) => {
 		child.once("error", reject);
