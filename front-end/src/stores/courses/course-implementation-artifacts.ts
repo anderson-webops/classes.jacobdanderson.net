@@ -36,6 +36,7 @@ export const courseImplementationSourceRepos: Record<string, string> = {
 	"java-level-1": "Java-Level-1",
 	"java-level-2": "Java-Level-2",
 	"java-level-3": "Java-Level-3",
+	"javascript-level-1-javascript-superstar": "Web-Development-Foundations",
 	"linux-systems": "Linux-Systems",
 	"low-level-security": "Low-Level-Security",
 	"low-level-security-part-2": "Low-Level-Security",
@@ -73,8 +74,6 @@ export const courseContentOnlySourcePolicies: Record<string, string> = {
 		"Content and media course. Source parity means every lab-style activity has a remote simulation/data alternative and no required household chemistry materials.",
 	"intro-to-physics":
 		"Content and media course. Source parity means every lab-style activity has a simulation, graph dataset, or paper-model alternative.",
-	"javascript-level-1-javascript-superstar":
-		"Legacy/catalog-owned JavaScript course. Keep project specs in the catalog until a JavaScript source repo is created.",
 	"javascript-level-2-javascript-master":
 		"Legacy/catalog-owned JavaScript course. Keep project specs in the catalog until a JavaScript source repo is created.",
 	"middle-school-integrated-science":
@@ -132,6 +131,13 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"Current Xcode and SwiftUI toolchain on macOS.",
 		"Simulator-first workflow; paid Apple Developer account is not assumed.",
 		"Version notes for any API that changes between Xcode/Swift releases."
+	],
+	"javascript-level-1-javascript-superstar": [
+		"Evergreen browser baseline using ECMAScript 2026, the HTML Living Standard, modern CSS, and built-in browser developer tools; no package install or build step is required.",
+		"Course-authored projects run as local index.html, styles.css, and script.js files, while original CodePen links remain reference artifacts rather than the only place a learner can work.",
+		"printToScreen(), prompt(), and alert() are labeled introductory sandbox helpers or blocking browser scaffolds; standards-based output uses semantic HTML, forms, events, and textContent.",
+		"D3 7.9.0 and Materialize 2.2.2 are pinned only for original projects that depend on them; every core concept also has a native HTML, CSS, DOM, or SVG route.",
+		"Supplied practice and verification cases provide an offline, privacy-safe route when CodePen, a CDN, or pending demonstration media is unavailable."
 	],
 	"linux-systems": [
 		"Ubuntu Server 26.04 LTS is the primary fresh-lab baseline; Debian 13 is the supported comparison route, and the exact distribution/version is recorded.",
@@ -625,6 +631,13 @@ const standardsOverrides: Record<string, string[]> = {
 		"NIST Secure Software Development Framework 1.1 and SP 800-61 Revision 3 incident-response guidance.",
 		"Node.js 24 LTS release, security, permission, test-runner, and dependency-management documentation."
 	],
+	"javascript-level-1-javascript-superstar": [
+		"ECMA-262 2026 for JavaScript language behavior and the MDN JavaScript Guide for learner-facing explanations.",
+		"WHATWG HTML Living Standard and DOM specifications for semantic structure, forms, document state, and events.",
+		"Modern CSS references for the box model, positioning, responsive layout, Grid, and source-order preservation.",
+		"WCAG 2.2 and MDN accessibility guidance for names, labels, keyboard access, focus, contrast, motion, status changes, and responsive reflow.",
+		"D3 7.9.0 and Materialize 2.2.2 documentation only where preserved course projects explicitly use those libraries."
+	],
 	"rust-systems-security": [
 		"Rust 1.97.1 release notes and the Rust 2024 Edition Guide.",
 		"The Rust Programming Language and Rust Reference for ownership, borrowing, error handling, concurrency, and unsafe obligations.",
@@ -691,6 +704,12 @@ const boundaryOverrides: Record<string, string[]> = {
 		"Teaches threat modeling, authorization, transport, validation, observability, exposure control, secure Node/TypeScript services, real-time boundaries, deployment review, authorized testing, and disclosure rather than exploit development or unsolicited assessment.",
 		"AI may draft test cases, payload variations, code-review questions, or report structure only inside the prewritten scope; it receives no secrets or real data, executes nothing automatically, and never grants authorization."
 	],
+	"javascript-level-1-javascript-superstar": [
+		"Uses JSS1–JSS8 followed by Check-In #1, then JSS9–JSS14 followed by Check-In #2, and finishes with one JSS15 master project; either check-in may also serve as an optional placement preview.",
+		"Teaches browser JavaScript fundamentals, functions, SVG drawing, semantic HTML, CSS layout, events, animation, responsive Grid, and DOM-driven state without introducing a back end, account system, package framework, or deployment requirement.",
+		"Original CodePen, D3, and Materialize projects remain available, but standards-based local files and supplied cases prevent a third-party host or library from becoming a prerequisite.",
+		"Learner projects use fictional low-stakes inputs; AI may explain a diagnostic or suggest a bounded test only after the learner states the program rule, and it does not receive personal responses or replace direct browser verification."
+	],
 	"rust-systems-security": [
 		"Uses RSS0–RSS10 as one complete progression from toolchain evidence through ownership, borrowing, typed failures, safe state, APIs, parsers, concurrency, unsafe boundaries, and a legacy-hardening capstone.",
 		"All programs operate on supplied text, byte, state, dependency, or concurrency fixtures in local workspaces; no live service, third-party binary, production repository, real credential, or personal data is required.",
@@ -735,6 +754,14 @@ const capstoneOverrides: Record<string, string[]> = {
 		"An authorized test plan mapped to selected ASVS, API Top 10, and WSTG checks, with reproducible results, remediation, retest, severity rationale, and responsible-disclosure draft.",
 		"A release and recovery packet containing Node and dependency versions, test commands, secrets boundary, rollback, incident response, known limitations, and a five-minute demonstration."
 	],
+	"javascript-level-1-javascript-superstar": [
+		"One responsive single-page experience with semantic landmarks, headings, labels, native controls, clear content hierarchy, and a useful no-JavaScript reading order.",
+		"JavaScript split into named functions for input normalization, state changes, rendering, and event handling, using const by default, let for reassignment, strict equality, and no accidental globals.",
+		"At least one original SVG or DOM-driven visual interaction whose structure remains understandable without D3 and whose visible state has a text equivalent.",
+		"Keyboard and pointer operation, visible focus, status communication, reduced-motion behavior, readable contrast, 200% zoom or narrow-width reflow, and source-order checks.",
+		"A verification table covering expected behavior, empty and malformed input, exact boundaries, repeated actions, reset behavior, console cleanliness, and one regression fixed during development.",
+		"A short project note naming the browser baseline, any pinned D3 or Materialize use, external assets and attribution, privacy choices, known limitations, and a two-minute demonstration."
+	],
 	"rust-systems-security": [
 		"One small supplied legacy parser or stateful CLI with an explicit behavior contract, threat model, trust boundary, malformed-input inventory, and named non-goals.",
 		"A Rust 2024 redesign that uses ownership, borrowing, Option, Result, enums, checked arithmetic, bounded collections, and narrow APIs to make invalid or ambiguous states harder to express.",
@@ -769,6 +796,14 @@ const safetyPolicyOverrides: Record<string, string[]> = {
 		"Treat every request, log, packet, certificate, configuration, and AI-generated suggestion as untrusted; redact secrets and identifiers, cap input and output size, and review before execution or sharing.",
 		"AI cannot authorize a target, expand scope, execute a command, select real identities, store sensitive context, or replace human verification; retain only reviewed, bounded test ideas and report wording.",
 		"Every finding separates observation, impact, preconditions, evidence, remediation, retest, uncertainty, disclosure audience, and recovery or cleanup."
+	],
+	"javascript-level-1-javascript-superstar": [
+		"Use fictional names, foods, scores, passwords, survey responses, and media; never request or publish a learner's real password, contact details, location, school information, private image, or account token.",
+		"Render learner-controlled text with textContent or equivalent safe text insertion, validate numeric conversion explicitly, cap loop and animation work, and keep browser output free of unexpected markup execution.",
+		"Prefer semantic elements and native controls before custom components; preserve labels, keyboard operation, focus, source order, status updates, contrast, reduced motion, and narrow-screen reflow.",
+		"Treat CodePen, CDN scripts, D3, Materialize, fonts, icons, and media as external dependencies with pinned versions or local fallbacks; no third-party sign-in or public publishing is required.",
+		"AI cannot receive personal responses, invent project requirements, or replace the learner's explanation; any suggested code is read, bounded, tested in local files, and revised until the learner can explain each state change.",
+		"Every project records the expected visible result, browser and viewport, standard and edge inputs, interaction method, observed result, console state, reset route, accessibility check, and remaining limitation."
 	],
 	"rust-systems-security": [
 		"All builds, parsers, unsafe examples, FFI shims, dependency checks, Miri runs, and fuzz cases stay inside a course-owned local workspace using supplied fictional inputs and fixed resource limits.",
@@ -941,6 +976,10 @@ function sourcePolicyFor(courseId: string) {
 
 		if (courseId === "rust-systems-security") {
 			return `Source-backed course. Canonical source repository: ${url}. The linked RUST-* starter/solution folders are lightweight label-sanitization checkpoints, currently using Rust 2021 edition, rather than distinct implementations of every named module. Existing URLs remain traceable; the supplied Rust cases and verification guide provide the module-specific ownership, parser, concurrency, unsafe, dependency, and capstone evidence.`;
+		}
+
+		if (courseId === "javascript-level-1-javascript-superstar") {
+			return `Source-backed and externally referenced course. Canonical local source repository: ${url}. The linked JSS-* starter/solution folders are generic click-to-add-list wrappers rather than distinct implementations of every named lesson; original CodePen projects contain most of the historical project variety. Existing links remain traceable, while supplied local cases and verification guidance provide module-specific, host-independent evidence.`;
 		}
 
 		return `Source-backed course. Canonical source repository: ${url}. Starter/reference links remain synchronized with catalog projects.`;

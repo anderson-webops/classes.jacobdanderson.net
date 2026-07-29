@@ -84,7 +84,12 @@ const JAVASCRIPT_LEVEL_1_ORIGINAL_MEDIA = [
 	"jss_check_in_2_project.mp4"
 ];
 
-export const javascriptLevel1Course: RawCourse = {
+const JAVASCRIPT_LEVEL_1_PRACTICE_PACK =
+	"/course-assets/javascript-level-1/javascript-level-1-practice-pack.md";
+const JAVASCRIPT_LEVEL_1_VERIFICATION_GUIDE =
+	"/course-assets/javascript-level-1/javascript-level-1-verification-guide.md";
+
+const javascriptLevel1SourceCourse: RawCourse = {
 	name: "JavaScript Level 1: JavaScript Superstar",
 	modules: [
 		{
@@ -1354,4 +1359,558 @@ export const javascriptLevel1Course: RawCourse = {
 			supplementalProjects: []
 		}
 	]
+};
+
+interface JavaScriptLevel1ModuleFlow {
+	stage: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	practiceSection: string;
+	answerSection: string;
+	route: string;
+	standardsRoute: string;
+	evidence: string;
+	primaryReference: {
+		label: string;
+		url: string;
+	};
+	additionalReferences?: {
+		label: string;
+		url: string;
+	}[];
+}
+
+const JAVASCRIPT_LEVEL_1_SEQUENCE = [
+	"JSS1 Variables and Data Types",
+	"JSS2 Operators and Math",
+	"JSS3 For and While Loops",
+	"JSS4 Combining Loops and Variables",
+	"JSS5 Conditionals",
+	"JSS6 Advanced Conditionals",
+	"JSS7 Drawing in JavaScript",
+	"JSS8 Nested Loops",
+	"Check-In #1",
+	"JSS9 Introduction to HTML & CSS",
+	"JSS10 Animations in JavaScript",
+	"JSS11 More HTML & CSS",
+	"JSS12 Basic Website Layout",
+	"JSS13 The Grid Layout",
+	"JSS14 Dynamic Websites with JavaScript",
+	"Check-In #2",
+	"JSS15 Master Project"
+] as const;
+
+const JAVASCRIPT_LEVEL_1_MODULE_FLOW: Record<
+	(typeof JAVASCRIPT_LEVEL_1_SEQUENCE)[number],
+	JavaScriptLevel1ModuleFlow
+> = {
+	"JSS1 Variables and Data Types": {
+		stage: "Store, inspect, and display small pieces of fictional data",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"const and let",
+			"number",
+			"string",
+			"boolean",
+			"conversion",
+			"safe output"
+		],
+		practiceSection: "variables-types-and-private-input-case",
+		answerSection: "variables-types-and-private-input-key",
+		route: "Compare `const` and `let`, classify numbers, strings, and booleans, convert a fictional form value deliberately, and render the result as text. Introductory `prompt()`, `alert()`, and `printToScreen()` examples remain recognizable, while the finished route uses a labeled form and page output.",
+		standardsRoute:
+			"Use current JavaScript declarations and explicit conversion in a plain local HTML, CSS, and JavaScript project. Treat blocking dialogs and sandbox-only helpers as temporary scaffolds rather than the browser application model.",
+		evidence:
+			"The record identifies each value, intended type, declaration choice, conversion result, visible output, empty-input behavior, and one privacy choice.",
+		primaryReference: {
+			label: "MDN JavaScript grammar and types",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types"
+		}
+	},
+	"JSS2 Operators and Math": {
+		stage: "Make numeric rules and randomness inspectable",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"number conversion",
+			"precedence",
+			"arithmetic",
+			"remainder",
+			"random range",
+			"boundary test"
+		],
+		practiceSection: "operators-conversion-and-randomness-case",
+		answerSection: "operators-conversion-and-randomness-key",
+		route: "Convert incoming values before arithmetic, use parentheses to communicate precedence, and implement one inclusive random-integer formula. Test the lower bound, upper bound, decimal input, empty input, and a value that cannot become a finite number.",
+		standardsRoute:
+			"Use `Number`, `Number.isFinite`, `Math.random`, and `Math.floor` directly. Keep the random rule in a named helper so the range contract can be reviewed independently from display code.",
+		evidence:
+			"The calculation table records the expression, predicted result, observed result, type, exact random bounds, and the response to invalid input.",
+		primaryReference: {
+			label: "MDN expressions and operators guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_operators"
+		}
+	},
+	"JSS3 For and While Loops": {
+		stage: "Select a loop from its stopping rule",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"initial state",
+			"condition",
+			"update",
+			"for loop",
+			"while loop",
+			"termination"
+		],
+		practiceSection: "loop-range-and-stop-condition-case",
+		answerSection: "loop-range-and-stop-condition-key",
+		route: "Use a `for` loop for a known range and a `while` loop for a state-based stop. Predict iteration counts before running, cap all generated work, and diagnose off-by-one, missing-update, and wrong-bound failures.",
+		standardsRoute:
+			"Use language-native loops in a local script and keep loop work separate from DOM output. Collect results first, then render once so a teaching example does not create excessive page updates.",
+		evidence:
+			"The trace lists initial state, condition result, body result, update, final state, iteration count, and the exact reason the loop terminates.",
+		primaryReference: {
+			label: "MDN loops and iteration guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration"
+		}
+	},
+	"JSS4 Combining Loops and Variables": {
+		stage: "Extract repeated logic into named functions",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"function",
+			"parameter",
+			"return value",
+			"accumulator",
+			"generated value",
+			"single purpose"
+		],
+		practiceSection: "functions-accumulators-and-generated-values-case",
+		answerSection: "functions-accumulators-and-generated-values-key",
+		route: "Turn repeated calculations and generated-value steps into small functions with parameters and return values. Keep accumulation, randomness, formatting, and page rendering in separate named operations that can be checked with fixed inputs.",
+		standardsRoute:
+			"Use function declarations or clearly named function expressions, local variables, explicit returns, and deterministic test inputs. Any password-style generator uses fictional samples only and is not presented as production credential generation.",
+		evidence:
+			"The function table states each input contract, returned value, side effect, fixed test, boundary case, and where the result enters the next step.",
+		primaryReference: {
+			label: "MDN functions guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions"
+		}
+	},
+	"JSS5 Conditionals": {
+		stage: "Translate a rule table into exclusive branches",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"strict equality",
+			"comparison",
+			"if",
+			"else if",
+			"else",
+			"range partition"
+		],
+		practiceSection: "conditional-rule-table-case",
+		answerSection: "conditional-rule-table-key",
+		route: "Write a small rule table before coding, then implement exact comparisons and non-overlapping ranges with `if`, `else if`, and `else`. Use fictional access labels rather than implying that a browser-only comparison is a real authentication system.",
+		standardsRoute:
+			"Use strict equality, explicit numeric conversion, and ordered branches whose boundaries cover the intended domain exactly once. Display the selected outcome with safe text insertion.",
+		evidence:
+			"The case table covers each exact boundary, one value on either side, an unmatched value, invalid input, expected branch, observed branch, and correction when they differ.",
+		primaryReference: {
+			label: "MDN control flow and error handling guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling"
+		}
+	},
+	"JSS6 Advanced Conditionals": {
+		stage: "Compose boolean rules without hiding precedence",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"boolean",
+			"AND",
+			"OR",
+			"NOT",
+			"truthiness",
+			"branch order"
+		],
+		practiceSection: "compound-condition-and-truthiness-case",
+		answerSection: "compound-condition-and-truthiness-key",
+		route: "Model compound decisions with truth tables, parentheses, and named boolean expressions. Compare deliberate booleans with truthy and falsy values, then use a FizzBuzz-style rule to expose branch-order mistakes.",
+		standardsRoute:
+			"Use `&&`, `||`, and `!` with explicit grouping and avoid relying on coercion when a converted boolean or number communicates the rule more clearly.",
+		evidence:
+			"The truth table includes every meaningful combination, expected expression result, selected branch, observed output, and one explanation of why changing branch order changes behavior.",
+		primaryReference: {
+			label: "MDN truthy glossary",
+			url: "https://developer.mozilla.org/en-US/docs/Glossary/Truthy"
+		}
+	},
+	"JSS7 Drawing in JavaScript": {
+		stage: "Represent a visual as structured SVG",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"SVG",
+			"coordinate",
+			"attribute",
+			"group",
+			"text alternative",
+			"D3 comparison"
+		],
+		practiceSection: "native-svg-shape-case",
+		answerSection: "native-svg-shape-key",
+		route: "Create and position SVG shapes with native elements or `createElementNS`, derive coordinates instead of guessing, and add a title, description, or adjacent text equivalent. Rebuild one preserved D3 example only after the native structure is understood.",
+		standardsRoute:
+			"Native SVG is the required route. D3 7.9.0 remains an optional comparison for original linked projects, with the library version and loading method recorded.",
+		evidence:
+			"The diagram names the SVG viewport, coordinate calculation, element and attributes, grouping rule, visible result, text equivalent, and whether the same structure works without D3.",
+		primaryReference: {
+			label: "MDN SVG scripting guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/SVG/Guides/Scripting"
+		},
+		additionalReferences: [
+			{
+				label: "D3 7 documentation",
+				url: "https://d3js.org/"
+			}
+		]
+	},
+	"JSS8 Nested Loops": {
+		stage: "Assign one dimension of repeated work to each loop",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"outer loop",
+			"inner loop",
+			"row",
+			"column",
+			"work budget",
+			"pattern"
+		],
+		practiceSection: "nested-loop-pattern-and-work-budget-case",
+		answerSection: "nested-loop-pattern-and-work-budget-key",
+		route: "Build text and SVG patterns by giving the outer loop responsibility for rows or groups and the inner loop responsibility for items. Calculate total work before running and cap both dimensions.",
+		standardsRoute:
+			"Use bounded language-native loops and one rendering pass. Keep coordinate or text generation separate from DOM insertion so the nested logic can be tested without a visual dependency.",
+		evidence:
+			"The grid trace records row count, column count, total iterations, first and last generated positions, output dimensions, boundary behavior, and response to an over-budget request.",
+		primaryReference: {
+			label: "MDN for statement reference",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for"
+		}
+	},
+	"Check-In #1": {
+		stage: "Fundamentals checkpoint after JSS1–JSS8",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"variables",
+			"operators",
+			"functions",
+			"loops",
+			"conditionals",
+			"SVG"
+		],
+		practiceSection: "fundamentals-checkpoint-case",
+		answerSection: "fundamentals-checkpoint-key",
+		route: "Complete this required checkpoint after JSS8 across variables, conversion, operators, functions, loops, conditionals, SVG, and nested work. It can also be used earlier as an optional placement preview, but the verification key stays closed until an independent attempt is recorded.",
+		standardsRoute:
+			"Use one local browser project, native JavaScript and SVG, fixed test inputs, and a short explanation for each choice. External examples may clarify syntax but do not replace the learner's runnable result.",
+		evidence:
+			"The checkpoint packet contains a prediction, runnable result, boundary or error case, console check, short explanation, confidence rating, and named revisit module for every topic.",
+		primaryReference: {
+			label: "MDN JavaScript Guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"
+		}
+	},
+	"JSS9 Introduction to HTML & CSS": {
+		stage: "Create a semantic document before styling it",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"landmark",
+			"heading",
+			"label",
+			"DOM tree",
+			"selector",
+			"source order"
+		],
+		practiceSection: "semantic-html-and-css-case",
+		answerSection: "semantic-html-and-css-key",
+		route: "Build a small document with landmarks, a logical heading order, labeled controls, and meaningful text before applying selectors and display rules. Inspect the DOM tree and preserve a useful reading order when styles are absent.",
+		standardsRoute:
+			"Use the HTML Living Standard, modern CSS, and native elements. Add a generic `div` or `span` only when no semantic element communicates the role.",
+		evidence:
+			"The structure map names every landmark, heading, control label, selector, display behavior, source-order decision, and the result with CSS or JavaScript unavailable.",
+		primaryReference: {
+			label: "HTML Living Standard developer edition",
+			url: "https://html.spec.whatwg.org/dev/"
+		}
+	},
+	"JSS10 Animations in JavaScript": {
+		stage: "Separate interaction state from animation rendering",
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"event",
+			"state",
+			"update",
+			"render",
+			"animation frame",
+			"reduced motion"
+		],
+		practiceSection: "events-animation-and-reduced-motion-case",
+		answerSection: "events-animation-and-reduced-motion-key",
+		route: "Connect keyboard and pointer events to a small state object, update that state predictably, and render motion with CSS or `requestAnimationFrame`. Provide a stable reduced-motion result and keep controls operable without hover.",
+		standardsRoute:
+			"Native events, CSS transitions, or `requestAnimationFrame` form the required path. Preserved D3 transitions are optional and use D3 7.9.0 with the same state and accessibility checks.",
+		evidence:
+			"The interaction trace names event source, state before and after, rendered change, frame or transition stop, keyboard route, reduced-motion result, reset behavior, and console state.",
+		primaryReference: {
+			label: "MDN requestAnimationFrame reference",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
+		},
+		additionalReferences: [
+			{
+				label: "MDN prefers-reduced-motion reference",
+				url: "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion"
+			}
+		]
+	},
+	"JSS11 More HTML & CSS": {
+		stage: "Predict spacing, positioning, and reflow",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"box model",
+			"normal flow",
+			"position",
+			"stacking",
+			"responsive unit",
+			"zoom"
+		],
+		practiceSection: "box-model-positioning-and-reflow-case",
+		answerSection: "box-model-positioning-and-reflow-key",
+		route: "Measure content, padding, border, and margin, then compare normal flow with deliberately positioned elements. Test at narrow widths and 200% zoom so decorative placement does not cover text or controls.",
+		standardsRoute:
+			"Prefer normal flow, flexible sizing, and modern responsive units. Use absolute or fixed positioning only for a named relationship with a tested overlap and focus-order plan.",
+		evidence:
+			"The layout record includes predicted and measured box size, positioning context, stacking result, narrow-width reflow, zoom behavior, focus visibility, and one corrected overlap.",
+		primaryReference: {
+			label: "MDN box model lesson",
+			url: "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model"
+		}
+	},
+	"JSS12 Basic Website Layout": {
+		stage: "Build reusable page sections with a native fallback",
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"section",
+			"navigation",
+			"table",
+			"component",
+			"fallback",
+			"keyboard check"
+		],
+		practiceSection: "component-library-and-native-fallback-case",
+		answerSection: "component-library-and-native-fallback-key",
+		route: "Assemble navigation, sections, data tables, and repeated content with semantic HTML and CSS first. Recreate one original Materialize component only after the native structure works, then test it with keyboard input and without the library.",
+		standardsRoute:
+			"Native HTML and CSS form the required route. Materialize 2.2.2 is pinned for preserved projects, initialized explicitly, and treated as an enhancement rather than the only source of structure or meaning.",
+		evidence:
+			"The component ledger records native element, enhanced component, library dependency, keyboard operation, label or name, narrow-width result, no-library result, and fallback content.",
+		primaryReference: {
+			label: "Materialize 2 getting started",
+			url: "https://materializeweb.com/getting-started.html"
+		},
+		additionalReferences: [
+			{
+				label: "HTML forms standard",
+				url: "https://html.spec.whatwg.org/dev/forms.html"
+			}
+		]
+	},
+	"JSS13 The Grid Layout": {
+		stage: "Create responsive grids without scrambling meaning",
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"grid container",
+			"track",
+			"item",
+			"minmax",
+			"breakpoint",
+			"source order"
+		],
+		practiceSection: "grid-source-order-and-responsive-case",
+		answerSection: "grid-source-order-and-responsive-key",
+		route: "Build an explicit two-dimensional grid, then replace brittle fixed columns with a responsive rule. Keep DOM and reading order logical even when visual placement changes, and verify a card or board at desktop, tablet, and narrow widths.",
+		standardsRoute:
+			"Use native CSS Grid as the required route. A Materialize grid remains an optional comparison, not a substitute for understanding tracks, gaps, intrinsic sizing, and source order.",
+		evidence:
+			"The grid record includes source order, visual order, column rule, minimum item width, overflow result, three viewport checks, keyboard sequence, and any content that required a layout revision.",
+		primaryReference: {
+			label: "MDN CSS Grid accessibility guidance",
+			url: "https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout/Accessibility"
+		}
+	},
+	"JSS14 Dynamic Websites with JavaScript": {
+		stage: "Update the DOM from explicit state and validated input",
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"selector",
+			"event listener",
+			"input validation",
+			"state",
+			"textContent",
+			"reset"
+		],
+		practiceSection: "dom-state-and-safe-rendering-case",
+		answerSection: "dom-state-and-safe-rendering-key",
+		route: "Read a labeled control, normalize the value, update explicit state, and render text or attributes through a named function. Test repeated actions, invalid and empty input, reset, and text containing markup characters without inserting learner text as HTML.",
+		standardsRoute:
+			"Use DOM selectors, `addEventListener`, form events, `textContent`, and narrow attribute or class updates. Keep state changes independent from rendering and avoid inline event handlers.",
+		evidence:
+			"The event table records trigger, raw input, normalized value, state before and after, visible output, safe-rendering result, repeated-action result, reset route, focus behavior, and console state.",
+		primaryReference: {
+			label: "MDN Document Object Model guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model"
+		}
+	},
+	"Check-In #2": {
+		stage: "Web-experience checkpoint after JSS9–JSS14",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"semantic HTML",
+			"responsive CSS",
+			"event",
+			"state",
+			"animation",
+			"accessibility"
+		],
+		practiceSection: "web-experience-checkpoint-case",
+		answerSection: "web-experience-checkpoint-key",
+		route: "Complete this required checkpoint after JSS14 by building one semantic, responsive, dynamic page. It can also be used earlier as an optional placement preview, but the verification key stays closed until the learner records an independent attempt.",
+		standardsRoute:
+			"Use native HTML, CSS, SVG, and DOM behavior first. D3 or Materialize may enhance one preserved task only when the page keeps its content, control names, and core interaction without the library.",
+		evidence:
+			"The checkpoint packet covers structure, layout, interaction, dynamic state, motion preference, keyboard path, narrow reflow, safe text, reset, console output, and a named module to revisit.",
+		primaryReference: {
+			label: "MDN CSS and JavaScript accessibility lesson",
+			url: "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/CSS_and_JavaScript"
+		}
+	},
+	"JSS15 Master Project": {
+		stage: "Accessible interactive-site capstone",
+		estimatedTime: "8–10 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"problem statement",
+			"semantic structure",
+			"state model",
+			"original interaction",
+			"verification",
+			"demonstration"
+		],
+		practiceSection: "accessible-interactive-site-capstone-case",
+		answerSection: "accessible-interactive-site-capstone-key",
+		route: "Plan and build one focused single-page experience with meaningful content, semantic structure, responsive layout, named JavaScript functions, validated input, explicit state, and an original SVG or DOM interaction. Develop it in vertical slices and keep a no-JavaScript reading order.",
+		standardsRoute:
+			"Use current browser standards as the baseline. Any pinned D3 7.9.0 or Materialize 2.2.2 feature remains an enhancement with attribution, a native structural fallback, and a documented limitation.",
+		evidence:
+			"The final packet contains the audience and task, state and event map, browser baseline, viewport checks, keyboard and focus evidence, motion and contrast checks, input table, regression record, external-asset list, privacy choices, limitations, and a two-minute demonstration.",
+		primaryReference: {
+			label: "WCAG 2.2 quick reference",
+			url: "https://www.w3.org/WAI/WCAG22/quickref/"
+		}
+	}
+};
+
+function javascriptLevel1PracticeLink(section: string) {
+	return `${JAVASCRIPT_LEVEL_1_PRACTICE_PACK}#${section}`;
+}
+
+function javascriptLevel1VerificationLink(section: string) {
+	return `${JAVASCRIPT_LEVEL_1_VERIFICATION_GUIDE}#${section}`;
+}
+
+function javascriptLevel1SupplementalPath(title: string) {
+	if (/extension|challenge/i.test(title)) return "challenge" as const;
+	return "choice" as const;
+}
+
+function renderJavaScriptLevel1References(flow: JavaScriptLevel1ModuleFlow) {
+	const references = [
+		`[${flow.primaryReference.label}](${flow.primaryReference.url})`,
+		...(flow.additionalReferences ?? []).map(
+			item => `[${item.label}](${item.url})`
+		)
+	];
+	return references.join(", ");
+}
+
+function decorateJavaScriptLevel1Module(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow =
+		JAVASCRIPT_LEVEL_1_MODULE_FLOW[
+			module.title as (typeof JAVASCRIPT_LEVEL_1_SEQUENCE)[number]
+		];
+	if (!flow)
+		throw new Error(`Missing JavaScript Level 1 flow: ${module.title}`);
+
+	const practiceLink = javascriptLevel1PracticeLink(flow.practiceSection);
+	const verificationLink = javascriptLevel1VerificationLink(
+		flow.answerSection
+	);
+	const references = renderJavaScriptLevel1References(flow);
+
+	return {
+		...module,
+		kind: "module",
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: [...flow.keyBlocks],
+		curriculum: module.curriculum.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Course flow:** ${flow.stage}. ${flow.route}
+
+**Standards route:** ${flow.standardsRoute}
+
+**Evidence gate:** ${flow.evidence}
+
+**Local continuity:** Complete the [supplied browser case](${practiceLink}) before comparing it with the [verification guide](${verificationLink}). This route uses fictional inputs and local files, so CodePen, a CDN, and pending demonstration media are optional.
+
+**Current references:** ${references}. Record the browser and viewport, and record any D3, Materialize, font, icon, media, or host version that affects the result.
+
+${item.content}`
+					: item.content,
+			learningPath: "core" as const,
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? flow.primaryReference.url
+					}
+				: {})
+		})),
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: javascriptLevel1SupplementalPath(item.title),
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? flow.primaryReference.url
+					}
+				: {})
+		}))
+	};
+}
+
+const javascriptLevel1ModulesByTitle = new Map(
+	javascriptLevel1SourceCourse.modules.map(module => [module.title, module])
+);
+
+const javascriptLevel1CoreModules = JAVASCRIPT_LEVEL_1_SEQUENCE.map(title => {
+	const module = javascriptLevel1ModulesByTitle.get(title);
+	if (!module) throw new Error(`Missing JavaScript Level 1 module: ${title}`);
+	return decorateJavaScriptLevel1Module(module);
+});
+
+const javascriptLevel1Appendices = javascriptLevel1SourceCourse.modules.filter(
+	module => module.kind === "appendix"
+);
+
+export const javascriptLevel1Course: RawCourse = {
+	...javascriptLevel1SourceCourse,
+	modules: [...javascriptLevel1CoreModules, ...javascriptLevel1Appendices]
 };
