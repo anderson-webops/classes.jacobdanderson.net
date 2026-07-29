@@ -1961,6 +1961,129 @@ const investingCourses = {
 		name: "Be Your Own Boss: Entrepreneurship 101",
 		area: "entrepreneurship",
 		focus: "design thinking, problem discovery, customer definition, iteration, competitors, feasibility, marketing, social impact, and pitch development",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"ENT1 Design Thinking Methodology": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"venture portfolio",
+					"Lean Canvas preview",
+					"assumptions",
+					"design thinking",
+					"evidence questions"
+				],
+				flowNote:
+					"Open one venture portfolio, preview the final canvas, and mark every untested claim as an assumption. The wallet sprint is an optional warm-up; the venture itself can be fictional, team-based, or personal."
+			},
+			"ENT2 Learning What It Takes To Be An Entrepreneur": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"founder strengths",
+					"values",
+					"empathy evidence",
+					"consent",
+					"problem seed"
+				],
+				flowNote:
+					"Choose a fictional, team, or personal founder profile, then gather only consented, non-identifying observation evidence. Use that evidence to identify one problem seed; a public About page and personal disclosure are not required."
+			},
+			"ENT3 Solving Problems Through Entrepreneurship": {
+				estimatedTime: "3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"problem statement",
+					"initial solution",
+					"low-fidelity prototype",
+					"brand identity",
+					"feedback questions"
+				],
+				flowNote:
+					"Turn the selected problem into a direct solution, build the smallest safe low-fidelity prototype, and prepare an original text mark or sketch plus privacy-respecting feedback questions. No purchases, advanced fabrication, or public website are required."
+			},
+			"ENT4 Identifying the Ideal Customer": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"customer segment",
+					"aggregate persona",
+					"needs and blockers",
+					"survey validity",
+					"privacy"
+				],
+				flowNote:
+					"Build a fictional or aggregate persona from ranges and patterns, then test assumptions with anonymous, opt-in, instructor-supplied, or simulated responses. The external coffee-shop game is an optional case with a text-table fallback."
+			},
+			"ENT5 Iterating On Your Idea": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"feedback sample",
+					"evidence limits",
+					"conflicting responses",
+					"iteration decision",
+					"before / after prototype"
+				],
+				flowNote:
+					"Separate observations from interpretations, record sample limits, choose revisions tied to evidence, and preserve a before-and-after prototype plus the riskiest remaining assumption."
+			},
+			"ENT6 Conducting Competitor Analysis": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"competitor set",
+					"comparison dimensions",
+					"positioning matrix",
+					"dated sources",
+					"differentiation"
+				],
+				flowNote:
+					"Compare a focused competitor set using dated public evidence, map the venture on two meaningful dimensions, and revise one product choice. Direct outreach is optional, opt-in, and never requires impersonation or bulk messaging."
+			},
+			"ENT7 Testing Financial Feasibility": {
+				estimatedTime: "3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"pricing model",
+					"unit cost",
+					"revenue",
+					"profit margin",
+					"sensitivity cases"
+				],
+				flowNote:
+					"Estimate price and unit economics, then model low, base, and high customer cases instead of presenting one forecast as certain. Keep assumptions visible and revise the venture when costs or demand make the first plan infeasible."
+			},
+			"ENT8 Building and Testing Marketing Strategies": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"value proposition",
+					"customer benefit",
+					"channel fit",
+					"message consistency",
+					"mock campaign"
+				],
+				flowNote:
+					"Condense evidence into one value proposition and choose channels that fit the persona, then create private campaign mockups. Public posts, ad spending, data collection, and real sales are not required."
+			},
+			"ENT9 Focusing on Social Impact": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"impact risk",
+					"alternative practice",
+					"cost tradeoff",
+					"claim evidence",
+					"unintended harm"
+				],
+				flowNote:
+					"Audit materials, labor, packaging, energy, distribution, and community effects, then revise the feasibility model. Keep claims sourced and bounded; a cause-aligned campaign is an optional private mockup."
+			},
+			"ENT10 Be Your Own Boss Master Project": {
+				estimatedTime: "3–4 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"Lean Canvas",
+					"evidence portfolio",
+					"feasibility",
+					"pitch",
+					"revision"
+				],
+				flowNote:
+					"Reconcile the venture canvas with customer, prototype, competitor, financial, marketing, and impact evidence, then revise a concise pitch after opt-in feedback or a structured self-review. A private portfolio and low-fidelity prototype are complete; launch, public posting, incorporation, and real sales are not required."
+			}
+		},
 		sourceActivityAnchors: {
 			"ENT1 Design Thinking Methodology": [
 				{
@@ -1974,18 +2097,19 @@ const investingCourses = {
 				},
 				{
 					title: "Ideal Wallet Design Sprint",
-					prompt: "Run a short design-thinking sprint around a wallet or small everyday object. Interview a user, write a point-of-view statement, sketch three possible solutions, gather feedback, and revise the strongest design.",
+					prompt: "Run a short design-thinking sprint around a wallet or small everyday object. Use an opt-in interview, an instructor-supplied fictional user, or a self-test; do not collect names, contact details, payment information, or sensitive contents. Write a point-of-view statement, sketch three possible solutions, gather feedback, and revise the strongest design.",
 					evidence: [
 						"Interview notes naming what the user stores, worries about, or wants easier access to.",
 						"Point-of-view statement in the form: user needs a way to ___ because or but ___.",
 						"Three concept sketches plus a final iteration note based on feedback."
-					]
+					],
+					learningPath: "choice"
 				}
 			],
 			"ENT2 Learning What It Takes To Be An Entrepreneur": [
 				{
 					title: "Entrepreneur Strengths and Values Sketch",
-					prompt: "Create a founder profile that names three to five strengths and two to four values. Connect each strength or value to how a future customer, teammate, or investor might judge the business.",
+					prompt: "Create a fictional, team, or personal founder profile that names three to five strengths and two to four values. Personal disclosure is optional. Connect each strength or value to how a future customer, teammate, or investor might judge the business.",
 					evidence: [
 						"Founder sketch or profile with strengths, values, and one concrete behavior for each value.",
 						"Example of a real entrepreneur or company whose choices either reinforced or weakened trust.",
@@ -1994,16 +2118,17 @@ const investingCourses = {
 				},
 				{
 					title: "Brand Foundation Website Page",
-					prompt: "Create an About or brand-foundation page for the developing business. Include founder values, a brief origin story, and the motivation behind the company before the product is fully defined.",
+					prompt: "Create a private mockup of an About or brand-foundation page for the developing business. Include fictional, team, or voluntarily shared founder values, a brief origin story, and the motivation behind the company before the product is fully defined.",
 					evidence: [
 						"About-page draft with founder strengths, values, and business motivation.",
 						"Customer-facing sentence explaining why those values matter to the buyer.",
 						"Revision note naming which claim sounds generic and how to make it more specific."
-					]
+					],
+					learningPath: "choice"
 				},
 				{
 					title: "Empathy Observation Persona",
-					prompt: "Observe a person, pet, or realistic daily routine and record pain points, frustrations, habits, and needs. Translate the observation into a simple persona that can guide later problem selection.",
+					prompt: "With consent, observe a non-sensitive routine, use a pet or self-observation, or work from an instructor-supplied fictional routine. Record pain points, frustrations, habits, and needs without names or identifying details, then translate the evidence into a simple persona that can guide later problem selection.",
 					evidence: [
 						"Observation notes organized into story, pain points, frustrations, habits, and needs.",
 						"Persona summary with one specific problem worth solving.",
@@ -2032,7 +2157,7 @@ const investingCourses = {
 				},
 				{
 					title: "Name, Logo, Tagline, and Feedback Survey",
-					prompt: "Give the company a recognizable identity and prepare feedback collection. Create a name, logo, and tagline, then write survey questions that gather specific reactions to the prototype.",
+					prompt: "Give the company a recognizable identity and prepare privacy-respecting feedback collection. Create an original name, low-fidelity logo sketch or text mark, and tagline, then write survey questions that gather prototype reactions without names, contact details, account information, or sensitive personal data.",
 					evidence: [
 						"Brand identity draft with name, logo concept, tagline, and reason each choice fits the customer.",
 						"Survey with open-ended questions about usefulness, price, concerns, and likelihood of use.",
@@ -2048,20 +2173,21 @@ const investingCourses = {
 						"Daily notes recording price, recipe choices, sales, and customer feedback patterns.",
 						"Observation explaining how one customer complaint led to a changed business decision.",
 						"Conclusion about why a product that is technically good can still fail if the buyer rejects price or fit."
-					]
+					],
+					learningPath: "choice"
 				},
 				{
 					title: "Ideal Customer Persona Profile",
-					prompt: "Define one ideal customer with age range, income range, education or background, location, needs, values, blockers, habits, and motivators. The persona must be specific enough to guide product and marketing decisions.",
+					prompt: "Define one fictional or aggregate ideal customer with age range, income range, education or background, broad location, needs, values, blockers, habits, and motivators. Use ranges and non-identifying patterns rather than naming real people. The persona must be specific enough to guide product and marketing decisions without becoming a personal record.",
 					evidence: [
 						"Customer persona with demographic details, needs, motivators, blockers, and buying habits.",
-						"List of two to five real or realistic people who fit the persona.",
+						"Two to five fictional example profiles or aggregate customer patterns that fit the persona.",
 						"Reasoning note explaining which persona detail changes the business plan the most."
 					]
 				},
 				{
 					title: "Customer Feedback Survey Draft",
-					prompt: "Write five to ten open-ended survey questions for potential customers. Include questions about willingness to pay, frequency of use, concerns, and desired changes without forcing yes-or-no answers.",
+					prompt: "Write five to ten open-ended survey questions for potential customers or an instructor-supplied fictional response set. Include questions about willingness to pay, frequency of use, concerns, and desired changes without forcing yes-or-no answers or requesting identifying or sensitive information.",
 					evidence: [
 						"Survey draft with open-ended wording and no leading answer choices.",
 						"Question map showing which product assumption each question tests.",
@@ -2072,7 +2198,7 @@ const investingCourses = {
 			"ENT5 Iterating On Your Idea": [
 				{
 					title: "Feedback Interpretation and Iteration Plan",
-					prompt: "Review prototype and persona-survey feedback. Separate improvements, keepers, conflicting responses, and surprising results, then choose which feedback will drive the next prototype version.",
+					prompt: "Review opt-in, anonymous, instructor-supplied, or clearly simulated prototype and persona-survey feedback. Record the response count and limitations, separate improvements, keepers, conflicting responses, and surprising results, then choose which feedback will drive the next prototype version.",
 					evidence: [
 						"Feedback table grouped by improvement, keep, conflict, and surprise.",
 						"Iteration plan with specific changes and the customer evidence behind each change.",
@@ -2101,7 +2227,7 @@ const investingCourses = {
 				},
 				{
 					title: "Competitor Question Research",
-					prompt: "Write questions for competitors or competitor research, then collect answers from public websites, product pages, reviews, or direct outreach when appropriate.",
+					prompt: "Write questions for competitor research, then collect answers from dated public websites, product pages, reviews, or clearly opt-in outreach when appropriate. Do not impersonate customers, scrape restricted data, or send unsolicited bulk messages.",
 					evidence: [
 						"Question list about problem solved, target customer, product difference, functionality, and motivation to buy.",
 						"Research notes with source links or dates.",
@@ -2121,11 +2247,11 @@ const investingCourses = {
 				},
 				{
 					title: "Production Cost and Profit Margin Forecast",
-					prompt: "Estimate the cost of production or service delivery, then calculate revenue, costs, profit, and profit margin for a first-year scenario with 1,000 customers.",
+					prompt: "Estimate the cost of production or service delivery, then calculate revenue, costs, profit, and profit margin for low, base, and high first-year cases. Include the original scenario with 1,000 customers as one explicit assumption rather than a guaranteed outcome.",
 					evidence: [
 						"Materials, tools, labor, software, or operating-cost list with estimated prices.",
 						"Profit-margin calculation and industry comparison note.",
-						"First-year forecast with revenue, total cost, profit, and margin at the final chosen price."
+						"Low, base, and high first-year forecasts with revenue, total cost, profit, margin, and customer-count assumptions at the final chosen price."
 					]
 				}
 			],
@@ -2141,7 +2267,7 @@ const investingCourses = {
 				},
 				{
 					title: "Channels and Launch Campaign Sketch",
-					prompt: "Choose sales and promotion channels based on the ideal customer's habits. Review consistent marketing from known companies, then sketch launch posts or website sections for the company.",
+					prompt: "Choose sales and promotion channels based on the ideal customer's habits. Review consistent marketing from known companies, then create private mock launch posts or website sections for the company. Public posting, ad purchases, and real sales are not required.",
 					evidence: [
 						"Channel decision explaining online, in-store, website, social, marketplace, or retailer choices.",
 						"Marketing reference notes from at least three companies with clear brand consistency.",
@@ -2161,12 +2287,13 @@ const investingCourses = {
 				},
 				{
 					title: "Cause-Aligned Website Page and Campaign",
-					prompt: "Create a cause-aligned page or campaign that explains the company's social or environmental commitment with concrete evidence instead of vague claims.",
+					prompt: "Create a private mock cause-aligned page or campaign that explains the company's social or environmental commitment with concrete, sourced, and bounded evidence instead of vague claims.",
 					evidence: [
 						"Cause page draft with the chosen cause, business practice, and measurable evidence.",
 						"Promotional post or campaign outline focused on awareness and customer trust.",
 						"Credibility check naming which claim needs a source, number, or clearer boundary."
-					]
+					],
+					learningPath: "choice"
 				}
 			],
 			"ENT10 Be Your Own Boss Master Project": [
@@ -2181,7 +2308,7 @@ const investingCourses = {
 				},
 				{
 					title: "Entrepreneur Feedback and Pitch Revision",
-					prompt: "Present the business plan to an entrepreneur, business owner, or knowledgeable reviewer. Gather feedback on clarity, feasibility, differentiation, and presentation, then revise the pitch.",
+					prompt: "Present the business plan privately to an opt-in entrepreneur, business owner, peer, instructor, or structured self-review checklist. Gather feedback on clarity, feasibility, differentiation, and presentation, then revise the pitch. Public posting or outreach is not required.",
 					evidence: [
 						"Feedback notes answering what works, what does not work, what is unclear, and what can improve.",
 						"Revision log showing what changed after feedback.",
@@ -2190,12 +2317,6 @@ const investingCourses = {
 				}
 			]
 		},
-		staticAssets: [
-			"ent3_project2_0.png",
-			"ent3_project2_1.png",
-			"ent4_project2_0.png",
-			"ent5_project1_0.png"
-		],
 		modules: [
 			"ENT1 Design Thinking Methodology",
 			"ENT2 Learning What It Takes To Be An Entrepreneur",
