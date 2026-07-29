@@ -26,7 +26,7 @@ jobs:
             - name: Pin npm version
               run: |
                   npm -v
-                  npm i -g npm@11.16.0
+                  npm i -g npm@12.0.1
                   npm -v
 
             - name: Install backend deps with backend lockfile
@@ -49,7 +49,7 @@ jobs:
             - name: Pin npm version
               run: |
                   npm -v
-                  npm i -g npm@11.16.0
+                  npm i -g npm@12.0.1
                   npm -v
 
             - name: Install deps
@@ -76,7 +76,7 @@ jobs:
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@11.16.0
+                  npm i -g npm@12.0.1
                   npm -v
 
             - name: Install deps
@@ -108,7 +108,7 @@ jobs:
               run: |
                   # optional guard:
                   if [ $(node -v | cut -d. -f1 | sed 's/v//') -ge 20 ]; then
-                    npm i -g npm@11.16.0
+                    npm i -g npm@12.0.1
                   fi
                   npm -v
 
@@ -142,7 +142,7 @@ jobs:
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@11.16.0
+                  npm i -g npm@12.0.1
                   npm -v
 
             - name: Install deps
@@ -166,7 +166,7 @@ jobs:
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@11.16.0
+                  npm i -g npm@12.0.1
                   npm -v
 
             - name: Install deps
@@ -191,7 +191,7 @@ jobs:
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@11.16.0
+                  npm i -g npm@12.0.1
                   npm -v
 
             - name: Install deps
@@ -228,7 +228,7 @@ jobs:
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@11.16.0
+                  npm i -g npm@12.0.1
                   npm -v
 
             - name: Install deps
