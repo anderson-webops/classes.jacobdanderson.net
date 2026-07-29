@@ -2,7 +2,7 @@ import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const assemblyCourse: RawCourse = {
+const assemblySourceCourse: RawCourse = {
 	name: "Assembly",
 	modules: [
 		{
@@ -11,17 +11,17 @@ export const assemblyCourse: RawCourse = {
 				{
 					title: "Preferred IDEs and Core Toolchain",
 					content:
-						"Standardize on `CLion` or `VS Code`, then make the real requirement the toolchain beneath the editor. Verify `clang --version`, `lldb --version`, and `cmake --version` before the course depends on disassembly, debugging, or mixed C and assembly builds."
+						"Standardize the executable course on an `x86-64 Linux` environment using the System V AMD64 ABI, GNU/Clang `.S` files with `.intel_syntax noprefix`, and a consistent C compiler, assembler, linker, debugger, `objdump`, and `CMake`/`CTest` workflow. `CLion` or `VS Code` may edit the files, but the exact target triple, ABI, syntax, build command, and disassembly syntax stay fixed so traces are comparable."
 				},
 				{
 					title: "macOS and Windows Walkthroughs",
 					content:
-						"On macOS, install Apple command-line tools with `xcode-select --install`, then verify the compiler and debugger from a terminal. On Windows, prefer WSL2 with Ubuntu so the shell, assembler workflow, and debugger behavior stay close to the Unix-style examples used throughout the course."
+						"On Windows, use an x86-64 WSL2 Linux distribution. On macOS—especially Apple Silicon—use a supported x86-64 Linux VM or remote lab environment for the required path rather than mixing native ARM64 instructions, Mach-O conventions, or the Apple ABI into Linux examples. Native ARM64 comparison belongs in the optional archive after the baseline traces are stable."
 				},
 				{
 					title: "Architecture Choice and Syntax Policy",
 					content:
-						"Use `x86-64 assembly` first because the debugger support, desktop relevance, and reverse-engineering value are stronger for a first course than jumping immediately into other architectures. Pick one syntax for active writing, and this course standardizes on Intel syntax while still showing how to recognize AT&T syntax in compiler output and external references."
+						"Use `x86-64 assembly` first because the debugger support, desktop relevance, and reverse-engineering value are strong for a first course. The required path writes GNU/Clang `.S` source with `.intel_syntax noprefix` and follows the System V AMD64 ABI on Linux. AT&T syntax, NASM syntax, Windows x64 conventions, Mach-O, and ARM64 are recognized as distinct variants rather than silently mixed into active code."
 				},
 				{
 					title: "Audience, Prerequisites, and Core Outcomes",
@@ -1250,5 +1250,279 @@ export const assemblyCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+interface AssemblyModuleFlow {
+	estimatedTime: string;
+	flowNote: string;
+	keyBlocks: string[];
+}
+
+const ASSEMBLY_PRIMARY_MODULE_COUNT = 13;
+
+const ASSEMBLY_MODULE_FLOW: Record<string, AssemblyModuleFlow> = {
+	"ASM0 Setup and Tooling": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"x86-64 Linux",
+			"System V AMD64",
+			"Intel-syntax .S",
+			"build / disassemble",
+			"debug trace"
+		],
+		flowNote:
+			"Confirm the exact target, ABI, source syntax, and tool versions before reading or writing instructions. Build one mixed C/assembly fixture, disassemble it in Intel syntax, run its deterministic check, and capture one instruction-step trace that connects source, registers, flags, memory, and control flow."
+	},
+	"Unit 1: Machine Model and Toolchain": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"source / object / executable",
+			"symbol",
+			"relocation",
+			"disassembly",
+			"O0 / O2 comparison"
+		],
+		flowNote:
+			"Follow one tiny function from C and `.S` source through object files, symbols, relocation, linking, and disassembly. Compare `-O0` and `-O2` only with the exact commands recorded and distinguish source structure from behavior preserved by the compiler."
+	},
+	"Unit 2: Registers and Data Movement": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"register width",
+			"partial-register write",
+			"sign / zero extension",
+			"operand source",
+			"trace table"
+		],
+		flowNote:
+			"Trace every move with a before/after value and width. Include the x86-64 rule that a 32-bit general-purpose destination clears the upper 32 bits while 8- and 16-bit writes preserve unaffected bits, then test signed and unsigned extension at boundary values."
+	},
+	"Unit 3: Arithmetic and Logic": {
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"implicit operands",
+			"flags",
+			"signed / unsigned",
+			"idiv precondition",
+			"fault case"
+		],
+		flowNote:
+			"Record explicit and implicit operands, result registers, and relevant flags for every arithmetic step. Test zero, sign, carry, and overflow boundaries, prepare the dividend correctly for `idiv`, and handle divisor zero and the signed minimum divided by `-1` fault case deliberately."
+	},
+	"Unit 4: Branching and Loops": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"flag producer",
+			"signed branch",
+			"unsigned branch",
+			"loop invariant",
+			"bounded memory walk"
+		],
+		flowNote:
+			"Link each conditional jump to the exact instruction that produced its flags and label whether the comparison is signed or unsigned. Verify empty, one-element, found, not-found, first, last, and bounded-end cases while preserving a written loop invariant."
+	},
+	"Unit 5: The Stack and Function Calls": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"call / ret",
+			"return address",
+			"stack frame",
+			"16-byte alignment",
+			"unwind trace"
+		],
+		flowNote:
+			"Draw stack state before and after `call`, prologue, local allocation, nested call, epilogue, and `ret`. Preserve required 16-byte call-site alignment for the pinned ABI and prove balanced stack restoration across normal and early-return paths."
+	},
+	"Unit 6: Calling Conventions and ABI": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"argument register",
+			"return register",
+			"caller-saved",
+			"callee-saved",
+			"C interop"
+		],
+		flowNote:
+			"Use the System V AMD64 register table as an executable contract. Call C from assembly and assembly from C, pass boundary values, preserve every callee-saved register touched, maintain stack alignment, and compare the observed call state with the ABI prediction."
+	},
+	"Unit 7: Memory Addressing and Data Structures": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"base + index * scale",
+			"element width",
+			"struct offset",
+			"bounded string",
+			"overlap policy"
+		],
+		flowNote:
+			"Derive effective addresses from a labeled layout before executing them. Test empty and bounded arrays/strings, exact capacity, missing terminator, and source/destination overlap policy; every memory walk carries an explicit length or trusted bound."
+	},
+	"Unit 8: System Calls and Runtime Interaction": {
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Linux syscall ABI",
+			"libc boundary",
+			"return / error value",
+			"argc / argv",
+			"unprivileged fixture"
+		],
+		flowNote:
+			"Keep direct calls limited to documented, unprivileged Linux syscalls in the controlled lab and compare them with libc wrappers. Validate `argc` before reading `argv`, check every return value and partial result, and test missing argument, bad path, short write, and ordinary success."
+	},
+	"Unit 9: Reading Compiler Output": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"recorded compiler flags",
+			"O0 / O2",
+			"source mapping",
+			"semantic equivalence",
+			"bounded claim"
+		],
+		flowNote:
+			"Compile the same small C fixtures with recorded compiler/version/flags and compare `-O0` with `-O2`. Identify preserved behavior, removed source artifacts, calling-convention obligations, and one limit on what can be inferred from a single compiler build."
+	},
+	"Unit 10: Debugging at Instruction Level": {
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"instruction breakpoint",
+			"register watch",
+			"memory watch",
+			"fault reproduction",
+			"evidence correction"
+		],
+		flowNote:
+			"Reproduce one known bug in an existing lab, stop at the first incorrect machine-state transition, and save the register/memory evidence before changing code. Rerun the same trace after the correction and show which previously false invariant now holds."
+	},
+	"Unit 11: Performance and Code Shape": {
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"correctness gate",
+			"fixed fixture",
+			"repeated measurement",
+			"memory locality",
+			"bounded conclusion"
+		],
+		flowNote:
+			"Prove identical behavior before comparing code shape or timings. Record build mode, fixture, machine context, repeated measurements, and relevant branch or memory-access evidence; instruction count alone cannot support a universal performance claim."
+	},
+	"Unit 12: Security and Reliability Visibility": {
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"known toy binary",
+			"hardening signal",
+			"control-flow trace",
+			"pseudocode recovery",
+			"defensive boundary"
+		],
+		flowNote:
+			"Work only with course-owned toy binaries and use reverse engineering to explain behavior, hardening signals, and reliability failures. Recover pseudocode from a bounded routine, verify it against fixtures, identify one uncertainty, and avoid exploit development or third-party targets."
+	}
+};
+
+function assemblySupplementalPath(title: string) {
+	return /extension|challenge/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function decorateAssemblyModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = ASSEMBLY_MODULE_FLOW[module.title];
+	const curriculum = module.curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content,
+		learningPath: "core" as const
+	}));
+
+	if (module.title === "ASM0 Setup and Tooling") {
+		curriculum.push({
+			title: "ASM0 Project 0: Target and Trace Readiness",
+			content: [
+				"**Completion evidence:**",
+				"- Recorded x86-64 Linux target, System V AMD64 ABI, compiler/assembler/linker/debugger versions, and Intel-syntax disassembly command.",
+				"- Clean mixed C/assembly configure/build/test run from a fresh checkout.",
+				"- Object-file symbol or relocation evidence plus the linked function in `objdump -Mintel` or the closest supported equivalent.",
+				"- One instruction-step table with address, instruction, register/flag or memory value before and after, and the evidence for the next control-flow step."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 12: Security and Reliability Visibility") {
+		curriculum.push({
+			title: "ASM12 Defensive Reverse-Trace Completion Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Course-owned toy binary, recorded build or provenance, architecture/ABI confirmation, and deterministic input fixtures.",
+				"- Function boundary, arguments, return value, stack/register obligations, control-flow graph or trace, and reconstructed pseudocode.",
+				"- Cases for normal input, boundary input, rejected input, and one deliberately explained uncertainty or compiler-dependent observation.",
+				"- Pseudocode output matches the toy binary on all fixtures; the work does not target third-party software, bypass controls, or develop an exploit."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: assemblySupplementalPath(item.title)
+		}))
+	};
+}
+
+function buildOptionalAssemblyArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Assembly Pathways and Studio Archive",
+		estimatedTime: "Choose individual pathways or studios as needed",
+		keyBlocks: [
+			"ARM64 comparison",
+			"SIMD",
+			"stack trace",
+			"ABI integration",
+			"reverse trace"
+		],
+		curriculum: [
+			{
+				title: "Assembly Pathway and Studio Archive Guide",
+				content:
+					"**Course flow:** ASM13 Expansion Ideas and Next Steps, Assembly Lab 15: Stack Trace Studio, Assembly Lab 16: ABI Integration Studio, and Assembly Lab 17: Reverse Trace Studio are optional pathways and transfer work after the x86-64 Linux/System V baseline is complete. Select only the comparison or studio that matches the next learning goal; completing the whole archive is not required.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: assemblySupplementalPath(item.title)
+				})
+			)
+		)
+	};
+}
+
+const assemblyPrimaryModules = assemblySourceCourse.modules
+	.slice(0, ASSEMBLY_PRIMARY_MODULE_COUNT)
+	.map(decorateAssemblyModule);
+const assemblyArchiveModules = assemblySourceCourse.modules.slice(
+	ASSEMBLY_PRIMARY_MODULE_COUNT
+);
+
+export const assemblyCourse: RawCourse = {
+	...assemblySourceCourse,
+	modules: [
+		...assemblyPrimaryModules,
+		buildOptionalAssemblyArchive(assemblyArchiveModules)
 	]
 };
