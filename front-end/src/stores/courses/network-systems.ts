@@ -2,7 +2,7 @@ import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const networkSystemsCourse: RawCourse = {
+const networkSystemsSourceCourse: RawCourse = {
 	name: "Network Systems",
 	modules: [
 		{
@@ -1270,5 +1270,444 @@ export const networkSystemsCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+interface NetworkSystemsModuleFlow {
+	stage: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	practiceSection: string;
+	answerSection: string;
+	route: string;
+	safeRoute: string;
+	evidence: string;
+	reference: string;
+}
+
+const NETWORK_PRACTICE_PACK =
+	"/course-assets/network/network-systems-practice-pack.md";
+const NETWORK_VERIFICATION_GUIDE =
+	"/course-assets/network/network-systems-verification-guide.md";
+const NETWORK_PRIMARY_MODULE_COUNT = 13;
+
+const NETWORK_MODULE_FLOW: Record<string, NetworkSystemsModuleFlow> = {
+	"NS0 Setup and Tooling": {
+		stage: "Lab readiness",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"owned boundary",
+			"environment identity",
+			"tool inventory",
+			"baseline state",
+			"stop condition",
+			"cleanup route"
+		],
+		practiceSection: "lab-boundary-and-readiness-case",
+		answerSection: "lab-boundary-and-readiness-key",
+		route: "Begin in an owned Ubuntu Server 26.04 LTS VM, with Debian 13 as a supported comparison route. Record distribution, kernel, interfaces, addresses, routes, resolver state, listening sockets, firewall state, network mode, snapshot, and tool versions before changing anything.",
+		safeRoute:
+			"Use loopback, host-only networking, user-mode NAT, or isolated namespaces. Keep bridged adapters, public listeners, real credentials, home-router changes, school or employer networks, and cloud infrastructure outside the lab. The supplied readiness transcript completes the same reasoning without a VM.",
+		evidence:
+			"A lab card names the owned target, allowed interfaces and addresses, tools, expected traffic, stop conditions, baseline commands, snapshot or cleanup path, and the exact evidence that marks the environment ready.",
+		reference: "https://documentation.ubuntu.com/release-notes/26.04/"
+	},
+	"Unit 1: The Network Stack in Plain English": {
+		stage: "Trace one request",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"application request",
+			"socket",
+			"transport",
+			"packet",
+			"frame",
+			"response path"
+		],
+		practiceSection: "request-path-and-transport-case",
+		answerSection: "request-path-and-transport-key",
+		route: "Trace one local client request from process and socket through source and destination ports, IP packet, local-link frame, receiving socket, application response, and return path. Compare TCP connection state and retransmission with UDP's application-managed delivery expectations.",
+		safeRoute:
+			"Use a supplied loopback request transcript and packet summary before running a toy local service. No external host is needed, and no layer is inferred from a diagram when a process, socket, route, or packet field can provide direct evidence.",
+		evidence:
+			"The trace distinguishes interface, frame, packet, transport segment or datagram, socket, port, process, and application data; it identifies what changes at each hop and what remains end to end.",
+		reference: "https://www.rfc-editor.org/rfc/rfc9293.html"
+	},
+	"Unit 2: Addresses and Naming": {
+		stage: "Identify endpoints",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"link address",
+			"IPv4 scope",
+			"IPv6 scope",
+			"prefix",
+			"hostname",
+			"resolved endpoint"
+		],
+		practiceSection: "address-name-and-scope-case",
+		answerSection: "address-name-and-scope-key",
+		route: "Classify each observed identifier as interface name, link-layer address, IPv4 or IPv6 address and prefix, hostname, DNS record, socket endpoint, or URL. Record scope explicitly so loopback, link-local, private, documentation, and globally routed values are not treated as interchangeable.",
+		safeRoute:
+			"Use reserved documentation addresses, fictional names under `.test`, and supplied A/AAAA answers. Do not publish personal hostnames, MAC addresses, private topology details, or real service inventory in submitted work.",
+		evidence:
+			"The endpoint map separates name from address, address from prefix, interface identity from host identity, and DNS success from transport reachability; every IPv6 address includes its scope and any required zone identifier.",
+		reference: "https://www.rfc-editor.org/rfc/rfc4291.html"
+	},
+	"Unit 3: Switches, Routers, NAT, and the Internet Edge": {
+		stage: "Explain forwarding",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"local prefix",
+			"default gateway",
+			"forwarding decision",
+			"next hop",
+			"NAT state",
+			"return route"
+		],
+		practiceSection: "subnet-route-and-nat-case",
+		answerSection: "subnet-route-and-nat-key",
+		route: "Decide whether a destination is local, identify the selected route and next hop, explain the router's forwarding decision, then track source or destination translation separately from routing. Include the return path so one-way reachability is not mistaken for a complete connection.",
+		safeRoute:
+			"Build only inside disposable namespaces or an owned host-only VM topology. Use reserved lab prefixes, record all namespace and veth names, avoid host forwarding or home-router edits, and define cleanup before creation.",
+		evidence:
+			"The topology and route tables predict each hop, neighbor lookup, translated tuple, and return path; tests confirm the prediction, and the cleanup removes every namespace and virtual link created by the lab.",
+		reference: "https://ubuntu.com/server/docs/introduction-to-networking"
+	},
+	"Unit 4: Ports and Listening Services": {
+		stage: "Map exposure",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"process",
+			"socket",
+			"bind address",
+			"port",
+			"protocol",
+			"reachability claim"
+		],
+		practiceSection: "listener-and-reachability-case",
+		answerSection: "listener-and-reachability-key",
+		route: "Map each course-owned listener to protocol, local address, port, process, user, and intended audience. Separate a bound socket from host-policy permission, route availability, and a successful application response.",
+		safeRoute:
+			"Inventory only the owned lab host or supplied `ss` and `lsof` output. Do not enumerate shared machines, expose a wildcard listener beyond the isolated segment, or treat a process name as authorization to probe it.",
+		evidence:
+			"The service map classifies loopback-only, lab-segment, and review-needed listeners, ties each to a process and owner, records the local application check, and states what additional bounded test is required before claiming remote reachability.",
+		reference: "https://man7.org/linux/man-pages/man8/ss.8.html"
+	},
+	"Unit 5: DNS and Name Resolution": {
+		stage: "Resolve and compare",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"query name",
+			"record type",
+			"resolver",
+			"authority",
+			"cache",
+			"application result"
+		],
+		practiceSection: "dns-resolution-and-cache-case",
+		answerSection: "dns-resolution-and-cache-key",
+		route: "Record the exact name, record type, resolver, answer, TTL, authority or recursion path, local override, and application result. Compare A and AAAA answers without assuming the preferred family or claiming that a correct answer proves the service is reachable.",
+		safeRoute:
+			"Use fictional `.test` zones, reserved addresses, and supplied `dig` transcripts for resolver and cache reasoning. Queries to approved public documentation names remain optional and never include internal names or identifying resolver details in shared work.",
+		evidence:
+			"The diagnosis distinguishes no answer, negative answer, stale or cached answer, wrong resolver, local override, and transport failure; it identifies which observation rules out each competing explanation.",
+		reference: "https://bind9.readthedocs.io/en/v9.20.23/manpages.html"
+	},
+	"Unit 6: Core Diagnostics": {
+		stage: "Find the first failing layer",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"scope",
+			"baseline",
+			"evidence ladder",
+			"failure signature",
+			"single change",
+			"retest"
+		],
+		practiceSection: "diagnostic-evidence-ladder-case",
+		answerSection: "diagnostic-evidence-ladder-key",
+		route: "Diagnose from nearest dependency outward: process state, listener, local application response, address and route, resolver, host policy, transport probe, remote application response, then bounded packet evidence. Classify timeout, refusal, reset, name failure, route failure, and application error before editing configuration.",
+		safeRoute:
+			"Use the supplied two-host transcript or two owned lab endpoints. Every command targets one declared address and port; range scans, broad discovery, repeated public probes, and changes made before the failure signature is recorded remain out of scope.",
+		evidence:
+			"The incident record names the first failing gate, cites the command and output that prove it, rejects at least two plausible alternatives, applies one narrow correction, and repeats the same checks to demonstrate recovery.",
+		reference: "https://curl.se/docs/manpage.html"
+	},
+	"Unit 7: Linux Interface and Route Management": {
+		stage: "Read and change local state",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"link state",
+			"address",
+			"route selection",
+			"neighbor",
+			"temporary change",
+			"revert"
+		],
+		practiceSection: "interface-route-and-neighbor-case",
+		answerSection: "interface-route-and-neighbor-key",
+		route: "Read link state, addresses and lifetimes, policy and main routes, selected source and next hop, and neighbor state before making a temporary namespace or VM-only change. Distinguish immediate `ip` state from persistent Netplan, NetworkManager, or systemd-networkd configuration.",
+		safeRoute:
+			"Never flush, down, rename, or replace a host interface or default route. Practice on a named namespace or disposable VM console, save the baseline, keep a second access path for any remote lab, and use the supplied transcript when recovery cannot be guaranteed.",
+		evidence:
+			"`ip route get` matches the predicted source, interface, and next hop; neighbor state is interpreted in context; the temporary change has one stated purpose; and the exact revert restores the recorded baseline.",
+		reference:
+			"https://ubuntu.com/server/docs/explanation/networking/configuring-networks/"
+	},
+	"Unit 8: IPv6 in Practice": {
+		stage: "Diagnose dual stack",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"address scope",
+			"prefix",
+			"neighbor discovery",
+			"A and AAAA",
+			"family-specific listener",
+			"dual-stack result"
+		],
+		practiceSection: "ipv6-dual-stack-case",
+		answerSection: "ipv6-dual-stack-key",
+		route: "Trace IPv6 independently through interface scope, prefix, route, neighbor discovery, resolver answer, listener family, host policy, and application response. Compare it with IPv4 only after each family has its own evidence path.",
+		safeRoute:
+			"Use loopback, link-local addresses with explicit interfaces, documentation prefixes, supplied route and resolver output, or an isolated namespace pair. No global IPv6 listener or external reachability test is required.",
+		evidence:
+			"The report explains `::1`, link-local, and global-unicast scope; identifies the selected IPv6 route and listener; compares A and AAAA behavior; and locates one family-specific failure without using IPv4 success as a substitute.",
+		reference: "https://www.rfc-editor.org/rfc/rfc8200.html"
+	},
+	"Unit 9: Firewalls and Host Policy": {
+		stage: "Limit exposure",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"baseline rules",
+			"least exposure",
+			"dry run",
+			"alternate access",
+			"verification",
+			"rollback"
+		],
+		practiceSection: "firewall-policy-and-rollback-case",
+		answerSection: "firewall-policy-and-rollback-key",
+		route: "Translate an allowed-traffic statement into the narrowest host policy, inspect current defaults and numbered rules, preview the change, preserve administration access, apply one rule at a time, and verify both allowed and intentionally blocked paths.",
+		safeRoute:
+			"Use supplied UFW output first and apply rules only inside the owned VM with console or second-session recovery. Never enable a generated policy blindly, alter a shared host, open a public port, or leave the lab enabled after its cleanup gate.",
+		evidence:
+			"The policy matrix matches the applied IPv4 and IPv6 rules, logs identify the intended decision, the management route remains available, unrelated ports remain closed, and delete/reset plus snapshot rollback returns to the baseline.",
+		reference: "https://ubuntu.com/server/docs/security-firewall/"
+	},
+	"Unit 10: Packet Capture and Deep Inspection": {
+		stage: "Answer one packet question",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"capture authority",
+			"interface",
+			"filter",
+			"packet limit",
+			"field interpretation",
+			"redaction"
+		],
+		practiceSection: "bounded-packet-capture-case",
+		answerSection: "bounded-packet-capture-key",
+		route: "Write one question before opening a capture, select the owned interface and exact host or port filter, cap packet count or duration, generate one known local flow, and interpret only the fields needed to answer the question.",
+		safeRoute:
+			"Use the supplied packet excerpt by default. Live capture is limited to traffic generated entirely inside the owned lab, with no promiscuous capture, broad interface, third-party payload, credential, session token, or identifying address included in submitted evidence.",
+		evidence:
+			"The capture note records authority, interface, filter, limit, generated flow, timestamps, source and destination tuple, relevant flags or DNS fields, conclusion, uncertainty, and a redacted minimal excerpt.",
+		reference:
+			"https://www.wireshark.org/docs/wsug_html_chunked/ChCapCaptureFilterSection.html"
+	},
+	"Unit 11: Common Application Protocols": {
+		stage: "Interpret application evidence",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"request and response",
+			"protocol state",
+			"status evidence",
+			"TLS boundary",
+			"certificate identity",
+			"visibility limit"
+		],
+		practiceSection: "protocol-and-tls-visibility-case",
+		answerSection: "protocol-and-tls-visibility-key",
+		route: "Compare HTTP, HTTPS, SSH, SMTP, and DNS by purpose, transport, message or handshake evidence, identity check, success signal, and common failure. Explain what TLS protects, what metadata remains visible, and what an encrypted packet trace cannot prove about application content.",
+		safeRoute:
+			"Use supplied transcripts, a loopback HTTP service, fictional mail dialogue, and a local or documentation certificate. Do not connect to unauthorized administration services, send mail, reuse credentials, weaken TLS, or submit private keys or session data.",
+		evidence:
+			"The protocol comparison identifies expected exchange, port convention without treating it as identity, success or failure signal, TLS visibility boundary, certificate-name result, and one limitation of the observed evidence.",
+		reference: "https://datatracker.ietf.org/doc/html/rfc8446"
+	},
+	"Unit 12: Secure Exposure of Services": {
+		stage: "Expose the minimum local path",
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"service identity",
+			"bind address",
+			"reverse proxy",
+			"host policy",
+			"external lab check",
+			"closure proof"
+		],
+		practiceSection: "least-exposure-service-case",
+		answerSection: "least-exposure-service-key",
+		route: "Start with a loopback toy service, place a local reverse proxy in front of it, define the intended client segment and one allowed port, then verify process, listener, route, policy, proxy response, and intentionally closed alternatives as separate gates.",
+		safeRoute:
+			"Keep every endpoint inside the owned host-only or namespace topology. Public DNS, public certificates, router port forwarding, cloud security groups, real domains, internet validation, and persistent exposure are not required.",
+		evidence:
+			"The exposure record proves the upstream remains loopback-only, the proxy is the only client-facing lab listener, host policy matches the declared client and port, the application response succeeds, unrelated paths fail, and cleanup removes the listener and rule.",
+		reference: "https://nginx.org/en/docs/http/ngx_http_proxy_module.html"
+	},
+	"Network Systems Lab 17: Operations Capstone Studio": {
+		stage: "Routed operations capstone",
+		estimatedTime: "8–12 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"isolated topology",
+			"dual-stack evidence",
+			"local service",
+			"least exposure",
+			"failure diagnosis",
+			"cleanup runbook"
+		],
+		practiceSection: "routed-operations-capstone-case",
+		answerSection: "routed-operations-capstone-key",
+		route: "Build one disposable client-router-server topology through vertical slices: boundary card, addresses and routes, local DNS record, toy service and listener, least-exposure policy, application check, bounded packet trace, two failures from different layers, correction, retest, and complete cleanup.",
+		safeRoute:
+			"Use network namespaces or owned host-only VMs with reserved addresses, fictional names, loopback or lab-segment listeners, supplied packet data, and a snapshot or cleanup script. No bridge, public route, home-router change, cloud credential, real domain, or third-party probe belongs in the capstone.",
+		evidence:
+			"The operations packet includes topology, versions, scope, baseline, route and listener proof, DNS and application results, policy matrix, minimal packet interpretation, two first-failing-layer diagnoses, corrected retests, cleanup proof, and known limitations.",
+		reference: "https://ubuntu.com/server/docs/how-to/networking/"
+	}
+};
+
+function networkPracticeLink(section: string) {
+	return `${NETWORK_PRACTICE_PACK}#${section}`;
+}
+
+function networkVerificationLink(section: string) {
+	return `${NETWORK_VERIFICATION_GUIDE}#${section}`;
+}
+
+function networkSupplementalPath(title: string) {
+	if (/extension|challenge/i.test(title)) return "challenge" as const;
+	if (/operations notebook/i.test(title)) return "core" as const;
+	return "choice" as const;
+}
+
+function networkArchivePath(title: string) {
+	const learningPath = networkSupplementalPath(title);
+	return learningPath === "core" ? ("choice" as const) : learningPath;
+}
+
+function decorateNetworkSystemsModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = NETWORK_MODULE_FLOW[module.title];
+	if (!flow) throw new Error(`Missing Network Systems flow: ${module.title}`);
+
+	const practiceLink = networkPracticeLink(flow.practiceSection);
+	const verificationLink = networkVerificationLink(flow.answerSection);
+	const curriculum = module.curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.stage}. ${flow.route}
+
+**Safe practice route:** ${flow.safeRoute}
+
+**Evidence gate:** ${flow.evidence}
+
+**Local continuity:** Use the [supplied practice case](${practiceLink}) when a compatible Linux environment, isolated topology, approved packet capture, or safe privileged route is unavailable. Record an independent diagnosis before comparing it with the [verification guide](${verificationLink}).
+
+**Primary reference:** [Open the current reference](${flow.reference}). Record the distribution, command version, address family, interface, and lab boundary when behavior is environment-sensitive.
+
+${item.content}`
+				: item.content,
+		learningPath: "core" as const,
+		...(item.projectLink
+			? {
+					datasetLink: item.datasetLink ?? practiceLink,
+					mediaLink: item.mediaLink ?? flow.reference
+				}
+			: {})
+	}));
+
+	return {
+		...module,
+		kind: "module",
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: [...flow.keyBlocks],
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: networkSupplementalPath(item.title),
+			datasetLink: item.datasetLink ?? practiceLink,
+			mediaLink: item.mediaLink ?? flow.reference
+		}))
+	};
+}
+
+function buildOptionalNetworkStudioArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	const practiceLink = networkPracticeLink("routed-operations-capstone-case");
+	const verificationLink = networkVerificationLink(
+		"routed-operations-capstone-key"
+	);
+	const reference = "https://ubuntu.com/server/docs/how-to/networking/";
+
+	return {
+		kind: "appendix",
+		title: "Optional Network Expansion and Integration Studio Archive",
+		estimatedTime:
+			"Choose one 3–5-session topic or studio when extra transfer is useful",
+		keyBlocks: [
+			"VPN concepts",
+			"internet routing",
+			"diagnostic workflow",
+			"service exposure",
+			"bounded evidence",
+			"transfer"
+		],
+		curriculum: [
+			{
+				title: "Network Expansion and Integration Archive Guide",
+				content: `**Course flow:** NS13 Expansion Ideas and Next Steps, Network Systems Lab 15: Diagnostic Workflow Studio, and Network Systems Lab 16: Service Exposure Studio are optional enrichment after their matching required units. Select one topic or studio to revisit a weak evidence ladder, exposure boundary, or conceptual extension; completing all three is not required before Network Systems Lab 17: Operations Capstone Studio.
+
+**Safe practice route:** Keep the selected work inside the owned isolated topology or use the [supplied capstone case](${practiceLink}). VPN, BGP, wireless, cloud, public routing, real certificates, and public service exposure remain conceptual or transcript-based unless a later course establishes a separately approved lab.
+
+**Evidence gate:** The selected option produces one bounded network question, one topology or transcript, one failure or comparison, one evidence-based conclusion, and one cleanup or scope note.`,
+				learningPath: "choice",
+				datasetLink: practiceLink,
+				solutionLink: verificationLink,
+				mediaLink: reference
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: networkArchivePath(item.title),
+					datasetLink: item.datasetLink ?? practiceLink,
+					mediaLink: item.mediaLink ?? reference
+				})
+			)
+		)
+	};
+}
+
+const networkPrimaryModules = networkSystemsSourceCourse.modules
+	.slice(0, NETWORK_PRIMARY_MODULE_COUNT)
+	.map(decorateNetworkSystemsModule);
+const networkCapstoneModule = decorateNetworkSystemsModule(
+	networkSystemsSourceCourse.modules.at(-1)!
+);
+const networkOptionalStudioModules = networkSystemsSourceCourse.modules.slice(
+	NETWORK_PRIMARY_MODULE_COUNT,
+	-1
+);
+
+export const networkSystemsCourse: RawCourse = {
+	...networkSystemsSourceCourse,
+	modules: [
+		...networkPrimaryModules,
+		networkCapstoneModule,
+		buildOptionalNetworkStudioArchive(networkOptionalStudioModules)
 	]
 };
