@@ -20,8 +20,9 @@ import type {
 
 declare module 'vue-router' {
   interface TypesConfig {
-    ParamParsers:
-      | never
+    _ParamParsers: {}
+    RouteNamedMap: import('vue-router/auto-routes').RouteNamedMap
+    _RouteFileInfoMap: import('vue-router/auto-routes')._RouteFileInfoMap
   }
 }
 
@@ -209,17 +210,23 @@ declare module 'vue-router/auto-routes' {
         | '/'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/[...all].vue': {
       routes:
         | '/[...all]'
       views:
         | never
+      pathParamNames:
+        | 'all'
     }
     'src/pages/about.vue': {
       routes:
         | '/about'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/admin/index.vue': {
@@ -227,11 +234,15 @@ declare module 'vue-router/auto-routes' {
         | '/admin/'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/admin/mdmail.vue': {
       routes:
         | '/admin/mdmail'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/admin/people.vue': {
@@ -239,11 +250,15 @@ declare module 'vue-router/auto-routes' {
         | '/admin/people'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/admin/student-management.vue': {
       routes:
         | '/admin/student-management'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/bluej.vue': {
@@ -251,11 +266,15 @@ declare module 'vue-router/auto-routes' {
         | '/bluej'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/course-resource.vue': {
       routes:
         | '/course-resource'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/courses.vue': {
@@ -263,11 +282,15 @@ declare module 'vue-router/auto-routes' {
         | '/courses'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/graph-sketcher.vue': {
       routes:
         | '/graph-sketcher'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/ide.vue': {
@@ -275,11 +298,15 @@ declare module 'vue-router/auto-routes' {
         | '/ide'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/pathways.vue': {
       routes:
         | '/pathways'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/payment.vue': {
@@ -287,11 +314,15 @@ declare module 'vue-router/auto-routes' {
         | '/payment'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/profile.vue': {
       routes:
         | '/profile'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/python-ide.vue': {
@@ -299,11 +330,15 @@ declare module 'vue-router/auto-routes' {
         | '/python-ide'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/README.vue': {
       routes:
         | '/README'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/reset-password.vue': {
@@ -311,11 +346,15 @@ declare module 'vue-router/auto-routes' {
         | '/reset-password'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/signup.vue': {
       routes:
         | '/signup'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/teaching.vue': {
@@ -323,11 +362,15 @@ declare module 'vue-router/auto-routes' {
         | '/teaching'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/wheel.vue': {
       routes:
         | '/wheel'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/pages/zelle.vue': {
@@ -335,11 +378,15 @@ declare module 'vue-router/auto-routes' {
         | '/zelle'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/pages/zoom.vue': {
       routes:
         | '/zoom'
       views:
+        | never
+      pathParamNames:
         | never
     }
   }

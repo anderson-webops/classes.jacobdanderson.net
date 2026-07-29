@@ -40,7 +40,7 @@
 		"moment": "^2.30.1",
 		"mongoose": "^9.7.2",
 		"multer": "^2.2.0",
-		"nodemailer": "9.0.1",
+		"nodemailer": "^9.0.3",
 		"openid-client": "^6.8.4",
 		"readline-sync": "^1.4.10",
 		"zod": "^4.3.6"
@@ -60,5 +60,14 @@
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.59.0",
 		"vitest": "^4.1.5"
+	},
+	"overrides": {
+		"body-parser": "$body-parser",
+		"brace-expansion": "5.0.8",
+		"esbuild": "$esbuild",
+		"js-yaml": "4.3.0",
+		"postcss": "8.5.24",
+		"qs": "6.15.3",
+		"vite": "8.1.5"
 	}
 }
