@@ -739,6 +739,7 @@ export const preAlgebraBCourse: RawCourse = {
 };
 
 configureMathCourseFlow(preAlgebraBCourse, {
+	courseId: "pre-algebra-b",
 	modules: [
 		{
 			title: "Pre-Algebra B Kick-Off",

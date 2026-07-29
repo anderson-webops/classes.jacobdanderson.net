@@ -110,8 +110,18 @@ const sourceStaticFilenames = [
 	"checkin2_app_5.png"
 ] as const;
 
-function createLesson(title: string, content: string, mediaLink?: string) {
-	return mediaLink ? { title, content, mediaLink } : { title, content };
+function createLesson(
+	title: string,
+	content: string,
+	mediaLink?: string,
+	aliases?: string[]
+) {
+	return {
+		title,
+		content,
+		...(mediaLink ? { mediaLink } : {}),
+		...(aliases?.length ? { aliases } : {})
+	};
 }
 
 function createModule(
@@ -322,7 +332,11 @@ This lesson emphasizes method-first fraction work and uses fully readable exampl
 - \`1/x + 1/z^2 = (z^2 + x)/(xz^2)\`
 - \`x/2 - 5/x^2 = (x^3 - 10)/(2x^2)\`
 - \`z - 1/z = (z^2 - 1)/z\`
-				`.trim()
+				`.trim(),
+				undefined,
+				[
+					"algebra-1b-ab3-fractions-with-polynomials-curriculum-fractions-with-polynomials-core-concepts"
+				]
 			),
 			createLesson(
 				"Fractions with Polynomial Denominators",
@@ -1169,9 +1183,11 @@ ${sourceMediaReferences()}
 };
 
 configureMathCourseFlow(algebra1BCourse, {
+	courseId: "algebra-1b",
 	modules: [
 		{
 			title: "Algebra 1B Kick-Off and Placement",
+			legacyTitle: "Algebra 1B Kick-Off Project",
 			estimatedTime: "1–2 sessions · 50–65 minutes each",
 			keyBlocks: [
 				"polynomial readiness",

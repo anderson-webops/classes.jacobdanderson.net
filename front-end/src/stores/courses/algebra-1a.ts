@@ -1049,9 +1049,11 @@ ${sourceMediaReferences()}
 };
 
 configureMathCourseFlow(algebra1ACourse, {
+	courseId: "algebra-1a",
 	modules: [
 		{
 			title: "Algebra 1A Kick-Off and Placement",
+			legacyTitle: "Algebra 1A Kick-Off Projects",
 			estimatedTime: "1–2 sessions · 50–65 minutes each",
 			keyBlocks: [
 				"placement sample",

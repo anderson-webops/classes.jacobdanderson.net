@@ -694,6 +694,7 @@ export const geometryACourse: RawCourse = {
 };
 
 configureMathCourseFlow(geometryACourse, {
+	courseId: "geometry-a",
 	modules: [
 		{
 			title: "Geometry A Foundations: Definitions, Logic, and Proofs",
