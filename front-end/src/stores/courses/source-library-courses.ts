@@ -28,6 +28,7 @@ interface SourceActivityAnchor {
 }
 
 interface SourceLibraryModuleMetadata {
+	conceptLearningPath?: CourseItemLearningPath;
 	estimatedTime: string;
 	flowNote: string;
 	keyBlocks: string[];
@@ -249,21 +250,49 @@ const middleSchoolBWritingSourceAnchors: Record<
 	]
 };
 
-const middleSchoolBWritingRetakeSourceAnchors = Object.fromEntries(
-	Object.entries(middleSchoolBWritingSourceAnchors).map(
-		([module, anchors]) => [
-			module,
-			anchors.map(anchor => ({
-				...anchor,
-				prompt: `Retake focus: revisit this skill with a fresh passage, draft, or presentation example before repeating the original source pattern. ${anchor.prompt}`,
-				evidence: [
-					...anchor.evidence,
-					"A comparison note naming the skill that improved from the first course pass."
-				]
-			}))
-		]
-	)
-) as Record<string, SourceActivityAnchor[]>;
+const middleSchoolBWritingRetakeSourceAnchors: Record<
+	string,
+	SourceActivityAnchor[]
+> = {
+	"MSB Retake Entry Diagnostic": [
+		{
+			title: "Argument and Fiction Entry Diagnostic",
+			prompt: "Complete one short argument sample and one short fiction sample without reviewing the course first. Label the evidence for claim, support, analysis, character objective, conflict, point of view, and revision so the retake plan can target only missing skills.",
+			evidence: [
+				"Argument sample with claim, evidence, analysis, and a brief counterclaim.",
+				"Fiction sample with character objective, conflict, point of view, and one scene-level craft choice.",
+				"Skill map marking each target as ready, review, or rebuild with a cited reason."
+			]
+		}
+	],
+	...Object.fromEntries(
+		Object.entries(middleSchoolBWritingSourceAnchors).map(
+			([module, anchors]) => [
+				module,
+				anchors.map(anchor => ({
+					...anchor,
+					learningPath: "choice" as const,
+					prompt: `Retake focus: revisit this skill with a fresh passage, draft, or presentation example before repeating the original source pattern. ${anchor.prompt}`,
+					evidence: [
+						...anchor.evidence,
+						"A comparison note naming the skill that improved from the first course pass."
+					]
+				}))
+			]
+		)
+	),
+	"MSB Retake Exit Evidence": [
+		{
+			title: "Before-and-After Retake Evidence Record",
+			prompt: "Compare the entry diagnostic with revised argument and fiction evidence from the targeted modules. Identify what changed, cite the revision that demonstrates each recovered skill, and name any skill that still needs practice.",
+			evidence: [
+				"Entry-to-exit comparison for every skill originally marked review or rebuild.",
+				"Before-and-after excerpts with annotations explaining the improvement.",
+				"Exit decision marking each target ready or naming a specific next practice step."
+			]
+		}
+	]
+};
 
 const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 	"MSC1 Nouns, Pronouns & Adjectives": [
@@ -1112,7 +1141,13 @@ function createSourceLibraryModule(
 				]
 					.filter(Boolean)
 					.join("\n\n"),
-				...(splitAnchors ? { learningPath: "core" as const } : {})
+				...(splitAnchors
+					? {
+							learningPath:
+								metadata?.conceptLearningPath ??
+								("core" as const)
+						}
+					: {})
 			},
 			...createSourceActivityAnchorItems(spec, moduleTitle)
 		],
@@ -3340,14 +3375,218 @@ const englishCourses = {
 		name: "Middle School B: Analytical and Creative Writing Retake",
 		area: "writing reinforcement",
 		focus: "targeted review of arguments, evidence, counterclaims, evidence analysis, transitions, revision, character development, conflict, plot, point of view, and short-story drafting",
-		staticAssets: [
-			"msa15_concept2_transitionaldevices.png",
-			"msa17_concept2_nemochart.png",
-			"msa19_concept2_emptyplot.png",
-			"msa19_concept2_labeledplot.png"
-		],
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"MSB Retake Entry Diagnostic": {
+				estimatedTime: "1 session · 45–55 minutes",
+				keyBlocks: [
+					"independent baseline",
+					"argument sample",
+					"fiction sample",
+					"skill evidence",
+					"ready / review / rebuild map"
+				],
+				flowNote:
+					"Complete the baseline before opening review modules. Mark a skill ready only when the sample contains visible evidence; use review or rebuild to select the smallest useful retake path."
+			},
+			"MSB1 Arguments & Evidence": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1–2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"debatable claim",
+					"reason",
+					"evidence",
+					"claim-evidence link",
+					"fresh example"
+				],
+				flowNote:
+					"Choose this review only when the diagnostic lacks a debatable claim, distinct reasoning, or connected evidence. Use a fresh topic and compare the result with the entry sample."
+			},
+			"MSB2 Counterclaims": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1–2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"claim",
+					"credible counterclaim",
+					"contrast transition",
+					"response",
+					"fair representation"
+				],
+				flowNote:
+					"Choose this review when the opposition is missing or weak. Build the strongest reasonable counterclaim, respond with evidence, and compare it with the entry version."
+			},
+			"MSB3 Integrating Evidence": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1–2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"context",
+					"introductory phrase",
+					"colon / comma",
+					"quotation",
+					"sentence flow"
+				],
+				flowNote:
+					"Choose this review when quotations are dropped into the paragraph or punctuated incorrectly. Use a fresh lawful excerpt and preserve a before-and-after integration."
+			},
+			"MSB4 Analyzing Evidence": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1–2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"inference claim",
+					"evidence",
+					"how / why analysis",
+					"alternative reading",
+					"revision"
+				],
+				flowNote:
+					"Choose this review when the entry sample quotes evidence without explaining it. Use a fresh lawful passage and add analysis that connects the detail to the claim."
+			},
+			"MSB5 Concluding Statements & Transitional Devices": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1 session · 45–55 minutes",
+				keyBlocks: [
+					"transition relationship",
+					"paragraph flow",
+					"fresh restatement",
+					"extension",
+					"revision trace"
+				],
+				flowNote:
+					"Choose this review when ideas feel disconnected or the conclusion simply repeats the claim. Revise one paragraph and annotate what each transition and conclusion sentence contributes."
+			},
+			"MSB6 Color Coding & Revision": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1 session · 45–55 minutes",
+				keyBlocks: [
+					"argument-part labels",
+					"missing / repeated part",
+					"unsupported part",
+					"order",
+					"revision diagnosis"
+				],
+				flowNote:
+					"Choose this review when the argument structure is difficult to diagnose. Use colors, labels, symbols, underlines, or tags, then revise the specific pattern the markup reveals."
+			},
+			"MSB Check-In #1": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1 session · 45–55 minutes",
+				keyBlocks: [
+					"claim / evidence",
+					"analysis",
+					"counterclaim",
+					"transitions / conclusion",
+					"before / after comparison"
+				],
+				flowNote:
+					"Use this checkpoint after any argument modules selected by the diagnostic. Compare the revised argument directly with the entry sample before marking argument skills ready."
+			},
+			"MSB7 Character Development": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1–2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"objective",
+					"choice",
+					"action / speech",
+					"character quality",
+					"fresh character"
+				],
+				flowNote:
+					"Choose this review when the entry character lacks a clear objective or supported qualities. Create a fresh character and trace objective through choices, actions, and speech."
+			},
+			"MSB8 Character Portraits": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1 session · 45–55 minutes",
+				keyBlocks: [
+					"objective",
+					"backstory",
+					"motivation",
+					"contradiction",
+					"scene-ready detail"
+				],
+				flowNote:
+					"Choose this review when the character feels flat or overexplained. Build a fresh portrait, then select only the details that can shape an actual scene."
+			},
+			"MSB9 Generating Conflict & Structuring Plot": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1–2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"objective / obstacle",
+					"conflict",
+					"event sequence",
+					"tension",
+					"plot revision"
+				],
+				flowNote:
+					"Choose this review when events do not grow from the objective and conflict. Use a hand-drawn or text-only plot curve and compare the revised structure with the entry sample."
+			},
+			"MSB10 Manipulating Point of View": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1–2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"narrator",
+					"knowledge access",
+					"point-of-view type",
+					"rewrite",
+					"reader effect"
+				],
+				flowNote:
+					"Choose this review when narrator access is inconsistent or its effect is unexplained. Rewrite a fresh scene from another point of view and compare reader impact."
+			},
+			"MSB11 Writing an Original Short Story": {
+				conceptLearningPath: "choice",
+				estimatedTime: "2–3 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"complete story arc",
+					"objective / conflict",
+					"point of view",
+					"intentional craft",
+					"revision evidence"
+				],
+				flowNote:
+					"Choose this review when several fiction skills must be integrated. Draft a new compact story rather than polishing the entry sample beyond recognition, then compare the two."
+			},
+			"MSB Check-In #2": {
+				conceptLearningPath: "choice",
+				estimatedTime: "1 session · 45–55 minutes",
+				keyBlocks: [
+					"character",
+					"conflict / plot",
+					"point of view",
+					"craft",
+					"before / after comparison"
+				],
+				flowNote:
+					"Use this checkpoint after the fiction modules selected by the diagnostic. Compare the revised scene with the entry sample before marking fiction skills ready."
+			},
+			"MSB12 Master Project": {
+				conceptLearningPath: "choice",
+				estimatedTime: "2–3 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"presentation path",
+					"recovered skills",
+					"course artifacts",
+					"audience",
+					"rehearsal / revision"
+				],
+				flowNote:
+					"Use the master project only when a presentation is useful evidence for the remaining gap. Choose one path; private, recorded, audio-supported, or instructor-only delivery is valid."
+			},
+			"MSB Retake Exit Evidence": {
+				estimatedTime: "1 session · 45–55 minutes",
+				keyBlocks: [
+					"entry / exit comparison",
+					"targeted revisions",
+					"recovered skill evidence",
+					"remaining gap",
+					"next step"
+				],
+				flowNote:
+					"Compare only the skills marked review or rebuild at entry. Cite before-and-after evidence, mark each target ready only when the revision demonstrates it, and record a precise next step for any remaining gap."
+			}
+		},
 		sourceActivityAnchors: middleSchoolBWritingRetakeSourceAnchors,
 		modules: [
+			"MSB Retake Entry Diagnostic",
 			"MSB1 Arguments & Evidence",
 			"MSB2 Counterclaims",
 			"MSB3 Integrating Evidence",
@@ -3361,7 +3600,8 @@ const englishCourses = {
 			"MSB10 Manipulating Point of View",
 			"MSB11 Writing an Original Short Story",
 			"MSB Check-In #2",
-			"MSB12 Master Project"
+			"MSB12 Master Project",
+			"MSB Retake Exit Evidence"
 		]
 	}),
 	grammarMechanics: createSourceLibraryCourse({

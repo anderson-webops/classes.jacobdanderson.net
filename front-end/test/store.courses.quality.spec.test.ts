@@ -7319,15 +7319,8 @@ describe("course text quality normalization", () => {
 
 			const text = allCourseText(course);
 
-			if (courseId === "middle-school-b-writing") {
-				expect(text, courseId).not.toContain(
-					"Source Activity Anchors:"
-				);
-				expect(text, courseId).toContain("**Completion evidence:**");
-			} else {
-				expect(text, courseId).toContain("Source Activity Anchors:");
-				expect(text, courseId).toContain("Evidence record:");
-			}
+			expect(text, courseId).not.toContain("Source Activity Anchors:");
+			expect(text, courseId).toContain("**Completion evidence:**");
 			for (const anchor of expectedAnchors) {
 				expect(text, `${courseId}: ${anchor}`).toContain(anchor);
 			}
@@ -7547,12 +7540,6 @@ describe("course text quality normalization", () => {
 
 	it("reserves source-library static assets from original source files", async () => {
 		const expectedAssetsByCourse = {
-			"middle-school-b-writing-retake": [
-				"msa15_concept2_transitionaldevices.png",
-				"msa17_concept2_nemochart.png",
-				"msa19_concept2_emptyplot.png",
-				"msa19_concept2_labeledplot.png"
-			],
 			"novel-writing": [
 				"nw6_blank_narrative_arc.jpg",
 				"nw6_narrative_arc_definitions.jpg"
