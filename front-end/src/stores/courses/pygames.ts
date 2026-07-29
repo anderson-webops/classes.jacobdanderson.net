@@ -1,51 +1,15 @@
-import type { RawCourse, RawCourseModuleItem } from "./types";
+import type {
+	CourseItemLearningPath,
+	RawCourse,
+	RawCourseModule,
+	RawCourseModuleItem
+} from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
-import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
 const PYGAMES_REPO_ROOT =
 	"https://github.com/instruction-material/PyGames/tree/main";
-
-const PYGAMES_AVAILABLE_ORIGINAL_ASSETS = [
-	"pyg_1_bouncing_alien.mp4",
-	"pyg_1_rainbow_fill.mp4",
-	"pyg_1_wandering_ball.mp4",
-	"pyg_2_100_meter_dash.mp4",
-	"pyg_2_apple_collector.mp4",
-	"pyg_2_arrow_point.mp4",
-	"pyg_2_art_box.mp4",
-	"pyg_2_odd_square_out.mp4",
-	"pyg_3_beach_ball_chase.mp4",
-	"pyg_4_bouncy_ball_room.mp4",
-	"pyg_4_falling_squares.mp4",
-	"pyg_4_jewel_catch.mp4",
-	"pyg_5_ball_pit.mp4",
-	"pyg_5_golf.mp4",
-	"pyg_5_keep_up.mp4",
-	"pyg_6_falling_jump.mp4",
-	"pyg_6_platformer_game.mp4",
-	"pyg_6_stay_on_the_platform.mp4",
-	"pyg_7_alien_catch.mp4",
-	"pyg_7_diamond_chase.mp4",
-	"pyg_7_number_count.mp4",
-	"pyg_8_asteroid_shoot.mp4",
-	"pyg_8_target_shoot.mp4",
-	"pyg_9_shark_chase.mp4",
-	"pyg_9_space_battle.mp4",
-	"pyg_10_alien_vs_ninja.mp4",
-	"pyg_11_space_invaders.mp4"
-] as const;
-
-const PYGAMES_PENDING_ORIGINAL_ASSETS = [
-	"check_in_2_starter.py",
-	"check_in_3_starter.py",
-	"pyg_3_asteroid_dodge.mp4",
-	"pyg_3_light_control.mp4",
-	"pyg_3_zrect_art.mp4",
-	"pyg_7_beach_ball_dodge.mp4",
-	"pyg6_platformer_game.py"
-] as const;
 
 function hideBroadPyGamesRootPair(item: RawCourseModuleItem) {
 	if (
@@ -1796,28 +1760,358 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 						"https://github.com/instruction-material/PyGames/tree/main/PG-34-applied-studio-17-images-supplemental-3/solution"
 				}
 			]
-		},
-		{
-			kind: "appendix",
-			title: "Demo Media Status",
-			curriculum: [
-				{
-					title: "PyGame Media Status",
-					content: [
-						"This course uses the student-facing assets below. Hosted entries are ready as static media links; pending entries keep stable static media URLs until the matching files are added.",
-						"**Hosted assets:**",
-						...PYGAMES_AVAILABLE_ORIGINAL_ASSETS.map(
-							filename => `- ${staticMediaUrl(filename)}`
-						),
-						"**Pending assets:**",
-						...PYGAMES_PENDING_ORIGINAL_ASSETS.map(
-							filename =>
-								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
-						)
-					].join("\n\n")
-				}
-			],
-			supplementalProjects: []
 		}
 	]
 });
+
+interface PyGamesFlowConfig {
+	title: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	choiceCurriculumTitles?: string[];
+	challengeCurriculumTitles?: string[];
+	projectThread: string;
+}
+
+const PYGAMES_FLOW: PyGamesFlowConfig[] = [
+	{
+		title: "PyG0 Setup, Editors, and Asset Workflow",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"WIDTH / HEIGHT",
+			"images, sounds, and music folders",
+			"fresh run",
+			"traceback",
+			"asset path"
+		],
+		projectThread:
+			"Establish one runnable project, a predictable asset layout, and a short traceback routine. The setup is complete when the same project opens and runs from a fresh start."
+	},
+	{
+		title: "Images and Sprites: Practice Studio",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Actor image name",
+			"images folder",
+			"sprite dimensions",
+			"draw()",
+			"missing-asset check"
+		],
+		projectThread:
+			"Load and draw one sprite before beginning actor movement. Keep temporary and final assets interchangeable so art changes do not alter game logic."
+	},
+	{
+		title: "PyG1 Object-Oriented Programming: Actors",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Actor()",
+			"draw()",
+			"update()",
+			"position anchors",
+			"xspeed / yspeed"
+		],
+		choiceCurriculumTitles: ["PyG1 Project 1: Rainbow Fill"],
+		challengeCurriculumTitles: ["PyG1 Project 3: Wandering Ball"],
+		projectThread:
+			"Use Bouncing Alien as the required actor-state build. Rainbow Fill is a drawing-loop choice; Wandering Ball is the reset-and-random-velocity challenge."
+	},
+	{
+		title: "PyG2 Event Handling",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"on_key_down()",
+			"on_mouse_down()",
+			"keyboard state",
+			"event position",
+			"visible feedback"
+		],
+		choiceCurriculumTitles: ["PyG2 Project 3: Art Box"],
+		projectThread:
+			"Trace one keyboard event and one mouse event into visible actor state, then build Arrow Point and Apple Collector. Art Box is the open-ended control remix."
+	},
+	{
+		title: "PyG3 Object-Oriented Programming: Advanced Actors",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"ZRect",
+			"colliderect()",
+			"contains()",
+			"dynamic attributes",
+			"collision response"
+		],
+		choiceCurriculumTitles: [
+			"PyG3 Project 1: ZRect Art",
+			"PyG3 Project 2: Light Control"
+		],
+		projectThread:
+			"Learn rectangle geometry and collision helpers, then use Beach Ball Chase as the required moving-collision game. ZRect Art and Light Control remain focused choices."
+	},
+	{
+		title: "PyG4 Managing Multiple Objects: Collectibles",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"list of Actors",
+			"for actor in actors",
+			"spawn and remove",
+			"collision loop",
+			"score update"
+		],
+		choiceCurriculumTitles: ["PyG4 Project 2: Falling Squares"],
+		projectThread:
+			"Use Bouncy Ball Room to manage many actors and Jewel Catch to add collection and score state. Falling Squares is an alternate spawn-and-update choice."
+	},
+	{
+		title: "Check-In #1: Actors, Events, ZRects, Collectibles",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Actor state",
+			"keyboard and mouse events",
+			"ZRect collision",
+			"actor lists",
+			"clean restart"
+		],
+		choiceCurriculumTitles: ["Check-In #1: Additional Practice Project"],
+		projectThread:
+			"Build one integrated actor-and-collectible scene, trace its event and collision path, and assign only the review needed for a specific failed checkpoint."
+	},
+	{
+		title: "PyG5 Physics",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"velocity",
+			"acceleration",
+			"gravity",
+			"friction",
+			"collision response"
+		],
+		choiceCurriculumTitles: ["PyG5 Project 1: Keep Up"],
+		challengeCurriculumTitles: ["PyG5 Project 3: Ball Pit"],
+		projectThread:
+			"Model gravity and friction separately, then combine them in Golf. Keep Up is a focused motion choice; Ball Pit is the many-object physics challenge."
+	},
+	{
+		title: "PyG6 Managing Multiple Objects: Obstacles and Surfaces",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"platform ZRect",
+			"vertical velocity",
+			"landing from above",
+			"platform list",
+			"double-jump prevention"
+		],
+		choiceCurriculumTitles: ["PyG6 Project 1: Stay on the Platform"],
+		challengeCurriculumTitles: ["PyG6 Project 3: Falling Jump"],
+		projectThread:
+			"Build and verify one-way landing logic before adding many platforms. Platformer Game is required; Stay on the Platform is a focused choice and Falling Jump is the harder variation."
+	},
+	{
+		title: "Check-In #2: Gravity, Friction, Platforms",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"gravity update",
+			"friction update",
+			"platform collision",
+			"jump state",
+			"landing boundary"
+		],
+		choiceCurriculumTitles: ["Check-In #2: Additional Practice Project"],
+		projectThread:
+			"Trace position and velocity through one frame, one landing, and one failed landing. Use the additional project only after the physics state can be explained."
+	},
+	{
+		title: "PyG7 Levels and System Control",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"gameState",
+			"time",
+			"clock.schedule()",
+			"level transition",
+			"reset state"
+		],
+		choiceCurriculumTitles: ["PyG7 Project 2: Beach Ball Dodge"],
+		projectThread:
+			"Use Alien Catch for timed state changes and Number Count for explicit level flow. Beach Ball Dodge is a control-and-timing choice after reset behavior is reliable."
+	},
+	{
+		title: "PyG8 Game Elements: Projectiles",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"projectile Actor",
+			"projectile list",
+			"spawn event",
+			"offscreen cleanup",
+			"projectile collision"
+		],
+		projectThread:
+			"Build one projectile first, then convert the same lifecycle into a list. Target Shoot proves the single-shot path; Asteroid Shoot proves spawning, updates, collision, and cleanup at scale."
+	},
+	{
+		title: "PyG9 Game Elements: Enemy AI",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"target position",
+			"chase behavior",
+			"enemy state",
+			"line-of-sight or hiding",
+			"enemy projectile"
+		],
+		challengeCurriculumTitles: ["PyG9 Project 2: Space Battle"],
+		projectThread:
+			"Use Shark Chase to make a readable sense-decide-act loop. Space Battle is the challenge because it combines enemy movement, projectiles, and boss-style state."
+	},
+	{
+		title: "Check-In #3: System Control, Projectiles, Enemy AI",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"game-state transition",
+			"projectile lifecycle",
+			"enemy decision",
+			"collision result",
+			"cleanup and replay"
+		],
+		choiceCurriculumTitles: ["Check-In #3: Additional Practice Project"],
+		projectThread:
+			"Demonstrate one complete interaction from input through projectile or AI update to collision feedback and replay. Review only the subsystem that breaks."
+	},
+	{
+		title: "PyG10 Ninja Versus Alien",
+		estimatedTime: "4–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"player controls",
+			"enemy behavior",
+			"projectiles",
+			"health or score",
+			"win, loss, and restart"
+		],
+		projectThread:
+			"Treat this as the first systems game. Ship a minimum playable loop, test every state transition, then use the planning, debugging, and reflection cards to improve architecture."
+	},
+	{
+		title: "PyG11 Space Invaders",
+		estimatedTime: "4–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"enemy formation",
+			"player projectile list",
+			"enemy projectile list",
+			"wave state",
+			"game-over cleanup"
+		],
+		projectThread:
+			"Build Space Invaders in vertical slices: player, one enemy, one projectile, collision, formation, waves, and restart. Do not add visual polish before both projectile lists clean up safely."
+	},
+	{
+		title: "PyG12 Master Project",
+		estimatedTime: "6–10 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"project scope",
+			"minimum playable version",
+			"separated subsystems",
+			"test matrix",
+			"presentation and reflection"
+		],
+		choiceCurriculumTitles: [
+			"Bonus Concepts for Assets",
+			"PyG12 Master Project: Core Project"
+		],
+		projectThread:
+			"Choose a finishable idea, build a minimum playable version, and verify input, update, draw, collision, state, and replay paths before optional assets or effects. Present one architectural decision and one repaired failure."
+	}
+];
+
+const PYGAMES_CHALLENGE_TITLE_RE =
+	/extension challenge|extension practice|asteroid dodge/i;
+const PYGAMES_COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
+const PYGAMES_NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
+const PYGAMES_LEADING_HYPHENS_RE = /^-+/;
+const PYGAMES_TRAILING_HYPHENS_RE = /-+$/;
+
+function pyGamesSlugify(value: string) {
+	return value
+		.toLowerCase()
+		.normalize("NFKD")
+		.replace(PYGAMES_COMBINING_MARKS_RE, "")
+		.replace(PYGAMES_NON_ALPHANUMERIC_RE, "-")
+		.replace(PYGAMES_LEADING_HYPHENS_RE, "")
+		.replace(PYGAMES_TRAILING_HYPHENS_RE, "");
+}
+
+function preservePyGamesIds(module: RawCourseModule, legacyModuleId: string) {
+	for (const [items, prefix] of [
+		[module.curriculum, "curriculum"],
+		[module.supplementalProjects, "supplemental"]
+	] as const) {
+		for (const item of items) {
+			item.id ??= pyGamesSlugify(
+				`${legacyModuleId}-${prefix}-${item.title}`
+			);
+		}
+	}
+}
+
+function pyGamesSupplementalPath(
+	item: Pick<RawCourseModuleItem, "title">
+): CourseItemLearningPath {
+	return PYGAMES_CHALLENGE_TITLE_RE.test(item.title) ? "challenge" : "choice";
+}
+
+function configurePyGamesModule(
+	module: RawCourseModule,
+	config: PyGamesFlowConfig
+) {
+	const legacyModuleId = pyGamesSlugify(`pygames-${module.title}`);
+	module.id ??= legacyModuleId;
+	preservePyGamesIds(module, legacyModuleId);
+
+	const choiceTitles = new Set(config.choiceCurriculumTitles ?? []);
+	const challengeTitles = new Set(config.challengeCurriculumTitles ?? []);
+	const movedItems = module.curriculum.filter(
+		item => choiceTitles.has(item.title) || challengeTitles.has(item.title)
+	);
+	module.curriculum = module.curriculum.filter(
+		item =>
+			!choiceTitles.has(item.title) && !challengeTitles.has(item.title)
+	);
+
+	for (const item of module.curriculum) {
+		item.learningPath = "core";
+	}
+	for (const item of movedItems) {
+		item.learningPath = challengeTitles.has(item.title)
+			? "challenge"
+			: "choice";
+	}
+	for (const item of module.supplementalProjects) {
+		item.learningPath = pyGamesSupplementalPath(item);
+	}
+	module.supplementalProjects = [
+		...movedItems,
+		...module.supplementalProjects
+	];
+
+	module.estimatedTime = config.estimatedTime;
+	module.keyBlocks = [...config.keyBlocks];
+	if (module.curriculum[0]) {
+		module.curriculum[0].content = [
+			module.curriculum[0].content,
+			`**Course flow:** ${config.projectThread}`
+		].join("\n\n");
+	}
+
+	return module;
+}
+
+function configurePyGamesFlow(course: RawCourse) {
+	const modulesByTitle = new Map(
+		course.modules.map(module => [module.title, module])
+	);
+
+	course.modules = PYGAMES_FLOW.map(config => {
+		const module = modulesByTitle.get(config.title);
+		if (!module) {
+			throw new Error(`PyGames flow is missing ${config.title}.`);
+		}
+		return configurePyGamesModule(module, config);
+	});
+}
+
+configurePyGamesFlow(pyGamesCourse);
