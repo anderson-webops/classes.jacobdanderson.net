@@ -3511,42 +3511,41 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("records PyGame media as hosted or pending on the class static host", async () => {
+	it("keeps PyGame media on project cards and pending media out of the learner flow", async () => {
 		const course = await loadRawCourse("pygames");
 		expect(course).not.toBeNull();
 
-		const mediaModule = course!.modules.find(
-			module => module.title === "Demo Media Status"
-		);
-		expect(mediaModule?.kind).toBe("appendix");
+		expect(
+			course!.modules.find(
+				module => module.title === "Demo Media Status"
+			)
+		).toBeUndefined();
 
-		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "PyGame Media Status"
-		);
-		expect(mediaItem).toBeDefined();
-		const content = mediaItem?.content ?? "";
-
-		for (const filename of [
-			"pyg_1_rainbow_fill.mp4",
-			"pyg_5_golf.mp4",
-			"pyg_11_space_invaders.mp4"
-		]) {
-			expect(content).toContain(staticMediaUrl(filename));
-			expect(content).not.toContain(
-				`file \`${filename}\` is not currently available`
-			);
+		const allItems = course!.modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		for (const [title, filename] of [
+			["PyG1 Project 1: Rainbow Fill", "pyg_1_rainbow_fill.mp4"],
+			["PyG5 Project 2: Golf", "pyg_5_golf.mp4"],
+			["PyG11 Project 1: Space Invaders", "pyg_11_space_invaders.mp4"]
+		] as const) {
+			expect(
+				allItems.find(item => item.title === title)?.mediaLink
+			).toBe(staticMediaUrl(filename));
 		}
 
+		const learnerText = JSON.stringify(course);
 		for (const filename of [
 			"check_in_2_starter.py",
 			"pyg_3_asteroid_dodge.mp4",
 			"pyg6_platformer_game.py"
 		]) {
-			expect(content).toContain(staticMediaUrl(filename));
-			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+			expect(hasPendingStaticMediaNotice(learnerText, filename)).toBe(
+				false
+			);
 		}
-
-		expect(content).not.toContain("static.junilearning.com");
+		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
 	it("keeps unshipped Scratch visuals out of learner flows", async () => {
