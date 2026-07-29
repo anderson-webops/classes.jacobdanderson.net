@@ -2081,7 +2081,7 @@ describe("course text quality normalization", () => {
 			},
 			{
 				courseId: "usaco-gold",
-				moduleTitle: "USG0 Setup and Gold Mindset",
+				moduleTitle: "USG0 Setup, Contest Contract, and Gold Mindset",
 				items: [
 					{
 						title: "Core Project: Setup and Gold Mindset",

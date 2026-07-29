@@ -1,4 +1,4 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
@@ -14,7 +14,7 @@ function pendingUsacoGoldAssetList(filenames: readonly string[]) {
 		.join("\n\n");
 }
 
-export const usacoGoldCourse: RawCourse = {
+const usacoGoldSourceCourse: RawCourse = {
 	name: "USACO Gold",
 	modules: [
 		{
@@ -1388,5 +1388,501 @@ export const usacoGoldCourse: RawCourse = {
 			],
 			supplementalProjects: []
 		}
+	]
+};
+
+const USACO_GOLD_CONTESTS = "https://usaco.org/index.php?page=contests";
+const USACO_GOLD_RULES = "https://usaco.org/index.php?page=instructions";
+const USACO_GOLD_DETAILS = "https://usaco.org/index.php?page=details";
+const USACO_GOLD_GUIDE = "https://usaco.guide/gold";
+const USACO_GOLD_RANGE_GUIDE =
+	"https://usaco.guide/gold/point-update-range-sum";
+const USACO_GOLD_EULER_GUIDE = "https://usaco.guide/gold/tree-euler";
+const USACO_GOLD_TREE_DP_GUIDE = "https://usaco.guide/gold/dp-trees";
+const USACO_GOLD_REROOTING_GUIDE = "https://usaco.guide/gold/all-roots";
+const USACO_GOLD_BITMASK_GUIDE = "https://usaco.guide/gold/dp-bitmasks";
+const USACO_GOLD_2026_THIRD_RESULTS =
+	"https://usaco.org/index.php?page=season26contest3results";
+
+const USACO_GOLD_PRIMARY_TITLES = new Set([
+	"USG0 Setup and Gold Mindset",
+	"Unit 1: Dynamic Programming Foundations",
+	"Unit 2: Shortest Paths and Weighted Graphs",
+	"Unit 3: MSTs, DSU, and Connectivity Optimization",
+	"Unit 4: Fenwick Trees, Ordering, and Range Structure",
+	"Unit 5: Advanced Graph Modeling and Geometry-Flavored Problems",
+	"Unit 6: Advanced DP and Combinatorics",
+	"Unit 7: Gold Capstone Sets"
+]);
+
+const USACO_GOLD_FLOW: Record<
+	string,
+	{
+		title: string;
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"USG0 Setup and Gold Mindset": {
+		title: "USG0 Setup, Contest Contract, and Gold Mindset",
+		estimatedTime: "3 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"Silver readiness",
+			"current Gold rules",
+			"certified result window",
+			"language and I/O workflow",
+			"complexity budget",
+			"protected practice"
+		],
+		flowNote:
+			"Verify independent Silver fluency, establish one reliable Gold contest language and standard-I/O workflow, read the live Gold and certified-result rules, and begin a proof-and-counterexample log before adding advanced algorithms."
+	},
+	"Unit 1: Dynamic Programming Foundations": {
+		title: "Unit 1: Dynamic Programming, Knapsack, and State Design",
+		estimatedTime: "7 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"state definition",
+			"base cases",
+			"push and pull transitions",
+			"evaluation order",
+			"knapsack and grid DP",
+			"slow oracle"
+		],
+		flowNote:
+			"Design states from the minimum information needed for future choices, prove transitions and evaluation order, validate against a slow oracle, and transfer the same discipline to knapsack and grid-state problems."
+	},
+	"Unit 2: Shortest Paths and Weighted Graphs": {
+		title: "Unit 2: Shortest Paths, DAGs, and Weighted Graphs",
+		estimatedTime: "7 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"weighted graph model",
+			"relaxation invariant",
+			"shortest-path selection",
+			"topological ordering",
+			"DAG dynamic programming",
+			"complexity proof"
+		],
+		flowNote:
+			"Choose a shortest-path method from edge weights, source count, and graph size; reject stale priority-queue work; and use topological order when dependencies form a DAG."
+	},
+	"Unit 3: MSTs, DSU, and Connectivity Optimization": {
+		title: "Unit 3: MSTs, DSU, and Connectivity Proofs",
+		estimatedTime: "6 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"component invariant",
+			"path compression",
+			"union by size",
+			"Kruskal and Prim",
+			"cut and exchange proof",
+			"connectivity threshold"
+		],
+		flowNote:
+			"Maintain an exact disjoint-set component invariant, compare Kruskal and Prim from the graph representation, and justify every accepted edge with a cut or exchange argument."
+	},
+	"Unit 4: Fenwick Trees, Ordering, and Range Structure": {
+		title: "Unit 4: Fenwick and Segment Trees, Ordering, and Range Structure",
+		estimatedTime: "7 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"point update",
+			"prefix and range query",
+			"Fenwick tree",
+			"segment tree",
+			"coordinate compression",
+			"inversion counting"
+		],
+		flowNote:
+			"Choose the smallest range structure whose updates and queries match the statement, derive index boundaries before coding, and connect compressed order statistics to inversion and sweep problems."
+	},
+	"Unit 5: Advanced Graph Modeling and Geometry-Flavored Problems": {
+		title: "Unit 5: Tree Algorithms, Euler Tours, and Advanced Graph Modeling",
+		estimatedTime: "7 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"tree rooting",
+			"Euler tour flattening",
+			"subtree range",
+			"tree dynamic programming",
+			"rerooting",
+			"state-graph modeling"
+		],
+		flowNote:
+			"Root trees only when it clarifies state, flatten subtrees into ranges with Euler-tour timestamps, build and reroot tree DP, and preserve the existing graph and geometry projects as model-selection practice."
+	},
+	"Unit 6: Advanced DP and Combinatorics": {
+		title: "Unit 6: Advanced DP, Bitmask State, and Combinatorics",
+		estimatedTime: "7 sessions · 60–110 minutes each",
+		keyBlocks: [
+			"bitmask state",
+			"range and digit DP awareness",
+			"modular arithmetic",
+			"combinatorics",
+			"modular inverse",
+			"transition proof"
+		],
+		flowNote:
+			"Extend state design to subsets and other compact dimensions, separate counting logic from modular implementation, and use range or digit DP only when the state and complexity genuinely fit."
+	},
+	"Unit 7: Gold Capstone Sets": {
+		title: "Unit 7: Protected Gold Sets, Postmortems, and Platinum Readiness",
+		estimatedTime: "8–10 sessions · 90–240 minutes each",
+		keyBlocks: [
+			"current official set",
+			"four-hour protected mock",
+			"certified-mode rehearsal",
+			"subtask strategy",
+			"delayed rewrite",
+			"Gold or Platinum next step"
+		],
+		flowNote:
+			"Calibrate with recent official Gold tasks, complete protected four-hour sets, repair failures through delayed independent rewrites, and use repeated evidence—not one cutoff or one lucky solve—to choose continued Gold work or a Platinum transition."
+	}
+};
+
+function goldOptionPath(title: string) {
+	return /extension|advanced|full gold repo|treasure|248|bookshelf|dijkstras algorithm ii|transfer practice|lights out|circular barn|bovine genomics|superbull|fenced in|roadblock/i.test(
+		title
+	)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function insertGoldItem(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateGoldModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = USACO_GOLD_FLOW[module.title];
+	let curriculum: RawCourseModuleItem[] = module.curriculum.map(item => ({
+		...item,
+		learningPath: "core" as const
+	}));
+	const coreProjectTitle = curriculum.at(-1)?.title ?? "";
+
+	if (module.title === "USG0 Setup and Gold Mindset") {
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Current Gold Contest and Certified-Result Contract",
+			content: [
+				"**Format:** A normal online contest usually uses one continuous four-hour window; the US Open uses five hours. The live schedule, promotion cutoff, problem count, and special event conditions remain authoritative.",
+				"",
+				"**Certified Gold result:** Gold problems are currently released at 12:00 p.m. ET on Saturday. A start between 12:00 and 12:15 earns a certified score, and a certified result is required for promotion from Gold to Platinum. Recheck this rule before every event.",
+				"",
+				"**Promotion:** A perfect score can promote during a contest; other promotion cutoffs vary by contest. Treat every published cutoff as evidence about that set, not a permanent target.",
+				"",
+				"**I/O:** Current problems use statement-specified standard input and output. Print no prompts or debug text, check 64-bit range, honor aggregate test-case bounds, and match every required newline."
+			].join("\n"),
+			projectLink: USACO_GOLD_DETAILS,
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Active-Contest Integrity and Protected Practice",
+			content: [
+				"**Active-contest boundary:** Work alone. Generative AI, Copilot-style assistance, discussion, shared code, prewritten templates, solution resources, and automated submissions are prohibited. Only basic language syntax, library, and input/output references are permitted.",
+				"",
+				"**Course practice:** Guided hints and editorial comparison occur only after a preserved attempt. A protected mock begins from empty files and follows the active-contest boundary for its full timer.",
+				"",
+				"**Evidence:** Retain source, submissions, judge outcomes, timing notes, and the smallest counterexample. Write the postmortem after the timer ends."
+			].join("\n"),
+			projectLink: USACO_GOLD_RULES,
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Gold Language, Numeric, and Performance Contract",
+			content: [
+				"USACO currently accepts C, C++, Java, and Python, but higher-division full solutions may exceed Python's practical speed even with a larger time allowance. C++ is the only language supported at IOI. Select one contest language before a training block and learn its fast input, priority queues, ordered containers, recursion limits, integer widths, and memory costs.",
+				"",
+				"Estimate operations and storage before coding. Use 64-bit integers whenever sums, products, path lengths, or counts can exceed 32-bit range, and verify the live compiler or interpreter versions instead of relying on an old course note."
+			].join("\n"),
+			projectLink: USACO_GOLD_RULES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 1: Dynamic Programming Foundations") {
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "DP State, Transition, and Validation Contract",
+			content: [
+				"**State:** Write one sentence defining exactly what `dp[state]` means and which choices from the original problem are already fixed.",
+				"**Base and order:** List base cases, whether transitions push or pull, and the evaluation order that guarantees dependencies are ready.",
+				"**Complexity:** Count reachable states and transitions per state; include memory and any dimension compression.",
+				"**Validation:** First implement or reason through a slower correct oracle, compare random tiny cases, and preserve the smallest mismatch before optimizing."
+			].join("\n"),
+			projectLink: USACO_GOLD_GUIDE,
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Knapsack and Grid-State Transfer",
+			content:
+				"Practice 0–1 and bounded-choice knapsack, then transfer the same state discipline to paths on grids. Identify when iteration direction prevents reusing an item, when obstacles or string alignment create a two-dimensional state, and when rolling rows preserve every dependency. The table shape is a consequence of the recurrence, not the starting point.",
+			projectLink: "https://usaco.guide/gold/knapsack",
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 2: Shortest Paths and Weighted Graphs") {
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Shortest-Path Selection and Relaxation Contract",
+			content: [
+				"Choose BFS for unit edges, 0–1 BFS for binary weights, Dijkstra for nonnegative weights, Bellman–Ford when negative edges require it, and Floyd–Warshall only when the graph is small enough for all-pairs cubic work.",
+				"",
+				"For every method, define the distance meaning, unreachable sentinel, relaxation condition, numeric range, and proof for when a value becomes final. In Dijkstra, permit duplicate queue entries and discard any entry whose distance is no longer current."
+			].join("\n"),
+			projectLink: "https://usaco.guide/gold/shortest-paths",
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Topological Ordering and DAG Dynamic Programming",
+			content:
+				"When directed dependencies have no cycle, compute a topological order and process each edge only after its predecessor state is ready. Define how indegrees or DFS finish order prove the ordering, detect a cycle rather than silently producing a partial order, and use the order for longest paths, counts, or reachability DP on a DAG.",
+			projectLink: "https://usaco.guide/gold/toposort",
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 3: MSTs, DSU, and Connectivity Optimization") {
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "DSU, Kruskal, Prim, and MST Proof Contract",
+			content: [
+				"**DSU:** Each representative identifies one current component. Use path compression plus union by size or rank, and count a successful merge only when representatives differ.",
+				"**Kruskal:** Process edges in nondecreasing weight and justify a chosen edge through the cut or exchange property.",
+				"**Prim:** Maintain the cheapest edge that can expand the current tree; reject stale candidates and compare its representation cost with Kruskal.",
+				"**Boundary:** Detect disconnected input, equal-weight ties, overflow in total cost, and problems asking for a threshold or forest rather than one MST."
+			].join("\n"),
+			projectLink: USACO_GOLD_GUIDE,
+			learningPath: "core"
+		});
+	}
+
+	if (
+		module.title === "Unit 4: Fenwick Trees, Ordering, and Range Structure"
+	) {
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Fenwick-versus-Segment-Tree Contract",
+			content: [
+				"Use a Fenwick tree for compact invertible prefix aggregation such as sums, or a segment tree when the merge operation, query shape, or stored node information needs more flexibility.",
+				"",
+				"Define whether indices are zero- or one-based, whether ranges are closed or half-open, what each internal node stores, and how a point update changes every affected aggregate. Test one element, the first and last index, an empty range if permitted, and repeated updates."
+			].join("\n"),
+			projectLink: USACO_GOLD_RANGE_GUIDE,
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Compressed Order Statistics and Inversion Counting",
+			content:
+				"Compress values only when relative order and equality are sufficient, preserve a reverse map when original values remain observable, and count each pair exactly once. Use a Fenwick tree, segment tree, ordered set, or merge-sort counting according to the required updates. Compare against an `O(n²)` inversion oracle on tiny permutations.",
+			projectLink: USACO_GOLD_RANGE_GUIDE,
+			learningPath: "core"
+		});
+	}
+
+	if (
+		module.title ===
+		"Unit 5: Advanced Graph Modeling and Geometry-Flavored Problems"
+	) {
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Euler-Tour Flattening and Subtree Ranges",
+			content: [
+				"Root the tree and assign each vertex an entry time before exploring its children. A subtree then occupies one contiguous interval from `tin[v]` through `tout[v]` under the chosen convention.",
+				"",
+				"Prove the interval convention on a tiny tree, skip the parent edge, and combine the flattened array with a Fenwick or segment tree for subtree queries and point updates."
+			].join("\n"),
+			projectLink: USACO_GOLD_EULER_GUIDE,
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Tree DP and Rerooting Contract",
+			content: [
+				"**First pass:** Define a subtree state and combine child contributions in postorder.",
+				"**All roots:** Identify what contribution is lost and gained when the root crosses one edge; carry the outside-subtree information in a second traversal.",
+				"**Proof:** Explain why each directed parent-child relation is processed a constant number of times and why the rerooted value includes every vertex exactly once.",
+				"**Safety:** Use iterative traversal when depth can exceed the language stack."
+			].join("\n"),
+			projectLink: USACO_GOLD_TREE_DP_GUIDE,
+			solutionLink: USACO_GOLD_REROOTING_GUIDE,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 6: Advanced DP and Combinatorics") {
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Bitmask, Range, and Digit-DP Scope Ladder",
+			content:
+				"Use bitmask DP when a small set of independent choices makes subsets the natural state, with complexity stated in terms of `2^n`. Treat range DP and digit DP as specialized extensions: define interval boundaries or digit-prefix restrictions precisely, and reject the method when the state count multiplied by transition cost exceeds the full constraints.",
+			projectLink: USACO_GOLD_BITMASK_GUIDE,
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Modular Arithmetic and Combinatorics Contract",
+			content: [
+				"State what is being counted before applying a modulus. Normalize subtraction, multiply in a wide enough type, and use a modular inverse only when the modulus and denominator make the inverse valid.",
+				"",
+				"For combinations, precompute factorials and inverse factorials only within the proven maximum input; for tree or DP counting, separate the structural recurrence from the modular operations and verify tiny answers by enumeration."
+			].join("\n"),
+			projectLink: "https://usaco.guide/gold/modular",
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 7: Gold Capstone Sets") {
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Current Gold Archive and Analysis-Mode Workflow",
+			content:
+				"Use the official contest archive to select recent Gold tasks, download released test data and solutions only after an attempt, and submit in analysis mode for judge feedback. Read all problems before choosing an order, identify available subtasks, and preserve the last timed submission before beginning post-contest repair.",
+			projectLink: USACO_GOLD_CONTESTS,
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "2026 Third-Contest Gold Calibration",
+			content:
+				"Use the official 2026 third-contest Gold set—`Good Cyclic Shifts`, `Picking Flowers`, and `Random Tree Generation`—as a recent three-problem calibration. Its released analyses combine inversion/range structure and prefix reasoning, layered graph DP, modular inverses, subtree sizes, and tree rerooting. The reported 750 promotion cutoff belongs to this contest, and Gold-to-Platinum promotion still requires a certified result under the live rules.",
+			projectLink: USACO_GOLD_2026_THIRD_RESULTS,
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Protected Gold Mock and Postmortem Contract",
+			content: [
+				"**Mock:** Use three unseen Gold problems, one continuous four-hour timer, an empty file per problem, permitted syntax/library references only, and no AI, hints, discussion, templates, or solution viewing.",
+				"**During the timer:** Record statement triage, estimated complexity, subtask opportunities, attempt order, submission time, and judge outcome without turning the log into outside assistance.",
+				"**Postmortem:** Preserve every partial attempt, classify the failure, find the smallest counterexample, study the released analysis, then complete a delayed rewrite from an empty file.",
+				"**Certified rehearsal:** Occasionally begin exactly on a scheduled start and use the full contest setup, while clearly distinguishing a course rehearsal from an official certified score."
+			].join("\n"),
+			projectLink: USACO_GOLD_RULES,
+			learningPath: "core"
+		});
+		curriculum = insertGoldItem(curriculum, coreProjectTitle, {
+			title: "Continue in Gold or Pursue Platinum",
+			content:
+				"Across at least two protected Gold mocks, demonstrate one independent full solve per set, meaningful verified partial progress on another problem, a correct delayed rewrite, and clear explanations of state, invariant, proof, and full-constraint complexity. Continue targeted Gold practice when one family remains fragile. Pursue Platinum study only when this evidence is repeatable; the official certified promotion result remains the authority for contest division.",
+			projectLink: USACO_GOLD_DETAILS,
+			learningPath: "core"
+		});
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	return {
+		...module,
+		title: flow.title,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: goldOptionPath(item.title)
+		}))
+	};
+}
+
+function buildGoldProblemBankAppendix(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Gold Problem Bank",
+		estimatedTime:
+			"Choose targeted problems after a unit gate or contest postmortem",
+		keyBlocks: [
+			"pattern repair",
+			"historical archive",
+			"starter and solution pairs",
+			"analysis-mode retry",
+			"spaced independent solve"
+		],
+		curriculum: [
+			{
+				title: "Problem Bank Scope Guide",
+				content:
+					"**Course flow:** The full Gold repository bank is optional practice, not a ninth required unit. Choose a problem because a unit gate or postmortem identified a specific algorithm, proof, or implementation gap. Preserve the first attempt, delay solution study until diagnosis, and later rewrite from an empty file.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: [
+			...module.curriculum,
+			...module.supplementalProjects
+		].map(item => ({
+			...item,
+			learningPath: goldOptionPath(item.title)
+		}))
+	};
+}
+
+function buildGoldStudioAppendix(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Historical and Applied Gold Studios",
+		estimatedTime:
+			"Choose one studio for a diagnosed algorithm or implementation gap",
+		keyBlocks: [
+			"guided reconstruction",
+			"historical Gold practice",
+			"implementation fluency",
+			"transfer problem",
+			"delayed rewrite"
+		],
+		curriculum: [
+			{
+				title: "Studio Scope Guide",
+				content:
+					"**Course flow:** These eight studios preserve the complete guided practice collection without placing every repository folder in the required spine. Choose one when a specific DP, shortest-path, MST, range-structure, or implementation weakness remains after the matching unit; close reference code before the transfer attempt.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: goldOptionPath(item.title)
+				})
+			)
+		)
+	};
+}
+
+const usacoGoldPrimaryModules = usacoGoldSourceCourse.modules
+	.filter(module => USACO_GOLD_PRIMARY_TITLES.has(module.title))
+	.map(decorateGoldModule);
+const usacoGoldProblemBank = usacoGoldSourceCourse.modules.find(
+	module => module.title === "Unit 8: Optional Gold Problem Bank"
+);
+const usacoGoldStudios = usacoGoldSourceCourse.modules.filter(
+	module =>
+		!USACO_GOLD_PRIMARY_TITLES.has(module.title) &&
+		module.title !== "Unit 8: Optional Gold Problem Bank" &&
+		module.title !== "Pending Static Assets"
+);
+const usacoGoldAssetAppendix = usacoGoldSourceCourse.modules.find(
+	module => module.title === "Pending Static Assets"
+);
+
+if (!usacoGoldProblemBank) {
+	throw new Error("USACO Gold optional problem bank is missing.");
+}
+
+if (!usacoGoldAssetAppendix) {
+	throw new Error("USACO Gold pending-static-assets appendix is missing.");
+}
+
+export const usacoGoldCourse: RawCourse = {
+	...usacoGoldSourceCourse,
+	modules: [
+		...usacoGoldPrimaryModules,
+		buildGoldProblemBankAppendix(usacoGoldProblemBank),
+		buildGoldStudioAppendix(usacoGoldStudios),
+		usacoGoldAssetAppendix
 	]
 };
