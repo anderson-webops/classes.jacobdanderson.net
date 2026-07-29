@@ -3,7 +3,7 @@ import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
-export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
+const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 	name: "Data Structures and Algorithms in C++",
 	modules: [
 		{
@@ -17,7 +17,7 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 				{
 					title: "Preferred Toolchain",
 					content:
-						"Standardize on `CLion` or `VS Code` with a working local compiler, debugger, and `CMake`. This course depends on multi-file structure, repeatable builds, and enough debugging fluency to inspect recursive and pointer-heavy code without guessing."
+						"Standardize on a C++20 compiler in `CLion` or `VS Code`, a debugger, and a small `CMake`/`CTest` workflow. Keep `-Wall -Wextra -Wpedantic` enabled and use AddressSanitizer/UndefinedBehaviorSanitizer or the closest supported diagnostic for pointer-heavy labs. This course depends on multi-file structure, repeatable builds, deterministic tests, and enough debugging fluency to inspect recursive and ownership-heavy code without guessing."
 				},
 				{
 					title: "Why This Course Uses Small Labs Instead of Giant Apps",
@@ -174,7 +174,7 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 				{
 					title: "Shortest Path Thinking",
 					content:
-						"Shortest-path work is a repeated relaxation problem rather than memorized Dijkstra vocabulary. The key judgment is understanding why a currently known best cost can still improve through another route until the frontier closes."
+						"Shortest-path work is a repeated relaxation problem rather than memorized Dijkstra vocabulary. State Dijkstra's nonnegative-edge precondition and reject unsupported negative weights before searching. Compare the straightforward adjacency-matrix `O(V^2)` frontier scan with an adjacency-list implementation backed by `std::priority_queue`, including stale queue entries and disconnected goals. The key judgment is understanding why a currently known best cost can still improve through another route until the frontier closes."
 				},
 				{
 					title: "Path Reconstruction",
@@ -732,7 +732,7 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 				{
 					title: "Interpreting Results Without Overclaiming",
 					content:
-						"Talk cautiously about benchmarks: sample size, workload shape, randomness, and implementation detail all matter. Good benchmarking language is part of engineering maturity."
+						"Talk cautiously about benchmarks: build mode, machine state, sample size, warm-up, workload shape, random seed, and implementation detail all matter. Separate correctness tests from timing, use repeated measurements and a robust summary such as the median, and preserve the raw results. Good benchmarking language reports what this fixture supports without declaring a universal winner."
 				},
 				{
 					title: "Benchmarking and Data Structure Tradeoffs: Verification and Reflection",
@@ -1414,5 +1414,248 @@ export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+interface DataStructuresCppModuleFlow {
+	estimatedTime: string;
+	flowNote: string;
+	keyBlocks: string[];
+}
+
+const DATA_STRUCTURES_CPP_PRIMARY_MODULE_COUNT = 10;
+
+const DATA_STRUCTURES_CPP_MODULE_FLOW: Record<
+	string,
+	DataStructuresCppModuleFlow
+> = {
+	"DSCPP0 Setup and Positioning": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"C++20 / CMake",
+			"warnings / sanitizers",
+			"operation count",
+			"invariant",
+			"deterministic test"
+		],
+		flowNote:
+			"Confirm the Level 2/3 prerequisites with a clean C++20 build before beginning the sequence. For one small operation, write the invariant, count the dominant work, state the expected growth class, and connect a failed test or diagnostic to the exact correction."
+	},
+	"DSCPP1 Interfaces, Records, and a Task Manager CLI": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"record invariant",
+			"sequence storage",
+			"search / erase",
+			"stable output",
+			"invalid command"
+		],
+		flowNote:
+			"Use the task manager as a short readiness bridge rather than a large application. Prove empty, one-item, duplicate, missing-ID, filtered, removed, and malformed-command behavior, then explain the cost of the principal vector operations before moving to graph structures."
+	},
+	"DSCPP2 Graphs and Shortest Paths": {
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"graph representation",
+			"nonnegative weights",
+			"relaxation",
+			"priority queue",
+			"path reconstruction"
+		],
+		flowNote:
+			"Define node, edge, sentinel, and weight rules before parsing the fixture. Compare matrix scanning with an adjacency-list/priority-queue frontier, reject negative weights, ignore stale queue entries, and test start-equals-goal, disconnected, competing-route, and path-reconstruction cases."
+	},
+	"DSCPP3 STL Containers and State-Based Text Generation": {
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"container contract",
+			"token normalization",
+			"state window",
+			"fixed seed",
+			"empty corpus"
+		],
+		flowNote:
+			"Use original or public-domain sample text and keep the generator local. Build tokenization and state transitions separately, use a fixed seed for regression tests, and verify empty input, one-token input, unseen state, repeated state, requested length, and deterministic replay."
+	},
+	"DSCPP4 Recursion and Backtracking in 3D Mazes": {
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"recursive contract",
+			"base case",
+			"visited state",
+			"path rollback",
+			"atomic import"
+		],
+		flowNote:
+			"Validate all 125 cells before replacing the active maze, then trace one successful and one failed branch by hand. Test six legal directions, boundaries, cycles, blocked entrance or exit, no-path, and successful path preservation while failed imports leave the prior maze unchanged."
+	},
+	"DSCPP5 Quicksort and Partitioning": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"partition invariant",
+			"pivot policy",
+			"recursive bounds",
+			"worst case",
+			"comparison fixture"
+		],
+		flowNote:
+			"Write the partition invariant and recursive interval convention before coding. Verify empty, one-item, duplicate-heavy, sorted, reverse-sorted, and random fixed-seed inputs, then compare correctness and operation counts with `std::sort` without treating one timing run as proof."
+	},
+	"DSCPP6 Templates and Linked Structures": {
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"node ownership",
+			"head / tail invariant",
+			"pointer update",
+			"copy / move policy",
+			"sanitizer evidence"
+		],
+		flowNote:
+			"Choose and document one ownership model before linking nodes. Test empty, front, middle, back, missing, repeated clear, copy/move policy, and destruction behavior; every mutation must preserve the head/tail/size invariant and pass the available memory diagnostic."
+	},
+	"DSCPP7 Binary Search Trees": {
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"ordering invariant",
+			"recursive search",
+			"duplicate policy",
+			"three removal cases",
+			"destruction"
+		],
+		flowNote:
+			"Check the ordering invariant after every mutation rather than judging only printed output. Cover empty and missing cases, duplicate policy, leaf removal, one-child removal, two-child removal with the selected predecessor convention, repeated clear, and clean destruction."
+	},
+	"DSCPP8 AVL Trees and Rebalancing": {
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"height invariant",
+			"balance factor",
+			"four rotations",
+			"rebalanced removal",
+			"ordered workload"
+		],
+		flowNote:
+			"Derive each rotation from a tiny tree and verify both BST order and stored heights afterward. Exercise all four insertion rotations, duplicates, missing removals, removal-triggered rebalancing, and ordered insert/remove sequences while checking every balance factor."
+	},
+	"DSCPP9 Benchmarking and Data-Structure Tradeoffs": {
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"correctness gate",
+			"release build",
+			"fixed workload",
+			"repeated samples",
+			"bounded conclusion"
+		],
+		flowNote:
+			"Pass identical correctness fixtures before collecting performance data. Record compiler and build mode, fixed seeds, workload sizes, warm-up policy, repeated raw samples, and median results for random and ordered workloads, then limit conclusions to the measured implementations and environment."
+	}
+};
+
+function dataStructuresCppSupplementalPath(title: string) {
+	return /extension|challenge/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function decorateDataStructuresCppModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = DATA_STRUCTURES_CPP_MODULE_FLOW[module.title];
+	const curriculum = module.curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content,
+		learningPath: "core" as const
+	}));
+
+	if (module.title === "DSCPP0 Setup and Positioning") {
+		curriculum.push({
+			title: "DSCPP0 Project 0: Complexity and Toolchain Readiness",
+			content: [
+				"**Completion evidence:**",
+				"- Compiler and CMake versions plus a documented C++20 configure/build/test path from a clean checkout.",
+				"- Warning-clean output and one supported sanitizer or equivalent memory-diagnostic run.",
+				"- A deterministic test that fails when a small regression is introduced.",
+				"- One operation-count table, one invariant, and one justified Big-O statement for the same small algorithm."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DSCPP9 Benchmarking and Data-Structure Tradeoffs") {
+		curriculum.push({
+			title: "DSCPP9 Capstone Completion Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Correctness suite shared across every compared container or custom structure.",
+				"- Recorded compiler, optimization mode, machine context, fixed seeds, workload generators, and warm-up policy.",
+				"- Repeated raw samples plus median results for random and ordered insert, lookup, and removal workloads at multiple sizes.",
+				"- A graph or table, one result that matches the asymptotic prediction, one surprising result, and a bounded conclusion that does not claim a universal winner."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: dataStructuresCppSupplementalPath(item.title)
+		}))
+	};
+}
+
+function buildOptionalAlgorithmStudioArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Algorithm Studios and Transfer Archive",
+		estimatedTime: "Choose individual studios as needed",
+		keyBlocks: [
+			"sequence invariant",
+			"graph route",
+			"recursive search",
+			"linked / tree invariant",
+			"benchmark transfer"
+		],
+		curriculum: [
+			{
+				title: "Algorithm Studio Archive Guide",
+				content:
+					"**Course flow:** Labs 11–17 are optional transfer and extension studios for concepts already established in DSCPP1–9. Select a studio when its matching invariant, trace, or benchmark needs more evidence; completing every archived studio is not part of the required course path.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: dataStructuresCppSupplementalPath(item.title)
+				})
+			)
+		)
+	};
+}
+
+const dataStructuresCppPrimaryModules =
+	dataStructuresAndAlgorithmsInCppSourceCourse.modules
+		.slice(0, DATA_STRUCTURES_CPP_PRIMARY_MODULE_COUNT)
+		.map(decorateDataStructuresCppModule);
+const dataStructuresCppArchiveModules =
+	dataStructuresAndAlgorithmsInCppSourceCourse.modules.slice(
+		DATA_STRUCTURES_CPP_PRIMARY_MODULE_COUNT
+	);
+
+export const dataStructuresAndAlgorithmsInCppCourse: RawCourse = {
+	...dataStructuresAndAlgorithmsInCppSourceCourse,
+	modules: [
+		...dataStructuresCppPrimaryModules,
+		buildOptionalAlgorithmStudioArchive(dataStructuresCppArchiveModules)
 	]
 };
