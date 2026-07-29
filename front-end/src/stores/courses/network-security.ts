@@ -2,7 +2,7 @@ import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const networkSecurityCourse: RawCourse = {
+const networkSecuritySourceCourse: RawCourse = {
 	name: "Network Security",
 	modules: [
 		{
@@ -1294,5 +1294,457 @@ export const networkSecurityCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+interface NetworkSecurityModuleFlow {
+	stage: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	practiceSection: string;
+	answerSection: string;
+	route: string;
+	safeRoute: string;
+	evidence: string;
+	reference: string;
+}
+
+const NETWORK_SECURITY_PRACTICE_PACK =
+	"/course-assets/network-security/network-security-practice-pack.md";
+const NETWORK_SECURITY_VERIFICATION_GUIDE =
+	"/course-assets/network-security/network-security-verification-guide.md";
+const NETWORK_SECURITY_PRIMARY_MODULE_COUNT = 14;
+
+const NETWORK_SECURITY_MODULE_FLOW: Record<string, NetworkSecurityModuleFlow> =
+	{
+		"NSEC0 Setup and Tooling": {
+			stage: "Secure lab readiness",
+			estimatedTime: "2–3 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"Node LTS",
+				"strict TypeScript",
+				"local target",
+				"synthetic data",
+				"rules of engagement",
+				"cleanup"
+			],
+			practiceSection: "secure-lab-readiness-case",
+			answerSection: "secure-lab-readiness-key",
+			route: "Use Node.js 24 LTS with the project-pinned TypeScript compiler, strict typechecking, locked dependencies, local tests, and a loopback-only toy service. Record runtime, package manager, dependency state, bind address, data classification, and clean run/test commands before security work begins.",
+			safeRoute:
+				"Write the rules of engagement first: owned local target, synthetic identities and data, allowed requests, rate and size limits, stop conditions, no outbound dependency unless declared, and exact cleanup. The supplied readiness case completes the same reasoning without starting a server.",
+			evidence:
+				"A clean-checkout record proves install assumptions without exposing credentials, compiles and tests the smallest fixture, confirms loopback scope, identifies every permitted input, and names the stop and reset route.",
+			reference: "https://nodejs.org/en/about/previous-releases"
+		},
+		"Unit 1: Security Model of Networked Systems": {
+			stage: "Model before testing",
+			estimatedTime: "4 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"asset",
+				"actor",
+				"trust boundary",
+				"entry point",
+				"abuse case",
+				"control"
+			],
+			practiceSection: "threat-model-and-trust-boundary-case",
+			answerSection: "threat-model-and-trust-boundary-key",
+			route: "Map the toy service's assets, actors, data flows, trust boundaries, entry points, privileged actions, abuse cases, controls, and assumptions before selecting tests. Separate confidentiality, integrity, and availability impacts and keep each control tied to one stated risk.",
+			safeRoute:
+				"Model only the supplied fictional service or an owned local fixture. Avoid real organizations, identities, architecture diagrams, credentials, vulnerabilities, or claims about systems that were not observed and authorized.",
+			evidence:
+				"The model names the protected asset, untrusted input, boundary crossing, actor capability, likely misuse, consequence, preventive or detective control, validation evidence, and remaining assumption for each priority path.",
+			reference:
+				"https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html"
+		},
+		"Unit 2: Sockets, Ports, and Services": {
+			stage: "Inventory the service boundary",
+			estimatedTime: "3–4 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"process",
+				"listener",
+				"bind scope",
+				"protocol",
+				"identity",
+				"exposure decision"
+			],
+			practiceSection: "listener-exposure-and-ownership-case",
+			answerSection: "listener-exposure-and-ownership-key",
+			route: "Map every course-owned listener to process, user, protocol, bind address, port, intended client, authentication expectation, authorization boundary, and local application check. Treat the port as routing metadata rather than proof of protocol or trust.",
+			safeRoute:
+				"Use supplied listener records or the owned toy host only. Never inventory a shared machine, sweep ports, probe neighboring addresses, publish a wildcard listener, or label an unfamiliar process malicious without evidence.",
+			evidence:
+				"The inventory distinguishes loopback, private-lab, wildcard, and unknown scope; identifies ownership and expected clients; records the least-exposure correction; and states the bounded evidence still needed for any reachability claim.",
+			reference:
+				"https://owasp.org/www-project-application-security-verification-standard/"
+		},
+		"Unit 3: HTTP and API Security Basics": {
+			stage: "Enforce request identity and authority",
+			estimatedTime: "5–6 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"request contract",
+				"authentication",
+				"authorization",
+				"object access",
+				"state change",
+				"error surface"
+			],
+			practiceSection: "request-authentication-and-authorization-case",
+			answerSection: "request-authentication-and-authorization-key",
+			route: "Trace one request through method, path, headers, cookie or token boundary, authenticated subject, requested object, action-level and object-level authorization, state change, response, and audit event. Test identity and authority separately.",
+			safeRoute:
+				"Use synthetic users, opaque stand-in tokens, fictional objects, and an in-memory local handler. Never place real tokens in a URL, log, fixture, screenshot, AI prompt, or course submission; no request leaves loopback.",
+			evidence:
+				"The request matrix proves unauthenticated rejection, cross-user object denial, role-action denial, authorized success, replay or duplicate-state behavior, safe error shape, and absence of secret or private data in logs and responses.",
+			reference:
+				"https://owasp.org/API-Security/editions/2023/en/0x03-introduction/"
+		},
+		"Unit 4: TLS and Secure Transport": {
+			stage: "Verify transport identity",
+			estimatedTime: "4–5 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"transport boundary",
+				"certificate name",
+				"trust chain",
+				"TLS version",
+				"proxy termination",
+				"visibility limit"
+			],
+			practiceSection: "tls-certificate-and-proxy-case",
+			answerSection: "tls-certificate-and-proxy-key",
+			route: "Verify where TLS begins and ends, which name the client expects, what chain and validity evidence establishes trust, what the reverse proxy forwards, and which metadata remains visible after application content is encrypted.",
+			safeRoute:
+				"Use supplied certificate output or a local certificate created only for fictional `.test` names. Do not disable verification, submit private keys, copy browser stores, request a real certificate, or expose the toy service publicly.",
+			evidence:
+				"The transport record identifies TLS version, peer name, trust result, validity, termination point, upstream scheme and listener, redirect behavior, forwarded-header decision, observable metadata, and one limitation of the evidence.",
+			reference:
+				"https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Security_Cheat_Sheet.html"
+		},
+		"Unit 5: Input Validation on the Network Boundary": {
+			stage: "Reject unsafe input early",
+			estimatedTime: "5 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"content type",
+				"schema",
+				"semantic rule",
+				"size limit",
+				"safe rejection",
+				"downstream isolation"
+			],
+			practiceSection: "schema-validation-and-resource-limit-case",
+			answerSection: "schema-validation-and-resource-limit-key",
+			route: "Validate method and content type, body and field size, structure, required fields, types, allowed values, semantic relationships, normalization, unknown-property policy, and downstream authorization before business logic or storage.",
+			safeRoute:
+				"Use bounded JSON fixtures with harmless malformed values. Do not generate denial-of-service volumes, exploit payloads, file uploads, command strings, or inputs aimed at a real parser; every negative test has a fixed size and count.",
+			evidence:
+				"The test table proves valid acceptance, missing and extra field handling, wrong type, boundary length, semantic conflict, oversized body rejection before parsing or deeper work, stable error shape, and no secret reflection.",
+			reference:
+				"https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html"
+		},
+		"Unit 6: Logging, Monitoring, and Forensics": {
+			stage: "Create privacy-safe evidence",
+			estimatedTime: "4–5 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"event schema",
+				"correlation",
+				"redaction",
+				"threshold",
+				"timeline",
+				"retention"
+			],
+			practiceSection: "security-logging-and-incident-timeline-case",
+			answerSection: "security-logging-and-incident-timeline-key",
+			route: "Define security-relevant events before collecting them: timestamp, event type, synthetic actor, route or channel, decision, reason code, correlation identifier, severity, and safe operational context. Build alerts from patterns rather than one ambiguous line.",
+			safeRoute:
+				"Use supplied fictional logs. Never log complete tokens, cookies, passwords, message bodies, personal data, private payloads, or AI conversation context; redact before sharing and cap retained excerpts.",
+			evidence:
+				"The timeline links one symptom to a bounded event sequence, distinguishes observation from inference, identifies the trigger and control response, records rejected explanations, preserves only necessary fields, and states retention plus deletion rules.",
+			reference:
+				"https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"
+		},
+		"Unit 7: Firewalls, Proxies, and Exposure": {
+			stage: "Layer exposure controls",
+			estimatedTime: "4–5 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"upstream listener",
+				"proxy listener",
+				"host policy",
+				"trusted proxy",
+				"client identity",
+				"rollback"
+			],
+			practiceSection: "proxy-exposure-and-forwarded-header-case",
+			answerSection: "proxy-exposure-and-forwarded-header-key",
+			route: "Keep the application on loopback, expose one private-lab proxy listener, define the intended client and port, set an explicit trusted-proxy boundary, and derive scheme or client address only from headers inserted by that trusted hop.",
+			safeRoute:
+				"Use supplied configuration and request records or an owned isolated VM with console recovery. No public listener, router forwarding, public certificate, cloud policy, or broad firewall change is required; preview and rollback precede any live policy edit.",
+			evidence:
+				"The evidence separates upstream and proxy listeners, proves direct upstream closure, tests allowed and denied clients, rejects spoofed forwarded headers from an untrusted path, preserves management access, and restores the baseline.",
+			reference:
+				"https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html"
+		},
+		"Unit 8: Secure Node/TypeScript Services": {
+			stage: "Build the hardened local service",
+			estimatedTime: "6–8 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"strict types",
+				"dependency lock",
+				"middleware order",
+				"authorization",
+				"error boundary",
+				"negative tests"
+			],
+			practiceSection: "secure-typescript-service-case",
+			answerSection: "secure-typescript-service-key",
+			route: "Assemble the local service in a deliberate order: request identifier, transport and proxy assumptions, size limit, parser, schema, authentication, authorization, route handler, safe error boundary, security headers, structured event, and bounded shutdown.",
+			safeRoute:
+				"Use in-memory fictional records, loopback binding, locked dependencies, and local tests. No database credential, third-party API, analytics, outbound webhook, user email, or production configuration belongs in the core build.",
+			evidence:
+				"Typecheck and tests prove middleware order, invalid-body rejection, identity and object authorization, CORS or origin policy, safe headers, nonleaking errors, bounded shutdown, redacted logs, and one dependency or configuration review.",
+			reference:
+				"https://nodejs.org/en/learn/getting-started/security-best-practices"
+		},
+		"Unit 9: Defensive Network Tooling in TS": {
+			stage: "Turn evidence into bounded decisions",
+			estimatedTime: "5 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"approved fixture",
+				"feature",
+				"threshold",
+				"decision",
+				"false positive",
+				"human review"
+			],
+			practiceSection: "rate-limit-and-abuse-decision-case",
+			answerSection: "rate-limit-and-abuse-decision-key",
+			route: "Build deterministic helpers over supplied request metadata: normalize safe fields, group by synthetic actor, apply window and resource limits, explain threshold decisions, retain uncertainty, and route consequential actions to review rather than claiming certainty from one signal.",
+			safeRoute:
+				"The tool reads only local fixtures and cannot open sockets, scan, block a real address, call an external service, or ingest raw personal data. Actor labels and addresses are fictional, and each dataset has a fixed maximum size.",
+			evidence:
+				"The detector passes normal, burst, repeated-failure, boundary-time, malformed-row, and ambiguous cases; reports the supporting events; records false-positive and evasion limits; and distinguishes recommendation from enforcement.",
+			reference:
+				"https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/"
+		},
+		"Unit 10: WebSockets and Real-Time Security": {
+			stage: "Secure connection and message state",
+			estimatedTime: "5–6 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"origin",
+				"session",
+				"message schema",
+				"room authorization",
+				"backpressure",
+				"disconnect"
+			],
+			practiceSection: "realtime-connection-and-message-case",
+			answerSection: "realtime-connection-and-message-key",
+			route: "Treat handshake, authenticated connection, per-message authorization, schema and size validation, room or channel membership, rate and backpressure limits, heartbeat, session expiration, logout, and disconnect as separate state transitions.",
+			safeRoute:
+				"Use a local notification fixture with synthetic connections and no free-form chat, file transfer, external broker, real cookie, or user identity. Message counts and sizes remain bounded, and every connection closes during cleanup.",
+			evidence:
+				"The transition table proves origin and authentication rejection, allowed subscription, cross-room denial, unknown and oversized message handling, rate or backpressure response, session expiry, logout closure, redacted event logging, and clean disconnect.",
+			reference:
+				"https://cheatsheetseries.owasp.org/cheatsheets/WebSocket_Security_Cheat_Sheet.html"
+		},
+		"Unit 11: Deployment Security Basics": {
+			stage: "Prepare a recoverable release",
+			estimatedTime: "5 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"configuration",
+				"secret boundary",
+				"dependency review",
+				"release evidence",
+				"health signal",
+				"rollback"
+			],
+			practiceSection: "secure-release-and-recovery-case",
+			answerSection: "secure-release-and-recovery-key",
+			route: "Separate committed configuration from injected secrets, record runtime and dependency versions, verify build and tests, review listener and proxy assumptions, define health and security-event signals, stage one release, and prove rollback to the last trusted artifact.",
+			safeRoute:
+				"Use placeholders and a supplied secret inventory without values. No real deployment account, token, certificate key, production log, cloud console, public DNS, remote registry credential, or third-party service is needed.",
+			evidence:
+				"The release packet includes provenance, lock state, typecheck and test results, configuration schema, secret owners without values, local smoke test, listener scope, log redaction check, backup or prior artifact, rollback, and post-rollback verification.",
+			reference: "https://csrc.nist.gov/pubs/sp/800/218/final"
+		},
+		"Unit 12: Authorized Penetration Testing, AI-Assisted Workflow, and Disclosure":
+			{
+				stage: "Verify and communicate within scope",
+				estimatedTime: "5–6 sessions · 45–60 minutes each",
+				keyBlocks: [
+					"authorization",
+					"test case",
+					"request limit",
+					"AI boundary",
+					"remediation",
+					"disclosure"
+				],
+				practiceSection: "authorized-test-ai-and-disclosure-case",
+				answerSection: "authorized-test-ai-and-disclosure-key",
+				route: "Translate selected ASVS, API Top 10, and versioned WSTG requirements into local test cases with preconditions, bounded input, expected secure result, observed result, evidence, severity rationale, remediation, and retest.",
+				safeRoute:
+					"Authorization comes from the written local fixture scope, never from an AI tool. AI may draft variations or review wording only after the target and limits are fixed; it receives no secrets or real data, runs no commands, and every suggestion is reviewed before use.",
+				evidence:
+					"The report proves the target and permission, maps each check to a requirement, stays under request and size limits, separates finding from speculation, records AI assistance and human verification, retests the correction, and addresses the intended disclosure audience.",
+				reference:
+					"https://owasp.org/www-project-web-security-testing-guide/v42/2-Introduction/README"
+			},
+		"Unit 13: Capstone": {
+			stage: "Secure-service capstone",
+			estimatedTime: "10–14 sessions · 45–60 minutes each",
+			keyBlocks: [
+				"threat model",
+				"secure service",
+				"observability",
+				"authorized audit",
+				"incident response",
+				"recovery packet"
+			],
+			practiceSection: "secure-service-capstone-case",
+			answerSection: "secure-service-capstone-key",
+			route: "Build one local TypeScript service through vertical slices: threat model, request and identity boundary, schema and resource limits, object and action authorization, local TLS or supplied certificate evidence, proxy scope, structured security events, real-time state when used, authorized tests, one injected incident, remediation, retest, and rollback.",
+			safeRoute:
+				"Keep the service on loopback or an owned isolated lab host with synthetic users and data. No public endpoint, real credential, external identity provider, payment, email, cloud account, production database, third-party target, or autonomous AI test belongs in the capstone.",
+			evidence:
+				"The final packet contains versions, scope, threat model, architecture, selected standard checks, typecheck and tests, negative cases, transport and exposure evidence, redacted timeline, two findings or one incident, fixes, retests, release and rollback steps, limitations, and disclosure notes.",
+			reference: "https://csrc.nist.gov/pubs/sp/800/61/r3/final"
+		}
+	};
+
+function networkSecurityPracticeLink(section: string) {
+	return `${NETWORK_SECURITY_PRACTICE_PACK}#${section}`;
+}
+
+function networkSecurityVerificationLink(section: string) {
+	return `${NETWORK_SECURITY_VERIFICATION_GUIDE}#${section}`;
+}
+
+function networkSecuritySupplementalPath(title: string) {
+	if (/extension|challenge/i.test(title)) return "challenge" as const;
+	if (/security notebook/i.test(title)) return "core" as const;
+	return "choice" as const;
+}
+
+function networkSecurityArchivePath(title: string) {
+	const learningPath = networkSecuritySupplementalPath(title);
+	return learningPath === "core" ? ("choice" as const) : learningPath;
+}
+
+function decorateNetworkSecurityModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = NETWORK_SECURITY_MODULE_FLOW[module.title];
+	if (!flow)
+		throw new Error(`Missing Network Security flow: ${module.title}`);
+
+	const practiceLink = networkSecurityPracticeLink(flow.practiceSection);
+	const verificationLink = networkSecurityVerificationLink(
+		flow.answerSection
+	);
+	const curriculum = module.curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.stage}. ${flow.route}
+
+**Safe practice route:** ${flow.safeRoute}
+
+**Evidence gate:** ${flow.evidence}
+
+**Local continuity:** Use the [supplied practice case](${practiceLink}) when a local Node service, isolated lab host, approved security test, or privacy-safe evidence route is unavailable. Record an independent decision before comparing it with the [verification guide](${verificationLink}).
+
+**Primary reference:** [Open the current reference](${flow.reference}). Record the standard or guide version, Node release, package versions, local target, and rules of engagement when the result depends on them.
+
+${item.content}`
+				: item.content,
+		learningPath: "core" as const,
+		...(item.projectLink
+			? {
+					datasetLink: item.datasetLink ?? practiceLink,
+					mediaLink: item.mediaLink ?? flow.reference
+				}
+			: {})
+	}));
+
+	return {
+		...module,
+		kind: "module",
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: [...flow.keyBlocks],
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: networkSecuritySupplementalPath(item.title),
+			datasetLink: item.datasetLink ?? practiceLink,
+			mediaLink: item.mediaLink ?? flow.reference
+		}))
+	};
+}
+
+function buildOptionalNetworkSecurityArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	const practiceLink = networkSecurityPracticeLink(
+		"secure-service-capstone-case"
+	);
+	const verificationLink = networkSecurityVerificationLink(
+		"secure-service-capstone-key"
+	);
+	const reference =
+		"https://owasp.org/www-project-application-security-verification-standard/";
+
+	return {
+		kind: "appendix",
+		title: "Optional Network Security Expansion and Studio Archive",
+		estimatedTime:
+			"Choose one 3–5-session topic or studio when extra transfer is useful",
+		keyBlocks: [
+			"session security",
+			"edge controls",
+			"service hardening",
+			"audit report",
+			"remediation",
+			"transfer"
+		],
+		curriculum: [
+			{
+				title: "Network Security Expansion and Studio Archive Guide",
+				content: `**Course flow:** NSEC14 Expansion Ideas and Next Steps, Network Security Lab 16: Service Boundary Hardening Studio, and Network Security Lab 17: Audit and Disclosure Studio are optional enrichment after Unit 13: Capstone. Select one topic or studio to revisit a weak control, evidence, or reporting target; completing all three is not required for the secure-service capstone.
+
+**Safe practice route:** Keep the selected work on the supplied local fixture or use the [supplied capstone case](${practiceLink}). OAuth, WAF/CDN, email security, DNS security, cloud controls, and public disclosure remain conceptual or case-based unless a later course creates a separately authorized environment.
+
+**Evidence gate:** The selected option produces one bounded requirement, one local or supplied case, one finding or comparison, one remediation or design decision, one retest or review result, and one explicit scope limit.`,
+				learningPath: "choice",
+				datasetLink: practiceLink,
+				solutionLink: verificationLink,
+				mediaLink: reference
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: networkSecurityArchivePath(item.title),
+					datasetLink: item.datasetLink ?? practiceLink,
+					mediaLink: item.mediaLink ?? reference
+				})
+			)
+		)
+	};
+}
+
+const networkSecurityPrimaryModules = networkSecuritySourceCourse.modules
+	.slice(0, NETWORK_SECURITY_PRIMARY_MODULE_COUNT)
+	.map(decorateNetworkSecurityModule);
+const networkSecurityOptionalModules =
+	networkSecuritySourceCourse.modules.slice(
+		NETWORK_SECURITY_PRIMARY_MODULE_COUNT
+	);
+
+export const networkSecurityCourse: RawCourse = {
+	...networkSecuritySourceCourse,
+	modules: [
+		...networkSecurityPrimaryModules,
+		buildOptionalNetworkSecurityArchive(networkSecurityOptionalModules)
 	]
 };
