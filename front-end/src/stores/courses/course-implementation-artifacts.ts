@@ -156,9 +156,11 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"Model evaluation, train/test split, baseline comparison, and model card required for reusable projects."
 	],
 	"network-security": [
-		"Local toy services, packet captures, and owned lab hosts only.",
-		"OWASP/WSTG-style evidence format for web/API security work.",
-		"No scanning or probing outside explicitly authorized lab targets."
+		"Node.js 24 LTS with project-pinned TypeScript, package lock, strict typechecking, and a local test command.",
+		"Local toy HTTP and WebSocket services, supplied request fixtures, fictional logs, configuration records, and owned loopback or isolated lab hosts only.",
+		"OWASP ASVS 5.0.0, API Security Top 10 2023, versioned WSTG 4.2, and focused Cheat Sheet guidance define verification targets rather than attack checklists.",
+		"No scanning, probing, credential use, capture, or payload testing outside an explicit local rules-of-engagement record.",
+		"Supplied request, log, TLS, proxy, rate-limit, disclosure, and incident cases provide a complete no-server and no-live-testing route."
 	],
 	"network-systems": [
 		"Ubuntu Server 26.04 LTS in an owned VM is the primary live-lab baseline; Debian 13 is the supported comparison route, and the exact distribution/version is recorded.",
@@ -613,6 +615,13 @@ const standardsOverrides: Record<string, string[]> = {
 		"iproute2 and Linux manual pages for interfaces, routes, neighbors, sockets, and network namespaces.",
 		"ISC BIND documentation for dig and resolver diagnostics.",
 		"Wireshark, curl, and Nginx first-party documentation for bounded packet capture, application probes, and local reverse proxies."
+	],
+	"network-security": [
+		"OWASP Application Security Verification Standard 5.0.0.",
+		"OWASP API Security Top 10 2023 and versioned Web Security Testing Guide 4.2.",
+		"OWASP Cheat Sheet guidance for input validation, logging, REST, TLS, secrets, and WebSocket security.",
+		"NIST Secure Software Development Framework 1.1 and SP 800-61 Revision 3 incident-response guidance.",
+		"Node.js 24 LTS release, security, permission, test-runner, and dependency-management documentation."
 	]
 };
 
@@ -666,6 +675,12 @@ const boundaryOverrides: Record<string, string[]> = {
 		"Live work stays inside an owned VM, network namespace topology, host-only segment, or user-mode NAT boundary; supplied evidence completes every objective without live capture or privileged network changes.",
 		"Teaches host and small-topology diagnosis, DNS, IPv4/IPv6, routing, firewall policy, packet interpretation, and local service exposure rather than public scanning, cloud networking, BGP operation, wireless administration, or production change management.",
 		"Claims about reachability follow an evidence ladder from process and listener through address, route, policy, transport, application response, and bounded packet evidence instead of treating ping or localhost success as proof."
+	],
+	"network-security": [
+		"Uses NSEC0 and Units 1–13 as the complete required secure-service progression; expansion topics and two later studios are optional transfer practice rather than a second capstone.",
+		"All implementation and verification targets are local toy services, supplied fixtures, or explicitly owned isolated lab hosts with written scope, stop conditions, cleanup, and no real user data.",
+		"Teaches threat modeling, authorization, transport, validation, observability, exposure control, secure Node/TypeScript services, real-time boundaries, deployment review, authorized testing, and disclosure rather than exploit development or unsolicited assessment.",
+		"AI may draft test cases, payload variations, code-review questions, or report structure only inside the prewritten scope; it receives no secrets or real data, executes nothing automatically, and never grants authorization."
 	]
 };
 
@@ -696,6 +711,14 @@ const capstoneOverrides: Record<string, string[]> = {
 		"One supplied or owned narrow packet trace tied to a declared question, capture boundary, packet limit, protocol interpretation, and privacy-safe excerpt.",
 		"One least-exposure policy with dry-run or preview evidence, alternate access path, applied rule set, local validation, and tested rollback.",
 		"A reproducible operations packet containing topology, versions, scope, command transcript, evidence ladder, cleanup, limitations, and a five-minute demonstration."
+	],
+	"network-security": [
+		"One local TypeScript service with a written threat model, asset and trust-boundary map, authenticated identity, object- and action-level authorization, and explicit non-goals.",
+		"Schema validation, body and message limits, safe error responses, rate or resource controls, and negative tests that prove malformed input never reaches protected logic.",
+		"Local TLS or supplied certificate evidence, deliberate proxy and forwarded-header handling, least-exposure listener policy, and no public endpoint requirement.",
+		"Structured security events with redaction, correlation, retention notes, alert thresholds, one injected incident, and a privacy-safe evidence timeline.",
+		"An authorized test plan mapped to selected ASVS, API Top 10, and WSTG checks, with reproducible results, remediation, retest, severity rationale, and responsible-disclosure draft.",
+		"A release and recovery packet containing Node and dependency versions, test commands, secrets boundary, rollback, incident response, known limitations, and a five-minute demonstration."
 	]
 };
 
@@ -715,6 +738,14 @@ const safetyPolicyOverrides: Record<string, string[]> = {
 		"Preview firewall and configuration changes, preserve a second access path before remote-policy edits, constrain listeners to loopback or private lab interfaces, and stop if the active target or rollback is uncertain.",
 		"Packet work uses supplied PCAP excerpts or a narrowly filtered owned flow with an explicit interface, host, port, packet limit, and immediate stop condition; redact addresses or payload data before sharing.",
 		"Every change records the question, expected signature, observed evidence, first failing layer, correction, retest, cleanup, and remaining limitation."
+	],
+	"network-security": [
+		"Every test begins with written authorization, local target, allowed methods, synthetic identities and data, request or event limits, stop conditions, cleanup, and the defensive question being answered.",
+		"Do not scan or probe third-party systems, use real credentials or tokens, collect traffic or personal data, bypass access controls, test public services, generate persistence, or publish weaponized instructions.",
+		"Use only loopback, owned isolated lab hosts, local toy applications, and supplied fixtures; bind services locally and keep outbound network access disabled unless one documented dependency is required.",
+		"Treat every request, log, packet, certificate, configuration, and AI-generated suggestion as untrusted; redact secrets and identifiers, cap input and output size, and review before execution or sharing.",
+		"AI cannot authorize a target, expand scope, execute a command, select real identities, store sensitive context, or replace human verification; retain only reviewed, bounded test ideas and report wording.",
+		"Every finding separates observation, impact, preconditions, evidence, remediation, retest, uncertainty, disclosure audience, and recovery or cleanup."
 	]
 };
 
@@ -871,6 +902,10 @@ function sourcePolicyFor(courseId: string) {
 
 		if (courseId === "network-systems") {
 			return `Source-backed course. Canonical source repository: ${url}. NS1–NS6 are the primary operational shell labs; the numbered NS-* folders are lightweight Python port-normalization checkpoints or studio practice. Existing starter/solution URLs remain traceable, while supplied network evidence prevents a generic checkpoint from being treated as a live infrastructure exercise.`;
+		}
+
+		if (courseId === "network-security") {
+			return `Source-backed course. Canonical source repository: ${url}. NSEC1–NSEC6 are the primary defensive TypeScript fixtures; the numbered NSEC-* folders are lightweight Python port-normalization checkpoints or studio practice. Existing starter/solution URLs remain traceable, while supplied security cases prevent a generic checkpoint from being treated as a complete service audit or live penetration test.`;
 		}
 
 		return `Source-backed course. Canonical source repository: ${url}. Starter/reference links remain synchronized with catalog projects.`;
@@ -2923,17 +2958,18 @@ function addSystemsSpecificSafetyModule(courseId: string, course: RawCourse) {
 		},
 		"network-security": {
 			environment: [
-				"Owned lab hosts, sample PCAPs, toy services, Zeek/Suricata-style analysis, TLS/certificate exercises on controlled domains or local CAs.",
-				"Threat model and monitoring objectives before tooling.",
-				"Alert triage reports with defensive recommendations."
+				"Node.js 24 LTS with project-pinned TypeScript, strict typechecking, local tests, and locked dependencies.",
+				"Loopback or owned isolated toy HTTP and WebSocket services, synthetic identities and request data, supplied logs, and local or documentation certificates.",
+				"OWASP ASVS/API/WSTG and focused Cheat Sheet checks selected before testing, with exact rules of engagement and request limits.",
+				"Threat model, monitoring objective, redaction rule, cleanup, and remediation/retest evidence before any security tooling."
 			],
 			prohibited: [
-				"Phishing, credential collection, unauthorized scanning, or real-system testing.",
-				"Testing systems without written authorization.",
-				"Public exploit steps detached from remediation."
+				"Phishing, credential collection, unauthorized scanning, real-system testing, or traffic capture outside the owned lab.",
+				"Bypassing access controls, using real tokens or personal data, publishing a listener, or allowing AI to expand scope or execute tests.",
+				"Public exploit steps, persistence, destructive actions, or findings detached from remediation, retest, and responsible disclosure."
 			],
 			project:
-				"Create a passive monitoring and remediation plan for a toy network, including TLS validation, detections, triage, and hardening steps."
+				"Build and audit a local TypeScript service with trust boundaries, authorization, validation, resource limits, TLS/proxy evidence, security logging, one injected incident, remediation, retest, and disclosure notes."
 		},
 		"c-systems-engineering": {
 			environment: [
