@@ -2,7 +2,7 @@ import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const cSystemsEngineeringCourse: RawCourse = {
+const cSystemsEngineeringSourceCourse: RawCourse = {
 	name: "C Systems Engineering",
 	modules: [
 		{
@@ -11,7 +11,7 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				{
 					title: "Preferred IDEs and Core Toolchain",
 					content:
-						"Standardize on `CLion` or `VS Code` and make the real requirement the underlying toolchain rather than the editor itself. Verify `clang --version`, `cmake --version`, and `lldb --version` or an equivalent GCC and GDB toolchain before the course depends on debugging, binary inspection, or sanitizer-backed runs."
+						"Standardize on portable C17 in `CLion` or `VS Code` and make the real requirement the underlying toolchain rather than the editor itself. Verify `clang --version`, `cmake --version`, and `lldb --version` or an equivalent GCC and GDB toolchain. Keep `-Wall -Wextra -Wpedantic` enabled, use `CTest` or an equivalent deterministic harness, and run AddressSanitizer/UndefinedBehaviorSanitizer or the closest supported diagnostic before the course depends on unsafe buffers, binary inspection, or dynamic allocation."
 				},
 				{
 					title: "macOS and Windows Setup Walkthroughs",
@@ -1259,5 +1259,295 @@ export const cSystemsEngineeringCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+interface CSystemsModuleFlow {
+	estimatedTime: string;
+	flowNote: string;
+	keyBlocks: string[];
+}
+
+const C_SYSTEMS_PRIMARY_MODULE_COUNT = 13;
+
+const C_SYSTEMS_OPTIONAL_CURRICULUM = new Set([
+	"Project: XOR Encoder Decoder",
+	"Project: Fixed Size Log File Reader"
+]);
+
+const C_SYSTEMS_MODULE_FLOW: Record<string, CSystemsModuleFlow> = {
+	"CSE0 Setup and Tooling": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"C17 / CMake",
+			"warnings",
+			"sanitizers",
+			"CTest",
+			"debug evidence"
+		],
+		flowNote:
+			"Establish one clean C17 configure/build/test path before any unsafe-memory exercise. Record the exact warning and sanitizer commands, prove that a deterministic test fails on a controlled regression, and connect one debugger or diagnostic observation to a correction."
+	},
+	"Unit 1: Why C for Systems Work": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"translation unit",
+			"declaration / definition",
+			"object file",
+			"link boundary",
+			"clean rebuild"
+		],
+		flowNote:
+			"Trace one source file through preprocessing, compilation, object output, and linking, then split a small utility across a header and source file. Reproduce and explain one missing-symbol and one duplicate-definition failure before completing a clean rebuild."
+	},
+	"Unit 2: Binary, Hex, and Number Representation": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"bit / byte",
+			"hex grouping",
+			"fixed-width integer",
+			"two's complement",
+			"representation check"
+		],
+		flowNote:
+			"Use `stdint.h` fixed-width types and make the bit width explicit in every interpretation. Check zero, one, all-one, sign-bit, minimum, and maximum fixtures and distinguish an object representation from the mathematical value it is being used to encode."
+	},
+	"Unit 3: Bitwise Operations": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"mask",
+			"shift width",
+			"unsigned operation",
+			"packed field",
+			"round-trip check"
+		],
+		flowNote:
+			"Design each mask from a labeled bit layout, perform shifts on appropriate unsigned fixed-width values, and reject out-of-range field values before packing. The bitflag parser is required; the XOR encoder is an optional transfer build after set, clear, toggle, extract, and round-trip cases pass."
+	},
+	"Unit 4: Memory and Layout": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"storage duration",
+			"sizeof / offsetof",
+			"alignment",
+			"padding",
+			"portable claim"
+		],
+		flowNote:
+			"Measure layout rather than assuming it. Compare arrays and structs with `sizeof`, `offsetof`, and addresses, then label which observations are guaranteed by C and which are implementation-specific; never serialize by dumping a struct's in-memory bytes."
+	},
+	"Unit 5: Strings and Byte Buffers": {
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"length / capacity",
+			"null termination",
+			"binary-safe API",
+			"bounds check",
+			"byte dump"
+		],
+		flowNote:
+			"Carry pointer plus explicit capacity or length at every buffer boundary. Verify empty, exact-fit, one-byte-short, embedded-zero, nonterminated, and binary-data fixtures and use `strlen` only after termination is established within the available capacity."
+	},
+	"Unit 6: Files, Streams, and Parsing": {
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"checked I/O",
+			"explicit endianness",
+			"record boundary",
+			"checksum",
+			"atomic acceptance"
+		],
+		flowNote:
+			"Specify the byte format before implementing it and decode fields only after bounds, magic, version, length, and checksum checks succeed. Test truncation at every field boundary, extra bytes, unsupported version, checksum failure, and clean round trip; the repeated log reader is a choice after the packet parser is correct."
+	},
+	"Unit 7: Dynamic Memory and Lifetime": {
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"owner / borrower",
+			"allocation failure",
+			"realloc safety",
+			"ring invariant",
+			"sanitizer-clean teardown"
+		],
+		flowNote:
+			"Write the owner, borrower, and cleanup rule before allocation. Preserve the original pointer when `realloc` fails, check multiplication and capacity growth for overflow, and verify empty, full, wraparound, growth, allocation-failure, repeated clear, and final teardown behavior under diagnostics."
+	},
+	"Unit 8: Function Pointers and Dispatch": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"function signature",
+			"dispatch table",
+			"validated index",
+			"state transition",
+			"unknown command"
+		],
+		flowNote:
+			"Keep every callback signature explicit and validate command or mode values before indexing a dispatch table. Prove each handler, unknown input, null handler, invalid state transition, and deterministic output while comparing the table with a simpler `switch` for the current scale."
+	},
+	"Unit 9: Data Structures in C": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"container contract",
+			"representation invariant",
+			"ownership",
+			"operation cost",
+			"failure preservation"
+		],
+		flowNote:
+			"Select a structure from the operations and ownership it needs rather than from familiarity. Extend the ring buffer only after documenting head/count/capacity rules, then check boundary operations, failed growth, ordering after wraparound, cleanup, and the expected cost of each public operation."
+	},
+	"Unit 10: Engineering Math in Code": {
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"fixed-point scale",
+			"checked arithmetic",
+			"rounding policy",
+			"unit contract",
+			"error bound"
+		],
+		flowNote:
+			"Define units, scale, valid input range, rounding, and saturation or rejection behavior before arithmetic. Check for overflow before signed operations, use a justified wider intermediate where available, and test minimum, maximum, zero, negative, rounding-boundary, and invalid-range cases."
+	},
+	"Unit 11: Systems Tooling": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"warning policy",
+			"debugger",
+			"sanitizer",
+			"nm / objdump",
+			"evidence notebook"
+		],
+		flowNote:
+			"Treat this as a consolidation and binary-forensics pass because warnings and diagnostics have been active since setup. Run an earlier utility through the debugger and sanitizer, inspect symbols or sections with the available `nm`/`objdump` equivalent, and explain which artifact confirms each source-level claim."
+	},
+	"Unit 12: Capstone Engineering Utility": {
+		estimatedTime: "6–8 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"input contract",
+			"validated transform",
+			"stable output",
+			"failure rollback",
+			"reproducible fixture"
+		],
+		flowNote:
+			"Build the telemetry utility in vertical slices around a documented input and output contract. No unvalidated record mutates accepted state or replaces trusted output; complete the course with warning-clean, sanitizer-clean, reproducible normal, boundary, malformed, overflow, truncated, and I/O-failure fixtures."
+	}
+};
+
+function cSystemsSupplementalPath(title: string) {
+	return /extension|challenge|xor encoder|log file reader/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function decorateCSystemsModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = C_SYSTEMS_MODULE_FLOW[module.title];
+	const optionalCurriculum = module.curriculum.filter(item =>
+		C_SYSTEMS_OPTIONAL_CURRICULUM.has(item.title)
+	);
+	const curriculum = module.curriculum
+		.filter(item => !C_SYSTEMS_OPTIONAL_CURRICULUM.has(item.title))
+		.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+					: item.content,
+			learningPath: "core" as const
+		}));
+
+	if (module.title === "CSE0 Setup and Tooling") {
+		curriculum.push({
+			title: "CSE0 Project 0: C17 Safety Toolchain Readiness",
+			content: [
+				"**Completion evidence:**",
+				"- Compiler, debugger, and CMake versions plus a documented C17 configure/build/test path from a clean checkout.",
+				"- Warning-clean output using `-Wall -Wextra -Wpedantic` or the closest supported equivalent.",
+				"- AddressSanitizer/UndefinedBehaviorSanitizer or equivalent diagnostic detecting one isolated unsafe fixture, followed by a corrected clean run.",
+				"- A deterministic test that exits unsuccessfully when a controlled regression is introduced."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 12: Capstone Engineering Utility") {
+		curriculum.push({
+			title: "CSE12 Capstone Completion Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Versioned input/output format, clean C17 build, deterministic test command, and sample fixture from a fresh checkout.",
+				"- Cases for empty input, valid record, minimum and maximum accepted values, malformed field, unsupported version, bad checksum, truncation at each field boundary, extra bytes, overflow attempt, and failed output write.",
+				"- Previous trusted output remains intact after rejected input or write failure, and all temporary allocations and files are cleaned up.",
+				"- Warning-clean and sanitizer-clean results plus one byte-level trace, one corrected failure, and one portability limitation."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: [
+			...optionalCurriculum.map(item => ({
+				...item,
+				learningPath: cSystemsSupplementalPath(item.title)
+			})),
+			...module.supplementalProjects.map(item => ({
+				...item,
+				learningPath: cSystemsSupplementalPath(item.title)
+			}))
+		]
+	};
+}
+
+function buildOptionalSystemsStudioArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Systems Build and Transfer Archive",
+		estimatedTime: "Choose individual studios as needed",
+		keyBlocks: [
+			"byte inspection",
+			"memory layout",
+			"binary parser",
+			"capstone transfer",
+			"evidence review"
+		],
+		curriculum: [
+			{
+				title: "Systems Studio Archive Guide",
+				content:
+					"**Course flow:** Systems Build 14: Byte Inspector Studio, Systems Build 15: Memory Layout Studio, Systems Build 16: Binary Parser Studio, and Systems Build 17: Capstone Utility Studio are optional transfer and extension work for units already completed in the required path. Select a studio when its matching byte, layout, parser, or utility evidence needs another pass; completing every archived studio is not required.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: cSystemsSupplementalPath(item.title)
+				})
+			)
+		)
+	};
+}
+
+const cSystemsPrimaryModules = cSystemsEngineeringSourceCourse.modules
+	.slice(0, C_SYSTEMS_PRIMARY_MODULE_COUNT)
+	.map(decorateCSystemsModule);
+const cSystemsArchiveModules = cSystemsEngineeringSourceCourse.modules.slice(
+	C_SYSTEMS_PRIMARY_MODULE_COUNT
+);
+
+export const cSystemsEngineeringCourse: RawCourse = {
+	...cSystemsEngineeringSourceCourse,
+	modules: [
+		...cSystemsPrimaryModules,
+		buildOptionalSystemsStudioArchive(cSystemsArchiveModules)
 	]
 };
