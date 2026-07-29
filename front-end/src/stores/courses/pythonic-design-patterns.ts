@@ -1,7 +1,7 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const pythonicDesignPatternsCourse: RawCourse = {
+const pythonicDesignPatternsSourceCourse: RawCourse = {
 	name: "Pythonic Design Patterns",
 	modules: [
 		{
@@ -960,4 +960,487 @@ export const pythonicDesignPatternsCourse: RawCourse = {
 			]
 		}
 	]
+};
+
+const PYTHONIC_PATTERNS_UNITTEST =
+	"https://docs.python.org/3.14/library/unittest.html";
+const PYTHONIC_PATTERNS_TYPING =
+	"https://docs.python.org/3.14/library/typing.html#typing.Protocol";
+const PYTHONIC_PATTERNS_DATACLASSES =
+	"https://docs.python.org/3.14/library/dataclasses.html";
+const PYTHONIC_PATTERNS_FUNCTOOLS =
+	"https://docs.python.org/3.14/library/functools.html";
+const PYTHONIC_PATTERNS_CONTEXTLIB =
+	"https://docs.python.org/3.14/library/contextlib.html";
+const PYTHONIC_PATTERNS_ENTRY_POINTS =
+	"https://docs.python.org/3.14/library/importlib.metadata.html#entry-points";
+const PYTHONIC_PATTERNS_WEAKREF =
+	"https://docs.python.org/3.14/library/weakref.html#weakref.WeakMethod";
+const PYTHONIC_PATTERNS_CONTEXTVARS =
+	"https://docs.python.org/3.14/library/contextvars.html";
+
+const PYTHONIC_PATTERNS_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"PDP0 Setup and Tooling": {
+		estimatedTime: "3 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"Python 3.14 baseline",
+			"virtual environment",
+			"package layout",
+			"unittest discovery",
+			"type-checking boundary",
+			"green baseline"
+		],
+		flowNote:
+			"Establish one reproducible Python 3.14 package with an isolated environment, repeatable tests, and a green baseline before any structural refactor."
+	},
+	"PDP1 Why Python Changes the Design-Patterns Conversation": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"design pressure",
+			"function or value",
+			"module boundary",
+			"named pattern",
+			"simpler counterfactual",
+			"removal trigger"
+		],
+		flowNote:
+			"Compare each named pattern with a function, value, callable, protocol, context manager, or module boundary, then keep only the structure earned by a concrete change scenario."
+	},
+	"PDP2 Design Foundations in Python": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"duck typing",
+			"Protocol",
+			"ABC",
+			"dataclass contract",
+			"dependency seam",
+			"static and runtime checks"
+		],
+		flowNote:
+			"Choose the lightest useful contract, model plain data without mutable-default traps, and isolate side effects behind replaceable collaborators."
+	},
+	"PDP3 Strategy Without Ceremony": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"plain function",
+			"callable object",
+			"behavior registry",
+			"signature contract",
+			"unknown selection",
+			"stateful strategy"
+		],
+		flowNote:
+			"Implement swappable behavior as functions first, then adopt a callable object or explicit registry only when state, discovery, or lifecycle creates real pressure."
+	},
+	"PDP4 Factory and Builder in Python": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"direct construction",
+			"named constructor",
+			"factory registry",
+			"valid configuration",
+			"entry-point plugin",
+			"failure contract"
+		],
+		flowNote:
+			"Move from direct construction to named constructors, registries, builders, or package entry points only as validity and extension requirements grow."
+	},
+	"PDP5 Observer, Events, and Callbacks": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"subscription handle",
+			"weak bound method",
+			"delivery order",
+			"reentrancy",
+			"sync callback",
+			"async task ownership"
+		],
+		flowNote:
+			"Define subscription lifetime and delivery semantics first, then make synchronous and asynchronous failure paths explicit rather than treating callbacks as free decoupling."
+	},
+	"PDP6 Decorator, Proxy, and Facade": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"decorator transparency",
+			"metadata preservation",
+			"proxy contract",
+			"cache invalidation",
+			"facade boundary",
+			"context-manager lifecycle"
+		],
+		flowNote:
+			"Add cross-cutting behavior without hiding call semantics, preserve wrapped-function contracts, and use context managers for deterministic resource lifecycle."
+	},
+	"PDP7 State and Command": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"legal transition",
+			"command input",
+			"mutable capture",
+			"idempotency",
+			"undo scope",
+			"history limit"
+		],
+		flowNote:
+			"Package meaningful actions and mode transitions while specifying captured state, retry behavior, undo limits, and bounded history."
+	},
+	"PDP8 Adapter and Integration Boundaries": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"external schema",
+			"internal model",
+			"version mapping",
+			"missing field",
+			"error translation",
+			"round-trip fixture"
+		],
+		flowNote:
+			"Translate versioned external shapes into one stable internal model, keep vendor exceptions at the edge, and prove the mapping with explicit fixtures."
+	},
+	"PDP9 Template Method versus Higher-Order Functions": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"algorithm skeleton",
+			"hook method",
+			"callable pipeline",
+			"generator pipeline",
+			"cleanup",
+			"extension pressure"
+		],
+		flowNote:
+			"Compare inheritance hooks with composed callables and generators, preserving visible control flow and deterministic cleanup."
+	},
+	"PDP10 Singleton, Global State, and Module Patterns": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"module cache",
+			"application factory",
+			"composition root",
+			"context-local state",
+			"test reset",
+			"shutdown lifecycle"
+		],
+		flowNote:
+			"Replace ambient module state with explicit application wiring or context-local state unless a documented process-wide lifecycle genuinely requires sharing."
+	},
+	"PDP11 Refactoring Python Code Smells": {
+		estimatedTime: "6 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"characterization test",
+			"side-effect seam",
+			"one-step refactor",
+			"behavior-change boundary",
+			"stop condition",
+			"rollback point"
+		],
+		flowNote:
+			"Protect observable behavior, isolate side effects, and remove one smell at a time through reviewable commits that can be reverted independently."
+	},
+	"PDP12 Capstone Pythonic Refactor Studio": {
+		estimatedTime: "8–10 sessions · 60–120 minutes each",
+		keyBlocks: [
+			"green baseline",
+			"dependency map",
+			"change scenarios",
+			"pattern decisions",
+			"before-and-after evidence",
+			"rollback packet"
+		],
+		flowNote:
+			"Refactor one salvageable Python application from a protected baseline, choose a deliberately small pattern set, and demonstrate that target changes became safer or simpler."
+	}
+};
+
+function pythonicPatternsOptionPath(title: string) {
+	return /extension|capstone|challenge/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function insertPythonicPatternsItem(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decoratePythonicPatternsModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = PYTHONIC_PATTERNS_FLOW[module.title];
+	let curriculum: RawCourseModuleItem[] = module.curriculum.map(item => ({
+		...item,
+		learningPath: "core" as const
+	}));
+	const coreProjectTitle = curriculum.at(-1)?.title ?? "";
+
+	if (module.title === "PDP0 Setup and Tooling") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Python 3.14 Build, Test, and Type Contract",
+			content: [
+				"**Prerequisite:** Enter after functions, classes, decorators, exceptions, packages, comprehensions, generators, context managers, and basic type hints are independently usable.",
+				"**Runtime baseline:** Pin Python 3.14 for the course workspace, create `.venv`, install only declared project requirements, and record `python --version` plus the command that runs the package.",
+				"**Verification:** Discover tests with `python -m unittest discover -s tests`, compile the package with `python -m compileall`, and run the configured static type checker over public boundaries.",
+				"**Delivery:** Commit the green unedited baseline separately from every later refactor so structural changes remain reviewable and reversible."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_UNITTEST,
+			learningPath: "core"
+		});
+	}
+
+	if (
+		module.title ===
+		"PDP1 Why Python Changes the Design-Patterns Conversation"
+	) {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Python Feature Ladder before Pattern Machinery",
+			content: [
+				"Try a value or `dataclass`, a pure function, a closure, a callable object, a dictionary registry, a `Protocol`, a context manager, and a module boundary before adding a classic class family.",
+				"",
+				"Stop at the first form that keeps state, lifecycle, extension, and testing explicit. Dynamic syntax can remove ceremony, but it does not remove the need for a stable contract."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_TYPING,
+			learningPath: "core"
+		});
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Pattern Decision Record and Removal Trigger",
+			content: [
+				"Record one realistic future change, current duplication or coupling, the simplest Python alternative, the selected pattern, added indirection, test cost, and evidence that earns the extra structure.",
+				"",
+				"Include a removal trigger and sketch the simpler counterfactual. Pattern fluency means keeping the smallest design that supports the change, not maximizing pattern names."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_UNITTEST,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP2 Design Foundations in Python") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Protocol, ABC, and Runtime-Validation Contract",
+			content: [
+				"Use duck typing for a local obvious capability, `Protocol` for static structural contracts across boundaries, and an ABC when shared implementation or runtime registration is part of the design.",
+				"",
+				"Annotations are not runtime enforcement. A `runtime_checkable` protocol verifies only attribute presence, not complete signatures or value types, so external input still needs explicit validation. Test one conforming fake and one malformed runtime value."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_TYPING,
+			learningPath: "core"
+		});
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Data-Class Mutability and Boundary Contract",
+			content: [
+				"Define whether each record is mutable, hashable, comparable, or frozen. Use `default_factory` for mutable fields, validate invariants at construction, and avoid `unsafe_hash` unless mutation cannot invalidate keyed collections.",
+				"",
+				"Keep transport dictionaries at integration edges and convert them into named internal values. A data class carries data transparently; behavior moves onto it only when that behavior protects the record's own invariant."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_DATACLASSES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP3 Strategy Without Ceremony") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Callable Signature, Registry, and State Contract",
+			content: [
+				"Give every strategy one typed callable signature and the same success, edge, and failure examples. A registry rejects duplicate keys, handles unknown names explicitly, and never relies on import order for correctness.",
+				"",
+				"Use a callable object only when configuration, history, caching, or lifecycle is visible state. Test that state across repeated calls and keep selection separate from execution."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_TYPING,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP4 Factory and Builder in Python") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Construction Validity and Factory Failure Contract",
+			content: [
+				"Use direct construction or a named class method for one concrete type, a registry-backed factory for runtime selection, and a builder only when staged configuration protects validity or readability.",
+				"",
+				"Test missing and unknown configuration, incompatible options, plugin construction failure, and whether defaults are copied rather than shared. Never publish a partially valid object."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_DATACLASSES,
+			learningPath: "core"
+		});
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Package Entry-Point Plugin Boundary",
+			content: [
+				"Expose one narrow protocol in the core package and discover optional third-party providers through `importlib.metadata.entry_points()` rather than importing every implementation directly.",
+				"",
+				"Handle zero, one, multiple, duplicate, and broken providers; load lazily; keep provider exceptions at the composition boundary; and test discovery from metadata without making import side effects the registration mechanism."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_ENTRY_POINTS,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP5 Observer, Events, and Callbacks") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Subscription Lifetime, Reentrancy, and Weak-Method Contract",
+			content: [
+				"Return an idempotent subscription handle or context manager that disconnects explicitly. Bound-method listeners either unsubscribe before their owner dies or use `weakref.WeakMethod`; plain weak references do not retain a temporary bound-method object correctly.",
+				"",
+				"Test duplicate registration, removal during publication, nested publication, a listener added mid-delivery, dead listeners, ordering, and one listener that raises. Define whether publication stops, aggregates errors, or isolates failures."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_WEAKREF,
+			learningPath: "core"
+		});
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Synchronous versus Asynchronous Delivery Contract",
+			content: [
+				"A synchronous publisher completes listeners before returning and exposes failures in the caller's stack. An asynchronous publisher owns every created task, awaits or supervises completion, and defines ordering, cancellation, backpressure, and shutdown.",
+				"",
+				"Never discard a coroutine or create an unobserved background task as an Observer shortcut. Test cancellation and listener failure with the event loop under project control."
+			].join("\n"),
+			projectLink:
+				"https://docs.python.org/3.14/library/asyncio-task.html",
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP6 Decorator, Proxy, and Facade") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Decorator Transparency and Proxy State Contract",
+			content: [
+				"Use `functools.wraps` or `update_wrapper` so names, documentation, annotations, and `__wrapped__` remain inspectable. Preserve positional and keyword behavior, return values, exceptions, sync versus async behavior, and generator semantics.",
+				"",
+				"For caching, authorization, retry, or lazy proxies, define cache keys, invalidation, concurrency, exception caching, and observable identity. Test stacked decorator order and bypass the wrapper through `__wrapped__` when isolating the core behavior."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_FUNCTOOLS,
+			learningPath: "core"
+		});
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Context Manager and ExitStack Lifecycle Pattern",
+			content: [
+				"Use a `with` boundary when setup and cleanup must remain paired across success and exceptions. Start with `contextmanager`; use a class when reusable state or richer methods matter, and use `ExitStack` for a data-driven number of resources.",
+				"",
+				"Test acquisition failure halfway through setup, reverse-order cleanup, exception suppression, repeated use, and nested use. Resource release never depends on garbage collection timing."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_CONTEXTLIB,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP7 State and Command") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Command Capture, Retry, and Undo Contract",
+			content: [
+				"Capture immutable command inputs or make an intentional snapshot; do not close over mutable state whose later value changes the recorded action. Define whether execution is one-shot, idempotent, retryable, cancelable, or compensating.",
+				"",
+				"Test illegal transitions, failure halfway through execution, undo after later commands, replay in a fresh process when supported, and a bounded history policy. Record which effects cannot be reversed."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_DATACLASSES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP8 Adapter and Integration Boundaries") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Schema Version, Validation, and Error-Mapping Contract",
+			content: [
+				"Name the supported external versions, required and optional fields, default policy, unknown-field policy, timezone and unit conversions, and the stable internal model before writing the adapter.",
+				"",
+				"Translate vendor exceptions into domain errors without losing the original cause. Test minimal, complete, malformed, unknown-version, and round-trip fixtures where export exists, and keep raw payloads out of core modules."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_TYPING,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP9 Template Method versus Higher-Order Functions") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Callable and Generator Pipeline Contract",
+			content: [
+				"Express the workflow once as Template Method hooks and once as named callable or generator stages. Keep ordering, short-circuit behavior, error propagation, and data ownership visible in both versions.",
+				"",
+				"When a generator owns a resource, bind that resource to a surrounding context manager and test early termination, `close()`, exceptions, and partial consumption. Choose the form with the clearest control flow for the expected extension."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_CONTEXTLIB,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP10 Singleton, Global State, and Module Patterns") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Application Factory, Import Cache, and Context-Local Contract",
+			content: [
+				"Create configuration and services in one application factory, pass collaborators explicitly, and expose a deterministic shutdown path. Re-importing a module normally returns cached module state, so tests cannot assume import syntax creates a fresh singleton.",
+				"",
+				"Use `ContextVar` for task-local request context, not as a service locator. Test token reset, copied contexts, concurrent tasks, test isolation, and teardown of process-wide resources."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_CONTEXTVARS,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP11 Refactoring Python Code Smells") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Characterization, Stop, and Rollback Contract",
+			content: [
+				"Capture return values, output, exceptions, file or network effects, ordering, and one awkward edge before editing. Commit the green baseline, introduce side-effect seams, and apply one named behavior-preserving transformation per commit.",
+				"",
+				"Stop when a failure is unexplained, a diff mixes behavior with structure, typing becomes less precise, or the step cannot be rolled back independently. A bug fix or feature follows a separately named test and commit."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_UNITTEST,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PDP12 Capstone Pythonic Refactor Studio") {
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Capstone Gate: Characterize before Change",
+			content: [
+				"Freeze representative success, failure, and side-effect behavior with tests, deterministic fixtures, a documented run command, a package-dependency map, and one static-type-check result.",
+				"",
+				"Tag or commit this baseline before structural work. Pattern refactors preserve behavior until a separately reviewed feature, bug fix, or performance change is scheduled."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_UNITTEST,
+			learningPath: "core"
+		});
+		curriculum = insertPythonicPatternsItem(curriculum, coreProjectTitle, {
+			title: "Capstone Evidence and Rollback Packet",
+			content: [
+				"Deliver the original and final dependency maps, two realistic change scenarios, pattern decision records, the small commit sequence, green tests, and before-and-after measurements such as modules touched, duplicated branches, test setup, import coupling, or time to add a provider.",
+				"",
+				"Demonstrate one collaborator or provider replacement, identify one pattern deliberately not used, name one remaining tradeoff, and retain a clear rollback point for every major structural choice."
+			].join("\n"),
+			projectLink: PYTHONIC_PATTERNS_TYPING,
+			learningPath: "core"
+		});
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: pythonicPatternsOptionPath(item.title)
+		}))
+	};
+}
+
+export const pythonicDesignPatternsCourse: RawCourse = {
+	...pythonicDesignPatternsSourceCourse,
+	modules: pythonicDesignPatternsSourceCourse.modules.map(
+		decoratePythonicPatternsModule
+	)
 };
