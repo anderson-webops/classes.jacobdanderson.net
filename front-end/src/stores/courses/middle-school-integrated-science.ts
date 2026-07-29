@@ -575,7 +575,7 @@ const MIDDLE_SCHOOL_SCIENCE_FLOW: Record<string, MiddleSchoolScienceFlow> = {
 			"Earth-history model revision"
 		],
 		phenomenon:
-			"A supplied regional case pairs a seven-day weather sequence, a multi-decade climate series, and maps of earthquakes, volcanoes, rocks, and fossils so learners must match each claim to the correct time and space scale.",
+			"A supplied regional case pairs a seven-day weather sequence, a multi-decade climate series, and maps of earthquakes, volcanoes, rocks, and fossils. Each claim must be matched to the correct time and space scale.",
 		corePath:
 			"Read weather variables and maps, distinguish forecast from observation, identify a long-term climate pattern, and connect clustered geologic evidence to plate-boundary models.",
 		stretchPath:
@@ -1116,6 +1116,8 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 	...middleSchoolIntegratedScienceSourceCourse,
 	modules: middleSchoolIntegratedScienceSourceCourse.modules.map(module => {
 		const flow = MIDDLE_SCHOOL_SCIENCE_FLOW[module.title];
+		const referenceIsMedia =
+			flow.referenceLink.includes("phet.colorado.edu");
 		const curriculum = module.curriculum.map((item, index) => ({
 			...item,
 			content: [
@@ -1135,8 +1137,15 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 			datasetLink:
 				item.datasetLink ??
 				(index === 0
-					? flow.referenceLink
+					? referenceIsMedia
+						? middleSchoolScienceMaterial(flow.materialSection)
+						: flow.referenceLink
 					: middleSchoolScienceMaterial(flow.materialSection)),
+			mediaLink:
+				item.mediaLink ??
+				(index === 0 && referenceIsMedia
+					? flow.referenceLink
+					: undefined),
 			solutionLink:
 				item.solutionLink ??
 				middleSchoolScienceAnswerKey(flow.answerSection),

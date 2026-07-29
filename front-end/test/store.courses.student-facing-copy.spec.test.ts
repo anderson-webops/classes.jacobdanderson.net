@@ -414,7 +414,7 @@ describe("student-facing course copy", () => {
 				}
 			}
 
-			expect(failures).toEqual([]);
+			expect(failures, failures.join("\n")).toEqual([]);
 		},
 		COURSE_SWEEP_TIMEOUT
 	);

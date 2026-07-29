@@ -578,7 +578,7 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			content: [
 				"**Shared routine:** Start with the phenomenon before vocabulary. Record the source and date, notice silently, share observations, sort observation from inference, ask a question, organize evidence, explain a claim, and end with what evidence could change the idea. Preserve the first response so revision is visible.",
 				"**K–2 notebook:** Use one labeled drawing, three observation marks or tallies, the frames I observe, I think, I wonder, and one because sentence. Speaking, pointing, dictation, drawing, or selecting from supplied words are equivalent response routes.",
-				"**Grades 3–5 notebook:** Add a small table or graph, label what changed and what was measured, write a CER paragraph, and identify one alternate explanation or missing measurement. Evidence is quoted or described precisely enough that another learner can find it.",
+				"**Grades 3–5 notebook:** Add a small table or graph, label what changed and what was measured, write a CER paragraph, and identify one alternate explanation or missing measurement. Evidence is quoted or described precisely enough that another reader can find it.",
 				"**Access check:** Every image has a text description, color is paired with labels or patterns, video evidence has a still or transcript, and no outdoor observation, camera, household object, or handwriting speed is required."
 			].join("\n\n"),
 			datasetLink: elementaryScienceMaterial(
@@ -594,7 +594,7 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			content: [
 				"**Question types:** A descriptive question asks what is present or changing. A comparison question asks how two cases differ. A testable cause-and-effect question names what changes, what is observed or measured, and what stays comparable. Questions about preference or meaning are valuable but require different evidence.",
 				"**Evidence rule:** A picture, table, graph, written description, or simulation state can provide evidence. Personal certainty, a guess, a vocabulary definition, or the claim repeated in different words cannot serve as the evidence for itself.",
-				"**Fair-comparison bridge:** K–2 learners compare two supplied scenes and name one difference. Grades 3–5 learners identify the changed condition, measured result, constants, repeated trials when supplied, and one reason the comparison remains limited.",
+				"**Fair-comparison bridge:** The K–2 route compares two supplied scenes and names one difference. The Grades 3–5 route identifies the changed condition, measured result, constants, repeated trials when supplied, and one reason the comparison remains limited.",
 				"**Mastery check:** Correct one observation that includes an explanation, one question that cannot be checked with available evidence, and one graph claim that invents a cause."
 			].join("\n\n"),
 			datasetLink: elementaryScienceMaterial(
@@ -610,7 +610,7 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			content: [
 				"**Classification routine:** Use several observations across time: cellular organization at the grade-appropriate level, use of energy and materials, growth through internal processes, response, reproduction at a species level, and maintenance of organized life processes. No single everyday clue decides every case.",
 				"**Clear and edge cases:** Animals and growing plants are clear living examples; rocks and active machines are nonliving. Wood, paper, and fossils can be described as once-living or made from living material. Seeds are living but may be dormant. Fire and robots can move or spread without being organisms.",
-				"**Grade-band bridge:** K–2 learners sort clear cases and explain one need. Grades 3–5 learners use the full supplied evidence table, preserve uncertain categories, and explain why one clue cannot settle the difficult cases.",
+				"**Grade-band bridge:** The K–2 route sorts clear cases and explains one need. The Grades 3–5 route uses the full supplied evidence table, preserves uncertain categories, and explains why one clue cannot settle the difficult cases.",
 				"**Mastery check:** Defend four classifications, revise one movement-only explanation, and name the observation that would be most useful for a dormant-seed case."
 			].join("\n\n"),
 			datasetLink: elementaryScienceMaterial(
@@ -624,7 +624,7 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			content: [
 				"**Relationship model:** A structure is a part or arrangement; function is a job or contribution; behavior is an action. A beak, root, fin, leaf, fur layer, or spine can support a task under particular environmental conditions without being perfect for every place.",
 				"**Evidence chain:** Name the structure, visible feature, proposed function, habitat condition, and evidence connecting them. A plausible story is marked as a prediction unless the supplied comparison or source supports the function claim.",
-				"**Changed condition:** K–2 learners draw or tell what might happen if one need changes. Grades 3–5 learners compare at least two structures, identify a benefit and limit, and predict how reduced water, changed food, temperature, or a new predator affects survival.",
+				"**Changed condition:** The K–2 route draws or tells what might happen if one need changes. The Grades 3–5 route compares at least two structures, identifies a benefit and limit, and predicts how reduced water, changed food, temperature, or a new predator affects survival.",
 				"**Mastery check:** Correct the claims that animals choose needed body parts, every cactus spine has one purpose, and a useful structure guarantees survival."
 			].join("\n\n"),
 			datasetLink: elementaryScienceMaterial(
@@ -638,9 +638,9 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 		{
 			title: "Food-Chain, Food-Web, and Energy-Arrow Gate",
 			content: [
-				"**Arrow convention:** In this course, a food-web arrow points from the food or energy source toward the organism receiving that transferred energy. Add a legend and text path so learners do not have to infer arrow direction from color or layout.",
+				"**Arrow convention:** In this course, a food-web arrow points from the food or energy source toward the organism receiving that transferred energy. Add a legend and text path so arrow direction never depends on color or layout alone.",
 				"**System model:** Most modeled food-web energy begins with sunlight captured by producers, moves to consumers, and disperses as heat. Decomposers process dead material and waste, returning matter to soil, water, or air; matter and energy are related but do not follow identical cycles.",
-				"**Grade-band bridge:** K–2 learners build one chain and name producer and consumer. Grades 3–5 learners build a web with decomposers, mark supported and hypothetical links, and trace one direct and one indirect effect of a changed population.",
+				"**Grade-band bridge:** The K–2 route builds one chain and names producer and consumer. The Grades 3–5 route builds a web with decomposers, marks supported and hypothetical links, and traces one direct and one indirect effect of a changed population.",
 				"**Mastery check:** Repair reversed arrows, add a missing producer and decomposer route, and explain why the top predator is not outside the decomposer system."
 			].join("\n\n"),
 			datasetLink: elementaryScienceMaterial(
@@ -686,7 +686,7 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			content: [
 				"**Water model:** Pools store water in oceans, lakes, rivers, soil, groundwater, ice, living things, and atmosphere. Flows such as evaporation, condensation, precipitation, runoff, infiltration, and transpiration move water or change its state. The model has branching paths rather than one fixed circle.",
 				"**Earth-change model:** Weathering breaks material down, erosion moves it, and deposition places it elsewhere. Floods, earthquakes, and eruptions can be fast events, while erosion, soil formation, recovery, and landscape adjustment can continue over longer periods.",
-				"**Grade-band bridge:** K–2 learners sequence and label a supplied water journey and sort change cards. Grades 3–5 learners identify pools and flows, trace Sun and gravity roles, and compare the time scales and evidence for two Earth changes.",
+				"**Grade-band bridge:** The K–2 route sequences and labels a supplied water journey and sorts change cards. The Grades 3–5 route identifies pools and flows, traces Sun and gravity roles, and compares the time scales and evidence for two Earth changes.",
 				"**Safety boundary:** Hazards are studied through supplied maps, images, and descriptions; no disaster reenactment, travel, household water experiment, or personal emergency disclosure is required."
 			].join("\n\n"),
 			datasetLink: ELEMENTARY_SCIENCE_REFERENCES.usgsWaterCycle,
@@ -732,7 +732,7 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			content: [
 				"**Force model:** Draw each arrow on or from the object receiving the push or pull, label the source when useful, and use arrow direction consistently. The combined effect, not one arrow alone, supports the prediction about changing motion.",
 				"**Motion evidence:** Position-time information describes where an object is at successive times. A steeper change in position over the same interval represents faster motion in the supplied cases; a flat section represents unchanged position, not necessarily an absence of all forces.",
-				"**Grade-band bridge:** K–2 learners sequence before-during-after motion frames and add one force arrow. Grades 3–5 learners compare arrow diagrams with position-time tables or graphs and distinguish balanced from unbalanced net-force cases.",
+				"**Grade-band bridge:** The K–2 route sequences before-during-after motion frames and adds one force arrow. The Grades 3–5 route compares arrow diagrams with position-time tables or graphs and distinguishes balanced from unbalanced net-force cases.",
 				"**Mastery check:** Match four diagrams to motion outcomes, correct one arrow attached to the wrong object, and explain why balanced forces can accompany constant motion in the simplified model."
 			].join("\n\n"),
 			datasetLink: elementaryScienceMaterial(
@@ -746,7 +746,7 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			content: [
 				"**Design question:** Compare how a ramp, lever, pulley, wheel and axle, wedge, or screw changes the direction or amount of force and the distance over which the force acts. Keep the object moved and goal consistent across comparisons.",
 				"**Tradeoff:** A machine can make one part of a task easier while requiring more distance, different setup, friction, stronger supports, or additional parts. It does not create energy or erase all work.",
-				"**Grade-band bridge:** K–2 learners match machine pictures to jobs and draw one improvement. Grades 3–5 learners compare supplied force-distance cases, define criteria and constraints, choose a design, inspect a failure case, and revise one feature.",
+				"**Grade-band bridge:** The K–2 route matches machine pictures to jobs and draws one improvement. The Grades 3–5 route compares supplied force-distance cases, defines criteria and constraints, chooses a design, inspects a failure case, and revises one feature.",
 				"**Mastery check:** Explain the benefit and cost of one machine, reject the phrase does the work for you, and preserve a before-and-after design note showing evidence-based revision."
 			].join("\n\n"),
 			datasetLink: elementaryScienceMaterial(
@@ -762,7 +762,7 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			content: [
 				"**Path model:** Light travels from a source, may be reflected, transmitted, absorbed, or blocked by an object, and reaches a receiver such as an eye or camera. A diagram labels every part and uses arrows for the modeled direction of travel.",
 				"**Shadow model:** A shadow is a region receiving less direct light because an object blocks part of the path. Shadow position and size depend on source, object, surface, and distances; the shadow is not material attached to the object.",
-				"**Grade-band bridge:** K–2 learners trace source-object-receiver paths and match shadow or reflection cards. Grades 3–5 learners compare materials, predict a changed source or object position, and critique what a two-dimensional ray drawing leaves out.",
+				"**Grade-band bridge:** The K–2 route traces source-object-receiver paths and matches shadow or reflection cards. The Grades 3–5 route compares materials, predicts a changed source or object position, and critiques what a two-dimensional ray drawing leaves out.",
 				"**Mastery check:** Repair an eye-ray diagram, add the missing receiver to a reflection path, and explain one shadow change with source and object evidence."
 			].join("\n\n"),
 			datasetLink: elementaryScienceMaterial(
@@ -778,7 +778,7 @@ const ELEMENTARY_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			content: [
 				"**Sound pathway:** A vibrating source changes nearby matter, the disturbance travels through a medium, and a receiver detects it. Loudness and pitch describe different perceived features and are not interchangeable in the supplied comparison.",
 				"**Signal design:** A signal has a sender, code or pattern, pathway, receiver, intended meaning, and conditions that can create error. Reliability improves when the signal is distinct, repeated appropriately, matched to the environment, and accessible to intended receivers.",
-				"**Grade-band bridge:** K–2 learners identify source, receiver, and message. Grades 3–5 learners compare distance, background noise, visibility, ambiguity, and redundant light-plus-text or sound-plus-visual routes.",
+				"**Grade-band bridge:** The K–2 route identifies source, receiver, and message. The Grades 3–5 route compares distance, background noise, visibility, ambiguity, and redundant light-plus-text or sound-plus-visual routes.",
 				"**Access check:** Audio always has a transcript, waveform, or event table; visual signals always have text labels or patterns. No learner's hearing, vision, speech, or sensory response is tested or disclosed."
 			].join("\n\n"),
 			datasetLink: elementaryScienceMaterial(
@@ -869,6 +869,8 @@ export const elementaryScienceCourse: RawCourse = {
 	...elementaryScienceSourceCourse,
 	modules: elementaryScienceSourceCourse.modules.map(module => {
 		const flow = ELEMENTARY_SCIENCE_FLOW[module.title];
+		const referenceIsMedia =
+			flow.referenceLink.includes("phet.colorado.edu");
 		const curriculum = module.curriculum.map((item, index) => ({
 			...item,
 			content: [
@@ -888,8 +890,15 @@ export const elementaryScienceCourse: RawCourse = {
 			datasetLink:
 				item.datasetLink ??
 				(index === 0
-					? flow.referenceLink
+					? referenceIsMedia
+						? elementaryScienceMaterial(flow.materialSection)
+						: flow.referenceLink
 					: elementaryScienceMaterial(flow.materialSection)),
+			mediaLink:
+				item.mediaLink ??
+				(index === 0 && referenceIsMedia
+					? flow.referenceLink
+					: undefined),
 			solutionLink:
 				item.solutionLink ??
 				elementaryScienceAnswerKey(flow.answerSection),

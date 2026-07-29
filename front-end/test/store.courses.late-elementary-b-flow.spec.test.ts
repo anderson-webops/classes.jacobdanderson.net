@@ -122,11 +122,13 @@ describe("Late Elementary B math learner flow", () => {
 		).toContain("simplified toy model");
 	});
 
-	it("keeps unavailable source-image bookkeeping out of the course", async () => {
+	it("keeps unavailable source-image bookkeeping out of the learner flow", async () => {
 		const course = await loadRawCourse("late-elementary-b-math");
 		expect(course).not.toBeNull();
 
-		const text = JSON.stringify(course);
+		const text = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		for (const filename of [
 			"checkin1_fractions_0.png",
 			"checkin1_fractions_1.png",
@@ -136,5 +138,10 @@ describe("Late Elementary B math learner flow", () => {
 		]) {
 			expect(text).not.toContain(filename);
 		}
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Source Media Inventory"
+			)?.kind
+		).toBe("appendix");
 	});
 });

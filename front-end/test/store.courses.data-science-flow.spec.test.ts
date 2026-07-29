@@ -127,12 +127,21 @@ describe("Data Science in Python learner flow", () => {
 		const course = await loadRawCourse("data-science-in-python");
 		expect(course).not.toBeNull();
 
-		const text = JSON.stringify(course);
+		const text = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		expect(text).toContain(
 			"https://static.classes.jacobdanderson.net/life_expectancy.csv"
 		);
 		expect(text).not.toContain("Data Science Asset Status");
 		expect(text).not.toContain("building_permits.csv");
 		expect(text).not.toContain("data_science_concept.png");
+		const inventory = course!.modules.find(
+			module => module.title === "Pending Source Media Inventory"
+		);
+		expect(inventory?.kind).toBe("appendix");
+		expect(inventory?.curriculum[0]?.content).toContain(
+			"building_permits.csv"
+		);
 	});
 });

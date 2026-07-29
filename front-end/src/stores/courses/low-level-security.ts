@@ -1110,7 +1110,7 @@ const lowLevelSecuritySetupModule: RawCourse["modules"][number] = {
 		{
 			title: "LLS0 Setup Gate: Reproduce the Baseline",
 			content:
-				"Configure and build the six supplied starter and solution pairs, run one finite solution case, and create an evidence record with expected result, observed result, platform difference, reset command, and remaining limitation. The gate is complete when another learner can reproduce the same local baseline without a private service or account.",
+				"Configure and build the six supplied starter and completed-reference pairs, run one finite reference case, and create an evidence record with expected result, observed result, platform difference, reset command, and remaining limitation. The gate is complete when another person can reproduce the same local baseline without a private service or account.",
 			datasetLink: `${LOW_LEVEL_SECURITY_PRACTICE_PACK}#safe-lab-preflight-case`,
 			mediaLink: "https://clang.llvm.org/docs/AddressSanitizer.html"
 		}

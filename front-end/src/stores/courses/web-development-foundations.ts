@@ -1844,7 +1844,7 @@ function decorateWebDevelopmentFoundationsAppendix(
 			...item,
 			content:
 				index === 0
-					? `**Optional appendix:** This material extends the required WDF0–WDF7 and Full Stack Web Lab 14–17 path. Select it only after the learner can build, test, persist, diagnose, and recover the local capstone. Public services, paid accounts, real credentials, and real user data are never required.
+					? `**Optional appendix:** This material extends the required WDF0–WDF7 and Full Stack Web Lab 14–17 path. Select it only after the local capstone can be built, tested, persisted, diagnosed, and recovered. Public services, paid accounts, real credentials, and real user data are never required.
 
 ${item.content}`
 					: item.content,

@@ -2907,9 +2907,14 @@ function buildAdvancedJavaEngineeringArchive(
 			{
 				title: "Advanced Java Engineering Sequence Guide",
 				content: [
-					"**Course flow:** AJ19 Post-C++ Java Tooling, Testing, and Packages; AJ20 Generics, Interfaces, and Collection API Design; AJ21 Streams, Files, and Data Pipelines; and AJ22 Concurrency, Services, and Capstone Architecture form an ordered continuation after the Street Searcher capstone.",
+					"**Course flow:**",
 					"",
-					"Complete the sequence only when deeper Java engineering is the next goal. Use Java 21, clean package/build/test boundaries, UTF-8 temporary fixtures, no raw generic types, bounded executors, explicit shutdown and interrupt policy, deterministic reports, and no real personal or credential data."
+					"1. **AJ19 Post-C++ Java Tooling, Testing, and Packages** establishes the build, package, test, and repository workflow.",
+					"2. **AJ20 Generics, Interfaces, and Collection API Design** develops reusable type-safe APIs.",
+					"3. **AJ21 Streams, Files, and Data Pipelines** connects collections to bounded file-processing workflows.",
+					"4. **AJ22 Concurrency, Services, and Capstone Architecture** completes the sequence with controlled concurrency and service design.",
+					"",
+					"**Entry and safety boundary:** This optional continuation follows the Street Searcher capstone when deeper Java engineering is the next goal. It uses Java 21, clean package/build/test boundaries, UTF-8 temporary fixtures, no raw generic types, bounded executors, explicit shutdown and interrupt policy, deterministic reports, and no real personal or credential data."
 				].join("\n"),
 				learningPath: "core"
 			}

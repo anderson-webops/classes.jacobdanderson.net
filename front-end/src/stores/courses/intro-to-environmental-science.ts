@@ -878,7 +878,7 @@ const introToEnvironmentalScienceSourceCourse: RawCourse = {
 				{
 					title: "Project: Environmental Action Pitch",
 					content: project({
-						goal: "Turn the proposal into a concise decision briefing for an audience that could review, test, or support the idea; no learner must advocate a personal political position.",
+						goal: "Turn the proposal into a concise decision briefing for an audience that could review, test, or support the idea; no personal political advocacy is required.",
 						artifact:
 							"A script, slide deck, or speaking outline that explains the baseline, evidence, alternatives, decision rule, proposed pilot, and what review role the audience could play.",
 						evidence:

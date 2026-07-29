@@ -1681,7 +1681,7 @@ function buildOptionalJavaConcurrencyExtension(): RawCourse["modules"][number] {
 			{
 				title: "Concurrency Extension Safety and Completion Contract",
 				content: [
-					"**Course flow:** Complete the required exception and state-management modules first. This extension preserves the original threading examples without making concurrency a Java Level 2 prerequisite.",
+					"**Course flow:** Complete the required exception and state-management modules first. This extension preserves the original threading examples without making concurrency a prerequisite for Java Level 2.",
 					"",
 					"**Completion evidence:**",
 					"- Use a fixed, small number of threads or a bounded `ExecutorService`; no unbounded thread creation or infinite worker loop.",

@@ -2699,7 +2699,7 @@ function addScienceGradeBandScopeModule(courseId: string, course: RawCourse) {
 				{
 					title: "Physical-Material Boundary",
 					content:
-						"**Investigation:** No activity requires beakers, chemicals, heat, food, kits, outdoor collection, or supervised construction. Optional observations must have an equivalent image, simulation, or data table. The course treats physical materials as optional context, not a requirement for participation or progress.\n\n**Evidence target:** The core objective can be completed with only paper, notes, and browser/shared-screen access. A complete activity names the evidence source, labels what was observed, and explains the pattern without depending on a household experiment."
+						"**Investigation:** Physical supplies are optional only; no activity requires beakers, chemicals, heat, food, kits, outdoor collection, or supervised construction. Optional observations must have an equivalent image, simulation, or data table. The course treats physical materials as optional context, not a requirement for participation or progress.\n\n**Evidence target:** The core objective can be completed with only paper, notes, and browser/shared-screen access. A complete activity names the evidence source, labels what was observed, and explains the pattern without depending on a household experiment."
 				}
 			],
 			supplementalProjects: [
@@ -3671,7 +3671,7 @@ const unityModuleFlow = [
 		answerSection: "full-project-repository-workflow-key",
 		focus: "A full Unity repository distinguishes the intentionally incomplete starter, learner checkpoints, completed review state, dependencies, generated files, and evidence needed to reproduce the project.",
 		coreRoute:
-			"Inspect the linked starter and solution repositories, map required Unity folders and source files, compare start and review behavior, and record a checkpoint with scene, scripts, test or play result, decision, and next action.",
+			"Inspect the linked starter and completed-review repositories, map required Unity folders and source files, compare start and review behavior, and record a checkpoint with scene, scripts, test or play result, decision, and next action.",
 		stretchRoute:
 			"Create a clean-clone verification record, design start/checkpoint/review tags, audit LFS and attribution, and prepare a capstone milestone plan with explicit scope cuts.",
 		verification:
@@ -3781,7 +3781,7 @@ ${routeLabel} Core: ${flow.coreRoute} Stretch: ${flow.stretchRoute}
 			"Accessible game-feedback practice using visible, textual, spatial, and control alternatives rather than color or audio alone."
 		],
 		sourcePolicy:
-			"Use UGD0–UGD6 as the complete learner-facing sequence and UGD7–UGD8 as explicitly optional production-engineering extensions. Preserve the canonical full-project starter and solution as the primary implementation pair. Legacy GD6–GD8 and Module 4–5 script snapshots remain optional appendices for comparison and transfer rather than a second hidden course.",
+			"Use https://github.com/instruction-material/Unity-Game-Development as the canonical source repository, with UGD0–UGD6 as the complete learner-facing sequence and UGD7–UGD8 as explicitly optional production-engineering extensions. Preserve the full-project starter and completed-review states as the primary implementation pair. Legacy GD6–GD8 and Module 4–5 script snapshots remain optional appendices for comparison and transfer rather than a second hidden course.",
 		assessmentCadence: [
 			"Each core module ends with one playable result, one evidence gate, and one recorded failure or boundary case.",
 			"Movement, physics, state, accessibility, and build smoke checks accumulate before capstone production begins.",

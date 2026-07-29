@@ -1949,6 +1949,10 @@ function buildJavaLevel1FoundationArchive(
 function buildOptionalJavaGraphicsModule(
 	module: RawCourse["modules"][number]
 ): RawCourse["modules"][number] {
+	const extensionFocus = module.title
+		.replace(/^Java Level 1 Graphics Extension:\s*/i, "")
+		.trim();
+
 	return {
 		...module,
 		kind: "appendix",
@@ -1962,9 +1966,8 @@ function buildOptionalJavaGraphicsModule(
 		],
 		curriculum: [
 			{
-				title: `${module.title} Guide`,
-				content:
-					"**Course flow:** This is an optional visual application of the main Java sequence, not a second required track. Choose one project after the relevant variables, branching, loops, or methods block; predict coordinates and state before rendering, then explain the result from the code.",
+				title: `${extensionFocus} Guide`,
+				content: `**Course flow:** This is an optional visual application of the main Java sequence, not a second required track. Choose one project after the relevant variables, branching, loops, or methods block; predict coordinates and state before rendering, then explain the result from the code.\n\n**Extension focus:** ${extensionFocus} provides the visual context for this optional practice.`,
 				learningPath: "core"
 			}
 		],

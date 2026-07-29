@@ -1448,7 +1448,7 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				{
 					title: "JSONBin Setup",
 					content:
-						'Review JSONBin v3 only as a preserved example of a hosted JSON API. Its write routes require an `X-Master-Key` or scoped `X-Access-Key`, so do not create, paste, or ship either key in CodePen or browser source. Build the required exercise with a versioned `{"notes": [{"id": "n1", "text": "fictional note", "complete": false}]}` fixture and `localStorage`. The key skill is separating local page state from persisted remote state; model that boundary with a storage adapter locally instead of exposing a remote credential. An optional instructor demonstration may show request shapes with redacted placeholders or an isolated server-side proxy, but learner completion never depends on a hosted bin or remote write.'
+						'Review JSONBin v3 only as a preserved example of a hosted JSON API. Its write routes require an `X-Master-Key` or scoped `X-Access-Key`, so do not create, paste, or ship either key in CodePen or browser source. Build the required exercise with a versioned `{"notes": [{"id": "n1", "text": "fictional note", "complete": false}]}` fixture and `localStorage`. The key skill is separating local page state from persisted remote state; model that boundary with a storage adapter locally instead of exposing a remote credential. An optional demonstration may show request shapes with redacted placeholders or an isolated server-side proxy, but learner completion never depends on a hosted bin or remote write.'
 				},
 				{
 					title: "JSM12 Project 1: To-Do List",

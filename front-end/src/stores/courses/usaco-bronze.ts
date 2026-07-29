@@ -1646,7 +1646,7 @@ function decorateBronzeModule(
 			content: [
 				"**Constraint table:** Record every input bound, total bound across test cases, time limit, memory limit, and any sortedness or uniqueness guarantee.",
 				"**Work budget:** State the candidate operation count before implementation and reject an approach that cannot fit the largest legal input.",
-				"**Numeric range:** Compute the largest possible index, count, distance, sum, and product; use `long long`, Java `long`, or Python integers when 32-bit storage is unsafe.",
+				"**Numeric range:** Compute the largest possible index, count, distance, sum, and product; use a 64-bit signed integer type in C++, Java `long`, or Python integers when 32-bit storage is unsafe.",
 				"**Greedy evidence:** State the local choice and why exchanging or delaying it cannot improve the final answer."
 			].join("\n"),
 			projectLink: USACO_CONTEST_RULES,

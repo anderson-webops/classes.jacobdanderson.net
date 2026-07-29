@@ -1477,7 +1477,7 @@ const SCRATCH_LEVEL_2_FLOW: ScratchLevel2FlowConfig[] = [
 		keyBlocks: ["if then else", "and", "or", "not", "touching color"],
 		choiceCurriculumTitles: ["GM3 Project 2: Strength Tester"],
 		projectThread:
-			"Use Color Spotter to test true, false, and partial-match cases. A complex condition is complete only when the student can explain why each operator is necessary."
+			"Use Color Spotter to test true, false, and partial-match cases. A complex condition is complete only when the explanation states why each operator is necessary."
 	},
 	{
 		oldTitle: "GM4 Cloning",
@@ -1561,7 +1561,7 @@ const SCRATCH_LEVEL_2_FLOW: ScratchLevel2FlowConfig[] = [
 		],
 		choiceCurriculumTitles: ["GM8 Project 2: Talent Show II"],
 		projectThread:
-			"Use My First Functions to distinguish defining a custom block from calling it. Require at least one input that changes behavior without copied scripts."
+			"Use My First Functions to distinguish defining a custom block from calling it. At least one input changes behavior without copied scripts."
 	},
 	{
 		oldTitle: "Check-In #2",

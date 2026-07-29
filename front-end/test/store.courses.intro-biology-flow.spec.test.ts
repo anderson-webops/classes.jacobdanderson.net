@@ -136,7 +136,7 @@ describe("Intro to Biology learner flow", () => {
 		);
 		expect(setup).toContain("Color is never the only label");
 		expect(setup).toContain(
-			"do not ask learners to compare private body data"
+			"never request comparisons of private body data"
 		);
 		expect(courseText()).toContain("**Accessible media alternative:**");
 		expect(courseText()).toContain(
