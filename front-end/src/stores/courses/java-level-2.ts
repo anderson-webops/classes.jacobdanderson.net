@@ -1,4 +1,4 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
@@ -28,7 +28,7 @@ const JAVA_LEVEL_2_ORIGINAL_MEDIA = [
 	"jm_10_tic_tac_toe.mp4"
 ];
 
-export const javaLevel2Course: RawCourse = {
+const javaLevel2SourceCourse: RawCourse = {
 	name: "Java Level 2",
 	modules: [
 		{
@@ -1187,6 +1187,575 @@ export const javaLevel2Course: RawCourse = {
 				}
 			],
 			supplementalProjects: []
+		}
+	]
+};
+
+const JAVA_LEVEL_2_PRIMARY_MODULE_COUNT = 13;
+
+const JAVA_LEVEL_2_SECONDARY_PROJECTS = new Set([
+	"JM2 Project 1: Person Class",
+	"Check-In #1: Additional Practice Project",
+	"JM4 Project 2: Book and PictureBook Class",
+	"JM4 Project 3: Vehicle Inheritance",
+	"JM5 Project 2: Dealership Database",
+	"Check-In #2: Additional Practice Project",
+	"JM8 Project 1: Crazy Name Tags Printer"
+]);
+
+const JAVA_LEVEL_2_CONCURRENCY_ITEMS = new Set([
+	"Threading in Java",
+	"JM6 Project 2: Bouncing Zeros",
+	"JM6 Supplemental Project 1: Barnyard Orchestra",
+	"Threading & Error Handling Transfer Practice",
+	"Threading & Error Handling Extension Practice",
+	"Check-In #2: Threading and Error Handling",
+	"JM9 Supplemental Project 1: Maze Runner Part 3",
+	"Preview: Threading Example"
+]);
+
+const JAVA_LEVEL_2_MODULE_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"JM0 Visual-to-OOP Bridge": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Java 21",
+			"object state",
+			"constructor trace",
+			"method contract",
+			"repeatable test"
+		],
+		flowNote:
+			"Translate the visible Karel object into custom classes while pinning the course to Java 21. Every class begins with a constructor-and-state prediction, one repeatable test harness, and compiler warnings reviewed before larger OOP projects begin."
+	},
+	"JM1 Instance Variables, Constructors, and Methods": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"private field",
+			"valid constructor",
+			"query method",
+			"behavior method",
+			"instance independence"
+		],
+		flowNote:
+			"Build one encapsulated class whose constructor establishes valid state and whose methods preserve its rules. Test normal construction, a state change, a rejected value, `toString()`, and independence between two instances before generalizing the vocabulary."
+	},
+	"JM2 Overloaded Constructors & Comparison Methods": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"constructor delegation",
+			"valid default",
+			"equals",
+			"hashCode",
+			"ordering contract"
+		],
+		flowNote:
+			"Use `this(...)` to funnel overloaded constructors through one validity rule, then separate identity, equality, and ordering. Verify that equal objects share a hash code and that `compareTo()` is antisymmetric, transitive, and consistent with the documented equality policy."
+	},
+	"JM3 Static Variables & Methods": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"instance state",
+			"class-wide state",
+			"static factory or helper",
+			"Comparable",
+			"tie breaker"
+		],
+		flowNote:
+			"Use static state only when the value truly belongs to the class rather than an instance. Test object creation counts from a fresh process, define deterministic comparison tie breakers, and explain why a static helper does not depend on mutable instance state."
+	},
+	"Check-In #1": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"constructor trace",
+			"encapsulation",
+			"static boundary",
+			"equality",
+			"ordering evidence"
+		],
+		flowNote:
+			"Treat this as an evidence checkpoint: construct and mutate one class, explain instance versus static state, and prove equality or ordering with boundary cases. Assign only the practice item tied to an observed gap before continuing."
+	},
+	"JM4 Subclasses & Inheritance": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"is-a test",
+			"super constructor",
+			"override",
+			"substitutability",
+			"composition alternative"
+		],
+		flowNote:
+			"Use inheritance only after an explicit is-a test and compare it with composition. A subclass must preserve superclass expectations when used through the parent type; verify constructor chaining, overriding, dynamic dispatch, and one case where composition is the clearer design."
+	},
+	"JM5 Maps": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"key-value contract",
+			"missing key",
+			"duplicate key",
+			"iteration order",
+			"key equality"
+		],
+		flowNote:
+			"Choose a key with a stable equality and hash-code contract, state the replacement policy for duplicate keys, and never rely on `HashMap` iteration order. Test empty, missing, present, duplicate, and removal cases before using a map in a larger application."
+	},
+	"JM6 Threading & Error Handling": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"failure boundary",
+			"specific exception",
+			"validated input",
+			"recovery state",
+			"resource cleanup"
+		],
+		flowNote:
+			"Keep the required module focused on predictable failure handling. Identify the exact operation that can fail, catch only exceptions that can be handled locally, preserve a trustworthy state, and prove both success and recovery paths without empty or catch-all handlers."
+	},
+	"Check-In #2": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"inheritance trace",
+			"override",
+			"map contract",
+			"exception recovery",
+			"targeted reteach"
+		],
+		flowNote:
+			"Check inheritance, dynamic dispatch, maps, and exception recovery through predictions and small edits. Threading is an optional extension and is not required for advancement; use the results to select a focused practice task."
+	},
+	"JM7 Bank Account": {
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"integer cents or BigDecimal",
+			"account invariant",
+			"fictional data",
+			"transaction result",
+			"failure test"
+		],
+		flowNote:
+			"Treat the bank project as an object-model simulation, not a real financial or authentication system. Use fictional identifiers, exact decimal money, explicit deposit/withdrawal rules, and result objects or documented exceptions so rejected operations cannot partially change state."
+	},
+	"JM8 File I/O": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Path and Files",
+			"UTF-8",
+			"try-with-resources",
+			"temporary fixture",
+			"malformed-record policy"
+		],
+		flowNote:
+			"Use `Path` and `Files` with explicit UTF-8 and test only inside a temporary course-owned directory. Define the file format before parsing, close resources reliably, and verify missing, empty, malformed, partial, and ordinary inputs without storing real credentials or personal records."
+	},
+	"JM9 Maze Runner": {
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"maze parser",
+			"immutable wall",
+			"player state",
+			"deterministic fixture",
+			"exit condition"
+		],
+		flowNote:
+			"Separate maze parsing, board state, movement rules, rendering, and input control. Use small deterministic text fixtures to test missing start or exit, malformed rows, blocked moves, boundaries, valid movement, and completion before adding an optional timer."
+	},
+	"JM10 Master Project": {
+		estimatedTime: "7–9 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"multi-class architecture",
+			"interface boundary",
+			"collection contract",
+			"repeatable tests",
+			"portfolio README"
+		],
+		flowNote:
+			"Build one bounded local console application with a clear user problem, multi-class design, one interface or substitutable abstraction, one collection with documented rules, robust input handling, and repeatable tests. Persistence and concurrency remain optional unless they serve the design."
+	}
+};
+
+function javaLevel2SupplementalPath(title: string) {
+	return /extension|challenge|vehicle|dealership|password|thread|advanced|timer/i.test(
+		title
+	)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function strengthenJavaLevel2Item(
+	item: RawCourseModuleItem
+): RawCourseModuleItem {
+	if (item.title === "Subclasses") {
+		return {
+			...item,
+			content:
+				"Learn how subclasses extend superclasses, call parent constructors, and override behavior while preserving the superclass contract. Apply an explicit is-a test, verify substitutability through a parent-typed reference, and compare the design with composition before adding a hierarchy."
+		};
+	}
+
+	if (item.title === "Maps") {
+		return {
+			...item,
+			content:
+				"Learn how maps store key-value pairs and define behavior for missing, present, duplicate, and removed keys. Choose immutable or stable keys with correct `equals()` and `hashCode()`, and do not assume a `HashMap` iteration order."
+		};
+	}
+
+	if (item.title === "Errors and Exception Handling") {
+		return {
+			...item,
+			content:
+				"Use exceptions to represent failures that cannot be handled as ordinary return values. Catch the most specific exception at a boundary that can recover, validate expected user mistakes before throwing, preserve a trustworthy state, and never use an empty catch block or a broad `catch (Exception)` without rethrowing or a documented boundary reason."
+		};
+	}
+
+	if (item.title === "Check-In #2 Overview") {
+		return {
+			...item,
+			content:
+				"This check-in revisits inheritance, overriding, exception recovery, and maps through short code-reading and transfer tasks. Threading is available in the optional concurrency extension and is not required for advancement."
+		};
+	}
+
+	if (item.title === "JM7 Project 1: Bank Account") {
+		return {
+			...item,
+			content:
+				"Design a classroom `BankAccount` simulation and a `BankSystem` that manages fictional accounts in a map. Represent money with integer cents or `BigDecimal`, reject non-positive deposits and disallowed overdrafts without partial state changes, and test exact balances. If a login-like prompt is retained, use a clearly fake classroom PIN in memory only; never collect, persist, or log real passwords or personal financial data."
+		};
+	}
+
+	if (item.title === "Writing to a File") {
+		return {
+			...item,
+			content:
+				"Use `Path` and `Files` with explicit UTF-8 to write course-owned text fixtures inside a temporary directory. Use try-with-resources when a stream or writer is needed, define overwrite versus append behavior, and verify the resulting lines rather than relying only on a successful call."
+		};
+	}
+
+	if (item.title === "Reading from a File") {
+		return {
+			...item,
+			content:
+				"Use `Path` and `Files` with explicit UTF-8 to read a documented text format. Handle missing, empty, malformed, and ordinary files separately, close any opened resource with try-with-resources, and report line or record context without exposing private file contents."
+		};
+	}
+
+	if (item.title === "JM10 Master Project") {
+		return {
+			...item,
+			content:
+				"Design and build one bounded, local console application that demonstrates multi-class Java design, an interface or substitutable abstraction, a collection with documented invariants, robust input and failure handling, and repeatable tests. File persistence is optional; concurrency belongs in the optional extension rather than the minimum capstone."
+		};
+	}
+
+	return item;
+}
+
+function insertJavaLevel2Item(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateJavaLevel2Module(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = JAVA_LEVEL_2_MODULE_FLOW[module.title];
+	const movedProjects = module.curriculum.filter(item =>
+		JAVA_LEVEL_2_SECONDARY_PROJECTS.has(item.title)
+	);
+	let curriculum: RawCourseModuleItem[] = module.curriculum
+		.filter(
+			item =>
+				!JAVA_LEVEL_2_SECONDARY_PROJECTS.has(item.title) &&
+				!JAVA_LEVEL_2_CONCURRENCY_ITEMS.has(item.title)
+		)
+		.map(strengthenJavaLevel2Item)
+		.map(item => ({
+			...item,
+			learningPath: "core" as const
+		}));
+
+	if (module.title === "JM0 Visual-to-OOP Bridge") {
+		curriculum.push({
+			title: "Java 21 OOP Test Readiness",
+			content: [
+				"**Completion evidence:**",
+				"- Record `java --version` and `javac --version` for the pinned Java 21 environment and compile with `javac -Xlint:all` or the repository's equivalent warning gate.",
+				"- Run one repeatable class test through the repository's existing test runner; use JUnit 5 when configured, otherwise use a deterministic assertion-based driver until it is.",
+				"- Prove constructor state, one method result, one rejected input, and independence between two objects.",
+				"- Start from a clean output directory so a stale `.class` file cannot masquerade as a passing source change."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "JM2 Overloaded Constructors & Comparison Methods") {
+		curriculum = insertJavaLevel2Item(
+			curriculum,
+			"Overloaded Constructors & Comparison Methods: Verification and Reflection",
+			{
+				title: "Equality, Hashing, and Ordering Contract",
+				content: [
+					"**Completion evidence:**",
+					"- Overloaded constructors delegate to one validity rule and produce equivalent state for equivalent inputs.",
+					"- `equals()` handles self, `null`, wrong type, equal objects, and unequal objects; equal objects return the same `hashCode()`.",
+					"- `compareTo()` documents its sort keys and tie breakers and is tested for negative, zero, and positive results.",
+					"- Ordering is antisymmetric and transitive on the fixture set, and its consistency or intentional difference from equality is stated."
+				].join("\n"),
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "JM6 Threading & Error Handling") {
+		curriculum = insertJavaLevel2Item(
+			curriculum,
+			"JM6 Project 1: Try-Catch This",
+			{
+				title: "Exception Recovery Completion Contract",
+				content: [
+					"**Completion evidence:**",
+					"- Name the operation that can fail and the most specific exception or validation result expected.",
+					"- Test ordinary success, invalid user input, arithmetic or index boundary failure, and a corrected retry.",
+					"- After recovery, identify which values remain trustworthy and prove the object or collection was not partially mutated.",
+					"- No empty catch blocks, exception-driven handling for ordinary predictable input, or catch-all handlers that hide programming errors."
+				].join("\n"),
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "JM7 Bank Account") {
+		curriculum = insertJavaLevel2Item(
+			curriculum,
+			"JM7 Project 1: Bank Account",
+			{
+				title: "Safe Classroom Money Model",
+				content: [
+					"**Completion evidence:**",
+					"- Every amount uses integer cents or `BigDecimal`, with a documented rounding policy if decimal input is accepted.",
+					"- Constructor and transaction invariants reject invalid amounts, unknown accounts, and disallowed overdrafts without changing balances.",
+					"- Tests cover exact deposit, exact withdrawal, insufficient funds, zero or negative amount, and two independent fictional accounts.",
+					"- Fixtures contain no real names, credentials, account numbers, or financial records, and no password-like value is written to a file or log."
+				].join("\n"),
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "JM8 File I/O") {
+		curriculum = insertJavaLevel2Item(
+			curriculum,
+			"JM8 Project 2: File IO and Maps",
+			{
+				title: "File Format and Fixture Completion Contract",
+				content: [
+					"**Completion evidence:**",
+					"- Document the path root, UTF-8 encoding, record shape, duplicate-key policy, and malformed-record policy.",
+					"- Use a temporary course-owned directory and fixtures for missing, empty, one-record, malformed, duplicate, and ordinary files.",
+					"- Read and write through `Path` and `Files` or a justified try-with-resources stream, then compare exact persisted content.",
+					"- An interrupted or rejected read does not publish partial application state, and diagnostic text identifies the record without printing private content."
+				].join("\n"),
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "JM9 Maze Runner") {
+		curriculum = insertJavaLevel2Item(
+			curriculum,
+			"Maze Runner: Planning and Architecture",
+			{
+				title: "Maze Runner Deterministic Completion Contract",
+				content: [
+					"**Completion evidence:**",
+					"- Separate parser, immutable wall/layout data, player state, movement rules, rendering, and console control.",
+					"- Tiny text fixtures cover missing start, missing exit, malformed or uneven rows, blocked boundary movement, valid movement, and reaching the exit.",
+					"- A rejected move leaves player and maze state unchanged, and the main loop has an explicit completion or quit condition.",
+					"- The same fixture and command sequence produces the same result; timed behavior is optional and tested separately."
+				].join("\n"),
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "JM10 Master Project") {
+		curriculum = insertJavaLevel2Item(curriculum, "Portfolio Project", {
+			title: "Master Project Definition of Done",
+			content: [
+				"**Required evidence:**",
+				"- One-sentence user problem, bounded feature list, class diagram or responsibility table, and a documented interface or substitution boundary.",
+				"- A collection contract covering empty, missing, duplicate, and removal behavior plus robust full-line input recovery.",
+				"- Repeatable tests for each domain class and one end-to-end happy path, rejected input, failure recovery, and fresh restart.",
+				"- A README with Java 21 prerequisites, clean build/run/test steps, example interaction, design explanation, known limitation, and no real personal or credential data."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	const supplementalProjects: RawCourseModuleItem[] = [
+		...module.supplementalProjects.filter(
+			item => !JAVA_LEVEL_2_CONCURRENCY_ITEMS.has(item.title)
+		),
+		...movedProjects
+	];
+
+	if (module.title === "JM6 Threading & Error Handling") {
+		supplementalProjects.push(
+			{
+				title: "Exception Recovery Table",
+				content:
+					"Create a table for four failure cases with operation, invalid input or exception, state that remains trustworthy, user-facing response, and whether retry is safe. Implement and verify one row without an empty or catch-all handler.",
+				learningPath: "choice"
+			},
+			{
+				title: "Malformed Input Boundary Challenge",
+				content:
+					"Build a bounded full-line input loop that accepts one documented value, rejects blank and malformed input, limits retries, and exits cleanly at end-of-input. Tests prove recovery does not reuse stale data or partially update an object.",
+				learningPath: "challenge"
+			}
+		);
+	}
+
+	return {
+		...module,
+		title:
+			module.title === "JM6 Threading & Error Handling"
+				? "JM6 Exceptions and Failure Handling"
+				: module.title,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: supplementalProjects.map(item => ({
+			...item,
+			learningPath:
+				item.learningPath ?? javaLevel2SupplementalPath(item.title)
+		}))
+	};
+}
+
+function sourceJavaLevel2Items() {
+	return javaLevel2SourceCourse.modules.flatMap(module => [
+		...module.curriculum,
+		...module.supplementalProjects
+	]);
+}
+
+function buildOptionalJavaConcurrencyExtension(): RawCourse["modules"][number] {
+	const concurrencyItems = sourceJavaLevel2Items().filter(item =>
+		JAVA_LEVEL_2_CONCURRENCY_ITEMS.has(item.title)
+	);
+
+	return {
+		kind: "appendix",
+		title: "Optional Java Concurrency Extension",
+		estimatedTime: "3–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"bounded worker count",
+			"start and join",
+			"interrupt policy",
+			"shared-state boundary",
+			"deterministic completion"
+		],
+		curriculum: [
+			{
+				title: "Concurrency Extension Safety and Completion Contract",
+				content: [
+					"**Course flow:** Complete the required exception and state-management modules first. This extension preserves the original threading examples without making concurrency a Java Level 2 prerequisite.",
+					"",
+					"**Completion evidence:**",
+					"- Use a fixed, small number of threads or a bounded `ExecutorService`; no unbounded thread creation or infinite worker loop.",
+					"- Define ownership for mutable state, wait for completion with `join()` or executor shutdown, and restore interrupt status when interruption cannot be completed locally.",
+					"- Do not use `sleep()` to prove correctness. Tests use a fixed event count, explicit completion signal, timeout, and deterministic final-state assertion.",
+					"- The console animation and optional maze timer stop cleanly and leave no background worker running."
+				].join("\n"),
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: concurrencyItems.map(item => ({
+			...item,
+			learningPath: javaLevel2SupplementalPath(item.title)
+		}))
+	};
+}
+
+function buildJavaLevel2PracticeArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Java Level 2 Practice and Reference Archive",
+		estimatedTime: "Choose individual references or studios as needed",
+		keyBlocks: [
+			"targeted reference",
+			"quiz-game example",
+			"maze transfer",
+			"file-I/O practice",
+			"comparison evidence"
+		],
+		curriculum: [
+			{
+				title: "Java Level 2 Practice and Reference Archive Guide",
+				content:
+					"**Course flow:** JM11 Repo Extension and Reference Library, JM Master Project Example Quiz Game: Practice Studio, and JM Maze Runner Project: Practice Studio are optional reference, recovery, and transfer material after the matching core module. Select one item for a named gap or extension goal; completing the entire archive is not required.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.filter(item => !JAVA_LEVEL_2_CONCURRENCY_ITEMS.has(item.title))
+				.map(item => ({
+					...item,
+					learningPath: javaLevel2SupplementalPath(item.title)
+				}))
+		)
+	};
+}
+
+const javaLevel2PrimaryModules = javaLevel2SourceCourse.modules
+	.slice(0, JAVA_LEVEL_2_PRIMARY_MODULE_COUNT)
+	.map(decorateJavaLevel2Module);
+const javaLevel2ArchiveModules = javaLevel2SourceCourse.modules.slice(
+	JAVA_LEVEL_2_PRIMARY_MODULE_COUNT,
+	-1
+);
+const javaLevel2PendingMediaModule = javaLevel2SourceCourse.modules.at(-1)!;
+
+export const javaLevel2Course: RawCourse = {
+	...javaLevel2SourceCourse,
+	modules: [
+		...javaLevel2PrimaryModules,
+		buildOptionalJavaConcurrencyExtension(),
+		buildJavaLevel2PracticeArchive(javaLevel2ArchiveModules),
+		{
+			...javaLevel2PendingMediaModule,
+			kind: "appendix",
+			estimatedTime: "Reference only",
+			keyBlocks: ["stable media URL", "pending asset"],
+			curriculum: javaLevel2PendingMediaModule.curriculum.map(item => ({
+				...item,
+				learningPath: "core"
+			}))
 		}
 	]
 };
