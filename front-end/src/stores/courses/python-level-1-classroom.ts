@@ -138,6 +138,114 @@ For a project share, demonstrate the Normal result first. If the Hard section is
 	]
 };
 
+const CLASSROOM_LAUNCH_CORE_TITLES = new Set([
+	"Classroom Workflow: Run, Normal, Hard",
+	"Launch Project 1: Color Circle Art",
+	"Launch Project 2: Picasso Keyboard Painter",
+	"Classroom Debugging and Showcase Routine"
+]);
+const CLASSROOM_LAUNCH_CHOICE_TITLES = new Set([
+	"Launch Project 3: Triangle Motion",
+	"Launch Project 4: Neon Trail Painter",
+	"Launch Project 5: Firework Festival",
+	"Launch Project 6: Spiral Galaxy",
+	"Launch Remix: Palette and Theme"
+]);
+const CLASSROOM_LAUNCH_CHALLENGE_TITLES = new Set([
+	"Launch Project 7: Turtle Race Day",
+	"Launch Project 8: Flower Garden Clicker",
+	"Launch Project 9: Maze Explorer",
+	"Launch Remix: Controls and Feedback"
+]);
+const CLASSROOM_SLUG_COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
+const CLASSROOM_SLUG_NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
+const CLASSROOM_SLUG_LEADING_HYPHENS_RE = /^-+/;
+const CLASSROOM_SLUG_TRAILING_HYPHENS_RE = /-+$/;
+
+function classroomSlugify(value: string) {
+	return value
+		.toLowerCase()
+		.normalize("NFKD")
+		.replace(CLASSROOM_SLUG_COMBINING_MARKS_RE, "")
+		.replace(CLASSROOM_SLUG_NON_ALPHANUMERIC_RE, "-")
+		.replace(CLASSROOM_SLUG_LEADING_HYPHENS_RE, "")
+		.replace(CLASSROOM_SLUG_TRAILING_HYPHENS_RE, "");
+}
+
+function configureClassroomLaunch(module: RawCourseModule) {
+	const legacyModuleId = classroomSlugify(
+		`python-level-1-classroom-${module.title}`
+	);
+	module.id ??= legacyModuleId;
+
+	for (const item of module.curriculum) {
+		item.id ??= classroomSlugify(
+			`${legacyModuleId}-curriculum-${item.title}`
+		);
+	}
+	for (const item of module.supplementalProjects) {
+		item.id ??= classroomSlugify(
+			`${legacyModuleId}-supplemental-${item.title}`
+		);
+	}
+
+	const movedProjects = module.curriculum.filter(
+		item => !CLASSROOM_LAUNCH_CORE_TITLES.has(item.title)
+	);
+	module.curriculum = module.curriculum.filter(item =>
+		CLASSROOM_LAUNCH_CORE_TITLES.has(item.title)
+	);
+
+	for (const item of module.curriculum) {
+		item.learningPath = "core";
+	}
+	for (const item of movedProjects) {
+		if (CLASSROOM_LAUNCH_CHALLENGE_TITLES.has(item.title)) {
+			item.learningPath = "challenge";
+		} else if (CLASSROOM_LAUNCH_CHOICE_TITLES.has(item.title)) {
+			item.learningPath = "choice";
+		} else {
+			throw new Error(
+				`Classroom launch project is missing a path: ${item.title}.`
+			);
+		}
+	}
+	for (const item of module.supplementalProjects) {
+		if (CLASSROOM_LAUNCH_CHALLENGE_TITLES.has(item.title)) {
+			item.learningPath = "challenge";
+		} else if (CLASSROOM_LAUNCH_CHOICE_TITLES.has(item.title)) {
+			item.learningPath = "choice";
+		} else {
+			throw new Error(
+				`Classroom launch remix is missing a path: ${item.title}.`
+			);
+		}
+	}
+
+	module.supplementalProjects = [
+		...movedProjects,
+		...module.supplementalProjects
+	];
+	module.estimatedTime = "2–3 sessions · 45–60 minutes each";
+	module.keyBlocks = [
+		"run before editing",
+		"Normal section",
+		"Hard section",
+		"save a working checkpoint",
+		"predict, test, repair, explain"
+	];
+
+	const workflow = module.curriculum[0];
+	if (workflow) {
+		workflow.content = [
+			workflow.content,
+			"**Course flow:** Complete Color Circle Art and Picasso Keyboard Painter as the shared launch. Choose the remaining showcase projects by concept or interest; Turtle Race, Flower Garden, and Maze Explorer are the harder systems challenges."
+		].join("\n\n");
+	}
+}
+
+configureClassroomLaunch(classroomLaunchModule);
+
 export const pythonLevel1ClassroomCourse: RawCourse = {
 	name: "Python Level 1: Classroom Edition",
 	modules: [

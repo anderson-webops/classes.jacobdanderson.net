@@ -1,4 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { beforeEach, describe, expect, it } from "vitest";
+import { useCoursesStore } from "@/stores/courses";
 import type {
 	RawCourse,
 	RawCourseModule,
@@ -42,6 +44,10 @@ function classroomProjects(course: RawCourse) {
 }
 
 describe("Python Level 1 classroom edition", () => {
+	beforeEach(() => {
+		setActivePinia(createPinia());
+	});
+
 	it("preserves the full course sequence after its classroom launch", async () => {
 		const [baseCourse, classroomCourse] = await Promise.all([
 			loadRawCourse("python-level-1"),
@@ -50,9 +56,7 @@ describe("Python Level 1 classroom edition", () => {
 		expect(baseCourse).not.toBeNull();
 		expect(classroomCourse).not.toBeNull();
 
-		expect(classroomCourse!.name).toBe(
-			"Python Level 1: Classroom Edition"
-		);
+		expect(classroomCourse!.name).toBe("Python Level 1: Classroom Edition");
 		expect(classroomCourse!.modules[0]?.title).toBe(
 			"Classroom Launch: Normal and Hard Projects"
 		);
@@ -60,9 +64,11 @@ describe("Python Level 1 classroom edition", () => {
 			classroomCourse!.modules.slice(1).map(module => module.title)
 		).toEqual(baseCourse!.modules.slice(1).map(module => module.title));
 
-		const launchProjects = classroomCourse!.modules[0]!.curriculum.filter(
-			item => /^Launch Project \d+:/.test(item.title)
-		);
+		const launchModule = classroomCourse!.modules[0]!;
+		const launchProjects = [
+			...launchModule.curriculum,
+			...launchModule.supplementalProjects
+		].filter(item => /^Launch Project \d+:/.test(item.title));
 		expect(launchProjects).toHaveLength(9);
 		expect(launchProjects.map(item => item.title)).toEqual([
 			"Launch Project 1: Color Circle Art",
@@ -75,12 +81,33 @@ describe("Python Level 1 classroom edition", () => {
 			"Launch Project 8: Flower Garden Clicker",
 			"Launch Project 9: Maze Explorer"
 		]);
+		expect(launchModule.estimatedTime).toBe(
+			"2–3 sessions · 45–60 minutes each"
+		);
+		expect(launchModule.keyBlocks).toHaveLength(5);
+		expect(launchModule.curriculum.map(item => item.title)).toEqual([
+			"Classroom Workflow: Run, Normal, Hard",
+			"Launch Project 1: Color Circle Art",
+			"Launch Project 2: Picasso Keyboard Painter",
+			"Classroom Debugging and Showcase Routine"
+		]);
+		expect(
+			launchModule.curriculum.every(item => item.learningPath === "core")
+		).toBe(true);
+		expect(
+			launchModule.supplementalProjects.filter(
+				item => item.learningPath === "choice"
+			)
+		).toHaveLength(5);
+		expect(
+			launchModule.supplementalProjects.filter(
+				item => item.learningPath === "challenge"
+			)
+		).toHaveLength(4);
 	});
 
 	it("gives every classroom project Normal and Hard work areas", async () => {
-		const classroomCourse = await loadRawCourse(
-			"python-level-1-classroom"
-		);
+		const classroomCourse = await loadRawCourse("python-level-1-classroom");
 		expect(classroomCourse).not.toBeNull();
 
 		const projects = classroomProjects(classroomCourse!);
@@ -93,10 +120,9 @@ describe("Python Level 1 classroom edition", () => {
 			expect(item.content, `${module.title} / ${item.title}`).toContain(
 				"**Hard:**"
 			);
-			expect(
-				item.projectLink,
-				`${module.title} / ${item.title}`
-			).toMatch(/^\/ide\?/);
+			expect(item.projectLink, `${module.title} / ${item.title}`).toMatch(
+				/^\/ide\?/
+			);
 
 			const projectUrl = new URL(
 				item.projectLink!,
@@ -121,10 +147,42 @@ describe("Python Level 1 classroom edition", () => {
 		expect(JSON.stringify(classroomCourse)).not.toMatch(/\bbeginner\b/i);
 	});
 
-	it("uses completed source projects when available and keeps source attribution", async () => {
-		const classroomCourse = await loadRawCourse(
+	it("keeps launch guidance focused on visible Turtle behavior", async () => {
+		const classroomCourse = await loadRawCourse("python-level-1-classroom");
+		const launchModule = classroomCourse?.modules[0];
+		expect(launchModule).toBeDefined();
+
+		const launchText = JSON.stringify(launchModule);
+		expect(launchText).toContain("**Course flow:**");
+		expect(launchText).toContain("canvas");
+		expect(launchText).toContain("clean start");
+		expect(launchText).not.toMatch(
+			/input surface|file data|empty value, duplicate value|casing issue|punctuation issue|messy input/i
+		);
+	});
+
+	it("preserves progress IDs when launch projects become optional", async () => {
+		const course = await useCoursesStore().loadCourseById(
 			"python-level-1-classroom"
 		);
+		const launchModule = course?.modules.find(
+			module =>
+				module.title === "Classroom Launch: Normal and Hard Projects"
+		);
+		const triangle = launchModule?.supplementalProjects.find(
+			item => item.title === "Launch Project 3: Triangle Motion"
+		);
+
+		expect(triangle?.id).toBe(
+			"python-level-1-classroom-classroom-launch-normal-and-hard-projects-curriculum-launch-project-3-triangle-motion"
+		);
+		expect(triangle?.aliases).toContain(
+			"python-level-1-classroom-classroom-launch-normal-and-hard-projects-supplemental-launch-project-3-triangle-motion"
+		);
+	});
+
+	it("uses completed source projects when available and keeps source attribution", async () => {
+		const classroomCourse = await loadRawCourse("python-level-1-classroom");
 		expect(classroomCourse).not.toBeNull();
 
 		const movementModule = classroomCourse!.modules.find(

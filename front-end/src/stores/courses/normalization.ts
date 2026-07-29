@@ -3560,15 +3560,9 @@ function isPygameSource(source: string) {
 }
 
 function isPythonTurtleContext(context: CourseTextContext) {
-	if (
-		context.courseId !== "python-level-1" &&
-		context.courseId !== "python-level-1-classroom"
-	) {
-		return false;
-	}
-
-	return /\b(?:grs\d+|turtle|coordinates?|movement|draw|drawing|canvas|shape|stamp|penup|pendown|goto|forward|left|right|event|collision|score|boundary|space eater|game mechanics)\b/.test(
-		contextText(context)
+	return (
+		context.courseId === "python-level-1" ||
+		context.courseId === "python-level-1-classroom"
 	);
 }
 
@@ -5601,6 +5595,20 @@ function extensionPrompt(context: CourseTextContext) {
 				`Create a compact scoring or reasoning note for ${subject} that targets one likely AP point loss.`,
 			subject =>
 				`Add one alternate input for ${subject} and explain which Java statement or method behavior controls the outcome.`
+		]);
+	}
+	if (isPythonTurtleContext(context)) {
+		return variantPrompt(context, [
+			subject =>
+				`Add one visible Turtle variation to ${subject} by changing a coordinate, color, size, movement, loop, or helper argument.`,
+			subject =>
+				`Add one canvas-boundary or reset case to ${subject} and verify it from a clean run.`,
+			subject =>
+				`Extend ${subject} with one new key, click, shape, animation, score, or collision behavior while preserving the existing controls.`,
+			subject =>
+				`Refactor one repeated Turtle action in ${subject} into a helper and call it with two visibly different arguments.`,
+			subject =>
+				`Add one state or feedback change to ${subject} and explain which Turtle command, event callback, loop, or condition controls it.`
 		]);
 	}
 	if (/python level 1|python level 2/.test(source)) {
