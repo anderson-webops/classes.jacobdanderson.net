@@ -67,6 +67,11 @@ const JAVASCRIPT_LEVEL_2_ORIGINAL_MEDIA = [
 	"jsm14_project_1.mp4"
 ] as const;
 
+const JAVASCRIPT_LEVEL_2_PRACTICE_PACK =
+	"/course-assets/javascript-level-2/javascript-level-2-practice-pack.md";
+const JAVASCRIPT_LEVEL_2_VERIFICATION_GUIDE =
+	"/course-assets/javascript-level-2/javascript-level-2-verification-guide.md";
+
 function applyJavaScriptLevel2PendingMediaNotices(course: RawCourse) {
 	for (const module of course.modules) {
 		for (const item of [
@@ -83,7 +88,7 @@ function applyJavaScriptLevel2PendingMediaNotices(course: RawCourse) {
 	}
 }
 
-export const javascriptLevel2Course: RawCourse = {
+const javascriptLevel2SourceCourse: RawCourse = {
 	name: "JavaScript Level 2: JavaScript Master",
 	modules: [
 		{
@@ -208,25 +213,25 @@ export const javascriptLevel2Course: RawCourse = {
 					title: "Check-In #2: APIs",
 					content: `**Concept path:** An API is a structured way for one program to request data from another program. In browser JavaScript, \`fetch\` starts the request and the response must be converted to usable data before the values can be read.
 
-**Practice targets:** Request \`https://pokeapi.co/api/v2/move/\`, convert the response to JSON, inspect the top-level object, and log the name of the first returned move. Keep the request code separate from any display code so the data shape is easy to inspect.
+**Practice targets:** Begin with the supplied PokéAPI-shaped fixture, inspect its top-level object, validate \`results\`, and display the first move name. Then optionally request \`https://pokeapi.co/api/v2/move/?limit=20\`, check \`response.ok\`, parse JSON, validate the same shape, and use an \`AbortController\` timeout. Keep loading, request, validation, state, and display code separate.
 
-**Evidence target:** The console shows the full response shape during development and prints the first move name from \`results[0].name\`. Network or data errors produce a visible message instead of a silent failure.`
+**Evidence target:** The fixture route always produces the expected first name. A successful optional request uses the same rendering path, repeated reads use the cached result, and offline, timeout, non-OK, or malformed-data cases produce a visible message without erasing the last valid state.`
 				},
 				{
 					title: "Check-In #2: Databases",
 					content: `**Concept path:** Databases store related records so programs can create, read, update, and delete persistent data. SQL queries describe what data to retrieve and how tables relate.
 
-**Practice targets:** Define \`SELECT\`, \`WHERE\`, and \`JOIN\` using a books-and-bookshelves example. Create a simple dbdiagram.io schema with a books table, a bookshelves table, and a relationship showing which shelf stores each book. List the four CRUD operations and connect each one to a possible app action.
+**Practice targets:** Define \`SELECT\`, \`WHERE\`, and \`JOIN\` using the supplied books-and-bookshelves rows. Draw a two-table schema locally, identify primary and foreign keys, predict each supplied query result, and map create, read, update, and delete to local app state. Optionally reproduce the diagram in dbdiagram after the local artifact is complete.
 
-**Evidence target:** The schema makes the relationship visible, the query vocabulary is tied to concrete records, and the CRUD examples distinguish changing stored data from merely displaying it.`
+**Evidence target:** The schema makes the relationship and constraints visible, each query prediction matches the supplied result, CRUD examples distinguish changing stored data from merely rendering it, and no hosted database, account, or real record is required.`
 				},
 				{
 					title: "Check-In #2: Additional Practice Project",
-					content: `**Project target:** Build a small PokeAPI analyzer that counts move types and displays the total for a prompted type. The project combines remote data, array/object traversal, input handling, and page output.
+					content: `**Project target:** Build a small move analyzer that counts types from a supplied PokéAPI-shaped fixture and displays the total for a form-selected type. An optional public GET refresh may replace the fixture after the local route works. The project combines resilient data loading, array/object traversal, input handling, and safe page output.
 
-**Build path:** Fetch move data, inspect the response, and decide which field contains the move type information needed by the project. Normalize the prompted type so capitalization does not break the comparison. Store counts in an object where each key is a type name and each value is the number of matching moves.
+**Build path:** Validate the fixture, normalize the form value so capitalization does not break comparison, and store counts in an object where each key is a type and each value is the number of matching moves. For an optional live refresh, check status, abort after a short timeout, cache the response, validate shape, and fall back to the fixture.
 
-**Evidence target:** The page displays a count for at least two different type inputs, handles an unknown type clearly, and includes a console or page-level trace showing the data used to build the counts.`,
+**Evidence target:** The page displays correct counts for at least two types, handles unknown and empty values, remains usable offline or after malformed remote data, and includes a privacy-safe page trace naming whether fixture or live data produced the result.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/a320051c74a1a5baa1358818c5bca5bc",
 					solutionLink:
@@ -281,11 +286,11 @@ export const javascriptLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Introductions & Setup",
-					content: `**Setup path:** JavaScript Level 2 uses CodePen as a fast browser workspace with separate HTML, CSS, and JavaScript panels. Open the starter resource, save a personal copy, run the page, and confirm that JavaScript changes update the visible output.
+					content: `**Setup path:** JavaScript Level 2 uses local \`index.html\`, \`styles.css\`, and \`script.js\` files as the durable browser workspace. Open the starter resource or create those three files, run the page, and confirm that JavaScript changes update visible output. CodePen remains an optional reference and quick experiment surface rather than the only place the project can run.
 
-**Core workflow:** Use \`printToScreen("Hello World")\` for page output and \`console.log()\` for diagnostic output. The page output is for the user-visible result; the console is for inspecting intermediate values, types, and errors.
+**Core workflow:** Render user-visible results into a semantic page element with \`textContent\` and use \`console.log()\` only for temporary diagnostic evidence. Existing \`printToScreen("Hello World")\` examples are sandbox scaffolds; identify the element and DOM update that replace that helper in a standards-based page.
 
-**Evidence target:** The saved pen runs after a refresh, a small text change appears on the page, and the console can be opened to inspect a test value.`,
+**Evidence target:** The local project runs after a refresh, a small text change appears on the page, the same result remains understandable without CodePen, and the console can be opened to inspect a test value without containing private input.`,
 					projectLink: "https://codepen.io/junilearning/pen/JjGrYOG"
 				},
 				{
@@ -300,9 +305,9 @@ export const javascriptLevel2Course: RawCourse = {
 					title: "Alert and Prompt",
 					content: `**Concept path:** \`alert()\` displays a blocking browser message, while \`prompt()\` collects a string from the user. Prompted input is text even when it looks like a number, so numeric calculations require conversion.
 
-**Practice targets:** Collect a name and a number with \`prompt()\`, print a greeting to the page, and log the raw input plus converted numeric value to the console. Test canceling the prompt and entering blank text so the program handles missing input deliberately.
+**Practice targets:** Inspect one preserved \`prompt()\` and \`alert()\` example, including cancel and blank behavior. Then replace it with a labeled form, submit event, explicit numeric conversion, an inline status message, and focus that remains in the page. Use fictional input and do not log the raw response.
 
-**Evidence target:** The page output changes based on input, numeric conversion is explicit, and invalid or missing input produces a clear fallback instead of \`NaN\` spreading through later calculations.`
+**Evidence target:** The form route is keyboard operable, page output changes from the normalized value, conversion is explicit, invalid or missing input produces a clear inline fallback, and \`NaN\` or personal text does not spread through diagnostics.`
 				},
 				{
 					title: "Conditionals",
@@ -1257,17 +1262,17 @@ export const javascriptLevel2Course: RawCourse = {
 					title: "APIs",
 					content: `**Concept path:** API requests are asynchronous because the browser must wait for another service to respond. \`fetch\` returns a promise, and the response body must be parsed, commonly with \`.json()\`, before the data can be used.
 
-**Practice targets:** Fetch a small public API, log the raw response status, parse JSON, and inspect the data shape before rendering. Add a visible loading state and an error state so the page does not look broken while waiting or after failure.
+**Practice targets:** Load a supplied JSON fixture through the same validation and rendering functions used by an optional public GET request. For the live route, check \`response.ok\`, parse JSON, validate the required fields, abort after a short timeout, cache repeated reads, and expose loading, success, empty, stale, and failure states.
 
-**Evidence target:** The page behavior distinguishes loading, successful data, and failed request states. The code reads data from the parsed response instead of assuming the shape without inspection.`
+**Evidence target:** The page remains usable with the network disabled, distinguishes every request state, keeps the last valid result during a failed refresh, and reads only validated fields. No API key, browser write credential, personal input, or unbounded retry is present.`
 				},
 				{
 					title: "JSM10 Project 1: Programming Jokes",
-					content: `**Project target:** Fetch a random programming joke and display both setup and punchline in the page. The project practices promise handling and data-driven rendering.
+					content: `**Project target:** Display programming jokes from the supplied fixture, then optionally refresh from the preserved public joke endpoint. The project practices promise handling, response validation, state, and data-driven rendering without making network availability a completion requirement.
 
-**Build path:** Request \`https://official-joke-api.appspot.com/jokes/programming/random\`, parse the JSON response, inspect whether the API returns an array or object, and render the joke fields safely. Add a button to request another joke.
+**Build path:** Validate whether the fixture or response contains an array or object, normalize it into one joke record, and render setup and punchline with \`textContent\`. Add a button that uses one active request, checks status, aborts after a timeout, and returns to fixture data when the endpoint is unavailable or changed.
 
-**Evidence target:** The page displays a joke after the request finishes, repeated clicks can load new jokes, and request errors display a readable fallback message.`,
+**Evidence target:** The fixture always renders, repeated clicks do not create overlapping requests, malformed or failed responses display a readable status while keeping valid content, and text from the data cannot become page markup.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/55981d32b9659656bb8cc4a17a0526bc",
 					solutionLink:
@@ -1275,11 +1280,11 @@ export const javascriptLevel2Course: RawCourse = {
 				},
 				{
 					title: "JSM10 Project 2: Random Fox Generator",
-					content: `**Project target:** Build a random fox image generator that fetches image data and updates the page on demand.
+					content: `**Project target:** Build an image-card generator from a supplied fictional-animal fixture, then optionally refresh the image URL from the preserved random-fox endpoint.
 
-**Build path:** Request \`https://randomfox.ca/floof/\`, read the returned image URL, create or update an \`img\` element, and trigger the request from a button click. Keep the old image visible or show a loading state while the next image is loading.
+**Build path:** Validate the data object and parse the candidate URL with the \`URL\` API. Permit only HTTPS from the reviewed fixture or provider origin, update one existing \`img\`, provide meaningful alt text from trusted local copy, and keep the old card visible while one cancelable request is pending.
 
-**Evidence target:** Clicking the button updates the displayed image, the image has useful alt text, and network errors produce a visible fallback instead of leaving an empty page.`,
+**Evidence target:** The local fixture works offline; valid refreshes update image and status together; an invalid protocol, unexpected origin, failed image load, timeout, or malformed response preserves a readable fallback and does not inject remote text or markup.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/93750fc08b5b2268a1d78b296295e2e8",
 					solutionLink:
@@ -1287,11 +1292,11 @@ export const javascriptLevel2Course: RawCourse = {
 				},
 				{
 					title: "JSM10 Project 3: Pokedex",
-					content: `**Project target:** Build a small Pokedex that searches PokeAPI and renders selected Pokemon details. The project combines autocomplete, remote data, error handling, and structured display.
+					content: `**Project target:** Build a small creature index that searches a supplied PokéAPI-shaped fixture and optionally refreshes a selected Pokémon with PokéAPI. The project combines form controls, cached public GET data, validation, error handling, and structured display.
 
-**Build path:** Load or define autocomplete options, request the selected Pokemon from PokeAPI, and display name, id, type, and image. Normalize search input and handle unknown Pokemon names without crashing the page.
+**Build path:** Use a labeled input and datalist, normalize the search term, look up local data first, and render name, id, type, and an approved image URL. The optional refresh checks status, timeout, shape, and provider origin, caches successful records, and follows PokéAPI fair-use guidance.
 
-**Evidence target:** Valid searches render the correct details, invalid searches produce a clear message, the image and text update together, and the interface remains usable after a failed request.`,
+**Evidence target:** Valid local searches render the correct details, invalid searches produce a clear inline message, the image and text update together, repeated searches use cached data, and the interface remains usable offline or after a failed or malformed request.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/35923b1d6dee01a5f3004d67836eca46",
 					solutionLink:
@@ -1301,11 +1306,11 @@ export const javascriptLevel2Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "JSM10 Supplemental Project 1: Funny Meter",
-					content: `**Project target:** Build a joke-rating interface that fetches multiple jokes, presents them one at a time, and records a rating for each.
+					content: `**Project target:** Build a joke-rating interface that loads a supplied set of fictional jokes, presents them one at a time, and records a rating for each. An optional public GET refresh may replace the fixture after the local state flow passes.
 
-**Build path:** Request the \`/jokes/programming/ten\` endpoint, store the returned jokes in an array, and track the current joke index plus user ratings. Advance only after a rating is recorded, then show a final summary with average rating or highest-rated joke.
+**Build path:** Validate and cap the joke array, track the current index and ratings, advance only after a rating is recorded, and show a final summary. The optional request checks status, timeout, response shape, and active-request state before replacing the fixture.
 
-**Evidence target:** Ten jokes are available after the request, each rating is stored with the correct joke, navigation does not skip or repeat jokes accidentally, and the final summary reflects the recorded data.`,
+**Evidence target:** The bounded fixture completes offline, each rating stays attached to the correct record, navigation does not skip or repeat accidentally, invalid ratings are rejected, and a failed refresh cannot erase an in-progress local session.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/bf88ab46e0b7314e0b0999ba35363519",
 					solutionLink:
@@ -1344,13 +1349,19 @@ export const javascriptLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Introduction to Databases",
-					content:
-						"Describe relational databases, tables, keys, and why to separate data; reference example diagram."
+					content: `**Concept path:** A relational database represents entities as tables, rows as records, columns as attributes, and constraints as rules the stored data must satisfy. Separating repeated facts can prevent contradictory copies, but every split needs a clear relationship.
+
+**Practice targets:** Model a fictional library with books, shelves, and placements. Identify candidate keys, choose a primary key, mark required and optional columns, and explain one duplication problem prevented by the design.
+
+**Evidence target:** The table map names each entity and relationship, includes representative rows, distinguishes an identifier from display text, and records one design tradeoff without requiring a hosted database.`
 				},
 				{
 					title: "SQL Queries",
-					content:
-						"Explain SELECT/WHERE and UPDATE syntax for querying and modifying data."
+					content: `**Concept path:** SQL separates the requested result from the steps a database uses to produce it. \`SELECT\` chooses columns, \`FROM\` chooses tables, \`WHERE\` filters rows, and \`ORDER BY\` makes output order explicit.
+
+**Practice targets:** Predict results for supplied \`SELECT\`, \`WHERE\`, \`ORDER BY\`, and \`LIMIT\` queries before comparing with the answer set. For one fictional update, write the matching preview \`SELECT\`, identify the exact target rows, and describe a rollback or transaction boundary.
+
+**Evidence target:** Every query names its input table shape, expected columns and rows, ordering assumption, \`NULL\` behavior, and whether it reads or changes data.`
 				},
 				{
 					title: "JSM11 Project 1: SQL SELECT Practice",
@@ -1361,8 +1372,11 @@ export const javascriptLevel2Course: RawCourse = {
 				},
 				{
 					title: "Primary and Foreign Keys",
-					content:
-						"Define primary vs foreign keys and JOIN usage; relate to real-world IDs."
+					content: `**Concept path:** A primary key identifies one row; a foreign key states that a value refers to a valid row in another table. A join follows that declared relationship, while the join type determines what happens to unmatched rows.
+
+**Practice targets:** Add primary and foreign keys to the supplied books-and-shelves schema, then predict inner-join and left-join results containing a missing shelf and an empty shelf. Distinguish a stable synthetic ID from a name that can change or repeat.
+
+**Evidence target:** The relationship diagram, representative rows, and predicted join results agree. The explanation names the parent, child, cardinality, optionality, and action expected when a referenced row changes or is deleted.`
 				},
 				{
 					title: "JSM11 Project 2: Join Tables Practice",
@@ -1373,13 +1387,16 @@ export const javascriptLevel2Course: RawCourse = {
 				},
 				{
 					title: "Database Schemas",
-					content:
-						"Explain schemas and relationships (one-to-many, many-to-many) with dbdiagram example."
+					content: `**Concept path:** A schema records entities, columns, types, constraints, and relationships before application code depends on them. One-to-many relationships place a foreign key on the many side; many-to-many relationships use a junction table with its own uniqueness rule.
+
+**Practice targets:** Draw the apartment schema locally, add column types and constraints, and convert one many-to-many idea into a junction table. Then optionally reproduce the same artifact in dbdiagram without using real resident data.
+
+**Evidence target:** The schema includes primary keys, foreign keys, required fields, one uniqueness rule, cardinality, representative fictional rows, and two queries the design can answer.`
 				},
 				{
 					title: "JSM11 Project 3: Apartment Building",
 					content:
-						"Design unit and resident tables with keys and at least five properties each on dbdiagram.io.",
+						"Design a fictional apartment-building schema locally with units, residents, and occupancy history. Give each entity a stable key, use foreign keys for relationships, include at least five purposeful attributes across the model, and represent residents moving between units without overwriting history. Add representative rows and two query questions. Optionally reproduce the finished local diagram in dbdiagram; no account, real address, resident identity, or hosted database is required.",
 					projectLink: "https://dbdiagram.io/d",
 					solutionLink:
 						"https://dbdiagram.io/d/5facb8cf3a78976d7b7b8d44"
@@ -1414,23 +1431,29 @@ export const javascriptLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Introduction to NoSQL",
-					content:
-						"Describe document/collection structure as JSON-like objects compared to relational tables."
+					content: `**Concept path:** A document model stores related fields together as JSON-like values, while a relational model separates entities and connects rows with keys. Neither model removes the need for identifiers, validation, constraints, versioning, or deliberate update rules.
+
+**Practice targets:** Represent the same fictional reading list as relational tables and as bounded document objects. Compare duplication, lookup shape, partial updates, ordering, missing fields, and a change that requires a data migration.
+
+**Evidence target:** The comparison names one fit and one limitation for each model, includes a small validated example, and avoids treating “NoSQL” as meaning no schema or no consistency rules.`
 				},
 				{
 					title: "CRUD",
-					content:
-						"Explain create/read/update/delete via HTTP methods (POST, GET, PUT, DELETE) with fetch options."
+					content: `**Concept path:** Create, read, update, and delete describe state changes, while HTTP methods describe a remote protocol. This course first implements CRUD against explicit in-memory state and \`localStorage\`, then maps each operation to a hypothetical request without exposing a write credential.
+
+**Practice targets:** Define an operation contract with input, validation, state before, state after, rendered result, persistence action, and failure result. Distinguish replacing a whole record from changing one field, and make delete require a stable record ID rather than a display position.
+
+**Evidence target:** Every local operation is repeatable, survives refresh where intended, reports storage failure, preserves unrelated records, and maps to an HTTP method without claiming that a browser-held secret creates a trusted database boundary.`
 				},
 				{
 					title: "JSONBin Setup",
 					content:
-						'Create a public JSONBin record with a small starter object such as `{"notes": ["my first message"]}`. Identify the latest-record GET endpoint and the PUT endpoint, then test both requests before building UI around them. The key skill is separating local page state from persisted remote state: after a refresh, the saved data remains recoverable from the bin.'
+						'Review JSONBin v3 only as a preserved example of a hosted JSON API. Its write routes require an `X-Master-Key` or scoped `X-Access-Key`, so do not create, paste, or ship either key in CodePen or browser source. Build the required exercise with a versioned `{"notes": [{"id": "n1", "text": "fictional note", "complete": false}]}` fixture and `localStorage`. The key skill is separating local page state from persisted remote state; model that boundary with a storage adapter locally instead of exposing a remote credential. An optional instructor demonstration may show request shapes with redacted placeholders or an isolated server-side proxy, but learner completion never depends on a hosted bin or remote write.'
 				},
 				{
 					title: "JSM12 Project 1: To-Do List",
 					content:
-						"Build a persistent to-do list by loading the current bin with `async`/`await`, rendering the notes, adding a new note from user input, and saving the updated array with PUT. Keep the workflow split into `getDB`, `renderDB`, and `addNote` so fetching, drawing, and mutation can be tested separately. Verify persistence by adding a note, refreshing the page, and confirming the note still appears.",
+						"Build a persistent fictional to-do list by loading a versioned fixture or `localStorage`, validating the record shape, rendering notes with `textContent`, adding a normalized note from a labeled form, and saving the bounded array locally. Keep loading, parsing, state mutation, rendering, and persistence in separate named functions. Use stable IDs, cap note length and count, expose storage failures, and verify persistence by adding a note, refreshing, and confirming that it returns. The original hosted project remains a reference, but the required solution contains no JSONBin key or remote write.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/1f218d8aafbcc33fd6409a8ab1616e29",
 					solutionLink: "https://codepen.io/junilearning/pen/MWZzbmK",
@@ -1440,7 +1463,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSM12 Project 2: Deleting Notes",
 					content:
-						"Extend the to-do list with a `deleteNote` function that removes the selected note by index, re-renders the list, and persists the changed array with PUT. Include a delete button beside each rendered note and verify that deleting the first, last, and only remaining note all produce the expected saved state.",
+						"Extend the local to-do list with a `deleteNote(id)` function that removes only the record with the selected stable ID, re-renders from state, and persists the changed document to `localStorage`. Include a clearly named delete button beside each note, move focus to a predictable location after deletion, and verify the first, last, only, unknown-ID, repeated-delete, refresh, and storage-failure cases. Do not use array position as a persistent identity or send a browser-held write secret.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/f8f84204c272d2a6449cda485cbe7736",
 					solutionLink: "https://codepen.io/junilearning/pen/BavGpyN"
@@ -1450,7 +1473,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSM12 Supplemental Project 1: Checking Notes",
 					content:
-						"Extend the to-do list so each item can be marked complete without deleting it. Store completion state in the saved data, render completed notes with a visible checkmark or strike-through style, and verify that completed/uncompleted status survives a page refresh. This turns the data model from plain strings into objects with both text and state.",
+						"Extend the local to-do list so each item can be marked complete without deletion. Store completion state in versioned objects with stable IDs, use a native checkbox with an accessible name, and communicate completion with text or state as well as visual styling. Verify that completed and incomplete status survives refresh, toggling one note does not change another, corrupted storage falls back safely, and a schema migration converts the original string array without losing valid fictional notes.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/ab6bf77b9d85e1b9a7452d5a307b6b7f",
 					solutionLink:
@@ -1490,7 +1513,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSM13 Project 1: Message Board",
 					content:
-						"Build a message board that stores posts as JSON objects with at least a title, URL, and image URL. The form creates a new post, saves it to the remote data store, clears or resets the inputs, and renders the newest posts in a readable order above the form. Verify the board by adding multiple posts and refreshing to confirm that the saved posts return.",
+						"Build a single-browser fictional message board that stores versioned post objects in `localStorage` with a stable ID, title, reviewed HTTPS URL, optional reviewed image URL, and locally generated ordering value. The labeled form validates and caps every field, creates a post, persists local state, resets inputs, moves focus predictably, and renders newest posts with `textContent`. Parse URLs with the `URL` API, permit only reviewed protocols and origins, and provide text when an image fails. Verify multiple posts, refresh, malformed and corrupted storage, markup-shaped text, invalid URLs, record limits, and reset. The original remote-store CodePen remains reference material; no real identity, public posting, browser secret, or remote write is required.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/6c0b3c5a207fc24b58c44a5f481922e3",
 					solutionLink: "https://codepen.io/junilearning/pen/GRPwwOg"
@@ -1524,7 +1547,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSM13 Supplemental Project 1: Adding Comments",
 					content:
-						"Add comments as nested data under each message-board post. Each rendered post shows its existing comments, provides an input for a new comment, updates only the intended post, and persists the changed board back to the data store. Test with at least two posts so comments do not accidentally attach to the wrong item.",
+						"Add bounded fictional comments as nested objects under each locally stored message-board post. Each post exposes a labeled comment form tied to the post’s stable ID, renders comment text safely, updates only the intended record, announces the result, and persists the versioned board to `localStorage`. Test at least two posts, duplicate text, empty and overlength input, markup-shaped text, refresh, deletion or reset, and storage failure so comments do not accidentally attach to the wrong item or become executable markup.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/f40d31ed70aef27cee691e91d947ef14",
 					solutionLink:
@@ -1564,7 +1587,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSM14 Project 1: Quiz Game",
 					content:
-						"Build a state capitals quiz using canvas to color states based on answers; fetch state data from provided JSONBin and manage game states.",
+						"Build a fictional region-and-capital quiz from the supplied local JSON fixture. Model loading, ready, asking, feedback, complete, and reset states explicitly; use a labeled form or native buttons for answers; update score exactly once per question; and render progress, feedback, and final result as DOM text. Canvas may color a decorative map or region diagram, but essential names, current question, score, status, and controls remain available outside it. Validate and cap fixture data, support keyboard and pointer use, preserve visible focus, respect reduced motion, and verify duplicate submit, wrong and correct answers, final question, empty fixture, malformed fixture, and restart. The preserved JSONBin-based CodePen is reference-only; no browser credential or remote write belongs in the required project.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/f8ec7312634d2011e58c44d691d1da13",
 					solutionLink:
@@ -1644,7 +1667,7 @@ export const javascriptLevel2Course: RawCourse = {
 				{
 					title: "JSM15 Project 1: Master Project",
 					content:
-						"Plan and build a web app or game (example chatroom). Scope to about two weeks, pseudocode stages, and complete an independent implementation pass with checkpoints."
+						"Plan and build one browser-only app or game for a fictional audience over roughly two weeks. Define one primary task, non-goals, state and event model, data shape, failure states, and a smallest complete vertical slice before adding polish. Separate pure logic from DOM, canvas, storage, and optional public-GET boundaries. A chat-style interface may be simulated locally, but do not add real accounts, public messages, browser-held write secrets, or an implied secure back end. Include a supplied-fixture route, bounded local persistence where useful, semantic controls, keyboard and pointer operation, visible focus and status, reduced motion, safe text and URL handling, reset and recovery, performance limits, and independent verification checkpoints."
 				},
 				{
 					title: "Handoff to Web Development Foundations",
@@ -1739,4 +1762,578 @@ export const javascriptLevel2Course: RawCourse = {
 	]
 };
 
-applyJavaScriptLevel2PendingMediaNotices(javascriptLevel2Course);
+applyJavaScriptLevel2PendingMediaNotices(javascriptLevel2SourceCourse);
+
+interface JavaScriptLevel2ModuleFlow {
+	stage: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	practiceSection: string;
+	answerSection: string;
+	route: string;
+	standardsRoute: string;
+	evidence: string;
+	primaryReference: {
+		label: string;
+		url: string;
+	};
+	additionalReferences?: {
+		label: string;
+		url: string;
+	}[];
+}
+
+const JAVASCRIPT_LEVEL_2_SEQUENCE = [
+	"JSM1 Fundamentals Review",
+	"JSM2 Functions",
+	"JSM3 Complex Conditionals",
+	"JSM4 Canvas",
+	"JSM5 Arrays and Iterators",
+	"JSM6 Objects and Properties",
+	"Check-In #1",
+	"JSM7 Helper Functions and Event Listeners",
+	"JSM8 Collisions and Controls",
+	"JSM9 Games in the Canvas",
+	"JSM10 APIs and Requests",
+	"JSM11 SQL and Schemas",
+	"JSM12 NoSQL and CRUD",
+	"Check-In #2",
+	"JSM13 Message Board",
+	"JSM14 Quiz Game",
+	"JSM15 Master Project"
+] as const;
+
+const JAVASCRIPT_LEVEL_2_MODULE_FLOW: Record<
+	(typeof JAVASCRIPT_LEVEL_2_SEQUENCE)[number],
+	JavaScriptLevel2ModuleFlow
+> = {
+	"JSM1 Fundamentals Review": {
+		stage: "Verify Level 1 fluency in a durable local workspace",
+		estimatedTime: "3–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"local files",
+			"declaration",
+			"conversion",
+			"branch",
+			"loop",
+			"safe output"
+		],
+		practiceSection: "level-1-readiness-and-state-case",
+		answerSection: "level-1-readiness-and-state-key",
+		route: "Rebuild one small Level 1 interaction with local files, explicit declarations and conversion, strict comparisons, bounded loops, safe DOM output, and a native SVG or CSS result. Preserve CodePen, dialogs, D3, and Materialize only as recognizable references.",
+		standardsRoute:
+			"Use ECMAScript 2026 and the HTML Living Standard in an evergreen browser. A labeled form and `textContent` replace blocking or sandbox-only helpers in the finished route.",
+		evidence:
+			"The readiness sheet records expected and observed values, types, branch and loop traces, local refresh behavior, console state, keyboard path, and the exact Level 1 topic that needs review.",
+		primaryReference: {
+			label: "MDN JavaScript Guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"
+		}
+	},
+	"JSM2 Functions": {
+		stage: "Design functions as testable contracts",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"parameter",
+			"return",
+			"pure logic",
+			"side effect",
+			"default",
+			"test table"
+		],
+		practiceSection: "function-contract-and-pure-test-case",
+		answerSection: "function-contract-and-pure-test-key",
+		route: "Write input and output contracts before implementation, extract pure calculations from prompting or rendering, return values instead of hiding results in logs, and test fixed boundaries before connecting random or event-driven callers.",
+		standardsRoute:
+			"Use named functions, local scope, template literals, explicit defaults, and deliberate error or fallback values. Keep DOM, random, storage, and network effects at narrow boundaries.",
+		evidence:
+			"The function table names parameters, accepted domain, return type, side effects, standard case, boundary, invalid case, caller, and one refactor that removed duplication.",
+		primaryReference: {
+			label: "MDN functions guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions"
+		}
+	},
+	"JSM3 Complex Conditionals": {
+		stage: "Make compound decisions auditable",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"decision table",
+			"strict comparison",
+			"compound rule",
+			"branch order",
+			"ternary",
+			"boundary"
+		],
+		practiceSection: "decision-table-and-ternary-case",
+		answerSection: "decision-table-and-ternary-key",
+		route: "Translate a decision table into grouped boolean expressions and mutually exclusive branches. Use a ternary only for one compact value choice, and use full branches when multiple actions, validation, or explanation are involved.",
+		standardsRoute:
+			"Use strict equality, explicit conversion, named booleans, parentheses, and complete range partitions. Do not rely on coercion or nested ternaries to compress an unclear rule.",
+		evidence:
+			"The case matrix covers all meaningful combinations and exact boundaries, identifies the selected branch and message, and demonstrates that changing branch order alters only the intended cases.",
+		primaryReference: {
+			label: "MDN control flow guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling"
+		}
+	},
+	"JSM4 Canvas": {
+		stage: "Map explicit drawing state to Canvas 2D",
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"canvas size",
+			"coordinate",
+			"context state",
+			"path",
+			"pixel ratio",
+			"fallback"
+		],
+		practiceSection: "canvas-coordinate-and-fallback-case",
+		answerSection: "canvas-coordinate-and-fallback-key",
+		route: "Configure the canvas drawing buffer and CSS size deliberately, calculate coordinates, isolate save and restore state, draw from data objects, and expose essential meaning in adjacent DOM text or canvas fallback content.",
+		standardsRoute:
+			"Use the Canvas 2D API directly with a bounded scene. Account for device pixel ratio when crispness matters, and keep decorative pixels separate from semantic controls and status.",
+		evidence:
+			"The canvas record names CSS and buffer dimensions, coordinate transform, drawing order, state changes, first and last pixels or objects, text alternative, resize result, and reset behavior.",
+		primaryReference: {
+			label: "MDN Canvas basic usage",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage"
+		}
+	},
+	"JSM5 Arrays and Iterators": {
+		stage: "Choose array operations from the data transformation",
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: ["index", "for-of", "map", "filter", "reduce", "2D shape"],
+		practiceSection: "array-transform-and-grid-case",
+		answerSection: "array-transform-and-grid-key",
+		route: "Trace ordered data by index, use `for...of` for direct values, choose `map`, `filter`, or `reduce` from the requested output, and make row and column ownership explicit in a rectangular two-dimensional array.",
+		standardsRoute:
+			"Use immutable transformations when the source must remain available, copy deliberately, avoid sparse accidental arrays, and cap generated dimensions and total work.",
+		evidence:
+			"The transformation ledger records input, operation, callback contract, output, source mutation, empty case, duplicate case, row lengths, total work, and one iterator choice rejected with a reason.",
+		primaryReference: {
+			label: "MDN Array reference",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"
+		}
+	},
+	"JSM6 Objects and Properties": {
+		stage: "Model related state before animating it",
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"object shape",
+			"property",
+			"method",
+			"identity",
+			"update",
+			"render"
+		],
+		practiceSection: "object-model-and-animation-state-case",
+		answerSection: "object-model-and-animation-state-key",
+		route: "Define a stable object shape, distinguish identity from display values, iterate only intended own properties, and separate state updates from canvas rendering. Animate a bounded object array through one explicit loop.",
+		standardsRoute:
+			"Use object literals, predictable property names, safe defaults, and `Object.keys`, `Object.values`, or `Object.entries` when property iteration is needed. Avoid mixing inherited or unvalidated fields into rendering.",
+		evidence:
+			"The object contract lists required fields, defaults, identity, valid updates, render inputs, frame before and after, unknown-field behavior, and one test proving that rendering does not mutate domain state.",
+		primaryReference: {
+			label: "MDN working with objects guide",
+			url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects"
+		},
+		additionalReferences: [
+			{
+				label: "MDN Canvas basic animations",
+				url: "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_animations"
+			}
+		]
+	},
+	"Check-In #1": {
+		stage: "Logic, data, and canvas checkpoint after JSM1–JSM6",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"function",
+			"conditional",
+			"array",
+			"object",
+			"canvas",
+			"test"
+		],
+		practiceSection: "logic-data-canvas-checkpoint-case",
+		answerSection: "logic-data-canvas-checkpoint-key",
+		route: "Complete this required checkpoint after JSM6 by combining function contracts, compound conditions, arrays, objects, and data-driven canvas rendering. It can also be used earlier as an optional placement preview, but the key stays closed until an independent attempt is recorded.",
+		standardsRoute:
+			"Use local files, fixed test data before randomness, bounded drawing work, semantic controls, and a text result that exposes essential canvas state.",
+		evidence:
+			"The packet contains predictions, runnable results, boundaries and invalid cases, object and array traces, canvas evidence, console state, an explanation for each choice, and a named revisit module.",
+		primaryReference: {
+			label: "MDN Canvas API",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API"
+		}
+	},
+	"JSM7 Helper Functions and Event Listeners": {
+		stage: "Normalize events before changing state",
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"listener",
+			"event data",
+			"coordinate transform",
+			"focus",
+			"handled key",
+			"cleanup"
+		],
+		practiceSection: "event-normalization-and-input-case",
+		answerSection: "event-normalization-and-input-key",
+		route: "Extract repeated logic into helpers, attach named listeners, convert pointer coordinates through the canvas bounding rectangle, and handle only documented keys while the interaction surface has focus. Remove or disable listeners when the experience stops.",
+		standardsRoute:
+			"Use `addEventListener`, native focus behavior, `KeyboardEvent.key`, and `preventDefault` only for a handled key inside the active interaction. Preserve normal page scrolling when focus leaves the experience.",
+		evidence:
+			"The event trace records target, event type, raw data, normalized data, state transition, visible result, default action decision, focus state, repeated-listener check, and cleanup.",
+		primaryReference: {
+			label: "MDN addEventListener reference",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener"
+		},
+		additionalReferences: [
+			{
+				label: "MDN KeyboardEvent key reference",
+				url: "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key"
+			}
+		]
+	},
+	"JSM8 Collisions and Controls": {
+		stage: "Treat collision as a tested geometry contract",
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"shape bounds",
+			"overlap",
+			"touching edge",
+			"response",
+			"single event",
+			"debug overlay"
+		],
+		practiceSection: "collision-boundary-case",
+		answerSection: "collision-boundary-key",
+		route: "Define circle and axis-aligned rectangle bounds, state whether touching counts as collision, test geometry with fixed values, and separate detection from response. Prevent one overlap from changing score or velocity repeatedly across frames.",
+		standardsRoute:
+			"Use small pure collision helpers and a visible optional debug overlay. Controls remain focus-aware, keyboard and pointer operable, and independent from collision math.",
+		evidence:
+			"The geometry table covers separated, touching, overlapping, contained, corner, high-speed crossing, and repeated-frame cases with expected detection, response, and correction.",
+		primaryReference: {
+			label: "MDN 2D collision detection",
+			url: "https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection"
+		}
+	},
+	"JSM9 Games in the Canvas": {
+		stage: "Build one bounded and recoverable game loop",
+		estimatedTime: "7–9 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"state machine",
+			"delta time",
+			"input",
+			"update",
+			"render",
+			"pause and reset"
+		],
+		practiceSection: "bounded-game-loop-case",
+		answerSection: "bounded-game-loop-key",
+		route: "Implement a minimal playable loop with explicit ready, running, paused, complete, and reset states. Sample input, update with capped delta time, resolve collisions, render once per frame, cancel the frame when stopped, and bound spawned objects.",
+		standardsRoute:
+			"Use `requestAnimationFrame`, one active loop, semantic start, pause, and reset controls, focus-aware keys, reduced-motion behavior, and DOM text for instructions, score, lives, status, and outcome.",
+		evidence:
+			"The loop trace includes frame handle, timestamp and delta cap, state before and after, object count, collision events, score change, pause and background-tab behavior, restart, and a measured work budget.",
+		primaryReference: {
+			label: "MDN anatomy of a video game",
+			url: "https://developer.mozilla.org/en-US/docs/Games/Anatomy"
+		},
+		additionalReferences: [
+			{
+				label: "MDN requestAnimationFrame reference",
+				url: "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
+			}
+		]
+	},
+	"JSM10 APIs and Requests": {
+		stage: "Design resilient read-only data boundaries",
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"fixture",
+			"loading state",
+			"response status",
+			"abort",
+			"shape validation",
+			"cache"
+		],
+		practiceSection: "resilient-fetch-and-fixture-case",
+		answerSection: "resilient-fetch-and-fixture-key",
+		route: "Start from a supplied fixture, then optionally refresh from a public GET API through one function that checks status, aborts on timeout or replacement, validates shape and size, caches successful data, and returns a typed local result to rendering.",
+		standardsRoute:
+			"Use Fetch, Response.ok, AbortController, URL, and safe text or reviewed image URLs. Follow provider fair-use guidance, make no browser-side authenticated write, and keep the fixture route fully functional offline.",
+		evidence:
+			"The request matrix covers fixture, loading, success, empty, non-OK, timeout, abort, malformed shape, unexpected URL, stale cache, repeated request, and recovery without exposing raw remote content or secrets.",
+		primaryReference: {
+			label: "MDN using Fetch",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+		},
+		additionalReferences: [
+			{
+				label: "PokéAPI v2 documentation and fair-use policy",
+				url: "https://pokeapi.co/docs/v2"
+			}
+		]
+	},
+	"JSM11 SQL and Schemas": {
+		stage: "Connect relational design to predicted query results",
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"table",
+			"primary key",
+			"foreign key",
+			"constraint",
+			"join",
+			"mutation preview"
+		],
+		practiceSection: "relational-schema-and-query-case",
+		answerSection: "relational-schema-and-query-key",
+		route: "Model supplied fictional entities, choose stable keys and constraints, represent one-to-many and many-to-many relationships, and predict SELECT, WHERE, ORDER, JOIN, NULL, aggregate, insert, update, and delete results from small tables.",
+		standardsRoute:
+			"Use the supplied local schema, rows, queries, and answer tables as the required route. SQLBolt and dbdiagram remain optional practice surfaces; no account, live database, real record, or destructive command is needed.",
+		evidence:
+			"The schema-and-query packet includes representative rows, cardinality, constraints, expected columns and rows, order and NULL assumptions, mutation preview, target count, rollback note, and observed or supplied result.",
+		primaryReference: {
+			label: "SQLite SELECT documentation",
+			url: "https://www.sqlite.org/lang_select.html"
+		},
+		additionalReferences: [
+			{
+				label: "SQLite foreign key documentation",
+				url: "https://www.sqlite.org/foreignkeys.html"
+			}
+		]
+	},
+	"JSM12 NoSQL and CRUD": {
+		stage: "Implement versioned local CRUD without browser secrets",
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"document shape",
+			"stable ID",
+			"CRUD contract",
+			"localStorage",
+			"migration",
+			"recovery"
+		],
+		practiceSection: "local-crud-and-persistence-case",
+		answerSection: "local-crud-and-persistence-key",
+		route: "Define a bounded versioned document, validate it at load, implement create, read, update, and delete against in-memory state, persist with localStorage, migrate one older shape, and recover from missing, malformed, or unavailable storage.",
+		standardsRoute:
+			"Use JSON and Web Storage locally. JSONBin remains historical context only because authenticated writes require a key that does not belong in browser source; no remote write or hosted account is required.",
+		evidence:
+			"The CRUD table records stable ID, input, validation, state before and after, persisted form, rendered result, refresh, duplicate or unknown ID, quota or storage failure, migration, and reset.",
+		primaryReference: {
+			label: "MDN localStorage reference",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+		},
+		additionalReferences: [
+			{
+				label: "MDN JSON reference",
+				url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON"
+			},
+			{
+				label: "JSONBin v3 update API reference",
+				url: "https://jsonbin.io/api-reference/bins/update"
+			}
+		]
+	},
+	"Check-In #2": {
+		stage: "Events, requests, and data checkpoint after JSM7–JSM12",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"event flow",
+			"canvas input",
+			"fixture and fetch",
+			"relational model",
+			"local CRUD",
+			"failure state"
+		],
+		practiceSection: "events-requests-data-checkpoint-case",
+		answerSection: "events-requests-data-checkpoint-key",
+		route: "Complete this required checkpoint after JSM12 with a focus-aware event, one geometry or canvas state change, a supplied-fixture data flow, an optional resilient GET, a small relational model, and versioned local CRUD. It can also serve as an optional placement preview before the sequence.",
+		standardsRoute:
+			"Use local files, fixtures, localStorage, and safe DOM output. Keep public GET refresh optional, open the key only after an independent attempt, and include no remote write credential.",
+		evidence:
+			"The packet traces input through state and output, covers request and storage failures, predicts query results, verifies keyboard and pointer operation, names the revisit module for each weak area, and keeps the local route complete.",
+		primaryReference: {
+			label: "MDN using Fetch",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+		}
+	},
+	"JSM13 Message Board": {
+		stage: "Build a safe single-browser message-board model",
+		estimatedTime: "6–7 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"post schema",
+			"stable ID",
+			"safe text",
+			"reviewed URL",
+			"nested comment",
+			"record limit"
+		],
+		practiceSection: "safe-message-board-case",
+		answerSection: "safe-message-board-key",
+		route: "Create fictional posts and comments in versioned local state, validate and cap every field and collection, render text safely, parse and allow only reviewed URLs, persist locally, and preserve predictable focus and status after create, comment, delete, refresh, migration, and reset.",
+		standardsRoute:
+			"Use native forms, `textContent`, the URL API, localStorage, and semantic lists or articles. The project is not a public service, has no real identity or moderation claim, and requires no remote data store or browser-held credential.",
+		evidence:
+			"The message-board matrix covers two posts, comment association, duplicate text, markup-shaped input, invalid and failed URLs, missing image, count and length caps, corrupt storage, migration, focus, announcement, refresh, delete, and reset.",
+		primaryReference: {
+			label: "MDN Node textContent reference",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent"
+		},
+		additionalReferences: [
+			{
+				label: "MDN URL API",
+				url: "https://developer.mozilla.org/en-US/docs/Web/API/URL_API"
+			}
+		]
+	},
+	"JSM14 Quiz Game": {
+		stage: "Implement an accessible quiz state machine",
+		estimatedTime: "6–7 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"fixture validation",
+			"quiz state",
+			"single submit",
+			"feedback",
+			"canvas alternative",
+			"restart"
+		],
+		practiceSection: "accessible-quiz-state-machine-case",
+		answerSection: "accessible-quiz-state-machine-key",
+		route: "Load a bounded fictional local fixture, model ready, asking, feedback, complete, and reset states, accept one answer per question, and render question, score, progress, feedback, and controls in the DOM. Canvas remains optional visual enhancement.",
+		standardsRoute:
+			"Use labeled forms or native buttons, keyboard and pointer parity, visible focus, status announcements, reduced motion, and essential non-canvas content. No JSONBin, remote write, credential, or real learner result is required.",
+		evidence:
+			"The quiz matrix covers correct, wrong, empty, duplicate submit, exact final question, score integrity, malformed and empty fixture, keyboard path, focus destination, canvas unavailable, complete state, and restart.",
+		primaryReference: {
+			label: "MDN Canvas accessibility guidance",
+			url: "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage#accessible_content"
+		}
+	},
+	"JSM15 Master Project": {
+		stage: "Browser application or game capstone",
+		estimatedTime: "10–14 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"audience and task",
+			"state model",
+			"effect boundary",
+			"data contract",
+			"verification",
+			"recovery"
+		],
+		practiceSection: "browser-app-capstone-case",
+		answerSection: "browser-app-capstone-key",
+		route: "Build one browser-only app or game through vertical slices: define audience, task and non-goals; model state and events; isolate pure logic from effects; implement bounded interaction; add fixture data and optional resilient reads; persist locally when useful; then verify accessibility, failure, recovery, and performance.",
+		standardsRoute:
+			"Use current browser standards, local files, supplied fictional fixtures, and no browser secret. Canvas, public GET APIs, SQL reasoning, and local CRUD appear only when they serve the selected task and retain complete fallback and recovery routes.",
+		evidence:
+			"The final packet includes requirements, state and event diagrams, data schema, effect boundaries, expected and observed cases, request and storage failures, keyboard and pointer evidence, canvas alternative, motion, contrast, reflow, frame or record budget, reset, regression, attribution, privacy, limitations, and a three-minute demonstration.",
+		primaryReference: {
+			label: "WCAG 2.2 quick reference",
+			url: "https://www.w3.org/WAI/WCAG22/quickref/"
+		}
+	}
+};
+
+function javascriptLevel2PracticeLink(section: string) {
+	return `${JAVASCRIPT_LEVEL_2_PRACTICE_PACK}#${section}`;
+}
+
+function javascriptLevel2VerificationLink(section: string) {
+	return `${JAVASCRIPT_LEVEL_2_VERIFICATION_GUIDE}#${section}`;
+}
+
+function javascriptLevel2SupplementalPath(title: string) {
+	if (/extension|challenge/i.test(title)) return "challenge" as const;
+	return "choice" as const;
+}
+
+function renderJavaScriptLevel2References(flow: JavaScriptLevel2ModuleFlow) {
+	return [
+		`[${flow.primaryReference.label}](${flow.primaryReference.url})`,
+		...(flow.additionalReferences ?? []).map(
+			item => `[${item.label}](${item.url})`
+		)
+	].join(", ");
+}
+
+function decorateJavaScriptLevel2Module(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow =
+		JAVASCRIPT_LEVEL_2_MODULE_FLOW[
+			module.title as (typeof JAVASCRIPT_LEVEL_2_SEQUENCE)[number]
+		];
+	if (!flow)
+		throw new Error(`Missing JavaScript Level 2 flow: ${module.title}`);
+
+	const practiceLink = javascriptLevel2PracticeLink(flow.practiceSection);
+	const verificationLink = javascriptLevel2VerificationLink(
+		flow.answerSection
+	);
+	const references = renderJavaScriptLevel2References(flow);
+
+	return {
+		...module,
+		kind: "module",
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: [...flow.keyBlocks],
+		curriculum: module.curriculum.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Course flow:** ${flow.stage}. ${flow.route}
+
+**Standards route:** ${flow.standardsRoute}
+
+**Evidence gate:** ${flow.evidence}
+
+**Local continuity:** Complete the [supplied Level 2 case](${practiceLink}) before comparing it with the [verification guide](${verificationLink}). Local files and fixtures remain the completion route when CodePen, public APIs, hosted database tools, remote storage, or pending media are unavailable.
+
+**Current references:** ${references}. Record the browser and viewport, fixture edition, storage schema version, and any external host, API, media, or library version that affects the result.
+
+${item.content}`
+					: item.content,
+			learningPath: "core" as const,
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? flow.primaryReference.url
+					}
+				: {})
+		})),
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: javascriptLevel2SupplementalPath(item.title),
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? flow.primaryReference.url
+					}
+				: {})
+		}))
+	};
+}
+
+const javascriptLevel2ModulesByTitle = new Map(
+	javascriptLevel2SourceCourse.modules.map(module => [module.title, module])
+);
+
+const javascriptLevel2CoreModules = JAVASCRIPT_LEVEL_2_SEQUENCE.map(title => {
+	const module = javascriptLevel2ModulesByTitle.get(title);
+	if (!module) throw new Error(`Missing JavaScript Level 2 module: ${title}`);
+	return decorateJavaScriptLevel2Module(module);
+});
+
+const javascriptLevel2Appendices = javascriptLevel2SourceCourse.modules.filter(
+	module => module.kind === "appendix"
+);
+
+export const javascriptLevel2Course: RawCourse = {
+	...javascriptLevel2SourceCourse,
+	modules: [...javascriptLevel2CoreModules, ...javascriptLevel2Appendices]
+};

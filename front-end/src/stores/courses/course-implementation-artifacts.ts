@@ -37,6 +37,7 @@ export const courseImplementationSourceRepos: Record<string, string> = {
 	"java-level-2": "Java-Level-2",
 	"java-level-3": "Java-Level-3",
 	"javascript-level-1-javascript-superstar": "Web-Development-Foundations",
+	"javascript-level-2-javascript-master": "Web-Development-Foundations",
 	"linux-systems": "Linux-Systems",
 	"low-level-security": "Low-Level-Security",
 	"low-level-security-part-2": "Low-Level-Security",
@@ -74,8 +75,6 @@ export const courseContentOnlySourcePolicies: Record<string, string> = {
 		"Content and media course. Source parity means every lab-style activity has a remote simulation/data alternative and no required household chemistry materials.",
 	"intro-to-physics":
 		"Content and media course. Source parity means every lab-style activity has a simulation, graph dataset, or paper-model alternative.",
-	"javascript-level-2-javascript-master":
-		"Legacy/catalog-owned JavaScript course. Keep project specs in the catalog until a JavaScript source repo is created.",
 	"middle-school-integrated-science":
 		"Content and media course. Source parity means every activity has a listed simulation, image/data source, notebook routine, or explicit no-physical-material alternative.",
 	"physics-level-2":
@@ -138,6 +137,13 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"printToScreen(), prompt(), and alert() are labeled introductory sandbox helpers or blocking browser scaffolds; standards-based output uses semantic HTML, forms, events, and textContent.",
 		"D3 7.9.0 and Materialize 2.2.2 are pinned only for original projects that depend on them; every core concept also has a native HTML, CSS, DOM, or SVG route.",
 		"Supplied practice and verification cases provide an offline, privacy-safe route when CodePen, a CDN, or pending demonstration media is unavailable."
+	],
+	"javascript-level-2-javascript-master": [
+		"Evergreen browser baseline using ECMAScript 2026, the HTML Living Standard, Canvas 2D, Fetch, Web Storage, and built-in developer tools; no package install, back end, or build step is required.",
+		"Course-authored projects run as local index.html, styles.css, script.js, and supplied JSON fixtures; CodePen and original third-party demos remain references rather than the only workspace.",
+		"Canvas games use requestAnimationFrame, bounded object counts, explicit start-stop-reset state, focus-aware input, and a visible text or DOM equivalent for essential state.",
+		"Public GET APIs are optional refresh sources with response-status checks, cancellation, shape validation, caching, and a supplied fixture fallback; no API key, access token, or browser-side write credential is used.",
+		"Relational exercises use supplied tables, schemas, queries, and result sets, while CRUD projects use in-memory state and localStorage by default; SQLBolt, dbdiagram, JSONBin, and other hosted tools are optional historical references."
 	],
 	"linux-systems": [
 		"Ubuntu Server 26.04 LTS is the primary fresh-lab baseline; Debian 13 is the supported comparison route, and the exact distribution/version is recorded.",
@@ -638,6 +644,13 @@ const standardsOverrides: Record<string, string[]> = {
 		"WCAG 2.2 and MDN accessibility guidance for names, labels, keyboard access, focus, contrast, motion, status changes, and responsive reflow.",
 		"D3 7.9.0 and Materialize 2.2.2 documentation only where preserved course projects explicitly use those libraries."
 	],
+	"javascript-level-2-javascript-master": [
+		"ECMA-262 2026 and the MDN JavaScript Guide for function, array, object, iterator, promise, and error behavior.",
+		"WHATWG HTML Living Standard and MDN Canvas guidance for Canvas 2D, fallback content, focus-aware controls, and animation lifecycle.",
+		"Fetch, Response, AbortController, URL, and Web Storage documentation for bounded client-side request and persistence behavior.",
+		"SQLite language and foreign-key documentation for relational query, key, join, mutation, and schema reasoning over supplied tables.",
+		"WCAG 2.2 and OWASP DOM guidance for keyboard access, visible status, motion, canvas alternatives, safe text insertion, URL handling, and untrusted remote data."
+	],
 	"rust-systems-security": [
 		"Rust 1.97.1 release notes and the Rust 2024 Edition Guide.",
 		"The Rust Programming Language and Rust Reference for ownership, borrowing, error handling, concurrency, and unsafe obligations.",
@@ -710,6 +723,12 @@ const boundaryOverrides: Record<string, string[]> = {
 		"Original CodePen, D3, and Materialize projects remain available, but standards-based local files and supplied cases prevent a third-party host or library from becoming a prerequisite.",
 		"Learner projects use fictional low-stakes inputs; AI may explain a diagnostic or suggest a bounded test only after the learner states the program rule, and it does not receive personal responses or replace direct browser verification."
 	],
+	"javascript-level-2-javascript-master": [
+		"Uses JSM1–JSM6 followed by Check-In #1, then JSM7–JSM12 followed by Check-In #2, and finishes with the JSM13 message board, JSM14 quiz game, and one JSM15 browser-app capstone; either check-in may also serve as an optional placement preview.",
+		"Teaches browser-side functions, state, arrays, objects, Canvas 2D, events, collision and game loops, resilient public-data reads, relational modeling, and local CRUD without presenting a browser as a trusted back end.",
+		"Required work uses local files, supplied fixtures, localStorage, and fictional data; CodePen, public APIs, SQLBolt, dbdiagram, JSONBin, and pending media remain optional references or enhancements.",
+		"AI may explain a trace, suggest bounded test data, or review a learner-written state model only after the learner states the contract; it receives no secrets or personal posts and cannot approve remote data, database mutation, accessibility, or correctness."
+	],
 	"rust-systems-security": [
 		"Uses RSS0–RSS10 as one complete progression from toolchain evidence through ownership, borrowing, typed failures, safe state, APIs, parsers, concurrency, unsafe boundaries, and a legacy-hardening capstone.",
 		"All programs operate on supplied text, byte, state, dependency, or concurrency fixtures in local workspaces; no live service, third-party binary, production repository, real credential, or personal data is required.",
@@ -762,6 +781,14 @@ const capstoneOverrides: Record<string, string[]> = {
 		"A verification table covering expected behavior, empty and malformed input, exact boundaries, repeated actions, reset behavior, console cleanliness, and one regression fixed during development.",
 		"A short project note naming the browser baseline, any pinned D3 or Materialize use, external assets and attribution, privacy choices, known limitations, and a two-minute demonstration."
 	],
+	"javascript-level-2-javascript-master": [
+		"One browser-only app or game with a concise audience and task statement, explicit non-goals, semantic controls, a documented state model, and a useful non-canvas or no-JavaScript explanation.",
+		"Named functions for normalization, state transitions, event handling, update, rendering, persistence, and request boundaries, with pure logic separated from DOM, canvas, storage, and network effects.",
+		"Either a bounded Canvas 2D loop with delta-time, collision, pause, reset, focus-aware controls, and essential text state, or a DOM application with equivalent event, state, and rendering complexity.",
+		"A supplied-fixture data route plus optional public GET refresh using status, timeout or cancellation, shape, cache, rate, and fallback handling; no browser secret or remote write is required.",
+		"A small relational or document model, local CRUD persistence, schema version or migration note, safe text and URL handling, and tests for empty, malformed, duplicate, stale, and storage-failure cases.",
+		"A release packet covering browser and viewport, expected and observed cases, console state, keyboard and pointer use, focus, motion, contrast, narrow reflow, performance budget, reset and recovery, attribution, privacy, limitations, and a three-minute demonstration."
+	],
 	"rust-systems-security": [
 		"One small supplied legacy parser or stateful CLI with an explicit behavior contract, threat model, trust boundary, malformed-input inventory, and named non-goals.",
 		"A Rust 2024 redesign that uses ownership, borrowing, Option, Result, enums, checked arithmetic, bounded collections, and narrow APIs to make invalid or ambiguous states harder to express.",
@@ -804,6 +831,14 @@ const safetyPolicyOverrides: Record<string, string[]> = {
 		"Treat CodePen, CDN scripts, D3, Materialize, fonts, icons, and media as external dependencies with pinned versions or local fallbacks; no third-party sign-in or public publishing is required.",
 		"AI cannot receive personal responses, invent project requirements, or replace the learner's explanation; any suggested code is read, bounded, tested in local files, and revised until the learner can explain each state change.",
 		"Every project records the expected visible result, browser and viewport, standard and edge inputs, interaction method, observed result, console state, reset route, accessibility check, and remaining limitation."
+	],
+	"javascript-level-2-javascript-master": [
+		"Use fictional names, posts, comments, scores, locations, images, URLs, and records; never collect or publish a learner's real identity, contact details, school data, private media, credential, token, API key, or browsing history.",
+		"Treat event input, storage, fixture data, API responses, URLs, and AI suggestions as untrusted; validate shape and size, render text with textContent, allow only reviewed URL protocols and origins, and cap arrays, loops, frames, retries, and stored records.",
+		"Never place a JSONBin master key, access key, database credential, or other write secret in browser code. Required CRUD stays local; any teacher-approved remote-write extension uses an isolated server-side boundary outside this course and disposable fictional records.",
+		"Canvas and game work provides semantic controls, keyboard and pointer parity, visible focus, focus-aware key capture, pause and reset, reduced-motion behavior, bounded work, and a text equivalent for score, status, instructions, and outcomes.",
+		"Public API work starts from a supplied fixture, checks Response.ok, supports abort or timeout, validates the response shape, caches repeated reads, follows provider fair-use guidance, and remains usable when offline, blocked by CORS, changed, or rate-limited.",
+		"Every project records expected and observed state transitions, standard and failure inputs, request or storage behavior, console state, keyboard and pointer checks, accessibility evidence, recovery and reset, external dependencies, privacy choices, and remaining limitations."
 	],
 	"rust-systems-security": [
 		"All builds, parsers, unsafe examples, FFI shims, dependency checks, Miri runs, and fuzz cases stay inside a course-owned local workspace using supplied fictional inputs and fixed resource limits.",
@@ -980,6 +1015,10 @@ function sourcePolicyFor(courseId: string) {
 
 		if (courseId === "javascript-level-1-javascript-superstar") {
 			return `Source-backed and externally referenced course. Canonical local source repository: ${url}. The linked JSS-* starter/solution folders are generic click-to-add-list wrappers rather than distinct implementations of every named lesson; original CodePen projects contain most of the historical project variety. Existing links remain traceable, while supplied local cases and verification guidance provide module-specific, host-independent evidence.`;
+		}
+
+		if (courseId === "javascript-level-2-javascript-master") {
+			return `Source-backed and externally referenced course. Canonical local source repository: ${url}. The linked JSM-* starter/solution folders, including the master-project folder, are generic click-to-add-list wrappers rather than distinct implementations of every named module; original CodePen and hosted-tool projects contain most of the historical project variety. Existing links remain traceable, while supplied local cases and verification guidance provide module-specific canvas, event, request, relational, CRUD, and capstone evidence.`;
 		}
 
 		return `Source-backed course. Canonical source repository: ${url}. Starter/reference links remain synchronized with catalog projects.`;
