@@ -1,5 +1,5 @@
 import type { ImplementationLabSection } from "./implementationLabGuidance";
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { javaLevel1GraphicsExtensionModules } from "./java-graphics-extensions";
 import { buildProjectGuidance } from "./projectGuidance";
@@ -150,7 +150,7 @@ function buildJavaFoundationGuidance(
 	});
 }
 
-export const javaLevel1Course: RawCourse = {
+const javaLevel1SourceCourse: RawCourse = {
 	name: "Java Level 1",
 	modules: [
 		{
@@ -1577,6 +1577,434 @@ export const javaLevel1Course: RawCourse = {
 				}
 			],
 			supplementalProjects: []
+		}
+	]
+};
+
+const JAVA_LEVEL_1_PRIMARY_MODULE_COUNT = 13;
+const JAVA_LEVEL_1_FOUNDATION_ARCHIVE_END = 19;
+
+const JAVA_LEVEL_1_SECONDARY_PROJECTS = new Set([
+	"JS1 Project 2: First Middle Last",
+	"JS3 Project 2: Color Mixer",
+	"JS4 Project 2: Nested Loops",
+	"JS5 Project 2: Mathematical Challenges",
+	"JS7 Project 2: Fortune Teller",
+	"JS7 Project 4: High Score List",
+	"JS8 Project 2: Grid Drawer",
+	"JS9 Master Project: Advanced Battleship"
+]);
+
+const JAVA_LEVEL_1_MODULE_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"J1A Visual Java Launch: Karel Robot Worlds": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"compile-run-observe",
+			"robot object state",
+			"method call",
+			"blocked move",
+			"state trace"
+		],
+		flowNote:
+			"Start with short Karel programs until object state, statement order, method calls, and compiler feedback are visible and explainable. Finish with a blocked-path repair and a written street, avenue, direction, and beeper trace before moving to console Java."
+	},
+	"J1B Visual Java Syntax: Types, Objects, and Methods": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"class and main",
+			"primitive value",
+			"object construction",
+			"method signature",
+			"parameter trace"
+		],
+		flowNote:
+			"Use the robot world to connect the class and `main` skeleton to typed values, constructor arguments, object state, methods, and parameters. Predict each state change before running, then explain one compiler error from its file, line, and symbol evidence."
+	},
+	"J1C Text Bridge: Variables, Strings, and Input": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Java 21",
+			"typed variable",
+			"String method",
+			"full-line input",
+			"invalid-input recovery"
+		],
+		flowNote:
+			"Pin the course to Java 21 and carry the visual compile-run-observe routine into console programs. Use full-line `Scanner` reads followed by explicit parsing so spaces, blank input, and invalid numbers are handled without stale-newline surprises; classroom prompts use fictional, non-sensitive responses."
+	},
+	"J1D Text Bridge: Casting, Operators, and Coordinate Reasoning": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"integer division",
+			"explicit cast",
+			"operator precedence",
+			"coordinate range",
+			"boundary case"
+		],
+		flowNote:
+			"Predict expression type and value before running, especially around integer division and explicit casts. Verify negative, zero, and threshold cases, then connect the same arithmetic to graphics coordinates without confusing position with width or height."
+	},
+	"J1E Branching Logic: Console Choices and Visual Decisions": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"boolean condition",
+			"branch table",
+			"String equality",
+			"normalized input",
+			"fallback case"
+		],
+		flowNote:
+			"Write a small decision table before each conditional, compare strings with `.equals()` or `.equalsIgnoreCase()`, and normalize text input deliberately. Test every branch plus one unknown or boundary input so the fallback behavior is visible rather than silent."
+	},
+	"J1F Repetition: Console Patterns and Grid Moves": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"loop invariant",
+			"initial state",
+			"update step",
+			"termination",
+			"nested-loop grid"
+		],
+		flowNote:
+			"Trace the initial state, condition, body, and update for bounded `for` and `while` loops before relying on output. Test zero, one, and several iterations, then use row and column variables to explain nested-loop patterns without an unbounded execution path."
+	},
+	"J1G Loops, Conditionals, and Randomized Games": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Random instance",
+			"seeded test",
+			"range boundary",
+			"guess loop",
+			"attempt limit"
+		],
+		flowNote:
+			"Use one `java.util.Random` instance, inject a fixed seed for tests, and choose a fresh seed only for ordinary play. Derive inclusive ranges explicitly and test their endpoints; every guessing loop has a clear exit condition or attempt limit."
+	},
+	"J1H Check-In: Visual-to-Text Foundations": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"state prediction",
+			"compiler diagnosis",
+			"input trace",
+			"branch coverage",
+			"loop boundary"
+		],
+		flowNote:
+			"Use the check-in as evidence, not another content sprint: predict state and output, diagnose one compiler error, and complete one transfer task covering input, branching, and loop boundaries. Revisit only the specific weak block before continuing."
+	},
+	"J1I Methods: Helpers, Parameters, and Reuse": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"method contract",
+			"parameter",
+			"return value",
+			"constructor",
+			"private state"
+		],
+		flowNote:
+			"Move from static helpers to one small class boundary: name each method's inputs, return value, side effects, and edge cases, then give a simple object private state, a constructor, and behavior. Test the class directly before arrays or the capstone depend on it."
+	},
+	"J1J Lists of State: Arrays and ArrayLists": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"fixed-size array",
+			"ArrayList",
+			"index boundary",
+			"empty collection",
+			"mutation contract"
+		],
+		flowNote:
+			"Choose arrays for fixed-size indexed state and `ArrayList` for a collection that must grow or shrink. Test empty, one-element, first-index, and last-index cases, and state whether each method mutates its input or returns a new result."
+	},
+	"J1K Grid Data: Two-Dimensional Arrays": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"row count",
+			"column count",
+			"nested traversal",
+			"rectangular precondition",
+			"empty-grid case"
+		],
+		flowNote:
+			"Sketch the row-column model before coding and keep row and column bounds separate. Test empty, one-cell, edge, corner, and non-square grids; if a method assumes a rectangular grid, validate or document that precondition instead of indexing blindly."
+	},
+	"J1L Check-In: Methods and Data Structures": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"method trace",
+			"array boundary",
+			"ArrayList mutation",
+			"2D traversal",
+			"targeted reteach"
+		],
+		flowNote:
+			"Demonstrate method contracts and collection reasoning with one prediction, one implementation, and one boundary test for arrays, lists, and grids. Use the result to select targeted practice before Battleship rather than assigning every optional project."
+	},
+	"J1M Master Project: Battleship Grid Game": {
+		estimatedTime: "6–8 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"board model",
+			"coordinate parser",
+			"shot result",
+			"seeded fixture",
+			"win condition"
+		],
+		flowNote:
+			"Keep one local, single-player Battleship game as the required capstone and build it in testable pieces: board state, coordinate parsing, shot resolution, rendering, and win detection. Use deterministic fixtures and complete the simple game before choosing the multiplayer extension."
+	}
+};
+
+function javaLevel1SupplementalPath(title: string) {
+	return /advanced|nested loops|mathematical challenges|high score|extension|challenge/i.test(
+		title
+	)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function strengthenJavaLevel1Item(
+	item: RawCourseModuleItem
+): RawCourseModuleItem {
+	if (item.title === "JS1 Project 1: Chat Bot") {
+		return {
+			...item,
+			content:
+				"Create a chatbot that asks at least five fictional, non-sensitive questions, stores the answers, and prints customized responses using string concatenation and robust full-line input handling. Do not request real names, contact details, passwords, health information, or other private data; test blank input and one response containing spaces."
+		};
+	}
+
+	if (item.title === "Random Numbers and Letters") {
+		return {
+			...item,
+			content:
+				"Create and reuse one `java.util.Random` object. Pass a fixed seed such as `new Random(12345)` during tests so a run can be reproduced, then use `new Random()` only for ordinary play. Derive integer ranges with `nextInt(bound)` and verify the smallest and largest possible values before using numeric character ranges."
+		};
+	}
+
+	if (item.title === "Arrays") {
+		return {
+			...item,
+			content:
+				"Create fixed-size arrays, access and update elements by index, and traverse them without reading outside `0` through `length - 1`. Test empty, one-element, first-index, and last-index arrays, and state whether each method mutates the original array or returns a separate result."
+		};
+	}
+
+	if (item.title === "ArrayLists") {
+		return {
+			...item,
+			content:
+				"Compare arrays with `ArrayList`, then use `add()`, `get()`, `set()`, `remove()`, and `size()` with explicit empty-list and index-boundary handling. State whether a helper mutates the supplied list or returns a new list, especially when removing items during traversal."
+		};
+	}
+
+	if (item.title === "Two-Dimensional Arrays") {
+		return {
+			...item,
+			content:
+				"Treat a 2D array as rows containing columns and traverse it with separate row and column bounds. Test empty, one-cell, non-square, edge, and corner cases; validate or document a rectangular-grid precondition before assuming every row has the same length."
+		};
+	}
+
+	return item;
+}
+
+function insertBeforeProject(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateJavaLevel1Module(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = JAVA_LEVEL_1_MODULE_FLOW[module.title];
+	const movedProjects = module.curriculum.filter(item =>
+		JAVA_LEVEL_1_SECONDARY_PROJECTS.has(item.title)
+	);
+	let curriculum: RawCourseModuleItem[] = module.curriculum
+		.filter(item => !JAVA_LEVEL_1_SECONDARY_PROJECTS.has(item.title))
+		.map(strengthenJavaLevel1Item)
+		.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+					: item.content,
+			learningPath: "core" as const
+		}));
+
+	if (module.title === "J1C Text Bridge: Variables, Strings, and Input") {
+		curriculum = insertBeforeProject(
+			curriculum,
+			"JS1 Project 1: Chat Bot",
+			{
+				title: "Java 21 Toolchain and Input Readiness",
+				content: [
+					"**Completion evidence:**",
+					"- The course uses the pinned Java 21 language level; record `java --version` and `javac --version` for the local or classroom environment.",
+					"- Compile a small program with `javac -Xlint:all`, run it from a clean output location, and explain any warning instead of suppressing it without cause.",
+					"- Read full lines with `Scanner.nextLine()` and parse numbers explicitly with `Integer.parseInt()` or `Double.parseDouble()` inside a bounded retry path.",
+					"- Verify a normal value, a response containing spaces, blank input, invalid numeric input, and a corrected retry without a stale newline."
+				].join("\n"),
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "J1I Methods: Helpers, Parameters, and Reuse") {
+		curriculum = insertBeforeProject(
+			curriculum,
+			"JS6 Project 1: Methods Practice",
+			{
+				title: "Small Class Boundary: State and Behavior",
+				content: [
+					"Create one small class such as `BoardCell`, `Player`, or `Counter` before the collection units.",
+					"",
+					"**Completion evidence:**",
+					"- Private state with a constructor that establishes a valid starting condition.",
+					"- At least one query method and one behavior method with named inputs, return value, side effects, and invalid-input policy.",
+					"- Direct tests for normal construction, one state change, a boundary or rejected input, and independence between two instances.",
+					"- No public mutable fields; callers use the class's methods rather than rewriting its rules."
+				].join("\n"),
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "J1M Master Project: Battleship Grid Game") {
+		curriculum = insertBeforeProject(curriculum, "Course Recap", {
+			title: "Simple Battleship Completion Contract",
+			content: [
+				"**Required scope:** A local, single-player game is the course capstone. Multiplayer, configurable fleets, and other advanced features remain optional until this contract passes.",
+				"",
+				"**Completion evidence:**",
+				"- Board state is separate from display text, and coordinate parsing rejects malformed or out-of-range input without changing the board.",
+				"- Seeded or fixed fixtures cover a valid miss, valid hit, duplicate shot, edge and corner coordinates, final winning shot, and a fresh-game reset.",
+				"- The main loop has an explicit termination condition; invalid input follows a bounded recovery path.",
+				"- One clean run demonstrates play from a fresh board through win detection, while direct checks prove the helper methods independently."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: [
+			...module.supplementalProjects,
+			...movedProjects
+		].map(item => ({
+			...item,
+			learningPath: javaLevel1SupplementalPath(item.title)
+		}))
+	};
+}
+
+function buildJavaLevel1FoundationArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Java Foundations Practice Archive",
+		estimatedTime: "Choose individual studios as needed",
+		keyBlocks: [
+			"even-value accumulator",
+			"threshold branch",
+			"inclusive range",
+			"adjacent gap",
+			"above-average count"
+		],
+		curriculum: [
+			{
+				title: "Java Foundations Practice Archive Guide",
+				content:
+					"**Course flow:** J1X02 Java Foundations Build 13: Practice Studio through J1X06 Java Foundations Build 17: Practice Studio, plus Temperature Converter: Practice Studio, are optional reinforcement after the matching core lesson or check-in. Select the smallest studio that addresses an observed gap; learners do not need to complete the entire archive.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: javaLevel1SupplementalPath(item.title)
+				})
+			)
+		)
+	};
+}
+
+function buildOptionalJavaGraphicsModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	return {
+		...module,
+		kind: "appendix",
+		estimatedTime:
+			"Choose this visual extension after the matching core blocks",
+		keyBlocks: [
+			"coordinate sketch",
+			"drawing primitive",
+			"helper method",
+			"controlled variation"
+		],
+		curriculum: [
+			{
+				title: `${module.title} Guide`,
+				content:
+					"**Course flow:** This is an optional visual application of the main Java sequence, not a second required track. Choose one project after the relevant variables, branching, loops, or methods block; predict coordinates and state before rendering, then explain the result from the code.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: [
+			...module.curriculum,
+			...module.supplementalProjects
+		].map(item => ({
+			...item,
+			learningPath: javaLevel1SupplementalPath(item.title)
+		}))
+	};
+}
+
+const javaLevel1PrimaryModules = javaLevel1SourceCourse.modules
+	.slice(0, JAVA_LEVEL_1_PRIMARY_MODULE_COUNT)
+	.map(decorateJavaLevel1Module);
+const javaLevel1FoundationArchiveModules = javaLevel1SourceCourse.modules.slice(
+	JAVA_LEVEL_1_PRIMARY_MODULE_COUNT,
+	JAVA_LEVEL_1_FOUNDATION_ARCHIVE_END
+);
+const javaLevel1GraphicsModules = javaLevel1SourceCourse.modules
+	.slice(JAVA_LEVEL_1_FOUNDATION_ARCHIVE_END, -1)
+	.map(buildOptionalJavaGraphicsModule);
+const javaLevel1PendingMediaModule = javaLevel1SourceCourse.modules.at(-1)!;
+
+export const javaLevel1Course: RawCourse = {
+	...javaLevel1SourceCourse,
+	modules: [
+		...javaLevel1PrimaryModules,
+		buildJavaLevel1FoundationArchive(javaLevel1FoundationArchiveModules),
+		...javaLevel1GraphicsModules,
+		{
+			...javaLevel1PendingMediaModule,
+			kind: "appendix",
+			estimatedTime: "Reference only",
+			keyBlocks: ["stable media URL", "pending asset"],
+			curriculum: javaLevel1PendingMediaModule.curriculum.map(item => ({
+				...item,
+				learningPath: "core"
+			}))
 		}
 	]
 };
