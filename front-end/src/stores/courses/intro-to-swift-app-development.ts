@@ -1,8 +1,8 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
-export const introToSwiftAppDevelopmentCourse: RawCourse = {
+const introToSwiftAppDevelopmentSourceCourse: RawCourse = {
 	name: "Intro to Swift App Development",
 	modules: [
 		{
@@ -1477,4 +1477,851 @@ export const introToSwiftAppDevelopmentCourse: RawCourse = {
 			]
 		}
 	]
+};
+
+type SwiftCourseStage =
+	| "Build foundations"
+	| "Extend the product"
+	| "Verify quality"
+	| "Prepare and ship"
+	| "Optional enrichment";
+
+interface SwiftCourseModuleFlow {
+	sourceTitle: string;
+	title: string;
+	stage: SwiftCourseStage;
+	estimatedTime: string;
+	keyBlocks: string[];
+	materialSection: string;
+	answerSection: string;
+	focus: string;
+	coreRoute: string;
+	stretchRoute: string;
+	verification: string;
+	boundary: string;
+	referenceLink: string;
+	projectCore: string;
+	projectStretch: string;
+}
+
+const SWIFT_REFERENCES = {
+	xcodeRequirements: "https://developer.apple.com/xcode/system-requirements/",
+	helloSwiftUI:
+		"https://developer.apple.com/tutorials/develop-in-swift/hello-swiftui",
+	swiftUIPathway: "https://developer.apple.com/swiftui/get-started/",
+	swiftBasics:
+		"https://docs.swift.org/swift-book/documentation/the-swift-programming-language/thebasics/",
+	swiftFunctions:
+		"https://docs.swift.org/swift-book/documentation/the-swift-programming-language/functions/",
+	swiftAppStructure:
+		"https://developer.apple.com/documentation/swiftui/app-organization",
+	modelData: "https://developer.apple.com/documentation/swiftui/model-data",
+	mapKit: "https://developer.apple.com/documentation/mapkit",
+	navigationStack:
+		"https://developer.apple.com/documentation/swiftui/navigationstack",
+	list: "https://developer.apple.com/documentation/swiftui/list",
+	swiftData:
+		"https://developer.apple.com/documentation/swiftdata/preserving-your-apps-model-data-across-launches",
+	urlSession:
+		"https://developer.apple.com/documentation/foundation/urlsession",
+	swiftTesting: "https://developer.apple.com/documentation/testing",
+	accessibility:
+		"https://developer.apple.com/design/human-interface-guidelines/accessibility/",
+	runApp: "https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device",
+	membership: "https://developer.apple.com/support/compare-memberships/",
+	signing:
+		"https://developer.apple.com/help/account/certificates/create-a-certificate-signing-request",
+	testFlight:
+		"https://developer.apple.com/help/app-store-connect/test-a-beta-version/testflight-overview",
+	appReview: "https://developer.apple.com/app-store/review/guidelines/",
+	submit: "https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-app-for-review",
+	path: "https://developer.apple.com/documentation/swiftui/path"
+} as const;
+
+const SWIFT_COURSE_FLOW: SwiftCourseModuleFlow[] = [
+	{
+		sourceTitle: "SAD2 Mac Setup and Project Tooling",
+		title: "SW1 Mac Setup and First Launch",
+		stage: "Build foundations",
+		estimatedTime: "2–3 sessions",
+		keyBlocks: [
+			"supported macOS",
+			"Xcode",
+			"simulator runtime",
+			"project naming",
+			"build destination",
+			"version record"
+		],
+		materialSection: "mac-setup-and-first-launch-case",
+		answerSection: "mac-setup-and-first-launch-key",
+		focus: "A first SwiftUI app moves from a named project to a successful simulator launch with the toolchain and destination recorded.",
+		coreRoute:
+			"Check the current Xcode compatibility table, create an iOS App project, identify the app entry point and first view, change visible text, and run the result in one installed simulator.",
+		stretchRoute:
+			"Compare preview and simulator behavior, add a second simulator size, record a reproducible clean-build routine, and explain which result belongs to source code versus local tool state.",
+		verification:
+			"A submission includes the Xcode version, Swift language mode, deployment target, simulator model and OS, one visible code change, and evidence that the launched build contains that change.",
+		boundary:
+			"A supported Mac and Xcode are required for the practical iOS route. The supplied project map and screenshots preserve a planning route when installation is unavailable; a paid developer membership is not required for this module.",
+		referenceLink: SWIFT_REFERENCES.xcodeRequirements,
+		projectCore:
+			"Create, rename, run, and archive notes for a blank SwiftUI app without changing signing or distribution settings.",
+		projectStretch:
+			"Compare two destinations and write a short troubleshooting decision tree for a preview success paired with a simulator failure."
+	},
+	{
+		sourceTitle: "SAD7 Xcode Project Anatomy",
+		title: "SW2 Xcode Project Anatomy",
+		stage: "Build foundations",
+		estimatedTime: "2–3 sessions",
+		keyBlocks: [
+			"project navigator",
+			"target",
+			"scheme",
+			"asset catalog",
+			"preview canvas",
+			"issue navigator"
+		],
+		materialSection: "xcode-project-anatomy-case",
+		answerSection: "xcode-project-anatomy-key",
+		focus: "A small app is easier to change when the learner can trace a visible screen from the app entry point through a view file, asset, target, scheme, and build destination.",
+		coreRoute:
+			"Use the supplied project map to locate the app entry point, ContentView, asset catalog, target settings, active scheme, preview controls, run destination, and first useful build error.",
+		stretchRoute:
+			"Add one grouped source folder and one asset, compare a file reference with target membership, and diagnose a supplied case where code exists but is not compiled into the active target.",
+		verification:
+			"Each label identifies a real Xcode role, the screen-to-source trace reaches a view included in the active target, and the learner can state where to inspect a compile issue before changing unrelated settings.",
+		boundary:
+			"Project, target, scheme, and destination are related but not interchangeable. The course uses one app target until a later project creates a justified test target.",
+		referenceLink: SWIFT_REFERENCES.helloSwiftUI,
+		projectCore:
+			"Annotate the supplied project diagram and make one asset-backed visual change in the first app.",
+		projectStretch:
+			"Repair a target-membership or asset-name mismatch and preserve a before-and-after explanation of the evidence used."
+	},
+	{
+		sourceTitle: "SAD8 SwiftUI Mental Model",
+		title: "SW3 SwiftUI Views, Layout, and Modifiers",
+		stage: "Build foundations",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"View",
+			"body",
+			"VStack",
+			"HStack",
+			"ZStack",
+			"modifier order"
+		],
+		materialSection: "swiftui-views-layout-and-modifiers-case",
+		answerSection: "swiftui-views-layout-and-modifiers-key",
+		focus: "A declarative view describes the desired interface as a tree, and modifier order changes the value passed to the next step in that tree.",
+		coreRoute:
+			"Read a short view from the inside out, build the Welcome Profile App with text, image, stacks, spacing, and styling, and predict two modifier-order results before running them.",
+		stretchRoute:
+			"Extract a reusable subview, support a second screen width and large text size, and explain how identity and data inputs affect the produced view value.",
+		verification:
+			"The app launches, the hierarchy matches the intended grouping, every modifier has a stated purpose, the interface remains readable at a supplied alternate text size, and the explanation distinguishes declarative description from imperative drawing.",
+		boundary:
+			"SwiftUI may recreate view values frequently; a view struct is not a permanent screen object. Layout examples use system controls and supplied assets rather than fixed coordinates for one device.",
+		referenceLink: SWIFT_REFERENCES.swiftUIPathway,
+		projectCore:
+			"Complete the canonical SAD1 Welcome Profile App with a coherent visual hierarchy and one reusable profile component.",
+		projectStretch:
+			"Add an alternate profile state, adaptive layout, and a documented modifier-order experiment without introducing navigation or shared data early."
+	},
+	{
+		sourceTitle: "SAD9 Swift Basics in App Context",
+		title: "SW4 Swift Basics in App Context",
+		stage: "Build foundations",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"let",
+			"var",
+			"type inference",
+			"optional",
+			"collection",
+			"control flow"
+		],
+		materialSection: "swift-basics-in-app-context-case",
+		answerSection: "swift-basics-in-app-context-key",
+		focus: "Constants, variables, types, optionals, collections, and control flow become meaningful when they model content and decisions that a view actually presents.",
+		coreRoute:
+			"Model profile data with constants and variables, use arrays and dictionaries only where their shapes fit the data, unwrap one optional explicitly, and transform the values into visible SwiftUI content.",
+		stretchRoute:
+			"Replace loosely related values with a stronger model, compare optional-handling strategies, filter and sort a supplied collection, and write boundary cases for empty or missing data.",
+		verification:
+			"Every value has a justified type and mutability choice, optional absence is handled without force unwrap, collection output is deterministic, and the view displays both ordinary and empty-state cases.",
+		boundary:
+			"Type inference reduces annotation noise but does not remove type rules. An optional represents possible absence, not an automatic error, and force unwrapping is excluded from the core route.",
+		referenceLink: SWIFT_REFERENCES.swiftBasics,
+		projectCore:
+			"Replace literal profile content with typed model values and render a supplied list with an explicit empty state.",
+		projectStretch:
+			"Add filtering, sorting, and optional metadata while keeping model transformations outside deeply nested view markup."
+	},
+	{
+		sourceTitle: "SAD10 Functions, Structs, and Enums",
+		title: "SW5 Functions, Structs, and Enums",
+		stage: "Build foundations",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"function",
+			"argument label",
+			"return value",
+			"struct",
+			"enum",
+			"switch"
+		],
+		materialSection: "functions-structs-and-enums-case",
+		answerSection: "functions-structs-and-enums-key",
+		focus: "Functions name behavior, structs group related value data, and enums make a finite set of app states explicit enough for exhaustive handling.",
+		coreRoute:
+			"Extract one pure formatting function, model one app item as an Identifiable struct, represent a finite status with an enum, and render every status through an exhaustive switch.",
+		stretchRoute:
+			"Add computed properties, validation with a throwing or optional result, associated enum values, and focused tests for model behavior independent of the UI.",
+		verification:
+			"Function inputs and outputs are clear, the model groups one coherent concept, each enum case has visible behavior, no default branch hides an unhandled state, and repeated sample data has stable identity.",
+		boundary:
+			"Structs use value semantics and fit most small app models and views. Classes remain useful for shared identity or framework requirements but are not introduced merely to imitate another language.",
+		referenceLink: SWIFT_REFERENCES.swiftFunctions,
+		projectCore:
+			"Refactor profile data into a small model, function, and display-state enum while preserving the same visible behavior.",
+		projectStretch:
+			"Add validation and model-only tests, then explain where value semantics reduce accidental shared mutation."
+	},
+	{
+		sourceTitle: "SAD6 What an App Is Structurally",
+		title: "SW6 App Structure and Lifecycle",
+		stage: "Build foundations",
+		estimatedTime: "2–3 sessions",
+		keyBlocks: [
+			"@main",
+			"App",
+			"Scene",
+			"WindowGroup",
+			"view hierarchy",
+			"model boundary"
+		],
+		materialSection: "app-structure-and-lifecycle-case",
+		answerSection: "app-structure-and-lifecycle-key",
+		focus: "An app is a system with an entry point, scenes, view hierarchy, model data, resources, and platform services rather than one growing ContentView file.",
+		coreRoute:
+			"Trace startup from @main through App and WindowGroup, map the current view hierarchy, separate model data from presentation, and place assets and supporting types in understandable locations.",
+		stretchRoute:
+			"Extract a feature boundary, compare app-level and view-level dependencies, sketch a second scene or platform target conceptually, and identify what remains shared.",
+		verification:
+			"The architecture map names entry point, scene, root view, child views, model, and resources; arrows show data or ownership direction; and each proposed file boundary has one responsibility.",
+		boundary:
+			"File count is not architecture. The course favors the smallest structure that keeps ownership and responsibilities visible, and it does not require a named enterprise pattern.",
+		referenceLink: SWIFT_REFERENCES.swiftAppStructure,
+		projectCore:
+			"Turn the first app into a readable multi-file structure with a model, reusable view, and documented startup path.",
+		projectStretch:
+			"Compare two feature-boundary options and defend the simpler one with change and testing scenarios."
+	},
+	{
+		sourceTitle: "SAD11 State and Data Flow",
+		title: "SW7 State and Data Flow",
+		stage: "Build foundations",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"@State",
+			"@Binding",
+			"@Observable",
+			"@Environment",
+			"single source of truth",
+			"derived state"
+		],
+		materialSection: "state-and-data-flow-case",
+		answerSection: "state-and-data-flow-key",
+		focus: "SwiftUI updates reliably when each piece of mutable data has one clear owner and dependent views receive values, bindings, or observable models intentionally.",
+		coreRoute:
+			"Use @State for transient view-owned data, pass a Binding to one editor, derive display values instead of storing duplicates, and use Observation for shared reference model data when the deployment target supports it.",
+		stretchRoute:
+			"Compare Observation with ObservableObject compatibility, inject a model through the environment, test a state transition outside the view, and diagnose a stale or duplicated source-of-truth bug.",
+		verification:
+			"Every mutable value has a named owner, child mutation uses an intentional binding or model method, derived values stay derived, empty and error states are represented, and the deployment-target note matches the selected observation API.",
+		boundary:
+			"Unclear state ownership is diagnosed before changing property wrappers. Observation integration begins with iOS 17-era platform availability. @StateObject and ObservableObject remain a compatibility route; mixing both models without an availability reason is avoided.",
+		referenceLink: SWIFT_REFERENCES.modelData,
+		projectCore:
+			"Add a favorite toggle and editable note with explicit ownership, binding, and a visible reset path.",
+		projectStretch:
+			"Move related shared state into an observable model, add a transition test, and document the compatibility route for an older deployment target."
+	},
+	{
+		sourceTitle: "SAD14 Media, Maps, and Device Features",
+		title: "SW8 Media, Maps, and Permission-Aware Features",
+		stage: "Extend the product",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"asset catalog",
+			"SF Symbols",
+			"Map",
+			"coordinate",
+			"permission timing",
+			"privacy fallback"
+		],
+		materialSection: "media-maps-and-permissions-case",
+		answerSection: "media-maps-and-permissions-key",
+		focus: "Bundled media and supplied coordinates can create rich interfaces before a learner requests photos, contacts, microphone, camera, or live location.",
+		coreRoute:
+			"Build the canonical Media Gallery and Map Places apps with supplied assets, static coordinates, labels, alternate text, and a no-permission simulator route.",
+		stretchRoute:
+			"Add map selection, an explicit rationale screen, denied and unavailable states, and a privacy data-flow map without collecting real learner or bystander information.",
+		verification:
+			"Assets have stable names and accessibility descriptions, map markers come from supplied nonidentifying data, the app works with permission denied, and any proposed permission request follows an initiated feature need.",
+		boundary:
+			"Core work uses bundled images and static fictional places. No classroom task requires personal photos, contacts, precise location, microphone, camera, or a learner's Apple Account data.",
+		referenceLink: SWIFT_REFERENCES.mapKit,
+		projectCore:
+			"Complete the canonical SAD2 Media Gallery and SAD4 Map Places apps using supplied nonpersonal assets and coordinates.",
+		projectStretch:
+			"Design and test a permission-aware enhancement with denied, restricted, unavailable, and no-network states while preserving the static fallback."
+	},
+	{
+		sourceTitle: "SAD12 Navigation and Multi-Screen Apps",
+		title: "SW9 Navigation and Multi-Screen Apps",
+		stage: "Extend the product",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"NavigationStack",
+			"NavigationLink",
+			"TabView",
+			"sheet",
+			"route",
+			"data passing"
+		],
+		materialSection: "navigation-and-multi-screen-case",
+		answerSection: "navigation-and-multi-screen-key",
+		focus: "Tabs represent peer destinations, stack navigation represents drill-down history, and sheets represent focused temporary work rather than interchangeable ways to add screens.",
+		coreRoute:
+			"Build the canonical Multi-Tab Hobby App, add one list-to-detail route, present one justified sheet, and pass model data without recreating unrelated state.",
+		stretchRoute:
+			"Represent routes as data, support a deep-link-like starting state, preserve selection across tabs, and test back, cancel, and save behavior for each path.",
+		verification:
+			"Every destination has a clear relationship to its origin, back and dismiss behavior are predictable, selected data remains consistent, and no route depends on a hidden global variable.",
+		boundary:
+			"NavigationStack is the core stack API for the selected modern deployment target. NavigationSplitView and UIKit navigation remain later alternatives rather than simultaneous requirements.",
+		referenceLink: SWIFT_REFERENCES.navigationStack,
+		projectCore:
+			"Complete the canonical SAD3 Multi-Tab Hobby App with peer tabs, one drill-down detail, and one focused editor or information sheet.",
+		projectStretch:
+			"Add route restoration or typed navigation data and verify each path from cold launch, tab switch, and cancellation."
+	},
+	{
+		sourceTitle: "SAD13 Lists, Forms, and CRUD Patterns",
+		title: "SW10 Lists, Forms, and CRUD",
+		stage: "Extend the product",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"List",
+			"Form",
+			"Identifiable",
+			"create",
+			"update",
+			"delete"
+		],
+		materialSection: "lists-forms-and-crud-case",
+		answerSection: "lists-forms-and-crud-key",
+		focus: "A predictable editor separates draft input from committed model data and gives create, read, update, and delete actions stable identity and recoverable behavior.",
+		coreRoute:
+			"Build the in-memory SAD5 Simple Tracker list, add and edit through validated forms, toggle one status, delete intentionally, and handle empty and invalid-input states.",
+		stretchRoute:
+			"Add sorting and filtering, undo or confirmation for destructive action, duplicate handling, and model-level tests for create and update rules.",
+		verification:
+			"Rows have stable identity, edits affect the intended item, invalid drafts do not corrupt committed data, deletion is understandable and recoverable where practical, and empty state offers a next action.",
+		boundary:
+			"CRUD describes product actions, not automatic architecture. This module remains in memory so data-flow bugs are visible before persistence adds a second system.",
+		referenceLink: SWIFT_REFERENCES.list,
+		projectCore:
+			"Complete the in-memory canonical SAD5 Simple Tracker with add, edit, toggle, delete, validation, and empty-state behavior.",
+		projectStretch:
+			"Add deterministic filtering, duplicate policy, and a reversible destructive-action path with focused model tests."
+	},
+	{
+		sourceTitle: "SAD16 Persistence",
+		title: "SW11 Persistence with SwiftData",
+		stage: "Extend the product",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"@Model",
+			"ModelContainer",
+			"ModelContext",
+			"@Query",
+			"migration",
+			"in-memory test store"
+		],
+		materialSection: "swiftdata-persistence-case",
+		answerSection: "swiftdata-persistence-key",
+		focus: "Persistence turns temporary model state into a stored product contract that must survive launch, edits, deletions, schema changes, and failure.",
+		coreRoute:
+			"Move the tracker model into SwiftData for an iOS 17-or-later route, configure a model container, insert and query items, relaunch to verify storage, and use an in-memory container for tests.",
+		stretchRoute:
+			"Add uniqueness or relationship behavior, document a model rename or migration risk, export or reset sample data, and compare SwiftData with a simpler UserDefaults boundary.",
+		verification:
+			"Create, edit, delete, and relaunch checks all pass; test data stays isolated; the selected deployment target supports the API; and schema decisions name data-loss and migration implications.",
+		boundary:
+			"SwiftData is available on iOS 17-era platforms. A supplied in-memory or file-backed model route preserves the lesson without CloudKit, accounts, syncing, or production personal data.",
+		referenceLink: SWIFT_REFERENCES.swiftData,
+		projectCore:
+			"Persist the canonical SAD5 Simple Tracker locally and prove its core records survive a controlled relaunch.",
+		projectStretch:
+			"Add an in-memory test container, one schema-evolution note, and a safe reset or export route for sample data."
+	},
+	{
+		sourceTitle: "SAD15 Networking and Data Loading",
+		title: "SW12 Networking and Data Loading",
+		stage: "Extend the product",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"URLSession",
+			"async await",
+			"Codable",
+			"HTTP status",
+			"loading state",
+			"local fixture"
+		],
+		materialSection: "networking-and-data-loading-case",
+		answerSection: "networking-and-data-loading-key",
+		focus: "A network feature is a state machine with empty, loading, loaded, failed, cancelled, and stale-data possibilities rather than a success-screen callback.",
+		coreRoute:
+			"Decode the supplied local JSON fixture first, load equivalent public read-only data with URLSession and async/await, validate the response, and render loading, content, empty, and error states.",
+		stretchRoute:
+			"Add cancellation, retry, timeout explanation, cache fallback, testable client abstraction, malformed-response fixtures, and concurrency notes for UI updates.",
+		verification:
+			"The local fixture always works, HTTP and decoding failures are distinct, the UI never stays indefinitely loading, cancellation does not become a false error, and no secret or personal identifier enters source control.",
+		boundary:
+			"Core work uses a bundled nonpersonal fixture and an instructor-approved public read-only endpoint. API keys, login tokens, scraping, learner accounts, and production backends remain outside scope.",
+		referenceLink: SWIFT_REFERENCES.urlSession,
+		projectCore:
+			"Complete the canonical SAD6 API Reference App with a local fixture, explicit state model, decode validation, and recoverable error view.",
+		projectStretch:
+			"Add a protocol-backed client, injected failure fixtures, cancellation, and a cache decision without storing sensitive data."
+	},
+	{
+		sourceTitle: "SAD17 Debugging and Testing",
+		title: "SW13 Debugging and Swift Testing",
+		stage: "Verify quality",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"reproduction",
+			"first useful signal",
+			"breakpoint",
+			"Swift Testing",
+			"#expect",
+			"regression case"
+		],
+		materialSection: "debugging-and-swift-testing-case",
+		answerSection: "debugging-and-swift-testing-key",
+		focus: "Debugging narrows a reproducible discrepancy with evidence, while a regression test preserves the corrected expectation at the smallest useful boundary.",
+		coreRoute:
+			"Reproduce a supplied model or UI bug, classify build, runtime, state, data, or layout evidence, inspect the earliest useful signal, fix one cause, and add a Swift Testing check for pure model behavior.",
+		stretchRoute:
+			"Parameterize boundary cases, test asynchronous loading with an injected client, compare Swift Testing with XCTest UI-test responsibilities, and attach useful failure context.",
+		verification:
+			"The report contains reproduction steps, expected and observed behavior, first useful signal, smallest causal change, passing regression evidence, and one limitation not covered by the test.",
+		boundary:
+			"Swift Testing is used in a test target, not the shipping app target. XCTest remains relevant for UI automation; previews, manual checks, unit tests, and UI tests provide different evidence.",
+		referenceLink: SWIFT_REFERENCES.swiftTesting,
+		projectCore:
+			"Repair one supplied tracker or network-state defect and add a Swift Testing regression that fails before the correction and passes after it.",
+		projectStretch:
+			"Add parameterized and asynchronous cases, then explain what remains for simulator or UI-level validation."
+	},
+	{
+		sourceTitle: "SAD18 App Design and Accessibility",
+		title: "SW14 App Design and Accessibility",
+		stage: "Verify quality",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"visual hierarchy",
+			"Dynamic Type",
+			"VoiceOver",
+			"touch target",
+			"contrast",
+			"Accessibility Inspector"
+		],
+		materialSection: "design-and-accessibility-case",
+		answerSection: "design-and-accessibility-key",
+		focus: "An interface is complete only when its hierarchy, actions, status, and content remain perceivable and operable through more than one visual or motor path.",
+		coreRoute:
+			"Audit one project for hierarchy, labels, Dynamic Type, VoiceOver order, touch targets, contrast, noncolor status, empty states, and understandable destructive actions; then repair the highest-impact barriers.",
+		stretchRoute:
+			"Use Accessibility Inspector, test Reduce Motion and increased contrast, add custom accessibility actions only where native semantics are insufficient, and document remaining risk.",
+		verification:
+			"Core flow works at a supplied large text size, controls have accurate names and roles, state is not color-only, reading order follows task order, and the audit records before-and-after evidence.",
+		boundary:
+			"Accessibility is a continuing design requirement rather than one late checklist. Native controls and adaptable layout are preferred before custom accessibility metadata or fixed-size exceptions.",
+		referenceLink: SWIFT_REFERENCES.accessibility,
+		projectCore:
+			"Audit and improve the Welcome Profile, Tracker, or API app with a recorded large-text and screen-reader pass.",
+		projectStretch:
+			"Test additional accessibility settings, prioritize unresolved barriers, and explain one design tradeoff without claiming universal compliance."
+	},
+	{
+		sourceTitle: "SAD4 Running on Simulator and Device",
+		title: "SW15 Simulator and Device Validation",
+		stage: "Prepare and ship",
+		estimatedTime: "2–3 sessions",
+		keyBlocks: [
+			"scheme",
+			"destination",
+			"simulator",
+			"device",
+			"console",
+			"smoke test"
+		],
+		materialSection: "simulator-and-device-validation-case",
+		answerSection: "simulator-and-device-validation-key",
+		focus: "A successful compile, simulator launch, and real-device validation are separate claims with different evidence and hardware limits.",
+		coreRoute:
+			"Run a release candidate on two supplied simulator profiles, perform the common smoke checklist, inspect console output, and document device-only checks as conditional rather than required.",
+		stretchRoute:
+			"Use a personally controlled device through a free Personal Team route where available, compare permissions and performance, and isolate one simulator-device discrepancy.",
+		verification:
+			"The report records scheme, destination, OS, build configuration, launch result, core-flow checks, console anomalies, and which device-only claims remain untested.",
+		boundary:
+			"No learner is required to own or connect an iPhone. A free Apple Account can support personal on-device testing, while simulator evidence remains the complete core route.",
+		referenceLink: SWIFT_REFERENCES.runApp,
+		projectCore:
+			"Execute and record a repeatable simulator smoke test for the current strongest app.",
+		projectStretch:
+			"Compare a personally controlled device with the simulator and diagnose one evidence-backed difference without collecting device identifiers in the submission."
+	},
+	{
+		sourceTitle: "SAD1 Apple Developer Ecosystem Overview",
+		title: "SW16 Apple Development and Distribution Map",
+		stage: "Prepare and ship",
+		estimatedTime: "1–2 sessions",
+		keyBlocks: [
+			"Xcode",
+			"Apple Account",
+			"Developer Program",
+			"App Store Connect",
+			"TestFlight",
+			"App Review"
+		],
+		materialSection: "apple-development-and-distribution-map-case",
+		answerSection: "apple-development-and-distribution-map-key",
+		focus: "Local development, personal device testing, beta distribution, and public App Store release are different access levels with different accounts, roles, artifacts, and review steps.",
+		coreRoute:
+			"Map Xcode, an Apple Account, the paid Developer Program, App Store Connect, TestFlight, App Review, and the App Store to the build or decision each one controls.",
+		stretchRoute:
+			"Compare individual, organization, and classroom-team scenarios, identify role dependencies, and design a simulated release route when learners do not control a paid account.",
+		verification:
+			"Each pipeline stage names its audience, account or role requirement, input artifact, output, and a condition that can block progress without implying that payment is required to learn SwiftUI.",
+		boundary:
+			"Core coding and simulator work remain free. Paid membership and organizational access are optional distribution resources controlled by an adult or organization, not course completion requirements.",
+		referenceLink: SWIFT_REFERENCES.membership,
+		projectCore:
+			"Complete a release-ladder map for the capstone and mark exactly where the free learning route ends.",
+		projectStretch:
+			"Add individual and organization role branches and a classroom simulation that requires no shared credentials."
+	},
+	{
+		sourceTitle: "SAD3 Certificates, Signing, and Bundle IDs",
+		title: "SW17 Signing, Teams, and Bundle IDs",
+		stage: "Prepare and ship",
+		estimatedTime: "2–3 sessions",
+		keyBlocks: [
+			"bundle identifier",
+			"team",
+			"certificate",
+			"provisioning profile",
+			"capability",
+			"signing error"
+		],
+		materialSection: "signing-teams-and-bundle-ids-case",
+		answerSection: "signing-teams-and-bundle-ids-key",
+		focus: "Signing links an app identifier, team authorization, certificate, entitlements, and build destination so a platform can verify who may run or distribute a build.",
+		coreRoute:
+			"Use the supplied signing matrix to distinguish bundle ID, team, certificate, profile, capability, and destination; inspect Xcode's signing surface without creating or sharing credentials.",
+		stretchRoute:
+			"Classify supplied signing failures, trace a capability mismatch, compare automatic and manual signing conceptually, and identify the minimum role required for each correction.",
+		verification:
+			"The diagnosis names the failed layer and supporting message, preserves a unique reverse-DNS identifier, avoids random setting changes, and proposes a correction within the learner's actual account role.",
+		boundary:
+			"Certificates, private keys, provisioning files, passwords, recovery codes, and team invitations are never submitted or shared. Learners without account access use the complete supplied diagnostic cases.",
+		referenceLink: SWIFT_REFERENCES.signing,
+		projectCore:
+			"Annotate a signing relationship map and resolve three supplied configuration cases without touching a real distribution account.",
+		projectStretch:
+			"Add entitlement and role constraints to the matrix and explain when an instructor or account holder must perform the action."
+	},
+	{
+		sourceTitle: "SAD5 App Store Connect and TestFlight Workflow",
+		title: "SW18 App Store Connect and TestFlight",
+		stage: "Prepare and ship",
+		estimatedTime: "2–3 sessions",
+		keyBlocks: [
+			"app record",
+			"build number",
+			"internal tester",
+			"external tester",
+			"beta review",
+			"feedback"
+		],
+		materialSection: "app-store-connect-and-testflight-case",
+		answerSection: "app-store-connect-and-testflight-key",
+		focus: "TestFlight distribution joins a processed build, app record, tester group, beta information, role permissions, review state, and a feedback loop.",
+		coreRoute:
+			"Use a supplied App Store Connect case to order app-record creation, archive upload, processing, export-compliance response, group assignment, beta notes, invitation, feedback, and build expiration.",
+		stretchRoute:
+			"Compare internal and external tester constraints, design a privacy-preserving feedback plan, triage crash and session evidence, and prepare a no-account simulation for classroom review.",
+		verification:
+			"The workflow distinguishes internal from external testing, notes that the first external build may need review, records build lifetime and role dependencies, and never treats a tester list as public course data.",
+		boundary:
+			"Live TestFlight use is optional and requires an enrolled team with appropriate roles. Core work uses fictional app records and testers; no learner email addresses or shared account credentials are collected.",
+		referenceLink: SWIFT_REFERENCES.testFlight,
+		projectCore:
+			"Prepare a simulated TestFlight release packet with beta description, test focus, build record, group choice, and feedback triage.",
+		projectStretch:
+			"Compare internal and external routes, add one review or export-compliance blocker, and revise the release packet after supplied feedback."
+	},
+	{
+		sourceTitle: "SAD20 Capstone App",
+		title: "SW19 Capstone Build and User Testing",
+		stage: "Prepare and ship",
+		estimatedTime: "8–12 sessions",
+		keyBlocks: [
+			"problem statement",
+			"minimum viable flow",
+			"iteration",
+			"test plan",
+			"accessibility",
+			"release candidate"
+		],
+		materialSection: "capstone-build-and-user-testing-case",
+		answerSection: "capstone-build-and-user-testing-key",
+		focus: "A capstone becomes credible through a small coherent user flow, explicit data ownership, tested failure states, accessibility evidence, and bounded claims rather than feature count.",
+		coreRoute:
+			"Choose or adapt the canonical SAD7 capstone, define audience without collecting personal data, build one complete flow, use local data or fixtures, test ordinary and failure states, and conduct a structured review with fictional tasks.",
+		stretchRoute:
+			"Add one justified persistence, networking, map, or media feature; use an injected test boundary; collect nonidentifying issue counts; and revise the highest-impact usability or reliability problem.",
+		verification:
+			"The release candidate launches from a clean simulator state, completes the primary task, handles empty and failure states, preserves data as claimed, passes model tests, records accessibility checks, and lists known limitations.",
+		boundary:
+			"The capstone does not require live accounts, analytics, payments, personal data, production services, or public release. User testing uses fictional scenarios and avoids recording names, contact details, precise locations, or sensitive content.",
+		referenceLink: SWIFT_REFERENCES.appReview,
+		projectCore:
+			"Complete the canonical SAD7 Publish-Ready Capstone as a tested release candidate with a scoped primary flow and evidence packet.",
+		projectStretch:
+			"Add one architecturally justified feature, automated boundary test, and evidence-backed revision without expanding beyond the stated release scope."
+	},
+	{
+		sourceTitle: "SAD19 Final Publishing Walkthrough",
+		title: "SW20 Final Publishing Walkthrough",
+		stage: "Prepare and ship",
+		estimatedTime: "2–3 sessions",
+		keyBlocks: [
+			"archive",
+			"version",
+			"build",
+			"privacy details",
+			"review notes",
+			"release decision"
+		],
+		materialSection: "final-publishing-walkthrough-case",
+		answerSection: "final-publishing-walkthrough-key",
+		focus: "Publishing is a release decision supported by a reproducible archive, accurate metadata, privacy answers, reviewer context, smoke evidence, ownership, and a rollback or follow-up plan.",
+		coreRoute:
+			"Complete the supplied preflight ledger for archive, version and build numbers, screenshots, description, support and privacy links, app privacy answers, review notes, test account or demo mode, and release choice.",
+		stretchRoute:
+			"Evaluate a rejection case, third-party SDK privacy change, phased release, manual release, transfer or role constraint, and a post-release defect response.",
+		verification:
+			"Every claim in metadata matches the build, privacy answers include third-party behavior, reviewer access is complete, no placeholder remains, and unresolved blockers produce a no-submit decision rather than optimism.",
+		boundary:
+			"Submitting a live app is optional and performed only by an authorized account holder or team member. The complete course outcome is a simulated submission packet and validated release candidate.",
+		referenceLink: SWIFT_REFERENCES.submit,
+		projectCore:
+			"Prepare and audit the capstone's simulated submission packet, then make a documented submit or hold decision.",
+		projectStretch:
+			"Respond to a supplied review rejection or privacy change and revise the packet, build plan, and release decision."
+	},
+	{
+		sourceTitle: "SADX Enrichment and Reference Boundaries",
+		title: "SWX Shapes and Legacy Reference Boundaries",
+		stage: "Optional enrichment",
+		estimatedTime: "2–4 optional sessions",
+		keyBlocks: [
+			"Path",
+			"Shape",
+			"GeometryReader",
+			"coordinate space",
+			"legacy comparison",
+			"transfer note"
+		],
+		materialSection: "shapes-and-legacy-reference-case",
+		answerSection: "shapes-and-legacy-reference-key",
+		focus: "Custom drawing can deepen SwiftUI geometry understanding, while legacy source remains evidence for comparison rather than a second required course sequence.",
+		coreRoute:
+			"Use the optional Shapes Studio to read points and paths, create one parameterized Shape, preview it at multiple sizes, and document which legacy idea transfers to modern SwiftUI.",
+		stretchRoute:
+			"Animate shape data accessibly, test inset or scaling behavior, compare a legacy implementation with the current API, and record one migration decision.",
+		verification:
+			"The shape adapts to supplied frames, avoids one-device coordinates, has a nonanimated or reduced-motion representation, and the legacy comparison names both transferable concept and obsolete implementation detail.",
+		boundary:
+			"Shapes Studio is optional enrichment after the core app path. Legacy Mod* folders remain instructor reference and never become hidden prerequisites.",
+		referenceLink: SWIFT_REFERENCES.path,
+		projectCore:
+			"Complete one adaptive custom Shape and a short modern-versus-legacy transfer note.",
+		projectStretch:
+			"Add animatable data and reduced-motion behavior, then verify geometry across three frame shapes."
+	}
+];
+
+function swiftPracticePack(section: string) {
+	return `/course-assets/swift/intro-swift-practice-pack.md#${section}`;
+}
+
+function swiftVerificationGuide(section: string) {
+	return `/course-assets/swift/intro-swift-verification-guide.md#${section}`;
+}
+
+function contextualSwiftTitle(
+	item: RawCourseModuleItem,
+	flow: SwiftCourseModuleFlow
+) {
+	if (item.title === "Diagnostic Checkpoint")
+		return `${flow.title}: Readiness Check`;
+	if (item.title === "Mod5Pro3")
+		return "Distribution Pipeline Reference Walkthrough";
+	if (item.title.startsWith("Worked Example Set:"))
+		return `${flow.title}: ${item.title.replace("Worked Example Set:", "Worked Cases —")}`;
+	return item.title;
+}
+
+function contextualizeSwiftItem(
+	item: RawCourseModuleItem,
+	flow: SwiftCourseModuleFlow,
+	isSupplemental: boolean
+): RawCourseModuleItem {
+	const practiceLink = swiftPracticePack(flow.materialSection);
+	const verificationLink = swiftVerificationGuide(flow.answerSection);
+	const isExtension =
+		flow.stage === "Optional enrichment" ||
+		item.title.includes("Extension") ||
+		item.title.includes("Transfer Practice");
+	const completionRoute = isSupplemental
+		? `**Completion route:** Core: ${flow.projectCore} Stretch: ${flow.projectStretch}`
+		: `**Practice route:** Core: ${flow.coreRoute} Stretch: ${flow.stretchRoute}`;
+	const legacyNote = `The visible ${flow.title} sequence is the active learner order. The source-pack label ${flow.sourceTitle} remains as an alias so established starter, solution, and archive links stay traceable.`;
+
+	return {
+		...item,
+		title: contextualSwiftTitle(item, flow),
+		aliases: [...new Set([...(item.aliases ?? []), item.title])],
+		content: `${item.content.trim()}
+
+**Course position:** ${flow.stage}. ${legacyNote}
+
+**Build focus:** ${flow.focus}
+
+${completionRoute}
+
+**Verification gate:** ${flow.verification}
+
+**Toolchain and access boundary:** ${flow.boundary}
+
+**Local continuity:** Use the [supplied practice case](${practiceLink}) when Xcode, a compatible Mac, a simulator runtime, a device, network access, or an Apple distribution account is unavailable. Check the result against the [verification guide](${verificationLink}); preserve the learner's reasoning and only then compare the expected evidence.
+
+**Primary reference:** [Open the current first-party reference](${flow.referenceLink}). Record the Xcode version, Swift language mode, deployment target, and relevant API availability before copying version-sensitive steps.`,
+		learningPath:
+			flow.stage === "Optional enrichment" ||
+			item.title.includes("Extension")
+				? "challenge"
+				: isExtension
+					? "choice"
+					: "core",
+		projectLink: item.projectLink ?? flow.referenceLink,
+		solutionLink: item.solutionLink ?? verificationLink,
+		datasetLink: practiceLink,
+		mediaLink: item.mediaLink ?? flow.referenceLink
+	};
+}
+
+const sourceSwiftModules = new Map(
+	introToSwiftAppDevelopmentSourceCourse.modules.map(module => [
+		module.title,
+		module
+	])
+);
+
+export const introToSwiftAppDevelopmentCourse: RawCourse = {
+	name: introToSwiftAppDevelopmentSourceCourse.name,
+	modules: SWIFT_COURSE_FLOW.map(flow => {
+		const sourceModule = sourceSwiftModules.get(flow.sourceTitle);
+		if (!sourceModule)
+			throw new Error(`Missing Swift source module: ${flow.sourceTitle}`);
+
+		return {
+			...sourceModule,
+			title: flow.title,
+			aliases: [
+				...new Set([...(sourceModule.aliases ?? []), flow.sourceTitle])
+			],
+			kind: flow.stage === "Optional enrichment" ? "appendix" : "module",
+			estimatedTime: flow.estimatedTime,
+			keyBlocks: [...flow.keyBlocks],
+			curriculum: sourceModule.curriculum.map(item =>
+				contextualizeSwiftItem(item, flow, false)
+			),
+			supplementalProjects: sourceModule.supplementalProjects.map(item =>
+				contextualizeSwiftItem(item, flow, true)
+			)
+		};
+	}),
+	developmentMetadata: {
+		priority: "soon",
+		standards: [
+			"Apple Develop in Swift and SwiftUI first-party learning progression",
+			"Swift API Design Guidelines and Swift language reference",
+			"Apple Human Interface Guidelines with accessibility integrated into every project",
+			"App Store Connect, TestFlight, privacy, and App Review first-party operational guidance"
+		],
+		sourcePolicy:
+			"Keep the seven canonical instruction-material/Swift app projects in their established SAD1–SAD7 order while presenting SW1–SW20 as the active lesson sequence. Legacy Mod* projects and Shapes Studio remain traceable reference or optional enrichment, not a competing prerequisite path. Every version-sensitive lesson links to a first-party Apple or Swift source plus a supplied local continuity case.",
+		assessmentCadence: [
+			"Each module ends with a uniquely named readiness check tied to a launch, model, interaction, test, accessibility, or release artifact.",
+			"Each canonical app passes a simulator smoke route plus ordinary, empty, and failure-state checks before the next project adds complexity.",
+			"Model and networking work includes focused Swift Testing evidence where the boundary can run without UI automation.",
+			"Accessibility, privacy, and no-device or no-account equivalents are checked throughout instead of being deferred to publishing.",
+			"The capstone ends with a release-candidate evidence packet and an explicit submit-or-hold decision."
+		],
+		toolchain: [
+			"Current stable Xcode on a supported macOS version, checked against Apple's current compatibility table.",
+			"SwiftUI with the selected Swift language mode and deployment target recorded at course start.",
+			"Simulator-first core route; no personally owned iPhone or paid Developer Program membership is assumed.",
+			"Observation and SwiftData use an iOS 17-or-later route with compatibility notes rather than unmarked version assumptions.",
+			"Bundled JSON, fictional map coordinates, supplied assets, and in-memory test stores preserve deterministic offline practice."
+		],
+		safetyPolicy: [
+			"Do not collect learner or bystander photos, contacts, precise location, microphone recordings, account identifiers, device identifiers, or other personal data.",
+			"Do not commit API keys, signing certificates, private keys, provisioning files, passwords, recovery codes, tokens, or team invitations.",
+			"Permission-aware projects remain fully functional with supplied assets and fictional data when permission is denied or hardware is absent.",
+			"Live App Store Connect, TestFlight, signing, and submission actions are optional and performed only through an authorized adult or organizational role.",
+			"User-testing tasks use fictional scenarios and nonidentifying issue records rather than recording people or sensitive content."
+		],
+		courseBoundaries: [
+			"This is a first SwiftUI app-development course, not a comprehensive Swift algorithms, UIKit, Objective-C, backend, cloud, payments, analytics, or production operations course.",
+			"SW1–SW14 form the account-free build and quality core; SW15–SW20 add conditional device and distribution understanding without making paid access a completion requirement.",
+			"The seven canonical app projects are Welcome Profile, Media Gallery, Multi-Tab Hobby, Map Places, Simple Tracker, API Reference, and Publish-Ready Capstone.",
+			"Modern APIs carry deployment-target notes; compatibility alternatives are explained when they clarify ownership or availability rather than taught as duplicate full tracks.",
+			"Legacy source is used only for comparison, troubleshooting, or migration evidence and is never hidden required work."
+		],
+		capstoneExpectations: [
+			"One scoped primary user flow with explicit audience, criteria, and non-goals.",
+			"Clear model ownership, intentional navigation, and a bounded persistence or networking decision.",
+			"Ordinary, empty, loading or failure, and recovery states appropriate to the selected feature set.",
+			"Focused model or client tests plus a reproducible simulator smoke record.",
+			"Large-text, screen-reader semantics, noncolor state, privacy, and permission-fallback evidence.",
+			"A simulated submission packet with accurate metadata, limitations, privacy answers, and a documented submit-or-hold decision."
+		],
+		recommendedNextWork: [
+			"Keep the canonical Swift source repository's starter and solution projects aligned with the visible SW1–SW20 sequence while preserving existing folder URLs.",
+			"Recheck version-sensitive Observation, SwiftData, testing, simulator, signing, and App Store Connect notes whenever the supported Xcode baseline changes.",
+			"Add instructor-captured simulator screenshots or short transcripts only when they have stable, accessible URLs and a matching text route."
+		]
+	}
 };
