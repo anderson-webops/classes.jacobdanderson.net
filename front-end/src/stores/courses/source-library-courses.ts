@@ -445,7 +445,8 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 				"A mixed correction set with rule labels.",
 				"One sentence using a pair of commas around extra information.",
 				"One explanation distinguishing necessary information from extra information."
-			]
+			],
+			learningPath: "choice"
 		}
 	],
 	"MSC9 Semicolons": [
@@ -589,7 +590,8 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 				"A mixed classification set with clause labels.",
 				"One repaired fragment or run-on sentence.",
 				"A short paragraph revision that uses at least two different sentence types."
-			]
+			],
+			learningPath: "choice"
 		}
 	],
 	"MSC Check-In #3": [
@@ -614,22 +616,33 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 	],
 	"MSC17 Master Project": [
 		{
+			title: "Grammar Master Project Path and Evidence Plan",
+			prompt: "Choose the grammar-lesson or mechanics-portfolio path, select the three or more course concepts that need to be demonstrated, and plan the examples, practice or annotations, audience, and revision check.",
+			evidence: [
+				"Selected project path, audience, and grammar concepts.",
+				"Artifact outline connecting every selected concept to an example and explanation.",
+				"Completion checklist with one feedback or self-review checkpoint."
+			]
+		},
+		{
 			title: "Grammar and Mechanics Presentation",
 			prompt: "Create a short grammar lesson using three selected concepts from the course. Each concept includes a definition, an example with visuals or labels, a 3-5 question practice exercise, and speaker notes.",
 			evidence: [
 				"Three selected concepts with definitions and examples.",
 				"Practice questions with an answer key.",
 				"Presentation notes that explain the rules in a logical sequence."
-			]
+			],
+			learningPath: "choice"
 		},
 		{
 			title: "Personal Narrative Mechanics Portfolio",
-			prompt: "Write or revise a personal narrative that demonstrates grammar and mechanics control. The portfolio highlights capitalization, punctuation, sentence boundaries, sentence variety, and selected parts-of-speech choices.",
+			prompt: "Write or revise a personal, adapted, or fictional narrative that demonstrates grammar and mechanics control. The portfolio highlights capitalization, punctuation, sentence boundaries, sentence variety, and selected parts-of-speech choices.",
 			evidence: [
-				"A complete personal narrative draft or revision.",
+				"A complete personal, adapted, or fictional narrative draft or revision.",
 				"An annotation record naming grammar and mechanics choices.",
 				"Before-and-after revisions for at least three sentence-level improvements."
-			]
+			],
+			learningPath: "choice"
 		}
 	]
 };
@@ -3608,6 +3621,250 @@ const englishCourses = {
 		name: "Middle School C: Grammar and Mechanics",
 		area: "grammar",
 		focus: "parts of speech, capitalization, punctuation, phrases, clauses, subjects, predicates, objects, sentence types, and mechanics revision",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"MSC1 Nouns, Pronouns & Adjectives": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"noun / proper noun",
+					"pronoun / antecedent",
+					"adjective",
+					"agreement",
+					"sentence annotation"
+				],
+				flowNote:
+					"Begin a cumulative edit log with definitions, labeled examples, and one pronoun-agreement repair. Use supplied or original sentences and keep the before-and-after version."
+			},
+			"MSC2 Verbs, Adverbs & Verbals": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"verb",
+					"adverb",
+					"gerund",
+					"participle",
+					"infinitive"
+				],
+				flowNote:
+					"Identify the action or state first, then explain how adverbs modify it and how each verbal functions in its sentence. Add one corrected or revised example to the edit log."
+			},
+			"MSC3 Prepositions & Interjections": {
+				estimatedTime: "1–2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"preposition",
+					"object of preposition",
+					"prepositional phrase",
+					"interjection",
+					"punctuation effect"
+				],
+				flowNote:
+					"Separate relationship words and their phrase objects from words expressing sudden feeling, then add one original combined example to the cumulative log."
+			},
+			"MSC4 Coordinating & Subordinating Conjunctions": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"FANBOYS",
+					"subordinating conjunction",
+					"independent / dependent",
+					"compound / complex",
+					"comma rule"
+				],
+				flowNote:
+					"Join equal ideas and dependent ideas in separate examples, label clause roles, and connect each comma decision to the sentence structure rather than to a pause."
+			},
+			"MSC Check-In #1": {
+				estimatedTime: "1–2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"parts of speech",
+					"agreement",
+					"verbals",
+					"phrases",
+					"conjunction structure"
+				],
+				flowNote:
+					"Complete the concept record and one application passage. Use missing or mislabeled evidence to select review before beginning mechanics."
+			},
+			"MSC5 Capitalization": {
+				estimatedTime: "1–2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"sentence start",
+					"proper noun",
+					"title / heading",
+					"pronoun I",
+					"rule label"
+				],
+				flowNote:
+					"Name the capitalization rule before correcting each example and add one before-and-after passage sentence to the cumulative edit log."
+			},
+			"MSC6 Periods, Question Marks, Exclamation Points & Quotation Marks":
+				{
+					estimatedTime: "2 sessions · 40–50 minutes each",
+					keyBlocks: [
+						"sentence purpose",
+						"end mark",
+						"quotation marks",
+						"dialogue punctuation",
+						"speaker words"
+					],
+					flowNote:
+						"Choose end marks from sentence purpose, keep quoted words and dialogue punctuation together, and preserve one corrected dialogue example in the edit log."
+				},
+			"MSC7 Phrases & Clauses I": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"subject-verb pair",
+					"phrase",
+					"independent clause",
+					"dependent clause",
+					"fragment repair"
+				],
+				flowNote:
+					"Run the subject-verb and complete-thought tests before labeling, then repair one fragment by connecting it to an independent clause."
+			},
+			"MSC8 Commas": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"list",
+					"introductory element",
+					"direct address / interrupter",
+					"joined clauses",
+					"necessary / extra information"
+				],
+				flowNote:
+					"Name the comma rule before adding punctuation. Complete the diagnosis set as core work and use the mixed extra-practice set only when more comma fluency is needed."
+			},
+			"MSC9 Semicolons": {
+				estimatedTime: "1–2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"independent clause",
+					"closely related ideas",
+					"semicolon",
+					"sentence boundary",
+					"repair"
+				],
+				flowNote:
+					"Test both sides for independence before using a semicolon, compare it with a period or conjunction, and log one corrected misuse."
+			},
+			"MSC10 Colons": {
+				estimatedTime: "1–2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"complete starter",
+					"list",
+					"explanation",
+					"example / quotation",
+					"colon repair"
+				],
+				flowNote:
+					"Confirm that the words before the colon form a complete sentence, then compare list, explanation, and example uses in the edit log."
+			},
+			"MSC11 Common Punctuation Errors": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"comma splice",
+					"run-on",
+					"sentence-boundary repair",
+					"coordinate / cumulative adjective",
+					"error log"
+				],
+				flowNote:
+					"Diagnose each error category before repairing it, compare valid sentence-boundary choices, and finish with a passage edit organized by rule rather than isolated marks."
+			},
+			"MSC12 Pauses & Breaks": {
+				estimatedTime: "1–2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"dash",
+					"parentheses",
+					"ellipsis",
+					"emphasis / side information",
+					"meaning effect"
+				],
+				flowNote:
+					"Compare the three punctuation choices on purpose and explain whether the sentence needs emphasis, side information, or omission/trailing thought."
+			},
+			"MSC Check-In #2": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"capitalization / end marks",
+					"quotation marks",
+					"commas / semicolons / colons",
+					"error repair",
+					"meaning effect"
+				],
+				flowNote:
+					"Complete the punctuation concept record and one application passage. Compare the corrected passage with the edit log before selecting any review."
+			},
+			"MSC13 Subjects & Predicates": {
+				estimatedTime: "1–2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"complete subject",
+					"simple subject",
+					"complete predicate",
+					"simple predicate",
+					"sentence core"
+				],
+				flowNote:
+					"Remove extra phrases to reveal the sentence core, then restore them and verify that subject and predicate labels still describe the complete sentence."
+			},
+			"MSC14 Direct & Indirect Objects": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"action verb",
+					"direct object",
+					"indirect object",
+					"what / whom",
+					"to / for whom"
+				],
+				flowNote:
+					"Find the verb first, ask the object questions in order, and add one complete sentence map to the cumulative edit log."
+			},
+			"MSC15 Phrases & Clauses II": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"phrase",
+					"independent / dependent clause",
+					"sentence expansion",
+					"subordination",
+					"meaning relationship"
+				],
+				flowNote:
+					"Expand one sentence with a phrase and one with a dependent clause, label the added structure, and explain how each addition changes meaning."
+			},
+			"MSC16 Sentence Types": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"simple",
+					"compound",
+					"complex",
+					"compound-complex",
+					"sentence variety"
+				],
+				flowNote:
+					"Classify sentence types from clause structure, rewrite one idea in all four forms, and use the mixed extra-practice set only when more fluency is needed."
+			},
+			"MSC Check-In #3": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"subject / predicate",
+					"objects",
+					"phrases / clauses",
+					"sentence type",
+					"clarity / rhythm revision"
+				],
+				flowNote:
+					"Complete the structure concept record and one passage revision. Explain how the structural change affects clarity, rhythm, or emphasis before selecting review."
+			},
+			"MSC17 Master Project": {
+				estimatedTime: "3–4 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"project path",
+					"selected grammar concepts",
+					"examples / annotations",
+					"practice or revision evidence",
+					"feedback check"
+				],
+				flowNote:
+					"Complete the path-and-evidence plan, then choose one project. A fictional narrative and private or instructor-only presentation are valid; personal disclosure and public posting are not required."
+			}
+		},
 		sourceActivityAnchors: grammarMechanicsSourceAnchors,
 		modules: [
 			"MSC1 Nouns, Pronouns & Adjectives",
