@@ -3074,6 +3074,394 @@ function addUnityFullProjectWorkflowModules(
 	});
 }
 
+const UNITY_STARTER_PROJECT =
+	"https://github.com/instruction-material/Unity-Game-Development/tree/main/UGD-full-project-starter";
+const UNITY_SOLUTION_PROJECT =
+	"https://github.com/instruction-material/Unity-Game-Development/tree/main/UGD-full-project-solution";
+const UNITY_PRACTICE_PACK =
+	"/course-assets/unity/unity-game-development-practice-pack.md";
+const UNITY_VERIFICATION_GUIDE =
+	"/course-assets/unity/unity-game-development-verification-guide.md";
+
+const unityModuleFlow = [
+	{
+		title: "UGD0 Unity 6.3 LTS Setup, Assets, and Project Hygiene",
+		stage: "Core foundation",
+		estimatedTime: "2–3 sessions",
+		keyBlocks: [
+			"Unity Hub",
+			"Unity 6.3 LTS",
+			"project folders",
+			"scene smoke test",
+			"asset license",
+			"clean clone"
+		],
+		practiceSection: "setup-and-source-hygiene-case",
+		answerSection: "setup-and-source-hygiene-key",
+		focus: "A reproducible Unity project starts with one recorded editor version, a deliberate folder layout, a playable smoke scene, and traceable assets.",
+		coreRoute:
+			"Open the supplied project, confirm Unity 6.3 LTS and package versions, inspect Assets, Packages, and ProjectSettings, then run a scene containing one visible player, obstacle, camera, and debug message.",
+		stretchRoute:
+			"Reopen a clean copy, diagnose one supplied version or reference failure, classify sample assets by license and Git LFS need, and document the smallest recovery path.",
+		verification:
+			"The project opens without compile errors, the scene enters Play Mode, the Console shows the expected message, the editor version is recorded, and every included external asset has a source and license.",
+		boundary:
+			"Use self-created, Unity-provided, public-domain, or clearly permissive assets. No paid package, personal account credential, learner identity, or copied commercial game asset is required.",
+		reference: "https://unity.com/releases/unity-6/support"
+	},
+	{
+		title: "UGD1 GameObjects, Components, and C# Scripts",
+		stage: "Core foundation",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"GameObject",
+			"Transform",
+			"component",
+			"MonoBehaviour",
+			"serialized field",
+			"debug trace"
+		],
+		practiceSection: "components-and-lifecycle-case",
+		answerSection: "components-and-lifecycle-key",
+		focus: "GameObjects become understandable when each component has one visible responsibility and script lifecycle methods are chosen for a specific timing need.",
+		coreRoute:
+			"Inspect a component gallery, connect Transform, Renderer, Collider, Rigidbody, and one MonoBehaviour to visible behavior, expose a private tuning value with SerializeField, and trace Awake, Start, Update, and FixedUpdate.",
+		stretchRoute:
+			"Repair missing Inspector references, compare frame-based and physics-step work, split one overloaded script into focused components, and explain the dependency between them.",
+		verification:
+			"Every serialized reference is assigned or checked, frame-rate-independent work uses delta time where appropriate, physics changes occur on the physics path, and the Console contains no unexplained errors.",
+		boundary:
+			"Core scripts operate only inside the supplied local project. Learners do not install third-party packages or copy opaque scripts to complete the component and lifecycle evidence.",
+		reference:
+			"https://docs.unity3d.com/6000.3/Documentation/Manual/creating-scripts.html"
+	},
+	{
+		title: "UGD2 Input, Movement, Camera, and Player Feel",
+		stage: "Core build",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"Input System",
+			"action map",
+			"movement intent",
+			"Rigidbody",
+			"camera follow",
+			"control tuning"
+		],
+		practiceSection: "input-movement-and-camera-case",
+		answerSection: "input-movement-and-camera-key",
+		focus: "Responsive control separates input intent, movement application, camera behavior, and tuning so each part can be tested without rewriting the others.",
+		coreRoute:
+			"Use the current Input System, map keyboard or controller actions to intent, implement one movement model, add camera follow, and compare two supplied speed or acceleration settings through a short playtest.",
+		stretchRoute:
+			"Add remappable actions, acceleration or friction, coyote-time or turn smoothing, controller parity, and an alternate control case without changing the core movement contract.",
+		verification:
+			"Controls work after scene restart, movement is stable across two frame-rate conditions, the camera keeps the goal readable, and a recorded playtest identifies one evidence-based tuning change.",
+		boundary:
+			"Keyboard input is a complete core route; no controller purchase is required. Input records contain action results and tuning observations, not device identifiers or personal usage analytics.",
+		reference:
+			"https://docs.unity3d.com/6000.3/Documentation/Manual/com.unity.inputsystem.html"
+	},
+	{
+		title: "UGD3 Physics, Collision, Triggers, and Collection",
+		stage: "Core build",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"Rigidbody",
+			"Collider",
+			"trigger",
+			"layer matrix",
+			"collectible state",
+			"reset boundary"
+		],
+		practiceSection: "physics-collision-and-collection-case",
+		answerSection: "physics-collision-and-collection-key",
+		focus: "Physics becomes predictable when collision intent, Rigidbody ownership, layer interaction, event callbacks, state changes, and reset behavior are specified before adding effects.",
+		coreRoute:
+			"Complete the supplied collision matrix, configure one blocking surface and one trigger collectible, connect pickup state to score and feedback, then add a hazard or out-of-bounds reset.",
+		stretchRoute:
+			"Diagnose tunneling, duplicate collection, mismatched 2D and 3D callbacks, layer exclusions, and a missing Rigidbody using the provided failure cases.",
+		verification:
+			"Each object pair matches the collision matrix, a collectible changes state exactly once, hazards reach the intended failure state, restart restores initial state, and callback evidence identifies the responsible script.",
+		boundary:
+			"All physics work stays inside the supplied scene with reversible values. No real-world motion data, networked scoring, or externally downloaded physics package is required.",
+		reference:
+			"https://docs.unity3d.com/6000.3/Documentation/Manual/PhysicsSection.html"
+	},
+	{
+		title: "UGD4 UI, Game State, Menus, and Restart Flow",
+		stage: "Core build",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"state machine",
+			"HUD",
+			"menu",
+			"pause",
+			"restart",
+			"accessible feedback"
+		],
+		practiceSection: "ui-state-and-restart-case",
+		answerSection: "ui-state-and-restart-key",
+		focus: "A readable game exposes a small state machine and gives the player redundant feedback for goal, progress, success, failure, pause, and the next available action.",
+		coreRoute:
+			"Model pre-game, playing, paused, won, lost, and restarting states, connect the state to a start screen and HUD, then verify start, pause, success, failure, and restart from a fresh run.",
+		stretchRoute:
+			"Add keyboard and pointer navigation, visible focus, noncolor status cues, a settings state, and a transition-table test that rejects impossible state changes.",
+		verification:
+			"The supplied transition table matches runtime behavior, each state exposes one valid next action, restart removes stale score and scene state, and critical information remains understandable without color or audio alone.",
+		boundary:
+			"Menus use fictional names and local settings only. Accounts, leaderboards, chat, payments, analytics, and collection of player identity are outside the course.",
+		reference:
+			"https://docs.unity3d.com/6000.3/Documentation/Manual/UI-system-compare.html"
+	},
+	{
+		title: "UGD5 Prefabs, Spawning, Levels, Audio, and Animation",
+		stage: "Core build",
+		estimatedTime: "4–6 sessions",
+		keyBlocks: [
+			"prefab",
+			"spawn rule",
+			"level data",
+			"audio cue",
+			"animation state",
+			"build smoke test"
+		],
+		practiceSection: "prefabs-levels-and-feedback-case",
+		answerSection: "prefabs-levels-and-feedback-key",
+		focus: "Reusable prefabs, bounded spawn rules, simple level data, and purposeful feedback add variety without duplicating objects or hiding game rules in scene setup.",
+		coreRoute:
+			"Create one configurable prefab, spawn it from a bounded rule or level layout, add three meaningful visual or audio feedback cues, and complete a local build smoke test before adding more content.",
+		stretchRoute:
+			"Pool repeated objects, drive a short animation state transition, add a nonaudio equivalent for every sound cue, and compare hand-authored and data-driven level setup.",
+		verification:
+			"Prefab overrides are intentional, spawn count and bounds are controlled, feedback maps to specific game states, audio is not the sole status cue, and the scene launches in a local build outside the editor.",
+		boundary:
+			"Supplied stand-in art and audio complete the core route. External media requires source, license, modification, and attribution notes; copyrighted commercial assets and paid packages are not used.",
+		reference:
+			"https://docs.unity3d.com/6000.3/Documentation/Manual/Prefabs.html"
+	},
+	{
+		title: "UGD6 Capstone Production, Playtesting, and Revision",
+		stage: "Core capstone",
+		estimatedTime: "8–12 sessions",
+		keyBlocks: [
+			"vertical slice",
+			"scope",
+			"playtest",
+			"bug triage",
+			"revision",
+			"release evidence"
+		],
+		practiceSection: "capstone-playtest-and-revision-case",
+		answerSection: "capstone-playtest-and-revision-key",
+		focus: "A credible first Unity capstone is a small complete vertical slice with a clear loop, explicit state, reproducible build, structured playtest, prioritized revision, and honest limits.",
+		coreRoute:
+			"Choose one supplied capstone option, write a one-page scope, build start-to-restart behavior, pass the pre-capstone component, input, collision, state, and build gates, then revise two high-impact findings from a structured playtest.",
+		stretchRoute:
+			"Add one justified system such as a second level, data-driven content, accessibility option, or automated rule test only after the complete vertical slice and evidence packet pass.",
+		verification:
+			"The final build launches from a clean state, communicates controls and goal, reaches success or failure, restarts correctly, identifies one difficult bug and its retest, records two revisions, and lists known limitations.",
+		boundary:
+			"Playtest notes use fictional participant labels and behavior observations without names, contact details, recordings, or analytics. Public publishing, monetization, network features, and asset-store purchases are optional and outside core completion.",
+		reference:
+			"https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-design"
+	},
+	{
+		title: "UGD7 Testing, Profiling, Builds, CI, and Asset Pipeline",
+		stage: "Optional production engineering",
+		estimatedTime: "4–6 optional sessions",
+		keyBlocks: [
+			"Edit Mode test",
+			"Play Mode test",
+			"Profiler",
+			"Build Profile",
+			"CI",
+			"Git LFS"
+		],
+		practiceSection: "testing-profiling-and-builds-case",
+		answerSection: "testing-profiling-and-builds-key",
+		focus: "Production engineering turns selected game rules, scene boot, performance symptoms, builds, packages, and large assets into repeatable evidence rather than editor-only confidence.",
+		coreRoute:
+			"Run the supplied Edit Mode and Play Mode checks, create or inspect a Build Profile, classify one measured profiler symptom, and audit package locks, attribution, and Git LFS rules.",
+		stretchRoute:
+			"Add a deterministic rule test, one scene smoke test, a bounded CI check, a clean-clone build, and a before-and-after profile record for one verified bottleneck.",
+		verification:
+			"Tests identify their failure layer, the Build Profile records target and scenes, profiling names a measured symptom and retest, package files reproduce, and generated caches or builds are not mistaken for source.",
+		boundary:
+			"This optional extension uses local or repository CI with bounded checks. It does not require persistent build workers, cloud credentials, telemetry, production services, or public deployment.",
+		reference:
+			"https://docs.unity3d.com/6000.3/Documentation/Manual/com.unity.test-framework.html"
+	},
+	{
+		title: "UGD8 Full-Project Starter and Review Repository Plan",
+		stage: "Optional production engineering",
+		estimatedTime: "3–5 optional sessions",
+		keyBlocks: [
+			"starter state",
+			"review state",
+			"checkpoint",
+			"manifest lock",
+			"asset provenance",
+			"clean clone"
+		],
+		practiceSection: "full-project-repository-workflow-case",
+		answerSection: "full-project-repository-workflow-key",
+		focus: "A full Unity repository distinguishes the intentionally incomplete starter, learner checkpoints, completed review state, dependencies, generated files, and evidence needed to reproduce the project.",
+		coreRoute:
+			"Inspect the linked starter and solution repositories, map required Unity folders and source files, compare start and review behavior, and record a checkpoint with scene, scripts, test or play result, decision, and next action.",
+		stretchRoute:
+			"Create a clean-clone verification record, design start/checkpoint/review tags, audit LFS and attribution, and prepare a capstone milestone plan with explicit scope cuts.",
+		verification:
+			"The starter remains legitimately incomplete, the review state demonstrates intended behavior, manifests and project settings are tracked, ignored caches stay excluded, and another machine can follow the recorded open, play, test, and build route.",
+		boundary:
+			"Repository examples contain only course assets and fictional content. Secrets, personal data, Unity account files, generated Library caches, and unlicensed media never enter the project history.",
+		reference:
+			"https://docs.unity3d.com/6000.3/Documentation/Manual/class-VersionControlSettings.html"
+	}
+] as const;
+
+function unityPackLink(section: string) {
+	return `${UNITY_PRACTICE_PACK}#${section}`;
+}
+
+function unityVerificationLink(section: string) {
+	return `${UNITY_VERIFICATION_GUIDE}#${section}`;
+}
+
+function finalizeUnityLearningFlow(courseId: string, course: RawCourse) {
+	if (courseId !== "unity-game-development") return;
+
+	for (const [sequenceIndex, flow] of unityModuleFlow.entries()) {
+		const module = course.modules.find(
+			candidate => candidate.title === flow.title
+		);
+		if (!module) continue;
+
+		const optional = sequenceIndex >= 7;
+		const practiceLink = unityPackLink(flow.practiceSection);
+		const verificationLink = unityVerificationLink(flow.answerSection);
+
+		module.kind = optional ? "appendix" : "module";
+		module.estimatedTime = flow.estimatedTime;
+		module.keyBlocks = [...flow.keyBlocks];
+
+		for (const [itemIndex, item] of [
+			...module.curriculum,
+			...module.supplementalProjects
+		].entries()) {
+			const supplemental = itemIndex >= module.curriculum.length;
+			const routeLabel = supplemental
+				? "**Project route:**"
+				: "**Practice route:**";
+
+			item.content = `${item.content.trim()}
+
+**Course position:** ${flow.stage}. This is module ${sequenceIndex + 1} of ${unityModuleFlow.length}; UGD0–UGD6 form the complete learner route, while UGD7–UGD8 are labeled optional production-engineering extensions.
+
+**Playable result:** ${flow.focus}
+
+${routeLabel} Core: ${flow.coreRoute} Stretch: ${flow.stretchRoute}
+
+**Evidence gate:** ${flow.verification}
+
+**Toolchain and access boundary:** ${flow.boundary}
+
+**Local continuity:** Use the [supplied practice case](${practiceLink}) for setup data, scene maps, failure cases, playtest records, and repository evidence. Compare completed reasoning with the [verification guide](${verificationLink}) after recording the learner's own result.
+
+**Primary reference:** [Open the current first-party Unity reference](${flow.reference}). Record the Unity editor and package versions when an API, package, build surface, or workflow is version-sensitive.`;
+			item.learningPath = optional
+				? supplemental
+					? "challenge"
+					: "choice"
+				: "core";
+			item.projectLink ??= UNITY_STARTER_PROJECT;
+			item.solutionLink ??= UNITY_SOLUTION_PROJECT;
+			item.datasetLink = practiceLink;
+			item.mediaLink ??= flow.reference;
+		}
+	}
+
+	for (const module of course.modules.filter(candidate =>
+		candidate.title.startsWith("Legacy Snapshot Archive:")
+	)) {
+		module.kind = "appendix";
+		module.estimatedTime ??= "Optional reference";
+		module.keyBlocks ??= [
+			"source snapshot",
+			"behavior trace",
+			"state ownership",
+			"comparison",
+			"transfer",
+			"retest"
+		];
+
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			item.learningPath = "choice";
+			item.solutionLink ??= UNITY_SOLUTION_PROJECT;
+			item.datasetLink ??= unityPackLink(
+				"full-project-repository-workflow-case"
+			);
+			item.mediaLink ??=
+				"https://docs.unity3d.com/6000.3/Documentation/Manual/Profiler.html";
+		}
+	}
+
+	course.developmentMetadata = {
+		priority: "soon",
+		standards: [
+			"Unity 6.3 LTS current release and support policy, with support through December 2027.",
+			"Unity Manual guidance for GameObjects, MonoBehaviour lifecycle, Input System, physics, UI, prefabs, testing, profiling, Build Profiles, and version control.",
+			"Instruction-material Unity full-project starter and solution repository with manifests, project settings, tests, Build Profiles, attribution, and Git LFS rules.",
+			"Accessible game-feedback practice using visible, textual, spatial, and control alternatives rather than color or audio alone."
+		],
+		sourcePolicy:
+			"Use UGD0–UGD6 as the complete learner-facing sequence and UGD7–UGD8 as explicitly optional production-engineering extensions. Preserve the canonical full-project starter and solution as the primary implementation pair. Legacy GD6–GD8 and Module 4–5 script snapshots remain optional appendices for comparison and transfer rather than a second hidden course.",
+		assessmentCadence: [
+			"Each core module ends with one playable result, one evidence gate, and one recorded failure or boundary case.",
+			"Movement, physics, state, accessibility, and build smoke checks accumulate before capstone production begins.",
+			"Playtests classify findings as bug, usability, balance, or feature request and revise the highest-impact evidence first.",
+			"The capstone passes launch, control, goal, success or failure, restart, attribution, and clean-build checks.",
+			"Optional testing and repository modules add automation or reproducibility evidence without becoming prerequisites for the first complete game."
+		],
+		toolchain: [
+			"Unity Hub with Unity 6.3 LTS and the exact editor version recorded in project documentation.",
+			"Unity's current Input System for the main control route, with keyboard completion available when no controller is present.",
+			"Local supplied starter and solution projects with Packages manifests and locks, ProjectSettings, scenes, scripts, stand-in assets, and documented Build Profiles.",
+			"Unity Test Framework and Profiler are used in bounded optional evidence tasks; no persistent server compiler or worker service is involved.",
+			"Git and Git LFS support project history and licensed source assets; generated Library, Temp, Logs, and local build output remain excluded."
+		],
+		safetyPolicy: [
+			"Use only self-created, Unity-provided, public-domain, or clearly permissive assets with source and license records.",
+			"Do not collect learner names, emails, recordings, device identifiers, analytics, precise location, contacts, or other personal data.",
+			"Do not commit credentials, tokens, account files, paid package contents, unlicensed media, or generated Unity caches.",
+			"Keyboard controls, supplied stand-in media, fictional playtest labels, and nonaudio feedback form complete alternatives to optional hardware or assets.",
+			"All editor, physics, profiling, testing, and build work stays local or in a bounded course repository."
+		],
+		courseBoundaries: [
+			"UGD0–UGD6 are a complete first Unity course from setup to revised vertical slice; UGD7–UGD8 are optional production-engineering extensions.",
+			"The core teaches one finishable local game loop rather than multiplayer, backend services, monetization, analytics, live operations, or public publishing.",
+			"GameObjects, components, input, movement, physics, UI state, prefabs, feedback, build checks, and playtesting are required before feature expansion.",
+			"Testing and build gates appear in small form before the capstone even though deeper Test Framework, profiling, CI, Git LFS, and repository work remains optional.",
+			"Legacy snapshots support comparison and transfer only; they do not override the active full-project sequence."
+		],
+		capstoneExpectations: [
+			"One scoped vertical slice with a clear goal, controls, complete start-to-restart loop, and explicit non-goals.",
+			"Intentional component ownership for movement, collision, score or game state, UI, and restart behavior.",
+			"Visible and nonaudio feedback for critical states, plus keyboard completion without optional hardware.",
+			"A structured playtest log, bug triage, two evidence-based revisions, and one documented difficult bug with retest.",
+			"A reproducible local build with recorded Unity version, packages, scene list, attribution, and known limitations.",
+			"A short demonstration explaining architecture, gameplay loop, validation evidence, scope cuts, and the next justified improvement."
+		],
+		recommendedNextWork: [
+			"Keep the full-project starter and solution synchronized with the visible UGD0–UGD8 sequence and preserve clean-clone checks.",
+			"Recheck the current Unity LTS baseline, Input System, Test Framework, Build Profiles, and support dates whenever Unity changes the supported editor line.",
+			"Add first-party or permissively licensed media only when provenance, nonaudio alternatives, and repository size policy are documented."
+		]
+	};
+}
+
 function backfillReferenceSolutionLinks(courseId: string, course: RawCourse) {
 	if (!courseImplementationSourceRepos[courseId]) return;
 
@@ -3513,6 +3901,7 @@ export function applyCourseImplementationArtifacts(
 	addScienceGradeBandScopeModule(courseId, course);
 	addUnityRebuildModules(courseId, course);
 	addUnityFullProjectWorkflowModules(courseId, course);
+	finalizeUnityLearningFlow(courseId, course);
 	addCppMatrixModule(courseId, course);
 	addCppThreeCourseSpineModule(courseId, course);
 	addApCsaAlignmentModule(courseId, course);
