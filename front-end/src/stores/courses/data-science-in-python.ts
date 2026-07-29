@@ -1,33 +1,16 @@
-import type { RawCourse } from "./types";
+import type {
+	CourseItemLearningPath,
+	RawCourse,
+	RawCourseModule,
+	RawCourseModuleItem
+} from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
-import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
+import { staticMediaUrl } from "./staticMedia";
 
-const DATA_SCIENCE_AVAILABLE_SOURCE_ASSETS = ["life_expectancy.csv"];
-
-const DATA_SCIENCE_PENDING_SOURCE_ASSETS = [
-	"building_permits.csv",
-	"flight_delays.csv",
-	"api.png",
-	"boxplot.png",
-	"categorical_variables.png",
-	"cholera.csv",
-	"data_science_concept.png",
-	"data_science_project.png",
-	"height_and_weight.csv",
-	"mpg.csv",
-	"normal.png",
-	"palettes.png",
-	"percents.png",
-	"quantitative_variables.png",
-	"sat.csv",
-	"skew.png",
-	"std.png",
-	"tips.csv",
-	"unemployment.csv",
-	"us_county_incomes.csv",
-	"zoo_animals.csv"
-];
+const DATA_SCIENCE_LIFE_EXPECTANCY_DATASET = staticMediaUrl(
+	"life_expectancy.csv"
+);
 
 interface AppliedDataScienceLab {
 	number: number;
@@ -1676,30 +1659,305 @@ export const dataScienceInPythonCourse: RawCourse = {
 						"https://github.com/instruction-material/Data-Science/tree/main/DSP-33-applied-studio-17-data-analysis-lab-17-supplemental-3/solution"
 				}
 			]
-		},
-		{
-			kind: "appendix",
-			title: "Static Data and Media Status",
-			curriculum: [
-				{
-					title: "Data Science Asset Status",
-					content: [
-						"This course uses the datasets and visual assets below. Hosted assets are available now; pending assets keep stable static media URLs until the matching files are added.",
-						"**Hosted assets:**",
-						...DATA_SCIENCE_AVAILABLE_SOURCE_ASSETS.map(
-							filename => `- ${staticMediaUrl(filename)}`
-						),
-						"**Pending assets:**",
-						...DATA_SCIENCE_PENDING_SOURCE_ASSETS.map(
-							filename =>
-								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
-						)
-					].join("\n\n")
-				}
-			],
-			supplementalProjects: []
 		}
 	]
 };
 
 applyDataScienceAppliedLabs(dataScienceInPythonCourse);
+
+interface DataScienceFlowConfig {
+	title: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	projectThread: string;
+}
+
+const DATA_SCIENCE_FLOW: DataScienceFlowConfig[] = [
+	{
+		title: "DSP0 Setup and Tooling",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"notebook / script choice",
+			"package import",
+			"data folder",
+			"restart and rerun",
+			"environment record"
+		],
+		projectThread:
+			"Create one reproducible workspace that runs from a fresh start, records package and file assumptions, and keeps data, notebooks, scripts, and outputs in predictable locations."
+	},
+	{
+		title: "Module 1: What Data Science Is",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"answerable question",
+			"data provenance",
+			"assumption",
+			"descriptive vs predictive",
+			"claim boundary"
+		],
+		projectThread:
+			"Begin with a question and evidence inventory before choosing calculations or charts. The first artifact states the source, assumptions, intended audience, and what the data cannot establish."
+	},
+	{
+		title: "Module 2: Notebook Workflow and Reproducibility",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"code cell",
+			"markdown cell",
+			"restart and run all",
+			"relative path",
+			"version checkpoint"
+		],
+		projectThread:
+			"Build a notebook that reads top to bottom without hidden state, then rerun it from a clean kernel. Move repeated logic into a function or script only when that improves reproducibility."
+	},
+	{
+		title: "Module 3: pandas Foundations",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"pd.read_csv()",
+			"head() / info()",
+			"boolean mask",
+			"groupby()",
+			"derived column"
+		],
+		projectThread:
+			"Inspect schema and row counts before transforming data. Every filter, group, sort, and derived column must connect to the analytical question and retain a small hand-checkable example."
+	},
+	{
+		title: "DSP10 Applied Studio: CSV Summaries and Sanity Checks",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"numeric conversion",
+			"count / total / mean",
+			"empty dataset",
+			"hand trace",
+			"sanity check"
+		],
+		projectThread:
+			"Apply the first complete data pipeline to the provided life-expectancy CSV: load, convert, summarize, hand-check a small slice, and explain what the result does and does not represent."
+	},
+	{
+		title: "Module 4: Cleaning and Validation",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"isna()",
+			"duplicate check",
+			"dtype conversion",
+			"range validation",
+			"cleaning log"
+		],
+		projectThread:
+			"Profile missing, duplicated, malformed, and impossible values before changing them. Every drop, repair, or recode is counted and justified against the original question."
+	},
+	{
+		title: "DSP11 Applied Studio: Cleaning Missing and Invalid Rows",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"accepted / rejected row",
+			"validation reason",
+			"safe repair",
+			"before / after count",
+			"representativeness"
+		],
+		projectThread:
+			"Turn cleaning rules into an auditable report with rows loaded, accepted, rejected, and repaired. End by checking whether the cleaned data still supports the intended question."
+	},
+	{
+		title: "DSP12 Applied Studio: Grouped Summaries by Category",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"category label",
+			"group count",
+			"group mean",
+			"label normalization",
+			"small-group warning"
+		],
+		projectThread:
+			"Compare whole-dataset and grouped summaries, normalize inconsistent labels, and keep group sizes visible so an apparent difference is not separated from its denominator."
+	},
+	{
+		title: "Module 5: Visualization and Statistics in Context",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"chart-data match",
+			"axis and unit",
+			"mean / median / spread",
+			"outlier",
+			"correlation limit"
+		],
+		projectThread:
+			"Choose summaries and charts from the question and data types, not decoration. Test scale, labels, outliers, and alternative summaries before writing any interpretation."
+	},
+	{
+		title: "DSP13 Applied Studio: Visualization Choice and Chart Integrity",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"bar / line / scatter",
+			"axis label",
+			"unit",
+			"honest scale",
+			"visual limitation"
+		],
+		projectThread:
+			"Build one chart that answers a named question, then critique its type, encoding, scale, labels, and limitation. A technically rendered chart is not complete without an honest interpretation."
+	},
+	{
+		title: "Module 6: Storytelling with Data",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"claim",
+			"supporting evidence",
+			"audience",
+			"limitation",
+			"next question"
+		],
+		projectThread:
+			"Write the analytical claim only after selecting the evidence. Separate observation from explanation, match detail to the audience, and state one caveat beside the conclusion."
+	},
+	{
+		title: "DSP14 Applied Studio: Reproducible Mini Reports",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"question",
+			"data source",
+			"method",
+			"result table or chart",
+			"conclusion and limitation"
+		],
+		projectThread:
+			"Combine question, source, method, result, interpretation, and limitation into one rerunnable mini report. Restart and rerun before treating the report as finished."
+	},
+	{
+		title: "Module 7: Dashboards with Altair and Streamlit",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Altair encoding",
+			"Streamlit control",
+			"filter state",
+			"default view",
+			"empty result"
+		],
+		projectThread:
+			"Build the smallest useful interface around one analytical question. Every control must visibly change the relevant data or view and handle default and no-match states."
+	},
+	{
+		title: "DSP15 Applied Studio: Lightweight Dashboards and Filters",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"one user question",
+			"one filter",
+			"summary card",
+			"no-match warning",
+			"scenario test"
+		],
+		projectThread:
+			"Turn a known summary into a focused filtered view, then verify default data, a normal filter, and an empty result by hand before adding a second control or export."
+	},
+	{
+		title: "Module 8: Domain Projects",
+		estimatedTime: "3–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"domain question",
+			"relevant columns",
+			"two analytical views",
+			"source note",
+			"portfolio packaging"
+		],
+		projectThread:
+			"Choose a domain because it supports a precise question and available evidence. Package two complementary analyses with source, method, result, limitation, and reproducible run notes."
+	},
+	{
+		title: "DSP16 Applied Studio: Capstone Data Story Readiness",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"scope lock",
+			"dataset readiness",
+			"cleaning plan",
+			"evidence plan",
+			"risk and fallback"
+		],
+		projectThread:
+			"Prove the capstone path on a tiny data slice before committing to the full build. The readiness brief links the question to columns, cleaning, analysis, visual evidence, limitations, and fallback scope."
+	},
+	{
+		title: "Module 9: Data Science Capstone",
+		estimatedTime: "6–10 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"question and scope",
+			"reproducible pipeline",
+			"validated result",
+			"notebook or dashboard",
+			"presentation and reflection"
+		],
+		projectThread:
+			"Build the approved narrow question through loading, cleaning, validation, analysis, visualization, and explanation. Ship a rerunnable artifact with a claim, evidence, limitation, and next question."
+	}
+];
+
+const DATA_SCIENCE_CHALLENGE_TITLE_RE = /extension|tiny capstone/i;
+
+function dataScienceSupplementalPath(
+	item: Pick<RawCourseModuleItem, "title">
+): CourseItemLearningPath {
+	return DATA_SCIENCE_CHALLENGE_TITLE_RE.test(item.title)
+		? "challenge"
+		: "choice";
+}
+
+function configureDataScienceModule(
+	module: RawCourseModule,
+	config: DataScienceFlowConfig
+) {
+	for (const item of module.curriculum) item.learningPath = "core";
+	for (const item of module.supplementalProjects) {
+		item.learningPath = dataScienceSupplementalPath(item);
+	}
+	module.estimatedTime = config.estimatedTime;
+	module.keyBlocks = [...config.keyBlocks];
+	if (module.curriculum[0]) {
+		module.curriculum[0].content = [
+			module.curriculum[0].content,
+			`**Course flow:** ${config.projectThread}`
+		].join("\n\n");
+	}
+	return module;
+}
+
+function attachDataScienceDataset(course: RawCourse) {
+	const studio = course.modules.find(
+		module =>
+			module.title ===
+			"DSP10 Applied Studio: CSV Summaries and Sanity Checks"
+	);
+	const project = studio?.curriculum.find(
+		item => item.title === "CSV Summary Builder"
+	);
+	if (!project) {
+		throw new Error(
+			"Data Science flow is missing the CSV Summary Builder."
+		);
+	}
+	project.datasetLink = DATA_SCIENCE_LIFE_EXPECTANCY_DATASET;
+	project.content = [
+		project.content,
+		`**Provided dataset:** ${DATA_SCIENCE_LIFE_EXPECTANCY_DATASET}`
+	].join("\n\n");
+}
+
+function configureDataScienceFlow(course: RawCourse) {
+	const modulesByTitle = new Map(
+		course.modules.map(module => [module.title, module])
+	);
+	course.modules = DATA_SCIENCE_FLOW.map(config => {
+		const module = modulesByTitle.get(config.title);
+		if (!module) {
+			throw new Error(`Data Science flow is missing ${config.title}.`);
+		}
+		return configureDataScienceModule(module, config);
+	});
+}
+
+attachDataScienceDataset(dataScienceInPythonCourse);
+configureDataScienceFlow(dataScienceInPythonCourse);
