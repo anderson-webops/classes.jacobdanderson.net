@@ -1,15 +1,14 @@
-import type { RawCourse } from "./types";
+import type {
+	CourseItemLearningPath,
+	RawCourse,
+	RawCourseModule,
+	RawCourseModuleItem
+} from "./types";
 import {
 	buildScratchFluencyDrill,
 	buildScratchOpenEndedVariant
 } from "./scratchProjectGuidance";
-import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
-
-const SCRATCH_LEVEL_1_SOURCE_ASSETS = [
-	"scratch_level_1_concept.png",
-	"scratch_level_1_project.png"
-] as const;
 
 export const scratchLevel1Course: RawCourse = {
 	name: "Scratch Level 1",
@@ -24,17 +23,18 @@ export const scratchLevel1Course: RawCourse = {
 				},
 				{
 					title: "Project 1 – Hungry Hippo",
-					content: `**Project goal:** Build a simple collection game with keyboard controls, score, and a countdown timer.
+					content: `**Project goal:** Begin a collection-game anchor project that grows as new Scratch ideas are introduced.
 
-**Build steps:**
+**Stage 1 — start and movement:**
 1. Start by playing the sample Hungry Hippo game and identifying the player sprite, collectable objects, score, and timer.
 2. Create a custom version with a sprite of your choice.
-3. Program arrow-key movement with direction and movement blocks.
-4. Add collectable objects that disappear or reset when the player sprite touches them.
-5. Create a score variable that increases when an object is collected.
-6. Create a timer variable that decreases as the game runs.
+3. Use the green flag to place the player at a predictable starting point.
+4. Program arrow-key movement with direction and movement blocks.
+5. Add one collectable sprite to the stage, but leave scoring, collision rules, and timing for later modules.
 
-**Completion check:** The player moves in four directions, collects objects, gains points, and has a visible countdown that changes during play.`,
+**Return plan:** Revisit this same project after coordinates, variables, conditionals, and broadcasts. Each return adds one tested system instead of building the whole game at once.
+
+**Completion check:** The player starts in the same place, moves in four directions, and can reach the collectable. Explain which future feature will need a variable and which will need a condition.`,
 					projectLink: "https://scratch.mit.edu/projects/304003593/",
 					solutionLink: "https://scratch.mit.edu/projects/313184786/"
 				},
@@ -70,21 +70,20 @@ export const scratchLevel1Course: RawCourse = {
 					title: "Starting in Scratch: Fluency Drill",
 					content: buildScratchFluencyDrill({
 						project: "Hungry Hippo-style collection",
-						focus: "green-flag setup, keyboard movement, score updates, and timer reset",
+						focus: "green-flag setup, keyboard movement, and predictable sprite starting positions",
 						restartCheck:
-							"The score and timer reset cleanly, and collecting an item changes only the intended variable."
+							"The player and collectable return to their intended positions, and every movement key still produces one clear action."
 					})
 				},
 				{
 					title: "Starting in Scratch: Open-Ended Variant",
 					content: buildScratchOpenEndedVariant({
 						project: "starter collection game",
-						coreIdea:
-							"basic sprite control, scoring, and visible feedback",
+						coreIdea: "basic sprite control and visible feedback",
 						variation:
-							"what gets collected, how points are earned, or how the countdown creates pressure",
+							"what gets collected, how the player moves, or where each sprite begins",
 						evidence:
-							"The finished game makes the start script, score script, and end condition easy to identify."
+							"The finished scene makes the green-flag setup and movement scripts easy to identify."
 					})
 				}
 			]
@@ -1396,23 +1395,362 @@ Typing practice is not required to complete the Scratch course, but it can make 
 						"Create a Scratch-to-Python readiness portfolio with three translated scripts. Include the original Scratch idea, pseudocode, a Python-style version, and a short note explaining what changed during translation."
 				}
 			]
-		},
-		{
-			kind: "appendix",
-			title: "Pending Static Assets",
-			curriculum: [
-				{
-					title: "Pending Scratch Level 1 Visual Assets",
-					content: [
-						"This course lists pending visual assets below. Each entry keeps a stable static media URL so the matching file can be added without changing course links.",
-						...SCRATCH_LEVEL_1_SOURCE_ASSETS.map(
-							filename =>
-								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
-						)
-					].join("\n\n")
-				}
-			],
-			supplementalProjects: []
 		}
 	]
 };
+
+interface ScratchModuleFlowConfig {
+	oldTitle: string;
+	title: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	choiceCurriculumTitles?: string[];
+	anchorReturn?: string;
+	kind?: RawCourseModule["kind"];
+}
+
+const SCRATCH_LEVEL_1_FLOW: ScratchModuleFlowConfig[] = [
+	{
+		oldTitle: "GS1 Starting in Scratch",
+		title: "GS1 Starting in Scratch",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"when green flag clicked",
+			"go to x: y:",
+			"point in direction",
+			"move steps"
+		]
+	},
+	{
+		oldTitle: "GS2 Event Listeners",
+		title: "GS2 Event Listeners",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"when key pressed",
+			"when this sprite clicked",
+			"point towards",
+			"change costume"
+		],
+		choiceCurriculumTitles: [
+			"Project 2 – Bouncy Ball Room",
+			"Project 3 – Dragonfly Events"
+		],
+		anchorReturn:
+			"Connect each arrow key to one player movement and confirm that restarting the project does not create duplicate controls."
+	},
+	{
+		oldTitle: "GS8 X & Y Coordinates",
+		title: "GS3 X & Y Coordinates",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"go to x: y:",
+			"change x by",
+			"change y by",
+			"x position",
+			"y position"
+		],
+		choiceCurriculumTitles: [
+			"Project 2 – Cake Chaser",
+			"Project 3 – Talent Show"
+		],
+		anchorReturn:
+			"Choose intentional start coordinates for the player and collectable, then test the four stage boundaries."
+	},
+	{
+		oldTitle: "GS3 Pen with Event Listeners",
+		title: "GS4 Pen with Event Listeners",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"pen down",
+			"pen up",
+			"erase all",
+			"set pen color",
+			"change pen size"
+		],
+		choiceCurriculumTitles: [
+			"Project 2 – Stencil Pencil",
+			"Project 3 – Beetle Artist"
+		]
+	},
+	{
+		oldTitle: "GS4 Loops",
+		title: "GS5 Loops",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: ["repeat", "forever", "wait", "stop all"],
+		choiceCurriculumTitles: [
+			"Project 1 – Elephant Effects",
+			"Project 2 – Hot Cross Buns"
+		]
+	},
+	{
+		oldTitle: "GS9 Variables",
+		title: "GS6 Variables",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"make a variable",
+			"set variable to",
+			"change variable by",
+			"show variable"
+		],
+		choiceCurriculumTitles: ["Project 2 – Spider Smash"],
+		anchorReturn:
+			"Add score and timer variables, reset both from the green flag, and verify that each starts with the same value on a second run."
+	},
+	{
+		oldTitle: "GS5 Basic Conditionals",
+		title: "GS7 Basic Conditionals",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: ["if then", "touching", "touching color", "key pressed?"],
+		choiceCurriculumTitles: [
+			"Project 2 – Noisy Reactions",
+			"Project 3 – Magic Wand"
+		],
+		anchorReturn:
+			"Detect when the player touches the collectable, increase score exactly once, and move the collectable to a new position."
+	},
+	{
+		oldTitle: "GS6 Advanced Conditionals",
+		title: "GS8 Advanced Conditionals",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: ["if then else", "and", "or", "not"],
+		choiceCurriculumTitles: ["Project 2 – Hungry Dinosaur"]
+	},
+	{
+		oldTitle: "GS7 User Input",
+		title: "GS9 User Input",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"ask and wait",
+			"answer",
+			"equals",
+			"less than",
+			"greater than"
+		],
+		choiceCurriculumTitles: [
+			"Project 2 – Fortune Teller",
+			"Project 3 – Number Guesser"
+		]
+	},
+	{
+		oldTitle: "GS10 Message Broadcasting",
+		title: "GS10 Message Broadcasting",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"broadcast",
+			"broadcast and wait",
+			"when I receive",
+			"stop all"
+		],
+		choiceCurriculumTitles: ["GS10 Project 2 – Bowl Fill"],
+		anchorReturn:
+			"Broadcast a game-over message when the timer reaches zero so every sprite enters the same ending state and can restart cleanly."
+	},
+	{
+		oldTitle: "GS11 Hedgehog Race",
+		title: "GS11 Hedgehog Race",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"pick random",
+			"repeat until",
+			"touching color",
+			"broadcast"
+		]
+	},
+	{
+		oldTitle: "GS12 Asteroid Dodge",
+		title: "GS12 Asteroid Dodge",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"forever",
+			"if then",
+			"touching",
+			"change score",
+			"broadcast"
+		]
+	},
+	{
+		oldTitle: "GS14 Mini Game Polish Studio",
+		title: "GS13 Mini Game Polish Studio",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"show and hide",
+			"sound blocks",
+			"broadcast",
+			"variables",
+			"stop all"
+		]
+	},
+	{
+		oldTitle: "GS15 Interactive Story Studio",
+		title: "GS14 Interactive Story Studio",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"broadcast and wait",
+			"when I receive",
+			"ask and wait",
+			"switch backdrop",
+			"variables"
+		]
+	},
+	{
+		oldTitle: "GS16 Debugging and Remix Studio",
+		title: "GS15 Debugging and Remix Studio",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"green-flag reset",
+			"show variable",
+			"wait",
+			"stop script",
+			"broadcast"
+		]
+	},
+	{
+		oldTitle: "GS13 Master Project",
+		title: "GS16 Master Project",
+		estimatedTime: "4–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"events",
+			"loops",
+			"conditionals",
+			"variables",
+			"broadcasts"
+		]
+	},
+	{
+		oldTitle: "GS17 Text-Based Programming Bridge",
+		title: "GS17 Scratch-to-Python Bridge",
+		estimatedTime: "1–2 optional sessions · 45–60 minutes each",
+		keyBlocks: [
+			"event → function",
+			"repeat → loop",
+			"if → condition",
+			"variable → state"
+		],
+		kind: "transition"
+	}
+];
+
+const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
+const NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
+const LEADING_HYPHENS_RE = /^-+/;
+const TRAILING_HYPHENS_RE = /-+$/;
+
+function scratchSlugify(value: string) {
+	return value
+		.toLowerCase()
+		.normalize("NFKD")
+		.replace(COMBINING_MARKS_RE, "")
+		.replace(NON_ALPHANUMERIC_RE, "-")
+		.replace(LEADING_HYPHENS_RE, "")
+		.replace(TRAILING_HYPHENS_RE, "");
+}
+
+function preserveScratchItemIds(
+	module: RawCourseModule,
+	legacyModuleId: string
+) {
+	for (const [items, prefix] of [
+		[module.curriculum, "curriculum"],
+		[module.supplementalProjects, "supplemental"]
+	] as const) {
+		for (const item of items) {
+			item.id ??= scratchSlugify(
+				`${legacyModuleId}-${prefix}-${item.title}`
+			);
+		}
+	}
+}
+
+function supplementalLearningPath(
+	item: Pick<RawCourseModuleItem, "title">
+): CourseItemLearningPath {
+	return /challenge|extension|open-ended/i.test(item.title)
+		? "challenge"
+		: "choice";
+}
+
+function renameScratchModuleReferences(
+	module: RawCourseModule,
+	config: ScratchModuleFlowConfig
+) {
+	const oldPrefix = config.oldTitle.match(/^GS\d+/)?.[0];
+	const newPrefix = config.title.match(/^GS\d+/)?.[0];
+
+	for (const item of [...module.curriculum, ...module.supplementalProjects]) {
+		item.content = item.content.replaceAll(config.oldTitle, config.title);
+		if (oldPrefix && newPrefix && oldPrefix !== newPrefix) {
+			item.title = item.title.replace(
+				new RegExp(`^${oldPrefix}\\b`),
+				newPrefix
+			);
+		}
+	}
+}
+
+function configureScratchLevel1Module(
+	module: RawCourseModule,
+	config: ScratchModuleFlowConfig
+) {
+	const legacyModuleId = scratchSlugify(`scratch-level-1-${config.oldTitle}`);
+	module.id ??= legacyModuleId;
+	preserveScratchItemIds(module, legacyModuleId);
+
+	const choiceTitles = new Set(config.choiceCurriculumTitles ?? []);
+	const movedChoices = module.curriculum.filter(item =>
+		choiceTitles.has(item.title)
+	);
+	module.curriculum = module.curriculum.filter(
+		item => !choiceTitles.has(item.title)
+	);
+
+	for (const item of module.curriculum) {
+		item.learningPath = "core";
+	}
+	for (const item of movedChoices) {
+		item.learningPath = "choice";
+	}
+	for (const item of module.supplementalProjects) {
+		item.learningPath = supplementalLearningPath(item);
+	}
+	module.supplementalProjects = [
+		...movedChoices,
+		...module.supplementalProjects
+	];
+
+	if (config.anchorReturn && module.curriculum[0]) {
+		module.curriculum[0].content = [
+			module.curriculum[0].content,
+			`**Hungry Hippo return:** ${config.anchorReturn}`
+		].join("\n\n");
+	}
+
+	renameScratchModuleReferences(module, config);
+	module.title = config.title;
+	module.estimatedTime = config.estimatedTime;
+	module.keyBlocks = [...config.keyBlocks];
+	if (config.kind) {
+		module.kind = config.kind;
+	} else {
+		delete module.kind;
+	}
+
+	return module;
+}
+
+function configureScratchLevel1Flow(course: RawCourse) {
+	const modulesByTitle = new Map(
+		course.modules.map(module => [module.title, module])
+	);
+
+	course.modules = SCRATCH_LEVEL_1_FLOW.map(config => {
+		const module = modulesByTitle.get(config.oldTitle);
+		if (!module) {
+			throw new Error(
+				`Scratch Level 1 flow is missing ${config.oldTitle}.`
+			);
+		}
+		return configureScratchLevel1Module(module, config);
+	});
+}
+
+configureScratchLevel1Flow(scratchLevel1Course);

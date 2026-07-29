@@ -498,6 +498,7 @@ const courseStats = computed(() => {
 	if (!course) return null;
 
 	const coreModules = course.modules.filter(isCoreModule);
+	const transitionModules = course.modules.filter(isTransitionModule);
 	const appendixModules = course.modules.filter(isAppendixModule);
 	const lessonCount = coreModules.reduce(
 		(total, module) => total + module.curriculum.length,
@@ -513,20 +514,19 @@ const courseStats = computed(() => {
 	const completedItemCount = coreModules.reduce(
 		(total, module) =>
 			total +
-			[...module.curriculum, ...module.supplementalProjects].filter(
-				item => isItemComplete(item)
-			).length,
+			module.curriculum.filter(item => isItemComplete(item)).length,
 		0
 	);
 
 	return {
 		moduleCount: coreModules.length,
+		transitionCount: transitionModules.length,
 		appendixCount: appendixModules.length,
 		lessonCount,
 		supplementalCount,
 		completedModuleCount,
 		completedItemCount,
-		totalItemCount: lessonCount + supplementalCount
+		totalItemCount: lessonCount
 	};
 });
 
@@ -553,6 +553,9 @@ const courseModules = computed(() => selectedCourse.value?.modules ?? []);
 const coreCourseModules = computed(() =>
 	courseModules.value.filter(isCoreModule)
 );
+const transitionCourseModules = computed(() =>
+	courseModules.value.filter(isTransitionModule)
+);
 const appendixCourseModules = computed(() =>
 	courseModules.value.filter(isAppendixModule)
 );
@@ -561,12 +564,17 @@ const visibleCoreModules = computed<VisibleModule[]>(() =>
 	visibleModuleList(coreCourseModules.value, normalizedQuery.value)
 );
 
+const visibleTransitionModules = computed<VisibleModule[]>(() =>
+	visibleModuleList(transitionCourseModules.value, normalizedQuery.value)
+);
+
 const visibleAppendixModules = computed<VisibleModule[]>(() =>
 	visibleModuleList(appendixCourseModules.value, normalizedQuery.value)
 );
 
 const visibleModules = computed<VisibleModule[]>(() => [
 	...visibleCoreModules.value,
+	...visibleTransitionModules.value,
 	...visibleAppendixModules.value
 ]);
 
@@ -576,6 +584,11 @@ const visibleOutlineGroups = computed(() =>
 			key: "modules",
 			label: "Modules",
 			modules: visibleCoreModules.value
+		},
+		{
+			key: "next-steps",
+			label: "Next Steps",
+			modules: visibleTransitionModules.value
 		},
 		{
 			key: "references",
@@ -685,33 +698,47 @@ const canEditActiveModuleProgress = computed(
 );
 
 const activeCurriculumSectionLabel = computed(() =>
-	activeModule.value?.kind === "appendix" ? "Reference" : "Core path"
+	activeModule.value?.kind === "appendix"
+		? "Reference"
+		: activeModule.value?.kind === "transition"
+			? "Optional transition"
+			: "Core path"
 );
 
 const activeCurriculumHeading = computed(() =>
 	activeModule.value?.kind === "appendix"
 		? "Reference Materials"
-		: "Curriculum"
+		: activeModule.value?.kind === "transition"
+			? "Next Step"
+			: "Required Builds"
 );
 
 const activeSupplementalSectionLabel = computed(() =>
 	activeModule.value?.kind === "appendix"
 		? "Reference practice"
-		: "Extra practice"
+		: activeModule.value?.kind === "transition"
+			? "Optional practice"
+			: "Practice and challenge"
 );
 
 const activeSupplementalHeading = computed(() =>
 	activeModule.value?.kind === "appendix"
 		? "Reference Activities"
-		: "Supplemental Projects"
+		: "Practice & Extensions"
 );
 
 const activeCurriculumJumpHeading = computed(() =>
-	activeModule.value?.kind === "appendix" ? "References:" : "Lessons:"
+	activeModule.value?.kind === "appendix"
+		? "References:"
+		: activeModule.value?.kind === "transition"
+			? "Next step:"
+			: "Core builds:"
 );
 
 const activeSupplementalJumpHeading = computed(() =>
-	activeModule.value?.kind === "appendix" ? "Activities:" : "Supplemental:"
+	activeModule.value?.kind === "appendix"
+		? "Activities:"
+		: "Practice and challenges:"
 );
 
 const courseReaderStatus = computed(() => {
@@ -726,15 +753,38 @@ const courseReaderStatus = computed(() => {
 });
 
 function moduleKindLabel(module: Pick<CourseModule, "kind">) {
-	return module.kind === "appendix" ? "Appendix" : "Module";
+	if (module.kind === "appendix") return "Appendix";
+	if (module.kind === "transition") return "Next step";
+	return "Module";
 }
 
 function isAppendixModule(module: Pick<CourseModule, "kind">) {
 	return module.kind === "appendix";
 }
 
+function isTransitionModule(module: Pick<CourseModule, "kind">) {
+	return module.kind === "transition";
+}
+
 function isCoreModule(module: Pick<CourseModule, "kind">) {
-	return !isAppendixModule(module);
+	return !isAppendixModule(module) && !isTransitionModule(module);
+}
+
+function itemLearningPath(
+	item: Pick<CourseModuleItem, "learningPath">,
+	fallback: "core" | "choice"
+) {
+	return item.learningPath ?? fallback;
+}
+
+function itemLearningPathLabel(
+	item: Pick<CourseModuleItem, "learningPath">,
+	fallback: "core" | "choice"
+) {
+	const path = itemLearningPath(item, fallback);
+	if (path === "challenge") return "Challenge";
+	if (path === "choice") return "Choose-One Practice";
+	return "Core Build";
 }
 
 const activeModuleProjectLinks = computed(() => {
@@ -1693,6 +1743,10 @@ function writeStoredValue(key: string, value: string) {
 						<dt>Modules</dt>
 						<dd>{{ courseStats.moduleCount }}</dd>
 					</div>
+					<div v-if="courseStats.transitionCount > 0" class="stat">
+						<dt>Next steps</dt>
+						<dd>{{ courseStats.transitionCount }}</dd>
+					</div>
 					<div v-if="courseStats.appendixCount > 0" class="stat">
 						<dt>Appendices</dt>
 						<dd>{{ courseStats.appendixCount }}</dd>
@@ -1702,7 +1756,7 @@ function writeStoredValue(key: string, value: string) {
 						<dd>{{ courseStats.lessonCount }}</dd>
 					</div>
 					<div class="stat">
-						<dt>Projects</dt>
+						<dt>Practice &amp; extensions</dt>
 						<dd>{{ courseStats.supplementalCount }}</dd>
 					</div>
 					<div v-if="hasProgressTracking" class="stat is-progress">
@@ -1717,7 +1771,7 @@ function writeStoredValue(key: string, value: string) {
 								{{ courseStats.completedItemCount }}/{{
 									courseStats.totalItemCount
 								}}
-								items
+								core items
 							</small>
 						</dd>
 					</div>
@@ -1881,7 +1935,8 @@ function writeStoredValue(key: string, value: string) {
 										hasProgressTracking &&
 										isCoreModule(module) &&
 										isModuleComplete(module),
-									'is-reference': isAppendixModule(module)
+									'is-reference': isAppendixModule(module),
+									'is-transition': isTransitionModule(module)
 								}"
 								type="button"
 								@click="selectModule(module.id)"
@@ -1946,6 +2001,29 @@ function writeStoredValue(key: string, value: string) {
 								{{ activeModule.position }}
 							</p>
 							<h3>{{ activeModule.title }}</h3>
+							<dl
+								v-if="
+									activeModule.estimatedTime ||
+									activeModule.keyBlocks?.length
+								"
+								class="module-guide"
+							>
+								<div v-if="activeModule.estimatedTime">
+									<dt>Estimated pace</dt>
+									<dd>{{ activeModule.estimatedTime }}</dd>
+								</div>
+								<div v-if="activeModule.keyBlocks?.length">
+									<dt>Key blocks</dt>
+									<dd class="key-block-list">
+										<span
+											v-for="block in activeModule.keyBlocks"
+											:key="block"
+										>
+											{{ block }}
+										</span>
+									</dd>
+								</div>
+							</dl>
 							<label
 								v-if="canEditActiveModuleProgress"
 								class="progress-toggle is-module"
@@ -2056,13 +2134,23 @@ function writeStoredValue(key: string, value: string) {
 								:key="item.id"
 								class="lesson-item"
 							>
-								<article class="lesson-card">
+								<article
+									class="lesson-card"
+									:class="`is-${itemLearningPath(item, 'core')}`"
+								>
 									<header class="lesson-header">
 										<span class="lesson-index">
 											{{ index + 1 }}
 										</span>
 										<div class="lesson-title-group">
-											<p class="lesson-kicker">Lesson</p>
+											<p class="lesson-kicker">
+												{{
+													itemLearningPathLabel(
+														item,
+														"core"
+													)
+												}}
+											</p>
 											<h5>{{ item.title }}</h5>
 										</div>
 										<span
@@ -2296,7 +2384,10 @@ function writeStoredValue(key: string, value: string) {
 								:key="item.id"
 								class="lesson-item"
 							>
-								<article class="lesson-card is-supplemental">
+								<article
+									class="lesson-card is-supplemental"
+									:class="`is-${itemLearningPath(item, 'choice')}`"
+								>
 									<header class="lesson-header">
 										<span
 											class="lesson-index is-supplemental"
@@ -2305,7 +2396,12 @@ function writeStoredValue(key: string, value: string) {
 										</span>
 										<div class="lesson-title-group">
 											<p class="lesson-kicker">
-												Supplemental project
+												{{
+													itemLearningPathLabel(
+														item,
+														"choice"
+													)
+												}}
 											</p>
 											<h5>{{ item.title }}</h5>
 										</div>
@@ -2551,6 +2647,7 @@ function writeStoredValue(key: string, value: string) {
 	--course-border-strong: rgba(30, 41, 59, 0.12);
 	--course-text: #0f172a;
 	--course-text-soft: #475569;
+	--course-muted: #64748b;
 	--course-panel: #ffffff;
 	--course-panel-soft: #f8fafc;
 	--course-accent: #0f766e;
@@ -3003,6 +3100,11 @@ function writeStoredValue(key: string, value: string) {
 	background: rgba(248, 250, 252, 0.62);
 }
 
+.outline-button.is-transition {
+	border-color: rgba(124, 58, 237, 0.14);
+	background: rgba(245, 243, 255, 0.62);
+}
+
 .outline-position,
 .lesson-index {
 	width: 2.5rem;
@@ -3032,6 +3134,16 @@ function writeStoredValue(key: string, value: string) {
 .outline-button.is-reference[aria-current="true"] .outline-position {
 	background: rgba(59, 130, 246, 0.14);
 	color: #1d4ed8;
+}
+
+.outline-button.is-transition .outline-position {
+	background: rgba(124, 58, 237, 0.12);
+	color: #6d28d9;
+}
+
+.outline-button.is-transition[aria-current="true"] .outline-position {
+	background: rgba(124, 58, 237, 0.18);
+	color: #5b21b6;
 }
 
 .outline-copy {
@@ -3140,6 +3252,54 @@ function writeStoredValue(key: string, value: string) {
 	gap: 0.55rem;
 	min-width: 0;
 	max-width: 100%;
+}
+
+.module-guide {
+	display: grid;
+	grid-template-columns: minmax(10rem, 0.7fr) minmax(0, 1.3fr);
+	gap: 0.75rem;
+	margin: 0.25rem 0 0;
+	padding: 0.9rem 1rem;
+	border: 1px solid rgba(15, 118, 110, 0.12);
+	border-radius: 16px;
+	background: rgba(240, 253, 250, 0.65);
+}
+
+.module-guide > div {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	min-width: 0;
+}
+
+.module-guide dt {
+	color: var(--course-muted);
+	font-size: 0.72rem;
+	font-weight: 800;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.module-guide dd {
+	margin: 0;
+	color: var(--course-text);
+	font-size: 0.9rem;
+	font-weight: 700;
+	line-height: 1.45;
+}
+
+.key-block-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+}
+
+.key-block-list span {
+	padding: 0.2rem 0.45rem;
+	border-radius: 999px;
+	background: rgba(15, 118, 110, 0.1);
+	color: var(--course-accent);
+	font-size: 0.8rem;
 }
 
 .reader-link-groups {
@@ -3302,6 +3462,18 @@ function writeStoredValue(key: string, value: string) {
 .lesson-card.is-supplemental {
 	padding-left: clamp(1rem, 2.2vw, 1.35rem);
 	border-left: 3px solid rgba(245, 158, 11, 0.22);
+}
+
+.lesson-card.is-choice .lesson-kicker {
+	color: #b45309;
+}
+
+.lesson-card.is-challenge {
+	border-left-color: rgba(124, 58, 237, 0.3);
+}
+
+.lesson-card.is-challenge .lesson-kicker {
+	color: #6d28d9;
 }
 
 .lesson-header {
@@ -3591,6 +3763,10 @@ function writeStoredValue(key: string, value: string) {
 	}
 
 	.course-stats {
+		grid-template-columns: 1fr;
+	}
+
+	.module-guide {
 		grid-template-columns: 1fr;
 	}
 

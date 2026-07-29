@@ -423,6 +423,7 @@ function normalizeCourse(
 								title: item.title,
 								content:
 									displayCourseContent(normalizedContent),
+								learningPath: item.learningPath,
 								projectLink: (() => {
 									if (
 										explicitProjectLink &&
@@ -486,6 +487,12 @@ function normalizeCourse(
 				...(moduleAliases.length ? { aliases: moduleAliases } : {}),
 				...(module.kind ? { kind: module.kind } : {}),
 				title: module.title,
+				...(module.estimatedTime
+					? { estimatedTime: module.estimatedTime }
+					: {}),
+				...(module.keyBlocks?.length
+					? { keyBlocks: [...module.keyBlocks] }
+					: {}),
 				curriculum: mapItems(module.curriculum, "curriculum"),
 				supplementalProjects: mapItems(
 					module.supplementalProjects,

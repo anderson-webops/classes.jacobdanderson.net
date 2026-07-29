@@ -3554,53 +3554,40 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("reserves original Scratch visual assets on the class static host", async () => {
-		const courses = await Promise.all([
+	it("keeps unshipped Scratch visuals out of the Level 1 learner flow", async () => {
+		const [scratchLevel1, scratchLevel2] = await Promise.all([
 			loadRawCourse("scratch-level-1"),
 			loadRawCourse("scratch-level-2")
 		]);
-		for (const course of courses) {
-			expect(course).not.toBeNull();
-		}
+		expect(scratchLevel1).not.toBeNull();
+		expect(scratchLevel2).not.toBeNull();
 
-		const expectations = [
-			{
-				course: courses[0]!,
-				title: "Pending Scratch Level 1 Visual Assets",
-				files: [
-					"scratch_level_1_concept.png",
-					"scratch_level_1_project.png"
-				]
-			},
-			{
-				course: courses[1]!,
-				title: "Pending Scratch Level 2 Visual Assets",
-				files: [
-					"scratch_level_2_concept.png",
-					"scratch_level_2_project.png"
-				]
-			}
-		];
-
-		for (const { course, files, title } of expectations) {
-			const mediaModule = course.modules.find(
+		expect(
+			scratchLevel1!.modules.find(
 				module => module.title === "Pending Static Assets"
-			);
-			expect(mediaModule?.kind).toBe("appendix");
+			)
+		).toBeUndefined();
 
-			const mediaItem = mediaModule?.curriculum.find(
-				item => item.title === title
-			);
-			expect(mediaItem).toBeDefined();
-			const content = mediaItem?.content ?? "";
+		const mediaModule = scratchLevel2!.modules.find(
+			module => module.title === "Pending Static Assets"
+		);
+		expect(mediaModule?.kind).toBe("appendix");
 
-			for (const filename of files) {
-				expect(content).toContain(staticMediaUrl(filename));
-				expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
-			}
+		const mediaItem = mediaModule?.curriculum.find(
+			item => item.title === "Pending Scratch Level 2 Visual Assets"
+		);
+		expect(mediaItem).toBeDefined();
+		const content = mediaItem?.content ?? "";
 
-			expect(content).not.toContain("static.junilearning.com");
+		for (const filename of [
+			"scratch_level_2_concept.png",
+			"scratch_level_2_project.png"
+		]) {
+			expect(content).toContain(staticMediaUrl(filename));
+			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
 		}
+
+		expect(content).not.toContain("static.junilearning.com");
 	});
 
 	it("keeps low-level security projects evidence-based instead of generic starter boilerplate", async () => {
@@ -5299,29 +5286,27 @@ describe("course text quality normalization", () => {
 		expect(lessonArc.content).not.toMatch(/This lesson arc covers/i);
 
 		const scratchStudio = scratchCourse!.modules
-			.find(module => module.title === "GS16 Debugging and Remix Studio")
+			.find(module => module.title === "GS15 Debugging and Remix Studio")
 			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 
 		expect(scratchStudio).toBeDefined();
 		expect(scratchStudio!.content).toContain("**Studio practice:**");
 		expect(scratchStudio!.content).toContain("\n**Checkpoints:**\n-");
 		expect(scratchStudio!.content).toMatch(
-			/\*\*Extension:\*\* Add one (?:difficulty option|feedback cue)/
+			/\*\*Extension:\*\* Add one (?:difficulty option|feedback cue|extra play path)/
 		);
 		expect(scratchStudio!.content).toContain(
 			"\n\n2. **Design and Planning Map**"
 		);
 		expect(scratchStudio!.content).not.toContain(
-			"Concept Path (GS16 Debugging and Remix Studio)"
+			"Concept Path (GS15 Debugging and Remix Studio)"
 		);
 		expect(scratchStudio!.content).not.toMatch(
 			/\n \n\n\*\*Checkpoints:\*\*/
 		);
 
 		const scratchBridge = scratchCourse!.modules
-			.find(
-				module => module.title === "GS17 Text-Based Programming Bridge"
-			)
+			.find(module => module.title === "GS17 Scratch-to-Python Bridge")
 			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 		expect(scratchBridge).toBeDefined();
 		expect(scratchBridge!.content).toContain(
@@ -5413,14 +5398,14 @@ describe("course text quality normalization", () => {
 		);
 
 		const scratchStudio = scratchLevel1!.modules
-			.find(module => module.title === "GS16 Debugging and Remix Studio")
+			.find(module => module.title === "GS15 Debugging and Remix Studio")
 			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 		expect(scratchStudio).toBeDefined();
 		expect(scratchStudio.content).toContain(
 			"Debug path for the studio: reproduce one realistic failure"
 		);
 		expect(scratchStudio.content).toContain(
-			"The studio starts from a predictable green-flag state"
+			"The studio can be replayed without stale state from the previous run."
 		);
 		expect(scratchStudio.content).not.toContain(
 			"Check Concept Path against the stated success criteria"
