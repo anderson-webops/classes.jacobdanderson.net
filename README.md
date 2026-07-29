@@ -84,6 +84,7 @@ flowchart TB
 ## Common Commands
 
 ```bash
+nvm use
 npm install
 npm run dev
 npm run server
@@ -94,6 +95,7 @@ npm run up
 
 ## Operational Notes
 
+- `.nvmrc` and `.node-version` pin Node 24.18.0 LTS; its npm 11.16.0 release matches the root `packageManager` field.
 - The root `package-lock.json` is the authoritative lockfile for the repo. Keep it updated whenever dependencies change.
 - Use `npm run server` and `npm run serve` when you want the API and front-end started separately.
 - Use [`HEALTHCHECKS.md`](./HEALTHCHECKS.md) for deployment monitor targets instead of `/`.
