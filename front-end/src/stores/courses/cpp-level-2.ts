@@ -1,6 +1,6 @@
 import type { RawCourse } from "./types";
 
-export const cppLevel2Course: RawCourse = {
+const cppLevel2SourceCourse: RawCourse = {
 	name: "C++ Level 2",
 	modules: [
 		{
@@ -235,7 +235,7 @@ export const cppLevel2Course: RawCourse = {
 				{
 					title: "Manual-Memory Class Design",
 					content:
-						"Use capstone-sized classes that own their own storage so invariants have to be maintained across multiple methods, not just in a single free function. Include constructors that establish valid storage, methods that preserve size/capacity rules, copy or resize operations that must not leak, input validation before mutation, and how matrix/profile examples force class boundaries and ownership rules to stay aligned."
+						"Use capstone-sized classes that own their own storage so invariants have to be maintained across multiple methods, not just in a single free function. Include constructors that establish valid storage, destructors that release it, copy and move operations that preserve valid states without double deletion, methods that preserve size/capacity rules, input validation before mutation, and how matrix/profile examples force class boundaries and ownership rules to stay aligned."
 				},
 				{
 					title: "CPPM5 Project 1: Matrix Fun with a Matrix Class",
@@ -283,4 +283,195 @@ export const cppLevel2Course: RawCourse = {
 			]
 		}
 	]
+};
+
+interface CppLevel2ModuleFlow {
+	estimatedTime: string;
+	flowNote: string;
+	keyBlocks: string[];
+}
+
+const CPP_LEVEL_2_OPTIONAL_CURRICULUM = new Set([
+	"CPPM0 Project 2: Ownership Boundary Debugging",
+	"CPPM1 Project 2: Pointer Error Examples",
+	"CPPM2 Project 2: Tic Tac Toe",
+	"CPPM3 Project 2: Bank Transactions",
+	"CPPM4 Project 1: Assembly Line",
+	"CPPM4 Project 3: Grocery List",
+	"CPPM5 Project 1: Matrix Fun with a Matrix Class"
+]);
+
+const CPP_LEVEL_2_CHALLENGE_CURRICULUM = new Set([
+	"CPPM1 Project 2: Pointer Error Examples",
+	"CPPM4 Project 3: Grocery List"
+]);
+
+const CPP_LEVEL_2_MODULE_FLOW: Record<string, CppLevel2ModuleFlow> = {
+	"CPPM0 Lifetime, References, and Ownership Framing": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"C++20 warning-clean build",
+			"AddressSanitizer / UBSan",
+			"owner / observer",
+			"reference lifetime",
+			"alias diagram"
+		],
+		flowNote:
+			"Begin with a clean C++20 build and a supported AddressSanitizer/UndefinedBehaviorSanitizer run before tracing references. Complete one lifetime diagram and one mutation trace; the second ownership-debugging project is a choice after the trace agrees with observed behavior."
+	},
+	"CPPM1 Pointers and Addresses": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"address",
+			"dereference",
+			"nullptr",
+			"non-owning pointer",
+			"failure explanation"
+		],
+		flowNote:
+			"Use pointers only as non-owning observers and mutators in this module. Predict aliases before running, check for `nullptr` before dereferencing, and explain one failed case with a trace or diagnostic; the larger error-example set is a challenge rather than required volume."
+	},
+	"CPPM2 Raw Arrays and Pointer Arithmetic": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"contiguous storage",
+			"explicit size",
+			"valid range",
+			"pointer offset",
+			"boundary cases"
+		],
+		flowNote:
+			"Compare indexed and pointer traversal over the same fixed data while keeping an explicit size at every function boundary. Prove zero logical length, one element, full capacity, and rejected out-of-range cases; Tic Tac Toe is an optional integration build."
+	},
+	"CPPM3 Two-Dimensional Arrays and Layout": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"row-major layout",
+			"row / column contract",
+			"rectangular dimensions",
+			"nested traversal",
+			"index validation"
+		],
+		flowNote:
+			"Draw the row/column shape and row-major address order before implementing 2D Array Practice. Test one-cell, rectangular, and invalid-index cases; Bank Transactions is a fictional-data choice for another grid model."
+	},
+	"CPPM4 Dynamic Memory and Custom Dynamic Arrays": {
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"new[] / delete[]",
+			"Rule of Three / Five",
+			"deep copy",
+			"move state",
+			"sanitizer evidence"
+		],
+		flowNote:
+			"Treat raw allocation as a bounded ownership laboratory, not the default production design. Pass the copy-control gate before building the dynamic array, then prove construction, growth, deep copy, move, self-assignment, destruction, and empty-state behavior with diagnostics enabled; Assembly Line and Grocery List are optional transfer work."
+	},
+	"CPPM5 Manual-Memory Capstones": {
+		estimatedTime: "5–7 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"owning class invariant",
+			"copy / move lifecycle",
+			"validated command",
+			"regression harness",
+			"RAII comparison"
+		],
+		flowNote:
+			"Use fictional, local-only Profile Posts as the principal capstone and preserve a valid state after every command and lifecycle operation. Finish with warning-clean and sanitizer-clean evidence plus a focused comparison showing how `std::vector` or `std::unique_ptr` removes manual cleanup responsibilities; Matrix is an optional parallel design."
+	}
+};
+
+function cppLevel2SupplementalPath(title: string) {
+	return /extension|error examples|grocery list/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function decorateCppLevel2Module(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = CPP_LEVEL_2_MODULE_FLOW[module.title];
+	const optionalCurriculum = module.curriculum.filter(item =>
+		CPP_LEVEL_2_OPTIONAL_CURRICULUM.has(item.title)
+	);
+	const coreCurriculum = module.curriculum
+		.filter(item => !CPP_LEVEL_2_OPTIONAL_CURRICULUM.has(item.title))
+		.map((item, index) => ({
+			...item,
+			content:
+				index === 0 && flow
+					? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+					: item.content,
+			learningPath: "core" as const
+		}));
+
+	if (module.title === "CPPM0 Lifetime, References, and Ownership Framing") {
+		coreCurriculum.splice(1, 0, {
+			title: "CPPM0 Project 0: C++20 Memory Diagnostics Readiness Check",
+			content: [
+				"**Completion evidence:**",
+				"- Compiler name and version plus the exact warning-clean C++20 build command.",
+				"- A diagnostic build using `-fsanitize=address,undefined -fno-omit-frame-pointer` or the closest supported AddressSanitizer/UBSan equivalent.",
+				"- One intentionally isolated invalid-memory fixture that the diagnostic build detects, followed by a corrected run.",
+				"- A note naming any unavailable diagnostic and the substitute trace, debugger, or Valgrind-style check used instead."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CPPM4 Dynamic Memory and Custom Dynamic Arrays") {
+		const implementationIndex = coreCurriculum.findIndex(
+			item =>
+				item.title === "CPPM4 Project 2: Dynamic Array Implementation"
+		);
+		coreCurriculum.splice(implementationIndex, 0, {
+			title: "Copy-Control Gate: Rule of Three and Rule of Five",
+			content: [
+				"**Completion evidence:**",
+				"- Ownership diagram for constructor, destructor, copy constructor, copy assignment, move constructor, and move assignment.",
+				"- A shallow-copy failure explanation covering shared storage, double deletion, and how a deep copy changes the ownership graph.",
+				"- Self-assignment and moved-from-state rules written before implementation.",
+				"- A short Rule of Zero comparison explaining why a standard container is preferred after the manual exercise."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CPPM5 Manual-Memory Capstones") {
+		coreCurriculum.push({
+			title: "CPPM5 Capstone Completion Contract: Profile Posts Ownership",
+			content: [
+				"**Completion evidence:**",
+				"- Fictional seed profiles only; no real personal, account, or public-posting data.",
+				"- Warning-clean and sanitizer-clean build instructions from a fresh checkout.",
+				"- Tests or transcripts for empty, add, view, update, remove, invalid index, invalid command, copy, move, resize, self-assignment, and destruction behavior.",
+				"- One ownership diagram, one corrected failure, and one focused RAII rewrite or comparison using `std::vector` or `std::unique_ptr`."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum: coreCurriculum,
+		supplementalProjects: [
+			...optionalCurriculum.map(item => ({
+				...item,
+				learningPath: CPP_LEVEL_2_CHALLENGE_CURRICULUM.has(item.title)
+					? ("challenge" as const)
+					: ("choice" as const)
+			})),
+			...module.supplementalProjects.map(item => ({
+				...item,
+				learningPath: cppLevel2SupplementalPath(item.title)
+			}))
+		]
+	};
+}
+
+export const cppLevel2Course: RawCourse = {
+	...cppLevel2SourceCourse,
+	modules: cppLevel2SourceCourse.modules.map(decorateCppLevel2Module)
 };
