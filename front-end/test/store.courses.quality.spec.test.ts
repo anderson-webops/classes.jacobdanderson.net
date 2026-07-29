@@ -6556,8 +6556,11 @@ describe("course text quality normalization", () => {
 			"Salary Negotiation Case",
 			"Wild Card Ledger",
 			"Spending Style and Needs-versus-Wants Budget",
+			"Profile Budget Revision",
 			"Debt Growth and Credit Card Simulation",
 			"Credit Card Selection Case",
+			"Car Loan and Housing What-If",
+			"Long-Run Purchase Value",
 			"Vehicle Purchase Decision",
 			"Checking-versus-Savings Allocation",
 			"Savings Account Offer Case",
@@ -6569,12 +6572,12 @@ describe("course text quality normalization", () => {
 			"Next-Year Outlook"
 		];
 
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).not.toContain("Source Activity Anchors:");
 		expect(text).toContain("neal.fun/spend");
 		expect(text).toContain("$30,000 in student debt");
 		expect(text).toContain("Budget Planner");
 		expect(text).toContain("Expense Tracker");
-		expect(text).toContain("Evidence record:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text).toContain(anchor);
 		}
