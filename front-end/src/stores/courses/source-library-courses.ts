@@ -3751,26 +3751,284 @@ const lateElementaryBMathSourceAnchors: Record<string, SourceActivityAnchor[]> =
 		]
 	};
 
+const earlyElementaryAModuleMetadata: Record<
+	string,
+	SourceLibraryModuleMetadata
+> = {
+	"EEA1 Addition and Subtraction within 20": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"number bond",
+			"make ten",
+			"addition / subtraction",
+			"equation",
+			"visual proof"
+		],
+		flowNote:
+			"Build, draw, and write each fact family before relying on mental answers. The ladybug case is complete when the model and equation agree, including the leftover case."
+	},
+	"EEA2 Addition and Subtraction within 100": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"tens / ones",
+			"compose / decompose",
+			"within 100",
+			"estimate",
+			"inverse check"
+		],
+		flowNote:
+			"Use base-ten grouping before symbolic regrouping. Compare an estimate with the exact result and check subtraction by adding back."
+	},
+	"EEA3 Representing Word Problems": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"known / unknown",
+			"drawing",
+			"equation",
+			"operation choice",
+			"answer statement"
+		],
+		flowNote:
+			"Represent each story with a drawing or bar model, an equation with the unknown in the correct position, and a sentence that answers the actual question."
+	},
+	"EEA4 Module Project: Escape the Game": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"100-point budget",
+			"constraint",
+			"coordinate steps",
+			"running total",
+			"verification"
+		],
+		flowNote:
+			"Treat the two activities as one constraint project: verify the character budget first, then verify every directional jump and total on the escape route."
+	},
+	"EEA5 Measuring and Estimating Length in Standard Units": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"inch / foot / yard",
+			"centimeter / meter",
+			"ruler start point",
+			"estimate",
+			"unit label"
+		],
+		flowNote:
+			"Estimate before measuring, start at zero, and attach a unit to every result. Compare customary and metric examples without mixing units in one calculation."
+	},
+	"EEA6 Relating Addition and Subtraction to Length": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"number line",
+			"length sum",
+			"length difference",
+			"unknown segment",
+			"unit check"
+		],
+		flowNote:
+			"Model segments on a number line before writing equations. Use the total and known pieces to solve the missing length, then check that all units match."
+	},
+	"EEA7 Module Project: The Longest Sandwich in California": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"0–96 number line",
+			"ordered lengths",
+			"multi-step subtraction",
+			"equal share",
+			"meter label"
+		],
+		flowNote:
+			"Keep one 96-meter model through planning, donation, eating, and sharing. Record each change so the remaining length never has to be guessed."
+	},
+	"EEA8 Understanding Place Value": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"hundreds / tens / ones",
+			"expanded form",
+			"compare",
+			"regroup",
+			"1,000"
+		],
+		flowNote:
+			"Build numbers with grouped objects or base-ten models, then connect the model to expanded and standard form. Explain how ten of one unit becomes one of the next unit."
+	},
+	"EEA9 Adding and Subtracting within 200": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"place-value strategy",
+			"regrouping",
+			"within 200",
+			"estimate",
+			"inverse check"
+		],
+		flowNote:
+			"Use a place-value model and one written strategy for each calculation. Compare the exact total with an estimate and use the inverse operation to check."
+	},
+	"EEA10 Representing Advanced Word Problems": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"multi-step story",
+			"operation plan",
+			"unknown",
+			"running record",
+			"reasonableness"
+		],
+		flowNote:
+			"Pause after each event in the ticket story, update one running record, and explain why the next operation matches the change before calculating."
+	},
+	"EEA11 Adding and Subtracting within 1000": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"hundreds / tens / ones",
+			"regrouping",
+			"within 1,000",
+			"written strategy",
+			"inverse check"
+		],
+		flowNote:
+			"Connect base-ten or expanded-form work to a written strategy. Name every regrouping and check the result with the inverse operation."
+	},
+	"EEA12 Strategies to Add and Subtract within 1000": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"decomposition",
+			"compensation",
+			"expanded form",
+			"running total",
+			"strategy comparison"
+		],
+		flowNote:
+			"Compare at least two valid strategies on the same score change. Keep a round-by-round ledger and explain which strategy is easiest to verify."
+	},
+	"EEA13 Module Project: Going TikTok Famous": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"read a table",
+			"order numbers",
+			"add totals",
+			"subtract from a target",
+			"interpret data"
+		],
+		flowNote:
+			"Use the creator scenario only as a follower-count data table; no social-media account or platform use is needed. Verify ordering, totals, and differences from the stated target."
+	},
+	"Check-in #1": {
+		estimatedTime: "1–2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"operation choice",
+			"place value",
+			"length unit",
+			"visual model",
+			"strategy explanation"
+		],
+		flowNote:
+			"Collect one model, equation, unit-aware result, and strategy explanation. Use missed evidence to choose review instead of assigning every extra activity."
+	},
+	"EEA14 Working with Equal Groups": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"equal groups",
+			"repeated addition",
+			"array",
+			"even / odd",
+			"leftover"
+		],
+		flowNote:
+			"Build equal groups with objects or drawings, connect them to repeated addition, and make any leftover visible instead of hiding it in the equation."
+	},
+	"EEA15 Partitioning Rectangles": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"equal squares",
+			"rows",
+			"columns",
+			"array count",
+			"partition"
+		],
+		flowNote:
+			"Partition one rectangle into equal rows and columns, count the same total two ways, and explain how the array supports repeated addition."
+	},
+	"EEA16 Time": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"analog / digital",
+			"a.m. / p.m.",
+			"half past",
+			"quarter until",
+			"elapsed time"
+		],
+		flowNote:
+			"Match analog and digital times before solving elapsed-time stories. Use a timeline for the rescue and delay so start, change, and end times stay visible."
+	},
+	"EEA17 Money": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"coin value",
+			"count money",
+			"dollar notation",
+			"equivalent amount",
+			"make change"
+		],
+		flowNote:
+			"Build each amount with coins, record it in dollars and cents, then trade for an equivalent amount with fewer pieces and verify the value did not change."
+	},
+	"EEA18 Visualizing Data": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"category",
+			"table",
+			"picture graph",
+			"compare counts",
+			"update data"
+		],
+		flowNote:
+			"Collect and label categories before choosing a display. Update the same display after new utensils arrive and use it to answer comparison questions."
+	},
+	"EEA19 Polygons and Circles": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"side / corner / curve",
+			"polygon",
+			"circle",
+			"equal parts",
+			"halves / thirds / fourths"
+		],
+		flowNote:
+			"Describe shapes by visible attributes, then partition examples into equal shares. A fraction name is accepted only when the parts are equal."
+	},
+	"EEA20 Module Project: The Next Hit iPhone": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"read a data table",
+			"chart",
+			"compare measures",
+			"array partition",
+			"evidence-based recommendation"
+		],
+		flowNote:
+			"Use the phone table as a neutral product-data comparison, not a purchase endorsement. Support the recommendation with charts, then verify the party arrays separately."
+	},
+	"Check-in #2": {
+		estimatedTime: "1–2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"equal groups",
+			"time / money",
+			"data display",
+			"shape / equal parts",
+			"visible reasoning"
+		],
+		flowNote:
+			"Collect one equal-groups model, one time or money record, one data interpretation, and one shape or fraction explanation before choosing targeted review."
+	}
+};
+
 const elementaryMathCourses = {
 	earlyElementaryA: createSourceLibraryCourse({
 		name: "Early Elementary A: Discovering Numbers, Operations, and Measurement",
 		area: "early elementary math",
 		focus: "addition, subtraction, word problems, length, place value, equal groups, rectangles, time, money, data, polygons, circles, and visual math explanations",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: earlyElementaryAModuleMetadata,
 		sourceActivityAnchors: earlyElementaryAMathSourceAnchors,
-		staticAssets: [
-			"check_in_1_length_0.png",
-			"check_in_1_sums_0.png",
-			"check_in_1_sums_1.png",
-			"check_in_2_additional_0.png",
-			"check_in_2_money_1.png",
-			"check_in_2_multiplication_0.png",
-			"check_in_2_multiplication_1.png",
-			"check_in_2_multiplication_2.png",
-			"check_in_2_time_0.png",
-			"mfa18_pset1_0.png",
-			"module_example.png",
-			"module_project_1_0.png"
-		],
 		modules: [
 			"EEA1 Addition and Subtraction within 20",
 			"EEA2 Addition and Subtraction within 100",
