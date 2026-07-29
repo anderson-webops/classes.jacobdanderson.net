@@ -1,7 +1,7 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { contextualizePhysicsCourse } from "./physicsContentContext";
 
-export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
+const introToPhysicsSourceCourse: RawCourse = contextualizePhysicsCourse({
 	name: "Intro to Physics",
 	modules: [
 		{
@@ -895,3 +895,711 @@ export const introToPhysicsCourse: RawCourse = contextualizePhysicsCourse({
 		}
 	]
 });
+
+interface IntroPhysicsModuleFlow {
+	stage: "Core foundation" | "Guided extension" | "Final synthesis";
+	estimatedTime: string;
+	keyBlocks: string[];
+	materialSection: string;
+	answerSection: string;
+	phenomenon: string;
+	corePath: string;
+	stretchPath: string;
+	evidenceGate: string;
+	boundary: string;
+	referenceLink: string;
+	projectCore: string;
+	projectStretch: string;
+}
+
+const INTRO_PHYSICS_REFERENCES = {
+	nistSI: "https://www.nist.gov/pml/owm/metric-si/si-units",
+	openStax: "https://openstax.org/details/books/physics",
+	phetMotion: "https://phet.colorado.edu/en/simulations/moving-man",
+	phetForces:
+		"https://phet.colorado.edu/en/simulations/forces-and-motion-basics",
+	phetEnergy: "https://phet.colorado.edu/en/simulations/energy-skate-park",
+	phetCircuits:
+		"https://phet.colorado.edu/en/simulations/circuit-construction-kit-dc",
+	phetWaves: "https://phet.colorado.edu/en/simulations/wave-on-a-string",
+	phetCollisions: "https://phet.colorado.edu/en/simulations/collision-lab",
+	phetTorque: "https://phet.colorado.edu/en/simulations/balancing-act",
+	phetDensity: "https://phet.colorado.edu/en/simulations/density",
+	phetThermal:
+		"https://phet.colorado.edu/en/simulations/energy-forms-and-changes",
+	phetOptics: "https://phet.colorado.edu/en/simulations/geometric-optics",
+	phetFaraday:
+		"https://phet.colorado.edu/en/simulations/faradays-electromagnetic-lab",
+	phetSprings: "https://phet.colorado.edu/en/simulations/masses-and-springs",
+	nasaOrbits:
+		"https://science.nasa.gov/solar-system/orbits-and-keplers-laws/",
+	phetPhotoelectric: "https://phet.colorado.edu/en/simulations/photoelectric"
+} as const;
+
+function introPhysicsMaterial(section: string) {
+	return `/course-assets/physics/intro-physics-materials-pack.md#${section}`;
+}
+
+function introPhysicsAnswerKey(section: string) {
+	return `/course-assets/physics/intro-physics-rubrics-answer-key.md#${section}`;
+}
+
+const INTRO_PHYSICS_FLOW: Record<string, IntroPhysicsModuleFlow> = {
+	"PHY1 Measurement, Uncertainty, and Scientific Modeling": {
+		stage: "Core foundation",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"SI quantities and units",
+			"unit conversion",
+			"precision and accuracy",
+			"measurement uncertainty",
+			"graph construction",
+			"bounded evidence claims"
+		],
+		materialSection: "measurement-and-uncertainty-cases",
+		answerSection: "measurement-and-uncertainty-key",
+		phenomenon:
+			"Two groups report different walking speeds from the same route, and both measurements can still be defensible.",
+		corePath:
+			"Preserve raw values and units, convert quantities, graph supplied position-time data, calculate a slope, summarize repeated reaction-time trials, and report a result with an uncertainty or resolution statement.",
+		stretchPath:
+			"Compare random scatter with systematic bias, propagate a simple measurement range into a calculated speed, test whether an extra decimal place is justified, and revise a claim after examining the data-collection method.",
+		evidenceGate:
+			"A complete response includes the measured quantity, numerical value, unit, instrument or source resolution, graph labels, calculation trail, and a claim whose precision matches the evidence.",
+		boundary:
+			"Accuracy is closeness to an accepted or reference value, precision describes repeatability or resolution, and uncertainty is not proof that every value inside a range is equally likely. Significant figures communicate measurement limits; they do not repair weak data.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.nistSI,
+		projectCore:
+			"Classify ten supplied quantities as direct or calculated measurements, select units and likely resolution, and explain one dominant uncertainty for each.",
+		projectStretch:
+			"Compare two possible measurement methods, quantify the effect of one bias, and recommend a method conditionally using precision, cost, and feasibility."
+	},
+	"PHY2 Motion Graphs and Kinematics": {
+		stage: "Core foundation",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"reference frames",
+			"distance and displacement",
+			"position-time slope",
+			"velocity-time area",
+			"acceleration",
+			"representation translation"
+		],
+		materialSection: "motion-graphs-and-kinematics-cases",
+		answerSection: "motion-graphs-and-kinematics-key",
+		phenomenon:
+			"An object can be at a positive position while moving in a negative direction, and a flat position graph can represent rest rather than zero position.",
+		corePath:
+			"Translate among a motion story, position table, position-time graph, interval velocity table, and signed coordinate diagram. Calculate slope or area only after naming the axes and interval.",
+		stretchPath:
+			"Use a piecewise dataset to identify changing acceleration, compare average with instantaneous quantities, combine perpendicular velocity contributions, and critique a graph that resembles the physical path but encodes different variables.",
+		evidenceGate:
+			"The story, table, graph, signs, units, and calculation all describe the same motion. Every slope or area statement names the graph and the physical quantity it represents.",
+		boundary:
+			"A graph is a relationship between quantities, not a picture of the route. Negative velocity indicates direction under a chosen convention, speed is nonnegative, and acceleration does not automatically mean speeding up.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetMotion,
+		projectCore:
+			"Build matching position-time and velocity-time representations for both supplied runners and support a sprint-versus-endurance comparison with exact intervals.",
+		projectStretch:
+			"Add a strategy change, quantify displacement and distance, compare average and peak speed, and explain how a different reference frame changes values without changing the event."
+	},
+	"PHY3 Forces, Free-Body Diagrams, and Newton's Laws": {
+		stage: "Core foundation",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"interaction pairs",
+			"object isolation",
+			"free-body diagrams",
+			"net force",
+			"mass and acceleration",
+			"Newton's three laws"
+		],
+		materialSection: "forces-and-newton-laws-cases",
+		answerSection: "forces-and-newton-laws-key",
+		phenomenon:
+			"A motionless elevator rider can have several forces acting, while an object moving at constant velocity can have zero net force.",
+		corePath:
+			"Choose one object, list external interactions, draw and label force arrows, calculate or compare net force, and connect the net force to acceleration rather than directly to velocity.",
+		stretchPath:
+			"Use paired acceleration datasets to infer the force-mass relationship, distinguish third-law pairs from balanced forces on one object, and analyze apparent weight during several elevator intervals.",
+		evidenceGate:
+			"Each force has an interacting source, acts on the isolated object, and uses a clear direction convention. The diagram, component equation, net force, and motion prediction agree.",
+		boundary:
+			"Constant velocity requires zero net force, not zero individual forces. Newton's third-law forces act on different objects, and mass is not interchangeable with gravitational force or scale reading.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetForces,
+		projectCore:
+			"Annotate the supplied structure or equilibrium diagram with interactions, force directions, likely compression or tension, and one evidence-based failure point.",
+		projectStretch:
+			"Compare two designs under the same load, quantify one force ratio or safety margin, and state which geometry or material assumption limits the conclusion."
+	},
+	"PHY4 Gravity, Work, and Energy": {
+		stage: "Core foundation",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"system boundaries",
+			"work and transfer",
+			"kinetic energy",
+			"gravitational energy",
+			"thermal transfer",
+			"energy conservation"
+		],
+		materialSection: "gravity-work-and-energy-cases",
+		answerSection: "gravity-work-and-energy-key",
+		phenomenon:
+			"Two carts can reach the same height with different speeds when energy leaves the selected mechanical system through friction.",
+		corePath:
+			"Define a system and interval, build initial and final energy accounts, calculate a supplied kinetic or gravitational energy value, and use height-speed evidence to explain a transfer.",
+		stretchPath:
+			"Compare force-based and energy-based solutions, estimate thermal transfer from a mechanical-energy difference, test a changed mass or height, and evaluate whether a model treats drag or friction adequately.",
+		evidenceGate:
+			"An energy story names the system, initial and final stores, transfers across the boundary, calculation units, and where energy appears in the surroundings when mechanical energy decreases.",
+		boundary:
+			"Energy is conserved in a suitably defined closed system, but mechanical energy alone can decrease. Work is a transfer associated with force through displacement; it is not a substance stored in an object.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetEnergy,
+		projectCore:
+			"Create a pendulum or track design from supplied evidence with labeled energy states, one calculation, and an explanation of decreasing mechanical amplitude.",
+		projectStretch:
+			"Compare two damping-reduction ideas using criteria, quantify one predicted improvement, and identify a tradeoff or model feature that the ideal simulation omits."
+	},
+	"PHY5 Electricity and Basic Circuits": {
+		stage: "Core foundation",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"charge and current",
+			"potential difference",
+			"resistance",
+			"series circuits",
+			"parallel circuits",
+			"electrical power"
+		],
+		materialSection: "circuits-cases",
+		answerSection: "circuits-key",
+		phenomenon:
+			"Opening one branch of a parallel circuit can leave another branch operating, while one break stops current everywhere in a simple series path.",
+		corePath:
+			"Trace complete paths, label current direction and voltage measurements, use supplied current-voltage data to infer resistance, and compare component behavior in series and parallel diagrams.",
+		stretchPath:
+			"Calculate equivalent resistance or power in bounded cases, diagnose hidden short and open paths, compare ideal with noisy measurements, and redesign a circuit for reliability or independent control.",
+		evidenceGate:
+			"A circuit claim cites topology plus measured or supplied voltage, current, resistance, brightness, or power evidence. A schematic, value table, and written explanation remain mutually consistent.",
+		boundary:
+			"Current is not consumed by the first component, voltage is not the same quantity as current, and a battery does not force one fixed current through every circuit. Simulations use idealized wires and components unless stated otherwise.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetCircuits,
+		projectCore:
+			"Compare the energy use of supplied devices from power and run time, show calculations with units, and identify which assumption dominates the estimate.",
+		projectStretch:
+			"Construct a conditional recommendation that adds standby use, efficiency, uncertainty, or cost while avoiding claims about a learner's household."
+	},
+	"PHY6 Waves, Sound, and Light": {
+		stage: "Core foundation",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"amplitude",
+			"wavelength",
+			"frequency and period",
+			"wave speed",
+			"reflection and refraction",
+			"resonance"
+		],
+		materialSection: "waves-sound-and-light-cases",
+		answerSection: "waves-sound-and-light-key",
+		phenomenon:
+			"A sound can become louder without becoming higher in pitch, and a wave can carry energy while the medium's particles mainly oscillate locally.",
+		corePath:
+			"Read spatial and time graphs, identify amplitude, wavelength, period, and frequency, calculate one wave-speed relationship, and compare reflection, refraction, sound, and light cases.",
+		stretchPath:
+			"Analyze resonance-response data, distinguish medium motion from wave propagation, compare sound and electromagnetic waves, and design a signal route resilient to one supplied interference source.",
+		evidenceGate:
+			"Every wave quantity comes from a named axis or measurement, with units and a clear distinction between a snapshot in space and variation through time.",
+		boundary:
+			"Amplitude and frequency describe different features, wave speed depends on the modeled medium and conditions, and light does not require a material medium in the same way sound does.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetWaves,
+		projectCore:
+			"Create a supplied-evidence demonstration brief with a prediction, amplitude or frequency measurement, observation table, and resonance or propagation explanation.",
+		projectStretch:
+			"Compare two driving frequencies or media, graph the response, identify damping or uncertainty, and add an equivalent non-audio representation."
+	},
+	"PHY7 Capstone Lab and Scientific Communication": {
+		stage: "Core foundation",
+		estimatedTime: "5–7 sessions",
+		keyBlocks: [
+			"focused questions",
+			"variables and controls",
+			"evidence-source choice",
+			"graph selection",
+			"claim-evidence-reasoning",
+			"revision and defense"
+		],
+		materialSection: "core-capstone-cases",
+		answerSection: "core-capstone-key",
+		phenomenon:
+			"The same dataset can support a narrow relationship claim while failing to prove a broader mechanism or universal rule.",
+		corePath:
+			"Choose one supplied mechanics, energy, circuit, or wave case; define a testable question; select variables and a graph; analyze evidence; state uncertainty; and revise a CER response after rubric feedback.",
+		stretchPath:
+			"Compare two models or datasets, test sensitivity to an assumption or exclusion rule, evaluate an alternative explanation, and defend why the final representation fits the question better than another option.",
+		evidenceGate:
+			"The capstone preserves source values, calculation steps, graph labels, claim scope, limitations, and a substantive before-and-after revision. Presentation polish never substitutes for traceable evidence.",
+		boundary:
+			"A simulation or provided dataset can test a model relationship without reproducing every real-world factor. A confirmed prediction does not prove a model uniquely, and an unexpected result does not make the investigation a failure.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.openStax,
+		projectCore:
+			"Complete one focused investigation with question, variables, source record, graph or diagram, calculation, CER response, limitation, and documented revision.",
+		projectStretch:
+			"Compare an alternative model, quantify uncertainty or sensitivity, add a changed-condition prediction, and defend what new evidence would change the conclusion."
+	},
+	"PHY8 Momentum, Impulse, and Collisions": {
+		stage: "Guided extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"system boundaries",
+			"vector momentum",
+			"impulse",
+			"force-time area",
+			"collision conservation",
+			"impact safety"
+		],
+		materialSection: "momentum-cases",
+		answerSection: "momentum-key",
+		phenomenon:
+			"An airbag can reduce average force while producing essentially the same momentum change by increasing the stopping time.",
+		corePath:
+			"Choose a direction and system, build before-and-after momentum tables, calculate impulse from a force-time area, and distinguish momentum conservation from kinetic-energy conservation.",
+		stretchPath:
+			"Analyze an inelastic collision, include an external impulse or uncertainty interval, compare safety designs with the same momentum change, and test whether system choice changes the conservation statement.",
+		evidenceGate:
+			"Mass, signed velocity, momentum, impulse, system boundary, units, and before-after timing remain explicit. Conservation is invoked only after external interactions are evaluated.",
+		boundary:
+			"Momentum is a vector and kinetic energy is a scalar; a closed-system collision conserves momentum even when mechanical kinetic energy changes form. Longer collision time changes average force, not the required momentum change.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetCollisions,
+		projectCore:
+			"Create an impact-safety brief with a system diagram, same-momentum-change comparison, force-time evidence, one calculation, and a model limitation.",
+		projectStretch:
+			"Compare two designs over multiple impact conditions, quantify peak-versus-average force carefully, and add a tradeoff involving mass, distance, comfort, cost, or reuse."
+	},
+	"PHY9 Rotational Motion and Torque Basics": {
+		stage: "Guided extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"pivots",
+			"lever arms",
+			"torque direction",
+			"net torque",
+			"rotational equilibrium",
+			"design tradeoffs"
+		],
+		materialSection: "torque-cases",
+		answerSection: "torque-key",
+		phenomenon:
+			"A smaller force applied farther from a pivot can create the same turning effect as a larger force applied nearby.",
+		corePath:
+			"Mark the pivot and force line, find the perpendicular lever arm, assign clockwise and counterclockwise signs, calculate torque, and test rotational equilibrium.",
+		stretchPath:
+			"Compare nonperpendicular forces, infer an unknown force or location, evaluate distributed load as a simplified point, and redesign a lever system under size or force constraints.",
+		evidenceGate:
+			"A torque conclusion includes pivot, force vector, perpendicular distance, sign convention, units, and a diagram that matches the calculation.",
+		boundary:
+			"Distance along an object is not always the lever arm, sign is a chosen rotational convention, and zero net torque does not by itself guarantee zero net force.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetTorque,
+		projectCore:
+			"Audit a supplied door, wrench, balance, or crane diagram with pivot, forces, lever arms, torque directions, and one numeric comparison.",
+		projectStretch:
+			"Evaluate a changed force angle or load location, add a translational-equilibrium check, and recommend a design with one practical tradeoff."
+	},
+	"PHY10 Fluids, Pressure, and Buoyancy": {
+		stage: "Guided extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"pressure and area",
+			"density",
+			"fluid pressure",
+			"displaced volume",
+			"buoyant force",
+			"floating equilibrium"
+		],
+		materialSection: "fluids-cases",
+		answerSection: "fluids-key",
+		phenomenon:
+			"A steel ship can float while a small solid steel block sinks because the ship-fluid system depends on average density and displaced volume, not material name alone.",
+		corePath:
+			"Calculate pressure or density from supplied values, compare floating and sinking cases, identify displaced volume, and build a force diagram for a floating object.",
+		stretchPath:
+			"Use a mass-loading table to estimate a design threshold, compare shape changes at fixed mass, distinguish pressure from total force, and critique a still-fluid or rigid-object assumption.",
+		evidenceGate:
+			"Mass, volume, area, fluid density, displacement, force direction, and units appear in the representation used to support the claim.",
+		boundary:
+			"Heavy objects do not automatically sink, pressure is not identical to force, and floating depends on force balance plus displaced fluid. The introductory model treats the fluid as still and incompressible unless noted.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetDensity,
+		projectCore:
+			"Design a boat-shape explanation from the supplied mass-volume and loading data, including a cross-section, displacement argument, and float-or-sink prediction.",
+		projectStretch:
+			"Estimate a loading limit, compare two hull shapes under a shared constraint, and identify stability, deformation, waves, or fluid motion omitted by the model."
+	},
+	"PHY11 Heat, Temperature, and Thermal Energy": {
+		stage: "Guided extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"temperature",
+			"thermal energy",
+			"heat transfer",
+			"specific heat",
+			"phase changes",
+			"thermal design"
+		],
+		materialSection: "thermal-cases",
+		answerSection: "thermal-key",
+		phenomenon:
+			"Two equal-mass materials receiving the same energy can change temperature by different amounts, and added energy can occur during a phase plateau without a temperature rise.",
+		corePath:
+			"Read heating data, distinguish temperature from energy transfer, identify conduction, convection, and radiation pathways, and calculate one specific-heat or transfer value.",
+		stretchPath:
+			"Interpret a phase-change plateau, compare thermal designs using rate data, account for system boundary and surroundings, and evaluate an ideal-insulation or uniform-temperature assumption.",
+		evidenceGate:
+			"Temperature, mass, energy transferred, time, material, transfer pathway, and units remain separate in every graph, calculation, or design claim.",
+		boundary:
+			"Heat names energy transfer caused by a temperature difference, not a substance stored in an object. Temperature measures a state property and does not alone determine total thermal energy.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetThermal,
+		projectCore:
+			"Write a thermal-design memo comparing two supplied containers or materials with graph evidence, one calculation, and a recommendation tied to a stated use.",
+		projectStretch:
+			"Add uncertainty, a phase-change or rate consideration, a cost or mass tradeoff, and a test that could overturn the recommendation."
+	},
+	"PHY12 Optics, Mirrors, Lenses, and Images": {
+		stage: "Guided extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"reflection",
+			"refraction",
+			"principal rays",
+			"focal length",
+			"real and virtual images",
+			"optical devices"
+		],
+		materialSection: "optics-cases",
+		answerSection: "optics-key",
+		phenomenon:
+			"Moving an object across a converging lens's focal point can change the image from real and inverted to virtual and upright.",
+		corePath:
+			"Draw principal rays, locate an image, classify it as real or virtual, compare object and image properties, and connect reflection or refraction to an optical device.",
+		stretchPath:
+			"Use the thin-lens relationship with signed quantities, compare measured and predicted image distance, diagnose a flawed ray diagram, and evaluate an ideal thin-lens assumption.",
+		evidenceGate:
+			"At least two rays, optical element, principal axis, focal points, object, image, direction, distances, and image classification support the explanation.",
+		boundary:
+			"Ray diagrams model light paths rather than physical lines in space, virtual images are observable even when they cannot be projected on a screen, and ideal thin lenses omit thickness and aberrations.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetOptics,
+		projectCore:
+			"Explain a supplied camera, glasses, mirror, telescope, or projector diagram with principal rays, image properties, and one device constraint.",
+		projectStretch:
+			"Compare two configurations quantitatively, diagnose an alignment or focus failure, and state which real-device effect the ideal ray model omits."
+	},
+	"PHY13 Magnetism and Electromagnetic Induction": {
+		stage: "Guided extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"magnetic fields",
+			"current and fields",
+			"coils",
+			"changing flux",
+			"motors and generators",
+			"energy conversion"
+		],
+		materialSection: "electromagnetism-cases",
+		answerSection: "electromagnetism-key",
+		phenomenon:
+			"A stationary magnet near a coil can produce no sustained induced signal, while moving the same magnet changes the signal's size and direction.",
+		corePath:
+			"Trace current, field, relative motion, device input, device output, and energy conversion in supplied electromagnet, motor, generator, or induction cases.",
+		stretchPath:
+			"Graph induced signal against motion or coil turns, infer polarity reversal, compare motor and generator operation, and evaluate uniform-field, ideal-coil, or lossless-conversion assumptions.",
+		evidenceGate:
+			"Direction, relative change, coil geometry, current or induced signal, and energy input-output evidence remain visible rather than being replaced by device vocabulary alone.",
+		boundary:
+			"Magnetic field lines are a representation, magnets are not unlimited energy sources, and induction depends on changing magnetic flux rather than merely having a magnetic field nearby.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetFaraday,
+		projectCore:
+			"Create an electromagnetic device brief tracing current or motion, field interaction, energy conversion, evidence, and one idealization.",
+		projectStretch:
+			"Use supplied signal data to compare two designs, quantify one relationship, and add a tradeoff involving strength, speed, coil turns, heating, or efficiency."
+	},
+	"PHY14 Simple Harmonic Motion and Resonance": {
+		stage: "Guided extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"equilibrium",
+			"restoring effects",
+			"amplitude",
+			"period and frequency",
+			"damping",
+			"driven resonance"
+		],
+		materialSection: "oscillation-and-resonance-cases",
+		answerSection: "oscillation-and-resonance-key",
+		phenomenon:
+			"Small repeated pushes can produce a large response when their timing aligns with a system's natural frequency.",
+		corePath:
+			"Identify equilibrium, amplitude, period, frequency, restoring behavior, and damping from supplied motion and response graphs.",
+		stretchPath:
+			"Estimate a spring-model parameter or resonance width, compare free and driven motion, test a changed mass or damping condition, and determine where simple harmonic assumptions break.",
+		evidenceGate:
+			"A complete explanation reads quantities from axes, identifies one full cycle correctly, separates natural from driving frequency, and cites response evidence for resonance.",
+		boundary:
+			"Not every repeated motion is simple harmonic, equilibrium is not a place where motion must stop, and resonance describes frequency-dependent response rather than automatically destructive vibration.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetSprings,
+		projectCore:
+			"Build a resonance case study from the supplied graph with system, natural frequency, driver, response, damping, evidence, and one control strategy.",
+		projectStretch:
+			"Compare response under two damping levels, quantify a peak or bandwidth change, and evaluate whether the simple model fits the selected real system."
+	},
+	"PHY15 Astronomy, Gravity, and Orbits": {
+		stage: "Guided extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"scale and units",
+			"central-force direction",
+			"orbital velocity",
+			"continuous free fall",
+			"period and radius",
+			"reference frames"
+		],
+		materialSection: "astronomy-and-orbits-cases",
+		answerSection: "astronomy-and-orbits-key",
+		phenomenon:
+			"An orbiting spacecraft continuously accelerates toward a central body even when its speed is nearly constant.",
+		corePath:
+			"Label force and velocity directions, compare weight across worlds, read orbital-radius and period data, and explain orbit as continuous free fall.",
+		stretchPath:
+			"Test a Kepler-style period-radius relationship with scaled data, compare circular with elliptical models, evaluate a not-to-scale diagram, and identify the reference frame used for each measurement.",
+		evidenceGate:
+			"Central body, orbiting object, distance scale, velocity direction, acceleration or force direction, period, units, and model scale support the orbital claim.",
+		boundary:
+			"Orbit does not mean gravity disappears, astronauts in orbit are not beyond gravitational interaction, and a forward force is not required to maintain inertial tangential motion.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.nasaOrbits,
+		projectCore:
+			"Create a mission-planning sketch with central body, path, velocity, force direction, scale note, period evidence, and one operational constraint.",
+		projectStretch:
+			"Compare two candidate orbits quantitatively, apply a period-radius relationship, and identify atmospheric drag, multi-body effects, or maneuver burns omitted by the introductory model."
+	},
+	"PHY16 Modern Physics and Model Limits": {
+		stage: "Guided extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"classical expectations",
+			"model-breaking evidence",
+			"quantized energy",
+			"spectra and photons",
+			"device applications",
+			"domain limits"
+		],
+		materialSection: "modern-physics-cases",
+		answerSection: "modern-physics-key",
+		phenomenon:
+			"Changing light intensity and changing light frequency have different effects in photoelectric evidence, which strains a purely classical wave-energy account.",
+		corePath:
+			"Name a classical expectation, inspect spectrum or photoelectric evidence, identify the mismatch, and state the limited modern idea needed for the case.",
+		stretchPath:
+			"Compare discrete spectral lines with a continuous prediction, use a threshold dataset, connect a device to the model, and explain why classical physics remains accurate within its tested domain.",
+		evidenceGate:
+			"The explanation separates observation, classical prediction, mismatch, refined model feature, application, and remaining simplification.",
+		boundary:
+			"Quantum is not a synonym for unpredictable or magical, photons are not ordinary classical particles in every respect, and model refinement does not erase the usefulness of classical approximations at everyday scales.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.phetPhotoelectric,
+		projectCore:
+			"Create a modern-physics explainer with a supplied spectrum or threshold dataset, classical expectation, evidence mismatch, refined idea, application, and caution.",
+		projectStretch:
+			"Quantify one threshold or spectral relationship, compare two possible explanations, and state what the introductory model still cannot predict."
+	},
+	"PHY17 Engineering Design and Physics Portfolio": {
+		stage: "Final synthesis",
+		estimatedTime: "6–8 sessions",
+		keyBlocks: [
+			"focused design questions",
+			"system and model choice",
+			"traceable evidence",
+			"criteria and constraints",
+			"uncertainty and alternatives",
+			"revision and defense"
+		],
+		materialSection: "final-portfolio-cases",
+		answerSection: "final-portfolio-key",
+		phenomenon:
+			"Two polished designs can reach different conclusions because they optimize different criteria, use different system boundaries, or rely on evidence of unequal strength.",
+		corePath:
+			"Select one approved supplied case, define a focused question and system, choose a model, analyze data, compare at least two options, document a limitation, revise one substantive decision, and defend the result.",
+		stretchPath:
+			"Combine two physics models carefully, quantify uncertainty or sensitivity, compare an alternative explanation or design, test a changed condition, and answer what evidence would reverse the recommendation.",
+		evidenceGate:
+			"The portfolio includes a source record, labeled representation, calculation trail, model statement, criteria and constraints, tradeoff table, bounded claim, limitation, before-after revision, and accessible defense.",
+		boundary:
+			"A portfolio demonstrates a defensible model-based decision, not universal proof or professional engineering certification. Conclusions remain conditional on the supplied evidence, assumptions, and stated operating range.",
+		referenceLink: INTRO_PHYSICS_REFERENCES.openStax,
+		projectCore:
+			"Build the complete portfolio around one question, model, evidence source, calculation, labeled representation, tradeoff, limitation, and documented revision.",
+		projectStretch:
+			"Integrate a second model or dataset, run a sensitivity comparison, evaluate an alternative design, and defend a conditional recommendation plus reversal criterion."
+	}
+};
+
+const GENERIC_PHYSICS_TITLES: Record<string, string> = {
+	"Concept Path": "Concept Map",
+	"Model and Reasoning Toolkit": "Model Routine",
+	"Worked Example Set": "Worked Cases",
+	"Investigation, Simulation, or Case Study": "Evidence Investigation"
+};
+
+function introPhysicsTopic(moduleTitle: string) {
+	return moduleTitle.replace(/^PHY\d+\s+/u, "").trim();
+}
+
+function contextualPhysicsTitle(moduleTitle: string, itemTitle: string) {
+	const replacement = GENERIC_PHYSICS_TITLES[itemTitle];
+	return replacement
+		? `${introPhysicsTopic(moduleTitle)}: ${replacement}`
+		: itemTitle;
+}
+
+function introPhysicsCurriculumPath(
+	stage: IntroPhysicsModuleFlow["stage"]
+): RawCourseModuleItem["learningPath"] {
+	return stage === "Guided extension" ? "choice" : "core";
+}
+
+function introPhysicsProjectPath(
+	title: string
+): RawCourseModuleItem["learningPath"] {
+	if (/Readiness Check$/i.test(title)) return "core";
+	if (/Failure Modes$/i.test(title)) return "choice";
+	return "challenge";
+}
+
+function introPhysicsProjectCompletion(
+	title: string,
+	flow: IntroPhysicsModuleFlow
+) {
+	if (/Readiness Check$/i.test(title)) {
+		return `Core: complete the supplied readiness cases, preserve units and signs, identify the relevant system or representation, and justify each answer with one exact evidence point. Stretch: diagnose one alternate interpretation, quantify one comparison, and state which model assumption or missing measurement controls confidence.`;
+	}
+
+	if (/Failure Modes$/i.test(title)) {
+		return `Core: correct at least three supplied errors and explain why each correction changes the physical meaning rather than only the wording. Stretch: connect each error to a graph, diagram, calculation, or boundary condition and create one transfer case that reveals the same misconception in a new setting.`;
+	}
+
+	return `Core: ${flow.projectCore} Stretch: ${flow.projectStretch}`;
+}
+
+export const introToPhysicsCourse: RawCourse = {
+	...introToPhysicsSourceCourse,
+	modules: introToPhysicsSourceCourse.modules.map(module => {
+		const flow = INTRO_PHYSICS_FLOW[module.title];
+		if (!flow) {
+			throw new Error(
+				`Missing Intro to Physics flow for ${module.title}.`
+			);
+		}
+
+		const curriculum = module.curriculum.map((item, itemIndex) => ({
+			...item,
+			title: contextualPhysicsTitle(module.title, item.title),
+			content: [
+				itemIndex === 0
+					? `**Teaching flow:** ${flow.stage}. No physical apparatus, personal device, home electricity, dropped-object activity, outdoor timing, camera, microphone, or learner household data is required. Begin with the supplied phenomenon, predict before calculating, inspect evidence, complete the core route, and revise one representation or claim.`
+					: "",
+				item.content,
+				`**Guiding phenomenon:** ${flow.phenomenon}`,
+				`**Core route:** ${flow.corePath}`,
+				`**Stretch route:** ${flow.stretchPath}`,
+				`**Evidence gate:** ${flow.evidenceGate}`,
+				`**Calculation and model boundary:** ${flow.boundary}`,
+				`**Reference:** [Open the authoritative module reference](${flow.referenceLink}).`
+			]
+				.filter(Boolean)
+				.join("\n\n"),
+			learningPath: introPhysicsCurriculumPath(flow.stage),
+			datasetLink:
+				item.datasetLink ?? introPhysicsMaterial(flow.materialSection),
+			solutionLink:
+				item.solutionLink ?? introPhysicsAnswerKey(flow.answerSection),
+			projectLink: item.projectLink ?? flow.referenceLink
+		}));
+
+		const supplementalProjects = module.supplementalProjects.map(item => ({
+			...item,
+			content: [
+				item.content,
+				`**Course stage:** ${flow.stage}.`,
+				`**Guiding phenomenon:** ${flow.phenomenon}`,
+				`**Completion route:** ${introPhysicsProjectCompletion(item.title, flow)}`,
+				`**Evidence gate:** ${flow.evidenceGate}`,
+				`**Calculation and model boundary:** ${flow.boundary}`
+			].join("\n\n"),
+			learningPath: introPhysicsProjectPath(item.title),
+			datasetLink:
+				item.datasetLink ?? introPhysicsMaterial(flow.materialSection),
+			solutionLink:
+				item.solutionLink ?? introPhysicsAnswerKey(flow.answerSection),
+			projectLink: item.projectLink ?? flow.referenceLink
+		}));
+
+		return {
+			...module,
+			estimatedTime: flow.estimatedTime,
+			keyBlocks: flow.keyBlocks,
+			curriculum,
+			supplementalProjects
+		};
+	}),
+	developmentMetadata: {
+		priority: "soon",
+		standards: [
+			"NGSS high-school physical science practices and crosscutting concepts at an algebra-based introductory level",
+			"SI quantity, unit, graph, uncertainty, and scientific-model communication conventions",
+			"Mechanics, energy, circuits, waves, thermal physics, optics, electromagnetism, orbit, and bounded modern-physics reasoning",
+			"Evidence practices across tables, graphs, free-body diagrams, energy accounts, circuit schematics, ray diagrams, and simulations",
+			"Engineering criteria, constraints, fair comparison, tradeoff analysis, revision, and defense"
+		],
+		sourcePolicy:
+			"Preserves all 17 modules and 51 named checkpoints, misconception studies, and projects while organizing the course into seven core-foundation modules, nine guided extensions, and one final synthesis. Every route works from a supplied local dataset or case, an answer and rubric link, and a verified public reference.",
+		assessmentCadence: [
+			"Prediction before calculation or simulation in every module",
+			"One unit-aware graph, diagram, table, or model with a reasonableness check",
+			"One bounded claim supported by exact evidence and one stated model limit",
+			"One core route plus an optional stretch route using the same phenomenon",
+			"One corrected misconception and one changed-condition transfer",
+			"Substantive revision after rubric feedback in both capstone stages"
+		],
+		toolchain: [
+			"Notebook, paper, spreadsheet, graphing tool, or digital document",
+			"Supplied Intro Physics materials pack and rubrics answer key",
+			"Shared tables, graphs, diagrams, simulation states, and structured case descriptions",
+			"NIST SI references, OpenStax Physics, PhET physics simulations, and NASA orbit references",
+			"Optional interactive simulations with a supplied noninteractive table, image description, or diagram route"
+		],
+		safetyPolicy: [
+			"No required physical apparatus, home electrical work, dropped objects, projectiles, outdoor timing, heat sources, optical exposure, magnets, sound recording, or personal devices",
+			"No required learner health, reaction-time, home-energy, location, household-resource, camera, or microphone data",
+			"Supplied fictional cases and datasets remain sufficient for every assessment",
+			"Graphs and diagrams include labels and text descriptions; audio has waveform or transcript alternatives; color is never the only signal",
+			"Engineering, energy, impact-safety, and device conclusions remain educational models rather than professional certification"
+		],
+		courseBoundaries: [
+			"PHY1–PHY7 form the complete introductory foundation; PHY8–PHY16 are guided extensions rather than hidden prerequisites for the first capstone",
+			"PHY17 is the final synthesis and can draw from any completed foundation or extension thread",
+			"Observation, measurement, calculation, inference, model, approximation, and recommendation remain distinct",
+			"Every equation is tied to a named system, coordinate convention, quantity definition, units, assumptions, and operating range",
+			"Classical models remain useful inside their tested domains even when later evidence motivates a refined model"
+		],
+		capstoneExpectations: [
+			"Focused question or design problem grounded in a supplied phenomenon",
+			"Traceable source and data record with units and preserved raw values",
+			"Labeled graph, diagram, or model plus calculation and reasonableness check",
+			"Claim or recommendation with exact evidence, mechanism, limitation, and alternative",
+			"Criteria, constraints, fair comparison, and tradeoff record for design work",
+			"Before-and-after revision plus an answer to what evidence would change the conclusion"
+		],
+		recommendedNextWork: [
+			"Add anonymized exemplars at several algebra and communication levels after classroom use identifies the most valuable cases.",
+			"Archive selected simulation states as locally owned screenshots and structured tables so external tools never become continuity requirements.",
+			"Map the foundation and extension routes to the target district's exact course calendar and adopted standards sequence."
+		]
+	}
+};
