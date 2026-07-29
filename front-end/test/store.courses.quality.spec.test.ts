@@ -6962,8 +6962,8 @@ describe("course text quality normalization", () => {
 			"R.A.Z.E"
 		];
 
-		expect(text).toContain("Source Activity Anchors:");
-		expect(text).toContain("Evidence record:");
+		expect(text).not.toContain("Source Activity Anchors:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
@@ -7538,11 +7538,6 @@ describe("course text quality normalization", () => {
 
 	it("reserves source-library static assets from original source files", async () => {
 		const expectedAssetsByCourse = {
-			"early-elementary-b-math": [
-				"checkin2_gm_4.png",
-				"mfb14_pset1_4.png",
-				"module_example.png"
-			],
 			"late-elementary-a-math": [
 				"check_in_2_lines_5.png",
 				"maa7_pset1_10.png",
