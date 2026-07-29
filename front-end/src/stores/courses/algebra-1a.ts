@@ -1061,7 +1061,7 @@ configureMathCourseFlow(algebra1ACourse, {
 				"practice goal"
 			],
 			flowNote:
-				"Use the overview to choose one diagnostic route rather than completing four opening projects. Managing a Restaurant checks equation readiness, Delivery Map checks coordinate and slope readiness, and the weekly-delivery or Chef's Special routes are challenges for learners who already have those foundations.",
+				"Use the overview to choose one diagnostic route rather than completing four opening projects. Managing a Restaurant checks equation readiness, Delivery Map checks coordinate and slope readiness, and the weekly-delivery or Chef's Special routes challenge an already secure foundation.",
 			choiceCurriculumTitles: [
 				"Project 1: Managing a Restaurant",
 				"Project 2A: Delivery Map"
