@@ -17,6 +17,8 @@ const newPassword = ref("");
 const confirmPassword = ref("");
 const passwordStatus = ref("");
 const passwordError = ref("");
+const sessionStatus = ref("");
+const sessionError = ref("");
 const idPrefix = computed(
 	() =>
 		`account-security-${props.role}-${props.entityId.replace(
@@ -84,6 +86,21 @@ async function updatePassword() {
 			err.response?.data?.message ??
 			err.message ??
 			"Unable to update password.";
+	}
+}
+
+async function revokeOtherSessions() {
+	sessionStatus.value = "";
+	sessionError.value = "";
+	try {
+		const { data } = await api.post("/accounts/revoke-sessions");
+		sessionStatus.value =
+			data.message ?? "Other signed-in sessions have been revoked.";
+	} catch (err: any) {
+		sessionError.value =
+			err.response?.data?.message ??
+			err.message ??
+			"Unable to revoke other sessions.";
 	}
 }
 </script>
@@ -177,6 +194,27 @@ async function updatePassword() {
 			</p>
 			<p v-if="passwordError" class="error" role="alert">
 				{{ passwordError }}
+			</p>
+		</div>
+
+		<div class="security-section">
+			<h5>Other signed-in sessions</h5>
+			<p class="hint">
+				Sign out other browsers or devices while keeping this session
+				active.
+			</p>
+			<button
+				class="btn-secondary btn"
+				type="button"
+				@click="revokeOtherSessions"
+			>
+				Sign out other sessions
+			</button>
+			<p v-if="sessionStatus" class="status success" role="status">
+				{{ sessionStatus }}
+			</p>
+			<p v-if="sessionError" class="status error" role="alert">
+				{{ sessionError }}
 			</p>
 		</div>
 	</section>

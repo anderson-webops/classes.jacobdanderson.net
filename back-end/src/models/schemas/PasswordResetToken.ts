@@ -6,6 +6,8 @@ export type PasswordResetRole = (typeof passwordResetRoles)[number];
 
 export interface IPasswordResetToken {
 	accountID: Types.ObjectId;
+	claimID?: string;
+	claimedAt?: Date;
 	email: string;
 	expiresAt: Date;
 	role: PasswordResetRole;
@@ -17,6 +19,16 @@ const passwordResetTokenSchema = new Schema<IPasswordResetToken>(
 		accountID: {
 			type: Schema.Types.ObjectId,
 			required: true
+		},
+		claimID: {
+			type: String,
+			default: undefined,
+			select: false
+		},
+		claimedAt: {
+			type: Date,
+			default: undefined,
+			select: false
 		},
 		email: {
 			type: String,
@@ -44,6 +56,7 @@ const passwordResetTokenSchema = new Schema<IPasswordResetToken>(
 
 passwordResetTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 passwordResetTokenSchema.index({ role: 1, accountID: 1 }, { unique: true });
+passwordResetTokenSchema.index({ claimID: 1 }, { sparse: true });
 
 export const PasswordResetToken: Model<IPasswordResetToken>
 	= mongoose.models.PasswordResetToken

@@ -1,10 +1,14 @@
 import { Router } from "express";
 
 const WHITESPACE_RE = /\s+/g;
+const QUOTE_REQUEST_TIMEOUT_MS = 5_000;
 
 export const quoteProxy = Router().get("/", async (_req, res) => {
 	try {
-		const r = await fetch("https://favqs.com/api/qotd");
+		const r = await fetch("https://favqs.com/api/qotd", {
+			headers: { accept: "application/json" },
+			signal: AbortSignal.timeout(QUOTE_REQUEST_TIMEOUT_MS)
+		});
 		if (!r.ok) {
 			return res.status(r.status).json({ error: await r.text() });
 		}
@@ -28,6 +32,9 @@ export const quoteProxy = Router().get("/", async (_req, res) => {
 	}
 	catch (err) {
 		console.error("favqs proxy failed:", err);
+		if (err instanceof Error && err.name === "TimeoutError") {
+			return res.status(504).json({ error: "Quotes service timed out" });
+		}
 		res.status(502).json({ error: "Unable to reach quotes service" });
 	}
 });

@@ -28,6 +28,15 @@ export async function findAccountsByEmail(normalizedEmail: string) {
 	return { admin, tutor, user };
 }
 
+export async function accountEmailExists(normalizedEmail: string) {
+	const [user, tutor, admin] = await Promise.all([
+		User.exists({ email: normalizedEmail }),
+		Tutor.exists({ email: normalizedEmail }),
+		Admin.exists({ email: normalizedEmail })
+	]);
+	return !!(user || tutor || admin);
+}
+
 export function accountCandidatesByPriority(accounts: {
 	admin: IAdmin | null;
 	tutor: ITutor | null;
@@ -60,6 +69,7 @@ export function clearSessionRoles(session: CustomSession) {
 	delete session.tutorID;
 	delete session.userID;
 	delete session.courseCodeLearnerID;
+	delete session.accountSessionVersion;
 }
 
 export function getAccountID(entity: AccountEntity) {
@@ -73,7 +83,11 @@ export function serializeAccountEntity(
 		= "toJSON" in entity && typeof entity.toJSON === "function"
 			? entity.toJSON()
 			: { ...entity };
-	const { password: _password, ...safeEntity }
+	const {
+		password: _password,
+		sessionVersion: _sessionVersion,
+		...safeEntity
+	}
 		= serializableEntity as Record<string, unknown>;
 	return safeEntity;
 }
@@ -88,4 +102,13 @@ export function establishAccountSession(
 
 	clearSessionRoles(session);
 	session[candidate.sessionKey] = getAccountID(candidate.entity);
+	session.accountSessionVersion = candidate.entity.sessionVersion ?? 0;
+}
+
+export function accountSessionVersionMatches(
+	session: CustomSession,
+	entity: AccountEntity
+) {
+	return Number.isInteger(session.accountSessionVersion)
+		&& session.accountSessionVersion === (entity.sessionVersion ?? 0);
 }

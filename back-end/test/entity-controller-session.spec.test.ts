@@ -4,28 +4,11 @@ import cookieSession from "cookie-session";
 import express from "express";
 import { Types } from "mongoose";
 import { describe, expect, it } from "vitest";
-import { makeEntityController } from "../src/controllers/common/entityController.js";
-
-class TestUser {
-	_id = new Types.ObjectId();
-	name: string;
-
-	constructor(data: { name: string }) {
-		this.name = data.name;
-	}
-
-	async save() {}
-}
+import { establishAccountSession } from "../src/utils/accountSessions.js";
 
 async function withEntityRoutes<T>(
 	run: (baseUrl: string) => Promise<T>
 ): Promise<T> {
-	const controller = makeEntityController({
-		model: TestUser as any,
-		idParam: "userID",
-		sessionKey: "userID",
-		responseKey: "currentUser"
-	});
 	const app = express();
 	app.use(express.json());
 	app.use(
@@ -42,13 +25,30 @@ async function withEntityRoutes<T>(
 	app.get("/test/session", (req, res) => {
 		const session = req.session as CustomSession;
 		res.json({
+			accountSessionVersion: session.accountSessionVersion ?? null,
 			adminID: session.adminID ?? null,
 			courseCodeLearnerID: session.courseCodeLearnerID ?? null,
 			tutorID: session.tutorID ?? null,
 			userID: session.userID ?? null
 		});
 	});
-	app.post("/users", controller.create);
+	app.post("/users", (req, res) => {
+		const user = {
+			_id: new Types.ObjectId(),
+			comparePassword: async () => true,
+			email: "student@example.com",
+			name: "Student",
+			password: "hidden",
+			role: "user",
+			saveEdit: "Edit",
+			sessionVersion: 3
+		};
+		establishAccountSession(req.session as CustomSession, {
+			entity: user as any,
+			sessionKey: "userID"
+		});
+		res.status(201).json({ currentUser: { _id: user._id } });
+	});
 
 	const server = await new Promise<Server>(resolve => {
 		const instance = app.listen(0, "127.0.0.1", () => resolve(instance));
@@ -105,6 +105,7 @@ describe("entity controller session replacement", () => {
 
 			expect(createResponse.status).toBe(201);
 			await expect(sessionResponse.json()).resolves.toEqual({
+				accountSessionVersion: 3,
 				adminID: null,
 				courseCodeLearnerID: null,
 				tutorID: null,

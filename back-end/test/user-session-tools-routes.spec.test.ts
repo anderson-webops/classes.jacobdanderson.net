@@ -120,6 +120,7 @@ async function withUserRoutes<T>(run: (baseUrl: string) => Promise<T>): Promise<
 	app.use(express.json());
 	app.use((req: any, _res, next) => {
 		req.session = {
+			accountSessionVersion: 0,
 			adminID: req.get("x-admin-id") || undefined,
 			tutorID: req.get("x-tutor-id") || undefined,
 			userID: req.get("x-user-id") || undefined
@@ -156,6 +157,7 @@ async function withTutorRoutes<T>(run: (baseUrl: string) => Promise<T>): Promise
 	app.use(express.json());
 	app.use((req: any, _res, next) => {
 		req.session = {
+			accountSessionVersion: 0,
 			adminID: req.get("x-admin-id") || undefined,
 			tutorID: req.get("x-tutor-id") || undefined,
 			userID: req.get("x-user-id") || undefined
@@ -215,12 +217,23 @@ describe("user schedule and note-only routes", () => {
 
 		modelMocks.adminFindById.mockImplementation((id: string) =>
 			id === adminID.toString()
-				? Promise.resolve({ _id: adminID, name: "Admin", email: "admin@example.com" })
+				? Promise.resolve({
+						_id: adminID,
+						name: "Admin",
+						email: "admin@example.com",
+						sessionVersion: 0
+					})
 				: Promise.resolve(null)
 		);
 		modelMocks.tutorFindById.mockImplementation((id: string) =>
 			id === tutorID.toString()
-				? Promise.resolve({ _id: tutorID, name: "Tutor", email: "tutor@example.com", coursePermissions: [] })
+				? Promise.resolve({
+						_id: tutorID,
+						name: "Tutor",
+						email: "tutor@example.com",
+						coursePermissions: [],
+						sessionVersion: 0
+					})
 				: Promise.resolve(null)
 		);
 		modelMocks.userFindById.mockImplementation(() => queryWith(makeStudent()));

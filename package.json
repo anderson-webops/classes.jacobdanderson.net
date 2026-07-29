@@ -31,8 +31,8 @@
 		"lint": "npm run -w front-end lint && npm run -w back-end lint",
 		"lint-fix": "npm run -w front-end lint-fix && npm run -w back-end lint-fix",
 		"typecheck": "npm run -w front-end typecheck && npm run -w back-end typecheck",
-		"clean": "sudo rm -rf node_modules dist package-lock.json **/node_modules **/dist **/package-lock.json",
-		"up": "npm exec --yes -- taze major -I && npm run -w front-end up && npm run -w back-end up"
+		"clean": "node scripts/clean-generated.mjs",
+		"up": "npm exec -- taze major --include-locked --recursive"
 	},
 	"overrides": {
 		"defu": "6.1.6",

@@ -7,11 +7,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPythonProject } from "../src/controllers/users/pythonProjectController.js";
 
 const modelMocks = vi.hoisted(() => ({
+	pythonProjectCountDocuments: vi.fn(),
 	pythonProjectCreate: vi.fn()
 }));
 
 vi.mock("../src/models/schemas/PythonProject.js", () => ({
 	PythonProject: {
+		countDocuments: modelMocks.pythonProjectCountDocuments,
 		create: modelMocks.pythonProjectCreate
 	}
 }));
@@ -77,12 +79,31 @@ async function postJson(baseUrl: string, body: unknown) {
 describe("Python project routes", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		modelMocks.pythonProjectCountDocuments.mockReturnValue({
+			exec: vi.fn().mockResolvedValue(0)
+		});
 		modelMocks.pythonProjectCreate.mockImplementation(async project => ({
 			_id: new Types.ObjectId(),
 			createdAt: new Date("2026-06-18T12:00:00.000Z"),
 			updatedAt: new Date("2026-06-18T12:00:00.000Z"),
 			...project
 		}));
+	});
+
+	it("rejects project creation when the account storage quota is reached", async () => {
+		modelMocks.pythonProjectCountDocuments.mockReturnValue({
+			exec: vi.fn().mockResolvedValue(200)
+		});
+
+		await withPythonProjectRoute(async baseUrl => {
+			const response = await postJson(baseUrl, {
+				files: [{ name: "main.py", content: "print('hello')" }],
+				title: "Over quota"
+			});
+
+			expect(response.status).toBe(409);
+			expect(modelMocks.pythonProjectCreate).not.toHaveBeenCalled();
+		});
 	});
 
 	it("accepts nested Python package files for signed-in IDE projects", async () => {

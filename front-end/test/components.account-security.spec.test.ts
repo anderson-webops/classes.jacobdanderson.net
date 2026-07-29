@@ -1,10 +1,21 @@
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import AccountSecurity from "@/components/AccountSecurity.vue";
+
+const apiMocks = vi.hoisted(() => ({
+	post: vi.fn()
+}));
+
+vi.mock("@/api", () => ({
+	api: {
+		post: apiMocks.post
+	}
+}));
 
 describe("AccountSecurity", () => {
 	beforeEach(() => {
+		vi.clearAllMocks();
 		setActivePinia(createPinia());
 	});
 
@@ -36,5 +47,30 @@ describe("AccountSecurity", () => {
 		expect(
 			second.find("#account-security-user-second-user-email").exists()
 		).toBe(true);
+	});
+
+	it("lets the current account revoke other signed-in sessions", async () => {
+		apiMocks.post.mockResolvedValue({
+			data: { message: "Other signed-in sessions have been revoked." }
+		});
+		const wrapper = mount(AccountSecurity, {
+			props: {
+				email: "student@example.com",
+				entityId: "student-user",
+				role: "user"
+			}
+		});
+		const button = wrapper
+			.findAll("button")
+			.find(candidate => candidate.text() === "Sign out other sessions");
+
+		expect(button).toBeDefined();
+		await button!.trigger("click");
+		await flushPromises();
+
+		expect(apiMocks.post).toHaveBeenCalledWith("/accounts/revoke-sessions");
+		expect(wrapper.text()).toContain(
+			"Other signed-in sessions have been revoked."
+		);
 	});
 });

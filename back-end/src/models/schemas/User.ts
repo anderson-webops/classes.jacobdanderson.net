@@ -69,6 +69,7 @@ const userSchema: Schema<IUser> = new Schema(
 		},
 		editUsers: { type: Boolean, default: false, required: true }, // Added required: true
 		saveEdit: { type: String, default: "Edit", required: true }, // Added required: true
+		sessionVersion: { type: Number, default: 0, required: true, min: 0 },
 		role: { type: String, default: "user" }
 	},
 	{ timestamps: true }

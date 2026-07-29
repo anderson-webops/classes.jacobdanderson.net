@@ -19,6 +19,7 @@ import {
 	parseScheduledSessionPayload,
 	serializeScheduledSession
 } from "../../utils/scheduledSessions.js";
+import { recordSecurityAuditEvent } from "../../utils/securityAudit.js";
 
 const MAX_COURSE_PROGRESS_ID_LENGTH = 160;
 const MAX_COURSE_PROGRESS_IDS = 1000;
@@ -225,7 +226,29 @@ export const getUsersOfTutor: RequestHandler = async (req, res) => {
 		return res.status(400).json({ message: "Invalid tutor ID" });
 	}
 	if (!Types.ObjectId.isValid(tutorID)) return res.status(400).json({ message: "Invalid tutor ID" });
-	const users = await User.find({ tutors: new Types.ObjectId(tutorID) });
+
+	if (
+		!req.currentAdmin
+		&& req.currentTutor?._id.toString() !== tutorID
+	) {
+		return res.status(403).json({ message: "You can only view your own students" });
+	}
+
+	const requestedLimit = Number(req.query.limit);
+	const requestedOffset = Number(req.query.offset);
+	const limit = Number.isInteger(requestedLimit)
+		? Math.min(Math.max(requestedLimit, 1), 250)
+		: 100;
+	const offset = Number.isInteger(requestedOffset)
+		? Math.min(Math.max(requestedOffset, 0), 10_000)
+		: 0;
+	const users = await User.find({ tutors: new Types.ObjectId(tutorID) })
+		.select("-password -recipientNameKey -sessionVersion")
+		.sort({ name: 1 })
+		.skip(offset)
+		.limit(limit);
+	res.setHeader("X-Result-Limit", String(limit));
+	res.setHeader("X-Result-Offset", String(offset));
 	res.json(users);
 };
 
@@ -249,6 +272,12 @@ export const setUserTutors: RequestHandler = async (req, res) => {
 	if (!user) return res.sendStatus(404);
 	user.tutors = validTutorIds;
 	await user.save();
+	await recordSecurityAuditEvent(req, {
+		action: "user.tutors.update",
+		metadata: { tutorCount: validTutorIds.length },
+		targetID: user._id,
+		targetRole: "user"
+	});
 	res.json({ tutors: user.tutors });
 };
 
@@ -342,6 +371,12 @@ export const setUserCourseAccess: RequestHandler = async (req, res) => {
 	const allowedCourses = new Set(uniqueCourses);
 	user.courseProgress = (user.courseProgress ?? []).filter(progress => allowedCourses.has(progress.courseId));
 	await user.save();
+	await recordSecurityAuditEvent(req, {
+		action: "user.course-access.update",
+		metadata: { courseCount: uniqueCourses.length },
+		targetID: user._id,
+		targetRole: "user"
+	});
 	res.json({ courseAccess: user.courseAccess, courseStatus: user.courseStatus });
 };
 
@@ -618,10 +653,22 @@ export const promoteUserToTutor: RequestHandler = async (req, res) => {
 	if (!Types.ObjectId.isValid(userID)) return res.status(400).json({ message: "Invalid user ID" });
 	try {
 		const tutor = await promoteUserAccount(userID);
+		await recordSecurityAuditEvent(req, {
+			action: "account.promote.user-to-tutor",
+			targetID: tutor._id,
+			targetRole: "tutor"
+		});
 		return res.status(201).json({ tutor });
 	}
 	catch (error) {
 		if (error instanceof AccountRoleTransferError) {
+			await recordSecurityAuditEvent(req, {
+				action: "account.promote.user-to-tutor",
+				metadata: { statusCode: error.statusCode },
+				outcome: "denied",
+				targetID: userID,
+				targetRole: "user"
+			});
 			if (error.statusCode === 404) return res.sendStatus(404);
 			return res.status(error.statusCode).json({ message: error.message });
 		}
@@ -646,6 +693,11 @@ export const deleteOwnUser: RequestHandler = async (req, res) => {
 	if (!user) return res.sendStatus(404);
 
 	await user.deleteOne();
+	await recordSecurityAuditEvent(req, {
+		action: "user.delete-self",
+		targetID: user._id,
+		targetRole: "user"
+	});
 	res.sendStatus(200);
 };
 
@@ -666,6 +718,11 @@ export const deleteUserAsTutor: RequestHandler = async (req, res) => {
 	}
 
 	await user.deleteOne();
+	await recordSecurityAuditEvent(req, {
+		action: "user.delete-by-tutor",
+		targetID: user._id,
+		targetRole: "user"
+	});
 	res.sendStatus(200);
 };
 
@@ -681,6 +738,11 @@ export const deleteUserAsAdmin: RequestHandler = async (req, res) => {
 	if (!user) return res.sendStatus(404);
 
 	await user.deleteOne();
+	await recordSecurityAuditEvent(req, {
+		action: "user.delete-by-admin",
+		targetID: user._id,
+		targetRole: "user"
+	});
 	res.sendStatus(200);
 };
 

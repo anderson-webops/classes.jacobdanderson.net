@@ -11,6 +11,7 @@ import type {
 	PythonProjectReviewRole
 } from "../../types/entities/IPythonProjectReview.js";
 import { randomBytes } from "node:crypto";
+import { env } from "node:process";
 import { Types } from "mongoose";
 import { z } from "zod";
 import { PythonProject } from "../../models/schemas/PythonProject.js";
@@ -42,6 +43,16 @@ const RUNTIME_RESERVED_ROOTS = new Set(["keras", "pgzero", "tensorflow"]);
 const MAX_PROJECT_FILES = 40;
 const MAX_FILE_LENGTH = 3_000_000;
 const MAX_PROJECT_LENGTH = 12_000_000;
+const configuredProjectLimit = Number(
+	env.CODE_IDE_PROJECTS_PER_ACCOUNT_MAX || 200
+);
+const MAX_SAVED_PROJECTS_PER_ACCOUNT = Math.max(
+	1,
+	Math.min(
+		Number.isFinite(configuredProjectLimit) ? configuredProjectLimit : 200,
+		1_000
+	)
+);
 const SHARE_ID_RE = /^[\w-]{20,80}$/;
 const DEFAULT_PROJECT_FILE: PythonProjectFile = {
 	name: "main.py",
@@ -548,6 +559,14 @@ export const listManagedPythonProjects: RequestHandler = async (req, res) => {
 export const createPythonProject: RequestHandler = async (req, res) => {
 	const owner = currentProjectOwner(req, res);
 	if (!owner) return;
+	const projectCount = await PythonProject.countDocuments(
+		projectOwnerQuery(owner)
+	).exec();
+	if (projectCount >= MAX_SAVED_PROJECTS_PER_ACCOUNT) {
+		return res.status(409).json({
+			message: `This account has reached its ${MAX_SAVED_PROJECTS_PER_ACCOUNT}-project storage limit`
+		});
+	}
 
 	const parsed = projectPayloadSchema.safeParse(req.body ?? {});
 	if (!parsed.success) {

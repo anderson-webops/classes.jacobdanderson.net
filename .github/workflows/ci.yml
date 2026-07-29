@@ -55,6 +55,9 @@ jobs:
             - name: Install deps
               run: npm ci
 
+            - name: Dependency security audit
+              run: npm audit --omit=optional
+
             # Root "lint" runs front-end and back-end lint
             - name: Lint
               run: npm run lint
