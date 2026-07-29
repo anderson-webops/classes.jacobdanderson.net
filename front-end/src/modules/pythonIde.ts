@@ -203,9 +203,11 @@ const pythonIdeCourseModes: Record<string, PythonIdeMode> = {
 	"java-level-3": "java",
 	"machine-learning": "data",
 	pygames: "pgzero",
+	"pygames-classroom": "pgzero",
 	"python-level-1": "turtle",
 	"python-level-1-classroom": "turtle",
 	"python-level-2": "python",
+	"python-level-2-classroom": "python",
 	"python-level-3": "python",
 	"python-to-java-and-cpp-bridge": "python",
 	"pythonic-design-patterns": "python"
@@ -2212,7 +2214,7 @@ normal_addition()
 hard_addition()
 `;
 const PYTHON_IDE_CLASSROOM_BLOCKING_RE =
-	/^(?:while\b[^\n]*:|(?:\w+\.)*(?:done|exitonclick|listen|mainloop)\s*\()/m;
+	/^(?:while\b[^\n]*:|pgzrun\.go\s*\(|(?:\w+\.)*(?:done|exitonclick|listen|mainloop)\s*\()/m;
 
 function pythonIdeClassroomDefinitionIndex(source: string) {
 	const lines = source.split("\n");

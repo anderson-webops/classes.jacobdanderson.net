@@ -265,7 +265,10 @@ const ideCourseHref = computed(() => {
 		course: selectedCourse.value.id,
 		mode: ideCourseMode.value
 	});
-	if (selectedCourse.value.id === "pygames") {
+	if (
+		selectedCourse.value.id === "pygames" ||
+		selectedCourse.value.id === "pygames-classroom"
+	) {
 		params.set("starter", "course");
 		params.set("projectKey", `${selectedCourse.value.id}:course`);
 		params.set("starterTitle", `${selectedCourse.value.name} Starter`);

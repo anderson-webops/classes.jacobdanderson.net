@@ -53,11 +53,27 @@ export const courseCatalog: CourseCatalogEntry[] = [
 			import("./pygames").then(({ pyGamesCourse }) => pyGamesCourse)
 	},
 	{
+		id: "pygames-classroom",
+		name: "PyGames: Classroom Edition",
+		load: () =>
+			import("./pygames-classroom").then(
+				({ pyGamesClassroomCourse }) => pyGamesClassroomCourse
+			)
+	},
+	{
 		id: "python-level-2",
 		name: "Python Level 2",
 		load: () =>
 			import("./python-level-2").then(
 				({ pythonLevel2Course }) => pythonLevel2Course
+			)
+	},
+	{
+		id: "python-level-2-classroom",
+		name: "Python Level 2: Classroom Edition",
+		load: () =>
+			import("./python-level-2-classroom").then(
+				({ pythonLevel2ClassroomCourse }) => pythonLevel2ClassroomCourse
 			)
 	},
 	{

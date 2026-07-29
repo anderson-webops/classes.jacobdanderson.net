@@ -489,6 +489,22 @@ screen.listen()
 		expect(files[0]?.content).toBe("VALUE = 1\n");
 		expect(files[1]?.content).toContain("def hard_addition():");
 		expect(files[2]?.content).toBe("Keep this file");
+
+		const pyGameSource = `import pgzrun
+
+def draw():
+    screen.clear()
+
+pgzrun.go()
+`;
+		const adaptedPyGameSource =
+			addPythonIdeClassroomSectionsToSource(pyGameSource);
+		expect(
+			adaptedPyGameSource.indexOf("\nnormal_addition()")
+		).toBeLessThan(adaptedPyGameSource.indexOf("pgzrun.go()"));
+		expect(
+			adaptedPyGameSource.indexOf("\nhard_addition()")
+		).toBeLessThan(adaptedPyGameSource.indexOf("pgzrun.go()"));
 	});
 
 	it("keeps built-in IDE demos and templates aligned with the classroom coding standard", () => {
@@ -1582,6 +1598,10 @@ screen.listen()
 			"turtle"
 		);
 		expect(pythonIdeModeForCourseId("pygames")).toBe("pgzero");
+		expect(pythonIdeModeForCourseId("pygames-classroom")).toBe("pgzero");
+		expect(pythonIdeModeForCourseId("python-level-2-classroom")).toBe(
+			"python"
+		);
 		expect(pythonIdeModeForCourseId("data-science-in-python")).toBe("data");
 		expect(pythonIdeModeForCourseId("machine-learning")).toBe("data");
 		expect(pythonIdeModeForCourseId("python-level-3")).toBe("python");

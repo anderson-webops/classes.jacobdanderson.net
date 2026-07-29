@@ -15,6 +15,15 @@ import {
 } from "./staticMedia";
 
 const INSTRUCTION_MATERIAL_BASE = "https://github.com/instruction-material";
+const CLASSROOM_BASE_COURSE_IDS: Record<string, string> = {
+	"pygames-classroom": "pygames",
+	"python-level-1-classroom": "python-level-1",
+	"python-level-2-classroom": "python-level-2"
+};
+
+function classroomBaseCourseId(courseId: string) {
+	return CLASSROOM_BASE_COURSE_IDS[courseId] ?? courseId;
+}
 
 const itemLinkKeys = [
 	"projectLink",
@@ -187,8 +196,7 @@ function appendPendingStaticMediaInventory(
 	course: RawCourse,
 	courseId: string
 ) {
-	const inventoryCourseId =
-		courseId === "python-level-1-classroom" ? "python-level-1" : courseId;
+	const inventoryCourseId = classroomBaseCourseId(courseId);
 	const representedFilenames = new Set(
 		course.modules.flatMap(module =>
 			[...module.curriculum, ...module.supplementalProjects].flatMap(
@@ -3396,7 +3404,8 @@ function needsPygameProjectCompletionSupport(context: CourseTextContext) {
 
 	return (
 		isPygameSource(source) &&
-		context.courseId === "pygames" &&
+		(context.courseId === "pygames" ||
+			context.courseId === "pygames-classroom") &&
 		/\bPyG\d/.test(context.module.title) &&
 		/\bProject\b/i.test(context.item.title) &&
 		!/\*\*(?:Outcome|Required outcome|Checkpoints|Completion checks|Extension):\*\*/i.test(
@@ -8453,7 +8462,7 @@ function normalizePythonLevel1(course: RawCourse) {
 	});
 }
 
-function applyPythonLevel1LearningPaths(course: RawCourse) {
+function applyCourseLearningPaths(course: RawCourse) {
 	for (const module of course.modules) {
 		if (module.kind === "appendix") continue;
 
@@ -8551,7 +8560,186 @@ function pythonLevel1ClassroomChallenges(
 	};
 }
 
-function isPythonLevel1ClassroomProject(
+function pythonLevel2ClassroomChallenges(
+	moduleTitle: string
+): ClassroomChallengePair {
+	const normalizedTitle = moduleTitle.toLowerCase();
+
+	if (/variables|strings|input/.test(normalizedTitle)) {
+		return {
+			normal: "Add one clearly named input, transformation, or formatted output inside the completed program",
+			hard: "Add input cleanup or validation and demonstrate ordinary, boundary, and invalid cases"
+		};
+	}
+	if (/loops/.test(normalizedTitle)) {
+		return {
+			normal: "Complete one counted or condition-controlled repetition without changing the working setup",
+			hard: "Add a loop invariant, early stop, or nested repetition and trace a small, typical, and boundary case"
+		};
+	}
+	if (/ascii|cipher/.test(normalizedTitle)) {
+		return {
+			normal: "Add one character-to-number or number-to-character transformation and verify its output",
+			hard: "Add wraparound, punctuation preservation, or a successful encode-decode round trip"
+		};
+	}
+	if (/conditionals/.test(normalizedTitle)) {
+		return {
+			normal: "Complete one ordered decision with an explicit expected result for every valid branch",
+			hard: "Add compound validation or another game rule and test normal, boundary, and invalid input"
+		};
+	}
+	if (/functions/.test(normalizedTitle)) {
+		return {
+			normal: "Complete one function with a clear responsibility, parameters, and a used result",
+			hard: "Refactor repeated work into another helper and verify each function independently before integration"
+		};
+	}
+	if (/lists|music/.test(normalizedTitle)) {
+		return {
+			normal: "Use one safe list creation, lookup, update, or traversal inside the completed program",
+			hard: "Coordinate multiple collections or add empty-list, duplicate, and boundary-index handling"
+		};
+	}
+	if (/dictionaries/.test(normalizedTitle)) {
+		return {
+			normal: "Add one meaningful key-value lookup or update with a safe missing-key result",
+			hard: "Build a nested or coordinated data model and explain why named keys fit better than positional indexes"
+		};
+	}
+	if (/sets/.test(normalizedTitle)) {
+		return {
+			normal: "Use a set to add, remove, compare, or deduplicate values in one visible result",
+			hard: "Combine set operations with another collection and test empty, duplicate, and disjoint cases"
+		};
+	}
+	if (
+		/to-do|bank account|type racer|wordsmith|blackjack/.test(
+			normalizedTitle
+		)
+	) {
+		return {
+			normal: "Complete one user-facing command, scoring rule, state update, or validation path in the working application",
+			hard: "Add persistence, replay, richer state, or another coordinated feature with a repeatable test matrix"
+		};
+	}
+	if (/master project/.test(normalizedTitle)) {
+		return {
+			normal: "Finish one complete vertical slice with input, state, output, and a reliable reset or exit path",
+			hard: "Add one planned subsystem while preserving clear function boundaries and regression tests for the working slice"
+		};
+	}
+	if (/check-in/.test(normalizedTitle)) {
+		return {
+			normal: "Complete the required case and record one input-output trace that demonstrates the checked skill",
+			hard: "Change one input, rule, or boundary and explain why the same solution still works or needs revision"
+		};
+	}
+
+	return {
+		normal: "Complete one clearly scoped data, function, or control-flow addition inside the working program",
+		hard: "Add a second coordinated feature and verify it with ordinary, boundary, and invalid or empty cases"
+	};
+}
+
+function pyGamesClassroomChallenges(
+	moduleTitle: string
+): ClassroomChallengePair {
+	const normalizedTitle = moduleTitle.toLowerCase();
+
+	if (/setup|editors|asset|images|sprites/.test(normalizedTitle)) {
+		return {
+			normal: "Add or configure one visible asset while preserving the working project structure and attribution",
+			hard: "Add a second asset state or animation and verify missing-asset and reset behavior"
+		};
+	}
+	if (/actors/.test(normalizedTitle) && !/advanced/.test(normalizedTitle)) {
+		return {
+			normal: "Add one visible Actor property or movement rule inside the running game",
+			hard: "Coordinate multiple Actor states or velocities while keeping every boundary response stable"
+		};
+	}
+	if (/event handling/.test(normalizedTitle)) {
+		return {
+			normal: "Complete one keyboard or mouse action and show the resulting state change on screen",
+			hard: "Add another control, held-input behavior, or mode without breaking the existing event path"
+		};
+	}
+	if (/advanced actors/.test(normalizedTitle)) {
+		return {
+			normal: "Add one ZRect, collision, or dynamic-attribute behavior to the completed scene",
+			hard: "Coordinate collision state, feedback, and reset behavior across more than one Actor"
+		};
+	}
+	if (/collectibles/.test(normalizedTitle)) {
+		return {
+			normal: "Add one list-managed object, collision rule, or score update that works for every collectible",
+			hard: "Add another object type or level rule while keeping iteration, removal, and reset behavior safe"
+		};
+	}
+	if (/physics/.test(normalizedTitle)) {
+		return {
+			normal: "Tune or add one named velocity, gravity, friction, or collision-response rule",
+			hard: "Combine forces or multiple moving objects and verify bounded motion plus deterministic reset"
+		};
+	}
+	if (/obstacles|surfaces|platform/.test(normalizedTitle)) {
+		return {
+			normal: "Add one platform, obstacle, or landing rule and verify standing, jumping, and falling cases",
+			hard: "Add moving surfaces, hazards, or level layout while preventing false collision snaps"
+		};
+	}
+	if (/levels|system control/.test(normalizedTitle)) {
+		return {
+			normal: "Complete one start, play, pause, end, or reset transition with visible feedback",
+			hard: "Add level progression or timed state changes and verify every transition and replay path"
+		};
+	}
+	if (/projectiles/.test(normalizedTitle)) {
+		return {
+			normal: "Add one firing, movement, collision, or reset rule for a working projectile",
+			hard: "Manage a projectile list with spawning, collision, and complete offscreen cleanup"
+		};
+	}
+	if (/enemy ai/.test(normalizedTitle)) {
+		return {
+			normal: "Add one readable sense-decide-act enemy behavior and visible response",
+			hard: "Add phases, multiple enemy states, or coordinated projectiles without unbounded object growth"
+		};
+	}
+	if (/ninja|space invaders|master project/.test(normalizedTitle)) {
+		return {
+			normal: "Finish one playable vertical slice with controls, update, draw, collision, feedback, and restart",
+			hard: "Add one planned game subsystem while keeping object cleanup and every state transition reliable"
+		};
+	}
+	if (/check-in/.test(normalizedTitle)) {
+		return {
+			normal: "Complete the required playable case and record the input, state change, and visible result",
+			hard: "Change one rule, boundary, or object count and explain why the same system still works or needs repair"
+		};
+	}
+
+	return {
+		normal: "Add one clearly visible and playable feature inside the completed game framework",
+		hard: "Add a second coordinated game system without breaking input, update, draw, collision, or reset behavior"
+	};
+}
+
+function classroomChallenges(
+	courseId: string,
+	moduleTitle: string
+): ClassroomChallengePair {
+	if (courseId === "python-level-2-classroom") {
+		return pythonLevel2ClassroomChallenges(moduleTitle);
+	}
+	if (courseId === "pygames-classroom") {
+		return pyGamesClassroomChallenges(moduleTitle);
+	}
+	return pythonLevel1ClassroomChallenges(moduleTitle);
+}
+
+function isClassroomProject(
 	module: RawCourseModule,
 	item: RawCourseModuleItem
 ) {
@@ -8579,7 +8767,104 @@ function pythonLevel1ClassroomTemplate(itemTitle: string) {
 	return "classroom-project";
 }
 
-function pythonLevel1ClassroomIdeLink(
+const PYGAMES_CLASSROOM_SOURCE_FILES: Record<string, string> = {
+	"pyg1 project 1: rainbow fill": "PyG1-Rainbow-Fill.py",
+	"pyg1 project 2: bouncing alien": "PyG1-Bouncing-Alien.py",
+	"pyg1 project 3: wandering ball": "PyG1-Wandering-Ball.py",
+	"pyg2 project 1: arrow point": "PyG2-Arrow-Point.py",
+	"pyg2 project 2: apple collector": "PyG2-Apple-Collector.py",
+	"pyg2 project 3: art box": "PyG2-Art-Box.py",
+	"pyg3 project 1: zrect art": "PyG3-ZRect-Art.py",
+	"pyg3 project 2: light control": "PyG3-Light-Control.py",
+	"pyg3 project 3: beach ball chase": "PyG3-Beach-Ball-Chase.py",
+	"pyg3 supplemental project 1: asteroid dodge": "PyG3-Asteroid-Dodge.py",
+	"pyg4 project 1: bouncy ball room": "PyG4-Bouncy-Ball-Room.py",
+	"pyg4 project 2: falling squares": "PyG4-Falling-Squares.py",
+	"pyg4 project 3: jewel catch": "PyG4-Jewel-Catch.py",
+	"pyg5 project 1: keep up": "PyG5-Keep-Up.py",
+	"pyg5 project 2: golf": "PyG5-Golf.py",
+	"pyg5 project 3: ball pit": "PyG5-Ball-Pit.py",
+	"pyg6 project 1: stay on the platform": "PyG6-Stay-on-the-Platform.py",
+	"pyg6 project 2: platformer game": "PyG6-Platformer-Game.py",
+	"pyg6 project 3: falling jump": "PyG6-Falling-Jump.py",
+	"pyg7 project 1: alien catch": "PyG7-Alien-Catch.py",
+	"pyg7 project 2: beach ball dodge": "PyG7-Beach-Ball-Dodge.py",
+	"pyg7 project 3: number count": "PyG7-Number-Count.py",
+	"pyg8 project 1: target shoot": "PyG8-Target-Shoot.py",
+	"pyg8 project 2: asteroid shoot": "PyG8-Asteroid-Shoot.py",
+	"pyg9 project 1: shark chase (fish bowl)": "PyG9-Shark-Chase.py",
+	"pyg9 project 2: space battle": "PyG9-Space-Battle.py",
+	"pyg10 project 1: ninja versus alien": "PyG10-Ninja-Versus-Alien.py",
+	"pyg11 project 1: space invaders": "PyG11-Space-Invaders.py",
+	"pyg12 project 1: master project": "PyG12-Master-Project.py"
+};
+
+function pyGamesClassroomSourceUrl(
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	const sourceFile = PYGAMES_CLASSROOM_SOURCE_FILES[item.title.toLowerCase()];
+	if (sourceFile) {
+		return `${INSTRUCTION_MATERIAL_BASE}/PyGames/blob/main/${sourceFile}`;
+	}
+
+	const checkInMatch = module.title.match(/^Check-In #([123]):/i);
+	if (!checkInMatch?.[1]) return undefined;
+
+	const checkInNumber = checkInMatch[1];
+	if (/Additional Practice Project/i.test(item.title)) {
+		const fileName =
+			checkInNumber === "3"
+				? "Check_in_3_Additional_Practice_Solution.py"
+				: `Check-in-${checkInNumber}-Additional-Practice-Solution.py`;
+		return `${INSTRUCTION_MATERIAL_BASE}/PyGames/blob/main/${fileName}`;
+	}
+	return `${INSTRUCTION_MATERIAL_BASE}/PyGames/blob/main/Check-in-${checkInNumber}-Solution.py`;
+}
+
+function pythonLevel2ClassroomSourceUrl(module: RawCourseModule) {
+	const checkInMatch = module.title.match(/^Check-In #([12])$/i);
+	if (!checkInMatch?.[1]) return undefined;
+	return githubTree(
+		"Python-Level-2",
+		`PS-Check-in-${checkInMatch[1]}/solution`
+	);
+}
+
+function classroomSourceUrl(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem,
+	originalProjectLink: string | undefined,
+	template: string
+) {
+	if (
+		courseId === "python-level-1-classroom" &&
+		template !== "classroom-project"
+	) {
+		return undefined;
+	}
+
+	return (
+		item.solutionLink ??
+		originalProjectLink ??
+		(courseId === "pygames-classroom"
+			? pyGamesClassroomSourceUrl(module, item)
+			: undefined) ??
+		(courseId === "python-level-2-classroom"
+			? pythonLevel2ClassroomSourceUrl(module)
+			: undefined)
+	);
+}
+
+function classroomIdeMode(courseId: string) {
+	if (courseId === "python-level-1-classroom") return "turtle";
+	if (courseId === "pygames-classroom") return "pgzero";
+	return "python";
+}
+
+function classroomIdeLink(
+	courseId: string,
 	item: RawCourseModuleItem,
 	template: string,
 	starterUrl?: string
@@ -8592,9 +8877,9 @@ function pythonLevel1ClassroomIdeLink(
 			.replace(/^-+|-+$/g, "");
 	const params = new URLSearchParams({
 		classroom: "1",
-		course: "python-level-1-classroom",
-		mode: "turtle",
-		projectKey: `python-level-1-classroom:${projectId}:starter`,
+		course: courseId,
+		mode: classroomIdeMode(courseId),
+		projectKey: `${courseId}:${projectId}:starter`,
 		starterLabel: "Classroom project",
 		starterTitle: item.title,
 		template
@@ -8615,7 +8900,7 @@ function replaceBeginnerLabel(value: string) {
 		.replace(/\bbeginner\b/g, "normal");
 }
 
-function adaptPythonLevel1Classroom(course: RawCourse) {
+function adaptClassroomCourse(course: RawCourse, courseId: string) {
 	course.name = replaceBeginnerLabel(course.name);
 
 	for (const module of course.modules) {
@@ -8627,7 +8912,7 @@ function adaptPythonLevel1Classroom(course: RawCourse) {
 		]) {
 			item.title = replaceBeginnerLabel(item.title);
 			item.content = replaceBeginnerLabel(item.content);
-			if (!isPythonLevel1ClassroomProject(module, item)) {
+			if (!isClassroomProject(module, item)) {
 				const classroomUse =
 					module.kind === "appendix"
 						? "Use this reference when a Normal or Hard project card calls for the related concept, source, or example"
@@ -8639,6 +8924,7 @@ function adaptPythonLevel1Classroom(course: RawCourse) {
 			const originalProjectLink = item.projectLink;
 			if (
 				originalProjectLink?.startsWith("https://github.com/") &&
+				!/\bJuni\b/i.test(originalProjectLink) &&
 				!item.content.includes(originalProjectLink)
 			) {
 				item.content += `\n\n**Original project files:** [Open the source starter](${originalProjectLink})`;
@@ -8648,16 +8934,23 @@ function adaptPythonLevel1Classroom(course: RawCourse) {
 				!item.content.includes("**Normal:**") ||
 				!item.content.includes("**Hard:**")
 			) {
-				const challenge = pythonLevel1ClassroomChallenges(module.title);
+				const challenge = classroomChallenges(courseId, module.title);
 				item.content += `\n\n**Classroom build:** Run the completed framework first, then work only inside the labeled Normal and Hard sections. Save a working Normal checkpoint before changing the Hard section.\n\n**Normal:** ${challenge.normal}.\n\n**Hard:** ${challenge.hard}.`;
 			}
 
-			const template = pythonLevel1ClassroomTemplate(item.title);
-			const sourceUrl =
-				template === "classroom-project"
-					? (item.solutionLink ?? originalProjectLink)
-					: undefined;
-			item.projectLink = pythonLevel1ClassroomIdeLink(
+			const template =
+				courseId === "python-level-1-classroom"
+					? pythonLevel1ClassroomTemplate(item.title)
+					: "classroom-project";
+			const sourceUrl = classroomSourceUrl(
+				courseId,
+				module,
+				item,
+				originalProjectLink,
+				template
+			);
+			item.projectLink = classroomIdeLink(
+				courseId,
 				item,
 				template,
 				sourceUrl?.startsWith("https://github.com/")
@@ -9113,6 +9406,7 @@ const normalizers: Record<string, (course: RawCourse) => void> = {
 	"python-level-1": normalizePythonLevel1,
 	"python-level-1-classroom": normalizePythonLevel1,
 	"python-level-2": normalizePythonLevel2,
+	"python-level-2-classroom": normalizePythonLevel2,
 	"python-level-3": normalizePythonLevel3,
 	"python-to-java-and-cpp-bridge": normalizePythonBridge,
 	"pythonic-design-patterns": normalizePythonicDesignPatterns,
@@ -9144,11 +9438,11 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	formatVisibleCourseMarkdown(course);
 	cleanVisibleCourseGrammar(course);
 	removeDuplicateSolutionLinks(course);
-	if (id === "python-level-1-classroom") {
-		adaptPythonLevel1Classroom(course);
+	if (CLASSROOM_BASE_COURSE_IDS[id]) {
+		adaptClassroomCourse(course, id);
 	}
-	if (id === "python-level-1" || id === "python-level-1-classroom") {
-		applyPythonLevel1LearningPaths(course);
+	if (id === "python-level-1" || CLASSROOM_BASE_COURSE_IDS[id]) {
+		applyCourseLearningPaths(course);
 	}
 	return course;
 }
