@@ -2752,7 +2752,7 @@ describe("course text quality normalization", () => {
 		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
-	it("records Python Level 3 media as hosted or pending on the class static host", async () => {
+	it("keeps available Python Level 3 media and hides unavailable actions", async () => {
 		const course = await loadRawCourse("python-level-3");
 		expect(course).not.toBeNull();
 
@@ -2764,36 +2764,22 @@ describe("course text quality normalization", () => {
 			course!,
 			/AM12 Project 2: File IO and Dictionaries/
 		);
-		expect(missingProject.mediaLink).toBe(
-			staticMediaUrl("am_12_file_io_with_dictionaries.mp4")
-		);
+		expect(missingProject.mediaLink).toBeUndefined();
 		expect(
 			hasPendingStaticMediaNotice(
 				missingProject.content,
 				"am_12_file_io_with_dictionaries.mp4"
 			)
-		).toBe(true);
+		).toBe(false);
 
-		const mediaModule = course!.modules.find(
-			module => module.title === "Pending Static Assets"
-		);
-		expect(mediaModule?.kind).toBe("appendix");
-
-		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "Pending Python Level 3 Assets"
-		);
-		expect(mediaItem).toBeDefined();
-		const content = mediaItem?.content ?? "";
-
-		for (const filename of [
-			"python_level_3_concept.png",
-			"python_level_3_project.png"
-		]) {
-			expect(content).toContain(staticMediaUrl(filename));
-			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
-		}
-
-		expect(content).not.toContain("static.junilearning.com");
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Static Assets"
+			)
+		).toBeUndefined();
+		const learnerText = allCourseText(course);
+		expect(learnerText).not.toContain("Pending Python Level 3 Assets");
+		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
 	it("records Data Science datasets and images as hosted or pending on the class static host", async () => {

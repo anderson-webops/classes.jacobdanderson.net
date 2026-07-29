@@ -1,14 +1,10 @@
-import type { RawCourse } from "./types";
-import {
-	pendingStaticMediaNotice,
-	staticMediaUrl,
-	withPendingStaticMediaNotice
-} from "./staticMedia";
-
-const PYTHON_LEVEL_3_PENDING_SOURCE_ASSETS = [
-	"python_level_3_concept.png",
-	"python_level_3_project.png"
-];
+import type {
+	CourseItemLearningPath,
+	RawCourse,
+	RawCourseModule,
+	RawCourseModuleItem
+} from "./types";
+import { isKnownPendingStaticMedia, staticMediaUrl } from "./staticMedia";
 
 const SORT_ANIMATIONS = {
 	bubble: staticMediaUrl("py3_bubble_sort_wikimedia.gif"),
@@ -90,12 +86,12 @@ function withSourceProjectMedia(course: RawCourse): RawCourse {
 		]) {
 			const filename = SOURCE_PROJECT_MEDIA_BY_TITLE[item.title];
 
-			if (filename && !item.mediaLink) {
+			if (
+				filename &&
+				!isKnownPendingStaticMedia(filename) &&
+				!item.mediaLink
+			) {
 				item.mediaLink = sourceProjectMedia(filename);
-				item.content = withPendingStaticMediaNotice(
-					item.content,
-					filename
-				);
 			}
 		}
 	}
@@ -1585,23 +1581,362 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				}
 			],
 			supplementalProjects: []
-		},
-		{
-			kind: "appendix",
-			title: "Pending Static Assets",
-			curriculum: [
-				{
-					title: "Pending Python Level 3 Assets",
-					content: [
-						"This course lists pending visual assets below. Available project demo media remains linked from the relevant project cards; these pending images keep stable static media URLs until the files are added.",
-						...PYTHON_LEVEL_3_PENDING_SOURCE_ASSETS.map(
-							filename =>
-								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
-						)
-					].join("\n\n")
-				}
-			],
-			supplementalProjects: []
 		}
 	]
 });
+
+interface PythonLevel3FlowConfig {
+	title: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	choiceCurriculumTitles?: string[];
+	challengeCurriculumTitles?: string[];
+	projectThread: string;
+}
+
+const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
+	{
+		title: "AM1 Review: Variables, Strings, Input, Loops, & Conditionals",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"input and conversion",
+			"string indexing",
+			"for / while loop",
+			"if / elif / else",
+			"command loop"
+		],
+		choiceCurriculumTitles: ["AM1 Project 3: Command Assistant"],
+		projectThread:
+			"Use Mad Libs and Fictional Language Verifier as a placement-quality review of data flow and branching. Command Assistant is an optional sustained-loop application when review evidence shows readiness."
+	},
+	{
+		title: "AM2 Review: Functions & Lists",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"def",
+			"parameter / argument",
+			"return value",
+			"list index",
+			"list mutation"
+		],
+		projectThread:
+			"Trace one function call and one list mutation before combining helpers with collection processing. Review can accelerate only when both state changes can be explained."
+	},
+	{
+		title: "AM3 Review: Dictionaries & Recap",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"key-value pair",
+			"dictionary lookup",
+			"missing key",
+			"collection selection",
+			"readiness evidence"
+		],
+		projectThread:
+			"Use the fundamentals problem set as a readiness gate. Record the specific review gap, if any, before recursion begins instead of repeating every earlier topic by default."
+	},
+	{
+		title: "AM4 Recursion Part 1",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"base case",
+			"recursive case",
+			"smaller input",
+			"call stack",
+			"return unwinding"
+		],
+		challengeCurriculumTitles: [
+			"AM4 Project 3: Recursive Fibonacci Numbers"
+		],
+		projectThread:
+			"Trace factorial and exponent calls before coding them, labeling the base case, smaller input, and returned value. Recursive Fibonacci is the challenge because repeated subproblems expose efficiency limits."
+	},
+	{
+		title: "AM5 Recursion Part 2",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"substring",
+			"recursive shrink",
+			"stack LIFO",
+			"push / pop",
+			"balanced delimiter"
+		],
+		choiceCurriculumTitles: ["AM5 Project 1: Recursive Cascade"],
+		projectThread:
+			"Connect recursive string reduction to the runtime stack, then implement palindrome checking and an explicit stack-based parentheses validator. Recursive Cascade remains a visual warm-up choice."
+	},
+	{
+		title: "Check-In #1",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"string helper",
+			"base case",
+			"recursive trace",
+			"stack state",
+			"failure diagnosis"
+		],
+		choiceCurriculumTitles: ["Check-In #1: Additional Practice Project"],
+		projectThread:
+			"Diagnose string helpers, recursion, and explicit stacks separately. Use additional practice only for the failed trace or implementation skill."
+	},
+	{
+		title: "AM6 Introduction to Algorithms & Runtime Analysis",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"linear search",
+			"input size n",
+			"O(n)",
+			"best / worst case",
+			"operation count"
+		],
+		challengeCurriculumTitles: ["AM6 Project 3: Function Analysis"],
+		projectThread:
+			"Implement and trace linear search before naming its growth rate. Big-O work compares operation counts as input grows; Function Analysis is the transfer challenge."
+	},
+	{
+		title: "AM7 Binary Search",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"sorted precondition",
+			"low / high",
+			"midpoint",
+			"discard half",
+			"O(log n)"
+		],
+		choiceCurriculumTitles: ["AM7 Project 2: Reverse Number Guesser"],
+		challengeCurriculumTitles: ["AM7 Project 3: Runtime Comparator"],
+		projectThread:
+			"Prove the sorted-input invariant and trace low, high, and midpoint updates before implementation. Reverse Number Guesser is a role-reversal choice; Runtime Comparator is the empirical challenge."
+	},
+	{
+		title: "AM8 Selection Sort & Insertion Sort",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"sorted / unsorted region",
+			"minimum selection",
+			"insertion shift",
+			"invariant",
+			"O(n²)"
+		],
+		projectThread:
+			"Trace the list after every outer pass for both algorithms. Compare their invariants, movement patterns, and nearly-sorted behavior before comparing only their shared O(n²) bound."
+	},
+	{
+		title: "Check-In #2",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"complexity class",
+			"linear-search trace",
+			"binary-search invariant",
+			"selection-sort pass",
+			"insertion-sort pass"
+		],
+		choiceCurriculumTitles: ["Check-In #2: Additional Practice Project"],
+		projectThread:
+			"Require a trace and a complexity explanation for each algorithm family. Additional practice targets the first incorrect invariant or growth-rate explanation."
+	},
+	{
+		title: "AM9 Bubble Sort",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"adjacent comparison",
+			"swap",
+			"outer pass",
+			"early exit",
+			"O(n²)"
+		],
+		challengeCurriculumTitles: ["AM9 Project 2: Baseball Analytics"],
+		projectThread:
+			"Trace adjacent comparisons and swaps through one complete pass, then add an early-exit condition. Baseball Analytics is the data-context challenge after the sort is independently verified."
+	},
+	{
+		title: "AM10 Merge Sort",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"split",
+			"merge",
+			"base case",
+			"recursive levels",
+			"O(n log n)"
+		],
+		projectThread:
+			"Build and test merge and split separately before composing merge sort. Trace one full recursion tree and verify duplicates, odd lengths, empty input, and already-sorted input."
+	},
+	{
+		title: "AM11 Quicksort",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"pivot",
+			"partition",
+			"recursive subarray",
+			"average O(n log n)",
+			"worst O(n²)"
+		],
+		challengeCurriculumTitles: ["AM11 Project 3: Sorting Comparison"],
+		projectThread:
+			"Verify partition independently, then trace pivot placement across recursive calls. Sorting Comparison is the challenge because it requires evidence-based algorithm selection across input shapes."
+	},
+	{
+		title: "AM12 File Input/Output",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"with open(...)",
+			"read / write mode",
+			"line parsing",
+			"dictionary from file",
+			"missing-file handling"
+		],
+		challengeCurriculumTitles: [
+			"AM12 Project 3: Word Translator with File I/O"
+		],
+		projectThread:
+			"Write and read a small file before parsing structured lines into a dictionary. Word Translator is the challenge after file closure, malformed lines, and missing-file behavior are explicit."
+	},
+	{
+		title: "Check-In #3",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"bubble-sort trace",
+			"merge-sort trace",
+			"quicksort partition",
+			"file lifecycle",
+			"algorithm choice"
+		],
+		choiceCurriculumTitles: ["Check-In #3: Additional Practice Project"],
+		projectThread:
+			"Compare sorting traces and file-lifecycle reasoning without requiring a full new build. Assign additional practice only for the algorithm or I/O boundary that remains unclear."
+	},
+	{
+		title: "AM13 Master Project: Conway's Game of Life",
+		estimatedTime: "4–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"2D grid",
+			"neighbor count",
+			"current / next state",
+			"boundary policy",
+			"generation test"
+		],
+		challengeCurriculumTitles: [
+			"AM13 Project 2: Two-Player Conway's Game of Life"
+		],
+		projectThread:
+			"Treat Conway's Game of Life as the simulation capstone. Build a minimum grid, neighbor counter, and immutable generation update before adding display polish; the two-player variation is the challenge."
+	},
+	{
+		title: "AM14 Master Project: Tic Tac Toe AI",
+		estimatedTime: "5–8 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"board representation",
+			"legal move",
+			"win evaluation",
+			"AI decision",
+			"strategy test"
+		],
+		challengeCurriculumTitles: ["AM14 Project 4: Advanced Tic Tac Toe AI"],
+		projectThread:
+			"Treat Tic Tac Toe as the AI capstone: ship the board and legal-move loop, add a testable decision rule, then prove wins, blocks, ties, and invalid moves. Fork-aware strategy is the advanced challenge."
+	}
+];
+
+const PYTHON_LEVEL_3_CHALLENGE_TITLE_RE =
+	/recursive sum and max|substring generator|advanced|extension/i;
+const PYTHON_LEVEL_3_COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
+const PYTHON_LEVEL_3_NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
+const PYTHON_LEVEL_3_LEADING_HYPHENS_RE = /^-+/;
+const PYTHON_LEVEL_3_TRAILING_HYPHENS_RE = /-+$/;
+
+function pythonLevel3Slugify(value: string) {
+	return value
+		.toLowerCase()
+		.normalize("NFKD")
+		.replace(PYTHON_LEVEL_3_COMBINING_MARKS_RE, "")
+		.replace(PYTHON_LEVEL_3_NON_ALPHANUMERIC_RE, "-")
+		.replace(PYTHON_LEVEL_3_LEADING_HYPHENS_RE, "")
+		.replace(PYTHON_LEVEL_3_TRAILING_HYPHENS_RE, "");
+}
+
+function preservePythonLevel3Ids(
+	module: RawCourseModule,
+	legacyModuleId: string
+) {
+	for (const [items, prefix] of [
+		[module.curriculum, "curriculum"],
+		[module.supplementalProjects, "supplemental"]
+	] as const) {
+		for (const item of items) {
+			item.id ??= pythonLevel3Slugify(
+				`${legacyModuleId}-${prefix}-${item.title}`
+			);
+		}
+	}
+}
+
+function pythonLevel3SupplementalPath(
+	item: Pick<RawCourseModuleItem, "title">
+): CourseItemLearningPath {
+	return PYTHON_LEVEL_3_CHALLENGE_TITLE_RE.test(item.title)
+		? "challenge"
+		: "choice";
+}
+
+function configurePythonLevel3Module(
+	module: RawCourseModule,
+	config: PythonLevel3FlowConfig
+) {
+	const legacyModuleId = pythonLevel3Slugify(
+		`python-level-3-${module.title}`
+	);
+	module.id ??= legacyModuleId;
+	preservePythonLevel3Ids(module, legacyModuleId);
+
+	const choiceTitles = new Set(config.choiceCurriculumTitles ?? []);
+	const challengeTitles = new Set(config.challengeCurriculumTitles ?? []);
+	const movedItems = module.curriculum.filter(
+		item => choiceTitles.has(item.title) || challengeTitles.has(item.title)
+	);
+	module.curriculum = module.curriculum.filter(
+		item =>
+			!choiceTitles.has(item.title) && !challengeTitles.has(item.title)
+	);
+
+	for (const item of module.curriculum) item.learningPath = "core";
+	for (const item of movedItems) {
+		item.learningPath = challengeTitles.has(item.title)
+			? "challenge"
+			: "choice";
+	}
+	for (const item of module.supplementalProjects) {
+		item.learningPath = pythonLevel3SupplementalPath(item);
+	}
+	module.supplementalProjects = [
+		...movedItems,
+		...module.supplementalProjects
+	];
+
+	module.estimatedTime = config.estimatedTime;
+	module.keyBlocks = [...config.keyBlocks];
+	if (module.curriculum[0]) {
+		module.curriculum[0].content = [
+			module.curriculum[0].content,
+			`**Course flow:** ${config.projectThread}`
+		].join("\n\n");
+	}
+
+	return module;
+}
+
+function configurePythonLevel3Flow(course: RawCourse) {
+	const modulesByTitle = new Map(
+		course.modules.map(module => [module.title, module])
+	);
+
+	course.modules = PYTHON_LEVEL_3_FLOW.map(config => {
+		const module = modulesByTitle.get(config.title);
+		if (!module) {
+			throw new Error(`Python Level 3 flow is missing ${config.title}.`);
+		}
+		return configurePythonLevel3Module(module, config);
+	});
+}
+
+configurePythonLevel3Flow(pythonLevel3Course);
