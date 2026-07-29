@@ -2,7 +2,7 @@ import type { RawCourse } from "./types";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
-export const rustSystemsSecurityCourse: RawCourse = {
+const rustSystemsSecuritySourceCourse: RawCourse = {
 	name: "Rust Systems Security",
 	modules: [
 		{
@@ -884,4 +884,384 @@ export const rustSystemsSecurityCourse: RawCourse = {
 			]
 		}
 	]
+};
+
+interface RustSystemsModuleFlow {
+	stage: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	practiceSection: string;
+	answerSection: string;
+	route: string;
+	safeRoute: string;
+	evidence: string;
+	primaryReference: {
+		label: string;
+		url: string;
+	};
+	additionalReferences?: Array<{
+		label: string;
+		url: string;
+	}>;
+}
+
+const RUST_SYSTEMS_PRACTICE_PACK =
+	"/course-assets/rust-systems-security/rust-systems-security-practice-pack.md";
+const RUST_SYSTEMS_VERIFICATION_GUIDE =
+	"/course-assets/rust-systems-security/rust-systems-security-verification-guide.md";
+
+const RUST_SYSTEMS_MODULE_FLOW: Record<string, RustSystemsModuleFlow> = {
+	"RSS0 Tooling, Cargo, and Why Rust Exists": {
+		stage: "Reproducible Rust baseline",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Rust 1.97.1",
+			"Edition 2024",
+			"Cargo lock",
+			"format",
+			"Clippy",
+			"tests"
+		],
+		practiceSection: "toolchain-baseline-and-build-evidence-case",
+		answerSection: "toolchain-baseline-and-build-evidence-key",
+		route: "Create or migrate a tiny Rust 2024 workspace, record `rustc -Vv` and `cargo -V`, inspect the manifest and lock state, then run format, Clippy, tests, and the program from a clean terminal. Compare each tool's evidence with the C or C++ bug class it does and does not address.",
+		safeRoute:
+			"Use the supplied build transcript when Rust installation, a network-backed advisory refresh, or a new dependency is unavailable. The linked source checkpoints currently declare Rust 2021 edition, so treat edition migration as an explicit compatibility exercise rather than silently rewriting the source claim.",
+		evidence:
+			"The baseline records Rust 1.97.1 stable, Cargo, Rust 2024 edition for course-authored work, lock behavior, exact checks, observed output, one compiler diagnostic explained in plain language, and the security limit of every tool.",
+		primaryReference: {
+			label: "Rust 1.97.1 release",
+			url: "https://blog.rust-lang.org/2026/07/16/Rust-1.97.1/"
+		},
+		additionalReferences: [
+			{
+				label: "Rust 2024 Edition Guide",
+				url: "https://doc.rust-lang.org/edition-guide/editions/creating-a-new-project.html"
+			},
+			{
+				label: "RustSec tooling",
+				url: "https://rustsec.org/"
+			}
+		]
+	},
+	"RSS1 Ownership, Moves, and Memory Responsibility": {
+		stage: "Assign resource responsibility",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: ["owner", "move", "copy", "clone", "scope", "drop"],
+		practiceSection: "ownership-resource-ledger-case",
+		answerSection: "ownership-resource-ledger-key",
+		route: "Trace strings, vectors, file-like handles, and composite records through construction, move, borrow, return, and drop. Predict which binding remains usable before compiling, then redesign ambiguous cleanup responsibility without cloning every value.",
+		safeRoute:
+			"Use inert labels and in-memory records only. No operating-system resource, real file, network handle, credential, or production object is needed; the supplied ledger provides the same ownership reasoning without code execution.",
+		evidence:
+			"The ownership table names the resource, current owner, transfer point, permitted borrow, final use, drop point, compiler result, and the narrow reason a clone or copy is valid when one remains.",
+		primaryReference: {
+			label: "Rust Book ownership chapter",
+			url: "https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html"
+		}
+	},
+	"RSS2 Borrowing, Aliasing, and Lifetimes": {
+		stage: "Make aliasing and lifetime claims explicit",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"shared borrow",
+			"mutable borrow",
+			"aliasing",
+			"scope",
+			"lifetime",
+			"minimal clone"
+		],
+		practiceSection: "borrowing-aliasing-refactor-case",
+		answerSection: "borrowing-aliasing-refactor-key",
+		route: "Refactor a small record normalizer so read-only observation, exclusive mutation, returned references, and owned results have deliberate signatures. Draw the referent and reference scopes first, then let compiler diagnostics test the prediction.",
+		safeRoute:
+			"Keep the exercise in one local module over supplied strings and slices. Do not bypass the borrow checker with raw pointers, interior mutability, leaked values, or broad cloning; the supplied diagnostic trace supports a no-compiler route.",
+		evidence:
+			"The refactor preserves behavior, removes the conflicting borrow, explains why each reference remains valid, identifies the smallest owned boundary, and distinguishes a lifetime relationship from an annotation added merely to silence a diagnostic.",
+		primaryReference: {
+			label: "Rust Book references and borrowing chapter",
+			url: "https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html"
+		}
+	},
+	"RSS3 Option, Result, and Typed Error Paths": {
+		stage: "Represent absence and failure in types",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Option",
+			"Result",
+			"error enum",
+			"match",
+			"question mark",
+			"public error"
+		],
+		practiceSection: "typed-error-parser-case",
+		answerSection: "typed-error-parser-key",
+		route: "Convert sentinel values, unchecked indexing, panic paths, and vague strings in a label parser into `Option`, a small error enum, deliberate `match` branches, and `?` propagation. Keep internal context while returning a stable caller-facing error.",
+		safeRoute:
+			"Parse only the bounded supplied text fixtures. Avoid real paths, secrets, logs, protocol payloads, `unwrap`, `expect`, process termination inside library logic, or error text that repeats untrusted input.",
+		evidence:
+			"Tests cover valid input, absence, malformed structure, unknown kind, boundary length, trailing data, and safe display text; every variant has one caller action and no malformed case panics.",
+		primaryReference: {
+			label: "Rust Book recoverable errors chapter",
+			url: "https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html"
+		}
+	},
+	"RSS4 Strings, Slices, Collections, and Bounds Safety": {
+		stage: "Bound every collection operation",
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"bytes",
+			"UTF-8",
+			"slice",
+			"get",
+			"checked arithmetic",
+			"capacity"
+		],
+		practiceSection: "bounds-safe-collections-case",
+		answerSection: "bounds-safe-collections-key",
+		route: "Process a bounded byte record and UTF-8 label without confusing byte offsets with character positions. Replace arithmetic, capacity, indexing, and slicing assumptions with explicit limits, checked operations, `get`, and typed errors.",
+		safeRoute:
+			"Use the supplied short byte arrays and strings with fixed input and output caps. No large allocation, arbitrary file, compressed input, recursive expansion, lossy secret-bearing error, or unsafe unchecked access belongs in the exercise.",
+		evidence:
+			"Boundary tests include empty, exact minimum, exact maximum, one beyond maximum, truncated header, inconsistent length, non-ASCII text, arithmetic overflow, and output-cap behavior with no panic or unbounded allocation.",
+		primaryReference: {
+			label: "Rust slice documentation",
+			url: "https://doc.rust-lang.org/std/primitive.slice.html"
+		}
+	},
+	"RSS5 Structs, Enums, and Safer State Models": {
+		stage: "Encode valid state transitions",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"struct",
+			"enum",
+			"constructor",
+			"transition",
+			"exhaustive match",
+			"invariant"
+		],
+		practiceSection: "state-machine-enum-case",
+		answerSection: "state-machine-enum-key",
+		route: "Replace loosely related booleans and optional fields with an enum-backed job state. Give every transition a typed input, valid next state, explicit error, and audit event so contradictory combinations cannot be constructed through the public API.",
+		safeRoute:
+			"Use a fictional in-memory import job and deterministic event list. Do not add a database, thread, network call, timestamp dependency, real filename, user identity, or hidden state mutation.",
+		evidence:
+			"The transition table covers every state and event, rejects illegal transitions without partial mutation, keeps private fields behind constructors, and proves that the old contradictory states are unrepresentable through safe callers.",
+		primaryReference: {
+			label: "Rust Book enums and pattern matching chapter",
+			url: "https://doc.rust-lang.org/book/ch06-00-enums.html"
+		}
+	},
+	"RSS6 Traits, Iterators, and API Contracts": {
+		stage: "Design a narrow reviewable API",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"trait",
+			"generic bound",
+			"iterator",
+			"ownership contract",
+			"error contract",
+			"test double"
+		],
+		practiceSection: "trait-api-contract-case",
+		answerSection: "trait-api-contract-key",
+		route: "Extract the smallest trait needed by a record-audit pipeline, choose borrowed or owned inputs deliberately, compose iterator adapters without hiding fallible work, and test the caller contract with a deterministic in-memory implementation.",
+		safeRoute:
+			"Keep the trait local and data-only. Avoid dynamic plugin loading, object-safe complexity without a consumer, network clients, filesystem adapters, global registries, or public API promises beyond the supplied case.",
+		evidence:
+			"The API review states required behavior, ownership and lifetime expectations, failure semantics, ordering, side effects, complexity assumption, extension point, and a test proving that an alternate implementation needs no privileged access.",
+		primaryReference: {
+			label: "Rust API Guidelines",
+			url: "https://rust-lang.github.io/api-guidelines/"
+		}
+	},
+	"RSS7 Files, Parsers, and Secure CLI Design": {
+		stage: "Build a bounded local parser and CLI",
+		estimatedTime: "6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"argument contract",
+			"read limit",
+			"parser",
+			"path boundary",
+			"exit status",
+			"diagnostic"
+		],
+		practiceSection: "secure-cli-parser-case",
+		answerSection: "secure-cli-parser-key",
+		route: "Separate CLI argument handling, bounded input acquisition, pure parsing, validation, domain work, display, and exit status. Read the supplied fixture through an explicit size cap, reject malformed records without panic, and keep diagnostics useful without echoing whole inputs.",
+		safeRoute:
+			"Use only the supplied fixture directory or an in-memory byte source. Do not recurse, follow unreviewed links, overwrite input, execute child processes, accept a URL, parse a real secret-bearing file, or fuzz outside a fixed corpus and budget.",
+		evidence:
+			"The CLI tests prove help and usage behavior, missing and extra arguments, missing file, exact size cap, one-over cap, malformed record, valid output, stable exit codes, no partial output, and privacy-safe diagnostics.",
+		primaryReference: {
+			label: "Command Line Applications in Rust",
+			url: "https://rust-cli.github.io/book/index.html"
+		}
+	},
+	"RSS8 Concurrency and Race Reduction": {
+		stage: "Preserve invariants across threads",
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Send",
+			"Sync",
+			"channel",
+			"mutex",
+			"atomicity",
+			"shutdown"
+		],
+		practiceSection: "concurrency-invariant-case",
+		answerSection: "concurrency-invariant-key",
+		route: "Implement a small fixed-work queue with owned messages or one narrow shared state, then reason about sendability, synchronization, compound invariants, error propagation, completion, cancellation, and clean shutdown. Distinguish memory safety from ordering and business-logic correctness.",
+		safeRoute:
+			"Use a fixed item count, thread count, queue size, timeout, and deterministic test seam. No sockets, daemon threads, unbounded producer, sleep-based correctness claim, shared process environment mutation, or production workload is needed.",
+		evidence:
+			"Tests account for every item exactly once, preserve the declared aggregate invariant, propagate worker failure, close all channels, join every thread, terminate within the budget, and document deadlock, starvation, ordering, and logic risks Rust does not erase.",
+		primaryReference: {
+			label: "Rust Book fearless concurrency chapter",
+			url: "https://doc.rust-lang.org/book/ch16-00-concurrency.html"
+		}
+	},
+	"RSS9 Unsafe, FFI, and Trusted Boundaries": {
+		stage: "Audit the boundary where compiler guarantees stop",
+		estimatedTime: "6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"safe baseline",
+			"unsafe operation",
+			"invariant",
+			"safe wrapper",
+			"FFI contract",
+			"Miri limit"
+		],
+		practiceSection: "unsafe-ffi-boundary-case",
+		answerSection: "unsafe-ffi-boundary-key",
+		route: "Start with a safe implementation, then review one supplied unsafe or C-ABI boundary only when it serves a named need. Minimize the block, document every precondition and invariant, contain raw values behind a safe wrapper, test invalid callers, and compare ordinary tests with bounded Miri evidence.",
+		safeRoute:
+			"The required route is a code-and-contract review over supplied snippets; compiling C or running Miri is optional. Never load an unknown library, call an unlicensed binary, weaken host protections, expose raw pointers publicly, or accept an AI-written safety comment as proof.",
+		evidence:
+			"The unsafe ledger identifies each operation, compiler guarantee surrendered, safety precondition, safe-code dependency, panic or unwind concern, wrapper guarantee, negative test, Miri result or supplied trace, and limitation that remains outside Miri's model.",
+		primaryReference: {
+			label: "Rust Book unsafe Rust chapter",
+			url: "https://doc.rust-lang.org/book/ch20-01-unsafe-rust.html"
+		},
+		additionalReferences: [
+			{
+				label: "Miri documentation",
+				url: "https://github.com/rust-lang/miri/"
+			}
+		]
+	},
+	"RSS10 Capstone: Harden a Legacy Tool": {
+		stage: "Legacy-tool hardening capstone",
+		estimatedTime: "10–14 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"behavior contract",
+			"threat model",
+			"Rust redesign",
+			"regression corpus",
+			"tool evidence",
+			"residual risk"
+		],
+		practiceSection: "legacy-tool-hardening-capstone-case",
+		answerSection: "legacy-tool-hardening-capstone-key",
+		route: "Harden the supplied legacy record tool through vertical slices: preserve valid behavior, define trust and resource boundaries, redesign ownership and state, introduce typed errors and bounded parsing, isolate any unavoidable unsafe or FFI code, add concurrency only when justified, and prove the final behavior with a reproducible evidence packet.",
+		safeRoute:
+			"Use only the supplied pseudocode, byte fixtures, fictional labels, local Rust workspace, fixed corpus, and bounded optional tool runs. No external binary, production code, real vulnerability, secret, public repository issue, live service, or autonomous AI execution belongs in the capstone.",
+		evidence:
+			"The final packet includes Rust and edition versions, original behavior contract, threat model, old failure modes, redesign map, format and lint results, tests, lock and advisory review, bounded corpus or fuzz evidence, unsafe ledger when present, before-and-after claims, residual risks, and a five-minute reproduction.",
+		primaryReference: {
+			label: "RustSec Advisory Database",
+			url: "https://rustsec.org/"
+		},
+		additionalReferences: [
+			{
+				label: "cargo-fuzz documentation",
+				url: "https://github.com/rust-fuzz/cargo-fuzz/"
+			},
+			{
+				label: "Miri documentation",
+				url: "https://github.com/rust-lang/miri/"
+			}
+		]
+	}
+};
+
+function rustSystemsPracticeLink(section: string) {
+	return `${RUST_SYSTEMS_PRACTICE_PACK}#${section}`;
+}
+
+function rustSystemsVerificationLink(section: string) {
+	return `${RUST_SYSTEMS_VERIFICATION_GUIDE}#${section}`;
+}
+
+function rustSystemsSupplementalPath(title: string) {
+	if (/extension|challenge/i.test(title)) return "challenge" as const;
+	if (/^project:/i.test(title)) return "core" as const;
+	return "choice" as const;
+}
+
+function renderRustSystemsReferences(flow: RustSystemsModuleFlow) {
+	const primary = `[${flow.primaryReference.label}](${flow.primaryReference.url})`;
+	const additional = flow.additionalReferences ?? [];
+	if (additional.length === 0) return primary;
+
+	return [
+		primary,
+		...additional.map(item => `[${item.label}](${item.url})`)
+	].join(", ");
+}
+
+function decorateRustSystemsModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = RUST_SYSTEMS_MODULE_FLOW[module.title];
+	if (!flow)
+		throw new Error(`Missing Rust Systems Security flow: ${module.title}`);
+
+	const practiceLink = rustSystemsPracticeLink(flow.practiceSection);
+	const verificationLink = rustSystemsVerificationLink(flow.answerSection);
+	const references = renderRustSystemsReferences(flow);
+
+	return {
+		...module,
+		kind: "module",
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: [...flow.keyBlocks],
+		curriculum: module.curriculum.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Course flow:** ${flow.stage}. ${flow.route}
+
+**Bounded practice route:** ${flow.safeRoute}
+
+**Evidence gate:** ${flow.evidence}
+
+**Local continuity:** Complete the [supplied Rust case](${practiceLink}) before comparing it with the [verification guide](${verificationLink}). This route requires no live target, real data, third-party binary, or unbounded tool run.
+
+**Current references:** ${references}. Record the Rust release, edition, target platform, lock state, optional tool versions, and source-fixture edition when the result depends on them.
+
+${item.content}`
+					: item.content,
+			learningPath: "core" as const,
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? flow.primaryReference.url
+					}
+				: {})
+		})),
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: rustSystemsSupplementalPath(item.title),
+			datasetLink: item.datasetLink ?? practiceLink,
+			mediaLink: item.mediaLink ?? flow.primaryReference.url
+		}))
+	};
+}
+
+export const rustSystemsSecurityCourse: RawCourse = {
+	...rustSystemsSecuritySourceCourse,
+	modules: rustSystemsSecuritySourceCourse.modules.map(
+		decorateRustSystemsModule
+	)
 };
