@@ -2702,28 +2702,23 @@ describe("course text quality normalization", () => {
 		);
 	});
 
-	it("reserves pending Python Level 1 media on the class static host", async () => {
+	it("keeps pending Python Level 1 media out of the learner course", async () => {
 		const course = await loadRawCourse("python-level-1");
 		expect(course).not.toBeNull();
 
-		const mediaModule = course!.modules.find(
-			module => module.title === "Pending Demo Media"
-		);
-		expect(mediaModule?.kind).toBe("appendix");
-
-		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "Pending Python Level 1 Demo Media"
-		);
-		expect(mediaItem).toBeDefined();
-		const content = mediaItem?.content ?? "";
+		expect(
+			course!.modules.some(
+				module => module.title === "Pending Demo Media"
+			)
+		).toBe(false);
+		const content = allCourseText(course);
 
 		for (const filename of [
 			"grs1_turtle_exploration(1).mp4",
 			"grs8_etch_a_sketch.gif",
 			"grs12_snake.gif"
 		]) {
-			expect(content).toContain(staticMediaUrl(filename));
-			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
+			expect(content).not.toContain(filename);
 		}
 
 		expect(content).not.toContain("static.junilearning.com");
