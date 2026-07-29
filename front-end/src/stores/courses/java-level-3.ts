@@ -1,4 +1,4 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
@@ -57,7 +57,7 @@ const JAVA_LEVEL_3_ORIGINAL_MEDIA = [
 	"am_1_mad_libs.mp4"
 ];
 
-export const javaLevel3Course: RawCourse = {
+const javaLevel3SourceCourse: RawCourse = {
 	name: "Java Level 3",
 	modules: [
 		{
@@ -2358,6 +2358,604 @@ export const javaLevel3Course: RawCourse = {
 				}
 			],
 			supplementalProjects: []
+		}
+	]
+};
+
+const JAVA_LEVEL_3_OPTIONAL_MODULES = new Set([
+	"AJ1 Review: Variables, Strings, and Input",
+	"AJ2 Review: Arrays and ArrayLists",
+	"AJ3 Review: Objects and Classes",
+	"AJ8 Bubble Sort",
+	"AJ18 Repo Extension, Starter, and Capstone Library"
+]);
+
+const JAVA_LEVEL_3_ADVANCED_MODULES = new Set([
+	"AJ19 Post-C++ Java Tooling, Testing, and Packages",
+	"AJ20 Generics, Interfaces, and Collection API Design",
+	"AJ21 Streams, Files, and Data Pipelines",
+	"AJ22 Concurrency, Services, and Capstone Architecture"
+]);
+
+const JAVA_LEVEL_3_ARCHIVE_ITEMS = new Set(["Check-In #2: Bubble Sort"]);
+
+const JAVA_LEVEL_3_SECONDARY_PROJECTS = new Set([
+	"AJ4 Project 2: Divisible by 7",
+	"AJ5 Project 2: Big-O Practice",
+	"AJ6 Project 2: Binary Search with Recursion",
+	"AJ6 Project 3: Precise Square Roots",
+	"Check-In #1: Additional Practice Project",
+	"Check-In #2: Additional Practice Project",
+	"AJ10 Project 2: Anything Array",
+	"AJ10 Project 3: Exception Practice",
+	"AJ11 Project 2: Doubly Linked List",
+	"Check-In #3: Additional Practice Project",
+	"AJ14 Project 3: BST Clear and Remove",
+	"AJ15 Project 2: Mini Search Engine",
+	"Check-In #4: Additional Practice Project"
+]);
+
+const JAVA_LEVEL_3_MODULE_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"AJ0 Visual Foundations Audit": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Java 21",
+			"clean build",
+			"repeatable tests",
+			"seeded fixture",
+			"measurement record"
+		],
+		flowNote:
+			"Use the visual-object audit as a short placement gate, then pin the algorithm lab to Java 21 with clean builds, warnings, repeatable tests, seeded data, and recorded measurement conditions. Select prerequisite review from the optional archive only when the evidence identifies a gap."
+	},
+	"AJ4 Recursion": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"base case",
+			"decreasing measure",
+			"call stack",
+			"input domain",
+			"iterative comparison"
+		],
+		flowNote:
+			"State the input domain, base case, and quantity that strictly decreases before coding. Trace calls and returns, test the smallest accepted inputs and one rejected input, and compare the recursive design with a loop when recursion adds stack cost without clearer structure."
+	},
+	"AJ5 Linear Search and Big-O Notation": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"search contract",
+			"comparison count",
+			"best and worst case",
+			"growth variable",
+			"bounded empirical claim"
+		],
+		flowNote:
+			"Define the search return contract and count comparisons on empty, first, middle, last, duplicate, and missing cases. Keep asymptotic reasoning separate from timings: Big-O follows from the algorithm, while measurements only describe the recorded implementation, fixture, and environment."
+	},
+	"AJ6 Binary Search": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"sorted precondition",
+			"low-high invariant",
+			"safe midpoint",
+			"strict interval shrink",
+			"missing target"
+		],
+		flowNote:
+			"Verify or document sorted input, maintain an inclusive low-high invariant, calculate the midpoint without overflow, and move past it after every miss. Test empty, one-element, even, odd, duplicate, first, last, below-range, above-range, and missing targets."
+	},
+	"Check-In #1": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"recursive trace",
+			"linear-search contract",
+			"binary-search invariant",
+			"growth explanation",
+			"targeted reteach"
+		],
+		flowNote:
+			"Use prediction, implementation, and boundary evidence to distinguish recursion, linear search, binary search, and growth analysis. Assign only the transfer item tied to an observed weakness before sorting begins."
+	},
+	"AJ7 Selection and Insertion Sort": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"sorted prefix",
+			"loop invariant",
+			"comparison count",
+			"swap or shift",
+			"stability claim"
+		],
+		flowNote:
+			"Trace the sorted prefix and remaining region after every outer iteration. Verify sortedness and element preservation on empty, one-value, sorted, reverse, duplicate, and negative-value fixtures; claim stability or in-place behavior only when the implementation proves it."
+	},
+	"AJ9 Merge Sort": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"divide",
+			"merge invariant",
+			"temporary storage",
+			"permutation oracle",
+			"measurement protocol"
+		],
+		flowNote:
+			"Build and test merge independently before recursion composes it into merge sort. Use an oracle for sortedness, element counts, duplicates, and idempotence, then compare algorithms with fixed seeded fixtures, warm-up, repeated runs, and bounded conclusions."
+	},
+	"Check-In #2": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"selection trace",
+			"insertion trace",
+			"merge trace",
+			"sort oracle",
+			"complexity explanation"
+		],
+		flowNote:
+			"Demonstrate selection, insertion, and merge-sort invariants plus one property-based sort check. Bubble sort remains available as optional comparison material, not a prerequisite for the data-structure sequence."
+	},
+	"AJ10 Sustainable Programming": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"ownership boundary",
+			"generic contract",
+			"no raw type",
+			"specific exception",
+			"refactor test"
+		],
+		flowNote:
+			"Treat maintainability as explicit ownership, type, and failure contracts. Use nested types only when ownership is clearer, generics without raw types or unchecked casts, and exceptions at recoverable boundaries; preserve behavior with characterization tests during refactoring."
+	},
+	"AJ11 Linked Lists": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"head and tail",
+			"size invariant",
+			"link ownership",
+			"empty transition",
+			"reachability trace"
+		],
+		flowNote:
+			"Draw references before changing them and maintain explicit head, tail, size, and reachability invariants. Test empty-to-one, one-to-empty, front, middle, end, duplicate, and missing operations without losing nodes or retaining removed links."
+	},
+	"AJ12 Stacks and Queues": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"LIFO",
+			"FIFO",
+			"ArrayDeque",
+			"empty policy",
+			"operation sequence"
+		],
+		flowNote:
+			"Model LIFO and FIFO behavior through operation sequences and use `ArrayDeque` for ordinary stack and queue clients. Define the empty-structure policy, avoid storing `null`, and test interleaved operations rather than isolated pushes or enqueues."
+	},
+	"AJ13 Priority Queues and Maps": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"priority comparator",
+			"deterministic tie breaker",
+			"map key contract",
+			"missing key",
+			"duplicate update"
+		],
+		flowNote:
+			"Derive collection choice from required operations. Priority queues need a total comparator with deterministic ties; maps need stable key equality and a duplicate policy. Test empty, tie, missing, duplicate, update, and removal behavior without relying on iteration order."
+	},
+	"Check-In #3": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"linked invariant",
+			"stack sequence",
+			"queue sequence",
+			"priority tie",
+			"map lookup"
+		],
+		flowNote:
+			"Use one invariant trace and one transfer implementation for linked lists, stacks, queues, priority queues, and maps. Continue only after empty-state and boundary behavior can be explained from the chosen representation."
+	},
+	"AJ14 Binary Search Trees": {
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"BST ordering",
+			"duplicate policy",
+			"recursive traversal",
+			"root replacement",
+			"size invariant"
+		],
+		flowNote:
+			"Document ordering and duplicate policy before insertion, then preserve reachability and size through search and traversal. Test empty, root, leaf, one-child, two-child, missing, duplicate, skewed, and balanced cases before attempting optional removal."
+	},
+	"AJ15 Hash Tables": {
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"equals and hashCode",
+			"bucket index",
+			"collision policy",
+			"load factor",
+			"rehash invariant"
+		],
+		flowNote:
+			"Treat hashing as a key contract plus collision and resize policies. Map every hash code safely to a bucket, preserve all entries through rehashing, and verify collisions, updates, removals, negative hashes, threshold boundaries, and equality-equivalent keys."
+	},
+	"AJ16 Graphs": {
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"vertex identity",
+			"edge direction",
+			"nonnegative weight",
+			"disconnected graph",
+			"predecessor path"
+		],
+		flowNote:
+			"Define vertex identity, edge direction, duplicate-edge policy, and weight domain before traversal. Dijkstra uses nonnegative weights, overflow-aware distances, stale-priority-entry handling, and explicit unreachable results; verify path and total cost on deterministic fixtures."
+	},
+	"Check-In #4": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"tree invariant",
+			"hash collision",
+			"rehash trace",
+			"graph model",
+			"shortest-path proof"
+		],
+		flowNote:
+			"Prove one tree invariant, one collision-and-resize sequence, and one graph shortest-path result before capstone work. Use failed evidence to select focused practice rather than repeating every structure project."
+	},
+	"AJ17 Master Project: Google Maps": {
+		estimatedTime: "8–10 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"course-owned graph data",
+			"validated loader",
+			"route result",
+			"deterministic oracle",
+			"portfolio evidence"
+		],
+		flowNote:
+			"Build a local street-searcher over course-owned or openly licensed fixture data without live location collection or external routing services. Separate loading, graph storage, shortest-path logic, route reconstruction, and presentation, then prove route and cost against small hand-computed graphs."
+	}
+};
+
+function javaLevel3SupplementalPath(title: string) {
+	return /extension|challenge|recursive|square root|doubly|remove|mini search|concurr|capstone|open addressing|chaining/i.test(
+		title
+	)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function strengthenJavaLevel3Item(
+	item: RawCourseModuleItem
+): RawCourseModuleItem {
+	if (item.title === "Binary Search") {
+		return {
+			...item,
+			content: `${item.content}
+
+**Implementation contract:** Use \`low + (high - low) / 2\` for the midpoint, move the selected bound past \`mid\`, and return the documented missing result only after the interval is empty.`
+		};
+	}
+
+	if (item.title === "Stacks") {
+		return {
+			...item,
+			content:
+				"Model last-in, first-out behavior and use `ArrayDeque` for ordinary Java stack clients through `push`, `pop`, and `peek`. Define the empty-stack policy, reject `null`, and test interleaved operations; treat the legacy `Stack` class as a compatibility reference rather than the default design."
+		};
+	}
+
+	if (item.title === "Queues") {
+		return {
+			...item,
+			content:
+				"Model first-in, first-out behavior with `ArrayDeque` through `addLast`, `removeFirst`, and `peekFirst` or the corresponding queue API. Define the empty-queue policy, reject `null`, and verify interleaved enqueue/dequeue sequences."
+		};
+	}
+
+	if (item.title === "Dijkstra's Shortest Path Algorithm") {
+		return {
+			...item,
+			content:
+				"Use Dijkstra only when every edge weight is nonnegative. Store overflow-aware distances, skip stale priority-queue entries, represent unreachable vertices explicitly, and retain predecessors so the returned path and total cost can both be verified."
+		};
+	}
+
+	if (item.title === "Introduction to Street Searcher") {
+		return {
+			...item,
+			content:
+				"Build the capstone as a local street-searcher over course-owned or openly licensed graph fixtures. Do not collect live location or personal travel data and do not depend on an external routing API; the learning target is the loader, weighted graph, shortest-path result, and route reconstruction."
+		};
+	}
+
+	return item;
+}
+
+function insertJavaLevel3Item(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateJavaLevel3Module(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = JAVA_LEVEL_3_MODULE_FLOW[module.title];
+	const movedProjects = module.curriculum.filter(item =>
+		JAVA_LEVEL_3_SECONDARY_PROJECTS.has(item.title)
+	);
+	let curriculum: RawCourseModuleItem[] = module.curriculum
+		.filter(
+			item =>
+				!JAVA_LEVEL_3_SECONDARY_PROJECTS.has(item.title) &&
+				!JAVA_LEVEL_3_ARCHIVE_ITEMS.has(item.title)
+		)
+		.map(strengthenJavaLevel3Item)
+		.map(item => ({
+			...item,
+			learningPath: "core" as const
+		}));
+
+	if (module.title === "AJ0 Visual Foundations Audit") {
+		curriculum.push({
+			title: "Java 21 Algorithm Lab Readiness",
+			content: [
+				"**Completion evidence:**",
+				"- Record the pinned Java 21 runtime and compiler versions, run a clean build with `javac -Xlint:all` or the repository's equivalent warning gate, and remove stale class output before rerunning.",
+				"- Execute repeatable tests through the existing project runner; use JUnit 5 when configured, otherwise use a deterministic assertion harness until it is.",
+				"- Generate fixtures with a fixed seed and record input size, distribution, warm-up, repetitions, elapsed-time method, and environment for any benchmark.",
+				"- State clearly that timing evidence describes the measured implementation and does not establish an asymptotic complexity class by itself."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "AJ4 Recursion") {
+		curriculum = insertJavaLevel3Item(
+			curriculum,
+			"AJ4 Project 1: Recursion Practice",
+			{
+				title: "Recursion Termination and Equivalence Contract",
+				content: [
+					"**Completion evidence:**",
+					"- Document accepted inputs, rejected inputs, base cases, and the integer or structural measure that strictly decreases on every recursive call.",
+					"- Trace call and return frames for zero or empty, one-step, ordinary, and invalid cases.",
+					"- Compare each recursive result with a simple independent oracle or iterative implementation on a bounded fixture set.",
+					"- Set a deliberate input limit when recursion depth can exceed the practical stack budget; invalid input does not recurse indefinitely."
+				].join("\n"),
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "AJ9 Merge Sort") {
+		curriculum.push({
+			title: "Sorting Oracle and Measurement Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Test empty, one-value, sorted, reverse, duplicate-heavy, negative, and extreme-value fixtures.",
+				"- Verify nondecreasing order, unchanged element counts, idempotence, and stability only when the implementation claims stability.",
+				"- Compare results with `Arrays.sort()` on copied fixtures while preserving the original input for permutation checks.",
+				"- Benchmarks use fixed seeded data, identical input copies, warm-up, repeated runs, recorded environment, and conclusions limited to the measured range; timing evidence does not establish an asymptotic complexity class."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "AJ10 Sustainable Programming") {
+		curriculum.push({
+			title: "Maintainability, Type, and Failure Contract",
+			content: [
+				"**Completion evidence:**",
+				"- A nested type has a documented ownership reason; otherwise it remains a separate class.",
+				"- Generic APIs explain the type parameter, work with at least two concrete types, and introduce no raw types or unjustified unchecked casts.",
+				"- Expected invalid input is validated, recoverable exceptions are caught specifically at a useful boundary, and programming errors are not hidden.",
+				"- Characterization tests capture behavior before one refactor and prove the intended behavior remains afterward."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "AJ14 Binary Search Trees") {
+		curriculum = insertJavaLevel3Item(
+			curriculum,
+			"Binary Search Trees: Extension Challenge",
+			{
+				title: "BST Invariant and Mutation Contract",
+				content: [
+					"**Completion evidence:**",
+					"- Document ordering, equality, duplicate, null, and size policies.",
+					"- After each insertion or removal fixture, an invariant walk proves ordering, reachability, node count, and expected root.",
+					"- Tests cover empty, root, leaf, one-child, two-child, missing, duplicate, skewed, and balanced cases.",
+					"- Traversal outputs match an independently constructed expected sequence; optional removal begins only after insertion and traversal pass."
+				].join("\n"),
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "AJ15 Hash Tables") {
+		curriculum.push({
+			title: "Hash Table Collision and Rehash Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Key equality and hash-code behavior are tested with distinct but equal keys, collisions, negative hashes, updates, removals, and missing lookups.",
+				"- Bucket indices use a safe nonnegative mapping such as `Math.floorMod`, including the minimum integer hash case.",
+				"- Load-factor threshold and capacity-growth rules are documented; rehashing preserves every key-value pair exactly once.",
+				"- Separate chaining or open addressing states its deletion policy, and an invariant check runs before and after resize."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "AJ16 Graphs") {
+		curriculum.push({
+			title: "Graph and Dijkstra Completion Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Document directed versus undirected edges, vertex identity, duplicate-edge policy, self-loop policy, and nonnegative weight domain.",
+				"- Test empty, one-vertex, disconnected, cyclic, duplicate-edge, tie, and multiple-path fixtures.",
+				"- Dijkstra rejects negative weights, uses overflow-aware distances, skips stale queue entries, and returns an explicit unreachable result.",
+				"- Reconstructed predecessor paths contain valid edges and their independently summed weight equals the reported shortest distance."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "AJ17 Master Project: Google Maps") {
+		curriculum = insertJavaLevel3Item(curriculum, "Course Recap", {
+			title: "Street Searcher Capstone Definition of Done",
+			content: [
+				"**Required evidence:**",
+				"- Course-owned or openly licensed local fixtures with documented format, provenance, nonnegative weight meaning, and malformed-record policy.",
+				"- Separate loader, graph model, shortest-path service, route reconstruction, and presentation boundaries.",
+				"- Hand-computed tests for missing vertex, same start/end, direct route, cheaper indirect route, equal-cost tie, disconnected destination, and malformed data.",
+				"- Reported path consists of real edges and its summed cost matches the returned distance; no live location, personal travel data, or external routing dependency is used, and no unbounded background compute is used."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: [
+			...module.supplementalProjects,
+			...movedProjects
+		].map(item => ({
+			...item,
+			learningPath: javaLevel3SupplementalPath(item.title)
+		}))
+	};
+}
+
+function buildJavaLevel3PlacementArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	const extractedItems = javaLevel3SourceCourse.modules
+		.flatMap(module => module.curriculum)
+		.filter(item => JAVA_LEVEL_3_ARCHIVE_ITEMS.has(item.title));
+
+	return {
+		kind: "appendix",
+		title: "Optional Java Foundations, Bubble Sort, and Reference Archive",
+		estimatedTime:
+			"Choose only the review or comparison material indicated by evidence",
+		keyBlocks: [
+			"syntax review",
+			"collection review",
+			"OOP review",
+			"bubble-sort comparison",
+			"capstone reference"
+		],
+		curriculum: [
+			{
+				title: "Placement and Reference Archive Guide",
+				content:
+					"**Course flow:** AJ1 Review: Variables, Strings, and Input; AJ2 Review: Arrays and ArrayLists; AJ3 Review: Objects and Classes; AJ8 Bubble Sort; and AJ18 Repo Extension, Starter, and Capstone Library are optional. Use AJ0 or a check-in to name the gap, select the smallest matching item, record the new evidence, and return to the required sequence.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: [
+			...modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]),
+			...extractedItems
+		].map(item => ({
+			...item,
+			learningPath: javaLevel3SupplementalPath(item.title)
+		}))
+	};
+}
+
+function buildAdvancedJavaEngineeringArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Advanced Java Engineering Sequence",
+		estimatedTime:
+			"Follow AJ19–AJ22 in order as a post-course continuation",
+		keyBlocks: [
+			"packages and tests",
+			"generic API",
+			"typed data pipeline",
+			"bounded executor",
+			"service architecture"
+		],
+		curriculum: [
+			{
+				title: "Advanced Java Engineering Sequence Guide",
+				content: [
+					"**Course flow:** AJ19 Post-C++ Java Tooling, Testing, and Packages; AJ20 Generics, Interfaces, and Collection API Design; AJ21 Streams, Files, and Data Pipelines; and AJ22 Concurrency, Services, and Capstone Architecture form an ordered continuation after the Street Searcher capstone.",
+					"",
+					"Complete the sequence only when deeper Java engineering is the next goal. Use Java 21, clean package/build/test boundaries, UTF-8 temporary fixtures, no raw generic types, bounded executors, explicit shutdown and interrupt policy, deterministic reports, and no real personal or credential data."
+				].join("\n"),
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: javaLevel3SupplementalPath(item.title)
+				})
+			)
+		)
+	};
+}
+
+const javaLevel3PrimaryModules = javaLevel3SourceCourse.modules
+	.filter(
+		module =>
+			!JAVA_LEVEL_3_OPTIONAL_MODULES.has(module.title) &&
+			!JAVA_LEVEL_3_ADVANCED_MODULES.has(module.title) &&
+			module.title !== "Pending Demo Media"
+	)
+	.map(decorateJavaLevel3Module);
+const javaLevel3PlacementArchiveModules = javaLevel3SourceCourse.modules.filter(
+	module => JAVA_LEVEL_3_OPTIONAL_MODULES.has(module.title)
+);
+const javaLevel3AdvancedModules = javaLevel3SourceCourse.modules.filter(
+	module => JAVA_LEVEL_3_ADVANCED_MODULES.has(module.title)
+);
+const javaLevel3PendingMediaModule = javaLevel3SourceCourse.modules.at(-1)!;
+
+export const javaLevel3Course: RawCourse = {
+	...javaLevel3SourceCourse,
+	modules: [
+		...javaLevel3PrimaryModules,
+		buildJavaLevel3PlacementArchive(javaLevel3PlacementArchiveModules),
+		buildAdvancedJavaEngineeringArchive(javaLevel3AdvancedModules),
+		{
+			...javaLevel3PendingMediaModule,
+			kind: "appendix",
+			estimatedTime: "Reference only",
+			keyBlocks: ["stable media URL", "pending asset"],
+			curriculum: javaLevel3PendingMediaModule.curriculum.map(item => ({
+				...item,
+				learningPath: "core"
+			}))
 		}
 	]
 };
