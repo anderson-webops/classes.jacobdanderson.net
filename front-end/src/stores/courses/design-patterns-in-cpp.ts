@@ -1,8 +1,8 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const designPatternsInCppCourse: RawCourse = {
+const designPatternsInCppSourceCourse: RawCourse = {
 	name: "Design Patterns in C++",
 	modules: [
 		{
@@ -1335,5 +1335,521 @@ export const designPatternsInCppCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+const DESIGN_PATTERNS_CPP_CORE_GUIDELINES =
+	"https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines";
+const DESIGN_PATTERNS_CPP_CTEST =
+	"https://cmake.org/cmake/help/latest/guide/tutorial/Testing%20and%20CTest.html";
+const DESIGN_PATTERNS_CPP_ASAN =
+	"https://clang.llvm.org/docs/AddressSanitizer.html";
+const DESIGN_PATTERNS_CPP_UBSAN =
+	"https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html";
+
+const DESIGN_PATTERNS_CPP_PRIMARY_TITLES = new Set([
+	"DPC0 Setup and Tooling",
+	"DPC1 Why Patterns Look Different in Modern C++",
+	"DPC2 Design Foundations",
+	"DPC3 Factory Method, Abstract Factory, and Builder",
+	"DPC4 Strategy and Policy-Based Design",
+	"DPC5 Observer and Event Flow",
+	"DPC6 Decorator, Adapter, and Facade",
+	"DPC7 Command and State",
+	"DPC8 Composite and Iterator",
+	"DPC9 Singleton, Global State, and Dependency Injection",
+	"DPC10 Patterns for Resource Management",
+	"DPC11 Legacy Refactoring Lab",
+	"DPC12 Capstone Studio"
+]);
+
+const DESIGN_PATTERNS_CPP_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"DPC0 Setup and Tooling": {
+		estimatedTime: "3 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"C++20 baseline",
+			"CMake build",
+			"CTest baseline",
+			"warnings",
+			"AddressSanitizer",
+			"UndefinedBehaviorSanitizer"
+		],
+		flowNote:
+			"Prove that one multi-file C++20 project configures, builds, tests, debugs, and passes warning and sanitizer gates before architecture work begins."
+	},
+	"DPC1 Why Patterns Look Different in Modern C++": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"ownership map",
+			"value semantics",
+			"borrowing",
+			"Rule of Zero",
+			"copy and move contract",
+			"simpler counterfactual"
+		],
+		flowNote:
+			"Start from ownership and value semantics, make copy and move behavior explicit, and introduce a named pattern only after a plain value, callable, or focused helper fails a real change scenario."
+	},
+	"DPC2 Design Foundations": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"interface contract",
+			"virtual destruction",
+			"object slicing",
+			"const-correctness",
+			"runtime polymorphism",
+			"concept-constrained templates"
+		],
+		flowNote:
+			"Build safe polymorphic boundaries, prevent slicing and destruction errors, and compare virtual dispatch with concept-constrained templates before selecting an extension mechanism."
+	},
+	"DPC3 Factory Method, Abstract Factory, and Builder": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"direct construction",
+			"return-by-value",
+			"unique ownership",
+			"product families",
+			"valid configuration",
+			"failure guarantee"
+		],
+		flowNote:
+			"Choose a creation technique from validity, family compatibility, ownership, and failure behavior, preferring direct construction or values until runtime variation earns factory machinery."
+	},
+	"DPC4 Strategy and Policy-Based Design": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"runtime Strategy",
+			"callable strategy",
+			"template policy",
+			"concept contract",
+			"dispatch cost",
+			"test seam"
+		],
+		flowNote:
+			"Implement the same variation with a virtual Strategy, a callable, and a constrained template policy, then select the smallest form that matches when the choice is known."
+	},
+	"DPC5 Observer and Event Flow": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"subscription lifetime",
+			"RAII token",
+			"weak ownership",
+			"delivery order",
+			"reentrancy",
+			"listener failure"
+		],
+		flowNote:
+			"Treat Observer as a lifetime and event-contract problem: make subscription ownership, delivery order, mutation during publication, and failure behavior testable."
+	},
+	"DPC6 Decorator, Adapter, and Facade": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"wrapper ownership",
+			"Decorator order",
+			"Adapter translation",
+			"Facade workflow",
+			"error boundary",
+			"dependency containment"
+		],
+		flowNote:
+			"Select a structural pattern from the boundary pressure, define ownership and failure translation, and prove that clients remain independent of wrapper and vendor details."
+	},
+	"DPC7 Command and State": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"command lifetime",
+			"captured state",
+			"undo contract",
+			"legal transitions",
+			"queue ownership",
+			"failure recovery"
+		],
+		flowNote:
+			"Model meaningful actions and state transitions while making queued-object lifetime, undo scope, invalid transitions, and partial failure explicit."
+	},
+	"DPC8 Composite and Iterator": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"tree ownership",
+			"leaf and group contract",
+			"traversal order",
+			"iterator invalidation",
+			"mutation policy",
+			"snapshot tradeoff"
+		],
+		flowNote:
+			"Build one owned heterogeneous tree, expose only the traversal contract clients need, and specify exactly when mutation invalidates iterators, references, or views."
+	},
+	"DPC9 Singleton, Global State, and Dependency Injection": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"global lifetime",
+			"initialization order",
+			"hidden dependency",
+			"composition root",
+			"test replacement",
+			"teardown order"
+		],
+		flowNote:
+			"Replace ambient process state with an application-owned composition root unless a documented process-wide invariant genuinely requires global lifetime."
+	},
+	"DPC10 Patterns for Resource Management": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"RAII handle",
+			"Rule of Zero or Five",
+			"exception guarantee",
+			"move-only type",
+			"pImpl boundary",
+			"ownership cycle"
+		],
+		flowNote:
+			"Design resource handles around deterministic cleanup, explicit copy and move semantics, stated exception guarantees, and stable implementation boundaries."
+	},
+	"DPC11 Legacy Refactoring Lab": {
+		estimatedTime: "6 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"characterization baseline",
+			"ownership debt",
+			"one-step refactor",
+			"sanitizer gate",
+			"stop condition",
+			"rollback point"
+		],
+		flowNote:
+			"Characterize observable behavior, repair ownership before abstraction, and refactor through small reversible steps that keep tests and sanitizer runs green."
+	},
+	"DPC12 Capstone Studio": {
+		estimatedTime: "8–10 sessions · 60–120 minutes each",
+		keyBlocks: [
+			"behavior baseline",
+			"ownership diagram",
+			"change scenarios",
+			"pattern decision records",
+			"before-and-after evidence",
+			"rollback packet"
+		],
+		flowNote:
+			"Refactor one medium-sized C++ system from a protected behavioral and lifetime baseline, justify a small pattern set, and demonstrate that a target change became safer or simpler."
+	}
+};
+
+function designPatternsCppOptionPath(title: string) {
+	return /extension|capstone|challenge/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function insertDesignPatternsCppItem(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateDesignPatternsCppModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = DESIGN_PATTERNS_CPP_FLOW[module.title];
+	let curriculum: RawCourseModuleItem[] = module.curriculum.map(item => ({
+		...item,
+		learningPath: "core" as const
+	}));
+	const coreProjectTitle = curriculum.at(-1)?.title ?? "";
+
+	if (module.title === "DPC0 Setup and Tooling") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Build, Test, Debug, and Sanitizer Course Contract",
+			content: [
+				"**Prerequisite:** Enter with C++ classes, inheritance, templates, standard containers, smart pointers, exceptions, separate compilation, and basic unit tests independently usable.",
+				"**Baseline:** Configure and build the unedited starter with `cmake -S . -B build` and `cmake --build build`. Register focused tests with CTest and run `ctest --test-dir build --output-on-failure`.",
+				"**Safety gate:** Keep a warnings-as-errors teaching configuration plus separate AddressSanitizer and UndefinedBehaviorSanitizer configurations. Record any platform-specific unsupported check rather than silently skipping the gate.",
+				"**Delivery:** Commit the green build-and-test baseline separately from architecture changes so every later refactor remains reviewable and reversible."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CTEST,
+			solutionLink: DESIGN_PATTERNS_CPP_ASAN,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC1 Why Patterns Look Different in Modern C++") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Ownership, Lifetime, and Special-Member Contract",
+			content: [
+				"Draw each important object's owner, borrowers, and destruction point. Prefer values and the Rule of Zero; use `unique_ptr` for exclusive dynamic ownership and `shared_ptr` only when independently shared lifetime is a real requirement.",
+				"",
+				"If a type directly manages a resource, define whether it is copyable, move-only, or immovable; implement the complete Rule-of-Five contract when required; and test self-assignment, move transfer, destruction, and a valid moved-from state. Raw pointers and references represent borrowing, never hidden ownership."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Pattern Cost and Simpler Counterfactual",
+			content: [
+				"State one realistic future change, the simplest design that handles it, and the evidence that design no longer contains the pressure. Compare a named pattern with a value, free function, lambda, standard-library component, or small composed object.",
+				"",
+				"Record added types, indirection, ownership edges, compile dependencies, runtime dispatch, and test setup. Include a removal trigger so an abstraction can be retired when its variation disappears."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC2 Design Foundations") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Polymorphic Base, Destruction, and Slicing Contract",
+			content: [
+				"A polymorphic base has either a public virtual destructor or a protected non-virtual destructor. Prevent accidental slicing by passing polymorphic objects through references or owning handles and by suppressing public copy and move when value copying cannot preserve dynamic type.",
+				"",
+				"Define `const` access, nullability, ownership transfer, exception behavior, and whether cloning is supported before exposing the interface. Test destruction through the intended handle and reject a raw owning pointer at the boundary."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Virtual Dispatch versus Constrained Template Boundary",
+			content: [
+				"Use virtual dispatch for runtime-selected, open-ended implementations with stable object identity or a stable ABI boundary. Use a callable or concept-constrained template when variation is known at compile time and exposing the concrete type is acceptable.",
+				"",
+				"Compare binary and compile-time coupling, error clarity, test substitution, code size, and plugin needs. The selected boundary must express the requirement rather than merely demonstrate a language feature."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC3 Factory Method, Abstract Factory, and Builder") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Factory Return, Validity, and Failure Contract",
+			content: [
+				"Return a value when the concrete result has natural value semantics, `unique_ptr<Base>` for exclusive runtime-polymorphic ownership, and `shared_ptr` only when callers truly share lifetime. Never return a raw owning pointer.",
+				"",
+				"Test invalid configuration, product-family compatibility, allocation or construction failure, and destruction after partial setup. A factory or builder leaves no leaked resource and never publishes a partially valid object."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC4 Strategy and Policy-Based Design") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Runtime, Callable, and Policy Evidence Matrix",
+			content: [
+				"Implement one rule as a virtual Strategy, a focused callable, and a concept-constrained template policy. Exercise the same examples and edge cases against all three forms.",
+				"",
+				"Choose from runtime replacement, captured state, stable ABI, compile-time validation, code size, build coupling, and test ergonomics. Record why the unused forms cost more than the selected one for this change scenario."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC5 Observer and Event Flow") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Subscription Token, Reentrancy, and Failure Contract",
+			content: [
+				"Return a move-only RAII subscription token whose destruction disconnects safely. Define whether the publisher owns listeners, borrows them, or observes them through `weak_ptr`; no callback may outlive its target.",
+				"",
+				"Test duplicate registration, removal during publication, a listener that subscribes another listener, expired targets, nested publication, ordering, and a throwing listener. State the thread that owns registration and delivery rather than implying thread safety."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC6 Decorator, Adapter, and Facade") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Structural Boundary Ownership and Error Contract",
+			content: [
+				"Declare whether each wrapper owns, borrows, or shares the wrapped object. Test nested Decorator order and destruction; keep vendor types, error codes, and resource handles behind Adapter; and make Facade rollback or partial-success behavior explicit.",
+				"",
+				"Clients depend only on the stable domain contract. Include one replacement fake to prove third-party details and wrapper construction do not leak across the boundary."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC7 Command and State") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Command Lifetime, Undo, and Transition Contract",
+			content: [
+				"Queued commands own immutable inputs or hold a lifetime-safe handle to every target; they never capture a dangling reference. Define whether execution is one-shot, repeatable, idempotent, cancelable, or compensating.",
+				"",
+				"Test illegal state transitions, failure halfway through a command, undo after later edits, bounded history, and destruction with queued work. Record which state is captured before execution and what cannot be reversed."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC8 Composite and Iterator") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Tree Ownership and Iterator Invalidation Contract",
+			content: [
+				"Choose one clear owner for every node and state whether child access returns a reference, pointer, iterator, view, or snapshot. Define depth-first or breadth-first order and whether traversal exposes leaves, groups, or both.",
+				"",
+				"Test empty trees, deep trees, removal of the current node, insertion during traversal, moved containers, and retained references. The iterator invalidation policy either prohibits mutation during traversal or documents exactly which iterators, references, and views become invalid."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (
+		module.title ===
+		"DPC9 Singleton, Global State, and Dependency Injection"
+	) {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Composition Root and Global-Lifetime Test",
+			content: [
+				"Create application services in one composition root, pass required collaborators explicitly, and destroy them in a visible order. A service locator that hides lookup behind a global function does not count as dependency injection.",
+				"",
+				"Before retaining process-wide state, prove why narrower ownership fails, define initialization and teardown order across translation units, state concurrency guarantees, and demonstrate test isolation with a replacement implementation."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC10 Patterns for Resource Management") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Rule of Zero or Five and Exception-Guarantee Contract",
+			content: [
+				"Prefer members that make the owning type obey the Rule of Zero. When a custom resource handle needs special members, implement the complete copyable or move-only contract, keep destruction non-throwing, and make ownership transfer visible.",
+				"",
+				"Name the no-throw, strong, or basic exception guarantee for acquisition, mutation, copy, and move. Test allocation or acquisition failure, self-assignment, move assignment over an existing resource, and cleanup after partial construction."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "pImpl, Shared Ownership, and Cycle Contract",
+			content: [
+				"Define the out-of-line destructor, copy and move policy, incomplete-type boundary, and rebuild or ABI pressure that justifies `pImpl`. Do not add it when ordinary encapsulation already contains the change.",
+				"",
+				"For shared ownership, draw the graph and break back-edges with `weak_ptr`. Test expiration, cache eviction, teardown order, and prove that the final owner releases the resource."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CORE_GUIDELINES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC11 Legacy Refactoring Lab") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Characterization, Stop, and Rollback Contract",
+			content: [
+				"Capture output, return values, errors, state changes, and one resource-lifetime edge before editing. Commit the green tests and sanitizer result, then separate ownership repair from pattern introduction with one named transformation per commit.",
+				"",
+				"Stop when a test failure is unexplained, sanitizer output appears, ownership becomes less explicit, or the diff cannot be reviewed as one behavior-preserving step. Revert to the last green commit instead of layering another abstraction over uncertainty."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CTEST,
+			solutionLink: DESIGN_PATTERNS_CPP_UBSAN,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "DPC12 Capstone Studio") {
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Capstone Gate: Behavior and Lifetime Baseline",
+			content: [
+				"Freeze representative success, failure, and cleanup behavior with CTest, deterministic fixtures, a documented build command, an ownership diagram, and AddressSanitizer plus UndefinedBehaviorSanitizer runs.",
+				"",
+				"Tag or commit this baseline before structural work. Every pattern refactor stays behavior-preserving until a separately named feature or bug-fix change is reviewed."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_CTEST,
+			solutionLink: DESIGN_PATTERNS_CPP_ASAN,
+			learningPath: "core"
+		});
+		curriculum = insertDesignPatternsCppItem(curriculum, coreProjectTitle, {
+			title: "Capstone Evidence and Rollback Packet",
+			content: [
+				"Deliver the original and final ownership maps, two realistic change scenarios, pattern decision records, the small commit sequence, green test and sanitizer evidence, and before-and-after measurements such as files touched, duplicated branches, build coupling, or setup required for a test.",
+				"",
+				"Demonstrate one runtime replacement or compile-time policy change, identify one pattern deliberately not used, name one remaining tradeoff, and retain a clear rollback point for every major structural choice."
+			].join("\n"),
+			projectLink: DESIGN_PATTERNS_CPP_UBSAN,
+			learningPath: "core"
+		});
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: designPatternsCppOptionPath(item.title)
+		}))
+	};
+}
+
+function buildDesignPatternsCppStudioAppendix(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Applied C++ Pattern Studios",
+		estimatedTime:
+			"Choose one studio after its matching core module or use the refactoring studio after DPC11",
+		keyBlocks: [
+			"ownership refactor",
+			"runtime variation",
+			"structural boundary",
+			"behavior preservation",
+			"transfer scenario",
+			"refactoring capstone"
+		],
+		curriculum: [
+			{
+				title: "Applied Studio Scope Guide",
+				content:
+					"**Course flow:** These four studios preserve the complete applied practice collection without presenting them as four additional required units. Choose Ownership-Aware Refactor after DPC2 or DPC10, Runtime Variation after DPC4, Structural Boundary after DPC6, or Refactoring Capstone after DPC11. Begin from a green test and sanitizer baseline, close reference code before transfer work, and finish with an ownership or decision record.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: designPatternsCppOptionPath(item.title)
+				})
+			)
+		)
+	};
+}
+
+const designPatternsCppPrimaryModules = designPatternsInCppSourceCourse.modules
+	.filter(module => DESIGN_PATTERNS_CPP_PRIMARY_TITLES.has(module.title))
+	.map(decorateDesignPatternsCppModule);
+const designPatternsCppStudios = designPatternsInCppSourceCourse.modules.filter(
+	module => !DESIGN_PATTERNS_CPP_PRIMARY_TITLES.has(module.title)
+);
+
+export const designPatternsInCppCourse: RawCourse = {
+	...designPatternsInCppSourceCourse,
+	modules: [
+		...designPatternsCppPrimaryModules,
+		buildDesignPatternsCppStudioAppendix(designPatternsCppStudios)
 	]
 };
