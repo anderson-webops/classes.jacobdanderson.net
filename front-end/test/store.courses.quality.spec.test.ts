@@ -6718,13 +6718,13 @@ describe("course text quality normalization", () => {
 			"Entrepreneur Feedback and Pitch Revision"
 		];
 
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).not.toContain("Source Activity Anchors:");
 		expect(text).toContain("Lean Canvas-style structure");
 		expect(text).toContain("coolmathgames.com/0-coffee-shop");
 		expect(text).toContain("Duolingo, Airbnb, or Uber");
 		expect(text).toContain("disruptive, new-market, integrative, or sustaining innovation");
 		expect(text).toContain("1,000 customers");
-		expect(text).toContain("Evidence record:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text).toContain(anchor);
 		}
@@ -7544,7 +7544,16 @@ describe("course text quality normalization", () => {
 
 	it("reserves source-library static assets from original source files", async () => {
 		const expectedAssetsByCourse = {
-			"entrepreneurship-101": ["ent4_project2_0.png"]
+			"usaco-bronze-on-demand": [
+				"UB1.png",
+				"UB2.png",
+				"UB3.png",
+				"UB4.png",
+				"UB5.png",
+				"UB6.png",
+				"missionTitle2.png",
+				"nextStepTitle.png"
+			]
 		} as const;
 
 		for (const [courseId, filenames] of Object.entries(
