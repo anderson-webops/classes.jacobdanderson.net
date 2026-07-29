@@ -153,9 +153,11 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"Supplied command transcripts and configuration cases provide a complete no-VM continuity route."
 	],
 	"low-level-security": [
-		"Local toy binaries, sanitizers, debuggers, and intentionally vulnerable fixtures only.",
-		"No third-party targets or unsandboxed exploit chains.",
-		"Every lab ends with mitigation or patch evidence."
+		"CMake 3.20 or newer with the source repository's C++17 language contract; record the exact compiler, CMake, generator, operating-system, and architecture versions.",
+		"Use a warnings-and-debug profile plus supported AddressSanitizer and UndefinedBehaviorSanitizer instrumentation with symbolized output; sanitizer results are test evidence rather than proof that no defects remain.",
+		"macOS and Linux capability records distinguish leak detection, symbolization, and debug-symbol behavior; address comparisons use storage classes and relationships rather than fixed values.",
+		"libFuzzer or the supplied mini-fuzzer uses deterministic local fixtures, one worker by default, and explicit run, time, input-length, memory, and output limits.",
+		"Supplied practice cases and verification records provide a complete route when a compiler feature, sanitizer, debugger, fuzzer, compatible Unix shell, or network connection is unavailable."
 	],
 	"low-level-security-part-2": [
 		"Local toy binaries, sanitizers, debuggers, and intentionally vulnerable fixtures only.",
@@ -608,6 +610,13 @@ const standardsOverrides: Record<string, string[]> = {
 		"NGSS 6-8 integrated physical, life, Earth/space, and engineering performance expectations.",
 		"NGSS practices for modeling, data analysis, argument from evidence, and design."
 	],
+	"low-level-security": [
+		"ISO/IEC 14882:2017 C++17 behavior and the source repository's CMake 3.20 build contract.",
+		"SEI CERT C++ Coding Standard for bounds, lifetime, integer, error-handling, and defensive review guidance.",
+		"OWASP Secure Coding Practices for input validation, fail-closed behavior, logging, and error handling.",
+		"Current Clang AddressSanitizer and UndefinedBehaviorSanitizer documentation with platform and coverage limitations recorded.",
+		"Current LLVM libFuzzer guidance for deterministic targets, corpus handling, finite campaigns, and resource limits."
+	],
 	"intro-to-chemistry": [
 		"NGSS physical science performance expectations for matter, reactions, energy, and models.",
 		"ACS chemistry teaching and safety guidance for school settings."
@@ -693,6 +702,12 @@ const boundaryOverrides: Record<string, string[]> = {
 		"Owns learning from examples: target and feature contracts, dummy baselines, splits, leakage control, model selection, metrics, error slices, uncertainty, and model cards.",
 		"Assumes Data Science cleaning and communication habits and AI Foundations reasoning habits rather than reteaching either course as the center.",
 		"Required work is low-stakes, local, and reproducible; remote notebooks, accelerators, personal data, and public deployment are never prerequisites."
+	],
+	"low-level-security": [
+		"Uses LLS0–LLS6 as the complete required progression from authorized setup through memory evidence, bounds, parsers, invariant-preserving state, bounded bug discovery, and a defensive audit capstone.",
+		"Low-Level Security Labs 7–12 are optional transfer appendices rather than a second required pass through the same six topics.",
+		"Required work stays inside supplied or learner-owned toy C++ source with finite commands, controlled inputs, explicit reset routes, and mitigation or regression evidence.",
+		"Exploit construction, public or third-party targets, credential use, persistence, weaponized artifacts, unbounded fuzzing, and claims beyond observed local evidence remain outside scope."
 	],
 	"c-level-1": [
 		"Builds idiomatic C++ fluency before ownership-heavy design.",
@@ -800,6 +815,14 @@ const capstoneOverrides: Record<string, string[]> = {
 		"An authorized test plan mapped to selected ASVS, API Top 10, and WSTG checks, with reproducible results, remediation, retest, severity rationale, and responsible-disclosure draft.",
 		"A release and recovery packet containing Node and dependency versions, test commands, secrets boundary, rollback, incident response, known limitations, and a five-minute demonstration."
 	],
+	"low-level-security": [
+		"One supplied packet-driven toy system with a written authorization boundary, assets, trust boundaries, assumptions, invariants, and explicit non-goals.",
+		"A malformed-input inventory covering packet shape, declared length, command dispatch, printable data, fixed label capacity, state transitions, and repeated operations.",
+		"Reproduction evidence from finite tests, warnings, and supported sanitizer instrumentation with exact tool versions and platform limitations.",
+		"Narrow patches tied to confirmed root causes, with standard, malformed, exact-boundary, repeated-operation, and regression cases rerun afterward.",
+		"A maintainer-facing audit separating observation, inferred impact in the toy system, root cause, remediation, verification, residual risk, and cleanup.",
+		"A reproducible local build-and-run record plus a three-minute defensive demonstration; no exploit artifact, public target, or external vulnerability claim is part of the deliverable."
+	],
 	"javascript-level-1-javascript-superstar": [
 		"One responsive single-page experience with semantic landmarks, headings, labels, native controls, clear content hierarchy, and a useful no-JavaScript reading order.",
 		"JavaScript split into named functions for input normalization, state changes, rendering, and event handling, using const by default, let for reassignment, strict equality, and no accidental globals.",
@@ -843,6 +866,14 @@ const capstoneOverrides: Record<string, string[]> = {
 };
 
 const safetyPolicyOverrides: Record<string, string[]> = {
+	"low-level-security": [
+		"Every activity begins with the supplied or learner-owned local source path, allowed files and tools, defensive question, finite resource budget, stop condition, and reset route.",
+		"Public systems, third-party binaries, real credentials or personal data, exploit payloads, shellcode, persistence, credential access, destructive host changes, and public proof-of-concept release remain outside scope.",
+		"Sanitizers, debuggers, and fuzzers run only against toy fixtures with bounded input, time, memory, output, and process counts; one worker is the default.",
+		"Do not disable host protections or require fixed addresses. Address-space variation, symbolization, leak detection, and sanitizer coverage differences are recorded as platform evidence.",
+		"AI may explain learner-captured diagnostics or suggest a bounded test only after the learner states the invariant and scope; it cannot authorize a target, generate a payload, expand the lab, or replace local verification.",
+		"Every confirmed defect ends with root-cause reasoning, a narrow mitigation or patch, rerun evidence, a regression case, cleanup, and one remaining limitation."
+	],
 	"machine-learning": [
 		"Required work uses public, synthetic, or course-supplied low-stakes datasets; learners do not upload personal messages, photographs, health records, financial records, school records, credentials, or other private data.",
 		"Models are educational analyses, not medical diagnosis, treatment, credit, insurance, hiring, discipline, admissions, identity, or other consequential-decision tools.",
@@ -1066,6 +1097,10 @@ function sourcePolicyFor(courseId: string) {
 
 		if (courseId === "network-security") {
 			return `Source-backed course. Canonical source repository: ${url}. NSEC1–NSEC6 are the primary defensive TypeScript fixtures; the numbered NSEC-* folders are lightweight Python port-normalization checkpoints or studio practice. Existing starter/solution URLs remain traceable, while supplied security cases prevent a generic checkpoint from being treated as a complete service audit or live penetration test.`;
+		}
+
+		if (courseId === "low-level-security") {
+			return `Source-backed course. Canonical source repository: ${url}. LLS1–LLS6 contain substantive C++17 starter and solution programs built by the repository's CMake 3.20 configuration; the numbered LLS-* folders are lightweight wrappers or repeated studio practice. The current verification shell script has CRLF line endings and does not execute directly on Unix until normalized, so source validation uses the direct CMake build, finite program runs, supplied practice cases, and verification guide. Existing starter and solution URLs remain traceable without representing every wrapper as a distinct full implementation.`;
 		}
 
 		if (courseId === "rust-systems-security") {
@@ -3181,9 +3216,9 @@ function addSystemsSpecificSafetyModule(courseId: string, course: RawCourse) {
 		},
 		"low-level-security": {
 			environment: [
-				"Toy binaries, toy parsers, sanitizers, debugger, libFuzzer/AFL-style fixtures, and snapshots.",
-				"Crash triage leads to patch and regression test.",
-				"Mitigation discussion stays tied to defensive hardening."
+				"Supplied toy C++17 binaries and parsers, warnings, supported sanitizers, debugger traces, bounded fuzz fixtures, and reproducible reset records.",
+				"Every command records target, compiler profile, finite resource limits, stop condition, expected result, observed result, and platform limitation.",
+				"Crash or invariant triage leads to root-cause analysis, a narrow patch, regression evidence, and defensive maintainer notes."
 			],
 			prohibited: [
 				"Third-party targets, exploit chaining, persistence, credential theft, or public PoC release.",
