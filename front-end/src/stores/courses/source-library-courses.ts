@@ -800,7 +800,7 @@ const novelWritingSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 			]
 		}
 	],
-	"Check-In #2": [
+	"NW13 Final Revision Portfolio": [
 		{
 			title: "Final Revision Portfolio",
 			prompt: "Build a final revision portfolio from a selected excerpt or completed draft section. The portfolio evaluates setting, dialogue, conflict, falling action, resolution, and earlier craft skills. It names the strongest current feature of the novel, identifies the highest-priority next revision, and explains how the draft has changed from the first course plan to the current version.",
@@ -812,7 +812,7 @@ const novelWritingSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 		},
 		{
 			title: "Publication Readiness Reflection",
-			prompt: "Review the novel as a reader-facing project. The reflection checks whether the title, opening, character arc, conflict, ending, and formatting are ready for sharing. The publication readiness check does not mean the draft is perfect; it means the writer can explain what the story is, what revision work has already happened, and what the next realistic editing pass would address.",
+			prompt: "Review the novel as a reader-facing project. The reflection checks whether the title, opening, character arc, conflict, ending, and formatting are ready for a private portfolio, instructor submission, or optional sharing. The publication readiness check does not mean the draft is perfect or that it must be posted publicly; it means the writer can explain what the story is, what revision work has already happened, and what the next realistic editing pass would address.",
 			evidence: [
 				"Reader-facing summary of the novel's premise, protagonist, conflict, and ending direction.",
 				"Checklist covering title, opening clarity, character arc, conflict resolution, dialogue formatting, and remaining copyedits.",
@@ -3893,11 +3893,178 @@ const englishCourses = {
 		name: "Novel Writing",
 		area: "long-form writing",
 		focus: "goal setting, protagonist and antagonist design, drafting, conflict, setting, plot structure, character development, narration, dialogue, and revision toward a complete story arc",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"NW1 Course Overview & Goal Setting": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"project scope",
+					"premise",
+					"word-count target",
+					"writing rhythm",
+					"completion definition"
+				],
+				flowNote:
+					"Choose the smallest sustainable story scope, define a premise and completion target, and divide the target into checkpoints. A short story, novella-length project, novel excerpt, or longer draft can complete the course."
+			},
+			"NW2 Developing a Protagonist and an Antagonist": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"protagonist",
+					"antagonist",
+					"objective",
+					"motivation",
+					"conflict relationship"
+				],
+				flowNote:
+					"Build the two central forces around competing objectives, motivations, strengths, flaws, and stakes, then carry those choices into the opening scene."
+			},
+			"NW3 Novel Drafting: Introducing Your Characters": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"opening scene",
+					"character action",
+					"point of view",
+					"scene goal",
+					"revision"
+				],
+				flowNote:
+					"Draft an opening that reveals character through action, voice, and choice. Revise the scene so its point of view, immediate goal, and first source of tension prepare the conflict ladder."
+			},
+			"NW4 Generating Conflict": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"conflict ladder",
+					"stakes",
+					"escalation",
+					"cause and effect",
+					"climax direction"
+				],
+				flowNote:
+					"Turn the protagonist's objective into a causal ladder of external, interpersonal, and internal obstacles. Use the ladder to choose which conflict belongs in the next drafted scene."
+			},
+			"NW5 Novel Drafting: Setting the Scene": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"setting",
+					"sensory detail",
+					"atmosphere",
+					"scene function",
+					"character interaction"
+				],
+				flowNote:
+					"Draft a scene whose setting changes what a character notices, chooses, or can do. Keep details that serve mood, pressure, action, or meaning, then add the scene to the living manuscript."
+			},
+			"NW6 Structuring Plot": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"exposition",
+					"rising action",
+					"climax",
+					"falling action",
+					"resolution"
+				],
+				flowNote:
+					"Map concrete story events and their causal links, then use the map to identify the next needed scene. Use a hand-drawn, text-only, or instructor-supplied arc; unavailable images are not required."
+			},
+			"NW7 Character Development": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"character objective",
+					"choice",
+					"consequence",
+					"change",
+					"rising action"
+				],
+				flowNote:
+					"Compare two manuscript moments to trace how pressure changes the protagonist's choices, relationships, or beliefs. Revise one scene where that development is not yet visible."
+			},
+			"NW8 Narration": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"point of view",
+					"narrator access",
+					"consistency",
+					"narrative distance",
+					"viewpoint audit"
+				],
+				flowNote:
+					"Choose the narration rules for the manuscript, audit an excerpt for knowledge and distance, and revise any viewpoint breaks before the midpoint review."
+			},
+			"Check-In #1": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"midpoint evidence",
+					"scope check",
+					"revision priority",
+					"excerpt comparison",
+					"next drafting target"
+				],
+				flowNote:
+					"Compare the current manuscript against the original scope, revise one meaningful excerpt, and set the next realistic scene or word-count checkpoint before continuing."
+			},
+			"NW9 Describing Setting": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"sensory setting",
+					"selective detail",
+					"atmosphere",
+					"action integration",
+					"revision"
+				],
+				flowNote:
+					"Expand one existing setting with purposeful sensory evidence, cut decorative details that do not serve the scene, and return the revision to the manuscript."
+			},
+			"NW10 Writing Dialogue": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"dialogue formatting",
+					"speaker clarity",
+					"action beats",
+					"subtext",
+					"character voice"
+				],
+				flowNote:
+					"Revise a dialogue scene for formatting, distinct voices, action beats, and subtext. Every retained exchange advances information, tension, relationship, or plot."
+			},
+			"NW11 Novel Drafting: Conflict": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"highest-tension scene",
+					"stakes",
+					"character choice",
+					"consequence",
+					"pacing"
+				],
+				flowNote:
+					"Draft or revise the manuscript's highest-tension scene so earlier choices cause the confrontation and its outcome changes what the ending must resolve."
+			},
+			"NW12 Novel Drafting: Falling Action & Resolution": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"falling action",
+					"resolution",
+					"cause and effect",
+					"character change",
+					"thematic closure"
+				],
+				flowNote:
+					"Trace consequences from the central conflict into a resolution that answers the opening objective and reveals external and internal change without rushing the final scenes."
+			},
+			"NW13 Final Revision Portfolio": {
+				estimatedTime: "3–5 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"chosen story scope",
+					"revision pass",
+					"continuity",
+					"polished portfolio",
+					"next-pass plan"
+				],
+				flowNote:
+					"Complete the chosen story scope, revise for continuity and craft, and assemble a polished excerpt or full draft with a readiness reflection. A private portfolio or instructor submission is complete; public posting or publication is optional and not required."
+			}
+		},
 		sourceActivityAnchors: novelWritingSourceAnchors,
-		staticAssets: [
-			"nw6_blank_narrative_arc.jpg",
-			"nw6_narrative_arc_definitions.jpg"
-		],
 		modules: [
 			"NW1 Course Overview & Goal Setting",
 			"NW2 Developing a Protagonist and an Antagonist",
@@ -3912,7 +4079,7 @@ const englishCourses = {
 			"NW10 Writing Dialogue",
 			"NW11 Novel Drafting: Conflict",
 			"NW12 Novel Drafting: Falling Action & Resolution",
-			"Check-In #2"
+			"NW13 Final Revision Portfolio"
 		]
 	})
 } as const;
