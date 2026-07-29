@@ -6803,13 +6803,13 @@ describe("course text quality normalization", () => {
 			"Picture Book Assembly Portfolio"
 		];
 
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).not.toContain("Source Activity Anchors:");
 		expect(text).toContain("opinion book");
 		expect(text).toContain("common noun and proper noun");
 		expect(text).toContain("markers, pens, colored pencils");
 		expect(text).toContain("beast, creature, and animal");
 		expect(text).toContain("Gabby Tries");
-		expect(text).toContain("Evidence record:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text).toContain(anchor);
 		}

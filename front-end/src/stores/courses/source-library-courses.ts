@@ -2151,6 +2151,165 @@ const englishCourses = {
 		name: "Early Elementary B: Write Your Own Picture Book",
 		area: "writing",
 		focus: "story planning, parts of speech, capitalization, commas, quotation marks, opinion writing, agreement, word choice, narrative writing, presentation skills, and book revision",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"WYB1 Book Brainstorm I": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"topic",
+					"opinion",
+					"audience",
+					"picture-text connection",
+					"book seed"
+				],
+				flowNote:
+					"Start one book portfolio and save every usable idea in it. Students may draw, dictate, or write, and may use fictional favorites instead of sharing personal places or routines."
+			},
+			"WYB2 Parts of Speech": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"noun / proper noun",
+					"adjective",
+					"verb",
+					"adverb",
+					"sentence label"
+				],
+				flowNote:
+					"Build the definition map with short examples, then revise one sentence from the book portfolio by choosing a precise noun, verb, adjective, or adverb."
+			},
+			"WYB3 Capitalization": {
+				estimatedTime: "1–2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"sentence start",
+					"proper noun",
+					"title",
+					"capitalization rule",
+					"editing mark"
+				],
+				flowNote:
+					"Infer rules from examples, then apply the rule list to the book title, character or place names, and one draft page. Preserve a before-and-after sentence."
+			},
+			"WYB4 Commas & Quotation Marks": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"comma in a list",
+					"introductory phrase",
+					"quotation marks",
+					"dialogue",
+					"punctuation revision"
+				],
+				flowNote:
+					"Solve the punctuation cases first, then add or revise one list and one line of dialogue in the developing book so the rules immediately support the final artifact."
+			},
+			"WYB5 Opinion Writing": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"opinion",
+					"reason",
+					"linking word",
+					"topic sentence",
+					"closing"
+				],
+				flowNote:
+					"Separate the opinion from its reasons, select the two strongest reasons, and turn the outline into a short opinion-book page sequence for the first checkpoint."
+			},
+			"WYB Check-In #1": {
+				estimatedTime: "1–2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"opinion book",
+					"two reasons",
+					"page order",
+					"mechanics",
+					"text-picture match"
+				],
+				flowNote:
+					"Complete the opinion mini-book checkpoint even if the final project will be narrative. Accept drawing plus dictation, typed text, or handwriting when the opinion, reasons, order, and mechanics are visible."
+			},
+			"WYB6 Book Brainstorm II": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"character",
+					"setting",
+					"conflict",
+					"solution",
+					"beginning / middle / end"
+				],
+				flowNote:
+					"Use a familiar story only as a structure model, then create an original character and conflict. Add both the story map and character sketch to the same book portfolio."
+			},
+			"WYB7 Subject-Verb Agreement": {
+				estimatedTime: "1–2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"subject",
+					"verb",
+					"singular",
+					"plural",
+					"agreement revision"
+				],
+				flowNote:
+					"Sort and explain agreement examples, then revise two portfolio sentences: one with a singular subject and one with a plural subject."
+			},
+			"WYB8 Word Choice": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"synonym",
+					"context",
+					"tone",
+					"precise word",
+					"before / after revision"
+				],
+				flowNote:
+					"Compare similar words in context, then replace one vague word in the book draft. Keep the original and revised sentences so the change in tone is visible."
+			},
+			"WYB9 Narrative Writing": {
+				estimatedTime: "3 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"narrative model",
+					"time-order word",
+					"dialogue / description",
+					"plot outline",
+					"lesson"
+				],
+				flowNote:
+					"Use a lawful classroom copy of Gabby Tries or an equivalent narrative before the model activity. Build the original story with a hand-drawn or text-only plot outline; no missing template is required."
+			},
+			"WYB Check-In #2": {
+				estimatedTime: "1–2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"narrative spread",
+					"character / conflict",
+					"sequence",
+					"word choice",
+					"agreement / punctuation"
+				],
+				flowNote:
+					"Complete one two-page narrative spread with connected text and picture notes. Accept drawing plus dictation, typing, or handwriting when the story event and revision evidence are clear."
+			},
+			"WYB10 Presentation Skills": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"voice",
+					"pacing",
+					"expression",
+					"visual support",
+					"rehearsal reflection"
+				],
+				flowNote:
+					"Build the criteria list, rehearse a short excerpt from a lawful copy of Gabby Tries or the original book, and revise one delivery choice after a self-check."
+			},
+			"WYB11 Master Project": {
+				estimatedTime: "4–6 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"opinion or narrative path",
+					"page sequence",
+					"text-picture connection",
+					"mechanics revision",
+					"presentation"
+				],
+				flowNote:
+					"Choose the opinion-book or narrative-book path, reuse the relevant checkpoint, assemble the smallest complete book first, and then revise mechanics, page order, illustrations, and presentation."
+			}
+		},
 		sourceActivityAnchors: {
 			"WYB1 Book Brainstorm I": [
 				{
@@ -2244,6 +2403,17 @@ const englishCourses = {
 					]
 				}
 			],
+			"WYB Check-In #1": [
+				{
+					title: "Opinion Mini-Book Checkpoint",
+					prompt: "Create a short opinion mini-book with a cover, opinion statement, two reason pages, and a closing page. Each page pairs words with a drawing or illustration note and applies the capitalization and punctuation rules practiced so far.",
+					evidence: [
+						"Cover and ordered page plan with a clear audience.",
+						"Opinion statement, two distinct reasons, linking words, and a closing.",
+						"Mechanics and text-picture check with at least one visible revision."
+					]
+				}
+			],
 			"WYB6 Book Brainstorm II": [
 				{
 					title: "Favorite Story Structure Review",
@@ -2324,6 +2494,17 @@ const englishCourses = {
 					]
 				}
 			],
+			"WYB Check-In #2": [
+				{
+					title: "Narrative Picture-Book Spread Checkpoint",
+					prompt: "Draft one connected two-page spread from the original story. Show a character responding to the conflict, use a time-order word, dialogue or description, and precise word choice, then revise agreement and punctuation.",
+					evidence: [
+						"Two-page text and illustration plan showing one connected story event.",
+						"Character action, time-order language, and dialogue or description that advances the conflict.",
+						"Before-and-after revision for word choice, subject-verb agreement, or punctuation."
+					]
+				}
+			],
 			"WYB10 Presentation Skills": [
 				{
 					title: "Strong Presentation Criteria",
@@ -2356,7 +2537,6 @@ const englishCourses = {
 				}
 			]
 		},
-		staticAssets: ["wyb1_proj1_plotempty.png"],
 		modules: [
 			"WYB1 Book Brainstorm I",
 			"WYB2 Parts of Speech",
