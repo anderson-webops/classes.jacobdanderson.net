@@ -6816,13 +6816,14 @@ describe("course text quality normalization", () => {
 			"Playable Scratch Game Build"
 		];
 
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).not.toContain("Source Activity Anchors:");
+		expect(text).toContain("**Course flow:**");
+		expect(text).toContain("**Completion evidence:**");
 		expect(text).toContain("scratch.mit.edu/projects/592006491");
 		expect(text).toContain("scratch.mit.edu/projects/287738652");
 		expect(text).toContain("scratch.mit.edu/projects/327610777");
 		expect(text).toContain("scratch.mit.edu/projects/299272518");
 		expect(text).toContain("events, loops, conditionals, variables");
-		expect(text).toContain("Evidence record:");
 		for (const anchor of expectedAnchors) {
 			expect(text).toContain(anchor);
 		}
