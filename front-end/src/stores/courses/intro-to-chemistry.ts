@@ -1,4 +1,4 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 
 const SIMULATIONS = {
 	balancingEquations:
@@ -18,6 +18,10 @@ const SIMULATIONS = {
 const REFERENCES = {
 	acsChemistryGuidelines:
 		"https://www.acs.org/education/policies/middle-and-high-school-chemistry.html",
+	acsGreenChemistry:
+		"https://www.acs.org/green-chemistry-sustainability/principles/12-principles-of-green-chemistry.html",
+	acsLabExperience:
+		"https://www.acs.org/education/policies/middle-and-high-school-chemistry/teaching-and-assessment/lab-experience.html",
 	acsPeriodicTable:
 		"https://www.acs.org/education/whatischemistry/periodictable.html",
 	bondEnergyVideo: "https://youtu.be/NgD9yHSJ29I?si=PtfBNaN9iDDQGf9L",
@@ -32,6 +36,8 @@ const REFERENCES = {
 		"https://www.khanacademy.org/science/ap-biology/chemistry-of-life/structure-of-water-and-hydrogen-bonding/a/cohesion-and-adhesion-in-water",
 	lavaLampDemo: "https://youtu.be/qCuFjXGSVB4",
 	ngssAppendices: "https://www.nextgenscience.org/resources/ngss-appendices",
+	ngssMatterInteractions:
+		"https://www.nextgenscience.org/dci-arrangement/hs-ps1-matter-and-its-interactions",
 	nistSiUnits: "https://www.nist.gov/pml/owm/metric-si/si-units",
 	oobleckDemo: "https://youtu.be/nw8KaHglokQ?t=123",
 	openStaxChemistry: "https://openstax.org/details/books/chemistry-2e",
@@ -75,7 +81,7 @@ function answerKey(section: string) {
 	return `${MATERIALS.answerKey}#${section}`;
 }
 
-export const introToChemistryCourse: RawCourse = {
+const introToChemistrySourceCourse: RawCourse = {
 	name: "Intro to Chemistry",
 	modules: [
 		{
@@ -1436,4 +1442,498 @@ export const introToChemistryCourse: RawCourse = {
 			]
 		}
 	]
+};
+
+const INTRO_CHEMISTRY_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"CHM1 Workflow, Safety, Measurement, and Models": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"macroscopic observation",
+			"particle model",
+			"symbolic representation",
+			"measurement and uncertainty",
+			"model limitation",
+			"remote safety boundary"
+		],
+		flowNote:
+			"Build the observation-model-evidence routine, establish measurement and accessibility conventions, and define exactly which conceptual skills remote work can and cannot certify."
+	},
+	"CHM2 Matter, Classification, and Particle Models": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"property evidence",
+			"pure substance",
+			"mixture",
+			"particle arrangement",
+			"physical change",
+			"classification counterexample"
+		],
+		flowNote:
+			"Classify matter from composition evidence, connect state and physical change to particle models, and challenge appearance-based shortcuts with counterexamples."
+	},
+	"CHM3 Atomic Structure, Isotopes, and Ions": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"proton identity",
+			"isotope",
+			"weighted atomic mass",
+			"ion charge",
+			"atomic notation",
+			"nuclear versus chemical change"
+		],
+		flowNote:
+			"Keep element identity, isotope mass, electron charge, and nuclear stability separate while translating among particle counts, notation, and evidence."
+	},
+	"CHM4 Periodic Table and Trends": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"table organization",
+			"group and period",
+			"valence pattern",
+			"relative trend",
+			"main-group boundary",
+			"evidence-based prediction"
+		],
+		flowNote:
+			"Use periodic position and main-group patterns to make bounded property predictions, then distinguish a trend-supported claim from an absolute rule."
+	},
+	"CHM5 Bonding, Formulas, and Molecular Structure": {
+		estimatedTime: "6 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"ionic lattice",
+			"covalent molecule",
+			"Lewis model",
+			"formula and naming",
+			"shape and polarity",
+			"bond-energy direction"
+		],
+		flowNote:
+			"Connect valence evidence to bonding models, formulas, shape, polarity, and energy while naming where octet, Lewis, and simple ionic-transfer models stop working."
+	},
+	"CHM6 Energy, Phase Change, and Intermolecular Forces": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"temperature",
+			"thermal energy",
+			"phase-change energy",
+			"intermolecular attraction",
+			"phase diagram",
+			"gas collisions"
+		],
+		flowNote:
+			"Track energy, particle motion, and attractions across phase and gas models without confusing temperature, total thermal energy, or intermolecular forces with chemical bonds."
+	},
+	"CHM7 Chemical Reactions and Conservation": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"reaction evidence",
+			"reactant and product",
+			"atom conservation",
+			"equation balancing",
+			"reaction pattern",
+			"particle-ratio preview"
+		],
+		flowNote:
+			"Identify reaction evidence cautiously, preserve formula identity while balancing atoms, and use particle batches to preview reaction ratios before formal mole calculations."
+	},
+	"CHM8 Solutions, Concentration, and pH": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"solute and solvent",
+			"qualitative concentration",
+			"saturation condition",
+			"particle dissolution",
+			"logarithmic pH",
+			"scope and safety"
+		],
+		flowNote:
+			"Explain dissolving, concentration, saturation, and aqueous pH qualitatively before the mole unit introduces molarity as a formal amount-per-volume calculation."
+	},
+	"CHM9 Moles and Stoichiometry": {
+		estimatedTime: "7 sessions · 60–110 minutes each",
+		keyBlocks: [
+			"mole and particles",
+			"molar mass",
+			"molarity",
+			"mole ratio",
+			"limiting reactant",
+			"dimensional analysis"
+		],
+		flowNote:
+			"Bridge particles to measurable amount, introduce molarity only after mole and molar mass, and solve stoichiometry through units, balanced ratios, limits, and reasonableness."
+	},
+	"CHM10 Advanced Chemistry Map": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"rate and energy",
+			"equilibrium",
+			"redox",
+			"nuclear boundary",
+			"green chemistry",
+			"next-course map"
+		],
+		flowNote:
+			"Preview advanced fields through bounded models and real evidence, connect chemistry choices to lifecycle tradeoffs, and distinguish orientation from demonstrated mastery."
+	},
+	"CHM11 Capstone: Real-World Chemistry Explanation": {
+		estimatedTime: "8–10 sessions · 60–120 minutes each",
+		keyBlocks: [
+			"narrow phenomenon",
+			"source-quality log",
+			"particle model",
+			"quantitative or symbolic evidence",
+			"changed-condition prediction",
+			"defense and revision"
+		],
+		flowNote:
+			"Build and defend one narrow chemistry explanation from traceable evidence, connected representations, uncertainty, and a prediction that can be challenged."
+	}
+};
+
+function introChemistryOptionPath(title: string) {
+	return /argument|error analysis|limiting reactant|advanced|capstone|model your own|peer review|challenge/i.test(
+		title
+	)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function insertIntroChemistryItem(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function appendBeforeChemistryCheckpoint(
+	items: RawCourseModuleItem[],
+	item: RawCourseModuleItem
+) {
+	const checkpointIndex = items.findIndex(candidate =>
+		candidate.title.startsWith("Checkpoint:")
+	);
+	if (checkpointIndex === -1) return [...items, item];
+	return [
+		...items.slice(0, checkpointIndex),
+		item,
+		...items.slice(checkpointIndex)
+	];
+}
+
+function sequenceIntroChemistryModules(
+	modules: RawCourse["modules"]
+): RawCourse["modules"] {
+	const sequenced = modules.map(module => ({
+		...module,
+		curriculum: [...module.curriculum],
+		supplementalProjects: [...module.supplementalProjects]
+	}));
+	const solutions = sequenced.find(
+		module => module.title === "CHM8 Solutions, Concentration, and pH"
+	);
+	const quantitative = sequenced.find(
+		module => module.title === "CHM9 Moles and Stoichiometry"
+	);
+	if (!solutions || !quantitative) return sequenced;
+
+	const molarityIndex = solutions.curriculum.findIndex(
+		item => item.title === "Molarity as a Quantitative Concentration"
+	);
+	if (molarityIndex === -1) return sequenced;
+
+	const [molarity] = solutions.curriculum.splice(molarityIndex, 1);
+	const moleRatioIndex = quantitative.curriculum.findIndex(
+		item => item.title === "Mole Ratios from Balanced Equations"
+	);
+	if (moleRatioIndex === -1) quantitative.curriculum.push(molarity);
+	else quantitative.curriculum.splice(moleRatioIndex, 0, molarity);
+
+	return sequenced;
+}
+
+function decorateIntroChemistryModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	if (module.kind === "appendix") {
+		return {
+			...module,
+			estimatedTime:
+				"Reference as needed during modules and capstone work",
+			keyBlocks: [
+				"standards",
+				"periodic tables",
+				"simulations",
+				"safety",
+				"evidence log",
+				"explanation rubric"
+			],
+			curriculum: module.curriculum.map(item => ({
+				...item,
+				learningPath: "choice" as const
+			})),
+			supplementalProjects: module.supplementalProjects.map(item => ({
+				...item,
+				learningPath: introChemistryOptionPath(item.title)
+			}))
+		};
+	}
+
+	const flow = INTRO_CHEMISTRY_FLOW[module.title];
+	let curriculum: RawCourseModuleItem[] = module.curriculum.map(item => ({
+		...item,
+		learningPath: "core" as const
+	}));
+
+	if (module.title === "CHM1 Workflow, Safety, Measurement, and Models") {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Three-Representation and Accessible-Evidence Contract",
+			content: [
+				"**Representation contract:** Every major explanation identifies the macroscopic observation, the submicroscopic particle or system model, and the symbolic representation such as a formula, equation, graph, ratio, or unit. The three representations answer different questions; none is presented as a photograph of invisible matter.",
+				"**Evidence contract:** Observation, measurement, model-based inference, and claim are labeled separately. A simulation setting or diagram feature becomes evidence only when its connection to the claim is explained, and every model names at least one feature it leaves out.",
+				"**Accessibility contract:** Color is never the only carrier of element, charge, phase, or trend information. Diagrams add labels, shapes, patterns, or a text description; tables include headings and units; video or simulation evidence is summarized in words; and an equivalent nonvisual dataset or description remains available.",
+				"**Mastery check:** Translate one phenomenon across all three representations, identify one agreement and one limitation, and revise any statement that treats a model as direct observation."
+			].join("\n\n"),
+			datasetLink: REFERENCES.ngssMatterInteractions,
+			learningPath: "core"
+		});
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Remote Investigation and Supervised-Laboratory Boundary",
+			content: [
+				"**Remote scope:** Simulations, supplied data, diagrams, readings, and safe observations can build conceptual models, variable reasoning, quantitative analysis, evidence logs, and scientific communication. This course does not certify hands-on competence with glassware, balances, burners, chemical transfer, PPE, ventilation, spill response, waste disposal, or emergency equipment.",
+				"**Laboratory boundary:** Any later physical investigation belongs in a properly equipped, accessible, supervised setting with an approved procedure and local rules. Planning follows RAMP: recognize hazards, assess risks, minimize risks, and prepare for emergencies. A demonstration video never grants permission to reproduce the procedure.",
+				"**Investigation cycle:** Whether evidence is physical or virtual, work includes a prediction and variable plan before data collection, an evidence record during the investigation, and model-based interpretation afterward. The evidence source and its limitations are part of the final claim.",
+				"**Equity check:** A project remains completable without household purchases, chemical handling, color-only observations, or inaccessible interfaces. Optional physical observations never change access to the core assessment."
+			].join("\n\n"),
+			datasetLink: REFERENCES.acsLabExperience,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CHM2 Matter, Classification, and Particle Models") {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Matter Classification and Change Misconception Gate",
+			content: [
+				"**Decision sequence:** First decide whether enough composition evidence exists. Then distinguish a fixed-composition substance from a variable-composition mixture, and only then classify an identified pure substance as element or compound. Uniform appearance can support a homogeneous-mixture claim, but it cannot prove purity.",
+				"**Model distinctions:** Solid, liquid, and gas describe physical state, not chemical identity. A substance can change state without becoming a different substance, and one state can contain an element, compound, or mixture. Particles do not expand when a sample expands; spacing, arrangement, and motion change.",
+				"**Change boundary:** Cutting, melting, boiling, dissolving, and separating are evaluated from identity evidence rather than memorized labels. Bubbles, color change, temperature change, or a precipitate can support a reaction claim in context, but no single cue proves that new substances formed.",
+				"**Mastery check:** Classify one deceptive uniform mixture, one pure compound, one phase change, and one uncertain case. Each answer cites the deciding evidence and names what additional observation would resolve uncertainty."
+			].join("\n\n"),
+			datasetLink: material("matter-and-classification-cards"),
+			solutionLink: answerKey("matter-and-classification-key"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CHM3 Atomic Structure, Isotopes, and Ions") {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Atomic Identity, Charge, and Nuclear-Change Gate",
+			content: [
+				"**Identity invariant:** Proton count defines the element. Changing neutron count creates an isotope of the same element. Changing electron count creates an ion of the same isotope. Changing proton count creates a different element. Mass number is a whole-number count for one isotope, while periodic-table atomic mass is an abundance-weighted average.",
+				"**Notation routine:** Read atomic number, mass number, and charge before calculating. Protons equal atomic number, neutrons equal mass number minus atomic number, and electrons equal proton count adjusted for signed charge. A positive charge means electrons were lost, not that protons were created.",
+				"**Process boundary:** Ordinary bonding and chemical reactions rearrange valence electrons and atoms without changing nuclei. Radioactive decay changes a nucleus and can change element identity; half-life describes population behavior, not a countdown clock for one predictable nucleus.",
+				"**Mastery check:** Compare a neutral atom, isotope, cation, anion, and nuclear-decay case. Every explanation names which particle count changes, which identity remains stable, and which model or notation supports the conclusion."
+			].join("\n\n"),
+			datasetLink: material("atomic-structure-checkpoint"),
+			solutionLink: answerKey("atomic-structure-checkpoint-key"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CHM4 Periodic Table and Trends") {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Periodic Trend Evidence and Assessment Boundary",
+			content: [
+				"**Evidence boundary:** Introductory predictions focus on main-group elements, relative comparisons, and supplied trend data. Group patterns, shielding, occupied energy levels, and attraction to the nucleus support explanations; arrow memorization alone does not count as evidence.",
+				"**Trend language:** Atomic radius, ionization energy, electronegativity, and metallic character are tendencies across selected comparisons, not exception-free laws. A claim uses language such as generally, relative to, or within this set and checks the actual reference when exact values or transition elements matter.",
+				"**Comparison routine:** For an element pair, identify whether the comparison is across a period or down a group, state which structural factor changes, predict the direction, and verify with a trusted table. Do not combine two changing directions into one unsupported shortcut.",
+				"**Mastery check:** Defend three main-group comparisons, reject one overbroad claim, and identify one case where table position supports only a cautious prediction. The explanation separates observed property data from the model used to account for the pattern."
+			].join("\n\n"),
+			datasetLink: REFERENCES.ngssMatterInteractions,
+			solutionLink: answerKey("periodic-trend-key"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CHM5 Bonding, Formulas, and Molecular Structure") {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Checkpoint: Bonding, Structure, and Energy Model Limits",
+			content: [
+				"**Bonding distinctions:** An ionic formula gives the lowest whole-number ratio in an extended lattice, not a discrete molecule. A covalent formula gives composition but not automatically Lewis structure, three-dimensional shape, polarity, or intermolecular behavior. Metallic and network structures need models beyond an isolated pair of atoms.",
+				"**Model limits:** Electron transfer, shared pairs, formal charge, and the octet rule are useful introductory bookkeeping models, not claims that atoms consciously seek eight electrons. Expanded octets, incomplete octets, resonance, and delocalized bonding mark limits that are named rather than forced into a misleading picture.",
+				"**Energy invariant:** Breaking a bond requires energy and forming a bond releases energy. A reaction releases energy overall only when the energy released by forming product interactions exceeds the energy required to disrupt reactant interactions; bond-energy tables provide estimates, not exact values for every molecular environment.",
+				"**Mastery tasks:** Build one charge-balanced ionic formula, one Lewis model, one shape-and-polarity explanation, and one bond-energy sign argument. Each task states what the chosen model shows and what property cannot be concluded from it alone."
+			].join("\n\n"),
+			datasetLink: REFERENCES.openStaxChemistry,
+			solutionLink: answerKey("bonding-and-formula-key"),
+			learningPath: "core"
+		});
+	}
+
+	if (
+		module.title === "CHM6 Energy, Phase Change, and Intermolecular Forces"
+	) {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Thermal, Phase, and Attraction Evidence Contract",
+			content: [
+				"**Energy accounting:** Name the system and surroundings before using absorbed, released, endothermic, or exothermic. Temperature tracks average kinetic energy, while total thermal energy also depends on amount and particle interactions. Heat is energy transferred because of a temperature difference, not a substance stored inside matter.",
+				"**Graph contract:** A sloped heating-curve segment links energy input to rising average kinetic energy within one phase. A phase-change segment can remain at nearly constant temperature while energy changes particle arrangement and potential energy. Graph axes, direction, pressure assumptions, and substance identity remain visible.",
+				"**Attraction boundary:** Intermolecular attractions act between particles and differ from covalent, ionic, or metallic bonding within a substance model. Stronger attractions can support relative boiling, evaporation, viscosity, or solubility predictions, but molecular size, shape, temperature, and the comparison set still matter.",
+				"**Mastery check:** Explain one heating-curve segment, one phase-diagram point, one gas-variable change, and one property comparison using particles and energy. Reject language that particles expand, stop moving, want to escape, or contain heat."
+			].join("\n\n"),
+			datasetLink: material("energy-phase-and-gas-checkpoint"),
+			solutionLink: answerKey("energy-phase-and-gas-checkpoint-key"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CHM7 Chemical Reactions and Conservation") {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Reaction Evidence, Equation, and Ratio Invariants",
+			content: [
+				"**Evidence rule:** Gas production, temperature or light change, color change, odor, and precipitate formation can support a reaction claim when alternatives are considered. Boiling, dissolving, mixing, or releasing a trapped gas can produce similar visible cues, so the conclusion depends on substance-identity evidence rather than one memorized sign.",
+				"**Equation invariant:** Correct formulas represent substance identity and remain unchanged while balancing. Coefficients scale whole formulas so every element and net charge are conserved; changing a subscript invents a different substance. State symbols, conditions, and energy annotations add context without changing atom counts.",
+				"**Rate boundary:** A catalyst changes the pathway and rate, not the balanced stoichiometric ratio or overall reactant/product identity. Reaction-type labels summarize patterns but do not replace predicting chemically plausible products or checking evidence.",
+				"**Quantitative preview:** Limiting-reactant work in this module uses whole-number particle or recipe batches from a balanced equation. Mole, molar-mass, molarity, and measured-mass calculations wait for CHM9 so ratio meaning is stable before conversion procedures begin."
+			].join("\n\n"),
+			datasetLink: SIMULATIONS.balancingEquations,
+			solutionLink: answerKey("reaction-type-key"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CHM8 Solutions, Concentration, and pH") {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Qualitative Solution Evidence and pH Scope Gate",
+			content: [
+				"**Sequence boundary:** This module compares relative concentration from solute amount and solution volume without requiring mole conversion. Formal molarity moves to CHM9 after amount of substance and molar mass are established. Saturation always names the solute, solvent, temperature, and relevant conditions.",
+				"**Particle model:** Dissolving disperses solute particles through a solvent and can involve ions or molecules; disappearing from view does not mean disappearing from matter. Dilution adds solvent but does not remove solute from a closed sample. Solubility and concentration answer different questions.",
+				"**pH scope:** pH is logarithmic and applies to aqueous acid-base models. Near ordinary classroom conditions, neutral water is introduced near pH 7, but neutral is defined by the acid-base balance rather than a universal color or safety label. A one-unit pH change represents a tenfold concentration-ratio change in the introductory model.",
+				"**Safety and evidence:** pH alone does not determine whether a material is safe to touch, taste, mix, or dispose of. Compare simulation values and supplied examples only, explain one dilution result, and name the model limits before drawing a real-world conclusion."
+			].join("\n\n"),
+			datasetLink: SIMULATIONS.phScale,
+			solutionLink: answerKey("concentration-and-ph-key"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CHM9 Moles and Stoichiometry") {
+		curriculum = insertIntroChemistryItem(
+			curriculum,
+			"Molar Mass and Unit Conversion",
+			{
+				title: "Particle–Mole–Mass Representation Bridge",
+				content: [
+					"**Representation bridge:** A balanced equation can be read as particles, formula units, or moles because coefficients express amount ratios; it cannot be read directly as gram ratios. The mole connects microscopic counts to measurable amount, and molar mass connects amount in moles to mass in grams.",
+					"**Conversion map:** Write each quantity with its unit and select one bridge at a time: particles ↔ moles through Avogadro's constant, grams ↔ moles through molar mass, solution volume ↔ moles through molarity, and substance-to-substance moles through balanced coefficients. The desired unit determines the path.",
+					"**Concept check:** Doubling every coefficient produces an equivalent equation ratio, while changing a formula does not. Equal masses of different substances usually contain different mole and particle amounts because molar masses differ.",
+					"**Mastery evidence:** Draw and explain one conversion map before calculating. Include the given quantity, target unit, required conversion factors, balanced equation when relevant, and one estimate of whether the result must be larger or smaller."
+				].join("\n\n"),
+				datasetLink: REFERENCES.openStaxChemistry,
+				solutionLink: answerKey(
+					"quantitative-chemistry-checkpoint-key"
+				),
+				learningPath: "core"
+			}
+		);
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Dimensional Analysis, Precision, and Reasonableness Contract",
+			content: [
+				"**Unit-first method:** Write conversion factors as equal ratios, orient each factor so unwanted units cancel, and keep substance labels attached to moles and grams. A numerically plausible answer with an uncanceled or wrong substance unit is not complete.",
+				"**Equation-first method:** Balance the equation before taking a mole ratio. Identify the limiting reactant from available amount divided by required coefficient or through complete conversion paths, then calculate product from that reactant and verify leftover material separately.",
+				"**Precision rule:** Carry guard digits through intermediate steps and round once at the end to a precision supported by the given measurements. Exact coefficients and counted objects do not limit significant figures. Scientific notation keeps Avogadro-scale values readable without hiding units.",
+				"**Reasonableness gate:** Check sign, magnitude, limiting reagent, conservation, and units. Compare theoretical output with the available reactants, explain any excess, and diagnose whether an unreasonable result came from formula mass, equation balance, reciprocal ratio, unit conversion, or premature rounding."
+			].join("\n\n"),
+			datasetLink: REFERENCES.nistSiUnits,
+			solutionLink: answerKey("quantitative-chemistry-checkpoint-key"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CHM10 Advanced Chemistry Map") {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Advanced-Topic Preview and Readiness Boundary",
+			content: [
+				"**Preview status:** Kinetics, equilibrium, electrochemistry, nuclear chemistry, organic chemistry, and materials chemistry are orientation topics here. A concept card can demonstrate accurate introductory distinctions and evidence habits, but it does not certify the mathematical, laboratory, or mechanistic depth of a later course.",
+				"**Connection map:** For each preview, identify the earlier anchor: collisions and energy for kinetics, opposing rates for equilibrium, electron transfer for redox, nuclear identity for decay, bonding and structure for organic chemistry, and structure-property relationships for materials.",
+				"**Model limit:** Use qualitative diagrams, supplied data, and carefully bounded claims. Equilibrium is not equal amounts, a catalyst does not shift an equilibrium position by itself, oxidation is broader than reaction with oxygen, and nuclear energy is not ordinary bond energy.",
+				"**Readiness evidence:** Choose one next path and cite prerequisite evidence from checkpoints, not interest alone. Name one concept already secure, one quantitative or model gap, one supervised-laboratory skill still needed, and one resource that accurately represents the next level."
+			].join("\n\n"),
+			datasetLink: REFERENCES.openStaxChemistry,
+			learningPath: "core"
+		});
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Green Chemistry and Lifecycle Tradeoff Lens",
+			content: [
+				"**Design question:** A chemistry choice is evaluated across function, hazard, amount, waste, energy, feedstock, transport, use, and end-of-life rather than labeled green from one attractive feature. Safer chemistry reduces hazard and exposure while still meeting the intended performance.",
+				"**Evidence categories:** Separate measured property data, hazard classifications, process conditions, material quantities, and assumptions. Renewable does not automatically mean nontoxic, biodegradable does not mean harmless in every environment, and lower energy use can trade against yield, durability, or separation needs.",
+				"**Comparison routine:** Compare two plausible material or process options with the same functional unit. Identify one benefit, one burden shifted elsewhere, one missing datum, and one design change that could prevent waste or reduce hazard before cleanup becomes necessary.",
+				"**Output:** Add a lifecycle tradeoff panel to one advanced concept card. The conclusion remains conditional on the stated evidence and avoids claiming that one classroom comparison proves complete environmental superiority."
+			].join("\n\n"),
+			datasetLink: REFERENCES.acsGreenChemistry,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CHM11 Capstone: Real-World Chemistry Explanation") {
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Capstone Source Quality, Traceability, and Uncertainty Contract",
+			content: [
+				"**Source log:** Record author or organization, title, date when available, direct link, evidence type, exact claim supported, and one limitation. Prefer standards bodies, government data, peer-reviewed or textbook references, and documented simulations over unattributed summaries.",
+				"**Traceability:** Every number carries a unit and source; every image, model, or simulation names its origin and setting; every equation identifies the substances and assumptions involved. A source can support a property value without supporting the final causal claim, so evidence roles remain separate.",
+				"**Uncertainty:** Distinguish measurement uncertainty, model limitation, missing variable, source disagreement, and scope boundary. Avoid false precision and causal language that exceeds observational or simulated evidence. State what new result would weaken or change the claim.",
+				"**Accessibility and integrity:** Provide text equivalents for visual evidence, use color-independent labels, paraphrase rather than copy, and preserve citations through revision. The final evidence table lets another reader retrace the explanation without private notes."
+			].join("\n\n"),
+			datasetLink: REFERENCES.acsChemistryGuidelines,
+			solutionLink: answerKey("capstone-rubric"),
+			learningPath: "core"
+		});
+		curriculum = appendBeforeChemistryCheckpoint(curriculum, {
+			title: "Capstone Evidence, Revision, and Defense Packet",
+			content: [
+				"**Required packet:** Submit the narrowed question, initial claim, source-quality log, macroscopic evidence, particle or system model, symbolic or quantitative representation when relevant, changed-condition prediction, model limitation, safety scope, and final claim.",
+				"**Revision record:** Preserve one before-and-after section showing how feedback changed chemistry accuracy, evidence relevance, unit use, model choice, or scope. A wording-only edit does not count when the underlying reasoning remains weak.",
+				"**Defense evidence:** Answer which observation is direct, which statement is inferred, why the model is fit for the question, what alternative explanation was considered, what evidence would change the conclusion, and which advanced concept remains outside the course boundary.",
+				"**Mastery decision:** Use the common rubric across claim, evidence, representation, quantitative accuracy, limitation, accessibility, and response to challenge. If a category lacks evidence, revise the artifact or narrow the claim rather than averaging the gap away."
+			].join("\n\n"),
+			datasetLink: material("capstone-defense-checkpoint"),
+			solutionLink: answerKey("capstone-rubric"),
+			learningPath: "core"
+		});
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: introChemistryOptionPath(item.title)
+		}))
+	};
+}
+
+export const introToChemistryCourse: RawCourse = {
+	...introToChemistrySourceCourse,
+	modules: sequenceIntroChemistryModules(
+		introToChemistrySourceCourse.modules
+	).map(decorateIntroChemistryModule)
 };
