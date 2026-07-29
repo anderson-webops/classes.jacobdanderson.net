@@ -4021,6 +4021,240 @@ const earlyElementaryAModuleMetadata: Record<
 	}
 };
 
+const earlyElementaryBModuleMetadata: Record<
+	string,
+	SourceLibraryModuleMetadata
+> = {
+	"EEB1 Adding and Subtracting within 1000": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"hundreds / tens / ones",
+			"expanded form",
+			"regrouping",
+			"estimate",
+			"inverse check"
+		],
+		flowNote:
+			"Build each number with place-value blocks or expanded form before calculating. Name every regrouping, compare with an estimate, and check subtraction by adding back."
+	},
+	"EEB2 Strategies to Add and Subtract within 1000": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"decomposition",
+			"compensation",
+			"place-value trade",
+			"running score",
+			"strategy comparison"
+		],
+		flowNote:
+			"Keep one round-by-round score ledger, solve at least one change with two strategies, and explain which strategy makes the regrouping easiest to verify."
+	},
+	"EEB3 Multiplying and Dividing within 100": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"equal groups",
+			"array",
+			"multiplication",
+			"division",
+			"unknown factor"
+		],
+		flowNote:
+			"Build or draw equal groups before writing equations. Connect each multiplication fact to a related division fact and make the missing quantity visible."
+	},
+	"EEB4 Properties of Multiplication and Division": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"commutative",
+			"associative",
+			"distributive",
+			"inverse operations",
+			"array proof"
+		],
+		flowNote:
+			"Rearrange the same objects instead of memorizing property names alone. Label what changes in each array and what total must remain invariant."
+	},
+	"EEB5 Multiplication and Division Word Problems": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"known / unknown",
+			"equal-groups model",
+			"equation",
+			"operation choice",
+			"answer statement"
+		],
+		flowNote:
+			"Identify the group size, number of groups, and total before choosing an operation. Show the unknown in a model and finish with a sentence tied to the story."
+	},
+	"EEB6 Applying the Four Operations": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"four operations",
+			"order of operations",
+			"parentheses",
+			"whole-number division",
+			"step trace"
+		],
+		flowNote:
+			"Record one expression per turn, evaluate one operation at a time, and compare two parentheses placements so the effect of grouping is visible."
+	},
+	"EEB7 Multiples of 10": {
+		estimatedTime: "1–2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"factor",
+			"multiple of 10",
+			"place-value shift",
+			"block model",
+			"pattern statement"
+		],
+		flowNote:
+			"Compare each single-digit product with its related multiple-of-ten product using blocks and equations. Describe the place-value change rather than relying on an add-a-zero shortcut alone."
+	},
+	"EEB8 Module Project: Using Science For Good": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"read a fixed table",
+			"repeated interval",
+			"unit rate",
+			"multi-step total",
+			"reasonableness check"
+		],
+		flowNote:
+			"Treat every medicine name and number as a closed, fictional arithmetic table. Do not infer, recommend, or apply any dosage to a real person; verify only the stated rates, intervals, units, and totals."
+	},
+	"Check-in #1": {
+		estimatedTime: "1–2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"place value",
+			"multiplication / division",
+			"property model",
+			"expression",
+			"visible explanation"
+		],
+		flowNote:
+			"Collect one place-value strategy, one multiplication or division model, one property explanation, and one evaluated expression. Assign only the review connected to missing evidence."
+	},
+	"EEB9 Units of Measurement": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"elapsed time",
+			"capacity",
+			"mass",
+			"estimate",
+			"unit choice"
+		],
+		flowNote:
+			"Estimate first, then choose and label a sensible unit before calculating. Use a timeline for elapsed time and keep capacity and mass comparisons separate."
+	},
+	"EEB10 Area": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"square unit",
+			"rows / columns",
+			"multiplication",
+			"decompose",
+			"estimate"
+		],
+		flowNote:
+			"Tile or draw rectangular regions before using multiplication. For an irregular region, show how enclosing or decomposing it supports a reasonable square-unit estimate."
+	},
+	"EEB11 Module Project: Investing for the Future": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"equal allocation",
+			"area decomposition",
+			"unit cost",
+			"compare options",
+			"evidence-based choice"
+		],
+		flowNote:
+			"Use the company scenario only for classroom arithmetic and evidence comparison, not real investment advice. Separate the equal-allocation calculation from the hypothetical recommendation, then verify the factory area and cost."
+	},
+	"EEB12 Partitioning Shapes": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"equal parts",
+			"unit fraction",
+			"numerator / denominator",
+			"shape partition",
+			"fraction statement"
+		],
+		flowNote:
+			"Partition each whole into equal parts before naming a fraction. Match every numerator and denominator to a visible shaded or selected region."
+	},
+	"EEB13 Fractions as Numbers": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"0 to 1 number line",
+			"equal intervals",
+			"unit fraction",
+			"equivalent fractions",
+			"compare fractions"
+		],
+		flowNote:
+			"Mark 0 and 1 first, divide the distance into equal intervals, and connect each physical sandwich cut to an exact point on the number line."
+	},
+	"EEB14 Represent and Interpret Data": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"table",
+			"scale",
+			"picture graph",
+			"bar graph",
+			"measurement line plot"
+		],
+		flowNote:
+			"Organize the values in a table before choosing a graph and state what one symbol or interval represents. Answer comparison questions directly from the completed display."
+	},
+	"EEB15 Perimeter": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"side length",
+			"perimeter",
+			"area contrast",
+			"same area / different shape",
+			"unit label"
+		],
+		flowNote:
+			"Trace and label every outer side before adding. Compare two rectangles with equal area to show why area does not determine perimeter."
+	},
+	"EEB16 Quadrilaterals": {
+		estimatedTime: "2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"four sides",
+			"parallel sides",
+			"right angle",
+			"shape hierarchy",
+			"attribute evidence"
+		],
+		flowNote:
+			"Classify each object from visible side and angle evidence, then place it in every quadrilateral category that applies instead of forcing one exclusive label."
+	},
+	"EEB17 Module Project: 2001: A Warehouse Odyssey": {
+		estimatedTime: "2–3 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"capacity fraction",
+			"compare to one half",
+			"rectangular area",
+			"design constraint",
+			"validated recommendation"
+		],
+		flowNote:
+			"Complete the capacity comparison before prioritizing restocks, then calculate robot area and test the recommendation against the stated movement and load constraints."
+	},
+	"Check-in #2": {
+		estimatedTime: "1–2 sessions · 35–45 minutes each",
+		keyBlocks: [
+			"measurement unit",
+			"area / perimeter",
+			"fraction model",
+			"data display",
+			"quadrilateral evidence"
+		],
+		flowNote:
+			"Collect one unit-aware measurement, one area or perimeter model, one fraction representation, one data interpretation, and one shape classification before choosing targeted review."
+	}
+};
+
 const elementaryMathCourses = {
 	earlyElementaryA: createSourceLibraryCourse({
 		name: "Early Elementary A: Discovering Numbers, Operations, and Measurement",
@@ -4058,21 +4292,9 @@ const elementaryMathCourses = {
 		name: "Early Elementary B: Exploring Arithmetic, Fractions, and Geometry",
 		area: "early elementary math",
 		focus: "multi-digit operations, multiplication, division, word problems, measurement, area, fractions, data, perimeter, quadrilaterals, and geometric explanation",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: earlyElementaryBModuleMetadata,
 		sourceActivityAnchors: earlyElementaryBMathSourceAnchors,
-		staticAssets: [
-			"checkin2_app_0.png",
-			"checkin2_gm_2.png",
-			"checkin2_gm_3.png",
-			"checkin2_gm_4.png",
-			"checkin2_ma_0.png",
-			"mfb10_concept1_0.png",
-			"mfb14_pset1_0.png",
-			"mfb14_pset1_1.png",
-			"mfb14_pset1_2.png",
-			"mfb14_pset1_3.png",
-			"mfb14_pset1_4.png",
-			"module_example.png"
-		],
 		modules: [
 			"EEB1 Adding and Subtracting within 1000",
 			"EEB2 Strategies to Add and Subtract within 1000",
