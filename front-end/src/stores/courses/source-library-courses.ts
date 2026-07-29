@@ -1909,6 +1909,105 @@ const englishCourses = {
 		name: "Early Elementary A: Discovering the Joy of Reading",
 		area: "reading",
 		focus: "characters, plot, literature comprehension, informational texts, figurative language, and short reading responses",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"JoR1 Characters": {
+				estimatedTime: "3 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"character detail",
+					"action",
+					"trait",
+					"text evidence",
+					"inference"
+				],
+				flowNote:
+					"Confirm a lawful classroom copy of each named story or use a teacher-selected equivalent before the session. Read in short sections, collect what the character says and does, and support each trait with one exact detail."
+			},
+			"JoR2 Plot": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"exposition",
+					"rising action",
+					"climax",
+					"resolution",
+					"event evidence"
+				],
+				flowNote:
+					"Confirm a lawful classroom copy of the named story or use an equivalent narrative. Retell the events first, then place them on a hand-drawn, text-only, or supplied plot diagram and explain the climax choice."
+			},
+			"JoR Check-In #1": {
+				estimatedTime: "1–2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"character trait",
+					"supporting action",
+					"plot order",
+					"climax / resolution",
+					"oral or written explanation"
+				],
+				flowNote:
+					"Use a lawful copy of Happy Halloween or an equivalent short story. Accept a labeled drawing, oral explanation, or short written response when it contains both character and plot evidence."
+			},
+			"JoR3 Reading Literature": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"important event",
+					"sequence",
+					"storyboard",
+					"lesson / moral",
+					"supporting evidence"
+				],
+				flowNote:
+					"Use a lawful copy of Groceries or an equivalent narrative. Choose six moments because they change the story, not merely because they are easy to draw, and connect the lesson to a specific event."
+			},
+			"JoR4 Reading Informational Texts": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"who / what / when / where / why",
+					"central idea",
+					"key detail",
+					"fact",
+					"audience explanation"
+				],
+				flowNote:
+					"Use a lawful copy of the megalodon article or an equivalent age-appropriate informational text. Separate the central idea from supporting facts before drafting the news report."
+			},
+			"JoR5 Figurative Language": {
+				estimatedTime: "2 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"literal / figurative",
+					"idiom",
+					"simile",
+					"metaphor",
+					"personification"
+				],
+				flowNote:
+					"Draw or describe the literal image first, then infer the intended meaning from sentence context. Require an explanation for each label so vocabulary does not become a guessing exercise."
+			},
+			"JoR Check-In #2": {
+				estimatedTime: "2–3 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"story lesson",
+					"character change",
+					"figurative language",
+					"main idea",
+					"supporting detail"
+				],
+				flowNote:
+					"Confirm lawful copies of the named texts or use equivalent literature and informational passages. Collect one literature response and one main-idea response, allowing oral, drawn, or written evidence."
+			},
+			"JoR6 Master Project": {
+				estimatedTime: "3–4 sessions · 30–40 minutes each",
+				keyBlocks: [
+					"project choice",
+					"summary / main idea",
+					"text evidence",
+					"audience format",
+					"revision"
+				],
+				flowNote:
+					"Complete the project-selection plan, then choose one final path. Use a lawful copy of the selected text or an equivalent, build the smallest complete response first, and revise after an evidence check."
+			}
+		},
 		sourceActivityAnchors: {
 			"JoR1 Characters": [
 				{
@@ -2007,13 +2106,23 @@ const englishCourses = {
 			],
 			"JoR6 Master Project": [
 				{
+					title: "Master Project Choice and Evidence Plan",
+					prompt: "Preview the story-review and informational-report paths, confirm access to one selected text or an equivalent, and plan the summary or main idea, evidence, audience format, and revision check before building.",
+					evidence: [
+						"Selected project path and accessible text.",
+						"Planning notes for summary or main idea, at least three supporting details, and the intended audience.",
+						"Completion checklist for the selected response format and one planned revision."
+					]
+				},
+				{
 					title: "Bacon and Mittens Review or Figurative Art",
 					prompt: "Read Bacon and Mittens and choose either a story review or a figurative-language art response. Both options require a summary, a moral or lesson, and evidence from the story.",
 					evidence: [
 						"Summary of what the story is about and the moral or lesson.",
 						"At least three figurative-language examples from the story, with meanings explained.",
 						"Response format selected: story review with opinion and reasons, or figurative-language art with explanation for each example."
-					]
+					],
+					learningPath: "choice"
 				},
 				{
 					title: "Dinosaur Footprint Interview or News Report",
@@ -2022,14 +2131,11 @@ const englishCourses = {
 						"Interview questions with imagined answers grounded in article details, or a news script with introduction, main idea, key details, and closing.",
 						"Key-detail list that includes the discovery, estimated age, dinosaur information, and museum/protection context.",
 						"Explanation of how the selected format helps the audience understand the informational text."
-					]
+					],
+					learningPath: "choice"
 				}
 			]
 		},
-		staticAssets: [
-			"jor2_disact_plotempty.png",
-			"jor2_disact_plotexample.png"
-		],
 		modules: [
 			"JoR1 Characters",
 			"JoR2 Plot",
