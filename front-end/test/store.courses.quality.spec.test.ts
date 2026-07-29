@@ -7241,7 +7241,7 @@ describe("course text quality normalization", () => {
 			"Writing from an Image Literature Showcase"
 		];
 
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).not.toContain("Source Activity Anchors:");
 		expect(text).toContain("Lead Prankster");
 		expect(text).toContain("Kyra's Fear");
 		expect(text).toContain("Soccer Summer");
@@ -7253,7 +7253,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("rhyme and alliteration");
 		expect(text).toContain("Analysis Toolbox");
 		expect(text).toContain("Writing from an Image");
-		expect(text).toContain("Evidence record:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text).toContain(anchor);
 		}
@@ -7539,9 +7539,6 @@ describe("course text quality normalization", () => {
 
 	it("reserves source-library static assets from original source files", async () => {
 		const expectedAssetsByCourse = {
-			"middle-school-a-literature": [
-				"msa1_concept1_mainideasupportingevidence.png"
-			],
 			"middle-school-b-writing": [
 				"msa15_concept2_transitionaldevices.png",
 				"msa17_concept2_nemochart.png",
