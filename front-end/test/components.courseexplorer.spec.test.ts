@@ -97,9 +97,10 @@ describe("CourseExplorer.vue", () => {
 		});
 		expect(wrapper.text()).toContain(assignedCourse.name);
 		expect(wrapper.text()).toContain("Core lessons");
-		expect(wrapper.text()).toContain("Projects");
+		expect(wrapper.text()).toContain("Practice & extensions");
 		expect(wrapper.text()).toContain("Done");
 		expect(wrapper.text()).toContain("Complete");
+		expect(wrapper.text()).toContain("core items");
 	});
 
 	it("limits a course-code learner to the course granted by that code", async () => {
@@ -426,7 +427,9 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.find(".course-stats").text()).toContain("Modules1");
 		expect(wrapper.find(".course-stats").text()).toContain("Appendices1");
 		expect(wrapper.find(".course-stats").text()).toContain("Core lessons1");
-		expect(wrapper.find(".course-stats").text()).toContain("Projects0");
+		expect(wrapper.find(".course-stats").text()).toContain(
+			"Practice & extensions0"
+		);
 		expect(wrapper.text()).toContain("Choose a section");
 		expect(wrapper.text()).toContain("References");
 		expect(
@@ -434,6 +437,104 @@ describe("CourseExplorer.vue", () => {
 				.find('[aria-label="Show appendix 1: Reference Appendix"]')
 				.exists()
 		).toBe(true);
+	});
+
+	it("separates optional transitions and labels paced learning paths", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+
+		const appStore = useAppStore();
+		const coursesStore = useCoursesStore();
+		const assignedCourse = coursesStore.courses[0];
+
+		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					curriculum: [
+						{
+							content: "Build the required interaction.",
+							id: "core-build",
+							learningPath: "core",
+							title: "Required Interaction"
+						}
+					],
+					id: "module-1",
+					supplementalProjects: [],
+					title: "Core Module"
+				},
+				{
+					curriculum: [
+						{
+							content: "Translate one block script.",
+							id: "transition-core",
+							learningPath: "core",
+							title: "Translation Build"
+						}
+					],
+					estimatedTime: "1 optional session",
+					id: "transition-1",
+					keyBlocks: ["repeat → loop", "if → condition"],
+					kind: "transition",
+					supplementalProjects: [
+						{
+							content: "Translate another script.",
+							id: "transition-choice",
+							learningPath: "choice",
+							title: "Choose a Translation"
+						},
+						{
+							content: "Explain a complete project.",
+							id: "transition-challenge",
+							learningPath: "challenge",
+							title: "Portfolio Challenge"
+						}
+					],
+					title: "Scratch-to-Python Bridge"
+				}
+			]
+		});
+
+		appStore.setCurrentUser({
+			_id: "user-1",
+			name: "Student",
+			email: "student@example.com",
+			age: 12,
+			state: "GA",
+			courseAccess: [assignedCourse.id],
+			courseProgress: [],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				plugins: [pinia]
+			}
+		});
+		await flushPromises();
+
+		await vi.waitFor(() => {
+			expect(wrapper.text()).toContain("Scratch-to-Python Bridge");
+		});
+		expect(wrapper.find(".course-stats").text()).toContain("Modules1");
+		expect(wrapper.find(".course-stats").text()).toContain("Next steps1");
+		expect(wrapper.text()).toContain("Next Steps");
+
+		await wrapper
+			.get('[aria-label="Show next step 1: Scratch-to-Python Bridge"]')
+			.trigger("click");
+		await flushPromises();
+
+		expect(wrapper.text()).toContain("Optional transition");
+		expect(wrapper.text()).toContain("Estimated pace");
+		expect(wrapper.text()).toContain("1 optional session");
+		expect(wrapper.text()).toContain("repeat → loop");
+		expect(wrapper.text()).toContain("Core Build");
+		expect(wrapper.text()).toContain("Choose-One Practice");
+		expect(wrapper.text()).toContain("Challenge");
+		expect(wrapper.text()).not.toContain("Mark next step complete");
 	});
 
 	it("matches saved progress against stable ID aliases", async () => {
