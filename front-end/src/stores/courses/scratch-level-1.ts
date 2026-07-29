@@ -380,7 +380,7 @@ E-D-C, E-D-C, C-C-C-C, D-D-D-D, E-D-C.
 				{
 					title: "Introducing conditionals",
 					content:
-						'Conditionals let a program make decisions. The "if … then" block checks a condition, and sensing blocks such as "touching mouse pointer", "key right arrow pressed", and "touching color ___" provide facts the condition can test. In games, conditionals often sit inside a `forever` loop so Scratch keeps checking for changes.'
+						'Conditionals let a program make decisions. The "if … then" block checks a condition, and sensing blocks such as "touching mouse pointer", "key right arrow pressed", and "touching color ___" provide facts the condition can test. In games, conditionals often sit inside a `forever` loop so Scratch keeps checking for changes. A useful test describes both outcomes: what happens when the condition is true and what remains unchanged when it is false.'
 				},
 				{
 					title: "Project 1 – Dino's Colors",
