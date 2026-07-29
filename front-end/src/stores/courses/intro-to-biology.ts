@@ -1,5 +1,36 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
+
+const BIOLOGY_REFERENCES = {
+	hhmiMembraneTransport:
+		"https://www.biointeractive.org/classroom-resources/simulating-membrane-transport",
+	hhmiSystems:
+		"https://www.biointeractive.org/sites/default/files/media/file/2024-10/IntroSystems-Educator-act.pdf",
+	ngssLifeScience:
+		"https://www.nextgenscience.org/dci-arrangement/hs-ls1-molecules-organisms-structures-and-processes",
+	niddkDigestion:
+		"https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works",
+	niddkKidneys:
+		"https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work",
+	openStaxBiology: "https://openstax.org/details/books/biology-2e",
+	openStaxEnergy:
+		"https://openstax.org/books/biology-2e/pages/6-1-energy-and-metabolism",
+	openStaxMacromolecules:
+		"https://openstax.org/books/biology-2e/pages/3-1-synthesis-of-biological-macromolecules"
+} as const;
+
+const BIOLOGY_MATERIALS = {
+	answerKey: "/course-assets/biology/intro-biology-rubrics-answer-key.md",
+	pack: "/course-assets/biology/intro-biology-materials-pack.md"
+} as const;
+
+function biologyMaterial(section: string) {
+	return `${BIOLOGY_MATERIALS.pack}#${section}`;
+}
+
+function biologyAnswerKey(section: string) {
+	return `${BIOLOGY_MATERIALS.answerKey}#${section}`;
+}
 
 function concept({
 	evidence,
@@ -39,7 +70,7 @@ function project({
 	].join("\n\n");
 }
 
-export const introToBiologyCourse: RawCourse = {
+const introToBiologySourceCourse: RawCourse = {
 	name: "Intro to Biology",
 	modules: [
 		{
@@ -751,6 +782,563 @@ export const introToBiologyCourse: RawCourse = {
 			"Add vetted open biology reference links by module",
 			"Upload missing biology diagrams to static.classes",
 			"Cross-link Intro to Environmental Science where ecosystems, energy flow, and evidence modeling continue the biology sequence"
+		]
+	}
+};
+
+interface IntroBiologyFlow {
+	answerSection: string;
+	boundaryCheck: string;
+	estimatedTime: string;
+	evidenceGate: string;
+	flowNote: string;
+	keyBlocks: string[];
+	materialSection: string;
+	referenceLink: string;
+}
+
+const INTRO_BIOLOGY_FLOW: Record<string, IntroBiologyFlow> = {
+	"BIO1 Human Body Systems": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"system boundary",
+			"organization across scales",
+			"structure and function",
+			"matter and information flow",
+			"homeostasis",
+			"model limitation"
+		],
+		flowNote:
+			"Establish biological evidence habits and map how cells, tissues, organs, and systems coordinate one function without treating a diagram as a complete or universal body.",
+		evidenceGate:
+			"Name the system boundary, distinguish matter flow from information flow, and support every interaction arrow with the supplied scenario or an authoritative source.",
+		boundaryCheck:
+			"Human examples illustrate system organization but do not define every organism, predict an individual's body, or support medical conclusions.",
+		referenceLink: BIOLOGY_REFERENCES.ngssLifeScience,
+		materialSection: "body-systems-scenario-cards",
+		answerSection: "body-systems-scenario-key"
+	},
+	"BIO2 Nutrients and Macromolecules": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"carbohydrate",
+			"lipid",
+			"protein",
+			"monomer and polymer",
+			"evidence from labels or tables",
+			"health-claim boundary"
+		],
+		flowNote:
+			"Translate food descriptions into molecule-level evidence, compare macromolecule roles without moral labels, and preserve uncertainty when a food contains several nutrient categories.",
+		evidenceGate:
+			"Use the supplied molecule or label evidence for each classification, identify at least one multi-category ingredient, and reject any claim based only on a food name or appearance.",
+		boundaryCheck:
+			"Nutrient models explain biological materials and processes; they do not rank foods as good or bad, prescribe a diet, or infer personal health.",
+		referenceLink: BIOLOGY_REFERENCES.openStaxMacromolecules,
+		materialSection: "nutrient-and-macromolecule-evidence-table",
+		answerSection: "nutrient-evidence-key"
+	},
+	"BIO3 Digestive Process": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"gastrointestinal path",
+			"accessory organ",
+			"mechanical digestion",
+			"chemical digestion",
+			"enzyme",
+			"matter conservation"
+		],
+		flowNote:
+			"Trace material through the gastrointestinal tract, connect tissues and secretions to mechanical and chemical processing, and use enzymes as bounded molecular models.",
+		evidenceGate:
+			"Keep location, movement, secretion, molecule change, and evidence in separate storyboard fields so transport is not confused with digestion.",
+		boundaryCheck:
+			"An enzyme model explains specificity and condition dependence without claiming that enzymes consciously choose substrates, are used up like reactants, or make matter disappear.",
+		referenceLink: BIOLOGY_REFERENCES.niddkDigestion,
+		materialSection: "digestive-pathway-and-enzyme-cards",
+		answerSection: "digestive-process-key"
+	},
+	"BIO4 Digestion and Absorption": {
+		estimatedTime: "6 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"digestion versus absorption",
+			"epithelial boundary",
+			"diffusion",
+			"facilitated diffusion",
+			"active transport",
+			"blood and lymph routes"
+		],
+		flowNote:
+			"Move from broken-down molecules to membrane crossing, distinguish passive and active transport, and trace absorbed materials into blood or lymph without treating food as entering cells intact.",
+		evidenceGate:
+			"For each route, identify the molecule model, membrane or tissue boundary, gradient direction, transport evidence, destination, and one omitted mechanism.",
+		boundaryCheck:
+			"Net diffusion does not mean particles stop moving, active transport is not movement caused by effort or intention, and a villus diagram is not a literal photograph of absorption.",
+		referenceLink: BIOLOGY_REFERENCES.hhmiMembraneTransport,
+		materialSection: "absorption-and-membrane-transport-cases",
+		answerSection: "absorption-and-transport-key"
+	},
+	"BIO5 Energy Use and Storage": {
+		estimatedTime: "6 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"cellular respiration",
+			"matter accounting",
+			"energy transfer",
+			"ATP coupling",
+			"biosynthesis and storage",
+			"heat"
+		],
+		flowNote:
+			"Trace absorbed carbon-containing molecules into cellular reactions, distinguish matter from energy, and model ATP as a repeatedly produced coupling molecule rather than stored energy itself.",
+		evidenceGate:
+			"Track carbon atoms, oxygen, carbon dioxide, ATP-related transfer, and heat in separate ledger columns, then identify which values are supplied, inferred, or outside the model.",
+		boundaryCheck:
+			"The overall respiration equation is an accounting model rather than one reaction step, energy is transferred rather than created, and fictional data replaces personal calorie estimates.",
+		referenceLink: BIOLOGY_REFERENCES.openStaxEnergy,
+		materialSection: "cellular-energy-ledger",
+		answerSection: "cellular-energy-key"
+	},
+	"BIO6 Regulation of Digestion": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"stimulus",
+			"signal",
+			"target response",
+			"negative feedback",
+			"dynamic homeostasis",
+			"association versus causation"
+		],
+		flowNote:
+			"Model regulation as dynamic feedback, separate signals from transported materials, and read abstracts or microbiome claims without extending group-level evidence to individual health.",
+		evidenceGate:
+			"A regulation claim names the changing condition, evidence for detection or signaling, responding tissue, outcome, and whether the loop reduces the original deviation.",
+		boundaryCheck:
+			"Homeostasis is not a perfectly fixed state, one graph does not reveal every signal, and an association in a study does not prove causation or diagnose an individual.",
+		referenceLink: BIOLOGY_REFERENCES.niddkDigestion,
+		materialSection: "feedback-and-regulation-cases",
+		answerSection: "regulation-key"
+	},
+	"BIO7 Elimination and Excretion": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"elimination",
+			"metabolic waste",
+			"filtration",
+			"reabsorption",
+			"osmoregulation",
+			"matter pathway"
+		],
+		flowNote:
+			"Separate material left in the digestive tract from metabolic wastes carried through the body, then connect lungs, liver, kidneys, skin, and urinary structures through explicit pathways.",
+		evidenceGate:
+			"Classify a material only after naming where it was produced, whether it entered internal circulation, which organ processed or removed it, and which boundary it crossed.",
+		boundaryCheck:
+			"Feces and urine are not interchangeable, kidneys selectively filter and reabsorb rather than simply cleaning food, and fictional cases cannot assess organ health.",
+		referenceLink: BIOLOGY_REFERENCES.niddkKidneys,
+		materialSection: "elimination-and-excretion-sort",
+		answerSection: "elimination-and-excretion-key"
+	},
+	"BIO8 Digestive Odyssey Capstone": {
+		estimatedTime: "8–10 sessions · 60–120 minutes each",
+		keyBlocks: [
+			"narrow system question",
+			"traceable source log",
+			"cross-scale pathway",
+			"matter-energy-information distinction",
+			"changed-condition prediction",
+			"revision and defense"
+		],
+		flowNote:
+			"Defend one cross-scale Digestive Odyssey model with traceable evidence, accessible representations, a changed-condition prediction, and an explicit statement of what this human-biology case cannot establish.",
+		evidenceGate:
+			"The final packet connects a meal component across molecule, cell or tissue, organ, and system scales while preserving the source and limitation for every major claim.",
+		boundaryCheck:
+			"This capstone demonstrates introductory human-biology systems reasoning, not medical expertise or full survey mastery of genetics, evolution, ecology, and biological diversity.",
+		referenceLink: BIOLOGY_REFERENCES.hhmiSystems,
+		materialSection: "digestive-odyssey-capstone-packet",
+		answerSection: "capstone-defense-rubric"
+	}
+};
+
+const INTRO_BIOLOGY_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
+	"BIO1 Human Body Systems": [
+		{
+			title: "Biology Scope, Scale, and Evidence Contract",
+			content: [
+				"**Course scope:** Digestive Odyssey is an introductory human-biology case study. It develops evidence, structure-function, systems, homeostasis, matter-and-energy, and cross-scale modeling through one sustained meal journey. It does not pretend that digestion alone is a complete survey of cell division, genetics, evolution, ecology, or biological diversity.",
+				"**Scale contract:** Explanations label molecule, organelle, cell, tissue, organ, organ system, organism, and environment levels when they appear. A function at one scale is not copied automatically to another: a stomach is not a large cell, and a molecule does not have the goals or experiences of the organism.",
+				"**Evidence contract:** Observation, supplied datum, source statement, model-based inference, and claim remain visibly distinct. Each system model names its boundary, inputs, outputs, interactions, changed-condition prediction, and one feature left outside the boundary.",
+				"**Next-path map:** Genetics and evolution explain inherited variation across generations; ecology extends systems reasoning to populations and ecosystems; cell biology adds organelles, division, and molecular information. Those topics are identified as next courses rather than implied mastery here."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.ngssLifeScience,
+			learningPath: "core"
+		},
+		{
+			title: "Homeostasis, Variation, and Accessible Models Gate",
+			content: [
+				"**Homeostasis:** A regulated system changes continuously while keeping selected conditions within workable ranges. The model identifies a variable, evidence of change, a sensing or signaling process, a response, and the effect on the original deviation; homeostasis is not a claim that every value stays constant.",
+				"**Variation:** Human diagrams and reference ranges are models, not universal templates. Age, body size, genetics, environment, health, and measurement conditions can alter observed values. Course cases remain fictional and do not ask learners to compare private body data or infer whether a person is normal.",
+				"**Accessible representation:** Color is never the only label for an organ, pathway, arrow type, or condition. Diagrams include names, shapes, line styles, reading order, and text descriptions; any image-dependent task has an equivalent supplied scenario or table.",
+				"**Mastery check:** Revise one body-system map so it includes a boundary, two interaction types, a feedback-related prediction, a text equivalent, and one variation or uncertainty note."
+			].join("\n\n"),
+			datasetLink: biologyMaterial("body-systems-scenario-cards"),
+			solutionLink: biologyAnswerKey("body-systems-scenario-key"),
+			learningPath: "core"
+		}
+	],
+	"BIO2 Nutrients and Macromolecules": [
+		{
+			title: "Molecule-to-Nutrient Evidence Gate",
+			content: [
+				"**Classification rule:** A food is a mixture of materials, not one macromolecule. Carbohydrates, lipids, proteins, and nucleic acids are molecule categories; vitamins, minerals, and water are biologically important but are not all polymers or energy sources. Classifications follow supplied composition evidence rather than appearance or everyday reputation.",
+				"**Structure-function bridge:** Polymers can be broken into smaller units and smaller units can be used in new molecules, but a food label does not reveal every molecular structure or metabolic destination. Proteins do more than build muscle, lipids do more than store energy, and carbohydrates do more than provide an immediate burst.",
+				"**Uncertainty routine:** For every meal claim, record the ingredient, evidence source, molecule or nutrient category, plausible biological role, and one reason the role is not guaranteed. Multi-category ingredients remain multi-category rather than forced into one box.",
+				"**Mastery check:** Classify five supplied ingredients, defend each with evidence, reject one moralized food label, and revise one overconfident claim into a bounded biological statement."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.openStaxMacromolecules,
+			solutionLink: biologyAnswerKey("nutrient-evidence-key"),
+			learningPath: "core"
+		},
+		{
+			title: "Nutrition Evidence and Personal-Health Boundary",
+			content: [
+				"**Evidence boundary:** Recipe cards, fictional labels, and molecule tables support classification and pathway models. They do not establish an ideal diet, diagnose deficiency, predict weight change, or show how one individual will respond.",
+				"**Language boundary:** Use composition-rich, low in the supplied table, associated in this dataset, or supports this model instead of healthy, unhealthy, clean, bad, guilt-free, or optimal. A biological explanation addresses molecules and evidence without assigning moral value to food or bodies.",
+				"**Privacy and access:** No learner records meals, allergies, medical conditions, body measurements, cultural practices, or household purchases unless voluntarily choosing a fictionalized example that can be replaced immediately. The supplied ingredient table is always sufficient.",
+				"**Mastery check:** Audit one recipe or Dinner Mystery explanation for unsupported certainty, personal-health inference, and single-nutrient labeling, then rewrite it using only the evidence actually available."
+			].join("\n\n"),
+			datasetLink: biologyMaterial(
+				"nutrient-and-macromolecule-evidence-table"
+			),
+			solutionLink: biologyAnswerKey("nutrient-evidence-key"),
+			learningPath: "core"
+		}
+	],
+	"BIO3 Digestive Process": [
+		{
+			title: "Cells, Tissues, Organs, and Enzymes Bridge",
+			content: [
+				"**Cross-scale model:** Food moves through an organ system, but digestion depends on tissue movement, secretory cells, molecular interactions, and enzymes. A complete pathway can zoom from organ location to tissue boundary to molecule change without treating one picture as all three scales.",
+				"**Enzyme model:** Enzymes are biological catalysts whose shape and chemical environment influence which reactions proceed efficiently. Substrate specificity, pH, temperature, concentration, and saturation can affect a supplied activity graph; the introductory model does not imply that enzymes think, choose, or disappear after one reaction.",
+				"**Matter rule:** Mechanical digestion changes size and mixing. Chemical digestion rearranges bonds and produces smaller molecular units. Neither process destroys matter, and visible disappearance is not enough evidence that a molecule has been absorbed or used by a cell.",
+				"**Mastery check:** Annotate one digestive frame with organ, tissue action, enzyme or secretion, substrate, product model, evidence, and a statement of what remains unchanged."
+			].join("\n\n"),
+			datasetLink: biologyMaterial("digestive-pathway-and-enzyme-cards"),
+			solutionLink: biologyAnswerKey("digestive-process-key"),
+			learningPath: "core"
+		},
+		{
+			title: "Mechanical and Chemical Digestion Misconception Gate",
+			content: [
+				"**Path invariant:** Food follows the gastrointestinal tract; it does not pass through the liver, pancreas, or gallbladder. Accessory organs contribute materials or processing support through ducts, blood, and signaling pathways.",
+				"**Process distinctions:** Chewing, mixing, and peristalsis are mechanical or transport actions. Acid changes conditions; enzymes catalyze reactions; bile supports lipid processing but is not itself an enzyme. Absorption is a later boundary-crossing process rather than another word for digestion.",
+				"**Evidence check:** A location label alone does not establish what reaction occurs, and a reaction name alone does not establish where it occurs. Pair each claim with a supplied pathway card or authoritative reference and identify the scale represented.",
+				"**Mastery check:** Correct four claims: food falls down the esophagus, the stomach digests everything, bile is an enzyme, and digested matter has entered the body. Explain the evidence used for every correction."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.niddkDigestion,
+			solutionLink: biologyAnswerKey("digestive-process-key"),
+			learningPath: "core"
+		}
+	],
+	"BIO4 Digestion and Absorption": [
+		{
+			title: "Membrane Transport and Absorption Gate",
+			content: [
+				"**Boundary model:** Absorption crosses an epithelial and cellular boundary after suitable molecules are available. The explanation identifies what crosses, which side is the digestive lumen, which side connects to internal transport, and whether the simplified route enters blood or lymph.",
+				"**Transport distinctions:** Simple diffusion and facilitated diffusion move down an applicable gradient without direct ATP coupling; facilitated diffusion uses a membrane protein. Active transport uses coupled cellular energy to move a substance against its gradient or maintain a distribution. Osmosis concerns water across a selectively permeable membrane.",
+				"**Model limits:** Net movement does not mean one-way particle motion, equilibrium does not mean particles stop, and active transport is not defined by speed or by a cell trying harder. Surface-area models support relative absorption claims only when other conditions are held comparable.",
+				"**Mastery check:** Solve the four supplied cases, draw concentration and route labels, classify the transport evidence, and state one feature the membrane model omits."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.hhmiMembraneTransport,
+			solutionLink: biologyAnswerKey("absorption-and-transport-key"),
+			learningPath: "core"
+		},
+		{
+			title: "Digestion-to-Transport Evidence Chain",
+			content: [
+				"**Evidence chain:** Start with a supplied macromolecule, name the digestive process that produces smaller units, identify the intestinal boundary, classify the transport mechanism only when gradient or coupling evidence is available, and trace the first internal route.",
+				"**Route distinction:** Many simple sugars and amino acids enter blood pathways, while many absorbed lipid products enter lymphatic pathways before joining circulation. This is an introductory route model, not a claim that every molecule follows one identical path.",
+				"**Surface-area reasoning:** Folds, villi, and microvilli increase available exchange area, but a larger drawing does not itself prove a faster rate. A defensible comparison names the area evidence and holds molecule, gradient, membrane property, and time conditions consistent.",
+				"**Mastery check:** Build one trace with five linked claims and reject one unsupported leap, such as digested food goes straight to every cell or more villi always guarantees more absorption."
+			].join("\n\n"),
+			datasetLink: biologyMaterial(
+				"absorption-and-membrane-transport-cases"
+			),
+			solutionLink: biologyAnswerKey("absorption-and-transport-key"),
+			learningPath: "core"
+		}
+	],
+	"BIO5 Energy Use and Storage": [
+		{
+			title: "Cellular Respiration, ATP, and Matter-Energy Gate",
+			content: [
+				"**Matter account:** The overall aerobic cellular-respiration model tracks carbon-containing molecules and oxygen into carbon dioxide and water. Atoms are rearranged rather than converted into energy, and the single equation compresses many reactions and cellular locations.",
+				"**Energy account:** Chemical reactions transfer energy among molecular systems. Some transfer supports ATP production and cellular work, while some energy disperses as heat. Energy is not created, stored as a substance inside ATP, or interchangeable with carbon atoms.",
+				"**ATP boundary:** ATP is continuously produced and used in coupled cellular processes. It is a short-term transfer mechanism rather than a permanent battery, a synonym for glucose, or the only molecule involved in metabolism.",
+				"**Mastery check:** Complete the supplied ledger, label matter and energy separately, account for carbon and oxygen, identify two simplifications, and explain why a personal calorie budget is not required evidence."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.openStaxEnergy,
+			solutionLink: biologyAnswerKey("cellular-energy-key"),
+			learningPath: "core"
+		},
+		{
+			title: "Food Carbon, Photosynthesis, and Storage Boundary",
+			content: [
+				"**Source connection:** Much of the chemical energy and carbon in food webs traces to producers that build sugars through photosynthesis. Human cells do not photosynthesize; they transform absorbed molecules through respiration, biosynthesis, storage, and other metabolic pathways.",
+				"**Storage distinctions:** Glycogen and lipids are different molecule stores with different tissues, capacities, and pathways. A cell-factory model can show destination choices without implying that every meal component is immediately burned, turned into fat, or routed by one universal schedule.",
+				"**Estimate boundary:** A fictional energy ledger can compare pathways, but no three-hour classroom model has enough information to predict an individual's exact energy expenditure or storage. Values remain explicitly supplied, estimated, or assumed.",
+				"**Mastery check:** Trace one carbon atom through a producer-to-food-to-cell story, then branch the cell destination into respiration and biosynthesis while preserving uncertainty."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.ngssLifeScience,
+			solutionLink: biologyAnswerKey("cellular-energy-key"),
+			learningPath: "core"
+		}
+	],
+	"BIO6 Regulation of Digestion": [
+		{
+			title: "Negative Feedback and Signal-Material Distinction",
+			content: [
+				"**Feedback structure:** A defensible negative-feedback loop names a changing condition, evidence that the condition is detected or communicated, a signal, a target response, and an outcome that reduces the initial deviation. It also states the system boundary and time scale.",
+				"**Arrow semantics:** Information arrows represent neural or chemical signals; material arrows represent nutrients, digestive secretions, gases, water, or wastes; energy-transfer annotations answer a third question. Using one unlabeled arrow type hides the mechanism.",
+				"**Homeostasis boundary:** Regulation maintains dynamic ranges through interacting processes. It does not mean the body is motionless, every person has one ideal number, or any single organ controls the entire system independently.",
+				"**Mastery check:** Build the supplied post-meal model, label each arrow type, identify one unmeasured step, and predict what the graph would show if the modeled response were weaker or delayed."
+			].join("\n\n"),
+			datasetLink: biologyMaterial("feedback-and-regulation-cases"),
+			solutionLink: biologyAnswerKey("regulation-key"),
+			learningPath: "core"
+		},
+		{
+			title: "Abstract, Microbiome, and Causal-Claim Gate",
+			content: [
+				"**Reading routine:** Extract the population or model system, comparison, measured variable, result, uncertainty, and stated limitation before interpreting an abstract. A dense technical term is not evidence by itself.",
+				"**Causal boundary:** Association, correlation, temporal order, and mechanism are different claims. A microbiome pattern associated with one outcome does not prove that one organism caused the outcome, represent the whole microbial community, or predict an individual.",
+				"**Transfer boundary:** Group averages and controlled model systems can support a course mechanism, but they do not authorize diagnosis, treatment, supplement advice, or dietary recommendations. Personal symptoms and health history are outside every assignment.",
+				"**Mastery check:** Annotate the supplied abstract case, write the strongest claim the evidence supports, reject one causal overreach, and name one study design or measurement that would strengthen the inference."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.niddkDigestion,
+			solutionLink: biologyAnswerKey("regulation-key"),
+			learningPath: "core"
+		}
+	],
+	"BIO7 Elimination and Excretion": [
+		{
+			title: "Elimination, Excretion, and Conservation Gate",
+			content: [
+				"**Path distinction:** Elimination removes material that remains in or is added to the digestive tract. Excretion removes products of metabolism or excess substances from internal fluids. A material's everyday label as waste is not enough; its origin and route decide the biological category.",
+				"**Organ-system model:** Lungs remove carbon dioxide and water vapor, kidneys filter blood and selectively reabsorb or secrete substances, skin participates in water and salt loss, and the liver transforms or processes many molecules. No single organ simply removes all toxins.",
+				"**Matter account:** Carbon, nitrogen, water, salts, and undigested material follow different pathways. Heat leaving the body is energy transfer rather than matter excretion, while a nutrient entering blood is absorption rather than waste removal.",
+				"**Mastery check:** Complete the supplied sort, draw one internal-to-external pathway, identify one reabsorbed material, and revise any response that equates feces with urine."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.niddkKidneys,
+			solutionLink: biologyAnswerKey("elimination-and-excretion-key"),
+			learningPath: "core"
+		},
+		{
+			title: "Kidney Filtration and Osmoregulation Boundary",
+			content: [
+				"**Filtration model:** Blood enters kidney vessels; small materials and fluid can enter a nephron filtrate model; useful water and solutes can be reabsorbed; additional substances can be secreted; the remaining fluid becomes urine. This sequence is more accurate than saying kidneys strain out every bad substance.",
+				"**Balance model:** Osmoregulation concerns water and dissolved-substance balance across body fluids and membranes. A classroom diagram can explain direction and selective processing without calculating an individual's kidney function or hydration needs.",
+				"**Evidence boundary:** Supplied organ diagrams and NIDDK descriptions support structure-function claims. They do not support claims about disease, treatment, urine appearance, or whether a particular person is healthy.",
+				"**Mastery check:** Label filtration, reabsorption, secretion, urine flow, and blood flow on a simplified nephron pathway, then name two structures or regulatory details left outside the model."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.niddkKidneys,
+			solutionLink: biologyAnswerKey("elimination-and-excretion-key"),
+			learningPath: "core"
+		}
+	],
+	"BIO8 Digestive Odyssey Capstone": [
+		{
+			title: "Capstone Source, Traceability, and Uncertainty Contract",
+			content: [
+				"**Source log:** Record organization or author, title, date when available, direct link, evidence type, exact claim supported, and one limitation. Prefer authoritative public-health, standards, textbook, or research-education sources over unattributed summaries.",
+				"**Traceability:** Every pathway arrow connects to a cited source, supplied case, or earlier artifact. Every graph names axes and units when present; every image has a text description; every molecule, tissue, organ, and system claim identifies its scale.",
+				"**Uncertainty:** Separate measurement uncertainty, missing mechanism, model simplification, biological variation, and course-scope boundary. State what result would weaken the explanation and what evidence would be needed before making a stronger claim.",
+				"**Integrity and privacy:** Paraphrase sources, preserve citations through revision, use fictional meal evidence, and exclude personal diet, symptoms, diagnoses, body measurements, and medical recommendations."
+			].join("\n\n"),
+			datasetLink: biologyMaterial("digestive-odyssey-capstone-packet"),
+			solutionLink: biologyAnswerKey("capstone-defense-rubric"),
+			learningPath: "core"
+		},
+		{
+			title: "Capstone Revision, Defense, and Next-Path Map",
+			content: [
+				"**Required packet:** Submit the narrow question, initial model, source log, molecule-to-cell-to-system trace, digestive or transport mechanism, cellular-use model, regulation loop, waste distinction, changed-condition prediction, final model, and limitation statement.",
+				"**Revision record:** Preserve one before-and-after section showing how feedback changed a biological mechanism, scale connection, evidence source, arrow meaning, uncertainty statement, or system boundary. A wording-only edit does not demonstrate model revision.",
+				"**Defense:** Identify direct evidence, inference, alternative explanation, omitted variable, representation strength, representation weakness, and the result that would change the claim. Defend why the model is useful without claiming that it is complete.",
+				"**Next-path map:** Connect unresolved questions to cell biology, genetics, evolution, ecology, microbiology, or environmental science. The map makes the course boundary visible and turns gaps into intentional next learning rather than hidden omissions."
+			].join("\n\n"),
+			datasetLink: BIOLOGY_REFERENCES.hhmiSystems,
+			solutionLink: biologyAnswerKey("capstone-defense-rubric"),
+			learningPath: "core"
+		}
+	]
+};
+
+const INTRO_BIOLOGY_PROJECT_COMPLETION: Record<string, string> = {
+	"Project: Human Body Systems Map":
+		"Add a system boundary, one material-flow arrow, one information-flow arrow, a text equivalent for the diagram, and a changed-condition prediction. Use the body-systems scenario key to verify that each arrow represents an interaction rather than proximity.",
+	"Project: Scenario Response Map":
+		"Separate supplied facts from inferred mechanisms, label the trigger and response time, and compare one alternative explanation. The final note states why the fictional scenario cannot diagnose or predict an individual.",
+	"Project: Travel Journal Launch":
+		"Create a legend for molecule, organ, system, evidence, inference, and unresolved-question entries. Use a fictional meal or the supplied table, preserve the initial model, and reserve space for later revision evidence.",
+	"Project: Dinner Mystery":
+		"Rank the four matches by confidence, cite the exact graph or molecule clue, and explain why one rejected alternative fits less well. Preserve ambiguity when the supplied evidence supports more than one dish.",
+	"Project: Nutrient Recipe Book":
+		"Use fictional recipes or the supplied table, give every molecule claim a source, and identify ingredients that contribute more than one category. Replace moralized nutrition language with composition and model language.",
+	"Project: Meal Journal Entry":
+		"Track at least one carbohydrate, protein, or lipid claim into a predicted smaller unit, mark the prediction as provisional, and identify what digestive evidence will be required before the route can be accepted.",
+	"Project: Digestive Anatomy Gallery":
+		"Distinguish gastrointestinal-path organs from accessory organs, add tissue or secretion evidence to three labels, and provide a text route from mouth to anus. Correct any diagram that routes food through the liver or pancreas.",
+	"Project: Ingestion Storyboard":
+		"Each frame identifies location, movement, mechanical action, chemical process when supported, and one unchanged quantity. Include peristalsis evidence and reject the explanation that gravity alone moves the meal.",
+	"Project: Digestive Travel Entry":
+		"Choose one meal component, trace its location and molecular form through at least four stages, and flag every point where the model lacks a named enzyme, secretion, or product.",
+	"Project: Nutrient Absorption Timeline":
+		"Add the epithelial boundary, gradient or transport evidence, first blood or lymph destination, and a diagram limitation to every timeline route. Do not label a transport mechanism without the evidence needed to distinguish it.",
+	"Project: Salad Clue Report":
+		"Build an evidence table with clue, pathway claim, confidence, and alternative explanation. The conclusion separates digestion from absorption and identifies which clue cannot resolve the exact transport mechanism.",
+	"Project: Model Strengths and Limits":
+		"Compare the two models at the same biological scale and question, then test both against one changed condition. The recommendation identifies useful information preserved, information hidden, and evidence needed to revise the weaker model.",
+	"Project: Cell Factory Diagram":
+		"Track carbon atoms and energy transfer in different visual channels, label oxygen and carbon dioxide roles, and describe ATP as a coupled transfer mechanism. Include one process compressed by the factory analogy.",
+	"Project: Three-Hour Energy Budget":
+		"Use only the fictional ledger, mark supplied values separately from estimates, and include an uncertainty range or qualitative alternative. The final note explains why the model cannot predict personal expenditure or storage.",
+	"Project: Energy Journal Entry":
+		"Trace one absorbed molecule into respiration and another into biosynthesis or storage, then identify carbon-containing outputs and energy-transfer evidence. Revise any statement that turns matter into energy.",
+	"Project: Regulation Flowchart":
+		"Label stimulus, detection or signaling evidence, information arrow, responding tissue, material response, and reduced deviation. Add one delayed-response prediction and one omitted pathway.",
+	"Project: Abstract Interaction Notes":
+		"Record population or model system, comparison, measured variable, result, and limitation before interpreting the abstract. Mark every statement as direct report, supported inference, or unsupported extension.",
+	"Project: Regulation Journal Entry":
+		"Connect the fictional meal to one feedback loop, distinguish signal from material transport, and state the time scale. Exclude symptoms, diagnoses, and advice from the explanation.",
+	"Project: Waste-System Trading Cards":
+		"Give each card an input, process, output, internal or external boundary, and evidence source. Add separate cards for carbon dioxide, nitrogen-containing waste, and undigested material so waste categories remain distinct.",
+	"Project: Alien Venn Diagram":
+		"State which alien features are supplied and which are inferred, preserve unknown categories, and test one changed anatomy condition. The comparison avoids assuming that a human arrangement is the only biologically possible solution.",
+	"Project: Final Waste Journal Entry":
+		"Trace one eliminated material and one excreted metabolic product from origin to boundary crossing. Include reabsorption where relevant and correct any route that treats urine as digested food.",
+	"Project: Digestive Odyssey Exhibit":
+		"Include the complete source log, cross-scale route, arrow legend, text equivalents, changed-condition prediction, and before-and-after model revision. Every major claim remains traceable to evidence.",
+	"Project: Biology CER Presentation":
+		"Use one narrow claim, two relevant pieces of evidence, a cross-scale reasoning chain, one alternative explanation, and one limitation. The defense states what finding would change the claim.",
+	"Project: Final Systems Reflection":
+		"Compare the first and final system boundaries, cite two concrete revisions, and identify a remaining question for genetics, evolution, ecology, cell biology, or microbiology. Do not present the Digestive Odyssey as a complete biology survey."
+};
+
+function introBiologyProjectPath(title: string) {
+	return /model strengths|abstract|CER|final systems|alien/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function introBiologyMediaAlternative(mediaLink: string | undefined) {
+	if (!mediaLink) return "";
+	if (mediaLink.endsWith("biomod2pro1im1.png")) {
+		return "**Accessible media alternative:** The Nutrient and Macromolecule Evidence Table supplies the same comparison task in text and table form. Complete evidence, confidence, and rejected-alternative fields even when the image is available.";
+	}
+	return "**Accessible media alternative:** The Body Systems Scenario Cards supply text-described organs, interactions, and arrow meanings. Use those cards when the image is unavailable, difficult to perceive, or not useful for the selected representation.";
+}
+
+export const introToBiologyCourse: RawCourse = {
+	...introToBiologySourceCourse,
+	modules: introToBiologySourceCourse.modules.map(module => {
+		const flow = INTRO_BIOLOGY_FLOW[module.title];
+		const curriculum = module.curriculum.map((item, index) => {
+			const mediaAlternative = introBiologyMediaAlternative(
+				item.mediaLink
+			);
+			return {
+				...item,
+				content: [
+					index === 0 ? `**Course flow:** ${flow.flowNote}` : "",
+					item.content,
+					`**Module evidence gate:** ${flow.evidenceGate}`,
+					`**Scale and boundary check:** ${flow.boundaryCheck}`,
+					mediaAlternative
+				]
+					.filter(Boolean)
+					.join("\n\n"),
+				datasetLink:
+					item.datasetLink ?? biologyMaterial(flow.materialSection),
+				learningPath: "core" as const
+			};
+		});
+		const supplementalProjects = module.supplementalProjects.map(item => ({
+			...item,
+			content: [
+				item.content,
+				`**Completion and extension gate:** ${INTRO_BIOLOGY_PROJECT_COMPLETION[item.title]}`,
+				`**Evidence boundary:** ${flow.boundaryCheck}`
+			].join("\n\n"),
+			datasetLink:
+				item.datasetLink ?? biologyMaterial(flow.materialSection),
+			solutionLink:
+				item.solutionLink ?? biologyAnswerKey(flow.answerSection),
+			learningPath: introBiologyProjectPath(item.title)
+		}));
+
+		return {
+			...module,
+			estimatedTime: flow.estimatedTime,
+			keyBlocks: flow.keyBlocks,
+			curriculum: [
+				...curriculum,
+				...INTRO_BIOLOGY_ADDITIONS[module.title]
+			],
+			supplementalProjects
+		};
+	}),
+	developmentMetadata: {
+		...introToBiologySourceCourse.developmentMetadata!,
+		standards: [
+			"NGSS HS-LS1 structures and processes",
+			"Structure and function across biological scales",
+			"Systems, system boundaries, and homeostasis",
+			"Matter, energy, and information flow",
+			"Developing and revising models",
+			"Claim-evidence-reasoning with uncertainty"
+		],
+		sourcePolicy:
+			"Preserves the BIO1-BIO8 Digestive Odyssey sequence while adding authoritative NGSS, NIDDK, OpenStax, and HHMI references; supplied equipment-free evidence packs; accessible media alternatives; and explicit medical, nutrition, privacy, and course-scope boundaries.",
+		assessmentCadence: [
+			"One model with a named boundary, scale, evidence source, and limitation per module",
+			"One curated media, supplied-data, or authoritative-reference evidence check per module",
+			"One misconception correction or changed-condition prediction per module",
+			"Course-long travel journal with preserved revisions",
+			"Capstone CER and model defense using the common rubric"
+		],
+		toolchain: [
+			"Notebook or digital document",
+			"Supplied biology materials pack and answer-key rubric",
+			"Accessible diagrams and text alternatives",
+			"Authoritative public biology references",
+			"Optional HHMI digital models with noninteractive alternatives"
+		],
+		safetyPolicy: [
+			"No required food handling, tasting, body measurement, or household experiment",
+			"No biological specimens, dissection, or wet-lab requirement",
+			"No personal diet, symptoms, diagnoses, medical history, or body data",
+			"No medical, nutrition, supplement, or treatment advice",
+			"Fictional cases and supplied evidence remain sufficient for every assessment"
+		],
+		courseBoundaries: [
+			"Introductory human-body systems and digestion case study rather than a complete biology survey",
+			"Conceptual cell, enzyme, membrane, metabolism, feedback, and excretion models without laboratory certification",
+			"No personalized nutrition, health assessment, diagnosis, or treatment guidance",
+			"Genetics, evolution, ecology, microbiology, and biodiversity are named next paths rather than implied mastery"
+		],
+		capstoneExpectations: [
+			"Cross-scale Digestive Odyssey system model",
+			"Traceable source and evidence portfolio",
+			"Matter-energy-information distinction",
+			"Changed-condition prediction and alternative explanation",
+			"Accessible representation with model limitation",
+			"Before-and-after revision and oral or written defense"
+		],
+		recommendedNextWork: [
+			"Replace the three pending legacy image files with licensed, locally archived, text-described diagrams while retaining the supplied nonvisual alternatives.",
+			"Add anonymized exemplar responses at multiple proficiency levels using the CER/model-rubric without introducing personal health data.",
+			"Cross-link genetics, evolution, cell biology, and Intro to Environmental Science pathways when those catalog transitions have dedicated readiness maps."
 		]
 	}
 };
