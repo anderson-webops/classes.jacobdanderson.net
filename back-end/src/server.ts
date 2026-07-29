@@ -3,6 +3,7 @@ import process, { env, exit } from "node:process";
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
 import express from "express";
+import helmet from "helmet";
 import mongoose from "mongoose";
 
 import {
@@ -11,6 +12,7 @@ import {
 } from "./controllers/common/pythonIdeAssetsProxy.js";
 import { quoteProxy } from "./controllers/common/quoteProxy.js";
 import { createAdminMailLimiter } from "./middleware/rateLimiters.js";
+import { createRequestOriginGuard } from "./middleware/requestOriginGuard.js";
 import { accountRoutes } from "./routes/accountRoutes.js";
 import { adminMailRoutes } from "./routes/adminMailRoutes.js";
 import { adminRoutes } from "./routes/adminRoutes.js";
@@ -18,14 +20,15 @@ import { courseAccessCodeRoutes } from "./routes/courseAccessCodeRoutes.js";
 import { tutorRoutes } from "./routes/tutorRoutes.js";
 
 import { userRoutes } from "./routes/userRoutes.js";
+import { internalDiagnosticsAuthorized } from "./utils/internalDiagnostics.js";
+import { getRoleTransferReadiness } from "./utils/roleTransferReadiness.js";
 
 import { readMongoSecret } from "./vaultClient.js";
-import "dotenv/config";
 
 async function main() {
 	const app = express();
 	const internalDiagnosticsKey = env.INTERNAL_DIAGNOSTICS_KEY;
-	const loopbackAddresses = new Set(["127.0.0.1", "::1", "::ffff:127.0.0.1"]);
+	const isProd = env.NODE_ENV === "production";
 	const codeIdeProjectJsonBodyLimit
 		= env.CODE_IDE_PROJECT_BODY_LIMIT || env.PYTHON_IDE_PROJECT_BODY_LIMIT || "15mb";
 	const codeIdeProjectJsonRoute = /^\/users\/(?:loggedin\/python-projects|loggedin\/python-project-reviews|[^/]+\/python-projects)(?:\/|$)/;
@@ -39,7 +42,11 @@ async function main() {
 	const SESSION_SECRET = env.SESSION_SECRET;
 	if (!SESSION_SECRET) throw new Error("Missing SESSION_SECRET");
 
-	app.set("trust proxy", 1);
+	app.set("trust proxy", isProd ? env.TRUST_PROXY || "loopback" : false);
+	app.use(helmet({
+		contentSecurityPolicy: false,
+		crossOriginResourcePolicy: false
+	}));
 
 	// 1) parsers first (with limits)
 	app.use(codeIdeProjectJsonRoute, bodyParser.json({ limit: codeIdeProjectJsonBodyLimit }));
@@ -48,7 +55,6 @@ async function main() {
 
 	// 2) sessions BEFORE any route that needs req.session
 	///   COOKIES   ///
-	const isProd = env.NODE_ENV === "production";
 	const isCrossSite = !!env.CROSS_SITE;
 	type CookieSessionOpts = Parameters<typeof cookieSession>[0];
 
@@ -74,6 +80,7 @@ async function main() {
 	}
 
 	app.use(cookieSession(cookieOptions));
+	app.use(createRequestOriginGuard());
 
 	// 3) cache-control for auth endpoints
 	app.use((req, res, next) => {
@@ -110,12 +117,20 @@ async function main() {
 
 		try {
 			await connection.db.admin().ping();
-			return res.set("Cache-Control", "no-store").json({
-				ready: true,
-				components: {
-					db: { ok: true, state }
-				}
-			});
+			const roleTransfers = await getRoleTransferReadiness();
+			const requireRoleTransfers
+				= env.REQUIRE_ROLE_TRANSFER_TRANSACTIONS === "true";
+			const ready = !requireRoleTransfers || roleTransfers.ok;
+			return res
+				.status(ready ? 200 : 503)
+				.set("Cache-Control", "no-store")
+				.json({
+					ready,
+					components: {
+						db: { ok: true, state },
+						roleTransfers
+					}
+				});
 		}
 		catch (error) {
 			return res.status(503).set("Cache-Control", "no-store").json({
@@ -129,18 +144,6 @@ async function main() {
 				}
 			});
 		}
-	});
-
-	// cache-control for auth endpoints
-	app.use((req, res, next) => {
-		if (
-			req.path.startsWith("/accounts")
-			|| req.path.startsWith("/course-access")
-			|| req.path.endsWith("/loggedin")
-		) {
-			res.setHeader("Cache-Control", "no-store");
-		}
-		next();
 	});
 
 	// --- Get Mongo URI from Vault (preferred), else env fallback ---
@@ -169,18 +172,10 @@ async function main() {
 	const c = mongoose.connection;
 	console.log(`Mongo connected: db=${c.db?.databaseName} host=${c.host} name=${c.name}`);
 	app.get("/_dbinfo", (req, res) => {
-		const forwardedFor = req.headers["x-forwarded-for"];
-		const forwardedIp = typeof forwardedFor === "string"
-			? forwardedFor.split(",")[0]?.trim()
-			: Array.isArray(forwardedFor)
-				? forwardedFor[0]?.trim()
-				: undefined;
-		const clientIp = forwardedIp || req.ip || req.socket.remoteAddress || "";
-		const isInternalRequest = env.NODE_ENV !== "production"
-			|| (internalDiagnosticsKey && req.get("x-internal-diagnostics-key") === internalDiagnosticsKey)
-			|| loopbackAddresses.has(clientIp);
-
-		if (!isInternalRequest) {
+		if (!internalDiagnosticsAuthorized(req, {
+			diagnosticsKey: internalDiagnosticsKey,
+			isProduction: isProd
+		})) {
 			return res.status(403).set("Cache-Control", "no-store").json({ ok: false, error: "forbidden" });
 		}
 
@@ -200,15 +195,10 @@ async function main() {
 	app.use("/accounts", accountRoutes);
 	app.use("/course-access", courseAccessCodeRoutes);
 
-	// after your session middleware in server.ts
-	app.get("/accounts/me", (req, res) => {
-		const s = req.session as any;
-		res.json({ adminID: s?.adminID ?? null, tutorID: s?.tutorID ?? null, userID: s?.userID ?? null });
-	});
-
 	const PORT = env.PORT || 3008;
 	const server = app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
 	let isShuttingDown = false;
+	const shutdownTimeoutMs = Number(env.SHUTDOWN_TIMEOUT_MS || 10_000);
 
 	const shutdown = async (signal: NodeJS.Signals) => {
 		if (isShuttingDown) {
@@ -217,6 +207,12 @@ async function main() {
 
 		isShuttingDown = true;
 		console.log(`${signal} received, shutting down gracefully...`);
+		const forceShutdownTimer = setTimeout(() => {
+			console.error("Graceful shutdown timed out; closing active connections.");
+			server.closeAllConnections();
+			exit(1);
+		}, shutdownTimeoutMs);
+		forceShutdownTimer.unref();
 
 		try {
 			if (server.listening) {
@@ -237,9 +233,11 @@ async function main() {
 			}
 
 			console.log("Graceful shutdown complete.");
+			clearTimeout(forceShutdownTimer);
 			exit(0);
 		}
 		catch (error) {
+			clearTimeout(forceShutdownTimer);
 			console.error("Graceful shutdown failed:", error);
 			exit(1);
 		}

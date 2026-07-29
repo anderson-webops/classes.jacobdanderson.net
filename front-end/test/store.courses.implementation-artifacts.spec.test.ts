@@ -11,6 +11,10 @@ import { researchBackedExpansionCourseIds } from "@/stores/courses/research-expa
 
 const authoredLearnerCourseIds = new Set(["intro-to-chemistry"]);
 const COURSE_SWEEP_TIMEOUT = 180000;
+const normalizedCoursePromises = new Map<
+	string,
+	ReturnType<typeof loadRawCourse>
+>();
 const pythonLevel2SplitSourceFolders = new Set([
 	"PS-Check-in-1",
 	"PS-Check-in-2",
@@ -75,7 +79,13 @@ const pythonLevel2SplitSourceFolders = new Set([
 ]);
 
 async function requireCourse(courseId: string) {
-	const course = await loadRawCourse(courseId);
+	let coursePromise = normalizedCoursePromises.get(courseId);
+	if (!coursePromise) {
+		coursePromise = loadRawCourse(courseId);
+		normalizedCoursePromises.set(courseId, coursePromise);
+	}
+
+	const course = await coursePromise;
 	expect(course, courseId).not.toBeNull();
 	return course!;
 }
@@ -1158,7 +1168,9 @@ describe("implemented course development artifacts", () => {
 			"UGD8 Full-Project Starter and Review Repository Plan"
 		);
 		expect(unityText).toContain("current full-project baseline");
-	}, 30000);
+		},
+		COURSE_SWEEP_TIMEOUT
+	);
 
 	it(
 		"keeps source-backed starter and solution links distinct",

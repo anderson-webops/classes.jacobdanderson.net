@@ -6,6 +6,7 @@ import {
 	deleteTutor,
 	getAllTutors,
 	getLoggedInTutor,
+	getTutorDirectory,
 	updateTutor
 } from "../controllers/users/tutorController.js";
 import {
@@ -16,11 +17,14 @@ import { validAdmin, validTutor, validTutorOrAdmin } from "../middleware/auth.js
 
 const router = express.Router();
 
-// Route to create a tutor
-router.post("/", createTutor);
+// Public directory contains display-only tutor fields and no contact details.
+router.get("/directory", getTutorDirectory);
 
-// Route to get all tutors
-router.get("/", getAllTutors);
+// Tutor accounts are created only by an authenticated admin.
+router.post("/", validAdmin, createTutor);
+
+// Full tutor records are administrative data.
+router.get("/", validAdmin, getAllTutors);
 
 // Route to update a tutor's information (protected - admin OR that tutor)
 router.put("/:tutorID", validTutorOrAdmin, updateTutor);

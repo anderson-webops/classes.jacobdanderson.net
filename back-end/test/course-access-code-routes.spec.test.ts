@@ -168,11 +168,15 @@ async function withCourseAccessRoutes<T>(
 		})
 	);
 	app.post("/test/session/admin", (req, res) => {
-		(req.session as CustomSession).adminID = adminID.toString();
+		const session = req.session as CustomSession;
+		session.adminID = adminID.toString();
+		session.accountSessionVersion = 0;
 		res.sendStatus(204);
 	});
 	app.post("/test/session/tutor", (req, res) => {
-		(req.session as CustomSession).tutorID = tutorID.toString();
+		const session = req.session as CustomSession;
+		session.tutorID = tutorID.toString();
+		session.accountSessionVersion = 0;
 		res.sendStatus(204);
 	});
 	app.get("/test/session", (req, res) => {
@@ -250,13 +254,15 @@ describe("course access code routes", () => {
 
 		modelMocks.adminFindById.mockResolvedValue({
 			_id: adminID,
-			name: "Admin"
+			name: "Admin",
+			sessionVersion: 0
 		});
 		modelMocks.adminExists.mockResolvedValue({ _id: adminID });
 		modelMocks.tutorFindById.mockImplementation(async () => ({
 			_id: tutorID,
 			name: "Tutor",
-			coursePermissions: tutorCoursePermissions
+			coursePermissions: tutorCoursePermissions,
+			sessionVersion: 0
 		}));
 		modelMocks.tutorExists.mockImplementation(async query =>
 			query._id.toString() === tutorID.toString()

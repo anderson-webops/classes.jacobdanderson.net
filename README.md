@@ -91,12 +91,15 @@ npm run server
 npm run serve
 npm run build
 npm run up
+npm run clean
 ```
 
 ## Operational Notes
 
 - `.nvmrc` and `.node-version` pin Node 24.18.0 LTS; its npm 11.16.0 release matches the root `packageManager` field.
 - The root `package-lock.json` is the authoritative lockfile for the repo. Keep it updated whenever dependencies change.
+- `npm run up` reports available dependency updates without rewriting manifests. Apply reviewed updates with a targeted `npm install`.
+- `npm run clean` removes generated build/test output only. It never uses `sudo` and never deletes lockfiles or dependency trees.
 - Use `npm run server` and `npm run serve` when you want the API and front-end started separately.
 - Use [`HEALTHCHECKS.md`](./HEALTHCHECKS.md) for deployment monitor targets instead of `/`.
 - The booking page embeds the sibling scheduler app from `VITE_SCHEDULER_ORIGIN`, defaulting to `https://scheduler.classes.jacobdanderson.net`. For local end-to-end testing against `../scheduler.classes.jacobdanderson.net`, run that app on port `5173` and set `VITE_SCHEDULER_ORIGIN=http://localhost:5173` in `front-end/.env`.

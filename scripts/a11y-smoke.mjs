@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import http from "node:http";
 import { createRequire } from "node:module";
+import net from "node:net";
 import puppeteer from "puppeteer";
 
 const require = createRequire(import.meta.url);
@@ -261,7 +262,8 @@ function startVite() {
 			detached: process.platform !== "win32",
 			env: {
 				...process.env,
-				BROWSER: "none"
+				BROWSER: "none",
+				VITE_API_PROXY_TARGET: `http://127.0.0.1:${apiPort}`
 			},
 			stdio: ["ignore", "pipe", "pipe"]
 		}
@@ -288,6 +290,25 @@ function killChild(child, signal) {
 
 function closeServer(server) {
 	return new Promise(resolve => server.close(resolve));
+}
+
+async function assertPortAvailable(port, label) {
+	const probe = net.createServer();
+	try {
+		await new Promise((resolve, reject) => {
+			probe.once("error", reject);
+			probe.listen(port, "127.0.0.1", resolve);
+		});
+	}
+	catch (error) {
+		throw new Error(
+			`${label} port ${port} is already in use; set A11Y_${label.toUpperCase()}_PORT to an unused port`,
+			{ cause: error }
+		);
+	}
+	finally {
+		if (probe.listening) await closeServer(probe);
+	}
 }
 
 function waitForChildExit(child) {
@@ -318,6 +339,8 @@ async function stopChild(child) {
 	]);
 }
 
+await assertPortAvailable(frontendPort, "frontend");
+await assertPortAvailable(apiPort, "api");
 const apiServer = createMockApiServer();
 const viteProcess = startVite();
 let browser;

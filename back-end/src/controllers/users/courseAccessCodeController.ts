@@ -7,6 +7,7 @@ import { Types } from "mongoose";
 import { z } from "zod";
 import { CourseAccessCode } from "../../models/schemas/CourseAccessCode.js";
 import { CourseCodeLearner } from "../../models/schemas/CourseCodeLearner.js";
+import { clearSessionRoles } from "../../utils/accountSessions.js";
 import {
 	courseAccessCodeHint,
 	createCourseAccessCodeValue,
@@ -17,6 +18,7 @@ import {
 	normalizeCourseCodeUsername,
 	normalizeCourseID
 } from "../../utils/courseAccessCodes.js";
+import { recordSecurityAuditEvent } from "../../utils/securityAudit.js";
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const MAX_CODE_CREATION_ATTEMPTS = 5;
@@ -34,13 +36,6 @@ const redeemCodePayloadSchema = z.object({
 	code: z.string(),
 	username: z.string()
 });
-
-function clearSessionRoles(session: CustomSession) {
-	delete session.adminID;
-	delete session.tutorID;
-	delete session.userID;
-	delete session.courseCodeLearnerID;
-}
 
 function serializeCourseAccessCode(code: ICourseAccessCode) {
 	return {
@@ -174,6 +169,13 @@ export const createCourseAccessCode: RequestHandler = async (req, res) => {
 				createdByName: staff.name,
 				active: true
 			});
+			await recordSecurityAuditEvent(req, {
+				action: "course-access-code.create",
+				metadata: {
+					courseID,
+					label: record.label
+				}
+			});
 			return res.status(201).json({
 				code,
 				accessCode: serializeCourseAccessCode(record)
@@ -208,6 +210,13 @@ export const updateCourseAccessCode: RequestHandler = async (req, res) => {
 	if (parsed.data.active !== undefined) code.active = parsed.data.active;
 	if (parsed.data.label !== undefined) code.label = parsed.data.label;
 	await code.save();
+	await recordSecurityAuditEvent(req, {
+		action: "course-access-code.update",
+		metadata: {
+			active: code.active,
+			courseID: code.courseID
+		}
+	});
 
 	res.json({ accessCode: serializeCourseAccessCode(code) });
 };

@@ -12,8 +12,8 @@ const modelMocks = vi.hoisted(() => ({
 	adminFindById: vi.fn(),
 	adminFindOne: vi.fn(),
 	resetDeleteOne: vi.fn(),
-	resetFindOneAndDelete: vi.fn(),
 	resetFindOneAndUpdate: vi.fn(),
+	resetUpdateOne: vi.fn(),
 	tutorFindById: vi.fn(),
 	tutorFindOne: vi.fn(),
 	userFindById: vi.fn(),
@@ -48,8 +48,8 @@ vi.mock("../src/models/schemas/User.js", () => ({
 vi.mock("../src/models/schemas/PasswordResetToken.js", () => ({
 	PasswordResetToken: {
 		deleteOne: modelMocks.resetDeleteOne,
-		findOneAndDelete: modelMocks.resetFindOneAndDelete,
-		findOneAndUpdate: modelMocks.resetFindOneAndUpdate
+		findOneAndUpdate: modelMocks.resetFindOneAndUpdate,
+		updateOne: modelMocks.resetUpdateOne
 	}
 }));
 
@@ -67,8 +67,10 @@ interface TestAccount {
 }
 
 function queryWith<T>(result: T) {
+	const exec = vi.fn().mockResolvedValue(result);
 	return {
-		exec: vi.fn().mockResolvedValue(result)
+		exec,
+		select: vi.fn().mockReturnValue({ exec })
 	};
 }
 
@@ -148,6 +150,7 @@ describe("password reset", () => {
 		mockAccounts({});
 		modelMocks.resetFindOneAndUpdate.mockReturnValue(queryWith({}));
 		modelMocks.resetDeleteOne.mockReturnValue(queryWith({ deletedCount: 1 }));
+		modelMocks.resetUpdateOne.mockReturnValue(queryWith({ modifiedCount: 1 }));
 		emailMocks.sendTransactionalEmail.mockResolvedValue(undefined);
 	});
 
@@ -215,7 +218,7 @@ describe("password reset", () => {
 	it("updates the selected role, consumes the token, and clears stale session roles", async () => {
 		const rawToken = "a".repeat(64);
 		const tutor = makeAccount();
-		modelMocks.resetFindOneAndDelete.mockReturnValue(queryWith({
+		modelMocks.resetFindOneAndUpdate.mockReturnValue(queryWith({
 			accountID: tutor._id,
 			role: "tutor"
 		}));
@@ -238,13 +241,29 @@ describe("password reset", () => {
 			});
 
 			expect(response.status).toBe(200);
-			expect(modelMocks.resetFindOneAndDelete).toHaveBeenCalledWith({
-				tokenHash: createHash("sha256").update(rawToken).digest("hex"),
-				expiresAt: { $gt: expect.any(Date) }
-			});
+			const tokenHash = createHash("sha256").update(rawToken).digest("hex");
+			expect(modelMocks.resetFindOneAndUpdate).toHaveBeenCalledWith(
+				{
+					tokenHash,
+					expiresAt: { $gt: expect.any(Date) },
+					claimID: { $exists: false }
+				},
+				{
+					$set: {
+						claimID: expect.stringMatching(/^[a-f\d]{48}$/),
+						claimedAt: expect.any(Date)
+					}
+				},
+				{ new: true }
+			);
 			expect(modelMocks.tutorFindById).toHaveBeenCalledWith(tutor._id);
 			expect(tutor.password).toBe("new-secure-password");
+			expect((tutor as TestAccount & { sessionVersion: number }).sessionVersion).toBe(1);
 			expect(tutor.save).toHaveBeenCalledTimes(1);
+			expect(modelMocks.resetDeleteOne).toHaveBeenCalledWith({
+				tokenHash,
+				claimID: expect.stringMatching(/^[a-f\d]{48}$/)
+			});
 			await expect(meResponse.json()).resolves.toEqual({
 				adminID: null,
 				tutorID: null,
@@ -254,7 +273,7 @@ describe("password reset", () => {
 	});
 
 	it("rejects an expired or already-used reset token", async () => {
-		modelMocks.resetFindOneAndDelete.mockReturnValue(queryWith(null));
+		modelMocks.resetFindOneAndUpdate.mockReturnValue(queryWith(null));
 
 		await withAccountRoutes(async (baseUrl) => {
 			const response = await fetch(`${baseUrl}/accounts/password-reset/confirm`, {
@@ -271,6 +290,42 @@ describe("password reset", () => {
 				message: "This password reset link is invalid or expired."
 			});
 			expect(modelMocks.tutorFindById).not.toHaveBeenCalled();
+		});
+	});
+
+	it("releases a claimed token when saving the new password fails", async () => {
+		const rawToken = "c".repeat(64);
+		const tutor = makeAccount();
+		tutor.save.mockRejectedValueOnce(new Error("temporary database failure"));
+		modelMocks.resetFindOneAndUpdate.mockReturnValue(queryWith({
+			accountID: tutor._id,
+			role: "tutor"
+		}));
+		modelMocks.tutorFindById.mockReturnValue(queryWith(tutor));
+
+		await withAccountRoutes(async (baseUrl) => {
+			const response = await fetch(`${baseUrl}/accounts/password-reset/confirm`, {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({
+					token: rawToken,
+					newPassword: "another-secure-password"
+				})
+			});
+
+			expect(response.status).toBe(500);
+			expect(modelMocks.resetUpdateOne).toHaveBeenCalledWith(
+				{
+					tokenHash: createHash("sha256").update(rawToken).digest("hex"),
+					claimID: expect.stringMatching(/^[a-f\d]{48}$/)
+				},
+				{
+					$unset: {
+						claimID: 1,
+						claimedAt: 1
+					}
+				}
+			);
 		});
 	});
 });

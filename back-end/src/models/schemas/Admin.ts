@@ -17,6 +17,7 @@ const adminSchema: Schema<IAdmin> = new Schema(
 		password: { type: String, required: true },
 		editAdmins: { type: Boolean, default: false, required: true }, // Added required: true
 		saveEdit: { type: String, default: "Edit", required: true }, // Added required: true
+		sessionVersion: { type: Number, default: 0, required: true, min: 0 },
 		role: { type: String, default: "admin" }
 	},
 	{ timestamps: true }

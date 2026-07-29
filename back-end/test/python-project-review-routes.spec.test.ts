@@ -8,6 +8,7 @@ const modelMocks = vi.hoisted(() => ({
 	tutorFindById: vi.fn(),
 	userFindById: vi.fn(),
 	pythonProjectCreate: vi.fn(),
+	pythonProjectCountDocuments: vi.fn(),
 	pythonProjectFind: vi.fn(),
 	pythonProjectFindOne: vi.fn(),
 	pythonProjectReviewFind: vi.fn(),
@@ -30,6 +31,7 @@ vi.mock("../src/models/schemas/User.js", () => ({
 
 vi.mock("../src/models/schemas/PythonProject.js", () => ({
 	PythonProject: {
+		countDocuments: modelMocks.pythonProjectCountDocuments,
 		create: modelMocks.pythonProjectCreate,
 		find: modelMocks.pythonProjectFind,
 		findOne: modelMocks.pythonProjectFindOne
@@ -162,6 +164,7 @@ async function withUserRoutes<T>(run: (baseUrl: string) => Promise<T>): Promise<
 	app.use(express.json({ limit: "15mb" }));
 	app.use((req: any, _res, next) => {
 		req.session = {
+			accountSessionVersion: 0,
 			adminID: req.get("x-admin-id") || undefined,
 			tutorID: req.get("x-tutor-id") || undefined,
 			userID: req.get("x-user-id") || undefined
@@ -218,15 +221,29 @@ async function putJson(baseUrl: string, path: string, body: unknown, headers: Re
 describe("Python project review routes", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		modelMocks.pythonProjectCountDocuments.mockReturnValue({
+			exec: vi.fn().mockResolvedValue(0)
+		});
 
 		modelMocks.adminFindById.mockImplementation((id: string) =>
 			id === adminID.toString()
-				? Promise.resolve({ _id: adminID, name: "Admin", email: "admin@example.com" })
+				? Promise.resolve({
+						_id: adminID,
+						name: "Admin",
+						email: "admin@example.com",
+						sessionVersion: 0
+					})
 				: Promise.resolve(null)
 		);
 		modelMocks.tutorFindById.mockImplementation((id: string) =>
 			id === tutorID.toString()
-				? Promise.resolve({ _id: tutorID, name: "Tutor", email: "tutor@example.com", coursePermissions: [] })
+				? Promise.resolve({
+						_id: tutorID,
+						name: "Tutor",
+						email: "tutor@example.com",
+						coursePermissions: [],
+						sessionVersion: 0
+					})
 				: Promise.resolve(null)
 		);
 		modelMocks.userFindById.mockImplementation(() => queryWith(makeStudent()));

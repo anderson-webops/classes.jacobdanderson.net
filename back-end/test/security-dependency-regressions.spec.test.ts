@@ -6,11 +6,21 @@ import { describe, expect, it } from "vitest";
 import {
 	createAdminMailLimiter,
 	createCourseCodeRedemptionLimiter,
+	createEmailCheckLimiter,
+	createLoginAccountLimiter,
+	createLoginIpLimiter,
 	createOAuthLoginLimiter,
+	createPasswordResetAccountLimiter,
 	createPasswordResetLimiter,
+	createSignupLimiter,
 	createUserCourseAccessLimiter
 } from "../src/middleware/rateLimiters.js";
+import {
+	configuredRequestOrigins,
+	createRequestOriginGuard
+} from "../src/middleware/requestOriginGuard.js";
 import { renderMarkdownEmailHtml } from "../src/utils/markdownEmail.js";
+import { internalDiagnosticsAuthorized } from "../src/utils/internalDiagnostics.js";
 import {
 	defaultSessionNoteSubject,
 	documentReferenceID,
@@ -20,13 +30,16 @@ import {
 
 async function withServer<T>(
 	handler: RequestHandler,
-	run: (baseUrl: string) => Promise<T>
+	run: (baseUrl: string) => Promise<T>,
+	responseStatus = 200,
+	trustProxy: boolean | string = false
 ): Promise<T> {
 	const app = express();
-	app.set("trust proxy", false);
+	app.set("trust proxy", trustProxy);
+	app.use(express.json());
 	app.use(handler);
 	app.all("/limited", (_req, res) => {
-		res.json({ ok: true });
+		res.status(responseStatus).json({ ok: responseStatus < 400 });
 	});
 
 	const server = await new Promise<Server>((resolve) => {
@@ -131,6 +144,145 @@ describe("security dependency regressions", () => {
 				});
 			}
 		);
+	});
+
+	it("rate limits login, signup, and email-enumeration endpoints", async () => {
+		for (const limiter of [
+			createLoginIpLimiter({ limit: 1, windowMs: 60_000 }),
+			createLoginAccountLimiter({ limit: 1, windowMs: 60_000 })
+		]) {
+			await withServer(limiter, async (baseUrl) => {
+				const first = await fetch(`${baseUrl}/limited`, {
+					body: JSON.stringify({ email: "student@example.com" }),
+					headers: { "content-type": "application/json" },
+					method: "POST"
+				});
+				const second = await fetch(`${baseUrl}/limited`, {
+					body: JSON.stringify({ email: "student@example.com" }),
+					headers: { "content-type": "application/json" },
+					method: "POST"
+				});
+				expect(first.status).toBe(401);
+				expect(second.status).toBe(429);
+			}, 401);
+		}
+
+		for (const limiter of [
+			createSignupLimiter({ limit: 1, windowMs: 60_000 }),
+			createEmailCheckLimiter({ limit: 1, windowMs: 60_000 })
+		]) {
+			await withServer(limiter, async (baseUrl) => {
+				const first = await fetch(`${baseUrl}/limited`, {
+					body: JSON.stringify({ email: "student@example.com" }),
+					headers: { "content-type": "application/json" },
+					method: "POST"
+				});
+				const second = await fetch(`${baseUrl}/limited`, {
+					body: JSON.stringify({ email: "student@example.com" }),
+					headers: { "content-type": "application/json" },
+					method: "POST"
+				});
+				expect(first.status).toBe(200);
+				expect(second.status).toBe(429);
+			});
+		}
+	});
+
+	it("applies the login account limit across different source IP addresses", async () => {
+		await withServer(
+			createLoginAccountLimiter({ limit: 1, windowMs: 60_000 }),
+			async (baseUrl) => {
+				const request = (forwardedFor: string) => fetch(`${baseUrl}/limited`, {
+					body: JSON.stringify({ email: "  STUDENT@EXAMPLE.COM " }),
+					headers: {
+						"content-type": "application/json",
+						"x-forwarded-for": forwardedFor
+					},
+					method: "POST"
+				});
+				const first = await request("192.0.2.10");
+				const second = await request("198.51.100.20");
+
+				expect(first.status).toBe(401);
+				expect(second.status).toBe(429);
+			},
+			401,
+			"loopback"
+		);
+	});
+
+	it("applies the password-reset account limit across different source IP addresses", async () => {
+		await withServer(
+			createPasswordResetAccountLimiter({ limit: 1, windowMs: 60_000 }),
+			async (baseUrl) => {
+				const request = (forwardedFor: string) => fetch(`${baseUrl}/limited`, {
+					body: JSON.stringify({ email: "  STUDENT@EXAMPLE.COM " }),
+					headers: {
+						"content-type": "application/json",
+						"x-forwarded-for": forwardedFor
+					},
+					method: "POST"
+				});
+				const first = await request("192.0.2.10");
+				const second = await request("198.51.100.20");
+
+				expect(first.status).toBe(200);
+				expect(second.status).toBe(429);
+			},
+			200,
+			"loopback"
+		);
+	});
+
+	it("rejects unsafe requests from unapproved browser origins", async () => {
+		await withServer(
+			createRequestOriginGuard(new Set(["https://classes.example.test"])),
+			async (baseUrl) => {
+				const rejected = await fetch(`${baseUrl}/limited`, {
+					headers: {
+						origin: "https://attacker.example",
+						"sec-fetch-site": "cross-site"
+					},
+					method: "POST"
+				});
+				const accepted = await fetch(`${baseUrl}/limited`, {
+					headers: {
+						origin: "https://classes.example.test",
+						"sec-fetch-site": "same-origin"
+					},
+					method: "POST"
+				});
+				expect(rejected.status).toBe(403);
+				expect(accepted.status).toBe(200);
+			}
+		);
+	});
+
+	it("keeps the canonical production origin allowed without a new deployment variable", () => {
+		expect(configuredRequestOrigins()).toContain(
+			"https://classes.jacobdanderson.net"
+		);
+	});
+
+	it("never treats forwarded loopback headers as production diagnostics authorization", async () => {
+		const handler: RequestHandler = (req, res) => {
+			res.status(internalDiagnosticsAuthorized(req, {
+				diagnosticsKey: "correct-secret",
+				isProduction: true
+			}) ? 200 : 403).end();
+		};
+		await withServer(handler, async (baseUrl) => {
+			const spoofed = await fetch(`${baseUrl}/limited`, {
+				headers: { "x-forwarded-for": "127.0.0.1" },
+				method: "POST"
+			});
+			const keyed = await fetch(`${baseUrl}/limited`, {
+				headers: { "x-internal-diagnostics-key": "correct-secret" },
+				method: "POST"
+			});
+			expect(spoofed.status).toBe(403);
+			expect(keyed.status).toBe(200);
+		});
 	});
 
 	it("rate limits repeated classroom code attempts without legacy headers", async () => {

@@ -6,6 +6,7 @@ import {
 	AccountRoleTransferError,
 	demoteTutorAccount
 } from "../../utils/accountRoleTransfer.js";
+import { recordSecurityAuditEvent } from "../../utils/securityAudit.js";
 
 const MAX_COURSE_ID_LENGTH = 160;
 const MAX_COURSE_IDS = 1000;
@@ -56,6 +57,12 @@ export const updateTutorCoursePermissions: RequestHandler = async (req, res) => 
 
 	tutor.coursePermissions = uniqueCourses;
 	await tutor.save();
+	await recordSecurityAuditEvent(req, {
+		action: "tutor.course-permissions.update",
+		metadata: { courseCount: uniqueCourses.length },
+		targetID: tutor._id,
+		targetRole: "tutor"
+	});
 
 	res.json({ coursePermissions: tutor.coursePermissions });
 };
@@ -70,10 +77,22 @@ export const demoteTutorToUser: RequestHandler = async (req, res) => {
 
 	try {
 		const user = await demoteTutorAccount(tutorID);
+		await recordSecurityAuditEvent(req, {
+			action: "account.demote.tutor-to-user",
+			targetID: user._id,
+			targetRole: "user"
+		});
 		return res.status(201).json({ user });
 	}
 	catch (error) {
 		if (error instanceof AccountRoleTransferError) {
+			await recordSecurityAuditEvent(req, {
+				action: "account.demote.tutor-to-user",
+				metadata: { statusCode: error.statusCode },
+				outcome: "denied",
+				targetID: tutorID,
+				targetRole: "tutor"
+			});
 			if (error.statusCode === 404) return res.sendStatus(404);
 			return res.status(error.statusCode).json({ message: error.message });
 		}

@@ -5,6 +5,7 @@ import type { PasswordResetRole } from "../../models/schemas/PasswordResetToken.
 import type { CustomSession } from "../../types/session/CustomSession.js";
 import { createHash, randomBytes } from "node:crypto";
 import { env } from "node:process";
+import { Types } from "mongoose";
 import { Admin } from "../../models/schemas/Admin.js";
 import { PasswordResetToken } from "../../models/schemas/PasswordResetToken.js";
 import { Tutor } from "../../models/schemas/Tutor.js";
@@ -17,6 +18,7 @@ import {
 	getAccountID,
 	serializeAccountEntity
 } from "../../utils/accountSessions.js";
+import { recordSecurityAuditEvent } from "../../utils/securityAudit.js";
 import { sendTransactionalEmail } from "../../utils/transactionalEmail.js";
 
 type Entity = Parameters<typeof getAccountID>[0];
@@ -84,6 +86,10 @@ async function deliverPasswordReset(normalizedEmail: string) {
 				email: normalizedEmail,
 				expiresAt,
 				tokenHash
+			},
+			$unset: {
+				claimID: 1,
+				claimedAt: 1
 			}
 		},
 		{ new: true, setDefaultsOnInsert: true, upsert: true }
@@ -127,23 +133,35 @@ function canMutate(session: CustomSession, entity: Entity) {
 
 // LOGIN
 export const login: RequestHandler = async (req, res) => {
-	const { email, password, remember } = req.body as {
-		email?: string;
-		password?: string;
-		remember?: boolean;
-	};
-	if (!email || !password) return res.sendStatus(400);
-
-	const normalizedEmail = email.trim().toLowerCase();
+	const normalizedEmail = typeof req.body?.email === "string"
+		? req.body.email.trim().toLowerCase()
+		: "";
+	const password = typeof req.body?.password === "string"
+		? req.body.password
+		: "";
+	const remember = req.body?.remember === true;
+	if (
+		!isValidEmailAddress(normalizedEmail)
+		|| password.length === 0
+		|| password.length > 256
+	) {
+		return res.sendStatus(400);
+	}
 
 	const { admin, tutor, user } = await findAccountsByEmail(normalizedEmail);
 
 	const candidates = accountCandidatesByPriority({ admin, tutor, user });
 	let selectedCandidate: SelectedLoginCandidate | undefined;
 	for (const candidate of candidates) {
-		if (candidate.entity && await candidate.entity.comparePassword(password)) {
-			selectedCandidate = { ...candidate, entity: candidate.entity };
-			break;
+		if (!candidate.entity) continue;
+		try {
+			if (await candidate.entity.comparePassword(password)) {
+				selectedCandidate = { ...candidate, entity: candidate.entity };
+				break;
+			}
+		}
+		catch {
+			console.warn(`Ignoring an unreadable ${candidate.role} password hash during login.`);
 		}
 	}
 
@@ -189,10 +207,24 @@ export const confirmPasswordReset: RequestHandler = async (req, res) => {
 		return res.status(400).json({ message: "Use a password between 8 and 256 characters." });
 	}
 
-	const resetRecord = await PasswordResetToken.findOneAndDelete({
-		tokenHash: hashResetToken(token),
-		expiresAt: { $gt: new Date() }
-	}).exec();
+	const tokenHash = hashResetToken(token);
+	const claimID = randomBytes(24).toString("hex");
+	const resetRecord = await PasswordResetToken.findOneAndUpdate(
+		{
+			tokenHash,
+			expiresAt: { $gt: new Date() },
+			claimID: { $exists: false }
+		},
+		{
+			$set: {
+				claimID,
+				claimedAt: new Date()
+			}
+		},
+		{ new: true }
+	)
+		.select("+claimID +claimedAt")
+		.exec();
 	if (!resetRecord) {
 		return res.status(400).json({ message: "This password reset link is invalid or expired." });
 	}
@@ -204,12 +236,34 @@ export const confirmPasswordReset: RequestHandler = async (req, res) => {
 	};
 	const account = await models[resetRecord.role].findById(resetRecord.accountID).exec();
 	if (!account) {
+		await PasswordResetToken.deleteOne({ tokenHash, claimID }).exec();
 		return res.status(400).json({ message: "This password reset link is invalid or expired." });
 	}
 
-	account.password = newPassword;
-	await account.save();
-	clearSessionRoles(req.session as CustomSession);
+	try {
+		account.password = newPassword;
+		account.sessionVersion = (account.sessionVersion ?? 0) + 1;
+		await account.save();
+		await PasswordResetToken.deleteOne({ tokenHash, claimID }).exec();
+		clearSessionRoles(req.session as CustomSession);
+		await recordSecurityAuditEvent(req, {
+			action: "account.password.reset",
+			targetID: account._id,
+			targetRole: resetRecord.role
+		});
+	}
+	catch (error) {
+		await PasswordResetToken.updateOne(
+			{ tokenHash, claimID },
+			{
+				$unset: {
+					claimID: 1,
+					claimedAt: 1
+				}
+			}
+		).exec();
+		throw error;
+	}
 
 	return res.json({ message: "Password updated. You can now log in with your new password." });
 };
@@ -222,12 +276,41 @@ export const logout: RequestHandler = (req, res) => {
 	return res.sendStatus(200);
 };
 
+export const revokeOtherSessions: RequestHandler = async (req, res) => {
+	const account = req.currentAdmin ?? req.currentTutor ?? req.currentUser;
+	if (!account) {
+		return res.status(403).json({ message: "Signed-in account required" });
+	}
+
+	account.sessionVersion = (account.sessionVersion ?? 0) + 1;
+	await account.save();
+	(req.session as CustomSession).accountSessionVersion = account.sessionVersion;
+	await recordSecurityAuditEvent(req, {
+		action: "account.sessions.revoke",
+		targetID: account._id,
+		targetRole: req.currentAdmin
+			? "admin"
+			: req.currentTutor
+				? "tutor"
+				: "user"
+	});
+	return res.json({ message: "Other signed-in sessions have been revoked." });
+};
+
 // CHECK EMAIL
 export const checkEmail: RequestHandler = async (req, res) => {
-	const { id, email } = req.body as { id?: string; email?: string };
-	if (!email) return res.status(400).json({ message: "Email required" });
-	const [u, t, a] = await Promise.all([User.findOne({ email }), Tutor.findOne({ email }), Admin.findOne({ email })]);
-	const conflict = [u, t, a].some(x => x && x._id.toString() !== id);
+	const email = typeof req.body?.email === "string"
+		? req.body.email.trim().toLowerCase()
+		: "";
+	if (!isValidEmailAddress(email)) {
+		return res.status(400).json({ message: "Valid email required" });
+	}
+	const [u, t, a] = await Promise.all([
+		User.exists({ email }),
+		Tutor.exists({ email }),
+		Admin.exists({ email })
+	]);
+	const conflict = [u, t, a].some(Boolean);
 	res.status(conflict ? 403 : 200).json({
 		message: conflict ? "Already in use" : "Available"
 	});
@@ -238,9 +321,16 @@ export const changeEmail: RequestHandler = async (req, res) => {
 	// to satisfy TS union‐of‐models overloads, first coerce your array to a single Model<any> type:
 	const models = [User, Tutor, Admin] as Array<import("mongoose").Model<any>>;
 	const { ID } = req.params;
-	const { email: newEmail } = req.body;
+	const newEmail = typeof req.body?.email === "string"
+		? req.body.email.trim().toLowerCase()
+		: "";
 
-	if (!newEmail) return res.status(400).json({ message: "New email is required." });
+	if (typeof ID !== "string" || !Types.ObjectId.isValid(ID)) {
+		return res.status(400).json({ message: "A valid account ID is required." });
+	}
+	if (!isValidEmailAddress(newEmail)) {
+		return res.status(400).json({ message: "A valid new email is required." });
+	}
 
 	const session = req.session as CustomSession;
 	const conflictChecks = await Promise.all(
@@ -257,7 +347,21 @@ export const changeEmail: RequestHandler = async (req, res) => {
 			return res.status(403).json({ message: "Not authorized to update this email." });
 		}
 		doc.email = newEmail;
+		doc.sessionVersion = (doc.sessionVersion ?? 0) + 1;
 		await doc.save();
+		const roleKey = doc instanceof Admin
+			? "adminID"
+			: doc instanceof Tutor
+				? "tutorID"
+				: "userID";
+		if (session[roleKey] === getAccountID(doc as Entity)) {
+			session.accountSessionVersion = doc.sessionVersion;
+		}
+		await recordSecurityAuditEvent(req, {
+			action: "account.email.change",
+			targetID: doc._id,
+			targetRole: roleKey.replace("ID", "") as "admin" | "tutor" | "user"
+		});
 		return res.json({ message: "Email updated successfully." });
 	}
 
@@ -267,12 +371,21 @@ export const changeEmail: RequestHandler = async (req, res) => {
 export const changePassword: RequestHandler = async (req, res) => {
 	const models = [User, Tutor, Admin] as Array<import("mongoose").Model<any>>;
 	const { ID } = req.params;
-	const { currentPassword, newPassword } = req.body as {
-		currentPassword?: string;
-		newPassword?: string;
-	};
+	const currentPassword = typeof req.body?.currentPassword === "string"
+		? req.body.currentPassword
+		: "";
+	const newPassword = typeof req.body?.newPassword === "string"
+		? req.body.newPassword
+		: "";
 
-	if (!newPassword) return res.status(400).json({ message: "New password is required." });
+	if (typeof ID !== "string" || !Types.ObjectId.isValid(ID)) {
+		return res.status(400).json({ message: "A valid account ID is required." });
+	}
+	if (newPassword.length < 8 || newPassword.length > 256) {
+		return res.status(400).json({
+			message: "Use a password between 8 and 256 characters."
+		});
+	}
 
 	const session: CustomSession = req.session as CustomSession;
 	for (const Model of models) {
@@ -285,8 +398,8 @@ export const changePassword: RequestHandler = async (req, res) => {
 
 		const isAdminOverride: boolean = !!session.adminID;
 		if (!isAdminOverride) {
-			if (!currentPassword) {
-				return res.status(400).json({ message: "Current password is required." });
+			if (currentPassword.length === 0 || currentPassword.length > 256) {
+				return res.status(400).json({ message: "A valid current password is required." });
 			}
 			const matches = await (doc as Entity).comparePassword(currentPassword);
 			if (!matches) {
@@ -295,7 +408,21 @@ export const changePassword: RequestHandler = async (req, res) => {
 		}
 
 		doc.password = newPassword;
+		doc.sessionVersion = (doc.sessionVersion ?? 0) + 1;
 		await doc.save();
+		const roleKey = doc instanceof Admin
+			? "adminID"
+			: doc instanceof Tutor
+				? "tutorID"
+				: "userID";
+		if (session[roleKey] === getAccountID(doc as Entity)) {
+			session.accountSessionVersion = doc.sessionVersion;
+		}
+		await recordSecurityAuditEvent(req, {
+			action: "account.password.change",
+			targetID: doc._id,
+			targetRole: roleKey.replace("ID", "") as "admin" | "tutor" | "user"
+		});
 		return res.json({ message: "Password updated successfully." });
 	}
 

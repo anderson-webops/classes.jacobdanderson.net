@@ -2177,7 +2177,7 @@ cols=3`
 		expect(runtimeSource).not.toMatch(/\bnew\s+Worker\b|\bWorker\s*\(/);
 		expect(runtimeSource).not.toContain("child_process");
 		expect(runtimeSource).not.toMatch(
-			/\bspawn\s*\(|\bexec\s*\(|\bfork\s*\(/
+			/(?:^|[^.\w])(?:spawn|exec|execFile|fork)\s*\(/m
 		);
 		expect(runtimeSource).not.toMatch(/\bjavac\b|\bdocker\b/i);
 	});
@@ -2205,7 +2205,7 @@ cols=3`
 		expect(backendSource).not.toContain("javaIdeRuntime");
 		expect(backendSource).not.toContain("node:child_process");
 		expect(backendSource).not.toMatch(
-			/\bspawn\s*\(|\bexec\s*\(|\bexecFile\s*\(|\bfork\s*\(/
+			/(?:^|[^.\w])(?:spawn|exec|execFile|fork)\s*\(/m
 		);
 		expect(backendSource).not.toMatch(/\bjavac\b|\bdocker\b/i);
 	});

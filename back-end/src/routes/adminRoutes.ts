@@ -8,21 +8,22 @@ import {
 	getLoggedInAdmin,
 	updateAdmin
 } from "../controllers/users/adminController.js";
-import { validAdmin } from "../middleware/auth.js";
+import { validAdmin, validAdminTarget } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Route to create an admin
-router.post("/", createAdmin);
+// Existing admins create additional admin accounts. Initial bootstrap uses
+// the create-admin operator script and is never exposed as a public API.
+router.post("/", validAdmin, createAdmin);
 
 // Route to get all admins (protected)
 router.get("/", validAdmin, getAllAdmins);
 
 // Route to update an admin's information (protected)
-router.put("/:adminID", validAdmin, updateAdmin);
+router.put("/:adminID", validAdmin, validAdminTarget, updateAdmin);
 
 // Route to delete an admin (protected)
-router.delete("/remove/:adminID", validAdmin, deleteAdmin);
+router.delete("/remove/:adminID", validAdmin, validAdminTarget, deleteAdmin);
 
 // Route to get the currently logged-in admin (protected)
 router.get("/loggedin", validAdmin, getLoggedInAdmin);

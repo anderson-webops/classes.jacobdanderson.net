@@ -21,8 +21,12 @@ export function passwordPlugin<T extends { password: string }>(schema: Schema<T>
 	};
 
 	schema.methods.toJSON = function (this: HydratedDocument<T>) {
-		const obj = this.toObject() as Record<string, unknown> & { password?: string };
+		const obj = this.toObject() as Record<string, unknown> & {
+			password?: string;
+			sessionVersion?: number;
+		};
 		delete obj.password;
+		delete obj.sessionVersion;
 		return obj;
 	};
 }

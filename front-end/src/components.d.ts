@@ -37,6 +37,5 @@ declare module 'vue' {
     TutorProfile: typeof import('./components/TutorProfile.vue')['default']
     UserCommunicationPanel: typeof import('./components/UserCommunicationPanel.vue')['default']
     UserProfile: typeof import('./components/UserProfile.vue')['default']
-    UserSignup: typeof import('./components/UserSignup.vue')['default']
   }
 }

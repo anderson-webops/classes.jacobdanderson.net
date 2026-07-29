@@ -7,6 +7,7 @@ export interface IBaseUser {
 	email: string;
 	password: string;
 	saveEdit: string; // the “Save” / “Edit” toggle text
+	sessionVersion: number;
 
 	comparePassword: (password: string) => Promise<boolean>;
 }

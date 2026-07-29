@@ -7,23 +7,38 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const modelMocks = vi.hoisted(() => ({
 	adminExists: vi.fn(),
+	adminFindById: vi.fn(),
 	adminFindOne: vi.fn(),
 	tutorExists: vi.fn(),
+	tutorFindById: vi.fn(),
 	tutorFindOne: vi.fn(),
 	userExists: vi.fn(),
+	userFindById: vi.fn(),
 	userFindOne: vi.fn()
 }));
 
 vi.mock("../src/models/schemas/Admin.js", () => ({
-	Admin: { exists: modelMocks.adminExists, findOne: modelMocks.adminFindOne }
+	Admin: {
+		exists: modelMocks.adminExists,
+		findById: modelMocks.adminFindById,
+		findOne: modelMocks.adminFindOne
+	}
 }));
 
 vi.mock("../src/models/schemas/Tutor.js", () => ({
-	Tutor: { exists: modelMocks.tutorExists, findOne: modelMocks.tutorFindOne }
+	Tutor: {
+		exists: modelMocks.tutorExists,
+		findById: modelMocks.tutorFindById,
+		findOne: modelMocks.tutorFindOne
+	}
 }));
 
 vi.mock("../src/models/schemas/User.js", () => ({
-	User: { exists: modelMocks.userExists, findOne: modelMocks.userFindOne }
+	User: {
+		exists: modelMocks.userExists,
+		findById: modelMocks.userFindById,
+		findOne: modelMocks.userFindOne
+	}
 }));
 
 const { accountRoutes } = await import("../src/routes/accountRoutes.js");
@@ -37,6 +52,8 @@ interface TestLoginEntity {
 	password: string;
 	saveEdit: string;
 	role: LoginRole;
+	save: ReturnType<typeof vi.fn>;
+	sessionVersion: number;
 	comparePassword: ReturnType<typeof vi.fn>;
 }
 
@@ -54,6 +71,8 @@ function makeEntity(role: LoginRole, acceptedPassword: string): TestLoginEntity 
 		password: `stored-${role}-password-hash`,
 		saveEdit: "Edit",
 		role,
+		save: vi.fn().mockResolvedValue(undefined),
+		sessionVersion: 0,
 		comparePassword: vi.fn(async candidatePassword => candidatePassword === acceptedPassword)
 	};
 }
@@ -81,14 +100,42 @@ function mockExistingSessionAccounts({
 	tutor?: TestLoginEntity | null;
 	user?: TestLoginEntity | null;
 }) {
+	const matches = (
+		query: Record<string, any>,
+		account: TestLoginEntity | null
+	) =>
+		!!account
+		&& query._id === account._id.toString()
+		&& (
+			query.sessionVersion === account.sessionVersion
+			|| (
+				account.sessionVersion === 0
+				&& Array.isArray(query.$or)
+				&& query.$or.some(
+					(filter: Record<string, unknown>) =>
+						filter.sessionVersion === 0
+						|| (
+							typeof filter.sessionVersion === "object"
+							&& filter.sessionVersion !== null
+							&& (filter.sessionVersion as Record<string, unknown>).$exists === false
+						)
+				)
+			)
+		);
 	modelMocks.adminExists.mockImplementation(async query =>
-		admin && query._id === admin._id.toString() ? { _id: admin._id } : null
+		matches(query, admin)
+			? { _id: admin._id }
+			: null
 	);
 	modelMocks.tutorExists.mockImplementation(async query =>
-		tutor && query._id === tutor._id.toString() ? { _id: tutor._id } : null
+		matches(query, tutor)
+			? { _id: tutor._id }
+			: null
 	);
 	modelMocks.userExists.mockImplementation(async query =>
-		user && query._id === user._id.toString() ? { _id: user._id } : null
+		matches(query, user)
+			? { _id: user._id }
+			: null
 	);
 }
 
@@ -191,6 +238,9 @@ describe("account login role transfer", () => {
 		vi.clearAllMocks();
 		mockAccounts({});
 		mockExistingSessionAccounts({});
+		modelMocks.adminFindById.mockResolvedValue(null);
+		modelMocks.tutorFindById.mockResolvedValue(null);
+		modelMocks.userFindById.mockResolvedValue(null);
 	});
 
 	it("does not let a stale user record shadow a tutor login with the same email", async () => {
@@ -217,6 +267,52 @@ describe("account login role transfer", () => {
 			expect(modelMocks.adminFindOne).toHaveBeenCalledWith({ email: "shared@example.com" });
 			expect(modelMocks.tutorFindOne).toHaveBeenCalledWith({ email: "shared@example.com" });
 			expect(modelMocks.userFindOne).toHaveBeenCalledWith({ email: "shared@example.com" });
+		});
+	});
+
+	it("continues to the tutor when a stale admin password hash is unreadable", async () => {
+		const admin = makeEntity("admin", "admin-password");
+		const tutor = makeEntity("tutor", "tutor-password");
+		admin.comparePassword.mockRejectedValue(new Error("Invalid Argon2 hash"));
+		mockAccounts({ admin, tutor });
+
+		await withAccountRoutes(async baseUrl => {
+			const response = await loginRequest(baseUrl, "tutor-password");
+
+			expect(response.status).toBe(200);
+			await expect(response.json()).resolves.toMatchObject({
+				currentTutor: { _id: tutor._id.toString(), role: "tutor" }
+			});
+			expect(admin.comparePassword).toHaveBeenCalledOnce();
+			expect(tutor.comparePassword).toHaveBeenCalledOnce();
+		});
+	});
+
+	it("rejects malformed or oversized login credentials before password verification", async () => {
+		const tutor = makeEntity("tutor", "tutor-password");
+		mockAccounts({ tutor });
+
+		await withAccountRoutes(async baseUrl => {
+			const malformed = await fetch(`${baseUrl}/accounts/login`, {
+				body: JSON.stringify({
+					email: { value: "shared@example.com" },
+					password: ["tutor-password"]
+				}),
+				headers: { "content-type": "application/json" },
+				method: "POST"
+			});
+			const oversized = await fetch(`${baseUrl}/accounts/login`, {
+				body: JSON.stringify({
+					email: "shared@example.com",
+					password: "x".repeat(257)
+				}),
+				headers: { "content-type": "application/json" },
+				method: "POST"
+			});
+
+			expect(malformed.status).toBe(400);
+			expect(oversized.status).toBe(400);
+			expect(tutor.comparePassword).not.toHaveBeenCalled();
 		});
 	});
 
@@ -287,6 +383,13 @@ describe("account login role transfer", () => {
 				tutorID: tutor._id.toString(),
 				userID: null
 			});
+			expect(modelMocks.tutorExists).toHaveBeenCalledWith({
+				_id: tutor._id.toString(),
+				$or: [
+					{ sessionVersion: 0 },
+					{ sessionVersion: { $exists: false } }
+				]
+			});
 		});
 	});
 
@@ -338,6 +441,123 @@ describe("account login role transfer", () => {
 				expect(body[scenario.responseKey]).not.toHaveProperty("password");
 				expect(responseText).not.toContain(scenario.hash);
 			}
+		});
+	});
+
+	it("revokes older cookies while preserving the session that requested revocation", async () => {
+		const user = makeEntity("user", "user-password");
+		mockAccounts({ user });
+		mockExistingSessionAccounts({ user });
+		modelMocks.userFindById.mockResolvedValue(user);
+
+		await withAccountRoutes(async baseUrl => {
+			const loginResponse = await loginRequest(baseUrl, "user-password");
+			const olderCookie = responseCookie(loginResponse);
+			const revokeResponse = await fetch(
+				`${baseUrl}/accounts/revoke-sessions`,
+				{
+					headers: { cookie: olderCookie },
+					method: "POST"
+				}
+			);
+			const currentCookie = responseCookie(revokeResponse);
+
+			expect(revokeResponse.status).toBe(200);
+			expect(user.sessionVersion).toBe(1);
+			expect(user.save).toHaveBeenCalledOnce();
+
+			const [olderSession, currentSession] = await Promise.all([
+				fetch(`${baseUrl}/accounts/me`, {
+					headers: { cookie: olderCookie }
+				}),
+				fetch(`${baseUrl}/accounts/me`, {
+					headers: { cookie: currentCookie }
+				})
+			]);
+			await expect(olderSession.json()).resolves.toEqual({
+				adminID: null,
+				tutorID: null,
+				userID: null
+			});
+			await expect(currentSession.json()).resolves.toEqual({
+				adminID: null,
+				tutorID: null,
+				userID: user._id.toString()
+			});
+		});
+	});
+
+	it("normalizes email availability checks and ignores caller-supplied account IDs", async () => {
+		await withAccountRoutes(async baseUrl => {
+			const response = await fetch(`${baseUrl}/accounts/checkEmail`, {
+				body: JSON.stringify({
+					email: "  AVAILABLE@EXAMPLE.COM ",
+					id: new Types.ObjectId().toString()
+				}),
+				headers: { "content-type": "application/json" },
+				method: "POST"
+			});
+
+			expect(response.status).toBe(200);
+			for (const exists of [
+				modelMocks.adminExists,
+				modelMocks.tutorExists,
+				modelMocks.userExists
+			]) {
+				expect(exists).toHaveBeenCalledWith({
+					email: "available@example.com"
+				});
+			}
+		});
+	});
+
+	it("requires a live account session for email and password changes", async () => {
+		await withAccountRoutes(async baseUrl => {
+			const accountID = new Types.ObjectId().toString();
+			const [emailResponse, passwordResponse] = await Promise.all([
+				fetch(`${baseUrl}/accounts/changeEmail/${accountID}`, {
+					body: JSON.stringify({ email: "new@example.com" }),
+					headers: { "content-type": "application/json" },
+					method: "POST"
+				}),
+				fetch(`${baseUrl}/accounts/changePassword/${accountID}`, {
+					body: JSON.stringify({ newPassword: "new-password" }),
+					headers: { "content-type": "application/json" },
+					method: "POST"
+				})
+			]);
+
+			expect(emailResponse.status).toBe(403);
+			expect(passwordResponse.status).toBe(403);
+		});
+	});
+
+	it("rejects malformed password-change values before hashing", async () => {
+		const user = makeEntity("user", "user-password");
+		mockAccounts({ user });
+		mockExistingSessionAccounts({ user });
+		modelMocks.userFindById.mockResolvedValue(user);
+
+		await withAccountRoutes(async baseUrl => {
+			const loginResponse = await loginRequest(baseUrl, "user-password");
+			const cookie = responseCookie(loginResponse);
+			const response = await fetch(
+				`${baseUrl}/accounts/changePassword/${user._id}`,
+				{
+					body: JSON.stringify({
+						currentPassword: ["user-password"],
+						newPassword: { value: "replacement-password" }
+					}),
+					headers: {
+						"content-type": "application/json",
+						cookie
+					},
+					method: "POST"
+				}
+			);
+
+			expect(response.status).toBe(400);
+			expect(user.save).not.toHaveBeenCalled();
 		});
 	});
 });

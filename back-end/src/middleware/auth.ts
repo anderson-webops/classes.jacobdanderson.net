@@ -4,7 +4,20 @@ import { Admin } from "../models/schemas/Admin.js";
 import { CourseCodeLearner } from "../models/schemas/CourseCodeLearner.js";
 import { Tutor } from "../models/schemas/Tutor.js";
 import { User } from "../models/schemas/User.js";
+import {
+	accountSessionVersionMatches,
+	clearSessionRoles
+} from "../utils/accountSessions.js";
 import { findUsableCourseAccessCodeByID } from "../utils/courseAccessCodes.js";
+
+function rejectInvalidAccountSession(
+	req: Parameters<RequestHandler>[0],
+	res: Parameters<RequestHandler>[1],
+	message: string
+) {
+	if (req.session) clearSessionRoles(req.session as any);
+	res.status(403).json({ message });
+}
 
 async function loadValidCourseCodeLearner(learnerID: string) {
 	const learner = await CourseCodeLearner.findById(learnerID);
@@ -26,7 +39,11 @@ export const validUser: RequestHandler = async (req, res, next) => {
 	try {
 		const user = await User.findById(req.session.userID);
 		if (!user) {
-			res.status(403).json({ message: "User account not found" });
+			rejectInvalidAccountSession(req, res, "User account not found");
+			return;
+		}
+		if (!accountSessionVersionMatches(req.session as any, user)) {
+			rejectInvalidAccountSession(req, res, "User session has been revoked");
 			return;
 		}
 		req.currentUser = user;
@@ -47,7 +64,11 @@ export const validTutor: RequestHandler = async (req, res, next) => {
 	try {
 		const tutor = await Tutor.findById(req.session.tutorID);
 		if (!tutor) {
-			res.status(403).json({ message: "Tutor account not found" });
+			rejectInvalidAccountSession(req, res, "Tutor account not found");
+			return;
+		}
+		if (!accountSessionVersionMatches(req.session as any, tutor)) {
+			rejectInvalidAccountSession(req, res, "Tutor session has been revoked");
 			return;
 		}
 		req.currentTutor = tutor;
@@ -65,7 +86,11 @@ export const validTutorOrAdminSession: RequestHandler = async (req, res, next) =
 		try {
 			const admin = await Admin.findById(req.session.adminID);
 			if (!admin) {
-				res.status(403).json({ message: "Admin account not found" });
+				rejectInvalidAccountSession(req, res, "Admin account not found");
+				return;
+			}
+			if (!accountSessionVersionMatches(req.session as any, admin)) {
+				rejectInvalidAccountSession(req, res, "Admin session has been revoked");
 				return;
 			}
 			req.currentAdmin = admin;
@@ -82,7 +107,11 @@ export const validTutorOrAdminSession: RequestHandler = async (req, res, next) =
 		try {
 			const tutor = await Tutor.findById(req.session.tutorID);
 			if (!tutor) {
-				res.status(403).json({ message: "Tutor account not found" });
+				rejectInvalidAccountSession(req, res, "Tutor account not found");
+				return;
+			}
+			if (!accountSessionVersionMatches(req.session as any, tutor)) {
+				rejectInvalidAccountSession(req, res, "Tutor session has been revoked");
 				return;
 			}
 			req.currentTutor = tutor;
@@ -104,7 +133,11 @@ export const validAccountSession: RequestHandler = async (req, res, next) => {
 		try {
 			const admin = await Admin.findById(req.session.adminID);
 			if (!admin) {
-				res.status(403).json({ message: "Admin account not found" });
+				rejectInvalidAccountSession(req, res, "Admin account not found");
+				return;
+			}
+			if (!accountSessionVersionMatches(req.session as any, admin)) {
+				rejectInvalidAccountSession(req, res, "Admin session has been revoked");
 				return;
 			}
 			req.currentAdmin = admin;
@@ -121,7 +154,11 @@ export const validAccountSession: RequestHandler = async (req, res, next) => {
 		try {
 			const tutor = await Tutor.findById(req.session.tutorID);
 			if (!tutor) {
-				res.status(403).json({ message: "Tutor account not found" });
+				rejectInvalidAccountSession(req, res, "Tutor account not found");
+				return;
+			}
+			if (!accountSessionVersionMatches(req.session as any, tutor)) {
+				rejectInvalidAccountSession(req, res, "Tutor session has been revoked");
 				return;
 			}
 			req.currentTutor = tutor;
@@ -138,7 +175,11 @@ export const validAccountSession: RequestHandler = async (req, res, next) => {
 		try {
 			const user = await User.findById(req.session.userID);
 			if (!user) {
-				res.status(403).json({ message: "User account not found" });
+				rejectInvalidAccountSession(req, res, "User account not found");
+				return;
+			}
+			if (!accountSessionVersionMatches(req.session as any, user)) {
+				rejectInvalidAccountSession(req, res, "User session has been revoked");
 				return;
 			}
 			req.currentUser = user;
@@ -190,7 +231,11 @@ export const validAdmin: RequestHandler = async (req, res, next) => {
 	try {
 		const admin = await Admin.findById(req.session.adminID);
 		if (!admin) {
-			res.status(403).json({ message: "Admin account not found" });
+			rejectInvalidAccountSession(req, res, "Admin account not found");
+			return;
+		}
+		if (!accountSessionVersionMatches(req.session as any, admin)) {
+			rejectInvalidAccountSession(req, res, "Admin session has been revoked");
 			return;
 		}
 		req.currentAdmin = admin;
@@ -204,22 +249,80 @@ export const validAdmin: RequestHandler = async (req, res, next) => {
 
 /**
  * Allow update/delete if:
- *  • adminID is in session, OR
- *  • tutorID in session matches the :tutorID param
+ *  • a live admin account is in session, OR
+ *  • a live tutor account in session matches the :tutorID param
  */
-export const validTutorOrAdmin: RequestHandler = (req, res, next) => {
-	const sess = req.session as any;
+export const validTutorOrAdmin: RequestHandler = async (req, res, next) => {
 	const { tutorID } = req.params;
 
-	// if admin, always OK
-	if (sess.adminID) {
-		return next();
+	if (req.session?.adminID) {
+		try {
+			const admin = await Admin.findById(req.session.adminID);
+			if (!admin) {
+				rejectInvalidAccountSession(req, res, "Admin account not found");
+				return;
+			}
+			if (!accountSessionVersionMatches(req.session as any, admin)) {
+				rejectInvalidAccountSession(req, res, "Admin session has been revoked");
+				return;
+			}
+			req.currentAdmin = admin;
+			return next();
+		}
+		catch (error) {
+			console.error("Error validating admin account:", error);
+			return res.status(500).json({ message: "Server error while validating admin" });
+		}
 	}
 
-	// if tutor and it's their own ID
-	if (sess.tutorID === tutorID) {
-		return next();
+	if (req.session?.tutorID === tutorID) {
+		try {
+			const tutor = await Tutor.findById(req.session.tutorID);
+			if (!tutor) {
+				rejectInvalidAccountSession(req, res, "Tutor account not found");
+				return;
+			}
+			if (!accountSessionVersionMatches(req.session as any, tutor)) {
+				rejectInvalidAccountSession(req, res, "Tutor session has been revoked");
+				return;
+			}
+			req.currentTutor = tutor;
+			return next();
+		}
+		catch (error) {
+			console.error("Error validating tutor account:", error);
+			return res.status(500).json({ message: "Server error while validating tutor" });
+		}
 	}
 
 	res.status(403).json({ message: "Not authorized to perform this action." });
+};
+
+export const validCurrentUserTarget: RequestHandler = (req, res, next) => {
+	const userID = Array.isArray(req.params.userID)
+		? req.params.userID[0]
+		: req.params.userID;
+	if (!req.currentUser || req.currentUser._id.toString() !== userID) {
+		return res.status(403).json({ message: "You can only update your own account" });
+	}
+	next();
+};
+
+export const validAdminTarget: RequestHandler = (req, res, next) => {
+	const adminID = Array.isArray(req.params.adminID)
+		? req.params.adminID[0]
+		: req.params.adminID;
+	const admin = req.currentAdmin;
+	if (
+		!admin
+		|| (
+			admin._id.toString() !== adminID
+			&& admin.editAdmins !== true
+		)
+	) {
+		return res.status(403).json({
+			message: "You can only manage your own admin account"
+		});
+	}
+	next();
 };

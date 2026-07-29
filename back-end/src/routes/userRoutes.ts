@@ -18,7 +18,8 @@ import {
 	createUser,
 	getAllUsers,
 	getLoggedInUser,
-	updateUser
+	updateUser,
+	updateUserAsTutor
 } from "../controllers/users/userController.js";
 import {
 	createUserScheduledSession,
@@ -40,19 +41,24 @@ import {
 import {
 	validAccountSession,
 	validAdmin,
+	validCurrentUserTarget,
 	validTutor,
 	validTutorOrAdminSession,
 	validUser
 } from "../middleware/auth.js";
-import { createUserCourseAccessLimiter } from "../middleware/rateLimiters.js";
+import {
+	createSignupLimiter,
+	createUserCourseAccessLimiter
+} from "../middleware/rateLimiters.js";
 
 const router: Router = express.Router();
 
 // Rate limiter for sensitive endpoints (e.g. 100 requests per 15 minutes)
 const userCourseAccessLimiter = createUserCourseAccessLimiter();
+const signupLimiter = createSignupLimiter();
 
 // Create a user
-router.post("/", createUser);
+router.post("/", signupLimiter, createUser);
 
 // Get logged in user communications
 router.get("/loggedin/communications", validUser, getLoggedInUserCommunications);
@@ -70,16 +76,16 @@ router.delete("/loggedin/python-projects/:projectID", validAccountSession, delet
 router.get("/loggedin/python-project-reviews", validAccountSession, listVisiblePythonProjectReviews);
 
 // Get users belonging to a given tutor
-router.get("/oftutor/:tutorID", getUsersOfTutor);
+router.get("/oftutor/:tutorID", validTutorOrAdminSession, getUsersOfTutor);
 
-// Get all users
-router.get("/all", getAllUsers);
+// Full account lists contain private learner information.
+router.get("/all", validAdmin, getAllUsers);
 
 // Update user info by the user themselves
-router.put("/user/:userID", validUser, updateUser);
+router.put("/user/:userID", validUser, validCurrentUserTarget, updateUser);
 
-// Update user info by the tutor
-router.put("/tutor/:userID", validTutor, updateUser);
+// Update non-security profile fields for one of the tutor's own students.
+router.put("/tutor/:userID", validTutor, updateUserAsTutor);
 
 // Update tutor assignments for a user (admin only)
 router.put("/:userID/tutors", validAdmin, setUserTutors);

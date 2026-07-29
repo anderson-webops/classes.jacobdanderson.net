@@ -6,4 +6,5 @@ export interface CustomSession extends Session {
 	tutorID?: string;
 	adminID?: string;
 	courseCodeLearnerID?: string;
+	accountSessionVersion?: number;
 }
