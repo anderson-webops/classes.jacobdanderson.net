@@ -1,6 +1,11 @@
 import type { RawCourse } from "./types";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
+const LOW_LEVEL_SECURITY_PART_2_PRACTICE_PACK =
+	"/course-assets/low-level-security-part-2/low-level-security-part-2-practice-pack.md";
+const LOW_LEVEL_SECURITY_PART_2_VERIFICATION_GUIDE =
+	"/course-assets/low-level-security-part-2/low-level-security-part-2-verification-guide.md";
+
 type SecurityLabMode = "core" | "extension";
 type SecurityLabPurpose =
 	"core" | "extension-challenge" | "transfer-practice" | "extension-practice";
@@ -210,7 +215,7 @@ function securityLabReviewContent(topic: string) {
 	].join("\n\n");
 }
 
-export const lowLevelSecurityPart2Course: RawCourse = {
+const lowLevelSecurityPart2SourceCourse: RawCourse = {
 	name: "Low Level Security Part 2",
 	modules: [
 		{
@@ -219,7 +224,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Why Part 2 Uses LLS13 through LLS18",
 					content:
-						"Keep the original course-outline numbering for Part 2. The source plan for this sequence defined the advanced local-lab IDs as LLS13 through LLS18, so the numbering jump is historical rather than a missing hidden module block in this catalog. There is no separate LLS7 through LLS12 sequence in the original Part 2 outline."
+						"Keep the source repository's advanced lab IDs LLS13 through LLS18. Part 1 uses LLS0 through LLS6 as its required path and retains Labs 7 through 12 as optional transfer studios; Part 2 begins at LLS13 so source folders, build targets, audit notes, and learner references stay aligned."
 				},
 				{
 					title: "Day-One Tooling and Local-Lab Boundaries",
@@ -229,7 +234,7 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				{
 					title: "Preferred IDEs and Platform Setup",
 					content:
-						"Recommend `CLion` or `VS Code` with `C/C++`, `CMake Tools`, `CodeLLDB`, and `Hex Editor` when VS Code is used. On macOS, Install Xcode command-line tools and CMake; on Windows, WSL2 plus Ubuntu is the cleanest path so the labs stay close to the Linux-oriented debugging environment they will use most often."
+						"Use a local editor such as CLion or VS Code with C/C++, CMake Tools, and CodeLLDB. macOS uses Xcode command-line tools plus CMake; Linux uses Clang or GCC plus CMake; Windows uses WSL2 with an owned Ubuntu workspace. The command-line CMake route is complete, so no proprietary IDE, hosted account, or public service is required."
 				},
 				{
 					title: "Ethics Statement and Defensive Scope",
@@ -242,15 +247,12 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 						"The course outcome is precise vulnerability reasoning: distinguish a crash from an exploitable condition, explain how bug classes can lead to control-flow or data corruption, evaluate mitigations such as ASLR, NX, canaries, RELRO, and allocator behavior, and produce patch notes plus regression checks that close the bug class rather than only describing it."
 				},
 				{
-					title: "LLS Part 2 Setup and Tooling: Core Project",
-					content: securityLabProjectContent(
-						"LLS Part 2 Setup and Tooling",
-						"core"
-					),
-					projectLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-04-rust-systems-lab-15/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-04-rust-systems-lab-15/solution"
+					title: "Part 2 Preflight Evidence Record",
+					content:
+						"Rebuild and rerun the Part 1 capstone, then compile LLS13 through LLS18 with the source repository's CMake 3.20 and C++17 contract. Record versions, supported sanitizers and binary-inspection tools, one finite run, one expected and observed comparison, one reset command, and the local authorization boundary. A clean preflight confirms tool availability and reproducibility; it does not establish that every source path is safe.",
+					datasetLink: `${LOW_LEVEL_SECURITY_PART_2_PRACTICE_PACK}#part-2-preflight-case`,
+					mediaLink:
+						"https://clang.llvm.org/docs/AddressSanitizer.html"
 				}
 			],
 			supplementalProjects: [
@@ -258,10 +260,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 					title: "Audit Notebook: Setup and Tooling",
 					content:
 						"Keep a written audit notebook for setup and tooling that records the lab boundary, the reproducer, the attacker assumptions, the mitigations present, and the patch or verification result. Focus especially on sanitizer readiness, debugger verification, and ethics boundaries so security relevance is communicated clearly instead of stopping at “it crashed.”",
-					projectLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-04-rust-systems-lab-15/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-04-rust-systems-lab-15/solution"
+					datasetLink: `${LOW_LEVEL_SECURITY_PART_2_PRACTICE_PACK}#part-2-preflight-case`,
+					mediaLink:
+						"https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html"
 				},
 				{
 					title: "Setup and Tooling Transfer Practice",
@@ -509,15 +510,12 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 					})
 				},
 				{
-					title: "Module 4: Information Disclosure and Memory Observation: Core Project",
-					content: securityLabProjectContent(
-						"Module 4: Information Disclosure and Memory Observation",
-						"core"
-					),
-					projectLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-05-rust-systems-lab-16/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-05-rust-systems-lab-16/solution"
+					title: "Disclosure Boundary Case Study",
+					content:
+						"Trace the supplied serializer transcript, identify exactly which bytes cross the public boundary, distinguish intended output from stale internal state, and propose the smallest clearing and length fix. Verify the corrected expected output with the supplied case before comparing it with the answer key. This course-specific C++ evidence prepares the LLS17 implementation and remediation handoff.",
+					datasetLink: `${LOW_LEVEL_SECURITY_PART_2_PRACTICE_PACK}#disclosure-boundary-case`,
+					mediaLink:
+						"https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/stable-en/02-checklist/05-checklist"
 				}
 			],
 			supplementalProjects: [
@@ -525,10 +523,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 					title: "Audit Notebook: Information Disclosure and Memory Observation",
 					content:
 						"Keep a written audit notebook for information disclosure and memory observation that records the lab boundary, the reproducer, the attacker assumptions, the mitigations present, and the patch or verification result. Focus especially on what crossed the trust boundary, what leaked, and how to prove the leak is gone after the patch so security relevance is communicated clearly instead of stopping at “it crashed.”",
-					projectLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-05-rust-systems-lab-16/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-05-rust-systems-lab-16/solution"
+					datasetLink: `${LOW_LEVEL_SECURITY_PART_2_PRACTICE_PACK}#disclosure-boundary-case`,
+					mediaLink:
+						"https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/stable-en/02-checklist/05-checklist"
 				},
 				{
 					title: "Memory Disclosure Transfer Practice",
@@ -648,15 +645,12 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 					})
 				},
 				{
-					title: "Module 6: Control-Flow Thinking for Defenders: Core Project",
-					content: securityLabProjectContent(
-						"Module 6: Control-Flow Thinking for Defenders",
-						"core"
-					),
-					projectLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-06-rust-systems-lab-17/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-06-rust-systems-lab-17/solution"
+					title: "Control-Flow Integrity Decision Case",
+					content:
+						"Review the supplied high-level trace of an indirect-call allowlist, identify which transitions are valid, and explain how control-flow integrity changes one risk statement without claiming that it fixes the underlying memory bug. The task is defensive analysis only: no gadget chain, payload, address calculation, or executable construction is included.",
+					datasetLink: `${LOW_LEVEL_SECURITY_PART_2_PRACTICE_PACK}#control-flow-integrity-case`,
+					mediaLink:
+						"https://clang.llvm.org/docs/ControlFlowIntegrity.html"
 				}
 			],
 			supplementalProjects: [
@@ -664,10 +658,9 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 					title: "Audit Notebook: Control-Flow Thinking for Defenders",
 					content:
 						"Keep a written audit notebook for control-flow thinking for defenders that records the lab boundary, the reproducer, the attacker assumptions, the mitigations present, and the patch or verification result. Focus especially on why control-relevant state changes the severity discussion even when the lab stays fully local so security relevance is communicated clearly instead of stopping at “it crashed.”",
-					projectLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-06-rust-systems-lab-17/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Low-Level-Security/tree/main/RUST-06-rust-systems-lab-17/solution"
+					datasetLink: `${LOW_LEVEL_SECURITY_PART_2_PRACTICE_PACK}#control-flow-integrity-case`,
+					mediaLink:
+						"https://clang.llvm.org/docs/ControlFlowIntegrity.html"
 				},
 				{
 					title: "Control-Flow Defense Transfer Practice",
@@ -1183,5 +1176,468 @@ export const lowLevelSecurityPart2Course: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+const LOW_LEVEL_SECURITY_PART_2_SOURCE_CORE_SEQUENCE = [
+	"LLS Part 2 Setup and Tooling",
+	"Module 1: Exploitability Triage",
+	"Module 2: Stack Corruption in Toy Programs",
+	"Module 3: Heap Lifetime and Heap Metadata Concepts",
+	"Module 4: Information Disclosure and Memory Observation",
+	"Module 5: Mitigation-Aware Analysis",
+	"Module 6: Control-Flow Thinking for Defenders",
+	"Module 7: From Bug Report to Patch",
+	"Module 8: Capstone Audit"
+] as const;
+
+const LOW_LEVEL_SECURITY_PART_2_APPENDICES = [
+	"Low-Level Security Lab 13: Exploitability Triage Studio",
+	"Low-Level Security Lab 14: Stack Corruption Hardening Studio",
+	"Low-Level Security Lab 15: Heap Lifetime Audit Studio",
+	"Low-Level Security Lab 16: Disclosure Boundary Hardening Studio",
+	"Low-Level Security Lab 17: Defensive Audit Capstone Studio"
+] as const;
+
+interface LowLevelSecurityPart2ModuleFlow {
+	displayTitle: string;
+	stage: string;
+	estimatedTime: string;
+	keyBlocks: readonly [string, string, string, string, string, string];
+	practiceSection: string;
+	answerSection: string;
+	route: string;
+	evidence: string;
+	references: readonly {
+		label: string;
+		url: string;
+	}[];
+}
+
+const LOW_LEVEL_SECURITY_PART_2_MODULE_FLOW: Record<
+	(typeof LOW_LEVEL_SECURITY_PART_2_SOURCE_CORE_SEQUENCE)[number],
+	LowLevelSecurityPart2ModuleFlow
+> = {
+	"LLS Part 2 Setup and Tooling": {
+		displayTitle: "Part 2 Preflight and Defensive Evidence",
+		stage: "Part 1 prerequisite and advanced local-lab preflight",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Part 1 evidence",
+			"C++17 source",
+			"tool capability",
+			"finite commands",
+			"source trace",
+			"reset path"
+		],
+		practiceSection: "part-2-preflight-case",
+		answerSection: "part-2-preflight-key",
+		route: "Reproduce the Part 1 capstone, build LLS13–LLS18 from the direct CMake path, record platform-specific sanitizer and binary-inspection capability, set finite resource bounds, and confirm a clean reset.",
+		evidence:
+			"The preflight includes Part 1 prerequisite evidence, source revision, C++17 toolchain, supported diagnostics, one finite solution run, expected and observed output, platform difference, stop condition, and reset command.",
+		references: [
+			{
+				label: "CMake tutorial",
+				url: "https://cmake.org/cmake/help/latest/guide/tutorial/index.html"
+			},
+			{
+				label: "Clang AddressSanitizer",
+				url: "https://clang.llvm.org/docs/AddressSanitizer.html"
+			}
+		]
+	},
+	"Module 1: Exploitability Triage": {
+		displayTitle: "LLS13 Exploitability Triage",
+		stage: "Evidence-bounded risk classification",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"reachability",
+			"input control",
+			"observed outcome",
+			"mitigations",
+			"confidence",
+			"maintainer note"
+		],
+		practiceSection: "exploitability-triage-case",
+		answerSection: "exploitability-triage-key",
+		route: "Classify supplied toy reports by reachability, controllable input, observed outcome, mitigation state, preconditions, and confidence before writing a concise maintainer note.",
+		evidence:
+			"The classification distinguishes abort, denial of service, disclosure, and corruption; every impact statement cites observed local evidence and names assumptions that remain unverified.",
+		references: [
+			{
+				label: "NIST Secure Software Development Framework",
+				url: "https://csrc.nist.gov/pubs/sp/800/218/final"
+			},
+			{
+				label: "SEI CERT C++ coding standard",
+				url: "https://wiki.sei.cmu.edu/confluence/x/Wnw-BQ"
+			}
+		]
+	},
+	"Module 2: Stack Corruption in Toy Programs": {
+		displayTitle: "LLS14 Stack Corruption Hardening",
+		stage: "Toy frame model, bounded write, and regression",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"toy frame",
+			"adjacent state",
+			"length contract",
+			"bounded copy",
+			"canary context",
+			"regression"
+		],
+		practiceSection: "stack-frame-hardening-case",
+		answerSection: "stack-frame-hardening-key",
+		route: "Trace the supplied frame model, compare short and oversized writes, separate observed adjacent-state corruption from broader impact assumptions, replace the unchecked copy, and rerun exact-boundary cases.",
+		evidence:
+			"The record identifies the first corrupted field, demonstrates rejection before the write, preserves standard behavior, includes exact-fit and oversized regressions, and treats stack protection as a layer rather than a code fix.",
+		references: [
+			{
+				label: "Clang AddressSanitizer",
+				url: "https://clang.llvm.org/docs/AddressSanitizer.html"
+			},
+			{
+				label: "SEI CERT C++ coding standard",
+				url: "https://wiki.sei.cmu.edu/confluence/x/Wnw-BQ"
+			}
+		]
+	},
+	"Module 3: Heap Lifetime and Heap Metadata Concepts": {
+		displayTitle: "LLS15 Heap Lifetime and Ownership",
+		stage: "Stale-handle reproduction and generation-safe ownership",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"owner",
+			"release",
+			"stale handle",
+			"slot reuse",
+			"generation check",
+			"blocked repeat"
+		],
+		practiceSection: "heap-lifetime-case",
+		answerSection: "heap-lifetime-key",
+		route: "Map ownership and release transitions, reproduce stale-handle reuse in the supplied session pool, add explicit invalidation or generation checks, and prove that reuse and repeated release fail safely.",
+		evidence:
+			"The trace names the owning state, shows the stale observation before correction, blocks the stale handle afterward, blocks double release, and avoids claims about allocator behavior not present in the toy model.",
+		references: [
+			{
+				label: "Clang AddressSanitizer",
+				url: "https://clang.llvm.org/docs/AddressSanitizer.html"
+			},
+			{
+				label: "SEI CERT C++ coding standard",
+				url: "https://wiki.sei.cmu.edu/confluence/x/Wnw-BQ"
+			}
+		]
+	},
+	"Module 4: Information Disclosure and Memory Observation": {
+		displayTitle: "Part 2 Bridge: Disclosure Boundaries",
+		stage: "Public-output boundary before the LLS17 implementation",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"public bytes",
+			"stale state",
+			"visible length",
+			"clearing",
+			"redaction",
+			"closed leak"
+		],
+		practiceSection: "disclosure-boundary-case",
+		answerSection: "disclosure-boundary-key",
+		route: "Trace a supplied serializer transcript, mark intended public bytes and stale internal bytes, select clearing and length controls, and verify the exact corrected output before implementing LLS17.",
+		evidence:
+			"The boundary record identifies what crossed, why it was unintended, the narrow clearing or length correction, the before-and-after bytes, a regression, and one logging or serialization limitation.",
+		references: [
+			{
+				label: "OWASP secure coding checklist",
+				url: "https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/stable-en/02-checklist/05-checklist"
+			}
+		]
+	},
+	"Module 5: Mitigation-Aware Analysis": {
+		displayTitle: "LLS16 Mitigation-Aware Build Analysis",
+		stage: "Observed hardening matrix without risk overstatement",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"platform format",
+			"PIE",
+			"stack protector",
+			"sanitizer",
+			"fortify context",
+			"patch remains"
+		],
+		practiceSection: "mitigation-build-matrix-case",
+		answerSection: "mitigation-build-matrix-key",
+		route: "Compare two finite local builds of the same toy source, record only protections that the platform and evidence can verify, distinguish compile-time instrumentation from deployment hardening, and explain why the source correction remains necessary.",
+		evidence:
+			"The matrix records compiler and linker commands, executable format, observed protection evidence, unknown or unsupported checks, platform differences, risk-language change, and the unchanged need for a patch and regression.",
+		references: [
+			{
+				label: "GCC instrumentation options",
+				url: "https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html"
+			},
+			{
+				label: "Clang command-line reference",
+				url: "https://clang.llvm.org/docs/ClangCommandLineReference.html"
+			}
+		]
+	},
+	"Module 6: Control-Flow Thinking for Defenders": {
+		displayTitle: "Part 2 Bridge: Control-Flow Integrity",
+		stage: "High-level integrity reasoning without payload construction",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"allowed target",
+			"indirect call",
+			"invalid transition",
+			"CFI scope",
+			"memory bug",
+			"risk wording"
+		],
+		practiceSection: "control-flow-integrity-case",
+		answerSection: "control-flow-integrity-key",
+		route: "Review a supplied indirect-call allowlist trace, classify valid and invalid transitions, explain what control-flow integrity constrains, and keep the underlying memory correction separate.",
+		evidence:
+			"The note uses only supplied high-level traces, identifies the invalid transition, states the CFI enforcement assumption, explains what remains unfixed, and contains no addresses, gadget sequence, payload, or executable construction.",
+		references: [
+			{
+				label: "Clang Control Flow Integrity",
+				url: "https://clang.llvm.org/docs/ControlFlowIntegrity.html"
+			}
+		]
+	},
+	"Module 7: From Bug Report to Patch": {
+		displayTitle: "LLS17 Disclosure, Triage, and Patch Handoff",
+		stage: "Reproduction-to-remediation workflow",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"reproducer",
+			"root cause",
+			"impact",
+			"narrow patch",
+			"regression",
+			"handoff"
+		],
+		practiceSection: "patch-and-advisory-case",
+		answerSection: "patch-and-advisory-key",
+		route: "Reproduce the LLS17 disclosure boundary, separate observation from inferred impact, patch clearing and visible-length behavior, rerun the exact case, and write a concise internal triage and remediation note.",
+		evidence:
+			"The handoff includes scope, exact reproducer, observed bytes, root cause, bounded impact, patch rationale, standard and negative regressions, mitigation context, residual limitation, and no public release requirement.",
+		references: [
+			{
+				label: "NIST Secure Software Development Framework",
+				url: "https://csrc.nist.gov/pubs/sp/800/218/final"
+			},
+			{
+				label: "OWASP secure coding checklist",
+				url: "https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/stable-en/02-checklist/05-checklist"
+			}
+		]
+	},
+	"Module 8: Capstone Audit": {
+		displayTitle: "LLS18 Defensive Hardening Capstone",
+		stage: "Multi-finding audit, correction, and maintainer packet",
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"scope",
+			"finding rank",
+			"attacker assumptions",
+			"patch set",
+			"regression suite",
+			"audit packet"
+		],
+		practiceSection: "hardening-capstone-case",
+		answerSection: "hardening-capstone-key",
+		route: "Audit the supplied LLS18 toy system across bounded writes, generation-checked handles, and public serialization; rank findings from observed evidence, patch narrowly, rerun the complete suite, and deliver a defensive maintainer packet.",
+		evidence:
+			"The packet includes source revision, scope, threat and trust-boundary map, ranked findings with confidence, exact reproducers, patch set, before-and-after evidence, mitigation matrix, regression suite, resource budget, cleanup, and residual risk.",
+		references: [
+			{
+				label: "NIST Secure Software Development Framework",
+				url: "https://csrc.nist.gov/pubs/sp/800/218/final"
+			},
+			{
+				label: "SEI CERT C++ coding standard",
+				url: "https://wiki.sei.cmu.edu/confluence/x/Wnw-BQ"
+			}
+		]
+	}
+};
+
+function lowLevelSecurityPart2PracticeLink(section: string) {
+	return `${LOW_LEVEL_SECURITY_PART_2_PRACTICE_PACK}#${section}`;
+}
+
+function lowLevelSecurityPart2VerificationLink(section: string) {
+	return `${LOW_LEVEL_SECURITY_PART_2_VERIFICATION_GUIDE}#${section}`;
+}
+
+function renderLowLevelSecurityPart2References(
+	flow: LowLevelSecurityPart2ModuleFlow
+) {
+	return flow.references
+		.map(reference => `[${reference.label}](${reference.url})`)
+		.join(", ");
+}
+
+function lowLevelSecurityPart2SupplementalPath(title: string) {
+	return /Extension|Challenge/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function lowLevelSecurityPart2ItemTitle(
+	title: string,
+	sourceTitle: string,
+	displayTitle: string
+) {
+	return title.startsWith(`${sourceTitle}:`)
+		? `${displayTitle}${title.slice(sourceTitle.length)}`
+		: title;
+}
+
+function decorateLowLevelSecurityPart2CoreModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const sourceTitle =
+		module.title as (typeof LOW_LEVEL_SECURITY_PART_2_SOURCE_CORE_SEQUENCE)[number];
+	const flow = LOW_LEVEL_SECURITY_PART_2_MODULE_FLOW[sourceTitle];
+	if (!flow) {
+		throw new Error(
+			`Missing Low Level Security Part 2 flow: ${module.title}`
+		);
+	}
+
+	const practiceLink = lowLevelSecurityPart2PracticeLink(
+		flow.practiceSection
+	);
+	const verificationLink = lowLevelSecurityPart2VerificationLink(
+		flow.answerSection
+	);
+	const primaryReference = flow.references[0]?.url;
+
+	return {
+		...module,
+		title: flow.displayTitle,
+		kind: "module",
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: [...flow.keyBlocks],
+		curriculum: module.curriculum.map((item, index) => ({
+			...item,
+			title: lowLevelSecurityPart2ItemTitle(
+				item.title,
+				sourceTitle,
+				flow.displayTitle
+			),
+			content:
+				index === 0
+					? `**Course flow:** ${flow.stage}. ${flow.route}
+
+**Defensive analysis contract:** Separate observed behavior, reachability, controllable input, preconditions, mitigation state, likely impact, confidence, and remaining uncertainty. A crash, hardening flag, or sanitizer result does not establish exploitability or complete safety by itself.
+
+**Scope and resource contract:** Use only supplied or learner-owned toy source in a local workspace. Record tool versions, finite input and runtime bounds, process count, stop condition, output path, and reset route. No public or third-party target, credential, exploit payload, gadget construction, persistence, unbounded campaign, or public proof of concept is part of the course.
+
+**Evidence gate:** ${flow.evidence}
+
+**Local continuity:** Complete the [supplied Part 2 case](${practiceLink}) before comparing it with the [verification guide](${verificationLink}). The supplied trace, source excerpt, build record, or case table is a complete route when a sanitizer, debugger, binary-inspection tool, compatible shell, or network connection is unavailable.
+
+**Current references:** ${renderLowLevelSecurityPart2References(flow)}. Record tool and document versions because platform support, diagnostics, flags, defaults, and examples can change.
+
+${item.content}`
+					: item.content,
+			learningPath: "core" as const,
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? primaryReference
+					}
+				: {})
+		})),
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			title: lowLevelSecurityPart2ItemTitle(
+				item.title,
+				sourceTitle,
+				flow.displayTitle
+			),
+			learningPath: lowLevelSecurityPart2SupplementalPath(item.title),
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? primaryReference
+					}
+				: {})
+		}))
+	};
+}
+
+function decorateLowLevelSecurityPart2Appendix(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	return {
+		...module,
+		kind: "appendix",
+		estimatedTime: "Optional transfer studio · 1–2 sessions",
+		keyBlocks: [
+			"prior finding",
+			"changed fixture",
+			"finite evidence",
+			"mitigation context",
+			"regression",
+			"handoff limit"
+		],
+		curriculum: module.curriculum.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Optional appendix:** Labs 13–17 repeat selected Part 2 skills after the complete preflight, LLS13–LLS18, and bridge-case path. Select this studio only for a specific transfer or support need; completing all five is not required for the LLS18 capstone.
+
+**Bounded route:** Stay inside the linked toy fixture, preserve finite commands and reset conditions, separate observed evidence from impact assumptions, and end with a patch, mitigation decision, regression, or maintainer handoff.
+
+${item.content}`
+					: item.content,
+			learningPath: "choice" as const
+		})),
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: lowLevelSecurityPart2SupplementalPath(item.title)
+		}))
+	};
+}
+
+const lowLevelSecurityPart2ModulesByTitle = new Map(
+	lowLevelSecurityPart2SourceCourse.modules.map(module => [
+		module.title,
+		module
+	])
+);
+
+const lowLevelSecurityPart2CoreModules =
+	LOW_LEVEL_SECURITY_PART_2_SOURCE_CORE_SEQUENCE.map(title => {
+		const module = lowLevelSecurityPart2ModulesByTitle.get(title);
+		if (!module) {
+			throw new Error(
+				`Missing Low Level Security Part 2 module: ${title}`
+			);
+		}
+		return decorateLowLevelSecurityPart2CoreModule(module);
+	});
+
+const lowLevelSecurityPart2Appendices =
+	LOW_LEVEL_SECURITY_PART_2_APPENDICES.map(title => {
+		const module = lowLevelSecurityPart2ModulesByTitle.get(title);
+		if (!module) {
+			throw new Error(
+				`Missing Low Level Security Part 2 appendix: ${title}`
+			);
+		}
+		return decorateLowLevelSecurityPart2Appendix(module);
+	});
+
+export const lowLevelSecurityPart2Course: RawCourse = {
+	...lowLevelSecurityPart2SourceCourse,
+	modules: [
+		...lowLevelSecurityPart2CoreModules,
+		...lowLevelSecurityPart2Appendices
 	]
 };
