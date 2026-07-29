@@ -1,10 +1,10 @@
-import type { RawCourse } from "./types";
-import {
-	pendingStaticMediaNotice,
-	staticMediaFilename,
-	staticMediaUrl,
-	withPendingStaticMediaNotice
-} from "./staticMedia";
+import type {
+	CourseItemLearningPath,
+	RawCourse,
+	RawCourseModule,
+	RawCourseModuleItem
+} from "./types";
+import { staticMediaFilename } from "./staticMedia";
 
 const PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS = [
 	"ps10_field_day.gif",
@@ -193,7 +193,9 @@ function reviewBrief({
 	].join("\n\n");
 }
 
-function applyPythonLevel2PendingMediaNotices(course: RawCourse) {
+function hideUnavailablePythonLevel2Media(course: RawCourse) {
+	const unavailableMedia = new Set(PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS);
+
 	for (const module of course.modules) {
 		for (const item of [
 			...module.curriculum,
@@ -203,8 +205,7 @@ function applyPythonLevel2PendingMediaNotices(course: RawCourse) {
 
 			const filename = staticMediaFilename(item.mediaLink);
 			if (!filename) continue;
-
-			item.content = withPendingStaticMediaNotice(item.content, filename);
+			if (unavailableMedia.has(filename)) delete item.mediaLink;
 		}
 	}
 }
@@ -2456,25 +2457,343 @@ export const pythonLevel2Course: RawCourse = {
 				}
 			],
 			supplementalProjects: []
-		},
-		{
-			kind: "appendix",
-			title: "Pending Static Assets",
-			curriculum: [
-				{
-					title: "Pending Python Level 2 Assets",
-					content: [
-						"This course lists pending assets below. Each entry keeps a stable static media URL so the matching file can be added without changing course links.",
-						...PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS.map(
-							filename =>
-								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
-						)
-					].join("\n\n")
-				}
-			],
-			supplementalProjects: []
 		}
 	]
 };
 
-applyPythonLevel2PendingMediaNotices(pythonLevel2Course);
+interface PythonLevel2FlowConfig {
+	title: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	choiceCurriculumTitles?: string[];
+	challengeCurriculumTitles?: string[];
+	projectThread: string;
+}
+
+const PYTHON_LEVEL_2_FLOW: PythonLevel2FlowConfig[] = [
+	{
+		title: "PS1 Variables, Strings, and Input",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"input()",
+			"int() / float()",
+			"string indexing",
+			"len()",
+			"formatted output"
+		],
+		projectThread:
+			"Establish a reliable edit-run-debug loop, then trace user input through conversion and string operations. Mad Libs proves complete input-to-output flow; Index Picker proves safe indexing."
+	},
+	{
+		title: "PS2 For Loops and While Loops",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"for ... in range()",
+			"while condition",
+			"loop variable",
+			"update step",
+			"termination check"
+		],
+		projectThread:
+			"Use Crazy Nametags to make repetition visible, then build Change Machine around a traceable loop invariant and tested boundary values. Optional projects provide targeted loop transfer."
+	},
+	{
+		title: "PS3 ASCII and Ciphers",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"ord()",
+			"chr()",
+			"character offset",
+			"wraparound",
+			"encoded sample text"
+		],
+		projectThread:
+			"Translate characters to numbers and back before building ciphers. Simple Cipher establishes the transformation; Caesar Cipher adds a reusable shift and wraparound cases."
+	},
+	{
+		title: "PS4 Conditionals",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"if / elif / else",
+			"comparison operators",
+			"boolean expression",
+			"branch coverage",
+			"boundary value"
+		],
+		challengeCurriculumTitles: ["PS4 Project 3: Credit Card Validator"],
+		projectThread:
+			"Use Rock, Paper, Scissors and FizzBuzz to practice mutually exclusive branches and boundary tests. Credit Card Validator is the challenge because it combines branching with multi-step validation."
+	},
+	{
+		title: "Check-In #1",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"input and conversion",
+			"loop trace",
+			"conditional branch",
+			"edge case",
+			"debug evidence"
+		],
+		choiceCurriculumTitles: ["Check-In #1: Additional Practice Project"],
+		projectThread:
+			"Diagnose variables, loops, and conditionals separately, then assign the additional project only when a specific gap needs another application."
+	},
+	{
+		title: "PS5 Functions",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: ["def", "parameter", "argument", "return", "local scope"],
+		choiceCurriculumTitles: ["PS5 Project 3: Dice Roller"],
+		projectThread:
+			"Trace parameters and return values before extracting repeated logic. Functions Practice and Coin Flipper form the required path; Dice Roller is an alternate random-function build."
+	},
+	{
+		title: "PS6 Lists and Music",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"list index",
+			"append()",
+			"remove()",
+			"for item in list",
+			"random choice"
+		],
+		challengeCurriculumTitles: ["PS6 Project 3: Song Generator"],
+		projectThread:
+			"Practice list creation, indexing, mutation, and traversal before building a song from ordered data. Song Generator is the challenge because it combines collection state with randomized composition."
+	},
+	{
+		title: "PS7 Dictionaries",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"key-value pair",
+			"dictionary lookup",
+			"get()",
+			"items()",
+			"missing-key case"
+		],
+		projectThread:
+			"Move from positional list data to named key-value data. Dictionaries Practice verifies lookup and update behavior; Song Generator 2 applies the structure to a richer data model."
+	},
+	{
+		title: "PS8 Ciphers and Music",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"mapping table",
+			"dictionary translation",
+			"unknown symbol",
+			"word boundary",
+			"round-trip check"
+		],
+		projectThread:
+			"Use Morse Code as an integration studio: choose a direction, translate with a dictionary, preserve word boundaries, handle unknown symbols, and verify a round trip."
+	},
+	{
+		title: "PS9 Sets",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"set()",
+			"add() / remove()",
+			"membership",
+			"union / intersection",
+			"duplicate elimination"
+		],
+		projectThread:
+			"Contrast sets with lists and dictionaries using duplicate and membership cases. Sets Practice establishes operations; Wheel of Fortune turns unique-letter state into a complete game loop."
+	},
+	{
+		title: "Check-In #2",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"function trace",
+			"list mutation",
+			"dictionary lookup",
+			"set membership",
+			"structure selection"
+		],
+		choiceCurriculumTitles: ["Check-In #2: Additional Practice Project"],
+		projectThread:
+			"Compare the same small problem across functions, lists, dictionaries, and sets. Use the additional project only after identifying which structure or function boundary needs reinforcement."
+	},
+	{
+		title: "PS10 To-Do List",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"command loop",
+			"task collection",
+			"add / view / remove",
+			"invalid command",
+			"clean exit"
+		],
+		projectThread:
+			"Build the first sustained console application around a small command loop. Ship add, view, remove, invalid-command, and exit paths before adding optional features."
+	},
+	{
+		title: "PS11 Bank Account",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"account state",
+			"deposit",
+			"withdrawal guard",
+			"transaction history",
+			"menu loop"
+		],
+		projectThread:
+			"Model state changes with explicit rules and guard conditions. Verify deposits, valid withdrawals, rejected withdrawals, repeated actions, and clean exit before optional account features."
+	},
+	{
+		title: "PS12 Type Racer",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"time module",
+			"elapsed time",
+			"accuracy",
+			"words per minute",
+			"zero-time guard"
+		],
+		projectThread:
+			"Measure elapsed time and text accuracy separately, then combine them into a Type Racer result that handles empty text, immediate input, and ordinary runs safely."
+	},
+	{
+		title: "PS13 Wordsmith",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"word collection",
+			"random choice",
+			"template",
+			"replay loop",
+			"grammar cleanup"
+		],
+		projectThread:
+			"Build generated text from named word collections and a readable template. The minimum version produces a coherent result and replay path before advanced generation is attempted."
+	},
+	{
+		title: "PS14 Blackjack",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"deck representation",
+			"hand total",
+			"hit / stand",
+			"dealer rule",
+			"win / loss / tie"
+		],
+		challengeCurriculumTitles: ["PS14 Project 2: Advanced Blackjack"],
+		projectThread:
+			"Ship Simple Blackjack with a traceable deck, hand totals, player choices, dealer rules, and all end states. Advanced Blackjack is the challenge after replay and edge cases are reliable."
+	},
+	{
+		title: "PS15 Master Project",
+		estimatedTime: "6–10 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"project scope",
+			"minimum usable version",
+			"data model",
+			"helper functions",
+			"test and presentation"
+		],
+		projectThread:
+			"Choose a finishable console application, build a minimum usable version, and verify ordinary, edge, invalid-input, and replay paths before optional polish. Present one design decision and one repaired failure."
+	}
+];
+
+const PYTHON_LEVEL_2_CHALLENGE_TITLE_RE =
+	/advanced|debugging|password cracker|extension|field day ii|class registration ii|evil wheel of fortune|mastermind|archery simulator|stock trader|double or nothing/i;
+const PYTHON_LEVEL_2_COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
+const PYTHON_LEVEL_2_NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
+const PYTHON_LEVEL_2_LEADING_HYPHENS_RE = /^-+/;
+const PYTHON_LEVEL_2_TRAILING_HYPHENS_RE = /-+$/;
+
+function pythonLevel2Slugify(value: string) {
+	return value
+		.toLowerCase()
+		.normalize("NFKD")
+		.replace(PYTHON_LEVEL_2_COMBINING_MARKS_RE, "")
+		.replace(PYTHON_LEVEL_2_NON_ALPHANUMERIC_RE, "-")
+		.replace(PYTHON_LEVEL_2_LEADING_HYPHENS_RE, "")
+		.replace(PYTHON_LEVEL_2_TRAILING_HYPHENS_RE, "");
+}
+
+function preservePythonLevel2Ids(
+	module: RawCourseModule,
+	legacyModuleId: string
+) {
+	for (const [items, prefix] of [
+		[module.curriculum, "curriculum"],
+		[module.supplementalProjects, "supplemental"]
+	] as const) {
+		for (const item of items) {
+			item.id ??= pythonLevel2Slugify(
+				`${legacyModuleId}-${prefix}-${item.title}`
+			);
+		}
+	}
+}
+
+function pythonLevel2SupplementalPath(
+	item: Pick<RawCourseModuleItem, "title">
+): CourseItemLearningPath {
+	return PYTHON_LEVEL_2_CHALLENGE_TITLE_RE.test(item.title)
+		? "challenge"
+		: "choice";
+}
+
+function configurePythonLevel2Module(
+	module: RawCourseModule,
+	config: PythonLevel2FlowConfig
+) {
+	const legacyModuleId = pythonLevel2Slugify(
+		`python-level-2-${module.title}`
+	);
+	module.id ??= legacyModuleId;
+	preservePythonLevel2Ids(module, legacyModuleId);
+
+	const choiceTitles = new Set(config.choiceCurriculumTitles ?? []);
+	const challengeTitles = new Set(config.challengeCurriculumTitles ?? []);
+	const movedItems = module.curriculum.filter(
+		item => choiceTitles.has(item.title) || challengeTitles.has(item.title)
+	);
+	module.curriculum = module.curriculum.filter(
+		item =>
+			!choiceTitles.has(item.title) && !challengeTitles.has(item.title)
+	);
+
+	for (const item of module.curriculum) item.learningPath = "core";
+	for (const item of movedItems) {
+		item.learningPath = challengeTitles.has(item.title)
+			? "challenge"
+			: "choice";
+	}
+	for (const item of module.supplementalProjects) {
+		item.learningPath = pythonLevel2SupplementalPath(item);
+	}
+	module.supplementalProjects = [
+		...movedItems,
+		...module.supplementalProjects
+	];
+
+	module.estimatedTime = config.estimatedTime;
+	module.keyBlocks = [...config.keyBlocks];
+	if (module.curriculum[0]) {
+		module.curriculum[0].content = [
+			module.curriculum[0].content,
+			`**Course flow:** ${config.projectThread}`
+		].join("\n\n");
+	}
+
+	return module;
+}
+
+function configurePythonLevel2Flow(course: RawCourse) {
+	const modulesByTitle = new Map(
+		course.modules.map(module => [module.title, module])
+	);
+
+	course.modules = PYTHON_LEVEL_2_FLOW.map(config => {
+		const module = modulesByTitle.get(config.title);
+		if (!module) {
+			throw new Error(`Python Level 2 flow is missing ${config.title}.`);
+		}
+		return configurePythonLevel2Module(module, config);
+	});
+}
+
+hideUnavailablePythonLevel2Media(pythonLevel2Course);
+configurePythonLevel2Flow(pythonLevel2Course);

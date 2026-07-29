@@ -2724,47 +2724,32 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("records Python Level 2 media as hosted or pending on the class static host", async () => {
+	it("keeps unavailable Python Level 2 media out of learner actions", async () => {
 		const course = await loadRawCourse("python-level-2");
 		expect(course).not.toBeNull();
 
-		const expectedPendingProjectMedia = [
+		const unavailableProjectMedia = [
 			[/PS1 Project 1: Mad Libs/, "ps1_mad_libs.gif"],
 			[/PS6 Supplemental Project 5: Card Shuffler/, "ps6_card_shuffler.mp4"],
 			[/PS12 Project 1: Type Racer/, "ps12_type_racer.mp4"]
 		] as const;
 
-		for (const [titlePattern, filename] of expectedPendingProjectMedia) {
+		for (const [titlePattern, filename] of unavailableProjectMedia) {
 			const item = findItem(course!, titlePattern);
-			expect(item.mediaLink).toBe(staticMediaUrl(filename));
-			expect(hasPendingStaticMediaNotice(item.content, filename)).toBe(true);
+			expect(item.mediaLink).toBeUndefined();
+			expect(hasPendingStaticMediaNotice(item.content, filename)).toBe(
+				false
+			);
 		}
 
-		const mediaModule = course!.modules.find(
-			module => module.title === "Pending Static Assets"
-		);
-		expect(mediaModule?.kind).toBe("appendix");
-
-		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "Pending Python Level 2 Assets"
-		);
-		expect(mediaItem).toBeDefined();
-		const content = mediaItem?.content ?? "";
-
-		for (const filename of [
-			"ps1_index_picker.mp4",
-			"ps6_card_shuffler.mp4",
-			"ps12_type_racer.mp4",
-			"ps_15_master_project.mp4",
-			"python_level_2_check_in_questions.png",
-			"python_level_2_concept.png",
-			"python_level_2_project.png"
-		]) {
-			expect(content).toContain(staticMediaUrl(filename));
-			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
-		}
-
-		expect(content).not.toContain("static.junilearning.com");
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Static Assets"
+			)
+		).toBeUndefined();
+		const learnerText = allCourseText(course);
+		expect(learnerText).not.toContain("Pending Python Level 2 Assets");
+		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
 	it("records Python Level 3 media as hosted or pending on the class static host", async () => {
