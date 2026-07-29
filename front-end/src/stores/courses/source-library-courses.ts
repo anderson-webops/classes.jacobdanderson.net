@@ -1,4 +1,8 @@
-import type { RawCourse, RawCourseModule } from "./types";
+import type {
+	CourseItemLearningPath,
+	RawCourse,
+	RawCourseModule
+} from "./types";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
@@ -7,14 +11,26 @@ interface SourceLibraryCourseSpec {
 	focus: string;
 	name: string;
 	modules: string[];
+	moduleMetadata?: Record<string, SourceLibraryModuleMetadata>;
+	splitSourceActivityAnchors?: boolean;
 	sourceActivityAnchors?: Record<string, SourceActivityAnchor[]>;
 	staticAssets?: string[];
 }
 
 interface SourceActivityAnchor {
+	aliases?: string[];
+	id?: string;
+	learningPath?: CourseItemLearningPath;
+	projectLink?: string;
 	title: string;
 	prompt: string;
 	evidence: string[];
+}
+
+interface SourceLibraryModuleMetadata {
+	estimatedTime: string;
+	flowNote: string;
+	keyBlocks: string[];
 }
 
 const middleSchoolBWritingSourceAnchors: Record<
@@ -999,6 +1015,24 @@ function createSourceActivityAnchorItems(
 	if (!anchors?.length) return [];
 
 	const topic = compactTopic(moduleTitle);
+	if (spec.splitSourceActivityAnchors) {
+		return anchors
+			.filter(anchor => (anchor.learningPath ?? "core") === "core")
+			.map(anchor => ({
+				...(anchor.id ? { id: anchor.id } : {}),
+				...(anchor.aliases?.length ? { aliases: anchor.aliases } : {}),
+				title: anchor.title,
+				content: [
+					`**Project goal:** ${anchor.prompt}`,
+					"**Completion evidence:**",
+					...anchor.evidence.map(item => `- ${item}`)
+				].join("\n"),
+				learningPath: "core" as const,
+				...(anchor.projectLink
+					? { projectLink: anchor.projectLink }
+					: {})
+			}));
+	}
 
 	return [
 		{
@@ -1018,29 +1052,70 @@ function createSourceActivityAnchorItems(
 	];
 }
 
+function createSourceActivityPracticeItems(
+	spec: SourceLibraryCourseSpec,
+	moduleTitle: string
+) {
+	if (!spec.splitSourceActivityAnchors) return [];
+
+	return (spec.sourceActivityAnchors?.[moduleTitle] ?? [])
+		.filter(anchor => (anchor.learningPath ?? "core") !== "core")
+		.map(anchor => ({
+			...(anchor.id ? { id: anchor.id } : {}),
+			...(anchor.aliases?.length ? { aliases: anchor.aliases } : {}),
+			title: anchor.title,
+			content: [
+				`**Project goal:** ${anchor.prompt}`,
+				"**Completion evidence:**",
+				...anchor.evidence.map(item => `- ${item}`)
+			].join("\n"),
+			learningPath: anchor.learningPath ?? ("choice" as const),
+			...(anchor.projectLink ? { projectLink: anchor.projectLink } : {})
+		}));
+}
+
 function createSourceLibraryModule(
 	spec: SourceLibraryCourseSpec,
 	moduleTitle: string
 ): RawCourseModule {
 	const topic = compactTopic(moduleTitle);
+	const metadata = spec.moduleMetadata?.[moduleTitle];
+	const splitAnchors = Boolean(spec.splitSourceActivityAnchors);
 
 	return {
 		title: moduleTitle,
+		...(metadata?.estimatedTime
+			? { estimatedTime: metadata.estimatedTime }
+			: {}),
+		...(metadata?.keyBlocks?.length
+			? { keyBlocks: [...metadata.keyBlocks] }
+			: {}),
 		curriculum: [
 			{
 				title: `Concepts: ${topic}`,
-				content: conceptContent(spec, moduleTitle)
+				content: [
+					conceptContent(spec, moduleTitle),
+					metadata?.flowNote
+						? `**Course flow:** ${metadata.flowNote}`
+						: ""
+				]
+					.filter(Boolean)
+					.join("\n\n"),
+				...(splitAnchors ? { learningPath: "core" as const } : {})
 			},
 			...createSourceActivityAnchorItems(spec, moduleTitle)
 		],
 		supplementalProjects: [
+			...createSourceActivityPracticeItems(spec, moduleTitle),
 			{
 				title: `Practice Map: ${topic}`,
-				content: practiceContent(spec, moduleTitle)
+				content: practiceContent(spec, moduleTitle),
+				...(splitAnchors ? { learningPath: "choice" as const } : {})
 			},
 			{
 				title: `Extension Review: ${topic}`,
-				content: extensionContent(spec, moduleTitle)
+				content: extensionContent(spec, moduleTitle),
+				...(splitAnchors ? { learningPath: "challenge" as const } : {})
 			}
 		]
 	};
@@ -3874,9 +3949,62 @@ const sourceVariantCourses = {
 		name: "Scratch Level 1: Game Superstar Bootcamp",
 		area: "visual programming bootcamp",
 		focus: "Scratch setup, sounds, motion, costumes, backdrops, event listeners, loops, conditionals, variables, and a short master project sequence",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"GS1 Event Listeners and Movement": {
+				estimatedTime: "2 sessions · 45–60 minutes each",
+				keyBlocks: [
+					"when green flag clicked",
+					"when key pressed",
+					"when this sprite clicked",
+					"motion blocks",
+					"sound and looks feedback"
+				],
+				flowNote:
+					"Complete the workspace tour and Dragonfly remix first. Choose one control-focused alternate only if time permits; the goal is dependable event-to-action behavior, not six required builds."
+			},
+			"GS2 Loops": {
+				estimatedTime: "2 sessions · 45–60 minutes each",
+				keyBlocks: [
+					"repeat",
+					"forever",
+					"wait",
+					"move and turn",
+					"green-flag reset"
+				],
+				flowNote:
+					"Use Mouse Shape Loops as the required visual build. Music and effects projects are choices after repeated movement and turn patterns can be predicted before running."
+			},
+			"GS3 Conditionals and Variables": {
+				estimatedTime: "2 sessions · 45–60 minutes each",
+				keyBlocks: [
+					"make a variable",
+					"set variable to",
+					"change variable by",
+					"if then",
+					"touching"
+				],
+				flowNote:
+					"Build the Button Click Timer as the required state project. Use Zebra for extra fluency or Crab Catching as the harder collision-game path."
+			},
+			"GS4 Master Project": {
+				estimatedTime: "3–4 sessions · 45–60 minutes each",
+				keyBlocks: [
+					"events",
+					"loops",
+					"conditionals",
+					"variables",
+					"broadcast or end state"
+				],
+				flowNote:
+					"Choose one game direction, ship a minimum playable loop, test a clean restart and one edge case, then spend remaining time on feedback and polish."
+			}
+		},
 		sourceActivityAnchors: {
 			"GS1 Event Listeners and Movement": [
 				{
+					id: "scratch-level-1-bootcamp-gs1-event-listeners-and-movement-curriculum-source-activity-anchors-event-listeners-and-movement",
+					learningPath: "core",
 					title: "Scratch Account and First Project Tour",
 					prompt: "Create or open a Scratch project and identify the stage, sprite list, code area, costumes, sounds, and save state. Use this setup pass to connect the project workspace to later movement, sound, and event-listener work.",
 					evidence: [
@@ -3886,6 +4014,8 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					learningPath: "core",
+					projectLink: "https://scratch.mit.edu/projects/592006491/",
 					title: "Dragonfly Event Listener Remix",
 					prompt: "Use the original dragonfly activity at https://scratch.mit.edu/projects/592006491/ as a reference for event-driven behavior. Add separate events for the green flag, space key, and sprite click so the dragonfly moves, plays a sound, and says a short message.",
 					evidence: [
@@ -3895,6 +4025,8 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					learningPath: "choice",
+					projectLink: "https://scratch.mit.edu/projects/592008620/",
 					title: "Beetle Keyboard Drawing Controls",
 					prompt: "Use https://scratch.mit.edu/projects/592008620/ as the shape-drawing reference. Build keyboard events that move a beetle with the arrow keys, reset the drawing with the green flag, and draw a square, triangle, and arrow from number-key events.",
 					evidence: [
@@ -3904,6 +4036,8 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					learningPath: "choice",
+					projectLink: "https://scratch.mit.edu/projects/287738652/",
 					title: "Pencil Drawing Program Controls",
 					prompt: "Use the drawing-program activity at https://scratch.mit.edu/projects/287738652/ to combine movement, turning, pen control, color changes, pen-size changes, and a reset event into one reusable drawing tool.",
 					evidence: [
@@ -3913,6 +4047,8 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					learningPath: "choice",
+					projectLink: "https://scratch.mit.edu/projects/287920173/",
 					title: "Arrow Direction and Mouse Targeting",
 					prompt: "Use https://scratch.mit.edu/projects/287920173/ as a reference for direction events. Program an arrow sprite to point in the four arrow-key directions, rotate with letter keys, and point toward the mouse when the space key is pressed.",
 					evidence: [
@@ -3922,6 +4058,8 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					learningPath: "challenge",
+					projectLink: "https://scratch.mit.edu/projects/287924505/",
 					title: "Ball Looks and Motion Event Set",
 					prompt: "Use https://scratch.mit.edu/projects/287924505/ to build a small event set for a ball sprite. Combine random starting position, movement with edge bounce, backdrop changes, size changes, sound, and color effects.",
 					evidence: [
@@ -3933,6 +4071,8 @@ const sourceVariantCourses = {
 			],
 			"GS2 Loops": [
 				{
+					learningPath: "choice",
+					projectLink: "https://scratch.mit.edu/projects/592014695/",
 					title: "Elephant Repeat and Forever Effects",
 					prompt: "Use https://scratch.mit.edu/projects/592014695/ as the loop-effects reference. Build key events that grow, shrink, change color, apply another visual effect, and repeatedly hide and show the elephant.",
 					evidence: [
@@ -3942,6 +4082,9 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					id: "scratch-level-1-bootcamp-gs2-loops-curriculum-source-activity-anchors-loops",
+					learningPath: "core",
+					projectLink: "https://scratch.mit.edu/projects/601699148/",
 					title: "Mouse Shape Loops",
 					prompt: "Use https://scratch.mit.edu/projects/601699148/ as the looped-shapes reference. Add a reset event, then use loops to draw a triangle, a circle-like shape, and at least one additional shape or design.",
 					evidence: [
@@ -3951,6 +4094,8 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					learningPath: "choice",
+					projectLink: "https://scratch.mit.edu/projects/291117784/",
 					title: "Hot Cross Buns Music Loop",
 					prompt: "Use https://scratch.mit.edu/projects/291117784/ as the music-loop reference. Recreate the note pattern EDC twice, followed by CCCC, DDDD, and EDC, then use loops to reduce repetition and play the full phrase twice.",
 					evidence: [
@@ -3962,6 +4107,9 @@ const sourceVariantCourses = {
 			],
 			"GS3 Conditionals and Variables": [
 				{
+					id: "scratch-level-1-bootcamp-gs3-conditionals-and-variables-curriculum-source-activity-anchors-conditionals-and-variables",
+					learningPath: "core",
+					projectLink: "https://scratch.mit.edu/projects/592019210/",
 					title: "Button Click Timer Game",
 					prompt: "Use https://scratch.mit.edu/projects/592019210/ as the variables reference. Build a timed button-click game with a click counter, countdown timer, start sequence, button feedback, and game-over hiding behavior.",
 					evidence: [
@@ -3971,6 +4119,8 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					learningPath: "challenge",
+					projectLink: "https://scratch.mit.edu/projects/327610777/",
 					title: "Crab Catching Game",
 					prompt: "Use https://scratch.mit.edu/projects/327610777/ as the falling-object game reference. Move the crab with arrow keys, make the cheesy puffs fall from random top positions, reset missed puffs, and increase a score when the crab catches one.",
 					evidence: [
@@ -3980,6 +4130,8 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					learningPath: "choice",
+					projectLink: "https://scratch.mit.edu/projects/327635693/",
 					title: "Zebra Step Counter",
 					prompt: "Use https://scratch.mit.edu/projects/327635693/ as the step-count reference. Create a steps variable, reset it with the green flag, move the zebra with arrow keys, switch costumes during movement, and count each step.",
 					evidence: [
@@ -3991,6 +4143,8 @@ const sourceVariantCourses = {
 			],
 			"GS4 Master Project": [
 				{
+					id: "scratch-level-1-bootcamp-gs4-master-project-curriculum-source-activity-anchors-master-project",
+					learningPath: "core",
 					title: "Bootcamp Game Selection",
 					prompt: "Choose a master-project direction from the original options: Spider Smash at https://scratch.mit.edu/projects/299272518/, Hungry Shark at https://scratch.mit.edu/projects/608768681/, or Save the Princess at https://scratch.mit.edu/projects/608770708/. Identify the core player action, objective, score or win condition, and main feedback loop before building.",
 					evidence: [
@@ -4000,6 +4154,7 @@ const sourceVariantCourses = {
 					]
 				},
 				{
+					learningPath: "core",
 					title: "Playable Scratch Game Build",
 					prompt: "Build a short original Scratch game that combines motion, events, loops, conditionals, variables, costumes or backdrops, sound or visual feedback, and a clear end state.",
 					evidence: [
