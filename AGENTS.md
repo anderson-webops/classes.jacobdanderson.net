@@ -7,7 +7,7 @@
 - Monorepo-wide configuration (ESLint, TypeScript base config, workspace scripts) is defined at the repository root; update these when adjusting tooling for either project.
 
 ## Build, Test, and Development Commands
-- `npm install` (root) installs all workspace dependencies using the pinned `npm@11` toolchain. Avoid mixing package managers.
+- `npm install` (root) installs all workspace dependencies using Node 24 LTS and the pinned `npm@11.16.0` toolchain. Avoid mixing package managers.
 - `npm run dev` starts the front-end dev server on port 3333; `npm run serve` runs the same build with `--host` enabled for LAN previews.
 - `npm run server` launches the API with live reload via `tsx watch -r dotenv/config` on port 3008.
 - `npm run build` produces optimized client + server bundles (`front-end/dist/`, `back-end/dist/`).
