@@ -1245,6 +1245,7 @@ export const preCalculusBCourse: RawCourse = {
 };
 
 configureMathCourseFlow(preCalculusBCourse, {
+	courseId: "pre-calculus-b",
 	modules: [
 		{
 			title: "PCTB1 Trigonometry Basics",

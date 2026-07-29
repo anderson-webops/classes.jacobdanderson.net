@@ -1255,6 +1255,7 @@ export const preCalculusACourse: RawCourse = {
 };
 
 configureMathCourseFlow(preCalculusACourse, {
+	courseId: "pre-calculus-a",
 	modules: [
 		{
 			title: "PCTA1 Piecewise Functions",

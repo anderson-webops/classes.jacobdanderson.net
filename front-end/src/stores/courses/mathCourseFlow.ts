@@ -7,6 +7,7 @@ import type {
 
 export interface MathCourseModuleFlow {
 	title: string;
+	legacyTitle?: string;
 	estimatedTime: string;
 	keyBlocks: string[];
 	flowNote: string;
@@ -19,7 +20,35 @@ export interface MathCourseModuleFlow {
 
 interface MathCourseFlowOptions {
 	appendixTitles: string[];
+	courseId: string;
 	modules: MathCourseModuleFlow[];
+}
+
+const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
+const NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
+const LEADING_HYPHENS_RE = /^-+/;
+const TRAILING_HYPHENS_RE = /-+$/;
+
+function mathCourseSlugify(value: string) {
+	return value
+		.toLowerCase()
+		.normalize("NFKD")
+		.replace(COMBINING_MARKS_RE, "")
+		.replace(NON_ALPHANUMERIC_RE, "-")
+		.replace(LEADING_HYPHENS_RE, "")
+		.replace(TRAILING_HYPHENS_RE, "");
+}
+
+function generatedModuleId(courseId: string, moduleTitle: string) {
+	return mathCourseSlugify(`${courseId}-${moduleTitle}`);
+}
+
+function preserveItemId(
+	item: RawCourseModuleItem,
+	moduleId: string,
+	location: "curriculum" | "supplemental"
+) {
+	item.id ??= mathCourseSlugify(`${moduleId}-${location}-${item.title}`);
 }
 
 function requireTitles(
@@ -42,7 +71,9 @@ function moveItems(
 	source: RawCourseModuleItem[],
 	destination: RawCourseModuleItem[],
 	titles: string[],
-	learningPath: CourseItemLearningPath
+	learningPath: CourseItemLearningPath,
+	moduleId: string,
+	sourceLocation: "curriculum" | "supplemental"
 ) {
 	const selectedTitles = new Set(titles);
 	const moved: RawCourseModuleItem[] = [];
@@ -50,6 +81,7 @@ function moveItems(
 
 	for (const item of source) {
 		if (selectedTitles.has(item.title)) {
+			preserveItemId(item, moduleId, sourceLocation);
 			moved.push({ ...item, learningPath });
 		} else {
 			retained.push(item);
@@ -60,7 +92,26 @@ function moveItems(
 	destination.push(...moved);
 }
 
-function configureModule(module: RawCourseModule, flow: MathCourseModuleFlow) {
+function configureModule(
+	module: RawCourseModule,
+	flow: MathCourseModuleFlow,
+	courseId: string
+) {
+	const legacyModuleId = generatedModuleId(
+		courseId,
+		flow.legacyTitle ?? module.title
+	);
+
+	if (flow.legacyTitle) {
+		module.id ??= legacyModuleId;
+		for (const item of module.curriculum) {
+			preserveItemId(item, legacyModuleId, "curriculum");
+		}
+		for (const item of module.supplementalProjects) {
+			preserveItemId(item, legacyModuleId, "supplemental");
+		}
+	}
+
 	const choiceCurriculumTitles = flow.choiceCurriculumTitles ?? [];
 	const challengeCurriculumTitles = flow.challengeCurriculumTitles ?? [];
 	const coreSupplementalTitles = flow.coreSupplementalTitles ?? [];
@@ -82,19 +133,25 @@ function configureModule(module: RawCourseModule, flow: MathCourseModuleFlow) {
 		module.curriculum,
 		module.supplementalProjects,
 		choiceCurriculumTitles,
-		"choice"
+		"choice",
+		legacyModuleId,
+		"curriculum"
 	);
 	moveItems(
 		module.curriculum,
 		module.supplementalProjects,
 		challengeCurriculumTitles,
-		"challenge"
+		"challenge",
+		legacyModuleId,
+		"curriculum"
 	);
 	moveItems(
 		module.supplementalProjects,
 		module.curriculum,
 		coreSupplementalTitles,
-		"core"
+		"core",
+		legacyModuleId,
+		"supplemental"
 	);
 
 	if (!module.curriculum.length) {
@@ -172,7 +229,7 @@ export function configureMathCourseFlow(
 		if (!module) {
 			throw new Error(`Expected ${course.name} module ${flow.title}.`);
 		}
-		configureModule(module, flow);
+		configureModule(module, flow, options.courseId);
 		return module;
 	});
 

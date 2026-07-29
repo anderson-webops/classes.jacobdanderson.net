@@ -976,6 +976,7 @@ export const apCalculusCourse: RawCourse = {
 };
 
 configureMathCourseFlow(apCalculusCourse, {
+	courseId: "ap-calculus",
 	modules: moduleData.map(data => {
 		const code = moduleCode(data.title);
 		const keyBlocks = calculusModuleKeyBlocks[code];

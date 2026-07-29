@@ -712,6 +712,7 @@ export const geometryBCourse: RawCourse = {
 };
 
 configureMathCourseFlow(geometryBCourse, {
+	courseId: "geometry-b",
 	modules: [
 		{
 			title: "GEOB1-GEOB2 Quadrilaterals and Parallelograms",

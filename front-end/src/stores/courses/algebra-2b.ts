@@ -846,6 +846,7 @@ Legacy static media is not embedded directly while those files are pending. Each
 };
 
 configureMathCourseFlow(algebra2BCourse, {
+	courseId: "algebra-2b",
 	modules: [
 		{
 			title: "ALB1 Introduction to Logarithms",

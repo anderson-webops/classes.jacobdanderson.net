@@ -971,6 +971,7 @@ ${sourceMediaReferences()}
 };
 
 configureMathCourseFlow(algebra2ACourse, {
+	courseId: "algebra-2a",
 	modules: [
 		{
 			title: "ALA1 Complex Numbers",
