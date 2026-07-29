@@ -6596,6 +6596,7 @@ describe("course text quality normalization", () => {
 			"Two-Minute Self Introduction",
 			"Introduce Another Person",
 			"Toast Outline and Delivery Notes",
+			"Audience-Centered Three-Part Speech",
 			"Annotated Keynote Performance",
 			"Personal Narrative Performance",
 			"Five-Minute Media Pitch",
@@ -6605,13 +6606,13 @@ describe("course text quality normalization", () => {
 			"TED-Style Talk Portfolio"
 		];
 
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).not.toContain("Source Activity Anchors:");
 		expect(text).toContain("opening, main points, and a closing summary");
 		expect(text).toContain("Eye-contact cues");
 		expect(text).toContain("Happiness v. Money");
 		expect(text).toContain("through-line");
 		expect(text).toContain("landscape framing");
-		expect(text).toContain("Evidence record:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text).toContain(anchor);
 		}

@@ -2557,6 +2557,117 @@ const englishCourses = {
 		name: "Make Your Point: Introduction to Public Speaking",
 		area: "public speaking",
 		focus: "introductions, toast structure, speechwriting, keynote organization, storytelling, radio pitches, argument defense, comedy timing, and polished talk delivery",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"MYP1 Personal Introductions": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"audience",
+					"opening / main points / closing",
+					"specific detail",
+					"pacing",
+					"revision reflection"
+				],
+				flowNote:
+					"Students may introduce themselves, a fictional persona, or another real or fictional person and never need to disclose sensitive personal information. Accept live, private recorded, or audio-only delivery."
+			},
+			"MYP2 Toastmaker": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"honoree",
+					"occasion / audience",
+					"meaningful detail",
+					"conversational tone",
+					"closing sentiment"
+				],
+				flowNote:
+					"Choose a real, fictional, or group honoree, build from notes rather than memorization, and revise one tone or pacing choice after a private rehearsal."
+			},
+			"MYP3 Speechwriter": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"purpose",
+					"audience",
+					"central claim",
+					"organized main points",
+					"evidence / closing"
+				],
+				flowNote:
+					"Use the audience-centered speech as the bridge from short ceremonial speaking to longer performances. Draft the smallest complete speech, test the order aloud, and revise for clarity before delivery polish."
+			},
+			"MYP4 Keynote Speaker": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"through-line",
+					"annotated outline",
+					"emphasis",
+					"gesture / posture",
+					"visual support"
+				],
+				flowNote:
+					"Keep one central through-line, annotate only meaningful delivery moments, and rehearse first without visuals so slides or backdrops support rather than replace the speaker."
+			},
+			"MYP5 Storyteller": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"hook",
+					"scene sequence",
+					"turning point",
+					"lesson / point",
+					"conversational delivery"
+				],
+				flowNote:
+					"Students may use a true, adapted, or fictionalized story and do not need to disclose private experiences. Build one clear scene and turning point before adding detail; accept live, private recorded, or audio-only delivery."
+			},
+			"MYP6 Radio Pitch": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"target audience",
+					"claim",
+					"strongest reasons",
+					"time limit",
+					"feedback revision"
+				],
+				flowNote:
+					"Plan for a specific audience, lead with the recommendation, and keep only details that support it. Compare the first and second delivery after one focused feedback pass."
+			},
+			"MYP7 Defense Attorney": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"claim",
+					"evidence",
+					"counterargument",
+					"response",
+					"closing statement"
+				],
+				flowNote:
+					"Treat the courtroom format as structured argument practice, distinguish examples from verified evidence, and represent the counterargument fairly before responding."
+			},
+			"MYP8 Stand-up Comedian": {
+				estimatedTime: "3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"setup / payoff",
+					"sequence",
+					"transition",
+					"timing",
+					"audience-safe revision"
+				],
+				flowNote:
+					"Keep comedy classroom-safe: no targeting classmates, protected traits, private information, trauma, or humiliation. A humorous story, observational routine, or fictional character routine is equally valid, and private delivery is acceptable."
+			},
+			"MYP9 Master Project: Your TED-Ed Talk": {
+				estimatedTime: "4–6 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"idea / through-line",
+					"supporting story or argument",
+					"visual aid",
+					"rehearsal cycle",
+					"copyright-safe portfolio"
+				],
+				flowNote:
+					"Create a TED-style classroom talk with no claim of TED or TED-Ed affiliation. Public posting and the unavailable release form are not required; live, private recorded, or audio-supported delivery is valid."
+			}
+		},
 		sourceActivityAnchors: {
 			"MYP1 Personal Introductions": [
 				{
@@ -2589,6 +2700,17 @@ const englishCourses = {
 					]
 				}
 			],
+			"MYP3 Speechwriter": [
+				{
+					title: "Audience-Centered Three-Part Speech",
+					prompt: "Choose a low-stakes topic and a specific audience, then draft a speech with an opening hook, two or three organized main points, supporting examples or evidence, transitions, and a closing that returns to the central claim.",
+					evidence: [
+						"Purpose and audience statement plus one clear central claim.",
+						"Three-part outline with transitions and support for each main point.",
+						"Read-aloud revision note identifying one order, clarity, or timing change."
+					]
+				}
+			],
 			"MYP4 Keynote Speaker": [
 				{
 					title: "Annotated Keynote Performance",
@@ -2603,7 +2725,7 @@ const englishCourses = {
 			"MYP5 Storyteller": [
 				{
 					title: "Personal Narrative Performance",
-					prompt: "Build a true-story performance from a personal narrative outline. The performance uses a hook, a clear sequence of events, a lesson or point, and conversational delivery from notes.",
+					prompt: "Build a true, adapted, or fictionalized story performance from a narrative outline. The performance uses a hook, a clear sequence of events, a lesson or point, and conversational delivery from notes.",
 					evidence: [
 						"Narrative outline with hook, key scene, conflict or turning point, and ending lesson.",
 						"Two eye-contact cues and two gesture or emphasis cues.",
@@ -2665,7 +2787,6 @@ const englishCourses = {
 				}
 			]
 		},
-		staticAssets: ["ted_ed_release.pdf"],
 		modules: [
 			"MYP1 Personal Introductions",
 			"MYP2 Toastmaker",
