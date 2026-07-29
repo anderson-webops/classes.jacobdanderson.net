@@ -78,11 +78,14 @@ describe("Pre-Calculus A learner flow", () => {
 			"Capstone: Pre-Calculus A Modeling Portfolio"
 		]);
 		expect(finalModule.curriculum[1]?.learningPath).toBe("core");
-		expect(finalModule.supplementalProjects).toEqual([
-			expect.objectContaining({
-				learningPath: "choice",
-				title: "Project: Rational, Logarithmic, and Conic Defense"
-			})
+		expect(
+			finalModule.supplementalProjects.map(item => [
+				item.title,
+				item.learningPath
+			])
+		).toEqual([
+			["Project: Rational, Logarithmic, and Conic Defense", "choice"],
+			["Challenge: Portfolio Model Stress Test", "challenge"]
 		]);
 	});
 
