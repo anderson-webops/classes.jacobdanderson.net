@@ -1,8 +1,8 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const usacoSilverCourse: RawCourse = {
+const usacoSilverSourceCourse: RawCourse = {
 	name: "USACO Silver",
 	modules: [
 		{
@@ -1368,5 +1368,474 @@ export const usacoSilverCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+const USACO_SILVER_CONTESTS = "https://usaco.org/index.php?page=contests";
+const USACO_SILVER_RULES = "https://usaco.org/index.php?page=instructions";
+const USACO_SILVER_DETAILS = "https://usaco.org/index.php?page=details";
+const USACO_SILVER_GUIDE = "https://usaco.guide/silver";
+const USACO_SILVER_COMPRESSION_GUIDE =
+	"https://usaco.guide/silver/sorting-custom";
+const USACO_SILVER_2026_SLIDING_WINDOW =
+	"https://usaco.org/index.php?page=viewproblem2&cpid=1544";
+const USACO_SILVER_2025_SEQUENCE_CONSTRUCTION =
+	"https://usaco.org/index.php?cpid=1518&lang=en&page=viewproblem2";
+const USACO_SILVER_2026_THIRD_RESULTS =
+	"https://usaco.org/index.php?page=season26contest3results";
+
+const USACO_SILVER_PRIMARY_TITLES = new Set([
+	"USS0 Setup and Silver Transition",
+	"Unit 1: Data Structures and Problem Modeling",
+	"Unit 2: DFS, BFS, and Graph Traversal",
+	"Unit 3: Sorting, Searching, and Binary Search",
+	"Unit 4: Prefix Sums, Ranges, and Counting",
+	"Unit 5: Greedy and Structured Simulation",
+	"Unit 6: Silver Capstone Sets"
+]);
+
+const USACO_SILVER_FLOW: Record<
+	string,
+	{
+		title: string;
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"USS0 Setup and Silver Transition": {
+		title: "USS0 Setup and Silver Transition",
+		estimatedTime: "3 sessions · 45–90 minutes each",
+		keyBlocks: [
+			"Bronze readiness",
+			"current contest rules",
+			"language and I/O workflow",
+			"complexity budget",
+			"protected practice",
+			"problem log"
+		],
+		flowNote:
+			"Verify independent Bronze accuracy, establish one reliable Silver language and standard-I/O workflow, read the live contest rules, and use protected practice before adding new algorithm families."
+	},
+	"Unit 1: Data Structures and Problem Modeling": {
+		title: "Unit 1: Maps, Sets, and Problem Modeling",
+		estimatedTime: "5 sessions · 45–90 minutes each",
+		keyBlocks: [
+			"state representation",
+			"maps and sets",
+			"membership and frequency",
+			"data-structure invariant",
+			"constraint budget",
+			"structured trace"
+		],
+		flowNote:
+			"Choose arrays, maps, sets, or structured records from the value range and required operations. Define what each structure contains at every step, then test the representation independently from the algorithm that uses it."
+	},
+	"Unit 2: DFS, BFS, and Graph Traversal": {
+		title: "Unit 2: DFS, BFS, Flood Fill, Trees, and Functional Graphs",
+		estimatedTime: "6 sessions · 45–90 minutes each",
+		keyBlocks: [
+			"graph construction",
+			"DFS and BFS",
+			"flood fill",
+			"tree structure",
+			"functional graphs",
+			"visited-state invariant"
+		],
+		flowNote:
+			"Translate stories and grids into nodes, edges, and states; choose DFS, BFS, or flood fill from the guarantee needed; and extend traversal reasoning to trees and one-outgoing-edge functional graphs."
+	},
+	"Unit 3: Sorting, Searching, and Binary Search": {
+		title: "Unit 3: Sorting, Two Pointers, Compression, and Binary Search",
+		estimatedTime: "6 sessions · 45–90 minutes each",
+		keyBlocks: [
+			"custom ordering",
+			"two pointers",
+			"coordinate compression",
+			"binary search",
+			"monotone predicate",
+			"boundary invariant"
+		],
+		flowNote:
+			"Sort to expose structure, scan monotone ranges with two pointers, compress large coordinates when only order matters, and use binary search only after stating a monotone predicate and boundary invariant."
+	},
+	"Unit 4: Prefix Sums, Ranges, and Counting": {
+		title: "Unit 4: Prefix and Difference Sums, Ranges, and Sliding Windows",
+		estimatedTime: "6 sessions · 45–90 minutes each",
+		keyBlocks: [
+			"prefix meaning",
+			"difference updates",
+			"two-dimensional ranges",
+			"sliding window",
+			"multiple test cases",
+			"aggregate input bound"
+		],
+		flowNote:
+			"Represent repeated range work with prefix or difference structures, extend the invariant to grids, and use sliding windows only when the entering and leaving updates are both explicit."
+	},
+	"Unit 5: Greedy and Structured Simulation": {
+		title: "Unit 5: Greedy, Priority Queues, Bitwise, and Structured Simulation",
+		estimatedTime: "6 sessions · 45–90 minutes each",
+		keyBlocks: [
+			"greedy exchange",
+			"event ordering",
+			"priority queue",
+			"bitwise state",
+			"constructive output",
+			"counterexample"
+		],
+		flowNote:
+			"Justify local choices with an exchange or no-regret argument, use priority queues for the next relevant event, and treat bitwise or constructive tasks as explicit state design rather than memorized tricks."
+	},
+	"Unit 6: Silver Capstone Sets": {
+		title: "Unit 6: Protected Silver Sets, Postmortems, and Gold Readiness",
+		estimatedTime: "6–8 sessions · 60–120 minutes each",
+		keyBlocks: [
+			"current official set",
+			"four-hour protected mock",
+			"partial-credit plan",
+			"judge diagnosis",
+			"delayed rewrite",
+			"Gold readiness"
+		],
+		flowNote:
+			"Calibrate against a recent official Silver set, complete protected mocks under the active-contest boundary, repair misses through delayed independent rewrites, and move to Gold only after Silver pattern recognition is repeatable."
+	}
+};
+
+function silverOptionPath(title: string) {
+	return /extension|challenge|advanced|superprime|castle|healthy holsteins|hamming|rectangular pasture|wormhole|closest cow|stuck in a rut|gold/i.test(
+		title
+	)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function strengthenSilverItem(item: RawCourseModuleItem): RawCourseModuleItem {
+	if (item.title === "Move from Bronze Accuracy to Silver Structure") {
+		return {
+			...item,
+			content:
+				"Enter Silver after Bronze problem statements, exact I/O, constraint checks, custom tests, and postmortem repair are independently reliable. Silver adds deliberate recognition of graph traversal, sorted sweeps, two pointers, coordinate compression, prefix and difference sums, sliding windows, binary search, greedy methods, priority queues, and compact state representations."
+		};
+	}
+
+	if (item.title === "Stronger Debugging under Time Pressure") {
+		return {
+			...item,
+			content:
+				"Separate strategy failure from implementation failure early. Keep the last submission, classify the result as wrong answer, time limit, runtime or memory error, compile failure, or output-format failure, find the smallest counterexample, and decide whether the next action is a model change, complexity change, or code repair."
+		};
+	}
+
+	if (item.title === "Comfort with Java or Another Strong Contest Language") {
+		return {
+			...item,
+			title: "One Reliable Silver Contest Language",
+			content:
+				"Use one language whose input, sorting, collections, queues, recursion limits, integer ranges, and performance costs are already familiar. USACO accepts C, C++, Java, and Python under the live technical specifications; verify current versions before competing and change languages between training blocks rather than during a contest."
+		};
+	}
+
+	if (item.title === "Catalog the Core Silver Patterns") {
+		return {
+			...item,
+			content:
+				"Maintain a pattern index with statement signals, required invariant, common complexity, and one counterexample for maps and sets, prefix and difference sums, custom sorting and compression, two pointers, binary search, DFS/BFS/flood fill, trees and functional graphs, greedy methods, priority queues, bitwise state, and constructive output. The index supports recognition; it is not prewritten contest code."
+		};
+	}
+
+	if (item.title === "Prepare for USACO Gold") {
+		return {
+			...item,
+			content:
+				"Move to `USACO Gold` after more than one protected Silver mock shows repeatable statement parsing, pattern selection, complexity analysis, exact implementation, and repair after failure. The live promotion result remains authoritative; this learning gate prevents dynamic programming, shortest paths, disjoint-set structures, and other Gold tools from hiding unresolved Silver gaps."
+		};
+	}
+
+	return item;
+}
+
+function insertSilverItem(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateSilverModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = USACO_SILVER_FLOW[module.title];
+	let curriculum: RawCourseModuleItem[] = module.curriculum
+		.map(strengthenSilverItem)
+		.map(item => ({ ...item, learningPath: "core" as const }));
+	const coreProjectTitle = curriculum.at(-1)?.title ?? "";
+
+	if (module.title === "USS0 Setup and Silver Transition") {
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Current Silver Contest and I/O Contract",
+			content: [
+				"**Format:** The current general description uses a continuous four-hour window for a normal online contest and five hours for the US Open. Silver is defined around fundamental problem-solving techniques and data structures. Promotion cutoffs, season structure, technical versions, and special contest conditions can change, so read the live details before every event.",
+				"",
+				"**2025–26 context:** Certified result windows applied to Gold and Platinum, not Silver, and the season used three online contests followed by a proctored invitational US Open. Treat that as one transitional season, not a permanent schedule.",
+				"",
+				"**I/O:** Modern problems use terminal-based standard input and output. Match the statement exactly, print no prompts or debug text, and verify numeric range and total input across test cases before coding."
+			].join("\n"),
+			projectLink: USACO_SILVER_DETAILS,
+			learningPath: "core"
+		});
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Contest Integrity and Protected Practice",
+			content: [
+				"**Active-contest boundary:** Work alone. Generative AI, Copilot-style assistance, discussion, shared code, prewritten templates, solution resources, and automated submissions are prohibited. Only basic language syntax, library, and input/output references are permitted.",
+				"",
+				"**Course practice:** Hints, editorial study, and solution comparison happen only after a preserved attempt. Protected mocks follow the active-contest boundary and begin from empty files.",
+				"",
+				"**Evidence:** Retain source, submissions, judge results, and timing notes; write the postmortem after the timer ends."
+			].join("\n"),
+			projectLink: USACO_SILVER_RULES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 1: Data Structures and Problem Modeling") {
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Representation and Data-Structure Invariant Contract",
+			content: [
+				"**Operations first:** List required insert, delete, membership, frequency, minimum/maximum, traversal, and ordering operations before naming a structure.",
+				"**Range check:** Use an array for a small dense domain, a set for distinct membership, and a map for sparse keyed values or counts.",
+				"**Invariant:** State exactly what each entry means after processing the first `i` inputs or events.",
+				"**Complexity:** Include both the expected operation cost and total number of operations at the largest legal input."
+			].join("\n"),
+			projectLink: USACO_SILVER_GUIDE,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 2: DFS, BFS, and Graph Traversal") {
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Flood Fill, Trees, and Functional Graphs",
+			content: [
+				"**Flood fill:** Define legal grid neighbors, mark a cell when it enters the traversal, and record component evidence such as size, perimeter, or label.",
+				"**Trees:** Use the unique-path property, choose a root only when it clarifies parent/child state, and avoid treating an undirected parent edge as a new subtree.",
+				"**Functional graphs:** Every node has one outgoing edge, so each component contains a directed cycle with incoming trees. Track visit state carefully enough to distinguish a new path from an already completed component.",
+				"**Safety:** Choose iterative traversal when recursion depth can exceed the language's safe stack."
+			].join("\n"),
+			projectLink: USACO_SILVER_GUIDE,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 3: Sorting, Searching, and Binary Search") {
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Two-Pointer and Sorted-Sweep Contract",
+			content: [
+				"Sort only when order preserves the information required by the answer. Define each pointer, the valid window or pair condition, and why at least one pointer moves monotonically after every comparison.",
+				"",
+				"Count each pair, interval, or event exactly once. Test equal values, no valid pair, all valid pairs, and a boundary where moving the wrong pointer skips the answer."
+			].join("\n"),
+			projectLink: USACO_SILVER_GUIDE,
+			learningPath: "core"
+		});
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Custom Ordering, Coordinate Compression, and Search Boundaries",
+			content: [
+				"**Comparator:** State the primary key, tie-breaker, and strict ordering rule before implementation.",
+				"**Compression:** Map sorted distinct values to compact indices only when relative order or equality is enough; retain reverse mapping when original values remain part of the output.",
+				"**Binary search:** Write the monotone predicate, maintain a known-false/known-true or half-open boundary invariant, and test the first valid and last invalid candidates.",
+				"**Memory:** Compression replaces an impossible large coordinate domain with storage proportional to the number of observed values."
+			].join("\n"),
+			projectLink: USACO_SILVER_COMPRESSION_GUIDE,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 4: Prefix Sums, Ranges, and Counting") {
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Prefix, Difference, Grid, and Sliding-Window Contract",
+			content: [
+				"**Prefix:** Define whether entry `i` includes or excludes position `i`, then derive the range formula before coding.",
+				"**Difference:** Record how an interval update changes its start and the position after its end, then recover values with one cumulative pass.",
+				"**Grid:** State the rectangle inclusion-exclusion formula and verify all four corners on a tiny matrix.",
+				"**Window:** Name the entering contribution, leaving contribution, maintained invariant, and condition that moves the left boundary."
+			].join("\n"),
+			projectLink: USACO_SILVER_GUIDE,
+			learningPath: "core"
+		});
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Recent Official Sliding-Window Calibration",
+			content:
+				"Use the official 2026 first-contest Silver problem `Sliding Window Summation` as a recent calibration. It contains up to 1,000 test cases, an aggregate input bound of one million, window relationships, and minimum/maximum output requirements. Start with a tiny oracle, state what one shifted window reveals about the next, reset all per-case state, and justify aggregate runtime.",
+			projectLink: USACO_SILVER_2026_SLIDING_WINDOW,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 5: Greedy and Structured Simulation") {
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Priority Queue and Greedy-Exchange Contract",
+			content: [
+				"Use a priority queue when the next minimum or maximum event changes repeatedly while the remaining data stays active. Define what one entry represents, when stale entries can exist, and how they are rejected.",
+				"",
+				"For a greedy choice, write an exchange, dominance, or no-regret argument. If a smallest counterexample defeats the local rule, preserve it and reclassify the problem before coding further."
+			].join("\n"),
+			projectLink: USACO_SILVER_GUIDE,
+			learningPath: "core"
+		});
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Bitwise State and Constructive Output",
+			content:
+				"Recent Silver work can require bitwise reasoning and construction rather than only returning a number. Use the official 2025 US Open Silver `Sequence Construction` problem to practice popcount, XOR, bounded output length, impossibility detection, and witness validation. Recompute every required property from the produced sequence before accepting it.",
+			projectLink: USACO_SILVER_2025_SEQUENCE_CONSTRUCTION,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 6: Silver Capstone Sets") {
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Current Season and Analysis-Mode Archive",
+			content:
+				"Use the official contest archive to select recent Silver tasks, download released test data and solutions after an attempt, and submit in analysis mode for judge feedback. Season structure and promotion criteria can change, so use the active contest page rather than copying a previous calendar or cutoff into the plan.",
+			projectLink: USACO_SILVER_CONTESTS,
+			learningPath: "core"
+		});
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "2026 Third-Contest Silver Calibration",
+			content:
+				"Use the official 2026 third-contest Silver set—`Clash!`, `Milk Buckets`, and `Point Elimination`—as a recent three-problem calibration. Read all statements before choosing an order, record subtask opportunities, solve under protected conditions, and use released solutions, test data, and analysis mode only after the timer. The reported 700 promotion cutoff belongs to that contest, not every Silver contest.",
+			projectLink: USACO_SILVER_2026_THIRD_RESULTS,
+			learningPath: "core"
+		});
+		curriculum = insertSilverItem(curriculum, coreProjectTitle, {
+			title: "Protected Mock and Postmortem Contract",
+			content: [
+				"**Mock:** Use three unseen Silver problems, one continuous four-hour timer, an empty file per problem, permitted syntax/library references only, and no AI, hints, discussion, templates, or solution viewing.",
+				"**During the timer:** Record first-read complexity, attempt order, submission time, and judge outcome without turning the log into outside assistance.",
+				"**Postmortem:** Preserve every partial attempt, classify the failure, find the smallest counterexample, study the released explanation, then complete a delayed rewrite from an empty file.",
+				"**Gold gate:** Across more than one mock, complete at least two independent solves and one successful delayed repair while explaining the pattern, invariant, and full-constraint complexity."
+			].join("\n"),
+			projectLink: USACO_SILVER_RULES,
+			learningPath: "core"
+		});
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	return {
+		...module,
+		title: flow.title,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects
+			.map(strengthenSilverItem)
+			.map(item => ({
+				...item,
+				learningPath: silverOptionPath(item.title)
+			}))
+	};
+}
+
+function buildSilverProblemBankAppendix(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Silver Problem Bank",
+		estimatedTime:
+			"Choose targeted problems after a unit gate or contest postmortem",
+		keyBlocks: [
+			"pattern repair",
+			"historical archive",
+			"starter and solution pairs",
+			"analysis-mode retry",
+			"spaced independent solve"
+		],
+		curriculum: [
+			{
+				title: "Problem Bank Scope Guide",
+				content:
+					"**Course flow:** The full repository bank is optional practice, not another required sequence. Choose a problem because a unit gate or postmortem identified a pattern gap. Preserve the first attempt, use hints or solutions only after diagnosis, and complete a later rewrite from an empty file.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: [
+			...module.curriculum,
+			...module.supplementalProjects
+		]
+			.map(strengthenSilverItem)
+			.map(item => ({
+				...item,
+				learningPath: silverOptionPath(item.title)
+			}))
+	};
+}
+
+function buildSilverStudioAppendix(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Historical and Applied Silver Studios",
+		estimatedTime:
+			"Choose one studio for a diagnosed algorithm or implementation gap",
+		keyBlocks: [
+			"guided reconstruction",
+			"historical training",
+			"implementation fluency",
+			"transfer problem",
+			"delayed rewrite"
+		],
+		curriculum: [
+			{
+				title: "Studio Scope Guide",
+				content:
+					"**Course flow:** These nine studios preserve the complete guided practice collection without placing every repository folder in the required spine. Choose one when a specific algorithm, data structure, or implementation weakness remains after the matching unit; close reference code before the transfer attempt.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(strengthenSilverItem)
+				.map(item => ({
+					...item,
+					learningPath: silverOptionPath(item.title)
+				}))
+		)
+	};
+}
+
+const usacoSilverPrimaryModules = usacoSilverSourceCourse.modules
+	.filter(module => USACO_SILVER_PRIMARY_TITLES.has(module.title))
+	.map(decorateSilverModule);
+const usacoSilverProblemBank = usacoSilverSourceCourse.modules.find(
+	module => module.title === "Unit 7: Optional Silver Problem Bank"
+);
+const usacoSilverStudios = usacoSilverSourceCourse.modules.filter(
+	module =>
+		!USACO_SILVER_PRIMARY_TITLES.has(module.title) &&
+		module.title !== "Unit 7: Optional Silver Problem Bank"
+);
+
+if (!usacoSilverProblemBank) {
+	throw new Error("USACO Silver optional problem bank is missing.");
+}
+
+export const usacoSilverCourse: RawCourse = {
+	...usacoSilverSourceCourse,
+	modules: [
+		...usacoSilverPrimaryModules,
+		buildSilverProblemBankAppendix(usacoSilverProblemBank),
+		buildSilverStudioAppendix(usacoSilverStudios)
 	]
 };
