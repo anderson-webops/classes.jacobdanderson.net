@@ -8220,6 +8220,21 @@ function normalizePythonLevel1(course: RawCourse) {
 	});
 }
 
+function applyPythonLevel1LearningPaths(course: RawCourse) {
+	for (const module of course.modules) {
+		if (module.kind === "appendix") continue;
+
+		for (const item of module.curriculum) {
+			item.learningPath ??= "core";
+		}
+		for (const item of module.supplementalProjects) {
+			item.learningPath ??= /transfer practice/i.test(item.title)
+				? "challenge"
+				: "choice";
+		}
+	}
+}
+
 interface ClassroomChallengePair {
 	normal: string;
 	hard: string;
@@ -8897,6 +8912,9 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	removeDuplicateSolutionLinks(course);
 	if (id === "python-level-1-classroom") {
 		adaptPythonLevel1Classroom(course);
+	}
+	if (id === "python-level-1" || id === "python-level-1-classroom") {
+		applyPythonLevel1LearningPaths(course);
 	}
 	return course;
 }
