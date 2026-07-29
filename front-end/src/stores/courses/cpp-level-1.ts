@@ -1,6 +1,6 @@
 import type { RawCourse } from "./types";
 
-export const cppLevel1Course: RawCourse = {
+const cppLevel1SourceCourse: RawCourse = {
 	name: "C++ Level 1",
 	modules: [
 		{
@@ -110,7 +110,7 @@ export const cppLevel1Course: RawCourse = {
 				{
 					title: "Randomness and Small Simulation Helpers",
 					content:
-						"`rand()` belongs after basic function calls are comfortable. Cover: seeding at the correct level, generating bounded random values, wrapping random behavior in helper functions, testing code that has random output, and separating generation logic from game or simulation output. Randomness creates a reason to decompose the program instead of writing one long `main`.",
+						"Modern `<random>` tools belong after basic function calls are comfortable. Use `std::mt19937` with an explicit seed and an appropriate distribution, pass or wrap the engine so random behavior stays separate from game output, and use a fixed seed for reproducible tests. `rand()` can be recognized in older code, but it is not the course's default. Randomness creates a reason to decompose the program instead of writing one long `main`.",
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-rand-Reference"
 				},
@@ -348,4 +348,199 @@ export const cppLevel1Course: RawCourse = {
 			]
 		}
 	]
+};
+
+interface CppLevel1ModuleFlow {
+	estimatedTime: string;
+	flowNote: string;
+	keyBlocks: string[];
+}
+
+const CPP_LEVEL_1_OPTIONAL_CURRICULUM = new Set([
+	"CPPF1 Project 2: Chat Bot",
+	"CPPF2 Project 2: Rock, Paper, Scissors",
+	"CPPF2 Project 3: Fizz Buzz",
+	"CPPF3 Project 2: Number Guesser",
+	"CPPF5 Project 2: Bank Accounts",
+	"CPPF6 Project 2: Defanging a Website Address"
+]);
+
+const CPP_LEVEL_1_CHALLENGE_CURRICULUM = new Set([
+	"CPPF2 Project 3: Fizz Buzz"
+]);
+
+const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
+	"CPPF1 Variables, Types, Strings, and Input/Output": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"C++20 compile / run",
+			"warnings",
+			"value types",
+			"cin / getline",
+			"input validation"
+		],
+		flowNote:
+			"Establish a repeatable C++20 build with `-Wall -Wextra -Wpedantic`, then complete Mad Libs as the first required program. Check whitespace input, failed numeric extraction, and recovery before choosing the chatbot extension."
+	},
+	"CPPF2 Loops and Conditionals": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"ordered branches",
+			"for loop",
+			"while loop",
+			"termination",
+			"state trace"
+		],
+		flowNote:
+			"Trace Number Games with a table before running it and test empty, reversed, or boundary ranges. Rock Paper Scissors is a choice and Fizz Buzz is a challenge, so one correct loop-driven project completes the module."
+	},
+	"CPPF3 Functions": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"function contract",
+			"parameters",
+			"return value",
+			"decomposition",
+			"reproducible randomness"
+		],
+		flowNote:
+			"Write deterministic helper contracts first, then use `std::mt19937` with a fixed test seed for the probability project. Keep generation, decision logic, and output separate; Number Guesser is an optional integration build."
+	},
+	"CPPF4 Classes and Objects": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"class invariant",
+			"constructor",
+			"private state",
+			"header / source split",
+			"multi-file build"
+		],
+		flowNote:
+			"Build the Cat class in the smallest working slices: construct, observe, update, and reject invalid state. Compile every source file from a clean command and explain which declarations belong in the header and which definitions belong in the source file."
+	},
+	"CPPF5 Vectors and Collection Patterns": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"vector",
+			"safe iteration",
+			"const reference",
+			"search / filter / summary",
+			"empty collection"
+		],
+		flowNote:
+			"Use Vector Practice to compare index and range-based iteration, then test empty, one-item, and multi-item collections. Bank Accounts is a fictional-data choice; real account details are never entered."
+	},
+	"CPPF6 Structs and Parameter Passing": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"value semantics",
+			"reference alias",
+			"const reference",
+			"struct record",
+			"mutation trace"
+		],
+		flowNote:
+			"Trace copies, aliases, and mutations before compiling, then combine a small struct with a vector or helper function. Defanging and the string-mutation lab remain optional after the parameter-passing trace is correct."
+	},
+	"CPPF7 Grids and 2D Vectors": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"row / column",
+			"nested vector",
+			"dimension check",
+			"nested loop",
+			"grid boundary"
+		],
+		flowNote:
+			"Add matrices only after dimensions are validated, then test empty, one-cell, rectangular, and mismatched inputs. Matrix Addition is required; Grid Statistics is a choice for more nested-loop practice."
+	},
+	"CPPF8 Master Project: Profile Posts": {
+		estimatedTime: "4–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Profile / Post model",
+			"vector ownership",
+			"command state",
+			"validated mutation",
+			"regression cases"
+		],
+		flowNote:
+			"Build a fictional, local-only profile manager in vertical slices, keep input handling outside the model, and validate every index and command. A warning-clean build plus normal, boundary, invalid-input, and fresh-start checks completes Level 1; networking, public posting, and real personal data are out of scope."
+	}
+};
+
+function cppLevel1SupplementalPath(title: string) {
+	return /extension|mutation lab/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function decorateCppLevel1Module(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = CPP_LEVEL_1_MODULE_FLOW[module.title];
+	const optionalCurriculum = module.curriculum.filter(item =>
+		CPP_LEVEL_1_OPTIONAL_CURRICULUM.has(item.title)
+	);
+	const coreCurriculum = module.curriculum
+		.filter(item => !CPP_LEVEL_1_OPTIONAL_CURRICULUM.has(item.title))
+		.map((item, index) => ({
+			...item,
+			content:
+				index === 0 && flow
+					? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+					: item.content,
+			learningPath: "core" as const
+		}));
+
+	if (module.title === "CPPF1 Variables, Types, Strings, and Input/Output") {
+		coreCurriculum.push({
+			title: "C++20 Toolchain and Input Readiness Check",
+			content: [
+				"**Completion evidence:**",
+				"- Compiler name and version plus the exact C++20 build and run command.",
+				"- Warning-clean hello-world build using `-Wall -Wextra -Wpedantic` or the closest supported equivalent.",
+				"- One `std::cin` numeric input and one full-line `std::getline` input, including the transition between them.",
+				"- One invalid numeric input case that clears the failed stream and explains the recovery behavior."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CPPF8 Master Project: Profile Posts") {
+		coreCurriculum.push({
+			title: "Profile Posts Completion Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Clean C++20 build instructions and a fresh-start run.",
+				"- Fictional seed posts and no real personal or account data.",
+				"- Tests or transcripts for add, view, update, remove, invalid index, invalid command, empty profile, and quit behavior.",
+				"- State diagram, class/struct responsibility note, and one revision made after a failed case."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum: coreCurriculum,
+		supplementalProjects: [
+			...optionalCurriculum.map(item => ({
+				...item,
+				learningPath: CPP_LEVEL_1_CHALLENGE_CURRICULUM.has(item.title)
+					? ("challenge" as const)
+					: ("choice" as const)
+			})),
+			...module.supplementalProjects.map(item => ({
+				...item,
+				learningPath: cppLevel1SupplementalPath(item.title)
+			}))
+		]
+	};
+}
+
+export const cppLevel1Course: RawCourse = {
+	...cppLevel1SourceCourse,
+	modules: cppLevel1SourceCourse.modules.map(decorateCppLevel1Module)
 };
