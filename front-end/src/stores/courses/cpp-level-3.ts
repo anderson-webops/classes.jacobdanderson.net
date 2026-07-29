@@ -1,6 +1,6 @@
 import type { RawCourse } from "./types";
 
-export const cppLevel3Course: RawCourse = {
+const cppLevel3SourceCourse: RawCourse = {
 	name: "C++ Level 3",
 	modules: [
 		{
@@ -153,7 +153,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "RAII and Single-Owner Resource Design",
 					content:
-						"RAII is the default modern C++ answer to cleanup: resources are acquired by objects and released automatically when those objects leave scope. Destructors are not called manually in normal code; they run because scope, object lifetime, and ownership are designed correctly. Standard containers, file streams, lock guards, and small wrapper classes are concrete RAII examples before custom resource classes appear. `std::unique_ptr` is the first smart pointer because it models single ownership clearly: moving it transfers ownership, the moved-from pointer no longer owns the resource, and copying is intentionally blocked. `std::shared_ptr` is introduced later only when shared lifetime is justified rather than as a default heap-allocation habit."
+						"RAII is the default modern C++ answer to cleanup: resources are acquired by objects and released automatically when those objects leave scope. Destructors are not called manually in normal code; they run because scope, object lifetime, and ownership are designed correctly. Standard containers, file streams, lock guards, and small wrapper classes are concrete RAII examples before custom resource classes appear. `std::unique_ptr` is the first smart pointer because it models single ownership clearly: moving it transfers ownership, the moved-from pointer no longer owns the resource, and copying is intentionally blocked. `std::shared_ptr` appears only when shared lifetime is justified, with `std::weak_ptr` used to observe shared objects or break ownership cycles rather than making shared ownership the default."
 				},
 				{
 					title: "Validation, Exceptions, and Resource Boundaries",
@@ -223,7 +223,7 @@ export const cppLevel3Course: RawCourse = {
 				{
 					title: "Polymorphism, Composition, and Runtime Dispatch",
 					content:
-						"Inheritance is a tool for shared interfaces and substitutable roles, not the default way to reuse code. Cover: composition versus inheritance, virtual functions, runtime dispatch through a small collection of objects with a common interface, and how this differs from a simple `enum class` state machine. Connect the comparison directly to future design-pattern work, especially polymorphic state objects."
+						"Inheritance is a tool for shared interfaces and substitutable roles, not the default way to reuse code. Cover: composition versus inheritance, pure virtual interfaces, virtual destructors, `override`, runtime dispatch through references or smart pointers, object-slicing avoidance, and how this differs from a simple `enum class` state machine. Connect the comparison directly to future design-pattern work, especially polymorphic state objects."
 				},
 				{
 					title: "Advanced Pathways and Program Framing",
@@ -253,4 +253,163 @@ export const cppLevel3Course: RawCourse = {
 			]
 		}
 	]
+};
+
+interface CppLevel3ModuleFlow {
+	estimatedTime: string;
+	flowNote: string;
+	keyBlocks: string[];
+}
+
+const CPP_LEVEL_3_CHALLENGE_SUPPLEMENTAL = new Set([
+	"CPPI1 Project 2: Import and Reject Bad Rows",
+	"CPPI1 Project 3: Mini Command Scanner",
+	"CPPI5 Project 2: Template Error Reading Drill"
+]);
+
+const CPP_LEVEL_3_MODULE_FLOW: Record<string, CppLevel3ModuleFlow> = {
+	"CPPI0 Bridge Course Setup and Positioning": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"C++20",
+			"warning-clean build",
+			"multi-file target",
+			"test harness",
+			"debug evidence"
+		],
+		flowNote:
+			"Start from a clean checkout and establish one documented C++20 build, test, and run path before adding features. The checkpoint is complete only when warnings are clean, a deliberately broken case is reproduced, and debugger or trace evidence explains why the correction works."
+	},
+	"CPPI1 Command Architecture, File I/O, and Small Parsers": {
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"token boundary",
+			"command object",
+			"validated mutation",
+			"save / reload",
+			"malformed input"
+		],
+		flowNote:
+			"Build the task manager in vertical slices: parse one command, validate it, mutate only after success, save through a temporary file, and reload into the same observable state. Test unknown commands, missing and extra arguments, quoted text, malformed rows, and a failed save; the scanner and import extensions remain optional."
+	},
+	"CPPI2 Recursion and the Call Stack": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"base case",
+			"smaller subproblem",
+			"stack frame",
+			"visited state",
+			"backtracking invariant"
+		],
+		flowNote:
+			"Draw representative stack frames before implementation, then keep search state small enough to verify by hand. The maze or word search must terminate on blocked, visited, boundary, solved, and unsolved cases and restore backtracked state deliberately."
+	},
+	"CPPI3 STL Containers, Iterators, and Algorithms": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"container contract",
+			"iterator validity",
+			"algorithm",
+			"predicate",
+			"complexity justification"
+		],
+		flowNote:
+			"Choose each container from the operations the inventory actually needs, then document iterator-invalidation assumptions before mutation. Verify duplicate IDs, missing keys, empty data, stable sorted views, and relation-style select/project/join results; the tradeoff audit is a choice for deeper justification."
+	},
+	"CPPI4 RAII, Smart Pointers, and Robust Error Handling": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"RAII",
+			"unique_ptr",
+			"shared_ptr / weak_ptr",
+			"basic guarantee",
+			"rollback"
+		],
+		flowNote:
+			"Keep ownership single by default and introduce shared lifetime only with a written ownership graph and a reason `std::unique_ptr` is insufficient. The file processor must preserve the previous valid state after failed open, parse, or output operations and demonstrate automatic cleanup on early return or exception."
+	},
+	"CPPI5 Value Types, Operator Overloading, and Templates": {
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"value invariant",
+			"const behavior",
+			"conventional operator",
+			"template contract",
+			"diagnostic reading"
+		],
+		flowNote:
+			"Define the value-type invariant and ordinary named operations before adding an operator. Test construction, comparison, output, invalid values, and container use, then add only operators whose meaning is conventional; the controlled template-error drill is an optional challenge."
+	},
+	"CPPI6 Polymorphism and Bridge to Advanced C++": {
+		estimatedTime: "6–8 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"composition / inheritance",
+			"virtual destructor",
+			"state transition",
+			"serialization round trip",
+			"regression suite"
+		],
+		flowNote:
+			"Build the capstone as a sequence of working vertical slices with a narrow interface and composition as the default. Prove accepted and rejected commands, every state transition, recursive or algorithmic edge cases, save/reload equivalence, corrupted-file recovery, and clean polymorphic destruction before selecting the next C++ pathway."
+	}
+};
+
+function decorateCppLevel3Module(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = CPP_LEVEL_3_MODULE_FLOW[module.title];
+	const curriculum = module.curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content,
+		learningPath: "core" as const
+	}));
+
+	if (module.title === "CPPI0 Bridge Course Setup and Positioning") {
+		curriculum.splice(1, 0, {
+			title: "CPPI0 Project 0: Reproducible Build and Test Readiness",
+			content: [
+				"**Completion evidence:**",
+				"- Compiler name and version plus one documented C++20 configure/build/test/run path from a clean checkout.",
+				"- Warning-clean output using `-Wall -Wextra -Wpedantic` or the closest supported equivalent.",
+				"- A small deterministic test or command harness that exits unsuccessfully when a regression is introduced.",
+				"- One debugger, trace, sanitizer, or failed-test artifact connected to the exact code change that resolved it."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "CPPI6 Polymorphism and Bridge to Advanced C++") {
+		curriculum.push({
+			title: "CPPI6 Capstone Completion Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Clean C++20 build and deterministic regression command from a fresh checkout.",
+				"- Tests or transcripts for accepted command, unknown command, missing and extra arguments, every state transition, recursive base and failure cases, empty state, and quit behavior.",
+				"- Save/reload round-trip equivalence plus malformed or corrupted-file recovery that preserves the previous valid state.",
+				"- Interface and ownership diagram showing composition choices, virtual destruction, no object slicing, and one limitation or deferred feature."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: CPP_LEVEL_3_CHALLENGE_SUPPLEMENTAL.has(item.title)
+				? ("challenge" as const)
+				: ("choice" as const)
+		}))
+	};
+}
+
+export const cppLevel3Course: RawCourse = {
+	...cppLevel3SourceCourse,
+	modules: cppLevel3SourceCourse.modules.map(decorateCppLevel3Module)
 };
