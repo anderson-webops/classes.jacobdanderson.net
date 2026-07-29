@@ -1,8 +1,8 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const designPatternsInJavaCourse: RawCourse = {
+const designPatternsInJavaSourceCourse: RawCourse = {
 	name: "Design Patterns in Java",
 	modules: [
 		{
@@ -1114,5 +1114,512 @@ export const designPatternsInJavaCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+const DESIGN_PATTERNS_JAVA_JUNIT = "https://docs.junit.org/current/user-guide/";
+const DESIGN_PATTERNS_JAVA_RECORDS =
+	"https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html";
+const DESIGN_PATTERNS_JAVA_SEALED =
+	"https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.1.1.2";
+const DESIGN_PATTERNS_JAVA_SERVICE_LOADER =
+	"https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ServiceLoader.html";
+
+const DESIGN_PATTERNS_JAVA_PRIMARY_TITLES = new Set([
+	"DPJ1 What Patterns Are and What They Are Not",
+	"DPJ2 Java Design Foundations",
+	"DPJ3 Creational Patterns I",
+	"DPJ4 Creational Patterns II and Boundary Patterns",
+	"DPJ5 Structural Patterns in Depth",
+	"DPJ6 Behavioral Patterns I",
+	"DPJ7 Behavioral Patterns II",
+	"DPJ8 Modern Extensions and Architecture-Level Patterns",
+	"DPJ9 Pattern Selection and Refactoring Judgment",
+	"DPJ10 Capstone Refactor"
+]);
+
+const DESIGN_PATTERNS_JAVA_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"DPJ1 What Patterns Are and What They Are Not": {
+		estimatedTime: "4 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"course prerequisite",
+			"characterization baseline",
+			"design pressure",
+			"pattern vocabulary",
+			"overengineering test",
+			"decision record"
+		],
+		flowNote:
+			"Establish a runnable multi-file Java baseline, distinguish a recurring design pressure from ordinary complexity, and document why a pattern earns its cost before implementing one."
+	},
+	"DPJ2 Java Design Foundations": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"contract and implementation",
+			"composition",
+			"cohesion and coupling",
+			"package boundary",
+			"records and sealed types",
+			"test seam"
+		],
+		flowNote:
+			"Build cohesive collaborators and explicit package dependencies, then compare interfaces and abstract classes with records, sealed types, enums, and lambdas that can make a named pattern unnecessary."
+	},
+	"DPJ3 Creational Patterns I": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"direct construction",
+			"Factory Method",
+			"Abstract Factory",
+			"Builder",
+			"product family",
+			"creation decision matrix"
+		],
+		flowNote:
+			"Start from direct construction, identify the exact creation pressure, and adopt Factory Method, Abstract Factory, or Builder only when a simpler constructor or static factory no longer expresses the rules."
+	},
+	"DPJ4 Creational Patterns II and Boundary Patterns": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"copy semantics",
+			"Prototype",
+			"Singleton risk",
+			"Adapter",
+			"Facade",
+			"boundary ownership"
+		],
+		flowNote:
+			"Make copy depth and global lifetime explicit, challenge Singleton against dependency injection, and separate compatibility translation with Adapter from subsystem simplification with Facade."
+	},
+	"DPJ5 Structural Patterns in Depth": {
+		estimatedTime: "6 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"Bridge",
+			"Composite",
+			"Decorator",
+			"Proxy",
+			"Flyweight",
+			"identity and lifecycle"
+		],
+		flowNote:
+			"Compare structural patterns by the client-visible contract, identity, ownership, and lifecycle they preserve rather than by diagram shape alone."
+	},
+	"DPJ6 Behavioral Patterns I": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"Strategy",
+			"State",
+			"Template Method",
+			"Iterator",
+			"functional interface",
+			"conditional replacement"
+		],
+		flowNote:
+			"Move varying decisions into explicit behavior while comparing classic classes with lambdas, enums, and sealed state models that can provide a smaller Java design."
+	},
+	"DPJ7 Behavioral Patterns II": {
+		estimatedTime: "6 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"Observer",
+			"Command",
+			"Chain of Responsibility",
+			"Mediator",
+			"Memento and Visitor",
+			"event and undo lifecycle"
+		],
+		flowNote:
+			"Model event delivery, commands, undo state, and multi-object coordination with explicit ordering, ownership, error, memory, and unsubscription rules."
+	},
+	"DPJ8 Modern Extensions and Architecture-Level Patterns": {
+		estimatedTime: "6 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"dependency injection",
+			"ServiceLoader plugins",
+			"event bus",
+			"MVC and MVVM",
+			"repository boundary",
+			"architecture fitness"
+		],
+		flowNote:
+			"Scale from object-level patterns to application boundaries, implement a real Java service-provider seam, and keep architecture labels tied to dependency direction and replaceable behavior."
+	},
+	"DPJ9 Pattern Selection and Refactoring Judgment": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"smell diagnosis",
+			"simpler alternative",
+			"pattern tradeoff",
+			"safe refactor sequence",
+			"measurement",
+			"pattern removal"
+		],
+		flowNote:
+			"Select patterns from a diagnosed change pressure, preserve behavior through small test-backed steps, compare against a simpler counterfactual, and remove abstractions that no longer earn their cost."
+	},
+	"DPJ10 Capstone Refactor": {
+		estimatedTime: "8–10 sessions · 60–120 minutes each",
+		keyBlocks: [
+			"characterization suite",
+			"change scenarios",
+			"small refactor commits",
+			"architecture review",
+			"before-and-after evidence",
+			"rollback packet"
+		],
+		flowNote:
+			"Refactor one cluttered Java application from a protected behavioral baseline, justify a small pattern set, preserve observable behavior, and present evidence that future changes became safer or simpler."
+	}
+};
+
+function designPatternsJavaOptionPath(title: string) {
+	return /extension|architecture judgment|structural wrapper/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function insertDesignPatternsJavaItem(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateDesignPatternsJavaModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = DESIGN_PATTERNS_JAVA_FLOW[module.title];
+	let curriculum: RawCourseModuleItem[] = module.curriculum.map(item => ({
+		...item,
+		learningPath: "core" as const
+	}));
+	const coreProjectTitle = curriculum.at(-1)?.title ?? "";
+
+	if (module.title === "DPJ1 What Patterns Are and What They Are Not") {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Java Pattern Course Contract and Characterization Baseline",
+				content: [
+					"**Prerequisite:** Enter after Java classes, interfaces, inheritance, collections, exceptions, packages, generics, build tools, and basic unit tests are independently usable.",
+					"**Baseline:** Build and run the starter before editing it. Add JUnit characterization tests for every observable behavior the refactor must preserve, including one error or edge path.",
+					"**Decision record:** Name the change pressure, current pain, simplest viable alternative, candidate pattern, added cost, and evidence that would justify removing the pattern later.",
+					"**Delivery:** Commit the green baseline separately from each small refactor so behavior and structure changes remain reviewable."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_JUNIT,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "One Change Scenario Before One Abstraction",
+				content:
+					"Describe one realistic future change and implement it once in the simple design before extracting an interface or pattern. If the change remains local and clear, keep the simpler code. If it scatters rules, duplicates decisions, or couples unrelated classes, record that evidence and refactor the smallest boundary that contains the pressure.",
+				projectLink: DESIGN_PATTERNS_JAVA_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPJ2 Java Design Foundations") {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Modern Java Types Before Classic Pattern Machinery",
+				content: [
+					"Use a record for a shallowly immutable, transparent value carrier; use an enum for a small fixed set with modest behavior; and use a sealed interface when the permitted family is intentionally closed.",
+					"",
+					"Compare these tools with Builder, State, Visitor, and class hierarchies. A classic pattern earns its place only when variation, lifecycle, or collaboration extends beyond what the language feature expresses clearly."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_RECORDS,
+				solutionLink: DESIGN_PATTERNS_JAVA_SEALED,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Package Dependency and Test-Seam Contract",
+				content: [
+					"Draw the package dependency arrows before refactoring. Domain code cannot import infrastructure details; composition at the application boundary selects concrete collaborators.",
+					"",
+					"Create one fake or in-memory collaborator at the seam, test the domain behavior without network, file, clock, or database effects, and reject interfaces that exist without a second implementation, a test seam, or a stable boundary."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPJ3 Creational Patterns I") {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Creational Pattern Decision Matrix",
+				content: [
+					"Use a constructor or named static factory for simple, valid creation; Factory Method when a creator varies one product; Abstract Factory when compatible product families vary together; and Builder when staged or optional configuration would otherwise obscure validity.",
+					"",
+					"For every choice, test invalid configuration, default values, product-family compatibility, and whether dependencies are visible at construction time."
+				].join("\n"),
+				projectLink:
+					"https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html",
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPJ4 Creational Patterns II and Boundary Patterns") {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Copy, Global State, and Boundary Risk Contract",
+				content: [
+					"**Prototype:** Define shallow versus deep copy, identity, mutable collection ownership, and failure behavior before cloning.",
+					"**Singleton:** Treat global lifetime, hidden dependencies, test isolation, initialization order, and thread safety as explicit costs. Compare with one application-owned instance passed through constructors.",
+					"**Adapter:** Translate one external contract into the domain's contract without leaking vendor types inward.",
+					"**Facade:** Offer a smaller workflow over a subsystem without pretending the subsystem has become simple internally."
+				].join("\n"),
+				projectLink:
+					"https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Cloneable.html",
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPJ5 Structural Patterns in Depth") {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Structural Pattern Identity and Lifecycle Contract",
+				content: [
+					"Bridge separates two independent axes of variation; Composite gives leaves and groups one client contract; Decorator adds nestable behavior; Proxy controls access or lifecycle; Flyweight shares immutable intrinsic state.",
+					"",
+					"For each implementation, state whether object identity is observable, who owns wrapped or shared resources, whether ordering changes behavior, how equality works, and which failures cross the boundary."
+				].join("\n"),
+				projectLink:
+					"https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/ref/WeakReference.html",
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPJ6 Behavioral Patterns I") {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Functional Strategy and Explicit-State Alternatives",
+				content: [
+					"Implement one Strategy as classes and one as a focused functional interface or method reference. Keep a class when behavior needs named state, lifecycle, dependencies, or multiple operations.",
+					"",
+					"Compare State objects with an enum or sealed state family, and compare Template Method inheritance with composition. Preserve illegal-transition tests and make the owner of every decision explicit."
+				].join("\n"),
+				projectLink:
+					"https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/package-summary.html",
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPJ7 Behavioral Patterns II") {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Event, Command, and Undo Lifecycle Contract",
+				content: [
+					"Define event delivery order, duplicate registration, unsubscription, listener failure, reentrant publication, and thread ownership before implementing Observer or Mediator.",
+					"",
+					"For Command and Memento, define captured input, authorization boundary, idempotency, undo scope, history size, and memory retention. For Chain of Responsibility, prove whether zero, one, or many handlers can act."
+				].join("\n"),
+				projectLink:
+					"https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/Flow.html",
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (
+		module.title ===
+		"DPJ8 Modern Extensions and Architecture-Level Patterns"
+	) {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "ServiceLoader Plugin Boundary",
+				content: [
+					"Define one narrow service interface in the core module, implement providers outside it, register them through `META-INF/services` or module `provides` declarations, and discover them with `ServiceLoader`.",
+					"",
+					"Handle zero, one, and multiple providers; test lazy loading and provider failure; keep application code dependent on the service rather than provider packages; and document that one `ServiceLoader` instance is not safe for concurrent use."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_SERVICE_LOADER,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Architecture Pattern Scope and Fitness Contract",
+				content: [
+					"Name the layer or boundary, allowed dependency direction, data ownership, and one change scenario for MVC/MVVM, Repository, Service Layer, DI, or an event bus.",
+					"",
+					"Add one architecture fitness check: a package dependency test, isolated domain test, provider replacement test, or end-to-end workflow. Reject a Repository that merely renames a collection and a Service Layer that only forwards every call."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPJ9 Pattern Selection and Refactoring Judgment") {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Pattern Decision Record and Simpler Counterfactual",
+				content: [
+					"Record the smell, change pressure, desired property, selected pattern, rejected simpler design, added classes and indirection, expected benefit, and a removal trigger.",
+					"",
+					"Implement or sketch the simpler counterfactual. Pattern fluency means explaining why this design earns more machinery now, not naming the most patterns."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_JUNIT,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Safe Refactor and Measurement Contract",
+				content: [
+					"Keep characterization tests green through one behavior-preserving step per commit. Separate renames and moves from logic changes, and pause when a failing test cannot be explained.",
+					"",
+					"Measure the target change before and after: files touched, conditional branches changed, duplicated rules, constructor dependencies, test setup, or time to add a variant. A pattern succeeds only if the chosen pressure improves without hiding a larger cost."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPJ10 Capstone Refactor") {
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Capstone Gate: Characterize Before Change",
+				content: [
+					"Freeze the starter's observable behavior with JUnit tests, a build command, representative fixtures, and one failure-path assertion. Record any behavior that cannot yet be tested and create a seam before applying a pattern.",
+					"",
+					"Tag or commit this baseline. Every later structural change must retain the same behavior until the project explicitly schedules a separately reviewed behavior change."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_JUNIT,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaItem(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Capstone Evidence and Rollback Packet",
+				content: [
+					"Deliver the original design map, change scenarios, decision records, small commit sequence, green test evidence, final dependency map, and before-and-after measurements.",
+					"",
+					"Demonstrate one new variant or dependency replacement, identify one pattern deliberately not used, name one remaining tradeoff, and retain a clear rollback point for each major structural choice."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: designPatternsJavaOptionPath(item.title)
+		}))
+	};
+}
+
+function buildDesignPatternsJavaStudioAppendix(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Applied Java Pattern Studios",
+		estimatedTime:
+			"Choose one studio after its matching pattern family or capstone diagnosis",
+		keyBlocks: [
+			"guided refactor",
+			"behavior preservation",
+			"pattern comparison",
+			"transfer scenario",
+			"extension scenario",
+			"decision reflection"
+		],
+		curriculum: [
+			{
+				title: "Applied Studio Scope Guide",
+				content:
+					"**Course flow:** These three studios preserve the complete applied practice collection without presenting them as three additional required units. Choose Strategy Selection for behavioral variation, Structural Wrapper for client-preserving indirection, or Architecture Judgment for a larger boundary decision. Begin from a green behavioral baseline and close reference code before transfer work.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: designPatternsJavaOptionPath(item.title)
+				})
+			)
+		)
+	};
+}
+
+const designPatternsJavaPrimaryModules =
+	designPatternsInJavaSourceCourse.modules
+		.filter(module => DESIGN_PATTERNS_JAVA_PRIMARY_TITLES.has(module.title))
+		.map(decorateDesignPatternsJavaModule);
+const designPatternsJavaStudios =
+	designPatternsInJavaSourceCourse.modules.filter(
+		module => !DESIGN_PATTERNS_JAVA_PRIMARY_TITLES.has(module.title)
+	);
+
+export const designPatternsInJavaCourse: RawCourse = {
+	...designPatternsInJavaSourceCourse,
+	modules: [
+		...designPatternsJavaPrimaryModules,
+		buildDesignPatternsJavaStudioAppendix(designPatternsJavaStudios)
 	]
 };
