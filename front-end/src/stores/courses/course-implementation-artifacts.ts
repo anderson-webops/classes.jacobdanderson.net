@@ -163,9 +163,11 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"Every lab ends with mitigation or patch evidence."
 	],
 	"machine-learning": [
-		"Python 3.12+ with scikit-learn as the baseline ML library.",
-		"TensorFlow/Keras or deep learning only as optional later extension material.",
-		"Model evaluation, train/test split, baseline comparison, and model card required for reusable projects."
+		"Python 3.14 with scikit-learn 1.9 in an isolated, recorded environment is the course-authored baseline.",
+		"pandas, NumPy, matplotlib, seaborn, and local Jupyter or VS Code provide the complete required workflow; Google Colab is an optional account-based convenience.",
+		"Every supervised workflow fixes a random state, splits before fitting preprocessing, and uses Pipeline or ColumnTransformer when transformations are learned from data.",
+		"TensorFlow/Keras is limited to bounded optional or later modules with recorded versions plus explicit sample, epoch, batch, and CPU-time caps.",
+		"Supplied fixtures, cached datasets, practice cases, and verification records provide a complete local route when a remote dataset, notebook host, account, or accelerator is unavailable."
 	],
 	"network-security": [
 		"Node.js 24 LTS with project-pinned TypeScript, package lock, strict typechecking, and a local test command.",
@@ -214,9 +216,10 @@ const dataCatalogs: Record<string, string[]> = {
 		"Provided messy CSV fixtures with missing values, duplicate rows, type mismatches, and categorical cleanup."
 	],
 	"machine-learning": [
-		"scikit-learn built-in datasets for first-pass classification and regression.",
-		"Small public tabular datasets with target, features, leakage notes, and baseline model expectations.",
-		"Model-card template requiring intended use, limitations, evaluation metric, and risk notes."
+		"scikit-learn built-in or course-supplied low-stakes datasets for first-pass classification and regression.",
+		"Small public tabular datasets with source, license, unit of observation, target, prediction-time features, leakage notes, split plan, and baseline expectation.",
+		"Fictional text, categorical, clustering, and regression fixtures that can be completed locally without uploading personal data.",
+		"Model-card template requiring intended use, non-goals, data limits, baseline, metrics, error slices, uncertainty, resource budget, and human-review boundary."
 	]
 };
 
@@ -660,6 +663,13 @@ const standardsOverrides: Record<string, string[]> = {
 		"OWASP input-validation, secrets, logging, REST, WebSocket, and deployment guidance for local teaching services.",
 		"HTTP, DNS, TLS, CORS, reverse-proxy, health-check, backup, restore, and observability references for deployment-readiness evidence."
 	],
+	"machine-learning": [
+		"scikit-learn 1.9 getting-started, preprocessing, Pipeline, model-selection, model-evaluation, common-pitfalls, and estimator documentation.",
+		"scikit-learn guidance to split before learned preprocessing, compare against dummy estimators, use metrics suited to the target, and avoid leakage.",
+		"NIST AI Risk Management Framework guidance for test, evaluation, verification, validation, uncertainty, context, limitations, and human oversight.",
+		"Dataset cards and source records covering provenance, license, unit of observation, target definition, sensitive fields, sampling limits, and intended use.",
+		"TensorFlow and Keras documentation only for explicitly bounded neural-network choices and optional image-classification work."
+	],
 	"rust-systems-security": [
 		"Rust 1.97.1 release notes and the Rust 2024 Edition Guide.",
 		"The Rust Programming Language and Rust Reference for ownership, borrowing, error handling, concurrency, and unsafe obligations.",
@@ -679,8 +689,10 @@ const boundaryOverrides: Record<string, string[]> = {
 		"Does not teach train/validation/test ML pipelines except as a contrast."
 	],
 	"machine-learning": [
-		"Owns learning from examples: baselines, splits, leakage control, model selection, metrics, error analysis, and model cards.",
-		"Assumes Data Science cleaning and communication habits rather than reviewing them as the course center."
+		"Uses ML0, ML7.5, ML1, ML2, ML3, ML3.5, ML5, ML4, ML6, and ML8 as the complete required path; image classification and the six repeated practice studios are optional appendices.",
+		"Owns learning from examples: target and feature contracts, dummy baselines, splits, leakage control, model selection, metrics, error slices, uncertainty, and model cards.",
+		"Assumes Data Science cleaning and communication habits and AI Foundations reasoning habits rather than reteaching either course as the center.",
+		"Required work is low-stakes, local, and reproducible; remote notebooks, accelerators, personal data, and public deployment are never prerequisites."
 	],
 	"c-level-1": [
 		"Builds idiomatic C++ fluency before ownership-heavy design.",
@@ -812,6 +824,14 @@ const capstoneOverrides: Record<string, string[]> = {
 		"A deployment-readiness packet covering Node and dependency versions, environment boundaries, CORS and proxy assumptions, TLS plan, redacted logs, smoke checks, resource limits, backup, restore, rollback, and known limitations.",
 		"Expected and observed browser, API, persistence, accessibility, failure, restart, and recovery cases plus a five-minute demonstration from clean local start through one injected fault and correction."
 	],
+	"machine-learning": [
+		"A data-and-problem card naming the source, license, unit of observation, target, prediction-time features, intended use, non-goals, sensitive fields, and known sampling limits.",
+		"One fixed train, validation or cross-validation, and held-out test strategy with preprocessing fitted only on training data through a reproducible Pipeline or ColumnTransformer.",
+		"A task-appropriate dummy baseline and at least two justified candidate models evaluated on the same split with one primary and one secondary metric.",
+		"Confusion, residual, calibration, or cluster-stability evidence plus at least two meaningful error slices and a written uncertainty or generalization limit.",
+		"A reproducible local run record with environment versions, random state, dataset checksum or version, bounded resource budget, expected result, observed result, and reset instructions.",
+		"A model card and short presentation explaining what the model may support, what it cannot establish, where human review remains necessary, and what evidence would change the conclusion."
+	],
 	"rust-systems-security": [
 		"One small supplied legacy parser or stateful CLI with an explicit behavior contract, threat model, trust boundary, malformed-input inventory, and named non-goals.",
 		"A Rust 2024 redesign that uses ownership, borrowing, Option, Result, enums, checked arithmetic, bounded collections, and narrow APIs to make invalid or ambiguous states harder to express.",
@@ -823,6 +843,14 @@ const capstoneOverrides: Record<string, string[]> = {
 };
 
 const safetyPolicyOverrides: Record<string, string[]> = {
+	"machine-learning": [
+		"Required work uses public, synthetic, or course-supplied low-stakes datasets; learners do not upload personal messages, photographs, health records, financial records, school records, credentials, or other private data.",
+		"Models are educational analyses, not medical diagnosis, treatment, credit, insurance, hiring, discipline, admissions, identity, or other consequential-decision tools.",
+		"Historically sensitive datasets remain optional audit material and must name provenance, representation limits, harmful variables, and why a score is not a deployment recommendation.",
+		"Face, voice, biometric, identity, surveillance, and live-person classification are outside scope; image work uses the supplied non-personal example set.",
+		"AI tools may explain learner-written code or suggest bounded tests, but they cannot invent labels, source provenance, evaluation evidence, fairness findings, or model approval.",
+		"Every project records license and privacy assumptions, resource limits, intended use, non-goals, likely failure modes, human-review boundary, and a deletion or reset path for local artifacts."
+	],
 	"linux-systems": [
 		"All mutating labs use an owned, disposable VM or WSL2 instance; shared school, employer, family, public-cloud, and production systems remain outside scope.",
 		"Take a VM snapshot or record a tested file-level rollback before sudo, package, permission, systemd, web-server, scheduler, mount, firewall, or security-policy changes.",
@@ -1054,6 +1082,10 @@ function sourcePolicyFor(courseId: string) {
 
 		if (courseId === "web-development-foundations") {
 			return `Source-backed course. Canonical source repository: ${url}. WDF1-Portfolio-Custom-Domain, WDF2-Notes-App-with-MongoDB, WDF3-Booking-Contact-App, WDF4-Realtime-Chat-App, and WDF5-Separate-Deployment-Lab are substantive teaching skeletons; the numbered WDF-* folders and Full Stack Web Lab folders are generic click-to-add-list wrappers rather than distinct full-stack implementations. Existing links remain traceable, while supplied local cases and verification guidance provide module-specific front-end, API, persistence, real-time, deployment, and capstone evidence. None of the linked projects is represented as production-ready.`;
+		}
+
+		if (courseId === "machine-learning") {
+			return `Source-backed course. Canonical source repository: ${url}. The named ML1–ML6 folders preserve substantive legacy scripts, notebooks, datasets, and images whose modeling choices vary in age and quality; they are teaching inputs to audit rather than production-ready reference implementations. The numbered ML-* folders are generic starter/solution wrappers, the ML8 workspace is a short placeholder, and no active local ML7 image-classifier implementation exists. Existing links remain traceable, while supplied practice cases and verification guidance provide the current leakage-safe, local-first evidence route.`;
 		}
 
 		return `Source-backed course. Canonical source repository: ${url}. Starter/reference links remain synchronized with catalog projects.`;
