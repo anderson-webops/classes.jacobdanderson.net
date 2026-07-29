@@ -1228,6 +1228,117 @@ const investingCourses = {
 		name: "Smart Money: Introduction to Personal Finance",
 		area: "personal finance",
 		focus: "income growth, spending plans, banking, credit, purchasing decisions, investing basics, and long-term financial tradeoffs",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"PF1 Building Wealth Through Personal Finance": {
+				estimatedTime: "3–4 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"fictional graduate profile",
+					"financial goals",
+					"baseline budget",
+					"assumptions",
+					"progress checkpoints"
+				],
+				flowNote:
+					"Create one fictional Graduate Profile and use it throughout the course. Establish goals, assumptions, and a first-month budget before exploring optional spending or research cases. All work is educational simulation; personal balances, credentials, and real account access are never required."
+			},
+			"PF2 How to Grow My Income": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"income sources",
+					"reliability",
+					"skills and time",
+					"startup cost",
+					"unexpected events"
+				],
+				flowNote:
+					"Compare realistic income paths by time, skill, cost, reliability, and risk, then update the same profile with one selected path and a wild-card event. Salary negotiation remains an optional role-play."
+			},
+			"PF3 How to Manage My Spending": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"gross and net income",
+					"needs and wants",
+					"budget rule",
+					"cash flow",
+					"tradeoffs"
+				],
+				flowNote:
+					"Convert gross income to estimated take-home pay, classify expenses without treating wants as moral failures, and revise the profile into a balanced monthly plan. A text table or instructor-supplied calculator can replace any external tool."
+			},
+			"PF4 How to Build Credit: Making Your Small Purchases Count": {
+				estimatedTime: "3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"APR",
+					"minimum payment",
+					"fees",
+					"credit utilization",
+					"total borrowing cost"
+				],
+				flowNote:
+					"Use hypothetical offers to connect APR, fees, balances, payment behavior, and total cost. Verify current terms and credit rules from authoritative sources; no real credit application, account, or identifying information is required."
+			},
+			"PF5 How to Make Smart Purchase Decisions": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"total cost of ownership",
+					"replacement frequency",
+					"quality and convenience",
+					"opportunity cost",
+					"budget fit"
+				],
+				flowNote:
+					"Compare purchase options over time, include non-price tradeoffs, and return the recommendation to the profile budget. The vehicle case is an optional extension for learners ready to model financing and recurring costs."
+			},
+			"PF6 How To Find Your Perfect Bank": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"checking",
+					"savings",
+					"APY and fees",
+					"access and minimums",
+					"deposit protection"
+				],
+				flowNote:
+					"Compare fictional or publicly documented account terms, record the date checked, and select accounts for the profile based on purpose, access, fees, APY, minimums, and applicable protections. Opening a real account is not part of the course."
+			},
+			"PF7 How to Plan for and Invest in Your Future": {
+				estimatedTime: "3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"time horizon",
+					"compound growth",
+					"risk assumptions",
+					"retirement accounts",
+					"hypothetical allocation"
+				],
+				flowNote:
+					"Model future needs with conservative and aggressive assumptions, then create a hypothetical savings allocation. Recheck contribution limits, eligibility, tax treatment, and employer-match rules against current authoritative sources before using any result outside the fictional profile."
+			},
+			"PF8 Making Your Money Count": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"personal values",
+					"evidence quality",
+					"marketing claims",
+					"tradeoffs",
+					"budget impact"
+				],
+				flowNote:
+					"Evaluate values-aligned claims with source evidence, uncertainty, and possible unintended effects, then make one budget decision for the profile. Creating a cause-aligned campaign or business is optional."
+			},
+			"PF9 Smart Money Master Project": {
+				estimatedTime: "3–4 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"financial journey",
+					"final cash flow",
+					"debt and savings",
+					"stress test",
+					"next-year recommendation"
+				],
+				flowNote:
+					"Reconcile the fictional profile across income, spending, banking, credit, purchases, future planning, and values. Finish with a one-year stress test and evidence-based next move. A private portfolio or instructor submission is complete; no public sharing or real financial action is required."
+			}
+		},
 		sourceActivityAnchors: {
 			"PF1 Building Wealth Through Personal Finance": [
 				{
@@ -1237,7 +1348,8 @@ const investingCourses = {
 						"List of purchases that stayed, changed, or disappeared as the constraint became stricter.",
 						"Five to seven personal values or future commitments that affect the revised spending plan.",
 						"One explanation of how long-term goals change a short-term purchase decision."
-					]
+					],
+					learningPath: "choice"
 				},
 				{
 					title: "Graduate Profile and First-Month Budget",
@@ -1250,12 +1362,13 @@ const investingCourses = {
 				},
 				{
 					title: "Wealth-Building Research and Financial Perspectives",
-					prompt: "Research one wealthy person or interview one to three trusted adults about financial habits. Compare income sources, assets, lifestyle choices, weekly or monthly money routines, and long-term goals.",
+					prompt: "Use a public profile, an instructor-supplied fictional case, or an optional interview with a trusted adult to compare financial habits. Do not request or record private account balances, credentials, debt details, or other sensitive financial information. Compare income sources, assets, lifestyle choices, weekly or monthly money routines, and long-term goals only at the level the source voluntarily makes available.",
 					evidence: [
 						"Research or interview notes with source names, dates, and the specific financial behaviors observed.",
 						"Comparison table separating income, assets, spending habits, saving habits, and risk tolerance.",
 						"Reflection connecting at least one outside perspective to the Graduate Profile decisions."
-					]
+					],
+					learningPath: "choice"
 				}
 			],
 			"PF2 How to Grow My Income": [
@@ -1275,7 +1388,8 @@ const investingCourses = {
 						"Raise request with value created, evidence of performance, and proposed new salary or raise range.",
 						"Employer objection list with calm responses tied to business value.",
 						"Updated income tracker showing the effect of a successful, partial, or unsuccessful negotiation."
-					]
+					],
+					learningPath: "choice"
 				},
 				{
 					title: "Wild Card Ledger",
@@ -1333,7 +1447,8 @@ const investingCourses = {
 						"Two loan outcomes with the same principal and different rates or credit assumptions.",
 						"Buy-versus-rent note that separates lifestyle preference from financial feasibility.",
 						"Profile update showing whether the monthly payment fits the existing budget."
-					]
+					],
+					learningPath: "choice"
 				}
 			],
 			"PF5 How to Make Smart Purchase Decisions": [
@@ -1353,7 +1468,8 @@ const investingCourses = {
 						"Vehicle comparison with purchase price, down payment, loan term, monthly payment, and total interest.",
 						"Recurring-cost estimate for insurance, maintenance, fuel or charging, and registration.",
 						"Expense-tracker update showing the effect of fixed and variable vehicle costs."
-					]
+					],
+					learningPath: "choice"
 				}
 			],
 			"PF6 How To Find Your Perfect Bank": [
@@ -1388,7 +1504,7 @@ const investingCourses = {
 				},
 				{
 					title: "Investment Account Allocation",
-					prompt: "Compare retirement account types such as Roth IRA and 401k, then allocate monthly savings between retirement accounts, self-directed investments, and bank savings.",
+					prompt: "Compare retirement account types such as Roth IRA and 401k using current authoritative information, then create a hypothetical allocation between retirement accounts, self-directed investments, and bank savings. Record the source date and treat contribution limits, tax treatment, eligibility, and employer-match rules as changeable facts that must be rechecked.",
 					evidence: [
 						"Allocation table with account type, monthly contribution, tax treatment, access constraints, and risk level.",
 						"One explanation of why early access, taxes, employer match, or risk changes the recommendation.",
@@ -1413,7 +1529,8 @@ const investingCourses = {
 						"Mission statement with the cause, audience, and concrete action.",
 						"Budget or operations note naming expected costs, benefits, and possible unintended harm.",
 						"Revision note explaining how the idea becomes more financially realistic or socially responsible."
-					]
+					],
+					learningPath: "choice"
 				}
 			],
 			"PF9 Smart Money Master Project": [
@@ -1437,16 +1554,6 @@ const investingCourses = {
 				}
 			]
 		},
-		staticAssets: [
-			"ent3_project2_0.png",
-			"ent3_project2_1.png",
-			"pf5_concept1_1.png",
-			"pf5_concept1_2.png",
-			"pf5_concept1_3.png",
-			"pf5_concept1_4.png",
-			"pf5_concept1_5.png",
-			"pf5_concept1_6.png"
-		],
 		modules: [
 			"PF1 Building Wealth Through Personal Finance",
 			"PF2 How to Grow My Income",
