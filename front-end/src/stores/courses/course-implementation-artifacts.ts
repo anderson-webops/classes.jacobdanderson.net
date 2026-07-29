@@ -161,9 +161,11 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"No scanning or probing outside explicitly authorized lab targets."
 	],
 	"network-systems": [
-		"Local VM/container or home-lab-safe diagnostics only.",
-		"IPv4, IPv6, DNS, routing, firewall, and packet-capture commands must include rollback notes.",
-		"Packet captures use provided or owned traffic."
+		"Ubuntu Server 26.04 LTS in an owned VM is the primary live-lab baseline; Debian 13 is the supported comparison route, and the exact distribution/version is recorded.",
+		"Network namespaces, host-only segments, or user-mode NAT keep routing and exposure work inside a disposable lab boundary; bridged, public-cloud, school, employer, and production networks remain outside scope.",
+		"Use iproute2, ss, curl, BIND dig, UFW/netfilter, tcpdump or Wireshark, and a local toy HTTP service; record the installed versions when output or syntax differs.",
+		"IPv4, IPv6, DNS, route, listener, firewall, and packet evidence is collected before a change, after the change, and after rollback.",
+		"Supplied command transcripts, DNS answers, route tables, listener maps, firewall rules, and packet excerpts provide a complete no-VM and no-capture route."
 	],
 	"rust-systems-security": [
 		"Current stable Rust toolchain and Cargo.",
@@ -604,6 +606,13 @@ const standardsOverrides: Record<string, string[]> = {
 		"Filesystem Hierarchy Standard 3.0 and GNU Bash/Coreutils references.",
 		"systemd first-party manuals for services, journald, timers, and unit verification.",
 		"Nginx and Apache first-party configuration and syntax-check documentation."
+	],
+	"network-systems": [
+		"Ubuntu 26.04 LTS networking, Netplan, UFW, and Ubuntu Server documentation.",
+		"IETF and RFC Editor standards for TCP, UDP, DNS, IPv4 private addressing, IPv6, and TLS 1.3.",
+		"iproute2 and Linux manual pages for interfaces, routes, neighbors, sockets, and network namespaces.",
+		"ISC BIND documentation for dig and resolver diagnostics.",
+		"Wireshark, curl, and Nginx first-party documentation for bounded packet capture, application probes, and local reverse proxies."
 	]
 };
 
@@ -651,6 +660,12 @@ const boundaryOverrides: Record<string, string[]> = {
 		"Mutating work stays on an owned VM or WSL2 instance with a snapshot or tested undo route; supplied transcripts complete every evidence target when a VM is unavailable.",
 		"Teaches local service operation, observability, automation, web serving, and recovery rather than public-cloud administration, production credentials, or third-party infrastructure.",
 		"Distribution-specific commands are recorded as Ubuntu 26.04 LTS, Debian 13, or an explicitly named alternative instead of presented as universal Linux behavior."
+	],
+	"network-systems": [
+		"Uses NS0 and Units 1–12 as the complete required progression, followed by one required routed-operations capstone; expansion topics and two integration studios are optional transfer practice.",
+		"Live work stays inside an owned VM, network namespace topology, host-only segment, or user-mode NAT boundary; supplied evidence completes every objective without live capture or privileged network changes.",
+		"Teaches host and small-topology diagnosis, DNS, IPv4/IPv6, routing, firewall policy, packet interpretation, and local service exposure rather than public scanning, cloud networking, BGP operation, wireless administration, or production change management.",
+		"Claims about reachability follow an evidence ladder from process and listener through address, route, policy, transport, application response, and bounded packet evidence instead of treating ping or localhost success as proof."
 	]
 };
 
@@ -673,6 +688,14 @@ const capstoneOverrides: Record<string, string[]> = {
 		"local-only web or health endpoint with listening-socket, route, and configuration-test evidence; no public exposure is required.",
 		"backup manifest, restore drill into a separate path, integrity comparison, retention note, and proof that a failed run preserves the last trusted backup.",
 		"runbook containing versions, architecture, scope, commands, rollback, known limitations, and a five-minute demonstration from clean start through recovery."
+	],
+	"network-systems": [
+		"One disposable client-router-server topology with documented namespace or VM boundaries, IPv4 addressing, one IPv6 comparison path, route tables, and an explicit cleanup command.",
+		"One local toy service whose process, bind address, port, route, host policy, and application response are verified independently.",
+		"Two injected failures from different layers, each diagnosed from the first failing evidence gate before correction and clean retest.",
+		"One supplied or owned narrow packet trace tied to a declared question, capture boundary, packet limit, protocol interpretation, and privacy-safe excerpt.",
+		"One least-exposure policy with dry-run or preview evidence, alternate access path, applied rule set, local validation, and tested rollback.",
+		"A reproducible operations packet containing topology, versions, scope, command transcript, evidence ladder, cleanup, limitations, and a five-minute demonstration."
 	]
 };
 
@@ -684,6 +707,14 @@ const safetyPolicyOverrides: Record<string, string[]> = {
 		"Do not disable host protections, open a public listener, scan or capture third-party traffic, alter a host bootloader, reformat storage, or practice privilege escalation.",
 		"Use fictional service names, supplied logs, local addresses, stand-in content, and redacted diagnostics; never submit credentials, tokens, private keys, hostnames tied to people, or real production logs.",
 		"Every privileged change records expected result, observed result, verification command, undo command, and snapshot or restore point."
+	],
+	"network-systems": [
+		"All labs use owned local VMs, network namespaces, host-only segments, user-mode NAT, loopback, or supplied evidence; school, employer, ISP, public-cloud, production, and third-party networks remain outside scope.",
+		"Do not scan address ranges, probe unknown hosts, capture or inject non-lab traffic, bridge the lab to an unmanaged network, publish a listener, alter a home router, or use real credentials or private operational data.",
+		"Record interfaces, addresses, routes, resolver state, listeners, firewall state, namespace names, and a tested cleanup or snapshot route before any privileged change.",
+		"Preview firewall and configuration changes, preserve a second access path before remote-policy edits, constrain listeners to loopback or private lab interfaces, and stop if the active target or rollback is uncertain.",
+		"Packet work uses supplied PCAP excerpts or a narrowly filtered owned flow with an explicit interface, host, port, packet limit, and immediate stop condition; redact addresses or payload data before sharing.",
+		"Every change records the question, expected signature, observed evidence, first failing layer, correction, retest, cleanup, and remaining limitation."
 	]
 };
 
@@ -836,6 +867,10 @@ function sourcePolicyFor(courseId: string) {
 	if (url) {
 		if (courseId === "linux-systems") {
 			return `Source-backed course. Canonical source repository: ${url}. LS1–LS6 are the primary multi-file operational labs; the numbered LS-* folders are lightweight shell checkpoints or studio practice. Existing starter/solution URLs remain traceable, while local evidence cases prevent a generic checkpoint from being treated as a production deployment.`;
+		}
+
+		if (courseId === "network-systems") {
+			return `Source-backed course. Canonical source repository: ${url}. NS1–NS6 are the primary operational shell labs; the numbered NS-* folders are lightweight Python port-normalization checkpoints or studio practice. Existing starter/solution URLs remain traceable, while supplied network evidence prevents a generic checkpoint from being treated as a live infrastructure exercise.`;
 		}
 
 		return `Source-backed course. Canonical source repository: ${url}. Starter/reference links remain synchronized with catalog projects.`;
@@ -2873,17 +2908,18 @@ function addSystemsSpecificSafetyModule(courseId: string, course: RawCourse) {
 		},
 		"network-systems": {
 			environment: [
-				"Namespace, VM, host-only, or user-NAT lab networks only.",
-				"Wireshark/tcpdump, ip/ss, DNS, TCP/IP, IPv6, routing, and failure injection.",
-				"Provided or owned packet captures."
+				"Ubuntu Server 26.04 LTS owned VM baseline, with Debian 13 as a supported comparison route.",
+				"Network namespace, host-only, loopback, or user-mode NAT lab segments only; no bridged or public-facing route.",
+				"iproute2/ss, curl, BIND dig, UFW/netfilter, tcpdump or Wireshark, DNS, TCP/UDP, IPv4/IPv6, routing, and bounded failure injection.",
+				"Supplied transcripts and packet excerpts or narrowly filtered traffic generated entirely inside the owned lab."
 			],
 			prohibited: [
-				"Scanning public IP ranges.",
-				"Packet injection or capture on non-lab networks.",
-				"Bridged labs touching school, employer, or ISP infrastructure."
+				"Scanning or probing any public, school, employer, ISP, production, or otherwise unauthorized target.",
+				"Packet injection, capture, credential use, or payload inspection on non-lab networks.",
+				"Bridged labs, public listeners, home-router changes, cloud credentials, or firewall edits without a tested rollback."
 			],
 			project:
-				"Build a small routed lab topology with IPv4/IPv6 addressing, DNS, packet traces, and two injected troubleshooting failures."
+				"Build a disposable client-router-server topology with IPv4/IPv6 evidence, local DNS and service checks, one bounded packet trace, least-exposure policy, cleanup, and two injected troubleshooting failures."
 		},
 		"network-security": {
 			environment: [
