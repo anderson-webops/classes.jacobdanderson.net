@@ -24,6 +24,11 @@ const machineLearningHostedSourceVideos = [
 
 const machineLearningPendingSourceImages = ["ml3_1.png", "ml3_2.png"] as const;
 
+const MACHINE_LEARNING_PRACTICE_PACK =
+	"/course-assets/machine-learning/machine-learning-practice-pack.md";
+const MACHINE_LEARNING_VERIFICATION_GUIDE =
+	"/course-assets/machine-learning/machine-learning-verification-guide.md";
+
 function hostedMachineLearningAssetList(filenames: readonly string[]) {
 	return filenames
 		.map(filename => `- ${staticMediaUrl(filename)}`)
@@ -39,7 +44,7 @@ function pendingMachineLearningAssetList(filenames: readonly string[]) {
 		.join("\n\n");
 }
 
-export const machineLearningCourse: RawCourse = {
+const machineLearningSourceCourse: RawCourse = {
 	name: "Machine Learning",
 	modules: [
 		{
@@ -48,7 +53,7 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Preferred Tools and Environment",
 					content:
-						"Standardize the course around `Google Colab` for the main workflow, with `VS Code` or `PyCharm` as the local follow-on environment when notebook work is ready to move into local modules. Set up Python, pandas, NumPy, matplotlib, seaborn, scikit-learn, and notebook support before the first real model so environment issues do not derail the conceptual lessons."
+						"Use Python 3.14 with a recorded isolated environment, scikit-learn 1.9, pandas, NumPy, matplotlib, seaborn, and local Jupyter or VS Code as the complete course workflow. Run a supplied import-and-version check, restart the kernel, and rerun from the first cell before the first model. Google Colab remains an optional convenience when a learner knowingly chooses an account-based notebook host; it is never the only way to complete a lesson."
 				},
 				{
 					title: "Notebook Cells vs. Reusable Python Modules",
@@ -58,12 +63,12 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Data Cleaning and Visualization First",
 					content:
-						"Before any model is trained, inspect columns, missing values, scales, and class balance. Basic plotting and train/test thinking belong in the baseline workflow, not as optional polish after the algorithm appears."
+						"Before any model is trained, write a data-and-problem card, inspect columns, missing values, units, scales, target balance, and possible leakage. Split supervised data before fitting any learned transformation. Basic plotting, a dummy baseline, and train/test thinking belong in the baseline workflow, not as optional polish after the algorithm appears."
 				},
 				{
 					title: "Model Comparison as the Course Habit",
 					content:
-						"Most serious datasets are tested with at least two approaches. One model run is only a starting point, not the end of the reasoning."
+						"Most serious datasets are tested with a task-appropriate dummy baseline and at least two plausible approaches on the same split. One model run or one accuracy value is only a starting point, not the end of the reasoning."
 				},
 				{
 					title: "ML0 Setup, Tooling, and Data Workflow: Core Project",
@@ -109,19 +114,20 @@ export const machineLearningCourse: RawCourse = {
 						"K-means clustering is a popular algorithm that partitions data into k clusters. A centroid is the mean of all points in a cluster, thought of as the cluster's center. Each point is assigned to the cluster whose centroid it is closest to, usually using Euclidean distance sqrt((y2 - y1)^2 + (x2 - x1)^2). In a four-point example using A, B, C, and D with k = 2, the steps are: choose k, pick initial centroids such as A and B, assign each point to the nearest centroid, recompute centroids by averaging point coordinates in each cluster, and repeat until centroids stop changing. One or two computed iterations make the distance calculations visible and show that results can depend on the initial random centroids."
 				},
 				{
-					title: "Google Colab Setup",
+					title: "Optional Google Colab Orientation",
 					content:
-						"Google Colab is the main IDE for this course and requires a Google account. Log in at https://colab.research.google.com, bookmark it, open the `Welcome to Colaboratory` notebook, and inspect the core features. Create a new notebook (File → New notebook), locate left-sidebar tools like Table of Contents, Find and Replace, and Files, then add code and text cells, run code, and reorder cells. Finish by creating a variable, printing it, printing a name in a second cell, and adding a short descriptive text cell before using Runtime → Restart and run all."
+						"Google Colab is an optional notebook host that requires a separate Google account and its own privacy decision. If selected, open a new notebook, inspect code and text cells, upload only the supplied non-personal fixture, record the active Python and package versions, then use Runtime → Restart session and run all. The same notebook steps must also work locally, and no learner is required to mount Drive or upload personal files."
 				},
 				{
 					title: "ML1 Project 1: Customer Segmentation",
 					content: `**Goal:** Build k-means clustering from scratch to group customers by annual income and spending score.
 
 **Setup:**
-- Create a dedicated Google Drive folder for machine-learning projects.
+- Create a local project folder and record Python, scikit-learn, pandas, and NumPy versions.
 - Download or open the linked customer segmentation CSV from the course source repository.
-- Mount Google Drive in Colab and read the CSV with pandas.
+- Read the local CSV with pandas and record its row count, columns, units, and checksum or source version.
 - Inspect the columns and select annual income plus spending score as the two clustering features.
+- Standardize both numeric features so one unit does not dominate Euclidean distance.
 
 **Exploration:**
 - Create a scatterplot of income versus spending score before clustering.
@@ -130,19 +136,21 @@ export const machineLearningCourse: RawCourse = {
 **Algorithm steps:**
 1. Choose \`k\`, such as \`k = 5\`.
 2. Store the data points in a list or array.
-3. Choose \`k\` random initial centroids.
+3. Choose \`k\` initial centroids from a seeded random generator.
 4. Store current centroids, previous centroids, and each customer's assigned cluster index.
-5. Repeat until the centroids stop changing:
+5. Repeat until centroid movement is below a written tolerance or a maximum iteration count is reached:
    - Compute Euclidean distance from each point to each centroid.
    - Assign each point to the nearest centroid.
    - Copy current centroids to previous centroids with \`deepcopy\`.
    - Recompute each centroid by averaging all points assigned to that cluster.
+   - Handle an empty cluster with a documented reseeding rule instead of dividing by zero.
 
 **Checkpoints:**
 - The final plot uses different colors for different clusters.
 - The algorithm is run more than once so random initialization is visible.
 - At least two \`k\` values are compared.
-- The written summary explains the dataset, the clustering goal, the final groups, and one surprising or uncertain pattern.`,
+- The manual result is compared with scikit-learn \`KMeans\` using a fixed \`random_state\`, explicit \`n_init\`, and the same scaled features.
+- The written summary explains the dataset, the clustering goal, stability across seeds, the final groups, and one surprising or uncertain pattern. Cluster numbers are arbitrary labels, not discovered facts about people.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML1-Customer-Segmentation-Starter-Updated",
 					solutionLink:
@@ -157,22 +165,24 @@ export const machineLearningCourse: RawCourse = {
 					content: `**Goal:** Use scikit-learn k-means to cluster Disney movies by release year and inflation-adjusted revenue.
 
 **Data preparation:**
-- Load the Disney movie dataset in Colab.
+- Load the Disney movie dataset from the local course source.
 - Extract the release date and inflation-adjusted revenue columns.
 - Convert the release date string into a numeric release year.
 - Build a two-column feature matrix using year and inflation-adjusted revenue.
+- Use a \`Pipeline\` with \`StandardScaler\` and \`KMeans\` so revenue scale does not silently dominate year.
 
 **Model steps:**
 1. Plot the raw data before clustering.
 2. Choose a starting value for \`k\`.
-3. Use scikit-learn's k-means implementation and call \`fit_predict()\` to generate cluster assignments.
+3. Use scikit-learn's k-means implementation with fixed \`random_state\` and explicit \`n_init\`, then call \`fit_predict()\`.
 4. Inspect \`cluster_centers_\` so the centroid locations are not treated as hidden magic.
 5. Plot the clustered scatterplot.
 
 **Comparison checks:**
 - Try multiple \`k\` values.
 - Compare how the cluster shapes, boundaries, and centroid positions change.
-- Explain whether the clusters reveal meaningful movie-era patterns or mainly reflect the scale of the revenue data.`,
+- Compare inertia and silhouette score cautiously, and inspect stability across at least three seeds.
+- Explain whether the clusters reveal a useful descriptive pattern or mainly reflect selected features and scaling. Do not treat a cluster as a causal movie-era category.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML1-Disney-Movie-Clustering-Starter-Updated",
 					solutionLink:
@@ -230,7 +240,7 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Training, Validation, and Testing Data",
 					content:
-						"To evaluate a classifier properly, the dataset is split into training, validation, and testing sets. Training data is used to fit the model; validation data is used to tune hyperparameters, such as k, and check accuracy while making adjustments; and testing data is held out and used only at the end to measure final performance. Most course projects use training and testing sets: training for model fitting and testing to estimate how well the classifier generalizes to new data."
+						"To evaluate a classifier properly, split before fitting a scaler, encoder, vectorizer, imputer, feature selector, or model. Training data fits the pipeline; validation data or cross-validation selects settings such as k; and the held-out test set is used once for final evaluation. Use a fixed random state, stratification when labels allow it, a dummy baseline, and at least one metric beyond accuracy."
 				},
 				{
 					title: "ML2 Project 1: KNN Customer Segment Classification",
@@ -240,20 +250,21 @@ export const machineLearningCourse: RawCourse = {
 - Start from saved customer segmentation work, or reload the dataset and recreate the feature columns.
 - Use the cluster assignments from k-means as labels.
 - Build feature vectors in the form \`[income, spendingScore]\`.
+- State clearly that these labels were generated by k-means rather than supplied as ground truth; the classifier is learning to imitate a previous clustering pipeline.
 
 **Model steps:**
 1. Choose a KNN value such as \`k = 3\` or \`k = 5\`.
-2. Split the data into training and testing sets.
-3. Implement KNN manually or use scikit-learn's \`KNeighborsClassifier\`.
-4. Evaluate the test-set accuracy.
-5. Compare predicted labels with the original cluster labels.
+2. Split with a fixed random state and stratification when each generated cluster has enough examples.
+3. Fit \`StandardScaler\` and \`KNeighborsClassifier\` together in a \`Pipeline\`.
+4. Compare against \`DummyClassifier\` and report accuracy plus macro F1 and a confusion matrix.
+5. Compare predicted labels with the generated cluster labels without describing them as real customer types.
 
 **Transfer check:**
 - Create at least one hypothetical customer feature vector.
 - Predict that customer's segment.
 - Check the result visually against the cluster plot and explain whether the prediction makes sense.
 
-**Reflection:** Explain how \`k\` was chosen, how well the classifier performed, and what might happen if the clusters from the previous project were noisy.`,
+**Reflection:** Explain how \`k\` was chosen, how well the classifier reproduced the clustering labels, and what happens when the previous clustering is unstable or noisy. Do not use the result to target or make decisions about real people.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML2-KNN-Customer-Segmentation-Classification-Updated",
 					datasetLink:
@@ -272,21 +283,22 @@ export const machineLearningCourse: RawCourse = {
 - Read the dataset documentation before encoding values.
 
 **Encoding task:**
-- Many columns are strings, so convert category values into numeric codes.
-- Use clear dictionaries for each column instead of relying on unexplained numbers.
-- Use \`pandas.replace()\` or an equivalent method to apply the replacement table.
+- Keep category values as strings until the split is created.
+- Use \`OneHotEncoder(handle_unknown="ignore")\` inside a \`ColumnTransformer\` and \`Pipeline\`.
+- Explain why arbitrary integer codes would make Euclidean distance treat category order and spacing as meaningful.
 
 **Model steps:**
-1. Construct feature vectors from the encoded columns.
+1. Construct raw categorical feature rows and target labels.
 2. Store labels from the acceptability column: \`unacc\`, \`acc\`, \`good\`, or \`vgood\`.
-3. Split the data with \`train_test_split()\`.
-4. Train scikit-learn's \`KNeighborsClassifier\`.
-5. Compute test-set accuracy.
+3. Split with a fixed random state and stratification.
+4. Fit one-hot encoding and scikit-learn's \`KNeighborsClassifier\` inside one pipeline.
+5. Compare with \`DummyClassifier\`; report balanced accuracy, macro F1, and a confusion matrix.
 
 **Checkpoints:**
 - Classify one hypothetical car feature vector.
 - Explain whether the result seems reasonable.
-- Summarize encoding choices, accuracy, and one surprising result or limitation.`,
+- Verify that an unseen category is handled predictably.
+- Summarize encoding choices, metrics, class imbalance, and one surprising result or limitation.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML2-KNN-Car-Classification-Starter",
 					solutionLink:
@@ -361,10 +373,10 @@ export const machineLearningCourse: RawCourse = {
 
 **Model steps:**
 1. Split the data into training and testing sets.
-2. Choose a suitable Naive Bayes variant, such as \`MultinomialNB\` when the feature assumptions fit.
+2. Use \`GaussianNB\` for these continuous measurements and explain why the preserved legacy \`MultinomialNB\` source is an implementation to audit rather than the current route.
 3. Call \`fit()\` on the training data.
 4. Call \`predict()\` on the test data.
-5. Compute accuracy with \`accuracy_score()\`.
+5. Compare with \`DummyClassifier\`; report accuracy, macro F1, and a confusion matrix.
 
 **Transfer check:** Create a few custom feature vectors, predict their species, and note that these examples may not exist in the original dataset.
 
@@ -381,28 +393,28 @@ export const machineLearningCourse: RawCourse = {
 					content: `**Goal:** Use Naive Bayes to classify emails as spam or not spam.
 
 **Data cleaning:**
-- Load the spam mails dataset in Colab.
+- Load the supplied fictional or sanitized email fixture locally; do not use personal inbox messages.
 - Drop irrelevant columns such as message IDs or duplicate label columns.
 - Remove duplicate rows.
 - Confirm which column contains the email text and which column contains the spam/ham label.
 
 **Text preprocessing:**
-- Remove punctuation.
-- Convert text to lowercase.
-- Filter out common stopwords such as \`the\`, \`is\`, and other high-frequency function words.
-- Use scikit-learn's \`CountVectorizer\` with the custom preprocessing function to produce bag-of-words features.
+- Split raw message text before fitting the vectorizer.
+- Use scikit-learn's \`CountVectorizer\` defaults first, then test one documented preprocessing change.
+- Keep vectorization and \`MultinomialNB\` together in a \`Pipeline\`; no package or stopword download occurs during a normal run.
 
 **Model steps:**
 1. Build the label list for spam or ham.
-2. Split the data into training and testing sets, such as 80% training and 20% testing.
-3. Train a classifier such as \`MultinomialNB\`.
-4. Evaluate accuracy on the test set.
-5. Inspect a few misclassified examples.
+2. Split raw messages with a fixed random state and stratification.
+3. Train \`MultinomialNB\` through the text pipeline.
+4. Compare with \`DummyClassifier\`; report precision, recall, F1, and a confusion matrix in addition to accuracy.
+5. Inspect redacted or fictional misclassified examples without printing private message text.
 
 **Reflection checks:**
 - Record training time and model accuracy.
 - Explain why Naive Bayes is a useful baseline for text classification.
-- Name one risk of relying only on accuracy or only on word counts.`,
+- Name one risk of relying only on accuracy or only on word counts.
+- State that the model is a classroom demonstration, not a production spam filter.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML3-Email-Spam-Classification",
 					datasetLink:
@@ -471,7 +483,7 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Decision Tree Lab",
 					content:
-						"Build a decision tree classifier on a familiar dataset such as Iris, Titanic, or customer churn, visualize the main splits, and compare how the model changes when the maximum depth is constrained."
+						"Build a decision tree classifier on the supplied low-stakes fixture or Iris, compare it with a dummy baseline on one fixed split, visualize only the most useful shallow tree, and compare validation behavior as maximum depth changes. Titanic and customer churn are optional historical examples, not required datasets."
 				},
 				{
 					title: "ML3.5 Decision Trees and Interpretable Models: Core Project",
@@ -483,7 +495,9 @@ export const machineLearningCourse: RawCourse = {
 						hasReference: false
 					}),
 					projectLink:
-						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Diabetes-Diagnosis-With-Neural-Networks"
+						"/course-assets/machine-learning/machine-learning-practice-pack.md#interpretable-tree-case",
+					solutionLink:
+						"/course-assets/machine-learning/machine-learning-verification-guide.md#interpretable-tree-key"
 				}
 			],
 			supplementalProjects: [
@@ -496,7 +510,9 @@ export const machineLearningCourse: RawCourse = {
 						section: "extension"
 					}),
 					projectLink:
-						"https://github.com/instruction-material/AI-Level-2/tree/main/ML4-Diabetes-Diagnosis-With-Neural-Networks"
+						"/course-assets/machine-learning/machine-learning-practice-pack.md#interpretable-tree-case",
+					solutionLink:
+						"/course-assets/machine-learning/machine-learning-verification-guide.md#interpretable-tree-key"
 				},
 				{
 					title: "ML3.5 Decision Trees and Interpretable Models Transfer Practice",
@@ -635,30 +651,30 @@ export const machineLearningCourse: RawCourse = {
 **Tooling note:** Keras is a high-level library that handles many implementation details for building and training neural networks.`
 				},
 				{
-					title: "ML4 Project 3: Diabetes Diagnosis with Neural Networks",
-					content: `**Goal:** Build a neural network that predicts whether a patient record indicates diabetes.
+					title: "ML4 Choice Audit: Historical Diabetes-Risk Dataset",
+					content: `**Goal:** Audit a bounded neural-network example that predicts the label in a historical diabetes-risk dataset. This is not a diagnosis, treatment recommendation, screening tool, or clinical decision system.
 
 **Data setup:**
-- Download and inspect the Pima Indians Diabetes dataset.
+- Read the source and representation notes for the preserved Pima Indians Diabetes dataset.
 - Identify which columns are features and which column is the label.
-- Upload the data to Google Drive and mount Drive in Colab.
-- Read the CSV into pandas.
+- Read the course-owned CSV locally; do not upload health or personal records.
 - Separate the feature matrix \`X\` from the label vector \`y\`.
+- Split before fitting preprocessing and use a fixed random state.
 
 **Model steps:**
-1. Split the dataset into training and testing sets.
-2. Build a Keras model for binary classification.
-3. Use one or two dense hidden layers with ReLU activations as a reasonable starting point.
-4. Use a final sigmoid output layer for the binary prediction.
-5. Compile the model with an appropriate loss function and optimizer.
-6. Train on the training data and evaluate on the test data.
+1. Establish a stratified \`DummyClassifier\` and a simple logistic-regression baseline.
+2. Standardize numeric features inside a pipeline.
+3. Optionally build a small Keras model with one or two bounded dense hidden layers.
+4. Use a final sigmoid output layer for the binary label probability.
+5. Fix seeds and cap samples, epochs, batch size, and CPU time.
+6. Report precision, recall, F1, confusion matrix, and calibration or threshold behavior on held-out data.
 
 **Experiments:**
-- Compare different epoch counts.
-- Compare different batch sizes.
-- Watch both performance and training time.
+- Compare the neural model with the simpler baseline, not only different epoch counts.
+- Inspect at least two error slices and explain why subgroup results may be unstable.
+- Record training time and stop when the stated compute budget is reached.
 
-**Reflection:** Summarize the dataset, network structure, accuracy, and one prediction pattern that needs cautious interpretation.`,
+**Reflection:** Summarize provenance, representation limits, model structure, baseline comparison, uncertainty, and why this classroom audit cannot support a claim about an individual person's health.`,
 					projectLink:
 						"https://colab.research.google.com/drive/1CLK1xyg-6rvgj2Z8KtTkt2y4sGYL-dTG",
 					solutionLink:
@@ -726,7 +742,7 @@ export const machineLearningCourse: RawCourse = {
 					content: `**Goal:** Fit and interpret a simple linear regression model.
 
 **Graph first:**
-- Open the starter code in Colab.
+- Open the starter code in the local notebook or Python environment.
 - Plot the given \`x\` and \`y\` data as a scatterplot.
 - Decide whether the data appears to follow a roughly straight-line trend.
 
@@ -785,28 +801,28 @@ export const machineLearningCourse: RawCourse = {
 						"https://static.classes.jacobdanderson.net/ml5_project_2.mp4"
 				},
 				{
-					title: "ML5 Project 3: Predicting Life Expectancy",
-					content: `**Goal:** Use WHO life expectancy data to build and compare regression models.
+					title: "ML5 Choice Audit: Country-Year Life-Expectancy Estimates",
+					content: `**Goal:** Use historical country-year aggregate records to compare regression models for the dataset's life-expectancy field. This does not predict an individual person's lifespan and does not establish causal effects.
 
 **Data setup:**
-- Upload the dataset to Google Drive.
-- Create a Colab notebook and mount Drive.
-- Read the CSV into pandas.
+- Read the course-owned CSV locally and record its source, years, countries, missingness, and unit of observation.
 - Identify input features, such as health, economic, and demographic variables.
-- Use life expectancy as the target output.
+- Use the country-year life-expectancy field as the target output.
+- Choose a group-aware or time-aware split so the test evidence is not inflated by near-duplicate country records across years.
 
 **Model comparison:**
-1. Split the data into training and testing sets.
-2. Build a linear regression model.
-3. Measure test performance.
-4. Build a polynomial or feature-expanded regression model.
-5. Evaluate the second model on the same test split.
+1. Reserve the held-out groups or later years before fitting preprocessing.
+2. Establish a \`DummyRegressor\` baseline.
+3. Build a leakage-safe linear-regression pipeline.
+4. Build one justified regularized or tree-based comparison model.
+5. Evaluate both on the same held-out split with MAE and one secondary metric.
 
 **Reflection checks:**
 - Compare which model fits better.
 - Decide whether the added complexity is justified.
-- Summarize which factors seem most correlated with life expectancy.
-- Name one reason correlation in this dataset does not automatically prove causation.`,
+- Summarize associations at the country-year level without turning coefficients into causal claims.
+- Name the ecological fallacy and explain why aggregate associations cannot be assigned to an individual.
+- Record two error slices, uncertainty, and one data limitation that could change the conclusion.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML5-Predicting-Life-Expectancy",
 					datasetLink:
@@ -870,33 +886,35 @@ export const machineLearningCourse: RawCourse = {
 						"Mean squared error (MSE) and mean absolute error (MAE) are standard metrics for regression. Both measure average prediction error: MAE averages absolute differences, while MSE averages squared differences, which penalizes large errors more heavily. A good regression model aims to minimize these values on both training and test data. Overfitting happens when a model fits the training data extremely well but performs poorly on new data; it has memorized rather than generalized. Train-test splits, such as 80% training and 20% testing, help check generalization."
 				},
 				{
-					title: "ML6 Project 1: Predicting House Prices with Neural Networks",
-					content: `**Goal:** Build a neural-network regression model for housing-price prediction.
+					title: "ML6 Project 1: Comparing Housing-Value Regression Models",
+					content: `**Goal:** Compare a bounded neural-network regressor with a simpler baseline on the California housing dataset or the supplied synthetic housing fixture.
 
 **Data setup:**
-- Create a new Colab notebook.
-- Load the Boston housing dataset from Keras.
-- Split the data into training and testing sets.
-- Normalize input features with \`StandardScaler\` or a similar tool so feature scales are comparable.
+- Work locally with scikit-learn's California housing data when it is already cached, or use the supplied synthetic fixture for a complete offline route.
+- Record the unit of observation, target, feature meanings, source, and limitations.
+- Split with a fixed random state before fitting preprocessing.
+- Normalize input features inside a pipeline or training-only preprocessing path.
 
 **Model steps:**
-1. Design a dense neural network for regression.
-2. Use ReLU or a similar activation in hidden layers.
-3. Use a linear output layer for the predicted numeric price.
-4. Compile with a regression loss such as MSE and a suitable optimizer.
-5. Train on the training data.
+1. Establish \`DummyRegressor\` and linear-regression baselines.
+2. Design a small dense neural network for regression.
+3. Use ReLU or a similar activation in hidden layers and a linear numeric output.
+4. Fix seeds, compile with a regression loss, and cap samples, epochs, batch size, and CPU time.
+5. Use validation evidence and an explicit stopping rule rather than increasing epochs until the result looks good.
 
 **Evaluation:**
-- Record mean absolute error over epochs.
-- Plot MAE versus epoch.
-- Evaluate on the test set and print mean squared error.
-- Plot predicted versus actual house prices with a \`y = x\` reference line.
+- Record training and validation MAE over epochs.
+- Evaluate every candidate on the same held-out test set with MAE and RMSE.
+- Plot residuals and predicted versus observed values with a \`y = x\` reference line.
+- Inspect at least two error slices and compare the network with the simpler baselines.
 
-**Reflection:** Explain how normalization, network architecture, and training epochs influenced accuracy and overfitting.`,
+**Legacy audit:** The linked historical source uses the Boston Housing dataset. Preserve it only as an optional dataset-ethics and migration audit; do not use its ethically problematic \`B\` feature or its score as the required benchmark.
+
+**Reflection:** Explain whether the neural network earned its added complexity, how normalization and stopping affected generalization, and why this educational estimate is not a real appraisal.`,
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML6-Predicting-House-Prices",
 					datasetLink:
-						"https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html",
+						"https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ml6_project_1.mp4"
 				},
@@ -954,34 +972,38 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Image Data and Classification",
 					content:
-						"Images are arrays of pixel values, so they can be used as input to machine learning models just like numerical datasets. Each pixel can store information such as brightness or RGB color values. Image classification assigns a label to each image, for example rainy, sunny, cloudy, or sunrise. Modern image classifiers are typically neural networks that learn from many labeled examples how patterns in pixel data correspond to categories."
+						"Images are arrays of pixel values, but near-duplicate images, camera sources, and augmentation can leak across splits. This optional appendix uses only supplied non-personal cloudy, rain, sunrise, and sunshine examples. Group originals and related images by source before creating train, validation, and test sets; apply augmentation to training only; and treat a small result as a workflow demonstration rather than broad visual recognition."
 				},
 				{
 					title: "ML7 Project 1: Weather Image Classifier",
 					content: `**Goal:** Build a neural network that classifies weather images as rainy, sunny, cloudy, or sunrise.
 
 **Data setup:**
-- Upload the dataset to a Google Drive folder.
-- Mount Drive in Colab.
-- Use Keras image-loading tools to define training, validation, and test generators.
-- Handle image rescaling, batching, and directory loading explicitly.
+- Use the supplied local, non-personal weather-image example set; do not upload learner photos or images of people.
+- Group originals, crops, and near-duplicates by source before splitting.
+- Define separate training, validation, and held-out test directories.
+- Handle resizing, rescaling, bounded batching, and deterministic seeds explicitly.
+- Apply random augmentation to training images only.
 
 **Model choices:**
-- Use a simple convolutional neural network when the goal is image-specific learning.
+- Establish a majority-class or simple color-histogram baseline.
+- Use a small convolutional neural network only when local resources permit.
 - A dense network after flattening can be used as a comparison, but discuss it as a weaker baseline for image structure.
 - Compile with a suitable multi-class classification loss.
+- Cap image count, dimensions, epochs, batch size, and CPU time before training.
 
 **Evaluation steps:**
 1. Train on the training set while monitoring validation accuracy.
-2. Evaluate on the test set.
-3. Load individual example images.
-4. Run \`model.predict()\` on those images.
-5. Interpret the largest predicted probability as the predicted class.
+2. Choose the stopping point without looking at the held-out test labels.
+3. Evaluate once on the test set with accuracy, macro F1, per-class recall, and a confusion matrix.
+4. Inspect at least one error from each class when available.
+5. Report runtime, resource limits, and instability across seeds.
 
 **Reflection checks:**
 - Compare predictions with true labels.
 - Discuss both success behavior and failure-mode behavior.
-- Summarize the dataset, model architecture, test accuracy, and any images where the model struggled.`,
+- Summarize the dataset, split-by-source rule, model architecture, baseline comparison, class-level results, and images where the model struggled.
+- State that the linked Colab notebooks are preserved historical references and that the active source repository has no complete local ML7 implementation.`,
 					projectLink:
 						"https://colab.research.google.com/drive/12HpOOjmQgf5sLmrTgknSFX24aSln6rT6?usp=sharing",
 					solutionLink:
@@ -1052,22 +1074,22 @@ export const machineLearningCourse: RawCourse = {
 				{
 					title: "Classification Metrics beyond Accuracy",
 					content:
-						"Accuracy, precision, recall, F1, and the confusion matrix are different lenses on model quality. A single percentage can hide the wrong failure mode, especially on imbalanced data, so model evaluation names which errors matter most."
+						"Accuracy, balanced accuracy, precision, recall, F1, and the confusion matrix are different lenses on model quality. Start with a task-appropriate DummyClassifier, name one primary and one secondary metric before training, and keep the held-out test set untouched until model selection is complete. A single percentage can hide the wrong failure mode, especially on imbalanced data."
 				},
 				{
 					title: "Regression Metrics and Residual Thinking",
 					content:
-						"Make residuals, MAE, MSE, and `R^2` part of the recurring regression workflow. A strong regression explanation connects a bad prediction on the graph to the same error pattern in the summary metrics."
+						"Start regression with DummyRegressor, then make residuals, MAE, RMSE, and `R^2` part of the recurring workflow. Fit imputers, scalers, encoders, and feature generation only on training data. A strong explanation connects a bad prediction and meaningful error slice to the same pattern in the summary metrics."
 				},
 				{
 					title: "Dataset Choice by Difficulty and Model Fit",
 					content:
-						"Build a small internal dataset bank by difficulty: tiny synthetic demos for concept explanation, medium structured datasets for classification and regression, and broader capstone candidates for comparison projects."
+						"Build a small internal dataset bank by difficulty: tiny synthetic demos for concept explanation, medium structured datasets for classification and regression, and broader low-stakes capstone candidates. Each dataset card records source, license, unit of observation, target, prediction-time features, likely leakage, sensitive fields, sampling limits, and intended use."
 				},
 				{
 					title: "Compare at Least Two Models per Serious Project",
 					content:
-						"Include a short comparison note whenever two plausible models can be tried on the same problem. This is the habit that turns the course from a sequence of demos into real machine-learning thinking."
+						"Include a dummy baseline and short comparison note whenever two plausible models can be tried on the same problem. Use one fixed split or cross-validation plan, one reproducible pipeline per candidate, the same metrics, and a written reason to prefer the simpler model when performance is meaningfully similar."
 				},
 				{
 					title: "ML7.5 Model Evaluation, Comparison, and Dataset Strategy: Core Project",
@@ -1133,11 +1155,12 @@ export const machineLearningCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Master Project Planning",
-					content: `The Master Project is a capstone built around a real dataset and a substantial machine-learning problem.
+					content: `The Master Project is a capstone built around a low-stakes public, synthetic, or course-supplied dataset and a substantial machine-learning question.
 
 **Allowed problem types:**
-- Classification, such as fake news detection, credit card fraud detection, or Titanic survival prediction.
-- Regression, such as loan amount prediction, Bitcoin price prediction, stock price prediction, or medical insurance cost prediction.
+- Classification, such as fictional support tickets, plant species, manufactured-part quality labels, or supplied game states.
+- Regression, such as synthetic energy use, bicycle demand, or a course-generated numeric outcome.
+- Clustering, such as comparing stable groupings in a supplied non-personal dataset without naming clusters as facts about people.
 - A comparison project that uses more than one course algorithm on the same dataset.
 
 **Possible algorithms:** k-means, KNN, Naive Bayes, neural networks, regression, and related evaluation tools.
@@ -1145,45 +1168,49 @@ export const machineLearningCourse: RawCourse = {
 **Scoping checks:**
 - The dataset is accessible and understandable.
 - The target variable is clearly defined.
+- Every feature is available at the claimed prediction time, and likely leakage has been identified.
 - The problem fits personal interests well enough to sustain debugging and analysis.
-- The result can be evaluated with an appropriate metric.`
+- The result can be evaluated with an appropriate metric.
+- The project does not make medical, financial, employment, discipline, admissions, identity, biometric, surveillance, or other consequential decisions.`
 				},
 				{
 					title: "Master Project Implementation",
 					content: `**Goal:** Turn the scoped capstone idea into a two-week build plan.
 
 **Planning decisions:**
+- Write a data-and-problem card with intended use and non-goals.
 - Identify input features.
 - Identify the target label or regression output.
-- Choose evaluation metrics.
+- Choose one primary and one secondary evaluation metric before training.
+- Choose a task-appropriate dummy baseline.
 - Decide which two algorithms to compare.
-- For classification, a useful comparison might be Naive Bayes versus a neural network.
-- For regression, a useful comparison might be linear or polynomial regression versus a neural network.
+- Prefer a simple interpretable model as one candidate.
 
 **Notebook workflow:**
-1. Create a new Colab notebook.
-2. Upload or connect to the dataset.
-3. Clean the data.
-4. Engineer or select features.
-5. Split the data into training and testing sets.
-6. Train the first model.
-7. Train the comparison model.
-8. Evaluate both models with the same metric.
-9. Document the process with explanatory text cells.
+1. Create a local notebook or Python module and record the environment.
+2. Load the supplied or locally cached dataset and verify its version.
+3. Reserve the held-out test set before fitting preprocessing.
+4. Build leakage-safe preprocessing and model pipelines.
+5. Fit the dummy baseline.
+6. Tune or cross-validate the first candidate on training data.
+7. Tune or cross-validate the comparison model on the same training evidence.
+8. Evaluate both once on the held-out test set with the same metrics.
+9. Inspect error slices, record resource use, and complete a model card.
+10. Restart and rerun from the first cell to prove reproducibility.
 
 **Checkpoint cadence:** Plan for substantial independent implementation and debugging, with periodic review checkpoints that focus on evidence, not just whether the notebook runs.`
 				},
 				{
 					title: "ML8 Project 1: Master Project Workspace",
 					content:
-						"Use the canonical capstone workspace in the repo as the starting structure for the final project. Compare at least two models, justify the evaluation metric, and leave the notebook organized enough to share as a portfolio artifact.",
+						"Use the linked ML8 folder only as a minimal historical placeholder, not as a complete starter. The supplied practice pack is the current capstone structure. Compare a dummy baseline and at least two candidate models, justify the metrics, preserve the held-out test boundary, add error slices and a model card, and leave the local notebook or modules reproducible enough to review as a portfolio artifact.",
 					projectLink:
 						"https://github.com/instruction-material/AI-Level-2/tree/main/ML8-Master-Project"
 				},
 				{
 					title: "Master Project Examples",
 					content:
-						"Example notebooks for similar projects, such as a Titanic survival predictor or a medical insurance cost predictor, provide useful structure: data exploration, feature selection, model building, evaluation, and reflection on results. These examples are inspiration, not templates to copy. Adapt techniques or visualizations only when they fit the chosen dataset and problem."
+						"Use supplied low-stakes examples such as fictional support-ticket classification, synthetic energy-use regression, plant classification, or non-personal clustering. Historical Titanic, insurance, health, credit, fraud, and market examples may be audited for data and claim risks, but they are not required capstone templates. Adapt a technique only when its assumptions fit the chosen dataset and problem."
 				},
 				{
 					title: "Master Project Presentation",
@@ -1195,7 +1222,7 @@ export const machineLearningCourse: RawCourse = {
 					content: `**Recap targets:**
 - Unsupervised learning and clustering.
 - Supervised learning and classification.
-- KNN, Naive Bayes, neural networks, regression, overfitting, evaluation, and image classification.
+- KNN, Naive Bayes, decision trees, neural networks, regression, overfitting, leakage control, evaluation, and optional image classification.
 - The difference between a working notebook and a justified modeling result.
 
 **Master Project connection:**
@@ -1773,4 +1800,439 @@ export const machineLearningCourse: RawCourse = {
 			supplementalProjects: []
 		}
 	]
+};
+
+const MACHINE_LEARNING_CORE_SEQUENCE = [
+	"ML0 Setup, Tooling, and Data Workflow",
+	"ML7.5 Model Evaluation, Comparison, and Dataset Strategy",
+	"ML1 K-Means Clustering",
+	"ML2 K-Nearest Neighbors",
+	"ML3 Naive Bayes",
+	"ML3.5 Decision Trees and Interpretable Models",
+	"ML5 Introduction to Regression",
+	"ML4 Neural Networks",
+	"ML6 Regression with Neural Networks",
+	"ML8 Master Project"
+] as const;
+
+const MACHINE_LEARNING_APPENDICES = [
+	"ML7 Image Classifier",
+	"Customer Segmentation Starter Build: Practice Studio",
+	"Customer Segmentation Interview: Practice Studio",
+	"Customer Segmentation: Practice Studio",
+	"Disney Movie Clustering Starter Build: Practice Studio",
+	"Disney Movie Clustering: Practice Studio",
+	"KNN Car Classification: Practice Studio",
+	"Pending Static Assets"
+] as const;
+
+interface MachineLearningModuleFlow {
+	stage: string;
+	estimatedTime: string;
+	keyBlocks: readonly [string, string, string, string, string, string];
+	practiceSection: string;
+	answerSection: string;
+	route: string;
+	evidence: string;
+	primaryReference: {
+		label: string;
+		url: string;
+	};
+	additionalReferences?: readonly {
+		label: string;
+		url: string;
+	}[];
+}
+
+const MACHINE_LEARNING_MODULE_FLOW: Record<
+	(typeof MACHINE_LEARNING_CORE_SEQUENCE)[number],
+	MachineLearningModuleFlow
+> = {
+	"ML0 Setup, Tooling, and Data Workflow": {
+		stage: "Reproducible local foundation",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"environment record",
+			"data card",
+			"local notebook",
+			"split boundary",
+			"restart check",
+			"privacy"
+		],
+		practiceSection: "environment-and-data-card-case",
+		answerSection: "environment-and-data-card-key",
+		route: "Create the local environment, verify imports and versions, inspect a supplied fixture, write its data-and-problem card, reserve a held-out split, then restart and rerun from the first cell.",
+		evidence:
+			"The record includes Python and package versions, dataset source and checksum or version, unit of observation, target or unsupervised goal, likely leakage, expected and observed import check, and a clean restart result.",
+		primaryReference: {
+			label: "scikit-learn getting started",
+			url: "https://scikit-learn.org/stable/getting_started.html"
+		}
+	},
+	"ML7.5 Model Evaluation, Comparison, and Dataset Strategy": {
+		stage: "Evaluation contract before model selection",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"dummy baseline",
+			"split plan",
+			"pipeline",
+			"primary metric",
+			"error slice",
+			"model card"
+		],
+		practiceSection: "evaluation-contract-case",
+		answerSection: "evaluation-contract-key",
+		route: "Write the evaluation contract before training: define the split, dummy baseline, primary and secondary metric, preprocessing fit boundary, model-comparison rule, error slices, and test-set opening condition.",
+		evidence:
+			"The completed contract makes leakage visible, uses the same evidence for every candidate, explains why accuracy or R-squared alone can mislead, and states when the simpler model should be preferred.",
+		primaryReference: {
+			label: "scikit-learn common pitfalls",
+			url: "https://scikit-learn.org/stable/common_pitfalls.html"
+		},
+		additionalReferences: [
+			{
+				label: "scikit-learn model evaluation",
+				url: "https://scikit-learn.org/stable/modules/model_evaluation.html"
+			}
+		]
+	},
+	"ML1 K-Means Clustering": {
+		stage: "Unsupervised pattern finding",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"feature scale",
+			"seed",
+			"convergence",
+			"empty cluster",
+			"stability",
+			"cluster limits"
+		],
+		practiceSection: "clustering-stability-case",
+		answerSection: "clustering-stability-key",
+		route: "Trace one manual iteration, repair the supplied convergence and empty-cluster failures, then compare scaled scikit-learn pipelines across k values and random seeds.",
+		evidence:
+			"The result records scaling, random state, n_init, stopping rule, stability across seeds, at least two k values, one visual or numeric quality measure, and why cluster labels are descriptive rather than causal facts.",
+		primaryReference: {
+			label: "StandardScaler reference",
+			url: "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html"
+		}
+	},
+	"ML2 K-Nearest Neighbors": {
+		stage: "Distance-based supervised classification",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"ground truth",
+			"stratified split",
+			"one-hot encoding",
+			"scaling",
+			"dummy baseline",
+			"confusion matrix"
+		],
+		practiceSection: "distance-classification-case",
+		answerSection: "distance-classification-key",
+		route: "Compare generated labels with ground truth, encode categorical inputs without arbitrary distances, fit preprocessing and KNN in one pipeline, tune k on training evidence, and compare with a dummy baseline.",
+		evidence:
+			"The report distinguishes learned-from-clusters labels from real labels, shows the split and pipeline, explains distance behavior, reports accuracy or balanced accuracy plus macro F1 and a confusion matrix, and tests one unknown category.",
+		primaryReference: {
+			label: "OneHotEncoder reference",
+			url: "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html"
+		},
+		additionalReferences: [
+			{
+				label: "ColumnTransformer guide",
+				url: "https://scikit-learn.org/stable/modules/compose.html"
+			}
+		]
+	},
+	"ML3 Naive Bayes": {
+		stage: "Probability-based classification",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"model assumption",
+			"GaussianNB",
+			"text pipeline",
+			"precision recall",
+			"redaction",
+			"failure mode"
+		],
+		practiceSection: "probabilistic-classification-case",
+		answerSection: "probabilistic-classification-key",
+		route: "Match GaussianNB to continuous Iris measurements, match MultinomialNB to nonnegative text counts, keep vectorization inside the training pipeline, and compare both tasks with dummy baselines.",
+		evidence:
+			"The learner explains each distribution assumption, preserves raw-to-pipeline split order, reports task-appropriate metrics and confusion matrices, inspects only supplied or redacted errors, and names one assumption-driven failure.",
+		primaryReference: {
+			label: "GaussianNB reference",
+			url: "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html"
+		}
+	},
+	"ML3.5 Decision Trees and Interpretable Models": {
+		stage: "Inspectable model comparison",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"split question",
+			"depth",
+			"overfitting",
+			"baseline",
+			"tree explanation",
+			"limit"
+		],
+		practiceSection: "interpretable-tree-case",
+		answerSection: "interpretable-tree-key",
+		route: "Fit a shallow decision tree to the supplied low-stakes fixture, compare depths using training-only evidence, inspect the main split rules, and compare held-out behavior with a dummy baseline.",
+		evidence:
+			"The result contains a depth comparison, a readable tree or rule trace, primary and secondary metrics, one error slice, a reason not to grow the tree further, and no claim that interpretability guarantees fairness or truth.",
+		primaryReference: {
+			label: "DecisionTreeClassifier reference",
+			url: "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html"
+		}
+	},
+	"ML5 Introduction to Regression": {
+		stage: "Numeric prediction with simple baselines",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"unit of observation",
+			"DummyRegressor",
+			"MAE",
+			"residual",
+			"extrapolation",
+			"association limit"
+		],
+		practiceSection: "regression-baseline-case",
+		answerSection: "regression-baseline-key",
+		route: "Graph first, establish a dummy baseline, fit linear and one justified nonlinear comparison on the same split, inspect residuals and extrapolation, then audit the optional country-year dataset without individual or causal claims.",
+		evidence:
+			"The report includes unit and target, split plan, dummy MAE, candidate MAE and one secondary metric, residual evidence, an extrapolation boundary, and a statement separating association from causation.",
+		primaryReference: {
+			label: "scikit-learn model evaluation",
+			url: "https://scikit-learn.org/stable/modules/model_evaluation.html"
+		}
+	},
+	"ML4 Neural Networks": {
+		stage: "From explicit neuron arithmetic to bounded training",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"weighted sum",
+			"activation",
+			"layer trace",
+			"simple baseline",
+			"compute cap",
+			"nonclinical claim"
+		],
+		practiceSection: "neural-network-audit-case",
+		answerSection: "neural-network-audit-key",
+		route: "Trace a neuron and tiny forward pass by hand, verify a transparent Python simulation, then compare one bounded trained network with a simpler model on supplied low-stakes data. The historical diabetes project is an optional audit only.",
+		evidence:
+			"The learner reproduces intermediate values, distinguishes simulation from training, records seeds and compute limits, compares against a simpler baseline, reports error evidence, and makes no diagnosis or individual-risk claim.",
+		primaryReference: {
+			label: "Keras training guide",
+			url: "https://www.tensorflow.org/guide/keras/training_with_built_in_methods"
+		}
+	},
+	"ML6 Regression with Neural Networks": {
+		stage: "Bounded nonlinear regression comparison",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"California housing",
+			"training-only scaling",
+			"early stopping",
+			"MAE RMSE",
+			"residual slices",
+			"complexity decision"
+		],
+		practiceSection: "neural-regression-case",
+		answerSection: "neural-regression-key",
+		route: "Use California housing when locally cached or the supplied synthetic fixture, compare dummy, linear, and small neural models, stop from validation evidence, and decide whether the network earns its complexity.",
+		evidence:
+			"The packet records data route, split, scaler fit boundary, seeds, epoch and CPU caps, validation stopping point, held-out MAE and RMSE, residual slices, baseline comparison, and a non-appraisal limitation.",
+		primaryReference: {
+			label: "California housing dataset reference",
+			url: "https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html"
+		},
+		additionalReferences: [
+			{
+				label: "Boston Housing ethical-use warning",
+				url: "https://scikit-learn.org/1.0/modules/generated/sklearn.datasets.load_boston.html"
+			}
+		]
+	},
+	"ML8 Master Project": {
+		stage: "Low-stakes reproducible capstone",
+		estimatedTime: "8–10 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"problem card",
+			"held-out test",
+			"baseline",
+			"two candidates",
+			"error analysis",
+			"model card"
+		],
+		practiceSection: "model-comparison-capstone-case",
+		answerSection: "model-comparison-capstone-key",
+		route: "Choose one supplied or approved low-stakes dataset, freeze the problem and evaluation contract, compare a dummy baseline and two candidate pipelines, open the held-out test once, analyze errors, and present a reproducible model card.",
+		evidence:
+			"The final packet includes source and license, intended use and non-goals, split and random state, preprocessing boundary, baseline, two candidates, primary and secondary metrics, error slices, resource budget, restart-and-rerun proof, limitations, and human review.",
+		primaryReference: {
+			label: "NIST AI Risk Management Framework",
+			url: "https://www.nist.gov/itl/ai-risk-management-framework"
+		},
+		additionalReferences: [
+			{
+				label: "NIST AI RMF measure guidance",
+				url: "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/"
+			}
+		]
+	}
+};
+
+function machineLearningPracticeLink(section: string) {
+	return `${MACHINE_LEARNING_PRACTICE_PACK}#${section}`;
+}
+
+function machineLearningVerificationLink(section: string) {
+	return `${MACHINE_LEARNING_VERIFICATION_GUIDE}#${section}`;
+}
+
+function renderMachineLearningReferences(flow: MachineLearningModuleFlow) {
+	return [
+		`[${flow.primaryReference.label}](${flow.primaryReference.url})`,
+		...(flow.additionalReferences ?? []).map(
+			reference => `[${reference.label}](${reference.url})`
+		)
+	].join(", ");
+}
+
+function machineLearningSupplementalPath(title: string) {
+	return /extension|challenge/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function isMachineLearningChoice(title: string) {
+	return /Choice Audit|Diabetes|Life Expectancy/i.test(title);
+}
+
+function decorateMachineLearningCoreModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow =
+		MACHINE_LEARNING_MODULE_FLOW[
+			module.title as (typeof MACHINE_LEARNING_CORE_SEQUENCE)[number]
+		];
+	if (!flow) {
+		throw new Error(`Missing Machine Learning flow: ${module.title}`);
+	}
+
+	const practiceLink = machineLearningPracticeLink(flow.practiceSection);
+	const verificationLink = machineLearningVerificationLink(
+		flow.answerSection
+	);
+	const references = renderMachineLearningReferences(flow);
+
+	return {
+		...module,
+		kind: "module",
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: [...flow.keyBlocks],
+		curriculum: module.curriculum.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Course flow:** ${flow.stage}. ${flow.route}
+
+**Evaluation contract:** Split before fitting learned preprocessing, establish a task-appropriate dummy baseline, fix random state, name one primary and one secondary metric, keep the held-out test set closed during model selection, and record meaningful error slices.
+
+**Evidence gate:** ${flow.evidence}
+
+**Local continuity:** Complete the [supplied Machine Learning case](${practiceLink}) before comparing it with the [verification guide](${verificationLink}). The local fixture and recorded environment are the complete route; Google Colab, remote datasets, accelerators, and personal accounts remain optional.
+
+**Current references:** ${references}. Record versions and dataset identity because package behavior, defaults, examples, and hosted files can change.
+
+${item.content}`
+					: item.content,
+			learningPath: isMachineLearningChoice(item.title)
+				? ("choice" as const)
+				: ("core" as const),
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? flow.primaryReference.url
+					}
+				: {})
+		})),
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: machineLearningSupplementalPath(item.title),
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? flow.primaryReference.url
+					}
+				: {})
+		}))
+	};
+}
+
+function decorateMachineLearningAppendix(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const imageAppendix = module.title === "ML7 Image Classifier";
+	return {
+		...module,
+		kind: "appendix",
+		estimatedTime: imageAppendix
+			? "Optional · 3–5 sessions"
+			: "Optional reference or transfer practice",
+		keyBlocks: imageAppendix
+			? [
+					"non-personal images",
+					"grouped split",
+					"training-only augmentation",
+					"compute cap",
+					"per-class metrics",
+					"source gap"
+				]
+			: [
+					"prior project",
+					"transfer",
+					"source trace",
+					"evidence",
+					"limitation",
+					"next step"
+				],
+		curriculum: module.curriculum.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Optional appendix:** This material follows the complete ML0, ML7.5, ML1, ML2, ML3, ML3.5, ML5, ML4, ML6, and ML8 path. It does not add a hidden prerequisite. ${imageAppendix ? "The image-classification route is bounded, local, non-personal, and compute-capped; the active source repository does not contain a complete local implementation." : "Use this repeated studio only when another pass through the named project serves a specific transfer or support need."}
+
+${item.content}`
+					: item.content,
+			learningPath: "choice" as const
+		})),
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: machineLearningSupplementalPath(item.title)
+		}))
+	};
+}
+
+const machineLearningModulesByTitle = new Map(
+	machineLearningSourceCourse.modules.map(module => [module.title, module])
+);
+
+const machineLearningCoreModules = MACHINE_LEARNING_CORE_SEQUENCE.map(title => {
+	const module = machineLearningModulesByTitle.get(title);
+	if (!module) throw new Error(`Missing Machine Learning module: ${title}`);
+	return decorateMachineLearningCoreModule(module);
+});
+
+const machineLearningAppendices = MACHINE_LEARNING_APPENDICES.map(title => {
+	const module = machineLearningModulesByTitle.get(title);
+	if (!module) throw new Error(`Missing Machine Learning appendix: ${title}`);
+	return decorateMachineLearningAppendix(module);
+});
+
+export const machineLearningCourse: RawCourse = {
+	...machineLearningSourceCourse,
+	modules: [...machineLearningCoreModules, ...machineLearningAppendices]
 };
