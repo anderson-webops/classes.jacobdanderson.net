@@ -52,12 +52,7 @@ const PYTHON_IDE_SHARE_ID_RE = /^[\w-]{20,80}$/;
 export type PythonIdeFileEncoding = "text" | "base64";
 
 export type PythonIdeMode =
-	| "data"
-	| "java"
-	| "karel"
-	| "pgzero"
-	| "python"
-	| "turtle";
+	"data" | "java" | "karel" | "pgzero" | "python" | "turtle";
 export type PythonIdeProjectTemplate =
 	| "blank"
 	| "bluej"

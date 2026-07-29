@@ -2,30 +2,14 @@ export type GraphAxisScale = "linear" | "logarithmic";
 export type GraphLineStyle = "none" | "solid" | "dashed" | "dotted" | "dashDot";
 export type GraphLineMode = "none" | "straight" | "step" | "smooth";
 export type GraphMarkerShape =
-	| "none"
-	| "circle"
-	| "square"
-	| "triangle"
-	| "diamond"
-	| "cross"
-	| "plus";
+	"none" | "circle" | "square" | "triangle" | "diamond" | "cross" | "plus";
 export type GraphLegendPosition =
-	| "topRight"
-	| "topLeft"
-	| "bottomRight"
-	| "bottomLeft";
+	"topRight" | "topLeft" | "bottomRight" | "bottomLeft";
 export type GraphAnnotationKind =
-	| "text"
-	| "line"
-	| "arrow"
-	| "rectangle"
-	| "ellipse";
+	"text" | "line" | "arrow" | "rectangle" | "ellipse";
 export type GraphAnnotationCoordinateSpace = "data" | "canvas";
 export type GraphSeriesSourceKind =
-	| "data"
-	| "function"
-	| "freehand"
-	| "bestFit";
+	"data" | "function" | "freehand" | "bestFit";
 
 export interface GraphCanvasSettings {
 	width: number;
@@ -1075,13 +1059,7 @@ export class GraphExpressionError extends Error {
 
 type ExpressionEvaluator = (x: number) => number;
 type ExpressionTokenKind =
-	| "number"
-	| "identifier"
-	| "operator"
-	| "open"
-	| "close"
-	| "comma"
-	| "end";
+	"number" | "identifier" | "operator" | "open" | "close" | "comma" | "end";
 
 interface ExpressionToken {
 	kind: ExpressionTokenKind;
