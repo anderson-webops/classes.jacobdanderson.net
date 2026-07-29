@@ -2782,37 +2782,24 @@ describe("course text quality normalization", () => {
 		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
-	it("records Data Science datasets and images as hosted or pending on the class static host", async () => {
+	it("attaches available Data Science data without exposing asset backlog", async () => {
 		const course = await loadRawCourse("data-science-in-python");
 		expect(course).not.toBeNull();
 
-		const mediaModule = course!.modules.find(
-			module => module.title === "Static Data and Media Status"
+		const summaryBuilder = findItem(course!, /CSV Summary Builder/);
+		expect(summaryBuilder.datasetLink).toBe(
+			staticMediaUrl("life_expectancy.csv")
 		);
-		expect(mediaModule?.kind).toBe("appendix");
-
-		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "Data Science Asset Status"
-		);
-		expect(mediaItem).toBeDefined();
-		const content = mediaItem?.content ?? "";
-
-		expect(content).toContain(staticMediaUrl("life_expectancy.csv"));
-		expect(content).not.toContain(
-			"file `life_expectancy.csv` is not currently available"
-		);
-
-		for (const filename of [
-			"building_permits.csv",
-			"flight_delays.csv",
-			"data_science_concept.png",
-			"zoo_animals.csv"
-		]) {
-			expect(content).toContain(staticMediaUrl(filename));
-			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
-		}
-
-		expect(content).not.toContain("static.junilearning.com");
+		expect(summaryBuilder.content).toContain("**Provided dataset:**");
+		expect(
+			course!.modules.find(
+				module => module.title === "Static Data and Media Status"
+			)
+		).toBeUndefined();
+		const learnerText = allCourseText(course);
+		expect(learnerText).not.toContain("Data Science Asset Status");
+		expect(learnerText).not.toContain("building_permits.csv");
+		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
 	it("reserves pending AI Foundations media on the class static host", async () => {
