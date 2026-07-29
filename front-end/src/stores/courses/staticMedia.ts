@@ -1575,8 +1575,6 @@ export const KNOWN_PENDING_STATIC_MEDIA_FILENAMES = [
 	"python_level_2_project.png",
 	"python_level_3_concept.png",
 	"python_level_3_project.png",
-	"scratch_level_2_concept.png",
-	"scratch_level_2_project.png",
 	"grs1_spirals.mp4",
 	"grs1_turtle_exploration(1).mp4",
 	"grs2_basic_shapes.mp4",

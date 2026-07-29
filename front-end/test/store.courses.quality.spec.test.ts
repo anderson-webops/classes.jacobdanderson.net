@@ -3554,7 +3554,7 @@ describe("course text quality normalization", () => {
 		expect(content).not.toContain("static.junilearning.com");
 	});
 
-	it("keeps unshipped Scratch visuals out of the Level 1 learner flow", async () => {
+	it("keeps unshipped Scratch visuals out of learner flows", async () => {
 		const [scratchLevel1, scratchLevel2] = await Promise.all([
 			loadRawCourse("scratch-level-1"),
 			loadRawCourse("scratch-level-2")
@@ -3567,27 +3567,11 @@ describe("course text quality normalization", () => {
 				module => module.title === "Pending Static Assets"
 			)
 		).toBeUndefined();
-
-		const mediaModule = scratchLevel2!.modules.find(
-			module => module.title === "Pending Static Assets"
-		);
-		expect(mediaModule?.kind).toBe("appendix");
-
-		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "Pending Scratch Level 2 Visual Assets"
-		);
-		expect(mediaItem).toBeDefined();
-		const content = mediaItem?.content ?? "";
-
-		for (const filename of [
-			"scratch_level_2_concept.png",
-			"scratch_level_2_project.png"
-		]) {
-			expect(content).toContain(staticMediaUrl(filename));
-			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
-		}
-
-		expect(content).not.toContain("static.junilearning.com");
+		expect(
+			scratchLevel2!.modules.find(
+				module => module.title === "Pending Static Assets"
+			)
+		).toBeUndefined();
 	});
 
 	it("keeps low-level security projects evidence-based instead of generic starter boilerplate", async () => {
@@ -5316,7 +5300,7 @@ describe("course text quality normalization", () => {
 
 		const scratchLevel2Bridge = scratchLevel2!.modules
 			.find(
-				module => module.title === "GM15 Text-Based Programming Bridge"
+				module => module.title === "GM15 Scratch-to-Python Bridge"
 			)
 			?.curriculum.find(item => /Core Concepts$/i.test(item.title));
 		expect(scratchLevel2Bridge).toBeDefined();

@@ -1,15 +1,14 @@
-import type { RawCourse } from "./types";
+import type {
+	CourseItemLearningPath,
+	RawCourse,
+	RawCourseModule,
+	RawCourseModuleItem
+} from "./types";
 import {
 	buildScratchFluencyDrill,
 	buildScratchOpenEndedVariant
 } from "./scratchProjectGuidance";
-import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
-
-const SCRATCH_LEVEL_2_SOURCE_ASSETS = [
-	"scratch_level_2_concept.png",
-	"scratch_level_2_project.png"
-] as const;
 
 export const scratchLevel2Course: RawCourse = {
 	name: "Scratch Level 2",
@@ -138,9 +137,20 @@ export const scratchLevel2Course: RawCourse = {
 					solutionLink: "https://scratch.mit.edu/projects/305082197/"
 				},
 				{
-					title: "GM1 Project 7: Asteroid Dodge",
-					content:
-						"Plan Asteroid Dodge around the player movement, asteroid spawn or reset rules, collision response, score or survival state, and replay behavior.\nAdd a project comment that lists the implementation steps. The starter project can be used as a base, or the dodge game can be rebuilt from a blank project with original sprites, costumes, and backdrops.",
+					id: "scratch-level-2-gm1-review-events-loops-conditionals-broadcasting-curriculum-gm1-project-7-asteroid-dodge",
+					title: "GM1 Review Project: Asteroid Dodge Remix",
+					content: `**Project goal:** Prove readiness for Scratch Level 2 by rebuilding or remixing one playable Asteroid Dodge loop.
+
+**Required systems:**
+1. Reset the player, asteroid, score, timer or lives, visibility, and backdrop from the green flag.
+2. Use events for player controls and one loop for continuous asteroid or game-state behavior.
+3. Use a conditional for collision or survival logic, and update a variable exactly once when that condition becomes true.
+4. Broadcast a game-over or round-complete message so every sprite enters the same ending state.
+5. Add a replay path that restores the complete start state without duplicated scripts or stale values.
+
+**Readiness evidence:** Run the project twice, test one repeated or ignored input, and explain the event-to-state-to-feedback chain for one collision.
+
+**If a prerequisite is shaky:** Use one of the review choices for that specific skill before returning to this remix. The goal is a dependable baseline, not seven required review builds.`,
 					projectLink: "https://scratch.mit.edu/projects/303001451/",
 					solutionLink: "https://scratch.mit.edu/projects/302948550/"
 				}
@@ -412,10 +422,10 @@ export const scratchLevel2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Check-in #1",
+			title: "Check-In #1",
 			curriculum: [
 				{
-					title: "Check-in #1: Nested Loops",
+					title: "Check-In #1: Nested Loops",
 					content: `**Check-in goal:** Review loops and nested loops with a small Scratch drawing project.
 
 **Setup:** Create a new blank Scratch project named "Check-in #1".
@@ -430,7 +440,7 @@ export const scratchLevel2Course: RawCourse = {
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
-					title: "Check-in #1: Cloning",
+					title: "Check-In #1: Cloning",
 					content: `**Check-in goal:** Review how clones let one sprite create temporary copies with their own behavior.
 
 **Prompts:**
@@ -444,13 +454,13 @@ export const scratchLevel2Course: RawCourse = {
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
-					title: "Check-in #1: Complex Conditionals",
+					title: "Check-In #1: Complex Conditionals",
 					content:
 						"Complex-1: What block would you use if you wanted to check if two things are true in the same if/then block?\nComplex-2: What about if you wanted to check if, given two things, at least one of them is true?\nComplex-3: What about if you wanted to check if a condition isn't true?\nComplex-ALL: Using complex conditionals, update your code so that the clones that are in the top right portion of the screen all have a blue pen color. (Hint: You may have to use coordinates!) Now, can you add code so that each of the four quadrants uses a different pen color?",
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
-					title: "Check-in #1: Additional Practice Project",
+					title: "Check-In #1: Additional Practice Project",
 					content:
 						"Make the owl count from 1 to 50 with a variable.\nAdd a conditional so that if the spacebar or the up arrow is pressed, the owl says something instead of the number.\nAdd a conditional so that if the mouse pointer is on the owl, it gets shy and doesn't say anything at all!",
 					projectLink: "https://scratch.mit.edu/projects/386649746/",
@@ -894,22 +904,22 @@ export const scratchLevel2Course: RawCourse = {
 			]
 		},
 		{
-			title: "Check-in #2",
+			title: "Check-In #2",
 			curriculum: [
 				{
-					title: "Check-in #2: Strings",
+					title: "Check-In #2: Strings",
 					content:
 						'Create a new blank project in Scratch, and name it "Check-in #2".\nStrings-1: What does the word “string” mean in Scratch?\nStrings-2: Add the Andie sprite to your project. When the 1 key is pressed, have him ask the user what their name is. Once the user responds, have him say “Hello [your name]” using one say block.\nStrings-3,4: Report to the user the first letter of their name and how many letters are in their name.',
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
-					title: "Check-in #2: Mathematical Operators and Randomness",
+					title: "Check-In #2: Mathematical Operators and Randomness",
 					content:
 						"Math-1: How can Scratch perform operations on numbers? Where are these blocks located?\nMath-2: When the 2 key is pressed, make Andie say the result of adding together 5 and 6.\nMath-3,4: Create a random number between 1 and 20 and store it in a variable. If the number is less than 10, have Andie say “Wow, that's a small number!” otherwise, say “Whoa, that's a big number!”\nMath-5: What is the mod block? Have it report to the user the remainder of dividing any two numbers.",
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
-					title: "Check-in #2: Lists",
+					title: "Check-In #2: Lists",
 					content: `**Check-in goal:** Review how lists store related values and support repeated behavior.
 
 **Prompts:**
@@ -925,7 +935,7 @@ export const scratchLevel2Course: RawCourse = {
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
-					title: "Check-in #2: Functions",
+					title: "Check-In #2: Functions",
 					content: `**Check-in goal:** Review custom blocks as reusable Scratch functions.
 
 **Prompts:**
@@ -940,7 +950,7 @@ export const scratchLevel2Course: RawCourse = {
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
-					title: "Check-in #2: Additional Practice Project",
+					title: "Check-In #2: Additional Practice Project",
 					content: `**Project goal:** Combine functions, costume loops, math operators, and lists in one dancing-sprite project.
 
 **Build steps:**
@@ -1405,23 +1415,430 @@ Scratch Level 2 already uses larger designs, lists, functions, and coordinated g
 						"Create a bridge portfolio that translates one Scratch game mechanic into pseudocode and Python-style code. Include the original Scratch behavior, the translated steps, and one explanation of what was easier or harder to express in text."
 				}
 			]
-		},
-		{
-			kind: "appendix",
-			title: "Pending Static Assets",
-			curriculum: [
-				{
-					title: "Pending Scratch Level 2 Visual Assets",
-					content: [
-						"This course lists pending visual assets below. Each entry keeps a stable static media URL so the matching file can be added without changing course links.",
-						...SCRATCH_LEVEL_2_SOURCE_ASSETS.map(
-							filename =>
-								`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
-						)
-					].join("\n\n")
-				}
-			],
-			supplementalProjects: []
 		}
 	]
 };
+
+interface ScratchLevel2FlowConfig {
+	oldTitle: string;
+	title: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	choiceCurriculumTitles?: string[];
+	challengeCurriculumTitles?: string[];
+	projectThread?: string;
+	kind?: "module" | "transition";
+}
+
+const SCRATCH_LEVEL_2_FLOW: ScratchLevel2FlowConfig[] = [
+	{
+		oldTitle: "GM1 Review: Events, Loops, Conditionals, & Broadcasting",
+		title: "GM1 Level 1 Skills Review",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"when green flag clicked",
+			"forever",
+			"if then",
+			"variables",
+			"broadcast"
+		],
+		choiceCurriculumTitles: [
+			"GM1 Project 1: Dragonfly Events",
+			"GM1 Project 2: Drawing Mouse",
+			"GM1 Project 3: Math Facts",
+			"GM1 Project 4: Speed Click"
+		],
+		challengeCurriculumTitles: [
+			"GM1 Project 5: Dance Off",
+			"GM1 Project 6: Hedgehog Race"
+		],
+		projectThread:
+			"Use Asteroid Dodge as a readiness remix. Complete only the review choices that address a demonstrated gap, then return to the same remix and prove the reset, collision, state, and broadcast paths."
+	},
+	{
+		oldTitle: "GM2 Nested Loops",
+		title: "GM2 Nested Loops",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"repeat",
+			"nested repeat",
+			"turn degrees",
+			"pen down",
+			"variables"
+		],
+		choiceCurriculumTitles: ["GM2 Project 2: Pyramid"],
+		projectThread:
+			"Build Square Inception first, trace the inner and outer loop counts, and use the alternate drawing projects only after the loop structure can be predicted before running."
+	},
+	{
+		oldTitle: "GM3 Complex Conditionals",
+		title: "GM3 Complex Conditionals",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: ["if then else", "and", "or", "not", "touching color"],
+		choiceCurriculumTitles: ["GM3 Project 2: Strength Tester"],
+		projectThread:
+			"Use Color Spotter to test true, false, and partial-match cases. A complex condition is complete only when the student can explain why each operator is necessary."
+	},
+	{
+		oldTitle: "GM4 Cloning",
+		title: "GM4 Cloning",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"create clone of myself",
+			"when I start as a clone",
+			"delete this clone",
+			"show and hide",
+			"pick random"
+		],
+		choiceCurriculumTitles: ["GM4 Project 2: Rainy Day"],
+		projectThread:
+			"Use Jackson Pollock Clones to separate the hidden parent sprite from each clone's startup and cleanup behavior before adding collision-heavy clone games."
+	},
+	{
+		oldTitle: "Check-In #1",
+		title: "Check-In #1",
+		estimatedTime: "1 session · 45–60 minutes",
+		keyBlocks: [
+			"nested repeat",
+			"and / or / not",
+			"create clone",
+			"delete clone",
+			"green-flag reset"
+		],
+		projectThread:
+			"Treat this as a low-stakes readiness checkpoint: predict first, build one integrated scene, and assign only the smallest targeted review needed before continuing."
+	},
+	{
+		oldTitle: "GM5 Strings",
+		title: "GM5 Strings",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: ["ask and wait", "answer", "join", "letter of", "length of"],
+		choiceCurriculumTitles: ["GM5 Project 2: Spelling Bee"],
+		projectThread:
+			"Build Security Bot as the required text-input project and test short input, spaces, first and last characters, and exact length before attempting traversal-heavy word games."
+	},
+	{
+		oldTitle: "GM6 Mathematical Operators",
+		title: "GM6 Operators and Randomness",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"addition",
+			"division",
+			"mod",
+			"pick random",
+			"comparisons"
+		],
+		challengeCurriculumTitles: ["GM6 Project 2: FizzBuzz"],
+		projectThread:
+			"Use Calculator to connect user input, operator choice, and conditional output. FizzBuzz becomes a challenge after mod and branch order can be explained."
+	},
+	{
+		oldTitle: "GM7 Lists",
+		title: "GM7 Lists",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"add to list",
+			"item of list",
+			"length of list",
+			"delete all of list",
+			"list contains"
+		],
+		choiceCurriculumTitles: ["GM7 Project 2: List Practice"],
+		challengeCurriculumTitles: ["GM7 Project 3: Music Memory"],
+		projectThread:
+			"Start with Bucket List so collection order and reset behavior are visible, then use List Practice or Music Memory only when the same list can be traversed and inspected reliably."
+	},
+	{
+		oldTitle: "GM8 Functions",
+		title: "GM8 Custom Blocks and Functions",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"make a block",
+			"define",
+			"custom block inputs",
+			"call a custom block",
+			"run without screen refresh"
+		],
+		choiceCurriculumTitles: ["GM8 Project 2: Talent Show II"],
+		projectThread:
+			"Use My First Functions to distinguish defining a custom block from calling it. Require at least one input that changes behavior without copied scripts."
+	},
+	{
+		oldTitle: "Check-In #2",
+		title: "Check-In #2",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"join and letter of",
+			"operators and mod",
+			"list traversal",
+			"custom block inputs",
+			"green-flag reset"
+		],
+		projectThread:
+			"Trace one input through text handling, calculation, list storage, a custom block, and visible output. Use the integrated dance project as the evidence task."
+	},
+	{
+		oldTitle: "GM9 Fish Food",
+		title: "GM9 Fish Food",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"clones",
+			"lists",
+			"custom blocks",
+			"collision conditionals",
+			"score or health"
+		],
+		projectThread:
+			"Fish Food is the first full systems project: ship a minimum playable loop, test positive and negative collisions, then add polish only after restart behavior is reliable."
+	},
+	{
+		oldTitle: "GM10 Treasure Cave",
+		title: "GM10 Treasure Cave",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"broadcast and wait",
+			"lists or inventory",
+			"custom blocks",
+			"level state",
+			"win and restart"
+		],
+		projectThread:
+			"Treasure Cave adds multi-scene state. Track treasure, hazards, level progress, and the end condition separately so each transition can be tested from a clean start."
+	},
+	{
+		oldTitle: "GM12 Arcade Systems Studio",
+		title: "GM11 Arcade Systems Studio",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"clone spawning",
+			"collision rules",
+			"score state",
+			"level broadcasts",
+			"game-over cleanup"
+		],
+		projectThread:
+			"Refactor one earlier game into reusable spawn, score, level, and cleanup systems. The studio prepares architecture that can be reused in the capstone."
+	},
+	{
+		oldTitle: "GM13 Simulation and Data Studio",
+		title: "GM12 Simulation and Data Studio",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"variables",
+			"lists",
+			"pick random",
+			"repeat trials",
+			"summary statistics"
+		],
+		projectThread:
+			"Build a small simulation with explicit starting values, one repeated update rule, multiple trials, and a visible result that distinguishes randomness from a programming bug."
+	},
+	{
+		oldTitle: "GM14 Code Organization and Debugging Studio",
+		title: "GM13 Code Organization and Debugging Studio",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"named custom blocks",
+			"broadcasts",
+			"reset scripts",
+			"show variable",
+			"stop script"
+		],
+		projectThread:
+			"Repair and refactor one existing project before adding features. Submit a before-and-after explanation plus a clean-start, normal-play, boundary, and replay test."
+	},
+	{
+		oldTitle: "GM11 Master Project",
+		title: "GM14 Master Project",
+		estimatedTime: "5–7 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"events",
+			"control flow",
+			"variables and lists",
+			"custom blocks",
+			"broadcasts and clones"
+		],
+		projectThread:
+			"Plan and ship an original minimum playable version before optional art, levels, or polish. The final presentation must explain one state system, one reusable block, one bug fixed, and one tested edge case."
+	},
+	{
+		oldTitle: "GM15 Text-Based Programming Bridge",
+		title: "GM15 Scratch-to-Python Bridge",
+		estimatedTime: "1–2 optional sessions · 45–60 minutes each",
+		keyBlocks: [
+			"event → function call",
+			"repeat → loop",
+			"if → condition",
+			"list → Python list",
+			"custom block → function"
+		],
+		projectThread:
+			"Translate one completed Scratch mechanic into pseudocode and a short Python plan while preserving its inputs, state changes, outputs, and test cases.",
+		kind: "transition"
+	}
+];
+
+const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
+const NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
+const LEADING_HYPHENS_RE = /^-+/;
+const TRAILING_HYPHENS_RE = /-+$/;
+
+function scratchLevel2Slugify(value: string) {
+	return value
+		.toLowerCase()
+		.normalize("NFKD")
+		.replace(COMBINING_MARKS_RE, "")
+		.replace(NON_ALPHANUMERIC_RE, "-")
+		.replace(LEADING_HYPHENS_RE, "")
+		.replace(TRAILING_HYPHENS_RE, "");
+}
+
+function preserveScratchLevel2ItemIds(
+	module: RawCourseModule,
+	legacyModuleId: string
+) {
+	for (const [items, prefix] of [
+		[module.curriculum, "curriculum"],
+		[module.supplementalProjects, "supplemental"]
+	] as const) {
+		for (const item of items) {
+			item.id ??= scratchLevel2Slugify(
+				`${legacyModuleId}-${prefix}-${item.title}`
+			);
+		}
+	}
+}
+
+function scratchLevel2SupplementalPath(
+	item: Pick<RawCourseModuleItem, "title">
+): CourseItemLearningPath {
+	return /challenge|extension|open-ended|platformer/i.test(item.title)
+		? "challenge"
+		: "choice";
+}
+
+function renameScratchLevel2ModuleReferences(
+	module: RawCourseModule,
+	config: ScratchLevel2FlowConfig
+) {
+	const oldPrefix = config.oldTitle.match(/^GM\d+/)?.[0];
+	const newPrefix = config.title.match(/^GM\d+/)?.[0];
+
+	for (const item of [...module.curriculum, ...module.supplementalProjects]) {
+		item.content = item.content.replaceAll(config.oldTitle, config.title);
+		if (oldPrefix && newPrefix && oldPrefix !== newPrefix) {
+			item.title = item.title.replace(
+				new RegExp(`^${oldPrefix}\\b`),
+				newPrefix
+			);
+		}
+	}
+}
+
+function configureScratchLevel2Module(
+	module: RawCourseModule,
+	config: ScratchLevel2FlowConfig
+) {
+	const legacyModuleId = scratchLevel2Slugify(
+		`scratch-level-2-${config.oldTitle}`
+	);
+	module.id ??= legacyModuleId;
+	preserveScratchLevel2ItemIds(module, legacyModuleId);
+
+	const choiceTitles = new Set(config.choiceCurriculumTitles ?? []);
+	const challengeTitles = new Set(config.challengeCurriculumTitles ?? []);
+	const movedItems = module.curriculum.filter(
+		item => choiceTitles.has(item.title) || challengeTitles.has(item.title)
+	);
+	module.curriculum = module.curriculum.filter(
+		item =>
+			!choiceTitles.has(item.title) && !challengeTitles.has(item.title)
+	);
+
+	for (const item of module.curriculum) {
+		item.learningPath = "core";
+	}
+	for (const item of movedItems) {
+		item.learningPath = challengeTitles.has(item.title)
+			? "challenge"
+			: "choice";
+	}
+	for (const item of module.supplementalProjects) {
+		item.learningPath = scratchLevel2SupplementalPath(item);
+	}
+	module.supplementalProjects = [
+		...movedItems,
+		...module.supplementalProjects
+	];
+
+	if (config.projectThread && module.curriculum[0]) {
+		module.curriculum[0].content = [
+			module.curriculum[0].content,
+			`**Course flow:** ${config.projectThread}`
+		].join("\n\n");
+	}
+
+	renameScratchLevel2ModuleReferences(module, config);
+	module.title = config.title;
+	module.estimatedTime = config.estimatedTime;
+	module.keyBlocks = [...config.keyBlocks];
+	if (config.kind) {
+		module.kind = config.kind;
+	} else {
+		delete module.kind;
+	}
+
+	return module;
+}
+
+function moveTypingBridgeResource(
+	modulesByTitle: Map<string, RawCourseModule>
+) {
+	const masterProject = modulesByTitle.get("GM11 Master Project");
+	const bridge = modulesByTitle.get("GM15 Text-Based Programming Bridge");
+	if (!masterProject || !bridge) {
+		throw new Error(
+			"Scratch Level 2 flow is missing the master project or bridge."
+		);
+	}
+
+	const typingResourceIndex = masterProject.curriculum.findIndex(
+		item =>
+			item.title === "Optional Extra Practice: Typing and Code Fluency"
+	);
+	if (typingResourceIndex < 0) return;
+
+	const [typingResource] = masterProject.curriculum.splice(
+		typingResourceIndex,
+		1
+	);
+	if (!typingResource) return;
+
+	const legacyModuleId = scratchLevel2Slugify(
+		"scratch-level-2-gm11-master-project"
+	);
+	typingResource.id ??= scratchLevel2Slugify(
+		`${legacyModuleId}-curriculum-${typingResource.title}`
+	);
+	typingResource.learningPath = "choice";
+	bridge.supplementalProjects.unshift(typingResource);
+}
+
+function configureScratchLevel2Flow(course: RawCourse) {
+	const modulesByTitle = new Map(
+		course.modules.map(module => [module.title, module])
+	);
+	moveTypingBridgeResource(modulesByTitle);
+
+	course.modules = SCRATCH_LEVEL_2_FLOW.map(config => {
+		const module = modulesByTitle.get(config.oldTitle);
+		if (!module) {
+			throw new Error(
+				`Scratch Level 2 flow is missing ${config.oldTitle}.`
+			);
+		}
+		return configureScratchLevel2Module(module, config);
+	});
+}
+
+configureScratchLevel2Flow(scratchLevel2Course);
