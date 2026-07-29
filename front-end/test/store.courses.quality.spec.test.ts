@@ -7476,8 +7476,8 @@ describe("course text quality normalization", () => {
 
 		const text = allCourseText(course);
 
-		expect(text).toContain("Source Activity Anchors:");
-		expect(text).toContain("Evidence record:");
+		expect(text).not.toContain("Source Activity Anchors:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
@@ -7541,10 +7541,6 @@ describe("course text quality normalization", () => {
 
 	it("reserves source-library static assets from original source files", async () => {
 		const expectedAssetsByCourse = {
-			"novel-writing": [
-				"nw6_blank_narrative_arc.jpg",
-				"nw6_narrative_arc_definitions.jpg"
-			],
 			"entrepreneurship-101": ["ent4_project2_0.png"]
 		} as const;
 
