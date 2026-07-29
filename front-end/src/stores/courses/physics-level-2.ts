@@ -1,7 +1,7 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { contextualizePhysicsCourse } from "./physicsContentContext";
 
-export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
+const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 	name: "Physics Level 2",
 	modules: [
 		{
@@ -850,3 +850,718 @@ export const physicsLevel2Course: RawCourse = contextualizePhysicsCourse({
 		}
 	]
 });
+
+interface PhysicsLevel2ModuleFlow {
+	stage:
+		| "Quantitative core"
+		| "Advanced modeling extension"
+		| "Independent synthesis";
+	estimatedTime: string;
+	keyBlocks: string[];
+	materialSection: string;
+	answerSection: string;
+	phenomenon: string;
+	corePath: string;
+	stretchPath: string;
+	evidenceGate: string;
+	boundary: string;
+	referenceLink: string;
+	projectCore: string;
+	projectStretch: string;
+}
+
+const PHYSICS_LEVEL_2_REFERENCES = {
+	projectile:
+		"https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
+	phetProjectile:
+		"https://phet.colorado.edu/en/simulations/projectile-motion",
+	volume1:
+		"https://openstax.org/books/university-physics-volume-1/pages/preface",
+	phetForces:
+		"https://phet.colorado.edu/en/simulations/forces-and-motion-basics",
+	phetCollisions: "https://phet.colorado.edu/en/simulations/collision-lab",
+	phetTorque: "https://phet.colorado.edu/en/simulations/balancing-act",
+	phetOrbits: "https://phet.colorado.edu/en/simulations/gravity-and-orbits",
+	phetCircuits:
+		"https://phet.colorado.edu/en/simulations/circuit-construction-kit-dc",
+	volume2:
+		"https://openstax.org/books/university-physics-volume-2/pages/1-introduction",
+	nistUncertainty: "https://www.nist.gov/pml/nist-technical-note-1297",
+	phetCurveFitting: "https://phet.colorado.edu/en/simulations/curve-fitting",
+	phetGas: "https://phet.colorado.edu/en/simulations/gas-properties",
+	heatEngines:
+		"https://openstax.org/books/university-physics-volume-2/pages/4-2-heat-engines",
+	phetFaraday:
+		"https://phet.colorado.edu/en/simulations/faradays-electromagnetic-lab",
+	relativity:
+		"https://openstax.org/books/university-physics-volume-3/pages/5-introduction",
+	volume3:
+		"https://openstax.org/books/university-physics-volume-3/pages/preface"
+} as const;
+
+function physicsLevel2Material(section: string) {
+	return `/course-assets/physics/physics-level-2-materials-pack.md#${section}`;
+}
+
+function physicsLevel2AnswerKey(section: string) {
+	return `/course-assets/physics/physics-level-2-rubrics-answer-key.md#${section}`;
+}
+
+const PHYSICS_LEVEL_2_FLOW: Record<string, PhysicsLevel2ModuleFlow> = {
+	"PHY8 Quantitative Kinematics and Vector Modeling": {
+		stage: "Quantitative core",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"coordinate systems",
+			"vector components",
+			"function representations",
+			"projectile motion",
+			"relative velocity",
+			"model comparison"
+		],
+		materialSection: "quantitative-kinematics-and-vectors-cases",
+		answerSection: "quantitative-kinematics-and-vectors-key",
+		phenomenon:
+			"Two projectiles launched at complementary angles can have the same ideal range while reaching different heights and spending different times in flight.",
+		corePath:
+			"Choose axes, resolve vectors, build component equations, compare tables and graphs, calculate an ideal projectile trajectory, and validate the result against supplied simulation evidence.",
+		stretchPath:
+			"Compare no-drag with drag evidence, solve a relative-velocity route, use parametric or spreadsheet modeling, quantify residuals, and test how coordinate choice changes algebra without changing the physical event.",
+		evidenceGate:
+			"The setup includes origin, axes, angle convention, vector components, initial conditions, equations, units, predicted values, comparison evidence, and a reasonableness check.",
+		boundary:
+			"Horizontal and vertical components share time but not identical acceleration. The ideal projectile model neglects drag, spin, curvature, and changing gravitational field; a useful approximation is not a claim that these effects do not exist.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.projectile,
+		projectCore:
+			"Plan the supplied rescue-drone route with air-relative velocity, environmental velocity, ground velocity, displacement, travel time, and a labeled vector diagram.",
+		projectStretch:
+			"Compare two routes under changed wind, add uncertainty or a speed constraint, and explain which assumption most affects arrival position."
+	},
+	"PHY9 Multi-Force Systems and Equilibrium": {
+		stage: "Quantitative core",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"system selection",
+			"multi-axis free-body diagrams",
+			"equilibrium equations",
+			"apparent weight",
+			"tension",
+			"model validation"
+		],
+		materialSection: "multi-force-and-equilibrium-cases",
+		answerSection: "multi-force-and-equilibrium-key",
+		phenomenon:
+			"One scale reading can be larger or smaller than \(mg\) even though an object's mass remains constant.",
+		corePath:
+			"Isolate each object, resolve forces by axis, write net-force equations, solve elevator and cable-equilibrium cases, and compare predictions with supplied force data.",
+		stretchPath:
+			"Analyze a nonuniform or accelerating system, infer an unknown tension or angle, compare subsystem with whole-system diagrams, and test the effect of sensor uncertainty.",
+		evidenceGate:
+			"Every equation traces to a labeled force on a specific object; component signs, acceleration constraints, units, and scale-reading interpretation remain consistent.",
+		boundary:
+			"Equilibrium means zero net force and can include constant velocity. Apparent weight is a contact-force measurement, not a change in mass or gravitational interaction.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.volume1,
+		projectCore:
+			"Audit the supplied tug-of-war system by separating both teams, rope, and ground; identify internal and external interactions and support the acceleration claim with diagrams.",
+		projectStretch:
+			"Add unequal rope mass or changing contact force, compare two system boundaries, and identify which conservation or Newton-law statement changes."
+	},
+	"PHY10 Friction, Inclines, and Connected Systems": {
+		stage: "Quantitative core",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"incline components",
+			"static friction limits",
+			"kinetic friction",
+			"connected constraints",
+			"pulley models",
+			"sensitivity analysis"
+		],
+		materialSection: "friction-inclines-and-connected-systems-cases",
+		answerSection: "friction-inclines-and-connected-systems-key",
+		phenomenon:
+			"A block can remain at rest on a shallow incline because static friction adjusts, then begin sliding after a threshold is crossed.",
+		corePath:
+			"Choose incline-aligned axes, calculate normal force and parallel gravity components, test static friction against its maximum, and solve a supplied kinetic-friction or two-mass case.",
+		stretchPath:
+			"Compare massless with massive-pulley assumptions, graph acceleration against angle, estimate a threshold from noisy evidence, and test sensitivity to friction coefficients.",
+		evidenceGate:
+			"Each solution distinguishes actual static friction from its maximum, names motion state, shows separate object diagrams, states shared constraints, and checks signs and limiting cases.",
+		boundary:
+			"Static friction is not automatically \(\mu_sN\); it adjusts up to a limit. Normal force need not equal weight, and ideal strings or pulleys are assumptions that can fail.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.phetForces,
+		projectCore:
+			"Design a ramp that meets a supplied hold-or-accelerate criterion using a free-body diagram, trigonometric components, friction test, and calculation.",
+		projectStretch:
+			"Optimize angle under a second constraint, compare uncertain coefficients, and state a safe operating range rather than one exact threshold."
+	},
+	"PHY11 Momentum, Impulse, and Collisions": {
+		stage: "Quantitative core",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"system impulse",
+			"two-dimensional momentum",
+			"center of mass",
+			"elasticity",
+			"energy comparison",
+			"safety design"
+		],
+		materialSection: "quantitative-momentum-and-collisions-cases",
+		answerSection: "quantitative-momentum-and-collisions-key",
+		phenomenon:
+			"A collision can conserve vector momentum in both axes while changing kinetic energy and producing deformation.",
+		corePath:
+			"Build signed or component momentum ledgers, calculate impulse from force-time evidence, solve one-dimensional collisions, and compare kinetic energy before and after.",
+		stretchPath:
+			"Analyze a two-dimensional collision, include an external impulse estimate, calculate center-of-mass motion, and compare uncertainty with apparent momentum mismatch.",
+		evidenceGate:
+			"The response defines system and interval, preserves vector components and units, checks external impulse, and evaluates momentum and kinetic energy separately.",
+		boundary:
+			"Momentum conservation depends on system and external impulse; kinetic energy is not conserved in every collision. Impact duration, average force, peak force, and momentum change are related but distinct.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.phetCollisions,
+		projectCore:
+			"Compare supplied helmet, airbag, or crumple-zone force-time records with impulse, average-force, stopping-time, and momentum-change evidence.",
+		projectStretch:
+			"Add peak-force and stopping-distance constraints, quantify uncertainty, and recommend a design conditionally across two impact cases."
+	},
+	"PHY12 Rotational Motion and Torque": {
+		stage: "Quantitative core",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"angular kinematics",
+			"torque",
+			"moment of inertia",
+			"rotational dynamics",
+			"rolling energy",
+			"angular momentum"
+		],
+		materialSection: "rotational-motion-and-torque-cases",
+		answerSection: "rotational-motion-and-torque-key",
+		phenomenon:
+			"Objects with the same mass and radius can roll differently because their mass distributions create different moments of inertia.",
+		corePath:
+			"Translate linear and angular quantities, calculate net torque and angular acceleration, compare rotational inertia models, and analyze rotational equilibrium.",
+		stretchPath:
+			"Combine translation and rotation for rolling motion, use angular momentum in a changing-inertia case, infer an unknown inertia from data, and test bearing-friction effects.",
+		evidenceGate:
+			"Pivot or axis, torque direction, lever arm, inertia model, angular quantities, energy or momentum account, units, and assumptions all appear.",
+		boundary:
+			"Moment of inertia depends on mass distribution and chosen axis, not mass alone. Rolling without slipping is a constraint, and rotational equilibrium does not guarantee translational equilibrium.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.phetTorque,
+		projectCore:
+			"Design a lifting or balancing tool with pivot, load, effort, torque balance, one inertia or stability consideration, and a tradeoff table.",
+		projectStretch:
+			"Compare two mass distributions or force angles, quantify sensitivity, and add a dynamic or structural constraint absent from the static model."
+	},
+	"PHY13 Gravitation, Circular Motion, and Orbits": {
+		stage: "Quantitative core",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"inward acceleration",
+			"universal gravitation",
+			"orbital speed",
+			"period-radius relations",
+			"energy in orbit",
+			"model scale"
+		],
+		materialSection: "gravitation-circular-motion-and-orbits-cases",
+		answerSection: "gravitation-circular-motion-and-orbits-key",
+		phenomenon:
+			"A satellite with nearly constant speed still accelerates continuously because its velocity direction changes.",
+		corePath:
+			"Draw inward acceleration and force, calculate circular-motion quantities, connect gravitation to orbital speed, and test period-radius or inverse-square patterns with supplied data.",
+		stretchPath:
+			"Compare orbit energies, estimate an altitude change, model elliptical limitations, distinguish inertial and rotating frames, and perform a scale or sensitivity check.",
+		evidenceGate:
+			"Central body, orbiting object, radius from center, tangential velocity, inward acceleration, force source, units, and model assumptions remain explicit.",
+		boundary:
+			"Centripetal force names the inward net-force role rather than an extra interaction. Circular, two-body, and point-mass assumptions narrow where the equations apply.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.phetOrbits,
+		projectCore:
+			"Plan a supplied orbit with radius, speed, period, force and velocity directions, central-body data, and a scale-honest diagram.",
+		projectStretch:
+			"Compare two candidate orbits by energy or period, add one operational constraint, and explain which noncircular or multi-body effect could change the result."
+	},
+	"PHY14 Electricity, Circuits, and Fields": {
+		stage: "Quantitative core",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"electric field",
+			"electric potential",
+			"series-parallel reduction",
+			"Kirchhoff reasoning",
+			"power",
+			"measurement loading"
+		],
+		materialSection: "electricity-circuits-and-fields-cases",
+		answerSection: "electricity-circuits-and-fields-key",
+		phenomenon:
+			"Two circuit points can share potential while carrying different branch currents, and a measuring device can alter the circuit it is intended to observe.",
+		corePath:
+			"Relate field and potential qualitatively, reduce series-parallel networks, apply junction and loop reasoning, calculate power, and compare predictions with supplied current-voltage evidence.",
+		stretchPath:
+			"Analyze an internal-resistance or meter-loading case, solve a two-loop network, compare energy-per-charge and charge-flow views, and diagnose uncertainty or non-ohmic behavior.",
+		evidenceGate:
+			"Schematic topology, node labels, current directions, loop signs, values, units, power or energy check, and measurement assumptions all agree.",
+		boundary:
+			"Potential is energy per charge rather than current pressure in a literal fluid. Ideal wires, sources, meters, and ohmic resistors are model choices, not universal component behavior.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.phetCircuits,
+		projectCore:
+			"Audit the supplied circuit against current, voltage, power, independent-control, and failure-isolation criteria with a labeled schematic and calculation table.",
+		projectStretch:
+			"Add internal resistance or meter loading, compare two redesigns, and state a bounded operating range or failure threshold."
+	},
+	"PHY15 Thermal Physics, Optics, and Modern Bridges": {
+		stage: "Quantitative core",
+		estimatedTime: "5–6 sessions",
+		keyBlocks: [
+			"thermal energy transfer",
+			"heating and phase curves",
+			"optical imaging",
+			"model transitions",
+			"threshold evidence",
+			"domain limits"
+		],
+		materialSection: "thermal-optics-and-modern-bridges-cases",
+		answerSection: "thermal-optics-and-modern-bridges-key",
+		phenomenon:
+			"One course module can use different models—thermal accounts, rays, and quantized thresholds—without treating them as interchangeable descriptions.",
+		corePath:
+			"Analyze one thermal dataset, one lens or mirror case, and one model-limit evidence case; select the correct representation and state why each model fits its phenomenon.",
+		stretchPath:
+			"Quantify a heating slope or phase interval, compare predicted and measured image locations, evaluate a threshold trend, and explain where each classical approximation stops being enough.",
+		evidenceGate:
+			"Each mini-study names its system, quantities, representation, calculation, evidence, and domain rather than combining unrelated equations into one answer.",
+		boundary:
+			"Heat, temperature, and internal energy are distinct; rays are geometric models; modern evidence refines classical domains rather than making all classical reasoning invalid.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.volume2,
+		projectCore:
+			"Complete the supplied thermal-design comparison with energy-transfer evidence, one quantitative model, criteria, and a stated limitation.",
+		projectStretch:
+			"Add an optics or threshold-based sensing component, test a changed condition, and keep the models linked through a clear system interface rather than blended vocabulary."
+	},
+	"PHY16 Engineering Physics Capstone": {
+		stage: "Quantitative core",
+		estimatedTime: "6–8 sessions",
+		keyBlocks: [
+			"problem framing",
+			"model selection",
+			"quantitative evidence",
+			"validation",
+			"criteria and constraints",
+			"revision and defense"
+		],
+		materialSection: "engineering-physics-capstone-cases",
+		answerSection: "engineering-physics-capstone-key",
+		phenomenon:
+			"A model can produce a precise prediction and still be unsuitable when its assumptions, operating range, or decision criteria do not match the engineering problem.",
+		corePath:
+			"Choose one supplied quantitative design case, define system and criteria, select a model, calculate a prediction, compare with evidence, document uncertainty, compare options, revise, and defend.",
+		stretchPath:
+			"Couple two models, perform sensitivity or residual analysis, compare alternate explanations, optimize under competing constraints, and identify a reversal threshold.",
+		evidenceGate:
+			"The capstone includes raw evidence, equations, units, labeled representation, validation check, criteria, constraints, tradeoffs, model limit, substantive revision, and accessible defense.",
+		boundary:
+			"This capstone completes the Level 2 quantitative core. Later modules extend numerical, experimental, continuum, thermodynamic, signal, and relativity reasoning; they are not hidden prerequisites for this milestone.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.volume1,
+		projectCore:
+			"Complete one supplied modeling challenge with question, system, model, evidence, calculation, comparison, uncertainty, limitation, and documented revision.",
+		projectStretch:
+			"Integrate a second model or dataset, quantify sensitivity, optimize a tradeoff, and defend what new evidence would reverse the design choice."
+	},
+	"PHY17 Numerical Modeling and Simulation Checks": {
+		stage: "Advanced modeling extension",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"state variables",
+			"update rules",
+			"initial conditions",
+			"time steps",
+			"convergence checks",
+			"analytic comparison"
+		],
+		materialSection: "numerical-modeling-and-simulation-cases",
+		answerSection: "numerical-modeling-and-simulation-key",
+		phenomenon:
+			"Two simulations using the same physical law can diverge because their time steps and update methods create different numerical error.",
+		corePath:
+			"Define state, initial conditions, update rule, and step size; run or inspect supplied Euler tables; compare with an analytic baseline; and identify numerical error.",
+		stretchPath:
+			"Perform a step-halving convergence study, compare Euler with a midpoint or energy-aware method, identify instability, and separate numerical artifacts from model inadequacy.",
+		evidenceGate:
+			"Code or spreadsheet output is accompanied by equations, units, initial conditions, step size, method, comparison baseline, error metric, and convergence evidence.",
+		boundary:
+			"Simulation output is not automatically physical truth. Smaller steps often reduce discretization error but do not fix a wrong model, wrong units, coding error, or unstable method without verification.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.volume1,
+		projectCore:
+			"Compare two supplied motion simulations against an analytic baseline with error-through-time and step-size evidence.",
+		projectStretch:
+			"Implement or analyze a second method, run a convergence test, and explain whether the remaining discrepancy is numerical, physical, or evidentiary."
+	},
+	"PHY18 Experimental Uncertainty and Curve Fitting": {
+		stage: "Advanced modeling extension",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"measurands",
+			"random and systematic effects",
+			"best-fit models",
+			"residuals",
+			"parameter uncertainty",
+			"evidence strength"
+		],
+		materialSection: "uncertainty-and-curve-fitting-cases",
+		answerSection: "uncertainty-and-curve-fitting-key",
+		phenomenon:
+			"A best-fit line can be useful without passing through every point, while a visually close fit can still hide patterned residuals and model failure.",
+		corePath:
+			"Define the measurand, preserve raw data, graph points, estimate a best-fit relationship, calculate residuals, and separate scatter from possible systematic bias.",
+		stretchPath:
+			"Compare linear and curved models, estimate parameter uncertainty or sensitivity, evaluate an outlier rule before exclusion, and use residual structure to revise the model.",
+		evidenceGate:
+			"Source, units, raw values, fit equation, parameter meaning, residuals, uncertainty statement, exclusion rule, and claim scope remain visible.",
+		boundary:
+			"Uncertainty is not the same as mistake, fit quality is not proved by a high visual resemblance alone, and deleting points after seeing the result requires a defensible predeclared reason.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.nistUncertainty,
+		projectCore:
+			"Audit the supplied measurement study with raw-data preservation, graph, fit, residuals, slope meaning, uncertainty components, and a bounded conclusion.",
+		projectStretch:
+			"Compare a second model, quantify parameter sensitivity, evaluate one outlier under a declared rule, and state what evidence would favor the alternative."
+	},
+	"PHY19 Coupled Systems and Constraints": {
+		stage: "Advanced modeling extension",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"multiple free-body diagrams",
+			"constraint equations",
+			"shared accelerations",
+			"tension assumptions",
+			"whole-system checks",
+			"model alternatives"
+		],
+		materialSection: "coupled-systems-and-constraints-cases",
+		answerSection: "coupled-systems-and-constraints-key",
+		phenomenon:
+			"Connected objects can share acceleration magnitude while experiencing different net forces, and tension can differ when a pulley or rope has nonnegligible inertia.",
+		corePath:
+			"Draw separate object diagrams, define coordinates, write force equations and a geometric constraint, solve a supplied connected-mass system, and verify with a whole-system equation.",
+		stretchPath:
+			"Add pulley inertia, a moving support, or multiple rope segments; derive the changed constraint; compare tensions; and test a limiting case.",
+		evidenceGate:
+			"Every shared quantity follows from a stated physical or geometric constraint, not from visual similarity. Subsystem and whole-system equations produce a consistent result.",
+		boundary:
+			"Connected does not automatically mean equal tension or equal acceleration vectors. Massless rope, frictionless pulley, no slip, and fixed support are assumptions with specific consequences.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.volume1,
+		projectCore:
+			"Create a constraint map for the supplied connected system with object diagrams, coordinates, rope-length relation, equations, and a verified solution.",
+		projectStretch:
+			"Change one connection or inertia assumption, derive the new constraint, compare predictions, and identify which earlier equality no longer holds."
+	},
+	"PHY20 Fluids and Continuum Models": {
+		stage: "Advanced modeling extension",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"continuum assumption",
+			"pressure fields",
+			"continuity",
+			"Bernoulli energy",
+			"viscosity and loss",
+			"model domain"
+		],
+		materialSection: "fluids-and-continuum-models-cases",
+		answerSection: "fluids-and-continuum-models-key",
+		phenomenon:
+			"Flow speed can increase through a narrower section while measured pressure decreases under a restricted steady-flow model.",
+		corePath:
+			"Use pressure, density, area, and flow-speed data; apply continuity; evaluate a Bernoulli-style energy account; and compare predictions with supplied pressure evidence.",
+		stretchPath:
+			"Estimate head loss, compare ideal and viscous records, analyze a branching flow, and state where compressibility, turbulence, or particle scale breaks the continuum model.",
+		evidenceGate:
+			"Flow direction, control volume, areas, speeds, elevations, pressures, density, units, and assumptions are all named before using a relation.",
+		boundary:
+			"Bernoulli reasoning is not a universal pressure shortcut. Steady, incompressible, low-loss flow along an applicable streamline is a model domain, and continuum descriptions fail at sufficiently small scales.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.phetGas,
+		projectCore:
+			"Analyze the supplied fluid system with a control volume, continuity table, pressure or energy comparison, and one model-domain limitation.",
+		projectStretch:
+			"Compare ideal with loss-inclusive evidence, quantify one discrepancy, and recommend a design only within a stated flow regime."
+	},
+	"PHY21 Thermodynamics and Engines": {
+		stage: "Advanced modeling extension",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"state variables",
+			"first-law accounting",
+			"process diagrams",
+			"heat reservoirs",
+			"engine efficiency",
+			"second-law limits"
+		],
+		materialSection: "thermodynamics-and-engines-cases",
+		answerSection: "thermodynamics-and-engines-key",
+		phenomenon:
+			"An engine can conserve energy while still being unable to convert all incoming thermal transfer into useful work.",
+		corePath:
+			"Define a thermodynamic system and sign convention, track heat, work, and internal-energy change, read a process diagram, and calculate engine efficiency or refrigerator performance.",
+		stretchPath:
+			"Compare cycles, calculate a reversible upper bound, identify irreversibility, test a reservoir-temperature change, and distinguish rate, energy, efficiency, and coefficient of performance.",
+		evidenceGate:
+			"System, process direction, state variables, reservoirs, sign convention, energy terms, units, and efficiency denominator remain explicit.",
+		boundary:
+			"The first law constrains energy accounting; the second law constrains direction and achievable conversion. Efficiency and coefficient of performance use different definitions and can have different numerical ranges.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.heatEngines,
+		projectCore:
+			"Audit the supplied engine or refrigerator with an energy-flow diagram, first-law account, efficiency or performance calculation, and one irreversibility.",
+		projectStretch:
+			"Compare a second cycle or reservoir condition, estimate a theoretical upper bound, and explain why the real device remains below it."
+	},
+	"PHY22 Electromagnetic Applications and Signals": {
+		stage: "Advanced modeling extension",
+		estimatedTime: "4–5 sessions",
+		keyBlocks: [
+			"field-to-signal conversion",
+			"calibration",
+			"sampling",
+			"noise",
+			"filter tradeoffs",
+			"sensor validation"
+		],
+		materialSection: "electromagnetic-signals-and-sensors-cases",
+		answerSection: "electromagnetic-signals-and-sensors-key",
+		phenomenon:
+			"A sensor can be precise but biased, and a smoother filtered signal can look more convincing while hiding rapid physical changes.",
+		corePath:
+			"Trace physical input to electrical signal, build a calibration relation, convert voltage to a measured quantity, inspect noisy time-series data, and validate against reference points.",
+		stretchPath:
+			"Compare filters, sampling rates, bandwidth, saturation, hysteresis, and uncertainty; diagnose aliasing or drift; and design a bounded calibration schedule.",
+		evidenceGate:
+			"Measurand, sensor input, raw signal, units, calibration equation, reference values, residuals, sampling details, and uncertainty remain traceable.",
+		boundary:
+			"A sensor reading is an estimate produced by a measurement chain. Filtering cannot recover information never sampled, and a smooth display does not prove accuracy.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.phetFaraday,
+		projectCore:
+			"Propose a supplied sensor system with measurand, transduction path, calibration table, operating range, sampling plan, and validation check.",
+		projectStretch:
+			"Compare two filters or sampling choices, quantify drift or residual error, and define a recalibration or failure threshold."
+	},
+	"PHY23 Relativity and Reference Frames Preview": {
+		stage: "Advanced modeling extension",
+		estimatedTime: "3–4 sessions",
+		keyBlocks: [
+			"inertial frames",
+			"events",
+			"simultaneity",
+			"time dilation",
+			"low-speed limits",
+			"invariant relationships"
+		],
+		materialSection: "relativity-and-reference-frames-cases",
+		answerSection: "relativity-and-reference-frames-key",
+		phenomenon:
+			"Observers in relative motion can assign different time intervals or simultaneity judgments while describing the same physical events under consistent transformation rules.",
+		corePath:
+			"Name frames and events, compare classical frame descriptions, calculate a Lorentz factor for supplied speeds, and identify proper-time or simultaneity conditions.",
+		stretchPath:
+			"Analyze an event diagram, compare low- and high-speed limits, calculate time dilation, and explain which measured quantities differ and which physical relationships remain consistent.",
+		evidenceGate:
+			"Observer, frame, event coordinates, relative speed, measured quantity, equation, units, and low-speed comparison are stated.",
+		boundary:
+			"Relativity is not mere perception and does not mean every claim is equally true. Ordinary-speed classical approximations remain accurate because relativistic corrections are tiny in that domain.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.relativity,
+		projectCore:
+			"Create a relativity explainer using the supplied observer and event case, one Lorentz-factor calculation, a low-speed comparison, and a model boundary.",
+		projectStretch:
+			"Add a spacetime-style event diagram or second observer, compare invariant and frame-dependent quantities, and correct one simultaneity misconception."
+	},
+	"PHY24 Independent Physics Research Portfolio": {
+		stage: "Independent synthesis",
+		estimatedTime: "7–10 sessions",
+		keyBlocks: [
+			"researchable questions",
+			"source quality",
+			"model selection",
+			"quantitative evidence",
+			"uncertainty and alternatives",
+			"revision and defense"
+		],
+		materialSection: "independent-physics-portfolio-cases",
+		answerSection: "independent-physics-portfolio-key",
+		phenomenon:
+			"A strong research portfolio becomes more credible when evidence narrows the original claim, exposes a model limit, or motivates a substantive revision.",
+		corePath:
+			"Select one approved supplied research seed, narrow the question, document sources, choose a model, analyze quantitative evidence, compare an alternative, state uncertainty, revise, and defend.",
+		stretchPath:
+			"Combine multiple evidence forms, reproduce or challenge a result, compare models, perform sensitivity analysis, and define a concrete result that would reverse or further narrow the conclusion.",
+		evidenceGate:
+			"The portfolio contains a research log, source evaluation, raw or supplied evidence, reproducible calculation, labeled representation, model and domain, uncertainty, alternative, revision history, and accessible defense.",
+		boundary:
+			"The portfolio is an instructional research synthesis, not original peer-reviewed proof or professional certification. Claims remain proportional to source quality, evidence range, model assumptions, and replication limits.",
+		referenceLink: PHYSICS_LEVEL_2_REFERENCES.volume3,
+		projectCore:
+			"Build the independent portfolio around one focused question, source set, model, dataset, calculation, representation, conclusion, limitation, and documented revision.",
+		projectStretch:
+			"Reproduce or compare a second result, quantify sensitivity, evaluate an alternate model, and defend a reversal criterion plus next evidence step."
+	}
+};
+
+function physicsLevel2Topic(moduleTitle: string) {
+	return moduleTitle.replace(/^PHY\d+\s+/u, "").trim();
+}
+
+function physicsLevel2Title(moduleTitle: string, itemTitle: string) {
+	return itemTitle === "Worked Example Set"
+		? `${physicsLevel2Topic(moduleTitle)}: Worked Cases`
+		: itemTitle;
+}
+
+function physicsLevel2CurriculumPath(
+	stage: PhysicsLevel2ModuleFlow["stage"]
+): RawCourseModuleItem["learningPath"] {
+	return stage === "Advanced modeling extension" ? "choice" : "core";
+}
+
+function physicsLevel2ProjectPath(
+	title: string
+): RawCourseModuleItem["learningPath"] {
+	if (/Readiness Check$/i.test(title)) return "core";
+	if (/Failure Modes$/i.test(title)) return "choice";
+	return "challenge";
+}
+
+function physicsLevel2ProjectCompletion(
+	title: string,
+	flow: PhysicsLevel2ModuleFlow
+) {
+	if (/Readiness Check$/i.test(title)) {
+		return "Core: complete the supplied readiness cases with diagrams, equations, units, and one exact evidence point per conclusion. Stretch: quantify one sensitivity or alternate interpretation and state the assumption or measurement that controls confidence.";
+	}
+
+	if (/Failure Modes$/i.test(title)) {
+		return "Core: repair at least three supplied errors and explain the physical consequence of each correction. Stretch: connect each misconception to a calculation, residual, diagram, constraint, or limiting case and create one transfer example.";
+	}
+
+	return `Core: ${flow.projectCore} Stretch: ${flow.projectStretch}`;
+}
+
+export const physicsLevel2Course: RawCourse = {
+	...physicsLevel2SourceCourse,
+	modules: physicsLevel2SourceCourse.modules.map((module, moduleIndex) => {
+		const flow = PHYSICS_LEVEL_2_FLOW[module.title];
+		if (!flow) {
+			throw new Error(
+				`Missing Physics Level 2 flow for ${module.title}.`
+			);
+		}
+
+		const curriculum = module.curriculum.map((item, itemIndex) => ({
+			...item,
+			title: physicsLevel2Title(module.title, item.title),
+			content: [
+				itemIndex === 0
+					? `**Teaching flow:** ${flow.stage}. Physics Level 2 is the quantitative continuation after Intro to Physics. Intro modules with similar PHY numbers are optional survey previews; this course's PHY8–PHY16 sequence rebuilds those ideas with algebra, trigonometry, multiple representations, validation, and uncertainty. No physical apparatus, personal-device data, home electrical work, projectiles, heat sources, or learner household measurements are required.`
+					: "",
+				item.content,
+				`**Guiding phenomenon:** ${flow.phenomenon}`,
+				`**Core route:** ${flow.corePath}`,
+				`**Stretch route:** ${flow.stretchPath}`,
+				`**Quantitative evidence gate:** ${flow.evidenceGate}`,
+				`**Model domain and limit:** ${flow.boundary}`,
+				`**Reference:** [Open the authoritative module reference](${flow.referenceLink}).`
+			]
+				.filter(Boolean)
+				.join("\n\n"),
+			learningPath: physicsLevel2CurriculumPath(flow.stage),
+			datasetLink:
+				item.datasetLink ?? physicsLevel2Material(flow.materialSection),
+			solutionLink:
+				item.solutionLink ?? physicsLevel2AnswerKey(flow.answerSection),
+			projectLink: item.projectLink ?? flow.referenceLink
+		}));
+
+		const supplementalProjects = module.supplementalProjects.map(item => ({
+			...item,
+			content: [
+				item.content,
+				`**Course stage:** ${flow.stage}.`,
+				`**Guiding phenomenon:** ${flow.phenomenon}`,
+				`**Completion route:** ${physicsLevel2ProjectCompletion(item.title, flow)}`,
+				`**Quantitative evidence gate:** ${flow.evidenceGate}`,
+				`**Model domain and limit:** ${flow.boundary}`
+			].join("\n\n"),
+			learningPath: physicsLevel2ProjectPath(item.title),
+			datasetLink:
+				item.datasetLink ?? physicsLevel2Material(flow.materialSection),
+			solutionLink:
+				item.solutionLink ?? physicsLevel2AnswerKey(flow.answerSection),
+			projectLink: item.projectLink ?? flow.referenceLink
+		}));
+
+		return {
+			...module,
+			estimatedTime: flow.estimatedTime,
+			keyBlocks: flow.keyBlocks,
+			curriculum,
+			supplementalProjects,
+			aliases:
+				moduleIndex === 0
+					? [
+							...(module.aliases ?? []),
+							"Physics Level 2 quantitative starting point"
+						]
+					: module.aliases
+		};
+	}),
+	developmentMetadata: {
+		priority: "soon",
+		standards: [
+			"Algebra- and trigonometry-based quantitative physics with explicit coordinate, system, and unit conventions",
+			"Mechanics, rotation, gravitation, circuits and fields, thermal and optical bridges, fluids, thermodynamics, signals, and relativity previews",
+			"Numerical verification, curve fitting, residual analysis, measurement uncertainty, and model-domain reasoning",
+			"Evidence practices across vector diagrams, free-body diagrams, energy and momentum ledgers, process diagrams, circuits, field and signal plots, and simulation tables",
+			"Engineering criteria, constraints, uncertainty, sensitivity, validation, tradeoff analysis, revision, and defense"
+		],
+		sourcePolicy:
+			"Preserves all 17 modules and 51 named checkpoints, failure-mode studies, and projects while defining PHY8–PHY16 as the quantitative core, PHY17–PHY23 as advanced modeling extensions, and PHY24 as independent synthesis. Every route uses a supplied local quantitative case, answer and rubric material, and a verified public reference.",
+		assessmentCadence: [
+			"Coordinate, system, sign, units, and assumptions before equation selection",
+			"Prediction plus a unit-aware diagram, table, graph, or computational representation",
+			"Calculation trail with dimensional, limiting-case, analytic, or residual check",
+			"One bounded quantitative claim and one model-domain limitation",
+			"One core route plus an optional sensitivity, uncertainty, or alternate-model stretch route",
+			"Substantive revision after evidence or rubric feedback at both capstone milestones"
+		],
+		toolchain: [
+			"Notebook, paper, spreadsheet, graphing tool, or optional local Python environment",
+			"Supplied Physics Level 2 materials pack and rubrics answer key",
+			"Shared quantitative tables, diagrams, residual records, simulation traces, and design cases",
+			"OpenStax University Physics, NIST uncertainty guidance, and verified PhET simulations",
+			"Optional interactive or coded model with a supplied noninteractive table and analytic comparison route"
+		],
+		safetyPolicy: [
+			"No required projectiles, collisions, elevated masses, pulley builds, home circuits, heat sources, optical exposure, pressure apparatus, magnets, engines, or physical sensors",
+			"No required learner reaction-time, location, household-energy, body, device, camera, microphone, or personal measurement data",
+			"Supplied fictional cases and quantitative datasets remain sufficient for every assessment",
+			"Graphs, field diagrams, and signals include labels and text descriptions; audio and color always have non-audio and non-color encodings",
+			"Engineering, sensor, impact, thermal, electrical, and fluid conclusions remain educational models rather than professional certification"
+		],
+		courseBoundaries: [
+			"Intro to Physics supplies conceptual and algebra readiness; similarly numbered Intro extension modules are optional surveys, not duplicate prerequisites",
+			"PHY8–PHY16 form a complete Level 2 quantitative core ending in the Engineering Physics Capstone",
+			"PHY17–PHY23 extend numerical, uncertainty, constraint, continuum, thermodynamic, signal, and relativity reasoning",
+			"PHY24 is independent synthesis and can draw from any completed core plus selected advanced extensions",
+			"Every quantitative model states system, coordinates, initial and boundary conditions, units, assumptions, validation evidence, and operating domain"
+		],
+		capstoneExpectations: [
+			"Focused quantitative question or design problem grounded in an approved supplied case",
+			"Traceable source record, preserved values, units, and uncertainty",
+			"Diagram or computational representation plus reproducible calculation and validation check",
+			"Criteria, constraints, alternatives, and sensitivity or tradeoff analysis",
+			"Bounded claim with model domain, limitation, and reversal condition",
+			"Before-and-after revision plus accessible technical defense"
+		],
+		recommendedNextWork: [
+			"Add anonymized exemplars at several algebra, coding, and communication levels after classroom use identifies priority modules.",
+			"Archive selected simulation states and traces as locally owned tables and images so external tools never become continuity requirements.",
+			"Map the quantitative core and advanced extensions to the target district, honors, or first-semester college sequence after that adoption context is selected."
+		]
+	}
+};
