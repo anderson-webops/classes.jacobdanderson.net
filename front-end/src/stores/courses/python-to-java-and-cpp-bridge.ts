@@ -3,7 +3,7 @@ import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
-export const pythonToJavaAndCppBridgeCourse: RawCourse = {
+const pythonToJavaAndCppBridgeSourceCourse: RawCourse = {
 	name: "Python to Java and C++ Bridge",
 	modules: [
 		{
@@ -1452,5 +1452,277 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+interface BridgeModuleFlow {
+	estimatedTime: string;
+	flowNote: string;
+	keyBlocks: string[];
+}
+
+const BRIDGE_TEACHING_ORDER = [
+	"PTJ0 Positioning and Workflow Translation",
+	"PTJ1 Functions, Parameters, and Return Types",
+	"PTJ2 Collections, Strings, and Indexing",
+	"PTJ3 Classes and Objects across Languages",
+	"PTJ4 Java-Specific Adaptation",
+	"PTJ5 C++-Specific Adaptation",
+	"Language Bridge Lab 17: Bridge Capstone Port Studio"
+] as const;
+
+const BRIDGE_BRANCH_MODULES = new Set([
+	"PTJ4 Java-Specific Adaptation",
+	"PTJ5 C++-Specific Adaptation"
+]);
+
+const BRIDGE_MODULE_FLOW: Record<string, BridgeModuleFlow> = {
+	"PTJ0 Positioning and Workflow Translation": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Python readiness",
+			"compile / run workflow",
+			"braces and semicolons",
+			"type declarations",
+			"same-behavior comparison"
+		],
+		flowNote:
+			"Choose one small Python reference program, confirm variables, conditions, loops, functions, and basic objects are familiar, and verify at least one Java or C++ compile-run path. Translate tiny examples while preserving inputs and outputs; learning one target branch is enough."
+	},
+	"PTJ1 Functions, Parameters, and Return Types": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"method / function signature",
+			"parameter types",
+			"return types",
+			"compiler diagnostics",
+			"behavior tests"
+		],
+		flowNote:
+			"Port one Python helper at a time, predict the signature before compiling, fix the first meaningful diagnostic, and verify the target-language function with the same normal and boundary cases."
+	},
+	"PTJ2 Collections, Strings, and Indexing": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Python list",
+			"Java array / ArrayList",
+			"C++ array / vector",
+			"string ranges",
+			"boundary cases"
+		],
+		flowNote:
+			"Translate one list-and-string algorithm with a small shared fixture set. Make fixed versus dynamic size, mutation, valid index ranges, and slice replacements visible before choosing a Java or C++ implementation."
+	},
+	"PTJ3 Classes and Objects across Languages": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"state and behavior",
+			"constructor",
+			"encapsulation",
+			"Java class file",
+			"C++ header / source pair"
+		],
+		flowNote:
+			"Port one small Python class, compare Java and C++ structure, and then choose the Java or C++ exit branch. Completing one branch plus the capstone completes the bridge; the second branch remains an extension."
+	},
+	"PTJ4 Java-Specific Adaptation": {
+		estimatedTime: "Choose-one branch · 2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"main method",
+			"Scanner input",
+			"string equality",
+			"null handling",
+			"Java exit project"
+		],
+		flowNote:
+			"Choose this branch when Java is the next course. Port the quiz game, verify string-content comparisons and input handling, and leave the C++ branch optional."
+	},
+	"PTJ5 C++-Specific Adaptation": {
+		estimatedTime: "Choose-one branch · 2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"includes and namespace",
+			"console streams",
+			"vector",
+			"value / reference parameters",
+			"C++ exit project"
+		],
+		flowNote:
+			"Choose this branch when C++ is the next course. Port the console program, verify vector and parameter behavior, and defer pointer-heavy work to the main C++ sequence; the Java branch remains optional."
+	},
+	"Language Bridge Lab 17: Bridge Capstone Port Studio": {
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"chosen target language",
+			"behavior contract",
+			"shared fixtures",
+			"compiler / runtime diagnosis",
+			"readiness reflection"
+		],
+		flowNote:
+			"Port one complete, modest Python program into the chosen target language. Use the same inputs, expected outputs, boundary cases, and class or collection behavior, then document one compiler error and one semantic difference resolved during the port."
+	}
+};
+
+function bridgeSupplementalPath(title: string) {
+	return /extension|transfer practice/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function decorateBridgeModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = BRIDGE_MODULE_FLOW[module.title];
+	const isBranch = BRIDGE_BRANCH_MODULES.has(module.title);
+	const curriculumPath = isBranch ? ("choice" as const) : ("core" as const);
+	const authoredProjectIndex = module.supplementalProjects.findIndex(item =>
+		item.title.startsWith("Project:")
+	);
+	const authoredProject =
+		authoredProjectIndex >= 0
+			? module.supplementalProjects[authoredProjectIndex]
+			: undefined;
+	const curriculumSource = authoredProject
+		? module.curriculum.filter(
+				item => !item.title.endsWith(": Core Project")
+			)
+		: module.curriculum;
+	const curriculum = curriculumSource.map((item, index) => ({
+		...item,
+		content:
+			index === 0 && flow
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content,
+		learningPath: curriculumPath
+	}));
+
+	if (authoredProject) {
+		curriculum.push({
+			...authoredProject,
+			learningPath: curriculumPath
+		});
+	}
+
+	if (module.title === "PTJ0 Positioning and Workflow Translation") {
+		curriculum.push({
+			title: "Python Readiness and Toolchain Checkpoint",
+			content: [
+				"**Completion evidence:**",
+				"- One short Python reference program that uses variables, a condition, a loop, a function, and a small object or record.",
+				"- A successful hello-world compile and run in at least one target language, with the exact command or browser workflow recorded.",
+				"- A side-by-side syntax map for assignment, condition, loop, function signature, output, and block boundaries.",
+				"- A branch decision naming Java or C++ as the first target; installing or completing both toolchains is not required."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "PTJ3 Classes and Objects across Languages") {
+		curriculum.push({
+			title: "Choose a Java or C++ Exit Branch",
+			content: [
+				"**Completion evidence:**",
+				"- Selected Java or C++ branch with the next course or project named.",
+				"- One reason the branch matches the learner's goal.",
+				"- A checklist for the branch project and capstone.",
+				"- The unselected branch is labeled optional rather than unfinished required work."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (
+		module.title === "Language Bridge Lab 17: Bridge Capstone Port Studio"
+	) {
+		curriculum.push({
+			title: "Chosen-Language Capstone Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Python reference behavior and selected Java or C++ target.",
+				"- Shared fixtures covering ordinary, boundary, and invalid-input behavior when applicable.",
+				"- Target-language implementation with build and run instructions.",
+				"- Comparison record naming one syntax difference, one runtime or type difference, one diagnosed failure, and the next-course readiness decision."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	return {
+		...module,
+		...(isBranch ? { kind: "transition" as const } : {}),
+		estimatedTime: flow?.estimatedTime,
+		keyBlocks: flow?.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects
+			.filter((_, index) => index !== authoredProjectIndex)
+			.map(item => ({
+				...item,
+				learningPath: bridgeSupplementalPath(item.title)
+			}))
+	};
+}
+
+function createBridgeArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Transfer Studio Archive",
+		estimatedTime:
+			"Optional · select only the studio that matches a later goal",
+		keyBlocks: [
+			"targeted transfer",
+			"guided example",
+			"starter project",
+			"verification",
+			"extension"
+		],
+		curriculum: [
+			{
+				title: "How to Use the Transfer Studio Archive",
+				content: [
+					"These studios preserve every prior bridge lab and cross-course transfer project without placing duplicate work in the required sequence.",
+					"Choose a studio only after the shared bridge, one language branch, and the capstone are complete, or when a specific later course calls for that transfer.",
+					"Archived studios:",
+					...modules.map(module => `- ${module.title}`)
+				].join("\n"),
+				learningPath: "choice"
+			}
+		],
+		supplementalProjects: modules.flatMap(module => [
+			...module.curriculum.map(item => ({
+				...item,
+				learningPath: "choice" as const
+			})),
+			...module.supplementalProjects.map(item => ({
+				...item,
+				learningPath: bridgeSupplementalPath(item.title)
+			}))
+		])
+	};
+}
+
+const bridgeModulesByTitle = new Map(
+	pythonToJavaAndCppBridgeSourceCourse.modules.map(module => [
+		module.title,
+		module
+	])
+);
+const bridgeTeachingModules = BRIDGE_TEACHING_ORDER.map(title => {
+	const module = bridgeModulesByTitle.get(title);
+	if (!module) throw new Error(`Missing bridge module: ${title}`);
+	return decorateBridgeModule(module);
+});
+const bridgeTeachingTitleSet = new Set<string>(BRIDGE_TEACHING_ORDER);
+const bridgeArchiveModules =
+	pythonToJavaAndCppBridgeSourceCourse.modules.filter(
+		module => !bridgeTeachingTitleSet.has(module.title)
+	);
+
+export const pythonToJavaAndCppBridgeCourse: RawCourse = {
+	...pythonToJavaAndCppBridgeSourceCourse,
+	modules: [
+		...bridgeTeachingModules,
+		createBridgeArchive(bridgeArchiveModules)
 	]
 };
