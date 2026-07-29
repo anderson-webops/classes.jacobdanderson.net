@@ -1,5 +1,5 @@
 import type { ImplementationLabSection } from "./implementationLabGuidance";
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
@@ -112,7 +112,7 @@ function buildRefactoringClinicGuidance(
 	});
 }
 
-export const designPatternsInJavaPart2Course: RawCourse = {
+const designPatternsInJavaPart2SourceCourse: RawCourse = {
 	name: "Design Patterns in Java Part 2: Refactoring",
 	modules: [
 		{
@@ -1398,5 +1398,513 @@ export const designPatternsInJavaPart2Course: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+const DESIGN_PATTERNS_JAVA_PART_2_JUNIT =
+	"https://docs.junit.org/current/user-guide/";
+const DESIGN_PATTERNS_JAVA_PART_2_RECORDS =
+	"https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html";
+const DESIGN_PATTERNS_JAVA_PART_2_OPTIONAL =
+	"https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html";
+const DESIGN_PATTERNS_JAVA_PART_2_COMPATIBILITY =
+	"https://docs.oracle.com/javase/specs/jls/se25/html/jls-13.html";
+
+const DESIGN_PATTERNS_JAVA_PART_2_PRIMARY_TITLES = new Set([
+	"DPR1 Code Smells and Safe Refactoring Workflow",
+	"DPR2 Composing Methods",
+	"DPR3 Moving Features Between Objects",
+	"DPR4 Organizing Data",
+	"DPR5 Simplifying Conditional Expressions",
+	"DPR6 Simplifying Method Calls",
+	"DPR7 Dealing with Generalization",
+	"DPR8 Refactoring Toward Patterns",
+	"DPR9 Testability, DI, and Refactoring with Confidence",
+	"DPR10 Capstone Refactoring Studio"
+]);
+
+const DESIGN_PATTERNS_JAVA_PART_2_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"DPR1 Code Smells and Safe Refactoring Workflow": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"change classification",
+			"smell diagnosis",
+			"behavior inventory",
+			"characterization baseline",
+			"reversible commit",
+			"stop condition"
+		],
+		flowNote:
+			"Classify the requested change, inventory observable behavior, create a green characterization baseline, diagnose one dominant smell, and plan a sequence in which every commit remains runnable and reversible."
+	},
+	"DPR2 Composing Methods": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"Extract Method",
+			"temporary variables",
+			"evaluation order",
+			"side effects",
+			"exception behavior",
+			"local equivalence"
+		],
+		flowNote:
+			"Use the smallest method-level transformation that clarifies intent while preserving evaluation order, side effects, exceptions, numeric behavior, and the exact public result."
+	},
+	"DPR3 Moving Features Between Objects": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"feature envy",
+			"responsibility ownership",
+			"Extract Class",
+			"Move Method",
+			"client compatibility",
+			"dependency direction"
+		],
+		flowNote:
+			"Move behavior toward the data and invariant it owns, preserve the client-facing collaboration, and verify that the new dependency direction reduces rather than relocates coupling."
+	},
+	"DPR4 Organizing Data": {
+		estimatedTime: "6 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"value semantics",
+			"record and parameter object",
+			"collection ownership",
+			"equals and hashCode",
+			"validation boundary",
+			"data compatibility"
+		],
+		flowNote:
+			"Replace primitive and mutable data clumps with explicit value concepts, preserve equality and collection ownership, and migrate callers without silently changing validation or serialized form."
+	},
+	"DPR5 Simplifying Conditional Expressions": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"decision table",
+			"guard clause",
+			"decomposition",
+			"polymorphism threshold",
+			"null policy",
+			"branch equivalence"
+		],
+		flowNote:
+			"Capture every branch in a decision table, simplify control flow before adding types, and prove that guard clauses, decomposition, special cases, or polymorphism preserve each supported and failure path."
+	},
+	"DPR6 Simplifying Method Calls": {
+		estimatedTime: "6 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"honest API",
+			"source compatibility",
+			"exception contract",
+			"null and Optional",
+			"call-site migration",
+			"deprecation path"
+		],
+		flowNote:
+			"Improve method and object APIs while preserving or deliberately migrating call sites, return and exception contracts, nullability, overload resolution, and externally visible compatibility."
+	},
+	"DPR7 Dealing with Generalization": {
+		estimatedTime: "5 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"substitutability",
+			"inheritance pressure",
+			"pull up and push down",
+			"Template Method",
+			"delegation",
+			"hierarchy exit"
+		],
+		flowNote:
+			"Test substitutability before moving members through a hierarchy, keep shared contracts honest, and replace inheritance with delegation when variation or ownership no longer fits one family."
+	},
+	"DPR8 Refactoring Toward Patterns": {
+		estimatedTime: "5 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"pattern entry path",
+			"small transformations",
+			"design pressure",
+			"simpler destination",
+			"pattern evidence",
+			"pattern removal"
+		],
+		flowNote:
+			"Let a pattern emerge from a sequence of justified transformations, compare it with a simpler destination, and retain the named pattern only when the original change pressure measurably improves."
+	},
+	"DPR9 Testability, DI, and Refactoring with Confidence": {
+		estimatedTime: "6 sessions · 60–100 minutes each",
+		keyBlocks: [
+			"legacy seam",
+			"clock and randomness",
+			"file and network effects",
+			"dependency injection",
+			"characterization quality",
+			"negative path"
+		],
+		flowNote:
+			"Create seams around nondeterminism and external effects, write focused characterization tests that can fail for the right reason, and use dependency injection to make behavior observable before structural change."
+	},
+	"DPR10 Capstone Refactoring Studio": {
+		estimatedTime: "8–12 sessions · 60–120 minutes each",
+		keyBlocks: [
+			"baseline tag",
+			"change ledger",
+			"commit-sized sequence",
+			"rollback point",
+			"before-and-after evidence",
+			"remaining risk"
+		],
+		flowNote:
+			"Refactor one salvageable Java application through a recorded sequence of green commits, stop when evidence becomes ambiguous, and present behavior, design, compatibility, and rollback evidence rather than a polished rewrite alone."
+	}
+};
+
+function designPatternsJavaPart2OptionPath(title: string) {
+	return /extension|clinic 1[5-7]/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function insertDesignPatternsJavaPart2Item(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateDesignPatternsJavaPart2Module(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = DESIGN_PATTERNS_JAVA_PART_2_FLOW[module.title];
+	let curriculum: RawCourseModuleItem[] = module.curriculum.map(item => ({
+		...item,
+		learningPath: "core" as const
+	}));
+	const coreProjectTitle = curriculum.at(-1)?.title ?? "";
+
+	if (module.title === "DPR1 Code Smells and Safe Refactoring Workflow") {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Refactor, Bug Fix, Feature, or Performance Change?",
+				content: [
+					"Classify the task before editing. A refactor preserves externally observable behavior; a bug fix intentionally changes incorrect behavior; a feature adds behavior; and a performance change preserves results while changing a measured resource property.",
+					"",
+					"Keep these change types in separate commits whenever practical. If a failing characterization test exposes an existing defect, record the current output first, obtain an explicit new expectation, and review the behavior change separately from structural cleanup."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Behavior Inventory and Reversible Commit Contract",
+				content: [
+					"Inventory return values, output text, exceptions, state changes, file or network effects, ordering, timing-sensitive contracts, and public API shape. Add characterization coverage for the normal path and at least one edge or failure path.",
+					"",
+					"Commit the green baseline. Perform one named transformation per commit, rerun the focused tests, inspect the diff, and stop when the failure cannot be explained or the next step cannot be rolled back independently."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPR2 Composing Methods") {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Extraction Semantic-Preservation Contract",
+				content: [
+					"Before Extract Method, Replace Temp with Query, or Substitute Algorithm, trace evaluation order, repeated calls, mutation, exceptions, short-circuiting, numeric conversion, and object identity.",
+					"",
+					"Use a table of inputs, intermediate values, outputs, and thrown exceptions. A cleaner method body is not equivalent if an extracted query runs twice, a side effect moves, precision changes, or an exception occurs at a different observable point."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPR3 Moving Features Between Objects") {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Ownership Move and Client-Compatibility Contract",
+				content: [
+					"Name the invariant and data that justify the new owner. Move one method or field at a time, keep the original entry point as a temporary delegating bridge, and migrate callers only after both direct and delegated paths are covered.",
+					"",
+					"Compare package dependencies, constructor dependencies, public methods, and files touched by one realistic change before and after. Reject a move that merely creates a message chain or exposes another object's internals."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPR4 Organizing Data") {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Value Semantics and Collection Ownership",
+				content: [
+					"Define identity versus value equality before replacing primitives or data clumps. Keep `equals` and `hashCode` consistent, decide whether ordering participates in equality, and test map or set behavior after the change.",
+					"",
+					"Use a record for a shallowly immutable transparent carrier when that contract fits. Copy mutable inputs and outputs or expose unmodifiable views according to one explicit collection-ownership policy."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_RECORDS,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Data Migration and Compatibility Check",
+				content: [
+					"List every constructor, factory, accessor, serializer, fixture, equality check, and persistence boundary affected by the new representation. Add conversion at one boundary rather than mixing old and new shapes throughout the domain.",
+					"",
+					"Test missing, extra, invalid, and round-trip data. Preserve the old format through an adapter or explicit migration when external consumers still depend on it; record any deliberate compatibility break separately."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_COMPATIBILITY,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPR5 Simplifying Conditional Expressions") {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Decision Table and Branch-Equivalence Contract",
+				content: [
+					"Convert the original conditional into a decision table containing inputs, branch selected, result, state change, and exception. Include boundaries where conditions overlap, no condition matches, or evaluation short-circuits.",
+					"",
+					"Apply guard clauses and decomposition before polymorphism. Rerun every table row after each step; add a type only when variants own stable behavior rather than when a single conditional merely looks long."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPR6 Simplifying Method Calls") {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Public API Compatibility Contract",
+				content: [
+					"Inventory source compatibility across public method names, parameter and return types, overloads, checked exceptions, visibility, generic bounds, and reflective or serialized use before changing a call shape.",
+					"",
+					"Prefer an additive migration: introduce the clearer API, delegate the old API, migrate call sites, mark the old entry point with a documented deprecation path, and remove it only at an intentional compatibility boundary."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_COMPATIBILITY,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Null, Optional, and Exception Boundary",
+				content: [
+					"Use one absence policy per boundary: nullable value, `Optional` return, empty collection, special-case object, or exception. Do not use `Optional` as a field or parameter by habit, and do not convert a failure into absence without an explicit contract.",
+					"",
+					"Test present, absent, invalid, and dependency-failure paths. Keep exception type, message contract if externally relied upon, and cause chain stable during a structural refactor."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_OPTIONAL,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPR7 Dealing with Generalization") {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Substitutability and Hierarchy-Exit Contract",
+				content: [
+					"Write contract tests that run against every subtype: accepted inputs, results, exceptions, mutation, and lifecycle rules. Pull members up only when every subtype honors the same meaning; push members down when the base contract is dishonest.",
+					"",
+					"Compare Template Method, sealed hierarchy, and delegation. Exit inheritance when subclasses reject inherited behavior, depend on fragile protected state, or vary across more than one independent axis."
+				].join("\n"),
+				projectLink:
+					"https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.1.1.2",
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPR8 Refactoring Toward Patterns") {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Pattern Arrival Evidence and Exit Trigger",
+				content: [
+					"Record the smell, requested change, transformation sequence, simpler destination, pattern introduced, and the exact pressure it relieves. Compare files touched, conditional edits, duplicated rules, dependency count, or test setup for the next variant.",
+					"",
+					"Define an exit trigger: collapse the abstraction when variants disappear, the boundary stops changing, indirection exceeds the benefit, or a modern Java language feature expresses the same contract more directly."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (
+		module.title === "DPR9 Testability, DI, and Refactoring with Confidence"
+	) {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Legacy Side-Effect Seam Catalog",
+				content: [
+					"Locate direct calls to clocks, randomness, static globals, environment variables, file systems, network clients, databases, threads, and process exit. Wrap one effect behind the narrowest domain-facing collaborator and inject it at the composition boundary.",
+					"",
+					"Use deterministic fakes for time and randomness, temporary owned fixtures for files, and in-memory or fake clients for remote effects. Keep integration tests for the real adapter rather than mocking the domain itself."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Characterization Test Quality Contract",
+				content: [
+					"A characterization test names the observed contract, controls nondeterminism, asserts meaningful outputs or effects, and fails when that behavior changes. Avoid tests that duplicate implementation steps, assert private methods, or pass regardless of the mutation.",
+					"",
+					"Prove each test can fail by making one temporary local mutation or by checking a known counterexample, then restore the source. Include normal, boundary, and failure paths before widening the refactor."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "DPR10 Capstone Refactoring Studio") {
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Capstone Change Ledger and Stop Points",
+				content: [
+					"Tag or commit the green baseline, then keep a ledger with smell, risk, planned transformation, expected benefit, focused tests, commit, result, and next decision. Separate structural, behavior, dependency, and formatting changes.",
+					"",
+					"Define stop points before editing: unexplained test failure, compatibility uncertainty, diff too large to review, missing rollback, or a new design pressure that invalidates the plan. Re-plan from the last green commit rather than forcing the sequence."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+		curriculum = insertDesignPatternsJavaPart2Item(
+			curriculum,
+			coreProjectTitle,
+			{
+				title: "Capstone Evidence Review",
+				content: [
+					"Deliver the behavior inventory, baseline tests, smell map, ordered commits, compatibility notes, before-and-after dependency view, and measurements tied to two realistic change scenarios.",
+					"",
+					"Demonstrate one postponed improvement, one abandoned refactor with evidence, one remaining risk, and the rollback point for every major change. The review evaluates judgment and safety, not the number of techniques or patterns used."
+				].join("\n"),
+				projectLink: DESIGN_PATTERNS_JAVA_PART_2_JUNIT,
+				learningPath: "core"
+			}
+		);
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	return {
+		...module,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: designPatternsJavaPart2OptionPath(item.title)
+		}))
+	};
+}
+
+function buildDesignPatternsJavaPart2ClinicAppendix(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Refactoring Clinics 11–17",
+		estimatedTime:
+			"Choose a clinic after the matching course unit or a capstone diagnosis",
+		keyBlocks: [
+			"feature ownership",
+			"conditional replacement",
+			"parameter objects",
+			"calculation pipeline",
+			"workflow variation",
+			"absence policy",
+			"multi-smell sequence"
+		],
+		curriculum: [
+			{
+				title: "Refactoring Clinic Scope Guide",
+				content:
+					"**Course flow:** These seven clinics preserve the complete guided practice collection without presenting them as seven additional required units. Select the clinic that matches a diagnosed smell, preserve the original behavior first, complete its guided reconstruction, close reference code, and then attempt the transfer or extension from the last green baseline.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: designPatternsJavaPart2OptionPath(item.title)
+				})
+			)
+		)
+	};
+}
+
+const designPatternsJavaPart2PrimaryModules =
+	designPatternsInJavaPart2SourceCourse.modules
+		.filter(module =>
+			DESIGN_PATTERNS_JAVA_PART_2_PRIMARY_TITLES.has(module.title)
+		)
+		.map(decorateDesignPatternsJavaPart2Module);
+const designPatternsJavaPart2Clinics =
+	designPatternsInJavaPart2SourceCourse.modules.filter(
+		module => !DESIGN_PATTERNS_JAVA_PART_2_PRIMARY_TITLES.has(module.title)
+	);
+
+export const designPatternsInJavaPart2Course: RawCourse = {
+	...designPatternsInJavaPart2SourceCourse,
+	modules: [
+		...designPatternsJavaPart2PrimaryModules,
+		buildDesignPatternsJavaPart2ClinicAppendix(
+			designPatternsJavaPart2Clinics
+		)
 	]
 };
