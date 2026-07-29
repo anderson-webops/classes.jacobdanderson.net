@@ -170,9 +170,11 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"Supplied command transcripts, DNS answers, route tables, listener maps, firewall rules, and packet excerpts provide a complete no-VM and no-capture route."
 	],
 	"rust-systems-security": [
-		"Current stable Rust toolchain and Cargo.",
-		"Unsafe Rust only inside explicitly scoped labs.",
-		"Clippy/tests encouraged before comparing Rust and C/C++ safety properties."
+		"Rust 1.97.1 stable with rustup, Cargo, rustfmt, Clippy, and Rust 2024 edition for course-authored work; linked source checkpoints currently declare Rust 2021 edition and remain valid migration exercises.",
+		"Use a committed Cargo.lock where applicable, cargo fmt --check, cargo clippy --all-targets --all-features -- -D warnings, and cargo test --locked as the repeatable baseline.",
+		"cargo audit is an installed RustSec tool whose live advisory refresh may require network access; the supplied advisory case provides an offline-equivalent dependency review.",
+		"Miri and cargo fuzz are optional, bounded advanced tools: both require a compatible nightly toolchain, and cargo fuzz also requires a supported Unix-like x86-64 or AArch64 environment.",
+		"Unsafe Rust and FFI appear only in explicitly scoped local labs with written invariants, safe wrappers, negative tests, cleanup, and no real third-party binary or service."
 	],
 	"unity-game-development": [
 		"Unity 6.3 LTS through Unity Hub.",
@@ -622,6 +624,13 @@ const standardsOverrides: Record<string, string[]> = {
 		"OWASP Cheat Sheet guidance for input validation, logging, REST, TLS, secrets, and WebSocket security.",
 		"NIST Secure Software Development Framework 1.1 and SP 800-61 Revision 3 incident-response guidance.",
 		"Node.js 24 LTS release, security, permission, test-runner, and dependency-management documentation."
+	],
+	"rust-systems-security": [
+		"Rust 1.97.1 release notes and the Rust 2024 Edition Guide.",
+		"The Rust Programming Language and Rust Reference for ownership, borrowing, error handling, concurrency, and unsafe obligations.",
+		"Rust API Guidelines and the Command Line Applications in Rust guide for reviewable library and CLI boundaries.",
+		"RustSec Advisory Database and cargo-audit guidance for lockfile-based dependency review.",
+		"Miri and cargo-fuzz documentation for bounded undefined-behavior checks and parser fuzzing, with their platform and coverage limitations recorded."
 	]
 };
 
@@ -681,6 +690,12 @@ const boundaryOverrides: Record<string, string[]> = {
 		"All implementation and verification targets are local toy services, supplied fixtures, or explicitly owned isolated lab hosts with written scope, stop conditions, cleanup, and no real user data.",
 		"Teaches threat modeling, authorization, transport, validation, observability, exposure control, secure Node/TypeScript services, real-time boundaries, deployment review, authorized testing, and disclosure rather than exploit development or unsolicited assessment.",
 		"AI may draft test cases, payload variations, code-review questions, or report structure only inside the prewritten scope; it receives no secrets or real data, executes nothing automatically, and never grants authorization."
+	],
+	"rust-systems-security": [
+		"Uses RSS0–RSS10 as one complete progression from toolchain evidence through ownership, borrowing, typed failures, safe state, APIs, parsers, concurrency, unsafe boundaries, and a legacy-hardening capstone.",
+		"All programs operate on supplied text, byte, state, dependency, or concurrency fixtures in local workspaces; no live service, third-party binary, production repository, real credential, or personal data is required.",
+		"Teaches how Rust reduces selected memory-safety and data-race risks while preserving explicit attention to logic, authorization, protocol, dependency, resource-exhaustion, panic, and unsafe-contract failures.",
+		"AI may explain diagnostics or suggest test cases only after the learner states the ownership, lifetime, state, or unsafe invariant; it cannot invent a safety contract, approve an unsafe block, select real targets, or replace tool evidence and code review."
 	]
 };
 
@@ -719,6 +734,14 @@ const capstoneOverrides: Record<string, string[]> = {
 		"Structured security events with redaction, correlation, retention notes, alert thresholds, one injected incident, and a privacy-safe evidence timeline.",
 		"An authorized test plan mapped to selected ASVS, API Top 10, and WSTG checks, with reproducible results, remediation, retest, severity rationale, and responsible-disclosure draft.",
 		"A release and recovery packet containing Node and dependency versions, test commands, secrets boundary, rollback, incident response, known limitations, and a five-minute demonstration."
+	],
+	"rust-systems-security": [
+		"One small supplied legacy parser or stateful CLI with an explicit behavior contract, threat model, trust boundary, malformed-input inventory, and named non-goals.",
+		"A Rust 2024 redesign that uses ownership, borrowing, Option, Result, enums, checked arithmetic, bounded collections, and narrow APIs to make invalid or ambiguous states harder to express.",
+		"Deterministic unit, integration, property-style, malformed-input, concurrency, and regression cases with panic behavior, resource limits, and platform assumptions recorded.",
+		"A minimal unsafe or FFI boundary only when the project requires it, with a written safety contract, isolated wrapper, call-site preconditions, review checklist, and Miri evidence where applicable.",
+		"A dependency and tool-evidence packet containing Rust 1.97.1, lock state, format, Clippy, tests, RustSec review, and bounded fuzz or supplied-corpus results.",
+		"A before-and-after audit explaining which bug classes changed, which logic and operational risks remain, how the correction was verified, and how another reviewer can reproduce the result."
 	]
 };
 
@@ -746,6 +769,14 @@ const safetyPolicyOverrides: Record<string, string[]> = {
 		"Treat every request, log, packet, certificate, configuration, and AI-generated suggestion as untrusted; redact secrets and identifiers, cap input and output size, and review before execution or sharing.",
 		"AI cannot authorize a target, expand scope, execute a command, select real identities, store sensitive context, or replace human verification; retain only reviewed, bounded test ideas and report wording.",
 		"Every finding separates observation, impact, preconditions, evidence, remediation, retest, uncertainty, disclosure audience, and recovery or cleanup."
+	],
+	"rust-systems-security": [
+		"All builds, parsers, unsafe examples, FFI shims, dependency checks, Miri runs, and fuzz cases stay inside a course-owned local workspace using supplied fictional inputs and fixed resource limits.",
+		"Do not inspect unlicensed binaries, connect the exercises to live services, process real secrets or personal data, tamper with third-party dependencies, publish weaponized code, or use a classroom result as proof about production software.",
+		"Prefer safe Rust; every unsafe operation names the invariant the compiler cannot check, the caller obligation, the contained module boundary, the failure mode, and the evidence used to review it.",
+		"Fuzzing has a fixed seed corpus, input-size cap, run or case budget, artifact limit, stop condition, and cleanup; supplied failing inputs replace live fuzzing when nightly tooling or the supported platform is unavailable.",
+		"Treat compiler, Clippy, cargo audit, Miri, fuzzing, and AI output as partial evidence with known blind spots; none proves complete security or permits widening the project scope.",
+		"Every correction preserves intended behavior, adds a negative regression case, records tool versions and exact commands, distinguishes observation from inference, and states remaining logic, dependency, platform, and unsafe-contract risk."
 	]
 };
 
@@ -906,6 +937,10 @@ function sourcePolicyFor(courseId: string) {
 
 		if (courseId === "network-security") {
 			return `Source-backed course. Canonical source repository: ${url}. NSEC1–NSEC6 are the primary defensive TypeScript fixtures; the numbered NSEC-* folders are lightweight Python port-normalization checkpoints or studio practice. Existing starter/solution URLs remain traceable, while supplied security cases prevent a generic checkpoint from being treated as a complete service audit or live penetration test.`;
+		}
+
+		if (courseId === "rust-systems-security") {
+			return `Source-backed course. Canonical source repository: ${url}. The linked RUST-* starter/solution folders are lightweight label-sanitization checkpoints, currently using Rust 2021 edition, rather than distinct implementations of every named module. Existing URLs remain traceable; the supplied Rust cases and verification guide provide the module-specific ownership, parser, concurrency, unsafe, dependency, and capstone evidence.`;
 		}
 
 		return `Source-backed course. Canonical source repository: ${url}. Starter/reference links remain synchronized with catalog projects.`;
@@ -3029,17 +3064,18 @@ function addSystemsSpecificSafetyModule(courseId: string, course: RawCourse) {
 		},
 		"rust-systems-security": {
 			environment: [
-				"Stable Rust with Cargo, Clippy, tests, cargo audit, Miri where appropriate, cargo fuzz for parser surfaces, and FFI only in scoped labs.",
-				"Unsafe blocks require written invariants.",
-				"Redesign unsafe C surfaces into safer Rust components."
+				"Rust 1.97.1 stable, Rust 2024 edition for course-authored work, Cargo, rustfmt, Clippy, tests, a committed lockfile where applicable, and supplied offline cases.",
+				"RustSec cargo audit, Miri, and cargo fuzz appear as bounded evidence tools with explicit install, network, nightly, platform, and coverage limitations.",
+				"Unsafe blocks and FFI require written invariants, isolated safe wrappers, negative tests, local toy inputs, and review of every caller obligation.",
+				"Legacy surfaces are supplied text, byte, state, and concurrency fixtures redesigned into safer local Rust components."
 			],
 			prohibited: [
-				"Offensive tool development, stealth or persistence features, dangerous FFI wrappers to subvert host protections.",
-				"Dependency tampering outside toy repositories.",
-				"Networked security tooling that leaves local lab scope."
+				"Offensive tooling, stealth, persistence, dangerous FFI wrappers, live-service interaction, or work against a third-party binary or repository.",
+				"Dependency tampering, real credentials or personal data, unbounded fuzzing, generated payload publication, or claims that tool output proves complete security.",
+				"AI-authored unsafe contracts or automatic code execution without learner reasoning, bounded scope, review, and independent verification."
 			],
 			project:
-				"Rewrite a toy C parser or library surface in Rust behind the same interface, document unsafe boundaries, and add audit/lint/fuzz evidence."
+				"Redesign a supplied toy legacy parser or stateful CLI in Rust 2024, preserve its valid behavior, reject malformed input, document every remaining unsafe or FFI boundary, and provide format, lint, test, dependency, bounded fuzz or corpus, and before-and-after audit evidence."
 		}
 	};
 	const config = rows[courseId];
