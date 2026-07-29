@@ -4255,6 +4255,234 @@ const earlyElementaryBModuleMetadata: Record<
 	}
 };
 
+const lateElementaryAModuleMetadata: Record<
+	string,
+	SourceLibraryModuleMetadata
+> = {
+	"LEA1 Place Value": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"ones / tens / hundreds",
+			"expanded form",
+			"exchange",
+			"standard form",
+			"equivalent value"
+		],
+		flowNote:
+			"Represent the prize money before combining it, then exchange equivalent groups until the number uses the fewest place-value pieces. Verify that every exchange preserves total value."
+	},
+	"LEA2 Comparing and Rounding": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"compare digits",
+			"rounding place",
+			"benchmark",
+			"estimate / exact",
+			"decision evidence"
+		],
+		flowNote:
+			"Mark the rounding place and benchmark values before rounding. Keep exact cost and distance separate from their estimates, then use both in the final comparison."
+	},
+	"LEA3 Addition and Subtraction": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"place-value model",
+			"regrouping",
+			"standard algorithm",
+			"estimate",
+			"inverse check"
+		],
+		flowNote:
+			"Model the operation with place-value pieces first, connect each trade to the written algorithm, and use estimation or the inverse operation to check the result."
+	},
+	"LEA4 Module Project: Soccer Season": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"roster table",
+			"multi-digit total",
+			"rounding",
+			"inequality",
+			"synergy adjustment"
+		],
+		flowNote:
+			"Build one auditable roster table, calculate exact and rounded totals, then change one player or position at a time so every synergy adjustment can be traced."
+	},
+	"LEA5 Factors and Multiples": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"array",
+			"factor pair",
+			"multiple",
+			"prime / composite",
+			"common factor"
+		],
+		flowNote:
+			"Build arrays before listing factors and pair every factor with its partner. Use the completed lists to distinguish factors, multiples, prime numbers, and composite numbers."
+	},
+	"LEA6 Multiplication by One-Digit Numbers": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"place-value product",
+			"partial products",
+			"regrouping",
+			"estimate",
+			"reasonableness"
+		],
+		flowNote:
+			"Decompose the multi-digit factor by place value, record each partial product, and compare the exact total with an estimate before accepting it."
+	},
+	"LEA7 Multiplication by Two-Digit Numbers": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"area model",
+			"partial products",
+			"distributive property",
+			"two-digit factor",
+			"estimate"
+		],
+		flowNote:
+			"Start with an area model or decomposition, label every partial product, and explain how the extra group changes 25 × 10 into 25 × 11."
+	},
+	"LEA8 Division by One-Digit Numbers": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"equal groups",
+			"quotient",
+			"remainder",
+			"interpretation",
+			"multiplication check"
+		],
+		flowNote:
+			"Represent equal groups before using a written division strategy. Interpret the remainder in the carton context and check the quotient with multiplication."
+	},
+	"LEA9 Module Project: Invest-a-thon": {
+		estimatedTime: "3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"equal allocation",
+			"remainder",
+			"growth multiplier",
+			"reallocation constraint",
+			"scenario justification"
+		],
+		flowNote:
+			"Treat all companies, multipliers, and projections as a fictional classroom dataset, not investment advice. Keep equal allocation, hypothetical selection, growth, and reallocation as separately verified stages."
+	},
+	"Check-in #1": {
+		estimatedTime: "1–2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"place value / rounding",
+			"operations",
+			"factor / multiple",
+			"multiplication / division",
+			"visible verification"
+		],
+		flowNote:
+			"Collect one place-value or rounding explanation, one multi-digit operation, one factor or multiple model, and one multiplication or division check. Use the evidence gaps to select review."
+	},
+	"LEA10 Lines": {
+		estimatedTime: "1–2 sessions · 40–50 minutes each",
+		keyBlocks: ["point", "line", "line segment", "ray", "endpoint / arrow"],
+		flowNote:
+			"Draw and label each figure with endpoints and arrows before comparing definitions. The drawing and the vocabulary explanation must agree."
+	},
+	"LEA11 Angles": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"vertex / rays",
+			"degree",
+			"right / acute / obtuse",
+			"clockwise / counterclockwise",
+			"final direction"
+		],
+		flowNote:
+			"Trace each compass turn from a visible starting direction, label its degree measure and direction, and verify the final heading after the full route."
+	},
+	"LEA12 Triangles": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"side-length class",
+			"angle class",
+			"right / acute / obtuse",
+			"equilateral / isosceles / scalene",
+			"multiple classification"
+		],
+		flowNote:
+			"Sort the same triangles once by side lengths and once by angles. Describe at least one triangle with both classifications to make the two attribute systems distinct."
+	},
+	"LEA13 Module Project: An Obtuse Life": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"shape attributes",
+			"symmetry",
+			"angle type",
+			"perpendicular",
+			"rotation"
+		],
+		flowNote:
+			"Use classroom-provided images, object sketches, or original diagrams; no student needs to photograph people or private spaces. Label every requested feature, then trace the lighting rotation from 90 degrees."
+	},
+	"LEA14 Polygons and Perimeter": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"polygon",
+			"equal sides",
+			"perimeter",
+			"line symmetry",
+			"unit label"
+		],
+		flowNote:
+			"Label each side before calculating the puppy-pen perimeter, then test the bed design by folding or reflecting it across the marked line of symmetry."
+	},
+	"LEA15 Quadrilaterals": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"parallel sides",
+			"equal sides",
+			"right angles",
+			"quadrilateral hierarchy",
+			"overlapping categories"
+		],
+		flowNote:
+			"Classify each quadrilateral from visible side and angle evidence and place it in every category that applies. Explain category overlap instead of choosing only one name."
+	},
+	"LEA16 Area and Volume": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"perimeter constraint",
+			"surface area",
+			"face decomposition",
+			"volume",
+			"square / cubic units"
+		],
+		flowNote:
+			"Choose dimensions that satisfy the 30-foot perimeter first, label every face used for tile area, and keep square-unit and cubic-unit calculations separate."
+	},
+	"LEA17 Module Project: The LA River Master Plan": {
+		estimatedTime: "3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"scaled plan",
+			"area decomposition",
+			"remaining area",
+			"perimeter",
+			"unknown dimension / volume"
+		],
+		flowNote:
+			"Build one labeled plan with a stated scale, verify used and remaining area, and then solve the pool and hot-tub dimensions with volume equations that preserve units."
+	},
+	"Check-in #2": {
+		estimatedTime: "1–2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"line / angle",
+			"triangle / polygon",
+			"quadrilateral evidence",
+			"perimeter / area",
+			"volume with units"
+		],
+		flowNote:
+			"Collect one labeled line or angle model, one shape classification, one perimeter or area calculation, and one volume calculation. Select review from missing evidence rather than assigning every option."
+	}
+};
+
 const elementaryMathCourses = {
 	earlyElementaryA: createSourceLibraryCourse({
 		name: "Early Elementary A: Discovering Numbers, Operations, and Measurement",
@@ -4321,48 +4549,9 @@ const elementaryMathCourses = {
 		name: "Late Elementary A: Investigating Multiplication, Division, and Geometry",
 		area: "late elementary math",
 		focus: "place value, rounding, whole-number operations, factors, multiples, multiplication, division, lines, angles, triangles, polygons, perimeter, area, and volume",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: lateElementaryAModuleMetadata,
 		sourceActivityAnchors: lateElementaryAMathSourceAnchors,
-		staticAssets: [
-			"check_in_1_multiplication_0.png",
-			"check_in_1_multiplication_1.png",
-			"check_in_1_multiplication_3.png",
-			"check_in_2_lines_0.png",
-			"check_in_2_lines_2.png",
-			"check_in_2_lines_4.png",
-			"check_in_2_lines_5.png",
-			"checkin1_app_0.png",
-			"maa1_pset1_0.png",
-			"maa6_pset1_0.png",
-			"maa6_pset1_1.png",
-			"maa6_pset1_2.png",
-			"maa6_pset1_3.png",
-			"maa6_pset1_4.png",
-			"maa7_pset1_0.png",
-			"maa7_pset1_1.png",
-			"maa7_pset1_10.png",
-			"maa7_pset1_11.png",
-			"maa7_pset1_2.png",
-			"maa7_pset1_6.png",
-			"maa7_pset1_7.png",
-			"maa7_pset1_8.png",
-			"maa7_pset1_9.png",
-			"maa7_pset2_0.png",
-			"maa7_pset2_1.png",
-			"maa7_pset2_2.png",
-			"maa7_pset2_3.png",
-			"maa7_pset3_0.png",
-			"maa7_pset3_1.png",
-			"maa7_pset3_2.png",
-			"maa7_pset3_3.png",
-			"maa7_pset3_4.png",
-			"maa7_pset3_5.png",
-			"maa7_pset3_6.png",
-			"maa7_pset3_7.png",
-			"maa7_pset3_8.png",
-			"maa7_pset3_9.png",
-			"module_example.png",
-			"module_project_1_0.png"
-		],
 		modules: [
 			"LEA1 Place Value",
 			"LEA2 Comparing and Rounding",
