@@ -1,7 +1,8 @@
 import type {
 	CourseItemLearningPath,
 	RawCourse,
-	RawCourseModule
+	RawCourseModule,
+	RawCourseModuleItem
 } from "./types";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
@@ -6857,7 +6858,7 @@ const sourceVariantCourses = {
 	usacoBronzeOnDemand: createSourceLibraryCourse({
 		name: "USACO Bronze: On Demand",
 		area: "self-paced competitive programming",
-		focus: "USACO setup, file input and output, simulation, complete search, greedy reasoning, modular arithmetic, grids, strings, arrays, intervals, and contest postmortems",
+		focus: "USACO setup, modern standard input and output, legacy file input and output, simulation, complete search, greedy reasoning, counting, grids, strings, arrays, intervals, constructive output, and contest postmortems",
 		staticAssets: [
 			"UB1.png",
 			"UB2.png",
@@ -6949,5 +6950,507 @@ export const lateElementaryMathACourse = elementaryMathCourses.lateElementaryA;
 export const lateElementaryMathBCourse = elementaryMathCourses.lateElementaryB;
 
 export const scratchLevel1BootcampCourse = sourceVariantCourses.scratchBootcamp;
-export const usacoBronzeOnDemandCourse =
+
+const USACO_ON_DEMAND_CONTESTS = "https://usaco.org/index.php?page=contests";
+const USACO_ON_DEMAND_RULES = "https://usaco.org/index.php?page=instructions";
+const USACO_ON_DEMAND_2025_BRONZE =
+	"https://usaco.org/index.php?page=viewproblem2&cpid=1468";
+const USACO_ON_DEMAND_2026_BRONZE =
+	"https://usaco.org/index.php?page=viewproblem2&cpid=1563";
+const USACO_ON_DEMAND_2026_RESULTS =
+	"https://usaco.org/index.php?page=season26contest2results";
+const USACO_ON_DEMAND_REPOSITORY =
+	"https://github.com/instruction-material/USACO-Bronze/tree/main";
+const USACO_ON_DEMAND_ANCHOR_PATHS: Record<string, string> = {
+	"UB1 Square Pasture": "UB1-Square-Pasture",
+	"UB6 Milking Cows": "UB6-Milking-Cows",
+	"UB10 Transformations": "UB10-Transformations",
+	"UB16 Wormholes": "UB16-Wormholes",
+	"UB50 Milking Order": "UB50-Milking-Order",
+	"UB51 Family Tree": "UB51-Family-Tree"
+};
+
+interface UsacoOnDemandStageSpec {
+	sourceTitle: string;
+	title: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	flow: string;
+	curriculum: RawCourseModuleItem[];
+}
+
+const usacoBronzeOnDemandSourceCourse =
 	sourceVariantCourses.usacoBronzeOnDemand;
+const usacoBronzeOnDemandSourceModules =
+	usacoBronzeOnDemandSourceCourse.modules.filter(
+		module => module.kind !== "appendix"
+	);
+const usacoBronzeOnDemandStaticAssets =
+	usacoBronzeOnDemandSourceCourse.modules.find(
+		module => module.title === "Pending Static Assets"
+	);
+
+function requireUsacoOnDemandSourceModule(title: string) {
+	const module = usacoBronzeOnDemandSourceModules.find(
+		candidate => candidate.title === title
+	);
+	if (!module) {
+		throw new Error(
+			`USACO Bronze: On Demand source module ${title} is missing.`
+		);
+	}
+	return module;
+}
+
+function usacoOnDemandOptionPath(title: string): CourseItemLearningPath {
+	return /extension|challenge|wormholes|cryptarithm|course design|field reduction|milking order/i.test(
+		title
+	)
+		? "challenge"
+		: "choice";
+}
+
+function buildUsacoOnDemandStage(
+	spec: UsacoOnDemandStageSpec
+): RawCourseModule {
+	const sourceModule = requireUsacoOnDemandSourceModule(spec.sourceTitle);
+	const anchorPath = USACO_ON_DEMAND_ANCHOR_PATHS[spec.sourceTitle];
+
+	return {
+		title: spec.title,
+		estimatedTime: spec.estimatedTime,
+		keyBlocks: spec.keyBlocks,
+		curriculum: [
+			{
+				title: "Self-Paced Stage Map",
+				content: `**Course flow:** ${spec.flow}`,
+				learningPath: "core"
+			},
+			...spec.curriculum.map(item => ({
+				...item,
+				learningPath: "core" as const
+			})),
+			...sourceModule.curriculum.map((item, index) => ({
+				...item,
+				learningPath: "core" as const,
+				...(index === 0 && anchorPath
+					? {
+							projectLink: `${USACO_ON_DEMAND_REPOSITORY}/${anchorPath}/starter`,
+							solutionLink: `${USACO_ON_DEMAND_REPOSITORY}/${anchorPath}/solution`
+						}
+					: {})
+			}))
+		],
+		supplementalProjects: sourceModule.supplementalProjects.map(item => ({
+			...item,
+			learningPath: usacoOnDemandOptionPath(item.title)
+		}))
+	};
+}
+
+function buildUsacoOnDemandArchive(
+	title: string,
+	moduleTitles: string[],
+	keyBlocks: string[],
+	scope: string
+): RawCourseModule {
+	return {
+		kind: "appendix",
+		title,
+		estimatedTime: "Choose one problem for a diagnosed gap or spaced retry",
+		keyBlocks,
+		curriculum: [
+			{
+				title: "Archive Scope Guide",
+				content: [
+					`**Course flow:** ${scope}`,
+					"",
+					"**Selection rule:** Choose a problem because a stage gate exposed a specific weakness, because a solved pattern needs a spaced retry, or because every current core task is already independent. One careful attempt, postmortem, and later rewrite is more valuable than racing through the archive.",
+					"",
+					"**Help sequence:** Read and trace first, request one narrow hint only after recording the blocked step, continue independently, and open a solution only after preserving the attempt and smallest failing case. Close the solution before rewriting from an empty file on a later day."
+				].join("\n"),
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: moduleTitles.flatMap(moduleTitle => {
+			const module = requireUsacoOnDemandSourceModule(moduleTitle);
+			return [...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					title: `${module.title}: ${item.title}`,
+					learningPath: usacoOnDemandOptionPath(item.title)
+				})
+			);
+		})
+	};
+}
+
+const usacoBronzeOnDemandPrimaryModules = [
+	buildUsacoOnDemandStage({
+		sourceTitle: "UB0 Welcome to USACO Bronze!",
+		title: "UB0 On-Demand Setup, Rules, and Placement",
+		estimatedTime: "2–3 sessions · 45–75 minutes each",
+		keyBlocks: [
+			"live contest rules",
+			"modern standard input and output",
+			"legacy file input and output",
+			"placement evidence",
+			"self-paced help ladder",
+			"protected practice"
+		],
+		flow: "Set up one reliable language workflow, read the current rules, and complete a two-problem placement attempt before choosing an entry stage. Placement can skip familiar instruction, but it does not waive the protected mock or final readiness gate.",
+		curriculum: [
+			{
+				title: "Current USACO Contest and I/O Contract",
+				content: [
+					"Current contests generally contain three or four algorithmic problems in one four-to-five-hour personal window and award partial credit by test case. Promotion thresholds, schedules, language versions, and certification details can change, so the live instructions and contest page remain authoritative.",
+					"",
+					"Current problems use terminal-based standard input and output. Many problems from before December 2020 use exact, case-sensitive filenames listed in the statement. Match the specified mode, print only the requested output, and classify judge results as accepted, wrong answer, time limit, runtime or memory error, compile failure, or output-format failure."
+				].join("\n"),
+				projectLink: USACO_ON_DEMAND_RULES
+			},
+			{
+				title: "Placement Attempt and Entry Decision",
+				content: [
+					"**Attempt:** Select two unseen Bronze problems from different patterns. Use an empty file, a 75-minute limit per problem, and no hints or solutions. Record the statement facts, constraints, planned complexity, sample result, custom tests, and final judge result.",
+					"",
+					"**Entry decision:** Start at Stage 1 when either problem reveals setup, translation, or testing gaps. Start at the first later stage whose pattern cannot be solved and explained independently. A clean solve includes exact I/O, a constraint-safe method, boundary tests, and a brief correctness argument.",
+					"",
+					"**Spaced check:** Re-solve one placement problem from an empty file after at least two days. A remembered script does not count as transfer; the new record needs an independently reconstructed model and tests."
+				].join("\n")
+			},
+			{
+				title: "Help Ladder and Contest Integrity",
+				content: [
+					"**Course practice:** First preserve the attempt and name the blocked step. Next use one diagnostic hint, return to the problem, and compare a solution only after the attempt can no longer progress. Close all reference code before completing a later independent rewrite.",
+					"",
+					"**Active contests and protected mocks:** Work alone. Generative AI, Copilot-style assistance, discussion, shared code, prewritten templates, solution resources, and automated submissions are prohibited. Only basic language syntax, library, and input/output references are permitted.",
+					"",
+					"**Evidence:** Begin from an empty solution file, retain the submitted source and result, and write the postmortem only after the timer ends."
+				].join("\n"),
+				projectLink: USACO_ON_DEMAND_RULES
+			}
+		]
+	}),
+	buildUsacoOnDemandStage({
+		sourceTitle: "UB1 Square Pasture",
+		title: "Stage 1: Simulation and Exact Translation",
+		estimatedTime: "4 sessions · 45–75 minutes each",
+		keyBlocks: [
+			"state model",
+			"literal translation",
+			"update order",
+			"tiny oracle",
+			"boundary tests",
+			"independent retry"
+		],
+		flow: "Translate each story into state, transitions, stopping conditions, and an answer update. Complete Square Pasture as the anchor, choose one targeted archive problem, then pass the stage gate from an empty file before advancing.",
+		curriculum: [
+			{
+				title: "Simulation Attempt Protocol",
+				content: [
+					"**Before code:** Name the full state, one legal transition, update order, stopping condition, and answer update.",
+					"**Tiny oracle:** Hand-compute a minimum case, a typical case, and a boundary or overshoot case.",
+					"**After code:** Compare each state change with the oracle, then add a test where changing update order changes the result.",
+					"**Complexity:** Count simulated steps and compare that count with the largest legal input."
+				].join("\n")
+			},
+			{
+				title: "Stage 1 Mastery Gate",
+				content:
+					"Without notes, solve a fresh direct-simulation problem, explain the invariant that remains true after every update, and repair one deliberately broken boundary case. Advance when the code, trace, and explanation agree; otherwise choose one problem from the Foundation Archive and retry the gate later."
+			}
+		]
+	}),
+	buildUsacoOnDemandStage({
+		sourceTitle: "UB10 Transformations",
+		title: "Stage 2: Strings, Modular Arithmetic, and Grids",
+		estimatedTime: "5 sessions · 45–75 minutes each",
+		keyBlocks: [
+			"string traversal",
+			"modular arithmetic",
+			"grid coordinates",
+			"rotation and reflection",
+			"case ordering",
+			"visual trace"
+		],
+		flow: "Use Transformations as the anchor for grid representation and ordered cases, then connect the same exactness to strings and modular arithmetic. Advance only after a fresh case can be modeled without copying the anchor.",
+		curriculum: [
+			{
+				title: "Representation and Case-Order Contract",
+				content:
+					"Write the representation before the algorithm: character index, row and column convention, transformation formula, and comparison rule. Keep rotation, reflection, and combinations as named operations. Test an asymmetric tiny grid so incorrect transformations cannot pass by coincidence, and preserve the required case order from the statement."
+			},
+			{
+				title: "Stage 2 Mastery Gate",
+				content:
+					"Solve one unseen string or modular-arithmetic problem and one small grid transformation from an empty file. For each, provide a non-example that distinguishes the chosen rule from a tempting wrong rule. Use the Foundation Archive for targeted repair when either representation remains unclear."
+			}
+		]
+	}),
+	buildUsacoOnDemandStage({
+		sourceTitle: "UB6 Milking Cows",
+		title: "Stage 3: Arrays, Intervals, Counting, and Greedy",
+		estimatedTime: "5 sessions · 45–75 minutes each",
+		keyBlocks: [
+			"constraint budget",
+			"sorted intervals",
+			"frequency counts",
+			"one-pass invariant",
+			"greedy exchange",
+			"64-bit range"
+		],
+		flow: "Use Milking Cows to make interval merging and one-pass invariants concrete, then choose array, count, sorting, or greedy representations from the constraints rather than from habit.",
+		curriculum: [
+			{
+				title: "Constraint, Numeric-Range, and Greedy Contract",
+				content: [
+					"Record every input bound, any total bound across test cases, the proposed operation count, and the largest possible index, count, distance, sum, and product. Use 64-bit storage when a legal result can exceed 32-bit range.",
+					"",
+					"For interval or greedy work, state the sorted order, the information retained during one scan, and the invariant after each processed item. Name the local choice and explain why delaying or exchanging it cannot improve the final result."
+				].join("\n")
+			},
+			{
+				title: "Stage 3 Mastery Gate",
+				content:
+					"Complete one fresh interval or counting task with a constraint table, safe numeric types, a one-pass or sorted invariant, and tests for touching, nested, disjoint, and extreme cases. Use the Classical Search and Simulation Archive for one spaced retry before Stage 4."
+			}
+		]
+	}),
+	buildUsacoOnDemandStage({
+		sourceTitle: "UB16 Wormholes",
+		title: "Stage 4: Complete Search and Structured State",
+		estimatedTime: "6 sessions · 45–90 minutes each",
+		keyBlocks: [
+			"candidate state space",
+			"complete enumeration",
+			"valid-state filter",
+			"termination argument",
+			"structured simulation",
+			"counterexample"
+		],
+		flow: "Use Wormholes to distinguish a provably small complete search from an unbounded brute-force attempt. Count the candidate space, generate every legal state once, and validate each state with a terminating simulation.",
+		curriculum: [
+			{
+				title: "Complete-Search Proof Record",
+				content: [
+					"**Candidate space:** Define one candidate, count the worst-case number of candidates, and identify when an incomplete state can be rejected.",
+					"**Coverage:** Explain why every legal candidate appears exactly once or why duplicates do not affect the answer.",
+					"**Validation:** State the simulation invariant and termination condition for each candidate.",
+					"**Debugging:** Preserve the smallest candidate that exposes a missing case, duplicate, or non-terminating path."
+				].join("\n")
+			},
+			{
+				title: "Stage 4 Mastery Gate",
+				content:
+					"Solve a fresh bounded-search problem and defend the maximum candidate count before running it. Then contrast it with a structured-state problem where enumeration is unnecessary. Advance when both complexity arguments fit the largest legal input."
+			}
+		]
+	}),
+	buildUsacoOnDemandStage({
+		sourceTitle: "UB52 Additional Practice Problems",
+		title: "Stage 5: Modern Bronze Patterns and Construction",
+		estimatedTime: "5 sessions · 45–90 minutes each",
+		keyBlocks: [
+			"maps and sets",
+			"prefix counts",
+			"large input",
+			"constructive witness",
+			"multiple test cases",
+			"aggregate bound"
+		],
+		flow: "Add modern Bronze patterns that are underrepresented in the historical archive: sparse counting, distinct-state tracking, prefix counts, large inputs, multiple test cases, and constructive outputs that require a valid witness.",
+		curriculum: [
+			{
+				title: "Current Counting and Large-Input Calibration",
+				content:
+					"Use the official 2025 Bronze problem as a current calibration. Its input reaches one million values, asks for distinct ordered patterns, uses standard input, and warns that the answer may need 64-bit storage. Compare a direct array, map, set, sorting, and prefix-count approach before choosing the representation that fits the value range and query shape.",
+				projectLink: USACO_ON_DEMAND_2025_BRONZE
+			},
+			{
+				title: "Constructive and Multi-Test Contract",
+				content:
+					"When a problem asks for feasibility and an example, validate the witness by replaying it against the original rules rather than checking only YES or NO. Reset every per-case data structure, use the total-input bound to justify aggregate runtime, and test one impossible case, one minimum witness, and one case with several valid witnesses.",
+				projectLink: USACO_ON_DEMAND_2026_BRONZE
+			},
+			{
+				title: "Stage 5 Mastery Gate",
+				content:
+					"Solve one recent official Bronze problem from an empty file, state why the chosen representation fits the full constraints, and validate every required output component. Use the Modern Bronze Patterns Archive for a diagnosed weakness, then repeat a related problem after at least two days."
+			}
+		]
+	}),
+	buildUsacoOnDemandStage({
+		sourceTitle: "UB50 Milking Order",
+		title: "Stage 6: Protected Mock Contest and Postmortem",
+		estimatedTime: "4–6 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"three-problem mock",
+			"attempt ordering",
+			"partial-credit plan",
+			"judge diagnosis",
+			"smallest counterexample",
+			"independent rewrite"
+		],
+		flow: "Complete a protected three-problem mock under active-contest restrictions, preserve every submission, and turn each unsolved or partial result into a specific diagnosis and later independent rewrite.",
+		curriculum: [
+			{
+				title: "Protected Mock Contract",
+				content: [
+					"Use three unseen Bronze problems, one continuous timer, an empty file per problem, permitted syntax/library references only, and no AI, hints, discussion, templates, or solution viewing.",
+					"",
+					"Record first-read complexity, attempt order, submission time, and judge outcome. A partial-credit plan may target a correct subtask before the full constraints, but every submitted approach still needs an honest complexity bound."
+				].join("\n"),
+				projectLink: USACO_ON_DEMAND_RULES
+			},
+			{
+				title: "Postmortem and Delayed Rewrite",
+				content:
+					"For every unsolved or partially solved problem, preserve the last attempt, classify the failure as statement, model, complexity, implementation, test design, or I/O, and find the smallest counterexample. Study the official explanation only after this record exists. Close all reference code, wait until a later study block, and produce a clean rewrite from an empty file.",
+				projectLink: USACO_ON_DEMAND_2026_RESULTS
+			}
+		]
+	}),
+	buildUsacoOnDemandStage({
+		sourceTitle: "UB51 Family Tree",
+		title: "Stage 7: Bronze Exit Portfolio and Silver Readiness",
+		estimatedTime: "2–4 sessions · 45–90 minutes each",
+		keyBlocks: [
+			"independent accuracy",
+			"cross-pattern transfer",
+			"postmortem repair",
+			"live promotion result",
+			"Silver prerequisites",
+			"next-course plan"
+		],
+		flow: "Consolidate independent evidence across more than one mock, compare the portfolio with the live contest result, and move to Silver only when Bronze accuracy and repair habits are repeatable.",
+		curriculum: [
+			{
+				title: "Bronze Exit Portfolio",
+				content:
+					"Submit two complete independent solves from each of two protected mocks, one successful delayed rewrite of a previously missed problem, a constraint and complexity record, a smallest-counterexample postmortem, and one cross-pattern explanation comparing two different solution structures."
+			},
+			{
+				title: "Silver Readiness Gate",
+				content:
+					"Promotion thresholds vary by contest, so the official live result remains authoritative. For the learning transition, demonstrate repeatable statement parsing, exact I/O, a constraint-safe approach, independent implementation, boundary testing, and repair after failure. Continue targeted Bronze practice when any of those habits still depends on hints or remembered code.",
+				projectLink: USACO_ON_DEMAND_CONTESTS
+			}
+		]
+	})
+];
+
+const usacoBronzeOnDemandArchives = [
+	buildUsacoOnDemandArchive(
+		"Optional Foundation Problem Archive",
+		[
+			"UB2 Your Ride Is Here",
+			"UB3 Friday the Thirteenth",
+			"UB4 Broken Necklace",
+			"UB5 Greedy Gift Givers",
+			"UB7 Name That Number",
+			"UB8 Palindromic Squares",
+			"UB9 Dual Palindromes",
+			"UB11 Mixing Milk"
+		],
+		[
+			"strings and modular arithmetic",
+			"calendar simulation",
+			"sequences",
+			"nested loops",
+			"exact translation"
+		],
+		"Use these early historical problems to repair setup, translation, string, modular-arithmetic, and small-loop gaps from Stages 1–2."
+	),
+	buildUsacoOnDemandArchive(
+		"Optional Classical Search and Simulation Archive",
+		[
+			"UB12 Barn Repair",
+			"UB13 Combination Lock",
+			"UB14 Prime Cryptarithm",
+			"UB15 Ski Course Design",
+			"UB17 Block Game",
+			"UB18 The Cow-Signal",
+			"UB19 Don't Be Last",
+			"UB20 Hoof, Paper, Scissors",
+			"UB21 Cow Tipping",
+			"UB22 Why Did the Cow Cross the Road",
+			"UB23 Why Did the Cow Cross the Road II",
+			"UB24 Why Did the Cow Cross the Road III",
+			"UB25 The Lost Cow"
+		],
+		[
+			"bounded search",
+			"grid simulation",
+			"state tracking",
+			"interval reasoning",
+			"case analysis"
+		],
+		"Use this bank after Stages 3–4 to target classical interval, complete-search, grid, and state-simulation patterns."
+	),
+	buildUsacoOnDemandArchive(
+		"Optional Modern Bronze Patterns Archive",
+		[
+			"UB26 Bovine Genomics",
+			"UB27 Modern Art",
+			"UB28 Fence Painting",
+			"UB29 Speeding Ticket",
+			"UB30 Contaminated Milk",
+			"UB31 Promotion Counting",
+			"UB32 Angry Cows",
+			"UB33 Mowing the Field",
+			"UB34 Milk Pails",
+			"UB35 Circular Barn",
+			"UB36 Load Balancing",
+			"UB37 Diamond Collector",
+			"UB38 Bull in a China Shop",
+			"UB39 Field Reduction"
+		],
+		[
+			"counting",
+			"coordinate reasoning",
+			"interval coverage",
+			"complete search",
+			"constraint analysis"
+		],
+		"Use these problems to deepen counting, coordinates, coverage, simulation, and bounded-search patterns after the corresponding core stage is secure."
+	),
+	buildUsacoOnDemandArchive(
+		"Optional Late Bronze Practice Archive",
+		[
+			"UB40 Blocked Billboard",
+			"UB41 The Bovine Shuffle",
+			"UB42 Milk Measurement",
+			"UB43 Blocked Billboard II",
+			"UB44 Lifeguards",
+			"UB45 Out of Place",
+			"UB46 Teleportation",
+			"UB47 Hoofball",
+			"UB48 Taming the Herd",
+			"UB49 Team Tic Tac Toe"
+		],
+		[
+			"late Bronze transfer",
+			"multi-step simulation",
+			"ranking and state changes",
+			"geometry",
+			"mock-contest selection"
+		],
+		"Use this bank for mixed-pattern transfer, mock replacement problems, or a final targeted repair before the Bronze exit portfolio."
+	)
+];
+
+if (!usacoBronzeOnDemandStaticAssets) {
+	throw new Error(
+		"USACO Bronze: On Demand static-asset appendix is missing."
+	);
+}
+
+export const usacoBronzeOnDemandCourse: RawCourse = {
+	...usacoBronzeOnDemandSourceCourse,
+	modules: [
+		...usacoBronzeOnDemandPrimaryModules,
+		...usacoBronzeOnDemandArchives,
+		usacoBronzeOnDemandStaticAssets
+	]
+};
