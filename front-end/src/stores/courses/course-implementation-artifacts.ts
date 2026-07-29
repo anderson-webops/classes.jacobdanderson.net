@@ -134,9 +134,11 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"Version notes for any API that changes between Xcode/Swift releases."
 	],
 	"linux-systems": [
-		"Ubuntu/Debian-style VM or container baseline unless a module names another distro.",
-		"systemd notes marked as distro-dependent.",
-		"Commands must include a recovery or undo path when they change system state."
+		"Ubuntu Server 26.04 LTS is the primary fresh-lab baseline; Debian 13 is the supported comparison route, and the exact distribution/version is recorded.",
+		"Use an owned VM or WSL2 instance for service, package, permission, scheduling, web-server, mount, and recovery changes; a rootless container covers shell and filesystem-only practice.",
+		"systemd, journald, package-manager, path, and service-name differences are labeled by distribution.",
+		"Snapshots, configuration copies, syntax checks, and a documented undo path come before privileged or service-affecting changes.",
+		"Supplied command transcripts and configuration cases provide a complete no-VM continuity route."
 	],
 	"low-level-security": [
 		"Local toy binaries, sanitizers, debuggers, and intentionally vulnerable fixtures only.",
@@ -595,6 +597,13 @@ const standardsOverrides: Record<string, string[]> = {
 	],
 	"unity-game-development": [
 		"Unity Manual, Unity Learn, Unity Test Framework, Build Profiles, Input System, and Git LFS documentation."
+	],
+	"linux-systems": [
+		"Ubuntu 26.04 LTS release, support, and Ubuntu Server documentation.",
+		"Debian 13 stable release and Debian Reference documentation.",
+		"Filesystem Hierarchy Standard 3.0 and GNU Bash/Coreutils references.",
+		"systemd first-party manuals for services, journald, timers, and unit verification.",
+		"Nginx and Apache first-party configuration and syntax-check documentation."
 	]
 };
 
@@ -636,6 +645,12 @@ const boundaryOverrides: Record<string, string[]> = {
 	"unity-game-development": [
 		"Uses full Unity project workflow with scenes, settings, packages, assets, tests, attribution, and reproducible builds.",
 		"Targets small, shippable, portfolio-friendly 2D vertical slices."
+	],
+	"linux-systems": [
+		"Uses LS0 and Units 1–12 as the operational foundation, followed by one required operations capstone; the three integration studios are optional transfer practice.",
+		"Mutating work stays on an owned VM or WSL2 instance with a snapshot or tested undo route; supplied transcripts complete every evidence target when a VM is unavailable.",
+		"Teaches local service operation, observability, automation, web serving, and recovery rather than public-cloud administration, production credentials, or third-party infrastructure.",
+		"Distribution-specific commands are recorded as Ubuntu 26.04 LTS, Debian 13, or an explicitly named alternative instead of presented as universal Linux behavior."
 	]
 };
 
@@ -650,6 +665,25 @@ const capstoneOverrides: Record<string, string[]> = {
 	],
 	"unity-game-development": [
 		"Small Unity 2D vertical slice with title/play/fail-or-win/restart flow, tests or smoke checks, build profile, and asset attribution."
+	],
+	"linux-systems": [
+		"One owned-VM service deployment with a dedicated unprivileged account, deliberate filesystem layout, validated configuration, and a reproducible start-to-health path.",
+		"systemd unit and timer evidence with status, dependency, environment, restart, enablement, and failure-recovery checks.",
+		"journald and application-log evidence connecting one injected failure to diagnosis, correction, and retest.",
+		"local-only web or health endpoint with listening-socket, route, and configuration-test evidence; no public exposure is required.",
+		"backup manifest, restore drill into a separate path, integrity comparison, retention note, and proof that a failed run preserves the last trusted backup.",
+		"runbook containing versions, architecture, scope, commands, rollback, known limitations, and a five-minute demonstration from clean start through recovery."
+	]
+};
+
+const safetyPolicyOverrides: Record<string, string[]> = {
+	"linux-systems": [
+		"All mutating labs use an owned, disposable VM or WSL2 instance; shared school, employer, family, public-cloud, and production systems remain outside scope.",
+		"Take a VM snapshot or record a tested file-level rollback before sudo, package, permission, systemd, web-server, scheduler, mount, firewall, or security-policy changes.",
+		"Inspect first, validate configuration before reload or restart, prefer the least privileged account, and stop when the active host, target path, or recovery route is uncertain.",
+		"Do not disable host protections, open a public listener, scan or capture third-party traffic, alter a host bootloader, reformat storage, or practice privilege escalation.",
+		"Use fictional service names, supplied logs, local addresses, stand-in content, and redacted diagnostics; never submit credentials, tokens, private keys, hostnames tied to people, or real production logs.",
+		"Every privileged change records expected result, observed result, verification command, undo command, and snapshot or restore point."
 	]
 };
 
@@ -800,6 +834,10 @@ function metadataStandards(courseId: string) {
 function sourcePolicyFor(courseId: string) {
 	const url = repoUrl(courseId);
 	if (url) {
+		if (courseId === "linux-systems") {
+			return `Source-backed course. Canonical source repository: ${url}. LS1–LS6 are the primary multi-file operational labs; the numbered LS-* folders are lightweight shell checkpoints or studio practice. Existing starter/solution URLs remain traceable, while local evidence cases prevent a generic checkpoint from being treated as a production deployment.`;
+		}
+
 		return `Source-backed course. Canonical source repository: ${url}. Starter/reference links remain synchronized with catalog projects.`;
 	}
 
@@ -1079,7 +1117,9 @@ function setCourseDevelopmentMetadata(courseId: string, course: RawCourse) {
 		toolchain:
 			courseToolchainAssumptions[courseId] ??
 			defaultToolchainFor(courseLabel, familyLabel),
-		safetyPolicy: safetyPolicyFor(kind, courseLabel, familyLabel),
+		safetyPolicy:
+			safetyPolicyOverrides[courseId] ??
+			safetyPolicyFor(kind, courseLabel, familyLabel),
 		courseBoundaries,
 		capstoneExpectations,
 		recommendedNextWork: recommendedNextWorkFor(
@@ -2818,7 +2858,8 @@ function addSystemsSpecificSafetyModule(courseId: string, course: RawCourse) {
 	> = {
 		"linux-systems": {
 			environment: [
-				"Ubuntu/Debian VM or rootless container baseline.",
+				"Ubuntu Server 26.04 LTS VM or WSL2 baseline, with Debian 13 as a supported comparison route.",
+				"Rootless containers are limited to shell and filesystem practice; service and scheduling labs use a systemd-capable owned environment or the supplied transcript route.",
 				"systemd/journald, permissions, mounts, processes, logs, nftables, AppArmor/SELinux exposure where appropriate.",
 				"Snapshots or documented undo path before privilege, firewall, or service changes."
 			],
