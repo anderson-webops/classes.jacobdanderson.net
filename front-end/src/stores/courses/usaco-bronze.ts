@@ -1,8 +1,17 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const usacoBronzeCourse: RawCourse = {
+const USACO_CONTESTS = "https://usaco.org/index.php?page=contests";
+const USACO_CONTEST_RULES = "https://usaco.org/index.php?page=instructions";
+const USACO_2025_BRONZE_PROBLEM =
+	"https://usaco.org/index.php?page=viewproblem2&cpid=1468";
+const USACO_2026_BRONZE_PROBLEM =
+	"https://usaco.org/index.php?page=viewproblem2&cpid=1563";
+const USACO_2026_CONTEST_RESULTS =
+	"https://usaco.org/index.php?page=season26contest2results";
+
+const usacoBronzeSourceCourse: RawCourse = {
 	name: "USACO Bronze",
 	modules: [
 		{
@@ -1417,5 +1426,410 @@ export const usacoBronzeCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+const USACO_BRONZE_PRIMARY_TITLES = new Set([
+	"USB0 Setup and Contest Workflow",
+	"Unit 1: Simulation and Careful Translation",
+	"Unit 2: Intervals, Arrays, and Greedy Warmups",
+	"Unit 3: Counting, Sorting, and Ranking",
+	"Unit 4: Search-Flavored Bronze Problems",
+	"Unit 5: Contest Sets and Tier Transition"
+]);
+
+const USACO_BRONZE_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"USB0 Setup and Contest Workflow": {
+		estimatedTime: "3 sessions · 45–75 minutes each",
+		keyBlocks: [
+			"current contest rules",
+			"standard input and output",
+			"legacy file input and output",
+			"sample and custom tests",
+			"protected contest mode"
+		],
+		flowNote:
+			"Establish a current contest workflow before solving for speed. Read the live rules, distinguish modern standard input/output from legacy file tasks, reproduce sample output exactly, build small custom tests, and practice a protected mode that matches USACO integrity requirements."
+	},
+	"Unit 1: Simulation and Careful Translation": {
+		estimatedTime: "5 sessions · 45–75 minutes each",
+		keyBlocks: [
+			"state model",
+			"simulation invariant",
+			"update order",
+			"tiny oracle",
+			"boundary case"
+		],
+		flowNote:
+			"Turn each story into state, transitions, and an answer update. Prove the simulation on tiny cases with a hand-computed oracle, then test first, last, equal, empty-or-minimum, and overshoot boundaries before considering a shortcut."
+	},
+	"Unit 2: Intervals, Arrays, and Greedy Warmups": {
+		estimatedTime: "5 sessions · 45–75 minutes each",
+		keyBlocks: [
+			"constraint budget",
+			"interval ordering",
+			"greedy exchange",
+			"64-bit range",
+			"one-pass invariant"
+		],
+		flowNote:
+			"Use constraints to choose a safe work budget, then apply sorted intervals, scans, and small greedy choices with an explicit invariant. Check numeric range before coding and use 64-bit values whenever the largest legal count, product, or sum can exceed 32-bit storage."
+	},
+	"Unit 3: Counting, Sorting, and Ranking": {
+		estimatedTime: "5 sessions · 45–75 minutes each",
+		keyBlocks: [
+			"frequency map",
+			"distinct set",
+			"prefix count",
+			"sorted order",
+			"large-input test"
+		],
+		flowNote:
+			"Choose among direct counts, maps, sets, sorting, and prefix counts based on value range and query shape. State what is counted, what makes two results distinct, and why the chosen representation fits the largest legal input."
+	},
+	"Unit 4: Search-Flavored Bronze Problems": {
+		estimatedTime: "5 sessions · 45–75 minutes each",
+		keyBlocks: [
+			"complete search",
+			"bounded state",
+			"constructive witness",
+			"multiple test cases",
+			"termination argument"
+		],
+		flowNote:
+			"Use complete search when the state space is provably small, and use direct structured simulation when it is not. Modern Bronze work may ask for a witness as well as YES/NO, so verify both feasibility and the constructed output across multiple test cases."
+	},
+	"Unit 5: Contest Sets and Tier Transition": {
+		estimatedTime: "6–8 sessions · 60–90 minutes each",
+		keyBlocks: [
+			"current official set",
+			"timed contest",
+			"partial-credit plan",
+			"WA/TLE/RTE postmortem",
+			"Silver readiness"
+		],
+		flowNote:
+			"Calibrate against recent official Bronze problems, then complete a protected three-problem mock and a structured postmortem. Read promotion criteria from each live contest rather than assuming a fixed threshold, and move to Silver only after independent Bronze accuracy is repeatable."
+	}
+};
+
+function bronzeOptionPath(title: string) {
+	return /challenge|wormholes|prime|ski|circular|cow college|feeding|milking order|acowdemia|late bronze|silver/i.test(
+		title
+	)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function strengthenBronzeItem(item: RawCourseModuleItem): RawCourseModuleItem {
+	if (item.title === "USACO File I/O and Submission Rhythm") {
+		return {
+			...item,
+			title: "Modern Standard I/O and Legacy File I/O",
+			content:
+				"Read each problem's input/output specification literally. Current contests use terminal-based standard input and output; most tasks before December 2020 use exact case-sensitive filenames from the statement. Produce only the requested output, include final newlines, never pause for a keypress, and test the same I/O mode that the judge will use."
+		};
+	}
+
+	if (item.title === "Bronze-Level Problem Framing") {
+		return {
+			...item,
+			content:
+				"Frame Bronze problems through constraints and observable behavior: direct simulation, complete search over a bounded space, counting, sorting, maps or sets, prefix counts, and justified greedy choices. Identify the input size, required output, subtask boundaries, and simplest approach that fits before writing code."
+		};
+	}
+
+	if (item.title === "Trace First, Optimize Second") {
+		return {
+			...item,
+			content:
+				"Build a correct baseline and a tiny hand-worked oracle before optimizing. Then compare the baseline's operation count with the largest legal input; if it is too large, preserve the tested behavior while changing the representation or repeated work. Record the first counterexample whenever an optimization changes the answer."
+		};
+	}
+
+	if (item.title === "Language Strategy") {
+		return {
+			...item,
+			content:
+				"USACO accepts C, C++, Java, and Python under the live technical rules. Bronze problems are generally designed to remain solvable in Python, while C++ is the required language at IOI and becomes the safest long-term contest choice. Keep one language stable during a contest cycle, verify the current compiler or interpreter details before competing, and treat Java mirrors as an optional transfer path rather than duplicate required lessons."
+		};
+	}
+
+	if (item.title === "Bronze Log: Setup and Contest Workflow") {
+		return {
+			...item,
+			content:
+				"Keep a compact problem log with the statement fact that controlled the solution, chosen complexity, numeric type, first wrong assumption, smallest failing case, judge outcome, and correction. Distinguish wrong answer, time limit, runtime or memory error, compile failure, and output-format failure so each submission produces a specific next action."
+		};
+	}
+
+	if (item.title === "Prepare for USACO Silver") {
+		return {
+			...item,
+			content:
+				"Move to `USACO Silver` after independent Bronze evidence is repeatable: parse an unfamiliar statement, derive a constraint-safe approach, implement exact I/O, solve at least two problems in a protected mock, and repair a missed problem from a postmortem. Promotion thresholds vary by contest, so the live USACO result remains authoritative while this readiness gate protects the learning transition."
+		};
+	}
+
+	return item;
+}
+
+function insertBronzeItem(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateBronzeModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = USACO_BRONZE_FLOW[module.title];
+	let curriculum: RawCourseModuleItem[] = module.curriculum
+		.map(strengthenBronzeItem)
+		.map(item => ({ ...item, learningPath: "core" as const }));
+	const coreProjectTitle = curriculum.at(-1)?.title ?? "";
+
+	if (module.title === "USB0 Setup and Contest Workflow") {
+		curriculum = insertBronzeItem(curriculum, coreProjectTitle, {
+			title: "Current USACO Contest Contract",
+			content: [
+				"**Format:** A contest typically contains three or four algorithmic problems in one contiguous four-to-five-hour personal window. Scoring is by test cases, so a correct subtask can earn partial credit even when the full constraints remain unsolved.",
+				"",
+				"**Feedback:** Classify judge results as accepted, wrong answer, time limit, runtime or memory error, compile failure, empty output, or missing output. Passing the sample is only the first gate; hidden legal cases remain the real correctness test.",
+				"",
+				"**Live-rule check:** Language versions, technical limits, schedule, certification details, and promotion thresholds can change. Read the official instructions and active contest page before every contest."
+			].join("\n"),
+			projectLink: USACO_CONTEST_RULES,
+			learningPath: "core"
+		});
+		curriculum = insertBronzeItem(curriculum, coreProjectTitle, {
+			title: "Contest Integrity and Protected Mode",
+			content: [
+				"**Active-contest boundary:** Work alone. Generative AI, Copilot-style assistance, discussion, shared code, prewritten templates, solution resources, and automated submissions are prohibited. Only references for basic language syntax, libraries, and input/output are permitted.",
+				"",
+				"**Course practice:** Hints, reviews, and solution comparison happen only outside active contests and after an honest attempt. Protected mocks use the stricter active-contest boundary so independent readiness is measured accurately.",
+				"",
+				"**Evidence:** Begin from an empty solution file, retain the submitted source and result, and write the postmortem only after the timer or practice window ends."
+			].join("\n"),
+			projectLink: USACO_CONTEST_RULES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 1: Simulation and Careful Translation") {
+		curriculum = insertBronzeItem(curriculum, coreProjectTitle, {
+			title: "Simulation Invariant and Tiny Oracle Contract",
+			content: [
+				"**Before code:** Name the complete state, one transition, update order, stopping condition, and answer update.",
+				"**Oracle:** Hand-compute at least three tiny fixtures, including a minimum case and a boundary or overshoot case.",
+				"**After code:** Compare every step against the oracle, then add a case where two updates would produce a different result if their order were reversed.",
+				"**Complexity:** Count simulated steps and verify the bound against the largest legal input."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 2: Intervals, Arrays, and Greedy Warmups") {
+		curriculum = insertBronzeItem(curriculum, coreProjectTitle, {
+			title: "Constraint, Complexity, and Numeric-Range Contract",
+			content: [
+				"**Constraint table:** Record every input bound, total bound across test cases, time limit, memory limit, and any sortedness or uniqueness guarantee.",
+				"**Work budget:** State the candidate operation count before implementation and reject an approach that cannot fit the largest legal input.",
+				"**Numeric range:** Compute the largest possible index, count, distance, sum, and product; use `long long`, Java `long`, or Python integers when 32-bit storage is unsafe.",
+				"**Greedy evidence:** State the local choice and why exchanging or delaying it cannot improve the final answer."
+			].join("\n"),
+			projectLink: USACO_CONTEST_RULES,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 3: Counting, Sorting, and Ranking") {
+		curriculum = insertBronzeItem(curriculum, coreProjectTitle, {
+			title: "Frequency Maps, Sets, and Prefix Counts",
+			content: [
+				"Choose a direct array when the value range is small and known, a map for sparse key counts, a set for distinct membership, sorting when order exposes the structure, and prefix counts when many range or before/after queries repeat.",
+				"",
+				"Use the 2025 official Bronze problem as a modern calibration: its input reaches one million values, asks for distinct ordered patterns, arrives through standard input, and explicitly warns that the answer may need 64-bit storage. Solve a tiny version first, then justify the full-input representation."
+			].join("\n"),
+			projectLink: USACO_2025_BRONZE_PROBLEM,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 4: Search-Flavored Bronze Problems") {
+		curriculum = insertBronzeItem(curriculum, coreProjectTitle, {
+			title: "Complete Search and Constructive Output Contract",
+			content: [
+				"**Complete search:** Define the candidate state space, count its worst-case size, reject duplicates or invalid states early, and prove every legal candidate is considered.",
+				"**Structured simulation:** Prefer a direct invariant when enumerating all states is unnecessary.",
+				"**Constructive output:** When the task asks for both feasibility and an example, validate the witness by replaying it against the original rules rather than checking only YES or NO.",
+				"**Multiple cases:** Reset all per-case state and use the stated total-input bound to justify aggregate runtime."
+			].join("\n"),
+			projectLink: USACO_2026_BRONZE_PROBLEM,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "Unit 5: Contest Sets and Tier Transition") {
+		curriculum = insertBronzeItem(curriculum, coreProjectTitle, {
+			title: "Current Season and Analysis-Mode Archive",
+			content:
+				"Use the live USACO contest page to confirm the current season structure and the official result pages to find problem statements, test data, solutions, and post-contest analysis-mode submissions. Season structure and certification details can change, so avoid copying an old schedule into the readiness plan.",
+			projectLink: USACO_CONTESTS,
+			learningPath: "core"
+		});
+		curriculum = insertBronzeItem(curriculum, coreProjectTitle, {
+			title: "2025–26 Bronze Calibration Set",
+			content:
+				"Use the official 2026 second-contest Bronze set as a current calibration point. Read all three statements before choosing an order, identify available subtasks, solve under protected conditions, then use the released solutions, test data, and analysis mode only after the timed attempt. Treat the reported 700 promotion threshold as specific to that contest, not a permanent Bronze rule.",
+			projectLink: USACO_2026_CONTEST_RESULTS,
+			learningPath: "core"
+		});
+		curriculum = insertBronzeItem(curriculum, coreProjectTitle, {
+			title: "Mock Contest and Postmortem Contract",
+			content: [
+				"**Mock:** Use three unseen Bronze problems, one continuous timer, an empty file per problem, permitted syntax/library references only, and no AI, hints, discussion, templates, or solution viewing.",
+				"**During the timer:** Record first-read complexity, attempt order, submission time, and judge outcome without turning the log into outside assistance.",
+				"**Postmortem:** For every unsolved or partially solved problem, preserve the last attempt, identify statement/model/complexity/implementation/test failure, find the smallest counterexample, and produce a clean independent rewrite later.",
+				"**Silver gate:** Demonstrate two complete independent solves plus one successful postmortem rewrite on more than one mock before changing tiers."
+			].join("\n"),
+			projectLink: USACO_CONTEST_RULES,
+			learningPath: "core"
+		});
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	const title =
+		module.title === "Unit 3: Counting, Sorting, and Ranking"
+			? "Unit 3: Frequency Maps, Sets, Sorting, and Prefix Counts"
+			: module.title === "Unit 4: Search-Flavored Bronze Problems"
+				? "Unit 4: Complete Search, Structured State, and Construction"
+				: module.title === "Unit 5: Contest Sets and Tier Transition"
+					? "Unit 5: Mock Contests, Postmortems, and Silver Readiness"
+					: module.title;
+
+	return {
+		...module,
+		title,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: module.supplementalProjects
+			.map(strengthenBronzeItem)
+			.map(item => ({
+				...item,
+				learningPath: bronzeOptionPath(item.title)
+			}))
+	};
+}
+
+function buildBronzeProblemBankAppendix(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Bronze Problem Bank and Language Mirrors",
+		estimatedTime:
+			"Choose targeted problems after a primary unit or postmortem",
+		keyBlocks: [
+			"pattern repair",
+			"classical archive",
+			"modern archive",
+			"Python/Java mirror",
+			"independent retry"
+		],
+		curriculum: [
+			{
+				title: "Problem Bank Scope Guide",
+				content:
+					"**Course flow:** The full repository bank is optional practice, not another required sequence. Choose a problem because a postmortem identified a specific pattern or because the primary unit is already independently secure. Solve the canonical problem once; use a Java mirror only for deliberate language transfer.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: [
+			...module.curriculum,
+			...module.supplementalProjects
+		]
+			.map(strengthenBronzeItem)
+			.map(item => ({
+				...item,
+				learningPath: bronzeOptionPath(item.title)
+			}))
+	};
+}
+
+function buildBronzeJavaStudioAppendix(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Java Bronze Practice Studios",
+		estimatedTime: "Choose one studio for a diagnosed Java or pattern gap",
+		keyBlocks: [
+			"language transfer",
+			"exact I/O",
+			"constraint-safe approach",
+			"independent implementation",
+			"postmortem rewrite"
+		],
+		curriculum: [
+			{
+				title: "Java Studio Scope Guide",
+				content:
+					"**Course flow:** These ten studios preserve the full Java practice sequence without forcing duplicate required work after the six-module Bronze spine. Choose a studio to transfer an already understood algorithm into Java or to repair a named contest weakness; begin from an empty file during protected practice.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects]
+				.map(strengthenBronzeItem)
+				.map(item => ({
+					...item,
+					learningPath: bronzeOptionPath(item.title)
+				}))
+		)
+	};
+}
+
+const usacoBronzePrimaryModules = usacoBronzeSourceCourse.modules
+	.filter(module => USACO_BRONZE_PRIMARY_TITLES.has(module.title))
+	.map(decorateBronzeModule);
+const usacoBronzeProblemBank = usacoBronzeSourceCourse.modules.find(
+	module => module.title === "Unit 6: Optional Bronze Problem Bank"
+);
+const usacoBronzeJavaStudios = usacoBronzeSourceCourse.modules.filter(
+	module =>
+		!USACO_BRONZE_PRIMARY_TITLES.has(module.title) &&
+		module.title !== "Unit 6: Optional Bronze Problem Bank"
+);
+
+if (!usacoBronzeProblemBank) {
+	throw new Error("USACO Bronze optional problem bank is missing.");
+}
+
+export const usacoBronzeCourse: RawCourse = {
+	...usacoBronzeSourceCourse,
+	modules: [
+		...usacoBronzePrimaryModules,
+		buildBronzeProblemBankAppendix(usacoBronzeProblemBank),
+		buildBronzeJavaStudioAppendix(usacoBronzeJavaStudios)
 	]
 };
