@@ -7284,6 +7284,7 @@ describe("course text quality normalization", () => {
 			"Jonah and Caleb Point-of-View Rewrite",
 			"Final Story Revision",
 			"Fiction Writing Check-In Record",
+			"Master Project Path and Evidence Plan",
 			"Analytical Writing Presentation",
 			"Fiction Writing Presentation"
 		];
@@ -7318,8 +7319,15 @@ describe("course text quality normalization", () => {
 
 			const text = allCourseText(course);
 
-			expect(text, courseId).toContain("Source Activity Anchors:");
-			expect(text, courseId).toContain("Evidence record:");
+			if (courseId === "middle-school-b-writing") {
+				expect(text, courseId).not.toContain(
+					"Source Activity Anchors:"
+				);
+				expect(text, courseId).toContain("**Completion evidence:**");
+			} else {
+				expect(text, courseId).toContain("Source Activity Anchors:");
+				expect(text, courseId).toContain("Evidence record:");
+			}
 			for (const anchor of expectedAnchors) {
 				expect(text, `${courseId}: ${anchor}`).toContain(anchor);
 			}
@@ -7539,12 +7547,6 @@ describe("course text quality normalization", () => {
 
 	it("reserves source-library static assets from original source files", async () => {
 		const expectedAssetsByCourse = {
-			"middle-school-b-writing": [
-				"msa15_concept2_transitionaldevices.png",
-				"msa17_concept2_nemochart.png",
-				"msa19_concept2_emptyplot.png",
-				"msa19_concept2_labeledplot.png"
-			],
 			"middle-school-b-writing-retake": [
 				"msa15_concept2_transitionaldevices.png",
 				"msa17_concept2_nemochart.png",

@@ -218,13 +218,23 @@ const middleSchoolBWritingSourceAnchors: Record<
 	],
 	"MSB12 Master Project": [
 		{
+			title: "Master Project Path and Evidence Plan",
+			prompt: "Choose the analytical-writing or fiction-writing presentation path, identify the prior course artifacts that will supply evidence, and plan the audience, structure, visual or text support, rehearsal, and revision check.",
+			evidence: [
+				"Selected presentation path and audience.",
+				"Artifact and evidence list drawn from the argument or fiction sequence.",
+				"Presentation outline plus one rehearsal and revision checkpoint."
+			]
+		},
+		{
 			title: "Analytical Writing Presentation",
 			prompt: "Create a presentation arguing why a chosen athlete, musician, restaurant, pet, food, or similar category choice is the best option. The presentation includes claim, reasoning, evidence, counterclaim, conclusion, and speaker notes.",
 			evidence: [
 				"A claim with reasoning and supporting evidence.",
 				"A counterclaim with reasoning and supporting evidence.",
 				"Presentation notes that move from topic introduction to claim, counterclaim, and conclusion."
-			]
+			],
+			learningPath: "choice"
 		},
 		{
 			title: "Fiction Writing Presentation",
@@ -233,7 +243,8 @@ const middleSchoolBWritingSourceAnchors: Record<
 				"A lesson outline with three fiction-writing concepts.",
 				"Examples from the final story connected to each concept.",
 				"Five writing tips and a closing reflection on the strongest part of the final story."
-			]
+			],
+			learningPath: "choice"
 		}
 	]
 };
@@ -3136,13 +3147,178 @@ const englishCourses = {
 		name: "Middle School B: Analytical and Creative Writing",
 		area: "writing",
 		focus: "arguments, evidence, counterclaims, evidence analysis, transitions, revision, character development, conflict, plot, point of view, and short-story drafting",
-		staticAssets: [
-			"msa15_concept2_transitionaldevices.png",
-			"msa17_concept2_nemochart.png",
-			"msa19_concept2_emptyplot.png",
-			"msa19_concept2_labeledplot.png"
-		],
-		sourceActivityAnchors: middleSchoolBWritingRetakeSourceAnchors,
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"MSB1 Arguments & Evidence": {
+				estimatedTime: "2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"debatable claim",
+					"reasoning",
+					"evidence",
+					"claim-evidence link",
+					"audience"
+				],
+				flowNote:
+					"Use the supplied debate topics only as writing prompts; no social-platform account or posting is required. Distinguish a claim, reasons, and evidence before drafting the paragraph."
+			},
+			"MSB2 Counterclaims": {
+				estimatedTime: "2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"claim",
+					"counterclaim",
+					"conditional language",
+					"contrast transition",
+					"fair representation"
+				],
+				flowNote:
+					"Build the strongest reasonable opposing position, mark it with clear transition language, and explain why addressing it improves rather than weakens the original argument."
+			},
+			"MSB3 Integrating Evidence": {
+				estimatedTime: "2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"source context",
+					"introductory phrase",
+					"colon",
+					"comma",
+					"quotation integration"
+				],
+				flowNote:
+					"Use a short lawful or instructor-supplied excerpt, practice both integration patterns, and check that the surrounding sentence remains grammatical and understandable."
+			},
+			"MSB4 Analyzing Evidence": {
+				estimatedTime: "3 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"inference claim",
+					"integrated evidence",
+					"how / why analysis",
+					"opposing interpretation",
+					"paragraph revision"
+				],
+				flowNote:
+					"Use a lawful copy of Car Ride or an equivalent passage. Draft the main interpretation, then test it by constructing a credible opposing interpretation before revising the analysis."
+			},
+			"MSB5 Concluding Statements & Transitional Devices": {
+				estimatedTime: "2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"concluding statement",
+					"fresh restatement",
+					"extension",
+					"transition relationship",
+					"flow revision"
+				],
+				flowNote:
+					"Revise one existing argument so transitions name the relationship between ideas and the conclusion restates without copying, then extends the argument."
+			},
+			"MSB6 Color Coding & Revision": {
+				estimatedTime: "2–3 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"claim / reason",
+					"evidence / analysis",
+					"counterclaim",
+					"transition / conclusion",
+					"revision diagnosis"
+				],
+				flowNote:
+					"Use colors, labels, symbols, underlines, or tags so the activity never depends on color vision. Diagnose a missing, repeated, unsupported, or misplaced part before revising."
+			},
+			"MSB Check-In #1": {
+				estimatedTime: "2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"claim / reasoning",
+					"evidence integration",
+					"analysis",
+					"counterclaim",
+					"revision record"
+				],
+				flowNote:
+					"Produce one complete analytical paragraph or plan with visible evidence and a revision record. Use missing evidence to choose targeted review before starting fiction."
+			},
+			"MSB7 Character Development": {
+				estimatedTime: "3 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"objective",
+					"choice",
+					"action / speech",
+					"character quality",
+					"cause-and-effect flow"
+				],
+				flowNote:
+					"Use familiar characters only as brief models and create an original character objective. Trace the objective through choices, actions, speech, and supported qualities without relying on the missing chart image."
+			},
+			"MSB8 Character Portraits": {
+				estimatedTime: "2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"objective",
+					"backstory",
+					"motivation",
+					"contradiction",
+					"scene-ready detail"
+				],
+				flowNote:
+					"Build more character knowledge than the story will state, then select only details that can shape a scene. Keep one visible detail and one below-the-surface motivation."
+			},
+			"MSB9 Generating Conflict & Structuring Plot": {
+				estimatedTime: "3 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"objective",
+					"obstacle / conflict",
+					"beginning / middle / end",
+					"tension",
+					"plot revision"
+				],
+				flowNote:
+					"Generate conflict from the character objective, then use a hand-drawn, text-only, or instructor-supplied plot curve. Verify that every major event changes the objective, obstacle, or stakes."
+			},
+			"MSB10 Manipulating Point of View": {
+				estimatedTime: "2–3 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"narrator",
+					"knowledge access",
+					"point-of-view type",
+					"scene rewrite",
+					"reader effect"
+				],
+				flowNote:
+					"Use a lawful supplied excerpt or an original scene, identify narrator access, and rewrite from another point of view to compare sympathy, suspense, humor, or tone."
+			},
+			"MSB11 Writing an Original Short Story": {
+				estimatedTime: "4–6 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"protagonist / objective",
+					"conflict / plot",
+					"point of view",
+					"theme / figurative language",
+					"revision evidence"
+				],
+				flowNote:
+					"Draft the smallest complete story first, then revise one craft layer at a time. Fictionalized material is valid and no student needs to disclose private experiences."
+			},
+			"MSB Check-In #2": {
+				estimatedTime: "2 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"character objective",
+					"conflict / plot",
+					"point of view",
+					"story craft",
+					"before / after revision"
+				],
+				flowNote:
+					"Submit one scene or excerpt plus its planning and before-and-after revision evidence. Use the missing craft evidence to select review before the master project."
+			},
+			"MSB12 Master Project": {
+				estimatedTime: "3–4 sessions · 45–55 minutes each",
+				keyBlocks: [
+					"project path",
+					"course artifacts",
+					"audience structure",
+					"presentation support",
+					"rehearsal / revision"
+				],
+				flowNote:
+					"Complete the path-and-evidence plan, then choose one presentation. Live, private recorded, audio-supported, or instructor-only delivery is valid; public posting is not required."
+			}
+		},
+		sourceActivityAnchors: middleSchoolBWritingSourceAnchors,
 		modules: [
 			"MSB1 Arguments & Evidence",
 			"MSB2 Counterclaims",
@@ -3170,7 +3346,7 @@ const englishCourses = {
 			"msa19_concept2_emptyplot.png",
 			"msa19_concept2_labeledplot.png"
 		],
-		sourceActivityAnchors: middleSchoolBWritingSourceAnchors,
+		sourceActivityAnchors: middleSchoolBWritingRetakeSourceAnchors,
 		modules: [
 			"MSB1 Arguments & Evidence",
 			"MSB2 Counterclaims",
