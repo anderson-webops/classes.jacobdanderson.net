@@ -2,7 +2,7 @@ import type { RawCourse } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
-export const linuxSystemsCourse: RawCourse = {
+const linuxSystemsSourceCourse: RawCourse = {
 	name: "Linux Systems",
 	modules: [
 		{
@@ -1324,5 +1324,445 @@ export const linuxSystemsCourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+interface LinuxSystemsModuleFlow {
+	stage: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	practiceSection: string;
+	answerSection: string;
+	route: string;
+	safeRoute: string;
+	evidence: string;
+	reference: string;
+}
+
+const LINUX_PRACTICE_PACK =
+	"/course-assets/linux/linux-systems-practice-pack.md";
+const LINUX_VERIFICATION_GUIDE =
+	"/course-assets/linux/linux-systems-verification-guide.md";
+const LINUX_PRIMARY_MODULE_COUNT = 13;
+
+const LINUX_MODULE_FLOW: Record<string, LinuxSystemsModuleFlow> = {
+	"LS0 Setup and Tooling": {
+		stage: "Lab readiness",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"owned environment",
+			"distribution identity",
+			"unprivileged user",
+			"snapshot",
+			"command inventory",
+			"rollback note"
+		],
+		practiceSection: "lab-readiness-and-scope-case",
+		answerSection: "lab-readiness-and-scope-key",
+		route: "Start with an owned Ubuntu Server 26.04 LTS VM or WSL2 instance, with Debian 13 as a supported comparison route. Record `/etc/os-release`, kernel, architecture, init system, package manager, active user, group membership, network mode, snapshot identifier, and course workspace before changing state.",
+		safeRoute:
+			"Use an unprivileged account for ordinary work, inspect sudo availability without changing policy, and keep service or package labs off the host operating system. The supplied environment transcript completes the same reasoning when a compatible VM is unavailable.",
+		evidence:
+			"A readiness record identifies the actual Linux context, proves the workspace can be reopened, distinguishes host from guest paths, names missing tools without blindly installing them, and includes a tested snapshot or file-level reset route.",
+		reference: "https://documentation.ubuntu.com/release-notes/26.04/"
+	},
+	"Unit 1: Shell Foundations": {
+		stage: "Inspect and compose",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"quoting",
+			"pipeline",
+			"redirection",
+			"exit status",
+			"safe filename",
+			"repeatable command"
+		],
+		practiceSection: "shell-pipeline-and-exit-status-case",
+		answerSection: "shell-pipeline-and-exit-status-key",
+		route: "Build command lines from one observable question at a time: identify inputs, quote variables and paths, transform output with small tools, preserve diagnostics deliberately, and inspect the final exit status before turning the pipeline into a script.",
+		safeRoute:
+			"Run against the supplied read-only directory and log fixture. Preview path sets before `xargs` or file changes, use null-delimited routes where filenames demand them, and keep deletion out of the foundational pipeline.",
+		evidence:
+			"The same pipeline handles zero, one, and multiple matches; filenames with spaces remain intact; output and diagnostics go to the intended destinations; and the reported exit status matches the command whose success matters.",
+		reference: "https://www.gnu.org/software/bash/manual/bash.html"
+	},
+	"Unit 2: Filesystem Hierarchy and Directory Purpose": {
+		stage: "Inspect and compose",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"FHS purpose",
+			"persistent state",
+			"transient state",
+			"pseudo-filesystem",
+			"service content",
+			"path ownership"
+		],
+		practiceSection: "filesystem-purpose-and-path-case",
+		answerSection: "filesystem-purpose-and-path-key",
+		route: "Classify configuration, served content, mutable application state, logs, optional software, temporary files, devices, and kernel views before choosing a path. Treat `/proc` and `/sys` as live interfaces and inspect them without presenting every entry as an ordinary persisted file.",
+		safeRoute:
+			"Plan layouts in a supplied directory tree first. Create the `/srv` static-site path only inside the owned lab, record the service account and traversal permissions, and avoid writing to pseudo-filesystems or replacing host directories.",
+		evidence:
+			"Every path choice states purpose, owner, mutability, persistence, backup need, and consumer. The static-site layout passes a directory traversal check and distinguishes source content, configuration, logs, and generated state.",
+		reference: "https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html"
+	},
+	"Unit 3: Users, Groups, and Permissions": {
+		stage: "Control access",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"user identity",
+			"group membership",
+			"file permission",
+			"directory traversal",
+			"umask",
+			"least privilege"
+		],
+		practiceSection: "users-groups-and-permissions-case",
+		answerSection: "users-groups-and-permissions-key",
+		route: "Predict effective access from user, primary and supplementary groups, file owner, group, mode bits, directory traversal, umask, and service identity before changing any permission. Diagnose from the complete path instead of reacting with broad modes.",
+		safeRoute:
+			"Use fictional accounts and a supplied directory tree inside the owned lab. Avoid recursive ownership changes on broad paths, never use `chmod 777` as a diagnostic shortcut, and record the original owner and mode before a change.",
+		evidence:
+			"The permission matrix predicts read, write, create, delete, and traverse outcomes for each identity; the observed result matches; and the least-privilege correction fixes the failure without granting unrelated access.",
+		reference:
+			"https://www.gnu.org/software/coreutils/manual/html_node/Mode-Structure.html"
+	},
+	"Unit 4: Editing and Configuration": {
+		stage: "Change safely",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"configuration baseline",
+			"targeted edit",
+			"diff",
+			"syntax check",
+			"reload",
+			"rollback"
+		],
+		practiceSection: "configuration-change-and-rollback-case",
+		answerSection: "configuration-change-and-rollback-key",
+		route: "Treat configuration as a controlled change: identify the active file and precedence, save a dated or versioned baseline, make one targeted edit, inspect the diff, run the program's syntax or verification command, reload only after validation, and retest the intended behavior.",
+		safeRoute:
+			"Practice on supplied copies before an active unit or server configuration. Keep secrets out of course files, avoid editor-generated ownership surprises, and restore the last validated file when the syntax check or behavior gate fails.",
+		evidence:
+			"The change record includes active path, precedence, original checksum or commit, focused diff, validation command, reload versus restart decision, observed result, and exact rollback.",
+		reference:
+			"https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html"
+	},
+	"Unit 5: Processes and Job Control": {
+		stage: "Operate runtime state",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"PID and PPID",
+			"process state",
+			"foreground job",
+			"signal",
+			"graceful stop",
+			"ownership"
+		],
+		practiceSection: "process-state-and-signal-case",
+		answerSection: "process-state-and-signal-key",
+		route: "Trace a process through parent, owner, state, command, open terminal relationship, resource evidence, and expected shutdown behavior. Separate shell job control from long-lived service supervision and distinguish a deliberate graceful signal from an indiscriminate kill.",
+		safeRoute:
+			"Signal only course-owned toy processes after confirming PID, owner, and command. Start with an ordinary termination path, reserve forceful termination for the supplied stuck-process case, and never target names or PIDs that were not created by the lab.",
+		evidence:
+			"The process table identifies parent and owner, foreground/background state is explained, the selected signal matches the intended transition, shutdown is confirmed, and no unrelated process is affected.",
+		reference: "https://man7.org/linux/man-pages/man7/signal.7.html"
+	},
+	"Unit 6: Services and systemd": {
+		stage: "Operate runtime state",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"unit state",
+			"ExecStart",
+			"service account",
+			"dependency",
+			"restart policy",
+			"enablement"
+		],
+		practiceSection: "systemd-service-and-failure-case",
+		answerSection: "systemd-service-and-failure-key",
+		route: "Read the complete service contract before activation: unit dependencies, executable and arguments, working directory, user and group, environment source, restart policy, install target, and expected logs. Distinguish daemon reload, service reload, restart, and enablement.",
+		safeRoute:
+			"Install only the course toy service in the owned systemd-capable environment. Validate the unit, use a dedicated unprivileged identity, bind locally, and preserve a disable-stop-remove-reset route before enabling startup.",
+		evidence:
+			"`systemd-analyze verify` or the closest supported check passes, status identifies the expected main process, the service survives the declared restart case, enablement is confirmed separately from runtime state, and one broken path is diagnosed from status plus journal evidence.",
+		reference:
+			"https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html"
+	},
+	"Unit 7: Logging and Observability": {
+		stage: "Diagnose and explain",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"journal field",
+			"unit filter",
+			"time window",
+			"application log",
+			"rotation",
+			"cause timeline"
+		],
+		practiceSection: "journal-and-observability-case",
+		answerSection: "journal-and-observability-key",
+		route: "Begin with a symptom and bounded time window, then filter by boot, unit, priority, process, or structured field. Correlate service state, journal entries, application logs, configuration change, and resource evidence into a timeline rather than copying a wall of output.",
+		safeRoute:
+			"Use supplied redacted logs or the toy service journal. Keep access within the active user's authorized journal view, remove hostnames or identifiers before sharing, and test retention on disposable records rather than deleting broad system history.",
+		evidence:
+			"The incident note states expected and observed behavior, first relevant event, causal evidence, rejected hypotheses, correction, and clean retest; excerpts are minimal, timestamped, and free of credentials or personal data.",
+		reference:
+			"https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
+	},
+	"Unit 8: Scheduling and Automation": {
+		stage: "Automate and verify",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"schedule",
+			"minimal environment",
+			"absolute path",
+			"overlap lock",
+			"timer state",
+			"run evidence"
+		],
+		practiceSection: "scheduler-and-automation-case",
+		answerSection: "scheduler-and-automation-key",
+		route: "Make the task reliable before scheduling it: explicit interpreter, paths, environment, input and output locations, exit handling, overlap policy, retention, and idempotent or recovery behavior. Compare cron's compact schedule with systemd timer activation and journal evidence.",
+		safeRoute:
+			"Write only to the supplied workspace and backup destination. Test the script manually under a reduced environment, use a short temporary schedule for observation, prevent overlapping runs, and remove or disable the schedule after the lab.",
+		evidence:
+			"The manual and scheduled runs produce the same validated artifact, a missing environment variable fails visibly, overlap is controlled, timer or cron state is inspectable, logs identify success or failure, and cleanup removes the schedule.",
+		reference:
+			"https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html"
+	},
+	"Unit 9: Package Management and Software Layout": {
+		stage: "Maintain software",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"repository source",
+			"package metadata",
+			"dependency",
+			"installed files",
+			"update plan",
+			"rollback"
+		],
+		practiceSection: "package-source-and-update-case",
+		answerSection: "package-source-and-update-key",
+		route: "Identify the distribution, configured repositories, package candidate, installed version, dependencies, file list, service impact, and security support before installation or update. Compare distribution package, source build, and tarball placement without mixing their ownership models.",
+		safeRoute:
+			"Use repository metadata and supplied transaction output before a real package change. Update only the owned lab after a snapshot, avoid unverified third-party repositories and curl-to-shell installers, and record the package-manager recovery path.",
+		evidence:
+			"The package record names source, version, architecture, files, dependencies, expected service effect, disk change, validation, and rollback; the selected installation model has one clear owner and update route.",
+		reference:
+			"https://documentation.ubuntu.com/server/how-to/software/package-management/"
+	},
+	"Unit 10: Networking from a Systems View": {
+		stage: "Diagnose and explain",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"interface",
+			"address",
+			"route",
+			"listener",
+			"name resolution",
+			"layered test"
+		],
+		practiceSection: "network-state-and-diagnostics-case",
+		answerSection: "network-state-and-diagnostics-key",
+		route: "Read local interface, address, route, resolver, listener, process ownership, and application response as separate layers. Test from nearest dependency outward so an HTTP failure is not guessed to be DNS, routing, firewall, socket, or application logic without evidence.",
+		safeRoute:
+			"Use loopback, user-mode NAT, and course-owned VM addresses only. Do not scan address ranges, capture third-party traffic, bridge into school or employer networks, or open a public listener; supplied `ip`, `ss`, `dig`, and `curl` output completes the diagnostic route.",
+		evidence:
+			"The diagnosis identifies the first failing layer, cites the exact route, resolver, listening socket, process, and application result that support it, and demonstrates a corrected local request without broad probing.",
+		reference: "https://man7.org/linux/man-pages/man8/ip.8.html"
+	},
+	"Unit 11: Web Servers": {
+		stage: "Deploy locally",
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"document root",
+			"server block",
+			"reverse proxy",
+			"local listener",
+			"configuration test",
+			"least privilege"
+		],
+		practiceSection: "web-server-and-reverse-proxy-case",
+		answerSection: "web-server-and-reverse-proxy-key",
+		route: "Separate static files, server configuration, upstream application, logs, socket, and process identity. Build the Nginx route first, compare the Apache virtual-host model, and distinguish configuration validation, reload, restart, local TLS concepts, and reverse proxy behavior.",
+		safeRoute:
+			"Bind the course service to loopback or a private lab interface, use fictional hostnames, keep firewall and router changes out of core work, and validate Nginx or Apache configuration before a reload. Public DNS, certificates, and internet exposure are not required.",
+		evidence:
+			"The document root and ownership are deliberate, syntax validation passes, `ss` identifies the expected local listener and process, static and proxied requests return the intended status and body, failure logs identify a broken upstream, and rollback restores the previous configuration.",
+		reference: "https://nginx.org/en/docs/beginners_guide.html"
+	},
+	"Unit 12: Storage, Backups, and Reliability": {
+		stage: "Recover reliably",
+		estimatedTime: "4–5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"capacity",
+			"mount identity",
+			"backup manifest",
+			"integrity check",
+			"separate restore",
+			"failure preservation"
+		],
+		practiceSection: "backup-restore-and-capacity-case",
+		answerSection: "backup-restore-and-capacity-key",
+		route: "Treat a backup as a recoverable, attributable artifact: identify source and exclusions, destination filesystem, free-space requirement, timestamp, manifest, integrity check, retention, permissions, logs, and a restore into a separate path before trusting it.",
+		safeRoute:
+			"Use the supplied workspace and archive destination rather than real home or production data. Do not edit host `fstab`, format devices, overwrite the source during restore, or delete the last trusted archive; use provided mount and capacity output when storage changes are unavailable.",
+		evidence:
+			"The backup contains the declared files, excludes transient data, matches the manifest or checksum evidence, restores to a separate path with expected ownership, handles insufficient space or interrupted output safely, and preserves the last trusted backup.",
+		reference: "https://www.gnu.org/software/tar/manual/tar.html"
+	},
+	"Linux Systems Lab 17: Operations Capstone Studio": {
+		stage: "Operations capstone",
+		estimatedTime: "8–12 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"scoped service",
+			"least privilege",
+			"health check",
+			"failure injection",
+			"restore drill",
+			"runbook"
+		],
+		practiceSection: "operations-capstone-incident-case",
+		answerSection: "operations-capstone-incident-key",
+		route: "Deploy one small local service through vertical slices: environment record, filesystem layout, dedicated identity, validated configuration, systemd unit, loopback health route, journal evidence, scheduled backup, restore drill, injected failure, correction, and clean-start demonstration.",
+		safeRoute:
+			"Keep every endpoint and dependency local to the owned VM or WSL2 instance, take a snapshot before integration, use fictional content, and avoid public DNS, public TLS, cloud credentials, external databases, host firewall changes, or production logs.",
+		evidence:
+			"The capstone passes clean start, local health, least-privilege ownership, configuration verification, controlled failure, journal diagnosis, corrected retest, scheduled backup, separate-path restore, disable/remove rollback, and a versioned runbook with known limitations.",
+		reference: "https://documentation.ubuntu.com/server/"
+	}
+};
+
+function linuxPracticeLink(section: string) {
+	return `${LINUX_PRACTICE_PACK}#${section}`;
+}
+
+function linuxVerificationLink(section: string) {
+	return `${LINUX_VERIFICATION_GUIDE}#${section}`;
+}
+
+function linuxSupplementalPath(title: string) {
+	if (/extension|challenge/i.test(title)) return "challenge" as const;
+	if (/troubleshooting notebook/i.test(title)) return "core" as const;
+	return "choice" as const;
+}
+
+function decorateLinuxSystemsModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = LINUX_MODULE_FLOW[module.title];
+	if (!flow) throw new Error(`Missing Linux Systems flow: ${module.title}`);
+
+	const practiceLink = linuxPracticeLink(flow.practiceSection);
+	const verificationLink = linuxVerificationLink(flow.answerSection);
+	const curriculum = module.curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.stage}. ${flow.route}
+
+**Safe practice route:** ${flow.safeRoute}
+
+**Evidence gate:** ${flow.evidence}
+
+**Local continuity:** Use the [supplied practice case](${practiceLink}) when a compatible Linux environment, sudo access, systemd, network isolation, or safe state-changing permission is unavailable. Record an independent diagnosis before comparing it with the [verification guide](${verificationLink}).
+
+**Primary reference:** [Open the current reference](${flow.reference}). Record the distribution, release, command version, and service implementation when behavior is version-sensitive.
+
+${item.content}`
+				: item.content,
+		learningPath: "core" as const,
+		...(item.projectLink
+			? {
+					datasetLink: item.datasetLink ?? practiceLink,
+					mediaLink: item.mediaLink ?? flow.reference
+				}
+			: {})
+	}));
+
+	return {
+		...module,
+		kind: "module",
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: [...flow.keyBlocks],
+		curriculum,
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: linuxSupplementalPath(item.title),
+			datasetLink: item.datasetLink ?? practiceLink,
+			mediaLink: item.mediaLink ?? flow.reference
+		}))
+	};
+}
+
+function buildOptionalLinuxStudioArchive(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	const practiceLink = linuxPracticeLink("operations-capstone-incident-case");
+	const verificationLink = linuxVerificationLink(
+		"operations-capstone-incident-key"
+	);
+
+	return {
+		kind: "appendix",
+		title: "Optional Linux Integration Studio Archive",
+		estimatedTime:
+			"Choose one 3–5-session studio when extra transfer is useful",
+		keyBlocks: [
+			"service deployment",
+			"automation",
+			"observability",
+			"backup",
+			"recovery",
+			"transfer"
+		],
+		curriculum: [
+			{
+				title: "Linux Integration Studio Archive Guide",
+				content: `**Course flow:** Linux Systems Lab 14: Service Deployment Studio, Linux Systems Lab 15: Automation and Observability Studio, and Linux Systems Lab 16: Backup Recovery Studio are optional integration practice after their matching required units. Select one studio to revisit a weak service, scheduler, journal, backup, or restore evidence target; completing all three is not required before Linux Systems Lab 17: Operations Capstone Studio.
+
+**Safe practice route:** Keep the selected studio inside the owned VM or use the [supplied capstone incident case](${practiceLink}). Preserve the original starter, use a snapshot or file-level rollback, and compare with the [verification guide](${verificationLink}) only after recording the attempted diagnosis.
+
+**Evidence gate:** The selected studio produces one bounded system change, one failure or edge case, one verification result, and one tested undo or recovery path.`,
+				learningPath: "choice",
+				datasetLink: practiceLink,
+				solutionLink: verificationLink,
+				mediaLink:
+					"https://www.freedesktop.org/software/systemd/man/latest/systemd.html"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: linuxSupplementalPath(item.title),
+					datasetLink: item.datasetLink ?? practiceLink,
+					mediaLink:
+						item.mediaLink ??
+						"https://www.freedesktop.org/software/systemd/man/latest/systemd.html"
+				})
+			)
+		)
+	};
+}
+
+const linuxPrimaryModules = linuxSystemsSourceCourse.modules
+	.slice(0, LINUX_PRIMARY_MODULE_COUNT)
+	.map(decorateLinuxSystemsModule);
+const linuxCapstoneModule = decorateLinuxSystemsModule(
+	linuxSystemsSourceCourse.modules.at(-1)!
+);
+const linuxOptionalStudioModules = linuxSystemsSourceCourse.modules.slice(
+	LINUX_PRIMARY_MODULE_COUNT,
+	-1
+);
+
+export const linuxSystemsCourse: RawCourse = {
+	...linuxSystemsSourceCourse,
+	modules: [
+		...linuxPrimaryModules,
+		linuxCapstoneModule,
+		buildOptionalLinuxStudioArchive(linuxOptionalStudioModules)
 	]
 };
