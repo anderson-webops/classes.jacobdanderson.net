@@ -1,4 +1,4 @@
-import type { RawCourse } from "./types";
+import type { RawCourse, RawCourseModuleItem } from "./types";
 import {
 	staticMediaFilename,
 	withPendingStaticMediaNotice
@@ -12,8 +12,16 @@ const AP_2022_FRQ =
 	"https://apcentral.collegeboard.org/media/pdf/ap22-frq-computer-science-a.pdf";
 const AP_2022_FRQ_SCORING =
 	"https://apcentral.collegeboard.org/media/pdf/ap22-sg-computer-science-a.pdf";
+const AP_2026_FRQ =
+	"https://apcentral.collegeboard.org/media/pdf/ap26-frq-computer-science-a.pdf";
+const AP_CSA_CED =
+	"https://apcentral.collegeboard.org/media/pdf/ap-computer-science-a-course-and-exam-description.pdf";
+const AP_CSA_EXAM =
+	"https://apcentral.collegeboard.org/courses/ap-computer-science-a/exam";
+const AP_CSA_QUICK_REFERENCE =
+	"https://apcentral.collegeboard.org/media/pdf/ap-computer-science-a-java-quick-reference.pdf";
 const AP_FRQ_ARCHIVE =
-	"https://apstudents.collegeboard.org/courses/ap-computer-science-a/free-response-questions-by-year";
+	"https://apcentral.collegeboard.org/courses/ap-computer-science-a/exam/past-exam-questions";
 const APCS_README =
 	"https://github.com/instruction-material/APCS/blob/main/README.md";
 const APCS_TRACKS_GUIDE = "/course-assets/apcs/apcs-pacing-tracks.md";
@@ -121,7 +129,7 @@ function apProject({
 		.join("\n\n");
 }
 
-export const apComputerScienceACourse: RawCourse = {
+const apComputerScienceASourceCourse: RawCourse = {
 	name: "AP Computer Science A",
 	modules: [
 		{
@@ -1639,6 +1647,629 @@ export const apComputerScienceACourse: RawCourse = {
 				}
 			]
 		}
+	]
+};
+
+const AP_CSA_ENRICHMENT_MODULES = new Set([
+	"APCS7 Inheritance",
+	"APCS8 Polymorphism"
+]);
+
+const AP_CSA_REFERENCE_ITEMS = new Set([
+	"Required Textbook",
+	"Reference Pack",
+	"Loop Reference Pack",
+	"Array Reference Pack",
+	"ArrayList Reference Pack",
+	"Recursion Reference Pack",
+	"Next Course Positioning"
+]);
+
+const AP_CSA_MODULE_FLOW: Record<
+	string,
+	{
+		estimatedTime: string;
+		keyBlocks: string[];
+		flowNote: string;
+	}
+> = {
+	"General: Course Introduction and Setup": {
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Fall 2025 CED",
+			"four official units",
+			"Java Quick Reference",
+			"fully digital exam",
+			"placement evidence"
+		],
+		flowNote:
+			"Anchor pacing to the effective Fall 2025 College Board framework: four units, five computational thinking practices, the current Java Quick Reference, and a fully digital exam. Use recent code and handwritten or typed tracing to choose a route without skipping required AP-specific evidence."
+	},
+	"Check-In #1": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Java syntax",
+			"object-method trace",
+			"String method",
+			"numeric expression",
+			"placement decision"
+		],
+		flowNote:
+			"Use this as placement for Unit 1, not as a generic prerequisite exam. Verify object creation and method calls, exact String and numeric results, compiler reasoning, and one independent correction before assigning targeted review."
+	},
+	"APCS1 Variables and Input/Output": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 1",
+			"primitive value",
+			"String object",
+			"method call",
+			"expression type"
+		],
+		flowNote:
+			"Map variables, primitive values, Strings, object construction, and method calls to Unit 1 Using Objects and Methods. Keyboard input remains useful programming enrichment, but exam-specific work emphasizes supplied values, method calls, exact output, and expression types."
+	},
+	"APCS2 Operators": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 1",
+			"integer division",
+			"remainder",
+			"compound assignment",
+			"boolean result"
+		],
+		flowNote:
+			"Predict type and value before execution for arithmetic, casting, remainder, assignment, relational, and logical expressions. Test zero, sign, truncation, precedence, and boundary cases in the exact Java form used by AP questions."
+	},
+	"APCS3 Conditionals and Packages": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 1 to Unit 2",
+			"library class",
+			"boolean condition",
+			"branch table",
+			"random range"
+		],
+		flowNote:
+			"Bridge Unit 1 library and method use into Unit 2 selection. Trace every branch, use `.equals()` for String content, derive random ranges from their possible endpoints, and explain package imports only to the depth required for accessible library classes."
+	},
+	"APCS4 Loops and Exceptions": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 2",
+			"loop invariant",
+			"termination",
+			"nested iteration",
+			"runtime error trace"
+		],
+		flowNote:
+			"Complete Unit 2 Selection and Iteration with branch and loop traces, including nested loops and common runtime failures. Formal try-catch design is enrichment; the assessed reasoning is condition evaluation, state change, termination, output, and correction."
+	},
+	"Check-In #2": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 2 checkpoint",
+			"branch coverage",
+			"loop trace",
+			"nested count",
+			"FRQ family 1"
+		],
+		flowNote:
+			"Close Unit 2 with one Methods and Control Structures FRQ-style response plus multiple-choice traces. Score method specification, conditions, iteration, helper calls, return value, and boundary behavior separately."
+	},
+	"APCS5 Classes Part I": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 3",
+			"private field",
+			"constructor",
+			"method contract",
+			"object state"
+		],
+		flowNote:
+			"Begin Unit 3 Class Creation with private state, constructors, accessors, behavior methods, and object-state traces. Build from a specification table and test each constructor and method without adding unrequested public behavior."
+	},
+	"APCS6 Classes Part II": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 3",
+			"this",
+			"reference semantics",
+			"state invariant",
+			"FRQ family 2"
+		],
+		flowNote:
+			"Complete Unit 3 through reference semantics, controlled mutation, `this`, constructor validity, and complete class writing. Practice the digital Class Design FRQ as a specification-matching task rather than an open-ended hierarchy exercise."
+	},
+	"Check-In #3": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 3 checkpoint",
+			"class header",
+			"private state",
+			"constructor",
+			"method implementation"
+		],
+		flowNote:
+			"Use a complete class-design prompt to verify Unit 3. Score class header, fields, constructor, method signature, state updates, return behavior, and specification compliance; inheritance and polymorphism remain optional enrichment."
+	},
+	"APCS9 Software Development Lifecycle": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 4",
+			"text-file Scanner",
+			"precondition",
+			"responsible computing",
+			"independent verification"
+		],
+		flowNote:
+			"Open Unit 4 Data Collections with specifications, text-file input, data provenance, failure preconditions, and responsible computing. Keyboard-validation projects remain enrichment; assessed file work uses `File`, `Scanner`, documented formats, and explicit close behavior."
+	},
+	"APCS10 Arrays": {
+		estimatedTime: "5 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 4",
+			"1D array",
+			"2D rectangular array",
+			"row-column trace",
+			"boundary index"
+		],
+		flowNote:
+			"Develop and analyze 1D and rectangular 2D array algorithms. Test empty 1D arrays and rectangular row/column boundaries, trace row-major and column-major access, and match the current AP exclusion of nonrectangular 2D arrays."
+	},
+	"APCS11 ArrayLists": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 4",
+			"generic element type",
+			"index shift",
+			"safe removal",
+			"FRQ family 3"
+		],
+		flowNote:
+			"Use typed `ArrayList<E>` operations, trace index shifts, and apply safe removal patterns without mutating through an enhanced for loop. Practice filtering, aggregation, and mutation in the current Data Analysis with ArrayList FRQ shape."
+	},
+	"Check-In #4": {
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 4 checkpoint",
+			"ArrayList FRQ",
+			"2D array FRQ",
+			"typed response",
+			"row scoring"
+		],
+		flowNote:
+			"Use one ArrayList and one 2D-array digital FRQ response to check Unit 4 data reasoning before wrappers and algorithms. Type without compiler feedback, then score each required behavior and correct only the missed row."
+	},
+	"APCS12 Wrapper Classes": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 4",
+			"Integer",
+			"Double",
+			"autoboxing",
+			"parse contract"
+		],
+		flowNote:
+			"Use `Integer` and `Double` as the object bridge for typed collections and parsing. Trace autoboxing, unboxing, null risk, constants, and `parseInt` or `parseDouble` behavior within the current Java Quick Reference."
+	},
+	"APCS13 Algorithmic Runtime and Linear Search": {
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 4",
+			"linear search",
+			"comparison count",
+			"first or last match",
+			"missing result"
+		],
+		flowNote:
+			"Implement and trace linear search over arrays, ArrayLists, and rows of rectangular 2D arrays. State the return contract, count comparisons, and test empty, first, middle, last, duplicate, and missing cases; treat broader runtime analysis as useful enrichment around the required algorithm."
+	},
+	"APCS14 Selection and Insertion Sort": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 4",
+			"selection sort",
+			"insertion sort",
+			"iteration trace",
+			"element preservation"
+		],
+		flowNote:
+			"Trace every outer iteration of selection and insertion sort on arrays and ArrayLists. Verify sortedness and element preservation on sorted, reverse, duplicate, negative, and short fixtures, with emphasis on determining intermediate states."
+	},
+	"APCS15 Recursion": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 4",
+			"base case",
+			"recursive call",
+			"stack frame",
+			"termination"
+		],
+		flowNote:
+			"Identify base cases, recursive calls, parameter progress, and returned values for Strings and collections. Trace zero or empty, one-step, ordinary, and rejected inputs; newer Java features and tail-recursion optimization are outside the assessed path."
+	},
+	"APCS16 Binary Search and Merge Sort": {
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Unit 4",
+			"sorted precondition",
+			"binary-search trace",
+			"merge-sort trace",
+			"recursive result"
+		],
+		flowNote:
+			"Finish Unit 4 by determining each recursive step of binary search and merge sort. Enforce sorted input for binary search, strict interval reduction, merge invariants, and exact intermediate collection states; other search and sort families stay outside exam scope."
+	},
+	"APCS17 Master Projects and Test Prep": {
+		estimatedTime: "8–10 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"42 digital MCQ",
+			"four FRQ families",
+			"Java Quick Reference",
+			"error log",
+			"independent mastery"
+		],
+		flowNote:
+			"Shift from topic learning to the current fully digital exam: 42 multiple-choice questions and four free-response families. Use the Quick Reference, type without compiler feedback, score by rubric row, maintain an error log, and complete no-AI readiness checks independently."
+	}
+};
+
+const AP_CSA_CHECK_IN_COPY: Record<string, Record<string, string>> = {
+	"Check-In #1": {
+		"Review Goal":
+			"Check-In #1 is a placement checkpoint before Unit 1. It samples Java syntax, object creation and method calls, Strings, numeric expressions, and short traces so the learner enters the supported, standard, quick, challenge, or exam-focused route with concrete evidence.",
+		"Learning Target Coverage":
+			"Use selected prompts for exact output, expression type and value, String methods, object-method effects, and one simple branch or loop. A miss identifies targeted review; it does not turn the placement check into an early cumulative exam.",
+		"Core Check-In Prompt Bank":
+			"Use the repository prompt bank selectively for placement. Record the attempted prompt, prediction, result, correction, and route decision, then begin Unit 1 with the smallest review set that addresses the evidence."
+	},
+	"Check-In #2": {
+		"Review Goal":
+			"Check-In #2 closes Units 1 and 2 with object-and-method reasoning plus selection and iteration. It includes one Methods and Control Structures FRQ-style method, exact expression or String traces, and multiple-choice work on conditions, loops, and runtime failures.",
+		"Prompt Bank Coverage":
+			"Use prompt-bank sections on values, method calls, Strings, arithmetic, boolean conditions, `for` and `while` loops, nested iteration, and runtime reasoning. Class-design and inheritance prompts remain for later modules or optional enrichment.",
+		"Core Check-In Prompt Bank":
+			"Complete the Unit 1 and Unit 2 portions of the repository prompt bank, type one method response without compiler feedback, and record the first incorrect state transition or omitted requirement before revising."
+	},
+	"Check-In #3": {
+		"Review Goal":
+			"Check-In #3 closes Unit 3 Class Creation. The checkpoint verifies a complete class header, private instance variables, constructor initialization, requested methods, controlled state changes, reference reasoning, and exact compliance with a supplied specification.",
+		"Prompt Bank Coverage":
+			"Use class-definition, constructor, accessor, mutator, `this`, reference, and object-state prompts. Inheritance, overriding, and polymorphism prompts belong to the optional enrichment appendix rather than this required checkpoint.",
+		"Core Check-In Prompt Bank":
+			"Use the class-creation portions of the repository prompt bank and complete one Class Design FRQ-family response without compiler feedback. Score the header, fields, constructor, methods, state behavior, and specification match separately."
+	},
+	"Check-In #4": {
+		"Review Goal":
+			"Check-In #4 checks the first Data Collections sequence: 1D arrays, rectangular 2D arrays, `ArrayList`, index shifts, mutation, traversal order, and method contracts before wrapper, recursion, searching, and sorting work continues.",
+		"Prompt Bank Coverage":
+			"Use array, rectangular 2D-array, and `ArrayList` prompts that expose indexes, row-column order, enhanced-loop limits, insertion, removal, and returned or mutated results.",
+		"Core Check-In Prompt Bank":
+			"Complete one Data Analysis with ArrayList response and one 2D Array response without compiler feedback. Score each required behavior, syntax boundary, traversal decision, and edge case, then revise only the missed row."
+	}
+};
+
+function alignApCsaCheckInItem(
+	moduleTitle: string,
+	item: RawCourseModuleItem
+): RawCourseModuleItem {
+	const content = AP_CSA_CHECK_IN_COPY[moduleTitle]?.[item.title];
+	return content ? { ...item, content } : item;
+}
+
+function apCsaSupplementalPath(item: RawCourseModuleItem) {
+	return /extension|challenge|inheritance|polymorphism|legacy|2020|2022|next course/i.test(
+		`${item.title}\n${item.content}`
+	)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function strengthenApCsaItem(item: RawCourseModuleItem): RawCourseModuleItem {
+	if (item.title === "Course Positioning") {
+		return {
+			...item,
+			content:
+				"AP Computer Science A is a Java course aligned to the effective Fall 2025 framework: Unit 1 Using Objects and Methods, Unit 2 Selection and Iteration, Unit 3 Class Creation, and Unit 4 Data Collections. Programming projects build durable skill while AP practice repeatedly exercises design, development, analysis, documentation, and responsible computing."
+		};
+	}
+
+	if (item.title === "Track Guide") {
+		return {
+			...item,
+			content: [
+				"The APCS track guide separates Slow/Supported, Medium/Standard, Fast/Quick, Hard/Challenge, and Exam-focused pacing while preserving the four-unit Fall 2025 framework.",
+				"Placement uses recent code, Java-specific mistakes, hand tracing, object-state explanations, and AP-style written reasoning. Fast learners may compress early syntax practice, but Unit 1 object/method evidence, Unit 2 selection/iteration, Unit 3 full class creation, and Unit 4 arrays, ArrayLists, rectangular 2D arrays, text files, recursion, searching, and sorting remain represented.",
+				"Designing inheritance hierarchies and polymorphic projects now live in optional enrichment because the current CED excludes designing and implementing inheritance relationships from the course and exam.",
+				"Challenge work deepens the same assessed concept through validation, tests, data files, edge-case analysis, or specification evidence rather than replacing exam scope with unrelated language features."
+			].join("\n\n")
+		};
+	}
+
+	if (item.title === "Java Toolchain and Workflow") {
+		return {
+			...item,
+			content:
+				"Use a full JDK with a fast compile-run cycle. The effective Fall 2025 CED recommends Java 22 and accepts Java 17 as a minimum; this repository's Windows setup remains tested with Temurin 21. Assessed work stays within the current Java Quick Reference and avoids lambdas, streams, and newer language features that are outside AP exam scope."
+		};
+	}
+
+	if (item.title === "Nested Loops and Early Exception Reasoning") {
+		return {
+			...item,
+			title: "Nested Loops and Runtime Error Reasoning",
+			content:
+				"Trace nested loops by row, column, and total execution count, then diagnose bounds, arithmetic, and termination failures from the exact state that causes them. Formal try-catch design remains programming enrichment rather than required exam content."
+		};
+	}
+
+	if (item.title === "Free Response Prep") {
+		return {
+			...item,
+			content:
+				"Begin Class Design FRQ-family writing with small, complete specifications. Name the private instance variables, constructor contract, requested methods, return values, and state changes; test ordinary, boundary, and repeated calls. Score each requested class element separately and correct the first missing or contradictory behavior without adding an inheritance hierarchy or unrequested public API."
+		};
+	}
+
+	if (item.title === "Robust Input and Failure Handling") {
+		return {
+			...item,
+			content:
+				"Keyboard validation is useful programming enrichment, but accepting keyboard input is outside current AP exam scope. Use this project to separate optional interface robustness from required Unit 4 text-file reasoning with `File`, `Scanner`, documented preconditions, and explicit close behavior."
+		};
+	}
+
+	if (item.title === "Practice Exam and FRQ Rhythm") {
+		return {
+			...item,
+			content: apConcept({
+				focus: "The final stretch prepares for the fully digital exam: 42 multiple-choice questions and four FRQ families—Methods and Control Structures, Class Design, Data Analysis with ArrayList, and 2D Array.",
+				practice: [
+					"Run short mixed sets before full digital simulations.",
+					"Type FRQ responses without compiler feedback and use the current Java Quick Reference.",
+					"Score each response by rubric row and record the exact missed behavior.",
+					"Select one targeted correction before another mixed set."
+				],
+				evidence:
+					"Readiness includes timing, typed-code accuracy, specification compliance, and a shrinking error log rather than a score alone."
+			})
+		};
+	}
+
+	if (item.title === "Past FRQ Archive") {
+		return {
+			...item,
+			content:
+				"Use the official College Board archive with year labels and scope checks. The 2026 released FRQs align to the revised exam; older questions can still provide useful method, class, array, or list practice but do not completely align with the current framework. Record year, FRQ family, rubric row, lost behavior, and targeted correction.",
+			projectLink: AP_FRQ_ARCHIVE
+		};
+	}
+
+	if (item.title === "2022 FRQ and Scoring Guidelines") {
+		return {
+			...item,
+			content:
+				"**Legacy practice:** The 2022 FRQs and scoring guidelines predate the Fall 2025 revision. Use only questions or parts that map cleanly to a current method/control, class-design, ArrayList, or 2D-array target, and label any out-of-scope inheritance or legacy format before assigning the task. Record the mapped current FRQ family, attempted rubric rows, first lost behavior, and corrected response so older material remains targeted practice rather than a substitute exam blueprint."
+		};
+	}
+
+	if (item.title === "2020 Repo Practice Exam") {
+		return {
+			...item,
+			content:
+				"**Legacy practice:** The 2020 repository exam predates the Fall 2025 framework and the fully digital format. Use selected aligned questions for stamina or mixed tracing, never as the current exam blueprint; map every assigned question to one of the four units and record any excluded topic."
+		};
+	}
+
+	return item;
+}
+
+function insertApCsaItem(
+	items: RawCourseModuleItem[],
+	beforeTitle: string,
+	item: RawCourseModuleItem
+) {
+	const index = items.findIndex(candidate => candidate.title === beforeTitle);
+	if (index === -1) return [...items, item];
+	return [...items.slice(0, index), item, ...items.slice(index)];
+}
+
+function decorateApCsaModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow = AP_CSA_MODULE_FLOW[module.title];
+	const movedReferences = module.curriculum.filter(item =>
+		AP_CSA_REFERENCE_ITEMS.has(item.title)
+	);
+	let curriculum: RawCourseModuleItem[] = module.curriculum
+		.filter(item => !AP_CSA_REFERENCE_ITEMS.has(item.title))
+		.map(strengthenApCsaItem)
+		.map(item => alignApCsaCheckInItem(module.title, item))
+		.map(item => ({
+			...item,
+			learningPath: "core" as const
+		}));
+
+	if (module.title === "General: Course Introduction and Setup") {
+		curriculum = insertApCsaItem(curriculum, "Track Guide", {
+			title: "Current Four-Unit Framework and Digital Exam",
+			content: [
+				"**Official baseline:** The effective Fall 2025 CED organizes AP CSA into Unit 1 Using Objects and Methods, Unit 2 Selection and Iteration, Unit 3 Class Creation, and Unit 4 Data Collections.",
+				"",
+				"**Exam contract:** The current fully digital exam has 42 multiple-choice questions in 90 minutes and four free-response questions in 90 minutes: Methods and Control Structures, Class Design, Data Analysis with ArrayList, and 2D Array.",
+				"",
+				"**Routine:** Use the current Java Quick Reference throughout the course, practice typed responses without compiler feedback, and score design, development, analysis, documentation, and responsible-computing evidence independently."
+			].join("\n"),
+			projectLink: AP_CSA_CED,
+			datasetLink: AP_CSA_QUICK_REFERENCE,
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "APCS4 Loops and Exceptions") {
+		curriculum.push({
+			title: "AP Scope Boundary: Iteration and Exceptions",
+			content: [
+				"**Required AP evidence:** Trace and write conditional, `for`, `while`, and nested-loop code; explain initialization, condition, update, termination, output, and runtime failures.",
+				"",
+				"**Enrichment boundary:** General try-catch design is not part of the current required framework. Exception-related examples support debugging only; they do not displace selection, iteration, or Methods and Control Structures FRQ practice."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "APCS6 Classes Part II") {
+		curriculum.push({
+			title: "FRQ Family 2: Class Design Contract",
+			content: [
+				"**Completion evidence:**",
+				"- Translate the specification table into a class header, private instance variables, a constructor, and the requested method.",
+				"- Match names, parameter types, return types, visibility, initial state, and behavior exactly.",
+				"- Test ordinary, boundary, and repeated-call state without adding an inheritance hierarchy or unrequested public API.",
+				"- Type one complete response without compiler feedback, then score each required element separately."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "APCS9 Software Development Lifecycle") {
+		curriculum.push(
+			{
+				title: "Unit 4 Text-File Input Contract",
+				content: [
+					"**Completion evidence:**",
+					"- Read a documented course-owned text file with `File` and `Scanner`, using only the current Java Quick Reference methods.",
+					"- State the file precondition or `throws IOException` boundary and close the scanner after use.",
+					"- Test missing-file policy separately from empty, one-record, malformed, and ordinary fixtures.",
+					"- If `nextLine()` and token methods appear in enrichment work, explain whitespace behavior; mixed-method analysis and keyboard input remain outside current exam scope."
+				].join("\n"),
+				projectLink: AP_CSA_CED,
+				learningPath: "core"
+			},
+			{
+				title: "Responsible Computing and Independent AI Use",
+				content: [
+					"Use computing responsibly by checking data provenance, privacy, bias, accessibility, and the social effect of a program design.",
+					"",
+					"AI tools may support explanation, alternative exploration, or feedback during guided learning only when local course policy permits. Students verify every suggestion, document permitted assistance, and complete protected check-ins and exam simulations independently without AI. No real personal, credential, health, or financial data enters classroom fixtures."
+				].join("\n"),
+				projectLink: AP_CSA_CED,
+				learningPath: "core"
+			}
+		);
+	}
+
+	if (module.title === "Check-In #4") {
+		curriculum.push({
+			title: "FRQ Families 3 and 4: Data Collections Contract",
+			content: [
+				"**ArrayList response:** Match the supplied class and method specification, traverse typed objects, mutate without skipped indexes or concurrent modification, and return exactly the requested result.",
+				"",
+				"**2D-array response:** Treat exam arrays as rectangular, keep row and column indexes distinct, trace requested traversal order, and verify edge rows, edge columns, and the smallest valid grid.",
+				"",
+				"Type both responses without compiler feedback and score required behavior, syntax, and boundary handling by row."
+			].join("\n"),
+			learningPath: "core"
+		});
+	}
+
+	if (module.title === "APCS17 Master Projects and Test Prep") {
+		curriculum = insertApCsaItem(curriculum, "Past FRQ Archive", {
+			title: "2026 Released FRQ Set",
+			content:
+				"Use the released 2026 FRQs as the current-framework benchmark. Complete each question in the digital family it represents, type without compiler feedback, use only the supplied classes and current Java Quick Reference, and record uncertain syntax or omitted behavior before comparing with any available official scoring material.",
+			projectLink: AP_2026_FRQ,
+			learningPath: "core"
+		});
+		curriculum.push({
+			title: "Digital Exam Completion Contract",
+			content: [
+				"**Readiness evidence:**",
+				"- Two timed 90-minute digital sections using 42 multiple-choice questions and four typed FRQs, with the current Quick Reference available.",
+				"- FRQ coverage includes Methods and Control Structures, Class Design, Data Analysis with ArrayList, and 2D Array.",
+				"- Error log records unit, computational thinking practice, rubric row or reasoning error, correction, and a later successful transfer check.",
+				"- At least one full simulation is completed independently without compiler, IDE execution, or AI assistance, followed by targeted review rather than immediate repetition."
+			].join("\n"),
+			projectLink: AP_CSA_EXAM,
+			datasetLink: AP_CSA_QUICK_REFERENCE,
+			learningPath: "core"
+		});
+	}
+
+	curriculum = curriculum.map((item, index) => ({
+		...item,
+		content:
+			index === 0
+				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				: item.content
+	}));
+
+	return {
+		...module,
+		title:
+			module.title === "APCS4 Loops and Exceptions"
+				? "APCS4 Selection, Iteration, and Runtime Reasoning"
+				: module.title,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
+		curriculum,
+		supplementalProjects: [
+			...module.supplementalProjects.map(strengthenApCsaItem),
+			...movedReferences
+		].map(item => ({
+			...item,
+			learningPath: apCsaSupplementalPath(item)
+		}))
+	};
+}
+
+function buildOptionalApCsaOopExtension(
+	modules: RawCourse["modules"]
+): RawCourse["modules"][number] {
+	return {
+		kind: "appendix",
+		title: "Optional Inheritance and Polymorphism Enrichment",
+		estimatedTime:
+			"Choose after Unit 3 only when enrichment time is available",
+		keyBlocks: [
+			"out-of-scope label",
+			"superclass",
+			"override",
+			"dynamic dispatch",
+			"substitutability"
+		],
+		curriculum: [
+			{
+				title: "Inheritance and Polymorphism Scope Guide",
+				content:
+					"**Course flow:** APCS7 Inheritance and APCS8 Polymorphism remain available as Java enrichment after Unit 3. The effective Fall 2025 CED explicitly excludes designing and implementing inheritance relationships from AP CSA course and exam scope, so these projects do not replace class-creation or data-collection practice.",
+				learningPath: "core"
+			}
+		],
+		supplementalProjects: modules.flatMap(module =>
+			[...module.curriculum, ...module.supplementalProjects].map(
+				item => ({
+					...item,
+					learningPath: apCsaSupplementalPath(item)
+				})
+			)
+		)
+	};
+}
+
+const apCsaPrimaryModules = apComputerScienceASourceCourse.modules
+	.filter(module => !AP_CSA_ENRICHMENT_MODULES.has(module.title))
+	.map(decorateApCsaModule);
+const apCsaEnrichmentModules = apComputerScienceASourceCourse.modules.filter(
+	module => AP_CSA_ENRICHMENT_MODULES.has(module.title)
+);
+
+export const apComputerScienceACourse: RawCourse = {
+	...apComputerScienceASourceCourse,
+	modules: [
+		...apCsaPrimaryModules,
+		buildOptionalApCsaOopExtension(apCsaEnrichmentModules)
 	]
 };
 
