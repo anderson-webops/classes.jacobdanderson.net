@@ -4483,6 +4483,252 @@ const lateElementaryAModuleMetadata: Record<
 	}
 };
 
+const lateElementaryBModuleMetadata: Record<
+	string,
+	SourceLibraryModuleMetadata
+> = {
+	"LEB1 Equivalent Fractions": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"same whole",
+			"equal parts",
+			"equivalent fraction",
+			"visual model",
+			"multiply / divide by one"
+		],
+		flowNote:
+			"Keep the whole fixed at 20, represent each fraction with equal parts, and explain why multiplying or dividing numerator and denominator by the same value preserves the amount."
+	},
+	"LEB2 Comparing and Ordering Fractions": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"same whole",
+			"benchmark fraction",
+			"common denominator",
+			"number line",
+			"ordered comparison"
+		],
+		flowNote:
+			"Compare fractions only after confirming the same whole. Use a benchmark, common denominator, or number line, then connect the ordering to the ribbon assignment."
+	},
+	"LEB3 Adding and Subtracting Fractions": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"common denominator",
+			"equivalent fraction",
+			"add / subtract",
+			"track model",
+			"whole-distance check"
+		],
+		flowNote:
+			"Shade the race distance after every change, rewrite fractions with a common denominator, and check that the final distance remains between zero and one whole race."
+	},
+	"LEB4 Multiplying Fractions": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"fraction of a fraction",
+			"area model",
+			"overlap",
+			"numerator product",
+			"denominator product"
+		],
+		flowNote:
+			"Draw the first fraction in one direction and the second in another, identify the overlap, and connect that region to the multiplication expression."
+	},
+	"LEB5 Dividing Fractions": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"measurement division",
+			"unit fraction",
+			"groups in an amount",
+			"visual model",
+			"multiplication check"
+		],
+		flowNote:
+			"Use the pie box to ask how many equal portions fit, label the size of one portion, and verify each division result with a related multiplication statement."
+	},
+	"LEB6 Module Project: Saving the Environment One Cake at a Time": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"ratio",
+			"reduced fraction",
+			"number line",
+			"scale recipe",
+			"unit label"
+		],
+		flowNote:
+			"Treat all company, emissions, cost, and recipe values as a fixed classroom dataset rather than current factual claims. Reduce and plot the report ratios, then scale the recipe with units visible."
+	},
+	"LEB7 Place Value with Decimals": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"tenths / hundredths",
+			"coin exchange",
+			"decimal notation",
+			"add decimals",
+			"comparison"
+		],
+		flowNote:
+			"Convert pennies and dimes into dollars with place-value exchanges before adding. Treat the phone price only as a comparison target, not a product recommendation."
+	},
+	"LEB8 Comparing and Rounding Decimals": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"align place values",
+			"compare decimals",
+			"rounding place",
+			"benchmark",
+			"interval reasoning"
+		],
+		flowNote:
+			"Align decimal places before ranking, mark the rounding digit and benchmark values, and justify proposed third-place times as values inside the correct interval."
+	},
+	"LEB9 Decimal Operations": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"decimal addition",
+			"decimal subtraction",
+			"decimal multiplication",
+			"unit price",
+			"change check"
+		],
+		flowNote:
+			"Record quantity, unit price, and item cost in one table, align decimal points, and check that subtotal plus tax plus change reconciles with the amount paid."
+	},
+	"LEB10 Module Project: From Facebook to YouTube": {
+		estimatedTime: "3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"aggregate data table",
+			"order decimals",
+			"threshold difference",
+			"fraction of total",
+			"data-based recommendation"
+		],
+		flowNote:
+			"Use only the supplied aggregate counts; no account, posting, sharing, platform access, or personal data collection is required. Verify the ordering, threshold, growth, and demographic calculations before making a hypothetical content recommendation."
+	},
+	"Check-in #1": {
+		estimatedTime: "1–2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"equivalent / ordered fractions",
+			"fraction operations",
+			"decimal place value",
+			"rounding",
+			"decimal operations"
+		],
+		flowNote:
+			"Collect one visual fraction model, one fraction operation, one decimal comparison or rounding explanation, and one labeled decimal calculation. Select review from the missing evidence."
+	},
+	"LEB11 Customary and Metric Units": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"conversion factor",
+			"equivalent measure",
+			"customary unit",
+			"metric unit",
+			"ranking"
+		],
+		flowNote:
+			"Choose one common unit before ranking each group, write the conversion factor as an equality, and keep height, weight, and time comparisons in separate tables."
+	},
+	"LEB12 Module Project: From Factory Line to Test Drive": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"blueprint dimensions",
+			"unit conversion",
+			"number-line stops",
+			"miles / kilometers",
+			"assumption check"
+		],
+		flowNote:
+			"Treat the vehicle and route as a unit-conversion model, not an autonomous-driving safety analysis. State each conversion factor, label every route unit, and verify the final distance in both systems."
+	},
+	"LEB13 Numerical Expressions": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"operation order",
+			"parentheses",
+			"expression",
+			"step trace",
+			"score comparison"
+		],
+		flowNote:
+			"Translate each game rule into one expression, evaluate one operation at a time, and compare alternate parentheses placements before ranking scores."
+	},
+	"LEB14 Multiplying by Two and Three Digit Numbers": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"area model",
+			"partial products",
+			"multi-digit multiplication",
+			"unit conversion",
+			"estimate"
+		],
+		flowNote:
+			"Decompose each factor, label partial products, convert dozens before combining quantities, and compare the production total with an estimate."
+	},
+	"LEB15 Dividing by Two Digit Numbers": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"two-digit divisor",
+			"quotient",
+			"remainder",
+			"interpretation",
+			"multiplication check"
+		],
+		flowNote:
+			"Estimate the quotient, show each division step, interpret remainders in the parking and pizza contexts, and verify each result with multiplication."
+	},
+	"LEB16 The Coordinate Plane": {
+		estimatedTime: "2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"x-axis / y-axis",
+			"origin",
+			"ordered pair",
+			"horizontal / vertical",
+			"route description"
+		],
+		flowNote:
+			"Label the axes and origin before plotting, read horizontal movement before vertical movement, and verify every destination as an ordered pair."
+	},
+	"LEB17 Patterns, Figures and Shapes in the Coordinate Plane": {
+		estimatedTime: "2–3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"input / output table",
+			"coordinate pair",
+			"additive pattern",
+			"multiplicative pattern",
+			"prediction check"
+		],
+		flowNote:
+			"Build each animal table before plotting, name whether the pattern is additive or multiplicative, and check predictions by extending the same rule."
+	},
+	"LEB18 Module Project: Chanh's Space Adventure": {
+		estimatedTime: "3 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"coordinate orbit sketch",
+			"radius / circumference",
+			"unit conversion",
+			"speed / period",
+			"simulation assumption"
+		],
+		flowNote:
+			"Treat the orbit work as a simplified toy model using only the stated radii, speeds, and conversion constants, not a real orbital prediction. Record assumptions, units, and each simulation adjustment before comparing results."
+	},
+	"Check-in #2": {
+		estimatedTime: "1–2 sessions · 40–50 minutes each",
+		keyBlocks: [
+			"unit conversion",
+			"numerical expression",
+			"multiplication / division",
+			"coordinate pair",
+			"pattern explanation"
+		],
+		flowNote:
+			"Collect one verified conversion, one evaluated expression, one multi-digit operation, one plotted coordinate, and one pattern explanation before assigning targeted review."
+	}
+};
+
 const elementaryMathCourses = {
 	earlyElementaryA: createSourceLibraryCourse({
 		name: "Early Elementary A: Discovering Numbers, Operations, and Measurement",
@@ -4578,16 +4824,9 @@ const elementaryMathCourses = {
 		name: "Late Elementary B: Mastering Fractions, Decimals, Units, and Coordinates",
 		area: "late elementary math",
 		focus: "fractions, decimals, unit conversion, numerical expressions, multi-digit multiplication and division, coordinate planes, patterns, figures, and geometric reasoning",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: lateElementaryBModuleMetadata,
 		sourceActivityAnchors: lateElementaryBMathSourceAnchors,
-		staticAssets: [
-			"checkin1_fractions_0.png",
-			"checkin1_fractions_1.png",
-			"leb16_concept1_0.png",
-			"leb16_pset1_0.png",
-			"leb16_pset1_2.png",
-			"leb16_pset1_3.png",
-			"module_example.png"
-		],
 		modules: [
 			"LEB1 Equivalent Fractions",
 			"LEB2 Comparing and Ordering Fractions",
