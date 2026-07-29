@@ -194,9 +194,11 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"Local play-mode/build checks before capstone publication."
 	],
 	"web-development-foundations": [
-		"Node 22+ or the version pinned by the project scaffold.",
-		"Browser checks at mobile and desktop widths.",
-		"Deployment assumptions recorded before introducing hosting-specific behavior."
+		"Node.js 24 LTS with the package-manager and lockfile state recorded for every reusable scaffold; source projects currently pin Vite 8, Express 5, Mongoose 9, Zod 4, Nodemailer 8, and Socket.IO 4 where applicable.",
+		"Localhost is the required runtime boundary: static files, supplied fixtures, in-memory adapters, test transports, and local databases provide a complete route without a public account or deployment.",
+		"Browser checks cover keyboard and pointer use, visible focus, status and error communication, reduced motion, 200% zoom, and narrow and desktop widths.",
+		"Server checks cover request size, schema validation, stable error shapes, timeouts, rate or resource limits, clean shutdown, health and readiness, and redacted logs.",
+		"Deployment work begins with a local preflight, configuration map, proxy review, smoke check, rollback, and restore rehearsal; public hosting and custom domains remain optional."
 	]
 };
 
@@ -651,6 +653,13 @@ const standardsOverrides: Record<string, string[]> = {
 		"SQLite language and foreign-key documentation for relational query, key, join, mutation, and schema reasoning over supplied tables.",
 		"WCAG 2.2 and OWASP DOM guidance for keyboard access, visible status, motion, canvas alternatives, safe text insertion, URL handling, and untrusted remote data."
 	],
+	"web-development-foundations": [
+		"Node.js 24 LTS release and package-management documentation.",
+		"WHATWG HTML, ECMA-262, MDN, WCAG 2.2, and WAI-ARIA Authoring Practices for front-end structure, state, interaction, and accessibility.",
+		"Vite 8, Express 5, Mongoose 9, MongoDB, Zod 4, Nodemailer 8, and Socket.IO 4 first-party documentation where the preserved source projects use those tools.",
+		"OWASP input-validation, secrets, logging, REST, WebSocket, and deployment guidance for local teaching services.",
+		"HTTP, DNS, TLS, CORS, reverse-proxy, health-check, backup, restore, and observability references for deployment-readiness evidence."
+	],
 	"rust-systems-security": [
 		"Rust 1.97.1 release notes and the Rust 2024 Edition Guide.",
 		"The Rust Programming Language and Rust Reference for ownership, borrowing, error handling, concurrency, and unsafe obligations.",
@@ -729,6 +738,12 @@ const boundaryOverrides: Record<string, string[]> = {
 		"Required work uses local files, supplied fixtures, localStorage, and fictional data; CodePen, public APIs, SQLBolt, dbdiagram, JSONBin, and pending media remain optional references or enhancements.",
 		"AI may explain a trace, suggest bounded test data, or review a learner-written state model only after the learner states the contract; it receives no secrets or personal posts and cannot approve remote data, database mutation, accessibility, or correctness."
 	],
+	"web-development-foundations": [
+		"Uses WDF0–WDF7 as the required progression, followed by Full Stack Web Labs 14–17; WDF8–WDF12 are optional operations, project-menu, networking, and next-step appendices.",
+		"Front-end application work starts with local state and a supplied event stream; the preserved Socket.IO chat becomes an optional revisit only after back-end request and lifecycle boundaries are understood.",
+		"Required work stays on localhost with fictional data, supplied fixtures, test email transport, local persistence, and deployment plans; public hosting, live SMTP, custom domains, and cloud databases are never prerequisites.",
+		"Teaches one inspectable vertical slice from semantic interface through validated API, persistence, health, logs, recovery, and release evidence rather than treating a copied framework or platform dashboard as full-stack understanding."
+	],
 	"rust-systems-security": [
 		"Uses RSS0–RSS10 as one complete progression from toolchain evidence through ownership, borrowing, typed failures, safe state, APIs, parsers, concurrency, unsafe boundaries, and a legacy-hardening capstone.",
 		"All programs operate on supplied text, byte, state, dependency, or concurrency fixtures in local workspaces; no live service, third-party binary, production repository, real credential, or personal data is required.",
@@ -789,6 +804,14 @@ const capstoneOverrides: Record<string, string[]> = {
 		"A small relational or document model, local CRUD persistence, schema version or migration note, safe text and URL handling, and tests for empty, malformed, duplicate, stale, and storage-failure cases.",
 		"A release packet covering browser and viewport, expected and observed cases, console state, keyboard and pointer use, focus, motion, contrast, narrow reflow, performance budget, reset and recovery, attribution, privacy, limitations, and a three-minute demonstration."
 	],
+	"web-development-foundations": [
+		"One fictional full-stack application with an audience, task, non-goals, architecture map, semantic responsive interface, and a useful local-only demonstration.",
+		"A validated Express 5 API with bounded JSON and form input, stable success and error shapes, explicit async handling, health and readiness behavior, and clean shutdown.",
+		"A local persistence adapter or MongoDB model with stable IDs, schema validation, indexes tied to named queries, deterministic seed data, migration or reset notes, and restore evidence.",
+		"Optional email or real-time behavior through test transport or loopback Socket.IO only, with message and connection limits, safe text, failure states, reconnect behavior, and no real contact data.",
+		"A deployment-readiness packet covering Node and dependency versions, environment boundaries, CORS and proxy assumptions, TLS plan, redacted logs, smoke checks, resource limits, backup, restore, rollback, and known limitations.",
+		"Expected and observed browser, API, persistence, accessibility, failure, restart, and recovery cases plus a five-minute demonstration from clean local start through one injected fault and correction."
+	],
 	"rust-systems-security": [
 		"One small supplied legacy parser or stateful CLI with an explicit behavior contract, threat model, trust boundary, malformed-input inventory, and named non-goals.",
 		"A Rust 2024 redesign that uses ownership, borrowing, Option, Result, enums, checked arithmetic, bounded collections, and narrow APIs to make invalid or ambiguous states harder to express.",
@@ -839,6 +862,14 @@ const safetyPolicyOverrides: Record<string, string[]> = {
 		"Canvas and game work provides semantic controls, keyboard and pointer parity, visible focus, focus-aware key capture, pause and reset, reduced-motion behavior, bounded work, and a text equivalent for score, status, instructions, and outcomes.",
 		"Public API work starts from a supplied fixture, checks Response.ok, supports abort or timeout, validates the response shape, caches repeated reads, follows provider fair-use guidance, and remains usable when offline, blocked by CORS, changed, or rate-limited.",
 		"Every project records expected and observed state transitions, standard and failure inputs, request or storage behavior, console state, keyboard and pointer checks, accessibility evidence, recovery and reset, external dependencies, privacy choices, and remaining limitations."
+	],
+	"web-development-foundations": [
+		"Use only fictional names, messages, notes, bookings, contact details, domains, credentials, and operational records; no learner, family, school, client, or production data belongs in a course project.",
+		"Keep required services on loopback with bounded request bodies, validated fields, stable errors, safe text rendering, timeouts, connection and record caps, redacted logs, and a clean stop and reset route.",
+		"Credentials, SMTP settings, database strings, signing material, and provider tokens remain server-side in ignored environment files; examples use placeholders, test transports, local adapters, or supplied evidence.",
+		"Public email delivery, cloud databases, custom domains, public listeners, production DNS, and third-party deployment changes are optional instructor-approved extensions with owned accounts and an explicit rollback plan.",
+		"Authentication is conceptual in this foundations course; no project claims production-ready identity, authorization, moderation, abuse prevention, privacy, availability, or security from a teaching skeleton.",
+		"Every project records expected and observed browser, server, data, accessibility, failure, restart, recovery, privacy, and resource-limit evidence, plus remaining limitations."
 	],
 	"rust-systems-security": [
 		"All builds, parsers, unsafe examples, FFI shims, dependency checks, Miri runs, and fuzz cases stay inside a course-owned local workspace using supplied fictional inputs and fixed resource limits.",
@@ -1019,6 +1050,10 @@ function sourcePolicyFor(courseId: string) {
 
 		if (courseId === "javascript-level-2-javascript-master") {
 			return `Source-backed and externally referenced course. Canonical local source repository: ${url}. The linked JSM-* starter/solution folders, including the master-project folder, are generic click-to-add-list wrappers rather than distinct implementations of every named module; original CodePen and hosted-tool projects contain most of the historical project variety. Existing links remain traceable, while supplied local cases and verification guidance provide module-specific canvas, event, request, relational, CRUD, and capstone evidence.`;
+		}
+
+		if (courseId === "web-development-foundations") {
+			return `Source-backed course. Canonical source repository: ${url}. WDF1-Portfolio-Custom-Domain, WDF2-Notes-App-with-MongoDB, WDF3-Booking-Contact-App, WDF4-Realtime-Chat-App, and WDF5-Separate-Deployment-Lab are substantive teaching skeletons; the numbered WDF-* folders and Full Stack Web Lab folders are generic click-to-add-list wrappers rather than distinct full-stack implementations. Existing links remain traceable, while supplied local cases and verification guidance provide module-specific front-end, API, persistence, real-time, deployment, and capstone evidence. None of the linked projects is represented as production-ready.`;
 		}
 
 		return `Source-backed course. Canonical source repository: ${url}. Starter/reference links remain synchronized with catalog projects.`;
