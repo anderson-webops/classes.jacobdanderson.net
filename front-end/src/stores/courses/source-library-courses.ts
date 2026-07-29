@@ -1570,6 +1570,141 @@ const investingCourses = {
 		name: "Money-Minded: Investing in the Stock Market",
 		area: "investing",
 		focus: "stock selection, compounding returns, risk, bonds, ETFs, diversification, company analysis, ethical investing, shorting, and cryptocurrency context",
+		splitSourceActivityAnchors: true,
+		moduleMetadata: {
+			"INV 1 Picking My First Stock": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"public companies",
+					"stock ownership",
+					"paper portfolio",
+					"baseline hypothesis",
+					"source date"
+				],
+				flowNote:
+					"Open one imaginary $100,000 paper portfolio and treat its first stock as a baseline hypothesis, not a recommendation. Record the source, observation date, rationale, uncertainty, and evidence that would later change the choice; no real account, money, or transaction is used."
+			},
+			"INV 2 Strategically Choosing My Stocks": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"market timing",
+					"index benchmark",
+					"bull and bear labels",
+					"data window",
+					"strategy revision"
+				],
+				flowNote:
+					"Compare timing with holding and benchmark the paper portfolio against dated index data. If an external activity is unavailable, use an instructor-supplied price table. Describe the selected window instead of predicting the next market move."
+			},
+			"INV 3 Understanding Compounding Returns": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"compound growth",
+					"inflation",
+					"real purchasing power",
+					"Rule of 72",
+					"assumption limits"
+				],
+				flowNote:
+					"Model several hypothetical rates in a text table or calculator, distinguish nominal dollars from purchasing power, and label every rate as an assumption rather than a promised return."
+			},
+			"INV 4 Assessing My Portfolio's Risk": {
+				estimatedTime: "2–3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"risk and reward",
+					"volatility",
+					"risk tolerance",
+					"risk-free comparison",
+					"portfolio revision"
+				],
+				flowNote:
+					"Use the dice ledger to separate uncertainty, volatility, and tolerance, then revise the paper portfolio. A Sharpe Ratio calculation is a challenge path for learners ready to work with dated return and risk-free-rate assumptions."
+			},
+			"INV 5 Investing in Bonds and ETFs": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"bonds",
+					"ETFs",
+					"index funds",
+					"liquidity",
+					"asset allocation"
+				],
+				flowNote:
+					"Compare investment types by risk, return potential, liquidity, fees, and diversification role, then add a hypothetical ETF and bond-fund allocation. The external Build Your Stax activity is optional and can be replaced with a supplied comparison table."
+			},
+			"INV 6 Diversifying My Stock Portfolio": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"stock categories",
+					"industry exposure",
+					"concentration risk",
+					"historical cycle",
+					"diversification revision"
+				],
+				flowNote:
+					"Audit the paper portfolio for repeated industry or category exposure and revise it for genuine diversification. Sector-rotation analysis is a challenge using a dated historical period or snapshot, not a forecast."
+			},
+			"INV 7 Assessing a Company's Success": {
+				estimatedTime: "3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"revenue and expenses",
+					"net income",
+					"P/E ratio",
+					"valuation uncertainty",
+					"source comparison"
+				],
+				flowNote:
+					"Read matched reporting periods, compare company performance with valuation, and test an undervaluation thesis against contrary evidence. Private-company ranking is optional and uses only supplied or public information without account creation."
+			},
+			"INV 8 Holding Companies Socially Responsible": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"environmental criteria",
+					"social criteria",
+					"governance criteria",
+					"rating methodology",
+					"values tradeoffs"
+				],
+				flowNote:
+					"Compare dated evidence from more than one source, note where ESG methods disagree, and revise the simulated portfolio without treating one score as a complete statement of company impact."
+			},
+			"INV 9 Shorting Stocks": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"borrow and sell",
+					"buy to cover",
+					"short squeeze",
+					"unlimited-loss risk",
+					"paper-only analysis"
+				],
+				flowNote:
+					"Explain the mechanism and asymmetric loss risk through a historical case. Creating a hypothetical short plan is a challenge path only; no real borrowing, trade, or recommendation is part of the course."
+			},
+			"INV 10 Understanding the Value of Cryptocurrency": {
+				estimatedTime: "2 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"cryptocurrency",
+					"market capitalization",
+					"volatility",
+					"historical return",
+					"portfolio limits"
+				],
+				flowNote:
+					"Study cryptocurrency as a volatile asset and technology context, record dates for all price evidence, and compare benefits with loss, access, custody, and speculation risks. Wallet setup, coin purchase, and real-money use are not required."
+			},
+			"INV 11 Money-Minded Master Project": {
+				estimatedTime: "3 sessions · 40–50 minutes each",
+				keyBlocks: [
+					"portfolio allocation",
+					"diversification",
+					"evidence and uncertainty",
+					"monitoring rule",
+					"strategy reflection"
+				],
+				flowNote:
+					"Turn the paper portfolio into an analytical strategy brief with dated evidence, limitations, risk controls, and conditions for revision. A private brief or instructor presentation completes the course; brokerage funding, public promotion, and real transactions are not required."
+			}
+		},
 		sourceActivityAnchors: {
 			"INV 1 Picking My First Stock": [
 				{
@@ -1603,9 +1738,9 @@ const investingCourses = {
 				},
 				{
 					title: "Index and Portfolio Strategy Check",
-					prompt: "Compare the S&P 500, Dow Jones, and Nasdaq over a one-year window, then decide whether current conditions look more bullish or bearish. Use that decision to refine a simulated stock list.",
+					prompt: "Compare the S&P 500, Dow Jones, and Nasdaq over a clearly dated one-year window, then describe whether that historical or current snapshot looks more bullish or bearish without treating the label as a prediction. Use the comparison to refine a simulated stock list.",
 					evidence: [
-						"Index comparison with S&P 500, Dow Jones, and Nasdaq notes.",
+						"Index comparison with S&P 500, Dow Jones, and Nasdaq notes, source links, observation date, and data window.",
 						"Trade plan for three to five stocks with share counts, estimated cost, and portfolio percentage.",
 						"Reflection comparing individual stock performance with an index such as S&P 500, DJI, or QQQ."
 					]
@@ -1614,7 +1749,7 @@ const investingCourses = {
 			"INV 3 Understanding Compounding Returns": [
 				{
 					title: "Compounding and Inflation Scenarios",
-					prompt: "Compare a $100 birthday gift kept in a piggy bank, placed in savings at 2%, and invested with a 10% average return. Extend the comparison to 1, 5, and 10 years, then account for 2% inflation.",
+					prompt: "Compare a $100 birthday gift kept in a piggy bank, placed in savings at a hypothetical 2%, and invested under a hypothetical 10% average-return assumption. Extend the comparison to 1, 5, and 10 years, then model 2% inflation as a scenario rather than a forecast or guarantee.",
 					evidence: [
 						"Table comparing piggy bank, savings, and investing outcomes after 1, 5, and 10 years.",
 						"Inflation-adjusted note explaining buying power rather than only nominal dollars.",
@@ -1643,12 +1778,13 @@ const investingCourses = {
 				},
 				{
 					title: "Sharpe Ratio Portfolio Review",
-					prompt: "Calculate a portfolio risk review using stock returns, a risk-free comparison, and the Sharpe Ratio. Treat the ratio as one tool, not a complete investing decision.",
+					prompt: "Calculate a portfolio risk review using stock returns, a dated risk-free-rate assumption, and the Sharpe Ratio. Treat the ratio as one backward-looking tool, not a complete investing decision or prediction.",
 					evidence: [
 						"List of stock percentage returns used in the Sharpe Ratio review.",
 						"Definition of investment portfolio, risk-free investment, return, volatility, and Sharpe Ratio.",
 						"Portfolio adjustment note explaining how the risk analysis changes or confirms the strategy."
-					]
+					],
+					learningPath: "challenge"
 				}
 			],
 			"INV 5 Investing in Bonds and ETFs": [
@@ -1659,7 +1795,8 @@ const investingCourses = {
 						"Investment-type comparison naming risk, return potential, liquidity, and diversification role.",
 						"Explanation of how diversification changes total portfolio risk.",
 						"Game result reflection identifying one decision that reduced risk and one decision that limited returns."
-					]
+					],
+					learningPath: "choice"
 				},
 				{
 					title: "ETF and Bond Fund Allocation",
@@ -1674,12 +1811,13 @@ const investingCourses = {
 			"INV 6 Diversifying My Stock Portfolio": [
 				{
 					title: "Stock Category and Sector Rotation Map",
-					prompt: "Classify stocks as cyclical, defensive, growth, blue-chip, or IPO, then connect those categories to sector rotation and the current stage of the economic cycle.",
+					prompt: "Classify stocks as cyclical, defensive, growth, blue-chip, or IPO, then connect those categories to sector rotation during one selected historical period or a dated current snapshot. Describe uncertainty rather than presenting the cycle stage as settled or predictive.",
 					evidence: [
 						"Definitions and examples for cyclical, defensive, growth, blue-chip, and IPO stocks.",
 						"Sector rotation map explaining which categories may perform better in different economic conditions.",
-						"Current-cycle note explaining which stock categories appear better aligned with the market environment."
-					]
+						"Dated cycle note explaining which stock categories appeared aligned with the selected market environment and what evidence could contradict that reading."
+					],
+					learningPath: "challenge"
 				},
 				{
 					title: "Category-Based Portfolio Diversification",
@@ -1694,7 +1832,7 @@ const investingCourses = {
 			"INV 7 Assessing a Company's Success": [
 				{
 					title: "Financial Statement and P/E Ratio Review",
-					prompt: "Use Tesla's public financial statements as a model for reading revenue, expenses, net income, and P/E ratio. Compare Tesla with GM to separate company performance from market valuation.",
+					prompt: "Use dated Tesla public financial statements as a model for reading revenue, expenses, net income, and P/E ratio. Compare Tesla with GM using the same reporting periods to separate company performance from market valuation and record every source date.",
 					evidence: [
 						"Definitions for revenue, expenses, net income, income statement, and P/E ratio.",
 						"Tesla trend notes for revenue and net income over multiple reporting periods.",
@@ -1712,18 +1850,19 @@ const investingCourses = {
 				},
 				{
 					title: "Private Company Ranking Case",
-					prompt: "Use [Republic.co](https://republic.co/) as a private-company research case. Rank three startup opportunities using differentiation, team, business/product evaluation, mission and impact, and one additional criterion.",
+					prompt: "Use an instructor-supplied snapshot or publicly accessible information from [Republic.co](https://republic.co/) as a private-company research case. Rank three startup opportunities using differentiation, team, business/product evaluation, mission and impact, and one additional criterion. Do not create an account, submit identifying information, or invest money.",
 					evidence: [
 						"Top-three ranking with evidence for differentiation, team, product value, and mission or impact.",
 						"Additional criteria list informed by startup failure patterns such as market need, business model, competition, or execution risk.",
 						"Final recommendation explaining why the top-ranked company is stronger than the runner-up."
-					]
+					],
+					learningPath: "choice"
 				}
 			],
 			"INV 8 Holding Companies Socially Responsible": [
 				{
 					title: "ESG Criteria and Reliability Review",
-					prompt: "Study environmental, social, and governance criteria, then compare sample ESG score evidence for companies such as Alphabet, Disney, and PepsiCo.",
+					prompt: "Study environmental, social, and governance criteria, then compare dated ESG score evidence for companies such as Alphabet, Disney, and PepsiCo. Record the rating provider and methodology because providers can score the same company differently.",
 					evidence: [
 						"Definitions for environmental, social, governance, ESG score, and socially responsible investing.",
 						"Priority list naming two or three criteria that matter most for an investing decision.",
@@ -1752,12 +1891,13 @@ const investingCourses = {
 				},
 				{
 					title: "Overvalued Company Short Plan",
-					prompt: "Find one to three companies that may be overvalued, use financial metrics or a research source such as Chartmill, and create a short-position plan with an exit rule.",
+					prompt: "For a paper-only simulation, find one to three companies that may be overvalued, use dated financial metrics or a research source such as Chartmill, and create a hypothetical short-position plan with a risk cap and exit rule. This is an analysis exercise, not a recommendation or real trade.",
 					evidence: [
 						"Candidate table with overvaluation evidence and uncertainty.",
 						"Short-position plan naming share count, entry rationale, risk cap, and buy-to-cover exit condition.",
 						"Portfolio risk note explaining why each candidate is or is not appropriate for shorting."
-					]
+					],
+					learningPath: "challenge"
 				}
 			],
 			"INV 10 Understanding the Value of Cryptocurrency": [
@@ -1777,31 +1917,32 @@ const investingCourses = {
 						"Price comparison for a 2018 peak purchase, a post-crash purchase, and a 2010-style early-price scenario.",
 						"Percentage gain or loss calculation for at least one scenario.",
 						"Investment thesis explaining whether cryptocurrency fits the portfolio and what risk evidence limits the conclusion."
-					]
+					],
+					learningPath: "choice"
 				}
 			],
 			"INV 11 Money-Minded Master Project": [
 				{
 					title: "Investment Strategy Pitch",
-					prompt: "Create a final pitch for a hypothetical brokerage-account funding request. The pitch explains what the money will be invested in, how the portfolio is diversified, and how the strategy handles risk, growth, ethics, and possible cryptocurrency exposure.",
+					prompt: "Create a final analytical brief for the simulated $100,000 portfolio. Explain the allocation, diversification, evidence, uncertainty, and how the strategy handles risk, growth, ethics, and any optional cryptocurrency exposure. The brief does not request brokerage funding or recommend real transactions.",
 					evidence: [
 						"Portfolio allocation with stocks, ETFs, bond funds, possible cryptocurrency, and cash or reserve assumptions.",
 						"Growth projection with expected return, time horizon, risk level, and evidence that could change the plan.",
-						"Implementation plan naming brokerage or app choice, profit-sharing or accountability rules, and responsible-use constraints."
+						"Monitoring plan naming review cadence, rebalancing rule, source checks, and conditions that would change the simulated allocation."
 					]
 				},
 				{
 					title: "Private Company Re-Evaluation",
-					prompt: "Return to the Republic.co private-company ranking case and decide whether the original top-three choices still hold up when new opportunities or better criteria are available.",
+					prompt: "If the optional private-company case was completed, return to its instructor-supplied or publicly accessible evidence and decide whether the original top-three choices still hold up. Otherwise, apply the same criteria audit to three public-company or fictional startup cases. No account creation or investment is required.",
 					evidence: [
 						"Updated top-three ranking with old and new company comparisons.",
 						"Criteria audit explaining which research criteria changed after completing the course.",
 						"Final decision note explaining whether the original ranking is confirmed or revised."
-					]
+					],
+					learningPath: "choice"
 				}
 			]
 		},
-		staticAssets: ["inv3_0.png"],
 		modules: [
 			"INV 1 Picking My First Stock",
 			"INV 2 Strategically Choosing My Stocks",

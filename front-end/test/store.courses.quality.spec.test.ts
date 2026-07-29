@@ -6659,7 +6659,7 @@ describe("course text quality normalization", () => {
 			"Private Company Re-Evaluation"
 		];
 
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).not.toContain("Source Activity Anchors:");
 		expect(text).toContain("Apple (AAPL)");
 		expect(text).toContain("imaginary $100,000");
 		expect(text).toContain("S&P 500, Dow Jones, and Nasdaq");
@@ -6674,7 +6674,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Jordans resale analogy");
 		expect(text).toContain("GameStop");
 		expect(text).toContain("Bitcoin, Ethereum, and Dogecoin");
-		expect(text).toContain("Evidence record:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text).toContain(anchor);
 		}
