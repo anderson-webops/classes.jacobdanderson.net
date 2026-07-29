@@ -98,11 +98,13 @@ describe("Middle School A Literature learner flow", () => {
 		).toContain("Do not infer facts about real people");
 	});
 
-	it("keeps unavailable diagram bookkeeping out of the course", async () => {
+	it("keeps unavailable diagram bookkeeping out of the learner flow", async () => {
 		const course = await loadRawCourse("middle-school-a-literature");
 		expect(course).not.toBeNull();
 
-		const text = JSON.stringify(course);
+		const text = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		expect(text).not.toContain(
 			"msa1_concept1_mainideasupportingevidence.png"
 		);
@@ -111,5 +113,10 @@ describe("Middle School A Literature learner flow", () => {
 				module => module.title === "Pending Static Assets"
 			)
 		).toBeUndefined();
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Source Media Inventory"
+			)?.kind
+		).toBe("appendix");
 	});
 });

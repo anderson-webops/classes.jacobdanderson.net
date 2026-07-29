@@ -110,16 +110,23 @@ describe("Early Elementary B Picture Book learner flow", () => {
 		).toContain("hand-drawn or text-only plot outline");
 	});
 
-	it("keeps unavailable plot-template bookkeeping out of the course", async () => {
+	it("keeps unavailable plot-template bookkeeping out of the learner flow", async () => {
 		const course = await loadRawCourse("early-elementary-b-picture-book");
 		expect(course).not.toBeNull();
 
-		const text = JSON.stringify(course);
+		const text = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		expect(text).not.toContain("wyb1_proj1_plotempty.png");
 		expect(
 			course!.modules.find(
 				module => module.title === "Pending Static Assets"
 			)
 		).toBeUndefined();
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Source Media Inventory"
+			)?.kind
+		).toBe("appendix");
 	});
 });

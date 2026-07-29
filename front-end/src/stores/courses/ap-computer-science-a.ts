@@ -725,7 +725,7 @@ const apComputerScienceASourceCourse: RawCourse = {
 					mediaLink: media("apcs7-project-3-pet-special-methods.mp4")
 				},
 				{
-					title: "Multiple Choice Reference",
+					title: "APCS7 Inheritance Multiple Choice Reference",
 					content:
 						"The APCS7 multiple-choice reference reinforces inheritance vocabulary and trace reasoning. Justify each answer by constructor order, inherited member access, or overridden method behavior. Use it after coding a subclass so the terminology stays tied to actual Java behavior. The expected evidence is one eliminated answer for each common misconception: assuming private fields are inherited as directly accessible, skipping `super(...)`, or forgetting that an override changes which method body runs. Add a constructor trace that lists superclass initialization before subclass initialization and labels any compile-time access error separately from runtime dispatch.",
 					projectLink: repo(
@@ -768,7 +768,7 @@ const apComputerScienceASourceCourse: RawCourse = {
 					solutionLink: repo("APCS8-Polymorphism-Reference/solution")
 				},
 				{
-					title: "Multiple Choice Reference",
+					title: "APCS8 Polymorphism Multiple Choice Reference",
 					content:
 						"The APCS8 multiple-choice reference helps when a polymorphic model is easier to code than to trace. The target is eliminating answer choices by compile-time type rules and dynamic dispatch behavior. Use it to practice the two-step AP habit: first list what the reference type permits, then decide which implementation runs from the actual object type. The final explanation makes clear whether an error is compile-time, runtime, or simply the expected override behavior. Mark every answer choice with one of those categories before selecting the final letter.",
 					projectLink: repo(
@@ -821,7 +821,7 @@ const apComputerScienceASourceCourse: RawCourse = {
 					solutionLink: repo("APCS11-Array-List-Reference/solution")
 				},
 				{
-					title: "Multiple Choice Reference",
+					title: "APCS11 ArrayList Multiple Choice Reference",
 					content:
 						"The APCS11 multiple-choice reference belongs here because the check-in's later prompts rely on strong collection tracing. The focus is index shifting, removal effects, and wrapper-class constraints rather than memorizing method names only. Use each question as a mini-trace: write the list contents after each operation, mark the current index, and identify whether a primitive value was autoboxed into an object. The right answer follows from the trace, not from recognition of the method name. Add one eliminated answer choice with the exact operation where its imagined list state diverges from Java's actual `ArrayList` behavior.",
 					projectLink: repo(
@@ -1918,7 +1918,7 @@ const AP_CSA_MODULE_FLOW: Record<
 const AP_CSA_CHECK_IN_COPY: Record<string, Record<string, string>> = {
 	"Check-In #1": {
 		"Review Goal":
-			"Check-In #1 is a placement checkpoint before Unit 1. It samples Java syntax, object creation and method calls, Strings, numeric expressions, and short traces so the learner enters the supported, standard, quick, challenge, or exam-focused route with concrete evidence.",
+			"Check-In #1 is a placement checkpoint before Unit 1. It samples Java syntax, object creation and method calls, Strings, numeric expressions, and short traces so the supported, standard, quick, challenge, or exam-focused route is selected from concrete evidence.",
 		"Learning Target Coverage":
 			"Use selected prompts for exact output, expression type and value, String methods, object-method effects, and one simple branch or loop. A miss identifies targeted review; it does not turn the placement check into an early cumulative exam.",
 		"Core Check-In Prompt Bank":

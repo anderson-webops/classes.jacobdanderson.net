@@ -1573,7 +1573,7 @@ function decorateDesignPatternsCppModule(
 			title: "Build, Test, Debug, and Sanitizer Course Contract",
 			content: [
 				"**Prerequisite:** Enter with C++ classes, inheritance, templates, standard containers, smart pointers, exceptions, separate compilation, and basic unit tests independently usable.",
-				"**Baseline:** Configure and build the unedited starter with `cmake -S . -B build` and `cmake --build build`. Register focused tests with CTest and run `ctest --test-dir build --output-on-failure`.",
+				"**Baseline:** Configure and build the unedited starter with `cmake -S . -B cmake-build` and `cmake --build cmake-build`. Register focused tests with CTest and run `ctest --test-dir cmake-build --output-on-failure`.",
 				"**Safety gate:** Keep a warnings-as-errors teaching configuration plus separate AddressSanitizer and UndefinedBehaviorSanitizer configurations. Record any platform-specific unsupported check rather than silently skipping the gate.",
 				"**Delivery:** Commit the green build-and-test baseline separately from architecture changes so every later refactor remains reviewable and reversible."
 			].join("\n"),

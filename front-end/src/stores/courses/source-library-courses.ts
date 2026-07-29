@@ -1289,7 +1289,7 @@ const investingCourses = {
 					"budget fit"
 				],
 				flowNote:
-					"Compare purchase options over time, include non-price tradeoffs, and return the recommendation to the profile budget. The vehicle case is an optional extension for learners ready to model financing and recurring costs."
+					"Compare purchase options over time, include non-price tradeoffs, and return the recommendation to the profile budget. The vehicle case is an optional extension for financing and recurring-cost modeling."
 			},
 			"PF6 How To Find Your Perfect Bank": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -1619,7 +1619,7 @@ const investingCourses = {
 					"portfolio revision"
 				],
 				flowNote:
-					"Use the dice ledger to separate uncertainty, volatility, and tolerance, then revise the paper portfolio. A Sharpe Ratio calculation is a challenge path for learners ready to work with dated return and risk-free-rate assumptions."
+					"Use the dice ledger to separate uncertainty, volatility, and tolerance, then revise the paper portfolio. A Sharpe Ratio calculation is a challenge path using dated return and risk-free-rate assumptions."
 			},
 			"INV 5 Investing in Bonds and ETFs": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -2410,7 +2410,7 @@ const englishCourses = {
 					"personification"
 				],
 				flowNote:
-					"Draw or describe the literal image first, then infer the intended meaning from sentence context. Require an explanation for each label so vocabulary does not become a guessing exercise."
+					"Draw or describe the literal image first, then infer the intended meaning from sentence context. Each label includes an explanation so vocabulary does not become a guessing exercise."
 			},
 			"JoR Check-In #2": {
 				estimatedTime: "2–3 sessions · 30–40 minutes each",
@@ -3709,7 +3709,7 @@ const englishCourses = {
 					"revision evidence"
 				],
 				flowNote:
-					"Draft the smallest complete story first, then revise one craft layer at a time. Fictionalized material is valid and no student needs to disclose private experiences."
+					"Draft the smallest complete story first, then revise one craft layer at a time. Fictionalized material is valid, and no one needs to disclose private experiences."
 			},
 			"MSB Check-In #2": {
 				estimatedTime: "2 sessions · 45–55 minutes each",
@@ -3861,7 +3861,7 @@ const englishCourses = {
 					"before / after comparison"
 				],
 				flowNote:
-					"Use this checkpoint after any argument modules selected by the diagnostic. Compare the revised argument directly with the entry sample before marking argument skills ready."
+					"This checkpoint follows any argument modules selected by the diagnostic. Compare the revised argument directly with the entry sample before marking argument skills ready."
 			},
 			"MSB7 Character Development": {
 				conceptLearningPath: "choice",
@@ -3939,7 +3939,7 @@ const englishCourses = {
 					"before / after comparison"
 				],
 				flowNote:
-					"Use this checkpoint after the fiction modules selected by the diagnostic. Compare the revised scene with the entry sample before marking fiction skills ready."
+					"This checkpoint follows the fiction modules selected by the diagnostic. Compare the revised scene with the entry sample before marking fiction skills ready."
 			},
 			"MSB12 Master Project": {
 				conceptLearningPath: "choice",
@@ -6194,7 +6194,7 @@ const lateElementaryAModuleMetadata: Record<
 			"rotation"
 		],
 		flowNote:
-			"Use classroom-provided images, object sketches, or original diagrams; no student needs to photograph people or private spaces. Label every requested feature, then trace the lighting rotation from 90 degrees."
+			"Use classroom-provided images, object sketches, or original diagrams; no one needs to photograph people or private spaces. Label every requested feature, then trace the lighting rotation from 90 degrees."
 	},
 	"LEA14 Polygons and Perimeter": {
 		estimatedTime: "2 sessions · 40–50 minutes each",

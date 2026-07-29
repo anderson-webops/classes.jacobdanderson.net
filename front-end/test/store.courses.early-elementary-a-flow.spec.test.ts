@@ -112,11 +112,13 @@ describe("Early Elementary A math learner flow", () => {
 		).toContain("not a purchase endorsement");
 	});
 
-	it("keeps unavailable source-image bookkeeping out of the course", async () => {
+	it("keeps unavailable source-image bookkeeping out of the learner flow", async () => {
 		const course = await loadRawCourse("early-elementary-a-math");
 		expect(course).not.toBeNull();
 
-		const text = JSON.stringify(course);
+		const text = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		for (const filename of [
 			"check_in_1_length_0.png",
 			"check_in_2_money_1.png",
@@ -125,5 +127,10 @@ describe("Early Elementary A math learner flow", () => {
 		]) {
 			expect(text).not.toContain(filename);
 		}
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Source Media Inventory"
+			)?.kind
+		).toBe("appendix");
 	});
 });

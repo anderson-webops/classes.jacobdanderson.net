@@ -109,14 +109,16 @@ describe("Late Elementary A math learner flow", () => {
 		expect(
 			requireModule("LEA13 Module Project: An Obtuse Life").curriculum[0]
 				?.content
-		).toContain("no student needs to photograph people or private spaces");
+		).toContain("no one needs to photograph people or private spaces");
 	});
 
-	it("keeps unavailable source-image bookkeeping out of the course", async () => {
+	it("keeps unavailable source-image bookkeeping out of the learner flow", async () => {
 		const course = await loadRawCourse("late-elementary-a-math");
 		expect(course).not.toBeNull();
 
-		const text = JSON.stringify(course);
+		const text = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		for (const filename of [
 			"check_in_1_multiplication_0.png",
 			"check_in_2_lines_5.png",
@@ -126,5 +128,10 @@ describe("Late Elementary A math learner flow", () => {
 		]) {
 			expect(text).not.toContain(filename);
 		}
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Source Media Inventory"
+			)?.kind
+		).toBe("appendix");
 	});
 });

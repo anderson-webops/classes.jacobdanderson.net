@@ -266,7 +266,7 @@ describe("Unity Game Development learner flow", () => {
 			"UGD0–UGD6 as the complete learner-facing sequence"
 		);
 		expect(metadata?.sourcePolicy).toContain(
-			"canonical full-project starter and solution"
+			"full-project starter and completed-review states"
 		);
 	});
 });

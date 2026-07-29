@@ -1584,13 +1584,13 @@ const SWIFT_COURSE_FLOW: SwiftCourseModuleFlow[] = [
 		],
 		materialSection: "xcode-project-anatomy-case",
 		answerSection: "xcode-project-anatomy-key",
-		focus: "A small app is easier to change when the learner can trace a visible screen from the app entry point through a view file, asset, target, scheme, and build destination.",
+		focus: "A small app is easier to change when a visible screen can be traced from the app entry point through a view file, asset, target, scheme, and build destination.",
 		coreRoute:
 			"Use the supplied project map to locate the app entry point, ContentView, asset catalog, target settings, active scheme, preview controls, run destination, and first useful build error.",
 		stretchRoute:
 			"Add one grouped source folder and one asset, compare a file reference with target membership, and diagnose a supplied case where code exists but is not compiled into the active target.",
 		verification:
-			"Each label identifies a real Xcode role, the screen-to-source trace reaches a view included in the active target, and the learner can state where to inspect a compile issue before changing unrelated settings.",
+			"Each label identifies a real Xcode role, the screen-to-source trace reaches a view included in the active target, and the final record states where to inspect a compile issue before changing unrelated settings.",
 		boundary:
 			"Project, target, scheme, and destination are related but not interchangeable. The course uses one app target until a later project creates a justified test target.",
 		referenceLink: SWIFT_REFERENCES.helloSwiftUI,
@@ -2008,7 +2008,7 @@ const SWIFT_COURSE_FLOW: SwiftCourseModuleFlow[] = [
 		coreRoute:
 			"Map Xcode, an Apple Account, the paid Developer Program, App Store Connect, TestFlight, App Review, and the App Store to the build or decision each one controls.",
 		stretchRoute:
-			"Compare individual, organization, and classroom-team scenarios, identify role dependencies, and design a simulated release route when learners do not control a paid account.",
+			"Compare individual, organization, and classroom-team scenarios, identify role dependencies, and design a simulated release route when a paid account is unavailable.",
 		verification:
 			"Each pipeline stage names its audience, account or role requirement, input artifact, output, and a condition that can block progress without implying that payment is required to learn SwiftUI.",
 		boundary:

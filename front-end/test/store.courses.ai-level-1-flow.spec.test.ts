@@ -140,11 +140,13 @@ describe("AI Level 1 learner flow", () => {
 		expect(capstone.keyBlocks).toContain("portfolio explanation");
 	});
 
-	it("keeps pending media bookkeeping out of the normalized course", async () => {
+	it("keeps pending media bookkeeping out of the normalized learner flow", async () => {
 		const course = await loadRawCourse("ai-level-1");
 		expect(course).not.toBeNull();
 
-		const text = JSON.stringify(course);
+		const text = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		expect(text).not.toContain("AI Foundations Media Status");
 		expect(text).not.toContain("fai1_project_1.mp4");
 		expect(text).not.toContain("fai3_1.png");
@@ -153,5 +155,12 @@ describe("AI Level 1 learner flow", () => {
 				module => module.title === "Pending Static Assets"
 			)
 		).toBeUndefined();
+		const inventory = course!.modules.find(
+			module => module.title === "Pending Source Media Inventory"
+		);
+		expect(inventory?.kind).toBe("appendix");
+		expect(inventory?.curriculum[0]?.content).toContain(
+			"fai1_project_1.mp4"
+		);
 	});
 });

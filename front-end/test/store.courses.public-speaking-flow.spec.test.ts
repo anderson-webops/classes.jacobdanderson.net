@@ -103,16 +103,23 @@ describe("Introduction to Public Speaking learner flow", () => {
 		).toContain("no claim of TED or TED-Ed affiliation");
 	});
 
-	it("keeps the unavailable release-form bookkeeping out of the course", async () => {
+	it("keeps the unavailable release-form bookkeeping out of the learner flow", async () => {
 		const course = await loadRawCourse("introduction-to-public-speaking");
 		expect(course).not.toBeNull();
 
-		const text = JSON.stringify(course);
+		const text = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		expect(text).not.toContain("ted_ed_release.pdf");
 		expect(
 			course!.modules.find(
 				module => module.title === "Pending Static Assets"
 			)
 		).toBeUndefined();
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Source Media Inventory"
+			)?.kind
+		).toBe("appendix");
 	});
 });

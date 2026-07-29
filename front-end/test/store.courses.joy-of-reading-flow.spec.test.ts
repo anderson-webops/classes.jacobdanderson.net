@@ -99,11 +99,13 @@ describe("Early Elementary A Joy of Reading learner flow", () => {
 		);
 	});
 
-	it("keeps unavailable plot-image bookkeeping out of the course", async () => {
+	it("keeps unavailable plot-image bookkeeping out of the learner flow", async () => {
 		const course = await loadRawCourse("early-elementary-a-reading");
 		expect(course).not.toBeNull();
 
-		const text = JSON.stringify(course);
+		const text = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		expect(text).not.toContain("jor2_disact_plotempty.png");
 		expect(text).not.toContain("jor2_disact_plotexample.png");
 		expect(
@@ -111,5 +113,10 @@ describe("Early Elementary A Joy of Reading learner flow", () => {
 				module => module.title === "Pending Static Assets"
 			)
 		).toBeUndefined();
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Source Media Inventory"
+			)?.kind
+		).toBe("appendix");
 	});
 });

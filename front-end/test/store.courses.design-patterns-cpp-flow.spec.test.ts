@@ -177,7 +177,9 @@ describe("Design Patterns in C++ learner flow", () => {
 		const capstone = moduleText("DPC12 Capstone Studio");
 		const resources = resourceText();
 
-		expect(setup).toContain("ctest --test-dir build --output-on-failure");
+		expect(setup).toContain(
+			"ctest --test-dir cmake-build --output-on-failure"
+		);
 		expect(setup).toContain("warnings-as-errors");
 		expect(setup).toContain("AddressSanitizer");
 		expect(setup).toContain("UndefinedBehaviorSanitizer");

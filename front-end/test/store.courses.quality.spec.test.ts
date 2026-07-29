@@ -55,6 +55,23 @@ function allCourseText(course: Awaited<ReturnType<typeof loadRawCourse>>) {
 		.join("\n");
 }
 
+function learnerCourseText(course: Awaited<ReturnType<typeof loadRawCourse>>) {
+	expect(course).not.toBeNull();
+	if (!course) return "";
+
+	return course.modules
+		.filter(module => module.kind !== "appendix")
+		.flatMap(module => [
+			module.title,
+			...module.curriculum.flatMap(item => [item.title, item.content]),
+			...module.supplementalProjects.flatMap(item => [
+				item.title,
+				item.content
+			])
+		])
+		.join("\n");
+}
+
 function allCourseItemTitles(
 	course: NonNullable<Awaited<ReturnType<typeof loadRawCourse>>>
 ) {
@@ -128,7 +145,7 @@ function isInformationalResourceTitle(title: string) {
 }
 
 const lessonBackbonePattern =
-	/\*\*(?:Applied studio|Build path|Concept focus|Concept path|Course path|Evidence of proficiency|Evidence target|Evidence targets|Explanation|Focus|Goal|Investigation|Project selection|Project target|Readiness check|Readiness map|Result|Science explanation|Scope path|Selected checks|Studio focus):\*\*|Core topics in this module:|Representative solutions|Check-?In #\d+|Check-in goal|\bReview\b/i;
+	/\*\*(?:Applied studio|Build focus|Build path|Concept focus|Concept path|Course flow|Course path|Course position|Evidence gate|Evidence of proficiency|Evidence target|Evidence targets|Explanation|Focus|Goal|Investigation|Playable result|Practice route|Project selection|Project target|Readiness check|Readiness map|Result|Science explanation|Scope path|Selected checks|Shared phenomenon|Studio focus|Verification gate):\*\*|Core topics in this module:|Representative solutions|Check-?In #\d+|Check-in goal|\bReview\b/i;
 
 function findItem(
 	course: NonNullable<Awaited<ReturnType<typeof loadRawCourse>>>,
@@ -167,16 +184,17 @@ function courseItemLinks(
 	return course.modules.flatMap(module =>
 		[...module.curriculum, ...module.supplementalProjects].flatMap(item =>
 			[
-				item.projectLink,
-				item.solutionLink,
-				item.datasetLink,
-				item.mediaLink
-			].flatMap(link =>
+				["projectLink", item.projectLink],
+				["solutionLink", item.solutionLink],
+				["datasetLink", item.datasetLink],
+				["mediaLink", item.mediaLink]
+			].flatMap(([kind, link]) =>
 				link
 					? [
 							{
 								course: courseId,
 								item: item.title,
+								kind,
 								link,
 								module: module.title
 							}
@@ -385,7 +403,7 @@ describe("course text quality normalization", () => {
 			},
 			{
 				courseId: "java-level-2",
-				moduleTitle: "JM11 Repo Extension and Reference Library",
+				moduleTitle: "Optional Java Level 2 Practice and Reference Archive",
 				itemTitle: "Reference: HashMaps Examples"
 			}
 		];
@@ -444,7 +462,10 @@ describe("course text quality normalization", () => {
 							const text = paragraph.replace(/\s+/g, " ").trim();
 							if (
 								!text ||
-								/^[-*]\s|^\d+\.\s|^#{1,6}\s|^\|/.test(text)
+								/^[-*]\s|^\d+\.\s|^#{1,6}\s|^\|/.test(text) ||
+								/^\*\*[^*\n]{2,60}:\*\*\s*\n(?:\s*-\s+[^\n]+(?:\n|$)){2,}/.test(
+									paragraph.trim()
+								)
 							) {
 								continue;
 							}
@@ -1167,7 +1188,7 @@ describe("course text quality normalization", () => {
 			expect(corpus).toContain("Open the starter resource");
 			expect(corpus).toContain("as an AI/Python project");
 			expect(corpus).toContain(
-				"Complete **PTJ0 Positioning and Workflow Translation** as a Java project that exposes class responsibilities, public behavior, and one edge case"
+				"Make the Syntax Translation Warmup class exercise easy to verify by stating expected behavior"
 			);
 			expect(corpus).toContain(
 				"Build the web-development extension challenge for **JSM1 Fundamentals Review** as a browser-visible feature with clear state, interaction, and error-handling evidence"
@@ -1422,7 +1443,7 @@ describe("course text quality normalization", () => {
 				"Verify the Division Facts object-design exercise with one standard case and one boundary case that exposes the key concept"
 			);
 			expect(corpus).toContain(
-				"Complete **PTJ1 Functions, Parameters, and Return Types** as a Java project that exposes class responsibilities, public behavior, and one edge case"
+				"Complete **Function Signature Transfer Practice** as a Java extension challenge that exposes class responsibilities, public behavior, and one edge case"
 			);
 			expect(corpus).not.toMatch(/\bSupplemental Practice\s+[2-9]\b/i);
 			expect(corpus).not.toMatch(/\bSupplemental\s+[2-9]\b/i);
@@ -1634,7 +1655,7 @@ describe("course text quality normalization", () => {
 			);
 			expect(corpus).toContain("**Focus:** Scratch game design:");
 			expect(corpus).toContain(
-				"Choose one design or reasoning decision in the project"
+				"Choose one design or reasoning decision in the Level 1 Skills Review Application Check project"
 			);
 			expect(corpus).not.toMatch(/\bRecovered\b/);
 			expect(corpus).not.toMatch(
@@ -2702,7 +2723,7 @@ describe("course text quality normalization", () => {
 		);
 	});
 
-	it("keeps pending Python Level 1 media out of the learner course", async () => {
+	it("keeps pending Python Level 1 media out of the learner flow", async () => {
 		const course = await loadRawCourse("python-level-1");
 		expect(course).not.toBeNull();
 
@@ -2711,7 +2732,12 @@ describe("course text quality normalization", () => {
 				module => module.title === "Pending Demo Media"
 			)
 		).toBe(false);
-		const content = allCourseText(course);
+		const content = learnerCourseText(course);
+		const inventory = course!.modules.find(
+			module => module.title === "Pending Source Media Inventory"
+		);
+		expect(inventory?.kind).toBe("appendix");
+		const inventoryText = inventory?.curriculum[0]?.content ?? "";
 
 		for (const filename of [
 			"grs1_turtle_exploration(1).mp4",
@@ -2719,6 +2745,10 @@ describe("course text quality normalization", () => {
 			"grs12_snake.gif"
 		]) {
 			expect(content).not.toContain(filename);
+			expect(inventoryText).toContain(filename);
+			expect(hasPendingStaticMediaNotice(inventoryText, filename)).toBe(
+				true
+			);
 		}
 
 		expect(content).not.toContain("static.junilearning.com");
@@ -2782,7 +2812,7 @@ describe("course text quality normalization", () => {
 		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
-	it("attaches available Data Science data without exposing asset backlog", async () => {
+	it("attaches available Data Science data without putting asset backlog in the learner flow", async () => {
 		const course = await loadRawCourse("data-science-in-python");
 		expect(course).not.toBeNull();
 
@@ -2796,13 +2826,20 @@ describe("course text quality normalization", () => {
 				module => module.title === "Static Data and Media Status"
 			)
 		).toBeUndefined();
-		const learnerText = allCourseText(course);
+		const learnerText = learnerCourseText(course);
 		expect(learnerText).not.toContain("Data Science Asset Status");
 		expect(learnerText).not.toContain("building_permits.csv");
 		expect(learnerText).not.toContain("static.junilearning.com");
+		const inventory = course!.modules.find(
+			module => module.title === "Pending Source Media Inventory"
+		);
+		expect(inventory?.kind).toBe("appendix");
+		expect(inventory?.curriculum[0]?.content).toContain(
+			"building_permits.csv"
+		);
 	});
 
-	it("keeps pending AI Foundations media out of the learner course", async () => {
+	it("keeps pending AI Foundations media out of the learner flow", async () => {
 		const course = await loadRawCourse("ai-level-1");
 		expect(course).not.toBeNull();
 
@@ -2811,11 +2848,19 @@ describe("course text quality normalization", () => {
 				module => module.title === "Pending Static Assets"
 			)
 		).toBeUndefined();
-		const learnerText = allCourseText(course);
+		const learnerText = learnerCourseText(course);
 		expect(learnerText).not.toContain("AI Foundations Media Status");
 		expect(learnerText).not.toContain("fai1_project_1.mp4");
 		expect(learnerText).not.toContain("fai3_1.png");
 		expect(learnerText).not.toContain("static.junilearning.com");
+		const inventory = course!.modules.find(
+			module => module.title === "Pending Source Media Inventory"
+		);
+		expect(inventory?.kind).toBe("appendix");
+		expect(inventory?.curriculum[0]?.content).toContain(
+			"fai1_project_1.mp4"
+		);
+		expect(inventory?.curriculum[0]?.content).toContain("fai3_1.png");
 	});
 
 	it("records Machine Learning media as hosted or pending on the class static host", async () => {
@@ -3480,7 +3525,9 @@ describe("course text quality normalization", () => {
 			).toBe(staticMediaUrl(filename));
 		}
 
-		const learnerText = JSON.stringify(course);
+		const learnerText = JSON.stringify(
+			course!.modules.filter(module => module.kind !== "appendix")
+		);
 		for (const filename of [
 			"check_in_2_starter.py",
 			"pyg_3_asteroid_dodge.mp4",
@@ -3490,6 +3537,10 @@ describe("course text quality normalization", () => {
 				false
 			);
 		}
+		const inventory = course!.modules.find(
+			module => module.title === "Pending Source Media Inventory"
+		);
+		expect(inventory?.kind).toBe("appendix");
 		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
@@ -3728,8 +3779,10 @@ describe("course text quality normalization", () => {
 			for (const module of course.modules.filter(module =>
 				/^Check-In #\d+$/.test(module.title)
 			)) {
-				const checkpoint = module.supplementalProjects.find(item =>
-					item.title.startsWith("Checkpoint:")
+				const checkpoint = module.supplementalProjects.find(
+					item =>
+						item.title.startsWith("Checkpoint:") ||
+						/Check-In \d+ Practice Project$/.test(item.title)
 				);
 				expect(checkpoint, `${courseId} ${module.title}`).toBeDefined();
 				if (checkpoint) checkpointBodies.push(checkpoint.content);
@@ -4644,8 +4697,10 @@ describe("course text quality normalization", () => {
 			const malformedGithubLinks: string[] = [];
 			const externalGithubLinks: string[] = [];
 			const staleBranchLinks: string[] = [];
-			const githubLinks = links.filter(({ link }) =>
-				link.includes("github.com")
+			const githubLinks = links.filter(
+				({ kind, link }) =>
+					(kind === "projectLink" || kind === "solutionLink") &&
+					link.includes("github.com")
 			);
 
 			for (const pattern of legacyReplitPatterns) {
@@ -5095,7 +5150,7 @@ describe("course text quality normalization", () => {
 				})
 			);
 			const reviewStructurePattern =
-				/\*\*(?:Outcome|Required outcome|Success criteria|Completion checks|Checkpoints|Extension):\*\*/i;
+				/\*\*(?:Outcome|Required outcome|Success criteria|Completion checks|Completion evidence|Checkpoints|Extension):\*\*/i;
 			const scratchSupportStructurePattern =
 				/\*\*Fluency goal:\*\*[\s\S]+\*\*Practice path:\*\*[\s\S]+\*\*Checkpoint:\*\*|\*\*Variant goal:\*\*[\s\S]+\*\*Design path:\*\*[\s\S]+\*\*Verification:\*\*/i;
 			const weakItems = courses.flatMap(({ id, course }) =>

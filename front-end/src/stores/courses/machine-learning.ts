@@ -1884,7 +1884,7 @@ const MACHINE_LEARNING_MODULE_FLOW: Record<
 		answerSection: "evaluation-contract-key",
 		route: "Write the evaluation contract before training: define the split, dummy baseline, primary and secondary metric, preprocessing fit boundary, model-comparison rule, error slices, and test-set opening condition.",
 		evidence:
-			"The completed contract makes leakage visible, uses the same evidence for every candidate, explains why accuracy or R-squared alone can mislead, and states when the simpler model should be preferred.",
+			"The completed contract makes leakage visible, uses the same evidence for every candidate, explains why accuracy or R-squared alone can mislead, and states when the simpler model is preferred.",
 		primaryReference: {
 			label: "scikit-learn common pitfalls",
 			url: "https://scikit-learn.org/stable/common_pitfalls.html"

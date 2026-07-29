@@ -965,7 +965,7 @@ const INTRO_BIOLOGY_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 		{
 			title: "Biology Scope, Scale, and Evidence Contract",
 			content: [
-				"**Course scope:** Digestive Odyssey is an introductory human-biology case study. It develops evidence, structure-function, systems, homeostasis, matter-and-energy, and cross-scale modeling through one sustained meal journey. It does not pretend that digestion alone is a complete survey of cell division, genetics, evolution, ecology, or biological diversity.",
+				"**Scope boundary:** Digestive Odyssey is an introductory human-biology case study. It develops evidence, structure-function, systems, homeostasis, matter-and-energy, and cross-scale modeling through one sustained meal journey. It does not pretend that digestion alone is a complete survey of cell division, genetics, evolution, ecology, or biological diversity.",
 				"**Scale contract:** Explanations label molecule, organelle, cell, tissue, organ, organ system, organism, and environment levels when they appear. A function at one scale is not copied automatically to another: a stomach is not a large cell, and a molecule does not have the goals or experiences of the organism.",
 				"**Evidence contract:** Observation, supplied datum, source statement, model-based inference, and claim remain visibly distinct. Each system model names its boundary, inputs, outputs, interactions, changed-condition prediction, and one feature left outside the boundary.",
 				"**Next-path map:** Genetics and evolution explain inherited variation across generations; ecology extends systems reasoning to populations and ecosystems; cell biology adds organelles, division, and molecular information. Those topics are identified as next courses rather than implied mastery here."
@@ -977,7 +977,7 @@ const INTRO_BIOLOGY_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 			title: "Homeostasis, Variation, and Accessible Models Gate",
 			content: [
 				"**Homeostasis:** A regulated system changes continuously while keeping selected conditions within workable ranges. The model identifies a variable, evidence of change, a sensing or signaling process, a response, and the effect on the original deviation; homeostasis is not a claim that every value stays constant.",
-				"**Variation:** Human diagrams and reference ranges are models, not universal templates. Age, body size, genetics, environment, health, and measurement conditions can alter observed values. Course cases remain fictional and do not ask learners to compare private body data or infer whether a person is normal.",
+				"**Variation:** Human diagrams and reference ranges are models, not universal templates. Age, body size, genetics, environment, health, and measurement conditions can alter observed values. Course cases remain fictional and never request comparisons of private body data or inferences about whether a person is normal.",
 				"**Accessible representation:** Color is never the only label for an organ, pathway, arrow type, or condition. Diagrams include names, shapes, line styles, reading order, and text descriptions; any image-dependent task has an equivalent supplied scenario or table.",
 				"**Mastery check:** Revise one body-system map so it includes a boundary, two interaction types, a feedback-related prediction, a text equivalent, and one variation or uncertainty note."
 			].join("\n\n"),

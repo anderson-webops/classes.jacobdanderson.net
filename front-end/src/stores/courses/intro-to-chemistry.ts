@@ -1805,7 +1805,7 @@ function decorateIntroChemistryModule(
 				"**Rate boundary:** A catalyst changes the pathway and rate, not the balanced stoichiometric ratio or overall reactant/product identity. Reaction-type labels summarize patterns but do not replace predicting chemically plausible products or checking evidence.",
 				"**Quantitative preview:** Limiting-reactant work in this module uses whole-number particle or recipe batches from a balanced equation. Mole, molar-mass, molarity, and measured-mass calculations wait for CHM9 so ratio meaning is stable before conversion procedures begin."
 			].join("\n\n"),
-			datasetLink: SIMULATIONS.balancingEquations,
+			mediaLink: SIMULATIONS.balancingEquations,
 			solutionLink: answerKey("reaction-type-key"),
 			learningPath: "core"
 		});
@@ -1820,7 +1820,7 @@ function decorateIntroChemistryModule(
 				"**pH scope:** pH is logarithmic and applies to aqueous acid-base models. Near ordinary classroom conditions, neutral water is introduced near pH 7, but neutral is defined by the acid-base balance rather than a universal color or safety label. A one-unit pH change represents a tenfold concentration-ratio change in the introductory model.",
 				"**Safety and evidence:** pH alone does not determine whether a material is safe to touch, taste, mix, or dispose of. Compare simulation values and supplied examples only, explain one dilution result, and name the model limits before drawing a real-world conclusion."
 			].join("\n\n"),
-			datasetLink: SIMULATIONS.phScale,
+			mediaLink: SIMULATIONS.phScale,
 			solutionLink: answerKey("concentration-and-ph-key"),
 			learningPath: "core"
 		});

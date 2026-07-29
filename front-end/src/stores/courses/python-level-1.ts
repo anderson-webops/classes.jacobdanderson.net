@@ -1168,7 +1168,7 @@ const PYTHON_LEVEL_1_FLOW: PythonLevel1FlowConfig[] = [
 			"reuse"
 		],
 		projectThread:
-			"Refactor the repeated house parts into named helpers, then build and call small Turtle utilities. Require two calls before treating a function as demonstrated reuse."
+			"Refactor the repeated house parts into named helpers, then build and call small Turtle utilities. Two calls demonstrate that a function is being reused."
 	},
 	{
 		title: "GrS8 Event Listeners",

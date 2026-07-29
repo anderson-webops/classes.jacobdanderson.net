@@ -1733,7 +1733,7 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 		],
 		choiceCurriculumTitles: ["Check-In #2: Additional Practice Project"],
 		projectThread:
-			"Require a trace and a complexity explanation for each algorithm family. Additional practice targets the first incorrect invariant or growth-rate explanation."
+			"Each algorithm family includes a trace and a complexity explanation. Additional practice targets the first incorrect invariant or growth-rate explanation."
 	},
 	{
 		title: "AM9 Bubble Sort",
