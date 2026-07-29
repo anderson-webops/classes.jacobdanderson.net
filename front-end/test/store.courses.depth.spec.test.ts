@@ -79,7 +79,7 @@ describe("course catalog breadth", () => {
 		}
 
 		expect(JSON.stringify(elementary)).toContain(
-			"No physical lab supplies are required"
+			"Physical supplies are optional only"
 		);
 		expect(JSON.stringify(middleSchool)).toContain(
 			"No specialized science equipment or required household experiments are needed"
