@@ -494,6 +494,11 @@ function addEditablePoint(point: { x: number; y: number }) {
 	return true;
 }
 
+function lockCanvasInteraction(event: Event) {
+	if (event.cancelable) event.preventDefault();
+	event.stopPropagation();
+}
+
 function onCanvasPointerDown(event: PointerEvent) {
 	const canvasPoint = pointerCanvasPosition(event);
 	if (!canvasPoint || !isInsidePlot(canvasPoint)) return;
@@ -501,6 +506,7 @@ function onCanvasPointerDown(event: PointerEvent) {
 	selectedAnnotationId.value = null;
 
 	if (activeTool.value === "point") {
+		lockCanvasInteraction(event);
 		const graphPoint = canvasPointToGraph(
 			graphDocument.value,
 			canvasPoint.x,
@@ -511,6 +517,7 @@ function onCanvasPointerDown(event: PointerEvent) {
 	}
 
 	if (activeTool.value === "text") {
+		lockCanvasInteraction(event);
 		const graphPoint = canvasPointToGraph(
 			graphDocument.value,
 			canvasPoint.x,
@@ -538,6 +545,7 @@ function onCanvasPointerDown(event: PointerEvent) {
 	}
 
 	if (activeTool.value === "draw") {
+		lockCanvasInteraction(event);
 		const before = graphSnapshot();
 		const graphPoint = canvasPointToGraph(
 			graphDocument.value,
@@ -569,6 +577,7 @@ function onCanvasPointerDown(event: PointerEvent) {
 	}
 
 	if (activeTool.value === "pan") {
+		lockCanvasInteraction(event);
 		pointerGesture.value = {
 			kind: "pan",
 			pointerId: event.pointerId,
@@ -606,6 +615,7 @@ function onPointPointerDown(
 	selectedPoint.value = { seriesId, index };
 	selectedAnnotationId.value = null;
 	if (activeTool.value !== "select") return;
+	lockCanvasInteraction(event);
 	const point = pointerCanvasPosition(event);
 	if (!point) return;
 	pointerGesture.value = {
@@ -627,6 +637,7 @@ function onAnnotationPointerDown(event: PointerEvent, annotationId: string) {
 	selectedPoint.value = null;
 	inspectorTab.value = "graph";
 	if (activeTool.value !== "select") return;
+	lockCanvasInteraction(event);
 	const point = pointerCanvasPosition(event);
 	if (!point) return;
 	pointerGesture.value = {
@@ -653,6 +664,7 @@ function onCanvasPointerMove(event: PointerEvent) {
 	)}`;
 	const gesture = pointerGesture.value;
 	if (!gesture || gesture.pointerId !== event.pointerId) return;
+	lockCanvasInteraction(event);
 
 	if (gesture.kind === "point" && gesture.seriesId !== undefined) {
 		const series = graphDocument.value.series.find(
@@ -728,6 +740,7 @@ function onCanvasPointerMove(event: PointerEvent) {
 function finishPointerGesture(event: PointerEvent) {
 	const gesture = pointerGesture.value;
 	if (!gesture || gesture.pointerId !== event.pointerId) return;
+	lockCanvasInteraction(event);
 	const after = graphSnapshot();
 	if (gesture.before !== after) {
 		pushUndoSnapshot(gesture.before);
@@ -746,6 +759,7 @@ function finishPointerGesture(event: PointerEvent) {
 }
 
 function onCanvasWheel(event: WheelEvent) {
+	lockCanvasInteraction(event);
 	const canvasPoint = pointerCanvasPosition(event);
 	if (!canvasPoint || !isInsidePlot(canvasPoint)) return;
 	svgElement.value?.focus();
@@ -1555,7 +1569,8 @@ onBeforeUnmount(() => {
 
 				<p class="graph-tools__hint">
 					Canvas focus captures arrows, space, Page Up, and Page Down
-					so the page does not scroll while editing.
+					so the page does not scroll while editing. Wheel zoom and
+					pointer drags also stay inside the canvas.
 				</p>
 			</aside>
 
@@ -1568,13 +1583,18 @@ onBeforeUnmount(() => {
 					<p>{{ coordinatesText }}</p>
 				</div>
 
-				<div class="graph-canvas-shell">
+				<div
+					class="graph-canvas-shell"
+					@dragstart.stop.prevent
+					@wheel.stop.prevent="onCanvasWheel"
+				>
 					<svg
 						ref="svgElement"
 						class="graph-canvas"
 						:class="`tool-${activeTool}`"
 						:viewBox="`0 0 ${graphDocument.canvas.width} ${graphDocument.canvas.height}`"
 						:aria-label="graphAriaLabel"
+						draggable="false"
 						role="img"
 						tabindex="0"
 						@keydown="onCanvasKeyDown"
@@ -1582,7 +1602,6 @@ onBeforeUnmount(() => {
 						@pointerdown="onCanvasPointerDown"
 						@pointermove="onCanvasPointerMove"
 						@pointerup="finishPointerGesture"
-						@wheel.prevent="onCanvasWheel"
 					>
 						<title>{{ graphDocument.title }}</title>
 						<desc>
@@ -2994,6 +3013,7 @@ onBeforeUnmount(() => {
 .graph-workspace {
 	min-height: min(76vh, 920px);
 	overflow: hidden;
+	overscroll-behavior: none;
 	display: grid;
 	grid-template-columns: minmax(10.5rem, 0.55fr) minmax(34rem, 3.4fr) minmax(
 			20rem,
@@ -3115,6 +3135,7 @@ onBeforeUnmount(() => {
 
 .graph-canvas-panel {
 	min-width: 0;
+	overscroll-behavior: none;
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr) auto;
 	background: var(--graph-inset);
@@ -3164,6 +3185,9 @@ onBeforeUnmount(() => {
 	display: grid;
 	place-items: center;
 	overflow: auto;
+	overscroll-behavior: none;
+	touch-action: none;
+	user-select: none;
 }
 
 .graph-canvas {
@@ -3174,6 +3198,7 @@ onBeforeUnmount(() => {
 	border-radius: 8px;
 	box-shadow: 0 20px 42px -34px rgba(15, 23, 42, 0.44);
 	background: #fff;
+	-webkit-user-drag: none;
 	touch-action: none;
 	user-select: none;
 }
@@ -3332,6 +3357,7 @@ onBeforeUnmount(() => {
 .graph-inspector__body {
 	min-height: 0;
 	overflow-y: auto;
+	overscroll-behavior: none;
 	padding: 1rem;
 	display: grid;
 	align-content: start;
@@ -3416,6 +3442,7 @@ onBeforeUnmount(() => {
 .graph-data-table-shell {
 	max-height: 19rem;
 	overflow: auto;
+	overscroll-behavior: none;
 	border: 1px solid var(--graph-border);
 	border-radius: 9px;
 	background: var(--graph-panel);
@@ -3597,6 +3624,7 @@ onBeforeUnmount(() => {
 		display: flex;
 		flex-direction: row;
 		overflow-x: auto;
+		overscroll-behavior-x: contain;
 	}
 
 	.graph-tools__list,
