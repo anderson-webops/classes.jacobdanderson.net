@@ -1145,6 +1145,28 @@ export const preCalculusACourse: RawCourse = {
 						extension:
 							"Add a conic-intersection or inverse-domain problem that produces an extraneous or rejected value."
 					})
+				),
+				lesson(
+					"Challenge: Portfolio Model Stress Test",
+					practiceSet({
+						goal: "Test whether one capstone conclusion survives a meaningful change to its assumptions or constraints.",
+						steps: [
+							"Choose one polynomial, sequence, rational, logarithmic, or conic model from the portfolio.",
+							"Change one domain boundary, parameter, data value, or geometric constraint.",
+							"Recalculate the affected result and update its graph, table, or feature list.",
+							"Compare the original and changed conclusions.",
+							"Explain which assumption controls the model's reliability."
+						],
+						outcome:
+							"The stress test distinguishes a stable mathematical conclusion from one that depends heavily on a chosen assumption.",
+						checkpoints: [
+							"The changed condition is stated before recalculation.",
+							"Both versions use the same variables and units.",
+							"The comparison identifies what stayed stable and what changed."
+						],
+						extension:
+							"Test a second model from a different function family and compare sensitivity."
+					})
 				)
 			]
 		),
@@ -1450,6 +1472,9 @@ configureMathCourseFlow(preCalculusACourse, {
 				"Use the check-in to select final review, then complete the required modeling portfolio with checked representations and an explicit Pre-Calculus B readiness note. The shorter defense remains an optional alternative artifact.",
 			coreSupplementalTitles: [
 				"Capstone: Pre-Calculus A Modeling Portfolio"
+			],
+			challengeSupplementalTitles: [
+				"Challenge: Portfolio Model Stress Test"
 			]
 		}
 	],

@@ -1133,6 +1133,28 @@ export const preCalculusBCourse: RawCourse = {
 						extension:
 							"Add one sample AP-style prompt and identify the prerequisite skill behind it."
 					})
+				),
+				lesson(
+					"Challenge: Timed Readiness Defense",
+					practiceSet({
+						goal: "Use timed evidence to defend a focused AP Calculus readiness plan.",
+						steps: [
+							"Select one trigonometry or coordinate task and one limit or rate-of-change task.",
+							"Complete both under a stated time limit without notes.",
+							"Classify every missed or uncertain step as concept, setup, calculation, representation, or explanation.",
+							"Correct the work and name the prerequisite that controls each correction.",
+							"Present a short readiness defense with two secure skills and two targeted review actions."
+						],
+						outcome:
+							"The defense turns a general readiness impression into a specific evidence-based review plan.",
+						checkpoints: [
+							"Timed and corrected work are both retained.",
+							"Each correction names the controlling prerequisite.",
+							"Review actions identify a topic and a concrete practice task."
+						],
+						extension:
+							"Add one calculator-active task and compare its setup demands with a no-calculator task."
+					})
 				)
 			]
 		),
@@ -1425,7 +1447,8 @@ configureMathCourseFlow(preCalculusBCourse, {
 				"Use both review sections to select final practice, then complete the required modeling portfolio with checked representations and a calculus-readiness reflection. The readiness map remains optional planning.",
 			coreSupplementalTitles: [
 				"Capstone: Pre-Calculus B Modeling Portfolio"
-			]
+			],
+			challengeSupplementalTitles: ["Challenge: Timed Readiness Defense"]
 		}
 	],
 	appendixTitles: [
