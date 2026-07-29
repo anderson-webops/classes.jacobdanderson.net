@@ -7371,6 +7371,7 @@ describe("course text quality normalization", () => {
 			"More Practice with Sentence Types",
 			"Sentence Structure Concept Review",
 			"Sentence Structure Application Passage",
+			"Grammar Master Project Path and Evidence Plan",
 			"Grammar and Mechanics Presentation",
 			"Personal Narrative Mechanics Portfolio"
 		];
@@ -7415,8 +7416,8 @@ describe("course text quality normalization", () => {
 
 		const text = allCourseText(course);
 
-		expect(text).toContain("Source Activity Anchors:");
-		expect(text).toContain("Evidence record:");
+		expect(text).not.toContain("Source Activity Anchors:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
