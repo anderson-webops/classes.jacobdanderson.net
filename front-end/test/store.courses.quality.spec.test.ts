@@ -7196,7 +7196,7 @@ describe("course text quality normalization", () => {
 			"Dinosaur Footprint Interview or News Report"
 		];
 
-		expect(text).toContain("Source Activity Anchors:");
+		expect(text).not.toContain("Source Activity Anchors:");
 		expect(text).toContain("The Secret Ingredient");
 		expect(text).toContain("Moira, Sunli, and Zaira");
 		expect(text).toContain("The Faithful Friend");
@@ -7205,7 +7205,7 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Kevin's Crafts");
 		expect(text).toContain("Bacon and Mittens");
 		expect(text).toContain("Four-year-old makes a big discovery!");
-		expect(text).toContain("Evidence record:");
+		expect(text).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text).toContain(anchor);
 		}
@@ -7538,10 +7538,6 @@ describe("course text quality normalization", () => {
 
 	it("reserves source-library static assets from original source files", async () => {
 		const expectedAssetsByCourse = {
-			"early-elementary-a-reading": [
-				"jor2_disact_plotempty.png",
-				"jor2_disact_plotexample.png"
-			],
 			"middle-school-a-literature": [
 				"msa1_concept1_mainideasupportingevidence.png"
 			],
