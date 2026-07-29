@@ -2802,33 +2802,20 @@ describe("course text quality normalization", () => {
 		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
-	it("reserves pending AI Foundations media on the class static host", async () => {
+	it("keeps pending AI Foundations media out of the learner course", async () => {
 		const course = await loadRawCourse("ai-level-1");
 		expect(course).not.toBeNull();
 
-		const mediaModule = course!.modules.find(
-			module => module.title === "Pending Static Assets"
-		);
-		expect(mediaModule?.kind).toBe("appendix");
-
-		const mediaItem = mediaModule?.curriculum.find(
-			item => item.title === "AI Foundations Media Status"
-		);
-		expect(mediaItem).toBeDefined();
-		const content = mediaItem?.content ?? "";
-
-		for (const filename of [
-			"fai1_project_1.mp4",
-			"FAI2_Project2_Updated.mp4",
-			"fai11_project_1.mp4",
-			"fai3_1.png",
-			"fai11_1.png"
-		]) {
-			expect(content).toContain(staticMediaUrl(filename));
-			expect(hasPendingStaticMediaNotice(content, filename)).toBe(true);
-		}
-
-		expect(content).not.toContain("static.junilearning.com");
+		expect(
+			course!.modules.find(
+				module => module.title === "Pending Static Assets"
+			)
+		).toBeUndefined();
+		const learnerText = allCourseText(course);
+		expect(learnerText).not.toContain("AI Foundations Media Status");
+		expect(learnerText).not.toContain("fai1_project_1.mp4");
+		expect(learnerText).not.toContain("fai3_1.png");
+		expect(learnerText).not.toContain("static.junilearning.com");
 	});
 
 	it("records Machine Learning media as hosted or pending on the class static host", async () => {

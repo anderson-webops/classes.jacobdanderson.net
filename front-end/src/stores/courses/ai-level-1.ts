@@ -1,74 +1,14 @@
-import type { RawCourse } from "./types";
+import type {
+	CourseItemLearningPath,
+	RawCourse,
+	RawCourseModule,
+	RawCourseModuleItem
+} from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
-import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
 type AiSearchSupplementalPurpose = "transfer" | "extension";
-
-const aiLevel1PendingSourceVideos = [
-	"fai1_project_1.mp4",
-	"fai1_project_2.mp4",
-	"fai1_project_3.mp4",
-	"fai2_project_1.mp4",
-	"FAI2_Project2_Updated.mp4",
-	"fai3_project_1.mp4",
-	"fai4_project_1.mp4",
-	"fai4_project_2.mp4",
-	"fai5_project_1.mp4",
-	"fai5_project_2.mp4",
-	"fai5_supplemental_project_1.mp4",
-	"fai6_project_1.mp4",
-	"fai6_project_2.mp4",
-	"fai6_supplemental_project_1.mp4",
-	"fai7_project_1.mp4",
-	"fai7_project_2.mp4",
-	"fai7_project_3.mp4",
-	"fai8_project_1.mp4",
-	"fai8_project_2.mp4",
-	"fai9_project_1.mp4",
-	"fai9_project_2.mp4",
-	"fai9_project_3.mp4",
-	"fai9_project_4.mp4",
-	"fai10_project_1.mp4",
-	"fai10_project_2.mp4",
-	"fai10_project_3.mp4",
-	"fai11_project_1.mp4"
-] as const;
-
-const aiLevel1PendingSourceImages = [
-	"fai3_1.png",
-	"fai3_2.png",
-	"fai3_4.png",
-	"fai3_5.png",
-	"fai3_6.png",
-	"fai5_example.png",
-	"fai6_1.png",
-	"fai7_1.png",
-	"fai7_2.png",
-	"fai7_3.png",
-	"fai7_4.png",
-	"fai7_5.png",
-	"fai7_6.png",
-	"fai7_7.png",
-	"fai9_1.png",
-	"fai9_2.png",
-	"fai9_3.png",
-	"fai9_4.png",
-	"fai9_5.png",
-	"fai10_1.png",
-	"fai10_2.png",
-	"fai11_1.png"
-] as const;
-
-function pendingAiLevel1AssetList(filenames: readonly string[]) {
-	return filenames
-		.map(
-			filename =>
-				`- ${staticMediaUrl(filename)}\n\n${pendingStaticMediaNotice(filename)}`
-		)
-		.join("\n\n");
-}
 
 function aiSearchLabFocus(labNumber: number) {
 	const focusByLab: Record<number, string> = {
@@ -1364,23 +1304,294 @@ export const aiLevel1Course: RawCourse = {
 						"https://github.com/instruction-material/AI-Level-1/tree/main/AI-18-applied-studio-17-the-marble-game-ai-copy-supplemental-3/solution"
 				}
 			]
-		},
-		{
-			kind: "appendix",
-			title: "Pending Static Assets",
-			curriculum: [
-				{
-					title: "AI Foundations Media Status",
-					content: [
-						"This course lists pending project videos and concept images below. Each entry keeps a stable static media URL so the matching file can be added without changing course links.",
-						"**Pending project videos:**",
-						pendingAiLevel1AssetList(aiLevel1PendingSourceVideos),
-						"**Pending concept images:**",
-						pendingAiLevel1AssetList(aiLevel1PendingSourceImages)
-					].join("\n\n")
-				}
-			],
-			supplementalProjects: []
 		}
 	]
 };
+
+interface AiLevel1FlowConfig {
+	title: string;
+	estimatedTime: string;
+	keyBlocks: string[];
+	projectThread: string;
+}
+
+const AI_LEVEL_1_FLOW: AiLevel1FlowConfig[] = [
+	{
+		title: "FAI0 Setup and Tooling",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"Python environment",
+			"state / action / goal",
+			"graph package",
+			"experiment log",
+			"reproducible run"
+		],
+		projectThread:
+			"Establish one reproducible graph-and-search workspace and a short experiment-log format. Refresh objects only when the state model shows a concrete prerequisite gap."
+	},
+	{
+		title: "Unit 1: AI Landscape and State Representation",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: ["state", "action", "goal test", "path cost", "node / edge"],
+		projectThread:
+			"Translate a plain-language problem into explicit states, actions, goals, and costs before coding. Build one inspectable graph model that later searches can reuse."
+	},
+	{
+		title: "Unit 2: Stacks, Queues, and Traversal Intuition",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"frontier",
+			"stack LIFO",
+			"queue FIFO",
+			"push / pop",
+			"hand trace"
+		],
+		projectThread:
+			"Trace the same graph with a stack and queue so frontier order becomes visible. Do not introduce search names until the exploration order can be predicted by hand."
+	},
+	{
+		title: "Unit 3: DFS, BFS, and Reachability",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"DFS",
+			"BFS",
+			"visited set",
+			"parent map",
+			"path reconstruction"
+		],
+		projectThread:
+			"Implement DFS and BFS from the same state representation, record visited order and parent links, and distinguish reachability from unweighted shortest-path guarantees."
+	},
+	{
+		title: "AI Search Lab 13: Practice Studio",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"frontier size",
+			"visited order",
+			"parent link",
+			"reconstructed path",
+			"trace explanation"
+		],
+		projectThread:
+			"Instrument one uninformed search so the frontier, visited set, parent map, and final path can be inspected. Use the trace to separate algorithm behavior from implementation bugs."
+	},
+	{
+		title: "Unit 4: Informed and Bounded Search",
+		estimatedTime: "4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"depth limit",
+			"priority queue",
+			"path cost g",
+			"heuristic h",
+			"A* score f"
+		],
+		projectThread:
+			"Introduce limits, costs, and heuristics as separate changes to frontier policy. Compare completeness, optimality, repeated work, and assumptions rather than ranking algorithms by speed alone."
+	},
+	{
+		title: "AI Search Lab 14: Practice Studio",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"depth cutoff",
+			"missed goal",
+			"iterative deepening",
+			"repeated work",
+			"stop condition"
+		],
+		projectThread:
+			"Stress depth-limited search with goals above, at, and below the cutoff, then compare iterative deepening. The lab must record both missed-state risk and repeated work."
+	},
+	{
+		title: "AI Search Lab 15: Practice Studio",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"uniform-cost search",
+			"priority queue",
+			"g / h / f",
+			"weighted edge",
+			"admissible heuristic"
+		],
+		projectThread:
+			"Trace uniform-cost and A* accounting on a weighted graph, including queue priorities and final path cost. Check an admissible and intentionally bad heuristic."
+	},
+	{
+		title: "AI Search Lab 16: Practice Studio",
+		estimatedTime: "2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"greedy search",
+			"A* search",
+			"misleading heuristic",
+			"path cost",
+			"comparison evidence"
+		],
+		projectThread:
+			"Compare greedy and A* on a case where the locally attractive route is not cheapest. Explain the tradeoff from trace evidence rather than from the final path alone."
+	},
+	{
+		title: "Unit 5: Rule-Based Systems and Puzzle Framing",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"rule",
+			"constraint",
+			"state tracker",
+			"feature",
+			"rules vs search"
+		],
+		projectThread:
+			"Model a small rule system and a puzzle state explicitly, then justify whether direct rules or search better fit each behavior. Keep rule firing and state changes inspectable."
+	},
+	{
+		title: "Unit 6: Heuristics and Game AI",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"game tree",
+			"random baseline",
+			"evaluation function",
+			"tie breaking",
+			"stress position"
+		],
+		projectThread:
+			"Start with random play as a baseline, then add one explainable evaluation rule. Compare outcomes and failure positions before calling a strategy stronger."
+	},
+	{
+		title: "AI Search Lab 17: Practice Studio",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"game state",
+			"legal action",
+			"score heuristic",
+			"baseline comparison",
+			"decision log"
+		],
+		projectThread:
+			"Evaluate one game or puzzle search against a baseline, log candidate scores and decisions, and stress the heuristic with a position chosen to expose its limitation."
+	},
+	{
+		title: "Unbeatable TicTacToe AI 1: Practice Studio",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"board state",
+			"legal move",
+			"minimax or complete search",
+			"win / block / tie",
+			"strategy test"
+		],
+		projectThread:
+			"Build Tic-Tac-Toe AI in stages: legal board loop, random baseline, win and block rules, then complete search if used. Test forced wins, forced blocks, forks, ties, and invalid moves."
+	},
+	{
+		title: "The Marble Game AI: Practice Studio",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"pile state",
+			"legal move",
+			"terminal state",
+			"evaluation rule",
+			"baseline result"
+		],
+		projectThread:
+			"Represent the marble game independently from its strategy, verify legal and terminal states, then compare the chosen policy with random play and at least one adversarial position."
+	},
+	{
+		title: "Unit 7: Features, Evaluation, and Responsible AI",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"feature",
+			"benchmark",
+			"failure slice",
+			"bias",
+			"uncertainty"
+		],
+		projectThread:
+			"Evaluate systems with named success criteria, baseline comparisons, and failure slices. Separate measured behavior from broad claims and document bias, uncertainty, and representation limits."
+	},
+	{
+		title: "Unit 8: Capstone and Portfolio Build",
+		estimatedTime: "6–10 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"scope lock",
+			"baseline",
+			"decision trace",
+			"stress test",
+			"portfolio explanation"
+		],
+		projectThread:
+			"Choose a finishable toy-AI problem, ship a minimum working baseline, add one justified improvement, and compare results on ordinary and adversarial cases before portfolio polish."
+	}
+];
+
+const AI_LEVEL_1_CHALLENGE_TITLE_RE =
+	/extension|unbeatable|marble game|compare|greedy search|maze solver|airports|two-player|updated/i;
+
+function aiLevel1SupplementalPath(
+	item: Pick<RawCourseModuleItem, "title">
+): CourseItemLearningPath {
+	return AI_LEVEL_1_CHALLENGE_TITLE_RE.test(item.title)
+		? "challenge"
+		: "choice";
+}
+
+function configureAiLevel1Module(
+	module: RawCourseModule,
+	config: AiLevel1FlowConfig
+) {
+	for (const item of module.curriculum) item.learningPath = "core";
+	for (const item of module.supplementalProjects) {
+		item.learningPath = aiLevel1SupplementalPath(item);
+	}
+	module.estimatedTime = config.estimatedTime;
+	module.keyBlocks = [...config.keyBlocks];
+	if (module.curriculum[0]) {
+		module.curriculum[0].content = [
+			module.curriculum[0].content,
+			`**Course flow:** ${config.projectThread}`
+		].join("\n\n");
+	}
+	return module;
+}
+
+function configureAiExtensionBank(module: RawCourseModule) {
+	module.kind = "appendix";
+	delete module.estimatedTime;
+	delete module.keyBlocks;
+	for (const item of module.curriculum) {
+		item.learningPath = aiLevel1SupplementalPath(item);
+	}
+	for (const item of module.supplementalProjects) {
+		item.learningPath = aiLevel1SupplementalPath(item);
+	}
+	if (module.curriculum[0]) {
+		module.curriculum[0].content = [
+			"**Optional reference bank:** Use these variants only after the core search, evaluation, and capstone path is complete or when a specific prerequisite needs reinforcement.",
+			module.curriculum[0].content
+		].join("\n\n");
+	}
+	return module;
+}
+
+function configureAiLevel1Flow(course: RawCourse) {
+	const modulesByTitle = new Map(
+		course.modules.map(module => [module.title, module])
+	);
+	const teachingModules = AI_LEVEL_1_FLOW.map(config => {
+		const module = modulesByTitle.get(config.title);
+		if (!module) {
+			throw new Error(`AI Level 1 flow is missing ${config.title}.`);
+		}
+		return configureAiLevel1Module(module, config);
+	});
+	const extensionBank = modulesByTitle.get(
+		"Unit 9: Repo Extension Bank and Canonical Variants"
+	);
+	if (!extensionBank) {
+		throw new Error(
+			"AI Level 1 flow is missing the repository extension bank."
+		);
+	}
+	course.modules = [
+		...teachingModules,
+		configureAiExtensionBank(extensionBank)
+	];
+}
+
+configureAiLevel1Flow(aiLevel1Course);
