@@ -1,5 +1,10 @@
 import type { RawCourse } from "./types";
 
+const LOW_LEVEL_SECURITY_PRACTICE_PACK =
+	"/course-assets/low-level-security/low-level-security-practice-pack.md";
+const LOW_LEVEL_SECURITY_VERIFICATION_GUIDE =
+	"/course-assets/low-level-security/low-level-security-verification-guide.md";
+
 type SecurityLabMode = "core" | "extension";
 type SecurityLabPurpose =
 	"core" | "extension-challenge" | "transfer-practice" | "extension-practice";
@@ -214,7 +219,7 @@ function securityLabReviewContent(topic: string) {
 	].join("\n\n");
 }
 
-export const lowLevelSecurityCourse: RawCourse = {
+const lowLevelSecuritySourceCourse: RawCourse = {
 	name: "Low Level Security",
 	modules: [
 		{
@@ -1058,4 +1063,416 @@ export const lowLevelSecurityCourse: RawCourse = {
 			]
 		}
 	]
+};
+
+const LOW_LEVEL_SECURITY_CORE_SEQUENCE = [
+	"LLS0 Safe Lab Setup and Evidence Contract",
+	"LLS1 Memory Layout and Security Tooling",
+	"LLS2 Bounds, Arrays, and Safer Copy Patterns",
+	"LLS3 Defensive Parsers and Binary Input",
+	"LLS4 Integer Safety, State, and Defensive Data Structures",
+	"LLS5 Bug Hunting with Sanitizers and Fuzzing",
+	"LLS6 Patching, Review, and Responsible Research"
+] as const;
+
+const LOW_LEVEL_SECURITY_APPENDICES = [
+	"Low-Level Security Lab 7: Sanitizer Triage Studio",
+	"Low-Level Security Lab 8: Bounds Regression Studio",
+	"Low-Level Security Lab 9: Binary Parser Hardening Studio",
+	"Low-Level Security Lab 10: Integer State Safety Studio",
+	"Low-Level Security Lab 11: Fuzzing Regression Studio",
+	"Low-Level Security Lab 12: Patch Review Handoff Studio"
+] as const;
+
+const lowLevelSecuritySetupModule: RawCourse["modules"][number] = {
+	title: "LLS0 Safe Lab Setup and Evidence Contract",
+	curriculum: [
+		{
+			title: "Owned Fixture and Authorization Boundary",
+			content:
+				"Use only the supplied toy C++ programs in a local learner-owned workspace. Record the allowed files, defensive question, permitted tools, stop condition, and reset path before running a compiler, debugger, sanitizer, or fuzzer. Public systems, third-party binaries, real credentials, exploit payloads, and public proof-of-concept material remain outside this course."
+		},
+		{
+			title: "Recorded C++17 Build Profiles",
+			content:
+				"The source repository uses CMake 3.20 and C++17. Record the operating system, architecture, compiler and version, CMake version, generator, and exact configure and build commands. Keep one warnings-and-debug profile and one supported AddressSanitizer plus UndefinedBehaviorSanitizer profile. Sanitizer builds are test instruments, not proof that no defects remain."
+		},
+		{
+			title: "Sanitizer Capability and Symbolization Probe",
+			content:
+				"Run the supplied capability case before interpreting a report. Confirm which sanitizers the selected compiler and platform support, whether stack traces resolve to source lines, and whether an external symbolizer or platform-specific debug-symbol step is needed. Leak detection and symbolization differ across macOS and Linux, so the evidence record names the observed capability rather than assuming parity."
+		},
+		{
+			title: "Bounded Work and Stable Evidence",
+			content:
+				"Every command has a time, input-size, output-size, and process-count limit. Fuzzing uses a supplied corpus, deterministic seed when supported, one worker by default, and explicit run or time limits. Address values vary across runs; compare storage classes, lifetimes, relative layout, and invariants rather than memorizing a fixed address."
+		},
+		{
+			title: "LLS0 Setup Gate: Reproduce the Baseline",
+			content:
+				"Configure and build the six supplied starter and solution pairs, run one finite solution case, and create an evidence record with expected result, observed result, platform difference, reset command, and remaining limitation. The gate is complete when another learner can reproduce the same local baseline without a private service or account.",
+			datasetLink: `${LOW_LEVEL_SECURITY_PRACTICE_PACK}#safe-lab-preflight-case`,
+			mediaLink: "https://clang.llvm.org/docs/AddressSanitizer.html"
+		}
+	],
+	supplementalProjects: [
+		{
+			title: "Toolchain Parity Comparison",
+			content:
+				"Compare one supplied case with two locally available compiler profiles. Record only meaningful differences in diagnostics, symbolization, or supported sanitizer behavior; do not treat different address values as a defect.",
+			learningPath: "choice",
+			datasetLink: `${LOW_LEVEL_SECURITY_PRACTICE_PACK}#safe-lab-preflight-case`,
+			mediaLink:
+				"https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html"
+		},
+		{
+			title: "Evidence Record Extension",
+			content:
+				"Add one repeatability check, one deliberate build failure, and one recovery note to the setup record. Keep the change inside the supplied workspace and explain how the evidence distinguishes tool availability from program correctness.",
+			learningPath: "challenge",
+			datasetLink: `${LOW_LEVEL_SECURITY_PRACTICE_PACK}#safe-lab-preflight-case`,
+			mediaLink:
+				"https://cmake.org/cmake/help/latest/guide/tutorial/index.html"
+		}
+	]
+};
+
+interface LowLevelSecurityModuleFlow {
+	stage: string;
+	estimatedTime: string;
+	keyBlocks: readonly [string, string, string, string, string, string];
+	practiceSection: string;
+	answerSection: string;
+	route: string;
+	evidence: string;
+	references: readonly {
+		label: string;
+		url: string;
+	}[];
+}
+
+const LOW_LEVEL_SECURITY_MODULE_FLOW: Record<
+	(typeof LOW_LEVEL_SECURITY_CORE_SEQUENCE)[number],
+	LowLevelSecurityModuleFlow
+> = {
+	"LLS0 Safe Lab Setup and Evidence Contract": {
+		stage: "Authorized and reproducible local foundation",
+		estimatedTime: "1–2 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"owned fixture",
+			"C++17 build",
+			"sanitizer probe",
+			"resource cap",
+			"reset path",
+			"evidence record"
+		],
+		practiceSection: "safe-lab-preflight-case",
+		answerSection: "safe-lab-preflight-key",
+		route: "Define scope, record the C++17 toolchain, build the supplied fixtures, probe sanitizer and symbolization support, set resource limits, and prove that the baseline can be reset and reproduced.",
+		evidence:
+			"The record names the owned target, exact versions and commands, supported diagnostics, finite resource budget, expected and observed output, platform difference, reset route, and one limitation.",
+		references: [
+			{
+				label: "CMake tutorial",
+				url: "https://cmake.org/cmake/help/latest/guide/tutorial/index.html"
+			},
+			{
+				label: "Clang AddressSanitizer",
+				url: "https://clang.llvm.org/docs/AddressSanitizer.html"
+			}
+		]
+	},
+	"LLS1 Memory Layout and Security Tooling": {
+		stage: "Memory evidence and tool interpretation",
+		estimatedTime: "2–3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"storage duration",
+			"stack",
+			"heap",
+			"address variance",
+			"sanitizer scope",
+			"observation note"
+		],
+		practiceSection: "memory-layout-evidence-case",
+		answerSection: "memory-layout-evidence-key",
+		route: "Trace stack, heap, global, static, and read-only objects; compare lifetimes and relative layout across two runs; then connect one sanitizer report to the exact broken assumption without relying on a fixed address.",
+		evidence:
+			"The learner identifies each storage class, records which addresses changed, explains lifetime and ownership, reproduces one supported diagnostic, and states one defect class the selected tool does not rule out.",
+		references: [
+			{
+				label: "Clang AddressSanitizer",
+				url: "https://clang.llvm.org/docs/AddressSanitizer.html"
+			}
+		]
+	},
+	"LLS2 Bounds, Arrays, and Safer Copy Patterns": {
+		stage: "Capacity contracts and valid failure state",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"capacity",
+			"visible length",
+			"terminator",
+			"status value",
+			"ownership",
+			"byte evidence"
+		],
+		practiceSection: "bounded-copy-contract-case",
+		answerSection: "bounded-copy-contract-key",
+		route: "Write the buffer contract before code, implement bounded copying with explicit status, preserve a valid destination after every call, and verify short, empty, exact-fit, oversized, and invalid input at byte level.",
+		evidence:
+			"The result distinguishes capacity from visible length, preserves termination, names truncation policy, leaves state valid after rejection, and matches every expected status and byte dump.",
+		references: [
+			{
+				label: "SEI CERT C++ coding standard",
+				url: "https://wiki.sei.cmu.edu/confluence/x/Wnw-BQ"
+			}
+		]
+	},
+	"LLS3 Defensive Parsers and Binary Input": {
+		stage: "Fail-closed parsing at a trust boundary",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"minimum shape",
+			"length check",
+			"command allowlist",
+			"byte validation",
+			"named rejection",
+			"negative matrix"
+		],
+		practiceSection: "defensive-parser-case",
+		answerSection: "defensive-parser-key",
+		route: "Define the packet contract, validate shape and declared length before payload use, reject unknown commands and disallowed bytes, and preserve a named negative case for each assumption.",
+		evidence:
+			"The parser accepts the supplied valid packet, rejects every malformed fixture for the intended reason, never reads past supplied bytes, and records one new independent rejection case.",
+		references: [
+			{
+				label: "OWASP secure coding checklist",
+				url: "https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/stable-en/02-checklist/05-checklist"
+			}
+		]
+	},
+	"LLS4 Integer Safety, State, and Defensive Data Structures": {
+		stage: "Invariant-preserving arithmetic and state",
+		estimatedTime: "3 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"range before arithmetic",
+			"signedness",
+			"head tail count",
+			"staged update",
+			"unchanged failure",
+			"invariant trace"
+		],
+		practiceSection: "integer-state-invariants-case",
+		answerSection: "integer-state-invariants-key",
+		route: "State the ring-buffer invariants, validate ranges before arithmetic, stage updates before committing state, and compare snapshots after successful, wraparound, and rejected operations.",
+		evidence:
+			"The trace keeps count within capacity, indexes within range, logical order intact across wraparound, and all observable state unchanged after a rejected read or write.",
+		references: [
+			{
+				label: "Clang UndefinedBehaviorSanitizer",
+				url: "https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html"
+			},
+			{
+				label: "GCC instrumentation options",
+				url: "https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html"
+			}
+		]
+	},
+	"LLS5 Bug Hunting with Sanitizers and Fuzzing": {
+		stage: "Bounded discovery, triage, and regression",
+		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"seed corpus",
+			"deterministic harness",
+			"run limit",
+			"first report",
+			"reduced case",
+			"regression corpus"
+		],
+		practiceSection: "bounded-fuzzing-triage-case",
+		answerSection: "bounded-fuzzing-triage-key",
+		route: "Start from valid supplied seeds, keep the harness deterministic and fast, cap runs, time, input length, memory, and workers, classify the first trustworthy finding, preserve a reduced case, patch narrowly, and rerun the corpus.",
+		evidence:
+			"The report includes exact bounds and seed, accepts and rejections by category, one preserved interesting case, root-cause reasoning, patch evidence, corpus rerun, and an explicit statement that no finding does not prove absence of bugs.",
+		references: [
+			{
+				label: "LLVM libFuzzer documentation",
+				url: "https://llvm.org/docs/LibFuzzer.html"
+			},
+			{
+				label: "Clang AddressSanitizer",
+				url: "https://clang.llvm.org/docs/AddressSanitizer.html"
+			}
+		]
+	},
+	"LLS6 Patching, Review, and Responsible Research": {
+		stage: "Defensive capstone and maintainer handoff",
+		estimatedTime: "5–6 sessions · 45–60 minutes each",
+		keyBlocks: [
+			"threat model",
+			"invariants",
+			"narrow patch",
+			"negative suite",
+			"retest",
+			"handoff note"
+		],
+		practiceSection: "patch-and-capstone-audit-case",
+		answerSection: "patch-and-capstone-audit-key",
+		route: "Audit the supplied packet-driven toy system, map trust boundaries and invariants, reproduce failures locally, select narrow fixes, rerun standard and malformed cases, and deliver a maintainer-facing remediation packet.",
+		evidence:
+			"The packet contains scope, assumptions, malformed-input inventory, reproduction evidence, root cause, patch rationale, regression results, residual risk, cleanup, and a short demonstration with no exploit artifact.",
+		references: [
+			{
+				label: "SEI CERT C++ coding standard",
+				url: "https://wiki.sei.cmu.edu/confluence/x/Wnw-BQ"
+			},
+			{
+				label: "OWASP secure coding checklist",
+				url: "https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/stable-en/02-checklist/05-checklist"
+			}
+		]
+	}
+};
+
+function lowLevelSecurityPracticeLink(section: string) {
+	return `${LOW_LEVEL_SECURITY_PRACTICE_PACK}#${section}`;
+}
+
+function lowLevelSecurityVerificationLink(section: string) {
+	return `${LOW_LEVEL_SECURITY_VERIFICATION_GUIDE}#${section}`;
+}
+
+function renderLowLevelSecurityReferences(flow: LowLevelSecurityModuleFlow) {
+	return flow.references
+		.map(reference => `[${reference.label}](${reference.url})`)
+		.join(", ");
+}
+
+function lowLevelSecuritySupplementalPath(title: string) {
+	return /Extension|Challenge/i.test(title)
+		? ("challenge" as const)
+		: ("choice" as const);
+}
+
+function decorateLowLevelSecurityCoreModule(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	const flow =
+		LOW_LEVEL_SECURITY_MODULE_FLOW[
+			module.title as (typeof LOW_LEVEL_SECURITY_CORE_SEQUENCE)[number]
+		];
+	if (!flow) {
+		throw new Error(`Missing Low Level Security flow: ${module.title}`);
+	}
+
+	const practiceLink = lowLevelSecurityPracticeLink(flow.practiceSection);
+	const verificationLink = lowLevelSecurityVerificationLink(
+		flow.answerSection
+	);
+	const primaryReference = flow.references[0]?.url;
+
+	return {
+		...module,
+		kind: "module",
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: [...flow.keyBlocks],
+		curriculum: module.curriculum.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Course flow:** ${flow.stage}. ${flow.route}
+
+**Scope and resource contract:** Work only with supplied or learner-owned toy source in a local workspace. Record the allowed target, commands, compiler profile, input and runtime bounds, stop condition, and reset path. No public target, third-party binary, exploit payload, credential, persistence, or unbounded process is part of this course.
+
+**Evidence gate:** ${flow.evidence}
+
+**Local continuity:** Complete the [supplied Low Level Security case](${practiceLink}) before comparing it with the [verification guide](${verificationLink}). The supplied case is a complete local route when a sanitizer, debugger, fuzzer, network connection, or compatible Unix shell is unavailable.
+
+**Current references:** ${renderLowLevelSecurityReferences(flow)}. Record tool and document versions because diagnostics, platform support, defaults, and examples can change.
+
+${item.content}`
+					: item.content,
+			learningPath: "core" as const,
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? primaryReference
+					}
+				: {})
+		})),
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: lowLevelSecuritySupplementalPath(item.title),
+			...(item.projectLink
+				? {
+						datasetLink: item.datasetLink ?? practiceLink,
+						mediaLink: item.mediaLink ?? primaryReference
+					}
+				: {})
+		}))
+	};
+}
+
+function decorateLowLevelSecurityAppendix(
+	module: RawCourse["modules"][number]
+): RawCourse["modules"][number] {
+	return {
+		...module,
+		kind: "appendix",
+		estimatedTime: "Optional transfer studio · 1–2 sessions",
+		keyBlocks: [
+			"prior invariant",
+			"changed fixture",
+			"bounded run",
+			"defensive evidence",
+			"regression",
+			"limitation"
+		],
+		curriculum: module.curriculum.map((item, index) => ({
+			...item,
+			content:
+				index === 0
+					? `**Optional appendix:** Labs 7–12 provide repeated transfer practice after the complete LLS0–LLS6 defensive path. Select this studio only when another pass through its named invariant, tool, or handoff skill serves a specific support need. Completing every appendix is not required for the LLS6 capstone.
+
+**Bounded route:** Stay inside the linked toy fixture, use finite inputs and commands, preserve reset and stop conditions, and carry the result back to a mitigation or regression decision.
+
+${item.content}`
+					: item.content,
+			learningPath: "choice" as const
+		})),
+		supplementalProjects: module.supplementalProjects.map(item => ({
+			...item,
+			learningPath: lowLevelSecuritySupplementalPath(item.title)
+		}))
+	};
+}
+
+const lowLevelSecurityModulesByTitle = new Map(
+	lowLevelSecuritySourceCourse.modules.map(module => [module.title, module])
+);
+
+const lowLevelSecurityCoreModules = LOW_LEVEL_SECURITY_CORE_SEQUENCE.map(
+	title => {
+		const module =
+			title === lowLevelSecuritySetupModule.title
+				? lowLevelSecuritySetupModule
+				: lowLevelSecurityModulesByTitle.get(title);
+		if (!module) {
+			throw new Error(`Missing Low Level Security module: ${title}`);
+		}
+		return decorateLowLevelSecurityCoreModule(module);
+	}
+);
+
+const lowLevelSecurityAppendices = LOW_LEVEL_SECURITY_APPENDICES.map(title => {
+	const module = lowLevelSecurityModulesByTitle.get(title);
+	if (!module) {
+		throw new Error(`Missing Low Level Security appendix: ${title}`);
+	}
+	return decorateLowLevelSecurityAppendix(module);
+});
+
+export const lowLevelSecurityCourse: RawCourse = {
+	...lowLevelSecuritySourceCourse,
+	modules: [...lowLevelSecurityCoreModules, ...lowLevelSecurityAppendices]
 };
