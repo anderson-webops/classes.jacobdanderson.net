@@ -307,7 +307,9 @@ export function graphDocumentToCsv(document: GraphDocument) {
 
 function legacyChildren(element: Element, localName: string) {
 	return Array.from(element.children).filter(
-		child => child.localName === localName
+		child =>
+			child.namespaceURI === LEGACY_GRAPH_NAMESPACE &&
+			child.localName === localName
 	);
 }
 
@@ -321,7 +323,9 @@ function legacyNumber(
 	fallback: number
 ) {
 	if (!element) return fallback;
-	const value = Number(element.getAttribute(attribute));
+	const rawValue = element.getAttribute(attribute);
+	if (rawValue === null || rawValue.trim() === "") return fallback;
+	const value = Number(rawValue);
 	return Number.isFinite(value) ? value : fallback;
 }
 
@@ -429,12 +433,18 @@ function parseLegacyLabels(graph: Element, warnings: string[]) {
 		);
 		const textParts = (paragraphs.length ? paragraphs : [element]).map(
 			paragraph =>
-				Array.from(paragraph.getElementsByTagNameNS("*", "lit"))
+				Array.from(
+					paragraph.getElementsByTagNameNS(
+						LEGACY_GRAPH_NAMESPACE,
+						"lit"
+					)
+				)
 					.map(literal => literal.textContent ?? "")
 					.join("")
 		);
 		const hasRichStyle =
-			element.getElementsByTagNameNS("*", "style").length > 0;
+			element.getElementsByTagNameNS(LEGACY_GRAPH_NAMESPACE, "style")
+				.length > 0;
 		if (hasRichStyle) {
 			warnings.push(
 				`Rich text in label "${id}" was imported as plain text.`
@@ -567,21 +577,51 @@ function decodeLegacyGraphSource(data: string | Uint8Array) {
 	return strFromU8(matches[0][1]);
 }
 
-export function importLegacyGraphSketcherDocument(
-	data: string | Uint8Array,
-	title = "Imported Graph"
-): LegacyGraphImportResult {
-	const xml = decodeLegacyGraphSource(data);
+function parseLegacyGraphXml(xml: string) {
+	if (/<!\s*(?:DOCTYPE|ENTITY)\b/i.test(xml)) {
+		throw new Error(
+			"Legacy graph imports cannot contain DOCTYPE or ENTITY declarations."
+		);
+	}
+
+	/*
+	 * Security boundary: this parses untrusted input as a detached XML document,
+	 * never as HTML and never into the page DOM. Only elements in the original
+	 * GraphSketcher namespace are accepted, and the importer copies selected
+	 * primitive values into a normalized GraphDocument. Exporters escape those
+	 * values before producing SVG.
+	 */
 	const parsed = new DOMParser().parseFromString(xml, "application/xml");
 	if (parsed.querySelector("parsererror")) {
 		throw new Error("The .ograph document contains malformed XML.");
 	}
+
 	const root = parsed.documentElement;
 	if (root.namespaceURI !== LEGACY_GRAPH_NAMESPACE) {
 		throw new Error(
 			"The file is not an original GraphSketcher .ograph document."
 		);
 	}
+	const elementCount = parsed.getElementsByTagName("*").length;
+	const legacyElementCount = parsed.getElementsByTagNameNS(
+		LEGACY_GRAPH_NAMESPACE,
+		"*"
+	).length;
+	if (legacyElementCount !== elementCount) {
+		throw new Error(
+			"The .ograph document contains elements outside the original GraphSketcher namespace."
+		);
+	}
+
+	return root;
+}
+
+export function importLegacyGraphSketcherDocument(
+	data: string | Uint8Array,
+	title = "Imported Graph"
+): LegacyGraphImportResult {
+	const xml = decodeLegacyGraphSource(data);
+	const root = parseLegacyGraphXml(xml);
 	const graph = legacyChildren(root, "graph")[0];
 	if (!graph)
 		throw new Error("The .ograph document does not contain a graph.");

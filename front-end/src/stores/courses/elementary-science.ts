@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import { isPhetResourceUrl } from "../../modules/resourceUrls";
 
 const ELEMENTARY_SCIENCE_REFERENCES = {
 	nasaBiomes: "https://science.nasa.gov/kids/earth/mission-biomes/",
@@ -869,8 +870,7 @@ export const elementaryScienceCourse: RawCourse = {
 	...elementaryScienceSourceCourse,
 	modules: elementaryScienceSourceCourse.modules.map(module => {
 		const flow = ELEMENTARY_SCIENCE_FLOW[module.title];
-		const referenceIsMedia =
-			flow.referenceLink.includes("phet.colorado.edu");
+		const referenceIsMedia = isPhetResourceUrl(flow.referenceLink);
 		const curriculum = module.curriculum.map((item, index) => ({
 			...item,
 			content: [

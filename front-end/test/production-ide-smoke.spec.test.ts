@@ -73,5 +73,13 @@ describe("production Code IDE smoke helpers", () => {
 			false
 		);
 		expect(containsCurrentIdeBundleMarkers(currentIdeBundle)).toBe(true);
+		expect(
+			containsCurrentIdeBundleMarkers(
+				currentIdeBundle.replace(
+					"https://github.com/k-pet-group/BlueJ-Greenfoot",
+					"https://github.com.evil.example/k-pet-group/BlueJ-Greenfoot"
+				)
+			)
+		).toBe(false);
 	});
 });

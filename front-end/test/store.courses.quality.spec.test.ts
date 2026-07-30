@@ -10,6 +10,7 @@ import {
 	KNOWN_PENDING_STATIC_MEDIA_FILENAMES,
 	canonicalStaticMediaUrl,
 	hasPendingStaticMediaNotice,
+	isLegacyStaticMediaUrl,
 	isStaticMediaUrl,
 	normalizeStaticMediaUrlsInText,
 	pendingStaticMediaNotice,
@@ -23,8 +24,11 @@ import {
 	parseCourseAssetUrl,
 	slugMarkdownHeading
 } from "@/modules/courseAssetPreview";
+import { isGitHubUrl } from "@/modules/resourceUrls";
 
 const COURSE_SWEEP_TIMEOUT = 180000;
+const LEGACY_STATIC_HOST_IN_TEXT_RE =
+	/(^|[^a-z0-9.-])static\.junilearning\.com(?=$|[^a-z0-9.-])/i;
 const normalizedCoursePromises = new Map<
 	string,
 	ReturnType<typeof loadRawCourseWithoutCache>
@@ -4700,7 +4704,7 @@ describe("course text quality normalization", () => {
 			const githubLinks = links.filter(
 				({ kind, link }) =>
 					(kind === "projectLink" || kind === "solutionLink") &&
-					link.includes("github.com")
+					isGitHubUrl(link)
 			);
 
 			for (const pattern of legacyReplitPatterns) {
@@ -6074,7 +6078,7 @@ describe("course text quality normalization", () => {
 			items
 				.map(item => item.mediaLink)
 				.filter(Boolean)
-				.some(link => link?.includes("static.junilearning.com"))
+				.some(link => isLegacyStaticMediaUrl(link ?? ""))
 		).toBe(false);
 	});
 
@@ -9363,7 +9367,7 @@ describe("course text quality normalization", () => {
 								.filter(Boolean)
 								.join("\n");
 
-							if (corpus.includes("static.junilearning.com")) {
+							if (LEGACY_STATIC_HOST_IN_TEXT_RE.test(corpus)) {
 								legacyOccurrences.push(
 									`${label} ${entry.id} / ${module.title} / ${item.title}`
 								);
