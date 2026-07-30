@@ -1,7 +1,7 @@
 import type { Server } from "node:http";
 import type { RequestHandler } from "express";
 import type { CustomSession } from "../src/types/session/CustomSession.js";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import cookieSession from "cookie-session";
 import express from "express";
@@ -117,6 +117,31 @@ function getStandardRateLimitHeader(response: Response): string | null {
 }
 
 describe("security dependency regressions", () => {
+	it("pins every GitHub Action and keeps one stable CodeQL category", () => {
+		const workflowDirectory = resolve(__dirname, "../../.github/workflows");
+		const actionReferences = readdirSync(workflowDirectory)
+			.filter(filename => filename.endsWith(".yml") || filename.endsWith(".yaml"))
+			.flatMap(filename =>
+				readFileSync(resolve(workflowDirectory, filename), "utf8")
+					.split(/\r?\n/u)
+					.map(line => line.trim())
+					.filter(line => line.startsWith("uses:") || line.startsWith("- uses:"))
+			);
+
+		expect(actionReferences.length).toBeGreaterThan(0);
+		for (const reference of actionReferences) {
+			expect(reference).toMatch(
+				/^-?\s*uses:\s+[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)?@[a-f0-9]{40}\s+#\s+\S+$/u
+			);
+		}
+
+		const codeqlWorkflow = readFileSync(
+			resolve(workflowDirectory, "codeql-analysis.yml"),
+			"utf8"
+		);
+		expect(codeqlWorkflow).toContain('category: "/language:javascript-typescript"');
+	});
+
 	it("rate limits database-backed API routes while leaving readiness probes alone", async () => {
 		await withServer(createApiIngressLimiter({ limit: 7, windowMs: 60_000 }), async baseUrl => {
 			const firstReadiness = await requestLimitedEndpoint(baseUrl, "/readyz");
