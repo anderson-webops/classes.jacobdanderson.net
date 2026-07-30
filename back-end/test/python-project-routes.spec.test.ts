@@ -479,12 +479,17 @@ describe("Python project routes", () => {
 
 	it("keeps a larger JSON parser limit scoped to Code IDE project routes", () => {
 		const serverSource = readFileSync(resolve(__dirname, "../src/server.ts"), "utf8");
+		const limiterSource = readFileSync(
+			resolve(__dirname, "../src/middleware/rateLimiters.ts"),
+			"utf8"
+		);
 
 		expect(serverSource).toContain("CODE_IDE_PROJECT_BODY_LIMIT");
 		expect(serverSource).toContain("PYTHON_IDE_PROJECT_BODY_LIMIT");
-		expect(serverSource).toContain("codeIdeProjectJsonRoute");
-		expect(serverSource).toContain("loggedin\\/python-projects");
-		expect(serverSource).toContain("[^/]+\\/python-projects");
+		expect(serverSource).toContain("codeIdeProjectApiMountPath");
+		expect(limiterSource).toContain("loggedin\\/python-projects");
+		expect(limiterSource).toContain("[^/]+\\/python-projects");
+		expect(limiterSource).toContain("(?=\\/|$)");
 		expect(serverSource).toContain("bodyParser.json({ limit: codeIdeProjectJsonBodyLimit })");
 		expect(serverSource).toContain('bodyParser.json({ limit: "1mb" })');
 	});

@@ -34,13 +34,9 @@ export function configuredRequestOrigins() {
 	return origins;
 }
 
-export function createRequestOriginGuard(
-	allowedOrigins = configuredRequestOrigins()
-): RequestHandler {
+export function createRequestOriginGuard(allowedOrigins = configuredRequestOrigins()): RequestHandler {
 	return (req, res, next) => {
-		const isAppleOAuthFormPost
-			= req.method === "POST"
-				&& APPLE_OAUTH_CALLBACK_PATH.test(req.path);
+		const isAppleOAuthFormPost = req.method === "POST" && APPLE_OAUTH_CALLBACK_PATH.test(req.path);
 		if (SAFE_METHODS.has(req.method) || isAppleOAuthFormPost) {
 			next();
 			return;
@@ -48,12 +44,18 @@ export function createRequestOriginGuard(
 
 		const originHeader = req.get("origin");
 		const origin = normalizedOrigin(originHeader);
+		const refererHeader = req.get("referer");
+		const refererOrigin = normalizedOrigin(refererHeader);
 		const fetchSite = req.get("sec-fetch-site")?.toLowerCase();
+		const requestOrigin = originHeader ? origin : refererOrigin;
 
 		if (
 			originHeader === "null"
-			|| (originHeader && (!origin || !allowedOrigins.has(origin)))
-			|| (!originHeader && fetchSite === "cross-site")
+			|| (originHeader && !origin)
+			|| (!originHeader && refererHeader && !refererOrigin)
+			|| !requestOrigin
+			|| !allowedOrigins.has(requestOrigin)
+			|| (fetchSite === "cross-site" && !originHeader)
 		) {
 			res.status(403).json({ message: "Cross-site request rejected" });
 			return;

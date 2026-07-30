@@ -1,10 +1,18 @@
 import type { Server } from "node:http";
 import type { RequestHandler } from "express";
+import type { CustomSession } from "../src/types/session/CustomSession.js";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import cookieSession from "cookie-session";
 import express from "express";
 import { Types } from "mongoose";
 import { describe, expect, it } from "vitest";
 import {
+	codeIdeProjectApiMountPath,
 	createAdminMailLimiter,
+	createApiIngressLimiter,
+	createCodeIdeProjectAccountWriteLimiter,
+	createCodeIdeProjectIngressLimiter,
 	createCourseCodeRedemptionLimiter,
 	createEmailCheckLimiter,
 	createLoginAccountLimiter,
@@ -15,10 +23,8 @@ import {
 	createSignupLimiter,
 	createUserCourseAccessLimiter
 } from "../src/middleware/rateLimiters.js";
-import {
-	configuredRequestOrigins,
-	createRequestOriginGuard
-} from "../src/middleware/requestOriginGuard.js";
+import { configuredRequestOrigins, createRequestOriginGuard } from "../src/middleware/requestOriginGuard.js";
+import { createApiSecurityHeaders, createCrossOriginAssetHeaders } from "../src/middleware/securityHeaders.js";
 import { renderMarkdownEmailHtml } from "../src/utils/markdownEmail.js";
 import { internalDiagnosticsAuthorized } from "../src/utils/internalDiagnostics.js";
 import {
@@ -27,26 +33,20 @@ import {
 	parseScheduledSessionPayload,
 	serializeScheduledSession
 } from "../src/utils/scheduledSessions.js";
+import {
+	createSessionCookieOptions,
+	crossSiteSessionCookiesEnabled,
+	serverListenHost
+} from "../src/utils/serverSecurity.js";
 
-async function withServer<T>(
-	handler: RequestHandler,
-	run: (baseUrl: string) => Promise<T>,
-	responseStatus = 200,
-	trustProxy: boolean | string = false
+async function withConfiguredServer<T>(
+	configure: (app: ReturnType<typeof express>) => void,
+	run: (baseUrl: string) => Promise<T>
 ): Promise<T> {
 	const app = express();
-	app.set("trust proxy", trustProxy);
-	app.use(express.json());
-	app.use(handler);
-	app.all([
-		"/limited",
-		"/accounts/oauth/apple/callback",
-		"/accounts/oauth/google/callback"
-	], (_req, res) => {
-		res.status(responseStatus).json({ ok: responseStatus < 400 });
-	});
+	configure(app);
 
-	const server = await new Promise<Server>((resolve) => {
+	const server = await new Promise<Server>(resolve => {
 		const instance = app.listen(0, "127.0.0.1", () => resolve(instance));
 	});
 	const address = server.address();
@@ -56,10 +56,9 @@ async function withServer<T>(
 
 	try {
 		return await run(`http://127.0.0.1:${address.port}`);
-	}
-	finally {
+	} finally {
 		await new Promise<void>((resolve, reject) => {
-			server.close((error) => {
+			server.close(error => {
 				if (error) {
 					reject(error);
 					return;
@@ -70,8 +69,47 @@ async function withServer<T>(
 	}
 }
 
-async function requestLimitedEndpoint(baseUrl: string): Promise<Response> {
-	return fetch(`${baseUrl}/limited`, { method: "POST" });
+async function withServer<T>(
+	handler: RequestHandler | RequestHandler[],
+	run: (baseUrl: string) => Promise<T>,
+	responseStatus = 200,
+	trustProxy: boolean | string = false,
+	mountPath?: string | RegExp
+): Promise<T> {
+	return withConfiguredServer(app => {
+		app.set("trust proxy", trustProxy);
+		app.use(express.json());
+		const handlers = Array.isArray(handler) ? handler : [handler];
+		if (mountPath) app.use(mountPath, ...handlers);
+		else app.use(...handlers);
+		app.all(
+			[
+				"/_dbinfo",
+				"/accounts/limited",
+				"/admins/limited",
+				"/limited",
+				"/accounts/oauth/apple/callback",
+				"/accounts/oauth/google/callback",
+				"/course-access/limited",
+				"/readyz",
+				"/tutors/limited",
+				"/USERS/limited",
+				"/users/limited",
+				"/users/loggedin/python-projects",
+				"/users/loggedin/python-projects/project-1",
+				"/USERS/loggedin/python-projects/project-2/share",
+				"/users/loggedin/python-projects-archive",
+				"/users/student-1/python-projects/project-1/review"
+			],
+			(_req, res) => {
+				res.status(responseStatus).json({ ok: responseStatus < 400 });
+			}
+		);
+	}, run);
+}
+
+async function requestLimitedEndpoint(baseUrl: string, path = "/limited"): Promise<Response> {
+	return fetch(`${baseUrl}${path}`, { method: "POST" });
 }
 
 function getStandardRateLimitHeader(response: Response): string | null {
@@ -79,75 +117,229 @@ function getStandardRateLimitHeader(response: Response): string | null {
 }
 
 describe("security dependency regressions", () => {
-	it("keeps admin mail rate limiting on standard headers and disables legacy headers", async () => {
-		await withServer(
-			createAdminMailLimiter({ limit: 2, windowMs: 60_000 }),
-			async (baseUrl) => {
-				const first = await requestLimitedEndpoint(baseUrl);
-				const second = await requestLimitedEndpoint(baseUrl);
-				const third = await requestLimitedEndpoint(baseUrl);
+	it("rate limits database-backed API routes while leaving readiness probes alone", async () => {
+		await withServer(createApiIngressLimiter({ limit: 7, windowMs: 60_000 }), async baseUrl => {
+			const firstReadiness = await requestLimitedEndpoint(baseUrl, "/readyz");
+			const secondReadiness = await requestLimitedEndpoint(baseUrl, "/readyz");
+			const apiResponses = await Promise.all(
+				[
+					"/_dbinfo",
+					"/accounts/limited",
+					"/admins/limited",
+					"/course-access/limited",
+					"/tutors/limited",
+					"/USERS/limited",
+					"/users/limited"
+				].map(path => requestLimitedEndpoint(baseUrl, path))
+			);
+			const blockedApiRequest = await requestLimitedEndpoint(baseUrl, "/users/limited");
 
-				expect(first.status).toBe(200);
-				expect(second.status).toBe(200);
-				expect(third.status).toBe(429);
-				expect(getStandardRateLimitHeader(first)).toBeTruthy();
-				expect(first.headers.get("x-ratelimit-limit")).toBeNull();
-				await expect(third.json()).resolves.toEqual({
-					message: "Too many requests, slow down."
+			expect(firstReadiness.status).toBe(200);
+			expect(secondReadiness.status).toBe(200);
+			expect(firstReadiness.headers.get("ratelimit")).toBeNull();
+			for (const response of apiResponses) {
+				expect(response.status).toBe(200);
+				expect(getStandardRateLimitHeader(response)).toBeTruthy();
+			}
+			expect(blockedApiRequest.status).toBe(429);
+			await expect(blockedApiRequest.json()).resolves.toEqual({
+				message: "Too many requests from this network. Please wait and try again."
+			});
+		});
+
+		await withServer(createApiIngressLimiter(), async baseUrl => {
+			const response = await requestLimitedEndpoint(baseUrl, "/users/limited");
+			expect(getStandardRateLimitHeader(response)).toContain("30000");
+		});
+	});
+
+	it("rate limits project ingress without charging project reads", async () => {
+		await withServer(
+			createCodeIdeProjectIngressLimiter({
+				limit: 1,
+				windowMs: 60_000
+			}),
+			async baseUrl => {
+				const read = await fetch(`${baseUrl}/limited`);
+				const firstWrite = await requestLimitedEndpoint(baseUrl);
+				const secondWrite = await requestLimitedEndpoint(baseUrl);
+
+				expect(read.status).toBe(200);
+				expect(read.headers.get("ratelimit")).toBeNull();
+				expect(firstWrite.status).toBe(200);
+				expect(secondWrite.status).toBe(429);
+				await expect(secondWrite.json()).resolves.toEqual({
+					message: "Too many project changes from this network. Please wait and try again."
 				});
 			}
 		);
+
+		await withServer(createCodeIdeProjectIngressLimiter(), async baseUrl => {
+			const response = await requestLimitedEndpoint(baseUrl);
+			expect(getStandardRateLimitHeader(response)).toContain("18000");
+		});
+	});
+
+	it("mounts project protection on collections and descendants without prefix lookalikes", async () => {
+		await withServer(
+			createCodeIdeProjectIngressLimiter({
+				limit: 3,
+				windowMs: 60_000
+			}),
+			async baseUrl => {
+				const matchingRequests = [
+					fetch(`${baseUrl}/users/loggedin/python-projects`, {
+						method: "POST"
+					}),
+					fetch(`${baseUrl}/users/loggedin/python-projects/project-1`, { method: "PUT" }),
+					fetch(`${baseUrl}/USERS/loggedin/python-projects/project-2/share`, { method: "PUT" })
+				];
+				const matchingResponses = await Promise.all(matchingRequests);
+				for (const response of matchingResponses) {
+					expect(response.status).toBe(200);
+					expect(getStandardRateLimitHeader(response)).toBeTruthy();
+				}
+
+				const lookalike = await fetch(`${baseUrl}/users/loggedin/python-projects-archive`, { method: "POST" });
+				expect(lookalike.status).toBe(200);
+				expect(getStandardRateLimitHeader(lookalike)).toBeNull();
+
+				const blockedDescendant = await fetch(`${baseUrl}/users/student-1/python-projects/project-1/review`, {
+					method: "POST"
+				});
+				expect(blockedDescendant.status).toBe(429);
+			},
+			200,
+			false,
+			codeIdeProjectApiMountPath
+		);
+	});
+
+	it("isolates project write limits by signed-in role and falls back to IP", async () => {
+		await withConfiguredServer(
+			app => {
+				app.use((req, _res, next) => {
+					const role = req.get("x-test-session-role");
+					const id = req.get("x-test-session-id");
+					const session = {} as CustomSession;
+					if (role === "admin" && id) session.adminID = id;
+					if (role === "tutor" && id) session.tutorID = id;
+					if (role === "user" && id) session.userID = id;
+					if (role === "course-code-learner" && id) {
+						session.courseCodeLearnerID = id;
+					}
+					if (Object.keys(session).length) req.session = session;
+					next();
+				});
+				app.use(
+					createCodeIdeProjectAccountWriteLimiter({
+						limit: 1,
+						windowMs: 60_000
+					})
+				);
+				app.all("/limited", (_req, res) => res.json({ ok: true }));
+			},
+			async baseUrl => {
+				const write = (role?: string, id = "same-object-id") => {
+					const headers = new Headers();
+					if (role) {
+						headers.set("x-test-session-role", role);
+						headers.set("x-test-session-id", id);
+					}
+					return fetch(`${baseUrl}/limited`, {
+						headers,
+						method: "POST"
+					});
+				};
+
+				expect((await write("user")).status).toBe(200);
+				expect((await write("user")).status).toBe(429);
+				expect((await write("tutor")).status).toBe(200);
+				expect((await write("course-code-learner")).status).toBe(200);
+				expect((await write()).status).toBe(200);
+				expect((await write()).status).toBe(429);
+			}
+		);
+
+		await withServer(createCodeIdeProjectAccountWriteLimiter(), async baseUrl => {
+			const response = await requestLimitedEndpoint(baseUrl);
+			expect(getStandardRateLimitHeader(response)).toContain("1800");
+		});
+	});
+
+	it("rejects invalid numeric rate-limit configuration", () => {
+		const previousValue = process.env.API_INGRESS_RATE_MAX;
+		try {
+			for (const invalidValue of ["0", "-1", "1.5", "not-a-number"]) {
+				process.env.API_INGRESS_RATE_MAX = invalidValue;
+				expect(() => createApiIngressLimiter()).toThrow("API_INGRESS_RATE_MAX must be a positive integer");
+			}
+		} finally {
+			if (previousValue === undefined) {
+				delete process.env.API_INGRESS_RATE_MAX;
+			} else {
+				process.env.API_INGRESS_RATE_MAX = previousValue;
+			}
+		}
+	});
+
+	it("keeps admin mail rate limiting on standard headers and disables legacy headers", async () => {
+		await withServer(createAdminMailLimiter({ limit: 2, windowMs: 60_000 }), async baseUrl => {
+			const first = await requestLimitedEndpoint(baseUrl);
+			const second = await requestLimitedEndpoint(baseUrl);
+			const third = await requestLimitedEndpoint(baseUrl);
+
+			expect(first.status).toBe(200);
+			expect(second.status).toBe(200);
+			expect(third.status).toBe(429);
+			expect(getStandardRateLimitHeader(first)).toBeTruthy();
+			expect(first.headers.get("x-ratelimit-limit")).toBeNull();
+			await expect(third.json()).resolves.toEqual({
+				message: "Too many requests, slow down."
+			});
+		});
 	});
 
 	it("keeps user course progress endpoints protected by the same non-legacy rate-limit header policy", async () => {
-		await withServer(
-			createUserCourseAccessLimiter({ limit: 1, windowMs: 60_000 }),
-			async (baseUrl) => {
-				const first = await requestLimitedEndpoint(baseUrl);
-				const second = await requestLimitedEndpoint(baseUrl);
+		await withServer(createUserCourseAccessLimiter({ limit: 1, windowMs: 60_000 }), async baseUrl => {
+			const first = await requestLimitedEndpoint(baseUrl);
+			const second = await requestLimitedEndpoint(baseUrl);
 
-				expect(first.status).toBe(200);
-				expect(second.status).toBe(429);
-				expect(getStandardRateLimitHeader(second)).toBeTruthy();
-				expect(second.headers.get("x-ratelimit-limit")).toBeNull();
-			}
-		);
+			expect(first.status).toBe(200);
+			expect(second.status).toBe(429);
+			expect(getStandardRateLimitHeader(second)).toBeTruthy();
+			expect(second.headers.get("x-ratelimit-limit")).toBeNull();
+		});
 	});
 
 	it("rate limits repeated password-reset attempts without legacy headers", async () => {
-		await withServer(
-			createPasswordResetLimiter({ limit: 1, windowMs: 60_000 }),
-			async (baseUrl) => {
-				const first = await requestLimitedEndpoint(baseUrl);
-				const second = await requestLimitedEndpoint(baseUrl);
+		await withServer(createPasswordResetLimiter({ limit: 1, windowMs: 60_000 }), async baseUrl => {
+			const first = await requestLimitedEndpoint(baseUrl);
+			const second = await requestLimitedEndpoint(baseUrl);
 
-				expect(first.status).toBe(200);
-				expect(second.status).toBe(429);
-				expect(getStandardRateLimitHeader(second)).toBeTruthy();
-				expect(second.headers.get("x-ratelimit-limit")).toBeNull();
-				await expect(second.json()).resolves.toEqual({
-					message: "Too many password reset attempts. Please wait and try again."
-				});
-			}
-		);
+			expect(first.status).toBe(200);
+			expect(second.status).toBe(429);
+			expect(getStandardRateLimitHeader(second)).toBeTruthy();
+			expect(second.headers.get("x-ratelimit-limit")).toBeNull();
+			await expect(second.json()).resolves.toEqual({
+				message: "Too many password reset attempts. Please wait and try again."
+			});
+		});
 	});
 
 	it("rate limits repeated OAuth attempts without legacy headers", async () => {
-		await withServer(
-			createOAuthLoginLimiter({ limit: 1, windowMs: 60_000 }),
-			async (baseUrl) => {
-				const first = await requestLimitedEndpoint(baseUrl);
-				const second = await requestLimitedEndpoint(baseUrl);
+		await withServer(createOAuthLoginLimiter({ limit: 1, windowMs: 60_000 }), async baseUrl => {
+			const first = await requestLimitedEndpoint(baseUrl);
+			const second = await requestLimitedEndpoint(baseUrl);
 
-				expect(first.status).toBe(200);
-				expect(second.status).toBe(429);
-				expect(getStandardRateLimitHeader(second)).toBeTruthy();
-				expect(second.headers.get("x-ratelimit-limit")).toBeNull();
-				await expect(second.json()).resolves.toEqual({
-					message: "Too many login attempts. Please wait and try again."
-				});
-			}
-		);
+			expect(first.status).toBe(200);
+			expect(second.status).toBe(429);
+			expect(getStandardRateLimitHeader(second)).toBeTruthy();
+			expect(second.headers.get("x-ratelimit-limit")).toBeNull();
+			await expect(second.json()).resolves.toEqual({
+				message: "Too many login attempts. Please wait and try again."
+			});
+		});
 	});
 
 	it("rate limits login, signup, and email-enumeration endpoints", async () => {
@@ -155,27 +347,31 @@ describe("security dependency regressions", () => {
 			createLoginIpLimiter({ limit: 1, windowMs: 60_000 }),
 			createLoginAccountLimiter({ limit: 1, windowMs: 60_000 })
 		]) {
-			await withServer(limiter, async (baseUrl) => {
-				const first = await fetch(`${baseUrl}/limited`, {
-					body: JSON.stringify({ email: "student@example.com" }),
-					headers: { "content-type": "application/json" },
-					method: "POST"
-				});
-				const second = await fetch(`${baseUrl}/limited`, {
-					body: JSON.stringify({ email: "student@example.com" }),
-					headers: { "content-type": "application/json" },
-					method: "POST"
-				});
-				expect(first.status).toBe(401);
-				expect(second.status).toBe(429);
-			}, 401);
+			await withServer(
+				limiter,
+				async baseUrl => {
+					const first = await fetch(`${baseUrl}/limited`, {
+						body: JSON.stringify({ email: "student@example.com" }),
+						headers: { "content-type": "application/json" },
+						method: "POST"
+					});
+					const second = await fetch(`${baseUrl}/limited`, {
+						body: JSON.stringify({ email: "student@example.com" }),
+						headers: { "content-type": "application/json" },
+						method: "POST"
+					});
+					expect(first.status).toBe(401);
+					expect(second.status).toBe(429);
+				},
+				401
+			);
 		}
 
 		for (const limiter of [
 			createSignupLimiter({ limit: 1, windowMs: 60_000 }),
 			createEmailCheckLimiter({ limit: 1, windowMs: 60_000 })
 		]) {
-			await withServer(limiter, async (baseUrl) => {
+			await withServer(limiter, async baseUrl => {
 				const first = await fetch(`${baseUrl}/limited`, {
 					body: JSON.stringify({ email: "student@example.com" }),
 					headers: { "content-type": "application/json" },
@@ -195,15 +391,16 @@ describe("security dependency regressions", () => {
 	it("applies the login account limit across different source IP addresses", async () => {
 		await withServer(
 			createLoginAccountLimiter({ limit: 1, windowMs: 60_000 }),
-			async (baseUrl) => {
-				const request = (forwardedFor: string) => fetch(`${baseUrl}/limited`, {
-					body: JSON.stringify({ email: "  STUDENT@EXAMPLE.COM " }),
-					headers: {
-						"content-type": "application/json",
-						"x-forwarded-for": forwardedFor
-					},
-					method: "POST"
-				});
+			async baseUrl => {
+				const request = (forwardedFor: string) =>
+					fetch(`${baseUrl}/limited`, {
+						body: JSON.stringify({ email: "  STUDENT@EXAMPLE.COM " }),
+						headers: {
+							"content-type": "application/json",
+							"x-forwarded-for": forwardedFor
+						},
+						method: "POST"
+					});
 				const first = await request("192.0.2.10");
 				const second = await request("198.51.100.20");
 
@@ -218,15 +415,16 @@ describe("security dependency regressions", () => {
 	it("applies the password-reset account limit across different source IP addresses", async () => {
 		await withServer(
 			createPasswordResetAccountLimiter({ limit: 1, windowMs: 60_000 }),
-			async (baseUrl) => {
-				const request = (forwardedFor: string) => fetch(`${baseUrl}/limited`, {
-					body: JSON.stringify({ email: "  STUDENT@EXAMPLE.COM " }),
-					headers: {
-						"content-type": "application/json",
-						"x-forwarded-for": forwardedFor
-					},
-					method: "POST"
-				});
+			async baseUrl => {
+				const request = (forwardedFor: string) =>
+					fetch(`${baseUrl}/limited`, {
+						body: JSON.stringify({ email: "  STUDENT@EXAMPLE.COM " }),
+						headers: {
+							"content-type": "application/json",
+							"x-forwarded-for": forwardedFor
+						},
+						method: "POST"
+					});
 				const first = await request("192.0.2.10");
 				const second = await request("198.51.100.20");
 
@@ -238,75 +436,221 @@ describe("security dependency regressions", () => {
 		);
 	});
 
-	it("rejects unsafe requests from unapproved browser origins", async () => {
-		await withServer(
-			createRequestOriginGuard(new Set(["https://classes.example.test"])),
-			async (baseUrl) => {
-				const rejected = await fetch(`${baseUrl}/limited`, {
-					headers: {
-						origin: "https://attacker.example",
-						"sec-fetch-site": "cross-site"
-					},
-					method: "POST"
+	it("sets a restrictive API CSP and scopes cross-origin resource access", async () => {
+		await withServer(createApiSecurityHeaders(), async baseUrl => {
+			const response = await fetch(`${baseUrl}/limited`);
+			const csp = response.headers.get("content-security-policy");
+
+			expect(csp).toContain("default-src 'none'");
+			expect(csp).toContain("base-uri 'none'");
+			expect(csp).toContain("form-action 'none'");
+			expect(csp).toContain("frame-ancestors 'none'");
+			expect(csp).not.toContain("script-src");
+			expect(csp).not.toContain("style-src");
+			expect(csp).not.toContain("upgrade-insecure-requests");
+			expect(response.headers.get("cross-origin-resource-policy")).toBe("same-origin");
+		});
+
+		await withServer([createApiSecurityHeaders(), createCrossOriginAssetHeaders()], async baseUrl => {
+			const response = await fetch(`${baseUrl}/limited`);
+			expect(response.headers.get("cross-origin-resource-policy")).toBe("cross-origin");
+		});
+	});
+
+	it("keeps production cookies secure and HTTP development bound to loopback", async () => {
+		const production = createSessionCookieOptions({
+			crossSite: false,
+			isProduction: true,
+			sessionSecret: "test-secret"
+		});
+		const crossSiteProduction = createSessionCookieOptions({
+			crossSite: true,
+			isProduction: true,
+			sessionSecret: "test-secret"
+		});
+		const development = createSessionCookieOptions({
+			crossSite: true,
+			isProduction: false,
+			sessionSecret: "test-secret"
+		});
+
+		expect(production).toMatchObject({
+			httpOnly: true,
+			sameSite: "lax",
+			secure: true
+		});
+		expect(crossSiteProduction).toMatchObject({
+			httpOnly: true,
+			sameSite: "none",
+			secure: true
+		});
+		expect(development).toMatchObject({
+			httpOnly: true,
+			sameSite: "lax"
+		});
+		expect(development).not.toHaveProperty("secure");
+		expect(crossSiteSessionCookiesEnabled("true")).toBe(true);
+		expect(crossSiteSessionCookiesEnabled(" TRUE ")).toBe(true);
+		expect(crossSiteSessionCookiesEnabled("false")).toBe(false);
+		expect(crossSiteSessionCookiesEnabled(" FALSE ")).toBe(false);
+		expect(crossSiteSessionCookiesEnabled("")).toBe(false);
+		expect(crossSiteSessionCookiesEnabled(undefined)).toBe(false);
+		expect(() => crossSiteSessionCookiesEnabled("1")).toThrow(
+			"CROSS_SITE must be true or false"
+		);
+		expect(() => crossSiteSessionCookiesEnabled("yes")).toThrow(
+			"CROSS_SITE must be true or false"
+		);
+		expect(serverListenHost(false, "0.0.0.0")).toBe("127.0.0.1");
+		expect(serverListenHost(true, " :: ")).toBe("::");
+		expect(serverListenHost(true, undefined)).toBeUndefined();
+
+		await withConfiguredServer(
+			app => {
+				app.use(cookieSession(development));
+				app.get("/session", (req, res) => {
+					(req.session as CustomSession).userID = "development-user";
+					res.json({ ok: true });
 				});
-				const accepted = await fetch(`${baseUrl}/limited`, {
-					headers: {
-						origin: "https://classes.example.test",
-						"sec-fetch-site": "same-origin"
-					},
-					method: "POST"
-				});
-				expect(rejected.status).toBe(403);
-				expect(accepted.status).toBe(200);
+			},
+			async baseUrl => {
+				const response = await fetch(`${baseUrl}/session`);
+				const setCookie = response.headers.get("set-cookie") ?? "";
+				expect(setCookie.toLowerCase()).toContain("httponly");
+				expect(setCookie.toLowerCase()).toContain("samesite=lax");
+				expect(setCookie.toLowerCase()).not.toMatch(
+					/(?:^|[;,]\s*)secure(?:[;,]|$)/
+				);
 			}
 		);
+	});
+
+	it("registers origin, session, and abuse controls in defensive order", () => {
+		const serverSource = readFileSync(resolve(__dirname, "../src/server.ts"), "utf8");
+		const securityHeaders = serverSource.indexOf("app.use(createApiSecurityHeaders())");
+		const healthRoute = serverSource.indexOf('app.get("/healthz"');
+		const ingressLimiter = serverSource.indexOf("app.use(createApiIngressLimiter())");
+		const projectIngressLimiter = serverSource.indexOf("createCodeIdeProjectIngressLimiter()");
+		const requestOriginGuard = serverSource.indexOf("app.use(createRequestOriginGuard())");
+		const cookieSessionMiddleware = serverSource.indexOf("cookieSession(");
+		const projectAccountLimiter = serverSource.indexOf("createCodeIdeProjectAccountWriteLimiter()");
+		const projectParser = serverSource.indexOf("bodyParser.json({ limit: codeIdeProjectJsonBodyLimit })");
+		const projectRoutes = serverSource.indexOf('app.use("/users", userRoutes)');
+
+		expect(securityHeaders).toBeGreaterThan(-1);
+		expect(healthRoute).toBeGreaterThan(securityHeaders);
+		expect(ingressLimiter).toBeGreaterThan(healthRoute);
+		expect(projectIngressLimiter).toBeGreaterThan(ingressLimiter);
+		expect(requestOriginGuard).toBeGreaterThan(projectIngressLimiter);
+		expect(cookieSessionMiddleware).toBeGreaterThan(requestOriginGuard);
+		expect(projectAccountLimiter).toBeGreaterThan(cookieSessionMiddleware);
+		expect(projectParser).toBeGreaterThan(projectAccountLimiter);
+		expect(projectRoutes).toBeGreaterThan(projectParser);
+	});
+
+	it("rejects unsafe requests from unapproved browser origins", async () => {
+		await withServer(createRequestOriginGuard(new Set(["https://classes.example.test"])), async baseUrl => {
+			const rejected = await fetch(`${baseUrl}/limited`, {
+				headers: {
+					origin: "https://attacker.example",
+					"sec-fetch-site": "cross-site"
+				},
+				method: "POST"
+			});
+			const accepted = await fetch(`${baseUrl}/limited`, {
+				headers: {
+					origin: "https://classes.example.test",
+					"sec-fetch-site": "same-origin"
+				},
+				method: "POST"
+			});
+			expect(rejected.status).toBe(403);
+			expect(accepted.status).toBe(200);
+		});
+	});
+
+	it("fails closed without request-source headers and accepts an allowed Referer", async () => {
+		await withServer(createRequestOriginGuard(new Set(["https://classes.example.test"])), async baseUrl => {
+			const missingSource = await fetch(`${baseUrl}/limited`, {
+				method: "POST"
+			});
+			const malformedReferer = await fetch(`${baseUrl}/limited`, {
+				headers: { referer: "not a URL" },
+				method: "POST"
+			});
+			const unapprovedReferer = await fetch(`${baseUrl}/limited`, {
+				headers: { referer: "https://attacker.example/form" },
+				method: "POST"
+			});
+			const approvedReferer = await fetch(`${baseUrl}/limited`, {
+				headers: {
+					referer: "https://classes.example.test/account/settings",
+					"sec-fetch-site": "same-origin"
+				},
+				method: "POST"
+			});
+			const safeRequest = await fetch(`${baseUrl}/limited`);
+
+			expect(missingSource.status).toBe(403);
+			expect(malformedReferer.status).toBe(403);
+			expect(unapprovedReferer.status).toBe(403);
+			expect(approvedReferer.status).toBe(200);
+			expect(safeRequest.status).toBe(200);
+		});
+	});
+
+	it("treats Origin as authoritative when both source headers are present", async () => {
+		await withServer(createRequestOriginGuard(new Set(["https://classes.example.test"])), async baseUrl => {
+			const response = await fetch(`${baseUrl}/limited`, {
+				headers: {
+					origin: "https://attacker.example",
+					referer: "https://classes.example.test/account/settings"
+				},
+				method: "POST"
+			});
+
+			expect(response.status).toBe(403);
+		});
 	});
 
 	it("exempts only Apple's exact form-post callback from the origin guard", async () => {
-		await withServer(
-			createRequestOriginGuard(new Set(["https://classes.example.test"])),
-			async (baseUrl) => {
-				const apple = await fetch(
-					`${baseUrl}/accounts/oauth/apple/callback`,
-					{
-						headers: {
-							origin: "https://appleid.apple.com",
-							"sec-fetch-site": "cross-site"
-						},
-						method: "POST"
-					}
-				);
-				const google = await fetch(
-					`${baseUrl}/accounts/oauth/google/callback`,
-					{
-						headers: {
-							origin: "https://attacker.example",
-							"sec-fetch-site": "cross-site"
-						},
-						method: "POST"
-					}
-				);
+		await withServer(createRequestOriginGuard(new Set(["https://classes.example.test"])), async baseUrl => {
+			const apple = await fetch(`${baseUrl}/accounts/oauth/apple/callback`, {
+				headers: {
+					origin: "https://appleid.apple.com",
+					"sec-fetch-site": "cross-site"
+				},
+				method: "POST"
+			});
+			const google = await fetch(`${baseUrl}/accounts/oauth/google/callback`, {
+				headers: {
+					origin: "https://attacker.example",
+					"sec-fetch-site": "cross-site"
+				},
+				method: "POST"
+			});
 
-				expect(apple.status).toBe(200);
-				expect(google.status).toBe(403);
-			}
-		);
+			expect(apple.status).toBe(200);
+			expect(google.status).toBe(403);
+		});
 	});
 
 	it("keeps the canonical production origin allowed without a new deployment variable", () => {
-		expect(configuredRequestOrigins()).toContain(
-			"https://classes.jacobdanderson.net"
-		);
+		expect(configuredRequestOrigins()).toContain("https://classes.jacobdanderson.net");
 	});
 
 	it("never treats forwarded loopback headers as production diagnostics authorization", async () => {
 		const handler: RequestHandler = (req, res) => {
-			res.status(internalDiagnosticsAuthorized(req, {
-				diagnosticsKey: "correct-secret",
-				isProduction: true
-			}) ? 200 : 403).end();
+			res.status(
+				internalDiagnosticsAuthorized(req, {
+					diagnosticsKey: "correct-secret",
+					isProduction: true
+				})
+					? 200
+					: 403
+			).end();
 		};
-		await withServer(handler, async (baseUrl) => {
+		await withServer(handler, async baseUrl => {
 			const spoofed = await fetch(`${baseUrl}/limited`, {
 				headers: { "x-forwarded-for": "127.0.0.1" },
 				method: "POST"
@@ -335,8 +679,7 @@ describe("security dependency regressions", () => {
 				expect(getStandardRateLimitHeader(second)).toBeTruthy();
 				expect(second.headers.get("x-ratelimit-limit")).toBeNull();
 				await expect(second.json()).resolves.toEqual({
-					message:
-						"Too many course code attempts. Please wait and try again."
+					message: "Too many course code attempts. Please wait and try again."
 				});
 			}
 		);
@@ -351,7 +694,7 @@ describe("security dependency regressions", () => {
 		expect(html).toContain("<h1>Lesson Notes</h1>");
 		expect(html).toContain("<strong>arrays</strong>");
 		expect(html).toContain("<li>Reviewed bounds</li>");
-		expect(html).toContain("<table role=\"presentation\"");
+		expect(html).toContain('<table role="presentation"');
 	});
 
 	it("handles malformed deeply nested markdown without throwing or returning a non-string", async () => {
