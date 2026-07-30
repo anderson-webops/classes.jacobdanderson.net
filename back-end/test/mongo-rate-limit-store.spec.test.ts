@@ -36,7 +36,7 @@ describe("MongoRateLimitStore", () => {
 			expect.objectContaining({ _id: expect.any(String) }),
 			expect.any(Array),
 			{
-				new: true,
+				returnDocument: "after",
 				updatePipeline: true,
 				upsert: true
 			}
