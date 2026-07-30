@@ -2,16 +2,9 @@
 
 ## Comparison target
 
-- Source defect evidence:
-  `/var/folders/l2/hs_3m4zd08d89jp_dzj2fqmw0000gn/T/TemporaryItems/NSIRD_screencaptureui_ChynFp/Screenshot 2026-07-26 at 20.56.51.png`
-- Browser-rendered implementation:
-  `docs/design-qa/dark-mode-admin-infill-fixed.png`
-- Combined comparison:
-  `docs/design-qa/dark-mode-admin-infill-comparison.png`
 - State: dark mode, administrator people workspace, generic learner assignment editor open.
 - Viewport: 776 × 1000 CSS pixels at device pixel ratio 1.
-- Source pixels: 776 × 1914; the first 776 × 1000 pixels were used for the focused comparison.
-- Implementation pixels: 776 × 1000.
+- Personal-data-bearing screenshots are intentionally excluded from the repository.
 
 ## Findings
 
@@ -34,7 +27,7 @@ No actionable P0, P1, or P2 findings remain for the reported infill defect.
 
 1. The source evidence showed a P1 hierarchy regression: broad near-black inset fills visually split the learner card and obscured the intended grouping.
 2. The first rendered pass removed the editor and label bands, but computed styles showed the generic form rule still forced select controls to the deepest inset surface.
-3. The selector was strengthened for admin and tutor workspaces. The final browser capture and side-by-side comparison confirm transparent structural regions, lighter controls, and no remaining nested dark infills.
+3. The selector was strengthened for admin and tutor workspaces. The final browser review confirmed transparent structural regions, lighter controls, and no remaining nested dark infills.
 
 ## Follow-up polish
 
