@@ -51,7 +51,7 @@ export class MongoRateLimitStore implements Store {
 					}
 				}
 			],
-			{ new: true, upsert: true }
+			{ new: true, updatePipeline: true, upsert: true }
 		)
 			.lean()
 			.exec();
@@ -79,7 +79,8 @@ export class MongoRateLimitStore implements Store {
 						}
 					}
 				}
-			]
+			],
+			{ updatePipeline: true }
 		).exec();
 	}
 
