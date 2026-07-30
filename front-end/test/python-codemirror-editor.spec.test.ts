@@ -83,7 +83,9 @@ function autocompleteLabelsForMarkedDoc(
 ) {
 	const pos = markedDoc.indexOf("|");
 	expect(pos).toBeGreaterThanOrEqual(0);
-	return autocompleteLabelsForDocAt(mode, markedDoc.replace("|", ""), pos);
+	expect(markedDoc.indexOf("|", pos + 1)).toBe(-1);
+	const doc = `${markedDoc.slice(0, pos)}${markedDoc.slice(pos + 1)}`;
+	return autocompleteLabelsForDocAt(mode, doc, pos);
 }
 
 function autocompleteLabelsForDocAt(

@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import { isPhetResourceUrl } from "../../modules/resourceUrls";
 
 const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 	name: "Middle School Integrated Science",
@@ -1116,8 +1117,7 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 	...middleSchoolIntegratedScienceSourceCourse,
 	modules: middleSchoolIntegratedScienceSourceCourse.modules.map(module => {
 		const flow = MIDDLE_SCHOOL_SCIENCE_FLOW[module.title];
-		const referenceIsMedia =
-			flow.referenceLink.includes("phet.colorado.edu");
+		const referenceIsMedia = isPhetResourceUrl(flow.referenceLink);
 		const curriculum = module.curriculum.map((item, index) => ({
 			...item,
 			content: [

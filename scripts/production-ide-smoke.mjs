@@ -4,6 +4,8 @@ const origin = process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderso
 const timeoutMs = Number(process.env.CLASSES_SITE_SMOKE_TIMEOUT_MS || 15000);
 const smokePaths = ["/ide"];
 const pageUrl = new URL(smokePaths[0], origin);
+const GITHUB_REPOSITORY_URL_RE = /https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+/g;
+const BLUEJ_GREENFOOT_PATH = "/k-pet-group/BlueJ-Greenfoot";
 
 async function fetchText(url) {
 	const controller = new AbortController();
@@ -50,6 +52,20 @@ export function containsJavaModeCopy(source) {
 	return source.includes("Python or Java") || source.includes("Karel Java") || source.includes("runJavaIdeProject");
 }
 
+function containsBlueJGreenfootSourceUrl(source) {
+	for (const match of source.matchAll(GITHUB_REPOSITORY_URL_RE)) {
+		const parsed = new URL(match[0]);
+		if (
+			parsed.protocol === "https:" &&
+			parsed.hostname === "github.com" &&
+			parsed.pathname === BLUEJ_GREENFOOT_PATH
+		) {
+			return true;
+		}
+	}
+	return false;
+}
+
 export function containsCurrentIdeBundleMarkers(source) {
 	const hasKarelOverlayRuntime =
 		source.includes("karel-robot--") &&
@@ -83,7 +99,7 @@ export function containsCurrentIdeBundleMarkers(source) {
 		source.includes("Java preview skipped projects over") &&
 		source.includes("total Java characters") &&
 		hasKarelOverlayRuntime &&
-		source.includes("https://github.com/k-pet-group/BlueJ-Greenfoot")
+		containsBlueJGreenfootSourceUrl(source)
 	);
 }
 
