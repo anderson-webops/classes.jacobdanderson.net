@@ -3,16 +3,19 @@ import process, { env, exit } from "node:process";
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
 import express from "express";
-import helmet from "helmet";
 import mongoose from "mongoose";
 
-import {
-	codeIdeAssetsProxy,
-	pythonIdeAssetsProxy
-} from "./controllers/common/pythonIdeAssetsProxy.js";
+import { codeIdeAssetsProxy, pythonIdeAssetsProxy } from "./controllers/common/pythonIdeAssetsProxy.js";
 import { quoteProxy } from "./controllers/common/quoteProxy.js";
-import { createAdminMailLimiter } from "./middleware/rateLimiters.js";
+import {
+	codeIdeProjectApiMountPath,
+	createAdminMailLimiter,
+	createApiIngressLimiter,
+	createCodeIdeProjectAccountWriteLimiter,
+	createCodeIdeProjectIngressLimiter
+} from "./middleware/rateLimiters.js";
 import { createRequestOriginGuard } from "./middleware/requestOriginGuard.js";
+import { createApiSecurityHeaders, createCrossOriginAssetHeaders } from "./middleware/securityHeaders.js";
 import { accountRoutes } from "./routes/accountRoutes.js";
 import { adminMailRoutes } from "./routes/adminMailRoutes.js";
 import { adminRoutes } from "./routes/adminRoutes.js";
@@ -22,6 +25,11 @@ import { tutorRoutes } from "./routes/tutorRoutes.js";
 import { userRoutes } from "./routes/userRoutes.js";
 import { internalDiagnosticsAuthorized } from "./utils/internalDiagnostics.js";
 import { getRoleTransferReadiness } from "./utils/roleTransferReadiness.js";
+import {
+	createSessionCookieOptions,
+	crossSiteSessionCookiesEnabled,
+	serverListenHost
+} from "./utils/serverSecurity.js";
 
 import { readMongoSecret } from "./vaultClient.js";
 
@@ -29,33 +37,47 @@ async function main() {
 	const app = express();
 	const internalDiagnosticsKey = env.INTERNAL_DIAGNOSTICS_KEY;
 	const isProd = env.NODE_ENV === "production";
-	const codeIdeProjectJsonBodyLimit
-		= env.CODE_IDE_PROJECT_BODY_LIMIT || env.PYTHON_IDE_PROJECT_BODY_LIMIT || "15mb";
-	const codeIdeProjectJsonRoute = /^\/users\/(?:loggedin\/python-projects|loggedin\/python-project-reviews|[^/]+\/python-projects)(?:\/|$)/;
+	const codeIdeProjectJsonBodyLimit = env.CODE_IDE_PROJECT_BODY_LIMIT || env.PYTHON_IDE_PROJECT_BODY_LIMIT || "15mb";
+	const SESSION_SECRET = env.SESSION_SECRET;
+	if (!SESSION_SECRET) throw new Error("Missing SESSION_SECRET");
 
-	// health
+	app.set("trust proxy", isProd ? env.TRUST_PROXY || "loopback" : false);
+	app.use(createApiSecurityHeaders());
+
+	// Health checks bypass rate limiting but receive the same security headers.
 	app.get("/healthz", (_req, res) => {
 		res.set("Cache-Control", "no-store");
 		res.json({ ok: true });
 	});
 
-	const SESSION_SECRET = env.SESSION_SECRET;
-	if (!SESSION_SECRET) throw new Error("Missing SESSION_SECRET");
+	// Bound database-backed traffic before parsing request bodies. Sensitive
+	// endpoints retain their stricter route-specific limits below.
+	app.use(createApiIngressLimiter());
+	app.use(codeIdeProjectApiMountPath, createCodeIdeProjectIngressLimiter());
 
-	app.set("trust proxy", isProd ? env.TRUST_PROXY || "loopback" : false);
-	app.use(helmet({
-		contentSecurityPolicy: false,
-		crossOriginResourcePolicy: false
-	}));
+	// Reject unsafe cross-origin requests before parsing their bodies or making
+	// cookie-backed identity available. Apple's exact form-post callback is
+	// exempt here and remains constrained by its dedicated parser below.
+	app.use(createRequestOriginGuard());
 
-	// 1) parsers first (with limits)
+	// Signed sessions are available to the per-account project limiter before
+	// any project auth middleware performs a database lookup.
+	app.use(
+		cookieSession(
+			createSessionCookieOptions({
+				crossSite: crossSiteSessionCookiesEnabled(env.CROSS_SITE),
+				isProduction: isProd,
+				sessionSecret: SESSION_SECRET
+			})
+		)
+	);
+	app.use(codeIdeProjectApiMountPath, createCodeIdeProjectAccountWriteLimiter());
+
+	// Parse only after coarse network, request-origin, and per-account checks.
 	app.use(
 		"/accounts/oauth/apple/callback",
 		(req, res, next) => {
-			if (
-				req.method === "POST"
-				&& !req.is("application/x-www-form-urlencoded")
-			) {
+			if (req.method === "POST" && !req.is("application/x-www-form-urlencoded")) {
 				res.sendStatus(415);
 				return;
 			}
@@ -67,40 +89,11 @@ async function main() {
 			parameterLimit: 10
 		})
 	);
-	app.use(codeIdeProjectJsonRoute, bodyParser.json({ limit: codeIdeProjectJsonBodyLimit }));
+	app.use(codeIdeProjectApiMountPath, bodyParser.json({ limit: codeIdeProjectJsonBodyLimit }));
 	app.use(bodyParser.urlencoded({ extended: false, limit: "1mb" }));
 	app.use(bodyParser.json({ limit: "1mb" }));
 
-	// 2) sessions BEFORE any route that needs req.session
-	///   COOKIES   ///
-	const isCrossSite = !!env.CROSS_SITE;
-	type CookieSessionOpts = Parameters<typeof cookieSession>[0];
-
-	const cookieOptions: CookieSessionOpts = {
-		name: "session",
-		keys: [SESSION_SECRET],
-		maxAge: 24 * 60 * 60 * 1000,
-		sameSite: "lax", // default, safe for dev & same-origin
-		secure: false // default in dev
-	};
-
-	// Adjust for production
-	if (isProd) {
-		if (isCrossSite) {
-			cookieOptions.sameSite = "none"; // required for cross-site
-			cookieOptions.secure = true; // required when SameSite=None
-			// cookieOptions.domain = ".example.com"; // optional if you want subdomain sharing
-		}
-		else {
-			cookieOptions.sameSite = "lax"; // fine for same-origin
-			cookieOptions.secure = true; // enforce HTTPS cookies
-		}
-	}
-
-	app.use(cookieSession(cookieOptions));
-	app.use(createRequestOriginGuard());
-
-	// 3) cache-control for auth endpoints
+	// Cache-control for auth endpoints.
 	app.use((req, res, next) => {
 		if (
 			req.path.startsWith("/accounts")
@@ -112,32 +105,34 @@ async function main() {
 		next();
 	});
 
-	// 4) rate limit (can be before or after parsers; keep before routes)
+	// Sensitive routes retain their narrower purpose-specific limits.
 	app.use("/admin-mail", createAdminMailLimiter(), adminMailRoutes);
 
 	//
 	app.use("/quotes", quoteProxy);
-	app.use("/code-ide-assets", codeIdeAssetsProxy);
-	app.use("/python-assets", pythonIdeAssetsProxy);
+	app.use("/code-ide-assets", createCrossOriginAssetHeaders(), codeIdeAssetsProxy);
+	app.use("/python-assets", createCrossOriginAssetHeaders(), pythonIdeAssetsProxy);
 
 	// ready
 	app.get("/readyz", async (_req, res) => {
 		const connection = mongoose.connection;
 		const state = connection.readyState;
 		if (state !== 1 || !connection.db) {
-			return res.status(503).set("Cache-Control", "no-store").json({
-				ready: false,
-				components: {
-					db: { ok: false, state }
-				}
-			});
+			return res
+				.status(503)
+				.set("Cache-Control", "no-store")
+				.json({
+					ready: false,
+					components: {
+						db: { ok: false, state }
+					}
+				});
 		}
 
 		try {
 			await connection.db.admin().ping();
 			const roleTransfers = await getRoleTransferReadiness();
-			const requireRoleTransfers
-				= env.REQUIRE_ROLE_TRANSFER_TRANSACTIONS === "true";
+			const requireRoleTransfers = env.REQUIRE_ROLE_TRANSFER_TRANSACTIONS === "true";
 			const ready = !requireRoleTransfers || roleTransfers.ok;
 			return res
 				.status(ready ? 200 : 503)
@@ -151,16 +146,19 @@ async function main() {
 				});
 		}
 		catch (error) {
-			return res.status(503).set("Cache-Control", "no-store").json({
-				ready: false,
-				components: {
-					db: {
-						ok: false,
-						state,
-						error: error instanceof Error ? error.message : "db-ping-failed"
+			return res
+				.status(503)
+				.set("Cache-Control", "no-store")
+				.json({
+					ready: false,
+					components: {
+						db: {
+							ok: false,
+							state,
+							error: error instanceof Error ? error.message : "db-ping-failed"
+						}
 					}
-				}
-			});
+				});
 		}
 	});
 
@@ -190,10 +188,12 @@ async function main() {
 	const c = mongoose.connection;
 	console.log(`Mongo connected: db=${c.db?.databaseName} host=${c.host} name=${c.name}`);
 	app.get("/_dbinfo", (req, res) => {
-		if (!internalDiagnosticsAuthorized(req, {
-			diagnosticsKey: internalDiagnosticsKey,
-			isProduction: isProd
-		})) {
+		if (
+			!internalDiagnosticsAuthorized(req, {
+				diagnosticsKey: internalDiagnosticsKey,
+				isProduction: isProd
+			})
+		) {
 			return res.status(403).set("Cache-Control", "no-store").json({ ok: false, error: "forbidden" });
 		}
 
@@ -213,8 +213,13 @@ async function main() {
 	app.use("/accounts", accountRoutes);
 	app.use("/course-access", courseAccessCodeRoutes);
 
-	const PORT = env.PORT || 3008;
-	const server = app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
+	const PORT = Number(env.PORT || 3008);
+	const listenHost = serverListenHost(isProd, env.HOST);
+	const onListening = () => {
+		const hostDescription = listenHost ?? "all configured interfaces";
+		console.log(`Server listening on ${hostDescription}:${PORT}!`);
+	};
+	const server = listenHost ? app.listen(PORT, listenHost, onListening) : app.listen(PORT, onListening);
 	let isShuttingDown = false;
 	const shutdownTimeoutMs = Number(env.SHUTDOWN_TIMEOUT_MS || 10_000);
 
