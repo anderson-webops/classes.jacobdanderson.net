@@ -51,7 +51,11 @@ export class MongoRateLimitStore implements Store {
 					}
 				}
 			],
-			{ new: true, updatePipeline: true, upsert: true }
+			{
+				returnDocument: "after",
+				updatePipeline: true,
+				upsert: true
+			}
 		)
 			.lean()
 			.exec();
