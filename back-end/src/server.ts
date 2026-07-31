@@ -8,10 +8,16 @@ import mongoose from "mongoose";
 import { codeIdeAssetsProxy, pythonIdeAssetsProxy } from "./controllers/common/pythonIdeAssetsProxy.js";
 import { quoteProxy } from "./controllers/common/quoteProxy.js";
 import {
+	createCodeIdeProjectJsonParser,
+	createCodeIdeProjectPayloadConcurrencyGuard
+} from "./middleware/projectPayload.js";
+import {
 	codeIdeProjectApiMountPath,
 	createAdminMailLimiter,
 	createApiIngressLimiter,
+	createCodeIdeHeavyProjectPayloadLimiter,
 	createCodeIdeProjectAccountWriteLimiter,
+	createCodeIdeProjectDataAccessLimiter,
 	createCodeIdeProjectIngressLimiter
 } from "./middleware/rateLimiters.js";
 import { createRequestOriginGuard } from "./middleware/requestOriginGuard.js";
@@ -23,11 +29,17 @@ import { courseAccessCodeRoutes } from "./routes/courseAccessCodeRoutes.js";
 import { tutorRoutes } from "./routes/tutorRoutes.js";
 
 import { userRoutes } from "./routes/userRoutes.js";
-import { internalDiagnosticsAuthorized } from "./utils/internalDiagnostics.js";
+import { selectMongoConnection } from "./security/mongoConnection.js";
+import {
+	internalDiagnosticsAuthorized,
+	readInternalDiagnosticsKey
+} from "./utils/internalDiagnostics.js";
 import { getRoleTransferReadiness } from "./utils/roleTransferReadiness.js";
 import {
 	createSessionCookieOptions,
 	crossSiteSessionCookiesEnabled,
+	readSessionSecret,
+	readTrustProxySetting,
 	serverListenHost
 } from "./utils/serverSecurity.js";
 
@@ -35,13 +47,13 @@ import { readMongoSecret } from "./vaultClient.js";
 
 async function main() {
 	const app = express();
-	const internalDiagnosticsKey = env.INTERNAL_DIAGNOSTICS_KEY;
+	const internalDiagnosticsKey = readInternalDiagnosticsKey(
+		env.INTERNAL_DIAGNOSTICS_KEY
+	);
 	const isProd = env.NODE_ENV === "production";
-	const codeIdeProjectJsonBodyLimit = env.CODE_IDE_PROJECT_BODY_LIMIT || env.PYTHON_IDE_PROJECT_BODY_LIMIT || "15mb";
-	const SESSION_SECRET = env.SESSION_SECRET;
-	if (!SESSION_SECRET) throw new Error("Missing SESSION_SECRET");
+	const sessionSecret = readSessionSecret(env.SESSION_SECRET, isProd);
 
-	app.set("trust proxy", isProd ? env.TRUST_PROXY || "loopback" : false);
+	app.set("trust proxy", readTrustProxySetting(env.TRUST_PROXY, isProd));
 	app.use(createApiSecurityHeaders());
 
 	// Health checks bypass rate limiting but receive the same security headers.
@@ -67,11 +79,42 @@ async function main() {
 			createSessionCookieOptions({
 				crossSite: crossSiteSessionCookiesEnabled(env.CROSS_SITE),
 				isProduction: isProd,
-				sessionSecret: SESSION_SECRET
+				sessionSecret
 			})
 		)
 	);
-	app.use(codeIdeProjectApiMountPath, createCodeIdeProjectAccountWriteLimiter());
+	const projectJson = createCodeIdeProjectJsonParser();
+	const projectDataAccessLimiter = createCodeIdeProjectDataAccessLimiter();
+	const heavyProjectPayloadLimiter
+		= createCodeIdeHeavyProjectPayloadLimiter();
+	const projectPayloadConcurrencyGuard
+		= createCodeIdeProjectPayloadConcurrencyGuard();
+	const projectBodyMethods = new Set(["PATCH", "POST", "PUT"]);
+	const limitProjectBody
+		= (limiter: express.RequestHandler) =>
+			(
+				req: express.Request,
+				res: express.Response,
+				next: express.NextFunction
+			) => {
+				if (!projectBodyMethods.has(req.method.toUpperCase())) {
+					next();
+					return;
+				}
+				limiter(req, res, next);
+			};
+	app.use(
+		codeIdeProjectApiMountPath,
+		(_req, res, next) => {
+			res.setHeader("Cache-Control", "no-store");
+			next();
+		},
+		projectDataAccessLimiter,
+		createCodeIdeProjectAccountWriteLimiter(),
+		limitProjectBody(heavyProjectPayloadLimiter),
+		limitProjectBody(projectPayloadConcurrencyGuard),
+		limitProjectBody(projectJson)
+	);
 
 	// Parse only after coarse network, request-origin, and per-account checks.
 	app.use(
@@ -89,7 +132,6 @@ async function main() {
 			parameterLimit: 10
 		})
 	);
-	app.use(codeIdeProjectApiMountPath, bodyParser.json({ limit: codeIdeProjectJsonBodyLimit }));
 	app.use(bodyParser.urlencoded({ extended: false, limit: "1mb" }));
 	app.use(bodyParser.json({ limit: "1mb" }));
 
@@ -145,7 +187,7 @@ async function main() {
 					}
 				});
 		}
-		catch (error) {
+		catch {
 			return res
 				.status(503)
 				.set("Cache-Control", "no-store")
@@ -155,43 +197,24 @@ async function main() {
 						db: {
 							ok: false,
 							state,
-							error: error instanceof Error ? error.message : "db-ping-failed"
+							error: "db-ping-failed"
 						}
 					}
 				});
 		}
 	});
 
-	// --- Get Mongo URI from Vault (preferred), else env fallback ---
-	let mongoUri: string | undefined;
-	try {
-		const { uri } = await readMongoSecret(); // your Vault client should read from KV v2
-		mongoUri = uri;
-	}
-	catch (e) {
-		// Fail silently if Vault is not available, then probably local test (Had to do this to avoid weird requirements
-		// console.log("Vault unavailable, falling back to MONGODB_URI:", e);
-		const m: string = e?.toString() || "";
-		if (!m.includes("Failed to fetch") && !m.includes("connect ECONNREFUSED")) {
-			console.log("");
-		}
-
-		mongoUri = env.MONGODB_URI;
-	}
-
-	if (!mongoUri) {
-		throw new Error("No MongoDB URI available (Vault and MONGODB_URI missing)");
-	}
-
-	await mongoose.connect(mongoUri);
-	console.log("Connected to MongoDB");
+	const mongoConnection = await selectMongoConnection(
+		env,
+		readMongoSecret
+	);
+	await mongoose.connect(mongoConnection.uri);
+	console.log("MongoDB connection established");
 	const c = mongoose.connection;
-	console.log(`Mongo connected: db=${c.db?.databaseName} host=${c.host} name=${c.name}`);
 	app.get("/_dbinfo", (req, res) => {
 		if (
 			!internalDiagnosticsAuthorized(req, {
-				diagnosticsKey: internalDiagnosticsKey,
-				isProduction: isProd
+				diagnosticsKey: internalDiagnosticsKey
 			})
 		) {
 			return res.status(403).set("Cache-Control", "no-store").json({ ok: false, error: "forbidden" });
@@ -202,7 +225,7 @@ async function main() {
 			host: c.host || null,
 			name: c.name || null,
 			readyState: c.readyState,
-			usingVault: !!env.VAULT_ROLE_ID && !!env.VAULT_SECRET_ID
+			usingVault: mongoConnection.source === "vault"
 		});
 	});
 
@@ -259,9 +282,11 @@ async function main() {
 			clearTimeout(forceShutdownTimer);
 			exit(0);
 		}
-		catch (error) {
+		catch {
 			clearTimeout(forceShutdownTimer);
-			console.error("Graceful shutdown failed:", error);
+			console.error(
+				"Graceful shutdown failed. Check service connectivity."
+			);
 			exit(1);
 		}
 	};
@@ -274,7 +299,9 @@ async function main() {
 	});
 }
 
-main().catch((err) => {
-	console.error(err);
+main().catch(() => {
+	console.error(
+		"Server startup failed. Check configuration and service connectivity."
+	);
 	exit(1);
 });

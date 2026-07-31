@@ -9,6 +9,11 @@ import { SessionNote } from "../../models/schemas/SessionNote.js";
 import { Tutor } from "../../models/schemas/Tutor.js";
 import { User } from "../../models/schemas/User.js";
 import {
+	deleteUserAccount,
+	UserAccountDeletionAuthorizationError,
+	UserAccountDeletionError
+} from "../../services/userAccountDeletion.js";
+import {
 	AccountRoleTransferError,
 	promoteUserAccount
 } from "../../utils/accountRoleTransfer.js";
@@ -676,6 +681,50 @@ export const promoteUserToTutor: RequestHandler = async (req, res) => {
 	}
 };
 
+async function deleteUserAccountAndRecordAudit(
+	req: Parameters<RequestHandler>[0],
+	res: Parameters<RequestHandler>[1],
+	userID: Types.ObjectId,
+	action: string,
+	{
+		omitActor = false,
+		requiredTutorID
+	}: {
+		omitActor?: boolean;
+		requiredTutorID?: Types.ObjectId;
+	} = {}
+) {
+	try {
+		const result = requiredTutorID
+			? await deleteUserAccount(userID, { requiredTutorID })
+			: await deleteUserAccount(userID);
+		if (!result.deleted) return res.sendStatus(404);
+
+		await recordSecurityAuditEvent(req, {
+			action,
+			...(omitActor ? { omitActor: true } : {}),
+			targetID: result.auditSubjectID,
+			targetRole: "user"
+		});
+		if (omitActor) {
+			// cookie-session clears its signed cookie when assigned null. The
+			// legacy express-session augmentation does not expose that runtime
+			// value in this repository's Request type.
+			(req as unknown as { session: null }).session = null;
+		}
+		return res.sendStatus(200);
+	}
+	catch (error) {
+		if (error instanceof UserAccountDeletionAuthorizationError) {
+			return res.status(error.statusCode).json({ message: error.message });
+		}
+		if (error instanceof UserAccountDeletionError) {
+			return res.status(error.statusCode).json({ message: error.message });
+		}
+		throw error;
+	}
+}
+
 export const deleteOwnUser: RequestHandler = async (req, res) => {
 	const userID = getUserIDParam(req, res);
 	if (!userID) return;
@@ -692,13 +741,13 @@ export const deleteOwnUser: RequestHandler = async (req, res) => {
 	const user = await User.findById(userID);
 	if (!user) return res.sendStatus(404);
 
-	await user.deleteOne();
-	await recordSecurityAuditEvent(req, {
-		action: "user.delete-self",
-		targetID: user._id,
-		targetRole: "user"
-	});
-	res.sendStatus(200);
+	return deleteUserAccountAndRecordAudit(
+		req,
+		res,
+		user._id,
+		"user.delete-self",
+		{ omitActor: true }
+	);
 };
 
 export const deleteUserAsTutor: RequestHandler = async (req, res) => {
@@ -717,13 +766,13 @@ export const deleteUserAsTutor: RequestHandler = async (req, res) => {
 		return res.status(403).json({ message: "You can only delete your own students" });
 	}
 
-	await user.deleteOne();
-	await recordSecurityAuditEvent(req, {
-		action: "user.delete-by-tutor",
-		targetID: user._id,
-		targetRole: "user"
-	});
-	res.sendStatus(200);
+	return deleteUserAccountAndRecordAudit(
+		req,
+		res,
+		user._id,
+		"user.delete-by-tutor",
+		{ requiredTutorID: actingTutor._id }
+	);
 };
 
 export const deleteUserAsAdmin: RequestHandler = async (req, res) => {
@@ -737,13 +786,12 @@ export const deleteUserAsAdmin: RequestHandler = async (req, res) => {
 	const user = await User.findById(userID);
 	if (!user) return res.sendStatus(404);
 
-	await user.deleteOne();
-	await recordSecurityAuditEvent(req, {
-		action: "user.delete-by-admin",
-		targetID: user._id,
-		targetRole: "user"
-	});
-	res.sendStatus(200);
+	return deleteUserAccountAndRecordAudit(
+		req,
+		res,
+		user._id,
+		"user.delete-by-admin"
+	);
 };
 
 export const getLoggedInUserCommunications: RequestHandler = async (req, res) => {

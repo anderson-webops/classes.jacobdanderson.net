@@ -1,12 +1,88 @@
 import { zipSync } from "fflate";
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createSampleGraphDocument } from "@/modules/graphSketcher";
+import {
+	extractLegacyGraphXmlFromArchive,
+	safeGraphArchiveErrorMessage
+} from "@/modules/graphSketcherArchive";
+import type {
+	GraphSketcherArchiveWorkerRequest,
+	GraphSketcherArchiveWorkerResponse
+} from "@/modules/graphSketcherArchive";
 import {
 	graphDocumentToCsv,
 	graphDocumentToSvg,
 	importDelimitedGraphData,
 	importLegacyGraphSketcherDocument
 } from "@/modules/graphSketcherFiles";
+
+const originalWorker = globalThis.Worker;
+
+class GraphSketcherArchiveWorkerStub {
+	private isTerminated = false;
+	private readonly messageListeners: Array<
+		(event: MessageEvent<GraphSketcherArchiveWorkerResponse>) => void
+	> = [];
+
+	addEventListener(
+		type: string,
+		listener: EventListenerOrEventListenerObject
+	) {
+		if (type === "message" && typeof listener === "function") {
+			this.messageListeners.push(
+				listener as (
+					event: MessageEvent<GraphSketcherArchiveWorkerResponse>
+				) => void
+			);
+		}
+	}
+
+	postMessage(message: GraphSketcherArchiveWorkerRequest) {
+		queueMicrotask(() => {
+			if (this.isTerminated) return;
+			let response: GraphSketcherArchiveWorkerResponse;
+			try {
+				response = {
+					ok: true,
+					xml: extractLegacyGraphXmlFromArchive(
+						new Uint8Array(message.archive),
+						message.maxArchiveBytes,
+						message.maxXmlBytes
+					)
+				};
+			} catch (error) {
+				response = {
+					ok: false,
+					message: safeGraphArchiveErrorMessage(error)
+				};
+			}
+			const event = new MessageEvent("message", { data: response });
+			for (const listener of this.messageListeners) listener(event);
+		});
+	}
+
+	terminate() {
+		this.isTerminated = true;
+	}
+}
+
+beforeAll(() => {
+	Object.defineProperty(globalThis, "Worker", {
+		configurable: true,
+		value: GraphSketcherArchiveWorkerStub
+	});
+});
+
+afterAll(() => {
+	if (originalWorker) {
+		Object.defineProperty(globalThis, "Worker", {
+			configurable: true,
+			value: originalWorker
+		});
+	} else {
+		Reflect.deleteProperty(globalThis, "Worker");
+	}
+});
 
 const legacyDocument = `<?xml version="1.0" encoding="UTF-8"?>
 <document xmlns="http://www.omnigroup.com/namespace/OmniGraphSketcher/v1">
@@ -70,6 +146,51 @@ describe("Graph Sketcher file compatibility", () => {
 		});
 	});
 
+	it("bounds delimited series, points, columns, and issue messages", () => {
+		const tooWide = [
+			"x",
+			...Array.from({ length: 129 }, (_, index) => `Series ${index + 1}`)
+		].join(",");
+		expect(() =>
+			importDelimitedGraphData(`${tooWide}\n0,${"1,".repeat(128)}1`)
+		).toThrow(/128 series columns/i);
+
+		const tooManyLongSeries = [
+			"series,x,y",
+			...Array.from(
+				{ length: 129 },
+				(_, index) => `Series ${index + 1},${index},${index}`
+			)
+		].join("\n");
+		expect(() => importDelimitedGraphData(tooManyLongSeries)).toThrow(
+			/128 series/i
+		);
+
+		const fullWidthHeader = [
+			"x",
+			...Array.from({ length: 128 }, (_, index) => `Series ${index + 1}`)
+		].join(",");
+		const overPointLimit = [
+			fullWidthHeader,
+			...Array.from(
+				{ length: 782 },
+				(_, rowIndex) => `${rowIndex},${Array(128).fill("1").join(",")}`
+			)
+		].join("\n");
+		expect(() => importDelimitedGraphData(overPointLimit)).toThrow(
+			/100,000 total points/i
+		);
+
+		const manyInvalidRows = [
+			"x,y",
+			...Array.from({ length: 20 }, (_, index) => `bad-${index},1`),
+			"0,2"
+		].join("\n");
+		const boundedIssues = importDelimitedGraphData(manyInvalidRows).issues;
+		expect(boundedIssues).toHaveLength(13);
+		expect(boundedIssues.at(-1)).toMatch(/additional import issues/i);
+	});
+
 	it("exports portable data and escaped standalone SVG", () => {
 		const document = createSampleGraphDocument();
 		document.title = `Cooling <script>alert("no")</script>`;
@@ -85,8 +206,52 @@ describe("Graph Sketcher file compatibility", () => {
 		expect(svg).toContain(">Measured</text>");
 	});
 
-	it("imports original plain and ZIP-wrapped .ograph documents", () => {
-		const plain = importLegacyGraphSketcherDocument(
+	it("neutralizes spreadsheet formulas in exported names and labels", () => {
+		const document = createSampleGraphDocument();
+		document.series[0].name = "=2+2";
+		document.series[0].points[0] = {
+			x: -3,
+			y: 4,
+			label: " \t@SUM(A1:A2)"
+		};
+		document.series[1].name = "+RUN";
+		document.series[1].points[0].label = "\u0007-DANGER";
+
+		const csv = graphDocumentToCsv(document);
+
+		expect(csv).toContain("'=2+2,-3,4");
+		expect(csv).toContain("' \t@SUM(A1:A2)");
+		expect(csv).toContain("'+RUN");
+		expect(csv).toContain("'\u0007-DANGER");
+		expect(csv).not.toContain(",'-3,");
+	});
+
+	it("bounds and validates ZIP-wrapped legacy archives before parsing", () => {
+		expect(() =>
+			extractLegacyGraphXmlFromArchive(new Uint8Array(9), 8, 16)
+		).toThrow(/larger than the 8 MB import limit/i);
+
+		const oversizedContents = zipSync({
+			"Project/contents.xml": new TextEncoder().encode("x".repeat(32))
+		});
+		expect(() =>
+			extractLegacyGraphXmlFromArchive(oversizedContents, 1_024, 16)
+		).toThrow(/contents\.xml is larger/i);
+
+		const missingContents = zipSync({
+			"Project/readme.txt": new TextEncoder().encode("not a graph")
+		});
+		expect(() =>
+			extractLegacyGraphXmlFromArchive(missingContents, 1_024, 64)
+		).toThrow(/exactly one contents\.xml/i);
+
+		expect(
+			safeGraphArchiveErrorMessage(new Error("private parser detail"))
+		).toBe("The .ograph archive could not be opened.");
+	});
+
+	it("imports original plain and ZIP-wrapped .ograph documents", async () => {
+		const plain = await importLegacyGraphSketcherDocument(
 			legacyDocument,
 			"Original Graph"
 		);
@@ -117,31 +282,56 @@ describe("Graph Sketcher file compatibility", () => {
 		const archive = zipSync({
 			"Project/contents.xml": new TextEncoder().encode(legacyDocument)
 		});
-		const zipped = importLegacyGraphSketcherDocument(
+		const zipped = await importLegacyGraphSketcherDocument(
 			archive,
 			"Archived Graph"
 		);
 		expect(zipped.document.title).toBe("Archived Graph");
 		expect(zipped.document.series[0].points).toHaveLength(2);
+
+		const duplicateArchive = zipSync({
+			"First/contents.xml": new TextEncoder().encode(legacyDocument),
+			"Second/contents.xml": new TextEncoder().encode(legacyDocument)
+		});
+		await expect(
+			importLegacyGraphSketcherDocument(duplicateArchive)
+		).rejects.toThrow(/exactly one contents\.xml/i);
 	});
 
-	it("rejects legacy XML declarations that can expand external content", () => {
-		const internalEntity = `<!DOCTYPE document [<!ENTITY classroom "expanded">]>${legacyGraphWith(
-			"<label><text><p><lit>&classroom;</lit></p></text></label>"
-		)}`;
-		const externalEntity = `<!DOCTYPE document [<!ENTITY classroom SYSTEM "https://example.test/student">]>${legacyGraphWith(
-			"<label><text><p><lit>&classroom;</lit></p></text></label>"
-		)}`;
+	it("cancels archived imports without applying worker output", async () => {
+		const archive = zipSync({
+			"Project/contents.xml": new TextEncoder().encode(legacyDocument)
+		});
+		const controller = new AbortController();
+		const importPromise = importLegacyGraphSketcherDocument(
+			archive,
+			"Canceled Graph",
+			controller.signal
+		);
+		controller.abort();
 
-		expect(() => importLegacyGraphSketcherDocument(internalEntity)).toThrow(
-			/DOCTYPE or ENTITY/i
-		);
-		expect(() => importLegacyGraphSketcherDocument(externalEntity)).toThrow(
-			/DOCTYPE or ENTITY/i
-		);
+		await expect(importPromise).rejects.toMatchObject({
+			name: "AbortError"
+		});
 	});
 
-	it("rejects foreign HTML or SVG elements in legacy XML", () => {
+	it("rejects legacy XML declarations that can expand external content", async () => {
+		const internalEntity = `<!DOCTYPE document [<!ENTITY unsafe "expanded">]>${legacyGraphWith(
+			"<label><text><p><lit>&unsafe;</lit></p></text></label>"
+		)}`;
+		const externalEntity = `<!DOCTYPE document [<!ENTITY unsafe SYSTEM "https://example.test/entity">]>${legacyGraphWith(
+			"<label><text><p><lit>&unsafe;</lit></p></text></label>"
+		)}`;
+
+		await expect(
+			importLegacyGraphSketcherDocument(internalEntity)
+		).rejects.toThrow(/DOCTYPE or ENTITY/i);
+		await expect(
+			importLegacyGraphSketcherDocument(externalEntity)
+		).rejects.toThrow(/DOCTYPE or ENTITY/i);
+	});
+
+	it("rejects foreign HTML or SVG elements in legacy XML", async () => {
 		const foreignSvg = legacyGraphWith(
 			'<svg xmlns="http://www.w3.org/2000/svg"><script>alert("no")</script></svg>'
 		);
@@ -149,16 +339,16 @@ describe("Graph Sketcher file compatibility", () => {
 			'<label><text><p><div xmlns="http://www.w3.org/1999/xhtml">Unsafe</div></p></text></label>'
 		);
 
-		expect(() => importLegacyGraphSketcherDocument(foreignSvg)).toThrow(
-			/outside the original GraphSketcher namespace/i
-		);
-		expect(() => importLegacyGraphSketcherDocument(foreignHtml)).toThrow(
-			/outside the original GraphSketcher namespace/i
-		);
+		await expect(
+			importLegacyGraphSketcherDocument(foreignSvg)
+		).rejects.toThrow(/outside the original GraphSketcher namespace/i);
+		await expect(
+			importLegacyGraphSketcherDocument(foreignHtml)
+		).rejects.toThrow(/outside the original GraphSketcher namespace/i);
 	});
 
-	it("copies legacy label markup as inert text and escapes SVG output", () => {
-		const result = importLegacyGraphSketcherDocument(
+	it("copies legacy label markup as inert text and escapes SVG output", async () => {
+		const result = await importLegacyGraphSketcherDocument(
 			legacyGraphWith(
 				'<label id="note" x="1" y="2"><text><p><lit>&lt;img src=x onerror=alert(1)&gt;</lit></p></text></label>'
 			)
@@ -172,14 +362,80 @@ describe("Graph Sketcher file compatibility", () => {
 		expect(svg).not.toContain("<img");
 	});
 
-	it("rejects malformed or unrelated legacy documents", () => {
-		expect(() => importLegacyGraphSketcherDocument("<not-xml")).toThrow(
-			/malformed/i
+	it("bounds legacy elements, vertices, labels, and line series", async () => {
+		await expect(
+			importLegacyGraphSketcherDocument(
+				legacyGraphWith(`<group>${"<item/>".repeat(50_000)}</group>`)
+			)
+		).rejects.toThrow(/50,000 XML elements/i);
+
+		await expect(
+			importLegacyGraphSketcherDocument(
+				legacyGraphWith("<vertex/>".repeat(20_001))
+			)
+		).rejects.toThrow(/20,000 vertices/i);
+
+		await expect(
+			importLegacyGraphSketcherDocument(
+				legacyGraphWith("<label/>".repeat(10_001))
+			)
+		).rejects.toThrow(/10,000 labels/i);
+
+		await expect(
+			importLegacyGraphSketcherDocument(
+				legacyGraphWith(
+					`<vertex id="v1"/><vertex id="v2"/>${'<line v1="v1" v2="v2"/>'.repeat(
+						129
+					)}`
+				)
+			)
+		).rejects.toThrow(/128 line and fill series/i);
+
+		await expect(
+			importLegacyGraphSketcherDocument(
+				legacyGraphWith(
+					`<vertex id="v1"/><line><vertices ids="${"v1 ".repeat(
+						100_001
+					)}"/></line>`
+				)
+			)
+		).rejects.toThrow(/100,000 total points/i);
+
+		await expect(
+			importLegacyGraphSketcherDocument(
+				legacyGraphWith(
+					Array.from(
+						{ length: 2_001 },
+						(_, index) =>
+							`<label id="label-${index}" x="${index}" y="${index}"><text><p><lit>Label</lit></p></text></label>`
+					).join("")
+				)
+			)
+		).rejects.toThrow(/2,000 standalone annotations/i);
+	});
+
+	it("caps legacy import warnings with an omission notice", async () => {
+		const vertices = Array.from(
+			{ length: 20 },
+			(_, index) =>
+				`<vertex id="v${index}" x="${index}" y="${index}"><snapped-to/></vertex>`
+		).join("");
+		const result = await importLegacyGraphSketcherDocument(
+			legacyGraphWith(vertices)
 		);
-		expect(() =>
+
+		expect(result.warnings).toHaveLength(13);
+		expect(result.warnings.at(-1)).toMatch(/additional import warnings/i);
+	});
+
+	it("rejects malformed or unrelated legacy documents", async () => {
+		await expect(
+			importLegacyGraphSketcherDocument("<not-xml")
+		).rejects.toThrow(/malformed/i);
+		await expect(
 			importLegacyGraphSketcherDocument(
 				'<document xmlns="https://example.test"><graph/></document>'
 			)
-		).toThrow(/not an original/i);
+		).rejects.toThrow(/not an original/i);
 	});
 });

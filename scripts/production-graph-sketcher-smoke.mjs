@@ -1,4 +1,8 @@
 import { pathToFileURL } from "node:url";
+import {
+	smokeErrorMessage,
+	smokeRequest
+} from "./http-smoke-client.mjs";
 
 const origin =
 	process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderson.net";
@@ -8,23 +12,16 @@ const timeoutMs = Number(
 const smokePath = "/graph-sketcher";
 
 async function fetchText(url) {
-	const controller = new AbortController();
-	const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-	try {
-		const response = await fetch(url, {
-			headers: {
-				accept: "text/html,application/javascript,text/javascript,*/*"
-			},
-			signal: controller.signal
-		});
-		if (!response.ok) {
-			throw new Error(`${url} returned HTTP ${response.status}`);
-		}
-		return await response.text();
-	} finally {
-		clearTimeout(timeout);
+	const response = await smokeRequest(url, {
+		headers: {
+			accept: "text/html,application/javascript,text/javascript,*/*"
+		},
+		timeoutMs
+	});
+	if (!response.ok) {
+		throw new Error(`${url} returned HTTP ${response.status}`);
 	}
+	return await response.text();
 }
 
 export function graphSketcherSmokePageUrl(baseOrigin = origin) {
@@ -60,6 +57,30 @@ export function containsGraphSketcherRuntimeMarkers(source) {
 	);
 }
 
+export function graphSketcherWorkerAssetUrls(
+	source,
+	pageUrl = graphSketcherSmokePageUrl()
+) {
+	const urls = new Set();
+	const workerAssetRE =
+		/["'`]([^"'`]*graphSketcherArchive\.worker[^"'`]*\.js(?:\?[^"'`]*)?)["'`]/g;
+	for (const match of source.matchAll(workerAssetRE)) {
+		const url = new URL(match[1], pageUrl);
+		if (url.origin === pageUrl.origin) urls.add(url.href);
+	}
+	return [...urls];
+}
+
+export function containsGraphSketcherWorkerMarkers(source) {
+	return (
+		source.includes("contents.xml") &&
+		source.includes(
+			"The .ograph archive must contain exactly one contents.xml file."
+		) &&
+		source.includes("The .ograph archive could not be opened.")
+	);
+}
+
 export async function runProductionGraphSketcherSmoke() {
 	const pageUrl = graphSketcherSmokePageUrl();
 	const html = await fetchText(pageUrl);
@@ -89,15 +110,35 @@ export async function runProductionGraphSketcherSmoke() {
 	const runtimeAsset = assetSources.find(asset =>
 		asset.source.includes("classes-graph-sketcher-document-v1")
 	);
+	if (!runtimeAsset) {
+		throw new Error(
+			`${pageUrl.href} did not reference the current Graph Sketcher runtime asset`
+		);
+	}
+	const workerAssetUrls = graphSketcherWorkerAssetUrls(
+		runtimeAsset.source,
+		pageUrl
+	);
+	if (workerAssetUrls.length !== 1) {
+		throw new Error(
+			`${pageUrl.href} did not reference exactly one Graph Sketcher archive worker`
+		);
+	}
+	const workerSource = await fetchText(workerAssetUrls[0]);
+	if (!containsGraphSketcherWorkerMarkers(workerSource)) {
+		throw new Error(
+			`${workerAssetUrls[0]} was not the current bounded Graph Sketcher archive worker`
+		);
+	}
 	console.log(
-		`OK: ${pageUrl.href} references ${runtimeAsset?.url ?? "the current Graph Sketcher assets"}`
+		`OK: ${pageUrl.href} references ${runtimeAsset.url} and ${workerAssetUrls[0]}`
 	);
 }
 
 const invokedUrl = process.argv[1] ? pathToFileURL(process.argv[1]).href : "";
 if (import.meta.url === invokedUrl) {
 	runProductionGraphSketcherSmoke().catch(error => {
-		console.error(error instanceof Error ? error.message : error);
+		console.error(smokeErrorMessage(error));
 		process.exitCode = 1;
 	});
 }

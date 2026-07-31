@@ -3,16 +3,21 @@ import type { IOAuthLoginAttempt } from "../../types/entities/IOAuthLoginAttempt
 import mongoose, { Schema } from "mongoose";
 import { externalIdentityProviders } from "../../types/entities/IExternalIdentity.js";
 
+const SHA256_HEX_PATTERN = /^[a-f\d]{64}$/u;
+
 const oauthLoginAttemptSchema = new Schema<IOAuthLoginAttempt>(
 	{
 		browserBindingHash: {
 			type: String,
 			required: true,
+			match: SHA256_HEX_PATTERN,
 			select: false
 		},
 		codeVerifier: {
 			type: String,
 			required: true,
+			minlength: 32,
+			maxlength: 256,
 			select: false
 		},
 		expiresAt: {
@@ -22,6 +27,8 @@ const oauthLoginAttemptSchema = new Schema<IOAuthLoginAttempt>(
 		nonce: {
 			type: String,
 			required: true,
+			minlength: 32,
+			maxlength: 256,
 			select: false
 		},
 		provider: {
@@ -43,6 +50,7 @@ const oauthLoginAttemptSchema = new Schema<IOAuthLoginAttempt>(
 		stateHash: {
 			type: String,
 			required: true,
+			match: SHA256_HEX_PATTERN,
 			unique: true,
 			select: false
 		}

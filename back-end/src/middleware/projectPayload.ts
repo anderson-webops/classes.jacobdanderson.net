@@ -1,0 +1,183 @@
+import type { Request, RequestHandler } from "express";
+import type { CustomSession } from "../types/session/CustomSession.js";
+import { env } from "node:process";
+import bodyParser from "body-parser";
+import { ipKeyGenerator } from "express-rate-limit";
+import { authenticatedSessionIsCurrent } from "../utils/accountSessions.js";
+
+/**
+ * A project may contain 12,000,000 UTF-16 code units. JSON can expand one
+ * code unit to a six-byte escape, so the parser needs slightly more than
+ * 72 MB for the largest valid payload plus file names and metadata.
+ */
+export const DEFAULT_CODE_IDE_PROJECT_JSON_BODY_LIMIT = "80mb";
+export const HEAVY_CODE_IDE_PROJECT_PAYLOAD_THRESHOLD_BYTES = 4 * 1024 * 1024;
+export const MAX_CONCURRENT_HEAVY_CODE_IDE_PROJECT_PAYLOADS = 1;
+export const MAX_CONCURRENT_HEAVY_CODE_IDE_PROJECT_PAYLOADS_PER_IDENTITY = 1;
+export const MAX_CONCURRENT_NORMAL_CODE_IDE_PROJECT_PAYLOADS = 8;
+export const MAX_CONCURRENT_NORMAL_CODE_IDE_PROJECT_PAYLOADS_PER_IDENTITY = 2;
+
+interface ProjectPayloadConcurrencyOptions {
+	globalLimit?: number;
+	heavyThresholdBytes?: number;
+	normalGlobalLimit?: number;
+	normalPerIdentityLimit?: number;
+	perIdentityLimit?: number;
+}
+
+export function isHeavyCodeIdeProjectPayload(
+	req: Request,
+	thresholdBytes = HEAVY_CODE_IDE_PROJECT_PAYLOAD_THRESHOLD_BYTES
+): boolean {
+	const transferEncoding = req.get("transfer-encoding");
+	if (transferEncoding) return true;
+
+	const contentEncoding = req.get("content-encoding")?.trim().toLowerCase();
+	if (contentEncoding && contentEncoding !== "identity") return true;
+
+	const rawContentLength = req.get("content-length")?.trim();
+	if (!rawContentLength || !/^\d+$/.test(rawContentLength)) return true;
+
+	const contentLength = Number(rawContentLength);
+	return (
+		!Number.isSafeInteger(contentLength)
+		|| contentLength > thresholdBytes
+	);
+}
+
+/**
+ * Project admission runs after the signed session middleware but before route
+ * authentication performs a database lookup. Use the signed account identity
+ * when available and a normalized network key only as a fallback.
+ */
+export function codeIdeProjectPayloadIdentity(req: Request): string {
+	const session = req.session as CustomSession | undefined;
+	if (!session || !authenticatedSessionIsCurrent(session)) {
+		return `network:${ipKeyGenerator(
+			req.ip || req.socket.remoteAddress || "unknown"
+		)}`;
+	}
+	const roleAndID = [
+		["admin", session?.adminID],
+		["tutor", session?.tutorID],
+		["user", session?.userID],
+		["course-code-learner", session?.courseCodeLearnerID]
+	].find(
+		(entry): entry is [string, string] =>
+			typeof entry[1] === "string" && entry[1].length > 0
+	);
+
+	if (roleAndID) return `${roleAndID[0]}:${roleAndID[1]}`;
+	return `network:${ipKeyGenerator(
+		req.ip || req.socket.remoteAddress || "unknown"
+	)}`;
+}
+
+export function createCodeIdeProjectJsonParser(
+	limit =
+		env.CODE_IDE_PROJECT_BODY_LIMIT
+		|| env.PYTHON_IDE_PROJECT_BODY_LIMIT
+		|| DEFAULT_CODE_IDE_PROJECT_JSON_BODY_LIMIT
+): RequestHandler {
+	// Browser project writes are uncompressed. Refusing compression prevents a
+	// small request from inflating into a much larger parser allocation.
+	return bodyParser.json({ inflate: false, limit });
+}
+
+/**
+ * Admit one heavy body process-wide. Normal autosaves retain a wider tier,
+ * while each signed identity remains bounded. Slots stay held through the
+ * response because the parsed body remains reachable during validation/write.
+ */
+export function createCodeIdeProjectPayloadConcurrencyGuard(
+	options: ProjectPayloadConcurrencyOptions = {}
+): RequestHandler {
+	const globalLimit
+		= options.globalLimit ?? MAX_CONCURRENT_HEAVY_CODE_IDE_PROJECT_PAYLOADS;
+	const heavyThresholdBytes
+		= options.heavyThresholdBytes
+			?? HEAVY_CODE_IDE_PROJECT_PAYLOAD_THRESHOLD_BYTES;
+	const normalGlobalLimit
+		= options.normalGlobalLimit
+			?? MAX_CONCURRENT_NORMAL_CODE_IDE_PROJECT_PAYLOADS;
+	const normalPerIdentityLimit
+		= options.normalPerIdentityLimit
+			?? MAX_CONCURRENT_NORMAL_CODE_IDE_PROJECT_PAYLOADS_PER_IDENTITY;
+	const perIdentityLimit
+		= options.perIdentityLimit
+			?? MAX_CONCURRENT_HEAVY_CODE_IDE_PROJECT_PAYLOADS_PER_IDENTITY;
+	const activeByIdentity = new Map<
+		string,
+		{ heavy: number; normal: number }
+	>();
+	let activeHeavyTotal = 0;
+	let activeNormalTotal = 0;
+
+	return (req, res, next) => {
+		const isHeavy = isHeavyCodeIdeProjectPayload(
+			req,
+			heavyThresholdBytes
+		);
+		const identity = codeIdeProjectPayloadIdentity(req);
+		const activeForIdentity
+			= activeByIdentity.get(identity) ?? { heavy: 0, normal: 0 };
+		const rejected = isHeavy
+			? activeHeavyTotal >= globalLimit
+			|| activeForIdentity.heavy + activeForIdentity.normal
+			>= perIdentityLimit
+			: activeNormalTotal >= normalGlobalLimit
+				|| activeForIdentity.heavy > 0
+				|| activeForIdentity.normal >= normalPerIdentityLimit;
+		if (rejected) {
+			res.setHeader("Retry-After", "1");
+			res.status(429).json({
+				message: isHeavy
+					? "Another large project save is already in progress. Try again shortly."
+					: "Too many project saves are already in progress. Try again shortly."
+			});
+			return;
+		}
+
+		if (isHeavy) {
+			activeHeavyTotal += 1;
+			activeForIdentity.heavy += 1;
+		}
+		else {
+			activeNormalTotal += 1;
+			activeForIdentity.normal += 1;
+		}
+		activeByIdentity.set(identity, activeForIdentity);
+
+		let released = false;
+		const release = () => {
+			if (released) return;
+			released = true;
+			const current = activeByIdentity.get(identity);
+			if (isHeavy) {
+				activeHeavyTotal -= 1;
+				if (current) current.heavy -= 1;
+			}
+			else {
+				activeNormalTotal -= 1;
+				if (current) current.normal -= 1;
+			}
+			if (!current || current.heavy + current.normal <= 0) {
+				activeByIdentity.delete(identity);
+			}
+			else {
+				activeByIdentity.set(identity, current);
+			}
+		};
+
+		req.once("aborted", release);
+		res.once("close", release);
+		res.once("finish", release);
+		try {
+			next();
+		}
+		catch (error) {
+			release();
+			throw error;
+		}
+	};
+}

@@ -7,7 +7,9 @@ import type {
 	PythonIdeFile,
 	PythonIdeMode,
 	PythonIdeProject,
+	PythonIdeProjectMetadata,
 	PythonIdeProjectReview,
+	PythonIdeProjectReviewMetadata,
 	PythonIdeProjectTemplate
 } from "@/modules/pythonIde";
 import type { PythonIdeCourseAssetPack } from "@/modules/pythonIdeCourseAssets";
@@ -36,8 +38,10 @@ import {
 	createPythonIdeProject,
 	createRemotePythonIdeProject,
 	deleteRemotePythonIdeProject,
+	fetchPythonIdeProject,
 	fetchPythonIdeProjects,
 	fetchSharedPythonIdeProject,
+	fetchVisiblePythonIdeProjectReview,
 	fetchVisiblePythonIdeProjectReviews,
 	getPythonIdeAssetDataUrl,
 	getPythonIdeDefaultFileContent,
@@ -590,7 +594,9 @@ const { currentAdmin, currentCourseLearner, currentTutor, currentUser } =
 	storeToRefs(app);
 
 const projects = ref<PythonIdeProject[]>([]);
+const projectCatalog = ref<PythonIdeProjectMetadata[]>([]);
 const visibleProjectReviews = ref<PythonIdeProjectReview[]>([]);
+const visibleProjectReviewCatalog = ref<PythonIdeProjectReviewMetadata[]>([]);
 const selectedProjectID = ref("");
 const selectedReviewFileName = ref("");
 const newFileName = ref("");
@@ -1015,14 +1021,13 @@ const gameState: GameCanvasState = {
 	backgroundGradient: null
 };
 
-const selectedProject = computed(
-	() =>
-		projects.value.find(
-			project => project._id === selectedProjectID.value
-		) ??
-		projects.value[0] ??
-		null
-);
+const selectedProject = computed(() => {
+	const selected = projects.value.find(
+		project => project._id === selectedProjectID.value
+	);
+	if (selected) return selected;
+	return selectedProjectID.value ? null : (projects.value[0] ?? null);
+});
 
 const activeFile = computed(() => {
 	const project = selectedProject.value;
@@ -1129,7 +1134,11 @@ const storageUserID = computed(() => {
 		? account.id
 		: `${account.role}:${account.id}`;
 });
-const sortedProjects = computed(() => [...projects.value]);
+const sortedProjects = computed(() =>
+	canSyncToAccount.value && projectCatalog.value.length
+		? [...projectCatalog.value]
+		: [...projects.value]
+);
 const runControlIsStop = computed(
 	() =>
 		isRunning.value ||
@@ -1626,6 +1635,7 @@ function mergeRuntimeProjectFiles(
 
 function touchProject(project: PythonIdeProject) {
 	project.updatedAt = new Date().toISOString();
+	if (canSyncToAccount.value) upsertProjectCatalog(project);
 }
 
 function touchSelectedProject() {
@@ -1644,7 +1654,9 @@ function requestedCourseProject() {
 	};
 }
 
-function projectForRoute(projectList: PythonIdeProject[]) {
+type PythonIdeProjectListItem = PythonIdeProject | PythonIdeProjectMetadata;
+
+function projectForRoute(projectList: PythonIdeProjectListItem[]) {
 	const request = requestedCourseProject();
 	if (!request) return null;
 	return (
@@ -1677,7 +1689,7 @@ function requestedStandaloneProjectKey() {
 	return "";
 }
 
-function standaloneProjectForRoute(projectList: PythonIdeProject[]) {
+function standaloneProjectForRoute(projectList: PythonIdeProjectListItem[]) {
 	const key = requestedStandaloneProjectKey();
 	if (!key) return null;
 	return (
@@ -1765,11 +1777,18 @@ async function importSharedProjectFromRouteIfNeeded(
 		const sharedProject = await fetchSharedPythonIdeProject(shareID);
 		if (!projectLoadIsCurrent(loadRunID)) return false;
 
-		const existingProject = projects.value.find(
+		const availableProjects =
+			canSyncToAccount.value && !localOnly
+				? projectCatalog.value
+				: projects.value;
+		const existingProject = availableProjects.find(
 			project => project.sharedSourceID === shareID
 		);
 		if (existingProject) {
 			selectedProjectID.value = existingProject._id;
+			if (canSyncToAccount.value && !localOnly) {
+				await loadRemoteProjectDetail(existingProject._id, loadRunID);
+			}
 			return true;
 		}
 
@@ -1841,6 +1860,7 @@ async function saveNewProject(
 		);
 		if (!projectLoadIsCurrent(loadRunID)) return;
 		projects.value.unshift(remoteProject);
+		upsertProjectCatalog(remoteProject);
 		selectedProjectID.value = remoteProject._id;
 		await discardLocalProjectSnapshotIfSafe();
 		if (!projectLoadIsCurrent(loadRunID)) return;
@@ -1860,9 +1880,16 @@ async function openRequestedCourseProjectIfNeeded(
 ) {
 	if (!projectLoadIsCurrent(loadRunID)) return false;
 
-	const existingProject = projectForRoute(projects.value);
+	const availableProjects =
+		canSyncToAccount.value && !localOnly
+			? projectCatalog.value
+			: projects.value;
+	const existingProject = projectForRoute(availableProjects);
 	if (existingProject) {
 		selectedProjectID.value = existingProject._id;
+		if (canSyncToAccount.value && !localOnly) {
+			await loadRemoteProjectDetail(existingProject._id, loadRunID);
+		}
 		return true;
 	}
 
@@ -1883,9 +1910,16 @@ async function openRequestedStandaloneProjectIfNeeded(
 	const key = requestedStandaloneProjectKey();
 	if (!key) return false;
 
-	const existingProject = standaloneProjectForRoute(projects.value);
+	const availableProjects =
+		canSyncToAccount.value && !localOnly
+			? projectCatalog.value
+			: projects.value;
+	const existingProject = standaloneProjectForRoute(availableProjects);
 	if (existingProject) {
 		selectedProjectID.value = existingProject._id;
+		if (canSyncToAccount.value && !localOnly) {
+			await loadRemoteProjectDetail(existingProject._id, loadRunID);
+		}
 		return true;
 	}
 
@@ -1918,18 +1952,54 @@ function setProjects(nextProjects: PythonIdeProject[]) {
 			project.activeFileName
 		)
 	}));
+	for (const project of projects.value) upsertProjectCatalog(project);
+	const availableProjects = canSyncToAccount.value
+		? projectCatalog.value
+		: projects.value;
 	selectedProjectID.value =
-		projectForRoute(projects.value)?._id ??
-		standaloneProjectForRoute(projects.value)?._id ??
-		projects.value[0]?._id ??
+		projectForRoute(availableProjects)?._id ??
+		standaloneProjectForRoute(availableProjects)?._id ??
+		availableProjects[0]?._id ??
 		"";
+}
+
+function projectMetadata(project: PythonIdeProject): PythonIdeProjectMetadata {
+	const { files: _files, ...metadata } = project;
+	return metadata;
+}
+
+function upsertProjectCatalog(
+	project: PythonIdeProject | PythonIdeProjectMetadata
+) {
+	const metadata = "files" in project ? projectMetadata(project) : project;
+	const existingIndex = projectCatalog.value.findIndex(
+		candidate => candidate._id === metadata._id
+	);
+	if (existingIndex >= 0) {
+		projectCatalog.value.splice(existingIndex, 1, metadata);
+		return;
+	}
+	projectCatalog.value.unshift(metadata);
+}
+
+function setProjectCatalog(nextProjects: PythonIdeProjectMetadata[]) {
+	projectCatalog.value = [...nextProjects];
+}
+
+function locallyPersistableProjects() {
+	// `projects` contains full local records plus at most the currently opened
+	// remote detail. Remote metadata lives separately in `projectCatalog`.
+	return projects.value;
 }
 
 async function persistLocalProjects(
 	options: { message?: string; quiet?: boolean } = {}
 ) {
 	try {
-		await saveLocalPythonProjectsAsync(projects.value, storageUserID.value);
+		await saveLocalPythonProjectsAsync(
+			locallyPersistableProjects(),
+			storageUserID.value
+		);
 		if (!options.quiet) {
 			saveMessage.value =
 				options.message ??
@@ -1947,16 +2017,19 @@ async function persistLocalProjects(
 }
 
 function saveLocalProjectSnapshot() {
-	if (!projects.value.length) return;
+	if (!locallyPersistableProjects().length) return;
 	try {
-		saveLocalPythonProjects(projects.value, storageUserID.value);
+		saveLocalPythonProjects(
+			locallyPersistableProjects(),
+			storageUserID.value
+		);
 	} catch (error) {
 		console.warn("Could not write Code IDE local snapshot.", error);
 	}
 }
 
 async function persistLocalProjectSnapshot() {
-	if (!projects.value.length) return;
+	if (!locallyPersistableProjects().length) return;
 	if (localSnapshotInFlight) {
 		localSnapshotQueued = true;
 		return localSnapshotInFlight;
@@ -1966,7 +2039,7 @@ async function persistLocalProjectSnapshot() {
 		do {
 			localSnapshotQueued = false;
 			await saveLocalPythonProjectsAsync(
-				projects.value,
+				locallyPersistableProjects(),
 				storageUserID.value
 			);
 		} while (localSnapshotQueued);
@@ -2016,18 +2089,152 @@ function scheduleLocalProjectSnapshot() {
 }
 
 async function syncProjectsToAccount(projectList: PythonIdeProject[]) {
-	return Promise.all(
-		projectList.map(project =>
-			project._id.startsWith("local-")
-				? createRemotePythonIdeProject(
-						pythonIdeProjectToPayload(project)
-					)
-				: updateRemotePythonIdeProject(
-						project._id,
-						pythonIdeProjectToPayload(project)
-					)
-		)
+	const syncedProjects: PythonIdeProject[] = [];
+	for (const project of projectList) {
+		const syncedProject = await (project._id.startsWith("local-")
+			? createRemotePythonIdeProject(pythonIdeProjectToPayload(project))
+			: updateRemotePythonIdeProject(
+					project._id,
+					pythonIdeProjectToPayload(project)
+				));
+		syncedProjects.push(syncedProject);
+	}
+	return syncedProjects;
+}
+
+let remoteProjectDetailLoadRun = 0;
+let remoteProjectDetailAbortController: AbortController | null = null;
+
+function visibleReviewLoadIsCurrent(
+	projectID: string,
+	loadRunID?: number,
+	signal?: AbortSignal
+) {
+	return (
+		!signal?.aborted &&
+		projectLoadIsCurrent(loadRunID) &&
+		selectedProjectID.value === projectID
 	);
+}
+
+async function loadVisibleReviewForProject(
+	projectID: string,
+	loadRunID?: number,
+	signal?: AbortSignal
+) {
+	const metadata = visibleProjectReviewCatalog.value.find(
+		review => review.sourceProject === projectID
+	);
+	if (!metadata || !currentUser.value?._id) {
+		if (visibleReviewLoadIsCurrent(projectID, loadRunID, signal)) {
+			visibleProjectReviews.value = [];
+		}
+		return;
+	}
+
+	let review: PythonIdeProjectReview;
+	try {
+		review = await fetchVisiblePythonIdeProjectReview(metadata._id, signal);
+	} catch {
+		if (!visibleReviewLoadIsCurrent(projectID, loadRunID, signal)) return;
+		visibleProjectReviews.value = [];
+		return;
+	}
+	if (!visibleReviewLoadIsCurrent(projectID, loadRunID, signal)) return;
+	visibleProjectReviews.value = [review];
+}
+
+async function loadRemoteProjectDetail(projectID: string, loadRunID?: number) {
+	if (!canSyncToAccount.value || projectID.startsWith("local-")) return;
+	remoteProjectDetailAbortController?.abort();
+	const abortController = new AbortController();
+	remoteProjectDetailAbortController = abortController;
+	const detailLoadRun = ++remoteProjectDetailLoadRun;
+	try {
+		const existing = projects.value.find(
+			project => project._id === projectID
+		);
+		if (existing) {
+			projects.value = [
+				...projects.value.filter(candidate =>
+					candidate._id.startsWith("local-")
+				),
+				...(existing._id.startsWith("local-") ? [] : [existing])
+			];
+			await loadVisibleReviewForProject(
+				projectID,
+				loadRunID,
+				abortController.signal
+			);
+			return;
+		}
+
+		const project = await fetchPythonIdeProject(
+			projectID,
+			abortController.signal
+		);
+		if (
+			detailLoadRun !== remoteProjectDetailLoadRun ||
+			!projectLoadIsCurrent(loadRunID) ||
+			selectedProjectID.value !== projectID
+		) {
+			return;
+		}
+
+		projects.value = [
+			...projects.value.filter(candidate =>
+				candidate._id.startsWith("local-")
+			),
+			project
+		];
+		upsertProjectCatalog(project);
+		await loadVisibleReviewForProject(
+			projectID,
+			loadRunID,
+			abortController.signal
+		);
+	} catch (error) {
+		if (!abortController.signal.aborted) throw error;
+	} finally {
+		if (remoteProjectDetailAbortController === abortController) {
+			remoteProjectDetailAbortController = null;
+		}
+	}
+}
+
+async function selectCatalogProject(projectID: string) {
+	if (projectID === selectedProjectID.value && selectedProject.value) {
+		return;
+	}
+
+	const previousProject = selectedProject.value;
+	if (previousProject && pendingSaveProjectIDs.has(previousProject._id)) {
+		if (saveTimer) {
+			window.clearTimeout(saveTimer);
+			saveTimer = null;
+		}
+		cancelLocalProjectSnapshot();
+		await savePendingProjects({ force: true });
+		if (unsyncedProjectIDs.has(previousProject._id)) {
+			appendOutput(
+				"stderr",
+				"Save this project before opening another one."
+			);
+			return;
+		}
+	}
+
+	selectedProjectID.value = projectID;
+	try {
+		await loadRemoteProjectDetail(projectID);
+	} catch (error) {
+		appendOutput(
+			"stderr",
+			error instanceof Error
+				? error.message
+				: "Could not load this project."
+		);
+	}
 }
 
 async function loadProjects() {
@@ -2039,7 +2246,11 @@ async function loadProjects() {
 		if (canSyncToAccount.value) {
 			const remoteProjects = await fetchPythonIdeProjects();
 			if (!projectLoadIsCurrent(loadRunID)) return;
-			visibleProjectReviews.value = currentUser.value?._id
+			setProjectCatalog(remoteProjects);
+			projects.value = [];
+			selectedProjectID.value = "";
+			visibleProjectReviews.value = [];
+			visibleProjectReviewCatalog.value = currentUser.value?._id
 				? await fetchVisiblePythonIdeProjectReviews().catch(() => [])
 				: [];
 			const localProjects = await loadLocalPythonProjectsAsync(
@@ -2056,6 +2267,12 @@ async function loadProjects() {
 					if (!projectLoadIsCurrent(loadRunID)) return;
 					await openRouteProjectIfNeeded(false, loadRunID);
 					if (!projectLoadIsCurrent(loadRunID)) return;
+					if (selectedProjectID.value) {
+						await loadRemoteProjectDetail(
+							selectedProjectID.value,
+							loadRunID
+						);
+					}
 					saveMessage.value = "Synced recovered local edits";
 					return;
 				} catch (error) {
@@ -2071,19 +2288,39 @@ async function loadProjects() {
 
 				await openRouteProjectIfNeeded(false, loadRunID);
 				if (!projectLoadIsCurrent(loadRunID)) return;
+				if (
+					selectedProjectID.value &&
+					!selectedProjectID.value.startsWith("local-")
+				) {
+					await loadRemoteProjectDetail(
+						selectedProjectID.value,
+						loadRunID
+					);
+				}
 				saveMessage.value = "Recovered local edits";
 				return;
 			}
 
 			if (remoteProjects.length) {
-				setProjects(remoteProjects);
-				await openRouteProjectIfNeeded(false, loadRunID);
+				const openedRouteProject = await openRouteProjectIfNeeded(
+					false,
+					loadRunID
+				);
 				if (!projectLoadIsCurrent(loadRunID)) return;
+				if (!openedRouteProject) {
+					selectedProjectID.value =
+						projectCatalog.value[0]?._id ?? "";
+					if (selectedProjectID.value) {
+						await loadRemoteProjectDetail(
+							selectedProjectID.value,
+							loadRunID
+						);
+					}
+				}
 				saveMessage.value = syncedSaveMessage.value;
 				return;
 			}
 
-			setProjects([]);
 			const openedRouteProject = await openRouteProjectIfNeeded(
 				false,
 				loadRunID
@@ -2105,6 +2342,8 @@ async function loadProjects() {
 		}
 
 		visibleProjectReviews.value = [];
+		visibleProjectReviewCatalog.value = [];
+		projectCatalog.value = [];
 		const localProjects = await loadLocalPythonProjectsAsync(
 			storageUserID.value
 		);
@@ -2153,6 +2392,8 @@ async function loadProjects() {
 		saveMessage.value =
 			error instanceof Error ? error.message : "Using local workspace";
 		visibleProjectReviews.value = [];
+		visibleProjectReviewCatalog.value = [];
+		projectCatalog.value = [];
 	} finally {
 		if (projectLoadIsCurrent(loadRunID)) {
 			await nextTick();
@@ -2219,7 +2460,7 @@ async function saveProjectOnce(
 			unsyncedProjectIDs.delete(savedProject._id);
 			pendingSaveProjectIDs.add(currentProject._id);
 			await saveLocalPythonProjectsAsync(
-				projects.value,
+				locallyPersistableProjects(),
 				storageUserID.value
 			);
 			return true;
@@ -2229,6 +2470,7 @@ async function saveProjectOnce(
 			if (startedProjectID.startsWith("local-"))
 				migrateCodeEditorViewStates(startedProjectID, savedProject._id);
 			projects.value.splice(currentIndex, 1, savedProject);
+			upsertProjectCatalog(savedProject);
 			if (selectedProjectID.value === startedProjectID) {
 				expectedSelectedProjectIDMigration = {
 					from: startedProjectID,
@@ -2507,6 +2749,7 @@ async function updateProjectSharePreference(event: Event) {
 		);
 		if (projectIndex >= 0) {
 			projects.value.splice(projectIndex, 1, updatedProject);
+			upsertProjectCatalog(updatedProject);
 			selectedProjectID.value = updatedProject._id;
 		}
 		await discardLocalProjectSnapshotIfSafe();
@@ -2752,16 +2995,15 @@ async function importBlueJProjectArchiveFromInput(event: Event) {
 	}
 }
 
-function projectLabel(project: PythonIdeProject) {
+function projectLabel(project: PythonIdeProjectListItem) {
 	return project.title || "Untitled Project";
 }
 
-function requestProjectDelete(project: PythonIdeProject) {
-	if (projects.value.length <= 1) {
+function requestProjectDelete(project: PythonIdeProjectListItem) {
+	if (sortedProjects.value.length <= 1) {
 		appendOutput("system", "Keep at least one project in the workspace.");
 		return;
 	}
-	selectedProjectID.value = project._id;
 	deleteCandidateProjectID.value = project._id;
 	deleteConfirmText.value = "";
 }
@@ -2771,19 +3013,20 @@ function cancelProjectDelete() {
 	deleteConfirmText.value = "";
 }
 
-async function confirmProjectDelete(project: PythonIdeProject) {
+async function confirmProjectDelete(project: PythonIdeProjectListItem) {
 	if (deleteConfirmText.value.trim().toLowerCase() !== "confirm") return;
 	await deleteProject(project);
 	cancelProjectDelete();
 }
 
-async function deleteProject(project: PythonIdeProject) {
-	if (projects.value.length <= 1) {
+async function deleteProject(project: PythonIdeProjectListItem) {
+	if (sortedProjects.value.length <= 1) {
 		appendOutput("system", "Keep at least one project in the workspace.");
 		return;
 	}
 
 	try {
+		const deletingSelectedProject = selectedProjectID.value === project._id;
 		const isRemoteProject =
 			canSyncToAccount.value && !project._id.startsWith("local-");
 		if (isRemoteProject) {
@@ -2792,8 +3035,16 @@ async function deleteProject(project: PythonIdeProject) {
 		projects.value = projects.value.filter(
 			candidate => candidate._id !== project._id
 		);
+		projectCatalog.value = projectCatalog.value.filter(
+			candidate => candidate._id !== project._id
+		);
 		deleteCodeEditorStateForProject(project._id);
-		selectedProjectID.value = projects.value[0]?._id ?? "";
+		if (deletingSelectedProject) {
+			selectedProjectID.value = sortedProjects.value[0]?._id ?? "";
+			if (isRemoteProject && selectedProjectID.value) {
+				await loadRemoteProjectDetail(selectedProjectID.value);
+			}
+		}
 		if (isRemoteProject) {
 			await discardLocalProjectSnapshotIfSafe();
 			saveMessage.value = syncedSaveMessage.value;
@@ -6810,6 +7061,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+	remoteProjectDetailAbortController?.abort();
 	flushPendingProjectSave();
 	saveCodeEditorViewState();
 	codeEditorView?.destroy();
@@ -7238,10 +7490,10 @@ onBeforeUnmount(() => {
 									class="project-button"
 									:class="{
 										'is-active':
-											project._id === selectedProject?._id
+											project._id === selectedProjectID
 									}"
 									type="button"
-									@click="selectedProjectID = project._id"
+									@click="selectCatalogProject(project._id)"
 								>
 									<span>{{ projectLabel(project) }}</span>
 									<small>{{
@@ -7252,11 +7504,12 @@ onBeforeUnmount(() => {
 									:aria-label="`Delete project ${projectLabel(project)}`"
 									class="file-delete project-delete-trigger"
 									:class="{
-										'is-disabled': projects.length <= 1
+										'is-disabled':
+											sortedProjects.length <= 1
 									}"
-									:disabled="projects.length <= 1"
+									:disabled="sortedProjects.length <= 1"
 									:title="
-										projects.length <= 1
+										sortedProjects.length <= 1
 											? 'Keep at least one project'
 											: `Delete project ${projectLabel(project)}`
 									"
@@ -7267,10 +7520,7 @@ onBeforeUnmount(() => {
 								</button>
 							</div>
 							<div
-								v-if="
-									project._id === selectedProject?._id &&
-									project._id === deleteCandidateProjectID
-								"
+								v-if="project._id === deleteCandidateProjectID"
 								class="project-delete-confirm"
 							>
 								<strong>

@@ -1,44 +1,45 @@
-// src/create-admin-user.ts
-import { env, exit } from "node:process";
+import process, { env } from "node:process";
 import mongoose from "mongoose";
 import * as readlineSync from "readline-sync";
 
 import { Admin } from "./models/schemas/Admin.js";
+import { selectMongoConnection } from "./security/mongoConnection.js";
+import {
+	adminCreationPayloadSchema,
+	isDuplicateKeyError
+} from "./utils/accountPayloads.js";
+import { accountEmailExists } from "./utils/accountSessions.js";
+import { readMongoSecret } from "./vaultClient.js";
 import "dotenv/config";
 
-const MONGODB_URI = env.MONGODB_URI;
-if (!MONGODB_URI) {
-	console.error("MONGODB_URI is required");
-	exit(1);
-}
-
-// Connect to MongoDB
-mongoose
-	.connect(MONGODB_URI)
-	.then(() => console.log("Connected to MongoDB"))
-	.catch((err) => {
-		console.error("Error connecting to MongoDB:", err);
-		exit(1);
-	});
-
-// Gather input
-const name: string = readlineSync.question("Name: ");
-const email: string = readlineSync.question("Email: ");
-const password: string = readlineSync.question("Password: ", {
-	hideEchoBack: true
-});
-
-if (!name || !email || !password) {
-	console.error("You need to enter name, email, and password!");
-	exit(1);
-}
-
-(async () => {
+async function main(): Promise<void> {
 	try {
-		const existingAdmin = await Admin.findOne({ email });
-		if (existingAdmin) {
-			console.error("That email already exists");
-			exit(1);
+		const mongoConnection = await selectMongoConnection(
+			env,
+			readMongoSecret
+		);
+		await mongoose.connect(mongoConnection.uri);
+
+		const parsed = adminCreationPayloadSchema.safeParse({
+			name: readlineSync.question("Name: "),
+			email: readlineSync.question("Email: "),
+			password: readlineSync.question("Password: ", {
+				hideEchoBack: true
+			})
+		});
+		if (!parsed.success) {
+			console.error(
+				"Enter a valid name and email, and a password between 8 and 256 characters."
+			);
+			process.exitCode = 1;
+			return;
+		}
+
+		const { email, name, password } = parsed.data;
+		if (await accountEmailExists(email)) {
+			console.error("That email already exists.");
+			process.exitCode = 1;
+			return;
 		}
 
 		const admin = new Admin({
@@ -51,11 +52,34 @@ if (!name || !email || !password) {
 		});
 
 		await admin.save();
-		// console.log(`Admin user created for ${name} with email ${email}`);
-		exit(0);
+		console.log("Admin account created.");
 	}
 	catch (error) {
-		console.error(`Error: ${error}`);
-		exit(1);
+		if (isDuplicateKeyError(error)) {
+			console.error("That email already exists.");
+		}
+		else {
+			// Connection errors can contain database credentials. Keep this
+			// message deliberately independent of the caught error.
+			console.error(
+				"Admin provisioning failed. Check database connectivity and account state."
+			);
+		}
+		process.exitCode = 1;
 	}
-})();
+	finally {
+		if (mongoose.connection.readyState !== 0) {
+			try {
+				await mongoose.disconnect();
+			}
+			catch {
+				console.error(
+					"Database disconnect failed after Admin provisioning."
+				);
+				process.exitCode = 1;
+			}
+		}
+	}
+}
+
+void main();

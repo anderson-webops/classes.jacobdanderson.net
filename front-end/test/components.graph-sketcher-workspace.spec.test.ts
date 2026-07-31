@@ -1,7 +1,13 @@
 import { mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import GraphSketcherWorkspace from "@/components/GraphSketcherWorkspace.vue";
-import { GRAPH_SKETCHER_STORAGE_KEY } from "@/modules/graphSketcher";
+import {
+	createBlankGraphDocument,
+	GRAPH_SKETCHER_STORAGE_KEY,
+	graphDocumentToJson,
+	MAX_GRAPH_DOCUMENT_BYTES,
+	MAX_GRAPH_EXPRESSION_LENGTH
+} from "@/modules/graphSketcher";
 
 function installLocalStorageStub() {
 	const values = new Map<string, string>();
@@ -55,6 +61,11 @@ describe("GraphSketcherWorkspace.vue", () => {
 		expect(wrapper.text()).toContain("Open / import");
 		expect(wrapper.text()).toContain("Download project");
 		expect(wrapper.text()).toContain("Plot a function");
+		expect(
+			wrapper
+				.get("[aria-label='Graph project actions']")
+				.attributes("role")
+		).toBe("group");
 
 		await buttonWithText(wrapper, "Style").trigger("click");
 		expect(wrapper.text()).toContain("Add linear best fit");
@@ -70,6 +81,9 @@ describe("GraphSketcherWorkspace.vue", () => {
 			.findAll("input")
 			.find(input => input.attributes("placeholder") === "sin(x) + 0.5x");
 		expect(equation).toBeDefined();
+		expect(equation!.attributes("maxlength")).toBe(
+			String(MAX_GRAPH_EXPRESSION_LENGTH)
+		);
 		await equation.setValue("x^2 - 4");
 		await buttonWithText(wrapper, "Plot function").trigger("click");
 
@@ -218,6 +232,139 @@ describe("GraphSketcherWorkspace.vue", () => {
 		expect(wrapper.text()).toContain("My saved graph");
 		expect(wrapper.text()).toContain(
 			"Restored the graph saved in this browser."
+		);
+	});
+
+	it("rejects oversized files before reading their contents", async () => {
+		const wrapper = mount(GraphSketcherWorkspace);
+		const text = vi.fn();
+		const arrayBuffer = vi.fn();
+		const input = wrapper.get(
+			"input[aria-label='Open or import a graph project']"
+		);
+		Object.defineProperty(input.element, "files", {
+			configurable: true,
+			value: [
+				{
+					arrayBuffer,
+					name: "too-large.csv",
+					size: MAX_GRAPH_DOCUMENT_BYTES + 1,
+					text
+				}
+			]
+		});
+
+		await input.trigger("change");
+
+		expect(text).not.toHaveBeenCalled();
+		expect(arrayBuffer).not.toHaveBeenCalled();
+		expect(wrapper.text()).toContain(
+			"The graph file is larger than the 8 MB browser limit."
+		);
+	});
+
+	it("renders every marker while sampling only large-graph editing handles", async () => {
+		const document = createBlankGraphDocument();
+		document.title = "Large marker-only graph";
+		document.series[0].lineStyle = "none";
+		document.series[0].markerShape = "circle";
+		document.series[0].points = Array.from(
+			{ length: 5_001 },
+			(_, index) => ({
+				x: (index % 100) / 5 - 10,
+				y: (Math.floor(index / 100) % 100) / 5 - 10
+			})
+		);
+		window.localStorage.setItem(
+			GRAPH_SKETCHER_STORAGE_KEY,
+			graphDocumentToJson(document)
+		);
+
+		const wrapper = mount(GraphSketcherWorkspace);
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.findAll(".graph-point")).toHaveLength(5_000);
+		const markerPath = wrapper.get(".graph-series__markers");
+		expect(markerPath.attributes("d").match(/\bM /g)).toHaveLength(5_001);
+		expect(wrapper.text()).toContain(
+			"Lines, markers, and error bars still use all 5,001 points"
+		);
+	});
+
+	it("does not apply a stale file import after loading the sample", async () => {
+		let resolveText: ((value: string) => void) | undefined;
+		const delayedText = new Promise<string>(resolve => {
+			resolveText = resolve;
+		});
+		const importedDocument = createBlankGraphDocument();
+		importedDocument.title = "Stale imported graph";
+
+		const wrapper = mount(GraphSketcherWorkspace);
+		const input = wrapper.get(
+			"input[aria-label='Open or import a graph project']"
+		);
+		Object.defineProperty(input.element, "files", {
+			configurable: true,
+			value: [
+				{
+					arrayBuffer: vi.fn(),
+					name: "stale.graphsketch",
+					size: 100,
+					text: () => delayedText
+				}
+			]
+		});
+
+		await input.trigger("change");
+		await buttonWithText(wrapper, "Sample").trigger("click");
+		resolveText?.(graphDocumentToJson(importedDocument));
+		await delayedText;
+		await new Promise(resolve => setTimeout(resolve, 0));
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.text()).not.toContain("Stale imported graph");
+		expect(wrapper.text()).toContain(
+			"Loaded the editable cooling experiment sample."
+		);
+	});
+
+	it("does not let a delayed file import overwrite newer graph edits", async () => {
+		let resolveText: ((value: string) => void) | undefined;
+		const delayedText = new Promise<string>(resolve => {
+			resolveText = resolve;
+		});
+		const importedDocument = createBlankGraphDocument();
+		importedDocument.title = "Stale imported graph";
+
+		const wrapper = mount(GraphSketcherWorkspace);
+		const input = wrapper.get(
+			"input[aria-label='Open or import a graph project']"
+		);
+		Object.defineProperty(input.element, "files", {
+			configurable: true,
+			value: [
+				{
+					arrayBuffer: vi.fn(),
+					name: "stale.graphsketch",
+					size: 100,
+					text: () => delayedText
+				}
+			]
+		});
+
+		await input.trigger("change");
+		await buttonWithText(wrapper, "Add").trigger("click");
+		resolveText?.(graphDocumentToJson(importedDocument));
+		await delayedText;
+		await new Promise(resolve => setTimeout(resolve, 0));
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.text()).not.toContain("Stale imported graph");
+		expect(wrapper.get("svg[role='img']").attributes("aria-label")).toContain(
+			"3 series"
+		);
+		expect(wrapper.text()).toContain(
+			"The graph changed while the file was opening, so the import was not applied."
 		);
 	});
 });

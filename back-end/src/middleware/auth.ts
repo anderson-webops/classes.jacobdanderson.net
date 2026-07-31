@@ -6,6 +6,7 @@ import { Tutor } from "../models/schemas/Tutor.js";
 import { User } from "../models/schemas/User.js";
 import {
 	accountSessionVersionMatches,
+	authenticatedSessionIsCurrent,
 	clearSessionRoles
 } from "../utils/accountSessions.js";
 import { findUsableCourseAccessCodeByID } from "../utils/courseAccessCodes.js";
@@ -193,6 +194,14 @@ export const validAccountSession: RequestHandler = async (req, res, next) => {
 	}
 
 	if (req.session?.courseCodeLearnerID) {
+		if (!authenticatedSessionIsCurrent(req.session as any)) {
+			rejectInvalidAccountSession(
+				req,
+				res,
+				"Course code session has expired"
+			);
+			return;
+		}
 		try {
 			const learner = await loadValidCourseCodeLearner(
 				req.session.courseCodeLearnerID

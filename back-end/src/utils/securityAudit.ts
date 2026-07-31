@@ -10,6 +10,7 @@ type AuditRole = "admin" | "tutor" | "user";
 interface SecurityAuditInput {
 	action: string;
 	metadata?: Record<string, unknown>;
+	omitActor?: boolean;
 	outcome?: "denied" | "failure" | "success";
 	targetID?: Types.ObjectId | string;
 	targetRole?: AuditRole;
@@ -42,7 +43,7 @@ export async function recordSecurityAuditEvent(
 	if (mongoose.connection.readyState !== 1) return;
 	try {
 		await SecurityAuditEvent.create({
-			...requestActor(req),
+			...(event.omitActor ? {} : requestActor(req)),
 			action: event.action,
 			ipHash: requestIpHash(req),
 			metadata: event.metadata,

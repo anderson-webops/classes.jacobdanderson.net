@@ -165,6 +165,20 @@ async function withAccountRoutes<T>(run: (baseUrl: string) => Promise<T>): Promi
 		session.courseCodeLearnerID = "stale-course-code-learner-id";
 		res.sendStatus(204);
 	});
+	app.post("/test/session/expired-user", (req, res) => {
+		const session = req.session as CustomSession;
+		session.userID = req.body.userID;
+		session.accountSessionVersion = 0;
+		session.authenticatedSessionExpiresAt = Date.now() - 1;
+		res.sendStatus(204);
+	});
+	app.get("/test/session/expiry", (req, res) => {
+		const session = req.session as CustomSession;
+		res.json({
+			authenticatedSessionExpiresAt:
+				session.authenticatedSessionExpiresAt ?? null
+		});
+	});
 	app.get("/test/session", (req, res) => {
 		res.json(sessionSnapshot(req.session as CustomSession));
 	});
@@ -203,7 +217,8 @@ function responseCookie(response: Response): string {
 async function loginRequest(
 	baseUrl: string,
 	password: string,
-	cookie?: string
+	cookie?: string,
+	remember = false
 ): Promise<Response> {
 	return fetch(`${baseUrl}/accounts/login`, {
 		method: "POST",
@@ -213,7 +228,8 @@ async function loginRequest(
 		},
 		body: JSON.stringify({
 			email: "  SHARED@EXAMPLE.COM ",
-			password
+			password,
+			remember
 		})
 	});
 }
@@ -350,6 +366,62 @@ describe("account login role transfer", () => {
 				expect.stringContaining("classes_oauth_apple=;"),
 				expect.stringContaining("classes_oauth_google=;")
 			]));
+		});
+	});
+
+	it("sets a real cookie expiry and rejects a replayed signed session after its embedded expiry", async () => {
+		const user = makeEntity("user", "user-password");
+		mockAccounts({ user });
+		mockExistingSessionAccounts({ user });
+
+		await withAccountRoutes(async baseUrl => {
+			const loginResponse = await loginRequest(
+				baseUrl,
+				"user-password"
+			);
+			const sessionSetCookies = loginResponse.headers
+				.getSetCookie()
+				.filter(cookie => cookie.startsWith("session=")
+					|| cookie.startsWith("session.sig="));
+			expect(loginResponse.status).toBe(200);
+			expect(sessionSetCookies).toHaveLength(2);
+			for (const cookie of sessionSetCookies) {
+				expect(cookie.toLowerCase()).toContain("expires=");
+			}
+
+			const liveCookie = responseCookie(loginResponse);
+			const expiryResponse = await fetch(
+				`${baseUrl}/test/session/expiry`,
+				{ headers: { cookie: liveCookie } }
+			);
+			const expiry = await expiryResponse.json() as {
+				authenticatedSessionExpiresAt: number;
+			};
+			expect(expiry.authenticatedSessionExpiresAt)
+				.toBeGreaterThan(Date.now() + 23 * 60 * 60 * 1000);
+
+			const expiredSeed = await fetch(
+				`${baseUrl}/test/session/expired-user`,
+				{
+					body: JSON.stringify({ userID: user._id.toString() }),
+					headers: { "content-type": "application/json" },
+					method: "POST"
+				}
+			);
+			const replayedCookie = responseCookie(expiredSeed);
+			modelMocks.userExists.mockClear();
+			const replayResponse = await fetch(
+				`${baseUrl}/accounts/me`,
+				{ headers: { cookie: replayedCookie } }
+			);
+
+			expect(replayResponse.status).toBe(200);
+			await expect(replayResponse.json()).resolves.toEqual({
+				adminID: null,
+				tutorID: null,
+				userID: null
+			});
+			expect(modelMocks.userExists).not.toHaveBeenCalled();
 		});
 	});
 

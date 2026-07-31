@@ -12,11 +12,13 @@ import { Tutor } from "../../models/schemas/Tutor.js";
 import { User } from "../../models/schemas/User.js";
 import {
 	accountCandidatesByPriority,
+	authenticatedSessionMaxAge,
 	clearSessionRoles,
 	establishAccountSession,
 	findAccountsByEmail,
 	getAccountID,
-	serializeAccountEntity
+	serializeAccountEntity,
+	setAuthenticatedSessionCookieLifetime
 } from "../../utils/accountSessions.js";
 import { clearOAuthBrowserBindings } from "../../utils/oauthBrowserBinding.js";
 import { recordSecurityAuditEvent } from "../../utils/securityAudit.js";
@@ -27,7 +29,6 @@ type SelectedLoginCandidate = ReturnType<typeof accountCandidatesByPriority>[num
 	entity: Entity;
 };
 
-const THIRTY_DAYS_MS: number = 30 * 24 * 60 * 60 * 1000;
 const PASSWORD_RESET_EXPIRY_MS = 30 * 60 * 1000;
 const PASSWORD_RESET_TOKEN_PATTERN = /^[a-f\d]{64}$/i;
 const PASSWORD_RESET_RESPONSE = {
@@ -171,10 +172,9 @@ export const login: RequestHandler = async (req, res) => {
 	}
 
 	const session = req.session as CustomSession;
-	establishAccountSession(session, selectedCandidate);
-
-	const options = ((req as any).sessionOptions ??= {});
-	options.maxAge = remember ? THIRTY_DAYS_MS : undefined;
+	const maxAge = authenticatedSessionMaxAge(remember);
+	establishAccountSession(session, selectedCandidate, maxAge);
+	setAuthenticatedSessionCookieLifetime(req, maxAge);
 	clearOAuthBrowserBindings(res);
 	return res.json({
 		[selectedCandidate.responseKey]:

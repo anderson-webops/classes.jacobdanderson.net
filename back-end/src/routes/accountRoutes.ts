@@ -31,6 +31,10 @@ import {
 import { Admin } from "../models/schemas/Admin.js";
 import { Tutor } from "../models/schemas/Tutor.js";
 import { User } from "../models/schemas/User.js";
+import {
+	authenticatedSessionIsCurrent,
+	clearSessionRoles
+} from "../utils/accountSessions.js";
 
 const router = Router();
 const objectIdPattern = /^[a-f\d]{24}$/i;
@@ -138,6 +142,10 @@ router.post(
 const currentAccount: RequestHandler = async (req, res) => {
 	const session = req.session as CustomSession | undefined;
 	if (!session) {
+		return res.json({ adminID: null, tutorID: null, userID: null });
+	}
+	if (!authenticatedSessionIsCurrent(session)) {
+		clearSessionRoles(session);
 		return res.json({ adminID: null, tutorID: null, userID: null });
 	}
 

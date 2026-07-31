@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import type {
 	ManagedPythonIdeProject,
+	ManagedPythonIdeProjectMetadata,
 	PythonIdeFile,
 	PythonIdeProject,
+	PythonIdeProjectMetadata,
 	PythonIdeProjectReview
 } from "@/modules/pythonIde";
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 import {
 	createPythonIdeProjectReview,
+	fetchManagedPythonIdeProject,
 	fetchManagedPythonIdeProjects,
 	isPythonIdeBinaryAssetFile,
 	updatePythonIdeProjectReview
@@ -25,20 +28,18 @@ const loading = ref(false);
 const saving = ref(false);
 const error = ref("");
 const success = ref("");
-const records = ref<ManagedPythonIdeProject[]>([]);
+const records = ref<ManagedPythonIdeProjectMetadata[]>([]);
+const selectedRecordDetail = ref<ManagedPythonIdeProject | null>(null);
 const selectedProjectID = ref("");
 const selectedFileName = ref("");
 const editFileContent = ref("");
 const noteDraft = ref("");
 const visibleDraft = ref(false);
 
-const selectedRecord = computed(
-	() =>
-		records.value.find(
-			record => record.project._id === selectedProjectID.value
-		) ??
-		records.value[0] ??
-		null
+const selectedRecord = computed(() =>
+	selectedRecordDetail.value?.project._id === selectedProjectID.value
+		? selectedRecordDetail.value
+		: null
 );
 const selectedProject = computed(() => selectedRecord.value?.project ?? null);
 const selectedReview = computed(() => selectedRecord.value?.review ?? null);
@@ -91,7 +92,7 @@ function formatDate(value: string | undefined) {
 	}).format(date);
 }
 
-function projectLabel(project: PythonIdeProject) {
+function projectLabel(project: PythonIdeProject | PythonIdeProjectMetadata) {
 	return project.courseProjectTitle || project.title;
 }
 
@@ -105,9 +106,14 @@ function replaceRecord(
 	project: PythonIdeProject,
 	review: PythonIdeProjectReview
 ) {
+	const { files: _projectFiles, ...projectMetadata } = project;
+	const { files: _reviewFiles, ...reviewMetadata } = review;
 	records.value = records.value.map(record =>
-		record.project._id === project._id ? { project, review } : record
+		record.project._id === project._id
+			? { project: projectMetadata, review: reviewMetadata }
+			: record
 	);
+	selectedRecordDetail.value = { project, review };
 }
 
 function selectDefaultFile(record: ManagedPythonIdeProject | null) {
@@ -143,8 +149,8 @@ async function loadProjectReviews() {
 			)
 		) {
 			selectedProjectID.value = records.value[0]?.project._id ?? "";
-			selectDefaultFile(selectedRecord.value);
 		}
+		await loadSelectedProject();
 		loaded.value = true;
 	} catch (err: any) {
 		error.value =
@@ -154,6 +160,53 @@ async function loadProjectReviews() {
 		records.value = [];
 	} finally {
 		loading.value = false;
+	}
+}
+
+let selectedProjectLoadRun = 0;
+let selectedProjectLoadingID = "";
+let selectedProjectAbortController: AbortController | null = null;
+async function loadSelectedProject() {
+	const projectID = selectedProjectID.value;
+	const loadRun = ++selectedProjectLoadRun;
+	selectedProjectAbortController?.abort();
+	selectedRecordDetail.value = null;
+	if (!props.userId || !projectID) return;
+
+	const abortController = new AbortController();
+	selectedProjectAbortController = abortController;
+	selectedProjectLoadingID = projectID;
+	loading.value = true;
+	error.value = "";
+	try {
+		const record = await fetchManagedPythonIdeProject(
+			props.userId,
+			projectID,
+			abortController.signal
+		);
+		if (
+			loadRun !== selectedProjectLoadRun ||
+			projectID !== selectedProjectID.value
+		) {
+			return;
+		}
+		selectedRecordDetail.value = record;
+		selectDefaultFile(record);
+	} catch (err: any) {
+		if (abortController.signal.aborted) return;
+		if (loadRun !== selectedProjectLoadRun) return;
+		error.value =
+			err.response?.data?.message ||
+			err.message ||
+			"Unable to load this saved Code IDE project.";
+	} finally {
+		if (loadRun === selectedProjectLoadRun) {
+			selectedProjectLoadingID = "";
+			loading.value = false;
+		}
+		if (selectedProjectAbortController === abortController) {
+			selectedProjectAbortController = null;
+		}
 	}
 }
 
@@ -291,10 +344,15 @@ function resetFileFromStudent() {
 }
 
 watch(selectedProjectID, () => {
-	selectDefaultFile(selectedRecord.value);
+	if (selectedProjectLoadingID === selectedProjectID.value) return;
+	void loadSelectedProject();
 });
 
 watch([selectedReview, selectedFileName], syncDrafts, { immediate: true });
+
+onBeforeUnmount(() => {
+	selectedProjectAbortController?.abort();
+});
 </script>
 
 <template>

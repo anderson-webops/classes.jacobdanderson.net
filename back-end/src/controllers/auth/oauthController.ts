@@ -8,7 +8,11 @@ import type { CustomSession } from "../../types/session/CustomSession.js";
 import { Buffer } from "node:buffer";
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { OAuthLoginAttempt } from "../../models/schemas/OAuthLoginAttempt.js";
-import { establishAccountSession } from "../../utils/accountSessions.js";
+import {
+	authenticatedSessionMaxAge,
+	establishAccountSession,
+	setAuthenticatedSessionCookieLifetime
+} from "../../utils/accountSessions.js";
 import {
 	ExternalIdentityAccountError,
 	resolveExternalIdentityAccount
@@ -32,7 +36,6 @@ import {
 	oauthProviderCredentials
 } from "../../utils/oauthProviderConfig.js";
 
-const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const OAUTH_TOKEN_PATTERN = /^[\w~-]{32,256}$/u;
 
 type OAuthErrorCode
@@ -249,9 +252,13 @@ export const finishOAuthLogin: RequestHandler = async (req, res) => {
 			provider,
 			subject
 		});
-		establishAccountSession(req.session as CustomSession, candidate);
-		const options = ((req as any).sessionOptions ??= {});
-		options.maxAge = consumedAttempt.remember ? THIRTY_DAYS_MS : undefined;
+		const maxAge = authenticatedSessionMaxAge(consumedAttempt.remember);
+		establishAccountSession(
+			req.session as CustomSession,
+			candidate,
+			maxAge
+		);
+		setAuthenticatedSessionCookieLifetime(req, maxAge);
 		return res.redirect(
 			303,
 			withOAuthResult(returnTo, "oauthStatus", "success")

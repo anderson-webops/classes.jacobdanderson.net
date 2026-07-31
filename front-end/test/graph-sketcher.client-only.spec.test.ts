@@ -23,19 +23,28 @@ describe("Graph Sketcher runtime boundary", () => {
 		);
 		const runtime = [
 			"graphSketcher.ts",
-			"graphSketcherFiles.ts"
+			"graphSketcherArchive.ts",
+			"graphSketcherFiles.ts",
+			"graphSketcherSafety.ts"
 		]
 			.map(file =>
 				readFileSync(resolve(process.cwd(), "src/modules", file), "utf8")
 			)
 			.join("\n");
+		const worker = readFileSync(
+			resolve(
+				process.cwd(),
+				"src/workers/graphSketcherArchive.worker.ts"
+			),
+			"utf8"
+		);
 
 		expect(route).toContain(
 			'import("@/components/GraphSketcherWorkspace.vue")'
 		);
 		expect(component).toContain("All rendering, imports, and");
 		expect(component).toContain("exports run in this browser.");
-		expect(`${component}\n${runtime}`).not.toMatch(
+		expect(`${component}\n${runtime}\n${worker}`).not.toMatch(
 			/\b(?:fetch|WebSocket|EventSource)\s*\(|\baxios\b|\/api\//
 		);
 		expect(runtime).not.toMatch(/\beval\s*\(|\bnew\s+Function\b/);

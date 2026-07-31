@@ -77,7 +77,9 @@ function ownedProjectQuery(ownerID: Types.ObjectId, ownerRole: "admin" | "tutor"
 function queryWith<T>(result: T) {
 	const query = {
 		populate: vi.fn().mockResolvedValue(result),
+		select: vi.fn(() => query),
 		sort: vi.fn(() => query),
+		skip: vi.fn(() => query),
 		limit: vi.fn(() => query),
 		lean: vi.fn().mockResolvedValue(result),
 		then: (resolve: (value: T) => unknown, reject: (reason: unknown) => unknown) =>
@@ -165,6 +167,7 @@ async function withUserRoutes<T>(run: (baseUrl: string) => Promise<T>): Promise<
 	app.use((req: any, _res, next) => {
 		req.session = {
 			accountSessionVersion: 0,
+			authenticatedSessionExpiresAt: Date.now() + 60_000,
 			adminID: req.get("x-admin-id") || undefined,
 			tutorID: req.get("x-tutor-id") || undefined,
 			userID: req.get("x-user-id") || undefined
@@ -273,12 +276,57 @@ describe("Python project review routes", () => {
 			expect(response.status).toBe(200);
 			expect(modelMocks.pythonProjectFind).toHaveBeenCalledWith(ownedProjectQuery(studentID, "user"));
 			expect(body.projects).toHaveLength(1);
-			expect(body.projects[0].files[0].content).toBe("print('student')\n");
+			expect(body.projects[0]).not.toHaveProperty("files");
+			expect(body.nextOffset).toBeNull();
+		});
+	});
+
+	it("paginates project metadata without returning file contents", async () => {
+		modelMocks.pythonProjectFind.mockReturnValue(queryWith(
+			Array.from({ length: 26 }, (_value, index) =>
+				makeProject({
+					_id: new Types.ObjectId(),
+					files: [{
+						content: `private-${index}`,
+						encoding: "text",
+						name: "main.py"
+					}],
+					title: `Project ${index}`
+				})
+			)
+		));
+
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(
+				`${baseUrl}/users/loggedin/python-projects?offset=0&limit=25`,
+				{ headers: { "x-user-id": studentID.toString() } }
+			);
+			const body = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(body.projects).toHaveLength(25);
+			expect(body.nextOffset).toBe(25);
+			for (const project of body.projects) {
+				expect(project).not.toHaveProperty("files");
+				expect(JSON.stringify(project)).not.toContain("private-");
+			}
+		});
+	});
+
+	it("rejects unbounded project-list pagination values", async () => {
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(
+				`${baseUrl}/users/loggedin/python-projects?limit=26`,
+				{ headers: { "x-user-id": studentID.toString() } }
+			);
+
+			expect(response.status).toBe(400);
+			expect(modelMocks.pythonProjectFind).not.toHaveBeenCalled();
 		});
 	});
 
 	it("sanitizes legacy stored files before listing owned Code IDE projects", async () => {
-		modelMocks.pythonProjectFind.mockReturnValue(queryWith([
+		modelMocks.pythonProjectFindOne.mockResolvedValue(
 			makeProject({
 				activeFileName: "../secret.py",
 				files: [
@@ -299,23 +347,23 @@ describe("Python project review routes", () => {
 					}
 				]
 			})
-		]));
+		);
 
 		await withUserRoutes(async baseUrl => {
-			const response = await fetch(`${baseUrl}/users/loggedin/python-projects`, {
+			const response = await fetch(`${baseUrl}/users/loggedin/python-projects/${projectID}`, {
 				headers: { "x-user-id": studentID.toString() }
 			});
 			const body = await response.json();
 
 			expect(response.status).toBe(200);
-			expect(body.projects[0].files).toEqual([
+			expect(body.project.files).toEqual([
 				{
 					name: "main.py",
 					content: "print('safe')\n",
 					encoding: "text"
 				}
 			]);
-			expect(body.projects[0].activeFileName).toBe("main.py");
+			expect(body.project.activeFileName).toBe("main.py");
 		});
 	});
 
@@ -376,10 +424,18 @@ describe("Python project review routes", () => {
 
 			expect(response.status).toBe(200);
 			expect(modelMocks.pythonProjectFind).toHaveBeenCalledWith(ownedProjectQuery(studentID, "user"));
-			expect(modelMocks.pythonProjectReviewFind).toHaveBeenCalledWith({ user: studentID });
 			expect(body.projects).toHaveLength(1);
-			expect(body.projects[0].project.files[0].content).toBe("print('student')\n");
-			expect(body.projects[0].review.files[0].content).toContain("Try a for loop");
+			expect(body.projects[0].project).not.toHaveProperty("files");
+			expect(body.projects[0].review).not.toHaveProperty("files");
+
+			const detailResponse = await fetch(
+				`${baseUrl}/users/${studentID}/python-projects/${projectID}`,
+				{ headers: { "x-admin-id": adminID.toString() } }
+			);
+			const detailBody = await detailResponse.json();
+			expect(detailResponse.status).toBe(200);
+			expect(detailBody.project.files[0].content).toBe("print('student')\n");
+			expect(detailBody.review.files[0].content).toContain("Try a for loop");
 		});
 	});
 

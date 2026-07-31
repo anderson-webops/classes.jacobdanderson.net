@@ -273,6 +273,14 @@ describe("Google and Apple OAuth login", () => {
 				}
 			);
 			const authenticatedSession = responseSessionCookies(callback);
+			for (const cookie of callback.headers
+				.getSetCookie()
+				.filter(value =>
+					value.startsWith("session=")
+					|| value.startsWith("session.sig=")
+				)) {
+				expect(cookie.toLowerCase()).toContain("expires=");
+			}
 			const sessionResponse = await fetch(`${baseUrl}/test/session`, {
 				headers: { cookie: authenticatedSession }
 			});
