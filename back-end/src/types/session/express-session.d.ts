@@ -16,6 +16,7 @@ declare module "express-session" {
 		userID?: string;
 		courseCodeLearnerID?: string;
 		accountSessionVersion?: number;
+		authenticatedSessionExpiresAt?: number;
 	}
 }
 

@@ -43,6 +43,9 @@ const RUNTIME_RESERVED_ROOTS = new Set(["keras", "pgzero", "tensorflow"]);
 const MAX_PROJECT_FILES = 40;
 const MAX_FILE_LENGTH = 3_000_000;
 const MAX_PROJECT_LENGTH = 12_000_000;
+const PROJECT_LIST_PAGE_SIZE = 25;
+const MAX_PROJECT_LIST_PAGE_SIZE = 25;
+const MAX_PROJECT_LIST_OFFSET = 100_000;
 const configuredProjectLimit = Number(
 	env.CODE_IDE_PROJECTS_PER_ACCOUNT_MAX || 200
 );
@@ -159,6 +162,26 @@ function serializePythonProject(project: IPythonProject) {
 	};
 }
 
+function serializePythonProjectMetadata(project: IPythonProject) {
+	return {
+		_id: project._id.toString(),
+		title: project.title,
+		mode: project.mode,
+		activeFileName: project.activeFileName,
+		courseID: project.courseID,
+		courseProjectKey: project.courseProjectKey,
+		courseProjectTitle: project.courseProjectTitle,
+		starterLabel: project.starterLabel,
+		starterUrl: project.starterUrl,
+		shared: project.shared ?? false,
+		shareID: project.shared ? project.shareID : undefined,
+		shareCreatedAt: project.shared ? project.shareCreatedAt : undefined,
+		sharedSourceID: project.sharedSourceID,
+		createdAt: project.createdAt,
+		updatedAt: project.updatedAt
+	};
+}
+
 function serializeSharedPythonProject(project: IPythonProject) {
 	const files = safeSerializedProjectFiles(project);
 	return {
@@ -183,6 +206,28 @@ function serializePythonProjectReview(review: IPythonProjectReview) {
 		mode: review.mode,
 		files,
 		activeFileName: normalizeActiveFileName(review.activeFileName, files),
+		courseID: review.courseID,
+		courseProjectKey: review.courseProjectKey,
+		courseProjectTitle: review.courseProjectTitle,
+		reviewerRole: review.reviewerRole,
+		reviewerName: review.reviewerName,
+		lastEditedByRole: review.lastEditedByRole,
+		lastEditedByName: review.lastEditedByName,
+		visibleToStudent: review.visibleToStudent,
+		note: review.note ?? "",
+		sourceUpdatedAt: review.sourceUpdatedAt,
+		createdAt: review.createdAt,
+		updatedAt: review.updatedAt
+	};
+}
+
+function serializePythonProjectReviewMetadata(review: IPythonProjectReview) {
+	return {
+		_id: review._id.toString(),
+		sourceProject: review.sourceProject.toString(),
+		title: review.title,
+		mode: review.mode,
+		activeFileName: review.activeFileName,
 		courseID: review.courseID,
 		courseProjectKey: review.courseProjectKey,
 		courseProjectTitle: review.courseProjectTitle,
@@ -361,6 +406,57 @@ function getReviewIDParam(req: Parameters<RequestHandler>[0], res: Parameters<Re
 	return reviewID;
 }
 
+function getListPagination(
+	req: Parameters<RequestHandler>[0],
+	res: Parameters<RequestHandler>[1]
+) {
+	const parseInteger = (
+		value: unknown,
+		fallback: number,
+		maximum: number
+	) => {
+		if (value === undefined) return fallback;
+		if (
+			typeof value !== "string"
+			|| !/^(?:0|[1-9]\d*)$/u.test(value)
+		) {
+			return null;
+		}
+		const parsed = Number(value);
+		return Number.isSafeInteger(parsed) && parsed <= maximum
+			? parsed
+			: null;
+	};
+	const offset = parseInteger(
+		req.query.offset,
+		0,
+		MAX_PROJECT_LIST_OFFSET
+	);
+	const limit = parseInteger(
+		req.query.limit,
+		PROJECT_LIST_PAGE_SIZE,
+		MAX_PROJECT_LIST_PAGE_SIZE
+	);
+	if (offset === null || limit === null || limit < 1) {
+		res.status(400).json({
+			message: `Project list pagination requires an offset from 0 through ${MAX_PROJECT_LIST_OFFSET} and a limit from 1 through ${MAX_PROJECT_LIST_PAGE_SIZE}`
+		});
+		return null;
+	}
+	return { limit, offset };
+}
+
+function paginatedResult<T>(
+	items: T[],
+	{ limit, offset }: { limit: number; offset: number }
+) {
+	const hasNextPage = items.length > limit;
+	return {
+		items: items.slice(0, limit),
+		nextOffset: hasNextPage ? offset + limit : null
+	};
+}
+
 function documentID(value: unknown) {
 	if (value && typeof value === "object" && "_id" in value) {
 		const id = (value as { _id?: unknown })._id;
@@ -516,43 +612,121 @@ async function findOwnedProject(req: Parameters<RequestHandler>[0], res: Paramet
 export const listPythonProjects: RequestHandler = async (req, res) => {
 	const owner = currentProjectOwner(req, res);
 	if (!owner) return;
+	const pagination = getListPagination(req, res);
+	if (!pagination) return;
 
-	const projects = await PythonProject.find(projectOwnerQuery(owner)).sort({ updatedAt: -1 }).limit(100);
+	const projects = await PythonProject.find(projectOwnerQuery(owner))
+		.select("-files")
+		.sort({ updatedAt: -1, _id: -1 })
+		.skip(pagination.offset)
+		.limit(pagination.limit + 1);
+	const page = paginatedResult(projects, pagination);
 
-	res.json({ projects: projects.map(serializePythonProject) });
+	res.json({
+		nextOffset: page.nextOffset,
+		projects: page.items.map(serializePythonProjectMetadata)
+	});
 };
 
 export const listVisiblePythonProjectReviews: RequestHandler = async (req, res) => {
 	const userID = req.currentUser?._id;
-	if (!userID) return res.json({ reviews: [] });
+	if (!userID) return res.json({ nextOffset: null, reviews: [] });
+	const pagination = getListPagination(req, res);
+	if (!pagination) return;
 
 	const reviews = await PythonProjectReview.find({
 		user: userID,
 		visibleToStudent: true
 	})
-		.sort({ updatedAt: -1 })
-		.limit(100);
+		.select("-files")
+		.sort({ updatedAt: -1, _id: -1 })
+		.skip(pagination.offset)
+		.limit(pagination.limit + 1);
+	const page = paginatedResult(reviews, pagination);
 
-	res.json({ reviews: reviews.map(serializePythonProjectReview) });
+	res.json({
+		nextOffset: page.nextOffset,
+		reviews: page.items.map(serializePythonProjectReviewMetadata)
+	});
 };
 
 export const listManagedPythonProjects: RequestHandler = async (req, res) => {
 	const user = await findManagedPythonProjectUser(req, res);
 	if (!user) return;
+	const pagination = getListPagination(req, res);
+	if (!pagination) return;
 
-	const [projects, reviews] = await Promise.all([
-		PythonProject.find(studentProjectOwnerQuery(user._id)).sort({ updatedAt: -1 }).limit(100),
-		PythonProjectReview.find({ user: user._id }).sort({ updatedAt: -1 }).limit(100)
-	]);
+	const projects = await PythonProject.find(studentProjectOwnerQuery(user._id))
+		.select("-files")
+		.sort({ updatedAt: -1, _id: -1 })
+		.skip(pagination.offset)
+		.limit(pagination.limit + 1);
+	const page = paginatedResult(projects, pagination);
+	const projectIDs = page.items.map(project => project._id);
+	const reviews = projectIDs.length
+		? await PythonProjectReview.find({
+				sourceProject: { $in: projectIDs },
+				user: user._id
+			}).select("-files")
+		: [];
 	const reviewsByProject = new Map(
-		reviews.map(review => [review.sourceProject.toString(), serializePythonProjectReview(review)])
+		reviews.map(review => [
+			review.sourceProject.toString(),
+			serializePythonProjectReviewMetadata(review)
+		])
 	);
 
 	res.json({
-		projects: projects.map(project => ({
-			project: serializePythonProject(project),
+		nextOffset: page.nextOffset,
+		projects: page.items.map(project => ({
+			project: serializePythonProjectMetadata(project),
 			review: reviewsByProject.get(project._id.toString()) ?? null
 		}))
+	});
+};
+
+export const getPythonProject: RequestHandler = async (req, res) => {
+	const project = await findOwnedProject(req, res);
+	if (!project) return;
+	res.json({ project: serializePythonProject(project) });
+};
+
+export const getVisiblePythonProjectReview: RequestHandler = async (req, res) => {
+	const userID = req.currentUser?._id;
+	if (!userID) return res.sendStatus(404);
+	const reviewID = getReviewIDParam(req, res);
+	if (!reviewID) return;
+
+	const review = await PythonProjectReview.findOne({
+		_id: new Types.ObjectId(reviewID),
+		user: userID,
+		visibleToStudent: true
+	});
+	if (!review) return res.sendStatus(404);
+	res.json({ review: serializePythonProjectReview(review) });
+};
+
+export const getManagedPythonProject: RequestHandler = async (req, res) => {
+	const user = await findManagedPythonProjectUser(req, res);
+	if (!user) return;
+	const projectID = getProjectIDParam(req, res);
+	if (!projectID) return;
+
+	const projectObjectID = new Types.ObjectId(projectID);
+	const [project, review] = await Promise.all([
+		PythonProject.findOne({
+			_id: projectObjectID,
+			...studentProjectOwnerQuery(user._id)
+		}),
+		PythonProjectReview.findOne({
+			sourceProject: projectObjectID,
+			user: user._id
+		})
+	]);
+	if (!project) return res.sendStatus(404);
+	res.json({
+		project: serializePythonProject(project),
+		review: review ? serializePythonProjectReview(review) : null
 	});
 };
 

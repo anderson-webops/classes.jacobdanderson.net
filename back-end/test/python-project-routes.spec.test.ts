@@ -483,14 +483,20 @@ describe("Python project routes", () => {
 			resolve(__dirname, "../src/middleware/rateLimiters.ts"),
 			"utf8"
 		);
+		const payloadSource = readFileSync(
+			resolve(__dirname, "../src/middleware/projectPayload.ts"),
+			"utf8"
+		);
 
-		expect(serverSource).toContain("CODE_IDE_PROJECT_BODY_LIMIT");
-		expect(serverSource).toContain("PYTHON_IDE_PROJECT_BODY_LIMIT");
 		expect(serverSource).toContain("codeIdeProjectApiMountPath");
 		expect(limiterSource).toContain("loggedin\\/python-projects");
 		expect(limiterSource).toContain("[^/]+\\/python-projects");
 		expect(limiterSource).toContain("(?=\\/|$)");
-		expect(serverSource).toContain("bodyParser.json({ limit: codeIdeProjectJsonBodyLimit })");
+		expect(payloadSource).toContain("CODE_IDE_PROJECT_BODY_LIMIT");
+		expect(payloadSource).toContain("PYTHON_IDE_PROJECT_BODY_LIMIT");
+		expect(payloadSource).toContain('"80mb"');
+		expect(payloadSource).toContain("inflate: false");
+		expect(serverSource).toContain("limitProjectBody(projectJson)");
 		expect(serverSource).toContain('bodyParser.json({ limit: "1mb" })');
 	});
 

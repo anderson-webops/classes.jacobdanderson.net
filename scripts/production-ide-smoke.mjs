@@ -1,4 +1,8 @@
 import { pathToFileURL } from "node:url";
+import {
+	smokeErrorMessage,
+	smokeRequest
+} from "./http-smoke-client.mjs";
 
 const origin = process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderson.net";
 const timeoutMs = Number(process.env.CLASSES_SITE_SMOKE_TIMEOUT_MS || 15000);
@@ -8,25 +12,18 @@ const GITHUB_REPOSITORY_URL_RE = /https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-
 const BLUEJ_GREENFOOT_PATH = "/k-pet-group/BlueJ-Greenfoot";
 
 async function fetchText(url) {
-	const controller = new AbortController();
-	const timeout = setTimeout(() => controller.abort(), timeoutMs);
+	const response = await smokeRequest(url, {
+		headers: {
+			accept: "text/html,application/javascript,text/javascript,*/*"
+		},
+		timeoutMs
+	});
 
-	try {
-		const response = await fetch(url, {
-			headers: {
-				accept: "text/html,application/javascript,text/javascript,*/*"
-			},
-			signal: controller.signal
-		});
-
-		if (!response.ok) {
-			throw new Error(`${url} returned HTTP ${response.status}`);
-		}
-
-		return await response.text();
-	} finally {
-		clearTimeout(timeout);
+	if (!response.ok) {
+		throw new Error(`${url} returned HTTP ${response.status}`);
 	}
+
+	return await response.text();
 }
 
 export function pageAssetUrls(html, baseUrl = pageUrl) {
@@ -145,7 +142,7 @@ export async function runProductionIdeSmoke() {
 const invokedUrl = process.argv[1] ? pathToFileURL(process.argv[1]).href : "";
 if (import.meta.url === invokedUrl) {
 	runProductionIdeSmoke().catch(error => {
-		console.error(error instanceof Error ? error.message : error);
+		console.error(smokeErrorMessage(error));
 		process.exitCode = 1;
 	});
 }

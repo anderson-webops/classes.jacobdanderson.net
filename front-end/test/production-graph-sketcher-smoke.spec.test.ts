@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
 	containsGraphSketcherRuntimeMarkers,
+	containsGraphSketcherWorkerMarkers,
+	graphSketcherWorkerAssetUrls,
 	graphSketcherSmokePageUrl,
 	pageAssetUrls
 } from "../../scripts/production-graph-sketcher-smoke.mjs";
@@ -46,5 +48,24 @@ describe("production Graph Sketcher smoke helpers", () => {
 
 		expect(containsGraphSketcherRuntimeMarkers("Graph Sketcher")).toBe(false);
 		expect(containsGraphSketcherRuntimeMarkers(currentRuntime)).toBe(true);
+	});
+
+	it("requires the bounded same-origin archive worker", () => {
+		const pageUrl = new URL(
+			"https://classes.jacobdanderson.net/graph-sketcher"
+		);
+		const runtime =
+			'new Worker("/assets/graphSketcherArchive.worker-a1.js")';
+		const worker = [
+			"contents.xml",
+			"The .ograph archive must contain exactly one contents.xml file.",
+			"The .ograph archive could not be opened."
+		].join("\n");
+
+		expect(graphSketcherWorkerAssetUrls(runtime, pageUrl)).toEqual([
+			"https://classes.jacobdanderson.net/assets/graphSketcherArchive.worker-a1.js"
+		]);
+		expect(containsGraphSketcherWorkerMarkers(worker)).toBe(true);
+		expect(containsGraphSketcherWorkerMarkers("contents.xml")).toBe(false);
 	});
 });

@@ -117,6 +117,9 @@ export const MAX_GRAPH_DOCUMENT_BYTES = 8 * 1024 * 1024;
 export const MAX_GRAPH_SERIES = 128;
 export const MAX_GRAPH_POINTS = 100_000;
 export const MAX_GRAPH_ANNOTATIONS = 2_000;
+export const MAX_GRAPH_EXPRESSION_LENGTH = 512;
+export const MAX_GRAPH_EXPRESSION_TOKENS = 256;
+export const MAX_GRAPH_EXPRESSION_DEPTH = 32;
 
 const DEFAULT_SERIES_COLORS = [
 	"#2563eb",
@@ -659,7 +662,6 @@ export function normalizeGraphDocument(value: unknown): GraphDocument {
 		);
 		remainingPointCount -= normalized.points.length;
 		series.push(normalized);
-		if (remainingPointCount <= 0) break;
 	}
 	if (!series.length) series.push(createGraphSeries());
 
@@ -695,6 +697,37 @@ export function cloneGraphDocument(document: GraphDocument) {
 	return normalizeGraphDocument(JSON.parse(JSON.stringify(document)));
 }
 
+function assertGraphDocumentImportLimits(value: unknown) {
+	if (!isRecord(value)) return;
+
+	const rawSeries = Array.isArray(value.series) ? value.series : [];
+	if (rawSeries.length > MAX_GRAPH_SERIES) {
+		throw new Error(
+			`Graph projects are limited to ${MAX_GRAPH_SERIES} series.`
+		);
+	}
+
+	let pointCount = 0;
+	for (const series of rawSeries) {
+		if (!isRecord(series) || !Array.isArray(series.points)) continue;
+		pointCount += series.points.length;
+		if (pointCount > MAX_GRAPH_POINTS) {
+			throw new Error(
+				`Graph projects are limited to ${MAX_GRAPH_POINTS.toLocaleString()} total points.`
+			);
+		}
+	}
+
+	const rawAnnotations = Array.isArray(value.annotations)
+		? value.annotations
+		: [];
+	if (rawAnnotations.length > MAX_GRAPH_ANNOTATIONS) {
+		throw new Error(
+			`Graph projects are limited to ${MAX_GRAPH_ANNOTATIONS.toLocaleString()} annotations.`
+		);
+	}
+}
+
 export function graphDocumentFromJson(json: string) {
 	if (new TextEncoder().encode(json).byteLength > MAX_GRAPH_DOCUMENT_BYTES) {
 		throw new Error(
@@ -703,7 +736,9 @@ export function graphDocumentFromJson(json: string) {
 	}
 
 	try {
-		return normalizeGraphDocument(JSON.parse(json));
+		const parsed = JSON.parse(json);
+		assertGraphDocumentImportLimits(parsed);
+		return normalizeGraphDocument(parsed);
 	} catch (error) {
 		if (error instanceof SyntaxError) {
 			throw new Error("The graph project contains malformed JSON.");
@@ -1014,16 +1049,27 @@ export function linearRegression(
 	};
 }
 
+function graphPointXRange(points: readonly GraphDataPoint[]) {
+	if (!points.length) return null;
+	let minimumX = Number.POSITIVE_INFINITY;
+	let maximumX = Number.NEGATIVE_INFINITY;
+	for (const point of points) {
+		if (!Number.isFinite(point.x)) return null;
+		minimumX = Math.min(minimumX, point.x);
+		maximumX = Math.max(maximumX, point.x);
+	}
+	return [minimumX, maximumX] as const;
+}
+
 export function createBestFitSeries(
 	source: GraphSeries,
 	color = source.color
 ): GraphSeries | null {
 	const regression = linearRegression(source.points);
 	if (!regression) return null;
-	const xValues = source.points.map(point => point.x);
-	const minimumX = Math.min(...xValues);
-	const maximumX = Math.max(...xValues);
-	if (!Number.isFinite(minimumX) || minimumX === maximumX) return null;
+	const xRange = graphPointXRange(source.points);
+	if (!xRange || xRange[0] === xRange[1]) return null;
+	const [minimumX, maximumX] = xRange;
 	return {
 		id: createGraphId("best-fit"),
 		name: `${source.name} best fit (R² ${regression.rSquared.toFixed(3)})`,
@@ -1203,7 +1249,7 @@ function tokenizeGraphExpression(expression: string) {
 		const isFunctionCall =
 			previous?.kind === "identifier" &&
 			token.kind === "open" &&
-			previous.text in GRAPH_EXPRESSION_FUNCTIONS;
+			Object.hasOwn(GRAPH_EXPRESSION_FUNCTIONS, previous.text);
 		if (
 			previous &&
 			canEndValue(previous) &&
@@ -1217,6 +1263,11 @@ function tokenizeGraphExpression(expression: string) {
 			});
 		}
 		tokens.push(token);
+	}
+	if (tokens.length > MAX_GRAPH_EXPRESSION_TOKENS) {
+		throw new GraphExpressionError(
+			`Expressions may contain at most ${MAX_GRAPH_EXPRESSION_TOKENS} tokens.`
+		);
 	}
 	tokens.push({
 		kind: "end",
@@ -1232,7 +1283,7 @@ class GraphExpressionParser {
 	constructor(private readonly tokens: ExpressionToken[]) {}
 
 	parse() {
-		const evaluator = this.parseAdditive();
+		const evaluator = this.parseAdditive(0);
 		if (this.current().kind !== "end") {
 			throw this.error(`Unexpected "${this.current().text}".`);
 		}
@@ -1255,14 +1306,23 @@ class GraphExpressionParser {
 		);
 	}
 
-	private parseAdditive(): ExpressionEvaluator {
-		let left = this.parseMultiplicative();
+	private assertDepth(depth: number) {
+		if (depth > MAX_GRAPH_EXPRESSION_DEPTH) {
+			throw new GraphExpressionError(
+				`Expression nesting may not exceed ${MAX_GRAPH_EXPRESSION_DEPTH} levels.`
+			);
+		}
+	}
+
+	private parseAdditive(depth: number): ExpressionEvaluator {
+		this.assertDepth(depth);
+		let left = this.parseMultiplicative(depth);
 		while (
 			this.current().kind === "operator" &&
 			["+", "-"].includes(this.current().text)
 		) {
 			const operator = this.advance().text;
-			const right = this.parseMultiplicative();
+			const right = this.parseMultiplicative(depth);
 			const previous = left;
 			left =
 				operator === "+"
@@ -1272,14 +1332,14 @@ class GraphExpressionParser {
 		return left;
 	}
 
-	private parseMultiplicative(): ExpressionEvaluator {
-		let left = this.parseUnary();
+	private parseMultiplicative(depth: number): ExpressionEvaluator {
+		let left = this.parseUnary(depth);
 		while (
 			this.current().kind === "operator" &&
 			["*", "/", "%"].includes(this.current().text)
 		) {
 			const operator = this.advance().text;
-			const right = this.parseUnary();
+			const right = this.parseUnary(depth);
 			const previous = left;
 			if (operator === "*") left = x => previous(x) * right(x);
 			else if (operator === "/") left = x => previous(x) / right(x);
@@ -1288,29 +1348,31 @@ class GraphExpressionParser {
 		return left;
 	}
 
-	private parseUnary(): ExpressionEvaluator {
+	private parseUnary(depth: number): ExpressionEvaluator {
+		this.assertDepth(depth);
 		if (
 			this.current().kind === "operator" &&
 			["+", "-"].includes(this.current().text)
 		) {
 			const operator = this.advance().text;
-			const value = this.parseUnary();
+			const value = this.parseUnary(depth + 1);
 			return operator === "-" ? x => -value(x) : value;
 		}
-		return this.parsePower();
+		return this.parsePower(depth);
 	}
 
-	private parsePower(): ExpressionEvaluator {
-		const left = this.parsePrimary();
+	private parsePower(depth: number): ExpressionEvaluator {
+		this.assertDepth(depth);
+		const left = this.parsePrimary(depth);
 		if (this.current().kind === "operator" && this.current().text === "^") {
 			this.advance();
-			const right = this.parseUnary();
+			const right = this.parseUnary(depth + 1);
 			return x => left(x) ** right(x);
 		}
 		return left;
 	}
 
-	private parsePrimary(): ExpressionEvaluator {
+	private parsePrimary(depth: number): ExpressionEvaluator {
 		const token = this.current();
 		if (token.kind === "number") {
 			this.advance();
@@ -1319,7 +1381,7 @@ class GraphExpressionParser {
 		}
 		if (token.kind === "open") {
 			this.advance();
-			const expression = this.parseAdditive();
+			const expression = this.parseAdditive(depth + 1);
 			if (this.current().kind !== "close") {
 				throw this.error('Expected ")".');
 			}
@@ -1332,11 +1394,13 @@ class GraphExpressionParser {
 
 		this.advance();
 		if (token.text === "x") return x => x;
-		if (token.text in GRAPH_EXPRESSION_CONSTANTS) {
+		if (Object.hasOwn(GRAPH_EXPRESSION_CONSTANTS, token.text)) {
 			const value = GRAPH_EXPRESSION_CONSTANTS[token.text];
 			return () => value;
 		}
-		const definition = GRAPH_EXPRESSION_FUNCTIONS[token.text];
+		const definition = Object.hasOwn(GRAPH_EXPRESSION_FUNCTIONS, token.text)
+			? GRAPH_EXPRESSION_FUNCTIONS[token.text]
+			: undefined;
 		if (!definition) {
 			throw new GraphExpressionError(
 				`Unknown name "${token.text}" at character ${token.position + 1}.`
@@ -1349,7 +1413,7 @@ class GraphExpressionParser {
 		const arguments_: ExpressionEvaluator[] = [];
 		if (this.current().kind !== "close") {
 			while (true) {
-				arguments_.push(this.parseAdditive());
+				arguments_.push(this.parseAdditive(depth + 1));
 				if (this.current().kind !== "comma") break;
 				this.advance();
 			}
@@ -1378,6 +1442,11 @@ class GraphExpressionParser {
 export function compileGraphExpression(
 	expression: string
 ): ExpressionEvaluator {
+	if (expression.length > MAX_GRAPH_EXPRESSION_LENGTH) {
+		throw new GraphExpressionError(
+			`Expressions may contain at most ${MAX_GRAPH_EXPRESSION_LENGTH} characters.`
+		);
+	}
 	const normalized = expression.trim();
 	if (!normalized) {
 		throw new GraphExpressionError("Enter an expression after y =.");
@@ -1424,23 +1493,84 @@ export function sampleGraphExpression(
 	return points;
 }
 
+function evenlyBoundDerivedGraphPoints(
+	points: GraphDataPoint[],
+	limit: number
+) {
+	if (points.length <= limit) return points;
+	if (limit <= 0) return [];
+	if (limit === 1) {
+		return [points[Math.floor((points.length - 1) / 2)]];
+	}
+
+	const bounded: GraphDataPoint[] = [];
+	let previousIndex = -1;
+	for (let index = 0; index < limit; index += 1) {
+		const pointIndex = Math.round(
+			(index * (points.length - 1)) / (limit - 1)
+		);
+		const point = points[pointIndex];
+		let crossesBreak = false;
+		for (
+			let skippedIndex = previousIndex + 1;
+			skippedIndex <= pointIndex;
+			skippedIndex += 1
+		) {
+			if (points[skippedIndex].breakBefore) {
+				crossesBreak = true;
+				break;
+			}
+		}
+		bounded.push(
+			crossesBreak && bounded.length
+				? { ...point, breakBefore: true }
+				: point
+		);
+		previousIndex = pointIndex;
+	}
+	return bounded;
+}
+
 export function refreshDerivedGraphSeries(document: GraphDocument) {
 	const sourceById = new Map(
 		document.series
 			.filter(series => series.sourceKind !== "bestFit")
 			.map(series => [series.id, series])
 	);
+	let remainingDerivedPointCapacity = Math.max(
+		0,
+		MAX_GRAPH_POINTS -
+			document.series.reduce(
+				(total, series) =>
+					(series.sourceKind === "function" &&
+						Boolean(series.sourceExpression)) ||
+					(series.sourceKind === "bestFit" &&
+						Boolean(series.sourceSeriesId))
+						? total
+						: total + series.points.length,
+				0
+			)
+	);
 	for (const series of document.series) {
 		if (series.sourceKind === "function" && series.sourceExpression) {
 			try {
-				series.points = sampleGraphExpression(
+				const points = sampleGraphExpression(
 					series.sourceExpression,
 					document.xAxis,
 					document.yAxis
 				);
+				if (points.length <= remainingDerivedPointCapacity) {
+					series.points = points;
+				} else {
+					series.points = evenlyBoundDerivedGraphPoints(
+						points,
+						remainingDerivedPointCapacity
+					);
+				}
 			} catch {
 				series.points = [];
 			}
+			remainingDerivedPointCapacity -= series.points.length;
 		}
 		if (series.sourceKind === "bestFit" && series.sourceSeriesId) {
 			const source = sourceById.get(series.sourceSeriesId);
@@ -1449,9 +1579,12 @@ export function refreshDerivedGraphSeries(document: GraphDocument) {
 				series.points = [];
 				continue;
 			}
-			const xValues = source.points.map(point => point.x);
-			const minimumX = Math.min(...xValues);
-			const maximumX = Math.max(...xValues);
+			const xRange = graphPointXRange(source.points);
+			if (!xRange || remainingDerivedPointCapacity < 2) {
+				series.points = [];
+				continue;
+			}
+			const [minimumX, maximumX] = xRange;
 			series.name = `${source.name} best fit (R² ${regression.rSquared.toFixed(3)})`;
 			series.points = [
 				{
@@ -1463,6 +1596,7 @@ export function refreshDerivedGraphSeries(document: GraphDocument) {
 					y: regression.slope * maximumX + regression.intercept
 				}
 			];
+			remainingDerivedPointCapacity -= series.points.length;
 		}
 	}
 }
@@ -1490,25 +1624,36 @@ function paddedRange(minimum: number, maximum: number, logarithmic: boolean) {
 }
 
 export function fitGraphAxesToData(document: GraphDocument) {
-	const points = document.series
-		.filter(series => series.isVisible)
-		.flatMap(series => series.points)
-		.filter(
-			point =>
-				Number.isFinite(point.x) &&
-				Number.isFinite(point.y) &&
-				(document.xAxis.scale !== "logarithmic" || point.x > 0) &&
-				(document.yAxis.scale !== "logarithmic" || point.y > 0)
-		);
-	if (!points.length) return false;
+	let minimumX = Number.POSITIVE_INFINITY;
+	let maximumX = Number.NEGATIVE_INFINITY;
+	let minimumY = Number.POSITIVE_INFINITY;
+	let maximumY = Number.NEGATIVE_INFINITY;
+	for (const series of document.series) {
+		if (!series.isVisible) continue;
+		for (const point of series.points) {
+			if (
+				!Number.isFinite(point.x) ||
+				!Number.isFinite(point.y) ||
+				(document.xAxis.scale === "logarithmic" && point.x <= 0) ||
+				(document.yAxis.scale === "logarithmic" && point.y <= 0)
+			) {
+				continue;
+			}
+			minimumX = Math.min(minimumX, point.x);
+			maximumX = Math.max(maximumX, point.x);
+			minimumY = Math.min(minimumY, point.y);
+			maximumY = Math.max(maximumY, point.y);
+		}
+	}
+	if (!Number.isFinite(minimumX)) return false;
 	const xRange = paddedRange(
-		Math.min(...points.map(point => point.x)),
-		Math.max(...points.map(point => point.x)),
+		minimumX,
+		maximumX,
 		document.xAxis.scale === "logarithmic"
 	);
 	const yRange = paddedRange(
-		Math.min(...points.map(point => point.y)),
-		Math.max(...points.map(point => point.y)),
+		minimumY,
+		maximumY,
 		document.yAxis.scale === "logarithmic"
 	);
 	[document.xAxis.minimum, document.xAxis.maximum] = xRange;

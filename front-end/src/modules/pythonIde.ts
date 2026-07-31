@@ -136,6 +136,38 @@ export interface ManagedPythonIdeProject {
 	review: PythonIdeProjectReview | null;
 }
 
+export type PythonIdeProjectMetadata = Omit<PythonIdeProject, "files">;
+export type PythonIdeProjectReviewMetadata = Omit<
+	PythonIdeProjectReview,
+	"files"
+>;
+
+export interface ManagedPythonIdeProjectMetadata {
+	project: PythonIdeProjectMetadata;
+	review: PythonIdeProjectReviewMetadata | null;
+}
+
+interface PythonIdeProjectPage<T> {
+	nextOffset: number | null;
+	projects: T[];
+}
+
+interface PythonIdeProjectReviewPage {
+	nextOffset: number | null;
+	reviews: PythonIdeProjectReviewMetadata[];
+}
+
+function nextPythonIdePageOffset(
+	currentOffset: number,
+	nextOffset: number | null
+) {
+	if (nextOffset === null) return null;
+	if (!Number.isSafeInteger(nextOffset) || nextOffset <= currentOffset) {
+		throw new Error("Project list pagination did not advance.");
+	}
+	return nextOffset;
+}
+
 export interface PythonIdeProjectPayload {
 	title?: string;
 	mode?: PythonIdeMode;
@@ -1990,8 +2022,9 @@ export function getPythonIdeModeLabel(mode: PythonIdeMode) {
 export function isPythonIdeBlueJProject(
 	project: Pick<
 		PythonIdeProject,
-		"courseProjectKey" | "files" | "mode" | "starterLabel" | "title"
-	>
+		"courseProjectKey" | "mode" | "starterLabel" | "title"
+	> &
+		Partial<Pick<PythonIdeProject, "files">>
 ) {
 	if (project.mode !== "java") return false;
 
@@ -2001,15 +2034,18 @@ export function isPythonIdeBlueJProject(
 		project.courseProjectKey === "ide-template:bluej" ||
 		starterLabel.includes("bluej") ||
 		title.includes("bluej") ||
-		project.files.some(file => file.name.toLowerCase() === "package.bluej")
+		project.files?.some(
+			file => file.name.toLowerCase() === "package.bluej"
+		) === true
 	);
 }
 
 export function getPythonIdeProjectKindLabel(
 	project: Pick<
 		PythonIdeProject,
-		"courseProjectKey" | "files" | "mode" | "starterLabel" | "title"
-	>
+		"courseProjectKey" | "mode" | "starterLabel" | "title"
+	> &
+		Partial<Pick<PythonIdeProject, "files">>
 ) {
 	return isPythonIdeBlueJProject(project)
 		? "BlueJ Java"
@@ -2975,10 +3011,31 @@ function formatStorageError(error: unknown) {
 }
 
 export async function fetchPythonIdeProjects() {
-	const { data } = await api.get<{ projects: PythonIdeProject[] }>(
-		"/users/loggedin/python-projects"
+	const projects: PythonIdeProjectMetadata[] = [];
+	let offset: number | null = 0;
+	while (offset !== null) {
+		const response = await api.get<
+			PythonIdeProjectPage<PythonIdeProjectMetadata>
+		>("/users/loggedin/python-projects", {
+			params: { offset }
+		});
+		const data: PythonIdeProjectPage<PythonIdeProjectMetadata> =
+			response.data;
+		projects.push(...data.projects);
+		offset = nextPythonIdePageOffset(offset, data.nextOffset);
+	}
+	return projects;
+}
+
+export async function fetchPythonIdeProject(
+	projectID: string,
+	signal?: AbortSignal
+) {
+	const { data } = await api.get<{ project: PythonIdeProject }>(
+		`/users/loggedin/python-projects/${projectID}`,
+		{ signal }
 	);
-	return data.projects;
+	return data.project;
 }
 
 export async function fetchSharedPythonIdeProject(shareID: string) {
@@ -2993,17 +3050,62 @@ export async function fetchSharedPythonIdeProject(shareID: string) {
 }
 
 export async function fetchVisiblePythonIdeProjectReviews() {
-	const { data } = await api.get<{ reviews: PythonIdeProjectReview[] }>(
-		"/users/loggedin/python-project-reviews"
-	);
-	return data.reviews;
+	const reviews: PythonIdeProjectReviewMetadata[] = [];
+	let offset: number | null = 0;
+	while (offset !== null) {
+		const response = await api.get<PythonIdeProjectReviewPage>(
+			"/users/loggedin/python-project-reviews",
+			{ params: { offset } }
+		);
+		const data: PythonIdeProjectReviewPage = response.data;
+		reviews.push(...data.reviews);
+		offset = nextPythonIdePageOffset(offset, data.nextOffset);
+	}
+	return reviews;
+}
+
+export async function fetchVisiblePythonIdeProjectReview(
+	reviewID: string,
+	signal?: AbortSignal
+) {
+	const { data } = await api.get<{
+		review: PythonIdeProjectReview;
+	}>(`/users/loggedin/python-project-reviews/${reviewID}`, { signal });
+	return data.review;
 }
 
 export async function fetchManagedPythonIdeProjects(userID: string) {
-	const { data } = await api.get<{ projects: ManagedPythonIdeProject[] }>(
-		`/users/${userID}/python-projects`
+	const projects: ManagedPythonIdeProjectMetadata[] = [];
+	let offset: number | null = 0;
+	while (offset !== null) {
+		const response = await api.get<
+			PythonIdeProjectPage<{
+				project: PythonIdeProjectMetadata;
+				review: PythonIdeProjectReviewMetadata | null;
+			}>
+		>(`/users/${userID}/python-projects`, {
+			params: { offset }
+		});
+		const data: PythonIdeProjectPage<{
+			project: PythonIdeProjectMetadata;
+			review: PythonIdeProjectReviewMetadata | null;
+		}> = response.data;
+		projects.push(...data.projects);
+		offset = nextPythonIdePageOffset(offset, data.nextOffset);
+	}
+	return projects;
+}
+
+export async function fetchManagedPythonIdeProject(
+	userID: string,
+	projectID: string,
+	signal?: AbortSignal
+) {
+	const { data } = await api.get<ManagedPythonIdeProject>(
+		`/users/${userID}/python-projects/${projectID}`,
+		{ signal }
 	);
-	return data.projects;
+	return data;
 }
 
 export async function createRemotePythonIdeProject(

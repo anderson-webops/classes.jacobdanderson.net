@@ -171,12 +171,14 @@ async function withCourseAccessRoutes<T>(
 		const session = req.session as CustomSession;
 		session.adminID = adminID.toString();
 		session.accountSessionVersion = 0;
+		session.authenticatedSessionExpiresAt = Date.now() + 60_000;
 		res.sendStatus(204);
 	});
 	app.post("/test/session/tutor", (req, res) => {
 		const session = req.session as CustomSession;
 		session.tutorID = tutorID.toString();
 		session.accountSessionVersion = 0;
+		session.authenticatedSessionExpiresAt = Date.now() + 60_000;
 		res.sendStatus(204);
 	});
 	app.get("/test/session", (req, res) => {
@@ -432,6 +434,14 @@ describe("course access code routes", () => {
 
 			expect(firstResponse.status).toBe(200);
 			expect(secondResponse.status).toBe(200);
+			for (const cookie of firstResponse.headers
+				.getSetCookie()
+				.filter(value =>
+					value.startsWith("session=")
+					|| value.startsWith("session.sig=")
+				)) {
+				expect(cookie.toLowerCase()).toContain("expires=");
+			}
 			expect(modelMocks.learnerCreate).toHaveBeenCalledTimes(1);
 			expect(firstBody.currentCourseLearner).toMatchObject({
 				courseAccess: ["python-level-1"],

@@ -1592,7 +1592,7 @@ pgzrun.go()
 			"project.courseProjectTitle = project.title;"
 		);
 		expect(pageSource).toContain(
-			"const existingProject = standaloneProjectForRoute(projects.value);"
+			"const existingProject = standaloneProjectForRoute(availableProjects);"
 		);
 	});
 
@@ -4370,7 +4370,7 @@ pgzrun.go()
 			pageSource.indexOf("fetchSharedPythonIdeProject(shareID)")
 		).toBeLessThan(
 			pageSource.indexOf(
-				"const existingProject = projects.value.find(\n\t\t\tproject => project.sharedSourceID === shareID"
+				"const existingProject = availableProjects.find(\n\t\t\tproject => project.sharedSourceID === shareID"
 			)
 		);
 		expect(pageSource).toContain("sharedSourceID: shareID");
@@ -4774,7 +4774,7 @@ pgzrun.go()
 			pageSource.indexOf("interface SaveProjectOptions", loadProjectsStart)
 		);
 		const localProjectsStart = loadProjectsSource.indexOf(
-			"visibleProjectReviews.value = [];\n\t\tconst localProjects = await loadLocalPythonProjectsAsync"
+			"visibleProjectReviewCatalog.value = [];\n\t\tprojectCatalog.value = [];\n\t\tconst localProjects = await loadLocalPythonProjectsAsync"
 		);
 		const localProjectsSource = loadProjectsSource.slice(
 			localProjectsStart,
@@ -4840,7 +4840,7 @@ pgzrun.go()
 		expect(setProjectsSource).toContain(
 			"project.files,\n\t\t\tproject.activeFileName"
 		);
-		expect(setProjectsSource).toContain("projectForRoute(projects.value)");
+		expect(setProjectsSource).toContain("projectForRoute(availableProjects)");
 		expect(pageSource).toContain(
 			"const activeFileName = resolvePythonIdeActiveFileName("
 		);

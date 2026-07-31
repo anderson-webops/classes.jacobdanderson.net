@@ -10,6 +10,10 @@ export type AccountEntity = IAdmin | ITutor | IUser;
 export type AccountRole = "admin" | "tutor" | "user";
 export type AccountSessionKey = "adminID" | "tutorID" | "userID";
 export type AccountResponseKey = "currentAdmin" | "currentTutor" | "currentUser";
+export const DEFAULT_AUTHENTICATED_SESSION_MAX_AGE_MS
+	= 24 * 60 * 60 * 1000;
+export const REMEMBERED_AUTHENTICATED_SESSION_MAX_AGE_MS
+	= 30 * 24 * 60 * 60 * 1000;
 
 export interface AccountCandidate {
 	entity: AccountEntity | null;
@@ -70,6 +74,43 @@ export function clearSessionRoles(session: CustomSession) {
 	delete session.userID;
 	delete session.courseCodeLearnerID;
 	delete session.accountSessionVersion;
+	delete session.authenticatedSessionExpiresAt;
+}
+
+export function authenticatedSessionMaxAge(remember: boolean) {
+	return remember
+		? REMEMBERED_AUTHENTICATED_SESSION_MAX_AGE_MS
+		: DEFAULT_AUTHENTICATED_SESSION_MAX_AGE_MS;
+}
+
+export function setAuthenticatedSessionLifetime(
+	session: CustomSession,
+	maxAge = DEFAULT_AUTHENTICATED_SESSION_MAX_AGE_MS,
+	now = Date.now()
+) {
+	if (!Number.isSafeInteger(maxAge) || maxAge <= 0) {
+		throw new TypeError("Authenticated session lifetime must be a positive integer");
+	}
+	session.authenticatedSessionExpiresAt = now + maxAge;
+}
+
+export function setAuthenticatedSessionCookieLifetime(
+	request: object,
+	maxAge: number
+) {
+	const req = request as {
+		sessionOptions?: { maxAge?: number };
+	};
+	const options = (req.sessionOptions ??= {});
+	options.maxAge = maxAge;
+}
+
+export function authenticatedSessionIsCurrent(
+	session: CustomSession,
+	now = Date.now()
+) {
+	return Number.isSafeInteger(session.authenticatedSessionExpiresAt)
+		&& (session.authenticatedSessionExpiresAt as number) > now;
 }
 
 export function getAccountID(entity: AccountEntity) {
@@ -94,7 +135,8 @@ export function serializeAccountEntity(
 
 export function establishAccountSession(
 	session: CustomSession,
-	candidate: Pick<AccountCandidate, "entity" | "sessionKey">
+	candidate: Pick<AccountCandidate, "entity" | "sessionKey">,
+	maxAge = DEFAULT_AUTHENTICATED_SESSION_MAX_AGE_MS
 ) {
 	if (!candidate.entity) {
 		throw new TypeError("Cannot establish a session without an account");
@@ -103,12 +145,14 @@ export function establishAccountSession(
 	clearSessionRoles(session);
 	session[candidate.sessionKey] = getAccountID(candidate.entity);
 	session.accountSessionVersion = candidate.entity.sessionVersion ?? 0;
+	setAuthenticatedSessionLifetime(session, maxAge);
 }
 
 export function accountSessionVersionMatches(
 	session: CustomSession,
 	entity: AccountEntity
 ) {
-	return Number.isInteger(session.accountSessionVersion)
+	return authenticatedSessionIsCurrent(session)
+		&& Number.isInteger(session.accountSessionVersion)
 		&& session.accountSessionVersion === (entity.sessionVersion ?? 0);
 }

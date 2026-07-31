@@ -15,6 +15,17 @@ const modelMocks = vi.hoisted(() => ({
 	internalEmailFind: vi.fn()
 }));
 
+const deletionMocks = vi.hoisted(() => ({
+	deleteUserAccount: vi.fn()
+}));
+
+vi.mock("../src/services/userAccountDeletion.js", () => ({
+	deleteUserAccount: deletionMocks.deleteUserAccount,
+	UserAccountDeletionError: class UserAccountDeletionError extends Error {
+		readonly statusCode = 503;
+	}
+}));
+
 vi.mock("../src/models/schemas/Admin.js", () => ({
 	Admin: { findById: modelMocks.adminFindById }
 }));
@@ -54,6 +65,7 @@ const otherTutorID = new Types.ObjectId();
 const adminID = new Types.ObjectId();
 const studentID = new Types.ObjectId();
 const sessionID = new Types.ObjectId();
+const deletionAuditSubjectID = new Types.ObjectId();
 const now = new Date("2026-05-12T18:00:00.000Z");
 
 function queryWith<T>(result: T) {
@@ -121,6 +133,7 @@ async function withUserRoutes<T>(run: (baseUrl: string) => Promise<T>): Promise<
 	app.use((req: any, _res, next) => {
 		req.session = {
 			accountSessionVersion: 0,
+			authenticatedSessionExpiresAt: Date.now() + 60_000,
 			adminID: req.get("x-admin-id") || undefined,
 			tutorID: req.get("x-tutor-id") || undefined,
 			userID: req.get("x-user-id") || undefined
@@ -158,6 +171,7 @@ async function withTutorRoutes<T>(run: (baseUrl: string) => Promise<T>): Promise
 	app.use((req: any, _res, next) => {
 		req.session = {
 			accountSessionVersion: 0,
+			authenticatedSessionExpiresAt: Date.now() + 60_000,
 			adminID: req.get("x-admin-id") || undefined,
 			tutorID: req.get("x-tutor-id") || undefined,
 			userID: req.get("x-user-id") || undefined
@@ -243,6 +257,10 @@ describe("user schedule and note-only routes", () => {
 		modelMocks.sessionNoteCreate.mockImplementation(async payload => makeNote(payload));
 		modelMocks.sessionNoteFind.mockReturnValue(queryWith([makeNote(), makeNote(), makeNote()]));
 		modelMocks.internalEmailFind.mockReturnValue(queryWith([]));
+		deletionMocks.deleteUserAccount.mockResolvedValue({
+			auditSubjectID: deletionAuditSubjectID,
+			deleted: true
+		});
 	});
 
 	it("lets an assigned tutor create a visible scheduled session for their student", async () => {
@@ -685,10 +703,8 @@ describe("user schedule and note-only routes", () => {
 	});
 
 	it("lets assigned tutors delete their own students when tutor records are populated", async () => {
-		const deleteOne = vi.fn().mockResolvedValue(undefined);
 		const student = {
-			...makeStudent([{ _id: tutorID }]),
-			deleteOne
+			...makeStudent([{ _id: tutorID }])
 		};
 		modelMocks.userFindById.mockImplementation(() => queryWith(student));
 
@@ -699,7 +715,11 @@ describe("user schedule and note-only routes", () => {
 			});
 
 			expect(response.status).toBe(200);
-			expect(deleteOne).toHaveBeenCalledOnce();
+			expect(deletionMocks.deleteUserAccount).toHaveBeenCalledOnce();
+			expect(deletionMocks.deleteUserAccount).toHaveBeenCalledWith(
+				studentID,
+				{ requiredTutorID: tutorID }
+			);
 		});
 	});
 

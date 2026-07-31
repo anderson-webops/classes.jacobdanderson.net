@@ -7,7 +7,13 @@ import { Types } from "mongoose";
 import { z } from "zod";
 import { CourseAccessCode } from "../../models/schemas/CourseAccessCode.js";
 import { CourseCodeLearner } from "../../models/schemas/CourseCodeLearner.js";
-import { clearSessionRoles } from "../../utils/accountSessions.js";
+import {
+	authenticatedSessionIsCurrent,
+	clearSessionRoles,
+	REMEMBERED_AUTHENTICATED_SESSION_MAX_AGE_MS,
+	setAuthenticatedSessionCookieLifetime,
+	setAuthenticatedSessionLifetime
+} from "../../utils/accountSessions.js";
 import {
 	courseAccessCodeHint,
 	createCourseAccessCodeValue,
@@ -20,7 +26,6 @@ import {
 } from "../../utils/courseAccessCodes.js";
 import { recordSecurityAuditEvent } from "../../utils/securityAudit.js";
 
-const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const MAX_CODE_CREATION_ATTEMPTS = 5;
 const createCodePayloadSchema = z.object({
 	courseID: z.string(),
@@ -280,8 +285,14 @@ export const redeemCourseAccessCode: RequestHandler = async (req, res) => {
 	const session = req.session as CustomSession;
 	clearSessionRoles(session);
 	session.courseCodeLearnerID = learner._id.toString();
-	const options = ((req as any).sessionOptions ??= {});
-	options.maxAge = THIRTY_DAYS_MS;
+	setAuthenticatedSessionLifetime(
+		session,
+		REMEMBERED_AUTHENTICATED_SESSION_MAX_AGE_MS
+	);
+	setAuthenticatedSessionCookieLifetime(
+		req,
+		REMEMBERED_AUTHENTICATED_SESSION_MAX_AGE_MS
+	);
 
 	res.json({
 		currentCourseLearner: serializeCourseCodeLearner(learner, accessCode.label)
@@ -291,14 +302,19 @@ export const redeemCourseAccessCode: RequestHandler = async (req, res) => {
 export const getCurrentCourseCodeLearner: RequestHandler = async (req, res) => {
 	const session = req.session as CustomSession | undefined;
 	const learnerID = session?.courseCodeLearnerID;
-	if (!session || !learnerID || !Types.ObjectId.isValid(learnerID)) {
-		if (session) delete session.courseCodeLearnerID;
+	if (
+		!session
+		|| !authenticatedSessionIsCurrent(session)
+		|| !learnerID
+		|| !Types.ObjectId.isValid(learnerID)
+	) {
+		if (session) clearSessionRoles(session);
 		return res.json({ currentCourseLearner: null });
 	}
 
 	const learner = await CourseCodeLearner.findById(learnerID);
 	if (!learner) {
-		delete session.courseCodeLearnerID;
+		clearSessionRoles(session);
 		return res.json({ currentCourseLearner: null });
 	}
 
@@ -306,7 +322,7 @@ export const getCurrentCourseCodeLearner: RequestHandler = async (req, res) => {
 		learner.accessCode.toString()
 	);
 	if (!accessCode || accessCode.courseID !== learner.courseID) {
-		delete session.courseCodeLearnerID;
+		clearSessionRoles(session);
 		return res.json({ currentCourseLearner: null });
 	}
 

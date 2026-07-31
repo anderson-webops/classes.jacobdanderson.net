@@ -4,12 +4,14 @@ import LearnerCodeReviewTools from "@/components/LearnerCodeReviewTools.vue";
 
 const moduleMocks = vi.hoisted(() => ({
 	createReview: vi.fn(),
+	fetchProject: vi.fn(),
 	fetchProjects: vi.fn(),
 	updateReview: vi.fn()
 }));
 
 vi.mock("@/modules/pythonIde", () => ({
 	createPythonIdeProjectReview: moduleMocks.createReview,
+	fetchManagedPythonIdeProject: moduleMocks.fetchProject,
 	fetchManagedPythonIdeProjects: moduleMocks.fetchProjects,
 	isPythonIdeBinaryAssetFile: (file: { encoding?: string }) => file.encoding === "base64",
 	updatePythonIdeProjectReview: moduleMocks.updateReview
@@ -78,6 +80,16 @@ const refreshedReview = {
 	updatedAt: "2026-06-20T12:31:00.000Z"
 };
 
+function metadataRecord(
+	record: { project: typeof project; review: typeof review | null }
+) {
+	const { files: _projectFiles, ...projectMetadata } = record.project;
+	const reviewMetadata = record.review
+		? (({ files: _reviewFiles, ...metadata }) => metadata)(record.review)
+		: null;
+	return { project: projectMetadata, review: reviewMetadata };
+}
+
 function mountTools() {
 	return mount(LearnerCodeReviewTools, {
 		props: {
@@ -98,7 +110,10 @@ async function openTools(wrapper: ReturnType<typeof mountTools>) {
 describe("LearnerCodeReviewTools", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		moduleMocks.fetchProjects.mockResolvedValue([{ project, review: null }]);
+		moduleMocks.fetchProjects.mockResolvedValue([
+			metadataRecord({ project, review: null })
+		]);
+		moduleMocks.fetchProject.mockResolvedValue({ project, review: null });
 		moduleMocks.createReview.mockResolvedValue({ project, review });
 		moduleMocks.updateReview.mockResolvedValue({ project, review });
 	});
@@ -132,7 +147,10 @@ describe("LearnerCodeReviewTools", () => {
 	});
 
 	it("saves edits, notes, and learner visibility only to the review copy", async () => {
-		moduleMocks.fetchProjects.mockResolvedValue([{ project, review }]);
+		moduleMocks.fetchProjects.mockResolvedValue([
+			metadataRecord({ project, review })
+		]);
+		moduleMocks.fetchProject.mockResolvedValue({ project, review });
 		const wrapper = mountTools();
 		await openTools(wrapper);
 
@@ -163,7 +181,13 @@ describe("LearnerCodeReviewTools", () => {
 	});
 
 	it("warns when the student project changed and refreshes the whole review copy", async () => {
-		moduleMocks.fetchProjects.mockResolvedValue([{ project: staleProject, review }]);
+		moduleMocks.fetchProjects.mockResolvedValue([
+			metadataRecord({ project: staleProject, review })
+		]);
+		moduleMocks.fetchProject.mockResolvedValue({
+			project: staleProject,
+			review
+		});
 		moduleMocks.updateReview.mockResolvedValue({
 			project: staleProject,
 			review: refreshedReview

@@ -8,7 +8,10 @@ import type {
 	GraphMarkerShape,
 	GraphSeries
 } from "@/modules/graphSketcher";
-import { strFromU8, unzipSync } from "fflate";
+import type {
+	GraphSketcherArchiveWorkerRequest,
+	GraphSketcherArchiveWorkerResponse
+} from "@/modules/graphSketcherArchive";
 import {
 	canvasPointToGraph,
 	createGraphSeries,
@@ -18,11 +21,14 @@ import {
 	graphPointToCanvas,
 	graphSeriesAreaPath,
 	graphSeriesPath,
+	MAX_GRAPH_ANNOTATIONS,
 	MAX_GRAPH_DOCUMENT_BYTES,
 	MAX_GRAPH_POINTS,
+	MAX_GRAPH_SERIES,
 	normalizeGraphDocument,
 	plotBoundsForCanvas
 } from "@/modules/graphSketcher";
+import GraphSketcherArchiveWorker from "@/workers/graphSketcherArchive.worker?worker";
 
 export interface GraphDelimitedImportResult {
 	series: GraphSeries[];
@@ -38,6 +44,12 @@ export interface LegacyGraphImportResult {
 const LEGACY_GRAPH_NAMESPACE =
 	"http://www.omnigroup.com/namespace/OmniGraphSketcher/v1";
 const MAX_LEGACY_XML_BYTES = 16 * 1024 * 1024;
+const MAX_LEGACY_ARCHIVE_DECODE_MS = 10_000;
+const MAX_LEGACY_ELEMENTS = 50_000;
+const MAX_LEGACY_VERTICES = 20_000;
+const MAX_LEGACY_LABELS = 10_000;
+const MAX_IMPORT_MESSAGES = 12;
+const MAX_DELIMITED_COLUMNS = MAX_GRAPH_SERIES + 1;
 const DELIMITERS = [",", "\t", ";", "|"] as const;
 const SERIES_COLORS = [
 	"#2563eb",
@@ -50,11 +62,47 @@ const SERIES_COLORS = [
 	"#be123c"
 ];
 
-function parseDelimitedRows(text: string, delimiter: string) {
+function addBoundedMessage(
+	messages: string[],
+	message: string,
+	kind: "issues" | "warnings"
+) {
+	if (messages.length < MAX_IMPORT_MESSAGES) {
+		messages.push(message);
+	} else if (messages.length === MAX_IMPORT_MESSAGES) {
+		messages.push(`Additional import ${kind} were omitted.`);
+	}
+}
+
+function parseDelimitedRows(
+	text: string,
+	delimiter: string,
+	maxColumns = Number.POSITIVE_INFINITY,
+	maxRows = Number.POSITIVE_INFINITY
+) {
 	const rows: string[][] = [];
 	let row: string[] = [];
 	let cell = "";
 	let inQuotes = false;
+
+	const finishRow = () => {
+		if (row.length >= maxColumns) {
+			throw new Error(
+				`Data imports are limited to ${MAX_GRAPH_SERIES} series columns.`
+			);
+		}
+		row.push(cell.trim());
+		if (row.some(value => value.length > 0)) {
+			if (rows.length >= maxRows) {
+				throw new Error(
+					`Data imports are limited to ${MAX_GRAPH_POINTS.toLocaleString()} rows.`
+				);
+			}
+			rows.push(row);
+		}
+		row = [];
+		cell = "";
+	};
 
 	for (let index = 0; index < text.length; index += 1) {
 		const character = text[index];
@@ -72,22 +120,23 @@ function parseDelimitedRows(text: string, delimiter: string) {
 		if (character === '"' && cell.length === 0) {
 			inQuotes = true;
 		} else if (character === delimiter) {
+			if (row.length + 1 >= maxColumns) {
+				throw new Error(
+					`Data imports are limited to ${MAX_GRAPH_SERIES} series columns.`
+				);
+			}
 			row.push(cell.trim());
 			cell = "";
 		} else if (character === "\n" || character === "\r") {
 			if (character === "\r" && text[index + 1] === "\n") index += 1;
-			row.push(cell.trim());
-			if (row.some(value => value.length > 0)) rows.push(row);
-			row = [];
-			cell = "";
+			finishRow();
 		} else {
 			cell += character;
 		}
 	}
 	if (inQuotes)
 		throw new Error("The pasted data has an unfinished quoted value.");
-	row.push(cell.trim());
-	if (row.some(value => value.length > 0)) rows.push(row);
+	finishRow();
 	return rows;
 }
 
@@ -143,19 +192,27 @@ function importLongFormRows(
 	);
 	const labelIndex = headers.findIndex(header => header === "label");
 	const byName = new Map<string, GraphSeries>();
+	let pointCount = 0;
 
 	for (const [rowIndex, row] of rows.slice(1).entries()) {
 		const x = parsedNumber(row[xIndex]);
 		const y = parsedNumber(row[yIndex]);
 		if (x === undefined || y === undefined) {
-			issues.push(
-				`Skipped row ${rowIndex + 2}: x and y must be numbers.`
+			addBoundedMessage(
+				issues,
+				`Skipped row ${rowIndex + 2}: x and y must be numbers.`,
+				"issues"
 			);
 			continue;
 		}
 		const name = safeSeriesName(row[seriesIndex], "Imported series");
 		let series = byName.get(name);
 		if (!series) {
+			if (byName.size >= MAX_GRAPH_SERIES) {
+				throw new Error(
+					`Data imports are limited to ${MAX_GRAPH_SERIES} series.`
+				);
+			}
 			series = createGraphSeries(
 				name,
 				SERIES_COLORS[byName.size % SERIES_COLORS.length]
@@ -169,7 +226,13 @@ function importLongFormRows(
 		if (xError !== undefined && xError >= 0) point.xError = xError;
 		if (yError !== undefined && yError >= 0) point.yError = yError;
 		if (label) point.label = label.slice(0, 2_048);
+		if (pointCount >= MAX_GRAPH_POINTS) {
+			throw new Error(
+				`Data imports are limited to ${MAX_GRAPH_POINTS.toLocaleString()} total points.`
+			);
+		}
 		series.points.push(point);
+		pointCount += 1;
 	}
 	return [...byName.values()];
 }
@@ -182,7 +245,12 @@ export function importDelimitedGraphData(
 	if (new TextEncoder().encode(text).byteLength > MAX_GRAPH_DOCUMENT_BYTES) {
 		throw new Error("The data file is larger than the 8 MB browser limit.");
 	}
-	const rows = parseDelimitedRows(text, detectedDelimiter(text));
+	const rows = parseDelimitedRows(
+		text,
+		detectedDelimiter(text),
+		MAX_DELIMITED_COLUMNS,
+		MAX_GRAPH_POINTS + 1
+	);
 	if (!rows.length) throw new Error("No data rows were found.");
 	if (rows.length > MAX_GRAPH_POINTS + 1) {
 		throw new Error(
@@ -215,6 +283,11 @@ export function importDelimitedGraphData(
 		(maximum, row) => Math.max(maximum, row.length),
 		0
 	);
+	if (width - 1 > MAX_GRAPH_SERIES) {
+		throw new Error(
+			`Data imports are limited to ${MAX_GRAPH_SERIES} series columns.`
+		);
+	}
 	if (width === 1) {
 		const series = createGraphSeries(
 			hasHeader
@@ -225,10 +298,17 @@ export function importDelimitedGraphData(
 		for (const [rowIndex, row] of dataRows.entries()) {
 			const y = parsedNumber(row[0]);
 			if (y === undefined) {
-				issues.push(
-					`Skipped row ${rowIndex + (hasHeader ? 2 : 1)}: expected a number.`
+				addBoundedMessage(
+					issues,
+					`Skipped row ${rowIndex + (hasHeader ? 2 : 1)}: expected a number.`,
+					"issues"
 				);
 				continue;
+			}
+			if (series.points.length >= MAX_GRAPH_POINTS) {
+				throw new Error(
+					`Data imports are limited to ${MAX_GRAPH_POINTS.toLocaleString()} total points.`
+				);
 			}
 			series.points.push({ x: rowIndex, y });
 		}
@@ -245,11 +325,14 @@ export function importDelimitedGraphData(
 			SERIES_COLORS[index % SERIES_COLORS.length]
 		)
 	);
+	let pointCount = 0;
 	for (const [rowIndex, row] of dataRows.entries()) {
 		const x = parsedNumber(row[0]);
 		if (x === undefined) {
-			issues.push(
-				`Skipped row ${rowIndex + (hasHeader ? 2 : 1)}: the first column must be numeric.`
+			addBoundedMessage(
+				issues,
+				`Skipped row ${rowIndex + (hasHeader ? 2 : 1)}: the first column must be numeric.`,
+				"issues"
 			);
 			continue;
 		}
@@ -260,12 +343,20 @@ export function importDelimitedGraphData(
 		) {
 			const y = parsedNumber(row[seriesIndex + 1]);
 			if (y !== undefined) {
+				if (pointCount >= MAX_GRAPH_POINTS) {
+					throw new Error(
+						`Data imports are limited to ${MAX_GRAPH_POINTS.toLocaleString()} total points.`
+					);
+				}
 				series[seriesIndex].points.push({ x, y });
+				pointCount += 1;
 			} else if (row[seriesIndex + 1]?.trim()) {
-				issues.push(
+				addBoundedMessage(
+					issues,
 					`Skipped the nonnumeric value in row ${rowIndex + (hasHeader ? 2 : 1)}, column ${
 						seriesIndex + 2
-					}.`
+					}.`,
+					"issues"
 				);
 			}
 		}
@@ -285,6 +376,17 @@ function csvValue(value: string) {
 	return /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
 }
 
+function spreadsheetSafeText(value: string) {
+	for (const character of value) {
+		const codePoint = character.codePointAt(0) ?? 0;
+		const isControl =
+			codePoint <= 0x1f || (codePoint >= 0x7f && codePoint <= 0x9f);
+		if (isControl || character.trim() === "") continue;
+		return "=+-@".includes(character) ? `'${value}` : value;
+	}
+	return value;
+}
+
 export function graphDocumentToCsv(document: GraphDocument) {
 	const rows = ["series,x,y,x_error,y_error,label"];
 	for (const series of document.series) {
@@ -292,12 +394,12 @@ export function graphDocumentToCsv(document: GraphDocument) {
 		for (const point of series.points) {
 			rows.push(
 				[
-					csvValue(series.name),
+					csvValue(spreadsheetSafeText(series.name)),
 					point.x.toString(),
 					point.y.toString(),
 					point.xError?.toString() ?? "",
 					point.yError?.toString() ?? "",
-					csvValue(point.label ?? "")
+					csvValue(spreadsheetSafeText(point.label ?? ""))
 				].join(",")
 			);
 		}
@@ -423,9 +525,9 @@ interface LegacyVertex {
 	markerSize: number;
 }
 
-function parseLegacyLabels(graph: Element, warnings: string[]) {
+function parseLegacyLabels(elements: Element[], warnings: string[]) {
 	const labels = new Map<string, LegacyLabel>();
-	for (const [index, element] of legacyChildren(graph, "label").entries()) {
+	for (const [index, element] of elements.entries()) {
 		const id = element.getAttribute("id")?.trim() || `label-${index + 1}`;
 		const paragraphs = legacyChildren(
 			legacyChild(element, "text") ?? element,
@@ -446,8 +548,10 @@ function parseLegacyLabels(graph: Element, warnings: string[]) {
 			element.getElementsByTagNameNS(LEGACY_GRAPH_NAMESPACE, "style")
 				.length > 0;
 		if (hasRichStyle) {
-			warnings.push(
-				`Rich text in label "${id}" was imported as plain text.`
+			addBoundedMessage(
+				warnings,
+				`Rich text in label "${id}" was imported as plain text.`,
+				"warnings"
 			);
 		}
 		labels.set(id, {
@@ -465,6 +569,35 @@ function parseLegacyLabels(graph: Element, warnings: string[]) {
 		});
 	}
 	return labels;
+}
+
+function legacyVertexIds(
+	element: Element,
+	maxIds: number,
+	fallback: Array<string | null> = []
+) {
+	const rawIds = legacyChild(element, "vertices")
+		?.getAttribute("ids")
+		?.trim();
+	if (!rawIds) {
+		const ids = fallback.filter((id): id is string => Boolean(id));
+		if (ids.length > maxIds) {
+			throw new Error(
+				`Legacy graph imports are limited to ${MAX_GRAPH_POINTS.toLocaleString()} total points.`
+			);
+		}
+		return ids;
+	}
+	const ids: string[] = [];
+	for (const match of rawIds.matchAll(/\S+/g)) {
+		if (ids.length >= maxIds) {
+			throw new Error(
+				`Legacy graph imports are limited to ${MAX_GRAPH_POINTS.toLocaleString()} total points.`
+			);
+		}
+		ids.push(match[0]);
+	}
+	return ids;
 }
 
 function parseLegacyAxis(
@@ -532,7 +665,102 @@ function parseLegacyAxis(
 	};
 }
 
-function decodeLegacyGraphSource(data: string | Uint8Array) {
+function graphImportCanceledError() {
+	const error = new Error("Graph import canceled.");
+	error.name = "AbortError";
+	return error;
+}
+
+function throwIfGraphImportCanceled(signal?: AbortSignal) {
+	if (signal?.aborted) throw graphImportCanceledError();
+}
+
+function decodeLegacyGraphArchive(data: Uint8Array, signal?: AbortSignal) {
+	throwIfGraphImportCanceled(signal);
+	return new Promise<string>((resolve, reject) => {
+		let worker: Worker;
+		try {
+			worker = new GraphSketcherArchiveWorker();
+		} catch {
+			reject(
+				new Error(
+					"This browser could not safely open the archived .ograph file."
+				)
+			);
+			return;
+		}
+
+		let completed = false;
+		let timeout: ReturnType<typeof setTimeout> | undefined;
+		let handleAbort: (() => void) | undefined;
+		const finish = (callback: () => void) => {
+			if (completed) return;
+			completed = true;
+			if (timeout) clearTimeout(timeout);
+			if (handleAbort) {
+				signal?.removeEventListener("abort", handleAbort);
+			}
+			worker.terminate();
+			callback();
+		};
+		handleAbort = () => {
+			finish(() => reject(graphImportCanceledError()));
+		};
+		timeout = setTimeout(() => {
+			finish(() =>
+				reject(new Error("The .ograph archive took too long to open."))
+			);
+		}, MAX_LEGACY_ARCHIVE_DECODE_MS);
+
+		worker.addEventListener(
+			"message",
+			(event: MessageEvent<GraphSketcherArchiveWorkerResponse>) => {
+				const response = event.data;
+				if (response.ok) {
+					const xml = response.xml;
+					finish(() => resolve(xml));
+				} else {
+					const message = response.message;
+					finish(() => reject(new Error(message)));
+				}
+			},
+			{ once: true }
+		);
+		worker.addEventListener(
+			"error",
+			() => {
+				finish(() =>
+					reject(
+						new Error("The .ograph archive could not be opened.")
+					)
+				);
+			},
+			{ once: true }
+		);
+		signal?.addEventListener("abort", handleAbort, { once: true });
+
+		const archiveCopy = new Uint8Array(data.byteLength);
+		archiveCopy.set(data);
+		const request: GraphSketcherArchiveWorkerRequest = {
+			archive: archiveCopy.buffer,
+			maxArchiveBytes: MAX_GRAPH_DOCUMENT_BYTES,
+			maxXmlBytes: MAX_LEGACY_XML_BYTES
+		};
+		try {
+			worker.postMessage(request, [archiveCopy.buffer]);
+		} catch {
+			finish(() =>
+				reject(new Error("The .ograph archive could not be opened."))
+			);
+		}
+	});
+}
+
+async function decodeLegacyGraphSource(
+	data: string | Uint8Array,
+	signal?: AbortSignal
+) {
+	throwIfGraphImportCanceled(signal);
 	if (typeof data === "string") {
 		if (new TextEncoder().encode(data).byteLength > MAX_LEGACY_XML_BYTES) {
 			throw new Error(
@@ -547,34 +775,8 @@ function decodeLegacyGraphSource(data: string | Uint8Array) {
 		);
 	}
 	const isZip = data[0] === 0x50 && data[1] === 0x4b;
-	if (!isZip) return strFromU8(data);
-	let oversizedEntry = false;
-	const files = unzipSync(data, {
-		filter(file) {
-			const isContentsXml =
-				file.name.toLowerCase() === "contents.xml" ||
-				file.name.toLowerCase().endsWith("/contents.xml");
-			if (isContentsXml && file.originalSize > MAX_LEGACY_XML_BYTES) {
-				oversizedEntry = true;
-				return false;
-			}
-			return isContentsXml;
-		}
-	});
-	if (oversizedEntry) {
-		throw new Error(
-			"The archived contents.xml is larger than the 16 MB import limit."
-		);
-	}
-	const matches = Object.entries(files).filter(([name]) =>
-		name.toLowerCase().endsWith("contents.xml")
-	);
-	if (matches.length !== 1) {
-		throw new Error(
-			"The .ograph archive must contain exactly one contents.xml file."
-		);
-	}
-	return strFromU8(matches[0][1]);
+	if (!isZip) return new TextDecoder().decode(data);
+	return decodeLegacyGraphArchive(data, signal);
 }
 
 function parseLegacyGraphXml(xml: string) {
@@ -596,13 +798,19 @@ function parseLegacyGraphXml(xml: string) {
 		throw new Error("The .ograph document contains malformed XML.");
 	}
 
+	const elementCount = parsed.getElementsByTagName("*").length;
+	if (elementCount > MAX_LEGACY_ELEMENTS) {
+		throw new Error(
+			`Legacy graph imports are limited to ${MAX_LEGACY_ELEMENTS.toLocaleString()} XML elements.`
+		);
+	}
+
 	const root = parsed.documentElement;
 	if (root.namespaceURI !== LEGACY_GRAPH_NAMESPACE) {
 		throw new Error(
 			"The file is not an original GraphSketcher .ograph document."
 		);
 	}
-	const elementCount = parsed.getElementsByTagName("*").length;
 	const legacyElementCount = parsed.getElementsByTagNameNS(
 		LEGACY_GRAPH_NAMESPACE,
 		"*"
@@ -616,18 +824,40 @@ function parseLegacyGraphXml(xml: string) {
 	return root;
 }
 
-export function importLegacyGraphSketcherDocument(
+export async function importLegacyGraphSketcherDocument(
 	data: string | Uint8Array,
-	title = "Imported Graph"
-): LegacyGraphImportResult {
-	const xml = decodeLegacyGraphSource(data);
+	title = "Imported Graph",
+	signal?: AbortSignal
+): Promise<LegacyGraphImportResult> {
+	const xml = await decodeLegacyGraphSource(data, signal);
+	throwIfGraphImportCanceled(signal);
 	const root = parseLegacyGraphXml(xml);
 	const graph = legacyChildren(root, "graph")[0];
 	if (!graph)
 		throw new Error("The .ograph document does not contain a graph.");
 
 	const warnings: string[] = [];
-	const labels = parseLegacyLabels(graph, warnings);
+	const labelElements = legacyChildren(graph, "label");
+	const vertexElements = legacyChildren(graph, "vertex");
+	const lineElements = legacyChildren(graph, "line");
+	const fillElements = legacyChildren(graph, "fill");
+	if (labelElements.length > MAX_LEGACY_LABELS) {
+		throw new Error(
+			`Legacy graph imports are limited to ${MAX_LEGACY_LABELS.toLocaleString()} labels.`
+		);
+	}
+	if (vertexElements.length > MAX_LEGACY_VERTICES) {
+		throw new Error(
+			`Legacy graph imports are limited to ${MAX_LEGACY_VERTICES.toLocaleString()} vertices.`
+		);
+	}
+	if (lineElements.length + fillElements.length > MAX_GRAPH_SERIES) {
+		throw new Error(
+			`Legacy graph imports are limited to ${MAX_GRAPH_SERIES} line and fill series.`
+		);
+	}
+
+	const labels = parseLegacyLabels(labelElements, warnings);
 	const axisLabelIds = new Set<string>();
 	const xAxis = parseLegacyAxis(graph, "x", labels, axisLabelIds);
 	const yAxis = parseLegacyAxis(graph, "y", labels, axisLabelIds);
@@ -641,7 +871,7 @@ export function importLegacyGraphSketcherDocument(
 			.filter(label => label.ownerId)
 			.map(label => [label.ownerId as string, label])
 	);
-	for (const [index, element] of legacyChildren(graph, "vertex").entries()) {
+	for (const [index, element] of vertexElements.entries()) {
 		const id = element.getAttribute("id")?.trim() || `vertex-${index + 1}`;
 		const point: GraphDataPoint = {
 			x: legacyNumber(element, "x", 0),
@@ -650,7 +880,11 @@ export function importLegacyGraphSketcherDocument(
 		const pointLabel = ownerLabels.get(id)?.text;
 		if (pointLabel) point.label = pointLabel;
 		if (legacyChild(element, "snapped-to")) {
-			warnings.push(`Snapping for point "${id}" was flattened.`);
+			addBoundedMessage(
+				warnings,
+				`Snapping for point "${id}" was flattened.`,
+				"warnings"
+			);
 		}
 		vertices.set(id, {
 			id,
@@ -663,26 +897,25 @@ export function importLegacyGraphSketcherDocument(
 
 	const consumedVertices = new Set<string>();
 	const series: GraphSeries[] = [];
-	for (const [index, element] of legacyChildren(graph, "line").entries()) {
-		const verticesElement = legacyChild(element, "vertices");
-		const ids =
-			verticesElement
-				?.getAttribute("ids")
-				?.trim()
-				.split(/\s+/)
-				.filter(Boolean) ??
-			[element.getAttribute("v1"), element.getAttribute("v2")].filter(
-				(id): id is string => Boolean(id)
-			);
+	let importedPointCount = 0;
+	for (const [index, element] of lineElements.entries()) {
+		const ids = legacyVertexIds(
+			element,
+			MAX_GRAPH_POINTS - importedPointCount,
+			[element.getAttribute("v1"), element.getAttribute("v2")]
+		);
 		const lineVertices = ids
 			.map(id => vertices.get(id))
 			.filter((vertex): vertex is LegacyVertex => Boolean(vertex));
 		if (lineVertices.length < 2) {
-			warnings.push(
-				`Line ${index + 1} referenced fewer than two available points.`
+			addBoundedMessage(
+				warnings,
+				`Line ${index + 1} referenced fewer than two available points.`,
+				"warnings"
 			);
 			continue;
 		}
+		importedPointCount += lineVertices.length;
 		ids.forEach(id => consumedVertices.add(id));
 		const first = lineVertices[0];
 		const lineId =
@@ -707,17 +940,16 @@ export function importLegacyGraphSketcherDocument(
 		});
 	}
 
-	for (const [index, element] of legacyChildren(graph, "fill").entries()) {
-		const ids =
-			legacyChild(element, "vertices")
-				?.getAttribute("ids")
-				?.trim()
-				.split(/\s+/)
-				.filter(Boolean) ?? [];
+	for (const [index, element] of fillElements.entries()) {
+		const ids = legacyVertexIds(
+			element,
+			MAX_GRAPH_POINTS - importedPointCount
+		);
 		const fillVertices = ids
 			.map(id => vertices.get(id))
 			.filter((vertex): vertex is LegacyVertex => Boolean(vertex));
 		if (fillVertices.length < 3) continue;
+		importedPointCount += fillVertices.length;
 		ids.forEach(id => consumedVertices.add(id));
 		series.push({
 			id: element.getAttribute("id")?.trim() || `fill-${index + 1}`,
@@ -732,8 +964,10 @@ export function importLegacyGraphSketcherDocument(
 			fillArea: true,
 			points: fillVertices.map(vertex => vertex.point)
 		});
-		warnings.push(
-			`Fill ${index + 1} was simplified to an editable area boundary.`
+		addBoundedMessage(
+			warnings,
+			`Fill ${index + 1} was simplified to an editable area boundary.`,
+			"warnings"
 		);
 	}
 
@@ -741,11 +975,25 @@ export function importLegacyGraphSketcherDocument(
 	for (const vertex of vertices.values()) {
 		if (consumedVertices.has(vertex.id)) continue;
 		const key = `${vertex.color}|${vertex.markerShape}|${vertex.markerSize}`;
+		if (
+			!freeGroups.has(key) &&
+			series.length + freeGroups.size >= MAX_GRAPH_SERIES
+		) {
+			throw new Error(
+				`Legacy graph imports are limited to ${MAX_GRAPH_SERIES} series.`
+			);
+		}
 		const group = freeGroups.get(key) ?? [];
 		group.push(vertex);
 		freeGroups.set(key, group);
 	}
 	for (const [index, group] of [...freeGroups.values()].entries()) {
+		if (importedPointCount + group.length > MAX_GRAPH_POINTS) {
+			throw new Error(
+				`Legacy graph imports are limited to ${MAX_GRAPH_POINTS.toLocaleString()} total points.`
+			);
+		}
+		importedPointCount += group.length;
 		const first = group[0];
 		series.push({
 			id: `free-points-${index + 1}`,
@@ -773,6 +1021,11 @@ export function importLegacyGraphSketcherDocument(
 		) {
 			continue;
 		}
+		if (annotations.length >= MAX_GRAPH_ANNOTATIONS) {
+			throw new Error(
+				`Legacy graph imports are limited to ${MAX_GRAPH_ANNOTATIONS.toLocaleString()} standalone annotations.`
+			);
+		}
 		annotations.push({
 			id: label.id,
 			kind: "text",
@@ -787,8 +1040,10 @@ export function importLegacyGraphSketcherDocument(
 		});
 	}
 	if (legacyChildren(graph, "group").length) {
-		warnings.push(
-			"Legacy groups were flattened into independently editable objects."
+		addBoundedMessage(
+			warnings,
+			"Legacy groups were flattened into independently editable objects.",
+			"warnings"
 		);
 	}
 

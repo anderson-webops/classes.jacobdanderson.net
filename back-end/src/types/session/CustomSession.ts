@@ -7,4 +7,5 @@ export interface CustomSession extends Session {
 	adminID?: string;
 	courseCodeLearnerID?: string;
 	accountSessionVersion?: number;
+	authenticatedSessionExpiresAt?: number;
 }

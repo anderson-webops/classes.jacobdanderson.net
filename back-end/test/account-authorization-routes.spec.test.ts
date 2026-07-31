@@ -94,6 +94,7 @@ async function withAccountRoutes<T>(run: (baseUrl: string) => Promise<T>) {
 	app.use((req: any, _res, next) => {
 		req.session = {
 			accountSessionVersion: 0,
+			authenticatedSessionExpiresAt: Date.now() + 60_000,
 			adminID: req.get("x-admin-id") || undefined,
 			tutorID: req.get("x-tutor-id") || undefined,
 			userID: req.get("x-user-id") || undefined

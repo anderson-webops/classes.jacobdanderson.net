@@ -8,8 +8,10 @@ import {
 } from "../../utils/accountPayloads.js";
 import {
 	accountEmailExists,
+	DEFAULT_AUTHENTICATED_SESSION_MAX_AGE_MS,
 	establishAccountSession,
-	serializeAccountEntity
+	serializeAccountEntity,
+	setAuthenticatedSessionCookieLifetime
 } from "../../utils/accountSessions.js";
 import { documentReferenceID } from "../../utils/scheduledSessions.js";
 import { recordSecurityAuditEvent } from "../../utils/securityAudit.js";
@@ -59,6 +61,10 @@ export const createUser: RequestHandler = async (req, res) => {
 			entity: user,
 			sessionKey: "userID"
 		});
+		setAuthenticatedSessionCookieLifetime(
+			req,
+			DEFAULT_AUTHENTICATED_SESSION_MAX_AGE_MS
+		);
 		await recordSecurityAuditEvent(req, {
 			action: "user.signup",
 			targetID: user._id,

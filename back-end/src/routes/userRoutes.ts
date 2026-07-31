@@ -6,7 +6,10 @@ import {
 	createPythonProject,
 	createPythonProjectReview,
 	deletePythonProject,
+	getManagedPythonProject,
+	getPythonProject,
 	getSharedPythonProject,
+	getVisiblePythonProjectReview,
 	listManagedPythonProjects,
 	listPythonProjects,
 	listVisiblePythonProjectReviews,
@@ -70,10 +73,16 @@ router.get("/python-projects/shared/:shareID", getSharedPythonProject);
 // managed /:userID/python-projects routes so "loggedin" is not parsed as an ID.
 router.get("/loggedin/python-projects", validAccountSession, listPythonProjects);
 router.post("/loggedin/python-projects", validAccountSession, createPythonProject);
+router.get("/loggedin/python-projects/:projectID", validAccountSession, getPythonProject);
 router.put("/loggedin/python-projects/:projectID", validAccountSession, updatePythonProject);
 router.put("/loggedin/python-projects/:projectID/share", validAccountSession, updatePythonProjectShare);
 router.delete("/loggedin/python-projects/:projectID", validAccountSession, deletePythonProject);
 router.get("/loggedin/python-project-reviews", validAccountSession, listVisiblePythonProjectReviews);
+router.get(
+	"/loggedin/python-project-reviews/:reviewID",
+	validAccountSession,
+	getVisiblePythonProjectReview
+);
 
 // Get users belonging to a given tutor
 router.get("/oftutor/:tutorID", validTutorOrAdminSession, getUsersOfTutor);
@@ -109,6 +118,11 @@ router.post("/:userID/session-notes", validTutorOrAdminSession, createUserSessio
 
 // Allow tutors and admins to review saved student Code IDE projects without editing student-owned files
 router.get("/:userID/python-projects", validTutorOrAdminSession, listManagedPythonProjects);
+router.get(
+	"/:userID/python-projects/:projectID",
+	validTutorOrAdminSession,
+	getManagedPythonProject
+);
 router.post("/:userID/python-projects/:projectID/review", validTutorOrAdminSession, createPythonProjectReview);
 router.put("/:userID/python-projects/:projectID/review/:reviewID", validTutorOrAdminSession, updatePythonProjectReview);
 

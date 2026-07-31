@@ -12,6 +12,7 @@ import {
 	createAdminMailLimiter,
 	createApiIngressLimiter,
 	createCodeIdeProjectAccountWriteLimiter,
+	createCodeIdeProjectDataAccessLimiter,
 	createCodeIdeProjectIngressLimiter,
 	createCourseCodeRedemptionLimiter,
 	createEmailCheckLimiter,
@@ -26,7 +27,10 @@ import {
 import { configuredRequestOrigins, createRequestOriginGuard } from "../src/middleware/requestOriginGuard.js";
 import { createApiSecurityHeaders, createCrossOriginAssetHeaders } from "../src/middleware/securityHeaders.js";
 import { renderMarkdownEmailHtml } from "../src/utils/markdownEmail.js";
-import { internalDiagnosticsAuthorized } from "../src/utils/internalDiagnostics.js";
+import {
+	internalDiagnosticsAuthorized,
+	readInternalDiagnosticsKey
+} from "../src/utils/internalDiagnostics.js";
 import {
 	defaultSessionNoteSubject,
 	documentReferenceID,
@@ -36,6 +40,8 @@ import {
 import {
 	createSessionCookieOptions,
 	crossSiteSessionCookiesEnabled,
+	readSessionSecret,
+	readTrustProxySetting,
 	serverListenHost
 } from "../src/utils/serverSecurity.js";
 
@@ -97,6 +103,7 @@ async function withServer<T>(
 				"/users/limited",
 				"/users/loggedin/python-projects",
 				"/users/loggedin/python-projects/project-1",
+				"/users/python-projects/shared/share-id",
 				"/USERS/loggedin/python-projects/project-2/share",
 				"/users/loggedin/python-projects-archive",
 				"/users/student-1/python-projects/project-1/review"
@@ -240,6 +247,33 @@ describe("security dependency regressions", () => {
 		);
 	});
 
+	it("applies project data limits to anonymous shared-project reads", async () => {
+		await withServer(
+			createCodeIdeProjectDataAccessLimiter({
+				limit: 1,
+				windowMs: 60_000
+			}),
+			async baseUrl => {
+				const first = await fetch(
+					`${baseUrl}/users/python-projects/shared/share-id`
+				);
+				const second = await fetch(
+					`${baseUrl}/users/python-projects/shared/share-id`
+				);
+
+				expect(first.status).toBe(200);
+				expect(second.status).toBe(429);
+				await expect(second.json()).resolves.toEqual({
+					message:
+						"Too many project requests. Please wait and try again."
+				});
+			},
+			200,
+			false,
+			codeIdeProjectApiMountPath
+		);
+	});
+
 	it("isolates project write limits by signed-in role and falls back to IP", async () => {
 		await withConfiguredServer(
 			app => {
@@ -252,6 +286,9 @@ describe("security dependency regressions", () => {
 					if (role === "user" && id) session.userID = id;
 					if (role === "course-code-learner" && id) {
 						session.courseCodeLearnerID = id;
+					}
+					if (Object.keys(session).length) {
+						session.authenticatedSessionExpiresAt = Date.now() + 60_000;
 					}
 					if (Object.keys(session).length) req.session = session;
 					next();
@@ -501,6 +538,9 @@ describe("security dependency regressions", () => {
 
 		expect(production).toMatchObject({
 			httpOnly: true,
+			name: "__Host-session",
+			overwrite: true,
+			path: "/",
 			sameSite: "lax",
 			secure: true
 		});
@@ -511,6 +551,9 @@ describe("security dependency regressions", () => {
 		});
 		expect(development).toMatchObject({
 			httpOnly: true,
+			name: "session",
+			overwrite: true,
+			path: "/",
 			sameSite: "lax"
 		});
 		expect(development).not.toHaveProperty("secure");
@@ -528,7 +571,15 @@ describe("security dependency regressions", () => {
 		);
 		expect(serverListenHost(false, "0.0.0.0")).toBe("127.0.0.1");
 		expect(serverListenHost(true, " :: ")).toBe("::");
-		expect(serverListenHost(true, undefined)).toBeUndefined();
+		expect(serverListenHost(true, undefined)).toBe("127.0.0.1");
+		expect(readTrustProxySetting(undefined, false)).toBe(false);
+		expect(readTrustProxySetting(undefined, true)).toBe("loopback");
+		expect(readTrustProxySetting("loopback", true)).toBe("loopback");
+		expect(readTrustProxySetting(" 1 ", true)).toBe(1);
+		expect(readTrustProxySetting("3", true)).toBe(3);
+		expect(() => readTrustProxySetting("0.0.0.0/0", true)).toThrow(
+			"TRUST_PROXY must be loopback or a hop count from 1 through 3"
+		);
 
 		await withConfiguredServer(
 			app => {
@@ -550,6 +601,68 @@ describe("security dependency regressions", () => {
 		);
 	});
 
+	it("requires a strong production session secret without blocking local development", () => {
+		expect(readSessionSecret("x".repeat(32), true)).toBe("x".repeat(32));
+		expect(readSessionSecret("é".repeat(16), true)).toBe("é".repeat(16));
+		expect(readSessionSecret("short-local-secret", false))
+			.toBe("short-local-secret");
+		expect(() => readSessionSecret("x".repeat(31), true)).toThrow(
+			"SESSION_SECRET must be at least 32 UTF-8 bytes in production"
+		);
+		expect(() => readSessionSecret(" ", false)).toThrow(
+			"Missing SESSION_SECRET"
+		);
+		expect(() => readSessionSecret(undefined, true)).toThrow(
+			"Missing SESSION_SECRET"
+		);
+	});
+
+	it("keeps readiness and Admin provisioning failures free of secret-bearing errors", () => {
+		const serverSource = readFileSync(
+			resolve(__dirname, "../src/server.ts"),
+			"utf8"
+		);
+		const adminProvisioningSource = readFileSync(
+			resolve(__dirname, "../src/create-admin-user.ts"),
+			"utf8"
+		);
+
+		expect(serverSource).toContain('error: "db-ping-failed"');
+		expect(serverSource).not.toContain(
+			'error instanceof Error ? error.message : "db-ping-failed"'
+		);
+		expect(serverSource).toContain("selectMongoConnection(");
+		expect(serverSource).toContain(
+			'usingVault: mongoConnection.source === "vault"'
+		);
+		expect(serverSource).toContain("main().catch(() =>");
+		expect(serverSource).not.toContain("console.error(err)");
+		expect(serverSource).not.toContain(
+			'console.error("Graceful shutdown failed:", error)'
+		);
+
+		expect(adminProvisioningSource).toContain(
+			"await mongoose.connect(mongoConnection.uri)"
+		);
+		expect(adminProvisioningSource).toContain("selectMongoConnection(");
+		expect(adminProvisioningSource).toContain(
+			"adminCreationPayloadSchema.safeParse"
+		);
+		expect(adminProvisioningSource).toContain(
+			"await mongoose.disconnect()"
+		);
+		expect(adminProvisioningSource).toContain(
+			"await accountEmailExists(email)"
+		);
+		expect(adminProvisioningSource).not.toContain(
+			"Admin.exists({ email }).exec()"
+		);
+		expect(adminProvisioningSource).not.toContain("process.exit(");
+		expect(adminProvisioningSource).not.toMatch(
+			/console\.error\([^)]*error/iu
+		);
+	});
+
 	it("registers origin, session, and abuse controls in defensive order", () => {
 		const serverSource = readFileSync(resolve(__dirname, "../src/server.ts"), "utf8");
 		const securityHeaders = serverSource.indexOf("app.use(createApiSecurityHeaders())");
@@ -558,8 +671,19 @@ describe("security dependency regressions", () => {
 		const projectIngressLimiter = serverSource.indexOf("createCodeIdeProjectIngressLimiter()");
 		const requestOriginGuard = serverSource.indexOf("app.use(createRequestOriginGuard())");
 		const cookieSessionMiddleware = serverSource.indexOf("cookieSession(");
+		const projectDataLimiter = serverSource.indexOf(
+			"createCodeIdeProjectDataAccessLimiter()"
+		);
 		const projectAccountLimiter = serverSource.indexOf("createCodeIdeProjectAccountWriteLimiter()");
-		const projectParser = serverSource.indexOf("bodyParser.json({ limit: codeIdeProjectJsonBodyLimit })");
+		const heavyProjectLimiter = serverSource.indexOf(
+			"createCodeIdeHeavyProjectPayloadLimiter()"
+		);
+		const projectConcurrencyGuard = serverSource.indexOf(
+			"createCodeIdeProjectPayloadConcurrencyGuard()"
+		);
+		const projectParser = serverSource.indexOf(
+			"limitProjectBody(projectJson)"
+		);
 		const projectRoutes = serverSource.indexOf('app.use("/users", userRoutes)');
 
 		expect(securityHeaders).toBeGreaterThan(-1);
@@ -568,8 +692,13 @@ describe("security dependency regressions", () => {
 		expect(projectIngressLimiter).toBeGreaterThan(ingressLimiter);
 		expect(requestOriginGuard).toBeGreaterThan(projectIngressLimiter);
 		expect(cookieSessionMiddleware).toBeGreaterThan(requestOriginGuard);
+		expect(projectDataLimiter).toBeGreaterThan(cookieSessionMiddleware);
 		expect(projectAccountLimiter).toBeGreaterThan(cookieSessionMiddleware);
+		expect(heavyProjectLimiter).toBeGreaterThan(cookieSessionMiddleware);
+		expect(projectConcurrencyGuard).toBeGreaterThan(cookieSessionMiddleware);
 		expect(projectParser).toBeGreaterThan(projectAccountLimiter);
+		expect(projectParser).toBeGreaterThan(heavyProjectLimiter);
+		expect(projectParser).toBeGreaterThan(projectConcurrencyGuard);
 		expect(projectRoutes).toBeGreaterThan(projectParser);
 	});
 
@@ -668,8 +797,7 @@ describe("security dependency regressions", () => {
 		const handler: RequestHandler = (req, res) => {
 			res.status(
 				internalDiagnosticsAuthorized(req, {
-					diagnosticsKey: "correct-secret",
-					isProduction: true
+					diagnosticsKey: "correct-secret"
 				})
 					? 200
 					: 403
@@ -687,6 +815,48 @@ describe("security dependency regressions", () => {
 			expect(spoofed.status).toBe(403);
 			expect(keyed.status).toBe(200);
 		});
+	});
+
+	it("requires an internal diagnostics key outside production too", async () => {
+		const handler: RequestHandler = (req, res) => {
+			res.status(
+				internalDiagnosticsAuthorized(req, {
+					diagnosticsKey: "local-diagnostics-secret"
+				})
+					? 200
+					: 403
+			).end();
+		};
+		await withServer(handler, async baseUrl => {
+			const missing = await fetch(`${baseUrl}/limited`, {
+				method: "POST"
+			});
+			const keyed = await fetch(`${baseUrl}/limited`, {
+				headers: {
+					"x-internal-diagnostics-key":
+						"local-diagnostics-secret"
+				},
+				method: "POST"
+			});
+
+			expect(missing.status).toBe(403);
+			expect(keyed.status).toBe(200);
+		});
+	});
+
+	it("requires strong internal diagnostics keys whenever diagnostics are enabled", () => {
+		expect(readInternalDiagnosticsKey(undefined)).toBeUndefined();
+		expect(readInternalDiagnosticsKey("")).toBeUndefined();
+		expect(readInternalDiagnosticsKey("x".repeat(32)))
+			.toBe("x".repeat(32));
+		expect(readInternalDiagnosticsKey("é".repeat(16)))
+			.toBe("é".repeat(16));
+		expect(() => readInternalDiagnosticsKey("x".repeat(31))).toThrow(
+			"INTERNAL_DIAGNOSTICS_KEY must be at least 32 UTF-8 bytes when configured"
+		);
+		expect(() => readInternalDiagnosticsKey(" ".repeat(32))).toThrow(
+			"INTERNAL_DIAGNOSTICS_KEY cannot contain only whitespace"
+		);
 	});
 
 	it("rate limits repeated classroom code attempts without legacy headers", async () => {

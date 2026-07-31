@@ -1,20 +1,28 @@
 import type { Request } from "express";
 import type { RateLimitRequestHandler } from "express-rate-limit";
-import type { CustomSession } from "../types/session/CustomSession.js";
 import { createHash } from "node:crypto";
 import { env } from "node:process";
-import rateLimit, { ipKeyGenerator } from "express-rate-limit";
+import rateLimit from "express-rate-limit";
 import { productionRateLimitStore } from "./mongoRateLimitStore.js";
+import {
+	codeIdeProjectPayloadIdentity,
+	HEAVY_CODE_IDE_PROJECT_PAYLOAD_THRESHOLD_BYTES,
+	isHeavyCodeIdeProjectPayload
+} from "./projectPayload.js";
 
 interface TunableRateLimitOptions {
 	limit?: number;
 	windowMs?: number;
 }
 
+interface HeavyProjectRateLimitOptions extends TunableRateLimitOptions {
+	heavyThresholdBytes?: number;
+}
+
 const DATABASE_BACKED_API_PATH = /^\/(?:accounts|admins|course-access|tutors|users|_dbinfo)(?:\/|$)/i;
 const PROJECT_WRITE_METHODS = new Set(["DELETE", "PATCH", "POST", "PUT"]);
 export const codeIdeProjectApiMountPath
-	= /^\/users\/(?:loggedin\/python-projects|loggedin\/python-project-reviews|[^/]+\/python-projects)(?=\/|$)/i;
+	= /^\/users\/(?:python-projects\/shared|loggedin\/python-projects|loggedin\/python-project-reviews|[^/]+\/python-projects)(?=\/|$)/i;
 
 function configuredPositiveInteger(name: string, fallback: number) {
 	const value = env[name]?.trim();
@@ -43,16 +51,7 @@ function normalizedEmailKey(req: Request) {
 }
 
 function codeIdeProjectAccountKey(req: Request) {
-	const session = req.session as CustomSession | undefined;
-	const roleAndID = [
-		["admin", session?.adminID],
-		["tutor", session?.tutorID],
-		["user", session?.userID],
-		["course-code-learner", session?.courseCodeLearnerID]
-	].find((entry): entry is [string, string] => typeof entry[1] === "string" && entry[1].length > 0);
-
-	if (roleAndID) return `${roleAndID[0]}:${roleAndID[1]}`;
-	return `ip:${ipKeyGenerator(req.ip ?? "unknown")}`;
+	return codeIdeProjectPayloadIdentity(req);
 }
 
 export function createApiIngressLimiter(options: TunableRateLimitOptions = {}): RateLimitRequestHandler {
@@ -105,6 +104,54 @@ export function createCodeIdeProjectAccountWriteLimiter(
 			message: "Too many project changes. Please wait and try again."
 		},
 		...options
+	});
+}
+
+export function createCodeIdeProjectDataAccessLimiter(
+	options: TunableRateLimitOptions = {}
+): RateLimitRequestHandler {
+	return rateLimit({
+		windowMs: configuredPositiveInteger(
+			"CODE_IDE_PROJECT_DATA_RATE_WINDOW_MS",
+			15 * 60 * 1000
+		),
+		limit: configuredPositiveInteger("CODE_IDE_PROJECT_DATA_RATE_MAX", 600),
+		...standardRateLimitHeaders,
+		...storeOptions("code-ide-project-data"),
+		keyGenerator: codeIdeProjectPayloadIdentity,
+		message: {
+			message: "Too many project requests. Please wait and try again."
+		},
+		...options
+	});
+}
+
+export function createCodeIdeHeavyProjectPayloadLimiter(
+	options: HeavyProjectRateLimitOptions = {}
+): RateLimitRequestHandler {
+	const {
+		heavyThresholdBytes =
+			HEAVY_CODE_IDE_PROJECT_PAYLOAD_THRESHOLD_BYTES,
+		...rateOptions
+	} = options;
+	return rateLimit({
+		windowMs: configuredPositiveInteger(
+			"CODE_IDE_HEAVY_PROJECT_RATE_WINDOW_MS",
+			15 * 60 * 1000
+		),
+		limit: configuredPositiveInteger(
+			"CODE_IDE_HEAVY_PROJECT_RATE_MAX",
+			20
+		),
+		...standardRateLimitHeaders,
+		...storeOptions("code-ide-heavy-project"),
+		keyGenerator: codeIdeProjectPayloadIdentity,
+		skip: req =>
+			!isHeavyCodeIdeProjectPayload(req, heavyThresholdBytes),
+		message: {
+			message: "Too many large project saves. Please wait and try again."
+		},
+		...rateOptions
 	});
 }
 
