@@ -103,6 +103,7 @@ const statusMessage = ref(
 	"Sample graph loaded. Every edit is saved in this browser."
 );
 const importWarnings = ref<string[]>([]);
+const isFileImportReady = ref(false);
 const svgElement = ref<SVGSVGElement>();
 const fileInput = ref<HTMLInputElement>();
 const undoStack = ref<string[]>([]);
@@ -1652,6 +1653,7 @@ function annotationRectangle(
 
 onMounted(() => {
 	loadLocalGraph();
+	isFileImportReady.value = true;
 });
 
 onBeforeUnmount(() => {
@@ -1689,6 +1691,7 @@ onBeforeUnmount(() => {
 				<button
 					type="button"
 					class="graph-button"
+					:disabled="!isFileImportReady"
 					@click="openFilePicker"
 				>
 					Open / import
@@ -1729,6 +1732,7 @@ onBeforeUnmount(() => {
 					type="file"
 					aria-label="Open or import a graph project"
 					accept=".graphsketch,.ograph,.json,.csv,.tsv,application/json,text/csv,text/tab-separated-values"
+					:disabled="!isFileImportReady"
 					@change="handleFileSelection"
 				/>
 			</div>

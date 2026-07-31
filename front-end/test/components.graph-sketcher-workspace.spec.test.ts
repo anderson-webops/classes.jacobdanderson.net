@@ -75,6 +75,22 @@ describe("GraphSketcherWorkspace.vue", () => {
 		expect(wrapper.text()).toContain("Linux desktop port");
 	});
 
+	it("keeps file import inert until the workspace is mounted", async () => {
+		const wrapper = mount(GraphSketcherWorkspace);
+		const input = wrapper.get(
+			"input[aria-label='Open or import a graph project']"
+		);
+		const openButton = buttonWithText(wrapper, "Open / import");
+
+		expect(input.attributes("disabled")).toBeDefined();
+		expect(openButton.attributes("disabled")).toBeDefined();
+
+		await wrapper.vm.$nextTick();
+
+		expect(input.attributes("disabled")).toBeUndefined();
+		expect(openButton.attributes("disabled")).toBeUndefined();
+	});
+
 	it("plots equations and keeps keyboard scrolling inside the canvas", async () => {
 		const wrapper = mount(GraphSketcherWorkspace);
 		const equation = wrapper
@@ -237,6 +253,7 @@ describe("GraphSketcherWorkspace.vue", () => {
 
 	it("rejects oversized files before reading their contents", async () => {
 		const wrapper = mount(GraphSketcherWorkspace);
+		await wrapper.vm.$nextTick();
 		const text = vi.fn();
 		const arrayBuffer = vi.fn();
 		const input = wrapper.get(
@@ -300,6 +317,7 @@ describe("GraphSketcherWorkspace.vue", () => {
 		importedDocument.title = "Stale imported graph";
 
 		const wrapper = mount(GraphSketcherWorkspace);
+		await wrapper.vm.$nextTick();
 		const input = wrapper.get(
 			"input[aria-label='Open or import a graph project']"
 		);
@@ -337,6 +355,7 @@ describe("GraphSketcherWorkspace.vue", () => {
 		importedDocument.title = "Stale imported graph";
 
 		const wrapper = mount(GraphSketcherWorkspace);
+		await wrapper.vm.$nextTick();
 		const input = wrapper.get(
 			"input[aria-label='Open or import a graph project']"
 		);
