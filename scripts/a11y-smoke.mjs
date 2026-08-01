@@ -4,6 +4,7 @@ import http from "node:http";
 import { createRequire } from "node:module";
 import net from "node:net";
 import puppeteer from "puppeteer";
+import { isTransientA11yError, runAxeInPage } from "./a11y-axe-runtime.mjs";
 
 const require = createRequire(import.meta.url);
 const axeSourcePath = require.resolve("axe-core/axe.min.js");
@@ -18,25 +19,13 @@ const routeScenarios = [
 		name: "public",
 		role: "public",
 		routes: runFullMatrix
-			? [
-					"/",
-					"/about",
-					"/courses",
-					"/graph-sketcher",
-					"/pathways",
-					"/signup",
-					"/payment",
-					"/zoom",
-					"/wheel"
-				]
+			? ["/", "/about", "/courses", "/graph-sketcher", "/pathways", "/signup", "/payment", "/zoom", "/wheel"]
 			: ["/", "/courses", "/graph-sketcher", "/signup", "/zoom"]
 	},
 	{
 		name: "student",
 		role: "student",
-		routes: runFullMatrix
-			? ["/profile", "/courses", "/pathways", "/zoom", "/wheel"]
-			: ["/profile", "/courses"]
+		routes: runFullMatrix ? ["/profile", "/courses", "/pathways", "/zoom", "/wheel"] : ["/profile", "/courses"]
 	},
 	{
 		name: "tutor",
@@ -49,14 +38,7 @@ const routeScenarios = [
 		name: "admin",
 		role: "admin",
 		routes: runFullMatrix
-			? [
-					"/profile",
-					"/courses",
-					"/admin",
-					"/admin/people",
-					"/admin/mdmail",
-					"/admin/student-management"
-				]
+			? ["/profile", "/courses", "/admin", "/admin/people", "/admin/mdmail", "/admin/student-management"]
 			: ["/admin", "/admin/mdmail", "/admin/student-management"]
 	}
 ];
@@ -172,19 +154,11 @@ function createMockApiServer() {
 			return;
 		}
 		if (url.pathname === "/admins/loggedin") {
-			sendJson(
-				res,
-				activeRole === "admin" ? { currentAdmin: admin } : {},
-				activeRole === "admin" ? 200 : 401
-			);
+			sendJson(res, activeRole === "admin" ? { currentAdmin: admin } : {}, activeRole === "admin" ? 200 : 401);
 			return;
 		}
 		if (url.pathname === "/tutors/loggedin") {
-			sendJson(
-				res,
-				activeRole === "tutor" ? { currentTutor: tutor } : {},
-				activeRole === "tutor" ? 200 : 401
-			);
+			sendJson(res, activeRole === "tutor" ? { currentTutor: tutor } : {}, activeRole === "tutor" ? 200 : 401);
 			return;
 		}
 		if (url.pathname === "/users/loggedin") {
@@ -299,14 +273,12 @@ async function assertPortAvailable(port, label) {
 			probe.once("error", reject);
 			probe.listen(port, "127.0.0.1", resolve);
 		});
-	}
-	catch (error) {
+	} catch (error) {
 		throw new Error(
 			`${label} port ${port} is already in use; set A11Y_${label.toUpperCase()}_PORT to an unused port`,
 			{ cause: error }
 		);
-	}
-	finally {
+	} finally {
 		if (probe.listening) await closeServer(probe);
 	}
 }
@@ -333,14 +305,8 @@ async function stopChild(child) {
 	if (exited) return;
 
 	killChild(child, "SIGKILL");
-	await Promise.race([
-		waitForChildExit(child),
-		new Promise(resolve => setTimeout(resolve, 2_000))
-	]);
+	await Promise.race([waitForChildExit(child), new Promise(resolve => setTimeout(resolve, 2_000))]);
 }
-
-const transientNavigationError =
-	/Execution context was destroyed|Cannot find context with specified id|Navigating frame was detached/i;
 
 async function runAxeAudit(page, url) {
 	for (let attempt = 1; attempt <= 3; attempt += 1) {
@@ -350,32 +316,16 @@ async function runAxeAudit(page, url) {
 				waitUntil: "domcontentloaded"
 			});
 			await page.waitForSelector("body", { timeout: 10_000 });
-			await page.waitForFunction(
-				() => document.body.innerText.trim().length > 0,
-				{ timeout: 10_000 }
-			);
-			await page.waitForFunction(
-				() => document.querySelector("#app")?.hasAttribute("data-v-app"),
-				{ timeout: 10_000 }
-			);
+			await page.waitForFunction(() => document.body.innerText.trim().length > 0, { timeout: 10_000 });
+			await page.waitForFunction(() => document.querySelector("#app")?.hasAttribute("data-v-app"), {
+				timeout: 10_000
+			});
 			await new Promise(resolve => setTimeout(resolve, 250));
 			await page.addScriptTag({ path: axeSourcePath });
 
-			return await page.evaluate(async () => {
-				return await axe.run(document, {
-					resultTypes: ["violations"],
-					runOnly: {
-						type: "tag",
-						values: ["wcag2a", "wcag2aa"]
-					}
-				});
-			});
+			return await runAxeInPage(page);
 		} catch (error) {
-			if (
-				attempt === 3
-				|| !(error instanceof Error)
-				|| !transientNavigationError.test(error.message)
-			) {
+			if (attempt === 3 || !isTransientA11yError(error)) {
 				throw error;
 			}
 
@@ -411,9 +361,7 @@ try {
 					const url = `${baseUrl}${route}`;
 					const page = await browser.newPage();
 					try {
-						console.log(
-							`a11y checking: ${url} (${scenario.name}, ${viewport.name}, ${media.name})`
-						);
+						console.log(`a11y checking: ${url} (${scenario.name}, ${viewport.name}, ${media.name})`);
 						page.setDefaultNavigationTimeout(15_000);
 						await page.setViewport({
 							deviceScaleFactor: 1,
@@ -431,15 +379,10 @@ try {
 							}
 						]);
 						await page.evaluateOnNewDocument(storedTheme => {
-							window.localStorage.setItem(
-								"vueuse-color-scheme",
-								storedTheme
-							);
+							window.localStorage.setItem("vueuse-color-scheme", storedTheme);
 						}, media.storedTheme);
 						const result = await runAxeAudit(page, url);
-						const violations = result.violations.filter(
-							violation => violation.id !== "frame-tested"
-						);
+						const violations = result.violations.filter(violation => violation.id !== "frame-tested");
 						if (violations.length) {
 							failures.push({
 								context: `${scenario.name}/${viewport.name}/${media.name}`,
@@ -448,9 +391,7 @@ try {
 							});
 							continue;
 						}
-						console.log(
-							`a11y ok: ${url} (${scenario.name}, ${viewport.name}, ${media.name})`
-						);
+						console.log(`a11y ok: ${url} (${scenario.name}, ${viewport.name}, ${media.name})`);
 					} finally {
 						await page.close().catch(() => {});
 					}
@@ -461,9 +402,7 @@ try {
 
 	if (failures.length) {
 		for (const failure of failures) {
-			console.error(
-				`\nAccessibility issues for ${failure.url} (${failure.context})`
-			);
+			console.error(`\nAccessibility issues for ${failure.url} (${failure.context})`);
 			for (const violation of failure.violations) {
 				console.error(`- [${violation.impact ?? "unknown"}] ${violation.id}: ${violation.help}`);
 				console.error(`  ${violation.helpUrl}`);
