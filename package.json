@@ -21,6 +21,7 @@
 		"audit:static-media": "node scripts/audit-static-course-media.mjs",
 		"audit-fix": "npm audit fix --workspaces",
 		"build": "npm run -w front-end build && npm run -w back-end build",
+		"check:dependencies": "npm ls --all",
 		"dev": "npm run -w front-end dev",
 		"server": "npm run -w back-end server",
 		"server:once": "npm run -w back-end server:once",
@@ -45,9 +46,9 @@
 		"@vue/language-core": {
 			"minimatch": "^9.0.9"
 		},
-		"path-to-regexp": "8.4.0",
+		"path-to-regexp": "8.4.2",
 		"serialize-javascript": "7.0.5",
-		"picomatch": "4.0.4",
+		"picomatch": "4.0.5",
 		"anymatch": {
 			"picomatch": "2.3.2"
 		},
@@ -74,7 +75,7 @@
 		"follow-redirects": "1.16.0",
 		"@cypress/request": {
 			"uuid": "14.0.0",
-			"qs": "6.15.2"
+			"qs": "6.15.3"
 		}
 	},
 	"allowScripts": {

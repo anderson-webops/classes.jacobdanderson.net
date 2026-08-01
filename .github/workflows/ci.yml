@@ -31,7 +31,15 @@ jobs:
 
             - name: Install backend deps with backend lockfile
               working-directory: back-end
-              run: npm ci
+              run: npm ci --workspaces=false
+
+            - name: Validate backend dependency tree
+              working-directory: back-end
+              run: npm ls --all --workspaces=false
+
+            - name: Audit backend dependency tree
+              working-directory: back-end
+              run: npm audit --omit=optional --workspaces=false
 
     lint:
         runs-on: ubuntu-latest
@@ -54,6 +62,9 @@ jobs:
 
             - name: Install deps
               run: npm ci
+
+            - name: Validate dependency tree
+              run: npm run check:dependencies
 
             - name: Dependency security audit
               run: npm audit --omit=optional
