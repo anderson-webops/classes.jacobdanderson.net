@@ -1,7 +1,3 @@
-<script lang="ts" setup>
-import { warmSchedulerConnections } from "@/modules/scheduler";
-</script>
-
 <template>
 	<footer class="site-footer">
 		<div class="site-shell site-shell--wide site-footer__inner">
@@ -51,14 +47,7 @@ import { warmSchedulerConnections } from "@/modules/scheduler";
 				<h3>Use the Site</h3>
 				<ul>
 					<li>
-						<RouterLink
-							to="/signup"
-							@focus="warmSchedulerConnections"
-							@mouseenter="warmSchedulerConnections"
-							@touchstart.passive="warmSchedulerConnections"
-						>
-							Book a Class
-						</RouterLink>
+						<RouterLink to="/signup"> Book a Class </RouterLink>
 					</li>
 					<li>
 						<RouterLink to="/payment">View Tuition</RouterLink>

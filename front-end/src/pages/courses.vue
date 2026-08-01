@@ -2,7 +2,6 @@
 import { storeToRefs } from "pinia";
 import { computed, defineAsyncComponent } from "vue";
 import CourseCodeAccessForm from "@/components/CourseCodeAccessForm.vue";
-import { warmSchedulerConnections } from "@/modules/scheduler";
 import { useAppStore } from "@/stores/app";
 
 defineOptions({ name: "CoursesPage" });
@@ -110,9 +109,6 @@ function openSignup() {
 					v-if="!isLoggedIn"
 					class="site-button site-button--secondary"
 					to="/signup"
-					@focus="warmSchedulerConnections"
-					@mouseenter="warmSchedulerConnections"
-					@touchstart.passive="warmSchedulerConnections"
 				>
 					Book a Class
 				</RouterLink>

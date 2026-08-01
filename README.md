@@ -105,3 +105,25 @@ npm run clean
 - Use `npm run server` and `npm run serve` when you want the API and front-end started separately.
 - Use [`HEALTHCHECKS.md`](./HEALTHCHECKS.md) for deployment monitor targets instead of `/`.
 - The booking page embeds the sibling scheduler app from `VITE_SCHEDULER_ORIGIN`, defaulting to `https://scheduler.classes.jacobdanderson.net`. For local end-to-end testing against `../scheduler.classes.jacobdanderson.net`, run that app on port `5173` and set `VITE_SCHEDULER_ORIGIN=http://localhost:5173` in `front-end/.env`.
+
+## Production security-header gate
+
+`netlify.toml` assigns exact Content Security Policy profiles to ordinary pages,
+Graph Sketcher, the Code IDE aliases, signup, the wheel, and the Admin roster
+embed. The dedicated hashed plain-Python worker asset also receives its own
+narrow response profile for the Pyodide sources it loads. Because a CSP belongs
+to the loaded document, navigation across profiles performs a full page load;
+same-profile navigation remains client-side.
+
+After production deploys, verify the live route headers, the current IDE and
+Graph Sketcher bundles, and the discovered Python worker bundle plus its exact
+response headers:
+
+```bash
+npm run verify:production
+```
+
+Set `CLASSES_SITE_ORIGIN` only when checking an equivalent preview. A production
+build that changes the scheduler origin or adds a browser-loaded remote origin
+must update the matching exact policy, its config-derived regression test, and
+the live probe together.

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { warmSchedulerConnections } from "@/modules/scheduler";
 import { useContentStore } from "@/stores/content";
 
 defineOptions({ name: "SupportUsPage" });
@@ -149,9 +148,6 @@ useHead(
 				<RouterLink
 					class="site-button site-button--primary"
 					to="/signup"
-					@focus="warmSchedulerConnections"
-					@mouseenter="warmSchedulerConnections"
-					@touchstart.passive="warmSchedulerConnections"
 				>
 					Open Scheduler
 				</RouterLink>
