@@ -98,7 +98,7 @@ npm run clean
 
 ## Operational Notes
 
-- `.nvmrc` and `.node-version` pin Node 24.18.0 LTS; its npm 11.16.0 release matches the root `packageManager` field.
+- `.nvmrc` and `.node-version` pin Node 24.18.0 LTS. The repository separately pins npm 12.0.1 through the root `packageManager` field; use that npm version instead of Node's bundled npm.
 - The root `package-lock.json` is the authoritative lockfile for the repo. Keep it updated whenever dependencies change.
 - `npm run up` reports available dependency updates without rewriting manifests. Apply reviewed updates with a targeted `npm install`.
 - `npm run clean` removes generated build/test output only. It never uses `sudo` and never deletes lockfiles or dependency trees.
