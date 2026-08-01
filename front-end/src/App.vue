@@ -1,9 +1,5 @@
 <script lang="ts" setup>
 import { pageTitleForPath } from "@/modules/pageHead";
-import {
-	SCHEDULER_ORIGIN,
-	schedulerDnsPrefetchHref
-} from "@/modules/scheduler";
 
 // https://github.com/vueuse/head
 // you can use this to manipulate the document head in any components,
@@ -118,23 +114,6 @@ useHead(
 				{
 					rel: "manifest",
 					href: "/site.webmanifest"
-				},
-				{
-					rel: "dns-prefetch",
-					href: schedulerDnsPrefetchHref
-				},
-				{
-					rel: "preconnect",
-					href: SCHEDULER_ORIGIN
-				},
-				{
-					rel: "dns-prefetch",
-					href: "//cdn.jsdelivr.net"
-				},
-				{
-					rel: "preconnect",
-					href: "https://cdn.jsdelivr.net",
-					crossorigin: "anonymous"
 				},
 				{
 					rel: "canonical",

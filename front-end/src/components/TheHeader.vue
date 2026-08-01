@@ -2,7 +2,6 @@
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { warmSchedulerConnections } from "@/modules/scheduler";
 import { useAppStore } from "@/stores/app";
 
 const emit = defineEmits<{
@@ -25,7 +24,6 @@ interface NavLink {
 	label: string;
 	to: string;
 	exact?: boolean;
-	warmScheduler?: boolean;
 }
 
 const primaryLinks = computed<NavLink[]>(() => {
@@ -41,8 +39,7 @@ const primaryLinks = computed<NavLink[]>(() => {
 		links.push({
 			label: "Book a Class",
 			to: "/signup",
-			exact: true,
-			warmScheduler: true
+			exact: true
 		});
 	}
 
@@ -95,10 +92,6 @@ function isLinkActive(link: NavLink) {
 
 	return route.path === link.to;
 }
-
-function maybeWarmScheduler(link: NavLink) {
-	if (link.warmScheduler) warmSchedulerConnections();
-}
 </script>
 
 <template>
@@ -135,11 +128,6 @@ function maybeWarmScheduler(link: NavLink) {
 											'is-active': isLinkActive(link)
 										}"
 										:to="link.to"
-										@focus="maybeWarmScheduler(link)"
-										@mouseenter="maybeWarmScheduler(link)"
-										@touchstart.passive="
-											maybeWarmScheduler(link)
-										"
 									>
 										{{ link.label }}
 									</router-link>

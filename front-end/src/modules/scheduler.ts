@@ -93,39 +93,3 @@ export const schedulerEmbedMessageSource =
 export const schedulerEmbedResizeType = "scheduler:resize";
 export const schedulerEmbedThemeMessageSource = "classes.jacobdanderson.net";
 export const schedulerEmbedThemeType = "scheduler:theme";
-
-let schedulerWarmthApplied = false;
-
-function ensureHeadLink(rel: string, href: string, crossorigin?: string) {
-	if (typeof document === "undefined") {
-		return;
-	}
-
-	const selector = crossorigin
-		? `link[rel="${rel}"][href="${href}"][crossorigin="${crossorigin}"]`
-		: `link[rel="${rel}"][href="${href}"]`;
-
-	if (document.head.querySelector(selector)) {
-		return;
-	}
-
-	const link = document.createElement("link");
-	link.rel = rel;
-	link.href = href;
-
-	if (crossorigin) {
-		link.crossOrigin = crossorigin;
-	}
-
-	document.head.appendChild(link);
-}
-
-export function warmSchedulerConnections() {
-	if (schedulerWarmthApplied) {
-		return;
-	}
-
-	schedulerWarmthApplied = true;
-	ensureHeadLink("dns-prefetch", schedulerDnsPrefetchHref);
-	ensureHeadLink("preconnect", SCHEDULER_ORIGIN);
-}

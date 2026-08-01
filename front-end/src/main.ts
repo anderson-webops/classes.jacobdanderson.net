@@ -41,7 +41,8 @@ export const createApp = ViteSSG(
 					"./modules/admin-guard.ts",
 					"./modules/i18n.ts",
 					"./modules/nprogress.ts",
-					"./modules/pinia.ts"
+					"./modules/pinia.ts",
+					"./modules/security-profile-navigation.ts"
 				],
 				{ eager: true, import: "install" }
 			)

@@ -32,7 +32,8 @@
 		"lint-fix": "npm run -w front-end lint-fix && npm run -w back-end lint-fix",
 		"typecheck": "npm run -w front-end typecheck && npm run -w back-end typecheck",
 		"clean": "node scripts/clean-generated.mjs",
-		"up": "npm exec -- taze major --include-locked --recursive"
+		"up": "npm exec -- taze major --include-locked --recursive",
+		"verify:production": "node scripts/production-security-headers-smoke.mjs && node scripts/production-ide-smoke.mjs && node scripts/production-graph-sketcher-smoke.mjs"
 	},
 	"overrides": {
 		"defu": "6.1.6",

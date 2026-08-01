@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { warmSchedulerConnections } from "@/modules/scheduler";
 import { useContentStore } from "@/stores/content";
 
 defineOptions({ name: "HomePage" });
@@ -96,13 +95,7 @@ useHead(
 			aria-label="Primary actions"
 			class="site-action-row home-actions"
 		>
-			<RouterLink
-				class="site-button site-button--primary"
-				to="/signup"
-				@focus="warmSchedulerConnections"
-				@mouseenter="warmSchedulerConnections"
-				@touchstart.passive="warmSchedulerConnections"
-			>
+			<RouterLink class="site-button site-button--primary" to="/signup">
 				Book a Class
 			</RouterLink>
 			<RouterLink
@@ -170,9 +163,6 @@ useHead(
 					<RouterLink
 						class="site-button site-button--primary"
 						to="/signup"
-						@focus="warmSchedulerConnections"
-						@mouseenter="warmSchedulerConnections"
-						@touchstart.passive="warmSchedulerConnections"
 					>
 						Open Scheduler
 					</RouterLink>
