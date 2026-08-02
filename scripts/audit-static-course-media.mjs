@@ -28,6 +28,7 @@ import {
 	staticMediaFilename,
 	staticMediaUrlsFromText
 } from "../src/stores/courses/staticMedia";
+import { fetchStaticMediaWithRetry } from "../../scripts/static-media-fetch.mjs";
 
 const knownPending = new Set(KNOWN_PENDING_STATIC_MEDIA_FILENAMES);
 const urls = new Map();
@@ -61,21 +62,6 @@ const textFileExtensions = new Set([
 ]);
 const staticAssetPathPattern =
 	/\.(?:avif|csv|gif|jpe?g|json|md|mov|mp4|pdf|png|svg|webm|zip)(?:[?#].*)?$/i;
-const maxFetchAttempts = 3;
-const fetchTimeoutMs = 5000;
-const fetchRetryDelayMs = 250;
-
-function delay(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function fetchWithTimeout(url, options = {}) {
-	return fetch(url, {
-		...options,
-		signal: AbortSignal.timeout(fetchTimeoutMs)
-	});
-}
-
 function add(url, reference) {
 	if (!url) return;
 	const canonicalUrl = canonicalStaticMediaUrl(url);
@@ -221,34 +207,7 @@ for (const [url, references] of [...urls].sort(([left], [right]) =>
 		continue;
 	}
 
-	let status = 0;
-	let ok = false;
-	let error = "";
-
-	for (let attempt = 1; attempt <= maxFetchAttempts; attempt += 1) {
-		try {
-			let response = await fetchWithTimeout(url, { method: "HEAD" });
-			if (response.status === 405 || response.status === 403) {
-				response = await fetchWithTimeout(url, {
-					headers: { Range: "bytes=0-0" },
-					method: "GET"
-				});
-			}
-			status = response.status;
-			ok = response.ok || response.status === 206;
-			error = "";
-
-			if (ok || ![0, 408, 425, 429, 500, 502, 503, 504].includes(status))
-				break;
-		} catch (err) {
-			status = 0;
-			error = err instanceof Error ? err.message : String(err);
-		}
-
-		if (attempt < maxFetchAttempts) {
-			await delay(fetchRetryDelayMs * attempt);
-		}
-	}
+	const { error, ok, status } = await fetchStaticMediaWithRetry(url);
 
 	const row = {
 		...baseRow,

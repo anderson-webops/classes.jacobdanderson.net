@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { serializeJsonLd } from "@/modules/serializeJsonLd";
 import { useContentStore } from "@/stores/content";
 
 defineOptions({ name: "SupportUsPage" });
@@ -23,7 +24,7 @@ useHead(
 			],
 			script: [
 				{
-					innerHTML: JSON.stringify({
+					innerHTML: serializeJsonLd({
 						"@context": "https://schema.org",
 						"@type": "FAQPage",
 						mainEntity: content.faqs.map(faq => ({

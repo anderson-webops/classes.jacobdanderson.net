@@ -49,6 +49,11 @@ describe("static route normalization", () => {
 			"<main>Course Resource</main>"
 		);
 		await writeFile(join(tempDir, "about.html"), "<main>About</main>");
+		await mkdir(join(tempDir, "about"), { recursive: true });
+		await writeFile(
+			join(tempDir, "about", "index.html"),
+			"<main>Stale About</main>"
+		);
 		await writeFile(
 			join(tempDir, "404.html"),
 			"<main>Page not found</main>"
@@ -72,6 +77,9 @@ describe("static route normalization", () => {
 		await normalizeStaticRoutes(tempDir);
 		await normalizeStaticRoutes(tempDir);
 
+		await expect(readFile(join(tempDir, "index.html"), "utf8")).resolves.toBe(
+			"<main>Home</main>"
+		);
 		await expect(
 			readFile(join(tempDir, "course-resource", "index.html"), "utf8")
 		).resolves.toBe("<main>Course Resource</main>");
@@ -87,6 +95,13 @@ describe("static route normalization", () => {
 				"utf8"
 			)
 		).resolves.toBe("<main>Student management</main>");
+		for (const retiredAlias of [
+			"about.html",
+			"course-resource.html",
+			join("admin", "student-management.html")
+		]) {
+			await expect(stat(join(tempDir, retiredAlias))).rejects.toThrow();
+		}
 		await expect(
 			stat(join(tempDir, "index", "index.html"))
 		).rejects.toThrow();
@@ -107,6 +122,9 @@ describe("static route normalization", () => {
 		await expect(
 			stat(join(tempDir, "course-assets", "example", "index.html"))
 		).rejects.toThrow();
+		await expect(
+			readFile(join(tempDir, "course-assets", "example.html"), "utf8")
+		).resolves.toBe("<main>Static course asset</main>");
 		await expect(stat(join(tempDir, ".vite"))).rejects.toThrow();
 	});
 
@@ -152,6 +170,9 @@ describe("static route normalization", () => {
 
 		expect(notFoundPage).toContain('name: "robots"');
 		expect(notFoundPage).toContain('content: "noindex,nofollow"');
+		expect(netlifyConfig).toMatch(
+			/\[build[.]processing[.]html\]\npretty_urls = true/u
+		);
 		expect(netlifyConfig.trimEnd()).toMatch(
 			/\[\[redirects\]\]\nfrom = "\/\*"\nto = "\/404[.]html"\nstatus = 404\nforce = false$/u
 		);

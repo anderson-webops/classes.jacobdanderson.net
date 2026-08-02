@@ -6,7 +6,10 @@ import {
 	securityHeaderProfileForPath,
 	securityProfileChanges
 } from "@/modules/security-profile-navigation";
-import { productionSecurityHeaderProbes } from "../../scripts/production-security-headers.mjs";
+import {
+	productionCanonicalRouteProbes,
+	productionSecurityHeaderProbes
+} from "../../scripts/production-security-headers.mjs";
 
 const repositoryRoot = resolve(import.meta.dirname, "../..");
 
@@ -43,7 +46,10 @@ describe("security-profile navigation", () => {
 	});
 
 	it("uses the same profiles as every live route probe", () => {
-		for (const { path, profile } of productionSecurityHeaderProbes) {
+		for (const { path, profile } of [
+			...productionSecurityHeaderProbes,
+			...productionCanonicalRouteProbes
+		]) {
 			expect(securityHeaderProfileForPath(path)).toBe(profile);
 		}
 	});

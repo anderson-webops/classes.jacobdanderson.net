@@ -138,6 +138,9 @@ jobs:
                   VITEST_WATCH: "false"
               run: npm run -w back-end test
 
+            - name: Native deployment contract tests
+              run: npm run test:native-deployment
+
     accessibility:
         runs-on: ubuntu-latest
         timeout-minutes: 15
@@ -183,8 +186,33 @@ jobs:
             - name: Install deps
               run: npm ci
 
+            - name: Static media fetch policy tests
+              run: npm run test:static-media-fetch
+
             - name: Audit static course media
               run: npm run audit:static-media
+
+    native-nginx:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  persist-credentials: false
+
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+              with:
+                  node-version: 24.18.0
+
+            - name: Install native Nginx fixture dependency
+              run: |
+                  if ! command -v nginx >/dev/null 2>&1; then
+                    sudo apt-get update
+                    sudo apt-get install --no-install-recommends --yes nginx
+                  fi
+
+            - name: Exercise native Nginx routing
+              run: npm run test:native-nginx
 
     test-e2e:
         runs-on: ubuntu-latest

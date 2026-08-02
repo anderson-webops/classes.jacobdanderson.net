@@ -1,4 +1,6 @@
 const exactSecurityHeaders = Object.freeze({
+	"cross-origin-opener-policy": "same-origin",
+	"cross-origin-resource-policy": "same-origin",
 	"permissions-policy": "camera=(), geolocation=(), microphone=()",
 	"referrer-policy": "strict-origin-when-cross-origin",
 	"strict-transport-security": "max-age=31536000; includeSubDomains",
@@ -175,31 +177,16 @@ export const productionSecurityHeaderProbes = Object.freeze([
 	Object.freeze({ path: "/courses/", profile: "standard" }),
 	Object.freeze({ path: "/graph-sketcher", profile: "graph-sketcher" }),
 	Object.freeze({ path: "/graph-sketcher/", profile: "graph-sketcher" }),
-	Object.freeze({ path: "/graph-sketcher.html", profile: "graph-sketcher" }),
-	Object.freeze({
-		path: "/graph-sketcher/index.html",
-		profile: "graph-sketcher"
-	}),
 	Object.freeze({ path: "/ide", profile: "code-ide" }),
 	Object.freeze({ path: "/ide/", profile: "code-ide" }),
-	Object.freeze({ path: "/ide.html", profile: "code-ide" }),
-	Object.freeze({ path: "/ide/index.html", profile: "code-ide" }),
 	Object.freeze({ path: "/python-ide", profile: "code-ide" }),
 	Object.freeze({ path: "/python-ide/", profile: "code-ide" }),
-	Object.freeze({ path: "/python-ide.html", profile: "code-ide" }),
-	Object.freeze({ path: "/python-ide/index.html", profile: "code-ide" }),
 	Object.freeze({ path: "/bluej", profile: "code-ide" }),
 	Object.freeze({ path: "/bluej/", profile: "code-ide" }),
-	Object.freeze({ path: "/bluej.html", profile: "code-ide" }),
-	Object.freeze({ path: "/bluej/index.html", profile: "code-ide" }),
 	Object.freeze({ path: "/signup", profile: "scheduler-embed" }),
 	Object.freeze({ path: "/signup/", profile: "scheduler-embed" }),
-	Object.freeze({ path: "/signup.html", profile: "scheduler-embed" }),
-	Object.freeze({ path: "/signup/index.html", profile: "scheduler-embed" }),
 	Object.freeze({ path: "/wheel", profile: "wheel-embed" }),
 	Object.freeze({ path: "/wheel/", profile: "wheel-embed" }),
-	Object.freeze({ path: "/wheel.html", profile: "wheel-embed" }),
-	Object.freeze({ path: "/wheel/index.html", profile: "wheel-embed" }),
 	Object.freeze({
 		path: "/admin/student-management",
 		profile: "student-management-embed"
@@ -207,10 +194,35 @@ export const productionSecurityHeaderProbes = Object.freeze([
 	Object.freeze({
 		path: "/admin/student-management/",
 		profile: "student-management-embed"
-	}),
+	})
+]);
+
+export const productionCanonicalRouteProbes = Object.freeze([
+	Object.freeze({ path: "/index.html", profile: "standard", target: "/" }),
+	...[
+		["graph-sketcher", "graph-sketcher"],
+		["ide", "code-ide"],
+		["python-ide", "code-ide"],
+		["bluej", "code-ide"],
+		["signup", "scheduler-embed"],
+		["wheel", "wheel-embed"]
+	].flatMap(([route, profile]) => [
+		Object.freeze({ path: `/${route}.html`, profile, target: `/${route}/` }),
+		Object.freeze({
+			path: `/${route}/index.html`,
+			profile,
+			target: `/${route}/`
+		})
+	]),
 	Object.freeze({
 		path: "/admin/student-management.html",
-		profile: "student-management-embed"
+		profile: "student-management-embed",
+		target: "/admin/student-management/"
+	}),
+	Object.freeze({
+		path: "/admin/student-management/index.html",
+		profile: "student-management-embed",
+		target: "/admin/student-management/"
 	})
 ]);
 

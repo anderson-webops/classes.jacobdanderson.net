@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import process from "node:process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -69,14 +70,13 @@ export async function normalizeStaticRoutes(targetDistDir = distDir) {
 		const routePath = relativeHtmlPath.slice(0, -".html".length);
 		const routeDirectory = path.join(targetDistDir, routePath);
 		const targetIndexPath = path.join(routeDirectory, "index.html");
+		const sourceHtmlPath = path.join(targetDistDir, relativeHtmlPath);
 
 		await fs.mkdir(routeDirectory, { recursive: true });
-		await fs.copyFile(
-			path.join(targetDistDir, relativeHtmlPath),
-			targetIndexPath
-		);
+		await fs.copyFile(sourceHtmlPath, targetIndexPath);
+		await fs.rm(sourceHtmlPath);
 		console.log(
-			`[normalize-static-routes] wrote ${path.relative(targetDistDir, targetIndexPath)}`
+			`[normalize-static-routes] moved ${relativeHtmlPath} to ${path.relative(targetDistDir, targetIndexPath)}`
 		);
 	}
 }

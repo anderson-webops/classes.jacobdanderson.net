@@ -11,6 +11,8 @@ Website and supporting API for `classes.jacobdanderson.net`.
   security-audit policy
 - `docs/social-login-setup.md` - Google and Apple login configuration and
   account-linking behavior
+- `docs/native-production-deployment.md` - canonical non-container custom-host
+  release preparation, atomic activation, verification, and rollback
 
 ## Curriculum Paths
 
@@ -104,6 +106,9 @@ npm run clean
 - `npm run clean` removes generated build/test output only. It never uses `sudo` and never deletes lockfiles or dependency trees.
 - Use `npm run server` and `npm run serve` when you want the API and front-end started separately.
 - Use [`HEALTHCHECKS.md`](./HEALTHCHECKS.md) for deployment monitor targets instead of `/`.
+- Use the [native production runbook](./docs/native-production-deployment.md)
+  for the canonical custom-host deployment. It uses Nginx and one loopback
+  systemd API; it does not use Docker or expose release metadata publicly.
 - The booking page embeds the sibling scheduler app from `VITE_SCHEDULER_ORIGIN`, defaulting to `https://scheduler.classes.jacobdanderson.net`. For local end-to-end testing against `../scheduler.classes.jacobdanderson.net`, run that app on port `5173` and set `VITE_SCHEDULER_ORIGIN=http://localhost:5173` in `front-end/.env`.
 
 ## Production security-header gate
