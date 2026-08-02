@@ -15,7 +15,7 @@
 - `npm run lint` (or `lint-fix`) runs the shared ESLint configuration across both workspaces; pre-commit hooks run `lint-staged` automatically.
 
 ## Coding Style & Naming Conventions
-- ESLint extends `@antfu/eslint-config` and enforces Prettier with tab indentation, double quotes, semicolons, 120-character lines, and LF endings. Run `npm run lint-fix` before pushing.
+- ESLint extends `@antfu/eslint-config` and enforces Prettier with tab indentation, double quotes, semicolons, 80-character lines, and LF endings. Run `npm run lint-fix` before pushing.
 - Vue single-file components use PascalCase filenames (`TheHeader.vue`), composables use the `useFeature` pattern, and Pinia stores live in `src/stores/`.
 - TypeScript modules should export camelCase functions and PascalCase classes/types. Keep front-end route files lowercase to match the generated router.
 - Prefer descriptive directory names (`controllers/common/`, `controllers/users/`) and colocate feature-specific assets alongside their modules.
