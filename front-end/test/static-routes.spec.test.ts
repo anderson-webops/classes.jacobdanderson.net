@@ -63,6 +63,11 @@ describe("static route normalization", () => {
 			join(tempDir, "course-assets", "example.html"),
 			"<main>Static course asset</main>"
 		);
+		await mkdir(join(tempDir, ".vite"), { recursive: true });
+		await writeFile(
+			join(tempDir, ".vite", "ssr-manifest.json"),
+			'{"internal":"build metadata"}'
+		);
 
 		await normalizeStaticRoutes(tempDir);
 		await normalizeStaticRoutes(tempDir);
@@ -102,6 +107,7 @@ describe("static route normalization", () => {
 		await expect(
 			stat(join(tempDir, "course-assets", "example", "index.html"))
 		).rejects.toThrow();
+		await expect(stat(join(tempDir, ".vite"))).rejects.toThrow();
 	});
 
 	it("renders concrete routes plus the friendly not-found artifact", () => {

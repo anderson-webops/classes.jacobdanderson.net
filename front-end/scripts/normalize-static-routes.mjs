@@ -46,8 +46,14 @@ async function collectHtmlFiles(
 }
 
 export async function normalizeStaticRoutes(targetDistDir = distDir) {
+	// Vite SSG emits this server-rendering manifest for its own build pipeline.
+	// The deployed site is fully static, so retaining the directory only exposes
+	// internal build metadata without providing any runtime capability.
+	await fs.rm(path.join(targetDistDir, ".vite"), {
+		force: true,
+		recursive: true
+	});
 	const ignoredRootDirectories = await collectPublicDirectoryNames();
-	ignoredRootDirectories.add(".vite");
 	ignoredRootDirectories.add("assets");
 	const htmlFiles = await collectHtmlFiles(
 		targetDistDir,
