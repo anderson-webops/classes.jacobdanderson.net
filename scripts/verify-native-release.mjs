@@ -14,6 +14,7 @@ const requiredFiles = Object.freeze([
 	"front-end/package.json",
 	"back-end/package.json",
 	"back-end/package-lock.json",
+	"scripts/verify-native-source.sh",
 	"scripts/verify-native-release.mjs"
 ]);
 const trackedDirectories = Object.freeze([
@@ -29,6 +30,29 @@ const forbiddenPublicPaths = Object.freeze([
 	"front-end/dist/api/release.html",
 	"front-end/dist/api/release/index.html"
 ]);
+const allowedStructuralEntries = Object.freeze({
+	".": Object.freeze([
+		manifestName,
+		"back-end",
+		"deploy",
+		"front-end",
+		"package-lock.json",
+		"package.json",
+		"scripts"
+	]),
+	"back-end": Object.freeze([
+		"dist",
+		"node_modules",
+		"package-lock.json",
+		"package.json"
+	]),
+	"deploy": Object.freeze(["native"]),
+	"front-end": Object.freeze(["dist", "package.json"]),
+	"scripts": Object.freeze([
+		"verify-native-release.mjs",
+		"verify-native-source.sh"
+	])
+});
 
 function fail(message) {
 	throw new Error(message);
@@ -84,6 +108,29 @@ async function assertForbiddenPathsAbsent(candidateDirectory) {
 	}
 }
 
+async function assertAllowedReleaseTree(candidateDirectory) {
+	for (const [relativeDirectory, allowedNames] of Object.entries(
+		allowedStructuralEntries
+	)) {
+		const absoluteDirectory = relativeDirectory === "."
+			? candidateDirectory
+			: path.join(candidateDirectory, relativeDirectory);
+		const entries = await fs.readdir(absoluteDirectory, { withFileTypes: true });
+		const allowed = new Set(allowedNames);
+		for (const entry of entries) {
+			const relativePath = relativeDirectory === "."
+				? entry.name
+				: path.posix.join(relativeDirectory, entry.name);
+			if (entry.isSymbolicLink()) {
+				fail(`Native release payload must not contain symlink ${relativePath}.`);
+			}
+			if (!allowed.has(entry.name)) {
+				fail(`Native release contains unsupported entry ${relativePath}.`);
+			}
+		}
+	}
+}
+
 function assertNoRawStaticRouteAliases(files) {
 	const fileSet = new Set(files);
 	for (const relativePath of files) {
@@ -104,6 +151,7 @@ function assertNoRawStaticRouteAliases(files) {
 }
 
 async function trackedFiles(candidateDirectory) {
+	await assertAllowedReleaseTree(candidateDirectory);
 	await assertForbiddenPathsAbsent(candidateDirectory);
 	const files = [...requiredFiles];
 	for (const relativeDirectory of trackedDirectories) {

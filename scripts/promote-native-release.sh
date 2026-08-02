@@ -45,7 +45,7 @@ trap cleanup EXIT
 [[ "$classes_api_service" =~ ^[a-zA-Z0-9_.@-]+[.]service$ \
 	&& "$classes_nginx_service" =~ ^[a-zA-Z0-9_.@-]+[.]service$ ]] \
 	|| { printf '%s\n' "Service unit names are invalid." >&2; exit 1; }
-for classes_command in awk basename chmod chown cmp curl dirname find git grep install ln mktemp mv nginx node readlink realpath rm sleep stat systemctl unlink; do
+for classes_command in awk basename chmod chown cmp curl dirname find git grep install ln mktemp mv nginx node readlink realpath rm sleep stat systemctl; do
 	command -v "$classes_command" >/dev/null 2>&1 \
 		|| { printf '%s\n' "Missing required command: $classes_command" >&2; exit 1; }
 done
@@ -60,10 +60,6 @@ classes_candidate_root="$classes_release_root/releases/.candidates"
 classes_candidate="$(realpath "$classes_candidate")"
 [[ "$classes_candidate" == "$classes_candidate_root/"* ]] \
 	|| { printf '%s\n' "Candidate must remain inside the managed .candidates directory." >&2; exit 1; }
-[[ "$(git -C "$classes_source_dir" rev-parse --is-inside-work-tree 2>/dev/null || true)" == "true" \
-	&& -z "$(git -C "$classes_source_dir" status --porcelain --untracked-files=normal)" ]] \
-	|| { printf '%s\n' "--source must be a clean Git checkout." >&2; exit 1; }
-
 node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_candidate"
 classes_manifest="$classes_candidate/.classes-native-release.json"
 classes_tag="$(node -e 'const m=require(process.argv[1]); process.stdout.write(m.tag)' "$classes_manifest")"
@@ -71,10 +67,11 @@ classes_revision="$(node -e 'const m=require(process.argv[1]); process.stdout.wr
 classes_release_id="$(node -e 'const m=require(process.argv[1]); process.stdout.write(m.releaseId)' "$classes_manifest")"
 [[ "$(basename "$classes_candidate")" == "$classes_release_id" ]] \
 	|| { printf '%s\n' "Candidate directory does not match its release ID." >&2; exit 1; }
-[[ "$(git -C "$classes_source_dir" rev-parse HEAD)" == "$classes_revision" \
-	&& "$(git -C "$classes_source_dir" cat-file -t "refs/tags/$classes_tag" 2>/dev/null || true)" == "tag" \
-	&& "$(git -C "$classes_source_dir" rev-parse "${classes_tag}^{}")" == "$classes_revision" ]] \
-	|| { printf '%s\n' "Source checkout does not match the candidate's annotated tag." >&2; exit 1; }
+"$classes_source_dir/scripts/verify-native-source.sh" \
+	"$classes_source_dir" \
+	"$classes_tag"
+[[ "$(git -C "$classes_source_dir" rev-parse --verify 'HEAD^{commit}')" == "$classes_revision" ]] \
+	|| { printf '%s\n' "Source checkout does not match the candidate revision." >&2; exit 1; }
 
 for classes_release_input in \
 	package.json \
@@ -82,6 +79,7 @@ for classes_release_input in \
 	front-end/package.json \
 	back-end/package.json \
 	back-end/package-lock.json \
+	scripts/verify-native-source.sh \
 	scripts/verify-native-release.mjs \
 	deploy/native/api.env.example \
 	deploy/native/host-nginx.conf.example \
@@ -100,12 +98,12 @@ classes_final_release="$classes_release_root/releases/$classes_release_id"
 	|| { printf '%s\n' "That exact immutable release already exists." >&2; exit 1; }
 classes_current_link="$classes_release_root/current"
 classes_previous_link="$classes_release_root/previous"
-[[ ! -e "$classes_current_link" || -L "$classes_current_link" ]] \
-	|| { printf '%s\n' "Current release path must be a symlink." >&2; exit 1; }
+[[ -L "$classes_current_link" ]] \
+	|| { printf '%s\n' "Promotion requires an existing current release symlink for rollback." >&2; exit 1; }
 [[ ! -e "$classes_previous_link" || -L "$classes_previous_link" ]] \
 	|| { printf '%s\n' "Previous release path must be a symlink." >&2; exit 1; }
 classes_previous_target="$(readlink -f "$classes_current_link" 2>/dev/null || true)"
-if [[ -L "$classes_current_link" && -z "$classes_previous_target" ]]; then
+if [[ -z "$classes_previous_target" || ! -d "$classes_previous_target" ]]; then
 	printf '%s\n' "Current release symlink is dangling." >&2
 	exit 1
 fi
@@ -117,12 +115,11 @@ if [[ "$classes_previous_target" == "$classes_candidate_root/"* ]]; then
 	printf '%s\n' "Current release must not point into the candidate directory." >&2
 	exit 1
 fi
-if [[ -n "$classes_previous_target" ]]; then
-	[[ -d "$classes_previous_target" && "$(stat -c '%u' "$classes_previous_target")" == "0" \
-		&& -z "$(find "$classes_previous_target" ! -user root -print -quit)" \
-		&& -z "$(find "$classes_previous_target" -perm /022 -print -quit)" ]] \
-		|| { printf '%s\n' "Current release is not a root-owned, immutable release." >&2; exit 1; }
-fi
+[[ "$(stat -c '%u' "$classes_previous_target")" == "0" \
+	&& -z "$(find "$classes_previous_target" ! -user root -print -quit)" \
+	&& -z "$(find "$classes_previous_target" -perm /022 -print -quit)" ]] \
+	|| { printf '%s\n' "Current release is not a root-owned, immutable release." >&2; exit 1; }
+node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_previous_target"
 
 classes_sources=(
 	"$classes_candidate/deploy/native/classes-http-maps.conf"
@@ -170,12 +167,7 @@ atomic_link() {
 }
 
 restore_previous() {
-	if [[ -n "$classes_previous_target" ]]; then
-		atomic_link "$classes_previous_target" "$classes_current_link" || return 1
-	else
-		[[ ! -L "$classes_current_link" ]] || unlink "$classes_current_link" || return 1
-		systemctl stop "$classes_api_service" >/dev/null 2>&1 || true
-	fi
+	atomic_link "$classes_previous_target" "$classes_current_link" || return 1
 	for classes_index in "${!classes_targets[@]}"; do
 		classes_target="${classes_targets[$classes_index]}"
 		if [[ -f "$classes_work_dir/$classes_index.previous" ]]; then
@@ -185,9 +177,7 @@ restore_previous() {
 		fi
 	done
 	systemctl daemon-reload || return 1
-	if [[ -n "$classes_previous_target" ]]; then
-		systemctl restart "$classes_api_service" || return 1
-	fi
+	systemctl restart "$classes_api_service" || return 1
 	nginx -t || return 1
 	systemctl reload "$classes_nginx_service" || return 1
 }
@@ -312,6 +302,12 @@ smoke_release() {
 	require_one_header "$classes_work_dir/root.headers" "Cache-Control" "no-cache"
 	require_one_header_containing "$classes_work_dir/root.headers" "Content-Security-Policy" "frame-ancestors 'none'"
 
+	classes_status="$(capture_https /courses/ "$classes_work_dir/courses.body" "$classes_work_dir/courses.headers")"
+	[[ "$classes_status" == "200" ]]
+	cmp --silent \
+		"$classes_work_dir/courses.body" \
+		"$classes_final_release/front-end/dist/courses/index.html"
+
 	classes_status="$(capture_https /api/readyz "$classes_work_dir/ready.body" "$classes_work_dir/ready.headers")"
 	[[ "$classes_status" == "200" ]]
 	[[ "$(header_value "$classes_work_dir/ready.headers" "Content-Type")" == application/json* ]]
@@ -398,7 +394,7 @@ if ! (
 	exit 1
 fi
 
-if [[ -n "$classes_previous_target" && "$classes_previous_target" != "$classes_final_release" ]]; then
+if [[ "$classes_previous_target" != "$classes_final_release" ]]; then
 	atomic_link "$classes_previous_target" "$classes_previous_link"
 fi
 printf 'Activated classes.jacobdanderson.net %s at %s.\n' "$classes_tag" "$classes_revision"

@@ -55,9 +55,11 @@ test("native Nginx keeps static, API, and hidden-file boundaries separate", asyn
 	assert.match(policy, /location \/ \{\s*try_files \$uri \$uri\/ =404;/u);
 	assert.doesNotMatch(policy, /try_files[^;]*index[.]html/u);
 	assert.match(policy, /location = \/index[.]html \{/u);
+	assert.ok(policy.includes("if ($request_uri ~ ^/index[.]html"));
 	assert.match(policy, /classes_legacy_route/u);
 	assert.match(policy, /location = \/admin\/student-management[.]html \{/u);
-	assert.match(policy, /classes_canonical_route/u);
+	assert.match(policy, /classes_direct_index_route/u);
+	assert.match(policy, /try_files \$uri =404;/u);
 	assert.match(policy, /return 308 https:\/\/classes[.]jacobdanderson[.]net/u);
 	assert.match(policy, /proxy_pass http:\/\/127[.]0[.]0[.]1:3008\//u);
 	assert.match(policy, /proxy_set_header X-Forwarded-For \$remote_addr;/u);
@@ -90,7 +92,7 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	]);
 
 	assert.match(prepare, /Prepare releases as the unprivileged classes-build user/u);
-	assert.match(prepare, /cat-file -t "refs\/tags\/\$classes_tag"/u);
+	assert.match(prepare, /verify-native-source[.]sh/u);
 	assert.match(prepare, /npm --prefix "\$1"/u);
 	assert.match(prepare, /run -w front-end test:unit/u);
 	assert.match(prepare, /run -w back-end test/u);
@@ -98,6 +100,8 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(prepare, /classes_staging_candidate\/back-end" ci/u);
 	assert.match(prepare, /back-end\/node_modules\/[.]bin/u);
 	assert.match(promote, /Candidate must remain inside the managed [.]candidates directory/u);
+	assert.match(promote, /verify-native-source[.]sh/u);
+	assert.match(promote, /Promotion requires an existing current release symlink for rollback/u);
 	assert.match(promote, /chown -R root:root "\$classes_candidate"/u);
 	assert.match(promote, /nginx -t/u);
 	assert.match(promote, /verify_nginx_includes/u);
@@ -107,6 +111,7 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(promote, /--resolve "classes[.]jacobdanderson[.]net:443:127[.]0[.]0[.]1"/u);
 	assert.match(promote, /--resolve "classes[.]jacobdanderson[.]net:80:127[.]0[.]0[.]1"/u);
 	assert.match(promote, /https:\/\/classes[.]jacobdanderson[.]net\$classes_http_path/u);
+	assert.match(promote, /capture_https \/courses\//u);
 	assert.match(promote, /\/api\/readyz/u);
 	assert.match(promote, /"\/404[.]html"/u);
 	assert.match(promote, /"\/courses[.]html"/u);
@@ -118,9 +123,79 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(verifier, /front-end\/dist\/[.]vite/u);
 	assert.match(verifier, /front-end\/dist\/release[.]json/u);
 	assert.match(verifier, /raw static route alias/u);
+	assert.match(verifier, /unsupported entry/u);
 	assert.match(verifier, /back-end\/node_modules/u);
 	assert.match(documentation, /internal `[.]classes-native-release[.]json`/u);
+	assert.match(documentation, /fetched `origin\/main`/u);
+	assert.match(documentation, /not an initial-cutover tool/u);
 	assert.match(documentation, /Any activation failure restores the prior symlink/u);
+});
+
+test("native source provenance requires canonical fetched origin/main and an annotated tag", async (t) => {
+	const temporaryRoot = await fs.mkdtemp(
+		path.join(os.tmpdir(), "classes-native-source-")
+	);
+	t.after(async () => fs.rm(temporaryRoot, { force: true, recursive: true }));
+	const git = (...arguments_) => {
+		const result = spawnSync("git", ["-C", temporaryRoot, ...arguments_], {
+			encoding: "utf8"
+		});
+		assert.equal(result.status, 0, result.stderr);
+		return result.stdout.trim();
+	};
+
+	git("init", "--initial-branch=main");
+	git("config", "user.name", "Native Fixture");
+	git("config", "user.email", "native-fixture@example.invalid");
+	await fs.writeFile(path.join(temporaryRoot, "README.md"), "fixture\n");
+	git("add", "README.md");
+	git("commit", "-m", "Initial fixture");
+	git(
+		"remote",
+		"add",
+		"origin",
+		"git@github.com:anderson-webops/classes.jacobdanderson.net.git"
+	);
+	git("update-ref", "refs/remotes/origin/main", "HEAD");
+	git("tag", "-a", "v2.7.999", "-m", "Fixture release");
+
+	const verifier = path.join(
+		repositoryRoot,
+		"scripts/verify-native-source.sh"
+	);
+	const verify = () => spawnSync(
+		"bash",
+		[verifier, temporaryRoot, "v2.7.999"],
+		{ encoding: "utf8" }
+	);
+	assert.equal(verify().status, 0);
+
+	git("remote", "set-url", "origin", "git@github.com:other/classes.git");
+	let rejected = verify();
+	assert.notEqual(rejected.status, 0);
+	assert.match(rejected.stderr, /origin is not anderson-webops/u);
+	git(
+		"remote",
+		"set-url",
+		"origin",
+		"https://github.com/anderson-webops/classes.jacobdanderson.net.git"
+	);
+
+	git("update-ref", "-d", "refs/remotes/origin/main");
+	rejected = verify();
+	assert.notEqual(rejected.status, 0);
+	assert.match(rejected.stderr, /missing the fetched origin\/main/u);
+	git("update-ref", "refs/remotes/origin/main", "HEAD");
+
+	await fs.writeFile(path.join(temporaryRoot, "README.md"), "new fixture\n");
+	git("add", "README.md");
+	git("commit", "-m", "Unfetched fixture commit");
+	rejected = verify();
+	assert.notEqual(rejected.status, 0);
+	assert.match(rejected.stderr, /HEAD is not the exact fetched origin\/main/u);
+
+	const verifierSource = await source("scripts/verify-native-source.sh");
+	assert.doesNotMatch(verifierSource, /git[^\n]*fetch/u);
 });
 
 test("internal manifest detects payload drift and stays out of public output", async t => {
@@ -147,10 +222,15 @@ test("internal manifest detects payload drift and stays out of public output", a
 	]) {
 		await fs.copyFile(path.join(repositoryRoot, relativePath), path.join(candidate, relativePath));
 	}
-	await fs.copyFile(
-		path.join(repositoryRoot, "scripts/verify-native-release.mjs"),
-		path.join(candidate, "scripts/verify-native-release.mjs")
-	);
+	for (const scriptName of [
+		"verify-native-release.mjs",
+		"verify-native-source.sh"
+	]) {
+		await fs.copyFile(
+			path.join(repositoryRoot, "scripts", scriptName),
+			path.join(candidate, "scripts", scriptName)
+		);
+	}
 	await fs.cp(path.join(repositoryRoot, "deploy/native"), path.join(candidate, "deploy/native"), {
 		recursive: true
 	});
@@ -175,6 +255,29 @@ test("internal manifest detects payload drift and stays out of public output", a
 	);
 
 	const verifier = path.join(repositoryRoot, "scripts/verify-native-release.mjs");
+	await fs.writeFile(path.join(candidate, "unchecked-top-level.sh"), "exit 0\n");
+	let rejectedPayload = spawnSync(
+		process.execPath,
+		[verifier, "--write", "--tag", "v2.7.205", "--revision", "a".repeat(40), candidate],
+		{ encoding: "utf8" }
+	);
+	assert.notEqual(rejectedPayload.status, 0);
+	assert.match(rejectedPayload.stderr, /unsupported entry/u);
+	await fs.rm(path.join(candidate, "unchecked-top-level.sh"));
+
+	await fs.symlink(
+		path.join(candidate, "package.json"),
+		path.join(candidate, "unchecked-link")
+	);
+	rejectedPayload = spawnSync(
+		process.execPath,
+		[verifier, "--write", "--tag", "v2.7.205", "--revision", "a".repeat(40), candidate],
+		{ encoding: "utf8" }
+	);
+	assert.notEqual(rejectedPayload.status, 0);
+	assert.match(rejectedPayload.stderr, /must not contain symlink/u);
+	await fs.rm(path.join(candidate, "unchecked-link"));
+
 	const rawAliasResult = spawnSync(
 		process.execPath,
 		[verifier, "--write", "--tag", "v2.7.205", "--revision", "a".repeat(40), candidate],
@@ -217,6 +320,11 @@ test("all hosting profiles require COOP and CORP consistently", async () => {
 		packageJson.scripts["test:native-deployment"],
 		"node --test test/native-production-deployment.test.mjs"
 	);
+	assert.equal(
+		packageJson.scripts["test:native-nginx"],
+		"node test/native-nginx-fixture.mjs"
+	);
 	assert.match(continuousIntegration, /run: npm run test:native-deployment/u);
+	assert.match(continuousIntegration, /run: npm run test:native-nginx/u);
 	assert.match(continuousIntegration, /run: npm run build/u);
 });

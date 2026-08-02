@@ -50,18 +50,12 @@ classes_candidate_root="$classes_release_root/releases/.candidates"
 	|| { printf '%s\n' "The real, writable .candidates directory is missing." >&2; exit 1; }
 [[ "$(realpath "$classes_candidate_root")" == "$classes_candidate_root" ]] \
 	|| { printf '%s\n' "The candidate directory must not redirect through a symlink." >&2; exit 1; }
-[[ "$(git -C "$classes_source_dir" rev-parse --is-inside-work-tree 2>/dev/null || true)" == "true" ]] \
-	|| { printf '%s\n' "--source must be a Git checkout." >&2; exit 1; }
-[[ -z "$(git -C "$classes_source_dir" status --porcelain --untracked-files=normal)" ]] \
-	|| { printf '%s\n' "Refusing to prepare a dirty checkout." >&2; exit 1; }
-
-classes_revision="$(git -C "$classes_source_dir" rev-parse HEAD)"
+"$classes_source_dir/scripts/verify-native-source.sh" \
+	"$classes_source_dir" \
+	"$classes_tag"
+classes_revision="$(git -C "$classes_source_dir" rev-parse --verify 'HEAD^{commit}')"
 [[ "$classes_revision" =~ ^[0-9a-f]{40}$ ]] \
 	|| { printf '%s\n' "Git did not return a full lowercase revision." >&2; exit 1; }
-[[ "$(git -C "$classes_source_dir" cat-file -t "refs/tags/$classes_tag" 2>/dev/null || true)" == "tag" ]] \
-	|| { printf '%s\n' "The release tag must be annotated." >&2; exit 1; }
-[[ "$(git -C "$classes_source_dir" rev-parse "${classes_tag}^{}")" == "$classes_revision" ]] \
-	|| { printf '%s\n' "The requested tag does not point to HEAD." >&2; exit 1; }
 [[ "$(node -p 'process.versions.node')" == "24.18.0" ]] \
 	|| { printf '%s\n' "Native releases require Node 24.18.0." >&2; exit 1; }
 [[ "$(npm --version)" == "12.0.1" ]] \
@@ -114,8 +108,9 @@ install -m 0644 \
 	"$classes_build_source/back-end/package-lock.json" \
 	"$classes_staging_candidate/back-end/"
 install -m 0755 \
+	"$classes_build_source/scripts/verify-native-source.sh" \
 	"$classes_build_source/scripts/verify-native-release.mjs" \
-	"$classes_staging_candidate/scripts/verify-native-release.mjs"
+	"$classes_staging_candidate/scripts/"
 
 # Install only the API's independent production dependency graph into the
 # immutable candidate; Nginx serves the frontend without a JavaScript runtime.

@@ -7,8 +7,12 @@ MongoDB data, credentials, or backups.
 
 ## Authority and layout
 
-Only deploy a clean checkout at an exact annotated `v2.x` tag. The public
-version is the tag; the root package version is not the release version.
+Only deploy a clean checkout whose `origin` is the canonical
+`anderson-webops/classes.jacobdanderson.net` repository. Fetch `origin/main`
+and tags before beginning; neither native script fetches or mutates a remote.
+The checkout's `HEAD`, fetched `origin/main`, and exact annotated `v2.x` tag
+must resolve to the same commit. The public version is the tag; the root package
+version is not the release version.
 Prepared candidates and immutable releases use these paths:
 
 ```text
@@ -20,7 +24,10 @@ Prepared candidates and immutable releases use these paths:
 Every candidate carries an internal `.classes-native-release.json` containing
 the exact tag, revision, and checksums for the built frontend, compiled API,
 installed production API dependencies, package inputs, and native
-configuration. It is operational metadata, not a public endpoint.
+configuration. Unexpected structural entries and every payload symlink are
+rejected, so recursively changing release ownership cannot pull unchecked
+content into the trusted boundary. The manifest is operational metadata, not a
+public endpoint.
 `/release.json` and `/api/release` intentionally remain 404.
 
 ## One-time server setup
@@ -48,9 +55,15 @@ Adapt `deploy/native/host-nginx.conf.example` into the existing TLS vhost. The
 `classes-http-maps.conf` include belongs in Nginx's `http` context; the
 `classes-server-policy.conf` include belongs inside the HTTPS server. Preserve
 the server's current certificate paths and reviewed HTTP/2 and HTTP/3 listener
-options. For the first native promotion, install the tagged release's include
-targets and unit before enabling the adapted vhost; this gives automatic
-rollback a known-good prior configuration to restore:
+options. The automated promoter is deliberately not an initial-cutover tool:
+it refuses to activate unless `current` already resolves to a validated,
+root-owned, immutable native release. Establish that first release and preserve
+the pre-native serving configuration through the server's reviewed cutover
+procedure before using this promoter for later releases. Do not claim or rely
+on automatic rollback until that prerequisite exists.
+
+Once the rollback prerequisite is established, install the tagged release's
+include targets and unit before enabling the adapted vhost:
 
 ```bash
 sudo install -o root -g root -m 0644 deploy/native/classes-http-maps.conf /etc/nginx/snippets/classes-http-maps.conf
@@ -75,10 +88,11 @@ API 404s remain JSON and are not replaced by the page 404.
 
 ## Prepare and promote
 
-The unprivileged preparation stage archives the tagged commit into a temporary
-directory, runs the pinned clean install, lint, type checks, frontend and
-backend tests, build, and audit, then installs only production API dependencies
-in the candidate. Run it as the dedicated build user:
+The unprivileged preparation stage verifies the canonical origin and already-
+fetched refs, archives the tagged commit into a temporary directory, runs the
+pinned clean install, lint, type checks, frontend and backend tests, build, and
+audit, then installs only production API dependencies in the candidate. Run it
+as the dedicated build user:
 
 ```bash
 sudo -u classes-build ./scripts/prepare-native-release.sh \
@@ -104,11 +118,13 @@ reloads Nginx, waits for database readiness, and probes the TLS vhost through
 loopback with its real host name. The smoke gate requires:
 
 - the exact HTTP-to-HTTPS redirect, including its query string;
-- the exact generated homepage;
+- the exact generated homepage and a nested clean course route without an
+  internal-index redirect loop;
 - Mongo-backed API readiness;
 - one strict COOP/CORP/CSP/frame header set;
 - canonical redirects for legacy route HTML and direct route `index.html`
-  requests;
+  requests, while internal index resolution keeps `/` and clean nested routes
+  at `200` without redirect loops;
 - byte-for-byte branded 404 responses for direct `/404.html`, retired raw
   route HTML, unknown pages, dotfiles, Vite metadata, and both internal/public
   release-metadata guesses; and
