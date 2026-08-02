@@ -1,6 +1,8 @@
 .gitattributes text eol=lf
+.editorconfig text eol=lf
 .node-version text eol=lf
 .nvmrc text eol=lf
+.prettierrc text eol=lf
 *.css text eol=lf
 *.conf text eol=lf
 *.conf.example text eol=lf
