@@ -103,6 +103,7 @@ function getMarkdownRenderer() {
 			({ default: MarkdownIt }) => {
 				const markdown = new MarkdownIt({
 					breaks: true,
+					html: false,
 					linkify: true
 				}) as unknown as MarkdownRendererInstance;
 				const defaultLinkOpen =

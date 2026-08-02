@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { pageTitleForPath } from "@/modules/pageHead";
+import { serializeJsonLd } from "@/modules/serializeJsonLd";
 
 // https://github.com/vueuse/head
 // you can use this to manipulate the document head in any components,
@@ -132,7 +133,7 @@ useHead(
 						]
 					: []),
 				...structuredData.value.map((entry, index) => ({
-					innerHTML: JSON.stringify(entry),
+					innerHTML: serializeJsonLd(entry),
 					key: `ld-json-${index}`,
 					type: "application/ld+json"
 				}))

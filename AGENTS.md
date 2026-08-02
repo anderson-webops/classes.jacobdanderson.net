@@ -23,7 +23,7 @@
 ## Testing Guidelines
 - Write unit tests with Vitest and follow the `*.spec.test.ts` naming used in `front-end/test/`. Snapshot updates belong in `__snapshots__/` and should be reviewed line-by-line.
 - Cypress specs should stub network calls against the Express test server; store fixtures under `front-end/cypress/fixtures/`.
-- Back-end tests are not yet wired up—when adding them, place suites under a new `back-end/test/` tree and update `npm run -w back-end test` to execute them (prefer Vitest + Supertest for HTTP coverage).
+- Back-end tests live under `back-end/test/` and run with `npm run -w back-end test`.
 - Aim to cover new endpoints, Pinia stores, and critical user flows before requesting review; document any intentionally skipped scenarios in the PR.
 
 ## Commit & Pull Request Guidelines
@@ -36,6 +36,13 @@
 - The API expects secrets via environment variables: `SESSION_SECRET`, Mongo credentials (`MONGODB_URI` or Vault via `VAULT_ROLE_ID`/`VAULT_SECRET_ID`), and optional `CROSS_SITE` to adjust cookie policy. Load them through `.env` files excluded from version control.
 - `npm run server` already loads `dotenv/config` and will attempt Vault retrieval via `src/vaultClient.ts`; validate both code paths when changing auth or persistence.
 - Never commit real credentials or production endpoints. Scrub logs before sharing, and verify rate limiting when exposing new routes under `/admin-mail` or other sensitive prefixes.
+
+## Native Production Authority
+
+- The canonical custom-host path is native Nginx plus exactly one loopback-only systemd API. Do not infer or introduce a Docker deployment.
+- Prepare a candidate from a clean checkout at the exact annotated release tag with `scripts/prepare-native-release.sh`, then activate it with `scripts/promote-native-release.sh` and the same tagged checkout.
+- Preserve the strict static-route boundary: unknown pages use the generated branded `404.html` with status 404, unknown API paths remain JSON 404s, and neither `/release.json` nor `/api/release` is a public identity endpoint.
+- Promotion must install the same release's Nginx snippets and systemd unit, switch atomically, pass readiness and loopback TLS smoke gates, and restore the prior configuration and release on failure. Do not change DNS, TLS records, data, credentials, or backups as part of application deployment.
 
 ## Local Course Material Paths
 - Place local starter/solution packs and source course working folders under `/Users/jacobanderson/Documents/Work/Juni`, not under `/Users/jacobanderson/Work/Juni`.

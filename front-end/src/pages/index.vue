@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
+import { serializeJsonLd } from "@/modules/serializeJsonLd";
 import { useContentStore } from "@/stores/content";
 
 defineOptions({ name: "HomePage" });
@@ -44,12 +45,12 @@ useHead(
 			],
 			script: [
 				{
-					innerHTML: JSON.stringify(faqStructuredData.value),
+					innerHTML: serializeJsonLd(faqStructuredData.value),
 					key: "classes-home-faq-jsonld",
 					type: "application/ld+json"
 				},
 				...courseStructuredData.value.map((entry, index) => ({
-					innerHTML: JSON.stringify(entry),
+					innerHTML: serializeJsonLd(entry),
 					key: `classes-home-course-${index}`,
 					type: "application/ld+json"
 				}))

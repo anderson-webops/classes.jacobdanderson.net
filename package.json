@@ -26,6 +26,9 @@
 		"server": "npm run -w back-end server",
 		"server:once": "npm run -w back-end server:once",
 		"serve": "npm run -w front-end serve",
+		"test:native-deployment": "node --test test/native-production-deployment.test.mjs",
+		"test:native-nginx": "node test/native-nginx-fixture.mjs",
+		"test:static-media-fetch": "node --test test/static-media-fetch.test.mjs",
 		"a11y": "node scripts/a11y-smoke.mjs",
 		"lint-server": "npm run -w back-end lint-fix && npm run -w back-end server",
 		"lint-serve": "npm run -w front-end lint-fix && npm run -w front-end serve",
@@ -34,6 +37,7 @@
 		"typecheck": "npm run -w front-end typecheck && npm run -w back-end typecheck",
 		"clean": "node scripts/clean-generated.mjs",
 		"up": "npm exec -- taze major --include-locked --recursive",
+		"verify:native-release": "node scripts/verify-native-release.mjs",
 		"verify:production": "node scripts/production-security-headers-smoke.mjs && node scripts/production-ide-smoke.mjs && node scripts/production-graph-sketcher-smoke.mjs"
 	},
 	"overrides": {

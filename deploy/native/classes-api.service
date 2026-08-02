@@ -1,0 +1,36 @@
+[Unit]
+Description=Classes API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=classes
+Group=classes
+WorkingDirectory=/srv/classes.jacobdanderson.net/current
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=3008
+Environment=TRUST_PROXY=loopback
+EnvironmentFile=/etc/classes.jacobdanderson.net/api.env
+ExecStart=/usr/bin/node back-end/dist/server.js
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=20s
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=false
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
