@@ -13,7 +13,20 @@ const transientA11yError = new RegExp(
 );
 
 export function isTransientA11yError(error) {
-	return error instanceof Error && transientA11yError.test(error.message);
+	const visitedErrors = new Set();
+	let currentError = error;
+
+	while (
+		currentError instanceof Error
+		&& !visitedErrors.has(currentError)
+	) {
+		if (transientA11yError.test(currentError.message)) return true;
+
+		visitedErrors.add(currentError);
+		currentError = currentError.cause;
+	}
+
+	return false;
 }
 
 export async function runAxeInPage(page) {
