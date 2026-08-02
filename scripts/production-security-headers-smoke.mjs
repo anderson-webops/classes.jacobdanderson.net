@@ -1,7 +1,11 @@
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 import { smokeRequest } from "./http-smoke-client.mjs";
-import { productionSecurityHeaderProbes, validateSecurityHeaders } from "./production-security-headers.mjs";
+import {
+	productionSecurityHeaderProbes,
+	validateApiSecurityHeaders,
+	validateSecurityHeaders
+} from "./production-security-headers.mjs";
 
 const origin = process.env.CLASSES_SITE_ORIGIN || "https://classes.jacobdanderson.net";
 const timeoutMs = Number(process.env.CLASSES_SITE_SMOKE_TIMEOUT_MS || 15_000);
@@ -24,6 +28,39 @@ export async function runProductionSecurityHeadersSmoke() {
 			`${path} returned HTTP ${response.status}.`
 		);
 		validateSecurityHeaders(response.headers, path, profile);
+	}
+
+	for (const { path, status } of [
+		{ path: "/api/healthz", status: 200 },
+		{ path: "/api/readyz", status: 200 },
+		{ path: "/api/__classes-security-probe-missing", status: 404 }
+	]) {
+		currentProbe = `API boundary at ${path}`;
+		const response = await smokeRequest(new URL(path, origin), {
+			redirect: "manual",
+			timeoutMs
+		});
+		assertion(response.status === status, `${path} returned HTTP ${response.status}.`);
+		assertion(
+			response.headers.get("content-type")?.includes("application/json"),
+			`${path} did not return JSON.`
+		);
+		assertion(
+			response.headers.get("cache-control")?.includes("no-store"),
+			`${path} must not be cached.`
+		);
+		validateApiSecurityHeaders(response.headers, path);
+		if (status === 404) {
+			const body = await response.json();
+			assertion(
+				body
+				&& typeof body === "object"
+				&& !Array.isArray(body)
+				&& Object.keys(body).join(",") === "message"
+				&& body.message === "Not found",
+				`${path} returned an unexpected not-found body.`
+			);
+		}
 	}
 
 	currentProbe = "complete";
