@@ -132,10 +132,17 @@ loopback with its real host name. The smoke gate requires:
   synthetic undeclared API path.
 
 Any activation failure restores the prior symlink, snippets, unit, API, and
-Nginx configuration. The failed immutable release remains for diagnosis and no
-release directory is automatically deleted. After a successful promotion,
-perform independent public A and AAAA HTTPS probes; same-network hairpin
-failure is not evidence that public IPv6 is down.
+Nginx configuration. A rollback is reported as successful only after the prior
+API reaches its bounded loopback readiness gate and the same TLS smoke contract
+passes against that release's manifest revision and exact frontend files. This
+includes the exact homepage, branded page 404, database-backed JSON readiness,
+and no-store JSON API 404. If restoration or its runtime verification fails,
+activation and rollback diagnostics remain separate in the preserved
+`/var/tmp/classes-native-promote.*` directory for operator review. The failed
+immutable release remains for diagnosis and no release directory is
+automatically deleted. After a successful promotion, perform independent
+public A and AAAA HTTPS probes; same-network hairpin failure is not evidence
+that public IPv6 is down.
 
 ## Recovery
 

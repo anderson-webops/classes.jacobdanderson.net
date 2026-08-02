@@ -108,6 +108,31 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(promote, /grep -Fxc "# configuration file \$classes_target:"/u);
 	assert.match(promote, /atomic_link "\$classes_final_release" "\$classes_current_link"/u);
 	assert.match(promote, /restore_previous/u);
+	assert.doesNotMatch(promote, /if ! \(\s*set -e/u);
+	assert.match(promote, /classes_activation_status=\$[?]/u);
+	assert.match(promote, /classes_rollback_status=\$[?]/u);
+	assert.match(promote, /if \(\( classes_rollback_status == 0 \)\); then/u);
+	assert.match(promote, /classes_previous_revision=/u);
+	assert.match(promote, /for _classes_attempt in \{1[.][.]30\}/u);
+	assert.match(promote, /wait_for_api_ready "\$classes_work_dir\/activation"/u);
+	assert.match(promote, /wait_for_api_ready "\$classes_work_dir\/rollback"/u);
+	assert.match(promote, /verify_nginx_includes "\$classes_work_dir\/rollback-nginx[.]dump"/u);
+	assert.match(
+		promote,
+		/smoke_release\s+\\\s+"\$classes_previous_target"\s+\\\s+"\$classes_previous_revision"\s+\\\s+"\$classes_work_dir\/rollback"/u
+	);
+	assert.match(
+		promote,
+		/cmp --silent "\$classes_probe_prefix[.]root[.]body" "\$classes_expected_release\/front-end\/dist\/index[.]html"/u
+	);
+	assert.match(
+		promote,
+		/cmp --silent "\$classes_probe_prefix[.]not-found[.]body" "\$classes_expected_release\/front-end\/dist\/404[.]html"/u
+	);
+	assert.match(promote, /capture_https \/api\/readyz "\$classes_probe_prefix[.]ready[.]body"/u);
+	assert.match(promote, /__native-release-missing-\$classes_expected_revision/u);
+	assert.match(promote, /api\/__native-release-missing-\$classes_expected_revision/u);
+	assert.match(promote, /classes_preserve_work=true/u);
 	assert.match(promote, /--resolve "classes[.]jacobdanderson[.]net:443:127[.]0[.]0[.]1"/u);
 	assert.match(promote, /--resolve "classes[.]jacobdanderson[.]net:80:127[.]0[.]0[.]1"/u);
 	assert.match(promote, /https:\/\/classes[.]jacobdanderson[.]net\$classes_http_path/u);
@@ -129,6 +154,8 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(documentation, /fetched `origin\/main`/u);
 	assert.match(documentation, /not an initial-cutover tool/u);
 	assert.match(documentation, /Any activation failure restores the prior symlink/u);
+	assert.match(documentation, /rollback is reported as successful only after/u);
+	assert.match(documentation, /activation and rollback diagnostics remain separate/u);
 });
 
 test("native source provenance requires canonical fetched origin/main and an annotated tag", async (t) => {

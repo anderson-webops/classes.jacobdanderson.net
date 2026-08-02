@@ -120,6 +120,11 @@ fi
 	&& -z "$(find "$classes_previous_target" -perm /022 -print -quit)" ]] \
 	|| { printf '%s\n' "Current release is not a root-owned, immutable release." >&2; exit 1; }
 node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_previous_target"
+classes_previous_manifest="$classes_previous_target/.classes-native-release.json"
+classes_previous_revision="$(
+	node -e 'const m=require(process.argv[1]); process.stdout.write(m.revision)' \
+		"$classes_previous_manifest"
+)"
 
 classes_sources=(
 	"$classes_candidate/deploy/native/classes-http-maps.conf"
@@ -179,7 +184,14 @@ restore_previous() {
 	systemctl daemon-reload || return 1
 	systemctl restart "$classes_api_service" || return 1
 	nginx -t || return 1
+	verify_nginx_includes "$classes_work_dir/rollback-nginx.dump" || return 1
 	systemctl reload "$classes_nginx_service" || return 1
+	wait_for_api_ready "$classes_work_dir/rollback" || return 1
+	smoke_release \
+		"$classes_previous_target" \
+		"$classes_previous_revision" \
+		"$classes_work_dir/rollback" \
+		|| return 1
 }
 
 header_value() {
@@ -244,23 +256,24 @@ capture_http() {
 require_https_redirect() {
 	local classes_path="$1"
 	local classes_target="$2"
+	local classes_probe_prefix="$3"
 	local classes_status
 	classes_status="$(
 		capture_https \
 			"$classes_path" \
-			"$classes_work_dir/redirect.body" \
-			"$classes_work_dir/redirect.headers"
+			"$classes_probe_prefix.redirect.body" \
+			"$classes_probe_prefix.redirect.headers"
 	)"
 	[[ "$classes_status" == "308" ]]
 	require_one_header \
-		"$classes_work_dir/redirect.headers" \
+		"$classes_probe_prefix.redirect.headers" \
 		"Location" \
 		"https://classes.jacobdanderson.net$classes_target"
 }
 
 verify_nginx_includes() {
 	local classes_include_count classes_target
-	local classes_nginx_dump="$classes_work_dir/nginx.dump"
+	local classes_nginx_dump="$1"
 	nginx -T >"$classes_nginx_dump" 2>&1
 	for classes_target in \
 		/etc/nginx/snippets/classes-http-maps.conf \
@@ -273,79 +286,97 @@ verify_nginx_includes() {
 	done
 }
 
+wait_for_api_ready() {
+	local classes_probe_prefix="$1"
+	for _classes_attempt in {1..30}; do
+		if curl --fail --silent --show-error --max-time 2 --noproxy '*' \
+			-o "$classes_probe_prefix.loopback-ready.body" \
+			http://127.0.0.1:3008/readyz \
+			2>"$classes_probe_prefix.loopback-ready.stderr"; then
+			return 0
+		fi
+		sleep 1
+	done
+	return 1
+}
+
 smoke_release() {
+	local classes_expected_release="$1"
+	local classes_expected_revision="$2"
+	local classes_probe_prefix="$3"
 	local classes_http_path classes_status
-	classes_http_path="/__native-http-redirect-$classes_revision?probe=1"
-	classes_status="$(capture_http "$classes_http_path" "$classes_work_dir/http.body" "$classes_work_dir/http.headers")"
+	classes_http_path="/__native-http-redirect-$classes_expected_revision?probe=1"
+	classes_status="$(capture_http "$classes_http_path" "$classes_probe_prefix.http.body" "$classes_probe_prefix.http.headers")"
 	[[ "$classes_status" == "301" ]]
 	require_one_header \
-		"$classes_work_dir/http.headers" \
+		"$classes_probe_prefix.http.headers" \
 		"Location" \
 		"https://classes.jacobdanderson.net$classes_http_path"
-	require_https_redirect "/index.html?probe=1" "/?probe=1"
-	require_https_redirect "/courses/index.html?probe=1" "/courses/?probe=1"
-	require_https_redirect "/ide.html?probe=1" "/ide/?probe=1"
+	require_https_redirect "/index.html?probe=1" "/?probe=1" "$classes_probe_prefix"
+	require_https_redirect "/courses/index.html?probe=1" "/courses/?probe=1" "$classes_probe_prefix"
+	require_https_redirect "/ide.html?probe=1" "/ide/?probe=1" "$classes_probe_prefix"
 	require_https_redirect \
 		"/admin/student-management.html?probe=1" \
-		"/admin/student-management/?probe=1"
+		"/admin/student-management/?probe=1" \
+		"$classes_probe_prefix"
 
-	classes_status="$(capture_https / "$classes_work_dir/root.body" "$classes_work_dir/root.headers")"
+	classes_status="$(capture_https / "$classes_probe_prefix.root.body" "$classes_probe_prefix.root.headers")"
 	[[ "$classes_status" == "200" ]]
-	cmp --silent "$classes_work_dir/root.body" "$classes_final_release/front-end/dist/index.html"
-	require_one_header "$classes_work_dir/root.headers" "Cross-Origin-Opener-Policy" "same-origin"
-	require_one_header "$classes_work_dir/root.headers" "Cross-Origin-Resource-Policy" "same-origin"
-	require_one_header "$classes_work_dir/root.headers" "X-Frame-Options" "DENY"
-	require_one_header "$classes_work_dir/root.headers" "X-Content-Type-Options" "nosniff"
-	require_one_header "$classes_work_dir/root.headers" "Referrer-Policy" "strict-origin-when-cross-origin"
-	require_one_header "$classes_work_dir/root.headers" "Permissions-Policy" "camera=(), geolocation=(), microphone=()"
-	require_one_header "$classes_work_dir/root.headers" "Strict-Transport-Security" "max-age=31536000; includeSubDomains"
-	require_one_header "$classes_work_dir/root.headers" "Cache-Control" "no-cache"
-	require_one_header_containing "$classes_work_dir/root.headers" "Content-Security-Policy" "frame-ancestors 'none'"
+	cmp --silent "$classes_probe_prefix.root.body" "$classes_expected_release/front-end/dist/index.html"
+	require_one_header "$classes_probe_prefix.root.headers" "Cross-Origin-Opener-Policy" "same-origin"
+	require_one_header "$classes_probe_prefix.root.headers" "Cross-Origin-Resource-Policy" "same-origin"
+	require_one_header "$classes_probe_prefix.root.headers" "X-Frame-Options" "DENY"
+	require_one_header "$classes_probe_prefix.root.headers" "X-Content-Type-Options" "nosniff"
+	require_one_header "$classes_probe_prefix.root.headers" "Referrer-Policy" "strict-origin-when-cross-origin"
+	require_one_header "$classes_probe_prefix.root.headers" "Permissions-Policy" "camera=(), geolocation=(), microphone=()"
+	require_one_header "$classes_probe_prefix.root.headers" "Strict-Transport-Security" "max-age=31536000; includeSubDomains"
+	require_one_header "$classes_probe_prefix.root.headers" "Cache-Control" "no-cache"
+	require_one_header_containing "$classes_probe_prefix.root.headers" "Content-Security-Policy" "frame-ancestors 'none'"
 
-	classes_status="$(capture_https /courses/ "$classes_work_dir/courses.body" "$classes_work_dir/courses.headers")"
+	classes_status="$(capture_https /courses/ "$classes_probe_prefix.courses.body" "$classes_probe_prefix.courses.headers")"
 	[[ "$classes_status" == "200" ]]
 	cmp --silent \
-		"$classes_work_dir/courses.body" \
-		"$classes_final_release/front-end/dist/courses/index.html"
+		"$classes_probe_prefix.courses.body" \
+		"$classes_expected_release/front-end/dist/courses/index.html"
 
-	classes_status="$(capture_https /api/readyz "$classes_work_dir/ready.body" "$classes_work_dir/ready.headers")"
+	classes_status="$(capture_https /api/readyz "$classes_probe_prefix.ready.body" "$classes_probe_prefix.ready.headers")"
 	[[ "$classes_status" == "200" ]]
-	[[ "$(header_value "$classes_work_dir/ready.headers" "Content-Type")" == application/json* ]]
-	[[ "$(header_value "$classes_work_dir/ready.headers" "Cache-Control")" == *"no-store"* ]]
-	require_one_header "$classes_work_dir/ready.headers" "Cross-Origin-Opener-Policy" "same-origin"
-	require_one_header "$classes_work_dir/ready.headers" "Cross-Origin-Resource-Policy" "same-origin"
-	require_one_header "$classes_work_dir/ready.headers" "X-Frame-Options" "DENY"
-	require_one_header "$classes_work_dir/ready.headers" "X-Content-Type-Options" "nosniff"
-	require_one_header "$classes_work_dir/ready.headers" "Referrer-Policy" "no-referrer"
-	require_one_header_containing "$classes_work_dir/ready.headers" "Content-Security-Policy" "default-src 'none'"
-	require_one_header_containing "$classes_work_dir/ready.headers" "Content-Security-Policy" "frame-ancestors 'none'"
-	node -e 'const b=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (b.ready !== true || b.components?.db?.ok !== true || b.components?.db?.state !== 1) process.exit(1)' "$classes_work_dir/ready.body"
+	[[ "$(header_value "$classes_probe_prefix.ready.headers" "Content-Type")" == application/json* ]]
+	[[ "$(header_value "$classes_probe_prefix.ready.headers" "Cache-Control")" == *"no-store"* ]]
+	require_one_header "$classes_probe_prefix.ready.headers" "Cross-Origin-Opener-Policy" "same-origin"
+	require_one_header "$classes_probe_prefix.ready.headers" "Cross-Origin-Resource-Policy" "same-origin"
+	require_one_header "$classes_probe_prefix.ready.headers" "X-Frame-Options" "DENY"
+	require_one_header "$classes_probe_prefix.ready.headers" "X-Content-Type-Options" "nosniff"
+	require_one_header "$classes_probe_prefix.ready.headers" "Referrer-Policy" "no-referrer"
+	require_one_header_containing "$classes_probe_prefix.ready.headers" "Content-Security-Policy" "default-src 'none'"
+	require_one_header_containing "$classes_probe_prefix.ready.headers" "Content-Security-Policy" "frame-ancestors 'none'"
+	node -e 'const b=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (b.ready !== true || b.components?.db?.ok !== true || b.components?.db?.state !== 1) process.exit(1)' "$classes_probe_prefix.ready.body"
 
 	for classes_path in \
 		"/404.html" \
 		"/courses.html" \
-		"/__native-release-missing-$classes_revision" \
+		"/__native-release-missing-$classes_expected_revision" \
 		"/.env" \
 		"/.vite/ssr-manifest.json" \
 		"/release.json" \
 		"/.classes-native-release.json"; do
-		classes_status="$(capture_https "$classes_path" "$classes_work_dir/not-found.body" "$classes_work_dir/not-found.headers")"
+		classes_status="$(capture_https "$classes_path" "$classes_probe_prefix.not-found.body" "$classes_probe_prefix.not-found.headers")"
 		[[ "$classes_status" == "404" ]]
-		cmp --silent "$classes_work_dir/not-found.body" "$classes_final_release/front-end/dist/404.html"
-		require_one_header "$classes_work_dir/not-found.headers" "X-Robots-Tag" "noindex, nofollow"
+		cmp --silent "$classes_probe_prefix.not-found.body" "$classes_expected_release/front-end/dist/404.html"
+		require_one_header "$classes_probe_prefix.not-found.headers" "X-Robots-Tag" "noindex, nofollow"
 	done
 
 	for classes_path in \
 		"/api" \
 		"/api/release" \
-		"/api/__native-release-missing-$classes_revision"; do
-		classes_status="$(capture_https "$classes_path" "$classes_work_dir/api-404.body" "$classes_work_dir/api-404.headers")"
+		"/api/__native-release-missing-$classes_expected_revision"; do
+		classes_status="$(capture_https "$classes_path" "$classes_probe_prefix.api-404.body" "$classes_probe_prefix.api-404.headers")"
 		[[ "$classes_status" == "404" ]]
-		[[ "$(header_value "$classes_work_dir/api-404.headers" "Content-Type")" == application/json* ]]
-		[[ "$(header_value "$classes_work_dir/api-404.headers" "Cache-Control")" == *"no-store"* ]]
-		require_one_header "$classes_work_dir/api-404.headers" "Cross-Origin-Opener-Policy" "same-origin"
-		require_one_header "$classes_work_dir/api-404.headers" "Cross-Origin-Resource-Policy" "same-origin"
-		node -e 'const b=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (Object.keys(b).join(",") !== "message" || b.message !== "Not found") process.exit(1)' "$classes_work_dir/api-404.body"
+		[[ "$(header_value "$classes_probe_prefix.api-404.headers" "Content-Type")" == application/json* ]]
+		[[ "$(header_value "$classes_probe_prefix.api-404.headers" "Cache-Control")" == *"no-store"* ]]
+		require_one_header "$classes_probe_prefix.api-404.headers" "Cross-Origin-Opener-Policy" "same-origin"
+		require_one_header "$classes_probe_prefix.api-404.headers" "Cross-Origin-Resource-Policy" "same-origin"
+		node -e 'const b=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (Object.keys(b).join(",") !== "message" || b.message !== "Not found") process.exit(1)' "$classes_probe_prefix.api-404.body"
 	done
 }
 
@@ -360,7 +391,9 @@ node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_final_rel
 	&& -z "$(find "$classes_final_release" -perm /022 -print -quit)" ]] \
 	|| { printf '%s\n' "Final release is not root-owned and immutable." >&2; exit 1; }
 
-if ! (
+classes_activation_status=0
+set +e
+(
 	set -e
 	for classes_index in "${!classes_targets[@]}"; do
 		atomic_install \
@@ -368,23 +401,29 @@ if ! (
 			"${classes_targets[$classes_index]}"
 	done
 	nginx -t
-	verify_nginx_includes
+	verify_nginx_includes "$classes_work_dir/activation-nginx.dump"
 	systemctl daemon-reload
 	atomic_link "$classes_final_release" "$classes_current_link"
 	systemctl restart "$classes_api_service"
 	systemctl reload "$classes_nginx_service"
-	classes_ready=false
-	for _classes_attempt in {1..30}; do
-		if curl --fail --silent --show-error --max-time 2 --noproxy '*' http://127.0.0.1:3008/readyz >/dev/null; then
-			classes_ready=true
-			break
-		fi
-		sleep 1
-	done
-	[[ "$classes_ready" == "true" ]]
-	smoke_release
-); then
-	if restore_previous; then
+	wait_for_api_ready "$classes_work_dir/activation"
+	smoke_release \
+		"$classes_final_release" \
+		"$classes_revision" \
+		"$classes_work_dir/activation"
+)
+classes_activation_status=$?
+set -e
+if (( classes_activation_status != 0 )); then
+	classes_rollback_status=0
+	set +e
+	(
+		set -e
+		restore_previous
+	)
+	classes_rollback_status=$?
+	set -e
+	if (( classes_rollback_status == 0 )); then
 		printf '%s\n' "Native activation failed; the prior release and configuration were restored." >&2
 	else
 		classes_preserve_work=true
