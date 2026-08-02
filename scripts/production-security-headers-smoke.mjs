@@ -2,6 +2,7 @@ import process from "node:process";
 import { pathToFileURL } from "node:url";
 import { smokeRequest } from "./http-smoke-client.mjs";
 import {
+	productionCanonicalRouteProbes,
 	productionSecurityHeaderProbes,
 	validateApiSecurityHeaders,
 	validateSecurityHeaders
@@ -28,6 +29,29 @@ export async function runProductionSecurityHeadersSmoke() {
 			`${path} returned HTTP ${response.status}.`
 		);
 		validateSecurityHeaders(response.headers, path, profile);
+	}
+
+	for (const { path, profile, target } of productionCanonicalRouteProbes) {
+		currentProbe = `${profile} canonical redirect at ${path}`;
+		const response = await smokeRequest(new URL(path, origin), {
+			redirect: "manual",
+			timeoutMs
+		});
+		assertion(
+			allowedRedirectStatuses.has(response.status),
+			`${path} returned HTTP ${response.status} instead of a redirect.`
+		);
+		validateSecurityHeaders(response.headers, path, profile);
+		const location = response.headers.get("location");
+		assertion(location, `${path} did not provide a redirect location.`);
+		const actualTarget = new URL(location, origin);
+		const expectedTarget = new URL(target, origin);
+		assertion(
+			actualTarget.origin === expectedTarget.origin
+			&& actualTarget.pathname === expectedTarget.pathname
+			&& actualTarget.search === expectedTarget.search,
+			`${path} did not redirect to its canonical route.`
+		);
 	}
 
 	for (const { path, status } of [
