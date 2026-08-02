@@ -511,6 +511,7 @@ describe("security dependency regressions", () => {
 			expect(csp).not.toContain("style-src");
 			expect(csp).not.toContain("upgrade-insecure-requests");
 			expect(response.headers.get("cross-origin-resource-policy")).toBe("same-origin");
+			expect(response.headers.get("x-frame-options")).toBe("DENY");
 		});
 
 		await withServer([createApiSecurityHeaders(), createCrossOriginAssetHeaders()], async baseUrl => {

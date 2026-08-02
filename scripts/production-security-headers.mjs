@@ -37,6 +37,13 @@ const standardPolicy = freezePolicy({
 	"manifest-src": ["'self'"]
 });
 
+const apiPolicy = freezePolicy({
+	"default-src": ["'none'"],
+	"base-uri": ["'none'"],
+	"form-action": ["'none'"],
+	"frame-ancestors": ["'none'"]
+});
+
 function extendPolicy(overrides) {
 	return freezePolicy({
 		...standardPolicy,
@@ -46,6 +53,7 @@ function extendPolicy(overrides) {
 
 const contentSecurityPolicies = Object.freeze(
 	Object.fromEntries([
+		["api", apiPolicy],
 		["standard", standardPolicy],
 		[
 			"code-ide",
@@ -214,6 +222,12 @@ function normalizedSources(sources) {
 	return [...sources].sort().join(" ");
 }
 
+function headerValues(headers, name) {
+	if (typeof headers.getAll === "function") return headers.getAll(name);
+	const value = headers.get(name);
+	return value === null ? [] : [value];
+}
+
 export function serializeContentSecurityPolicy(profile) {
 	const policy = contentSecurityPolicies[profile];
 	assertion(policy, "Unknown Content-Security-Policy profile.");
@@ -252,10 +266,44 @@ export function validateContentSecurityPolicy(value, profile) {
 }
 
 export function validateSecurityHeaders(headers, path, profile) {
+	assertion(
+		headerValues(headers, "content-security-policy").length === 1,
+		`${path} returned duplicate Content-Security-Policy headers.`
+	);
 	validateContentSecurityPolicy(headers.get("content-security-policy"), profile);
 	for (const [name, expectedValue] of Object.entries(exactSecurityHeaders)) {
+		assertion(
+			headerValues(headers, name).length === 1,
+			`${path} returned duplicate ${name} headers.`
+		);
 		assertion(headers.get(name) === expectedValue, `${path} returned an unexpected ${name} header.`);
 	}
+	return true;
+}
+
+export function validateApiSecurityHeaders(headers, path) {
+	assertion(
+		headerValues(headers, "content-security-policy").length === 1,
+		`${path} returned duplicate Content-Security-Policy headers.`
+	);
+	validateContentSecurityPolicy(headers.get("content-security-policy"), "api");
+	const expected = {
+		"cross-origin-opener-policy": "same-origin",
+		"cross-origin-resource-policy": "same-origin",
+		"permissions-policy": "camera=(), geolocation=(), microphone=()",
+		"referrer-policy": "no-referrer",
+		"strict-transport-security": "max-age=31536000; includeSubDomains",
+		"x-content-type-options": "nosniff",
+		"x-frame-options": "DENY"
+	};
+	for (const [name, expectedValue] of Object.entries(expected)) {
+		assertion(
+			headerValues(headers, name).length === 1,
+			`${path} returned duplicate ${name} headers.`
+		);
+		assertion(headers.get(name) === expectedValue, `${path} returned an unexpected ${name} header.`);
+	}
+	assertion(headers.get("set-cookie") === null, `${path} unexpectedly set a cookie.`);
 	return true;
 }
 

@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 
 import { codeIdeAssetsProxy, pythonIdeAssetsProxy } from "./controllers/common/pythonIdeAssetsProxy.js";
 import { quoteProxy } from "./controllers/common/quoteProxy.js";
+import { apiNotFound } from "./middleware/notFound.js";
 import {
 	createCodeIdeProjectJsonParser,
 	createCodeIdeProjectPayloadConcurrencyGuard
@@ -235,6 +236,10 @@ async function main() {
 	app.use("/admins", adminRoutes);
 	app.use("/accounts", accountRoutes);
 	app.use("/course-access", courseAccessCodeRoutes);
+
+	// The public site owns branded HTML errors. The API must never fall through
+	// to Express's stock HTML error document.
+	app.use(apiNotFound);
 
 	const PORT = Number(env.PORT || 3008);
 	const listenHost = serverListenHost(isProd, env.HOST);

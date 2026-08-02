@@ -12,6 +12,14 @@ function responseHeader(headers, name) {
 	return value ?? null;
 }
 
+function responseHeaderValues(response, name) {
+	const value = response.headersDistinct?.[name.toLowerCase()];
+	if (Array.isArray(value)) return [...value];
+	if (value !== undefined) return [value];
+	const fallback = responseHeader(response.headers, name);
+	return fallback === null ? [] : [fallback];
+}
+
 async function requestOnce(
 	url,
 	{
@@ -72,7 +80,8 @@ async function requestOnce(
 						resolve({
 							headers: {
 								get: name =>
-									responseHeader(response.headers, name)
+									responseHeader(response.headers, name),
+								getAll: name => responseHeaderValues(response, name)
 							},
 							json: async () => JSON.parse(responseBody),
 							ok: status >= 200 && status < 300,

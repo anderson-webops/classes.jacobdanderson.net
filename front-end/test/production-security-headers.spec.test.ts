@@ -6,6 +6,7 @@ import {
 	exactSecurityHeaders,
 	netlifySecurityHeaderRules,
 	serializeContentSecurityPolicy,
+	validateApiSecurityHeaders,
 	validateContentSecurityPolicy,
 	validateSecurityHeaders
 } from "../../scripts/production-security-headers.mjs";
@@ -208,6 +209,35 @@ describe("production security-header policy", () => {
 		values.set("referrer-policy", "no-referrer");
 		expect(() => validateSecurityHeaders(headers, "/", "standard")).toThrow(
 			"unexpected referrer-policy"
+		);
+	});
+
+	it("requires one strict, cookie-free API header profile", () => {
+		const values = new Map<string, string>([
+			["content-security-policy", serializeContentSecurityPolicy("api")],
+			["cross-origin-opener-policy", "same-origin"],
+			["cross-origin-resource-policy", "same-origin"],
+			["permissions-policy", "camera=(), geolocation=(), microphone=()"],
+			["referrer-policy", "no-referrer"],
+			["strict-transport-security", "max-age=31536000; includeSubDomains"],
+			["x-content-type-options", "nosniff"],
+			["x-frame-options", "DENY"]
+		]);
+		const duplicates = new Map<string, string[]>();
+		const headers = {
+			get: (name: string) => values.get(name) ?? null,
+			getAll: (name: string) =>
+				duplicates.get(name)
+				?? (values.has(name) ? [values.get(name)!] : [])
+		};
+
+		expect(validateApiSecurityHeaders(headers, "/api/healthz")).toBe(true);
+		duplicates.set("content-security-policy", [
+			serializeContentSecurityPolicy("api"),
+			serializeContentSecurityPolicy("api")
+		]);
+		expect(() => validateApiSecurityHeaders(headers, "/api/healthz")).toThrow(
+			"duplicate Content-Security-Policy"
 		);
 	});
 });

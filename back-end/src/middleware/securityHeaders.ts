@@ -11,7 +11,8 @@ export function createApiSecurityHeaders(): RequestHandler {
 				frameAncestors: ["'none'"]
 			},
 			useDefaults: false
-		}
+		},
+		xFrameOptions: { action: "deny" }
 	});
 }
 
