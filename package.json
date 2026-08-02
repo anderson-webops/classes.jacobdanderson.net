@@ -27,6 +27,7 @@
 		"server:once": "npm run -w back-end server:once",
 		"serve": "npm run -w front-end serve",
 		"test:native-deployment": "node --test test/native-production-deployment.test.mjs",
+		"test:static-media-fetch": "node --test test/static-media-fetch.test.mjs",
 		"a11y": "node scripts/a11y-smoke.mjs",
 		"lint-server": "npm run -w back-end lint-fix && npm run -w back-end server",
 		"lint-serve": "npm run -w front-end lint-fix && npm run -w front-end serve",

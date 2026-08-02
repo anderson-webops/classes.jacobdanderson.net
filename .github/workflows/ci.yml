@@ -186,6 +186,9 @@ jobs:
             - name: Install deps
               run: npm ci
 
+            - name: Static media fetch policy tests
+              run: npm run test:static-media-fetch
+
             - name: Audit static course media
               run: npm run audit:static-media
 
