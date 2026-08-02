@@ -97,7 +97,7 @@ as the dedicated build user:
 ```bash
 sudo -u classes-build ./scripts/prepare-native-release.sh \
   --source /path/to/clean/classes.jacobdanderson.net \
-  --tag v2.7.205
+  --tag v2.7.206
 ```
 
 Promote the exact path printed by that command from the same clean tagged
@@ -106,7 +106,7 @@ checkout:
 ```bash
 sudo ./scripts/promote-native-release.sh \
   --source /path/to/clean/classes.jacobdanderson.net \
-  --candidate /srv/classes.jacobdanderson.net/releases/.candidates/v2.7.205-<full-revision>
+  --candidate /srv/classes.jacobdanderson.net/releases/.candidates/v2.7.206-<full-revision>
 ```
 
 Promotion verifies source provenance and every manifest checksum, makes the
