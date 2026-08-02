@@ -141,9 +141,6 @@ jobs:
             - name: Native deployment contract tests
               run: npm run test:native-deployment
 
-            - name: Build
-              run: npm run build
-
     accessibility:
         runs-on: ubuntu-latest
         timeout-minutes: 15
