@@ -13,6 +13,10 @@ import generateSitemap from "vite-ssg-sitemap";
 import { VueRouterAutoImports } from "vue-router/unplugin";
 import VueRouter from "vue-router/vite";
 import { generateProductionSitemap } from "./scripts/sitemap.mts";
+import {
+	includedStaticRoutes,
+	renderFriendlyNotFoundHead
+} from "./scripts/static-route-policy.mts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pythonIdePreloadChunkRE = /(?:^|\/)python-ide-runtime-[^/]+\.js$/;
@@ -85,6 +89,8 @@ export default defineConfig(({ command }) => ({
 	ssgOptions: {
 		script: "defer",
 		formatting: "minify",
+		includedRoutes: includedStaticRoutes,
+		onPageRendered: renderFriendlyNotFoundHead,
 		beastiesOptions: {
 			reduceInlineStyles: false
 		},
@@ -125,8 +131,8 @@ export default defineConfig(({ command }) => ({
 		proxy: {
 			"/api": {
 				target:
-					process.env.VITE_API_PROXY_TARGET
-					|| "http://localhost:3008",
+					process.env.VITE_API_PROXY_TARGET ||
+					"http://localhost:3008",
 				changeOrigin: true,
 				rewrite: p => p.replace(/^\/api/, "") // strip /api
 			}
