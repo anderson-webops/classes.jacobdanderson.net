@@ -1,6 +1,7 @@
 export const SITE_URL = "https://classes.jacobdanderson.net";
 
 export const SITEMAP_EXCLUDED_ROUTES = [
+	"/404",
 	"/README",
 	"/admin",
 	"/admin/mdmail",
