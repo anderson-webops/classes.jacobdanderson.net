@@ -16,6 +16,16 @@ async function source(relativePath) {
 	return fs.readFile(path.join(repositoryRoot, relativePath), "utf8");
 }
 
+function nginxAddHeaderValues(sourceText) {
+	const values = new Map();
+	const addHeaderPattern = /^\s*add_header\s+([A-Za-z0-9-]+)\s+"((?:\\.|[^"\\])*)"\s+always;\s*$/gmu;
+	for (const match of sourceText.matchAll(addHeaderPattern)) {
+		const name = match[1].toLowerCase();
+		values.set(name, [...(values.get(name) ?? []), match[2]]);
+	}
+	return values;
+}
+
 test("native Nginx keeps static, API, and hidden-file boundaries separate", async () => {
 	const [maps, headers, policy, host, unit] = await Promise.all([
 		source("deploy/native/classes-http-maps.conf"),
@@ -36,8 +46,9 @@ test("native Nginx keeps static, API, and hidden-file boundaries separate", asyn
 	]) {
 		assert.ok(maps.includes(serializeContentSecurityPolicy(profile)), `${profile} CSP drifted`);
 	}
+	const configuredHeaders = nginxAddHeaderValues(headers);
 	for (const [name, value] of Object.entries(exactSecurityHeaders)) {
-		assert.match(headers.toLowerCase(), new RegExp(`add_header ${name} "${value.replace(/[()]/gu, "\\$&")}"`, "iu"));
+		assert.deepEqual(configuredHeaders.get(name), [value]);
 	}
 	assert.match(policy, /error_page 404 =404 \/404[.]html;/u);
 	assert.match(policy, /location = \/404[.]html \{\s*internal;/u);
@@ -59,6 +70,15 @@ test("native Nginx keeps static, API, and hidden-file boundaries separate", asyn
 	assert.match(unit, /Environment=PORT=3008/u);
 	assert.match(unit, /ExecStart=\/usr\/bin\/node back-end\/dist\/server[.]js/u);
 	assert.match(unit, /ProtectSystem=strict/u);
+});
+
+test("Nginx header parsing preserves literal backslash sequences", () => {
+	const value = String.raw`literal\path\(value\)`;
+	const configuredHeaders = nginxAddHeaderValues(
+		`add_header X-Literal-Test "${value}" always;\n`
+	);
+
+	assert.deepEqual(configuredHeaders.get("x-literal-test"), [value]);
 });
 
 test("prepare and promotion scripts enforce exact provenance and rollback gates", async () => {
