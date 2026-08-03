@@ -106,6 +106,7 @@ install -m 0644 "$classes_build_source/front-end/package.json" "$classes_staging
 install -m 0644 \
 	"$classes_build_source/back-end/package.json" \
 	"$classes_build_source/back-end/package-lock.json" \
+	"$classes_build_source/back-end/.npmrc" \
 	"$classes_staging_candidate/back-end/"
 install -m 0755 \
 	"$classes_build_source/scripts/verify-native-source.sh" \
@@ -120,6 +121,7 @@ classes_npm "$classes_staging_candidate/back-end" ci \
 	--omit=dev \
 	--include=optional \
 	--strict-allow-scripts
+rm -f -- "$classes_staging_candidate/back-end/.npmrc"
 rm -rf -- "$classes_staging_candidate/back-end/node_modules/.bin"
 node "$classes_staging_candidate/scripts/verify-native-release.mjs" \
 	--write \

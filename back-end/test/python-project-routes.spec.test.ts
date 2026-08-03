@@ -500,6 +500,64 @@ describe("Python project routes", () => {
 		expect(serverSource).toContain('bodyParser.json({ limit: "1mb" })');
 	});
 
+	it("composes pre-parser auth and terminal reservation ownership", () => {
+		const serverSource = readFileSync(
+			resolve(__dirname, "../src/server.ts"),
+			"utf8"
+		);
+		const routeSource = readFileSync(
+			resolve(__dirname, "../src/routes/userRoutes.ts"),
+			"utf8"
+		);
+		const accountLimiter = serverSource.indexOf(
+			"createCodeIdeProjectAccountWriteLimiter(),"
+		);
+		const authentication = serverSource.indexOf(
+			"authenticateProjectMutation,",
+			accountLimiter
+		);
+		const heavyLimiter = serverSource.indexOf(
+			"limitProjectBody(heavyProjectPayloadLimiter)",
+			authentication
+		);
+		const concurrency = serverSource.indexOf(
+			"limitProjectBody(projectPayloadConcurrencyGuard)",
+			heavyLimiter
+		);
+		const parser = serverSource.indexOf(
+			"limitProjectBody(projectJson)",
+			concurrency
+		);
+		const claim = serverSource.indexOf(
+			"limitProjectBody(claimCodeIdeProjectPayloadReservation)",
+			parser
+		);
+		const routes = serverSource.indexOf(
+			'app.use("/users", userRoutes)',
+			claim
+		);
+
+		expect(accountLimiter).toBeGreaterThan(-1);
+		expect(authentication).toBeGreaterThan(accountLimiter);
+		expect(heavyLimiter).toBeGreaterThan(authentication);
+		expect(concurrency).toBeGreaterThan(heavyLimiter);
+		expect(parser).toBeGreaterThan(concurrency);
+		expect(claim).toBeGreaterThan(parser);
+		expect(routes).toBeGreaterThan(claim);
+
+		const compactRoutes = routeSource.replace(/\s+/g, " ");
+		for (const route of [
+			'router.post( "/loggedin/python-projects", validProjectAccountSession, withCodeIdeProjectPayloadReservation(createPythonProject) )',
+			'router.put( "/loggedin/python-projects/:projectID", validProjectAccountSession, withCodeIdeProjectPayloadReservation(updatePythonProject) )',
+			'router.put( "/loggedin/python-projects/:projectID/share", validProjectAccountSession, withCodeIdeProjectPayloadReservation(updatePythonProjectShare) )',
+			'router.delete( "/loggedin/python-projects/:projectID", validProjectAccountSession, withCodeIdeProjectPayloadReservation(deletePythonProject) )',
+			'router.post( "/:userID/python-projects/:projectID/review", validManagedProjectSession, withCodeIdeProjectPayloadReservation(createPythonProjectReview) )',
+			'router.put( "/:userID/python-projects/:projectID/review/:reviewID", validManagedProjectSession, withCodeIdeProjectPayloadReservation(updatePythonProjectReview) )'
+		]) {
+			expect(compactRoutes).toContain(route);
+		}
+	});
+
 	it("rejects files that collide with browser runtime shim modules", async () => {
 		await withPythonProjectRoute(async baseUrl => {
 			for (const reservedFileName of [

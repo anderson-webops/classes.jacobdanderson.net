@@ -2192,11 +2192,11 @@ cols=3`
 		].join("\n");
 
 		expect(backendSource).toContain('app.get("/healthz"');
-		expect(backendSource).toContain(
-			'router.post("/loggedin/python-projects"'
+		expect(backendSource).toMatch(
+			/router[.]post[(]\s*"\/loggedin\/python-projects"/u
 		);
-		expect(backendSource).toContain(
-			'router.put("/loggedin/python-projects/:projectID"'
+		expect(backendSource).toMatch(
+			/router[.]put[(]\s*"\/loggedin\/python-projects\/:projectID"/u
 		);
 		expect(backendSource).toContain(
 			'router.get("/python-projects/shared/:shareID"'
