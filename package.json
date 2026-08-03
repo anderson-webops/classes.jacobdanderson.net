@@ -85,12 +85,13 @@
 	"allowScripts": {
 		"connect-mongo": false,
 		"express-rate-limit": false,
-		"argon2": true,
-		"cypress": true,
-		"esbuild": true,
-		"puppeteer": true,
-		"simple-git-hooks": true,
-		"vue-demi": true
+		"argon2@0.44.0": true,
+		"cypress@15.19.0": true,
+		"esbuild@0.28.1": true,
+		"fsevents@2.3.3": true,
+		"puppeteer@24.43.1": true,
+		"simple-git-hooks@2.13.1": true,
+		"vue-demi@0.14.10": true
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^8.2.0",
