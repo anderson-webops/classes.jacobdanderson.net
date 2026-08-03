@@ -2,6 +2,7 @@ import type { Server } from "node:http";
 import { request } from "node:http";
 import { gzipSync } from "node:zlib";
 import express from "express";
+import rateLimit from "express-rate-limit";
 import { describe, expect, it, vi } from "vitest";
 import {
 	claimCodeIdeProjectPayloadReservation,
@@ -333,14 +334,18 @@ function postRawTarget(baseUrl: string, target: string): Promise<number> {
 describe("Code IDE project payload middleware", () => {
 	it("classifies parsed mounts for unusual raw request targets", async () => {
 		const app = express();
-		app.use(codeIdeProjectApiMountPath, (req, res) => {
-			const scope = codeIdeProjectMutationAuthScope(req);
-			if (scope === "read-only") {
-				res.sendStatus(405);
-				return;
+		app.use(
+			codeIdeProjectApiMountPath,
+			rateLimit({ limit: 100, windowMs: 60_000 }),
+			(req, res) => {
+				const scope = codeIdeProjectMutationAuthScope(req);
+				if (scope === "read-only") {
+					res.sendStatus(405);
+					return;
+				}
+				res.sendStatus(204);
 			}
-			res.sendStatus(204);
-		});
+		);
 		app.use((_req, res) => res.sendStatus(404));
 
 		const server = await new Promise<Server>(resolve => {
