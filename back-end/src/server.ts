@@ -5,7 +5,6 @@ import cookieSession from "cookie-session";
 import express from "express";
 import mongoose from "mongoose";
 
-import { codeIdeAssetsProxy, pythonIdeAssetsProxy } from "./controllers/common/pythonIdeAssetsProxy.js";
 import { quoteProxy } from "./controllers/common/quoteProxy.js";
 import {
 	validAccountSession,
@@ -28,7 +27,7 @@ import {
 	createCodeIdeProjectIngressLimiter
 } from "./middleware/rateLimiters.js";
 import { createRequestOriginGuard } from "./middleware/requestOriginGuard.js";
-import { createApiSecurityHeaders, createCrossOriginAssetHeaders } from "./middleware/securityHeaders.js";
+import { createApiSecurityHeaders } from "./middleware/securityHeaders.js";
 import { accountRoutes } from "./routes/accountRoutes.js";
 import { adminMailRoutes } from "./routes/adminMailRoutes.js";
 import { adminRoutes } from "./routes/adminRoutes.js";
@@ -182,8 +181,6 @@ async function main() {
 
 	//
 	app.use("/quotes", quoteProxy);
-	app.use("/code-ide-assets", createCrossOriginAssetHeaders(), codeIdeAssetsProxy);
-	app.use("/python-assets", createCrossOriginAssetHeaders(), pythonIdeAssetsProxy);
 
 	// ready
 	app.get("/readyz", async (_req, res) => {

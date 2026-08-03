@@ -3,15 +3,8 @@ import { getPythonIdeFileMimeType } from "@/modules/pythonIde";
 export const pythonIdeCourseAssetsManifestUrl = "/ide/assets/manifest.json";
 export const pythonIdeLegacyCourseAssetsManifestUrl =
 	"/python-ide/assets/manifest.json";
-export const pythonIdeCourseAssetsZipUrl = "/api/code-ide-assets/assets.zip";
-export const pythonIdeLegacyCourseAssetsZipUrl =
-	"/api/python-assets/assets.zip";
-export const pythonIdeCourseAssetZipSourceUrls = [
-	pythonIdeCourseAssetsZipUrl,
-	pythonIdeLegacyCourseAssetsZipUrl
-];
 
-const ASSET_PATH_RE = /^(?:images|music|sounds)\/[^/].+\.[\dA-Z]+$/i;
+const ASSET_PATH_RE = /^(?:images|music|sounds)\/(?:[^/]+\/)*[^/]+\.[\dA-Z]+$/i;
 const ASSET_PATH_EXTENSION_RE = /\.[\dA-Z]+$/i;
 const ASSET_LOOKUP_SEPARATOR_RE = /[^\dA-Z]+/gi;
 const IGNORED_ZIP_PATH_RE =
@@ -66,9 +59,7 @@ export async function loadPythonIdeCourseAssetPack(
 				pythonIdeCourseAssetsManifestUrl,
 				pythonIdeLegacyCourseAssetsManifestUrl
 			]);
-	const zipSourceUrls = options.url
-		? [options.url]
-		: (options.urls ?? pythonIdeCourseAssetZipSourceUrls);
+	const zipSourceUrls = options.url ? [options.url] : (options.urls ?? []);
 	const fetcher = options.fetcher ?? window.fetch.bind(window);
 	courseAssetPackPromise = (async () => {
 		const failures: string[] = [];
@@ -172,7 +163,7 @@ export function parsePythonIdeCourseAssetManifest(
 
 export async function parsePythonIdeCourseAssetZip(
 	zipBytes: Uint8Array,
-	sourceUrl = pythonIdeCourseAssetsZipUrl
+	sourceUrl = "provided-code-ide-assets.zip"
 ): Promise<PythonIdeCourseAssetPack> {
 	const { parsePythonIdeCourseAssetZipBytes } =
 		await import("@/modules/pythonIdeCourseAssetZip");
