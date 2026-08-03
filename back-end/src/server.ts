@@ -7,8 +7,14 @@ import mongoose from "mongoose";
 
 import { codeIdeAssetsProxy, pythonIdeAssetsProxy } from "./controllers/common/pythonIdeAssetsProxy.js";
 import { quoteProxy } from "./controllers/common/quoteProxy.js";
+import {
+	validAccountSession,
+	validTutorOrAdminSession
+} from "./middleware/auth.js";
 import { apiNotFound } from "./middleware/notFound.js";
 import {
+	claimCodeIdeProjectPayloadReservation,
+	codeIdeProjectMutationAuthScope,
 	createCodeIdeProjectJsonParser,
 	createCodeIdeProjectPayloadConcurrencyGuard
 } from "./middleware/projectPayload.js";
@@ -91,6 +97,27 @@ async function main() {
 	const projectPayloadConcurrencyGuard
 		= createCodeIdeProjectPayloadConcurrencyGuard();
 	const projectBodyMethods = new Set(["PATCH", "POST", "PUT"]);
+	const projectMutationMethods = new Set(["DELETE", ...projectBodyMethods]);
+	const authenticateProjectMutation: express.RequestHandler = (
+		req,
+		res,
+		next
+	) => {
+		if (!projectMutationMethods.has(req.method.toUpperCase())) {
+			next();
+			return;
+		}
+
+		const authScope = codeIdeProjectMutationAuthScope(req);
+		if (authScope === "account") {
+			return validAccountSession(req, res, next);
+		}
+		if (authScope === "managed") {
+			return validTutorOrAdminSession(req, res, next);
+		}
+		res.setHeader("Allow", "GET");
+		res.status(405).json({ message: "Project mutation is not allowed here" });
+	};
 	const limitProjectBody
 		= (limiter: express.RequestHandler) =>
 			(
@@ -112,9 +139,11 @@ async function main() {
 		},
 		projectDataAccessLimiter,
 		createCodeIdeProjectAccountWriteLimiter(),
+		authenticateProjectMutation,
 		limitProjectBody(heavyProjectPayloadLimiter),
 		limitProjectBody(projectPayloadConcurrencyGuard),
-		limitProjectBody(projectJson)
+		limitProjectBody(projectJson),
+		limitProjectBody(claimCodeIdeProjectPayloadReservation)
 	);
 
 	// Parse only after coarse network, request-origin, and per-account checks.

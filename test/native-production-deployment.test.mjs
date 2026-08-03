@@ -99,6 +99,22 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(prepare, /run audit/u);
 	assert.match(prepare, /classes_staging_candidate\/back-end" ci/u);
 	assert.match(prepare, /back-end\/node_modules\/[.]bin/u);
+	const policyCopy = prepare.search(
+		/^\t"\$classes_build_source\/back-end\/[.]npmrc" \\$/mu
+	);
+	const runtimeInstall = prepare.search(
+		/^classes_npm "\$classes_staging_candidate\/back-end" ci \\$/mu
+	);
+	const policyRemoval = prepare.search(
+		/^rm -f -- "\$classes_staging_candidate\/back-end\/[.]npmrc"$/mu
+	);
+	const manifestWrite = prepare.search(
+		/^node "\$classes_staging_candidate\/scripts\/verify-native-release[.]mjs" \\$/mu
+	);
+	assert.ok(policyCopy >= 0 && policyCopy < runtimeInstall);
+	assert.ok(runtimeInstall < policyRemoval && policyRemoval < manifestWrite);
+	assert.match(prepare.slice(runtimeInstall, policyRemoval), /^\t--include=optional \\$/mu);
+	assert.match(prepare.slice(runtimeInstall, policyRemoval), /^\t--strict-allow-scripts$/mu);
 	assert.match(promote, /Candidate must remain inside the managed [.]candidates directory/u);
 	assert.match(promote, /verify-native-source[.]sh/u);
 	assert.match(promote, /Promotion requires an existing current release symlink for rollback/u);
@@ -291,6 +307,19 @@ test("internal manifest detects payload drift and stays out of public output", a
 	assert.notEqual(rejectedPayload.status, 0);
 	assert.match(rejectedPayload.stderr, /unsupported entry/u);
 	await fs.rm(path.join(candidate, "unchecked-top-level.sh"));
+
+	await fs.copyFile(
+		path.join(repositoryRoot, "back-end/.npmrc"),
+		path.join(candidate, "back-end/.npmrc")
+	);
+	rejectedPayload = spawnSync(
+		process.execPath,
+		[verifier, "--write", "--tag", "v2.7.205", "--revision", "a".repeat(40), candidate],
+		{ encoding: "utf8" }
+	);
+	assert.notEqual(rejectedPayload.status, 0);
+	assert.match(rejectedPayload.stderr, /unsupported entry back-end\/\.npmrc/u);
+	await fs.rm(path.join(candidate, "back-end/.npmrc"));
 
 	await fs.symlink(
 		path.join(candidate, "package.json"),

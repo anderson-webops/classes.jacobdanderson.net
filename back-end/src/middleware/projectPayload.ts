@@ -25,6 +25,44 @@ interface ProjectPayloadConcurrencyOptions {
 	perIdentityLimit?: number;
 }
 
+export type CodeIdeProjectMutationAuthScope
+	= "account" | "managed" | "read-only";
+
+interface ProjectPayloadReservation {
+	claim: () => boolean;
+	takeOwnership: () => (() => void) | null;
+}
+
+const projectPayloadReservations = new WeakMap<
+	Request,
+	ProjectPayloadReservation
+>();
+
+function projectPayloadTransportClosed(
+	req: Request,
+	res: Parameters<RequestHandler>[1]
+): boolean {
+	return (
+		req.aborted
+		|| req.destroyed
+		|| res.destroyed
+		|| res.writableEnded
+	);
+}
+
+/** Classify the parsed regex mount, never the attacker-controlled raw target. */
+export function codeIdeProjectMutationAuthScope(
+	req: Request
+): CodeIdeProjectMutationAuthScope {
+	if (req.baseUrl.toLowerCase() === "/users/loggedin/python-projects") {
+		return "account";
+	}
+	if (/^\/users\/[^/]+\/python-projects$/i.test(req.baseUrl)) {
+		return "managed";
+	}
+	return "read-only";
+}
+
 export function isHeavyCodeIdeProjectPayload(
 	req: Request,
 	thresholdBytes = HEAVY_CODE_IDE_PROJECT_PAYLOAD_THRESHOLD_BYTES
@@ -46,11 +84,25 @@ export function isHeavyCodeIdeProjectPayload(
 }
 
 /**
- * Project admission runs after the signed session middleware but before route
- * authentication performs a database lookup. Use the signed account identity
- * when available and a normalized network key only as a fallback.
+ * Production authenticates project mutations before admission. Prefer that
+ * verified current-role identity; signed-session and normalized network keys
+ * remain defensive fallbacks for reusable middleware and isolated fixtures.
  */
 export function codeIdeProjectPayloadIdentity(req: Request): string {
+	const currentRoleAndID = [
+		["admin", req.currentAdmin?._id?.toString()],
+		["tutor", req.currentTutor?._id?.toString()],
+		["user", req.currentUser?._id?.toString()],
+		[
+			"course-code-learner",
+			req.currentCourseCodeLearner?._id?.toString()
+		]
+	].find(
+		(entry): entry is [string, string] =>
+			typeof entry[1] === "string" && entry[1].length > 0
+	);
+	if (currentRoleAndID) return `${currentRoleAndID[0]}:${currentRoleAndID[1]}`;
+
 	const session = req.session as CustomSession | undefined;
 	if (!session || !authenticatedSessionIsCurrent(session)) {
 		return `network:${ipKeyGenerator(
@@ -85,6 +137,44 @@ export function createCodeIdeProjectJsonParser(
 }
 
 /**
+ * Claim a successfully parsed, preauthorized mutation immediately before
+ * route dispatch. The transport fallback stays armed so unmatched routes and
+ * disconnects before terminal ownership cannot leak the slot.
+ */
+export const claimCodeIdeProjectPayloadReservation: RequestHandler
+	= (req, _res, next) => {
+		const reservation = projectPayloadReservations.get(req);
+		if (!reservation || reservation.claim()) next();
+	};
+
+/**
+ * Await the terminal project mutation while it owns the admitted payload slot.
+ * The terminal path takes exclusive ownership and removes the fallback before
+ * persistence. A request released during parsing/auth cannot mutate later.
+ */
+export function withCodeIdeProjectPayloadReservation(
+	handler: RequestHandler
+): RequestHandler {
+	return async (req, res, next) => {
+		const reservation = projectPayloadReservations.get(req);
+		if (!reservation) {
+			await handler(req, res, next);
+			return;
+		}
+
+		const release = reservation.takeOwnership();
+		if (!release) return;
+
+		try {
+			await handler(req, res, next);
+		}
+		finally {
+			release();
+		}
+	};
+}
+
+/**
  * Admit one heavy body process-wide. Normal autosaves retain a wider tier,
  * while each signed identity remains bounded. Slots stay held through the
  * response because the parsed body remains reachable during validation/write.
@@ -114,6 +204,7 @@ export function createCodeIdeProjectPayloadConcurrencyGuard(
 	let activeNormalTotal = 0;
 
 	return (req, res, next) => {
+		if (projectPayloadTransportClosed(req, res)) return;
 		const isHeavy = isHeavyCodeIdeProjectPayload(
 			req,
 			heavyThresholdBytes
@@ -148,10 +239,10 @@ export function createCodeIdeProjectPayloadConcurrencyGuard(
 		}
 		activeByIdentity.set(identity, activeForIdentity);
 
-		let released = false;
-		const release = () => {
-			if (released) return;
-			released = true;
+		let slotReleased = false;
+		const releaseSlot = () => {
+			if (slotReleased) return;
+			slotReleased = true;
 			const current = activeByIdentity.get(identity);
 			if (isHeavy) {
 				activeHeavyTotal -= 1;
@@ -169,14 +260,59 @@ export function createCodeIdeProjectPayloadConcurrencyGuard(
 			}
 		};
 
-		req.once("aborted", release);
-		res.once("close", release);
-		res.once("finish", release);
+		let reservationState: "available" | "claimed" | "owned" | "released"
+			= "available";
+		const removeFallbackListeners = () => {
+			req.removeListener("aborted", releaseBeforeOwnership);
+			res.removeListener("close", releaseBeforeOwnership);
+			res.removeListener("finish", releaseBeforeOwnership);
+		};
+		function releaseBeforeOwnership() {
+			if (
+				reservationState !== "available"
+				&& reservationState !== "claimed"
+			) {
+				return;
+			}
+			reservationState = "released";
+			removeFallbackListeners();
+			releaseSlot();
+		}
+		const reservation: ProjectPayloadReservation = {
+			claim: () => {
+				if (projectPayloadTransportClosed(req, res)) {
+					releaseBeforeOwnership();
+					return false;
+				}
+				if (reservationState !== "available") return false;
+				reservationState = "claimed";
+				return true;
+			},
+			takeOwnership: () => {
+				if (projectPayloadTransportClosed(req, res)) {
+					releaseBeforeOwnership();
+					return null;
+				}
+				if (reservationState !== "claimed") return null;
+				reservationState = "owned";
+				removeFallbackListeners();
+				return () => {
+					if (reservationState !== "owned") return;
+					reservationState = "released";
+					projectPayloadReservations.delete(req);
+					releaseSlot();
+				};
+			}
+		};
+		projectPayloadReservations.set(req, reservation);
+		req.once("aborted", releaseBeforeOwnership);
+		res.once("close", releaseBeforeOwnership);
+		res.once("finish", releaseBeforeOwnership);
 		try {
 			next();
 		}
 		catch (error) {
-			release();
+			releaseBeforeOwnership();
 			throw error;
 		}
 	};
