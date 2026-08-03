@@ -88,9 +88,7 @@ import {
 	pythonIdeAssetLookupAliases,
 	pythonIdeAssetCandidateNames,
 	pythonIdeCourseAssetsManifestUrl,
-	pythonIdeCourseAssetsZipUrl,
 	pythonIdeLegacyCourseAssetsManifestUrl,
-	pythonIdeLegacyCourseAssetsZipUrl,
 	resetPythonIdeCourseAssetPackCache
 } from "../src/modules/pythonIdeCourseAssets";
 import {
@@ -5100,7 +5098,10 @@ pgzrun.go()
 		const zipBytes = zipSync({
 			"__MACOSX/images/._alien.png": strToU8("ignored"),
 			"images/.DS_Store": strToU8("ignored"),
+			"images/1.png": oneByOnePngBytes,
 			"images/alien.png": oneByOnePngBytes,
+			"images/seaweed-publicdomainvectors.org/seaweed.png":
+				oneByOnePngBytes,
 			"music/tune.mp3": new Uint8Array([1, 2, 3]),
 			"sounds/eep.wav": new Uint8Array([4, 5, 6])
 		});
@@ -5122,7 +5123,12 @@ pgzrun.go()
 			pythonIdeAssetCandidateNames("music", "tune.mp3", [".mp3"])
 		);
 
-		expect(pack.assets.size).toBe(3);
+		expect(pack.assets.size).toBe(5);
+		expect(pack.assets.get("images/1.png")?.name).toBe("images/1.png");
+		expect(
+			pack.assets.get("images/seaweed-publicdomainvectors.org/seaweed.png")
+				?.name
+		).toBe("images/seaweed-publicdomainvectors.org/seaweed.png");
 		expect(alien?.mimeType).toBe("image/png");
 		expect(alien?.width).toBe(1);
 		expect(alien?.height).toBe(1);
@@ -5211,6 +5217,13 @@ pgzrun.go()
 				{
 					height: 18,
 					mimeType: "image/png",
+					name: "images/1.png",
+					url: "/python-ide/assets/images/1.png",
+					width: 20
+				},
+				{
+					height: 18,
+					mimeType: "image/png",
 					name: "images/alien.png",
 					url: "/python-ide/assets/images/alien.png",
 					width: 20
@@ -5231,6 +5244,13 @@ pgzrun.go()
 					name: "images/alien-left.png",
 					url: "/python-ide/assets/images/alien-left.png",
 					width: 20
+				},
+				{
+					height: 24,
+					mimeType: "image/png",
+					name: "images/seaweed-publicdomainvectors.org/seaweed.png",
+					url: "/python-ide/assets/images/seaweed-publicdomainvectors.org/seaweed.png",
+					width: 12
 				}
 			]
 		});
@@ -5243,7 +5263,16 @@ pgzrun.go()
 			pythonIdeAssetCandidateNames("images", "alien_left", [".png"])
 		);
 
-		expect(pack.assets.size).toBe(4);
+		expect(pack.assets.size).toBe(6);
+		expect(pack.assets.get("images/1.png")?.url).toBe(
+			"/python-ide/assets/images/1.png"
+		);
+		expect(
+			pack.assets.get("images/seaweed-publicdomainvectors.org/seaweed.png")
+				?.url
+		).toBe(
+			"/python-ide/assets/images/seaweed-publicdomainvectors.org/seaweed.png"
+		);
 		expect(alien?.url).toBe("/python-ide/assets/images/alien.png");
 		expect(alien?.width).toBe(20);
 		expect(alien?.height).toBe(18);
@@ -5282,15 +5311,26 @@ pgzrun.go()
 		);
 	});
 
-	it("keeps the Code IDE extracted asset manifest mirrored and file-backed", () => {
+	it("keeps generated Code IDE manifests mirrored and file-backed", () => {
 		const legacyManifestPath = resolve(
 			__dirname,
 			"../public/python-ide/assets/manifest.json"
 		);
-		const codeIdeManifestSource = readFileSync(
-			resolve(__dirname, "../public/ide/assets/manifest.json"),
+		const codeIdeManifestPath = resolve(
+			__dirname,
+			"../public/ide/assets/manifest.json"
+		);
+		const ignoreSource = readFileSync(
+			resolve(__dirname, "../.gitignore"),
 			"utf8"
 		);
+		expect(ignoreSource).toContain("/public/ide/assets/");
+		expect(existsSync(codeIdeManifestPath)).toBe(
+			existsSync(legacyManifestPath)
+		);
+		if (!existsSync(codeIdeManifestPath)) return;
+
+		const codeIdeManifestSource = readFileSync(codeIdeManifestPath, "utf8");
 		const manifest = JSON.parse(codeIdeManifestSource) as {
 			assets: Array<{
 				name: string;
@@ -5298,11 +5338,9 @@ pgzrun.go()
 			}>;
 		};
 
-		if (existsSync(legacyManifestPath)) {
-			expect(codeIdeManifestSource).toBe(
-				readFileSync(legacyManifestPath, "utf8")
-			);
-		}
+		expect(codeIdeManifestSource).toBe(
+			readFileSync(legacyManifestPath, "utf8")
+		);
 		expect(manifest.assets.length).toBeGreaterThan(100);
 		const assetFilePaths = manifest.assets.map(asset =>
 			resolve(
@@ -5348,7 +5386,78 @@ pgzrun.go()
 		expect(zipSource).toContain("parsePythonIdeCourseAssetZipBytes");
 	});
 
-	it("prefers the extracted asset manifest before falling back to the same-origin API proxy", async () => {
+	it("pins the build-time asset archive to the reviewed bytes", () => {
+		const downloadSource = readFileSync(
+			resolve(__dirname, "../scripts/download-code-ide-assets.mjs"),
+			"utf8"
+		);
+
+		expect(downloadSource).toContain('from "node:crypto"');
+		expect(downloadSource).toContain(
+			"const REVIEWED_ASSETS_ZIP_BYTES = 14_676_489;"
+		);
+		expect(downloadSource).toContain(
+			"6ab65a710032ca71cf957bfd56f8b60579d66c94395bbc34fc433be4bb0f92a1"
+		);
+		expect(downloadSource).toContain('const hash = createHash("sha256");');
+		expect(downloadSource).toContain("response.body.getReader()");
+		expect(downloadSource).toContain(
+			"byteLength > REVIEWED_ASSETS_ZIP_BYTES"
+		);
+		expect(downloadSource).toContain(
+			'response.headers.get("content-length")'
+		);
+		expect(downloadSource).toContain(
+			"cache?.sha256 === REVIEWED_ASSETS_ZIP_SHA256"
+		);
+		expect(downloadSource).toContain(
+			"readReviewedAssetArchiveFile(cacheZipPath"
+		);
+		expect(downloadSource).toContain(
+			"expectedBytes: REVIEWED_ASSETS_ZIP_BYTES"
+		);
+		expect(downloadSource).toMatch(
+			/await extractAssets\(\s*localInfo\.archive\.bytes,\s*localInfo\.archive\.sourceUrl/
+		);
+		expect(downloadSource).toContain("sha256: REVIEWED_ASSETS_ZIP_SHA256");
+		expect(downloadSource).toContain(
+			"const ASSET_REQUEST_TIMEOUT_MS = 60_000;"
+		);
+		expect(downloadSource).toContain(
+			"const ASSET_RETRY_DELAYS_MS = [1_000, 3_000];"
+		);
+		expect(downloadSource).toContain(
+			"rm(assetsOutputDir, { force: true, recursive: true })"
+		);
+		expect(downloadSource).toContain(
+			"rm(codeIdeManifestPath, { force: true })"
+		);
+		expect(downloadSource).toContain(
+			'withAssetNetworkRetry(\n\t\t\t"asset download"'
+		);
+		expect(downloadSource).toContain(
+			"runAssetNetworkRequest(label, operation"
+		);
+		expect(downloadSource).toContain(
+			"retryDelaysMs: ASSET_RETRY_DELAYS_MS"
+		);
+		expect(downloadSource).toContain("fetch(sourceUrl, { signal })");
+		expect(downloadSource).not.toContain('method: "HEAD",');
+		for (const alias of [
+			"CODE_IDE_ASSETS_ZIP_URL",
+			"PYTHON_IDE_ASSETS_ZIP_URL",
+			"CODE_IDE_ASSETS_REFRESH",
+			"PYTHON_IDE_ASSETS_REFRESH",
+			"CODE_IDE_ASSETS_DOWNLOAD",
+			"PYTHON_IDE_ASSETS_DOWNLOAD",
+			"CODE_IDE_ASSETS_FRONT_END_DIR",
+			"PYTHON_IDE_ASSETS_FRONT_END_DIR"
+		]) {
+			expect(downloadSource).toContain(alias);
+		}
+	});
+
+	it("loads the extracted asset manifest without a runtime archive request", async () => {
 		const requestedUrls: string[] = [];
 		const pack = await loadPythonIdeCourseAssetPack({
 			fetcher: async url => {
@@ -5422,7 +5531,35 @@ pgzrun.go()
 		);
 	});
 
-	it("falls back to the same-origin zip proxy when extracted manifests are missing", async () => {
+	it("does not use a runtime archive fallback when extracted manifests are missing", async () => {
+		const requestedUrls: string[] = [];
+
+		await expect(
+			loadPythonIdeCourseAssetPack({
+				fetcher: async url => {
+					requestedUrls.push(url);
+					return {
+						arrayBuffer: async () => new ArrayBuffer(0),
+						ok: false,
+						status: 404
+					};
+				}
+			})
+		).rejects.toThrow("Unable to load PyGame Zero assets");
+
+		expect(requestedUrls).toEqual([
+			pythonIdeCourseAssetsManifestUrl,
+			pythonIdeLegacyCourseAssetsManifestUrl
+		]);
+		const assetSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIdeCourseAssets.ts"),
+			"utf8"
+		);
+		expect(assetSource).not.toContain("/api/code-ide-assets/assets.zip");
+		expect(assetSource).not.toContain("/api/python-assets/assets.zip");
+	});
+
+	it("accepts an explicitly supplied archive source for module callers", async () => {
 		const zipBytes = zipSync({
 			"images/alien.png": oneByOnePngBytes
 		});
@@ -5430,10 +5567,7 @@ pgzrun.go()
 		const pack = await loadPythonIdeCourseAssetPack({
 			fetcher: async url => {
 				requestedUrls.push(url);
-				if (
-					url === pythonIdeCourseAssetsManifestUrl ||
-					url === pythonIdeLegacyCourseAssetsManifestUrl
-				) {
+				if (url === pythonIdeCourseAssetsManifestUrl) {
 					return {
 						arrayBuffer: async () => new ArrayBuffer(0),
 						ok: false,
@@ -5441,80 +5575,30 @@ pgzrun.go()
 					};
 				}
 
-				expect(url).toBe(pythonIdeCourseAssetsZipUrl);
+				expect(url).toBe("/test-assets.zip");
 				return {
 					arrayBuffer: async () => zipBytes.buffer.slice(0),
 					ok: true,
 					status: 200
 				};
-			}
+			},
+			manifestUrl: pythonIdeCourseAssetsManifestUrl,
+			url: "/test-assets.zip"
 		});
 
 		expect(requestedUrls).toEqual([
 			pythonIdeCourseAssetsManifestUrl,
-			pythonIdeLegacyCourseAssetsManifestUrl,
-			pythonIdeCourseAssetsZipUrl
+			"/test-assets.zip"
 		]);
 		expect(pack.assets.has("images/alien.png")).toBe(true);
 	});
 
-	it("falls back to the legacy same-origin zip proxy when the Code IDE proxy is unavailable", async () => {
-		const zipBytes = zipSync({
-			"images/alien.png": oneByOnePngBytes
-		});
+	it("does not fetch an archive when extracted manifests have no usable assets", async () => {
 		const requestedUrls: string[] = [];
-		const pack = await loadPythonIdeCourseAssetPack({
-			fetcher: async url => {
-				requestedUrls.push(url);
-				if (
-					url === pythonIdeCourseAssetsManifestUrl ||
-					url === pythonIdeLegacyCourseAssetsManifestUrl
-				) {
-					return {
-						arrayBuffer: async () => new ArrayBuffer(0),
-						ok: false,
-						status: 404
-					};
-				}
-
-				if (url === pythonIdeCourseAssetsZipUrl) {
-					return {
-						arrayBuffer: async () => new ArrayBuffer(0),
-						ok: false,
-						status: 404
-					};
-				}
-
-				expect(url).toBe(pythonIdeLegacyCourseAssetsZipUrl);
-				return {
-					arrayBuffer: async () => zipBytes.buffer.slice(0),
-					ok: true,
-					status: 200
-				};
-			}
-		});
-
-		expect(requestedUrls).toEqual([
-			pythonIdeCourseAssetsManifestUrl,
-			pythonIdeLegacyCourseAssetsManifestUrl,
-			pythonIdeCourseAssetsZipUrl,
-			pythonIdeLegacyCourseAssetsZipUrl
-		]);
-		expect(pack.assets.has("images/alien.png")).toBe(true);
-	});
-
-	it("falls back to the same-origin zip proxy when the asset manifest has no usable assets", async () => {
-		const zipBytes = zipSync({
-			"images/alien.png": oneByOnePngBytes
-		});
-		const requestedUrls: string[] = [];
-		const pack = await loadPythonIdeCourseAssetPack({
-			fetcher: async url => {
-				requestedUrls.push(url);
-				if (
-					url === pythonIdeCourseAssetsManifestUrl ||
-					url === pythonIdeLegacyCourseAssetsManifestUrl
-				) {
+		await expect(
+			loadPythonIdeCourseAssetPack({
+				fetcher: async url => {
+					requestedUrls.push(url);
 					return {
 						arrayBuffer: async () => new ArrayBuffer(0),
 						json: async () => ({
@@ -5530,54 +5614,13 @@ pgzrun.go()
 						status: 200
 					};
 				}
-
-				expect(url).toBe(pythonIdeCourseAssetsZipUrl);
-				return {
-					arrayBuffer: async () => zipBytes.buffer.slice(0),
-					ok: true,
-					status: 200
-				};
-			}
-		});
+			})
+		).rejects.toThrow("contained no usable assets");
 
 		expect(requestedUrls).toEqual([
 			pythonIdeCourseAssetsManifestUrl,
-			pythonIdeLegacyCourseAssetsManifestUrl,
-			pythonIdeCourseAssetsZipUrl
+			pythonIdeLegacyCourseAssetsManifestUrl
 		]);
-		expect(pack.assets.has("images/alien.png")).toBe(true);
-	});
-
-	it("falls back to the same-origin zip proxy when the asset manifest fetch fails", async () => {
-		const zipBytes = zipSync({
-			"images/alien.png": oneByOnePngBytes
-		});
-		const requestedUrls: string[] = [];
-		const pack = await loadPythonIdeCourseAssetPack({
-			fetcher: async url => {
-				requestedUrls.push(url);
-				if (
-					url === pythonIdeCourseAssetsManifestUrl ||
-					url === pythonIdeLegacyCourseAssetsManifestUrl
-				) {
-					throw new TypeError("manifest network failure");
-				}
-
-				expect(url).toBe(pythonIdeCourseAssetsZipUrl);
-				return {
-					arrayBuffer: async () => zipBytes.buffer.slice(0),
-					ok: true,
-					status: 200
-				};
-			}
-		});
-
-		expect(requestedUrls).toEqual([
-			pythonIdeCourseAssetsManifestUrl,
-			pythonIdeLegacyCourseAssetsManifestUrl,
-			pythonIdeCourseAssetsZipUrl
-		]);
-		expect(pack.assets.has("images/alien.png")).toBe(true);
 	});
 
 	it("keeps shared PyGame Zero asset support wired into the page and runtime", () => {
