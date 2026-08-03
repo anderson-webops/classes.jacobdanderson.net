@@ -71,6 +71,9 @@ jobs:
             - name: Validate dependency tree
               run: npm run check:dependencies
 
+            - name: Verify root lock provenance
+              run: npm run test:lock-provenance
+
             - name: Dependency security audit
               run: npm audit --include=optional
 
