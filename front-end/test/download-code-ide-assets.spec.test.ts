@@ -3,7 +3,6 @@ import {
 	existsSync,
 	mkdtempSync,
 	mkdirSync,
-	readFileSync,
 	rmSync,
 	writeFileSync
 } from "node:fs";
@@ -29,13 +28,21 @@ function writeFixtureFile(root: string, filePath: string, content: string) {
 	writeFileSync(target, content);
 }
 
-function runAssetScript(frontEndDir: string) {
+function runAssetScript(frontEndDir: string, useLegacyAliases = false) {
+	const assetEnvironment = useLegacyAliases
+		? {
+				PYTHON_IDE_ASSETS_DOWNLOAD: "skip",
+				PYTHON_IDE_ASSETS_FRONT_END_DIR: frontEndDir
+			}
+		: {
+				CODE_IDE_ASSETS_DOWNLOAD: "skip",
+				CODE_IDE_ASSETS_FRONT_END_DIR: frontEndDir
+			};
 	return execFileSync(process.execPath, [scriptPath], {
 		cwd: resolve(__dirname, ".."),
 		env: {
 			...process.env,
-			CODE_IDE_ASSETS_DOWNLOAD: "skip",
-			CODE_IDE_ASSETS_FRONT_END_DIR: frontEndDir
+			...assetEnvironment
 		},
 		encoding: "utf8"
 	});
@@ -48,48 +55,48 @@ describe("Code IDE asset staging script", () => {
 		}
 	});
 
-	it("removes a stale Code IDE manifest when skipped extraction has no source manifest", () => {
+	it("supports legacy Python IDE aliases while omitting generated output", () => {
 		const frontEndDir = makeTempFrontEndDir();
 		const codeManifestPath = join(
 			frontEndDir,
 			"public/ide/assets/manifest.json"
+		);
+		const legacyManifestPath = join(
+			frontEndDir,
+			"public/python-ide/assets/manifest.json"
 		);
 		writeFixtureFile(
 			frontEndDir,
 			"public/ide/assets/manifest.json",
 			'{"assets":[{"name":"images/stale.png"}]}\n'
 		);
+		writeFixtureFile(
+			frontEndDir,
+			"public/python-ide/assets/manifest.json",
+			'{"assets":[{"name":"images/stale.png"}]}\n'
+		);
 
-		runAssetScript(frontEndDir);
+		runAssetScript(frontEndDir, true);
 
 		expect(existsSync(codeManifestPath)).toBe(false);
+		expect(existsSync(legacyManifestPath)).toBe(false);
 	});
 
-	it("mirrors the extracted legacy manifest and removes stale public zips when downloads are skipped", () => {
+	it("removes stale generated outputs and zips in Code IDE skip mode", () => {
 		const frontEndDir = makeTempFrontEndDir();
-		const legacyManifest = `${JSON.stringify(
-			{
-				assets: [
-					{
-						mimeType: "image/png",
-						name: "images/alien.png",
-						url: "/python-ide/assets/images/alien.png"
-					}
-				],
-				version: 1
-			},
-			null,
-			"\t"
-		)}\n`;
 		const codeManifestPath = join(
 			frontEndDir,
 			"public/ide/assets/manifest.json"
+		);
+		const legacyManifestPath = join(
+			frontEndDir,
+			"public/python-ide/assets/manifest.json"
 		);
 		const staleZipPath = join(frontEndDir, "public/python-ide/assets.zip");
 		writeFixtureFile(
 			frontEndDir,
 			"public/python-ide/assets/manifest.json",
-			legacyManifest
+			'{"assets":[{"name":"images/stale.png"}]}\n'
 		);
 		writeFixtureFile(
 			frontEndDir,
@@ -100,7 +107,8 @@ describe("Code IDE asset staging script", () => {
 
 		runAssetScript(frontEndDir);
 
-		expect(readFileSync(codeManifestPath, "utf8")).toBe(legacyManifest);
+		expect(existsSync(codeManifestPath)).toBe(false);
+		expect(existsSync(legacyManifestPath)).toBe(false);
 		expect(existsSync(staleZipPath)).toBe(false);
 	});
 });
