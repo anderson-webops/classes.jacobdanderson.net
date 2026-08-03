@@ -49,12 +49,34 @@ import {
 	validTutorOrAdminSession,
 	validUser
 } from "../middleware/auth.js";
+import { withCodeIdeProjectPayloadReservation } from "../middleware/projectPayload.js";
 import {
 	createSignupLimiter,
 	createUserCourseAccessLimiter
 } from "../middleware/rateLimiters.js";
 
 const router: Router = express.Router();
+
+const validProjectAccountSession: express.RequestHandler = (req, res, next) => {
+	if (
+		req.currentAdmin
+		|| req.currentTutor
+		|| req.currentUser
+		|| req.currentCourseCodeLearner
+	) {
+		next();
+		return;
+	}
+	return validAccountSession(req, res, next);
+};
+
+const validManagedProjectSession: express.RequestHandler = (req, res, next) => {
+	if (req.currentAdmin || req.currentTutor) {
+		next();
+		return;
+	}
+	return validTutorOrAdminSession(req, res, next);
+};
 
 // Rate limiter for sensitive endpoints (e.g. 100 requests per 15 minutes)
 const userCourseAccessLimiter = createUserCourseAccessLimiter();
@@ -72,11 +94,27 @@ router.get("/python-projects/shared/:shareID", getSharedPythonProject);
 // Persist logged-in account Code IDE projects. Keep these before the
 // managed /:userID/python-projects routes so "loggedin" is not parsed as an ID.
 router.get("/loggedin/python-projects", validAccountSession, listPythonProjects);
-router.post("/loggedin/python-projects", validAccountSession, createPythonProject);
+router.post(
+	"/loggedin/python-projects",
+	validProjectAccountSession,
+	withCodeIdeProjectPayloadReservation(createPythonProject)
+);
 router.get("/loggedin/python-projects/:projectID", validAccountSession, getPythonProject);
-router.put("/loggedin/python-projects/:projectID", validAccountSession, updatePythonProject);
-router.put("/loggedin/python-projects/:projectID/share", validAccountSession, updatePythonProjectShare);
-router.delete("/loggedin/python-projects/:projectID", validAccountSession, deletePythonProject);
+router.put(
+	"/loggedin/python-projects/:projectID",
+	validProjectAccountSession,
+	withCodeIdeProjectPayloadReservation(updatePythonProject)
+);
+router.put(
+	"/loggedin/python-projects/:projectID/share",
+	validProjectAccountSession,
+	withCodeIdeProjectPayloadReservation(updatePythonProjectShare)
+);
+router.delete(
+	"/loggedin/python-projects/:projectID",
+	validProjectAccountSession,
+	withCodeIdeProjectPayloadReservation(deletePythonProject)
+);
 router.get("/loggedin/python-project-reviews", validAccountSession, listVisiblePythonProjectReviews);
 router.get(
 	"/loggedin/python-project-reviews/:reviewID",
@@ -123,8 +161,16 @@ router.get(
 	validTutorOrAdminSession,
 	getManagedPythonProject
 );
-router.post("/:userID/python-projects/:projectID/review", validTutorOrAdminSession, createPythonProjectReview);
-router.put("/:userID/python-projects/:projectID/review/:reviewID", validTutorOrAdminSession, updatePythonProjectReview);
+router.post(
+	"/:userID/python-projects/:projectID/review",
+	validManagedProjectSession,
+	withCodeIdeProjectPayloadReservation(createPythonProjectReview)
+);
+router.put(
+	"/:userID/python-projects/:projectID/review/:reviewID",
+	validManagedProjectSession,
+	withCodeIdeProjectPayloadReservation(updatePythonProjectReview)
+);
 
 // Delete the user by the user themselves
 router.delete("/user/:userID", validUser, deleteOwnUser);
