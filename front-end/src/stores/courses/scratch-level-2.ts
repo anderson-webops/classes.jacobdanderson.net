@@ -4,6 +4,7 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import { isCoreProjectTitle } from "./projectGrouping";
 import {
 	buildScratchFluencyDrill,
 	buildScratchOpenEndedVariant
@@ -1009,7 +1010,8 @@ export const scratchLevel2Course: RawCourse = {
 					title: "GM9 Project 1: Fish Food",
 					content:
 						"Plan Fish Food around the fish controls, food movement, scoring, hazards or missed-food behavior, and the condition that ends or resets the game.\nCreate a blank Scratch project and add a project comment that lists the implementation steps. Build Fish Food with custom sprites and backdrops as preparation for the master project.\nTest that food appears predictably, score changes only when intended, and the game can be replayed from a clean state.",
-					projectLink: "https://scratch.mit.edu/projects/468227197"
+					projectLink: "https://scratch.mit.edu/projects/315901981/",
+					solutionLink: "https://scratch.mit.edu/projects/357453262/"
 				},
 				{
 					title: "Fish Food: Debugging and Failure Modes",
@@ -1745,9 +1747,17 @@ function configureScratchLevel2Module(
 	module.id ??= legacyModuleId;
 	preserveScratchLevel2ItemIds(module, legacyModuleId);
 
-	const choiceTitles = new Set(config.choiceCurriculumTitles ?? []);
-	const challengeTitles = new Set(config.challengeCurriculumTitles ?? []);
-	const movedItems = module.curriculum.filter(
+	const choiceTitles = new Set(
+		(config.choiceCurriculumTitles ?? []).filter(
+			title => !isCoreProjectTitle(title)
+		)
+	);
+	const challengeTitles = new Set(
+		(config.challengeCurriculumTitles ?? []).filter(
+			title => !isCoreProjectTitle(title)
+		)
+	);
+	const movedPractice = module.curriculum.filter(
 		item => choiceTitles.has(item.title) || challengeTitles.has(item.title)
 	);
 	module.curriculum = module.curriculum.filter(
@@ -1758,7 +1768,7 @@ function configureScratchLevel2Module(
 	for (const item of module.curriculum) {
 		item.learningPath = "core";
 	}
-	for (const item of movedItems) {
+	for (const item of movedPractice) {
 		item.learningPath = challengeTitles.has(item.title)
 			? "challenge"
 			: "choice";
@@ -1767,7 +1777,7 @@ function configureScratchLevel2Module(
 		item.learningPath = scratchLevel2SupplementalPath(item);
 	}
 	module.supplementalProjects = [
-		...movedItems,
+		...movedPractice,
 		...module.supplementalProjects
 	];
 
