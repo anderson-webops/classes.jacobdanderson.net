@@ -129,6 +129,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/privacy': RouteRecordInfo<
+      '/privacy',
+      '/privacy',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/profile': RouteRecordInfo<
       '/profile',
       '/profile',
@@ -312,6 +319,14 @@ declare module 'vue-router/auto-routes' {
     'src/pages/payment.vue': {
       routes:
         | '/payment'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/privacy.vue': {
+      routes:
+        | '/privacy'
       views:
         | never
       pathParamNames:
