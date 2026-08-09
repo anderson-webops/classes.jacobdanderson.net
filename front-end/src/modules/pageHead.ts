@@ -14,6 +14,7 @@ const ROUTE_TITLES: Array<[RegExp, string]> = [
 	[/^\/payment(?:\/|$)/, "Tuition"],
 	[/^\/zelle(?:\/|$)/, "Zelle"],
 	[/^\/about(?:\/|$)/, "About"],
+	[/^\/privacy(?:\/|$)/, "Privacy"],
 	[/^\/profile(?:\/|$)/, "Account"],
 	[/^\/reset-password(?:\/|$)/, "Reset Password"],
 	[/^\/admin\/student-management(?:\/|$)/, "Student Management"],
