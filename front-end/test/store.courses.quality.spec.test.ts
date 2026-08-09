@@ -5958,11 +5958,11 @@ describe("course text quality normalization", () => {
 
 		expect(duplicateScratchResources).toEqual([]);
 		expect(findItem(scratchLevel2!, /Fish Food/).projectLink).toBe(
+			"https://scratch.mit.edu/projects/315901981"
+		);
+		expect(findItem(scratchLevel2!, /Fish Food/).solutionLink).toBe(
 			"https://scratch.mit.edu/projects/468227197"
 		);
-		expect(
-			findItem(scratchLevel2!, /Fish Food/).solutionLink
-		).toBeUndefined();
 	});
 
 	it("neutralizes repetitive generated supplemental project wording", async () => {
