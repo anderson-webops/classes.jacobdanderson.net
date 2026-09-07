@@ -71,23 +71,31 @@ describe("Scratch Level 2 learner flow", () => {
 		}
 	});
 
-	it("uses one required project per concept module and preserves alternatives", () => {
+	it("keeps every authored project core and supplemental work separate", () => {
 		const review = requireModule("GM1 Level 1 Skills Review");
 		expect(
 			review.curriculum
 				.filter(item => item.projectLink)
 				.map(item => item.title)
-		).toEqual(["GM1 Review Project: Asteroid Dodge Remix"]);
+		).toEqual([
+			"GM1 Project 1: Dragonfly Events",
+			"GM1 Project 2: Drawing Mouse",
+			"GM1 Project 3: Math Facts",
+			"GM1 Project 4: Speed Click",
+			"GM1 Project 5: Dance Off",
+			"GM1 Project 6: Hedgehog Race",
+			"GM1 Review Project: Asteroid Dodge Remix"
+		]);
 		expect(
-			review.supplementalProjects.find(
+			review.curriculum.find(
 				item => item.title === "GM1 Project 1: Dragonfly Events"
 			)?.learningPath
-		).toBe("choice");
+		).toBe("core");
 		expect(
-			review.supplementalProjects.find(
+			review.curriculum.find(
 				item => item.title === "GM1 Project 6: Hedgehog Race"
 			)?.learningPath
-		).toBe("challenge");
+		).toBe("core");
 
 		for (const [moduleTitle, requiredProject, alternateProject] of [
 			[
@@ -131,23 +139,26 @@ describe("Scratch Level 2 learner flow", () => {
 				module.curriculum.some(item => item.title === requiredProject),
 				moduleTitle
 			).toBe(true);
-			expect(
-				module.supplementalProjects.some(
-					item => item.title === alternateProject
-				),
-				moduleTitle
-			).toBe(true);
+				expect(
+					module.curriculum.some(
+						item => item.title === alternateProject
+					),
+					moduleTitle
+				).toBe(true);
 		}
 	});
 
-	it("keeps review targeted and moves typing practice to the optional bridge", () => {
+	it("preserves the Juni review project and keeps typing in the optional bridge", () => {
 		const reviewProject = requireModule(
 			"GM1 Level 1 Skills Review"
 		).curriculum.find(item => item.title.includes("Asteroid Dodge Remix"));
+		expect(reviewProject?.content).toContain("Play through the demo");
 		expect(reviewProject?.content).toContain(
-			"not seven required review builds"
+			"Create a comment in the project"
 		);
-		expect(reviewProject?.content).toContain("Readiness evidence");
+		expect(reviewProject?.content).toContain(
+			"Starter code is provided"
+		);
 
 		const capstone = requireModule("GM14 Master Project");
 		expect(
@@ -190,14 +201,12 @@ describe("Scratch Level 2 learner flow", () => {
 
 		const pyramid = course!.modules
 			.find(module => module.title === "GM2 Nested Loops")
-			?.supplementalProjects.find(
+			?.curriculum.find(
 				item => item.title === "GM2 Project 2: Pyramid"
 			);
 		expect(pyramid?.id).toBe(
 			"scratch-level-2-gm2-nested-loops-curriculum-gm2-project-2-pyramid"
 		);
-		expect(pyramid?.aliases).toContain(
-			"scratch-level-2-gm2-nested-loops-supplemental-gm2-project-2-pyramid"
-		);
+		expect(pyramid?.aliases).toBeUndefined();
 	});
 });

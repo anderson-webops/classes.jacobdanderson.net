@@ -71,7 +71,7 @@ describe("Python Level 3 learner flow", () => {
 		}
 	});
 
-	it("separates advanced variants while retaining every authored card", () => {
+	it("keeps authored projects core and only supplemental work optional", () => {
 		const requiredCount = pythonLevel3Course.modules.reduce(
 			(total, module) => total + module.curriculum.length,
 			0
@@ -81,68 +81,66 @@ describe("Python Level 3 learner flow", () => {
 			0
 		);
 
-		expect(requiredCount).toBe(72);
-		expect(optionCount).toBe(18);
+		expect(requiredCount).toBe(86);
+		expect(optionCount).toBe(4);
+
+		// Juni places these check-in projects in curriculum, despite their titles.
+		for (const title of ["Check-In #1", "Check-In #2", "Check-In #3"]) {
+			expect(
+				requireSourceModule(title).curriculum.find(item =>
+					item.title.includes("Additional Practice Project")
+				)?.learningPath
+			).toBe("core");
+		}
 		expect(
-			requireSourceModule("AM4 Recursion Part 1").supplementalProjects.find(
+			requireSourceModule("AM4 Recursion Part 1").curriculum.find(
 				item =>
-					item.title ===
-					"AM4 Project 3: Recursive Fibonacci Numbers"
+					item.title === "AM4 Project 3: Recursive Fibonacci Numbers"
 			)?.learningPath
-		).toBe("challenge");
+		).toBe("core");
 		expect(
-			requireSourceModule("AM7 Binary Search").supplementalProjects.find(
+			requireSourceModule("AM7 Binary Search").curriculum.find(
 				item => item.title === "AM7 Project 2: Reverse Number Guesser"
 			)?.learningPath
-		).toBe("choice");
+		).toBe("core");
 		expect(
 			requireSourceModule(
 				"AM14 Master Project: Tic Tac Toe AI"
-			).supplementalProjects.find(
-				item =>
-					item.title ===
-					"AM14 Project 4: Advanced Tic Tac Toe AI"
+			).curriculum.find(
+				item => item.title === "AM14 Project 4: Advanced Tic Tac Toe AI"
 			)?.learningPath
-		).toBe("challenge");
+		).toBe("core");
 	});
 
 	it("stages both capstones around testable minimum systems", () => {
 		expect(
-			requireSourceModule(
-				"AM13 Master Project: Conway's Game of Life"
-			).curriculum[0]?.content
+			requireSourceModule("AM13 Master Project: Conway's Game of Life")
+				.curriculum[0]?.content
 		).toContain("simulation capstone");
 		expect(
-			requireSourceModule(
-				"AM14 Master Project: Tic Tac Toe AI"
-			).curriculum[0]?.content
+			requireSourceModule("AM14 Master Project: Tic Tac Toe AI")
+				.curriculum[0]?.content
 		).toContain("AI capstone");
 		expect(
-			requireSourceModule(
-				"AM14 Master Project: Tic Tac Toe AI"
-			).keyBlocks
+			requireSourceModule("AM14 Master Project: Tic Tac Toe AI").keyBlocks
 		).toContain("strategy test");
 	});
 
-	it("preserves moved-project progress IDs and exposes their new aliases", async () => {
-		const course =
-			await useCoursesStore().loadCourseById("python-level-3");
+	it("preserves project progress IDs in the core listing", async () => {
+		const course = await useCoursesStore().loadCourseById("python-level-3");
 		expect(course).not.toBeNull();
 
 		const recursion = course!.modules.find(
 			module => module.title === "AM4 Recursion Part 1"
 		);
-		const fibonacci = recursion?.supplementalProjects.find(
-			item =>
-				item.title === "AM4 Project 3: Recursive Fibonacci Numbers"
+		const fibonacci = recursion?.curriculum.find(
+			item => item.title === "AM4 Project 3: Recursive Fibonacci Numbers"
 		);
 
 		expect(fibonacci?.id).toBe(
 			"python-level-3-am4-recursion-part-1-curriculum-am4-project-3-recursive-fibonacci-numbers"
 		);
-		expect(fibonacci?.aliases).toContain(
-			"python-level-3-am4-recursion-part-1-supplemental-am4-project-3-recursive-fibonacci-numbers"
-		);
+		expect(fibonacci?.aliases).toBeUndefined();
 	});
 
 	it("keeps licensed sort animations and only available project media", async () => {

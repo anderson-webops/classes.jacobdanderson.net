@@ -71,17 +71,14 @@ describe("Scratch Level 1 learner flow", () => {
 		}
 	});
 
-	it("uses one required project and moves alternate builds into practice", () => {
+	it("keeps authored projects core and supplemental work in practice", () => {
 		const events = requireModule("GS2 Event Listeners");
 		expect(events.curriculum.map(item => item.title)).toEqual([
 			"Basic event listeners",
-			"Project 1 – Spinner"
+			"Project 1 – Spinner",
+			"Project 2 – Bouncy Ball Room",
+			"Project 3 – Dragonfly Events"
 		]);
-		expect(
-			events.supplementalProjects.find(
-				item => item.title === "Project 2 – Bouncy Ball Room"
-			)?.learningPath
-		).toBe("choice");
 		expect(
 			events.supplementalProjects.find(item =>
 				item.title.includes("Extension Challenge")
@@ -91,26 +88,30 @@ describe("Scratch Level 1 learner flow", () => {
 		const loops = requireModule("GS5 Loops");
 		expect(loops.curriculum.map(item => item.title)).toEqual([
 			"Introduction to loops",
+			"Project 1 – Elephant Effects",
+			"Project 2 – Hot Cross Buns",
 			"Project 3 – Drawing Mouse"
 		]);
 		expect(loops.supplementalProjects.map(item => item.title)).toEqual(
 			expect.arrayContaining([
-				"Project 1 – Elephant Effects",
-				"Project 2 – Hot Cross Buns"
+				"GS5 Supplemental Project 1 – Shapify",
+				"Loops: Fluency Drill"
 			])
 		);
 	});
 
-	it("builds Hungry Hippo in stages after each prerequisite", () => {
+	it("preserves the original Juni Hungry Hippo instructions", () => {
 		const hungryHippo = requireModule(
 			"GS1 Starting in Scratch"
 		).curriculum.find(item => item.title.includes("Hungry Hippo"));
-		expect(hungryHippo?.content).toContain("Stage 1 — start and movement");
 		expect(hungryHippo?.content).toContain(
-			"leave scoring, collision rules, and timing for later modules"
+			"• Play a sample Hungry Hippo game."
 		);
-		expect(hungryHippo?.content).not.toContain(
-			"Create a score variable that increases"
+		expect(hungryHippo?.content).toContain(
+			"• Decide which module to start in based on understanding of the controls."
+		);
+		expect(hungryHippo?.content).toContain(
+			'• Create variables for "score" and a timer'
 		);
 
 		for (const [moduleTitle, expectedReturn] of [
@@ -144,14 +145,14 @@ describe("Scratch Level 1 learner flow", () => {
 			"scratch-level-1-gs3-x-y-coordinates"
 		);
 
-		const cakeChaser = coordinates?.supplementalProjects.find(item =>
+		const cakeChaser = coordinates?.curriculum.find(item =>
 			item.title.includes("Cake Chaser")
 		);
 		expect(cakeChaser?.id).toBe(
 			"scratch-level-1-gs8-x-y-coordinates-curriculum-project-2-cake-chaser"
 		);
 		expect(cakeChaser?.aliases).toContain(
-			"scratch-level-1-gs3-x-y-coordinates-supplemental-project-2-cake-chaser"
+			"scratch-level-1-gs3-x-y-coordinates-curriculum-project-2-cake-chaser"
 		);
 
 		const capstone = course!.modules.find(

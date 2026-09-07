@@ -71,7 +71,7 @@ describe("Python Level 2 learner flow", () => {
 		}
 	});
 
-	it("reduces the required path while retaining every authored card", () => {
+	it("keeps authored projects core and only supplemental work optional", () => {
 		const requiredCount = pythonLevel2Course.modules.reduce(
 			(total, module) => total + module.curriculum.length,
 			0
@@ -81,25 +81,33 @@ describe("Python Level 2 learner flow", () => {
 			0
 		);
 
-		expect(requiredCount).toBe(48);
-		expect(optionCount).toBe(58);
+		expect(requiredCount).toBe(54);
+		expect(optionCount).toBe(52);
+
+		// Juni places these check-in projects in curriculum, despite their titles.
+		for (const title of ["Check-In #1", "Check-In #2"]) {
+			expect(
+				requireSourceModule(title).curriculum.find(item =>
+					item.title.includes("Additional Practice Project")
+				)?.learningPath
+			).toBe("core");
+		}
 
 		expect(
-			requireSourceModule("PS4 Conditionals").supplementalProjects.find(
-				item =>
-					item.title === "PS4 Project 3: Credit Card Validator"
+			requireSourceModule("PS4 Conditionals").curriculum.find(
+				item => item.title === "PS4 Project 3: Credit Card Validator"
 			)?.learningPath
-		).toBe("challenge");
+		).toBe("core");
 		expect(
-			requireSourceModule("PS5 Functions").supplementalProjects.find(
+			requireSourceModule("PS5 Functions").curriculum.find(
 				item => item.title === "PS5 Project 3: Dice Roller"
 			)?.learningPath
-		).toBe("choice");
+		).toBe("core");
 		expect(
-			requireSourceModule("PS14 Blackjack").supplementalProjects.find(
+			requireSourceModule("PS14 Blackjack").curriculum.find(
 				item => item.title === "PS14 Project 2: Advanced Blackjack"
 			)?.learningPath
-		).toBe("challenge");
+		).toBe("core");
 	});
 
 	it("uses PS8 as a collections-and-cipher integration studio", () => {
@@ -110,24 +118,21 @@ describe("Python Level 2 learner flow", () => {
 		expect(ps8.keyBlocks).toContain("round-trip check");
 	});
 
-	it("preserves moved-project progress IDs and exposes their new aliases", async () => {
-		const course =
-			await useCoursesStore().loadCourseById("python-level-2");
+	it("preserves project progress IDs in the core listing", async () => {
+		const course = await useCoursesStore().loadCourseById("python-level-2");
 		expect(course).not.toBeNull();
 
 		const conditionals = course!.modules.find(
 			module => module.title === "PS4 Conditionals"
 		);
-		const validator = conditionals?.supplementalProjects.find(
+		const validator = conditionals?.curriculum.find(
 			item => item.title === "PS4 Project 3: Credit Card Validator"
 		);
 
 		expect(validator?.id).toBe(
 			"python-level-2-ps4-conditionals-curriculum-ps4-project-3-credit-card-validator"
 		);
-		expect(validator?.aliases).toContain(
-			"python-level-2-ps4-conditionals-supplemental-ps4-project-3-credit-card-validator"
-		);
+		expect(validator?.aliases).toBeUndefined();
 	});
 
 	it("keeps method references and unavailable media out of learner actions", async () => {
@@ -145,10 +150,12 @@ describe("Python Level 2 learner flow", () => {
 			expect(text).toContain(referenceUrl);
 		}
 		expect(
-			course!.modules.flatMap(module => [
-				...module.curriculum,
-				...module.supplementalProjects
-			]).some(item => item.mediaLink)
+			course!.modules
+				.flatMap(module => [
+					...module.curriculum,
+					...module.supplementalProjects
+				])
+				.some(item => item.mediaLink)
 		).toBe(false);
 		expect(text).not.toContain("Pending Python Level 2 Assets");
 	});

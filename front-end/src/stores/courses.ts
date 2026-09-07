@@ -13,6 +13,7 @@ import {
 } from "@/modules/resourceUrls";
 import { useAppStore } from "./app";
 import { courseCatalog, loadRawCourse } from "./courses/index";
+import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
 
 const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
 const NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
@@ -345,12 +346,19 @@ type CourseModuleItemDraft = Omit<CourseModuleItem, "id" | "aliases"> & {
 	stableId?: string;
 };
 
-function mergeAdjacentSupportItems(items: CourseModuleItemDraft[]) {
+function mergeAdjacentSupportItems(
+	items: CourseModuleItemDraft[],
+	canMerge: (
+		previousItem: CourseModuleItemDraft,
+		item: CourseModuleItemDraft
+	) => boolean = () => true
+) {
 	return items.reduce<CourseModuleItemDraft[]>((mergedItems, item) => {
 		const previousItem = mergedItems.at(-1);
 
 		if (
 			previousItem &&
+			canMerge(previousItem, item) &&
 			(MERGE_INTO_PREVIOUS_TITLE_RE.test(item.title) ||
 				(PRESENTATION_TITLE_RE.test(item.title) &&
 					PROJECT_TITLE_RE.test(previousItem.title)))
@@ -371,6 +379,9 @@ function normalizeCourse(
 	courseId = slugify(course.name),
 	options: NormalizeCourseOptions = { includeSolutions: true }
 ) {
+	const preserveScratchProjectInstructions =
+		courseId.startsWith("scratch-level-");
+
 	return {
 		id: courseId,
 		name: course.name,
@@ -419,16 +430,22 @@ function normalizeCourse(
 								scratchProjectEmbedUrl(
 									resolvedSolutionLink ?? ""
 								);
-							const normalizedContent = normalizeContent(
-								extractedLink?.content ?? item.content
-							);
+							const preserveProjectContent =
+								preserveScratchProjectInstructions &&
+								isJuniScratchProjectTitle(courseId, item.title);
+							const normalizedContent = preserveProjectContent
+								? item.content.trim()
+								: normalizeContent(
+										extractedLink?.content ?? item.content
+									);
 
 							return {
 								stableAliases: item.aliases,
 								stableId: item.id,
 								title: item.title,
-								content:
-									displayCourseContent(normalizedContent),
+								content: preserveProjectContent
+									? normalizedContent
+									: displayCourseContent(normalizedContent),
 								learningPath: item.learningPath,
 								projectLink: (() => {
 									if (
@@ -462,7 +479,14 @@ function normalizeCourse(
 								datasetLink: item.datasetLink,
 								mediaLink: item.mediaLink
 							};
-						})
+						}),
+					(previousItem, item) =>
+						!preserveScratchProjectInstructions ||
+						(!isJuniScratchProjectTitle(
+							courseId,
+							previousItem.title
+						) &&
+							!isJuniScratchProjectTitle(courseId, item.title))
 				).map(item => {
 					const generatedItemId = slugify(
 						`${generatedModuleId}-${prefix}-${item.title}`
