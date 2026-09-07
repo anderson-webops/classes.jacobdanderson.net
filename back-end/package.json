@@ -66,9 +66,9 @@
 		"brace-expansion": "5.0.9",
 		"esbuild": "$esbuild",
 		"js-yaml": "4.3.1",
-		"nanoid": "3.3.17",
+		"nanoid": "3.3.18",
 		"postcss": "8.5.24",
-		"qs": "6.15.3",
+		"qs": "6.16.0",
 		"vite": "8.1.5"
 	}
 }

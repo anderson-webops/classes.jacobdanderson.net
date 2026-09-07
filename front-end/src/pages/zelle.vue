@@ -13,15 +13,6 @@ defineOptions({ name: "ZellePaymentPage" });
 		</header>
 
 		<div class="zelle-card site-surface">
-			<img
-				alt="Zelle payment email for Classes with Jacob"
-				class="zelle-image"
-				height="1278"
-				loading="lazy"
-				src="../assets/Images/Zelle_Email.jpeg"
-				width="1050"
-			/>
-
 			<div class="zelle-copy">
 				<p class="eyebrow">Zelle Email</p>
 				<p class="zelle-email">classes@jacobdanderson.net</p>
@@ -57,13 +48,6 @@ defineOptions({ name: "ZellePaymentPage" });
 	justify-items: center;
 	padding: 2rem;
 	text-align: center;
-}
-
-.zelle-image {
-	max-width: min(100%, 19rem);
-	height: auto;
-	border-radius: 18px;
-	box-shadow: 0 16px 36px -28px rgba(13, 38, 63, 0.45);
 }
 
 .zelle-copy {
