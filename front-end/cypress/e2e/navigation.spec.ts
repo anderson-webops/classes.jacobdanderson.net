@@ -45,7 +45,39 @@ context("Navigation & page smoke-tests", () => {
 		cy.url().should("eq", `${Cypress.config().baseUrl}/`);
 	});
 
-/*	it("shows a motivational quote on Home", () => {
+	it("keeps IDE controls usable across phone and tablet viewports", () => {
+		cy.visit("/ide");
+		for (const width of [320, 360, 390, 768]) {
+			cy.viewport(width, 800);
+			cy.get(".editor-actions").should(actions => {
+				const viewportWidth =
+					actions[0].ownerDocument.defaultView?.innerWidth;
+				expect(viewportWidth).to.equal(width);
+				for (const control of actions[0].querySelectorAll("button")) {
+					const box = control.getBoundingClientRect();
+					expect(box.left).to.be.at.least(0);
+					expect(box.right).to.be.at.most(viewportWidth ?? 0);
+					expect(box.width).to.be.at.least(44);
+					expect(box.height).to.be.at.least(44);
+				}
+			});
+			cy.document().should(document => {
+				expect(document.documentElement.scrollWidth).to.be.at.most(
+					document.documentElement.clientWidth
+				);
+			});
+		}
+
+		cy.viewport(320, 800);
+		cy.get('button[aria-label="IDE settings"]').click();
+		cy.get("#code-ide-settings-panel").should(panel => {
+			const box = panel[0].getBoundingClientRect();
+			expect(box.left).to.be.at.least(0);
+			expect(box.right).to.be.at.most(320);
+		});
+	});
+
+	/*	it("shows a motivational quote on Home", () => {
 		cy.get(".quote")
 			.should("exist")
 			.and(($q) => expect($q.text().length).to.be.greaterThan(10)); // non-empty

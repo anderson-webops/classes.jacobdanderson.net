@@ -332,6 +332,11 @@ describe("python IDE project helpers", () => {
 		expect(circleArt.files[0]?.content).toContain(
 			"artist.speed(DRAWING_SPEED)"
 		);
+		expect(turtleCircleArtStarterCode).toContain("DRAWING_SPEED = 0");
+		expect(turtleCircleArtStarterCode).toContain("CIRCLE_COUNT = 4");
+		expect(turtleCircleArtStarterCode).toContain("CIRCLE_STEPS = 12");
+		expect(turtleCircleArtStarterCode).toContain("screen.tracer(0)");
+		expect(turtleCircleArtStarterCode).toContain("screen.update()");
 		expect(circleArt.files[0]?.content).toContain("###   NORMAL SECTION");
 		expect(circleArt.files[0]?.content).toContain("###   HARD SECTION");
 
@@ -456,6 +461,7 @@ describe("python IDE project helpers", () => {
 			"screen.onclick(draw_firework)"
 		);
 		expect(turtleSpiralGalaxyStarterCode).toContain("draw_galaxy()");
+		expect(turtleSpiralGalaxyStarterCode).toContain("SPIRAL_STEPS = 72");
 		expect(turtleRaceDayStarterCode).toContain(
 			"screen.ontimer(race_step, RACE_DELAY_MS)"
 		);
@@ -4951,6 +4957,15 @@ pgzrun.go()
 		expect(pageSource).toContain("unicode: gameKeyUnicode(event)");
 		expect(pageSource).toContain('@blur="clearCanvasKeyboardState"');
 		expect(pageSource).toContain(
+			'window.addEventListener("mouseup", handleWindowMouseUp);'
+		);
+		expect(pageSource).toContain(
+			'window.removeEventListener("mouseup", handleWindowMouseUp);'
+		);
+		expect(pageSource).toContain(
+			'dispatchCanvasPointerEvent(event, "mouseup");'
+		);
+		expect(pageSource).toContain(
 			"visualOutput?.focus({ preventScroll: true })"
 		);
 		expect(pageSource).toContain("--python-focus-ring");
@@ -5616,6 +5631,42 @@ pgzrun.go()
 		expect(assetSource).not.toContain("/api/python-assets/assets.zip");
 	});
 
+	it("retries a transient course asset manifest failure", async () => {
+		let attempts = 0;
+		const fetcher = vi.fn(async () => {
+			attempts += 1;
+			if (attempts === 1) throw new Error("temporary network failure");
+			return {
+				arrayBuffer: async () => new ArrayBuffer(0),
+				json: async () => ({
+					assets: [
+						{
+							height: 18,
+							mimeType: "image/png",
+							name: "images/alien.png",
+							url: "/python-ide/assets/images/alien.png",
+							width: 20
+						}
+					]
+				}),
+				ok: true,
+				status: 200
+			};
+		});
+
+		const manifestUrl = "/test-assets/transient-manifest.json";
+		await expect(
+			loadPythonIdeCourseAssetPack({ fetcher, manifestUrl })
+		).rejects.toThrow("temporary network failure");
+		const pack = await loadPythonIdeCourseAssetPack({
+			fetcher,
+			manifestUrl
+		});
+
+		expect(fetcher).toHaveBeenCalledTimes(2);
+		expect(pack.assets.has("images/alien.png")).toBe(true);
+	});
+
 	it("accepts an explicitly supplied archive source for module callers", async () => {
 		const zipBytes = zipSync({
 			"images/alien.png": oneByOnePngBytes
@@ -5931,10 +5982,19 @@ pgzrun.go()
 		expect(runtimeSource).toContain("_run_animations(now)");
 		expect(pageSource).toContain("await ensureGameCourseAssetsLoaded()");
 		expect(pageSource).toContain(
+			"prepareGameAssetsForExplicitRun();\n\t\t\tawait ensureGameCourseAssetsLoaded();"
+		);
+		expect(pageSource).toContain(
+			"if (entry.failed) gameImageCache.delete(key);"
+		);
+		expect(pageSource).not.toContain(
+			"if (gameCourseAssetPack || gameCourseAssetPackLoadFailed) return;"
+		);
+		expect(pageSource).toContain(
 			"let gameCourseAssetPackSilentLoadFailed = false;"
 		);
 		expect(pageSource).toContain(
-			"if (!announce && gameCourseAssetPackSilentLoadFailed) return;"
+			"(gameCourseAssetPackSilentLoadFailed || gameCourseAssetPackLoadFailed)"
 		);
 		expect(pageSource).toContain(
 			"gameCourseAssetPackSilentLoadFailed = true;"

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { api } from "@/api";
 import { useAppStore } from "@/stores/app";
 
@@ -15,8 +15,13 @@ const emailError = ref("");
 const currentPassword = ref("");
 const newPassword = ref("");
 const confirmPassword = ref("");
+const currentPasswordInput = ref<HTMLInputElement | null>(null);
+const newPasswordInput = ref<HTMLInputElement | null>(null);
+const confirmPasswordInput = ref<HTMLInputElement | null>(null);
 const passwordStatus = ref("");
 const passwordError = ref("");
+const isPasswordSubmitting = ref(false);
+let passwordRequest: AbortController | null = null;
 const sessionStatus = ref("");
 const sessionError = ref("");
 const idPrefix = computed(
@@ -62,7 +67,31 @@ async function updateEmail() {
 	}
 }
 
+function clearPasswordInputs() {
+	currentPassword.value = newPassword.value = confirmPassword.value = "";
+	for (const input of [
+		currentPasswordInput,
+		newPasswordInput,
+		confirmPasswordInput
+	]) {
+		if (input.value) input.value.value = "";
+	}
+}
+
+function resetPasswordForm() {
+	passwordRequest?.abort();
+	passwordRequest = null;
+	isPasswordSubmitting.value = false;
+	passwordStatus.value = "";
+	passwordError.value = "";
+	clearPasswordInputs();
+}
+
+watch(() => [props.entityId, props.role], resetPasswordForm, { flush: "sync" });
+onBeforeUnmount(resetPasswordForm);
+
 async function updatePassword() {
+	if (isPasswordSubmitting.value) return;
 	passwordStatus.value = "";
 	passwordError.value = "";
 	if (!newPassword.value) {
@@ -74,18 +103,33 @@ async function updatePassword() {
 		return;
 	}
 
+	const payload = {
+		currentPassword: currentPassword.value,
+		newPassword: newPassword.value
+	};
+	const request = new AbortController();
+	passwordRequest = request;
+	isPasswordSubmitting.value = true;
+	clearPasswordInputs();
 	try {
-		await api.post(`/accounts/changePassword/${props.entityId}`, {
-			currentPassword: currentPassword.value,
-			newPassword: newPassword.value
+		await api.post(`/accounts/changePassword/${props.entityId}`, payload, {
+			signal: request.signal,
+			timeout: 30_000
 		});
+		if (passwordRequest !== request) return;
 		passwordStatus.value = "Password updated successfully.";
-		currentPassword.value = newPassword.value = confirmPassword.value = "";
 	} catch (err: any) {
+		if (passwordRequest !== request) return;
 		passwordError.value =
 			err.response?.data?.message ??
 			err.message ??
 			"Unable to update password.";
+	} finally {
+		if (passwordRequest === request) {
+			passwordRequest = null;
+			isPasswordSubmitting.value = false;
+			clearPasswordInputs();
+		}
 	}
 }
 
@@ -141,16 +185,23 @@ async function revokeOtherSessions() {
 			</p>
 		</div>
 
-		<div class="security-section">
-			<h5>Change password</h5>
+		<form
+			:aria-busy="isPasswordSubmitting ? 'true' : 'false'"
+			:aria-labelledby="`${idPrefix}-password-title`"
+			class="security-section"
+			@submit.prevent="updatePassword"
+		>
+			<h5 :id="`${idPrefix}-password-title`">Change password</h5>
 			<div class="field">
 				<label :for="`${idPrefix}-current-password`"
 					>Current password</label
 				>
 				<input
 					:id="`${idPrefix}-current-password`"
+					ref="currentPasswordInput"
 					v-model="currentPassword"
 					autocomplete="current-password"
+					:disabled="isPasswordSubmitting"
 					name="current-password"
 					type="password"
 				/>
@@ -159,8 +210,10 @@ async function revokeOtherSessions() {
 				<label :for="`${idPrefix}-new-password`">New password</label>
 				<input
 					:id="`${idPrefix}-new-password`"
+					ref="newPasswordInput"
 					v-model="newPassword"
 					autocomplete="new-password"
+					:disabled="isPasswordSubmitting"
 					name="new-password"
 					type="password"
 				/>
@@ -171,18 +224,20 @@ async function revokeOtherSessions() {
 				>
 				<input
 					:id="`${idPrefix}-confirm-password`"
+					ref="confirmPasswordInput"
 					v-model="confirmPassword"
 					autocomplete="new-password"
+					:disabled="isPasswordSubmitting"
 					name="confirm-password"
 					type="password"
 				/>
 			</div>
 			<button
 				class="btn-primary btn"
-				type="button"
-				@click="updatePassword"
+				:disabled="isPasswordSubmitting"
+				type="submit"
 			>
-				Update password
+				{{ isPasswordSubmitting ? "Updating…" : "Update password" }}
 			</button>
 			<p
 				v-if="passwordStatus"
@@ -195,7 +250,7 @@ async function revokeOtherSessions() {
 			<p v-if="passwordError" class="error" role="alert">
 				{{ passwordError }}
 			</p>
-		</div>
+		</form>
 
 		<div class="security-section">
 			<h5>Other signed-in sessions</h5>
