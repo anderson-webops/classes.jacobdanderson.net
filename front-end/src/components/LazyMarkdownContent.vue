@@ -66,7 +66,23 @@ function normalizeInlineCourseMarkdown(content: string) {
 			}
 
 			let normalized = line
-				.replace(/(\S)\s+(\*\*[^*\n]{1,80}:\*\*)/g, "$1\n\n$2")
+				.replace(
+					/(\S)\s+(\*\*[^*\n]{1,80}:\*\*)/g,
+					(
+						match,
+						prefix: string,
+						label: string,
+						offset: number,
+						source: string
+					) => {
+						const textBeforeLabel = source
+							.slice(0, offset + prefix.length)
+							.trim();
+						if (/^(?:[-*+]|\d+[.)])$/u.test(textBeforeLabel))
+							return match;
+						return `${prefix}\n\n${label}`;
+					}
+				)
 				.replace(
 					/(\*\*[^*\n]{1,80}:\*\*)\s+(?=(?:\d+\.|[-*])\s)/g,
 					"$1\n"
@@ -146,7 +162,7 @@ function getMarkdownRenderer() {
 					env,
 					self
 				) =>
-					`<div class="markdown-table-scroll">${defaultTableOpen(tokens, index, options, env, self)}`;
+					`<div class="markdown-table-scroll" tabindex="0">${defaultTableOpen(tokens, index, options, env, self)}`;
 				markdown.renderer.rules.table_close = (
 					tokens,
 					index,
@@ -185,9 +201,9 @@ watch(
 			return;
 		}
 
-		renderedHtml.value = markdown.render(
-			normalizeInlineCourseMarkdown(content)
-		);
+		renderedHtml.value = markdown
+			.render(normalizeInlineCourseMarkdown(content))
+			.replaceAll("<pre>", '<pre tabindex="0">');
 	},
 	{ immediate: true }
 );
@@ -414,6 +430,11 @@ watch(
 	padding: 0;
 	background: transparent;
 	color: inherit;
+}
+
+.item-content-markdown :deep([tabindex="0"]:focus-visible) {
+	outline: 3px solid var(--focus-ring-color, #2563eb);
+	outline-offset: -3px;
 }
 
 .item-content-markdown :deep(blockquote) {

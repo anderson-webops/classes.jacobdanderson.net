@@ -21,6 +21,7 @@ describe("LazyMarkdownContent.vue", () => {
 
 		const tableWrapper = wrapper.find(".markdown-table-scroll");
 		expect(tableWrapper.exists()).toBe(true);
+		expect(tableWrapper.attributes("tabindex")).toBe("0");
 		expect(tableWrapper.find("table").exists()).toBe(true);
 		expect(wrapper.findAll("th").map(cell => cell.text())).toEqual([
 			"Sample",
@@ -54,9 +55,9 @@ describe("LazyMarkdownContent.vue", () => {
 			"/course-resource?" +
 				"asset=%2Fcourse-assets%2Fchemistry%2Fchemistry-materials-pack.md%23measurement-tables-and-unit-conversions"
 		);
-		expect(wrapper.find('a[href="https://example.com/file.md"]').exists()).toBe(
-			true
-		);
+		expect(
+			wrapper.find('a[href="https://example.com/file.md"]').exists()
+		).toBe(true);
 	});
 
 	it("escapes raw HTML and rejects executable link protocols", async () => {
@@ -105,7 +106,9 @@ describe("LazyMarkdownContent.vue", () => {
 			"The normal path works.",
 			"One boundary case is tested."
 		]);
-		expect(wrapper.text()).toContain("Checkpoint: The game restarts cleanly.");
+		expect(wrapper.text()).toContain(
+			"Checkpoint: The game restarts cleanly."
+		);
 	});
 
 	it("does not split hyphenated project titles into fake bullet items", async () => {
@@ -133,6 +136,20 @@ describe("LazyMarkdownContent.vue", () => {
 			/Open Ended Project\s*<\/li>\s*<li>Create a Drawing/
 		);
 	});
+
+	it.each(["-", "*", "+", "1.", "1)"])(
+		"preserves a bold label inside an authored %s list item",
+		async marker => {
+			const wrapper = mount(LazyMarkdownContent, {
+				props: { content: `${marker} **Goal:** Build a small game.` }
+			});
+			await vi.waitFor(() => {
+				expect(wrapper.findAll("li")).toHaveLength(1);
+			});
+			expect(wrapper.get("li").text()).toBe("Goal: Build a small game.");
+			expect(wrapper.get("li strong").text()).toBe("Goal:");
+		}
+	);
 
 	it("does not rewrite fenced code blocks while formatting compact course text", async () => {
 		const wrapper = mount(LazyMarkdownContent, {
@@ -164,6 +181,7 @@ describe("LazyMarkdownContent.vue", () => {
 		});
 
 		const codeText = wrapper.find("pre code").text();
+		expect(wrapper.get("pre").attributes("tabindex")).toBe("0");
 		expect(codeText).toContain("# Function definitions");
 		expect(codeText).toContain("def draw_border():");
 		expect(codeText).toContain("# Continuous game logic");
