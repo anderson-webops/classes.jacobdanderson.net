@@ -39,8 +39,8 @@
 		"marked": "^18.0.3",
 		"moment": "^2.30.1",
 		"mongoose": "^9.7.2",
-		"multer": "^2.2.0",
-		"nodemailer": "^9.0.3",
+		"multer": "^2.3.0",
+		"nodemailer": "^9.1.1",
 		"openid-client": "^6.8.4",
 		"readline-sync": "^1.4.10",
 		"zod": "^4.3.6"
@@ -59,7 +59,7 @@
 		"tsx": "^4.22.4",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.59.0",
-		"vitest": "^4.1.5"
+		"vitest": "^4.1.11"
 	},
 	"overrides": {
 		"body-parser": "$body-parser",
