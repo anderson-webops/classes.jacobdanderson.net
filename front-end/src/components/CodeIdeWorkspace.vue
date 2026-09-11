@@ -6223,6 +6223,42 @@ function createGuardedTurtleBridgeRun(): TurtleBridge {
 }
 
 const gameBridge: GameBridge = {
+	makeSurfaceOpaque(canvas) {
+		const context = canvas.getContext("2d");
+		if (!context || !canvas.width || !canvas.height) return;
+		const image = context.getImageData(0, 0, canvas.width, canvas.height);
+		for (let index = 3; index < image.data.length; index += 4) {
+			image.data[index] = 255;
+		}
+		context.putImageData(image, 0, 0);
+	},
+	applySurfaceColorKey(canvas, red, green, blue) {
+		const context = canvas.getContext("2d");
+		if (!context || !canvas.width || !canvas.height) return;
+		const image = context.getImageData(0, 0, canvas.width, canvas.height);
+		const pixels = image.data;
+		for (let index = 0; index < pixels.length; index += 4) {
+			if (
+				pixels[index] === red &&
+				pixels[index + 1] === green &&
+				pixels[index + 2] === blue
+			) {
+				pixels[index + 3] = 0;
+			}
+		}
+		context.putImageData(image, 0, 0);
+	},
+	blitSurface(canvas, x, y, alpha) {
+		const context = setGameCanvasTransform();
+		if (!context || !canvas.width || !canvas.height) return;
+		context.save();
+		try {
+			context.globalAlpha = Math.max(0, Math.min(1, alpha));
+			context.drawImage(canvas, x, y);
+		} finally {
+			context.restore();
+		}
+	},
 	reset: resetGameCanvas,
 	clear: () => clearGameCanvas(),
 	fill(color: string, gcolor?: string) {
@@ -6277,6 +6313,15 @@ function createGuardedGameBridgeRun(): GameBridge {
 	const isActiveRun = () => runID === activeGameBridgeRunID;
 
 	return {
+		makeSurfaceOpaque(...args) {
+			if (isActiveRun()) gameBridge.makeSurfaceOpaque(...args);
+		},
+		applySurfaceColorKey(...args) {
+			if (isActiveRun()) gameBridge.applySurfaceColorKey(...args);
+		},
+		blitSurface(...args) {
+			if (isActiveRun()) gameBridge.blitSurface(...args);
+		},
 		reset(width?: number, height?: number) {
 			if (!isActiveRun()) return;
 			gameBridge.reset(width, height);
@@ -8054,7 +8099,8 @@ onBeforeUnmount(() => {
 									<ul>
 										<li>Cmd/Ctrl+F opens search.</li>
 										<li>
-											Cmd/Ctrl+Enter runs the project.
+											Cmd/Ctrl+Enter or F5 runs or stops
+											the project.
 										</li>
 										<li>Cmd/Ctrl+S saves the project.</li>
 										<li>

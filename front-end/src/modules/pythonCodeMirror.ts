@@ -420,6 +420,7 @@ const turtleRuntimeCompletions = [
 ];
 
 const pgzeroRuntimeCompletions = [
+	completion("pygame", "namespace", "Surface, Rect and drawing helpers", 60),
 	completion("pgzrun", "namespace", "run a PyGame Zero project", 60),
 	completion("Actor", "class", "sprite with image, position, and collision"),
 	completion("Animation", "class", "running animation handle"),
@@ -625,6 +626,54 @@ const turtleMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
 };
 
 const pgzeroMemberCompletions: Record<string, PythonIdeCompletionOption[]> = {
+	pygame: [
+		completion(
+			"Surface",
+			"class",
+			"Surface((width, height), flags=0): create an image"
+		),
+		completion("SRCALPHA", "constant", "enable per-pixel transparency"),
+		completion("Rect", "class", "rectangle for collision and layout"),
+		completion("draw", "namespace", "draw shapes onto a Surface"),
+		completion("transform", "namespace", "scale or flip a Surface")
+	],
+	"pygame.Surface": [
+		...imageSurfaceMemberCompletions,
+		...[
+			["fill", "fill(color, rect=None): paint the surface"],
+			["blit", "blit(source, dest, area=None): draw another Surface"],
+			["blits", "draw several Surfaces"],
+			["copy", "make an independent copy"],
+			["convert", "copy without pixel transparency"],
+			["convert_alpha", "copy with pixel transparency"],
+			["set_alpha", "set overall opacity from 0 to 255"],
+			["get_alpha", "read overall opacity"],
+			["set_colorkey", "choose a transparent color"],
+			["get_colorkey", "read the transparent color"],
+			["set_clip", "limit the drawing area"],
+			["get_clip", "read the drawing area"],
+			["set_at", "set one pixel's color"],
+			["get_at", "read one pixel's RGBA color"]
+		].map(([label, detail]) => completion(label!, "method", detail!))
+	],
+	"pygame.draw": [
+		"rect",
+		"circle",
+		"ellipse",
+		"line",
+		"lines",
+		"polygon"
+	].map(label =>
+		completion(
+			label,
+			"method",
+			`${label}(surface, color, ...): draw onto a Surface`
+		)
+	),
+	"pygame.transform": [
+		completion("scale", "method", "scale(surface, (width, height))"),
+		completion("flip", "method", "flip(surface, flip_x, flip_y)")
+	],
 	actor: actorMemberCompletions(),
 	bounds: rectMemberCompletions(),
 	enemy: actorMemberCompletions(),
@@ -1075,6 +1124,14 @@ function pythonEditorActionKeymap(options: PythonCodeMirrorOptions) {
 				options.onRun?.();
 				return true;
 			}
+		},
+		{
+			key: "F5",
+			preventDefault: true,
+			run() {
+				options.onRun?.();
+				return true;
+			}
 		}
 	]);
 }
@@ -1491,7 +1548,21 @@ export function pythonIdeCompletionSource(
 				);
 			}
 
-			const options = pythonIdeCompletionsForMode(mode, receiver);
+			// Recognize named surfaces, including a pygame import alias, for call tips.
+			const sourceBeforeCursor = context.state.doc.sliceString(
+				0,
+				word.from
+			);
+			const surfaceAssignment =
+				mode === "pgzero" &&
+				pythonIdentifierRegex.test(receiver) &&
+				new RegExp(
+					String.raw`(?:^|\n)\s*${receiver}\s*=\s*(?:\w+\.)?Surface\s*\(`
+				).test(sourceBeforeCursor);
+			const options = pythonIdeCompletionsForMode(
+				mode,
+				surfaceAssignment ? "pygame.Surface" : receiver
+			);
 			if (!options.length) return null;
 			return {
 				from: completionFrom,

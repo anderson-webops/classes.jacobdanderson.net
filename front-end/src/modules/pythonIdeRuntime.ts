@@ -5,6 +5,7 @@ import {
 	isPythonIdeTextFile,
 	isValidPythonFileName
 } from "@/modules/pythonIde";
+import { pygameShim } from "@/modules/pythonIdePygame";
 import {
 	PYODIDE_INDEX_URL,
 	PYODIDE_SCRIPT_SRC,
@@ -88,6 +89,19 @@ interface ArtifactBridge {
 }
 
 export interface GameBridge {
+	makeSurfaceOpaque: (canvas: HTMLCanvasElement) => void;
+	applySurfaceColorKey: (
+		canvas: HTMLCanvasElement,
+		red: number,
+		green: number,
+		blue: number
+	) => void;
+	blitSurface: (
+		canvas: HTMLCanvasElement,
+		x: number,
+		y: number,
+		alpha: number
+	) => void;
 	reset: (width?: number, height?: number) => void;
 	clear: () => void;
 	fill: (color: string, gcolor?: string) => void;
@@ -3936,6 +3950,17 @@ class _Screen:
         self.draw = _ScreenDraw()
 
     def blit(self, image, pos, **kwargs):
+        from pygame import Surface
+        if isinstance(image, Surface):
+            if kwargs:
+                raise TypeError("screen.blit(surface, pos) does not accept additional options.")
+            drawable = image._drawable()
+            _bridge.blitSurface(
+                drawable._canvas,
+                float(pos[0]), float(pos[1]),
+                1.0 if image.get_alpha() is None else image.get_alpha() / 255,
+            )
+            return
         width, height = _asset_size(image)
         angle = _number(kwargs.get("angle", 0), 0)
         _bridge.drawImage(
@@ -5456,10 +5481,7 @@ function writeRuntimeShims(pyodide: PyodideAPI) {
 		`${PROJECT_ROOT}/zrect.py`,
 		"from _classes_pgzero import ZRect, Rect\n"
 	);
-	pyodide.FS.writeFile(
-		`${PROJECT_ROOT}/pygame.py`,
-		"from _classes_pgzero import Rect\n"
-	);
+	pyodide.FS.writeFile(`${PROJECT_ROOT}/pygame.py`, pygameShim);
 
 	if (!pyodide.FS.analyzePath(`${PROJECT_ROOT}/pgzero`).exists) {
 		pyodide.FS.mkdirTree(`${PROJECT_ROOT}/pgzero`);

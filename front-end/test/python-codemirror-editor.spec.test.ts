@@ -31,6 +31,32 @@ function sourceFile(path: string) {
 	return readFileSync(resolve(__dirname, path), "utf8");
 }
 
+it("suggests Pygame surfaces and their drawing methods in game projects", () => {
+	expect(autocompleteLabelsForDoc("pgzero", "pygame.Su")).toContain(
+		"Surface"
+	);
+	expect(autocompleteLabelsForDoc("pgzero", "pygame.draw.re")).toContain(
+		"rect"
+	);
+	expect(
+		autocompleteLabelsForDoc(
+			"pgzero",
+			"card = pygame.Surface((40, 20))\ncard.fi"
+		)
+	).toContain("fill");
+	expect(
+		autocompleteLabelsForDoc(
+			"pgzero",
+			"card = pygame.Surface((40, 20))\ncard.bl"
+		)
+	).toContain("blit");
+	expect(
+		pythonIdeCompletionsForMode("pgzero", "pygame").map(
+			option => option.label
+		)
+	).not.toContain("display");
+});
+
 function completionMatchBefore(doc: string, pos: number, expression: RegExp) {
 	const prefix = doc.slice(0, pos);
 	const match = prefix.match(expression);
@@ -1474,7 +1500,7 @@ describe("python IDE CodeMirror editor", () => {
 
 		expect(pageSource).toContain('class="editor-shortcuts"');
 		expect(pageSource).toContain("Cmd/Ctrl+F opens search.");
-		expect(pageSource).toMatch(/Cmd\/Ctrl\+Enter\s+runs the project\./);
+		expect(pageSource).toMatch(/Cmd\/Ctrl\+Enter or F5\s+runs or stops\s+the project\./);
 		expect(pageSource).toContain("Cmd/Ctrl+S saves the project.");
 		expect(pageSource).toMatch(
 			/Cmd\/Ctrl\+\/\s+toggles comments for the\s+line or selection\./
