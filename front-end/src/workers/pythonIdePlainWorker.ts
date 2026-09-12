@@ -1,3 +1,4 @@
+import type { IdeStage } from "@/modules/ideDiagnostics";
 import type { PythonIdeFile } from "@/modules/pythonIde";
 import {
 	isPythonIdeTextFile,
@@ -61,7 +62,10 @@ interface PlainPythonErrorMessage {
 }
 
 type PlainPythonWorkerMessage =
-	PlainPythonDoneMessage | PlainPythonErrorMessage | PlainPythonOutputMessage;
+	| { type: "stage"; id: number; stage: IdeStage; pythonVersion?: string }
+	| PlainPythonDoneMessage
+	| PlainPythonErrorMessage
+	| PlainPythonOutputMessage;
 
 let pyodidePromise: Promise<PyodideAPI> | null = null;
 let activeRunID: number | null = null;
@@ -316,9 +320,22 @@ json.dumps(__classes_files)
 
 async function runPlainPythonProject(request: PlainPythonRunRequest) {
 	activeRunID = request.id;
+	postWorkerMessage({
+		type: "stage",
+		id: request.id,
+		stage: "loading-runtime"
+	});
 	const pyodide = await loadRuntime();
 	if (!isActiveRun(request.id)) return;
 
+	postWorkerMessage({
+		type: "stage",
+		id: request.id,
+		stage: "preparing",
+		pythonVersion: String(
+			pyodide.runPython('__import__("sys").version.split()[0]')
+		)
+	});
 	pyodide.setStdout?.({
 		batched: text => postOutput(request.id, "stdout", text)
 	});
@@ -332,8 +349,14 @@ async function runPlainPythonProject(request: PlainPythonRunRequest) {
 	]);
 	syncProjectFiles(pyodide, request.files);
 	if (!isActiveRun(request.id)) return;
+	postWorkerMessage({
+		type: "stage",
+		id: request.id,
+		stage: "loading-packages"
+	});
 	await loadPlainPythonImportPackages(pyodide, request.files);
 	if (!isActiveRun(request.id)) return;
+	postWorkerMessage({ type: "stage", id: request.id, stage: "executing" });
 	await pyodide.runPythonAsync(
 		projectBootstrap(
 			request.activeFileName,
@@ -343,6 +366,7 @@ async function runPlainPythonProject(request: PlainPythonRunRequest) {
 	);
 	if (!isActiveRun(request.id)) return;
 
+	postWorkerMessage({ type: "stage", id: request.id, stage: "saving" });
 	postWorkerMessage({
 		type: "done",
 		id: request.id,

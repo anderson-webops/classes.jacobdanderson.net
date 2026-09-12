@@ -76,6 +76,8 @@ classes_npm() {
 	env -i \
 		PATH="$PATH" \
 		CI=true \
+		CLASSES_BUILD_REVISION="$classes_revision" \
+		CLASSES_BUILD_RELEASE="$classes_tag" \
 		CYPRESS_INSTALL_BINARY=0 \
 		PUPPETEER_SKIP_DOWNLOAD=true \
 		npm_config_cache="$classes_build_root/npm-cache" \

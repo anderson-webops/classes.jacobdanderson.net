@@ -59,6 +59,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/admin/ide-reports': RouteRecordInfo<
+      '/admin/ide-reports',
+      '/admin/ide-reports',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/admin/mdmail': RouteRecordInfo<
       '/admin/mdmail',
       '/admin/mdmail',
@@ -246,6 +253,14 @@ declare module 'vue-router/auto-routes' {
     'src/pages/admin/index.vue': {
       routes:
         | '/admin/'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/admin/ide-reports.vue': {
+      routes:
+        | '/admin/ide-reports'
       views:
         | never
       pathParamNames:

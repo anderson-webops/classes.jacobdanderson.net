@@ -3,6 +3,12 @@ import AdminWorkspaceShell from "@/components/AdminWorkspaceShell.vue";
 
 const adminTools = [
 	{
+		title: "IDE reports",
+		description:
+			"Review private diagnostics and problem reports from the browser IDEs.",
+		href: "/admin/ide-reports"
+	},
+	{
 		title: "People and access",
 		description:
 			"Manage tutors, learners, role changes, course permissions, recipient associations, and assigned course access.",
