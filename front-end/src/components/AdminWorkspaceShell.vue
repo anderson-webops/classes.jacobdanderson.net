@@ -27,6 +27,7 @@ const route = useRoute();
 
 const navItems = [
 	{ label: "Overview", to: "/admin" },
+	{ label: "IDE reports", to: "/admin/ide-reports" },
 	{ label: "People and access", to: "/admin/people" },
 	{ label: "Course workspace", to: "/courses" },
 	{ label: "Session notes", to: "/admin/mdmail" },

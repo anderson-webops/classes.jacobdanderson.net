@@ -1,3 +1,4 @@
+import type { IdeStage } from "@/modules/ideDiagnostics";
 import type { PythonIdeFile, PythonIdeMode } from "@/modules/pythonIde";
 import {
 	getPythonIdeRunnableFile,
@@ -289,6 +290,8 @@ export interface TurtleBridge {
 }
 
 export interface RunPythonProjectOptions {
+	onStage?: (stage: IdeStage) => void;
+	onPythonVersion?: (version: string) => void;
 	files: PythonIdeFile[];
 	activeFileName: string;
 	inputText: string;
@@ -321,6 +324,7 @@ interface PlainPythonWorkerErrorMessage {
 }
 
 type PlainPythonWorkerMessage =
+	| { type: "stage"; id: number; stage: IdeStage; pythonVersion?: string }
 	| PlainPythonWorkerDoneMessage
 	| PlainPythonWorkerErrorMessage
 	| PlainPythonWorkerOutputMessage;
@@ -573,6 +577,12 @@ async function runPlainPythonProjectInWorker(options: RunPythonProjectOptions) {
 		function handleMessage(event: MessageEvent<PlainPythonWorkerMessage>) {
 			const message = event.data;
 			if (message.id !== runID) return;
+			if (message.type === "stage") {
+				options.onStage?.(message.stage);
+				if (message.pythonVersion)
+					options.onPythonVersion?.(message.pythonVersion);
+				return;
+			}
 			if (message.type === "output") {
 				options.onOutput(message.kind, message.text);
 				return;
@@ -5501,11 +5511,16 @@ function writeRuntimeShims(pyodide: PyodideAPI) {
 }
 
 export async function runPythonProject(options: RunPythonProjectOptions) {
+	options.onStage?.("loading-runtime");
 	if (options.mode === "python")
 		return runPlainPythonProjectInWorker(options);
 
 	const pyodide = await loadRuntime();
 	throwIfRunStopped(options);
+	options.onPythonVersion?.(
+		String(pyodide.runPython('__import__("sys").version.split()[0]'))
+	);
+	options.onStage?.("preparing");
 	releaseRuntimeCallbackRegistries(pyodide);
 	clearRuntimeShimModules(pyodide);
 	throwIfRunStopped(options);
@@ -5549,6 +5564,7 @@ export async function runPythonProject(options: RunPythonProjectOptions) {
 	if (!activeFile)
 		throw new Error("Project does not have a runnable Python file.");
 
+	options.onStage?.("loading-packages");
 	await loadPyodideImportPackages(
 		pyodide,
 		options.files,
@@ -5593,6 +5609,7 @@ except Exception:
 `);
 	throwIfRunStopped(options);
 
+	options.onStage?.("executing");
 	await pyodide.runPythonAsync(`
 import __main__
 __main__.__dict__["__name__"] = "__main__"
@@ -5607,6 +5624,7 @@ exec(
 	`);
 	throwIfRunStopped(options);
 
+	options.onStage?.("rendering");
 	await pyodide.runPythonAsync(`
 try:
     from _classes_artifacts import emit_matplotlib_figures

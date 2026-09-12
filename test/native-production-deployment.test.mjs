@@ -104,6 +104,9 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 		source("docs/native-production-deployment.md")
 	]);
 
+	assert.ok(prepare.includes('CLASSES_BUILD_REVISION="$classes_revision" \\'));
+	assert.ok(prepare.includes('CLASSES_BUILD_RELEASE="$classes_tag" \\'));
+
 	assert.match(prepare, /Prepare releases as the unprivileged classes-build user/u);
 	assert.match(prepare, /verify-native-source[.]sh/u);
 	assert.match(prepare, /npm --prefix "\$1"/u);

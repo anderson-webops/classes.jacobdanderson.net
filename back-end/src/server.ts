@@ -32,6 +32,7 @@ import { accountRoutes } from "./routes/accountRoutes.js";
 import { adminMailRoutes } from "./routes/adminMailRoutes.js";
 import { adminRoutes } from "./routes/adminRoutes.js";
 import { courseAccessCodeRoutes } from "./routes/courseAccessCodeRoutes.js";
+import { ideReportRoutes } from "./routes/ideReportRoutes.js";
 import { tutorRoutes } from "./routes/tutorRoutes.js";
 
 import { userRoutes } from "./routes/userRoutes.js";
@@ -144,6 +145,8 @@ async function main() {
 		limitProjectBody(projectJson),
 		limitProjectBody(claimCodeIdeProjectPayloadReservation)
 	);
+
+	app.use("/ide-reports", ideReportRoutes);
 
 	// Parse only after coarse network, request-origin, and per-account checks.
 	app.use(

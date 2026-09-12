@@ -19,7 +19,7 @@ interface HeavyProjectRateLimitOptions extends TunableRateLimitOptions {
 	heavyThresholdBytes?: number;
 }
 
-const DATABASE_BACKED_API_PATH = /^\/(?:accounts|admins|course-access|tutors|users|_dbinfo)(?:\/|$)/i;
+const DATABASE_BACKED_API_PATH = /^\/(?:accounts|admins|ide-reports|course-access|tutors|users|_dbinfo)(?:\/|$)/i;
 const PROJECT_WRITE_METHODS = new Set(["DELETE", "PATCH", "POST", "PUT"]);
 export const codeIdeProjectApiMountPath
 	= /^\/users\/(?:python-projects\/shared|loggedin\/python-projects|loggedin\/python-project-reviews|[^/]+\/python-projects)(?=\/|$)/i;
@@ -280,6 +280,17 @@ export function createCourseCodeRedemptionLimiter(options: TunableRateLimitOptio
 		message: {
 			message: "Too many course code attempts. Please wait and try again."
 		},
+		...options
+	});
+}
+
+export function createIdeReportLimiter(options: TunableRateLimitOptions = {}): RateLimitRequestHandler {
+	return rateLimit({
+		windowMs: 60 * 60 * 1000,
+		limit: 60,
+		...standardRateLimitHeaders,
+		...storeOptions("ide-reports"),
+		message: { message: "Too many reports from this network. Copy diagnostics and try again later." },
 		...options
 	});
 }

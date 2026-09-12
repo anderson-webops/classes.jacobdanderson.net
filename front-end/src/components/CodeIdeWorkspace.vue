@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { EditorState as CodeEditorState } from "@codemirror/state";
 import type { EditorView as CodeEditorView } from "@codemirror/view";
+import type { IdeFailure, IdeMode, IdeStage } from "@/modules/ideDiagnostics";
 import type { KarelWallSide, KarelWorldState } from "@/modules/javaIdeRuntime";
 import type { PythonCodeMirrorAssetCompletionNames } from "@/modules/pythonCodeMirror";
 import type {
@@ -30,6 +31,12 @@ import {
 	watch
 } from "vue";
 import { useRoute } from "vue-router";
+import IdeDiagnosticsControls from "@/components/IdeDiagnosticsControls.vue";
+import {
+	createIdeDiagnostics,
+	safeRuntimeVersion,
+	sanitizeIdeError
+} from "@/modules/ideDiagnostics";
 import { runJavaIdeProject } from "@/modules/javaIdeRuntime";
 import { createKarelWorldPlaybackController } from "@/modules/karelWorldPlayback";
 import {
@@ -631,6 +638,14 @@ const sidebarCollapsed = ref(false);
 const stopRequested = ref(false);
 const saveMessage = ref("Loading workspace");
 const runMessage = ref("Ready");
+const diagnosticStage = ref<IdeStage>("idle");
+const diagnosticPythonVersion = ref("not-loaded");
+const diagnosticFailure = ref<{
+	stage: IdeStage;
+	mode: IdeMode;
+	failure: IdeFailure;
+} | null>(null);
+
 const shareMessage = ref("");
 const storagePersistenceMessage = ref("Checking local save protection");
 const storagePersistenceStatus = ref<
@@ -1425,8 +1440,36 @@ function isJavaIdeMode(mode: PythonIdeMode): mode is "java" | "karel" {
 	return mode === "java" || mode === "karel";
 }
 
+function diagnosticMode(): IdeMode {
+	return selectedProjectIsBlueJ.value
+		? "bluej"
+		: (selectedProject.value?.mode ?? "python");
+}
+function recordIdeFailure(error: unknown) {
+	const stage =
+		diagnosticStage.value === "completed"
+			? "executing"
+			: diagnosticStage.value;
+	const mode = diagnosticMode();
+	diagnosticFailure.value = {
+		stage,
+		mode,
+		failure: sanitizeIdeError(error, stage, mode)
+	};
+}
+function captureIdeDiagnostics() {
+	const last = diagnosticFailure.value;
+	return createIdeDiagnostics(
+		last?.mode ?? diagnosticMode(),
+		last?.stage ?? diagnosticStage.value,
+		last?.failure ?? null,
+		diagnosticPythonVersion.value
+	);
+}
+
 function appendOutput(kind: OutputLine["kind"], text: string) {
 	if (!text) return;
+	if (kind === "stderr") recordIdeFailure(text);
 	const outputText =
 		text.length > maxOutputTextLength
 			? `${text.slice(0, maxOutputTextLength)}${outputEntryTruncatedMessage}`
@@ -2886,6 +2929,8 @@ async function downloadSelectedProjectForBlueJ() {
 		return;
 	}
 
+	diagnosticStage.value = "exporting";
+	diagnosticFailure.value = null;
 	try {
 		const { blueJProjectArchiveName, createBlueJProjectArchive } =
 			await import("@/modules/blueJProjectExport");
@@ -2914,6 +2959,8 @@ async function importBlueJProjectArchiveFromInput(event: Event) {
 	const file = input.files?.[0];
 	input.value = "";
 	if (!file) return;
+	diagnosticStage.value = "importing";
+	diagnosticFailure.value = null;
 
 	if (!/\.zip$/i.test(file.name)) {
 		appendOutput("stderr", "Choose a BlueJ project ZIP file.");
@@ -4421,6 +4468,7 @@ async function runTurtleTimerCallback(
 				? error.message
 				: "Turtle timer handler failed."
 		);
+		recordIdeFailure(error);
 	}
 }
 
@@ -5452,6 +5500,7 @@ async function runGameTick(loopID: number) {
 			"stderr",
 			error instanceof Error ? error.message : "Game loop failed."
 		);
+		recordIdeFailure(error);
 		stopGameLoop();
 	} finally {
 		if (loopID === activeGameLoopID) {
@@ -6448,6 +6497,8 @@ function shouldStopPythonIdeRun(runID: number, projectID: string) {
 }
 
 async function runCurrentProject() {
+	diagnosticFailure.value = null;
+	diagnosticStage.value = "preparing";
 	const runID = nextPythonIdeRunID();
 	stopRequested.value = false;
 	await saveSelectedProject({ force: true });
@@ -6476,6 +6527,7 @@ async function runCurrentProject() {
 
 	try {
 		if (isJavaIdeMode(project.mode)) {
+			diagnosticStage.value = "executing";
 			const result = runJavaIdeProject({
 				activeFileName: runnableFile.name,
 				files: project.files,
@@ -6486,6 +6538,7 @@ async function runCurrentProject() {
 			for (const line of result.stderr) appendOutput("stderr", line);
 			if (project.mode === "karel" && result.karelWorldSteps?.length) {
 				runMessage.value = "Animating Karel world";
+				diagnosticStage.value = "rendering";
 				const completedPlayback = await playKarelWorldSteps(
 					result.karelWorldSteps,
 					() => !shouldStopPythonIdeRun(runID, project._id)
@@ -6503,6 +6556,7 @@ async function runCurrentProject() {
 				karelWorld.value = result.karelWorld ?? null;
 			}
 			if (shouldStopPythonIdeRun(runID, project._id)) return;
+			diagnosticStage.value = "completed";
 			runMessage.value = result.stderr.length
 				? "Run finished with issues"
 				: project.mode === "karel"
@@ -6513,11 +6567,13 @@ async function runCurrentProject() {
 
 		if (project.mode === "pgzero") {
 			runMessage.value = "Loading assets";
+			diagnosticStage.value = "loading-assets";
 			prepareGameAssetsForExplicitRun();
 			await ensureGameCourseAssetsLoaded();
 			if (shouldStopPythonIdeRun(runID, project._id)) return;
 		}
 
+		diagnosticStage.value = "loading-runtime";
 		const { runPythonProject } = await loadPythonRuntimeModule();
 		if (shouldStopPythonIdeRun(runID, project._id)) return;
 		await runPythonProject({
@@ -6536,7 +6592,18 @@ async function runCurrentProject() {
 			onArtifact: appendArtifact,
 			onProjectFilesUpdate: files =>
 				mergeRuntimeProjectFiles(project, files),
-			onOutput: appendOutput,
+			onOutput: (kind, text) => {
+				if (isPythonIdeRunCurrent(runID, project._id))
+					appendOutput(kind, text);
+			},
+			onStage: stage => {
+				if (isPythonIdeRunCurrent(runID, project._id))
+					diagnosticStage.value = stage;
+			},
+			onPythonVersion: version => {
+				if (isPythonIdeRunCurrent(runID, project._id))
+					diagnosticPythonVersion.value = safeRuntimeVersion(version);
+			},
 			shouldStop: () => shouldStopPythonIdeRun(runID, project._id)
 		});
 		if (
@@ -6544,9 +6611,11 @@ async function runCurrentProject() {
 			!shouldStopPythonIdeRun(runID, project._id)
 		) {
 			runMessage.value = "Drawing";
+			diagnosticStage.value = "rendering";
 			await waitForTurtleAnimation();
 		}
 		if (!shouldStopPythonIdeRun(runID, project._id)) {
+			diagnosticStage.value = "completed";
 			runMessage.value =
 				project.mode === "data"
 					? "Analysis ready"
@@ -6560,6 +6629,7 @@ async function runCurrentProject() {
 		if (shouldStopPythonIdeRun(runID, project._id)) return;
 		const formattedError = formatPythonRuntimeError(error);
 		appendOutput("stderr", formattedError);
+		recordIdeFailure(error);
 		void markPythonRuntimeErrorInEditor(formattedError, runnableFile.name);
 		runMessage.value = "Run failed";
 	} finally {
@@ -6576,6 +6646,7 @@ function stopCurrentProject() {
 	stopRequested.value = true;
 	stopActiveRuntimeSurfaces();
 	runMessage.value = "Stopped";
+	diagnosticStage.value = "stopped";
 	appendOutput(
 		"system",
 		hadRunInFlight
@@ -6699,6 +6770,7 @@ function dispatchTurtleKeyHandlers(
 					? error.message
 					: "Turtle key handler failed."
 			);
+			recordIdeFailure(error);
 		}
 	}
 	return true;
@@ -6908,6 +6980,7 @@ function callTurtlePointerHandler(
 			"stderr",
 			error instanceof Error ? error.message : failureMessage
 		);
+		recordIdeFailure(error);
 	}
 }
 
@@ -7073,6 +7146,8 @@ watch(selectedProjectID, (projectID, previousProjectID) => {
 	stopActiveRuntimeSurfaces();
 	karelWorld.value = null;
 	runMessage.value = "Ready";
+	diagnosticFailure.value = null;
+	diagnosticStage.value = "idle";
 	if (!hadRunInFlight) {
 		releaseIdlePythonRuntimeCallbacks();
 		stopRequested.value = false;
@@ -7183,6 +7258,8 @@ onBeforeUnmount(() => {
 				</div>
 			</div>
 		</div>
+
+		<IdeDiagnosticsControls :capture="captureIdeDiagnostics" />
 
 		<div v-if="isLoading" class="code-ide-loading site-surface">
 			Loading code workspace...
