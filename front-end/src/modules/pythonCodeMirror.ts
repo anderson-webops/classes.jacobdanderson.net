@@ -966,6 +966,9 @@ const pythonEditorTheme = EditorView.theme({
 		padding: "0.35rem 0.55rem"
 	},
 	".cm-panel.cm-search button": {
+		// CodeMirror's default light gradient otherwise covers our theme color.
+		backgroundImage: "none",
+		textShadow: "none",
 		minHeight: "2rem",
 		border: "1px solid var(--color-border)",
 		borderRadius: "0.65rem",

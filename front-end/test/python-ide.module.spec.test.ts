@@ -2559,7 +2559,7 @@ pgzrun.go()
 		expect(pageSource).toContain("const turtleMarkerHaloLineWidth = 4");
 		expect(pageSource).toContain("const turtleMarkerStrokeLineWidth = 1.2");
 		expect(pageSource).toContain(
-			"context.strokeStyle = turtleState.background"
+			"turtleManualFrame?.background ?? turtleState.background"
 		);
 		expect(pageSource).toContain(
 			"context.lineWidth = turtleMarkerHaloLineWidth"
@@ -2881,10 +2881,10 @@ pgzrun.go()
 		);
 		expect(renderCommandSource).not.toContain("getBoundingClientRect()");
 		expect(renderSceneSource).toContain(
-			"const toCanvas = createCanvasCoordinateMapper(rect);"
+			"frame ? frame.worldCoordinates : turtleWorldCoordinates"
 		);
 		expect(renderSceneSource).toContain(
-			"renderTurtleCommand(context, command, toCanvas);"
+			"renderTurtleCommand(context, command, toCanvas, 1, undefined, shapes);"
 		);
 		expect(renderSceneSource).toContain(
 			"drawTurtleMarker(context, markerPose, toCanvas);"

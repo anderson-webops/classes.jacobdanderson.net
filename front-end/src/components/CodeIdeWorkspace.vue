@@ -236,6 +236,18 @@ interface TurtleCompletedCommand {
 	turtleID: string;
 }
 
+// The last explicitly published scene is independent of pending Turtle state.
+// Keep vectors so resizing or expanding the console cannot reveal pending work
+// or lose a frame while the canvas is hidden.
+interface TurtleManualFrame {
+	commands: TurtleCompletedCommand[];
+	poses: Map<string, TurtlePose>;
+	background: string;
+	backgroundImage: CachedGameImage | null;
+	worldCoordinates: [number, number, number, number] | null;
+	shapes: Map<string, TurtleShapeDefinition>;
+}
+
 interface CodeEditorViewState {
 	mainIndex: number;
 	ranges: Array<{ anchor: number; head: number }>;
@@ -744,6 +756,7 @@ let gameCourseAssetPackSilentLoadFailed = false;
 let turtleStampCounter = 0;
 let turtleCompletedCommands: TurtleCompletedCommand[] = [];
 let turtleQueuedSteps: TurtleAnimationStep[] = [];
+let turtleManualFrame: TurtleManualFrame | null = null;
 let turtleVisiblePoses = new Map<string, TurtlePose>();
 let turtleWorldCoordinates: [number, number, number, number] | null = null;
 let turtleBackgroundImage: CachedGameImage | null = null;
@@ -3554,9 +3567,12 @@ function refreshActiveTurtleEventHandlerCount() {
 		turtleObjectDragHandlers.size;
 }
 
-function createCanvasCoordinateMapper(rect: DOMRect): CanvasCoordinateMapper {
-	if (turtleWorldCoordinates) {
-		const [left, bottom, right, top] = turtleWorldCoordinates;
+function createCanvasCoordinateMapper(
+	rect: DOMRect,
+	worldCoordinates = turtleWorldCoordinates
+): CanvasCoordinateMapper {
+	if (worldCoordinates) {
+		const [left, bottom, right, top] = worldCoordinates;
 		const width = right - left;
 		const height = top - bottom;
 		return (x: number, y: number) => ({
@@ -3594,6 +3610,7 @@ function resizeCanvasForDisplay() {
 	if (!canvas || !context) return null;
 
 	const rect = canvas.getBoundingClientRect();
+	if (rect.width <= 0 || rect.height <= 0) return null;
 	const dpr = window.devicePixelRatio || 1;
 	syncCanvasBitmapSize(canvas, rect, dpr);
 	context.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -3755,12 +3772,13 @@ function normalizeTurtleShape(shape: string): TurtleShapeName {
 function drawTurtleMarker(
 	context: CanvasRenderingContext2D,
 	pose: TurtlePose,
-	toCanvas: CanvasCoordinateMapper
+	toCanvas: CanvasCoordinateMapper,
+	shapes = turtleRegisteredShapes
 ) {
 	if (!pose.visible) return;
 
 	const point = toCanvas(pose.x, pose.y);
-	const customShape = turtleRegisteredShapes.get(pose.shape);
+	const customShape = shapes.get(pose.shape);
 	if (customShape?.kind === "image") {
 		const asset = resolveGameAsset(
 			"images",
@@ -3909,7 +3927,8 @@ function drawOriginalTurtlePolygonShape(
 	context.moveTo(firstPoint[1], firstPoint[0]);
 	for (const [x, y] of remainingPoints) context.lineTo(y, x);
 	context.closePath();
-	context.strokeStyle = turtleState.background;
+	context.strokeStyle =
+		turtleManualFrame?.background ?? turtleState.background;
 	context.lineWidth = turtleMarkerHaloLineWidth;
 	context.stroke();
 	context.fillStyle = markerColor;
@@ -3974,7 +3993,8 @@ function renderTurtleCommand(
 	command: TurtleRenderCommand,
 	toCanvas: CanvasCoordinateMapper,
 	progress = 1,
-	activeLineEnd?: { x: number; y: number }
+	activeLineEnd?: { x: number; y: number },
+	shapes = turtleRegisteredShapes
 ) {
 	if (command.kind === "line") {
 		const start = toCanvas(command.from.x, command.from.y);
@@ -4049,7 +4069,7 @@ function renderTurtleCommand(
 	}
 
 	if (command.kind === "stamp") {
-		drawTurtleMarker(context, command.pose, toCanvas);
+		drawTurtleMarker(context, command.pose, toCanvas, shapes);
 		return;
 	}
 
@@ -4058,6 +4078,17 @@ function renderTurtleCommand(
 	context.font = command.font;
 	context.textAlign = command.align;
 	context.fillText(command.text, point.x, point.y);
+}
+
+function captureTurtleManualFrame() {
+	turtleManualFrame = {
+		commands: [...turtleCompletedCommands],
+		poses: new Map(turtleVisiblePoses),
+		background: turtleState.background,
+		backgroundImage: turtleBackgroundImage,
+		worldCoordinates: turtleWorldCoordinates,
+		shapes: new Map(turtleRegisteredShapes)
+	};
 }
 
 function renderTurtleScene(
@@ -4069,20 +4100,33 @@ function renderTurtleScene(
 	if (!canvasContext) return;
 
 	const { context, rect } = canvasContext;
-	const toCanvas = createCanvasCoordinateMapper(rect);
-	context.fillStyle = turtleState.background;
+	const frame = !turtleTracerEnabled ? turtleManualFrame : null;
+	const toCanvas = createCanvasCoordinateMapper(
+		rect,
+		frame ? frame.worldCoordinates : turtleWorldCoordinates
+	);
+	const backgroundImage = frame
+		? frame.backgroundImage
+		: turtleBackgroundImage;
+	const shapes = frame?.shapes ?? turtleRegisteredShapes;
+	context.fillStyle = frame?.background ?? turtleState.background;
 	context.fillRect(0, 0, rect.width, rect.height);
-	if (turtleBackgroundImage?.loaded && !turtleBackgroundImage.failed) {
+	if (backgroundImage?.loaded && !backgroundImage.failed) {
 		context.drawImage(
-			turtleBackgroundImage.element,
+			backgroundImage.element,
 			0,
 			0,
 			rect.width,
 			rect.height
 		);
 	}
-	for (const { command } of turtleCompletedCommands)
-		renderTurtleCommand(context, command, toCanvas);
+	for (const { command } of frame?.commands ?? turtleCompletedCommands)
+		renderTurtleCommand(context, command, toCanvas, 1, undefined, shapes);
+	if (frame) {
+		for (const pose of frame.poses.values())
+			drawTurtleMarker(context, pose, toCanvas, shapes);
+		return;
+	}
 	if (activeCommand) {
 		renderTurtleCommand(
 			context,
@@ -4148,6 +4192,7 @@ function flushTurtleAnimation() {
 	turtleAnimationStepStartedAt = 0;
 	turtleQueuedSteps = [];
 	for (const step of pendingSteps) completeTurtleAnimationStep(step);
+	if (!turtleTracerEnabled) captureTurtleManualFrame();
 	renderTurtleScene();
 	resolveActiveTurtleAnimation();
 }
@@ -4312,6 +4357,7 @@ function flushBackloggedTurtleAnimationSteps(timestamp: number) {
 }
 
 function scheduleTurtleAnimation() {
+	if (!turtleTracerEnabled) return Promise.resolve();
 	if (!turtleAnimationPromise) {
 		turtleAnimationPromise = new Promise<void>(resolve => {
 			resolveTurtleAnimation = resolve;
@@ -4325,10 +4371,16 @@ function scheduleTurtleAnimation() {
 function queueTurtleStep(
 	step: Omit<TurtleAnimationStep, "turtleID"> & { turtleID?: string }
 ) {
-	turtleQueuedSteps.push({
+	const nextStep = {
 		...step,
 		turtleID: step.turtleID ?? activeTurtleID
-	});
+	};
+	if (!turtleTracerEnabled) {
+		// Apply logical movement without scheduling visible intermediate frames.
+		completeTurtleAnimationStep(nextStep);
+		return;
+	}
+	turtleQueuedSteps.push(nextStep);
 	void scheduleTurtleAnimation();
 }
 
@@ -4386,6 +4438,7 @@ function resetTurtleCanvas() {
 	turtleRegisteredShapes.clear();
 	activeTurtleID = defaultTurtleID;
 	turtleTracerEnabled = true;
+	turtleManualFrame = null;
 	turtleScreenDelayMs = 10;
 	turtleState = createDefaultTurtleState();
 	turtleStates = new Map<string, TurtleState>([
@@ -6045,7 +6098,18 @@ const turtleBridge: TurtleBridge = {
 			: 3;
 	},
 	setTracer(value: number) {
-		turtleTracerEnabled = value !== 0;
+		const enabled = value !== 0;
+		if (enabled === turtleTracerEnabled) return;
+		if (!enabled) {
+			// Finish commands issued before tracer(0), then freeze that scene.
+			flushTurtleAnimation();
+			captureTurtleManualFrame();
+			turtleTracerEnabled = false;
+		} else {
+			turtleTracerEnabled = true;
+			turtleManualFrame = null;
+			flushTurtleAnimation();
+		}
 	},
 	setVisible(visible: boolean) {
 		const fromPose = currentTurtlePose();
@@ -6470,11 +6534,9 @@ function resetActiveCanvas() {
 }
 
 function redrawActiveCanvas() {
-	if (selectedProject.value?.mode === "pgzero") {
-		clearGameCanvas();
-		return;
-	}
-
+	// Game frames are painted by the program. Preserve the existing bitmap
+	// through layout changes until its next draw, rather than erasing it.
+	if (selectedProject.value?.mode === "pgzero") return;
 	renderTurtleScene();
 }
 
@@ -7206,6 +7268,19 @@ watch(isLoading, loading => {
 	if (!loading) void nextTick(resetCodeEditor);
 });
 
+// The canvas is created after projects load and can be replaced on mode changes.
+// Observing only at mount misses it and leaves hidden/reshown output at 1x1.
+watch(
+	canvasRef,
+	canvas => {
+		resizeObserver?.disconnect();
+		if (!canvas) return;
+		resizeObserver ??= new ResizeObserver(() => redrawActiveCanvas());
+		resizeObserver.observe(canvas);
+	},
+	{ flush: "post" }
+);
+
 onMounted(() => {
 	primePythonRuntimeConnection();
 	void refreshPythonIdeStoragePersistenceStatus();
@@ -7222,11 +7297,6 @@ onMounted(() => {
 		"pointerdown",
 		handleIdeSettingsOutsidePointerDown
 	);
-
-	if (canvasRef.value) {
-		resizeObserver = new ResizeObserver(() => redrawActiveCanvas());
-		resizeObserver.observe(canvasRef.value);
-	}
 });
 
 onBeforeUnmount(() => {
