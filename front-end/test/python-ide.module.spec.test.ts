@@ -4714,7 +4714,7 @@ pgzrun.go()
 			"EditorState.allowMultipleSelections.of(true)"
 		);
 		expect(codeMirrorSource).toContain(
-			"Prec.highest(keymap.of([indentWithTab]))"
+			"Prec.highest(keymap.of([codeEditorTabBinding]))"
 		);
 		expect(helpTextSource).toContain(".code-panel { overflow: hidden;");
 		expect(helpTextSource).toContain("max-height: min(24rem, 44vh);");

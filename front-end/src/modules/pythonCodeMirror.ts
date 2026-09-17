@@ -1,6 +1,6 @@
 import type { Completion } from "@codemirror/autocomplete";
 import type { Diagnostic } from "@codemirror/lint";
-import type { Extension } from "@codemirror/state";
+import type { Extension, StateCommand } from "@codemirror/state";
 import type { DecorationSet, ViewUpdate } from "@codemirror/view";
 import type { PythonIdeMode } from "@/modules/pythonIde";
 import {
@@ -15,6 +15,7 @@ import {
 	defaultKeymap,
 	history,
 	historyKeymap,
+	indentMore,
 	indentWithTab
 } from "@codemirror/commands";
 import { java, javaLanguage } from "@codemirror/lang-java";
@@ -2975,6 +2976,26 @@ const javaEditorDiagnosticsSetup: Extension[] = [
 	linter(view => codeArgumentDiagnostics(view.state, "java"))
 ];
 
+// Match ordinary typing when there is only a caret. Use the configured
+// indentation text so Python code does not acquire mixed tabs and spaces.
+export const insertEditorIndent: StateCommand = ({ state, dispatch }) => {
+	if (state.selection.ranges.some(range => !range.empty))
+		return indentMore({ state, dispatch });
+	if (state.readOnly) return false;
+	dispatch(
+		state.update(state.replaceSelection(state.facet(indentUnit)), {
+			scrollIntoView: true,
+			userEvent: "input"
+		})
+	);
+	return true;
+};
+
+export const codeEditorTabBinding = {
+	...indentWithTab,
+	run: insertEditorIndent
+};
+
 export function createPythonCodeMirrorExtensions(
 	options: PythonCodeMirrorOptions
 ): Extension[] {
@@ -3019,7 +3040,7 @@ export function createPythonCodeMirrorExtensions(
 		Prec.highest(closingTokenSkipKeymap),
 		Prec.highest(pythonNewlineKeymap),
 		Prec.highest(pythonEditorActionKeymap(options)),
-		Prec.highest(keymap.of([indentWithTab])),
+		Prec.highest(keymap.of([codeEditorTabBinding])),
 		Prec.high(wrapSelectionKeymap),
 		lineWrappingEnabled ? EditorView.lineWrapping : [],
 		EditorView.contentAttributes.of({

@@ -143,6 +143,37 @@ test(
 					),
 					originalCode
 				);
+				// A caret inserts indentation at its own position; highlighted text
+				// still indents the whole selected line, with Shift+Tab undoing it.
+				await page.keyboard.press("Tab");
+				assert.equal(
+					await page.$eval(
+						".cm-content",
+						element => element.textContent
+					),
+					correctedCode.replaceAll("\n", "") + "    "
+				);
+				await page.keyboard.down("Shift");
+				await page.keyboard.press("ArrowLeft");
+				await page.keyboard.up("Shift");
+				await page.keyboard.press("Tab");
+				assert.equal(
+					await page.$eval(
+						".cm-line:last-child",
+						element => element.textContent
+					),
+					"    " + correctedCode.split("\n").at(-1) + "    "
+				);
+				await page.keyboard.down("Shift");
+				await page.keyboard.press("Tab");
+				await page.keyboard.up("Shift");
+				assert.equal(
+					await page.$eval(
+						".cm-line:last-child",
+						element => element.textContent
+					),
+					correctedCode.split("\n").at(-1) + "    "
+				);
 				// Exercise the real layout with bounded synthetic output, without downloading
 				// a Python runtime or coupling a scrolling regression to program execution.
 				await page.$eval(".output-panel", element => {
