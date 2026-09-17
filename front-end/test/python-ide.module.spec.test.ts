@@ -3566,8 +3566,9 @@ pgzrun.go()
 		);
 
 		expect(gameFrameSource).toContain(
-			"width: min(100%, var(--python-game-max-width, 54rem));"
+			"var(--python-game-max-width, 54rem)"
 		);
+		expect(gameFrameSource).toContain("100cqh - 2.5rem - 2px");
 		expect(gameFrameSource).toContain(
 			"aspect-ratio: var(--python-game-aspect, 640 / 400);"
 		);

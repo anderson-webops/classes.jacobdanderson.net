@@ -609,6 +609,7 @@ const selectedReviewFileName = ref("");
 const newFileName = ref("");
 const inputText = ref("");
 const outputLines = ref<OutputLine[]>([]);
+const consoleExpanded = ref(false);
 const runtimeArtifacts = ref<RuntimeArtifactView[]>([]);
 const karelWorld = ref<KarelWorldState | null>(null);
 const isLoading = ref(true);
@@ -6712,6 +6713,26 @@ function focusKarelWorldOutput(event: PointerEvent) {
 	output.focus({ preventScroll: true });
 }
 
+function selectAllConsoleOutput(event: KeyboardEvent) {
+	if (
+		!(event.metaKey || event.ctrlKey) ||
+		event.altKey ||
+		event.shiftKey ||
+		event.key.toLowerCase() !== "a"
+	) {
+		return;
+	}
+	const output = event.currentTarget;
+	const selection = window.getSelection();
+	if (!(output instanceof HTMLElement) || !selection) return;
+	event.preventDefault();
+	event.stopPropagation();
+	const range = document.createRange();
+	range.selectNodeContents(output);
+	selection.removeAllRanges();
+	selection.addRange(range);
+}
+
 function activateRunControl() {
 	if (runControlIsStop.value) {
 		stopCurrentProject();
@@ -8262,150 +8283,186 @@ onBeforeUnmount(() => {
 						@pointerdown="startIdeSplitResize"
 					/>
 
-					<section class="result-panel" aria-label="Code output">
+					<section
+						class="result-panel"
+						:class="{
+							'result-panel--visual':
+								!consoleExpanded &&
+								(usesVisualOutput || runtimeArtifacts.length),
+							'result-panel--console-expanded': consoleExpanded
+						}"
+						aria-label="Code output"
+					>
 						<div class="panel-header">
 							<span>{{
-								usesKarelWorld
-									? "Karel world"
-									: usesDrawingCanvas
-										? `${selectedModeLabel} canvas`
-										: "Runtime"
+								consoleExpanded
+									? "Console"
+									: usesKarelWorld
+										? "Karel world"
+										: usesDrawingCanvas
+											? `${selectedModeLabel} canvas`
+											: "Runtime"
 							}}</span>
-							<button
-								class="panel-link"
-								type="button"
-								@click="clearOutput"
-							>
-								Clear output
-							</button>
+							<div class="result-panel-actions">
+								<button
+									class="panel-link console-expand-toggle"
+									type="button"
+									:aria-expanded="consoleExpanded"
+									aria-controls="ide-console-output"
+									@click="consoleExpanded = !consoleExpanded"
+								>
+									{{
+										consoleExpanded
+											? "Restore view"
+											: "Expand console"
+									}}
+								</button>
+								<button
+									class="panel-link"
+									type="button"
+									@click="clearOutput"
+								>
+									Clear output
+								</button>
+							</div>
 						</div>
 
 						<div
-							v-show="usesKarelWorld"
-							ref="karelWorldRef"
-							class="karel-shell"
-							aria-label="Karel world"
-							tabindex="0"
-							@pointerdown="focusKarelWorldOutput"
+							v-show="usesVisualOutput || runtimeArtifacts.length"
+							class="result-visuals"
 						>
 							<div
-								v-if="karelWorld"
-								class="karel-world"
-								:style="karelWorldStyle"
+								v-show="usesKarelWorld"
+								ref="karelWorldRef"
+								class="karel-shell"
+								aria-label="Karel world"
+								tabindex="0"
+								@pointerdown="focusKarelWorldOutput"
 							>
 								<div
-									v-for="cell in karelWorldCells"
-									:key="cell.key"
-									class="karel-cell"
-									:class="{
-										'has-paint': Boolean(cell.paintColor),
-										'has-wall-east': cell.walls.east,
-										'has-wall-north': cell.walls.north,
-										'has-wall-south': cell.walls.south,
-										'has-wall-west': cell.walls.west
-									}"
-									:style="karelCellStyle(cell)"
-									:aria-label="karelCellAriaLabel(cell)"
+									v-if="karelWorld"
+									class="karel-world"
+									:style="karelWorldStyle"
 								>
-									<span
-										v-if="cell.beeperCount"
-										class="karel-beeper"
-										aria-label="Beeper"
+									<div
+										v-for="cell in karelWorldCells"
+										:key="cell.key"
+										class="karel-cell"
+										:class="{
+											'has-paint': Boolean(
+												cell.paintColor
+											),
+											'has-wall-east': cell.walls.east,
+											'has-wall-north': cell.walls.north,
+											'has-wall-south': cell.walls.south,
+											'has-wall-west': cell.walls.west
+										}"
+										:style="karelCellStyle(cell)"
+										:aria-label="karelCellAriaLabel(cell)"
 									>
-										{{ cell.beeperCount }}
-									</span>
+										<span
+											v-if="cell.beeperCount"
+											class="karel-beeper"
+											aria-label="Beeper"
+										>
+											{{ cell.beeperCount }}
+										</span>
+									</div>
+									<span
+										v-if="karelWorld.robot"
+										class="karel-robot"
+										:class="karelRobotDirectionClass"
+										:style="karelRobotStyle"
+										aria-label="Karel robot"
+									/>
 								</div>
-								<span
-									v-if="karelWorld.robot"
-									class="karel-robot"
-									:class="karelRobotDirectionClass"
-									:style="karelRobotStyle"
-									aria-label="Karel robot"
-								/>
+								<div v-else class="karel-empty">
+									Run Karel code to render the world.
+								</div>
 							</div>
-							<div v-else class="karel-empty">
-								Run Karel code to render the world.
-							</div>
-						</div>
 
-						<div
-							v-show="usesDrawingCanvas"
-							class="canvas-shell"
-							:class="{ 'canvas-shell--game': usesGameCanvas }"
-						>
 							<div
-								class="canvas-frame"
+								v-show="usesDrawingCanvas"
+								class="canvas-shell"
 								:class="{
-									'canvas-frame--game': usesGameCanvas
+									'canvas-shell--game': usesGameCanvas
 								}"
-								:style="drawingCanvasStyle"
 							>
-								<canvas
-									ref="canvasRef"
-									:aria-label="`${selectedModeLabel} canvas`"
-									class="turtle-canvas"
+								<div
+									class="canvas-frame"
 									:class="{
-										'turtle-canvas--game': usesGameCanvas
+										'canvas-frame--game': usesGameCanvas
 									}"
-									tabindex="0"
-									@blur="clearCanvasKeyboardState"
-									@mousedown="
-										dispatchCanvasPointerEvent(
-											$event,
-											'mousedown'
-										)
-									"
-									@mousemove="
-										dispatchCanvasPointerEvent(
-											$event,
-											'mousemove'
-										)
-									"
-									@mouseup="
-										dispatchCanvasPointerEvent(
-											$event,
-											'mouseup'
-										)
-									"
-									@wheel="dispatchCanvasWheelEvent"
-								/>
+									:style="drawingCanvasStyle"
+								>
+									<canvas
+										ref="canvasRef"
+										:aria-label="`${selectedModeLabel} canvas`"
+										class="turtle-canvas"
+										:class="{
+											'turtle-canvas--game':
+												usesGameCanvas
+										}"
+										tabindex="0"
+										@blur="clearCanvasKeyboardState"
+										@mousedown="
+											dispatchCanvasPointerEvent(
+												$event,
+												'mousedown'
+											)
+										"
+										@mousemove="
+											dispatchCanvasPointerEvent(
+												$event,
+												'mousemove'
+											)
+										"
+										@mouseup="
+											dispatchCanvasPointerEvent(
+												$event,
+												'mouseup'
+											)
+										"
+										@wheel="dispatchCanvasWheelEvent"
+									/>
+								</div>
 							</div>
-						</div>
 
-						<div
-							v-if="runtimeArtifacts.length"
-							class="artifact-list"
-							aria-label="Rendered Python charts and reports"
-						>
-							<figure
-								v-for="artifact in runtimeArtifacts"
-								:key="artifact.id"
-								class="artifact-card"
+							<div
+								v-if="runtimeArtifacts.length"
+								class="artifact-list"
+								aria-label="Rendered Python charts and reports"
 							>
-								<figcaption>
-									<span>{{ artifact.title }}</span>
-									<small>{{ artifact.mimeType }}</small>
-								</figcaption>
-								<img
-									v-if="artifact.dataUrl"
-									:alt="artifact.title"
-									:src="artifact.dataUrl"
-								/>
-								<audio
-									v-else-if="artifact.audioUrl"
-									controls
-									:src="artifact.audioUrl"
-									:title="artifact.title"
-								/>
-								<iframe
-									v-else-if="artifact.srcdoc"
-									referrerpolicy="no-referrer"
-									sandbox="allow-scripts"
-									:srcdoc="artifact.srcdoc"
-									:title="artifact.title"
-								/>
-								<pre v-else>{{ artifact.text }}</pre>
-							</figure>
+								<figure
+									v-for="artifact in runtimeArtifacts"
+									:key="artifact.id"
+									class="artifact-card"
+								>
+									<figcaption>
+										<span>{{ artifact.title }}</span>
+										<small>{{ artifact.mimeType }}</small>
+									</figcaption>
+									<img
+										v-if="artifact.dataUrl"
+										:alt="artifact.title"
+										:src="artifact.dataUrl"
+									/>
+									<audio
+										v-else-if="artifact.audioUrl"
+										controls
+										:src="artifact.audioUrl"
+										:title="artifact.title"
+									/>
+									<iframe
+										v-else-if="artifact.srcdoc"
+										referrerpolicy="no-referrer"
+										sandbox="allow-scripts"
+										:srcdoc="artifact.srcdoc"
+										:title="artifact.title"
+									/>
+									<pre v-else>{{ artifact.text }}</pre>
+								</figure>
+							</div>
 						</div>
 
 						<div class="input-output-grid">
@@ -8417,7 +8474,15 @@ onBeforeUnmount(() => {
 								/>
 							</label>
 
-							<div class="output-panel" aria-live="polite">
+							<div
+								id="ide-console-output"
+								class="output-panel"
+								role="log"
+								aria-label="Console output"
+								aria-live="polite"
+								tabindex="0"
+								@keydown="selectAllConsoleOutput"
+							>
 								<div
 									v-if="!outputLines.length"
 									class="empty-output"
@@ -9988,10 +10053,42 @@ html.dark .editor-shortcuts ul {
 }
 
 .result-panel {
-	grid-template-rows: auto auto minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr);
+}
+
+.result-panel--visual {
+	grid-template-rows: auto minmax(0, 1fr) minmax(15rem, 40%);
+}
+
+.result-visuals {
+	container-type: size;
+	min-height: 0;
+	min-width: 0;
+	overflow: auto;
+	overscroll-behavior: contain;
+}
+
+.result-panel--console-expanded .result-visuals,
+.result-panel--console-expanded .stdin-panel {
+	display: none;
+}
+
+.result-panel--console-expanded .input-output-grid {
+	grid-template-rows: minmax(0, 1fr);
+}
+
+.result-panel .panel-header,
+.result-panel-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem 1rem;
 }
 
 .canvas-shell {
+	height: 100%;
+	min-height: 0;
 	display: grid;
 	place-items: center;
 	padding: 1rem;
@@ -10012,11 +10109,19 @@ html.dark .editor-shortcuts ul {
 }
 
 .canvas-frame {
-	width: 100%;
+	width: min(
+		100%,
+		var(--python-turtle-max-width, 48rem),
+		calc((100cqh - 2rem - 2px) * var(--python-turtle-aspect, 640 / 480))
+	);
 }
 
 .canvas-frame--game {
-	width: min(100%, var(--python-game-max-width, 54rem));
+	width: min(
+		100%,
+		var(--python-game-max-width, 54rem),
+		calc((100cqh - 2.5rem - 2px) * var(--python-game-aspect, 640 / 400))
+	);
 	aspect-ratio: var(--python-game-aspect, 640 / 400);
 }
 
@@ -10039,7 +10144,8 @@ html.dark .editor-shortcuts ul {
 .karel-shell {
 	display: grid;
 	place-items: center;
-	min-height: 26rem;
+	height: 100%;
+	min-height: 0;
 	padding: 1rem;
 	border: 1px solid transparent;
 	border-bottom: 1px solid var(--color-border);
@@ -10054,7 +10160,11 @@ html.dark .editor-shortcuts ul {
 	position: relative;
 	display: grid;
 	grid-template-columns: repeat(var(--karel-cols), minmax(0, 1fr));
-	width: min(100%, 34rem);
+	width: min(
+		100%,
+		34rem,
+		calc((100cqh - 2rem - 2px) * var(--karel-cols) / var(--karel-rows))
+	);
 	aspect-ratio: var(--karel-cols) / var(--karel-rows);
 	border: 3px solid #111827;
 	background: #fff;
@@ -10148,7 +10258,8 @@ html.dark .editor-shortcuts ul {
 .karel-empty {
 	display: grid;
 	width: min(100%, 34rem);
-	min-height: 20rem;
+	height: 100%;
+	min-height: 0;
 	place-items: center;
 	border: 1px dashed var(--color-border);
 	border-radius: 14px;
@@ -10221,8 +10332,9 @@ html.dark .editor-shortcuts ul {
 
 .input-output-grid {
 	min-height: 0;
+	min-width: 0;
 	display: grid;
-	grid-template-rows: auto minmax(12rem, 1fr);
+	grid-template-rows: auto minmax(0, 1fr);
 }
 
 .stdin-panel {
@@ -10236,16 +10348,25 @@ html.dark .editor-shortcuts ul {
 
 .stdin-panel textarea {
 	min-height: 5rem;
+	max-height: 8rem;
 	padding: 0.75rem;
 	resize: vertical;
 }
 
 .output-panel {
 	min-height: 0;
+	min-width: 0;
 	overflow: auto;
+	overscroll-behavior: contain;
+	scrollbar-gutter: stable;
 	padding: 1rem;
 	background: var(--python-output-bg);
 	color: var(--python-output-ink);
+}
+
+.output-panel:focus-visible {
+	outline: 2px solid var(--python-focus-ring);
+	outline-offset: -2px;
 }
 
 .empty-output {
@@ -10257,6 +10378,8 @@ html.dark .editor-shortcuts ul {
 
 .output-line {
 	margin: 0 0 0.45rem;
+	overflow: visible;
+	overflow-wrap: anywhere;
 	white-space: pre-wrap;
 	font-family:
 		"SFMono-Regular", "Cascadia Code", "Liberation Mono", monospace;
