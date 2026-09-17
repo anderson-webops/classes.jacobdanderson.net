@@ -56,6 +56,7 @@ import {
 	ViewPlugin
 } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
+import { codeArgumentDiagnostics } from "@/modules/codeArgumentDiagnostics";
 
 interface PythonCodeMirrorOptions {
 	onChange: (content: string) => void;
@@ -2954,6 +2955,7 @@ const pythonEditorBaseSetup: Extension[] = [
 
 const pythonEditorDiagnosticsSetup: Extension[] = [
 	linter(view => pythonSyntaxDiagnostics(view.state)),
+	linter(view => codeArgumentDiagnostics(view.state, "python")),
 	pythonRuntimeDiagnosticsField,
 	linter(view => view.state.field(pythonRuntimeDiagnosticsField), {
 		needsRefresh(update) {
@@ -2966,7 +2968,8 @@ const pythonEditorDiagnosticsSetup: Extension[] = [
 	})
 ];
 const javaEditorDiagnosticsSetup: Extension[] = [
-	linter(view => javaSyntaxDiagnostics(view.state))
+	linter(view => javaSyntaxDiagnostics(view.state)),
+	linter(view => codeArgumentDiagnostics(view.state, "java"))
 ];
 
 export function createPythonCodeMirrorExtensions(
