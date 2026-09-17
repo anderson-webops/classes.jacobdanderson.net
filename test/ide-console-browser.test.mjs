@@ -160,6 +160,7 @@ test(
 				for (const [width, height] of [
 					[1440, 900],
 					[1920, 1080],
+					[1000, 660],
 					[820, 720],
 					[390, 844]
 				]) {
@@ -172,6 +173,26 @@ test(
 							behavior: "instant"
 						})
 					);
+					if (["turtle", "pgzero"].includes(mode)) {
+						assert.ok(
+							await page.$eval(".turtle-canvas", canvas => {
+								const bounds = canvas.getBoundingClientRect();
+								const viewport = canvas
+									.closest(".result-visuals")
+									.getBoundingClientRect();
+								return (
+									bounds.height > 0 &&
+									bounds.top >= viewport.top &&
+									bounds.bottom <= viewport.bottom + 1 &&
+									document.elementFromPoint(
+										bounds.x + bounds.width / 2,
+										bounds.y + bounds.height / 2
+									) === canvas
+								);
+							}),
+							`${context}: the full canvas and its center must stay accessible`
+						);
+					}
 					const bounds = await page.evaluate(() => {
 						const console = document.querySelector(".output-panel");
 						const panel = document.querySelector(".result-panel");

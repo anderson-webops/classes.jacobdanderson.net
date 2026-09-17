@@ -211,6 +211,30 @@ test(
 						`${error.message}\n${await page.$eval(".code-ide", element => element.innerText).catch(() => page.$eval("body", element => element.innerText))}`
 					);
 				}
+				// Expanding the console must preserve the running game and its surfaces.
+				await page.click(".console-expand-toggle");
+				assert.equal(
+					await page.$eval("button.run-control", element =>
+						element.textContent.trim()
+					),
+					"Stop"
+				);
+				await page.click(".console-expand-toggle");
+				await page.waitForFunction(() => {
+					const canvas = document.querySelector(
+						"canvas.turtle-canvas--game"
+					);
+					if (!canvas?.clientHeight) return false;
+					const pixel = canvas
+						.getContext("2d")
+						.getImageData(
+							(12 * canvas.width) / 160,
+							(12 * canvas.height) / 120,
+							1,
+							1
+						).data;
+					return pixel[0] === 255 && pixel[1] === 0;
+				});
 				const pixels = await page.$eval(
 					"canvas.turtle-canvas--game",
 					canvas => {

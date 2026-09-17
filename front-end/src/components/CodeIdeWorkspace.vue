@@ -10061,6 +10061,7 @@ html.dark .editor-shortcuts ul {
 }
 
 .result-visuals {
+	container-type: size;
 	min-height: 0;
 	min-width: 0;
 	overflow: auto;
@@ -10086,6 +10087,8 @@ html.dark .editor-shortcuts ul {
 }
 
 .canvas-shell {
+	height: 100%;
+	min-height: 0;
 	display: grid;
 	place-items: center;
 	padding: 1rem;
@@ -10106,11 +10109,19 @@ html.dark .editor-shortcuts ul {
 }
 
 .canvas-frame {
-	width: 100%;
+	width: min(
+		100%,
+		var(--python-turtle-max-width, 48rem),
+		calc((100cqh - 2rem - 2px) * var(--python-turtle-aspect, 640 / 480))
+	);
 }
 
 .canvas-frame--game {
-	width: min(100%, var(--python-game-max-width, 54rem));
+	width: min(
+		100%,
+		var(--python-game-max-width, 54rem),
+		calc((100cqh - 2.5rem - 2px) * var(--python-game-aspect, 640 / 400))
+	);
 	aspect-ratio: var(--python-game-aspect, 640 / 400);
 }
 
@@ -10133,7 +10144,8 @@ html.dark .editor-shortcuts ul {
 .karel-shell {
 	display: grid;
 	place-items: center;
-	min-height: 26rem;
+	height: 100%;
+	min-height: 0;
 	padding: 1rem;
 	border: 1px solid transparent;
 	border-bottom: 1px solid var(--color-border);
@@ -10148,7 +10160,11 @@ html.dark .editor-shortcuts ul {
 	position: relative;
 	display: grid;
 	grid-template-columns: repeat(var(--karel-cols), minmax(0, 1fr));
-	width: min(100%, 34rem);
+	width: min(
+		100%,
+		34rem,
+		calc((100cqh - 2rem - 2px) * var(--karel-cols) / var(--karel-rows))
+	);
 	aspect-ratio: var(--karel-cols) / var(--karel-rows);
 	border: 3px solid #111827;
 	background: #fff;
@@ -10242,7 +10258,8 @@ html.dark .editor-shortcuts ul {
 .karel-empty {
 	display: grid;
 	width: min(100%, 34rem);
-	min-height: 20rem;
+	height: 100%;
+	min-height: 0;
 	place-items: center;
 	border: 1px dashed var(--color-border);
 	border-radius: 14px;
