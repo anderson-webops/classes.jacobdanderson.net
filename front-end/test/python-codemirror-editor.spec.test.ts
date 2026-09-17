@@ -6,7 +6,6 @@ import {
 	defaultKeymap,
 	indentLess,
 	indentMore,
-	indentWithTab,
 	toggleComment
 } from "@codemirror/commands";
 import { python } from "@codemirror/lang-python";
@@ -16,6 +15,8 @@ import { describe, expect, it, vi } from "vitest";
 import type { PythonIdeMode } from "../src/modules/pythonIde";
 import {
 	canSkipExistingClosingToken,
+	codeEditorTabBinding,
+	insertEditorIndent,
 	createPythonCodeMirrorExtensions,
 	isPythonBracketPairIgnoredAt,
 	javaIdeCompletionsForMode,
@@ -198,7 +199,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(blueJLegacyRouteSource).toContain("<CodeIdeWorkspace />");
 		expect(workspaceSource).toContain("codeIdeHeroContent");
 		expect(workspaceSource).not.toContain('route.path === "/bluej"');
-		expect(workspaceSource).toContain("<h1>{{ codeIdeHeroContent.title }}</h1>");
+		expect(workspaceSource).toContain(
+			"<h1>{{ codeIdeHeroContent.title }}</h1>"
+		);
 		expect(workspaceSource).toContain(
 			'title: "Code, run, and draw in Python or Java"'
 		);
@@ -221,9 +224,7 @@ describe("python IDE CodeMirror editor", () => {
 	});
 
 	it("does not import the heavy Pyodide runtime before running code", () => {
-		const pageSource = sourceFile(
-			"../src/components/CodeIdeWorkspace.vue"
-		);
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 		const runtimeSource = sourceFile("../src/modules/pythonIdeRuntime.ts");
 		const hintSource = sourceFile(
 			"../src/modules/pythonIdeRuntimeHints.ts"
@@ -254,9 +255,7 @@ describe("python IDE CodeMirror editor", () => {
 	});
 
 	it("mounts CodeMirror instead of the old textarea highlight overlay", () => {
-		const pageSource = sourceFile(
-			"../src/components/CodeIdeWorkspace.vue"
-		);
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 
 		expect(pageSource).toContain("createPythonCodeMirrorExtensions");
 		expect(pageSource).toContain("new EditorView");
@@ -268,9 +267,7 @@ describe("python IDE CodeMirror editor", () => {
 	});
 
 	it("preserves CodeMirror state, cursor, scroll, and history per IDE file", () => {
-		const pageSource = sourceFile(
-			"../src/components/CodeIdeWorkspace.vue"
-		);
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 		const resetStart = pageSource.indexOf("async function resetCodeEditor");
 		const resetSource = pageSource.slice(
 			resetStart,
@@ -318,9 +315,7 @@ describe("python IDE CodeMirror editor", () => {
 
 	it("enables Python parsing and typical IDE editing behavior", () => {
 		const editorSource = sourceFile("../src/modules/pythonCodeMirror.ts");
-		const pageSource = sourceFile(
-			"../src/components/CodeIdeWorkspace.vue"
-		);
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 
 		expect(editorSource).toContain("pythonEditorBaseSetup");
 		expect(editorSource).toContain("lineNumbers()");
@@ -526,7 +521,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(editorSource).toContain("try_with_resources");
 		expect(editorSource).toContain("file_scanner");
 		expect(editorSource).toContain("file_writer");
-		expect(editorSource).toContain('new File("${snippetField("file")}.txt")');
+		expect(editorSource).toContain(
+			'new File("${snippetField("file")}.txt")'
+		);
 		expect(editorSource).toContain(
 			'new FileWriter("${snippetField("file")}.txt")'
 		);
@@ -699,10 +696,44 @@ describe("python IDE CodeMirror editor", () => {
 		);
 	});
 
+	it.each(["python", "turtle", "pgzero", "java", "karel"] as const)(
+		"inserts Tab at the caret in %s instead of shifting its line",
+		mode => {
+			const doc = "first line\n    second line";
+			for (const cursor of [0, 3, doc.length]) {
+				const state = EditorState.create({
+					doc,
+					extensions: createPythonCodeMirrorExtensions({ mode }),
+					selection: { anchor: cursor }
+				});
+				const result = runStateCommand(state, codeEditorTabBinding.run);
+				expect(result.result).toBe(true);
+				expect(result.state.doc.toString()).toBe(
+					doc.slice(0, cursor) + "    " + doc.slice(cursor)
+				);
+				expect(result.state.selection.main.head).toBe(cursor + 4);
+			}
+		}
+	);
+
+	it("indents the line when only part of its text is highlighted", () => {
+		const state = EditorState.create({
+			doc: "print(value)",
+			extensions: createPythonCodeMirrorExtensions({ mode: "python" }),
+			selection: { anchor: 6, head: 11 }
+		});
+		expect(
+			runStateCommand(
+				state,
+				codeEditorTabBinding.run
+			).state.doc.toString()
+		).toBe("    print(value)");
+	});
+
 	it("wires Tab and Shift+Tab indentation for Java selections", () => {
-		expect(indentWithTab.key).toBe("Tab");
-		expect(indentWithTab.run).toBe(indentMore);
-		expect(indentWithTab.shift).toBe(indentLess);
+		expect(codeEditorTabBinding.key).toBe("Tab");
+		expect(codeEditorTabBinding.run).toBe(insertEditorIndent);
+		expect(codeEditorTabBinding.shift).toBe(indentLess);
 
 		const doc = "public class Main {\nint x = 1;\nint y = 2;\n}\n";
 		const selectedBodyLines = EditorState.create({
@@ -715,7 +746,7 @@ describe("python IDE CodeMirror editor", () => {
 
 		const indented = runStateCommand(
 			selectedBodyLines,
-			indentWithTab.run as StateCommand
+			codeEditorTabBinding.run as StateCommand
 		);
 		expect(indented.result).toBe(true);
 		expect(indented.state.doc.toString()).toBe(
@@ -724,7 +755,7 @@ describe("python IDE CodeMirror editor", () => {
 
 		const dedented = runStateCommand(
 			indented.state,
-			indentWithTab.shift as StateCommand
+			codeEditorTabBinding.shift as StateCommand
 		);
 		expect(dedented.result).toBe(true);
 		expect(dedented.state.doc.toString()).toBe(doc);
@@ -734,7 +765,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(autocompleteLabelsForDoc("java", "System.out.")).toEqual(
 			expect.arrayContaining(["print", "println", "printf", "format"])
 		);
-		expect(autocompleteLabelsForDoc("java", "java.lang.System.out.")).toEqual(
+		expect(
+			autocompleteLabelsForDoc("java", "java.lang.System.out.")
+		).toEqual(
 			expect.arrayContaining(["print", "println", "printf", "format"])
 		);
 		expect(autocompleteLabelsForDoc("java", "String.")).toEqual(
@@ -964,7 +997,7 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.util.Optional;",
 				"public class Main {",
 				"    public static void main(String[] args) {",
-				"        Optional<String> name = Optional.ofNullable(\"Ada\");",
+				'        Optional<String> name = Optional.ofNullable("Ada");',
 				"        name.|",
 				"    }",
 				"}"
@@ -991,7 +1024,7 @@ describe("python IDE CodeMirror editor", () => {
 				"import java.util.stream.Stream;",
 				"public class Main {",
 				"    public static void main(String[] args) {",
-				"        Stream<String> names = Stream.of(\"Ada\", \"Grace\");",
+				'        Stream<String> names = Stream.of("Ada", "Grace");',
 				"        names.|",
 				"    }",
 				"}"
@@ -1063,7 +1096,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(autocompleteLabelsForDoc("java", "Collections.")).toEqual(
 			expect.arrayContaining(["sort", "reverse", "shuffle", "max"])
 		);
-		expect(autocompleteLabelsForDoc("java", "java.util.Collections.")).toEqual(
+		expect(
+			autocompleteLabelsForDoc("java", "java.util.Collections.")
+		).toEqual(
 			expect.arrayContaining(["sort", "reverse", "shuffle", "max"])
 		);
 		expect(autocompleteLabelsForDoc("java", "Comparator.")).toEqual(
@@ -1073,7 +1108,9 @@ describe("python IDE CodeMirror editor", () => {
 				"reverseOrder"
 			])
 		);
-		expect(autocompleteLabelsForDoc("java", "java.util.Comparator.")).toEqual(
+		expect(
+			autocompleteLabelsForDoc("java", "java.util.Comparator.")
+		).toEqual(
 			expect.arrayContaining([
 				"comparing",
 				"comparingInt",
@@ -1095,29 +1132,19 @@ describe("python IDE CodeMirror editor", () => {
 			expect.arrayContaining(["of", "empty", "generate", "iterate"])
 		);
 		expect(autocompleteLabelsForDoc("java", "Collectors.")).toEqual(
-			expect.arrayContaining([
-				"toList",
-				"toSet",
-				"joining",
-				"groupingBy"
-			])
+			expect.arrayContaining(["toList", "toSet", "joining", "groupingBy"])
 		);
 		expect(
 			autocompleteLabelsForDoc("java", "java.util.stream.Collectors.")
 		).toEqual(
-			expect.arrayContaining([
-				"toList",
-				"toSet",
-				"joining",
-				"groupingBy"
-			])
+			expect.arrayContaining(["toList", "toSet", "joining", "groupingBy"])
 		);
 		expect(autocompleteLabelsForDoc("karel", "World.")).toEqual(
 			expect.arrayContaining(["readWorld"])
 		);
-		expect(autocompleteLabelsForDoc("karel", "kareltherobot.World.")).toEqual(
-			expect.arrayContaining(["readWorld"])
-		);
+		expect(
+			autocompleteLabelsForDoc("karel", "kareltherobot.World.")
+		).toEqual(expect.arrayContaining(["readWorld"]));
 		expect(autocompleteLabelsForDoc("karel", "Directions.")).toEqual(
 			expect.arrayContaining(["North", "East", "South", "West"])
 		);
@@ -1306,11 +1333,15 @@ describe("python IDE CodeMirror editor", () => {
 				"import kareltherobot.Directions"
 			])
 		);
-		expect(karelImportResult?.options?.map(option => option.label)).not.toEqual(
-			expect.arrayContaining(["import java.awt.Color"])
-		);
 		expect(
-			autocompleteResultsForDocAt("java", karelImportDoc, karelImportDoc.length)
+			karelImportResult?.options?.map(option => option.label)
+		).not.toEqual(expect.arrayContaining(["import java.awt.Color"]));
+		expect(
+			autocompleteResultsForDocAt(
+				"java",
+				karelImportDoc,
+				karelImportDoc.length
+			)
 		).toEqual([]);
 	});
 
@@ -1363,7 +1394,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(karelStringResult?.options?.map(option => option.label)).toEqual(
 			expect.arrayContaining(["length", "charAt", "substring"])
 		);
-		expect(karelStringResult?.options?.map(option => option.label)).not.toEqual(
+		expect(
+			karelStringResult?.options?.map(option => option.label)
+		).not.toEqual(
 			expect.arrayContaining(["move", "turnLeft", "putBeeper"])
 		);
 
@@ -1494,13 +1527,13 @@ describe("python IDE CodeMirror editor", () => {
 	});
 
 	it("surfaces the built-in editor shortcuts in the IDE chrome", () => {
-		const pageSource = sourceFile(
-			"../src/components/CodeIdeWorkspace.vue"
-		);
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 
 		expect(pageSource).toContain('class="editor-shortcuts"');
 		expect(pageSource).toContain("Cmd/Ctrl+F opens search.");
-		expect(pageSource).toMatch(/Cmd\/Ctrl\+Enter or F5\s+runs or stops\s+the project\./);
+		expect(pageSource).toMatch(
+			/Cmd\/Ctrl\+Enter or F5\s+runs or stops\s+the project\./
+		);
 		expect(pageSource).toContain("Cmd/Ctrl+S saves the project.");
 		expect(pageSource).toMatch(
 			/Cmd\/Ctrl\+\/\s+toggles comments for the\s+line or selection\./
@@ -1517,9 +1550,7 @@ describe("python IDE CodeMirror editor", () => {
 	});
 
 	it("keeps IDE toolbar controls on a shared visual baseline", () => {
-		const pageSource = sourceFile(
-			"../src/components/CodeIdeWorkspace.vue"
-		);
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 
 		expect(pageSource).toContain(
 			"grid-template-columns: minmax(15rem, 1fr) auto;"
@@ -1550,9 +1581,7 @@ describe("python IDE CodeMirror editor", () => {
 	});
 
 	it("keeps the IDE splitter as a single discreet separator", () => {
-		const pageSource = sourceFile(
-			"../src/components/CodeIdeWorkspace.vue"
-		);
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 		const splitterSource =
 			pageSource.match(
 				/class="ide-splitter"[\s\S]*?@pointerdown="startIdeSplitResize"[\s\S]*?\/>/
@@ -1577,9 +1606,7 @@ describe("python IDE CodeMirror editor", () => {
 	});
 
 	it("keeps IDE settings copy readable and spacious instead of all-caps", () => {
-		const pageSource = sourceFile(
-			"../src/components/CodeIdeWorkspace.vue"
-		);
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 
 		expect(pageSource).toMatch(
 			/\.ide-settings-panel\s*{[\s\S]*position: absolute;[\s\S]*z-index: 18;[\s\S]*top: calc\(100% \+ 0\.6rem\);[\s\S]*right: 0;[\s\S]*width: min\(26rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: min\(36rem, calc\(100vh - 8rem\)\);[\s\S]*display: grid;[\s\S]*gap: 0\.45rem;[\s\S]*padding: 0\.8rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.84rem;[\s\S]*line-height: 1\.42;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: normal;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
@@ -1600,10 +1627,10 @@ describe("python IDE CodeMirror editor", () => {
 			'@click="showIdeSettings = !showIdeSettings"'
 		);
 		expect(pageSource).toContain(
-			"document.addEventListener(\n\t\t\"pointerdown\",\n\t\thandleIdeSettingsOutsidePointerDown\n\t);"
+			'document.addEventListener(\n\t\t"pointerdown",\n\t\thandleIdeSettingsOutsidePointerDown\n\t);'
 		);
 		expect(pageSource).toContain(
-			"document.removeEventListener(\n\t\t\"pointerdown\",\n\t\thandleIdeSettingsOutsidePointerDown\n\t);"
+			'document.removeEventListener(\n\t\t"pointerdown",\n\t\thandleIdeSettingsOutsidePointerDown\n\t);'
 		);
 		expect(pageSource).toContain("Autosave");
 		expect(pageSource).toContain("Suggestions");
@@ -1649,9 +1676,7 @@ describe("python IDE CodeMirror editor", () => {
 	});
 
 	it("offers course-runtime completions by immutable project mode", () => {
-		const pageSource = sourceFile(
-			"../src/components/CodeIdeWorkspace.vue"
-		);
+		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 		const toolbarSource =
 			pageSource.match(
 				/class="editor-toolbar"[\s\S]*?<div class="ide-grid">/
