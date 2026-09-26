@@ -7,6 +7,15 @@ export interface CourseCatalogEntry extends CourseSummary {
 
 export const courseCatalog: CourseCatalogEntry[] = [
 	{
+		id: "scratch-level-1-classroom",
+		name: "Scratch Level 1: Classroom Edition",
+		load: () =>
+			import("./scratch-level-1-classroom").then(
+				({ scratchLevel1ClassroomCourse }) =>
+					scratchLevel1ClassroomCourse
+			)
+	},
+	{
 		id: "scratch-level-1",
 		name: "Scratch Level 1",
 		load: () =>
