@@ -24,6 +24,7 @@ export const coursePublicPathways: CoursePublicPathway[] = [
 		courseIds: [
 			"scratch-level-1-bootcamp",
 			"scratch-level-1",
+			"scratch-level-1-classroom",
 			"scratch-level-2"
 		],
 		audience:

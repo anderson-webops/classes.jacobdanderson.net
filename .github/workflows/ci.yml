@@ -262,6 +262,9 @@ jobs:
             - name: Verify console scrolling and editor argument warnings
               run: node --test test/ide-console-browser.test.mjs
 
+            - name: Verify Scratch classroom import, execution and downloads
+              run: node --test test/scratch-projects.test.mjs test/scratch-browser.test.mjs
+
             - name: Verify Turtle manual updates and editor search contrast
               run: node --test test/turtle-tracer-browser.test.mjs
 

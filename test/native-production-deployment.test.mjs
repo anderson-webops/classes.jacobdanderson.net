@@ -53,9 +53,11 @@ test("native Nginx keeps static, API, and hidden-file boundaries separate", asyn
 		),
 		"/courses must bind the exact course-scratch CSP"
 	);
+	assert.match(maps, /map \$uri \$classes_resource_policy \{\s*default "same-origin";\s*~\^\/scratch-runtime\/ "cross-origin";/u);
+	assert.match(maps, /map \$uri \$classes_public_asset_origin \{\s*default "";\s*~\^\/scratch-runtime\/ "\*";/u);
 	const configuredHeaders = nginxAddHeaderValues(headers);
 	for (const [name, value] of Object.entries(exactSecurityHeaders)) {
-		assert.deepEqual(configuredHeaders.get(name), [value]);
+		assert.deepEqual(configuredHeaders.get(name), [name === "cross-origin-resource-policy" ? "$classes_resource_policy" : value]);
 	}
 	assert.match(policy, /error_page 404 =404 \/404[.]html;/u);
 	assert.match(policy, /location = \/404[.]html \{\s*internal;/u);

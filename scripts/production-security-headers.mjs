@@ -66,7 +66,7 @@ const contentSecurityPolicies = Object.freeze(
 		[
 			"code-ide",
 			extendPolicy({
-				"img-src": ["'self'", "data:", "blob:"],
+				"img-src": ["'self'", "data:", "blob:", "https://assets.scratch.mit.edu"],
 				"script-src": [
 					"'self'",
 					"'unsafe-inline'",
@@ -78,7 +78,8 @@ const contentSecurityPolicies = Object.freeze(
 					...standardPolicy["connect-src"],
 					"https://cdn.jsdelivr.net",
 					"https://pypi.org",
-					"https://files.pythonhosted.org"
+					"https://files.pythonhosted.org",
+					"https://assets.scratch.mit.edu"
 				],
 				"frame-src": ["'self'"],
 				"media-src": ["'self'", "data:", "blob:"],

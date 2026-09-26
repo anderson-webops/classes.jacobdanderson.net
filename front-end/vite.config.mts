@@ -13,6 +13,7 @@ import Layouts from "vite-plugin-vue-layouts-next";
 import generateSitemap from "vite-ssg-sitemap";
 import { VueRouterAutoImports } from "vue-router/unplugin";
 import VueRouter from "vue-router/vite";
+import { scratchEditorPlugin } from "./scripts/scratch/plugin.mts";
 import { generateProductionSitemap } from "./scripts/sitemap.mts";
 import {
 	includedStaticRoutes,
@@ -59,6 +60,7 @@ export default defineConfig(({ command }) => ({
 	},
 
 	plugins: [
+		scratchEditorPlugin(),
 		/* 1️⃣  Router (must run before macros/layouts) */
 		VueRouter({
 			extensions: [".vue"],

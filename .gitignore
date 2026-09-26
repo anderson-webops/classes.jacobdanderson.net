@@ -26,3 +26,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Reproducibly prepared, checksum-verified Scratch distribution
+front-end/public/scratch-runtime/vendor/
+front-end/public/scratch-runtime/vendor.staging-*/
