@@ -33,7 +33,12 @@ context("Navigation & page smoke-tests", () => {
 		// ---- Book a Class --------------------------------------------------
 		cy.get(".site-nav").contains("a:visible", "Book a Class").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/signup`);
-		cy.get("h1").contains("Book a Class").should("exist");
+		cy.get("h1").contains("Schedule a class").should("be.visible");
+		cy.get('iframe[title="Class scheduler"]').should("be.visible");
+		cy.contains("button", "Expand calendar").click();
+		cy.get(".signup-page").should("have.class", "is-expanded");
+		cy.contains("button", "Exit expanded view").click();
+		cy.get(".signup-page").should("not.have.class", "is-expanded");
 
 		// ---- Tuition & Payment ---------------------------------------------
 		cy.get(".site-nav").contains("a:visible", "Tuition").click();
