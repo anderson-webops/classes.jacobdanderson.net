@@ -446,7 +446,7 @@ export function createProject(id, solution = false) {
 	};
 	const archive = zipSync(
 		{ "project.json": strToU8(JSON.stringify(project)), ...assets },
-		{ level: 6, mtime: new Date("2026-01-01T00:00:00Z") }
+		{ level: 6, mtime: new Date(2026, 0, 1) }
 	);
 	return { project, archive };
 }

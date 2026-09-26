@@ -1,3 +1,4 @@
+import { prepareScratchEditor } from "../front-end/scripts/scratch/prepare-editor.mjs";
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import http from "node:http";
@@ -354,6 +355,7 @@ async function runAxeAudit(page, url) {
 	throw new Error(`Unable to audit ${url}.`);
 }
 
+await prepareScratchEditor();
 await assertPortAvailable(frontendPort, "frontend");
 await assertPortAvailable(apiPort, "api");
 const apiServer = createMockApiServer();

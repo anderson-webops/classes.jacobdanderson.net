@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
@@ -71,4 +72,17 @@ test("published starters match the reproducible generator and do not include sol
 			),
 			createProject(lesson.id).archive
 		);
+});
+
+test("archives are reproducible across local time zones", () => {
+	const script = `import { createProject } from './front-end/scripts/scratch/generate-projects.mjs'; import { createHash } from 'node:crypto'; console.log(createHash('sha256').update(createProject('two-arrows').archive).digest('hex'));`;
+	const hashes = ["UTC", "America/Los_Angeles", "Asia/Tokyo"].map(TZ =>
+		execFileSync(process.execPath, ["--input-type=module", "-e", script], {
+			cwd: new URL("../", import.meta.url),
+			env: { ...process.env, TZ },
+			encoding: "utf8",
+			timeout: 10000
+		}).trim()
+	);
+	assert.equal(new Set(hashes).size, 1);
 });

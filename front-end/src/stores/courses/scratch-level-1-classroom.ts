@@ -4,7 +4,7 @@ import projects from "../../../scripts/scratch/projects.json";
 const units = [...new Set(projects.map(project => project.unit))];
 const introductions: Record<string, string> = {
 	"Events and movement":
-		"Start with four blocks, not a blank screen. An event is the trigger; the block beneath it is the action. Predict, press a key, then change one value. Keep the original working script beside your addition.",
+		"The first example contains just four blocks. An event is the trigger; the block beneath it is the action. Predict, press a key, then change one value. Keep the original working script beside your addition.",
 	"Position and reset":
 		"Drag a sprite to the place you want it, read x and y, and only then choose a motion block. Use the green flag to restore the starting scene and a click event to act. Compare an immediate go to with a timed glide. A layer block changes overlap, not position.",
 	"Dialogue and scenes":
