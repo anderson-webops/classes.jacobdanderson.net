@@ -94,6 +94,25 @@ test(
 			process.chdir(root);
 			server = await createServer({
 				root,
+				// Prebundle lazy IDE imports before a program starts; avoid cold-cache reloads.
+				optimizeDeps: {
+					include: [
+						"@codemirror/state",
+						"@codemirror/view",
+						"@codemirror/autocomplete",
+						"@codemirror/commands",
+						"@codemirror/lang-java",
+						"@codemirror/lang-python",
+						"@codemirror/language",
+						"@codemirror/lint",
+						"@codemirror/search",
+						"@lezer/highlight",
+						"@fortawesome/fontawesome-svg-core",
+						"@fortawesome/free-brands-svg-icons",
+						"@fortawesome/free-solid-svg-icons",
+						"@fortawesome/vue-fontawesome"
+					]
+				},
 				server: { host: "127.0.0.1", port: 0, strictPort: true }
 			});
 			await server.listen();
@@ -179,7 +198,7 @@ test(
 			});
 			await page.waitForSelector("button.run-control:not([disabled])");
 			for (let run = 0; run < 2; run += 1) {
-				await page.click("button.run-control");
+				await page.locator("button.run-control").click();
 				try {
 					await page.waitForFunction(
 						() =>

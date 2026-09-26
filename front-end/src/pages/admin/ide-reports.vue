@@ -148,7 +148,7 @@ meta:
 
 <style scoped>
 .report-inbox {
-	color: #14243b;
+	color: var(--color-ink, #14243b);
 	display: grid;
 	gap: 1rem;
 	min-width: 0;
