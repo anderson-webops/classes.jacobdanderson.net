@@ -30,3 +30,4 @@ pnpm-debug.log*
 # Reproducibly prepared, checksum-verified Scratch distribution
 front-end/public/scratch-runtime/vendor/
 front-end/public/scratch-runtime/vendor.staging-*/
+front-end/public/python-runtime/

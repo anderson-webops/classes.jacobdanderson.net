@@ -78,10 +78,21 @@ async function runFixture() {
 		);
 		const configPath = path.join(temporaryRoot, "nginx.conf");
 		await fs.cp(fixtureSource, distDirectory, { recursive: true });
+		for (const asset of [
+			"python-runtime/runtime.js",
+			"ide/assets/fixture.json"
+		]) {
+			const filename = path.join(distDirectory, asset);
+			await fs.mkdir(path.dirname(filename), { recursive: true });
+			await fs.writeFile(filename, "synthetic public asset");
+		}
 
 		const [maps, headers, sourcePolicy] = await Promise.all([
 			fs.readFile(
-				path.join(repositoryRoot, "deploy/native/classes-http-maps.conf"),
+				path.join(
+					repositoryRoot,
+					"deploy/native/classes-http-maps.conf"
+				),
 				"utf8"
 			),
 			fs.readFile(
@@ -105,7 +116,8 @@ async function runFixture() {
 			"root /srv/classes.jacobdanderson.net/current/front-end/dist;",
 			`root ${safeNginxPath(distDirectory)};`
 		);
-		const installedHeadersPath = "/etc/nginx/snippets/classes-static-headers.conf";
+		const installedHeadersPath =
+			"/etc/nginx/snippets/classes-static-headers.conf";
 		assert.ok(policy.includes(installedHeadersPath));
 		policy = policy.replaceAll(
 			installedHeadersPath,
@@ -152,24 +164,18 @@ async function runFixture() {
 			`${configTest.stdout}\n${configTest.stderr}`
 		);
 
-		nginxProcess = spawn("nginx", [
-			...nginxArguments,
-			"-g",
-			"daemon off;"
-		]);
+		nginxProcess = spawn("nginx", [...nginxArguments, "-g", "daemon off;"]);
 		let stderr = "";
 		nginxProcess.stderr.setEncoding("utf8");
-		nginxProcess.stderr.on("data", (chunk) => {
+		nginxProcess.stderr.on("data", chunk => {
 			stderr += chunk;
 		});
 
-		const request = requestPath => fetch(
-			`http://127.0.0.1:${port}${requestPath}`,
-			{
+		const request = requestPath =>
+			fetch(`http://127.0.0.1:${port}${requestPath}`, {
 				headers: { Host: "classes.jacobdanderson.net" },
 				redirect: "manual"
-			}
-		);
+			});
 		let ready = false;
 		for (let attempt = 0; attempt < 50; attempt += 1) {
 			if (nginxProcess.exitCode !== null) break;
@@ -179,13 +185,16 @@ async function runFixture() {
 					ready = true;
 					break;
 				}
-			}
-			catch {
+			} catch {
 				// Nginx may still be binding its fixture port.
 			}
 			await delay(100);
 		}
-		assert.equal(ready, true, `Nginx fixture did not become ready.\n${stderr}`);
+		assert.equal(
+			ready,
+			true,
+			`Nginx fixture did not become ready.\n${stderr}`
+		);
 
 		for (const [requestPath, marker, profile] of [
 			["/", "Classes root fixture", "standard"],
@@ -193,7 +202,11 @@ async function runFixture() {
 			["/ide/", "Classes IDE fixture", "code-ide"]
 		]) {
 			const response = await request(requestPath);
-			assert.equal(response.status, 200, `${requestPath} must not redirect`);
+			assert.equal(
+				response.status,
+				200,
+				`${requestPath} must not redirect`
+			);
 			assert.equal(
 				response.headers.get("content-security-policy"),
 				serializeContentSecurityPolicy(profile),
@@ -233,15 +246,46 @@ async function runFixture() {
 			assert.match(await response.text(), /Classes not-found fixture/u);
 		}
 
-		console.log("Native Nginx fixture passed clean-route, redirect, and 404 checks.");
-	}
-	finally {
+		for (const asset of [
+			"/python-runtime/runtime.js",
+			"/ide/assets/fixture.json"
+		]) {
+			const response = await request(asset);
+			assert.equal(response.status, 200);
+			assert.equal(
+				response.headers.get("access-control-allow-origin"),
+				"*"
+			);
+			assert.equal(
+				response.headers.get("cross-origin-resource-policy"),
+				"cross-origin"
+			);
+			assert.equal(
+				response.headers.get("access-control-allow-credentials"),
+				null
+			);
+		}
+		const normalPage = await request("/ide/");
+		assert.equal(
+			normalPage.headers.get("access-control-allow-origin"),
+			null
+		);
+		assert.equal(
+			normalPage.headers.get("cross-origin-resource-policy"),
+			"same-origin"
+		);
+		console.log(
+			"Native Nginx fixture passed routing, CSP and public runtime asset checks."
+		);
+	} finally {
 		if (nginxProcess) await stopNginx(nginxProcess);
 		await fs.rm(temporaryRoot, { force: true, recursive: true });
 	}
 }
 
-runFixture().catch((error) => {
-	console.error(error instanceof Error ? error.message : "Native Nginx fixture failed.");
+runFixture().catch(error => {
+	console.error(
+		error instanceof Error ? error.message : "Native Nginx fixture failed."
+	);
 	process.exitCode = 1;
 });

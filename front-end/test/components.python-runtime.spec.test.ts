@@ -1,0 +1,70 @@
+import { flushPromises, mount } from "@vue/test-utils";
+import { createPinia } from "pinia";
+import { describe, expect, it, vi } from "vitest";
+import { createMemoryHistory, createRouter } from "vue-router";
+import CodeIdeWorkspace from "@/components/CodeIdeWorkspace.vue";
+
+const calls = vi.hoisted(() => ({
+	get: vi.fn(),
+	post: vi.fn(),
+	put: vi.fn(),
+	delete: vi.fn()
+}));
+vi.mock("@/api", () => ({ api: calls }));
+
+describe("runtime-only Python surface", () => {
+	it("mounts and unmounts without account requests, persistence or editor controls", async () => {
+		const storage = Object.getOwnPropertyDescriptor(
+			window,
+			"localStorage"
+		)!;
+		const database = Object.getOwnPropertyDescriptor(window, "indexedDB");
+		const denyStorage = vi.fn(() => {
+			throw new Error("No origin storage in this fixture");
+		});
+		const router = createRouter({
+			history: createMemoryHistory(),
+			routes: [{ path: "/", component: { template: "<div/>" } }]
+		});
+		await router.push("/");
+		Object.defineProperty(window, "localStorage", {
+			configurable: true,
+			get: denyStorage
+		});
+		Object.defineProperty(window, "indexedDB", {
+			configurable: true,
+			get: denyStorage
+		});
+		const observe = vi.fn();
+		vi.stubGlobal(
+			"ResizeObserver",
+			class {
+				observe = observe;
+				disconnect = vi.fn();
+			}
+		);
+		let wrapper: ReturnType<typeof mount> | undefined;
+		try {
+			wrapper = mount(CodeIdeWorkspace, {
+				props: { runtimeOnly: true },
+				global: { plugins: [createPinia(), router] }
+			});
+			await flushPromises();
+			expect(wrapper.findAll("textarea, input, button")).toHaveLength(0);
+			document.dispatchEvent(new Event("visibilitychange"));
+			window.dispatchEvent(new Event("pagehide"));
+			wrapper.unmount();
+			wrapper = undefined;
+			await flushPromises();
+			expect(denyStorage).not.toHaveBeenCalled();
+			for (const call of Object.values(calls))
+				expect(call).not.toHaveBeenCalled();
+		} finally {
+			wrapper?.unmount();
+			Object.defineProperty(window, "localStorage", storage);
+			if (database) Object.defineProperty(window, "indexedDB", database);
+			else Reflect.deleteProperty(window, "indexedDB");
+			vi.unstubAllGlobals();
+		}
+	});
+});

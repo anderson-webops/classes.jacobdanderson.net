@@ -27,6 +27,7 @@ import {
 	nextTick,
 	onBeforeUnmount,
 	onMounted,
+	reactive,
 	ref,
 	watch
 } from "vue";
@@ -85,7 +86,23 @@ import {
 	pythonIdeAssetLookupAliases
 } from "@/modules/pythonIdeCourseAssets";
 import { primePythonRuntimeConnection } from "@/modules/pythonIdeRuntimeHints";
+import {
+	sandboxRun,
+	startPythonSandbox,
+	unchangedRunFiles
+} from "@/modules/pythonSandbox";
 import { useAppStore } from "@/stores/app";
+
+const props = withDefaults(defineProps<{ runtimeOnly?: boolean }>(), {
+	runtimeOnly: false
+});
+const emit = defineEmits<{
+	runtimeMessage: [message: Record<string, unknown>];
+}>();
+const sandboxHost = ref<HTMLElement | null>(null);
+const sandboxActive = ref(false);
+const sandboxPresent = ref(false);
+let activeSandbox: ReturnType<typeof startPythonSandbox> | null = null;
 
 type PythonCodeEditorModules = [
 	typeof import("@codemirror/view"),
@@ -783,6 +800,7 @@ function loadPythonRuntimeModule() {
 }
 
 function loadPythonIdeAutoSavePreference() {
+	if (props.runtimeOnly) return false;
 	if (typeof window === "undefined") return true;
 	return window.localStorage.getItem(pythonIdeAutoSaveStorageKey) !== "off";
 }
@@ -796,6 +814,7 @@ function persistPythonIdeAutoSavePreference(enabled: boolean) {
 }
 
 function loadPythonIdeCodeRecommendationsPreference() {
+	if (props.runtimeOnly) return false;
 	if (typeof window === "undefined") return true;
 	return (
 		window.localStorage.getItem(pythonIdeCodeRecommendationsStorageKey) !==
@@ -812,7 +831,7 @@ function persistPythonIdeCodeRecommendationsPreference(enabled: boolean) {
 }
 
 function loadPythonIdeEditorLineWrapPreference() {
-	if (typeof window === "undefined") return true;
+	if (props.runtimeOnly || typeof window === "undefined") return true;
 	return (
 		window.localStorage.getItem(pythonIdeEditorLineWrapStorageKey) !== "off"
 	);
@@ -827,7 +846,7 @@ function persistPythonIdeEditorLineWrapPreference(enabled: boolean) {
 }
 
 function loadPythonIdeExpandedWorkspacePreference() {
-	if (typeof window === "undefined") return false;
+	if (props.runtimeOnly || typeof window === "undefined") return false;
 	return (
 		window.localStorage.getItem(pythonIdeExpandedWorkspaceStorageKey) ===
 		"on"
@@ -843,7 +862,7 @@ function persistPythonIdeExpandedWorkspacePreference(enabled: boolean) {
 }
 
 function loadPythonIdeSplitPercentPreference() {
-	if (typeof window === "undefined") return null;
+	if (props.runtimeOnly || typeof window === "undefined") return null;
 	const storedValue = window.localStorage.getItem(
 		pythonIdeSplitPercentStorageKey
 	);
@@ -1044,12 +1063,12 @@ const turtleFillState: TurtleFillState = {
 	points: []
 };
 
-const gameState: GameCanvasState = {
+const gameState = reactive<GameCanvasState>({
 	width: 640,
 	height: 400,
 	background: "#111827",
 	backgroundGradient: null
-};
+});
 
 const selectedProject = computed(() => {
 	const selected = projects.value.find(
@@ -1171,6 +1190,7 @@ const sortedProjects = computed(() =>
 );
 const runControlIsStop = computed(
 	() =>
+		sandboxActive.value ||
 		isRunning.value ||
 		isGameLoopActive.value ||
 		activeTurtleTimerCount.value > 0 ||
@@ -1198,6 +1218,12 @@ const usesGameCanvas = computed(() => selectedProject.value?.mode === "pgzero");
 const usesKarelWorld = computed(() => selectedProject.value?.mode === "karel");
 const usesVisualOutput = computed(
 	() => usesDrawingCanvas.value || usesKarelWorld.value
+);
+const hasRuntimeVisuals = computed(
+	() =>
+		usesVisualOutput.value ||
+		runtimeArtifacts.value.length > 0 ||
+		(sandboxPresent.value && selectedProject.value?.mode === "data")
 );
 const activeIdeSplitPercent = computed(
 	() =>
@@ -1483,6 +1509,13 @@ function captureIdeDiagnostics() {
 
 function appendOutput(kind: OutputLine["kind"], text: string) {
 	if (!text) return;
+	if (props.runtimeOnly) {
+		emit("runtimeMessage", {
+			type: "output",
+			kind,
+			text: text.slice(0, 16_000)
+		});
+	}
 	if (kind === "stderr") recordIdeFailure(text);
 	const outputText =
 		text.length > maxOutputTextLength
@@ -1639,6 +1672,10 @@ function mergeRuntimeProjectFiles(
 	project: PythonIdeProject,
 	files: PythonIdeFile[]
 ) {
+	if (props.runtimeOnly) {
+		emit("runtimeMessage", { type: "files", files });
+		return;
+	}
 	const currentProject = projects.value.find(
 		candidate => candidate._id === project._id
 	);
@@ -2139,6 +2176,7 @@ async function discardLocalProjectSnapshotIfSafe() {
 }
 
 function scheduleLocalProjectSnapshot() {
+	if (props.runtimeOnly) return;
 	cancelLocalProjectSnapshot();
 	localSnapshotTimer = window.setTimeout(() => {
 		localSnapshotTimer = null;
@@ -2296,6 +2334,7 @@ async function selectCatalogProject(projectID: string) {
 }
 
 async function loadProjects() {
+	if (props.runtimeOnly) return;
 	const loadRunID = ++projectLoadRunID;
 	isLoading.value = true;
 	suppressAutoSave = true;
@@ -2556,6 +2595,7 @@ async function saveProjectOnce(
 }
 
 async function savePendingProjects(options: SaveProjectOptions = {}) {
+	if (props.runtimeOnly) return;
 	if (suppressAutoSave && !options.force) return;
 	if (saveInFlight) {
 		saveQueued = true;
@@ -2599,12 +2639,14 @@ async function savePendingProjects(options: SaveProjectOptions = {}) {
 }
 
 async function saveSelectedProject(options: SaveProjectOptions = {}) {
+	if (props.runtimeOnly) return;
 	const projectID = selectedProject.value?._id;
 	if (projectID) pendingSaveProjectIDs.add(projectID);
 	return savePendingProjects(options);
 }
 
 function scheduleSave() {
+	if (props.runtimeOnly) return;
 	if (suppressAutoSave) return;
 	const projectID = selectedProject.value?._id;
 	if (!projectID) return;
@@ -2630,6 +2672,7 @@ function scheduleSave() {
 }
 
 function flushPendingProjectSave() {
+	if (props.runtimeOnly) return;
 	if (
 		suppressAutoSave ||
 		!autoSaveEnabled.value ||
@@ -3261,6 +3304,7 @@ function restoreCodeEditorViewState(
 }
 
 async function resetCodeEditor() {
+	if (props.runtimeOnly) return;
 	const resetToken = ++codeEditorResetToken;
 	saveCodeEditorViewState();
 	codeEditorView?.destroy();
@@ -3547,6 +3591,8 @@ function canDeleteFile(file: PythonIdeFile) {
 }
 
 function clearOutput() {
+	if (activeSandbox) stopActiveRuntimeSurfaces();
+	sandboxPresent.value = false;
 	clearKarelWorldPlayback();
 	outputLines.value = [];
 	runtimeArtifacts.value = [];
@@ -5223,6 +5269,7 @@ function getGameImageEntry(asset: ResolvedGameAsset) {
 		loaded: false,
 		src
 	};
+	entry.element.crossOrigin = "anonymous";
 	entry.element.addEventListener("load", () => {
 		entry.loaded = true;
 		requestGameTick();
@@ -6560,6 +6607,8 @@ function shouldStopPythonIdeRun(runID: number, projectID: string) {
 }
 
 async function runCurrentProject() {
+	activeSandbox?.destroy();
+	activeSandbox = null;
 	diagnosticFailure.value = null;
 	diagnosticStage.value = "preparing";
 	const runID = nextPythonIdeRunID();
@@ -6585,7 +6634,7 @@ async function runCurrentProject() {
 	runMessage.value = isJavaIdeMode(project.mode)
 		? "Starting Java"
 		: "Starting Python";
-	appendOutput("system", `Running ${runnableFile.name}`);
+	if (!props.runtimeOnly) appendOutput("system", `Running ${runnableFile.name}`);
 	clearPythonRuntimeDiagnosticInEditor();
 
 	try {
@@ -6625,6 +6674,59 @@ async function runCurrentProject() {
 				: project.mode === "karel"
 					? "Karel world ready"
 					: "Run complete";
+			return;
+		}
+
+		if (!props.runtimeOnly) {
+			if (!sandboxHost.value)
+				throw new Error("Python output surface is unavailable.");
+			const account = storageUserID.value;
+			const files = project.files.map(file => ({
+				name: file.name,
+				content: file.content,
+				encoding: file.encoding ?? "text"
+			}));
+			const request = sandboxRun({
+				mode: project.mode,
+				activeFileName: runnableFile.name,
+				files,
+				inputText: inputText.value
+			});
+			if (!request)
+				throw new Error("Project exceeds the isolated runtime limits.");
+			activeSandbox = startPythonSandbox(sandboxHost.value, request, {
+				isCurrent: () =>
+					account === storageUserID.value &&
+					!shouldStopPythonIdeRun(runID, project._id),
+				onOutput: appendOutput,
+				onStage: stage => {
+					diagnosticStage.value = stage;
+				},
+				onPythonVersion: version => {
+					diagnosticPythonVersion.value = version;
+				},
+				onActivity: active => {
+					sandboxActive.value = active;
+				},
+				onFiles: nextFiles => {
+					const current = projects.value.find(
+						candidate => candidate._id === project._id
+					);
+					if (current && unchangedRunFiles(current, files)) {
+						mergeRuntimeProjectFiles(current, nextFiles);
+					} else {
+						appendOutput(
+							"system",
+							"Runtime file changes were not saved because you edited the project during this run."
+						);
+					}
+				}
+			});
+			sandboxPresent.value = true;
+			await activeSandbox.done;
+			if (shouldStopPythonIdeRun(runID, project._id)) return;
+			diagnosticStage.value = "completed";
+			runMessage.value = "Run complete";
 			return;
 		}
 
@@ -6690,7 +6792,14 @@ async function runCurrentProject() {
 		}
 	} catch (error) {
 		if (shouldStopPythonIdeRun(runID, project._id)) return;
+		if (!props.runtimeOnly) sandboxPresent.value = false;
 		const formattedError = formatPythonRuntimeError(error);
+		if (props.runtimeOnly) {
+			emit("runtimeMessage", {
+				type: "error",
+				message: formattedError.slice(0, 16_000)
+			});
+		}
 		appendOutput("stderr", formattedError);
 		recordIdeFailure(error);
 		void markPythonRuntimeErrorInEditor(formattedError, runnableFile.name);
@@ -6726,6 +6835,10 @@ function stopCurrentProject() {
 
 function stopActiveRuntimeSurfaces() {
 	invalidatePythonIdeRuns();
+	activeSandbox?.destroy();
+	activeSandbox = null;
+	sandboxActive.value = false;
+	sandboxPresent.value = false;
 	isRunning.value = false;
 	clearKarelWorldPlayback();
 	invalidateTurtleBridgeRuns();
@@ -7178,8 +7291,10 @@ function clearCanvasKeyboardState() {
 watch(
 	() => storageUserID.value,
 	() => {
+		stopActiveRuntimeSurfaces();
 		void loadProjects();
-	}
+	},
+	{ flush: "sync" }
 );
 
 watch(
@@ -7282,6 +7397,12 @@ watch(
 );
 
 onMounted(() => {
+	if (props.runtimeOnly) {
+		window.addEventListener("keydown", handleKeyDown, true);
+		window.addEventListener("keyup", handleKeyUp, true);
+		window.addEventListener("mouseup", handleWindowMouseUp);
+		return;
+	}
 	primePythonRuntimeConnection();
 	void refreshPythonIdeStoragePersistenceStatus();
 	void loadProjects();
@@ -7322,11 +7443,105 @@ onBeforeUnmount(() => {
 	releaseLoadedPythonRuntimeCallbacks();
 	resizeObserver?.disconnect();
 });
-defineExpose({ stop: stopCurrentProject });
+watch(runControlIsStop, active => {
+	if (props.runtimeOnly) emit("runtimeMessage", { type: "activity", active });
+});
+watch(
+	diagnosticStage,
+	stage => {
+		if (props.runtimeOnly) emit("runtimeMessage", { type: "stage", stage });
+	},
+	{ flush: "sync" }
+);
+watch(
+	diagnosticPythonVersion,
+	version => {
+		if (props.runtimeOnly)
+			emit("runtimeMessage", { type: "version", version });
+	},
+	{ flush: "sync" }
+);
+
+async function runIsolated(request: unknown) {
+	if (
+		!props.runtimeOnly ||
+		window.parent === window ||
+		window.origin !== "null"
+	) {
+		throw new Error("Python execution requires an isolated frame.");
+	}
+	const run = sandboxRun(request);
+	if (!run) throw new Error("Invalid Python runtime request.");
+	projects.value = [
+		{
+			_id: "runtime",
+			title: "Python runtime",
+			mode: run.mode,
+			files: run.files,
+			activeFileName: run.activeFileName
+		}
+	];
+	selectedProjectID.value = "runtime";
+	inputText.value = run.inputText;
+	isLoading.value = false;
+	await nextTick();
+	focusVisualOutputForRun();
+	await runCurrentProject();
+	emit("runtimeMessage", { type: "done" });
+}
+
+defineExpose({ stop: stopCurrentProject, runIsolated });
 </script>
 
 <template>
 	<section
+		v-if="runtimeOnly"
+		class="isolated-runtime"
+		:class="{ 'isolated-runtime--canvas': usesDrawingCanvas }"
+		aria-label="Python runtime surface"
+	>
+		<canvas
+			v-show="usesDrawingCanvas"
+			ref="canvasRef"
+			class="turtle-canvas"
+			:class="{ 'turtle-canvas--game': usesGameCanvas }"
+			:style="drawingCanvasStyle"
+			tabindex="0"
+			aria-label="Python drawing canvas"
+			@blur="clearCanvasKeyboardState"
+			@mousedown="dispatchCanvasPointerEvent($event, 'mousedown')"
+			@mousemove="dispatchCanvasPointerEvent($event, 'mousemove')"
+			@mouseup="dispatchCanvasPointerEvent($event, 'mouseup')"
+			@wheel="dispatchCanvasWheelEvent"
+		/>
+		<figure
+			v-for="artifact in runtimeArtifacts"
+			:key="artifact.id"
+			class="artifact-card"
+		>
+			<figcaption>{{ artifact.title }}</figcaption>
+			<img
+				v-if="artifact.dataUrl"
+				:src="artifact.dataUrl"
+				:alt="artifact.title"
+			/>
+			<audio
+				v-else-if="artifact.audioUrl"
+				controls
+				:src="artifact.audioUrl"
+			/>
+			<iframe
+				v-else-if="artifact.srcdoc"
+				sandbox="allow-scripts"
+				referrerpolicy="no-referrer"
+				:srcdoc="artifact.srcdoc"
+				:title="artifact.title"
+			/>
+			<pre v-else>{{ artifact.text }}</pre>
+		</figure>
+	</section>
+	<section
+		v-else
 		class="code-ide-page page-shell page-shell--wide"
 		:class="{ 'code-ide-page--expanded': ideExpanded }"
 	>
@@ -8358,8 +8573,7 @@ defineExpose({ stop: stopCurrentProject });
 						class="result-panel"
 						:class="{
 							'result-panel--visual':
-								!consoleExpanded &&
-								(usesVisualOutput || runtimeArtifacts.length),
+								!consoleExpanded && hasRuntimeVisuals,
 							'result-panel--console-expanded': consoleExpanded
 						}"
 						aria-label="Code output"
@@ -8398,10 +8612,13 @@ defineExpose({ stop: stopCurrentProject });
 							</div>
 						</div>
 
-						<div
-							v-show="usesVisualOutput || runtimeArtifacts.length"
-							class="result-visuals"
-						>
+						<div v-show="hasRuntimeVisuals" class="result-visuals">
+							<div
+								v-show="sandboxPresent"
+								ref="sandboxHost"
+								class="python-sandbox-host"
+								aria-label="Isolated Python output host"
+							/>
 							<div
 								v-show="usesKarelWorld"
 								ref="karelWorldRef"
@@ -8453,7 +8670,7 @@ defineExpose({ stop: stopCurrentProject });
 							</div>
 
 							<div
-								v-show="usesDrawingCanvas"
+								v-if="usesDrawingCanvas && !sandboxPresent"
 								class="canvas-shell"
 								:class="{
 									'canvas-shell--game': usesGameCanvas
@@ -8539,9 +8756,14 @@ defineExpose({ stop: stopCurrentProject });
 						<div class="input-output-grid">
 							<label class="stdin-panel">
 								<span>Input</span>
+								<small
+									>Python and Turtle prompts read one line at
+									a time. Use :cancel to cancel a Turtle
+									prompt.</small
+								>
 								<textarea
 									v-model="inputText"
-									placeholder="One input or Scanner value per line"
+									placeholder="One input, Turtle prompt, or Scanner value per line"
 								/>
 							</label>
 
@@ -10139,6 +10361,28 @@ html.dark .editor-shortcuts ul {
 	overscroll-behavior: contain;
 }
 
+.python-sandbox-host {
+	height: 100%;
+	min-height: 0;
+}
+
+.isolated-runtime--canvas {
+	box-sizing: border-box;
+	container-type: size;
+	display: grid;
+	place-items: center;
+	height: calc(100vh - 16px);
+	padding: 1rem;
+}
+
+.isolated-runtime--canvas .turtle-canvas {
+	width: min(100%, calc(100cqh * var(--python-turtle-aspect, 640 / 480)));
+}
+
+.isolated-runtime--canvas .turtle-canvas--game {
+	width: min(100%, calc(100cqh * var(--python-game-aspect, 640 / 400)));
+}
+
 .result-panel--console-expanded .result-visuals,
 .result-panel--console-expanded .stdin-panel {
 	display: none;
@@ -10210,6 +10454,11 @@ html.dark .editor-shortcuts ul {
 .turtle-canvas--game {
 	width: 100%;
 	height: 100%;
+}
+
+.isolated-runtime .turtle-canvas--game {
+	height: auto;
+	aspect-ratio: var(--python-game-aspect, 640 / 400);
 }
 
 .karel-shell {

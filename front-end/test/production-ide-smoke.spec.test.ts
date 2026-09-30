@@ -9,7 +9,8 @@ import {
 	pythonIdeWorkerAssetUrls,
 	productionIdeSmokePageUrls,
 	sameOriginJavaScriptImportUrls,
-	validatePlainPythonWorkerSecurityHeaders
+	validatePlainPythonWorkerSecurityHeaders,
+	validatePythonRuntimeAssetHeaders
 } from "../../scripts/production-ide-smoke.mjs";
 import {
 	exactSecurityHeaders,
@@ -17,6 +18,21 @@ import {
 } from "../../scripts/production-security-headers.mjs";
 
 describe("production Code IDE smoke helpers", () => {
+	it("requires anonymous public runtime asset headers without credential support", () => {
+		const headers = new Headers({
+			"access-control-allow-origin": "*",
+			"cross-origin-resource-policy": "cross-origin",
+			"x-content-type-options": "nosniff"
+		});
+		expect(() => validatePythonRuntimeAssetHeaders(headers)).not.toThrow();
+		for (const name of [...headers.keys()]) {
+			const missing = new Headers(headers);
+			missing.delete(name);
+			expect(() => validatePythonRuntimeAssetHeaders(missing)).toThrow();
+		}
+		headers.set("access-control-allow-credentials", "true");
+		expect(() => validatePythonRuntimeAssetHeaders(headers)).toThrow();
+	});
 	it("checks the single generalized IDE entry route", () => {
 		expect(
 			productionIdeSmokePageUrls(

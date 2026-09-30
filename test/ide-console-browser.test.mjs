@@ -89,6 +89,7 @@ test(
 					}
 				});
 				await page.evaluateOnNewDocument(mode => {
+					if (window !== window.top) return;
 					const name = ["java", "karel"].includes(mode)
 						? "Main.java"
 						: "main.py";

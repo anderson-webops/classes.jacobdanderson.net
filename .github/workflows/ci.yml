@@ -147,6 +147,12 @@ jobs:
             - name: Native deployment contract tests
               run: npm run test:native-deployment
 
+            - name: Turtle input compatibility
+              run: python3 -B test/turtle-input-box.test.py
+
+            - name: Verify root snapshot and separate runtime ownership
+              run: sudo python3 -B test/native-candidate-ownership.test.py
+
     accessibility:
         runs-on: ubuntu-latest
         timeout-minutes: 15

@@ -13,6 +13,7 @@ import Layouts from "vite-plugin-vue-layouts-next";
 import generateSitemap from "vite-ssg-sitemap";
 import { VueRouterAutoImports } from "vue-router/unplugin";
 import VueRouter from "vue-router/vite";
+import { pythonRuntimePlugin } from "./scripts/python-runtime-plugin.mts";
 import { scratchEditorPlugin } from "./scripts/scratch/plugin.mts";
 import { generateProductionSitemap } from "./scripts/sitemap.mts";
 import {
@@ -60,6 +61,7 @@ export default defineConfig(({ command }) => ({
 	},
 
 	plugins: [
+		pythonRuntimePlugin(),
 		scratchEditorPlugin(),
 		/* 1️⃣  Router (must run before macros/layouts) */
 		VueRouter({

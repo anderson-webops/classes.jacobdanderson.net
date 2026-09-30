@@ -5,6 +5,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer";
 import { createServer } from "vite";
+import { publicRuntimeHeaders, pythonFrame } from "./python-frame-fixture.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const code = readFileSync(
@@ -13,7 +14,8 @@ const code = readFileSync(
 );
 
 async function pixels(page) {
-	const data = await page.$eval(".turtle-canvas", canvas =>
+	const runtime = await pythonFrame(page);
+	const data = await runtime.$eval(".turtle-canvas", canvas =>
 		canvas.toDataURL()
 	);
 	return createHash("sha256").update(data).digest("hex");
@@ -33,7 +35,10 @@ async function checkpoint(page, text) {
 }
 
 async function key(page, value) {
-	await page.$eval(".turtle-canvas", el => el.focus({ preventScroll: true }));
+	const runtime = await pythonFrame(page);
+	await runtime.$eval(".turtle-canvas", el =>
+		el.focus({ preventScroll: true })
+	);
 	await page.keyboard.press(value);
 	await page.evaluate(
 		() =>
@@ -114,11 +119,13 @@ test(
 					void request.respond({
 						status: 200,
 						contentType: "application/json",
-						body: '{"assets":[]}'
+						body: '{"assets":[]}',
+						headers: publicRuntimeHeaders
 					});
 				else void request.continue();
 			});
 			await page.evaluateOnNewDocument(code => {
+				if (window !== window.top) return;
 				const date = new Date().toISOString();
 				localStorage.setItem(
 					"classes-python-ide-projects:anonymous",
@@ -306,7 +313,8 @@ test(
 				cleared,
 				"repeated explicit updates retain the same scene"
 			);
-			await page.evaluate(() => {
+			const runtime = await pythonFrame(page);
+			await runtime.evaluate(() => {
 				window.tracerFrames = new Set();
 				window.sampleTracerFrames = true;
 				function sample() {
@@ -320,8 +328,8 @@ test(
 			});
 			await key(page, "a");
 			await checkpoint(page, "ANIMATING");
-			await page.waitForFunction(() => window.tracerFrames.size >= 3);
-			await page.evaluate(() => {
+			await runtime.waitForFunction(() => window.tracerFrames.size >= 3);
+			await runtime.evaluate(() => {
 				window.sampleTracerFrames = false;
 			});
 			console.log(
@@ -334,7 +342,10 @@ test(
 					.find(button => button.textContent.includes("Clear output"))
 					.click()
 			);
-			assert.notEqual(await pixels(page), cleared);
+			assert.equal(
+				await page.$('iframe[title="Isolated Python output"]'),
+				null
+			);
 			await page.close();
 		} finally {
 			await browser?.close();

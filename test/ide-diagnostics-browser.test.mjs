@@ -4,6 +4,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer";
 import { createServer } from "vite";
+import { publicRuntimeHeaders } from "./python-frame-fixture.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 
@@ -154,12 +155,14 @@ test(
 						void request.respond({
 							status: 200,
 							contentType: "application/json",
-							body: '{"assets":[]}'
+							body: '{"assets":[]}',
+							headers: publicRuntimeHeaders
 						});
 					} else void request.continue();
 				});
 				await page.evaluateOnNewDocument(
 					({ mode, title, code }) => {
+						if (window !== window.top) return;
 						const name = ["java", "karel"].includes(mode)
 							? "Main.java"
 							: "main.py";

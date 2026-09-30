@@ -14,6 +14,7 @@ import {
 } from "@/modules/pythonIdeRuntimeHints";
 import { pythonIdeImportedTopLevelModules } from "@/modules/pythonImportScanner";
 import { pythonStandardLibraryModules } from "@/modules/pythonStandardLibraryModules";
+import PythonWorker from "../workers/pythonIdePlainWorker?worker&inline";
 
 export { pythonIdeImportedTopLevelModules } from "@/modules/pythonImportScanner";
 
@@ -500,10 +501,7 @@ export async function releasePythonIdeRuntimeCallbacks() {
 }
 
 function getPlainPythonWorker() {
-	plainPythonWorker ??= new Worker(
-		new URL("../workers/pythonIdePlainWorker.ts", import.meta.url),
-		{ type: "module" }
-	);
+	plainPythonWorker ??= new PythonWorker();
 	return plainPythonWorker;
 }
 
@@ -1595,19 +1593,19 @@ class _Screen:
         return _screen_width
 
     def textinput(self, title, prompt):
-        try:
-            result = window.prompt(str(prompt), "")
-        except Exception:
+        import builtins
+        result = builtins.input("[{}] {}".format(title, prompt))
+        if result == ":cancel":
             return None
-        return None if result is None else str(result)
+        return ":cancel" if result == chr(92) + ":cancel" else result
 
     def numinput(self, title, prompt, default=None, minval=None, maxval=None):
-        default_text = "" if default is None else str(default)
-        try:
-            result = window.prompt(str(prompt), default_text)
-        except Exception:
+        result = self.textinput(title, prompt)
+        if result is None:
             return None
-        if result is None or str(result).strip() == "":
+        if str(result).strip() == "":
+            result = default
+        if result is None:
             return None
         try:
             number = float(result)
@@ -5511,6 +5509,8 @@ function writeRuntimeShims(pyodide: PyodideAPI) {
 }
 
 export async function runPythonProject(options: RunPythonProjectOptions) {
+	if (window.parent === window || window.origin !== "null")
+		throw new Error("Python execution requires an opaque runtime frame.");
 	options.onStage?.("loading-runtime");
 	if (options.mode === "python")
 		return runPlainPythonProjectInWorker(options);

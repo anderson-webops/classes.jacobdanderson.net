@@ -83,7 +83,7 @@ const contentSecurityPolicies = Object.freeze(
 				],
 				"frame-src": ["'self'"],
 				"media-src": ["'self'", "data:", "blob:"],
-				"worker-src": ["'self'"]
+				"worker-src": ["'self'", "blob:"]
 			})
 		],
 		[

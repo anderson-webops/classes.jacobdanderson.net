@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 import puppeteer from "puppeteer";
 import { createServer } from "vite";
+import { publicRuntimeHeaders, pythonFrame } from "./python-frame-fixture.mjs";
 
 // Uses the real IDE and Pyodide runtime. No account or backend is required.
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
@@ -139,7 +140,7 @@ test(
 			// Suppress network-only shared assets; this fixture uses generated images.
 			await page.setRequestInterception(true);
 			page.on("request", request => {
-				if (new URL(request.url()).pathname === "/accounts/me") {
+				if (new URL(request.url()).pathname.startsWith("/api/")) {
 					void request.respond({
 						status: 200,
 						contentType: "application/json",
@@ -160,15 +161,17 @@ test(
 									mimeType: "image/svg+xml",
 									width: 1,
 									height: 1,
-									url: "/fixture.svg"
+									url: "/ide/assets/fixture.svg"
 								}
 							]
-						})
+						}),
+						headers: publicRuntimeHeaders
 					});
 				} else if (request.url().endsWith("/fixture.svg")) {
 					void request.respond({
 						status: 200,
 						contentType: "image/svg+xml",
+						headers: publicRuntimeHeaders,
 						body: '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" />'
 					});
 				} else {
@@ -176,6 +179,7 @@ test(
 				}
 			});
 			await page.evaluateOnNewDocument(code => {
+				if (window !== window.top) return;
 				const now = new Date().toISOString();
 				localStorage.setItem(
 					"classes-python-ide-projects:anonymous",
@@ -199,6 +203,7 @@ test(
 			await page.waitForSelector("button.run-control:not([disabled])");
 			for (let run = 0; run < 2; run += 1) {
 				await page.locator("button.run-control").click();
+				const runtime = await pythonFrame(page);
 				try {
 					await page.waitForFunction(
 						() =>
@@ -207,7 +212,7 @@ test(
 								?.textContent?.includes("SURFACE_TEST_PASS"),
 						{ timeout: 90000 }
 					);
-					await page.waitForFunction(
+					await runtime.waitForFunction(
 						() => {
 							const canvas = document.querySelector(
 								"canvas.turtle-canvas--game"
@@ -239,7 +244,7 @@ test(
 					"Stop"
 				);
 				await page.click(".console-expand-toggle");
-				await page.waitForFunction(() => {
+				await runtime.waitForFunction(() => {
 					const canvas = document.querySelector(
 						"canvas.turtle-canvas--game"
 					);
@@ -254,7 +259,7 @@ test(
 						).data;
 					return pixel[0] === 255 && pixel[1] === 0;
 				});
-				const pixels = await page.$eval(
+				const pixels = await runtime.$eval(
 					"canvas.turtle-canvas--game",
 					canvas => {
 						const context = canvas.getContext("2d");

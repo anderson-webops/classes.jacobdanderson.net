@@ -3404,8 +3404,10 @@ pgzrun.go()
 		);
 		expect(runtimeSource).toContain('script.crossOrigin = "anonymous";');
 		expect(runtimeSource).toContain(
-			'new URL("../workers/pythonIdePlainWorker.ts", import.meta.url)'
+			'from "../workers/pythonIdePlainWorker?worker&inline"'
 		);
+		expect(runtimeSource).toContain("new PythonWorker()");
+		expect(runtimeSource).toContain('window.origin !== "null"');
 		expect(runtimeSource).toContain(
 			"export function stopPythonIdeRuntimeRun"
 		);
@@ -3554,15 +3556,15 @@ pgzrun.go()
 		expect(pageSource).toContain("canvas-frame--game");
 		expect(pageSource).toContain("turtle-canvas--game");
 		expect(pageSource).toContain("ide-grid--drawing");
-		const gameFrameStart = pageSource.indexOf(".canvas-frame--game");
-		const gameCanvasStart = pageSource.indexOf(".turtle-canvas--game");
+		const gameFrameStart = pageSource.indexOf("\n.canvas-frame--game {");
+		const gameCanvasStart = pageSource.indexOf("\n.turtle-canvas--game {");
 		const gameFrameSource = pageSource.slice(
 			gameFrameStart,
 			gameCanvasStart
 		);
 		const gameCanvasSource = pageSource.slice(
 			gameCanvasStart,
-			pageSource.indexOf(".karel-shell", gameCanvasStart)
+			pageSource.indexOf("\n}", gameCanvasStart) + 2
 		);
 
 		expect(gameFrameSource).toContain(
@@ -3575,6 +3577,12 @@ pgzrun.go()
 		expect(gameCanvasSource).toContain("height: 100%;");
 		expect(gameCanvasSource).not.toContain("height: auto;");
 		expect(gameCanvasSource).not.toContain("aspect-ratio:");
+		expect(pageSource).toContain(
+			"const gameState = reactive<GameCanvasState>"
+		);
+		expect(pageSource).toMatch(
+			/\.isolated-runtime \.turtle-canvas--game\s*\{\s*height: auto;\s*aspect-ratio: var\(--python-game-aspect, 640 \/ 400\);/
+		);
 		expect(pageSource).toContain(
 			".turtle-canvas:not(.turtle-canvas--game)"
 		);

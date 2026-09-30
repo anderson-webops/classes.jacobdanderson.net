@@ -357,35 +357,46 @@ async function assertProductionIdePage(pageUrl) {
 		);
 	}
 
-	const workerAssetUrls = pythonIdeWorkerAssetUrls(combinedAssetSource, pageUrl);
-	if (workerAssetUrls.length !== 1) {
-		throw new Error(`${pageUrl.href} did not reference exactly one hashed plain-Python worker asset`);
-	}
-	const workerUrl = new URL(workerAssetUrls[0]);
-	const workerResponse = await smokeRequest(workerUrl, {
+	const runtimeUrl = new URL("/python-runtime/runtime.js", pageUrl);
+	const runtimeResponse = await smokeRequest(runtimeUrl, {
 		headers: {
 			accept: "application/javascript,text/javascript,*/*"
 		},
 		timeoutMs
 	});
-	if (!workerResponse.ok) {
-		throw new Error(`${workerUrl.href} returned HTTP ${workerResponse.status}`);
+	if (!runtimeResponse.ok) {
+		throw new Error(`${runtimeUrl.href} returned HTTP ${runtimeResponse.status}`);
 	}
-	validatePlainPythonWorkerSecurityHeaders(workerResponse.headers, workerUrl.pathname);
-	const workerSource = await boundedResponseText(
-		workerResponse,
-		workerUrl,
+	validatePythonRuntimeAssetHeaders(runtimeResponse.headers);
+	const runtimeSource = await boundedResponseText(
+		runtimeResponse,
+		runtimeUrl,
 		productionIdeSmokeLimits.maxAssetBytes
 	);
-	if (!containsPlainPythonWorkerMarkers(workerSource)) {
-		throw new Error(`${workerUrl.href} was not the current plain-Python worker bundle`);
+	if (!runtimeSource.includes("An opaque Python frame is required.") ||
+		!runtimeSource.includes("Python execution requires an isolated frame.")) {
+		throw new Error(`${runtimeUrl.href} was not the isolated Python runtime bundle`);
 	}
+	const stylesheetUrl = new URL("/python-runtime/runtime.css", pageUrl);
+	const stylesheet = await smokeRequest(stylesheetUrl, { timeoutMs });
+	if (!stylesheet.ok) throw new Error(`${stylesheetUrl.href} returned HTTP ${stylesheet.status}`);
+	validatePythonRuntimeAssetHeaders(stylesheet.headers);
+	await boundedResponseText(stylesheet, stylesheetUrl, productionIdeSmokeLimits.maxAssetBytes);
 
 	console.log(
 		`OK: ${pageUrl.href} references ${ideAsset?.url ?? "IDE assets"} with current Code IDE Java/BlueJ markers${
 			karelStyleAsset ? ` and ${karelStyleAsset.url} with Karel overlay styles` : ""
-		} and ${workerUrl.href} with the exact Python-worker security profile`
+		} and ${runtimeUrl.href} with isolated runtime asset headers`
 	);
+}
+
+export function validatePythonRuntimeAssetHeaders(headers) {
+	if (headers.get("access-control-allow-origin") !== "*" ||
+		headers.get("access-control-allow-credentials") !== null ||
+		headers.get("cross-origin-resource-policy") !== "cross-origin" ||
+		headers.get("x-content-type-options") !== "nosniff") {
+		throw new Error("Public Python runtime assets require anonymous CORS and nosniff.");
+	}
 }
 
 export async function runProductionIdeSmoke() {
