@@ -214,6 +214,7 @@ async function assertBranded404(candidateDirectory) {
 
 async function writeManifest(candidateDirectory, tag, revision) {
 	const releaseId = validateIdentity(tag, revision);
+	await assertPythonRuntimeAssets(candidateDirectory, tag);
 	await assertBranded404(candidateDirectory);
 	const manifestPath = path.join(candidateDirectory, manifestName);
 	const alreadyExists = await fs.lstat(manifestPath).then(
@@ -241,6 +242,15 @@ function isPlainObject(value) {
 	return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+async function assertPythonRuntimeAssets(candidateDirectory, tag) {
+	const [major, minor, patch] = tag.slice(1).split(/[.-]/u).map(Number);
+	if (major > 2 || (major === 2 && (minor > 8 || (minor === 8 && patch >= 1)))) {
+		for (const name of ["runtime.js", "runtime.css"]) {
+			await regularFile(candidateDirectory, `front-end/dist/python-runtime/${name}`);
+		}
+	}
+}
+
 async function verifyManifest(candidateDirectory) {
 	const manifestPath = await regularFile(candidateDirectory, manifestName);
 	const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
@@ -248,6 +258,7 @@ async function verifyManifest(candidateDirectory) {
 		fail("Native release manifest has an unsupported identity or schema.");
 	}
 	const releaseId = validateIdentity(manifest.tag, manifest.revision);
+	await assertPythonRuntimeAssets(candidateDirectory, manifest.tag);
 	if (manifest.releaseId !== releaseId) fail("Native release manifest has an inconsistent release ID.");
 	if (!isPlainObject(manifest.files)) fail("Native release manifest is missing its file checksums.");
 	if (typeof manifest.generatedAt !== "string" || !Number.isFinite(Date.parse(manifest.generatedAt))) {

@@ -16,6 +16,15 @@ async function source(relativePath) {
 	return fs.readFile(path.join(repositoryRoot, relativePath), "utf8");
 }
 
+test("native candidate snapshots preserve independent protected bytes", () => {
+	const result = spawnSync("python3", ["-B", "test/native-candidate-snapshot.test.py"], {
+		cwd: repositoryRoot,
+		encoding: "utf8",
+		timeout: 30000
+	});
+	assert.equal(result.status, 0, result.stderr || result.error?.message);
+});
+
 function nginxAddHeaderValues(sourceText) {
 	const values = new Map();
 	const addHeaderPattern = /^\s*add_header\s+([A-Za-z0-9-]+)\s+"((?:\\.|[^"\\])*)"\s+always;\s*$/gmu;
@@ -136,7 +145,16 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(promote, /Candidate must remain inside the managed [.]candidates directory/u);
 	assert.match(promote, /verify-native-source[.]sh/u);
 	assert.match(promote, /Promotion requires an existing current release symlink for rollback/u);
-	assert.match(promote, /chown -R root:root "\$classes_candidate"/u);
+	assert.match(promote, /snapshot-native-candidate[.]py/u);
+	assert.doesNotMatch(promote, /chown -R/u);
+	assert.ok(
+		promote.indexOf("snapshot-native-candidate.py")
+		< promote.indexOf('node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_candidate"')
+	);
+	assert.ok(
+		promote.indexOf('"$classes_source_dir/$classes_release_input" "$classes_candidate/$classes_release_input"')
+		< promote.indexOf('mv -- "$classes_candidate" "$classes_final_release"')
+	);
 	assert.match(promote, /nginx -t/u);
 	assert.match(promote, /verify_nginx_includes/u);
 	assert.match(promote, /grep -Fxc "# configuration file \$classes_target:"/u);
@@ -390,6 +408,23 @@ test("internal manifest detects payload drift and stays out of public output", a
 	const driftResult = spawnSync(process.execPath, [verifier, candidate], { encoding: "utf8" });
 	assert.notEqual(driftResult.status, 0);
 	assert.match(driftResult.stderr, /checksum mismatch/u);
+
+	await fs.writeFile(path.join(candidate, "back-end/dist/server.js"), "export {};\n");
+	await fs.rm(path.join(candidate, ".classes-native-release.json"));
+	const newReleaseArguments = [verifier, "--write", "--tag", "v2.8.1", "--revision", "a".repeat(40), candidate];
+	const missingRuntime = spawnSync(process.execPath, newReleaseArguments, { encoding: "utf8" });
+	assert.notEqual(missingRuntime.status, 0);
+	assert.match(missingRuntime.stderr, /python-runtime\/runtime.js/u);
+	await fs.mkdir(path.join(candidate, "front-end/dist/python-runtime"));
+	for (const name of ["runtime.js", "runtime.css"]) {
+		await fs.writeFile(path.join(candidate, "front-end/dist/python-runtime", name), "synthetic fixture\n");
+	}
+	const newRelease = spawnSync(process.execPath, newReleaseArguments, { encoding: "utf8" });
+	assert.equal(newRelease.status, 0, newRelease.stderr);
+	await fs.rm(path.join(candidate, "front-end/dist/python-runtime/runtime.js"));
+	const lostRuntime = spawnSync(process.execPath, [verifier, candidate], { encoding: "utf8" });
+	assert.notEqual(lostRuntime.status, 0);
+	assert.match(lostRuntime.stderr, /python-runtime\/runtime.js/u);
 });
 
 test("all hosting profiles require COOP and CORP consistently", async () => {

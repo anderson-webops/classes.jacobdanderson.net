@@ -24,15 +24,15 @@ Prepared candidates and immutable releases use these paths:
 Every candidate carries an internal `.classes-native-release.json` containing
 the exact tag, revision, and checksums for the built frontend, compiled API,
 installed production API dependencies, package inputs, and native
-configuration. Unexpected structural entries and every payload symlink are
-rejected, so recursively changing release ownership cannot pull unchecked
-content into the trusted boundary. The manifest is operational metadata, not a
+configuration. Unexpected structural entries, hardlinks and every payload
+symlink are rejected. Promotion verifies a fresh protected snapshot rather than
+changing ownership of mutable builder files. The manifest is operational metadata, not a
 public endpoint.
 `/release.json` and `/api/release` intentionally remain 404.
 
 ## One-time server setup
 
-Install system Node 24.18.0, npm 12.0.1, Git, Nginx, `curl`, and the existing
+Install system Node 24.18.0, npm 12.0.1, Python 3, Git, Nginx, `curl`, and the existing
 MongoDB or Vault client configuration. Create separate build and runtime users;
 neither needs an interactive login:
 
@@ -100,8 +100,13 @@ sudo -u classes-build ./scripts/prepare-native-release.sh \
   --tag v2.7.206
 ```
 
-Promote the exact path printed by that command from the same clean tagged
-checkout:
+Promote the exact path printed by that command from an independently fetched,
+root-owned clean checkout of the same tag. Every ancestor and source entry must
+be protected from group/other writes. The promoter, its Python snapshot helper,
+Git metadata, verifiers, and comparison inputs must never be supplied by the
+build account. Do not turn the build account's checkout into trusted source by
+changing its ownership: retained writable descriptors would survive that change.
+Run a frozen copy of these reviewed helpers; do not edit a running wrapper.
 
 ```bash
 sudo ./scripts/promote-native-release.sh \
@@ -109,9 +114,17 @@ sudo ./scripts/promote-native-release.sh \
   --candidate /srv/classes.jacobdanderson.net/releases/.candidates/v2.7.206-<full-revision>
 ```
 
-Promotion verifies source provenance and every manifest checksum, makes the
-release root-owned and non-writable, verifies it again after the ownership
-boundary, backs up the installed snippets and unit, tests Nginx, proves all
+Promotion first moves the candidate into a root-private quarantine, then copies
+regular files through descriptor-relative, no-follow operations into fresh
+root-owned inodes. Symlinks, hardlinks, and special files are rejected. This
+isolated snapshot, not the build-user tree, passes source provenance, complete
+manifest checks, and tagged-source comparisons before installation. Manifest
+hashes are never regenerated to accept drift. Only the verified snapshot is
+renamed into the immutable release and reverified. Original build trees and
+failed snapshots remain under root-private `releases/.quarantine-*` directories
+for explicit operator review and cleanup; allow temporary duplicate disk usage.
+The snapshot is the authority for all later installation operations.
+Promotion then backs up the installed snippets and unit, tests Nginx, proves all
 three reviewed snippets are active exactly once in Nginx's loaded
 configuration, switches `current` atomically, restarts the one API process,
 reloads Nginx, waits for database readiness, and probes the TLS vhost through

@@ -45,7 +45,7 @@ trap cleanup EXIT
 [[ "$classes_api_service" =~ ^[a-zA-Z0-9_.@-]+[.]service$ \
 	&& "$classes_nginx_service" =~ ^[a-zA-Z0-9_.@-]+[.]service$ ]] \
 	|| { printf '%s\n' "Service unit names are invalid." >&2; exit 1; }
-for classes_command in awk basename chmod chown cmp curl dirname find git grep install ln mktemp mv nginx node readlink realpath rm sleep stat systemctl; do
+for classes_command in awk basename chmod cmp curl dirname find git grep install ln mktemp mv nginx node python3 readlink realpath rm sleep stat systemctl; do
 	command -v "$classes_command" >/dev/null 2>&1 \
 		|| { printf '%s\n' "Missing required command: $classes_command" >&2; exit 1; }
 done
@@ -58,8 +58,14 @@ classes_candidate_root="$classes_release_root/releases/.candidates"
 [[ -n "$classes_candidate" && -d "$classes_candidate" && ! -L "$classes_candidate" ]] \
 	|| { printf '%s\n' "--candidate must identify a real directory." >&2; exit 1; }
 classes_candidate="$(realpath "$classes_candidate")"
-[[ "$classes_candidate" == "$classes_candidate_root/"* ]] \
+[[ "$(dirname "$classes_candidate")" == "$classes_candidate_root" ]] \
 	|| { printf '%s\n' "Candidate must remain inside the managed .candidates directory." >&2; exit 1; }
+classes_candidate_name="$(basename "$classes_candidate")"
+classes_candidate="$(python3 "$classes_source_dir/scripts/snapshot-native-candidate.py" \
+	--source "$classes_source_dir" \
+	--releases "$classes_release_root/releases" \
+	--name "$classes_candidate_name")"
+classes_quarantine="$(dirname "$classes_candidate")"
 node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_candidate"
 classes_manifest="$classes_candidate/.classes-native-release.json"
 classes_tag="$(node -e 'const m=require(process.argv[1]); process.stdout.write(m.tag)' "$classes_manifest")"
@@ -409,10 +415,6 @@ smoke_release() {
 	done
 }
 
-# Move the verified candidate to its root-owned immutable name before any live
-# configuration changes. A failed activation leaves it available for review.
-chown -R root:root "$classes_candidate"
-chmod -R go-w "$classes_candidate"
 mv -- "$classes_candidate" "$classes_final_release"
 node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_final_release"
 [[ "$(stat -c '%u' "$classes_final_release")" == "0" \
@@ -466,3 +468,4 @@ if [[ "$classes_previous_target" != "$classes_final_release" ]]; then
 	atomic_link "$classes_previous_target" "$classes_previous_link"
 fi
 printf 'Activated classes.jacobdanderson.net %s at %s.\n' "$classes_tag" "$classes_revision"
+printf 'Original build candidate retained for root-only review: %s/incoming\n' "$classes_quarantine"
