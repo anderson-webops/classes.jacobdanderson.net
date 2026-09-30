@@ -5,6 +5,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { courseContentSecurityPolicy } from "../scripts/native-csp-from-map.mjs";
 import {
 	contentSecurityPolicies,
 	exactSecurityHeaders,
@@ -70,6 +71,8 @@ test("native Nginx keeps static, API, and hidden-file boundaries separate", asyn
 		assert.deepEqual(configuredHeaders.get(name), [name === "cross-origin-resource-policy" ? "$classes_resource_policy" : value]);
 	}
 	assert.match(policy, /error_page 404 =404 \/404[.]html;/u);
+	assert.match(policy, /location = \/__central-analytics \{\s*return 404;/u);
+	assert.match(policy, /location \^~ \/__central-analytics\/ \{\s*return 404;/u);
 	assert.match(policy, /location = \/404[.]html \{\s*internal;/u);
 	assert.match(policy, /location \/ \{\s*try_files \$uri \$uri\/ =404;/u);
 	assert.doesNotMatch(policy, /try_files[^;]*index[.]html/u);
@@ -106,6 +109,35 @@ test("Nginx header parsing preserves literal backslash sequences", () => {
 	);
 
 	assert.deepEqual(configuredHeaders.get("x-literal-test"), [value]);
+});
+
+test("native smoke checks use the policy sealed with each release", async () => {
+	const maps = await source("deploy/native/classes-http-maps.conf");
+	const currentPolicy = courseContentSecurityPolicy(maps);
+	assert.equal(currentPolicy, serializeContentSecurityPolicy("course-scratch"));
+	const courseLine = maps
+		.split("\n")
+		.find(line => line.trim().startsWith("~^/courses(?:/|$) \""));
+	assert.ok(courseLine);
+	const legacyLine = courseLine.replaceAll(" https://analytics.jacobdanderson.net", "");
+	assert.notEqual(legacyLine, courseLine);
+	const legacyMaps = maps.replace(courseLine, legacyLine);
+	assert.equal(
+		courseContentSecurityPolicy(legacyMaps),
+		currentPolicy.replaceAll(" https://analytics.jacobdanderson.net", "")
+	);
+	assert.throws(
+		() => courseContentSecurityPolicy(`${maps}\n${courseLine}`),
+		/unique course policy/u
+	);
+	const helper = path.join(repositoryRoot, "scripts/native-csp-from-map.mjs");
+	const result = spawnSync(
+		process.execPath,
+		[helper, path.join(repositoryRoot, "deploy/native/classes-http-maps.conf")],
+		{ encoding: "utf8" }
+	);
+	assert.equal(result.status, 0, result.stderr);
+	assert.equal(result.stdout, currentPolicy);
 });
 
 test("prepare and promotion scripts enforce exact provenance and rollback gates", async () => {
@@ -204,9 +236,11 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 		promote,
 		/require_coding_standard_redirect "\/coding_standard\?probe=1"/u
 	);
-	assert.ok(
-		promote.includes('serializeContentSecurityPolicy("course-scratch")')
-	);
+	assert.match(promote, /node "\$classes_source_dir\/scripts\/native-csp-from-map[.]mjs"/u);
+	assert.match(promote, /"\$classes_expected_release\/deploy\/native\/classes-http-maps[.]conf"/u);
+	assert.match(promote, /"\$classes_work_dir\/activation" \\\s+true/u);
+	assert.match(promote, /"\$classes_require_analytics_denial" == "true"/u);
+	assert.match(promote, /"\/__central-analytics\/script[.]js"/u);
 	assert.match(
 		promote,
 		/require_one_header\s+\\\s+"\$classes_probe_prefix[.]courses[.]headers"\s+\\\s+"Content-Security-Policy"\s+\\\s+"\$classes_course_csp"/u

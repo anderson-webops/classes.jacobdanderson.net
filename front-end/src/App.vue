@@ -127,7 +127,7 @@ useHead(
 					? [
 							{
 								defer: true,
-								src: "/__central-analytics/script.js",
+								src: "https://analytics.jacobdanderson.net/script.js",
 								"data-website-id":
 									"a1a38acf-8585-4142-b9cd-75322146e50b"
 							}

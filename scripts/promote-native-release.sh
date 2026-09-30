@@ -333,11 +333,11 @@ smoke_release() {
 	local classes_expected_release="$1"
 	local classes_expected_revision="$2"
 	local classes_probe_prefix="$3"
+	local classes_require_analytics_denial="${4:-false}"
 	local classes_course_csp classes_http_path classes_status
 	classes_course_csp="$(
-		node --input-type=module -e \
-			'const policy = await import(process.argv[1]); process.stdout.write(policy.serializeContentSecurityPolicy("course-scratch"));' \
-			"$classes_source_dir/scripts/production-security-headers.mjs"
+		node "$classes_source_dir/scripts/native-csp-from-map.mjs" \
+			"$classes_expected_release/deploy/native/classes-http-maps.conf"
 	)"
 	[[ -n "$classes_course_csp" ]]
 	classes_http_path="/__native-http-redirect-$classes_expected_revision?probe=1"
@@ -406,6 +406,18 @@ smoke_release() {
 		cmp --silent "$classes_probe_prefix.not-found.body" "$classes_expected_release/front-end/dist/404.html"
 		require_one_header "$classes_probe_prefix.not-found.headers" "X-Robots-Tag" "noindex, nofollow"
 	done
+	if [[ "$classes_require_analytics_denial" == "true" ]]; then
+		for classes_path in \
+			"/__central-analytics" \
+			"/__central-analytics/script.js" \
+			"/__central-analytics/api/send" \
+			"/__central-analytics/unknown"; do
+			classes_status="$(capture_https "$classes_path" "$classes_probe_prefix.analytics-denied.body" "$classes_probe_prefix.analytics-denied.headers")"
+			[[ "$classes_status" == "404" ]]
+			cmp --silent "$classes_probe_prefix.analytics-denied.body" "$classes_expected_release/front-end/dist/404.html"
+			require_one_header "$classes_probe_prefix.analytics-denied.headers" "X-Robots-Tag" "noindex, nofollow"
+		done
+	fi
 
 	for classes_path in \
 		"/api" \
@@ -449,7 +461,8 @@ set +e
 	smoke_release \
 		"$classes_final_release" \
 		"$classes_revision" \
-		"$classes_work_dir/activation"
+		"$classes_work_dir/activation" \
+		true
 )
 classes_activation_status=$?
 set -e

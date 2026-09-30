@@ -7,6 +7,7 @@ const exactSecurityHeaders = Object.freeze({
 	"x-content-type-options": "nosniff",
 	"x-frame-options": "DENY"
 });
+const analyticsOrigin = "https://analytics.jacobdanderson.net";
 
 function freezePolicy(policy) {
 	return Object.freeze(
@@ -31,8 +32,8 @@ const standardPolicy = freezePolicy({
 	],
 	"font-src": ["'self'"],
 	"style-src": ["'self'", "'unsafe-inline'"],
-	"script-src": ["'self'", "'unsafe-inline'"],
-	"connect-src": ["'self'", "https://api.github.com", "https://raw.githubusercontent.com"],
+	"script-src": ["'self'", "'unsafe-inline'", analyticsOrigin],
+	"connect-src": ["'self'", "https://api.github.com", "https://raw.githubusercontent.com", analyticsOrigin],
 	"frame-src": ["'none'"],
 	"media-src": ["'self'", "https://static.classes.jacobdanderson.net"],
 	"worker-src": ["'none'"],
@@ -72,7 +73,8 @@ const contentSecurityPolicies = Object.freeze(
 					"'unsafe-inline'",
 					"'unsafe-eval'",
 					"'wasm-unsafe-eval'",
-					"https://cdn.jsdelivr.net"
+					"https://cdn.jsdelivr.net",
+					analyticsOrigin
 				],
 				"connect-src": [
 					...standardPolicy["connect-src"],
@@ -89,7 +91,7 @@ const contentSecurityPolicies = Object.freeze(
 		[
 			"graph-sketcher",
 			extendPolicy({
-				"connect-src": ["'self'"],
+				"connect-src": ["'self'", analyticsOrigin],
 				"img-src": ["'self'", "data:", "blob:"],
 				"media-src": ["'self'"],
 				"worker-src": ["'self'"]

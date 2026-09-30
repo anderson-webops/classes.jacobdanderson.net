@@ -42,6 +42,27 @@ const expectedRuleProfiles = new Map(
 );
 
 describe("production security-header policy", () => {
+	it("loads analytics on its separate host without the site session cookie", () => {
+		const appSource = readFileSync(
+			resolve(repositoryRoot, "front-end/src/App.vue"),
+			"utf8"
+		);
+		const analyticsOrigin = "https://analytics.jacobdanderson.net";
+		expect(appSource).toContain(`src: "${analyticsOrigin}/script.js"`);
+		expect(appSource).not.toContain("/__central-analytics/");
+		for (const [profile, policy] of Object.entries(
+			contentSecurityPolicies
+		)) {
+			if (profile === "api" || profile === "python-worker") {
+				expect(policy["script-src"] ?? []).not.toContain(analyticsOrigin);
+				expect(policy["connect-src"] ?? []).not.toContain(analyticsOrigin);
+				continue;
+			}
+			expect(policy["script-src"]).toContain(analyticsOrigin);
+			expect(policy["connect-src"]).toContain(analyticsOrigin);
+		}
+	});
+
 	it("keeps every Netlify route on its exact shared policy profile", () => {
 		const rules = netlifyContentSecurityPolicyRules(netlifySource);
 

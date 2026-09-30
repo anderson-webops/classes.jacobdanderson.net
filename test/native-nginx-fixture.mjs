@@ -79,6 +79,7 @@ async function runFixture() {
 		const configPath = path.join(temporaryRoot, "nginx.conf");
 		await fs.cp(fixtureSource, distDirectory, { recursive: true });
 		for (const asset of [
+			"__central-analytics/script.js",
 			"python-runtime/runtime.js",
 			"ide/assets/fixture.json"
 		]) {
@@ -238,6 +239,9 @@ async function runFixture() {
 
 		for (const requestPath of [
 			"/404.html",
+			"/__central-analytics",
+			"/__central-analytics/script.js",
+			"/__central-analytics/api/send",
 			"/courses.html",
 			"/unknown-fixture-route"
 		]) {

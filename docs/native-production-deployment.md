@@ -88,6 +88,17 @@ serve only real generated routes, use the internal branded `404.html` for
 unknown page paths, keep dotfiles private, and proxy `/api` only to loopback.
 API 404s remain JSON and are not replaced by the page 404.
 
+The page loads analytics directly from `analytics.jacobdanderson.net`, not the
+legacy same-origin `/__central-analytics/` proxy, so Classes session cookies
+cannot accompany that script request. The native policy denies the old path.
+Before promoting this release, review the host vhost and remove any separate
+legacy analytics proxy location. A more specific location can override the
+source denial even when `nginx -t` passes, so candidate activation also checks
+the effective legacy paths for the local 404 document and rolls back on drift.
+Keep the application listener and all existing credentials unchanged. Rollback
+checks the retained release against its own policy instead of applying the
+candidate's new CSP to it.
+
 ## Prepare, authenticate and promote
 
 From v2.8.4 onward, a builder-created manifest is inventory, not approval.
