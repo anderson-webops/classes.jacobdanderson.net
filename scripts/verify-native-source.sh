@@ -29,13 +29,13 @@ classes_origin_main="$(
 )"
 [[ -n "$classes_origin_main" ]] \
 	|| { printf '%s\n' "Native source is missing the fetched origin/main revision." >&2; exit 1; }
-[[ "$classes_revision" == "$classes_origin_main" ]] \
-	|| { printf '%s\n' "Native source HEAD is not the exact fetched origin/main revision." >&2; exit 1; }
+git -C "$classes_source_dir" merge-base --is-ancestor "$classes_revision" "$classes_origin_main" \
+	|| { printf '%s\n' "Native source HEAD is not contained in fetched origin/main." >&2; exit 1; }
 [[ "$(git -C "$classes_source_dir" cat-file -t "refs/tags/$classes_tag" 2>/dev/null || true)" == "tag" ]] \
 	|| { printf '%s\n' "Native release tag must exist as an annotated tag." >&2; exit 1; }
 [[ "$(git -C "$classes_source_dir" rev-parse --verify "refs/tags/$classes_tag^{commit}")" == "$classes_revision" ]] \
 	|| { printf '%s\n' "Annotated native release tag does not resolve to source HEAD." >&2; exit 1; }
 
-printf 'Verified %s at exact canonical origin/main revision %s.\n' \
+printf 'Verified %s at exact annotated revision %s in canonical origin/main.\n' \
 	"$classes_tag" \
 	"$classes_revision"

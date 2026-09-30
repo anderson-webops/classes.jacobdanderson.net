@@ -123,6 +123,7 @@ classes_npm "$classes_staging_candidate/back-end" ci \
 	--omit=dev \
 	--include=optional \
 	--strict-allow-scripts
+classes_npm "$classes_staging_candidate/back-end" audit --omit=dev --include=optional
 rm -f -- "$classes_staging_candidate/back-end/.npmrc"
 rm -rf -- "$classes_staging_candidate/back-end/node_modules/.bin"
 node "$classes_staging_candidate/scripts/verify-native-release.mjs" \

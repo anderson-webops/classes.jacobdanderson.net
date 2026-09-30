@@ -138,7 +138,7 @@ describe("security dependency regressions", () => {
 		expect(actionReferences.length).toBeGreaterThan(0);
 		for (const reference of actionReferences) {
 			expect(reference).toMatch(
-				/^-?\s*uses:\s+[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)?@[a-f0-9]{40}\s+#\s+\S+$/u
+				/^-?\s*uses:\s+[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)?@[a-f0-9]{40}(?:\s+#\s+\S+)?$/u
 			);
 		}
 

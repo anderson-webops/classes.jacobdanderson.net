@@ -40,7 +40,7 @@
 ## Native Production Authority
 
 - The canonical custom-host path is native Nginx plus exactly one loopback-only systemd API. Do not infer or introduce a Docker deployment.
-- Prepare a candidate from a clean checkout at the exact annotated release tag with `scripts/prepare-native-release.sh`, then activate it with `scripts/promote-native-release.sh` and the same tagged checkout.
+- Produce the native candidate through the tagged `native-release.yml` CI workflow, retain its attested archive/manifest/bundle on the immutable release, and activate the unchanged extracted artifact with `scripts/promote-native-release.sh` and an independently trusted checkout of that tag. Local `prepare-native-release.sh` outputs are validation builds, not authenticated deployment candidates. Never substitute self-reported builder hashes for CI provenance.
 - Preserve the strict static-route boundary: unknown pages use the generated branded `404.html` with status 404, unknown API paths remain JSON 404s, and neither `/release.json` nor `/api/release` is a public identity endpoint.
 - Promotion must install the same release's Nginx snippets and systemd unit, switch atomically, pass readiness and loopback TLS smoke gates, and restore the prior configuration and release on failure. Do not change DNS, TLS records, data, credentials, or backups as part of application deployment.
 
@@ -55,12 +55,12 @@
 - Keep both `package-lock.json` and `back-end/package-lock.json` synchronized before every commit or push.
 - Use lowercase annotated semver tags only. Do not invent ad-hoc labels such as `V1`, `torca-r07`, `pre-lfs-migration-*`, or similar one-off names.
 - This repo follows the stable `v2.x` line. Stay on `v2` for routine work; only cut `v3` for an intentional breaking application or API change.
-- Before creating a new tag, check the latest tag in the active semver line and decide whether the new commit is still the same release milestone. If it is, move that existing tag forward to the new validated commit instead of minting a new version number.
-- Keep the GitHub release aligned with that decision: when the commit still belongs to the same milestone, update or recreate the existing release so it points at the moved tag/current commit; only create a brand-new release when the change creates a genuinely new milestone.
+- Published tags and release artifacts are immutable. Never move or recreate a published tag to include later changes; a corrected deployable state needs a new annotated version and its own exact source identity.
+- Keep the GitHub release attached to its original tag and validated artifact bytes. Never replace a published asset with a rebuild or manufacture provenance for an older local build.
 - Cut a fresh semver tag and release only when the work crosses a real release boundary, such as a new deployable milestone, a materially different operator/user-facing state, or a version-line change that deserves its own notes and rollback point.
 - Create an annotated tag when a deployable course-catalog, front-end UX, back-end API, health/deploy, performance, or security change is ready to ship.
 - Create a GitHub release when that tag represents a real site milestone for users, admins, or operators. Release notes should summarize scope, validation, rollout notes, and any migration or recovery steps.
-- If the existing tag or release history contains stale drafts, redundant entries, or ad-hoc labels, clean that history up instead of preserving clutter.
+- Preserve existing published release history and rollback evidence. Remove only unneeded unpublished drafts when their contents have been accounted for.
 - Skip tags and releases for trivial doc-only edits, formatting-only changes, or routine housekeeping unless they change deployment, operations, or a consumer-facing contract.
 
 ## Dependency & Lockfile Discipline

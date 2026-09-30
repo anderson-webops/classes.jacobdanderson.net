@@ -45,7 +45,7 @@ trap cleanup EXIT
 [[ "$classes_api_service" =~ ^[a-zA-Z0-9_.@-]+[.]service$ \
 	&& "$classes_nginx_service" =~ ^[a-zA-Z0-9_.@-]+[.]service$ ]] \
 	|| { printf '%s\n' "Service unit names are invalid." >&2; exit 1; }
-for classes_command in awk basename chmod cmp curl dirname find git grep install ln mktemp mv nginx node python3 readlink realpath rm sleep stat systemctl; do
+for classes_command in awk basename chmod cmp curl dirname find gh git grep install ln mktemp mv nginx node python3 readlink realpath rm sleep stat systemctl; do
 	command -v "$classes_command" >/dev/null 2>&1 \
 		|| { printf '%s\n' "Missing required command: $classes_command" >&2; exit 1; }
 done
@@ -96,6 +96,11 @@ for classes_release_input in \
 	cmp --silent "$classes_source_dir/$classes_release_input" "$classes_candidate/$classes_release_input" \
 		|| { printf '%s\n' "Candidate input differs from tagged source: $classes_release_input" >&2; exit 1; }
 done
+node "$classes_source_dir/scripts/verify-native-provenance.mjs" "$classes_candidate"
+native_manifest_digest() {
+	node -e 'const fs=require("node:fs"),crypto=require("node:crypto"); process.stdout.write(crypto.createHash("sha256").update(fs.readFileSync(process.argv[1])).digest("hex"))' "$1"
+}
+classes_authenticated_manifest_sha256="$(native_manifest_digest "$classes_manifest")"
 [[ -z "$(find "$classes_candidate" -perm -002 -print -quit)" ]] \
 	|| { printf '%s\n' "Candidate contains world-writable content." >&2; exit 1; }
 
@@ -178,6 +183,7 @@ atomic_link() {
 }
 
 restore_previous() {
+	node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_previous_target" || return 1
 	atomic_link "$classes_previous_target" "$classes_current_link" || return 1
 	for classes_index in "${!classes_targets[@]}"; do
 		classes_target="${classes_targets[$classes_index]}"
@@ -416,6 +422,8 @@ smoke_release() {
 }
 
 mv -- "$classes_candidate" "$classes_final_release"
+[[ "$(native_manifest_digest "$classes_final_release/.classes-native-release.json")" == "$classes_authenticated_manifest_sha256" ]] \
+	|| { printf '%s\n' "Final manifest differs from independently authenticated CI evidence." >&2; exit 1; }
 node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_final_release"
 [[ "$(stat -c '%u' "$classes_final_release")" == "0" \
 	&& -z "$(find "$classes_final_release" ! -user root -print -quit)" \

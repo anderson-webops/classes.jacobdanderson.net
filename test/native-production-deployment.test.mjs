@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -144,6 +145,16 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(prepare.slice(runtimeInstall, policyRemoval), /^\t--strict-allow-scripts$/mu);
 	assert.match(promote, /Candidate must remain inside the managed [.]candidates directory/u);
 	assert.match(promote, /verify-native-source[.]sh/u);
+	const candidateProof = 'node "$classes_source_dir/scripts/verify-native-provenance.mjs" "$classes_candidate"';
+	const finalProof = '[[ "$(native_manifest_digest "$classes_final_release/.classes-native-release.json")" == "$classes_authenticated_manifest_sha256" ]]';
+	assert.ok(promote.indexOf(candidateProof) > promote.indexOf("snapshot-native-candidate.py"));
+	assert.ok(promote.indexOf(candidateProof) < promote.indexOf('mv -- "$classes_candidate" "$classes_final_release"'));
+	assert.ok(promote.indexOf(finalProof) > promote.indexOf('mv -- "$classes_candidate" "$classes_final_release"'));
+	assert.ok(promote.indexOf(finalProof) < promote.indexOf('atomic_link "$classes_final_release" "$classes_current_link"'));
+	assert.ok(promote.indexOf('classes_authenticated_manifest_sha256="$(native_manifest_digest "$classes_manifest")"') > promote.indexOf(candidateProof));
+	assert.equal(promote.match(/verify-native-provenance[.]mjs/gu).length, 1);
+	assert.match(promote, /restore_previous\(\) \{\s*node "\$classes_source_dir\/scripts\/verify-native-release[.]mjs" "\$classes_previous_target" \|\| return 1/u);
+	assert.doesNotMatch(promote, /verify-native-provenance[.]mjs" "\$classes_previous_target"/u);
 	assert.match(promote, /Promotion requires an existing current release symlink for rollback/u);
 	assert.match(promote, /snapshot-native-candidate[.]py/u);
 	assert.doesNotMatch(promote, /chown -R/u);
@@ -221,6 +232,103 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(documentation, /activation and rollback diagnostics remain separate/u);
 });
 
+test("native provenance rejects rehashed payloads and pins the independent signer", async t => {
+	const temporaryRoot = await fs.mkdtemp(path.join(os.tmpdir(), "classes-provenance-"));
+	t.after(async () => fs.rm(temporaryRoot, { force: true, recursive: true }));
+	const candidate = path.join(temporaryRoot, "candidate");
+	for (const directory of [
+		"front-end/dist/python-runtime", "back-end/dist",
+		"back-end/node_modules/runtime-package", "scripts", "deploy"
+	]) await fs.mkdir(path.join(candidate, directory), { recursive: true });
+	for (const relativePath of [
+		"package.json", "package-lock.json", "front-end/package.json",
+		"back-end/package.json", "back-end/package-lock.json",
+		"scripts/verify-native-source.sh", "scripts/verify-native-release.mjs"
+	]) await fs.copyFile(path.join(repositoryRoot, relativePath), path.join(candidate, relativePath));
+	await fs.cp(path.join(repositoryRoot, "deploy/native"), path.join(candidate, "deploy/native"), { recursive: true });
+	const contents = {
+		"front-end/dist/index.html": "<h1>Classes with Jacob</h1>\n",
+		"front-end/dist/404.html": "<title>Page not found | Classes with Jacob</title>\n",
+		"front-end/dist/python-runtime/runtime.js": "export {};\n",
+		"front-end/dist/python-runtime/runtime.css": "body {}\n",
+		"back-end/dist/server.js": "export {};\n",
+		"back-end/node_modules/runtime-package/index.js": "export {};\n"
+	};
+	for (const [relativePath, content] of Object.entries(contents)) {
+		await fs.writeFile(path.join(candidate, relativePath), content);
+	}
+	const tag = "v2.8.4";
+	const revision = "a".repeat(40);
+	const manifestPath = path.join(candidate, ".classes-native-release.json");
+	const internalVerifier = path.join(repositoryRoot, "scripts/verify-native-release.mjs");
+	const guard = path.join(repositoryRoot, "scripts/verify-native-provenance.mjs");
+	const writeManifest = async (selectedTag = tag, selectedRevision = revision) => {
+		await fs.rm(manifestPath, { force: true });
+		const result = spawnSync(process.execPath, [internalVerifier, "--write", "--tag", selectedTag, "--revision", selectedRevision, candidate], { encoding: "utf8" });
+		assert.equal(result.status, 0, result.stderr);
+	};
+	await writeManifest();
+	const trustedManifest = await fs.readFile(manifestPath);
+	const digest = createHash("sha256").update(trustedManifest).digest("hex");
+	const repository = "anderson-webops/classes.jacobdanderson.net";
+	const expectedArguments = [
+		"attestation", "verify", manifestPath, "--hostname", "github.com", "--repo", repository,
+		"--signer-workflow", `${repository}/.github/workflows/native-release.yml`,
+		"--source-digest", revision, "--signer-digest", revision,
+		"--source-ref", `refs/tags/${tag}`, "--deny-self-hosted-runners"
+	];
+	const cli = path.join(temporaryRoot, "gh");
+	await fs.writeFile(cli, `#!${process.execPath}\nimport fs from "node:fs";\nimport crypto from "node:crypto";\nconst args = process.argv.slice(2);\nfs.writeFileSync(${JSON.stringify(path.join(temporaryRoot, "called.json"))}, JSON.stringify(args));\nif (process.env.TEST_PROVENANCE_UNAVAILABLE === "1") process.exit(1);\nif (JSON.stringify(args) !== ${JSON.stringify(JSON.stringify(expectedArguments))}) process.exit(2);\nif (crypto.createHash("sha256").update(fs.readFileSync(args[2])).digest("hex") !== ${JSON.stringify(digest)}) process.exit(3);\n`, { mode: 0o755 });
+	const verify = (extraEnv = {}) => spawnSync(process.execPath, [guard, candidate], {
+		encoding: "utf8",
+		env: { ...process.env, PATH: `${temporaryRoot}${path.delimiter}${process.env.PATH}`, ...extraEnv }
+	});
+	assert.equal(verify().status, 0);
+	assert.deepEqual(JSON.parse(await fs.readFile(path.join(temporaryRoot, "called.json"), "utf8")), expectedArguments);
+	assert.notEqual(verify({ TEST_PROVENANCE_UNAVAILABLE: "1" }).status, 0);
+	for (const relativePath of ["back-end/dist/server.js", "back-end/node_modules/runtime-package/index.js", "front-end/dist/index.html"]) {
+		await fs.appendFile(path.join(candidate, relativePath), "forged runtime bytes\n");
+		await writeManifest();
+		assert.equal(spawnSync(process.execPath, [internalVerifier, candidate]).status, 0);
+		assert.match(verify().stderr, /lacks verified canonical CI provenance/u);
+		await fs.writeFile(path.join(candidate, relativePath), contents[relativePath]);
+	}
+	const addedFile = path.join(candidate, "back-end/dist/extra.js");
+	await fs.writeFile(addedFile, "export {};\n");
+	await writeManifest();
+	assert.notEqual(verify().status, 0);
+	await fs.rm(addedFile);
+	await fs.rm(path.join(candidate, "back-end/node_modules/runtime-package/index.js"));
+	await writeManifest();
+	assert.notEqual(verify().status, 0);
+	await fs.writeFile(path.join(candidate, "back-end/node_modules/runtime-package/index.js"), contents["back-end/node_modules/runtime-package/index.js"]);
+	await writeManifest("v2.8.5");
+	assert.notEqual(verify().status, 0);
+	await writeManifest(tag, "b".repeat(40));
+	assert.notEqual(verify().status, 0);
+	await fs.writeFile(manifestPath, trustedManifest);
+	assert.equal(verify().status, 0);
+	await fs.rm(cli);
+	const missingCli = spawnSync(process.execPath, [guard, candidate], { encoding: "utf8", env: { ...process.env, PATH: temporaryRoot } });
+	assert.match(missingCli.stderr, /lacks verified canonical CI provenance/u);
+});
+
+test("native release producer isolates signing from untrusted persistent builders", async () => {
+	const workflow = await source(".github/workflows/native-release.yml");
+	assert.match(workflow, /tags: \[v2\.\*\.\*\]/u);
+	assert.match(workflow, /runs-on: ubuntu-24\.04-arm/u);
+	assert.match(workflow, /persist-credentials: false/u);
+	assert.match(workflow, /prepare-native-release.sh --source "\$GITHUB_WORKSPACE"/u);
+	assert.match(workflow, /attest:\s*needs: build\s*runs-on: ubuntu-latest/u);
+	assert.match(workflow, /--tag "\$RELEASE_TAG"/u);
+	assert.doesNotMatch(workflow, /pull_request|workflow_dispatch|runs-on:.*self-hosted/u);
+	assert.doesNotMatch(workflow.slice(0, workflow.indexOf("    attest:")), /id-token: write|attestations: write/u);
+	assert.doesNotMatch(workflow.slice(workflow.indexOf("    attest:")), /npm|tar -|node |bash /u);
+	for (const action of workflow.matchAll(/uses: ([^\n]+)/gu)) {
+		assert.match(action[1], /^actions\/[a-z-]+@[a-f0-9]{40}$/u);
+	}
+});
+
 test("native source provenance requires canonical fetched origin/main and an annotated tag", async (t) => {
 	const temporaryRoot = await fs.mkdtemp(
 		path.join(os.tmpdir(), "classes-native-source-")
@@ -282,7 +390,14 @@ test("native source provenance requires canonical fetched origin/main and an ann
 	git("commit", "-m", "Unfetched fixture commit");
 	rejected = verify();
 	assert.notEqual(rejected.status, 0);
-	assert.match(rejected.stderr, /HEAD is not the exact fetched origin\/main/u);
+	assert.match(rejected.stderr, /HEAD is not contained in fetched origin\/main/u);
+	git("update-ref", "refs/remotes/origin/main", "HEAD");
+	git("checkout", "--detach", "v2.7.999");
+	assert.equal(verify().status, 0, "An immutable tag remains valid after main advances");
+	await fs.writeFile(path.join(temporaryRoot, "README.md"), "unmerged fixture\n");
+	git("add", "README.md");
+	git("commit", "-m", "Unmerged fixture");
+	assert.match(verify().stderr, /HEAD is not contained in fetched origin\/main/u);
 
 	const verifierSource = await source("scripts/verify-native-source.sh");
 	assert.doesNotMatch(verifierSource, /git[^\n]*fetch/u);

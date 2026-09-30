@@ -1,0 +1,88 @@
+name: Native release
+
+on:
+    push:
+        tags: [v2.*.*]
+
+permissions:
+    contents: read
+
+concurrency:
+    group: native-release-${{ github.ref }}
+    cancel-in-progress: false
+
+jobs:
+    build:
+        if: github.repository == 'anderson-webops/classes.jacobdanderson.net'
+        runs-on: ubuntu-24.04-arm
+        timeout-minutes: 45
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+              with:
+                  fetch-depth: 0
+                  persist-credentials: false
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+              with:
+                  node-version: 24.18.0
+            - name: Pin npm
+              run: npm install --global npm@12.0.1
+            - name: Build the exact tagged native artifact
+              env:
+                  RELEASE_TAG: ${{ github.ref_name }}
+              run: |
+                  test "$(uname -m)" = aarch64
+                  mkdir -p "$RUNNER_TEMP/native/releases/.candidates" "$RUNNER_TEMP/publish"
+                  bash scripts/prepare-native-release.sh --source "$GITHUB_WORKSPACE" --release-root "$RUNNER_TEMP/native" --tag "$RELEASE_TAG"
+                  candidate="$RUNNER_TEMP/native/releases/.candidates/$RELEASE_TAG-$GITHUB_SHA"
+                  node scripts/verify-native-release.mjs "$candidate"
+                  tar -czf "$RUNNER_TEMP/publish/classes-native-linux-arm64.tar.gz" -C "$candidate" .
+                  cp "$candidate/.classes-native-release.json" "$RUNNER_TEMP/publish/classes-native-linux-arm64.manifest.json"
+            - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: native-release
+                  path: ${{ runner.temp }}/publish/
+                  if-no-files-found: error
+                  retention-days: 30
+
+    attest:
+        needs: build
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        permissions:
+            contents: read
+            id-token: write
+            attestations: write
+        steps:
+            - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+              with:
+                  name: native-release
+                  path: publish
+            - uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6
+              id: provenance
+              with:
+                  subject-path: |
+                      publish/classes-native-linux-arm64.tar.gz
+                      publish/classes-native-linux-arm64.manifest.json
+            - name: Retain the signed provenance bundle
+              env:
+                  BUNDLE_PATH: ${{ steps.provenance.outputs.bundle-path }}
+              run: cp "$BUNDLE_PATH" publish/classes-native-linux-arm64.sigstore.json
+            - name: Verify the published proof policy
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  RELEASE_TAG: ${{ github.ref_name }}
+              run: |
+                  for subject in publish/classes-native-linux-arm64.tar.gz publish/classes-native-linux-arm64.manifest.json; do
+                    gh attestation verify "$subject" --hostname github.com \
+                      --bundle publish/classes-native-linux-arm64.sigstore.json \
+                      --repo anderson-webops/classes.jacobdanderson.net \
+                      --signer-workflow anderson-webops/classes.jacobdanderson.net/.github/workflows/native-release.yml \
+                      --source-digest "$GITHUB_SHA" --signer-digest "$GITHUB_SHA" \
+                      --source-ref "refs/tags/$RELEASE_TAG" --deny-self-hosted-runners
+                  done
+            - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: attested-native-release
+                  path: publish/
+                  if-no-files-found: error
+                  retention-days: 30

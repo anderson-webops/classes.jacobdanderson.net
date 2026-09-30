@@ -10,8 +10,10 @@ MongoDB data, credentials, or backups.
 Only deploy a clean checkout whose `origin` is the canonical
 `anderson-webops/classes.jacobdanderson.net` repository. Fetch `origin/main`
 and tags before beginning; neither native script fetches or mutates a remote.
-The checkout's `HEAD`, fetched `origin/main`, and exact annotated `v2.x` tag
-must resolve to the same commit. The public version is the tag; the root package
+The checkout's `HEAD` and exact annotated `v2.x` tag must resolve to the same
+commit, reachable from fetched `origin/main`. An unrelated later main commit
+must not invalidate an immutable tagged build or retry; side-branch commits
+outside canonical main are rejected. The public version is the tag; the root package
 version is not the release version.
 Prepared candidates and immutable releases use these paths:
 
@@ -86,13 +88,42 @@ serve only real generated routes, use the internal branded `404.html` for
 unknown page paths, keep dotfiles private, and proxy `/api` only to loopback.
 API 404s remain JSON and are not replaced by the page 404.
 
-## Prepare and promote
+## Prepare, authenticate and promote
+
+From v2.8.4 onward, a builder-created manifest is inventory, not approval.
+Production promotion requires GitHub's signed provenance for that exact manifest,
+from this repository's `.github/workflows/native-release.yml`, the exact source
+commit and annotated tag, and a GitHub-hosted runner. GitHub CLI with the
+`--source-digest`, `--signer-digest`, `--source-ref` and
+`--deny-self-hosted-runners` verification flags is required on the operator host.
+Use a protected CLI installation and operator environment, not builder tools.
+Missing proof, an unavailable verifier or GitHub, and any identity mismatch stop
+before activation. There is no unsigned or caller-supplied checksum fallback.
+
+Pushing a new annotated `v2` tag runs the pinned clean ARM64 build on a disposable
+GitHub-hosted runner with read-only repository permissions. A separate fresh job
+attests its immutable Actions artifact without executing its contents. Neither
+the persistent host builder nor pull-request workflows receive signing authority.
+After both jobs succeed, retain the `attested-native-release` artifact's archive,
+manifest and Sigstore bundle on the same immutable GitHub release. Do not rebuild
+locally and substitute those bytes, sign a host candidate, or move the tag.
+
+An operator can download that artifact by its reviewed successful run ID using
+`gh run download --repo anderson-webops/classes.jacobdanderson.net --name attested-native-release --dir /path/to/download RUN_ID`.
+Verify the downloaded archive with `gh attestation verify`, pinning the canonical
+repository, signer workflow, exact tag and both source/signer commits using the
+same policy as `scripts/verify-native-provenance.mjs`. Extract it as the
+unprivileged build user into the exact managed candidate path, never as root.
+The root promoter independently verifies the protected snapshot against the
+attested manifest; archive extraction or local rehashing is not approval.
 
 The unprivileged preparation stage verifies the canonical origin and already-
 fetched refs, archives the tagged commit into a temporary directory, runs the
 pinned clean install, lint, type checks, frontend and backend tests, build, and
-audit, then installs only production API dependencies in the candidate. Run it
-as the dedicated build user:
+audit, then installs only production API dependencies in the candidate. This is
+the shared CI producer and remains useful for local validation as the dedicated
+build user. A locally prepared result has no independent CI proof and is not a
+deployable substitute for the published archive:
 
 ```bash
 sudo -u classes-build ./scripts/prepare-native-release.sh \
@@ -100,7 +131,7 @@ sudo -u classes-build ./scripts/prepare-native-release.sh \
   --tag v2.7.206
 ```
 
-Promote the exact path printed by that command from an independently fetched,
+Promote the extracted CI artifact path from an independently fetched,
 root-owned clean checkout of the same tag. Every ancestor and source entry must
 be protected from group/other writes. The promoter, its Python snapshot helper,
 Git metadata, verifiers, and comparison inputs must never be supplied by the
@@ -111,19 +142,30 @@ Run a frozen copy of these reviewed helpers; do not edit a running wrapper.
 ```bash
 sudo ./scripts/promote-native-release.sh \
   --source /path/to/clean/classes.jacobdanderson.net \
-  --candidate /srv/classes.jacobdanderson.net/releases/.candidates/v2.7.206-<full-revision>
+  --candidate /srv/classes.jacobdanderson.net/releases/.candidates/v2.8.4-<full-revision>
 ```
 
 Promotion first moves the candidate into a root-private quarantine, then copies
 regular files through descriptor-relative, no-follow operations into fresh
 root-owned inodes. Symlinks, hardlinks, and special files are rejected. This
 isolated snapshot, not the build-user tree, passes source provenance, complete
-manifest checks, and tagged-source comparisons before installation. Manifest
+manifest checks, independently signed CI provenance, and tagged-source comparisons
+before installation. Manifest
 hashes are never regenerated to accept drift. Only the verified snapshot is
 renamed into the immutable release and reverified. Original build trees and
 failed snapshots remain under root-private `releases/.quarantine-*` directories
 for explicit operator review and cleanup; allow temporary duplicate disk usage.
-The snapshot is the authority for all later installation operations.
+The authenticated snapshot is the authority for all later installation operations.
+The final placement's manifest digest must equal the independently authenticated
+snapshot's digest, and its full payload is checked again before activation. This
+does not repeat the network lookup after final placement, so a transient registry
+failure cannot strand an otherwise authenticated release at its immutable path.
+The already-serving, root-owned immutable rollback release retains its own
+manifest and revision, including releases predating this provenance contract.
+Rollback rechecks its inventory, but never requires the new candidate's proof or
+GitHub availability. This exception applies only to the retained current release,
+not to a newly supplied unsigned candidate. Do not fabricate retroactive CI proof
+or silently replace the retained runtime during this transition.
 Promotion then backs up the installed snippets and unit, tests Nginx, proves all
 three reviewed snippets are active exactly once in Nginx's loaded
 configuration, switches `current` atomically, restarts the one API process,
