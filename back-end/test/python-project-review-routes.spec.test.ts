@@ -381,6 +381,11 @@ describe("Python project review routes", () => {
 						name: "turtle.py",
 						content: "print('reserved')\n",
 						encoding: "text"
+					},
+					{
+						name: "_classes_artifacts/__init__.py",
+						content: "print('shadow')\n",
+						encoding: "text"
 					}
 				]
 			})
@@ -404,7 +409,7 @@ describe("Python project review routes", () => {
 		});
 	});
 
-	it("sanitizes legacy stored files when updating owned project metadata", async () => {
+	it("preserves legacy files on metadata updates while filtering the response", async () => {
 		const project = makeProject({
 			activeFileName: "../secret.py",
 			files: [
@@ -422,6 +427,11 @@ describe("Python project review routes", () => {
 					name: "turtle.py",
 					content: "print('reserved')\n",
 					encoding: "text"
+				},
+				{
+					name: "_classes_artifacts/__init__.py",
+					content: "print('shadow')\n",
+					encoding: "text"
 				}
 			]
 		});
@@ -437,17 +447,16 @@ describe("Python project review routes", () => {
 			const body = await response.json();
 
 			expect(response.status).toBe(200);
-			expect(project.files).toEqual([
-				{
-					name: "main.py",
-					content: "print('safe')\n",
-					encoding: "text"
-				}
+			expect(project.files.map(file => file.name)).toEqual([
+				"main.py",
+				"../secret.py",
+				"turtle.py",
+				"_classes_artifacts/__init__.py"
 			]);
-			expect(project.activeFileName).toBe("main.py");
+			expect(project.activeFileName).toBe("../secret.py");
 			expect(project.save).toHaveBeenCalled();
 			expect(body.project.title).toBe("Cleaned loops practice");
-			expect(body.project.files).toEqual(project.files);
+			expect(body.project.files.map((file: { name: string }) => file.name)).toEqual(["main.py"]);
 			expect(body.project.activeFileName).toBe("main.py");
 		});
 	});
@@ -774,7 +783,7 @@ describe("Python project review routes", () => {
 		});
 	});
 
-	it("sanitizes legacy review files when changing visibility without replacing files", async () => {
+	it("preserves legacy review files while filtering visibility responses", async () => {
 		const review = makeReview({
 			activeFileName: "../secret.py",
 			files: [
@@ -792,6 +801,11 @@ describe("Python project review routes", () => {
 					name: "pygame.py",
 					content: "# Runtime-reserved module.\n",
 					encoding: "text"
+				},
+				{
+					name: "_classes_artifacts/__init__.py",
+					content: "# Runtime-reserved package.\n",
+					encoding: "text"
 				}
 			]
 		});
@@ -807,17 +821,16 @@ describe("Python project review routes", () => {
 			const body = await response.json();
 
 			expect(response.status).toBe(200);
-			expect(review.files).toEqual([
-				{
-					name: "main.py",
-					content: "# Safe review note.\nprint('review')\n",
-					encoding: "text"
-				}
+			expect(review.files.map(file => file.name)).toEqual([
+				"main.py",
+				"../secret.py",
+				"pygame.py",
+				"_classes_artifacts/__init__.py"
 			]);
-			expect(review.activeFileName).toBe("main.py");
+			expect(review.activeFileName).toBe("../secret.py");
 			expect(review.visibleToStudent).toBe(true);
 			expect(review.save).toHaveBeenCalled();
-			expect(body.review.files).toEqual(review.files);
+			expect(body.review.files.map((file: { name: string }) => file.name)).toEqual(["main.py"]);
 			expect(body.review.activeFileName).toBe("main.py");
 		});
 	});
@@ -905,7 +918,7 @@ describe("Python project review routes", () => {
 		});
 	});
 
-	it("sanitizes legacy stored files before refreshing an enabled share link", async () => {
+	it("preserves legacy files while filtering an enabled share link", async () => {
 		const shareID = "share_EXISTING123456789_xyz";
 		const project = makeProject({
 			activeFileName: "../secret.py",
@@ -937,17 +950,14 @@ describe("Python project review routes", () => {
 			const body = await response.json();
 
 			expect(response.status).toBe(200);
-			expect(project.files).toEqual([
-				{
-					name: "main.py",
-					content: "print('safe shared code')\n",
-					encoding: "text"
-				}
+			expect(project.files.map(file => file.name)).toEqual([
+				"main.py",
+				"../secret.py"
 			]);
-			expect(project.activeFileName).toBe("main.py");
+			expect(project.activeFileName).toBe("../secret.py");
 			expect(project.shareID).toBe(shareID);
 			expect(project.save).toHaveBeenCalled();
-			expect(body.project.files).toEqual(project.files);
+			expect(body.project.files.map((file: { name: string }) => file.name)).toEqual(["main.py"]);
 			expect(body.project.activeFileName).toBe("main.py");
 		});
 	});
@@ -1067,6 +1077,11 @@ describe("Python project review routes", () => {
 					{
 						name: "turtle.py",
 						content: "print('reserved')\n",
+						encoding: "text"
+					},
+					{
+						name: "_classes_artifacts/__init__.py",
+						content: "print('shadow')\n",
 						encoding: "text"
 					}
 				],

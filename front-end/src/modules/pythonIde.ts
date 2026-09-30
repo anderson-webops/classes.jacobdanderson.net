@@ -32,9 +32,18 @@ const PYTHON_IDE_RUNTIME_RESERVED_FILE_NAMES = new Set([
 	"zrect.py"
 ]);
 const PYTHON_IDE_RUNTIME_RESERVED_ROOTS = new Set([
+	"_classes_artifacts",
+	"_classes_keras",
+	"_classes_pgzero",
 	"keras",
 	"pgzero",
-	"tensorflow"
+	"pgzrun",
+	"pygame",
+	"pysynth",
+	"streamlit",
+	"tensorflow",
+	"turtle",
+	"zrect"
 ]);
 const TEXT_FILE_RE = /\.(?:csv|eps|java|json|md|ps|py|txt|svg)$/i;
 const IMAGE_EXTENSION_RE = /\.(?:gif|jpe?g|png|svg|webp)$/i;
@@ -2561,12 +2570,18 @@ export function normalizePythonFileName(
 }
 
 export function isPythonIdeRuntimeReservedPath(value: string) {
-	const normalized = value.trim().replaceAll("\\", "/").toLowerCase();
+	const normalized = value.trim().replaceAll("\\", "/");
 	if (!normalized) return false;
-	if (PYTHON_IDE_RUNTIME_RESERVED_FILE_NAMES.has(normalized)) return true;
+	if (PYTHON_IDE_RUNTIME_RESERVED_FILE_NAMES.has(normalized.toLowerCase()))
+		return true;
 
 	const root = normalized.split("/")[0] ?? "";
-	return PYTHON_IDE_RUNTIME_RESERVED_ROOTS.has(root);
+	if (PYTHON_IDE_RUNTIME_RESERVED_FILE_NAMES.has(root.toLowerCase()))
+		return true;
+	return (
+		PYTHON_EXTENSION_RE.test(normalized) &&
+		PYTHON_IDE_RUNTIME_RESERVED_ROOTS.has(root)
+	);
 }
 
 export function isValidPythonFileName(value: string) {

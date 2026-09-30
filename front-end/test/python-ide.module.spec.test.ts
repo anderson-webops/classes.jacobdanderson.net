@@ -5103,6 +5103,30 @@ pgzrun.go()
 		expect(isPythonIdeRuntimeReservedPath("turtle.py")).toBe(true);
 		expect(isPythonIdeRuntimeReservedPath("keras/layers.py")).toBe(true);
 		expect(isValidPythonFileName("turtle.py")).toBe(false);
+		const runtimeSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
+			"utf8"
+		);
+		const runtimeModuleList = runtimeSource.match(
+			/const PYTHON_IDE_RUNTIME_MODULES = (\[[\s\S]*?\]);/
+		);
+		expect(runtimeModuleList).not.toBeNull();
+		const runtimeModules = JSON.parse(
+			runtimeModuleList?.[1] ?? "[]"
+		) as string[];
+		expect(runtimeModules.length).toBeGreaterThan(0);
+		for (const reservedRoot of runtimeModules) {
+			expect(
+				isPythonIdeRuntimeReservedPath(`${reservedRoot}/__init__.py`)
+			).toBe(true);
+			expect(isValidPythonFileName(`${reservedRoot}/helpers.py`)).toBe(
+				false
+			);
+		}
+		expect(isValidPythonFileName("TuRtLe/__init__.py")).toBe(true);
+		expect(isValidPythonFileName("pygame/Main.java")).toBe(true);
+		expect(isValidPythonFileName("turtle.py/helpers.py")).toBe(false);
+		expect(isValidPythonFileName("TURTLE.PY/helper.java")).toBe(false);
 		expect(isValidPythonFileName("pgzrun.py")).toBe(false);
 		expect(isValidPythonFileName("pygame.py")).toBe(false);
 		expect(isValidPythonFileName("streamlit.py")).toBe(false);

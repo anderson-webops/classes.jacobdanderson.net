@@ -39,7 +39,20 @@ const RUNTIME_RESERVED_FILE_NAMES = new Set([
 	"turtle.py",
 	"zrect.py"
 ]);
-const RUNTIME_RESERVED_ROOTS = new Set(["keras", "pgzero", "tensorflow"]);
+const RUNTIME_RESERVED_ROOTS = new Set([
+	"_classes_artifacts",
+	"_classes_keras",
+	"_classes_pgzero",
+	"keras",
+	"pgzero",
+	"pgzrun",
+	"pygame",
+	"pysynth",
+	"streamlit",
+	"tensorflow",
+	"turtle",
+	"zrect"
+]);
 const MAX_PROJECT_FILES = 40;
 const MAX_FILE_LENGTH = 3_000_000;
 const MAX_PROJECT_LENGTH = 12_000_000;
@@ -63,12 +76,13 @@ const DEFAULT_PROJECT_FILE: PythonProjectFile = {
 };
 
 function isRuntimeReservedProjectPath(value: string) {
-	const normalized = value.trim().replaceAll("\\", "/").toLowerCase();
+	const normalized = value.trim().replaceAll("\\", "/");
 	if (!normalized) return false;
-	if (RUNTIME_RESERVED_FILE_NAMES.has(normalized)) return true;
+	if (RUNTIME_RESERVED_FILE_NAMES.has(normalized.toLowerCase())) return true;
 
 	const root = normalized.split("/")[0] ?? "";
-	return RUNTIME_RESERVED_ROOTS.has(root);
+	if (RUNTIME_RESERVED_FILE_NAMES.has(root.toLowerCase())) return true;
+	return PYTHON_FILE_NAME_RE.test(normalized) && RUNTIME_RESERVED_ROOTS.has(root);
 }
 
 function isSafeProjectFileName(value: string) {
@@ -842,7 +856,7 @@ export const updatePythonProject: RequestHandler = async (req, res) => {
 
 	if (parsed.data.title) project.title = parsed.data.title;
 	if (parsed.data.mode) project.mode = parsed.data.mode as PythonProjectMode;
-	project.files = nextFiles;
+	if (parsed.data.files) project.files = nextFiles;
 	if (owner.role === "courseCodeLearner") {
 		project.courseID = owner.courseID;
 	}
@@ -855,7 +869,7 @@ export const updatePythonProject: RequestHandler = async (req, res) => {
 	if (parsed.data.starterUrl) project.starterUrl = parsed.data.starterUrl;
 	if (parsed.data.sharedSourceID) project.sharedSourceID = parsed.data.sharedSourceID;
 	project.ownerRole ??= "user";
-	project.activeFileName = nextActiveFileName;
+	if (parsed.data.files || parsed.data.activeFileName) project.activeFileName = nextActiveFileName;
 
 	await project.save();
 	res.json({ project: serializePythonProject(project) });
@@ -874,9 +888,6 @@ export const updatePythonProjectShare: RequestHandler = async (req, res) => {
 	project.shared = parsed.data.shared;
 	project.ownerRole ??= "user";
 	if (project.shared) {
-		const files = safeSerializedProjectFiles(project);
-		project.files = files;
-		project.activeFileName = normalizeActiveFileName(project.activeFileName, files);
 		if (!wasShared || !project.shareID) {
 			project.shareID = createPythonProjectShareID();
 			project.shareCreatedAt = new Date();
@@ -945,7 +956,7 @@ export const updatePythonProjectReview: RequestHandler = async (req, res) => {
 		nextFiles
 	);
 
-	review.files = nextFiles;
+	if (refreshFromSource || parsed.data.files) review.files = nextFiles;
 	if (refreshFromSource) {
 		review.title = project.title;
 		review.mode = project.mode;
@@ -956,7 +967,7 @@ export const updatePythonProjectReview: RequestHandler = async (req, res) => {
 	}
 	if (parsed.data.visibleToStudent !== undefined) review.visibleToStudent = parsed.data.visibleToStudent;
 	if (parsed.data.note !== undefined) review.note = parsed.data.note;
-	review.activeFileName = nextActiveFileName;
+	if (refreshFromSource || parsed.data.files || parsed.data.activeFileName) review.activeFileName = nextActiveFileName;
 	review.lastEditedBy = reviewer.id;
 	review.lastEditedByRole = reviewer.role;
 	review.lastEditedByName = reviewer.name;

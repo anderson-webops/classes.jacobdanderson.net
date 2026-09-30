@@ -221,6 +221,27 @@ describe("Python project routes", () => {
 		});
 	});
 
+	it("allows Java packages and case-distinct Python packages outside shim paths", async () => {
+		await withPythonProjectRoute(async baseUrl => {
+			const javaResponse = await postJson(baseUrl, {
+				files: [{ name: "pygame/Main.java", content: "public class Main {}" }],
+				mode: "java",
+				title: "Java package"
+			});
+			expect(javaResponse.status).toBe(201);
+
+			const pythonResponse = await postJson(baseUrl, {
+				files: [
+					{ name: "main.py", content: "print('ok')\n" },
+					{ name: "Turtle/__init__.py", content: "value = 1\n" }
+				],
+				mode: "python",
+				title: "Case-distinct package"
+			});
+			expect(pythonResponse.status).toBe(201);
+		});
+	});
+
 	it("accepts Turtle PostScript files saved by the browser runtime", async () => {
 		await withPythonProjectRoute(async baseUrl => {
 			const response = await postJson(baseUrl, {
@@ -559,11 +580,27 @@ describe("Python project routes", () => {
 	});
 
 	it("rejects files that collide with browser runtime shim modules", async () => {
+		const runtimeSource = readFileSync(
+			resolve(__dirname, "../../front-end/src/modules/pythonIdeRuntime.ts"),
+			"utf8"
+		);
+		const runtimeModuleList = runtimeSource.match(
+			/const PYTHON_IDE_RUNTIME_MODULES = (\[[\s\S]*?\]);/
+		);
+		expect(runtimeModuleList).not.toBeNull();
+		const runtimeModules = JSON.parse(
+			runtimeModuleList?.[1] ?? "[]"
+		) as string[];
+		expect(runtimeModules.length).toBeGreaterThan(0);
+
 		await withPythonProjectRoute(async baseUrl => {
 			for (const reservedFileName of [
 				"turtle.py",
 				"pygame.py",
 				"pgzrun.py",
+				...runtimeModules.map(moduleName => `${moduleName}/__init__.py`),
+				"turtle.py/helpers.py",
+				"TURTLE.PY/helper.java",
 				"keras.py",
 				"keras/layers.py",
 				"pgzero/builtins.py",
