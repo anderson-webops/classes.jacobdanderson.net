@@ -32,7 +32,7 @@ import {
 	ref,
 	watch
 } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import IdeDiagnosticsControls from "@/components/IdeDiagnosticsControls.vue";
 import {
 	createIdeDiagnostics,
@@ -637,6 +637,7 @@ for (let digit = 0; digit <= 9; digit += 1) {
 
 const app = useAppStore();
 const route = useRoute();
+const router = useRouter();
 const { currentUser } = storeToRefs(app);
 
 const projects = ref<PythonIdeProject[]>([]);
@@ -652,6 +653,11 @@ const consoleExpanded = ref(false);
 const runtimeArtifacts = ref<RuntimeArtifactView[]>([]);
 const karelWorld = ref<KarelWorldState | null>(null);
 const isLoading = ref(true);
+const pendingRouteProject = ref<{
+	kind: "course" | "share" | "standalone";
+	localOnly: boolean;
+	routeKey: string;
+} | null>(null);
 const isSaving = ref(false);
 const isDownloading = ref(false);
 const isSharing = ref(false);
@@ -1842,15 +1848,13 @@ async function createRequestedCourseProject() {
 
 async function importSharedProjectFromRouteIfNeeded(
 	localOnly = false,
-	loadRunID?: number
+	loadRunID?: number,
+	confirmed = false
 ) {
 	const shareID = requestedShareID.value;
 	if (!shareID || !projectLoadIsCurrent(loadRunID)) return false;
 
 	try {
-		const sharedProject = await fetchSharedPythonIdeProject(shareID);
-		if (!projectLoadIsCurrent(loadRunID)) return false;
-
 		const availableProjects =
 			canSyncToAccount.value && !localOnly
 				? projectCatalog.value
@@ -1865,6 +1869,13 @@ async function importSharedProjectFromRouteIfNeeded(
 			}
 			return true;
 		}
+		if (!confirmed) {
+			queueRouteProjectImport("share", localOnly, loadRunID);
+			return false;
+		}
+
+		const sharedProject = await fetchSharedPythonIdeProject(shareID);
+		if (!projectLoadIsCurrent(loadRunID)) return false;
 
 		const files = sharedProject.files.map(file => ({
 			name: file.name,
@@ -1903,18 +1914,31 @@ async function importSharedProjectFromRouteIfNeeded(
 	}
 }
 
-async function openRouteProjectIfNeeded(localOnly = false, loadRunID?: number) {
+async function openRouteProjectIfNeeded(
+	localOnly = false,
+	loadRunID?: number,
+	confirmed = false
+) {
 	if (requestedShareID.value) {
-		return importSharedProjectFromRouteIfNeeded(localOnly, loadRunID);
+		return importSharedProjectFromRouteIfNeeded(
+			localOnly,
+			loadRunID,
+			confirmed
+		);
 	}
 
 	const openedCourseProject = await openRequestedCourseProjectIfNeeded(
 		localOnly,
-		loadRunID
+		loadRunID,
+		confirmed
 	);
 	if (openedCourseProject) return true;
 
-	return openRequestedStandaloneProjectIfNeeded(localOnly, loadRunID);
+	return openRequestedStandaloneProjectIfNeeded(
+		localOnly,
+		loadRunID,
+		confirmed
+	);
 }
 
 function projectLoadIsCurrent(loadRunID?: number) {
@@ -1922,6 +1946,117 @@ function projectLoadIsCurrent(loadRunID?: number) {
 		!accountScope.signal.aborted &&
 		(loadRunID === undefined || loadRunID === projectLoadRunID)
 	);
+}
+
+function currentRouteImportKey() {
+	return JSON.stringify([
+		route.path,
+		requestedCourseId.value,
+		requestedCourseProjectKey.value,
+		requestedClassroomSource.value,
+		requestedClassroomProject.value,
+		requestedCourseStarter.value,
+		requestedStarterUrl.value,
+		requestedStarterTitle.value,
+		requestedStarterLabel.value,
+		requestedShareID.value,
+		requestedTemplate.value,
+		requestedStarterMode.value
+	]);
+}
+
+function queueRouteProjectImport(
+	kind: "course" | "share" | "standalone",
+	localOnly: boolean,
+	loadRunID?: number
+) {
+	if (!projectLoadIsCurrent(loadRunID)) return;
+	pendingRouteProject.value = {
+		kind,
+		localOnly,
+		routeKey: currentRouteImportKey()
+	};
+}
+
+async function confirmRouteProjectImport() {
+	const pending = pendingRouteProject.value;
+	if (
+		!pending ||
+		pending.routeKey !== currentRouteImportKey() ||
+		isLoading.value
+	) {
+		return;
+	}
+
+	const loadRunID = projectLoadRunID;
+	isLoading.value = true;
+	try {
+		const previousProjectID = selectedProject.value?._id;
+		if (pendingSaveProjectIDs.size || saveInFlight) {
+			if (saveTimer) window.clearTimeout(saveTimer);
+			saveTimer = null;
+			cancelLocalProjectSnapshot();
+			if (pending.localOnly) await persistLocalProjects();
+			else await savePendingProjects({ force: true });
+		}
+		if (previousProjectID && unsyncedProjectIDs.has(previousProjectID)) {
+			appendOutput(
+				"stderr",
+				"Save this project before importing another one."
+			);
+			return;
+		}
+		if (
+			!projectLoadIsCurrent(loadRunID) ||
+			pending.routeKey !== currentRouteImportKey()
+		) {
+			return;
+		}
+
+		pendingRouteProject.value = null;
+		suppressAutoSave = true;
+		const opened = await openRouteProjectIfNeeded(
+			pending.localOnly,
+			loadRunID,
+			true
+		);
+		if (
+			!opened &&
+			projectLoadIsCurrent(loadRunID) &&
+			pending.routeKey === currentRouteImportKey()
+		) {
+			pendingRouteProject.value = pending;
+		}
+	} catch (error) {
+		if (
+			projectLoadIsCurrent(loadRunID) &&
+			pending.routeKey === currentRouteImportKey()
+		) {
+			pendingRouteProject.value = pending;
+			appendOutput(
+				"stderr",
+				error instanceof Error
+					? error.message
+					: "Could not import project."
+			);
+			saveMessage.value = "Could not import project";
+		}
+	} finally {
+		if (
+			projectLoadIsCurrent(loadRunID) &&
+			pending.routeKey === currentRouteImportKey()
+		) {
+			await nextTick();
+			suppressAutoSave = false;
+			isLoading.value = false;
+			resetActiveCanvas();
+		}
+	}
+}
+
+async function declineRouteProjectImport() {
+	pendingRouteProject.value = null;
+	await router.replace({ path: "/ide" });
 }
 
 async function saveNewProject(
@@ -1954,9 +2089,11 @@ async function saveNewProject(
 
 async function openRequestedCourseProjectIfNeeded(
 	localOnly = false,
-	loadRunID?: number
+	loadRunID?: number,
+	confirmed = false
 ) {
 	if (!projectLoadIsCurrent(loadRunID)) return false;
+	if (!requestedCourseProject()) return false;
 
 	const availableProjects =
 		canSyncToAccount.value && !localOnly
@@ -1970,6 +2107,10 @@ async function openRequestedCourseProjectIfNeeded(
 		}
 		return true;
 	}
+	if (!confirmed) {
+		queueRouteProjectImport("course", localOnly, loadRunID);
+		return false;
+	}
 
 	const requestedProject = await createRequestedCourseProject();
 	if (!projectLoadIsCurrent(loadRunID)) return false;
@@ -1981,7 +2122,8 @@ async function openRequestedCourseProjectIfNeeded(
 
 async function openRequestedStandaloneProjectIfNeeded(
 	localOnly = false,
-	loadRunID?: number
+	loadRunID?: number,
+	confirmed = false
 ) {
 	if (!projectLoadIsCurrent(loadRunID)) return false;
 
@@ -2000,6 +2142,10 @@ async function openRequestedStandaloneProjectIfNeeded(
 		}
 		return true;
 	}
+	if (!confirmed) {
+		queueRouteProjectImport("standalone", localOnly, loadRunID);
+		return false;
+	}
 
 	const project = applyStandaloneRouteMetadata(
 		createPythonIdeProject(requestedStarterMode.value, {
@@ -2012,14 +2158,9 @@ async function openRequestedStandaloneProjectIfNeeded(
 }
 
 async function createInitialProject() {
-	const requestedProject = await createRequestedCourseProject();
-	if (requestedProject) return requestedProject;
-	return applyStandaloneRouteMetadata(
-		createPythonIdeProject(requestedStarterMode.value, {
-			courseProjectKey: requestedStandaloneProjectKey() || undefined,
-			template: requestedTemplate.value
-		})
-	);
+	return createPythonIdeProject(requestedStarterMode.value, {
+		template: "blank"
+	});
 }
 
 function setProjects(nextProjects: PythonIdeProject[]) {
@@ -2333,6 +2474,7 @@ async function selectCatalogProject(projectID: string) {
 async function loadProjects() {
 	if (props.runtimeOnly) return;
 	const loadRunID = ++projectLoadRunID;
+	pendingRouteProject.value = null;
 	isLoading.value = true;
 	suppressAutoSave = true;
 	loadPersistedCodeEditorViewStates(storageUserID.value);
@@ -2423,6 +2565,7 @@ async function loadProjects() {
 			);
 			if (!projectLoadIsCurrent(loadRunID)) return;
 			if (openedRouteProject) return;
+			if (pendingRouteProject.value) return;
 
 			const initialProject = await createInitialProject();
 			if (!projectLoadIsCurrent(loadRunID)) return;
@@ -2460,6 +2603,7 @@ async function loadProjects() {
 		);
 		if (!projectLoadIsCurrent(loadRunID)) return;
 		if (openedRouteProject) return;
+		if (pendingRouteProject.value) return;
 
 		const initialProject = await createInitialProject();
 		if (!projectLoadIsCurrent(loadRunID)) return;
@@ -2479,7 +2623,7 @@ async function loadProjects() {
 				loadRunID
 			);
 			if (!projectLoadIsCurrent(loadRunID)) return;
-			if (!openedRouteProject) {
+			if (!openedRouteProject && !pendingRouteProject.value) {
 				const initialProject = await createInitialProject();
 				if (!projectLoadIsCurrent(loadRunID)) return;
 				await saveNewProject(initialProject, true, loadRunID);
@@ -7316,24 +7460,9 @@ function clearCanvasKeyboardState() {
 	activeTurtleDragButton = null;
 }
 
-watch(
-	() =>
-		[
-			route.query.course,
-			route.path,
-			route.query.mode,
-			route.query.projectKey,
-			route.query.share,
-			route.query.starter,
-			route.query.starterLabel,
-			route.query.starterTitle,
-			route.query.starterUrl,
-			route.query.template
-		].join(":"),
-	() => {
-		void loadProjects();
-	}
-);
+watch(currentRouteImportKey, () => {
+	void loadProjects();
+});
 
 watch(
 	selectedProject,
@@ -7606,9 +7735,54 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 		<div v-if="isLoading" class="code-ide-loading site-surface">
 			Loading code workspace...
 		</div>
+		<section
+			v-if="pendingRouteProject && !isLoading"
+			aria-label="Linked project import"
+			class="code-ide-route-import site-surface"
+			data-testid="ide-route-import-prompt"
+		>
+			<h2>Import this linked project?</h2>
+			<p>
+				This link requests a new project. Confirm its source before
+				saving it to your workspace. Inspect the files before running
+				them. Imported code will not run automatically.
+			</p>
+			<p
+				v-if="
+					pendingRouteProject.kind === 'course' && requestedStarterUrl
+				"
+			>
+				Source: <code>{{ requestedStarterUrl }}</code>
+			</p>
+			<p v-else-if="pendingRouteProject.kind === 'share'">
+				Source: shared project link
+			</p>
+			<div class="code-ide-route-import-actions">
+				<button
+					class="site-button"
+					data-testid="ide-route-import-confirm"
+					type="button"
+					@click="confirmRouteProjectImport"
+				>
+					Import project
+				</button>
+				<button
+					class="site-button site-button--secondary"
+					type="button"
+					@click="declineRouteProjectImport"
+				>
+					Not now
+				</button>
+			</div>
+		</section>
 
 		<div
-			v-else
+			v-if="
+				!isLoading &&
+				(!pendingRouteProject ||
+					projects.length ||
+					projectCatalog.length)
+			"
 			class="code-ide-workspace"
 			:class="{ 'is-sidebar-collapsed': sidebarCollapsed }"
 		>
@@ -9065,6 +9239,24 @@ html.dark .karel-empty {
 	display: grid;
 	place-items: center;
 	color: var(--color-ink-soft);
+}
+
+.code-ide-route-import {
+	display: grid;
+	gap: 0.75rem;
+	padding: 1rem;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+}
+
+.code-ide-route-import code {
+	overflow-wrap: anywhere;
+}
+
+.code-ide-route-import-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
 }
 
 .code-ide-workspace {

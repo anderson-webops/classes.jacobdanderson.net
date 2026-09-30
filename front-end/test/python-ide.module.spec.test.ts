@@ -4422,11 +4422,11 @@ pgzrun.go()
 			"const sharedProject = await fetchSharedPythonIdeProject(shareID);"
 		);
 		expect(
-			pageSource.indexOf("fetchSharedPythonIdeProject(shareID)")
-		).toBeLessThan(
 			pageSource.indexOf(
 				"const existingProject = availableProjects.find(\n\t\t\tproject => project.sharedSourceID === shareID"
 			)
+		).toBeLessThan(
+			pageSource.indexOf("fetchSharedPythonIdeProject(shareID)")
 		);
 		expect(pageSource).toContain("sharedSourceID: shareID");
 		expect(pageSource).toContain(
@@ -4768,7 +4768,7 @@ pgzrun.go()
 		expect(pageSource).toContain("const requestedShareID = computed");
 		expect(pageSource).toContain("async function openRouteProjectIfNeeded");
 		expect(pageSource).toContain(
-			"return importSharedProjectFromRouteIfNeeded(localOnly, loadRunID);"
+			"return importSharedProjectFromRouteIfNeeded(\n\t\t\tlocalOnly,\n\t\t\tloadRunID,\n\t\t\tconfirmed"
 		);
 		expect(pageSource).toContain("route.query.share");
 		expect(pageSource).toContain(
