@@ -192,7 +192,8 @@ test(
 				);
 				// Chrome worker imports stall under Puppeteer page-level interception.
 				// Leave runtime traffic untouched, then intercept only the report POST.
-				if (mode === "python") await page.setRequestInterception(false);
+				const usesWorkerRuntime = ["python", "java", "karel"].includes(mode);
+				if (usesWorkerRuntime) await page.setRequestInterception(false);
 				await page.locator("button.run-control").click();
 				try {
 					await page.waitForFunction(
@@ -221,7 +222,7 @@ test(
 						{ cause: error }
 					);
 				}
-				if (mode === "python") await page.setRequestInterception(true);
+				if (usesWorkerRuntime) await page.setRequestInterception(true);
 				const count = reports.length;
 				await page.click(
 					".ide-diagnostics-controls > button:nth-child(2)"
