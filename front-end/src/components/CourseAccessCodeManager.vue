@@ -4,6 +4,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import {
 	createCourseAccessCode,
 	fetchCourseAccessCodes,
+	recoverCourseCodeLearner,
 	updateCourseAccessCode
 } from "@/modules/courseAccessCodes";
 
@@ -25,6 +26,43 @@ const success = ref("");
 const loading = ref(true);
 const submitting = ref(false);
 const updatingCodeID = ref("");
+const recoveryCodeID = ref("");
+const recoveryUsername = ref("");
+const recoveryConfirmed = ref(false);
+const recoveryPassword = ref("");
+const recovering = ref(false);
+
+watch([recoveryCodeID, recoveryUsername], () => {
+	recoveryConfirmed.value = false;
+	recoveryPassword.value = "";
+});
+
+async function recoverLearner() {
+	if (
+		!recoveryCodeID.value ||
+		!recoveryUsername.value.trim() ||
+		!recoveryConfirmed.value ||
+		recovering.value
+	) {
+		return;
+	}
+	recovering.value = true;
+	recoveryPassword.value = "";
+	error.value = "";
+	try {
+		recoveryPassword.value = await recoverCourseCodeLearner(
+			recoveryCodeID.value,
+			recoveryUsername.value
+		);
+		recoveryConfirmed.value = false;
+	} catch (reason: any) {
+		error.value =
+			reason.response?.data?.message ??
+			"Unable to recover this workspace.";
+	} finally {
+		recovering.value = false;
+	}
+}
 
 const courseNameMap = computed(
 	() =>
@@ -138,8 +176,8 @@ onMounted(loadCodes);
 			</div>
 			<p>
 				Issue a code for one course. Learners use that code with a
-				classroom username to reopen the course and their saved IDE
-				projects without creating an email account.
+				classroom username and private password to reopen the course and
+				their saved IDE projects without creating an email account.
 			</p>
 		</div>
 
@@ -246,10 +284,82 @@ onMounted(loadCodes);
 			</article>
 		</div>
 
+		<details v-if="codes.length">
+			<summary>Recover an existing learner workspace</summary>
+			<p class="privacy-note">
+				Confirm the learner's identity using your existing class records
+				or a private conversation. A shared course code or claimed
+				username is not proof of ownership. Recovery replaces the
+				password and signs out existing sessions, without deleting
+				projects.
+			</p>
+			<form class="code-creation-form" @submit.prevent="recoverLearner">
+				<label>
+					<span>Workspace course code</span>
+					<select
+						v-model="recoveryCodeID"
+						:disabled="recovering"
+						required
+					>
+						<option disabled value="">Choose a code</option>
+						<option
+							v-for="code in codes"
+							:key="code._id"
+							:value="code._id"
+						>
+							{{ code.label }} ({{ code.codeHint }})
+						</option>
+					</select>
+				</label>
+				<label>
+					<span>Existing learner username</span>
+					<input
+						v-model="recoveryUsername"
+						:disabled="recovering"
+						maxlength="40"
+						required
+					/>
+				</label>
+				<label>
+					<input
+						v-model="recoveryConfirmed"
+						type="checkbox"
+						:disabled="recovering"
+						required
+					/>
+					<span
+						>I verified this learner's identity independently.</span
+					>
+				</label>
+				<button
+					class="manager-button"
+					type="submit"
+					:disabled="!recoveryConfirmed || recovering"
+				>
+					{{ recovering ? "Recovering…" : "Reset learner password" }}
+				</button>
+			</form>
+			<div v-if="recoveryPassword" class="new-code-panel" role="status">
+				<div>
+					<span
+						>New private password. Give it only to the verified
+						learner. It cannot be retrieved later.</span
+					>
+					<strong>{{ recoveryPassword }}</strong>
+				</div>
+				<button
+					class="manager-button"
+					type="button"
+					@click="recoveryPassword = ''"
+				>
+					Hide password
+				</button>
+			</div>
+		</details>
 		<p class="privacy-note">
-			Anyone who knows both the code and a username can reopen that
-			username’s workspace. Use separate codes when stronger separation is
-			needed, and disable a code when the class ends.
+			Course codes enroll learners; only their private passwords reopen
+			saved workspaces. Use separate codes for separate classes and
+			disable a code when the class ends.
 		</p>
 	</section>
 </template>

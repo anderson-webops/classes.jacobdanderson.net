@@ -73,6 +73,7 @@ export function clearSessionRoles(session: CustomSession) {
 	delete session.tutorID;
 	delete session.userID;
 	delete session.courseCodeLearnerID;
+	delete session.courseCodeCredentialVersion;
 	delete session.accountSessionVersion;
 	delete session.authenticatedSessionExpiresAt;
 }

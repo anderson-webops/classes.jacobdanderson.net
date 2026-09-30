@@ -10,6 +10,7 @@ import {
 	clearSessionRoles
 } from "../utils/accountSessions.js";
 import { findUsableCourseAccessCodeByID } from "../utils/courseAccessCodes.js";
+import { courseCodeSessionMatches } from "../utils/courseCodeCredentials.js";
 
 function rejectInvalidAccountSession(
 	req: Parameters<RequestHandler>[0],
@@ -206,8 +207,8 @@ export const validAccountSession: RequestHandler = async (req, res, next) => {
 			const learner = await loadValidCourseCodeLearner(
 				req.session.courseCodeLearnerID
 			);
-			if (!learner) {
-				delete req.session.courseCodeLearnerID;
+			if (!learner || !courseCodeSessionMatches(req.session as any, learner)) {
+				clearSessionRoles(req.session as any);
 				res.status(403).json({
 					message: "Course code session not found or no longer active"
 				});

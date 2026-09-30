@@ -3,6 +3,7 @@ import {
 	createCourseAccessCode,
 	getCurrentCourseCodeLearner,
 	listCourseAccessCodes,
+	recoverCourseCodeLearner,
 	redeemCourseAccessCode,
 	updateCourseAccessCode
 } from "../controllers/users/courseAccessCodeController.js";
@@ -19,6 +20,12 @@ const redemptionLimiter = createCourseCodeRedemptionLimiter();
 router.get("/me", getCurrentCourseCodeLearner);
 router.post("/redeem", redemptionLimiter, redeemCourseAccessCode);
 router.get("/codes", validTutorOrAdminSession, listCourseAccessCodes);
+router.post(
+	"/codes/:codeID/learners/recover",
+	managementLimiter,
+	validTutorOrAdminSession,
+	recoverCourseCodeLearner
+);
 router.post(
 	"/codes",
 	managementLimiter,

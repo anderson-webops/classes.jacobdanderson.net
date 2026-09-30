@@ -3,6 +3,7 @@ import type { QueryFilter } from "mongoose";
 import type { ICourseAccessCode } from "../../types/entities/ICourseAccessCode.js";
 import type { ICourseCodeLearner } from "../../types/entities/ICourseCodeLearner.js";
 import type { CustomSession } from "../../types/session/CustomSession.js";
+import { randomBytes } from "node:crypto";
 import { Types } from "mongoose";
 import { z } from "zod";
 import { CourseAccessCode } from "../../models/schemas/CourseAccessCode.js";
@@ -24,6 +25,11 @@ import {
 	normalizeCourseCodeUsername,
 	normalizeCourseID
 } from "../../utils/courseAccessCodes.js";
+import {
+	courseCodeSessionMatches,
+	createCourseCodeCredentials,
+	verifyCourseCodePassword
+} from "../../utils/courseCodeCredentials.js";
 import { recordSecurityAuditEvent } from "../../utils/securityAudit.js";
 
 const MAX_CODE_CREATION_ATTEMPTS = 5;
@@ -39,8 +45,10 @@ const updateCodePayloadSchema = z.object({
 });
 const redeemCodePayloadSchema = z.object({
 	code: z.string(),
-	username: z.string()
+	username: z.string(),
+	password: z.string().min(12).max(128)
 });
+const recoveryPayloadSchema = z.object({ username: z.string().max(80) });
 
 function serializeCourseAccessCode(code: ICourseAccessCode) {
 	return {
@@ -227,9 +235,12 @@ export const updateCourseAccessCode: RequestHandler = async (req, res) => {
 };
 
 export const redeemCourseAccessCode: RequestHandler = async (req, res) => {
+	res.set("Cache-Control", "no-store");
 	const parsed = redeemCodePayloadSchema.safeParse(req.body ?? {});
 	if (!parsed.success) {
-		return res.status(400).json({ message: "Enter a course code and username" });
+		return res.status(400).json({
+			message: "Enter a course code, username, and a private password of 12–128 characters"
+		});
 	}
 
 	const compactCode = normalizeCourseAccessCode(parsed.data.code);
@@ -253,15 +264,12 @@ export const redeemCourseAccessCode: RequestHandler = async (req, res) => {
 	let learner = await CourseCodeLearner.findOne({
 		accessCode: accessCode._id,
 		usernameKey: normalizedUsername.usernameKey
-	});
+	}).select("+passwordHash");
 	const now = new Date();
-	if (learner) {
-		learner.lastSeenAt = now;
-		await learner.save();
-	}
-	else {
+	if (!learner) {
 		try {
 			learner = await CourseCodeLearner.create({
+				...await createCourseCodeCredentials(parsed.data.password),
 				accessCode: accessCode._id,
 				username: normalizedUsername.username,
 				usernameKey: normalizedUsername.usernameKey,
@@ -274,17 +282,25 @@ export const redeemCourseAccessCode: RequestHandler = async (req, res) => {
 			learner = await CourseCodeLearner.findOne({
 				accessCode: accessCode._id,
 				usernameKey: normalizedUsername.usernameKey
-			});
+			}).select("+passwordHash");
 		}
 	}
 
 	if (!learner) {
 		return res.status(503).json({ message: "Unable to open the course workspace" });
 	}
+	if (!await verifyCourseCodePassword(learner, parsed.data.password)) {
+		return res.status(403).json({
+			message: "Unable to sign in. Check your details or ask your tutor to recover your workspace."
+		});
+	}
+	learner.lastSeenAt = now;
+	await learner.save();
 
 	const session = req.session as CustomSession;
 	clearSessionRoles(session);
 	session.courseCodeLearnerID = learner._id.toString();
+	session.courseCodeCredentialVersion = learner.credentialVersion;
 	setAuthenticatedSessionLifetime(
 		session,
 		REMEMBERED_AUTHENTICATED_SESSION_MAX_AGE_MS
@@ -299,7 +315,39 @@ export const redeemCourseAccessCode: RequestHandler = async (req, res) => {
 	});
 };
 
+export const recoverCourseCodeLearner: RequestHandler = async (req, res) => {
+	res.set("Cache-Control", "no-store");
+	const codeID = getCodeIDParam(req, res);
+	if (!codeID) return;
+	const query = staffCodeQuery(req, codeID);
+	if (!query) return res.sendStatus(403);
+	const parsed = recoveryPayloadSchema.safeParse(req.body ?? {});
+	const username = parsed.success
+		? normalizeCourseCodeUsername(parsed.data.username)
+		: null;
+	if (!username) return res.status(400).json({ message: "Enter the learner's classroom username" });
+	const code = await CourseAccessCode.findOne(query);
+	if (!code) return res.sendStatus(404);
+	if (req.currentTutor && !(req.currentTutor.coursePermissions ?? []).includes(code.courseID)) {
+		return res.sendStatus(403);
+	}
+	const password = randomBytes(18).toString("base64url");
+	const credentials = await createCourseCodeCredentials(password);
+	const learner = await CourseCodeLearner.findOneAndUpdate(
+		{ accessCode: code._id, usernameKey: username.usernameKey, courseID: code.courseID },
+		{ $set: credentials },
+		{ new: true, runValidators: true }
+	);
+	if (!learner) return res.sendStatus(404);
+	await recordSecurityAuditEvent(req, {
+		action: "course-access-code.learner-recover",
+		metadata: { courseID: code.courseID }
+	});
+	res.json({ password });
+};
+
 export const getCurrentCourseCodeLearner: RequestHandler = async (req, res) => {
+	res.set("Cache-Control", "no-store");
 	const session = req.session as CustomSession | undefined;
 	const learnerID = session?.courseCodeLearnerID;
 	if (
@@ -313,7 +361,7 @@ export const getCurrentCourseCodeLearner: RequestHandler = async (req, res) => {
 	}
 
 	const learner = await CourseCodeLearner.findById(learnerID);
-	if (!learner) {
+	if (!learner || !courseCodeSessionMatches(session, learner)) {
 		clearSessionRoles(session);
 		return res.json({ currentCourseLearner: null });
 	}

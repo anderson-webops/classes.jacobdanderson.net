@@ -14,6 +14,7 @@ const modelMocks = vi.hoisted(() => ({
 	learnerCreate: vi.fn(),
 	learnerFindById: vi.fn(),
 	learnerFindOne: vi.fn(),
+	learnerFindOneAndUpdate: vi.fn(),
 	tutorExists: vi.fn(),
 	tutorFindById: vi.fn(),
 	userFindById: vi.fn()
@@ -38,7 +39,8 @@ vi.mock("../src/models/schemas/CourseCodeLearner.js", () => ({
 	CourseCodeLearner: {
 		create: modelMocks.learnerCreate,
 		findById: modelMocks.learnerFindById,
-		findOne: modelMocks.learnerFindOne
+		findOne: modelMocks.learnerFindOne,
+		findOneAndUpdate: modelMocks.learnerFindOneAndUpdate
 	}
 }));
 
@@ -55,14 +57,11 @@ vi.mock("../src/models/schemas/User.js", () => ({
 	}
 }));
 
-const { courseAccessCodeRoutes } = await import(
-	"../src/routes/courseAccessCodeRoutes.js"
-);
+const { courseAccessCodeRoutes } =
+	await import("../src/routes/courseAccessCodeRoutes.js");
 const { validAccountSession } = await import("../src/middleware/auth.js");
-const {
-	hashCourseAccessCode,
-	normalizeCourseAccessCode
-} = await import("../src/utils/courseAccessCodes.js");
+const { hashCourseAccessCode, normalizeCourseAccessCode } =
+	await import("../src/utils/courseAccessCodes.js");
 
 interface AccessCodeRecord {
 	_id: Types.ObjectId;
@@ -84,6 +83,8 @@ interface LearnerRecord {
 	accessCode: Types.ObjectId;
 	username: string;
 	usernameKey: string;
+	passwordHash?: string;
+	credentialVersion?: string;
 	courseID: string;
 	lastSeenAt: Date;
 	createdAt: Date;
@@ -95,6 +96,7 @@ const adminID = new Types.ObjectId();
 const tutorID = new Types.ObjectId();
 const testCodeID = new Types.ObjectId();
 const testCode = "2345-6789-ABCD";
+const testPassword = "synthetic-private-passphrase";
 const testCodeHash = hashCourseAccessCode(
 	normalizeCourseAccessCode(testCode) ?? ""
 );
@@ -190,6 +192,12 @@ async function withCourseAccessRoutes<T>(
 			userID: session.userID ?? null
 		});
 	});
+	app.post("/test/session/legacy", (req, res) => {
+		const session = req.session as CustomSession;
+		session.courseCodeLearnerID = learners[0]._id.toString();
+		session.authenticatedSessionExpiresAt = Date.now() + 60_000;
+		res.sendStatus(204);
+	});
 	app.get("/test/protected-project", validAccountSession, (req, res) => {
 		res.json({
 			learnerID: req.currentCourseCodeLearner?._id.toString() ?? null
@@ -207,8 +215,7 @@ async function withCourseAccessRoutes<T>(
 
 	try {
 		return await run(`http://127.0.0.1:${address.port}`);
-	}
-	finally {
+	} finally {
 		await new Promise<void>((resolve, reject) => {
 			server.close(error => {
 				if (error) {
@@ -267,8 +274,8 @@ describe("course access code routes", () => {
 			sessionVersion: 0
 		}));
 		modelMocks.tutorExists.mockImplementation(async query =>
-			query._id.toString() === tutorID.toString()
-			&& tutorCoursePermissions.includes(query.coursePermissions)
+			query._id.toString() === tutorID.toString() &&
+			tutorCoursePermissions.includes(query.coursePermissions)
 				? { _id: tutorID }
 				: null
 		);
@@ -285,31 +292,40 @@ describe("course access code routes", () => {
 		modelMocks.codeFind.mockImplementation(query => ({
 			sort: () => ({
 				limit: async () =>
-					accessCodes.filter(code =>
-						!query.createdBy
-						|| code.createdBy.toString() === query.createdBy.toString()
+					accessCodes.filter(
+						code =>
+							!query.createdBy ||
+							code.createdBy.toString() ===
+								query.createdBy.toString()
 					)
 			})
 		}));
 		modelMocks.codeFindOne.mockImplementation(query => {
 			const match =
 				accessCodes.find(code => {
-					if (query.active !== undefined && code.active !== query.active) {
-						return false;
-					}
-					if (query.codeHash && code.codeHash !== query.codeHash) return false;
-					if (query._id && code._id.toString() !== query._id.toString()) {
-						return false;
-					}
 					if (
-						query.createdBy
-						&& code.createdBy.toString() !== query.createdBy.toString()
+						query.active !== undefined &&
+						code.active !== query.active
+					) {
+						return false;
+					}
+					if (query.codeHash && code.codeHash !== query.codeHash)
+						return false;
+					if (
+						query._id &&
+						code._id.toString() !== query._id.toString()
 					) {
 						return false;
 					}
 					if (
-						query.createdByRole
-						&& code.createdByRole !== query.createdByRole
+						query.createdBy &&
+						code.createdBy.toString() !== query.createdBy.toString()
+					) {
+						return false;
+					}
+					if (
+						query.createdByRole &&
+						code.createdByRole !== query.createdByRole
 					) {
 						return false;
 					}
@@ -317,22 +333,40 @@ describe("course access code routes", () => {
 				}) ?? null;
 			return makeThenableQuery(match);
 		});
-		modelMocks.learnerFindOne.mockImplementation(async query =>
-			learners.find(
-				learner =>
-					learner.accessCode.toString() === query.accessCode.toString()
-					&& learner.usernameKey === query.usernameKey
-			) ?? null
+		modelMocks.learnerFindOne.mockImplementation(query =>
+			makeThenableQuery(
+				learners.find(
+					learner =>
+						learner.accessCode.toString() ===
+							query.accessCode.toString() &&
+						learner.usernameKey === query.usernameKey
+				) ?? null
+			)
+		);
+		modelMocks.learnerFindOneAndUpdate.mockImplementation(
+			async (query, update) => {
+				const learner = learners.find(
+					record =>
+						record.accessCode.toString() ===
+							query.accessCode.toString() &&
+						record.usernameKey === query.usernameKey &&
+						record.courseID === query.courseID
+				);
+				if (!learner) return null;
+				Object.assign(learner, update.$set);
+				return learner;
+			}
 		);
 		modelMocks.learnerCreate.mockImplementation(async payload => {
 			const learner = makeLearner(payload);
 			learners.push(learner);
 			return learner;
 		});
-		modelMocks.learnerFindById.mockImplementation(async learnerID =>
-			learners.find(
-				learner => learner._id.toString() === learnerID.toString()
-			) ?? null
+		modelMocks.learnerFindById.mockImplementation(
+			async learnerID =>
+				learners.find(
+					learner => learner._id.toString() === learnerID.toString()
+				) ?? null
 		);
 	});
 
@@ -349,7 +383,9 @@ describe("course access code routes", () => {
 			const compactCode = normalizeCourseAccessCode(body.code);
 
 			expect(response.status).toBe(201);
-			expect(body.code).toMatch(/^[23456789A-HJ-NP-Z]{4}(?:-[23456789A-HJ-NP-Z]{4}){2}$/);
+			expect(body.code).toMatch(
+				/^[23456789A-HJ-NP-Z]{4}(?:-[23456789A-HJ-NP-Z]{4}){2}$/
+			);
 			expect(compactCode).not.toBeNull();
 			expect(modelMocks.codeCreate).toHaveBeenCalledWith(
 				expect.objectContaining({
@@ -358,13 +394,16 @@ describe("course access code routes", () => {
 					courseID: "python-level-1"
 				})
 			);
-			expect(modelMocks.codeCreate.mock.calls[0][0]).not.toHaveProperty("code");
-			expect(responseText).not.toContain(hashCourseAccessCode(compactCode!));
-
-			const listResponse = await fetch(
-				`${baseUrl}/course-access/codes`,
-				{ headers: { cookie } }
+			expect(modelMocks.codeCreate.mock.calls[0][0]).not.toHaveProperty(
+				"code"
 			);
+			expect(responseText).not.toContain(
+				hashCourseAccessCode(compactCode!)
+			);
+
+			const listResponse = await fetch(`${baseUrl}/course-access/codes`, {
+				headers: { cookie }
+			});
 			const listText = await listResponse.text();
 			expect(listResponse.status).toBe(200);
 			expect(listText).not.toContain(hashCourseAccessCode(compactCode!));
@@ -416,19 +455,27 @@ describe("course access code routes", () => {
 		});
 	});
 
-	it("reopens the same pseudonymous learner for a code and normalized username", async () => {
+	it("reopens the same learner only with the private password", async () => {
 		accessCodes.push(makeAccessCode());
 
 		await withCourseAccessRoutes(async baseUrl => {
 			const firstResponse = await postJson(
 				`${baseUrl}/course-access/redeem`,
-				{ code: "2345 6789 abcd", username: "  Student   One  " }
+				{
+					code: "2345 6789 abcd",
+					username: "  Student   One  ",
+					password: testPassword
+				}
 			);
 			const firstBody = await firstResponse.json();
 			const firstCookie = responseCookie(firstResponse);
 			const secondResponse = await postJson(
 				`${baseUrl}/course-access/redeem`,
-				{ code: testCode, username: "student one" }
+				{
+					code: testCode,
+					username: "student one",
+					password: testPassword
+				}
 			);
 			const secondBody = await secondResponse.json();
 
@@ -436,13 +483,20 @@ describe("course access code routes", () => {
 			expect(secondResponse.status).toBe(200);
 			for (const cookie of firstResponse.headers
 				.getSetCookie()
-				.filter(value =>
-					value.startsWith("session=")
-					|| value.startsWith("session.sig=")
+				.filter(
+					value =>
+						value.startsWith("session=") ||
+						value.startsWith("session.sig=")
 				)) {
 				expect(cookie.toLowerCase()).toContain("expires=");
 			}
 			expect(modelMocks.learnerCreate).toHaveBeenCalledTimes(1);
+			expect(learners[0].passwordHash).toMatch(/^\$argon2/);
+			expect(JSON.stringify(firstBody)).not.toContain("password");
+			expect(JSON.stringify(firstBody)).not.toContain(
+				"credentialVersion"
+			);
+			expect(firstResponse.headers.get("cache-control")).toBe("no-store");
 			expect(firstBody.currentCourseLearner).toMatchObject({
 				courseAccess: ["python-level-1"],
 				courseID: "python-level-1",
@@ -483,7 +537,11 @@ describe("course access code routes", () => {
 		await withCourseAccessRoutes(async baseUrl => {
 			const redeemResponse = await postJson(
 				`${baseUrl}/course-access/redeem`,
-				{ code: testCode, username: "Student Two" }
+				{
+					code: testCode,
+					username: "Student Two",
+					password: testPassword
+				}
 			);
 			const cookie = responseCookie(redeemResponse);
 			const activeProjectResponse = await fetch(
@@ -506,6 +564,138 @@ describe("course access code routes", () => {
 				{ headers: { cookie } }
 			);
 			expect(projectSessionResponse.status).toBe(403);
+		});
+	});
+
+	it("rejects missing or incorrect passwords without changing a learner", async () => {
+		accessCodes.push(makeAccessCode());
+		await withCourseAccessRoutes(async baseUrl => {
+			await postJson(`${baseUrl}/course-access/redeem`, {
+				code: testCode,
+				username: "Learner",
+				password: testPassword
+			});
+			learners[0].save.mockClear();
+			for (const password of [
+				undefined,
+				"incorrect-passphrase",
+				"short",
+				"x".repeat(129)
+			]) {
+				const response = await postJson(
+					`${baseUrl}/course-access/redeem`,
+					{
+						code: testCode,
+						username: "Learner",
+						password
+					}
+				);
+				expect(response.status).toBe(
+					password === "incorrect-passphrase" ? 403 : 400
+				);
+				expect(response.headers.getSetCookie()).toEqual([]);
+			}
+			expect(learners).toHaveLength(1);
+			expect(learners[0].save).not.toHaveBeenCalled();
+		});
+	});
+
+	it("preserves legacy workspaces and requires authorized recovery before access", async () => {
+		accessCodes.push(makeAccessCode());
+		learners.push(
+			makeLearner({
+				accessCode: testCodeID,
+				courseID: "python-level-1",
+				lastSeenAt: new Date(),
+				username: "Existing Learner",
+				usernameKey: "existing learner"
+			})
+		);
+		const originalID = learners[0]._id.toString();
+		await withCourseAccessRoutes(async baseUrl => {
+			const denied = await postJson(`${baseUrl}/course-access/redeem`, {
+				code: testCode,
+				username: "Existing Learner",
+				password: testPassword
+			});
+			expect(denied.status).toBe(403);
+			const legacy = await postJson(`${baseUrl}/test/session/legacy`, {});
+			const legacyCookie = responseCookie(legacy);
+			const me = await fetch(`${baseUrl}/course-access/me`, {
+				headers: { cookie: legacyCookie }
+			});
+			expect(await me.json()).toEqual({ currentCourseLearner: null });
+			expect(
+				(
+					await fetch(`${baseUrl}/test/protected-project`, {
+						headers: { cookie: legacyCookie }
+					})
+				).status
+			).toBe(403);
+			const recoveryURL = `${baseUrl}/course-access/codes/${testCodeID}/learners/recover`;
+			const payload = { username: "Existing Learner" };
+			expect((await postJson(recoveryURL, payload)).status).toBe(403);
+			const tutorCookie = await seedSession(baseUrl, "tutor");
+			expect(
+				(await postJson(recoveryURL, payload, tutorCookie)).status
+			).toBe(404);
+			expect(modelMocks.learnerFindOneAndUpdate).not.toHaveBeenCalled();
+			const adminCookie = await seedSession(baseUrl, "admin");
+			const recovered = await postJson(recoveryURL, payload, adminCookie);
+			expect(recovered.status).toBe(200);
+			expect(recovered.headers.get("cache-control")).toBe("no-store");
+			const { password } = await recovered.json();
+			expect(password).toMatch(/^[\w-]{24}$/);
+			expect(learners[0]._id.toString()).toBe(originalID);
+			const signedIn = await postJson(`${baseUrl}/course-access/redeem`, {
+				code: testCode,
+				username: "Existing Learner",
+				password
+			});
+			expect(signedIn.status).toBe(200);
+			expect((await signedIn.json()).currentCourseLearner._id).toBe(
+				originalID
+			);
+			const cookie = responseCookie(signedIn);
+			await postJson(recoveryURL, payload, adminCookie);
+			expect(
+				(
+					await fetch(`${baseUrl}/test/protected-project`, {
+						headers: { cookie }
+					})
+				).status
+			).toBe(403);
+			expect(
+				await (
+					await fetch(`${baseUrl}/course-access/me`, {
+						headers: { cookie }
+					})
+				).json()
+			).toEqual({ currentCourseLearner: null });
+			expect(modelMocks.learnerCreate).not.toHaveBeenCalled();
+		});
+	});
+
+	it("authenticates the stored credential when concurrent registration loses the unique-key race", async () => {
+		accessCodes.push(makeAccessCode());
+		await withCourseAccessRoutes(async baseUrl => {
+			await postJson(`${baseUrl}/course-access/redeem`, {
+				code: testCode,
+				username: "Learner",
+				password: testPassword
+			});
+			modelMocks.learnerFindOne.mockImplementationOnce(() =>
+				makeThenableQuery(null)
+			);
+			modelMocks.learnerCreate.mockRejectedValueOnce({ code: 11000 });
+			const response = await postJson(`${baseUrl}/course-access/redeem`, {
+				code: testCode,
+				username: "Learner",
+				password: "different-private-passphrase"
+			});
+			expect(response.status).toBe(403);
+			expect(response.headers.getSetCookie()).toEqual([]);
+			expect(learners).toHaveLength(1);
 		});
 	});
 });

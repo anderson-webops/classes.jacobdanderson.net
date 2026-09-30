@@ -106,16 +106,15 @@ describe("app store bootstrapSession()", () => {
 
 		const result = await app.redeemCourseAccessCode(
 			"2345-6789-ABCD",
-			"Student One"
+			"Student One",
+			"synthetic-private-passphrase"
 		);
 
-		expect(apiMod.api.post).toHaveBeenCalledWith(
-			"/course-access/redeem",
-			{
-				code: "2345-6789-ABCD",
-				username: "Student One"
-			}
-		);
+		expect(apiMod.api.post).toHaveBeenCalledWith("/course-access/redeem", {
+			code: "2345-6789-ABCD",
+			username: "Student One",
+			password: "synthetic-private-passphrase"
+		});
 		expect(result).toEqual(learner);
 		expect(app.currentCourseLearner).toEqual(learner);
 		expect(app.currentAdmin).toBeNull();

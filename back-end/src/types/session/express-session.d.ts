@@ -15,6 +15,7 @@ declare module "express-session" {
 		tutorID?: string;
 		userID?: string;
 		courseCodeLearnerID?: string;
+		courseCodeCredentialVersion?: string;
 		accountSessionVersion?: number;
 		authenticatedSessionExpiresAt?: number;
 	}

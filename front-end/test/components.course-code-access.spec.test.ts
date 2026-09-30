@@ -9,7 +9,7 @@ describe("CourseCodeAccessForm.vue", () => {
 		setActivePinia(createPinia());
 	});
 
-	it("opens a pseudonymous course workspace with a code and username", async () => {
+	it("requires a private password to open a pseudonymous workspace", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 		const app = useAppStore();
@@ -34,14 +34,19 @@ describe("CourseCodeAccessForm.vue", () => {
 
 		await inputs[0].setValue("2345-6789-ABCD");
 		await inputs[1].setValue("Student One");
+		expect(wrapper.get("button").attributes("disabled")).toBeDefined();
+		await inputs[2].setValue("synthetic-private-passphrase");
 		await wrapper.get("form").trigger("submit.prevent");
 		await flushPromises();
 
 		expect(redeem).toHaveBeenCalledWith(
 			"2345-6789-ABCD",
-			"Student One"
+			"Student One",
+			"synthetic-private-passphrase"
 		);
 		expect(wrapper.text()).toContain("Opened Period 2 as Student One.");
 		expect(wrapper.text()).toContain("without providing an email address");
+		expect((inputs[2].element as HTMLInputElement).value).toBe("");
+		expect(wrapper.text()).toContain("Your projects are preserved");
 	});
 });

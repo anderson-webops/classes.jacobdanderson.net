@@ -46,7 +46,6 @@ export type UserAccountDeletionResult
 
 async function deleteAccountLinkedRecords(
 	userID: MongooseTypes.ObjectId,
-	email: string,
 	auditSubjectID: MongooseTypes.ObjectId,
 	session: ClientSession
 ) {
@@ -65,21 +64,7 @@ async function deleteAccountLinkedRecords(
 	await PythonProjectReview.deleteMany({ user: userID }, { session }).exec();
 	await InternalEmail.deleteMany({ user: userID }, { session }).exec();
 	await ScheduledSession.deleteMany({ user: userID }, { session }).exec();
-	await SessionNote.deleteMany(
-		{
-			$or: [
-				{ user: userID },
-				{
-					primaryEmail: email,
-					$or: [
-						{ user: { $exists: false } },
-						{ user: null }
-					]
-				}
-			]
-		},
-		{ session }
-	).exec();
+	await SessionNote.deleteMany({ user: userID }, { session }).exec();
 	await SecurityAuditEvent.updateMany(
 		{ actorID: userID, actorRole: "user" },
 		{ $set: { actorID: auditSubjectID } },
@@ -130,7 +115,6 @@ export async function deleteUserAccount(
 
 		await deleteAccountLinkedRecords(
 			objectID,
-			user.email.trim().toLowerCase(),
 			auditSubjectID,
 			session
 		);

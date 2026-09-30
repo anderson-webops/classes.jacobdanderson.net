@@ -5,12 +5,17 @@ import { useAppStore } from "@/stores/app";
 const app = useAppStore();
 const code = ref("");
 const username = ref("");
+const password = ref("");
 const error = ref("");
 const success = ref("");
 const submitting = ref(false);
 
 const canSubmit = computed(
-	() => code.value.trim().length > 0 && username.value.trim().length >= 2
+	() =>
+		code.value.trim().length > 0 &&
+		username.value.trim().length >= 2 &&
+		password.value.length >= 12 &&
+		password.value.length <= 128
 );
 
 async function redeemCode() {
@@ -22,11 +27,13 @@ async function redeemCode() {
 	try {
 		const learner = await app.redeemCourseAccessCode(
 			code.value,
-			username.value
+			username.value,
+			password.value
 		);
 		success.value = `Opened ${learner.codeLabel || learner.courseID} as ${learner.username}.`;
 		code.value = "";
 		username.value = "";
+		password.value = "";
 	} catch (reason: any) {
 		error.value =
 			reason.response?.data?.message ??
@@ -44,9 +51,9 @@ async function redeemCode() {
 			<p class="page-eyebrow">Classroom access</p>
 			<h2>Use a course code</h2>
 			<p>
-				Enter the code from your tutor and the same username each time.
-				You can open the assigned course and sync IDE projects without
-				providing an email address.
+				Enter the code from your tutor, your username, and your private
+				password. You can open the assigned course and sync IDE projects
+				without providing an email address.
 			</p>
 		</div>
 
@@ -72,6 +79,18 @@ async function redeemCode() {
 					spellcheck="false"
 				/>
 			</label>
+			<label>
+				<span>Private password</span>
+				<input
+					v-model="password"
+					type="password"
+					autocomplete="current-password"
+					minlength="12"
+					maxlength="128"
+					required
+					placeholder="At least 12 characters"
+				/>
+			</label>
 			<button
 				class="site-button site-button--primary"
 				:disabled="!canSubmit || submitting"
@@ -88,9 +107,11 @@ async function redeemCode() {
 			{{ error }}
 		</p>
 		<p class="course-code-note">
-			The code and username together open the same saved workspace. Keep
-			the code within your class and choose a classroom username that does
-			not reveal private information.
+			For a new username, choose and save a private password of 12–128
+			characters. Use the same password to reopen your saved projects.
+			Never share it with classmates. If you previously used only a code
+			and username, or forgot your password, ask your tutor to recover
+			your existing workspace. Your projects are preserved.
 		</p>
 	</section>
 </template>
@@ -120,7 +141,7 @@ async function redeemCode() {
 
 .course-code-form {
 	display: grid;
-	grid-template-columns: minmax(12rem, 1fr) minmax(12rem, 1fr) auto;
+	grid-template-columns: repeat(3, minmax(10rem, 1fr)) auto;
 	gap: 1rem;
 	align-items: end;
 }

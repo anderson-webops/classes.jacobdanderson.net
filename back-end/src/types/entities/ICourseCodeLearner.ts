@@ -5,6 +5,8 @@ export interface ICourseCodeLearner {
 	accessCode: Types.ObjectId;
 	username: string;
 	usernameKey: string;
+	passwordHash?: string;
+	credentialVersion?: string;
 	courseID: string;
 	lastSeenAt: Date;
 	createdAt: Date;

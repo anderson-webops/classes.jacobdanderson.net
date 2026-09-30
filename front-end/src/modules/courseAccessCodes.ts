@@ -51,3 +51,14 @@ export async function updateCourseAccessCode(
 	}>(`/course-access/codes/${encodeURIComponent(codeID)}`, payload);
 	return data.accessCode;
 }
+
+export async function recoverCourseCodeLearner(
+	codeID: string,
+	username: string
+) {
+	const { data } = await api.post<{ password: string }>(
+		`/course-access/codes/${encodeURIComponent(codeID)}/learners/recover`,
+		{ username }
+	);
+	return data.password;
+}

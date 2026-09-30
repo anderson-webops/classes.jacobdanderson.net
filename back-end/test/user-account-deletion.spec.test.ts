@@ -68,12 +68,12 @@ vi.mock("../src/models/schemas/User.js", () => ({
 	}
 }));
 
-const {
-	deleteUserAccount,
-	UserAccountDeletionError
-} = await import("../src/services/userAccountDeletion.js");
+const { deleteUserAccount, UserAccountDeletionError } =
+	await import("../src/services/userAccountDeletion.js");
 
-const session = { id: "user-account-deletion-session" } as unknown as ClientSession;
+const session = {
+	id: "user-account-deletion-session"
+} as unknown as ClientSession;
 const transaction = vi.spyOn(mongoose.connection, "transaction");
 
 function queryResult<T>(result: T) {
@@ -95,14 +95,13 @@ describe("user account deletion", () => {
 			ok: true,
 			topology: "replica-set"
 		});
-		transaction.mockImplementation(
-			async operation => operation(session)
-		);
+		transaction.mockImplementation(async operation => operation(session));
 
-		const successfulDeletion = () => queryResult({
-			acknowledged: true,
-			deletedCount: 1
-		});
+		const successfulDeletion = () =>
+			queryResult({
+				acknowledged: true,
+				deletedCount: 1
+			});
 		for (const deletionMock of [
 			modelMocks.externalIdentityDeleteMany,
 			modelMocks.internalEmailDeleteMany,
@@ -158,18 +157,7 @@ describe("user account deletion", () => {
 			);
 		}
 		expect(modelMocks.sessionNoteDeleteMany).toHaveBeenCalledWith(
-			{
-				$or: [
-					{ user: userID },
-					{
-						primaryEmail: "student@example.com",
-						$or: [
-							{ user: { $exists: false } },
-							{ user: null }
-						]
-					}
-				]
-			},
+			{ user: userID },
 			{ session }
 		);
 		expect(modelMocks.securityAuditEventUpdateMany).toHaveBeenNthCalledWith(
@@ -194,8 +182,8 @@ describe("user account deletion", () => {
 			writeConcern: { w: "majority" }
 		});
 
-		const accountDeleteOrder
-			= modelMocks.userDeleteOne.mock.invocationCallOrder[0];
+		const accountDeleteOrder =
+			modelMocks.userDeleteOne.mock.invocationCallOrder[0];
 		for (const operation of [
 			modelMocks.externalIdentityDeleteMany,
 			modelMocks.internalEmailDeleteMany,
@@ -210,6 +198,36 @@ describe("user account deletion", () => {
 				accountDeleteOrder
 			);
 		}
+	});
+
+	it("only deletes notes with the immutable account owner", async () => {
+		const userID = new Types.ObjectId();
+		const otherUserID = new Types.ObjectId();
+		const email = "learner@example.test";
+		const notes = [
+			{ id: "owned", user: userID, primaryEmail: "old@example.test" },
+			{ id: "unlinked", primaryEmail: email },
+			{ id: "legacy", user: null, primaryEmail: email },
+			{ id: "other-owner", user: otherUserID, primaryEmail: email }
+		];
+		modelMocks.userFindById.mockReturnValue(
+			findQueryResult({ _id: userID, email })
+		);
+		modelMocks.sessionNoteDeleteMany.mockImplementation(filter => {
+			expect(filter).toEqual({ user: userID });
+			const retained = notes.filter(
+				note => !note.user?.equals(filter.user)
+			);
+			expect(retained.map(note => note.id)).toEqual([
+				"unlinked",
+				"legacy",
+				"other-owner"
+			]);
+			return queryResult({ acknowledged: true, deletedCount: 1 });
+		});
+
+		expect((await deleteUserAccount(userID)).deleted).toBe(true);
+		expect(modelMocks.sessionNoteDeleteMany).toHaveBeenCalledTimes(1);
 	});
 
 	it("does not delete the account or report success when a child sweep fails", async () => {

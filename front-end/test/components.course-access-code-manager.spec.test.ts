@@ -5,12 +5,14 @@ import CourseAccessCodeManager from "@/components/CourseAccessCodeManager.vue";
 const moduleMocks = vi.hoisted(() => ({
 	create: vi.fn(),
 	fetch: vi.fn(),
+	recover: vi.fn(),
 	update: vi.fn()
 }));
 
 vi.mock("@/modules/courseAccessCodes", () => ({
 	createCourseAccessCode: moduleMocks.create,
 	fetchCourseAccessCodes: moduleMocks.fetch,
+	recoverCourseCodeLearner: moduleMocks.recover,
 	updateCourseAccessCode: moduleMocks.update
 }));
 
@@ -84,5 +86,31 @@ describe("CourseAccessCodeManager.vue", () => {
 			"Existing code sessions can no longer sync or reopen projects."
 		);
 		expect(wrapper.text()).toContain("Disabled");
+	});
+
+	it("requires an identity confirmation and reveals a recovery password only once", async () => {
+		moduleMocks.fetch.mockResolvedValue([existingCode]);
+		moduleMocks.recover.mockResolvedValue("synthetic-recovery-password");
+		const wrapper = mount(CourseAccessCodeManager, {
+			props: {
+				courses: [{ id: "python-level-1", name: "Python Level 1" }]
+			}
+		});
+		await flushPromises();
+		const details = wrapper.get("details");
+		await details.get("select").setValue("code-1");
+		await details.get("input:not([type=checkbox])").setValue("Learner");
+		await details.get("form").trigger("submit.prevent");
+		expect(moduleMocks.recover).not.toHaveBeenCalled();
+		await details.get("input[type=checkbox]").setValue(true);
+		await details.get("form").trigger("submit.prevent");
+		await flushPromises();
+		expect(moduleMocks.recover).toHaveBeenCalledWith("code-1", "Learner");
+		expect(details.text()).toContain("synthetic-recovery-password");
+		await details
+			.findAll("button")
+			.find(button => button.text() === "Hide password")!
+			.trigger("click");
+		expect(details.text()).not.toContain("synthetic-recovery-password");
 	});
 });

@@ -22,6 +22,8 @@ const courseCodeLearnerSchema: Schema<ICourseCodeLearner> = new Schema(
 			trim: true,
 			maxlength: 40
 		},
+		passwordHash: { type: String, select: false },
+		credentialVersion: { type: String },
 		courseID: {
 			type: String,
 			required: true,

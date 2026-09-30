@@ -263,10 +263,14 @@ export const useAppStore = defineStore("app", {
 			}
 		},
 
-		async redeemCourseAccessCode(code: string, username: string) {
+		async redeemCourseAccessCode(
+			code: string,
+			username: string,
+			password: string
+		) {
 			const { data } = await api.post<{
 				currentCourseLearner: CourseCodeLearner;
-			}>("/course-access/redeem", { code, username });
+			}>("/course-access/redeem", { code, username, password });
 			this.setCurrentAdmin(null);
 			this.setCurrentTutor(null);
 			this.setCurrentUser(null);
