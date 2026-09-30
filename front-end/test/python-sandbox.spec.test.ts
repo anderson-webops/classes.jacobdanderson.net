@@ -27,8 +27,10 @@ afterEach(() => {
 	vi.useRealTimers();
 });
 
-function setup(mode: "python" | "turtle" = "python") {
-	const host = document.createElement("div");
+function setup(
+	mode: "python" | "turtle" | "pgzero" | "data" = "python",
+	host = document.createElement("div")
+) {
 	document.body.append(host);
 	const callbacks = {
 		isCurrent: vi.fn(() => true),
@@ -55,10 +57,42 @@ function setup(mode: "python" | "turtle" = "python") {
 			})
 		);
 	};
-	return { handle, frame, receive, callbacks };
+	return { handle, frame, receive, callbacks, host };
 }
 
 describe("isolated Python contract", () => {
+	it.each(["python", "turtle", "pgzero", "data"] as const)(
+		"replaces the %s runtime context and rejects results from its previous run",
+		async mode => {
+			const previous = setup(mode);
+			const previousWindow = previous.frame.contentWindow;
+			previous.receive({ type: "ready" });
+			previous.handle.destroy();
+			await previous.handle.done;
+			const current = setup(mode, previous.host);
+			current.receive({ type: "ready" });
+			expect(current.frame.contentWindow === previousWindow).toBe(false);
+			expect(current.frame.srcdoc).not.toBe(previous.frame.srcdoc);
+			expect(current.host.querySelectorAll("iframe")).toHaveLength(1);
+			expect(previous.frame.isConnected).toBe(false);
+			previous.receive(
+				{ type: "files", files: request.files },
+				"null",
+				previousWindow
+			);
+			current.receive(
+				{ type: "files", files: request.files },
+				"null",
+				previousWindow
+			);
+			expect(previous.callbacks.onFiles).not.toHaveBeenCalled();
+			expect(current.callbacks.onFiles).not.toHaveBeenCalled();
+			current.receive({ type: "files", files: request.files });
+			expect(current.callbacks.onFiles).toHaveBeenCalledExactlyOnceWith(
+				request.files
+			);
+		}
+	);
 	it("forwards pointer releases only to the active drawing frame", () => {
 		const { frame, handle, receive, callbacks } = setup("turtle");
 		const post = vi.spyOn(frame.contentWindow!, "postMessage");

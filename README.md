@@ -9,6 +9,8 @@ Website and supporting API for `classes.jacobdanderson.net`.
 - `HEALTHCHECKS.md` - monitor endpoints and expected `200`/`503` behavior
 - `docs/account-deletion.md` - transactional user-data deletion and retained
   security-audit policy
+- `docs/transactional-email-security.md` - mandatory mail encryption and private
+  asset-source metadata
 - `docs/social-login-setup.md` - Google and Apple login configuration and
   account-linking behavior
 - `docs/native-production-deployment.md` - canonical non-container custom-host

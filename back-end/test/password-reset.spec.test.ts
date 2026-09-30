@@ -195,6 +195,26 @@ describe("password reset", () => {
 		});
 	});
 
+	it("removes an undelivered token and preserves the generic response when both relays fail", async () => {
+		const tutor = makeAccount();
+		mockAccounts({ tutor });
+		emailMocks.sendTransactionalEmail.mockRejectedValue(new AggregateError([], "Synthetic TLS failure"));
+		await withAccountRoutes(async (baseUrl) => {
+			const response = await fetch(`${baseUrl}/accounts/password-reset/request`, {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ email: "julio@example.com" })
+			});
+			expect(response.status).toBe(202);
+			await expect(response.json()).resolves.toEqual({
+				message: "If an account uses that email, a password reset link is on its way."
+			});
+			await vi.waitFor(() => expect(modelMocks.resetDeleteOne).toHaveBeenCalledTimes(1));
+			const created = modelMocks.resetFindOneAndUpdate.mock.calls[0][1];
+			expect(modelMocks.resetDeleteOne.mock.calls[0][0]).toEqual({ tokenHash: created.$set.tokenHash });
+		});
+	});
+
 	it("returns the same response without creating a token for an unknown email", async () => {
 		await withAccountRoutes(async (baseUrl) => {
 			const response = await fetch(`${baseUrl}/accounts/password-reset/request`, {

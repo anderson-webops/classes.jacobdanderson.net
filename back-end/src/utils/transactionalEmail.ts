@@ -31,6 +31,7 @@ function createPrimaryTransporter() {
 		host,
 		port: Number(env.SMTP_PRIMARY_PORT || env.SMTP_PORT || 25),
 		secure: String(env.SMTP_PRIMARY_SECURE || env.SMTP_SECURE || "false").toLowerCase() === "true",
+		requireTLS: true,
 		connectionTimeout: 15_000,
 		socketTimeout: 15_000,
 		tls: {
@@ -50,6 +51,7 @@ function createFallbackTransporter() {
 		host: env.SMTP_FALLBACK_HOST || "smtp.gmail.com",
 		port: Number(env.SMTP_FALLBACK_PORT || 587),
 		secure: String(env.SMTP_FALLBACK_SECURE || "false").toLowerCase() === "true",
+		requireTLS: true,
 		auth: user && pass ? { user, pass } : undefined,
 		connectionTimeout: 15_000,
 		socketTimeout: 15_000,

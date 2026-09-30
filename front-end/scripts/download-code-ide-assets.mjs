@@ -100,10 +100,7 @@ async function stageCodeIdeAssets() {
 	const localInfo = await localAssetInfo();
 
 	if (!forceRefresh && isCurrent(localInfo)) {
-		await extractAssets(
-			localInfo.archive.bytes,
-			localInfo.archive.sourceUrl
-		);
+		await extractAssets(localInfo.archive.bytes);
 		console.log(
 			`[code-ide-assets] rebuilt ${relativeManifestPath()} from the verified cached archive`
 		);
@@ -155,10 +152,7 @@ async function stageCodeIdeAssets() {
 		);
 	} catch (error) {
 		if (localInfo.archive) {
-			await extractAssets(
-				localInfo.archive.bytes,
-				localInfo.archive.sourceUrl
-			);
+			await extractAssets(localInfo.archive.bytes);
 			console.warn(
 				`[code-ide-assets] download failed, rebuilt ${relativeManifestPath()} from the verified cached archive: ${formatError(error)}`
 			);
@@ -169,7 +163,7 @@ async function stageCodeIdeAssets() {
 	}
 }
 
-async function extractAssets(zipBytes, manifestSourceUrl = sourceUrl) {
+async function extractAssets(zipBytes) {
 	const files = unzipSync(zipBytes);
 	const assets = [];
 
@@ -206,7 +200,6 @@ async function extractAssets(zipBytes, manifestSourceUrl = sourceUrl) {
 	const manifest = {
 		assets,
 		generatedAt: new Date().toISOString(),
-		sourceUrl: manifestSourceUrl,
 		version: 1
 	};
 	await writeManifestFiles(manifest);

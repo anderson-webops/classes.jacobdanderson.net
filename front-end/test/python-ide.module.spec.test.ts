@@ -5497,8 +5497,8 @@ pgzrun.go()
 		expect(downloadSource).toContain(
 			"expectedBytes: REVIEWED_ASSETS_ZIP_BYTES"
 		);
-		expect(downloadSource).toMatch(
-			/await extractAssets\(\s*localInfo\.archive\.bytes,\s*localInfo\.archive\.sourceUrl/
+		expect(downloadSource).toContain(
+			"await extractAssets(localInfo.archive.bytes)"
 		);
 		expect(downloadSource).toContain("sha256: REVIEWED_ASSETS_ZIP_SHA256");
 		expect(downloadSource).toContain(
