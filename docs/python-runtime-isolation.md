@@ -41,3 +41,7 @@ surface. Browser acceptance must use built output with production-equivalent
 headers and synthetic projects in all four modes. It must cover input,
 drawing, interactive callbacks, data displays, file capture, rerun and stop.
 No production data, provider calls or user account are needed.
+
+The parent forwards only bounded mouse-release coordinates to the current drawing
+frame when a drag ends outside it. This preserves game pointer-up handling without
+giving the frame access to parent DOM, input values or an authenticated API.

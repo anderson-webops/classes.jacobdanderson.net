@@ -42,6 +42,20 @@ function waitForRuntimeStatus(status: string) {
 	);
 }
 
+function runtimeCanvas() {
+	return cy
+		.get<HTMLIFrameElement>('iframe[title="Isolated Python output"]')
+		.should("have.attr", "sandbox", "allow-scripts")
+		.then(() =>
+			cy.get<HTMLIFrameElement>('iframe[title="Isolated Python output"]')
+		)
+		.its("0.contentDocument.body")
+		.should("not.be.empty")
+		.then(body =>
+			cy.wrap(body).find<HTMLCanvasElement>("canvas.turtle-canvas")
+		);
+}
+
 const minimalGameCode = `import pgzrun
 
 WIDTH = 320
@@ -88,10 +102,18 @@ context("IDE runtime recovery", () => {
 				manifestRequests += 1;
 				if (!allowManifest) {
 					blockedManifestRequests += 1;
-					request.reply({ body: {}, statusCode: 503 });
+					request.reply({
+						body: {},
+						statusCode: 503,
+						headers: { "access-control-allow-origin": "*" }
+					});
 					return;
 				}
 				request.reply({
+					headers: {
+						"access-control-allow-origin": "*",
+						"cross-origin-resource-policy": "cross-origin"
+					},
 					body: {
 						assets: [
 							{
@@ -143,14 +165,14 @@ context("IDE runtime recovery", () => {
 
 		cy.get("button.run-control").click();
 		waitForRuntimeStatus("Game running");
-		cy.get("canvas.turtle-canvas").trigger("mousedown", {
+		runtimeCanvas().trigger("mousedown", {
 			eventConstructor: "MouseEvent",
 			button: 0,
 			buttons: 1,
 			clientX: 80,
 			clientY: 80
 		});
-		cy.get<HTMLCanvasElement>("canvas.turtle-canvas").should(canvas => {
+		runtimeCanvas().should(canvas => {
 			const pixel = canvas[0]
 				.getContext("2d")!
 				.getImageData(10, 10, 1, 1).data;
@@ -163,7 +185,7 @@ context("IDE runtime recovery", () => {
 			clientX: 80,
 			clientY: 80
 		});
-		cy.get<HTMLCanvasElement>("canvas.turtle-canvas").should(canvas => {
+		runtimeCanvas().should(canvas => {
 			const pixel = canvas[0]
 				.getContext("2d")!
 				.getImageData(10, 10, 1, 1).data;

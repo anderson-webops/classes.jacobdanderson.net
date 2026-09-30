@@ -189,10 +189,17 @@ function runtimeStatus(document: Document) {
 	return elementText(document.querySelector(".code-ide-status strong"));
 }
 
+function runtimeDocument(document: Document) {
+	const frame = document.querySelector<HTMLIFrameElement>(
+		'iframe[title="Isolated Python output"]'
+	);
+	return frame ? frame.contentDocument : document;
+}
+
 function canvasSnapshot(document: Document) {
 	return (
-		document
-			.querySelector<HTMLCanvasElement>(".turtle-canvas")
+		runtimeDocument(document)
+			?.querySelector<HTMLCanvasElement>(".turtle-canvas")
 			?.toDataURL() ?? ""
 	);
 }
@@ -232,6 +239,9 @@ async function stopAndVerifyFrozen(document: Document) {
 		"the stopped Run control",
 		10_000
 	);
+	if (document.querySelector('iframe[title="Isolated Python output"]')) {
+		throw new Error("Stopping must discard the isolated runtime frame.");
+	}
 	await delay(100);
 	const stoppedSnapshot = canvasSnapshot(document);
 	await delay(250);
@@ -330,6 +340,17 @@ async function runStarterScenario(
 	}
 
 	if (scenario.kind === "canvas") {
+		const frame = document.querySelector<HTMLIFrameElement>(
+			'iframe[title="Isolated Python output"]'
+		);
+		if (frame?.getAttribute("sandbox") !== "allow-scripts")
+			throw new Error(
+				"Python graphics must use the scripts-only runtime frame."
+			);
+		if (!runtimeDocument(document)?.querySelector(".turtle-canvas"))
+			throw new Error(
+				"The isolated runtime canvas is unavailable to this browser fixture."
+			);
 		await waitFor(
 			() => canvasSnapshot(document) !== initialCanvas,
 			`${scenario.title} to paint its first changed canvas frame`,
@@ -346,7 +367,7 @@ async function runStarterScenario(
 	}
 	if (
 		scenario.kind === "data" &&
-		!document.querySelector(".artifact-list img")
+		!runtimeDocument(document)?.querySelector(".artifact-card img")
 	) {
 		throw new Error("The Data / AI starter did not render its chart.");
 	}

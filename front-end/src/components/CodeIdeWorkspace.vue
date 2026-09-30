@@ -6727,7 +6727,14 @@ async function runCurrentProject() {
 			await activeSandbox.done;
 			if (shouldStopPythonIdeRun(runID, project._id)) return;
 			diagnosticStage.value = "completed";
-			runMessage.value = "Run complete";
+			runMessage.value =
+				project.mode === "data"
+					? "Analysis ready"
+					: project.mode === "pgzero"
+						? "Game running"
+						: project.mode === "turtle"
+							? "Drawing ready"
+							: "Run complete";
 			return;
 		}
 
@@ -7491,7 +7498,18 @@ async function runIsolated(request: unknown) {
 	emit("runtimeMessage", { type: "done" });
 }
 
-defineExpose({ stop: stopCurrentProject, runIsolated });
+function releaseIsolatedPointer(
+	button: number,
+	clientX: number,
+	clientY: number
+) {
+	if (!props.runtimeOnly || window.origin !== "null") return;
+	handleWindowMouseUp(
+		new MouseEvent("mouseup", { button, clientX, clientY, buttons: 0 })
+	);
+}
+
+defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 </script>
 
 <template>

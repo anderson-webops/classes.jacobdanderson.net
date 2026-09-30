@@ -10,6 +10,36 @@ export interface PythonSandboxRun {
 	inputText: string;
 }
 
+export function sandboxPointerRelease(value: unknown, channel: string) {
+	if (!value || typeof value !== "object" || Array.isArray(value))
+		return null;
+	const message = value as Record<string, unknown>;
+	if (
+		Object.keys(message).sort().join(",") !==
+			"button,channel,clientX,clientY,type" ||
+		message.channel !== channel ||
+		message.type !== "pointer-release"
+	) {
+		return null;
+	}
+	const { button, clientX, clientY } = message;
+	if (
+		typeof button !== "number" ||
+		!Number.isInteger(button) ||
+		button < 0 ||
+		button > 4 ||
+		typeof clientX !== "number" ||
+		!Number.isFinite(clientX) ||
+		Math.abs(clientX) > 100_000 ||
+		typeof clientY !== "number" ||
+		!Number.isFinite(clientY) ||
+		Math.abs(clientY) > 100_000
+	) {
+		return null;
+	}
+	return { button, clientX, clientY };
+}
+
 export function sandboxFiles(
 	value: unknown,
 	textOnly = false
@@ -132,6 +162,7 @@ export function startPythonSandbox(
 			"Project exceeds the isolated runtime file or input limits."
 		);
 	}
+	const isDrawingRun = ["turtle", "pgzero"].includes(checked.mode);
 	const frame = document.createElement("iframe");
 	const channel = crypto.randomUUID();
 	frame.title = "Isolated Python output";
@@ -164,6 +195,7 @@ export function startPythonSandbox(
 		active = false;
 		window.clearTimeout(timeout);
 		window.removeEventListener("message", receive);
+		window.removeEventListener("mouseup", releasePointer);
 		frame.remove();
 		callbacks.onActivity(false);
 		if (!finished) {
@@ -177,6 +209,22 @@ export function startPythonSandbox(
 			rejectDone(new Error(message));
 		}
 		destroy();
+	}
+	function releasePointer(event: MouseEvent) {
+		if (!active || !started || !callbacks.isCurrent() || !isDrawingRun) {
+			return;
+		}
+		const bounds = frame.getBoundingClientRect();
+		frame.contentWindow?.postMessage(
+			{
+				channel,
+				type: "pointer-release",
+				button: event.button,
+				clientX: event.clientX - bounds.left,
+				clientY: event.clientY - bounds.top
+			},
+			"*"
+		);
 	}
 	function receive(event: MessageEvent) {
 		if (
@@ -287,6 +335,7 @@ export function startPythonSandbox(
 		}
 	}
 	window.addEventListener("message", receive);
+	window.addEventListener("mouseup", releasePointer);
 	host.replaceChildren(frame);
 	return { done, destroy };
 }

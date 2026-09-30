@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
 	sandboxFiles,
 	sandboxFrameDocument,
+	sandboxPointerRelease,
 	sandboxRun,
 	startPythonSandbox,
 	unchangedRunFiles
@@ -26,7 +27,7 @@ afterEach(() => {
 	vi.useRealTimers();
 });
 
-function setup() {
+function setup(mode: "python" | "turtle" = "python") {
 	const host = document.createElement("div");
 	document.body.append(host);
 	const callbacks = {
@@ -37,7 +38,7 @@ function setup() {
 		onStage: vi.fn(),
 		onPythonVersion: vi.fn()
 	};
-	const handle = startPythonSandbox(host, request, callbacks);
+	const handle = startPythonSandbox(host, { ...request, mode }, callbacks);
 	cleanups.push(handle.destroy);
 	const frame = host.querySelector("iframe")!;
 	const channel = /data-channel="([^"]+)"/.exec(frame.srcdoc)![1];
@@ -58,6 +59,47 @@ function setup() {
 }
 
 describe("isolated Python contract", () => {
+	it("forwards pointer releases only to the active drawing frame", () => {
+		const { frame, handle, receive, callbacks } = setup("turtle");
+		const post = vi.spyOn(frame.contentWindow!, "postMessage");
+		const release = () =>
+			window.dispatchEvent(
+				new MouseEvent("mouseup", {
+					button: 0,
+					clientX: 20,
+					clientY: 30
+				})
+			);
+		release();
+		expect(post).not.toHaveBeenCalled();
+		receive({ type: "ready" });
+		post.mockClear();
+		release();
+		expect(post).toHaveBeenCalledTimes(1);
+		const message = post.mock.calls[0][0] as Record<string, unknown>;
+		expect(
+			sandboxPointerRelease(message, message.channel as string)
+		).toEqual({ button: 0, clientX: 20, clientY: 30 });
+		for (const change of [
+			{ channel: "wrong" },
+			{ button: -1 },
+			{ clientX: Infinity },
+			{ clientY: 100_001 },
+			{ extra: true }
+		]) {
+			expect(
+				sandboxPointerRelease(
+					{ ...message, ...change },
+					message.channel as string
+				)
+			).toBeNull();
+		}
+		callbacks.isCurrent.mockReturnValue(false);
+		release();
+		handle.destroy();
+		release();
+		expect(post).toHaveBeenCalledTimes(1);
+	});
 	it("accepts all four modes and rejects unsupported request fields", () => {
 		for (const mode of ["python", "turtle", "pgzero", "data"])
 			expect(sandboxRun({ ...request, mode })).not.toBeNull();

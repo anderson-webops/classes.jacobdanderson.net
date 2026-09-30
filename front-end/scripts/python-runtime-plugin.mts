@@ -1,3 +1,4 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 import path from "node:path";
 import process from "node:process";
@@ -6,6 +7,22 @@ import Vue from "@vitejs/plugin-vue";
 import { build } from "vite";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
+
+function publicAssetHeaders(
+	request: IncomingMessage,
+	response: ServerResponse,
+	next: () => void
+) {
+	const pathname = request.url?.split("?")[0];
+	if (
+		pathname &&
+		/^\/(?:python-runtime|(?:ide|python-ide)\/assets)\//.test(pathname)
+	) {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+	}
+	next();
+}
 
 export function pythonRuntimePlugin(): Plugin {
 	return {
@@ -58,22 +75,10 @@ export function pythonRuntimePlugin(): Plugin {
 			});
 		},
 		configureServer(server) {
-			server.middlewares.use((request, response, next) => {
-				const pathname = request.url?.split("?")[0];
-				if (
-					pathname &&
-					/^\/(?:python-runtime|(?:ide|python-ide)\/assets)\//.test(
-						pathname
-					)
-				) {
-					response.setHeader("Access-Control-Allow-Origin", "*");
-					response.setHeader(
-						"Cross-Origin-Resource-Policy",
-						"cross-origin"
-					);
-				}
-				next();
-			});
+			server.middlewares.use(publicAssetHeaders);
+		},
+		configurePreviewServer(server) {
+			server.middlewares.use(publicAssetHeaders);
 		}
 	};
 }

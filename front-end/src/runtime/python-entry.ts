@@ -2,7 +2,7 @@ import { createPinia } from "pinia";
 import { createApp, h, nextTick } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 import CodeIdeWorkspace from "../components/CodeIdeWorkspace.vue";
-import { sandboxRun } from "../modules/pythonSandbox";
+import { sandboxPointerRelease, sandboxRun } from "../modules/pythonSandbox";
 
 const { channel, parentOrigin } = document.body.dataset;
 if (
@@ -39,10 +39,19 @@ app.use(
 );
 app.mount("#python-runtime-root");
 window.addEventListener("message", async event => {
-	if (used || event.source !== host || event.origin !== parentOrigin) return;
+	if (event.source !== host || event.origin !== parentOrigin) return;
 	const message = event.data;
-	if (!message || message.channel !== channel || message.type !== "run")
+	if (!message || message.channel !== channel) return;
+	const release = used ? sandboxPointerRelease(message, channel) : null;
+	if (release) {
+		component?.releaseIsolatedPointer(
+			release.button,
+			release.clientX,
+			release.clientY
+		);
 		return;
+	}
+	if (used || message.type !== "run") return;
 	const run = sandboxRun(message.run);
 	if (!run) return;
 	used = true;
