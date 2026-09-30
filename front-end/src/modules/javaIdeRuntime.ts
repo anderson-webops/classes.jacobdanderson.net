@@ -1,5 +1,9 @@
 import type { PythonIdeFile, PythonIdeMode } from "@/modules/pythonIde";
 import {
+	JavaPreviewBudget,
+	JavaPreviewLimitError
+} from "@/modules/javaPreviewBudget";
+import {
 	getPythonIdeRunnableFile,
 	isPythonIdeJavaFile
 } from "@/modules/pythonIde";
@@ -43,14 +47,15 @@ export interface KarelWorldState {
 	walls: KarelWallState[];
 }
 
-interface JavaIdeRunOptions {
+export interface JavaIdeRunOptions {
 	activeFileName: string;
 	files: PythonIdeFile[];
 	inputText?: string;
 	mode: Extract<PythonIdeMode, "java" | "karel">;
 }
 
-interface JavaIdeRunResult {
+export interface JavaIdeRunResult {
+	runnableFileName?: string;
 	karelWorld?: KarelWorldState;
 	karelWorldSteps?: KarelWorldState[];
 	stderr: string[];
@@ -209,6 +214,7 @@ const MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH = 40;
 const MAX_JAVA_CONSOLE_LOOP_ITERATIONS = 500;
 const MAX_JAVA_CONSOLE_OUTPUT_LINES = 500;
 const MAX_JAVA_CONSOLE_OUTPUT_LINE_CHARS = 12000;
+let activeBudget = new JavaPreviewBudget();
 const JAVA_CONSOLE_OUTPUT_LINE_TRUNCATED_MESSAGE =
 	"\n[Output truncated to keep the browser responsive.]";
 const javaFormatConversions = "bcdefgosx";
@@ -313,6 +319,27 @@ const karelFacingConditions: Record<string, KarelDirection> = {
 export function runJavaIdeProject(
 	options: JavaIdeRunOptions
 ): JavaIdeRunResult {
+	const previousBudget = activeBudget;
+	activeBudget = new JavaPreviewBudget();
+	try {
+		return runBoundedJavaIdeProject(options);
+	} catch (error) {
+		return {
+			stderr: [
+				error instanceof JavaPreviewLimitError
+					? error.message
+					: "Java/Karel preview could not safely interpret this program. Check the program or run it in a desktop IDE."
+			],
+			stdout: []
+		};
+	} finally {
+		activeBudget = previousBudget;
+	}
+}
+
+function runBoundedJavaIdeProject(
+	options: JavaIdeRunOptions
+): JavaIdeRunResult {
 	const sourceBoundsError = javaRuntimeSourceBoundsError(options.files);
 	if (sourceBoundsError) {
 		return {
@@ -341,9 +368,11 @@ export function runJavaIdeProject(
 		};
 	}
 
-	return options.mode === "karel"
-		? runKarelProject(options.files, activeFile)
-		: runConsoleJavaProject(activeFile, options.inputText ?? "");
+	const result =
+		options.mode === "karel"
+			? runKarelProject(options.files, activeFile)
+			: runConsoleJavaProject(activeFile, options.inputText ?? "");
+	return { ...result, runnableFileName: activeFile.name };
 }
 
 function javaRuntimeSourceBoundsError(files: PythonIdeFile[]) {
@@ -426,6 +455,7 @@ function seedJavaLiteralConstants(
 		/^(?:(?:public|private|protected|static|final)\s+)*(?:String|int|long|double|float|boolean|char)\s+([A-Z_]\w*)$/i;
 
 	for (const rawLine of source.split(/\r?\n/)) {
+		activeBudget.step();
 		const line = rawLine.trim();
 		if (
 			!line.includes("final") ||
@@ -466,6 +496,7 @@ function executeJavaConsoleBody(
 	output: JavaConsoleOutputState,
 	depth = 0
 ): JavaConsoleSignal {
+	activeBudget.step();
 	if (depth > 30) {
 		context.stderr.push("Stopped Java preview after nested control flow.");
 		return null;
@@ -473,6 +504,7 @@ function executeJavaConsoleBody(
 
 	let index = 0;
 	while (index < body.length) {
+		activeBudget.step();
 		index = skipWhitespace(body, index);
 		if (index >= body.length) break;
 
@@ -642,6 +674,7 @@ function executeJavaConsoleStatement(
 	context: JavaConsoleContext,
 	output: JavaConsoleOutputState
 ): JavaConsoleSignal {
+	activeBudget.step();
 	const trimmed = statement.trim().replace(/;$/, "").trim();
 	if (trimmed === "break") return "break";
 	if (trimmed === "continue") return "continue";
@@ -763,6 +796,7 @@ function executeJavaCollectionMutationStatement(
 	const method = match[2].toLowerCase();
 	if (method === "add") {
 		const item = evaluateJavaExpression(args.at(-1) ?? "", context, output);
+		activeBudget.allocateValues(1);
 		if (args.length >= 2) {
 			collection.value.splice(
 				javaExpressionToIndex(args[0] ?? "0", context, output),
@@ -776,6 +810,7 @@ function executeJavaCollectionMutationStatement(
 	}
 	if (method === "set") {
 		const index = javaExpressionToIndex(args[0] ?? "", context, output);
+		checkJavaCollectionIndex(index, collection.value.length);
 		collection.value[index] = evaluateJavaExpression(
 			args[1] ?? "",
 			context,
@@ -967,7 +1002,10 @@ function applyJavaCompoundAssignment(
 		if (currentValue.type === "string" || nextValue.type === "string") {
 			return {
 				type: "string",
-				value: `${javaValueToString(currentValue)}${javaValueToString(nextValue)}`
+				value: joinJavaText(
+					javaValueToString(currentValue),
+					javaValueToString(nextValue)
+				)
 			};
 		}
 		return {
@@ -989,6 +1027,26 @@ function applyJavaCompoundAssignment(
 }
 
 function evaluateJavaExpression(
+	expression: string,
+	context?: JavaConsoleContext,
+	output?: JavaConsoleOutputState
+): JavaConsoleValue {
+	activeBudget.enterExpression();
+	try {
+		const value = evaluateBoundedJavaExpression(
+			expression,
+			context,
+			output
+		);
+		if (value.type === "string")
+			activeBudget.allocateText(value.value.length);
+		return value;
+	} finally {
+		activeBudget.leaveExpression();
+	}
+}
+
+function evaluateBoundedJavaExpression(
 	expression: string,
 	context?: JavaConsoleContext,
 	output?: JavaConsoleOutputState
@@ -1264,7 +1322,10 @@ function combineJavaAdditionValues(
 	if (left.type === "string" || right.type === "string") {
 		return {
 			type: "string",
-			value: `${javaValueToString(left)}${javaValueToString(right)}`
+			value: joinJavaText(
+				javaValueToString(left),
+				javaValueToString(right)
+			)
 		};
 	}
 	if (isJavaNumericAdditionValue(left) && isJavaNumericAdditionValue(right)) {
@@ -1275,7 +1336,7 @@ function combineJavaAdditionValues(
 	}
 	return {
 		type: "string",
-		value: `${javaValueToString(left)}${javaValueToString(right)}`
+		value: joinJavaText(javaValueToString(left), javaValueToString(right))
 	};
 }
 
@@ -1325,8 +1386,12 @@ function formatJavaConsoleText(formatText: string, values: JavaConsoleValue[]) {
 
 		const value = values[valueIndex] ?? { type: "string", value: "" };
 		valueIndex += 1;
-		formatted += formatJavaFormatValue(value, token);
+		formatted = joinJavaText(
+			formatted,
+			formatJavaFormatValue(value, token)
+		);
 	}
+	activeBudget.allocateText(formatted.length);
 	return formatted;
 }
 
@@ -1344,7 +1409,12 @@ function parseJavaFormatToken(formatText: string, percentIndex: number) {
 	}
 
 	const flagsStart = index;
-	while ("-+ 0,(".includes(formatText[index] ?? "")) index += 1;
+	while (
+		index < formatText.length &&
+		"-+ 0,(".includes(formatText[index] ?? "")
+	) {
+		index += 1;
+	}
 	const flags = formatText.slice(flagsStart, index);
 	const widthStart = index;
 	while (/\d/.test(formatText[index] ?? "")) index += 1;
@@ -1364,7 +1434,8 @@ function parseJavaFormatToken(formatText: string, percentIndex: number) {
 	}
 
 	const conversion = formatText[index] ?? "";
-	return javaFormatConversions.includes(conversion.toLowerCase())
+	return conversion &&
+		javaFormatConversions.includes(conversion.toLowerCase())
 		? { conversion, end: index, flags, precision, width }
 		: null;
 }
@@ -1379,6 +1450,17 @@ function formatJavaFormatValue(
 	}
 ) {
 	const conversion = token.conversion.toLowerCase();
+	if (token.width !== null) activeBudget.allocateText(token.width);
+	if (
+		token.precision !== null &&
+		(!Number.isSafeInteger(token.precision) ||
+			token.precision < 0 ||
+			token.precision > (conversion === "f" ? 100 : 200000))
+	) {
+		throw new JavaPreviewLimitError(
+			"Java preview stopped at its formatting precision limit."
+		);
+	}
 	let text: string;
 	if (conversion === "d") {
 		text = String(Math.trunc(javaValueToNumber(value)));
@@ -1667,21 +1749,64 @@ function evaluateJavaArrayLiteral(
 	);
 }
 
+function joinJavaText(left: string, right: string) {
+	activeBudget.allocateText(left.length + right.length);
+	return left + right;
+}
+
 function javaValueToString(value: JavaConsoleValue): string {
-	if (
-		value.type === "array" ||
-		value.type === "arrayList" ||
-		value.type === "map"
-	) {
-		return javaCollectionToString(value);
+	const parts: string[] = [];
+	const ancestors = new Set<JavaConsoleValue>();
+	let length = 0;
+	function append(text: string) {
+		length += text.length;
+		if (length > 200000) {
+			throw new JavaPreviewLimitError(
+				"Java preview stopped at its string size limit."
+			);
+		}
+		parts.push(text);
 	}
-	if (value.type === "mapEntry") {
-		return `${javaValueToString(value.value.key)}=${javaValueToString(value.value.value)}`;
+	function visit(current: JavaConsoleValue, depth: number) {
+		activeBudget.step();
+		if (depth > 32 || ancestors.has(current)) {
+			throw new JavaPreviewLimitError(
+				"Java preview cannot display cyclic or deeply nested collections."
+			);
+		}
+		ancestors.add(current);
+		if (current.type === "array" || current.type === "arrayList") {
+			append("[");
+			current.value.forEach((item, index) => {
+				if (index) append(", ");
+				visit(item, depth + 1);
+			});
+			append("]");
+		} else if (current.type === "map") {
+			append("{");
+			current.value.forEach((entry, index) => {
+				if (index) append(", ");
+				visit(entry.key, depth + 1);
+				append("=");
+				visit(entry.value, depth + 1);
+			});
+			append("}");
+		} else if (current.type === "mapEntry") {
+			visit(current.value.key, depth + 1);
+			append("=");
+			visit(current.value.value, depth + 1);
+		} else if (current.type === "random") {
+			append("Random");
+		} else if (current.type === "scanner") {
+			append("Scanner");
+		} else {
+			append(String(current.value));
+		}
+		ancestors.delete(current);
 	}
-	if (value.type === "random") return "Random";
-	if (value.type === "scanner") return "Scanner";
-	if (value.type === "null") return "null";
-	return String(value.value);
+	visit(value, 0);
+	activeBudget.allocateText(length);
+	return parts.join("");
 }
 
 function javaValueToNumber(value: JavaConsoleValue): number {
@@ -1705,15 +1830,7 @@ function javaValueToNumber(value: JavaConsoleValue): number {
 function javaCollectionToString(
 	value: Extract<JavaConsoleValue, { type: "array" | "arrayList" | "map" }>
 ): string {
-	if (value.type === "map") {
-		return `{${value.value
-			.map(
-				entry =>
-					`${javaValueToString(entry.key)}=${javaValueToString(entry.value)}`
-			)
-			.join(", ")}}`;
-	}
-	return `[${value.value.map(javaValueToString).join(", ")}]`;
+	return javaValueToString(value);
 }
 
 function javaIterableValues(value: JavaConsoleValue): JavaConsoleValue[] {
@@ -1744,11 +1861,14 @@ function javaArrayValueForDimensions(
 	context?: JavaConsoleContext,
 	output?: JavaConsoleOutputState
 ): JavaConsoleValue {
+	if (dimensions.length > 16) {
+		throw new JavaPreviewLimitError(
+			"Java preview stopped at its array nesting limit."
+		);
+	}
 	const [rawLength = "0", ...remainingDimensions] = dimensions;
-	const length = Math.max(
-		0,
-		javaExpressionToIndex(rawLength || "0", context, output)
-	);
+	const length = javaExpressionToIndex(rawLength || "0", context, output);
+	activeBudget.allocateValues(length);
 	const defaultValue = () => {
 		if (!remainingDimensions.length)
 			return defaultJavaValueForType(elementType);
@@ -1767,6 +1887,7 @@ function javaArrayValue(
 	elementType: string,
 	value: JavaConsoleValue[]
 ): JavaConsoleValue {
+	activeBudget.allocateValues(value.length);
 	return {
 		elementType,
 		type: "array",
@@ -1778,7 +1899,8 @@ function copyJavaArrayValue(
 	original: Extract<JavaConsoleValue, { type: "array" }>,
 	rawLength: number
 ): JavaConsoleValue {
-	const length = Math.max(0, rawLength);
+	const length = rawLength;
+	activeBudget.allocateValues(length);
 	const value = original.value.slice(0, length);
 	while (value.length < length) {
 		value.push(defaultJavaValueForType(original.elementType));
@@ -1803,6 +1925,7 @@ function applyDeclaredJavaType(
 }
 
 function javaArrayListValue(value: JavaConsoleValue[] = []): JavaConsoleValue {
+	activeBudget.allocateValues(value.length);
 	return {
 		elementType: "Object",
 		type: "arrayList",
@@ -1864,6 +1987,7 @@ function setJavaMapEntry(
 		if (!onlyIfAbsent) entry.value = value;
 		return;
 	}
+	activeBudget.allocateValues(1);
 	map.value.push({ key, value });
 	sortJavaMapEntriesIfNeeded(map);
 }
@@ -1951,8 +2075,17 @@ function setJavaIndexedValue(
 	}
 	if (collection?.type !== "array" && collection?.type !== "arrayList")
 		return;
-	collection.value[javaExpressionToIndex(finalIndex, context, output)] =
-		value;
+	const index = javaExpressionToIndex(finalIndex, context, output);
+	checkJavaCollectionIndex(index, collection.value.length);
+	collection.value[index] = value;
+}
+
+function checkJavaCollectionIndex(index: number, length: number) {
+	if (!Number.isSafeInteger(index) || index < 0 || index >= length) {
+		throw new JavaPreviewLimitError(
+			"Java preview stopped at an invalid collection index."
+		);
+	}
 }
 
 function parseJavaIndexExpressions(rawIndexes: string) {
@@ -2201,6 +2334,7 @@ function executeJavaConsoleMethodCall(
 	context: JavaConsoleContext,
 	output?: JavaConsoleOutputState
 ): JavaConsoleValue {
+	activeBudget.step();
 	const method = context.methods.get(methodName);
 	if (!method) return { type: "null", value: null };
 	if (context.methodCallDepth >= MAX_JAVA_CONSOLE_METHOD_CALL_DEPTH) {
@@ -3233,6 +3367,7 @@ function collectKarelCommandsFromBody(
 	execution: KarelPreviewExecution,
 	depth = 0
 ) {
+	activeBudget.step();
 	if (depth > 20) {
 		addKarelWarning(
 			plan,
@@ -3247,6 +3382,7 @@ function collectKarelCommandsFromBody(
 		canAddKarelCommand(plan) &&
 		!execution.stopped
 	) {
+		activeBudget.step();
 		index = skipWhitespace(body, index);
 		if (index >= body.length) break;
 

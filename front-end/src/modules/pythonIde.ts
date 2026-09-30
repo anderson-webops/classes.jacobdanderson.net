@@ -44,8 +44,6 @@ const STARTER_RELATIVE_PREFIX_RE = /^(?:starter|src)\//i;
 const PYTHON_IDE_INDEXED_DB_NAME = "classes-python-ide";
 const PYTHON_IDE_INDEXED_DB_VERSION = 1;
 const PYTHON_IDE_PROJECT_STORE = "projectStores";
-const JAVA_ENTRY_POINT_IGNORED_TEXT_RE =
-	/"""[\s\S]*?"""|\/\*[\s\S]*?\*\/|\/\/[^\n\r]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g;
 const JAVA_MAIN_METHOD_RE =
 	/\bmain\s*\(\s*(?:\w+\s*\[\s*\]\s+\w+|\w+\s+\w+\s*\[\s*\]|\w+\s*\.\.\.\s+\w+)\s*\)/;
 const KAREL_RUN_METHOD_RE = /\brun\s*\(\s*\)/;
@@ -2847,7 +2845,52 @@ function isLikelyKarelEntryFile(file: Pick<PythonIdeFile, "content">) {
 }
 
 function javaEntryPointSearchText(file: Pick<PythonIdeFile, "content">) {
-	return file.content.replace(JAVA_ENTRY_POINT_IGNORED_TEXT_RE, " ");
+	if (file.content.length > 200000) return "";
+	const source = file.content;
+	const parts: string[] = [];
+	let index = 0;
+	let start = 0;
+	while (index < source.length) {
+		const character = source[index];
+		const block = source.startsWith("/*", index);
+		const line = source.startsWith("//", index);
+		if (!block && !line && character !== '"' && character !== "'") {
+			index += 1;
+			continue;
+		}
+		parts.push(source.slice(start, index), " ");
+		if (block) {
+			const end = source.indexOf("*/", index + 2);
+			index = end < 0 ? source.length : end + 2;
+		} else if (line) {
+			index += 2;
+			while (
+				index < source.length &&
+				source[index] !== "\n" &&
+				source[index] !== "\r"
+			) {
+				index += 1;
+			}
+		} else {
+			const delimiter = source.startsWith('"""', index)
+				? '"""'
+				: character!;
+			index += delimiter.length;
+			while (index < source.length) {
+				if (source[index] === "\\") {
+					index += 2;
+				} else if (source.startsWith(delimiter, index)) {
+					index += delimiter.length;
+					break;
+				} else {
+					index += 1;
+				}
+			}
+		}
+		start = index;
+	}
+	parts.push(source.slice(start));
+	return parts.join("");
 }
 
 export function loadLocalPythonProjects(userID?: string | null) {

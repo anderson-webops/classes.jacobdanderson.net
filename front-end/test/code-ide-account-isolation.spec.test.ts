@@ -98,12 +98,39 @@ interface WorkspaceState {
 	saveSelectedProject: (options: { force: boolean }) => Promise<void>;
 	persistLocalProjectSnapshot: () => Promise<void>;
 	syncProjectsToAccount: (projects: PythonIdeProject[]) => Promise<PythonIdeProject[]>;
+	runCurrentProject: () => Promise<void>;
 }
 function state(wrapper: VueWrapper) {
 	return wrapper.findComponent(CodeIdeWorkspace).vm.$.setupState as WorkspaceState;
 }
 
 describe("account-bound workspace lifetime", () => {
+	it("terminates Java execution when its owning account is revoked", async () => {
+		const terminated = vi.fn();
+		let worker: { onmessage: ((event: MessageEvent) => void) | null } | undefined;
+		vi.stubGlobal("Worker", class {
+			onmessage: ((event: MessageEvent) => void) | null = null;
+			terminate = terminated;
+			postMessage = vi.fn();
+			constructor() { worker = this; }
+		});
+		const { wrapper, app } = await workspace();
+		const current = state(wrapper);
+		current.projects = [{ ...project("alice"), mode: "java", activeFileName: "Main.java", files: [{ name: "Main.java", content: "class Main {}" }] }];
+		current.selectedProjectID = "local-alice";
+		current.autoSaveEnabled = false;
+		await nextTick();
+		const running = current.runCurrentProject();
+		await flushPromises();
+		expect(worker).toBeDefined();
+		const staleResult = worker!.onmessage;
+		app.$patch({ currentUser: { _id: "bob" } });
+		await nextTick();
+		expect(terminated).toHaveBeenCalledOnce();
+		staleResult?.({ data: { stdout: ["alice private result"], stderr: [] } } as MessageEvent);
+		await running;
+		expect(wrapper.text()).not.toContain("alice private result");
+	});
 	it("forwards the editor switch stop control to the active workspace", async () => {
 		const { wrapper } = await workspace();
 		state(wrapper).isRunning = true;

@@ -4105,7 +4105,7 @@ pgzrun.go()
 			"const project = selectedProject.value;"
 		);
 		const runnableIndex = runSource.indexOf(
-			"const runnableFile = getPythonIdeRunnableFile(project);"
+			"const runnableFile = isJavaIdeMode(project.mode)"
 		);
 
 		expect(saveIndex).toBeGreaterThan(0);

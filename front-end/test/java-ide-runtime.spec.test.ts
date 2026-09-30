@@ -2161,9 +2161,10 @@ cols=3`
 			'() => import("@/components/AccountCodeIdeWorkspace.vue")'
 		);
 		expect(workspaceSource).toContain(
-			'import { runJavaIdeProject } from "@/modules/javaIdeRuntime";'
+			'import { startJavaPreview } from "@/modules/javaIdeWorker";'
 		);
-		expect(workspaceSource).toContain("const result = runJavaIdeProject({");
+		expect(workspaceSource).toContain("const preview = startJavaPreview({");
+		expect(workspaceSource).toContain("const result = await preview.done;");
 		expect(workspaceSource).toContain("inputText: inputText.value");
 		expect(workspaceSource).toContain("mode: project.mode");
 		expect(workspaceSource).not.toContain("javac");

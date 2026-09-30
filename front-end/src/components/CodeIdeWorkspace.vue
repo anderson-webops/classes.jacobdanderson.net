@@ -39,7 +39,7 @@ import {
 	safeRuntimeVersion,
 	sanitizeIdeError
 } from "@/modules/ideDiagnostics";
-import { runJavaIdeProject } from "@/modules/javaIdeRuntime";
+import { startJavaPreview } from "@/modules/javaIdeWorker";
 import { createKarelWorldPlaybackController } from "@/modules/karelWorldPlayback";
 import {
 	addPythonIdeClassroomSections,
@@ -113,6 +113,7 @@ const sandboxHost = ref<HTMLElement | null>(null);
 const sandboxActive = ref(false);
 const sandboxPresent = ref(false);
 let activeSandbox: ReturnType<typeof startPythonSandbox> | null = null;
+let activeJavaPreview: ReturnType<typeof startJavaPreview> | null = null;
 
 type PythonCodeEditorModules = [
 	typeof import("@codemirror/view"),
@@ -6612,6 +6613,8 @@ function shouldStopPythonIdeRun(runID: number, projectID: string) {
 }
 
 async function runCurrentProject() {
+	activeJavaPreview?.stop();
+	activeJavaPreview = null;
 	activeSandbox?.destroy();
 	activeSandbox = null;
 	diagnosticFailure.value = null;
@@ -6624,7 +6627,11 @@ async function runCurrentProject() {
 	if (shouldStopPythonIdeRun(runID, project._id)) return;
 
 	clearOutput();
-	const runnableFile = getPythonIdeRunnableFile(project);
+	const runnableFile = isJavaIdeMode(project.mode)
+		? project.files.find(file =>
+				isPythonIdeRunnableFile(file.name, project.mode)
+			)
+		: getPythonIdeRunnableFile(project);
 	if (!runnableFile) {
 		const fileType = isJavaIdeMode(project.mode) ? "Java" : "Python";
 		runMessage.value = `No ${fileType} file`;
@@ -6639,19 +6646,25 @@ async function runCurrentProject() {
 	runMessage.value = isJavaIdeMode(project.mode)
 		? "Starting Java"
 		: "Starting Python";
-	if (!props.runtimeOnly)
+	if (!props.runtimeOnly && !isJavaIdeMode(project.mode))
 		appendOutput("system", `Running ${runnableFile.name}`);
 	clearPythonRuntimeDiagnosticInEditor();
 
 	try {
 		if (isJavaIdeMode(project.mode)) {
 			diagnosticStage.value = "executing";
-			const result = runJavaIdeProject({
-				activeFileName: runnableFile.name,
+			const preview = startJavaPreview({
+				activeFileName: project.activeFileName,
 				files: project.files,
 				inputText: inputText.value,
 				mode: project.mode
 			});
+			activeJavaPreview = preview;
+			const result = await preview.done;
+			if (activeJavaPreview === preview) activeJavaPreview = null;
+			if (shouldStopPythonIdeRun(runID, project._id)) return;
+			if (!props.runtimeOnly && result.runnableFileName)
+				appendOutput("system", `Running ${result.runnableFileName}`);
 			for (const line of result.stdout) appendOutput("stdout", line);
 			for (const line of result.stderr) appendOutput("stderr", line);
 			if (project.mode === "karel" && result.karelWorldSteps?.length) {
@@ -6848,6 +6861,8 @@ function stopCurrentProject() {
 
 function stopActiveRuntimeSurfaces() {
 	invalidatePythonIdeRuns();
+	activeJavaPreview?.stop();
+	activeJavaPreview = null;
 	activeSandbox?.destroy();
 	activeSandbox = null;
 	sandboxActive.value = false;
