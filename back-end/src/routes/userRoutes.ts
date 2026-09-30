@@ -49,6 +49,7 @@ import {
 	validTutorOrAdminSession,
 	validUser
 } from "../middleware/auth.js";
+import { requireCodeIdeAccountMatch } from "../middleware/codeIdeAccount.js";
 import { withCodeIdeProjectPayloadReservation } from "../middleware/projectPayload.js";
 import {
 	createSignupLimiter,
@@ -93,32 +94,37 @@ router.get("/python-projects/shared/:shareID", getSharedPythonProject);
 
 // Persist logged-in account Code IDE projects. Keep these before the
 // managed /:userID/python-projects routes so "loggedin" is not parsed as an ID.
-router.get("/loggedin/python-projects", validAccountSession, listPythonProjects);
+router.get("/loggedin/python-projects", validAccountSession, requireCodeIdeAccountMatch, listPythonProjects);
 router.post(
 	"/loggedin/python-projects",
 	validProjectAccountSession,
+	requireCodeIdeAccountMatch,
 	withCodeIdeProjectPayloadReservation(createPythonProject)
 );
-router.get("/loggedin/python-projects/:projectID", validAccountSession, getPythonProject);
+router.get("/loggedin/python-projects/:projectID", validAccountSession, requireCodeIdeAccountMatch, getPythonProject);
 router.put(
 	"/loggedin/python-projects/:projectID",
 	validProjectAccountSession,
+	requireCodeIdeAccountMatch,
 	withCodeIdeProjectPayloadReservation(updatePythonProject)
 );
 router.put(
 	"/loggedin/python-projects/:projectID/share",
 	validProjectAccountSession,
+	requireCodeIdeAccountMatch,
 	withCodeIdeProjectPayloadReservation(updatePythonProjectShare)
 );
 router.delete(
 	"/loggedin/python-projects/:projectID",
 	validProjectAccountSession,
+	requireCodeIdeAccountMatch,
 	withCodeIdeProjectPayloadReservation(deletePythonProject)
 );
-router.get("/loggedin/python-project-reviews", validAccountSession, listVisiblePythonProjectReviews);
+router.get("/loggedin/python-project-reviews", validAccountSession, requireCodeIdeAccountMatch, listVisiblePythonProjectReviews);
 router.get(
 	"/loggedin/python-project-reviews/:reviewID",
 	validAccountSession,
+	requireCodeIdeAccountMatch,
 	getVisiblePythonProjectReview
 );
 

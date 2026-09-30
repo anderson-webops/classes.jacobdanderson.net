@@ -2158,7 +2158,7 @@ cols=3`
 		);
 
 		expect(routeSource).toContain(
-			'() => import("@/components/CodeIdeWorkspace.vue")'
+			'() => import("@/components/AccountCodeIdeWorkspace.vue")'
 		);
 		expect(workspaceSource).toContain(
 			'import { runJavaIdeProject } from "@/modules/javaIdeRuntime";'

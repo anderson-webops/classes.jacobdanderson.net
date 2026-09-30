@@ -1,4 +1,6 @@
+import type { CodeIdeAccountScope } from "@/modules/codeIdeAccountScope";
 import { api } from "@/api";
+import { codeIdeAccountRequest } from "@/modules/codeIdeAccountScope";
 import {
 	listPreviewFiles,
 	loadPreviewFile,
@@ -2861,7 +2863,47 @@ export function loadLocalPythonProjects(userID?: string | null) {
 	}
 }
 
+const localProjectStorageQueues = new Map<string, Promise<void>>();
+const localProjectStorageRevisions = new Map<string, number>();
+
+function nextLocalProjectStorageRevision(key: string) {
+	const revision = (localProjectStorageRevisions.get(key) ?? 0) + 1;
+	localProjectStorageRevisions.set(key, revision);
+	return revision;
+}
+
+function snapshotLocalProjects(projects: PythonIdeProject[]) {
+	return projects.map(project => ({
+		...project,
+		files: project.files.map(file => ({ ...file }))
+	}));
+}
+
+function queueLocalProjectStorage<Result>(
+	key: string,
+	action: () => Promise<Result>
+) {
+	const previous = localProjectStorageQueues.get(key) ?? Promise.resolve();
+	const operation = previous.then(action);
+	const settled = operation.then(
+		() => undefined,
+		() => undefined
+	);
+	localProjectStorageQueues.set(key, settled);
+	void settled.then(() => {
+		if (localProjectStorageQueues.get(key) === settled)
+			localProjectStorageQueues.delete(key);
+	});
+	return operation;
+}
+
 export async function loadLocalPythonProjectsAsync(userID?: string | null) {
+	return queueLocalProjectStorage(pythonIdeStorageKey(userID), () => {
+		return readLocalPythonProjects(userID);
+	});
+}
+
+async function readLocalPythonProjects(userID?: string | null) {
 	const key = pythonIdeStorageKey(userID);
 	const storedProjects = await readIndexedDbPythonProjects(key);
 	const legacyProjects = loadLocalPythonProjects(userID);
@@ -2872,7 +2914,7 @@ export async function loadLocalPythonProjectsAsync(userID?: string | null) {
 		const legacyProjectsUpdatedAt =
 			pythonIdeProjectSetUpdatedAt(legacyProjects);
 		if (legacyProjectsUpdatedAt > storedProjectsUpdatedAt) {
-			await saveLocalPythonProjectsAsync(legacyProjects, userID);
+			await writeLocalPythonProjectSnapshot(legacyProjects, userID);
 			return legacyProjects;
 		}
 		return storedProjects;
@@ -2881,7 +2923,7 @@ export async function loadLocalPythonProjectsAsync(userID?: string | null) {
 	if (storedProjects) return storedProjects;
 
 	if (legacyProjects.length) {
-		await saveLocalPythonProjectsAsync(legacyProjects, userID);
+		await writeLocalPythonProjectSnapshot(legacyProjects, userID);
 	}
 	return legacyProjects;
 }
@@ -2891,10 +2933,13 @@ export function saveLocalPythonProjects(
 	userID?: string | null
 ) {
 	if (typeof window === "undefined") return;
-	window.localStorage.setItem(
-		pythonIdeStorageKey(userID),
-		JSON.stringify(projects)
-	);
+	const key = pythonIdeStorageKey(userID);
+	const revision = nextLocalProjectStorageRevision(key);
+	const snapshot = snapshotLocalProjects(projects);
+	void queueLocalProjectStorage(key, () => {
+		return writeLocalPythonProjectSnapshot(snapshot, userID, revision);
+	}).catch(() => undefined);
+	window.localStorage.setItem(key, JSON.stringify(snapshot));
 }
 
 function pythonIdeProjectSetUpdatedAt(projects: PythonIdeProject[]) {
@@ -2912,14 +2957,32 @@ export async function saveLocalPythonProjectsAsync(
 	projects: PythonIdeProject[],
 	userID?: string | null
 ) {
+	const snapshot = snapshotLocalProjects(projects);
 	const key = pythonIdeStorageKey(userID);
+	const revision = nextLocalProjectStorageRevision(key);
+	return queueLocalProjectStorage(key, () => {
+		return writeLocalPythonProjectSnapshot(snapshot, userID, revision);
+	});
+}
+
+async function writeLocalPythonProjectSnapshot(
+	projects: PythonIdeProject[],
+	userID?: string | null,
+	revision = localProjectStorageRevisions.get(pythonIdeStorageKey(userID)) ??
+		0
+) {
+	const key = pythonIdeStorageKey(userID);
+	const isLatest = () =>
+		revision === (localProjectStorageRevisions.get(key) ?? 0);
 
 	try {
 		await writeIndexedDbPythonProjects(key, projects);
-		saveLegacyLocalPythonProjectsMirror(projects, userID);
+		if (isLatest()) saveLegacyLocalPythonProjectsMirror(projects, userID);
 	} catch (indexedDbError) {
+		if (!isLatest()) return;
 		try {
-			saveLocalPythonProjects(projects, userID);
+			if (typeof window !== "undefined")
+				window.localStorage.setItem(key, JSON.stringify(projects));
 		} catch {
 			throw new Error(
 				`Could not save Code IDE projects locally. Browser project storage may be full or unavailable. (${formatStorageError(indexedDbError)})`
@@ -2930,13 +2993,36 @@ export async function saveLocalPythonProjectsAsync(
 
 export function clearLocalPythonProjects(userID?: string | null) {
 	if (typeof window === "undefined") return;
-	window.localStorage.removeItem(pythonIdeStorageKey(userID));
+	const key = pythonIdeStorageKey(userID);
+	window.localStorage.removeItem(key);
+	nextLocalProjectStorageRevision(key);
+	void queueLocalProjectStorage(key, () => {
+		return deleteIndexedDbPythonProjects(key);
+	}).catch(() => undefined);
 }
 
-export async function clearLocalPythonProjectsAsync(userID?: string | null) {
+export async function clearLocalPythonProjectsAsync(
+	userID?: string | null,
+	signal?: AbortSignal
+) {
 	const key = pythonIdeStorageKey(userID);
-	await deleteIndexedDbPythonProjects(key).catch(() => undefined);
-	clearLocalPythonProjects(userID);
+	const revision = localProjectStorageRevisions.get(key) ?? 0;
+	return queueLocalProjectStorage(key, async () => {
+		if (
+			signal?.aborted ||
+			revision !== (localProjectStorageRevisions.get(key) ?? 0)
+		) {
+			return;
+		}
+		await deleteIndexedDbPythonProjects(key).catch(() => undefined);
+		if (
+			!signal?.aborted &&
+			revision === (localProjectStorageRevisions.get(key) ?? 0)
+		) {
+			if (typeof window !== "undefined")
+				window.localStorage.removeItem(key);
+		}
+	});
 }
 
 async function readIndexedDbPythonProjects(key: string) {
@@ -3053,7 +3139,12 @@ function saveLegacyLocalPythonProjectsMirror(
 	userID?: string | null
 ) {
 	try {
-		saveLocalPythonProjects(projects, userID);
+		if (typeof window !== "undefined") {
+			window.localStorage.setItem(
+				pythonIdeStorageKey(userID),
+				JSON.stringify(projects)
+			);
+		}
 	} catch {
 		// IndexedDB remains the primary store; the mirror is best-effort.
 	}
@@ -3063,13 +3154,14 @@ function formatStorageError(error: unknown) {
 	return error instanceof Error ? error.message : "storage unavailable";
 }
 
-export async function fetchPythonIdeProjects() {
+export async function fetchPythonIdeProjects(scope?: CodeIdeAccountScope) {
 	const projects: PythonIdeProjectMetadata[] = [];
 	let offset: number | null = 0;
 	while (offset !== null) {
 		const response = await api.get<
 			PythonIdeProjectPage<PythonIdeProjectMetadata>
 		>("/users/loggedin/python-projects", {
+			...codeIdeAccountRequest(scope),
 			params: { offset }
 		});
 		const data: PythonIdeProjectPage<PythonIdeProjectMetadata> =
@@ -3082,11 +3174,12 @@ export async function fetchPythonIdeProjects() {
 
 export async function fetchPythonIdeProject(
 	projectID: string,
-	signal?: AbortSignal
+	signal?: AbortSignal,
+	scope?: CodeIdeAccountScope
 ) {
 	const { data } = await api.get<{ project: PythonIdeProject }>(
 		`/users/loggedin/python-projects/${projectID}`,
-		{ signal }
+		{ signal, ...codeIdeAccountRequest(scope, signal) }
 	);
 	return data.project;
 }
@@ -3102,13 +3195,15 @@ export async function fetchSharedPythonIdeProject(shareID: string) {
 	return data.project;
 }
 
-export async function fetchVisiblePythonIdeProjectReviews() {
+export async function fetchVisiblePythonIdeProjectReviews(
+	scope?: CodeIdeAccountScope
+) {
 	const reviews: PythonIdeProjectReviewMetadata[] = [];
 	let offset: number | null = 0;
 	while (offset !== null) {
 		const response = await api.get<PythonIdeProjectReviewPage>(
 			"/users/loggedin/python-project-reviews",
-			{ params: { offset } }
+			{ ...codeIdeAccountRequest(scope), params: { offset } }
 		);
 		const data: PythonIdeProjectReviewPage = response.data;
 		reviews.push(...data.reviews);
@@ -3119,11 +3214,15 @@ export async function fetchVisiblePythonIdeProjectReviews() {
 
 export async function fetchVisiblePythonIdeProjectReview(
 	reviewID: string,
-	signal?: AbortSignal
+	signal?: AbortSignal,
+	scope?: CodeIdeAccountScope
 ) {
 	const { data } = await api.get<{
 		review: PythonIdeProjectReview;
-	}>(`/users/loggedin/python-project-reviews/${reviewID}`, { signal });
+	}>(`/users/loggedin/python-project-reviews/${reviewID}`, {
+		signal,
+		...codeIdeAccountRequest(scope, signal)
+	});
 	return data.review;
 }
 
@@ -3162,11 +3261,13 @@ export async function fetchManagedPythonIdeProject(
 }
 
 export async function createRemotePythonIdeProject(
-	payload: PythonIdeProjectPayload
+	payload: PythonIdeProjectPayload,
+	scope?: CodeIdeAccountScope
 ) {
 	const { data } = await api.post<{ project: PythonIdeProject }>(
 		"/users/loggedin/python-projects",
-		payload
+		payload,
+		codeIdeAccountRequest(scope)
 	);
 	return data.project;
 }
@@ -3206,26 +3307,36 @@ export async function updatePythonIdeProjectReview(
 
 export async function updateRemotePythonIdeProject(
 	projectID: string,
-	payload: PythonIdeProjectPayload
+	payload: PythonIdeProjectPayload,
+	scope?: CodeIdeAccountScope
 ) {
 	const { data } = await api.put<{ project: PythonIdeProject }>(
 		`/users/loggedin/python-projects/${projectID}`,
-		payload
+		payload,
+		codeIdeAccountRequest(scope)
 	);
 	return data.project;
 }
 
 export async function updateRemotePythonIdeProjectShare(
 	projectID: string,
-	shared: boolean
+	shared: boolean,
+	scope?: CodeIdeAccountScope
 ) {
 	const { data } = await api.put<{ project: PythonIdeProject }>(
 		`/users/loggedin/python-projects/${projectID}/share`,
-		{ shared }
+		{ shared },
+		codeIdeAccountRequest(scope)
 	);
 	return data.project;
 }
 
-export async function deleteRemotePythonIdeProject(projectID: string) {
-	await api.delete(`/users/loggedin/python-projects/${projectID}`);
+export async function deleteRemotePythonIdeProject(
+	projectID: string,
+	scope?: CodeIdeAccountScope
+) {
+	await api.delete(
+		`/users/loggedin/python-projects/${projectID}`,
+		codeIdeAccountRequest(scope)
+	);
 }

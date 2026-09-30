@@ -547,10 +547,10 @@ describe("Python project routes", () => {
 
 		const compactRoutes = routeSource.replace(/\s+/g, " ");
 		for (const route of [
-			'router.post( "/loggedin/python-projects", validProjectAccountSession, withCodeIdeProjectPayloadReservation(createPythonProject) )',
-			'router.put( "/loggedin/python-projects/:projectID", validProjectAccountSession, withCodeIdeProjectPayloadReservation(updatePythonProject) )',
-			'router.put( "/loggedin/python-projects/:projectID/share", validProjectAccountSession, withCodeIdeProjectPayloadReservation(updatePythonProjectShare) )',
-			'router.delete( "/loggedin/python-projects/:projectID", validProjectAccountSession, withCodeIdeProjectPayloadReservation(deletePythonProject) )',
+			'router.post( "/loggedin/python-projects", validProjectAccountSession, requireCodeIdeAccountMatch, withCodeIdeProjectPayloadReservation(createPythonProject) )',
+			'router.put( "/loggedin/python-projects/:projectID", validProjectAccountSession, requireCodeIdeAccountMatch, withCodeIdeProjectPayloadReservation(updatePythonProject) )',
+			'router.put( "/loggedin/python-projects/:projectID/share", validProjectAccountSession, requireCodeIdeAccountMatch, withCodeIdeProjectPayloadReservation(updatePythonProjectShare) )',
+			'router.delete( "/loggedin/python-projects/:projectID", validProjectAccountSession, requireCodeIdeAccountMatch, withCodeIdeProjectPayloadReservation(deletePythonProject) )',
 			'router.post( "/:userID/python-projects/:projectID/review", validManagedProjectSession, withCodeIdeProjectPayloadReservation(createPythonProjectReview) )',
 			'router.put( "/:userID/python-projects/:projectID/review/:reviewID", validManagedProjectSession, withCodeIdeProjectPayloadReservation(updatePythonProjectReview) )'
 		]) {

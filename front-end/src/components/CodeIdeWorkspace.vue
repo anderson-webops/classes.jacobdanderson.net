@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { EditorState as CodeEditorState } from "@codemirror/state";
 import type { EditorView as CodeEditorView } from "@codemirror/view";
+import type { CodeIdeAccountScope } from "@/modules/codeIdeAccountScope";
 import type { IdeFailure, IdeMode, IdeStage } from "@/modules/ideDiagnostics";
 import type { KarelWallSide, KarelWorldState } from "@/modules/javaIdeRuntime";
 import type { PythonCodeMirrorAssetCompletionNames } from "@/modules/pythonCodeMirror";
@@ -93,12 +94,21 @@ import {
 } from "@/modules/pythonSandbox";
 import { useAppStore } from "@/stores/app";
 
-const props = withDefaults(defineProps<{ runtimeOnly?: boolean }>(), {
-	runtimeOnly: false
-});
+const props = withDefaults(
+	defineProps<{
+		runtimeOnly?: boolean;
+		accountScope?: CodeIdeAccountScope;
+	}>(),
+	{ runtimeOnly: false }
+);
 const emit = defineEmits<{
 	runtimeMessage: [message: Record<string, unknown>];
 }>();
+const localAccountController = new AbortController();
+const accountScope = props.accountScope ?? {
+	ownerKey: null,
+	signal: localAccountController.signal
+};
 const sandboxHost = ref<HTMLElement | null>(null);
 const sandboxActive = ref(false);
 const sandboxPresent = ref(false);
@@ -626,8 +636,7 @@ for (let digit = 0; digit <= 9; digit += 1) {
 
 const app = useAppStore();
 const route = useRoute();
-const { currentAdmin, currentCourseLearner, currentTutor, currentUser } =
-	storeToRefs(app);
+const { currentUser } = storeToRefs(app);
 
 const projects = ref<PythonIdeProject[]>([]);
 const projectCatalog = ref<PythonIdeProjectMetadata[]>([]);
@@ -1142,47 +1151,16 @@ const activeVisibleReviewFileContent = computed(() => {
 	return file.content;
 });
 
-const activeAccount = computed(() => {
-	if (currentAdmin.value?._id) {
-		return {
-			id: currentAdmin.value._id,
-			role: "admin" as const
-		};
-	}
-	if (currentTutor.value?._id) {
-		return {
-			id: currentTutor.value._id,
-			role: "tutor" as const
-		};
-	}
-	if (currentUser.value?._id) {
-		return {
-			id: currentUser.value._id,
-			role: "user" as const
-		};
-	}
-	if (currentCourseLearner.value?._id) {
-		return {
-			id: currentCourseLearner.value._id,
-			role: "courseCodeLearner" as const
-		};
-	}
-	return null;
-});
-const canSyncToAccount = computed(() => !!activeAccount.value);
+const canSyncToAccount = computed(() => !!accountScope.ownerKey);
 const syncDestinationLabel = computed(() =>
-	currentCourseLearner.value ? "course workspace" : "account"
+	accountScope.ownerKey?.startsWith("courseCodeLearner:")
+		? "course workspace"
+		: "account"
 );
 const syncedSaveMessage = computed(
 	() => `Synced to ${syncDestinationLabel.value}`
 );
-const storageUserID = computed(() => {
-	const account = activeAccount.value;
-	if (!account) return null;
-	return account.role === "user"
-		? account.id
-		: `${account.role}:${account.id}`;
-});
+const storageUserID = computed(() => accountScope.ownerKey);
 const sortedProjects = computed(() =>
 	canSyncToAccount.value && projectCatalog.value.length
 		? [...projectCatalog.value]
@@ -1939,7 +1917,10 @@ async function openRouteProjectIfNeeded(localOnly = false, loadRunID?: number) {
 }
 
 function projectLoadIsCurrent(loadRunID?: number) {
-	return loadRunID === undefined || loadRunID === projectLoadRunID;
+	return (
+		!accountScope.signal.aborted &&
+		(loadRunID === undefined || loadRunID === projectLoadRunID)
+	);
 }
 
 async function saveNewProject(
@@ -1951,7 +1932,8 @@ async function saveNewProject(
 
 	if (canSyncToAccount.value && !localOnly) {
 		const remoteProject = await createRemotePythonIdeProject(
-			pythonIdeProjectToPayload(project)
+			pythonIdeProjectToPayload(project),
+			accountScope
 		);
 		if (!projectLoadIsCurrent(loadRunID)) return;
 		projects.value.unshift(remoteProject);
@@ -2090,6 +2072,7 @@ function locallyPersistableProjects() {
 async function persistLocalProjects(
 	options: { message?: string; quiet?: boolean } = {}
 ) {
+	if (accountScope.signal.aborted) return;
 	try {
 		await saveLocalPythonProjectsAsync(
 			locallyPersistableProjects(),
@@ -2124,6 +2107,7 @@ function saveLocalProjectSnapshot() {
 }
 
 async function persistLocalProjectSnapshot() {
+	if (accountScope.signal.aborted) return;
 	if (!locallyPersistableProjects().length) return;
 	if (localSnapshotInFlight) {
 		localSnapshotQueued = true;
@@ -2137,7 +2121,7 @@ async function persistLocalProjectSnapshot() {
 				locallyPersistableProjects(),
 				storageUserID.value
 			);
-		} while (localSnapshotQueued);
+		} while (localSnapshotQueued && !accountScope.signal.aborted);
 	})();
 
 	try {
@@ -2167,7 +2151,10 @@ async function discardLocalProjectSnapshot() {
 	}
 	localSnapshotQueued = false;
 	unsyncedProjectIDs.clear();
-	await clearLocalPythonProjectsAsync(storageUserID.value);
+	await clearLocalPythonProjectsAsync(
+		storageUserID.value,
+		accountScope.signal
+	);
 }
 
 async function discardLocalProjectSnapshotIfSafe() {
@@ -2188,10 +2175,14 @@ async function syncProjectsToAccount(projectList: PythonIdeProject[]) {
 	const syncedProjects: PythonIdeProject[] = [];
 	for (const project of projectList) {
 		const syncedProject = await (project._id.startsWith("local-")
-			? createRemotePythonIdeProject(pythonIdeProjectToPayload(project))
+			? createRemotePythonIdeProject(
+					pythonIdeProjectToPayload(project),
+					accountScope
+				)
 			: updateRemotePythonIdeProject(
 					project._id,
-					pythonIdeProjectToPayload(project)
+					pythonIdeProjectToPayload(project),
+					accountScope
 				));
 		syncedProjects.push(syncedProject);
 	}
@@ -2230,7 +2221,11 @@ async function loadVisibleReviewForProject(
 
 	let review: PythonIdeProjectReview;
 	try {
-		review = await fetchVisiblePythonIdeProjectReview(metadata._id, signal);
+		review = await fetchVisiblePythonIdeProjectReview(
+			metadata._id,
+			signal,
+			accountScope
+		);
 	} catch {
 		if (!visibleReviewLoadIsCurrent(projectID, loadRunID, signal)) return;
 		visibleProjectReviews.value = [];
@@ -2267,7 +2262,8 @@ async function loadRemoteProjectDetail(projectID: string, loadRunID?: number) {
 
 		const project = await fetchPythonIdeProject(
 			projectID,
-			abortController.signal
+			abortController.signal,
+			accountScope
 		);
 		if (
 			detailLoadRun !== remoteProjectDetailLoadRun ||
@@ -2341,14 +2337,16 @@ async function loadProjects() {
 	loadPersistedCodeEditorViewStates(storageUserID.value);
 	try {
 		if (canSyncToAccount.value) {
-			const remoteProjects = await fetchPythonIdeProjects();
+			const remoteProjects = await fetchPythonIdeProjects(accountScope);
 			if (!projectLoadIsCurrent(loadRunID)) return;
 			setProjectCatalog(remoteProjects);
 			projects.value = [];
 			selectedProjectID.value = "";
 			visibleProjectReviews.value = [];
 			visibleProjectReviewCatalog.value = currentUser.value?._id
-				? await fetchVisiblePythonIdeProjectReviews().catch(() => [])
+				? await fetchVisiblePythonIdeProjectReviews(accountScope).catch(
+						() => []
+					)
 				: [];
 			const localProjects = await loadLocalPythonProjectsAsync(
 				storageUserID.value
@@ -2428,7 +2426,8 @@ async function loadProjects() {
 			const initialProject = await createInitialProject();
 			if (!projectLoadIsCurrent(loadRunID)) return;
 			const remoteProject = await createRemotePythonIdeProject(
-				pythonIdeProjectToPayload(initialProject)
+				pythonIdeProjectToPayload(initialProject),
+				accountScope
 			);
 			if (!projectLoadIsCurrent(loadRunID)) return;
 			setProjects([remoteProject]);
@@ -2527,8 +2526,13 @@ async function saveProjectOnce(
 
 		await persistLocalProjects({ quiet: true });
 		const savedProject = startedProjectID.startsWith("local-")
-			? await createRemotePythonIdeProject(payload)
-			: await updateRemotePythonIdeProject(startedProjectID, payload);
+			? await createRemotePythonIdeProject(payload, accountScope)
+			: await updateRemotePythonIdeProject(
+					startedProjectID,
+					payload,
+					accountScope
+				);
+		if (accountScope.signal.aborted) return false;
 		const currentIndex = projects.value.findIndex(
 			candidate => candidate._id === startedProjectID
 		);
@@ -2843,7 +2847,8 @@ async function updateProjectSharePreference(event: Event) {
 
 		const updatedProject = await updateRemotePythonIdeProjectShare(
 			project._id,
-			shared
+			shared,
+			accountScope
 		);
 		const projectIndex = projects.value.findIndex(
 			candidate => candidate._id === project._id
@@ -3135,7 +3140,7 @@ async function deleteProject(project: PythonIdeProjectListItem) {
 		const isRemoteProject =
 			canSyncToAccount.value && !project._id.startsWith("local-");
 		if (isRemoteProject) {
-			await deleteRemotePythonIdeProject(project._id);
+			await deleteRemotePythonIdeProject(project._id, accountScope);
 		}
 		projects.value = projects.value.filter(
 			candidate => candidate._id !== project._id
@@ -7297,15 +7302,6 @@ function clearCanvasKeyboardState() {
 }
 
 watch(
-	() => storageUserID.value,
-	() => {
-		stopActiveRuntimeSurfaces();
-		void loadProjects();
-	},
-	{ flush: "sync" }
-);
-
-watch(
 	() =>
 		[
 			route.query.course,
@@ -7429,8 +7425,13 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+	localAccountController.abort();
+	projectLoadRunID += 1;
 	remoteProjectDetailAbortController?.abort();
 	flushPendingProjectSave();
+	cancelLocalProjectSnapshot();
+	if (saveTimer) window.clearTimeout(saveTimer);
+	saveTimer = null;
 	saveCodeEditorViewState();
 	codeEditorView?.destroy();
 	stopIdeSplitResize();

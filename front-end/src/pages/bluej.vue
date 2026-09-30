@@ -3,7 +3,7 @@ import { defineAsyncComponent, onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const CodeIdeWorkspace = defineAsyncComponent(
-	() => import("@/components/CodeIdeWorkspace.vue")
+	() => import("@/components/AccountCodeIdeWorkspace.vue")
 );
 const route = useRoute();
 const router = useRouter();

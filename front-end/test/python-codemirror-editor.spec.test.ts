@@ -179,13 +179,13 @@ describe("python IDE CodeMirror editor", () => {
 
 		expect(routeSource).toContain("defineAsyncComponent");
 		expect(routeSource).toContain(
-			'() => import("@/components/CodeIdeWorkspace.vue")'
+			'() => import("@/components/AccountCodeIdeWorkspace.vue")'
 		);
 		expect(routeSource).not.toContain("new EditorView");
 		expect(routeSource).not.toContain("loadPythonIdeRuntime");
 		expect(legacyRouteSource).toContain("defineAsyncComponent");
 		expect(legacyRouteSource).toContain(
-			'() => import("@/components/CodeIdeWorkspace.vue")'
+			'() => import("@/components/AccountCodeIdeWorkspace.vue")'
 		);
 		expect(legacyRouteSource).toContain('path: "/ide"');
 		expect(legacyRouteSource).toContain("<CodeIdeWorkspace />");

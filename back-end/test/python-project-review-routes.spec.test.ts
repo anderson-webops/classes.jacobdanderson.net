@@ -281,6 +281,43 @@ describe("Python project review routes", () => {
 		});
 	});
 
+	it.each([
+		["x-user-id", studentID.toString(), studentID.toString()],
+		["x-tutor-id", tutorID.toString(), `tutor:${tutorID}`],
+		["x-admin-id", adminID.toString(), `admin:${adminID}`]
+	])("rejects stale workspace ownership before every own route for %s", async (header, accountID, expectedOwner) => {
+		await withUserRoutes(async baseUrl => {
+			const routes = [
+				["GET", "/python-projects"],
+				["POST", "/python-projects"],
+				["GET", `/python-projects/${projectID}`],
+				["PUT", `/python-projects/${projectID}`],
+				["DELETE", `/python-projects/${projectID}`],
+				["PUT", `/python-projects/${projectID}/share`],
+				["GET", "/python-project-reviews"],
+				["GET", `/python-project-reviews/${reviewID}`]
+			];
+			for (const [method, path] of routes) {
+				const response = await fetch(`${baseUrl}/users/loggedin${path}`, {
+					method,
+					headers: { [header]: accountID, "X-Code-IDE-Owner": `other-${expectedOwner}` }
+				});
+				expect(response.status, `${method} ${path}`).toBe(409);
+				expect(await response.json()).toEqual({ message: "Workspace account changed. Reopen the workspace before syncing." });
+			}
+			expect(modelMocks.pythonProjectCreate).not.toHaveBeenCalled();
+			expect(modelMocks.pythonProjectFind).not.toHaveBeenCalled();
+			expect(modelMocks.pythonProjectFindOne).not.toHaveBeenCalled();
+			expect(modelMocks.pythonProjectReviewFind).not.toHaveBeenCalled();
+			expect(modelMocks.pythonProjectReviewFindOne).not.toHaveBeenCalled();
+			const valid = await postJson(baseUrl, "/users/loggedin/python-projects", {
+				title: "Matching owner",
+				files: [{ name: "main.py", content: "print('synthetic')" }]
+			}, { [header]: accountID, "X-Code-IDE-Owner": expectedOwner });
+			expect(valid.status).toBe(201);
+		});
+	});
+
 	it("paginates project metadata without returning file contents", async () => {
 		modelMocks.pythonProjectFind.mockReturnValue(queryWith(
 			Array.from({ length: 26 }, (_value, index) =>

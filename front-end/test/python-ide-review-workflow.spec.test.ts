@@ -24,7 +24,7 @@ describe("Code IDE review workflow wiring", () => {
 		const pageSource = sourceFile("../src/components/CodeIdeWorkspace.vue");
 
 		expect(pageSource).toContain("const visibleProjectReviews = ref<PythonIdeProjectReview[]>([]);");
-		expect(pageSource).toContain("fetchVisiblePythonIdeProjectReviews().catch(() => [])");
+		expect(pageSource).toContain("fetchVisiblePythonIdeProjectReviews(accountScope).catch(");
 		expect(pageSource).toContain("selectedVisibleReview");
 		expect(pageSource).toContain('class="visible-review-panel"');
 		expect(pageSource).toContain("activeVisibleReviewFileContent");

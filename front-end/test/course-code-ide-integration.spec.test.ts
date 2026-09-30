@@ -21,13 +21,14 @@ describe("course-code IDE integration", () => {
 
 	it("uses the classroom learner as an isolated IDE project owner", () => {
 		const workspace = source("src/components/CodeIdeWorkspace.vue");
+		const accountWorkspace = source("src/components/AccountCodeIdeWorkspace.vue");
 
-		expect(workspace).toContain("currentCourseLearner.value?._id");
-		expect(workspace).toContain('role: "courseCodeLearner" as const');
+		expect(accountWorkspace).toContain("app.currentCourseLearner?._id");
+		expect(accountWorkspace).toContain('`courseCodeLearner:${app.currentCourseLearner._id}`');
 		expect(workspace).toContain(
-			'currentCourseLearner.value ? "course workspace" : "account"'
+			'accountScope.ownerKey?.startsWith("courseCodeLearner:")'
 		);
-		expect(workspace).toContain("fetchPythonIdeProjects()");
+		expect(workspace).toContain("fetchPythonIdeProjects(accountScope)");
 		expect(workspace).toContain("createRemotePythonIdeProject");
 	});
 

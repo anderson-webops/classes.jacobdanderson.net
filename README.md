@@ -13,6 +13,8 @@ Website and supporting API for `classes.jacobdanderson.net`.
   asset-source metadata
 - `docs/social-login-setup.md` - Google and Apple login configuration and
   account-linking behavior
+- `docs/ide-account-isolation.md` - account-bound editor requests and local
+  recovery across sign-in and sign-out
 - `docs/native-production-deployment.md` - canonical non-container custom-host
   release preparation, atomic activation, verification, and rollback
 

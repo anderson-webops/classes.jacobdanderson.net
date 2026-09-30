@@ -1554,7 +1554,7 @@ pgzrun.go()
 			"if (legacyProjectsUpdatedAt > storedProjectsUpdatedAt)"
 		);
 		expect(moduleSource).toContain(
-			"await saveLocalPythonProjectsAsync(legacyProjects, userID);"
+			"await writeLocalPythonProjectSnapshot(legacyProjects, userID);"
 		);
 	});
 
@@ -4123,7 +4123,7 @@ pgzrun.go()
 		);
 
 		expect(pageSource).toContain(
-			"await clearLocalPythonProjectsAsync(storageUserID.value);"
+			"await clearLocalPythonProjectsAsync("
 		);
 		expect(pageSource).toContain("async function syncProjectsToAccount");
 		expect(pageSource).toContain(
@@ -4403,12 +4403,12 @@ pgzrun.go()
 		);
 		expect(pageSource).toContain("const isSharing = ref(false);");
 		expect(pageSource).toContain('const shareMessage = ref("");');
-		expect(pageSource).toContain("const activeAccount = computed");
+		expect(pageSource).toContain("const accountScope = props.accountScope");
 		expect(pageSource).toContain(
-			"const canSyncToAccount = computed(() => !!activeAccount.value);"
+			"const canSyncToAccount = computed(() => !!accountScope.ownerKey);"
 		);
 		expect(pageSource).toContain(
-			'return account.role === "user"\n\t\t? account.id\n\t\t: `${account.role}:${account.id}`;'
+			"const storageUserID = computed(() => accountScope.ownerKey);"
 		);
 		expect(pageSource).toContain("const requestedShareID = computed");
 		expect(pageSource).toContain("function codeIdeShareUrl");
@@ -4927,7 +4927,7 @@ pgzrun.go()
 		expect(pageSource).toContain("const pendingSaveProjectIDs");
 		expect(pageSource).toContain("const startedUpdatedAt");
 		expect(pageSource).toContain(
-			"? await createRemotePythonIdeProject(payload)"
+			"? await createRemotePythonIdeProject(payload, accountScope)"
 		);
 		expect(pageSource).toContain("const projectChangedDuringSave");
 		expect(pageSource).toContain("saveQueued = true");

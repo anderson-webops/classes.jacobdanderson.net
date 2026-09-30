@@ -3,7 +3,7 @@ import { computed, defineAsyncComponent, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const CodeIdeWorkspace = defineAsyncComponent(
-	() => import("@/components/CodeIdeWorkspace.vue")
+	() => import("@/components/AccountCodeIdeWorkspace.vue")
 );
 const ScratchIdeWorkspace = defineAsyncComponent(
 	() => import("@/components/ScratchIdeWorkspace.vue")
