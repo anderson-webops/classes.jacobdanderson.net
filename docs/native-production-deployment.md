@@ -32,6 +32,31 @@ changing ownership of mutable builder files. The manifest is operational metadat
 public endpoint.
 `/release.json` and `/api/release` intentionally remain 404.
 
+## Source and host contract
+
+The current manifest proves the release's identity and payload bytes. Its
+`schemaVersion: 1` is **not** a declaration that every host adapter can install
+the release. Do not interpret a successful source build, audit, or attestation
+as production readiness when a runtime, listener, migration, or rollback
+contract has changed.
+
+A future contract revision must declare the application and source identity,
+supported runtime and architecture, required host-adapter capabilities,
+artifact hashes, readiness checks, migration prerequisites, and compatibility
+with the exact retained rollback release. CI must validate that declaration
+against the unpacked artifact and rehearse upgrade, repeat deployment, failed
+activation, and restoration without downloading or rebuilding the prior
+artifact. The host adapter must advertise its supported contract and reject an
+unsupported requirement **before** building or changing production, reporting
+that a host update is needed rather than classifying the source as defective.
+
+Introduce and enforce that revision together with a reviewed server adapter;
+do not change the existing manifest schema or relax its verifier independently
+to make a new release deploy. Site-specific ports, environment values, service
+ownership, and proxy policy remain under host control. The server owns retry
+classification, promotion, rollback accounting, and the final live status;
+source release notes describe verified artifacts, not activation.
+
 ## One-time server setup
 
 Install system Node 24.18.0, npm 12.0.1, Python 3, Git, Nginx, `curl`, and the existing
