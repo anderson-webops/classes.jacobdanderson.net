@@ -6634,7 +6634,8 @@ async function runCurrentProject() {
 	runMessage.value = isJavaIdeMode(project.mode)
 		? "Starting Java"
 		: "Starting Python";
-	if (!props.runtimeOnly) appendOutput("system", `Running ${runnableFile.name}`);
+	if (!props.runtimeOnly)
+		appendOutput("system", `Running ${runnableFile.name}`);
 	clearPythonRuntimeDiagnosticInEditor();
 
 	try {
@@ -8757,9 +8758,8 @@ defineExpose({ stop: stopCurrentProject, runIsolated });
 							<label class="stdin-panel">
 								<span>Input</span>
 								<small
-									>Python and Turtle prompts read one line at
-									a time. Use :cancel to cancel a Turtle
-									prompt.</small
+									>One answer per line. Turtle: :cancel to
+									cancel.</small
 								>
 								<textarea
 									v-model="inputText"
