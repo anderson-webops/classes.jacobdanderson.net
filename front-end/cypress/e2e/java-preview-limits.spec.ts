@@ -1,8 +1,10 @@
 function visitJavaProject(code: string) {
 	cy.visit("/ide", {
 		onBeforeLoad(window) {
+			const date = new Date().toISOString();
 			window.localStorage.setItem("classes-python-ide-projects:anonymous", JSON.stringify([{
 				_id: "local-java-limits", title: "Java limits", mode: "java", activeFileName: "Main.java",
+				createdAt: date, updatedAt: date,
 				files: [{ name: "Main.java", content: `public class Main { public static void main(String[] args) { ${code} } }` }]
 			}]));
 		}
