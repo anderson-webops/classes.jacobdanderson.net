@@ -1,4 +1,5 @@
 import type { SendMailOptions } from "nodemailer";
+import type { SMTPSentMessageInfo } from "nodemailer/lib/smtp-transport";
 import { Buffer } from "node:buffer";
 import { randomUUID } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
@@ -160,9 +161,7 @@ function parseDateOnly(dateStr: string): Date | null {
 	return Number.isNaN(dt.getTime()) ? null : dt;
 }
 
-type SendMailInfo = Awaited<
-	ReturnType<ReturnType<typeof nodemailer.createTransport>["sendMail"]>
->;
+type SendMailInfo = SMTPSentMessageInfo;
 
 interface MailBase {
 	date: Date;
