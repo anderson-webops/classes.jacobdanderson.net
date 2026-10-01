@@ -86,3 +86,14 @@ test("archives are reproducible across local time zones", () => {
 	);
 	assert.equal(new Set(hashes).size, 1);
 });
+
+test("blank independent project has portable artwork but no scripts or solutions", async () => {
+	const { project, archive } = createProject("blank");
+	assert.equal(project.targets.length, 2);
+	for (const target of project.targets) {
+		assert.deepEqual(target.blocks, {});
+		assert.deepEqual(target.variables, {});
+	}
+	assert.deepEqual(project.monitors, []);
+	assert.deepEqual(new Uint8Array(await readFile(new URL("../front-end/public/scratch-projects/blank.sb3", import.meta.url))), archive);
+});
