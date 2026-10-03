@@ -372,7 +372,9 @@ describe("user schedule and note-only routes", () => {
 				`/users/${studentID}/session-notes`,
 				{
 					sessionDate: "2026-05-12",
-					markdown: "Worked on recursion and traced two edge cases."
+					markdown: "Worked on recursion and traced two edge cases.",
+					delivery: { source: "site_smtp", status: "smtp_accepted", sentAt: now },
+					sentAt: now
 				},
 				{ "x-admin-id": adminID.toString() }
 			);
@@ -389,6 +391,8 @@ describe("user schedule and note-only routes", () => {
 				})
 			);
 			expect("deleteMany" in modelMocks).toBe(false);
+			expect(modelMocks.sessionNoteCreate.mock.lastCall?.[0]).not.toHaveProperty("delivery");
+			expect(modelMocks.sessionNoteCreate.mock.lastCall?.[0]).not.toHaveProperty("sentAt");
 		});
 	});
 

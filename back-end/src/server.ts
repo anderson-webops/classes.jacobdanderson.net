@@ -33,6 +33,7 @@ import { adminMailRoutes } from "./routes/adminMailRoutes.js";
 import { adminRoutes } from "./routes/adminRoutes.js";
 import { courseAccessCodeRoutes } from "./routes/courseAccessCodeRoutes.js";
 import { ideReportRoutes } from "./routes/ideReportRoutes.js";
+import { sessionNoteVerificationRoutes } from "./routes/sessionNoteVerificationRoutes.js";
 import { tutorRoutes } from "./routes/tutorRoutes.js";
 
 import { userRoutes } from "./routes/userRoutes.js";
@@ -147,6 +148,7 @@ async function main() {
 	);
 
 	app.use("/ide-reports", ideReportRoutes);
+	app.use("/session-notes/verification", sessionNoteVerificationRoutes);
 
 	// Parse only after coarse network, request-origin, and per-account checks.
 	app.use(

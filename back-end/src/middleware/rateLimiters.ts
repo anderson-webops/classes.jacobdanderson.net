@@ -19,7 +19,7 @@ interface HeavyProjectRateLimitOptions extends TunableRateLimitOptions {
 	heavyThresholdBytes?: number;
 }
 
-const DATABASE_BACKED_API_PATH = /^\/(?:accounts|admins|ide-reports|course-access|tutors|users|_dbinfo)(?:\/|$)/i;
+const DATABASE_BACKED_API_PATH = /^\/(?:accounts|admins|ide-reports|course-access|session-notes|tutors|users|_dbinfo)(?:\/|$)/i;
 const PROJECT_WRITE_METHODS = new Set(["DELETE", "PATCH", "POST", "PUT"]);
 export const codeIdeProjectApiMountPath
 	= /^\/users\/(?:python-projects\/shared|loggedin\/python-projects|loggedin\/python-project-reviews|[^/]+\/python-projects)(?=\/|$)/i;
@@ -227,6 +227,17 @@ export function createAdminMailLimiter(options: TunableRateLimitOptions = {}): R
 		...standardRateLimitHeaders,
 		...storeOptions("admin-mail"),
 		message: { message: "Too many requests, slow down." },
+		...options
+	});
+}
+
+export function createSessionNoteVerificationLimiter(options: TunableRateLimitOptions = {}): RateLimitRequestHandler {
+	return rateLimit({
+		windowMs: 60_000,
+		limit: 60,
+		...standardRateLimitHeaders,
+		...storeOptions("session-notes-read"),
+		message: { message: "Too many verification requests. Please try again later." },
 		...options
 	});
 }

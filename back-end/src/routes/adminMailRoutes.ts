@@ -1,5 +1,6 @@
 import type { SendMailOptions } from "nodemailer";
-import type { SMTPSentMessageInfo } from "nodemailer/lib/smtp-transport";
+import type { SentMessageInfo as SMTPSentMessageInfo } from "nodemailer/lib/smtp-transport/index.js";
+import type { SessionNoteDelivery } from "../types/entities/ISessionNote.js";
 import { Buffer } from "node:buffer";
 import { randomUUID } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
@@ -14,6 +15,7 @@ import { SessionNote } from "../models/schemas/SessionNote.js";
 import { User } from "../models/schemas/User.js";
 import { loadAdminRecipients } from "../utils/adminRecipients.js";
 import { renderMarkdownEmailHtml } from "../utils/markdownEmail.js";
+import { sessionNoteDeliveryFromSend } from "../utils/sessionNoteDelivery.js";
 
 const router = Router();
 const DATE_PREFIX_RE = /^(\d{4})-(\d{2})-(\d{2})/;
@@ -397,6 +399,7 @@ async function saveAssociatedRecords(
 		transportUsed: TransportKind;
 		messageId: string | undefined;
 		sentAt: Date;
+		delivery: SessionNoteDelivery;
 	}
 ): Promise<SavedAssociationSummary> {
 	const matchesByEmail = await findMatchedUsersByEmail(args.recipients);
@@ -419,6 +422,7 @@ async function saveAssociatedRecords(
 			ccEmails: args.recipients.slice(1).map(normalizeEmail),
 			subject: args.subject,
 			sessionDate: args.sessionDate,
+			delivery: args.delivery,
 			markdown: args.markdown,
 			html: args.html
 		});
@@ -431,6 +435,7 @@ async function saveAssociatedRecords(
 			ccEmails: args.recipients.slice(1).map(normalizeEmail),
 			subject: args.subject,
 			sessionDate: args.sessionDate,
+			delivery: args.delivery,
 			markdown: args.markdown,
 			html: args.html
 		});
@@ -822,6 +827,8 @@ router.post("/send", validAdmin, async (req, res) => {
 		const { info, fromUsed, transportUsed, usedSenderFallback } = await sendWithFailover(
 			mailBase
 		);
+		const sentAt = new Date();
+		const delivery = sessionNoteDeliveryFromSend(info, recipients[0], sentAt);
 		const messageId = info.messageId || createMessageId(fromUsed);
 
 		try {
@@ -857,7 +864,8 @@ router.post("/send", validAdmin, async (req, res) => {
 			fromUsed,
 			transportUsed,
 			messageId,
-			sentAt: mailBase.date
+			sentAt,
+			delivery
 		});
 		const primaryRecipient = normalizeEmail(recipients[0] ?? "");
 		const recentSessionNotes = sessionDate
