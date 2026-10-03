@@ -41,7 +41,8 @@
 		"clean": "node scripts/clean-generated.mjs",
 		"up": "npm exec -- taze major --include-locked --recursive",
 		"verify:native-release": "node scripts/verify-native-release.mjs",
-		"verify:production": "node scripts/production-security-headers-smoke.mjs && node scripts/production-ide-smoke.mjs && node scripts/production-graph-sketcher-smoke.mjs"
+		"verify:production": "node scripts/production-security-headers-smoke.mjs && node scripts/production-ide-smoke.mjs && node scripts/production-graph-sketcher-smoke.mjs",
+		"test:braces-security": "node --test --test-timeout=10000 test/braces-security.test.mjs"
 	},
 	"overrides": {
 		"defu": "6.1.6",
@@ -85,7 +86,8 @@
 		"@cypress/request": {
 			"uuid": "14.0.0",
 			"qs": "6.16.0"
-		}
+		},
+		"braces": "$braces"
 	},
 	"allowScripts": {
 		"connect-mongo": false,
@@ -105,6 +107,7 @@
 		"@unocss/eslint-plugin": "^66.6.7",
 		"@vue/test-utils": "^2.4.11",
 		"axe-core": "^4.11.4",
+		"braces": "file:vendor/classes-braces-3.0.3-classes.1.tgz",
 		"eslint": "^10.1.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.5",

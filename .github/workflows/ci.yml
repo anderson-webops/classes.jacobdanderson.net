@@ -77,6 +77,9 @@ jobs:
             - name: Dependency security audit
               run: npm audit --include=optional
 
+            - name: Brace parser security and compatibility regressions
+              run: npm run test:braces-security
+
             # Root "lint" runs front-end and back-end lint
             - name: Lint
               run: npm run lint

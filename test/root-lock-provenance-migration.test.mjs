@@ -22,7 +22,9 @@ import {
 	ProvenanceError,
 	validateIncomingEdge,
 	validateNodeGuards,
-	validateRegistryVersion
+	validateRegistryVersion,
+	validateVendoredBraces,
+	VENDORED_BRACES
 } from "../scripts/migrate-root-lock-provenance.mjs";
 
 const repositoryRoot = resolve(import.meta.dirname, "..");
@@ -63,7 +65,7 @@ it("repository root lock has trusted provenance on every registry edge", async (
 	const lock = JSON.parse(
 		await readFile(join(repositoryRoot, "package-lock.json"), "utf8")
 	);
-	const { occurrences, excluded } = await collectOccurrences(
+	const { occurrences, excluded, vendored } = await collectOccurrences(
 		repositoryRoot,
 		lock,
 		pinned
@@ -76,9 +78,10 @@ it("repository root lock has trusted provenance on every registry edge", async (
 		"node_modules/front-end"
 	]);
 	assert.equal(
-		occurrences.length + excluded.length,
+		occurrences.length + excluded.length + vendored.length,
 		Object.keys(lock.packages).length
 	);
+	assert.deepEqual(vendored, ["node_modules/braces"]);
 	for (const occurrence of occurrences) {
 		await validateRegistryVersion(
 			occurrence.name,
@@ -94,6 +97,55 @@ it("repository root lock has trusted provenance on every registry edge", async (
 			pinned
 		);
 	}
+});
+
+it("only permits the reviewed local braces identity, edges, and archive", async () => {
+	const edge = {
+		name: "braces",
+		spec: VENDORED_BRACES.resolved,
+		valid: true,
+		satisfiedBy: () => true
+	};
+	const node = {
+		location: "node_modules/braces",
+		name: "braces",
+		version: VENDORED_BRACES.version,
+		package: { name: VENDORED_BRACES.name },
+		edgesIn: new Set([edge])
+	};
+	await validateVendoredBraces(repositoryRoot, node, VENDORED_BRACES);
+	for (const patch of [
+		{ resolved: "file:../other.tgz" },
+		{ name: "braces" },
+		{ version: "3.0.3" },
+		{ integrity: sriA }
+	]) {
+		await assert.rejects(
+			validateVendoredBraces(repositoryRoot, node, { ...VENDORED_BRACES, ...patch }),
+			/unrecognized/i
+		);
+	}
+	for (const patch of [
+		{ isLink: true },
+		{ inBundle: true },
+		{ extraneous: true },
+		{ edgesIn: new Set() },
+		{ location: "node_modules/other" },
+		{ edgesIn: new Set([{ ...edge, spec: "file:../other.tgz" }]) },
+		{ edgesIn: new Set([{ ...edge, valid: false }]) }
+	]) {
+		await assert.rejects(
+			validateVendoredBraces(repositoryRoot, { ...node, ...patch }, VENDORED_BRACES),
+			/unrecognized/i
+		);
+	}
+	const fixture = await mkdtemp(join(tmpdir(), "classes-braces-integrity-"));
+	await mkdir(join(fixture, "vendor"));
+	await writeFile(join(fixture, VENDORED_BRACES.resolved.slice(5)), "tampered");
+	await assert.rejects(
+		validateVendoredBraces(fixture, node, VENDORED_BRACES),
+		/does not match reviewed bytes/
+	);
 });
 
 it("accepts a normal range edge that satisfies the locked version", () => {

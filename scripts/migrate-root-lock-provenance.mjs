@@ -2,6 +2,7 @@
 
 import assert from "node:assert/strict";
 import { Buffer } from "node:buffer";
+import { createHash } from "node:crypto";
 import { readFile, rename, stat, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
@@ -20,6 +21,50 @@ export const PINNED_VERSIONS = Object.freeze({
 });
 
 const PROVENANCE_FIELDS = new Set(["resolved", "integrity"]);
+
+export const VENDORED_BRACES = Object.freeze({
+	name: "@classes/braces",
+	version: "3.0.3-classes.1",
+	resolved: "file:vendor/classes-braces-3.0.3-classes.1.tgz",
+	integrity: "sha512-CvnqWaCXetG3nKnHDvxhuL4r8NbU+x+9aw3DqOCQBY9wZzbwK7iVdSkTl20Ddmgu12wIF004obCkseb4ORkVZQ=="
+});
+
+// One reviewed local security fork, not a general exception for file/alias edges.
+export async function validateVendoredBraces(repository, node, metadata) {
+	if (
+		node.location !== "node_modules/braces"
+		|| node.name !== "braces"
+		|| node.version !== VENDORED_BRACES.version
+		|| node.package?.name !== VENDORED_BRACES.name
+		|| node.isRegistryDependency
+		|| node.isLink
+		|| node.inBundle
+		|| node.package?.inBundle
+		|| node.extraneous
+		|| !node.edgesIn?.size
+		|| Object.entries(VENDORED_BRACES).some(([key, value]) =>
+			metadata[key] !== value)
+	) {
+		fail("Unrecognized vendored braces identity or provenance.");
+	}
+	for (const edge of node.edgesIn) {
+		if (
+			edge.name !== "braces"
+			|| edge.spec !== VENDORED_BRACES.resolved
+			|| edge.valid !== true
+			|| edge.satisfiedBy(node) !== true
+		) {
+			fail("Unrecognized vendored braces incoming edge.");
+		}
+	}
+	const archive = await readFile(
+		join(repository, VENDORED_BRACES.resolved.slice("file:".length))
+	);
+	const integrity = `sha512-${createHash("sha512").update(archive).digest("base64")}`;
+	if (integrity !== VENDORED_BRACES.integrity) {
+		fail("Vendored braces archive does not match reviewed bytes.");
+	}
+}
 
 export class ProvenanceError extends Error {
 	constructor(message, details = undefined) {
@@ -454,6 +499,7 @@ export async function collectOccurrences(repository, lock, runtime) {
 	const occurrences = [];
 	const visitedLocations = new Set();
 	const excluded = [];
+	const vendored = [];
 
 	for (const node of tree.inventory.values()) {
 		const location = node.location;
@@ -464,6 +510,12 @@ export async function collectOccurrences(repository, lock, runtime) {
 
 		if (node.isProjectRoot || node.isWorkspace || node.isLink) {
 			excluded.push(location);
+			continue;
+		}
+
+		if (node.name === "braces" && !node.isRegistryDependency) {
+			await validateVendoredBraces(repository, node, lock.packages[location]);
+			vendored.push(location);
 			continue;
 		}
 
@@ -495,7 +547,7 @@ export async function collectOccurrences(repository, lock, runtime) {
 		);
 	}
 
-	return { occurrences, excluded };
+	return { occurrences, excluded, vendored };
 }
 
 async function fetchRegistryProvenance(occurrences, runtime, options) {
@@ -574,7 +626,7 @@ export async function migrateRootLock(options) {
 	assertCanonicalEnvironmentRegistry();
 	await readRepositoryNpmrcs(repository, lock);
 
-	const { occurrences, excluded } = await collectOccurrences(
+	const { occurrences, excluded, vendored } = await collectOccurrences(
 		repository,
 		lock,
 		runtime
@@ -654,6 +706,7 @@ export async function migrateRootLock(options) {
 		uniquePackageNames: packageNames,
 		uniqueIdentities: provenance.size,
 		excludedLocations: excluded.sort(),
+		vendoredLocations: vendored.sort(),
 		alreadyComplete,
 		addedOccurrences: insertions.length,
 		mode: options.write ? "write" : options.check ? "check" : "dry-run",
