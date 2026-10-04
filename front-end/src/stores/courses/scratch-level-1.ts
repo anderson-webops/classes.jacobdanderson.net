@@ -4,6 +4,7 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrections";
 import { isCoreProjectTitle } from "./projectGrouping";
 import {
 	buildScratchFluencyDrill,
@@ -207,14 +208,9 @@ Challenge: Trace shapes on other backdrops.
 				},
 				{
 					title: "Project 3 – Beetle Artist",
-					content: `
-1. Use the arrow keys to move the beetle 10 steps.
-2. When the green flag is clicked, erase all drawings.
-3. Press "1" to draw a square.
-4. Press "2" to draw a triangle.
-5. Press "3" to draw an arrow shape.
-Challenge: Trace shapes on other backdrops.
-`,
+					content: correctedJuniScratchInstructions(
+						"Project 3 – Beetle Artist"
+					),
 					projectLink: "https://scratch.mit.edu/projects/288003770/",
 					solutionLink: "https://scratch.mit.edu/projects/287999903/"
 				}
@@ -569,33 +565,25 @@ Challenge: Add a counter for the number of guesses and congratulate the player i
 				},
 				{
 					title: "Project 1 – Bug Eater",
-					content: `
-1. When the green flag is clicked, make the praying mantis appear at a random position.
-2. When the mouse is clicked, make the mantis glide to the mouse pointer's X and Y position.
-3. If the mantis touches a bug, broadcast a message to make the bug disappear and increase the score.
-4. Use variables for the score and a timer.
-5. End the game when the timer runs out and display the score.`,
+					content: correctedJuniScratchInstructions(
+						"Project 1 – Bug Eater"
+					),
 					projectLink: "https://scratch.mit.edu/projects/297831461/",
 					solutionLink: "https://scratch.mit.edu/projects/297828061/"
 				},
 				{
 					title: "Project 2 – Cake Chaser",
-					content: `
-1. Set up two sprites: a person and a slice of cake.
-2. Use the arrow keys to move the person around the stage.
-3. Make the cake appear at random X and Y coordinates.
-4. When the person touches the cake, play a sound, move the cake to a new random location and increase the score.
-5. Add a timer that counts down and ends the game when it reaches zero.`,
+					content: correctedJuniScratchInstructions(
+						"Project 2 – Cake Chaser"
+					),
 					projectLink: "https://scratch.mit.edu/projects/299085513/",
 					solutionLink: "https://scratch.mit.edu/projects/297843021/"
 				},
 				{
 					title: "Project 3 – Talent Show",
-					content: `
-1. Choose three performers (sprites).
-2. When the green flag is clicked, have each performer go to their starting position using X and Y coordinates.
-3. Use broadcast messages to make each performer do an act in sequence (dance, jump or play an instrument).
-4. After the performances, have all performers bow together.`,
+					content: correctedJuniScratchInstructions(
+						"Project 3 – Talent Show"
+					),
 					projectLink: "https://scratch.mit.edu/projects/295339505/",
 					solutionLink: "https://scratch.mit.edu/projects/295340057/"
 				}
@@ -643,22 +631,17 @@ Challenge: Add a counter for the number of guesses and congratulate the player i
 				},
 				{
 					title: "Project 1 – Speed Click",
-					content: `
-1. When the green flag is clicked, create a timer variable and set it to 20.
-2. Make a target sprite (e.g., a button) appear in random positions.
-3. Each time the target is clicked, increase a score variable by 1.
-4. Decrease the timer by 1 every second; when the timer reaches zero, stop the game and display the final score.
-5. Consider adding a high-score variable.`,
+					content: correctedJuniScratchInstructions(
+						"Project 1 – Speed Click"
+					),
 					projectLink: "https://scratch.mit.edu/projects/299327014/",
 					solutionLink: "https://scratch.mit.edu/projects/299311602/"
 				},
 				{
 					title: "Project 2 – Spider Smash",
-					content: `
-1. When the green flag is clicked, have spiders appear at random positions and move downward.
-2. When a spider is clicked, hide it, play a sound and increase the score.
-3. Create a timer that counts down; end the game when it reaches zero.
-4. Optionally increase difficulty by speeding up the spiders over time.`,
+					content: correctedJuniScratchInstructions(
+						"Project 2 – Spider Smash"
+					),
 					projectLink: "https://scratch.mit.edu/projects/299272518/",
 					solutionLink: "https://scratch.mit.edu/projects/299094220/"
 				},
