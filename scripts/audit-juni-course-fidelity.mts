@@ -3,7 +3,9 @@ import type {
 	RawCourseModuleItem
 } from "../front-end/src/stores/courses/types";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import vm from "node:vm";
+import { findJuniScratchInstructionCorrection } from "../front-end/src/stores/courses/juniScratchInstructionCorrections";
 import {
 	courseCatalog,
 	loadRawCourse
@@ -25,14 +27,8 @@ const originalCourseFiles = [
 	["java-level-3", "java-level-3"],
 	["intro-to-physics", "intro-to-physics"],
 	["intro-to-swift-app-development", "intro-to-swift-app-development"],
-	[
-		"javascript-level-1-javascript-superstar",
-		"javascript-level-1"
-	],
-	[
-		"javascript-level-2-javascript-master",
-		"javascript-level-2"
-	],
+	["javascript-level-1-javascript-superstar", "javascript-level-1"],
+	["javascript-level-2-javascript-master", "javascript-level-2"],
 	["machine-learning", "machine-learning"]
 ] as const;
 
@@ -60,9 +56,13 @@ interface ContentMismatch extends OriginalProject {
 
 function loadOriginalCourse(file: string): RawCourse {
 	const sourcePath = `front-end/src/stores/courses/${file}.ts`;
-	const source = execFileSync("git", ["show", `${SOURCE_REF}:${sourcePath}`], {
-		encoding: "utf8"
-	});
+	const source = execFileSync(
+		"git",
+		["show", `${SOURCE_REF}:${sourcePath}`],
+		{
+			encoding: "utf8"
+		}
+	);
 	const executable = source
 		.replace(/^import type[\s\S]*?;\s*/u, "")
 		.replace(
@@ -74,7 +74,9 @@ function loadOriginalCourse(file: string): RawCourse {
 	const course = (context as { __course?: RawCourse }).__course;
 
 	if (!course) {
-		throw new Error(`Unable to load original Juni course from ${sourcePath}.`);
+		throw new Error(
+			`Unable to load original Juni course from ${sourcePath}.`
+		);
 	}
 
 	return course;
@@ -179,6 +181,8 @@ const scratchProjectsMissingCurrentLinks: Array<{
 }> = [];
 let originalProjectCount = 0;
 let scratchProjectCount = 0;
+const verifiedScratchCorrections: Array<{ courseId: string; title: string }> =
+	[];
 
 for (const [courseId, file] of originalCourseFiles) {
 	const catalogEntry = courseCatalog.find(entry => entry.id === courseId);
@@ -224,6 +228,20 @@ for (const [courseId, file] of originalCourseFiles) {
 		if (courseId.startsWith("scratch-level-")) {
 			scratchProjectCount += 1;
 			const rawItem = itemForTitle(rawCourse, project);
+			const correction = findJuniScratchInstructionCorrection(
+				courseId,
+				project.title
+			);
+			const correctionMatchesBaseline =
+				correction &&
+				createHash("sha256").update(project.content).digest("hex") ===
+					correction.baselineContentSha256;
+			if (correctionMatchesBaseline) {
+				verifiedScratchCorrections.push({
+					courseId,
+					title: project.title
+				});
+			}
 			if (!project.hasSourceLink) {
 				scratchProjectsWithoutSourceLinks.push({
 					courseId,
@@ -242,7 +260,19 @@ for (const [courseId, file] of originalCourseFiles) {
 			] as const) {
 				const current = itemForTitle(course, project);
 
-				if (current?.content.trim() !== project.content) {
+				const expectedContent = correctionMatchesBaseline
+					? correction.content
+					: project.content;
+				const correctionLinksMatch =
+					!correction ||
+					(current?.projectLink ===
+						`https://scratch.mit.edu/projects/${correction.projectId}/` &&
+						current?.solutionLink ===
+							`https://scratch.mit.edu/projects/${correction.solutionId}/`);
+				if (
+					current?.content.trim() !== expectedContent ||
+					!correctionLinksMatch
+				) {
 					scratchContentMismatches.push({
 						...project,
 						courseId,
@@ -282,6 +312,8 @@ console.log(
 				({ courseId, surface, title }) => ({ courseId, surface, title })
 			),
 			scratchProjectCount,
+			verifiedScratchCorrectionCount: verifiedScratchCorrections.length,
+			verifiedScratchCorrections,
 			scratchProjectsMissingCurrentLinks,
 			scratchProjectsWithoutSourceLinks,
 			sourceRef: SOURCE_REF
