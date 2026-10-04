@@ -27,6 +27,7 @@ import {
 import { courseAssetViewerUrl } from "@/modules/courseAssetPreview";
 import {
 	getPythonIdeModeLabel,
+	isKnownCourseWorksheetResource,
 	pythonIdeModeForCourseId,
 	pythonIdeModeForCourseResource
 } from "@/modules/pythonIde";
@@ -1461,7 +1462,9 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 			kind: projectUrl.startsWith("/course-assets/")
 				? "asset"
 				: "project",
-			label: projectLabel(item, projectUrl),
+			label: isKnownCourseWorksheetResource(projectUrl)
+				? "Worksheet"
+				: projectLabel(item, projectUrl),
 			url: projectUrl,
 			host: linkHost(projectUrl)
 		});
@@ -1475,7 +1478,9 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 	) {
 		links.push({
 			kind: "solution",
-			label: solutionLabel(solutionUrl),
+			label: isKnownCourseWorksheetResource(solutionUrl)
+				? "Reference key"
+				: solutionLabel(solutionUrl),
 			url: solutionUrl,
 			host: linkHost(solutionUrl)
 		});
@@ -1513,7 +1518,8 @@ function codePreviewResources(item: CourseModuleItem): CodePreviewResource[] {
 				kind: "project" | "solution";
 			} =>
 				(resource.kind === "project" || resource.kind === "solution") &&
-				resource.host === "github.com"
+				resource.host === "github.com" &&
+				!isKnownCourseWorksheetResource(resource.url)
 		)
 		.map(resource => ({
 			kind: resource.kind,

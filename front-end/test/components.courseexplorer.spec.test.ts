@@ -220,6 +220,18 @@ describe("CourseExplorer.vue", () => {
 
 	it.each([
 		{
+			courseId: "python-level-3",
+			folder: "AM6-Big-O-Analysis/starter",
+			repo: "Python-Level-3",
+			mode: null
+		},
+		{
+			courseId: "python-level-3",
+			folder: "AM6-Function-Analysis/starter",
+			repo: "Python-Level-3",
+			mode: "python"
+		},
+		{
 			courseId: "python-level-1",
 			folder: "Turtle-Coordinates/starter",
 			repo: "Python-Level-1",
@@ -296,6 +308,12 @@ describe("CourseExplorer.vue", () => {
 			});
 			if (!mode) {
 				expect(wrapper.text()).not.toContain("Start in IDE");
+				if (folder === "AM6-Big-O-Analysis/starter") {
+					expect(wrapper.text()).toContain("Worksheet");
+					expect(
+						wrapper.findComponent({ name: "CodePreview" }).exists()
+					).toBe(false);
+				}
 				expect(
 					wrapper
 						.find(

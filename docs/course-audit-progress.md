@@ -45,19 +45,42 @@ The corrected workflow:
 No dependencies, lockfiles, saved projects, course identifiers, or progress keys
 were changed. Existing learner projects are not automatically rewritten.
 
-## Unfinished source-pack finding
+## Source-pack reconciliation and corrections
 
-A read-only check of the local `Python-Level-3` reference checkout found 44
-distinct starter paths linked by the normalized catalog. Eleven contained Python
-source; 33 contained no Python source. For example, `AM7-Binary-Search/starter`
-contained a placeholder README while the implementation lived in `solution/`.
-The checkout's source manifest independently recorded 33 placeholder roles.
+An untruncated public tree at Python Level 3 source revision
+`d3610afbe355ce2ab3fa6747ef438bce2c83c3be` confirmed the local finding: 44 linked
+starter folders, eleven with Python code and 33 structural placeholders.
 
-This is a source-pack follow-up, not a claim that the remote repository has the
-same current state. Reconcile the exact public source revision before changes,
-then provide assignment-specific incomplete starters and verify their solution
-counterparts. Do not copy completed answers into starters or classify a README
-and a nonempty repository as a ready implementation pair.
+[Source PR #1](https://github.com/instruction-material/Python-Level-3/pull/1)
+provided six incomplete algorithm starters and fixed large-integer binary
+conversion. Its integrated source was `9293c232ec7d8b318956df516836d7d4d4d04449`.
+
+[Source PR #2](https://github.com/instruction-material/Python-Level-3/pull/2)
+at integrated source `f9b62f604a0429a7081e94cff7a3c9769dd9dc7d` provides nine more
+incomplete console/recursion starters, fourteen supplied function-analysis
+examples without answer comments, and a complete ten-prompt mathematical
+worksheet with a separate reference key. All 22 source tests passed locally
+and in hosted CI. The first check-in practice remains core; AM5's extra list
+and substring practice remains supplemental.
+
+Reference corrections cover empty inputs, literal/case-sensitive palindromes,
+bracket-only validation, negative maxima, stable contiguous substrings, exact
+and blank assistant commands, per-session name state, and case-insensitive
+language rules with specific failure messages. The site text states these
+contracts. Coding imports still require confirmation and do not execute source.
+
+Big-O analysis is a mathematical worksheet, so it keeps its readable source
+and reference links without misleading code-preview or IDE-import controls.
+Its verification evidence is worksheet-specific, not a coding implementation.
+Function Analysis
+does supply code and retains its Python import shortcut. A Python-file count is
+not a correctness or readiness gate for a non-coding assignment.
+
+Sixteen structural placeholder roles remain open, along with correctness review
+of the eleven distinct migrated pairs. The source repository's
+[review ledger](https://github.com/instruction-material/Python-Level-3/blob/f9b62f604a0429a7081e94cff7a3c9769dd9dc7d/SOURCE_PACK_REVIEW.md)
+distinguishes those boundaries. Do not copy completed answers into coding starters
+or certify a nonempty folder as an implementation pair.
 
 Additional source/language alignment checks remain necessary for generated
 bridge extension packs. Several local folders titled as C++ practice contained

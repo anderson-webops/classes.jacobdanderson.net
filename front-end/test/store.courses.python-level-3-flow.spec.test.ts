@@ -112,6 +112,51 @@ describe("Python Level 3 learner flow", () => {
 		).toBe("core");
 	});
 
+	it("states source contracts and distinguishes worksheet from supplied-code analysis", () => {
+		const items = pythonLevel3Course.modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		const byTitle = new Map(items.map(item => [item.title, item]));
+		expect(
+			byTitle.get("AM1 Project 2: Fictional Language Verifier")?.content
+		).toContain("ignoring letter case");
+		expect(
+			byTitle.get("AM1 Project 3: Command Assistant")?.content
+		).toContain("blank or unknown input");
+		expect(
+			byTitle.get("AM5 Project 1: Recursive Cascade")?.content
+		).toContain("empty string prints no lines");
+		expect(
+			byTitle.get("AM5 Project 2: Recursive Palindrome Checker")?.content
+		).toContain("literal, case-sensitive");
+		expect(
+			byTitle.get("AM5 Project 3: Parentheses Validator")?.content
+		).toContain("non-bracket character is rejected");
+		expect(
+			byTitle.get("AM5 Supplemental Project 1: Recursive Sum and Max")
+				?.content
+		).toContain("ValueError for an empty maximum");
+		const substrings = byTitle.get(
+			"AM5 Supplemental Project 2: Substring Generator"
+		);
+		expect(substrings?.content).toContain("contiguous substrings");
+		expect(substrings?.content).toContain("excludes ac");
+		expect(substrings?.learningPath).toBe("challenge");
+		expect(byTitle.get("AM6 Project 2: Big-O Notation")?.content).toContain(
+			"mathematical worksheet"
+		);
+		expect(byTitle.get("AM6 Project 2: Big-O Notation")?.content).toContain(
+			"justified classification for each of the ten prompts"
+		);
+		expect(
+			byTitle.get("AM6 Project 2: Big-O Notation")?.content
+		).not.toContain("The finished project proves");
+		expect(
+			byTitle.get("AM6 Project 3: Function Analysis")?.content
+		).toContain("supplied f1 through f14");
+	});
+
 	it("stages both capstones around testable minimum systems", () => {
 		expect(
 			requireSourceModule("AM13 Master Project: Conway's Game of Life")

@@ -104,18 +104,20 @@ function projectBrief({
 	build,
 	checkpoints,
 	extension,
-	goal
+	goal,
+	verification
 }: {
 	build: string[];
 	checkpoints: string[];
 	extension?: string;
 	goal: string;
+	verification?: string;
 }) {
 	return [
 		`**Goal:** ${goal}`,
 		`**Build path:**\n${build.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
 		`**Checkpoints:**\n${checkpoints.map(checkpoint => `- ${checkpoint}`).join("\n")}`,
-		`**Verification:** The finished project proves "${goal}" with a correctness trace, a normal case, a boundary or adversarial case, and a short note explaining the algorithmic or data-structure choice.`,
+		`**Verification:** ${verification ?? `The finished project proves "${goal}" with a correctness trace, a normal case, a boundary or adversarial case, and a short note explaining the algorithmic or data-structure choice.`}`,
 		extension ? `**Extension:** ${extension}` : ""
 	]
 		.filter(Boolean)
@@ -192,8 +194,8 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						build: [
 							"Ask for an input word and store it as a string.",
 							"Check whether the word has an even number of characters.",
-							"Count vowels and require at least two.",
-							"Compare the first and last letters and require them to be different.",
+							"Count at least two vowels from a/e/i/o/u, ignoring letter case.",
+							"Compare the first and last letters without case differences and require them to differ; empty input must not index a missing character.",
 							"Print whether the word is valid and identify which rule failed when it is not valid."
 						],
 						checkpoints: [
@@ -215,7 +217,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 							"Define several supported commands, such as time, date, remember-name, joke, or fun-fact.",
 							"Keep accepting commands with a loop controlled by either `while True` plus `break` or a boolean running variable.",
 							"Add a clear stopping command.",
-							"Handle unknown commands with a helpful message instead of crashing or silently doing nothing."
+							"Compare complete commands, handle blank or unknown input without indexing an empty string, and keep any remembered name only in the current session."
 						],
 						checkpoints: [
 							"At least three commands produce different responses.",
@@ -440,7 +442,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						],
 						checkpoints: [
 							"A short word produces the expected forward and backward cascades.",
-							"The base case handles an empty or one-character string.",
+							"An empty string prints no lines, and a one-character string prints once.",
 							"The explanation identifies which version prints before or after the recursive call."
 						]
 					}),
@@ -452,7 +454,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM5 Project 2: Recursive Palindrome Checker",
 					content: projectBrief({
-						goal: "Write a recursive palindrome checker for strings.",
+						goal: "Write a recursive palindrome checker for literal, case-sensitive strings.",
 						build: [
 							"Compare the first and last characters.",
 							"Return `False` immediately when the characters do not match.",
@@ -484,6 +486,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 							"Create a dictionary of matching bracket pairs.",
 							"Scan the input string and reject mismatched or premature closing brackets.",
 							"Accept the string only when the stack is empty at the end.",
+							"Use a bracket-only contract: empty input is balanced, but any non-bracket character is rejected by both approaches.",
 							"Explore a recursive version that removes complete pairs such as `()`, `[]`, or `{}` until no more valid reductions are possible."
 						],
 						checkpoints: [
@@ -506,6 +509,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						build: [
 							"Write a recursive function that returns the sum of a list.",
 							"Write a recursive function that returns the maximum value in a list.",
+							"Define the empty sum as 0 and raise ValueError for an empty maximum; keep the input list unchanged.",
 							"Shrink the problem with sublists or index bounds until a base case is reached.",
 							"Compare each recursive result with Python's built-in `sum()` or `max()` for verification."
 						],
@@ -525,14 +529,15 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Generate substrings recursively and remove duplicates from the final result.",
 						build: [
-							"Represent the recursive choice as including or excluding part of the remaining string.",
+							"Generate contiguous substrings by recursively removing characters from the ends; do not skip interior characters as in a subsequence.",
 							"Collect generated strings in a list.",
 							"Remove duplicates by converting the result to a set and back to a list.",
-							"Sort or print the results in a stable order for easier checking."
+							"Return a sorted list in stable order, including the empty string, and trace only short inputs while exploring the branching recursion."
 						],
 						checkpoints: [
 							"Short inputs such as `ab` and `aba` are easy to verify by hand.",
 							"Duplicate substrings are removed from the final output.",
+							"The result for abc excludes ac, because a substring must be contiguous.",
 							"The explanation connects the recursive tree to the generated result."
 						]
 					}),
@@ -660,8 +665,11 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					title: "AM6 Project 2: Big-O Notation",
 					content: projectBrief({
 						goal: "Classify runtime expressions by their dominant Big-O behavior.",
+						verification:
+							"The completed worksheet states the input domain and growth model, gives a justified classification for each of the ten prompts, and keeps independent variables separate. Attempt each prompt before consulting the reference key.",
 						build: [
 							"Simplify expressions such as `12n^2 + n`, `n - sqrt(n)`, and `log(n) + 2`.",
+							"Read the ten-prompt mathematical worksheet in the starter README; this task does not require an IDE import. State the growth model and keep independent variables separate.",
 							"Analyze recursive definitions such as `f(n) = 1 + f(n/2)`.",
 							"Include challenge problems with multiple variables or known summations such as `1 + 2 + ... + n`."
 						],
@@ -680,10 +688,13 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					title: "AM6 Project 3: Function Analysis",
 					content: projectBrief({
 						goal: "Analyze real code snippets by counting how work grows with `n`.",
+						verification:
+							"The analysis records a prediction and justified primitive-operation count for each supplied function, including independent variables, early exits, and empty-input boundaries. Compare small traces with the separate reference only after attempting the classification.",
 						build: [
+							"Use the supplied f1 through f14 source as the analysis input; record predictions before running small examples, then compare with the separate reference comments.",
 							"Count the main operations performed by each function.",
 							"Break nested loops into outer-loop and inner-loop work.",
-							"Compare repeated addition with multiplication.",
+							"Use the stated primitive-operation model, keep n and m independent, and distinguish early exits and empty-input boundaries from the worst-case count.",
 							"Decide on the final Big-O classification for each function."
 						],
 						checkpoints: [

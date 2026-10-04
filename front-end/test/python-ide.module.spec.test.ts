@@ -1665,6 +1665,36 @@ pgzrun.go()
 		expect(normalizePythonIdeMode("unknown", "turtle")).toBe("turtle");
 	});
 
+	it("keeps the known math worksheet read-only without disabling code analysis", () => {
+		for (const path of [
+			"tree/main/AM6-Big-O-Analysis/starter",
+			"tree/main/AM6-Big-O-Analysis/solution",
+			"blob/main/AM6-Big-O-Analysis/solution/main.py"
+		]) {
+			expect(
+				pythonIdeModeForCourseResource(
+					"python-level-3",
+					`https://github.com/instruction-material/Python-Level-3/${path}`
+				)
+			).toBeNull();
+		}
+		expect(
+			pythonIdeModeForCourseResource(
+				"python-level-3",
+				"https://github.com/Instruction-Material/python-level-3/tree/main/AM6-Big-O-Analysis/starter"
+			)
+		).toBeNull();
+		for (const url of [
+			"https://github.com/instruction-material/Python-Level-3/tree/main/AM6-Function-Analysis/starter",
+			"https://github.com/instruction-material/Python-Level-3/tree/main/AM6-Big-O-Analysis-Extra/starter",
+			"https://github.com/another-owner/Python-Level-3/tree/main/AM6-Big-O-Analysis/starter"
+		]) {
+			expect(pythonIdeModeForCourseResource("python-level-3", url)).toBe(
+				"python"
+			);
+		}
+	});
+
 	it("keeps Turtle fill and RGB color hooks wired in the runtime shim", () => {
 		const runtimeSource = readFileSync(
 			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
