@@ -38,6 +38,9 @@ The corrected workflow:
 - Opens bridge Java starters in Java mode. The C++ console-port starter keeps its
   GitHub source link and documented local compiler workflow, without a misleading
   browser-import button. This does not add a C++ browser runtime.
+- Gives the ZIP import control an accessible name and uses theme-aware readable
+  text for the import source URL, addressing browser-discovered label and dark
+  contrast failures.
 
 No dependencies, lockfiles, saved projects, course identifiers, or progress keys
 were changed. Existing learner projects are not automatically rewritten.

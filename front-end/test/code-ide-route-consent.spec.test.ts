@@ -158,6 +158,9 @@ describe("Code IDE route import consent", () => {
 		await settle();
 		expect(requests.post).not.toHaveBeenCalled();
 		expect(wrapper.find(".code-ide-workspace").exists()).toBe(false);
+		expect(
+			wrapper.find("input[type='file']").attributes("aria-label")
+		).toBe("Import a BlueJ project ZIP");
 		expect(wrapper.find("[role='alert']").text()).toContain(
 			"GitHub returned 404."
 		);

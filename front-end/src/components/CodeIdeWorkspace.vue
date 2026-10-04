@@ -7710,6 +7710,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 		<input
 			ref="blueJArchiveInputRef"
 			:accept="blueJProjectArchiveUploadAccept"
+			aria-label="Import a BlueJ project ZIP"
 			class="sr-only"
 			type="file"
 			@change="importBlueJProjectArchiveFromInput"
@@ -9256,6 +9257,7 @@ html.dark .karel-empty {
 }
 
 .code-ide-route-import code {
+	color: var(--color-ink);
 	overflow-wrap: anywhere;
 }
 

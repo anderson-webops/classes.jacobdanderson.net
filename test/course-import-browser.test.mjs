@@ -43,11 +43,13 @@ test(
 			const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
 			const executablePath = [
 				process.env.PUPPETEER_EXECUTABLE_PATH,
-				puppeteer.executablePath(),
+				await puppeteer.executablePath(),
 				"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
 				"/usr/bin/google-chrome",
 				"/usr/bin/chromium"
-			].find(value => value && existsSync(value));
+			].find(
+				value => typeof value === "string" && value && existsSync(value)
+			);
 			assert.ok(
 				executablePath,
 				"Chrome is required for course import browser checks"
