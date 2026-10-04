@@ -27,7 +27,8 @@ import {
 import { courseAssetViewerUrl } from "@/modules/courseAssetPreview";
 import {
 	getPythonIdeModeLabel,
-	pythonIdeModeForCourseId
+	pythonIdeModeForCourseId,
+	pythonIdeModeForCourseResource
 } from "@/modules/pythonIde";
 import {
 	externalDatasetResourceLabel,
@@ -1532,10 +1533,15 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 	) {
 		return "";
 	}
+	const mode = pythonIdeModeForCourseResource(
+		selectedCourse.value.id,
+		resource.url
+	);
+	if (!mode) return "";
 
 	const params = new URLSearchParams({
 		course: selectedCourse.value.id,
-		mode: ideCourseMode.value,
+		mode,
 		projectKey: `${selectedCourse.value.id}:${item.id}:starter`,
 		starterUrl: resource.url,
 		starterTitle: item.title,

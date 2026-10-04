@@ -293,6 +293,19 @@ jobs:
                   if-no-files-found: ignore
                   retention-days: 7
 
+            - name: Verify confirmed course imports and accessible errors
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
+              run: node --test test/course-import-browser.test.mjs
+
+            - name: Retain course import screenshots
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: course-import-screenshots
+                  path: output/playwright/course-import-error-*.png
+                  if-no-files-found: ignore
+                  retention-days: 7
+
             - name: Cypress
               uses: cypress-io/github-action@fa4a118725a8f001170d49631ea89e5d66fee626 # v7.4.1
               with:

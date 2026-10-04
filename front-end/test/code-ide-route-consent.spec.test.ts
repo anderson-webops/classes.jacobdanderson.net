@@ -23,8 +23,8 @@ const preview = vi.hoisted(() => ({
 vi.mock("@/api", () => ({ api: requests }));
 vi.mock("@/modules/codePreview", async importOriginal => ({
 	...(await importOriginal<typeof import("@/modules/codePreview")>()),
-	listPreviewFiles: preview.list,
-	loadPreviewFile: preview.load
+	listGitHubProjectFiles: preview.list,
+	loadGitHubProjectFile: preview.load
 }));
 
 const existingProject: PythonIdeProject = {
@@ -144,6 +144,135 @@ afterEach(async () => {
 });
 
 describe("Code IDE route import consent", () => {
+	it("explains a failed import even when an empty account has no console", async () => {
+		requests.get.mockImplementation(async () => ({
+			data: { nextOffset: null, projects: [], reviews: [] }
+		}));
+		preview.list.mockRejectedValue(new Error("GitHub returned 404."));
+		const { wrapper } = await openWorkspace(
+			"/ide?projectKey=missing:starter&starterUrl=https%3A%2F%2Fgithub.com%2Fexample%2Fcourse%2Ftree%2Fmain%2Fstarter"
+		);
+		await wrapper
+			.find("[data-testid='ide-route-import-confirm']")
+			.trigger("click");
+		await settle();
+		expect(requests.post).not.toHaveBeenCalled();
+		expect(wrapper.find(".code-ide-workspace").exists()).toBe(false);
+		expect(wrapper.find("[role='alert']").text()).toContain(
+			"GitHub returned 404."
+		);
+		expect(wrapper.text()).toContain("The import did not finish");
+	});
+
+	it("does not save a local demo when an anonymous linked import fails", async () => {
+		preview.list.mockRejectedValue(new Error("GitHub returned 404."));
+		const { wrapper } = await openWorkspace(
+			"/ide?projectKey=missing:starter&starterUrl=https%3A%2F%2Fgithub.com%2Fexample%2Fcourse%2Ftree%2Fmain%2Fstarter",
+			false
+		);
+		const projectsBefore = loadLocalPythonProjects(null);
+		await wrapper
+			.find("[data-testid='ide-route-import-confirm']")
+			.trigger("click");
+		await settle();
+		expect(requests.post).not.toHaveBeenCalled();
+		expect(loadLocalPythonProjects(null)).toEqual(projectsBefore);
+		expect(
+			wrapper.find("[data-testid='ide-route-import-error']").text()
+		).toContain("The import did not finish");
+	});
+
+	it.each([
+		"download failure",
+		"readme only",
+		"wrong language",
+		"second file failure"
+	])("does not create a demo after %s", async failure => {
+		if (failure === "download failure")
+			preview.list.mockRejectedValue(new Error("GitHub returned 404."));
+		if (failure === "readme only")
+			preview.list.mockResolvedValue([{ path: "starter/README.md" }]);
+		if (failure === "wrong language")
+			preview.list.mockResolvedValue([{ path: "starter/Main.java" }]);
+		if (failure === "second file failure") {
+			preview.list.mockResolvedValue([
+				{ path: "starter/main.py" },
+				{ path: "starter/helper.py" }
+			]);
+			preview.load
+				.mockResolvedValueOnce({ content: "print('first')" })
+				.mockRejectedValueOnce(new Error("Second file unavailable"));
+		}
+		const { wrapper } = await openWorkspace(
+			"/ide?mode=python&projectKey=broken:starter&starterUrl=https%3A%2F%2Fgithub.com%2Fexample%2Fcourse%2Ftree%2Fmain%2Fstarter"
+		);
+		await wrapper
+			.find("[data-testid='ide-route-import-confirm']")
+			.trigger("click");
+		await settle();
+		expect(requests.post).not.toHaveBeenCalled();
+		expect(workspaceState(wrapper).selectedProjectID).toBe(
+			"existing-project"
+		);
+		expect(workspaceState(wrapper).projects[0].files).toEqual(
+			existingProject.files
+		);
+		expect(
+			wrapper.find("[data-testid='ide-route-import-prompt']").exists()
+		).toBe(true);
+		expect(wrapper.text()).toContain("Could not import project");
+	});
+
+	it("retries the requested starter after a transient failure without importing a demo", async () => {
+		preview.list.mockRejectedValueOnce(new Error("GitHub returned 503."));
+		const { wrapper } = await openWorkspace(
+			"/ide?projectKey=retry:starter&starterUrl=https%3A%2F%2Fgithub.com%2Fexample%2Fcourse%2Ftree%2Fmain%2Fstarter"
+		);
+		await wrapper
+			.find("[data-testid='ide-route-import-confirm']")
+			.trigger("click");
+		await settle();
+		expect(requests.post).not.toHaveBeenCalled();
+		await wrapper
+			.find("[data-testid='ide-route-import-confirm']")
+			.trigger("click");
+		await settle();
+		expect(requests.post).toHaveBeenCalledTimes(1);
+		expect(requests.post.mock.calls[0][1].files).toEqual([
+			{ name: "main.py", content: "print('imported')", encoding: "text" }
+		]);
+	});
+
+	it("imports bridge Java source only after confirmation in Java mode", async () => {
+		preview.list.mockResolvedValue([
+			{ path: "PTJ5-Python-to-Java-Quiz-Game/starter/Main.java" }
+		]);
+		preview.load.mockResolvedValue({
+			content:
+				"public class Main { public static void main(String[] args) {} }"
+		});
+		const { wrapper } = await openWorkspace(
+			"/ide?course=python-to-java-and-cpp-bridge&mode=java&projectKey=bridge:starter&starterUrl=https%3A%2F%2Fgithub.com%2Finstruction-material%2FPython-to-Java-and-CPP-Bridge%2Ftree%2Fmain%2FPTJ5-Python-to-Java-Quiz-Game%2Fstarter"
+		);
+		expect(preview.list).not.toHaveBeenCalled();
+		await wrapper
+			.find("[data-testid='ide-route-import-confirm']")
+			.trigger("click");
+		await settle();
+		expect(requests.post).toHaveBeenCalledTimes(1);
+		expect(requests.post.mock.calls[0][1]).toMatchObject({
+			mode: "java",
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content:
+						"public class Main { public static void main(String[] args) {} }"
+				}
+			]
+		});
+	});
+
 	it("does not fetch or save a URL-supplied starter before explicit approval", async () => {
 		const starterUrl =
 			"https://github.com/attacker/example/tree/main/starter";

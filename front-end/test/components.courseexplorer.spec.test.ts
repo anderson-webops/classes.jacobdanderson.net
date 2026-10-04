@@ -218,80 +218,115 @@ describe("CourseExplorer.vue", () => {
 		expect(query.get("mode")).toBe("turtle");
 	});
 
-	it("links GitHub starter resources to course-tied IDE projects", async () => {
-		const pinia = createPinia();
-		setActivePinia(pinia);
+	it.each([
+		{
+			courseId: "python-level-1",
+			folder: "Turtle-Coordinates/starter",
+			repo: "Python-Level-1",
+			mode: "turtle"
+		},
+		{
+			courseId: "python-to-java-and-cpp-bridge",
+			folder: "PTJ5-Python-to-Java-Quiz-Game/starter",
+			repo: "Python-to-Java-and-CPP-Bridge",
+			mode: "java"
+		},
+		{
+			courseId: "python-to-java-and-cpp-bridge",
+			folder: "PTJ6-Python-to-CPP-Console-Port/starter",
+			repo: "Python-to-Java-and-CPP-Bridge",
+			mode: null
+		}
+	])(
+		"offers an appropriate starter workflow for $folder",
+		async ({ courseId, folder, repo, mode }) => {
+			const pinia = createPinia();
+			setActivePinia(pinia);
 
-		const appStore = useAppStore();
-		const coursesStore = useCoursesStore();
-		const pythonCourse = coursesStore.courses.find(
-			course => course.id === "python-level-1"
-		);
+			const appStore = useAppStore();
+			const coursesStore = useCoursesStore();
+			const pythonCourse = coursesStore.courses.find(
+				course => course.id === courseId
+			);
 
-		if (!pythonCourse) throw new Error("Expected Python Level 1 course.");
+			if (!pythonCourse)
+				throw new Error("Expected Python Level 1 course.");
 
-		vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
-			id: pythonCourse.id,
-			name: pythonCourse.name,
-			modules: [
-				{
-					curriculum: [
-						{
-							content: "Use the starter project.",
-							id: "turtle-coordinates",
-							projectLink:
-								"https://github.com/instruction-material/Python-Level-1/tree/main/Turtle-Coordinates/starter",
-							title: "Turtle Coordinates"
-						}
-					],
-					id: "python-module-1",
-					supplementalProjects: [],
-					title: "Python Turtle"
+			vi.spyOn(coursesStore, "loadCourseById").mockResolvedValue({
+				id: pythonCourse.id,
+				name: pythonCourse.name,
+				modules: [
+					{
+						curriculum: [
+							{
+								content: "Use the starter project.",
+								id: "turtle-coordinates",
+								projectLink: `https://github.com/instruction-material/${repo}/tree/main/${folder}`,
+								title: "Turtle Coordinates"
+							}
+						],
+						id: "python-module-1",
+						supplementalProjects: [],
+						title: "Python Turtle"
+					}
+				]
+			});
+
+			appStore.setCurrentUser({
+				_id: "user-1",
+				name: "Student",
+				email: "student@example.com",
+				age: 12,
+				state: "GA",
+				courseAccess: [pythonCourse.id],
+				courseProgress: [],
+				editUsers: false,
+				saveEdit: "Save"
+			});
+
+			const wrapper = mount(CourseExplorer, {
+				global: {
+					plugins: [pinia]
 				}
-			]
-		});
+			});
+			await flushPromises();
 
-		appStore.setCurrentUser({
-			_id: "user-1",
-			name: "Student",
-			email: "student@example.com",
-			age: 12,
-			state: "GA",
-			courseAccess: [pythonCourse.id],
-			courseProgress: [],
-			editUsers: false,
-			saveEdit: "Save"
-		});
-
-		const wrapper = mount(CourseExplorer, {
-			global: {
-				plugins: [pinia]
+			await vi.waitFor(() => {
+				expect(wrapper.text()).toContain(pythonCourse.name);
+			});
+			if (!mode) {
+				expect(wrapper.text()).not.toContain("Start in IDE");
+				expect(
+					wrapper
+						.find(
+							`a[href="https://github.com/instruction-material/${repo}/tree/main/${folder}"]`
+						)
+						.exists()
+				).toBe(true);
+				wrapper.unmount();
+				return;
 			}
-		});
-		await flushPromises();
 
-		await vi.waitFor(() => {
-			expect(wrapper.text()).toContain("Start in IDE");
-		});
-
-		const link = wrapper
-			.findAll("a")
-			.find(candidate => candidate.text().includes("Start in IDE"));
-		expect(link?.exists()).toBe(true);
-		const href = link?.attributes("href") ?? "";
-		const query = new URLSearchParams(href.split("?")[1] ?? "");
-		expect(href.startsWith("/ide?")).toBe(true);
-		expect(query.get("course")).toBe("python-level-1");
-		expect(query.get("mode")).toBe("turtle");
-		expect(query.get("projectKey")).toBe(
-			"python-level-1:turtle-coordinates:starter"
-		);
-		expect(query.get("starterUrl")).toBe(
-			"https://github.com/instruction-material/Python-Level-1/tree/main/Turtle-Coordinates/starter"
-		);
-		expect(query.get("starterTitle")).toBe("Turtle Coordinates");
-		expect(query.get("starterLabel")).toBe("Starter project");
-	});
+			const link = wrapper
+				.findAll("a")
+				.find(candidate => candidate.text().includes("Start in IDE"));
+			expect(link?.exists()).toBe(true);
+			const href = link?.attributes("href") ?? "";
+			const query = new URLSearchParams(href.split("?")[1] ?? "");
+			expect(href.startsWith("/ide?")).toBe(true);
+			expect(query.get("course")).toBe(courseId);
+			expect(query.get("mode")).toBe(mode);
+			expect(query.get("projectKey")).toBe(
+				`${courseId}:turtle-coordinates:starter`
+			);
+			expect(query.get("starterUrl")).toBe(
+				`https://github.com/instruction-material/${repo}/tree/main/${folder}`
+			);
+			expect(query.get("starterTitle")).toBe("Turtle Coordinates");
+			expect(query.get("starterLabel")).toBe("Starter project");
+			wrapper.unmount();
+		}
+	);
 
 	it("marks PyGame course-level IDE links as course starters", async () => {
 		const pinia = createPinia();
@@ -653,12 +688,10 @@ describe("CourseExplorer.vue", () => {
 			"Other available courses"
 		]);
 		expect(
-			wrapper.findAll("#course-select option").map(option => option.text())
-		).toEqual([
-			currentCourse.name,
-			pastCourse.name,
-			availableCourse.name
-		]);
+			wrapper
+				.findAll("#course-select option")
+				.map(option => option.text())
+		).toEqual([currentCourse.name, pastCourse.name, availableCourse.name]);
 		expect(
 			wrapper.find<HTMLSelectElement>("#course-select").element.value
 		).toBe(currentCourse.id);
@@ -675,8 +708,9 @@ describe("CourseExplorer.vue", () => {
 		const coursesStore = useCoursesStore();
 		const assignedCourse = coursesStore.courses[0];
 		const unassignedCourse =
-			coursesStore.courses.find(course => course.id !== assignedCourse.id) ??
-			coursesStore.courses[1];
+			coursesStore.courses.find(
+				course => course.id !== assignedCourse.id
+			) ?? coursesStore.courses[1];
 
 		if (!assignedCourse || !unassignedCourse) {
 			throw new Error("Expected course fixtures.");
@@ -715,7 +749,9 @@ describe("CourseExplorer.vue", () => {
 
 		await vi.waitFor(() => {
 			expect(
-				wrapper.findAll("#learner-select option").map(option => option.text())
+				wrapper
+					.findAll("#learner-select option")
+					.map(option => option.text())
 			).toContain("All learners");
 		});
 
@@ -735,12 +771,14 @@ describe("CourseExplorer.vue", () => {
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("Viewing all courses");
 			expect(
-				wrapper.findAll("#course-select option").map(option => option.text())
+				wrapper
+					.findAll("#course-select option")
+					.map(option => option.text())
 			).toContain(unassignedCourse.name);
 		});
-		expect(wrapper.find("#course-select optgroup").attributes("label")).toBe(
-			"All courses"
-		);
+		expect(
+			wrapper.find("#course-select optgroup").attributes("label")
+		).toBe("All courses");
 		expect(wrapper.findAll(".progress-toggle")).toHaveLength(0);
 		expect(wrapper.find(".course-stats").text()).not.toContain("Done");
 		expect(api.put).not.toHaveBeenCalled();
@@ -797,13 +835,17 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain("Learner");
 		});
 		expect(
-			wrapper.findAll("#learner-select option").map(option => option.text())
+			wrapper
+				.findAll("#learner-select option")
+				.map(option => option.text())
 		).not.toContain("All learners");
 		expect(
 			wrapper.find<HTMLSelectElement>("#learner-select").element.value
 		).toBe("learner-1");
 		expect(
-			wrapper.findAll("#course-select option").map(option => option.text())
+			wrapper
+				.findAll("#course-select option")
+				.map(option => option.text())
 		).toContain(assignedCourse.name);
 	});
 
@@ -818,8 +860,9 @@ describe("CourseExplorer.vue", () => {
 		if (!assignedCourse) throw new Error("Expected course fixtures.");
 
 		const unassignedCourse =
-			coursesStore.courses.find(course => course.id !== assignedCourse.id) ??
-			coursesStore.courses[1];
+			coursesStore.courses.find(
+				course => course.id !== assignedCourse.id
+			) ?? coursesStore.courses[1];
 
 		if (!unassignedCourse) throw new Error("Expected course fixtures.");
 
@@ -827,7 +870,8 @@ describe("CourseExplorer.vue", () => {
 			unassignedCourse.id
 		);
 
-		if (!unassignedCourseDefinition) throw new Error("Expected course fixtures.");
+		if (!unassignedCourseDefinition)
+			throw new Error("Expected course fixtures.");
 
 		window.localStorage.setItem(
 			"classes:course-explorer:selected-course",
@@ -883,9 +927,9 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("Viewing all courses");
 		expect(wrapper.findAll(".progress-toggle")).toHaveLength(0);
 
-		await wrapper.find<HTMLSelectElement>("#learner-select").setValue(
-			"learner-1"
-		);
+		await wrapper
+			.find<HTMLSelectElement>("#learner-select")
+			.setValue("learner-1");
 		await nextTick();
 
 		await vi.waitFor(() => {
@@ -1801,7 +1845,9 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain("Pending Static Assets");
 		});
 		expect(wrapper.text()).toContain("References");
-		expect(wrapper.text()).toContain("Pre-Calculus A Pending Static Assets");
+		expect(wrapper.text()).toContain(
+			"Pre-Calculus A Pending Static Assets"
+		);
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("pcta12_pset2_40.png");
 			expect(wrapper.text()).toContain("Pending media");
@@ -1857,7 +1903,9 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain("Pending Static Assets");
 		});
 		expect(wrapper.text()).toContain("References");
-		expect(wrapper.text()).toContain("Pre-Calculus B Pending Static Assets");
+		expect(wrapper.text()).toContain(
+			"Pre-Calculus B Pending Static Assets"
+		);
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("pctb3_pset4_20.png");
 			expect(wrapper.text()).toContain("Pending media");
@@ -2182,12 +2230,11 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("View Course asset");
 		expect(wrapper.text()).not.toContain("Dataset");
 		expect(
-			wrapper.find('a.resource-link.is-asset[href*="apcs-pacing-tracks"]')
+			wrapper
+				.find('a.resource-link.is-asset[href*="apcs-pacing-tracks"]')
 				.exists()
 		).toBe(true);
-		expect(wrapper.find("a.resource-link.is-dataset").exists()).toBe(
-			false
-		);
+		expect(wrapper.find("a.resource-link.is-dataset").exists()).toBe(false);
 	});
 
 	it("renders local course asset fragments inside the course viewer", async () => {
@@ -2284,9 +2331,9 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain(
 				"Flat regions can still involve energy transfer."
 			);
-			expect(wrapper.find(".course-asset-preview-scrollbox").exists()).toBe(
-				true
-			);
+			expect(
+				wrapper.find(".course-asset-preview-scrollbox").exists()
+			).toBe(true);
 			expect(wrapper.find(".markdown-table-scroll").exists()).toBe(true);
 		});
 
@@ -2585,13 +2632,19 @@ describe("CourseExplorer.vue", () => {
 		});
 
 		expect(
-			wrapper.find(`a.resource-link.is-project[href="${rootUrl}"]`).exists()
+			wrapper
+				.find(`a.resource-link.is-project[href="${rootUrl}"]`)
+				.exists()
 		).toBe(false);
 		expect(
-			wrapper.find(`a.resource-link.is-solution[href="${rootUrl}"]`).exists()
+			wrapper
+				.find(`a.resource-link.is-solution[href="${rootUrl}"]`)
+				.exists()
 		).toBe(false);
 		expect(
-			wrapper.find(`a.resource-link.is-reference[href="${rootUrl}"]`).exists()
+			wrapper
+				.find(`a.resource-link.is-reference[href="${rootUrl}"]`)
+				.exists()
 		).toBe(true);
 		expect(
 			wrapper
@@ -2602,16 +2655,16 @@ describe("CourseExplorer.vue", () => {
 			wrapper
 				.find(`a.resource-link.is-reference[href="${rootUrl}"]`)
 				.text()
-		).toContain(
-			"Source archive"
-		);
+		).toContain("Source archive");
 		expect(
 			wrapper
 				.find(`a.resource-link.is-reference[href="${usacoRootUrl}"]`)
 				.text()
 		).toContain("Problem bank");
 		expect(
-			wrapper.find(`a.resource-link.is-project[href="${starterUrl}"]`).exists()
+			wrapper
+				.find(`a.resource-link.is-project[href="${starterUrl}"]`)
+				.exists()
 		).toBe(true);
 		expect(
 			wrapper

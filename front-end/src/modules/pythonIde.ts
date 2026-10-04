@@ -2,8 +2,8 @@ import type { CodeIdeAccountScope } from "@/modules/codeIdeAccountScope";
 import { api } from "@/api";
 import { codeIdeAccountRequest } from "@/modules/codeIdeAccountScope";
 import {
-	listPreviewFiles,
-	loadPreviewFile,
+	listGitHubProjectFiles,
+	loadGitHubProjectFile,
 	parseGitHubResource
 } from "@/modules/codePreview";
 
@@ -250,7 +250,7 @@ const pythonIdeCourseModes: Record<string, PythonIdeMode> = {
 	"python-level-2": "python",
 	"python-level-2-classroom": "python",
 	"python-level-3": "python",
-	"python-to-java-and-cpp-bridge": "python",
+	"python-to-java-and-cpp-bridge": "java",
 	"pythonic-design-patterns": "python"
 };
 
@@ -274,6 +274,20 @@ export function normalizePythonIdeMode(
 
 export function pythonIdeModeForCourseId(courseId: string | null | undefined) {
 	return courseId ? (pythonIdeCourseModes[courseId] ?? null) : null;
+}
+
+export function pythonIdeModeForCourseResource(courseId: string, url: string) {
+	const resource = parseGitHubResource(url);
+	if (!resource) return null;
+	// The bridge's C++ port has no browser runtime; keep its local source link.
+	if (
+		/\.(?:c|cc|cpp|cxx|h|hpp)$/i.test(resource.path) ||
+		(courseId === "python-to-java-and-cpp-bridge" &&
+			/^PTJ6-Python-to-CPP-Console-Port(?:\/|$)/.test(resource.path))
+	) {
+		return null;
+	}
+	return pythonIdeModeForCourseId(courseId);
 }
 
 export function isValidPythonIdeShareID(value: string | null | undefined) {
@@ -2753,7 +2767,8 @@ function safeProjectFileNameFromStarterPath(
 }
 
 export async function loadPythonIdeStarterFilesFromGitHub(
-	starterUrl: string
+	starterUrl: string,
+	mode: PythonIdeMode = "python"
 ): Promise<PythonIdeFile[]> {
 	const resource = parseGitHubResource(starterUrl);
 	if (!resource) {
@@ -2762,7 +2777,7 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 		);
 	}
 
-	const previewFiles = await listPreviewFiles(starterUrl);
+	const previewFiles = await listGitHubProjectFiles(starterUrl);
 	const usedFileNames = new Set<string>();
 	const starterFiles: PythonIdeFile[] = [];
 
@@ -2774,7 +2789,7 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 		);
 		if (!name || !isPythonIdeTextFile(name)) continue;
 
-		const preview = await loadPreviewFile(file);
+		const preview = await loadGitHubProjectFile(file);
 		starterFiles.push({
 			name,
 			content: preview.content,
@@ -2783,8 +2798,13 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 	}
 
 	const runnableFileIndex = starterFiles.findIndex(file =>
-		CODE_EXTENSION_RE.test(file.name)
+		isPythonIdeRunnableFile(file.name, mode)
 	);
+	if (runnableFileIndex < 0) {
+		throw new Error(
+			`No ${getPythonIdeModeLabel(mode)} source files were found. Open the source link to check the starter or use its documented local workflow.`
+		);
+	}
 	if (runnableFileIndex <= 0) return starterFiles;
 
 	const [runnableFile] = starterFiles.splice(runnableFileIndex, 1);
