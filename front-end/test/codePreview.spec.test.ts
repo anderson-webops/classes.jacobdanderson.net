@@ -3,7 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import CodePreview from "@/components/CodePreview.vue";
 import {
 	githubRawUrl,
+	listGitHubProjectFiles,
 	listPreviewFiles,
+	loadGitHubProjectFile,
 	loadPreviewFile,
 	parseGitHubResource,
 	resetCodePreviewCaches
@@ -142,6 +144,86 @@ describe("code preview GitHub helpers", () => {
 		expect(preview.content).toBe("public class Main {}");
 		expect(cachedPreview).toBe(preview);
 		expect(fetcher).toHaveBeenCalledTimes(3);
+	});
+
+	it("imports complete source without reusing a cut-off preview", async () => {
+		const [file] = await listGitHubProjectFiles(
+			"https://github.com/example/course/blob/main/starter/main.py"
+		);
+		const source = `${"# source\n".repeat(10000)}print("last line")\n`;
+		const fetcher = vi.fn(async () => textResponse(source));
+		const preview = await loadPreviewFile(file!, fetcher);
+		expect(preview.truncated).toBe(true);
+		expect(preview.content).not.toContain("last line");
+		const imported = await loadGitHubProjectFile(file!, fetcher);
+		expect(imported.truncated).toBe(false);
+		expect(imported.content).toBe(source);
+		expect(fetcher).toHaveBeenCalledTimes(2);
+	});
+
+	it("checks the actual UTF-8 byte limit when a response has no length header", async () => {
+		const [file] = await listGitHubProjectFiles(
+			"https://github.com/example/course/blob/main/main.py"
+		);
+		await expect(
+			loadGitHubProjectFile(file!, async () =>
+				textResponse("é".repeat(60001))
+			)
+		).rejects.toThrow("too large");
+	});
+
+	it("rejects incomplete file lists even when a partial preview is cached", async () => {
+		const url = "https://github.com/example/course/tree/main/starter";
+		const makeFiles = (count: number) =>
+			Array.from({ length: count }, (_, index) => ({
+				type: "file",
+				name: `file${index}.py`,
+				path: `starter/file${index}.py`,
+				size: 1,
+				html_url: `https://github.com/example/course/blob/main/starter/file${index}.py`,
+				download_url: null
+			}));
+		const fetcher = vi.fn(async () => jsonResponse(makeFiles(81)));
+		expect(await listPreviewFiles(url, fetcher)).toHaveLength(80);
+		await expect(listGitHubProjectFiles(url, fetcher)).rejects.toThrow(
+			"file limit"
+		);
+		expect(fetcher).toHaveBeenCalledTimes(2);
+		fetcher.mockImplementation(async () => jsonResponse(makeFiles(80)));
+		expect(await listGitHubProjectFiles(url, fetcher)).toHaveLength(80);
+	});
+
+	it("does not skip oversize source while importing a folder", async () => {
+		await expect(
+			listGitHubProjectFiles(
+				"https://github.com/example/course/tree/main/starter",
+				async () =>
+					jsonResponse([
+						{
+							type: "file",
+							name: "main.py",
+							path: "starter/main.py",
+							size: 120001
+						}
+					])
+			)
+		).rejects.toThrow("too large: starter/main.py");
+	});
+
+	it("rejects folders beyond the supported import depth", async () => {
+		const fetcher = vi.fn(async (url: string | URL | Request) => {
+			const path = new URL(String(url)).pathname.split("/contents/")[1];
+			return jsonResponse([
+				{ type: "dir", name: "nested", path: `${path}/nested` }
+			]);
+		});
+		await expect(
+			listGitHubProjectFiles(
+				"https://github.com/example/course/tree/main/starter",
+				fetcher
+			)
+		).rejects.toThrow("folder depth limit");
+		expect(fetcher).toHaveBeenCalledTimes(4);
 	});
 });
 

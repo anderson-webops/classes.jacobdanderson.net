@@ -56,6 +56,7 @@ import {
 	normalizePythonFileName,
 	pgzeroOutlineStarterCode,
 	pythonIdeModeForCourseId,
+	pythonIdeModeForCourseResource,
 	pythonIdeProjectToPayload,
 	pythonIdeStorageKey,
 	pythonStarterCode,
@@ -1638,6 +1639,21 @@ pgzrun.go()
 		expect(pythonIdeModeForCourseId("data-science-in-python")).toBe("data");
 		expect(pythonIdeModeForCourseId("machine-learning")).toBe("data");
 		expect(pythonIdeModeForCourseId("python-level-3")).toBe("python");
+		expect(pythonIdeModeForCourseId("python-to-java-and-cpp-bridge")).toBe(
+			"java"
+		);
+		expect(
+			pythonIdeModeForCourseResource(
+				"python-to-java-and-cpp-bridge",
+				"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ5-Python-to-Java-Quiz-Game/starter"
+			)
+		).toBe("java");
+		expect(
+			pythonIdeModeForCourseResource(
+				"python-to-java-and-cpp-bridge",
+				"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/starter"
+			)
+		).toBeNull();
 		expect(pythonIdeModeForCourseId("java-level-1")).toBe("karel");
 		expect(pythonIdeModeForCourseId("java-level-2")).toBe("java");
 		expect(pythonIdeModeForCourseId("ap-computer-science-a")).toBe("java");
@@ -4122,9 +4138,7 @@ pgzrun.go()
 			"utf8"
 		);
 
-		expect(pageSource).toContain(
-			"await clearLocalPythonProjectsAsync("
-		);
+		expect(pageSource).toContain("await clearLocalPythonProjectsAsync(");
 		expect(pageSource).toContain("async function syncProjectsToAccount");
 		expect(pageSource).toContain(
 			'saveMessage.value = "Synced recovered local edits";'

@@ -683,6 +683,7 @@ const deleteConfirmText = ref("");
 const sidebarCollapsed = ref(false);
 const stopRequested = ref(false);
 const saveMessage = ref("Loading workspace");
+const routeProjectImportError = ref("");
 const runMessage = ref("Ready");
 const diagnosticStage = ref<IdeStage>("idle");
 const diagnosticPythonVersion = ref("not-loaded");
@@ -1816,23 +1817,13 @@ async function createRequestedCourseProject() {
 
 	let starterFiles: PythonIdeFile[] | undefined;
 	if (request.starterUrl) {
-		try {
-			const loadedFiles = await loadPythonIdeStarterFilesFromGitHub(
-				request.starterUrl
-			);
-			starterFiles = loadedFiles.length
-				? requestedClassroomProject.value
-					? addPythonIdeClassroomSections(loadedFiles)
-					: loadedFiles
-				: undefined;
-		} catch (error) {
-			appendOutput(
-				"stderr",
-				error instanceof Error
-					? `Could not load starter code: ${error.message}`
-					: "Could not load starter code."
-			);
-		}
+		const loadedFiles = await loadPythonIdeStarterFilesFromGitHub(
+			request.starterUrl,
+			requestedStarterMode.value
+		);
+		starterFiles = requestedClassroomProject.value
+			? addPythonIdeClassroomSections(loadedFiles)
+			: loadedFiles;
 	}
 
 	return createPythonIdeProject(requestedStarterMode.value, {
@@ -1971,6 +1962,7 @@ function queueRouteProjectImport(
 	loadRunID?: number
 ) {
 	if (!projectLoadIsCurrent(loadRunID)) return;
+	routeProjectImportError.value = "";
 	pendingRouteProject.value = {
 		kind,
 		localOnly,
@@ -1989,6 +1981,7 @@ async function confirmRouteProjectImport() {
 	}
 
 	const loadRunID = projectLoadRunID;
+	routeProjectImportError.value = "";
 	isLoading.value = true;
 	try {
 		const previousProjectID = selectedProject.value?._id;
@@ -2033,6 +2026,10 @@ async function confirmRouteProjectImport() {
 			pending.routeKey === currentRouteImportKey()
 		) {
 			pendingRouteProject.value = pending;
+			routeProjectImportError.value =
+				error instanceof Error
+					? error.message
+					: "Could not import project.";
 			appendOutput(
 				"stderr",
 				error instanceof Error
@@ -2055,6 +2052,7 @@ async function confirmRouteProjectImport() {
 }
 
 async function declineRouteProjectImport() {
+	routeProjectImportError.value = "";
 	pendingRouteProject.value = null;
 	await router.replace({ path: "/ide" });
 }
@@ -7756,6 +7754,14 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 			</p>
 			<p v-else-if="pendingRouteProject.kind === 'share'">
 				Source: shared project link
+			</p>
+			<p
+				v-if="routeProjectImportError"
+				role="alert"
+				data-testid="ide-route-import-error"
+			>
+				{{ routeProjectImportError }} The import did not finish. Retry
+				the import or choose Not now.
 			</p>
 			<div class="code-ide-route-import-actions">
 				<button

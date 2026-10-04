@@ -275,11 +275,16 @@ function fileFromBlobResource(resource: GitHubResource): PreviewFile | null {
 
 function fileFromContentsItem(
 	resource: GitHubResource,
-	item: GitHubContentItem
+	item: GitHubContentItem,
+	complete = false
 ): PreviewFile | null {
 	if (item.type !== "file") return null;
 	if (!isPreviewableCodePath(item.path)) return null;
-	if (item.size > MAX_FILE_BYTES) return null;
+	if (item.size > MAX_FILE_BYTES) {
+		if (complete)
+			throw new Error(`Project file is too large: ${item.path}`);
+		return null;
+	}
 
 	return {
 		htmlUrl: item.html_url,
@@ -304,11 +309,12 @@ async function listDirectoryFiles(
 	path: string,
 	fetcher: PreviewFetch,
 	depth = 0,
-	collected: PreviewFile[] = []
+	collected: PreviewFile[] = [],
+	complete = false
 ) {
 	if (
 		depth > MAX_DIRECTORY_DEPTH ||
-		collected.length >= MAX_DIRECTORY_FILES
+		(!complete && collected.length >= MAX_DIRECTORY_FILES)
 	) {
 		return collected;
 	}
@@ -321,33 +327,55 @@ async function listDirectoryFiles(
 	const items = Array.isArray(response) ? response : [response];
 
 	for (const item of items) {
-		if (collected.length >= MAX_DIRECTORY_FILES) break;
+		if (!complete && collected.length >= MAX_DIRECTORY_FILES) break;
 
 		if (item.type === "file") {
-			const file = fileFromContentsItem(resource, item);
-			if (file) collected.push(file);
+			const file = fileFromContentsItem(resource, item, complete);
+			if (file) {
+				if (complete && collected.length >= MAX_DIRECTORY_FILES) {
+					throw new Error("This project exceeds the IDE file limit.");
+				}
+				collected.push(file);
+			}
 			continue;
 		}
 
 		if (
 			item.type === "dir" &&
-			depth < MAX_DIRECTORY_DEPTH &&
 			!IGNORED_DIRECTORY_NAMES.has(item.name.toLowerCase())
 		) {
+			if (depth >= MAX_DIRECTORY_DEPTH) {
+				if (complete) {
+					throw new Error(
+						"This project exceeds the IDE folder depth limit."
+					);
+				}
+				continue;
+			}
 			await listDirectoryFiles(
 				resource,
 				item.path,
 				fetcher,
 				depth + 1,
-				collected
+				collected,
+				complete
 			);
+		} else if (
+			complete &&
+			(item.type === "symlink" || item.type === "submodule")
+		) {
+			throw new Error("Linked project files require a local checkout.");
 		}
 	}
 
 	return collected;
 }
 
-async function listFilesWithoutCache(url: string, fetcher: PreviewFetch) {
+async function listFilesWithoutCache(
+	url: string,
+	fetcher: PreviewFetch,
+	complete = false
+) {
 	const resource = parseGitHubResource(url);
 	if (!resource) {
 		throw new Error(
@@ -360,7 +388,14 @@ async function listFilesWithoutCache(url: string, fetcher: PreviewFetch) {
 		return file ? [file] : [];
 	}
 
-	const files = await listDirectoryFiles(resource, resource.path, fetcher);
+	const files = await listDirectoryFiles(
+		resource,
+		resource.path,
+		fetcher,
+		0,
+		[],
+		complete
+	);
 	return files
 		.sort(
 			(a, b) =>
@@ -368,6 +403,14 @@ async function listFilesWithoutCache(url: string, fetcher: PreviewFetch) {
 				a.path.localeCompare(b.path)
 		)
 		.slice(0, MAX_DIRECTORY_FILES);
+}
+
+// Imports must not reuse a deliberately partial preview listing or cache.
+export function listGitHubProjectFiles(
+	url: string,
+	fetcher: PreviewFetch = fetch
+) {
+	return listFilesWithoutCache(url, fetcher, true);
 }
 
 export function listPreviewFiles(url: string, fetcher: PreviewFetch = fetch) {
@@ -387,7 +430,8 @@ export function listPreviewFiles(url: string, fetcher: PreviewFetch = fetch) {
 
 async function loadFileWithoutCache(
 	file: PreviewFile,
-	fetcher: PreviewFetch
+	fetcher: PreviewFetch,
+	complete = false
 ): Promise<PreviewFileContent> {
 	if (file.size !== null && file.size > MAX_FILE_BYTES) {
 		throw new Error("This file is too large to preview.");
@@ -404,6 +448,9 @@ async function loadFileWithoutCache(
 	}
 
 	const rawContent = await response.text();
+	if (new TextEncoder().encode(rawContent).byteLength > MAX_FILE_BYTES) {
+		throw new Error("This file is too large to preview or import.");
+	}
 	if (contentLooksBinary(rawContent)) {
 		throw new Error(
 			"This file appears to be binary and cannot be previewed."
@@ -412,12 +459,19 @@ async function loadFileWithoutCache(
 
 	return {
 		content:
-			rawContent.length > MAX_PREVIEW_CHARS
+			!complete && rawContent.length > MAX_PREVIEW_CHARS
 				? rawContent.slice(0, MAX_PREVIEW_CHARS)
 				: rawContent,
 		file,
-		truncated: rawContent.length > MAX_PREVIEW_CHARS
+		truncated: !complete && rawContent.length > MAX_PREVIEW_CHARS
 	};
+}
+
+export function loadGitHubProjectFile(
+	file: PreviewFile,
+	fetcher: PreviewFetch = fetch
+) {
+	return loadFileWithoutCache(file, fetcher, true);
 }
 
 export function loadPreviewFile(
