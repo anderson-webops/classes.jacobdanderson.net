@@ -1,6 +1,11 @@
 import importlib.util
+import contextlib
+import io
+import json
+import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location(
     "mac_workflow", Path(__file__).parents[1] / "scripts/session-note-mac/verify_notes.py"
@@ -28,6 +33,55 @@ def record(**changes):
 
 
 class MacWorkflowTests(unittest.TestCase):
+    def test_private_json_credential_is_loaded_without_exposing_metadata(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "reader.json"
+            path.write_text(json.dumps({"token": "synthetic-credential", "description": "Private configuration"}))
+            path.chmod(0o600)
+            self.assertEqual(workflow.load_read_credential(path), "synthetic-credential")
+
+    def test_unsafe_and_ambiguous_credentials_fail_without_private_errors(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "reader.json"
+            for payload, mode in [({"token": "synthetic-credential"}, 0o644),
+                                  ({"token": "synthetic-credential", "accessToken": "another-synthetic-value"}, 0o600),
+                                  ({"token": "synthetic credential"}, 0o600),
+                                  ({"token": "synthetic-credential", "metadata": "x" * 17000}, 0o600)]:
+                path.write_text(json.dumps(payload)); path.chmod(mode)
+                with self.assertRaises(workflow.client.EvidenceError) as caught:
+                    workflow.load_read_credential(path)
+                self.assertNotIn("synthetic-credential", str(caught.exception))
+            path.write_text(json.dumps({"token": "synthetic-credential"})); path.chmod(0o600)
+            link = Path(tmp) / "linked.json"; link.symlink_to(path)
+            with self.assertRaises(workflow.client.EvidenceError):
+                workflow.load_read_credential(link)
+
+    def test_missing_private_credential_never_uses_downloads_or_sends_a_request(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp); downloads = home / "Downloads"; downloads.mkdir()
+            old = downloads / "classes-session-notes-read-only.json"
+            old.write_text(json.dumps({"token": "synthetic-credential"})); old.chmod(0o600)
+            output = home / "report.json"
+            args = ["verify_notes.py", "--student-id", "507f1f77bcf86cd799439011", "--from", "2026-09-01", "--to", "2026-09-30", "--output", str(output)]
+            with patch("sys.argv", args), patch.object(workflow, "DEFAULT_CREDENTIAL_PATH", home / "private/reader.json"), patch.object(workflow.Path, "home", return_value=home), patch.object(workflow.client, "request_json") as request, contextlib.redirect_stderr(io.StringIO()):
+                with self.assertRaises(SystemExit) as caught:
+                    workflow.main()
+                self.assertEqual(caught.exception.code, 1)
+                request.assert_not_called()
+                self.assertFalse(output.exists())
+
+    def test_explicit_private_credential_produces_a_report_without_the_token(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "reader.json"; path.write_text(json.dumps({"token": "synthetic-credential"})); path.chmod(0o600)
+            output = Path(tmp) / "report.json"
+            args = ["verify_notes.py", "--student-id", "507f1f77bcf86cd799439011", "--from", "2026-09-01", "--to", "2026-09-30", "--credential-file", str(path), "--output", str(output)]
+            with patch("sys.argv", args), patch.object(workflow.client, "request_json", return_value=page()) as request, contextlib.redirect_stdout(io.StringIO()) as stdout:
+                workflow.main()
+                self.assertEqual(request.call_args.args[-1], "synthetic-credential")
+                self.assertNotIn("synthetic-credential", output.read_text() + stdout.getvalue())
+                self.assertEqual(output.stat().st_mode & 0o077, 0)
+                self.assertTrue(json.loads(output.read_text())["queries"][0]["paginationComplete"])
+
     def test_empty_evidence_preserves_every_coverage_field(self):
         result = workflow.verify_query({"studentId": "student"}, "2026-09-01", "2026-09-30", 100, lambda _: page())
         self.assertTrue(result["paginationComplete"])

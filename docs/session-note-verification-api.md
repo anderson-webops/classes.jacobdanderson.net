@@ -165,6 +165,12 @@ Unsupported versions, changed coverage, repeated cursors, duplicate rows,
 redirects and oversized responses fail visibly. Sheet associations require
 matching student and actual booking IDs, never classDate alone.
 
+The Mac read credential now lives in the workflow's owner-only
+`private/classes-session-notes-read-only.json`, outside the repository and
+Downloads. Its value and server-side read-only authorization are unchanged.
+The client supports an explicit `--credential-file` override and refuses unsafe
+local credential files before making a request.
+
 ```sh
 python3 scripts/session-notes-client.py --api https://classes.jacobdanderson.net/api --token-file PRIVATE_READ_TOKEN verify --student-id 507f1f77bcf86cd799439011 --from 2026-09-01 --to 2026-09-30
 python3 scripts/session-notes-client.py --api https://classes.jacobdanderson.net/api --token-file PRIVATE_REGISTRATION_TOKEN register --metadata-file PRIVATE_METADATA_JSON

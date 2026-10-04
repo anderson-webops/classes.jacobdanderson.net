@@ -6,10 +6,12 @@ import importlib.util
 import json
 import os
 import re
+import stat
 import time
 from pathlib import Path
 
 folder = Path(__file__).resolve().parent
+DEFAULT_CREDENTIAL_PATH = folder / "private/classes-session-notes-read-only.json"
 helper = folder / "session_notes_client.py"
 if not helper.exists():
     helper = folder.parent / "session-notes-client.py"
@@ -22,6 +24,26 @@ FIELDS = client.RECORD_FIELDS | {
     "originalSessionStartAt", "associationCorrectedAt", "operationId", "noteVersion",
     "replacesRecordId", "supersededByRecordId",
 }
+
+
+def load_read_credential(path):
+    """Load an owner-only JSON credential without a Downloads fallback."""
+    try:
+        fd = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+        with os.fdopen(fd, "r") as handle:
+            info = os.fstat(handle.fileno())
+            if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077 or info.st_size > 16384:
+                raise ValueError()
+            raw = handle.read(16385)
+            if len(raw) > 16384:
+                raise ValueError()
+            config = json.loads(raw)
+        tokens = [config[key] for key in ("token", "bearerToken", "accessToken", "bearer_token", "access_token") if isinstance(config.get(key), str)]
+        if len(tokens) != 1 or not tokens[0] or re.search(r"\s", tokens[0]):
+            raise ValueError()
+        return tokens[0]
+    except Exception:
+        raise client.EvidenceError("Read credential could not be loaded safely. No request sent.") from None
 
 
 def project_response(data):
@@ -104,6 +126,8 @@ def main():
     parser.add_argument("--limit", type=int, default=100)
     parser.add_argument("--cursor")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--credential-file", type=Path, default=DEFAULT_CREDENTIAL_PATH,
+                        help="Owner-only read credential JSON; defaults to the workflow's private directory")
     args = parser.parse_args()
     try:
         start, end = dt.date.fromisoformat(args.start), dt.date.fromisoformat(args.end)
@@ -115,19 +139,15 @@ def main():
     except (ValueError, AssertionError):
         parser.error("Invalid identity, date range, limit or cursor")
     try:
-        # Existing read configuration stays at its existing path and is never copied.
-        config = json.loads((Path.home()/"Downloads/classes-session-notes-read-only.json").read_text())
-        tokens = [config[key] for key in ("token", "bearerToken", "accessToken", "bearer_token", "access_token") if isinstance(config.get(key), str)]
-        if len(tokens) != 1 or not tokens[0] or re.search(r"\s", tokens[0]):
-            raise ValueError()
-    except Exception:
-        parser.exit(1, "Read credential could not be loaded safely. No request sent.\n")
+        token = load_read_credential(args.credential_file)
+    except client.EvidenceError as error:
+        parser.exit(1, str(error) + "\n")
     last = 0.0
     def fetch(path):
         nonlocal last
         time.sleep(max(0, 1.1-(time.monotonic()-last)))
         last = time.monotonic()
-        return client.request_json(BASE, path, tokens[0])
+        return client.request_json(BASE, path, token)
     report = {"endpoint": ENDPOINT, "clientSchemaVersion": 2,
               "queriedAtUTC": dt.datetime.now(dt.timezone.utc).isoformat(),
               "from": args.start, "to": args.end,

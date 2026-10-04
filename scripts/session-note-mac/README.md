@@ -3,8 +3,15 @@
 `verify_notes.py` is the maintained schema-v2 adapter for the existing standalone
 Mac workflow. Install it alongside `session_notes_client.py` (the repository's
 `scripts/session-notes-client.py`). Back up the old sources first. Preserve the
-read credential in its original Downloads location and all historical reports.
-Do not copy credentials or student reports into Git.
+read credential in `private/classes-session-notes-read-only.json` beside the
+installed workflow. The private directory must have mode 0700 and the credential
+mode 0600. Downloads is temporary intake, not persistent credential storage;
+move credentials needed by this workflow into its private directory. Preserve
+all historical reports. Do not copy credentials or student reports into Git.
+
+The client defaults to that private path. `--credential-file` can select another
+owner-only JSON file explicitly. Unsafe permissions, symlinks, oversized or
+ambiguous credential files fail before any request. There is no Downloads fallback.
 
 The client requires schemaVersion 2 and every critical evidence/identity field.
 Running against the older deployed contract fails visibly and leaves the report
