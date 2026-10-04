@@ -30,16 +30,6 @@ context("Navigation & page smoke-tests", () => {
 		cy.url().should("eq", `${Cypress.config().baseUrl}/about`);
 		cy.get("h1").contains("Focused Help").should("exist");
 
-		// ---- Book a Class --------------------------------------------------
-		cy.get(".site-nav").contains("a:visible", "Book a Class").click();
-		cy.url().should("eq", `${Cypress.config().baseUrl}/signup`);
-		cy.get("h1").contains("Schedule a class").should("be.visible");
-		cy.get('iframe[title="Class scheduler"]').should("be.visible");
-		cy.contains("button", "Expand calendar").click();
-		cy.get(".signup-page").should("have.class", "is-expanded");
-		cy.contains("button", "Exit expanded view").click();
-		cy.get(".signup-page").should("not.have.class", "is-expanded");
-
 		// ---- Tuition & Payment ---------------------------------------------
 		cy.get(".site-nav").contains("a:visible", "Tuition").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/payment`);
@@ -48,6 +38,23 @@ context("Navigation & page smoke-tests", () => {
 		// ---- back to Home -------------------------------------------
 		cy.get(".site-nav").contains("a:visible", "Home").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/`);
+	});
+
+	it("opens Book a Class in the full-page scheduler", () => {
+		const schedulerOrigin = "https://scheduler.classes.jacobdanderson.net";
+		cy.intercept("GET", `${schedulerOrigin}/`, {
+			statusCode: 200,
+			headers: { "content-type": "text/html" },
+			body: '<!doctype html><html lang="en"><head><title>Scheduler fixture</title></head><body><h1>Full-page scheduler fixture</h1></body></html>'
+		}).as("scheduler");
+		cy.get(".site-nav").contains("a:visible", "Book a Class").click();
+		cy.wait("@scheduler");
+		cy.origin(schedulerOrigin, () => {
+			cy.location("pathname").should("eq", "/");
+			cy.location("search").should("eq", "");
+			cy.get("h1").should("have.text", "Full-page scheduler fixture");
+			cy.get("iframe").should("not.exist");
+		});
 	});
 
 	it("keeps IDE controls usable across phone and tablet viewports", () => {

@@ -73,6 +73,16 @@ Targeted course fidelity, learner-display requirements, scheduler handoff, and
 security-profile navigation tests cover these changes. Full project checks and
 release validation are recorded with the delivery commit/release.
 
+Local validation passed 29 focused unit tests, project lint/typecheck, and the
+isolated browser test for top-level navigation, ignored redirect/token parameters,
+Back navigation, and blocked-navigation fallback. The fallback passed Axe at
+390px and 1280px with no horizontal overflow; screenshots were inspected. Browser
+tests mock external services and do not create bookings. CI retains fallback
+screenshots and runs the full project suite. The broad local test run was stopped
+when concurrent work overloaded the Mac. Optional guarded fast scanners refused
+installed-version drift; their policy was not changed, and native checks remain
+the validation authority.
+
 The historical whole-catalog audit reports 131 unmatched legacy identities both
 before and after this change. Those existing renamed/reworked non-Scratch entries
 are not asserted to be missing coursework. The relevant Scratch gate finds all

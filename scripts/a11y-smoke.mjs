@@ -383,6 +383,18 @@ try {
 					try {
 						console.log(`a11y checking: ${url} (${scenario.name}, ${viewport.name}, ${media.name})`);
 						page.setDefaultNavigationTimeout(15_000);
+						if (route === "/signup") {
+							// Audit the real local fallback without entering the live scheduler.
+							await page.setRequestInterception(true);
+							page.on("request", request => {
+								if (request.isNavigationRequest() && request.frame() === page.mainFrame() &&
+									new URL(request.url()).origin !== baseUrl) {
+									void request.abort("aborted");
+								} else {
+									void request.continue();
+								}
+							});
+						}
 						await page.setViewport({
 							deviceScaleFactor: 1,
 							height: viewport.height,
