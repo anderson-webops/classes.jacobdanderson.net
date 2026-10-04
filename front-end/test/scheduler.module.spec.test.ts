@@ -1,9 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
 	buildSchedulerEmbedUrl,
 	buildSchedulerUrl,
 	DEFAULT_SCHEDULER_ORIGIN,
 	normalizeSchedulerOrigin,
+	openSchedulerPage,
 	SCHEDULER_ORIGIN,
 	schedulerDnsPrefetchHref,
 	schedulerEmbedThemeMessageSource,
@@ -14,6 +15,13 @@ import {
 } from "@/modules/scheduler";
 
 describe("scheduler embed helpers", () => {
+	it("replaces the handoff history entry with the full-page scheduler", () => {
+		const replace = vi.fn();
+		openSchedulerPage({ replace });
+		expect(replace).toHaveBeenCalledExactlyOnceWith(schedulerUrl);
+		expect(new URL(replace.mock.calls[0]![0]).search).toBe("");
+	});
+
 	it("defaults to the production scheduler service", () => {
 		expect(SCHEDULER_ORIGIN).toBe(DEFAULT_SCHEDULER_ORIGIN);
 		expect(schedulerUrl).toBe(`${DEFAULT_SCHEDULER_ORIGIN}/`);
@@ -26,9 +34,9 @@ describe("scheduler embed helpers", () => {
 		expect(normalizeSchedulerOrigin("http://localhost:5173/calendar")).toBe(
 			"http://localhost:5173"
 		);
-		expect(normalizeSchedulerOrigin("scheduler.classes.jacobdanderson.net")).toBe(
-			DEFAULT_SCHEDULER_ORIGIN
-		);
+		expect(
+			normalizeSchedulerOrigin("scheduler.classes.jacobdanderson.net")
+		).toBe(DEFAULT_SCHEDULER_ORIGIN);
 		expect(normalizeSchedulerOrigin("ftp://example.invalid")).toBe(
 			DEFAULT_SCHEDULER_ORIGIN
 		);
@@ -77,7 +85,9 @@ describe("scheduler embed helpers", () => {
 		expect(buildSchedulerUrl("https://example.invalid/portal")).toBe(
 			schedulerUrl
 		);
-		expect(buildSchedulerUrl("//example.invalid/portal")).toBe(schedulerUrl);
+		expect(buildSchedulerUrl("//example.invalid/portal")).toBe(
+			schedulerUrl
+		);
 	});
 
 	it("exposes the theme message contract used by the iframe", () => {
