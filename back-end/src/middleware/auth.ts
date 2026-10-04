@@ -51,8 +51,8 @@ export const validUser: RequestHandler = async (req, res, next) => {
 		req.currentUser = user;
 		next();
 	}
-	catch (error) {
-		console.error("Error in validUser middleware:", error);
+	catch {
+		console.warn("Error in validUser middleware:");
 		res.status(500).json({ message: "Server error while validating user" });
 	}
 };
@@ -76,8 +76,8 @@ export const validTutor: RequestHandler = async (req, res, next) => {
 		req.currentTutor = tutor;
 		next();
 	}
-	catch (error) {
-		console.error("Error in validTutor middleware:", error);
+	catch {
+		console.warn("Error in validTutor middleware:");
 		res.status(500).json({ message: "Server error while validating tutor" });
 	}
 };
@@ -98,8 +98,8 @@ export const validTutorOrAdminSession: RequestHandler = async (req, res, next) =
 			req.currentAdmin = admin;
 			next();
 		}
-		catch (error) {
-			console.error("Error in validTutorOrAdminSession middleware (admin):", error);
+		catch {
+			console.warn("Error in validTutorOrAdminSession middleware (admin):");
 			res.status(500).json({ message: "Server error while validating admin" });
 		}
 		return;
@@ -119,8 +119,8 @@ export const validTutorOrAdminSession: RequestHandler = async (req, res, next) =
 			req.currentTutor = tutor;
 			next();
 		}
-		catch (error) {
-			console.error("Error in validTutorOrAdminSession middleware (tutor):", error);
+		catch {
+			console.warn("Error in validTutorOrAdminSession middleware (tutor):");
 			res.status(500).json({ message: "Server error while validating tutor" });
 		}
 		return;
@@ -145,8 +145,8 @@ export const validAccountSession: RequestHandler = async (req, res, next) => {
 			req.currentAdmin = admin;
 			next();
 		}
-		catch (error) {
-			console.error("Error in validAccountSession middleware (admin):", error);
+		catch {
+			console.warn("Error in validAccountSession middleware (admin):");
 			res.status(500).json({ message: "Server error while validating admin" });
 		}
 		return;
@@ -166,8 +166,8 @@ export const validAccountSession: RequestHandler = async (req, res, next) => {
 			req.currentTutor = tutor;
 			next();
 		}
-		catch (error) {
-			console.error("Error in validAccountSession middleware (tutor):", error);
+		catch {
+			console.warn("Error in validAccountSession middleware (tutor):");
 			res.status(500).json({ message: "Server error while validating tutor" });
 		}
 		return;
@@ -187,8 +187,8 @@ export const validAccountSession: RequestHandler = async (req, res, next) => {
 			req.currentUser = user;
 			next();
 		}
-		catch (error) {
-			console.error("Error in validAccountSession middleware (user):", error);
+		catch {
+			console.warn("Error in validAccountSession middleware (user):");
 			res.status(500).json({ message: "Server error while validating user" });
 		}
 		return;
@@ -251,8 +251,8 @@ export const validAdmin: RequestHandler = async (req, res, next) => {
 		req.currentAdmin = admin;
 		next();
 	}
-	catch (error) {
-		console.error("Error in validAdmin middleware:", error);
+	catch {
+		console.warn("Error in validAdmin middleware:");
 		res.status(500).json({ message: "Server error while validating admin" });
 	}
 };

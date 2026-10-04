@@ -28,7 +28,15 @@ const sessionNoteSchema: Schema<ISessionNote> = new Schema(
 		markdown: { type: String, required: true },
 		html: { type: String, required: true },
 		// Optional so saved/manual/legacy notes never acquire inferred send dates.
-		delivery: { type: deliverySchema, default: undefined }
+		delivery: { type: deliverySchema, default: undefined },
+		associationReviewResolved: Boolean,
+		associationCorrections: [{ _id: false, at: Date, actorId: String, keyHash: String, payloadHash: String, previousSessionId: String, nextSessionId: String, nextSnapshot: { startAt: Date, endAt: Date, timezone: String, scheduleRevision: Number } }],
+		workflowVersion: Number,
+		noteVersion: String,
+		savedAt: Date,
+		scheduledSessionId: { type: Schema.Types.ObjectId, ref: "ScheduledSession", index: true },
+		sessionSnapshot: { startAt: Date, endAt: Date, timezone: String, scheduleRevision: Number },
+		associationStatus: { type: String, enum: ["verified_session", "unlinked_review_required"] }
 	},
 	{ timestamps: true }
 );

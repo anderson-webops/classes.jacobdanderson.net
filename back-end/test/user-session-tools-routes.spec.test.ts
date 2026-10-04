@@ -35,7 +35,7 @@ vi.mock("../src/models/schemas/Tutor.js", () => ({
 }));
 
 vi.mock("../src/models/schemas/User.js", () => ({
-	User: { findById: modelMocks.userFindById }
+	User: { findById: modelMocks.userFindById, updateOne: vi.fn().mockResolvedValue({ modifiedCount: 1 }) }
 }));
 
 vi.mock("../src/models/schemas/ScheduledSession.js", () => ({
@@ -74,6 +74,7 @@ function queryWith<T>(result: T) {
 		sort: vi.fn(() => query),
 		limit: vi.fn(() => query),
 		select: vi.fn(() => query),
+		maxTimeMS: vi.fn(() => query),
 		lean: vi.fn().mockResolvedValue(result),
 		then: (resolve: (value: T) => unknown, reject: (reason: unknown) => unknown) =>
 			Promise.resolve(result).then(resolve, reject),
@@ -372,6 +373,7 @@ describe("user schedule and note-only routes", () => {
 				`/users/${studentID}/session-notes`,
 				{
 					sessionDate: "2026-05-12",
+					unlinked: true,
 					markdown: "Worked on recursion and traced two edge cases.",
 					delivery: { source: "site_smtp", status: "smtp_accepted", sentAt: now },
 					sentAt: now

@@ -8,6 +8,7 @@ import { ScheduledSession } from "../../models/schemas/ScheduledSession.js";
 import { SessionNote } from "../../models/schemas/SessionNote.js";
 import { Tutor } from "../../models/schemas/Tutor.js";
 import { User } from "../../models/schemas/User.js";
+import { withSessionNoteWriter } from "../../services/sessionNoteWriteFence.js";
 import {
 	deleteUserAccount,
 	UserAccountDeletionAuthorizationError,
@@ -25,6 +26,7 @@ import {
 	serializeScheduledSession
 } from "../../utils/scheduledSessions.js";
 import { recordSecurityAuditEvent } from "../../utils/securityAudit.js";
+import { normalizeNoteEmails, noteObjectId, NoteWorkflowError, resolveNoteIdentity, snapshotSession } from "../../utils/sessionNoteIdentity.js";
 
 const MAX_COURSE_PROGRESS_ID_LENGTH = 160;
 const MAX_COURSE_PROGRESS_IDS = 1000;
@@ -206,17 +208,8 @@ function serializeSessionNote(
 	};
 }
 
-async function getRecentSessionNotesForUser(userID: Types.ObjectId, email: string) {
-	const normalizedEmail = email.trim().toLowerCase();
-	const notes = await SessionNote.find({
-		$or: [
-			{ user: userID },
-			{
-				user: { $exists: false },
-				primaryEmail: normalizedEmail
-			}
-		]
-	})
+async function getRecentSessionNotesForUser(userID: Types.ObjectId, _email: string) {
+	const notes = await SessionNote.find({ user: userID })
 		.sort({ sessionDate: -1, createdAt: -1 })
 		.limit(3)
 		.lean();
@@ -579,6 +572,13 @@ export const updateUserScheduledSession: RequestHandler = async (req, res) => {
 		}
 	}
 
+	if (scheduledSession.startAt.getTime() !== parsed.startAt.getTime() || scheduledSession.endAt.getTime() !== parsed.endAt.getTime() || scheduledSession.timezone !== parsed.timezone) {
+		if ((scheduledSession.scheduleHistory?.length ?? 0) >= 200) return res.status(409).json({ message: "Schedule history requires operator review" });
+		const previous = snapshotSession(scheduledSession);
+		const next = { startAt: parsed.startAt, endAt: parsed.endAt, timezone: parsed.timezone };
+		scheduledSession.scheduleHistory = [...(scheduledSession.scheduleHistory ?? []), { at: new Date(), actorId: String(req.currentAdmin?._id ?? req.currentTutor?._id), previous, next }];
+		scheduledSession.scheduleRevision = (scheduledSession.scheduleRevision ?? 0) + 1;
+	}
 	scheduledSession.title = parsed.title;
 	scheduledSession.courseId = parsed.courseId;
 	scheduledSession.startAt = parsed.startAt;
@@ -614,33 +614,47 @@ export const createUserSessionNote: RequestHandler = async (req, res) => {
 
 	const markdown
 		= typeof req.body?.markdown === "string"
-			? req.body.markdown.trim()
+			? req.body.markdown
 			: typeof req.body?.md === "string"
-				? req.body.md.trim()
+				? req.body.md
 				: "";
-	if (!markdown) {
+	if (!markdown.trim()) {
 		return res.status(400).json({ message: "markdown is required" });
 	}
 
-	const ccEmails = normalizeStringArray(req.body?.ccEmails ?? []);
+	let ccEmails = normalizeStringArray(req.body?.ccEmails ?? []);
 	if (!ccEmails) {
 		return res.status(400).json({ message: "ccEmails must be an array" });
 	}
 
+	ccEmails = normalizeNoteEmails(ccEmails);
 	const rawSubject = typeof req.body?.subject === "string" ? req.body.subject.trim() : "";
 	const subject = rawSubject || defaultSessionNoteSubject(sessionDate);
 	const html = await renderMarkdownEmailHtml(markdown);
 
-	const note = await SessionNote.create({
+	let identity;
+	try {
+		if (req.body?.scheduledSessionId && !noteObjectId.safeParse(req.body.scheduledSessionId).success) return res.status(400).json({ message: "Invalid session identity" });
+		identity = await resolveNoteIdentity(req, { studentId: String(user._id), scheduledSessionId: req.body?.scheduledSessionId, unlinked: req.body?.unlinked === true, primaryEmail: typeof req.body?.primaryEmail === "string" ? req.body.primaryEmail : undefined });
+	}
+	catch (e) { return res.status(e instanceof NoteWorkflowError ? e.status : 503).json({ message: e instanceof NoteWorkflowError ? e.code : "Identity unavailable" }); }
+	if (ccEmails.some(email => !/^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]+$/.test(email))) return res.status(400).json({ message: "Invalid CC addresses" });
+	if (markdown.length > 200_000 || subject.length > 200 || ccEmails.length > 20) return res.status(413).json({ message: "Note too large" });
+	const note = await withSessionNoteWriter(String(user._id), () => SessionNote.create({
+		workflowVersion: 2,
+		savedAt: new Date(),
+		scheduledSessionId: identity.scheduledSessionId,
+		sessionSnapshot: identity.sessionSnapshot,
+		associationStatus: identity.associationStatus,
 		user: user._id,
 		studentName: user.name,
-		primaryEmail: user.email.trim().toLowerCase(),
+		primaryEmail: typeof req.body?.primaryEmail === "string" ? req.body.primaryEmail.trim().toLowerCase() : user.email.trim().toLowerCase(),
 		ccEmails,
 		subject,
 		sessionDate,
 		markdown,
 		html
-	});
+	}));
 
 	const recentSessionNotes = await getRecentSessionNotesForUser(user._id, user.email);
 	res.status(201).json({
@@ -666,6 +680,7 @@ export const promoteUserToTutor: RequestHandler = async (req, res) => {
 		return res.status(201).json({ tutor });
 	}
 	catch (error) {
+		if (error instanceof NoteWorkflowError) return res.status(error.status).json({ message: error.code });
 		if (error instanceof AccountRoleTransferError) {
 			await recordSecurityAuditEvent(req, {
 				action: "account.promote.user-to-tutor",
@@ -715,6 +730,7 @@ async function deleteUserAccountAndRecordAudit(
 		return res.sendStatus(200);
 	}
 	catch (error) {
+		if (error instanceof NoteWorkflowError) return res.status(error.status).json({ message: error.code });
 		if (error instanceof UserAccountDeletionAuthorizationError) {
 			return res.status(error.statusCode).json({ message: error.message });
 		}

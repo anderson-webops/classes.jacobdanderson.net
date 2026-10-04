@@ -670,7 +670,7 @@ describe("security dependency regressions", () => {
 		const healthRoute = serverSource.indexOf('app.get("/healthz"');
 		const ingressLimiter = serverSource.indexOf("app.use(createApiIngressLimiter())");
 		const projectIngressLimiter = serverSource.indexOf("createCodeIdeProjectIngressLimiter()");
-		const requestOriginGuard = serverSource.indexOf("app.use(createRequestOriginGuard())");
+		const requestOriginGuard = serverSource.indexOf("app.use(createNoteAwareRequestOriginGuard())");
 		const cookieSessionMiddleware = serverSource.indexOf("cookieSession(");
 		const projectDataLimiter = serverSource.indexOf(
 			"createCodeIdeProjectDataAccessLimiter()"

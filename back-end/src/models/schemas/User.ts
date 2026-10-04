@@ -19,6 +19,9 @@ const userSchema: Schema<IUser> = new Schema(
 			],
 			default: []
 		},
+		noteWorkflowDeleting: { type: Boolean, select: false },
+		noteWorkflowWriters: { type: [{ _id: false, id: String, at: Date }], default: undefined, select: false },
+		noteWorkflowWriterDispositions: { type: [{ _id: false, at: Date, actorId: String, writerId: String, keyHash: String, payloadHash: String, evidenceRef: String }], default: undefined, select: false },
 		name: { type: String, required: true },
 		email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
 		age: { type: String },

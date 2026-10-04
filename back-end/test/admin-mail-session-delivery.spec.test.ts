@@ -126,70 +126,43 @@ afterEach(() => {
 	vi.restoreAllMocks();
 });
 
-describe("site SMTP session-note evidence", () => {
-	it.each([false, true])("stores actual SMTP completion before the Sent-folder copy, linked=%s", async (linked) => {
-		if (linked) {
-			mocks.findNamedUser.mockReturnValue({
-				lean: async () => ({ _id: studentID, name: "Student", email: "student@example.test" })
-			});
-		}
-		await withMail(async (url) => {
-			expect((await send(url)).status).toBe(200);
-			expect(mocks.create).toHaveBeenCalledWith(expect.objectContaining({
-				sessionDate: new Date("2026-09-30T12:00:00Z"),
-				delivery: { source: "site_smtp", status: "smtp_accepted", sentAt: completedAt }
-			}));
-			const saved = mocks.create.mock.lastCall?.[0];
-			expect(saved.user).toBe(linked ? studentID : undefined);
-			expect(mocks.append).toHaveBeenCalledOnce();
-			expect(saved.delivery.sentAt).not.toEqual(mocks.send.mock.lastCall?.[0].date);
-		});
-	});
-	it("retains send evidence when the optional IMAP copy fails", async () => {
-		mocks.append.mockRejectedValue(new Error("Test copy failure"));
-		await withMail(async (url) => {
-			expect((await send(url)).status).toBe(200);
-			expect(mocks.create.mock.lastCall?.[0].delivery.sentAt).toEqual(completedAt);
-		});
-	});
-	it("records fallback transport completion", async () => {
-		mocks.send.mockRejectedValueOnce(Object.assign(new Error("Test transport down"), { code: "ECONNREFUSED" }));
-		await withMail(async (url) => {
-			expect((await send(url)).status).toBe(200);
-			expect(mocks.send).toHaveBeenCalledTimes(2);
-			expect(mocks.create.mock.lastCall?.[0].delivery.sentAt).toEqual(completedAt);
-		});
-	});
-	it("does not mark a rejected primary recipient as sent when only CC succeeds", async () => {
-		mocks.send.mockResolvedValue({
-			accepted: ["parent@example.test"],
-			rejected: ["student@example.test"]
-		});
-		await withMail(async (url) => {
-			expect((await send(url)).status).toBe(200);
-			expect(mocks.create.mock.lastCall?.[0].delivery).toEqual({
-				source: "site_smtp",
-				status: "smtp_rejected"
-			});
-		});
-	});
-	it("does not persist claimed evidence after SMTP failure", async () => {
-		mocks.send.mockRejectedValue(new Error("Test send failure"));
-		await withMail(async (url) => {
-			expect((await send(url)).status).toBe(502);
+describe("session-note HTTP fail-closed boundaries", () => {
+	it("requires a student, saved note version and durable key before SMTP", async () => {
+		await withMail(async url => {
+			expect((await send(url)).status).toBe(400);
+			expect(mocks.send).not.toHaveBeenCalled();
 			expect(mocks.create).not.toHaveBeenCalled();
 		});
 	});
-	it("does not accept the verification credential for mail sending or note contents", async () => {
+	it("does not echo invalid recipient values", async () => {
+		await withMail(async url => {
+			const response = await send(url, { to: "PRIVATE_BAD_ADDRESS" });
+			expect(response.status).toBe(400);
+			expect(await response.text()).not.toContain("PRIVATE_BAD_ADDRESS");
+		});
+	});
+	it("does not permit a read credential to send or read contents", async () => {
 		const token = "x".repeat(43);
 		vi.stubEnv("SESSION_NOTES_READ_TOKEN_SHA256", createHash("sha256").update(token).digest("hex"));
 		vi.stubEnv("SESSION_NOTES_READ_TOKEN_EXPIRES_AT", afterCopyAt.toISOString());
-		await withMail(async (url) => {
+		await withMail(async url => {
 			const headers = { authorization: `Bearer ${token}` };
 			expect((await fetch(`${url}/send`, { headers, method: "POST" })).status).toBe(403);
 			expect((await fetch(`${url}/session-notes/recent`, { headers })).status).toBe(403);
+			expect((await fetch(`${url}/session-notes/review`, { headers })).status).toBe(403);
 			expect(mocks.send).not.toHaveBeenCalled();
-			expect(mocks.find).not.toHaveBeenCalled();
+		});
+	});
+	it("rejects impossible dates rather than rolling into another month", async () => {
+		await withMail(async url => { expect((await send(url, { sessionDate: "2026-02-30" })).status).toBe(400); });
+		expect(mocks.send).not.toHaveBeenCalled();
+	});
+	it("does not fall back after an ambiguous SMTP timeout for a non-note message either", async () => {
+		mocks.send.mockRejectedValue({ code: "ETIMEDOUT", command: "CONN", message: "PRIVATE_RAW_ERROR" });
+		await withMail(async url => {
+			const response = await send(url, { sessionDate: undefined });
+			expect(response.status).toBe(202); expect(await response.text()).not.toContain("PRIVATE_RAW_ERROR");
+			expect(mocks.send).toHaveBeenCalledOnce();
 		});
 	});
 });

@@ -34,6 +34,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScratchIdeWorkspace: typeof import('./components/ScratchIdeWorkspace.vue')['default']
+    SessionNoteEvidenceReview: typeof import('./components/SessionNoteEvidenceReview.vue')['default']
     TheFooter: typeof import('./components/TheFooter.vue')['default']
     TheHeader: typeof import('./components/TheHeader.vue')['default']
     TheInput: typeof import('./components/TheInput.vue')['default']

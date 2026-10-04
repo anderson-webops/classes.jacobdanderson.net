@@ -3,6 +3,9 @@ import type { Types } from "mongoose";
 import type { IBaseUser } from "../abstractions/BaseUser.js";
 
 export interface IUser extends IBaseUser {
+	noteWorkflowDeleting?: boolean;
+	noteWorkflowWriters?: { id: string; at: Date }[];
+	noteWorkflowWriterDispositions?: { at: Date; actorId: string; writerId: string; keyHash: string; payloadHash: string; evidenceRef: string }[];
 	age: string;
 	state: string;
 	tutors: Types.ObjectId[];

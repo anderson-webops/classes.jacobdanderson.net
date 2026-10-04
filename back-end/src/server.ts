@@ -26,18 +26,20 @@ import {
 	createCodeIdeProjectDataAccessLimiter,
 	createCodeIdeProjectIngressLimiter
 } from "./middleware/rateLimiters.js";
-import { createRequestOriginGuard } from "./middleware/requestOriginGuard.js";
 import { createApiSecurityHeaders } from "./middleware/securityHeaders.js";
+import { createNoteAwareRequestOriginGuard, sessionNoteEvidenceAuth } from "./middleware/sessionNoteEvidenceAuth.js";
 import { accountRoutes } from "./routes/accountRoutes.js";
-import { adminMailRoutes } from "./routes/adminMailRoutes.js";
+import { adminMailRoutes, sessionNoteSending } from "./routes/adminMailRoutes.js";
 import { adminRoutes } from "./routes/adminRoutes.js";
 import { courseAccessCodeRoutes } from "./routes/courseAccessCodeRoutes.js";
 import { ideReportRoutes } from "./routes/ideReportRoutes.js";
+import { sessionNoteEvidenceRoutes } from "./routes/sessionNoteEvidenceRoutes.js";
 import { sessionNoteVerificationRoutes } from "./routes/sessionNoteVerificationRoutes.js";
 import { tutorRoutes } from "./routes/tutorRoutes.js";
-
 import { userRoutes } from "./routes/userRoutes.js";
+
 import { selectMongoConnection } from "./security/mongoConnection.js";
+import { ensureNoteWorkflowIndexes, noteOperationalEvent } from "./services/sessionNoteSending.js";
 import {
 	internalDiagnosticsAuthorized,
 	readInternalDiagnosticsKey
@@ -78,7 +80,7 @@ async function main() {
 	// Reject unsafe cross-origin requests before parsing their bodies or making
 	// cookie-backed identity available. Apple's exact form-post callback is
 	// exempt here and remains constrained by its dedicated parser below.
-	app.use(createRequestOriginGuard());
+	app.use(createNoteAwareRequestOriginGuard());
 
 	// Signed sessions are available to the per-account project limiter before
 	// any project auth middleware performs a database lookup.
@@ -149,6 +151,8 @@ async function main() {
 
 	app.use("/ide-reports", ideReportRoutes);
 	app.use("/session-notes/verification", sessionNoteVerificationRoutes);
+
+	app.use("/session-notes/evidence", sessionNoteEvidenceAuth, bodyParser.json({ limit: "16kb" }), sessionNoteEvidenceRoutes);
 
 	// Parse only after coarse network, request-origin, and per-account checks.
 	app.use(
@@ -242,6 +246,23 @@ async function main() {
 	);
 	await mongoose.connect(mongoConnection.uri);
 	console.log("MongoDB connection established");
+	let noteWorkerBusy = false;
+	let noteWorker: ReturnType<typeof setInterval> | undefined;
+	if (env.SESSION_NOTES_WORKER_ENABLED === "true" || env.SESSION_NOTES_SEND_ENABLED === "true") {
+		await ensureNoteWorkflowIndexes();
+		const recover = async () => {
+			if (noteWorkerBusy) return;
+			noteWorkerBusy = true;
+			try {
+				await sessionNoteSending.recover();
+			}
+			catch { noteOperationalEvent("worker", "recovery_unavailable"); }
+			finally { noteWorkerBusy = false; }
+		};
+		await recover();
+		noteWorker = setInterval(() => void recover(), 30_000);
+		noteWorker.unref();
+	}
 	const c = mongoose.connection;
 	app.get("/_dbinfo", (req, res) => {
 		if (
@@ -271,6 +292,11 @@ async function main() {
 	// The public site owns branded HTML errors. The API must never fall through
 	// to Express's stock HTML error document.
 	app.use(apiNotFound);
+	app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+		const status = (error as { status?: number })?.status;
+		const safeStatus = status === 413 ? 413 : status === 400 ? 400 : 503;
+		res.status(safeStatus).set("Cache-Control", "no-store").json({ message: safeStatus === 413 ? "Request too large" : safeStatus === 400 ? "Invalid request" : "Service temporarily unavailable" });
+	});
 
 	const PORT = Number(env.PORT || 3008);
 	const listenHost = serverListenHost(isProd, env.HOST);
@@ -288,6 +314,7 @@ async function main() {
 		}
 
 		isShuttingDown = true;
+		if (noteWorker) clearInterval(noteWorker);
 		console.log(`${signal} received, shutting down gracefully...`);
 		const forceShutdownTimer = setTimeout(() => {
 			console.error("Graceful shutdown timed out; closing active connections.");

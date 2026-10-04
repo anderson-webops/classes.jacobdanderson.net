@@ -1,5 +1,6 @@
 // src/types/entities/ISessionNote.ts
 import type { Document, Types } from "mongoose";
+import type { SessionSnapshot } from "./ISessionNoteSend.js";
 
 export interface SessionNoteDelivery {
 	source: "site_smtp";
@@ -17,6 +18,14 @@ export interface ISessionNote extends Document {
 	markdown: string;
 	html: string;
 	delivery?: SessionNoteDelivery;
+	associationReviewResolved?: boolean;
+	associationCorrections?: { at: Date; actorId: string; keyHash: string; payloadHash: string; previousSessionId?: string; nextSessionId: string; nextSnapshot: SessionSnapshot }[];
+	workflowVersion?: number;
+	noteVersion?: string;
+	savedAt?: Date;
+	scheduledSessionId?: Types.ObjectId;
+	sessionSnapshot?: SessionSnapshot;
+	associationStatus?: "verified_session" | "unlinked_review_required";
 	createdAt: Date;
 	updatedAt: Date;
 }

@@ -1,110 +1,189 @@
-# Session-note verification API
+# Session-note evidence API, schema version 2
 
-`GET /api/session-notes/verification` returns saved class dates and verified
-SMTP send metadata without note text, HTML, subjects, email addresses,
-attachments, payment records or account credentials. It cannot send mail or
-change a tracker. The native proxy removes `/api` before forwarding to Express.
+This is the next source contract, not a claim of deployment. The native proxy
+strips `/api` before Express. Version 2 adds fields and external metadata rows
+while retaining the legacy fields. See [OpenAPI](session-note-evidence.openapi.json)
+and [rollout and rollback](session-note-evidence-rollout.md).
 
-## Access and setup
+## Access
 
-A current, non-revoked administrator session can use the endpoint immediately
-after deployment. Tutor, student and classroom-code sessions cannot. For an
-external read-only client, create a separate credential on a trusted machine:
+`GET /api/session-notes/verification` accepts the existing read-only bearer token
+or a current administrator session. Its credential configuration is unchanged;
+it grants no send, registration, correction, association, review or account rights.
+Tokens belong only in Authorization headers, never URLs or request bodies.
+
+`POST /api/session-notes/evidence` accepts an administrator session with approved
+Origin/Referer protection, or a **different** expiring, revocable bearer credential
+with scope `register` and an explicit student-ID allowlist. The read-token hash
+cannot also configure this key. Machine registration cannot attest, correct,
+send mail, change associations or modify accounts.
+
+Create new owner-only files without overwrites or secret output:
 
 ```sh
-node scripts/create-session-notes-read-key.mjs /absolute/private/directory
+node scripts/create-session-notes-evidence-key.mjs PRIVATE_DIRECTORY COMMA_SEPARATED_STUDENT_IDS
 ```
 
-This creates two new owner-readable files without overwriting existing files
-or printing the secret: `session-notes-read.token` for the client and
-`session-notes-read.env` for the server. The server file contains only the
-SHA-256 hash and a 90-day expiry. Add those two configuration values to the
-existing protected API environment through the server's normal configuration
-process, then restart that API. Keep the raw token in the client's credential
-store. Do not put either file in source control, web assets, prompts or logs.
+The protected server environment receives only the new hash, expiry, scope and
+student IDs. Removing the hash revokes access; replacing it rotates access.
+Keep the existing read credential and Mongo/Vault/SMTP/IMAP configuration intact.
 
-The client sends `Authorization: Bearer <token>` over HTTPS. Tokens in URLs,
-query strings and request bodies are not accepted. A missing, invalid or
-expired token configuration disables machine access; administrator access
-still works. Replacing the hash rotates the credential; removing it revokes
-it. This credential does not authenticate any other API or grant mail-sending
-or account permissions. Local source work does not configure or deploy a host.
+## Bounded verification
 
-## Request
+Supply exactly one of `studentId` or `studentName`, inclusive `YYYY-MM-DD` `from`
+and `to` dates covering at most 366 days, and optional `limit` (default 50, max 100).
+Prefer stable IDs. Exact case-insensitive names remain available for legacy
+notes, but conflicting identities return 409. A guardian mailbox, duplicate name
+or date alone does not identify a child's session.
 
-Provide exactly one of:
+Continue `nextCursor` with the same filters until null. Results merge site notes
+and registered external evidence, ordered by class date and record ID descending.
+A failed page is not an empty result. Do not claim completeness before finishing
+pagination.
 
-- `studentId`: the student's existing User ID (24 hexadecimal characters).
-- `studentName`: the exact full saved recipient/student label, case-insensitive.
-  No fuzzy or substring matching is performed. This also supports students
-  without accounts. Ambiguous names return 409 instead of combining students.
+Every page, including empty results, retains:
 
-`from` and `to` are inclusive class dates in `YYYY-MM-DD` format, covering at
-most 366 days. `limit` defaults to 50 and has a maximum of 100. Continue with the
-returned `nextCursor`, using the same student and date filters, until it is
-null. Results sort by class date and record ID, newest first. For example:
+- `schemaVersion: 2`, `coverage: site_records_only`, and `coverageSince: null`.
+- `coverageDetails.sources`: site_saved_notes, site_smtp_attempts,
+  registered_external_metadata.
+- `coverageDetails.completeHistoricalCoverage`, `mailboxHistoryQueried`, and
+  `expectedSessionsIncluded`: false.
+- `statusMeaning`: primary SMTP acceptance is not inbox delivery; unknown,
+  absent, saved-only or ambiguous records do not imply overdue mail.
 
-```http
-GET /api/session-notes/verification?studentName=Sophia&from=2026-09-01&to=2026-09-30
-Authorization: Bearer <read-only credential>
+No coverage start date asserts complete history. This API reads no mailbox,
+Zoom transcript or booking list to infer sends. It covers saved site notes and
+metadata explicitly registered against accounts. A pre-note preparing intent is
+in administrator review, not a fabricated note row. Deleted records, unregistered
+external mail and expected bookings without notes are outside the population.
+Empty means no matching recorded evidence, not `never_sent`.
+
+## Record contract
+
+| Fields | Meaning |
+| --- | --- |
+| recordId, noteId, recordType | Stable evidence row, optional note, site_note or external_evidence |
+| studentId, scheduledSessionId | Local account and booking IDs; null for unlinked/legacy cases |
+| classDate | Operator-entered label; never proof of actual session identity |
+| actualSessionStartAt, sessionTimezone | Explicit verified association snapshot; no nearest-date matching |
+| associationStatus | verified_session or unlinked_review_required |
+| sentAt | Site primary-recipient SMTP acceptance completion in UTC, otherwise null |
+| externalSentAt | Outside-site observed send time, separately sourced, otherwise null |
+| evidenceRecordedAt | Actual evidence/save recording time when known, otherwise null |
+| deliverySource | site_smtp, mac_sent_item, admin_attestation, or null |
+| deliveryStatus | Legacy smtp_accepted, smtp_rejected, or unknown |
+| evidenceStatus, statusReason | Rich evidence state and bounded reason |
+| operationId, noteVersion | Safe site operation/version references when present |
+
+Site rows preserve `originalSessionStartAt` and `associationCorrectedAt`.
+An audited correction adds the new booking/snapshot without erasing the original
+send-intent snapshot or changing sentAt. Scheduled sessions retain old/new time,
+timezone and revision history. A saved version is never silently rebound after
+rescheduling. External IDs, meeting URLs/passwords, participants and raw source
+metadata remain internal. There is no inferred Calendly/calendar/Zoom association.
+
+| evidenceStatus | Interpretation |
+| --- | --- |
+| saved_not_sent | Version-2 save-only record without a send intent |
+| legacy_missing_metadata | Historical note lacks evidence; send outcome unknown |
+| preparing, queued, sending | Durable intent preparing, awaiting dispatch, or claimed |
+| smtp_accepted | Primary accepted by site SMTP; CC-only acceptance is insufficient |
+| smtp_rejected | Explicit primary rejection |
+| send_failed | Established nonacceptance or failed identity preflight |
+| delivery_unconfirmed | Possible acceptance/orphaned attempt; reconcile, do not blindly resend |
+| external_observed | Registered observation of outside-site Sent item |
+| external_attested | Weaker administrator attestation |
+| external_withdrawn, external_superseded | Append-only correction preserves original evidence |
+
+Creation/update dates, session times, subject dates and checkboxes never populate
+sentAt. Legacy accepted timestamps are preserved. External evidence never changes
+site delivery metadata or claims inbox delivery.
+
+## External registration and corrections
+
+Strict JSON, maximum 16 KiB, rejects extra fields. Required: studentId, classDate,
+source, observedSendAt, evidenceType, evidenceRef, idempotencyKey. Select a
+scheduledSessionId or explicit `unlinked:true`. Optional noteId must belong to
+the student; session IDs must be that student's booking. Unlinked evidence enters
+review before any verified association can be claimed.
+
+Mac observations use `source:mac_sent_item`, `evidenceType:observed_sent_item`.
+`evidenceRef` is 64 lowercase hex characters: SHA-256 of a protected local
+reference, not a raw mail transport identifier. Retain the original privately.
+The timestamp comes from the observed send, never a note date. No bodies,
+subjects, addresses, mailbox exports or recordings are accepted.
+
+Equivalent stable keys return the same row; changed payloads return 409. Stable
+student/evidenceRef deduplicates key rotation. Administrator corrections require
+`replaces`, `correctionReason` (wrong_timestamp, wrong_association, withdrawn),
+a new opaque reference and stable key. Old records remain and are marked
+superseded. Observed evidence cannot be replaced by a weaker attestation.
+
+## Sending and review
+
+Save-only `POST /api/users/:studentId/session-notes` requires a session ID or
+explicit unlinked selection and stores no delivery claim.
+
+Session-note `POST /api/admin-mail/send` requires studentId, noteId, idempotencyKey,
+sessionDate, to, subject, md and explicit booking/unlinked selection. Saved content,
+recipient and association must match. Retain the key through response loss and
+browser reload. Accepted results return 200; pending, ambiguous and tracking
+problems return 202 with safe operationId. A 202 does not authorize a fresh resend.
+
+Private administrator routes:
+
+- `GET /api/admin-mail/session-notes/operations/:operationId`: safe status.
+- `GET /api/admin-mail/session-notes/review`: bounded queue.
+- `POST .../operations/:operationId/disposition`: confirmed_not_accepted,
+  keep_unconfirmed or retry_nonaccepted, opaque evidenceRef and stable key. The
+  explicit retry queues an existing intent only after established nonacceptance,
+  capped at 20 attempts. Ambiguous outcomes cannot use retry_nonaccepted without
+  a separate audited finding of nonacceptance. No manufactured acceptance timestamp.
+- `POST .../students/:studentId/writer-disposition`: confirmed_process_stopped,
+  writer UUID, opaque evidenceRef and stable key. Sending and recovery must be
+  paused; active writers cannot be cleared. Old markers never expire automatically.
+- `POST .../:noteId/association`: explicit studentId/sessionId and stable key,
+  audited old/new association history.
+
+Writes retain approved-origin protection. Neither machine credential can use
+these administrator routes.
+
+## Mac client and tracker
+
+`scripts/session-notes-client.py` is the reusable reference client. The actual
+standalone Mac consumer is updated from `scripts/session-note-mac/verify_notes.py`
+at `/Users/jacobanderson/Documents/Codex/2026-10-03/task/session_note_verification/`.
+Its old sources are backed up with a SHA-256 manifest; read credentials and
+historical reports are untouched. It retains every page's coverage/meaning/schema,
+record and session identity, reasons and separate local Sent observations.
+Unsupported versions, changed coverage, repeated cursors, duplicate rows,
+redirects and oversized responses fail visibly. Sheet associations require
+matching student and actual booking IDs, never classDate alone.
+
+```sh
+python3 scripts/session-notes-client.py --api https://classes.jacobdanderson.net/api --token-file PRIVATE_READ_TOKEN verify --student-id 507f1f77bcf86cd799439011 --from 2026-09-01 --to 2026-09-30
+python3 scripts/session-notes-client.py --api https://classes.jacobdanderson.net/api --token-file PRIVATE_REGISTRATION_TOKEN register --metadata-file PRIVATE_METADATA_JSON
 ```
 
-```json
-{
-	"records": [{
-		"recordId": "507f1f77bcf86cd799439012",
-		"studentId": "507f1f77bcf86cd799439011",
-		"classDate": "2026-09-17",
-		"sentAt": "2026-09-18T01:25:12.000Z",
-		"deliveryStatus": "smtp_accepted"
-	}],
-	"nextCursor": null,
-	"coverage": "site_records_only",
-	"statusMeaning": "smtp_accepted means the mail server accepted the primary recipient; inbox delivery is not confirmed. Unknown or absent records are not evidence that notes are overdue."
-}
-```
+Both token files must be owner-only. Keep read and registration credentials
+separate. The installed client now requires this schema-v2 contract and fails visibly
+until the server operator deploys it. Registration remains an explicit separate
+action after its distinct credential is provisioned. See the Mac adapter README
+for bindings, pagination and preserved local Sent observations.
 
-Each stored note has its own row; multiple sends for one class are not silently
-merged. `studentId` is null for notes not associated with an account. Name
-collisions or legacy mixtures of linked and unlinked identities must be
-resolved explicitly; an ID query includes only notes actually linked to it.
+Session Notes remains the actual sent date in the tracker timezone. Done remains
+the operator's finalization decision, including free/no-notes exceptions.
+Unknown/saved-only evidence is incomplete evidence, not overdue mail. This client
+never sends email or finalizes entries.
 
-## Evidence and tracker semantics
+## Errors and privacy
 
-- `smtp_accepted`: the site's SMTP transport explicitly accepted the primary
-  recipient. `sentAt` records that transport's successful completion in UTC,
-  before an optional IMAP Sent-folder copy. Convert it to the tracker time
-  zone before taking a calendar date, typically America/New_York.
-- `smtp_rejected`: SMTP explicitly rejected the primary recipient, even if a
-  copy recipient was accepted. `sentAt` is null.
-- `unknown`: legacy/manual notes, missing transport evidence, or incomplete
-  metadata. `sentAt` is null. Creation/modification timestamps are never used
-  as send dates. This API does not claim recipient delivery, opening or reading.
+Read: 400 invalid query; 401 invalid bearer; 403 missing admin; 405 mutation;
+409 ambiguous identity; 429 rate limit; 503 unavailable evidence.
+Registration additionally rejects missing student (404), ownership/key conflicts
+(409), excessive bodies (413), insufficient scope or origin (403).
 
-New site sends capture this evidence automatically. Existing records are not
-backfilled or treated as proof of sending. Mail sent outside this site, records
-that were deleted, and failures to save a post-send record are outside coverage.
-An empty result means no matching saved evidence, not that notes were never sent.
-Failed SMTP attempts with no saved note also do not produce a verified row.
-
-For the tracker, **Session Notes** means the date the notes were sent. **Done**
-remains Jacob's manual finalization decision, including free classes or classes
-that do not receive notes. **In progress** means a class occurred but its entry
-has not been finalized. No status or overdue inference is made by this API.
-
-## Limits and release checks
-
-The endpoint is GET/HEAD-only, rate-limited to 60 requests per minute per IP,
-uses positive metadata projections and `Cache-Control: no-store`, and bounds
-each database query to two seconds. It does not enable cross-origin reading.
-400 indicates invalid filters/cursor, 401 an invalid bearer credential, 403 a
-missing or invalid admin session, 405 a write method, 409 an ambiguous name,
-429 the rate limit, and 503 unavailable database evidence. Do not convert an
-error response into an empty result or a tracker status.
-
-The optional schema fields need no destructive migration. Deploy the matching
-source release; allow Mongoose to create the new student/date indexes, or have
-the database operator create the schema-declared indexes before heavy use if
-automatic index creation is disabled. Validate a real authorized GET and an
-unauthorized rejection on the host after deployment. Do not send test email to
-students merely to test this API.
+Read queries remain GET/HEAD-only, no-store, 60/minute/IP and bounded to two seconds.
+Registration is 20/minute/IP plus existing ingress controls. Positive projections
+and serializers exclude private contents, addresses, subjects, transport IDs,
+credentials and meeting secrets. Errors and operational signals are allowlisted.

@@ -19,6 +19,8 @@ export interface IScheduledSession extends Document {
 	sourceEmail?: string;
 	externalEventId?: string;
 	recurrenceId?: string;
+	scheduleRevision?: number;
+	scheduleHistory?: { at: Date; actorId: string; previous: { startAt: Date; endAt: Date; timezone: string }; next: { startAt: Date; endAt: Date; timezone: string } }[];
 	createdAt: Date;
 	updatedAt: Date;
 }

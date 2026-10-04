@@ -57,6 +57,8 @@ const scheduleForm = ref({
 	timezone,
 	notes: ""
 });
+const noteSessionId = ref("");
+const noteUnlinked = ref(false);
 const noteForm = ref({
 	sessionDate: new Date().toISOString().slice(0, 10),
 	subject: "",
@@ -230,6 +232,11 @@ async function updateSessionStatus(
 }
 
 async function createSessionNote() {
+	if (!noteSessionId.value && !noteUnlinked.value) {
+		error.value =
+			"Select the actual session or explicitly mark this note unlinked.";
+		return;
+	}
 	if (!noteForm.value.markdown.trim()) {
 		error.value = "Session notes are required.";
 		return;
@@ -244,6 +251,8 @@ async function createSessionNote() {
 			recentSessionNotes: SessionNoteRecord[];
 		}>(`/users/${props.userId}/session-notes`, {
 			sessionDate: noteForm.value.sessionDate,
+			scheduledSessionId: noteSessionId.value || undefined,
+			unlinked: noteUnlinked.value,
 			subject: noteForm.value.subject,
 			markdown: noteForm.value.markdown
 		});
@@ -348,6 +357,35 @@ async function createSessionNote() {
 						<h5>Save without email</h5>
 					</div>
 					<form class="tool-form" @submit.prevent="createSessionNote">
+						<label
+							>Actual session
+							<select
+								v-model="noteSessionId"
+								:disabled="noteUnlinked"
+							>
+								<option value="">
+									Select a scheduled session
+								</option>
+								<option
+									v-for="session in scheduledSessions"
+									:key="session._id"
+									:value="session._id"
+								>
+									{{ formatDateTime(session.startAt) }} ·
+									{{ session.timezone }} ·
+									{{ session._id.slice(-6) }}
+								</option>
+							</select>
+						</label>
+						<label
+							><input
+								v-model="noteUnlinked"
+								type="checkbox"
+								@change="noteSessionId = ''"
+							/>
+							No verified session available; operator review
+							required</label
+						>
 						<label>
 							Session date
 							<input v-model="noteForm.sessionDate" type="date" />

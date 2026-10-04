@@ -8,11 +8,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
 	find: vi.fn(),
 	aggregate: vi.fn(),
+	operations: vi.fn(),
+	external: vi.fn(),
+	students: vi.fn(),
 	admin: vi.fn()
 }));
 vi.mock("../src/models/schemas/SessionNote.js", () => ({
 	SessionNote: { find: mocks.find, aggregate: mocks.aggregate }
 }));
+vi.mock("../src/models/schemas/SessionNoteSend.js", () => ({ SessionNoteSend: { aggregate: mocks.operations } }));
+vi.mock("../src/models/schemas/SessionNoteEvidence.js", () => ({ SessionNoteEvidence: { find: mocks.external } }));
+vi.mock("../src/models/schemas/User.js", () => ({ User: { find: mocks.students } }));
 vi.mock("../src/models/schemas/Admin.js", () => ({
 	Admin: { findById: mocks.admin }
 }));
@@ -26,6 +32,7 @@ const params = new URLSearchParams({
 	from: "2026-09-01",
 	to: "2026-09-30"
 });
+const emptyQuery: any = { select: () => emptyQuery, sort: () => emptyQuery, collation: () => emptyQuery, limit: () => emptyQuery, maxTimeMS: () => emptyQuery, lean: async () => [] };
 let rows: Record<string, unknown>[];
 let identities: unknown[];
 let query: ReturnType<typeof chain>;
@@ -99,6 +106,9 @@ beforeEach(() => {
 	query = chain();
 	mocks.find.mockReturnValue(query);
 	mocks.aggregate.mockReturnValue(query);
+	mocks.operations.mockReturnValue({ option: async () => [] });
+	mocks.external.mockReturnValue({ select: () => emptyQuery, sort: () => emptyQuery, limit: () => emptyQuery, maxTimeMS: () => emptyQuery, lean: async () => [] });
+	mocks.students.mockReturnValue({ select: () => emptyQuery, collation: () => emptyQuery, limit: () => emptyQuery, maxTimeMS: () => emptyQuery, lean: async () => [] });
 	mocks.admin.mockResolvedValue({ sessionVersion: 0 });
 });
 afterEach(() => vi.unstubAllEnvs());
@@ -180,16 +190,20 @@ describe("bounded private metadata queries", () => {
 			expect(response.status).toBe(200);
 			expect(response.headers.get("cache-control")).toBe("no-store");
 			const body = await response.json();
-			expect(body.records).toEqual(rows.map((row, index) => ({
+			expect(body.records.map((record: any) => ({ recordId: record.recordId, studentId: record.studentId, classDate: record.classDate, sentAt: record.sentAt, deliveryStatus: record.deliveryStatus }))).toEqual(expect.arrayContaining(rows.map((row, index) => ({
 				recordId: String(row._id),
 				studentId: index === 2 ? null : studentID,
 				classDate: "2026-09-17",
 				sentAt: index === 0 ? sentAt.toISOString() : null,
 				deliveryStatus: ["smtp_accepted", "unknown", "smtp_rejected", "unknown"][index]
-			})));
+			}))));
+			expect(body.records).toHaveLength(4);
 			expect(JSON.stringify(body)).not.toMatch(/PRIVATE|private@example|createdAt|updatedAt/);
 			expect(body.coverage).toBe("site_records_only");
-			expect(query.select).toHaveBeenCalledWith({ _id: 1, user: 1, sessionDate: 1, delivery: 1 });
+			expect(query.select).toHaveBeenCalledWith(expect.objectContaining({ _id: 1, user: 1, sessionDate: 1, delivery: 1 }));
+			expect(body.schemaVersion).toBe(2);
+			expect(body.coverageSince).toBeNull();
+			expect(body.coverageDetails.completeHistoricalCoverage).toBe(false);
 			expect(query.maxTimeMS).toHaveBeenCalledWith(2000);
 			expect(query.limit).toHaveBeenCalledWith(51);
 		});

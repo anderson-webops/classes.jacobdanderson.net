@@ -1,0 +1,1932 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Classes Session-note Evidence",
+    "version": "2",
+    "description": "Source candidate contract, additive legacy fields. Site primary SMTP acceptance is not inbox delivery. Empty or unknown evidence is not overdue mail. Mac consuming-app adoption and protected-copy host rehearsal remain separate gates."
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "Same-origin native API"
+    }
+  ],
+  "paths": {
+    "/session-notes/verification": {
+      "get": {
+        "operationId": "verifySessionNoteEvidence",
+        "description": "Read-only, bounded metadata. Exactly one student filter; inclusive range max 366 days. Every page preserves coverage. No mailbox or booking inference.",
+        "security": [
+          {
+            "ReadOnlyBearer": []
+          },
+          {
+            "AdministratorSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{24}$"
+            }
+          },
+          {
+            "name": "studentName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Metadata response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidencePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session-notes/evidence": {
+      "post": {
+        "operationId": "registerExternalEvidence",
+        "security": [
+          {
+            "RegistrationBearer": []
+          },
+          {
+            "AdministratorSession": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvidenceRegistration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Existing equivalent registration",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceAcknowledgment"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Metadata appended",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceAcknowledgment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-mail/send": {
+      "post": {
+        "operationId": "sendSavedSessionNote",
+        "security": [
+          {
+            "AdministratorSession": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionNoteSend"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Primary SMTP acceptance persisted",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Pending, ambiguous or tracking reconciliation; do not blindly resend",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-mail/session-notes/operations/{operationId}": {
+      "get": {
+        "operationId": "getNoteOperation",
+        "security": [
+          {
+            "AdministratorSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Metadata response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-mail/session-notes/operations/{operationId}/disposition": {
+      "post": {
+        "operationId": "recordManualDisposition",
+        "security": [
+          {
+            "AdministratorSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Disposition"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-mail/session-notes/{noteId}/association": {
+      "post": {
+        "operationId": "correctNoteAssociation",
+        "security": [
+          {
+            "AdministratorSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssociationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssociationAcknowledgment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-mail/session-notes/review": {
+      "get": {
+        "operationId": "reviewNoteEvidence",
+        "security": [
+          {
+            "AdministratorSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Metadata response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewQueue"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-mail/session-notes/students/{studentId}/writer-disposition": {
+      "post": {
+        "operationId": "recordManualDisposition",
+        "security": [
+          {
+            "AdministratorSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WriterDisposition"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WriterAcknowledgment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded error; no private values",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Audit and clear a writer whose old process is confirmed stopped",
+        "description": "Sending and recovery must both be paused. Active writers cannot be cleared. Persistent markers never expire automatically. Verify the previous API process is stopped; use protected evidence and a stable key. No email is sent."
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ReadOnlyBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Existing verification-only token; no mutation permissions"
+      },
+      "RegistrationBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Distinct expiring student-allowlisted register-only credential"
+      },
+      "AdministratorSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-session",
+        "description": "Current signed administrator session. Writes require approved Origin/Referer; cookie/signature names follow server session configuration."
+      }
+    },
+    "schemas": {
+      "EvidenceRecord": {
+        "type": "object",
+        "properties": {
+          "recordId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "noteId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recordType": {
+            "type": "string",
+            "enum": [
+              "site_note",
+              "external_evidence"
+            ]
+          },
+          "studentId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "classDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "sentAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "deliveryStatus": {
+            "type": "string",
+            "enum": [
+              "smtp_accepted",
+              "smtp_rejected",
+              "unknown"
+            ]
+          },
+          "deliverySource": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "site_smtp",
+              "mac_sent_item",
+              "admin_attestation",
+              null
+            ]
+          },
+          "evidenceStatus": {
+            "type": "string",
+            "enum": [
+              "saved_not_sent",
+              "legacy_missing_metadata",
+              "preparing",
+              "queued",
+              "sending",
+              "smtp_accepted",
+              "smtp_rejected",
+              "send_failed",
+              "delivery_unconfirmed",
+              "external_observed",
+              "external_attested",
+              "external_withdrawn",
+              "external_superseded"
+            ]
+          },
+          "statusReason": {
+            "type": "string"
+          },
+          "evidenceRecordedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "externalSentAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "scheduledSessionId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "actualSessionStartAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "sessionTimezone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "associationStatus": {
+            "type": "string",
+            "enum": [
+              "verified_session",
+              "unlinked_review_required"
+            ]
+          },
+          "originalSessionStartAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "associationCorrectedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "operationId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "noteVersion": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "replacesRecordId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supersededByRecordId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          }
+        },
+        "required": [
+          "recordId",
+          "noteId",
+          "recordType",
+          "studentId",
+          "classDate",
+          "sentAt",
+          "deliveryStatus",
+          "deliverySource",
+          "evidenceStatus",
+          "statusReason",
+          "evidenceRecordedAt",
+          "externalSentAt",
+          "scheduledSessionId",
+          "actualSessionStartAt",
+          "sessionTimezone",
+          "associationStatus"
+        ]
+      },
+      "EvidencePage": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "const": 2
+          },
+          "coverage": {
+            "const": "site_records_only"
+          },
+          "coverageSince": {
+            "type": "null"
+          },
+          "coverageDetails": {
+            "$ref": "#/components/schemas/CoverageDetails"
+          },
+          "statusMeaning": {
+            "type": "string"
+          },
+          "records": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/EvidenceRecord"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "coverage",
+          "coverageSince",
+          "coverageDetails",
+          "statusMeaning",
+          "records",
+          "nextCursor"
+        ]
+      },
+      "CoverageDetails": {
+        "type": "object",
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "site_saved_notes",
+                "site_smtp_attempts",
+                "registered_external_metadata"
+              ]
+            }
+          },
+          "completeHistoricalCoverage": {
+            "const": false
+          },
+          "mailboxHistoryQueried": {
+            "const": false
+          },
+          "expectedSessionsIncluded": {
+            "const": false
+          }
+        },
+        "required": [
+          "sources",
+          "completeHistoricalCoverage",
+          "mailboxHistoryQueried",
+          "expectedSessionsIncluded"
+        ]
+      },
+      "EvidenceRegistration": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "noteId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "scheduledSessionId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "unlinked": {
+            "type": "boolean"
+          },
+          "classDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "mac_sent_item",
+              "admin_attestation"
+            ]
+          },
+          "observedSendAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "evidenceType": {
+            "type": "string",
+            "enum": [
+              "observed_sent_item",
+              "user_attestation"
+            ]
+          },
+          "evidenceRef": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[\\w-]{16,128}$"
+          },
+          "replaces": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "correctionReason": {
+            "type": "string",
+            "enum": [
+              "wrong_timestamp",
+              "wrong_association",
+              "withdrawn"
+            ]
+          }
+        },
+        "required": [
+          "studentId",
+          "classDate",
+          "source",
+          "observedSendAt",
+          "evidenceType",
+          "evidenceRef",
+          "idempotencyKey"
+        ],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "required": [
+                  "scheduledSessionId"
+                ],
+                "properties": {
+                  "unlinked": {
+                    "const": false
+                  }
+                }
+              },
+              {
+                "required": [
+                  "unlinked"
+                ],
+                "properties": {
+                  "unlinked": {
+                    "const": true
+                  }
+                },
+                "not": {
+                  "required": [
+                    "scheduledSessionId"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "oneOf": [
+              {
+                "properties": {
+                  "source": {
+                    "const": "mac_sent_item"
+                  },
+                  "evidenceType": {
+                    "const": "observed_sent_item"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "source": {
+                    "const": "admin_attestation"
+                  },
+                  "evidenceType": {
+                    "const": "user_attestation"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "oneOf": [
+              {
+                "required": [
+                  "replaces",
+                  "correctionReason"
+                ]
+              },
+              {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "replaces"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "correctionReason"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "description": "Metadata only, 16 KiB maximum. Timestamp cannot exceed server time by over one minute. Machine scope permits only mac_sent_item observations for allowlisted students and forbids corrections. Session and optional note must belong to student. No nearest-date inference. Digest references are protected local references, not raw transport IDs.",
+        "examples": [
+          {
+            "studentId": "507f1f77bcf86cd799439011",
+            "scheduledSessionId": "507f1f77bcf86cd799439012",
+            "classDate": "2026-09-18",
+            "source": "mac_sent_item",
+            "observedSendAt": "2026-09-20T00:00:00Z",
+            "evidenceType": "observed_sent_item",
+            "evidenceRef": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "idempotencyKey": "synthetic-registration-key"
+          }
+        ]
+      },
+      "EvidenceAcknowledgment": {
+        "type": "object",
+        "properties": {
+          "recordId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "evidenceStatus": {
+            "type": "string",
+            "enum": [
+              "external_observed",
+              "external_attested",
+              "external_withdrawn"
+            ]
+          }
+        },
+        "required": [
+          "recordId",
+          "evidenceStatus"
+        ]
+      },
+      "Operation": {
+        "type": "object",
+        "properties": {
+          "operationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "noteId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "noteVersion": {
+            "type": "string"
+          },
+          "evidenceStatus": {
+            "type": "string",
+            "enum": [
+              "preparing",
+              "queued",
+              "sending",
+              "smtp_accepted",
+              "smtp_rejected",
+              "send_failed",
+              "delivery_unconfirmed"
+            ]
+          },
+          "statusReason": {
+            "type": "string"
+          },
+          "ok": {
+            "type": "boolean"
+          },
+          "sentAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "archivalStatus": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "archiving",
+              "archived",
+              "retry",
+              "review_required",
+              "not_applicable"
+            ]
+          },
+          "associationStatus": {
+            "type": "string",
+            "enum": [
+              "verified_session",
+              "unlinked_review_required"
+            ]
+          }
+        },
+        "required": [
+          "operationId",
+          "noteId",
+          "evidenceStatus",
+          "statusReason",
+          "ok"
+        ],
+        "description": "Accepted-but-unrecorded response intentionally omits unavailable timestamps/version/archive fields. Keep operationId; 202 is pending or reconciliation, not permission to retry with a new key."
+      },
+      "SessionNoteSend": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "md": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200000
+          },
+          "recipientName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sessionDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "studentId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "noteId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "scheduledSessionId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "unlinked": {
+            "type": "boolean"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[\\w-]{16,128}$"
+          }
+        },
+        "required": [
+          "to",
+          "subject",
+          "md",
+          "sessionDate",
+          "studentId",
+          "noteId",
+          "idempotencyKey"
+        ],
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "required": [
+                  "scheduledSessionId"
+                ],
+                "properties": {
+                  "unlinked": {
+                    "const": false
+                  }
+                }
+              },
+              {
+                "required": [
+                  "unlinked"
+                ],
+                "properties": {
+                  "unlinked": {
+                    "const": true
+                  }
+                },
+                "not": {
+                  "required": [
+                    "scheduledSessionId"
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "description": "The session-note form of existing /admin-mail/send. At most 20 recipients; to is comma-separated, first is primary. Saved note/version must match content, recipient and verified session snapshot. Other mail without sessionDate has no session-note evidence. Reuse identical key/payload after lost responses."
+      },
+      "Disposition": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "confirmed_not_accepted",
+              "keep_unconfirmed",
+              "retry_nonaccepted"
+            ]
+          },
+          "evidenceRef": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[\\w-]{16,128}$"
+          }
+        },
+        "required": [
+          "decision",
+          "evidenceRef",
+          "idempotencyKey"
+        ],
+        "additionalProperties": false,
+        "description": "Explicit audited retry queues only an existing rejected/proven-nonaccepted intent, capped at 20 attempts. Ambiguous outcomes require a separate finding of nonacceptance; no SMTP timestamp is fabricated."
+      },
+      "AssociationRequest": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "scheduledSessionId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[\\w-]{16,128}$"
+          }
+        },
+        "required": [
+          "studentId",
+          "scheduledSessionId",
+          "idempotencyKey"
+        ],
+        "additionalProperties": false
+      },
+      "AssociationAcknowledgment": {
+        "type": "object",
+        "properties": {
+          "noteId": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+          },
+          "associationStatus": {
+            "const": "verified_session"
+          }
+        },
+        "required": [
+          "noteId",
+          "associationStatus"
+        ]
+      },
+      "ReviewQueue": {
+        "type": "object",
+        "properties": {
+          "operations": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/Operation"
+            }
+          },
+          "externalEvidence": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "properties": {
+                "recordId": {
+                  "type": "string",
+                  "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                "studentId": {
+                  "type": "string",
+                  "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                "evidenceStatus": {
+                  "type": "string",
+                  "enum": [
+                    "external_observed",
+                    "external_attested",
+                    "external_withdrawn"
+                  ]
+                }
+              },
+              "required": [
+                "recordId",
+                "studentId",
+                "evidenceStatus"
+              ]
+            }
+          },
+          "unlinkedNotes": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "properties": {
+                "noteId": {
+                  "type": "string",
+                  "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                "studentId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "noteId",
+                "studentId"
+              ]
+            }
+          },
+          "limit": {
+            "const": 100
+          },
+          "writerMarkers": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "properties": {
+                "studentId": {
+                  "type": "string",
+                  "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                "writerId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "startedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "active": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "studentId",
+                "writerId",
+                "startedAt",
+                "active"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "operations",
+          "externalEvidence",
+          "unlinkedNotes",
+          "limit",
+          "writerMarkers"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "WriterDisposition": {
+        "type": "object",
+        "properties": {
+          "writerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision": {
+            "const": "confirmed_process_stopped"
+          },
+          "evidenceRef": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[\\w-]{16,128}$"
+          }
+        },
+        "required": [
+          "writerId",
+          "decision",
+          "evidenceRef",
+          "idempotencyKey"
+        ],
+        "additionalProperties": false
+      },
+      "WriterAcknowledgment": {
+        "type": "object",
+        "properties": {
+          "writerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "disposition": {
+            "const": "confirmed_process_stopped"
+          }
+        },
+        "required": [
+          "writerId",
+          "disposition"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

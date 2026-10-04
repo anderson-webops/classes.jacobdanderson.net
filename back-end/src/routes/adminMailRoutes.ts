@@ -10,14 +10,27 @@ import { ImapFlow } from "imapflow";
 import nodemailer from "nodemailer";
 import { z } from "zod";
 import { validAdmin } from "../middleware/auth.js";
+import { Admin } from "../models/schemas/Admin.js";
 import { InternalEmail } from "../models/schemas/InternalEmail.js";
+import { ScheduledSession } from "../models/schemas/ScheduledSession.js";
 import { SessionNote } from "../models/schemas/SessionNote.js";
+import { SessionNoteEvidence } from "../models/schemas/SessionNoteEvidence.js";
+import { SessionNoteSend } from "../models/schemas/SessionNoteSend.js";
 import { User } from "../models/schemas/User.js";
+import { classifySmtpFailure, createNoteSendWorkflow, ensureNoteWorkflowIndexes, mongoNoteSendStore, noteAssociationMatches, noteOperationalEvent, safeOperation } from "../services/sessionNoteSending.js";
+import { noteWriterIsActive, withSessionNoteWriter } from "../services/sessionNoteWriteFence.js";
 import { loadAdminRecipients } from "../utils/adminRecipients.js";
 import { renderMarkdownEmailHtml } from "../utils/markdownEmail.js";
 import { sessionNoteDeliveryFromSend } from "../utils/sessionNoteDelivery.js";
+import { metadataHash, normalizeNoteEmails, noteObjectId, NoteWorkflowError, resolveNoteIdentity } from "../utils/sessionNoteIdentity.js";
+
+import { externalEvidenceStatus } from "../utils/sessionNoteVerificationMetadata.js";
 
 const router = Router();
+router.use((_req, res, next) => {
+	res.set("Cache-Control", "no-store");
+	next();
+});
 const DATE_PREFIX_RE = /^(\d{4})-(\d{2})-(\d{2})/;
 const DEFAULT_PRIMARY_FROM_ADDR = "classes@jacobdanderson.net";
 const DEFAULT_FALLBACK_FROM_ADDR = "jacobdanderson@gmail.com";
@@ -31,46 +44,6 @@ const DEFAULT_IMAP_APPEND_HOST = "mail.stridewithus.co";
 const DEFAULT_IMAP_APPEND_PORT = 993;
 const DEFAULT_IMAP_APPEND_USER = "jacob@jacobdanderson.net";
 const DEFAULT_IMAP_SENT_MAILBOX = "Sent Messages";
-const TRANSPORT_FAILURE_CODES = new Set([
-	"ECONNREFUSED",
-	"ETIMEDOUT",
-	"EHOSTUNREACH",
-	"ECONNRESET",
-	"ESOCKET",
-	"ENOTFOUND",
-	"EPIPE"
-]);
-const TRANSPORT_FAILURE_HINTS = [
-	"connection refused",
-	"connect econnrefused",
-	"timeout",
-	"timed out",
-	"connection reset",
-	"ehostunreach",
-	"greeting never received",
-	"socket closed unexpectedly",
-	"service not available",
-	"service unavailable",
-	"local error in processing"
-] as const;
-const TRANSPORT_FAILURE_COMMANDS = new Set([
-	"CONN",
-	"EHLO",
-	"HELO",
-	"LHLO",
-	"STARTTLS",
-	"AUTH"
-]);
-const SENDER_HINTS = [
-	"from address",
-	"sender",
-	"sender verify failed"
-];
-const REJECTION_HINTS = [
-	"not authorized",
-	"rejected"
-] as const;
-
 const PRIMARY_FROM_ADDR = env.MDMAIL_PRIMARY_FROM
 	|| env.MDMAIL_FROM_PRIMARY
 	|| env.MDMAIL_FROM
@@ -127,11 +100,16 @@ const ALLOW_TO = (env.MDMAIL_ALLOW_TO || "").split(",").filter(Boolean);
 const MAX_MD_LEN = Number(env.MDMAIL_MAX_MD_LEN || 200_000);
 
 const MailSchema = z.object({
-	to: z.string().trim().min(1),
+	to: z.string().trim().min(1).max(5000),
 	subject: z.string().trim().min(1).max(200),
 	md: z.string().min(1),
 	recipientName: z.string().trim().min(1).optional(),
-	sessionDate: z.string().trim().optional()
+	sessionDate: z.string().trim().optional(),
+	studentId: noteObjectId.optional(),
+	scheduledSessionId: noteObjectId.optional(),
+	noteId: noteObjectId.optional(),
+	unlinked: z.boolean().optional(),
+	idempotencyKey: z.string().regex(/^[\w-]{16,128}$/).optional()
 });
 
 router.get("/recipients", validAdmin, (_req, res) => {
@@ -140,8 +118,8 @@ router.get("/recipients", validAdmin, (_req, res) => {
 			recipients: loadAdminRecipients()
 		});
 	}
-	catch (error) {
-		console.error("admin-mail/recipients failed:", error);
+	catch {
+		console.warn("admin_mail_recipients_unavailable");
 		return res.status(500).json({
 			message: "Admin recipient configuration is unavailable."
 		});
@@ -160,7 +138,7 @@ function parseDateOnly(dateStr: string): Date | null {
 	if (!year || !month || !day) return null;
 	// store at UTC noon to avoid TZ-related off-by-one when read in other zones
 	const dt = new Date(Date.UTC(year, month - 1, day, 12));
-	return Number.isNaN(dt.getTime()) ? null : dt;
+	return Number.isNaN(dt.getTime()) || dt.getUTCFullYear() !== year || dt.getUTCMonth() !== month - 1 || dt.getUTCDate() !== day ? null : dt;
 }
 
 type SendMailInfo = SMTPSentMessageInfo;
@@ -175,14 +153,6 @@ interface MailBase {
 }
 
 type TransportKind = "primary-local" | "fallback-gmail";
-
-interface MailSendError {
-	code?: string;
-	command?: string;
-	message?: string;
-	response?: string;
-	responseCode?: number;
-}
 
 interface MailSendResult {
 	fromUsed: string;
@@ -203,6 +173,8 @@ interface SavedAssociationSummary {
 }
 
 interface RecentSessionNoteRecord {
+	studentId?: string | null;
+	scheduledSessionId?: string | null;
 	_id: string;
 	studentName: string;
 	primaryEmail: string;
@@ -217,26 +189,6 @@ interface RecentSessionNoteRecord {
 interface ImapAppendResult {
 	appended: boolean;
 	mailbox: string;
-}
-
-function getMailErrorText(err: unknown): string {
-	if (!err || typeof err !== "object") return "";
-
-	const { message, response } = err as MailSendError;
-	return [message, response]
-		.filter((value): value is string => typeof value === "string")
-		.join(" ")
-		.toLowerCase();
-}
-
-function summarizeMailError(err: unknown): string {
-	if (!err || typeof err !== "object") return String(err);
-
-	const { message, responseCode } = err as MailSendError;
-	if (typeof message === "string" && typeof responseCode === "number")
-		return `${responseCode} ${message}`;
-	if (typeof message === "string") return message;
-	return String(err);
 }
 
 function readOptionalCA(path: string) {
@@ -349,7 +301,9 @@ function serializeSessionNote(
 		sessionDate: note.sessionDate,
 		markdown: note.markdown,
 		createdAt: note.createdAt,
-		updatedAt: note.updatedAt
+		updatedAt: note.updatedAt,
+		studentId: "user" in note ? String(note.user ?? "") : null,
+		scheduledSessionId: "scheduledSessionId" in note ? String(note.scheduledSessionId ?? "") : null
 	};
 }
 
@@ -604,7 +558,8 @@ async function appendSentMessage(
 			servername: IMAP_APPEND_SERVERNAME
 		},
 		connectionTimeout: 15000,
-		socketTimeout: 15000
+		socketTimeout: 15000,
+		logger: false
 	});
 
 	try {
@@ -628,155 +583,149 @@ async function appendSentMessage(
 	}
 }
 
-function isSenderRejection(err: unknown): boolean {
-	if (!err || typeof err !== "object") return false;
-
-	const { responseCode } = err as MailSendError;
-	const errorText = getMailErrorText(err);
-	const hasSenderHint = SENDER_HINTS.some(hint => errorText.includes(hint));
-	const hasRejectionHint = REJECTION_HINTS.some(hint => errorText.includes(hint));
-	const hasSenderCode = responseCode === 550 || responseCode === 553;
-
-	return hasSenderHint && (hasSenderCode || hasRejectionHint);
-}
-
-function isTransportFailure(err: unknown): boolean {
-	if (!err || typeof err !== "object" || isSenderRejection(err))
-		return false;
-
-	const { code, command, responseCode } = err as MailSendError;
-	const errorText = getMailErrorText(err);
-	if (typeof code === "string" && TRANSPORT_FAILURE_CODES.has(code.toUpperCase()))
-		return true;
-	if (
-		TRANSPORT_FAILURE_HINTS.some(hint => errorText.includes(hint))
-	)
-		return true;
-	if (
-		typeof responseCode === "number"
-		&& responseCode >= 400
-		&& responseCode < 600
-	) {
-		if (
-			typeof command === "string"
-			&& TRANSPORT_FAILURE_COMMANDS.has(command.toUpperCase())
-		) {
-			return true;
-		}
-		return (
-			errorText.includes("connection")
-			|| errorText.includes("socket")
-			|| errorText.includes("timeout")
-			|| errorText.includes("service unavailable")
-			|| errorText.includes("service not available")
-			|| errorText.includes("local error in processing")
-		);
-	}
-
-	return false;
-}
-
-async function sendWithFailover(
-	mailBase: MailBase
-): Promise<MailSendResult> {
-	const primaryTransporter = createPrimaryTransporter();
+async function sendWithFailover(mailBase: MailBase): Promise<MailSendResult> {
 	try {
-		const info = await primaryTransporter.sendMail({
-			...mailBase,
-			from: PRIMARY_FROM_ADDR
-		});
-		console.info("admin-mail/send sent with primary transport", {
-			transport: "primary-local",
-			from: PRIMARY_FROM_ADDR,
-			messageId: info.messageId
-		});
-		return {
-			info,
-			fromUsed: PRIMARY_FROM_ADDR,
-			transportUsed: "primary-local",
-			usedSenderFallback: false
-		};
+		const info = await createPrimaryTransporter().sendMail({ ...mailBase, from: PRIMARY_FROM_ADDR });
+		return { info, fromUsed: PRIMARY_FROM_ADDR, transportUsed: "primary-local", usedSenderFallback: false };
 	}
-	catch (primaryErr) {
-		if (!isTransportFailure(primaryErr)) {
-			throw primaryErr;
-		}
-		console.warn(
-			"admin-mail/send primary transport failed, retrying with fallback transport",
-			{
-				transport: "primary-local",
-				fallbackTransport: "fallback-gmail",
-				from: PRIMARY_FROM_ADDR,
-				error: summarizeMailError(primaryErr)
-			}
-		);
-
-		const fallbackTransporter = createFallbackTransporter();
-
-		try {
-			const info = await fallbackTransporter.sendMail({
-				...mailBase,
-				from: PRIMARY_FROM_ADDR
-			});
-			console.info("admin-mail/send sent with fallback transport", {
-				transport: "fallback-gmail",
-				from: PRIMARY_FROM_ADDR,
-				messageId: info.messageId
-			});
-			return {
-				info,
-				fromUsed: PRIMARY_FROM_ADDR,
-				transportUsed: "fallback-gmail",
-				usedSenderFallback: false
-			};
-		}
-		catch (fallbackTransportErr) {
-			if (
-				!isSenderRejection(fallbackTransportErr)
-				|| FALLBACK_FROM_ADDR === PRIMARY_FROM_ADDR
-			) {
-				throw new AggregateError(
-					[primaryErr, fallbackTransportErr],
-					`Primary transport failed (${summarizeMailError(primaryErr)}); fallback transport failed (${summarizeMailError(fallbackTransportErr)})`
-				);
-			}
-
-			console.warn(
-				"admin-mail/send fallback transport rejected primary From, retrying with fallback From",
-				{
-					transport: "fallback-gmail",
-					primaryFrom: PRIMARY_FROM_ADDR,
-					fallbackFrom: FALLBACK_FROM_ADDR,
-					error: summarizeMailError(fallbackTransportErr)
-				}
-			);
-
-			try {
-				const info = await fallbackTransporter.sendMail({
-					...mailBase,
-					from: FALLBACK_FROM_ADDR
-				});
-				console.info("admin-mail/send sent with fallback transport and fallback From", {
-					transport: "fallback-gmail",
-					from: FALLBACK_FROM_ADDR,
-					messageId: info.messageId
-				});
-				return {
-					info,
-					fromUsed: FALLBACK_FROM_ADDR,
-					transportUsed: "fallback-gmail",
-					usedSenderFallback: true
-				};
-			}
-			catch (senderFallbackErr) {
-				throw new AggregateError(
-					[primaryErr, fallbackTransportErr, senderFallbackErr],
-					`Primary transport failed (${summarizeMailError(primaryErr)}); fallback transport rejected primary From (${summarizeMailError(fallbackTransportErr)}); fallback From failed (${summarizeMailError(senderFallbackErr)})`
-				);
-			}
-		}
+	catch (error) {
+		if (classifySmtpFailure(error).state === "delivery_unconfirmed") throw new NoteWorkflowError(202, "smtp_outcome_ambiguous");
+		const info = await createFallbackTransporter().sendMail({ ...mailBase, from: FALLBACK_FROM_ADDR });
+		return { info, fromUsed: FALLBACK_FROM_ADDR, transportUsed: "fallback-gmail", usedSenderFallback: true };
 	}
 }
+
+export const sessionNoteSending = createNoteSendWorkflow({
+	protectDispatch: (record, action) => withSessionNoteWriter(record.note.user, action),
+	validateBeforeSend: async (record) => {
+		const user = await User.findById(record.note.user);
+		const note = await SessionNote.findById(record.noteId);
+		if (!user || !note || String(note.user) !== record.note.user || note.markdown !== record.note.markdown || note.subject !== record.note.subject || !noteAssociationMatches(note, record.note)) throw new Error("identity_changed");
+		await resolveNoteIdentity({ currentAdmin: await Admin.findById(record.actorId) } as any, { studentId: record.note.user, scheduledSessionId: record.note.scheduledSessionId, unlinked: !record.note.scheduledSessionId, primaryEmail: record.note.primaryEmail });
+		if (record.note.scheduledSessionId) {
+			const session = await ScheduledSession.findOne({ _id: record.note.scheduledSessionId, user: user._id });
+			if (!session || metadataHash({ startAt: session.startAt, endAt: session.endAt, timezone: session.timezone, scheduleRevision: session.scheduleRevision ?? 0 }) !== metadataHash(record.note.sessionSnapshot)) throw new Error("schedule_changed");
+		}
+	},
+	// Durable note sends use one transport. No timeout-triggered fallback can resend DATA.
+	send: async record => createPrimaryTransporter().sendMail(noteMail(record)),
+	archive: async (record) => { await appendSentMessage(noteMail(record)); }
+});
+function noteMail(record: import("../types/entities/ISessionNoteSend.js").SessionNoteSendRecord): SendMailOptions {
+	return { from: PRIMARY_FROM_ADDR, date: record.claimedAt ?? record.createdAt, to: record.note.primaryEmail, cc: record.note.ccEmails, subject: record.note.subject, text: record.note.markdown, html: record.note.html, messageId: record.messageId };
+}
+router.get("/session-notes/identities", validAdmin, async (_req, res) => {
+	try {
+		const students = await User.find({}).select({ _id: 1, name: 1, recipientName: 1 }).sort({ name: 1 }).limit(1000).maxTimeMS(2000).lean();
+		res.set("Cache-Control", "no-store").json({ students: students.map(s => ({ studentId: String(s._id), name: s.name, recipientName: s.recipientName ?? null })) });
+	}
+	catch { res.status(503).json({ message: "Student identities unavailable" }); }
+});
+router.get("/session-notes/operations/:operationId", validAdmin, async (req, res) => {
+	try {
+		if (!z.uuid().safeParse(req.params.operationId).success) return res.status(400).json({ message: "Invalid operation" });
+		res.set("Cache-Control", "no-store").json(safeOperation(await mongoNoteSendStore.get(String(req.params.operationId))));
+	}
+	catch (e) { res.status(e instanceof NoteWorkflowError ? e.status : 503).json({ message: "Operation unavailable" }); }
+});
+router.get("/session-notes/review", validAdmin, async (_req, res) => {
+	try {
+		const records = await SessionNoteSend.find({ $or: [{ state: { $in: ["preparing", "sending", "delivery_unconfirmed", "send_failed", "smtp_rejected"] } }, { state: "queued", createdAt: { $lt: new Date(Date.now() - 300_000) } }, { archiveState: "review_required" }, { "note.associationStatus": "unlinked_review_required" }] }).sort({ createdAt: 1 }).limit(100).maxTimeMS(2000).lean();
+		const resolved = await SessionNote.find({ _id: { $in: records.map(r => r.noteId) }, associationReviewResolved: true }).select({ _id: 1 }).limit(100).maxTimeMS(2000).lean();
+		const markerUsers = await User.find({ "noteWorkflowWriters.at": { $lt: new Date(Date.now() - 120_000) } }).select({ _id: 1, noteWorkflowWriters: 1 }).limit(100).maxTimeMS(2000).lean();
+		const writerMarkers = markerUsers.flatMap(u => (u.noteWorkflowWriters ?? []).filter(w => w.at.getTime() < Date.now() - 120_000).map(w => ({ studentId: String(u._id), writerId: w.id, startedAt: w.at.toISOString(), active: noteWriterIsActive(w.id) }))).slice(0, 100);
+		const resolvedIds = new Set(resolved.map(n => String(n._id)));
+		const unlinkedNotes = await SessionNote.find({ associationStatus: "unlinked_review_required", associationReviewResolved: { $ne: true } }).select({ _id: 1, user: 1 }).limit(100).maxTimeMS(2000).lean();
+		const externalEvidence = await SessionNoteEvidence.find({ associationStatus: "unlinked_review_required" }).select({ _id: 1, studentId: 1, evidenceType: 1, correctionReason: 1 }).limit(100).maxTimeMS(2000).lean();
+		res.set("Cache-Control", "no-store").json({ writerMarkers, operations: records.filter(r => !(r.state === "smtp_accepted" && resolvedIds.has(r.noteId))).map(safeOperation), externalEvidence: externalEvidence.map(e => ({ recordId: String(e._id), studentId: e.studentId, evidenceStatus: externalEvidenceStatus(e) })), unlinkedNotes: unlinkedNotes.map(n => ({ noteId: String(n._id), studentId: n.user ? String(n.user) : null })), limit: 100 });
+	}
+	catch { res.status(503).json({ message: "Review queue unavailable" }); }
+});
+router.post("/session-notes/students/:studentId/writer-disposition", validAdmin, async (req, res) => {
+	const parsed = z.object({ writerId: z.uuid(), decision: z.literal("confirmed_process_stopped"), evidenceRef: z.string().regex(/^[a-f0-9]{64}$/), idempotencyKey: z.string().regex(/^[\w-]{16,128}$/) }).strict().safeParse(req.body);
+	if (!parsed.success || !noteObjectId.safeParse(req.params.studentId).success) return res.status(400).json({ message: "Invalid writer disposition" });
+	if (env.SESSION_NOTES_SEND_ENABLED === "true" || env.SESSION_NOTES_WORKER_ENABLED === "true" || noteWriterIsActive(parsed.data.writerId)) return res.status(409).json({ message: "Pause sending/recovery and verify the old process stopped; active writers cannot be cleared" });
+	try {
+		const studentId = String(req.params.studentId);
+		const keyHash = metadataHash(parsed.data.idempotencyKey);
+		const payloadHash = metadataHash({ writerId: parsed.data.writerId, evidenceRef: parsed.data.evidenceRef });
+		const student = await User.findById(studentId).select("+noteWorkflowWriterDispositions");
+		const prior = student?.noteWorkflowWriterDispositions?.find(d => d.keyHash === keyHash);
+		if (prior) {
+			if (prior.payloadHash !== payloadHash) throw new NoteWorkflowError(409, "idempotency_payload_conflict");
+			return res.json({ writerId: parsed.data.writerId, disposition: "confirmed_process_stopped" });
+		}
+		const result = await User.updateOne({ "_id": studentId, "noteWorkflowWriters.id": parsed.data.writerId, "noteWorkflowWriterDispositions.19": { $exists: false }, "noteWorkflowWriterDispositions.keyHash": { $ne: keyHash } }, {
+			$pull: { noteWorkflowWriters: { id: parsed.data.writerId } },
+			$push: { noteWorkflowWriterDispositions: { writerId: parsed.data.writerId, actorId: String(req.currentAdmin!._id), at: new Date(), keyHash, payloadHash, evidenceRef: parsed.data.evidenceRef } }
+		}, { writeConcern: { w: "majority", j: true }, maxTimeMS: 5000 });
+		if (!result.modifiedCount) {
+			const retry = await User.findById(studentId).select("+noteWorkflowWriterDispositions");
+			const completed = retry?.noteWorkflowWriterDispositions?.find(d => d.keyHash === keyHash);
+			if (completed?.payloadHash !== payloadHash) throw new NoteWorkflowError(409, "writer_disposition_conflict_or_history_full");
+		}
+		return res.json({ writerId: parsed.data.writerId, disposition: "confirmed_process_stopped" });
+	}
+	catch (e) { return res.status(e instanceof NoteWorkflowError ? e.status : 503).json({ message: e instanceof NoteWorkflowError ? e.code : "Writer disposition unavailable" }); }
+});
+
+router.post("/session-notes/:noteId/association", validAdmin, async (req, res) => {
+	const parsed = z.object({ studentId: noteObjectId, scheduledSessionId: noteObjectId, idempotencyKey: z.string().regex(/^[\w-]{16,128}$/) }).strict().safeParse(req.body);
+	if (!parsed.success || !noteObjectId.safeParse(req.params.noteId).success) return res.status(400).json({ message: "Invalid association" });
+	try {
+		const note = await SessionNote.findOne({ _id: req.params.noteId, user: parsed.data.studentId });
+		if (!note) throw new NoteWorkflowError(409, "note_identity_conflict");
+		const keyHash = metadataHash(parsed.data.idempotencyKey);
+		const payloadHash = metadataHash({ studentId: parsed.data.studentId, scheduledSessionId: parsed.data.scheduledSessionId });
+		const prior = note.associationCorrections?.find(c => c.keyHash === keyHash);
+		if (prior) {
+			if (prior.payloadHash !== payloadHash) throw new NoteWorkflowError(409, "idempotency_payload_conflict");
+			return res.json({ noteId: String(note._id), associationStatus: "verified_session" });
+		}
+		const identity = await resolveNoteIdentity(req, parsed.data);
+		const updated = await SessionNote.updateOne({ "_id": note._id, "associationCorrections.19": { $exists: false }, "associationCorrections.keyHash": { $ne: keyHash }, "__v": note.__v }, {
+			$inc: { __v: 1 },
+			$set: { associationReviewResolved: true },
+			$push: { associationCorrections: { actorId: String(req.currentAdmin!._id), at: new Date(), keyHash, payloadHash, previousSessionId: note.associationCorrections?.at(-1)?.nextSessionId ?? (note.scheduledSessionId ? String(note.scheduledSessionId) : undefined), nextSessionId: identity.scheduledSessionId, nextSnapshot: identity.sessionSnapshot } }
+		}, { writeConcern: { w: "majority", j: true }, maxTimeMS: 5000 });
+		if (!updated.modifiedCount) {
+			const retry = await SessionNote.findOne({ _id: note._id, user: parsed.data.studentId });
+			const completed = retry?.associationCorrections?.find(c => c.keyHash === keyHash);
+			if (!completed || completed.payloadHash !== payloadHash) throw new NoteWorkflowError(409, "association_conflict_or_history_full");
+		}
+		res.json({ noteId: String(note._id), associationStatus: "verified_session" });
+	}
+	catch (e) { res.status(e instanceof NoteWorkflowError ? e.status : 503).json({ message: e instanceof NoteWorkflowError ? e.code : "Association unavailable" }); }
+});
+router.post("/session-notes/operations/:operationId/disposition", validAdmin, async (req, res) => {
+	const parsed = z.object({ decision: z.enum(["confirmed_not_accepted", "keep_unconfirmed", "retry_nonaccepted"]), evidenceRef: z.string().regex(/^[a-f0-9]{64}$/), idempotencyKey: z.string().regex(/^[\w-]{16,128}$/) }).strict().safeParse(req.body);
+	if (!parsed.success || !z.uuid().safeParse(req.params.operationId).success) return res.status(400).json({ message: "Invalid disposition" });
+	try {
+		const id = String(req.params.operationId);
+		const current = await mongoNoteSendStore.get(id);
+		const keyHash = metadataHash(parsed.data.idempotencyKey);
+		const payloadHash = metadataHash({ decision: parsed.data.decision, evidenceRef: parsed.data.evidenceRef });
+		const prior = current?.dispositions.find(d => d.keyHash === keyHash);
+		if (prior) {
+			if (prior.payloadHash !== payloadHash) throw new NoteWorkflowError(409, "idempotency_payload_conflict");
+			return res.json(safeOperation(current));
+		}
+		const retrying = parsed.data.decision === "retry_nonaccepted";
+		if (retrying && (!current || !(current.state === "smtp_rejected" || (current.state === "send_failed" && ["smtp_nonacceptance", "dispatch_identity_changed", "confirmed_not_accepted"].includes(current.errorCode ?? ""))))) throw new NoteWorkflowError(409, "retry_requires_established_nonacceptance");
+		const updated = await mongoNoteSendStore.change(id, { "attempts.19": { $exists: false }, "state": retrying ? current!.state : { $in: ["preparing", "queued", "delivery_unconfirmed", "send_failed", "smtp_rejected"] }, "dispositions.19": { $exists: false }, "dispositions.keyHash": { $ne: keyHash }, "dispositions.evidenceRef": { $ne: parsed.data.evidenceRef } }, {
+			$set: { state: retrying ? "queued" : parsed.data.decision === "confirmed_not_accepted" ? "send_failed" : "delivery_unconfirmed", errorCode: parsed.data.decision, evidenceRecordedAt: new Date() },
+			$push: { dispositions: { actorId: String(req.currentAdmin!._id), at: new Date(), decision: parsed.data.decision, evidenceRef: parsed.data.evidenceRef, keyHash, payloadHash } }
+		});
+		if (!updated) {
+			const retry = await mongoNoteSendStore.get(id);
+			const completed = retry?.dispositions.find(d => d.keyHash === keyHash);
+			if (completed?.payloadHash === payloadHash) return res.json(safeOperation(retry));
+			return res.status(409).json({ message: "Disposition conflict" });
+		}
+		res.json(safeOperation(updated));
+	}
+	catch (e) { res.status(e instanceof NoteWorkflowError ? e.status : 503).json({ message: e instanceof NoteWorkflowError ? e.code : "Disposition unavailable" }); }
+});
 
 router.post("/send", validAdmin, async (req, res) => {
 	try {
@@ -786,18 +735,15 @@ router.post("/send", validAdmin, async (req, res) => {
 		}
 		const { to, subject, md, sessionDate: sessionDateStr, recipientName } = parsed.data;
 
-		const recipients = to
-			.split(",")
-			.map(addr => addr.trim())
-			.filter(Boolean);
+		const recipients = normalizeNoteEmails(to.split(","));
 
-		if (recipients.length === 0) {
+		if (recipients.length === 0 || recipients.length > 20) {
 			return res.status(400).json({ message: "At least one recipient is required" });
 		}
 
 		const invalid = recipients.filter(addr => !z.string().email().safeParse(addr).success);
 		if (invalid.length) {
-			return res.status(400).json({ message: "Invalid recipient(s)", invalid });
+			return res.status(400).json({ message: "Invalid recipients" });
 		}
 
 		if (ALLOW_TO.length && !recipients.every(addr => ALLOW_TO.includes(addr)))
@@ -812,8 +758,40 @@ router.post("/send", validAdmin, async (req, res) => {
 				return res.status(400).json({ message: "Invalid sessionDate" });
 			sessionDate = d;
 		}
+		if (!sessionDate && (parsed.data.studentId || parsed.data.noteId || parsed.data.scheduledSessionId || parsed.data.idempotencyKey || parsed.data.unlinked)) return res.status(400).json({ message: "Session-note requests require a class-date label and explicit session identity" });
 
 		const html = await renderMarkdownEmailHtml(md);
+		if (sessionDate) {
+			const { studentId, scheduledSessionId, unlinked, noteId, idempotencyKey } = parsed.data;
+			if (!studentId || !noteId || !idempotencyKey) return res.status(400).json({ message: "Select a student, save a note, and provide an idempotency key", code: "note_identity_required" });
+			await ensureNoteWorkflowIndexes();
+			const keyHash = metadataHash(idempotencyKey);
+			const actorId = String(req.currentAdmin!._id);
+			const payloadHash = metadataHash({ studentId, scheduledSessionId: scheduledSessionId ?? null, unlinked: unlinked === true, noteId, to: recipients.map(normalizeEmail), subject, md, sessionDate, recipientName: recipientName ?? null });
+			const prior = await mongoNoteSendStore.byKey(actorId, keyHash);
+			if (prior) {
+				if (prior.payloadHash !== payloadHash) throw new NoteWorkflowError(409, "idempotency_payload_conflict");
+				if (prior.state === "preparing") await withSessionNoteWriter(prior.note.user, () => sessionNoteSending.prepare({ actorId, keyHash, payloadHash, noteId: prior.noteId, note: prior.note }));
+				const result = prior.state === "queued" || prior.state === "preparing" ? await sessionNoteSending.dispatch(prior._id) : safeOperation(prior);
+				return res.status(result.ok ? 200 : 202).json(result);
+			}
+			const identity = await resolveNoteIdentity(req, { studentId, scheduledSessionId, unlinked, primaryEmail: recipients[0], recipientName });
+			const record = await withSessionNoteWriter(studentId, () => sessionNoteSending.prepare({ actorId, keyHash, payloadHash, noteId, note: {
+				user: studentId,
+				studentName: identity.student.name,
+				primaryEmail: normalizeEmail(recipients[0]),
+				ccEmails: recipients.slice(1).map(normalizeEmail),
+				subject,
+				markdown: md,
+				html,
+				sessionDate,
+				scheduledSessionId: identity.scheduledSessionId,
+				sessionSnapshot: identity.sessionSnapshot,
+				associationStatus: identity.associationStatus
+			} }));
+			const result = await sessionNoteSending.dispatch(record._id);
+			return res.status(result.ok ? 200 : 202).json(result);
+		}
 
 		const mailBase = {
 			date: new Date(),
@@ -824,7 +802,7 @@ router.post("/send", validAdmin, async (req, res) => {
 			html
 		};
 
-		const { info, fromUsed, transportUsed, usedSenderFallback } = await sendWithFailover(
+		const { info, fromUsed, transportUsed } = await sendWithFailover(
 			mailBase
 		);
 		const sentAt = new Date();
@@ -832,26 +810,15 @@ router.post("/send", validAdmin, async (req, res) => {
 		const messageId = info.messageId || createMessageId(fromUsed);
 
 		try {
-			const appendResult = await appendSentMessage({
+			await appendSentMessage({
 				...mailBase,
 				from: fromUsed,
 				messageId
 			});
-			console.info("admin-mail/send appended copy to sent mailbox", {
-				transportUsed,
-				fromUsed,
-				mailbox: appendResult.mailbox,
-				messageId
-			});
+			noteOperationalEvent("internal-mail", "archive_complete");
 		}
-		catch (appendErr) {
-			console.warn("admin-mail/send IMAP append failed", {
-				transportUsed,
-				fromUsed,
-				mailbox: IMAP_SENT_MAILBOX,
-				messageId: info.messageId,
-				error: summarizeMailError(appendErr)
-			});
+		catch {
+			noteOperationalEvent("internal-mail", "archive_failed");
 		}
 
 		const savedAssociations = await saveAssociatedRecords({
@@ -875,26 +842,15 @@ router.post("/send", validAdmin, async (req, res) => {
 				})
 			: [];
 
-		console.info("admin-mail/send completed", {
-			transportUsed,
-			fromUsed,
-			usedSenderFallback,
-			messageId,
-			sessionNoteSavedFor: savedAssociations.sessionNoteSavedFor?.email ?? null,
-			internalEmailsSavedFor: savedAssociations.internalEmailsSavedFor.map(
-				user => user.email
-			)
-		});
 		return res.json({
 			ok: true,
-			messageId,
 			associations: savedAssociations,
 			recentSessionNotes
 		});
 	}
 	catch (err: any) {
-		console.error("admin-mail/send failed:", err);
-		return res.status(502).json({ ok: false, message: err?.message ?? "Send failed" });
+		noteOperationalEvent("request", "mail_request_failed");
+		return res.status(err instanceof NoteWorkflowError ? err.status : 503).json({ ok: false, message: err instanceof NoteWorkflowError ? err.code : "Mail tracking unavailable; do not resend until the operation is checked" });
 	}
 });
 

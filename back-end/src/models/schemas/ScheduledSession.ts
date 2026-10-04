@@ -16,6 +16,8 @@ const scheduledSessionSchema: Schema<IScheduledSession> = new Schema(
 			default: undefined,
 			index: true
 		},
+		scheduleRevision: { type: Number, default: 0 },
+		scheduleHistory: [{ _id: false, at: Date, actorId: String, previous: { startAt: Date, endAt: Date, timezone: String }, next: { startAt: Date, endAt: Date, timezone: String } }],
 		title: { type: String, required: true, trim: true },
 		courseId: { type: String, trim: true, default: undefined },
 		startAt: { type: Date, required: true, index: true },
@@ -33,7 +35,7 @@ const scheduledSessionSchema: Schema<IScheduledSession> = new Schema(
 		externalEventId: { type: String, trim: true, default: undefined, index: true },
 		recurrenceId: { type: String, trim: true, default: undefined, index: true }
 	},
-	{ timestamps: true }
+	{ timestamps: true, optimisticConcurrency: true }
 );
 
 scheduledSessionSchema.index({ user: 1, startAt: 1, status: 1 });

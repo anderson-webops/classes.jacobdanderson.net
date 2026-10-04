@@ -38,6 +38,7 @@ const modelMocks = vi.hoisted(() => ({
 	userConstructed: vi.fn(),
 	userDelete: vi.fn(),
 	userExists: vi.fn(),
+	userUpdateOne: vi.fn(),
 	userFindById: vi.fn(),
 	userSave: vi.fn(),
 	userUpdateMany: vi.fn()
@@ -137,6 +138,7 @@ vi.mock("../src/models/schemas/Tutor.js", () => ({
 vi.mock("../src/models/schemas/User.js", () => ({
 	User: class MockUser {
 		static exists = modelMocks.userExists;
+		static updateOne = modelMocks.userUpdateOne;
 		static findById = modelMocks.userFindById;
 		static updateMany = modelMocks.userUpdateMany;
 
@@ -227,6 +229,7 @@ describe("account role transfer transactions", () => {
 		}
 		modelMocks.tutorDelete.mockResolvedValue({ deletedCount: 1 });
 		modelMocks.userDelete.mockResolvedValue({ deletedCount: 1 });
+		modelMocks.userUpdateOne.mockReturnValue({ exec: vi.fn().mockResolvedValue({ modifiedCount: 1 }) });
 		modelMocks.tutorSave.mockImplementation(async (account: MockAccount) => {
 			expect(account.skipPasswordHash).toBe(true);
 			delete account.skipPasswordHash;

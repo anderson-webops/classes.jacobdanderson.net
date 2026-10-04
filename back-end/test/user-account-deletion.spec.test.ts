@@ -15,6 +15,9 @@ const modelMocks = vi.hoisted(() => ({
 	scheduledSessionDeleteMany: vi.fn(),
 	securityAuditEventUpdateMany: vi.fn(),
 	sessionNoteDeleteMany: vi.fn(),
+	sessionNoteSendDeleteMany: vi.fn(),
+	sessionNoteEvidenceDeleteMany: vi.fn(),
+	userUpdateOne: vi.fn(),
 	userDeleteOne: vi.fn(),
 	userFindById: vi.fn()
 }));
@@ -61,8 +64,11 @@ vi.mock("../src/models/schemas/SessionNote.js", () => ({
 	SessionNote: { deleteMany: modelMocks.sessionNoteDeleteMany }
 }));
 
+vi.mock("../src/models/schemas/SessionNoteSend.js", () => ({ SessionNoteSend: { deleteMany: modelMocks.sessionNoteSendDeleteMany } }));
+vi.mock("../src/models/schemas/SessionNoteEvidence.js", () => ({ SessionNoteEvidence: { deleteMany: modelMocks.sessionNoteEvidenceDeleteMany } }));
 vi.mock("../src/models/schemas/User.js", () => ({
 	User: {
+		updateOne: modelMocks.userUpdateOne,
 		deleteOne: modelMocks.userDeleteOne,
 		findById: modelMocks.userFindById
 	}
@@ -109,7 +115,9 @@ describe("user account deletion", () => {
 			modelMocks.pythonProjectDeleteMany,
 			modelMocks.pythonProjectReviewDeleteMany,
 			modelMocks.scheduledSessionDeleteMany,
-			modelMocks.sessionNoteDeleteMany
+			modelMocks.sessionNoteDeleteMany,
+			modelMocks.sessionNoteSendDeleteMany,
+			modelMocks.sessionNoteEvidenceDeleteMany
 		]) {
 			deletionMock.mockImplementation(successfulDeletion);
 		}
@@ -117,6 +125,7 @@ describe("user account deletion", () => {
 			queryResult({ acknowledged: true, modifiedCount: 1 })
 		);
 		modelMocks.userDeleteOne.mockImplementation(successfulDeletion);
+		modelMocks.userUpdateOne.mockReturnValue(queryResult({ modifiedCount: 1 }));
 	});
 
 	afterAll(() => {
@@ -192,7 +201,9 @@ describe("user account deletion", () => {
 			modelMocks.pythonProjectReviewDeleteMany,
 			modelMocks.scheduledSessionDeleteMany,
 			modelMocks.securityAuditEventUpdateMany,
-			modelMocks.sessionNoteDeleteMany
+			modelMocks.sessionNoteDeleteMany,
+			modelMocks.sessionNoteSendDeleteMany,
+			modelMocks.sessionNoteEvidenceDeleteMany
 		]) {
 			expect(operation.mock.invocationCallOrder[0]).toBeLessThan(
 				accountDeleteOrder

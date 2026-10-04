@@ -11,6 +11,7 @@ import { ScheduledSession } from "../models/schemas/ScheduledSession.js";
 import { SessionNote } from "../models/schemas/SessionNote.js";
 import { Tutor } from "../models/schemas/Tutor.js";
 import { User } from "../models/schemas/User.js";
+import { fenceSessionNoteAccountRemoval } from "../services/sessionNoteWriteFence.js";
 import { getRoleTransferReadiness } from "./roleTransferReadiness.js";
 
 type AccountRoleTransferStatus = 404 | 409 | 503;
@@ -114,6 +115,7 @@ export async function promoteUserAccount(userID: string) {
 		if (!user) {
 			throw new AccountRoleTransferError(404, "User not found");
 		}
+		await fenceSessionNoteAccountRemoval(String(user._id), session);
 
 		const [existingTutor, existingAdmin] = await Promise.all([
 			Tutor.exists({ email: user.email }).session(session).exec(),

@@ -5,7 +5,9 @@ import { marked } from "marked";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
 import AdminWorkspaceShell from "@/components/AdminWorkspaceShell.vue";
+import SessionNoteEvidenceReview from "@/components/SessionNoteEvidenceReview.vue";
 import { fetchAdminRecipients } from "@/modules/adminRecipients";
+import { retainNoteSendIntent } from "@/modules/sessionNoteSendIntent";
 
 // allow single newlines to render as <br> and keep GitHub-flavored markdown
 marked.setOptions({ breaks: true, gfm: true });
@@ -22,6 +24,8 @@ interface SendAssociations {
 }
 
 interface SessionNoteRecord {
+	studentId?: string;
+	scheduledSessionId?: string;
 	_id: string;
 	studentName: string;
 	primaryEmail: string;
@@ -39,6 +43,9 @@ interface RecentSessionNotesResponse {
 }
 
 interface SendMailResponse {
+	operationId?: string;
+	evidenceStatus?: string;
+	statusReason?: string;
 	ok: boolean;
 	messageId?: string;
 	associations?: SendAssociations;
@@ -55,6 +62,17 @@ const to = ref("");
 const subject = ref("");
 const md = ref("");
 const sending = ref(false);
+const noteStudentId = ref("");
+const noteSessionId = ref("");
+const noteUnlinked = ref(false);
+const selectedSavedNoteId = ref("");
+const noteStudents = ref<{ studentId: string; name: string }[]>([]);
+const noteSessions = ref<{ _id: string; startAt: string; timezone: string }[]>(
+	[]
+);
+const noteOperation = ref<SendMailResponse | null>(null);
+let pendingNoteSend: { signature: string; key: string; noteId: string } | null =
+	null;
 const activeTab = ref<MailTab>("compose");
 const selectedRecipientName = ref("");
 const adminRecipients = ref<AdminRecipient[]>([]);
@@ -73,6 +91,43 @@ const recentNotesOwner = ref<MatchedUserAccount | null>(null);
 const recentNotesLoading = ref(false);
 const recentNotesError = ref("");
 let recentNotesRequestToken = 0;
+watch(noteStudentId, async studentId => {
+	noteSessionId.value = "";
+	selectedSavedNoteId.value = "";
+	noteSessions.value = [];
+	if (!studentId) return;
+	try {
+		const { data } = await api.get(`/users/${studentId}/schedule`);
+		if (studentId === noteStudentId.value)
+			noteSessions.value = data.scheduledSessions ?? [];
+	} catch {
+		resultText.value = "Unable to load verified sessions.";
+	}
+});
+function loadSavedNote() {
+	const note = recentSessionNotes.value.find(
+		n => n._id === selectedSavedNoteId.value
+	);
+	if (!note) return;
+	md.value = note.markdown;
+	subject.value = note.subject;
+	subjectDate.value = note.sessionDate.slice(0, 10);
+	noteSessionId.value = note.scheduledSessionId ?? "";
+	noteUnlinked.value = !noteSessionId.value;
+}
+async function checkNoteOperation() {
+	if (!noteOperation.value?.operationId) return;
+	try {
+		const { data } = await api.get<SendMailResponse>(
+			`/admin-mail/session-notes/operations/${noteOperation.value.operationId}`
+		);
+		noteOperation.value = data;
+		resultText.value = `Operation ${data.operationId}: ${data.evidenceStatus}. ${data.statusReason ?? ""}`;
+	} catch {
+		resultText.value =
+			"Tracking unavailable. Keep the operation reference and do not send again.";
+	}
+}
 
 // success preview state
 const sentOk = ref(false);
@@ -157,13 +212,17 @@ watch(
 	{ immediate: true }
 );
 
-watch(subjectDate, value => {
-	if (!value) {
-		subject.value = "";
-		return;
-	}
-	subject.value = formatSessionSubject(value);
-});
+watch(
+	subjectDate,
+	value => {
+		if (!value) {
+			subject.value = "";
+			return;
+		}
+		subject.value = formatSessionSubject(value);
+	},
+	{ flush: "sync" }
+);
 
 async function loadAdminRecipientList() {
 	recipientsLoading.value = true;
@@ -181,7 +240,15 @@ async function loadAdminRecipientList() {
 	}
 }
 
-onMounted(loadAdminRecipientList);
+onMounted(async () => {
+	await loadAdminRecipientList();
+	try {
+		const { data } = await api.get("/admin-mail/session-notes/identities");
+		noteStudents.value = data.students ?? [];
+	} catch {
+		/* Selecting an identity remains unavailable until loading succeeds. */
+	}
+});
 
 function switchTab(tab: MailTab) {
 	activeTab.value = tab;
@@ -363,15 +430,64 @@ async function sendMail() {
 	const wasSessionNoteSend = !!sessionDateIso;
 	const keptRecipientSelection = selectedRecipientName.value;
 	const usedCustomRecipient = isCustomRecipient.value;
-	const payload = {
+	const payload: Record<string, unknown> = {
 		to: curTo,
 		subject: curSubject,
 		md: curMd,
 		sessionDate: sessionDateIso ?? undefined,
-		recipientName: selectedRecipientName.value || undefined
+		recipientName: isCustomRecipient.value
+			? undefined
+			: selectedRecipientName.value || undefined
 	};
 
 	try {
+		if (wasSessionNoteSend) {
+			if (
+				!noteStudentId.value ||
+				(!noteSessionId.value && !noteUnlinked.value)
+			) {
+				resultText.value =
+					"Select the student and actual session, or explicitly mark the note unlinked.";
+				return;
+			}
+			const identity = {
+				studentId: noteStudentId.value,
+				scheduledSessionId: noteSessionId.value || undefined,
+				unlinked: noteUnlinked.value
+			};
+			const signature = JSON.stringify({
+				...payload,
+				...identity,
+				selectedSavedNoteId: selectedSavedNoteId.value
+			});
+			if (!pendingNoteSend || pendingNoteSend.signature !== signature) {
+				pendingNoteSend = await retainNoteSendIntent(
+					signature,
+					async () => {
+						let noteId = selectedSavedNoteId.value;
+						if (!noteId) {
+							const saved = await api.post(
+								`/users/${noteStudentId.value}/session-notes`,
+								{
+									...identity,
+									sessionDate: sessionDateIso?.slice(0, 10),
+									subject: curSubject,
+									markdown: curMd,
+									primaryEmail: parseRecipients(curTo).to,
+									ccEmails: parseRecipients(curTo).cc
+								}
+							);
+							noteId = saved.data.sessionNote._id;
+						}
+						return noteId;
+					}
+				);
+			}
+			Object.assign(payload, identity, {
+				noteId: pendingNoteSend.noteId,
+				idempotencyKey: pendingNoteSend.key
+			});
+		}
 		const { data } = await api.post<SendMailResponse>(
 			"/admin-mail/send",
 			payload,
@@ -380,6 +496,14 @@ async function sendMail() {
 			}
 		);
 
+		if (data.operationId) {
+			noteOperation.value = data;
+			resultText.value = `Operation ${data.operationId}: ${data.evidenceStatus}. ${data.ok ? "Primary recipient accepted by SMTP; inbox delivery is not confirmed." : "Keep this reference. Do not create another send while this outcome is pending or unconfirmed."}`;
+			if (data.ok) {
+				await loadRecentSessionNotes();
+			}
+			return;
+		}
 		if (data?.ok === true) {
 			saveSummary.value = data?.associations ?? null;
 			lastSendWasSessionNote.value = wasSessionNoteSend;
@@ -453,6 +577,7 @@ function parseDateIso(value: string): string | null {
 		title="Notes and Mail"
 	>
 		<section class="wrap">
+			<SessionNoteEvidenceReview />
 			<div class="mail-card">
 				<div class="mail-card__header">
 					<div>
@@ -560,6 +685,80 @@ function parseDateIso(value: string): string | null {
 								become CC.
 							</p>
 						</div>
+					</div>
+
+					<div v-if="subjectDate" class="field">
+						<label class="field-label" for="note-student"
+							>Student identity</label
+						>
+						<select id="note-student" v-model="noteStudentId">
+							<option value="">Select student explicitly</option>
+							<option
+								v-for="student in noteStudents"
+								:key="student.studentId"
+								:value="student.studentId"
+							>
+								{{ student.name }} ·
+								{{ student.studentId.slice(-6) }}
+							</option>
+						</select>
+						<label class="field-label" for="note-session"
+							>Actual session</label
+						>
+						<select
+							id="note-session"
+							v-model="noteSessionId"
+							:disabled="noteUnlinked"
+						>
+							<option value="">Select scheduled session</option>
+							<option
+								v-for="session in noteSessions"
+								:key="session._id"
+								:value="session._id"
+							>
+								{{ new Date(session.startAt).toLocaleString() }}
+								· {{ session.timezone }} ·
+								{{ session._id.slice(-6) }}
+							</option>
+						</select>
+						<label
+							><input
+								v-model="noteUnlinked"
+								type="checkbox"
+								@change="noteSessionId = ''"
+							/>
+							Unlinked note; operator review required</label
+						>
+						<label class="field-label" for="saved-note"
+							>Saved note version</label
+						>
+						<select
+							id="saved-note"
+							v-model="selectedSavedNoteId"
+							@change="loadSavedNote"
+						>
+							<option value="">
+								Save this draft before sending
+							</option>
+							<option
+								v-for="note in recentSessionNotes.filter(
+									n => n.studentId === noteStudentId
+								)"
+								:key="note._id"
+								:value="note._id"
+							>
+								{{ note.sessionDate.slice(0, 10) }} ·
+								{{ note._id.slice(-6) }}
+							</option>
+						</select>
+						<button
+							v-if="noteOperation"
+							type="button"
+							class="ghost-btn"
+							@click="checkNoteOperation"
+						>
+							Check send status
+						</button>
 					</div>
 
 					<div class="field subject-group">

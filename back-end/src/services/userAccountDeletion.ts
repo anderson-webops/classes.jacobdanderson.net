@@ -8,8 +8,12 @@ import { PythonProjectReview } from "../models/schemas/PythonProjectReview.js";
 import { ScheduledSession } from "../models/schemas/ScheduledSession.js";
 import { SecurityAuditEvent } from "../models/schemas/SecurityAuditEvent.js";
 import { SessionNote } from "../models/schemas/SessionNote.js";
+import { SessionNoteEvidence } from "../models/schemas/SessionNoteEvidence.js";
+import { SessionNoteSend } from "../models/schemas/SessionNoteSend.js";
 import { User } from "../models/schemas/User.js";
 import { getRoleTransferReadiness } from "../utils/roleTransferReadiness.js";
+
+import { fenceSessionNoteAccountRemoval } from "./sessionNoteWriteFence.js";
 
 const USER_DELETION_TRANSACTION_OPTIONS = {
 	readConcern: { level: "snapshot" },
@@ -65,6 +69,8 @@ async function deleteAccountLinkedRecords(
 	await InternalEmail.deleteMany({ user: userID }, { session }).exec();
 	await ScheduledSession.deleteMany({ user: userID }, { session }).exec();
 	await SessionNote.deleteMany({ user: userID }, { session }).exec();
+	await SessionNoteSend.deleteMany({ "note.user": String(userID) }, { session }).exec();
+	await SessionNoteEvidence.deleteMany({ studentId: String(userID) }, { session }).exec();
 	await SecurityAuditEvent.updateMany(
 		{ actorID: userID, actorRole: "user" },
 		{ $set: { actorID: auditSubjectID } },
@@ -113,6 +119,7 @@ export async function deleteUserAccount(
 			throw new UserAccountDeletionAuthorizationError();
 		}
 
+		await fenceSessionNoteAccountRemoval(String(objectID), session);
 		await deleteAccountLinkedRecords(
 			objectID,
 			auditSubjectID,
