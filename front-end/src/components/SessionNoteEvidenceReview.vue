@@ -8,6 +8,7 @@ interface Operation {
 	noteId: string;
 	evidenceStatus: string;
 	statusReason: string;
+	archivalStatus: string;
 }
 const operations = ref<Operation[]>([]);
 const unlinked = ref<{ noteId: string; studentId: string | null }[]>([]);
@@ -70,8 +71,9 @@ async function disposition() {
 				)
 			}
 		);
-		message.value =
-			decision.value === "retry_nonaccepted"
+		message.value = decision.value.startsWith("archive_")
+			? "Archival disposition recorded. SMTP evidence is unchanged; no email was sent."
+			: decision.value === "retry_nonaccepted"
 				? "Audited retry queued. Delivery occurs only when sending is enabled."
 				: "Disposition recorded. No email was sent.";
 		await loadReview();
@@ -173,7 +175,8 @@ async function registerEvidence() {
 		<ul>
 			<li v-for="operation in operations" :key="operation.operationId">
 				{{ operation.operationId }} · {{ operation.evidenceStatus }} ·
-				{{ operation.statusReason }} · note {{ operation.noteId }}
+				{{ operation.statusReason }} · note {{ operation.noteId }} ·
+				archive {{ operation.archivalStatus }}
 			</li>
 			<li v-for="note in unlinked" :key="note.noteId">
 				Unlinked note {{ note.noteId }} · student {{ note.studentId }}
@@ -211,7 +214,7 @@ async function registerEvidence() {
 			<button type="submit">Record stopped-process disposition</button>
 		</form>
 		<form @submit.prevent="disposition">
-			<h3>Resolve an uncertain send</h3>
+			<h3>Resolve an uncertain send or archive</h3>
 			<label
 				>Operation ID <input v-model="selectedOperation" required
 			/></label>
@@ -231,11 +234,22 @@ async function registerEvidence() {
 					<option value="confirmed_not_accepted">
 						Evidence establishes nonacceptance
 					</option>
+					<option value="archive_confirmed_present">
+						Archive: evidence confirms the Sent copy exists
+					</option>
+					<option value="archive_confirmed_absent">
+						Archive: proven absent, queue an archive-only retry
+					</option>
+					<option value="archive_keep_unconfirmed">
+						Archive: keep the append outcome unconfirmed
+					</option>
 				</select></label
 			>
 			<p>
 				A Sent item can be registered below. Manual review cannot
-				manufacture an SMTP acceptance timestamp.
+				manufacture an SMTP acceptance timestamp. Pause sending and
+				recovery before resolving an archive, and verify its outcome
+				against protected mailbox evidence.
 			</p>
 			<button type="submit">Record disposition</button>
 		</form>

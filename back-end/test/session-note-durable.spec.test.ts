@@ -29,11 +29,13 @@ import {
 } from "../src/services/sessionNoteSending.js";
 import { metadataHash } from "../src/utils/sessionNoteIdentity.js";
 import { noteVerificationMetadata } from "../src/utils/sessionNoteVerificationMetadata.js";
+import { NoteArchiveError } from "../src/utils/sessionNoteArchive.js";
 
 vi.mock("imapflow", () => ({
 	ImapFlow: class {
+		on = () => this;
 		connect = async () => {};
-		append = async () => {};
+		append = async () => ({ path: "Synthetic Sent" });
 		logout = async () => {};
 	}
 }));
@@ -471,7 +473,7 @@ describe.skipIf(!existsSync(mongod))(
 			});
 		});
 		it("retries archival alone after failure and retains accepted evidence", async () => {
-			archive.mockRejectedValueOnce(new Error("synthetic IMAP failure"));
+			archive.mockRejectedValueOnce(new NoteArchiveError("not_appended"));
 			const w = workflow();
 			const record = await prepare(w);
 			expect(await w.dispatch(record._id)).toMatchObject({
@@ -506,6 +508,93 @@ describe.skipIf(!existsSync(mongod))(
 			expect(
 				(await SessionNoteSend.findById(record._id))!.archiveState
 			).toBe("review_required");
+		});
+		it("does not append again after acceptance tracking fails", async () => {
+			let trackingFailed = false;
+			const store = {
+				...mongoNoteSendStore,
+				change: async (id: string, expected: Record<string, unknown>, update: Record<string, any>) => {
+					if (update.$set?.archiveState === "archived") {
+						trackingFailed = true;
+						throw new Error("Synthetic archival persistence failure");
+					}
+					return mongoNoteSendStore.change(id, expected, update);
+				}
+			};
+			const w = workflow({ store });
+			const record = await prepare(w);
+			expect(await w.dispatch(record._id)).toMatchObject({ evidenceStatus: "smtp_accepted" });
+			expect(trackingFailed).toBe(true);
+			expect(archive).toHaveBeenCalledTimes(1);
+			const accepted = await SessionNoteSend.findById(record._id);
+			expect(accepted!.archiveState).toBe("archiving");
+			expect(accepted!.sentAt).toBeInstanceOf(Date);
+			await SessionNoteSend.updateOne({ _id: record._id }, { $set: { archiveClaimedAt: new Date(0) } });
+			await w.recover();
+			await w.dispatch(record._id);
+			expect(archive).toHaveBeenCalledTimes(1);
+			expect(received).toBe(1);
+			expect((await SessionNoteSend.findById(record._id))!.archiveState).toBe("review_required");
+		});
+		it("keeps an APPEND timeout under review while preserving accepted SMTP evidence", async () => {
+			archive.mockRejectedValueOnce(new NoteArchiveError("unconfirmed"));
+			const w = workflow();
+			const record = await prepare(w);
+			await w.dispatch(record._id);
+			await w.recover();
+			expect(archive).toHaveBeenCalledTimes(1);
+			expect(received).toBe(1);
+			const saved = await SessionNoteSend.findById(record._id);
+			expect(saved!.state).toBe("smtp_accepted");
+			expect(saved!.archiveState).toBe("review_required");
+			expect(event).toHaveBeenCalledWith(record._id, "archive_outcome_ambiguous");
+		});
+		it("audits archival dispositions without changing or resending accepted SMTP evidence", async () => {
+			const w = workflow();
+			const record = await prepare(w);
+			await w.dispatch(record._id);
+			await SessionNoteSend.updateOne({ _id: record._id }, { $set: { archiveState: "review_required" } });
+			await SessionNote.updateOne({ _id: record.noteId }, { $set: { associationReviewResolved: true } });
+			const path = "/admin-mail/session-notes/operations/" + record._id + "/disposition";
+			const payload = { decision: "archive_confirmed_present", evidenceRef: "a".repeat(64), idempotencyKey: "archive-disposition-synthetic" };
+			expect((await post(path, payload)).status).toBe(409);
+			vi.stubEnv("SESSION_NOTES_SEND_ENABLED", "false");
+			expect((await post(path, payload, { authorization: "Bearer " + readToken })).status).toBe(403);
+			expect((await post(path, payload, { authorization: "Bearer " + writeToken })).status).toBe(403);
+			expect((await post(path, payload, { ...adminHeaders, origin: "https://foreign.example.test" })).status).toBe(403);
+			const review = await (await fetch(apiBase + "/admin-mail/session-notes/review", { headers: adminHeaders })).json();
+			expect(review.operations).toEqual(expect.arrayContaining([expect.objectContaining({ operationId: record._id, archivalStatus: "review_required" })]));
+			const responses = await Promise.all([post(path, payload), post(path, payload)]);
+			expect(responses.map(response => response.status)).toEqual([200, 200]);
+			const saved = await SessionNoteSend.findById(record._id);
+			expect(saved!.state).toBe("smtp_accepted");
+			expect(saved!.archiveState).toBe("archived");
+			expect(saved!.dispositions).toHaveLength(1);
+			expect(saved!.sentAt).toEqual((await SessionNote.findById(record.noteId))!.delivery!.sentAt);
+			expect((await post(path, { ...payload, evidenceRef: "b".repeat(64) })).status).toBe(409);
+			expect(received).toBe(1);
+			expect(archive).toHaveBeenCalledTimes(1);
+		});
+		it("allows a bounded archive-only retry only after audited proof of absence", async () => {
+			archive.mockRejectedValueOnce(new NoteArchiveError("unconfirmed"));
+			const w = workflow({ enabled: () => process.env.SESSION_NOTES_SEND_ENABLED === "true" });
+			const record = await prepare(w);
+			await w.dispatch(record._id);
+			vi.stubEnv("SESSION_NOTES_SEND_ENABLED", "false");
+			const path = "/admin-mail/session-notes/operations/" + record._id + "/disposition";
+			const absent = { decision: "archive_confirmed_absent", evidenceRef: "c".repeat(64), idempotencyKey: "archive-absence-synthetic" };
+			expect((await post(path, absent)).status).toBe(200);
+			expect((await SessionNoteSend.findById(record._id))!.archiveState).toBe("retry");
+			await w.recover();
+			expect(archive).toHaveBeenCalledTimes(1);
+			vi.stubEnv("SESSION_NOTES_SEND_ENABLED", "true");
+			await w.recover();
+			expect(archive).toHaveBeenCalledTimes(2);
+			expect(received).toBe(1);
+			expect((await SessionNoteSend.findById(record._id))!.archiveState).toBe("archived");
+			await SessionNoteSend.updateOne({ _id: record._id }, { $set: { archiveState: "review_required", archiveAttempts: 5 } });
+			vi.stubEnv("SESSION_NOTES_SEND_ENABLED", "false");
+			expect((await post(path, { ...absent, idempotencyKey: "archive-max-attempts-synthetic", evidenceRef: "d".repeat(64) })).status).toBe(409);
 		});
 		it("recovers after a process is killed following SMTP acceptance without resending", async () => {
 			const w = workflow();

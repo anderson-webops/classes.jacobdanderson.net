@@ -49,6 +49,22 @@ for review rather than risking an automatic duplicate archive. SMTP never retrie
 because IMAP failed. The SMTP payload remains protected in the outbox for recovery;
 ordinary logs and read APIs never expose it.
 
+An IMAP connection failure before APPEND, a tagged NO/BAD response, or an
+explicit false APPEND result establishes nonacceptance. A timeout after APPEND
+starts, missing acknowledgment, or failure recording a successful APPEND goes
+to review; none schedules another append. A successful APPEND stays confirmed
+even if logout fails. Classification follows the maintained
+[ImapFlow contract](https://imapflow.com/docs/api/imapflow-client/).
+
+The administrator review includes archival uncertainty even when the note's
+student/session association is already resolved. With both sending and recovery
+paused, an administrator can record `archive_confirmed_present`,
+`archive_confirmed_absent`, or `archive_keep_unconfirmed` against an opaque
+protected-evidence reference. Present marks only the archive complete; proven
+absence queues only an archive repair, capped at five total attempts. These
+idempotent, audited actions never change SMTP acceptance or its timestamp and
+cannot be authorized by either the read token or external-registration token.
+
 ## Worker and bounded operational monitoring
 
 One in-process timer runs within the existing classes-api.service, every 30 seconds,
@@ -194,22 +210,29 @@ evidence and record an explicit administrator disposition/metadata correction.
 
 ## Source validation report
 
-Candidate release: **v2.8.13**. The annotated tag and GitHub release resolve
-its exact commit; v2.8.12 remains immutable. Artifact provenance is verified
+Candidate release: **v2.8.14**, extending the durable evidence milestone v2.8.13
+with safe archival reconciliation. The annotated tag and GitHub release resolve
+its exact commit; all previously published tags remain immutable. Artifact provenance is verified
 separately against that same commit/tag before publication.
 
 Local final gates on October 4, 2026:
 
-- Complete backend suite: **325/325 tests passed**, 34 files, including the
+- Complete backend suite: **341/341 tests passed**, 35 files, including the
   existing real promotion/demotion transaction/hash test on an isolated local
   replica-set fixture. The new outbox/recovery suite separately uses standalone
   MongoDB, demonstrating that note sending does not require transactions.
-- New durable/evidence fixture suite: **36 tests passed**, including pre-send
+- Durable/evidence fixture suite: **40 tests passed**, including pre-send
   persistence failure, concurrent requests, DATA timeout, forced process kill,
   acceptance tracking failure, CC-only acceptance, fake IMAP failures, scope/CSRF,
   corrected associations, DST/shared mailbox identity, bounded stale monitoring,
   account writer fencing and withdrawn evidence.
-- Focused composer/preview/persisted-key suites: **13/13 tests passed**.
+- Archival acknowledgment classification: **12/12 tests passed**, including
+  pre-APPEND failure, tagged rejection, missing acknowledgment, timeout and
+  confirmed APPEND with failed logout. The fixture additionally covers successful
+  APPEND followed by database failure, no automatic duplicate append, protected
+  manual disposition and archive-only retries.
+- Focused administrator-review/composer/preview/persisted-key suites: **15/15
+  tests passed**.
 - Reference Python client: **8/8**; Mac adapter: **8/8**, also rerun against its
   installed source. Installation hashes match the maintained sources. Original
   Mac scripts have owner-only backups and a SHA-256 manifest.
@@ -227,3 +250,35 @@ Fixtures use synthetic accounts in an isolated standalone local mongod,
 a non-relaying loopback SMTP sink, and fake IMAP. A child process is killed after
 SMTP DATA acceptance to exercise recovery. No client/admin email, production
 mailbox, Zoom recording, production records, host runtime or service state is used.
+
+## Acceptance coverage map
+
+The following are synthetic source acceptance checks. Test names identify the
+cases in `back-end/test/session-note-durable.spec.test.ts` unless another file
+is named. A test observing one dispatch is fixture evidence, not a claim of
+exactly-once SMTP delivery.
+
+| Required gate | Source evidence |
+| --- | --- |
+| Database failure before mail | does not contact SMTP if intent persistence fails; note-persistence failure resumes preparation |
+| Concurrent equivalent requests | atomically deduplicates concurrent equivalent requests and dispatches once |
+| Acceptance then persistence failure or process kill | accepted-but-unrecorded tracking trouble; process killed following SMTP acceptance, no second send |
+| Ambiguous timeout after DATA | does not blindly fail over or resend a DATA timeout |
+| Primary rejection / CC-only acceptance | does not mark primary acceptance when only CC was accepted; `session-note-delivery.spec.test.ts` explicit rejection precedence |
+| IMAP failure affects only archive | retries archival alone; uncertain APPEND and successful APPEND tracking failure stay under review |
+| Save-only / legacy / external status | distinguishes save-only from legacy; external metadata registration and withdrawn evidence preserve honest provenance |
+| Saved note then sent | preserves existing saved note; HTTP save/send uses exactly that version and explicit session identity |
+| Midnight / timezone / DST / reschedule | midnight and DST occurrences distinct; schedule changes retained and outdated snapshot refused |
+| Shared parent / duplicate names / same-day sessions | requires child identity; rejects duplicate-name queries; multiple occurrences are not guessed from classDate |
+| Empty results / every page / schema | preserves coverage on empty and every mixed-evidence page; reference/Mac client schema and pagination tests |
+| Read credential cannot mutate | rejects read-token mutations; administrator HTTP boundaries also reject reader sending/content access |
+| Invalid / foreign session / scopes / changed key | ownership/key conflicts, expired/insufficient scopes and CSRF fail closed; changed idempotent payload rejected |
+| Private logs and unauthorized responses | HTTP privacy assertions; allowlisted operational events; read projections exclude contents and transport/meeting secrets |
+| Stale queued / ambiguous signals | paused stale work signaled once without send/append; orphaned send recovery remains unconfirmed |
+| Manual archive disposition | paused, audited/idempotent present/absence decisions; foreign origin and both machine credentials denied; SMTP timestamp unchanged |
+
+The protected production-copy rehearsal still requires the operator's real
+verified-backup manifest and mail-disabled isolated environment. The source
+fixture's synthetic backup/hash rehearsal does not satisfy that gate. Native
+loopback plus IPv4/IPv6 origin acceptance and real deployment remain operator
+steps; no installed artifact or service has been modified by this source task.

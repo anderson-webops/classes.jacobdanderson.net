@@ -1707,7 +1707,10 @@
             "enum": [
               "confirmed_not_accepted",
               "keep_unconfirmed",
-              "retry_nonaccepted"
+              "retry_nonaccepted",
+              "archive_confirmed_present",
+              "archive_confirmed_absent",
+              "archive_keep_unconfirmed"
             ]
           },
           "evidenceRef": {
@@ -1725,7 +1728,7 @@
           "idempotencyKey"
         ],
         "additionalProperties": false,
-        "description": "Explicit audited retry queues only an existing rejected/proven-nonaccepted intent, capped at 20 attempts. Ambiguous outcomes require a separate finding of nonacceptance; no SMTP timestamp is fabricated."
+        "description": "Explicit audited retry queues only an existing rejected/proven-nonaccepted intent, capped at 20 attempts. Ambiguous outcomes require a separate finding of nonacceptance; no SMTP timestamp is fabricated. Archival dispositions require both sending and recovery paused and review_required on an accepted/rejected operation. Confirmed absence queues only archival repair, capped at five attempts; present marks the archive complete. SMTP state and timestamps remain unchanged. All decisions are idempotent and audited against an opaque protected-evidence reference."
       },
       "AssociationRequest": {
         "type": "object",

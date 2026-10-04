@@ -27,6 +27,7 @@ vi.mock("nodemailer", () => ({
 }));
 vi.mock("imapflow", () => ({
 	ImapFlow: class {
+		on = () => this;
 		connect = mocks.connect;
 		append = mocks.append;
 		logout = mocks.logout;
@@ -114,6 +115,7 @@ beforeEach(() => {
 	});
 	mocks.append.mockImplementation(async () => {
 		vi.setSystemTime(afterCopyAt);
+		return { path: "Synthetic Sent" };
 	});
 	mocks.admin.mockResolvedValue({ sessionVersion: 0 });
 	mocks.findUser.mockReturnValue({ lean: async () => [] });

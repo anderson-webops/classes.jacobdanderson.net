@@ -5,6 +5,7 @@ import { Types } from "mongoose";
 import { SessionNote } from "../models/schemas/SessionNote.js";
 import { SessionNoteEvidence } from "../models/schemas/SessionNoteEvidence.js";
 import { SessionNoteSend } from "../models/schemas/SessionNoteSend.js";
+import { NoteArchiveError } from "../utils/sessionNoteArchive.js";
 import { sessionNoteDeliveryFromSend } from "../utils/sessionNoteDelivery.js";
 import { metadataHash, NoteWorkflowError } from "../utils/sessionNoteIdentity.js";
 import { noteOperationalEvent } from "../utils/sessionNoteOperational.js";
@@ -158,13 +159,25 @@ export function createNoteSendWorkflow(deps: NoteSendDependencies) {
 		if (!claimed) return;
 		try {
 			await deps.archive(claimed);
-			await store.change(id, { archiveState: "archiving" }, { $set: { archiveState: "archived" } });
+		}
+		catch (error) {
+			const canRetry = error instanceof NoteArchiveError && error.outcome === "not_appended" && claimed.archiveAttempts < 5;
+			try {
+				await store.change(id, { archiveState: "archiving" }, {
+					$set: { archiveState: canRetry ? "retry" : "review_required", ...(canRetry ? { nextArchiveAt: new Date(Date.now() + 60_000 * 2 ** claimed.archiveAttempts) } : {}) },
+					...(!canRetry ? { $unset: { nextArchiveAt: "" } } : {})
+				});
+			}
+			catch { event(id, "archive_tracking_requires_attention"); }
+			event(id, canRetry ? "archive_tracking_requires_attention" : "archive_outcome_ambiguous");
+			return;
+		}
+		try {
+			const recorded = await store.change(id, { archiveState: "archiving" }, { $set: { archiveState: "archived" } });
+			if (!recorded) event(id, "archive_tracking_requires_attention");
 		}
 		catch {
-			await store.change(id, { archiveState: "archiving" }, { $set: {
-				archiveState: claimed.archiveAttempts >= 5 ? "review_required" : "retry",
-				nextArchiveAt: new Date(Date.now() + 60_000 * 2 ** claimed.archiveAttempts)
-			} });
+			// APPEND completed. Leave its durable claim for review; never append again.
 			event(id, "archive_tracking_requires_attention");
 		}
 	}

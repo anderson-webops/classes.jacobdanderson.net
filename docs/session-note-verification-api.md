@@ -139,6 +139,11 @@ Private administrator routes:
   explicit retry queues an existing intent only after established nonacceptance,
   capped at 20 attempts. Ambiguous outcomes cannot use retry_nonaccepted without
   a separate audited finding of nonacceptance. No manufactured acceptance timestamp.
+  The same route accepts archive_confirmed_present, archive_confirmed_absent or
+  archive_keep_unconfirmed while both sending and recovery are paused. Only
+  review_required archives on accepted/rejected operations qualify; proven absence
+  queues an archive-only repair, capped at five attempts. SMTP evidence/timestamps
+  remain unchanged. Archive uncertainty is listed separately in archivalStatus.
 - `POST .../students/:studentId/writer-disposition`: confirmed_process_stopped,
   writer UUID, opaque evidenceRef and stable key. Sending and recovery must be
   paused; active writers cannot be cleared. Old markers never expire automatically.

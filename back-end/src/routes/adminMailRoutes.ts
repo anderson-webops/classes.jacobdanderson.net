@@ -21,6 +21,7 @@ import { classifySmtpFailure, createNoteSendWorkflow, ensureNoteWorkflowIndexes,
 import { noteWriterIsActive, withSessionNoteWriter } from "../services/sessionNoteWriteFence.js";
 import { loadAdminRecipients } from "../utils/adminRecipients.js";
 import { renderMarkdownEmailHtml } from "../utils/markdownEmail.js";
+import { confirmedArchiveAppend, NoteArchiveError } from "../utils/sessionNoteArchive.js";
 import { sessionNoteDeliveryFromSend } from "../utils/sessionNoteDelivery.js";
 import { metadataHash, normalizeNoteEmails, noteObjectId, NoteWorkflowError, resolveNoteIdentity } from "../utils/sessionNoteIdentity.js";
 
@@ -542,10 +543,16 @@ async function appendSentMessage(
 	message: SendMailOptions
 ): Promise<ImapAppendResult> {
 	if (!IMAP_APPEND_PASS) {
-		throw new Error("IMAP_APPEND_PASS is not configured");
+		throw new NoteArchiveError("not_appended");
 	}
 
-	const rawMessage = await generateRawMimeMessage(message);
+	let rawMessage: Buffer;
+	try {
+		rawMessage = await generateRawMimeMessage(message);
+	}
+	catch {
+		throw new NoteArchiveError("not_appended");
+	}
 	const client = new ImapFlow({
 		host: IMAP_APPEND_HOST,
 		port: IMAP_APPEND_PORT,
@@ -562,25 +569,13 @@ async function appendSentMessage(
 		logger: false
 	});
 
-	try {
-		await client.connect();
-		await client.append(
-			IMAP_SENT_MAILBOX,
-			rawMessage,
-			["\\Seen"],
-			message.date
-		);
-		return {
-			appended: true,
-			mailbox: IMAP_SENT_MAILBOX
-		};
-	}
-	finally {
-		try {
-			await client.logout();
-		}
-		catch {}
-	}
+	client.on("error", () => noteOperationalEvent("internal-mail", "archive_outcome_ambiguous"));
+	await confirmedArchiveAppend({
+		connect: () => client.connect(),
+		append: () => client.append(IMAP_SENT_MAILBOX, rawMessage, ["\\Seen"], message.date),
+		logout: () => client.logout()
+	});
+	return { appended: true, mailbox: IMAP_SENT_MAILBOX };
 }
 
 async function sendWithFailover(mailBase: MailBase): Promise<MailSendResult> {
@@ -637,7 +632,7 @@ router.get("/session-notes/review", validAdmin, async (_req, res) => {
 		const resolvedIds = new Set(resolved.map(n => String(n._id)));
 		const unlinkedNotes = await SessionNote.find({ associationStatus: "unlinked_review_required", associationReviewResolved: { $ne: true } }).select({ _id: 1, user: 1 }).limit(100).maxTimeMS(2000).lean();
 		const externalEvidence = await SessionNoteEvidence.find({ associationStatus: "unlinked_review_required" }).select({ _id: 1, studentId: 1, evidenceType: 1, correctionReason: 1 }).limit(100).maxTimeMS(2000).lean();
-		res.set("Cache-Control", "no-store").json({ writerMarkers, operations: records.filter(r => !(r.state === "smtp_accepted" && resolvedIds.has(r.noteId))).map(safeOperation), externalEvidence: externalEvidence.map(e => ({ recordId: String(e._id), studentId: e.studentId, evidenceStatus: externalEvidenceStatus(e) })), unlinkedNotes: unlinkedNotes.map(n => ({ noteId: String(n._id), studentId: n.user ? String(n.user) : null })), limit: 100 });
+		res.set("Cache-Control", "no-store").json({ writerMarkers, operations: records.filter(r => !(r.state === "smtp_accepted" && resolvedIds.has(r.noteId) && r.archiveState !== "review_required")).map(safeOperation), externalEvidence: externalEvidence.map(e => ({ recordId: String(e._id), studentId: e.studentId, evidenceStatus: externalEvidenceStatus(e) })), unlinkedNotes: unlinkedNotes.map(n => ({ noteId: String(n._id), studentId: n.user ? String(n.user) : null })), limit: 100 });
 	}
 	catch { res.status(503).json({ message: "Review queue unavailable" }); }
 });
@@ -698,7 +693,7 @@ router.post("/session-notes/:noteId/association", validAdmin, async (req, res) =
 	catch (e) { res.status(e instanceof NoteWorkflowError ? e.status : 503).json({ message: e instanceof NoteWorkflowError ? e.code : "Association unavailable" }); }
 });
 router.post("/session-notes/operations/:operationId/disposition", validAdmin, async (req, res) => {
-	const parsed = z.object({ decision: z.enum(["confirmed_not_accepted", "keep_unconfirmed", "retry_nonaccepted"]), evidenceRef: z.string().regex(/^[a-f0-9]{64}$/), idempotencyKey: z.string().regex(/^[\w-]{16,128}$/) }).strict().safeParse(req.body);
+	const parsed = z.object({ decision: z.enum(["confirmed_not_accepted", "keep_unconfirmed", "retry_nonaccepted", "archive_confirmed_present", "archive_confirmed_absent", "archive_keep_unconfirmed"]), evidenceRef: z.string().regex(/^[a-f0-9]{64}$/), idempotencyKey: z.string().regex(/^[\w-]{16,128}$/) }).strict().safeParse(req.body);
 	if (!parsed.success || !z.uuid().safeParse(req.params.operationId).success) return res.status(400).json({ message: "Invalid disposition" });
 	try {
 		const id = String(req.params.operationId);
@@ -709,6 +704,30 @@ router.post("/session-notes/operations/:operationId/disposition", validAdmin, as
 		if (prior) {
 			if (prior.payloadHash !== payloadHash) throw new NoteWorkflowError(409, "idempotency_payload_conflict");
 			return res.json(safeOperation(current));
+		}
+		if (parsed.data.decision.startsWith("archive_")) {
+			if (env.SESSION_NOTES_SEND_ENABLED === "true" || env.SESSION_NOTES_WORKER_ENABLED === "true") throw new NoteWorkflowError(409, "pause_sending_and_recovery_before_archive_disposition");
+			if (!current || !["smtp_accepted", "smtp_rejected"].includes(current.state) || current.archiveState !== "review_required") throw new NoteWorkflowError(409, "archive_disposition_requires_review");
+			const retryArchive = parsed.data.decision === "archive_confirmed_absent";
+			if (retryArchive && current.archiveAttempts >= 5) throw new NoteWorkflowError(409, "archive_attempt_limit");
+			const updated = await mongoNoteSendStore.change(id, {
+				"state": current.state,
+				"archiveState": "review_required",
+				"archiveAttempts": current.archiveAttempts,
+				"dispositions.19": { $exists: false },
+				"dispositions.keyHash": { $ne: keyHash },
+				"dispositions.evidenceRef": { $ne: parsed.data.evidenceRef }
+			}, {
+				$set: { archiveState: retryArchive ? "retry" : parsed.data.decision === "archive_confirmed_present" ? "archived" : "review_required", ...(retryArchive ? { nextArchiveAt: new Date() } : {}) },
+				...(!retryArchive ? { $unset: { nextArchiveAt: "" } } : {}),
+				$push: { dispositions: { actorId: String(req.currentAdmin!._id), at: new Date(), decision: parsed.data.decision, evidenceRef: parsed.data.evidenceRef, keyHash, payloadHash } }
+			});
+			if (!updated) {
+				const completed = await mongoNoteSendStore.get(id);
+				if (completed?.dispositions.some(d => d.keyHash === keyHash && d.payloadHash === payloadHash)) return res.json(safeOperation(completed));
+				throw new NoteWorkflowError(409, "archive_disposition_conflict");
+			}
+			return res.json(safeOperation(updated));
 		}
 		const retrying = parsed.data.decision === "retry_nonaccepted";
 		if (retrying && (!current || !(current.state === "smtp_rejected" || (current.state === "send_failed" && ["smtp_nonacceptance", "dispatch_identity_changed", "confirmed_not_accepted"].includes(current.errorCode ?? ""))))) throw new NoteWorkflowError(409, "retry_requires_established_nonacceptance");
