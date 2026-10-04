@@ -188,6 +188,57 @@ describe("Python Level 3 learner flow", () => {
 		expect(fibonacci?.aliases).toBeUndefined();
 	});
 
+	it("states sorting mutation, stability, and measured-experiment contracts", () => {
+		const items = pythonLevel3Course.modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		const byTitle = new Map(items.map(item => [item.title, item]));
+		const selection = byTitle.get("AM8 Project 1: Selection Sort")!;
+		expect(selection.content).toContain("leaves the input empty");
+		expect(selection.content).toContain("current unsorted suffix");
+		expect(selection.content).toContain("return the same list");
+		expect(byTitle.get("AM8 Project 2: Insertion Sort")?.content).toContain(
+			"tied items retain their order"
+		);
+		expect(byTitle.get("AM9 Project 1: Bubble Sort")?.content).toContain(
+			"Count comparisons"
+		);
+		expect(byTitle.get("AM10 Project 1: Merge")?.content).toContain(
+			"`pop(0)`"
+		);
+		expect(byTitle.get("AM10 Project 2: Split")?.content).toContain(
+			"return None"
+		);
+		expect(byTitle.get("AM10 Project 3: Merge Sort")?.content).toContain(
+			"empty and singleton base cases return a copy"
+		);
+		expect(byTitle.get("AM11 Project 1: Partition")?.content).toContain(
+			"pivot value, not an index"
+		);
+		expect(byTitle.get("AM11 Project 2: Quicksort")?.content).toContain(
+			"without mutating or aliasing"
+		);
+		const comparison = byTitle.get("AM11 Project 3: Sorting Comparison")!;
+		// Juni's authored comparison project remains required, not optional.
+		expect(comparison.learningPath).toBe("core");
+		for (const contract of [
+			"fresh copy of the same input",
+			"time.perf_counter()",
+			"validate the result after stopping the clock",
+			"from 0 to 2000",
+			"from 1 to 10",
+			"medians of measured runs only",
+			"do not prove Big-O"
+		]) {
+			expect(comparison.content).toContain(contract);
+		}
+		for (const item of [selection, comparison]) {
+			expect(item.projectLink).toMatch(/\/starter$/);
+			expect(item.solutionLink).toMatch(/\/solution$/);
+		}
+	});
+
 	it("keeps licensed sort animations and only available project media", async () => {
 		const course = await loadRawCourse("python-level-3");
 		expect(course).not.toBeNull();

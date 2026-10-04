@@ -830,13 +830,13 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Write selection sort and connect each pass to the growing sorted portion of the list.",
 						build: [
-							"Build a version that repeatedly finds the minimum value, removes it, and appends it to a result list.",
+							"Implement `selection_sort1(lst)` by repeatedly finding the minimum value, removing it, and appending it to a new result list. This consuming version leaves the input empty; keep a copy for tests.",
 							"Trace how the unsorted portion shrinks after each pass.",
-							"Compare the extra-list approach with an in-place version that swaps values instead.",
-							"Test sorted, reversed, duplicate, and random inputs."
+							"Implement `selection_sort2(lst)` in place: select the minimum from the current unsorted suffix, swap it into the next position, and return the same list. Do not restart the minimum scan from index zero.",
+							"Test empty, singleton, negative, sorted, reversed, duplicate, and random inputs. Use built-in sorting only as an independent oracle, not inside either implementation."
 						],
 						checkpoints: [
-							"The final list is sorted in ascending order.",
+							"The result is sorted and retains every input item. The consuming version returns a new list and empties the input; the in-place version returns that same list.",
 							"The trace identifies which value is selected on each pass.",
 							"The explanation compares time and space tradeoffs."
 						]
@@ -866,13 +866,13 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Implement insertion sort and trace how each new value moves into the sorted prefix.",
 						build: [
-							"Treat the left side of the list as the sorted portion.",
+							"Implement `insertion_sort1(lst)` with a new result list and preserve the input; implement `insertion_sort2(lst)` in place and return the same list. Treat the left side as the sorted portion.",
 							"Take the next unsorted value and move it left until it belongs in the sorted portion.",
 							"Track how the sorted and unsorted portions change over time.",
-							"Test an already sorted list, a descending list, a duplicate-heavy list, and a random list."
+							"Move a value left only when it is strictly smaller, so tied items retain their order. Test empty, singleton, negative, sorted, descending, duplicate-heavy, and random inputs against an independent built-in-sort oracle."
 						],
 						checkpoints: [
-							"The list is sorted correctly after every full run.",
+							"The values are sorted correctly and all duplicates remain. The copy-returning version leaves the original unchanged and returns a distinct list, even for empty or singleton input.",
 							"The trace shows why nearly sorted input is easier for insertion sort.",
 							"The worst-case reversed input is connected to repeated swaps."
 						]
@@ -1018,9 +1018,9 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 							"Add a helper that returns a sorted copy while leaving the original list unchanged."
 						],
 						checkpoints: [
-							"Duplicate, already sorted, reversed, and random inputs sort correctly.",
+							"Empty, singleton, negative, duplicate, already sorted, reversed, and random inputs sort correctly. `bubble_sort_in_place` and `bubble_sort_improved` return the same list; `bubble_sort_copy` returns a new list.",
 							"The inner comparison range shrinks after each pass for a stated reason.",
-							"The copy-returning helper does not mutate the original list."
+							"The copy-returning helper does not mutate the original list. Count comparisons to verify that an already sorted input needs only one pass in the improved version; swap only strictly out-of-order neighbors to preserve ties."
 						]
 					}),
 					projectLink:
@@ -1031,7 +1031,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "Bubble Sort Big-O Analysis",
 					content:
-						"Count the repeated adjacent comparisons and show why bubble sort is also `O(n^2)` in time. Then improve the algorithm by adding an early cutoff or reducing the comparison range once the largest values have already been moved into place."
+						"Count the repeated adjacent comparisons: basic bubble sort remains `O(n^2)` even on sorted input. Reset a swap flag for each pass and stop after a no-swap pass to obtain a linear best case, while retaining quadratic worst-case time. In-place variants use constant auxiliary space; a sorted-copy helper adds linear space."
 				},
 				{
 					title: "AM9 Project 2: Baseball Analytics",
@@ -1075,15 +1075,15 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Write a `merge()` helper that combines two already sorted lists.",
 						build: [
-							"Compare the front remaining items of both input lists.",
+							"Both inputs must already be sorted. Compare their front remaining items using indices; do not repeatedly call `pop(0)`, which shifts a Python list and breaks the linear-merge cost model.",
 							"Append the smaller item to the result list.",
 							"Continue until one input list is exhausted.",
-							"Append any leftover values from the other list."
+							"Append any leftover values, return a new list, and preserve both inputs. Take the left-hand item on ties so the merge is stable."
 						],
 						checkpoints: [
 							"Two sorted inputs produce one sorted output.",
 							"Unequal list lengths are handled correctly.",
-							"Duplicate values remain in the merged result."
+							"Duplicate values remain in the merged result. Empty inputs work on either side, inputs stay unchanged, and tied record labels retain their relative order."
 						]
 					}),
 					projectLink:
@@ -1098,7 +1098,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						build: [
 							"Split a list into left and right halves.",
 							"Recursively split each half until each piece has length 1 or less.",
-							"Print or return the split structure so the recursive shape is visible.",
+							"Implement `split(lst)` as a trace helper: print singleton leaves from left to right, print `[]` for empty input, and return None. It does not return a sorted list.",
 							"Trace the splitting process on an odd-length and even-length list."
 						],
 						checkpoints: [
@@ -1117,15 +1117,15 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Combine splitting and merging into a complete merge sort implementation.",
 						build: [
-							"Add the base case for a list that is already trivially sorted.",
+							"Implement `merge_sort(lst)` with a new-list contract: empty and singleton base cases return a copy, not the input object.",
 							"Split the list into two halves.",
 							"Recursively sort each half.",
 							"Merge the sorted halves into one sorted result.",
-							"Optionally compare the helper-based version with a compact version."
+							"Optionally implement `merge_sort2(lst)` with the merge logic integrated, retaining the same stable, nonmutating, new-list contract."
 						],
 						checkpoints: [
 							"Empty, one-item, duplicate, reversed, and random lists sort correctly.",
-							"The implementation preserves all original values.",
+							"The implementation preserves all original values and leaves the input unchanged. The result is a different list even for empty and singleton inputs; equal-key record labels retain their relative order.",
 							"The explanation connects split depth and merge work to runtime."
 						]
 					}),
@@ -1137,7 +1137,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "Merge Sort Big-O Analysis",
 					content:
-						"A recursion tree shows why merge sort runs in `O(n log n)` time. Each level of the tree does `O(n)` total merge work, and the height of the tree is `O(log n)`. Comparing this growth to `O(n^2)` explains why merge sort is usually preferable on larger inputs."
+						"A recursion tree shows why merge sort runs in `O(n log n)` time: indexed merging does `O(n)` total work at each level, and tree height is `O(log n)`. Repeated `pop(0)` would add Python list-shifting costs and invalidate this analysis. Slices and output lists require linear peak auxiliary storage, plus logarithmic recursion depth."
 				}
 			],
 			supplementalProjects: []
@@ -1160,7 +1160,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Write a partition helper for quicksort.",
 						build: [
-							"Take a list and a pivot value as inputs.",
+							"Implement `partition(lst, pivot)` with a pivot value, not an index. Preserve the input and order within each group, including when the pivot is absent.",
 							"Create one partition for values less than the pivot.",
 							"Create one partition for values equal to the pivot.",
 							"Create one partition for values greater than the pivot.",
@@ -1182,14 +1182,14 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Write quicksort using partitioning and recursive sorting.",
 						build: [
-							"Choose a pivot for the current input.",
+							"Implement `quicksort(lst, rng=None)` to return a sorted new list without changing the input, including empty and singleton cases. Choose a pivot from the current input; use `random.Random(0)` as the optional rng for repeatable tests.",
 							"Partition the list into less-than, equal-to, and greater-than regions.",
 							"Recursively sort the less-than and greater-than regions.",
 							"Concatenate the sorted left side, equal values, and sorted right side."
 						],
 						checkpoints: [
 							"Repeated values remain in the output.",
-							"Already sorted and reversed inputs still produce correct results.",
+							"Empty, singleton, negative, already sorted, and reversed inputs produce correct results without mutating or aliasing the input. Test partition membership independently before recursion.",
 							"The explanation identifies when quicksort can degrade to `O(n^2)`."
 						]
 					}),
@@ -1201,21 +1201,21 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "Quicksort Big-O Analysis",
 					content:
-						"A recursion tree makes quicksort's best and worst cases visible. If the pivot splits the list evenly, quicksort runs in `O(n log n)`. If the pivot is consistently poor and produces highly unbalanced partitions, the runtime degrades to `O(n^2)`. Random pivots or shuffling the list first reduce the chance of repeated bad partitions."
+						"Balanced quicksort partitions give `O(n log n)` time; repeatedly poor pivots give `O(n^2)` time and can exceed Python's recursion depth. Random pivots reduce that risk, not eliminate it. This new-list implementation is not in-place: balanced recursion has linear peak list storage plus a logarithmic stack; worst-case retained partitions can use quadratic storage and a linear stack. Optional `shuffle` mutates by a nonnegative integer number of random swaps and returns None; empty input is safe, but fixed swaps are not a uniform permutation. Optional `shuffle2` returns a random permutation in a new list and empties its input."
 				},
 				{
 					title: "AM11 Project 3: Sorting Comparison",
 					content: projectBrief({
 						goal: "Compare sorting algorithms across different input patterns.",
 						build: [
-							"Run several sorting algorithms on random, sorted, and reversed lists.",
-							"Test more than one list size.",
-							"Record timing or operation-count evidence.",
-							"Compare the measured results with the expected Big-O behavior."
+							"Bring tested selection, insertion, basic bubble, merge, and quicksort implementations into the starter. Build `make_workloads(size, rng)` with shared seeded random, sorted, reversed, and duplicate-heavy data. Give every algorithm and repeat a fresh copy of the same input.",
+							"Implement `time_sort(sorter, values)` using `time.perf_counter()`. Prepare the working copy and independent `sorted(values)` oracle before the clock; time only the sorting call, then validate the result after stopping the clock. Reject incorrect results rather than reporting their speed.",
+							"Implement `benchmark(sizes=(100, 300), repeats=3, seed=0, algorithms=None)` to report measured median seconds per size, shape, and algorithm. Bound experiments to one through five integer sizes from 0 to 2000 and integer repeats from 1 to 10; reject bool as an integer. Optional algorithms is a name-to-function dictionary for small tests.",
+							"Return result rows with size, shape, algorithm, repeats, and median_seconds fields. Exclude generation, copies, oracle sorting, validation, and printing from timings. Label basic versus optimized bubble sort and any skipped run; never substitute historical estimates for measurements. Record environment and seed, and explain why small local timings illustrate behavior but do not prove Big-O."
 						],
 						checkpoints: [
-							"Each algorithm receives comparable inputs.",
-							"The comparison distinguishes correctness from speed.",
+							"Each algorithm receives identical input values in an independent copy for every repeat; an in-place sort cannot change the next workload.",
+							"Correctness checks pass before timings are reported. Merge uses indexed merging rather than `pop(0)`, and reported values are medians of measured runs only.",
 							"The conclusion explains when one algorithm is a better fit than another."
 						]
 					}),
@@ -1786,7 +1786,7 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 		],
 		challengeCurriculumTitles: ["AM11 Project 3: Sorting Comparison"],
 		projectThread:
-			"Verify partition independently, then trace pivot placement across recursive calls. Sorting Comparison is the challenge because it requires evidence-based algorithm selection across input shapes."
+			"Verify partition independently, then trace pivot values across recursive calls. Sorting Comparison remains a required project: independently verify each sorter, then compare measured behavior across shared input shapes."
 	},
 	{
 		title: "AM12 File Input/Output",
