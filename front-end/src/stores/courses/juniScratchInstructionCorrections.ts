@@ -47,7 +47,7 @@ export const juniScratchInstructionCorrections = [
 			"d705245be4d08be21e5a411e8958308896e015af70c68c0420be34c79957977d",
 		content: `Let the user choose which talent the cat performs.
 
-1. Ask the user what the cat should do.
+1. Ask the user which talent the cat will perform.
 2. For the answer "speak", have the cat say something.
 3. For "song", have the cat play music.
 4. For "spin", have the cat turn in place.
