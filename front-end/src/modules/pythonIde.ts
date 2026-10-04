@@ -276,9 +276,19 @@ export function pythonIdeModeForCourseId(courseId: string | null | undefined) {
 	return courseId ? (pythonIdeCourseModes[courseId] ?? null) : null;
 }
 
+export function isKnownCourseWorksheetResource(url: string) {
+	const resource = parseGitHubResource(url);
+	return (
+		!!resource &&
+		resource.owner.toLowerCase() === "instruction-material" &&
+		resource.repo.toLowerCase() === "python-level-3" &&
+		/^AM6-Big-O-Analysis(?:\/|$)/.test(resource.path)
+	);
+}
+
 export function pythonIdeModeForCourseResource(courseId: string, url: string) {
 	const resource = parseGitHubResource(url);
-	if (!resource) return null;
+	if (!resource || isKnownCourseWorksheetResource(url)) return null;
 	// The bridge's C++ port has no browser runtime; keep its local source link.
 	if (
 		/\.(?:c|cc|cpp|cxx|h|hpp)$/i.test(resource.path) ||

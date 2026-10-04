@@ -13,7 +13,7 @@ const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const axeSource = createRequire(import.meta.url).resolve("axe-core/axe.min.js");
 
 test(
-	"confirmed course import failure, retry, and accessible feedback",
+	"confirmed imports, retry, accessible feedback, and analysis resource roles",
 	{ timeout: 120000 },
 	async () => {
 		let browser;
@@ -64,6 +64,7 @@ test(
 				let failDownload = true;
 				let sourceRequests = 0;
 				let remoteWrites = 0;
+				let courseFixture = false;
 				await page.setRequestInterception(true);
 				page.on("request", request => {
 					const url = new URL(request.url());
@@ -106,10 +107,30 @@ test(
 						)
 							remoteWrites++;
 						// All APIs and external services are fixtures, never production requests.
+						let body = {};
+						if (
+							courseFixture &&
+							url.pathname === "/api/accounts/me"
+						) {
+							body = { userID: "course-fixture" };
+						} else if (
+							courseFixture &&
+							url.pathname === "/api/users/loggedin"
+						) {
+							body = {
+								currentUser: {
+									_id: "course-fixture",
+									name: "Course fixture",
+									email: "course@example.invalid",
+									courseAccess: ["python-level-3"],
+									courseProgress: []
+								}
+							};
+						}
 						void request.respond({
 							status: 200,
 							contentType: "application/json",
-							body: "{}"
+							body: JSON.stringify(body)
 						});
 					} else void request.continue();
 				});
@@ -198,6 +219,109 @@ test(
 					sourceRequests,
 					4,
 					"Two failed downloads plus one complete retry"
+				);
+				courseFixture = true;
+				for (const width of [390, 1280]) {
+					await page.setViewport({ width, height: 900 });
+					await page.goto(
+						`${origin}/courses#python-level-3-am6-introduction-to-algorithms-runtime-analysis`,
+						{ waitUntil: "domcontentloaded" }
+					);
+					const worksheetSelector =
+						"a[href*='AM6-Big-O-Analysis/starter']";
+					const analysisSelector =
+						"a[href*='AM6-Function-Analysis/starter']";
+					await page.waitForSelector(worksheetSelector);
+					await page.waitForSelector(analysisSelector);
+					assert.match(
+						await page.$eval(
+							worksheetSelector,
+							link => link.textContent
+						),
+						/Worksheet/
+					);
+					assert.equal(
+						await page.$eval(worksheetSelector, link => {
+							return [
+								...link
+									.closest(".lesson-item")
+									.querySelectorAll("button")
+							].some(button =>
+								/Preview starter code/.test(button.textContent)
+							);
+						}),
+						false,
+						"A worksheet does not offer a code preview"
+					);
+					assert.equal(
+						await page.$eval(
+							worksheetSelector,
+							link =>
+								link
+									.closest(".lesson-item")
+									.querySelectorAll(".is-ide-starter").length
+						),
+						0,
+						"The mathematical worksheet keeps its readable source link without an IDE shortcut"
+					);
+					const analysisHref = await page.$eval(
+						analysisSelector,
+						link =>
+							link
+								.closest(".lesson-item")
+								.querySelector(".is-ide-starter")
+								.getAttribute("href")
+					);
+					const query = new URL(analysisHref, origin).searchParams;
+					assert.equal(query.get("mode"), "python");
+					assert.equal(
+						query.get("starterUrl"),
+						"https://github.com/instruction-material/Python-Level-3/tree/main/AM6-Function-Analysis/starter"
+					);
+					assert.equal(
+						sourceRequests,
+						4,
+						"Reading course instructions does not download code"
+					);
+					if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+						const directory = join(
+							previousDirectory,
+							process.env.COURSE_IMPORT_SCREENSHOT_DIR
+						);
+						for (const [role, selector] of [
+							["worksheet", worksheetSelector],
+							["analysis", analysisSelector]
+						]) {
+							const link = await page.$(selector);
+							const card = await link.evaluateHandle(element =>
+								element.closest(".lesson-item")
+							);
+							await card.asElement().screenshot({
+								path: join(
+									directory,
+									`course-import-${role}-${width}.png`
+								)
+							});
+							await card.dispose();
+							await link.dispose();
+						}
+					}
+					await page.goto(new URL(analysisHref, origin).href, {
+						waitUntil: "domcontentloaded"
+					});
+					await page.waitForSelector(
+						"[data-testid='ide-route-import-confirm']"
+					);
+					assert.equal(
+						sourceRequests,
+						4,
+						"Supplied-code analysis still requires confirmation before downloading"
+					);
+				}
+				assert.equal(
+					remoteWrites,
+					0,
+					"Resource inspection never writes to production"
 				);
 			} finally {
 				await page.close();
