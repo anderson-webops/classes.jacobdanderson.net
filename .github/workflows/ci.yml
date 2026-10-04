@@ -280,16 +280,16 @@ jobs:
             - name: Verify Turtle manual updates and editor search contrast
               run: node --test test/turtle-tracer-browser.test.mjs
 
-            - name: Verify full-page booking and accessible fallback
+            - name: Verify inline booking and Classes navigation
               env:
                   BOOKING_SCREENSHOT_DIR: output/playwright
               run: node --test test/signup-browser.test.mjs
 
-            - name: Retain booking fallback screenshots
+            - name: Retain booking screenshots
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               with:
-                  name: booking-fallback-screenshots
-                  path: output/playwright/signup-fallback-*.png
+                  name: booking-screenshots
+                  path: output/playwright/signup-*.png
                   if-no-files-found: ignore
                   retention-days: 7
 

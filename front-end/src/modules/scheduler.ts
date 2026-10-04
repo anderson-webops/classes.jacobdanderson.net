@@ -38,14 +38,6 @@ export const SCHEDULER_ORIGIN = normalizeSchedulerOrigin(
 );
 export const schedulerUrl = `${SCHEDULER_ORIGIN}/`;
 
-export function openSchedulerPage(
-	location: Pick<Location, "replace"> = window.location
-) {
-	// Replacing the handoff page prevents Back from reopening the redirect.
-	// Never derive this destination from incoming query parameters.
-	location.replace(schedulerUrl);
-}
-
 export const schedulerDnsPrefetchHref = `//${new URL(SCHEDULER_ORIGIN).host}`;
 export type SchedulerEmbedTheme = "light" | "dark";
 

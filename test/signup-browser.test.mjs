@@ -1,20 +1,20 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { test } from "node:test";
+import { test as nodeTest } from "node:test";
 import puppeteer from "puppeteer";
 import { createServer } from "vite";
 import { runAxeInPage } from "../scripts/a11y-axe-runtime.mjs";
-import { createRequire } from "node:module";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const schedulerUrl = "https://scheduler.classes.jacobdanderson.net/";
 const axeSource = createRequire(import.meta.url).resolve("axe-core/axe.min.js");
 
-test(
-	"full-page booking handoff, Back navigation and accessible fallback",
+nodeTest(
+	"embedded booking preserves Classes navigation, sizing and theme",
 	{ timeout: 120000 },
 	async () => {
 		let browser;
@@ -59,9 +59,13 @@ test(
 				args: ["--no-sandbox"]
 			});
 			const page = await browser.newPage();
+			await page.emulateMediaFeatures([
+				{ name: "prefers-color-scheme", value: "light" },
+				{ name: "prefers-reduced-motion", value: "reduce" }
+			]);
 			try {
 				const schedulerRequests = [];
-				let blockNavigation = false;
+				await page.setCacheEnabled(false);
 				await page.setRequestInterception(true);
 				page.on("request", request => {
 					const url = new URL(request.url());
@@ -71,93 +75,86 @@ test(
 							mainFrame: request.frame() === page.mainFrame(),
 							navigation: request.isNavigationRequest()
 						});
-						if (blockNavigation) void request.abort("aborted");
-						else
-							void request.respond({
-								status: 200,
-								contentType: "text/html",
-								body: '<!doctype html><html lang="en"><head><title>Scheduler fixture</title></head><body><h1>Scheduler fixture</h1></body></html>'
-							});
-					} else if (url.origin !== origin) {
-						// Never contact production APIs, analytics or other external services.
+						const title =
+							url.pathname === "/portal"
+								? "Manage bookings fixture"
+								: "Calendar fixture";
+						void request.respond({
+							status: 200,
+							contentType: "text/html",
+							body: `<!doctype html><html lang="en"><head><title>${title}</title>
+<style>body{margin:0;padding:16px;font:16px Arial;color:#102235;background:#f3f7fb}html.dark body{color:#f4f8ff;background:#0a1525}main{min-height:1280px}button{padding:12px}</style></head>
+<body><main><h1>${title}</h1><button id="grow">Show booking details</button></main>
+<script>
+function resize(){ parent.postMessage({source:"scheduler.classes.jacobdanderson.net",type:"scheduler:resize",height:document.documentElement.scrollHeight}, "${origin}"); }
+window.addEventListener("message",event=>{ if(event.source!==parent || event.origin!=="${origin}") return; if(event.data.type==="scheduler:theme"){ document.documentElement.classList.toggle("dark",event.data.theme==="dark"); resize(); }});
+document.getElementById("grow").onclick=()=>{document.querySelector("main").style.minHeight="1640px";resize();};
+new ResizeObserver(resize).observe(document.querySelector("main"));
+resize();</script></body></html>`
+						});
+					} else if (
+						url.origin !== origin ||
+						url.pathname.startsWith("/api/")
+					) {
+						// Isolate every production API/analytics request; never create bookings.
 						void request.respond({
 							status: 200,
 							contentType: "application/json",
 							body: "{}"
 						});
-					} else if (url.pathname.startsWith("/api/")) {
-						void request.respond({
-							status: 200,
-							contentType: "application/json",
-							body: "{}"
-						});
-					} else void request.continue();
+					} else {
+						void request.continue();
+					}
 				});
-				await page.goto(`${origin}/about`, {
-					waitUntil: "networkidle0"
-				});
-				await page
-					.goto(
-						`${origin}/signup?redirect=https://example.invalid/&token=do-not-forward`,
-						{ waitUntil: "domcontentloaded" }
-					)
-					.catch(error => {
-						if (!error.message.includes("ERR_ABORTED")) throw error;
-					});
-				await page.waitForFunction(
-					url => window.location.href === url,
-					{},
-					schedulerUrl
-				);
-				assert.equal(await page.$("iframe"), null);
-				assert.deepEqual(
-					schedulerRequests.filter(request => request.navigation),
-					[{ url: schedulerUrl, mainFrame: true, navigation: true }]
-				);
-				// A BFCache restore need not emit the loading lifecycle events used by goBack.
-				await page.evaluate(() => window.history.back());
-				await page.waitForFunction(
-					url => window.location.href === url,
-					{},
-					`${origin}/about`
-				);
-				assert.equal(
-					page.url(),
-					`${origin}/about`,
-					"Back must not revisit the redirect page"
-				);
-				blockNavigation = true;
 				for (const width of [390, 1280]) {
+					console.log(`Checking inline booking at ${width}px`);
 					await page.setViewport({ width, height: 900 });
-					await page
-						.goto(`${origin}/signup`, {
-							waitUntil: "domcontentloaded"
-						})
-						.catch(error => {
-							if (!error.message.includes("ERR_ABORTED"))
-								throw error;
-						});
-					await page.waitForSelector(".signup-page a.site-button");
-					await page.waitForFunction(() =>
-						document
-							.querySelector("#app")
-							?.hasAttribute("data-v-app")
+					await page.goto(
+						`${origin}/signup?redirect=https://example.invalid/&token=do-not-forward`,
+						{ waitUntil: "networkidle0" }
 					);
-					assert.equal(
-						await page.$eval(
-							".signup-page a.site-button",
-							element => element.href
-						),
-						schedulerUrl
+					await page.waitForSelector("#app[data-v-app]");
+					await page.waitForFunction(
+						() =>
+							document
+								.querySelector(".scheduler-frame")
+								?.getBoundingClientRect().height >= 1280
 					);
-					assert.equal(
-						await page.$eval(
-							".signup-page a.text-link",
-							element => element.href
-						),
-						`${schedulerUrl}portal`
+					assert.equal(new URL(page.url()).pathname, "/signup");
+					assert.equal(new URL(page.url()).origin, origin);
+					assert.ok(await page.$(".site-header .site-nav"));
+					const frameUrl = new URL(
+						await page.$eval(".scheduler-frame", frame => frame.src)
 					);
-					assert.equal(await page.$("iframe"), null);
+					assert.equal(frameUrl.origin, new URL(schedulerUrl).origin);
+					assert.equal(frameUrl.searchParams.get("embed"), "1");
+					assert.deepEqual([...frameUrl.searchParams.keys()].sort(), [
+						"embed",
+						"theme"
+					]);
+					assert.ok(
+						schedulerRequests
+							.filter(request => request.navigation)
+							.every(request => !request.mainFrame)
+					);
+					const box = await page.$eval(".scheduler-frame", frame => {
+						const bounds = frame.getBoundingClientRect();
+						return {
+							width: bounds.width,
+							top: bounds.top,
+							headerBottom: document
+								.querySelector(".site-header")
+								.getBoundingClientRect().bottom
+						};
+					});
+					assert.ok(
+						box.width >= width - 40,
+						"Calendar must use the full page width"
+					);
+					assert.ok(
+						box.top >= box.headerBottom,
+						"Calendar must not cover Classes navigation"
+					);
 					assert.equal(
 						await page.evaluate(
 							() =>
@@ -166,28 +163,114 @@ test(
 						),
 						true
 					);
+					const child = page
+						.frames()
+						.find(frame => frame.url() === frameUrl.href);
+					assert.ok(child, "Scheduler must remain a child frame");
+					await child.click("#grow");
+					await page.waitForFunction(
+						() =>
+							document
+								.querySelector(".scheduler-frame")
+								.getBoundingClientRect().height >= 1640
+					);
+					const navigationCount = schedulerRequests.filter(
+						request => request.navigation
+					).length;
+					await page
+						.locator('button[aria-label="Switch to dark mode"]')
+						.click();
+					await page.waitForFunction(() =>
+						document.documentElement.classList.contains("dark")
+					);
+					await child.waitForFunction(() =>
+						document.documentElement.classList.contains("dark")
+					);
+					assert.equal(
+						schedulerRequests.filter(request => request.navigation)
+							.length,
+						navigationCount,
+						"Changing theme must preserve an in-progress booking"
+					);
 					await page.addScriptTag({ path: axeSource });
 					const result = await runAxeInPage(page);
 					assert.deepEqual(
 						result.violations,
 						[],
-						`Fallback accessibility at ${width}px`
+						`Booking accessibility at ${width}px`
 					);
 					if (process.env.BOOKING_SCREENSHOT_DIR) {
+						await page.evaluate(() => window.scrollTo(0, 0));
 						const directory = join(
 							previousDirectory,
 							process.env.BOOKING_SCREENSHOT_DIR
 						);
 						await mkdir(directory, { recursive: true });
 						await page.screenshot({
-							path: join(
-								directory,
-								`signup-fallback-${width}.png`
-							),
-							fullPage: true
+							path: join(directory, `signup-${width}.png`),
+							fullPage: false
 						});
 					}
+					await page.click(".scheduler-toolbar button");
+					await page.waitForFunction(
+						() =>
+							new URL(
+								document.querySelector(".scheduler-frame").src
+							).pathname === "/portal"
+					);
+					assert.equal(new URL(page.url()).pathname, "/signup");
+					await page.click(".scheduler-toolbar button");
+					await page.waitForFunction(
+						() =>
+							new URL(
+								document.querySelector(".scheduler-frame").src
+							).pathname === "/"
+					);
+					if (width < 1200) await page.click(".site-toggler");
+					await page.waitForSelector(
+						'.site-header a[href="/about"]',
+						{ visible: true }
+					);
+					await Promise.all([
+						page.waitForNavigation({ waitUntil: "networkidle0" }),
+						page.click('.site-header a[href="/about"]')
+					]);
+					assert.equal(new URL(page.url()).pathname, "/about");
+					await page.goBack({ waitUntil: "networkidle0" });
+					assert.equal(new URL(page.url()).pathname, "/signup");
+					assert.ok(await page.$(".scheduler-frame"));
+					// Return to light before the next viewport's theme test.
+					await page
+						.locator('button[aria-label="Switch to light mode"]')
+						.click();
 				}
+			} catch (error) {
+				console.error(
+					await page.evaluate(() => ({
+						width: window.innerWidth,
+						theme: document.documentElement.className,
+						frameHeight:
+							document.querySelector(".scheduler-frame")?.style
+								.height,
+						status: document.querySelector(".scheduler-status")
+							?.textContent
+					}))
+				);
+				for (const frame of page
+					.frames()
+					.filter(frame => frame !== page.mainFrame())) {
+					console.error(
+						await frame
+							.evaluate(() => ({
+								heading:
+									document.querySelector("h1")?.textContent,
+								contentHeight:
+									document.documentElement.scrollHeight
+							}))
+							.catch(() => "Frame unavailable")
+					);
+				}
+				throw error;
 			} finally {
 				await page.close();
 			}

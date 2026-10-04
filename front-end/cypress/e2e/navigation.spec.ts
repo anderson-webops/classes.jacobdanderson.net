@@ -40,21 +40,23 @@ context("Navigation & page smoke-tests", () => {
 		cy.url().should("eq", `${Cypress.config().baseUrl}/`);
 	});
 
-	it("opens Book a Class in the full-page scheduler", () => {
+	it("keeps Book a Class and its scheduler within Classes navigation", () => {
 		const schedulerOrigin = "https://scheduler.classes.jacobdanderson.net";
-		cy.intercept("GET", `${schedulerOrigin}/`, {
+		cy.intercept("GET", `${schedulerOrigin}/?*`, {
 			statusCode: 200,
 			headers: { "content-type": "text/html" },
-			body: '<!doctype html><html lang="en"><head><title>Scheduler fixture</title></head><body><h1>Full-page scheduler fixture</h1></body></html>'
+			body: '<!doctype html><html lang="en"><head><title>Scheduler fixture</title></head><body><main><h1>Scheduler fixture</h1></main></body></html>'
 		}).as("scheduler");
 		cy.get(".site-nav").contains("a:visible", "Book a Class").click();
 		cy.wait("@scheduler");
-		cy.origin(schedulerOrigin, () => {
-			cy.location("pathname").should("eq", "/");
-			cy.location("search").should("eq", "");
-			cy.get("h1").should("have.text", "Full-page scheduler fixture");
-			cy.get("iframe").should("not.exist");
+		cy.location("pathname").should("eq", "/signup");
+		cy.get(".scheduler-frame").should(frame => {
+			const url = new URL(frame.attr("src")!);
+			expect(url.origin).to.equal(schedulerOrigin);
+			expect(url.searchParams.get("embed")).to.equal("1");
 		});
+		cy.get(".site-nav").contains("a:visible", "About").click();
+		cy.location("pathname").should("eq", "/about");
 	});
 
 	it("keeps IDE controls usable across phone and tablet viewports", () => {

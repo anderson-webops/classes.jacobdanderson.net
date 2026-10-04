@@ -384,12 +384,19 @@ try {
 						console.log(`a11y checking: ${url} (${scenario.name}, ${viewport.name}, ${media.name})`);
 						page.setDefaultNavigationTimeout(15_000);
 						if (route === "/signup") {
-							// Audit the real local fallback without entering the live scheduler.
+							// Isolate the embedded scheduler from production during accessibility checks.
 							await page.setRequestInterception(true);
 							page.on("request", request => {
 								if (request.isNavigationRequest() && request.frame() === page.mainFrame() &&
 									new URL(request.url()).origin !== baseUrl) {
 									void request.abort("aborted");
+								} else if (request.isNavigationRequest() &&
+									new URL(request.url()).origin !== baseUrl) {
+									void request.respond({
+										status: 200,
+										contentType: "text/html",
+										body: '<!doctype html><html lang="en"><head><title>Class scheduler fixture</title></head><body><main><h1>Class scheduler</h1></main></body></html>'
+									});
 								} else {
 									void request.continue();
 								}
