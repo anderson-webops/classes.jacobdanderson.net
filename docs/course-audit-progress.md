@@ -76,9 +76,25 @@ Function Analysis
 does supply code and retains its Python import shortcut. A Python-file count is
 not a correctness or readiness gate for a non-coding assignment.
 
-Sixteen structural placeholder roles remain open, along with correctness review
-of the eleven distinct migrated pairs. The source repository's
-[review ledger](https://github.com/instruction-material/Python-Level-3/blob/f9b62f604a0429a7081e94cff7a3c9769dd9dc7d/SOURCE_PACK_REVIEW.md)
+[Source PR #3](https://github.com/instruction-material/Python-Level-3/pull/3)
+adds six incomplete sorting starters with explicit new-list, in-place and
+consuming contracts. References fix selection's suffix scan and tied-record
+identity, use stable indexed merging, handle empty/singleton lists consistently,
+and no longer run demonstrations or experiments during import. Sorting Comparison
+remains core and reports only measured medians on fresh copies of shared, seeded
+inputs after correctness checks. It excludes preparation, copying, validation
+and printing from timings. All 31 source tests and the eight focused site-flow
+tests passed locally; full site CI remains the delivery authority.
+
+Ten structural placeholder roles remain open. A separate bounded review of the
+eleven distinct migrated pairs found seven concrete prompt/reference mismatches,
+including inexact Hailstone arithmetic, a ten-versus-twenty list count, tied-mode
+ordering, a missing first-one search, a missing sorted experiment shape, absent
+bubble-sort early exit, and a broken optional punctuation extension. These are
+recorded follow-ups, not repairs delivered by the sorting milestone. Additional
+input-domain, file-format and mutation contracts need assignment-specific review.
+The source repository's
+[review ledger](https://github.com/instruction-material/Python-Level-3/blob/d3ba6e9ba0c94a5680c882fc1c92b2f514f806be/SOURCE_PACK_REVIEW.md)
 distinguishes those boundaries. Do not copy completed answers into coding starters
 or certify a nonempty folder as an implementation pair.
 
