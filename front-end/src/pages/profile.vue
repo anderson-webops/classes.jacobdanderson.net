@@ -175,9 +175,18 @@ function leaveClassroom() {
 						>
 							Log in
 						</button>
-						<RouterLink class="action secondary" to="/signup">
+						<button
+							class="action secondary"
+							type="button"
+							@click="app.setSignupBlock(true)"
+						>
 							Create an account
-						</RouterLink>
+						</button>
+						<RouterLink
+							class="action secondary"
+							to="/courses#classroom-access"
+							>Use a classroom code</RouterLink
+						>
 					</div>
 				</div>
 			</div>
@@ -186,6 +195,23 @@ function leaveClassroom() {
 </template>
 
 <style scoped>
+.profile-page {
+	background: transparent !important;
+	padding-top: 1.5rem !important;
+	min-height: 0 !important;
+}
+.profile-header h1 {
+	font-size: clamp(1.6rem, 3vw, 2.2rem) !important;
+}
+.empty-card,
+.profile-card {
+	background: var(--color-surface) !important;
+	color: var(--color-ink) !important;
+}
+.empty-card h2,
+.empty-card p {
+	color: var(--color-ink) !important;
+}
 .profile-page {
 	position: relative;
 	min-height: calc(100vh - 6rem);
@@ -196,7 +222,7 @@ function leaveClassroom() {
 			rgba(125, 211, 252, 0.38),
 			transparent 55%
 		),
-		linear-gradient(130deg, #0f172a 0%, #1e3a8a 55%, #312e81 100%);
+		linear-gradient(130deg, var(--color-ink) 0%, #1e3a8a 55%, #312e81 100%);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -220,7 +246,7 @@ function leaveClassroom() {
 
 .profile-header {
 	text-align: center;
-	color: #f8fafc;
+	color: var(--color-ink);
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
@@ -260,7 +286,7 @@ function leaveClassroom() {
 	font-size: clamp(2.1rem, 5vw, 2.85rem);
 	font-weight: 700;
 	line-height: 1.12;
-	color: #f8fafc;
+	color: var(--color-ink);
 	text-shadow: 0 16px 32px rgba(15, 23, 42, 0.28);
 }
 
@@ -268,7 +294,7 @@ function leaveClassroom() {
 	margin: 0;
 	font-size: clamp(1rem, 2.6vw, 1.18rem);
 	line-height: 1.65;
-	color: rgba(226, 232, 240, 0.9);
+	color: var(--color-ink-soft);
 }
 
 .profile-card {
@@ -294,18 +320,18 @@ function leaveClassroom() {
 	display: flex;
 	flex-direction: column;
 	gap: 2rem;
-	color: #0f172a;
+	color: var(--color-ink);
 }
 
 .profile-card :deep(.Signup h2) {
 	margin: 0;
 	font-size: clamp(1.8rem, 4vw, 2.25rem);
-	color: #0f172a;
+	color: var(--color-ink);
 }
 
 .profile-card :deep(.Signup h4) {
 	font-size: 1.1rem;
-	color: #0f172a;
+	color: var(--color-ink);
 }
 
 .profile-card :deep(hr) {
@@ -401,7 +427,7 @@ function leaveClassroom() {
 
 .action.primary {
 	background: linear-gradient(135deg, #38bdf8, #2563eb);
-	color: #0f172a;
+	color: var(--color-ink);
 	box-shadow: 0 18px 35px -18px rgba(37, 99, 235, 0.65);
 }
 

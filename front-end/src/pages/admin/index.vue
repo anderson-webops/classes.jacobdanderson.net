@@ -37,12 +37,16 @@ const adminTools = [
 
 <template>
 	<AdminWorkspaceShell
-		intro="Move between the main operator workflows without losing context. The shell and navigation stay consistent across admin pages so the workspace feels like one place instead of separate tools."
+		intro="Manage learners, course access and session notes."
 		title="Admin Workspace"
 	>
 		<nav class="tool-grid" aria-label="Admin tools">
 			<RouterLink
-				v-for="tool in adminTools"
+				v-for="tool in adminTools.filter(tool =>
+					['/admin/people', '/admin/mdmail', '/courses'].includes(
+						tool.href
+					)
+				)"
 				:key="tool.href"
 				:to="tool.href"
 				class="tool-card"
@@ -52,10 +56,35 @@ const adminTools = [
 				<p>{{ tool.description }}</p>
 			</RouterLink>
 		</nav>
+		<details>
+			<summary>Reports and roster spreadsheet</summary>
+			<nav class="tool-grid">
+				<RouterLink
+					v-for="tool in adminTools.filter(tool =>
+						[
+							'/admin/ide-reports',
+							'/admin/student-management'
+						].includes(tool.href)
+					)"
+					:key="tool.href"
+					:to="tool.href"
+					class="tool-card"
+					>{{ tool.title }}</RouterLink
+				>
+			</nav>
+		</details>
 	</AdminWorkspaceShell>
 </template>
 
 <style scoped>
+.tool-card {
+	background: var(--color-surface) !important;
+	border-color: var(--color-border) !important;
+	color: var(--color-ink) !important;
+}
+.tool-card p {
+	color: var(--color-ink-soft) !important;
+}
 .tool-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));

@@ -44,11 +44,15 @@ describe("AccountManagement.vue login (happy path)", () => {
 			expect(wrapper.find(".oauth-button.apple").exists()).toBe(true);
 		});
 		const google = wrapper.get<HTMLAnchorElement>(".oauth-button.google");
-		const googleUrl = new URL(google.attributes("href"), window.location.origin);
+		const googleUrl = new URL(
+			google.attributes("href"),
+			window.location.origin
+		);
 		expect(google.text()).toContain("Continue with Google");
 		expect(googleUrl.pathname).toBe("/api/accounts/oauth/google/start");
-		expect(googleUrl.searchParams.get("returnTo"))
-			.toBe("/courses?view=current#python");
+		expect(googleUrl.searchParams.get("returnTo")).toBe(
+			"/courses?view=current#python"
+		);
 		expect(googleUrl.searchParams.get("remember")).toBe("false");
 
 		await wrapper.get('input[name="remember"]').setValue(true);
@@ -192,7 +196,8 @@ describe("AccountManagement.vue login (happy path)", () => {
 		app.setLoginBlock(true);
 		(apiMod.api.post as any).mockResolvedValueOnce({
 			data: {
-				message: "If an account uses that email, a password reset link is on its way."
+				message:
+					"If an account uses that email, a password reset link is on its way."
 			}
 		});
 
@@ -205,10 +210,14 @@ describe("AccountManagement.vue login (happy path)", () => {
 		const resetButton = wrapper
 			.findAll("button")
 			.find(button => button.text() === "Reset it securely");
-		if (!resetButton) throw new Error("Password reset button was not rendered.");
+		if (!resetButton)
+			throw new Error("Password reset button was not rendered.");
 		await resetButton.trigger("click");
 
-		expect(wrapper.get("#reset-email").element).toHaveProperty("value", "julio@example.com");
+		expect(wrapper.get("#reset-email").element).toHaveProperty(
+			"value",
+			"julio@example.com"
+		);
 		await wrapper.get(".password-reset-form").trigger("submit.prevent");
 
 		expect(apiMod.api.post).toHaveBeenCalledWith(
@@ -222,6 +231,23 @@ describe("AccountManagement.vue login (happy path)", () => {
 			);
 		});
 		expect(wrapper.find('a[href^="mailto:"]').exists()).toBe(false);
+		wrapper.unmount();
+	});
+	it("closes access entry after classroom authentication without requesting an email login", async () => {
+		const app = useAppStore();
+		app.setLoginBlock(true);
+		const wrapper = mount(AccountManagement, {
+			global: { stubs: { Teleport: true } }
+		});
+		app.setCurrentCourseLearner({
+			_id: "synthetic-learner",
+			username: "learner",
+			courseID: "python",
+			codeLabel: "Classroom",
+			accessCodeId: "code"
+		} as any);
+		await vi.waitFor(() => expect(app.loginBlock).toBe(false));
+		expect(apiMod.api.post).not.toHaveBeenCalled();
 		wrapper.unmount();
 	});
 });

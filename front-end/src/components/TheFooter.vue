@@ -1,6 +1,15 @@
+<script setup lang="ts">
+import { siteLabels } from "@/modules/siteNavigation";
+
+defineProps<{ compact?: boolean }>();
+</script>
+
 <template>
-	<footer class="site-footer">
-		<div class="site-shell site-shell--wide site-footer__inner">
+	<footer class="site-footer" :class="{ 'site-footer--compact': compact }">
+		<div
+			v-if="!compact"
+			class="site-shell site-shell--wide site-footer__inner"
+		>
 			<section class="site-footer__brand">
 				<p class="site-footer__eyebrow">Private Online Tutoring</p>
 				<h2>Classes with Jacob</h2>
@@ -53,9 +62,9 @@
 						<RouterLink to="/payment">View Tuition</RouterLink>
 					</li>
 					<li>
-						<RouterLink to="/graph-sketcher"
-							>Graph Sketcher</RouterLink
-						>
+						<RouterLink to="/graph-sketcher">{{
+							siteLabels.graphing
+						}}</RouterLink>
 					</li>
 					<li>
 						<RouterLink to="/about">About Jacob</RouterLink>
@@ -69,6 +78,11 @@
 
 		<div class="site-shell site-shell--wide site-footer__bottom">
 			<p>© {{ new Date().getFullYear() }} Jacob Anderson.</p>
+			<div v-if="compact" class="site-action-row">
+				<a href="mailto:classes@jacobdanderson.net">Help</a
+				><RouterLink to="/privacy">Privacy</RouterLink
+				><RouterLink to="/payment">Tuition</RouterLink>
+			</div>
 			<button
 				class="site-footer__theme-toggle"
 				type="button"
@@ -85,6 +99,18 @@
 </template>
 
 <style scoped>
+.site-footer.site-footer--compact {
+	margin-top: 1.5rem;
+	padding: 0.5rem 0;
+}
+.site-footer--compact .site-footer__bottom {
+	margin-top: 0;
+	padding: 0.5rem;
+	border: 0;
+}
+.site-footer--compact a {
+	color: #9ec3f4;
+}
 .site-footer {
 	margin-top: 4rem;
 	padding: 3.5rem 0 1.75rem;

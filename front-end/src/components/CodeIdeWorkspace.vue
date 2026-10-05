@@ -34,6 +34,9 @@ import {
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import IdeDiagnosticsControls from "@/components/IdeDiagnosticsControls.vue";
+import IdeStarterPicker from "@/components/IdeStarterPicker.vue";
+import WorkspaceHeader from "@/components/WorkspaceHeader.vue";
+import WorkspaceStorageStatus from "@/components/WorkspaceStorageStatus.vue";
 import {
 	createIdeDiagnostics,
 	safeRuntimeVersion,
@@ -330,20 +333,6 @@ interface GameToneHandle {
 }
 
 type PythonIdeAssetFolder = "images" | "music" | "sounds";
-type CodeIdeWorkspacePresetID = PythonIdeMode | "bluej";
-
-interface CodeIdeWorkspacePreset {
-	id: CodeIdeWorkspacePresetID;
-	label: string;
-	mode: PythonIdeMode;
-	template: PythonIdeProjectTemplate;
-}
-
-interface CodeIdeWorkspacePresetGroup {
-	label: string;
-	presets: CodeIdeWorkspacePreset[];
-}
-
 type BuiltinTurtleShapeName =
 	| "arrow"
 	| "blank"
@@ -472,58 +461,6 @@ const blueJProjectArchiveUploadAccept =
 	".zip,application/zip,application/x-zip-compressed";
 const blueJHomeUrl = "https://www.bluej.org/";
 const blueJSourceUrl = "https://github.com/k-pet-group/BlueJ-Greenfoot";
-const codeIdeWorkspacePresetGroups: CodeIdeWorkspacePresetGroup[] = [
-	{
-		label: "Browser IDE",
-		presets: [
-			{
-				id: "python",
-				label: "Python",
-				mode: "python",
-				template: "blank"
-			},
-			{
-				id: "turtle",
-				label: "Python Turtle",
-				mode: "turtle",
-				template: "blank"
-			},
-			{
-				id: "pgzero",
-				label: "PyGame Zero",
-				mode: "pgzero",
-				template: "blank"
-			},
-			{
-				id: "data",
-				label: "Data / AI",
-				mode: "data",
-				template: "blank"
-			},
-			{ id: "java", label: "Java", mode: "java", template: "blank" },
-			{
-				id: "karel",
-				label: "Karel Java",
-				mode: "karel",
-				template: "blank"
-			}
-		]
-	},
-	{
-		label: "BlueJ integration",
-		presets: [
-			{
-				id: "bluej",
-				label: "BlueJ Java",
-				mode: "java",
-				template: "bluej"
-			}
-		]
-	}
-];
-const codeIdeWorkspacePresets = codeIdeWorkspacePresetGroups.flatMap(
-	group => group.presets
-);
 const blueJClassNameRegex =
 	/\b(?:public\s+)?(?:abstract\s+|final\s+)?class\s+([A-Z_$][\w$]*)/;
 const blueJMainMethodRegex =
@@ -669,7 +606,6 @@ const activeTurtleEventHandlerCount = ref(0);
 const showProjectMenu = ref(false);
 const showFileTools = ref(false);
 const showIdeSettings = ref(false);
-const newWorkspacePresetID = ref<CodeIdeWorkspacePresetID>("turtle");
 const autoSaveEnabled = ref(loadPythonIdeAutoSavePreference());
 const codeRecommendationsEnabled = ref(
 	loadPythonIdeCodeRecommendationsPreference()
@@ -681,6 +617,8 @@ const isResizingIdeSplit = ref(false);
 const deleteCandidateProjectID = ref("");
 const deleteConfirmText = ref("");
 const sidebarCollapsed = ref(false);
+const mobileProjectsOpen = ref(false);
+const mobileView = ref<"code" | "canvas" | "console">("code");
 const stopRequested = ref(false);
 const saveMessage = ref("Loading workspace");
 const routeProjectImportError = ref("");
@@ -1318,6 +1256,14 @@ const karelWorldCells = computed<KarelWorldCell[]>(() => {
 const requestedCourseId = computed(() =>
 	typeof route.query.course === "string" ? route.query.course : ""
 );
+const returnLessonHash = computed(() => {
+	const lesson = route.query.lesson;
+	return typeof lesson === "string" &&
+		lesson.length <= 250 &&
+		/^[\w-]+$/.test(lesson)
+		? `#${lesson}`
+		: `#${requestedCourseId.value}`;
+});
 const requestedCourseProjectKey = computed(() =>
 	typeof route.query.projectKey === "string" ? route.query.projectKey : ""
 );
@@ -3054,14 +3000,6 @@ async function createProject(
 		await nextTick();
 		resetActiveCanvas();
 	}
-}
-
-async function createSelectedWorkspaceProject() {
-	const preset = codeIdeWorkspacePresets.find(
-		candidate => candidate.id === newWorkspacePresetID.value
-	);
-	if (!preset) return;
-	await createProject(preset.mode, preset.template);
 }
 
 async function createProjectFromMenu(
@@ -7046,6 +6984,8 @@ function focusVisualOutputForRun() {
 		return;
 	}
 
+	if (window.matchMedia?.("(max-width: 900px)").matches)
+		mobileView.value = "canvas";
 	visualOutput?.focus({ preventScroll: true });
 	window.requestAnimationFrame(() =>
 		visualOutput?.focus({ preventScroll: true })
@@ -7084,6 +7024,8 @@ function activateRunControl() {
 		return;
 	}
 	focusVisualOutputForRun();
+	if (window.matchMedia?.("(max-width: 900px)").matches)
+		mobileView.value = usesVisualOutput.value ? "canvas" : "console";
 	void runCurrentProject().finally(focusVisualOutputForRun);
 }
 
@@ -7458,20 +7400,13 @@ function clearCanvasKeyboardState() {
 	activeTurtleDragButton = null;
 }
 
+watch(mobileView, () => {
+	void nextTick(refreshResizableIdeLayout);
+});
+
 watch(currentRouteImportKey, () => {
 	void loadProjects();
 });
-
-watch(
-	selectedProject,
-	project => {
-		if (!project) return;
-		newWorkspacePresetID.value = isPythonIdeBlueJProject(project)
-			? "bluej"
-			: project.mode;
-	},
-	{ immediate: true }
-);
 
 watch(selectedProjectID, (projectID, previousProjectID) => {
 	const expectedMigration = expectedSelectedProjectIDMigration;
@@ -7715,21 +7650,48 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 			type="file"
 			@change="importBlueJProjectArchiveFromInput"
 		/>
-		<div class="code-ide-hero">
-			<div>
-				<p class="code-ide-eyebrow">{{ codeIdeHeroContent.eyebrow }}</p>
-				<h1>{{ codeIdeHeroContent.title }}</h1>
+		<WorkspaceHeader title="Python or Java">
+			<button
+				type="button"
+				class="site-button site-button--secondary compact-button"
+				aria-haspopup="dialog"
+				:aria-expanded="showProjectMenu"
+				@click="showProjectMenu = true"
+			>
+				New project
+			</button>
+			<span role="status">{{ saveMessage }}</span>
+			<strong>{{ runMessage }}</strong>
+			<RouterLink
+				v-if="requestedCourseId"
+				:to="{ path: '/courses', hash: returnLessonHash }"
+				>Return to lesson</RouterLink
+			>
+			<details>
+				<summary>Help</summary>
 				<p>{{ codeIdeHeroContent.description }}</p>
-			</div>
-			<div class="code-ide-status">
-				<div aria-live="polite">
-					<span>{{ saveMessage }}</span>
-					<strong>{{ runMessage }}</strong>
-				</div>
-			</div>
-		</div>
-
-		<IdeDiagnosticsControls :capture="captureIdeDiagnostics" />
+				<IdeDiagnosticsControls :capture="captureIdeDiagnostics" />
+			</details>
+		</WorkspaceHeader>
+		<IdeStarterPicker
+			:open="showProjectMenu"
+			:preferred-language="selectedProject?.mode"
+			@close="showProjectMenu = false"
+			@choose="createProjectFromMenu($event.mode, $event.template)"
+			@import="openBlueJArchiveImporterFromMenu"
+		/>
+		<WorkspaceStorageStatus
+			:label="
+				canSyncToAccount
+					? 'Storage: your account and this device.'
+					: 'Storage: this device.'
+			"
+			>{{
+				canSyncToAccount
+					? "Python and Java sync when saved. Download a ZIP for a separate copy."
+					: "Edits save locally when autosave is enabled. Sign in to sync, or download a ZIP."
+			}}</WorkspaceStorageStatus
+		>
 
 		<div v-if="isLoading" class="code-ide-loading site-surface">
 			Loading code workspace...
@@ -7791,7 +7753,10 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 					projectCatalog.length)
 			"
 			class="code-ide-workspace"
-			:class="{ 'is-sidebar-collapsed': sidebarCollapsed }"
+			:class="{
+				'is-sidebar-collapsed': sidebarCollapsed,
+				'mobile-projects-open': mobileProjectsOpen
+			}"
 		>
 			<button
 				v-if="sidebarCollapsed"
@@ -7809,6 +7774,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 				v-else
 				id="code-ide-sidebar"
 				class="code-ide-sidebar"
+				:class="{ 'mobile-projects-open': mobileProjectsOpen }"
 				aria-label="Code projects and files"
 			>
 				<div class="sidebar-block">
@@ -7829,323 +7795,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 									aria-hidden="true"
 								/>
 							</button>
-							<div class="project-create">
-								<button
-									:aria-expanded="showProjectMenu"
-									aria-haspopup="menu"
-									aria-label="More project options"
-									class="icon-action icon-action--add"
-									title="More project options"
-									type="button"
-									@click="showProjectMenu = !showProjectMenu"
-								>
-									+
-								</button>
-								<div
-									v-if="showProjectMenu"
-									class="project-create-menu"
-									role="menu"
-								>
-									<span>Import project</span>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											openBlueJArchiveImporterFromMenu
-										"
-									>
-										Import BlueJ ZIP
-									</button>
-									<span>Classroom projects</span>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'circle-art'
-											)
-										"
-									>
-										Color Circle Art
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'picasso'
-											)
-										"
-									>
-										Picasso Keyboard Painter
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'triangle-motion'
-											)
-										"
-									>
-										Triangle Motion Starter
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'neon-trail'
-											)
-										"
-									>
-										Neon Trail Painter
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'firework-festival'
-											)
-										"
-									>
-										Firework Festival
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'spiral-galaxy'
-											)
-										"
-									>
-										Spiral Galaxy
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'turtle-race'
-											)
-										"
-									>
-										Turtle Race Day
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'flower-garden'
-											)
-										"
-									>
-										Flower Garden Clicker
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'maze-explorer'
-											)
-										"
-									>
-										Maze Explorer
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'classroom-project'
-											)
-										"
-									>
-										Classroom Turtle Studio
-									</button>
-									<span>Template project</span>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'outline'
-											)
-										"
-									>
-										Python Level 1 Outline
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'pgzero',
-												'outline'
-											)
-										"
-									>
-										PyGame Zero Outline
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'java',
-												'outline'
-											)
-										"
-									>
-										Java Outline
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'java',
-												'bluej'
-											)
-										"
-									>
-										BlueJ Java Project
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'karel',
-												'outline'
-											)
-										"
-									>
-										Karel Java Outline
-									</button>
-									<span>Demo project</span>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'python',
-												'demo'
-											)
-										"
-									>
-										Demo Python
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'data',
-												'demo'
-											)
-										"
-									>
-										Demo Data / AI
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'turtle',
-												'demo'
-											)
-										"
-									>
-										Demo Python Turtle
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'pgzero',
-												'demo'
-											)
-										"
-									>
-										Demo PyGame Zero
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'java',
-												'demo'
-											)
-										"
-									>
-										Demo Java
-									</button>
-									<button
-										type="button"
-										role="menuitem"
-										@click="
-											createProjectFromMenu(
-												'karel',
-												'demo'
-											)
-										"
-									>
-										Demo Karel Java
-									</button>
-								</div>
-							</div>
 						</div>
-					</div>
-
-					<div
-						class="workspace-type-control"
-						aria-label="IDE and language selector"
-						role="group"
-					>
-						<label class="workspace-type-label">
-							<span>Workspace type</span>
-							<select v-model="newWorkspacePresetID">
-								<optgroup
-									v-for="group in codeIdeWorkspacePresetGroups"
-									:key="group.label"
-									:label="group.label"
-								>
-									<option
-										v-for="preset in group.presets"
-										:key="preset.id"
-										:value="preset.id"
-									>
-										{{ preset.label }}
-									</option>
-								</optgroup>
-							</select>
-						</label>
-						<button
-							class="site-button site-button--secondary compact-button workspace-type-create"
-							type="button"
-							@click="createSelectedWorkspaceProject"
-						>
-							New project
-						</button>
 					</div>
 
 					<div class="project-list">
@@ -8347,14 +7997,30 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 				</div>
 			</aside>
 
-			<main v-if="selectedProject" class="code-ide-main">
+			<div v-if="selectedProject" class="code-ide-main">
+				<div
+					class="mobile-workspace-navigation"
+					aria-label="Workspace views"
+				>
+					<button
+						type="button"
+						:aria-expanded="mobileProjectsOpen"
+						aria-controls="code-ide-sidebar"
+						@click="
+							mobileProjectsOpen = !mobileProjectsOpen;
+							sidebarCollapsed = false;
+						"
+					>
+						Projects / files
+					</button>
+				</div>
 				<div class="editor-toolbar">
 					<div class="project-title-field">
 						<label
 							class="project-title-label"
 							for="code-ide-project-title"
 						>
-							Project name
+							Project name · {{ selectedModeLabel }}
 						</label>
 						<input
 							id="code-ide-project-title"
@@ -8566,11 +8232,12 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 					</div>
 				</div>
 
-				<section
+				<details
 					v-if="selectedProjectCanShowBlueJIntegration"
 					class="bluej-integration-panel"
 					aria-label="BlueJ integration"
 				>
+					<summary>BlueJ desktop integration</summary>
 					<div>
 						<p class="bluej-integration-eyebrow">BlueJ</p>
 						<h2>BlueJ Desktop Integration</h2>
@@ -8642,7 +8309,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 							BlueJ source
 						</a>
 					</div>
-				</section>
+				</details>
 
 				<section
 					v-if="selectedVisibleReview"
@@ -8679,11 +8346,33 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 				</section>
 
 				<div
+					class="mobile-view-picker"
+					aria-label="Code and output views"
+				>
+					<button
+						v-for="view in ['code', 'canvas', 'console'] as const"
+						:key="view"
+						type="button"
+						:aria-pressed="mobileView === view"
+						:disabled="view === 'canvas' && !usesVisualOutput"
+						@click="mobileView = view"
+					>
+						{{
+							view === "code"
+								? "Code"
+								: view === "canvas"
+									? "Canvas"
+									: "Console"
+						}}
+					</button>
+				</div>
+				<div
 					ref="ideGridRef"
 					class="ide-grid"
 					:class="{
 						'ide-grid--drawing': usesVisualOutput,
-						'is-resizing': isResizingIdeSplit
+						'is-resizing': isResizingIdeSplit,
+						[`mobile-view-${mobileView}`]: true
 					}"
 					:style="ideGridStyle"
 				>
@@ -9006,15 +8695,37 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 						</div>
 					</section>
 				</div>
-			</main>
+			</div>
 		</div>
 	</section>
 </template>
 
 <style scoped>
+.workspace-storage-note {
+	margin: 0;
+	font-size: 0.85rem;
+	color: var(--color-ink-soft);
+}
+@media (max-width: 900px) {
+	.code-ide-workspace {
+		display: flex !important;
+		flex-direction: column;
+	}
+	.code-ide-main {
+		order: -1;
+		width: 100%;
+	}
+	.code-ide-sidebar {
+		width: 100%;
+		max-height: 24rem;
+		overflow: auto;
+	}
+}
+
 .code-ide-page {
 	width: min(1680px, calc(100% - clamp(2rem, 4vw, 4rem)));
-	gap: 1.25rem;
+	padding: 0.75rem 0 1rem;
+	gap: 0.75rem;
 	--code-ide-toolbar-control-size: 3.5rem;
 	--code-ide-toolbar-button-width: 6.75rem;
 	--code-ide-toolbar-control-radius: 16px;
@@ -9363,44 +9074,6 @@ html.dark .karel-empty {
 	position: relative;
 }
 
-.workspace-type-control {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto;
-	gap: 0.5rem;
-	align-items: end;
-}
-
-.workspace-type-label {
-	min-width: 0;
-	display: grid;
-	gap: 0.35rem;
-}
-
-.workspace-type-label span {
-	color: var(--color-ink-soft);
-	font-size: 0.72rem;
-	font-weight: 800;
-}
-
-.workspace-type-label select {
-	width: 100%;
-	min-width: 0;
-	height: 2.55rem;
-	padding: 0 2rem 0 0.7rem;
-	border: 1px solid var(--color-border);
-	border-radius: 8px;
-	background: rgba(255, 255, 255, 0.84);
-	color: var(--color-ink);
-	font: inherit;
-	font-size: 0.82rem;
-	font-weight: 700;
-}
-
-.workspace-type-create {
-	min-height: 2.55rem;
-	white-space: nowrap;
-}
-
 .icon-action {
 	width: 2.1rem;
 	height: 2.1rem;
@@ -9551,12 +9224,6 @@ html.dark .project-create-menu button {
 html.dark .project-create-menu button:hover,
 html.dark .project-create-menu button:focus-visible {
 	background: #164e4b;
-}
-
-html.dark .workspace-type-label select {
-	border-color: rgba(94, 234, 212, 0.22);
-	background: #0f1b2a;
-	color: #f8fafc;
 }
 
 html.dark .bluej-integration-panel {
@@ -9879,6 +9546,7 @@ html.dark .file-delete:disabled::after {
 .code-ide-main {
 	min-width: 0;
 	display: grid;
+	align-content: start;
 	gap: 1rem;
 	padding: 1rem;
 }
@@ -11057,6 +10725,88 @@ html.dark .editor-shortcuts ul {
 
 	.ide-settings-trigger {
 		flex: 1 1 auto;
+	}
+}
+.mobile-workspace-navigation,
+.mobile-view-picker {
+	display: none;
+}
+.bluej-integration-panel summary {
+	cursor: pointer;
+	font-weight: 600;
+}
+.bluej-integration-panel:not([open]) {
+	display: block;
+	padding: 0.6rem 0.75rem;
+}
+@media (max-width: 900px) {
+	.mobile-workspace-navigation,
+	.mobile-view-picker {
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+	.mobile-workspace-navigation button,
+	.mobile-view-picker button {
+		min-height: 2.75rem;
+		padding: 0.35rem 0.6rem;
+		border: 1px solid var(--color-border);
+		border-radius: 0.5rem;
+		background: var(--color-surface-strong);
+		color: var(--color-ink);
+	}
+	.mobile-view-picker button[aria-pressed="true"] {
+		border-color: var(--color-accent);
+		box-shadow: inset 0 0 0 1px var(--color-accent);
+	}
+	.code-ide-sidebar:not(.mobile-projects-open),
+	.sidebar-collapse-toggle--rail {
+		display: none;
+	}
+	.code-ide-sidebar.mobile-projects-open {
+		order: -2;
+	}
+	.ide-grid.mobile-view-code .result-panel,
+	.ide-grid.mobile-view-canvas .code-panel,
+	.ide-grid.mobile-view-console .code-panel {
+		display: none;
+	}
+	.ide-grid.mobile-view-console .result-visuals {
+		display: none;
+	}
+	.ide-grid.mobile-view-canvas .input-output-grid {
+		display: none;
+	}
+	.ide-grid {
+		min-height: 50vh;
+	}
+	.code-ide-page {
+		gap: 0.5rem;
+		padding-block: 0.5rem;
+	}
+	.code-ide-main {
+		padding: 0.75rem;
+		gap: 0.65rem;
+	}
+	.code-ide-page .workspace-heading {
+		padding: 0;
+	}
+}
+@media (max-width: 480px) {
+	.editor-actions {
+		grid-template-columns: 2.75rem minmax(0, 1.4fr) repeat(
+				2,
+				minmax(0, 1fr)
+			);
+		gap: 0.4rem;
+	}
+	.editor-actions > .site-button {
+		padding-inline: 0.35rem;
+		font-size: 0.85rem;
+	}
+	.code-ide-page {
+		--code-ide-toolbar-control-size: 2.75rem;
+		--code-ide-toolbar-control-radius: 10px;
 	}
 }
 </style>

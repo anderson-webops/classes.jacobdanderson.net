@@ -9,11 +9,13 @@ describe("admin workspace mobile layout", () => {
 	it("allows admin shell panels to shrink inside narrow viewports", () => {
 		const source = readSource("../src/components/AdminWorkspaceShell.vue");
 
-		expect(source).toContain(".admin-shell__hero");
+		expect(source).toContain("<WorkspaceHeader");
 		expect(source).toContain("min-width: 0;");
 		expect(source).toContain("max-width: 100%;");
 		expect(source).toContain(".admin-shell__body");
-		expect(source).toContain("box-sizing: border-box;");
+		expect(readSource("../src/styles/main.css")).toContain(
+			"box-sizing: border-box;"
+		);
 		expect(source).toContain(".admin-shell__nav-link");
 	});
 

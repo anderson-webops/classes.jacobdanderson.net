@@ -7,6 +7,7 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
 import AccessibleDialog from "@/components/AccessibleDialog.vue";
+import CourseCodeAccessForm from "@/components/CourseCodeAccessForm.vue";
 import {
 	emptyOAuthProviderAvailability,
 	fetchOAuthProviderAvailability,
@@ -18,7 +19,10 @@ import { useAppStore } from "@/stores/app";
 const app = useAppStore();
 
 // ─── LOGIN STATE & METHODS ──────────────────────────────────────────
-const { loginBlock, signupBlock } = storeToRefs(app);
+const { loginBlock, signupBlock, currentCourseLearner } = storeToRefs(app);
+watch(currentCourseLearner, learner => {
+	if (learner && loginBlock.value) changeLoginView(false);
+});
 
 const loginEmail = ref("");
 const loginPassword = ref("");
@@ -339,8 +343,12 @@ async function addSignup() {
 				</p>
 			</form>
 
+			<details v-if="loginView === 'login'" class="auth-classroom-entry">
+				<summary>Use a classroom code instead</summary>
+				<CourseCodeAccessForm />
+			</details>
 			<form
-				v-else
+				v-if="loginView !== 'login'"
 				class="auth-form password-reset-form"
 				@submit.prevent="requestPasswordReset"
 			>

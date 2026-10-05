@@ -9,6 +9,7 @@ import { api } from "@/api";
 import AccountSecurity from "@/components/AccountSecurity.vue";
 import CourseAccessCodeManager from "@/components/CourseAccessCodeManager.vue";
 import LearnerCodeReviewTools from "@/components/LearnerCodeReviewTools.vue";
+import LearnerContextActions from "@/components/LearnerContextActions.vue";
 import LearnerSessionTools from "@/components/LearnerSessionTools.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 // import { useDeleteAccount } from "@/composables/useDeleteAccount";
@@ -25,6 +26,14 @@ const props = defineProps<{ mode?: "account" | "teaching" }>();
 /* -------------------------------------------------- */
 const app = useAppStore();
 const { currentTutor, users } = storeToRefs(app);
+const learnerSearch = ref("");
+const filteredUsers = computed(() =>
+	users.value.filter(user =>
+		`${user.name} ${user.email}`
+			.toLowerCase()
+			.includes(learnerSearch.value.trim().toLowerCase())
+	)
+);
 const error = ref("");
 const success = ref("");
 // const deleteMe = useDeleteAccount("tutor");
@@ -208,7 +217,7 @@ async function saveUserCourses(userID: string) {
 
 <template>
 	<section class="profile-workspace">
-		<header class="workspace-header">
+		<header v-if="!isTeachingMode" class="workspace-header">
 			<div>
 				<p class="workspace-eyebrow">Tutor profile</p>
 				<h2>
@@ -238,7 +247,7 @@ async function saveUserCourses(userID: string) {
 			</div>
 		</header>
 
-		<article v-if="currentTutor" class="workspace-sheet">
+		<article v-if="currentTutor && !isTeachingMode" class="workspace-sheet">
 			<div class="sheet-summary">
 				<div class="summary-block">
 					<p class="summary-label">Courses enabled</p>
@@ -331,10 +340,15 @@ async function saveUserCourses(userID: string) {
 			</div>
 		</article>
 
-		<CourseAccessCodeManager
-			v-if="isTeachingMode"
-			:courses="permittedCourses"
-		/>
+		<div v-if="isTeachingMode" class="teaching-controls">
+			<label class="roster-search"
+				>Search learners<input
+					v-model="learnerSearch"
+					type="search"
+					placeholder="Name or email"
+			/></label>
+			<p v-if="!filteredUsers.length">No matching learners.</p>
+		</div>
 
 		<section v-if="isTeachingMode" class="directory-section">
 			<div class="section-heading">
@@ -349,7 +363,11 @@ async function saveUserCourses(userID: string) {
 			</div>
 
 			<div class="directory-grid">
-				<article v-for="u in users" :key="u._id" class="directory-card">
+				<article
+					v-for="u in filteredUsers"
+					:key="u._id"
+					class="directory-card"
+				>
 					<div class="directory-card-header">
 						<div>
 							<h4>{{ u.name }}</h4>
@@ -408,6 +426,7 @@ async function saveUserCourses(userID: string) {
 						<p v-else class="summary-copy">No course access yet</p>
 					</div>
 
+					<LearnerContextActions :student-id="String(u._id)" />
 					<LearnerSessionTools
 						:user-email="u.email"
 						:user-id="String(u._id)"
@@ -519,10 +538,28 @@ async function saveUserCourses(userID: string) {
 		<p v-if="error" class="error" role="alert">
 			{{ error }}
 		</p>
+		<details v-if="isTeachingMode" class="course-code-tools">
+			<summary>Create or manage classroom codes</summary>
+			<CourseAccessCodeManager :courses="permittedCourses" />
+		</details>
 	</section>
 </template>
 
 <style scoped>
+.roster-search {
+	display: grid;
+	gap: 0.4rem;
+	margin-bottom: 1rem;
+	font: inherit;
+}
+.roster-search input {
+	padding: 0.65rem;
+	width: 100%;
+	color: var(--color-ink);
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: 0.5rem;
+}
 .profile-workspace {
 	display: grid;
 	gap: 1.1rem;

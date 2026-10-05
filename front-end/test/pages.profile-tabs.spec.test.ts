@@ -22,6 +22,15 @@ describe("Profile page account routing", () => {
 		setActivePinia(createPinia());
 	});
 
+	it("opens actual account creation without sending visitors to booking", async () => {
+		const app = useAppStore();
+		const wrapper = mount(ProfilePage, { global: { stubs: { RouterLink: true } } });
+		const button = wrapper.findAll("button").find(button => button.text() === "Create an account")!;
+		await button.trigger("click");
+		expect(app.signupBlock).toBe(true);
+		expect(wrapper.find('[to="/signup"]').exists()).toBe(false);
+		wrapper.unmount();
+	});
 	it("renders account content without embedding course-library tabs", async () => {
 		const app = useAppStore();
 		app.setCurrentUser({

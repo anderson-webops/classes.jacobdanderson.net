@@ -200,11 +200,9 @@ describe("python IDE CodeMirror editor", () => {
 		expect(workspaceSource).toContain("codeIdeHeroContent");
 		expect(workspaceSource).not.toContain('route.path === "/bluej"');
 		expect(workspaceSource).toContain(
-			"<h1>{{ codeIdeHeroContent.title }}</h1>"
+			'<WorkspaceHeader title="Python or Java">'
 		);
-		expect(workspaceSource).toContain(
-			'title: "Code, run, and draw in Python or Java"'
-		);
+		expect(workspaceSource).toContain("WorkspaceHeader");
 		expect(workspaceSource).toContain(
 			"Build multi-file Python and Java projects"
 		);
@@ -1681,36 +1679,26 @@ describe("python IDE CodeMirror editor", () => {
 			pageSource.match(
 				/class="editor-toolbar"[\s\S]*?<div class="ide-grid">/
 			)?.[0] ?? "";
-		const workspaceSelectorSource =
-			pageSource.match(
-				/class="workspace-type-control"[\s\S]*?<div class="project-list">/
-			)?.[0] ?? "";
-
+		const pickerSource = sourceFile(
+			"../src/components/IdeStarterPicker.vue"
+		);
 		expect(toolbarSource).not.toContain("<select");
 		expect(toolbarSource).not.toContain("selectedProject.mode");
-		expect(workspaceSelectorSource).toContain(
-			'v-model="newWorkspacePresetID"'
+		expect(pageSource).toContain("<IdeStarterPicker");
+		expect(pageSource).toContain(
+			"createProjectFromMenu($event.mode, $event.template)"
 		);
-		expect(workspaceSelectorSource).toContain(
-			"codeIdeWorkspacePresetGroups"
-		);
-		expect(workspaceSelectorSource).toContain(
-			"createSelectedWorkspaceProject"
-		);
-		for (const presetID of [
+		for (const mode of [
 			"python",
 			"data",
 			"turtle",
 			"pgzero",
 			"java",
-			"karel",
-			"bluej"
+			"karel"
 		]) {
-			expect(pageSource).toContain(`id: "${presetID}"`);
+			expect(pickerSource).toContain(`value="${mode}"`);
 		}
-		expect(pageSource).toContain(
-			"await createProject(preset.mode, preset.template);"
-		);
+
 		expect(pageSource).not.toContain(
 			"selectedProject.value.mode = newWorkspacePresetID.value"
 		);

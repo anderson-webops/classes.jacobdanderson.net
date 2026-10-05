@@ -1,9 +1,21 @@
 <script lang="ts" setup>
+import { nextTick, watch } from "vue";
+import { useRoute } from "vue-router";
+import { isWorkspacePath } from "@/modules/siteNavigation";
 import AccountManagement from "~/components/AccountManagement.vue";
 import TheHeader from "~/components/TheHeader.vue";
 import { useAppStore } from "../stores/app";
 
 const app = useAppStore();
+const route = useRoute();
+watch(
+	() => route.path,
+	async () => {
+		await nextTick();
+		// Focus the persistent landmark, including while an async page is loading.
+		document.getElementById("main-content")?.focus({ preventScroll: true });
+	}
+);
 
 function showLoginModal() {
 	app.setLoginBlock(true);
@@ -29,9 +41,9 @@ function showSignupModal() {
 
 		<AccountManagement />
 
-		<main id="main-content" class="site-main">
+		<main id="main-content" class="site-main" tabindex="-1">
 			<RouterView />
 		</main>
-		<TheFooter />
+		<TheFooter :compact="isWorkspacePath(route.path)" />
 	</div>
 </template>

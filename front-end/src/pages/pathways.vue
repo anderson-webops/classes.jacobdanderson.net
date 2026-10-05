@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
+import { computed, ref } from "vue";
 import { useAppStore } from "@/stores/app";
 import { courseCatalog } from "@/stores/courses/index";
 import { coursePublicPathways } from "@/stores/courses/public-pathways";
@@ -11,6 +12,7 @@ const { isAdmin } = storeToRefs(app);
 const courseNameById = new Map(
 	courseCatalog.map(course => [course.id, course.name])
 );
+const search = ref("");
 const priorityRank = {
 	urgent: 0,
 	soon: 1,
@@ -18,11 +20,19 @@ const priorityRank = {
 };
 
 const sortedPathways = computed(() =>
-	[...coursePublicPathways].sort(
-		(a, b) =>
-			priorityRank[a.adminPriority] - priorityRank[b.adminPriority] ||
-			a.title.localeCompare(b.title)
-	)
+	[...coursePublicPathways]
+		.filter(pathway =>
+			`${pathway.title} ${pathway.audience} ${pathway.prerequisiteSummary} ${pathway.courseIds.map(courseName).join(" ")}`
+				.toLowerCase()
+				.includes(search.value.trim().toLowerCase())
+		)
+		.sort(
+			(a, b) =>
+				(isAdmin.value
+					? priorityRank[a.adminPriority] -
+						priorityRank[b.adminPriority]
+					: 0) || a.title.localeCompare(b.title)
+		)
 );
 const coveredCourseCount = computed(() =>
 	coursePublicPathways.reduce(
@@ -57,7 +67,7 @@ function priorityLabel(priority: string) {
 			</div>
 			<div class="pathways-stats" aria-label="Pathway coverage summary">
 				<div>
-					<strong>{{ sortedPathways.length }}</strong>
+					<strong>{{ coursePublicPathways.length }}</strong>
 					<span>Pathways</span>
 				</div>
 				<div>
@@ -67,9 +77,27 @@ function priorityLabel(priority: string) {
 			</div>
 		</header>
 
+		<label class="pathway-search"
+			>Search course families<input
+				v-model="search"
+				type="search"
+				placeholder="Python, Scratch, math…"
+		/></label>
+		<nav class="pathway-index" aria-label="Course family index">
+			<a
+				v-for="pathway in sortedPathways"
+				:key="pathway.id"
+				:href="`#pathway-${pathway.id}`"
+				>{{ pathway.title }}</a
+			>
+		</nav>
+		<p v-if="!sortedPathways.length" role="status">
+			No matching pathways. Try a subject or course name.
+		</p>
 		<div class="pathways-grid">
 			<article
 				v-for="pathway in sortedPathways"
+				:id="`pathway-${pathway.id}`"
 				:key="pathway.id"
 				class="site-surface site-surface--soft pathway-card"
 			>
@@ -97,118 +125,127 @@ function priorityLabel(priority: string) {
 					{{ pathway.audience }}
 				</p>
 
-				<section>
-					<h3>Courses Covered</h3>
-					<ul class="course-chip-list">
-						<li
-							v-for="courseId in pathway.courseIds"
-							:key="courseId"
-						>
-							{{ courseName(courseId) }}
-						</li>
-					</ul>
-				</section>
-
-				<section>
-					<h3>Prerequisite Summary</h3>
-					<p>{{ pathway.prerequisiteSummary }}</p>
-				</section>
-
-				<div class="pathway-card__columns">
-					<section>
-						<h3>Outcomes</h3>
-						<ul>
-							<li
-								v-for="outcome in pathway.outcomes"
-								:key="outcome"
-							>
-								{{ outcome }}
-							</li>
-						</ul>
-					</section>
-
-					<section>
-						<h3>Project Expectations</h3>
-						<ul>
-							<li
-								v-for="project in pathway.projectExpectations"
-								:key="project"
-							>
-								{{ project }}
-							</li>
-						</ul>
-					</section>
-				</div>
-
+				<p class="pathway-readiness">
+					<strong>Readiness:</strong>
+					{{ pathway.prerequisiteSummary }}
+				</p>
 				<details>
 					<summary>
-						{{
-							isAdmin
-								? "Assessment, tooling, safety, and next work"
-								: "Assessment, tooling, and safety"
-						}}
+						Courses, outcomes and project expectations
 					</summary>
-					<div class="pathway-card__details">
+					<section>
+						<h3>Courses Covered</h3>
+						<ul class="course-chip-list">
+							<li
+								v-for="courseId in pathway.courseIds"
+								:key="courseId"
+							>
+								{{ courseName(courseId) }}
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Prerequisite Summary</h3>
+						<p>{{ pathway.prerequisiteSummary }}</p>
+					</section>
+
+					<div class="pathway-card__columns">
 						<section>
-							<h3>Sequencing Notes</h3>
+							<h3>Outcomes</h3>
 							<ul>
 								<li
-									v-for="note in pathway.sequencingNotes"
-									:key="note"
+									v-for="outcome in pathway.outcomes"
+									:key="outcome"
 								>
-									{{ note }}
+									{{ outcome }}
 								</li>
 							</ul>
 						</section>
 
 						<section>
-							<h3>Assessment Style</h3>
+							<h3>Project Expectations</h3>
 							<ul>
 								<li
-									v-for="assessment in pathway.assessmentStyle"
-									:key="assessment"
+									v-for="project in pathway.projectExpectations"
+									:key="project"
 								>
-									{{ assessment }}
-								</li>
-							</ul>
-						</section>
-
-						<section>
-							<h3>Sources and Tooling</h3>
-							<ul>
-								<li
-									v-for="source in pathway.sourceAndTooling"
-									:key="source"
-								>
-									{{ source }}
-								</li>
-							</ul>
-						</section>
-
-						<section>
-							<h3>Safety and Access</h3>
-							<ul>
-								<li
-									v-for="boundary in pathway.safetyAndAccess"
-									:key="boundary"
-								>
-									{{ boundary }}
-								</li>
-							</ul>
-						</section>
-
-						<section v-if="isAdmin">
-							<h3>Expansion Backlog</h3>
-							<ul>
-								<li
-									v-for="item in pathway.adminExpansionBacklog"
-									:key="item"
-								>
-									{{ item }}
+									{{ project }}
 								</li>
 							</ul>
 						</section>
 					</div>
+
+					<details>
+						<summary>
+							{{
+								isAdmin
+									? "Assessment, tooling, safety, and next work"
+									: "Assessment, tooling, and safety"
+							}}
+						</summary>
+						<div class="pathway-card__details">
+							<section>
+								<h3>Sequencing Notes</h3>
+								<ul>
+									<li
+										v-for="note in pathway.sequencingNotes"
+										:key="note"
+									>
+										{{ note }}
+									</li>
+								</ul>
+							</section>
+
+							<section>
+								<h3>Assessment Style</h3>
+								<ul>
+									<li
+										v-for="assessment in pathway.assessmentStyle"
+										:key="assessment"
+									>
+										{{ assessment }}
+									</li>
+								</ul>
+							</section>
+
+							<section>
+								<h3>Sources and Tooling</h3>
+								<ul>
+									<li
+										v-for="source in pathway.sourceAndTooling"
+										:key="source"
+									>
+										{{ source }}
+									</li>
+								</ul>
+							</section>
+
+							<section>
+								<h3>Safety and Access</h3>
+								<ul>
+									<li
+										v-for="boundary in pathway.safetyAndAccess"
+										:key="boundary"
+									>
+										{{ boundary }}
+									</li>
+								</ul>
+							</section>
+
+							<section v-if="isAdmin">
+								<h3>Expansion Backlog</h3>
+								<ul>
+									<li
+										v-for="item in pathway.adminExpansionBacklog"
+										:key="item"
+									>
+										{{ item }}
+									</li>
+								</ul>
+							</section>
+						</div>
+					</details>
 				</details>
 			</article>
 		</div>
@@ -216,6 +253,32 @@ function priorityLabel(priority: string) {
 </template>
 
 <style scoped>
+.pathway-search {
+	display: grid;
+	gap: 0.4rem;
+	font: inherit;
+	text-transform: none;
+	letter-spacing: normal;
+}
+.pathway-search input {
+	padding: 0.75rem;
+	border: 1px solid var(--color-border);
+	background: var(--color-surface);
+	color: var(--color-ink);
+	border-radius: 0.6rem;
+}
+.pathway-index {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+}
+.pathway-card {
+	scroll-margin-top: 1rem;
+}
+.pathway-card details > section {
+	margin-top: 1rem;
+}
+
 .pathways-page {
 	display: flex;
 	flex-direction: column;

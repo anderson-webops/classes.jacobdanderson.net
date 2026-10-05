@@ -48,7 +48,7 @@ const heroCopy = computed(() => {
 	}
 
 	if (currentCourseLearner.value) {
-		return `Signed in as ${currentCourseLearner.value.username}. Your IDE projects sync to this classroom workspace.`;
+		return `Signed in as ${currentCourseLearner.value.username}. Your Python and Java projects sync to this classroom workspace. Scratch projects need a downloaded .sb3 file; graphs save on this device.`;
 	}
 
 	if (hasAssignedCourseAccess.value) {
@@ -68,7 +68,10 @@ function openSignup() {
 </script>
 
 <template>
-	<section class="page-shell page-shell--wide courses-page">
+	<section
+		class="page-shell page-shell--wide courses-page"
+		:class="{ 'is-learning': hasAssignedCourseAccess }"
+	>
 		<header class="courses-hero site-surface">
 			<div class="courses-copy">
 				<p class="page-eyebrow">{{ heroEyebrow }}</p>
@@ -115,7 +118,23 @@ function openSignup() {
 			</div>
 		</header>
 
-		<section v-if="!isLoggedIn" class="courses-code-entry">
+		<section v-if="!isLoggedIn" class="site-surface courses-discovery">
+			<h2>Explore before enrolling</h2>
+			<p>
+				Browse course families, prerequisites and project expectations.
+				Course lessons require assigned access.
+			</p>
+			<RouterLink
+				class="site-button site-button--secondary"
+				to="/pathways"
+				>Explore course pathways</RouterLink
+			>
+		</section>
+		<section
+			v-if="!isLoggedIn"
+			id="classroom-access"
+			class="courses-code-entry"
+		>
 			<CourseCodeAccessForm />
 		</section>
 
@@ -124,9 +143,9 @@ function openSignup() {
 			class="courses-gate site-surface site-surface--soft"
 			role="status"
 		>
-			<h2>No Courses Yet</h2>
+			<h2>Get course access</h2>
 			<p>
-				Email
+				Ask your tutor to assign a course, or email
 				<a class="text-link" href="mailto:classes@jacobdanderson.net">
 					classes@jacobdanderson.net
 				</a>
@@ -139,6 +158,19 @@ function openSignup() {
 </template>
 
 <style scoped>
+.courses-discovery {
+	padding: 1rem;
+}
+.is-learning .courses-hero {
+	padding: 0.65rem 1rem;
+}
+.is-learning .courses-title {
+	font-size: 1.4rem;
+}
+.is-learning .page-eyebrow,
+.is-learning .page-copy {
+	display: none;
+}
 .courses-page {
 	display: flex;
 	flex-direction: column;

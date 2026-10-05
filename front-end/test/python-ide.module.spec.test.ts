@@ -1,3 +1,4 @@
+import { ideStarters } from "../src/modules/ideStarterCatalog";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { python } from "@codemirror/lang-python";
 import { EditorState } from "@codemirror/state";
@@ -1597,7 +1598,7 @@ pgzrun.go()
 			"utf8"
 		);
 
-		expect(headerSource).toContain('{ label: "IDE", to: "/ide"');
+		expect(headerSource).toContain('{ label: siteLabels.ide, to: "/ide"');
 		expect(headerSource).not.toContain('label: "BlueJ IDE"');
 		expect(pageHeadSource).toContain('[/^\\/ide(?:\\/|$)/, "IDE"]');
 		expect(pageHeadSource).toContain('[/^\\/python-ide(?:\\/|$)/, "IDE"]');
@@ -4525,66 +4526,25 @@ pgzrun.go()
 		expect(moduleSource).toContain("function getOutlineStarterFiles");
 		expect(moduleSource).toContain('if (template === "outline")');
 		expect(moduleSource).toContain('if (template === "bluej")');
-		expect(pageSource).toContain("Template project");
-		expect(pageSource).toContain("Classroom projects");
-		expect(pageSource).toContain("Classroom Turtle Studio");
-		expect(pageSource).toContain("Python Level 1 Outline");
-		expect(pageSource).toContain("Color Circle Art");
-		expect(pageSource).toContain("Firework Festival");
-		expect(pageSource).toContain("Flower Garden Clicker");
-		expect(pageSource).toContain("Maze Explorer");
-		expect(pageSource).toContain("Neon Trail Painter");
-		expect(pageSource).toContain("Picasso Keyboard Painter");
-		expect(pageSource).toContain("Spiral Galaxy");
-		expect(pageSource).toContain("Turtle Race Day");
-		expect(pageSource).toContain("Triangle Motion Starter");
-		expect(pageSource).toContain("PyGame Zero Outline");
-		expect(pageSource).toContain("Java Outline");
-		expect(pageSource).toContain("BlueJ Java");
-		expect(pageSource).toContain("BlueJ Java Project");
-		expect(pageSource).toContain("Karel Java Outline");
+		expect(pageSource).toContain("<IdeStarterPicker");
+		expect(pageSource).toContain("createProjectFromMenu(");
+		expect(pageSource).toContain("$event.mode, $event.template");
+		for (const starter of ideStarters) {
+			const project = createPythonIdeProject(starter.mode, {
+				template: starter.template
+			});
+			expect(project.mode).toBe(starter.mode);
+			expect(project.files.length).toBeGreaterThan(0);
+		}
+		expect(
+			ideStarters.filter(item => item.category === "Classroom")
+		).toHaveLength(10);
+		expect(
+			ideStarters.filter(item => item.category === "Templates")
+		).toHaveLength(5);
 		expect(pageSource).toContain("requestedClassroomProject");
 		expect(pageSource).toContain(
 			"addPythonIdeClassroomSections(loadedFiles)"
-		);
-		expect(pageSource).toMatch(
-			/createProjectFromMenu\(\s*'turtle',\s*'outline'/
-		);
-		expect(pageSource).toMatch(
-			/createProjectFromMenu\(\s*'turtle',\s*'circle-art'/
-		);
-		expect(pageSource).toMatch(
-			/createProjectFromMenu\(\s*'turtle',\s*'picasso'/
-		);
-		expect(pageSource).toMatch(
-			/createProjectFromMenu\(\s*'turtle',\s*'triangle-motion'/
-		);
-		for (const template of [
-			"classroom-project",
-			"firework-festival",
-			"flower-garden",
-			"maze-explorer",
-			"neon-trail",
-			"spiral-galaxy",
-			"turtle-race"
-		]) {
-			expect(pageSource).toMatch(
-				new RegExp(
-					`createProjectFromMenu\\(\\s*'turtle',\\s*'${template}'`
-				)
-			);
-		}
-		expect(pageSource).toMatch(
-			/createProjectFromMenu\(\s*'pgzero',\s*'outline'/
-		);
-		expect(pageSource).toMatch(
-			/createProjectFromMenu\(\s*'java',\s*'outline'/
-		);
-		expect(pageSource).toMatch(
-			/createProjectFromMenu\(\s*'java',\s*'bluej'/
-		);
-		expect(pageSource).toMatch(
-			/createProjectFromMenu\(\s*'karel',\s*'outline'/
 		);
 	});
 
@@ -4633,14 +4593,10 @@ pgzrun.go()
 		);
 		expect(pageSource).toContain("codeIdeHeroContent");
 		expect(pageSource).toContain('eyebrow: "IDE"');
-		expect(pageSource).toContain("codeIdeWorkspacePresetGroups");
-		expect(pageSource).toContain('label: "Browser IDE"');
-		expect(pageSource).toContain('label: "BlueJ integration"');
-		expect(pageSource).toContain('label: "BlueJ Java"');
-		expect(pageSource).toContain('class="workspace-type-control"');
-		expect(pageSource).toContain('aria-label="IDE and language selector"');
-		expect(pageSource).toContain('v-model="newWorkspacePresetID"');
-		expect(pageSource).toContain("createSelectedWorkspaceProject");
+		expect(pageSource).toContain("<IdeStarterPicker");
+		expect(ideStarters).toContainEqual(
+			expect.objectContaining({ mode: "java", template: "bluej" })
+		);
 		expect(pageSource).toContain(
 			"BlueJ integration for desktop object-bench projects"
 		);
@@ -4705,7 +4661,7 @@ pgzrun.go()
 			"utf8"
 		);
 
-		expect(headerSource).toContain('{ label: "IDE", to: "/ide"');
+		expect(headerSource).toContain('{ label: siteLabels.ide, to: "/ide"');
 		expect(headerSource).not.toContain('to: "/bluej"');
 		expect(headerSource).not.toContain('label: "BlueJ IDE"');
 	});

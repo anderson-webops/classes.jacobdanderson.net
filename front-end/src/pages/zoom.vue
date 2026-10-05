@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+import { classMeetingUrl } from "@/modules/siteNavigation";
+
 defineOptions({ name: "ZoomClassroomPage" });
 
-const zoomMeetingUrl = "https://us06web.zoom.us/j/2543520025";
+const zoomMeetingUrl = classMeetingUrl;
 </script>
 
 <template>

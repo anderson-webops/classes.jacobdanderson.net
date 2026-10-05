@@ -236,6 +236,12 @@ function containsBlueJGreenfootSourceUrl(source) {
 	return false;
 }
 
+export function containsCodeIdeWorkspaceMarkers(source) {
+	return source.includes("Python or Java")
+		&& source.includes("Download project ZIP")
+		&& source.includes("BlueJ Desktop Integration");
+}
+
 export function containsCurrentIdeBundleMarkers(source) {
 	const hasKarelOverlayRuntime
 		= source.includes("karel-robot--")
@@ -246,9 +252,10 @@ export function containsCurrentIdeBundleMarkers(source) {
 			&& source.includes("will-change:left, top, transform");
 
 	return (
-		source.includes("Code, run, and draw in Python or Java")
-		&& source.includes("Workspace type")
-		&& source.includes("Browser IDE")
+		source.includes("Python or Java")
+		&& source.includes("Choose a starter")
+		&& source.includes("All languages")
+		&& source.includes("New project")
 		&& source.includes("BlueJ Java")
 		&& source.includes("preview Java console programs or Karel robot")
 		&& source.includes("BlueJ integration for desktop object-bench projects")
@@ -262,7 +269,7 @@ export function containsCurrentIdeBundleMarkers(source) {
 		&& source.includes("New BlueJ project")
 		&& source.includes("Import BlueJ ZIP")
 		&& source.includes("Download project ZIP")
-		&& source.includes("Classroom projects")
+		&& source.includes("Classroom")
 		&& source.includes("Maze Explorer")
 		&& source.includes("Triangle Motion Starter")
 		&& source.includes("Download BlueJ ZIP")
@@ -319,7 +326,7 @@ async function assertProductionIdePage(pageUrl) {
 			url
 		}))
 	);
-	const ideAsset = assetSources.find(asset => asset.source.includes("Code, run, and draw in Python or Java"));
+	const ideAsset = assetSources.find(asset => containsCodeIdeWorkspaceMarkers(asset.source));
 	const karelStyleAsset = assetSources.find(asset => asset.source.includes(".karel-robot"));
 	if (!ideAsset) {
 		throw new Error(`${pageUrl.href} did not reference the Code IDE bundle`);
@@ -373,8 +380,8 @@ async function assertProductionIdePage(pageUrl) {
 		runtimeUrl,
 		productionIdeSmokeLimits.maxAssetBytes
 	);
-	if (!runtimeSource.includes("An opaque Python frame is required.") ||
-		!runtimeSource.includes("Python execution requires an isolated frame.")) {
+	if (!runtimeSource.includes("An opaque Python frame is required.")
+		|| !runtimeSource.includes("Python execution requires an isolated frame.")) {
 		throw new Error(`${runtimeUrl.href} was not the isolated Python runtime bundle`);
 	}
 	const stylesheetUrl = new URL("/python-runtime/runtime.css", pageUrl);
@@ -391,10 +398,10 @@ async function assertProductionIdePage(pageUrl) {
 }
 
 export function validatePythonRuntimeAssetHeaders(headers) {
-	if (headers.get("access-control-allow-origin") !== "*" ||
-		headers.get("access-control-allow-credentials") !== null ||
-		headers.get("cross-origin-resource-policy") !== "cross-origin" ||
-		headers.get("x-content-type-options") !== "nosniff") {
+	if (headers.get("access-control-allow-origin") !== "*"
+		|| headers.get("access-control-allow-credentials") !== null
+		|| headers.get("cross-origin-resource-policy") !== "cross-origin"
+		|| headers.get("x-content-type-options") !== "nosniff") {
 		throw new Error("Public Python runtime assets require anonymous CORS and nosniff.");
 	}
 }

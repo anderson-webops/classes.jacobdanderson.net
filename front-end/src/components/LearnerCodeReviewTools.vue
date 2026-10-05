@@ -356,7 +356,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<details class="code-review-tools" @toggle="onToggle">
+	<details
+		:id="`learner-${userId}-projects`"
+		class="code-review-tools"
+		@toggle="onToggle"
+	>
 		<summary class="tools-summary">
 			<span>
 				<strong>Code review</strong>

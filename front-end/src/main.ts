@@ -10,6 +10,7 @@ import { setupLayouts } from "virtual:generated-layouts";
 
 import { routes } from "vue-router/auto-routes";
 import App from "./App.vue";
+import { routeScrollBehavior } from "./modules/routeOrientation";
 import { ViteSSG } from "./ssg";
 import { useAppStore } from "./stores/app";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -27,7 +28,8 @@ export const createApp = ViteSSG(
 	App,
 	{
 		routes: setupLayouts([...routes]),
-		base: import.meta.env.BASE_URL
+		base: import.meta.env.BASE_URL,
+		scrollBehavior: routeScrollBehavior
 	},
 	async ctx => {
 		// ctx is the context where you can add global components or plugins

@@ -1,4 +1,5 @@
 import { mount, type VueWrapper } from "@vue/test-utils";
+import { createPinia } from "pinia";
 import { createHead } from "@unhead/vue/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -22,7 +23,7 @@ describe("booking inside Classes", () => {
 		isDark.value = false;
 		wrapper = mount(SignupPage, {
 			attachTo: document.body,
-			global: { plugins: [createHead()] }
+			global: { plugins: [createPinia(), createHead()] }
 		});
 	});
 

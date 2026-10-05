@@ -38,12 +38,20 @@ function choose(event: Event) {
 <template>
 	<div class="integrated-ide">
 		<label class="ide-environment"
-			>Editor
+			>Editor environment
 			<select :value="scratch ? 'scratch' : 'code'" @change="choose">
-				<option value="code">Python or Java</option>
+				<option value="code">Code: Python or Java</option>
 				<option value="scratch">Scratch blocks</option>
 			</select>
 		</label>
+		<details class="ide-environment-note">
+			<summary>About editor environments</summary>
+			<p>
+				Switch editors here. To use another code language, create a new
+				project inside the Code editor; existing projects keep their
+				language.
+			</p>
+		</details>
 		<CodeIdeWorkspace
 			v-if="codeVisited"
 			v-show="!scratch"
@@ -58,6 +66,11 @@ function choose(event: Event) {
 </template>
 
 <style scoped>
+.ide-environment-note {
+	margin: 0 0.75rem;
+	color: var(--color-ink-soft);
+	font-size: 0.85rem;
+}
 .integrated-ide {
 	width: 100%;
 	min-width: 0;

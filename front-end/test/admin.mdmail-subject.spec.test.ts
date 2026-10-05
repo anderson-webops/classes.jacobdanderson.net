@@ -1,10 +1,14 @@
-import { describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import MdMail from "@/pages/admin/mdmail.vue";
 
+vi.mock("@/api", () => ({ api: { get: vi.fn().mockResolvedValue({ data: { students: [] } }), post: vi.fn() } }));
 vi.mock("@/modules/adminRecipients", () => ({
 	fetchAdminRecipients: vi.fn().mockResolvedValue([])
 }));
+
+beforeEach(() => setActivePinia(createPinia()));
 
 describe("Admin mail subject line", () => {
 	it("allows manual editing of the subject", async () => {

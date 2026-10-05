@@ -11,6 +11,7 @@ import AccessibleDialog from "@/components/AccessibleDialog.vue";
 import AccountSecurity from "@/components/AccountSecurity.vue";
 import CourseAccessCodeManager from "@/components/CourseAccessCodeManager.vue";
 import LearnerCodeReviewTools from "@/components/LearnerCodeReviewTools.vue";
+import LearnerContextActions from "@/components/LearnerContextActions.vue";
 import LearnerSessionTools from "@/components/LearnerSessionTools.vue";
 import ProfileFields from "@/components/ProfileFields.vue";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
@@ -30,6 +31,14 @@ const props = defineProps<{
 /* -------------------------------------------------- */
 const app = useAppStore();
 const { currentAdmin, tutors, users } = storeToRefs(app);
+const learnerSearch = ref("");
+const filteredUsers = computed(() =>
+	users.value.filter(user =>
+		`${user.name} ${user.email}`
+			.toLowerCase()
+			.includes(learnerSearch.value.trim().toLowerCase())
+	)
+);
 const error = ref("");
 const success = ref("");
 const deleteMe = useDeleteAccount("admin");
@@ -582,7 +591,7 @@ function confirmDeleteAdmin() {
 
 <template>
 	<section class="admin-workspace">
-		<header class="workspace-header">
+		<header v-if="isAccountMode" class="workspace-header">
 			<div>
 				<p class="workspace-eyebrow">
 					{{
@@ -722,122 +731,13 @@ function confirmDeleteAdmin() {
 		</template>
 
 		<template v-else>
-			<CourseAccessCodeManager :courses="courseOptions" />
-
-			<section class="directory-section">
-				<div class="section-heading">
-					<div>
-						<p class="workspace-eyebrow">Tutors</p>
-						<h3>{{ tutorsHeader }}</h3>
-					</div>
-					<p class="section-copy">
-						Enable course access for each tutor so learner
-						assignments always reflect the right teaching scope.
-					</p>
-				</div>
-
-				<div class="directory-grid">
-					<article
-						v-for="t in tutors"
-						:key="t._id"
-						class="directory-card"
-					>
-						<div class="directory-card-header">
-							<div>
-								<h4>{{ t.name }}</h4>
-								<p>{{ t.email }}</p>
-							</div>
-							<button
-								class="btn-secondary btn"
-								type="button"
-								:aria-label="
-									tutorEditing[t._id]
-										? `Close course editor for ${t.name}`
-										: `Edit courses for ${t.name}`
-								"
-								@click="toggleTutorEdit(t._id)"
-							>
-								{{
-									tutorEditing[t._id]
-										? "Close editor"
-										: "Edit courses"
-								}}
-							</button>
-						</div>
-
-						<details class="summary-block is-inline is-collapsible">
-							<summary class="summary-toggle">
-								<span class="summary-label">
-									Course access
-								</span>
-							</summary>
-							<ul
-								v-if="tutorCourseLabels(t._id).length"
-								class="summary-list"
-							>
-								<li
-									v-for="course in tutorCourseLabels(t._id)"
-									:key="`${t._id}-${course}`"
-								>
-									{{ course }}
-								</li>
-							</ul>
-							<p v-else class="summary-copy is-muted">
-								No course access enabled
-							</p>
-						</details>
-
-						<div v-if="tutorEditing[t._id]" class="course-editor">
-							<p class="helper-text">
-								Select which courses this tutor can access.
-							</p>
-							<div class="checkbox-grid">
-								<label
-									v-for="course in courseOptions"
-									:key="course.id"
-								>
-									<input
-										:checked="
-											tutorCourseSelections[
-												t._id
-											]?.includes(course.id)
-										"
-										type="checkbox"
-										@change="
-											onTutorCourseToggle(
-												t._id,
-												course.id,
-												(
-													$event.target as HTMLInputElement
-												).checked
-											)
-										"
-									/>
-									{{ course.name }}
-								</label>
-							</div>
-							<div class="action-row">
-								<button
-									class="btn-primary btn"
-									type="button"
-									:aria-label="`Save course access for ${t.name}`"
-									@click="saveTutorCourses(t._id)"
-								>
-									Save courses
-								</button>
-								<button
-									class="btn-secondary btn"
-									type="button"
-									:aria-label="`Cancel course edits for ${t.name}`"
-									@click="cancelTutorEdit(t._id)"
-								>
-									Cancel
-								</button>
-							</div>
-						</div>
-					</article>
-				</div>
-			</section>
+			<label class="roster-search"
+				>Search learners<input
+					v-model="learnerSearch"
+					type="search"
+					placeholder="Name or email"
+			/></label>
+			<p v-if="!filteredUsers.length">No matching learners.</p>
 
 			<section class="directory-section">
 				<div class="section-heading">
@@ -849,7 +749,7 @@ function confirmDeleteAdmin() {
 
 				<div class="directory-grid">
 					<article
-						v-for="u in users"
+						v-for="u in filteredUsers"
 						:key="u._id"
 						class="directory-card"
 					>
@@ -950,6 +850,10 @@ function confirmDeleteAdmin() {
 							</details>
 						</div>
 
+						<LearnerContextActions
+							:student-id="String(u._id)"
+							can-send
+						/>
 						<LearnerSessionTools
 							:user-email="u.email"
 							:user-id="String(u._id)"
@@ -1243,7 +1147,7 @@ function confirmDeleteAdmin() {
 
 				<div class="directory-grid">
 					<article
-						v-for="u in users"
+						v-for="u in filteredUsers"
 						:key="u._id"
 						class="directory-card"
 					>
@@ -1274,6 +1178,136 @@ function confirmDeleteAdmin() {
 					</article>
 				</div>
 			</section>
+			<details class="tutor-management">
+				<summary>
+					Tutors and teaching permissions ({{ tutors.length }})
+				</summary>
+				<section class="directory-section">
+					<div class="section-heading">
+						<div>
+							<p class="workspace-eyebrow">Tutors</p>
+							<h3>{{ tutorsHeader }}</h3>
+						</div>
+						<p class="section-copy">
+							Enable course access for each tutor so learner
+							assignments always reflect the right teaching scope.
+						</p>
+					</div>
+
+					<div class="directory-grid">
+						<article
+							v-for="t in tutors"
+							:key="t._id"
+							class="directory-card"
+						>
+							<div class="directory-card-header">
+								<div>
+									<h4>{{ t.name }}</h4>
+									<p>{{ t.email }}</p>
+								</div>
+								<button
+									class="btn-secondary btn"
+									type="button"
+									:aria-label="
+										tutorEditing[t._id]
+											? `Close course editor for ${t.name}`
+											: `Edit courses for ${t.name}`
+									"
+									@click="toggleTutorEdit(t._id)"
+								>
+									{{
+										tutorEditing[t._id]
+											? "Close editor"
+											: "Edit courses"
+									}}
+								</button>
+							</div>
+
+							<details
+								class="summary-block is-inline is-collapsible"
+							>
+								<summary class="summary-toggle">
+									<span class="summary-label">
+										Course access
+									</span>
+								</summary>
+								<ul
+									v-if="tutorCourseLabels(t._id).length"
+									class="summary-list"
+								>
+									<li
+										v-for="course in tutorCourseLabels(
+											t._id
+										)"
+										:key="`${t._id}-${course}`"
+									>
+										{{ course }}
+									</li>
+								</ul>
+								<p v-else class="summary-copy is-muted">
+									No course access enabled
+								</p>
+							</details>
+
+							<div
+								v-if="tutorEditing[t._id]"
+								class="course-editor"
+							>
+								<p class="helper-text">
+									Select which courses this tutor can access.
+								</p>
+								<div class="checkbox-grid">
+									<label
+										v-for="course in courseOptions"
+										:key="course.id"
+									>
+										<input
+											:checked="
+												tutorCourseSelections[
+													t._id
+												]?.includes(course.id)
+											"
+											type="checkbox"
+											@change="
+												onTutorCourseToggle(
+													t._id,
+													course.id,
+													(
+														$event.target as HTMLInputElement
+													).checked
+												)
+											"
+										/>
+										{{ course.name }}
+									</label>
+								</div>
+								<div class="action-row">
+									<button
+										class="btn-primary btn"
+										type="button"
+										:aria-label="`Save course access for ${t.name}`"
+										@click="saveTutorCourses(t._id)"
+									>
+										Save courses
+									</button>
+									<button
+										class="btn-secondary btn"
+										type="button"
+										:aria-label="`Cancel course edits for ${t.name}`"
+										@click="cancelTutorEdit(t._id)"
+									>
+										Cancel
+									</button>
+								</div>
+							</div>
+						</article>
+					</div>
+				</section>
+			</details>
+			<details>
+				<summary>Create or manage classroom codes</summary>
+				<CourseAccessCodeManager :courses="courseOptions" />
+			</details>
 		</template>
 
 		<AccessibleDialog
@@ -1319,6 +1353,20 @@ function confirmDeleteAdmin() {
 </template>
 
 <style scoped>
+.roster-search {
+	display: grid;
+	gap: 0.4rem;
+	margin-bottom: 1rem;
+	font: inherit;
+}
+.roster-search input {
+	padding: 0.65rem;
+	width: 100%;
+	color: var(--color-ink);
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: 0.5rem;
+}
 .admin-workspace {
 	display: grid;
 	gap: 1.1rem;

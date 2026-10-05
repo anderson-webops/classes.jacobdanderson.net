@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { classMeetingUrl, siteLabels } from "@/modules/siteNavigation";
 import { useAppStore } from "@/stores/app";
 
 const emit = defineEmits<{
@@ -11,6 +12,13 @@ const emit = defineEmits<{
 
 const app = useAppStore();
 const route = useRoute();
+const accountMenu = ref<HTMLDetailsElement>();
+watch(
+	() => route.fullPath,
+	() => {
+		if (accountMenu.value) accountMenu.value.open = false;
+	}
+);
 const {
 	currentAdmin,
 	currentCourseLearner,
@@ -24,15 +32,20 @@ interface NavLink {
 	label: string;
 	to: string;
 	exact?: boolean;
+	external?: boolean;
 }
 
 const primaryLinks = computed<NavLink[]>(() => {
 	const links: NavLink[] = [
-		{ label: "Home", to: "/", exact: true },
-		{ label: "Courses", to: "/courses", exact: true },
-		{ label: "Graphing", to: "/graph-sketcher", exact: true },
-		{ label: "IDE", to: "/ide", exact: true },
-		{ label: "Zoom", to: "/zoom", exact: true }
+		{ label: siteLabels.courses, to: "/courses", exact: true },
+		{ label: siteLabels.graphing, to: "/graph-sketcher", exact: true },
+		{ label: siteLabels.ide, to: "/ide", exact: true },
+		{
+			label: isLoggedIn.value ? "Join class on Zoom" : siteLabels.join,
+			to: isLoggedIn.value ? classMeetingUrl : "/zoom",
+			exact: true,
+			external: isLoggedIn.value
+		}
 	];
 
 	if (!isAdmin.value) {
@@ -43,14 +56,10 @@ const primaryLinks = computed<NavLink[]>(() => {
 		});
 	}
 
-	links.push({ label: "About", to: "/about", exact: true });
+	if (!isLoggedIn.value)
+		links.push({ label: "About", to: "/about", exact: true });
 
 	return links;
-});
-
-const utilityLinks = computed<NavLink[]>(() => {
-	if (isAdmin.value) return [];
-	return [{ label: "Tuition", to: "/payment", exact: true }];
 });
 
 const workspaceLinks = computed<NavLink[]>(() => {
@@ -62,10 +71,6 @@ const workspaceLinks = computed<NavLink[]>(() => {
 
 	if (currentTutor.value) {
 		links.push({ label: "Teaching", to: "/teaching", exact: false });
-	}
-
-	if (currentAdmin.value || currentTutor.value || currentUser.value) {
-		links.push({ label: "Account", to: "/profile", exact: false });
 	}
 
 	return links;
@@ -82,6 +87,7 @@ const accountBadge = computed(() => {
 });
 
 function logoutUser() {
+	if (accountMenu.value) accountMenu.value.open = false;
 	app.logout();
 }
 
@@ -122,10 +128,24 @@ function isLinkActive(link: NavLink) {
 						<div class="site-nav__content">
 							<ul class="site-nav__links">
 								<li v-for="link in primaryLinks" :key="link.to">
+									<a
+										v-if="link.external"
+										class="site-nav__link"
+										:href="link.to"
+										target="_blank"
+										rel="noopener noreferrer"
+										>{{ link.label
+										}}<span class="sr-only">
+											(opens in a new tab)</span
+										></a
+									>
 									<router-link
+										v-else
 										class="site-nav__link"
 										:class="{
-											'is-active': isLinkActive(link)
+											'is-active': isLinkActive(link),
+											'site-nav__book':
+												link.to === '/signup'
 										}"
 										:to="link.to"
 									>
@@ -135,31 +155,7 @@ function isLinkActive(link: NavLink) {
 							</ul>
 
 							<div class="site-nav__aside">
-								<div
-									v-if="utilityLinks.length"
-									class="site-nav__utility"
-								>
-									<router-link
-										v-for="link in utilityLinks"
-										:key="link.to"
-										class="site-nav__utility-link"
-										:class="{
-											'is-active': isLinkActive(link)
-										}"
-										:to="link.to"
-									>
-										{{ link.label }}
-									</router-link>
-								</div>
-
 								<div class="site-nav__actions">
-									<span
-										v-if="accountBadge"
-										class="site-nav__badge"
-									>
-										{{ accountBadge }}
-									</span>
-
 									<router-link
 										v-for="link in workspaceLinks"
 										:key="link.to"
@@ -172,14 +168,44 @@ function isLinkActive(link: NavLink) {
 										{{ link.label }}
 									</router-link>
 
-									<button
+									<details
 										v-if="isLoggedIn"
-										class="site-button site-button--secondary site-nav__action site-nav__action--danger"
-										type="button"
-										@click="logoutUser"
+										ref="accountMenu"
+										class="site-account-menu"
+										@keydown.esc.prevent="
+											accountMenu &&
+											(accountMenu.open = false)
+										"
 									>
-										Log out
-									</button>
+										<summary>
+											{{
+												currentCourseLearner
+													? "Classroom"
+													: siteLabels.account
+											}}
+										</summary>
+										<div class="site-account-menu__content">
+											<span class="site-nav__badge">{{
+												accountBadge
+											}}</span>
+											<RouterLink
+												class="site-nav__link"
+												to="/profile"
+												>{{
+													currentCourseLearner
+														? "Classroom settings"
+														: "Account settings"
+												}}</RouterLink
+											>
+											<button
+												class="site-button site-button--secondary site-nav__action site-nav__action--danger"
+												type="button"
+												@click="logoutUser"
+											>
+												Log out
+											</button>
+										</div>
+									</details>
 									<button
 										v-else
 										class="site-button site-button--secondary site-nav__action"
@@ -187,14 +213,6 @@ function isLinkActive(link: NavLink) {
 										@click="emit('loginClick')"
 									>
 										Log in
-									</button>
-									<button
-										v-if="!isLoggedIn"
-										class="site-button site-button--primary site-nav__action"
-										type="button"
-										@click="emit('signupClick')"
-									>
-										Sign up
 									</button>
 								</div>
 							</div>
@@ -263,8 +281,7 @@ function isLinkActive(link: NavLink) {
 	min-width: 0;
 }
 
-.site-nav__links,
-.site-nav__utility {
+.site-nav__links {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -291,8 +308,7 @@ function isLinkActive(link: NavLink) {
 	min-width: 0;
 }
 
-.site-nav__link,
-.site-nav__utility-link {
+.site-nav__link {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -308,17 +324,18 @@ function isLinkActive(link: NavLink) {
 }
 
 .site-nav__link:hover,
-.site-nav__utility-link:hover,
-.site-nav__link.is-active,
-.site-nav__utility-link.is-active {
+.site-nav__link.is-active {
 	color: var(--color-ink);
 	background: rgba(255, 255, 255, 0.64);
 	box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
 }
 
-.site-nav__utility-link {
-	padding-inline: 0.45rem;
-	font-size: 0.95rem;
+.site-nav__book,
+.site-nav__book:hover,
+.site-nav__book.is-active {
+	color: var(--color-button-primary-text);
+	background: var(--color-button-primary-bg);
+	box-shadow: none;
 }
 
 .site-nav__actions {
@@ -388,14 +405,41 @@ function isLinkActive(link: NavLink) {
 	}
 
 	.site-nav__link,
-	.site-nav__utility-link,
 	.site-nav__action {
 		width: 100%;
 	}
 
-	.site-nav__utility,
 	.site-nav__actions {
 		width: 100%;
+	}
+}
+.site-account-menu {
+	position: relative;
+}
+.site-account-menu summary {
+	cursor: pointer;
+	padding: 0.65rem 0.85rem;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	color: var(--color-ink);
+}
+.site-account-menu__content {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 0.3rem);
+	min-width: 14rem;
+	display: grid;
+	gap: 0.5rem;
+	padding: 0.75rem;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background: var(--color-surface-strong);
+	box-shadow: var(--shadow-soft);
+}
+@media (max-width: 1199px) {
+	.site-account-menu__content {
+		position: static;
+		margin-top: 0.4rem;
 	}
 }
 </style>

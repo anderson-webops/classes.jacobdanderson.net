@@ -1,25 +1,15 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { serializeJsonLd } from "@/modules/serializeJsonLd";
+import { useAppStore } from "@/stores/app";
 import { useContentStore } from "@/stores/content";
 
 defineOptions({ name: "HomePage" });
 
 const content = useContentStore();
+const app = useAppStore();
 const siteUrl = "https://classes.jacobdanderson.net";
-const { faqs, highlights, subjectGroups } = storeToRefs(content);
-const faqStructuredData = computed(() => ({
-	"@context": "https://schema.org",
-	"@type": "FAQPage",
-	mainEntity: faqs.value.map(faq => ({
-		"@type": "Question",
-		acceptedAnswer: {
-			"@type": "Answer",
-			text: faq.answer
-		},
-		name: faq.question
-	}))
-}));
+const { subjectGroups } = storeToRefs(content);
 const courseStructuredData = computed(() =>
 	subjectGroups.value.map(group => ({
 		"@context": "https://schema.org",
@@ -44,11 +34,6 @@ useHead(
 				}
 			],
 			script: [
-				{
-					innerHTML: serializeJsonLd(faqStructuredData.value),
-					key: "classes-home-faq-jsonld",
-					type: "application/ld+json"
-				},
 				...courseStructuredData.value.map((entry, index) => ({
 					innerHTML: serializeJsonLd(entry),
 					key: `classes-home-course-${index}`,
@@ -78,10 +63,34 @@ useHead(
 					<li class="site-chip">Assignment and project help</li>
 					<li class="site-chip">Short written follow-up notes</li>
 				</ul>
+				<div
+					aria-label="Primary actions"
+					class="site-action-row home-actions"
+				>
+					<RouterLink
+						v-if="app.isLoggedIn"
+						class="site-button site-button--primary"
+						to="/courses"
+						>Continue your course</RouterLink
+					>
+					<RouterLink
+						v-else
+						class="site-button site-button--primary"
+						to="/signup"
+					>
+						Book a Class
+					</RouterLink>
+					<RouterLink
+						class="site-button site-button--secondary"
+						to="/payment"
+					>
+						Tuition
+					</RouterLink>
+				</div>
 			</div>
 			<figure class="media-frame home-hero__media">
 				<img
-					alt="Student and tutor collaborating on a laptop"
+					alt="Graduates celebrating with graduation caps"
 					class="hero-image"
 					fetchpriority="high"
 					height="900"
@@ -90,21 +99,6 @@ useHead(
 					width="1200"
 				/>
 			</figure>
-		</section>
-
-		<section
-			aria-label="Primary actions"
-			class="site-action-row home-actions"
-		>
-			<RouterLink class="site-button site-button--primary" to="/signup">
-				Book a Class
-			</RouterLink>
-			<RouterLink
-				class="site-button site-button--secondary"
-				to="/payment"
-			>
-				Tuition
-			</RouterLink>
 		</section>
 
 		<section aria-labelledby="subjects-title" class="home-section">
@@ -124,30 +118,20 @@ useHead(
 					:key="group.title"
 					class="site-surface site-surface--soft subject-card"
 				>
-					<h3>{{ group.title }}</h3>
-					<ul>
-						<li v-for="subject in group.subjects" :key="subject">
-							{{ subject }}
-						</li>
-					</ul>
+					<details>
+						<summary>{{ group.title }}</summary>
+						<ul>
+							<li
+								v-for="subject in group.subjects"
+								:key="subject"
+							>
+								{{ subject }}
+							</li>
+						</ul>
+					</details>
 				</article>
 			</div>
-		</section>
-
-		<section aria-labelledby="highlights-title" class="home-section">
-			<div class="section-heading">
-				<h2 id="highlights-title" class="section-title">Sessions</h2>
-			</div>
-			<div class="highlight-grid">
-				<article
-					v-for="highlight in highlights"
-					:key="highlight.title"
-					class="site-surface site-surface--soft highlight-card"
-				>
-					<h3>{{ highlight.title }}</h3>
-					<p>{{ highlight.copy }}</p>
-				</article>
-			</div>
+			<RouterLink to="/pathways">Help choosing a course</RouterLink>
 		</section>
 
 		<section aria-labelledby="next-steps-title" class="home-section">
@@ -244,7 +228,7 @@ useHead(
 	align-content: start;
 }
 
-.subject-card h3,
+.subject-card summary,
 .highlight-card h3 {
 	font-size: 1.12rem;
 }

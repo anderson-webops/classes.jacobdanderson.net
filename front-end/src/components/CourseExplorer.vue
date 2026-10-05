@@ -11,6 +11,7 @@ import type {
 import { storeToRefs } from "pinia";
 import {
 	computed,
+	inject,
 	nextTick,
 	onBeforeUnmount,
 	onMounted,
@@ -18,6 +19,7 @@ import {
 	shallowRef,
 	watch
 } from "vue";
+import { routeLocationKey, routerKey } from "vue-router";
 import { api } from "@/api";
 import {
 	courseStatusBucketForUser,
@@ -100,6 +102,30 @@ const coursesStore = useCoursesStore();
 const { courses } = storeToRefs(coursesStore);
 
 const appStore = useAppStore();
+const navigationRoute = inject(routeLocationKey, null);
+const navigationRouter = inject(routerKey, null);
+const initialLearnerRequest = ref(
+	typeof window === "undefined"
+		? ""
+		: (new URLSearchParams(window.location.search).get("learner") ?? "")
+);
+const learnerRequest = computed(() =>
+	navigationRoute
+		? typeof navigationRoute.query.learner === "string"
+			? navigationRoute.query.learner
+			: ""
+		: initialLearnerRequest.value
+);
+function clearLearnerRequest() {
+	if (navigationRouter && navigationRoute) {
+		const query = { ...navigationRoute.query };
+		delete query.learner;
+		void navigationRouter.replace({ query, hash: navigationRoute.hash });
+	} else {
+		initialLearnerRequest.value = "";
+	}
+}
+
 const { currentTutor, currentAdmin, currentCourseLearner, currentUser, users } =
 	storeToRefs(appStore);
 
@@ -368,12 +394,18 @@ watch(
 );
 
 watch(
-	[managedLearners, isStorageReady, currentHashAnchor],
+	[managedLearners, isStorageReady, currentHashAnchor, learnerRequest],
 	([value, storageReady]) => {
 		if (!isStaffContext.value) return;
 
 		if (value.length === 0) {
 			if (!storageReady || managedLearnersLoading.value) return;
+			if (learnerRequest.value) {
+				selectedLearnerId.value = "";
+				managedLearnersError.value =
+					"This learner is unavailable in your teaching scope.";
+				return;
+			}
 			selectedLearnerId.value = canUseAllLearnersContext.value
 				? ALL_LEARNERS_CONTEXT_ID
 				: "";
@@ -381,6 +413,29 @@ watch(
 		}
 
 		if (!storageReady) return;
+		const requestedLearner = learnerRequest.value;
+		if (
+			requestedLearner &&
+			!value.some(user => String(user._id) === requestedLearner)
+		) {
+			selectedLearnerId.value = "";
+			managedLearnersError.value =
+				"This learner is unavailable in your teaching scope.";
+			return;
+		}
+		if (requestedLearner) {
+			hasRestoredStoredLearner.value = true;
+			managedLearnersError.value = "";
+			const verified = value.find(
+				user => String(user._id) === requestedLearner
+			);
+			selectedLearnerId.value = verified?._id ?? "";
+			if (!verified) {
+				managedLearnersError.value =
+					"This learner is unavailable in your teaching scope.";
+			}
+			return;
+		}
 
 		const selectedStillValid = isSelectableLearnerContextId(
 			selectedLearnerId.value,
@@ -927,6 +982,22 @@ function isItemComplete(item: CourseModuleItem) {
 
 function selectCourse(id: string) {
 	selectedCourseId.value = id;
+}
+
+async function continueLearning() {
+	searchQuery.value = "";
+	const core = courseModules.value.filter(isCoreModule);
+	const current = core.find(module => module.id === activeModuleId.value);
+	const next =
+		current && !isModuleComplete(current)
+			? current
+			: (core.find(module => !isModuleComplete(module)) ?? core.at(-1));
+	if (!next) return;
+	activeModuleId.value = next.id;
+	await nextTick();
+	const reader = document.getElementById("course-reader-panel");
+	reader?.scrollIntoView({ block: "start" });
+	reader?.focus({ preventScroll: true });
 }
 
 function selectModule(id: string) {
@@ -1551,7 +1622,8 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 		projectKey: `${selectedCourse.value.id}:${item.id}:starter`,
 		starterUrl: resource.url,
 		starterTitle: item.title,
-		starterLabel: resource.label
+		starterLabel: resource.label,
+		lesson: itemAnchorId(activeModuleId.value, item.id)
 	});
 	return `/ide?${params.toString()}`;
 }
@@ -1565,6 +1637,21 @@ function courseAssetPreviewResources(
 }
 
 function resourceOpenUrl(resource: ResourceLink) {
+	if (resource.url.startsWith("/ide?") && selectedCourse.value) {
+		const url = new URL(resource.url, "https://classes.local");
+		url.searchParams.set("course", selectedCourse.value.id);
+		const item = [
+			...(activeModule.value?.curriculum ?? []),
+			...(activeModule.value?.supplementalProjects ?? [])
+		].find(item => item.projectLink === resource.url);
+		if (item) {
+			url.searchParams.set(
+				"lesson",
+				itemAnchorId(activeModuleId.value, item.id)
+			);
+		}
+		return `${url.pathname}${url.search}`;
+	}
 	return courseAssetViewerUrl(resource.url, resource.label);
 }
 
@@ -1746,44 +1833,69 @@ function writeStoredValue(key: string, value: string) {
 					</div>
 				</div>
 
-				<dl class="course-stats">
-					<div class="stat">
-						<dt>Modules</dt>
-						<dd>{{ courseStats.moduleCount }}</dd>
-					</div>
-					<div v-if="courseStats.transitionCount > 0" class="stat">
-						<dt>Next steps</dt>
-						<dd>{{ courseStats.transitionCount }}</dd>
-					</div>
-					<div v-if="courseStats.appendixCount > 0" class="stat">
-						<dt>Appendices</dt>
-						<dd>{{ courseStats.appendixCount }}</dd>
-					</div>
-					<div class="stat">
-						<dt>Core</dt>
-						<dd>{{ courseStats.lessonCount }}</dd>
-					</div>
-					<div class="stat">
-						<dt>Practice</dt>
-						<dd>{{ courseStats.supplementalCount }}</dd>
-					</div>
-					<div v-if="hasProgressTracking" class="stat is-progress">
-						<dt>Done</dt>
-						<dd>
-							<span>
-								{{ courseStats.completedModuleCount }}/{{
-									courseStats.moduleCount
-								}}
-							</span>
-							<small>
-								{{ courseStats.completedItemCount }}/{{
-									courseStats.totalItemCount
-								}}
-								core items
-							</small>
-						</dd>
-					</div>
-				</dl>
+				<div class="course-resume">
+					<button
+						type="button"
+						class="site-button site-button--primary"
+						@click="continueLearning"
+					>
+						{{
+							hasProgressTracking
+								? "Continue learning"
+								: "Start course"
+						}}
+					</button>
+					<p v-if="activeModule">
+						Current lesson: {{ activeModule.title }}
+					</p>
+				</div>
+				<details class="course-summary">
+					<summary>Course overview and progress</summary>
+					<dl class="course-stats">
+						<div class="stat">
+							<dt>Modules</dt>
+							<dd>{{ courseStats.moduleCount }}</dd>
+						</div>
+						<div
+							v-if="courseStats.transitionCount > 0"
+							class="stat"
+						>
+							<dt>Next steps</dt>
+							<dd>{{ courseStats.transitionCount }}</dd>
+						</div>
+						<div v-if="courseStats.appendixCount > 0" class="stat">
+							<dt>Appendices</dt>
+							<dd>{{ courseStats.appendixCount }}</dd>
+						</div>
+						<div class="stat">
+							<dt>Core</dt>
+							<dd>{{ courseStats.lessonCount }}</dd>
+						</div>
+						<div class="stat">
+							<dt>Practice</dt>
+							<dd>{{ courseStats.supplementalCount }}</dd>
+						</div>
+						<div
+							v-if="hasProgressTracking"
+							class="stat is-progress"
+						>
+							<dt>Done</dt>
+							<dd>
+								<span>
+									{{ courseStats.completedModuleCount }}/{{
+										courseStats.moduleCount
+									}}
+								</span>
+								<small>
+									{{ courseStats.completedItemCount }}/{{
+										courseStats.totalItemCount
+									}}
+									core items
+								</small>
+							</dd>
+						</div>
+					</dl>
+				</details>
 			</header>
 
 			<div v-if="isStaffContext" class="staff-context-bar">
@@ -1796,6 +1908,7 @@ function writeStoredValue(key: string, value: string) {
 						:disabled="
 							managedLearnersLoading || !hasLearnerContextOptions
 						"
+						@change="clearLearnerRequest"
 					>
 						<option disabled value="">
 							{{
@@ -2000,6 +2113,7 @@ function writeStoredValue(key: string, value: string) {
 				<div
 					v-if="activeModule"
 					id="course-reader-panel"
+					tabindex="-1"
 					class="course-reader"
 				>
 					<header class="reader-header">
@@ -2239,7 +2353,7 @@ function writeStoredValue(key: string, value: string) {
 														resource
 													)
 												"
-												class="resource-link is-ide-starter"
+												class="resource-link is-ide-starter site-button--primary"
 												:href="
 													ideStarterHref(
 														item,
@@ -2509,7 +2623,7 @@ function writeStoredValue(key: string, value: string) {
 														resource
 													)
 												"
-												class="resource-link is-ide-starter"
+												class="resource-link is-ide-starter site-button--primary"
 												:href="
 													ideStarterHref(
 														item,
@@ -2761,6 +2875,33 @@ function writeStoredValue(key: string, value: string) {
 </template>
 
 <style scoped>
+.course-hero {
+	padding: 1rem !important;
+	gap: 0.75rem !important;
+	grid-template-columns: minmax(0, 1fr) auto !important;
+}
+.course-hero h2 {
+	font-size: 1.5rem !important;
+}
+.course-description,
+.course-eyebrow,
+.course-ide-action span {
+	display: none;
+}
+.course-summary {
+	grid-column: 1 / -1;
+}
+.course-resume p {
+	font-size: 0.9rem;
+	margin: 0.35rem 0 0;
+	color: var(--color-ink-soft);
+}
+@media (max-width: 700px) {
+	.course-hero {
+		grid-template-columns: 1fr !important;
+	}
+}
+
 .course-explorer {
 	--course-border: rgba(15, 23, 42, 0.08);
 	--course-border-strong: rgba(30, 41, 59, 0.12);
@@ -3718,6 +3859,9 @@ button.resource-link {
 }
 
 .resource-link.is-ide-starter {
+	order: -1;
+	font-weight: 700;
+	border: 2px solid var(--color-accent);
 	--course-resource-bg: rgba(220, 252, 231, 0.96);
 	--course-resource-bg-hover: rgba(187, 247, 208, 0.98);
 	--course-resource-text: #14532d;

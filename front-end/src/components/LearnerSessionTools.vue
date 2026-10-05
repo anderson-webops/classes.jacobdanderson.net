@@ -275,7 +275,11 @@ async function createSessionNote() {
 </script>
 
 <template>
-	<details class="session-tools" @toggle="onToggle">
+	<details
+		:id="`learner-${userId}-sessions`"
+		class="session-tools"
+		@toggle="onToggle"
+	>
 		<summary class="tools-summary">
 			<span>
 				<strong>Schedule and notes</strong>

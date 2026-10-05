@@ -1,15 +1,19 @@
+import { createPinia, setActivePinia } from "pinia";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import MdMail from "@/pages/admin/mdmail.vue";
 
+vi.mock("@/api", () => ({ api: { get: vi.fn().mockResolvedValue({ data: { students: [] } }), post: vi.fn() } }));
 vi.mock("@/modules/adminRecipients", () => ({
 	fetchAdminRecipients: vi.fn().mockResolvedValue([])
 }));
 
 const findPreviewBody = (wrapper: ReturnType<typeof mount>) =>
 	wrapper.find('[data-testid="live-preview-body"]');
+
+beforeEach(() => setActivePinia(createPinia()));
 
 describe("Admin mail preview tabs", () => {
 	it("shows compose tab by default and hides preview", () => {

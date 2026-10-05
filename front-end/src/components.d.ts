@@ -16,6 +16,7 @@ declare module 'vue' {
     AccountManagement: typeof import('./components/AccountManagement.vue')['default']
     AccountSecurity: typeof import('./components/AccountSecurity.vue')['default']
     AdminProfile: typeof import('./components/AdminProfile.vue')['default']
+    AdminReviewStatus: typeof import('./components/AdminReviewStatus.vue')['default']
     AdminWorkspaceShell: typeof import('./components/AdminWorkspaceShell.vue')['default']
     CodeIdeWorkspace: typeof import('./components/CodeIdeWorkspace.vue')['default']
     CodePreview: typeof import('./components/CodePreview.vue')['default']
@@ -25,8 +26,10 @@ declare module 'vue' {
     CourseExplorer: typeof import('./components/CourseExplorer.vue')['default']
     GraphSketcherWorkspace: typeof import('./components/GraphSketcherWorkspace.vue')['default']
     IdeDiagnosticsControls: typeof import('./components/IdeDiagnosticsControls.vue')['default']
+    IdeStarterPicker: typeof import('./components/IdeStarterPicker.vue')['default']
     LazyMarkdownContent: typeof import('./components/LazyMarkdownContent.vue')['default']
     LearnerCodeReviewTools: typeof import('./components/LearnerCodeReviewTools.vue')['default']
+    LearnerContextActions: typeof import('./components/LearnerContextActions.vue')['default']
     LearnerCourseProgressEditor: typeof import('./components/LearnerCourseProgressEditor.vue')['default']
     LearnerSessionTools: typeof import('./components/LearnerSessionTools.vue')['default']
     ProfileDetailsCard: typeof import('./components/ProfileDetailsCard.vue')['default']
@@ -41,5 +44,7 @@ declare module 'vue' {
     TutorProfile: typeof import('./components/TutorProfile.vue')['default']
     UserCommunicationPanel: typeof import('./components/UserCommunicationPanel.vue')['default']
     UserProfile: typeof import('./components/UserProfile.vue')['default']
+    WorkspaceHeader: typeof import('./components/WorkspaceHeader.vue')['default']
+    WorkspaceStorageStatus: typeof import('./components/WorkspaceStorageStatus.vue')['default']
   }
 }

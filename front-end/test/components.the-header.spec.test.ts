@@ -28,10 +28,10 @@ describe("TheHeader.vue", () => {
 		});
 	}
 
-	it("shows Zoom but keeps Pathways out of the primary navigation for visitors", () => {
+	it("shows Join class but keeps Pathways out of the primary navigation for visitors", () => {
 		const wrapper = mountHeader();
 
-		expect(wrapper.text()).toContain("Zoom");
+		expect(wrapper.text()).toContain("Join class");
 		expect(wrapper.text()).toContain("IDE");
 		expect(wrapper.text()).toContain("Graphing");
 		expect(wrapper.text()).not.toContain("BlueJ");
@@ -52,7 +52,7 @@ describe("TheHeader.vue", () => {
 
 		const wrapper = mountHeader(pinia);
 
-		expect(wrapper.text()).toContain("Zoom");
+		expect(wrapper.text()).toContain("Join class");
 		expect(wrapper.text()).toContain("IDE");
 		expect(wrapper.text()).toContain("Graphing");
 		expect(wrapper.text()).not.toContain("BlueJ");
@@ -103,7 +103,7 @@ describe("TheHeader.vue", () => {
 
 		expect(wrapper.text()).toContain("Classroom: Student One");
 		expect(wrapper.text()).toContain("Log out");
-		expect(wrapper.text()).not.toContain("Account");
+		expect(wrapper.text()).toContain("Classroom");
 		expect(wrapper.text()).not.toContain("Log in");
 	});
 });

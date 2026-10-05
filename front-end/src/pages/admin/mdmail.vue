@@ -2,7 +2,8 @@
 import type { AdminRecipient } from "@/modules/adminRecipients";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, inject, onMounted, ref, watch } from "vue";
+import { routeLocationKey } from "vue-router";
 import { api } from "@/api";
 import AdminWorkspaceShell from "@/components/AdminWorkspaceShell.vue";
 import SessionNoteEvidenceReview from "@/components/SessionNoteEvidenceReview.vue";
@@ -58,15 +59,22 @@ type MailTab = "compose" | "preview";
 const CUSTOM_OPTION = "Custom";
 const MAIL_TABS: MailTab[] = ["compose", "preview"];
 
+const messageKind = ref("session-note");
 const to = ref("");
 const subject = ref("");
 const md = ref("");
 const sending = ref(false);
 const noteStudentId = ref("");
+const pendingStudentId = ref<string | null>(null);
+const requestedStudentInvalid = ref(false);
+const noteRoute = inject(routeLocationKey, null);
+
 const noteSessionId = ref("");
 const noteUnlinked = ref(false);
 const selectedSavedNoteId = ref("");
-const noteStudents = ref<{ studentId: string; name: string }[]>([]);
+const noteStudents = ref<
+	{ studentId: string; name: string; recipientName?: string }[]
+>([]);
 const noteSessions = ref<{ _id: string; startAt: string; timezone: string }[]>(
 	[]
 );
@@ -91,7 +99,56 @@ const recentNotesOwner = ref<MatchedUserAccount | null>(null);
 const recentNotesLoading = ref(false);
 const recentNotesError = ref("");
 let recentNotesRequestToken = 0;
+function requestNoteStudent(studentId: string) {
+	if (sending.value) return;
+	if (
+		studentId &&
+		!noteStudents.value.some(student => student.studentId === studentId)
+	) {
+		requestedStudentInvalid.value = true;
+		resultText.value =
+			"Requested student identity is unavailable. Select a verified student.";
+		return;
+	}
+	requestedStudentInvalid.value = false;
+	if (studentId === noteStudentId.value) return;
+	if (md.value.trim() || pendingNoteSend || noteOperation.value) {
+		pendingStudentId.value = studentId;
+		return;
+	}
+	applyNoteStudent(studentId);
+}
+function applyNoteStudent(studentId: string) {
+	md.value = "";
+	subject.value = "";
+	subjectDate.value = "";
+	pendingNoteSend = null;
+	noteOperation.value = null;
+	pendingStudentId.value = null;
+	noteUnlinked.value = false;
+	resultText.value = "";
+	noteStudentId.value = studentId;
+	const verified = noteStudents.value.find(
+		student => student.studentId === studentId
+	);
+	selectedRecipientName.value =
+		verified?.recipientName &&
+		adminRecipients.value.some(
+			recipient => recipient.name === verified.recipientName
+		)
+			? verified.recipientName
+			: "";
+}
+watch(
+	() => noteRoute?.query.student,
+	studentId => {
+		if (typeof studentId === "string" && noteStudents.value.length)
+			requestNoteStudent(studentId);
+	}
+);
+
 watch(noteStudentId, async studentId => {
+	resetRecentSessionNotes();
 	noteSessionId.value = "";
 	selectedSavedNoteId.value = "";
 	noteSessions.value = [];
@@ -100,13 +157,16 @@ watch(noteStudentId, async studentId => {
 		const { data } = await api.get(`/users/${studentId}/schedule`);
 		if (studentId === noteStudentId.value)
 			noteSessions.value = data.scheduledSessions ?? [];
+		await loadRecentSessionNotes();
 	} catch {
 		resultText.value = "Unable to load verified sessions.";
 	}
 });
 function loadSavedNote() {
 	const note = recentSessionNotes.value.find(
-		n => n._id === selectedSavedNoteId.value
+		n =>
+			n._id === selectedSavedNoteId.value &&
+			n.studentId === noteStudentId.value
 	);
 	if (!note) return;
 	md.value = note.markdown;
@@ -245,6 +305,11 @@ onMounted(async () => {
 	try {
 		const { data } = await api.get("/admin-mail/session-notes/identities");
 		noteStudents.value = data.students ?? [];
+		const requested = noteRoute
+			? noteRoute.query.student
+			: new URLSearchParams(window.location.search).get("student");
+		if (typeof requested === "string" && requested)
+			requestNoteStudent(requested);
 	} catch {
 		/* Selecting an identity remains unavailable until loading succeeds. */
 	}
@@ -370,6 +435,40 @@ function noteRecencyLabel(index: number) {
 }
 
 async function loadRecentSessionNotes() {
+	// Saved versions belong to the selected student, even when siblings share a mailbox.
+	if (messageKind.value === "session-note") {
+		if (!noteStudentId.value) {
+			resetRecentSessionNotes();
+			return;
+		}
+		const studentId = noteStudentId.value;
+		const requestToken = ++recentNotesRequestToken;
+		recentNotesLoading.value = true;
+		recentNotesError.value = "";
+		try {
+			const { data } = await api.get(`/users/${studentId}/session-notes`);
+			if (
+				requestToken !== recentNotesRequestToken ||
+				studentId !== noteStudentId.value
+			) {
+				return;
+			}
+			recentSessionNotes.value = (data.sessionNotes ?? []).filter(
+				(note: SessionNoteRecord) => note.studentId === studentId
+			);
+			recentNotesError.value = "";
+		} catch {
+			if (requestToken === recentNotesRequestToken) {
+				recentNotesError.value =
+					"Saved notes unavailable for this student.";
+			}
+		} finally {
+			if (requestToken === recentNotesRequestToken)
+				recentNotesLoading.value = false;
+		}
+		return;
+	}
+
 	const recipientName = selectedRecipientName.value;
 	const resolvedPrimaryEmail = primaryEmail.value;
 
@@ -418,6 +517,13 @@ async function loadRecentSessionNotes() {
 }
 
 async function sendMail() {
+	if (
+		sending.value ||
+		requestedStudentInvalid.value ||
+		pendingStudentId.value !== null
+	) {
+		return;
+	}
 	resultText.value = "";
 	sentOk.value = false;
 	sending.value = true;
@@ -427,14 +533,16 @@ async function sendMail() {
 	const curSubject = subject.value.trim();
 	const curMd = md.value;
 	const sessionDateIso = parseDateIso(subjectDate.value);
-	const wasSessionNoteSend = !!sessionDateIso;
+	const wasSessionNoteSend = messageKind.value === "session-note";
 	const keptRecipientSelection = selectedRecipientName.value;
 	const usedCustomRecipient = isCustomRecipient.value;
 	const payload: Record<string, unknown> = {
 		to: curTo,
 		subject: curSubject,
 		md: curMd,
-		sessionDate: sessionDateIso ?? undefined,
+		sessionDate: wasSessionNoteSend
+			? (sessionDateIso ?? undefined)
+			: undefined,
 		recipientName: isCustomRecipient.value
 			? undefined
 			: selectedRecipientName.value || undefined
@@ -442,6 +550,11 @@ async function sendMail() {
 
 	try {
 		if (wasSessionNoteSend) {
+			if (!sessionDateIso) {
+				resultText.value =
+					"Choose the note label date. The actual session must still be selected separately.";
+				return;
+			}
 			if (
 				!noteStudentId.value ||
 				(!noteSessionId.value && !noteUnlinked.value)
@@ -573,12 +686,22 @@ function parseDateIso(value: string): string | null {
 
 <template>
 	<AdminWorkspaceShell
-		intro="Compose session notes and internal admin mail in one place, with a cleaner writing surface and a stable preview flow."
+		intro="Select the student and actual session, write the note, preview it and track the send outcome."
 		title="Notes and Mail"
 	>
 		<section class="wrap">
 			<SessionNoteEvidenceReview />
 			<div class="mail-card">
+				<label class="message-kind"
+					>Message type<select v-model="messageKind">
+						<option value="session-note">Session note</option>
+						<option value="internal">Internal message</option>
+					</select></label
+				>
+				<p v-if="messageKind === 'session-note'" class="hint">
+					1. Student → 2. Actual session → 3. Draft and preview → 4.
+					Send tracking. The label date does not identify the session.
+				</p>
 				<div class="mail-card__header">
 					<div>
 						<p class="mail-card__eyebrow">Composer</p>
@@ -623,6 +746,120 @@ function parseDateIso(value: string): string | null {
 				</div>
 
 				<div class="field-grid">
+					<div
+						v-if="messageKind === 'session-note'"
+						class="field note-identity-fields"
+					>
+						<label class="field-label" for="note-student"
+							>Student identity</label
+						>
+						<select
+							id="note-student"
+							:value="noteStudentId"
+							:disabled="sending"
+							@change="
+								requestNoteStudent(
+									($event.target as HTMLSelectElement).value
+								)
+							"
+						>
+							<option value="">Select student explicitly</option>
+							<option
+								v-for="student in noteStudents"
+								:key="student.studentId"
+								:value="student.studentId"
+							>
+								{{ student.name }} ·
+								{{ student.studentId.slice(-6) }}
+							</option>
+						</select>
+						<div
+							v-if="pendingStudentId !== null"
+							class="student-context-confirmation"
+							role="alert"
+						>
+							<p>
+								This draft or send reference belongs to the
+								current student. Save or copy it before
+								switching. Changing students clears this draft;
+								delivery tracking remains available in review.
+							</p>
+							<button
+								type="button"
+								@click="applyNoteStudent(pendingStudentId!)"
+							>
+								Discard draft and switch student
+							</button>
+							<button
+								type="button"
+								@click="pendingStudentId = null"
+							>
+								Keep current student
+							</button>
+						</div>
+						<p v-if="requestedStudentInvalid" role="alert">
+							The requested student is unavailable. Select a
+							verified student before continuing.
+						</p>
+						<label class="field-label" for="note-session"
+							>Actual session</label
+						>
+						<select
+							id="note-session"
+							v-model="noteSessionId"
+							:disabled="noteUnlinked"
+						>
+							<option value="">Select scheduled session</option>
+							<option
+								v-for="session in noteSessions"
+								:key="session._id"
+								:value="session._id"
+							>
+								{{ new Date(session.startAt).toLocaleString() }}
+								· {{ session.timezone }} ·
+								{{ session._id.slice(-6) }}
+							</option>
+						</select>
+						<label
+							><input
+								v-model="noteUnlinked"
+								type="checkbox"
+								@change="noteSessionId = ''"
+							/>
+							Unlinked note; operator review required</label
+						>
+						<label class="field-label" for="saved-note"
+							>Saved note version</label
+						>
+						<select
+							id="saved-note"
+							v-model="selectedSavedNoteId"
+							@change="loadSavedNote"
+						>
+							<option value="">
+								Save this draft before sending
+							</option>
+							<option
+								v-for="note in recentSessionNotes.filter(
+									n => n.studentId === noteStudentId
+								)"
+								:key="note._id"
+								:value="note._id"
+							>
+								{{ note.sessionDate.slice(0, 10) }} ·
+								{{ note._id.slice(-6) }}
+							</option>
+						</select>
+						<button
+							v-if="noteOperation"
+							type="button"
+							class="ghost-btn"
+							@click="checkNoteOperation"
+						>
+							Check send status
+						</button>
+					</div>
+
 					<div class="field">
 						<label class="field-label" for="recipient-select"
 							>Recipient</label
@@ -687,86 +924,13 @@ function parseDateIso(value: string): string | null {
 						</div>
 					</div>
 
-					<div v-if="subjectDate" class="field">
-						<label class="field-label" for="note-student"
-							>Student identity</label
-						>
-						<select id="note-student" v-model="noteStudentId">
-							<option value="">Select student explicitly</option>
-							<option
-								v-for="student in noteStudents"
-								:key="student.studentId"
-								:value="student.studentId"
-							>
-								{{ student.name }} ·
-								{{ student.studentId.slice(-6) }}
-							</option>
-						</select>
-						<label class="field-label" for="note-session"
-							>Actual session</label
-						>
-						<select
-							id="note-session"
-							v-model="noteSessionId"
-							:disabled="noteUnlinked"
-						>
-							<option value="">Select scheduled session</option>
-							<option
-								v-for="session in noteSessions"
-								:key="session._id"
-								:value="session._id"
-							>
-								{{ new Date(session.startAt).toLocaleString() }}
-								· {{ session.timezone }} ·
-								{{ session._id.slice(-6) }}
-							</option>
-						</select>
-						<label
-							><input
-								v-model="noteUnlinked"
-								type="checkbox"
-								@change="noteSessionId = ''"
-							/>
-							Unlinked note; operator review required</label
-						>
-						<label class="field-label" for="saved-note"
-							>Saved note version</label
-						>
-						<select
-							id="saved-note"
-							v-model="selectedSavedNoteId"
-							@change="loadSavedNote"
-						>
-							<option value="">
-								Save this draft before sending
-							</option>
-							<option
-								v-for="note in recentSessionNotes.filter(
-									n => n.studentId === noteStudentId
-								)"
-								:key="note._id"
-								:value="note._id"
-							>
-								{{ note.sessionDate.slice(0, 10) }} ·
-								{{ note._id.slice(-6) }}
-							</option>
-						</select>
-						<button
-							v-if="noteOperation"
-							type="button"
-							class="ghost-btn"
-							@click="checkNoteOperation"
-						>
-							Check send status
-						</button>
-					</div>
-
 					<div class="field subject-group">
 						<label class="field-label" for="subject-date-input"
 							>Subject</label
 						>
 						<div class="subject-row">
 							<button
+								v-if="messageKind === 'session-note'"
 								type="button"
 								class="picker-btn"
 								@click="openDatePicker"
@@ -778,6 +942,7 @@ function parseDateIso(value: string): string | null {
 								}}
 							</button>
 							<input
+								v-show="messageKind === 'session-note'"
 								id="subject-date-input"
 								ref="dateInput"
 								v-model="subjectDate"
@@ -848,10 +1013,33 @@ function parseDateIso(value: string): string | null {
 					</p>
 					<button
 						class="send-btn"
-						:disabled="sending || !to || !subject || !md"
-						@click="sendMail"
+						:disabled="
+							sending ||
+							!to ||
+							!subject ||
+							!md ||
+							(messageKind === 'session-note' &&
+								(!subjectDate ||
+									!noteStudentId ||
+									requestedStudentInvalid ||
+									pendingStudentId !== null ||
+									(!noteSessionId && !noteUnlinked)))
+						"
+						@click="
+							activeTab === 'compose'
+								? switchTab('preview')
+								: sendMail()
+						"
 					>
-						{{ sending ? "Sending…" : "Send" }}
+						{{
+							sending
+								? "Sending…"
+								: activeTab === "compose"
+									? "Preview before sending"
+									: messageKind === "session-note"
+										? "Send session note"
+										: "Send internal message"
+						}}
 					</button>
 				</div>
 			</div>
@@ -901,7 +1089,7 @@ function parseDateIso(value: string): string | null {
 							</span>
 						</div>
 						<p class="history-note__meta">
-							Sent to {{ note.primaryEmail }}
+							Recipients: {{ note.primaryEmail }}
 							<template v-if="note.ccEmails.length">
 								· CC {{ note.ccEmails.join(", ") }}
 							</template>
@@ -977,6 +1165,26 @@ function parseDateIso(value: string): string | null {
 </template>
 
 <style scoped>
+.message-kind {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 1rem;
+	font: inherit;
+	text-transform: none;
+	letter-spacing: normal;
+}
+.message-kind select {
+	padding: 0.5rem;
+	background: var(--color-surface);
+	color: var(--color-ink);
+	border: 1px solid var(--color-border);
+}
+.note-identity-fields {
+	grid-column: 1 / -1;
+}
+
 .wrap {
 	max-width: 1000px;
 	margin: 0 auto;

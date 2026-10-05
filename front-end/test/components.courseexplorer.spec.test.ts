@@ -1,7 +1,8 @@
 import { flushPromises, mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { nextTick } from "vue";
+import { nextTick, reactive } from "vue";
+import { routeLocationKey, routerKey } from "vue-router";
 import { api } from "@/api";
 import { resetCourseAssetPreviewCache } from "@/modules/courseAssetPreview";
 import CourseExplorer from "@/components/CourseExplorer.vue";
@@ -2692,5 +2693,86 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.findAll(".resource-link.is-project")).toHaveLength(1);
 		expect(wrapper.findAll(".resource-link.is-solution")).toHaveLength(1);
 		expect(wrapper.findAll(".resource-link.is-reference")).toHaveLength(2);
+	});
+	it("carries authorized learner IDs across links and honors manual selection", async () => {
+		const app = useAppStore();
+		const courses = useCoursesStore();
+		const assignedCourse = courses.courses[0];
+		app.setCurrentTutor({
+			_id: "teacher",
+			name: "Teacher",
+			email: "teacher@example.invalid",
+			age: 30,
+			state: "GA",
+			usersOfTutorLength: 2,
+			coursePermissions: [assignedCourse.id],
+			editTutors: false,
+			saveEdit: "Save"
+		});
+		vi.mocked(api.get).mockResolvedValue({
+			data: ["a", "b"].map(id => ({
+				_id: id,
+				name: "Same name",
+				email: "shared@example.invalid",
+				age: 12,
+				state: "GA",
+				courseAccess: [assignedCourse.id],
+				courseProgress: [],
+				editUsers: false,
+				saveEdit: "Save"
+			}))
+		});
+		vi.spyOn(courses, "loadCourseById").mockResolvedValue({
+			id: assignedCourse.id,
+			name: assignedCourse.name,
+			modules: [
+				{
+					id: "module",
+					title: "Lesson",
+					curriculum: [],
+					supplementalProjects: []
+				}
+			]
+		});
+		const route = reactive({
+			query: { learner: "b" } as Record<string, string>,
+			hash: ""
+		});
+		const replace = vi.fn(
+			async (target: { query: Record<string, string> }) => {
+				route.query = target.query;
+			}
+		);
+		const wrapper = mount(CourseExplorer, {
+			global: {
+				provide: {
+					[routeLocationKey as symbol]: route,
+					[routerKey as symbol]: { replace }
+				}
+			}
+		});
+		await flushPromises();
+		expect(
+			wrapper.get<HTMLSelectElement>("#learner-select").element.value
+		).toBe("b");
+		await wrapper.get("#learner-select").setValue("a");
+		await flushPromises();
+		expect(replace).toHaveBeenCalledWith({ query: {}, hash: "" });
+		expect(
+			wrapper.get<HTMLSelectElement>("#learner-select").element.value
+		).toBe("a");
+		route.query = { learner: "b" };
+		await flushPromises();
+		expect(
+			wrapper.get<HTMLSelectElement>("#learner-select").element.value
+		).toBe("b");
+		route.query = { learner: "foreign" };
+		await flushPromises();
+		expect(wrapper.text()).toContain("unavailable in your teaching scope");
+		expect(
+			wrapper.get<HTMLSelectElement>("#learner-select").element.value
+		).toBe("");
+		expect(api.put).not.toHaveBeenCalled();
+		wrapper.unmount();
 	});
 });

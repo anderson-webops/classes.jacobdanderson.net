@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
 	boundedResponseText,
+	containsCodeIdeWorkspaceMarkers,
 	containsCurrentIdeBundleMarkers,
 	containsJavaModeCopy,
 	containsPlainPythonWorkerMarkers,
@@ -64,8 +65,9 @@ describe("production Code IDE smoke helpers", () => {
 			"Java Level 1 mentions Karel Java and a BlueJ Java Project.";
 		const currentIdeBundle = [
 			"Code, run, and draw in Python or Java",
-			"Workspace type",
-			"Browser IDE",
+			"Choose a starter",
+			"All languages",
+			"New project",
 			"BlueJ Java",
 			"preview Java console programs or Karel robot",
 			"BlueJ integration for desktop object-bench projects",
@@ -79,7 +81,7 @@ describe("production Code IDE smoke helpers", () => {
 			"New BlueJ project",
 			"Import BlueJ ZIP",
 			"Download project ZIP",
-			"Classroom projects",
+			"Classroom",
 			"Maze Explorer",
 			"Triangle Motion Starter",
 			"Download BlueJ ZIP",
@@ -99,6 +101,15 @@ describe("production Code IDE smoke helpers", () => {
 			false
 		);
 		expect(containsCurrentIdeBundleMarkers(currentIdeBundle)).toBe(true);
+		expect(containsCodeIdeWorkspaceMarkers(currentIdeBundle)).toBe(true);
+		expect(containsCodeIdeWorkspaceMarkers(genericJavaCourseAsset)).toBe(
+			false
+		);
+		expect(
+			containsCurrentIdeBundleMarkers(
+				currentIdeBundle.replace("Choose a starter", "old project menu")
+			)
+		).toBe(false);
 		expect(
 			containsCurrentIdeBundleMarkers(
 				currentIdeBundle.replace(

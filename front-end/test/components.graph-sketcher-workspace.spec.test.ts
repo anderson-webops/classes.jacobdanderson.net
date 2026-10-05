@@ -56,7 +56,7 @@ describe("GraphSketcherWorkspace.vue", () => {
 	it("renders a complete client-side graphing workspace", async () => {
 		const wrapper = mount(GraphSketcherWorkspace);
 
-		expect(wrapper.get("h1").text()).toBe("Graph Sketcher");
+		expect(wrapper.get("h1").text()).toBe("Graphing");
 		expect(wrapper.get("svg[role='img']").attributes("tabindex")).toBe("0");
 		expect(wrapper.text()).toContain("Open / import");
 		expect(wrapper.text()).toContain("Download project");
@@ -70,7 +70,10 @@ describe("GraphSketcherWorkspace.vue", () => {
 		await buttonWithText(wrapper, "Style").trigger("click");
 		expect(wrapper.text()).toContain("Add linear best fit");
 
-		await buttonWithText(wrapper, "Graph").trigger("click");
+		await wrapper
+			.findAll(".graph-inspector__tabs button")
+			.find(button => button.text() === "Graph")!
+			.trigger("click");
 		expect(wrapper.text()).toContain("Original source");
 		expect(wrapper.text()).toContain("Linux desktop port");
 	});
@@ -379,11 +382,29 @@ describe("GraphSketcherWorkspace.vue", () => {
 		await wrapper.vm.$nextTick();
 
 		expect(wrapper.text()).not.toContain("Stale imported graph");
-		expect(wrapper.get("svg[role='img']").attributes("aria-label")).toContain(
-			"3 series"
-		);
+		expect(
+			wrapper.get("svg[role='img']").attributes("aria-label")
+		).toContain("3 series");
 		expect(wrapper.text()).toContain(
 			"The graph changed while the file was opening, so the import was not applied."
 		);
+	});
+	it("reports blocked device storage without claiming the graph was saved", async () => {
+		vi.useFakeTimers();
+		vi.spyOn(window.localStorage, "setItem").mockImplementation(() => {
+			throw new Error("Storage blocked");
+		});
+		const wrapper = mount(GraphSketcherWorkspace);
+		try {
+			await buttonWithText(wrapper, "Sample").trigger("click");
+			await vi.advanceTimersByTimeAsync(300);
+			expect(wrapper.text()).toContain(
+				"Download required: local save unavailable"
+			);
+			expect(wrapper.text()).not.toContain("Autosaved locally");
+		} finally {
+			wrapper.unmount();
+			vi.useRealTimers();
+		}
 	});
 });

@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import {
+	computed,
+	nextTick,
+	onBeforeUnmount,
+	onMounted,
+	ref,
+	watch
+} from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
+import WorkspaceHeader from "@/components/WorkspaceHeader.vue";
+import WorkspaceStorageStatus from "@/components/WorkspaceStorageStatus.vue";
 import {
 	scratchDownloadName,
 	scratchFrameDocument,
@@ -18,6 +27,16 @@ const title = ref("My Scratch project");
 const starter = ref("");
 const status = ref("Opening Scratch…");
 const expanded = ref(false);
+const frameViewport = ref<HTMLDivElement>();
+const scratchView = ref<"blocks" | "stage">("stage");
+function showScratchView(view: "blocks" | "stage") {
+	scratchView.value = view;
+	const viewport = frameViewport.value;
+	viewport?.scrollTo({
+		left: view === "stage" ? viewport.scrollWidth : 0,
+		behavior: "instant"
+	});
+}
 let channel = "";
 let timer: ReturnType<typeof setTimeout> | undefined;
 const selected = computed(() =>
@@ -109,6 +128,8 @@ function receive(event: MessageEvent) {
 		clearTimeout(timer);
 		status.value = "Ready. Download your project to keep a copy.";
 		if (starter.value) void openStarter();
+		if (window.matchMedia?.("(max-width: 1120px)").matches)
+			void nextTick(() => showScratchView("stage"));
 	} else if (data.type === "loaded") {
 		busy.value = false;
 		dirty.value = false;
@@ -188,6 +209,34 @@ defineExpose({ stop: () => send("stop") });
 		:class="{ expanded }"
 		aria-label="Scratch workspace"
 	>
+		<WorkspaceHeader title="Scratch blocks"
+			><RouterLink
+				v-if="typeof route.query.course === 'string'"
+				:to="{
+					path: '/courses',
+					hash:
+						typeof route.query.lesson === 'string' &&
+						/^[\w-]{1,250}$/.test(route.query.lesson)
+							? `#${route.query.lesson}`
+							: `#${route.query.course}`
+				}"
+				>Return to lesson</RouterLink
+			></WorkspaceHeader
+		>
+		<WorkspaceStorageStatus
+			:label="
+				dirty
+					? 'Download required: unsaved changes.'
+					: 'Scratch saves to a file.'
+			"
+			>Download .sb3 to keep your work; it does not sync to your
+			account.</WorkspaceStorageStatus
+		>
+		<p class="scratch-small-screen">
+			The full block editor needs a wider screen. Swipe horizontally to
+			reach the stage, or use Expand editor and rotate your device.
+			Download your project before leaving.
+		</p>
 		<div class="scratch-toolbar">
 			<label
 				>Project name <input v-model="title" maxlength="120"
@@ -235,14 +284,40 @@ defineExpose({ stop: () => send("stop") });
 				>{{ status }}{{ dirty ? " Unsaved changes." : "" }}</span
 			>
 		</div>
-		<iframe
-			v-if="source"
-			ref="frame"
-			:srcdoc="source"
-			sandbox="allow-scripts allow-downloads"
-			allow="camera 'none'; microphone 'none'; geolocation 'none'"
-			title="Scratch block editor and stage"
-		/>
+		<div
+			class="scratch-view-switch"
+			aria-label="Scratch small-screen views"
+		>
+			<button
+				type="button"
+				:aria-pressed="scratchView === 'blocks'"
+				@click="showScratchView('blocks')"
+			>
+				Blocks
+			</button>
+			<button
+				type="button"
+				:aria-pressed="scratchView === 'stage'"
+				@click="showScratchView('stage')"
+			>
+				Stage
+			</button>
+		</div>
+		<div
+			ref="frameViewport"
+			class="scratch-frame-viewport"
+			tabindex="0"
+			aria-label="Scrollable Scratch blocks and stage"
+		>
+			<iframe
+				v-if="source"
+				ref="frame"
+				:srcdoc="source"
+				sandbox="allow-scripts allow-downloads"
+				allow="camera 'none'; microphone 'none'; geolocation 'none'"
+				title="Scratch block editor and stage"
+			/>
+		</div>
 		<details class="scratch-help">
 			<summary>Saving, classroom tasks and credits</summary>
 			<p>
@@ -285,6 +360,21 @@ defineExpose({ stop: () => send("stop") });
 </template>
 
 <style scoped>
+.scratch-small-screen {
+	display: none;
+}
+.scratch-save-reminder {
+	margin: 0;
+	color: var(--color-ink-soft);
+	font-size: 0.9rem;
+}
+@media (max-width: 700px) {
+	.scratch-small-screen {
+		display: block;
+		margin: 0;
+		font-size: 0.9rem;
+	}
+}
 .scratch-workspace {
 	display: flex;
 	flex-direction: column;
@@ -333,6 +423,8 @@ defineExpose({ stop: () => send("stop") });
 }
 .scratch-workspace iframe {
 	width: 100%;
+	/* Keep Scratch's complete desktop layout inside the scrollable frame. */
+	min-width: 1120px;
 	height: max(650px, calc(100dvh - 230px));
 	border: 1px solid #a6adba;
 	border-radius: 0.5rem;
@@ -354,12 +446,28 @@ defineExpose({ stop: () => send("stop") });
 	flex: 1;
 	min-height: 560px;
 }
-@media (max-width: 700px) {
-	.scratch-workspace {
-		overflow-x: auto;
+.scratch-frame-viewport {
+	min-width: 0;
+	overflow-x: auto;
+	overscroll-behavior: contain;
+	touch-action: pan-x pan-y;
+}
+.scratch-view-switch {
+	display: none;
+}
+@media (max-width: 1120px) {
+	.scratch-view-switch {
+		display: flex;
+		gap: 0.5rem;
 	}
-	.scratch-workspace iframe {
-		min-width: 760px;
+	.scratch-view-switch button {
+		min-height: 2.75rem;
+	}
+	.scratch-workspace {
+		overflow-x: clip;
+	}
+	.scratch-frame-viewport {
+		max-width: 100%;
 	}
 }
 </style>

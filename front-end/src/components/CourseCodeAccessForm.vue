@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import { useAppStore } from "@/stores/app";
 
 const app = useAppStore();
+const entry = ref("returning");
 const code = ref("");
 const username = ref("");
 const password = ref("");
@@ -52,11 +53,25 @@ async function redeemCode() {
 			<h2>Use a course code</h2>
 			<p>
 				Enter the code from your tutor, your username, and your private
-				password. You can open the assigned course and sync IDE projects
-				without providing an email address.
+				password. You can open the assigned course and sync Python and
+				Java IDE projects without providing an email address.
 			</p>
 		</div>
 
+		<label
+			>Classroom access
+			<select v-model="entry">
+				<option value="returning">Reopen my workspace</option>
+				<option value="new">Create a new workspace</option>
+			</select>
+		</label>
+		<p>
+			{{
+				entry === "new"
+					? "Choose a new username and keep your private password. Your tutor's code determines course access."
+					: "Use your existing code, username and password. For forgotten passwords, ask your tutor to recover the workspace."
+			}}
+		</p>
 		<form class="course-code-form" @submit.prevent="redeemCode">
 			<label>
 				<span>Course code</span>
@@ -84,7 +99,9 @@ async function redeemCode() {
 				<input
 					v-model="password"
 					type="password"
-					autocomplete="current-password"
+					:autocomplete="
+						entry === 'new' ? 'new-password' : 'current-password'
+					"
 					minlength="12"
 					maxlength="128"
 					required
