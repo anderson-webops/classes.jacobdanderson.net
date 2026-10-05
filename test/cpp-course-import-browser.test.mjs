@@ -16,7 +16,7 @@ import { preview } from "vite";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const repository = "instruction-material/Python-to-Java-and-CPP-Bridge";
-const revision = "b2ebcb94b5f1d2410603031cd409b022d2187253";
+const revision = "003c7cc321dd758360c27575b8a9f2a4c7b710b7";
 const packs = {
 	"PTJ1-Syntax-Translation-Warmup/starter/cpp": {
 		"README.md": "8db88854ab5e1398be2afdf0468ef3644dfcf4d75c358bc13d3cb42bd9140646",
@@ -39,9 +39,28 @@ const packs = {
 	"PTJ6-Python-to-CPP-Console-Port/starter": {
 		"README.md": "682bd108401494aef8d95aa039a636ce2ca2b6575ded547a09ea08a403e8c0e4",
 		"main.cpp": "75f01a58894d2ce1d2c0aa506ac7ac6e54b827fb9da7fcc267ab6eacfc41954e"
+	},
+	"PTJ7-Task-Tracker-Capstone/starter/cpp": {
+		"README.md": "0fa5f851dc2cfe196b2cb70d3a1699bdb879dfecf2087c96a9ba240c69a1903a",
+		"TaskTracker.cpp": "0bb89908e62373f7683b29d2f131fac24289ed9430d55472b4cf8b7ff53b463a",
+		"TaskTracker.h": "403e0ed70b326bfa53cd64a330098d5c9846e36ada40809317b7e80a9775d948",
+		"main.cpp": "e8df394338847cd39b501c2e4649e0317510fd644114a97afc62a14cb14b4908"
+	},
+	"PTJ7-Task-Tracker-Capstone/starter/java": {
+		"Main.java": "221782daae0726b25370e84d9742c812b3e68c08229bd60bd28bffbe1c72d234",
+		"README.md": "0fa5f851dc2cfe196b2cb70d3a1699bdb879dfecf2087c96a9ba240c69a1903a",
+		"TaskTracker.java": "dcd5c4b443934b1706ff474a92e2343f1cb2ee1a9bc5b626c6259ea46740186c"
 	}
 };
-const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "cpp-course-import-browser-ci";
+const moduleAnchors = {
+	PTJ1: "ptj0-positioning-and-workflow-translation",
+	PTJ2: "ptj1-functions-parameters-and-return-types",
+	PTJ3: "ptj2-collections-strings-and-indexing",
+	PTJ4: "ptj3-classes-and-objects-across-languages",
+	PTJ6: "ptj5-c-specific-adaptation",
+	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
+};
+const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "bridge-course-import-browser-ci";
 function record(event, fields = {}) {
 	return console.log(JSON.stringify({
 		event,
@@ -65,11 +84,12 @@ async function readStarter(folder, hashes) {
 	return files;
 }
 
-async function compileExport(directory, names) {
-	const args = ["-std=c++17", "-Wall", "-Wextra", "-pedantic", "-I.", ...names.filter(name => /\.(?:cc|cpp|cxx)$/.test(name)), "-o", "project"];
+async function compileExport(directory, names, mode) {
+	const command = mode === "java" ? process.env.JAVAC ?? "javac" : "c++";
+	const args = mode === "java" ? ["-Xlint:all", ...names.filter(name => name.endsWith(".java"))] : ["-std=c++17", "-Wall", "-Wextra", "-pedantic", "-I.", ...names.filter(name => /\.(?:cc|cpp|cxx)$/.test(name)), "-o", "project"];
 	await new Promise((resolve, reject) => {
-		const child = spawn("c++", args, { cwd: directory, detached: true, stdio: ["ignore", "pipe", "pipe"] });
-		record("start", { command: ["c++", ...args], cwd: directory, pid: child.pid, timeoutMs: 30000 });
+		const child = spawn(command, args, { cwd: directory, detached: true, stdio: ["ignore", "pipe", "pipe"] });
+		record("start", { command: [command, ...args], cwd: directory, pid: child.pid, timeoutMs: 30000 });
 		let errors = "";
 		child.stdout.resume();
 		child.stderr.on("data", (data) => {
@@ -96,7 +116,7 @@ async function compileExport(directory, names) {
 	});
 }
 
-nodeTest("published C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 240000 }, async () => {
+nodeTest("published bridge starters confirm, edit, save, export, reopen and compile natively", { timeout: 240000 }, async () => {
 	let browser;
 	let server;
 	let page;
@@ -152,29 +172,37 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 				void request.continue();
 			}
 		});
-		// Actual catalog action must advertise the C++ mode and await confirmation.
-		await page.goto(`${origin}/courses#python-to-java-and-cpp-bridge-ptj5-c-specific-adaptation`, { waitUntil: "domcontentloaded" });
-		const sourceSelector = "a[href*='PTJ6-Python-to-CPP-Console-Port/starter']:not(.is-ide-starter)";
-		await page.waitForSelector(sourceSelector);
-		const href = await page.$eval(sourceSelector, link => link.closest(".lesson-item").querySelector(".is-ide-starter").getAttribute("href"));
-		assert.equal(new URL(href, origin).searchParams.get("mode"), "cpp");
-		assert.equal(sourceRequests, 0);
-		courseFixture = false;
-		// Native byte verification happens outside the browser; the learner still consents before import.
+		// Each source choice is reached through the real catalog action, including
+		// the two capstone targets. Pin published starter bytes independently.
 		for (const [packFolder, hashes] of Object.entries(packs)) {
 			folder = packFolder;
-			await page.setViewport({ width: folder.startsWith("PTJ1") ? 390 : 1280, height: 900 });
+			const mode = folder.endsWith("/java") ? "java" : "cpp";
+			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
+			await page.setViewport({ width: folder.startsWith("PTJ1") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(folder, hashes);
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
-			const key = `browser:${folder}:starter`;
-			const params = new URLSearchParams({ mode: "cpp", projectKey: key, starterUrl: `https://github.com/${repository}/tree/main/${folder}`, starterTitle: folder.split("/")[0] });
-			await page.goto(`${origin}/ide?${params}`, { waitUntil: "domcontentloaded" });
+			const beforeRuntime = runtimeRequests;
+			courseFixture = true;
+			const anchor = moduleAnchors[folder.slice(0, 4)];
+			assert.ok(anchor);
+			await page.goto(`${origin}/courses#python-to-java-and-cpp-bridge-${anchor}`, { waitUntil: "domcontentloaded" });
+			const selector = `a[href='https://github.com/${repository}/tree/main/${folder}']:not(.is-ide-starter)`;
+			await page.waitForSelector(selector);
+			const href = await page.$eval(selector, link => link.closest(".lesson-item").querySelector(".is-ide-starter").getAttribute("href"));
+			const params = new URL(href, origin).searchParams;
+			assert.equal(params.get("mode"), mode);
+			assert.equal(params.get("starterUrl"), `https://github.com/${repository}/tree/main/${folder}`);
+			assert.equal(sourceRequests, before, "Catalog choices never fetch source without consent");
+			const key = params.get("projectKey");
+			assert.ok(key);
+			courseFixture = false;
+			await page.goto(new URL(href, origin).href, { waitUntil: "domcontentloaded" });
 			await page.waitForSelector("[data-testid='ide-route-import-confirm']");
 			assert.equal(sourceRequests, before);
 			await page.click("[data-testid='ide-route-import-confirm']");
-			await page.waitForSelector("[aria-label='C++ build workflow']");
-			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("#include"));
+			if (mode === "cpp") await page.waitForSelector("[aria-label='C++ build workflow']");
+			await page.waitForFunction(mode => document.querySelector(".cm-content")?.textContent.includes(mode === "java" ? "public class Main" : "#include"), {}, mode);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
 			if (folder.startsWith("PTJ4")) {
 				const input = "input[aria-label='New project file name']";
@@ -184,11 +212,11 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 				await page.waitForFunction(() => [...document.querySelectorAll(".file-button")].some(button => button.textContent.includes("src/workflow.cpp")));
 				expectedFiles["src/workflow.cpp"] = "// Add C++ function or class definitions here.\n";
 			}
-			await page.evaluate(() => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes("main.cpp")).click());
-			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("int main("));
+			await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
+			await page.waitForFunction(mode => document.querySelector(".cm-content")?.textContent.includes(mode === "java" ? "public class Main" : "int main("), {}, mode);
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
-			const edited = `${files["main.cpp"]}\n// Browser workflow edit\n`;
-			expectedFiles["main.cpp"] = edited;
+			const edited = `${files[entryFile]}\n// Browser workflow edit\n`;
+			expectedFiles[entryFile] = edited;
 			await page.click(".cm-content");
 			await page.keyboard.down(modifier);
 			await page.keyboard.press("a");
@@ -197,15 +225,19 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 			await page.keyboard.down(modifier);
 			await page.keyboard.press("s");
 			await page.keyboard.up(modifier);
-			await page.waitForFunction((key, source) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === "main.cpp" && file.content === source)), {}, key, edited);
-			await page.waitForSelector("button.run-control:not(:disabled)");
-			await page.click("button.run-control");
-			await page.waitForFunction(() => document.querySelector(".output-panel")?.textContent.includes("-std=c++17"));
-			assert.equal(await page.$(".stdin-panel"), null);
-			const instructions = await page.$eval(".output-panel", element => element.textContent);
-			assert.match(instructions, /does not compile or execute/);
-			for (const name of Object.keys(expectedFiles).filter(name => name.endsWith(".cpp"))) assert.ok(instructions.includes(`'${name}'`));
-			assert.equal(runtimeRequests, 0, "C++ instructions never start a Python or Java runtime");
+			await page.waitForFunction((key, source, name) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === name && file.content === source)), {}, key, edited, entryFile);
+			if (mode === "cpp") {
+				await page.waitForSelector("button.run-control:not(:disabled)");
+				await page.click("button.run-control");
+				await page.waitForFunction(() => document.querySelector(".output-panel")?.textContent.includes("-std=c++17"));
+				assert.equal(await page.$(".stdin-panel"), null);
+				const instructions = await page.$eval(".output-panel", element => element.textContent);
+				assert.match(instructions, /does not compile or execute/);
+				for (const name of Object.keys(expectedFiles).filter(name => name.endsWith(".cpp"))) assert.ok(instructions.includes(`'${name}'`));
+				assert.equal(runtimeRequests, beforeRuntime, "C++ instructions never start a Python or Java runtime");
+			}
+			// The Java object capstone is edited/exported here and compiled natively
+			// below; the limited browser interpreter is not its execution gate.
 			await page.evaluate(() => {
 				window.__cppZip = null;
 				const original = HTMLAnchorElement.prototype.click;
@@ -224,17 +256,17 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 			const zip = unzipSync(Uint8Array.from(await page.evaluate(() => window.__cppZip)));
 			const exported = Object.fromEntries(Object.entries(zip).map(([path, bytes]) => [path.slice(path.indexOf("/") + 1), strFromU8(bytes)]));
 			assert.deepEqual(exported, expectedFiles);
-			const directory = join(temporary, folder.split("/")[0]);
+			const directory = join(temporary, `${folder.split("/")[0]}-${mode}`);
 			await mkdir(directory);
 			for (const [name, content] of Object.entries(exported)) {
 				const path = join(directory, name);
 				await mkdir(dirname(path), { recursive: true });
 				await writeFile(path, content);
 			}
-			await compileExport(directory, Object.keys(exported));
+			await compileExport(directory, Object.keys(exported), mode);
 			await page.reload({ waitUntil: "domcontentloaded" });
-			await page.waitForFunction(() => [...document.querySelectorAll(".file-button")].some(button => button.textContent.includes("main.cpp")));
-			await page.evaluate(() => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes("main.cpp")).click());
+			await page.waitForFunction(name => [...document.querySelectorAll(".file-button")].some(button => button.textContent.includes(name)), {}, entryFile);
+			await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
 			await page.waitForSelector(".cm-content");
 			await page.click(".cm-content");
 			// CodeMirror renders the visible lines. Navigate to the saved edit at
@@ -245,12 +277,12 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Browser workflow edit"));
 			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
-			if (folder.startsWith("PTJ4") && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+			if ((folder.startsWith("PTJ4") || folder.startsWith("PTJ7")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
 				await mkdir(directory, { recursive: true });
-				await page.screenshot({ path: join(directory, "course-import-cpp-workspace.png"), fullPage: true });
+				await page.screenshot({ path: join(directory, `course-import-${mode}-${folder.slice(0, 4)}-workspace.png`), fullPage: true });
 			}
-			record("verified", { folder, revision, fileCount: Object.keys(exported).length });
+			record("verified", { folder, revision, mode, fileCount: Object.keys(exported).length });
 		}
 		assert.equal(remoteWrites, 0, "Imports never write to production services");
 	}

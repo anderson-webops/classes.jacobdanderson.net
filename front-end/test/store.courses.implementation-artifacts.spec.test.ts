@@ -224,10 +224,19 @@ describe("implemented course development artifacts", () => {
 	);
 
 	it(
-		"ensures every core module has at least two supplemental project/checkpoint options",
+		"preserves authored bridge practice and fills legacy project/checkpoint options",
 		async () => {
 			for (const { id } of courseCatalog) {
 				const course = await requireCourse(id);
+				if (id === "python-to-java-and-cpp-bridge") {
+					for (const module of course.modules) {
+						expect(module.supplementalProjects).toHaveLength(1);
+						expect(
+							module.supplementalProjects[0]?.learningPath
+						).toBe("challenge");
+					}
+					continue;
+				}
 				const underfilled = coreModules(course).filter(
 					module => module.supplementalProjects.length < 2
 				);
@@ -524,9 +533,9 @@ describe("implemented course development artifacts", () => {
 		);
 		expectAuthoredSourcePair(
 			bridgeCourse,
-			"Project: Starter Source Review",
-			"Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/starter",
-			"Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/solution"
+			"Project: Syntax Translation Warmup: Java Starter",
+			"Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/starter/java",
+			"Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/solution/java"
 		);
 		expectAuthoredSourcePair(
 			cppLevel2,
