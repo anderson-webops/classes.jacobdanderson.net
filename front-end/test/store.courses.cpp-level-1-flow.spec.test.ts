@@ -71,7 +71,7 @@ describe("C++ Level 1 learner flow", () => {
 			}))
 		);
 
-		for (const module of cppLevel1Course.modules.slice(0, 3))
+		for (const module of cppLevel1Course.modules.slice(0, 4))
 			expect(module.supplementalProjects).toEqual([]);
 		for (const project of [
 			"CPPF1 Project 2: Chat Bot",

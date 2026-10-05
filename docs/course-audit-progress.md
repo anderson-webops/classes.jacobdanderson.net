@@ -509,8 +509,28 @@ gate exposed the compiler-guidance wording and an overly broad grammar check
 that rejected the valid term "distribution mappings". The same compiler edit
 is present in the complete site briefs; the grammar check retains its specific
 generated Scratch-copy guards. All six focused functions/copy checks pass.
-Final full site checks and downstream integration remain pending;
-CPPF4–CPPF8 and the broader audit remain open.
+Final [site PR #134](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/134)
+integrated at `43fe8fa02f88fbbba3cd6325fb6d8eef41b713e8` with identical reviewed
+and integrated trees. All final review gates and independent
+[canonical-main CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37379859042)
+and CodeQL passed. The combined first-three-module milestone is published as
+[v2.8.33](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.33).
+Its original hosted ARM64 archive and manifest passed independent signed proof
+verification pinned to repository, workflow, exact revision and annotated tag,
+with self-hosted runners denied. All 7,843 payload files, thirteen trusted source
+files, safe unique entries and one verified hardlink passed streamed checks.
+Uploaded and published asset identities, sizes/digests and notes match exactly;
+release `404135608` is immutable. No production activation is claimed.
+
+[Downstream PR #24](https://github.com/instruction-material/classes.jacobdanderson.net/pull/24)
+publishes exact canonical parent plus one preserved 75-file overlay at
+`7c3677b1c72c5d889d7b0cbef7dcfcee50a71376`. Its full reviewed CI and CodeQL passed;
+an explicit lease protected the observed old downstream main. Neutral branding,
+example configuration, shared static assets and absence of analytics integration
+are preserved. Downstream tags and releases are unchanged. Independent
+[downstream-main CI](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37381448453)
+and [CodeQL](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37381448557)
+passed for the published overlay commit. CPPF4–CPPF8 and the broader audit stay open.
 
 ## Verification authority
 
@@ -524,3 +544,57 @@ in [zoom-followup-review.md](zoom-followup-review.md).
 The broad audit remains open for assignment-level source correctness, full
 course purpose and content review, justified duplication, original-source
 identity reconciliation, and workflow verification across supported environments.
+
+## C++ class-project candidate
+
+[Source PR #5](https://github.com/instruction-material/CPP-Level-1/pull/5)
+restores Person Class and separates Cat starter/reference packs. At reviewed
+source `dcddc25f01a3b168a2b45d06b75799f7bf1bd408`, all 38 independent methods,
+50 active native builds and separate CMake targets passed both hosted gates.
+All archived source trees match the original tree exactly. Every Person public
+method is implemented; the initializer lesson retains that API/output. Cat uses
+the authored default breed and exact age-one pluralization while preserving its
+original fictional signed-age example. Makefiles choose one program and avoid
+duplicate root/starter/reference definitions.
+
+The site candidate restores the original Point concepts, required Person,
+member-initializer lesson and required Cat sequence. Complete multi-file examples
+remain readable references, two full project briefs use distinct starter/reference
+links, and no supplemental quota tasks are added. Source integration is verified
+at `b5fc424b527e1e5ab99353d243e37d1cfd602f88`, whose tree matches reviewed source.
+Independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37382353527)
+passes. The neutral brief follow-up in
+[source PR #6](https://github.com/instruction-material/CPP-Level-1/pull/6) integrates
+at `174217a8af1077febd7bc59943aa501f9a2bb1e9`, also matching the reviewed tree.
+Its independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37384742261)
+passes all 38 methods, 50 native targets, sanitizer checks and separate CMake
+targets. All 24 starter-file digests use this exact source pin, with the earlier
+sixteen and every C++ program file unchanged by the wording correction.
+
+The shared student-view formatter previously split fenced programs on blank
+lines, trimming indentation and deleting code paragraphs that contained an
+instructor-note string. It now cleans prose separately and preserves code fences,
+including their blank lines, indentation and literal strings. Python and multiple
+fence-delimiter regressions exercise the actual student store. All twenty focused
+formatting/early-C++ tests pass; source/browser lint passes. Both complete
+multi-file lesson programs compile warning-clean and match independent output
+fixtures. The full browser gate additionally edits, saves and reopens each Person
+and Cat header, implementation and driver before certifying their exact exports.
+
+At candidate `c2c058ab29911287c93f8a00cde0635367c9c85a`, all seventeen actual
+browser workflows and eight complete lesson programs passed. The retained Cat
+desktop and Person mobile workspace screenshots were visually inspected. The
+functional suite caught two third-person brief sentences; both source and site
+copies now use the neutral instruction "Trace the same". All five focused
+copy/class checks pass. The authored-practice regression also includes CPPF4 in
+the explicit early-module contract, retaining the supplemental-project floor for
+other courses. Final full site checks remain required before integration.
+CPPF5–CPPF8 and the broader audit remain open.
+
+Candidate `3dd401ca8f081dfecb5c64a743f8beeb3c34fa87` passes all 1,321
+functional tests. Its separate catalog suite exposed a retired lesson-title
+expectation and an overly broad split-status wording guard that also rejected
+the valid instruction not to compile root, starter and solution copies together.
+The regression now checks the actual Point header/source lesson and retains
+specific administrative boilerplate guards. All 267 catalog-quality checks pass
+locally with those corrections. Final exact-head hosted gates remain pending.

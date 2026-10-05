@@ -138,15 +138,51 @@ function shouldHideItem(title: string) {
 }
 
 function normalizeContent(content: string): string {
-	const paragraphs = content
-		.split(PARAGRAPH_BREAK_RE)
-		.map(part => part.trim())
-		.filter(Boolean)
-		.filter(part => !INSTRUCTOR_NOTE_RE.test(part));
-	return paragraphs
-		.join("\n\n")
-		.replace(EXCESS_BLANK_LINES_RE, "\n\n")
-		.trim();
+	const chunks: string[] = [];
+	let prose: string[] = [];
+	let code: string[] = [];
+	let fence = "";
+	const flushProse = () => {
+		const text = prose
+			.join("\n")
+			.split(PARAGRAPH_BREAK_RE)
+			.map(part => part.trim())
+			.filter(Boolean)
+			.filter(part => !INSTRUCTOR_NOTE_RE.test(part))
+			.join("\n\n")
+			.replace(EXCESS_BLANK_LINES_RE, "\n\n");
+		if (text) chunks.push(text);
+		prose = [];
+	};
+	// Prose cleanup must never trim indentation or remove note-like strings
+	// inside supplied programs. A closing fence may be longer than its opener.
+	for (const line of content.split("\n")) {
+		if (fence) {
+			code.push(line);
+			const closing = line.match(/^[\t ]*(`{3,}|~{3,})[\t ]*\r?$/)?.[1];
+			if (
+				closing &&
+				closing[0] === fence[0] &&
+				closing.length >= fence.length
+			) {
+				chunks.push(code.join("\n"));
+				code = [];
+				fence = "";
+			}
+			continue;
+		}
+		const opening = line.match(/^[\t ]*(`{3,}|~{3,})/)?.[1];
+		if (opening) {
+			flushProse();
+			fence = opening;
+			code = [line];
+		} else {
+			prose.push(line);
+		}
+	}
+	flushProse();
+	if (code.length) chunks.push(code.join("\n"));
+	return chunks.join("\n\n").trim();
 }
 
 function ensureSentence(text: string) {

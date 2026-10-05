@@ -1171,8 +1171,14 @@ describe("course text quality normalization", () => {
 			);
 			expect(corpus).not.toMatch(/no separate solution link/i);
 			expect(corpus).not.toMatch(/canonical reference\/source location/i);
-			expect(corpus).not.toMatch(/starter[-/ ]and[-/ ]solution/i);
-			expect(corpus).not.toMatch(/starter\/solution/i);
+			// Build instructions can legitimately distinguish separate packs.
+			// Reject administrative split/status copy rather than those warnings.
+			expect(corpus).not.toMatch(
+				/starter[-/ ]and[-/ ]solution (?:links|folders) (?:are |remain )?(?:the same|identical|missing|unavailable)/i
+			);
+			expect(corpus).not.toMatch(
+				/starter\/solution (?:split|separation|parity|audit|remediation)/i
+			);
 			expect(corpus).not.toMatch(/finished solution/i);
 			expect(corpus).not.toMatch(/same learning goal/i);
 			expect(corpus).not.toMatch(/staff[- ]review/i);
@@ -1789,9 +1795,13 @@ describe("course text quality normalization", () => {
 		const course = await loadRawCourse("c-level-1");
 		expect(course).not.toBeNull();
 
-		const item = findItem(course!, /Multi-File Class Implementation/);
-		expect(item.content).toContain("declarations belong in headers");
-		expect(item.content).toContain("linker behavior");
+		const item = findItem(
+			course!,
+			/Point Declarations, Definitions, and State Tracing/
+		);
+		expect(item.content).toContain("declares its interface in the header");
+		expect(item.content).toContain("does not link a missing method");
+		expect(item.content).toContain("compile\nboth .cpp files");
 		expect(item.content).not.toMatch(/expected file format/i);
 	});
 
