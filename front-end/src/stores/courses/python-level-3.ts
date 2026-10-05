@@ -1275,26 +1275,28 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "Writing to a File",
 					content:
-						'`open("filename.txt", "w+")` creates or opens a file for writing, and `f.write(...)` stores output in that file instead of only printing to the console. Good file-writing practice includes multiple lines of text and output generated inside a loop.'
+						'Use `with open("output.txt", "w", encoding="utf-8", newline="\\n") as f:` and `f.write(...)` to store text. The context manager closes the file on success or an error. Validate and format the whole input before opening: write mode deliberately truncates existing output. UTF-8 and LF make the byte format explicit; `w+` adds reading access this task does not need. An I/O failure after opening may leave partial output, so use a working copy for experiments.'
 				},
 				{
 					title: "AM12 Project 1: Crazy Name Tags Printer",
 					content: projectBrief({
-						goal: "Write variations of a typed name to one or more output files.",
+						goal: "Separate literal name transformations, exact text formatting and a required single-file writing workflow. Three separate files are an optional extension.",
 						build: [
-							"Ask for a name.",
-							"Write the name one letter at a time.",
-							"Write every other letter.",
-							"Write the name backward.",
-							"Close files cleanly or use context managers."
+							"Implement name_variations(name), returning a fresh tuple of the literal name, characters at zero-based indexes 0, 2, 4, ... and the reversed name. Accept empty strings; preserve case, spaces, tabs and Unicode code points literally. Combining sequences are not preserved as visual graphemes, and no normalization is performed. Non-strings, embedded CR/LF or text that cannot encode as UTF-8 raise ValueError.",
+							"Implement format_tags(name) without file I/O, using the same name domain. Write each character on its own line in the three variation orders: one LF after every character and one additional LF after each section, including the last. Empty names produce exactly three LF characters; a literal space is a space on a line, not a blank separator.",
+							'Implement write_tags(name, path="output.txt"). Validate the whole name and destination before opening. Destinations are nonempty UTF-8 encodable strings or os.PathLike returning such text, without NUL; invalid paths raise ValueError. Accept pathlib.Path and preserve literal path whitespace. Use a context manager, mode "w", encoding="utf-8" and newline="\\n"; deliberately overwrite valid output and return None. Validation errors preserve existing output; normal filesystem errors propagate, parent folders are not created and later I/O failures can leave truncated/partial files.',
+							'Implement main(path="output.txt", input_fn=None, output_fn=None). Validate path and callable-or-None callbacks before prompting; invalid configuration raises ValueError. Resolve None to built-in input/print at call time. Prompt once with "What is your name? " and call write_tags. Return a fresh dictionary with exactly status and path (destination text): written on success, invalid for an invalid name, failed for output OSError, cancelled for input EOFError/KeyboardInterrupt. Report the outcome without claiming success on failure. Invalid names and input cancellation open no output; literal quit is a valid name. Other callback errors propagate.',
+							"Complete the four core callables before replacing the starter's reminder with a guarded main() call. Imports must not prompt, open files, print or run the project. No input file is needed; original output samples in solution remain historical reference assets, including the empty output.txt that is not an expected new core result."
 						],
 						checkpoints: [
-							"The output file contains the expected name variations.",
-							"Short names and empty input are handled deliberately.",
-							"The file-writing code is organized enough to modify safely."
+							"For Ada, independently predict ('Ada', 'Aa', 'adA') and the exact core text 'A\\nd\\na\\n\\nA\\na\\n\\na\\nd\\nA\\n\\n'. Check the final section separator and UTF-8 bytes.",
+							"Test empty input ('\\n\\n\\n'), one/odd-length names, repeated letters, literal case/space/tab and Unicode. Explain the difference between a code point and a displayed grapheme.",
+							"With temporary files, verify deliberate overwrite, invalid input preserving prior output, invalid paths, missing parents, cancellation and closure after writing raises. Reopen actual output rather than inferring it from console messages."
 						],
 						extension:
-							"Write each name variation to a separate file after the single-file version works."
+							'Optionally implement write_separate_tags(name, paths=("output1.txt", "output2.txt", "output3.txt")) after the core works. paths must be a list or tuple of exactly three valid destinations. Validate all input and reject identical/equivalent paths and symlink/hardlink aliases with ValueError before opening any file; inspection errors propagate. Write one variation per file, one LF per character without core section separators, using UTF-8/LF context-managed overwrite; empty names give three empty files. Return None. Validation preserves all outputs; later I/O failure can leave earlier files written. No transactional rollback is promised. Core main() does not select this extension automatically.',
+						verification:
+							"Confirm importing the incomplete starter main.py and complete README.md into the Python IDE, or run from a starter working copy with python3 main.py. Initial Run is a reminder. Discuss one index/file trace with a course facilitator, implement the guarded console entry point, enter a name, reopen output.txt and check exact contents. Independently test another name, save/export and reopen the saved work. Completed reference answers stay separate in solution."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM12-Crazy-Name-Tags-Printer/starter",
@@ -1851,7 +1853,7 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 			"missing-file handling"
 		],
 		projectThread:
-			"Write and read a small file before parsing structured lines into a dictionary. Dictionary reading and the Word Translator remain required core projects with distinct purposes: alternating key/value construction versus a read/transform/write pipeline. Complete core translation after file closure, malformed-line and missing-file behavior are explicit; only its punctuation extension is optional."
+			"Complete the required single-file Crazy Name Tags project to practice formatting and deliberate writing; only its separate-file extension is optional. Then read a small file before parsing structured lines into a dictionary. Dictionary reading and the Word Translator remain required core projects with distinct purposes: alternating key/value construction versus a read/transform/write pipeline. Complete core translation after file closure, malformed-line and missing-file behavior are explicit; only its punctuation extension is optional."
 	},
 	{
 		title: "Check-In #3",
