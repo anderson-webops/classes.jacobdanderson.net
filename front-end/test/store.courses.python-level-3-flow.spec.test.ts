@@ -955,6 +955,137 @@ describe("Python Level 3 learner flow", () => {
 		}
 	});
 
+	it("fully specifies the two distinct required Conway projects", () => {
+		const module = requireSourceModule(
+			"AM13 Master Project: Conway's Game of Life"
+		);
+		const single = module.curriculum.find(
+			item => item.title === "AM13 Project 1: Conway's Game of Life"
+		)!;
+		const owned = module.curriculum.find(
+			item =>
+				item.title ===
+				"AM13 Project 2: Two-Player Conway's Game of Life"
+		)!;
+		for (const item of [single, owned]) {
+			expect(item.learningPath).toBe("core");
+			for (const text of [
+				"required",
+				"synchronous",
+				"finite",
+				"B3/S23",
+				"parse_coordinates",
+				"read_coordinates",
+				"make_grid",
+				"neighbors",
+				"next_generation",
+				"render_board",
+				"print_board",
+				"main(",
+				"ValueError",
+				"using `with`",
+				"Booleans",
+				"Initial Run",
+				"guarded",
+				"reference",
+				"save/export",
+				"Import",
+				".in"
+			]) {
+				expect(item.content.toLowerCase()).toContain(
+					text.toLowerCase()
+				);
+			}
+		}
+		for (const text of [
+			"30 rows by 60 columns",
+			"eight",
+			"exactly three",
+			"two or three",
+			"run(grid, generations=5",
+			"generations=None",
+			"column 59",
+			"cancelled",
+			"same current board",
+			"O(height × width)",
+			"whole board"
+		]) {
+			expect(single.content.replace(/\s+/g, " ")).toContain(text);
+		}
+		for (const text of [
+			"five cells each, not squares",
+			"retains its current owner",
+			"majority",
+			"O starts",
+			"independent of cell",
+			"before O's first edit",
+			"automatic",
+			"apply_turn",
+			"kill must select opponent",
+			"board_status",
+			"max_turns=50",
+			"max_turns=None",
+			"next_player",
+			"no turn consumed",
+			"quit",
+			"EOF",
+			"never announce a winner"
+		]) {
+			expect(owned.content.toLowerCase().replace(/\s+/g, " ")).toContain(
+				text.toLowerCase()
+			);
+		}
+		expect(module.curriculum[0]!.content).toContain(
+			"Both Conway projects remain required"
+		);
+		expect(module.curriculum[0]!.content).not.toContain(
+			"two-player variation is the challenge"
+		);
+	});
+
+	it("retains Conway titles, progress keys and separate learner/reference source roles", async () => {
+		const course = await useCoursesStore().loadCourseById("python-level-3");
+		const module = course!.modules.find(
+			item => item.title === "AM13 Master Project: Conway's Game of Life"
+		)!;
+		for (const [title, folder, suffix] of [
+			[
+				"AM13 Project 1: Conway's Game of Life",
+				"AM13-Conways-Game-of-Life",
+				"am13-project-1-conway-s-game-of-life"
+			],
+			[
+				"AM13 Project 2: Two-Player Conway's Game of Life",
+				"AM13-Two-Player-Conways",
+				"am13-project-2-two-player-conway-s-game-of-life"
+			]
+		]) {
+			const item = module.curriculum.find(
+				candidate => candidate.title === title
+			)!;
+			expect(item.id).toBe(
+				"python-level-3-am13-master-project-conway-s-game-of-life-curriculum-" +
+					suffix
+			);
+			expect(item.learningPath).toBe("core");
+			expect(item.solutionLink).toBeUndefined();
+			expect(item.projectLink).toBe(
+				"https://github.com/instruction-material/Python-Level-3/tree/main/" +
+					folder +
+					"/starter"
+			);
+			expect(
+				requireSourceModule(module.title).curriculum.find(
+					candidate => candidate.title === title
+				)!.solutionLink
+			).toBe(
+				"https://github.com/instruction-material/Python-Level-3/tree/main/" +
+					folder +
+					"/solution"
+			);
+		}
+	});
+
 	it("keeps licensed sort animations and only available project media", async () => {
 		const course = await loadRawCourse("python-level-3");
 		expect(course).not.toBeNull();

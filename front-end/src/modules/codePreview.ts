@@ -60,6 +60,7 @@ const CODE_EXTENSIONS = new Set([
 	".h",
 	".hpp",
 	".html",
+	".in",
 	".java",
 	".js",
 	".json",

@@ -56,6 +56,48 @@ const searchPacks = [
 				"04b01b7669f42a0cf6aed44ee23a65e5ed5dce686801ebcfa236271eec661d7b"
 		},
 		reminder: "Implement the four core tasks in README.md"
+	},
+	{
+		folder: "AM13-Conways-Game-of-Life",
+		revision: "5e32ed800087ac4d9b0a45d28a3e815e28d58a24",
+		digests: {
+			"README.md":
+				"5d5c2daf1ea8ca915a0d125d5d49ecc9dc4b61f090df315097854095da6dcb9a",
+			"b-heptomino-shuttle.in":
+				"7a36638a57420f796c466c4395b1231e61ba0404f29d88b309d33c56a225fbf4",
+			"boat.in":
+				"68fb15811ce8e5c1f3b118dd7d95b57fbf26bad89c6ea171261aa5c49c348013",
+			"design1.in":
+				"7923908dd9291bf04ef3d3ca2b303d07ece53192dd8d5c148c9560ea175b1e8a",
+			"f-pentomino.in":
+				"9869ce538ea1808027456e429a39a2997fe7f8852b36f7d79cbff89032cd9c70",
+			"hertz-oscillator.in":
+				"600584759ce1122384b96c56b26be689af4b7906aa508477f5a80b9a05e3c345",
+			"main.py":
+				"783872ec6400014416a5a1b6068c59bf597ae376f0c7ead0ebb9d55f9219f83f",
+			"repeat.in":
+				"48e3ffa23891bc27613df3aa2ec73f5fc0542f34ecca3323261635e724433377",
+			"spaceship.in":
+				"21eeb302c63a9d362add7b82e7fd146b7764fc320cff64e5cf13e0429008f654",
+			"square.in":
+				"4cb6c005cc3d39e44353c489a4dc13776903d270a50186e8fe05a018537fa6e7"
+		},
+		reminder: "Implement the ten tasks in README.md"
+	},
+	{
+		folder: "AM13-Two-Player-Conways",
+		revision: "5e32ed800087ac4d9b0a45d28a3e815e28d58a24",
+		digests: {
+			"README.md":
+				"6d0ae407fd9c71bf5a59d2d1fe6acfb5b15f81bfe91f496b917054cbda95fee5",
+			"main.py":
+				"ebc0dffcc1709373ea12808b194fe7774f2f22d29fd34559cf13d0aa18710475",
+			"player1.in":
+				"b0352395372fd463e6a0c9a2f10a8be4650978fa1bb0c4ef9865f18ef267683b",
+			"player2.in":
+				"43cd440da61a1ed7d770c2bdfa3dc552085337d1c866c1881cbe3e49c72932f3"
+		},
+		reminder: "Implement the fourteen tasks in README.md"
 	}
 ];
 
@@ -261,6 +303,203 @@ async function exerciseNameTags(page, learnerFiles) {
 	await clickOutput();
 	console.log(
 		"Name Tags imported scaffold edited, console input executed, exact Unicode/LF output reopened, ZIP exported and saved work reopened"
+	);
+}
+async function exerciseConway(page, pack, learnerFiles) {
+	// Test-only valid-path edits verify the real file/console worker workflow.
+	// Independent source tests verify full domains, rules and game outcomes.
+	const owned = pack.folder === "AM13-Two-Player-Conways";
+	const edits = {
+		parse_coordinates: [
+			"return [tuple(map(int, line.split())) for line in lines if line.strip()]"
+		],
+		read_coordinates: [
+			"with open(path, 'r', encoding='utf-8') as source:",
+			"    return parse_coordinates(source.readlines(), height, width)"
+		],
+		make_grid: owned
+			? [
+					"board = [[0] * width for _ in range(height)]",
+					"for owner, points in ((1, player1_coords), (2, player2_coords)):",
+					"    for row, col in points:",
+					"        board[row][col] = owner",
+					"return board"
+				]
+			: [
+					"board = [[False] * width for _ in range(height)]",
+					"for row, col in coords:",
+					"    board[row][col] = True",
+					"return board"
+				],
+		next_generation: [
+			"result = []",
+			"for row in range(len(grid)):",
+			"    line = []",
+			"    for col in range(len(grid[0])):",
+			"        nearby = [grid[row+dr][col+dc] for dr in (-1,0,1) for dc in (-1,0,1)",
+			"                  if (dr,dc) != (0,0) and 0 <= row+dr < len(grid) and 0 <= col+dc < len(grid[0])]",
+			"        count = sum(bool(cell) for cell in nearby)",
+			owned
+				? "        value = (grid[row][col] if count in (2,3) else 0) if grid[row][col] else ((1 if nearby.count(1) > nearby.count(2) else 2) if count == 3 else 0)"
+				: "        value = count == 3 or (grid[row][col] and count == 2)",
+			"        line.append(value)",
+			"    result.append(line)",
+			"return result"
+		],
+		main: owned
+			? [
+					"first = read_coordinates(player1_path, height, width)",
+					"second = read_coordinates(player2_path, height, width)",
+					"assert len(first) == len(second) == 5",
+					"board = make_grid(first, second, height, width)",
+					"grow = parse_coordinates([input('grow: ')], height, width)[0]",
+					"kill = parse_coordinates([input('kill: ')], height, width)[0]",
+					"assert board[grow[0]][grow[1]] == 0 and board[kill[0]][kill[1]] == 2",
+					"board[grow[0]][grow[1]], board[kill[0]][kill[1]] = 1, 0",
+					"board = next_generation(board)",
+					"print('CONWAY_WORKFLOW_OWNED', len(board), len(board[0]))",
+					"with open(player1_path, 'rb') as source, open('workflow.in', 'wb') as probe:",
+					"    probe.write(source.read())"
+				]
+			: [
+					"coords = read_coordinates(path, height, width)",
+					"assert len(coords) == 4",
+					"board = next_generation(make_grid(coords, height, width))",
+					"print('CONWAY_WORKFLOW_SINGLE', len(board), len(board[0]))",
+					"with open(path, 'rb') as source, open('workflow.in', 'wb') as probe:",
+					"    probe.write(source.read())"
+				]
+	};
+	let edited = learnerFiles["main.py"];
+	for (const [name, lines] of Object.entries(edits)) {
+		const placeholder = `raise NotImplementedError("Implement ${name} from README.md")`;
+		assert.equal(edited.split(placeholder).length, 2);
+		edited = edited.replace(placeholder, lines.join("\n    "));
+	}
+	const reminder = owned
+		? 'print("Implement the fourteen tasks in README.md; then select a bounded or continuous game.")'
+		: 'print("Implement the ten tasks in README.md; then select a bounded or continuous run.")';
+	assert.equal(edited.split(reminder).length, 2);
+	edited = edited.replace(reminder, "main()");
+	const modifier = await page.evaluate(() =>
+		/Mac/.test(navigator.platform) ? "Meta" : "Control"
+	);
+	await page.click(".cm-content");
+	await page.keyboard.down(modifier);
+	await page.keyboard.press("a");
+	await page.keyboard.up(modifier);
+	await page.keyboard.sendCharacter(edited);
+	if (owned)
+		await page.$eval(".stdin-panel textarea", element => {
+			element.value = "0 0\n4 8\n";
+			element.dispatchEvent(new Event("input", { bubbles: true }));
+		});
+	await page.waitForFunction(
+		(key, source) =>
+			JSON.parse(
+				localStorage.getItem("classes-python-ide-projects:anonymous") ??
+					"[]"
+			).some(
+				project =>
+					project.courseProjectKey === key &&
+					project.files.some(
+						file =>
+							file.name === "main.py" && file.content === source
+					)
+			),
+		{},
+		`browser:${pack.folder}:starter`,
+		edited
+	);
+	await page.click("button.run-control");
+	await page.waitForFunction(
+		marker =>
+			document
+				.querySelector(".output-panel")
+				?.textContent.includes(marker) &&
+			document
+				.querySelector("[data-testid='ide-run-status']")
+				?.textContent.includes("Run complete"),
+		{ timeout: 90000 },
+		owned ? "CONWAY_WORKFLOW_OWNED 10 10" : "CONWAY_WORKFLOW_SINGLE 30 60"
+	);
+	assert.doesNotMatch(
+		await page.$eval(".output-panel", element => element.textContent),
+		/Traceback|EOFError|NotImplementedError/
+	);
+	const expectedProbe = learnerFiles[owned ? "player1.in" : "repeat.in"];
+	await page.waitForFunction(
+		(key, text) =>
+			JSON.parse(
+				localStorage.getItem("classes-python-ide-projects:anonymous") ??
+					"[]"
+			).some(
+				project =>
+					project.courseProjectKey === key &&
+					project.files.some(
+						file =>
+							file.name === "workflow.in" && file.content === text
+					)
+			),
+		{},
+		`browser:${pack.folder}:starter`,
+		expectedProbe
+	);
+	await page.evaluate(() => {
+		const originalClick = HTMLAnchorElement.prototype.click;
+		HTMLAnchorElement.prototype.click = function () {
+			if (
+				this.download.endsWith(".zip") &&
+				this.href.startsWith("blob:")
+			) {
+				void fetch(this.href)
+					.then(response => response.arrayBuffer())
+					.then(bytes => {
+						window.__conwayDownloadedZip = Array.from(
+							new Uint8Array(bytes)
+						);
+					});
+				return;
+			}
+			return originalClick.call(this);
+		};
+	});
+	await page.click("button[aria-label='Download project ZIP']");
+	await page.waitForFunction(() =>
+		Array.isArray(window.__conwayDownloadedZip)
+	);
+	const zip = unzipSync(
+		Uint8Array.from(await page.evaluate(() => window.__conwayDownloadedZip))
+	);
+	const archived = name => {
+		const keys = Object.keys(zip).filter(path => path.endsWith("/" + name));
+		assert.equal(keys.length, 1);
+		return strFromU8(zip[keys[0]]);
+	};
+	for (const [name, text] of Object.entries(learnerFiles))
+		assert.equal(archived(name), name === "main.py" ? edited : text);
+	assert.equal(archived("workflow.in"), expectedProbe);
+	await page.reload({ waitUntil: "domcontentloaded" });
+	await page.waitForSelector(".file-button");
+	const saved = await page.evaluate(
+		key =>
+			JSON.parse(
+				localStorage.getItem("classes-python-ide-projects:anonymous") ??
+					"[]"
+			).find(project => project.courseProjectKey === key)?.files,
+		`browser:${pack.folder}:starter`
+	);
+	for (const [name, text] of Object.entries(learnerFiles))
+		assert.equal(
+			saved.find(file => file.name === name)?.content,
+			name === "main.py" ? edited : text
+		);
+	assert.equal(
+		saved.find(file => file.name === "workflow.in")?.content,
+		expectedProbe
+	);
+	console.log(
+		`Conway original patterns imported, file/console generation executed, exact ZIP exported and saved files reopened: ${pack.folder}`
 	);
 }
 // Synthetic workflow fixture, not a completed course sorting assignment.
@@ -942,11 +1181,11 @@ test(
 					);
 					assert.equal(
 						sourceRequests,
-						before + 3,
-						"Exactly one directory and both learner files"
+						before + 1 + Object.keys(searchFiles).length,
+						"Exactly one directory and every learner file"
 					);
 					await page.waitForFunction(
-						projectKey =>
+						({ projectKey, fileCount }) =>
 							JSON.parse(
 								localStorage.getItem(
 									"classes-python-ide-projects:anonymous"
@@ -954,10 +1193,13 @@ test(
 							).some(
 								project =>
 									project.courseProjectKey === projectKey &&
-									project.files.length === 2
+									project.files.length === fileCount
 							),
 						{},
-						`browser:${pack.folder}:starter`
+						{
+							projectKey: `browser:${pack.folder}:starter`,
+							fileCount: Object.keys(searchFiles).length
+						}
 					);
 					const savedFiles = await page.evaluate(projectKey => {
 						const projects = JSON.parse(
@@ -973,10 +1215,10 @@ test(
 						savedFiles,
 						"Imported starter saved under its distinct project key"
 					);
-					assert.deepEqual(savedFiles.map(file => file.name).sort(), [
-						"README.md",
-						"main.py"
-					]);
+					assert.deepEqual(
+						savedFiles.map(file => file.name).sort(),
+						Object.keys(searchFiles).sort()
+					);
 					for (const file of savedFiles)
 						assert.equal(
 							file.content,
@@ -1024,6 +1266,9 @@ test(
 						if (pack.folder === "AM12-Crazy-Name-Tags-Printer") {
 							await exerciseNameTags(page, searchFiles);
 						}
+						if (pack.folder.startsWith("AM13-")) {
+							await exerciseConway(page, pack, searchFiles);
+						}
 						if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 							const directory = join(
 								previousDirectory,
@@ -1049,7 +1294,7 @@ test(
 						);
 						assert.equal(
 							sourceRequests,
-							before + 3,
+							before + 1 + Object.keys(searchFiles).length,
 							"Reopening never redownloads the starter"
 						);
 						console.log(

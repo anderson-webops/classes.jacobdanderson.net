@@ -5198,7 +5198,7 @@ __classes_reserved_files = {
     "zrect.py",
 }
 __classes_reserved_dirs = {"__pycache__", "keras", "pgzero", "tensorflow"}
-__classes_text_suffixes = {".csv", ".eps", ".json", ".md", ".ps", ".py", ".svg", ".txt"}
+__classes_text_suffixes = {".csv", ".eps", ".in", ".json", ".md", ".ps", ".py", ".svg", ".txt"}
 __classes_files = []
 
 for __classes_path in sorted(__classes_project_root.rglob("*")):
@@ -5213,7 +5213,11 @@ for __classes_path in sorted(__classes_project_root.rglob("*")):
     if __classes_path.suffix.lower() not in __classes_text_suffixes:
         continue
     try:
-        __classes_content = __classes_path.read_text(encoding="utf-8")
+        if __classes_path.suffix.lower() == ".in":
+            with __classes_path.open("r", encoding="utf-8", newline="") as __classes_input:
+                __classes_content = __classes_input.read()
+        else:
+            __classes_content = __classes_path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         continue
     __classes_files.append({
