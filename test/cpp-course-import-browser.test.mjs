@@ -64,7 +64,7 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "b5fc424b527e1e5ab99353d243e37d1cfd602f88";
+const foundationRevision = "174217a8af1077febd7bc59943aa501f9a2bb1e9";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
 		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
@@ -99,13 +99,13 @@ const foundationPacks = {
 		"main.cpp": "bf6ebeaf8a9710ea947cca43e47dd9338bc28d8cc2263498b5d0e3a0650840df"
 	},
 	"CPPF4-Person-Class/starter": {
-		"README.md": "774d8b159609dd87293e5682eeabb4192c97f47283cba86583a29d272f0eb39c",
+		"README.md": "4c2cb8f0e01b53333fe6e09b605fbcab0c0e841efe2559696834db49ea891683",
 		"person.cpp": "199040c957425e93357dbc9d5e07b7fd788e0cd80efd4dc48c7a91938b7d2c8c",
 		"person.h": "13e3d0df58a5ba1e4efdb4bd2fcb306aec53c4e86d706bea50ae50ec8a30f828",
 		"main.cpp": "20f07495555bbe3383b4cc89dbb57d8b557b1b2c8842a979d24547bb993f1eaf"
 	},
 	"CPPF4-Cat-Class/starter": {
-		"README.md": "b03646a70e72d8ad1c6f811f5adb388a94a3d32e325c8bcfee6549a2ac7349ae",
+		"README.md": "bfefc3c00563b98047a539935b1fedd6ef9b45b2f4676b3de06dad7db4702122",
 		"cat.cpp": "4b8df11d98069633ae1a865702f36c432f2ba8d8bf6af92801febbbfc24b1488",
 		"cat.h": "86dfa633c5271c361505b62ae1427bf606c468d10e73c49c286e37b799ecca30",
 		"main.cpp": "725baaecae0c9596c1fa990da46e67f5607438f49075b7183fee8a2ef37e242c"

@@ -560,12 +560,16 @@ duplicate root/starter/reference definitions.
 The site candidate restores the original Point concepts, required Person,
 member-initializer lesson and required Cat sequence. Complete multi-file examples
 remain readable references, two full project briefs use distinct starter/reference
-links, and no supplemental quota tasks are added. Source integration and exact
-starter pins are verified at `b5fc424b527e1e5ab99353d243e37d1cfd602f88`, whose
-tree matches reviewed source. Independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37382353527)
-passes. All 24 starter-file digests are pinned, with the earlier sixteen
-unchanged. Browser workflows and full site validation remain pending before delivery.
-CPPF5–CPPF8 and the broader audit remain open.
+links, and no supplemental quota tasks are added. Source integration is verified
+at `b5fc424b527e1e5ab99353d243e37d1cfd602f88`, whose tree matches reviewed source.
+Independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37382353527)
+passes. The neutral brief follow-up in
+[source PR #6](https://github.com/instruction-material/CPP-Level-1/pull/6) integrates
+at `174217a8af1077febd7bc59943aa501f9a2bb1e9`, also matching the reviewed tree.
+Its independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37384742261)
+passes all 38 methods, 50 native targets, sanitizer checks and separate CMake
+targets. All 24 starter-file digests use this exact source pin, with the earlier
+sixteen and every C++ program file unchanged by the wording correction.
 
 The shared student-view formatter previously split fenced programs on blank
 lines, trimming indentation and deleting code paragraphs that contained an
@@ -576,3 +580,13 @@ formatting/early-C++ tests pass; source/browser lint passes. Both complete
 multi-file lesson programs compile warning-clean and match independent output
 fixtures. The full browser gate additionally edits, saves and reopens each Person
 and Cat header, implementation and driver before certifying their exact exports.
+
+At candidate `c2c058ab29911287c93f8a00cde0635367c9c85a`, all seventeen actual
+browser workflows and eight complete lesson programs passed. The retained Cat
+desktop and Person mobile workspace screenshots were visually inspected. The
+functional suite caught two third-person brief sentences; both source and site
+copies now use the neutral instruction "Trace the same". All five focused
+copy/class checks pass. The authored-practice regression also includes CPPF4 in
+the explicit early-module contract, retaining the supplemental-project floor for
+other courses. Final full site checks remain required before integration.
+CPPF5–CPPF8 and the broader audit remain open.
