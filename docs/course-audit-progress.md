@@ -319,12 +319,18 @@ requires confirmation, runs the initial reminder, makes test-only valid-path
 edits, reads original patterns and console moves, executes a generation, exports
 the actual UI ZIP and reopens saved files. A generated `.in` probe exercises
 runtime capture. These workflow edits do not replace independent reference tests.
-Production/API writes are blocked. Thirty focused front-end methods and 341
+Production/API writes are blocked. Thirty-one focused front-end methods and 341
 back-end methods pass locally (one existing back-end test is conditionally
 skipped). API fixtures verify actual accepted payloads and unchanged input
 records for both account roles while retaining path restrictions. The first
 local API run could not bind its isolated loopback servers in the sandbox;
-the authorized rerun passed without changing tests. Full site CI and milestone delivery remain
+the authorized rerun passed without changing tests. Another 170 IDE/sandbox
+methods and the focused catalog-copy gate pass locally. Full hosted checks
+exposed a missed plain-worker capture whitelist and a course-copy artifact;
+both are corrected. The added regression executes each runtime's actual embedded
+Python capture code against temporary CRLF, unterminated, empty and invalid-UTF-8
+patterns. Browser verification still requires its fresh hosted gate.
+Full site CI and milestone delivery remain
 pending; previous release checks are not substituted for them.
 
 Thirty-eight authored coding/review pairs, one supplied-code analysis and one

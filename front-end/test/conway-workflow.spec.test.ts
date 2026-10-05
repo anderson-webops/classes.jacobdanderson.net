@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { strFromU8, unzipSync } from "fflate";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { resetCodePreviewCaches } from "../src/modules/codePreview";
 import {
 	createPythonIdeProject,
@@ -96,5 +100,56 @@ describe("Conway input-file workflow", () => {
 			"_classes_artifacts.py"
 		])
 			expect(isValidPythonFileName(path)).toBe(false);
+	});
+
+	it("captures generated pattern records through both runtime implementations", () => {
+		const directory = mkdtempSync(join(tmpdir(), "conway-capture-"));
+		const records = "4 0 \r\n4 1\r\n5 2";
+		try {
+			writeFileSync(join(directory, "repeat.in"), records);
+			writeFileSync(join(directory, "workflow.in"), "");
+			writeFileSync(join(directory, "invalid.in"), new Uint8Array([255]));
+			for (const path of [
+				"modules/pythonIdeRuntime.ts",
+				"workers/pythonIdePlainWorker.ts"
+			]) {
+				const source = readFileSync(
+					resolve(__dirname, "../src", path),
+					"utf8"
+				);
+				const capture = source.slice(
+					source.indexOf("async function captureProjectTextFiles")
+				);
+				const script = capture
+					.split(
+						"const snapshot = await pyodide.runPythonAsync(`"
+					)[1]!
+					.split("`);")[0]!
+					.replace(
+						"${escapePythonString(PROJECT_ROOT)}",
+						JSON.stringify(directory)
+					);
+				const actual = JSON.parse(
+					execFileSync(
+						"python3",
+						[
+							"-B",
+							"-c",
+							script + "\nprint(json.dumps(__classes_files))"
+						],
+						{
+							encoding: "utf8",
+							timeout: 5000
+						}
+					)
+				);
+				expect(actual).toEqual([
+					{ name: "repeat.in", content: records, encoding: "text" },
+					{ name: "workflow.in", content: "", encoding: "text" }
+				]);
+			}
+		} finally {
+			rmSync(directory, { recursive: true, force: true });
+		}
 	});
 });
