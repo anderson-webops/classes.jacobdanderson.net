@@ -6706,7 +6706,10 @@ async function runCurrentProject() {
 
 	clearOutput();
 	if (project.mode === "cpp") {
-		for (const line of cppBuildInstructions(project.files))
+		for (const line of cppBuildInstructions(
+			project.files,
+			project.courseProjectKey
+		))
 			appendOutput("system", line);
 		runMessage.value = "Native build instructions";
 		diagnosticStage.value = "completed";

@@ -58,14 +58,6 @@ describe("C++ Level 1 learner flow", () => {
 	});
 
 	it("keeps original Juni projects in core and supplemental work in practice", () => {
-		const requiredCount = cppLevel1Course.modules.reduce(
-			(total, module) => total + module.curriculum.length,
-			0
-		);
-		const optionCount = cppLevel1Course.modules.reduce(
-			(total, module) => total + module.supplementalProjects.length,
-			0
-		);
 		const options = cppLevel1Course.modules.flatMap(module =>
 			module.supplementalProjects.map(item => ({
 				path: item.learningPath,
@@ -79,8 +71,8 @@ describe("C++ Level 1 learner flow", () => {
 			}))
 		);
 
-		expect(requiredCount).toBe(29);
-		expect(optionCount).toBe(9);
+		for (const module of cppLevel1Course.modules.slice(0, 2))
+			expect(module.supplementalProjects).toEqual([]);
 		for (const project of [
 			"CPPF1 Project 2: Chat Bot",
 			"CPPF2 Project 2: Rock, Paper, Scissors",

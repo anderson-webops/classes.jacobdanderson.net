@@ -224,7 +224,7 @@ describe("implemented course development artifacts", () => {
 	);
 
 	it(
-		"preserves authored bridge practice and fills legacy project/checkpoint options",
+		"preserves authored course practice and fills legacy project/checkpoint options",
 		async () => {
 			for (const { id } of courseCatalog) {
 				const course = await requireCourse(id);
@@ -238,8 +238,16 @@ describe("implemented course development artifacts", () => {
 					continue;
 				}
 				const underfilled = coreModules(course).filter(
-					module => module.supplementalProjects.length < 2
+					module =>
+						module.supplementalProjects.length < 2 &&
+						!(id === "c-level-1" && /^CPPF[12] /.test(module.title))
 				);
+				if (id === "c-level-1") {
+					for (const module of course.modules.filter(module =>
+						/^CPPF[12] /.test(module.title)
+					))
+						expect(module.supplementalProjects).toEqual([]);
+				}
 
 				expect(underfilled, id).toHaveLength(0);
 			}

@@ -88,6 +88,7 @@ const BOILERPLATE_SENTENCE_REWRITES: Array<{
 const STRUCTURED_COURSE_SUPPORT_RE =
 	/\*\*(?:Normal|Hard|Concept focus|Project goal|Teaching flow|Learning sequence|Diagnostic guidance|Readiness check|Misconception check|Common pitfalls|Exit check|Mastery check|Remote investigation|Science explanation|Studio focus|AP connection):?\*\*/i;
 const MARKDOWN_LIST_BLOCK_RE = /(?:^|\n)\s*(?:[-*]|\d+\.)\s+\S/;
+const FENCED_CODE_BLOCK_RE = /(?:^|\n)[\t ]*(?:`{3,}|~{3,})/;
 
 interface NormalizeCourseOptions {
 	includeSolutions: boolean;
@@ -230,7 +231,10 @@ function displayCourseContent(content: string) {
 		return normalized;
 	}
 
-	if (MARKDOWN_LIST_BLOCK_RE.test(normalized)) {
+	if (
+		MARKDOWN_LIST_BLOCK_RE.test(normalized) ||
+		FENCED_CODE_BLOCK_RE.test(normalized)
+	) {
 		return normalized;
 	}
 
