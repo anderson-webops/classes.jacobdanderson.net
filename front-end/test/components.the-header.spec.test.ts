@@ -4,12 +4,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import TheHeader from "@/components/TheHeader.vue";
 import { useAppStore } from "@/stores/app";
 
-vi.mock("vue-router", () => ({
-	useRoute: () => ({ path: "/" })
-}));
+const route = vi.hoisted(() => ({ path: "/" }));
+vi.mock("vue-router", () => ({ useRoute: () => route }));
 
 describe("TheHeader.vue", () => {
 	beforeEach(() => {
+		route.path = "/";
 		setActivePinia(createPinia());
 	});
 
@@ -27,6 +27,18 @@ describe("TheHeader.vue", () => {
 			}
 		});
 	}
+
+	it("keeps the home header intact and uses the compact header on content pages", () => {
+		const home = mountHeader();
+		expect(home.classes()).not.toContain("site-header--compact");
+		home.unmount();
+		route.path = "/courses";
+		const courses = mountHeader();
+		expect(courses.classes()).toContain("site-header--compact");
+		expect(courses.text()).toContain("Courses");
+		expect(courses.text()).toContain("Log in");
+		courses.unmount();
+	});
 
 	it("shows Join class but keeps Pathways out of the primary navigation for visitors", () => {
 		const wrapper = mountHeader();

@@ -14,13 +14,10 @@ defineOptions({ name: "AdminWorkspaceShell" });
 
 withDefaults(
 	defineProps<{
-		eyebrow?: string;
 		title: string;
-		intro: string;
 		action?: WorkspaceAction | null;
 	}>(),
 	{
-		eyebrow: "Admin workspace",
 		action: null
 	}
 );
@@ -86,10 +83,6 @@ function isActive(path: string) {
 			</nav>
 
 			<AdminReviewStatus />
-			<details v-if="intro" class="admin-shell__help">
-				<summary>About this workspace</summary>
-				<p>{{ intro }}</p>
-			</details>
 			<div class="admin-shell__body">
 				<slot />
 			</div>
@@ -107,12 +100,8 @@ function isActive(path: string) {
 	max-width: 1180px;
 	margin: 0 auto;
 	display: grid;
-	gap: 1rem;
+	gap: 0.5rem;
 	min-width: 0;
-}
-.admin-shell__help {
-	color: var(--color-ink-soft);
-	font-size: 0.9rem;
 }
 .admin-shell__actions {
 	display: flex;
@@ -161,5 +150,17 @@ function isActive(path: string) {
 	.admin-shell__actions {
 		justify-content: flex-start;
 	}
+}
+
+.admin-shell__nav-link {
+	min-height: 2.75rem;
+	padding: 0.35rem 0.65rem;
+	border-color: transparent;
+	background: transparent;
+	font-size: 0.9rem;
+}
+.admin-shell__nav {
+	border-bottom: 1px solid var(--color-border);
+	padding-bottom: 0.25rem;
 }
 </style>

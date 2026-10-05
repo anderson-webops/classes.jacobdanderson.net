@@ -129,6 +129,19 @@ describe("simplified workspaces", () => {
 		expect(wrapper.text()).toContain("same note");
 		wrapper.unmount();
 	});
+	it("keeps a completed empty review check out of the working area", async () => {
+		useAppStore().setCurrentAdmin({
+			_id: "admin",
+			name: "Admin",
+			email: "admin@example.invalid",
+			editAdmins: false,
+			saveEdit: "Save"
+		});
+		const wrapper = mount(AdminReviewStatus, { global: { stubs } });
+		await flushPromises();
+		expect(wrapper.find('[role="status"]').exists()).toBe(false);
+		wrapper.unmount();
+	});
 	it("requires student and session identity for session notes, independent of label date", async () => {
 		const wrapper = mount(MdMail, { global: { stubs } });
 		await flushPromises();

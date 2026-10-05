@@ -197,18 +197,11 @@ describe("python IDE CodeMirror editor", () => {
 			'mode: route.query.mode ?? "bluej"'
 		);
 		expect(blueJLegacyRouteSource).toContain("<CodeIdeWorkspace />");
-		expect(workspaceSource).toContain("codeIdeHeroContent");
 		expect(workspaceSource).not.toContain('route.path === "/bluej"');
 		expect(workspaceSource).toContain(
 			'<WorkspaceHeader title="Python or Java">'
 		);
 		expect(workspaceSource).toContain("WorkspaceHeader");
-		expect(workspaceSource).toContain(
-			"Build multi-file Python and Java projects"
-		);
-		expect(workspaceSource).toContain(
-			"preview Java console programs or Karel robot"
-		);
 	});
 
 	it("does not force CodeMirror through a fragile manual editor chunk", () => {
@@ -1610,7 +1603,17 @@ describe("python IDE CodeMirror editor", () => {
 			/\.ide-settings-panel\s*{[\s\S]*position: absolute;[\s\S]*z-index: 18;[\s\S]*top: calc\(100% \+ 0\.6rem\);[\s\S]*right: 0;[\s\S]*width: min\(26rem, calc\(100vw - 2rem\)\);[\s\S]*max-height: min\(36rem, calc\(100vh - 8rem\)\);[\s\S]*display: grid;[\s\S]*gap: 0\.45rem;[\s\S]*padding: 0\.8rem;[\s\S]*background: #fff;[\s\S]*font-family: var\(--font-sans\);[\s\S]*font-size: 0\.84rem;[\s\S]*line-height: 1\.42;[\s\S]*font-variant: normal;[\s\S]*font-weight: 400;[\s\S]*text-align: left;[\s\S]*text-transform: none;[\s\S]*letter-spacing: normal;[\s\S]*overflow-wrap: normal;[\s\S]*word-break: normal;/
 		);
 		expect(pageSource).toMatch(
-			/\.ide-settings-panel\s*{[\s\S]*right: auto;[\s\S]*left: 0;[\s\S]*width: min\(26rem, calc\(100vw - 2rem\)\);/
+			/\.editor-actions\s*{\s*position: relative;/
+		);
+		const narrowScreenStyles =
+			pageSource
+				.split("@media (max-width: 820px) {")[1]
+				?.split("@media")[0] ?? "";
+		expect(narrowScreenStyles).toMatch(
+			/\.ide-settings\s*{\s*position: static;\s*}/
+		);
+		expect(narrowScreenStyles).toMatch(
+			/\.ide-settings-panel\s*{\s*right: auto;\s*left: 0;\s*width: min\(26rem, 100%\);\s*}/
 		);
 		expect(pageSource).toContain(
 			'ref="ideSettingsRef" class="ide-settings"'

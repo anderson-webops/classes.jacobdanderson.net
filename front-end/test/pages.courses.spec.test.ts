@@ -140,7 +140,7 @@ describe("courses page access gate", () => {
 		await flushPromises();
 
 		expect(wrapper.text()).toContain("Your Course");
-		expect(wrapper.text()).toContain("Signed in as Student One");
+		expect(wrapper.get("h1").classes()).toContain("sr-only");
 		expect(wrapper.text()).toContain("Course explorer");
 		expect(wrapper.text()).not.toContain("Go to Account");
 		expect(wrapper.text()).not.toContain("Use a course code");

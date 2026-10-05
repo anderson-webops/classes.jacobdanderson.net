@@ -1377,15 +1377,6 @@ const selectedBlueJClassTargets = computed(() => {
 		})
 		.slice(0, 8);
 });
-const codeIdeHeroContent = {
-	eyebrow: "IDE",
-	title: "Code, run, and draw in Python or Java",
-	description:
-		"Build multi-file Python and Java projects, use the Turtle canvas for drawing and " +
-		"keyboard-driven lessons, explore PyGame Zero games and data/AI notebooks with " +
-		"rendered charts, preview Java console programs or Karel robot worlds, and use " +
-		"BlueJ integration for desktop object-bench projects, ZIP import, and package.bluej export."
-};
 
 function codeIdeShareUrl(shareID: string) {
 	const sharePath = `/ide?share=${encodeURIComponent(shareID)}`;
@@ -7682,7 +7673,6 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 			>
 			<details>
 				<summary>Help</summary>
-				<p>{{ codeIdeHeroContent.description }}</p>
 				<IdeDiagnosticsControls :capture="captureIdeDiagnostics" />
 			</details>
 		</WorkspaceHeader>
@@ -8740,9 +8730,9 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 	width: min(1680px, calc(100% - clamp(2rem, 4vw, 4rem)));
 	padding: 0.75rem 0 1rem;
 	gap: 0.75rem;
-	--code-ide-toolbar-control-size: 3.5rem;
-	--code-ide-toolbar-button-width: 6.75rem;
-	--code-ide-toolbar-control-radius: 16px;
+	--code-ide-toolbar-control-size: 2.75rem;
+	--code-ide-toolbar-button-width: 5rem;
+	--code-ide-toolbar-control-radius: 8px;
 	--python-code-bg: #f8fafc;
 	--python-code-ink: #1e293b;
 	--python-code-muted: #64748b;
@@ -10830,5 +10820,37 @@ html.dark .editor-shortcuts ul {
 		--code-ide-toolbar-control-size: 2.75rem;
 		--code-ide-toolbar-control-radius: 10px;
 	}
+}
+
+.code-ide-page {
+	width: min(1680px, calc(100% - 2rem));
+}
+.code-ide-main {
+	padding: 0.65rem;
+	gap: 0.5rem;
+	border-radius: 10px;
+}
+.code-ide-sidebar {
+	padding: 0.65rem;
+	border-radius: 10px;
+}
+.editor-toolbar {
+	gap: 0.5rem;
+}
+.project-title-label {
+	font-size: 0.8rem;
+	text-transform: none;
+	letter-spacing: 0;
+	font-weight: 600;
+}
+.panel-header {
+	padding: 0.5rem 0.65rem;
+	font-size: 0.8rem;
+	letter-spacing: 0;
+	text-transform: none;
+}
+.code-panel,
+.result-panel {
+	border-radius: 8px;
 }
 </style>

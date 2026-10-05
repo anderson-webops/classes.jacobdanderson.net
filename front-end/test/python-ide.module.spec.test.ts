@@ -4591,16 +4591,10 @@ pgzrun.go()
 		expect(pageSource).toContain(
 			'v-if="selectedProjectCanShowBlueJIntegration"'
 		);
-		expect(pageSource).toContain("codeIdeHeroContent");
-		expect(pageSource).toContain('eyebrow: "IDE"');
 		expect(pageSource).toContain("<IdeStarterPicker");
 		expect(ideStarters).toContainEqual(
 			expect.objectContaining({ mode: "java", template: "bluej" })
 		);
-		expect(pageSource).toContain(
-			"BlueJ integration for desktop object-bench projects"
-		);
-		expect(pageSource).toContain("package.bluej export");
 		expect(pageSource).not.toContain('to="/bluej"');
 		expect(pageSource).toContain("BlueJ integration");
 		expect(pageSource).toContain("Import BlueJ ZIP");

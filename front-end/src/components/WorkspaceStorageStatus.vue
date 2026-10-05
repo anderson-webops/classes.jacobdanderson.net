@@ -3,10 +3,12 @@ defineProps<{ label: string }>();
 </script>
 
 <template>
-	<p class="workspace-storage" role="status">
-		<strong>{{ label }}</strong
-		><span v-if="$slots.default"><slot /></span>
-	</p>
+	<details class="workspace-storage">
+		<summary>
+			<span role="status">{{ label }}</span>
+		</summary>
+		<p v-if="$slots.default"><slot /></p>
+	</details>
 </template>
 
 <style scoped>
@@ -20,5 +22,13 @@ defineProps<{ label: string }>();
 	font-weight: 600;
 	color: var(--color-ink);
 	margin-right: 0.35rem;
+}
+
+.workspace-storage summary {
+	cursor: pointer;
+}
+.workspace-storage p {
+	margin-top: 0.35rem;
+	max-width: 65ch;
 }
 </style>

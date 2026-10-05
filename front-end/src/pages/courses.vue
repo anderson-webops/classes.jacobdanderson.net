@@ -72,7 +72,8 @@ function openSignup() {
 		class="page-shell page-shell--wide courses-page"
 		:class="{ 'is-learning': hasAssignedCourseAccess }"
 	>
-		<header class="courses-hero site-surface">
+		<h1 v-if="hasAssignedCourseAccess" class="sr-only">{{ heroTitle }}</h1>
+		<header v-else class="courses-hero">
 			<div class="courses-copy">
 				<p class="page-eyebrow">{{ heroEyebrow }}</p>
 				<h1 class="page-title courses-title">{{ heroTitle }}</h1>
@@ -118,18 +119,9 @@ function openSignup() {
 			</div>
 		</header>
 
-		<section v-if="!isLoggedIn" class="site-surface courses-discovery">
-			<h2>Explore before enrolling</h2>
-			<p>
-				Browse course families, prerequisites and project expectations.
-				Course lessons require assigned access.
-			</p>
-			<RouterLink
-				class="site-button site-button--secondary"
-				to="/pathways"
-				>Explore course pathways</RouterLink
-			>
-		</section>
+		<RouterLink v-if="!isLoggedIn" class="text-link" to="/pathways"
+			>Explore course pathways</RouterLink
+		>
 		<section
 			v-if="!isLoggedIn"
 			id="classroom-access"
@@ -174,7 +166,7 @@ function openSignup() {
 .courses-page {
 	display: flex;
 	flex-direction: column;
-	gap: 1.5rem;
+	gap: 0.75rem;
 }
 
 .courses-hero {

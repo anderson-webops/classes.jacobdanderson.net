@@ -70,25 +70,6 @@ const heroTitle = computed(() => {
 	return "Account access.";
 });
 
-const heroSubtitle = computed(() => {
-	switch (profileRole.value) {
-		case "Administrator":
-			return "Manage your own login and security details here. People, permissions, course access, session notes, and role changes now live under Admin.";
-		case "Tutor":
-			return "Manage your own login and security details here. Learner operations live in the Teaching workspace and course progress is tracked inside Courses.";
-		case "Student":
-			return "Check your account information, assigned tutors, course access, and communication settings.";
-		case "Classroom":
-			return "This email-free workspace keeps the assigned course and IDE projects connected to your course code and username.";
-		default:
-			return "Sign in or create an account to view personalized account details.";
-	}
-});
-
-const heroBadge = computed(() =>
-	profileRole.value ? `Signed in as ${profileRole.value}` : "Account"
-);
-
 const profileComponentProps = computed(() => {
 	if (currentAdmin.value) {
 		return { mode: "account" };
@@ -121,9 +102,10 @@ function leaveClassroom() {
 				class="profile-header"
 				:class="{ 'is-workspace-layout': isWorkspaceLayout }"
 			>
-				<p class="profile-badge">{{ heroBadge }}</p>
+				<span v-if="profileRole" class="profile-badge">{{
+					profileRole
+				}}</span>
 				<h1>{{ heroTitle }}</h1>
-				<p>{{ heroSubtitle }}</p>
 			</header>
 
 			<div
@@ -491,6 +473,40 @@ function leaveClassroom() {
 	.action {
 		width: 100%;
 	}
+}
+
+.profile-page,
+.profile-page.is-workspace-layout {
+	padding: 1rem 1rem 2rem;
+	min-height: 0;
+	align-items: flex-start;
+}
+.profile-content {
+	gap: 1rem;
+}
+.profile-header,
+.profile-header.is-workspace-layout {
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	text-align: left;
+	margin: 0;
+	gap: 0.5rem 0.75rem;
+}
+.profile-header h1 {
+	font-size: 1.5rem !important;
+	order: -1;
+}
+.profile-badge {
+	padding: 0.25rem 0.5rem;
+	font-size: 0.8rem;
+}
+.profile-card,
+.profile-card.is-workspace-layout {
+	padding: 0;
+	border: 0;
+	box-shadow: none;
+	background: transparent !important;
 }
 </style>
 

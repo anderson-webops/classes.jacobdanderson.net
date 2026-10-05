@@ -23,7 +23,7 @@ onMounted(async () => {
 		const count = categories.reduce((sum, list) => sum + list.length, 0);
 		message.value = count
 			? `${count} review entries need attention. Entries can refer to the same note; each list is bounded.`
-			: "No session-note review entries returned.";
+			: "";
 	} catch {
 		message.value =
 			"Session-note review status unavailable. Open review before sending.";

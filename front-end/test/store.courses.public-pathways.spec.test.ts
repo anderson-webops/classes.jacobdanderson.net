@@ -10,7 +10,9 @@ import {
 } from "@/stores/courses/public-pathways";
 
 function pathwayText(pathwayId: string) {
-	const pathway = coursePublicPathways.find(pathway => pathway.id === pathwayId);
+	const pathway = coursePublicPathways.find(
+		pathway => pathway.id === pathwayId
+	);
 	if (!pathway) throw new Error(`Missing public pathway ${pathwayId}`);
 	return JSON.stringify(pathway);
 }
@@ -33,7 +35,10 @@ describe("public course pathways", () => {
 		expect(pathwayIds).toEqual(catalogIds);
 
 		for (const courseId of catalogIds) {
-			expect(coursePublicPathwayByCourseId.get(courseId), courseId).toBeDefined();
+			expect(
+				coursePublicPathwayByCourseId.get(courseId),
+				courseId
+			).toBeDefined();
 		}
 	});
 
@@ -41,14 +46,37 @@ describe("public course pathways", () => {
 		for (const pathway of coursePublicPathways) {
 			expect(pathway.title, pathway.id).toBeTruthy();
 			expect(pathway.audience.length, pathway.id).toBeGreaterThan(80);
-			expect(pathway.prerequisiteSummary.length, pathway.id).toBeGreaterThan(60);
-			expect(pathway.outcomes.length, pathway.id).toBeGreaterThanOrEqual(3);
-			expect(pathway.sequencingNotes.length, pathway.id).toBeGreaterThanOrEqual(3);
-			expect(pathway.projectExpectations.length, pathway.id).toBeGreaterThanOrEqual(3);
-			expect(pathway.assessmentStyle.length, pathway.id).toBeGreaterThanOrEqual(3);
-			expect(pathway.sourceAndTooling.length, pathway.id).toBeGreaterThanOrEqual(3);
-			expect(pathway.safetyAndAccess.length, pathway.id).toBeGreaterThanOrEqual(3);
-			expect(pathway.adminExpansionBacklog.length, pathway.id).toBeGreaterThanOrEqual(3);
+			expect(
+				pathway.prerequisiteSummary.length,
+				pathway.id
+			).toBeGreaterThan(60);
+			expect(pathway.outcomes.length, pathway.id).toBeGreaterThanOrEqual(
+				3
+			);
+			expect(
+				pathway.sequencingNotes.length,
+				pathway.id
+			).toBeGreaterThanOrEqual(3);
+			expect(
+				pathway.projectExpectations.length,
+				pathway.id
+			).toBeGreaterThanOrEqual(3);
+			expect(
+				pathway.assessmentStyle.length,
+				pathway.id
+			).toBeGreaterThanOrEqual(3);
+			expect(
+				pathway.sourceAndTooling.length,
+				pathway.id
+			).toBeGreaterThanOrEqual(3);
+			expect(
+				pathway.safetyAndAccess.length,
+				pathway.id
+			).toBeGreaterThanOrEqual(3);
+			expect(
+				pathway.adminExpansionBacklog.length,
+				pathway.id
+			).toBeGreaterThanOrEqual(3);
 		}
 	});
 
@@ -58,16 +86,25 @@ describe("public course pathways", () => {
 		expect(corpus).not.toMatch(/\bshould\b/i);
 		expect(corpus).not.toMatch(/\bStudents entering\b/i);
 		expect(corpus).not.toMatch(/\bKey idea:/i);
-		expect(corpus).not.toMatch(/\b(?:PyGame|Unity|Bronze|Silver|Gold)\s+(?:Know|Be)\b/i);
+		expect(corpus).not.toMatch(
+			/\b(?:PyGame|Unity|Bronze|Silver|Gold)\s+(?:Know|Be)\b/i
+		);
 		expect(corpus).not.toMatch(/\bBe (?:ready|comfortable)\b/i);
 	});
 
 	it("captures the high-priority research constraints that were easy to miss", () => {
-		expect(coursePublicPathways.find(pathway => pathway.id === "scratch-early-cs")?.adminPriority).toBe("urgent");
-		expect(pathwayText("scratch-early-cs")).toMatch(/blocks-to-pseudocode|pseudocode/i);
+		expect(
+			coursePublicPathways.find(
+				pathway => pathway.id === "scratch-early-cs"
+			)?.adminPriority
+		).toBe("urgent");
+		expect(pathwayText("scratch-early-cs")).toMatch(
+			/blocks-to-pseudocode|pseudocode/i
+		);
 
 		expect(
-			coursePublicPathways.find(pathway => pathway.id === "algebra")?.courseIds
+			coursePublicPathways.find(pathway => pathway.id === "algebra")
+				?.courseIds
 		).toEqual([
 			"early-elementary-a-math",
 			"early-elementary-b-math",
@@ -95,29 +132,43 @@ describe("public course pathways", () => {
 
 		expect(pathwayText("game-development")).toMatch(/Build Profiles/i);
 		expect(pathwayText("game-development")).toMatch(/Input System/i);
-		expect(pathwayText("game-development")).toMatch(/Git LFS|asset attribution|CI/i);
+		expect(pathwayText("game-development")).toMatch(
+			/Git LFS|asset attribution|CI/i
+		);
 
 		expect(pathwayText("security")).toMatch(/Prohibited/i);
-		expect(pathwayText("security")).toMatch(/local fixtures|owned targets|provided captures/i);
-		expect(pathwayText("security")).toMatch(/evidence, impact, and mitigation/i);
+		expect(pathwayText("security")).toMatch(
+			/local fixtures|owned targets|provided captures/i
+		);
+		expect(pathwayText("security")).toMatch(
+			/evidence, impact, and mitigation/i
+		);
 
 		expect(pathwayText("ap-csa")).toMatch(/College Board/i);
 		expect(pathwayText("ap-csa")).toMatch(/Bluebook|digital AP/i);
 		expect(pathwayText("ap-csa")).toMatch(/FRQ|MCQ/i);
 
 		expect(pathwayText("java-pathway")).toMatch(/Visual-First/i);
-		expect(pathwayText("java-pathway")).toMatch(/first-week Karel robot worlds/i);
+		expect(pathwayText("java-pathway")).toMatch(
+			/first-week Karel robot worlds/i
+		);
 		expect(pathwayText("java-pathway")).not.toMatch(/Carol\/Karel/i);
 		expect(pathwayText("java-pathway")).toMatch(/visual exit ticket/i);
-		expect(pathwayText("java-pathway")).toMatch(/CodeHS or the browser Code IDE/i);
+		expect(pathwayText("java-pathway")).toMatch(
+			/CodeHS or the browser Code IDE/i
+		);
 
 		expect(pathwayText("usaco")).toMatch(/P1, one P2, and one P3/i);
 		expect(pathwayText("usaco")).toMatch(/USACO Official|USACO Guide/i);
 		expect(pathwayText("usaco")).toMatch(/postmortem/i);
 
 		expect(pathwayText("data-ai-ml")).toMatch(/Iris|Palmer Penguins/i);
-		expect(pathwayText("data-ai-ml")).toMatch(/NYC 311|NOAA Climate Data Online|OpenML/i);
-		expect(pathwayText("data-ai-ml")).toMatch(/train\/test|confusion matrix/i);
+		expect(pathwayText("data-ai-ml")).toMatch(
+			/NYC 311|NOAA Climate Data Online|OpenML/i
+		);
+		expect(pathwayText("data-ai-ml")).toMatch(
+			/train\/test|confusion matrix/i
+		);
 		expect(pathwayText("data-ai-ml")).toMatch(/model card/i);
 
 		expect(pathwayText("science")).toMatch(/No required beakers/i);
@@ -126,7 +177,9 @@ describe("public course pathways", () => {
 
 		expect(pathwayText("systems-infrastructure")).toMatch(/safety matrix/i);
 		expect(pathwayText("ap-csa")).toMatch(/42 MCQ \/ 4 FRQ/i);
-		expect(pathwayText("usaco")).toMatch(/brute-force idea|target complexity/i);
+		expect(pathwayText("usaco")).toMatch(
+			/brute-force idea|target complexity/i
+		);
 	});
 
 	it("renders the public pathway page with admin priorities, coverage, and key course families", () => {
@@ -151,8 +204,13 @@ describe("public course pathways", () => {
 		expect(wrapper.text()).toContain("Scratch and Early Computer Science");
 		expect(wrapper.text()).toContain("JavaScript and Web Development");
 		expect(wrapper.text()).toContain("AP Computer Science A");
-		expect(wrapper.text()).toContain("Network, Low-Level, and Systems Security");
-		expect(wrapper.text()).toContain("Courses covered");
+		expect(wrapper.text()).toContain(
+			"Network, Low-Level, and Systems Security"
+		);
+		expect(wrapper.text()).toMatch(/\d+ pathways · \d+ courses/);
+		expect(
+			wrapper.get(".pathway-index").attributes("open")
+		).toBeUndefined();
 		expect(wrapper.text()).toContain("Build next");
 		expect(wrapper.text()).toContain("Expansion Backlog");
 	});

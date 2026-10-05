@@ -16,7 +16,6 @@ useHead({
 <template>
 	<section class="page-shell privacy-page">
 		<header class="privacy-header">
-			<p class="page-eyebrow">Privacy</p>
 			<h1 class="page-title">Course Players and IDE Reports</h1>
 			<p class="page-copy">
 				This notice covers optional Scratch solution players and IDE
@@ -26,7 +25,7 @@ useHead({
 
 		<section
 			aria-labelledby="ide-report-privacy-title"
-			class="privacy-card site-surface site-surface--soft"
+			class="privacy-card"
 		>
 			<h2 id="ide-report-privacy-title">
 				IDE diagnostics and problem reports
@@ -56,7 +55,7 @@ useHead({
 
 		<section
 			aria-labelledby="scratch-player-privacy-title"
-			class="privacy-card site-surface site-surface--soft"
+			class="privacy-card"
 		>
 			<h2 id="scratch-player-privacy-title">Scratch solution players</h2>
 			<p>
@@ -89,7 +88,7 @@ useHead({
 .privacy-card {
 	display: grid;
 	gap: 1rem;
-	padding: clamp(1.4rem, 3vw, 2rem);
+	padding: 0;
 }
 
 .privacy-card h2,
