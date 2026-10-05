@@ -133,7 +133,7 @@ All 63 source methods passed locally and hosted. The matching site change
 passed full reviewed-head and independent integrated-main CI, including real
 confirmed Python import, execution, generated output reopening, exact-byte ZIP
 export and saved-workspace reopening with production/API writes blocked.
-The CI-attested native files are retained unchanged in immutable
+The CI-attested native files are retained unchanged in the published
 [v2.8.25](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.25).
 Production activation remains separate and unverified.
 
@@ -170,7 +170,7 @@ copying work. Full site verification for this new group is pending; the existing
 v2.8.25 workflow evidence is not substituted for its own checks.
 
 That group subsequently passed full reviewed-head and independent integrated-main
-site CI. Its unchanged CI-attested native artifacts are retained in immutable
+site CI. Its unchanged CI-attested native artifacts are retained in the published
 [v2.8.26](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.26).
 Production activation remains separate and unverified.
 
@@ -225,7 +225,7 @@ and independent
 [integrated-main CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37264361642).
 Its exact tagged
 [native build and attestation](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37264829763)
-produced the unchanged authenticated assets published in immutable
+produced the unchanged authenticated assets published in
 [v2.8.27](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.27).
 Downstream [PR #17](https://github.com/instruction-material/classes.jacobdanderson.net/pull/17)
 and independent [fork-main CI](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37265017700)
@@ -274,7 +274,7 @@ and independent integrated-main
 [CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37303337648)
 passed. The exact tagged native build and attestation
 [run](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37304026563)
-produced the unchanged assets retained in immutable
+produced the unchanged assets retained in the published
 [v2.8.28](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.28).
 Downstream [PR #18](https://github.com/instruction-material/classes.jacobdanderson.net/pull/18)
 and independent fork-main
@@ -333,7 +333,7 @@ patterns. Full reviewed-head and independent integrated-main site CI passed,
 including both actual Conway import/run/export/reopen workflows. The exact tagged
 native build and attestation
 [run](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37314047353)
-produced the unchanged assets retained in immutable
+produced the unchanged assets retained in the published
 [v2.8.29](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.29).
 Every payload digest and thirteen trusted source files were independently checked
 without extracting a second dependency tree. Downstream
@@ -388,8 +388,59 @@ initial reminder, makes test-only valid-path edits, executes three full console
 games and a seeded evaluation batch, captures the actual UI ZIP, and reopens the
 saved exact source. These edits exercise the workflow; independent native tests
 verify reference correctness. Production/API writes are blocked. All 32 focused
-site checks and root source lint pass locally; hosted browser and full site
-delivery gates are pending for this group.
+site checks and root source lint pass locally. Full reviewed-head
+[site CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37323755593)
+and independent
+[integrated-main CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37324809996)
+passed, including all four actual Tic Tac Toe workflows, 1,300 core and 267
+course-quality checks, 301 API checks with 41 existing database-dependent skips,
+and eleven Cypress checks. Retained import screenshots were visually inspected.
+The exact annotated `v2.8.30` tag targets
+`a7d78580d00f8719b3437b0bbb663cb9e03edea9`; its native
+[build and attestation](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37325707003)
+passed. Independent proof verification pins repository, workflow, source/signer
+commit, tag and hosted runners. Every one of 7,843 archive payload digests and
+thirteen trusted source files matches, with safe unique entries and one verified
+prior-file hardlink. The original archive, manifest and bundle are retained in
+the published
+[v2.8.30](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.30).
+Uploaded and published asset sizes/digests, notes, annotated tag and exact source
+were checked. No local rebuild or production activation is claimed.
+
+Downstream [PR #20](https://github.com/instruction-material/classes.jacobdanderson.net/pull/20)
+preserves the exact existing 75-file neutral overlay on that canonical commit.
+Full reviewed-head checks and independent
+[fork-main CI](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37326301345)
+passed, including all four browser workflows. Publication used the exact observed
+main lease. No downstream tags, releases or deployments were changed.
+
+The stale Python Level 3 ledger also listed two retired Java catalog IDs.
+[Source PR #11](https://github.com/instruction-material/Python-Level-3/pull/11)
+corrects only that ledger at integrated source
+`12ce8ebe9ccdc6fac56a287bc4993380688900a3`, preserving coursework bytes and the
+native verification gate. Exact-head push/review checks and independent
+[source-main CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37326393287)
+passed all 167 methods. Current Java Level 1/2/3 mappings use their own source
+repositories; historical archived Java material does not establish Python parity.
+
+## Artifact retention and GitHub release locking
+
+The repository policy requires preserving published tags and artifact bytes.
+That retention policy must be distinguished from GitHub's platform-enforced
+immutability flag. Final API readback on 2026-10-05 showed `immutable: false` for
+v2.8.29 and v2.8.30 despite their checked source and signed provenance. Prior
+wording that called those releases immutable was too strong.
+
+GitHub release immutability was disabled for this canonical repository. It is
+now enabled for future releases, with an authenticated API readback confirming
+the setting. GitHub documents that this protection
+[applies to future releases](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/establish-provenance-and-integrity/prevent-release-changes).
+Existing published tags/assets were not replaced, moved or republished to
+manufacture a lock. v2.8.30 remains published with matching checked bytes and
+signed build provenance, but its GitHub immutability flag remains false. Future
+release delivery must verify the enabled policy before publication and confirm
+the individual release lock afterward. Live application activation remains a
+separate, unverified boundary.
 
 ## Verification authority
 
