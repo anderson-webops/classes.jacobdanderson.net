@@ -633,7 +633,6 @@ describe("Python Level 3 learner flow", () => {
 			"Core completion does not require translate_punctuation",
 			"Optionally implement translate_punctuation(word)",
 			"punctuation=True",
-			"punctuation-only tokens remain unchanged",
 			"straight/curly apostrophes",
 			"Read input_punctuation.txt anew",
 			"output_punctuation.txt",
@@ -641,6 +640,9 @@ describe("Python Level 3 learner flow", () => {
 		]) {
 			expect(project.content).toContain(contract);
 		}
+		expect(project.content).toMatch(
+			/punctuation-only tokens remain unchanged/
+		);
 		expect(project.content).not.toContain(
 			"Unknown words and capitalization are handled consistently"
 		);
