@@ -1,0 +1,240 @@
+import assert from "node:assert/strict";
+import { Buffer } from "node:buffer";
+import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+// This workflow is run by node --test in CI, outside Vitest.
+// eslint-disable-next-line test/no-import-node-test -- Uses the native CI test runner.
+import { test as nodeTest } from "node:test";
+import { fileURLToPath } from "node:url";
+import { strFromU8, unzipSync } from "fflate";
+import puppeteer from "puppeteer";
+import { createServer } from "vite";
+
+const root = fileURLToPath(new URL("../front-end/", import.meta.url));
+const repository = "instruction-material/Python-to-Java-and-CPP-Bridge";
+const revision = "b2ebcb94b5f1d2410603031cd409b022d2187253";
+const packs = {
+	"PTJ1-Syntax-Translation-Warmup/starter/cpp": {
+		"README.md": "8db88854ab5e1398be2afdf0468ef3644dfcf4d75c358bc13d3cb42bd9140646",
+		"main.cpp": "db173a70ee15dabd066f55ec84b616660d2ab31eed5b4c1f3853edec48a87236"
+	},
+	"PTJ2-Function-Port-Pack/starter/cpp": {
+		"README.md": "1d62cc9a4794e982a9afea7d62764712b2350e80c929267062dc6664752a0ddd",
+		"main.cpp": "4958789b9ecdfdbb938ba69c722b888f6148e31997ff129e56c30addec79d1be"
+	},
+	"PTJ3-Text-and-Collection-Port-Lab/starter/cpp": {
+		"README.md": "aeae7419a5380244a8559bd193915fab9e3eb5791066989500ce45ca1f02a527",
+		"main.cpp": "aa82a9622a96cf4f385cf87156dd2a6603f5932b604122dd0d562540b805b5e2"
+	},
+	"PTJ4-Shared-Class-Port/starter/cpp": {
+		"BankAccount.cpp": "4fdde771189e242459fba39cb31573c7c1b6c8a1dba00ec844242d6a65c53961",
+		"BankAccount.h": "44ac4c908f21270c772aa5a1e493804641a92ce09defcda0eb8bce6d264e5f24",
+		"README.md": "e5fd5ca606d8ea4c1c2531a5bc95acd87f21c84affd7542d8ddfdbc7a49af283",
+		"main.cpp": "7f895dd8334278cef6c9e2f180988489b1d53654bc62d8531d30cdb1f451dec9"
+	},
+	"PTJ6-Python-to-CPP-Console-Port/starter": {
+		"README.md": "682bd108401494aef8d95aa039a636ce2ca2b6575ded547a09ea08a403e8c0e4",
+		"main.cpp": "75f01a58894d2ce1d2c0aa506ac7ac6e54b827fb9da7fcc267ab6eacfc41954e"
+	}
+};
+const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "cpp-course-import-browser-ci";
+function record(event, fields = {}) {
+	return console.log(JSON.stringify({
+		event,
+		parentTaskId: taskId,
+		cwd: root,
+		parentPid: process.pid,
+		time: new Date().toISOString(),
+		...fields
+	}));
+}
+
+async function readStarter(folder, hashes) {
+	const files = {};
+	for (const [name, digest] of Object.entries(hashes)) {
+		const response = await fetch(`https://raw.githubusercontent.com/${repository}/${revision}/${folder}/${name}`, { signal: AbortSignal.timeout(30000) });
+		assert.equal(response.status, 200);
+		const bytes = new Uint8Array(await response.arrayBuffer());
+		assert.equal(createHash("sha256").update(bytes).digest("hex"), digest);
+		files[name] = new TextDecoder().decode(bytes);
+	}
+	return files;
+}
+
+async function compileExport(directory, names) {
+	const args = ["-std=c++17", "-Wall", "-Wextra", "-pedantic", "-I.", ...names.filter(name => /\.(?:cc|cpp|cxx)$/.test(name)), "-o", "project"];
+	await new Promise((resolve, reject) => {
+		const child = spawn("c++", args, { cwd: directory, detached: true, stdio: ["ignore", "pipe", "pipe"] });
+		record("start", { command: ["c++", ...args], cwd: directory, pid: child.pid, timeoutMs: 30000 });
+		let errors = "";
+		child.stdout.resume();
+		child.stderr.on("data", (data) => {
+			errors += data;
+		});
+		const timer = setTimeout(() => {
+			try {
+				process.kill(-child.pid, "SIGKILL");
+			}
+			catch {}
+			record("child-process-group-cleanup", { pid: child.pid, reason: "timeout" });
+		}, 30000);
+		child.once("error", (error) => {
+			clearTimeout(timer);
+			record("end", { pid: child.pid, exitCode: 1 });
+			reject(error);
+		});
+		child.once("close", (code) => {
+			clearTimeout(timer);
+			record("end", { pid: child.pid, exitCode: code });
+			if (code === 0) resolve();
+			else reject(new Error(`Exported starter did not compile: ${errors}`));
+		});
+	});
+}
+
+nodeTest("published C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 240000 }, async () => {
+	let browser;
+	let server;
+	let page;
+	let temporary;
+	let exitCode = 0;
+	const previousDirectory = process.cwd();
+	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 240000 });
+	try {
+		process.chdir(root);
+		temporary = await mkdtemp(join(tmpdir(), "cpp-course-workflow-"));
+		server = await createServer({ root, server: { host: "127.0.0.1", port: 0, strictPort: true } });
+		await server.listen();
+		const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
+		const executablePath = [process.env.PUPPETEER_EXECUTABLE_PATH, puppeteer.executablePath(), "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/usr/bin/google-chrome", "/usr/bin/chromium"].find(value => value && existsSync(value));
+		assert.ok(executablePath, "Chrome is required");
+		browser = await puppeteer.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
+		page = await browser.newPage();
+		let folder;
+		let files;
+		let sourceRequests = 0;
+		let remoteWrites = 0;
+		let runtimeRequests = 0;
+		let courseFixture = true;
+		await page.setRequestInterception(true);
+		page.on("request", (request) => {
+			const url = new URL(request.url());
+			const respond = (body, contentType = "application/json") => request.respond({ status: 200, contentType, headers: { "access-control-allow-origin": "*" }, body });
+			if (/pyodide|python-runtime-frame|javaIde\.worker/.test(url.href)) runtimeRequests++;
+			if (url.hostname === "api.github.com") {
+				sourceRequests++;
+				assert.equal(url.pathname, `/repos/${repository}/contents/${folder}`);
+				assert.equal(url.searchParams.get("ref"), "main");
+				void respond(JSON.stringify(Object.keys(files).map(name => ({ type: "file", name, path: `${folder}/${name}`, size: Buffer.byteLength(files[name]), html_url: `https://github.com/${repository}/blob/main/${folder}/${name}`, download_url: `https://raw.githubusercontent.com/${repository}/main/${folder}/${name}` }))));
+			}
+			else if (url.hostname === "raw.githubusercontent.com") {
+				sourceRequests++;
+				const name = url.pathname.split("/").at(-1);
+				assert.equal(url.pathname, `/${repository}/main/${folder}/${name}`);
+				assert.ok(Object.hasOwn(files, name));
+				void respond(files[name], "text/plain");
+			}
+			else if (url.origin !== origin || url.pathname.startsWith("/api/")) {
+				if (!["GET", "OPTIONS"].includes(request.method())) remoteWrites++;
+				let body = {};
+				if (courseFixture && url.pathname === "/api/accounts/me") body = { userID: "bridge-fixture" };
+				if (courseFixture && url.pathname === "/api/users/loggedin") body = { currentUser: { _id: "bridge-fixture", name: "Course fixture", email: "course@example.invalid", courseAccess: ["python-to-java-and-cpp-bridge"], courseProgress: [] } };
+				void respond(JSON.stringify(body));
+			}
+			else {
+				void request.continue();
+			}
+		});
+		// Actual catalog action must advertise the C++ mode and await confirmation.
+		await page.goto(`${origin}/courses#python-to-java-and-cpp-bridge-ptj5-c-specific-adaptation`, { waitUntil: "domcontentloaded" });
+		const sourceSelector = "a[href*='PTJ6-Python-to-CPP-Console-Port/starter']:not(.is-ide-starter)";
+		await page.waitForSelector(sourceSelector);
+		const href = await page.$eval(sourceSelector, link => link.closest(".lesson-item").querySelector(".is-ide-starter").getAttribute("href"));
+		assert.equal(new URL(href, origin).searchParams.get("mode"), "cpp");
+		assert.equal(sourceRequests, 0);
+		courseFixture = false;
+		// Native byte verification happens outside the browser; the learner still consents before import.
+		for (const [packFolder, hashes] of Object.entries(packs)) {
+			folder = packFolder;
+			files = await readStarter(folder, hashes);
+			const before = sourceRequests;
+			const key = `browser:${folder}:starter`;
+			const params = new URLSearchParams({ mode: "cpp", projectKey: key, starterUrl: `https://github.com/${repository}/tree/main/${folder}`, starterTitle: folder.split("/")[0] });
+			await page.goto(`${origin}/ide?${params}`, { waitUntil: "domcontentloaded" });
+			await page.waitForSelector("[data-testid='ide-route-import-confirm']");
+			assert.equal(sourceRequests, before);
+			await page.click("[data-testid='ide-route-import-confirm']");
+			await page.waitForSelector("[aria-label='C++ build workflow']");
+			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("#include"));
+			assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
+			await page.evaluate(() => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes("main.cpp")).click());
+			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("int main("));
+			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
+			const edited = `${files["main.cpp"]}\n// Browser workflow edit\n`;
+			await page.click(".cm-content");
+			await page.keyboard.down(modifier);
+			await page.keyboard.press("a");
+			await page.keyboard.up(modifier);
+			await page.keyboard.insertText(edited);
+			await page.keyboard.down(modifier);
+			await page.keyboard.press("s");
+			await page.keyboard.up(modifier);
+			await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent.trim() === "Build instructions").click());
+			await page.waitForFunction(() => document.querySelector(".output-panel")?.textContent.includes("-std=c++17"));
+			assert.equal(await page.$(".stdin-panel"), null);
+			const instructions = await page.$eval(".output-panel", element => element.textContent);
+			assert.match(instructions, /does not compile or execute/);
+			for (const name of Object.keys(files).filter(name => name.endsWith(".cpp"))) assert.ok(instructions.includes(`'${name}'`));
+			assert.equal(runtimeRequests, 0, "C++ instructions never start a Python or Java runtime");
+			await page.evaluate(() => {
+				window.__cppZip = null;
+				const original = HTMLAnchorElement.prototype.click;
+				HTMLAnchorElement.prototype.click = function () {
+					if (this.download.endsWith(".zip") && this.href.startsWith("blob:")) {
+						void fetch(this.href).then(response => response.arrayBuffer()).then((bytes) => {
+							window.__cppZip = Array.from(new Uint8Array(bytes));
+						});
+						return;
+					}
+					return original.call(this);
+				};
+			});
+			await page.click("button[aria-label='Download project ZIP']");
+			await page.waitForFunction(() => Array.isArray(window.__cppZip));
+			const zip = unzipSync(Uint8Array.from(await page.evaluate(() => window.__cppZip)));
+			const exported = Object.fromEntries(Object.entries(zip).map(([path, bytes]) => [path.slice(path.indexOf("/") + 1), strFromU8(bytes)]));
+			assert.deepEqual(exported, { ...files, "main.cpp": edited });
+			const directory = join(temporary, folder.split("/")[0]);
+			await mkdir(directory);
+			for (const [name, content] of Object.entries(exported)) await writeFile(join(directory, name), content);
+			await compileExport(directory, Object.keys(exported));
+			await page.reload({ waitUntil: "domcontentloaded" });
+			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Browser workflow edit"));
+			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
+			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
+			if (folder.startsWith("PTJ4") && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
+				await mkdir(directory, { recursive: true });
+				await page.screenshot({ path: join(directory, "course-import-cpp-workspace.png"), fullPage: true });
+			}
+			record("verified", { folder, revision, fileCount: Object.keys(exported).length });
+		}
+		assert.equal(remoteWrites, 0, "Imports never write to production services");
+	}
+	catch (error) {
+		exitCode = 1;
+		throw error;
+	}
+	finally {
+		if (page) await page.close();
+		if (browser) await browser.close();
+		if (server) await server.close();
+		if (temporary) await rm(temporary, { recursive: true, force: true });
+		process.chdir(previousDirectory);
+		record("cleanup", { pid: process.pid, exitCode });
+	}
+});

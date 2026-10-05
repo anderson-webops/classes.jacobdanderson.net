@@ -469,6 +469,59 @@ describe("Python project routes", () => {
 		);
 	});
 
+	it("stores multi-file C++ projects for user and course-code owners", async () => {
+		const files = [
+			{
+				name: "main.cpp",
+				content: '#include "include/Task.hpp"\nint main() {}\n'
+			},
+			{ name: "src/Task.cc", content: '#include "include/Task.hpp"\n' },
+			{ name: "include/Task.hpp", content: "#pragma once\n" },
+			{ name: "README.md", content: "Build both sources.\n" }
+		];
+		for (const owner of ["user", "course-code"] as const) {
+			await withPythonProjectRoute(async baseUrl => {
+				const response = await postJson(baseUrl, {
+					mode: "cpp",
+					files,
+					activeFileName: "main.cpp"
+				});
+				expect(response.status).toBe(201);
+				const body = await response.json();
+				expect(body.project.mode).toBe("cpp");
+				expect(body.project.files).toEqual(
+					files.map(file => ({ ...file, encoding: "text" }))
+				);
+			}, owner);
+		}
+		expect(modelMocks.pythonProjectCreate.mock.calls[0]?.[0].user).toEqual(
+			userID
+		);
+		expect(modelMocks.pythonProjectCreate.mock.calls[1]?.[0]).toMatchObject(
+			{ user: courseCodeLearnerID, ownerRole: "courseCodeLearner" }
+		);
+	});
+
+	it("rejects C++ header-only, wrong-language and unsafe path projects", async () => {
+		await withPythonProjectRoute(async baseUrl => {
+			for (const name of [
+				"Only.h",
+				"main.py",
+				"Main.java",
+				"../main.cpp",
+				"images/main.cpp",
+				"main';touch.cpp"
+			]) {
+				const response = await postJson(baseUrl, {
+					mode: "cpp",
+					files: [{ name, content: "" }]
+				});
+				expect(response.status).toBe(400);
+			}
+		});
+		expect(modelMocks.pythonProjectCreate).not.toHaveBeenCalled();
+	});
+
 	it("rejects project payloads that do not include a code file for the selected mode", async () => {
 		await withPythonProjectRoute(async baseUrl => {
 			for (const payload of [
@@ -682,13 +735,13 @@ describe("Python project routes", () => {
 
 		expect(sources).toContain('app.get("/healthz"');
 		expect(sources).toContain(
-			'const projectModeSchema = z.enum(["data", "java", "karel", "pgzero", "python", "turtle"])'
+			'const projectModeSchema = z.enum(["cpp", "data", "java", "karel", "pgzero", "python", "turtle"])'
 		);
 		expect(sources).toContain(
-			'export type PythonProjectMode = "data" | "java" | "karel" | "pgzero" | "python" | "turtle";'
+			'export type PythonProjectMode = "cpp" | "data" | "java" | "karel" | "pgzero" | "python" | "turtle";'
 		);
 		expect(sources).toContain(
-			'enum: ["data", "java", "karel", "pgzero", "python", "turtle"]'
+			'enum: ["cpp", "data", "java", "karel", "pgzero", "python", "turtle"]'
 		);
 		expect(sources).toContain("ROOT_TEXT_FILE_RE =");
 		expect(sources).toContain("java|json");

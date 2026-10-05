@@ -81,6 +81,7 @@ describe("private IDE diagnostics", () => {
 		});
 	});
 	it.each([
+		"cpp",
 		"python",
 		"turtle",
 		"pgzero",
@@ -104,5 +105,11 @@ describe("private IDE diagnostics", () => {
 		).toBe(true);
 		expect(diagnostics.site).not.toContain("?");
 		expect(diagnostics.runtime.blueJVersion).toBe("unknown");
+		if (mode === "cpp")
+			expect(diagnostics.runtime).toMatchObject({
+				engine: "source-editor",
+				version: "unknown",
+				pythonVersion: "not-loaded"
+			});
 	});
 });

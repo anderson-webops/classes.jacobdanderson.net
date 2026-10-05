@@ -7,13 +7,17 @@ import {
 	parseGitHubResource
 } from "@/modules/codePreview";
 
+import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
+
 const WHITESPACE_RE = /\s+/g;
 const FILE_EXTENSION_RE = /\.[\dA-Z]+$/i;
 const JAVA_EXTENSION_RE = /\.java$/i;
 const PYTHON_EXTENSION_RE = /\.py$/i;
-const CODE_EXTENSION_RE = /\.(?:java|py)$/i;
+const CPP_EXTENSION_RE = /\.(?:cc|cpp|cxx)$/i;
+const CODE_EXTENSION_RE = /\.(?:cc|cpp|cxx|h|hpp|java|py)$/i;
 const SAFE_FILE_SEGMENT_RE = /^\w[\w.-]*$/;
-const ROOT_TEXT_FILE_RE = /^\w[\w.-]*\.(?:csv|eps|in|java|json|md|ps|py|txt)$/i;
+const ROOT_TEXT_FILE_RE =
+	/^\w[\w.-]*\.(?:cc|cpp|cxx|h|hpp|csv|eps|in|java|json|md|ps|py|txt)$/i;
 const IMAGE_FILE_RE = /^images\/\w[\w.-]*\.(?:gif|jpe?g|png|svg|webp)$/i;
 const AUDIO_FILE_RE = /^(?:music|sounds)\/\w[\w.-]*\.(?:mp3|ogg|wav)$/i;
 const ASSET_DIRECTORY_NAMES = new Set(["images", "music", "sounds"]);
@@ -45,7 +49,8 @@ const PYTHON_IDE_RUNTIME_RESERVED_ROOTS = new Set([
 	"turtle",
 	"zrect"
 ]);
-const TEXT_FILE_RE = /\.(?:csv|eps|in|java|json|md|ps|py|txt|svg)$/i;
+const TEXT_FILE_RE =
+	/\.(?:cc|cpp|cxx|h|hpp|csv|eps|in|java|json|md|ps|py|txt|svg)$/i;
 const IMAGE_EXTENSION_RE = /\.(?:gif|jpe?g|png|svg|webp)$/i;
 const SOUND_EXTENSION_RE = /\.wav$/i;
 const MUSIC_EXTENSION_RE = /\.(?:mp3|ogg)$/i;
@@ -61,7 +66,7 @@ const PYTHON_IDE_SHARE_ID_RE = /^[\w-]{20,80}$/;
 export type PythonIdeFileEncoding = "text" | "base64";
 
 export type PythonIdeMode =
-	"data" | "java" | "karel" | "pgzero" | "python" | "turtle";
+	"cpp" | "data" | "java" | "karel" | "pgzero" | "python" | "turtle";
 export type PythonIdeProjectTemplate =
 	| "blank"
 	| "bluej"
@@ -212,6 +217,11 @@ export const pythonIdeStorageNamespace = "classes-python-ide-projects";
 export const pythonIdeAllowedFileExtensions = [
 	".py",
 	".java",
+	".cpp",
+	".cc",
+	".cxx",
+	".h",
+	".hpp",
 	".csv",
 	".json",
 	".txt",
@@ -235,6 +245,12 @@ export const pythonIdeFileUploadAccept =
 let pythonIdeStorageDbPromise: Promise<IDBDatabase> | null = null;
 
 const pythonIdeCourseModes: Record<string, PythonIdeMode> = {
+	"c-level-1": "cpp",
+	"cpp-level-1": "cpp",
+	"cpp-level-2": "cpp",
+	"cpp-level-3": "cpp",
+	"data-structures-and-algorithms-in-cpp": "cpp",
+	"design-patterns-in-cpp": "cpp",
 	"ai-level-1": "data",
 	"ap-computer-science-a": "java",
 	"data-science-in-python": "data",
@@ -261,6 +277,7 @@ export function normalizePythonIdeMode(
 ): PythonIdeMode {
 	if (value === "bluej") return "java";
 	if (
+		value === "cpp" ||
 		value === "data" ||
 		value === "java" ||
 		value === "karel" ||
@@ -290,14 +307,15 @@ export function isKnownCourseWorksheetResource(url: string) {
 export function pythonIdeModeForCourseResource(courseId: string, url: string) {
 	const resource = parseGitHubResource(url);
 	if (!resource || isKnownCourseWorksheetResource(url)) return null;
-	// The bridge's C++ port has no browser runtime; keep its local source link.
 	if (
-		/\.(?:c|cc|cpp|cxx|h|hpp)$/i.test(resource.path) ||
+		/\.(?:cc|cpp|cxx)$/i.test(resource.path) ||
 		(courseId === "python-to-java-and-cpp-bridge" &&
-			/^PTJ6-Python-to-CPP-Console-Port(?:\/|$)/.test(resource.path))
+			(/(?:^|\/)cpp(?:\/|$)/i.test(resource.path) ||
+				/^PTJ6-Python-to-CPP-Console-Port(?:\/|$)/.test(resource.path)))
 	) {
-		return null;
+		return "cpp";
 	}
+	if (/\.(?:c|h|hpp)$/i.test(resource.path)) return null;
 	return pythonIdeModeForCourseId(courseId);
 }
 
@@ -2112,6 +2130,7 @@ plt.tight_layout()
 `;
 
 export function getPythonIdeModeLabel(mode: PythonIdeMode) {
+	if (mode === "cpp") return "C++";
 	if (mode === "data") return "Data / AI";
 	if (mode === "java") return "Java";
 	if (mode === "karel") return "Karel Java";
@@ -2154,6 +2173,7 @@ export function getPythonIdeProjectKindLabel(
 }
 
 function getDemoStarterCode(mode: PythonIdeMode) {
+	if (mode === "cpp") return cppStarterCode;
 	if (mode === "data") return dataScienceStarterCode;
 	if (mode === "java") return javaStarterCode;
 	if (mode === "karel") return karelStarterCode;
@@ -2171,6 +2191,13 @@ function clonePythonIdeFiles(files: PythonIdeFile[]) {
 }
 
 function getBlankStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "cpp") {
+		return [
+			{ name: "main.cpp", content: cppStarterCode },
+
+			{ name: "README.md", content: cppWorkspaceReadme }
+		];
+	}
 	if (mode === "pgzero") return getCourseStarterFiles(mode);
 	if (mode === "java") {
 		return [
@@ -2191,6 +2218,13 @@ function getBlankStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getCourseStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "cpp") {
+		return [
+			{ name: "main.cpp", content: cppStarterCode },
+
+			{ name: "README.md", content: cppWorkspaceReadme }
+		];
+	}
 	if (mode === "java") {
 		return [
 			{
@@ -2226,7 +2260,8 @@ function getCourseStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getDemoStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
-	if (mode === "java" || mode === "karel") return getCourseStarterFiles(mode);
+	if (mode === "cpp" || mode === "java" || mode === "karel")
+		return getCourseStarterFiles(mode);
 
 	const files = [
 		{
@@ -2253,6 +2288,13 @@ function getDemoStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getOutlineStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "cpp") {
+		return [
+			{ name: "main.cpp", content: cppStarterCode },
+
+			{ name: "README.md", content: cppWorkspaceReadme }
+		];
+	}
 	if (mode === "java") {
 		return [
 			{
@@ -2477,7 +2519,9 @@ export function resolvePythonIdeActiveFileName(
 		files.find(file => file.name === preferredFileName)?.name ??
 		files.find(file => file.name === "Main.java")?.name ??
 		files.find(file => file.name === "Algo.java")?.name ??
+		files.find(file => file.name === "main.cpp")?.name ??
 		files.find(file => file.name === "main.py")?.name ??
+		files.find(file => CPP_EXTENSION_RE.test(file.name))?.name ??
 		files.find(file => isPythonIdeJavaFile(file.name))?.name ??
 		files.find(file => isPythonIdePythonFile(file.name))?.name ??
 		files[0]?.name ??
@@ -2489,6 +2533,7 @@ function projectTitleForMode(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate = "blank"
 ) {
+	if (mode === "cpp") return "C++ Project";
 	if (template === "bluej" && mode === "java") return "BlueJ Java Project";
 	if (template === "circle-art" && mode === "turtle")
 		return "Color Circle Art";
@@ -2665,6 +2710,7 @@ export function isPythonIdeRunnableFile(
 	value: string,
 	mode: PythonIdeMode = "python"
 ) {
+	if (mode === "cpp") return CPP_EXTENSION_RE.test(value);
 	return mode === "java" || mode === "karel"
 		? isPythonIdeJavaFile(value)
 		: isPythonIdePythonFile(value);
@@ -2715,6 +2761,8 @@ export function getPythonIdeAssetDataUrl(file: PythonIdeFile) {
 
 export function getPythonIdeFileKindLabel(value: string) {
 	const extension = value.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
+	if ([".cpp", ".cc", ".cxx"].includes(extension ?? "")) return "C++";
+	if ([".h", ".hpp"].includes(extension ?? "")) return "Header";
 	if (extension === ".csv") return "CSV";
 	if (extension === ".java") return "Java";
 	if (extension === ".json") return "JSON";
@@ -2728,6 +2776,9 @@ export function getPythonIdeFileKindLabel(value: string) {
 
 export function getPythonIdeDefaultFileContent(fileName: string) {
 	const extension = fileName.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
+	if ([".cpp", ".cc", ".cxx"].includes(extension ?? ""))
+		return cppStarterCode;
+	if ([".h", ".hpp"].includes(extension ?? "")) return "#pragma once\n\n";
 	if (extension === ".csv") return "name,value\nsample,1\n";
 	if (extension === ".java")
 		return '/**\n * @brief Write a small Java console program\n */\npublic class Main {\n/*****************\n*   CONSTANTS   *\n*****************/\n\n    private static final String GREETING_MESSAGE = "Hello, Java!";\n\n\n/*****************\n*   FUNCTIONS   *\n*****************/\n\n    /**\n     * @brief Run the Java program\n     *\n     * @param args Command-line arguments\n     */\n    public static void main(String[] args) {\n        System.out.println(GREETING_MESSAGE);\n    }\n}\n';

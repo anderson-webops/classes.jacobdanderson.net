@@ -25,10 +25,11 @@ const blankStarters: IdeStarter[] = [
 	"data",
 	"pgzero",
 	"java",
+	"cpp",
 	"karel"
 ].map(mode => ({
 	id: `blank-${mode}`,
-	label: `Blank ${mode === "turtle" ? "Python Turtle" : mode === "pgzero" ? "Pygame" : mode === "data" ? "Python Data / AI" : mode === "karel" ? "Karel Java" : mode === "java" ? "Java" : "Python"}`,
+	label: `Blank ${mode === "turtle" ? "Python Turtle" : mode === "pgzero" ? "Pygame" : mode === "data" ? "Python Data / AI" : mode === "karel" ? "Karel Java" : mode === "java" ? "Java" : mode === "cpp" ? "C++" : "Python"}`,
 	category: "Templates",
 	mode: mode as IdeStarter["mode"],
 	template: "blank"
@@ -60,6 +61,7 @@ const visible = computed(() =>
 					<option value="data">Python Data / AI</option>
 					<option value="pgzero">Pygame</option>
 					<option value="java">Java / BlueJ</option>
+					<option value="cpp">C++ source</option>
 					<option value="karel">Karel Java</option>
 				</select></label
 			>

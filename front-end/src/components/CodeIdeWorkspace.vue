@@ -37,6 +37,7 @@ import IdeDiagnosticsControls from "@/components/IdeDiagnosticsControls.vue";
 import IdeStarterPicker from "@/components/IdeStarterPicker.vue";
 import WorkspaceHeader from "@/components/WorkspaceHeader.vue";
 import WorkspaceStorageStatus from "@/components/WorkspaceStorageStatus.vue";
+import { cppBuildInstructions } from "@/modules/cppBuildInstructions";
 import {
 	createIdeDiagnostics,
 	safeRuntimeVersion,
@@ -1127,6 +1128,8 @@ const selectedModeLabel = computed(() =>
 		: "Code"
 );
 const newFileNamePlaceholder = computed(() => {
+	if (selectedProject.value?.mode === "cpp")
+		return "main.cpp, src/helpers.cpp or include/Helper.h";
 	if (selectedProject.value?.mode === "karel")
 		return "MyProgram.java, helpers/Helper.java, or world.txt";
 	if (selectedProject.value?.mode === "java")
@@ -3481,7 +3484,11 @@ function addFile() {
 	if (!selectedProject.value) return;
 	const fileName = normalizePythonFileName(
 		newFileName.value,
-		isJavaIdeMode(selectedProject.value.mode) ? ".java" : ".py"
+		selectedProject.value.mode === "cpp"
+			? ".cpp"
+			: isJavaIdeMode(selectedProject.value.mode)
+				? ".java"
+				: ".py"
 	);
 	if (!isValidPythonFileName(fileName)) {
 		appendOutput(
@@ -6698,6 +6705,13 @@ async function runCurrentProject() {
 	if (shouldStopPythonIdeRun(runID, project._id)) return;
 
 	clearOutput();
+	if (project.mode === "cpp") {
+		for (const line of cppBuildInstructions(project.files))
+			appendOutput("system", line);
+		runMessage.value = "Native build instructions";
+		diagnosticStage.value = "completed";
+		return;
+	}
 	const runnableFile = isJavaIdeMode(project.mode)
 		? project.files.find(file =>
 				isPythonIdeRunnableFile(file.name, project.mode)
@@ -7651,7 +7665,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 			type="file"
 			@change="importBlueJProjectArchiveFromInput"
 		/>
-		<WorkspaceHeader title="Python or Java">
+		<WorkspaceHeader title="Code workspace">
 			<button
 				type="button"
 				class="site-button site-button--secondary compact-button"
@@ -7691,7 +7705,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 			"
 			>{{
 				canSyncToAccount
-					? "Python and Java sync when saved. Download a ZIP for a separate copy."
+					? "Code projects sync when saved. Download a ZIP for a separate copy."
 					: "Edits save locally when autosave is enabled. Sign in to sync, or download a ZIP."
 			}}</WorkspaceStorageStatus
 		>
@@ -8230,10 +8244,29 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 							type="button"
 							@click="activateRunControl"
 						>
-							{{ runControlIsStop ? "Stop" : "Run" }}
+							{{
+								runControlIsStop
+									? "Stop"
+									: selectedProject?.mode === "cpp"
+										? "Build instructions"
+										: "Run"
+							}}
 						</button>
 					</div>
 				</div>
+
+				<section
+					v-if="selectedProject?.mode === 'cpp'"
+					class="site-surface cpp-build-panel"
+					aria-label="C++ build workflow"
+				>
+					<p>
+						Edit and save the C++ starter here. Download the ZIP and
+						extract it before compiling with a native C++ compiler.
+						The browser provides source editing and build
+						instructions.
+					</p>
+				</section>
 
 				<details
 					v-if="selectedProjectCanShowBlueJIntegration"
@@ -8662,8 +8695,17 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 							</div>
 						</div>
 
-						<div class="input-output-grid">
-							<label class="stdin-panel">
+						<div
+							class="input-output-grid"
+							:class="{
+								'input-output-grid--source':
+									selectedProject?.mode === 'cpp'
+							}"
+						>
+							<label
+								v-if="selectedProject?.mode !== 'cpp'"
+								class="stdin-panel"
+							>
 								<span>Input</span>
 								<small
 									>One answer per line. Turtle: :cancel to
@@ -8688,7 +8730,11 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 									v-if="!outputLines.length"
 									class="empty-output"
 								>
-									Output will appear here after a run.
+									{{
+										selectedProject?.mode === "cpp"
+											? "Select Build instructions for this project's native compiler command."
+											: "Output will appear here after a run."
+									}}
 								</div>
 								<pre
 									v-for="line in outputLines"
@@ -9560,6 +9606,14 @@ html.dark .file-delete:disabled::after {
 	grid-template-columns: minmax(15rem, 1fr) auto;
 	gap: 0.75rem;
 	align-items: end;
+}
+
+.cpp-build-panel {
+	padding: 0.75rem 1rem;
+}
+
+.cpp-build-panel p {
+	margin: 0;
 }
 
 .stdin-panel {
@@ -10561,6 +10615,10 @@ html.dark .editor-shortcuts ul {
 	min-width: 0;
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr);
+}
+
+.input-output-grid--source {
+	grid-template-rows: minmax(0, 1fr);
 }
 
 .stdin-panel {

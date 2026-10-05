@@ -199,7 +199,7 @@ describe("python IDE CodeMirror editor", () => {
 		expect(blueJLegacyRouteSource).toContain("<CodeIdeWorkspace />");
 		expect(workspaceSource).not.toContain('route.path === "/bluej"');
 		expect(workspaceSource).toContain(
-			'<WorkspaceHeader title="Python or Java">'
+			'<WorkspaceHeader title="Code workspace">'
 		);
 		expect(workspaceSource).toContain("WorkspaceHeader");
 	});

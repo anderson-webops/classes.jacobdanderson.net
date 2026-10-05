@@ -29,7 +29,7 @@ export const ideDiagnosticSchema = z
 			.strict(),
 		runtime: z
 			.object({
-				engine: z.enum(["pyodide", "java-preview"]),
+				engine: z.enum(["pyodide", "java-preview", "source-editor"]),
 				version,
 				pythonVersion: version,
 				adapterRevision: revision,
@@ -37,6 +37,7 @@ export const ideDiagnosticSchema = z
 			})
 			.strict(),
 		mode: z.enum([
+			"cpp",
 			"python",
 			"turtle",
 			"pgzero",
