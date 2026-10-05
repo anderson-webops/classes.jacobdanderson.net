@@ -1481,10 +1481,10 @@ const implementationOnlyProfiles = {
 			"Debugging the same small program in Python, Java, and C++."
 		],
 		projectTypes: [
-			"Port a Python console program into Java and C++.",
+			"Port a Python console program into the chosen Java or C++ target; the other target is optional.",
 			"Create a type-error diagnosis notebook.",
 			"Compare object/reference behavior across languages.",
-			"Build a small command-line program with equivalent tests in all three languages."
+			"Build a small command-line program with equivalent tests in Python and the chosen target."
 		],
 		assessments: [
 			"Trace equivalent code in Python, Java, and C++.",
@@ -4239,6 +4239,10 @@ function supplementalProjectFor(
 }
 
 function ensureSupplementalProjectFloor(courseId: string, course: RawCourse) {
+	// The authored bridge places its required language choices beside each
+	// project brief. Additional practice needs a distinct purpose, not a quota.
+	if (courseId === "python-to-java-and-cpp-bridge") return;
+
 	for (const module of course.modules) {
 		if (module.kind === "appendix") continue;
 

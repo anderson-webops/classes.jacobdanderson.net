@@ -1207,7 +1207,7 @@ describe("course text quality normalization", () => {
 			expect(corpus).toContain("Open the starter resource");
 			expect(corpus).toContain("as an AI/Python project");
 			expect(corpus).toContain(
-				"Make the Syntax Translation Warmup class exercise easy to verify by stating expected behavior"
+				"replace one unfinished body at a time"
 			);
 			expect(corpus).toContain(
 				"Build the web-development extension challenge for **JSM1 Fundamentals Review** as a browser-visible feature with clear state, interaction, and error-handling evidence"
@@ -1462,7 +1462,7 @@ describe("course text quality normalization", () => {
 				"Verify the Division Facts object-design exercise with one standard case and one boundary case that exposes the key concept"
 			);
 			expect(corpus).toContain(
-				"Complete **Function Signature Transfer Practice** as a Java extension challenge that exposes class responsibilities, public behavior, and one edge case"
+				"Predict a missing-return diagnostic and a wrong-argument-type diagnostic"
 			);
 			expect(corpus).not.toMatch(/\bSupplemental Practice\s+[2-9]\b/i);
 			expect(corpus).not.toMatch(/\bSupplemental\s+[2-9]\b/i);
@@ -1954,10 +1954,6 @@ describe("course text quality normalization", () => {
 			["src/stores/courses/machine-learning.ts", "machine learning"],
 			["src/stores/courses/network-security.ts", "network security"],
 			["src/stores/courses/pygames.ts", "Python/PyGame"],
-			[
-				"src/stores/courses/python-to-java-and-cpp-bridge.ts",
-				"Java/C++ bridge"
-			],
 			["src/stores/courses/usaco-bronze.ts", "USACO"],
 			["src/stores/courses/usaco-silver.ts", "USACO Silver"],
 			["src/stores/courses/usaco-gold.ts", "USACO Gold"]
@@ -4166,16 +4162,13 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Java Scanner Transfer Practice");
 		expect(corpus).toContain("C++ Vector Extension Practice");
 		expect(corpus).toContain(
-			"Language Bridge Lab 11: Compile-Run Comparison Studio"
-		);
-		expect(corpus).toContain(
-			"Language Bridge Lab 13: Collection Porting Studio"
-		);
-		expect(corpus).toContain(
 			"Language Bridge Lab 17: Bridge Capstone Port Studio"
 		);
-		expect(corpus).toContain("Graphics Translation Studio");
-		expect(corpus).toContain("C Foundations Transfer Studio");
+		expect(corpus).toContain("Task Tracker Capstone Port");
+		expect(corpus).toContain("100 successful adds");
+		expect(corpus).not.toMatch(/BRG-|Transfer Studio Archive/);
+		expect(corpus).not.toContain("Graphics Translation Studio");
+		expect(corpus).not.toContain("C Foundations Transfer Studio");
 	});
 
 	it("keeps Low-Level Security Part 1 defensive and specifically labeled", async () => {

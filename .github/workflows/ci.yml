@@ -265,16 +265,16 @@ jobs:
             - name: Build front-end
               run: npm run -w front-end build
 
-            - name: Verify C++ source import, export and native compilation
+            - name: Verify bridge source import, export and native compilation
               env:
                   COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
-              run: node --test test/cpp-course-import-browser.test.mjs
+              run: JAVAC="$JAVA_HOME_21_X64/bin/javac" node --test test/cpp-course-import-browser.test.mjs
 
-            - name: Retain C++ workspace screenshot
+            - name: Retain bridge workspace screenshots
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               with:
                   name: cpp-workspace-screenshots
-                  path: output/playwright/course-import-cpp-*.png
+                  path: output/playwright/course-import-*.png
                   if-no-files-found: ignore
                   retention-days: 7
 

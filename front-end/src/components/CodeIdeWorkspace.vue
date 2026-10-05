@@ -8047,7 +8047,13 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 							@input="updateProjectTitle"
 						/>
 					</div>
-					<div class="editor-actions">
+					<div
+						class="editor-actions"
+						:class="{
+							'editor-actions--cpp':
+								selectedProject?.mode === 'cpp'
+						}"
+					>
 						<div ref="ideSettingsRef" class="ide-settings">
 							<button
 								:aria-expanded="showIdeSettings"
@@ -8239,7 +8245,11 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 						</button>
 						<button
 							class="site-button site-button--primary run-control"
-							:class="{ 'run-control--stop': runControlIsStop }"
+							:class="{
+								'run-control--stop': runControlIsStop,
+								'run-control--build':
+									selectedProject?.mode === 'cpp'
+							}"
 							:disabled="!runControlIsStop && isSaving"
 							type="button"
 							@click="activateRunControl"
@@ -9667,6 +9677,17 @@ html.dark .file-delete:disabled::after {
 	line-height: 1;
 }
 
+.editor-actions--cpp {
+	flex-wrap: wrap;
+	height: auto;
+}
+
+.editor-actions > .run-control--build {
+	width: auto;
+	min-width: max-content;
+	white-space: nowrap;
+}
+
 .bluej-integration-panel {
 	display: grid;
 	grid-template-columns: 1fr;
@@ -10869,6 +10890,13 @@ html.dark .editor-shortcuts ul {
 				minmax(0, 1fr)
 			);
 		gap: 0.4rem;
+	}
+	.editor-actions--cpp {
+		grid-template-columns: 2.75rem minmax(0, 1.4fr) minmax(0, 1fr);
+	}
+	.editor-actions--cpp > .run-control--build {
+		grid-column: 1 / -1;
+		width: 100%;
 	}
 	.editor-actions > .site-button {
 		padding-inline: 0.35rem;

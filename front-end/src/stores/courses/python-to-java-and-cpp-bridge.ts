@@ -1,1475 +1,14 @@
-import type { RawCourse } from "./types";
-import { buildImplementationLabGuidance } from "./implementationLabGuidance";
-import { buildProjectGuidance } from "./projectGuidance";
-import { buildSupportSectionGuidance } from "./supportSectionGuidance";
+import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
+import { bridgeProjectBriefs } from "./bridgeProjectBriefs";
 
-const pythonToJavaAndCppBridgeSourceCourse: RawCourse = {
-	name: "Python to Java and C++ Bridge",
-	modules: [
-		{
-			title: "PTJ0 Positioning and Workflow Translation",
-			curriculum: [
-				{
-					title: "Why Typed Languages Feel Harder at First",
-					content:
-						"Frame the bridge as a translation problem, not a full restart. The assumed background is variables, loops, functions, and objects from Python; the new challenge is stronger type declarations, compilation, braces, semicolons, and more explicit project structure."
-				},
-				{
-					title: "Compiled vs. Interpreted Workflows",
-					content:
-						"Compare Python's quick script loop with Java and C++ compile-run cycles. Compiler errors are structured feedback rather than evidence that the language is hostile."
-				},
-				{
-					title: "Blocks, Braces, and Signatures",
-					content:
-						"Translate indentation-based thinking into braces and method signatures. Typed syntax adds ceremony, but the underlying control flow is still the same."
-				},
-				{
-					title: "What Transfers Cleanly from Python",
-					content:
-						"Make the transfer explicit: loops, conditionals, string processing, decomposition into helper functions, and object modeling still matter. The bridge preserves confidence by showing where the existing mental model still applies."
-				},
-				{
-					title: "PTJ0 Positioning and Workflow Translation: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"PTJ0 Positioning and Workflow Translation",
-						projectKind: "core",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/solution"
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Project: Syntax Translation Warmup",
-					content:
-						"Port several tiny Python snippets into typed Java and C++ starter files to compare variables, conditionals, loops, and return statements side by side.",
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/solution"
-				},
-				{
-					title: "Project: Starter Source Review",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"PTJ0 Positioning and Workflow Translation",
-						itemTitle: "Project: Starter Source Review",
-						projectKind: "core",
-						hasReference: false
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ1-Syntax-Translation-Warmup/solution"
-				},
-				{
-					title: "Workflow Translation Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"PTJ0 Positioning and Workflow Translation",
-						itemTitle: "Workflow Translation Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-01-ptj0-positioning-and-workflow-translation-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-01-ptj0-positioning-and-workflow-translation-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "PTJ1 Functions, Parameters, and Return Types",
-			curriculum: [
-				{
-					title: "From def to Method Signatures",
-					content:
-						"Map Python's `def` syntax to Java methods and C++ functions. Read the parameter types and return type before reading the body."
-				},
-				{
-					title: "Void, Value Returns, and Compile-Time Mismatches",
-					content:
-						"Practice spotting the common mistakes that typed languages catch immediately: returning the wrong type, forgetting a return statement, or passing the wrong argument type."
-				},
-				{
-					title: "Reading Compiler Feedback Productively",
-					content:
-						"Work through small broken examples where a missing semicolon, bad type, or mismatched brace causes several errors. The skill is to find the first real error and ignore the noise that cascades after it."
-				},
-				{
-					title: "Functions, Parameters, and Return Types: Verification and Reflection",
-					content: buildSupportSectionGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Functions, Parameters, and Return Types",
-						section: "verification"
-					})
-				},
-				{
-					title: "PTJ1 Functions, Parameters, and Return Types: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"PTJ1 Functions, Parameters, and Return Types",
-						projectKind: "core",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ2-Function-Port-Pack/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ2-Function-Port-Pack/solution"
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Project: Function Port Pack",
-					content:
-						"Translate a Python helper-function worksheet into Java and C++, preserving the same behavior while adding explicit parameter and return types.",
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ2-Function-Port-Pack/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ2-Function-Port-Pack/solution"
-				},
-				{
-					title: "Function Signature Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"PTJ1 Functions, Parameters, and Return Types",
-						itemTitle: "Function Signature Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-02-ptj1-functions-parameters-and-return-types-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-02-ptj1-functions-parameters-and-return-types-supplemental-2/solution"
-				},
-				{
-					title: "Return-Type Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"PTJ1 Functions, Parameters, and Return Types",
-						itemTitle: "Return-Type Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-03-ptj1-functions-parameters-and-return-types-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-03-ptj1-functions-parameters-and-return-types-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "PTJ2 Collections, Strings, and Indexing",
-			curriculum: [
-				{
-					title: "Lists vs. Arrays, ArrayLists, and Vectors",
-					content:
-						"Compare Python lists with Java arrays and `ArrayList`, then with C++ arrays and `vector`. Explain which structure is fixed-size, which grows dynamically, and how indexing and methods differ."
-				},
-				{
-					title: "String APIs and Slice Replacement",
-					content:
-						"Translate Python slicing habits into Java and C++ string methods. The bridge slows the workflow just enough to make substring ranges, mutation rules, and off-by-one boundaries deliberate."
-				},
-				{
-					title: "Bounds and Loop Discipline",
-					content:
-						"Use list and string loops to reinforce boundary conditions in typed languages. This is where Python habits can translate into stronger debugging: predict the valid index range, trace the loop endpoint, then compare that prediction with compiler or runtime feedback."
-				},
-				{
-					title: "Collections, Strings, and Indexing: Verification and Reflection",
-					content: buildSupportSectionGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Collections, Strings, and Indexing",
-						section: "verification"
-					})
-				},
-				{
-					title: "PTJ2 Collections, Strings, and Indexing: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "PTJ2 Collections, Strings, and Indexing",
-						projectKind: "core",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ3-Text-and-Collection-Port-Lab/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ3-Text-and-Collection-Port-Lab/solution"
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Project: Text and Collection Port Lab",
-					content:
-						"Port a Python list-and-string processing exercise into Java and C++ and compare how the same algorithm changes once indexing, arrays, and string APIs become more explicit.",
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ3-Text-and-Collection-Port-Lab/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ3-Text-and-Collection-Port-Lab/solution"
-				},
-				{
-					title: "Collection Indexing Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "PTJ2 Collections, Strings, and Indexing",
-						itemTitle: "Collection Indexing Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-04-ptj2-collections-strings-and-indexing-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-04-ptj2-collections-strings-and-indexing-supplemental-2/solution"
-				},
-				{
-					title: "Text API Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "PTJ2 Collections, Strings, and Indexing",
-						itemTitle: "Text API Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-05-ptj2-collections-strings-and-indexing-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-05-ptj2-collections-strings-and-indexing-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "PTJ3 Classes and Objects across Languages",
-			curriculum: [
-				{
-					title: "What Stays the Same in OOP",
-					content:
-						"Re-anchor classes in familiar Python ideas: objects still carry state, constructors still initialize that state, and methods still bundle behavior with data. The new work is mostly syntax and file organization."
-				},
-				{
-					title: "Java Class Structure",
-					content:
-						"Fields, constructors, getters, setters, and access modifiers define the Java object model. Visible pattern: why Java looks more ceremonial while still describing a familiar object model."
-				},
-				{
-					title: "C++ Class Structure and Header/Source Separation",
-					content:
-						"C++ class declarations often live in header files while method definitions live in source files. The split exists for organization and compilation reasons, not because the class model itself is conceptually different from Python."
-				},
-				{
-					title: "Classes and Objects across Languages: Verification and Reflection",
-					content: buildSupportSectionGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Classes and Objects across Languages",
-						section: "verification"
-					})
-				},
-				{
-					title: "PTJ3 Classes and Objects across Languages: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"PTJ3 Classes and Objects across Languages",
-						projectKind: "core",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ4-Shared-Class-Port/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ4-Shared-Class-Port/solution"
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Project: Shared Class Port",
-					content:
-						"Rewrite a small Python class such as `Pet`, `BankAccount`, or `Character` as both a Java class and a C++ header/source pair.",
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ4-Shared-Class-Port/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ4-Shared-Class-Port/solution"
-				},
-				{
-					title: "Class Port Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"PTJ3 Classes and Objects across Languages",
-						itemTitle: "Class Port Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-06-ptj3-classes-and-objects-across-languages-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-06-ptj3-classes-and-objects-across-languages-supplemental-2/solution"
-				},
-				{
-					title: "Header Source Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"PTJ3 Classes and Objects across Languages",
-						itemTitle: "Header Source Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-07-ptj3-classes-and-objects-across-languages-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-07-ptj3-classes-and-objects-across-languages-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "PTJ4 Java-Specific Adaptation",
-			curriculum: [
-				{
-					title: "Scanner, main, and Java Project Rhythm",
-					content:
-						"Practice `Scanner`, `public static void main`, and the file structure expected by early Java projects. This makes the first weeks of `Java Level 1` feel familiar instead of abrupt."
-				},
-				{
-					title: "String Equality and Reference Habits",
-					content:
-						'Java string comparison separates value equality from reference identity. In Python, `==` usually compares string contents, so Java requires a deliberate adjustment: `.equals()` expresses content equality while `==` asks whether two variables point to the same object. The bridge example needs at least one literal string, one string built from input or concatenation, and one `null` check so the difference is visible instead of memorized. Good Java habits place the known non-null value first when useful, such as `"yes".equals(answer)`, and reserve `==` for primitives, enum constants, or intentional identity checks.'
-				},
-				{
-					title: "Bridge Exit to Java Level 1",
-					content:
-						"By the end of the Java branch, the target outcome is readiness to write simple typed methods, use `Scanner`, and build a small class without getting stuck on boilerplate."
-				},
-				{
-					title: "Java Specific Adaptation: Verification and Reflection",
-					content: buildSupportSectionGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Java Specific Adaptation",
-						section: "verification"
-					})
-				},
-				{
-					title: "PTJ4 Java-Specific Adaptation: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "PTJ4 Java-Specific Adaptation",
-						projectKind: "core",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ5-Python-to-Java-Quiz-Game/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ5-Python-to-Java-Quiz-Game/solution"
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Project: Python to Java Quiz Game",
-					content:
-						"Port a small Python quiz or Mad Libs program into Java and use it as the last pre-Java-Level-1 confidence check.",
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ5-Python-to-Java-Quiz-Game/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ5-Python-to-Java-Quiz-Game/solution"
-				},
-				{
-					title: "Java Scanner Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "PTJ4 Java-Specific Adaptation",
-						itemTitle: "Java Scanner Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-08-ptj4-java-specific-adaptation-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-08-ptj4-java-specific-adaptation-supplemental-2/solution"
-				},
-				{
-					title: "Java Quiz Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "PTJ4 Java-Specific Adaptation",
-						itemTitle: "Java Quiz Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-09-ptj4-java-specific-adaptation-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-09-ptj4-java-specific-adaptation-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "PTJ5 C++-Specific Adaptation",
-			curriculum: [
-				{
-					title: "Includes, std, and Console Streams",
-					content:
-						"Practice `#include`, `std::`, `cout`, and `cin` until the syntax stops feeling special. The first C++ goal is comfort with typed syntax and compilation, not early pointer complexity."
-				},
-				{
-					title: "Vectors, References, and Pass-by-Value Intuition",
-					content:
-						"`vector` and the difference between passing by value and by reference prepare for C++ collections without jumping ahead to the full pointer-heavy part of the C++ path."
-				},
-				{
-					title: "Bridge Exit to C++ Level 1",
-					content:
-						"By the end of the C++ branch, the target outcome is readiness to work with console I/O, typed functions, vectors, and small classes, with pointers still deferred to the normal C++ course sequence."
-				},
-				{
-					title: "C++ Specific Adaptation: Verification and Reflection",
-					content: buildSupportSectionGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C++ Specific Adaptation",
-						section: "verification"
-					})
-				},
-				{
-					title: "PTJ5 C++-Specific Adaptation: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "PTJ5 C++-Specific Adaptation",
-						projectKind: "core",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/solution"
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Project: Python to C++ Console Port",
-					content:
-						"Convert a small Python console game into C++ and use it as the last transition exercise before entering the main `C++ Level 1` path.",
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/solution"
-				},
-				{
-					title: "C++ Console Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "PTJ5 C++-Specific Adaptation",
-						itemTitle: "C++ Console Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-10-ptj5-cpp-specific-adaptation-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-10-ptj5-cpp-specific-adaptation-supplemental-2/solution"
-				},
-				{
-					title: "C++ Vector Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "PTJ5 C++-Specific Adaptation",
-						itemTitle: "C++ Vector Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-11-ptj5-cpp-specific-adaptation-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-11-ptj5-cpp-specific-adaptation-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "Language Bridge Lab 11: Compile-Run Comparison Studio",
-			curriculum: [
-				{
-					title: "Language Bridge Lab 11: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 11: Compile-Run Comparison Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "Language Bridge Lab 11: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 11: Compile-Run Comparison Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "Language Bridge Lab 11: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 11: Compile-Run Comparison Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-01-language-bridge-lab-11/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-01-language-bridge-lab-11/solution"
-				},
-				{
-					title: "Language Bridge Lab 11: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 11: Compile-Run Comparison Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Language Bridge Lab 11: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 11: Compile-Run Comparison Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-01-language-bridge-lab-11/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-01-language-bridge-lab-11/solution"
-				},
-				{
-					title: "Compile-Run Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 11: Compile-Run Comparison Studio",
-						itemTitle: "Compile-Run Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-12-applied-studio-7-language-bridge-lab-11-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-12-applied-studio-7-language-bridge-lab-11-supplemental-2/solution"
-				},
-				{
-					title: "Compile-Run Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 11: Compile-Run Comparison Studio",
-						itemTitle: "Compile-Run Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-13-applied-studio-7-language-bridge-lab-11-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-13-applied-studio-7-language-bridge-lab-11-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "Language Bridge Lab 12: Type Signature Translation Studio",
-			curriculum: [
-				{
-					title: "Language Bridge Lab 12: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 12: Type Signature Translation Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "Language Bridge Lab 12: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 12: Type Signature Translation Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "Language Bridge Lab 12: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 12: Type Signature Translation Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-02-language-bridge-lab-12/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-02-language-bridge-lab-12/solution"
-				},
-				{
-					title: "Language Bridge Lab 12: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 12: Type Signature Translation Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Language Bridge Lab 12: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 12: Type Signature Translation Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-02-language-bridge-lab-12/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-02-language-bridge-lab-12/solution"
-				},
-				{
-					title: "Type Signature Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 12: Type Signature Translation Studio",
-						itemTitle: "Type Signature Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-14-applied-studio-8-language-bridge-lab-12-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-14-applied-studio-8-language-bridge-lab-12-supplemental-2/solution"
-				},
-				{
-					title: "Type Signature Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 12: Type Signature Translation Studio",
-						itemTitle: "Type Signature Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-15-applied-studio-8-language-bridge-lab-12-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-15-applied-studio-8-language-bridge-lab-12-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "Language Bridge Lab 13: Collection Porting Studio",
-			curriculum: [
-				{
-					title: "Language Bridge Lab 13: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 13: Collection Porting Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "Language Bridge Lab 13: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 13: Collection Porting Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "Language Bridge Lab 13: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 13: Collection Porting Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-03-language-bridge-lab-13/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-03-language-bridge-lab-13/solution"
-				},
-				{
-					title: "Language Bridge Lab 13: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 13: Collection Porting Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Language Bridge Lab 13: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 13: Collection Porting Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-03-language-bridge-lab-13/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-03-language-bridge-lab-13/solution"
-				},
-				{
-					title: "Collection Porting Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 13: Collection Porting Studio",
-						itemTitle: "Collection Porting Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-16-applied-studio-9-language-bridge-lab-13-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-16-applied-studio-9-language-bridge-lab-13-supplemental-2/solution"
-				},
-				{
-					title: "Collection Porting Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 13: Collection Porting Studio",
-						itemTitle: "Collection Porting Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-17-applied-studio-9-language-bridge-lab-13-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-17-applied-studio-9-language-bridge-lab-13-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "Language Bridge Lab 14: Class Model Translation Studio",
-			curriculum: [
-				{
-					title: "Language Bridge Lab 14: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 14: Class Model Translation Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "Language Bridge Lab 14: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 14: Class Model Translation Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "Language Bridge Lab 14: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 14: Class Model Translation Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-04-language-bridge-lab-14/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-04-language-bridge-lab-14/solution"
-				},
-				{
-					title: "Language Bridge Lab 14: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 14: Class Model Translation Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Language Bridge Lab 14: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 14: Class Model Translation Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-04-language-bridge-lab-14/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-04-language-bridge-lab-14/solution"
-				},
-				{
-					title: "Class Model Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 14: Class Model Translation Studio",
-						itemTitle: "Class Model Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-18-applied-studio-10-language-bridge-lab-14-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-18-applied-studio-10-language-bridge-lab-14-supplemental-2/solution"
-				},
-				{
-					title: "Class Model Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 14: Class Model Translation Studio",
-						itemTitle: "Class Model Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-19-applied-studio-10-language-bridge-lab-14-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-19-applied-studio-10-language-bridge-lab-14-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "Language Bridge Lab 15: Java Console Adaptation Studio",
-			curriculum: [
-				{
-					title: "Language Bridge Lab 15: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 15: Java Console Adaptation Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "Language Bridge Lab 15: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 15: Java Console Adaptation Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "Language Bridge Lab 15: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 15: Java Console Adaptation Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-05-language-bridge-lab-15/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-05-language-bridge-lab-15/solution"
-				},
-				{
-					title: "Language Bridge Lab 15: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 15: Java Console Adaptation Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Language Bridge Lab 15: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 15: Java Console Adaptation Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-05-language-bridge-lab-15/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-05-language-bridge-lab-15/solution"
-				},
-				{
-					title: "Java Console Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 15: Java Console Adaptation Studio",
-						itemTitle: "Java Console Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-20-applied-studio-11-language-bridge-lab-15-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-20-applied-studio-11-language-bridge-lab-15-supplemental-2/solution"
-				},
-				{
-					title: "Java Console Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 15: Java Console Adaptation Studio",
-						itemTitle: "Java Console Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-21-applied-studio-11-language-bridge-lab-15-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-21-applied-studio-11-language-bridge-lab-15-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "Language Bridge Lab 16: C++ Console Adaptation Studio",
-			curriculum: [
-				{
-					title: "Language Bridge Lab 16: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 16: C++ Console Adaptation Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "Language Bridge Lab 16: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 16: C++ Console Adaptation Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "Language Bridge Lab 16: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 16: C++ Console Adaptation Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-06-language-bridge-lab-16/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-06-language-bridge-lab-16/solution"
-				},
-				{
-					title: "Language Bridge Lab 16: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 16: C++ Console Adaptation Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Language Bridge Lab 16: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 16: C++ Console Adaptation Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-06-language-bridge-lab-16/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-06-language-bridge-lab-16/solution"
-				},
-				{
-					title: "C++ Console Adaptation Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 16: C++ Console Adaptation Studio",
-						itemTitle: "C++ Console Adaptation Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-22-applied-studio-12-language-bridge-lab-16-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-22-applied-studio-12-language-bridge-lab-16-supplemental-2/solution"
-				},
-				{
-					title: "C++ Console Adaptation Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 16: C++ Console Adaptation Studio",
-						itemTitle: "C++ Console Adaptation Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-23-applied-studio-12-language-bridge-lab-16-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-23-applied-studio-12-language-bridge-lab-16-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "Language Bridge Lab 17: Bridge Capstone Port Studio",
-			curriculum: [
-				{
-					title: "Language Bridge Lab 17: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 17: Bridge Capstone Port Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "Language Bridge Lab 17: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 17: Bridge Capstone Port Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "Language Bridge Lab 17: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 17: Bridge Capstone Port Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-07-language-bridge-lab-17/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-07-language-bridge-lab-17/solution"
-				},
-				{
-					title: "Language Bridge Lab 17: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 17: Bridge Capstone Port Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Language Bridge Lab 17: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle:
-							"Language Bridge Lab 17: Bridge Capstone Port Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-07-language-bridge-lab-17/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-07-language-bridge-lab-17/solution"
-				},
-				{
-					title: "Bridge Capstone Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 17: Bridge Capstone Port Studio",
-						itemTitle: "Bridge Capstone Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-24-applied-studio-13-language-bridge-lab-17-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-24-applied-studio-13-language-bridge-lab-17-supplemental-2/solution"
-				},
-				{
-					title: "Bridge Capstone Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle:
-							"Language Bridge Lab 17: Bridge Capstone Port Studio",
-						itemTitle: "Bridge Capstone Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-25-applied-studio-13-language-bridge-lab-17-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-25-applied-studio-13-language-bridge-lab-17-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "Graphics Translation Studio",
-			curriculum: [
-				{
-					title: "Graphics Translation Studio: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Graphics Translation Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "Graphics Translation Studio: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Graphics Translation Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "Graphics Translation Studio: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Graphics Translation Studio",
-						section: "coreProject",
-						hasReference: false
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/graphics"
-				},
-				{
-					title: "Graphics Translation Studio: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Graphics Translation Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Graphics Translation Studio: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Graphics Translation Studio",
-						section: "extension",
-						hasReference: false
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/graphics"
-				},
-				{
-					title: "Graphics Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "Graphics Translation Studio",
-						itemTitle: "Graphics Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-26-applied-studio-14-graphics-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-26-applied-studio-14-graphics-supplemental-2/solution"
-				},
-				{
-					title: "Graphics Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "Graphics Translation Studio",
-						itemTitle: "Graphics Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-27-applied-studio-14-graphics-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-27-applied-studio-14-graphics-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "C++ Console Practice Studio",
-			curriculum: [
-				{
-					title: "C++ Console Practice Studio: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C++ Console Practice Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "C++ Console Practice Studio: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C++ Console Practice Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "C++ Console Practice Studio: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C++ Console Practice Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/solution"
-				},
-				{
-					title: "C++ Console Practice Studio: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C++ Console Practice Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "C++ Console Practice Studio: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C++ Console Practice Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/solution"
-				},
-				{
-					title: "C++ Console Practice Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "C++ Console Practice Studio",
-						itemTitle: "C++ Console Practice Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-28-applied-studio-15-cpp-practice-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-28-applied-studio-15-cpp-practice-supplemental-2/solution"
-				},
-				{
-					title: "C++ Console Practice Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "C++ Console Practice Studio",
-						itemTitle: "C++ Console Practice Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-29-applied-studio-15-cpp-practice-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-29-applied-studio-15-cpp-practice-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "Java Foundations Transfer Studio",
-			curriculum: [
-				{
-					title: "Java Foundations Transfer Studio: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Java Foundations Transfer Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "Java Foundations Transfer Studio: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Java Foundations Transfer Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "Java Foundations Transfer Studio: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Java Foundations Transfer Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-01-java-foundations-build-12/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-01-java-foundations-build-12/solution"
-				},
-				{
-					title: "Java Foundations Transfer Studio: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Java Foundations Transfer Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "Java Foundations Transfer Studio: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "Java Foundations Transfer Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-01-java-foundations-build-12/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Java-Level-1/tree/main/J1-01-java-foundations-build-12/solution"
-				},
-				{
-					title: "Java Foundations Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "Java Foundations Transfer Studio",
-						itemTitle: "Java Foundations Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-30-applied-studio-16-j1x01-java-foundations-build-12-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-30-applied-studio-16-j1x01-java-foundations-build-12-supplemental-2/solution"
-				},
-				{
-					title: "Java Foundations Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "Java Foundations Transfer Studio",
-						itemTitle: "Java Foundations Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-31-applied-studio-16-j1x01-java-foundations-build-12-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-31-applied-studio-16-j1x01-java-foundations-build-12-supplemental-3/solution"
-				}
-			]
-		},
-		{
-			title: "C Foundations Transfer Studio",
-			curriculum: [
-				{
-					title: "C Foundations Transfer Studio: Core Concepts",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C Foundations Transfer Studio",
-						section: "concepts"
-					})
-				},
-				{
-					title: "C Foundations Transfer Studio: Guided Example",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C Foundations Transfer Studio",
-						section: "example"
-					})
-				},
-				{
-					title: "C Foundations Transfer Studio: Core Project",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C Foundations Transfer Studio",
-						section: "coreProject"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/C-Level-1-C-Fundamentals/tree/main/CF-01-c-foundations-build-13/starter",
-					solutionLink:
-						"https://github.com/instruction-material/C-Level-1-C-Fundamentals/tree/main/CF-01-c-foundations-build-13/solution"
-				},
-				{
-					title: "C Foundations Transfer Studio: Review and Reflection",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C Foundations Transfer Studio",
-						section: "review"
-					})
-				}
-			],
-			supplementalProjects: [
-				{
-					title: "C Foundations Transfer Studio: Extension Challenge",
-					content: buildImplementationLabGuidance({
-						courseFamily: "language bridge",
-						moduleTitle: "C Foundations Transfer Studio",
-						section: "extension"
-					}),
-					projectLink:
-						"https://github.com/instruction-material/C-Level-1-C-Fundamentals/tree/main/CF-01-c-foundations-build-13/starter",
-					solutionLink:
-						"https://github.com/instruction-material/C-Level-1-C-Fundamentals/tree/main/CF-01-c-foundations-build-13/solution"
-				},
-				{
-					title: "C Foundations Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "C Foundations Transfer Studio",
-						itemTitle: "C Foundations Transfer Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-32-applied-studio-17-c-foundations-build-13-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-32-applied-studio-17-c-foundations-build-13-supplemental-2/solution"
-				},
-				{
-					title: "C Foundations Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "Java/C++ bridge",
-						moduleTitle: "C Foundations Transfer Studio",
-						itemTitle: "C Foundations Extension Practice",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-33-applied-studio-17-c-foundations-build-13-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/BRG-33-applied-studio-17-c-foundations-build-13-supplemental-3/solution"
-				}
-			]
-		}
-	]
-};
+const BRIDGE_SOURCE_BASE =
+	"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main";
 
 interface BridgeModuleFlow {
 	estimatedTime: string;
 	flowNote: string;
 	keyBlocks: string[];
 }
-
-const BRIDGE_TEACHING_ORDER = [
-	"PTJ0 Positioning and Workflow Translation",
-	"PTJ1 Functions, Parameters, and Return Types",
-	"PTJ2 Collections, Strings, and Indexing",
-	"PTJ3 Classes and Objects across Languages",
-	"PTJ4 Java-Specific Adaptation",
-	"PTJ5 C++-Specific Adaptation",
-	"Language Bridge Lab 17: Bridge Capstone Port Studio"
-] as const;
 
 const BRIDGE_BRANCH_MODULES = new Set([
 	"PTJ4 Java-Specific Adaptation",
@@ -1563,166 +102,293 @@ const BRIDGE_MODULE_FLOW: Record<string, BridgeModuleFlow> = {
 	}
 };
 
-function bridgeSupplementalPath(title: string) {
-	return /extension|transfer practice/i.test(title)
-		? ("challenge" as const)
-		: ("choice" as const);
+const BRIDGE_PROJECT_FOLDERS = {
+	syntax: "PTJ1-Syntax-Translation-Warmup",
+	functions: "PTJ2-Function-Port-Pack",
+	collections: "PTJ3-Text-and-Collection-Port-Lab",
+	classes: "PTJ4-Shared-Class-Port",
+	java: "PTJ5-Python-to-Java-Quiz-Game",
+	cpp: "PTJ6-Python-to-CPP-Console-Port",
+	capstone: "PTJ7-Task-Tracker-Capstone"
+} as const;
+
+type BridgeProject = keyof typeof bridgeProjectBriefs;
+
+function projectChoice(
+	project: BridgeProject,
+	title: string,
+	language: "java" | "cpp"
+): RawCourseModuleItem {
+	const folder = BRIDGE_PROJECT_FOLDERS[project];
+	const branch =
+		project === "java" || project === "cpp" ? "" : `/${language}`;
+	const label = language === "java" ? "Java" : "C++";
+	return {
+		title: `${title}: ${label} Starter`,
+		learningPath: "choice",
+		content: `Choose this ${label} starter to complete the shared project above. Only one target is required. The IDE button opens a confirmation before downloading this language’s source and complete README; it imports the starter, not the separate reference. Keep all files together, save and download the project ZIP, then extract and compile it with the README’s native commands. ${language === "java" ? "Use JDK 21; the Java browser runner is a limited preview and native compilation is the completion gate." : "Use a C++17 compiler; the source workspace does not execute C++ in the browser."} Compare the separate ${label} reference after a working draft and fixture record.`,
+		projectLink: `${BRIDGE_SOURCE_BASE}/${folder}/starter${branch}`,
+		solutionLink: `${BRIDGE_SOURCE_BASE}/${folder}/solution${branch}`
+	};
 }
 
-function decorateBridgeModule(
-	module: RawCourse["modules"][number]
-): RawCourse["modules"][number] {
-	const flow = BRIDGE_MODULE_FLOW[module.title];
-	const isBranch = BRIDGE_BRANCH_MODULES.has(module.title);
-	const curriculumPath = isBranch ? ("choice" as const) : ("core" as const);
-	const authoredProjectIndex = module.supplementalProjects.findIndex(item =>
-		item.title.startsWith("Project:")
+function bridgeModule(
+	title: string,
+	lessons: [string, string][],
+	projectTitle: string,
+	project: BridgeProject,
+	extension: [string, string]
+): RawCourseModule {
+	const isBranch = BRIDGE_BRANCH_MODULES.has(title);
+	const path = isBranch ? ("choice" as const) : ("core" as const);
+	const flow = BRIDGE_MODULE_FLOW[title];
+	const curriculum: RawCourseModuleItem[] = lessons.map(
+		([lessonTitle, content], index) => ({
+			title: lessonTitle,
+			content:
+				index === 0
+					? `**Course flow:** ${flow.flowNote}\n\n${content}`
+					: content,
+			learningPath: path
+		})
 	);
-	const authoredProject =
-		authoredProjectIndex >= 0
-			? module.supplementalProjects[authoredProjectIndex]
-			: undefined;
-	const curriculumSource = authoredProject
-		? module.curriculum.filter(
-				item => !item.title.endsWith(": Core Project")
-			)
-		: module.curriculum;
-	const curriculum = curriculumSource.map((item, index) => ({
-		...item,
-		content:
-			index === 0 && flow
-				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
-				: item.content,
-		learningPath: curriculumPath
-	}));
-
-	if (authoredProject) {
-		curriculum.push({
-			...authoredProject,
-			learningPath: curriculumPath
-		});
+	const projectItem: RawCourseModuleItem = {
+		title: projectTitle,
+		learningPath: path,
+		content: `Complete this project in the chosen target language. Read the supplied Python behavior and contract, predict the fixtures, then use the matching starter choice. Only one target is required.\n\n${bridgeProjectBriefs[project]}`
+	};
+	const choices =
+		project === "java" || project === "cpp"
+			? []
+			: [
+					projectChoice(project, projectTitle, "java"),
+					projectChoice(project, projectTitle, "cpp")
+				];
+	if (project === "java" || project === "cpp") {
+		const choice = projectChoice(project, projectTitle, project);
+		projectItem.projectLink = choice.projectLink;
+		projectItem.solutionLink = choice.solutionLink;
 	}
-
-	if (module.title === "PTJ0 Positioning and Workflow Translation") {
-		curriculum.push({
-			title: "Python Readiness and Toolchain Checkpoint",
-			content: [
-				"**Completion evidence:**",
-				"- One short Python reference program that uses variables, a condition, a loop, a function, and a small object or record.",
-				"- A successful hello-world compile and run in at least one target language, with the exact command or browser workflow recorded.",
-				"- A side-by-side syntax map for assignment, condition, loop, function signature, output, and block boundaries.",
-				"- A branch decision naming Java or C++ as the first target; installing or completing both toolchains is not required."
-			].join("\n"),
-			learningPath: "core"
-		});
-	}
-
-	if (module.title === "PTJ3 Classes and Objects across Languages") {
-		curriculum.push({
-			title: "Choose a Java or C++ Exit Branch",
-			content: [
-				"**Completion evidence:**",
-				"- Selected Java or C++ branch with the next course or project named.",
-				"- One reason the branch matches the learner's goal.",
-				"- A checklist for the branch project and capstone.",
-				"- The unselected branch is labeled optional rather than unfinished required work."
-			].join("\n"),
-			learningPath: "core"
-		});
-	}
-
-	if (
-		module.title === "Language Bridge Lab 17: Bridge Capstone Port Studio"
-	) {
-		curriculum.push({
-			title: "Chosen-Language Capstone Contract",
-			content: [
-				"**Completion evidence:**",
-				"- Python reference behavior and selected Java or C++ target.",
-				"- Shared fixtures covering ordinary, boundary, and invalid-input behavior when applicable.",
-				"- Target-language implementation with build and run instructions.",
-				"- Comparison record naming one syntax difference, one runtime or type difference, one diagnosed failure, and the next-course readiness decision."
-			].join("\n"),
-			learningPath: "core"
-		});
-	}
-
+	curriculum.push(projectItem, ...choices);
 	return {
-		...module,
+		title,
 		...(isBranch ? { kind: "transition" as const } : {}),
-		estimatedTime: flow?.estimatedTime,
-		keyBlocks: flow?.keyBlocks,
+		estimatedTime: flow.estimatedTime,
+		keyBlocks: flow.keyBlocks,
 		curriculum,
-		supplementalProjects: module.supplementalProjects
-			.filter((_, index) => index !== authoredProjectIndex)
-			.map(item => ({
-				...item,
-				learningPath: bridgeSupplementalPath(item.title)
-			}))
-	};
-}
-
-function createBridgeArchive(
-	modules: RawCourse["modules"]
-): RawCourse["modules"][number] {
-	return {
-		kind: "appendix",
-		title: "Optional Transfer Studio Archive",
-		estimatedTime:
-			"Optional · select only the studio that matches a later goal",
-		keyBlocks: [
-			"targeted transfer",
-			"guided example",
-			"starter project",
-			"verification",
-			"extension"
-		],
-		curriculum: [
+		supplementalProjects: [
 			{
-				title: "How to Use the Transfer Studio Archive",
-				content: [
-					"These studios preserve every prior bridge lab and cross-course transfer project without placing duplicate work in the required sequence.",
-					"Choose a studio only after the shared bridge, one language branch, and the capstone are complete, or when a specific later course calls for that transfer.",
-					"Archived studios:",
-					...modules.map(module => `- ${module.title}`)
-				].join("\n"),
-				learningPath: "choice"
+				title: extension[0],
+				content: extension[1],
+				learningPath: "challenge"
 			}
-		],
-		supplementalProjects: modules.flatMap(module => [
-			...module.curriculum.map(item => ({
-				...item,
-				learningPath: "choice" as const
-			})),
-			...module.supplementalProjects.map(item => ({
-				...item,
-				learningPath: bridgeSupplementalPath(item.title)
-			}))
-		])
+		]
 	};
 }
-
-const bridgeModulesByTitle = new Map(
-	pythonToJavaAndCppBridgeSourceCourse.modules.map(module => [
-		module.title,
-		module
-	])
-);
-const bridgeTeachingModules = BRIDGE_TEACHING_ORDER.map(title => {
-	const module = bridgeModulesByTitle.get(title);
-	if (!module) throw new Error(`Missing bridge module: ${title}`);
-	return decorateBridgeModule(module);
-});
-const bridgeTeachingTitleSet = new Set<string>(BRIDGE_TEACHING_ORDER);
-const bridgeArchiveModules =
-	pythonToJavaAndCppBridgeSourceCourse.modules.filter(
-		module => !bridgeTeachingTitleSet.has(module.title)
-	);
 
 export const pythonToJavaAndCppBridgeCourse: RawCourse = {
-	...pythonToJavaAndCppBridgeSourceCourse,
+	name: "Python to Java and C++ Bridge",
 	modules: [
-		...bridgeTeachingModules,
-		createBridgeArchive(bridgeArchiveModules)
+		bridgeModule(
+			"PTJ0 Positioning and Workflow Translation",
+			[
+				[
+					"Why Typed Languages Feel Harder at First",
+					"This bridge assumes Python variables, conditions, loops, functions, lists and simple objects. The existing algorithm remains useful: a port preserves its promised inputs, outputs and state changes while adapting types, syntax and files. Choose Java or C++ as the first target throughout the four shared stages, then complete that language’s exit and capstone. The other target is an optional extension. This authored transition course prepares an experienced Python learner for the main Java or C++ sequence; it does not replace either full introductory course. Start each exercise by predicting the Python result, mapping its data and control flow, and only then editing the target starter. During a facilitated session, explain the prediction and one type decision before running."
+				],
+				[
+					"Compiled vs. Interpreted Workflows",
+					"Python runs a script with `python3 file.py`. A native Java workflow compiles source with JDK 21 using `javac *.java`, then runs the class with `java Main`; use `Main`, without `.java` or `.class`, in the run command. A native C++17 workflow compiles all source files with `c++ -std=c++17 -Wall -Wextra -pedantic -I. *.cpp -o bridge`, then runs `./bridge`. Open a starter with the site’s matching IDE button, confirm the import, read its README and preserve all files. Save and download a project ZIP, extract it, then use the documented native commands. The Java browser runner is a limited preview, so native Java is the authoritative workflow for these projects, especially the class port and capstone. C++ uses native compilation. Importing does not execute code. A compiler error prevents execution; a runtime error occurs after a successful build. Fix the first relevant diagnostic before investigating later messages."
+				],
+				[
+					"Blocks, Braces, and Signatures",
+					"Python uses indentation to group a block. Java and C++ use `{` and `}`; indentation still makes the nesting readable, and most simple statements end in `;`. A Python assignment can bind a name to another kind of object later. A typed declaration such as `int count = 3;` fixes that variable’s declared type. Java writes Boolean values as `boolean`; C++ uses `bool`. Java methods belong to a class; the supplied `static` helpers can be called without constructing an object. C++ free functions can appear outside a class. Both languages declare a return type and parameter types before the body. For a tiny condition or loop, mark the opening and closing block, trace the same values as Python, and predict which statement runs next. Avoid changing the algorithm while resolving the syntax."
+				],
+				[
+					"What Transfers Cleanly from Python",
+					"Decomposition, conditions, iteration and object state transfer across all three languages. Library spelling and numeric behavior may differ. Python integers can grow; Java `int` has a fixed 32-bit range, and native C++ `int` width depends on its implementation. Integer division in Java/C++ discards the fractional part toward zero; Python `/` returns a floating-point result and `//` floors. Strings and collections also have different APIs and representations. A port therefore needs an explicit input domain and shared fixtures, rather than a visual resemblance between source files. For the warmup, use the provided ASCII strings and bounded integer cases, including the documented minimum-integer rejection. Record a predicted result, actual result and explanation for each case. Compare returned values rather than incidental collection-printing styles."
+				],
+				[
+					"Project: Starter Source Review",
+					"Read the chosen warmup starter’s declarations and README before implementing it. Identify the supplied driver, the unfinished callable methods, parameter types, return types, and the native compile/run command. Explain why the starter can compile while still stopping at an implementation reminder. This is a reading checkpoint within the warmup, not another project or another import. Keep learner changes in the starter and consult its separate target-language reference after a working draft."
+				],
+				[
+					"Python Readiness and Toolchain Checkpoint",
+					"**Completion evidence:**\n- Predict the supplied Python helper results and explain a condition, loop, function and simple object.\n- Compile and run hello world in the chosen native target; record the exact command and output.\n- Map assignment, condition, loop, function, output and block syntax.\n- Name Java or C++ as the first target. Only one toolchain and one target implementation are required. If a prerequisite is unfamiliar, practise it in Python before starting the port."
+				]
+			],
+			"Project: Syntax Translation Warmup",
+			"syntax",
+			[
+				"Workflow Translation Extension Practice",
+				"After a working warmup, port it into the second target and compare the same fixtures. Record the declaration, block and compile/run differences. Reuse the matching starter choice above; this is an optional second-target comparison of the same contract, not another required warmup."
+			]
+		),
+		bridgeModule(
+			"PTJ1 Functions, Parameters, and Return Types",
+			[
+				[
+					"From def to Method Signatures",
+					"A signature states the callable name, input types and output type. Python can discover an incompatible argument while executing; Java and C++ reject many incompatible calls during compilation. Read the provided helper declarations before changing a body. A Java `static` method belongs to its class without requiring an instance; a C++ free function is callable outside a class. `boolean`/`bool` represents the membership flag, `double` represents the price, and integer helpers return `int`. Preserve the original names and parameter order so the supplied driver and checks still call the same API. Use the Python baseline to decide the behavior of each input. The signature alone does not decide whether an amount may be negative, which letters count as vowels, or which boundary is inclusive; those promises are in the contract."
+				],
+				[
+					"Void, Value Returns, and Compile-Time Mismatches",
+					"A value-returning function must produce its promised type on every reachable path. `void` describes a function with no returned value; it does not match a helper whose caller uses a computed score, price or count. `return` ends the current call, so a branch placed after it will not execute. Before compiling, trace every condition to confirm a result is produced. A missing return or incompatible type is a compiler diagnostic; a wrong clamp boundary can compile and still fail a behavior check. Floating-point arithmetic stores approximations, so compare price results with a small stated tolerance rather than assuming every decimal has an exact representation. The shared price inputs are finite, non-negative doubles. Keep the contract’s domain visible rather than adding unrelated input policies during translation."
+				],
+				[
+					"Reading Compiler Feedback Productively",
+					"Compiler errors are structured feedback rather than evidence that the language is hostile. Start at the first error’s file and line, inspect the named expression and the preceding statement, then compare its type or punctuation with the declaration. A missing brace or semicolon can cause many later errors; fix one cause and rebuild before changing unrelated lines. Preserve the diagnostic and explain what changed. After a successful build, run ordinary and boundary cases independently of the demonstration driver. For the function pack, predict scores below/at/above the clamp limits, both membership values, empty text and repeated uppercase/lowercase vowels. Confirm the inputs remain unchanged. During a facilitated walkthrough, explain the failing trace and propose the smallest correction; independent study uses the same prediction-and-check record."
+				],
+				[
+					"Functions, Parameters, and Return Types: Verification and Reflection",
+					"Make a fixture table with input, predicted output, actual output and pass/fail. Cover each helper, integer extremes where supported, a zero price, both membership values, and ASCII text with no vowels, repeated vowels and punctuation. Record the floating-point tolerance. Keep at least one corrected compiler diagnostic and one corrected behavior mismatch, with their causes. Explain which checks concern types and which concern the algorithm. Completion requires the chosen target’s full callable contract, not only the supplied sample output."
+				]
+			],
+			"Project: Function Port Pack",
+			"functions",
+			[
+				"Function Signature Transfer Practice",
+				"After the function pack passes, write a type map for each parameter and return value in the other target without reading its reference. Predict a missing-return diagnostic and a wrong-argument-type diagnostic, then verify them in a small disposable example. Keep the original project behavior unchanged."
+			]
+		),
+		bridgeModule(
+			"PTJ2 Collections, Strings, and Indexing",
+			[
+				[
+					"Lists vs. Arrays, ArrayLists, and Vectors",
+					"Python lists grow dynamically. A Java array has a fixed length after creation and uses `.length`; `ArrayList` grows and uses `.size()`, `.get(index)` and `.add(value)`. A C++ `vector` grows, uses `.size()` and `.push_back(value)`, and provides indexed access or range iteration. The collection pack accepts Java `List<String>` or C++ `const vector<string>&`. Java’s supplied `List.of(...)` is unmodifiable, so build a new result instead of adding to the input. A C++ const reference borrows the vector without copying it and prevents mutation through that reference. The port must preserve input order and duplicates. Draw the input and result as separate collections, then trace which words are retained. A loop that visits each value directly avoids unnecessary index arithmetic."
+				],
+				[
+					"String APIs and Slice Replacement",
+					"Python slicing uses an excluded end index. Java `substring(start, end)` also excludes the end; C++ `substr(start, count)` takes a character count instead of an end index. For the first two ASCII characters of `bridge`, Java `substring(0, 2)` and C++ `substr(0, 2)` both produce `br`. For a middle range, convert the Python end into `end - start` for C++. Java strings are immutable, while C++ strings have mutable operations; assigning a new string result is distinct from changing a collection. Java string length counts UTF-16 code units and C++ string size counts bytes. Neither is a general Unicode user-perceived character count. The shared assignment deliberately uses ASCII fixtures. Explain that limit before generalizing the algorithm to names or multilingual text."
+				],
+				[
+					"Bounds and Loop Discipline",
+					"Valid indexes run from zero through size minus one. An empty collection has no valid element index, so a loop guard must prevent reading element zero when the size is zero. For an indexed loop, use a strict less-than end condition; a range loop can avoid manual bounds entirely. Before implementing the collection helpers, trace lengths four, five and six to determine the inclusive filter boundary. Trace two equally long words to preserve the first longest match, and retain repeated qualifying words in their original positions. A new result must not alias a mutable input list. Check the original input after calling each helper and test the empty case separately. Compare returned elements, since Java and C++ drivers intentionally print collections differently."
+				],
+				[
+					"Collections, Strings, and Indexing: Verification and Reflection",
+					"Verify empty and single-word inputs, lengths around the filter threshold, all-short lists, duplicates and equal-length ties. Record the ordered returned elements and confirm the input is unchanged. Explain the difference between fixed arrays and growing collections, the slice endpoint/count distinction, and the ASCII limitation. During a session, pause after each loop iteration to predict the partial result; independently, write the same trace before execution. Completion requires both helpers in one chosen target and evidence for boundaries, order and non-mutation."
+				]
+			],
+			"Project: Text and Collection Port Lab",
+			"collections",
+			[
+				"Collection Indexing Transfer Practice",
+				"Trace the same collection fixture once with a range loop and once with indexes in the chosen target. Preserve order, duplicates, the first longest tie and unchanged input. Explain which version makes the bounds easier to verify. This optional refactor reuses the completed collection project."
+			]
+		),
+		bridgeModule(
+			"PTJ3 Classes and Objects across Languages",
+			[
+				[
+					"What Stays the Same in OOP",
+					"An object combines state with operations that preserve a contract. The account port stores an owner and balance, validates construction, and exposes deposit, withdrawal and summary operations. Draw the balance before and after each call; rejected operations must leave it unchanged. Encapsulation keeps direct balance changes out of callers so the account can enforce its rules consistently. Python, Java and C++ express the same model differently, but validation order and state preservation remain behavior requirements. This teaching example uses finite doubles; production monetary software needs an explicit exact representation. The sample does not establish a production finance design. Start with construction and one valid operation, then rejection cases, before adding formatted output."
+				],
+				[
+					"Java Class Structure",
+					"A Java public class belongs in the file matching its name: `BankAccount` in `BankAccount.java`, and the supplied driver `Main` in `Main.java`. A constructor has the class name and no declared return type; `new` constructs an instance. Private fields protect state, while public methods form the callable interface. `this` names the current instance when a field and parameter have the same name. Compile both files together before running `java Main`. Java object variables hold references: assigning `second = first` makes both variables refer to the same account, so a change through one is visible through the other. A separate `new` account has separate state. Explain this with a two-variable diagram and a small prediction before execution."
+				],
+				[
+					"C++ Class Structure and Header/Source Separation",
+					"The C++ header declares the class, its fields and public signatures. The implementation `.cpp` defines those methods with `BankAccount::methodName`; the driver `.cpp` calls them. Include the header where its declarations are needed, and compile both source files to provide the method definitions. Compiling only the driver can succeed at syntax checking and fail at linking because definitions are missing. A header guard prevents duplicate declarations within a translation unit. A C++ account variable here holds a value: an ordinary copy creates a separate account whose later balance changes do not change the original. This differs from Java reference assignment. Preserve all imported filenames and the header, use the supplied build command, and avoid adding raw pointers or manual allocation to this exercise."
+				],
+				[
+					"Classes and Objects across Languages: Verification and Reflection",
+					"Trace a successful deposit and withdrawal, full withdrawal to zero, an overdraft, zero/negative/non-finite amounts, invalid starting balance and deposit overflow. Compare the summary before and after each rejected operation. Verify exactly two decimal places and a decimal point independent of locale. Create independent accounts, then distinguish Java aliasing from C++ value copying in a separate check. A working sample is insufficient if a rejected transaction corrupts state. Completion evidence includes the chosen target’s files, native build/run commands, an unchanged-state trace and the object-model explanation."
+				],
+				[
+					"Choose a Java or C++ Exit Branch",
+					"**Completion evidence:**\n- Select the Java or C++ exit that matches the next course or project.\n- Record why it fits the learner’s goal and keep the same target for the capstone.\n- Complete that branch’s console project and the capstone checks.\n- The unselected branch is labeled optional; completing both is an extension, not a requirement."
+				]
+			],
+			"Project: Shared Class Port",
+			"classes",
+			[
+				"Header Source Extension Practice",
+				"For a completed C++ class port, build only the driver and inspect the missing-definition linker error, then restore the full build command. For Java, draw a reference-alias trace and compare it with a separate new account. Record the language-specific lesson without altering the account contract."
+			]
+		),
+		bridgeModule(
+			"PTJ4 Java-Specific Adaptation",
+			[
+				[
+					"Scanner, main, and Java Project Rhythm",
+					"The supplied `public static void main(String[] args)` is the entry point. `Scanner` reads console input; `hasNextLine()` tests availability before `nextLine()` consumes a complete line. A blank line is an answer containing no characters, while end of input means no further line exists. The quiz driver handles EOF by reporting cancellation and retaining the score already earned. Keep that input lifecycle and implement the scoring helper. Read the full native source contract before using the browser preview; native Java compilation and console fixtures are the completion gate. Test correct and incorrect answers, surrounding spaces, mixed case, blank lines and input ending after the first question. Predict the accumulated score after each accepted answer."
+				],
+				[
+					"String Equality and Reference Habits",
+					'Java String `==` compares reference identity; it does not ask whether two separate objects contain the same text. `.equals()` compares contents, and `.equalsIgnoreCase(...)` supports the quiz’s ASCII case-insensitive contract. `new String("class")` can contain the same text as another string while referring to a different object. A null reference names no object, so calling an instance method on null raises a runtime error. If null is allowed by a contract, test it before dereferencing or compare from a known non-null value. The quiz helper’s inputs are explicitly non-null ASCII strings; do not silently invent a null policy. Trimming surrounding whitespace and comparing text are separate operations. Explain which promise comes from the API and which comes from this assignment’s domain, then verify mixed case and surrounding spaces against the Python baseline.'
+				],
+				[
+					"Bridge Exit to Java Level 1",
+					"Finish the supplied quiz in native Java, preserving its prompts, two-question scoring and EOF behavior. Explain the helper’s typed signature, content equality and input lifecycle. Record a normal run, a wrong-answer run and an early cancellation with points preserved. The main Java sequence can then deepen classes, collections and larger applications according to its prerequisites; this bridge is a compact transition from existing Python knowledge. Use the task-tracker capstone next in the same language. The C++ branch remains an optional second-target comparison."
+				],
+				[
+					"Java Specific Adaptation: Verification and Reflection",
+					"Create the full fixture table from the project brief. Verify points stay between zero and two, empty input is distinguished from an empty line, and cancellation does not erase earned points. Record exact native commands, predicted and observed output, and one corrected String comparison mistake. Explain how `Scanner` and `main` adapt the Python workflow. A facilitated walkthrough pauses before reading a line and before changing the score; independent study writes those predictions in the record."
+				]
+			],
+			"Project: Python to Java Quiz Game",
+			"java",
+			[
+				"Java Scanner Transfer Practice",
+				"Using the completed quiz driver, predict a blank answer versus immediate EOF and EOF after one correct answer. Verify the output and explain why a line-availability check precedes reading. This optional input trace reuses the quiz; it does not require another scoring project."
+			]
+		),
+		bridgeModule(
+			"PTJ5 C++-Specific Adaptation",
+			[
+				[
+					"Includes, std, and Console Streams",
+					"C++ headers declare standard library facilities: `<iostream>` for console streams, `<string>` for strings and `<vector>` for vectors. Qualified names such as `std::cout` make their namespace visible. `cin >> guess` reads a whitespace-delimited token; it skips blank whitespace, and `vector compile` supplies two guesses. Python `input()` reads a full line, so translating its interface requires an explicit choice. This source pack deliberately uses token input; a line-based alternative would use `getline` and a changed contract. Check the stream result before scoring so EOF never reuses the previous guess. Build first, then run the executable with a known input fixture. The site workspace supports editing and download; it does not compile C++ in the browser."
+				],
+				[
+					"Vectors, References, and Pass-by-Value Intuition",
+					"A C++ value parameter copies its argument, while a reference parameter refers to an existing object. `const string&` and `const vector<string>&` permit reading without copying the whole input and prevent changes through that reference. These inputs must still be valid while the function uses them. A vector owns its elements and supports range iteration; no raw pointers or manual allocation are needed for this console exercise. The scoring helper tests exact case-sensitive membership and returns either zero or one. Duplicate secret words do not award multiple points for one guess. Repeated matching guesses across accepted rounds each earn a point. Keep those two situations distinct in the fixture table and confirm the input vector remains unchanged."
+				],
+				[
+					"Bridge Exit to C++ Level 1",
+					"Finish the native console port using the documented C++17 command, retain all supplied input handling, and verify three rounds plus early EOF. Explain includes, stream success/failure, vector iteration and const-reference parameters. Diagnose a compiler or linker message before changing behavior. The main C++ sequence can then deepen ownership, lifetime and larger programs according to its prerequisites; this bridge does not introduce pointer-heavy work. Complete the task-tracker capstone next in C++. The Java branch remains optional for a later second-target comparison."
+				],
+				[
+					"C++ Specific Adaptation: Verification and Reflection",
+					"Test exact membership, missing words, case changes, empty/duplicate secret lists, repeated accepted guesses, blank whitespace, immediate EOF and EOF after one match. The last case must score one rather than replaying the previous token. Record the accepted round count and unchanged input vector. Explain why token input differs from Python line input and document the actual native build/run command. Completion requires the whole fixture set and a corrected failure trace, not only a successful three-token sample."
+				]
+			],
+			"Project: Python to C++ Console Port",
+			"cpp",
+			[
+				"C++ Vector Extension Practice",
+				"Using the completed console port, test duplicated secrets and repeated guesses as separate fixtures, then verify non-mutation and EOF after one match. Explain why membership returns one point per accepted round. This optional trace reuses the console project rather than importing another pack."
+			]
+		),
+		bridgeModule(
+			"Language Bridge Lab 17: Bridge Capstone Port Studio",
+			[
+				[
+					"Language Bridge Lab 17: Core Concepts",
+					"The task tracker combines typed functions, ordered collections, encapsulated state, validation and a supplied console loop. Read the full contract before selecting the Java or C++ starter. A task’s ID is distinct from its current list position; removal must not recycle an ID or restore the lifetime add budget. Repeated titles are allowed. Model each operation as input, validation, state transition and output. A rejected operation must preserve the same tasks, flags, order and next ID. The list operation returns fresh data so callers cannot mutate the tracker through its result. Use the same chosen language as the exit project; the other target is optional."
+				],
+				[
+					"Language Bridge Lab 17: Guided Example",
+					"Predict the shared console fixture in the project brief without running it. Draw the state after every successful add, repeated completion, removal and final add. Keep a separate next-ID column rather than deriving it from collection size. Run the supplied Python baseline to check the prediction, then map its record and list representation to the provided target declarations. Implement normalization and one add first, test that a rejected add does not consume an ID, and then implement completion, removal, filtering and summary. The supplied command loop remains separate from the six learner methods. During a facilitated walkthrough, pause at each state change to predict the next output; independent study records the same trace."
+				],
+				[
+					"Language Bridge Lab 17: Review and Reflection",
+					"Compare the chosen port with Python using the shared ordinary, boundary and invalid-input fixtures. Record state before and after each rejected operation, verify fresh list results and independent trackers, and check the 100-successful-add lifetime boundary after a removal. Compile and run the real console protocol with LF/CRLF and EOF, including input after QUIT that must be ignored. Explain one syntax difference, one type or object-model difference and one diagnosed mismatch. Consult the separately linked target reference only after a working draft, and explain any revision rather than replacing the learner implementation."
+				],
+				[
+					"Chosen-Language Capstone Contract",
+					"**Completion evidence:**\n- One working Java or C++ task-tracker port of the supplied Python baseline.\n- Shared fixtures with predicted and actual output, including title/ID boundaries, ordering, repeated operations and the lifetime add limit.\n- State-preserving rejection and fresh-result evidence.\n- The exact native build/run commands and all required files.\n- A comparison record with a type/object difference, a diagnosed failure and the next-course readiness decision. The second target is optional."
+				]
+			],
+			"Language Bridge Lab 17: Core Project",
+			"capstone",
+			[
+				"Language Bridge Lab 17: Extension Challenge",
+				"After completing the capstone in one target, use the other target starter and preserve the same task and console contract. Compare Java reference aliasing with ordinary C++ value copying and explain how separate trackers keep separate state. A GUI, sorting or persistence needs a separate explicit behavior contract and is not required for bridge completion."
+			]
+		)
 	]
 };
