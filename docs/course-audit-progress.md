@@ -444,6 +444,27 @@ release delivery must verify the enabled policy before publication and confirm
 the individual release lock afterward. Live application activation remains a
 separate, unverified boundary.
 
+## C++ input foundations and native workspace workflow
+
+[Site PR #133](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/133)
+integrated at `e51ad398f74545058f396165d682ffcb85f4a4af`, with a tree identical
+to reviewed head `70d99e122aac8b85eb333249c2d6ad8516fefd6d`. It provides the
+original five required input/loop projects as incomplete starters with separate
+references and complete briefs, preserving lesson order and progress aliases.
+The displayed lessons retain all four complete code examples.
+
+The actual saved project key includes a colon after the course ID. Its native
+instruction lookup now recognizes that format and displays C++20 for Level 1,
+with similar non-Level-1 names excluded. Learner exports retain the documented
+warning flags; supplied examples and reviewed references use warnings as errors.
+Full [reviewed-head CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37372837436)
+and CodeQL passed, including twelve bridge/foundation confirmation, editing,
+saving, exact export, reopening and native compilation workflows and all four
+lesson console fixtures. Mad Libs and Chat Bot mobile screenshots and the Number
+Games desktop workspace were visually inspected. Qodana skipped its unconfigured
+scan; that workflow success is not an analysis result. Independent integrated-main
+checks, release provenance and downstream delivery remain separate gates.
+
 ## C++ functions, probability and guessing contracts
 
 [Source PR #3](https://github.com/instruction-material/CPP-Level-1/pull/3)
