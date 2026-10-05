@@ -307,7 +307,9 @@ nodeTest("published bridge and C++ foundation starters confirm, edit, save, expo
 				expectedFiles["src/workflow.cpp"] = "// Add C++ function or class definitions here.\n";
 			}
 			await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
-			await page.waitForFunction(mode => document.querySelector(".cm-content")?.textContent.includes(mode === "java" ? "public class Main" : "int main("), {}, mode);
+			// Supplied helpers can put main below the visible CodeMirror viewport.
+			const firstLine = files[entryFile].split("\n").find(line => line.trim());
+			await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
 			const edited = `${files[entryFile]}\n// Browser workflow edit\n`;
 			expectedFiles[entryFile] = edited;
