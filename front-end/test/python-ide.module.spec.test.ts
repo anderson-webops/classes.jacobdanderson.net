@@ -1654,7 +1654,7 @@ pgzrun.go()
 				"python-to-java-and-cpp-bridge",
 				"https://github.com/instruction-material/Python-to-Java-and-CPP-Bridge/tree/main/PTJ6-Python-to-CPP-Console-Port/starter"
 			)
-		).toBeNull();
+		).toBe("cpp");
 		expect(pythonIdeModeForCourseId("java-level-1")).toBe("karel");
 		expect(pythonIdeModeForCourseId("java-level-2")).toBe("java");
 		expect(pythonIdeModeForCourseId("ap-computer-science-a")).toBe("java");
@@ -4541,7 +4541,7 @@ pgzrun.go()
 		).toHaveLength(10);
 		expect(
 			ideStarters.filter(item => item.category === "Templates")
-		).toHaveLength(5);
+		).toHaveLength(6);
 		expect(pageSource).toContain("requestedClassroomProject");
 		expect(pageSource).toContain(
 			"addPythonIdeClassroomSections(loadedFiles)"

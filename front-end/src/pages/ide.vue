@@ -40,7 +40,7 @@ function choose(event: Event) {
 		<label class="ide-environment"
 			><span class="sr-only">Editor environment</span>
 			<select :value="scratch ? 'scratch' : 'code'" @change="choose">
-				<option value="code">Code: Python or Java</option>
+				<option value="code">Code: Python, Java or C++</option>
 				<option value="scratch">Scratch blocks</option>
 			</select>
 		</label>

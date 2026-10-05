@@ -304,7 +304,7 @@ describe("CourseExplorer.vue", () => {
 			courseId: "python-to-java-and-cpp-bridge",
 			folder: "PTJ6-Python-to-CPP-Console-Port/starter",
 			repo: "Python-to-Java-and-CPP-Bridge",
-			mode: null
+			mode: "cpp"
 		}
 	])(
 		"offers an appropriate starter workflow for $folder",

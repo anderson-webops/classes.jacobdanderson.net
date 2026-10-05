@@ -12,6 +12,13 @@ export interface IdeStarter {
 }
 export const ideStarters: IdeStarter[] = [
 	{
+		id: "cpp:course",
+		label: "C++ Console Source",
+		mode: "cpp",
+		template: "course",
+		category: "Templates"
+	},
+	{
 		id: "turtle:circle-art",
 		label: "Color Circle Art",
 		mode: "turtle",

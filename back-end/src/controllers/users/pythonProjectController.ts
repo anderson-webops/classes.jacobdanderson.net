@@ -24,6 +24,8 @@ const IMAGE_FILE_RE = /^images\/\w[\w.-]*\.(?:gif|jpe?g|png|svg|webp)$/i;
 const AUDIO_FILE_RE = /^(?:music|sounds)\/\w[\w.-]*\.(?:mp3|ogg|wav)$/i;
 const PYTHON_FILE_NAME_RE = /\.py$/i;
 const JAVA_FILE_NAME_RE = /\.java$/i;
+const CPP_FILE_NAME_RE = /\.(?:cc|cpp|cxx)$/i;
+const CPP_TEXT_FILE_NAME_RE = /\.(?:cc|cpp|cxx|h|hpp)$/i;
 const ASSET_DIRECTORY_NAMES = new Set(["images", "music", "sounds"]);
 const RUNTIME_RESERVED_FILE_NAMES = new Set([
 	"_classes_artifacts.py",
@@ -98,7 +100,7 @@ function isSafeProjectFileName(value: string) {
 
 	if (isRuntimeReservedProjectPath(value)) return false;
 
-	if (PYTHON_FILE_NAME_RE.test(value) || JAVA_FILE_NAME_RE.test(value)) {
+	if (PYTHON_FILE_NAME_RE.test(value) || JAVA_FILE_NAME_RE.test(value) || CPP_TEXT_FILE_NAME_RE.test(value)) {
 		const rootDirectory = segments[0]?.toLowerCase();
 		return !rootDirectory || !ASSET_DIRECTORY_NAMES.has(rootDirectory);
 	}
@@ -108,7 +110,7 @@ function isSafeProjectFileName(value: string) {
 	return IMAGE_FILE_RE.test(value) || AUDIO_FILE_RE.test(value);
 }
 
-const projectModeSchema = z.enum(["data", "java", "karel", "pgzero", "python", "turtle"]);
+const projectModeSchema = z.enum(["cpp", "data", "java", "karel", "pgzero", "python", "turtle"]);
 const projectFileSchema = z.object({
 	name: z
 		.string()
@@ -258,6 +260,7 @@ function serializePythonProjectReviewMetadata(review: IPythonProjectReview) {
 }
 
 function defaultProjectFileForMode(mode: PythonProjectMode): PythonProjectFile {
+	if (mode === "cpp") return { name: "main.cpp", content: "" };
 	if (mode === "java") {
 		return {
 			name: "Main.java",
@@ -276,6 +279,7 @@ function defaultProjectFileForMode(mode: PythonProjectMode): PythonProjectFile {
 }
 
 function requiredCodeFileMessage(mode: PythonProjectMode) {
+	if (mode === "cpp") return "Project must include at least one C++ source file";
 	if (mode === "java" || mode === "karel") {
 		return "Project must include at least one Java file";
 	}
@@ -284,8 +288,8 @@ function requiredCodeFileMessage(mode: PythonProjectMode) {
 }
 
 function projectFilesMatchMode(files: PythonProjectFile[], mode: PythonProjectMode) {
-	const codeFileRe = mode === "java" || mode === "karel" ? JAVA_FILE_NAME_RE : PYTHON_FILE_NAME_RE;
-	return files.some(file => codeFileRe.test(file.name));
+	const codeFileRe = mode === "cpp" ? CPP_FILE_NAME_RE : mode === "java" || mode === "karel" ? JAVA_FILE_NAME_RE : PYTHON_FILE_NAME_RE;
+	return files.some(file => codeFileRe.test(file.name) && (mode !== "cpp" || file.encoding !== "base64"));
 }
 
 function rejectProjectFilesForMode(
