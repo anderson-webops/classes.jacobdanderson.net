@@ -207,32 +207,32 @@ function canvasSnapshot(document: Document) {
 }
 
 async function clickStarterButton(document: Document, label: string) {
-	const toggle = document.querySelector<HTMLButtonElement>(
+	const menuToggle = document.querySelector<HTMLButtonElement>(
 		'[data-testid="ide-new-project"]'
 	);
-	if (!toggle) throw new Error("The project starter picker is unavailable.");
-	toggle.click();
+	if (!menuToggle) throw new Error("The New project control is unavailable.");
+	if (menuToggle.getAttribute("aria-expanded") !== "true") menuToggle.click();
 	await waitFor(
 		() => Boolean(document.querySelector("#ide-starter-picker")),
-		"starter picker",
+		"the starter dialog",
 		10_000
 	);
-	const selects = document.querySelectorAll<HTMLSelectElement>(
-		"#ide-starter-picker select"
+	const filters = document.querySelectorAll<HTMLSelectElement>(
+		"#ide-starter-picker .starter-filters select"
 	);
-	const [language, category] = selects;
-	if (!language || !category)
-		throw new Error("Starter filters are unavailable.");
-	language.value = "all";
-	language.dispatchEvent(new Event("change", { bubbles: true }));
-	category.value = label.startsWith("Demo ")
+	if (filters.length !== 2)
+		throw new Error("The starter filters are unavailable.");
+	const ChangeEvent = document.defaultView?.Event ?? Event;
+	filters[0]!.value = "all";
+	filters[0]!.dispatchEvent(new ChangeEvent("change", { bubbles: true }));
+	filters[1]!.value = label.startsWith("Demo ")
 		? "Demos"
 		: label.startsWith("Blank ")
 			? "Blank"
 			: label.includes("Outline") || label === "BlueJ Java Project"
 				? "Templates"
 				: "Classroom";
-	category.dispatchEvent(new Event("change", { bubbles: true }));
+	filters[1]!.dispatchEvent(new ChangeEvent("change", { bubbles: true }));
 	let button: HTMLButtonElement | undefined;
 	await waitFor(
 		() => {

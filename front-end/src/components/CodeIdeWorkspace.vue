@@ -6963,6 +6963,16 @@ function stopActiveRuntimeSurfaces() {
 	activeTurtleDragButton = null;
 }
 
+function selectMobileView(view: "code" | "canvas" | "console") {
+	mobileView.value = view;
+	if (view === "canvas") consoleExpanded.value = false;
+}
+
+function toggleConsoleExpansion() {
+	consoleExpanded.value = !consoleExpanded.value;
+	if (consoleExpanded.value) mobileView.value = "console";
+}
+
 function focusVisualOutputForRun() {
 	const projectMode = selectedProject.value?.mode;
 	const visualOutput =
@@ -6976,7 +6986,7 @@ function focusVisualOutputForRun() {
 	}
 
 	if (window.matchMedia?.("(max-width: 900px)").matches)
-		mobileView.value = "canvas";
+		selectMobileView("canvas");
 	visualOutput?.focus({ preventScroll: true });
 	window.requestAnimationFrame(() =>
 		visualOutput?.focus({ preventScroll: true })
@@ -7016,7 +7026,7 @@ function activateRunControl() {
 	}
 	focusVisualOutputForRun();
 	if (window.matchMedia?.("(max-width: 900px)").matches)
-		mobileView.value = usesVisualOutput.value ? "canvas" : "console";
+		selectMobileView(usesVisualOutput.value ? "canvas" : "console");
 	void runCurrentProject().finally(focusVisualOutputForRun);
 }
 
@@ -7645,8 +7655,8 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 			<button
 				type="button"
 				class="site-button site-button--secondary compact-button"
-				aria-haspopup="dialog"
 				data-testid="ide-new-project"
+				aria-haspopup="dialog"
 				:aria-expanded="showProjectMenu"
 				@click="showProjectMenu = true"
 			>
@@ -8345,10 +8355,11 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 					<button
 						v-for="view in ['code', 'canvas', 'console'] as const"
 						:key="view"
+						:data-view="view"
 						type="button"
 						:aria-pressed="mobileView === view"
 						:disabled="view === 'canvas' && !usesVisualOutput"
-						@click="mobileView = view"
+						@click="selectMobileView(view)"
 					>
 						{{
 							view === "code"
@@ -8492,7 +8503,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 									type="button"
 									:aria-expanded="consoleExpanded"
 									aria-controls="ide-console-output"
-									@click="consoleExpanded = !consoleExpanded"
+									@click="toggleConsoleExpansion"
 								>
 									{{
 										consoleExpanded
@@ -10688,10 +10699,14 @@ html.dark .editor-shortcuts ul {
 		min-width: 0;
 	}
 
+	.ide-settings {
+		position: static;
+	}
+
 	.ide-settings-panel {
 		right: auto;
 		left: 0;
-		width: min(26rem, calc(100vw - 2rem));
+		width: min(26rem, 100%);
 	}
 
 	.turtle-canvas:not(.turtle-canvas--game) {
@@ -10769,6 +10784,10 @@ html.dark .editor-shortcuts ul {
 	}
 	.ide-grid.mobile-view-canvas .input-output-grid {
 		display: none;
+	}
+	.ide-grid.mobile-view-canvas .result-panel,
+	.ide-grid.mobile-view-console .result-panel {
+		grid-template-rows: auto minmax(0, 1fr);
 	}
 	.ide-grid {
 		min-height: 50vh;

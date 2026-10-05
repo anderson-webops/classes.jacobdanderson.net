@@ -39,7 +39,12 @@ describe("Java preview resource boundary", () => {
 		);
 		cy.get("button.run-control").should("have.text", "Run");
 		cy.get('[data-testid="ide-new-project"]').click();
-		cy.get("#ide-starter-picker select").eq(1).select("Demos");
+		cy.get("#ide-starter-picker .starter-filters select")
+			.eq(0)
+			.select("all");
+		cy.get("#ide-starter-picker .starter-filters select")
+			.eq(1)
+			.select("Demos");
 		cy.contains(
 			"#ide-starter-picker .starter-results button",
 			"Demo Java"

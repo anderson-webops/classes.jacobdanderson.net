@@ -28,7 +28,7 @@ context("Navigation & page smoke-tests", () => {
 		// ---- About ---------------------------------------------------
 		cy.get(".site-nav").contains("a:visible", "About").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/about`);
-		cy.get("h1").contains("About Jacob").should("exist");
+		cy.get(".about-page h1").should("have.text", "About Jacob");
 
 		// ---- Tuition & Payment ---------------------------------------------
 		cy.get(".site-footer").contains("a:visible", "Tuition").click();
@@ -76,8 +76,20 @@ context("Navigation & page smoke-tests", () => {
 				}
 			});
 			cy.document().should(document => {
+				const layout = [
+					".ide-environment",
+					".code-ide-page",
+					".editor-toolbar"
+				].map(selector => ({
+					selector,
+					bounds: document
+						.querySelector(selector)
+						?.getBoundingClientRect()
+						.toJSON()
+				}));
 				expect(document.documentElement.scrollWidth).to.be.at.most(
-					document.documentElement.clientWidth
+					document.documentElement.clientWidth,
+					JSON.stringify(layout)
 				);
 			});
 		}
