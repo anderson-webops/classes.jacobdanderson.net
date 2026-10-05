@@ -106,6 +106,30 @@ describe("Python project routes", () => {
 		});
 	});
 
+	it("saves original Conway input records for user and course-code accounts", async () => {
+		const files = [
+			{ name: "main.py", content: "print('learner reminder')\n" },
+			{ name: "player1.in", content: "4 0 \r\n4 1\r\n5 2" },
+			{ name: "player2.in", content: "4 8\n5 6\n" }
+		];
+		for (const owner of ["user", "course-code"] as const) {
+			await withPythonProjectRoute(async baseUrl => {
+				const response = await postJson(baseUrl, { files, title: "Conway", mode: "python" });
+				expect(response.status).toBe(201);
+				const body = await response.json();
+				expect(body.project.files).toEqual(files.map(file => ({ ...file, encoding: "text" })));
+				expect(modelMocks.pythonProjectCreate).toHaveBeenLastCalledWith(expect.objectContaining({
+					files: files.map(file => ({ ...file, encoding: "text" })),
+					user: owner === "user" ? userID : courseCodeLearnerID
+				}));
+				for (const name of ["../repeat.in", "/repeat.in", "folder/repeat.in"]) {
+					const invalid = await postJson(baseUrl, { files: [...files, { name, content: "0 0" }] });
+					expect(invalid.status).toBe(400);
+				}
+			}, owner);
+		}
+	});
+
 	it("accepts nested Python package files for signed-in IDE projects", async () => {
 		await withPythonProjectRoute(async baseUrl => {
 			const response = await postJson(baseUrl, {

@@ -268,10 +268,74 @@ README after confirmation, exercises initial Run, then edits the scaffold for a
 valid Unicode-name path, supplies console input, checks generated LF/UTF-8
 output, reopens it, captures the real UI ZIP download and reopens saved work.
 These test-only edits verify the workflow; independent source checks verify
-reference correctness. Production/API writes remain blocked. Site verification
-and delivery for this follow-up are pending; prior release evidence is not a
-substitute. Thirty-six authored coding/review pairs are checked; six coding
+reference correctness. Production/API writes remain blocked. Site reviewed-head
+[CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37302611757)
+and independent integrated-main
+[CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37303337648)
+passed. The exact tagged native build and attestation
+[run](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37304026563)
+produced the unchanged assets retained in immutable
+[v2.8.28](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.28).
+Downstream [PR #18](https://github.com/instruction-material/classes.jacobdanderson.net/pull/18)
+and independent fork-main
+[CI](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37304570527)
+passed. Production activation remains unverified.
+Thirty-six authored coding/review pairs were checked; six coding
 placeholders and the full course/purpose/source/workflow audit remain open.
+
+## Conway simulation and ownership follow-up
+
+[Source PR #9](https://github.com/instruction-material/Python-Level-3/pull/9)
+integrated at `5e32ed800087ac4d9b0a45d28a3e815e28d58a24` supplies complete
+briefs, 24 matching incomplete callable tasks and all ten unchanged original
+pattern inputs. Both projects remain required: synchronous Boolean simulation
+first, then owned legal turns and strategy. Existing titles, progress IDs and
+the 86-core/4-optional inventory remain unchanged.
+
+References use finite nonwrapping B3/S23 and fresh generations. Owned survivors
+retain their owner, births use majority, edits precede generation and O/X turns
+alternate independently of counts. Paired grow-dead/kill-opponent choices validate
+before mutation. Initial/post-edit/post-generation extinction, invalid retries,
+full-board passes, cancellation and bounded limits are explicit. Continuous modes
+remain selectable without a promise of natural termination. Legacy filenames
+resolve their own canonical sibling rather than running conflicting references.
+
+All 144 source methods pass locally and in exact-head
+[push CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37309223318),
+[review CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37309230627)
+and independent integrated-main
+[CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37309325600).
+Twenty-six new methods use independent exhaustive small-board rule oracles,
+fresh-row/domain checks and actual file/console tests. Frozen LF and configured
+CRLF input digests allow shallow checkouts without weakening byte preservation.
+Optional guarded Ruff/Oxlint refused version drift; approved policy is unchanged.
+
+The site previously filtered out `.in` inputs. Import eligibility, filename/text
+handling, upload selection, user/course-code account saving and runtime capture
+now retain them, including record
+line endings during capture. Full learner contracts are readable in the course.
+Native browser coverage uses immutable checked starter/README/input bytes,
+requires confirmation, runs the initial reminder, makes test-only valid-path
+edits, reads original patterns and console moves, executes a generation, exports
+the actual UI ZIP and reopens saved files. A generated `.in` probe exercises
+runtime capture. These workflow edits do not replace independent reference tests.
+Production/API writes are blocked. Thirty-one focused front-end methods and 341
+back-end methods pass locally (one existing back-end test is conditionally
+skipped). API fixtures verify actual accepted payloads and unchanged input
+records for both account roles while retaining path restrictions. The first
+local API run could not bind its isolated loopback servers in the sandbox;
+the authorized rerun passed without changing tests. Another 170 IDE/sandbox
+methods and the focused catalog-copy gate pass locally. Full hosted checks
+exposed a missed plain-worker capture whitelist and a course-copy artifact;
+both are corrected. The added regression executes each runtime's actual embedded
+Python capture code against temporary CRLF, unterminated, empty and invalid-UTF-8
+patterns. Browser verification still requires its fresh hosted gate.
+Full site CI and milestone delivery remain
+pending; previous release checks are not substituted for them.
+
+Thirty-eight authored coding/review pairs, one supplied-code analysis and one
+worksheet are checked. Four Tic Tac Toe coding placeholders and the broader
+course purpose/source/workflow audit remain open. No live activation is claimed.
 
 ## Verification authority
 

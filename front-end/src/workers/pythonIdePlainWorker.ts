@@ -290,14 +290,18 @@ from pathlib import Path
 
 __classes_root = Path(${escapePythonString(PROJECT_ROOT)})
 __classes_files = []
-__classes_text_suffixes = {".csv", ".json", ".md", ".py", ".svg", ".txt"}
+__classes_text_suffixes = {".csv", ".in", ".json", ".md", ".py", ".svg", ".txt"}
 for __classes_path in sorted(__classes_root.rglob("*")):
     if not __classes_path.is_file():
         continue
     if __classes_path.suffix.lower() not in __classes_text_suffixes:
         continue
     try:
-        __classes_content = __classes_path.read_text(encoding="utf-8")
+        if __classes_path.suffix.lower() == ".in":
+            with __classes_path.open("r", encoding="utf-8", newline="") as __classes_input:
+                __classes_content = __classes_input.read()
+        else:
+            __classes_content = __classes_path.read_text(encoding="utf-8")
     except Exception:
         continue
     __classes_files.append({
