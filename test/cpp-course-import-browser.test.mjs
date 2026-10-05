@@ -62,26 +62,26 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "2864638dd25dc236c02a8e9c04f08eb6b32a9984";
+const foundationRevision = "eef08ab41ab8932080fdac349be6938c10df06a2";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
-		"README.md": "98c10ece0a7e5f757f54fbd47e631baa802265b36d1c229aea68a142aeef8de6",
+		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
 		"main.cpp": "7250ce9927a2e0104053e3fb07c9ad55b874ca6245710ffda1de3a2a9b11ac3d"
 	},
 	"CPPF1-Chat-Bot/starter": {
-		"README.md": "d9b19e6b0f28be995baad79e3cca2fef4bf1513eaa07da7d8b6fffb85e7450b7",
+		"README.md": "6c0e55ca0be21cadddd0dcc3507679b8bd374c24ed5499b734e159526e2760f1",
 		"main.cpp": "dc3ce8d94ca43162c16ec701fffcf7765f540c5614caef68ada83d2e1cf00b26"
 	},
 	"CPPF2-Number-Games/starter": {
-		"README.md": "16f005b78aca493ee0531db7f429a7510691c468c5ed3ce3ecbd4b88fb1f2a82",
+		"README.md": "883c62cea1be2869687cb3dc434762bebc776fb730e6b4c31e9f40aeca9f7bb6",
 		"main.cpp": "954aeafe69ae219e17e754f9b9d159a65c5089610bc0a8ff7277b4304f54ff8a"
 	},
 	"CPPF2-Rock-Paper-Scissors/starter": {
-		"README.md": "78068658179ddf016c5457c6426c46ecb5980915f58369084af689963475268a",
+		"README.md": "e4c3836f0f5bfcd65e9ecd473c5fed1c18452cdfb158971b1a914009b34f8eb1",
 		"main.cpp": "a1297dae1bade9fc05b267a06882d542547c576cc5466401a903fddc9c426660"
 	},
 	"CPPF2-Fizz-Buzz/starter": {
-		"README.md": "d55f16a9276ee6ccda5142d8269dfaccb74c3a8f5aa0fe5d1c84c74dc5b64682",
+		"README.md": "5f6f8adac36bba4b54bb5a46c576e2fed6153a1923e3061ccaa44e80637bd889",
 		"main.cpp": "d60a0b38e00abb97d67ccb5abad025a721adb755d784463f81001b0b95a0ac15"
 	}
 };
@@ -186,7 +186,7 @@ nodeTest("the four foundation lesson programs compile and match independent cons
 			{ input: "3\n", code: 1, stdout: "Count: Sentence: ", stderr: "Missing sentence.\n" },
 			{ input: "3\n\n", code: 1, stdout: "Count: Sentence: ", stderr: "Missing sentence.\n" }
 		],
-		branches: [{ input: "", code: 0, stdout: "high\n1\n2\n3\n", stderr: "" }]
+		branches: [{ input: "", code: 0, stdout: "high\n1\n2\n3\n1\n2\n3\n", stderr: "" }]
 	};
 	try {
 		for (const [name, fixtures] of Object.entries(examples)) {

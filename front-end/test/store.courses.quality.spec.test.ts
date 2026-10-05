@@ -44,6 +44,13 @@ function loadRawCourse(id: string) {
 	return coursePromise;
 }
 
+// Literal types and console fixtures are source material, not generated prose.
+function proseForQualityChecks(content: string) {
+	return content
+		.replace(/(?:^|\n)[\t ]*(`{3,}|~{3,})[^\n]*\n[\s\S]*?\n[\t ]*\1/g, "\nCODE_BLOCK\n")
+		.replace(/`[^`\n]*`/g, "CODE_LITERAL");
+}
+
 function allCourseText(course: Awaited<ReturnType<typeof loadRawCourse>>) {
 	expect(course).not.toBeNull();
 	if (!course) return "";
@@ -553,7 +560,9 @@ describe("course text quality normalization", () => {
 						const text = item.content;
 
 						for (const { name, pattern } of artifactChecks) {
-							const match = text.match(pattern);
+							const match = (name === "duplicate generated word"
+								? proseForQualityChecks(text)
+								: text).match(pattern);
 							if (!match) continue;
 
 							failures.push(
@@ -4994,7 +5003,7 @@ describe("course text quality normalization", () => {
 							}
 						}
 						const repeatedWordMatch =
-							item.content.match(repeatedWordPattern);
+							proseForQualityChecks(item.content).match(repeatedWordPattern);
 						if (repeatedWordMatch) {
 							repeatedWords.push(
 								`${courseCatalog[courseIndex].id} / ${module.title} / ${item.title} / ${repeatedWordMatch[0]}`
@@ -8551,10 +8560,11 @@ describe("course text quality normalization", () => {
 
 		const setup = findItem(course!, /Program Setup/);
 
-		expect(setup.content).toContain("This lesson begins with");
-		expect(setup.content).toContain("**Key topics:**");
-		expect(setup.content).toContain("- `#include`");
-		expect(setup.content).toContain("**Practice check:**");
+		expect(setup.content).toContain("## A first compiled program");
+		expect(setup.content).toContain("#include <iostream>");
+		expect(setup.content).toContain("Hello, C++!");
+		expect(setup.content).toContain("c++ -std=c++20");
+		expect(setup.content).toContain("Restore the semicolon");
 		expect(setup.content).not.toMatch(/Start with|Cover:|Students should/);
 		expect(setup.content).not.toMatch(/\*\*Learning sequence:\*\*/);
 		expect(setup.content).not.toMatch(/\*\*Practice target:\*\*/);
