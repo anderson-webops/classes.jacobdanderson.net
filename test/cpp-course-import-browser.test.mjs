@@ -12,7 +12,7 @@ import { test as nodeTest } from "node:test";
 import { fileURLToPath } from "node:url";
 import { strFromU8, unzipSync } from "fflate";
 import puppeteer from "puppeteer";
-import { createServer } from "vite";
+import { preview } from "vite";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const repository = "instruction-material/Python-to-Java-and-CPP-Bridge";
@@ -107,13 +107,16 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 	try {
 		process.chdir(root);
 		temporary = await mkdtemp(join(tmpdir(), "cpp-course-workflow-"));
-		server = await createServer({ root, server: { host: "127.0.0.1", port: 0, strictPort: true } });
-		await server.listen();
+		// CI builds this exact checkout first. Exercise deployable assets without
+		// development dependency discovery reloading the page mid-interaction.
+		assert.ok(existsSync(join(root, "dist/index.html")), "Build the front end before the browser check");
+		server = await preview({ root, preview: { host: "127.0.0.1", port: 0, strictPort: true } });
 		const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
 		const executablePath = [process.env.PUPPETEER_EXECUTABLE_PATH, await puppeteer.executablePath(), "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/usr/bin/google-chrome", "/usr/bin/chromium"].find(value => typeof value === "string" && value && existsSync(value));
 		assert.ok(executablePath, "Chrome is required");
 		browser = await puppeteer.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
 		page = await browser.newPage();
+		await page.setViewport({ width: 1280, height: 900 });
 		let folder;
 		let files;
 		let sourceRequests = 0;
@@ -160,6 +163,7 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 		// Native byte verification happens outside the browser; the learner still consents before import.
 		for (const [packFolder, hashes] of Object.entries(packs)) {
 			folder = packFolder;
+			await page.setViewport({ width: folder.startsWith("PTJ1") ? 390 : 1280, height: 900 });
 			files = await readStarter(folder, hashes);
 			const before = sourceRequests;
 			const key = `browser:${folder}:starter`;
