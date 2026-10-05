@@ -281,6 +281,10 @@ nodeTest("published bridge starters confirm, edit, save, export, reopen and comp
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
 				await mkdir(directory, { recursive: true });
 				await page.screenshot({ path: join(directory, `course-import-${mode}-${folder.slice(0, 4)}-workspace.png`), fullPage: true });
+				if (folder.startsWith("PTJ7") && mode === "cpp") {
+					await page.setViewport({ width: 390, height: 900 });
+					await page.screenshot({ path: join(directory, "course-import-cpp-PTJ7-mobile.png"), fullPage: true });
+				}
 			}
 			record("verified", { folder, revision, mode, fileCount: Object.keys(exported).length });
 		}
