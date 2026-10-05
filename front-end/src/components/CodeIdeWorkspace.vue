@@ -7661,7 +7661,9 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 				New project
 			</button>
 			<span role="status">{{ saveMessage }}</span>
-			<strong>{{ runMessage }}</strong>
+			<strong role="status" data-testid="ide-run-status">{{
+				runMessage
+			}}</strong>
 			<RouterLink
 				v-if="requestedCourseId"
 				:to="{ path: '/courses', hash: returnLessonHash }"

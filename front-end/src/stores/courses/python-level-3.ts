@@ -1728,9 +1728,8 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 			"stack state",
 			"failure diagnosis"
 		],
-		choiceCurriculumTitles: ["Check-In #1: Additional Practice Project"],
 		projectThread:
-			"Diagnose string helpers, recursion, and explicit stacks separately. Use additional practice only for the failed trace or implementation skill."
+			"Diagnose string helpers, recursion, and explicit stacks separately. The running-sum project remains a required core review project; complete its forward/reverse traces, discuss one case with a course facilitator, and test different data independently."
 	},
 	{
 		title: "AM6 Introduction to Algorithms & Runtime Analysis",
@@ -1784,9 +1783,8 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 			"selection-sort pass",
 			"insertion-sort pass"
 		],
-		choiceCurriculumTitles: ["Check-In #2: Additional Practice Project"],
 		projectThread:
-			"Each algorithm family includes a trace and a complexity explanation. Additional practice targets the first incorrect invariant or growth-rate explanation."
+			"Each algorithm family includes a trace and a complexity explanation. The two-sort timing project remains a required core review project, distinct from the later five-sort comparison; use shared inputs and discuss measured results after checking correctness."
 	},
 	{
 		title: "AM9 Bubble Sort",
@@ -1855,9 +1853,8 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 			"file lifecycle",
 			"algorithm choice"
 		],
-		choiceCurriculumTitles: ["Check-In #3: Additional Practice Project"],
 		projectThread:
-			"Compare sorting traces and file-lifecycle reasoning without requiring a full new build. Assign additional practice only for the algorithm or I/O boundary that remains unclear."
+			"Compare sorting traces and file-lifecycle reasoning. The ASCII file-sorting project remains a required core review project; predict a fixture, complete its read/sort/write workflow, reopen the output and test different data independently."
 	},
 	{
 		title: "AM13 Master Project: Conway's Game of Life",

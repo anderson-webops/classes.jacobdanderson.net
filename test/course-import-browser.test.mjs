@@ -434,6 +434,14 @@ test(
 					await page.waitForSelector(
 						"button.run-control:not([disabled])"
 					);
+					assert.equal(
+						await page.$eval(
+							"[data-testid='ide-run-status']",
+							element => element.getAttribute("role")
+						),
+						"status",
+						"Run results remain a live status in the compact workspace"
+					);
 					await page.click("button.run-control");
 					await page.waitForFunction(
 						() =>
@@ -441,7 +449,7 @@ test(
 								.querySelector(".output-panel")
 								?.textContent.includes("COURSE_FILE_IO_PASS") &&
 							document
-								.querySelector(".code-ide-status strong")
+								.querySelector("[data-testid='ide-run-status']")
 								?.textContent.includes("Run complete"),
 						{ timeout: 90000 }
 					);

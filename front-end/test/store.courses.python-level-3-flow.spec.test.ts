@@ -86,6 +86,9 @@ describe("Python Level 3 learner flow", () => {
 
 		// Juni places these check-in projects in curriculum, despite their titles.
 		for (const title of ["Check-In #1", "Check-In #2", "Check-In #3"]) {
+			expect(requireSourceModule(title).curriculum[0]?.content).toContain(
+				"remains a required core review project"
+			);
 			expect(
 				requireSourceModule(title).curriculum.find(item =>
 					item.title.includes("Additional Practice Project")
