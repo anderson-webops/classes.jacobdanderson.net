@@ -646,6 +646,8 @@ describe("Python Level 3 learner flow", () => {
 		expect(project.content).not.toContain(
 			"Unknown words and capitalization are handled consistently"
 		);
+		expect(project.content).not.toMatch(/\bJuni\b/i);
+		expect(project.content).toContain("a word-translation function");
 		expect(module.curriculum[0]?.content).toContain(
 			"only its punctuation extension is optional"
 		);

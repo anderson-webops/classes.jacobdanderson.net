@@ -1328,7 +1328,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM12 Project 3: Word Translator with File I/O",
 					content: projectBrief({
-						goal: "Combine a defined Juni Latin character rule with independently testable file-reading, translation and writing stages.",
+						goal: "Combine a word-translation function implementing the original character rule with independently testable file-reading, translation and writing stages.",
 						build: [
 							"Retain input_no_punctuation.txt and input_punctuation.txt. The core uses the former; punctuation is a separate optional extension. This is not general Pig Latin or a known-word lookup.",
 							"Implement translate(word): for a nonempty whitespace-free string, move its first character to the end and append ay. Empty input gives an empty string. Preserve character case and Unicode literally; non-string or whitespace-containing input raises ValueError. Core tokens follow the literal character rule, not a dictionary.",
