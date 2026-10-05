@@ -590,3 +590,11 @@ copy/class checks pass. The authored-practice regression also includes CPPF4 in
 the explicit early-module contract, retaining the supplemental-project floor for
 other courses. Final full site checks remain required before integration.
 CPPF5–CPPF8 and the broader audit remain open.
+
+Candidate `3dd401ca8f081dfecb5c64a743f8beeb3c34fa87` passes all 1,321
+functional tests. Its separate catalog suite exposed a retired lesson-title
+expectation and an overly broad split-status wording guard that also rejected
+the valid instruction not to compile root, starter and solution copies together.
+The regression now checks the actual Point header/source lesson and retains
+specific administrative boilerplate guards. All 267 catalog-quality checks pass
+locally with those corrections. Final exact-head hosted gates remain pending.
