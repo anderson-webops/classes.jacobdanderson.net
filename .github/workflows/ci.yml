@@ -11,7 +11,7 @@ permissions:
 
 jobs:
     backend-install:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
@@ -46,7 +46,7 @@ jobs:
               run: npm audit --include=optional --workspaces=false
 
     lint:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
@@ -85,7 +85,7 @@ jobs:
               run: npm run lint
 
     typecheck:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
@@ -109,11 +109,11 @@ jobs:
               run: npm run typecheck
 
     test:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         strategy:
             matrix:
                 node-version: [24.18.0]
-                os: [ubuntu-latest]
+                os: [ubuntu-24.04]
             fail-fast: false
 
         steps:
@@ -160,7 +160,7 @@ jobs:
               run: sudo python3 -B test/native-candidate-ownership.test.py
 
     accessibility:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         timeout-minutes: 15
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -185,7 +185,7 @@ jobs:
               run: npm run a11y
 
     static-media:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         timeout-minutes: 10
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -213,7 +213,7 @@ jobs:
               run: npm run audit:static-media
 
     native-nginx:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         timeout-minutes: 5
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -235,7 +235,7 @@ jobs:
               run: npm run test:native-nginx
 
     test-e2e:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         timeout-minutes: 15
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -265,12 +265,12 @@ jobs:
             - name: Build front-end
               run: npm run -w front-end build
 
-            - name: Verify bridge source import, export and native compilation
+            - name: Verify bridge and C++ foundation import, export and native compilation
               env:
                   COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
               run: JAVAC="$JAVA_HOME_21_X64/bin/javac" node --test test/cpp-course-import-browser.test.mjs
 
-            - name: Retain bridge workspace screenshots
+            - name: Retain C++ and Java workspace screenshots
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               with:
                   name: cpp-workspace-screenshots
@@ -329,7 +329,7 @@ jobs:
                   wait-on: "http://localhost:3333"
 
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:

@@ -141,6 +141,28 @@ describe("C++ source workspace", () => {
 		);
 		expect(instructions).not.toMatch(/Helper\.h|bad\.cpp|touch/);
 		expect(instructions).toContain("does not compile or execute");
+		for (const key of [
+			"c-level-1-project",
+			"cpp-level-1-project",
+			"c-level-1:c-level-1-cppf1-variables-types-strings-and-input-output-curriculum-cppf1-project-1-mad-libs:starter",
+			"cpp-level-1:cpp-level-1-project:starter",
+			"c-level-1"
+		]) {
+			expect(cppBuildInstructions(files, key).join("\n")).toContain(
+				"-std=c++20 -Wall -Wextra -Wpedantic"
+			);
+		}
+		expect(
+			cppBuildInstructions(
+				files,
+				"python-to-java-and-cpp-bridge-project"
+			).join("\n")
+		).toContain("-std=c++17");
+		for (const key of ["c-level-10:project:starter", "c-level-1x-project"]) {
+			expect(cppBuildInstructions(files, key).join("\n")).toContain(
+				"-std=c++17"
+			);
+		}
 		expect(
 			cppBuildInstructions([{ name: "Helper.h", content: "" }]).join("\n")
 		).toContain("Add a .cpp");

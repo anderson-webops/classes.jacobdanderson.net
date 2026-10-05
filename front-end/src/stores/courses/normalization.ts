@@ -1390,8 +1390,13 @@ function groupConceptLessons(
 	];
 }
 
-function normalizeModuleLessonShape(course: RawCourse) {
+function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 	for (const module of course.modules) {
+		// These authored lessons interleave concepts with complete references.
+		// Grouping concepts at the first position moves input before value types.
+		if (courseId === "c-level-1" && /^CPPF[12] /.test(module.title))
+			continue;
+
 		const conceptItems = module.curriculum.filter(item =>
 			isConceptLessonItem(item)
 		);
@@ -9467,7 +9472,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	normalizers[id]?.(course);
 	normalizeDisplayTitles(course);
 	rewritePlaceholderCourseText(course, id);
-	normalizeModuleLessonShape(course);
+	normalizeModuleLessonShape(course, id);
 	applyResearchBackedExpansions(id, course);
 	applyCourseImplementationArtifacts(id, course);
 	normalizeUsacoProjectGuidance(course, id);

@@ -4245,6 +4245,11 @@ function ensureSupplementalProjectFloor(courseId: string, course: RawCourse) {
 
 	for (const module of course.modules) {
 		if (module.kind === "appendix") continue;
+		if (courseId === "c-level-1" && /^CPPF[12] /.test(module.title)) {
+			// These authored modules already contain every required original
+			// project. Complete examples are lesson references, not quota tasks.
+			continue;
+		}
 
 		while (module.supplementalProjects.length < 2) {
 			module.supplementalProjects.push(

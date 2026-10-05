@@ -353,7 +353,7 @@ test("native release producer isolates signing from untrusted persistent builder
 	assert.match(workflow, /runs-on: ubuntu-24\.04-arm/u);
 	assert.match(workflow, /persist-credentials: false/u);
 	assert.match(workflow, /prepare-native-release.sh --source "\$GITHUB_WORKSPACE"/u);
-	assert.match(workflow, /attest:\s*needs: build\s*runs-on: ubuntu-latest/u);
+	assert.match(workflow, /attest:\s*needs: build\s*runs-on: ubuntu-24\.04/u);
 	assert.match(workflow, /--tag "\$RELEASE_TAG"/u);
 	assert.doesNotMatch(workflow, /pull_request|workflow_dispatch|runs-on:.*self-hosted/u);
 	assert.doesNotMatch(workflow.slice(0, workflow.indexOf("    attest:")), /id-token: write|attestations: write/u);

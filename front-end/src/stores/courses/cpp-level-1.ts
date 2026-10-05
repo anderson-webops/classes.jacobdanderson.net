@@ -1,4 +1,8 @@
 import type { RawCourse } from "./types";
+import {
+	cppFoundationLessonBriefs,
+	cppFoundationProjectBriefs
+} from "./cppFoundationProjectBriefs";
 import { isCoreProjectTitle } from "./projectGrouping";
 
 const cppLevel1SourceCourse: RawCourse = {
@@ -9,96 +13,82 @@ const cppLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Program Setup, Syntax, and Compile-Run Cycle",
-					content:
-						"This lesson begins with a single-file console program and makes the compile-run cycle explicit.\n\n**Key topics:**\n- `#include`\n- `main`\n- braces\n- semicolons\n- comments\n- compiler errors versus runtime behavior\n- the idea that C++ is compiled before it runs\n\n**Practice check:** A successful first workflow makes one small change, recompiles, reads the output or error, and explains what changed before the syntax load rises."
+					aliases: [
+						"c-level-1-cppf1-variables-types-strings-and-input-output-curriculum-variables-types-strings-and-input-output-core-concepts"
+					],
+					content: cppFoundationLessonBriefs.setup
 				},
 				{
 					title: "Primitive Types, Strings, and Console I/O",
-					content:
-						"Integers, doubles, booleans, chars, and `std::string` are the core beginner value types, and they connect directly to `std::cin` and `std::cout`. Include declaring and assigning variables, choosing a type, reading typed input, printing labels with values, basic string length/indexing, and common beginner mistakes such as missing quotes, invalid assignments, and input that stops at whitespace.",
-					projectLink:
+					content: cppFoundationLessonBriefs.values,
+					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Primitive-Types-and-Strings-Reference"
 				},
 				{
+					title: "Token Input, Full-Line Input, and Failure",
+					content: cppFoundationLessonBriefs.input
+				},
+				{
 					title: "CPPF1 Project 1: Mad Libs",
-					content:
-						"Build a short Mad Libs generator with string variables, prompts, and a printed story. Use clear variable names, test at least two custom stories, and explain how inputs move through the program.",
+					content: cppFoundationProjectBriefs.madLibs,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Mad-Libs",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Mad-Libs/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Mad-Libs"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Mad-Libs/solution"
 				},
 				{
 					title: "CPPF1 Project 2: Chat Bot",
-					content:
-						"Use strings, input, and simple arithmetic to make a small interactive chatbot. This is still a syntax-and-confidence project, not an algorithmic challenge.",
+					content: cppFoundationProjectBriefs.chatBot,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Chat-Bot",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Chat-Bot/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Chat-Bot"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Chat-Bot/solution"
 				}
 			],
-			supplementalProjects: [
-				{
-					title: "Variables and Input/Output: Extension Challenge",
-					content:
-						"Extend the early syntax work with one extra input case, one more formatted output step, or a slightly more realistic text-processing task.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Variables-Types-and-Input-and-Output-Supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF1-Variables-Types-and-Input-and-Output-Supplemental-2/solution"
-				}
-			]
+			supplementalProjects: []
 		},
 		{
 			title: "CPPF2 Loops and Conditionals",
 			curriculum: [
 				{
 					title: "Branching and Repetition",
-					content:
-						"Control flow is how a program chooses and repeats behavior. Include `if`, `else if`, and `else`; comparison operators; Boolean expressions; ordered branch checks; `for` loops for counted repetition; `while` loops for condition-driven repetition; loop initialization, stopping conditions, and updates; and how to trace variable changes without guessing.",
-					projectLink:
+					content: cppFoundationLessonBriefs.branches,
+					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-For-Loop-Practice"
 				},
 				{
-					title: "CPPF2 Project 1: Number Games",
+					title: "While-Loop Reference and State Tracing",
 					content:
-						"Build small loop-driven tasks such as counting between bounds, summing values, and computing averages. The main habit here is tracing loop state instead of guessing.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Number-Games",
+						"The supplied while-loop program is a complete reference, not starter work. Predict each counter's initial value, condition and update before running it. It prints 0–10, even values 0–10, a countdown 10–0, the letters of one ASCII word forward/backward, sum 5050 and factorial 3628800. Missing word input skips the character examples while the constant examples finish. Use its README and compare zero-iteration, one-iteration and normal traces with the for-loop reference.",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Number-Games"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-While-Loop-Practice"
+				},
+				{
+					title: "CPPF2 Project 1: Number Games",
+					content: cppFoundationProjectBriefs.numberGames,
+					projectLink:
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Number-Games/starter",
+					solutionLink:
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Number-Games/solution"
 				},
 				{
 					title: "CPPF2 Project 2: Rock, Paper, Scissors",
-					content:
-						"Use conditionals to compare choices and decide winners. Keep the focus on branching logic practice rather than a large design exercise.",
+					content: cppFoundationProjectBriefs.rockPaperScissors,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Rock-Paper-Scissors",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Rock-Paper-Scissors/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Rock-Paper-Scissors"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Rock-Paper-Scissors/solution"
 				},
 				{
 					title: "CPPF2 Project 3: Fizz Buzz",
-					content:
-						"Use modular arithmetic and ordered condition checks to build a correct Fizz Buzz solution. This is a compact way to reinforce both loops and branching.",
+					content: cppFoundationProjectBriefs.fizzBuzz,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Fizz-Buzz",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Fizz-Buzz/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Fizz-Buzz"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-Fizz-Buzz/solution"
 				}
 			],
-			supplementalProjects: [
-				{
-					title: "Loops and Conditionals: While-Loop Drill",
-					content:
-						"Use a short while-loop reinforcement task when termination logic is still shaky.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-While-Loop-Practice",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF2-While-Loop-Practice"
-				}
-			]
+			supplementalProjects: []
 		},
 		{
 			title: "CPPF3 Functions",
@@ -381,7 +371,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"input validation"
 		],
 		flowNote:
-			"Establish a repeatable C++20 build with `-Wall -Wextra -Wpedantic`, then complete Mad Libs as the first required program. Check whitespace input, failed numeric extraction, and recovery before choosing the chatbot extension."
+			"Establish a repeatable C++20 build with `-Wall -Wextra -Wpedantic`, then complete Mad Libs as the first required program. Check token versus full-line input, failed numeric extraction and recovery, then complete both required Mad Libs and Chat Bot projects."
 	},
 	"CPPF2 Loops and Conditionals": {
 		estimatedTime: "3 sessions · 45–60 minutes each",
@@ -393,7 +383,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"state trace"
 		],
 		flowNote:
-			"Trace Number Games with a table before running it and test empty, reversed, or boundary ranges. Rock Paper Scissors is a choice and Fizz Buzz is a challenge, so one correct loop-driven project completes the module."
+			"Trace Number Games with a table before running it and test empty, reversed, or boundary ranges. Complete Number Games with both loop kinds, then the required Rock Paper Scissors and Fizz Buzz branching projects. Supplied loop examples are references rather than extra assignments."
 	},
 	"CPPF3 Functions": {
 		estimatedTime: "3 sessions · 45–60 minutes each",
@@ -405,7 +395,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"reproducible randomness"
 		],
 		flowNote:
-			"Write deterministic helper contracts first, then use `std::mt19937` with a fixed test seed for the probability project. Keep generation, decision logic, and output separate; Number Guesser is an optional integration build."
+			"Write deterministic helper contracts first, then use `std::mt19937` with a fixed test seed for the probability project. Keep generation, decision logic, and output separate; Number Guesser is the required integration build after the probability functions."
 	},
 	"CPPF4 Classes and Objects": {
 		estimatedTime: "3 sessions · 45–60 minutes each",
@@ -429,7 +419,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"empty collection"
 		],
 		flowNote:
-			"Use Vector Practice to compare index and range-based iteration, then test empty, one-item, and multi-item collections. Bank Accounts is a fictional-data choice; real account details are never entered."
+			"Use Vector Practice to compare index and range-based iteration, then test empty, one-item, and multi-item collections. Bank Accounts is the required fictional-data project; real account details are never entered."
 	},
 	"CPPF6 Structs and Parameter Passing": {
 		estimatedTime: "3 sessions · 45–60 minutes each",
@@ -441,7 +431,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"mutation trace"
 		],
 		flowNote:
-			"Trace copies, aliases, and mutations before compiling, then combine a small struct with a vector or helper function. Defanging and the string-mutation lab remain optional after the parameter-passing trace is correct."
+			"Trace copies, aliases, and mutations before compiling, then combine a small struct with a vector or helper function. Complete the required Defanging project after the parameter-passing trace is correct; the string-mutation lab remains an optional extension."
 	},
 	"CPPF7 Grids and 2D Vectors": {
 		estimatedTime: "2–3 sessions · 45–60 minutes each",

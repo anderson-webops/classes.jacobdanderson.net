@@ -13,10 +13,11 @@ import { fileURLToPath } from "node:url";
 import { strFromU8, unzipSync } from "fflate";
 import puppeteer from "puppeteer";
 import { preview } from "vite";
+import { cppFoundationLessonBriefs } from "../front-end/src/stores/courses/cppFoundationProjectBriefs.ts";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
-const repository = "instruction-material/Python-to-Java-and-CPP-Bridge";
-const revision = "003c7cc321dd758360c27575b8a9f2a4c7b710b7";
+const bridgeRepository = "instruction-material/Python-to-Java-and-CPP-Bridge";
+const bridgeRevision = "003c7cc321dd758360c27575b8a9f2a4c7b710b7";
 const packs = {
 	"PTJ1-Syntax-Translation-Warmup/starter/cpp": {
 		"README.md": "8db88854ab5e1398be2afdf0468ef3644dfcf4d75c358bc13d3cb42bd9140646",
@@ -60,7 +61,53 @@ const moduleAnchors = {
 	PTJ6: "ptj5-c-specific-adaptation",
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
-const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "bridge-course-import-browser-ci";
+const foundationRepository = "instruction-material/CPP-Level-1";
+const foundationRevision = "eef08ab41ab8932080fdac349be6938c10df06a2";
+const foundationPacks = {
+	"CPPF1-Mad-Libs/starter": {
+		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
+		"main.cpp": "7250ce9927a2e0104053e3fb07c9ad55b874ca6245710ffda1de3a2a9b11ac3d"
+	},
+	"CPPF1-Chat-Bot/starter": {
+		"README.md": "6c0e55ca0be21cadddd0dcc3507679b8bd374c24ed5499b734e159526e2760f1",
+		"main.cpp": "dc3ce8d94ca43162c16ec701fffcf7765f540c5614caef68ada83d2e1cf00b26"
+	},
+	"CPPF2-Number-Games/starter": {
+		"README.md": "883c62cea1be2869687cb3dc434762bebc776fb730e6b4c31e9f40aeca9f7bb6",
+		"main.cpp": "954aeafe69ae219e17e754f9b9d159a65c5089610bc0a8ff7277b4304f54ff8a"
+	},
+	"CPPF2-Rock-Paper-Scissors/starter": {
+		"README.md": "e4c3836f0f5bfcd65e9ecd473c5fed1c18452cdfb158971b1a914009b34f8eb1",
+		"main.cpp": "a1297dae1bade9fc05b267a06882d542547c576cc5466401a903fddc9c426660"
+	},
+	"CPPF2-Fizz-Buzz/starter": {
+		"README.md": "5f6f8adac36bba4b54bb5a46c576e2fed6153a1923e3061ccaa44e80637bd889",
+		"main.cpp": "d60a0b38e00abb97d67ccb5abad025a721adb755d784463f81001b0b95a0ac15"
+	}
+};
+const fixtures = [
+	...Object.entries(packs).map(([folder, hashes]) => ({
+		repository: bridgeRepository,
+		revision: bridgeRevision,
+		courseId: "python-to-java-and-cpp-bridge",
+		standard: 17,
+		folder,
+		hashes,
+		anchor: moduleAnchors[folder.slice(0, 4)]
+	})),
+	...Object.entries(foundationPacks).map(([folder, hashes]) => ({
+		repository: foundationRepository,
+		revision: foundationRevision,
+		courseId: "c-level-1",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: folder.startsWith("CPPF1")
+			? "cppf1-variables-types-strings-and-input-output"
+			: "cppf2-loops-and-conditionals"
+	}))
+];
+const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "cpp-course-import-browser-ci";
 function record(event, fields = {}) {
 	return console.log(JSON.stringify({
 		event,
@@ -72,7 +119,7 @@ function record(event, fields = {}) {
 	}));
 }
 
-async function readStarter(folder, hashes) {
+async function readStarter(repository, revision, folder, hashes) {
 	const files = {};
 	for (const [name, digest] of Object.entries(hashes)) {
 		const response = await fetch(`https://raw.githubusercontent.com/${repository}/${revision}/${folder}/${name}`, { signal: AbortSignal.timeout(30000) });
@@ -84,17 +131,21 @@ async function readStarter(folder, hashes) {
 	return files;
 }
 
-async function compileExport(directory, names, mode) {
-	const command = mode === "java" ? process.env.JAVAC ?? "javac" : "c++";
-	const args = mode === "java" ? ["-Xlint:all", ...names.filter(name => name.endsWith(".java"))] : ["-std=c++17", "-Wall", "-Wextra", "-pedantic", "-I.", ...names.filter(name => /\.(?:cc|cpp|cxx)$/.test(name)), "-o", "project"];
-	await new Promise((resolve, reject) => {
-		const child = spawn(command, args, { cwd: directory, detached: true, stdio: ["ignore", "pipe", "pipe"] });
+async function runNative(command, args, directory, input = "") {
+	return new Promise((resolve, reject) => {
+		const child = spawn(command, args, { cwd: directory, detached: true, stdio: ["pipe", "pipe", "pipe"] });
 		record("start", { command: [command, ...args], cwd: directory, pid: child.pid, timeoutMs: 30000 });
-		let errors = "";
-		child.stdout.resume();
-		child.stderr.on("data", (data) => {
-			errors += data;
+		let stdout = "";
+		let stderr = "";
+		child.stdout.on("data", (data) => {
+			stdout += data;
 		});
+		child.stderr.on("data", (data) => {
+			stderr += data;
+		});
+		// A failed spawn can close stdin before its buffer drains.
+		child.stdin.on("error", () => {});
+		child.stdin.end(input);
 		const timer = setTimeout(() => {
 			try {
 				process.kill(-child.pid, "SIGKILL");
@@ -110,20 +161,63 @@ async function compileExport(directory, names, mode) {
 		child.once("close", (code) => {
 			clearTimeout(timer);
 			record("end", { pid: child.pid, exitCode: code });
-			if (code === 0) resolve();
-			else reject(new Error(`Exported starter did not compile: ${errors}`));
+			resolve({ code, stdout, stderr });
 		});
 	});
 }
 
-nodeTest("published bridge starters confirm, edit, save, export, reopen and compile natively", { timeout: 240000 }, async () => {
+async function compileExport(directory, names, mode, standard = 17, warningsAsErrors = false) {
+	const command = mode === "java" ? process.env.JAVAC ?? "javac" : "c++";
+	// Unfinished learner stubs may have unused parameters. Use the displayed
+	// native build flags for exports; complete lesson examples stay warning-clean.
+	const args = mode === "java" ? ["-Xlint:all", ...names.filter(name => name.endsWith(".java"))] : [`-std=c++${standard}`, "-Wall", "-Wextra", "-Wpedantic", ...(warningsAsErrors ? ["-Werror"] : []), "-I.", ...names.filter(name => /\.(?:cc|cpp|cxx)$/.test(name)), "-o", "project"];
+	const result = await runNative(command, args, directory);
+	assert.equal(result.code, 0, `Native compilation failed: ${result.stderr}`);
+}
+
+nodeTest("the four foundation lesson programs compile and match independent console fixtures", { timeout: 120000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-lesson-contracts-"));
+	const examples = {
+		setup: [{ input: "", code: 0, stdout: "Hello, C++!\n", stderr: "" }],
+		values: [{ input: "", code: 0, stdout: "14\n9.6\n0\nA\nc\n3\ncat naps\n3\n1\n3.33333\n", stderr: "" }],
+		input: [
+			{ input: "3\ncats like naps\n", code: 0, stdout: "Count: Sentence: \n3: cats like naps\n", stderr: "" },
+			{ input: "3x\ncats like naps\n", code: 0, stdout: "Count: Sentence: \n3: cats like naps\n", stderr: "" },
+			{ input: "", code: 1, stdout: "Count: ", stderr: "Invalid count.\n" },
+			{ input: "three\ncats\n", code: 1, stdout: "Count: ", stderr: "Invalid count.\n" },
+			{ input: "3\n", code: 1, stdout: "Count: Sentence: ", stderr: "Missing sentence.\n" },
+			{ input: "3\n\n", code: 1, stdout: "Count: Sentence: ", stderr: "Missing sentence.\n" }
+		],
+		branches: [{ input: "", code: 0, stdout: "high\n1\n2\n3\n1\n2\n3\n", stderr: "" }]
+	};
+	try {
+		for (const [name, fixtures] of Object.entries(examples)) {
+			const directory = join(temporary, name);
+			await mkdir(directory);
+			const matches = [...cppFoundationLessonBriefs[name].matchAll(/```cpp\n([\s\S]*?)\n```/g)];
+			assert.equal(matches.length, 1, `Expected one standalone ${name} example`);
+			await writeFile(join(directory, "main.cpp"), `${matches[0][1]}\n`);
+			await compileExport(directory, ["main.cpp"], "cpp", 20, true);
+			for (const { input, ...expected } of fixtures) {
+				const result = await runNative(join(directory, "project"), [], directory, input);
+				assert.deepEqual(result, expected, `${name} fixture ${JSON.stringify(input)}`);
+			}
+		}
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-lesson-contracts", pid: process.pid });
+	}
+});
+
+nodeTest("published bridge and C++ foundation starters confirm, edit, save, export, reopen and compile natively", { timeout: 360000 }, async () => {
 	let browser;
 	let server;
 	let page;
 	let temporary;
 	let exitCode = 0;
 	const previousDirectory = process.cwd();
-	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 240000 });
+	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 360000 });
 	try {
 		process.chdir(root);
 		temporary = await mkdtemp(join(tmpdir(), "cpp-course-workflow-"));
@@ -137,6 +231,8 @@ nodeTest("published bridge starters confirm, edit, save, export, reopen and comp
 		browser = await puppeteer.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
 		page = await browser.newPage();
 		await page.setViewport({ width: 1280, height: 900 });
+		let repository;
+		let courseId;
 		let folder;
 		let files;
 		let sourceRequests = 0;
@@ -165,7 +261,7 @@ nodeTest("published bridge starters confirm, edit, save, export, reopen and comp
 				if (!["GET", "OPTIONS"].includes(request.method())) remoteWrites++;
 				let body = {};
 				if (courseFixture && url.pathname === "/api/accounts/me") body = { userID: "bridge-fixture" };
-				if (courseFixture && url.pathname === "/api/users/loggedin") body = { currentUser: { _id: "bridge-fixture", name: "Course fixture", email: "course@example.invalid", courseAccess: ["python-to-java-and-cpp-bridge"], courseProgress: [] } };
+				if (courseFixture && url.pathname === "/api/users/loggedin") body = { currentUser: { _id: "bridge-fixture", name: "Course fixture", email: "course@example.invalid", courseAccess: [courseId], courseProgress: [] } };
 				void respond(JSON.stringify(body));
 			}
 			else {
@@ -174,19 +270,19 @@ nodeTest("published bridge starters confirm, edit, save, export, reopen and comp
 		});
 		// Each source choice is reached through the real catalog action, including
 		// the two capstone targets. Pin published starter bytes independently.
-		for (const [packFolder, hashes] of Object.entries(packs)) {
-			folder = packFolder;
+		for (const fixture of fixtures) {
+			({ repository, courseId, folder } = fixture);
+			const { revision, standard, hashes, anchor } = fixture;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder.startsWith("PTJ1") || mode === "java" ? 390 : 1280, height: 900 });
-			files = await readStarter(folder, hashes);
+			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || mode === "java" ? 390 : 1280, height: 900 });
+			files = await readStarter(repository, revision, folder, hashes);
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
 			const beforeRuntime = runtimeRequests;
 			courseFixture = true;
-			const anchor = moduleAnchors[folder.slice(0, 4)];
 			assert.ok(anchor);
-			await page.goto(`${origin}/courses#python-to-java-and-cpp-bridge-${anchor}`, { waitUntil: "domcontentloaded" });
+			await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
 			const selector = `a[href='https://github.com/${repository}/tree/main/${folder}']:not(.is-ide-starter)`;
 			await page.waitForSelector(selector);
 			const href = await page.$eval(selector, link => link.closest(".lesson-item").querySelector(".is-ide-starter").getAttribute("href"));
@@ -213,7 +309,9 @@ nodeTest("published bridge starters confirm, edit, save, export, reopen and comp
 				expectedFiles["src/workflow.cpp"] = "// Add C++ function or class definitions here.\n";
 			}
 			await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
-			await page.waitForFunction(mode => document.querySelector(".cm-content")?.textContent.includes(mode === "java" ? "public class Main" : "int main("), {}, mode);
+			// Supplied helpers can put main below the visible CodeMirror viewport.
+			const firstLine = files[entryFile].split("\n").find(line => line.trim());
+			await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
 			const edited = `${files[entryFile]}\n// Browser workflow edit\n`;
 			expectedFiles[entryFile] = edited;
@@ -229,7 +327,7 @@ nodeTest("published bridge starters confirm, edit, save, export, reopen and comp
 			if (mode === "cpp") {
 				await page.waitForSelector("button.run-control:not(:disabled)");
 				await page.click("button.run-control");
-				await page.waitForFunction(() => document.querySelector(".output-panel")?.textContent.includes("-std=c++17"));
+				await page.waitForFunction(standard => document.querySelector(".output-panel")?.textContent.includes(`-std=c++${standard}`), {}, standard);
 				assert.equal(await page.$(".stdin-panel"), null);
 				const instructions = await page.$eval(".output-panel", element => element.textContent);
 				assert.match(instructions, /does not compile or execute/);
@@ -263,7 +361,7 @@ nodeTest("published bridge starters confirm, edit, save, export, reopen and comp
 				await mkdir(dirname(path), { recursive: true });
 				await writeFile(path, content);
 			}
-			await compileExport(directory, Object.keys(exported), mode);
+			await compileExport(directory, Object.keys(exported), mode, standard);
 			await page.reload({ waitUntil: "domcontentloaded" });
 			await page.waitForFunction(name => [...document.querySelectorAll(".file-button")].some(button => button.textContent.includes(name)), {}, entryFile);
 			await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
@@ -277,16 +375,16 @@ nodeTest("published bridge starters confirm, edit, save, export, reopen and comp
 			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Browser workflow edit"));
 			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
-			if ((folder.startsWith("PTJ4") || folder.startsWith("PTJ7")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+			if ((folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
 				await mkdir(directory, { recursive: true });
-				await page.screenshot({ path: join(directory, `course-import-${mode}-${folder.slice(0, 4)}-workspace.png`), fullPage: true });
+				await page.screenshot({ path: join(directory, `course-import-${mode}-${folder.split("/")[0]}-workspace.png`), fullPage: true });
 				if (folder.startsWith("PTJ7") && mode === "cpp") {
 					await page.setViewport({ width: 390, height: 900 });
 					await page.screenshot({ path: join(directory, "course-import-cpp-PTJ7-mobile.png"), fullPage: true });
 				}
 			}
-			record("verified", { folder, revision, mode, fileCount: Object.keys(exported).length });
+			record("verified", { repository, folder, revision, mode, standard, fileCount: Object.keys(exported).length });
 		}
 		assert.equal(remoteWrites, 0, "Imports never write to production services");
 	}
