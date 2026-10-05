@@ -1394,7 +1394,7 @@ function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 	for (const module of course.modules) {
 		// These authored lessons interleave concepts with complete references.
 		// Grouping concepts first changes the input and deterministic/random order.
-		if (courseId === "c-level-1" && /^CPPF[123] /.test(module.title))
+		if (courseId === "c-level-1" && /^CPPF[1-4] /.test(module.title))
 			continue;
 
 		const conceptItems = module.curriculum.filter(item =>

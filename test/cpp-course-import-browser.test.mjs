@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { strFromU8, unzipSync } from "fflate";
 import puppeteer from "puppeteer";
 import { preview } from "vite";
+import { cppClassesLessonBriefs } from "../front-end/src/stores/courses/cppClassesProjectBriefs.ts";
 import { cppFoundationLessonBriefs } from "../front-end/src/stores/courses/cppFoundationProjectBriefs.ts";
 import { cppFunctionsLessonBriefs } from "../front-end/src/stores/courses/cppFunctionsProjectBriefs.ts";
 
@@ -63,7 +64,7 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "90c349525c22a157bff333c6160adbd9815ed7ae";
+const foundationRevision = "b5fc424b527e1e5ab99353d243e37d1cfd602f88";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
 		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
@@ -96,8 +97,21 @@ const foundationPacks = {
 	"CPPF3-Number-Guesser/starter": {
 		"README.md": "f8388163560122cb9d5b49ef3be9736277ced261d6139c388fd5c14c5383a989",
 		"main.cpp": "bf6ebeaf8a9710ea947cca43e47dd9338bc28d8cc2263498b5d0e3a0650840df"
+	},
+	"CPPF4-Person-Class/starter": {
+		"README.md": "774d8b159609dd87293e5682eeabb4192c97f47283cba86583a29d272f0eb39c",
+		"person.cpp": "199040c957425e93357dbc9d5e07b7fd788e0cd80efd4dc48c7a91938b7d2c8c",
+		"person.h": "13e3d0df58a5ba1e4efdb4bd2fcb306aec53c4e86d706bea50ae50ec8a30f828",
+		"main.cpp": "20f07495555bbe3383b4cc89dbb57d8b557b1b2c8842a979d24547bb993f1eaf"
+	},
+	"CPPF4-Cat-Class/starter": {
+		"README.md": "b03646a70e72d8ad1c6f811f5adb388a94a3d32e325c8bcfee6549a2ac7349ae",
+		"cat.cpp": "4b8df11d98069633ae1a865702f36c432f2ba8d8bf6af92801febbbfc24b1488",
+		"cat.h": "86dfa633c5271c361505b62ae1427bf606c468d10e73c49c286e37b799ecca30",
+		"main.cpp": "725baaecae0c9596c1fa990da46e67f5607438f49075b7183fee8a2ef37e242c"
 	}
 };
+
 const fixtures = [
 	...Object.entries(packs).map(([folder, hashes]) => ({
 		repository: bridgeRepository,
@@ -119,7 +133,9 @@ const fixtures = [
 			? "cppf1-variables-types-strings-and-input-output"
 			: folder.startsWith("CPPF2")
 				? "cppf2-loops-and-conditionals"
-				: "cppf3-functions"
+				: folder.startsWith("CPPF3")
+					? "cppf3-functions"
+					: "cppf4-classes-and-objects"
 	}))
 ];
 const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "cpp-course-import-browser-ci";
@@ -263,7 +279,32 @@ nodeTest("the function lesson programs compile and satisfy return-value and rand
 	}
 });
 
-nodeTest("published bridge and C++ foundation starters confirm, edit, save, export, reopen and compile natively", { timeout: 360000 }, async () => {
+nodeTest("the supplied multi-file class lessons compile and preserve checked state/output", { timeout: 120000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-class-lesson-contracts-"));
+	const expected = {
+		point: "This is a point with coordinates x: 0 and y: 0\nThis is a point with coordinates x: -1 and y: 1\nThis is a point with coordinates x: -1 and y: 0\n0\n",
+		initializers: "Name: Unknown, Age: 0, Birthday: January 1, 1970, Birth Location: Somewhere over the rainbow, Height: 0' 0\"\nName: Jenny, Age: 21, Birthday: January 1, Birth Location: USA, Height: 5' 0\"\nAlex, 22, 66, January 1, USA\nName: Alex, Age: 22, Birthday: January 1, Birth Location: USA, Height: 5' 6\"\n"
+	};
+	try {
+		for (const name of ["point", "initializers"]) {
+			const directory = join(temporary, name);
+			await mkdir(directory);
+			const files = [...cppClassesLessonBriefs[name].matchAll(/### `([^`]+)`\n\n```cpp\n([\s\S]*?)\n```/g)];
+			assert.equal(files.length, 3);
+			const stem = name === "point" ? "point" : "person";
+			assert.deepEqual(files.map(match => match[1]), [`${stem}.h`, `${stem}.cpp`, "main.cpp"]);
+			for (const match of files) await writeFile(join(directory, match[1]), `${match[2]}\n`);
+			await compileExport(directory, files.map(match => match[1]), "cpp", 20, true);
+			assert.deepEqual(await runNative(join(directory, "project"), [], directory), { code: 0, stdout: expected[name], stderr: "" });
+		}
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-class-lesson-contracts", pid: process.pid });
+	}
+});
+
+nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 360000 }, async () => {
 	let browser;
 	let server;
 	let page;
@@ -328,7 +369,7 @@ nodeTest("published bridge and C++ foundation starters confirm, edit, save, expo
 			const { revision, standard, hashes, anchor } = fixture;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
@@ -377,6 +418,26 @@ nodeTest("published bridge and C++ foundation starters confirm, edit, save, expo
 			await page.keyboard.press("s");
 			await page.keyboard.up(modifier);
 			await page.waitForFunction((key, source, name) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === name && file.content === source)), {}, key, edited, entryFile);
+			// The new class packs must preserve and save both their interface and
+			// implementation, not only the driver's text.
+			const classFiles = folder.startsWith("CPPF4") ? Object.keys(files).filter(name => name !== entryFile && /\.(?:h|cpp)$/.test(name)) : [];
+			assert.equal(classFiles.length, folder.startsWith("CPPF4") ? 2 : 0);
+			for (const name of classFiles) {
+				await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), name);
+				const first = files[name].split("\n").find(line => line.trim());
+				await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, first);
+				const source = `${files[name]}\n// Browser workflow edit\n`;
+				expectedFiles[name] = source;
+				await page.click(".cm-content");
+				await page.keyboard.down(modifier);
+				await page.keyboard.press("a");
+				await page.keyboard.up(modifier);
+				await page.keyboard.sendCharacter(source);
+				await page.keyboard.down(modifier);
+				await page.keyboard.press("s");
+				await page.keyboard.up(modifier);
+				await page.waitForFunction((key, source, name) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === name && file.content === source)), {}, key, source, name);
+			}
 			if (mode === "cpp") {
 				await page.waitForSelector("button.run-control:not(:disabled)");
 				await page.click("button.run-control");
@@ -426,6 +487,16 @@ nodeTest("published bridge and C++ foundation starters confirm, edit, save, expo
 			await page.keyboard.press(modifier === "Meta" ? "ArrowDown" : "End");
 			await page.keyboard.up(modifier);
 			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Browser workflow edit"));
+			for (const name of classFiles) {
+				await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), name);
+				await page.click(".cm-content");
+				await page.keyboard.down(modifier);
+				await page.keyboard.press(modifier === "Meta" ? "ArrowDown" : "End");
+				await page.keyboard.up(modifier);
+				await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Browser workflow edit"));
+				assert.equal(await page.evaluate((key, name) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").find(project => project.courseProjectKey === key)?.files.find(file => file.name === name)?.content, key, name), expectedFiles[name]);
+			}
+			if (classFiles.length) await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
 			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
 			if ((folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {

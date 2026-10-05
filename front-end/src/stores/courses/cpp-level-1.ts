@@ -1,5 +1,9 @@
 import type { RawCourse } from "./types";
 import {
+	cppClassesLessonBriefs,
+	cppClassesProjectBriefs
+} from "./cppClassesProjectBriefs";
+import {
 	cppFoundationLessonBriefs,
 	cppFoundationProjectBriefs
 } from "./cppFoundationProjectBriefs";
@@ -151,35 +155,47 @@ const cppLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Classes, Objects, and Encapsulated State",
-					content:
-						"A class packages related data and behavior together. Include objects as individual instances, private state, public behavior, constructors, getters/setters when appropriate, and why methods protect invariants instead of letting every part of the program edit fields directly. Keep the focus on object modeling, not advanced language mechanics."
+					content: cppClassesLessonBriefs.objects
 				},
 				{
-					title: "Multi-File Class Implementation",
-					content:
-						"Small multi-file classes show how real C++ projects split declarations and definitions. Key topics include header files, source files, include guards, method declarations versus method bodies, default and overloaded constructors, member functions that update object state, and how to compile a project with more than one `.cpp` file.",
-					projectLink:
+					title: "Point Declarations, Definitions, and State Tracing",
+					aliases: [
+						"c-level-1-cppf4-classes-and-objects-curriculum-multi-file-class-implementation"
+					],
+					content: cppClassesLessonBriefs.point,
+					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Point-Class"
 				},
 				{
-					title: "CPPF4 Project: Cat Class",
-					content:
-						"Build a small class with constructors, state updates, and readable output. The project focuses on modeling and method practice, not memory management.",
+					title: "CPPF4 Project 1: Person Class",
+					content: cppClassesProjectBriefs.person,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Cat-Class",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Person-Class/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Cat-Class"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Person-Class/solution"
+				},
+				{
+					title: "Person Constructors and Member-Initializer Lists",
+					aliases: [
+						"c-level-1-cppf4-classes-and-objects-supplemental-classes-and-objects-bmi-extension"
+					],
+					content: cppClassesLessonBriefs.initializers,
+					solutionLink:
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Person-Class-with-BMI"
+				},
+				{
+					title: "CPPF4 Project 2: Cat Class",
+					aliases: [
+						"c-level-1-cppf4-classes-and-objects-curriculum-cppf4-project-cat-class"
+					],
+					content: cppClassesProjectBriefs.cat,
+					projectLink:
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Cat-Class/starter",
+					solutionLink:
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Cat-Class/solution"
 				}
 			],
-			supplementalProjects: [
-				{
-					title: "Classes and Objects: BMI Extension",
-					content:
-						"Treat the member-initializer-list version as an extension after the class shape itself is already comfortable.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF4-Person-Class-with-BMI"
-				}
-			]
+			supplementalProjects: []
 		},
 		{
 			title: "CPPF5 Vectors and Collection Patterns",
@@ -410,14 +426,14 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 	"CPPF4 Classes and Objects": {
 		estimatedTime: "3 sessions · 45–60 minutes each",
 		keyBlocks: [
-			"class invariant",
+			"object state",
 			"constructor",
 			"private state",
 			"header / source split",
 			"multi-file build"
 		],
 		flowNote:
-			"Build the Cat class in the smallest working slices: construct, observe, update, and reject invalid state. Compile every source file from a clean command and explain which declarations belong in the header and which definitions belong in the source file."
+			"Trace the supplied Point class, then complete the required Person project before rewriting its constructors with member-initializer lists. Complete the required Cat project with its authored defaults and signed-age contract. Compile both source files, test every public method and explain how private access differs from value validation. Supplied examples remain complete lesson references."
 	},
 	"CPPF5 Vectors and Collection Patterns": {
 		estimatedTime: "2–3 sessions · 45–60 minutes each",
