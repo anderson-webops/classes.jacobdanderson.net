@@ -186,10 +186,8 @@ test(
 					{ mode, title, code }
 				);
 				await page.goto(`${origin}/ide`, { waitUntil: "networkidle2" });
-				await page.click(
-					"details:has(.ide-diagnostics-controls) > summary"
-				);
 				await page.waitForSelector(".cm-content");
+				await page.locator(".ide-help > summary").click();
 				await page.waitForSelector(
 					"button.run-control:not([disabled])"
 				);

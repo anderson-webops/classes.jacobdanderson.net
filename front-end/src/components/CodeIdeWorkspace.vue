@@ -7671,7 +7671,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 				:to="{ path: '/courses', hash: returnLessonHash }"
 				>Return to lesson</RouterLink
 			>
-			<details>
+			<details class="ide-help">
 				<summary>Help</summary>
 				<IdeDiagnosticsControls :capture="captureIdeDiagnostics" />
 			</details>

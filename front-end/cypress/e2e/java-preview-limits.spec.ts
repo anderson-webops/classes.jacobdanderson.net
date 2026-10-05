@@ -78,7 +78,7 @@ describe("Java preview resource boundary", () => {
 			button[0]!.click();
 		});
 		cy.get("button.run-control").should("have.text", "Stop").click();
-		cy.get('[data-testid="ide-run-status"]').should("have.text", "Stopped");
+		cy.get("[data-testid='ide-run-status']").should("have.text", "Stopped");
 		cy.get("@terminateJava").should("have.been.calledOnce");
 		cy.get("button.run-control").should("have.text", "Run");
 	});

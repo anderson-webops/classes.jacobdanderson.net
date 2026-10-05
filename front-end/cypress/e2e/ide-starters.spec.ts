@@ -187,7 +187,7 @@ function outputText(document: Document) {
 
 function runtimeStatus(document: Document) {
 	return elementText(
-		document.querySelector('[data-testid="ide-run-status"]')
+		document.querySelector("[data-testid='ide-run-status']")
 	);
 }
 
@@ -227,11 +227,12 @@ async function clickStarterButton(document: Document, label: string) {
 	filters[0]!.dispatchEvent(new ChangeEvent("change", { bubbles: true }));
 	filters[1]!.value = label.startsWith("Demo ")
 		? "Demos"
-		: label.endsWith("Outline") || label === "BlueJ Java Project"
-			? "Templates"
-			: "Classroom";
+		: label.startsWith("Blank ")
+			? "Blank"
+			: label.includes("Outline") || label === "BlueJ Java Project"
+				? "Templates"
+				: "Classroom";
 	filters[1]!.dispatchEvent(new ChangeEvent("change", { bubbles: true }));
-
 	let button: HTMLButtonElement | undefined;
 	await waitFor(
 		() => {
@@ -242,7 +243,7 @@ async function clickStarterButton(document: Document, label: string) {
 			].find(candidate => elementText(candidate) === label);
 			return Boolean(button);
 		},
-		`${label} to appear in the starter menu`,
+		`${label} in the starter picker`,
 		10_000
 	);
 	if (!button) throw new Error(`Starter button ${label} is unavailable.`);

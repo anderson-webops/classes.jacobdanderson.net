@@ -31,7 +31,7 @@ context("Navigation & page smoke-tests", () => {
 		cy.get(".about-page h1").should("have.text", "About Jacob");
 
 		// ---- Tuition & Payment ---------------------------------------------
-		cy.get('.site-footer a[href="/payment"]').first().click();
+		cy.get(".site-footer").contains("a:visible", "Tuition").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/payment`);
 		cy.get("h1").contains("Tuition").should("exist");
 
