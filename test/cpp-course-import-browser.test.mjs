@@ -183,7 +183,9 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 			await page.keyboard.down(modifier);
 			await page.keyboard.press("s");
 			await page.keyboard.up(modifier);
-			await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent.trim() === "Build instructions").click());
+			await page.waitForFunction((key, source) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === "main.cpp" && file.content === source)), {}, key, edited);
+			await page.waitForSelector("button.run-control:not(:disabled)");
+			await page.click("button.run-control");
 			await page.waitForFunction(() => document.querySelector(".output-panel")?.textContent.includes("-std=c++17"));
 			assert.equal(await page.$(".stdin-panel"), null);
 			const instructions = await page.$eval(".output-panel", element => element.textContent);
