@@ -108,7 +108,6 @@ const permittedCourses = computed(() => {
 });
 
 const learnerCount = computed(() => users.value.length);
-const enabledCourseCount = computed(() => permittedCourses.value.length);
 const isTeachingMode = computed(() => props.mode === "teaching");
 
 watch(
@@ -217,60 +216,33 @@ async function saveUserCourses(userID: string) {
 
 <template>
 	<section class="profile-workspace">
-		<header v-if="!isTeachingMode" class="workspace-header">
-			<div>
-				<p class="workspace-eyebrow">Tutor profile</p>
-				<h2>
-					{{
-						isTeachingMode
-							? "Teaching workspace"
-							: "Account details"
-					}}
-				</h2>
-				<p>
-					{{
-						isTeachingMode
-							? "Check which classes you can teach and manage learner course access from one organized view."
-							: "Review your tutor account and manage login security without mixing it with learner operations."
-					}}
-				</p>
-			</div>
-			<div class="workspace-stats">
-				<div class="stat-pill">
-					<span>Enabled courses</span>
-					<strong>{{ enabledCourseCount }}</strong>
-				</div>
-				<div class="stat-pill">
-					<span>Learners</span>
-					<strong>{{ learnerCount }}</strong>
-				</div>
-			</div>
-		</header>
-
 		<article v-if="currentTutor && !isTeachingMode" class="workspace-sheet">
-			<div class="sheet-summary">
-				<div class="summary-block">
-					<p class="summary-label">Courses enabled</p>
-					<p class="summary-copy">
-						{{
-							permittedCourses.length
-								? permittedCourses
-										.map(course => course.name)
-										.join(", ")
-								: "Waiting for admin course access"
-						}}
-					</p>
+			<details class="profile-associations">
+				<summary>Courses and tutors</summary>
+				<div class="sheet-summary">
+					<div class="summary-block">
+						<p class="summary-label">Courses enabled</p>
+						<p class="summary-copy">
+							{{
+								permittedCourses.length
+									? permittedCourses
+											.map(course => course.name)
+											.join(", ")
+									: "Waiting for admin course access"
+							}}
+						</p>
+					</div>
+					<div class="summary-block">
+						<p class="summary-label">Learner roster</p>
+						<p class="summary-copy">
+							{{ learnerCount }} learner{{
+								learnerCount === 1 ? "" : "s"
+							}}
+							currently assigned
+						</p>
+					</div>
 				</div>
-				<div class="summary-block">
-					<p class="summary-label">Learner roster</p>
-					<p class="summary-copy">
-						{{ learnerCount }} learner{{
-							learnerCount === 1 ? "" : "s"
-						}}
-						currently assigned
-					</p>
-				</div>
-			</div>
+			</details>
 
 			<div class="sheet-body">
 				<section class="sheet-panel">
@@ -939,5 +911,54 @@ async function saveUserCourses(userID: string) {
 	.action-row {
 		flex-direction: column;
 	}
+}
+
+.profile-workspace,
+.admin-workspace {
+	gap: 0.75rem;
+}
+.workspace-sheet {
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	background: transparent;
+}
+.sheet-body {
+	gap: 1rem;
+}
+.sheet-panel {
+	padding: 0.75rem;
+	border-radius: 8px;
+	box-shadow: none;
+}
+.profile-associations > summary {
+	min-height: 2.75rem;
+	align-content: center;
+	cursor: pointer;
+	color: var(--color-ink-soft);
+	font-size: 0.9rem;
+}
+.directory-grid {
+	gap: 0.75rem;
+}
+.directory-card {
+	padding: 0.85rem;
+	gap: 0.65rem;
+	border-radius: 8px;
+	box-shadow: none;
+}
+.section-heading {
+	gap: 0.5rem;
+}
+.section-heading .workspace-eyebrow {
+	display: none;
+}
+.section-heading h3 {
+	font-size: 1.15rem;
+}
+.summary-block {
+	padding: 0.65rem;
+	border-radius: 6px;
 }
 </style>

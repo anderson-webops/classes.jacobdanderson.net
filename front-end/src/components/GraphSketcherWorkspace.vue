@@ -1726,10 +1726,7 @@ onBeforeUnmount(() => {
 		class="graph-sketcher-page"
 		:class="{ 'is-expanded': graphExpanded }"
 	>
-		<WorkspaceHeader
-			title="Graphing"
-			:description="`${localSaveLabel}. Download a project to keep an editable copy.`"
-		>
+		<WorkspaceHeader title="Graphing" :description="localSaveLabel">
 			<button
 				type="button"
 				class="graph-button graph-inspector-toggle"
@@ -1779,68 +1776,83 @@ onBeforeUnmount(() => {
 					Style
 				</button>
 			</div>
-			<div
-				class="graph-document-actions"
+			<details
+				class="graph-document-actions graph-project-menu"
 				role="group"
 				aria-label="Graph project actions"
 			>
-				<button type="button" class="graph-button" @click="newGraph">
-					{{ isNewGraphConfirmationPending ? "Confirm new" : "New" }}
-				</button>
-				<button type="button" class="graph-button" @click="loadSample">
-					Sample
-				</button>
-				<button
-					type="button"
-					class="graph-button"
-					:disabled="!isFileImportReady"
-					@click="openFilePicker"
-				>
-					Open / import
-				</button>
-				<button
-					type="button"
-					class="graph-button"
-					@click="downloadProject"
-				>
-					Download project
-				</button>
-				<details class="graph-export-menu">
-					<summary class="graph-button">Export</summary>
-					<div class="graph-export-options">
-						<button
-							type="button"
-							class="graph-button"
-							@click="exportSvg"
-						>
-							SVG
-						</button>
-						<button
-							type="button"
-							class="graph-button"
-							@click="exportPng"
-						>
-							PNG
-						</button>
-						<button
-							type="button"
-							class="graph-button"
-							@click="exportCsv"
-						>
-							CSV
-						</button>
-					</div>
-				</details>
-				<input
-					ref="fileInput"
-					class="sr-only"
-					type="file"
-					aria-label="Open or import a graph project"
-					accept=".graphsketch,.ograph,.json,.csv,.tsv,application/json,text/csv,text/tab-separated-values"
-					:disabled="!isFileImportReady"
-					@change="handleFileSelection"
-				/>
-			</div>
+				<summary class="graph-button">Project</summary>
+				<div class="graph-project-options">
+					<button
+						type="button"
+						class="graph-button"
+						@click="newGraph"
+					>
+						{{
+							isNewGraphConfirmationPending
+								? "Confirm new"
+								: "New"
+						}}
+					</button>
+					<button
+						type="button"
+						class="graph-button"
+						@click="loadSample"
+					>
+						Sample
+					</button>
+					<button
+						type="button"
+						class="graph-button"
+						:disabled="!isFileImportReady"
+						@click="openFilePicker"
+					>
+						Open / import
+					</button>
+					<button
+						type="button"
+						class="graph-button"
+						@click="downloadProject"
+					>
+						Download project
+					</button>
+					<details class="graph-export-menu">
+						<summary class="graph-button">Export</summary>
+						<div class="graph-export-options">
+							<button
+								type="button"
+								class="graph-button"
+								@click="exportSvg"
+							>
+								SVG
+							</button>
+							<button
+								type="button"
+								class="graph-button"
+								@click="exportPng"
+							>
+								PNG
+							</button>
+							<button
+								type="button"
+								class="graph-button"
+								@click="exportCsv"
+							>
+								CSV
+							</button>
+						</div>
+					</details>
+					<input
+						ref="fileInput"
+						class="sr-only"
+						type="file"
+						aria-label="Open or import a graph project"
+						accept=".graphsketch,.ograph,.json,.csv,.tsv,application/json,text/csv,text/tab-separated-values"
+						:disabled="!isFileImportReady"
+						@change="handleFileSelection"
+					/>
+				</div>
+			</details>
 		</WorkspaceHeader>
 
 		<div
@@ -1927,12 +1939,6 @@ onBeforeUnmount(() => {
 						Fit data
 					</button>
 				</div>
-
-				<p class="graph-tools__hint">
-					Canvas focus captures arrows, space, Page Up, and Page Down
-					so the page does not scroll while editing. Wheel zoom and
-					pointer drags also stay inside the canvas.
-				</p>
 			</aside>
 
 			<section class="graph-canvas-panel" aria-labelledby="canvas-title">
@@ -3853,6 +3859,10 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 1280px) {
+	.graph-workspace.inspector-hidden {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
 	.graph-workspace {
 		grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.48fr);
 	}
@@ -4026,5 +4036,48 @@ onBeforeUnmount(() => {
 	.graph-workspace:not(.inspector-hidden) .graph-tools {
 		display: none;
 	}
+}
+
+.graph-sketcher-page {
+	padding-block: 0.5rem 1rem;
+	gap: 0.5rem;
+}
+.graph-workspace {
+	border-radius: 10px;
+	box-shadow: none;
+}
+.graph-project-menu {
+	position: relative;
+	display: block;
+}
+.graph-project-menu > summary {
+	cursor: pointer;
+}
+.graph-project-options {
+	position: absolute;
+	top: calc(100% + 0.4rem);
+	right: 0;
+	z-index: 10;
+	width: min(20rem, 85vw);
+	padding: 0.75rem;
+	display: grid;
+	gap: 0.5rem;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--graph-panel);
+	box-shadow: var(--shadow-soft);
+}
+.graph-canvas-toolbar {
+	padding: 0.5rem 0.75rem;
+}
+.graph-canvas-toolbar h2 {
+	font-size: 1.1rem;
+}
+.graph-tools {
+	padding: 0.65rem;
+	gap: 0.65rem;
+}
+.graph-inspector {
+	padding: 0.75rem;
 }
 </style>

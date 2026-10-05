@@ -685,10 +685,7 @@ function parseDateIso(value: string): string | null {
 </script>
 
 <template>
-	<AdminWorkspaceShell
-		intro="Select the student and actual session, write the note, preview it and track the send outcome."
-		title="Notes and Mail"
-	>
+	<AdminWorkspaceShell title="Notes and Mail">
 		<section class="wrap">
 			<SessionNoteEvidenceReview />
 			<div class="mail-card">
@@ -698,13 +695,8 @@ function parseDateIso(value: string): string | null {
 						<option value="internal">Internal message</option>
 					</select></label
 				>
-				<p v-if="messageKind === 'session-note'" class="hint">
-					1. Student → 2. Actual session → 3. Draft and preview → 4.
-					Send tracking. The label date does not identify the session.
-				</p>
 				<div class="mail-card__header">
 					<div>
-						<p class="mail-card__eyebrow">Composer</p>
 						<h2>Compose Message</h2>
 					</div>
 					<div
@@ -937,8 +929,8 @@ function parseDateIso(value: string): string | null {
 							>
 								{{
 									subjectDate
-										? "Change date"
-										: "Pick session date"
+										? "Change subject date"
+										: "Pick subject date"
 								}}
 							</button>
 							<input
@@ -948,7 +940,7 @@ function parseDateIso(value: string): string | null {
 								v-model="subjectDate"
 								type="date"
 								class="sr-only"
-								aria-label="Pick session date"
+								aria-label="Pick subject date"
 								@change="handleDateChange"
 							/>
 							<input
@@ -1006,11 +998,6 @@ function parseDateIso(value: string): string | null {
 				</div>
 
 				<div class="mail-card__footer">
-					<p class="helper-copy">
-						Every send should be readable in preview first and clear
-						enough to store back into learner history when
-						applicable.
-					</p>
 					<button
 						class="send-btn"
 						:disabled="
@@ -1051,7 +1038,6 @@ function parseDateIso(value: string): string | null {
 			>
 				<div class="history-card__header">
 					<div>
-						<p class="mail-card__eyebrow">Recent notes</p>
 						<h3>{{ recentNotesHeading }}</h3>
 					</div>
 					<p v-if="recentNotesOwner" class="history-card__meta">
@@ -1322,15 +1308,6 @@ function parseDateIso(value: string): string | null {
 	gap: 1rem;
 }
 
-.mail-card__eyebrow {
-	margin: 0 0 0.35rem;
-	font-size: 0.74rem;
-	font-weight: 800;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: #2563eb;
-}
-
 .mail-card__header h2 {
 	margin: 0;
 	font-size: 1.55rem;
@@ -1342,13 +1319,6 @@ function parseDateIso(value: string): string | null {
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
-}
-
-.helper-copy {
-	margin: 0;
-	max-width: 42rem;
-	color: #526779;
-	line-height: 1.6;
 }
 
 .field-grid {

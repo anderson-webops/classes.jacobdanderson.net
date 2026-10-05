@@ -3,11 +3,10 @@ defineOptions({ name: "AboutPage" });
 </script>
 
 <template>
-	<section class="page-shell page-shell--wide about-page">
+	<section class="page-shell about-page">
 		<section aria-labelledby="intro-title" class="page-hero about-intro">
 			<div class="copy">
-				<p class="page-eyebrow">About Jacob</p>
-				<h1 id="intro-title" class="page-title">Focused Help</h1>
+				<h1 id="intro-title" class="page-title">About Jacob</h1>
 				<p class="page-copy">
 					I taught hundreds of students through Juni Learning before
 					moving into direct private instruction. Most students come
@@ -21,7 +20,7 @@ defineOptions({ name: "AboutPage" });
 					there is no active class assignment.
 				</p>
 			</div>
-			<figure class="image-wrapper media-frame">
+			<figure class="image-wrapper">
 				<img
 					alt="Jacob Anderson"
 					height="1200"
@@ -37,7 +36,7 @@ defineOptions({ name: "AboutPage" });
 				<h2 id="fit-title" class="section-title">Best Fit</h2>
 			</div>
 			<div class="fit-grid">
-				<article class="site-surface site-surface--soft">
+				<article>
 					<h3>Active Coursework</h3>
 					<p>
 						A strong fit for students who need help finishing an
@@ -45,7 +44,7 @@ defineOptions({ name: "AboutPage" });
 						next check-in.
 					</p>
 				</article>
-				<article class="site-surface site-surface--soft">
+				<article>
 					<h3>Projects</h3>
 					<p>
 						Useful for students building apps, games, labs, or other
@@ -53,7 +52,7 @@ defineOptions({ name: "AboutPage" });
 						is still in progress.
 					</p>
 				</article>
-				<article class="site-surface site-surface--soft">
+				<article>
 					<h3>Course Paths</h3>
 					<p>
 						A good fit when a student needs a defined path with
@@ -71,21 +70,21 @@ defineOptions({ name: "AboutPage" });
 				</h2>
 			</div>
 			<ul>
-				<li class="site-surface site-surface--soft">
+				<li>
 					<p>
 						<strong>Start with the exact problem:</strong>
 						We work from the assignment, bug, or project in front of
 						the student instead of drifting into generic lecture.
 					</p>
 				</li>
-				<li class="site-surface site-surface--soft">
+				<li>
 					<p>
 						<strong>Make the reasoning visible:</strong>
 						Students explain choices, test cases, and edge cases out
 						loud so understanding is easy to check.
 					</p>
 				</li>
-				<li class="site-surface site-surface--soft">
+				<li>
 					<p>
 						<strong>Leave with a next step:</strong>
 						Each session ends with what was solved, what still needs
@@ -119,77 +118,61 @@ defineOptions({ name: "AboutPage" });
 
 <style scoped>
 .about-page {
-	gap: clamp(2.25rem, 5vw, 4rem);
+	max-width: 64rem;
 }
-
 .about-intro {
-	grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.8fr);
-	align-items: center;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 10rem;
+	align-items: start;
+	gap: 2rem;
 }
-
 .image-wrapper {
-	aspect-ratio: 4 / 5;
+	margin: 0;
+	overflow: hidden;
+	border-radius: 8px;
 }
-
 .image-wrapper img {
 	width: 100%;
-	height: 100%;
-	object-fit: cover;
+	height: auto;
 }
-
-.copy {
-	display: grid;
-	gap: 1.25rem;
-}
-
+.copy,
 .about-section {
-	display: grid;
-	gap: 1.25rem;
-}
-
-.section-heading {
-	display: grid;
-	gap: 0.8rem;
-	max-width: 42rem;
-}
-
-.about-section ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	display: grid;
-	gap: 1rem;
-}
-
-.about-section li {
-	padding: 1rem 1.25rem;
-}
-
-.fit-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-	gap: 1.25rem;
-}
-
-.fit-grid article {
-	padding: 1.4rem;
 	display: grid;
 	gap: 0.75rem;
 }
-
+.fit-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1.5rem;
+}
+.fit-grid article {
+	display: grid;
+	align-content: start;
+	gap: 0.5rem;
+}
+.fit-grid h3 {
+	font: 600 1rem var(--font-sans);
+}
 .fit-grid p,
-.about-section li p {
+.about-section p {
 	color: var(--color-ink-soft);
 	line-height: 1.65;
 }
-
-@media (max-width: 920px) {
+.about-section ul {
+	list-style: none;
+	display: grid;
+	gap: 0.75rem;
+}
+@media (max-width: 700px) {
 	.about-intro {
 		grid-template-columns: 1fr;
 	}
-
 	.image-wrapper {
-		max-width: 26rem;
+		display: none;
+	}
+	.fit-grid {
+		grid-template-columns: 1fr;
+		gap: 0.75rem;
 	}
 }
 </style>

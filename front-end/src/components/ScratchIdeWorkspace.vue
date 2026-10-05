@@ -241,49 +241,56 @@ defineExpose({ stop: () => send("stop") });
 			<label
 				>Project name <input v-model="title" maxlength="120"
 			/></label>
-			<label class="file-control"
-				>Open .sb3
-				<input
-					type="file"
-					accept=".sb3"
-					:disabled="!ready || busy"
-					@change="openFile"
-			/></label>
-			<button :disabled="!ready || busy" @click="newProject">
-				New project
-			</button>
 			<button :disabled="!ready || busy" @click="send('download')">
 				Download project
 			</button>
 			<button :aria-pressed="expanded" @click="expanded = !expanded">
 				{{ expanded ? "Exit expanded view" : "Expand editor" }}
 			</button>
+			<details class="scratch-project-menu">
+				<summary>New / open</summary>
+				<div class="scratch-project-options">
+					<label class="file-control"
+						>Open .sb3
+						<input
+							type="file"
+							accept=".sb3"
+							:disabled="!ready || busy"
+							@change="openFile"
+					/></label>
+					<button :disabled="!ready || busy" @click="newProject">
+						New project
+					</button>
+					<div class="scratch-starters">
+						<label
+							>Classroom starter
+							<select v-model="starter">
+								<option value="">Choose a project</option>
+								<option value="blank">
+									Blank independent project
+								</option>
+								<option
+									v-for="item in catalog"
+									:key="item.id"
+									:value="item.id"
+								>
+									{{ item.name }}
+								</option>
+							</select></label
+						>
+						<button
+							:disabled="!selected || !ready || busy"
+							@click="openStarter"
+						>
+							Open starter
+						</button>
+					</div>
+				</div>
+			</details>
 		</div>
-		<div class="scratch-starters">
-			<label
-				>Classroom starter
-				<select v-model="starter">
-					<option value="">Choose a project</option>
-					<option value="blank">Blank independent project</option>
-					<option
-						v-for="item in catalog"
-						:key="item.id"
-						:value="item.id"
-					>
-						{{ item.name }}
-					</option>
-				</select></label
-			>
-			<button
-				:disabled="!selected || !ready || busy"
-				@click="openStarter"
-			>
-				Open starter
-			</button>
-			<span role="status"
-				>{{ status }}{{ dirty ? " Unsaved changes." : "" }}</span
-			>
-		</div>
+		<span class="scratch-status" role="status"
+			>{{ status }}{{ dirty ? " Unsaved changes." : "" }}</span
+		>
 		<div
 			class="scratch-view-switch"
 			aria-label="Scratch small-screen views"
@@ -319,24 +326,14 @@ defineExpose({ stop: () => send("stop") });
 			/>
 		</div>
 		<details class="scratch-help">
-			<summary>Saving, classroom tasks and credits</summary>
-			<p>
-				Projects run in this browser. Use Download project to save an
-				.sb3 file, then Open .sb3 to continue here or import it into
-				your school's Scratch-compatible environment. No Scratch account
-				is required. Your Scratch work is not saved to your site
-				account.
-			</p>
+			<summary>Classroom tasks and credits</summary>
 			<p v-if="selected && starter !== 'blank'">
 				<strong>Normal:</strong> {{ selected.normal }}
 				<strong>Hard:</strong> {{ selected.hard }}
 				<strong>Check:</strong> {{ selected.check }}
 			</p>
 			<p>
-				The starters include their artwork. Scratch's optional sprite
-				and sound libraries download public assets from Scratch;
-				painting and uploading your own artwork also work. Camera,
-				microphone, cloud variables and external extensions are
+				Camera, microphone, cloud variables and external extensions are
 				unavailable in this classroom editor.
 			</p>
 			<p>
@@ -469,5 +466,48 @@ defineExpose({ stop: () => send("stop") });
 	.scratch-frame-viewport {
 		max-width: 100%;
 	}
+}
+
+.scratch-workspace {
+	gap: 0.5rem;
+	padding-block: 0.5rem 1rem;
+}
+.scratch-toolbar {
+	align-items: end;
+	gap: 0.5rem;
+}
+.scratch-toolbar label {
+	gap: 0.25rem;
+}
+.scratch-project-menu {
+	position: relative;
+}
+.scratch-project-menu > summary {
+	cursor: pointer;
+	min-height: 2.75rem;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+}
+.scratch-project-options {
+	position: absolute;
+	z-index: 10;
+	top: calc(100% + 0.4rem);
+	right: 0;
+	display: grid;
+	gap: 0.75rem;
+	width: min(25rem, 85vw);
+	padding: 0.75rem;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-surface);
+	box-shadow: var(--shadow-soft);
+}
+.scratch-project-options .scratch-starters {
+	display: grid;
+}
+.scratch-status {
+	font-size: 0.85rem;
+	color: var(--color-ink-soft);
 }
 </style>

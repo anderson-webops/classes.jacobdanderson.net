@@ -65,10 +65,7 @@ onMounted(() => load());
 </script>
 
 <template>
-	<AdminWorkspaceShell
-		title="IDE problem reports"
-		intro="Private, explicitly submitted diagnostics. Reports expire after 90 days. Categories and site/build metadata are client-reported clues, not verified outage signals."
-	>
+	<AdminWorkspaceShell title="IDE problem reports">
 		<div class="report-inbox">
 			<form class="report-actions" @submit.prevent="load()">
 				<label for="report-reference-filter"

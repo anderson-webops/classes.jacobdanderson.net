@@ -104,6 +104,62 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain("core items");
 	});
 
+	it("keeps the lesson open while secondary navigation is closed, and returns focus after choosing a lesson", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+		const courses = useCoursesStore();
+		const course = await courses.loadCourseById("scratch-level-1");
+		if (!course || course.modules.length < 2)
+			throw new Error("Expected lesson fixtures");
+		useAppStore().setCurrentUser({
+			_id: "synthetic-learner",
+			name: "Example learner",
+			email: "learner@example.invalid",
+			age: 14,
+			state: "GA",
+			courseAccess: [course.id],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+		const wrapper = mount(CourseExplorer, {
+			attachTo: document.body,
+			global: { plugins: [pinia] }
+		});
+		try {
+			await flushPromises();
+			await vi.waitFor(() =>
+				expect(wrapper.find(".lesson-card").exists()).toBe(true)
+			);
+			expect(
+				wrapper.get(".course-summary").attributes("open")
+			).toBeUndefined();
+			expect(
+				wrapper.get(".course-toolbar-disclosure").attributes("open")
+			).toBeUndefined();
+			expect(
+				wrapper.get(".reader-link-groups").attributes("open")
+			).toBeUndefined();
+			const toggle = wrapper.get(".outline-toggle");
+			expect(toggle.attributes("aria-expanded")).toBe("false");
+			await wrapper.get("#course-search").setValue("loops");
+			expect(toggle.attributes("aria-expanded")).toBe("true");
+			await wrapper.get("#course-search").setValue("");
+			await toggle.trigger("click");
+			await toggle.trigger("click");
+			expect(toggle.attributes("aria-expanded")).toBe("true");
+			await wrapper.findAll(".outline-button")[1].trigger("click");
+			expect(toggle.attributes("aria-expanded")).toBe("false");
+			expect(wrapper.get(".reader-header h3").text()).toBe(
+				course.modules[1].title
+			);
+			expect(document.activeElement).toBe(
+				wrapper.get("#course-reader-panel").element
+			);
+		} finally {
+			wrapper.unmount();
+		}
+	});
+
 	it("limits a course-code learner to the course granted by that code", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
@@ -482,7 +538,7 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.find(".course-stats").text()).toContain("Appendices1");
 		expect(wrapper.find(".course-stats").text()).toContain("Core1");
 		expect(wrapper.find(".course-stats").text()).toContain("Practice0");
-		expect(wrapper.text()).toContain("Choose a section");
+		expect(wrapper.get(".outline-header").text()).toBe("Lessons");
 		expect(wrapper.text()).toContain("References");
 		expect(
 			wrapper
@@ -788,7 +844,9 @@ describe("CourseExplorer.vue", () => {
 		await flushPromises();
 
 		await vi.waitFor(() => {
-			expect(wrapper.text()).toContain("Viewing all courses");
+			expect(
+				wrapper.get(".course-toolbar-disclosure summary").text()
+			).toContain("All learners");
 			expect(
 				wrapper
 					.findAll("#course-select option")
@@ -943,7 +1001,9 @@ describe("CourseExplorer.vue", () => {
 				wrapper.find<HTMLSelectElement>("#course-select").element.value
 			).toBe(unassignedCourse.id);
 		});
-		expect(wrapper.text()).toContain("Viewing all courses");
+		expect(
+			wrapper.get(".course-toolbar-disclosure summary").text()
+		).toContain("All learners");
 		expect(wrapper.findAll(".progress-toggle")).toHaveLength(0);
 
 		await wrapper

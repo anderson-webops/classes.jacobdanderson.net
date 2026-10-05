@@ -54,27 +54,14 @@ function priorityLabel(priority: string) {
 
 <template>
 	<section class="page-shell page-shell--wide pathways-page">
-		<header class="pathways-hero site-surface">
+		<header class="pathways-hero">
 			<div class="pathways-hero__copy">
-				<p class="page-eyebrow">Course pathways</p>
 				<h1 class="page-title">Course Pathways</h1>
-				<p class="page-copy">
-					Explore course families by readiness, outcomes, projects,
-					assessment style, tools, and safety boundaries. Use each
-					pathway to choose a reasonable next course and understand
-					what successful work looks like.
-				</p>
 			</div>
-			<div class="pathways-stats" aria-label="Pathway coverage summary">
-				<div>
-					<strong>{{ coursePublicPathways.length }}</strong>
-					<span>Pathways</span>
-				</div>
-				<div>
-					<strong>{{ coveredCourseCount }}</strong>
-					<span>Courses covered</span>
-				</div>
-			</div>
+			<p class="pathways-coverage">
+				{{ coursePublicPathways.length }} pathways ·
+				{{ coveredCourseCount }} courses
+			</p>
 		</header>
 
 		<label class="pathway-search"
@@ -83,14 +70,17 @@ function priorityLabel(priority: string) {
 				type="search"
 				placeholder="Python, Scratch, math…"
 		/></label>
-		<nav class="pathway-index" aria-label="Course family index">
-			<a
-				v-for="pathway in sortedPathways"
-				:key="pathway.id"
-				:href="`#pathway-${pathway.id}`"
-				>{{ pathway.title }}</a
-			>
-		</nav>
+		<details class="pathway-navigation">
+			<summary>Course families</summary>
+			<nav class="pathway-index" aria-label="Course family index">
+				<a
+					v-for="pathway in sortedPathways"
+					:key="pathway.id"
+					:href="`#pathway-${pathway.id}`"
+					>{{ pathway.title }}</a
+				>
+			</nav>
+		</details>
 		<p v-if="!sortedPathways.length" role="status">
 			No matching pathways. Try a subject or course name.
 		</p>
@@ -473,5 +463,31 @@ function priorityLabel(priority: string) {
 	.pathway-card__header {
 		flex-direction: column;
 	}
+}
+
+.pathways-hero {
+	padding: 0;
+	align-items: center;
+	gap: 0.5rem 1rem;
+}
+.pathways-hero__copy {
+	gap: 0;
+}
+.pathways-coverage {
+	font-size: 0.85rem;
+	color: var(--color-ink-soft);
+}
+.pathway-navigation > summary {
+	min-height: 2.75rem;
+	align-content: center;
+	cursor: pointer;
+}
+.pathway-card {
+	padding: 0.85rem 1rem;
+	gap: 0.65rem;
+	border-radius: 8px;
+}
+.pathway-card h2 {
+	font-size: 1.2rem;
 }
 </style>

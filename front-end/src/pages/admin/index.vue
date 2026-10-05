@@ -4,42 +4,29 @@ import AdminWorkspaceShell from "@/components/AdminWorkspaceShell.vue";
 const adminTools = [
 	{
 		title: "IDE reports",
-		description:
-			"Review private diagnostics and problem reports from the browser IDEs.",
 		href: "/admin/ide-reports"
 	},
 	{
 		title: "People and access",
-		description:
-			"Manage tutors, learners, role changes, course permissions, recipient associations, and assigned course access.",
 		href: "/admin/people"
 	},
 	{
 		title: "Course workspace",
-		description:
-			"Open the course viewer, choose a learner context, and mark module or project progress where the curriculum is visible.",
 		href: "/courses"
 	},
 	{
 		title: "Session notes",
-		description:
-			"Send session notes and internal admin messages with markdown formatting.",
 		href: "/admin/mdmail"
 	},
 	{
 		title: "Roster spreadsheet",
-		description:
-			"Review the shared student management spreadsheet and current roster workflows.",
 		href: "/admin/student-management"
 	}
 ];
 </script>
 
 <template>
-	<AdminWorkspaceShell
-		intro="Manage learners, course access and session notes."
-		title="Admin Workspace"
-	>
+	<AdminWorkspaceShell title="Admin Workspace">
 		<nav class="tool-grid" aria-label="Admin tools">
 			<RouterLink
 				v-for="tool in adminTools.filter(tool =>
@@ -51,9 +38,7 @@ const adminTools = [
 				:to="tool.href"
 				class="tool-card"
 			>
-				<p class="tool-label">Workspace</p>
 				<h2>{{ tool.title }}</h2>
-				<p>{{ tool.description }}</p>
 			</RouterLink>
 		</nav>
 		<details>
@@ -81,9 +66,6 @@ const adminTools = [
 	background: var(--color-surface) !important;
 	border-color: var(--color-border) !important;
 	color: var(--color-ink) !important;
-}
-.tool-card p {
-	color: var(--color-ink-soft) !important;
 }
 .tool-grid {
 	display: grid;
@@ -113,24 +95,9 @@ const adminTools = [
 	box-shadow: 0 20px 38px rgba(30, 41, 59, 0.12);
 }
 
-.tool-label {
-	margin: 0;
-	font-size: 0.75rem;
-	font-weight: 800;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: #2563eb;
-}
-
 .tool-card h2 {
 	margin: 0;
 	font-size: 1.3rem;
-}
-
-.tool-card p {
-	margin: 0;
-	color: #53697f;
-	line-height: 1.6;
 }
 </style>
 

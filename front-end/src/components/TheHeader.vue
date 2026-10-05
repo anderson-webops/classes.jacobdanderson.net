@@ -101,7 +101,10 @@ function isLinkActive(link: NavLink) {
 </script>
 
 <template>
-	<header class="site-header">
+	<header
+		class="site-header"
+		:class="{ 'site-header--compact': route.path !== '/' }"
+	>
 		<div class="site-shell site-shell--wide">
 			<nav class="navbar navbar-expand-xl site-nav">
 				<div class="site-nav__inner site-surface site-surface--strong">
@@ -225,6 +228,30 @@ function isLinkActive(link: NavLink) {
 </template>
 
 <style scoped>
+.site-header.site-header--compact {
+	padding-top: 0;
+	border-bottom: 1px solid var(--color-border);
+}
+.site-header--compact .site-nav__inner {
+	padding: 0.25rem 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	gap: 0.5rem 1rem;
+}
+.site-header--compact .site-brand__title {
+	font-size: 1.15rem;
+}
+.site-header--compact
+	:is(.site-nav__link, .site-nav__action, .site-account-menu > summary) {
+	min-height: 2.75rem;
+	padding: 0.35rem 0.65rem;
+	font-size: 0.9rem;
+}
+.site-header--compact .site-nav__aside {
+	gap: 0.35rem;
+}
 .site-header {
 	position: relative;
 	z-index: 1;

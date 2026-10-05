@@ -197,18 +197,11 @@ describe("python IDE CodeMirror editor", () => {
 			'mode: route.query.mode ?? "bluej"'
 		);
 		expect(blueJLegacyRouteSource).toContain("<CodeIdeWorkspace />");
-		expect(workspaceSource).toContain("codeIdeHeroContent");
 		expect(workspaceSource).not.toContain('route.path === "/bluej"');
 		expect(workspaceSource).toContain(
 			'<WorkspaceHeader title="Python or Java">'
 		);
 		expect(workspaceSource).toContain("WorkspaceHeader");
-		expect(workspaceSource).toContain(
-			"Build multi-file Python and Java projects"
-		);
-		expect(workspaceSource).toContain(
-			"preview Java console programs or Karel robot"
-		);
 	});
 
 	it("does not force CodeMirror through a fragile manual editor chunk", () => {

@@ -40,7 +40,7 @@ const { currentTutor } = storeToRefs(app);
 	width: min(1180px, 100%);
 	margin: 0 auto;
 	display: grid;
-	gap: 1rem;
+	gap: 0.5rem;
 }
 .teaching-empty {
 	display: grid;

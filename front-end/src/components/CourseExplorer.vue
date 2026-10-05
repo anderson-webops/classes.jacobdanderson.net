@@ -130,6 +130,7 @@ const { currentTutor, currentAdmin, currentCourseLearner, currentUser, users } =
 	storeToRefs(appStore);
 
 const searchQuery = ref("");
+const outlineOpen = ref(false);
 const selectedCourseId = ref("");
 const selectedLearnerId = ref("");
 const activeModuleId = ref("");
@@ -290,15 +291,6 @@ const courseEyebrow = computed(() => {
 	return "Current course";
 });
 
-const courseDescription = computed(() =>
-	props.publicCatalog
-		? "Open modules, projects, and supplemental resources from this course."
-		: isAllLearnersContext.value
-			? "Browse every course without assigning progress to a learner."
-			: isStaffContext.value
-				? "Choose a learner, open one of their assigned courses, and mark progress directly inside the syllabus."
-				: "Use the controls below to switch courses or search inside this syllabus."
-);
 const ideCourseMode = computed(() =>
 	pythonIdeModeForCourseId(selectedCourse.value?.id)
 );
@@ -374,6 +366,9 @@ const progressSaveStatusText = computed(() => {
 });
 
 const normalizedQuery = computed(() => normalizeSearch(searchQuery.value));
+watch(normalizedQuery, query => {
+	if (query) outlineOpen.value = true;
+});
 
 watch(
 	[
@@ -1000,8 +995,14 @@ async function continueLearning() {
 	reader?.focus({ preventScroll: true });
 }
 
-function selectModule(id: string) {
+async function selectModule(id: string) {
 	activeModuleId.value = id;
+	if (!outlineOpen.value) return;
+	outlineOpen.value = false;
+	await nextTick();
+	document
+		.getElementById("course-reader-panel")
+		?.focus({ preventScroll: true });
 }
 
 function clearSearch() {
@@ -1814,11 +1815,8 @@ function writeStoredValue(key: string, value: string) {
 		<div v-if="hasCourseAccess" class="course-shell">
 			<header v-if="selectedCourse && courseStats" class="course-hero">
 				<div class="course-hero-copy">
-					<p class="course-eyebrow">{{ courseEyebrow }}</p>
+					<p class="sr-only">{{ courseEyebrow }}</p>
 					<h2>{{ selectedCourse.name }}</h2>
-					<p class="course-description">
-						{{ courseDescription }}
-					</p>
 					<div v-if="ideCourseHref" class="course-ide-action">
 						<a
 							class="site-button site-button--secondary course-ide-link"
@@ -1826,10 +1824,6 @@ function writeStoredValue(key: string, value: string) {
 						>
 							{{ ideCourseLabel }}
 						</a>
-						<span>
-							Use the browser workspace for this course's code,
-							files, and canvas projects.
-						</span>
 					</div>
 				</div>
 
@@ -1845,12 +1839,9 @@ function writeStoredValue(key: string, value: string) {
 								: "Start course"
 						}}
 					</button>
-					<p v-if="activeModule">
-						Current lesson: {{ activeModule.title }}
-					</p>
 				</div>
 				<details class="course-summary">
-					<summary>Course overview and progress</summary>
+					<summary>Progress</summary>
 					<dl class="course-stats">
 						<div class="stat">
 							<dt>Modules</dt>
@@ -1898,138 +1889,170 @@ function writeStoredValue(key: string, value: string) {
 				</details>
 			</header>
 
-			<div v-if="isStaffContext" class="staff-context-bar">
-				<label class="control-block" for="learner-select">
-					<span class="control-label">Learner context</span>
-					<select
-						id="learner-select"
-						v-model="selectedLearnerId"
-						class="course-select"
-						:disabled="
-							managedLearnersLoading || !hasLearnerContextOptions
-						"
-						@change="clearLearnerRequest"
-					>
-						<option disabled value="">
-							{{
-								managedLearnersLoading
-									? "Loading learners..."
-									: "Select a learner"
+			<div class="course-navigation-controls">
+				<details class="course-toolbar-disclosure">
+					<summary>
+						<span v-if="isStaffContext"
+							>{{
+								selectedLearner?.name ||
+								(isAllLearnersContext
+									? "All learners"
+									: "Select a learner")
 							}}
-						</option>
-						<option
-							v-if="canUseAllLearnersContext"
-							:value="ALL_LEARNERS_CONTEXT_ID"
-						>
-							All learners
-						</option>
-						<option
-							v-for="(learner, index) in managedLearners"
-							:key="learner._id"
-							:value="learner._id"
-						>
-							{{ learnerOptionLabel(learner, index) }}
-						</option>
-					</select>
-				</label>
-
-				<div class="staff-context-status">
-					<p
-						class="progress-save-status"
-						:class="`is-${progressSaveStatus}`"
-						:role="
-							progressSaveStatus === 'error' ? 'alert' : 'status'
-						"
-						aria-live="polite"
+							·
+						</span>
+						Course and search
+					</summary>
+					<div
+						class="course-toolbar"
+						:class="{ 'has-learner': isStaffContext }"
 					>
-						{{ progressSaveStatusText }}
-					</p>
-					<p
-						v-if="managedLearnersError"
-						class="progress-save-status is-error"
-						role="alert"
-					>
-						{{ managedLearnersError }}
-					</p>
-					<button
-						v-if="progressSaveStatus === 'error'"
-						class="retry-save"
-						type="button"
-						@click="retryProgressSave"
-					>
-						Retry save
-					</button>
-				</div>
-			</div>
-
-			<div class="course-toolbar">
-				<label class="control-block" for="course-select">
-					<span class="control-label">Course</span>
-					<select
-						id="course-select"
-						v-model="selectedCourseId"
-						class="course-select"
-						:disabled="courseList.length === 0"
-						@change="selectCourse(selectedCourseId)"
-					>
-						<option
-							v-if="courseList.length === 0"
-							disabled
-							value=""
+						<label
+							v-if="isStaffContext"
+							class="control-block learner-block"
+							for="learner-select"
 						>
-							No assigned courses
-						</option>
-						<optgroup
-							v-for="group in courseGroups"
-							:key="group.key"
-							:label="group.label"
-						>
-							<option
-								v-for="course in group.courses"
-								:key="course.id"
-								:value="course.id"
+							<span class="control-label">Learner context</span>
+							<select
+								id="learner-select"
+								v-model="selectedLearnerId"
+								class="course-select"
+								:disabled="
+									managedLearnersLoading ||
+									!hasLearnerContextOptions
+								"
+								@change="clearLearnerRequest"
 							>
-								{{ course.name }}
-							</option>
-						</optgroup>
-					</select>
-				</label>
+								<option disabled value="">
+									{{
+										managedLearnersLoading
+											? "Loading learners..."
+											: "Select a learner"
+									}}
+								</option>
+								<option
+									v-if="canUseAllLearnersContext"
+									:value="ALL_LEARNERS_CONTEXT_ID"
+								>
+									All learners
+								</option>
+								<option
+									v-for="(learner, index) in managedLearners"
+									:key="learner._id"
+									:value="learner._id"
+								>
+									{{ learnerOptionLabel(learner, index) }}
+								</option>
+							</select>
+						</label>
+						<label class="control-block" for="course-select">
+							<span class="control-label">Course</span>
+							<select
+								id="course-select"
+								v-model="selectedCourseId"
+								class="course-select"
+								:disabled="courseList.length === 0"
+								@change="selectCourse(selectedCourseId)"
+							>
+								<option
+									v-if="courseList.length === 0"
+									disabled
+									value=""
+								>
+									No assigned courses
+								</option>
+								<optgroup
+									v-for="group in courseGroups"
+									:key="group.key"
+									:label="group.label"
+								>
+									<option
+										v-for="course in group.courses"
+										:key="course.id"
+										:value="course.id"
+									>
+										{{ course.name }}
+									</option>
+								</optgroup>
+							</select>
+						</label>
 
-				<label class="control-block search-block" for="course-search">
-					<span class="control-label">Search lessons</span>
-					<div class="search-shell">
-						<input
-							id="course-search"
-							v-model="searchQuery"
-							class="course-search"
-							name="course-search"
-							placeholder="Search module titles, lessons, or keywords"
-							type="search"
-						/>
-						<button
-							v-if="searchQuery"
-							class="clear-search"
-							type="button"
-							@click="clearSearch"
+						<label
+							class="control-block search-block"
+							for="course-search"
 						>
-							Clear
-						</button>
+							<span class="control-label">Search lessons</span>
+							<div class="search-shell">
+								<input
+									id="course-search"
+									v-model="searchQuery"
+									class="course-search"
+									name="course-search"
+									placeholder="Search module titles, lessons, or keywords"
+									type="search"
+								/>
+								<button
+									v-if="searchQuery"
+									class="clear-search"
+									type="button"
+									@click="clearSearch"
+								>
+									Clear
+								</button>
+							</div>
+						</label>
 					</div>
-				</label>
+				</details>
+				<button
+					class="outline-toggle site-button site-button--secondary"
+					type="button"
+					aria-controls="course-outline"
+					:aria-expanded="outlineOpen"
+					@click="outlineOpen = !outlineOpen"
+				>
+					{{ outlineOpen ? "Hide lessons" : "Lessons" }}
+				</button>
 			</div>
 
+			<div
+				v-if="
+					isStaffContext &&
+					(progressSaveStatus !== 'idle' || managedLearnersError)
+				"
+				class="staff-context-status"
+			>
+				<p
+					v-if="progressSaveStatus !== 'idle'"
+					class="progress-save-status"
+					:class="`is-${progressSaveStatus}`"
+					:role="progressSaveStatus === 'error' ? 'alert' : 'status'"
+					aria-live="polite"
+				>
+					{{ progressSaveStatusText }}
+				</p>
+				<p
+					v-if="managedLearnersError"
+					class="progress-save-status is-error"
+					role="alert"
+				>
+					{{ managedLearnersError }}
+				</p>
+				<button
+					v-if="progressSaveStatus === 'error'"
+					class="retry-save"
+					type="button"
+					@click="retryProgressSave"
+				>
+					Retry save
+				</button>
+			</div>
 			<div v-if="selectedCourse" class="course-workspace">
-				<aside class="course-outline">
-					<div class="outline-header">
-						<p class="outline-eyebrow">Syllabus</p>
-						<h3>Choose a section</h3>
-						<!--
-						<p>
-							The right side shows the full reading view for the
-							selected module.
-						</p>
-						-->
-					</div>
+				<aside
+					id="course-outline"
+					class="course-outline"
+					:class="{ 'is-open': outlineOpen }"
+				>
+					<div class="outline-header"><h3>Lessons</h3></div>
 
 					<div v-if="visibleModules.length > 0" class="outline-list">
 						<section
@@ -2123,29 +2146,6 @@ function writeStoredValue(key: string, value: string) {
 								{{ activeModule.position }}
 							</p>
 							<h3>{{ activeModule.title }}</h3>
-							<dl
-								v-if="
-									activeModule.estimatedTime ||
-									activeModule.keyBlocks?.length
-								"
-								class="module-guide"
-							>
-								<div v-if="activeModule.estimatedTime">
-									<dt>Estimated pace</dt>
-									<dd>{{ activeModule.estimatedTime }}</dd>
-								</div>
-								<div v-if="activeModule.keyBlocks?.length">
-									<dt>Key blocks</dt>
-									<dd class="key-block-list">
-										<span
-											v-for="block in activeModule.keyBlocks"
-											:key="block"
-										>
-											{{ block }}
-										</span>
-									</dd>
-								</div>
-							</dl>
 							<label
 								v-if="canEditActiveModuleProgress"
 								class="progress-toggle is-module"
@@ -2183,56 +2183,98 @@ function writeStoredValue(key: string, value: string) {
 							</p>
 						</div>
 
-						<div
-							v-if="
-								activeModuleProjectLinks.length > 0 ||
-								activeModuleSupplementalLinks.length > 0
-							"
-							class="reader-link-groups"
-						>
-							<div
-								v-if="activeModuleProjectLinks.length > 0"
-								class="reader-link-group"
+						<div class="reader-tools">
+							<details
+								v-if="
+									activeModule.estimatedTime ||
+									activeModule.keyBlocks?.length
+								"
+								class="module-guide-disclosure"
 							>
-								<h4 class="reader-link-heading">
-									{{ activeCurriculumJumpHeading }}
-								</h4>
-								<nav
-									aria-label="Jump to module lesson"
-									class="reader-jump-links"
+								<summary>Lesson guide</summary>
+								<dl
+									v-if="
+										activeModule.estimatedTime ||
+										activeModule.keyBlocks?.length
+									"
+									class="module-guide"
 								>
-									<a
-										v-for="link in activeModuleProjectLinks"
-										:key="link.id"
-										class="jump-link"
-										:href="`#${link.id}`"
-									>
-										{{ link.label }}
-									</a>
-								</nav>
-							</div>
+									<div v-if="activeModule.estimatedTime">
+										<dt>Estimated pace</dt>
+										<dd>
+											{{ activeModule.estimatedTime }}
+										</dd>
+									</div>
+									<div v-if="activeModule.keyBlocks?.length">
+										<dt>Key blocks</dt>
+										<dd class="key-block-list">
+											<span
+												v-for="block in activeModule.keyBlocks"
+												:key="block"
+											>
+												{{ block }}
+											</span>
+										</dd>
+									</div>
+								</dl>
+							</details>
 
-							<div
-								v-if="activeModuleSupplementalLinks.length > 0"
-								class="reader-link-group"
+							<details
+								v-if="
+									activeModuleProjectLinks.length > 0 ||
+									activeModuleSupplementalLinks.length > 0
+								"
+								class="reader-link-groups"
 							>
-								<h4 class="reader-link-heading is-supplemental">
-									{{ activeSupplementalJumpHeading }}
-								</h4>
-								<nav
-									aria-label="Jump to supplemental project"
-									class="reader-jump-links"
+								<summary>Jump to a project</summary>
+								<div
+									v-if="activeModuleProjectLinks.length > 0"
+									class="reader-link-group"
 								>
-									<a
-										v-for="link in activeModuleSupplementalLinks"
-										:key="link.id"
-										class="jump-link is-supplemental"
-										:href="`#${link.id}`"
+									<h4 class="reader-link-heading">
+										{{ activeCurriculumJumpHeading }}
+									</h4>
+									<nav
+										aria-label="Jump to module lesson"
+										class="reader-jump-links"
 									>
-										{{ link.label }}
-									</a>
-								</nav>
-							</div>
+										<a
+											v-for="link in activeModuleProjectLinks"
+											:key="link.id"
+											class="jump-link"
+											:href="`#${link.id}`"
+										>
+											{{ link.label }}
+										</a>
+									</nav>
+								</div>
+
+								<div
+									v-if="
+										activeModuleSupplementalLinks.length > 0
+									"
+									class="reader-link-group"
+								>
+									<h4
+										class="reader-link-heading is-supplemental"
+									>
+										{{ activeSupplementalJumpHeading }}
+									</h4>
+									<nav
+										aria-label="Jump to supplemental project"
+										class="reader-jump-links"
+									>
+										<a
+											v-for="link in activeModuleSupplementalLinks"
+											:key="link.id"
+											class="jump-link is-supplemental"
+											:href="`#${link.id}`"
+										>
+											{{ link.label }}
+										</a>
+									</nav>
+								</div>
+							</details>
 						</div>
 					</header>
 
@@ -2875,33 +2917,6 @@ function writeStoredValue(key: string, value: string) {
 </template>
 
 <style scoped>
-.course-hero {
-	padding: 1rem !important;
-	gap: 0.75rem !important;
-	grid-template-columns: minmax(0, 1fr) auto !important;
-}
-.course-hero h2 {
-	font-size: 1.5rem !important;
-}
-.course-description,
-.course-eyebrow,
-.course-ide-action span {
-	display: none;
-}
-.course-summary {
-	grid-column: 1 / -1;
-}
-.course-resume p {
-	font-size: 0.9rem;
-	margin: 0.35rem 0 0;
-	color: var(--color-ink-soft);
-}
-@media (max-width: 700px) {
-	.course-hero {
-		grid-template-columns: 1fr !important;
-	}
-}
-
 .course-explorer {
 	--course-border: rgba(15, 23, 42, 0.08);
 	--course-border-strong: rgba(30, 41, 59, 0.12);
@@ -4196,6 +4211,305 @@ button.resource-link {
 
 	.lesson-card.is-supplemental {
 		padding-left: 0.85rem;
+	}
+}
+
+/* Keep the lesson above the fold. Secondary navigation opens on demand. */
+.course-shell {
+	gap: 0.75rem;
+	overflow: visible;
+}
+.course-hero {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	padding: 0;
+}
+.course-hero-copy {
+	flex: 1 1 auto;
+	flex-direction: row;
+	align-items: center;
+	gap: 0.75rem;
+}
+.course-hero h2 {
+	font-size: 1.35rem;
+}
+.course-ide-action {
+	margin: 0;
+}
+.course-summary {
+	position: relative;
+	font-size: 0.9rem;
+}
+.course-summary summary {
+	min-height: 2.75rem;
+	display: list-item;
+	align-content: center;
+	cursor: pointer;
+}
+.course-stats {
+	position: absolute;
+	z-index: 5;
+	right: 0;
+	width: min(28rem, 85vw);
+	max-width: none;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 0.75rem;
+	gap: 0.65rem 1rem;
+	background: var(--course-panel);
+	box-shadow: var(--course-shadow);
+}
+.stat {
+	padding: 0;
+	border: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+	gap: 0.4rem;
+	background: transparent;
+}
+.stat.is-progress {
+	background: transparent;
+}
+.stat dt {
+	text-transform: none;
+	letter-spacing: 0;
+	color: var(--course-text-soft);
+	font-size: 0.9rem;
+}
+.stat dd {
+	margin: 0;
+	font-size: 1rem;
+}
+.stat small {
+	display: inline;
+	margin: 0 0 0 0.4rem;
+	font-size: 0.8rem;
+}
+.course-navigation-controls {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.5rem;
+}
+.course-toolbar-disclosure {
+	flex: 1;
+	min-width: 0;
+}
+.course-toolbar-disclosure > summary {
+	min-height: 2.75rem;
+	align-content: center;
+	cursor: pointer;
+	color: var(--course-text-soft);
+	font-size: 0.85rem;
+}
+.course-toolbar-disclosure[open] .course-toolbar {
+	margin-top: 0.5rem;
+}
+.course-toolbar {
+	display: grid;
+	grid-template-columns: minmax(12rem, 1fr) minmax(12rem, 1fr);
+	gap: 0.75rem;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+.course-toolbar.has-learner {
+	grid-template-columns: minmax(12rem, 0.8fr) minmax(14rem, 1.2fr) minmax(
+			12rem,
+			1fr
+		);
+}
+.control-block {
+	gap: 0.25rem;
+}
+.control-label {
+	font-size: 0.8rem;
+	text-transform: none;
+	letter-spacing: 0;
+}
+.course-select,
+.course-search {
+	min-height: 2.75rem;
+	padding: 0.5rem 0.75rem;
+	border-radius: 8px;
+	font-size: 0.9rem;
+	box-shadow: none;
+}
+.course-select {
+	padding-right: 2.5rem;
+}
+.staff-context-status {
+	justify-content: flex-start;
+	flex-direction: row;
+}
+.progress-save-status {
+	padding: 0.25rem 0.5rem;
+	font-size: 0.85rem;
+	font-weight: 500;
+}
+.course-workspace {
+	grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr);
+	border-radius: 10px;
+	box-shadow: none;
+}
+.course-outline {
+	position: static;
+	padding: 0.75rem;
+	gap: 0.65rem;
+	background: transparent;
+	max-height: none;
+}
+.outline-header {
+	padding: 0;
+}
+.outline-header h3 {
+	font-family: inherit;
+	font-size: 0.95rem;
+}
+.outline-button {
+	padding: 0.5rem;
+	gap: 0.5rem;
+	border-radius: 6px;
+}
+.outline-copy strong {
+	font-size: 0.85rem;
+}
+.outline-copy small {
+	font-size: 0.75rem;
+}
+.outline-position {
+	width: 1.5rem;
+	height: 1.5rem;
+	font-size: 0.75rem;
+}
+.course-reader {
+	padding: 1rem 1.25rem;
+	gap: 1rem;
+}
+.reader-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	flex-direction: row;
+	gap: 0.5rem 1rem;
+	padding: 0 0 0.75rem;
+}
+.reader-copy {
+	flex: 1 1 18rem;
+	gap: 0.35rem;
+}
+.reader-header h3 {
+	font-size: clamp(1.25rem, 2vw, 1.6rem);
+}
+.reader-tools {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: start;
+	gap: 0.25rem 1rem;
+	max-width: 100%;
+}
+.reader-link-groups {
+	display: block;
+	margin: 0;
+	max-width: 100%;
+}
+.reader-link-groups summary,
+.module-guide-disclosure summary {
+	min-height: 2.75rem;
+	align-content: center;
+	cursor: pointer;
+	color: var(--course-text-soft);
+	font-size: 0.85rem;
+}
+.reader-link-group {
+	margin-top: 0.75rem;
+}
+.module-guide {
+	margin-top: 0.5rem;
+}
+.progress-toggle.is-module {
+	margin-top: 0.35rem;
+	font-size: 0.85rem;
+}
+.section-header {
+	gap: 0.5rem;
+}
+.section-header > div {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.5rem;
+}
+.section-header .section-eyebrow {
+	margin: 0;
+}
+.section-header h4 {
+	font-size: 1.2rem;
+}
+.lesson-card {
+	padding: 1rem;
+	border-radius: 8px;
+	box-shadow: none;
+}
+.lesson-header {
+	gap: 0.65rem;
+}
+.outline-toggle {
+	display: none;
+}
+@media (max-width: 800px) {
+	.course-workspace {
+		grid-template-columns: 1fr;
+	}
+	.course-toolbar.has-learner {
+		grid-template-columns: 1fr 1fr;
+	}
+	.course-toolbar.has-learner .search-block {
+		grid-column: 1 / -1;
+	}
+	.outline-toggle {
+		display: inline-flex;
+		align-self: flex-start;
+	}
+	.course-outline {
+		display: none;
+		border-right: 0;
+	}
+	.course-outline.is-open {
+		display: flex;
+		max-height: min(45vh, 24rem);
+		overflow: auto;
+	}
+	.course-reader {
+		padding: 0.85rem;
+	}
+	.course-hero-copy {
+		flex-wrap: wrap;
+	}
+}
+@media (max-width: 480px) {
+	.course-toolbar,
+	.course-toolbar.has-learner {
+		grid-template-columns: 1fr;
+	}
+	.course-toolbar.has-learner .search-block {
+		grid-column: auto;
+	}
+	.course-summary {
+		margin-left: auto;
+	}
+	.lesson-header {
+		flex-direction: row;
+		align-items: center;
+	}
+	.section-header {
+		flex-direction: row;
+		align-items: center;
+	}
+	.search-shell {
+		flex-direction: row;
 	}
 }
 </style>

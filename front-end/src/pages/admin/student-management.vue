@@ -9,15 +9,10 @@ import AdminWorkspaceShell from "@/components/AdminWorkspaceShell.vue";
 			label: 'Open full spreadsheet',
 			external: true
 		}"
-		intro="Use this as a secondary roster snapshot for cross-checking. Native people, access, and progress work should happen in the admin people workspace and course workspace."
 		title="Roster Spreadsheet"
 	>
 		<div class="sheet-panel">
-			<p class="helper-text">
-				This embedded view is for quick review. Use the full sheet for
-				editing, filters, or protected-range work.
-			</p>
-			<p id="spreadsheet-summary" class="helper-text">
+			<p id="spreadsheet-summary" class="sr-only">
 				Screen reader users should use the full spreadsheet link above
 				for the most complete table navigation and editing controls.
 			</p>

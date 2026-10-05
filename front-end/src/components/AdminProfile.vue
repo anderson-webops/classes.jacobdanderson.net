@@ -77,8 +77,6 @@ const courseNameMap = computed<Record<string, string>>(
 			{} as Record<string, string>
 		) ?? {}
 );
-const tutorCount = computed(() => tutors.value.length);
-const userCount = computed(() => users.value.length);
 const adminRecipientNames = computed(() =>
 	adminRecipients.value.map(recipient => recipient.name)
 );
@@ -591,40 +589,6 @@ function confirmDeleteAdmin() {
 
 <template>
 	<section class="admin-workspace">
-		<header v-if="isAccountMode" class="workspace-header">
-			<div>
-				<p class="workspace-eyebrow">
-					{{
-						isAccountMode
-							? "Administrator account"
-							: "Administration"
-					}}
-				</p>
-				<h2>
-					{{
-						isAccountMode ? "Account details" : "People and access"
-					}}
-				</h2>
-				<p>
-					{{
-						isAccountMode
-							? "Review your admin account and manage login security without mixing it with roster or course operations."
-							: "Manage tutors, learners, permissions, assignments, session tools, and role changes from the admin workspace."
-					}}
-				</p>
-			</div>
-			<div class="workspace-stats">
-				<div class="stat-pill">
-					<span>Tutors</span>
-					<strong>{{ tutorCount }}</strong>
-				</div>
-				<div class="stat-pill">
-					<span>Learners</span>
-					<strong>{{ userCount }}</strong>
-				</div>
-			</div>
-		</header>
-
 		<p
 			v-if="success"
 			class="status-banner is-success"
@@ -639,28 +603,6 @@ function confirmDeleteAdmin() {
 
 		<template v-if="isAccountMode">
 			<article v-if="currentAdmin" class="workspace-sheet">
-				<div class="sheet-summary">
-					<div class="summary-block">
-						<p class="summary-label">Directory overview</p>
-						<p class="summary-copy">
-							{{ tutorCount }} tutor{{
-								tutorCount === 1 ? "" : "s"
-							}}
-							and {{ userCount }} learner{{
-								userCount === 1 ? "" : "s"
-							}}
-							are currently active in the workspace.
-						</p>
-					</div>
-					<div class="summary-block">
-						<p class="summary-label">Primary responsibility</p>
-						<p class="summary-copy">
-							Control who can teach which courses and which
-							students can open each curriculum.
-						</p>
-					</div>
-				</div>
-
 				<div class="sheet-body">
 					<section class="sheet-panel">
 						<div class="panel-header">
@@ -1947,5 +1889,54 @@ function confirmDeleteAdmin() {
 	.stat-pill:last-child {
 		border-bottom: none;
 	}
+}
+
+.profile-workspace,
+.admin-workspace {
+	gap: 0.75rem;
+}
+.workspace-sheet {
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	background: transparent;
+}
+.sheet-body {
+	gap: 1rem;
+}
+.sheet-panel {
+	padding: 0.75rem;
+	border-radius: 8px;
+	box-shadow: none;
+}
+.profile-associations > summary {
+	min-height: 2.75rem;
+	align-content: center;
+	cursor: pointer;
+	color: var(--color-ink-soft);
+	font-size: 0.9rem;
+}
+.directory-grid {
+	gap: 0.75rem;
+}
+.directory-card {
+	padding: 0.85rem;
+	gap: 0.65rem;
+	border-radius: 8px;
+	box-shadow: none;
+}
+.section-heading {
+	gap: 0.5rem;
+}
+.section-heading .workspace-eyebrow {
+	display: none;
+}
+.section-heading h3 {
+	font-size: 1.15rem;
+}
+.summary-block {
+	padding: 0.65rem;
+	border-radius: 6px;
 }
 </style>

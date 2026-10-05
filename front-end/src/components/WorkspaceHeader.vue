@@ -20,13 +20,13 @@ defineProps<{ title: string; description?: string }>();
 	align-items: center;
 	justify-content: space-between;
 	flex-wrap: wrap;
-	gap: 0.75rem;
-	padding: 0.75rem 0;
+	gap: 0.5rem;
+	padding: 0.25rem 0;
 	color: var(--color-ink);
 }
 .workspace-heading h1 {
 	margin: 0;
-	font-size: clamp(1.35rem, 3vw, 1.8rem);
+	font-size: clamp(1.2rem, 2vw, 1.5rem);
 }
 .workspace-heading p {
 	margin: 0.35rem 0 0;
