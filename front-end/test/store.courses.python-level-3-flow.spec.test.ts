@@ -379,6 +379,181 @@ describe("Python Level 3 learner flow", () => {
 		expect(buildPath.match(/^\d+\./gm)).toHaveLength(16);
 	});
 
+	it("gives check-in one complete string, recursion and stack contracts", () => {
+		const module = requireSourceModule("Check-In #1");
+		const text = module.curriculum.map(item => item.content).join("\n");
+		for (const contract of [
+			"middle_letters(word)",
+			"second_word(sentence)",
+			"fewer than two words",
+			"num_pins(rows)",
+			"zero rows need zero pins",
+			"lucas(n)",
+			"one-based positions",
+			"1 through 20",
+			"strangeFunction(4)",
+			"nums = [1, 2, 3, 4, 5]",
+			"make_word(keystrokes)",
+			"backspace on an empty stack does nothing",
+			"separate solution and answer key"
+		]) {
+			expect(text).toContain(contract);
+		}
+	});
+
+	it("preserves original check-in two expressions, traces and search boundaries", () => {
+		const module = requireSourceModule("Check-In #2");
+		const text = module.curriculum.map(item => item.content).join("\n");
+		for (const contract of [
+			"n^2 + 1000n",
+			"log(n) + sqrt(n)",
+			"1*2*3*...*n",
+			"expression's value",
+			"weirdFunction(nums)",
+			"function1(nums)",
+			"function2(50)",
+			"linear_search(l, v)",
+			"bin_search_iter(lst, item)",
+			"bin_search_recur(lst, item)",
+			"rather than slicing",
+			"first_one_index(numbers)",
+			"-1 for empty/all-zero input",
+			"two descending selection passes on [2, 5, 10, 3, 6, 1]",
+			"inserting indices 1, 2 and 3",
+			"return the same list",
+			"tied items"
+		]) {
+			expect(text).toContain(contract);
+		}
+		const timing = module.curriculum.find(item =>
+			item.title.includes("Additional Practice Project")
+		)!;
+		for (const contract of [
+			"two-sort review",
+			"AM11's five-sort",
+			"selection_sort2(lst)",
+			"insertion_sort2(lst)",
+			"make_workloads(n, seed=0)",
+			"time_sort(sorter, values)",
+			"benchmark(sizes=(100, 300), repeats=3, seed=0, sorters=None)",
+			"random, sorted and reversed",
+			"fresh copy of the same shape",
+			"median of measured samples",
+			"timings do not prove Big-O"
+		]) {
+			expect(timing.content).toContain(contract);
+		}
+	});
+
+	it("states exact advanced-sort and file record policies without filling trace answers", () => {
+		const module = requireSourceModule("Check-In #3");
+		const text = module.curriculum.map(item => item.content).join("\n");
+		for (const contract of [
+			"unoptimized baseline",
+			"[4, 8, 2, 1, 10, 0]",
+			"actual no-swap early cutoff",
+			"merge(listA, listB)",
+			"taking left ties first",
+			"Avoid pop(0)",
+			"partition(lst, pivot)",
+			"within-group order",
+			"distinct-key model",
+			"write_letters(word, path='file.txt')",
+			"read_letter_counts(path='file.txt')",
+			"not meaningful spaces",
+			"Empty files return {}",
+			"Neither automatically splits text into words",
+			"Reopen generated file.txt"
+		]) {
+			expect(text).toContain(contract);
+		}
+		const fileSort = module.curriculum.find(item =>
+			item.title.includes("Additional Practice Project")
+		)!;
+		for (const contract of [
+			"read_letters(path='input.txt')",
+			"sort_letters(letters)",
+			"write_letters(letters, path='output.txt')",
+			"sort_file(input_path='input.txt', output_path='output.txt')",
+			"Literal space/tab",
+			"one-based line number",
+			"path/symlink/hardlink aliases",
+			"preserve input bytes",
+			"malformed input preserves existing output",
+			"save/export"
+		]) {
+			expect(fileSort.content).toContain(contract);
+		}
+		for (const answer of [
+			"[10, 6, 2, 3, 5, 1]",
+			"[2, 3, 5, 7, 10, 1]",
+			"[2, 1, 4, 0, 8, 10]"
+		]) {
+			expect(text).not.toContain(answer);
+			expect(
+				requireSourceModule("Check-In #2")
+					.curriculum.map(item => item.content)
+					.join("\n")
+			).not.toContain(answer);
+		}
+	});
+
+	it("keeps check-in source roles, core placement and progress IDs after normalization", async () => {
+		const course = await useCoursesStore().loadCourseById("python-level-3");
+		const raw = await loadRawCourse("python-level-3");
+		const sourceItems = raw!.modules.flatMap(module => module.curriculum);
+		const items = course!.modules.flatMap(module => module.curriculum);
+		for (const [number, folder] of [
+			[1, "AM-Check-In-1"],
+			[2, "AM-Check-In-2"],
+			[3, "AM-Check-In-3"]
+		] as const) {
+			const starterUrl = `https://github.com/instruction-material/Python-Level-3/tree/main/${folder}/starter`;
+			const item = items.find(
+				candidate => candidate.projectLink === starterUrl
+			)!;
+			expect(item.id).toBe(
+				`python-level-3-check-in-${number}-curriculum-check-in-${number}-overview`
+			);
+			expect(item.aliases).toEqual([
+				`python-level-3-check-in-${number}-curriculum-python-level-3-check-in-${number}-overview`
+			]);
+			expect(item.learningPath).toBe("core");
+			expect(item.projectLink).toBe(
+				`https://github.com/instruction-material/Python-Level-3/tree/main/${folder}/starter`
+			);
+			expect(item.solutionLink).toBeUndefined();
+			expect(
+				sourceItems.find(
+					candidate => candidate.projectLink === starterUrl
+				)?.solutionLink
+			).toBe(
+				`https://github.com/instruction-material/Python-Level-3/tree/main/${folder}/solution`
+			);
+			expect(item.content).toContain("Confirm importing");
+		}
+		for (const number of [2, 3]) {
+			const item = items.find(candidate =>
+				candidate.projectLink?.endsWith(
+					`/AM-Check-In-${number}-Additional-Project/starter`
+				)
+			)!;
+			expect(item.id).toBe(
+				`python-level-3-check-in-${number}-curriculum-check-in-${number}-additional-practice-project`
+			);
+			expect(item.learningPath).toBe("core");
+			expect(item.projectLink).toMatch(
+				new RegExp(`/AM-Check-In-${number}-Additional-Project/starter$`)
+			);
+			expect(item.solutionLink).toBeUndefined();
+			expect(
+				sourceItems.find(
+					candidate => candidate.projectLink === item.projectLink
+				)?.solutionLink
+			).toMatch(/\/solution$/);
+		}
+	});
+
 	it("keeps licensed sort animations and only available project media", async () => {
 		const course = await loadRawCourse("python-level-3");
 		expect(course).not.toBeNull();

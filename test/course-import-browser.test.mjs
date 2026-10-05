@@ -8,13 +8,26 @@ import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer";
 import { createServer } from "vite";
 import { runAxeInPage } from "../scripts/a11y-axe-runtime.mjs";
+import { strFromU8, unzipSync } from "fflate";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const axeSource = createRequire(import.meta.url).resolve("axe-core/axe.min.js");
+// Synthetic workflow fixture, not a completed course sorting assignment.
+const fileIoInput = "b\n \nA\nb";
+const fileIoOutput = "B\n \nA\nB\n";
+const fileIoSource = [
+	"from pathlib import Path",
+	"source = Path('input.txt').read_text(encoding='utf-8')",
+	"with open('output.txt', 'w', encoding='utf-8', newline='\\n') as output:",
+	"    for letter in source.splitlines():",
+	"        output.write(letter.upper() + '\\n')",
+	"print('COURSE_FILE_IO_PASS')",
+	""
+].join("\n");
 
 test(
 	"confirmed imports, retry, accessible feedback, and analysis resource roles",
-	{ timeout: 120000 },
+	{ timeout: 180000 },
 	async () => {
 		let browser;
 		let server;
@@ -30,7 +43,7 @@ test(
 				command: "course-import-browser",
 				pid: process.pid,
 				startedAt,
-				timeoutMs: 120000
+				timeoutMs: 180000
 			})
 		);
 		try {
@@ -65,8 +78,24 @@ test(
 				let sourceRequests = 0;
 				let remoteWrites = 0;
 				let courseFixture = false;
+				let fileIoFixture = false;
 				await page.setRequestInterception(true);
 				page.on("request", request => {
+					if (
+						request.interceptResolutionState().action === "disabled"
+					) {
+						if (!["GET", "OPTIONS"].includes(request.method()))
+							remoteWrites++;
+						const hostname = new URL(request.url()).hostname;
+						if (
+							[
+								"api.github.com",
+								"raw.githubusercontent.com"
+							].includes(hostname)
+						)
+							sourceRequests++;
+						return;
+					}
 					const url = new URL(request.url());
 					if (url.hostname === "api.github.com") {
 						sourceRequests++;
@@ -76,18 +105,41 @@ test(
 							headers: { "access-control-allow-origin": "*" },
 							body: failDownload
 								? "{}"
-								: JSON.stringify([
-										{
-											type: "file",
-											name: "main.py",
-											path: "starter/main.py",
-											size: 29,
-											html_url:
-												"https://github.com/example/course/blob/main/starter/main.py",
-											download_url:
-												"https://raw.githubusercontent.com/example/course/main/starter/main.py"
-										}
-									])
+								: JSON.stringify(
+										fileIoFixture
+											? [
+													...[
+														"main.py",
+														"input.txt"
+													].map(name => ({
+														type: "file",
+														name,
+														path: `starter/${name}`,
+														size:
+															name === "main.py"
+																? Buffer.byteLength(
+																		fileIoSource
+																	)
+																: Buffer.byteLength(
+																		fileIoInput
+																	),
+														html_url: `https://github.com/example/course/blob/main/starter/${name}`,
+														download_url: `https://raw.githubusercontent.com/example/course/main/starter/${name}`
+													}))
+												]
+											: [
+													{
+														type: "file",
+														name: "main.py",
+														path: "starter/main.py",
+														size: 29,
+														html_url:
+															"https://github.com/example/course/blob/main/starter/main.py",
+														download_url:
+															"https://raw.githubusercontent.com/example/course/main/starter/main.py"
+													}
+												]
+									)
 						});
 					} else if (url.hostname === "raw.githubusercontent.com") {
 						sourceRequests++;
@@ -95,7 +147,11 @@ test(
 							status: 200,
 							contentType: "text/plain",
 							headers: { "access-control-allow-origin": "*" },
-							body: "print('course source marker')\n"
+							body: fileIoFixture
+								? url.pathname.endsWith("/input.txt")
+									? fileIoInput
+									: fileIoSource
+								: "print('course source marker')\n"
 						});
 					} else if (
 						url.origin !== origin ||
@@ -323,6 +379,221 @@ test(
 					0,
 					"Resource inspection never writes to production"
 				);
+
+				// Real Python execution: release page-level interception only after
+				// importing controlled source. CDP still blocks APIs and production
+				// hosts; worker runtime imports otherwise stall under interception.
+				courseFixture = false;
+				fileIoFixture = true;
+				const fileParams = new URLSearchParams({
+					mode: "python",
+					projectKey: "browser:file-io:starter",
+					starterUrl:
+						"https://github.com/example/course/tree/main/starter",
+					starterTitle: "File workflow fixture"
+				});
+				await page.goto(`${origin}/ide?${fileParams}`, {
+					waitUntil: "domcontentloaded"
+				});
+				await page.waitForSelector(
+					"[data-testid='ide-route-import-confirm']"
+				);
+				assert.equal(
+					sourceRequests,
+					4,
+					"File source also waits for confirmation"
+				);
+				await page.click("[data-testid='ide-route-import-confirm']");
+				await page.waitForFunction(() =>
+					document
+						.querySelector(".cm-content")
+						?.textContent.includes("COURSE_FILE_IO_PASS")
+				);
+				await page.waitForFunction(() =>
+					[...document.querySelectorAll(".file-button")].some(
+						button => button.textContent.includes("input.txt")
+					)
+				);
+				assert.equal(
+					sourceRequests,
+					7,
+					"One directory plus two exact source files"
+				);
+				const cdp = await page.createCDPSession();
+				try {
+					await cdp.send("Network.enable");
+					await cdp.send("Network.setBlockedURLs", {
+						urls: [
+							"*/api/*",
+							"*classes.jacobdanderson.net*",
+							"*api.github.com*",
+							"*raw.githubusercontent.com*"
+						]
+					});
+					await page.setRequestInterception(false);
+					await page.waitForSelector(
+						"button.run-control:not([disabled])"
+					);
+					await page.click("button.run-control");
+					await page.waitForFunction(
+						() =>
+							document
+								.querySelector(".output-panel")
+								?.textContent.includes("COURSE_FILE_IO_PASS") &&
+							document
+								.querySelector(".code-ide-status strong")
+								?.textContent.includes("Run complete"),
+						{ timeout: 90000 }
+					);
+					await page.waitForFunction(
+						expected => {
+							const projects = JSON.parse(
+								localStorage.getItem(
+									"classes-python-ide-projects:anonymous"
+								) ?? "[]"
+							);
+							return projects.some(project =>
+								project.files.some(
+									file =>
+										file.name === "output.txt" &&
+										file.content === expected
+								)
+							);
+						},
+						{},
+						fileIoOutput
+					);
+					const clickFile = async name => {
+						const index = await page.$$eval(
+							".file-button",
+							(buttons, name) =>
+								buttons.findIndex(
+									button =>
+										button.querySelector("span")
+											?.textContent === name
+								),
+							name
+						);
+						assert.ok(
+							index >= 0,
+							`Project file ${name} is available`
+						);
+						const buttons = await page.$$(".file-button");
+						await buttons[index].click();
+						for (const button of buttons) await button.dispose();
+					};
+					await clickFile("output.txt");
+					await page.waitForFunction(
+						() =>
+							document.querySelector(
+								".file-button.is-active span"
+							)?.textContent === "output.txt"
+					);
+					assert.deepEqual(
+						await page.$$eval(".cm-content .cm-line", lines =>
+							lines.map(line => line.textContent)
+						),
+						fileIoOutput.split("\n"),
+						"Generated output reopens in the editor with its space and final newline"
+					);
+					if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+						const directory = join(
+							previousDirectory,
+							process.env.COURSE_IMPORT_SCREENSHOT_DIR
+						);
+						await mkdir(directory, { recursive: true });
+						await page.screenshot({
+							path: join(
+								directory,
+								"course-import-file-io-1280.png"
+							),
+							fullPage: true
+						});
+					}
+					// Capture the actual ZIP triggered by the UI, not a reconstruction
+					// from localStorage or a direct call to the archive helper.
+					await page.evaluate(() => {
+						const originalClick = HTMLAnchorElement.prototype.click;
+						HTMLAnchorElement.prototype.click = function () {
+							if (
+								this.download.endsWith(".zip") &&
+								this.href.startsWith("blob:")
+							) {
+								void fetch(this.href)
+									.then(response => response.arrayBuffer())
+									.then(bytes => {
+										window.__courseDownloadedZip =
+											Array.from(new Uint8Array(bytes));
+									});
+								return;
+							}
+							return originalClick.call(this);
+						};
+					});
+					await page.click(
+						"button[aria-label='Download project ZIP']"
+					);
+					await page.waitForFunction(() =>
+						Array.isArray(window.__courseDownloadedZip)
+					);
+					const zip = unzipSync(
+						Uint8Array.from(
+							await page.evaluate(
+								() => window.__courseDownloadedZip
+							)
+						)
+					);
+					const archivedFile = name => {
+						const key = Object.keys(zip).find(path =>
+							path.endsWith("/" + name)
+						);
+						assert.ok(key, `Export contains ${name}`);
+						return strFromU8(zip[key]);
+					};
+					assert.equal(archivedFile("main.py"), fileIoSource);
+					assert.equal(
+						archivedFile("input.txt"),
+						fileIoInput,
+						"Original input bytes survive execution/export"
+					);
+					assert.equal(
+						archivedFile("output.txt"),
+						fileIoOutput,
+						"Export retains generated file bytes"
+					);
+					await page.reload({ waitUntil: "domcontentloaded" });
+					await page.waitForSelector(".file-button");
+					await clickFile("output.txt");
+					await page.waitForFunction(
+						() =>
+							document.querySelector(
+								".file-button.is-active span"
+							)?.textContent === "output.txt"
+					);
+					assert.deepEqual(
+						await page.$$eval(".cm-content .cm-line", lines =>
+							lines.map(line => line.textContent)
+						),
+						fileIoOutput.split("\n"),
+						"Generated file persists after reopening the workspace"
+					);
+					assert.equal(
+						sourceRequests,
+						7,
+						"Reopening saved work does not redownload the starter"
+					);
+					assert.equal(
+						await page.$("[data-testid='ide-route-import-prompt']"),
+						null
+					);
+					assert.equal(
+						remoteWrites,
+						0,
+						"File execution and export remain local"
+					);
+				} finally {
+					await cdp.detach();
+				}
 			} finally {
 				await page.close();
 			}

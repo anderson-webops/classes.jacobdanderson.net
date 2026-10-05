@@ -578,7 +578,8 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: reviewBrief({
 						focus: "Low-pressure review of recursion, stacks, and string processing.",
 						tasks: [
-							"Attempt each prompt independently before reviewing hints or examples.",
+							"Confirm importing the linked starter into the Python IDE, or run Python 3 from its starter folder. Its README contains the complete review; initial Run gives a reminder to implement the TODOs.",
+							"Attempt each prompt independently before reviewing the separate solution and answer key. Keep supplied strangeFunction as tracing input, not a completed learner answer.",
 							"Identify whether any mistakes came from vocabulary, tracing, syntax, or data-structure choice.",
 							"Return to the specific skill that needs practice instead of repeating the whole module."
 						],
@@ -591,9 +592,9 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: reviewBrief({
 						focus: "String slicing, splitting, and index boundaries.",
 						tasks: [
-							"Remove the first and last letters from a word.",
-							"Extract the second word from a sentence with at least two words.",
-							"Explain which indexes are included and excluded in each slice."
+							"Implement middle_letters(word), returning the string without its first and last characters. Empty, one-character and two-character words return an empty string; non-string input raises ValueError.",
+							"Implement second_word(sentence), returning the second whitespace-delimited word. Repeated spaces and tabs are separators; fewer than two words or non-string input raises ValueError.",
+							"Complete main to ask for a word and a sentence and display both results. Explain included/excluded slice indexes, then test short words and repeated whitespace."
 						],
 						evidence:
 							"Examples with short words and multi-word sentences produce the expected substrings."
@@ -605,9 +606,10 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						focus: "Base cases, recursive calls, and tracing call frames.",
 						tasks: [
 							"Explain what a recursive function is.",
-							"Identify the base case and recursive call in a provided function.",
-							"Write recursive solutions for bowling-pin pyramids and Lucas numbers.",
-							"Trace the behavior of a provided recursive function before running it."
+							"Identify the base case and a recursive call that moves toward it.",
+							"Implement num_pins(rows) recursively: rows is a nonnegative integer, not bool; row sizes are 1 through rows and zero rows need zero pins. Invalid input raises ValueError. Practice with small values such as 0 through 100 to stay within recursion limits.",
+							"Implement lucas(n) recursively with one-based positions: the sequence starts 2, 1, 3, 4, 7, 11 and each later value sums the previous two. n is a positive integer, not bool; invalid input raises ValueError. Use small positions such as 1 through 20; repeated calls grow rapidly.",
+							"Predict every line of supplied strangeFunction(4), including call order, before running it. Compare the trace with a course facilitator, then try different small inputs independently."
 						],
 						evidence:
 							"The trace matches the program output and explains why recursion stops."
@@ -618,9 +620,10 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: reviewBrief({
 						focus: "Last-in, first-out stack behavior and stack-backed editing.",
 						tasks: [
-							"Create a stack of numbers.",
-							"Push and pop items while tracking the top of the stack.",
-							"Process keyboard input where `#` represents backspace."
+							"Explain last-in, first-out behavior and how a Python list supports a stack.",
+							"Create nums = [1, 2, 3, 4, 5], append a random integer from 1 through 10, print the stack, then pop the top and print it again in main.",
+							"Implement make_word(keystrokes), also available as makeWord: # removes the latest character, and backspace on an empty stack does nothing. All other characters, including spaces and letter case, are literal; non-string input raises ValueError.",
+							"Predict the original examples makeWord('hi#'), makeWord('ok##'), makeWord('ti#ger') and makeWord('t###') before running them. Test empty input and repeated leading backspaces."
 						],
 						evidence:
 							"The final text after backspaces matches a hand-traced stack simulation."
@@ -920,7 +923,8 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: reviewBrief({
 						focus: "Algorithm analysis, searching, and elementary sorting.",
 						tasks: [
-							"Explain the reasoning behind each answer before checking the final result.",
+							"Confirm importing the linked starter into the Python IDE, or run Python 3 from starter. Complete its TODOs after the initial reminder; weirdFunction, function1 and function2 remain supplied code to analyze.",
+							"Explain the reasoning behind each answer before consulting the separate solution README. Preserve the original expressions and pass inputs; no classification or trace answer is filled into learner work.",
 							"Trace at least one small input by hand for each algorithm family.",
 							"Mark whether any error came from runtime notation, loop tracing, or algorithm vocabulary."
 						],
@@ -933,9 +937,10 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: reviewBrief({
 						focus: "Big-O vocabulary and runtime simplification.",
 						tasks: [
-							"Define Big-O analysis.",
-							"Simplify several runtime expressions.",
-							"Identify best-case and worst-case behavior in sample functions."
+							"Define Big-O, the input size and the cost model. Treat a print, comparison, index or arithmetic operation as unit cost here; arbitrary-size integer bit costs are separate.",
+							"Classify the growth of n^2 + 1000n, log(n) + sqrt(n), and 1*2*3*...*n for positive n. The last question concerns the expression's value, not the runtime of a loop multiplying n factors.",
+							"Analyze the supplied weirdFunction(nums) for odd and even lengths, including best/worst input families; analyze function1(nums) with its fixed inner-loop bound.",
+							"Trace supplied function2(50) before running it, then analyze its work for positive integer n under the stated unit-cost model."
 						],
 						evidence:
 							"Each simplified runtime includes the dominant term and a short reason."
@@ -947,7 +952,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						focus: "Linear search tracing and implementation.",
 						tasks: [
 							"Explain how linear search works and when it can be used.",
-							"Complete missing code for a linear search function.",
+							"Implement linear_search(l, v), returning Boolean membership without changing the list. Empty input returns False; sorting is unnecessary.",
 							"Identify best-case and worst-case behavior."
 						],
 						evidence:
@@ -960,8 +965,10 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						focus: "Binary search preconditions, boundaries, and runtime.",
 						tasks: [
 							"Explain binary search and the sorted-input requirement.",
-							"Finish iterative and recursive implementations.",
-							"Identify the logarithmic runtime behavior."
+							"Implement bin_search_iter(lst, item) and bin_search_recur(lst, item) for already ascending input. Return Boolean membership, including False for empty input, without mutation.",
+							"Use indices/bounds rather than slicing, copying, sorting or a preliminary validation scan. Sorted input is a precondition established before calling the search.",
+							"Implement first_one_index(numbers) for already sorted zeros followed by ones. Return the zero-based first-one index or -1 for empty/all-zero input. Use logarithmically many constant-cost indexed accesses; do not scan to validate the precondition.",
+							"Test found/missing targets, every zero/one boundary, all zeros and all ones. Explain interval progress and stopping conditions."
 						],
 						evidence:
 							"The search bounds shrink correctly and stop for both found and missing targets."
@@ -973,8 +980,9 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						focus: "Selection sort passes, selected values, and runtime.",
 						tasks: [
 							"Describe selection sort.",
-							"Trace the result of a few passes on a sample list.",
-							"Complete an implementation and explain its runtime."
+							"Predict two descending selection passes on [2, 5, 10, 3, 6, 1]. One pass selects the maximum of the unsorted suffix.",
+							"Complete selectionSort(lst), also available as selection_sort, largest to smallest in place; return the same list, including empty/singleton input. Stability is not promised.",
+							"Explain best/worst comparison work, then verify output, mutation and returned identity separately."
 						],
 						evidence:
 							"The trace shows the selected value and sorted portion after each pass."
@@ -986,8 +994,9 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						focus: "Insertion sort prefix growth and best/worst cases.",
 						tasks: [
 							"Describe insertion sort.",
-							"Trace several passes.",
-							"Complete an implementation and compare best and worst cases."
+							"Predict three ascending insertion passes on [3, 7, 2, 5, 10, 1]. Count inserting indices 1, 2 and 3; index zero is not an insertion pass.",
+							"Complete insertionSort(lst), also available as insertion_sort, smallest to largest in place; return the same list. Strict out-of-order comparisons keep tied items in their original order.",
+							"Test empty/singleton, duplicate and reversed inputs. Explain best/worst comparisons and shifts rather than relying only on clock time."
 						],
 						evidence:
 							"The trace shows how a new value moves through the sorted prefix."
@@ -996,18 +1005,21 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "Check-In #2: Additional Practice Project",
 					content: projectBrief({
-						goal: "Reuse earlier sorting algorithms and compare their speed across input patterns.",
+						goal: "Compare two ascending sorting algorithms fairly using measured timings.",
 						build: [
-							"Run the same algorithms on random, sorted, and reversed lists.",
-							"Test multiple list sizes.",
-							"Record timing results in a small table.",
-							"Explain which results match the expected best or worst cases."
+							"Implement selection_sort2(lst) and insertion_sort2(lst), both ascending in place and returning the same list. This core two-sort review is distinct from AM11's five-sort comparison and the descending selection trace above.",
+							"Implement make_workloads(n, seed=0): use a local seeded generator for integers 1 through max(1, 10*n), then make random, sorted and reversed shapes of the same multiset. n is an integer from 0 to 2000, not bool.",
+							"Implement time_sort(sorter, values): compute the expected sorted output and a fresh copy before time.perf_counter(); time only the sorter, then validate the result after stopping the clock. Incorrect output raises AssertionError; a non-finite or negative elapsed value raises RuntimeError.",
+							"Implement benchmark(sizes=(100, 300), repeats=3, seed=0, sorters=None): use one to five sizes from 0 to 2000 and one to ten repeats, rejecting bool/out-of-range integers with ValueError. seed is an integer, not bool. Optional sorters is a dictionary of one or two named callables; invalid configurations raise ValueError.",
+							"Give every algorithm/repetition a fresh copy of the same shape. Return rows with algorithm, shape, n, repeats and seconds as the median of measured samples. Print a small table only after completing TODOs; larger explicit experiments can exceed browser budgets and can run locally."
 						],
 						checkpoints: [
-							"All algorithms sort the same inputs correctly.",
-							"The timing table uses comparable list sizes.",
-							"The conclusion explains more than one timing result."
-						]
+							"Both algorithms sort identical workloads correctly without retaining mutations between samples.",
+							"Generation, copying, expected-output computation, validation and printing are outside the timed section.",
+							"The table reports measured medians only; timings do not prove Big-O and can vary by machine."
+						],
+						verification:
+							"Predict work, compare actual results and discuss the experiment with a course facilitator. Test empty/small lists and invalid bounds; retain measured samples rather than historical timing guesses."
 					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM-Check-In-2-Additional-Project/solution"
@@ -1341,7 +1353,8 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: reviewBrief({
 						focus: "Advanced sorting plus file input/output.",
 						tasks: [
-							"Trace each sorting algorithm before running the implementation.",
+							"Confirm importing the linked starter into the Python IDE, or run Python 3 from starter. Initial Run is a TODO reminder; supplied bubbleSort is the unoptimized baseline to trace and improve.",
+							"Trace each sorting algorithm before running the implementation; keep the separate reference and answer key outside the attempted starter.",
 							"Explain how file data moves from disk into strings, lists, dictionaries, or output files.",
 							"Return to any weak spot with one focused practice case."
 						],
@@ -1355,9 +1368,9 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						focus: "Bubble sort passes, adjacent swaps, and efficiency improvements.",
 						tasks: [
 							"Explain bubble sort.",
-							"Trace the effect of a few passes.",
-							"Complete an implementation.",
-							"Discuss early cutoff or shrinking-range improvements."
+							"Predict two full left-to-right baseline bubbleSort passes on [4, 8, 2, 1, 10, 0] before running the supplied code.",
+							"Implement bubble_sort(lst) ascending in place, returning the same list. Use both a shrinking suffix and a per-pass swap flag with actual no-swap early cutoff; strict swaps preserve tie order.",
+							"Test empty/singleton, sorted, reversed and duplicate inputs. Count actual comparisons on sorted input for the baseline and improved versions, then explain best/worst work."
 						],
 						evidence:
 							"The trace shows adjacent comparisons and the sorted suffix after each pass."
@@ -1369,8 +1382,9 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						focus: "Merge sort splitting, merging, and recursive structure.",
 						tasks: [
 							"Explain merge sort.",
-							"Complete a `merge()` helper.",
-							"Identify why merge sort uses recursion rather than repeated adjacent passes."
+							"Complete merge(listA, listB) for already ascending lists: return a fresh stable merged list without changing either input. Use indices, taking left ties first; empty and unequal inputs work.",
+							"Avoid pop(0), which shifts Python lists and undermines the linear-merge model. Verify identity, tie labels and leftovers separately.",
+							"Explain merge sort's recursive splitting and cost. This assignment completes the merge helper, not a replacement full merge-sort project."
 						],
 						evidence:
 							"The explanation connects sorted sublists to the final merge result."
@@ -1382,8 +1396,9 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						focus: "Quicksort partitioning and pivot-sensitive runtime.",
 						tasks: [
 							"Explain quicksort.",
-							"Complete a `partition()` helper.",
-							"Compare best and worst runtime behavior."
+							"Complete partition(lst, pivot), where pivot is a value, not an index. Return three fresh less/equal/greater lists in original within-group order; leave input unchanged. Empty input and a pivot absent from input work.",
+							"Compare balanced/unbalanced recursive splits under a stated distinct-key model. Keep duplicates in the equal group so they do not enter a non-progressing recursive call.",
+							"Discuss how a three-way equal group changes the all-equal case, then trace one new input independently."
 						],
 						evidence:
 							"The explanation identifies how pivot quality changes recursion depth."
@@ -1394,10 +1409,11 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: reviewBrief({
 						focus: "Writing, reading, and processing file contents.",
 						tasks: [
-							"Write letters of an input word to a file.",
-							"Read the letters back.",
-							"Count letter frequencies in a dictionary.",
-							"Explain the difference between `.read()` and `.readlines()`."
+							"Implement write_letters(word, path='file.txt'): validate that word is a string without CR/LF before opening output; invalid input raises ValueError. Write each exact Unicode character plus a newline using UTF-8 and a context manager; return None. Empty input is valid and valid runs deliberately overwrite the explicit output.",
+							"Implement read_letter_counts(path='file.txt'): remove only record newlines, not meaningful spaces, and count literal case-sensitive characters in a dictionary. Empty files return {}; blank or longer records raise ValueError with the one-based line number. Missing/unreadable files propagate the normal file exception.",
+							"Complete main to ask for a word, write it, read the file back and print the counts. Replace the direct-run reminder only after completing TODOs; imports do not ask for input or read/write files.",
+							"Explain read() versus readlines() using a file with spaces and a last line without a newline. Neither automatically splits text into words.",
+							"Use temporary fixtures for empty, repeated, Unicode, space and malformed records. Reopen generated file.txt in the IDE project, inspect its contents and save/export after inspection."
 						],
 						evidence:
 							"The dictionary counts match the file contents after newline handling is considered."
@@ -1408,16 +1424,19 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Read letters from a file, sort them, and write the sorted result back to disk.",
 						build: [
-							"Read letters from a file into a list.",
-							"Sort the letters in ASCII order with one implemented sorting algorithm.",
-							"Write the sorted result to an output file.",
-							"Compare the output file with the expected sorted order."
+							"Confirm importing the starter and input.txt into the Python IDE, or run Python 3 from starter. Complete read_letters(path='input.txt'): each UTF-8 record is exactly one ASCII character excluding CR/LF. Literal space/tab is valid; LF, CRLF and an absent final newline work. Empty files return []; blank, longer or non-ASCII records raise ValueError with a one-based line number.",
+							"Implement sort_letters(letters): validate a list of those characters, return a fresh ascending ASCII-order list retaining duplicates, and leave input unchanged. Use a studied bubble, merge or quicksort, not built-in sort as the implementation; invalid values raise ValueError.",
+							"Implement write_letters(letters, path='output.txt'): validate the full list before opening output, then write one character plus newline per record and return None. Valid runs deliberately overwrite output; invalid values preserve an existing file.",
+							"Implement sort_file(input_path='input.txt', output_path='output.txt'): reject identical files, including path/symlink/hardlink aliases, with ValueError. Read/validate everything before writing, preserve input bytes and return the sorted list. Missing/unreadable input propagates normal exceptions; malformed input preserves existing output.",
+							"After completing TODOs, replace the direct-run reminder with a guarded sort_file() call. Reopen output.txt in the project, compare independent expected order and save/export after inspection."
 						],
 						checkpoints: [
-							"The code handles newline characters intentionally.",
-							"The sorting algorithm is one already implemented in the course.",
-							"The output file can be reopened and checked."
-						]
+							"Empty input, duplicates, spaces, uppercase/lowercase and missing final newline have explicit expected results.",
+							"Malformed records and output aliases fail before any source or existing output is overwritten.",
+							"The output file can be reopened and checked; testing uses temporary files rather than overwriting the supplied example."
+						],
+						verification:
+							"Predict one fixture, walk through its record handling and sorting with a course facilitator, then test different data independently. Compare exact input/output bytes and fresh-list identity; completed reference code stays separate from the starter."
 					}),
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM-Check-In-3-Additional-Project/solution"
