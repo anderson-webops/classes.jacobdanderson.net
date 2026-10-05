@@ -1289,7 +1289,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 							"Complete the four core callables before replacing the starter's reminder with a guarded main() call. Imports must not prompt, open files, print or run the project. No input file is needed; original output samples in solution remain historical reference assets, including the empty output.txt that is not an expected new core result."
 						],
 						checkpoints: [
-							"For Juni, independently predict ('Juni', 'Jn', 'inuJ') and the exact core text 'J\\nu\\nn\\ni\\n\\nJ\\nn\\n\\ni\\nn\\nu\\nJ\\n\\n'. Check the final section separator and UTF-8 bytes.",
+							"For Ada, independently predict ('Ada', 'Aa', 'adA') and the exact core text 'A\\nd\\na\\n\\nA\\na\\n\\na\\nd\\nA\\n\\n'. Check the final section separator and UTF-8 bytes.",
 							"Test empty input ('\\n\\n\\n'), one/odd-length names, repeated letters, literal case/space/tab and Unicode. Explain the difference between a code point and a displayed grapheme.",
 							"With temporary files, verify deliberate overwrite, invalid input preserving prior output, invalid paths, missing parents, cancellation and closure after writing raises. Reopen actual output rather than inferring it from console messages."
 						],

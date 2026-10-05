@@ -898,7 +898,7 @@ describe("Python Level 3 learner flow", () => {
 			"failed",
 			"cancelled",
 			"literal quit is a valid name",
-			"'Juni', 'Jn', 'inuJ'",
+			"'Ada', 'Aa', 'adA'",
 			"write_separate_tags(name",
 			"symlink/hardlink",
 			"without core section separators",
