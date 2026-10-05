@@ -68,6 +68,7 @@ const forbiddenStudentFacingPatterns = [
 	/\bThe tutor should\b/i,
 	/\binstructor\b/i,
 	/\bteacher\b/i,
+	/\ban course facilitator\b/i,
 	/\bCover:\b/i,
 	/\bSet expectations\b/i,
 	/\bOptional observations may be assigned\b/i,

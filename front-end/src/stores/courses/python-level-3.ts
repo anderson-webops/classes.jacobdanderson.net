@@ -244,21 +244,23 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM2 Project 1: Functions Practice",
 					content: projectBrief({
-						goal: "Build a function practice file that separates reusable logic from test calls.",
+						goal: "Review iterative functions with reusable return values and independent test calls; later AM4 projects teach recursion.",
 						build: [
-							"Write a function that returns the product of three numbers.",
-							"Write a function that returns the average of two numbers.",
-							"Write a function that counts how many times a letter appears in a word.",
-							"Write a function that counts how many digits in an integer are 7.",
-							"Write a function that computes `a` to the power of `b`."
+							"Implement `product(a, b, c)` to return the product of three numeric inputs.",
+							"Implement `average(x, y)` to return the arithmetic mean of two numeric inputs.",
+							"Implement `count_letter(word, letter)` to count an exact, case-sensitive character. Empty words give zero; reject a nonstring word or a letter that is not a one-character string with ValueError.",
+							"Implement `count_seven(number)` to count digit 7 in an integer's magnitude, ignoring its minus sign. Zero has no sevens. Reject nonintegers and bool with ValueError; keep digit arithmetic exact rather than rounding through floating division.",
+							"Implement `exponent(a, b)` with repeated multiplication. Require a nonnegative integer exponent, not bool, or raise ValueError. Exponent zero returns one, including the conventional `0**0` case used here."
 						],
 						checkpoints: [
 							"Each function returns a value rather than only printing.",
-							"Each function has at least two test calls.",
-							"Edge cases include zero, repeated letters, and numbers without the digit 7."
+							"Each function has normal, boundary and rejected-domain tests; imports do not print or request input. Put demonstration calls under the direct-run guard.",
+							"Check zero, negative digit inputs, repeated/absent letters, case differences and exact large integers against independent expectations."
 						],
 						extension:
-							"Add factorial and Hailstone-sequence length functions after the required functions are working."
+							"Optional iterative challenges: implement `factorial(n)` for a nonnegative integer, not bool, with `0! = 1`; invalid domains raise ValueError. Implement `hailstone(n, max_steps=10000)` for a positive integer, not bool: halve even terms exactly, otherwise use `3*n + 1`, and stop at one. Return the term count including the initial number and final one; ten gives seven terms and one gives one. max_steps is a nonnegative integer transition cap, not bool; invalid domains raise ValueError and hitting the cap before one raises RuntimeError rather than returning a partial count. General Hailstone convergence is not proved. Attempt these only after the five required functions work.",
+						verification:
+							"Trace inputs, accumulator and return values before coding; write independent assertions, compare traces with an instructor, then test different data. Keep incomplete starter code and completed references separate."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM2-Functions-Practice/starter",
@@ -275,16 +277,22 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Practice list construction and list-processing functions without hard-coding final answers.",
 						build: [
-							"Generate the numbers 1 through 20.",
-							"Generate the first 20 even numbers.",
-							"Generate the first 10 perfect squares.",
-							"Write functions that sum a list, return minimum and maximum values, flatten a list of lists, and return the maximum value from each inner list."
+							"Implement `make_numbers()` to return a fresh list of integers 1 through 20.",
+							"Implement `make_evens()` to return the first twenty positive even numbers, 2 through 40; zero is excluded.",
+							"Implement `make_squares()` to return the first ten positive perfect squares, 1 through 100. Generate all three lists with loops, not manually typed answers.",
+							"Implement `sum_lists(l1, l2)` to return the numeric sum of both lists, not concatenate them; empty lists contribute zero.",
+							"Implement `minimum(l)` and `maximum(l)` for nonempty numeric lists; an empty input raises ValueError. Use loops rather than built-in sum/min/max helpers in these practice implementations.",
+							"Implement `sum_list_of_lists(l)` to sum all inner lists, with empty outer/inner lists contributing zero.",
+							"Implement `flatten_list(l)` to return a new one-level flattening, retaining input order and duplicates and skipping empty inner lists.",
+							"Implement `max_list(l)` using maximum: return maxima of nonempty inner lists in order and deliberately skip empty inner lists. Empty outer/all-empty input returns a new empty list."
 						],
 						checkpoints: [
-							"Generated lists come from loops or comprehensions rather than manually typed full lists.",
-							"List functions work on new test lists, not only on the provided examples.",
-							"Empty or one-item lists are considered where the function contract allows them."
-						]
+							"Generated counts and endpoints match all three tasks, including twenty even values rather than ten.",
+							"No function changes input lists. List-producing functions return distinct new objects, including empty results.",
+							"Test negative values, duplicates, singleton lists, empty sums, rejected empty min/max and mixed empty/nonempty nested lists. Imports remain quiet."
+						],
+						verification:
+							"Trace accumulators and flattening order with an instructor, then check different inputs independently. Built-in helpers may be test oracles, not substitutes for the practice loops; consult the separate reference only after attempting the tasks."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM2-Lists-Practice/starter",
@@ -307,16 +315,30 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Complete a fundamentals problem set that proves fluency with Python's core data and control-flow tools.",
 						build: [
-							"Solve problems involving list processing, counting, perfect squares, factorial sums, divisors, reverse strings, vowel counts, frequency analysis, and swapping values in a list.",
-							"Keep each solution small enough to test independently.",
-							"Name helper functions when a problem has a reusable subtask.",
-							"Record any problem where the first approach failed and what changed in the working solution."
+							"`double(numbers)`: return a new list with every input number doubled, preserving input order and duplicates.",
+							"`starts_with_a(words)`: return words starting with lowercase a, in order. Empty strings and uppercase A do not match.",
+							"`num_of_evens(numbers)`: count even integers, including zero and negative evens.",
+							"`sum_of_numbers(numbers)`: return the numeric sum; empty input returns zero.",
+							"`index_of_largest_number(numbers)`: return the zero-based index of the largest value in a nonempty list of distinct numbers; otherwise raise ValueError.",
+							"`all_squares(N)`: for a nonnegative integer N, print nonnegative perfect squares at most N, including zero, one per line in increasing order; return None.",
+							"`largest_power_of_two(N)`: for a positive integer N, return the greatest integer x with `2**x <= N`; one returns zero.",
+							"`factorial_sum(N)`: for a nonnegative integer N, return `1! + 2! + ... + N!`; zero returns the empty sum, zero.",
+							"`largest_divisor(N)`: for a positive integer N, return the largest positive divisor strictly below N; one has no such divisor and returns None.",
+							"`largest_product(numbers)`: return the largest product of two distinct positions. Equal values in separate positions are allowed; fewer than two integers raises ValueError.",
+							"`sums_to_zero(numbers)`: return True if two distinct positions sum to zero. Empty/singleton input returns False; `[0]` is False while `[0, 0]` is True.",
+							"`most_common_numbers(numbers)`: return all tied modes in a new list in ascending numeric order; `[3, 6, 2, 2, 6]` returns `[2, 6]`, and empty input returns a new empty list.",
+							"`reverse_string(str)`: return the reversed string, preserving whitespace and punctuation.",
+							"`count_vowels(str)`: count ASCII a/e/i/o/u in either letter case; do not count y.",
+							"`count_pairs(numbers)`: count distinct values appearing exactly twice, not the number of their occurrences; a value appearing three times is not counted.",
+							"`swap_min_max(numbers)`: swap the smallest and largest values in place and return that same list object. Require a nonempty list of distinct numbers or raise ValueError; a singleton is unchanged."
 						],
 						checkpoints: [
-							"Each solution has at least one normal test and one boundary-style test.",
-							"The code avoids hard-coded answers.",
-							"The final review identifies which topics are ready and which still need practice."
-						]
+							"Every task has a normal test and an allowed boundary or deliberately rejected-domain test. Integer N parameters reject bool and unsupported values with ValueError; parity, product, zero-sum and mode tasks use integer lists.",
+							"Only swap_min_max mutates input. Tasks 1, 2 and 12 return fresh lists even when empty. Imports do not print, and test calls remain under the direct-run guard.",
+							"Check negative products, duplicate frequencies, two-distinct-position rules, case policies and empty inputs with independent expectations; do not hard-code example inputs."
+						],
+						verification:
+							"Trace and attempt each of the sixteen functions before consulting the separate reference. Review one trace with an instructor, then test different data independently and record what changed after a failed first approach."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM3-Python-Fundamentals-Problem-Set/starter",
