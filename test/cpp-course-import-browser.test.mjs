@@ -166,9 +166,11 @@ async function runNative(command, args, directory, input = "") {
 	});
 }
 
-async function compileExport(directory, names, mode, standard = 17) {
+async function compileExport(directory, names, mode, standard = 17, warningsAsErrors = false) {
 	const command = mode === "java" ? process.env.JAVAC ?? "javac" : "c++";
-	const args = mode === "java" ? ["-Xlint:all", ...names.filter(name => name.endsWith(".java"))] : [`-std=c++${standard}`, "-Wall", "-Wextra", "-Wpedantic", "-Werror", "-I.", ...names.filter(name => /\.(?:cc|cpp|cxx)$/.test(name)), "-o", "project"];
+	// Unfinished learner stubs may have unused parameters. Use the displayed
+	// native build flags for exports; complete lesson examples stay warning-clean.
+	const args = mode === "java" ? ["-Xlint:all", ...names.filter(name => name.endsWith(".java"))] : [`-std=c++${standard}`, "-Wall", "-Wextra", "-Wpedantic", ...(warningsAsErrors ? ["-Werror"] : []), "-I.", ...names.filter(name => /\.(?:cc|cpp|cxx)$/.test(name)), "-o", "project"];
 	const result = await runNative(command, args, directory);
 	assert.equal(result.code, 0, `Native compilation failed: ${result.stderr}`);
 }
@@ -195,7 +197,7 @@ nodeTest("the four foundation lesson programs compile and match independent cons
 			const matches = [...cppFoundationLessonBriefs[name].matchAll(/```cpp\n([\s\S]*?)\n```/g)];
 			assert.equal(matches.length, 1, `Expected one standalone ${name} example`);
 			await writeFile(join(directory, "main.cpp"), `${matches[0][1]}\n`);
-			await compileExport(directory, ["main.cpp"], "cpp", 20);
+			await compileExport(directory, ["main.cpp"], "cpp", 20, true);
 			for (const { input, ...expected } of fixtures) {
 				const result = await runNative(join(directory, "project"), [], directory, input);
 				assert.deepEqual(result, expected, `${name} fixture ${JSON.stringify(input)}`);
