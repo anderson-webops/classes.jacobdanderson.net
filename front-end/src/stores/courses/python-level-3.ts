@@ -1353,7 +1353,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: reviewBrief({
 						focus: "Advanced sorting plus file input/output.",
 						tasks: [
-							"Confirm importing the linked starter into the Python IDE, or run Python 3 from starter. Initial Run is a TODO reminder; supplied bubbleSort is the unoptimized baseline to trace and improve.",
+							"Confirm importing the linked starter into the Python IDE, or run Python 3 from starter. Initial Run is an exercise reminder; supplied bubbleSort is the unoptimized baseline to trace and improve.",
 							"Trace each sorting algorithm before running the implementation; keep the separate reference and answer key outside the attempted starter.",
 							"Explain how file data moves from disk into strings, lists, dictionaries, or output files.",
 							"Return to any weak spot with one focused practice case."

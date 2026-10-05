@@ -218,6 +218,14 @@ test(
 					await page.setViewport({ width, height });
 					const context = `${mode} at ${width}x${height}`;
 					console.log(context);
+					if (width <= 900) {
+						const view = ["turtle", "pgzero"].includes(mode)
+							? "canvas"
+							: "console";
+						await page.click(
+							`.mobile-view-picker [data-view="${view}"]`
+						);
+					}
 					await page.$eval(".result-panel", element =>
 						element.scrollIntoView({
 							block: "center",
@@ -242,6 +250,47 @@ test(
 								);
 							}),
 							`${context}: the full canvas and its center must stay accessible`
+						);
+						if (width <= 900) {
+							await page.click(".console-expand-toggle");
+							assert.equal(
+								await page.$eval(
+									'.mobile-view-picker [data-view="console"]',
+									element =>
+										element.getAttribute("aria-pressed")
+								),
+								"true",
+								`${context}: expanding from Canvas must reveal Console`
+							);
+							await page.waitForSelector(".output-panel", {
+								visible: true
+							});
+							await page.click(
+								'.mobile-view-picker [data-view="canvas"]'
+							);
+							assert.equal(
+								await page.$eval(
+									".console-expand-toggle",
+									element =>
+										element.getAttribute("aria-expanded")
+								),
+								"false",
+								`${context}: selecting Canvas must restore its visual panel`
+							);
+							await page.waitForSelector(".turtle-canvas", {
+								visible: true
+							});
+						}
+					}
+					if (width <= 900) {
+						await page.click(
+							'.mobile-view-picker [data-view="console"]'
+						);
+						await page.$eval(".result-panel", element =>
+							element.scrollIntoView({
+								block: "center",
+								behavior: "instant"
+							})
 						);
 					}
 					const bounds = await page.evaluate(() => {
