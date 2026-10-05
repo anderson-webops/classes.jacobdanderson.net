@@ -5053,7 +5053,9 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(/\*\*Completion check:\*\*/i);
 			expect(corpus).not.toMatch(/\bcore project focus:/i);
 			expect(corpus).not.toMatch(/\bRun the local the\b/i);
-			expect(corpus).not.toMatch(/\b(?:connectings|mappings)\b/i);
+			// "Distribution mappings" is valid technical prose. The malformed
+			// generated Scratch mapping copy has its own item-specific check.
+			expect(corpus).not.toMatch(/\bconnectings\b/i);
 			expect(corpus).not.toMatch(
 				/\bThis module focuses on (?:combine|connect|diagnose|map|organize|turn|use)\b/i
 			);

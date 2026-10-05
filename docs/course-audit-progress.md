@@ -484,6 +484,15 @@ All 29 source methods and 45 native targets passed exact-head review checks and
 independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37371616259).
 The initial main attempt could not acquire a runner; its retry passed.
 
+The matching neutral compiler instruction was refined in
+[source PR #4](https://github.com/instruction-material/CPP-Level-1/pull/4),
+integrated at `90c349525c22a157bff333c6160adbd9815ed7ae`. All nine brief copies
+agree and the reviewed/integrated trees match. Both exact-head native gates
+passed; C++ program and archive bytes are unchanged. The browser pin uses this
+integrated tree, with all sixteen early Level 1 starter-file digests verified.
+Independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37378148296)
+also passed for that published revision.
+
 The catalog candidate preserves that learning sequence and all three full briefs,
 with separate starter/reference links and legacy progress aliases. Complete math
 and random demonstrations are lessons rather than supplemental quota tasks.
@@ -493,7 +502,14 @@ rewriting that subject as "the work", and keeps capitalization in neutral role
 labels. All thirteen focused foundation/functions catalog checks and source lint
 pass locally. Browser coverage now includes all eight early C++ Level 1 starters
 alongside the seven bridge starters, plus strict compilation of both new supplied
-lesson examples. Full site checks and downstream integration remain pending;
+lesson examples. The fifteen workflows and both new lesson examples passed on
+candidate `a3b01aad6630c017c6b8fc2dd364dbeb7326c888`, and Function Practice desktop
+and Number Guesser mobile screenshots were visually inspected. Its full catalog
+gate exposed the compiler-guidance wording and an overly broad grammar check
+that rejected the valid term "distribution mappings". The same compiler edit
+is present in the complete site briefs; the grammar check retains its specific
+generated Scratch-copy guards. All six focused functions/copy checks pass.
+Final full site checks and downstream integration remain pending;
 CPPF4–CPPF8 and the broader audit remain open.
 
 ## Verification authority

@@ -63,7 +63,7 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "3f6b9281239df72ae5182cf20fb389eefe4b563c";
+const foundationRevision = "90c349525c22a157bff333c6160adbd9815ed7ae";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
 		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
@@ -86,15 +86,15 @@ const foundationPacks = {
 		"main.cpp": "d60a0b38e00abb97d67ccb5abad025a721adb755d784463f81001b0b95a0ac15"
 	},
 	"CPPF3-Function-Practice/starter": {
-		"README.md": "487b5a1426228183c919141cbd7f468210f2c4e24b50327aa3021ecb3f5bc446",
+		"README.md": "fe366dd7d9f25c3b0a25db91a984630250182430dc535600f9d2eae0e037196a",
 		"main.cpp": "4ab7b45999b398a104bcd7e1b8f253333199a1b09fb1e35821bb909b2f713a83"
 	},
 	"CPPF3-Probability-Functions/starter": {
-		"README.md": "f71b31a6af9eb716fd380c4b954a0dd386cf631798be01dc9b4ccbe5a392bf5e",
+		"README.md": "fed5d96d649a3b114fd5f2dba4617145a7738762d28d8e4c1db384d878d433fa",
 		"main.cpp": "83dd68efcf0876ae27cb78e92c552c71217e4245870d3fcb65e1b0152c760895"
 	},
 	"CPPF3-Number-Guesser/starter": {
-		"README.md": "540222f14b530a6f78bc75c96e63d666a691fc60795f949632ad9e93284a0d75",
+		"README.md": "f8388163560122cb9d5b49ef3be9736277ced261d6139c388fd5c14c5383a989",
 		"main.cpp": "bf6ebeaf8a9710ea947cca43e47dd9338bc28d8cc2263498b5d0e3a0650840df"
 	}
 };
