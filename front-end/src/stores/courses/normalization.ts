@@ -1393,8 +1393,8 @@ function groupConceptLessons(
 function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 	for (const module of course.modules) {
 		// These authored lessons interleave concepts with complete references.
-		// Grouping concepts at the first position moves input before value types.
-		if (courseId === "c-level-1" && /^CPPF[12] /.test(module.title))
+		// Grouping concepts first changes the input and deterministic/random order.
+		if (courseId === "c-level-1" && /^CPPF[123] /.test(module.title))
 			continue;
 
 		const conceptItems = module.curriculum.filter(item =>
@@ -2751,7 +2751,10 @@ function neutralizeStudentFacingText(text: string) {
 					/\binstructor\/account holder\b/gi,
 					"course facilitator or account holder"
 				)
-				.replace(/\binstructor\b/gi, "course facilitator")
+				.replace(/\binstructor\b/gi, role => {
+					if (role[0] === "I") return "Course facilitator";
+					return "course facilitator";
+				})
 				.replace(/\bteacher-provided\b/gi, "provided")
 				.replace(/\bteacher-supplied\b/gi, "course-supplied")
 				.replace(/\bteacher requirement\b/gi, "course requirement")
@@ -3273,8 +3276,6 @@ function neutralizeStudentFacingText(text: string) {
 					/\blearners decide what information\b/gi,
 					"the relevant information is identified"
 				)
-				.replace(/\bthe learner's\b/g, "the work's")
-				.replace(/\bthe learner\b/g, "the work")
 				.replace(/\blearner suggests\b/g, "the response suggests")
 				.replace(/\blearner answers\b/g, "the response answers")
 				.replace(

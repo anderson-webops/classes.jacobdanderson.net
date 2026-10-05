@@ -14,6 +14,7 @@ import { strFromU8, unzipSync } from "fflate";
 import puppeteer from "puppeteer";
 import { preview } from "vite";
 import { cppFoundationLessonBriefs } from "../front-end/src/stores/courses/cppFoundationProjectBriefs.ts";
+import { cppFunctionsLessonBriefs } from "../front-end/src/stores/courses/cppFunctionsProjectBriefs.ts";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const bridgeRepository = "instruction-material/Python-to-Java-and-CPP-Bridge";
@@ -62,7 +63,7 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "eef08ab41ab8932080fdac349be6938c10df06a2";
+const foundationRevision = "90c349525c22a157bff333c6160adbd9815ed7ae";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
 		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
@@ -83,6 +84,18 @@ const foundationPacks = {
 	"CPPF2-Fizz-Buzz/starter": {
 		"README.md": "5f6f8adac36bba4b54bb5a46c576e2fed6153a1923e3061ccaa44e80637bd889",
 		"main.cpp": "d60a0b38e00abb97d67ccb5abad025a721adb755d784463f81001b0b95a0ac15"
+	},
+	"CPPF3-Function-Practice/starter": {
+		"README.md": "fe366dd7d9f25c3b0a25db91a984630250182430dc535600f9d2eae0e037196a",
+		"main.cpp": "4ab7b45999b398a104bcd7e1b8f253333199a1b09fb1e35821bb909b2f713a83"
+	},
+	"CPPF3-Probability-Functions/starter": {
+		"README.md": "fed5d96d649a3b114fd5f2dba4617145a7738762d28d8e4c1db384d878d433fa",
+		"main.cpp": "83dd68efcf0876ae27cb78e92c552c71217e4245870d3fcb65e1b0152c760895"
+	},
+	"CPPF3-Number-Guesser/starter": {
+		"README.md": "f8388163560122cb9d5b49ef3be9736277ced261d6139c388fd5c14c5383a989",
+		"main.cpp": "bf6ebeaf8a9710ea947cca43e47dd9338bc28d8cc2263498b5d0e3a0650840df"
 	}
 };
 const fixtures = [
@@ -104,7 +117,9 @@ const fixtures = [
 		hashes,
 		anchor: folder.startsWith("CPPF1")
 			? "cppf1-variables-types-strings-and-input-output"
-			: "cppf2-loops-and-conditionals"
+			: folder.startsWith("CPPF2")
+				? "cppf2-loops-and-conditionals"
+				: "cppf3-functions"
 	}))
 ];
 const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "cpp-course-import-browser-ci";
@@ -210,6 +225,44 @@ nodeTest("the four foundation lesson programs compile and match independent cons
 	}
 });
 
+nodeTest("the function lesson programs compile and satisfy return-value and random-domain fixtures", { timeout: 120000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-function-lesson-contracts-"));
+	try {
+		for (const [name, brief] of Object.entries(cppFunctionsLessonBriefs)) {
+			const directory = join(temporary, name);
+			await mkdir(directory);
+			const matches = [...brief.matchAll(/```cpp\n([\s\S]*?)\n```/g)];
+			assert.equal(matches.length, 1);
+			await writeFile(join(directory, "main.cpp"), `${matches[0][1]}\n`);
+			await compileExport(directory, ["main.cpp"], "cpp", 20, true);
+			const result = await runNative(join(directory, "project"), [], directory);
+			assert.equal(result.code, 0);
+			assert.equal(result.stderr, "");
+			if (name === "functions") {
+				assert.equal(result.stdout, "Sum: 5\nAverage: 2.5\n");
+			}
+			else {
+				const lines = result.stdout.trimEnd().split("\n");
+				assert.equal(lines.length, 13);
+				assert.match(lines[0], /^Same seed, same engine value: \d+ \d+$/);
+				const values = lines[0].replace("Same seed, same engine value: ", "").split(" ");
+				assert.equal(values.length, 2);
+				assert.equal(values[0], values[1]);
+				assert.equal(lines[1], "Five values in the inclusive range 0 through 50:");
+				assert.ok(lines.slice(2, 7).every(value => /^\d+$/.test(value) && Number(value) <= 50));
+				assert.equal(lines[7], "Five values in the inclusive range 100 through 200:");
+				assert.ok(lines.slice(8).every(value => /^\d+$/.test(value) && Number(value) >= 100 && Number(value) <= 200));
+				const repeated = await runNative(join(directory, "project"), [], directory);
+				assert.deepEqual(repeated, result);
+			}
+		}
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-function-lesson-contracts", pid: process.pid });
+	}
+});
+
 nodeTest("published bridge and C++ foundation starters confirm, edit, save, export, reopen and compile natively", { timeout: 360000 }, async () => {
 	let browser;
 	let server;
@@ -275,7 +328,7 @@ nodeTest("published bridge and C++ foundation starters confirm, edit, save, expo
 			const { revision, standard, hashes, anchor } = fixture;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			const expectedFiles = { ...files };
 			const before = sourceRequests;

@@ -444,6 +444,74 @@ release delivery must verify the enabled policy before publication and confirm
 the individual release lock afterward. Live application activation remains a
 separate, unverified boundary.
 
+## C++ input foundations and native workspace workflow
+
+[Site PR #133](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/133)
+integrated at `e51ad398f74545058f396165d682ffcb85f4a4af`, with a tree identical
+to reviewed head `70d99e122aac8b85eb333249c2d6ad8516fefd6d`. It provides the
+original five required input/loop projects as incomplete starters with separate
+references and complete briefs, preserving lesson order and progress aliases.
+The displayed lessons retain all four complete code examples.
+
+The actual saved project key includes a colon after the course ID. Its native
+instruction lookup now recognizes that format and displays C++20 for Level 1,
+with similar non-Level-1 names excluded. Learner exports retain the documented
+warning flags; supplied examples and reviewed references use warnings as errors.
+Full [reviewed-head CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37372837436)
+and CodeQL passed, including twelve bridge/foundation confirmation, editing,
+saving, exact export, reopening and native compilation workflows and all four
+lesson console fixtures. Mad Libs and Chat Bot mobile screenshots and the Number
+Games desktop workspace were visually inspected. Qodana skipped its unconfigured
+scan; that workflow success is not an analysis result. Independent integrated-main
+checks, release provenance and downstream delivery remain separate gates.
+
+## C++ functions, probability and guessing contracts
+
+[Source PR #3](https://github.com/instruction-material/CPP-Level-1/pull/3)
+integrated at `3f6b9281239df72ae5182cf20fb389eefe4b563c` restores the original
+Function Practice assignment before Probability Events and Random and Number
+Guesser. Each has a complete brief, an intentionally incomplete starter and a
+separate reference. Starter reminders exit with status 2 and provide no answer
+results. The unrelated vector extension is archived without replacing the three
+required assignments.
+
+Arithmetic domains prevent signed overflow in the console exercise. References
+convert before averaging, sum two independent dice, advance one seeded engine,
+validate guessing ranges before drawing, count five valid guesses, and distinguish
+invalid-input cancellation from a loss. Random tests verify domains and repeatable
+runs on one library, without a cross-library sequence or fairness claim.
+All 29 source methods and 45 native targets passed exact-head review checks and
+independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37371616259).
+The initial main attempt could not acquire a runner; its retry passed.
+
+The matching neutral compiler instruction was refined in
+[source PR #4](https://github.com/instruction-material/CPP-Level-1/pull/4),
+integrated at `90c349525c22a157bff333c6160adbd9815ed7ae`. All nine brief copies
+agree and the reviewed/integrated trees match. Both exact-head native gates
+passed; C++ program and archive bytes are unchanged. The browser pin uses this
+integrated tree, with all sixteen early Level 1 starter-file digests verified.
+Independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37378148296)
+also passed for that published revision.
+
+The catalog candidate preserves that learning sequence and all three full briefs,
+with separate starter/reference links and legacy progress aliases. Complete math
+and random demonstrations are lessons rather than supplemental quota tasks.
+The random reference remains available through its explicit lesson link.
+Copy normalization preserves the person implementing the program rather than
+rewriting that subject as "the work", and keeps capitalization in neutral role
+labels. All thirteen focused foundation/functions catalog checks and source lint
+pass locally. Browser coverage now includes all eight early C++ Level 1 starters
+alongside the seven bridge starters, plus strict compilation of both new supplied
+lesson examples. The fifteen workflows and both new lesson examples passed on
+candidate `a3b01aad6630c017c6b8fc2dd364dbeb7326c888`, and Function Practice desktop
+and Number Guesser mobile screenshots were visually inspected. Its full catalog
+gate exposed the compiler-guidance wording and an overly broad grammar check
+that rejected the valid term "distribution mappings". The same compiler edit
+is present in the complete site briefs; the grammar check retains its specific
+generated Scratch-copy guards. All six focused functions/copy checks pass.
+Final full site checks and downstream integration remain pending;
+CPPF4–CPPF8 and the broader audit remain open.
+
 ## Verification authority
 
 Functional regression tests exercise confirmation, remote and local failure,

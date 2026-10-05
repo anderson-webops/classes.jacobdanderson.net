@@ -3,6 +3,10 @@ import {
 	cppFoundationLessonBriefs,
 	cppFoundationProjectBriefs
 } from "./cppFoundationProjectBriefs";
+import {
+	cppFunctionsLessonBriefs,
+	cppFunctionsProjectBriefs
+} from "./cppFunctionsProjectBriefs";
 import { isCoreProjectTitle } from "./projectGrouping";
 
 const cppLevel1SourceCourse: RawCourse = {
@@ -95,46 +99,52 @@ const cppLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Function Signatures, Return Values, and Decomposition",
-					content:
-						"Functions are named units of work with parameters and return types. Include reading a function signature, deciding what data a function needs, deciding what it returns, separating calculation from printing, avoiding repeated code, and using small helper functions to make a larger program easier to test. A strong explanation names why a function exists, not just how to call it."
+					aliases: [
+						"c-level-1-cppf3-functions-curriculum-functions-core-concepts"
+					],
+					content: cppFunctionsLessonBriefs.functions
+				},
+				{
+					title: "CPPF3 Project 1: Function Practice",
+					content: cppFunctionsProjectBriefs.functionPractice,
+					projectLink:
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Function-Practice/starter",
+					solutionLink:
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Function-Practice/solution"
 				},
 				{
 					title: "Randomness and Small Simulation Helpers",
-					content:
-						"Modern `<random>` tools belong after basic function calls are comfortable. Use `std::mt19937` with an explicit seed and an appropriate distribution, pass or wrap the engine so random behavior stays separate from game output, and use a fixed seed for reproducible tests. `rand()` can be recognized in older code, but it is not the course's default. Randomness creates a reason to decompose the program instead of writing one long `main`.",
-					projectLink:
+					aliases: [
+						"c-level-1-cppf3-functions-curriculum-functions-application-check"
+					],
+					content: cppFunctionsLessonBriefs.random,
+					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-rand-Reference"
 				},
 				{
-					title: "CPPF3 Project 1: Probability Functions",
-					content:
-						"Write functions that simulate small random events such as coin flips, dice rolls, or card draws. Separate generation logic from printing logic.",
+					title: "CPPF3 Project 2: Probability Events and Random",
+					aliases: [
+						"c-level-1-cppf3-functions-curriculum-cppf3-project-1-probability-functions"
+					],
+					content: cppFunctionsProjectBriefs.probability,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Probability-Functions",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Probability-Functions/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Probability-Functions"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Probability-Functions/solution"
 				},
 				{
-					title: "CPPF3 Project 2: Number Guesser",
-					content:
-						"Break the game into input handling, random-number selection, and guess checking. This is the point where function decomposition starts feeling necessary instead of optional.",
+					title: "CPPF3 Project 3: Number Guesser",
+					aliases: [
+						"c-level-1-cppf3-functions-curriculum-cppf3-project-2-number-guesser"
+					],
+					content: cppFunctionsProjectBriefs.numberGuesser,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Number-Guesser",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Number-Guesser/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Number-Guesser"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Number-Guesser/solution"
 				}
 			],
-			supplementalProjects: [
-				{
-					title: "Functions: Extension Challenge",
-					content:
-						"Use a focused starter and review pair when function design and testing need one more pass.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Functions-Supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF3-Functions-Supplemental-2/solution"
-				}
-			]
+			supplementalProjects: []
 		},
 		{
 			title: "CPPF4 Classes and Objects",
@@ -351,7 +361,7 @@ const CPP_LEVEL_1_OPTIONAL_CURRICULUM = new Set([
 	"CPPF1 Project 2: Chat Bot",
 	"CPPF2 Project 2: Rock, Paper, Scissors",
 	"CPPF2 Project 3: Fizz Buzz",
-	"CPPF3 Project 2: Number Guesser",
+	"CPPF3 Project 3: Number Guesser",
 	"CPPF5 Project 2: Bank Accounts",
 	"CPPF6 Project 2: Defanging a Website Address"
 ]);
@@ -395,7 +405,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"reproducible randomness"
 		],
 		flowNote:
-			"Write deterministic helper contracts first, then use `std::mt19937` with a fixed test seed for the probability project. Keep generation, decision logic, and output separate; Number Guesser is the required integration build after the probability functions."
+			"Complete Function Practice with explicit parameter, return-value and arithmetic contracts before introducing randomness. Then complete the required Probability Events and Random and Number Guesser projects with one seeded engine, independent die rolls, checked range/guess input and a five-valid-guess limit. Supplied demonstrations remain lesson references."
 	},
 	"CPPF4 Classes and Objects": {
 		estimatedTime: "3 sessions · 45–60 minutes each",
