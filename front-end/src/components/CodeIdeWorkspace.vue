@@ -7646,19 +7646,22 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 				type="button"
 				class="site-button site-button--secondary compact-button"
 				aria-haspopup="dialog"
+				data-testid="ide-new-project"
 				:aria-expanded="showProjectMenu"
 				@click="showProjectMenu = true"
 			>
 				New project
 			</button>
 			<span role="status">{{ saveMessage }}</span>
-			<strong>{{ runMessage }}</strong>
+			<strong role="status" data-testid="ide-run-status">{{
+				runMessage
+			}}</strong>
 			<RouterLink
 				v-if="requestedCourseId"
 				:to="{ path: '/courses', hash: returnLessonHash }"
 				>Return to lesson</RouterLink
 			>
-			<details>
+			<details class="ide-help">
 				<summary>Help</summary>
 				<IdeDiagnosticsControls :capture="captureIdeDiagnostics" />
 			</details>

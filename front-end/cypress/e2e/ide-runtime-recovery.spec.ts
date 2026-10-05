@@ -36,7 +36,7 @@ function visitSeededPgZeroProject(options: SeedProjectOptions) {
 }
 
 function waitForRuntimeStatus(status: string) {
-	cy.get(".code-ide-status strong", { timeout: 120_000 }).should(
+	cy.get("[data-testid='ide-run-status']", { timeout: 120_000 }).should(
 		"have.text",
 		status
 	);

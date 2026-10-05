@@ -186,7 +186,9 @@ function outputText(document: Document) {
 }
 
 function runtimeStatus(document: Document) {
-	return elementText(document.querySelector(".code-ide-status strong"));
+	return elementText(
+		document.querySelector("[data-testid='ide-run-status']")
+	);
 }
 
 function runtimeDocument(document: Document) {
@@ -205,24 +207,43 @@ function canvasSnapshot(document: Document) {
 }
 
 async function clickStarterButton(document: Document, label: string) {
-	const menuToggle = document.querySelector<HTMLButtonElement>(
-		'button[aria-label="More project options"]'
+	const toggle = document.querySelector<HTMLButtonElement>(
+		'[data-testid="ide-new-project"]'
 	);
-	if (!menuToggle)
-		throw new Error("The project starter menu is unavailable.");
-	if (menuToggle.getAttribute("aria-expanded") !== "true") menuToggle.click();
-
+	if (!toggle) throw new Error("The project starter picker is unavailable.");
+	toggle.click();
+	await waitFor(
+		() => Boolean(document.querySelector("#ide-starter-picker")),
+		"starter picker",
+		10_000
+	);
+	const selects = document.querySelectorAll<HTMLSelectElement>(
+		"#ide-starter-picker select"
+	);
+	const [language, category] = selects;
+	if (!language || !category)
+		throw new Error("Starter filters are unavailable.");
+	language.value = "all";
+	language.dispatchEvent(new Event("change", { bubbles: true }));
+	category.value = label.startsWith("Demo ")
+		? "Demos"
+		: label.startsWith("Blank ")
+			? "Blank"
+			: label.includes("Outline") || label === "BlueJ Java Project"
+				? "Templates"
+				: "Classroom";
+	category.dispatchEvent(new Event("change", { bubbles: true }));
 	let button: HTMLButtonElement | undefined;
 	await waitFor(
 		() => {
 			button = [
 				...document.querySelectorAll<HTMLButtonElement>(
-					".project-create-menu button"
+					"#ide-starter-picker .starter-results button"
 				)
 			].find(candidate => elementText(candidate) === label);
 			return Boolean(button);
 		},
-		`${label} to appear in the starter menu`,
+		`${label} in the starter picker`,
 		10_000
 	);
 	if (!button) throw new Error(`Starter button ${label} is unavailable.`);

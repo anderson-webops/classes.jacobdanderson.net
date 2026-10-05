@@ -187,12 +187,15 @@ test(
 				);
 				await page.goto(`${origin}/ide`, { waitUntil: "networkidle2" });
 				await page.waitForSelector(".cm-content");
+				await page.locator(".ide-help > summary").click();
 				await page.waitForSelector(
 					"button.run-control:not([disabled])"
 				);
 				// Chrome worker imports stall under Puppeteer page-level interception.
 				// Leave runtime traffic untouched, then intercept only the report POST.
-				const usesWorkerRuntime = ["python", "java", "karel"].includes(mode);
+				const usesWorkerRuntime = ["python", "java", "karel"].includes(
+					mode
+				);
 				if (usesWorkerRuntime) await page.setRequestInterception(false);
 				await page.locator("button.run-control").click();
 				try {
@@ -200,7 +203,7 @@ test(
 						() =>
 							/Run failed|Run complete|Karel world ready|Run finished with issues|No Java file|No Python file/.test(
 								document.querySelector(
-									".code-ide-status strong"
+									"[data-testid='ide-run-status']"
 								)?.textContent ?? ""
 							),
 						{ timeout: 60000 }
@@ -218,7 +221,7 @@ test(
 						)
 					);
 					throw new Error(
-						`${mode}: ${await page.$eval(".code-ide-status", element => element.textContent)}; ${await page.$eval(".output-panel", element => element.textContent)}`,
+						`${mode}: ${await page.$eval("[data-testid='ide-run-status']", element => element.textContent)}; ${await page.$eval(".output-panel", element => element.textContent)}`,
 						{ cause: error }
 					);
 				}

@@ -28,15 +28,15 @@ context("Navigation & page smoke-tests", () => {
 		// ---- About ---------------------------------------------------
 		cy.get(".site-nav").contains("a:visible", "About").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/about`);
-		cy.get("h1").contains("Focused Help").should("exist");
+		cy.get("h1").contains("About Jacob").should("exist");
 
 		// ---- Tuition & Payment ---------------------------------------------
-		cy.get(".site-nav").contains("a:visible", "Tuition").click();
+		cy.get(".site-footer").contains("a:visible", "Tuition").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/payment`);
 		cy.get("h1").contains("Tuition").should("exist");
 
 		// ---- back to Home -------------------------------------------
-		cy.get(".site-nav").contains("a:visible", "Home").click();
+		cy.get(".site-brand").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/`);
 	});
 
