@@ -35,9 +35,11 @@ The corrected workflow:
   without creating a replacement demo or overwriting existing learner work.
 - Shows the failure beside the confirmation controls, including empty accounts
   that do not yet have a console. Retrying downloads the requested source again.
-- Opens bridge Java starters in Java mode. The C++ console-port starter keeps its
-  GitHub source link and documented local compiler workflow, without a misleading
-  browser-import button. This does not add a C++ browser runtime.
+- Opens bridge Java starters in Java mode and C++ starters in a source workspace.
+  The C++ workspace imports sources and headers after confirmation, saves and
+  downloads the full project, and supplies native C++17 build instructions.
+  C++ compilation and execution use the documented local compiler workflow.
+  This does not add a C++ browser compiler or certify the unfinished BRG packs.
 - Gives the ZIP import control an accessible name and uses theme-aware readable
   text for the import source URL, addressing browser-discovered label and dark
   contrast failures.
