@@ -239,7 +239,9 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 			await page.click(".cm-content");
 			// CodeMirror renders the visible lines. Navigate to the saved edit at
 			// the end of the document before checking the reopened editor.
-			await page.keyboard.press(modifier === "Meta" ? "Meta+ArrowDown" : "Control+End");
+			await page.keyboard.down(modifier);
+			await page.keyboard.press(modifier === "Meta" ? "ArrowDown" : "End");
+			await page.keyboard.up(modifier);
 			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Browser workflow edit"));
 			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
