@@ -239,6 +239,146 @@ describe("Python Level 3 learner flow", () => {
 		}
 	});
 
+	it("states complete iterative function and list review contracts", () => {
+		const module = requireSourceModule("AM2 Review: Functions & Lists");
+		const functions = module.curriculum.find(
+			item => item.title === "AM2 Project 1: Functions Practice"
+		)!;
+		for (const name of [
+			"product(a, b, c)",
+			"average(x, y)",
+			"count_letter(word, letter)",
+			"count_seven(number)",
+			"exponent(a, b)"
+		]) {
+			expect(functions.content).toContain(name);
+		}
+		expect(functions.content).toContain(
+			"later AM4 projects teach recursion"
+		);
+		expect(functions.content).toContain("Optional iterative challenges");
+		expect(functions.content).toContain("hailstone(n, max_steps=10000)");
+		expect(functions.content).toContain("transition cap");
+		expect(functions.content).toContain(
+			"General Hailstone convergence is not proved"
+		);
+		expect(functions.content).toContain("case-sensitive");
+		const lists = module.curriculum.find(
+			item => item.title === "AM2 Project 2: Lists Practice"
+		)!;
+		for (const name of [
+			"make_numbers()",
+			"make_evens()",
+			"make_squares()",
+			"sum_lists(l1, l2)",
+			"minimum(l)",
+			"maximum(l)",
+			"sum_list_of_lists(l)",
+			"flatten_list(l)",
+			"max_list(l)"
+		]) {
+			expect(lists.content).toContain(name);
+		}
+		expect(lists.content).toContain(
+			"twenty positive even numbers, 2 through 40"
+		);
+		expect(lists.content).toContain("deliberately skip empty inner lists");
+		expect(lists.content).toContain("No function changes input lists");
+		for (const item of [functions, lists]) {
+			expect(item.learningPath).toBe("core");
+			expect(item.projectLink).toMatch(/\/starter$/);
+			expect(item.solutionLink).toMatch(/\/solution$/);
+		}
+	});
+
+	it("supplies all sixteen fundamentals tasks without requiring reference answers", () => {
+		const item = requireSourceModule(
+			"AM3 Review: Dictionaries & Recap"
+		).curriculum.find(
+			candidate =>
+				candidate.title ===
+				"AM3 Project 1: Python Fundamentals Problem Set"
+		)!;
+		const buildPath = item.content
+			.split("**Build path:**\n")[1]
+			.split("\n\n**Checkpoints:**")[0];
+		expect(buildPath.match(/^\d+\./gm)).toHaveLength(16);
+		for (const name of [
+			"double",
+			"starts_with_a",
+			"num_of_evens",
+			"sum_of_numbers",
+			"index_of_largest_number",
+			"all_squares",
+			"largest_power_of_two",
+			"factorial_sum",
+			"largest_divisor",
+			"largest_product",
+			"sums_to_zero",
+			"most_common_numbers",
+			"reverse_string",
+			"count_vowels",
+			"count_pairs",
+			"swap_min_max"
+		]) {
+			expect(buildPath).toContain(name + "(");
+		}
+		for (const contract of [
+			"ascending numeric order",
+			"`[3, 6, 2, 2, 6]` returns `[2, 6]`",
+			"Only swap_min_max mutates input",
+			"Integer N parameters reject bool",
+			"two distinct positions",
+			"either letter case",
+			"a singleton is unchanged"
+		]) {
+			expect(item.content).toContain(contract);
+		}
+		expect(item.learningPath).toBe("core");
+		expect(item.projectLink).toMatch(/\/starter$/);
+		expect(item.solutionLink).toMatch(/\/solution$/);
+	});
+
+	it("preserves full learner instructions and existing review progress IDs", async () => {
+		const course = await useCoursesStore().loadCourseById("python-level-3");
+		const items = course!.modules.flatMap(module => module.curriculum);
+		const expected = [
+			[
+				"AM2 Project 1: Functions Practice",
+				"python-level-3-am2-review-functions-lists-curriculum-am2-project-1-functions-practice",
+				"hailstone(n, max_steps=10000)"
+			],
+			[
+				"AM2 Project 2: Lists Practice",
+				"python-level-3-am2-review-functions-lists-curriculum-am2-project-2-lists-practice",
+				"twenty positive even numbers, 2 through 40"
+			],
+			[
+				"AM3 Project 1: Python Fundamentals Problem Set",
+				"python-level-3-am3-review-dictionaries-recap-curriculum-am3-project-1-python-fundamentals-problem-set",
+				"swap_min_max(numbers)"
+			]
+		];
+		for (const [title, id, lastTask] of expected) {
+			const item = items.find(candidate => candidate.title === title)!;
+			expect(item.id).toBe(id);
+			expect(item.aliases).toBeUndefined();
+			expect(item.content).toContain(lastTask);
+			expect(item.content).toContain("with a course facilitator");
+			expect(item.content).not.toMatch(/\ban course facilitator\b/i);
+			expect(item.projectLink).toMatch(/\/starter$/);
+		}
+		const fundamentals = items.find(
+			item =>
+				item.title === "AM3 Project 1: Python Fundamentals Problem Set"
+		)!;
+		expect(fundamentals.content).toContain("**Build plan:**");
+		const buildPath = fundamentals.content
+			.split("**Build plan:**")[1]
+			.split("**Checkpoints:**")[0];
+		expect(buildPath.match(/^\d+\./gm)).toHaveLength(16);
+	});
+
 	it("keeps licensed sort animations and only available project media", async () => {
 		const course = await loadRawCourse("python-level-3");
 		expect(course).not.toBeNull();

@@ -2751,6 +2751,7 @@ function neutralizeStudentFacingText(text: string) {
 				.replace(/\bteacher-supplied\b/gi, "course-supplied")
 				.replace(/\bteacher requirement\b/gi, "course requirement")
 				.replace(/\bteacher\b/gi, "course facilitator")
+				.replace(/\b(a)n(?=\s+course facilitator\b)/gi, "$1")
 				.replace(
 					/\bThis module focuses on ([a-z]+)\b/g,
 					moduleFocusVerbReplacement

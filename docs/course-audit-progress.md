@@ -93,8 +93,33 @@ ordering, a missing first-one search, a missing sorted experiment shape, absent
 bubble-sort early exit, and a broken optional punctuation extension. These are
 recorded follow-ups, not repairs delivered by the sorting milestone. Additional
 input-domain, file-format and mutation contracts need assignment-specific review.
+Those seven findings were open at the sorting milestone. The next three-pack
+follow-up below repairs the first three; four concrete mismatches and additional
+input-domain, file-format and mutation contracts remain open.
+
+[Source PR #4](https://github.com/instruction-material/Python-Level-3/pull/4)
+at integrated source `6ed2caf76313b92163e3c450f6bd7192e518b9a5` repairs AM2
+Functions Practice, AM2 Lists Practice and the AM3 Fundamentals Problem Set.
+Thirty-two callable starter functions remain intentionally incomplete, with
+separate reference implementations and complete learner briefs. The five
+required iterative function exercises remain distinct from their two optional
+challenges and the later recursion projects.
+
+References use exact integer Hailstone and digit arithmetic, produce twenty
+positive evens, and return tied modes in ascending order. Domain, case, empty-list,
+fresh-output and mutation rules are explicit. Hailstone has a transition cap;
+bounded examples do not prove general convergence. All sixteen fundamentals
+prompts are available in the site and starter brief without requiring reference
+answers. Normalized learner copy retains these full prompts and existing progress
+IDs, and corrects the article when replacing instructor with course facilitator.
+
+All 45 source tests passed locally and in exact-head hosted CI. Focused site
+regressions check the complete normalized instructions and confirmed-import
+workflow; full site CI remains the delivery authority. Twenty-four authored
+coding pairs, one supplied-code analysis and one worksheet are checked. Eight
+distinct migrated pairs and ten coding placeholder roles still await verification.
 The source repository's
-[review ledger](https://github.com/instruction-material/Python-Level-3/blob/d3ba6e9ba0c94a5680c882fc1c92b2f514f806be/SOURCE_PACK_REVIEW.md)
+[review ledger](https://github.com/instruction-material/Python-Level-3/blob/6ed2caf76313b92163e3c450f6bd7192e518b9a5/SOURCE_PACK_REVIEW.md)
 distinguishes those boundaries. Do not copy completed answers into coding starters
 or certify a nonempty folder as an implementation pair.
 
