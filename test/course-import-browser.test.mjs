@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -12,6 +13,64 @@ import { strFromU8, unzipSync } from "fflate";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const axeSource = createRequire(import.meta.url).resolve("axe-core/axe.min.js");
+// Exact published learner source, not synthetic answers or mutable main bytes.
+const searchSourceRevision = "2473272796d28401c2b8a3f50b472070d9272e3a";
+const searchPacks = [
+	{
+		folder: "AM7-Reverse-Number-Guesser",
+		digests: {
+			"main.py":
+				"851956a342785f81798d9677d38939acb1e58f384061ada657526f5e19feb504",
+			"README.md":
+				"77b7b89d7b0b26edd235248706f21c2ec2251d41839f7bf226ceee2d2962112e"
+		},
+		reminder: "Implement the four tasks in README.md"
+	},
+	{
+		folder: "AM7-Number-Guesser",
+		digests: {
+			"main.py":
+				"5feb8b0ad3a81d75df5ecd5bdee603e85704ba8ecbea8126e5ee46b8fbeb5ce1",
+			"README.md":
+				"31a0223de38812330d1d0d015b60a26769f1eece5da61487d1a7bad875461bec"
+		},
+		reminder: "Implement the three tasks in README.md"
+	},
+	{
+		folder: "AM7-Runtime-Comparator",
+		digests: {
+			"main.py":
+				"177a2debc4ae16fbb684ddfd7adcb4b3785ac2fb5c3df6db93a062acec9fc22e",
+			"README.md":
+				"d291662971b988908ae513c30ac32aa72382ed9716aaf2057b98276b815ad910"
+		},
+		reminder: "Implement the five core tasks in README.md"
+	}
+];
+
+async function readPublishedStarter(pack) {
+	const entries = await Promise.all(
+		Object.entries(pack.digests).map(async ([name, digest]) => {
+			const url = `https://raw.githubusercontent.com/instruction-material/Python-Level-3/${searchSourceRevision}/${pack.folder}/starter/${name}`;
+			const response = await fetch(url, {
+				signal: AbortSignal.timeout(20000)
+			});
+			assert.equal(
+				response.status,
+				200,
+				`Published starter is available: ${url}`
+			);
+			const bytes = Buffer.from(await response.arrayBuffer());
+			assert.equal(
+				createHash("sha256").update(bytes).digest("hex"),
+				digest,
+				`Unchanged source bytes for ${pack.folder}/${name}`
+			);
+			return [name, bytes.toString("utf8")];
+		})
+	);
+	return Object.fromEntries(entries);
+}
 // Synthetic workflow fixture, not a completed course sorting assignment.
 const fileIoInput = "b\n \nA\nb";
 const fileIoOutput = "B\n \nA\nB\n";
@@ -27,7 +86,7 @@ const fileIoSource = [
 
 test(
 	"confirmed imports, accessible resource roles, and saved Python file exports",
-	{ timeout: 180000 },
+	{ timeout: 300000 },
 	async () => {
 		let browser;
 		let server;
@@ -43,7 +102,7 @@ test(
 				command: "course-import-browser",
 				pid: process.pid,
 				startedAt,
-				timeoutMs: 180000
+				timeoutMs: 300000
 			})
 		);
 		try {
@@ -79,6 +138,8 @@ test(
 				let remoteWrites = 0;
 				let courseFixture = false;
 				let fileIoFixture = false;
+				let searchPack = null;
+				let searchFiles = null;
 				await page.setRequestInterception(true);
 				page.on("request", request => {
 					if (
@@ -99,6 +160,31 @@ test(
 					const url = new URL(request.url());
 					if (url.hostname === "api.github.com") {
 						sourceRequests++;
+						if (searchPack) {
+							assert.equal(
+								url.pathname,
+								`/repos/instruction-material/Python-Level-3/contents/${searchPack.folder}/starter`
+							);
+							assert.equal(url.searchParams.get("ref"), "main");
+							void request.respond({
+								status: 200,
+								contentType: "application/json",
+								headers: { "access-control-allow-origin": "*" },
+								body: JSON.stringify(
+									Object.entries(searchFiles).map(
+										([name, source]) => ({
+											type: "file",
+											name,
+											path: `${searchPack.folder}/starter/${name}`,
+											size: Buffer.byteLength(source),
+											html_url: `https://github.com/instruction-material/Python-Level-3/blob/main/${searchPack.folder}/starter/${name}`,
+											download_url: `https://raw.githubusercontent.com/instruction-material/Python-Level-3/main/${searchPack.folder}/starter/${name}`
+										})
+									)
+								)
+							});
+							return;
+						}
 						void request.respond({
 							status: failDownload ? 503 : 200,
 							contentType: "application/json",
@@ -143,6 +229,21 @@ test(
 						});
 					} else if (url.hostname === "raw.githubusercontent.com") {
 						sourceRequests++;
+						if (searchPack) {
+							const name = url.pathname.split("/").at(-1);
+							assert.equal(
+								url.pathname,
+								`/instruction-material/Python-Level-3/main/${searchPack.folder}/starter/${name}`
+							);
+							assert.ok(Object.hasOwn(searchFiles, name));
+							void request.respond({
+								status: 200,
+								contentType: "text/plain",
+								headers: { "access-control-allow-origin": "*" },
+								body: searchFiles[name]
+							});
+							return;
+						}
 						void request.respond({
 							status: 200,
 							contentType: "text/plain",
@@ -604,8 +705,173 @@ test(
 						"File execution and export remain local"
 					);
 				} finally {
+					await cdp.send("Network.setBlockedURLs", { urls: [] });
 					await cdp.detach();
 				}
+
+				// Exercise actual published incomplete starters, not reference answers.
+				// The browser receives frozen checked bytes through controlled reads;
+				// no download is initiated by the learner workflow before confirmation.
+				for (const pack of searchPacks) {
+					searchFiles = await readPublishedStarter(pack);
+					searchPack = pack;
+					fileIoFixture = false;
+					const before = sourceRequests;
+					await page.setRequestInterception(true);
+					const params = new URLSearchParams({
+						mode: "python",
+						projectKey: `browser:${pack.folder}:starter`,
+						starterUrl: `https://github.com/instruction-material/Python-Level-3/tree/main/${pack.folder}/starter`,
+						starterTitle: pack.folder
+					});
+					await page.goto(`${origin}/ide?${params}`, {
+						waitUntil: "domcontentloaded"
+					});
+					await page.waitForSelector(
+						"[data-testid='ide-route-import-confirm']"
+					);
+					assert.equal(
+						sourceRequests,
+						before,
+						`${pack.folder} waits for confirmation`
+					);
+					await page.click(
+						"[data-testid='ide-route-import-confirm']"
+					);
+					await page.waitForFunction(() =>
+						document
+							.querySelector(".cm-content")
+							?.textContent.includes("NotImplementedError")
+					);
+					await page.waitForFunction(() =>
+						[...document.querySelectorAll(".file-button")].some(
+							button => button.textContent.includes("README.md")
+						)
+					);
+					assert.equal(
+						sourceRequests,
+						before + 3,
+						"Exactly one directory and both learner files"
+					);
+					await page.waitForFunction(
+						projectKey =>
+							JSON.parse(
+								localStorage.getItem(
+									"classes-python-ide-projects:anonymous"
+								) ?? "[]"
+							).some(
+								project =>
+									project.courseProjectKey === projectKey &&
+									project.files.length === 2
+							),
+						{},
+						`browser:${pack.folder}:starter`
+					);
+					const savedFiles = await page.evaluate(projectKey => {
+						const projects = JSON.parse(
+							localStorage.getItem(
+								"classes-python-ide-projects:anonymous"
+							) ?? "[]"
+						);
+						return projects.find(
+							project => project.courseProjectKey === projectKey
+						)?.files;
+					}, `browser:${pack.folder}:starter`);
+					assert.ok(
+						savedFiles,
+						"Imported starter saved under its distinct project key"
+					);
+					assert.deepEqual(savedFiles.map(file => file.name).sort(), [
+						"README.md",
+						"main.py"
+					]);
+					for (const file of savedFiles)
+						assert.equal(
+							file.content,
+							searchFiles[file.name],
+							"Imported exact published incomplete bytes"
+						);
+					const runtimeCdp = await page.createCDPSession();
+					try {
+						await runtimeCdp.send("Network.enable");
+						await runtimeCdp.send("Network.setBlockedURLs", {
+							urls: [
+								`${origin}/api/*`,
+								"*://classes.jacobdanderson.net/*",
+								"*://scheduler.classes.jacobdanderson.net/*",
+								"*://api.github.com/*",
+								"*://raw.githubusercontent.com/*"
+							]
+						});
+						await page.setRequestInterception(false);
+						await page.waitForSelector(
+							"button.run-control:not([disabled])"
+						);
+						await page.click("button.run-control");
+						await page.waitForFunction(
+							reminder =>
+								document
+									.querySelector(".output-panel")
+									?.textContent.includes(reminder) &&
+								document
+									.querySelector(
+										"[data-testid='ide-run-status']"
+									)
+									?.textContent.includes("Run complete"),
+							{ timeout: 90000 },
+							pack.reminder
+						);
+						assert.doesNotMatch(
+							await page.$eval(
+								".output-panel",
+								element => element.textContent
+							),
+							/Traceback|EOFError|NotImplementedError/,
+							"Initial Run only prints the learner reminder"
+						);
+						if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+							const directory = join(
+								previousDirectory,
+								process.env.COURSE_IMPORT_SCREENSHOT_DIR
+							);
+							await mkdir(directory, { recursive: true });
+							await page.screenshot({
+								path: join(
+									directory,
+									`course-import-${pack.folder}-1280.png`
+								),
+								fullPage: true
+							});
+						}
+						await page.reload({ waitUntil: "domcontentloaded" });
+						await page.waitForSelector(".file-button");
+						assert.equal(
+							await page.$(
+								"[data-testid='ide-route-import-confirm']"
+							),
+							null,
+							"Saved starter reopens without replacement"
+						);
+						assert.equal(
+							sourceRequests,
+							before + 3,
+							"Reopening never redownloads the starter"
+						);
+						console.log(
+							`Exact published learner source imported, run and reopened: ${pack.folder}@${searchSourceRevision}`
+						);
+					} finally {
+						await runtimeCdp.send("Network.setBlockedURLs", {
+							urls: []
+						});
+						await runtimeCdp.detach();
+					}
+				}
+				assert.equal(
+					remoteWrites,
+					0,
+					"All imported starter work remains local"
+				);
 			} finally {
 				await page.close();
 			}

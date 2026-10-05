@@ -169,6 +169,11 @@ and index-bound runtime from the original sliced reference's linear worst-case
 copying work. Full site verification for this new group is pending; the existing
 v2.8.25 workflow evidence is not substituted for its own checks.
 
+That group subsequently passed full reviewed-head and independent integrated-main
+site CI. Its unchanged CI-attested native artifacts are retained in immutable
+[v2.8.26](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.26).
+Production activation remains separate and unverified.
+
 Thirty-two authored coding/review pairs, one supplied-code analysis and one
 worksheet are checked; no distinct migrated pair remains open. Ten genuine
 coding placeholder roles and other-course purpose, source and workflow audits
@@ -179,6 +184,45 @@ Additional source/language alignment checks remain necessary for generated
 bridge extension packs. Several local folders titled as C++ practice contained
 Java starters; selecting a working Java runtime does not resolve that coursework
 content mismatch.
+
+## Interactive search follow-up
+
+[Source PR #7](https://github.com/instruction-material/Python-Level-3/pull/7)
+at integrated source `2473272796d28401c2b8a3f50b472070d9272e3a` completes three
+genuine coding placeholders: Reverse Number Guesser, Number Guesser and Runtime
+Comparator. Thirteen matching incomplete callables accompany complete learner
+briefs; the sliced recursive-search helper is explicitly optional. Completed
+reference answers stay separate. Original commands, folder names, 1–100 domains,
+seven-try defaults and search parameter names remain.
+
+Computer-led guessing now distinguishes confirmed, conditionally inferred,
+contradictory, exhausted and cancelled outcomes. Invalid responses retry without
+consuming attempts. The supplemental player-led random-secret game validates
+ASCII integer text and accepted attempts, supports injected secrets and does not
+claim seven arbitrary guesses guarantee a win. These distinct purposes remain
+required and optional respectively; the search experiment remains required.
+
+The experiment uses a shared multiset/query batch, independently checked untimed
+warm-ups, fresh copies and measured full-batch medians. Preparation, sorting,
+oracle work, validation and printing are not timed. Original-order versus sorted
+hit positions are disclosed as a confound; timings do not prove Big-O or include
+the end-to-end preparation cost. Workloads and repeat counts are bounded.
+
+All 101 native source methods passed locally, in exact-head
+[push CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37263130709)
+and [review CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37263164387),
+then on independent [integrated main](https://github.com/instruction-material/Python-Level-3/actions/runs/37263245237).
+Tests cover every default secret, exhaustive small-list membership, invalid and
+terminal states, quiet imports, original incomplete signatures, real guarded
+default runs, independent clocks, timer boundaries and mutation/result failures.
+The optional guarded Ruff preflight refused audited-version drift; its policy
+was unchanged, and the canonical native source gate passed.
+
+Matching site briefs retain titles, progress IDs and the 86-core/4-optional
+inventory. Full site verification for this group is pending; earlier release
+evidence is not substituted. Thirty-five authored coding/review pairs, one
+supplied-code analysis and one worksheet are checked. Seven genuine coding
+placeholders and the broader course/purpose/source/workflow audit remain open.
 
 ## Verification authority
 
