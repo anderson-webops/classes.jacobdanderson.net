@@ -1111,4 +1111,67 @@ describe("Python Level 3 learner flow", () => {
 			"Pending Python Level 3 Assets"
 		);
 	});
+	it("keeps all four Tic Tac Toe stages core with complete distinct contracts", () => {
+		const module = requireSourceModule(
+			"AM14 Master Project: Tic Tac Toe AI"
+		);
+		const projects = module.curriculum.filter(item =>
+			item.title.startsWith("AM14 Project")
+		);
+		expect(projects).toHaveLength(4);
+		expect(module.curriculum[0]?.content).toContain(
+			"All four Tic Tac Toe stages remain required core work"
+		);
+		expect(module.curriculum[0]?.content).not.toContain(
+			"advanced challenge"
+		);
+		for (const item of projects) {
+			expect(item.learningPath).toBe("core");
+			expect(item.projectLink).toMatch(/\/starter$/);
+			expect(item.solutionLink).toMatch(/\/solution$/);
+			for (const contract of [
+				"make_board()",
+				"duplicate_board(board)",
+				"game_status(board)",
+				"legal_moves(board)",
+				"apply_move(board, player, row, col)",
+				"Boolean coordinates",
+				"Caller-owned boards remain unchanged",
+				"save and export"
+			])
+				expect(item.content, item.title).toContain(contract);
+		}
+		const [ui, basic, experiment, advanced] = projects;
+		for (const item of [ui, basic, advanced]) {
+			for (const contract of [
+				"parse_coordinate(text)",
+				"case-insensitive quit",
+				"EOF",
+				"input KeyboardInterrupt",
+				"cancelled",
+				"nine accepted moves"
+			])
+				expect(item?.content).toContain(contract);
+		}
+		expect(ui?.content).toContain("random_player_move(board, rng=None)");
+		expect(basic?.content).toContain("Own wins precede blocks");
+		for (const contract of [
+			"evaluate(games=1000, seed=0",
+			"0..10000",
+			"random.Random(seed)",
+			"first_x_win",
+			"0.0 rates",
+			"do not prove optimality"
+		])
+			expect(experiment?.content).toContain(contract);
+		for (const contract of [
+			"test_fork(board, i, j, player)",
+			"Count coordinates",
+			"Immediate wins are not forks",
+			"compulsory opponent block",
+			"every legal opponent response",
+			"already-lost arbitrary positions"
+		])
+			expect(advanced?.content).toContain(contract);
+	});
 });
