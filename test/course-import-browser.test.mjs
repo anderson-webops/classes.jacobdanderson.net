@@ -26,7 +26,7 @@ const fileIoSource = [
 ].join("\n");
 
 test(
-	"confirmed imports, retry, accessible feedback, and analysis resource roles",
+	"confirmed imports, accessible resource roles, and saved Python file exports",
 	{ timeout: 180000 },
 	async () => {
 		let browser;
@@ -424,10 +424,11 @@ test(
 					await cdp.send("Network.enable");
 					await cdp.send("Network.setBlockedURLs", {
 						urls: [
-							"*/api/*",
-							"*classes.jacobdanderson.net*",
-							"*api.github.com*",
-							"*raw.githubusercontent.com*"
+							`${origin}/api/*`,
+							"*://classes.jacobdanderson.net/*",
+							"*://scheduler.classes.jacobdanderson.net/*",
+							"*://api.github.com/*",
+							"*://raw.githubusercontent.com/*"
 						]
 					});
 					await page.setRequestInterception(false);
@@ -568,6 +569,9 @@ test(
 						archivedFile("output.txt"),
 						fileIoOutput,
 						"Export retains generated file bytes"
+					);
+					console.log(
+						"Real Python input, generated output, and exported ZIP bytes verified"
 					);
 					await page.reload({ waitUntil: "domcontentloaded" });
 					await page.waitForSelector(".file-button");
