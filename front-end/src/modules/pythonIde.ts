@@ -2776,8 +2776,11 @@ export function getPythonIdeFileKindLabel(value: string) {
 
 export function getPythonIdeDefaultFileContent(fileName: string) {
 	const extension = fileName.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
-	if ([".cpp", ".cc", ".cxx"].includes(extension ?? ""))
-		return cppStarterCode;
+	if ([".cpp", ".cc", ".cxx"].includes(extension ?? "")) {
+		return /^main\.(?:cc|cpp|cxx)$/i.test(baseName(fileName))
+			? cppStarterCode
+			: "// Add C++ function or class definitions here.\n";
+	}
 	if ([".h", ".hpp"].includes(extension ?? "")) return "#pragma once\n\n";
 	if (extension === ".csv") return "name,value\nsample,1\n";
 	if (extension === ".java")

@@ -7,6 +7,7 @@ import { sandboxRun } from "../src/modules/pythonSandbox";
 import {
 	clearLocalPythonProjects,
 	createPythonIdeProject,
+	getPythonIdeDefaultFileContent,
 	isValidPythonFileName,
 	loadLocalPythonProjects,
 	loadPythonIdeStarterFilesFromGitHub,
@@ -124,6 +125,9 @@ describe("C++ source workspace", () => {
 	});
 
 	it("gives a complete native command without pretending to execute C++", () => {
+		expect(getPythonIdeDefaultFileContent("main.cpp")).toContain("int main()");
+		for (const name of ["Helper.cpp", "src/Task.cc", "Helper.cxx"])
+			expect(getPythonIdeDefaultFileContent(name)).not.toContain("int main");
 		const files = [
 			{ name: "main.cpp", content: "" },
 			{ name: "src/Helper.cxx", content: "" },

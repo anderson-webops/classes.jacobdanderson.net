@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 // This workflow is run by node --test in CI, outside Vitest.
 // eslint-disable-next-line test/no-import-node-test -- Uses the native CI test runner.
 import { test as nodeTest } from "node:test";
@@ -165,6 +165,7 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 			folder = packFolder;
 			await page.setViewport({ width: folder.startsWith("PTJ1") ? 390 : 1280, height: 900 });
 			files = await readStarter(folder, hashes);
+			const expectedFiles = { ...files };
 			const before = sourceRequests;
 			const key = `browser:${folder}:starter`;
 			const params = new URLSearchParams({ mode: "cpp", projectKey: key, starterUrl: `https://github.com/${repository}/tree/main/${folder}`, starterTitle: folder.split("/")[0] });
@@ -175,10 +176,19 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 			await page.waitForSelector("[aria-label='C++ build workflow']");
 			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("#include"));
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
+			if (folder.startsWith("PTJ4")) {
+				const input = "input[aria-label='New project file name']";
+				if (!await page.$(input)) await page.click("button[aria-controls='code-ide-file-tools-panel']");
+				await page.type(input, "src/workflow.cpp");
+				await page.keyboard.press("Enter");
+				await page.waitForFunction(() => [...document.querySelectorAll(".file-button")].some(button => button.textContent.includes("src/workflow.cpp")));
+				expectedFiles["src/workflow.cpp"] = "// Add C++ function or class definitions here.\n";
+			}
 			await page.evaluate(() => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes("main.cpp")).click());
 			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("int main("));
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
 			const edited = `${files["main.cpp"]}\n// Browser workflow edit\n`;
+			expectedFiles["main.cpp"] = edited;
 			await page.click(".cm-content");
 			await page.keyboard.down(modifier);
 			await page.keyboard.press("a");
@@ -194,7 +204,7 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 			assert.equal(await page.$(".stdin-panel"), null);
 			const instructions = await page.$eval(".output-panel", element => element.textContent);
 			assert.match(instructions, /does not compile or execute/);
-			for (const name of Object.keys(files).filter(name => name.endsWith(".cpp"))) assert.ok(instructions.includes(`'${name}'`));
+			for (const name of Object.keys(expectedFiles).filter(name => name.endsWith(".cpp"))) assert.ok(instructions.includes(`'${name}'`));
 			assert.equal(runtimeRequests, 0, "C++ instructions never start a Python or Java runtime");
 			await page.evaluate(() => {
 				window.__cppZip = null;
@@ -213,12 +223,23 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 			await page.waitForFunction(() => Array.isArray(window.__cppZip));
 			const zip = unzipSync(Uint8Array.from(await page.evaluate(() => window.__cppZip)));
 			const exported = Object.fromEntries(Object.entries(zip).map(([path, bytes]) => [path.slice(path.indexOf("/") + 1), strFromU8(bytes)]));
-			assert.deepEqual(exported, { ...files, "main.cpp": edited });
+			assert.deepEqual(exported, expectedFiles);
 			const directory = join(temporary, folder.split("/")[0]);
 			await mkdir(directory);
-			for (const [name, content] of Object.entries(exported)) await writeFile(join(directory, name), content);
+			for (const [name, content] of Object.entries(exported)) {
+				const path = join(directory, name);
+				await mkdir(dirname(path), { recursive: true });
+				await writeFile(path, content);
+			}
 			await compileExport(directory, Object.keys(exported));
 			await page.reload({ waitUntil: "domcontentloaded" });
+			await page.waitForFunction(() => [...document.querySelectorAll(".file-button")].some(button => button.textContent.includes("main.cpp")));
+			await page.evaluate(() => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes("main.cpp")).click());
+			await page.waitForSelector(".cm-content");
+			await page.click(".cm-content");
+			// CodeMirror renders the visible lines. Navigate to the saved edit at
+			// the end of the document before checking the reopened editor.
+			await page.keyboard.press(modifier === "Meta" ? "Meta+ArrowDown" : "Control+End");
 			await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Browser workflow edit"));
 			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
@@ -233,6 +254,21 @@ nodeTest("published C++ starters confirm, edit, save, export, reopen and compile
 	}
 	catch (error) {
 		exitCode = 1;
+		if (page) {
+			const state = await page.evaluate(() => ({
+				path: location.pathname,
+				activeFile: document.querySelector(".file-button.is-active")?.textContent,
+				editorCount: document.querySelectorAll(".cm-content").length,
+				pendingImport: !!document.querySelector("[data-testid='ide-route-import-confirm']"),
+				projects: JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").map(project => ({
+					key: project.courseProjectKey,
+					mode: project.mode,
+					activeFile: project.activeFileName,
+					files: project.files.map(file => ({ name: file.name, hasEdit: file.content.includes("Browser workflow edit") }))
+				}))
+			})).catch(() => ({ unavailable: true }));
+			record("failure-state", state);
+		}
 		throw error;
 	}
 	finally {
