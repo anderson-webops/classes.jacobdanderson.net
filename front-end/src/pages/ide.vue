@@ -77,6 +77,7 @@ function choose(event: Event) {
 }
 .ide-environment {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 0.7rem;
 	margin: 0.5rem 1rem;
@@ -86,6 +87,8 @@ function choose(event: Event) {
 	letter-spacing: normal;
 }
 .ide-environment select {
+	min-width: 0;
+	max-width: 100%;
 	font: inherit;
 	padding: 0.4rem 0.7rem;
 	border-radius: 0.5rem;

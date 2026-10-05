@@ -7664,6 +7664,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 			<button
 				type="button"
 				class="site-button site-button--secondary compact-button"
+				data-testid="ide-new-project"
 				aria-haspopup="dialog"
 				:aria-expanded="showProjectMenu"
 				@click="showProjectMenu = true"
@@ -10708,10 +10709,14 @@ html.dark .editor-shortcuts ul {
 		min-width: 0;
 	}
 
+	.ide-settings {
+		position: static;
+	}
+
 	.ide-settings-panel {
 		right: auto;
 		left: 0;
-		width: min(26rem, calc(100vw - 2rem));
+		width: min(26rem, 100%);
 	}
 
 	.turtle-canvas:not(.turtle-canvas--game) {

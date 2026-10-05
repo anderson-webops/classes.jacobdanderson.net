@@ -186,7 +186,9 @@ function outputText(document: Document) {
 }
 
 function runtimeStatus(document: Document) {
-	return elementText(document.querySelector(".code-ide-status strong"));
+	return elementText(
+		document.querySelector('[data-testid="ide-run-status"]')
+	);
 }
 
 function runtimeDocument(document: Document) {
@@ -206,18 +208,36 @@ function canvasSnapshot(document: Document) {
 
 async function clickStarterButton(document: Document, label: string) {
 	const menuToggle = document.querySelector<HTMLButtonElement>(
-		'button[aria-label="More project options"]'
+		'[data-testid="ide-new-project"]'
 	);
-	if (!menuToggle)
-		throw new Error("The project starter menu is unavailable.");
+	if (!menuToggle) throw new Error("The New project control is unavailable.");
 	if (menuToggle.getAttribute("aria-expanded") !== "true") menuToggle.click();
+	await waitFor(
+		() => Boolean(document.querySelector("#ide-starter-picker")),
+		"the starter dialog",
+		10_000
+	);
+	const filters = document.querySelectorAll<HTMLSelectElement>(
+		"#ide-starter-picker .starter-filters select"
+	);
+	if (filters.length !== 2)
+		throw new Error("The starter filters are unavailable.");
+	const ChangeEvent = document.defaultView?.Event ?? Event;
+	filters[0]!.value = "all";
+	filters[0]!.dispatchEvent(new ChangeEvent("change", { bubbles: true }));
+	filters[1]!.value = label.startsWith("Demo ")
+		? "Demos"
+		: label.endsWith("Outline") || label === "BlueJ Java Project"
+			? "Templates"
+			: "Classroom";
+	filters[1]!.dispatchEvent(new ChangeEvent("change", { bubbles: true }));
 
 	let button: HTMLButtonElement | undefined;
 	await waitFor(
 		() => {
 			button = [
 				...document.querySelectorAll<HTMLButtonElement>(
-					".project-create-menu button"
+					"#ide-starter-picker .starter-results button"
 				)
 			].find(candidate => elementText(candidate) === label);
 			return Boolean(button);

@@ -31,12 +31,12 @@ context("Navigation & page smoke-tests", () => {
 		cy.get("h1").contains("Focused Help").should("exist");
 
 		// ---- Tuition & Payment ---------------------------------------------
-		cy.get(".site-nav").contains("a:visible", "Tuition").click();
+		cy.get('.site-footer a[href="/payment"]').first().click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/payment`);
 		cy.get("h1").contains("Tuition").should("exist");
 
 		// ---- back to Home -------------------------------------------
-		cy.get(".site-nav").contains("a:visible", "Home").click();
+		cy.get(".site-brand").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/`);
 	});
 
@@ -76,8 +76,20 @@ context("Navigation & page smoke-tests", () => {
 				}
 			});
 			cy.document().should(document => {
+				const layout = [
+					".ide-environment",
+					".code-ide-page",
+					".editor-toolbar"
+				].map(selector => ({
+					selector,
+					bounds: document
+						.querySelector(selector)
+						?.getBoundingClientRect()
+						.toJSON()
+				}));
 				expect(document.documentElement.scrollWidth).to.be.at.most(
-					document.documentElement.clientWidth
+					document.documentElement.clientWidth,
+					JSON.stringify(layout)
 				);
 			});
 		}
