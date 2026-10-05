@@ -10,6 +10,7 @@ import puppeteer from "puppeteer";
 import { createServer } from "vite";
 import { runAxeInPage } from "../scripts/a11y-axe-runtime.mjs";
 import { strFromU8, unzipSync } from "fflate";
+import { exerciseTicTacToe } from "./course-tic-tac-toe-workflow.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const axeSource = createRequire(import.meta.url).resolve("axe-core/axe.min.js");
@@ -98,6 +99,42 @@ const searchPacks = [
 				"43cd440da61a1ed7d770c2bdfa3dc552085337d1c866c1881cbe3e49c72932f3"
 		},
 		reminder: "Implement the fourteen tasks in README.md"
+	},
+	{
+		folder: "AM14-Tic-Tac-Toe-UI",
+		revision: "94ddb35a81a5f768ef0a44d91e107cf1b4e66cf5",
+		digests: {
+			"main.py": "24e8ef82aebb2e2b3f11109c55d0365b32970e2cbe66435d01638779145463c4",
+			"README.md": "6763f69906246f05975c5e2587fd3a7a3dc1bb92d11693937a1fd6b30b43073e"
+		},
+		reminder: "Read README.md, implement the learner functions"
+	},
+	{
+		folder: "AM14-Tic-Tac-Toe-AI",
+		revision: "94ddb35a81a5f768ef0a44d91e107cf1b4e66cf5",
+		digests: {
+			"main.py": "bc44c26a98bc76050200bcdc7e696f1d5da2cab53de98127d2515b8874b0e641",
+			"README.md": "6a42e1d4633f19a4adbe6c99485b6357f9d8261f45f95f72c61821a1972983ac"
+		},
+		reminder: "Read README.md, implement the learner functions"
+	},
+	{
+		folder: "AM14-Tic-Tac-Toe-AI-Test",
+		revision: "94ddb35a81a5f768ef0a44d91e107cf1b4e66cf5",
+		digests: {
+			"main.py": "a53ecc93875007e9a36b3816aa9c5765e92062bb9668e063e1ecfa2e3be51082",
+			"README.md": "81f6694dda40a8e561c2b6708adfae97f6c264e4a4442399289b045bc6428844"
+		},
+		reminder: "Read README.md, implement the learner functions"
+	},
+	{
+		folder: "AM14-Tic-Tac-Toe-AI-with-Forks",
+		revision: "94ddb35a81a5f768ef0a44d91e107cf1b4e66cf5",
+		digests: {
+			"main.py": "0464e05b3f82523de32d561fd09aec65cc3969964cf4f6bd137db9cc303558e6",
+			"README.md": "40de3dae1da8cbc87b4441987aca074f0ef4d8c019fd89acdc3d213b1d721e9f"
+		},
+		reminder: "Read README.md, implement the learner functions"
 	}
 ];
 
@@ -1268,6 +1305,9 @@ test(
 						}
 						if (pack.folder.startsWith("AM13-")) {
 							await exerciseConway(page, pack, searchFiles);
+						}
+						if (pack.folder.startsWith("AM14-")) {
+							await exerciseTicTacToe(page, pack, searchFiles);
 						}
 						if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 							const directory = join(

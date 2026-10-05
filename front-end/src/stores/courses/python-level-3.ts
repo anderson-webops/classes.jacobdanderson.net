@@ -1545,19 +1545,27 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM14 Project 1: Tic Tac Toe UI",
 					content: projectBrief({
-						goal: "Create a playable Tic Tac Toe interface before adding stronger computer strategy.",
+						goal: "Build the playable console foundation with legal human input, random legal computer moves and honest terminal outcomes.",
 						build: [
-							"Represent the board with a list or a list of lists.",
-							"Print the board clearly after each move.",
-							"Alternate turns between two players.",
-							"Detect wins and ties.",
-							"Add a first computer player that chooses random legal moves."
+							"Confirm importing the linked starter into the Python IDE, or use Python 3 locally. Initial Run prints a reminder; the public callables are intentionally incomplete. Predict each case and implement or carry forward independently verified, learner-written functions. Keep the separate reference outside the attempted starter.",
+							"Use three list rows of three exact string cells: space, X or O. Coordinates are exact integers 0..2; reject Boolean coordinates. Rows run top to bottom, columns left to right. Any three matching marks across one row, column or diagonal win; a full board without a winner draws. There is no wrapping.",
+							"Implement make_board() and duplicate_board(board) with fresh separate rows. win(board, player) checks all eight lines for X/O, and finished(board) checks full occupancy independently of wins. Validate board shape and cell/player domains with ValueError; hypothetical mark-count imbalance is permitted for candidate analysis.",
+							"game_status(board) returns ongoing, X_won, O_won or draw and rejects simultaneous winners. legal_moves(board) returns fresh row-major [row,col] pairs, or [] for an ended game. apply_move(board, player, row, col) validates an ongoing game and empty in-range square before returning copied rows with one edit. Caller-owned boards remain unchanged.",
+							"A supplied rng needs callable choice(sequence); None resolves the current random module at call time. Validate returned random coordinates against the original legal list even if the callback changes its received copy. Standard random selection is uniform over a finite legal list. Strategy helpers return a fresh move or None for an ended game; unexpected callback errors propagate.",
+							"Implement random_player_move(board, rng=None) by choosing from the finite legal list, with None for an ended game. Do not repeatedly guess occupied positions; a full or won board needs no move.",
+							"render_board(board) returns three ASCII rows with | dividers, ---+---+--- separators and a final LF. print_board(board, output_fn=None) sends the whole render in one callback call; default print adds its usual newline. No clearing commands, sleeps, network requests or files are part of the game.",
+							"parse_coordinate(text) trims whitespace and accepts signed ASCII integer text valued 0..2, or case-insensitive quit returning None. Empty, decimal, Unicode-digit, out-of-range and non-text records raise ValueError. Prompt for row then column; malformed text or an occupied square retries the whole pair without editing or advancing the turn.",
+							"play(start_player=None, input_fn=None, output_fn=None, rng=None) starts empty with human X and computer O. None chooses the starting mark randomly; explicit X/O selects it. Input/output defaults resolve current built-ins at call time; validate configuration before I/O. Print the initial board and each accepted move, alternate accepted turns and stop immediately after win/draw.",
+							"Quit at either prompt, EOF or an input KeyboardInterrupt cancels with no winner. Unexpected input/output/strategy errors propagate. play and main return fresh status/winner/board/moves/start_player fields: status is X_won, O_won, draw or cancelled; winner is X/O only for a win; moves are accepted (player,row,col) tuples. A completed game uses at most nine accepted moves; endlessly invalid input is not a termination guarantee.",
+							'After implementing or porting the required functions, replace the reminder with a guarded main() call. main(start_player=None, input_fn=None, output_fn=None, rng=None) returns play’s outcome. Use main(start_player="X") for a predictable human-first trace. Imports remain quiet.'
 						],
 						checkpoints: [
-							"Illegal moves are rejected or handled clearly.",
-							"Rows, columns, and diagonals are all checked for wins.",
-							"Tie games end without falsely reporting a winner."
-						]
+							"Predict a row, column, diagonal win and a full-board draw; independently verify fresh rows, unchanged input and every terminal state.",
+							"Exercise malformed coordinates, occupied cells, quit at each prompt and EOF. Invalid input never advances the turn or reports a winner.",
+							"Replay one X-first and one O-first game, checking alternation and the nine-accepted-move bound."
+						],
+						verification:
+							"Confirm the distinct starter import, predict a fixture and explain a trace with a course facilitator, then independently check the required functions. Run the guarded entry point, save and export the learner project, and reopen the saved work. Completed reference answers remain separate."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM14-Tic-Tac-Toe-UI/starter",
@@ -1567,18 +1575,28 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM14 Project 2: Tic Tac Toe AI",
 					content: projectBrief({
-						goal: "Replace the random computer player with a rule-based Tic Tac Toe strategy.",
+						goal: "Extend learner-written UI code with copied-board candidate evaluation and the original basic tactical priorities.",
 						build: [
-							"Check for an immediate winning move.",
-							"Block the opponent's immediate winning move.",
-							"Prefer center control, then corners, then sides.",
-							"Test candidate moves on a copied board so evaluation does not mutate the real game state."
+							"Confirm importing the linked starter into the Python IDE, or use Python 3 locally. Initial Run prints a reminder; the public callables are intentionally incomplete. Predict each case and implement or carry forward independently verified, learner-written functions. Keep the separate reference outside the attempted starter.",
+							"Use three list rows of three exact string cells: space, X or O. Coordinates are exact integers 0..2; reject Boolean coordinates. Rows run top to bottom, columns left to right. Any three matching marks across one row, column or diagonal win; a full board without a winner draws. There is no wrapping.",
+							"Implement make_board() and duplicate_board(board) with fresh separate rows. win(board, player) checks all eight lines for X/O, and finished(board) checks full occupancy independently of wins. Validate board shape and cell/player domains with ValueError; hypothetical mark-count imbalance is permitted for candidate analysis.",
+							"game_status(board) returns ongoing, X_won, O_won or draw and rejects simultaneous winners. legal_moves(board) returns fresh row-major [row,col] pairs, or [] for an ended game. apply_move(board, player, row, col) validates an ongoing game and empty in-range square before returning copied rows with one edit. Caller-owned boards remain unchanged.",
+							"A supplied rng needs callable choice(sequence); None resolves the current random module at call time. Validate returned random coordinates against the original legal list even if the callback changes its received copy. Standard random selection is uniform over a finite legal list. Strategy helpers return a fresh move or None for an ended game; unexpected callback errors propagate.",
+							"test_win(board, i, j, player) validates a candidate and tests copied state; occupied or ended positions return false. winning_moves(board, player) returns fresh immediate winning coordinates in row-major order. Candidate evaluation never mutates the actual board.",
+							'The basic ai_player_move(board, rng=None, player="O") prioritizes the first own win, first opponent win to block, center, then the first open corner in top-left/top-right/bottom-left/bottom-right order, then a random legal side. Own wins precede blocks. Default O preserves the computer role; configure player="X" for a strategy acting as X. Record a weak position when evaluation finds one.',
+							"render_board(board) returns three ASCII rows with | dividers, ---+---+--- separators and a final LF. print_board(board, output_fn=None) sends the whole render in one callback call; default print adds its usual newline. No clearing commands, sleeps, network requests or files are part of the game.",
+							"parse_coordinate(text) trims whitespace and accepts signed ASCII integer text valued 0..2, or case-insensitive quit returning None. Empty, decimal, Unicode-digit, out-of-range and non-text records raise ValueError. Prompt for row then column; malformed text or an occupied square retries the whole pair without editing or advancing the turn.",
+							"play(start_player=None, input_fn=None, output_fn=None, rng=None) starts empty with human X and computer O. None chooses the starting mark randomly; explicit X/O selects it. Input/output defaults resolve current built-ins at call time; validate configuration before I/O. Print the initial board and each accepted move, alternate accepted turns and stop immediately after win/draw.",
+							"Quit at either prompt, EOF or an input KeyboardInterrupt cancels with no winner. Unexpected input/output/strategy errors propagate. play and main return fresh status/winner/board/moves/start_player fields: status is X_won, O_won, draw or cancelled; winner is X/O only for a win; moves are accepted (player,row,col) tuples. A completed game uses at most nine accepted moves; endlessly invalid input is not a termination guarantee.",
+							'After implementing or porting the required functions, replace the reminder with a guarded main() call. main(start_player=None, input_fn=None, output_fn=None, rng=None) returns play’s outcome. Use main(start_player="X") for a predictable human-first trace. Imports remain quiet.'
 						],
 						checkpoints: [
-							"The AI takes a win when one is available.",
-							"The AI blocks a one-move opponent win.",
-							"The copied-board evaluation leaves the actual board unchanged until the chosen move is applied."
-						]
+							"Predict an immediate win, an opponent block and a position offering both; the own win takes precedence.",
+							"Test empty-board center choice, original corner ordering, both acting marks and unchanged input rows.",
+							"Keep a reproducible weak decision or losing trace for the evaluation stage; this basic heuristic is not an optimality claim."
+						],
+						verification:
+							"Confirm the distinct starter import, predict a fixture and explain a trace with a course facilitator, then independently check the required functions. Run the guarded entry point, save and export the learner project, and reopen the saved work. Completed reference answers remain separate."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM14-Tic-Tac-Toe-AI/starter",
@@ -1588,18 +1606,31 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM14 Project 3: Tic Tac Toe AI Test",
 					content: projectBrief({
-						goal: "Evaluate the Tic Tac Toe AI by running repeated games against a random player.",
+						goal: "Evaluate the earlier AI against a random player using reproducible legal games, correct bookkeeping and a retained first-loss trace.",
 						build: [
-							"Automate many games between the rule-based AI and a random player.",
-							"Record wins, losses, and ties.",
-							"Summarize results as counts or percentages.",
-							"Identify at least one board state where the AI still makes a weak choice."
+							"Confirm importing the linked starter into the Python IDE, or use Python 3 locally. Initial Run prints a reminder; the public callables are intentionally incomplete. Predict each case and implement or carry forward independently verified, learner-written functions. Keep the separate reference outside the attempted starter.",
+							"Use three list rows of three exact string cells: space, X or O. Coordinates are exact integers 0..2; reject Boolean coordinates. Rows run top to bottom, columns left to right. Any three matching marks across one row, column or diagonal win; a full board without a winner draws. There is no wrapping.",
+							"Implement make_board() and duplicate_board(board) with fresh separate rows. win(board, player) checks all eight lines for X/O, and finished(board) checks full occupancy independently of wins. Validate board shape and cell/player domains with ValueError; hypothetical mark-count imbalance is permitted for candidate analysis.",
+							"game_status(board) returns ongoing, X_won, O_won or draw and rejects simultaneous winners. legal_moves(board) returns fresh row-major [row,col] pairs, or [] for an ended game. apply_move(board, player, row, col) validates an ongoing game and empty in-range square before returning copied rows with one edit. Caller-owned boards remain unchanged.",
+							"A supplied rng needs callable choice(sequence); None resolves the current random module at call time. Validate returned random coordinates against the original legal list even if the callback changes its received copy. Standard random selection is uniform over a finite legal list. Strategy helpers return a fresh move or None for an ended game; unexpected callback errors propagate.",
+							"test_win(board, i, j, player) validates a candidate and tests copied state; occupied or ended positions return false. winning_moves(board, player) returns fresh immediate winning coordinates in row-major order. Candidate evaluation never mutates the actual board.",
+							'The basic ai_player_move(board, rng=None, player="O") prioritizes the first own win, first opponent win to block, center, then the first open corner in top-left/top-right/bottom-left/bottom-right order, then a random legal side. Own wins precede blocks. Default O preserves the computer role; configure player="X" for a strategy acting as X. Record a weak position when evaluation finds one.',
+							"Implement random_player_move(board, rng=None) by choosing from the finite legal list, with None for an ended game. Do not repeatedly guess occupied positions; a full or won board needs no move.",
+							"Reuse and retest learner-written board and basic strategy functions. play_game(start_player=None, rng=None, x_move_fn=None, o_move_fn=None) starts fresh with random X/basic AI O defaults. Each callable strategy receives (copied_board, rng), returns a legal two-integer list/tuple and cannot edit the real board through its private copy. Invalid results raise ValueError; unexpected strategy errors propagate.",
+							"Alternate accepted turns, stop at the first win/draw and accept at most nine moves. Return fresh status/winner/board/moves/start_player fields matching console outcomes; no console input or file writing is part of play_game. Custom callbacks need their own termination guarantee.",
+							"evaluate(games=1000, seed=0, start_player=None, x_move_fn=None, o_move_fn=None) validates an exact integer game count 0..10000, an exact integer seed or None, X/O/None start and callable/None strategies before running. Use one fresh random.Random(seed) across the batch. None seed intentionally chooses a non-reproducible batch; None start randomizes the first mark separately each game.",
+							"Return games/seed/start_player, x_wins/o_wins/draws, rates mapping those three count keys to count/games fractions, and first_x_win containing the first full X-win trace or None. Counts sum to games. A zero-game batch has zero counts, 0.0 rates and no fabricated outcome. Repeated reports have fresh mutable data.",
+							'main(games=1000, seed=0, start_player=None, output_fn=None) prints default random-X/basic-O counts, percentages and evidence scope, then returns its report. Initial Run remains a reminder until the guarded call is enabled. Start with main(games=10, seed=0, start_player="X"), then use the original-sized 1000-game batch. Imports never run an experiment.',
+							'Repeat matching seeds/order/policies for reproducibility and separate X-first from O-first results. Carry learner-written strategies into this project; configure a callback acting as X explicitly with player="X". Many wins against the sampled random opponent do not prove optimality; keep and replay a first-loss trace before adding forks. Full legal-opponent game-tree enumeration is a separate evidence method.'
 						],
 						checkpoints: [
-							"The test run includes enough games to reveal a trend.",
-							"The results distinguish wins, losses, and ties.",
-							"The conclusion names where the strategy performs well and where it can improve."
-						]
+							"Check zero-game results, count/rate consistency and identical reports for identical seed/order/policies.",
+							"Replay retained traces independently; every move is legal and no move follows a win or full-board draw.",
+							"Verify bad strategy results fail explicitly and a callback changing its private board cannot change the real game.",
+							"Explain the tested opponent, seed and starting order before interpreting counts; retain one basic-AI weakness for the fork stage."
+						],
+						verification:
+							"Confirm the distinct starter import, predict a fixture and explain a trace with a course facilitator, then independently check the required functions. Run the guarded entry point, save and export the learner project, and reopen the saved work. Completed reference answers remain separate."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM14-Tic-Tac-Toe-AI-Test/starter",
@@ -1609,18 +1640,31 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM14 Project 4: Advanced Tic Tac Toe AI",
 					content: projectBrief({
-						goal: "Upgrade the Tic Tac Toe AI with fork creation and fork blocking.",
+						goal: "Extend the earlier AI with distinct-threat fork creation and deliberate single/multiple-fork defenses.",
 						build: [
-							"Define a fork as a move that creates two simultaneous winning threats.",
-							"Detect whether the AI can create a fork.",
-							"Detect whether the opponent is threatening a fork.",
-							"Update the strategy order to include immediate wins, blocks, forks, fork blocks, center, corners, and sides."
+							"Confirm importing the linked starter into the Python IDE, or use Python 3 locally. Initial Run prints a reminder; the public callables are intentionally incomplete. Predict each case and implement or carry forward independently verified, learner-written functions. Keep the separate reference outside the attempted starter.",
+							"Use three list rows of three exact string cells: space, X or O. Coordinates are exact integers 0..2; reject Boolean coordinates. Rows run top to bottom, columns left to right. Any three matching marks across one row, column or diagonal win; a full board without a winner draws. There is no wrapping.",
+							"Implement make_board() and duplicate_board(board) with fresh separate rows. win(board, player) checks all eight lines for X/O, and finished(board) checks full occupancy independently of wins. Validate board shape and cell/player domains with ValueError; hypothetical mark-count imbalance is permitted for candidate analysis.",
+							"game_status(board) returns ongoing, X_won, O_won or draw and rejects simultaneous winners. legal_moves(board) returns fresh row-major [row,col] pairs, or [] for an ended game. apply_move(board, player, row, col) validates an ongoing game and empty in-range square before returning copied rows with one edit. Caller-owned boards remain unchanged.",
+							"A supplied rng needs callable choice(sequence); None resolves the current random module at call time. Validate returned random coordinates against the original legal list even if the callback changes its received copy. Standard random selection is uniform over a finite legal list. Strategy helpers return a fresh move or None for an ended game; unexpected callback errors propagate.",
+							"test_win(board, i, j, player) validates a candidate and tests copied state; occupied or ended positions return false. winning_moves(board, player) returns fresh immediate winning coordinates in row-major order. Candidate evaluation never mutates the actual board.",
+							"test_fork(board, i, j, player) tests a non-winning candidate creating at least two distinct empty coordinates that each win on the next same-mark turn. Count coordinates, not winning lines through one square. Immediate wins are not forks; occupied/ended candidates are false. fork_moves(board, player) returns fresh row-major fork coordinates without mutation.",
+							'The advanced ai_player_move(board, rng=None, player="O") preserves own win, opponent block, first own fork, opponent fork defense, center, original corner order and random-side priorities. Block one opponent fork directly at its coordinate.',
+							"For multiple opponent forks, consider top-middle, middle-left, middle-right, bottom-middle, then other legal squares. Prefer a move creating one own immediate threat whose compulsory opponent block neither wins nor creates a fork. Otherwise choose the first candidate removing all immediate opponent forks. If neither defense exists, continue the stated center/corner/side heuristic. Explain the forcing reply instead of selecting a side unconditionally.",
+							"Compare learner-written earlier and advanced policies against random play and each other using the evaluation harness with explicit marks and both starts. Independent reference game-tree checks cover every legal opponent response and possible random fallback from empty boards and find no losses for the revised 3x3 reference policy. That result requires separate verification of other implementations and does not cover already-lost arbitrary positions.",
+							"render_board(board) returns three ASCII rows with | dividers, ---+---+--- separators and a final LF. print_board(board, output_fn=None) sends the whole render in one callback call; default print adds its usual newline. No clearing commands, sleeps, network requests or files are part of the game.",
+							"parse_coordinate(text) trims whitespace and accepts signed ASCII integer text valued 0..2, or case-insensitive quit returning None. Empty, decimal, Unicode-digit, out-of-range and non-text records raise ValueError. Prompt for row then column; malformed text or an occupied square retries the whole pair without editing or advancing the turn.",
+							"play(start_player=None, input_fn=None, output_fn=None, rng=None) starts empty with human X and computer O. None chooses the starting mark randomly; explicit X/O selects it. Input/output defaults resolve current built-ins at call time; validate configuration before I/O. Print the initial board and each accepted move, alternate accepted turns and stop immediately after win/draw.",
+							"Quit at either prompt, EOF or an input KeyboardInterrupt cancels with no winner. Unexpected input/output/strategy errors propagate. play and main return fresh status/winner/board/moves/start_player fields: status is X_won, O_won, draw or cancelled; winner is X/O only for a win; moves are accepted (player,row,col) tuples. A completed game uses at most nine accepted moves; endlessly invalid input is not a termination guarantee.",
+							'After implementing or porting the required functions, replace the reminder with a guarded main() call. main(start_player=None, input_fn=None, output_fn=None, rng=None) returns play’s outcome. Use main(start_player="X") for a predictable human-first trace. Imports remain quiet.'
 						],
 						checkpoints: [
-							"Known fork positions are detected correctly.",
-							"The AI blocks opponent forks when required.",
-							"The advanced strategy is tested against the earlier AI and the random player."
-						]
+							"Predict a genuine fork, an immediate winning candidate and two winning lines through one coordinate; count distinct future winning coordinates.",
+							"Trace an opposite-corner opponent fork and the forced blocking reply for a side move. Prove the defense leaves no immediate winning or fork-producing compulsory reply.",
+							"Compare the earlier and advanced strategies for both marks/starts, preserve traces and separate measured random-opponent performance from exhaustive legal-opponent evidence."
+						],
+						verification:
+							"Confirm the distinct starter import, predict a fixture and explain a trace with a course facilitator, then independently check the required functions. Run the guarded entry point, save and export the learner project, and reopen the saved work. Completed reference answers remain separate."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM14-Tic-Tac-Toe-AI-with-Forks/starter",
@@ -1895,9 +1939,8 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 			"AI decision",
 			"strategy test"
 		],
-		challengeCurriculumTitles: ["AM14 Project 4: Advanced Tic Tac Toe AI"],
 		projectThread:
-			"Treat Tic Tac Toe as the AI capstone: ship the board and legal-move loop, add a testable decision rule, then prove wins, blocks, ties, and invalid moves. Fork-aware strategy is the advanced challenge."
+			"All four Tic Tac Toe stages remain required core work with distinct purposes: playable UI, copied-board basic tactics, reproducible evaluation and fork-aware defense. Together these stages form the AI capstone. Carry forward independently verified learner-written functions, retain reference answers separately and distinguish sampled performance from complete legal-opponent evidence."
 	}
 ];
 

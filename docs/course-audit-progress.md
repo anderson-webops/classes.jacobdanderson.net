@@ -329,13 +329,67 @@ methods and the focused catalog-copy gate pass locally. Full hosted checks
 exposed a missed plain-worker capture whitelist and a course-copy artifact;
 both are corrected. The added regression executes each runtime's actual embedded
 Python capture code against temporary CRLF, unterminated, empty and invalid-UTF-8
-patterns. Browser verification still requires its fresh hosted gate.
-Full site CI and milestone delivery remain
-pending; previous release checks are not substituted for them.
+patterns. Full reviewed-head and independent integrated-main site CI passed,
+including both actual Conway import/run/export/reopen workflows. The exact tagged
+native build and attestation
+[run](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37314047353)
+produced the unchanged assets retained in immutable
+[v2.8.29](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.29).
+Every payload digest and thirteen trusted source files were independently checked
+without extracting a second dependency tree. Downstream
+[PR #19](https://github.com/instruction-material/classes.jacobdanderson.net/pull/19)
+and independent fork-main CI passed. Production activation remains unverified.
 
 Thirty-eight authored coding/review pairs, one supplied-code analysis and one
 worksheet are checked. Four Tic Tac Toe coding placeholders and the broader
 course purpose/source/workflow audit remain open. No live activation is claimed.
+
+## Tic Tac Toe interface, tactics, evaluation and forks
+
+[Source PR #10](https://github.com/instruction-material/Python-Level-3/pull/10)
+integrated at `94ddb35a81a5f768ef0a44d91e107cf1b4e66cf5` completes the last four
+Python Level 3 coding placeholders. Complete neutral briefs accompany 59 matching
+incomplete public callables. Separate references preserve the four original
+purposes: playable random-opponent console UI, basic copied-board tactics,
+reproducible random-opponent evaluation, and fork creation/defense. All four were
+numbered core projects in the original source curriculum and remain required.
+Titles, progress IDs and the 86-core/4-optional inventory are unchanged.
+
+References validate board/cell/coordinate domains, copy caller-owned state,
+select from finite legal moves, stop on terminal states, retry invalid human
+input without advancing, and distinguish cancellation from wins/draws. Imports
+are quiet. Evaluation records the seed, start order, counts, fractional rates and
+first X-win trace, handles zero games, and isolates strategy callback boards.
+Sampled results do not establish optimality.
+
+Forks count distinct future winning coordinates rather than lines through one
+square. Multiple-fork defense checks the compulsory reply instead of blindly
+selecting a side. Independent game-tree enumeration from empty boards covers both
+acting marks, both starts, every legal opponent response and every possible
+random fallback. It exposes a basic-policy loss when playing second and finds no
+loss for the revised fork reference in that defined scope. This does not certify
+unverified learner implementations or arbitrary already-lost positions.
+
+All 167 native source methods pass locally, in exact-head
+[push CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37319371632)
+and [review CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37319383831),
+then independent
+[integrated-main CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37319671291).
+Twenty-three new methods include independent bitmask checks over all 19,683
+symbol boards, 10,956 reachable board/turn states across both starts, complete
+policy trees and real console/batch tests. Every active Python Level 3 pack now
+has its assignment-specific source review: 42 authored coding/review pairs, one
+supplied-code analysis and one worksheet, with zero coding placeholders.
+The broader course audit remains open.
+
+The matching site briefs state all required contracts. Browser coverage imports
+the exact immutable incomplete starter and README after confirmation, runs the
+initial reminder, makes test-only valid-path edits, executes three full console
+games and a seeded evaluation batch, captures the actual UI ZIP, and reopens the
+saved exact source. These edits exercise the workflow; independent native tests
+verify reference correctness. Production/API writes are blocked. All 32 focused
+site checks and root source lint pass locally; hosted browser and full site
+delivery gates are pending for this group.
 
 ## Verification authority
 
