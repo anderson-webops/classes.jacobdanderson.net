@@ -714,6 +714,159 @@ describe("Python Level 3 learner flow", () => {
 		}
 	});
 
+	it("specifies computer-led feedback and honest terminal guessing states", () => {
+		const module = requireSourceModule("AM7 Binary Search");
+		const item = module.curriculum.find(
+			candidate =>
+				candidate.title === "AM7 Project 2: Reverse Number Guesser"
+		)!;
+		for (const contract of [
+			"parse_feedback(text)",
+			"midpoint(low, high)",
+			"update_bounds(low, high, guess, feedback)",
+			"play(low=1, high=100, max_guesses=7, input_fn=None, output_fn=None)",
+			"yes/above/below/quit",
+			"Above means the secret is greater",
+			"without changing bounds or consuming an attempt",
+			"status, number, guesses and bounds",
+			"confirmed",
+			"inferred",
+			"contradiction",
+			"exhausted",
+			"cancelled",
+			"last valid bounds",
+			"all 100 default secrets",
+			"guarantee depends on consistent feedback"
+		]) {
+			expect(item.content).toContain(contract);
+		}
+		expect(module.curriculum[0]?.content).toContain(
+			"required core projects"
+		);
+		expect(module.curriculum[0]?.content).not.toContain(
+			"role-reversal choice"
+		);
+	});
+
+	it("keeps the optional player-led game distinct without an arbitrary-win guarantee", () => {
+		const item =
+			requireSourceModule("AM7 Binary Search").supplementalProjects[0];
+		for (const contract of [
+			"player-led game",
+			"parse_guess(text, low=1, high=100)",
+			"guess_feedback(guess, secret)",
+			"play(secret=None, low=1, high=100, max_guesses=7, input_fn=None, output_fn=None)",
+			"ASCII decimal digits",
+			"injected integer",
+			"without consuming a try",
+			"including a repeated miss",
+			"status, secret and guesses",
+			"won",
+			"lost",
+			"cancelled",
+			"not cancellation",
+			"seven arbitrary guesses are not guaranteed to win"
+		]) {
+			expect(item.content).toContain(contract);
+		}
+		expect(item.content).not.toContain(
+			"guarantees the correct answer within 7 tries"
+		);
+		expect(item.learningPath).toBe("choice");
+	});
+
+	it("specifies verified shared search timing without preparation or historical estimates", () => {
+		const item = requireSourceModule("AM7 Binary Search").curriculum.find(
+			candidate => candidate.title === "AM7 Project 3: Runtime Comparator"
+		)!;
+		for (const contract of [
+			"linear_search(list1, item)",
+			"bin_search_iter(lst, item)",
+			"make_workload(size=2000, queries=50, seed=0)",
+			"compare_searches(nums, targets, repeats=3, clock=None)",
+			"main(size=2000, queries=50, repeats=3, seed=0)",
+			"from 0 to 5000",
+			"from 0 to 100",
+			"from 1 to 10",
+			"Manually supplied negative integers are valid",
+			"time.perf_counter()",
+			"same targets",
+			"same multiset",
+			"untimed warm-ups",
+			"fresh copy before each start-clock",
+			"result collection",
+			"after stopping the clock",
+			"AssertionError",
+			"median_seconds",
+			"actual measured full-batch seconds",
+			"outside the two-algorithm core benchmark",
+			"O(n) worst-case copying",
+			"hit-position confound",
+			"do not prove Big-O"
+		]) {
+			expect(item.content).toContain(contract);
+		}
+		expect(item.content).not.toContain("time.time()");
+		expect(item.learningPath).toBe("core");
+	});
+
+	it("preserves interactive search progress IDs and incomplete learner source roles", async () => {
+		const course = await useCoursesStore().loadCourseById("python-level-3");
+		const raw = await loadRawCourse("python-level-3");
+		const allItems = (value: typeof course) =>
+			value!.modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+		const items = allItems(course);
+		const sourceItems = raw!.modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		for (const [folder, suffix, path] of [
+			[
+				"AM7-Reverse-Number-Guesser",
+				"curriculum-am7-project-2-reverse-number-guesser",
+				"core"
+			],
+			[
+				"AM7-Runtime-Comparator",
+				"curriculum-am7-project-3-runtime-comparator",
+				"core"
+			],
+			[
+				"AM7-Number-Guesser",
+				"supplemental-am7-supplemental-project-1-number-guesser",
+				"choice"
+			]
+		]) {
+			const root = `https://github.com/instruction-material/Python-Level-3/tree/main/${folder}`;
+			const item = items.find(
+				candidate => candidate.projectLink === `${root}/starter`
+			)!;
+			expect(item).toBeDefined();
+			expect(item.id).toBe(`python-level-3-am7-binary-search-${suffix}`);
+			expect(item.learningPath).toBe(path);
+			expect(item.solutionLink).toBeUndefined();
+			expect(
+				sourceItems.find(
+					candidate => candidate.projectLink === item.projectLink
+				)?.solutionLink
+			).toBe(`${root}/solution`);
+			for (const contract of [
+				"Confirm",
+				"incomplete starter",
+				"Python IDE",
+				"guarded",
+				"python3 main.py",
+				"save/export",
+				"reopen"
+			]) {
+				expect(item.content).toContain(contract);
+			}
+		}
+	});
+
 	it("keeps licensed sort animations and only available project media", async () => {
 		const course = await loadRawCourse("python-level-3");
 		expect(course).not.toBeNull();

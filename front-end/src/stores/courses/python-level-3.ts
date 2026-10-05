@@ -773,17 +773,18 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM7 Project 2: Reverse Number Guesser",
 					content: projectBrief({
-						goal: "Write a reverse number guesser where the computer applies binary search to find the user's number.",
+						goal: "Build the required computer-led midpoint game over an inclusive 1–100 interval. The player holds the secret; this differs from the optional player-led Number Guesser.",
 						build: [
-							"Track the lowest and highest possible values.",
-							"Guess the midpoint of the current range.",
-							"Update the range based on whether the guess is too high or too low.",
-							"Stop when the guess is correct."
+							"Implement `parse_feedback(text)` for string input: strip surrounding whitespace, normalize case, and accept exactly yes/above/below/quit. Anything else raises ValueError; preserve the original yes command rather than treating arbitrary text as success.",
+							"Implement `midpoint(low, high)` and `update_bounds(low, high, guess, feedback)`. Bounds are builtin integers, not Boolean, with 1 <= low <= high <= 100. Use the lower integer midpoint. Above means the secret is greater than the guess; below means smaller. Exclude the wrong guess and return a strictly smaller tuple. Only above/below update bounds; invalid guesses, domains or an empty resulting interval raise ValueError.",
+							"Implement `play(low=1, high=100, max_guesses=7, input_fn=None, output_fn=None)`. The limit is a builtin integer from 1 to 7; validate configuration and callable callbacks before prompting. None resolves input/print at call time. Invalid feedback retries without changing bounds or consuming an attempt. Only accepted yes/above/below responses record a midpoint and consume one attempt; quit, EOF and KeyboardInterrupt cancel without recording the interrupted guess.",
+							"Return a fresh dictionary with status, number, guesses and bounds. Yes is confirmed by the player's claim; a singleton is inferred conditionally on consistent feedback without another prompt. Empty candidates mean contradiction; a limit with multiple candidates means exhausted; interruption means cancelled. Number is None except for confirmed/inferred. Keep the last valid bounds and a fresh guesses list, without global state.",
+							"Confirm opening the incomplete starter in the Python IDE, read its complete README, and test helpers before replacing the reminder with a guarded play() call. Use the standard-input prompt for feedback. Imports must not prompt or print. Locally run `python3 main.py` from starter; save/export and reopen the workspace. No extra files or dependencies are required."
 						],
 						checkpoints: [
-							"The possible range shrinks after every wrong guess.",
-							"The program finds any number in the range within the expected number of guesses.",
-							"The explanation connects the guessing strategy to binary search."
+							"Trace a small interval before running; then independently check all 100 default secrets with truthful feedback and at most seven accepted responses. The guarantee depends on consistent feedback, not arbitrary claims.",
+							"Test invalid/mixed-case feedback, both edges, a singleton, contradiction, a deliberately insufficient limit, quit and EOF. Inferred is not confirmed; invalid, cancelled, contradictory and exhausted flows must not claim success.",
+							"Explain strict interval shrinking and inference with a course facilitator, then independently test different secrets and fresh game histories. Completed reference answers remain separate."
 						]
 					}),
 					projectLink:
@@ -794,17 +795,20 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM7 Project 3: Runtime Comparator",
 					content: projectBrief({
-						goal: "Compare linear search and binary search with repeated timing experiments.",
+						goal: "Complete the required search experiment using shared data and targets, independently checked answers and measured batch medians. This measures search, not AM11's sorting algorithms.",
 						build: [
-							"Copy in iterative implementations of linear search and binary search.",
-							"Generate a sorted data set for binary search.",
-							"Run many random searches through each algorithm.",
-							"Measure elapsed time with `time.time()` before and after repeated searches."
+							"Implement `linear_search(list1, item)` and `bin_search_iter(lst, item)` with the original names and parameters. Return Boolean membership and preserve inputs. Binary search assumes sorted input and uses index bounds; do not put sorting or a validation scan inside either timed search. Reuse only previously verified learner code, not automatically imported reference answers.",
+							"Implement `make_workload(size=2000, queries=50, seed=0)`: use local random.Random(seed), not global random state, to return fresh nums/targets lists of generated integers from 0 through 100000, retaining duplicates. Size is a builtin integer from 0 to 5000, queries from 0 to 100, and seed an integer; Boolean and invalid domains raise ValueError.",
+							"Implement `compare_searches(nums, targets, repeats=3, clock=None)`: require integer lists, not Boolean items, within those size/query caps. Manually supplied negative integers are valid. Repeats is an integer from 1 to 10. None resolves time.perf_counter() at call time; another clock must be callable. Validate before timing. Freeze the same targets for both algorithms: linear uses original-order data, binary a sorted copy of the same multiset.",
+							"Prepare an independent membership oracle and validated untimed warm-ups for both algorithms before measuring either. Prepare a fresh copy before each start-clock call. Time only the shared query loop and result collection; generation, sorting, copying, oracle work, validation and printing stay outside. Verify exact Boolean answers and unchanged working inputs after stopping the clock; mismatch raises AssertionError instead of reporting a result. Reject nonfinite, Boolean or decreasing clock readings and nonfinite elapsed time with ValueError.",
+							"Return two fresh dictionaries in linear/binary order with algorithm, size, queries, hits, repeats, input_order and median_seconds. Hits includes repeated matching queries; input_order is original/sorted. Use medians of actual measured full-batch seconds. Implement `main(size=2000, queries=50, repeats=3, seed=0)` to generate once, return rows and print Python version/implementation, seed, report and timing boundaries.",
+							"Optional: retain `bin_search_recur(lst, item)` outside the two-algorithm core benchmark. The original sliced recursion has O(log n) comparisons but O(n) worst-case copying work; its total runtime is not logarithmic. Core completion requires five tasks, not this extra helper.",
+							"Confirm importing the incomplete starter into the Python IDE, read its complete README and check the five core tasks before a guarded main() call. Imports must not allocate workloads, draw random values, print or run timings. Locally run `python3 main.py` from starter; save/export and reopen. No extra files or dependencies are required."
 						],
 						checkpoints: [
-							"The same targets are tested against both algorithms.",
-							"Binary search is only used on sorted data.",
-							"The timing result is interpreted as evidence, not as a single perfect measurement."
+							"Use independent membership predictions for negatives, duplicates, hits, misses and empty lists. Inject a clock to check shared queries, fresh copies, warm-ups, timer boundaries and measured medians; preserve nums and targets.",
+							"Discuss the original-order versus sorted hit-position confound. An already sorted nums input controls that difference. Empty query batches measure overhead, not algorithm speed. Report workload, hit count, repeats, environment and seed.",
+							"Measured local medians do not prove Big-O or the end-to-end cost of sorting before binary search. Walk one batch with a course facilitator, then vary workload independently; never substitute historical guesses for measurements."
 						]
 					}),
 					projectLink:
@@ -817,17 +821,18 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM7 Supplemental Project 1: Number Guesser",
 					content: projectBrief({
-						goal: "Design a number-guessing strategy that guarantees the correct answer within 7 tries.",
+						goal: "Build the optional player-led game: the computer holds a random secret from 1–100 and gives higher/lower feedback for at most seven accepted guesses. Arbitrary guesses may lose; this is not the required computer-led Reverse Number Guesser.",
 						build: [
-							"Define the full range of possible numbers.",
-							"Choose guesses that split the remaining possibilities as evenly as possible.",
-							"Track the remaining interval after each high/low response.",
-							"Explain why lucky guesses are not the measure of success."
+							"Implement `parse_guess(text, low=1, high=100)`. Validate builtin integer bounds, excluding Boolean, with 1 <= low <= high <= 100. Strip surrounding whitespace; case-insensitive quit returns None. Otherwise require an optional sign followed by ASCII decimal digits and an in-range integer. Blank, decimal, underscore, internal-space, non-ASCII, out-of-range, non-string or overlong integer text raises ValueError.",
+							"Implement `guess_feedback(guess, secret)` for builtin integers from 1 through 100, excluding Boolean: return higher when the guess is below the secret, lower when above and correct when equal. Invalid values raise ValueError.",
+							"Implement `play(secret=None, low=1, high=100, max_guesses=7, input_fn=None, output_fn=None)`. Validate bounds, integer limit from 1 to 7 and callable callbacks before prompting. None callbacks resolve input/print at call time. A None secret selects random.randint(low, high) at call time; an injected integer in the interval enables repeatable tests.",
+							"Invalid input retries without consuming a try; every accepted integer, including a repeated miss, consumes one. Quit, EOF or KeyboardInterrupt cancels without recording the interrupted input. Return a fresh dictionary with status, secret and guesses: won on exact guess, lost after all wrong tries, otherwise cancelled. Reveal the secret on the console only on win/loss, not cancellation; retain no global history.",
+							"Confirm opening the incomplete starter in the Python IDE, read its complete README and check the three tasks before a guarded play() call using standard input. Imports must not draw a secret, prompt or print. Locally run `python3 main.py` from starter; save/export and reopen. No extra files or dependencies are required."
 						],
 						checkpoints: [
-							"Every possible secret number can be found within the limit.",
-							"The strategy can be written as a repeatable process.",
-							"The process clearly motivates binary search."
+							"Predict higher/lower/correct independently using injected secrets, then verify all 100 secrets with a binary strategy. That strategy can win within seven; seven arbitrary guesses are not guaranteed to win.",
+							"Test repeated misses, last-attempt wins, invalid text/range input, quit, EOF, fresh histories and invalid configuration. Check actual accepted attempts, status and non-disclosure on cancellation.",
+							"Discuss strategy guarantees versus the game's allowance with a course facilitator, then independently test different secrets. Keep completed reference answers separate from this optional assignment."
 						]
 					}),
 					projectLink:
@@ -1766,10 +1771,8 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 			"discard half",
 			"O(log n)"
 		],
-		choiceCurriculumTitles: ["AM7 Project 2: Reverse Number Guesser"],
-		challengeCurriculumTitles: ["AM7 Project 3: Runtime Comparator"],
 		projectThread:
-			"Prove the sorted-input invariant and trace low, high, and midpoint updates before implementation. Reverse Number Guesser is a role-reversal choice; Runtime Comparator is the empirical challenge."
+			"Trace the sorted-input invariant and midpoint updates before implementation. Reverse Number Guesser and Runtime Comparator remain required core projects: first build the computer-led game, then measure comparable search batches. Only the player-led Number Guesser is optional; its secret and guess roles are deliberately reversed."
 	},
 	{
 		title: "AM8 Selection Sort & Insertion Sort",
