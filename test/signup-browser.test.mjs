@@ -231,12 +231,25 @@ resize();</script></body></html>`
 						'.site-header a[href="/about"]',
 						{ visible: true }
 					);
-					await Promise.all([
-						page.waitForNavigation({ waitUntil: "networkidle0" }),
-						page.click('.site-header a[href="/about"]')
-					]);
+					// Header links use the client router. Check the resulting route
+					// and rendered content rather than waiting for a document reload.
+					await page.locator('.site-header a[href="/about"]').click();
+					await page.waitForFunction(
+						() =>
+							location.pathname === "/about" &&
+							Boolean(document.querySelector(".about-page"))
+					);
 					assert.equal(new URL(page.url()).pathname, "/about");
-					await page.goBack({ waitUntil: "networkidle0" });
+					assert.equal(new URL(page.url()).origin, origin);
+					assert.equal(await page.$(".scheduler-frame"), null);
+					await page.goBack({ waitUntil: "domcontentloaded" });
+					await page.waitForFunction(
+						() =>
+							location.pathname === "/signup" &&
+							document
+								.querySelector(".scheduler-frame")
+								?.getBoundingClientRect().height >= 1280
+					);
 					assert.equal(new URL(page.url()).pathname, "/signup");
 					assert.ok(await page.$(".scheduler-frame"));
 					// Return to light before the next viewport's theme test.
@@ -247,6 +260,7 @@ resize();</script></body></html>`
 			} catch (error) {
 				console.error(
 					await page.evaluate(() => ({
+						url: location.href,
 						width: window.innerWidth,
 						theme: document.documentElement.className,
 						frameHeight:
