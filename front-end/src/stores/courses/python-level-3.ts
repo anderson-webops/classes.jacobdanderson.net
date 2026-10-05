@@ -250,7 +250,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 							"Implement `average(x, y)` to return the arithmetic mean of two numeric inputs.",
 							"Implement `count_letter(word, letter)` to count an exact, case-sensitive character. Empty words give zero; reject a nonstring word or a letter that is not a one-character string with ValueError.",
 							"Implement `count_seven(number)` to count digit 7 in an integer's magnitude, ignoring its minus sign. Zero has no sevens. Reject nonintegers and bool with ValueError; keep digit arithmetic exact rather than rounding through floating division.",
-							"Implement `exponent(a, b)` with repeated multiplication. Require a nonnegative integer exponent, not bool, or raise ValueError. Exponent zero returns one, including the conventional `0**0` case used here."
+							"Implement `exponent(a, b)` with repeated multiplication. The exponent must be a nonnegative integer, not bool; unsupported values raise ValueError. Exponent zero returns one, including the conventional `0**0` case used here."
 						],
 						checkpoints: [
 							"Each function returns a value rather than only printing.",
@@ -330,7 +330,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 							"`reverse_string(str)`: return the reversed string, preserving whitespace and punctuation.",
 							"`count_vowels(str)`: count ASCII a/e/i/o/u in either letter case; do not count y.",
 							"`count_pairs(numbers)`: count distinct values appearing exactly twice, not the number of their occurrences; a value appearing three times is not counted.",
-							"`swap_min_max(numbers)`: swap the smallest and largest values in place and return that same list object. Require a nonempty list of distinct numbers or raise ValueError; a singleton is unchanged."
+							"`swap_min_max(numbers)`: swap the smallest and largest values in place and return that same list object. The input must be a nonempty list of distinct numbers; a singleton is unchanged. Empty or repeated-value input raises ValueError."
 						],
 						checkpoints: [
 							"Every task has a normal test and an allowed boundary or deliberately rejected-domain test. Integer N parameters reject bool and unsupported values with ValueError; parity, product, zero-sum and mode tasks use integer lists.",
