@@ -444,6 +444,37 @@ release delivery must verify the enabled policy before publication and confirm
 the individual release lock afterward. Live application activation remains a
 separate, unverified boundary.
 
+## C++ functions, probability and guessing contracts
+
+[Source PR #3](https://github.com/instruction-material/CPP-Level-1/pull/3)
+integrated at `3f6b9281239df72ae5182cf20fb389eefe4b563c` restores the original
+Function Practice assignment before Probability Events and Random and Number
+Guesser. Each has a complete brief, an intentionally incomplete starter and a
+separate reference. Starter reminders exit with status 2 and provide no answer
+results. The unrelated vector extension is archived without replacing the three
+required assignments.
+
+Arithmetic domains prevent signed overflow in the console exercise. References
+convert before averaging, sum two independent dice, advance one seeded engine,
+validate guessing ranges before drawing, count five valid guesses, and distinguish
+invalid-input cancellation from a loss. Random tests verify domains and repeatable
+runs on one library, without a cross-library sequence or fairness claim.
+All 29 source methods and 45 native targets passed exact-head review checks and
+independent [source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37371616259).
+The initial main attempt could not acquire a runner; its retry passed.
+
+The catalog candidate preserves that learning sequence and all three full briefs,
+with separate starter/reference links and legacy progress aliases. Complete math
+and random demonstrations are lessons rather than supplemental quota tasks.
+The random reference remains available through its explicit lesson link.
+Copy normalization preserves the person implementing the program rather than
+rewriting that subject as "the work", and keeps capitalization in neutral role
+labels. All thirteen focused foundation/functions catalog checks and source lint
+pass locally. Browser coverage now includes all eight early C++ Level 1 starters
+alongside the seven bridge starters, plus strict compilation of both new supplied
+lesson examples. Full site checks and downstream integration remain pending;
+CPPF4–CPPF8 and the broader audit remain open.
+
 ## Verification authority
 
 Functional regression tests exercise confirmation, remote and local failure,
