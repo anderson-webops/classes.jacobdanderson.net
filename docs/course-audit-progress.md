@@ -93,9 +93,9 @@ ordering, a missing first-one search, a missing sorted experiment shape, absent
 bubble-sort early exit, and a broken optional punctuation extension. These are
 recorded follow-ups, not repairs delivered by the sorting milestone. Additional
 input-domain, file-format and mutation contracts need assignment-specific review.
-Those seven findings were open at the sorting milestone. The next three-pack
-follow-up below repairs the first three; four concrete mismatches and additional
-input-domain, file-format and mutation contracts remain open.
+Those seven findings were open at the sorting milestone. The fundamentals,
+check-in and record/file follow-ups below repair all seven. This closes those
+specific mismatches, not the ten remaining placeholders or the broader audit.
 
 [Source PR #4](https://github.com/instruction-material/Python-Level-3/pull/4)
 at integrated source `6ed2caf76313b92163e3c450f6bd7192e518b9a5` repairs AM2
@@ -115,13 +115,65 @@ IDs, and corrects the article when replacing instructor with course facilitator.
 
 All 45 source tests passed locally and in exact-head hosted CI. Focused site
 regressions check the complete normalized instructions and confirmed-import
-workflow; full site CI remains the delivery authority. Twenty-four authored
+workflow; full site CI remains the delivery authority. At that milestone, twenty-four authored
 coding pairs, one supplied-code analysis and one worksheet are checked. Eight
-distinct migrated pairs and ten coding placeholder roles still await verification.
+distinct migrated pairs and ten coding placeholder roles still awaited verification.
 The source repository's
 [review ledger](https://github.com/instruction-material/Python-Level-3/blob/6ed2caf76313b92163e3c450f6bd7192e518b9a5/SOURCE_PACK_REVIEW.md)
 distinguishes those boundaries. Do not copy completed answers into coding starters
 or certify a nonempty folder as an implementation pair.
+
+[Source PR #5](https://github.com/instruction-material/Python-Level-3/pull/5)
+at integrated source `2a5f8d3ef1c7ec91e98219c399c849d2528edcb5` completes five
+check-in/review packs with 27 incomplete callable tasks and complete briefs.
+Five original supplied problem functions remain tracing/optimization inputs,
+checked against their frozen source fixture; reference answers stay separate.
+All 63 source methods passed locally and hosted. The matching site change
+[PR #124](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/124)
+passed full reviewed-head and independent integrated-main CI, including real
+confirmed Python import, execution, generated output reopening, exact-byte ZIP
+export and saved-workspace reopening with production/API writes blocked.
+The CI-attested native files are retained unchanged in immutable
+[v2.8.25](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.25).
+Production activation remains separate and unverified.
+
+[Source PR #6](https://github.com/instruction-material/Python-Level-3/pull/6)
+at integrated source `6b7ed239bf995cc0725e71850ba6c8b83bb0629d` completes the
+last three migrated pairs: Baseball Analytics, File IO and Dictionaries, and
+Juni Latin with File IO. Three complete learner briefs accompany twelve matching
+incomplete callable tasks, including one explicitly optional punctuation helper.
+
+Baseball uses exact statistic keys, validated synthetic records, fresh stable
+descending rankings and unchanged inputs. Dictionary reading defines surrounding
+whitespace, blank/odd/duplicate policies without inventing output writing. The
+translator preserves the original character-to-end-plus-ay rule and literal case,
+states deliberate whitespace/line changes and keeps punctuation separately
+selected. File validation and reading precede output opening; identical paths,
+symlink/hardlink aliases and malformed input cannot silently overwrite source.
+
+All 80 source methods passed locally and in exact-head
+[push CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37258197420)
+and [review CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37258200108),
+then independently on [integrated main](https://github.com/instruction-material/Python-Level-3/actions/runs/37258283220).
+Independent bounded oracles check rankings, dictionary pairs and character
+translation. Original player records and all six Git input blobs match the
+pre-change source byte-for-byte. Exact fixtures recognize baseline LF bytes and
+the Mac's configured CRLF checkout variants, without arbitrary normalization.
+The first Linux run exposed that checkout difference and was corrected against
+the original Git blobs; input files and Git attributes were not changed.
+
+The matching site briefs state every function/domain/file rule, retain titles,
+core placement and progress IDs, and separate learner/reference source roles.
+The AM7 explanation also distinguishes logarithmic binary-search comparisons
+and index-bound runtime from the original sliced reference's linear worst-case
+copying work. Full site verification for this new group is pending; the existing
+v2.8.25 workflow evidence is not substituted for its own checks.
+
+Thirty-two authored coding/review pairs, one supplied-code analysis and one
+worksheet are checked; no distinct migrated pair remains open. Ten genuine
+coding placeholder roles and other-course purpose, source and workflow audits
+remain incomplete. Current source boundaries are recorded in the
+[review ledger](https://github.com/instruction-material/Python-Level-3/blob/6b7ed239bf995cc0725e71850ba6c8b83bb0629d/SOURCE_PACK_REVIEW.md).
 
 Additional source/language alignment checks remain necessary for generated
 bridge extension packs. Several local folders titled as C++ practice contained

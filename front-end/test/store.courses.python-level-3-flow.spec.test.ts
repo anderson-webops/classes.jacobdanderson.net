@@ -557,6 +557,163 @@ describe("Python Level 3 learner flow", () => {
 		}
 	});
 
+	it("states the keyed leaderboard contract without changing original data roles", () => {
+		const project = requireSourceModule("AM9 Bubble Sort").curriculum.find(
+			item => item.title === "AM9 Project 2: Baseball Analytics"
+		)!;
+		for (const contract of [
+			"ten synthetic p1-p10 records",
+			"playerList",
+			"player_list",
+			"bubble_baseball(players, stat)",
+			"Average, Home Run and RBI",
+			"finite int/float in [0, 1]",
+			"Boolean numbers are invalid",
+			"Validate every field",
+			"one-based record numbers",
+			"fresh list of names in descending",
+			"equal statistics in their original input order",
+			"Do not change the outer input list",
+			"not sorted or list.sort",
+			"print_list(names)",
+			"Imports must not print",
+			"save/export"
+		]) {
+			expect(project.content).toContain(contract);
+		}
+		expect(project.content).not.toContain("such as batting average");
+		expect(
+			requireSourceModule("AM9 Bubble Sort").curriculum[0]?.content
+		).toContain("required core data-context project");
+	});
+
+	it("defines alternating record errors and keeps dictionary work read-only", () => {
+		const project = requireSourceModule(
+			"AM12 File Input/Output"
+		).curriculum.find(
+			item => item.title === "AM12 Project 2: File IO and Dictionaries"
+		)!;
+		for (const contract of [
+			"parse_pairs(lines)",
+			'load_pairs(path="input.txt")',
+			'main(path="input.txt")',
+			"does not require writing an output file",
+			"Strip surrounding whitespace from both",
+			"retain interior spaces and string values",
+			"blank keys are rejected, empty values are valid",
+			"later duplicate keys replace earlier values",
+			"odd counts, blank keys and embedded delimiters",
+			"one-based line number",
+			"readlines and a context manager",
+			"A final newline is not an extra blank value",
+			"preserve input bytes",
+			"normal missing/unreadable-file or decoding errors"
+		]) {
+			expect(project.content).toContain(contract);
+		}
+	});
+
+	it("keeps the literal translation pipeline core and punctuation separately optional", () => {
+		const module = requireSourceModule("AM12 File Input/Output");
+		const project = module.curriculum.find(
+			item =>
+				item.title === "AM12 Project 3: Word Translator with File I/O"
+		)!;
+		for (const contract of [
+			"translate(word)",
+			"move its first character to the end and append ay",
+			"Preserve character case and Unicode literally",
+			'read_lines(path="input_no_punctuation.txt")',
+			"translate_lines(lines, punctuation=False)",
+			"one output line per input line, including blanks",
+			'write_lines(lines, path="output.txt")',
+			"validates the entire list before opening output",
+			"one LF after each record",
+			"symlink/hardlink aliases",
+			"Core completion does not require translate_punctuation",
+			"Optionally implement translate_punctuation(word)",
+			"punctuation=True",
+			"straight/curly apostrophes",
+			"Read input_punctuation.txt anew",
+			"output_punctuation.txt",
+			"not general Pig Latin or a known-word lookup"
+		]) {
+			expect(project.content).toContain(contract);
+		}
+		expect(project.content).toMatch(
+			/punctuation-only tokens remain unchanged/
+		);
+		expect(project.content).not.toContain(
+			"Unknown words and capitalization are handled consistently"
+		);
+		expect(project.content).not.toMatch(/\bJuni\b/i);
+		expect(project.content).toContain("a word-translation function");
+		expect(module.curriculum[0]?.content).toContain(
+			"only its punctuation extension is optional"
+		);
+	});
+
+	it("preserves normalized record/file progress IDs, core placement and separated source roles", async () => {
+		const course = await useCoursesStore().loadCourseById("python-level-3");
+		const raw = await loadRawCourse("python-level-3");
+		const sourceItems = raw!.modules.flatMap(module => module.curriculum);
+		const items = course!.modules.flatMap(module => module.curriculum);
+		for (const [folder, id] of [
+			[
+				"AM9-Baseball-Analytics",
+				"python-level-3-am9-bubble-sort-curriculum-am9-project-2-baseball-analytics"
+			],
+			[
+				"AM12-File-IO-and-Dictionaries",
+				"python-level-3-am12-file-input-output-curriculum-am12-project-2-file-io-and-dictionaries"
+			],
+			[
+				"AM12-Juni-Latin-with-File-IO",
+				"python-level-3-am12-file-input-output-curriculum-am12-project-3-word-translator-with-file-i-o"
+			]
+		]) {
+			const root = `https://github.com/instruction-material/Python-Level-3/tree/main/${folder}`;
+			const project = items.find(
+				item => item.projectLink === `${root}/starter`
+			)!;
+			expect(project).toBeDefined();
+			expect(project.id).toBe(id);
+			expect(project.learningPath).toBe("core");
+			expect(project.solutionLink).toBeUndefined();
+			expect(
+				sourceItems.find(item => item.projectLink === `${root}/starter`)
+					?.solutionLink
+			).toBe(`${root}/solution`);
+			expect(project.content).toContain("Confirm");
+			expect(project.content).toContain("Python IDE");
+			expect(project.content).toContain("save/export");
+		}
+	});
+
+	it("distinguishes logarithmic binary comparisons from recursive slice copying", () => {
+		const module = requireSourceModule("AM7 Binary Search");
+		const project = module.curriculum.find(
+			item => item.title === "AM7 Project 1: Binary Search Implementation"
+		)!;
+		expect(project.content).toContain("bin_search_iter(lst, item)");
+		expect(project.content).toContain("bin_search_recur(lst, item)");
+		expect(project.content).toContain(
+			"returning True for membership and False"
+		);
+		const analysis = module.curriculum.find(
+			item => item.title === "Binary Search Big-O Analysis"
+		)!.content;
+		for (const contract of [
+			"`O(log n)` comparisons",
+			"constant-time indexed access and index bounds",
+			"original recursive reference uses list slices",
+			"worst-case copying work is `O(n)`",
+			"outside the search"
+		]) {
+			expect(analysis).toContain(contract);
+		}
+	});
+
 	it("keeps licensed sort animations and only available project media", async () => {
 		const course = await loadRawCourse("python-level-3");
 		expect(course).not.toBeNull();

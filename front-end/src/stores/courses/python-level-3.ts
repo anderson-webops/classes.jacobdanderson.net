@@ -742,7 +742,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "Binary Search Introduction",
 					content:
-						"Binary search is a faster search method for sorted lists. At each step, the target value is compared to the middle item, and half of the remaining search space is eliminated. This repeated halving connects directly to recursion and logarithmic runtime."
+						"Binary search searches sorted lists by comparing the target with the middle item and eliminating half of the remaining search space. This repeated halving gives logarithmic comparison counts. Index-bound implementations avoid the additional copying work of recursive list slices."
 				},
 				{
 					title: "AM7 Project 1: Binary Search Implementation",
@@ -752,7 +752,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 							"Keep the input list sorted before searching.",
 							"In the iterative version, track low and high indexes and continue while `low <= high`.",
 							"In the recursive version, search the appropriate half with slices or index bounds.",
-							"Return a clear result when the list is empty or the target is found."
+							"Implement bin_search_iter(lst, item) and bin_search_recur(lst, item), returning True for membership and False for a missing target or empty list. Preserve the sorted input; preparing sorted data is separate from searching."
 						],
 						checkpoints: [
 							"Targets at the beginning, middle, and end are found.",
@@ -768,7 +768,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "Binary Search Big-O Analysis",
 					content:
-						"Analyze the worst case for binary search by tracking how many times the input can be cut in half before nothing remains. Compare `O(log n)` with `O(n)` and discuss why binary search only works reliably on sorted data."
+						"Track the repeated halving: both versions use `O(log n)` comparisons on sorted input. With constant-time indexed access and index bounds, worst-case search time is `O(log n)`. The original recursive reference uses list slices, which copy the selected halves: their total worst-case copying work is `O(n)`, so do not call that implementation's total runtime logarithmic. Preparing or validating sorted input has its own cost, outside the search. Compare these costs with linear search and explain the sorted-data precondition."
 				},
 				{
 					title: "AM7 Project 2: Reverse Number Guesser",
@@ -1070,18 +1070,21 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM9 Project 2: Baseball Analytics",
 					content: projectBrief({
-						goal: "Adapt sorting logic to rank baseball players by selected statistics.",
+						goal: "Apply adjacent bubble-sort comparisons to produce stable descending baseball leaderboards without changing the supplied records.",
 						build: [
-							"Store each player's data together in a consistent structure.",
-							"Support ranking by statistics such as batting average, home runs, or RBI.",
-							"Sort based on the chosen field.",
-							"Return or print a leaderboard in the correct order."
+							"Retain the ten synthetic p1-p10 records and playerList; player_list is a compatible spelling. These are practice data, not current baseball results. Each record is a four-field list or tuple: name, average, home runs and RBI.",
+							"Implement bubble_baseball(players, stat). players is a list; recognize exactly the case-sensitive fields Average, Home Run and RBI. Names are nonblank strings, average is a finite int/float in [0, 1], and both counts are nonnegative ints. Boolean numbers are invalid. Validate every field; invalid containers, records or keys raise ValueError, with one-based record numbers for record errors.",
+							"Return a fresh list of names in descending selected-statistic order, keeping equal statistics in their original input order. Empty input returns a fresh []; retain duplicate names and records. Do not change the outer input list or its records. Use adjacent bubble comparisons on a working copy, not sorted or list.sort; reversing an ascending result would reverse ties too.",
+							"Implement print_list(names): validate a list of strings before printing, print each name with one leading tab on its own line and return None. Empty input prints nothing; invalid input raises ValueError without partial output.",
+							"Implement main() to display Average Leaderboard:, Home Run Leaderboard: and RBI Leaderboard:, with blank lines between groups. Return None and leave playerList unchanged. Replace the starter's initial reminder with a direct-run guarded call only after checking the helpers. Imports must not print, request input or sleep."
 						],
 						checkpoints: [
-							"Changing the selected statistic changes the leaderboard order.",
-							"Ties and missing or unusual values are handled consistently.",
-							"The explanation identifies the data shape and the sort key."
-						]
+							"Independently predict all three rankings and a small tied-record trace before running them. Stable ties and nonmutation are explicit clarified policies, not guarantees of the old snapshot.",
+							"Check empty/singleton lists, duplicate names, equal statistics, unchanged record identity, unknown keys and every invalid field domain.",
+							"Explain the selected index, why equal adjacent values do not swap, quadratic worst-case work and the working copy's space."
+						],
+						verification:
+							"Confirm opening the starter in the Python IDE or run from starter with Python 3. Discuss one adjacent pass with a course facilitator, then test different synthetic records independently. Compare with an independently computed expected ranking and save/export the project. Completed reference code stays separate in solution."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM9-Baseball-Analytics/starter",
@@ -1303,16 +1306,19 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Read alternating file lines into a dictionary.",
 						build: [
-							"Read a text file that alternates between keys and values.",
-							"Strip newline characters from each line.",
-							"Store each key with the following line as its value.",
-							"Print or inspect the resulting dictionary."
+							'Retain the supplied input.txt and implement parse_pairs(lines), load_pairs(path="input.txt") and main(path="input.txt"). This assignment reads and inspects a dictionary; it does not require writing an output file.',
+							"parse_pairs receives a list of strings, one physical record each, optionally ending in one LF/CRLF/CR delimiter. Other embedded CR/LF delimiters are invalid. Pair records 1/2, 3/4 and so on as keys/values. Strip surrounding whitespace from both, matching the original parser; retain interior spaces and string values.",
+							"Return a fresh dictionary without changing lines. Empty input gives {}; blank keys are rejected, empty values are valid and later duplicate keys replace earlier values. Do not discard blank records. Invalid containers/record types raise ValueError; odd counts, blank keys and embedded delimiters report their one-based line number.",
+							"load_pairs uses UTF-8, readlines and a context manager. Accept LF/CRLF and an unterminated final record. A final newline is not an extra blank value: an empty value needs its own physical blank line. Propagate normal missing/unreadable-file or decoding errors and preserve input bytes.",
+							"main loads, prints and returns the dictionary. Replace the initial reminder with a guarded call after testing the helpers. Imports must not open files, print data or request input."
 						],
 						checkpoints: [
-							"Known key-value pairs appear correctly in the dictionary.",
-							"Odd numbers of lines or blank lines are handled deliberately.",
-							"The explanation connects file order to dictionary construction."
-						]
+							"Independently predict a four-record fixture and inspect the original ten pairs, including surrounding whitespace on technology and tool.",
+							"Check empty input, CRLF/LF, absent final newline, odd counts, blank keys/values, duplicate keys and missing files without modifying the original input.",
+							"Explain why record position matters and why stripping surrounding whitespace differs from removing only a newline."
+						],
+						verification:
+							"Confirm importing main.py and input.txt into the Python IDE, or run from starter with Python 3. Discuss one record-index trace with a course facilitator, then use independent expected dictionaries and temporary synthetic files. Inspect the result and save/export; reference answers remain in solution."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM12-File-IO-and-Dictionaries/starter",
@@ -1322,20 +1328,25 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "AM12 Project 3: Word Translator with File I/O",
 					content: projectBrief({
-						goal: "Translate text from an input file and write the translated result to an output file.",
+						goal: "Combine a word-translation function implementing the original character rule with independently testable file-reading, translation and writing stages.",
 						build: [
-							"Read sentences from an input text file.",
-							"Translate each word with a word-translation function.",
-							"Write the translated sentences to an output file.",
-							"Keep the file-reading, translation, and file-writing steps easy to test separately."
+							"Retain input_no_punctuation.txt and input_punctuation.txt. The core uses the former; punctuation is a separate optional extension. This is not general Pig Latin or a known-word lookup.",
+							"Implement translate(word): for a nonempty whitespace-free string, move its first character to the end and append ay. Empty input gives an empty string. Preserve character case and Unicode literally; non-string or whitespace-containing input raises ValueError. Core tokens follow the literal character rule, not a dictionary.",
+							'Implement read_lines(path="input_no_punctuation.txt") with UTF-8 and a context manager. Remove record delimiters only, retaining blank lines; accept LF/CRLF and an unterminated final line. Empty files give []. Propagate normal file/decoding errors and preserve source bytes.',
+							"translate_lines(lines, punctuation=False) receives a list of delimiter-free strings. Split each line on whitespace, translate tokens and join with single spaces: deliberately normalize leading/trailing spaces and repeated spaces/tabs while keeping one output line per input line, including blanks. Return a fresh list without mutation. Invalid containers, record types or embedded CR/LF raise ValueError, with line numbers for delimiter errors; punctuation must be Boolean.",
+							'write_lines(lines, path="output.txt") validates the entire list before opening output, then writes UTF-8 with one LF after each record and no added trailing token spaces. Empty input writes an empty file. Return None; invalid records must preserve existing output. Valid output deliberately overwrites the destination.',
+							'translate_file(input_path="input_no_punctuation.txt", output_path="output.txt", punctuation=False) rejects identical/equivalent paths and symlink/hardlink aliases with ValueError. Read and translate the complete source before writing, return the translated list and retain source bytes. Missing, undecodable or invalid input leaves existing output unchanged; ordinary output I/O errors propagate.',
+							"Replace the starter's reminder with a guarded translate_file() call after the five core helpers work. Imports must not open files or run translation. Core completion does not require translate_punctuation."
 						],
 						checkpoints: [
-							"The output file has the expected translated text.",
-							"Multiple lines are preserved or intentionally reformatted.",
-							"Unknown words and capitalization are handled consistently."
+							"Predict small tokens and a two-line fixture, then independently check empty/single-character tokens, literal case/Unicode, blank lines and normalized whitespace.",
+							"Reopen output.txt and compare its exact line and final-newline policy. Test missing/undecodable input, malformed output records and aliases using temporary files.",
+							"Explain the character rule and intentional whitespace changes without inventing unknown-word behavior."
 						],
 						extension:
-							"Preserve punctuation in its original location while translating the words."
+							"Optionally implement translate_punctuation(word) and select it only with punctuation=True. Preserve leading/trailing clusters from Python's string.punctuation plus curly quotes “ ” ‘ ’ and ellipsis …. Empty or punctuation-only tokens remain unchanged. Internal characters, including straight/curly apostrophes, remain in the body and follow the same character rotation; do not promise language-aware contractions or an unchanged numeric index for arbitrary internal punctuation. Read input_punctuation.txt anew and write output_punctuation.txt in a separate call. Do not reuse core lines or a closed output handle.",
+						verification:
+							"Confirm importing the starter and original inputs in the Python IDE, or run from starter with Python 3. Discuss one trace with a course facilitator, independently test the stages, reopen output and save/export. The optional path also checks clustered/punctuation-only tokens and the original curly apostrophe in wasn’t. Completed reference code stays separate."
 					}),
 					projectLink:
 						"https://github.com/instruction-material/Python-Level-3/tree/main/AM12-Juni-Latin-with-File-IO/starter",
@@ -1796,9 +1807,8 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 			"early exit",
 			"O(n²)"
 		],
-		challengeCurriculumTitles: ["AM9 Project 2: Baseball Analytics"],
 		projectThread:
-			"Trace adjacent comparisons and swaps through one complete pass, then add an early-exit condition. Baseball Analytics is the data-context challenge after the sort is independently verified."
+			"Trace adjacent comparisons and swaps through one complete pass, then add an early-exit condition. Baseball Analytics remains a required core data-context project after the sort is independently verified; it adds keyed records, stable descending ties and unchanged-input checks."
 	},
 	{
 		title: "AM10 Merge Sort",
@@ -1837,11 +1847,8 @@ const PYTHON_LEVEL_3_FLOW: PythonLevel3FlowConfig[] = [
 			"dictionary from file",
 			"missing-file handling"
 		],
-		challengeCurriculumTitles: [
-			"AM12 Project 3: Word Translator with File I/O"
-		],
 		projectThread:
-			"Write and read a small file before parsing structured lines into a dictionary. Word Translator is the challenge after file closure, malformed lines, and missing-file behavior are explicit."
+			"Write and read a small file before parsing structured lines into a dictionary. Dictionary reading and the Word Translator remain required core projects with distinct purposes: alternating key/value construction versus a read/transform/write pipeline. Complete core translation after file closure, malformed-line and missing-file behavior are explicit; only its punctuation extension is optional."
 	},
 	{
 		title: "Check-In #3",
