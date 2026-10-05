@@ -867,6 +867,94 @@ describe("Python Level 3 learner flow", () => {
 		}
 	});
 
+	it("fully specifies literal name tags, deliberate file writes and the optional extension", () => {
+		const module = requireSourceModule("AM12 File Input/Output");
+		const item = module.curriculum.find(
+			candidate =>
+				candidate.title === "AM12 Project 1: Crazy Name Tags Printer"
+		)!;
+		for (const contract of [
+			"name_variations(name)",
+			"fresh tuple",
+			"zero-based indexes 0, 2, 4",
+			"Unicode code points",
+			"graphemes",
+			"embedded CR/LF",
+			"format_tags(name)",
+			"including the last",
+			"exactly three LF characters",
+			'write_tags(name, path="output.txt")',
+			"before opening",
+			"os.PathLike",
+			"without NUL",
+			"path whitespace",
+			"return None",
+			"truncated/partial",
+			'main(path="output.txt", input_fn=None, output_fn=None)',
+			"call time",
+			"exactly status and path",
+			"written",
+			"invalid",
+			"failed",
+			"cancelled",
+			"literal quit is a valid name",
+			"'Juni', 'Jn', 'inuJ'",
+			"write_separate_tags(name",
+			"symlink/hardlink",
+			"without core section separators",
+			"three empty files",
+			"No transactional rollback",
+			"does not select this extension automatically"
+		]) {
+			expect(item.content).toContain(contract);
+		}
+		expect(module.curriculum[0]?.content).toContain(
+			"mode deliberately truncates"
+		);
+		expect(module.curriculum[0]?.content).toContain(
+			"separate-file extension is optional"
+		);
+		expect(item.learningPath).toBe("core");
+	});
+
+	it("retains required name-tag progress and incomplete learner import roles", async () => {
+		const course = await useCoursesStore().loadCourseById("python-level-3");
+		const item = course!.modules
+			.flatMap(module => module.curriculum)
+			.find(
+				candidate =>
+					candidate.title ===
+					"AM12 Project 1: Crazy Name Tags Printer"
+			)!;
+		const root =
+			"https://github.com/instruction-material/Python-Level-3/tree/main/AM12-Crazy-Name-Tags-Printer";
+		expect(item.id).toBe(
+			"python-level-3-am12-file-input-output-curriculum-am12-project-1-crazy-name-tags-printer"
+		);
+		expect(item.learningPath).toBe("core");
+		expect(item.projectLink).toBe(`${root}/starter`);
+		expect(item.solutionLink).toBeUndefined();
+		expect(
+			requireSourceModule("AM12 File Input/Output").curriculum.find(
+				candidate => candidate.title === item.title
+			)?.solutionLink
+		).toBe(`${root}/solution`);
+		for (const contract of [
+			"Confirm",
+			"incomplete starter",
+			"README.md",
+			"Python IDE",
+			"guarded",
+			"python3 main.py",
+			"enter a name",
+			"reopen output.txt",
+			"save/export",
+			"reference answers stay separate"
+		]) {
+			expect(item.content).toContain(contract);
+		}
+	});
+
 	it("keeps licensed sort animations and only available project media", async () => {
 		const course = await loadRawCourse("python-level-3");
 		expect(course).not.toBeNull();

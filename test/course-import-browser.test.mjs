@@ -45,13 +45,24 @@ const searchPacks = [
 				"d291662971b988908ae513c30ac32aa72382ed9716aaf2057b98276b815ad910"
 		},
 		reminder: "Implement the five core tasks in README.md"
+	},
+	{
+		folder: "AM12-Crazy-Name-Tags-Printer",
+		revision: "efd0cdfb190a9110ec1a160786e13f724a60153f",
+		digests: {
+			"main.py":
+				"dc6ba7303df926a4c66b10852981899e41f7b04ba7aff6232156658df43b8f92",
+			"README.md":
+				"04b01b7669f42a0cf6aed44ee23a65e5ed5dce686801ebcfa236271eec661d7b"
+		},
+		reminder: "Implement the four core tasks in README.md"
 	}
 ];
 
 async function readPublishedStarter(pack) {
 	const entries = await Promise.all(
 		Object.entries(pack.digests).map(async ([name, digest]) => {
-			const url = `https://raw.githubusercontent.com/instruction-material/Python-Level-3/${searchSourceRevision}/${pack.folder}/starter/${name}`;
+			const url = `https://raw.githubusercontent.com/instruction-material/Python-Level-3/${pack.revision ?? searchSourceRevision}/${pack.folder}/starter/${name}`;
 			const response = await fetch(url, {
 				signal: AbortSignal.timeout(20000)
 			});
@@ -70,6 +81,187 @@ async function readPublishedStarter(pack) {
 		})
 	);
 	return Object.fromEntries(entries);
+}
+
+async function exerciseNameTags(page, learnerFiles) {
+	// Test-only edits exercise one valid-name path in the real imported scaffold.
+	// Native source tests independently verify full reference contracts/errors.
+	// No completed solution is downloaded or put into the learner source folder.
+	const edits = {
+		'raise NotImplementedError("Implement name_variations from README.md")':
+			[
+				"alternate = ''.join(c for i, c in enumerate(name) if i % 2 == 0)",
+				"pending, reverse = list(name), []",
+				"while pending:",
+				"    reverse.append(pending.pop())",
+				"return (name, alternate, ''.join(reverse))"
+			],
+		'raise NotImplementedError("Implement format_tags from README.md")': [
+			"lines = []",
+			"for variation in name_variations(name):",
+			"    lines.extend(variation)",
+			"    lines.append('')",
+			"return '\\n'.join(lines) + '\\n'"
+		],
+		'raise NotImplementedError("Implement write_tags from README.md")': [
+			"text = format_tags(name)",
+			"with open(path, 'w', encoding='utf-8', newline='\\n') as output:",
+			"    output.write(text)"
+		],
+		'raise NotImplementedError("Implement main from README.md")': [
+			"name = input('What is your name? ')",
+			"write_tags(name, path)",
+			"print('NAME_TAG_WORKFLOW_WRITTEN')",
+			"return {'status': 'written', 'path': path}"
+		]
+	};
+	let edited = learnerFiles["main.py"];
+	for (const [placeholder, lines] of Object.entries(edits)) {
+		assert.equal(edited.split(placeholder).length, 2);
+		edited = edited.replace(placeholder, lines.join("\n    "));
+	}
+	const reminder =
+		'print("Implement the four core tasks in README.md; separate files are optional.")';
+	assert.equal(edited.split(reminder).length, 2);
+	edited = edited.replace(reminder, "main()");
+	const modifier = await page.evaluate(() =>
+		/Mac/.test(navigator.platform) ? "Meta" : "Control"
+	);
+	await page.click(".cm-content");
+	await page.keyboard.down(modifier);
+	await page.keyboard.press("a");
+	await page.keyboard.up(modifier);
+	await page.keyboard.sendCharacter(edited);
+	await page.$eval(".stdin-panel textarea", element => {
+		element.value = "é A😀\n";
+		element.dispatchEvent(new Event("input", { bubbles: true }));
+	});
+	await page.waitForFunction(
+		source => {
+			const projects = JSON.parse(
+				localStorage.getItem("classes-python-ide-projects:anonymous") ??
+					"[]"
+			);
+			return projects.some(
+				project =>
+					project.courseProjectKey ===
+						"browser:AM12-Crazy-Name-Tags-Printer:starter" &&
+					project.files.some(
+						file =>
+							file.name === "main.py" && file.content === source
+					)
+			);
+		},
+		{},
+		edited
+	);
+	await page.click("button.run-control");
+	await page.waitForFunction(
+		() =>
+			document
+				.querySelector(".output-panel")
+				?.textContent.includes("NAME_TAG_WORKFLOW_WRITTEN") &&
+			document
+				.querySelector("[data-testid='ide-run-status']")
+				?.textContent.includes("Run complete"),
+		{ timeout: 90000 }
+	);
+	const expected = "é\n \nA\n😀\n\né\nA\n\n😀\nA\n \né\n\n";
+	const clickOutput = async () => {
+		const index = await page.$$eval(".file-button", buttons =>
+			buttons.findIndex(
+				button =>
+					button.querySelector("span")?.textContent === "output.txt"
+			)
+		);
+		assert.ok(index >= 0, "Name Tags generated a real output.txt");
+		const buttons = await page.$$(".file-button");
+		await buttons[index].click();
+		for (const button of buttons) await button.dispose();
+		await page.waitForFunction(
+			() =>
+				document.querySelector(".file-button.is-active span")
+					?.textContent === "output.txt"
+		);
+		assert.deepEqual(
+			await page.$$eval(".cm-content .cm-line", lines =>
+				lines.map(line => line.textContent)
+			),
+			expected.split("\n")
+		);
+	};
+	await page.waitForFunction(
+		expected => {
+			const projects = JSON.parse(
+				localStorage.getItem("classes-python-ide-projects:anonymous") ??
+					"[]"
+			);
+			return projects.some(
+				project =>
+					project.courseProjectKey ===
+						"browser:AM12-Crazy-Name-Tags-Printer:starter" &&
+					project.files.some(
+						file =>
+							file.name === "output.txt" &&
+							file.content === expected
+					)
+			);
+		},
+		{},
+		expected
+	);
+	assert.doesNotMatch(
+		await page.$eval(".output-panel", element => element.textContent),
+		/Traceback|EOFError|NotImplementedError/
+	);
+	await clickOutput();
+	await page.evaluate(() => {
+		const originalClick = HTMLAnchorElement.prototype.click;
+		HTMLAnchorElement.prototype.click = function () {
+			if (
+				this.download.endsWith(".zip") &&
+				this.href.startsWith("blob:")
+			) {
+				void fetch(this.href)
+					.then(response => response.arrayBuffer())
+					.then(bytes => {
+						window.__nameTagsDownloadedZip = Array.from(
+							new Uint8Array(bytes)
+						);
+					});
+				return;
+			}
+			return originalClick.call(this);
+		};
+	});
+	await page.click("button[aria-label='Download project ZIP']");
+	await page.waitForFunction(() =>
+		Array.isArray(window.__nameTagsDownloadedZip)
+	);
+	const zip = unzipSync(
+		Uint8Array.from(
+			await page.evaluate(() => window.__nameTagsDownloadedZip)
+		)
+	);
+	const archived = name => {
+		const keys = Object.keys(zip).filter(path => path.endsWith("/" + name));
+		assert.equal(keys.length, 1, `Exactly one exported ${name}`);
+		return strFromU8(zip[keys[0]]);
+	};
+	assert.equal(archived("main.py"), edited);
+	assert.equal(archived("README.md"), learnerFiles["README.md"]);
+	assert.equal(archived("output.txt"), expected);
+	assert.equal(
+		Object.keys(zip).filter(path => path.endsWith(".txt")).length,
+		1,
+		"Optional outputs are not generated by the core workflow"
+	);
+	await page.reload({ waitUntil: "domcontentloaded" });
+	await page.waitForSelector(".file-button");
+	await clickOutput();
+	console.log(
+		"Name Tags imported scaffold edited, console input executed, exact Unicode/LF output reopened, ZIP exported and saved work reopened"
+	);
 }
 // Synthetic workflow fixture, not a completed course sorting assignment.
 const fileIoInput = "b\n \nA\nb";
@@ -829,6 +1021,9 @@ test(
 							/Traceback|EOFError|NotImplementedError/,
 							"Initial Run only prints the learner reminder"
 						);
+						if (pack.folder === "AM12-Crazy-Name-Tags-Printer") {
+							await exerciseNameTags(page, searchFiles);
+						}
 						if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 							const directory = join(
 								previousDirectory,
@@ -858,7 +1053,7 @@ test(
 							"Reopening never redownloads the starter"
 						);
 						console.log(
-							`Exact published learner source imported, run and reopened: ${pack.folder}@${searchSourceRevision}`
+							`Exact published learner source imported, run and reopened: ${pack.folder}@${pack.revision ?? searchSourceRevision}`
 						);
 					} finally {
 						await runtimeCdp.send("Network.setBlockedURLs", {

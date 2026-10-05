@@ -219,10 +219,59 @@ The optional guarded Ruff preflight refused audited-version drift; its policy
 was unchanged, and the canonical native source gate passed.
 
 Matching site briefs retain titles, progress IDs and the 86-core/4-optional
-inventory. Full site verification for this group is pending; earlier release
-evidence is not substituted. Thirty-five authored coding/review pairs, one
+inventory. That group passed full
+[reviewed-head CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37263916323)
+and independent
+[integrated-main CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37264361642).
+Its exact tagged
+[native build and attestation](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37264829763)
+produced the unchanged authenticated assets published in immutable
+[v2.8.27](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.27).
+Downstream [PR #17](https://github.com/instruction-material/classes.jacobdanderson.net/pull/17)
+and independent [fork-main CI](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37265017700)
+passed after preserving the neutral instructor overlay. Production activation
+remains separate and unverified. Thirty-five authored coding/review pairs, one
 supplied-code analysis and one worksheet are checked. Seven genuine coding
-placeholders and the broader course/purpose/source/workflow audit remain open.
+placeholders and the broader course/purpose/source/workflow audit remained open.
+
+## Crazy Name Tags follow-up
+
+[Source PR #8](https://github.com/instruction-material/Python-Level-3/pull/8)
+at integrated source `efd0cdfb190a9110ec1a160786e13f724a60153f` replaces the
+structural Name Tags starter with a full learner brief, four incomplete core
+callables and one optional separate-file callable. The single-file project
+remains required; it teaches transformation, exact formatting and deliberate
+writing before dictionary parsing and the translator's read/transform/write
+pipeline. Titles, existing progress IDs and the 86-core/4-optional inventory remain.
+
+The original literal character orders and extra LF after each core section are
+preserved. Empty names give exactly three LFs. Case, spaces/tabs and Unicode code
+points are literal; grapheme-aware reversal is not claimed. Reference imports
+no longer prompt or truncate output. Validation precedes opening; actual writes
+use UTF-8/LF and context-managed closure. Console results distinguish written,
+invalid, failed and cancelled states. Optional three-file output has no section
+separators, rejects aliases before writing and does not promise rollback after
+an ordinary later I/O failure. All four historical sample blobs remain unchanged;
+the empty core sample is not misrepresented as a new expected output.
+
+All 118 native source methods pass locally, in exact-head
+[push CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37301232728)
+and [review CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37301281776),
+then independent [integrated-main CI](https://github.com/instruction-material/Python-Level-3/actions/runs/37301369734).
+Seventeen new methods use independent bounded character/index oracles and real
+temporary-file/console workflows. The optional guarded Ruff and Oxlint preflights
+refused audited-version drift; their policy remains unchanged.
+
+Matching site copy now states the full core and optional contracts. The native
+browser regression imports the exact immutable incomplete starter and complete
+README after confirmation, exercises initial Run, then edits the scaffold for a
+valid Unicode-name path, supplies console input, checks generated LF/UTF-8
+output, reopens it, captures the real UI ZIP download and reopens saved work.
+These test-only edits verify the workflow; independent source checks verify
+reference correctness. Production/API writes remain blocked. Site verification
+and delivery for this follow-up are pending; prior release evidence is not a
+substitute. Thirty-six authored coding/review pairs are checked; six coding
+placeholders and the full course/purpose/source/workflow audit remain open.
 
 ## Verification authority
 
