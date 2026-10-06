@@ -15,8 +15,21 @@
 
 context("Navigation & page smoke-tests", () => {
 	beforeEach(() => {
+		cy.intercept("GET", "**/api/accounts/me", {
+			statusCode: 200,
+			body: {}
+		}).as("accountSession");
+		cy.intercept("GET", "**/api/course-access/me", {
+			statusCode: 200,
+			body: { currentCourseLearner: null }
+		}).as("classroomSession");
+		cy.intercept("GET", "**/api/accounts/oauth/providers", {
+			statusCode: 200,
+			body: { google: false, apple: false }
+		});
 		cy.viewport(1440, 900);
 		cy.visit("/"); // -> Home
+		cy.wait(["@accountSession", "@classroomSession"]);
 	});
 
 	it("loads the home page", () => {
@@ -60,15 +73,9 @@ context("Navigation & page smoke-tests", () => {
 	});
 
 	it("switches sign-in views without overflowing or losing a draft", () => {
-		cy.intercept("GET", "**/api/accounts/me", {
-			statusCode: 200,
-			body: {}
-		});
-		cy.intercept("GET", "**/api/accounts/oauth/providers", {
-			statusCode: 200,
-			body: { google: false, apple: false }
-		});
 		cy.visit("/courses");
+		// SSG renders the header before session bootstrap mounts its handlers.
+		cy.wait(["@accountSession", "@classroomSession"]);
 		cy.get(".site-nav").contains("button", "Log in").click();
 		cy.get("#login-dialog").within(() => {
 			cy.get("#uname").type("learner@example.invalid");
