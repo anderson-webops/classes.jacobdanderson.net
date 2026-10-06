@@ -471,6 +471,38 @@ describe("CourseExplorer.vue", () => {
 		expect(query.get("starterLabel")).toBe("Course starter");
 	});
 
+	it("offers configured worked-lesson imports while leaving other references separate", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+		const courses = useCoursesStore();
+		const folders = ["CPPM2-Array-Basics-Reference", "CPPM2-Pointer-Arithmetic-Reference", "CPPM3-Two-Dimensional-Arrays-Reference"];
+		vi.spyOn(courses, "loadCourseById").mockResolvedValue({
+			id: "cpp-level-2", name: "C++ Level 2",
+			modules: [{ id: "arrays", title: "Arrays", supplementalProjects: [],
+				curriculum: folders.map((folder, index) => ({
+					id: folder.toLowerCase(), title: folder, content: "Predict the trace before running.",
+					projectLink: `https://github.com/instruction-material/CPP-Level-2/tree/main/${folder}`,
+					ideImport: index < 2
+				}))
+			}]
+		});
+		useAppStore().setCurrentUser({ _id: "learner", name: "Learner", email: "learner@example.invalid", age: 14, state: "GA", courseAccess: ["cpp-level-2"], editUsers: false, saveEdit: "Save" });
+		const wrapper = mount(CourseExplorer, { global: { plugins: [pinia] } });
+		try {
+			await flushPromises();
+			await vi.waitFor(() => expect(wrapper.findAll(".is-ide-starter")).toHaveLength(2));
+			for (const [index, item] of wrapper.findAll(".lesson-item").entries()) {
+				const link = item.find(".is-ide-starter");
+				if (index === 2) { expect(link.exists()).toBe(false); continue; }
+				const query = new URL(link.attributes("href"), "https://classes.local").searchParams;
+				expect(query.get("mode")).toBe("cpp");
+				expect(query.get("projectKey")).toBe(`cpp-level-2:${folders[index].toLowerCase()}:starter`);
+				expect(query.get("starterUrl")).toBe(`https://github.com/instruction-material/CPP-Level-2/tree/main/${folders[index]}`);
+			}
+			expect(api.get).not.toHaveBeenCalled();
+		} finally { wrapper.unmount(); }
+	});
+
 	it("counts reference appendices separately from core course work", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
