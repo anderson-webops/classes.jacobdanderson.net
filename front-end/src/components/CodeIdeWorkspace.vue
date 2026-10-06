@@ -8274,7 +8274,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 					aria-label="C++ build workflow"
 				>
 					<p>
-						Edit and save the C++ starter here. Download the ZIP and
+						Edit and save the C++ project here. Download the ZIP and
 						extract it before compiling with a native C++ compiler.
 						The browser provides source editing and build
 						instructions.

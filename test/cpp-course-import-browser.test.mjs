@@ -15,11 +15,13 @@ import puppeteer from "puppeteer";
 import { preview } from "vite";
 import { cppClassesLessonBriefs } from "../front-end/src/stores/courses/cppClassesProjectBriefs.ts";
 import { cppCollectionsLessonBrief } from "../front-end/src/stores/courses/cppCollectionsProjectBriefs.ts";
+import { cppDynamicMemoryProjectBriefs } from "../front-end/src/stores/courses/cppDynamicMemoryProjectBriefs.ts";
 import { cppFoundationLessonBriefs } from "../front-end/src/stores/courses/cppFoundationProjectBriefs.ts";
 import { cppFunctionsLessonBriefs } from "../front-end/src/stores/courses/cppFunctionsProjectBriefs.ts";
 import { cppGridLessonBrief } from "../front-end/src/stores/courses/cppGridProjectBriefs.ts";
 import { cppLifetimeProjectBriefs } from "../front-end/src/stores/courses/cppLifetimeProjectBriefs.ts";
 import { cppParameterLessonBriefs } from "../front-end/src/stores/courses/cppParameterProjectBriefs.ts";
+import { completeDynamicMemoryFile, verifyDynamicMemoryDefaultExport, verifyDynamicMemoryExport } from "./cpp-dynamic-memory-export-checks.mjs";
 import { completeTwoDimensionalAttempt, verifyTwoDimensionalExport } from "./cpp-two-dimensional-export-checks.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
@@ -270,9 +272,73 @@ const twoDimensionalReferences = {
 	}
 };
 const twoDimensionalReferenceCode = {};
-const preservedPacks = { ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks };
+const dynamicMemoryRevision = "9c235e518fe35e6b3fe2003c8b61b3c56ceff831";
+const dynamicMemoryPacks = {
+	"CPPM4-Dynamic-Variables-Reference": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "d9fba21630a928beb2708816b89054284087c7acbcef0e74e8aba2b93e6a2e44",
+		"main.cpp": "064fdf5d346b165ea147801d3a623c2288421d6413856c06847bfff4551904d7"
+	},
+	"CPPM4-Dynamic-Array-Implementation-Starter": {
+		"DynamicArray.cpp": "498bafacda981ba1a24c7055052d975804b4f41e9bbfda7b85bc993eca540c49",
+		"DynamicArray.h": "f107228176d9a0af6e7cfda613e9a7c8ec3a38324884d0425d2c2fef17532668",
+		"Makefile": "ef2802b6b5ae13aa89efb32e1770fde234b08305db815224e3edffd7a8fbe9b1",
+		"README.md": "40fb973c243d2065920b8cb75253bebb1639138c20bd867659f983b0b5e8b5da",
+		"main.cpp": "174a6b15c583d8ba535cf64fbd63ab1c503a485b656ea34c0af8478d1942cd6f"
+	},
+	"CPPM4-Assembly-Line-Starter": {
+		"Makefile": "7c3d82ef05411ffd36d68ec071875a8bd56b2de80404ec32c6668244a86175b3",
+		"README.md": "7d54349c82bf7c040d69133aa1c70b009c32546678c30ab3f0893e8c76fe0da7",
+		"main.cpp": "a97e4ca3264833a8cae6e5169a66d4d965c26f3d0351f60ee8d08c777f6f3f82"
+	},
+	"CPPM4-Grocery-List-Starter": {
+		"DynamicArray.cpp": "d3e181f0453aec49bc7689e9106650158f5e38ea95293fd994f88038675993a0",
+		"DynamicArray.h": "9929fdf8aab7a159573c48111c417c438be8bd03c7810d7913e21270e3801772",
+		"GroceryList.cpp": "a5c1db065205cb178461fb0ab604dc79f4846f7319324096413cfc2334f88646",
+		"GroceryList.h": "4ed939bd23f7fd41b2407a6f9d197ade69da86ac4905e936b17111022e563da7",
+		"Makefile": "593ed8ac57fbbab268e9d92b84cc14d94f31e95840fe99449aa709d0a8868bcd",
+		"README.md": "760c0dece7a48f44575415df89adef56793281c3594f23392f937d311a620477",
+		"main.cpp": "c8a0b84c85bd875b3cc4a16c4e0359661f9b15d65a101db8c3bb33fd0f48dad8"
+	}
+};
+const dynamicMemoryReferences = {
+	"CPPM4-Dynamic-Array-Implementation": {
+		"DynamicArray.cpp": "d6b185efc6f1cf858eb3183ea2db9cbbab95f093b03dc7ee16ed3d026d14a165",
+		"DynamicArray.h": "739da5587abf446b78b432c4f0b3efbbc3465fb871d1205fedab2ca4bc0c3852",
+		"Makefile": "ef2802b6b5ae13aa89efb32e1770fde234b08305db815224e3edffd7a8fbe9b1",
+		"README.md": "40fb973c243d2065920b8cb75253bebb1639138c20bd867659f983b0b5e8b5da",
+		"main.cpp": "a07d6a56f1bab374023ab99aacf5284069fc9e8a53b34dc5e7844db028705666"
+	},
+	"CPPM4-Assembly-Line": {
+		"Makefile": "7c3d82ef05411ffd36d68ec071875a8bd56b2de80404ec32c6668244a86175b3",
+		"README.md": "7d54349c82bf7c040d69133aa1c70b009c32546678c30ab3f0893e8c76fe0da7",
+		"main.cpp": "53f1c43a018f4d34404cb26d04bfa6ceafe955a51a8b09421456512424f56012"
+	},
+	"CPPM4-Grocery-List": {
+		"DynamicArray.cpp": "873c1268a7f1befca6a91842feb90081f94c5faf8f52576c3276e5c25f62c5d9",
+		"DynamicArray.h": "40a05b23daa51a7d7c43120ec23e8f0a2d78591019c6169f7ad46bdb4fe23f01",
+		"GroceryList.cpp": "1de515792d8fe5425cf80b01ad78e71149fd2a10818dd35cbea7b2e4595e3a52",
+		"GroceryList.h": "4ed939bd23f7fd41b2407a6f9d197ade69da86ac4905e936b17111022e563da7",
+		"Makefile": "593ed8ac57fbbab268e9d92b84cc14d94f31e95840fe99449aa709d0a8868bcd",
+		"README.md": "760c0dece7a48f44575415df89adef56793281c3594f23392f937d311a620477",
+		"main.cpp": "f0e19d0d1a2a87d68f487625fdf1acc8f608cc438ee9325d5dc8fac8913937b2"
+	}
+};
+const dynamicMemoryReferenceFiles = {};
+const dynamicMemoryFolders = { ...dynamicMemoryPacks, ...dynamicMemoryReferences };
+const preservedPacks = { ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks, ...dynamicMemoryPacks };
 
 const fixtures = [
+	...Object.entries(dynamicMemoryFolders).map(([folder, hashes]) => ({
+		repository: memoryRepository,
+		revision: dynamicMemoryRevision,
+		courseId: "cpp-level-2",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: "cppm4-dynamic-memory-and-custom-dynamic-arrays",
+		reference: Object.hasOwn(dynamicMemoryReferences, folder)
+	})),
 	...Object.entries(twoDimensionalPacks).map(([folder, hashes]) => ({
 		repository: memoryRepository,
 		revision: twoDimensionalRevision,
@@ -502,7 +568,10 @@ async function verifyMemoryExport(directory, folder) {
 	const result = await runNative(join(directory, "project"), [], directory);
 	assert.equal(result.code, 0);
 	assert.equal(result.stderr, "");
-	if (Object.hasOwn(twoDimensionalPacks, folder)) {
+	if (Object.hasOwn(dynamicMemoryFolders, folder)) {
+		await verifyDynamicMemoryExport(directory, folder, result, runNative);
+	}
+	else if (Object.hasOwn(twoDimensionalPacks, folder)) {
 		await verifyTwoDimensionalExport(directory, folder, result, runNative);
 	}
 	else if (Object.hasOwn(gamePacks, folder)) {
@@ -901,14 +970,63 @@ nodeTest("the complete grid lesson compiles with exact indexed updates and row t
 	}
 });
 
-nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 360000 }, async () => {
+nodeTest("the complete dynamic-lifetime lesson compiles and traces only live objects", { timeout: 60000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-dynamic-lifetime-lesson-"));
+	try {
+		const programs = [...cppDynamicMemoryProjectBriefs.lifetime.matchAll(/```cpp\n([\s\S]*?)\n```/g)];
+		assert.equal(programs.length, 1);
+		await writeFile(join(temporary, "main.cpp"), `${programs[0][1]}\n`);
+		for (const diagnostic of [false, true]) {
+			const compiled = await runNative("clang++", ["-std=c++20", "-Wall", "-Wextra", "-Wpedantic", "-Werror", ...(diagnostic ? ["-g", "-O0", "-fsanitize=address,undefined", "-fno-sanitize-recover=all"] : []), "main.cpp", "-o", "project"], temporary);
+			assert.equal(compiled.code, 0, compiled.stderr);
+			const result = await runNative(join(temporary, "project"), [], temporary, "5\n");
+			assert.equal(result.code, 0, result.stderr);
+			assert.equal(result.stderr, "");
+			assert.match(result.stdout, /The value of \*p1 is: 5/);
+			assert.match(result.stdout, /p1 is nullptr: true/);
+			assert.match(result.stdout, /strPtr is nullptr: true/);
+			const invalid = await runNative(join(temporary, "project"), [], temporary, "1.5\n");
+			assert.equal(invalid.code, 1);
+			assert.equal(invalid.stderr, "Expected a complete, representable integer.\n");
+			assert.doesNotMatch(invalid.stdout, /The value of/);
+		}
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-dynamic-lifetime-lesson", pid: process.pid });
+	}
+});
+
+async function downloadProjectFiles(page) {
+	await page.evaluate(() => {
+		window.__cppZip = null;
+		if (window.__cppZipHookInstalled) return;
+		window.__cppZipHookInstalled = true;
+		const original = HTMLAnchorElement.prototype.click;
+		HTMLAnchorElement.prototype.click = function () {
+			if (this.download.endsWith(".zip") && this.href.startsWith("blob:")) {
+				void fetch(this.href).then(response => response.arrayBuffer()).then((bytes) => {
+					window.__cppZip = Array.from(new Uint8Array(bytes));
+				});
+				return;
+			}
+			return original.call(this);
+		};
+	});
+	await page.click("button[aria-label='Download project ZIP']");
+	await page.waitForFunction(() => Array.isArray(window.__cppZip));
+	const zip = unzipSync(Uint8Array.from(await page.evaluate(() => window.__cppZip)));
+	return Object.fromEntries(Object.entries(zip).map(([path, bytes]) => [path.slice(path.indexOf("/") + 1), strFromU8(bytes)]));
+}
+
+nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 600000 }, async () => {
 	let browser;
 	let server;
 	let page;
 	let temporary;
 	let exitCode = 0;
 	const previousDirectory = process.cwd();
-	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 360000 });
+	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 600000 });
 	try {
 		process.chdir(root);
 		temporary = await mkdtemp(join(tmpdir(), "cpp-course-workflow-"));
@@ -930,6 +1048,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 		let remoteWrites = 0;
 		let runtimeRequests = 0;
 		let courseFixture = true;
+		let referenceFixture = false;
 		await page.setRequestInterception(true);
 		page.on("request", (request) => {
 			const url = new URL(request.url());
@@ -951,7 +1070,9 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			else if (url.origin !== origin || url.pathname.startsWith("/api/")) {
 				if (!["GET", "OPTIONS"].includes(request.method())) remoteWrites++;
 				let body = {};
-				if (courseFixture && url.pathname === "/api/accounts/me") body = { userID: "bridge-fixture" };
+				if (courseFixture && url.pathname === "/api/accounts/me") body = referenceFixture ? { tutorID: "cpp-reference-fixture" } : { userID: "bridge-fixture" };
+				if (courseFixture && referenceFixture && url.pathname === "/api/tutors/loggedin") body = { currentTutor: { _id: "cpp-reference-fixture", name: "Reference fixture", email: "reference@example.invalid", age: 30, state: "GA", coursePermissions: [courseId], usersOfTutorLength: 0 } };
+				if (courseFixture && referenceFixture && url.pathname === "/api/users/oftutor/cpp-reference-fixture") body = [{ _id: "bridge-fixture", name: "Course fixture", email: "course@example.invalid", age: 14, state: "GA", courseAccess: [courseId], courseProgress: [] }];
 				if (courseFixture && url.pathname === "/api/users/loggedin") body = { currentUser: { _id: "bridge-fixture", name: "Course fixture", email: "course@example.invalid", courseAccess: [courseId], courseProgress: [] } };
 				void respond(JSON.stringify(body));
 			}
@@ -964,6 +1085,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 		for (const fixture of fixtures) {
 			({ repository, courseId, folder } = fixture);
 			const { revision, standard, hashes, anchor } = fixture;
+			referenceFixture = fixture.reference ?? false;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
 			await page.setViewport({ width: folder.startsWith("CPPM0-Lifetime") || folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
@@ -982,6 +1104,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				const referenceFolder = folder.replace(/-Starter$/, "");
 				twoDimensionalReferenceCode[folder] = (await readStarter(repository, revision, referenceFolder, twoDimensionalReferences[referenceFolder]))["main.cpp"];
 			}
+			if (Object.hasOwn(dynamicMemoryPacks, folder) && folder.endsWith("-Starter")) {
+				const referenceFolder = folder.replace(/-Starter$/, "");
+				dynamicMemoryReferenceFiles[folder] = await readStarter(repository, revision, referenceFolder, dynamicMemoryReferences[referenceFolder]);
+			}
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
 			const beforeRuntime = runtimeRequests;
@@ -990,7 +1116,8 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
 			const selector = `a[href='https://github.com/${repository}/tree/main/${folder}']:not(.is-ide-starter)`;
 			await page.waitForSelector(selector);
-			const href = await page.$eval(selector, link => link.closest(".lesson-item").querySelector(".is-ide-starter").getAttribute("href"));
+			const href = await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll(".is-ide-starter")].find(action => new URL(action.href).searchParams.get("starterUrl") === link.href)?.getAttribute("href"));
+			assert.ok(href, "The selected source has its own IDE action");
 			const params = new URL(href, origin).searchParams;
 			assert.equal(params.get("mode"), mode);
 			assert.equal(params.get("starterUrl"), `https://github.com/${repository}/tree/main/${folder}`);
@@ -1003,8 +1130,18 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			assert.equal(sourceRequests, before);
 			await page.click("[data-testid='ide-route-import-confirm']");
 			if (mode === "cpp") await page.waitForSelector("[aria-label='C++ build workflow']");
+			if (Object.hasOwn(dynamicMemoryFolders, folder)) assert.match(await page.$eval("[aria-label='C++ build workflow']", element => element.textContent), /C\+\+ project/);
 			await page.waitForFunction(mode => document.querySelector(".cm-content")?.textContent.includes(mode === "java" ? "public class Main" : "#include"), {}, mode);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
+			if (Object.hasOwn(dynamicMemoryPacks, folder) && folder.endsWith("-Starter")) {
+				const untouched = await downloadProjectFiles(page);
+				assert.deepEqual(untouched, files);
+				const directory = join(temporary, `${folder}-untouched`);
+				await mkdir(directory);
+				for (const [name, content] of Object.entries(untouched)) await writeFile(join(directory, name), content);
+				await verifyDynamicMemoryDefaultExport(directory, folder, runNative);
+				record("verified-unfinished-export", { folder, fileCount: Object.keys(untouched).length });
+			}
 			if (folder.startsWith("PTJ4")) {
 				const input = "input[aria-label='New project file name']";
 				if (!await page.$(input)) await page.click("button[aria-controls='code-ide-file-tools-panel']");
@@ -1018,7 +1155,8 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const firstLine = files[entryFile].split("\n").find(line => line.trim());
 			await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
-			const edited = `${completeMemoryAttempt(folder, files[entryFile])}\n// Browser workflow edit\n`;
+			const completed = Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, entryFile, files[entryFile], dynamicMemoryReferenceFiles[folder]) : completeMemoryAttempt(folder, files[entryFile]);
+			const edited = `${completed}\n// Browser workflow edit\n`;
 			expectedFiles[entryFile] = edited;
 			await page.click(".cm-content");
 			await page.keyboard.down(modifier);
@@ -1031,14 +1169,14 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await page.waitForFunction((key, source, name) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === name && file.content === source)), {}, key, edited, entryFile);
 			// The new class packs must preserve and save both their interface and
 			// implementation, not only the driver's text.
-			const multiFilePack = folder.startsWith("CPPF4") || folder.startsWith("CPPF8-Profile-Posts/");
+			const multiFilePack = folder.startsWith("CPPF4") || folder.startsWith("CPPF8-Profile-Posts/") || Object.hasOwn(dynamicMemoryFolders, folder);
 			const classFiles = multiFilePack ? Object.keys(files).filter(name => name !== entryFile && /\.(?:h|cpp)$/.test(name)) : [];
-			assert.equal(classFiles.length, multiFilePack ? 2 : 0);
+			assert.equal(classFiles.length, folder.includes("Grocery-List") ? 4 : folder.includes("Dynamic-Array-Implementation") ? 2 : multiFilePack && !Object.hasOwn(dynamicMemoryFolders, folder) ? 2 : 0);
 			for (const name of classFiles) {
 				await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), name);
 				const first = files[name].split("\n").find(line => line.trim());
 				await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, first);
-				const source = `${files[name]}\n// Browser workflow edit\n`;
+				const source = `${Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, name, files[name], dynamicMemoryReferenceFiles[folder]) : files[name]}\n// Browser workflow edit\n`;
 				expectedFiles[name] = source;
 				await page.click(".cm-content");
 				await page.keyboard.down(modifier);
@@ -1062,23 +1200,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			}
 			// The Java object capstone is edited/exported here and compiled natively
 			// below; the limited browser interpreter is not its execution gate.
-			await page.evaluate(() => {
-				window.__cppZip = null;
-				const original = HTMLAnchorElement.prototype.click;
-				HTMLAnchorElement.prototype.click = function () {
-					if (this.download.endsWith(".zip") && this.href.startsWith("blob:")) {
-						void fetch(this.href).then(response => response.arrayBuffer()).then((bytes) => {
-							window.__cppZip = Array.from(new Uint8Array(bytes));
-						});
-						return;
-					}
-					return original.call(this);
-				};
-			});
-			await page.click("button[aria-label='Download project ZIP']");
-			await page.waitForFunction(() => Array.isArray(window.__cppZip));
-			const zip = unzipSync(Uint8Array.from(await page.evaluate(() => window.__cppZip)));
-			const exported = Object.fromEntries(Object.entries(zip).map(([path, bytes]) => [path.slice(path.indexOf("/") + 1), strFromU8(bytes)]));
+			const exported = await downloadProjectFiles(page);
 			assert.deepEqual(exported, expectedFiles);
 			const directory = join(temporary, `${folder.split("/")[0]}-${mode}`);
 			await mkdir(directory);

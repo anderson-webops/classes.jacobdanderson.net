@@ -503,6 +503,103 @@ describe("CourseExplorer.vue", () => {
 		} finally { wrapper.unmount(); }
 	});
 
+	it("keeps configured learner and staff-reference imports in distinct saved projects", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+		const courses = useCoursesStore();
+		const base =
+			"https://github.com/instruction-material/CPP-Level-2/tree/main/";
+		vi.spyOn(courses, "loadCourseById").mockResolvedValue({
+			id: "cpp-level-2",
+			name: "C++ Level 2",
+			modules: [
+				{
+					id: "dynamic",
+					title: "Dynamic Memory",
+					supplementalProjects: [],
+					curriculum: [
+						{
+							id: "grocery",
+							title: "Grocery List",
+							content:
+								"Attempt first, then compare with the reference.",
+							projectLink: base + "CPPM4-Grocery-List-Starter",
+							solutionLink: base + "CPPM4-Grocery-List",
+							ideImport: true
+						}
+					]
+				}
+			]
+		});
+		const app = useAppStore();
+		app.setCurrentUser({
+			_id: "learner",
+			name: "Learner",
+			email: "learner@example.invalid",
+			age: 14,
+			state: "GA",
+			courseAccess: ["cpp-level-2"],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+		const wrapper = mount(CourseExplorer, { global: { plugins: [pinia] } });
+		try {
+			await flushPromises();
+			await vi.waitFor(() =>
+				expect(wrapper.findAll(".is-ide-starter")).toHaveLength(1)
+			);
+			expect(wrapper.text()).not.toContain("Open reference in IDE");
+			app.setCurrentUser(null);
+			vi.mocked(api.get).mockResolvedValueOnce({
+				data: [
+					{
+						_id: "learner",
+						name: "Learner",
+						email: "learner@example.invalid",
+						age: 14,
+						state: "GA",
+						courseAccess: ["cpp-level-2"],
+						courseProgress: [],
+						editUsers: false,
+						saveEdit: "Save"
+					}
+				]
+			});
+			app.setCurrentTutor({
+				_id: "tutor",
+				name: "Tutor",
+				email: "tutor@example.invalid",
+				age: 30,
+				state: "GA",
+				usersOfTutorLength: 0,
+				coursePermissions: ["cpp-level-2"],
+				editTutors: false,
+				saveEdit: "Save"
+			});
+			await flushPromises();
+			await vi.waitFor(() =>
+				expect(wrapper.findAll(".is-ide-starter")).toHaveLength(2)
+			);
+			const links = wrapper.findAll(".is-ide-starter");
+			for (const [index, link] of links.entries()) {
+				const params = new URL(
+					link.attributes("href"),
+					"https://classes.local"
+				).searchParams;
+				expect(params.get("mode")).toBe("cpp");
+				expect(params.get("projectKey")).toBe(
+					`cpp-level-2:grocery:${index ? "reference" : "starter"}`
+				);
+				expect(params.get("starterUrl")).toBe(
+					base + "CPPM4-Grocery-List" + (index ? "" : "-Starter")
+				);
+			}
+			expect(links[1].text()).toContain("Open reference in IDE");
+		} finally {
+			wrapper.unmount();
+		}
+	});
+
 	it("counts reference appendices separately from core course work", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);

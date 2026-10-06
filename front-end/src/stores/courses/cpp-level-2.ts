@@ -1,5 +1,6 @@
 import type { RawCourse } from "./types";
 import { cppArrayProjectBriefs } from "./cppArrayProjectBriefs";
+import { cppDynamicMemoryProjectBriefs } from "./cppDynamicMemoryProjectBriefs";
 import { cppLifetimeProjectBriefs } from "./cppLifetimeProjectBriefs";
 import { cppPointerProjectBriefs } from "./cppPointerProjectBriefs";
 import { cppTwoDimensionalProjectBriefs } from "./cppTwoDimensionalProjectBriefs";
@@ -171,48 +172,43 @@ const cppLevel2SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Dynamic Allocation and Manual Ownership",
-					content:
-						"`new` and `delete` make heap allocation, leaks, and dangling pointers explicit. Include why heap objects outlive the current stack frame until deleted; how ownership must be assigned before allocation; why every allocation needs exactly one cleanup path; what can go wrong during replacement and resizing; and why raw `new`/`delete` is a learning tool for ownership rather than the preferred modern endpoint.",
+					content: cppDynamicMemoryProjectBriefs.lifetime,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Dynamic-Variables-Reference"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Dynamic-Variables-Reference",
+					ideImport: true
 				},
 				{
 					title: "CPPM4 Project 1: Assembly Line",
-					content:
-						"Use dynamically created objects in a small loop-driven workflow so allocation, replacement, and cleanup happen in a concrete program.",
+					content: cppDynamicMemoryProjectBriefs.assembly,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Assembly-Line",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Assembly-Line-Starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Assembly-Line"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Assembly-Line",
+					ideImport: true
 				},
 				{
 					title: "CPPM4 Project 2: Dynamic Array Implementation",
-					content:
-						"Implement a growable array manually with capacity tracking, reallocation, copying, and cleanup. This is the course's core ownership and resizing lab.",
+					content: cppDynamicMemoryProjectBriefs.array,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Dynamic-Array-Implementation",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Dynamic-Array-Implementation-Starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Dynamic-Array-Implementation"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Dynamic-Array-Implementation",
+					ideImport: true
 				},
 				{
 					title: "CPPM4 Project 3: Grocery List",
-					content:
-						"Adapt the custom dynamic array to store real record data instead of plain integers. This shows how quickly manual container management becomes more demanding.",
+					content: cppDynamicMemoryProjectBriefs.grocery,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Grocery-List",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Grocery-List-Starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Grocery-List"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Grocery-List",
+					ideImport: true
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "Dynamic Memory: Verification and Reflection",
-					content:
-						"Pause after the custom-array work and explain what gets allocated, copied, and deleted at each stage of a resize.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Dynamic-Array-Implementation",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM4-Dynamic-Array-Implementation"
+					content: cppDynamicMemoryProjectBriefs.reflection
 				}
 			]
 		},
@@ -407,13 +403,7 @@ function decorateCppLevel2Module(
 		);
 		coreCurriculum.splice(implementationIndex, 0, {
 			title: "Copy-Control Gate: Rule of Three and Rule of Five",
-			content: [
-				"**Completion evidence:**",
-				"- Ownership diagram for constructor, destructor, copy constructor, copy assignment, move constructor, and move assignment.",
-				"- A shallow-copy failure explanation covering shared storage, double deletion, and how a deep copy changes the ownership graph.",
-				"- Self-assignment and moved-from-state rules written before implementation.",
-				"- A short Rule of Zero comparison explaining why a standard container is preferred after the manual exercise."
-			].join("\n"),
+			content: cppDynamicMemoryProjectBriefs.copyControl,
 			learningPath: "core"
 		});
 	}

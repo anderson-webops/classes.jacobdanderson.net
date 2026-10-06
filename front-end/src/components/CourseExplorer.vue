@@ -1605,7 +1605,7 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 	if (
 		!selectedCourse.value ||
 		!ideCourseMode.value ||
-		resource.kind !== "project" ||
+		(resource.kind !== "project" && resource.kind !== "solution") ||
 		resource.host !== "github.com" ||
 		(!item.ideImport &&
 			!STARTER_RE.test(`${resource.label} ${resource.url}`))
@@ -1621,7 +1621,7 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 	const params = new URLSearchParams({
 		course: selectedCourse.value.id,
 		mode,
-		projectKey: `${selectedCourse.value.id}:${item.id}:starter`,
+		projectKey: `${selectedCourse.value.id}:${item.id}:${resource.kind === "solution" ? "reference" : "starter"}`,
 		starterUrl: resource.url,
 		starterTitle: item.title,
 		starterLabel: resource.label,
@@ -2407,7 +2407,12 @@ function writeStoredValue(key: string, value: string) {
 												<span
 													class="resource-link-label"
 												>
-													Start in IDE
+													{{
+														resource.kind ===
+														"solution"
+															? "Open reference in IDE"
+															: "Start in IDE"
+													}}
 												</span>
 												<small
 													class="resource-link-host"
@@ -2677,7 +2682,12 @@ function writeStoredValue(key: string, value: string) {
 												<span
 													class="resource-link-label"
 												>
-													Start in IDE
+													{{
+														resource.kind ===
+														"solution"
+															? "Open reference in IDE"
+															: "Start in IDE"
+													}}
 												</span>
 												<small
 													class="resource-link-host"
