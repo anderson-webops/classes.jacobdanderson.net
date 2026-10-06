@@ -71,14 +71,15 @@ describe("C++ Level 1 learner flow", () => {
 			}))
 		);
 
-		for (const module of cppLevel1Course.modules.slice(0, 5))
+		for (const module of cppLevel1Course.modules.slice(0, 6))
 			expect(module.supplementalProjects).toEqual([]);
 		for (const project of [
 			"CPPF1 Project 2: Chat Bot",
 			"CPPF2 Project 2: Rock, Paper, Scissors",
 			"CPPF3 Project 3: Number Guesser",
 			"CPPF5 Project 2: Bank Accounts",
-			"CPPF6 Project 2: Defanging a Website Address"
+			"CPPF6 Project 2: Defanging a Website Address",
+			"CPPF6 Project 3: Chaos Monkeys"
 		]) {
 			expect(curriculum).toContainEqual({
 				path: "core",

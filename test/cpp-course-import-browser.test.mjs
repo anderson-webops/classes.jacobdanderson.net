@@ -17,6 +17,7 @@ import { cppClassesLessonBriefs } from "../front-end/src/stores/courses/cppClass
 import { cppCollectionsLessonBrief } from "../front-end/src/stores/courses/cppCollectionsProjectBriefs.ts";
 import { cppFoundationLessonBriefs } from "../front-end/src/stores/courses/cppFoundationProjectBriefs.ts";
 import { cppFunctionsLessonBriefs } from "../front-end/src/stores/courses/cppFunctionsProjectBriefs.ts";
+import { cppParameterLessonBriefs } from "../front-end/src/stores/courses/cppParameterProjectBriefs.ts";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const bridgeRepository = "instruction-material/Python-to-Java-and-CPP-Bridge";
@@ -65,7 +66,7 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "9632a5db7e3519ab72bb84f7cdc189f4e4af9397";
+const foundationRevision = "f4648ea457a587715dd33667f62e539c84d15406";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
 		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
@@ -118,6 +119,18 @@ const foundationPacks = {
 	"CPPF5-Bank-Accounts/starter": {
 		"README.md": "15384b8e55d92b59a53ac205fd8e8e28075bbe3ee44d5beaf61a96b52157e3da",
 		"main.cpp": "0617bd4e087864a5b16f62e0cce45ad93e79ca44a083405442c7f3ef69c7b54f"
+	},
+	"CPPF6-Parameter-Passing/starter": {
+		"README.md": "0fcfff88dc9c65375169619d382498161afac8c2907956acda948b69a8f83349",
+		"main.cpp": "485f37489f54aacc4f5e448a933128235a8b0414cb112041aa0c41e025fb87b1"
+	},
+	"CPPF6-Defanging-a-Website-URL/starter": {
+		"README.md": "9f6b8b6148a1d80a61d6eeeb2e30ccb1ad54a35657b8aa46152956615609599b",
+		"main.cpp": "a48599ff2da597e0beb19637ccaa8dcf575b2020c3ec9451d8b91f1c9c10262b"
+	},
+	"CPPF6-Chaos-Monkeys/starter": {
+		"README.md": "1fa069f0f3b115c248888ac629c49b49ccb7a32f065b62d79f29a43a2e0f2209",
+		"main.cpp": "963a91ebc9bff4c48eae15d8d25d270fb2b9326be7c61f7a1663ee53cb44e644"
 	}
 };
 
@@ -146,7 +159,9 @@ const fixtures = [
 					? "cppf3-functions"
 					: folder.startsWith("CPPF4")
 						? "cppf4-classes-and-objects"
-						: "cppf5-vectors-and-collection-patterns"
+						: folder.startsWith("CPPF5")
+							? "cppf5-vectors-and-collection-patterns"
+							: "cppf6-structs-and-parameter-passing"
 	}))
 ];
 const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "cpp-course-import-browser-ci";
@@ -334,6 +349,29 @@ nodeTest("the supplied vector lesson compiles with exact collection output", { t
 	}
 });
 
+nodeTest("the supplied parameter and struct lessons compile with exact caller and record output", { timeout: 120000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-parameter-lesson-contracts-"));
+	const expected = {
+		introduction: "Hello World!\nDemonstrating passing by value:\nval1 is: 10\nval2 is: 20\nDemonstrating passing by reference:\nval1 is: 10\nval2 is now changed to: 40\nval1 is: 10\nval1 is now changed to: 30\nThere should have been no change to val1, and we could not have modified val2 either.\n",
+		structs: "First Student:\nRoll Number: 1\nName: Brown\nPhone Number: 123443\n\nSecond Student:\nRoll Number: 2\nName: Sam\nPhone Number: 1234567822\n\nThird Student:\nRoll Number: 3\nName: Addy\nPhone Number: 1234567844\n"
+	};
+	try {
+		for (const [name, brief] of Object.entries(cppParameterLessonBriefs)) {
+			const directory = join(temporary, name);
+			await mkdir(directory);
+			const programs = [...brief.matchAll(/```cpp\n([\s\S]*?)\n```/g)];
+			assert.equal(programs.length, 1);
+			await writeFile(join(directory, "main.cpp"), `${programs[0][1]}\n`);
+			await compileExport(directory, ["main.cpp"], "cpp", 20, true);
+			assert.deepEqual(await runNative(join(directory, "project"), [], directory), { code: 0, stdout: expected[name], stderr: "" });
+		}
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-parameter-lesson-contracts", pid: process.pid });
+	}
+});
+
 nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 360000 }, async () => {
 	let browser;
 	let server;
@@ -399,7 +437,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const { revision, standard, hashes, anchor } = fixture;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			const expectedFiles = { ...files };
 			const before = sourceRequests;

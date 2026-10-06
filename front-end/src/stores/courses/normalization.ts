@@ -1,6 +1,7 @@
 import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
 import { isJuniScratchProjectTitle } from "./juniScratchProjects";
+import { mapMarkdownProse } from "./markdownProse";
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyResearchBackedExpansions } from "./research-expansions";
 import {
@@ -1203,6 +1204,8 @@ function hasMarkdownSupportLabel(text: string) {
 }
 
 function supportBaseContent(text: string) {
+	// A short supplied program is still structured source, not one prose line.
+	if (/^[ \t]*(?:`{3}|~{3})/m.test(text)) return text.trim();
 	if (!preservesBlockStructure(text)) return compactWhitespace(text);
 
 	return text.replace(/\n{3,}/g, "\n\n").trim();
@@ -1333,6 +1336,12 @@ function enrichBriefConceptLesson(
 	item: RawCourseModuleItem
 ) {
 	if (compactWhitespace(item.content).length >= 220) return item;
+	if (/^[ \t]*(?:`{3}|~{3})/m.test(item.content)) {
+		return {
+			...item,
+			content: `${item.content.trim()}\n\n${briefConceptAddendum(module, item)}`
+		};
+	}
 
 	return {
 		...item,
@@ -1394,7 +1403,7 @@ function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 	for (const module of course.modules) {
 		// These authored lessons interleave concepts with complete references.
 		// Grouping concepts first changes the input and deterministic/random order.
-		if (courseId === "c-level-1" && /^CPPF[1-5] /.test(module.title))
+		if (courseId === "c-level-1" && /^CPPF[1-6] /.test(module.title))
 			continue;
 
 		const conceptItems = module.curriculum.filter(item =>
@@ -2626,6 +2635,10 @@ function normalizeSectionActionAgreement(text: string) {
 }
 
 function neutralizeStudentFacingText(text: string) {
+	return mapMarkdownProse(text, neutralizeStudentFacingProse);
+}
+
+function neutralizeStudentFacingProse(text: string) {
 	const neutralized = normalizeDuplicateArticles(
 		neutralizeCourseShouldPhrasing(
 			neutralizeLessonDirectiveText(text)
@@ -3355,7 +3368,10 @@ function normalizeLegacyBranding(course: RawCourse) {
 		for (const section of ["curriculum", "supplementalProjects"] as const) {
 			for (const item of module[section]) {
 				item.title = normalizeLegacyBrandingText(item.title);
-				item.content = normalizeLegacyBrandingText(item.content);
+				item.content = mapMarkdownProse(
+					item.content,
+					normalizeLegacyBrandingText
+				);
 			}
 		}
 	}
@@ -3365,7 +3381,10 @@ function formatVisibleCourseMarkdown(course: RawCourse) {
 	for (const module of course.modules) {
 		for (const section of ["curriculum", "supplementalProjects"] as const) {
 			for (const item of module[section]) {
-				item.content = formatVisibleMarkdownStructure(item.content);
+				item.content = mapMarkdownProse(
+					item.content,
+					formatVisibleMarkdownStructure
+				);
 			}
 		}
 	}
@@ -9394,32 +9413,37 @@ function cleanVisibleCourseGrammar(course: RawCourse) {
 	for (const module of course.modules) {
 		for (const section of ["curriculum", "supplementalProjects"] as const) {
 			for (const item of module[section]) {
-				item.content = item.content
-					.replace(
-						new RegExp(`\\b([Aa]) (${vowelArticleNouns})\\b`, "g"),
-						(_match: string, article: string, noun: string) =>
-							`${article === "A" ? "An" : "an"} ${noun}`
-					)
-					.replace(
-						new RegExp(
-							`\\b([Aa])n (${consonantArticleNouns})\\b`,
-							"g"
-						),
-						(_match: string, article: string, noun: string) =>
-							`${article === "A" ? "A" : "a"} ${noun}`
-					)
-					.replace(
-						new RegExp(
-							`\\b(one|each|every|a|an) the (?:[A-Z]{2}[A-Z0-9+.-]*|Unit|Module)\\b[^.!?\\n]{0,120}? (${evidenceNouns})\\b`,
-							"g"
-						),
-						"$1 $2"
-					)
-					.replace(
-						/\b(first|second|third|another|one) the (?:studio|lab|work) ([a-z])/gi,
-						"$1 $2"
-					)
-					.replace(/\bthe the\b/gi, "the");
+				item.content = mapMarkdownProse(item.content, prose => {
+					return prose
+						.replace(
+							new RegExp(
+								`\\b([Aa]) (${vowelArticleNouns})\\b`,
+								"g"
+							),
+							(_match: string, article: string, noun: string) =>
+								`${article === "A" ? "An" : "an"} ${noun}`
+						)
+						.replace(
+							new RegExp(
+								`\\b([Aa])n (${consonantArticleNouns})\\b`,
+								"g"
+							),
+							(_match: string, article: string, noun: string) =>
+								`${article === "A" ? "A" : "a"} ${noun}`
+						)
+						.replace(
+							new RegExp(
+								`\\b(one|each|every|a|an) the (?:[A-Z]{2}[A-Z0-9+.-]*|Unit|Module)\\b[^.!?\\n]{0,120}? (${evidenceNouns})\\b`,
+								"g"
+							),
+							"$1 $2"
+						)
+						.replace(
+							/\b(first|second|third|another|one) the (?:studio|lab|work) ([a-z])/gi,
+							"$1 $2"
+						)
+						.replace(/\bthe the\b/gi, "the");
+				});
 			}
 		}
 	}

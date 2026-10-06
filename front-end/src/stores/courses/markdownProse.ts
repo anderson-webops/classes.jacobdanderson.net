@@ -1,0 +1,58 @@
+// Copy edits apply to prose. Supplied code, including comments and strings,
+// must remain the same program students read in the source repository.
+export function mapMarkdownProse(
+	text: string,
+	transform: (prose: string) => string
+) {
+	function copyProse(prose: string) {
+		if (!prose.trim()) return prose;
+		const leading = prose.match(/^\s*/)?.[0] ?? "";
+		const trailing = prose.match(/\s*$/)?.[0] ?? "";
+		return leading + transform(prose).trim() + trailing;
+	}
+
+	function inlineProse(prose: string) {
+		const spans = [...prose.matchAll(/`+/g)];
+		let result = "";
+		let start = 0;
+		for (let index = 0; index < spans.length; index++) {
+			const opening = spans[index];
+			const closingIndex = spans.findIndex(
+				(span, candidate) => candidate > index && span[0] === opening[0]
+			);
+			if (closingIndex < 0) continue;
+			const end = spans[closingIndex].index! + opening[0].length;
+			result += copyProse(prose.slice(start, opening.index));
+			result += prose.slice(opening.index, end);
+			start = end;
+			index = closingIndex;
+		}
+		return result + copyProse(prose.slice(start));
+	}
+
+	let result = "";
+	let prose = "";
+	let fence = "";
+	for (const line of text.match(/[^\n]*(?:\n|$)/g) ?? []) {
+		if (fence) {
+			result += line;
+			const closing = line.match(/^[ \t]*(`+|~+)[ \t]*\r?(?:\n|$)/);
+			if (
+				closing?.[1][0] === fence[0] &&
+				closing[1].length >= fence.length
+			) {
+				fence = "";
+			}
+			continue;
+		}
+		const opening = line.match(/^[ \t]*(`{3,}|~{3,})/);
+		if (opening) {
+			result += inlineProse(prose) + line;
+			prose = "";
+			fence = opening[1];
+		} else {
+			prose += line;
+		}
+	}
+	return result + inlineProse(prose);
+}
