@@ -487,6 +487,7 @@ function normalizeCourse(
 									? normalizedContent
 									: displayCourseContent(normalizedContent),
 								learningPath: item.learningPath,
+								ideImport: item.ideImport,
 								projectLink: (() => {
 									if (
 										explicitProjectLink &&
