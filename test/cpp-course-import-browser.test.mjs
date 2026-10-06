@@ -17,6 +17,7 @@ import { cppClassesLessonBriefs } from "../front-end/src/stores/courses/cppClass
 import { cppCollectionsLessonBrief } from "../front-end/src/stores/courses/cppCollectionsProjectBriefs.ts";
 import { cppFoundationLessonBriefs } from "../front-end/src/stores/courses/cppFoundationProjectBriefs.ts";
 import { cppFunctionsLessonBriefs } from "../front-end/src/stores/courses/cppFunctionsProjectBriefs.ts";
+import { cppGridLessonBrief } from "../front-end/src/stores/courses/cppGridProjectBriefs.ts";
 import { cppParameterLessonBriefs } from "../front-end/src/stores/courses/cppParameterProjectBriefs.ts";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
@@ -66,7 +67,7 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "f4648ea457a587715dd33667f62e539c84d15406";
+const foundationRevision = "f79cb2c6530ee28363fa00de15f12e40a78b96de";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
 		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
@@ -131,6 +132,14 @@ const foundationPacks = {
 	"CPPF6-Chaos-Monkeys/starter": {
 		"README.md": "1fa069f0f3b115c248888ac629c49b49ccb7a32f065b62d79f29a43a2e0f2209",
 		"main.cpp": "963a91ebc9bff4c48eae15d8d25d270fb2b9326be7c61f7a1663ee53cb44e644"
+	},
+	"CPPF7-Matrix-Addition/starter": {
+		"README.md": "3abb3917457f108580a68f41a67f016058ab6c049e29add2a24d1d1ea01a4219",
+		"main.cpp": "7e1e9a17723f0ba92aeb5c94f03700b3af0c76fad9cdd3573bbf28b8db0125ae"
+	},
+	"CPPF7-Grid-Statistics/starter": {
+		"README.md": "503bec05a2fd03d2ea84263f710a2cc8f12ab4ed9eceb835fbb95325692eada0",
+		"main.cpp": "80a756801d16a1af40219370c6c58079da504f4871f5924a4a6224eee7f9b432"
 	}
 };
 
@@ -161,7 +170,9 @@ const fixtures = [
 						? "cppf4-classes-and-objects"
 						: folder.startsWith("CPPF5")
 							? "cppf5-vectors-and-collection-patterns"
-							: "cppf6-structs-and-parameter-passing"
+							: folder.startsWith("CPPF6")
+								? "cppf6-structs-and-parameter-passing"
+								: "cppf7-grids-and-2d-vectors"
 	}))
 ];
 const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "cpp-course-import-browser-ci";
@@ -372,6 +383,21 @@ nodeTest("the supplied parameter and struct lessons compile with exact caller an
 	}
 });
 
+nodeTest("the complete grid lesson compiles with exact indexed updates and row totals", { timeout: 60000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-grid-lesson-contracts-"));
+	try {
+		const programs = [...cppGridLessonBrief.matchAll(/```cpp\n([\s\S]*?)\n```/g)];
+		assert.equal(programs.length, 1);
+		await writeFile(join(temporary, "main.cpp"), `${programs[0][1]}\n`);
+		await compileExport(temporary, ["main.cpp"], "cpp", 20, true);
+		assert.deepEqual(await runNative(join(temporary, "project"), [], temporary), { code: 0, stdout: "Original grid:\n1 2 3 \n4 5 6 \n7 8 9 \n\nUpdated grid:\n1 2 3 \n4 99 6 \n7 8 9 \n10 11 12 \n\nRow totals:\nRow 0: 6\nRow 1: 109\nRow 2: 24\nRow 3: 33\n", stderr: "" });
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-grid-lesson-contracts", pid: process.pid });
+	}
+});
+
 nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 360000 }, async () => {
 	let browser;
 	let server;
@@ -437,7 +463,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const { revision, standard, hashes, anchor } = fixture;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			const expectedFiles = { ...files };
 			const before = sourceRequests;

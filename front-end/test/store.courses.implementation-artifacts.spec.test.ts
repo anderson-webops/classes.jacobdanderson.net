@@ -242,7 +242,7 @@ describe("implemented course development artifacts", () => {
 						module.supplementalProjects.length < 2 &&
 						!(
 							id === "c-level-1" &&
-							/^CPPF[123456] /.test(module.title)
+							/^CPPF[1234567] /.test(module.title)
 						)
 				);
 				if (id === "c-level-1") {
