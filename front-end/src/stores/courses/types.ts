@@ -7,6 +7,8 @@ export interface RawCourseModuleItem {
 	content: string;
 	learningPath?: CourseItemLearningPath;
 	projectLink?: string;
+	/** Offer a confirmed IDE import for this project resource, including worked lessons. */
+	ideImport?: boolean;
 	solutionLink?: string;
 	datasetLink?: string;
 	mediaLink?: string;

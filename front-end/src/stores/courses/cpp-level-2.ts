@@ -88,12 +88,14 @@ const cppLevel2SourceCourse: RawCourse = {
 				{
 					title: "Raw Arrays as Contiguous Memory",
 					content: cppArrayProjectBriefs.basics,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Array-Basics-Reference"
 				},
 				{
 					title: "Pointer Arithmetic and Offset Reasoning",
 					content: cppArrayProjectBriefs.arithmetic,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Pointer-Arithmetic-Reference"
 				},
