@@ -43,5 +43,10 @@ describe("copy cleanup preserves supplied source", () => {
 		expect(result).toContain(inline);
 		expect(result).toContain(longInline);
 		expect(result).toContain(unclosed);
+		const directive = normalized(
+			"Start with `contextmanager`; use a class when reusable state matters."
+		);
+		expect(directive).toContain("`contextmanager`");
+		expect(directive).not.toMatch(/\bStart with\b/);
 	});
 });

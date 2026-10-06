@@ -570,6 +570,12 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			if ((folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
 				await mkdir(directory, { recursive: true });
+				// Show the imported source rather than the last edited blank line.
+				await page.click(".cm-content");
+				await page.keyboard.down(modifier);
+				await page.keyboard.press(modifier === "Meta" ? "ArrowUp" : "Home");
+				await page.keyboard.up(modifier);
+				await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
 				await page.screenshot({ path: join(directory, `course-import-${mode}-${folder.split("/")[0]}-workspace.png`), fullPage: true });
 				if (folder.startsWith("PTJ7") && mode === "cpp") {
 					await page.setViewport({ width: 390, height: 900 });

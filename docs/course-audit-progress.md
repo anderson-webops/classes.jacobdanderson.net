@@ -749,3 +749,18 @@ retain their line structure during enrichment. Regression fixtures check comment
 strings, surrounding prose, backtick/tilde fences, longer and unclosed blocks and
 inline literals. Exact-head full site and browser gates remain required before
 integration. CPPF7–CPPF8 and the broader audit remain open.
+
+
+The first parameter catalog head `5ae6ed39a1bb20c72e7870ae5d2413b129f4c12b`
+passes all twenty-two actual browser workflows, eleven complete lesson programs
+and eleven Cypress checks, plus build, typecheck, lint, accessibility and CodeQL.
+The functional sweep exposes two copy-check follow-ups: a raw-source pattern
+mistakes a preserved supplied-program comment for generated course prose, and
+sentence rewrites cannot cross inline-code boundaries when each fragment is
+processed independently. Raw scanning now decodes TypeScript string literals
+and excludes code from prose checks, with valid-code and invalid-prose fixtures.
+Inline code is masked for a whole-sentence copy pass and restored exactly.
+All twelve focused course-copy/parameter/fidelity methods pass locally. Screenshot
+capture returns to the start of the source after verifying the saved edit, so
+workspace review shows imported code rather than an ending blank line. Final
+exact-head full validation remains required before integration.

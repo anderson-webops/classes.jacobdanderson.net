@@ -13,7 +13,10 @@ export function mapMarkdownProse(
 
 	function inlineProse(prose: string) {
 		const spans = [...prose.matchAll(/`+/g)];
-		let result = "";
+		const literals: Array<[string, string]> = [];
+		let prefix = "\uE000";
+		while (prose.includes(prefix)) prefix += "\uE000";
+		let masked = "";
 		let start = 0;
 		for (let index = 0; index < spans.length; index++) {
 			const opening = spans[index];
@@ -22,12 +25,18 @@ export function mapMarkdownProse(
 			);
 			if (closingIndex < 0) continue;
 			const end = spans[closingIndex].index! + opening[0].length;
-			result += copyProse(prose.slice(start, opening.index));
-			result += prose.slice(opening.index, end);
+			const marker = `${prefix}${literals.length}\uE001`;
+			literals.push([marker, prose.slice(opening.index, end)]);
+			masked += prose.slice(start, opening.index) + marker;
 			start = end;
 			index = closingIndex;
 		}
-		return result + copyProse(prose.slice(start));
+		// Keep the whole prose sentence available to copy rules that span a
+		// literal, then restore every code span exactly.
+		let result = copyProse(masked + prose.slice(start));
+		for (const [marker, literal] of literals)
+			result = result.replaceAll(marker, literal);
+		return result;
 	}
 
 	let result = "";
