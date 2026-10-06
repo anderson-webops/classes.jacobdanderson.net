@@ -91,6 +91,7 @@ describe("CPPM3 two-dimensional lesson and learner workflows", () => {
 	});
 	it("states ledger commit boundaries and new coordinate/column tasks", () => {
 		const { bank, extension } = cppTwoDimensionalProjectBriefs;
+		expect(bank).toContain("independent work or an instructor walkthrough");
 		for (const text of [
 			"int balances[4][5]",
 			"three transaction rows",
