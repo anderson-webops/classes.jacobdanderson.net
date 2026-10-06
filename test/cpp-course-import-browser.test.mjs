@@ -196,7 +196,65 @@ const pointerReferences = {
 };
 const pointerReferenceCode = {};
 
+const arrayRevision = "b6d08a149db2ea53b33c990816d87cd0feb7556f";
+const arrayPacks = {
+	"CPPM2-Array-Basics-Reference": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "a892bead504389cc239a5a1d7d97c2a0b77665cde419b0fcf4273e0e39eb1dd8",
+		"main.cpp": "67acaaf24f541323f7426224cd3e992baa553dfaf05e12104ba94e3991bf8e25"
+	},
+	"CPPM2-Pointer-Arithmetic-Reference": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "f9d1428751e3b95632d5eba07cb45403d0997e9062077d64805af0afcf5c4f2a",
+		"main.cpp": "6bd55acf43446eb86bfc9e25b34f024348ae1fc2b5dfafe9c7c34871458cab7e"
+	},
+	"CPPM2-Array-Practice-Starter": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "353bf374a1a12ee81b075426af98d2fe4898c933011817cdebaddc6188098091",
+		"main.cpp": "c2579518fb480f79d87d230be418d9973f425d9eee3bb783c09321e90e664ed0"
+	}
+};
+const arrayReferences = {
+	"CPPM2-Array-Practice": {
+		"main.cpp": "423b1d9dae3fbd942d737b20a761340fc5e07fe51e58ced19728d45862e80a22"
+	}
+};
+const arrayReferenceCode = {};
+const gameRevision = "0d5d007dbdefd467174f7574f6fb8cb2b5f77b3b";
+const gamePacks = {
+	"CPPM2-Tic-Tac-Toe-Starter": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "fd016fab713695a52380096fd4ee87b03e7e272687456264e2e59bd3a9dfc90a",
+		"main.cpp": "5acc2a1a81aa0baeba8372fa3c947cad83d4f8cfe366602ca4865bee2854f166"
+	}
+};
+const gameReferences = {
+	"CPPM2-Tic-Tac-Toe": {
+		"main.cpp": "09662fe9e70784e6dcb2070f71558415f38dc5c2aca1d1f515d5930aab7bcb5d"
+	}
+};
+const gameReferenceCode = {};
+const preservedPacks = { ...pointerPacks, ...arrayPacks, ...gamePacks };
+
 const fixtures = [
+	...Object.entries(gamePacks).map(([folder, hashes]) => ({
+		repository: memoryRepository,
+		revision: gameRevision,
+		courseId: "cpp-level-2",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: "cppm2-raw-arrays-and-pointer-arithmetic"
+	})),
+	...Object.entries(arrayPacks).map(([folder, hashes]) => ({
+		repository: memoryRepository,
+		revision: arrayRevision,
+		courseId: "cpp-level-2",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: "cppm2-raw-arrays-and-pointer-arithmetic"
+	})),
 	...Object.entries(pointerPacks).map(([folder, hashes]) => ({
 		repository: memoryRepository,
 		revision: pointerRevision,
@@ -319,6 +377,28 @@ async function compileExport(directory, names, mode, standard = 17, warningsAsEr
 }
 
 function completeMemoryAttempt(folder, source) {
+	if (Object.hasOwn(gamePacks, folder)) {
+		const reference = gameReferenceCode[folder];
+		for (const name of ["applyMove", "checkwin", "board"]) {
+			const pattern = new RegExp(`// TASK ${name}\\n[\\s\\S]*?\\n// END TASK ${name}`, "g");
+			const implementation = reference.match(pattern)?.[0];
+			assert.ok(implementation, `Reference ${name} is available`);
+			assert.equal(source.match(pattern)?.length, 1);
+			source = source.replace(pattern, () => implementation);
+		}
+		return source;
+	}
+	if (folder === "CPPM2-Array-Practice-Starter") {
+		const reference = arrayReferenceCode[folder];
+		for (const name of ["fillPerfectSquares", "firstLast", "sumArray", "sumLetters"]) {
+			const pattern = new RegExp(`// TASK ${name}\\n[\\s\\S]*?\\n// END TASK ${name}`, "g");
+			const implementation = reference.match(pattern)?.[0];
+			assert.ok(implementation, `Reference ${name} is available`);
+			assert.equal(source.match(pattern)?.length, 1);
+			source = source.replace(pattern, () => implementation);
+		}
+		return source;
+	}
 	if (Object.hasOwn(pointerPacks, folder)) {
 		const reference = pointerReferenceCode[folder];
 		const names = folder.includes("Error") ? ["repairedExamples"] : ["question1", "question2", "question3"];
@@ -376,7 +456,13 @@ async function verifyMemoryExport(directory, folder) {
 	const result = await runNative(join(directory, "project"), [], directory);
 	assert.equal(result.code, 0);
 	assert.equal(result.stderr, "");
-	if (Object.hasOwn(pointerPacks, folder)) {
+	if (Object.hasOwn(gamePacks, folder)) {
+		await verifyGameExport(directory, folder, result);
+	}
+	else if (Object.hasOwn(arrayPacks, folder)) {
+		await verifyArrayExport(directory, folder, result);
+	}
+	else if (Object.hasOwn(pointerPacks, folder)) {
 		await verifyPointerExport(directory, folder, result);
 	}
 	else if (folder.startsWith("CPPM0-Lifetime")) {
@@ -421,6 +507,82 @@ int main() {
 	else {
 		assert.match(result.stdout, /^5\n[^\n]+\n10\n10\n1\n20\n20\nabsent, no dereference\n$/);
 	}
+}
+
+async function verifyGameExport(directory, folder, result) {
+	assert.ok(Object.hasOwn(gamePacks, folder));
+	assert.doesNotMatch(result.stdout, /Learner tasks:/);
+	assert.match(result.stdout, /Game ended before a result \(input closed\)/);
+	const built = await runNative("make", ["main", "main-debug"], directory);
+	assert.equal(built.code, 0, built.stderr);
+	for (const binary of ["main", "main-debug"]) {
+		const ordinary = await runNative(join(directory, binary), [], directory);
+		assert.deepEqual(ordinary, { code: 0, stdout: result.stdout, stderr: "" });
+		const interrupted = await runNative(join(directory, binary), [], directory, "1\n");
+		assert.equal(interrupted.code, 0, interrupted.stderr);
+		assert.equal(interrupted.stderr, "");
+		assert.equal((interrupted.stdout.match(/input closed/g) ?? []).length, 1);
+		assert.doesNotMatch(interrupted.stdout, /Invalid move|wins!|Game draw/);
+		for (const [input, expected, prompts] of [
+			["1\n4\n2\n5\n3\n9\n", "Player 1 wins!", 5],
+			["1\n4\n2\n5\n9\n6\n", "Player 2 wins!", 6],
+			["1\n2\n3\n5\n4\n6\n8\n7\n9\n1\n", "Game draw", 9]
+		]) {
+			const played = await runNative(join(directory, binary), [], directory, input);
+			assert.equal(played.code, 0, played.stderr);
+			assert.equal(played.stderr, "");
+			assert.ok(played.stdout.includes(expected));
+			assert.equal((played.stdout.match(/Player [12], enter a number:/g) ?? []).length, prompts);
+			assert.doesNotMatch(played.stdout, /input closed/);
+		}
+		const bad = ["", "cat", "0", "10", "-1", "1x", "1 2", "+1", "01", "1.0"];
+		const rejected = await runNative(join(directory, binary), [], directory, `${[...bad, " \t1 \r", "1", "4", "2", "5", "3"].join("\n")}\n`);
+		assert.equal(rejected.code, 0, rejected.stderr);
+		assert.equal(rejected.stderr, "");
+		assert.equal((rejected.stdout.match(/Invalid move/g) ?? []).length, bad.length + 1);
+		assert.deepEqual([...rejected.stdout.matchAll(/Player ([12]), enter a number:/g)].map(match => match[1]), [...Array.from({ length: bad.length + 1 }).fill("1"), "2", "2", "1", "2", "1"]);
+	}
+	await writeFile(join(directory, "game-check.cpp"), "#define main providedMain\n#include \"main.cpp\"\n" + "\n#undef main\n#include <algorithm>\n#include <array>\n#include <bit>\n#include <cassert>\n#include <climits>\n#include <queue>\n#include <set>\n#include <sstream>\n#include <utility>\nconst unsigned lines[8] = {7, 56, 448, 73, 146, 292, 273, 84};\nint classify(unsigned x, unsigned o) {\n    for (const unsigned mask : lines) if ((x & mask) == mask || (o & mask) == mask) return 1;\n    return (x | o) == 511 ? 0 : -1;\n}\nvoid restore(unsigned x, unsigned o) {\n    square[0] = 'o';\n    for (int bit = 0; bit < 9; ++bit) {\n        const unsigned mask = 1u << bit;\n        square[bit + 1] = x & mask ? 'X' : o & mask ? 'O' : static_cast<char>('1' + bit);\n    }\n}\nstd::array<char, 10> snapshot() {\n    std::array<char, 10> result{};\n    std::copy(square, square + 10, result.begin());\n    return result;\n}\nint main() {\n    std::queue<std::pair<unsigned, unsigned>> pending;\n    std::set<unsigned> visited;\n    std::array<unsigned, 8> xWins{}, oWins{};\n    std::size_t draws = 0;\n    pending.push({0, 0});\n    while (!pending.empty()) {\n        const auto [x, o] = pending.front(); pending.pop();\n        if (!visited.insert(x | (o << 9)).second) continue;\n        restore(x, o);\n        const auto before = snapshot();\n        const int status = classify(x, o);\n        assert(checkwin() == status && snapshot() == before);\n        std::ostringstream rendered;\n        auto* prior = std::cout.rdbuf(rendered.rdbuf());\n        board();\n        std::cout.rdbuf(prior);\n        assert(snapshot() == before && !rendered.str().empty());\n        if (status == 0) ++draws;\n        for (std::size_t line = 0; line < 8; ++line) {\n            if ((x & lines[line]) == lines[line]) ++xWins[line];\n            if ((o & lines[line]) == lines[line]) ++oWins[line];\n        }\n        for (const int choice : {INT_MIN, -1, 0, 10, INT_MAX}) {\n            assert(!applyMove(choice, 'X') && snapshot() == before);\n        }\n        for (const char mark : {'?', '\\0'}) assert(!applyMove(1, mark) && snapshot() == before);\n        const bool xTurn = std::popcount(x) == std::popcount(o);\n        for (int bit = 0; bit < 9; ++bit) {\n            restore(x, o);\n            const unsigned mask = 1u << bit;\n            const bool accepted = status == -1 && ((x | o) & mask) == 0;\n            assert(applyMove(bit + 1, xTurn ? 'X' : 'O') == accepted);\n            auto after = before;\n            if (accepted) {\n                after[static_cast<std::size_t>(bit + 1)] = xTurn ? 'X' : 'O';\n                pending.push({xTurn ? x | mask : x, xTurn ? o : o | mask});\n            }\n            assert(snapshot() == after);\n        }\n    }\n    assert(visited.size() > 5000 && draws > 0);\n    for (std::size_t line = 0; line < 8; ++line) assert(xWins[line] > 0 && oWins[line] > 0);\n    std::cout << \"Verified \" << visited.size() << \" reachable boards, all eight lines for both players, terminal rejection and single-cell mutation.\\n\";\n    return 0;\n}\n");
+	const compiled = await runNative("c++", ["-std=c++20", "-Wall", "-Wextra", "-Wpedantic", "-Werror", "-g", "-O0", "-fsanitize=address,undefined", "-fno-sanitize-recover=all", "game-check.cpp", "-o", "game-check"], directory);
+	assert.equal(compiled.code, 0, compiled.stderr);
+	const checked = await runNative(join(directory, "game-check"), [], directory);
+	assert.equal(checked.code, 0, checked.stderr);
+	assert.equal(checked.stderr, "");
+	assert.match(checked.stdout, /Verified 5478 reachable boards/);
+	assert.equal((await runNative("make", ["clean"], directory)).code, 0);
+	assert.equal(existsSync(join(directory, "main")), false);
+	assert.equal(existsSync(join(directory, "main-debug")), false);
+}
+
+async function verifyArrayExport(directory, folder, result) {
+	assert.doesNotMatch(result.stdout, /Learner task:/);
+	const built = await runNative("make", ["main", "main-debug"], directory);
+	assert.equal(built.code, 0, built.stderr);
+	const normal = await runNative(join(directory, "main"), [], directory);
+	const diagnostic = await runNative(join(directory, "main-debug"), [], directory);
+	assert.deepEqual(normal, { code: 0, stdout: result.stdout, stderr: "" });
+	assert.deepEqual(diagnostic, normal);
+	if (folder === "CPPM2-Array-Practice-Starter") {
+		assert.equal(result.stdout, "\nPerfect squares: 0 1 4 9 16 25 36 49 64 81 \nFirst and last are the same? 0\nSum: 285\nTotal letters: 17\n");
+		await writeFile(join(directory, "array-check.cpp"), "#define main providedMain\n#include \"main.cpp\"\n" + "\n#undef main\n#include <array>\n#include <vector>\n#include <cassert>\n#include <limits>\n#include <algorithm>\n\ntemplate<class Call>\nvoid invalid(Call call) {\n    bool caught = false;\n    try { call(); } catch (const std::invalid_argument&) { caught = true; }\n    assert(caught);\n}\n\nint main() {\n    assert(!firstLast(nullptr, 0));\n    assert(sumArray(nullptr, 0) == 0);\n    assert(sumLetters(nullptr, 0) == 0);\n    int storage[12]{};\n    storage[10] = -11; storage[11] = -12;\n    fillPerfectSquares(storage, 10);\n    const int squares[10] = {0, 1, 4, 9, 16, 25, 36, 49, 64, 81};\n    assert(std::equal(storage, storage + 10, squares));\n    assert(storage[10] == -11 && storage[11] == -12);\n    assert(!firstLast(storage, 10) && sumArray(storage, 10) == 285);\n    for (const int size : {-1, -2}) {\n        invalid([&] { (void)firstLast(storage, size); });\n        invalid([&] { (void)sumArray(storage, size); });\n        invalid([&] { (void)sumLetters(nullptr, size); });\n        invalid([&] { fillPerfectSquares(storage, size); });\n    }\n    invalid([] { (void)firstLast(nullptr, 1); });\n    invalid([] { (void)sumArray(nullptr, 1); });\n    invalid([] { (void)sumLetters(nullptr, 1); });\n    invalid([] { fillPerfectSquares(nullptr, 10); });\n    for (const int size : {0, 9, 11}) invalid([&] { fillPerfectSquares(storage, size); });\n    std::size_t checked = 0;\n    const std::array<int, 5> domain = {-2, -1, 0, 1, 2};\n    for (int length = 0; length <= 5; ++length) {\n        int combinations = 1;\n        for (int i = 0; i < length; ++i) combinations *= 5;\n        for (int code = 0; code < combinations; ++code) {\n            std::array<int, 5> values{};\n            values.fill(77);\n            int digits = code;\n            long long expected = 0;\n            for (int i = 0; i < length; ++i) {\n                values[static_cast<std::size_t>(i)] = domain[static_cast<std::size_t>(digits % 5)];\n                digits /= 5;\n                expected += values[static_cast<std::size_t>(i)];\n            }\n            const auto before = values;\n            const bool endpoints = length != 0 && values[0] == values[static_cast<std::size_t>(length - 1)];\n            assert(firstLast(values.data(), length) == endpoints);\n            assert(sumArray(values.data(), length) == expected);\n            assert(values == before);\n            ++checked;\n        }\n    }\n    assert(checked == 3906);\n    const std::vector<std::vector<int>> boundaries = {\n        {INT_MAX}, {INT_MIN}, {INT_MAX, 0}, {INT_MIN, 0},\n        {INT_MAX, 1}, {INT_MIN, -1}, {INT_MAX, 1, -1}, {INT_MIN, -1, 1},\n        {INT_MAX, -INT_MAX}, {INT_MIN, INT_MAX}, {INT_MAX, INT_MIN},\n        {0, INT_MAX, -1, 1}, {0, INT_MIN, 1, -1}\n    };\n    for (auto values : boundaries) {\n        const auto before = values;\n        long long expected = 0;\n        bool overflow = false;\n        for (const int value : values) {\n            expected += value;\n            if (expected > INT_MAX || expected < INT_MIN) { overflow = true; break; }\n        }\n        bool caught = false;\n        try {\n            const int actual = sumArray(values.data(), static_cast<int>(values.size()));\n            assert(!overflow && actual == expected);\n        } catch (const std::overflow_error&) { caught = true; }\n        assert(caught == overflow && values == before);\n    }\n    std::vector<std::string> words = {\"happy\", \"Juni\", \"computer\", \"\", \"\\xc3\\xa9\", std::string(\"a\\0b\", 3), \"\\x80\"};\n    const auto before = words;\n    std::size_t expectedBytes = 0;\n    for (int length = 0; length <= static_cast<int>(words.size()); ++length) {\n        assert(sumLetters(words.data(), length) == static_cast<int>(expectedBytes));\n        if (length < static_cast<int>(words.size())) expectedBytes += words[static_cast<std::size_t>(length)].size();\n    }\n    assert(sumLetters(words.data(), 3) == 17 && words == before);\n    invalid([&] { (void)sumLetters(words.data(), -1); });\n    std::cout << \"Verified 3906 logical ranges, 13 integer boundaries, string byte prefixes, and input preservation.\\n\";\n    return 0;\n}\n");
+		const compiled = await runNative("c++", ["-std=c++20", "-Wall", "-Wextra", "-Wpedantic", "-Werror", "-g", "-O0", "-fsanitize=address,undefined", "-fno-sanitize-recover=all", "array-check.cpp", "-o", "array-check"], directory);
+		assert.equal(compiled.code, 0, compiled.stderr);
+		const checked = await runNative(join(directory, "array-check"), [], directory);
+		assert.equal(checked.code, 0, checked.stderr);
+		assert.equal(checked.stderr, "");
+		assert.match(checked.stdout, /3906 logical ranges, 13 integer boundaries/);
+	}
+	else if (folder === "CPPM2-Array-Basics-Reference") {
+		assert.equal(result.stdout, `0\n42\n1\n10\n${Array.from({ length: 10 }, (_, index) => `${index}\n`).join("")}`);
+	}
+	else {
+		assert.match(result.stdout, /Current offset: 1\n/);
+		assert.match(result.stdout, /One-past offset \(not dereferenced\): 20\n/);
+		assert.ok(result.stdout.includes(`Values by traversal: ${Array.from({ length: 20 }, (_, index) => `${index} `).join("")}\n`));
+	}
+	assert.equal((await runNative("make", ["clean"], directory)).code, 0);
+	assert.equal(existsSync(join(directory, "main")), false);
+	assert.equal(existsSync(join(directory, "main-debug")), false);
 }
 
 async function verifyPointerExport(directory, folder, result) {
@@ -761,6 +923,12 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				const referenceFolder = folder.replace(/-Starter$/, "");
 				pointerReferenceCode[folder] = (await readStarter(repository, revision, referenceFolder, pointerReferences[referenceFolder]))["main.cpp"];
 			}
+			if (folder === "CPPM2-Array-Practice-Starter") {
+				arrayReferenceCode[folder] = (await readStarter(repository, revision, "CPPM2-Array-Practice", arrayReferences["CPPM2-Array-Practice"]))["main.cpp"];
+			}
+			if (Object.hasOwn(gamePacks, folder)) {
+				gameReferenceCode[folder] = (await readStarter(repository, revision, "CPPM2-Tic-Tac-Toe", gameReferences["CPPM2-Tic-Tac-Toe"]))["main.cpp"];
+			}
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
 			const beforeRuntime = runtimeRequests;
@@ -909,7 +1077,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 					await page.screenshot({ path: join(directory, "course-import-cpp-PTJ7-mobile.png"), fullPage: true });
 				}
 			}
-			if (Object.hasOwn(pointerPacks, folder)) {
+			if (Object.hasOwn(preservedPacks, folder)) {
 				const legacySource = "// Earlier saved learner attempt\nint main() { return 0; }\n";
 				await page.click(".cm-content");
 				await page.keyboard.down(modifier);
@@ -928,7 +1096,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				courseFixture = true;
 				await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
 				await page.waitForSelector(selector);
-				const freshHref = await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll("a")].find(item => /Open current starter\s+separately/.test(item.textContent))?.getAttribute("href"));
+				const freshHref = await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll("a")].find(item => /Open current (?:starter|pack)\s+separately/.test(item.textContent))?.getAttribute("href"));
 				assert.ok(freshHref, "Full project brief offers the separate current learner import");
 				const freshKey = new URL(freshHref, origin).searchParams.get("projectKey");
 				assert.notEqual(freshKey, key);

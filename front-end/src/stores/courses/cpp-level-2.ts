@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { cppArrayProjectBriefs } from "./cppArrayProjectBriefs";
 import { cppLifetimeProjectBriefs } from "./cppLifetimeProjectBriefs";
 import { cppPointerProjectBriefs } from "./cppPointerProjectBriefs";
 
@@ -86,22 +87,19 @@ const cppLevel2SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Raw Arrays as Contiguous Memory",
-					content:
-						"Raw arrays are fixed-size contiguous blocks and function as a lower-level model than `std::vector`, not as the new default beginner container. Include explicit size parameters, valid index ranges, how array names decay to addresses, why bounds are not tracked for you, and how raw arrays help explain what safer containers are doing.",
+					content: cppArrayProjectBriefs.basics,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Array-Basics-Reference"
 				},
 				{
 					title: "Pointer Arithmetic and Offset Reasoning",
-					content:
-						"Use pointer arithmetic carefully so `arr + i` is understood as an address calculation. Include element-size offsets, moving a pointer through an array, comparing pointer traversal with indexed traversal, stopping before the end, and explaining why the point is memory-layout reasoning rather than style preference.",
+					content: cppArrayProjectBriefs.arithmetic,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Pointer-Arithmetic-Reference"
 				},
 				{
 					title: "CPPM2 Project 1: Array Practice",
-					content:
-						"Write small array-processing functions that depend on an explicit size parameter. Visible pattern: Exactly what raw arrays gain and what safety they lose.",
+					content: cppArrayProjectBriefs.practice,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Array-Practice-Starter",
 					solutionLink:
@@ -109,10 +107,9 @@ const cppLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "CPPM2 Project 2: Tic Tac Toe",
-					content:
-						"Use a flat raw array to represent a board and enforce valid moves. This is a good capstone for fixed-size indexed storage before multi-dimensional layout enters the picture.",
+					content: cppArrayProjectBriefs.game,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Tic-Tac-Toe",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Tic-Tac-Toe-Starter",
 					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Tic-Tac-Toe"
 				}
@@ -120,8 +117,7 @@ const cppLevel2SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Raw Arrays: Verification Drill",
-					content:
-						"Re-run the array practice with one or two custom cases and explain how indexes and addresses line up in memory.",
+					content: cppArrayProjectBriefs.verification,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM2-Array-Practice-Starter",
 					solutionLink:
