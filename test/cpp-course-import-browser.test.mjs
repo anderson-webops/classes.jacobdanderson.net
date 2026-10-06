@@ -20,8 +20,10 @@ import { cppFoundationLessonBriefs } from "../front-end/src/stores/courses/cppFo
 import { cppFunctionsLessonBriefs } from "../front-end/src/stores/courses/cppFunctionsProjectBriefs.ts";
 import { cppGridLessonBrief } from "../front-end/src/stores/courses/cppGridProjectBriefs.ts";
 import { cppLifetimeProjectBriefs } from "../front-end/src/stores/courses/cppLifetimeProjectBriefs.ts";
+import { cppManualCapstoneProjectBriefs } from "../front-end/src/stores/courses/cppManualCapstoneProjectBriefs.ts";
 import { cppParameterLessonBriefs } from "../front-end/src/stores/courses/cppParameterProjectBriefs.ts";
 import { completeDynamicMemoryFile, verifyDynamicMemoryDefaultExport, verifyDynamicMemoryExport } from "./cpp-dynamic-memory-export-checks.mjs";
+import { completeManualCapstoneFile, verifyManualCapstoneDefaultExport, verifyManualCapstoneExport } from "./cpp-manual-capstone-export-checks.mjs";
 import { completeTwoDimensionalAttempt, verifyTwoDimensionalExport } from "./cpp-two-dimensional-export-checks.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
@@ -326,9 +328,59 @@ const dynamicMemoryReferences = {
 };
 const dynamicMemoryReferenceFiles = {};
 const dynamicMemoryFolders = { ...dynamicMemoryPacks, ...dynamicMemoryReferences };
-const preservedPacks = { ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks, ...dynamicMemoryPacks };
+const capstoneRevision = "a6aeab398adc05ec7a654301a2e055f6acfeadaa";
+const capstonePacks = {
+	"CPPM5-Profile-Posts-Starter": {
+		"Makefile": "3102bcde5d91d6bb14143a45c3290f9e5569625cd2c53896a41de938c9a64c6b",
+		"README.md": "e266180bc87fd5cab1f677e6b9009806a07872cc46d382c2e3021c78a3c63edb",
+		"main.cpp": "8b35b655f56615e865d5f6bf57d810302c7ee497560d31ae94c9668ad0b7b4f8",
+		"profile.cpp": "73aa4b38938687724cb32f970c13054343daa69d511bfb08ef4a7693067eafe0",
+		"profile.h": "88badb09f8c6f579a2834884bf40a7292cd622f8eecc6a7b182a8cb156a67cfb"
+	},
+	"CPPM5-Matrix-Fun-with-Matrix-Class-Starter": {
+		"Makefile": "838b403074a3375d56f3c8194818a50311ceb6fc66ef118448a94b77eeace6ba",
+		"README.md": "63d065a4f6b9abcf88273bcefbd531cdf99d11b3edc8fca8377f5ba9bc12f422",
+		"main.cpp": "5da7f60bdc93f5098c207d0fe3cd8f7b8fc9c2cfb2e4553feab3ac628c44de7a",
+		"matrix.cpp": "9561b2fbb6f402d61ddac6954cbdac2943ec9df8a072d038bdfe5f8d85d9cd25",
+		"matrix.h": "9ad18df6ba96555af774830e0e9e085829584c3f18adecf6365616b6551431f7"
+	},
+	"CPPM5-Modern-Ownership-Reflection": {
+		"Makefile": "28828d69c4954874bd9ad67b3ad50f655a79eedae9e18b0f4287c966f91b5ead",
+		"README.md": "e0411d9db6dbc96410435c6d3e6be65ab128f0001ba24f777c4378eefb41ecc7",
+		"main.cpp": "1c6ad370cff59aa44364015af9373b335a97aa3ba270c81200797bb081e1c0ac"
+	}
+};
+const capstoneReferences = {
+	"CPPM5-Profile-Posts": {
+		"Makefile": "3102bcde5d91d6bb14143a45c3290f9e5569625cd2c53896a41de938c9a64c6b",
+		"README.md": "e266180bc87fd5cab1f677e6b9009806a07872cc46d382c2e3021c78a3c63edb",
+		"main.cpp": "80f847a9b8f36bb769d9b6e046e4d542a9763180ec8d9b90d94fa94e3250b5a7",
+		"profile.cpp": "d998e50123d11a0c5a72f7e0b25e3f5d4f27fc4dbef1655492e226ba413d35ac",
+		"profile.h": "88badb09f8c6f579a2834884bf40a7292cd622f8eecc6a7b182a8cb156a67cfb"
+	},
+	"CPPM5-Matrix-Fun-with-Matrix-Class": {
+		"Makefile": "838b403074a3375d56f3c8194818a50311ceb6fc66ef118448a94b77eeace6ba",
+		"README.md": "63d065a4f6b9abcf88273bcefbd531cdf99d11b3edc8fca8377f5ba9bc12f422",
+		"main.cpp": "fb85c6f52f3d5fcdd8b6b688dac94b655feb8bb4209582692779e2f9c940fc7e",
+		"matrix.cpp": "e0722d58ac481b8677dd0e9d4b8032b7ab2df831ba864599d88c5432ad346bfc",
+		"matrix.h": "9ad18df6ba96555af774830e0e9e085829584c3f18adecf6365616b6551431f7"
+	}
+};
+const capstoneFolders = { ...capstonePacks, ...capstoneReferences };
+const capstoneReferenceFiles = {};
+const preservedPacks = { ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks, ...dynamicMemoryPacks, ...capstonePacks };
 
 const fixtures = [
+	...Object.entries(capstoneFolders).map(([folder, hashes]) => ({
+		repository: memoryRepository,
+		revision: capstoneRevision,
+		courseId: "cpp-level-2",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: "cppm5-manual-memory-capstones",
+		reference: Object.hasOwn(capstoneReferences, folder)
+	})),
 	...Object.entries(dynamicMemoryFolders).map(([folder, hashes]) => ({
 		repository: memoryRepository,
 		revision: dynamicMemoryRevision,
@@ -568,7 +620,10 @@ async function verifyMemoryExport(directory, folder) {
 	const result = await runNative(join(directory, "project"), [], directory);
 	assert.equal(result.code, 0);
 	assert.equal(result.stderr, "");
-	if (Object.hasOwn(dynamicMemoryFolders, folder)) {
+	if (Object.hasOwn(capstoneFolders, folder)) {
+		await verifyManualCapstoneExport(directory, folder, result, runNative);
+	}
+	else if (Object.hasOwn(dynamicMemoryFolders, folder)) {
 		await verifyDynamicMemoryExport(directory, folder, result, runNative);
 	}
 	else if (Object.hasOwn(twoDimensionalPacks, folder)) {
@@ -785,7 +840,7 @@ nodeTest("the lifetime, pointer and diagnostics lessons compile with independent
 			["diagnostics", "42\n"]
 		]) {
 			const programs = [...cppLifetimeProjectBriefs[name].matchAll(/```cpp\n([\s\S]*?)\n```/g)];
-			assert.equal(programs.length, 1);
+		assert.equal(programs.length, 1);
 			const code = `${programs[0][1]}\n`;
 			await writeFile(join(temporary, "main.cpp"), code);
 			await compileExport(temporary, ["main.cpp"], "cpp", 20, true);
@@ -997,6 +1052,27 @@ nodeTest("the complete dynamic-lifetime lesson compiles and traces only live obj
 	}
 });
 
+nodeTest("complete inline ownership comparison retains its published program", { timeout: 60000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-capstone-inline-"));
+	try {
+		const programs = [...cppManualCapstoneProjectBriefs.ownership.matchAll(/```cpp\n([\s\S]*?)\n```/g)];
+			assert.equal(programs.length, 1);
+		const files = await readStarter(memoryRepository, capstoneRevision, "CPPM5-Modern-Ownership-Reflection", capstonePacks["CPPM5-Modern-Ownership-Reflection"]);
+		assert.equal(`${programs[0][1]}\n`, files["main.cpp"]);
+		await writeFile(join(temporary, "main.cpp"), `${programs[0][1]}\n`);
+		await compileExport(temporary, ["main.cpp"], "cpp", 20, true);
+		const result = await runNative(join(temporary, "project"), [], temporary);
+		assert.equal(result.code, 0, result.stderr);
+		assert.equal(result.stderr, "");
+		assert.match(result.stdout, /Manual array: 84 91 76 88 /);
+		assert.match(result.stdout, /unique_ptr array: 84 91 76 88 /);
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-capstone-inline", pid: process.pid });
+	}
+});
+
 async function downloadProjectFiles(page) {
 	await page.evaluate(() => {
 		window.__cppZip = null;
@@ -1088,7 +1164,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			referenceFixture = fixture.reference ?? false;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder.startsWith("CPPM0-Lifetime") || folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder.startsWith("CPPM0-Lifetime") || folder === "CPPM5-Profile-Posts-Starter" || folder === "CPPM5-Modern-Ownership-Reflection" || folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			if (Object.hasOwn(pointerPacks, folder)) {
 				const referenceFolder = folder.replace(/-Starter$/, "");
@@ -1107,6 +1183,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			if (Object.hasOwn(dynamicMemoryPacks, folder) && folder.endsWith("-Starter")) {
 				const referenceFolder = folder.replace(/-Starter$/, "");
 				dynamicMemoryReferenceFiles[folder] = await readStarter(repository, revision, referenceFolder, dynamicMemoryReferences[referenceFolder]);
+			}
+			if (Object.hasOwn(capstonePacks, folder) && folder.endsWith("-Starter")) {
+				const referenceFolder = folder.replace(/-Starter$/, "");
+				capstoneReferenceFiles[folder] = await readStarter(repository, revision, referenceFolder, capstoneReferences[referenceFolder]);
 			}
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
@@ -1130,16 +1210,17 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			assert.equal(sourceRequests, before);
 			await page.click("[data-testid='ide-route-import-confirm']");
 			if (mode === "cpp") await page.waitForSelector("[aria-label='C++ build workflow']");
-			if (Object.hasOwn(dynamicMemoryFolders, folder)) assert.match(await page.$eval("[aria-label='C++ build workflow']", element => element.textContent), /C\+\+ project/);
+			if (Object.hasOwn(dynamicMemoryFolders, folder) || Object.hasOwn(capstoneFolders, folder)) assert.match(await page.$eval("[aria-label='C++ build workflow']", element => element.textContent), /C\+\+ project/);
 			await page.waitForFunction(mode => document.querySelector(".cm-content")?.textContent.includes(mode === "java" ? "public class Main" : "#include"), {}, mode);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
-			if (Object.hasOwn(dynamicMemoryPacks, folder) && folder.endsWith("-Starter")) {
+			if ((Object.hasOwn(dynamicMemoryPacks, folder) || Object.hasOwn(capstonePacks, folder)) && folder.endsWith("-Starter")) {
 				const untouched = await downloadProjectFiles(page);
 				assert.deepEqual(untouched, files);
 				const directory = join(temporary, `${folder}-untouched`);
 				await mkdir(directory);
 				for (const [name, content] of Object.entries(untouched)) await writeFile(join(directory, name), content);
-				await verifyDynamicMemoryDefaultExport(directory, folder, runNative);
+				if (Object.hasOwn(capstonePacks, folder)) await verifyManualCapstoneDefaultExport(directory, folder, runNative);
+				else await verifyDynamicMemoryDefaultExport(directory, folder, runNative);
 				record("verified-unfinished-export", { folder, fileCount: Object.keys(untouched).length });
 			}
 			if (folder.startsWith("PTJ4")) {
@@ -1155,7 +1236,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const firstLine = files[entryFile].split("\n").find(line => line.trim());
 			await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
-			const completed = Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, entryFile, files[entryFile], dynamicMemoryReferenceFiles[folder]) : completeMemoryAttempt(folder, files[entryFile]);
+			const completed = Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, entryFile, files[entryFile], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, entryFile, files[entryFile], dynamicMemoryReferenceFiles[folder]) : completeMemoryAttempt(folder, files[entryFile]);
 			const edited = `${completed}\n// Browser workflow edit\n`;
 			expectedFiles[entryFile] = edited;
 			await page.click(".cm-content");
@@ -1169,14 +1250,14 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await page.waitForFunction((key, source, name) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === name && file.content === source)), {}, key, edited, entryFile);
 			// The new class packs must preserve and save both their interface and
 			// implementation, not only the driver's text.
-			const multiFilePack = folder.startsWith("CPPF4") || folder.startsWith("CPPF8-Profile-Posts/") || Object.hasOwn(dynamicMemoryFolders, folder);
+			const multiFilePack = folder.startsWith("CPPF4") || folder.startsWith("CPPF8-Profile-Posts/") || Object.hasOwn(dynamicMemoryFolders, folder) || Object.hasOwn(capstoneFolders, folder);
 			const classFiles = multiFilePack ? Object.keys(files).filter(name => name !== entryFile && /\.(?:h|cpp)$/.test(name)) : [];
-			assert.equal(classFiles.length, folder.includes("Grocery-List") ? 4 : folder.includes("Dynamic-Array-Implementation") ? 2 : multiFilePack && !Object.hasOwn(dynamicMemoryFolders, folder) ? 2 : 0);
+			assert.equal(classFiles.length, folder.includes("Grocery-List") ? 4 : folder.includes("Dynamic-Array-Implementation") || folder.includes("CPPM5-Profile-Posts") || folder.includes("Matrix-Class") ? 2 : multiFilePack && !Object.hasOwn(dynamicMemoryFolders, folder) && !Object.hasOwn(capstoneFolders, folder) ? 2 : 0);
 			for (const name of classFiles) {
 				await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), name);
 				const first = files[name].split("\n").find(line => line.trim());
 				await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, first);
-				const source = `${Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, name, files[name], dynamicMemoryReferenceFiles[folder]) : files[name]}\n// Browser workflow edit\n`;
+				const source = `${Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, name, files[name], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, name, files[name], dynamicMemoryReferenceFiles[folder]) : files[name]}\n// Browser workflow edit\n`;
 				expectedFiles[name] = source;
 				await page.click(".cm-content");
 				await page.keyboard.down(modifier);
