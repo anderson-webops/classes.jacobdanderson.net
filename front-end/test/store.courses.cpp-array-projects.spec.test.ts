@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { useCoursesStore } from "@/stores/courses";
 import { cppLevel2Course } from "@/stores/courses/cpp-level-2";
 import { cppArrayProjectBriefs } from "@/stores/courses/cppArrayProjectBriefs";
 import { loadRawCourse } from "@/stores/courses/index";
@@ -6,6 +8,17 @@ import { loadRawCourse } from "@/stores/courses/index";
 const source = "https://github.com/instruction-material/CPP-Level-2/tree/main/";
 
 describe("CPPM2 array lesson and learner workflows", () => {
+	it("preserves configured worked-lesson imports through the learner catalog", async () => {
+		setActivePinia(createPinia());
+		const course = (await useCoursesStore().loadCourseById("cpp-level-2"))!;
+		const module = course.modules.find(module => module.title === "CPPM2 Raw Arrays and Pointer Arithmetic")!;
+		for (const [title, folder] of [["Raw Arrays as Contiguous Memory", "CPPM2-Array-Basics-Reference"], ["Pointer Arithmetic and Offset Reasoning", "CPPM2-Pointer-Arithmetic-Reference"]]) {
+			const item = module.curriculum.find(item => item.title === title)!;
+			expect(item.ideImport).toBe(true);
+			expect(item.projectLink).toBe(source + folder);
+		}
+		expect(course.modules.filter(item => item !== module).flatMap(item => [...item.curriculum, ...item.supplementalProjects]).some(item => item.ideImport)).toBe(false);
+	});
 	it("keeps required practice and an optional verification choice distinct", async () => {
 		for (const course of [cppLevel2Course, (await loadRawCourse("cpp-level-2"))!]) {
 			const module = course.modules.find(module => module.title === "CPPM2 Raw Arrays and Pointer Arithmetic")!;
