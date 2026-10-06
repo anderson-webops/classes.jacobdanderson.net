@@ -15,6 +15,10 @@ import {
 	cppFunctionsLessonBriefs,
 	cppFunctionsProjectBriefs
 } from "./cppFunctionsProjectBriefs";
+import {
+	cppParameterLessonBriefs,
+	cppParameterProjectBriefs
+} from "./cppParameterProjectBriefs";
 import { isCoreProjectTitle } from "./projectGrouping";
 
 const cppLevel1SourceCourse: RawCourse = {
@@ -234,48 +238,43 @@ const cppLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "References, Const References, and Function Boundaries",
-					content:
-						"References are aliases, and `const` references are a safe way to avoid unnecessary copying. Include pass-by-value versus pass-by-reference, when a function mutates caller-owned data, when it only observes data, why `const` communicates intent, and how to trace what changes after a function call. Treat this as a data-flow topic, not a pointer topic.",
-					projectLink:
+					content: cppParameterLessonBriefs.introduction,
+					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Parameter-Passing-Introduction"
 				},
 				{
 					title: "CPPF6 Project 1: Parameter Passing Tracing",
-					content:
-						"Trace what changes and what does not when values are passed by value, by reference, and by const reference. The result shows clear reasoning about function boundaries.",
+					content: cppParameterProjectBriefs.tracing,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Parameter-Passing-Starter",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Parameter-Passing/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Parameter-Passing"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Parameter-Passing/solution"
 				},
 				{
 					title: "Structs for Small Records",
-					content:
-						"`struct` is a lightweight way to group related fields before the profile capstone. Cover: simple record shapes such as a person, transaction, or post; when a struct is clearer than parallel vectors; passing records to functions; using vectors of structs; and deciding whether a behavior belongs in a function now or in a class later.",
-					projectLink:
+					content: cppParameterLessonBriefs.structs,
+					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Structs-Example"
 				},
 				{
 					title: "CPPF6 Project 2: Defanging a Website Address",
-					content:
-						"Compare a function that edits a string directly with one that returns a new string. This creates a concrete reason to care about parameter passing choices.",
+					content: cppParameterProjectBriefs.defang,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Defanging-a-Website-URL",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Defanging-a-Website-URL/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Defanging-a-Website-URL"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Defanging-a-Website-URL/solution"
+				},
+				{
+					id: "c-level-1-cppf6-structs-and-parameter-passing-supplemental-structs-and-parameter-passing-string-mutation-lab",
+					title: "CPPF6 Project 3: Chaos Monkeys",
+					content: cppParameterProjectBriefs.chaos,
+					projectLink:
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Chaos-Monkeys/starter",
+					solutionLink:
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Chaos-Monkeys/solution"
 				}
 			],
-			supplementalProjects: [
-				{
-					title: "Structs and Parameter Passing: String Mutation Lab",
-					content:
-						"Use the string-scrambling lab only after the main parameter-passing work is clear.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Chaos-Monkeys",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF6-Chaos-Monkeys"
-				}
-			]
+			supplementalProjects: []
 		},
 		{
 			title: "CPPF7 Grids and 2D Vectors",
@@ -439,7 +438,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"Trace the complete vectors example, then complete required Vector Practice with empty, one-item and bounded signed collections. Complete required Bank Accounts with fictional integer-dollar values, validate count and each requested amount before reporting any balance, and test cancellation as well as normal results. Real account details are never entered."
 	},
 	"CPPF6 Structs and Parameter Passing": {
-		estimatedTime: "3 sessions · 45–60 minutes each",
+		estimatedTime: "4 sessions · 45–60 minutes each",
 		keyBlocks: [
 			"value semantics",
 			"reference alias",
@@ -448,7 +447,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"mutation trace"
 		],
 		flowNote:
-			"Trace copies, aliases, and mutations before compiling, then combine a small struct with a vector or helper function. Complete the required Defanging project after the parameter-passing trace is correct; the string-mutation lab remains an optional extension."
+			"Trace the complete introduction and implement the required prediction driver before comparing results. Read the supplied small-record lesson, then complete required Defanging and Chaos Monkeys. Check copy preservation, mutable caller changes, const observation and loop termination; test empty and bounded inputs. Save each attempt before comparing the reference."
 	},
 	"CPPF7 Grids and 2D Vectors": {
 		estimatedTime: "2–3 sessions · 45–60 minutes each",

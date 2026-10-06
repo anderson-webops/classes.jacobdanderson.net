@@ -683,3 +683,99 @@ gates pass at reviewed `670905540454c96133aa7f87adbbf4482a5b6df0`; integrated
 file hashes match the final site pin; only the two README digests change, with
 program, lesson and archive bytes unchanged. Final exact-head site gates remain
 required before integration.
+
+
+The final [collection site PR #136](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/136)
+integrates at `a4dda64e6eddbd6412e0ff030e2bf91bef2544c8`, with a tree identical
+to reviewed head `9b71444bf4ac98653fb223d8ffbac3d32157f292`. All 1,325 functional
+and 267 catalog-quality methods, 303 API passes, nineteen actual starter
+workflows, nine complete lesson programs and eleven Cypress checks pass.
+The 41 existing database-dependent checks remain skipped. Independent
+[canonical-main CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37392531630)
+and [CodeQL](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37392531733)
+also pass; Qodana skips its token-dependent analysis.
+
+The collection milestone is published as
+[v2.8.35](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.35).
+The original hosted ARM64 archive and manifest pass independent signed proof
+checks pinned to repository, workflow, exact source/signer revision, annotated
+tag and hosted runners. All 7,843 payload digests, thirteen trusted source files,
+safe unique entries and one verified prior-file hardlink match. Published release
+`404194350` is immutable with unchanged uploaded asset identities, sizes/digests
+and notes. Production activation has not been performed.
+
+[Downstream PR #26](https://github.com/instruction-material/classes.jacobdanderson.net/pull/26)
+publishes that exact canonical parent plus the preserved 75-file overlay at
+`d3e6f1d06876a56d6a0763a763fe1b030cc6986d`. Its full reviewed CI and CodeQL pass,
+including 1,333 functional methods and the same catalog/API/browser gates.
+Independent [downstream-main CI](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37393541485)
+and [CodeQL](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37393541018)
+also pass. The exact overlay, neutral defaults, analytics boundary and dependency
+locks remain intact. Publication used the observed-main lease and the authorized
+one-time offline hook fallback; global hooks and downstream releases are unchanged.
+
+## C++ parameter-passing candidate
+
+[Source PR #10](https://github.com/instruction-material/CPP-Level-1/pull/10)
+integrates at `f4648ea457a587715dd33667f62e539c84d15406`, matching reviewed
+`2c8177810c4fc8eb6e36c553bcb6ed05f5cb56f8`. All 58 independent methods, sixty
+warning-clean native targets, sanitizer checks and separate CMake builds pass
+both reviewed gates and independent
+[source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37392488583).
+The original complete introduction and Student-record program bytes and archive
+are unchanged.
+
+Parameter Passing Tracing retains supplied helpers while leaving predictions and
+the driver unfinished. Defanging defines exact literal expansion, const-input
+preservation, empty helper inputs and console cancellation. Chaos Monkeys bounds
+original-byte traversal, preserves copy/reference/observer boundaries and states
+its random-letter domain without uniformity or cryptographic claims. All three
+have equal complete root/starter/reference briefs, incomplete status-2 reminders,
+distinct references and one-program Makefiles. The old tracing starter remains
+self-contained for previous direct imports.
+
+The catalog candidate restores all three original required projects, including
+Chaos Monkeys, whose old supplemental progress ID is retained with a new core
+alias. The two complete supplied lessons are readable on the site; they are not
+presented as unfinished starters. Generic practice quota duplicates are omitted.
+The source pin uses the integrated tree: all 28 previous starter-file digests
+remain identical, with six new pinned files. Browser coverage grows to twenty-two
+starter workflows and eleven complete lesson programs.
+
+The displayed Student-record program exposed copy cleanup changing source
+comments. Prose cleanup now preserves fenced and inline code across neutral
+wording, legacy branding, visible formatting and grammar; short code examples
+retain their line structure during enrichment. Regression fixtures check comments,
+strings, surrounding prose, backtick/tilde fences, longer and unclosed blocks and
+inline literals. Exact-head full site and browser gates remain required before
+integration. CPPF7–CPPF8 and the broader audit remain open.
+
+
+The first parameter catalog head `5ae6ed39a1bb20c72e7870ae5d2413b129f4c12b`
+passes all twenty-two actual browser workflows, eleven complete lesson programs
+and eleven Cypress checks, plus build, typecheck, lint, accessibility and CodeQL.
+The functional sweep exposes two copy-check follow-ups: a raw-source pattern
+mistakes a preserved supplied-program comment for generated course prose, and
+sentence rewrites cannot cross inline-code boundaries when each fragment is
+processed independently. Raw scanning now decodes TypeScript string literals
+and excludes code from prose checks, with valid-code and invalid-prose fixtures.
+Inline code is masked for a whole-sentence copy pass and restored exactly.
+All twelve focused course-copy/parameter/fidelity methods pass locally. Screenshot
+capture returns to the start of the source after verifying the saved edit, so
+workspace review shows imported code rather than an ending blank line. Final
+exact-head full validation remains required before integration.
+
+
+The second full head `2f5c1b7ad2ae2343c1ae57b2fbbbdf792c1c39ae` passes
+all 1,331 functional methods, twenty-two actual starter workflows, eleven
+complete lesson programs and eleven Cypress checks. Three of 267 course-quality
+methods expose follow-ups: inline-code masking hides numbered-step markers from
+the formatter, and two raw-source scans inspect supplied code as prose. Retain
+inline-code syntax around collision-safe placeholders during prose edits, then
+restore exact literal bytes. Both copy suites share an independent TypeScript
+literal scanner that removes Markdown code only for prose checks. The existing
+invalid-prose regressions remain active. All 282 local quality, artifact, copy,
+source-preservation, display and parameter-project methods pass after correction.
+The mobile Defanging and desktop Parameter/Chaos screenshots are inspected with
+the original code visible at the start. Full final-head hosted checks remain
+required before integration.

@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { rawCourseProse } from "./courseProse";
 import { describe, expect, it } from "vitest";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
 import { isJuniScratchProjectTitle } from "@/stores/courses/juniScratchProjects";
@@ -292,7 +293,7 @@ describe("student-facing course copy", () => {
 		const failures: string[] = [];
 
 		for (const file of files) {
-			const source = readFileSync(file, "utf8");
+			const source = rawCourseProse(readFileSync(file, "utf8"));
 
 			for (const pattern of forbiddenRawGeneratedPatterns) {
 				if (!pattern.test(source)) continue;
@@ -304,6 +305,17 @@ describe("student-facing course copy", () => {
 		}
 
 		expect(failures).toEqual([]);
+		const literal = JSON.stringify(
+			"```cpp\n// we can demonstrate a const error\n```"
+		);
+		expect(rawCourseProse(`export const lesson = ${literal};`)).not.toMatch(
+			/\bwe can\b/i
+		);
+		expect(
+			rawCourseProse(
+				'export const lesson = "We can demonstrate a const error.";'
+			)
+		).toMatch(/\bwe can\b/i);
 	});
 
 	it("keeps custom Scratch copy neutral instead of instructor-scripted", async () => {

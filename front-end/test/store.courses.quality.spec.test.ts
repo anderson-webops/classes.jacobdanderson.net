@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import fs from "node:fs";
+import { rawCourseProse } from "./courseProse";
 import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
 import {
@@ -253,7 +254,11 @@ function visibleCourseSourceCorpus() {
 				!excludedFiles.has(file) &&
 				file !== "index.ts"
 		)
-		.map(file => fs.readFileSync(`src/stores/courses/${file}`, "utf8"))
+		.map(file =>
+			rawCourseProse(
+				fs.readFileSync(`src/stores/courses/${file}`, "utf8")
+			)
+		)
 		.join("\n");
 }
 
@@ -1855,7 +1860,7 @@ describe("course text quality normalization", () => {
 			"src/stores/courses/design-patterns-in-cpp.ts"
 		];
 		const corpus = sourcePaths
-			.map(path => fs.readFileSync(path, "utf8"))
+			.map(path => rawCourseProse(fs.readFileSync(path, "utf8")))
 			.join("\n");
 
 		expect(corpus).not.toMatch(/\bTeach\b/);
