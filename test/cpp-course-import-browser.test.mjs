@@ -235,7 +235,7 @@ const gameReferences = {
 	}
 };
 const gameReferenceCode = {};
-const twoDimensionalRevision = "8c0306d0adf115824fee452a2114d4dd3d6b5afe";
+const twoDimensionalRevision = "f8faf6d7ca7c3e1700e82b13621341cf3e98589f";
 const twoDimensionalPacks = {
 	"CPPM3-Two-Dimensional-Arrays-Reference": {
 		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
@@ -244,12 +244,12 @@ const twoDimensionalPacks = {
 	},
 	"CPPM3-2D-Array-Practice-Starter": {
 		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
-		"README.md": "9956c6abcf4a5c81272f18c90f20c740af252349b62ba8a3a414d63d4b64e89a",
+		"README.md": "1c30c2dd0e288942f9e2e5bc57b0ee877124f26dc69f2dc392e9ecb7de668aef",
 		"main.cpp": "37e5600536c04f9ecc2b443918ddb994d765293a82a57d208ea7cedf3f96f5b9"
 	},
 	"CPPM3-Bank-Transactions-Starter": {
 		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
-		"README.md": "ca5a95c21d157487b51c3693fe6ec340feae5a47535e6e0c5f22c00bf9a6143c",
+		"README.md": "5abbf95e893f6261e23911b811b2a3e706756a6a1e57378ad4f83aa2c5781e8f",
 		"main.cpp": "c6eabd0ba98e197fcdf2134017ac6bb6f0bc025423fe91be8ad14adf2f36b60c"
 	},
 	"CPPM3-2D-Array-Extension-Starter": {

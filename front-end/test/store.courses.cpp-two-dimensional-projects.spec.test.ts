@@ -64,6 +64,7 @@ describe("CPPM3 two-dimensional lesson and learner workflows", () => {
 	});
 	it("explains distinct storage shapes, original tasks and fractional-average ownership", () => {
 		const { layout, practice } = cppTwoDimensionalProjectBriefs;
+		expect(practice).toContain("separate project for checked coordinates");
 		for (const text of [
 			"A cast does not create a new flat array object",
 			"const int rows[][3]",
