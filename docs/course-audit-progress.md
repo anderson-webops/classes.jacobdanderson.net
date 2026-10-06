@@ -940,3 +940,36 @@ integrated source pin, with four new files added. Hosted browser coverage is
 extended to twenty-four actual starter workflows and twelve complete lesson
 programs; those gates remain required before integration. CPPF8 and the broader
 77-course content/workflow audit remain active.
+
+## Two-dimensional array source and catalog integration
+
+The CPPM2 array and Tic Tac Toe milestone is delivered in immutable
+[v2.8.41](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.41),
+with downstream customizations preserved. Production activation remains
+unverified.
+
+[CPPM3 source PR #7](https://github.com/instruction-material/CPP-Level-2/pull/7)
+and [extension PR #8](https://github.com/instruction-material/CPP-Level-2/pull/8)
+integrate at `8c0306d0adf115824fee452a2114d4dd3d6b5afe`. Review and independent
+main gates pass all seven native groups and seven separate Make/CMake packs.
+The original four required calculations use actual flat-array storage,
+fractional double row means, checked integer prefixes and allocation cleanup.
+The optional fictional ledger preserves the original four-by-five model with
+three transactions, typed rows, validated full-line input, overflow-before-write
+and initialized-prefix printing. The distinct optional extension adds checked
+coordinates and column means in its own unfinished starter. References and
+post-attempt reflection stay separate from learner source.
+
+The catalog candidate includes all four full briefs and separate current-pack
+keys, the configured worked-lesson import, required/choice/challenge roles and
+unchanged course/progress identities. Browser fixtures pin the published source
+bytes independently, complete only marked learner tasks from separately hashed
+references, and exercise the actual exported source. Acceptance includes 1,614
+rectangles, thirteen integer boundaries, five table allocation failures, 3,861
+calendar cases, input retries and EOF at every ledger field, 9,273 valid extension
+coordinates and failed-result cleanup. Four new saved-attempt cases keep previous
+work while importing current files into separate projects.
+
+Hosted full catalog/browser gates, canonical integration, downstream integration
+and the corresponding native release remain required for this candidate. The
+broader 77-course audit and unavailable Zoom transcript boundary remain active.

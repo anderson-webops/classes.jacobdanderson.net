@@ -2,6 +2,7 @@ import type { RawCourse } from "./types";
 import { cppArrayProjectBriefs } from "./cppArrayProjectBriefs";
 import { cppLifetimeProjectBriefs } from "./cppLifetimeProjectBriefs";
 import { cppPointerProjectBriefs } from "./cppPointerProjectBriefs";
+import { cppTwoDimensionalProjectBriefs } from "./cppTwoDimensionalProjectBriefs";
 
 const cppLevel2SourceCourse: RawCourse = {
 	name: "C++ Level 2",
@@ -132,26 +133,24 @@ const cppLevel2SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Two-Dimensional Arrays, Layout, and Function Boundaries",
-					content:
-						"2D arrays are rows and columns with a concrete storage layout. Include nested loops, row/column meaning, row-major storage, rectangular dimensions, multiplication-table tracing, and when a 2D array can be viewed as contiguous memory. Keep pointer-based flattening secondary until the grid shape is clear, then explain what changes when a function receives a pointer view instead of a higher-level container.",
+					content: cppTwoDimensionalProjectBriefs.layout,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-Two-Dimensional-Arrays-Reference"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-Two-Dimensional-Arrays-Reference",
+					ideImport: true
 				},
 				{
 					title: "CPPM3 Project 1: 2D Array Practice",
-					content:
-						"Compute sums, minimums, multiplication tables, and row averages with raw 2D array logic. This reinforces layout reasoning and careful indexing.",
+					content: cppTwoDimensionalProjectBriefs.practice,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-2D-Array-Practice",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-2D-Array-Practice-Starter",
 					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-2D-Array-Practice"
 				},
 				{
 					title: "CPPM3 Project 2: Bank Transactions",
-					content:
-						"Use a raw 2D grid to model recurring account data and print it clearly. The project matters because it forces row/column meaning to stay explicit.",
+					content: cppTwoDimensionalProjectBriefs.bank,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-Bank-Transactions",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-Bank-Transactions-Starter",
 					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-Bank-Transactions"
 				}
@@ -159,12 +158,11 @@ const cppLevel2SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Two-Dimensional Arrays: Extension Challenge",
-					content:
-						"Add one more grid calculation or validation rule so row/column logic has to be defended in a fresh case.",
+					content: cppTwoDimensionalProjectBriefs.extension,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-2D-Array-Practice",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-2D-Array-Extension-Starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-2D-Array-Practice"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM3-2D-Array-Extension"
 				}
 			]
 		},
@@ -342,7 +340,7 @@ const CPP_LEVEL_2_MODULE_FLOW: Record<string, CppLevel2ModuleFlow> = {
 			"index validation"
 		],
 		flowNote:
-			"Draw the row/column shape and row-major address order before implementing 2D Array Practice. Test one-cell, rectangular, and invalid-index cases; Bank Transactions is a fictional-data choice for another grid model."
+			"Distinguish nested rows, one real flat array, and separately owned row pointers before required 2D Array Practice. Test rectangular, empty, fractional-average and allocation-failure cases. Bank Transactions is an optional fictional input-ledger choice; the extension adds checked coordinates and column averages in a separate project."
 	},
 	"CPPM4 Dynamic Memory and Custom Dynamic Arrays": {
 		estimatedTime: "5–6 sessions · 45–60 minutes each",
