@@ -2,36 +2,51 @@
 
 ## Latest C++ delivery checkpoint
 
-The required Matrix Addition project and optional Grid Statistics project are
-integrated in [PR #138](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/138)
-at `a92ac3262a8a8c5b747db6738273974415495b89`. Full reviewed and independent
-main CI and CodeQL passed. Actual main checks include 1,335 functional tests,
-267 course-quality checks, 303 API tests with 41 existing database skips,
-24 confirmed starter import/save/export/reopen workflows, 12 compiled supplied
-programs, and 11 Cypress checks. Root and standalone backend audits reported
-zero advisories after targeted dependency corrections. The original authenticated native
-artifacts are published unchanged in `v2.8.37`; production activation is unverified.
+The lifetime and ownership catalog milestone is integrated in
+[PR #140](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/140)
+at `834ec22f33bfb14e656995891add8d166c258d57`, with the exact reviewed tree.
+Review and independent main CI/CodeQL passed: 1,343 functional tests, 267 quality
+checks, 304 API tests with 41 existing database skips, 29 confirmed IDE
+import/edit/save/export/reopen/native workflows, 15 compiled instructional
+programs, and 11 Cypress checks. The unchanged, authenticated native artifacts
+are published in `v2.8.39`; production activation is unverified. Downstream
+[PR #30](https://github.com/instruction-material/classes.jacobdanderson.net/pull/30)
+preserves the complete neutral overlay at `87d06df715ed7cb29ebe50ffa562aa89092be921`;
+its review and independent main CI/CodeQL passed, including 1,351 functional
+checks and the same browser/native gates.
 
-Profile Posts source
-[PR #12](https://github.com/instruction-material/CPP-Level-1/pull/12) is
-independently verified on integrated main
-`770aa14c51891d73e4f5c960fa839f8bdf15b964`: 81 source methods and 68 separate
-warning-clean native/CMake targets, including sanitizer model/transition checks.
-The required capstone now implements an interactive full-line command loop,
-validated indexes, bounded records, safe signed heart changes, and cancellation
-before mutation. The optional extension preserves its separate scripted
-explicit-state exercise. Both have distinct incomplete starter/reference packs
-and complete equal learner briefs. Original filenames and method signatures
-remain available.
+The next source correction is integrated in
+[CPP Level 2 PR #3](https://github.com/instruction-material/CPP-Level-2/pull/3)
+at `9a0c69c4ec6866859bc862fc85547910f3a0d60f`, tree
+`d839193ef856cf35a987dc100b9e17aa54ab4903`. The prior ordinary pointer-error
+program's null store was reproduced under UBSan before correction. Ordinary
+runs now demonstrate defined corrections; explicit null/dangling modes require
+an AddressSanitizer build, and ordinary builds reject them without invalid
+access. Separate sibling learner packs contain unfinished functions and full
+briefs; reference reflections remain separate. Existing parent imports still
+have one entry point. Pointer Practice fixes the labeled `.data()` correction,
+handles empty meeting-pointer input, preserves its original scanner/result
+algorithm, checks bounds by subtraction, and reports both result offsets.
 
-The accompanying catalog change supplies model/API and command-loop concepts,
-both complete project briefs, separate source-pack links, and a purposeful
-data-model extension that continues the learner's saved project. All six
-existing item progress IDs are retained. Nineteen foundation starter packs have
-44 exact source file pins; with seven bridge packs, the candidate browser gate
-will exercise 26 confirmed imports and native exported builds. This is a
-candidate requirement, not a claim that its full hosted browser gate has passed.
-The broader 77-course source/content audit remains active.
+All six scoped native acceptance groups pass locally and in source review/push
+CI; the independent integrated-main run
+[37415440259](https://github.com/instruction-material/CPP-Level-2/actions/runs/37415440259)
+also passes. Coverage includes four strict C++20 Make workflows and sanitized
+ordinary runs, five independent CMake targets, explicit null/dangling diagnoses,
+four expected compile-error cases, completed learner fixtures, and 1,570
+scanner/result cases per practice fixture. Original three questions, sample
+inputs and `question3(const std::string&)` remain available. These gates do not
+certify unrelated CPPM2–CPPM5 source.
+
+The matching catalog candidate keeps the error exercise as an optional challenge
+and practice as an optional choice, supplies full briefs and distinct starter/
+reference links, and retains all frozen C++ Level 2 progress identities. Existing
+saved attempts keep their work. A separate current-starter link allows a fresh
+import under a different project key. The browser gate is extended to 31 learner
+workflows and two saved-attempt/fresh-import checks, with actual exported-source
+native acceptance tests. These expanded hosted gates remain required before
+catalog integration; source publication alone does not establish their success.
+The broader 77-course source/content/workflow audit remains active.
 
 ## Scope and evidence boundary
 
