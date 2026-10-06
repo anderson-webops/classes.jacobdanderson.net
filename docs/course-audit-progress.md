@@ -38,6 +38,11 @@ scanner/result cases per practice fixture. Original three questions, sample
 inputs and `question3(const std::string&)` remain available. These gates do not
 certify unrelated CPPM2–CPPM5 source.
 
+[Source PR #4](https://github.com/instruction-material/CPP-Level-2/pull/4)
+clarifies one learner import sentence without changing code. Its integrated
+revision `52584eea3fca4bad6631df78536be06a22738ca7` is the final browser source
+pin; the complete native source tree and separate brief parity are preserved.
+
 The matching catalog candidate keeps the error exercise as an optional challenge
 and practice as an optional choice, supplies full briefs and distinct starter/
 reference links, and retains all frozen C++ Level 2 progress identities. Existing
