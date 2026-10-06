@@ -1,5 +1,38 @@
 # Course audit progress
 
+## Latest C++ delivery checkpoint
+
+The required Matrix Addition project and optional Grid Statistics project are
+integrated in [PR #138](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/138)
+at `a92ac3262a8a8c5b747db6738273974415495b89`. Full reviewed and independent
+main CI and CodeQL passed. Actual main checks include 1,335 functional tests,
+267 course-quality checks, 303 API tests with 41 existing database skips,
+24 confirmed starter import/save/export/reopen workflows, 12 compiled supplied
+programs, and 11 Cypress checks. Root and standalone backend audits reported
+zero advisories after targeted dependency corrections. The exact tagged native
+artifact for `v2.8.37` is being prepared; production activation is unverified.
+
+Profile Posts source
+[PR #12](https://github.com/instruction-material/CPP-Level-1/pull/12) is
+independently verified on integrated main
+`770aa14c51891d73e4f5c960fa839f8bdf15b964`: 81 source methods and 68 separate
+warning-clean native/CMake targets, including sanitizer model/transition checks.
+The required capstone now implements an interactive full-line command loop,
+validated indexes, bounded records, safe signed heart changes, and cancellation
+before mutation. The optional extension preserves its separate scripted
+explicit-state exercise. Both have distinct incomplete starter/reference packs
+and complete equal learner briefs. Original filenames and method signatures
+remain available.
+
+The accompanying catalog change supplies model/API and command-loop concepts,
+both complete project briefs, separate source-pack links, and a purposeful
+data-model extension that continues the learner's saved project. All six
+existing item progress IDs are retained. Nineteen foundation starter packs have
+44 exact source file pins; with seven bridge packs, the candidate browser gate
+will exercise 26 confirmed imports and native exported builds. This is a
+candidate requirement, not a claim that its full hosted browser gate has passed.
+The broader 77-course source/content audit remains active.
+
 ## Scope and evidence boundary
 
 The audit covers course availability, distinct delivery purposes, self-contained

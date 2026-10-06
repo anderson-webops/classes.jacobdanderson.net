@@ -67,7 +67,7 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "f79cb2c6530ee28363fa00de15f12e40a78b96de";
+const foundationRevision = "770aa14c51891d73e4f5c960fa839f8bdf15b964";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
 		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
@@ -140,6 +140,16 @@ const foundationPacks = {
 	"CPPF7-Grid-Statistics/starter": {
 		"README.md": "503bec05a2fd03d2ea84263f710a2cc8f12ab4ed9eceb835fbb95325692eada0",
 		"main.cpp": "80a756801d16a1af40219370c6c58079da504f4871f5924a4a6224eee7f9b432"
+	},
+	"CPPF8-Profile-Posts/starter": {
+		"README.md": "5a31883270ae2198c9ffe697356bbfc20c6ada5f94fc95ce7ad7efec3d8bd9dc",
+		"main.cpp": "4e3b263f54579d013f16cac9189ebfc27450ddc6dd621c6831ecd5fe4c2f4924",
+		"profile.cpp": "5a2082cdf535f2c112da6b81c196ae9b62554e390ed800506de0dfde56e68d73",
+		"profile.h": "5f1522f06e888c294004683421ccf65e5f26cd0a40814c39eb51d2804ed09289"
+	},
+	"CPPF8-State-Machine-Profile-Posts/starter": {
+		"README.md": "d05edf973f1303f72280e6a84283bea860930b6919a31e0108b3f6c27ed337a6",
+		"main.cpp": "d57f868c54ad45656e8fb994db9f10b6f593be6cc55ad039a0478c1fc51fa016"
 	}
 };
 
@@ -172,7 +182,9 @@ const fixtures = [
 							? "cppf5-vectors-and-collection-patterns"
 							: folder.startsWith("CPPF6")
 								? "cppf6-structs-and-parameter-passing"
-								: "cppf7-grids-and-2d-vectors"
+								: folder.startsWith("CPPF7")
+									? "cppf7-grids-and-2d-vectors"
+									: "cppf8-master-project-profile-posts"
 	}))
 ];
 const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "cpp-course-import-browser-ci";
@@ -463,7 +475,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const { revision, standard, hashes, anchor } = fixture;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
@@ -514,8 +526,9 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await page.waitForFunction((key, source, name) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === name && file.content === source)), {}, key, edited, entryFile);
 			// The new class packs must preserve and save both their interface and
 			// implementation, not only the driver's text.
-			const classFiles = folder.startsWith("CPPF4") ? Object.keys(files).filter(name => name !== entryFile && /\.(?:h|cpp)$/.test(name)) : [];
-			assert.equal(classFiles.length, folder.startsWith("CPPF4") ? 2 : 0);
+			const multiFilePack = folder.startsWith("CPPF4") || folder.startsWith("CPPF8-Profile-Posts/");
+			const classFiles = multiFilePack ? Object.keys(files).filter(name => name !== entryFile && /\.(?:h|cpp)$/.test(name)) : [];
+			assert.equal(classFiles.length, multiFilePack ? 2 : 0);
 			for (const name of classFiles) {
 				await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), name);
 				const first = files[name].split("\n").find(line => line.trim());
