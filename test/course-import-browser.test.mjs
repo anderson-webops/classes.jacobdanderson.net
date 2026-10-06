@@ -17,6 +17,9 @@ import { exerciseTicTacToe } from "./course-tic-tac-toe-workflow.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const axeSource = createRequire(import.meta.url).resolve("axe-core/axe.min.js");
+// Production builds include page analytics. Keep that service blocked when
+// worker execution requires releasing page-level fixture interception.
+const productionAnalyticsPattern = "*://analytics.jacobdanderson.net/*";
 // Exact published learner source, not synthetic answers or mutable main bytes.
 const searchSourceRevision = "2473272796d28401c2b8a3f50b472070d9272e3a";
 const searchPacks = [
@@ -613,6 +616,7 @@ nodeTest(
 				let failDownload = true;
 				let sourceRequests = 0;
 				let remoteWrites = 0;
+				const remoteWriteDestinations = [];
 				let courseFixture = false;
 				let fileIoFixture = false;
 				let searchPack = null;
@@ -622,8 +626,11 @@ nodeTest(
 					if (
 						request.interceptResolutionState().action === "disabled"
 					) {
-						if (!["GET", "OPTIONS"].includes(request.method()))
+						if (!["GET", "OPTIONS"].includes(request.method())) {
 							remoteWrites++;
+							const url = new URL(request.url());
+							remoteWriteDestinations.push(`${request.method()} ${url.origin}${url.pathname}`);
+						}
 						const hostname = new URL(request.url()).hostname;
 						if (
 							[
@@ -743,6 +750,7 @@ nodeTest(
 							&& request.method() !== "OPTIONS"
 						) {
 							remoteWrites++;
+							remoteWriteDestinations.push(`${request.method()} ${url.origin}${url.pathname}`);
 						}
 						// All APIs and external services are fixtures, never production requests.
 						let body = {};
@@ -1013,6 +1021,7 @@ nodeTest(
 					await cdp.send("Network.enable");
 					await cdp.send("Network.setBlockedURLs", {
 						urls: [
+							productionAnalyticsPattern,
 							`${origin}/api/*`,
 							"*://classes.jacobdanderson.net/*",
 							"*://scheduler.classes.jacobdanderson.net/*",
@@ -1194,7 +1203,7 @@ nodeTest(
 					);
 				}
 				finally {
-					await cdp.send("Network.setBlockedURLs", { urls: [] });
+					await cdp.send("Network.setBlockedURLs", { urls: [productionAnalyticsPattern] });
 					await cdp.detach();
 				}
 
@@ -1290,6 +1299,7 @@ nodeTest(
 						await runtimeCdp.send("Network.enable");
 						await runtimeCdp.send("Network.setBlockedURLs", {
 							urls: [
+								productionAnalyticsPattern,
 								`${origin}/api/*`,
 								"*://classes.jacobdanderson.net/*",
 								"*://scheduler.classes.jacobdanderson.net/*",
@@ -1368,7 +1378,7 @@ nodeTest(
 					}
 					finally {
 						await runtimeCdp.send("Network.setBlockedURLs", {
-							urls: []
+							urls: [productionAnalyticsPattern]
 						});
 						await runtimeCdp.detach();
 					}
@@ -1376,7 +1386,7 @@ nodeTest(
 				assert.equal(
 					remoteWrites,
 					0,
-					"All imported starter work remains local"
+					`All imported starter work remains local; unexpected destinations: ${JSON.stringify(remoteWriteDestinations)}`
 				);
 			}
 			finally {
