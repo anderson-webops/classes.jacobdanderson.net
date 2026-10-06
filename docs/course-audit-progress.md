@@ -1,3 +1,60 @@
+# CPPM2 arrays and game source/catalog audit (2026-10-06)
+
+[Source PR #5](https://github.com/instruction-material/CPP-Level-2/pull/5)
+merged the complete array packs at `b6d08a149db2ea53b33c990816d87cd0feb7556f`
+with exactly the reviewed source tree. Both scoped review gates passed, and the
+independent main [array run](https://github.com/instruction-material/CPP-Level-2/actions/runs/37420250076)
+and [pointer regression run](https://github.com/instruction-material/CPP-Level-2/actions/runs/37420250438)
+passed at that integrated revision.
+
+The existing learner pack is present, but previously contained only unfinished
+source. It now has full instructions, explicit task bodies, a strict Makefile,
+and four pending-task messages. All four original tasks, samples beginning with
+zero, and original observer signatures remain. The reference handles zero
+logical length, rejects detectable invalid ranges and unrepresentable ordered
+prefix totals before access/addition, counts string bytes before narrowing,
+and preserves observer inputs. The caller still proves real capacity and lifetime.
+The arithmetic reference retains the original out-of-range expressions disabled;
+normal execution uses valid elements and one-past only as a boundary. Both worked
+lessons have complete neutral walkthroughs and independent native build packs.
+
+The source gate passed four Make workflows, four CMake targets, sanitizer-clean
+normal runs, and completed learner fixtures. Each completed practice fixture
+passed 3,906 logical ranges, 13 integer boundary cases, string-prefix byte counts,
+and input-preservation checks. Large string representability is reviewed before
+conversion without allocating gigabytes. CPPM3-CPPM5 projects remain outside
+this scoped proof.
+
+[Source PR #6](https://github.com/instruction-material/CPP-Level-2/pull/6)
+merged the optional Tic Tac Toe correction at
+`0d5d007dbdefd467174f7574f6fb8cb2b5f77b3b`, preserving the reviewed tree.
+The old program repeatedly reported invalid moves after one valid move and
+closed input. A separate learner pack now contains three unfinished tasks,
+full instructions, and a strict native build. The reference parses whole lines,
+exits once on end-of-input, preserves the current turn after rejected input,
+and stops immediately after a win or draw. Both completed fixtures passed
+5,478 reachable board states against an independent checker, input fixtures,
+two Make workflows, and two CMake targets. Review gates and independent main
+[game](https://github.com/instruction-material/CPP-Level-2/actions/runs/37421808695),
+[array](https://github.com/instruction-material/CPP-Level-2/actions/runs/37421808709),
+and [pointer](https://github.com/instruction-material/CPP-Level-2/actions/runs/37421808681)
+gates passed at that exact integrated revision.
+
+The catalog candidate replaces editorial placeholders with the full briefs and
+keeps required practice separate from optional verification and game choices. Earlier
+saved attempts retain their normal route; current-pack links create distinct
+confirmed imports. Browser coverage adds four pinned packs to the prior 31
+workflows and four saved-attempt cases to the prior two. Expanded browser and
+sitewide delivery gates remain pending for this candidate; do not treat the
+planned counts as completed evidence.
+
+The preceding pointer milestone is delivered: canonical PR #141 and downstream
+PR #31 are merged; reviewed and independent main gates passed, including 31
+learner workflows and two saved-attempt checks. Immutable
+[v2.8.40](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.40)
+retains the original exact-tag signed native archive, manifest and bundle.
+Production activation is unverified. The broader 77-course audit remains active.
+
 # Course audit progress
 
 ## Latest C++ delivery checkpoint
