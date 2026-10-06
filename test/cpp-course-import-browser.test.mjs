@@ -65,7 +65,7 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "78fdf38f1c4f2163c12ffc206f8024d58a740647";
+const foundationRevision = "9632a5db7e3519ab72bb84f7cdc189f4e4af9397";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
 		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
@@ -112,11 +112,11 @@ const foundationPacks = {
 		"main.cpp": "725baaecae0c9596c1fa990da46e67f5607438f49075b7183fee8a2ef37e242c"
 	},
 	"CPPF5-Vector-Practice/starter": {
-		"README.md": "c4b02999145e57d33d895e2258ec85fe2783512263bc376d9455b96f8b932ee8",
+		"README.md": "cbcc15f4f4c78dc1e3c5069e6c5bbc29356cb15ec22bdd798e5176ce0644701c",
 		"main.cpp": "1ae8e5cd4ecc4455fb6910e7c30e65310e2e206d9fd7a06744e907e039b9064e"
 	},
 	"CPPF5-Bank-Accounts/starter": {
-		"README.md": "a4867be317d7b7de23c1cec842ca13edb06539265348cad8cc22c31e8e6a46e5",
+		"README.md": "15384b8e55d92b59a53ac205fd8e8e28075bbe3ee44d5beaf61a96b52157e3da",
 		"main.cpp": "0617bd4e087864a5b16f62e0cce45ad93e79ca44a083405442c7f3ef69c7b54f"
 	}
 };

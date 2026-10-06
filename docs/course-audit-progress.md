@@ -665,3 +665,21 @@ the two targeted neutral-copy/authored-practice checks also pass (84 unrelated
 methods skipped). Source/browser lint and syntax pass. Browser coverage is extended to nineteen
 starter workflows and nine complete lesson programs. Full hosted site validation
 remains required before delivery. CPPF6–CPPF8 and the broader audit stay open.
+
+
+The first collection review head passes all 1,325 functional methods and all
+nineteen actual browser workflows, nine complete lesson programs and eleven
+Cypress checks. Bank/mobile and Vector/desktop screenshots are visually checked.
+One of 267 quality methods rejects the literal TODO starter marker in otherwise
+complete briefs; no unfinished assignment copy is found. The follow-up renders
+that marker as inline code and checks placeholder prose outside code literals,
+with explicit valid-literal and invalid-prose regression cases. The focused
+quality method passes locally (186 unrelated methods skipped).
+
+[Source PR #9](https://github.com/instruction-material/CPP-Level-1/pull/9) changes
+only that markup in six equal root/starter/reference briefs. Both full source
+gates pass at reviewed `670905540454c96133aa7f87adbbf4482a5b6df0`; integrated
+`9632a5db7e3519ab72bb84f7cdc189f4e4af9397` has the identical tree. All 28 starter
+file hashes match the final site pin; only the two README digests change, with
+program, lesson and archive bytes unchanged. Final exact-head site gates remain
+required before integration.
