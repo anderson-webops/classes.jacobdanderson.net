@@ -81,6 +81,7 @@ export const useAppStore = defineStore("app", {
 		currentTutor: null as Tutor | null,
 		currentAdmin: null as Admin | null,
 		currentCourseLearner: null as CourseCodeLearner | null,
+		sessionBootstrapStatus: "pending" as "pending" | "ready",
 
 		loginBlock: false,
 		signupBlock: false,
@@ -96,17 +97,16 @@ export const useAppStore = defineStore("app", {
 			!!state.currentAdmin ||
 			!!state.currentCourseLearner,
 
-		isAdmin: state => !!state.currentAdmin
+		isAdmin: state => !!state.currentAdmin,
+
+		// Static HTML cannot know the cookie-backed session. Keep navigation
+		// neutral until bootstrap finishes or an interactive login succeeds.
+		isSessionResolved(): boolean {
+			return this.sessionBootstrapStatus === "ready" || this.isLoggedIn;
+		}
 	},
 
 	actions: {
-		/*		async bootstrapSession() {
-			await Promise.allSettled([
-				this.refreshCurrentAdmin(),
-				this.refreshCurrentTutor(),
-				this.refreshCurrentUser()
-			]);
-		}, */
 		async bootstrapSession() {
 			try {
 				const { data } = await api.get("/accounts/me");
@@ -136,6 +136,8 @@ export const useAppStore = defineStore("app", {
 				this.setCurrentTutor(null);
 				this.setCurrentUser(null);
 				this.setCurrentCourseLearner(null);
+			} finally {
+				this.sessionBootstrapStatus = "ready";
 			}
 		},
 

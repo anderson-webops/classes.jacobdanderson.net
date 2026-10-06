@@ -25,7 +25,8 @@ const {
 	currentTutor,
 	currentUser,
 	isLoggedIn,
-	isAdmin
+	isAdmin,
+	isSessionResolved
 } = storeToRefs(app);
 
 interface NavLink {
@@ -39,14 +40,17 @@ const primaryLinks = computed<NavLink[]>(() => {
 	const links: NavLink[] = [
 		{ label: siteLabels.courses, to: "/courses", exact: true },
 		{ label: siteLabels.graphing, to: "/graph-sketcher", exact: true },
-		{ label: siteLabels.ide, to: "/ide", exact: true },
-		{
-			label: isLoggedIn.value ? "Join class on Zoom" : siteLabels.join,
-			to: isLoggedIn.value ? classMeetingUrl : "/zoom",
-			exact: true,
-			external: isLoggedIn.value
-		}
+		{ label: siteLabels.ide, to: "/ide", exact: true }
 	];
+
+	if (!isSessionResolved.value) return links;
+
+	links.push({
+		label: isLoggedIn.value ? "Join class on Zoom" : siteLabels.join,
+		to: isLoggedIn.value ? classMeetingUrl : "/zoom",
+		exact: true,
+		external: isLoggedIn.value
+	});
 
 	if (!isAdmin.value) {
 		links.push({
@@ -210,7 +214,7 @@ function isLinkActive(link: NavLink) {
 										</div>
 									</details>
 									<button
-										v-else
+										v-else-if="isSessionResolved"
 										class="site-button site-button--secondary site-nav__action"
 										type="button"
 										@click="emit('loginClick')"

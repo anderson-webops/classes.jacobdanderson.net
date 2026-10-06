@@ -1,6 +1,8 @@
 import { mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createSSRApp, nextTick } from "vue";
+import { renderToString } from "vue/server-renderer";
 import TheHeader from "@/components/TheHeader.vue";
 import { useAppStore } from "@/stores/app";
 
@@ -13,8 +15,9 @@ describe("TheHeader.vue", () => {
 		setActivePinia(createPinia());
 	});
 
-	function mountHeader(pinia = createPinia()) {
+	function mountHeader(pinia = createPinia(), resolved = true) {
 		setActivePinia(pinia);
+		useAppStore().sessionBootstrapStatus = resolved ? "ready" : "pending";
 		return mount(TheHeader, {
 			global: {
 				plugins: [pinia],
@@ -27,6 +30,30 @@ describe("TheHeader.vue", () => {
 			}
 		});
 	}
+
+	it("does not pre-render guest navigation before the cookie session is known", async () => {
+		const pinia = createPinia();
+		const app = createSSRApp(TheHeader);
+		app.use(pinia);
+		app.component("RouterLink", { template: "<a><slot /></a>" });
+		const html = await renderToString(app);
+		expect(html).toContain("Courses");
+		expect(html).toContain("IDE");
+		expect(html).not.toMatch(/Log in|Book a Class|About|Join class/);
+	});
+
+	it("keeps a pending session neutral and restores guest controls when resolved", async () => {
+		const pinia = createPinia();
+		const wrapper = mountHeader(pinia, false);
+		expect(wrapper.text()).not.toMatch(
+			/Log in|Book a Class|About|Join class/
+		);
+		useAppStore().sessionBootstrapStatus = "ready";
+		await nextTick();
+		expect(wrapper.text()).toContain("Log in");
+		expect(wrapper.text()).toContain("About");
+		wrapper.unmount();
+	});
 
 	it("keeps the home header intact and uses the compact header on content pages", () => {
 		const home = mountHeader();

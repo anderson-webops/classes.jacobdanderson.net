@@ -21,6 +21,42 @@ describe("app store bootstrapSession()", () => {
 		vi.clearAllMocks();
 	});
 
+	it("stays unresolved through both delayed account requests", async () => {
+		let resolveAccount!: (result: any) => void;
+		let resolveAdmin!: (result: any) => void;
+		(apiMod.api.get as any)
+			.mockImplementationOnce(
+				() =>
+					new Promise(resolve => {
+						resolveAccount = resolve;
+					})
+			)
+			.mockImplementationOnce(
+				() =>
+					new Promise(resolve => {
+						resolveAdmin = resolve;
+					})
+			);
+		const app = useAppStore();
+		const pending = app.bootstrapSession();
+		expect(app.isSessionResolved).toBe(false);
+		resolveAccount({ data: { adminID: "a1" } });
+		await Promise.resolve();
+		expect(app.isSessionResolved).toBe(false);
+		resolveAdmin({ data: { currentAdmin: { _id: "a1", name: "A" } } });
+		await pending;
+		expect(app.isSessionResolved).toBe(true);
+		expect(app.isAdmin).toBe(true);
+	});
+
+	it("settles an anonymous or failed session so login remains available", async () => {
+		const app = useAppStore();
+		(apiMod.api.get as any).mockRejectedValueOnce(new Error("unavailable"));
+		await app.bootstrapSession();
+		expect(app.isSessionResolved).toBe(true);
+		expect(app.isLoggedIn).toBe(false);
+	});
+
 	it("hydrates admin", async () => {
 		(apiMod.api.get as any)
 			.mockResolvedValueOnce({ data: { adminID: "a1" } }) // /accounts/me
