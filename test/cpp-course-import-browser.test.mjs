@@ -173,7 +173,7 @@ const memoryPacks = {
 	}
 };
 
-const pointerRevision = "9a0c69c4ec6866859bc862fc85547910f3a0d60f";
+const pointerRevision = "52584eea3fca4bad6631df78536be06a22738ca7";
 const pointerPacks = {
 	"CPPM1-Pointer-Error-Examples-Starter": {
 		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
@@ -182,7 +182,7 @@ const pointerPacks = {
 	},
 	"CPPM1-Pointer-Practice-Starter": {
 		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
-		"README.md": "5e5b9c9bb8ca2f4ff821fd29f716c08b013ec44a71d6ab3161392b6b7e50c909",
+		"README.md": "f47e146f47d8cee7df6b67b6a4a3f528d650bba34b5d4745876b529603171c47",
 		"main.cpp": "b2fb21efea4cad7dee358ca98dcebcff3d25c78cd0e12c7908a3f60d55f90bde"
 	}
 };
@@ -911,13 +911,15 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			}
 			if (Object.hasOwn(pointerPacks, folder)) {
 				const legacySource = "// Earlier saved learner attempt\nint main() { return 0; }\n";
-				await page.evaluate((key, folder, source) => {
-					const projects = JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous"));
-					const project = projects.find(item => item.courseProjectKey === key);
-					project.starterUrl = `https://github.com/instruction-material/CPP-Level-2/tree/main/${folder.replace(/-Starter$/, "")}`;
-					project.files.find(file => file.name === "main.cpp").content = source;
-					localStorage.setItem("classes-python-ide-projects:anonymous", JSON.stringify(projects));
-				}, key, folder, legacySource);
+				await page.click(".cm-content");
+				await page.keyboard.down(modifier);
+				await page.keyboard.press("a");
+				await page.keyboard.up(modifier);
+				await page.keyboard.sendCharacter(legacySource);
+				await page.keyboard.down(modifier);
+				await page.keyboard.press("s");
+				await page.keyboard.up(modifier);
+				await page.waitForFunction((key, source) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === "main.cpp" && file.content === source)), {}, key, legacySource);
 				const requestsBeforeLegacy = sourceRequests;
 				await page.goto(new URL(href, origin).href, { waitUntil: "domcontentloaded" });
 				await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Earlier saved learner attempt"));
