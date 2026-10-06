@@ -11,6 +11,7 @@ import {
 	isValidPythonFileName,
 	loadLocalPythonProjects,
 	loadPythonIdeStarterFilesFromGitHub,
+	normalizePythonFileName,
 	pythonIdeModeForCourseId,
 	pythonIdeModeForCourseResource,
 	pythonIdeProjectToPayload,
@@ -59,7 +60,11 @@ describe("C++ source workspace", () => {
 			},
 			{ name: "src/Task.cc", content: '#include "include/Task.hpp"\n' },
 			{ name: "include/Task.hpp", content: "#pragma once\n" },
-			{ name: "README.md", content: "Build both sources.\n" }
+			{ name: "README.md", content: "Build both sources.\n" },
+			{
+				name: "Makefile",
+				content: "main:\n\tc++ main.cpp src/Task.cc -o main\n"
+			}
 		];
 		for (const file of project.files)
 			expect(isValidPythonFileName(file.name)).toBe(true);
@@ -68,6 +73,9 @@ describe("C++ source workspace", () => {
 			"/main.cpp",
 			"src//main.cpp",
 			"images/main.cpp",
+			"../Makefile",
+			"src/Makefile",
+			"Makefile.sh",
 			"main';echo.cpp"
 		])
 			expect(isValidPythonFileName(name)).toBe(false);
@@ -88,7 +96,8 @@ describe("C++ source workspace", () => {
 			"main.cpp": '#include "BankAccount.h"\nint main() {}\n',
 			"BankAccount.cpp": "// Implement the operations from README.md.\n",
 			"BankAccount.h": "#pragma once\n",
-			"README.md": "Starter brief\n"
+			"README.md": "Starter brief\n",
+			Makefile: "main:\n\tc++ main.cpp BankAccount.cpp -o main\n"
 		};
 		const base =
 			"https://raw.githubusercontent.com/example/course/main/starter/";
@@ -120,11 +129,13 @@ describe("C++ source workspace", () => {
 		expect(
 			Object.fromEntries(files.map(file => [file.name, file.content]))
 		).toEqual(contents);
-		expect(requests).toHaveLength(5);
+		expect(requests).toHaveLength(6);
 		expect(requests.every(url => !url.includes("solution"))).toBe(true);
 	});
 
 	it("gives a complete native command without pretending to execute C++", () => {
+		expect(normalizePythonFileName("Makefile", ".cpp")).toBe("Makefile");
+		expect(getPythonIdeDefaultFileContent("Makefile")).toBe("");
 		expect(getPythonIdeDefaultFileContent("main.cpp")).toContain(
 			"int main()"
 		);
