@@ -2,6 +2,7 @@ import type { RawCourse } from "./types";
 import { cppArrayProjectBriefs } from "./cppArrayProjectBriefs";
 import { cppDynamicMemoryProjectBriefs } from "./cppDynamicMemoryProjectBriefs";
 import { cppLifetimeProjectBriefs } from "./cppLifetimeProjectBriefs";
+import { cppManualCapstoneProjectBriefs } from "./cppManualCapstoneProjectBriefs";
 import { cppPointerProjectBriefs } from "./cppPointerProjectBriefs";
 import { cppTwoDimensionalProjectBriefs } from "./cppTwoDimensionalProjectBriefs";
 
@@ -217,51 +218,42 @@ const cppLevel2SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Manual-Memory Class Design",
-					content:
-						"Use capstone-sized classes that own their own storage so invariants have to be maintained across multiple methods, not just in a single free function. Include constructors that establish valid storage, destructors that release it, copy and move operations that preserve valid states without double deletion, methods that preserve size/capacity rules, input validation before mutation, and how matrix/profile examples force class boundaries and ownership rules to stay aligned."
+					content: cppManualCapstoneProjectBriefs.classDesign
 				},
 				{
 					title: "CPPM5 Project 1: Matrix Fun with a Matrix Class",
-					content:
-						"Model a matrix as a class, then implement fill, add, multiply, and display operations. This is a useful design capstone because it combines grid reasoning with class boundaries.",
+					content: cppManualCapstoneProjectBriefs.matrix,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Matrix-Fun-with-Matrix-Class",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Matrix-Fun-with-Matrix-Class-Starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Matrix-Fun-with-Matrix-Class"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Matrix-Fun-with-Matrix-Class",
+					ideImport: true
 				},
 				{
 					title: "CPPM5 Project 2: Profile Posts",
-					content:
-						"Rebuild the profile-posts concept with manual dynamic storage instead of `std::vector`. This is intentionally harder than the Level 1 capstone and serves as a second-course endpoint.",
+					content: cppManualCapstoneProjectBriefs.profile,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Profile-Posts",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Profile-Posts-Starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Profile-Posts"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Profile-Posts",
+					ideImport: true
 				},
 				{
 					title: "Modern Ownership and Next-Step Positioning",
-					content:
-						"After the manual-memory capstones, the modern correction is RAII: resources normally tie to object lifetime, and single-owner heap data usually moves toward `std::unique_ptr` or a standard container. The next-step comparison separates cleanup responsibility, design responsibility, and course placement: `C++ Level 3` for medium-size idiomatic C++, `Data Structures and Algorithms in C++` for implementation depth, or `C Systems Engineering` for lower-level representation."
+					content: cppManualCapstoneProjectBriefs.positioning
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "Manual-Memory Capstones: Extension Challenge",
-					content:
-						"Extend either capstone with one extra operation or safety check so ownership reasoning continues under a little more pressure.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Profile-Posts",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Profile-Posts"
+					content: cppManualCapstoneProjectBriefs.extension
 				},
 				{
 					title: "CPPM5 Project 3: Modern Ownership Reflection",
-					content:
-						"Pick one manual allocation from a capstone and compare it with a standard container or `std::unique_ptr` version. The comparison focuses on ownership responsibilities, not rewriting the whole project.",
+					content: cppManualCapstoneProjectBriefs.ownership,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Modern-Ownership-Reflection",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM5-Modern-Ownership-Reflection"
+					ideImport: true
 				}
 			]
 		}
@@ -411,13 +403,7 @@ function decorateCppLevel2Module(
 	if (module.title === "CPPM5 Manual-Memory Capstones") {
 		coreCurriculum.push({
 			title: "CPPM5 Capstone Completion Contract: Profile Posts Ownership",
-			content: [
-				"**Completion evidence:**",
-				"- Fictional seed profiles only; no real personal, account, or public-posting data.",
-				"- Warning-clean and sanitizer-clean build instructions from a fresh checkout.",
-				"- Tests or transcripts for empty, add, view, update, remove, invalid index, invalid command, copy, move, resize, self-assignment, and destruction behavior.",
-				"- One ownership diagram, one corrected failure, and one focused RAII rewrite or comparison using `std::vector` or `std::unique_ptr`."
-			].join("\n"),
+			content: cppManualCapstoneProjectBriefs.completion,
 			learningPath: "core"
 		});
 	}
