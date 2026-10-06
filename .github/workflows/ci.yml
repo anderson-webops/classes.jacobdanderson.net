@@ -80,6 +80,9 @@ jobs:
             - name: Brace parser security and compatibility regressions
               run: npm run test:braces-security
 
+            - name: Dependency advisory compatibility regressions
+              run: node --test --test-timeout=10000 test/dependency-advisory-regressions.test.mjs
+
             # Root "lint" runs front-end and back-end lint
             - name: Lint
               run: npm run lint

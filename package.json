@@ -83,6 +83,13 @@
 		"undici": "7.29.1",
 		"nanoid": "3.3.18",
 		"follow-redirects": "1.16.0",
+		"proxy-addr": "2.0.8",
+		"source-map-js": "1.2.2",
+		"postcss-selector-parser": "7.1.6",
+		"tinypool": "2.1.2",
+		"micromark-extension-math": {
+			"katex": "0.18.2"
+		},
 		"@cypress/request": {
 			"uuid": "14.0.0",
 			"qs": "6.16.0"
