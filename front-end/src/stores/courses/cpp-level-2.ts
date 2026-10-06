@@ -1,5 +1,6 @@
 import type { RawCourse } from "./types";
 import { cppLifetimeProjectBriefs } from "./cppLifetimeProjectBriefs";
+import { cppPointerProjectBriefs } from "./cppPointerProjectBriefs";
 
 const cppLevel2SourceCourse: RawCourse = {
 	name: "C++ Level 2",
@@ -62,10 +63,9 @@ const cppLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "CPPM1 Project 2: Pointer Error Examples",
-					content:
-						"Trace incorrect pointer patterns and explain exactly why they fail. The explanation names the bug, not just observes that the program misbehaves.",
+					content: cppPointerProjectBriefs.errors,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointer-Error-Examples",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointer-Error-Examples-Starter",
 					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointer-Error-Examples"
 				}
@@ -73,10 +73,9 @@ const cppLevel2SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Pointers: Practice Lab",
-					content:
-						"Use the pointer-practice lab when moving pointers and string-backed memory need a longer tracing exercise.",
+					content: cppPointerProjectBriefs.practice,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointer-Practice",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointer-Practice-Starter",
 					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointer-Practice"
 				}

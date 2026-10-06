@@ -173,7 +173,39 @@ const memoryPacks = {
 	}
 };
 
+const pointerRevision = "9a0c69c4ec6866859bc862fc85547910f3a0d60f";
+const pointerPacks = {
+	"CPPM1-Pointer-Error-Examples-Starter": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "17dccff7bc8f705e70fae3f473fa5f43c50c3496e25f593d1403d9d30d99bddf",
+		"main.cpp": "f684bd05e3d6e8a626dfbc7a50100457407d68557df052a0740772a61a3a1650"
+	},
+	"CPPM1-Pointer-Practice-Starter": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "5e5b9c9bb8ca2f4ff821fd29f716c08b013ec44a71d6ab3161392b6b7e50c909",
+		"main.cpp": "b2fb21efea4cad7dee358ca98dcebcff3d25c78cd0e12c7908a3f60d55f90bde"
+	}
+};
+const pointerReferences = {
+	"CPPM1-Pointer-Error-Examples": {
+		"main.cpp": "dd40faccd63b278d69acb80b02fe72ffa12f949ac5a885f083338d5ab009dc26"
+	},
+	"CPPM1-Pointer-Practice": {
+		"main.cpp": "5a40f81d66d08eef5393ff8bc737ff332cf56e186df842a975fe0cc0635cea57"
+	}
+};
+const pointerReferenceCode = {};
+
 const fixtures = [
+	...Object.entries(pointerPacks).map(([folder, hashes]) => ({
+		repository: memoryRepository,
+		revision: pointerRevision,
+		courseId: "cpp-level-2",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: "cppm1-pointers-and-addresses"
+	})),
 	...Object.entries(memoryPacks).map(([folder, hashes]) => ({
 		repository: memoryRepository,
 		revision: memoryRevision,
@@ -287,6 +319,19 @@ async function compileExport(directory, names, mode, standard = 17, warningsAsEr
 }
 
 function completeMemoryAttempt(folder, source) {
+	if (Object.hasOwn(pointerPacks, folder)) {
+		const reference = pointerReferenceCode[folder];
+		const names = folder.includes("Error") ? ["repairedExamples"] : ["question1", "question2", "question3"];
+		for (const name of names) {
+			const pattern = new RegExp(`void ${name}\\([^\\n]*\\) \\{[\\s\\S]*?\\n}`, "g");
+			const implementation = reference.match(pattern)?.[0];
+			assert.ok(implementation, `Reference ${name} is available`);
+			assert.ok(source.match(pattern), `Learner ${name} is available`);
+			source = source.replace(pattern, () => implementation);
+		}
+		return source;
+	}
+
 	if (folder.startsWith("CPPM0-Lifetime")) {
 		const notes = [
 			"The copy changes to 80 while the caller remains 70.",
@@ -331,7 +376,10 @@ async function verifyMemoryExport(directory, folder) {
 	const result = await runNative(join(directory, "project"), [], directory);
 	assert.equal(result.code, 0);
 	assert.equal(result.stderr, "");
-	if (folder.startsWith("CPPM0-Lifetime")) {
+	if (Object.hasOwn(pointerPacks, folder)) {
+		await verifyPointerExport(directory, folder, result);
+	}
+	else if (folder.startsWith("CPPM0-Lifetime")) {
 		const traces = [...result.stdout.matchAll(/^(.+?) -> (.+?): (\d+) at (.+)$/gm)];
 		assert.deepEqual(traces.map(match => [match[1], match[2], Number(match[3])]), [
 			["Original card", "Taylor", 70],
@@ -373,6 +421,79 @@ int main() {
 	else {
 		assert.match(result.stdout, /^5\n[^\n]+\n10\n10\n1\n20\n20\nabsent, no dereference\n$/);
 	}
+}
+
+async function verifyPointerExport(directory, folder, result) {
+	assert.doesNotMatch(result.stdout, /Learner task:/);
+	const build = await runNative("make", ["main", "main-debug"], directory);
+	assert.equal(build.code, 0, build.stderr);
+	const sanitized = await runNative(join(directory, "main-debug"), [], directory);
+	assert.equal(sanitized.code, 0, sanitized.stderr);
+	assert.equal(sanitized.stderr, "");
+	assert.equal(sanitized.stdout, result.stdout);
+	if (folder.includes("Error")) {
+		assert.equal(result.stdout, "Live observer value: 20\nAbsent observer: no dereference\nTwo pointer aliases: 1\nInitialized pointer value: 10\nAssigned target value: 5\nInitialized target value: 7\nMatched target type: potatoes\n");
+		for (const mode of ["--null", "--dangling"]) {
+			const ordinary = await runNative(join(directory, "main"), [mode], directory);
+			assert.equal(ordinary.code, 2);
+			assert.match(ordinary.stderr, /require an AddressSanitizer build/);
+			const diagnostic = await runNative(join(directory, "main-debug"), [mode], directory);
+			assert.notEqual(diagnostic.code, 0);
+			assert.match(diagnostic.stderr, mode === "--null" ? /runtime error: store to null pointer/ : /heap-use-after-free/);
+		}
+	}
+	else {
+		const rows = [...result.stdout.matchAll(/^p([12]) is: (\d+)$/gm)];
+		assert.deepEqual(rows.filter(row => row[1] === "1").map(row => Number(row[2])), Array.from({ length: 10 }, (_, index) => index));
+		assert.deepEqual(rows.filter(row => row[1] === "2").map(row => Number(row[2])), Array.from({ length: 10 }, (_, index) => index * 2));
+		await writeFile(join(directory, "practice-check.cpp"), `#define main exportedDriver
+#include "main.cpp"
+#undef main
+#include <cassert>
+#include <functional>
+#include <sstream>
+#include <utility>
+std::string capture(const std::function<void()>& call) {
+    std::ostringstream output;
+    auto* previous = std::cout.rdbuf(output.rdbuf());
+    call();
+    std::cout.rdbuf(previous);
+    return output.str();
+}
+int main() {
+    for (const auto& text : std::vector<std::string>{"", "x", "ab", "abc", "abcd", "JuniLearning"}) {
+        const auto output = capture([&] { question2(text); });
+        if (text.empty()) assert(output == "Question 2 needs a non-empty string.\\n");
+        else {
+            assert(output.find("Number of times p1 pointer increased: " + std::to_string(text.size()/2)) != std::string::npos);
+            assert(output.find("Number of times p2 pointer decreased: " + std::to_string((text.size()-1)/2)) != std::string::npos);
+        }
+    }
+    std::vector<std::pair<std::string, std::size_t>> cases{
+        {"1hello", 1}, {"3hello", 3}, {"12e4woah", 7}, {"1a2bc", 3},
+        {"0a1b", 1}, {"4abc1", 4}, {"4abc", 0}, {"9a1bc", 0},
+        {"abc", 0}, {"0", 0}, {"9", 0}, {"000", 0}, {"2abc1", 3}, {"2a3b", 2}
+    };
+    cases.push_back({std::string("1") + static_cast<char>(0x80) + "2bc", 3});
+    assert(capture([] { question3(""); }) == "Question 3 needs a non-empty string.\\n");
+    for (const auto& [text, offset] : cases) {
+        const auto before = text;
+        const auto output = capture([&] { question3(text); });
+        assert(text == before);
+        const auto summary = "The final location of the end pointer was pointing to: " + std::string(1, text[offset]) + ", after advancing " + std::to_string(offset) + " characters.";
+        const auto first = output.find(summary);
+        assert(first != std::string::npos);
+        assert(output.find(summary, first + summary.size()) != std::string::npos);
+    }
+}
+`);
+		const compile = await runNative("c++", ["-std=c++20", "-Wall", "-Wextra", "-Wpedantic", "-Werror", "-g", "-O0", "-fsanitize=address,undefined", "-fno-sanitize-recover=all", "practice-check.cpp", "-o", "practice-check"], directory);
+		assert.equal(compile.code, 0, compile.stderr);
+		const checks = await runNative(join(directory, "practice-check"), [], directory);
+		assert.deepEqual(checks, { code: 0, stdout: "", stderr: "" });
+	}
+	const clean = await runNative("make", ["clean"], directory);
+	assert.equal(clean.code, 0, clean.stderr);
 }
 
 nodeTest("the lifetime, pointer and diagnostics lessons compile with independent output and diagnosed failure", { timeout: 120000 }, async () => {
@@ -636,6 +757,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
 			await page.setViewport({ width: folder.startsWith("CPPM0-Lifetime") || folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
+			if (Object.hasOwn(pointerPacks, folder)) {
+				const referenceFolder = folder.replace(/-Starter$/, "");
+				pointerReferenceCode[folder] = (await readStarter(repository, revision, referenceFolder, pointerReferences[referenceFolder]))["main.cpp"];
+			}
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
 			const beforeRuntime = runtimeRequests;
@@ -783,6 +908,42 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 					await page.setViewport({ width: 390, height: 900 });
 					await page.screenshot({ path: join(directory, "course-import-cpp-PTJ7-mobile.png"), fullPage: true });
 				}
+			}
+			if (Object.hasOwn(pointerPacks, folder)) {
+				const legacySource = "// Earlier saved learner attempt\nint main() { return 0; }\n";
+				await page.evaluate((key, folder, source) => {
+					const projects = JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous"));
+					const project = projects.find(item => item.courseProjectKey === key);
+					project.starterUrl = `https://github.com/instruction-material/CPP-Level-2/tree/main/${folder.replace(/-Starter$/, "")}`;
+					project.files.find(file => file.name === "main.cpp").content = source;
+					localStorage.setItem("classes-python-ide-projects:anonymous", JSON.stringify(projects));
+				}, key, folder, legacySource);
+				const requestsBeforeLegacy = sourceRequests;
+				await page.goto(new URL(href, origin).href, { waitUntil: "domcontentloaded" });
+				await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Earlier saved learner attempt"));
+				assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
+				assert.equal(sourceRequests, requestsBeforeLegacy);
+				courseFixture = true;
+				await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
+				await page.waitForSelector(selector);
+				const freshHref = await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll("a")].find(item => /Open current starter\s+separately/.test(item.textContent))?.getAttribute("href"));
+				assert.ok(freshHref, "Full project brief offers the separate current learner import");
+				const freshKey = new URL(freshHref, origin).searchParams.get("projectKey");
+				assert.notEqual(freshKey, key);
+				courseFixture = false;
+				await page.goto(new URL(freshHref, origin).href, { waitUntil: "domcontentloaded" });
+				await page.waitForSelector("[data-testid='ide-route-import-confirm']");
+				assert.equal(sourceRequests, requestsBeforeLegacy);
+				await page.click("[data-testid='ide-route-import-confirm']");
+				await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("#include"));
+				assert.equal(sourceRequests, requestsBeforeLegacy + 1 + Object.keys(files).length);
+				await page.waitForFunction(key => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key), {}, freshKey);
+				const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous")));
+				assert.equal(saved.find(project => project.courseProjectKey === key).files.find(file => file.name === "main.cpp").content, legacySource);
+				const fresh = saved.find(project => project.courseProjectKey === freshKey);
+				assert.ok(fresh);
+				assert.deepEqual(Object.fromEntries(fresh.files.map(file => [file.name, file.content])), files);
+				record("verified-saved-attempt", { folder, previousKey: key, currentKey: freshKey });
 			}
 			record("verified", { repository, folder, revision, mode, standard, fileCount: Object.keys(exported).length });
 		}
