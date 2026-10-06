@@ -779,3 +779,54 @@ source-preservation, display and parameter-project methods pass after correction
 The mobile Defanging and desktop Parameter/Chaos screenshots are inspected with
 the original code visible at the start. Full final-head hosted checks remain
 required before integration.
+
+
+## Parameter coursework delivery and grid candidate
+
+[Site PR #137](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/137)
+integrates reviewed `785760c0e0df001c0c233a6eb99e77fd1b15a0ff` at
+`d52ab226edbc4138b29a9ddc4d490ea82bb5a654`, with an identical tree. Both review
+and independent main CI/CodeQL pass: 1,331 functional tests, 267 catalog methods,
+303 API passes, twenty-two actual starter workflows, eleven supplied lesson
+programs and eleven Cypress checks. The 41 existing database-dependent methods
+remain skipped; Qodana skips token-dependent analysis.
+
+The immutable [v2.8.36 release](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.36)
+points at that exact integrated revision. Its original hosted ARM64 archive and
+manifest pass independent signed proofs with repository/workflow/source/signer/
+tag/hosted-runner restrictions. All 7,843 payload files and thirteen trusted
+source files match hashes, manifests agree, the single hardlink is verified and
+static 404 boundaries pass. Draft and published release identities, notes,
+original asset IDs, sizes and digests are independently read back. Production
+activation has not been performed.
+
+[Downstream PR #27](https://github.com/instruction-material/classes.jacobdanderson.net/pull/27)
+publishes the exact 75-file overlay on that canonical parent at
+`7eb3feaca42eabba22d7ff0f14da89d15b0fa32e`, with the observed-main lease. Review
+and independent main CI/CodeQL pass, including 1,339 functional tests and the
+same catalog/API/browser gates. Overlay bytes, both locks, neutral defaults and
+analytics boundaries are preserved; global hooks and downstream releases are
+unchanged.
+
+[Grid source PR #11](https://github.com/instruction-material/CPP-Level-1/pull/11)
+integrates reviewed `3b95f047f07b0eab819abd89ffcdd55ea5f46f48` at
+`f79cb2c6530ee28363fa00de15f12e40a78b96de`, with an identical tree. Both full
+review gates and the independent main native job pass 69 methods, sixty-four
+warning-clean native targets, sanitizer cases and sixty-four separate CMake
+builds. Matrix Addition now rejects missing, malformed, partial or out-of-domain
+values before reporting a sum, correcting reproduced cancellation and signed-
+overflow failures. Dimensions are checked before allocation. Grid Statistics
+remains optional bounded rectangular-grid practice; ragged validation remains
+an extension. Empty/zero-column and wide/tall cases, const-input preservation,
+negative/tied maxima and exact driver outputs are checked. The complete grid
+lesson retains its original tracked program bytes.
+
+The matching grid catalog candidate includes both full briefs, distinct nested
+starters/references, the readable complete lesson, retained required/choice roles
+and both actual public progress IDs. Generic quota practice is omitted. Ninety-
+four local catalog/artifact/progress/source-fidelity/display methods pass, along
+with source/browser lint and syntax. All 34 prior starter-file digests match the
+integrated source pin, with four new files added. Hosted browser coverage is
+extended to twenty-four actual starter workflows and twelve complete lesson
+programs; those gates remain required before integration. CPPF8 and the broader
+77-course content/workflow audit remain active.

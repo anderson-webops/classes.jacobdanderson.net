@@ -16,6 +16,10 @@ import {
 	cppFunctionsProjectBriefs
 } from "./cppFunctionsProjectBriefs";
 import {
+	cppGridLessonBrief,
+	cppGridProjectBriefs
+} from "./cppGridProjectBriefs";
+import {
 	cppParameterLessonBriefs,
 	cppParameterProjectBriefs
 } from "./cppParameterProjectBriefs";
@@ -281,30 +285,27 @@ const cppLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Nested Vectors, Grid Traversal, and Nested Loop Patterns",
-					content:
-						"A 2D vector first works as a grid of rows instead of a shortcut into raw multi-dimensional arrays. Include reading `grid[row][col]`, row versus column meaning, printing a grid, updating a cell, nested loops for row totals and scans, rectangular versus irregular grids, and why this higher-level model prepares for raw array layout later without introducing memory tricks too early.",
-					projectLink:
+					content: cppGridLessonBrief,
+					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Grids-and-2D-Vectors-Reference"
 				},
 				{
 					title: "CPPF7 Project: Matrix Addition",
-					content:
-						"Use two 2D vectors with the same dimensions and build a result grid cell by cell. This gives the course a clean grid project without manual allocation or pointer arithmetic.",
+					content: cppGridProjectBriefs.matrix,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Matrix-Addition",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Matrix-Addition/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Matrix-Addition"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Matrix-Addition/solution"
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "CPPF7 Project 2: Grid Statistics",
-					content:
-						"Extend grid work by computing row totals, column totals, diagonal totals, and the largest value in a rectangular 2D vector. This gives the course a second grid project before the Level 1 capstone.",
+					content: cppGridProjectBriefs.statistics,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Grid-Statistics",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Grid-Statistics/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Grid-Statistics"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF7-Grid-Statistics/solution"
 				}
 			]
 		},
@@ -459,7 +460,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"grid boundary"
 		],
 		flowNote:
-			"Add matrices only after dimensions are validated, then test empty, one-cell, rectangular, and mismatched inputs. Matrix Addition is required; Grid Statistics is a choice for more nested-loop practice."
+			"Trace the complete 2D-vector lesson, then complete required Matrix Addition with dimensions checked before allocation and both bounded matrices validated before any sum. Test one-cell, wide/tall, dimension and numeric bounds, and every cancellation phase. Optional Grid Statistics practices const-reference summaries, empty/zero-column grids and row-major ties in its stated rectangular domain."
 	},
 	"CPPF8 Master Project: Profile Posts": {
 		estimatedTime: "4–6 sessions · 45–60 minutes each",
