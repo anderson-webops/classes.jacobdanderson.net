@@ -54,7 +54,7 @@ describe("CourseExplorer.vue", () => {
 		vi.unstubAllGlobals();
 	});
 
-	it("renders course stats for an assigned learner without throwing", async () => {
+	it("shows completed lessons without aggregate statistics or project shortcuts", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -99,9 +99,10 @@ describe("CourseExplorer.vue", () => {
 		expect(wrapper.text()).toContain(assignedCourse.name);
 		expect(wrapper.text()).toContain("Core");
 		expect(wrapper.text()).toContain("Practice");
-		expect(wrapper.text()).toContain("Done");
+		expect(wrapper.find(".course-stats").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Complete");
-		expect(wrapper.text()).toContain("core items");
+		expect(wrapper.text()).not.toContain("core items");
+		expect(wrapper.text()).not.toContain("Jump to a project");
 	});
 
 	it("keeps the lesson open while secondary navigation is closed, and returns focus after choosing a lesson", async () => {
@@ -130,15 +131,11 @@ describe("CourseExplorer.vue", () => {
 			await vi.waitFor(() =>
 				expect(wrapper.find(".lesson-card").exists()).toBe(true)
 			);
-			expect(
-				wrapper.get(".course-summary").attributes("open")
-			).toBeUndefined();
+			expect(wrapper.find(".course-summary").exists()).toBe(false);
 			expect(
 				wrapper.get(".course-toolbar-disclosure").attributes("open")
 			).toBeUndefined();
-			expect(
-				wrapper.get(".reader-link-groups").attributes("open")
-			).toBeUndefined();
+			expect(wrapper.find(".reader-link-groups").exists()).toBe(false);
 			const toggle = wrapper.get(".outline-toggle");
 			expect(toggle.attributes("aria-expanded")).toBe("false");
 			await wrapper.get("#course-search").setValue("loops");
@@ -475,32 +472,69 @@ describe("CourseExplorer.vue", () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 		const courses = useCoursesStore();
-		const folders = ["CPPM2-Array-Basics-Reference", "CPPM2-Pointer-Arithmetic-Reference", "CPPM3-Two-Dimensional-Arrays-Reference"];
+		const folders = [
+			"CPPM2-Array-Basics-Reference",
+			"CPPM2-Pointer-Arithmetic-Reference",
+			"CPPM3-Two-Dimensional-Arrays-Reference"
+		];
 		vi.spyOn(courses, "loadCourseById").mockResolvedValue({
-			id: "cpp-level-2", name: "C++ Level 2",
-			modules: [{ id: "arrays", title: "Arrays", supplementalProjects: [],
-				curriculum: folders.map((folder, index) => ({
-					id: folder.toLowerCase(), title: folder, content: "Predict the trace before running.",
-					projectLink: `https://github.com/instruction-material/CPP-Level-2/tree/main/${folder}`,
-					ideImport: index < 2
-				}))
-			}]
+			id: "cpp-level-2",
+			name: "C++ Level 2",
+			modules: [
+				{
+					id: "arrays",
+					title: "Arrays",
+					supplementalProjects: [],
+					curriculum: folders.map((folder, index) => ({
+						id: folder.toLowerCase(),
+						title: folder,
+						content: "Predict the trace before running.",
+						projectLink: `https://github.com/instruction-material/CPP-Level-2/tree/main/${folder}`,
+						ideImport: index < 2
+					}))
+				}
+			]
 		});
-		useAppStore().setCurrentUser({ _id: "learner", name: "Learner", email: "learner@example.invalid", age: 14, state: "GA", courseAccess: ["cpp-level-2"], editUsers: false, saveEdit: "Save" });
+		useAppStore().setCurrentUser({
+			_id: "learner",
+			name: "Learner",
+			email: "learner@example.invalid",
+			age: 14,
+			state: "GA",
+			courseAccess: ["cpp-level-2"],
+			editUsers: false,
+			saveEdit: "Save"
+		});
 		const wrapper = mount(CourseExplorer, { global: { plugins: [pinia] } });
 		try {
 			await flushPromises();
-			await vi.waitFor(() => expect(wrapper.findAll(".is-ide-starter")).toHaveLength(2));
-			for (const [index, item] of wrapper.findAll(".lesson-item").entries()) {
+			await vi.waitFor(() =>
+				expect(wrapper.findAll(".is-ide-starter")).toHaveLength(2)
+			);
+			for (const [index, item] of wrapper
+				.findAll(".lesson-item")
+				.entries()) {
 				const link = item.find(".is-ide-starter");
-				if (index === 2) { expect(link.exists()).toBe(false); continue; }
-				const query = new URL(link.attributes("href"), "https://classes.local").searchParams;
+				if (index === 2) {
+					expect(link.exists()).toBe(false);
+					continue;
+				}
+				const query = new URL(
+					link.attributes("href"),
+					"https://classes.local"
+				).searchParams;
 				expect(query.get("mode")).toBe("cpp");
-				expect(query.get("projectKey")).toBe(`cpp-level-2:${folders[index].toLowerCase()}:starter`);
-				expect(query.get("starterUrl")).toBe(`https://github.com/instruction-material/CPP-Level-2/tree/main/${folders[index]}`);
+				expect(query.get("projectKey")).toBe(
+					`cpp-level-2:${folders[index].toLowerCase()}:starter`
+				);
+				expect(query.get("starterUrl")).toBe(
+					`https://github.com/instruction-material/CPP-Level-2/tree/main/${folders[index]}`
+				);
 			}
 			expect(api.get).not.toHaveBeenCalled();
-		} finally { wrapper.unmount(); }
+		} finally {
+			wrapper.unmount();
+		}
 	});
 
 	it("keeps configured learner and staff-reference imports in distinct saved projects", async () => {
@@ -600,7 +634,7 @@ describe("CourseExplorer.vue", () => {
 		}
 	});
 
-	it("counts reference appendices separately from core course work", async () => {
+	it("keeps reference appendices separate from core lessons without counters", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -663,10 +697,6 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.text()).toContain("Reference Appendix");
 		});
 
-		expect(wrapper.find(".course-stats").text()).toContain("Modules1");
-		expect(wrapper.find(".course-stats").text()).toContain("Appendices1");
-		expect(wrapper.find(".course-stats").text()).toContain("Core1");
-		expect(wrapper.find(".course-stats").text()).toContain("Practice0");
 		expect(wrapper.get(".outline-header").text()).toBe("Lessons");
 		expect(wrapper.text()).toContain("References");
 		expect(
@@ -755,8 +785,6 @@ describe("CourseExplorer.vue", () => {
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("Scratch-to-Python Bridge");
 		});
-		expect(wrapper.find(".course-stats").text()).toContain("Modules1");
-		expect(wrapper.find(".course-stats").text()).toContain("Next steps1");
 		expect(wrapper.text()).toContain("Next Steps");
 
 		await wrapper
@@ -833,7 +861,7 @@ describe("CourseExplorer.vue", () => {
 		await vi.waitFor(() => {
 			expect(wrapper.text()).toContain("Stable Module");
 		});
-		expect(wrapper.text()).toContain("Done");
+		expect(wrapper.find(".course-stats").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Complete");
 	});
 
@@ -986,7 +1014,6 @@ describe("CourseExplorer.vue", () => {
 			wrapper.find("#course-select optgroup").attributes("label")
 		).toBe("All courses");
 		expect(wrapper.findAll(".progress-toggle")).toHaveLength(0);
-		expect(wrapper.find(".course-stats").text()).not.toContain("Done");
 		expect(api.put).not.toHaveBeenCalled();
 	});
 

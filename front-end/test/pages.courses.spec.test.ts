@@ -6,6 +6,7 @@ import { useAppStore } from "@/stores/app";
 
 describe("courses page access gate", () => {
 	beforeEach(() => {
+		document.body.innerHTML = "";
 		setActivePinia(createPinia());
 	});
 
@@ -28,11 +29,28 @@ describe("courses page access gate", () => {
 
 		await flushPromises();
 		expect(wrapper.text()).toContain("Open Your Courses");
-		expect(wrapper.text()).toContain("Use a course code");
+		expect(wrapper.find(".course-code-access").isVisible()).toBe(false);
 
 		await wrapper.get("button").trigger("click");
 
 		expect(app.loginBlock).toBe(true);
+	});
+
+	it("switches between account actions and the classroom form without stacking them", async () => {
+		const wrapper = mount(CoursesPage, {
+			attachTo: document.body,
+			global: { stubs: { RouterLink: true } }
+		});
+		await flushPromises();
+		expect(wrapper.get(".courses-account-entry").isVisible()).toBe(true);
+		expect(wrapper.get(".course-code-access").isVisible()).toBe(false);
+		await wrapper.get('input[value="course-code"]').setValue(true);
+		expect(wrapper.get(".courses-account-entry").isVisible()).toBe(false);
+		expect(wrapper.get(".course-code-access").isVisible()).toBe(true);
+		await wrapper.get('input[value="account"]').setValue(true);
+		expect(wrapper.get(".courses-account-entry").isVisible()).toBe(true);
+		expect(wrapper.get(".course-code-access").isVisible()).toBe(false);
+		wrapper.unmount();
 	});
 
 	it("shows the access request message for a learner with no courses", async () => {

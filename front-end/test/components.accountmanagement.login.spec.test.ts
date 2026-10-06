@@ -1,5 +1,5 @@
 // components/accountmanagement.login.spec.test.ts
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import AccountManagement from "../src/components/AccountManagement.vue";
@@ -26,6 +26,77 @@ describe("AccountManagement.vue login (happy path)", () => {
 		vi.clearAllMocks();
 	});
 
+	it("switches sign-in methods instead of stacking forms and preserves drafts", async () => {
+		useAppStore().setLoginBlock(true);
+		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
+			global: {
+				stubs: {
+					AccessibleDialog: {
+						props: ["open"],
+						template: '<section v-if="open"><slot /></section>'
+					}
+				}
+			}
+		});
+		await flushPromises();
+		await wrapper.get("#uname").setValue("learner@example.invalid");
+		expect(wrapper.get(".loginForm").isVisible()).toBe(true);
+		expect(wrapper.get(".auth-code-view").isVisible()).toBe(false);
+		await wrapper.get('input[value="course-code"]').setValue(true);
+		expect(wrapper.get(".loginForm").isVisible()).toBe(false);
+		expect(wrapper.get(".auth-code-view").isVisible()).toBe(true);
+		await wrapper
+			.get('input[placeholder="Your classroom username"]')
+			.setValue("Example learner");
+		await wrapper.get('input[value="account"]').setValue(true);
+		expect(wrapper.get("#uname").element).toHaveProperty(
+			"value",
+			"learner@example.invalid"
+		);
+		await wrapper.get('input[value="course-code"]').setValue(true);
+		expect(
+			wrapper.get('input[placeholder="Your classroom username"]').element
+		).toHaveProperty("value", "Example learner");
+		expect(apiMod.api.post).not.toHaveBeenCalled();
+		wrapper.unmount();
+	});
+
+	it("offers classroom sign-up as an exclusive view and closes it after authentication", async () => {
+		const app = useAppStore();
+		app.setSignupBlock(true);
+		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
+			global: {
+				stubs: {
+					AccessibleDialog: {
+						props: ["open"],
+						template: '<section v-if="open"><slot /></section>'
+					}
+				}
+			}
+		});
+		expect(wrapper.get(".signupForm").isVisible()).toBe(true);
+		await wrapper.get('input[value="course-code"]').setValue(true);
+		expect(wrapper.get(".signupForm").isVisible()).toBe(false);
+		expect(wrapper.get(".course-code-form").isVisible()).toBe(true);
+		expect(
+			wrapper
+				.get('.course-code-form input[type="password"]')
+				.attributes("autocomplete")
+		).toBe("new-password");
+		app.setCurrentCourseLearner({
+			_id: "synthetic-learner",
+			username: "learner",
+			courseID: "python",
+			codeLabel: "Classroom",
+			accessCodeId: "code"
+		} as any);
+		await vi.waitFor(() => expect(app.signupBlock).toBe(false));
+		expect(apiMod.api.post).not.toHaveBeenCalled();
+		wrapper.unmount();
+	});
+
 	it("offers only configured Google and Apple login choices and preserves Remember me", async () => {
 		const app = useAppStore();
 		app.setLoginBlock(true);
@@ -35,6 +106,7 @@ describe("AccountManagement.vue login (happy path)", () => {
 		});
 
 		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
 			attachTo: document.body,
 			global: { stubs: { teleport: true } }
 		});
@@ -73,6 +145,7 @@ describe("AccountManagement.vue login (happy path)", () => {
 
 		const wrapper = mount(AccountManagement, {
 			attachTo: document.body,
+			attachTo: document.body,
 			global: { stubs: { teleport: true } }
 		});
 
@@ -98,6 +171,7 @@ describe("AccountManagement.vue login (happy path)", () => {
 		});
 
 		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
 			attachTo: document.body,
 			global: { stubs: { teleport: true } }
 		});
@@ -135,6 +209,7 @@ describe("AccountManagement.vue login (happy path)", () => {
 
 		const wrapper = mount(AccountManagement, {
 			attachTo: document.body,
+			attachTo: document.body,
 			global: { stubs: { teleport: true } }
 		});
 
@@ -167,6 +242,7 @@ describe("AccountManagement.vue login (happy path)", () => {
 		app.setLoginBlock(true);
 
 		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
 			attachTo: document.body,
 			global: { stubs: { teleport: true } }
 		});
@@ -202,6 +278,7 @@ describe("AccountManagement.vue login (happy path)", () => {
 		});
 
 		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
 			attachTo: document.body,
 			global: { stubs: { teleport: true } }
 		});

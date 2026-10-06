@@ -12,6 +12,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AccessibleDialog: typeof import('./components/AccessibleDialog.vue')['default']
+    AccessModeToggle: typeof import('./components/AccessModeToggle.vue')['default']
     AccountCodeIdeWorkspace: typeof import('./components/AccountCodeIdeWorkspace.vue')['default']
     AccountManagement: typeof import('./components/AccountManagement.vue')['default']
     AccountSecurity: typeof import('./components/AccountSecurity.vue')['default']

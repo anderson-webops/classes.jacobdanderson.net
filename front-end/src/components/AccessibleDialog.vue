@@ -4,6 +4,7 @@ import { computed, nextTick, onBeforeUnmount, ref, useSlots, watch } from "vue";
 const props = withDefaults(
 	defineProps<{
 		closeLabel?: string;
+		compact?: boolean;
 		description?: string;
 		dialogId: string;
 		open: boolean;
@@ -80,7 +81,28 @@ function focusableElements() {
 	if (!panel.value) return [];
 	return Array.from(
 		panel.value.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
-	).filter(element => !element.hasAttribute("disabled"));
+	).filter(element => {
+		if (
+			element.hasAttribute("disabled") ||
+			element.getAttribute("tabindex") === "-1"
+		) {
+			return false;
+		}
+		let current: HTMLElement | null = element;
+		while (current && current !== panel.value) {
+			const style = window.getComputedStyle(current);
+			if (
+				current.hidden ||
+				current.inert ||
+				style.display === "none" ||
+				style.visibility === "hidden"
+			) {
+				return false;
+			}
+			current = current.parentElement;
+		}
+		return true;
+	});
 }
 
 function focusFirstElement() {
@@ -128,6 +150,7 @@ function handleKeydown(event: KeyboardEvent) {
 				:id="dialogId"
 				ref="panel"
 				class="dialog-panel"
+				:class="{ 'dialog-panel--compact': compact }"
 				role="dialog"
 				aria-modal="true"
 				:aria-labelledby="titleId"
@@ -184,6 +207,7 @@ function handleKeydown(event: KeyboardEvent) {
 .dialog-panel {
 	width: min(100%, 42rem);
 	max-height: calc(100vh - 2rem);
+	max-height: calc(100dvh - 2 * clamp(1rem, 4vw, 3rem));
 	display: grid;
 	gap: 1rem;
 	overflow: auto;
@@ -194,6 +218,11 @@ function handleKeydown(event: KeyboardEvent) {
 	color: var(--color-ink, #10263a);
 	box-shadow: 0 34px 90px -44px rgba(8, 15, 28, 0.8);
 	outline: none;
+}
+
+.dialog-panel--compact {
+	width: min(100%, 30rem);
+	gap: 0.85rem;
 }
 
 .dialog-header {

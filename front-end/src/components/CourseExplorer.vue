@@ -86,7 +86,6 @@ const WWW_PREFIX_RE = /^www\./;
 const REFERENCE_TITLE_RE = /reference/i;
 const STARTER_RE = /starter/i;
 const CAPSTONE_TITLE_RE = /capstone|master project/i;
-const PROJECT_PREFIX_RE = /^Project:\s*/i;
 const SOURCE_REPOSITORY_ROOT_RE =
 	/^https:\/\/github\.com\/instruction-material\/[^/]+\/tree\/main$/i;
 const REPOSITORY_ARCHIVE_RE =
@@ -563,43 +562,6 @@ watch(
 	{ immediate: true }
 );
 
-const courseStats = computed(() => {
-	const course = selectedCourse.value;
-	if (!course) return null;
-
-	const coreModules = course.modules.filter(isCoreModule);
-	const transitionModules = course.modules.filter(isTransitionModule);
-	const appendixModules = course.modules.filter(isAppendixModule);
-	const lessonCount = coreModules.reduce(
-		(total, module) => total + module.curriculum.length,
-		0
-	);
-	const supplementalCount = coreModules.reduce(
-		(total, module) => total + module.supplementalProjects.length,
-		0
-	);
-	const completedModuleCount = coreModules.filter(module =>
-		isModuleComplete(module)
-	).length;
-	const completedItemCount = coreModules.reduce(
-		(total, module) =>
-			total +
-			module.curriculum.filter(item => isItemComplete(item)).length,
-		0
-	);
-
-	return {
-		moduleCount: coreModules.length,
-		transitionCount: transitionModules.length,
-		appendixCount: appendixModules.length,
-		lessonCount,
-		supplementalCount,
-		completedModuleCount,
-		completedItemCount,
-		totalItemCount: lessonCount
-	};
-});
-
 const selectedCourseProgress = computed(() => {
 	const courseId = selectedCourseId.value;
 	const owner = progressOwner.value;
@@ -789,20 +751,6 @@ const activeSupplementalHeading = computed(() =>
 		: "Supplemental Projects"
 );
 
-const activeCurriculumJumpHeading = computed(() =>
-	activeModule.value?.kind === "appendix"
-		? "References:"
-		: activeModule.value?.kind === "transition"
-			? "Next step projects:"
-			: "Core projects:"
-);
-
-const activeSupplementalJumpHeading = computed(() =>
-	activeModule.value?.kind === "appendix"
-		? "Activities:"
-		: "Practice projects:"
-);
-
 const courseReaderStatus = computed(() => {
 	if (!selectedCourse.value || !activeModule.value) return "";
 	const searchContext = normalizedQuery.value
@@ -838,26 +786,6 @@ function itemLearningPath(
 ) {
 	return item.learningPath ?? fallback;
 }
-
-const activeModuleProjectLinks = computed(() => {
-	const module = activeModule.value;
-	if (!module) return [];
-
-	return module.curriculum.map((item, index) => ({
-		id: itemAnchorId(module.id, item.id),
-		label: `${index + 1}. ${item.title}`
-	}));
-});
-
-const activeModuleSupplementalLinks = computed(() => {
-	const module = activeModule.value;
-	if (!module) return [];
-
-	return module.supplementalProjects.map((item, index) => ({
-		id: itemAnchorId(module.id, item.id),
-		label: `${index + 1}. ${item.title.replace(PROJECT_PREFIX_RE, "")}`
-	}));
-});
 
 function normalizeSearch(value: string) {
 	return value.toLowerCase().replace(WHITESPACE_RE, " ").trim();
@@ -1814,7 +1742,7 @@ function writeStoredValue(key: string, value: string) {
 	<section class="course-explorer">
 		<p class="sr-only" aria-live="polite">{{ courseReaderStatus }}</p>
 		<div v-if="hasCourseAccess" class="course-shell">
-			<header v-if="selectedCourse && courseStats" class="course-hero">
+			<header v-if="selectedCourse" class="course-hero">
 				<div class="course-hero-copy">
 					<p class="sr-only">{{ courseEyebrow }}</p>
 					<h2>{{ selectedCourse.name }}</h2>
@@ -1841,53 +1769,6 @@ function writeStoredValue(key: string, value: string) {
 						}}
 					</button>
 				</div>
-				<details class="course-summary">
-					<summary>Progress</summary>
-					<dl class="course-stats">
-						<div class="stat">
-							<dt>Modules</dt>
-							<dd>{{ courseStats.moduleCount }}</dd>
-						</div>
-						<div
-							v-if="courseStats.transitionCount > 0"
-							class="stat"
-						>
-							<dt>Next steps</dt>
-							<dd>{{ courseStats.transitionCount }}</dd>
-						</div>
-						<div v-if="courseStats.appendixCount > 0" class="stat">
-							<dt>Appendices</dt>
-							<dd>{{ courseStats.appendixCount }}</dd>
-						</div>
-						<div class="stat">
-							<dt>Core</dt>
-							<dd>{{ courseStats.lessonCount }}</dd>
-						</div>
-						<div class="stat">
-							<dt>Practice</dt>
-							<dd>{{ courseStats.supplementalCount }}</dd>
-						</div>
-						<div
-							v-if="hasProgressTracking"
-							class="stat is-progress"
-						>
-							<dt>Done</dt>
-							<dd>
-								<span>
-									{{ courseStats.completedModuleCount }}/{{
-										courseStats.moduleCount
-									}}
-								</span>
-								<small>
-									{{ courseStats.completedItemCount }}/{{
-										courseStats.totalItemCount
-									}}
-									core items
-								</small>
-							</dd>
-						</div>
-					</dl>
-				</details>
 			</header>
 
 			<div class="course-navigation-controls">
@@ -2091,27 +1972,15 @@ function writeStoredValue(key: string, value: string) {
 								</span>
 								<span class="outline-copy">
 									<strong>{{ module.title }}</strong>
-									<small>
-										{{ module.visibleItemCount }}
-										{{
-											module.visibleItemCount === 1
-												? "item"
-												: "items"
-										}}
-										<span v-if="module.isFiltered">
-											visible out of
-											{{ module.totalItemCount }}
-										</span>
-										<span
-											v-if="
-												hasProgressTracking &&
-												isCoreModule(module) &&
-												isModuleComplete(module)
-											"
-											class="complete-pill"
-										>
-											Complete
-										</span>
+									<small
+										v-if="
+											hasProgressTracking &&
+											isCoreModule(module) &&
+											isModuleComplete(module)
+										"
+										class="complete-pill"
+									>
+										Complete
 									</small>
 								</span>
 							</button>
@@ -2219,63 +2088,6 @@ function writeStoredValue(key: string, value: string) {
 									</div>
 								</dl>
 							</details>
-
-							<details
-								v-if="
-									activeModuleProjectLinks.length > 0 ||
-									activeModuleSupplementalLinks.length > 0
-								"
-								class="reader-link-groups"
-							>
-								<summary>Jump to a project</summary>
-								<div
-									v-if="activeModuleProjectLinks.length > 0"
-									class="reader-link-group"
-								>
-									<h4 class="reader-link-heading">
-										{{ activeCurriculumJumpHeading }}
-									</h4>
-									<nav
-										aria-label="Jump to module lesson"
-										class="reader-jump-links"
-									>
-										<a
-											v-for="link in activeModuleProjectLinks"
-											:key="link.id"
-											class="jump-link"
-											:href="`#${link.id}`"
-										>
-											{{ link.label }}
-										</a>
-									</nav>
-								</div>
-
-								<div
-									v-if="
-										activeModuleSupplementalLinks.length > 0
-									"
-									class="reader-link-group"
-								>
-									<h4
-										class="reader-link-heading is-supplemental"
-									>
-										{{ activeSupplementalJumpHeading }}
-									</h4>
-									<nav
-										aria-label="Jump to supplemental project"
-										class="reader-jump-links"
-									>
-										<a
-											v-for="link in activeModuleSupplementalLinks"
-											:key="link.id"
-											class="jump-link is-supplemental"
-											:href="`#${link.id}`"
-										>
-											{{ link.label }}
-										</a>
-									</nav>
-								</div>
-							</details>
 						</div>
 					</header>
 
@@ -2287,9 +2099,6 @@ function writeStoredValue(key: string, value: string) {
 								</p>
 								<h4>{{ activeCurriculumHeading }}</h4>
 							</div>
-							<span class="section-count">
-								{{ activeModule.curriculum.length }}
-							</span>
 						</div>
 
 						<ol class="lesson-list">
@@ -2563,9 +2372,6 @@ function writeStoredValue(key: string, value: string) {
 								</p>
 								<h4>{{ activeSupplementalHeading }}</h4>
 							</div>
-							<span class="section-count">
-								{{ activeModule.supplementalProjects.length }}
-							</span>
 						</div>
 
 						<ol class="lesson-list">
@@ -3045,63 +2851,6 @@ function writeStoredValue(key: string, value: string) {
 	flex: 0 0 auto;
 }
 
-.course-stats {
-	width: 100%;
-	max-width: 31rem;
-	min-width: 0;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(6.8rem, 1fr));
-	gap: 0;
-	margin: 0;
-	border-radius: 16px;
-	overflow: hidden;
-	background: rgba(255, 255, 255, 0.72);
-	border: 1px solid rgba(148, 163, 184, 0.22);
-	box-shadow: 0 18px 32px -28px rgba(15, 23, 42, 0.18);
-}
-
-.stat {
-	padding: 1rem 1.15rem 1.15rem;
-	background: transparent;
-	border-right: 1px solid rgba(148, 163, 184, 0.18);
-	min-height: 100%;
-	min-width: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-}
-
-.stat:last-child {
-	border-right: none;
-}
-
-.stat.is-progress {
-	background: rgba(236, 253, 245, 0.72);
-}
-
-.stat dt {
-	margin: 0;
-	font-size: clamp(0.68rem, 0.78vw, 0.8rem);
-	font-weight: 700;
-	text-transform: uppercase;
-	letter-spacing: 0.08em;
-	color: #0f766e;
-}
-
-.stat dd {
-	margin: 0.45rem 0 0;
-	font-size: clamp(1.3rem, 3vw, 1.8rem);
-	font-weight: 700;
-	color: var(--course-text);
-}
-
-.stat small {
-	display: block;
-	margin-top: 0.35rem;
-	line-height: 1.35;
-	color: var(--course-text-soft);
-}
-
 .course-toolbar {
 	width: 100%;
 	box-sizing: border-box;
@@ -3252,7 +3001,6 @@ function writeStoredValue(key: string, value: string) {
 .outline-reset:focus-visible,
 .outline-button:focus-visible,
 .resource-link:focus-visible,
-.jump-link:focus-visible,
 .retry-save:focus-visible,
 .progress-toggle:focus-within {
 	outline: 2px solid var(--focus-ring-color);
@@ -3588,36 +3336,6 @@ function writeStoredValue(key: string, value: string) {
 	font-size: 0.8rem;
 }
 
-.reader-link-groups {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-}
-
-.reader-link-group {
-	display: flex;
-	flex-direction: column;
-	gap: 0.55rem;
-}
-
-.reader-link-heading {
-	margin: 0;
-	font-size: 1rem;
-	line-height: 1.35;
-	color: var(--course-text);
-}
-
-.reader-link-heading.is-supplemental {
-	color: #b45309;
-}
-
-.reader-jump-links {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem;
-}
-
-.jump-link,
 .resource-link {
 	display: inline-flex;
 	align-items: center;
@@ -3637,27 +3355,9 @@ button.resource-link {
 	font: inherit;
 }
 
-.jump-link:hover,
 .resource-link:hover {
 	transform: translateY(-1px);
 	border-color: rgba(15, 118, 110, 0.22);
-}
-
-.jump-link {
-	flex-direction: row;
-	gap: 0.5rem;
-	border-radius: 14px;
-	background: rgba(248, 250, 252, 0.9);
-	font-size: 0.85rem;
-	line-height: 1.45;
-}
-
-.jump-link:hover {
-	background: rgba(240, 253, 250, 0.95);
-}
-
-.jump-link.is-supplemental {
-	background: rgba(255, 247, 237, 0.85);
 }
 
 .reader-section {
@@ -3678,19 +3378,6 @@ button.resource-link {
 	align-items: end;
 	justify-content: space-between;
 	gap: 1rem;
-}
-
-.section-count {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 2.4rem;
-	height: 2.4rem;
-	padding: 0 0.8rem;
-	border-radius: 14px;
-	background: rgba(15, 23, 42, 0.06);
-	font-weight: 700;
-	color: var(--course-text);
 }
 
 .lesson-list {
@@ -4167,20 +3854,11 @@ button.resource-link {
 	.staff-context-bar {
 		gap: 0.9rem;
 	}
-
-	.course-stats {
-		width: 100%;
-		max-width: none;
-	}
 }
 
 @media (max-width: 640px) {
 	.course-shell {
 		overflow: visible;
-	}
-
-	.course-stats {
-		grid-template-columns: 1fr;
 	}
 
 	.module-guide {
@@ -4195,8 +3873,7 @@ button.resource-link {
 		align-items: stretch;
 	}
 
-	.resource-link,
-	.jump-link {
+	.resource-link {
 		width: 100%;
 		justify-content: space-between;
 	}
@@ -4247,56 +3924,6 @@ button.resource-link {
 }
 .course-ide-action {
 	margin: 0;
-}
-.course-summary {
-	position: relative;
-	font-size: 0.9rem;
-}
-.course-summary summary {
-	min-height: 2.75rem;
-	display: list-item;
-	align-content: center;
-	cursor: pointer;
-}
-.course-stats {
-	position: absolute;
-	z-index: 5;
-	right: 0;
-	width: min(28rem, 85vw);
-	max-width: none;
-	display: flex;
-	flex-wrap: wrap;
-	padding: 0.75rem;
-	gap: 0.65rem 1rem;
-	background: var(--course-panel);
-	box-shadow: var(--course-shadow);
-}
-.stat {
-	padding: 0;
-	border: 0;
-	display: flex;
-	flex-direction: row;
-	align-items: baseline;
-	gap: 0.4rem;
-	background: transparent;
-}
-.stat.is-progress {
-	background: transparent;
-}
-.stat dt {
-	text-transform: none;
-	letter-spacing: 0;
-	color: var(--course-text-soft);
-	font-size: 0.9rem;
-}
-.stat dd {
-	margin: 0;
-	font-size: 1rem;
-}
-.stat small {
-	display: inline;
-	margin: 0 0 0 0.4rem;
-	font-size: 0.8rem;
 }
 .course-navigation-controls {
 	display: flex;
@@ -4421,21 +4048,12 @@ button.resource-link {
 	gap: 0.25rem 1rem;
 	max-width: 100%;
 }
-.reader-link-groups {
-	display: block;
-	margin: 0;
-	max-width: 100%;
-}
-.reader-link-groups summary,
 .module-guide-disclosure summary {
 	min-height: 2.75rem;
 	align-content: center;
 	cursor: pointer;
 	color: var(--course-text-soft);
 	font-size: 0.85rem;
-}
-.reader-link-group {
-	margin-top: 0.75rem;
 }
 .module-guide {
 	margin-top: 0.5rem;
@@ -4507,9 +4125,6 @@ button.resource-link {
 	}
 	.course-toolbar.has-learner .search-block {
 		grid-column: auto;
-	}
-	.course-summary {
-		margin-left: auto;
 	}
 	.lesson-header {
 		flex-direction: row;

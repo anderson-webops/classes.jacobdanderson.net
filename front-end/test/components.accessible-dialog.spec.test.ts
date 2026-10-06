@@ -1,8 +1,29 @@
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
 import AccessibleDialog from "@/components/AccessibleDialog.vue";
 
 describe("AccessibleDialog", () => {
+	it("traps focus within the active view, skipping hidden forms", async () => {
+		document.body.innerHTML = "";
+		const wrapper = mount(AccessibleDialog, {
+			attachTo: document.body,
+			global: { stubs: { teleport: true } },
+			props: { dialogId: "mode-dialog", open: false, title: "Log in" },
+			slots: {
+				default:
+					'<button id="active-action">Visible action</button><div style="display:none"><button id="inactive-action">Hidden action</button></div>'
+			}
+		});
+		await wrapper.setProps({ open: true });
+		await flushPromises();
+		const close = wrapper.get<HTMLButtonElement>(".dialog-close");
+		close.element.focus();
+		await close.trigger("keydown", { key: "Tab", shiftKey: true });
+		expect(document.activeElement?.id).toBe("active-action");
+		await wrapper.get("#active-action").trigger("keydown", { key: "Tab" });
+		expect(document.activeElement).toBe(close.element);
+		wrapper.unmount();
+	});
 	it("renders dialog semantics and emits close from the close button", async () => {
 		document.body.innerHTML = "";
 		const wrapper = mount(AccessibleDialog, {

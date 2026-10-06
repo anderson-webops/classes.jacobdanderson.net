@@ -1143,6 +1143,20 @@ html.dark body .course-explorer :is(.resource-link, .resource-link-label, .resou
 	}
 }
 
+/* Follow the actual link target, including links rendered from course Markdown. */
+a[target="_blank"]:not(.resource-link)::after,
+a.resource-link[target="_blank"] .resource-link-label::after {
+	content: "";
+	display: inline-block;
+	width: 0.8em;
+	height: 0.8em;
+	margin-inline-start: 0.4em;
+	flex-shrink: 0;
+	vertical-align: baseline;
+	background: currentColor;
+	mask: url("../assets/icons/new-tab.svg") center / contain no-repeat;
+}
+
 /* Content pages use a quiet frame; the home page keeps its original presentation. */
 .site-frame.site-frame--content .page-shell {
 	padding-block: 1rem 2rem;
@@ -1187,9 +1201,6 @@ html.dark body .course-explorer :is(.resource-link, .resource-link-label, .resou
 	:is(.site-nav__inner, .course-toolbar, .profile-card, .workspace-sheet) {
 	background: transparent !important;
 	box-shadow: none;
-}
-.site-frame.site-frame--content .course-explorer :is(.stat, .stat.is-progress) {
-	background: transparent !important;
 }
 .site-frame.site-frame--content
 	.course-explorer

@@ -7,6 +7,7 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { api } from "@/api";
 import AccessibleDialog from "@/components/AccessibleDialog.vue";
+import AccessModeToggle from "@/components/AccessModeToggle.vue";
 import CourseCodeAccessForm from "@/components/CourseCodeAccessForm.vue";
 import {
 	emptyOAuthProviderAvailability,
@@ -22,6 +23,7 @@ const app = useAppStore();
 const { loginBlock, signupBlock, currentCourseLearner } = storeToRefs(app);
 watch(currentCourseLearner, learner => {
 	if (learner && loginBlock.value) changeLoginView(false);
+	if (learner && signupBlock.value) changeSignupView(false);
 });
 
 const loginEmail = ref("");
@@ -29,6 +31,8 @@ const loginPassword = ref("");
 const rememberMe = ref(false);
 const errorLogin = ref("");
 const loginView = ref<"login" | "password-reset">("login");
+const loginMode = ref<"account" | "course-code">("account");
+const signupMode = ref<"account" | "course-code">("account");
 const resetEmail = ref("");
 const resetMessage = ref("");
 const resetError = ref("");
@@ -42,9 +46,9 @@ const loginDialogTitle = computed(() =>
 	loginView.value === "login" ? "Log in" : "Reset your password"
 );
 const loginDialogDescription = computed(() =>
-	loginView.value === "login"
-		? "Log in to the account connected to your classes."
-		: "Request a one-time password reset link for your classes account."
+	loginView.value === "password-reset"
+		? "Request a one-time password reset link for your classes account."
+		: ""
 );
 
 async function loadOAuthProviders() {
@@ -60,7 +64,10 @@ async function loadOAuthProviders() {
 watch(
 	loginBlock,
 	show => {
-		if (show) void loadOAuthProviders();
+		if (show) {
+			loginMode.value = "account";
+			void loadOAuthProviders();
+		}
 	},
 	{ immediate: true }
 );
@@ -180,6 +187,7 @@ const passwordMatch = computed(() => password.value === passwordRepeat.value);
 
 // close / open (comes from your store)
 function changeSignupView(show: boolean) {
+	if (!show) signupMode.value = "account";
 	app.setSignupBlock(show);
 }
 
@@ -238,115 +246,127 @@ async function addSignup() {
 	<div>
 		<AccessibleDialog
 			close-label="Close login dialog"
+			compact
 			:description="loginDialogDescription"
 			dialog-id="login-dialog"
 			:open="loginBlock"
 			:title="loginDialogTitle"
 			@close="changeLoginView(false)"
 		>
-			<form
-				v-if="loginView === 'login'"
-				class="auth-form loginForm"
-				@submit.prevent="loginTutor"
-			>
-				<div v-if="hasOAuthProviders" class="oauth-actions">
-					<a
-						v-if="oauthProviders.google"
-						class="oauth-button google"
-						:href="oauthLoginHref('google', rememberMe)"
-					>
-						<FontAwesomeIcon :icon="faGoogle" aria-hidden="true" />
-						Continue with Google
-					</a>
-					<a
-						v-if="oauthProviders.apple"
-						class="oauth-button apple"
-						:href="oauthLoginHref('apple', rememberMe)"
-					>
-						<FontAwesomeIcon :icon="faApple" aria-hidden="true" />
-						Continue with Apple
-					</a>
-				</div>
-
-				<div v-if="hasOAuthProviders" class="auth-separator">
-					<span>or use email and password</span>
-				</div>
-
-				<label for="uname">Email</label>
-				<input
-					id="uname"
-					v-model="loginEmail"
-					autocomplete="email"
-					placeholder="Enter Email"
-					required
-					type="email"
-				/>
-
-				<label for="psw1">Password</label>
-				<input
-					id="psw1"
-					v-model="loginPassword"
-					autocomplete="current-password"
-					placeholder="Enter Password"
-					required
-					type="password"
-				/>
-
-				<label class="remember">
-					<input
-						v-model="rememberMe"
-						name="remember"
-						type="checkbox"
-					/>
-					Remember me
-				</label>
-
-				<p
-					v-if="errorLogin"
-					id="login-error"
-					class="error"
-					role="alert"
+			<template v-if="loginView === 'login'">
+				<AccessModeToggle v-model="loginMode" label="Sign-in method" />
+				<form
+					v-show="loginMode === 'account'"
+					class="auth-form loginForm"
+					@submit.prevent="loginTutor"
 				>
-					{{ errorLogin }}
-				</p>
+					<div v-if="hasOAuthProviders" class="oauth-actions">
+						<a
+							v-if="oauthProviders.google"
+							class="oauth-button google"
+							:href="oauthLoginHref('google', rememberMe)"
+						>
+							<FontAwesomeIcon
+								:icon="faGoogle"
+								aria-hidden="true"
+							/>
+							Continue with Google
+						</a>
+						<a
+							v-if="oauthProviders.apple"
+							class="oauth-button apple"
+							:href="oauthLoginHref('apple', rememberMe)"
+						>
+							<FontAwesomeIcon
+								:icon="faApple"
+								aria-hidden="true"
+							/>
+							Continue with Apple
+						</a>
+					</div>
 
-				<div class="auth-actions">
-					<button class="button" type="submit">Login</button>
-					<button
-						class="button secondary"
-						type="button"
-						@click="changeLoginView(false)"
+					<div v-if="hasOAuthProviders" class="auth-separator">
+						<span>or use email and password</span>
+					</div>
+
+					<label for="uname">Email</label>
+					<input
+						id="uname"
+						v-model="loginEmail"
+						autocomplete="email"
+						placeholder="Enter Email"
+						required
+						type="email"
+					/>
+
+					<label for="psw1">Password</label>
+					<input
+						id="psw1"
+						v-model="loginPassword"
+						autocomplete="current-password"
+						placeholder="Enter Password"
+						required
+						type="password"
+					/>
+
+					<label class="remember">
+						<input
+							v-model="rememberMe"
+							name="remember"
+							type="checkbox"
+						/>
+						Remember me
+					</label>
+
+					<p
+						v-if="errorLogin"
+						id="login-error"
+						class="error"
+						role="alert"
 					>
-						Cancel
-					</button>
+						{{ errorLogin }}
+					</p>
+
+					<div class="auth-actions">
+						<button class="button" type="submit">Login</button>
+						<button
+							class="button secondary"
+							type="button"
+							@click="changeLoginView(false)"
+						>
+							Cancel
+						</button>
+					</div>
+
+					<p class="auth-switch">
+						Don't have an account?
+						<button
+							class="text-button"
+							type="button"
+							@click="openSignupFromLogin"
+						>
+							Sign up
+						</button>
+					</p>
+					<p class="auth-help">
+						Forgot your password?
+						<button
+							class="text-button"
+							type="button"
+							@click="openPasswordReset"
+						>
+							Reset it securely</button
+						>.
+					</p>
+				</form>
+
+				<div
+					v-show="loginMode === 'course-code'"
+					class="auth-code-view"
+				>
+					<CourseCodeAccessForm embedded />
 				</div>
-
-				<p class="auth-switch">
-					Don't have an account?
-					<button
-						class="text-button"
-						type="button"
-						@click="openSignupFromLogin"
-					>
-						Sign up
-					</button>
-				</p>
-				<p class="auth-help">
-					Forgot your password?
-					<button
-						class="text-button"
-						type="button"
-						@click="openPasswordReset"
-					>
-						Reset it securely</button
-					>.
-				</p>
-			</form>
-
-			<details v-if="loginView === 'login'" class="auth-classroom-entry">
-				<summary>Use a classroom code instead</summary>
-				<CourseCodeAccessForm />
-			</details>
+			</template>
 			<form
 				v-if="loginView !== 'login'"
 				class="auth-form password-reset-form"
@@ -395,13 +415,21 @@ async function addSignup() {
 
 		<AccessibleDialog
 			close-label="Close sign up dialog"
-			description="Create a learner account to access assigned courses and class information."
+			compact
 			dialog-id="signup-dialog"
 			:open="signupBlock"
 			title="Sign up"
 			@close="changeSignupView(false)"
 		>
-			<form class="auth-form signupForm" @submit.prevent="addSignup">
+			<AccessModeToggle v-model="signupMode" label="Sign-up method" />
+			<div v-show="signupMode === 'course-code'" class="auth-code-view">
+				<CourseCodeAccessForm embedded initial-entry="new" />
+			</div>
+			<form
+				v-show="signupMode === 'account'"
+				class="auth-form signupForm"
+				@submit.prevent="addSignup"
+			>
 				<label for="name">Name</label>
 				<input
 					id="name"
@@ -556,7 +584,8 @@ async function addSignup() {
 .auth-form input[type="text"] {
 	width: 100%;
 	box-sizing: border-box;
-	padding: 0.85rem 0.95rem;
+	min-height: 2.75rem;
+	padding: 0.65rem 0.8rem;
 	border: 1px solid var(--color-border, rgba(148, 163, 184, 0.45));
 	border-radius: 14px;
 	background: var(--color-surface-strong, #fff);
@@ -592,7 +621,7 @@ async function addSignup() {
 	color: #fff;
 	padding: 0.85rem 1.1rem;
 	cursor: pointer;
-	font-weight: 800;
+	font-weight: 650;
 }
 
 .button.secondary {
@@ -669,6 +698,7 @@ async function addSignup() {
 
 	.button {
 		width: 100%;
+		flex-basis: auto;
 	}
 }
 </style>

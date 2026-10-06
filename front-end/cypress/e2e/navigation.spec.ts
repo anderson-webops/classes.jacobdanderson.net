@@ -59,6 +59,71 @@ context("Navigation & page smoke-tests", () => {
 		cy.location("pathname").should("eq", "/about");
 	});
 
+	it("switches sign-in views without overflowing or losing a draft", () => {
+		cy.intercept("GET", "**/api/accounts/me", {
+			statusCode: 200,
+			body: {}
+		});
+		cy.intercept("GET", "**/api/accounts/oauth/providers", {
+			statusCode: 200,
+			body: { google: false, apple: false }
+		});
+		cy.visit("/courses");
+		cy.get(".site-nav").contains("button", "Log in").click();
+		cy.get("#login-dialog").within(() => {
+			cy.get("#uname").type("learner@example.invalid");
+			cy.contains(".access-mode-toggle label", "Course code").click();
+			cy.get(".loginForm").should("not.be.visible");
+			cy.get('input[placeholder="Your classroom username"]').type(
+				"Example learner"
+			);
+			cy.contains(".access-mode-toggle label", "Account").click();
+			cy.get(".auth-code-view").should("not.be.visible");
+			cy.get("#uname").should("have.value", "learner@example.invalid");
+			cy.contains(".access-mode-toggle label", "Course code").click();
+			cy.get('input[placeholder="Your classroom username"]').should(
+				"have.value",
+				"Example learner"
+			);
+		});
+		for (const width of [1440, 768, 360, 320]) {
+			cy.viewport(width, 800);
+			cy.get("#login-dialog").should(panel => {
+				const element = panel[0];
+				const bounds = element.getBoundingClientRect();
+				expect(bounds.left).to.be.at.least(0);
+				expect(bounds.right).to.be.at.most(width);
+				expect(element.scrollWidth).to.be.at.most(element.clientWidth);
+				const submit = element.querySelector(
+					".course-code-form button"
+				)!;
+				expect(submit.getBoundingClientRect().right).to.be.at.most(
+					bounds.right
+				);
+			});
+		}
+	});
+
+	it("marks Zoom and other new-tab links with a visible icon", () => {
+		cy.visit("/zoom");
+		cy.contains('a[target="_blank"]', "Join on Zoom").should(link => {
+			const style = link[0].ownerDocument.defaultView!.getComputedStyle(
+				link[0],
+				"::after"
+			);
+			expect(style.content).to.equal('""');
+			expect(style.maskImage).not.to.equal("none");
+			expect(parseFloat(style.width)).to.be.greaterThan(0);
+		});
+		cy.get(".site-brand").should(link => {
+			const style = link[0].ownerDocument.defaultView!.getComputedStyle(
+				link[0],
+				"::after"
+			);
+			expect(style.maskImage).to.equal("none");
+		});
+	});
+
 	it("keeps IDE controls usable across phone and tablet viewports", () => {
 		cy.visit("/ide");
 		for (const width of [320, 360, 390, 768]) {

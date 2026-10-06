@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { computed, defineAsyncComponent } from "vue";
+import { computed, defineAsyncComponent, inject, ref, watch } from "vue";
+import { routeLocationKey } from "vue-router";
+import AccessModeToggle from "@/components/AccessModeToggle.vue";
 import CourseCodeAccessForm from "@/components/CourseCodeAccessForm.vue";
 import { useAppStore } from "@/stores/app";
 
@@ -11,6 +13,15 @@ const CourseExplorer = defineAsyncComponent(
 );
 
 const app = useAppStore();
+const route = inject(routeLocationKey, null);
+const accessMode = ref<"account" | "course-code">("account");
+watch(
+	() => route?.hash,
+	hash => {
+		if (hash === "#classroom-access") accessMode.value = "course-code";
+	},
+	{ immediate: true }
+);
 const {
 	currentAdmin,
 	currentCourseLearner,
@@ -83,51 +94,57 @@ function openSignup() {
 			</div>
 
 			<div
-				v-if="!isLoggedIn || !hasAssignedCourseAccess"
+				v-if="isLoggedIn && !hasAssignedCourseAccess"
 				class="site-action-row courses-actions"
 			>
-				<button
-					v-if="!isLoggedIn"
-					class="site-button site-button--secondary"
-					type="button"
-					@click="openLogin"
-				>
-					Log in
-				</button>
-				<button
-					v-if="!isLoggedIn"
-					class="site-button site-button--primary"
-					type="button"
-					@click="openSignup"
-				>
-					Sign up
-				</button>
 				<RouterLink
-					v-else-if="!hasAssignedCourseAccess"
 					class="site-button site-button--secondary"
 					to="/profile"
 				>
 					Go to Account
 				</RouterLink>
-				<RouterLink
-					v-if="!isLoggedIn"
-					class="site-button site-button--secondary"
-					to="/signup"
-				>
-					Book a Class
-				</RouterLink>
 			</div>
 		</header>
 
-		<RouterLink v-if="!isLoggedIn" class="text-link" to="/pathways"
-			>Explore course pathways</RouterLink
-		>
 		<section
 			v-if="!isLoggedIn"
 			id="classroom-access"
 			class="courses-code-entry"
 		>
-			<CourseCodeAccessForm />
+			<AccessModeToggle
+				v-model="accessMode"
+				label="Course access method"
+			/>
+			<div
+				v-show="accessMode === 'account'"
+				class="courses-account-entry"
+			>
+				<div class="site-action-row">
+					<button
+						class="site-button site-button--primary"
+						type="button"
+						@click="openLogin"
+					>
+						Log in
+					</button>
+					<button
+						class="site-button site-button--secondary"
+						type="button"
+						@click="openSignup"
+					>
+						Sign up
+					</button>
+				</div>
+				<RouterLink class="text-link" to="/signup"
+					>Book a Class</RouterLink
+				>
+				<RouterLink class="text-link" to="/pathways">
+					Explore course pathways
+				</RouterLink>
+			</div>
+			<div v-show="accessMode === 'course-code'">
+				<CourseCodeAccessForm embedded />
+			</div>
 		</section>
 
 		<section
@@ -152,6 +169,25 @@ function openSignup() {
 <style scoped>
 .courses-discovery {
 	padding: 1rem;
+}
+
+.courses-code-entry {
+	width: min(100%, 30rem);
+	margin-inline: auto;
+}
+
+.courses-account-entry {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.85rem 1.25rem;
+}
+
+.courses-account-entry .site-action-row {
+	width: 100%;
+}
+
+.courses-account-entry .site-button {
+	flex: 1;
 }
 .is-learning .courses-hero {
 	padding: 0.65rem 1rem;

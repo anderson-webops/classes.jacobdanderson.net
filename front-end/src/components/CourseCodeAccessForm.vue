@@ -2,8 +2,15 @@
 import { computed, ref } from "vue";
 import { useAppStore } from "@/stores/app";
 
+const props = withDefaults(
+	defineProps<{
+		embedded?: boolean;
+		initialEntry?: "returning" | "new";
+	}>(),
+	{ embedded: false, initialEntry: "returning" }
+);
 const app = useAppStore();
-const entry = ref("returning");
+const entry = ref(props.initialEntry);
 const code = ref("");
 const username = ref("");
 const password = ref("");
@@ -47,29 +54,30 @@ async function redeemCode() {
 </script>
 
 <template>
-	<section class="course-code-access site-surface site-surface--soft">
-		<div class="course-code-copy">
-			<p class="page-eyebrow">Classroom access</p>
+	<section
+		class="course-code-access"
+		:class="embedded ? 'is-embedded' : 'site-surface site-surface--soft'"
+	>
+		<div v-if="!embedded" class="course-code-copy">
 			<h2>Use a course code</h2>
 			<p>
-				Enter the code from your tutor, your username, and your private
-				password. You can open the assigned course and sync Python and
-				Java IDE projects without providing an email address.
+				Open your course and saved projects without providing an email
+				address.
 			</p>
 		</div>
 
-		<label
-			>Classroom access
+		<label class="course-code-entry"
+			>Workspace
 			<select v-model="entry">
 				<option value="returning">Reopen my workspace</option>
 				<option value="new">Create a new workspace</option>
 			</select>
 		</label>
-		<p>
+		<p v-if="!embedded || entry === 'new'">
 			{{
 				entry === "new"
-					? "Choose a new username and keep your private password. Your tutor's code determines course access."
-					: "Use your existing code, username and password. For forgotten passwords, ask your tutor to recover the workspace."
+					? "Choose a username and a private password of 12–128 characters."
+					: "Use your existing course code, username and private password."
 			}}
 		</p>
 		<form class="course-code-form" @submit.prevent="redeemCode">
@@ -124,20 +132,40 @@ async function redeemCode() {
 			{{ error }}
 		</p>
 		<p class="course-code-note">
-			For a new username, choose and save a private password of 12–128
-			characters. Use the same password to reopen your saved projects.
-			Never share it with classmates. If you previously used only a code
-			and username, or forgot your password, ask your tutor to recover
-			your existing workspace. Your projects are preserved.
+			Keep your password private. If you forgot it or previously used only
+			a code and username, ask your tutor to recover your workspace. Your
+			projects are preserved.
 		</p>
 	</section>
 </template>
 
 <style scoped>
 .course-code-access {
+	container-type: inline-size;
 	display: grid;
-	gap: 1.25rem;
+	gap: 0.8rem;
 	padding: clamp(1.4rem, 2.8vw, 2rem);
+}
+
+.course-code-access.is-embedded {
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
+.course-code-entry {
+	display: grid;
+	gap: 0.45rem;
+	min-width: 0;
+	font-weight: 650;
+}
+
+.course-code-entry select {
+	width: 100%;
+	min-height: 2.75rem;
+	padding: 0.45rem 0.75rem;
+	font: inherit;
 }
 
 .course-code-copy {
@@ -158,12 +186,13 @@ async function redeemCode() {
 
 .course-code-form {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(10rem, 1fr)) auto;
+	grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
 	gap: 1rem;
 	align-items: end;
 }
 
 .course-code-form label {
+	min-width: 0;
 	display: grid;
 	gap: 0.45rem;
 	font-weight: 650;
@@ -171,13 +200,25 @@ async function redeemCode() {
 }
 
 .course-code-form input {
+	box-sizing: border-box;
 	width: 100%;
-	min-height: 3rem;
-	padding: 0.75rem 0.9rem;
+	min-width: 0;
+	min-height: 2.75rem;
+	padding: 0.65rem 0.8rem;
 	border: 1px solid var(--color-border);
 	border-radius: 14px;
 	background: var(--color-surface);
 	color: var(--color-ink);
+}
+
+.is-embedded .course-code-form {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+@container (max-width: 44rem) {
+	.course-code-form {
+		grid-template-columns: minmax(0, 1fr);
+	}
 }
 
 .course-code-status,
