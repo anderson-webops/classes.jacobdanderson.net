@@ -17,7 +17,7 @@ describe("CPPM2 array lesson and learner workflows", () => {
 			expect(item.ideImport).toBe(true);
 			expect(item.projectLink).toBe(source + folder);
 		}
-		expect(course.modules.filter(item => item !== module).flatMap(item => [...item.curriculum, ...item.supplementalProjects]).some(item => item.ideImport)).toBe(false);
+		expect([...module.curriculum, ...module.supplementalProjects].filter(item => item.ideImport).map(item => item.title)).toEqual(["Raw Arrays as Contiguous Memory", "Pointer Arithmetic and Offset Reasoning"]);
 	});
 	it("keeps required practice and an optional verification choice distinct", async () => {
 		for (const course of [cppLevel2Course, (await loadRawCourse("cpp-level-2"))!]) {

@@ -20,6 +20,7 @@ import { cppFunctionsLessonBriefs } from "../front-end/src/stores/courses/cppFun
 import { cppGridLessonBrief } from "../front-end/src/stores/courses/cppGridProjectBriefs.ts";
 import { cppLifetimeProjectBriefs } from "../front-end/src/stores/courses/cppLifetimeProjectBriefs.ts";
 import { cppParameterLessonBriefs } from "../front-end/src/stores/courses/cppParameterProjectBriefs.ts";
+import { completeTwoDimensionalAttempt, verifyTwoDimensionalExport } from "./cpp-two-dimensional-export-checks.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const bridgeRepository = "instruction-material/Python-to-Java-and-CPP-Bridge";
@@ -234,9 +235,53 @@ const gameReferences = {
 	}
 };
 const gameReferenceCode = {};
-const preservedPacks = { ...pointerPacks, ...arrayPacks, ...gamePacks };
+const twoDimensionalRevision = "8c0306d0adf115824fee452a2114d4dd3d6b5afe";
+const twoDimensionalPacks = {
+	"CPPM3-Two-Dimensional-Arrays-Reference": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "5a8e60755fce0cdb8f1837559031880d8fdb970b4cb92fb4e5b38320a217c388",
+		"main.cpp": "bce18fbcf17d6aaf4016ae6f20bf3928a8524a1b961f507caaea9e053141101c"
+	},
+	"CPPM3-2D-Array-Practice-Starter": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "9956c6abcf4a5c81272f18c90f20c740af252349b62ba8a3a414d63d4b64e89a",
+		"main.cpp": "37e5600536c04f9ecc2b443918ddb994d765293a82a57d208ea7cedf3f96f5b9"
+	},
+	"CPPM3-Bank-Transactions-Starter": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "ca5a95c21d157487b51c3693fe6ec340feae5a47535e6e0c5f22c00bf9a6143c",
+		"main.cpp": "c6eabd0ba98e197fcdf2134017ac6bb6f0bc025423fe91be8ad14adf2f36b60c"
+	},
+	"CPPM3-2D-Array-Extension-Starter": {
+		"Makefile": "17ae8add523b31bee84be65585b722f5ed7fd51643336b3cbe6dbe9b8a7f7542",
+		"README.md": "cd6c55aa2d4c2197b14105ca848c97b886759e285e385791288fd5580e9fbbda",
+		"main.cpp": "88a827ef9f370a8a33304f5e69693d3d8cf8847d44af8e7b2e2d65d854e7b0dd"
+	}
+};
+const twoDimensionalReferences = {
+	"CPPM3-2D-Array-Practice": {
+		"main.cpp": "05fc60f2c0b05aae65dffa56743fa62c5c21bb44e8a1506ae9c986a51ad5dab3"
+	},
+	"CPPM3-Bank-Transactions": {
+		"main.cpp": "f88509ffb8b5b11b934d6b9820a75094463ca6015d05cba26ba1daedb8bd1124"
+	},
+	"CPPM3-2D-Array-Extension": {
+		"main.cpp": "56924a2d795c90a9593756c0ef628ab240532f106e11ce3de7b338c79360de2c"
+	}
+};
+const twoDimensionalReferenceCode = {};
+const preservedPacks = { ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks };
 
 const fixtures = [
+	...Object.entries(twoDimensionalPacks).map(([folder, hashes]) => ({
+		repository: memoryRepository,
+		revision: twoDimensionalRevision,
+		courseId: "cpp-level-2",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: "cppm3-two-dimensional-arrays-and-layout"
+	})),
 	...Object.entries(gamePacks).map(([folder, hashes]) => ({
 		repository: memoryRepository,
 		revision: gameRevision,
@@ -377,6 +422,7 @@ async function compileExport(directory, names, mode, standard = 17, warningsAsEr
 }
 
 function completeMemoryAttempt(folder, source) {
+	if (Object.hasOwn(twoDimensionalPacks, folder)) return completeTwoDimensionalAttempt(folder, source, twoDimensionalReferenceCode[folder]);
 	if (Object.hasOwn(gamePacks, folder)) {
 		const reference = gameReferenceCode[folder];
 		for (const name of ["applyMove", "checkwin", "board"]) {
@@ -456,7 +502,10 @@ async function verifyMemoryExport(directory, folder) {
 	const result = await runNative(join(directory, "project"), [], directory);
 	assert.equal(result.code, 0);
 	assert.equal(result.stderr, "");
-	if (Object.hasOwn(gamePacks, folder)) {
+	if (Object.hasOwn(twoDimensionalPacks, folder)) {
+		await verifyTwoDimensionalExport(directory, folder, result, runNative);
+	}
+	else if (Object.hasOwn(gamePacks, folder)) {
 		await verifyGameExport(directory, folder, result);
 	}
 	else if (Object.hasOwn(arrayPacks, folder)) {
@@ -928,6 +977,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			}
 			if (Object.hasOwn(gamePacks, folder)) {
 				gameReferenceCode[folder] = (await readStarter(repository, revision, "CPPM2-Tic-Tac-Toe", gameReferences["CPPM2-Tic-Tac-Toe"]))["main.cpp"];
+			}
+			if (Object.hasOwn(twoDimensionalPacks, folder) && folder.endsWith("-Starter")) {
+				const referenceFolder = folder.replace(/-Starter$/, "");
+				twoDimensionalReferenceCode[folder] = (await readStarter(repository, revision, referenceFolder, twoDimensionalReferences[referenceFolder]))["main.cpp"];
 			}
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
