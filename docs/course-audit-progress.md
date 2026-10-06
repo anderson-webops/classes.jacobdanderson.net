@@ -764,3 +764,18 @@ All twelve focused course-copy/parameter/fidelity methods pass locally. Screensh
 capture returns to the start of the source after verifying the saved edit, so
 workspace review shows imported code rather than an ending blank line. Final
 exact-head full validation remains required before integration.
+
+
+The second full head `2f5c1b7ad2ae2343c1ae57b2fbbbdf792c1c39ae` passes
+all 1,331 functional methods, twenty-two actual starter workflows, eleven
+complete lesson programs and eleven Cypress checks. Three of 267 course-quality
+methods expose follow-ups: inline-code masking hides numbered-step markers from
+the formatter, and two raw-source scans inspect supplied code as prose. Retain
+inline-code syntax around collision-safe placeholders during prose edits, then
+restore exact literal bytes. Both copy suites share an independent TypeScript
+literal scanner that removes Markdown code only for prose checks. The existing
+invalid-prose regressions remain active. All 282 local quality, artifact, copy,
+source-preservation, display and parameter-project methods pass after correction.
+The mobile Defanging and desktop Parameter/Chaos screenshots are inspected with
+the original code visible at the start. Full final-head hosted checks remain
+required before integration.

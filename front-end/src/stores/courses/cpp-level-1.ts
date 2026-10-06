@@ -447,7 +447,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"mutation trace"
 		],
 		flowNote:
-			"Trace the complete introduction and implement the required prediction driver before comparing results. Read the supplied Student-record lesson, then complete required Defanging and Chaos Monkeys. Check copy preservation, mutable caller changes, const observation and loop termination; test empty and bounded inputs. Save each attempt before comparing the reference."
+			"Trace the complete introduction and implement the required prediction driver before comparing results. Read the supplied small-record lesson, then complete required Defanging and Chaos Monkeys. Check copy preservation, mutable caller changes, const observation and loop termination; test empty and bounded inputs. Save each attempt before comparing the reference."
 	},
 	"CPPF7 Grids and 2D Vectors": {
 		estimatedTime: "2–3 sessions · 45–60 minutes each",

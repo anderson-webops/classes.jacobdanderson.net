@@ -50,5 +50,10 @@ describe("copy cleanup preserves supplied source", () => {
 		);
 		expect(directive).toContain("`contextmanager`");
 		expect(directive).not.toMatch(/\bStart with\b/);
+		const steps = normalized(
+			"**Build plan:**\n1. `first()` reads a value.\n2. `second()` checks the value."
+		);
+		expect(steps).toContain("**Build plan:**\n\n1. `first()`");
+		expect(steps).toContain("\n2. `second()`");
 	});
 });

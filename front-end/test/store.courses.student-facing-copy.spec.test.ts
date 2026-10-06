@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import ts from "typescript";
+import { rawCourseProse } from "./courseProse";
 import { describe, expect, it } from "vitest";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
 import { isJuniScratchProjectTitle } from "@/stores/courses/juniScratchProjects";
@@ -275,42 +275,6 @@ function snippet(value: string, pattern: RegExp) {
 
 	const start = Math.max(0, match.index - 70);
 	return value.slice(start, start + 180).replace(/\s+/g, " ");
-}
-
-function proseForCopyChecks(text: string) {
-	return text
-		.replace(/(`{3,}|~{3,})[\s\S]*?\1/g, " ")
-		.replace(/(`+)[\s\S]*?\1/g, " ");
-}
-
-function rawCourseProse(source: string) {
-	const tree = ts.createSourceFile(
-		"course.ts",
-		source,
-		ts.ScriptTarget.Latest
-	);
-	const literals: Array<[number, number, string]> = [];
-	function visit(node: ts.Node) {
-		if (
-			ts.isStringLiteralLike(node) ||
-			ts.isTemplateHead(node) ||
-			ts.isTemplateMiddle(node) ||
-			ts.isTemplateTail(node)
-		) {
-			const prose = proseForCopyChecks(node.text);
-			if (prose !== node.text)
-				literals.push([
-					node.getStart(tree),
-					node.end,
-					JSON.stringify(prose)
-				]);
-		}
-		ts.forEachChild(node, visit);
-	}
-	visit(tree);
-	for (const [start, end, prose] of literals.reverse())
-		source = source.slice(0, start) + prose + source.slice(end);
-	return source;
 }
 
 function escapeRegExp(value: string) {

@@ -25,7 +25,7 @@ export function mapMarkdownProse(
 			);
 			if (closingIndex < 0) continue;
 			const end = spans[closingIndex].index! + opening[0].length;
-			const marker = `${prefix}${literals.length}\uE001`;
+			const marker = `\`${prefix}${literals.length}\uE001\``;
 			literals.push([marker, prose.slice(opening.index, end)]);
 			masked += prose.slice(start, opening.index) + marker;
 			start = end;
