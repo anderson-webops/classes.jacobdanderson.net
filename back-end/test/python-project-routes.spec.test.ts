@@ -33,8 +33,7 @@ async function withPythonProjectRoute<T>(
 				_id: courseCodeLearnerID,
 				courseID: "python-level-1"
 			};
-		}
-		else {
+		} else {
 			req.currentUser = {
 				_id: userID
 			};
@@ -114,16 +113,33 @@ describe("Python project routes", () => {
 		];
 		for (const owner of ["user", "course-code"] as const) {
 			await withPythonProjectRoute(async baseUrl => {
-				const response = await postJson(baseUrl, { files, title: "Conway", mode: "python" });
+				const response = await postJson(baseUrl, {
+					files,
+					title: "Conway",
+					mode: "python"
+				});
 				expect(response.status).toBe(201);
 				const body = await response.json();
-				expect(body.project.files).toEqual(files.map(file => ({ ...file, encoding: "text" })));
-				expect(modelMocks.pythonProjectCreate).toHaveBeenLastCalledWith(expect.objectContaining({
-					files: files.map(file => ({ ...file, encoding: "text" })),
-					user: owner === "user" ? userID : courseCodeLearnerID
-				}));
-				for (const name of ["../repeat.in", "/repeat.in", "folder/repeat.in"]) {
-					const invalid = await postJson(baseUrl, { files: [...files, { name, content: "0 0" }] });
+				expect(body.project.files).toEqual(
+					files.map(file => ({ ...file, encoding: "text" }))
+				);
+				expect(modelMocks.pythonProjectCreate).toHaveBeenLastCalledWith(
+					expect.objectContaining({
+						files: files.map(file => ({
+							...file,
+							encoding: "text"
+						})),
+						user: owner === "user" ? userID : courseCodeLearnerID
+					})
+				);
+				for (const name of [
+					"../repeat.in",
+					"/repeat.in",
+					"folder/repeat.in"
+				]) {
+					const invalid = await postJson(baseUrl, {
+						files: [...files, { name, content: "0 0" }]
+					});
 					expect(invalid.status).toBe(400);
 				}
 			}, owner);
@@ -168,35 +184,31 @@ describe("Python project routes", () => {
 					user: userID
 				})
 			);
-			expect(body.project.files.map((file: { name: string }) => file.name)).toEqual([
-				"package/__init__.py",
-				"package/util.py"
-			]);
+			expect(
+				body.project.files.map((file: { name: string }) => file.name)
+			).toEqual(["package/__init__.py", "package/util.py"]);
 		});
 	});
 
 	it("stores a course-code learner project under only the granted course", async () => {
-		await withPythonProjectRoute(
-			async baseUrl => {
-				const response = await postJson(baseUrl, {
-					activeFileName: "main.py",
-					courseID: "java-level-1",
-					files: [{ content: "print('classroom')\n", name: "main.py" }],
-					mode: "python",
-					title: "Classroom project"
-				});
+		await withPythonProjectRoute(async baseUrl => {
+			const response = await postJson(baseUrl, {
+				activeFileName: "main.py",
+				courseID: "java-level-1",
+				files: [{ content: "print('classroom')\n", name: "main.py" }],
+				mode: "python",
+				title: "Classroom project"
+			});
 
-				expect(response.status).toBe(201);
-				expect(modelMocks.pythonProjectCreate).toHaveBeenCalledWith(
-					expect.objectContaining({
-						courseID: "python-level-1",
-						ownerRole: "courseCodeLearner",
-						user: courseCodeLearnerID
-					})
-				);
-			},
-			"course-code"
-		);
+			expect(response.status).toBe(201);
+			expect(modelMocks.pythonProjectCreate).toHaveBeenCalledWith(
+				expect.objectContaining({
+					courseID: "python-level-1",
+					ownerRole: "courseCodeLearner",
+					user: courseCodeLearnerID
+				})
+			);
+		}, "course-code");
 	});
 
 	it("accepts nested Java package files for signed-in IDE projects", async () => {
@@ -209,7 +221,8 @@ describe("Python project routes", () => {
 						name: "src/main/java/Helper.java"
 					},
 					{
-						content: "package main.java;\npublic class Main { public static void main(String[] args) {} }\n",
+						content:
+							"package main.java;\npublic class Main { public static void main(String[] args) {} }\n",
 						name: "src/main/java/Main.java"
 					}
 				],
@@ -224,12 +237,14 @@ describe("Python project routes", () => {
 					activeFileName: "src/main/java/Main.java",
 					files: [
 						{
-							content: "package main.java;\npublic class Helper {}\n",
+							content:
+								"package main.java;\npublic class Helper {}\n",
 							encoding: "text",
 							name: "src/main/java/Helper.java"
 						},
 						{
-							content: "package main.java;\npublic class Main { public static void main(String[] args) {} }\n",
+							content:
+								"package main.java;\npublic class Main { public static void main(String[] args) {} }\n",
 							encoding: "text",
 							name: "src/main/java/Main.java"
 						}
@@ -238,17 +253,21 @@ describe("Python project routes", () => {
 					user: userID
 				})
 			);
-			expect(body.project.files.map((file: { name: string }) => file.name)).toEqual([
-				"src/main/java/Helper.java",
-				"src/main/java/Main.java"
-			]);
+			expect(
+				body.project.files.map((file: { name: string }) => file.name)
+			).toEqual(["src/main/java/Helper.java", "src/main/java/Main.java"]);
 		});
 	});
 
 	it("allows Java packages and case-distinct Python packages outside shim paths", async () => {
 		await withPythonProjectRoute(async baseUrl => {
 			const javaResponse = await postJson(baseUrl, {
-				files: [{ name: "pygame/Main.java", content: "public class Main {}" }],
+				files: [
+					{
+						name: "pygame/Main.java",
+						content: "public class Main {}"
+					}
+				],
 				mode: "java",
 				title: "Java package"
 			});
@@ -310,7 +329,9 @@ describe("Python project routes", () => {
 			expect(response.status).toBe(201);
 			expect(modelMocks.pythonProjectCreate).toHaveBeenCalledWith(
 				expect.objectContaining({
-					files: expect.arrayContaining([expect.objectContaining({ name: "helper_39.py" })])
+					files: expect.arrayContaining([
+						expect.objectContaining({ name: "helper_39.py" })
+					])
 				})
 			);
 		});
@@ -339,7 +360,8 @@ describe("Python project routes", () => {
 					activeFileName: "Main.java",
 					files: [
 						{
-							content: "public class Main { public static void main(String[] args) {} }",
+							content:
+								"public class Main { public static void main(String[] args) {} }",
 							name: "Main.java"
 						}
 					],
@@ -350,7 +372,8 @@ describe("Python project routes", () => {
 					activeFileName: "Algo.java",
 					files: [
 						{
-							content: "public class Algo { public static void main(String[] args) {} }",
+							content:
+								"public class Algo { public static void main(String[] args) {} }",
 							name: "Algo.java"
 						},
 						{
@@ -369,7 +392,9 @@ describe("Python project routes", () => {
 
 				expect(response.status).toBe(201);
 				expect(body.project.mode).toBe(payload.mode);
-				expect(body.project.activeFileName).toBe(payload.activeFileName);
+				expect(body.project.activeFileName).toBe(
+					payload.activeFileName
+				);
 			}
 		});
 
@@ -380,7 +405,8 @@ describe("Python project routes", () => {
 				activeFileName: "Main.java",
 				files: [
 					{
-						content: "public class Main { public static void main(String[] args) {} }",
+						content:
+							"public class Main { public static void main(String[] args) {} }",
 						encoding: "text",
 						name: "Main.java"
 					}
@@ -396,7 +422,8 @@ describe("Python project routes", () => {
 				activeFileName: "Algo.java",
 				files: [
 					{
-						content: "public class Algo { public static void main(String[] args) {} }",
+						content:
+							"public class Algo { public static void main(String[] args) {} }",
 						encoding: "text",
 						name: "Algo.java"
 					},
@@ -420,7 +447,8 @@ describe("Python project routes", () => {
 				activeFileName: "Main.java",
 				files: [
 					{
-						content: "public class Main { public static void main(String[] args) {} }",
+						content:
+							"public class Main { public static void main(String[] args) {} }",
 						name: "Main.java"
 					}
 				],
@@ -457,7 +485,8 @@ describe("Python project routes", () => {
 				activeFileName: "Main.java",
 				files: [
 					{
-						content: "public class Main { public static void main(String[] args) {} }",
+						content:
+							"public class Main { public static void main(String[] args) {} }",
 						encoding: "text",
 						name: "Main.java"
 					}
@@ -477,7 +506,11 @@ describe("Python project routes", () => {
 			},
 			{ name: "src/Task.cc", content: '#include "include/Task.hpp"\n' },
 			{ name: "include/Task.hpp", content: "#pragma once\n" },
-			{ name: "README.md", content: "Build both sources.\n" }
+			{ name: "README.md", content: "Build both sources.\n" },
+			{
+				name: "Makefile",
+				content: "main:\n\tc++ main.cpp src/Task.cc -o main\n"
+			}
 		];
 		for (const owner of ["user", "course-code"] as const) {
 			await withPythonProjectRoute(async baseUrl => {
@@ -500,6 +533,27 @@ describe("Python project routes", () => {
 		expect(modelMocks.pythonProjectCreate.mock.calls[1]?.[0]).toMatchObject(
 			{ user: courseCodeLearnerID, ownerRole: "courseCodeLearner" }
 		);
+	});
+
+	it("keeps build files inert and rejects unsupported build-file paths", async () => {
+		await withPythonProjectRoute(async baseUrl => {
+			for (const name of ["../Makefile", "src/Makefile", "Makefile.sh"]) {
+				const response = await postJson(baseUrl, {
+					mode: "cpp",
+					files: [
+						{ name: "main.cpp", content: "int main() {}" },
+						{ name, content: "all:\n\techo build\n" }
+					]
+				});
+				expect(response.status).toBe(400);
+			}
+			const response = await postJson(baseUrl, {
+				mode: "cpp",
+				files: [{ name: "Makefile", content: "all:\n\techo build\n" }]
+			});
+			expect(response.status).toBe(400);
+		});
+		expect(modelMocks.pythonProjectCreate).not.toHaveBeenCalled();
 	});
 
 	it("rejects C++ header-only, wrong-language and unsafe path projects", async () => {
@@ -526,12 +580,16 @@ describe("Python project routes", () => {
 		await withPythonProjectRoute(async baseUrl => {
 			for (const payload of [
 				{
-					files: [{ content: "print('wrong mode')\n", name: "main.py" }],
+					files: [
+						{ content: "print('wrong mode')\n", name: "main.py" }
+					],
 					mode: "java",
 					title: "Missing Java file"
 				},
 				{
-					files: [{ content: "public class Main {}", name: "Main.java" }],
+					files: [
+						{ content: "public class Main {}", name: "Main.java" }
+					],
 					mode: "python",
 					title: "Missing Python file"
 				}
@@ -548,7 +606,9 @@ describe("Python project routes", () => {
 	});
 
 	it("accepts a base64 asset at the editor's 2 MB binary import limit", async () => {
-		const twoMegabyteBase64 = "A".repeat(Math.ceil((2 * 1024 * 1024) / 3) * 4);
+		const twoMegabyteBase64 = "A".repeat(
+			Math.ceil((2 * 1024 * 1024) / 3) * 4
+		);
 
 		await withPythonProjectRoute(async baseUrl => {
 			const response = await postJson(baseUrl, {
@@ -568,15 +628,21 @@ describe("Python project routes", () => {
 			});
 
 			expect(response.status).toBe(201);
-			const createdProject = modelMocks.pythonProjectCreate.mock.calls.at(-1)?.[0];
-			const assetFile = createdProject.files.find((file: { name: string }) => file.name === "images/player.png");
+			const createdProject =
+				modelMocks.pythonProjectCreate.mock.calls.at(-1)?.[0];
+			const assetFile = createdProject.files.find(
+				(file: { name: string }) => file.name === "images/player.png"
+			);
 			expect(assetFile.encoding).toBe("base64");
 			expect(assetFile.content).toHaveLength(twoMegabyteBase64.length);
 		});
 	});
 
 	it("keeps a larger JSON parser limit scoped to Code IDE project routes", () => {
-		const serverSource = readFileSync(resolve(__dirname, "../src/server.ts"), "utf8");
+		const serverSource = readFileSync(
+			resolve(__dirname, "../src/server.ts"),
+			"utf8"
+		);
 		const limiterSource = readFileSync(
 			resolve(__dirname, "../src/middleware/rateLimiters.ts"),
 			"utf8"
@@ -658,7 +724,10 @@ describe("Python project routes", () => {
 
 	it("rejects files that collide with browser runtime shim modules", async () => {
 		const runtimeSource = readFileSync(
-			resolve(__dirname, "../../front-end/src/modules/pythonIdeRuntime.ts"),
+			resolve(
+				__dirname,
+				"../../front-end/src/modules/pythonIdeRuntime.ts"
+			),
 			"utf8"
 		);
 		const runtimeModuleList = runtimeSource.match(
@@ -675,7 +744,9 @@ describe("Python project routes", () => {
 				"turtle.py",
 				"pygame.py",
 				"pgzrun.py",
-				...runtimeModules.map(moduleName => `${moduleName}/__init__.py`),
+				...runtimeModules.map(
+					moduleName => `${moduleName}/__init__.py`
+				),
 				"turtle.py/helpers.py",
 				"TURTLE.PY/helper.java",
 				"keras.py",
@@ -728,7 +799,10 @@ describe("Python project routes", () => {
 				"utf8"
 			),
 			readFileSync(
-				resolve(__dirname, "../src/models/schemas/PythonProjectReview.ts"),
+				resolve(
+					__dirname,
+					"../src/models/schemas/PythonProjectReview.ts"
+				),
 				"utf8"
 			)
 		].join("\n");
@@ -749,6 +823,8 @@ describe("Python project routes", () => {
 		expect(sources).not.toMatch(/\bworker_threads\b|\bnew\s+Worker\b/);
 		expect(sources).not.toMatch(/\bjavaIdeRuntime\b|\brunJavaIdeProject\b/);
 		expect(sources).not.toMatch(/\bjavac\b|\bdocker\b/i);
-		expect(sources).not.toMatch(/\bspawn\s*\(|\bfork\s*\(|\bexecFile(?:Sync)?\s*\(/);
+		expect(sources).not.toMatch(
+			/\bspawn\s*\(|\bfork\s*\(|\bexecFile(?:Sync)?\s*\(/
+		);
 	});
 });

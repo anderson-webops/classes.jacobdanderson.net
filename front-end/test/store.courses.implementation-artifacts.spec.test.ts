@@ -550,7 +550,7 @@ describe("implemented course development artifacts", () => {
 		);
 		expectAuthoredSourcePair(
 			cppLevel2,
-			"Pointer Basics, Aliasing, and Failure Modes",
+			"CPPM1 Project 1: Pointer Starter",
 			"CPP-Level-2/tree/main/CPPM1-Pointers-Starter",
 			"CPP-Level-2/tree/main/CPPM1-Pointers"
 		);

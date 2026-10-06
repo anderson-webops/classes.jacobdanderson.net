@@ -8,9 +8,11 @@ import {
 	clearLocalPythonProjects,
 	createPythonIdeProject,
 	getPythonIdeDefaultFileContent,
+	getPythonIdeFileKindLabel,
 	isValidPythonFileName,
 	loadLocalPythonProjects,
 	loadPythonIdeStarterFilesFromGitHub,
+	normalizePythonFileName,
 	pythonIdeModeForCourseId,
 	pythonIdeModeForCourseResource,
 	pythonIdeProjectToPayload,
@@ -59,15 +61,24 @@ describe("C++ source workspace", () => {
 			},
 			{ name: "src/Task.cc", content: '#include "include/Task.hpp"\n' },
 			{ name: "include/Task.hpp", content: "#pragma once\n" },
-			{ name: "README.md", content: "Build both sources.\n" }
+			{ name: "README.md", content: "Build both sources.\n" },
+			{
+				name: "Makefile",
+				content: "main:\n\tc++ main.cpp src/Task.cc -o main\n"
+			}
 		];
 		for (const file of project.files)
 			expect(isValidPythonFileName(file.name)).toBe(true);
+		expect(getPythonIdeFileKindLabel("Makefile")).toBe("Build file");
+		expect(getPythonIdeFileKindLabel("makefile")).toBe("Build file");
 		for (const name of [
 			"../main.cpp",
 			"/main.cpp",
 			"src//main.cpp",
 			"images/main.cpp",
+			"../Makefile",
+			"src/Makefile",
+			"Makefile.sh",
 			"main';echo.cpp"
 		])
 			expect(isValidPythonFileName(name)).toBe(false);
@@ -88,7 +99,8 @@ describe("C++ source workspace", () => {
 			"main.cpp": '#include "BankAccount.h"\nint main() {}\n',
 			"BankAccount.cpp": "// Implement the operations from README.md.\n",
 			"BankAccount.h": "#pragma once\n",
-			"README.md": "Starter brief\n"
+			"README.md": "Starter brief\n",
+			Makefile: "main:\n\tc++ main.cpp BankAccount.cpp -o main\n"
 		};
 		const base =
 			"https://raw.githubusercontent.com/example/course/main/starter/";
@@ -120,14 +132,20 @@ describe("C++ source workspace", () => {
 		expect(
 			Object.fromEntries(files.map(file => [file.name, file.content]))
 		).toEqual(contents);
-		expect(requests).toHaveLength(5);
+		expect(requests).toHaveLength(6);
 		expect(requests.every(url => !url.includes("solution"))).toBe(true);
 	});
 
 	it("gives a complete native command without pretending to execute C++", () => {
-		expect(getPythonIdeDefaultFileContent("main.cpp")).toContain("int main()");
+		expect(normalizePythonFileName("Makefile", ".cpp")).toBe("Makefile");
+		expect(getPythonIdeDefaultFileContent("Makefile")).toBe("");
+		expect(getPythonIdeDefaultFileContent("main.cpp")).toContain(
+			"int main()"
+		);
 		for (const name of ["Helper.cpp", "src/Task.cc", "Helper.cxx"])
-			expect(getPythonIdeDefaultFileContent(name)).not.toContain("int main");
+			expect(getPythonIdeDefaultFileContent(name)).not.toContain(
+				"int main"
+			);
 		const files = [
 			{ name: "main.cpp", content: "" },
 			{ name: "src/Helper.cxx", content: "" },
@@ -146,6 +164,9 @@ describe("C++ source workspace", () => {
 			"cpp-level-1-project",
 			"c-level-1:c-level-1-cppf1-variables-types-strings-and-input-output-curriculum-cppf1-project-1-mad-libs:starter",
 			"cpp-level-1:cpp-level-1-project:starter",
+			"cpp-level-2:cpp-level-2-cppm0-project:starter",
+			"cpp-level-2-project",
+			"cpp-level-2",
 			"c-level-1"
 		]) {
 			expect(cppBuildInstructions(files, key).join("\n")).toContain(
@@ -158,7 +179,12 @@ describe("C++ source workspace", () => {
 				"python-to-java-and-cpp-bridge-project"
 			).join("\n")
 		).toContain("-std=c++17");
-		for (const key of ["c-level-10:project:starter", "c-level-1x-project"]) {
+		for (const key of [
+			"c-level-10:project:starter",
+			"c-level-1x-project",
+			"cpp-level-20:project:starter",
+			"cpp-level-2x-project"
+		]) {
 			expect(cppBuildInstructions(files, key).join("\n")).toContain(
 				"-std=c++17"
 			);

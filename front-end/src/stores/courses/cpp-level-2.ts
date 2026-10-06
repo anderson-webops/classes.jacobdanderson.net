@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { cppLifetimeProjectBriefs } from "./cppLifetimeProjectBriefs";
 
 const cppLevel2SourceCourse: RawCourse = {
 	name: "C++ Level 2",
@@ -8,42 +9,39 @@ const cppLevel2SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Level 2 Positioning and Ownership Vocabulary",
-					content:
-						"This course is the low-level follow-on after prior work has already covered menu-driven programs with functions, classes, vectors, structs, references, and simple state. Level 2 deepens the memory model instead of presenting pointer syntax as disconnected trivia. The central vocabulary includes owner, observer, borrower, mutator, lifetime boundary, valid state, invariant, alias, and cleanup responsibility. These terms make later pointer work reviewable: every function or class can be described by what data it owns, what data it temporarily observes, what data it may mutate, and what must remain true when the operation finishes. Raw arrays, heap allocation, and custom containers become safer once that ownership sentence is explicit."
+					content: cppLifetimeProjectBriefs.positioning
 				},
 				{
 					title: "References, Lifetimes, and Evidence-Based Debugging",
-					content:
-						"Pass-by-value, pass-by-reference, and `const` reference come before raw pointers because they expose ownership and aliasing without adding address syntax too early. Key topics include stack objects, heap objects, aliases, dangling references, leaks, invalidated references, scope-based cleanup, and the difference between a function that mutates caller-owned data and one that only observes it. The debugging habit is evidence-based: draw a small alias diagram, print relevant addresses only when they clarify the question, inspect values in the debugger, and compare the trace with the ownership sentence for the function. Compiler warnings and sanitizers are treated as evidence about lifetime mistakes, not as mysterious messages to work around."
+					content: cppLifetimeProjectBriefs.references
 				},
 				{
 					title: "CPPM0 Project 1: Lifetime Tracing Warm-Up",
-					content:
-						"Trace a short multi-function program by drawing stack frames, aliases, and mutation points. Identify which variables are independent copies, which are references, and which values would become invalid after a scope ends.",
+					content: cppLifetimeProjectBriefs.tracing.replaceAll(
+						/\bTODO\b/g,
+						"`TODO`"
+					),
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Lifetime-Tracing-Warm-Up",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Lifetime-Tracing-Warm-Up/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Lifetime-Tracing-Warm-Up"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Lifetime-Tracing-Warm-Up/solution"
 				},
 				{
 					title: "CPPM0 Project 2: Ownership Boundary Debugging",
-					content:
-						"Debug a small program that mixes copies, references, const references, and borrowed observations. Explain which function owns data, which function mutates caller-owned data, and which value is only safe because the original object still exists.",
+					content: cppLifetimeProjectBriefs.ownership.replaceAll(
+						/\bTODO\b/g,
+						"`TODO`"
+					),
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Ownership-Boundary-Debugging",
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Ownership-Boundary-Debugging/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Ownership-Boundary-Debugging"
+						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Ownership-Boundary-Debugging/solution"
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "CPPM0 Project 3: Lifetime Diagram Extension",
-					content:
-						"Extend one CPM0 tracing project with a written before/after diagram. The diagram labels stack values, aliases, mutation points, and lifetime boundaries.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Lifetime-Tracing-Warm-Up",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Lifetime-Tracing-Warm-Up"
+					content: cppLifetimeProjectBriefs.extension
 				}
 			]
 		},
@@ -52,17 +50,11 @@ const cppLevel2SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Pointer Basics, Aliasing, and Failure Modes",
-					content:
-						"Pointers are variables that store addresses, not regular values. Cover: `&`, `*`, `nullptr`, reading through a pointer, writing through a pointer, pointer aliasing, and how two names can change the same object. Then make failure modes explicit: uninitialized pointers, dangling pointers, null dereferences, stale observations, and why pointer bugs need evidence instead of guessing.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointers-Starter",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointers"
+					content: cppLifetimeProjectBriefs.pointers
 				},
 				{
 					title: "CPPM1 Project 1: Pointer Starter",
-					content:
-						"Use a guided starter to answer conceptual questions about reading and writing through pointers. This module is about memory model clarity, not clever syntax.",
+					content: cppLifetimeProjectBriefs.pointerProject,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM1-Pointers-Starter",
 					solutionLink:
@@ -408,13 +400,7 @@ function decorateCppLevel2Module(
 	if (module.title === "CPPM0 Lifetime, References, and Ownership Framing") {
 		coreCurriculum.splice(1, 0, {
 			title: "CPPM0 Project 0: C++20 Memory Diagnostics Readiness Check",
-			content: [
-				"**Completion evidence:**",
-				"- Compiler name and version plus the exact warning-clean C++20 build command.",
-				"- A diagnostic build using `-fsanitize=address,undefined -fno-omit-frame-pointer` or the closest supported AddressSanitizer/UBSan equivalent.",
-				"- One intentionally isolated invalid-memory fixture that the diagnostic build detects, followed by a corrected run.",
-				"- A note naming any unavailable diagnostic and the substitute trace, debugger, or Valgrind-style check used instead."
-			].join("\n"),
+			content: cppLifetimeProjectBriefs.diagnostics,
 			learningPath: "core"
 		});
 	}

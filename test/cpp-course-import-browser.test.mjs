@@ -18,6 +18,7 @@ import { cppCollectionsLessonBrief } from "../front-end/src/stores/courses/cppCo
 import { cppFoundationLessonBriefs } from "../front-end/src/stores/courses/cppFoundationProjectBriefs.ts";
 import { cppFunctionsLessonBriefs } from "../front-end/src/stores/courses/cppFunctionsProjectBriefs.ts";
 import { cppGridLessonBrief } from "../front-end/src/stores/courses/cppGridProjectBriefs.ts";
+import { cppLifetimeProjectBriefs } from "../front-end/src/stores/courses/cppLifetimeProjectBriefs.ts";
 import { cppParameterLessonBriefs } from "../front-end/src/stores/courses/cppParameterProjectBriefs.ts";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
@@ -153,7 +154,37 @@ const foundationPacks = {
 	}
 };
 
+const memoryRepository = "instruction-material/CPP-Level-2";
+const memoryRevision = "ddbc9448351ca99de292c935c3d0024e616e5a5c";
+const memoryPacks = {
+	"CPPM0-Lifetime-Tracing-Warm-Up/starter": {
+		"Makefile": "cb0a3b63d29a9eea2932f6d493e8449345c346b525bf6e8d52ec9431139cd47b",
+		"README.md": "65181bbfbf7dbc196ad6b46a78c001775252715d83487a0c89f15dc43a8a9b61",
+		"main.cpp": "08ba2dd0f7fca5c235c1426865ef4ccdcbbceb685d4e37d3fc62436d8f7c155e"
+	},
+	"CPPM0-Ownership-Boundary-Debugging/starter": {
+		"Makefile": "cb0a3b63d29a9eea2932f6d493e8449345c346b525bf6e8d52ec9431139cd47b",
+		"README.md": "36bce2e1918a9340b5aa70c872a18c4882265267265ab1c5bcfae3c84f479932",
+		"main.cpp": "a197fdf56daf2ae3f0785b17892c091b23642663ad031fb5344abd8a24581913"
+	},
+	"CPPM1-Pointers-Starter": {
+		"Makefile": "fc3647af6f34f21cf12305818388b2cef6903ee056f29c1558082420fd109c77",
+		"main.cpp": "2e2cc7370dda4254f04972e0de1bdd649a57cce96bf5ca6988ef85a037f0902b"
+	}
+};
+
 const fixtures = [
+	...Object.entries(memoryPacks).map(([folder, hashes]) => ({
+		repository: memoryRepository,
+		revision: memoryRevision,
+		courseId: "cpp-level-2",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: folder.startsWith("CPPM0")
+			? "cppm0-lifetime-references-and-ownership-framing"
+			: "cppm1-pointers-and-addresses"
+	})),
 	...Object.entries(packs).map(([folder, hashes]) => ({
 		repository: bridgeRepository,
 		revision: bridgeRevision,
@@ -254,6 +285,134 @@ async function compileExport(directory, names, mode, standard = 17, warningsAsEr
 	const result = await runNative(command, args, directory);
 	assert.equal(result.code, 0, `Native compilation failed: ${result.stderr}`);
 }
+
+function completeMemoryAttempt(folder, source) {
+	if (folder.startsWith("CPPM0-Lifetime")) {
+		const notes = [
+			"The copy changes to 80 while the caller remains 70.",
+			"The reference changes the caller to 80; the const observer reads 80.",
+			"The returned bonus is 100; named elision permits shared identity.",
+			"Disabling optional named elision keeps the returned value valid."
+		];
+		return source.replace(/\/\/ TODO ([1-4]):[^\n]*/g, (_, number) => `// Prediction ${number}: ${notes[Number(number) - 1]}`);
+	}
+	if (folder.startsWith("CPPM0-Ownership")) {
+		const placeholder = "// TODO: Find the earliest maximum and return that vector element.\n  throw std::logic_error(\"Implement highestSeverity before running selection\");";
+		assert.ok(source.includes(placeholder));
+		return source.replace(placeholder, "std::size_t selected = 0;\n  for (std::size_t index = 1; index < entries.size(); ++index) {\n    if (entries[index].severity > entries[selected].severity) selected = index;\n  }\n  return entries[selected];")
+			.replace(/\/\/ TODO 1:[^\n]*/, "// Prediction 1: The copy changes to 7 while the vector element stays 2.")
+			.replace(/\/\/ TODO 2:[^\n]*/, "// Prediction 2: Reference mutation changes the first element to 7.")
+			.replace(/\/\/ TODO 3:[^\n]*/, "// Prediction 3: The vector owns the borrow; reallocation and destruction invalidate it.");
+	}
+	if (folder === "CPPM1-Pointers-Starter") {
+		return source.replace("int main() {", `int main() {
+    int val1 = 5;
+    int* p1 = &val1;
+    std::cout << *p1 << '\\n' << p1 << '\\n';
+    *p1 = 10;
+    std::cout << *p1 << '\\n' << val1 << '\\n';
+    int* p2 = p1;
+    std::cout << (p1 == p2) << '\\n';
+    *p2 = 20;
+    std::cout << *p1 << '\\n' << val1 << '\\n';
+    int* absent = nullptr;
+    if (absent == nullptr) std::cout << "absent, no dereference\\n";
+    // Reading an uninitialized pointer is undefined behavior in C++20.
+    // Null has no object to dereference; a crash is not guaranteed.
+    // *p1 = &val1 mismatches int and int*; keep it disabled.
+    // *p1 = val1 assigns an int to an int target and is valid here.
+    // p1 = val1 mismatches int* and int; keep it disabled.
+`);
+	}
+	return source;
+}
+
+async function verifyMemoryExport(directory, folder) {
+	const result = await runNative(join(directory, "project"), [], directory);
+	assert.equal(result.code, 0);
+	assert.equal(result.stderr, "");
+	if (folder.startsWith("CPPM0-Lifetime")) {
+		const traces = [...result.stdout.matchAll(/^(.+?) -> (.+?): (\d+) at (.+)$/gm)];
+		assert.deepEqual(traces.map(match => [match[1], match[2], Number(match[3])]), [
+			["Original card", "Taylor", 70],
+			["Inside updateCopy", "Taylor", 80],
+			["After updateCopy", "Taylor", 70],
+			["Inside updateReference", "Taylor", 80],
+			["After updateReference", "Taylor", 80],
+			["Inside observeConstReference", "Taylor", 80],
+			["Inside makeBonusCard", "Morgan", 100],
+			["Returned bonus card", "Morgan", 100]
+		]);
+		assert.notEqual(traces[0][4], traces[1][4]);
+		for (const index of [2, 3, 4, 5]) assert.equal(traces[index][4], traces[0][4]);
+	}
+	else if (folder.startsWith("CPPM0-Ownership")) {
+		assert.match(result.stdout, /Highest severity entry -> failed validation \(severity 8\)/);
+		assert.doesNotMatch(result.stdout, /Learner task:/);
+		// Test the implementation actually edited and exported by the browser.
+		await writeFile(join(directory, "selection-check.cpp"), `#define main exportedDriver
+#include "main.cpp"
+#undef main
+#include <cassert>
+#include <climits>
+int main() {
+    std::vector<LogEntry> entries{{"a", -9}, {"b", -2}, {"c", -2}};
+    assert(&highestSeverity(entries) == &entries[1]);
+    assert(entries[0].severity == -9 && entries[1].severity == -2 && entries[2].severity == -2);
+    std::vector<LogEntry> single{{"only", INT_MIN}};
+    assert(&highestSeverity(single) == &single[0]);
+    entries[0].severity = INT_MAX;
+    assert(&highestSeverity(entries) == &entries[0]);
+    try { highestSeverity({}); return 1; }
+    catch (const std::invalid_argument&) {}
+}
+`);
+		await compileExport(directory, ["selection-check.cpp"], "cpp", 20, true);
+		assert.deepEqual(await runNative(join(directory, "project"), [], directory), { code: 0, stdout: "", stderr: "" });
+	}
+	else {
+		assert.match(result.stdout, /^5\n[^\n]+\n10\n10\n1\n20\n20\nabsent, no dereference\n$/);
+	}
+}
+
+nodeTest("the lifetime, pointer and diagnostics lessons compile with independent output and diagnosed failure", { timeout: 120000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-memory-lesson-contracts-"));
+	try {
+		for (const [name, expected] of [
+			["references", "Copy: 11\nAfter copy: 7\nObserved: 11\nReturned: 12\n"],
+			["pointers", "Value: 14\nRead through first: 14\nSame address: 1\nNo object to read\n"],
+			["diagnostics", "42\n"]
+		]) {
+			const programs = [...cppLifetimeProjectBriefs[name].matchAll(/```cpp\n([\s\S]*?)\n```/g)];
+			assert.equal(programs.length, 1);
+			const code = `${programs[0][1]}\n`;
+			await writeFile(join(temporary, "main.cpp"), code);
+			await compileExport(temporary, ["main.cpp"], "cpp", 20, true);
+			assert.deepEqual(await runNative(join(temporary, "project"), [], temporary), { code: 0, stdout: expected, stderr: "" });
+			if (name !== "diagnostics") continue;
+			const flags = ["-std=c++20", "-Wall", "-Wextra", "-Wpedantic", "-Werror", "-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer", "main.cpp", "-o", "diagnostic"];
+			assert.equal((await runNative("c++", flags, temporary)).code, 0);
+			assert.deepEqual(await runNative(join(temporary, "diagnostic"), [], temporary), { code: 0, stdout: "42\n", stderr: "" });
+			const invalid = await runNative(join(temporary, "diagnostic"), ["--invalid"], temporary);
+			assert.notEqual(invalid.code, 0);
+			assert.match(invalid.stderr, /AddressSanitizer: heap-use-after-free/);
+			const corrected = code.replace(
+				"owner.reset();\n        std::cout << *observer << '\\n'; // Isolated diagnostic failure.",
+				"std::cout << *observer << '\\n';\n        owner.reset();\n        observer = nullptr;"
+			);
+			assert.notEqual(corrected, code);
+			await writeFile(join(temporary, "main.cpp"), corrected);
+			await compileExport(temporary, ["main.cpp"], "cpp", 20, true);
+			assert.deepEqual(await runNative(join(temporary, "project"), ["--invalid"], temporary), { code: 0, stdout: "42\n", stderr: "" });
+			assert.equal((await runNative("c++", flags, temporary)).code, 0);
+			assert.deepEqual(await runNative(join(temporary, "diagnostic"), ["--invalid"], temporary), { code: 0, stdout: "42\n", stderr: "" });
+		}
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-memory-lesson-contracts", pid: process.pid });
+	}
+});
 
 nodeTest("the four foundation lesson programs compile and match independent console fixtures", { timeout: 120000 }, async () => {
 	const temporary = await mkdtemp(join(tmpdir(), "cpp-lesson-contracts-"));
@@ -475,7 +634,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const { revision, standard, hashes, anchor } = fixture;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder.startsWith("CPPM0-Lifetime") || folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
@@ -513,7 +672,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const firstLine = files[entryFile].split("\n").find(line => line.trim());
 			await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
-			const edited = `${files[entryFile]}\n// Browser workflow edit\n`;
+			const edited = `${completeMemoryAttempt(folder, files[entryFile])}\n// Browser workflow edit\n`;
 			expectedFiles[entryFile] = edited;
 			await page.click(".cm-content");
 			await page.keyboard.down(modifier);
@@ -583,6 +742,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				await writeFile(path, content);
 			}
 			await compileExport(directory, Object.keys(exported), mode, standard);
+			if (folder.startsWith("CPPM")) await verifyMemoryExport(directory, folder);
 			await page.reload({ waitUntil: "domcontentloaded" });
 			await page.waitForFunction(name => [...document.querySelectorAll(".file-button")].some(button => button.textContent.includes(name)), {}, entryFile);
 			await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
@@ -606,7 +766,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			if (classFiles.length) await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
 			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
-			if ((folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+			if (Object.hasOwn(files, "Makefile")) {
+				assert.equal(await page.evaluate(() => [...document.querySelectorAll(".file-button")].find(button => button.querySelector("span")?.textContent === "Makefile")?.querySelector("small")?.textContent.trim()), "Build file");
+			}
+			if ((folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
 				await mkdir(directory, { recursive: true });
 				// Show the imported source rather than the last edited blank line.
