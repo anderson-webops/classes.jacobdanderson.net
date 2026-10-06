@@ -35,7 +35,7 @@ export function mapMarkdownProse(
 		// literal, then restore every code span exactly.
 		let result = copyProse(masked + prose.slice(start));
 		for (const [marker, literal] of literals)
-			result = result.replaceAll(marker, literal);
+			result = result.replaceAll(marker, () => literal);
 		return result;
 	}
 

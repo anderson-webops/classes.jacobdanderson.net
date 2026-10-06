@@ -34,14 +34,16 @@ describe("copy cleanup preserves supplied source", () => {
 	it("preserves matching inline code and an unclosed block while editing surrounding prose", () => {
 		const inline = '`"Juni" Students a input`';
 		const longInline = '``a student writes `teacher` and "Juni"``';
+		const replacement = "``$& $$ $' $` ${HOME}``";
 		const unclosed =
 			'~~~cpp\n// Students must preserve this\nconst label = "Juni";';
 		const result = normalized(
-			`A student reads a input: ${inline} and ${longInline}.\n\n${unclosed}`
+			`A student reads a input: ${inline} and ${longInline} and ${replacement}.\n\n${unclosed}`
 		);
 		expect(result).toContain("A learner reads an input:");
 		expect(result).toContain(inline);
 		expect(result).toContain(longInline);
+		expect(result).toContain(replacement);
 		expect(result).toContain(unclosed);
 		const directive = normalized(
 			"Start with `contextmanager`; use a class when reusable state matters."
