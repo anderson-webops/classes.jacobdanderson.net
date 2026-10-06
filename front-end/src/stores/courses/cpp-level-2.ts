@@ -17,7 +17,10 @@ const cppLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "CPPM0 Project 1: Lifetime Tracing Warm-Up",
-					content: cppLifetimeProjectBriefs.tracing,
+					content: cppLifetimeProjectBriefs.tracing.replaceAll(
+						/\bTODO\b/g,
+						"`TODO`"
+					),
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Lifetime-Tracing-Warm-Up/starter",
 					solutionLink:
@@ -25,7 +28,10 @@ const cppLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "CPPM0 Project 2: Ownership Boundary Debugging",
-					content: cppLifetimeProjectBriefs.ownership,
+					content: cppLifetimeProjectBriefs.ownership.replaceAll(
+						/\bTODO\b/g,
+						"`TODO`"
+					),
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-2/tree/main/CPPM0-Ownership-Boundary-Debugging/starter",
 					solutionLink:

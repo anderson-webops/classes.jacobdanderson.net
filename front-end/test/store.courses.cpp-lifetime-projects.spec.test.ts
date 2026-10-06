@@ -52,7 +52,9 @@ describe("opening C++ Level 2 learner and reference workflows", () => {
 				expect(item.projectLink).toBe(`${source}${folder}/starter`);
 				expect(item.solutionLink).toBe(`${source}${folder}/solution`);
 				if (course === cppLevel2Course)
-					expect(item.content).toBe(brief);
+					expect(item.content).toBe(
+						brief.replaceAll(/\bTODO\b/g, "`TODO`")
+					);
 				for (const command of brief.matchAll(
 					/```sh\n([\s\S]*?)\n```/g
 				)) {

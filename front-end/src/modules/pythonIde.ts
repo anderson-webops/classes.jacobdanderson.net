@@ -2761,6 +2761,7 @@ export function getPythonIdeAssetDataUrl(file: PythonIdeFile) {
 }
 
 export function getPythonIdeFileKindLabel(value: string) {
+	if (/^makefile$/i.test(value)) return "Build file";
 	const extension = value.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
 	if ([".cpp", ".cc", ".cxx"].includes(extension ?? "")) return "C++";
 	if ([".h", ".hpp"].includes(extension ?? "")) return "Header";

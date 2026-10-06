@@ -8,6 +8,7 @@ import {
 	clearLocalPythonProjects,
 	createPythonIdeProject,
 	getPythonIdeDefaultFileContent,
+	getPythonIdeFileKindLabel,
 	isValidPythonFileName,
 	loadLocalPythonProjects,
 	loadPythonIdeStarterFilesFromGitHub,
@@ -68,6 +69,8 @@ describe("C++ source workspace", () => {
 		];
 		for (const file of project.files)
 			expect(isValidPythonFileName(file.name)).toBe(true);
+		expect(getPythonIdeFileKindLabel("Makefile")).toBe("Build file");
+		expect(getPythonIdeFileKindLabel("makefile")).toBe("Build file");
 		for (const name of [
 			"../main.cpp",
 			"/main.cpp",

@@ -766,6 +766,9 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			if (classFiles.length) await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
 			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
+			if (Object.hasOwn(files, "Makefile")) {
+				assert.equal(await page.evaluate(() => [...document.querySelectorAll(".file-button")].find(button => button.querySelector("span")?.textContent === "Makefile")?.querySelector("small")?.textContent.trim()), "Build file");
+			}
 			if ((folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
 				await mkdir(directory, { recursive: true });
