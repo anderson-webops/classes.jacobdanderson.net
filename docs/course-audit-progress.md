@@ -598,3 +598,88 @@ the valid instruction not to compile root, starter and solution copies together.
 The regression now checks the actual Point header/source lesson and retains
 specific administrative boilerplate guards. All 267 catalog-quality checks pass
 locally with those corrections. Final exact-head hosted gates remain pending.
+
+The final [site PR #135](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/135)
+integrates at `b86910ba923a115847324b052214a32a5b549e06`, with a tree identical
+to reviewed head `6d37fd76d620ffd78b6fd64c3490b4091062ab03`. All 1,321 functional
+and 267 catalog-quality methods pass. API checks pass 303 methods with 41 existing
+database-dependent skips. All seventeen pinned starter workflows, eight complete
+lesson programs, exact exports/native compilation and eleven Cypress checks pass.
+Independent [canonical-main CI](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37386899508)
+and [CodeQL](https://github.com/anderson-webops/classes.jacobdanderson.net/actions/runs/37386899327)
+also pass. Qodana skips its token-dependent analysis.
+
+The milestone is published as
+[v2.8.34](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.34).
+Its original tagged hosted ARM64 archive and manifest pass independent signed
+proof checks pinned to repository, workflow, exact source/signer revision, tag
+and hosted runners. All 7,843 payload digests, thirteen trusted source files,
+safe unique archive entries and one verified prior-file hardlink match. Uploaded
+and published asset IDs, sizes/digests and notes are unchanged; release
+`404169331` is immutable. No production activation is claimed.
+
+[Downstream PR #25](https://github.com/instruction-material/classes.jacobdanderson.net/pull/25)
+publishes exact canonical parent plus the preserved 75-file overlay at
+`9ad34102d9a4dcf3915db9d416259d4124ed1332`. The normalized overlay patch matches
+without semantic edits. Full reviewed checks and independent
+[downstream-main CI](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37387901620)
+and [CodeQL](https://github.com/instruction-material/classes.jacobdanderson.net/actions/runs/37387901061)
+pass. An explicit observed-main lease protected publication. Neutral branding,
+example configuration, shared static assets and the analytics boundary remain
+intact. Downstream tags and releases are unchanged.
+
+## C++ collection-project candidate
+
+[Source PR #7](https://github.com/instruction-material/CPP-Level-1/pull/7) integrates
+at `e729baca982fc3683ef4f42f38fc72e05d3ca974` with the exact reviewed tree.
+Vector Practice and Bank Accounts have complete, equal root/starter/reference
+briefs, deliberately incomplete starter reminders, separate references and
+one-program Makefiles. Both remain required in the deliberate vectors-first
+Level 1 module; raw-memory work remains in Level 2. The complete vectors example
+retains its original tracked program bytes and supplies a readable lesson.
+
+Bounded integer collections establish safe int sums; ASCII length semantics
+avoid a Unicode character-count claim. Bank Accounts validates count before
+allocation and each complete integer amount before reporting any balance.
+Missing, malformed and out-of-range fields cancel with status 1. Zero counts and
+negative withdrawals remain valid fictional exercise data. All 48 independent
+methods, 54 native targets, sanitizer checks and separate CMake builds pass
+both review gates and independent
+[source-main CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37388438560).
+The integer-spelling follow-up in
+[source PR #8](https://github.com/instruction-material/CPP-Level-1/pull/8) removes an
+unstated 64-character limit that rejected bounded values with long leading-zero
+spellings. Six focused native fixtures pass with sanitizers and warnings as
+errors. Full [push](https://github.com/instruction-material/CPP-Level-1/actions/runs/37389384785)
+and [review](https://github.com/instruction-material/CPP-Level-1/actions/runs/37389513865)
+gates pass 48 methods and 54 separate native/CMake targets. The correction
+integrates at `78fdf38f1c4f2163c12ffc206f8024d58a740647` with the exact reviewed
+tree; all 28 starter-file digests and both project briefs plus the complete
+vector lesson match that final site pin. Independent [integrated-source CI](https://github.com/instruction-material/CPP-Level-1/actions/runs/37389906217)
+also passes.
+
+The matching site candidate keeps both existing project identities, full briefs,
+separate nested starter/reference links and the complete vectors lesson. Generic
+quota duplicates are omitted. Nine focused collection/Level-1 flow methods pass;
+the two targeted neutral-copy/authored-practice checks also pass (84 unrelated
+methods skipped). Source/browser lint and syntax pass. Browser coverage is extended to nineteen
+starter workflows and nine complete lesson programs. Full hosted site validation
+remains required before delivery. CPPF6–CPPF8 and the broader audit stay open.
+
+
+The first collection review head passes all 1,325 functional methods and all
+nineteen actual browser workflows, nine complete lesson programs and eleven
+Cypress checks. Bank/mobile and Vector/desktop screenshots are visually checked.
+One of 267 quality methods rejects the literal TODO starter marker in otherwise
+complete briefs; no unfinished assignment copy is found. The follow-up renders
+that marker as inline code and checks placeholder prose outside code literals,
+with explicit valid-literal and invalid-prose regression cases. The focused
+quality method passes locally (186 unrelated methods skipped).
+
+[Source PR #9](https://github.com/instruction-material/CPP-Level-1/pull/9) changes
+only that markup in six equal root/starter/reference briefs. Both full source
+gates pass at reviewed `670905540454c96133aa7f87adbbf4482a5b6df0`; integrated
+`9632a5db7e3519ab72bb84f7cdc189f4e4af9397` has the identical tree. All 28 starter
+file hashes match the final site pin; only the two README digests change, with
+program, lesson and archive bytes unchanged. Final exact-head site gates remain
+required before integration.

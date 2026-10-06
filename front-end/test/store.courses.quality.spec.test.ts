@@ -544,6 +544,15 @@ describe("course text quality normalization", () => {
 					pattern: /\b(?:TODO|FIXME|TBD|lorem ipsum)\b/i
 				}
 			];
+			const placeholderPattern = artifactChecks.find(
+				check => check.name === "unfinished placeholder"
+			)!.pattern;
+			expect(
+				proseForQualityChecks("Complete one `TODO` marker in the starter.")
+			).not.toMatch(placeholderPattern);
+			expect(proseForQualityChecks("TODO: describe the assignment.")).toMatch(
+				placeholderPattern
+			);
 
 			for (const { entry, course } of await loadedCatalogCourses()) {
 				for (const module of course.modules) {
@@ -560,7 +569,8 @@ describe("course text quality normalization", () => {
 						const text = item.content;
 
 						for (const { name, pattern } of artifactChecks) {
-							const match = (name === "duplicate generated word"
+							const match = (name === "duplicate generated word" ||
+								name === "unfinished placeholder"
 								? proseForQualityChecks(text)
 								: text).match(pattern);
 							if (!match) continue;

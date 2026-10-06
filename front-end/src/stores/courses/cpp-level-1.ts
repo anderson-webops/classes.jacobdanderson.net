@@ -4,6 +4,10 @@ import {
 	cppClassesProjectBriefs
 } from "./cppClassesProjectBriefs";
 import {
+	cppCollectionsLessonBrief,
+	cppCollectionsProjectBriefs
+} from "./cppCollectionsProjectBriefs";
+import {
 	cppFoundationLessonBriefs,
 	cppFoundationProjectBriefs
 } from "./cppFoundationProjectBriefs";
@@ -202,41 +206,28 @@ const cppLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Vectors as Growable Sequences and Function Inputs",
-					content:
-						"`std::vector` is the default beginner collection for ordered values that can grow over time. Cover: `push_back`, indexing, `size`, iterating with indexes and range-based loops, reading versus mutating a collection, passing vectors to functions, using `const` references for read-only access, and writing summary operations such as totals, filters, and searches.",
-					projectLink:
+					content: cppCollectionsLessonBrief,
+					solutionLink:
 						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Vectors-Reference"
 				},
 				{
 					title: "CPPF5 Project 1: Vector Practice",
-					content:
-						"Use vectors to store values, compute totals, and process strings through helper functions. This replaces the earlier raw-array jump with a safer container-first pattern.",
+					content: cppCollectionsProjectBriefs.vector,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Vector-Practice",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Vector-Practice/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Vector-Practice"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Vector-Practice/solution"
 				},
 				{
 					title: "CPPF5 Project 2: Bank Accounts",
-					content:
-						"Use a vector of transactions to compute a changing account balance. This is a better first collection project than raw arrays because the data model stays visible without manual resizing mechanics.",
+					content: cppCollectionsProjectBriefs.bank,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Bank-Accounts",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Bank-Accounts/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Bank-Accounts"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Bank-Accounts/solution"
 				}
 			],
-			supplementalProjects: [
-				{
-					title: "Vectors and Collections: Extension Challenge",
-					content:
-						"Extend one of the vector projects with filtering, searching, or a new summary calculation to keep collection thinking active.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Bank-Accounts",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF5-Bank-Accounts"
-				}
-			]
+			supplementalProjects: []
 		},
 		{
 			title: "CPPF6 Structs and Parameter Passing",
@@ -445,7 +436,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"empty collection"
 		],
 		flowNote:
-			"Use Vector Practice to compare index and range-based iteration, then test empty, one-item, and multi-item collections. Bank Accounts is the required fictional-data project; real account details are never entered."
+			"Trace the complete vectors example, then complete required Vector Practice with empty, one-item and bounded signed collections. Complete required Bank Accounts with fictional integer-dollar values, validate count and each requested amount before reporting any balance, and test cancellation as well as normal results. Real account details are never entered."
 	},
 	"CPPF6 Structs and Parameter Passing": {
 		estimatedTime: "3 sessions · 45–60 minutes each",

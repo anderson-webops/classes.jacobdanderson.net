@@ -14,6 +14,7 @@ import { strFromU8, unzipSync } from "fflate";
 import puppeteer from "puppeteer";
 import { preview } from "vite";
 import { cppClassesLessonBriefs } from "../front-end/src/stores/courses/cppClassesProjectBriefs.ts";
+import { cppCollectionsLessonBrief } from "../front-end/src/stores/courses/cppCollectionsProjectBriefs.ts";
 import { cppFoundationLessonBriefs } from "../front-end/src/stores/courses/cppFoundationProjectBriefs.ts";
 import { cppFunctionsLessonBriefs } from "../front-end/src/stores/courses/cppFunctionsProjectBriefs.ts";
 
@@ -64,7 +65,7 @@ const moduleAnchors = {
 	PTJ7: "language-bridge-lab-17-bridge-capstone-port-studio"
 };
 const foundationRepository = "instruction-material/CPP-Level-1";
-const foundationRevision = "174217a8af1077febd7bc59943aa501f9a2bb1e9";
+const foundationRevision = "9632a5db7e3519ab72bb84f7cdc189f4e4af9397";
 const foundationPacks = {
 	"CPPF1-Mad-Libs/starter": {
 		"README.md": "3900507cdc02ee6c11d9f0a28c05773fcefac50840013bd5e8487dfa72e55cdc",
@@ -109,6 +110,14 @@ const foundationPacks = {
 		"cat.cpp": "4b8df11d98069633ae1a865702f36c432f2ba8d8bf6af92801febbbfc24b1488",
 		"cat.h": "86dfa633c5271c361505b62ae1427bf606c468d10e73c49c286e37b799ecca30",
 		"main.cpp": "725baaecae0c9596c1fa990da46e67f5607438f49075b7183fee8a2ef37e242c"
+	},
+	"CPPF5-Vector-Practice/starter": {
+		"README.md": "cbcc15f4f4c78dc1e3c5069e6c5bbc29356cb15ec22bdd798e5176ce0644701c",
+		"main.cpp": "1ae8e5cd4ecc4455fb6910e7c30e65310e2e206d9fd7a06744e907e039b9064e"
+	},
+	"CPPF5-Bank-Accounts/starter": {
+		"README.md": "15384b8e55d92b59a53ac205fd8e8e28075bbe3ee44d5beaf61a96b52157e3da",
+		"main.cpp": "0617bd4e087864a5b16f62e0cce45ad93e79ca44a083405442c7f3ef69c7b54f"
 	}
 };
 
@@ -135,7 +144,9 @@ const fixtures = [
 				? "cppf2-loops-and-conditionals"
 				: folder.startsWith("CPPF3")
 					? "cppf3-functions"
-					: "cppf4-classes-and-objects"
+					: folder.startsWith("CPPF4")
+						? "cppf4-classes-and-objects"
+						: "cppf5-vectors-and-collection-patterns"
 	}))
 ];
 const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "cpp-course-import-browser-ci";
@@ -304,6 +315,25 @@ nodeTest("the supplied multi-file class lessons compile and preserve checked sta
 	}
 });
 
+nodeTest("the supplied vector lesson compiles with exact collection output", { timeout: 60000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-vector-lesson-contracts-"));
+	try {
+		const programs = [...cppCollectionsLessonBrief.matchAll(/```cpp\n([\s\S]*?)\n```/g)];
+		assert.equal(programs.length, 1);
+		await writeFile(join(temporary, "main.cpp"), `${programs[0][1]}\n`);
+		await compileExport(temporary, ["main.cpp"], "cpp", 20, true);
+		assert.deepEqual(await runNative(join(temporary, "project"), [], temporary), {
+			code: 0,
+			stdout: "Scores stored in a vector:\nIndex 0: 88\nIndex 1: 91\nIndex 2: 76\nIndex 3: 95\n\nThe first score is 88\nThe last score is 95\nThere are 4 total scores.\n\nAfter improving the second score:\n88 95 76 95 \n\nLesson labels:\n- warmup\n- practice\n- challenge\n",
+			stderr: ""
+		});
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-vector-lesson-contracts", pid: process.pid });
+	}
+});
+
 nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 360000 }, async () => {
 	let browser;
 	let server;
@@ -369,7 +399,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const { revision, standard, hashes, anchor } = fixture;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
