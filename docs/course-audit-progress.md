@@ -9,8 +9,8 @@ main CI and CodeQL passed. Actual main checks include 1,335 functional tests,
 267 course-quality checks, 303 API tests with 41 existing database skips,
 24 confirmed starter import/save/export/reopen workflows, 12 compiled supplied
 programs, and 11 Cypress checks. Root and standalone backend audits reported
-zero advisories after targeted dependency corrections. The exact tagged native
-artifact for `v2.8.37` is being prepared; production activation is unverified.
+zero advisories after targeted dependency corrections. The original authenticated native
+artifacts are published unchanged in `v2.8.37`; production activation is unverified.
 
 Profile Posts source
 [PR #12](https://github.com/instruction-material/CPP-Level-1/pull/12) is
