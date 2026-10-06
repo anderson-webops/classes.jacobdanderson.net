@@ -949,8 +949,9 @@ with downstream customizations preserved. Production activation remains
 unverified.
 
 [CPPM3 source PR #7](https://github.com/instruction-material/CPP-Level-2/pull/7)
-and [extension PR #8](https://github.com/instruction-material/CPP-Level-2/pull/8)
-integrate at `8c0306d0adf115824fee452a2114d4dd3d6b5afe`. Review and independent
+and [extension PR #8](https://github.com/instruction-material/CPP-Level-2/pull/8),
+with [paired-brief PR #9](https://github.com/instruction-material/CPP-Level-2/pull/9),
+integrate at `f8faf6d7ca7c3e1700e82b13621341cf3e98589f`. Review and independent
 main gates pass all seven native groups and seven separate Make/CMake packs.
 The original four required calculations use actual flat-array storage,
 fractional double row means, checked integer prefixes and allocation cleanup.

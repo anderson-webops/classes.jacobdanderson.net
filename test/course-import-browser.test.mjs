@@ -1,15 +1,18 @@
 import assert from "node:assert/strict";
+import { Buffer } from "node:buffer";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { join } from "node:path";
-import { test } from "node:test";
+// This workflow is run by node --test in CI, outside Vitest.
+// eslint-disable-next-line test/no-import-node-test -- Uses the native CI test runner.
+import { test as nodeTest } from "node:test";
 import { fileURLToPath } from "node:url";
-import puppeteer from "puppeteer";
-import { createServer } from "vite";
-import { runAxeInPage } from "../scripts/a11y-axe-runtime.mjs";
 import { strFromU8, unzipSync } from "fflate";
+import puppeteer from "puppeteer";
+import { preview } from "vite";
+import { runAxeInPage } from "../scripts/a11y-axe-runtime.mjs";
 import { exerciseTicTacToe } from "./course-tic-tac-toe-workflow.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
@@ -167,7 +170,7 @@ async function exerciseNameTags(page, learnerFiles) {
 	// Native source tests independently verify full reference contracts/errors.
 	// No completed solution is downloaded or put into the learner source folder.
 	const edits = {
-		'raise NotImplementedError("Implement name_variations from README.md")':
+		"raise NotImplementedError(\"Implement name_variations from README.md\")":
 			[
 				"alternate = ''.join(c for i, c in enumerate(name) if i % 2 == 0)",
 				"pending, reverse = list(name), []",
@@ -175,19 +178,19 @@ async function exerciseNameTags(page, learnerFiles) {
 				"    reverse.append(pending.pop())",
 				"return (name, alternate, ''.join(reverse))"
 			],
-		'raise NotImplementedError("Implement format_tags from README.md")': [
+		"raise NotImplementedError(\"Implement format_tags from README.md\")": [
 			"lines = []",
 			"for variation in name_variations(name):",
 			"    lines.extend(variation)",
 			"    lines.append('')",
 			"return '\\n'.join(lines) + '\\n'"
 		],
-		'raise NotImplementedError("Implement write_tags from README.md")': [
+		"raise NotImplementedError(\"Implement write_tags from README.md\")": [
 			"text = format_tags(name)",
 			"with open(path, 'w', encoding='utf-8', newline='\\n') as output:",
 			"    output.write(text)"
 		],
-		'raise NotImplementedError("Implement main from README.md")': [
+		"raise NotImplementedError(\"Implement main from README.md\")": [
 			"name = input('What is your name? ')",
 			"write_tags(name, path)",
 			"print('NAME_TAG_WORKFLOW_WRITTEN')",
@@ -199,8 +202,8 @@ async function exerciseNameTags(page, learnerFiles) {
 		assert.equal(edited.split(placeholder).length, 2);
 		edited = edited.replace(placeholder, lines.join("\n    "));
 	}
-	const reminder =
-		'print("Implement the four core tasks in README.md; separate files are optional.")';
+	const reminder
+		= "print(\"Implement the four core tasks in README.md; separate files are optional.\")";
 	assert.equal(edited.split(reminder).length, 2);
 	edited = edited.replace(reminder, "main()");
 	const modifier = await page.evaluate(() =>
@@ -211,21 +214,21 @@ async function exerciseNameTags(page, learnerFiles) {
 	await page.keyboard.press("a");
 	await page.keyboard.up(modifier);
 	await page.keyboard.sendCharacter(edited);
-	await page.$eval(".stdin-panel textarea", element => {
+	await page.$eval(".stdin-panel textarea", (element) => {
 		element.value = "é A😀\n";
 		element.dispatchEvent(new Event("input", { bubbles: true }));
 	});
 	await page.waitForFunction(
-		source => {
+		(source) => {
 			const projects = JSON.parse(
-				localStorage.getItem("classes-python-ide-projects:anonymous") ??
-					"[]"
+				localStorage.getItem("classes-python-ide-projects:anonymous")
+				?? "[]"
 			);
 			return projects.some(
 				project =>
-					project.courseProjectKey ===
-						"browser:AM12-Crazy-Name-Tags-Printer:starter" &&
-					project.files.some(
+					project.courseProjectKey
+					=== "browser:AM12-Crazy-Name-Tags-Printer:starter"
+					&& project.files.some(
 						file =>
 							file.name === "main.py" && file.content === source
 					)
@@ -239,10 +242,12 @@ async function exerciseNameTags(page, learnerFiles) {
 		() =>
 			document
 				.querySelector(".output-panel")
-				?.textContent.includes("NAME_TAG_WORKFLOW_WRITTEN") &&
-			document
-				.querySelector("[data-testid='ide-run-status']")
-				?.textContent.includes("Run complete"),
+				?.textContent
+				.includes("NAME_TAG_WORKFLOW_WRITTEN")
+				&& document
+					.querySelector("[data-testid='ide-run-status']")
+					?.textContent
+					.includes("Run complete"),
 		{ timeout: 90000 }
 	);
 	const expected = "é\n \nA\n😀\n\né\nA\n\n😀\nA\n \né\n\n";
@@ -251,8 +256,7 @@ async function exerciseNameTags(page, learnerFiles) {
 			buttons.findIndex(
 				button =>
 					button.querySelector("span")?.textContent === "output.txt"
-			)
-		);
+			));
 		assert.ok(index >= 0, "Name Tags generated a real output.txt");
 		const buttons = await page.$$(".file-button");
 		await buttons[index].click();
@@ -264,25 +268,24 @@ async function exerciseNameTags(page, learnerFiles) {
 		);
 		assert.deepEqual(
 			await page.$$eval(".cm-content .cm-line", lines =>
-				lines.map(line => line.textContent)
-			),
+				lines.map(line => line.textContent)),
 			expected.split("\n")
 		);
 	};
 	await page.waitForFunction(
-		expected => {
+		(expected) => {
 			const projects = JSON.parse(
-				localStorage.getItem("classes-python-ide-projects:anonymous") ??
-					"[]"
+				localStorage.getItem("classes-python-ide-projects:anonymous")
+				?? "[]"
 			);
 			return projects.some(
 				project =>
-					project.courseProjectKey ===
-						"browser:AM12-Crazy-Name-Tags-Printer:starter" &&
-					project.files.some(
+					project.courseProjectKey
+					=== "browser:AM12-Crazy-Name-Tags-Printer:starter"
+					&& project.files.some(
 						file =>
-							file.name === "output.txt" &&
-							file.content === expected
+							file.name === "output.txt"
+							&& file.content === expected
 					)
 			);
 		},
@@ -298,12 +301,12 @@ async function exerciseNameTags(page, learnerFiles) {
 		const originalClick = HTMLAnchorElement.prototype.click;
 		HTMLAnchorElement.prototype.click = function () {
 			if (
-				this.download.endsWith(".zip") &&
-				this.href.startsWith("blob:")
+				this.download.endsWith(".zip")
+				&& this.href.startsWith("blob:")
 			) {
 				void fetch(this.href)
 					.then(response => response.arrayBuffer())
-					.then(bytes => {
+					.then((bytes) => {
 						window.__nameTagsDownloadedZip = Array.from(
 							new Uint8Array(bytes)
 						);
@@ -322,8 +325,8 @@ async function exerciseNameTags(page, learnerFiles) {
 			await page.evaluate(() => window.__nameTagsDownloadedZip)
 		)
 	);
-	const archived = name => {
-		const keys = Object.keys(zip).filter(path => path.endsWith("/" + name));
+	const archived = (name) => {
+		const keys = Object.keys(zip).filter(path => path.endsWith(`/${name}`));
 		assert.equal(keys.length, 1, `Exactly one exported ${name}`);
 		return strFromU8(zip[keys[0]]);
 	};
@@ -414,8 +417,8 @@ async function exerciseConway(page, pack, learnerFiles) {
 		edited = edited.replace(placeholder, lines.join("\n    "));
 	}
 	const reminder = owned
-		? 'print("Implement the fourteen tasks in README.md; then select a bounded or continuous game.")'
-		: 'print("Implement the ten tasks in README.md; then select a bounded or continuous run.")';
+		? "print(\"Implement the fourteen tasks in README.md; then select a bounded or continuous game.\")"
+		: "print(\"Implement the ten tasks in README.md; then select a bounded or continuous run.\")";
 	assert.equal(edited.split(reminder).length, 2);
 	edited = edited.replace(reminder, "main()");
 	const modifier = await page.evaluate(() =>
@@ -426,20 +429,21 @@ async function exerciseConway(page, pack, learnerFiles) {
 	await page.keyboard.press("a");
 	await page.keyboard.up(modifier);
 	await page.keyboard.sendCharacter(edited);
-	if (owned)
-		await page.$eval(".stdin-panel textarea", element => {
+	if (owned) {
+		await page.$eval(".stdin-panel textarea", (element) => {
 			element.value = "0 0\n4 8\n";
 			element.dispatchEvent(new Event("input", { bubbles: true }));
 		});
+	}
 	await page.waitForFunction(
 		(key, source) =>
 			JSON.parse(
-				localStorage.getItem("classes-python-ide-projects:anonymous") ??
-					"[]"
+				localStorage.getItem("classes-python-ide-projects:anonymous")
+				?? "[]"
 			).some(
 				project =>
-					project.courseProjectKey === key &&
-					project.files.some(
+					project.courseProjectKey === key
+					&& project.files.some(
 						file =>
 							file.name === "main.py" && file.content === source
 					)
@@ -453,10 +457,12 @@ async function exerciseConway(page, pack, learnerFiles) {
 		marker =>
 			document
 				.querySelector(".output-panel")
-				?.textContent.includes(marker) &&
-			document
-				.querySelector("[data-testid='ide-run-status']")
-				?.textContent.includes("Run complete"),
+				?.textContent
+				.includes(marker)
+				&& document
+					.querySelector("[data-testid='ide-run-status']")
+					?.textContent
+					.includes("Run complete"),
 		{ timeout: 90000 },
 		owned ? "CONWAY_WORKFLOW_OWNED 10 10" : "CONWAY_WORKFLOW_SINGLE 30 60"
 	);
@@ -468,12 +474,12 @@ async function exerciseConway(page, pack, learnerFiles) {
 	await page.waitForFunction(
 		(key, text) =>
 			JSON.parse(
-				localStorage.getItem("classes-python-ide-projects:anonymous") ??
-					"[]"
+				localStorage.getItem("classes-python-ide-projects:anonymous")
+				?? "[]"
 			).some(
 				project =>
-					project.courseProjectKey === key &&
-					project.files.some(
+					project.courseProjectKey === key
+					&& project.files.some(
 						file =>
 							file.name === "workflow.in" && file.content === text
 					)
@@ -486,12 +492,12 @@ async function exerciseConway(page, pack, learnerFiles) {
 		const originalClick = HTMLAnchorElement.prototype.click;
 		HTMLAnchorElement.prototype.click = function () {
 			if (
-				this.download.endsWith(".zip") &&
-				this.href.startsWith("blob:")
+				this.download.endsWith(".zip")
+				&& this.href.startsWith("blob:")
 			) {
 				void fetch(this.href)
 					.then(response => response.arrayBuffer())
-					.then(bytes => {
+					.then((bytes) => {
 						window.__conwayDownloadedZip = Array.from(
 							new Uint8Array(bytes)
 						);
@@ -508,8 +514,8 @@ async function exerciseConway(page, pack, learnerFiles) {
 	const zip = unzipSync(
 		Uint8Array.from(await page.evaluate(() => window.__conwayDownloadedZip))
 	);
-	const archived = name => {
-		const keys = Object.keys(zip).filter(path => path.endsWith("/" + name));
+	const archived = (name) => {
+		const keys = Object.keys(zip).filter(path => path.endsWith(`/${name}`));
 		assert.equal(keys.length, 1);
 		return strFromU8(zip[keys[0]]);
 	};
@@ -521,16 +527,17 @@ async function exerciseConway(page, pack, learnerFiles) {
 	const saved = await page.evaluate(
 		key =>
 			JSON.parse(
-				localStorage.getItem("classes-python-ide-projects:anonymous") ??
-					"[]"
+				localStorage.getItem("classes-python-ide-projects:anonymous")
+				?? "[]"
 			).find(project => project.courseProjectKey === key)?.files,
 		`browser:${pack.folder}:starter`
 	);
-	for (const [name, text] of Object.entries(learnerFiles))
+	for (const [name, text] of Object.entries(learnerFiles)) {
 		assert.equal(
 			saved.find(file => file.name === name)?.content,
 			name === "main.py" ? edited : text
 		);
+	}
 	assert.equal(
 		saved.find(file => file.name === "workflow.in")?.content,
 		expectedProbe
@@ -552,7 +559,7 @@ const fileIoSource = [
 	""
 ].join("\n");
 
-test(
+nodeTest(
 	"confirmed imports, accessible resource roles, and saved Python file exports",
 	{ timeout: 300000 },
 	async () => {
@@ -560,8 +567,8 @@ test(
 		let server;
 		const previousDirectory = process.cwd();
 		const startedAt = new Date().toISOString();
-		const taskId =
-			process.env.CLASSES_FAMILY_TASK_ID ?? "course-import-browser-ci";
+		const taskId
+			= process.env.CLASSES_FAMILY_TASK_ID ?? "course-import-browser-ci";
 		console.log(
 			JSON.stringify({
 				event: "start",
@@ -575,11 +582,13 @@ test(
 		);
 		try {
 			process.chdir(root);
-			server = await createServer({
+			// CI builds this checkout before browser workflows. Serve those assets
+			// so dependency discovery cannot reload the document during an import.
+			assert.ok(existsSync(join(root, "dist/index.html")), "Build the front end before the browser check");
+			server = await preview({
 				root,
-				server: { host: "127.0.0.1", port: 0, strictPort: true }
+				preview: { host: "127.0.0.1", port: 0, strictPort: true }
 			});
-			await server.listen();
 			const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
 			const executablePath = [
 				process.env.PUPPETEER_EXECUTABLE_PATH,
@@ -609,7 +618,7 @@ test(
 				let searchPack = null;
 				let searchFiles = null;
 				await page.setRequestInterception(true);
-				page.on("request", request => {
+				page.on("request", (request) => {
 					if (
 						request.interceptResolutionState().action === "disabled"
 					) {
@@ -621,8 +630,9 @@ test(
 								"api.github.com",
 								"raw.githubusercontent.com"
 							].includes(hostname)
-						)
+						) {
 							sourceRequests++;
+						}
 						return;
 					}
 					const url = new URL(request.url());
@@ -695,7 +705,8 @@ test(
 												]
 									)
 						});
-					} else if (url.hostname === "raw.githubusercontent.com") {
+					}
+					else if (url.hostname === "raw.githubusercontent.com") {
 						sourceRequests++;
 						if (searchPack) {
 							const name = url.pathname.split("/").at(-1);
@@ -722,25 +733,28 @@ test(
 									: fileIoSource
 								: "print('course source marker')\n"
 						});
-					} else if (
-						url.origin !== origin ||
-						url.pathname.startsWith("/api/")
+					}
+					else if (
+						url.origin !== origin
+						|| url.pathname.startsWith("/api/")
 					) {
 						if (
-							request.method() !== "GET" &&
-							request.method() !== "OPTIONS"
-						)
+							request.method() !== "GET"
+							&& request.method() !== "OPTIONS"
+						) {
 							remoteWrites++;
+						}
 						// All APIs and external services are fixtures, never production requests.
 						let body = {};
 						if (
-							courseFixture &&
-							url.pathname === "/api/accounts/me"
+							courseFixture
+							&& url.pathname === "/api/accounts/me"
 						) {
 							body = { userID: "course-fixture" };
-						} else if (
-							courseFixture &&
-							url.pathname === "/api/users/loggedin"
+						}
+						else if (
+							courseFixture
+							&& url.pathname === "/api/users/loggedin"
 						) {
 							body = {
 								currentUser: {
@@ -757,7 +771,10 @@ test(
 							contentType: "application/json",
 							body: JSON.stringify(body)
 						});
-					} else void request.continue();
+					}
+					else {
+						void request.continue();
+					}
 				});
 				for (const width of [390, 1280]) {
 					await page.setViewport({ width, height: 900 });
@@ -801,8 +818,8 @@ test(
 					assert.equal(
 						await page.evaluate(
 							() =>
-								document.documentElement.scrollWidth <=
-								innerWidth
+								document.documentElement.scrollWidth
+								<= innerWidth
 						),
 						true
 					);
@@ -833,7 +850,8 @@ test(
 				await page.waitForFunction(() =>
 					document
 						.querySelector(".cm-content")
-						?.textContent.includes("course source marker")
+						?.textContent
+						.includes("course source marker")
 				);
 				assert.equal(
 					await page.$("[data-testid='ide-route-import-prompt']"),
@@ -852,10 +870,10 @@ test(
 						`${origin}/courses#python-level-3-am6-introduction-to-algorithms-runtime-analysis`,
 						{ waitUntil: "domcontentloaded" }
 					);
-					const worksheetSelector =
-						"a[href*='AM6-Big-O-Analysis/starter']";
-					const analysisSelector =
-						"a[href*='AM6-Function-Analysis/starter']";
+					const worksheetSelector
+						= "a[href*='AM6-Big-O-Analysis/starter']";
+					const analysisSelector
+						= "a[href*='AM6-Function-Analysis/starter']";
 					await page.waitForSelector(worksheetSelector);
 					await page.waitForSelector(analysisSelector);
 					assert.match(
@@ -866,7 +884,7 @@ test(
 						/Worksheet/
 					);
 					assert.equal(
-						await page.$eval(worksheetSelector, link => {
+						await page.$eval(worksheetSelector, (link) => {
 							return [
 								...link
 									.closest(".lesson-item")
@@ -884,7 +902,8 @@ test(
 							link =>
 								link
 									.closest(".lesson-item")
-									.querySelectorAll(".is-ide-starter").length
+									.querySelectorAll(".is-ide-starter")
+									.length
 						),
 						0,
 						"The mathematical worksheet keeps its readable source link without an IDE shortcut"
@@ -976,7 +995,8 @@ test(
 				await page.waitForFunction(() =>
 					document
 						.querySelector(".cm-content")
-						?.textContent.includes("COURSE_FILE_IO_PASS")
+						?.textContent
+						.includes("COURSE_FILE_IO_PASS")
 				);
 				await page.waitForFunction(() =>
 					[...document.querySelectorAll(".file-button")].some(
@@ -1017,14 +1037,16 @@ test(
 						() =>
 							document
 								.querySelector(".output-panel")
-								?.textContent.includes("COURSE_FILE_IO_PASS") &&
-							document
-								.querySelector("[data-testid='ide-run-status']")
-								?.textContent.includes("Run complete"),
+								?.textContent
+								.includes("COURSE_FILE_IO_PASS")
+								&& document
+									.querySelector("[data-testid='ide-run-status']")
+									?.textContent
+									.includes("Run complete"),
 						{ timeout: 90000 }
 					);
 					await page.waitForFunction(
-						expected => {
+						(expected) => {
 							const projects = JSON.parse(
 								localStorage.getItem(
 									"classes-python-ide-projects:anonymous"
@@ -1033,15 +1055,15 @@ test(
 							return projects.some(project =>
 								project.files.some(
 									file =>
-										file.name === "output.txt" &&
-										file.content === expected
+										file.name === "output.txt"
+										&& file.content === expected
 								)
 							);
 						},
 						{},
 						fileIoOutput
 					);
-					const clickFile = async name => {
+					const clickFile = async (name) => {
 						const index = await page.$$eval(
 							".file-button",
 							(buttons, name) =>
@@ -1069,8 +1091,7 @@ test(
 					);
 					assert.deepEqual(
 						await page.$$eval(".cm-content .cm-line", lines =>
-							lines.map(line => line.textContent)
-						),
+							lines.map(line => line.textContent)),
 						fileIoOutput.split("\n"),
 						"Generated output reopens in the editor with its space and final newline"
 					);
@@ -1094,14 +1115,14 @@ test(
 						const originalClick = HTMLAnchorElement.prototype.click;
 						HTMLAnchorElement.prototype.click = function () {
 							if (
-								this.download.endsWith(".zip") &&
-								this.href.startsWith("blob:")
+								this.download.endsWith(".zip")
+								&& this.href.startsWith("blob:")
 							) {
 								void fetch(this.href)
 									.then(response => response.arrayBuffer())
-									.then(bytes => {
-										window.__courseDownloadedZip =
-											Array.from(new Uint8Array(bytes));
+									.then((bytes) => {
+										window.__courseDownloadedZip
+											= Array.from(new Uint8Array(bytes));
 									});
 								return;
 							}
@@ -1121,9 +1142,9 @@ test(
 							)
 						)
 					);
-					const archivedFile = name => {
+					const archivedFile = (name) => {
 						const key = Object.keys(zip).find(path =>
-							path.endsWith("/" + name)
+							path.endsWith(`/${name}`)
 						);
 						assert.ok(key, `Export contains ${name}`);
 						return strFromU8(zip[key]);
@@ -1153,8 +1174,7 @@ test(
 					);
 					assert.deepEqual(
 						await page.$$eval(".cm-content .cm-line", lines =>
-							lines.map(line => line.textContent)
-						),
+							lines.map(line => line.textContent)),
 						fileIoOutput.split("\n"),
 						"Generated file persists after reopening the workspace"
 					);
@@ -1172,7 +1192,8 @@ test(
 						0,
 						"File execution and export remain local"
 					);
-				} finally {
+				}
+				finally {
 					await cdp.send("Network.setBlockedURLs", { urls: [] });
 					await cdp.detach();
 				}
@@ -1209,7 +1230,8 @@ test(
 					await page.waitForFunction(() =>
 						document
 							.querySelector(".cm-content")
-							?.textContent.includes("NotImplementedError")
+							?.textContent
+							.includes("NotImplementedError")
 					);
 					await page.waitForFunction(() =>
 						[...document.querySelectorAll(".file-button")].some(
@@ -1229,8 +1251,8 @@ test(
 								) ?? "[]"
 							).some(
 								project =>
-									project.courseProjectKey === projectKey &&
-									project.files.length === fileCount
+									project.courseProjectKey === projectKey
+									&& project.files.length === fileCount
 							),
 						{},
 						{
@@ -1238,7 +1260,7 @@ test(
 							fileCount: Object.keys(searchFiles).length
 						}
 					);
-					const savedFiles = await page.evaluate(projectKey => {
+					const savedFiles = await page.evaluate((projectKey) => {
 						const projects = JSON.parse(
 							localStorage.getItem(
 								"classes-python-ide-projects:anonymous"
@@ -1256,12 +1278,13 @@ test(
 						savedFiles.map(file => file.name).sort(),
 						Object.keys(searchFiles).sort()
 					);
-					for (const file of savedFiles)
+					for (const file of savedFiles) {
 						assert.equal(
 							file.content,
 							searchFiles[file.name],
 							"Imported exact published incomplete bytes"
 						);
+					}
 					const runtimeCdp = await page.createCDPSession();
 					try {
 						await runtimeCdp.send("Network.enable");
@@ -1283,12 +1306,14 @@ test(
 							reminder =>
 								document
 									.querySelector(".output-panel")
-									?.textContent.includes(reminder) &&
-								document
-									.querySelector(
-										"[data-testid='ide-run-status']"
-									)
-									?.textContent.includes("Run complete"),
+									?.textContent
+									.includes(reminder)
+									&& document
+										.querySelector(
+											"[data-testid='ide-run-status']"
+										)
+										?.textContent
+										.includes("Run complete"),
 							{ timeout: 90000 },
 							pack.reminder
 						);
@@ -1340,7 +1365,8 @@ test(
 						console.log(
 							`Exact published learner source imported, run and reopened: ${pack.folder}@${pack.revision ?? searchSourceRevision}`
 						);
-					} finally {
+					}
+					finally {
 						await runtimeCdp.send("Network.setBlockedURLs", {
 							urls: []
 						});
@@ -1352,10 +1378,12 @@ test(
 					0,
 					"All imported starter work remains local"
 				);
-			} finally {
+			}
+			finally {
 				await page.close();
 			}
-		} finally {
+		}
+		finally {
 			if (browser) await browser.close();
 			if (server) await server.close();
 			process.chdir(previousDirectory);
