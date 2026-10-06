@@ -1,9 +1,9 @@
-import { prepareScratchEditor } from "../front-end/scripts/scratch/prepare-editor.mjs";
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import http from "node:http";
 import { createRequire } from "node:module";
 import net from "node:net";
+import process from "node:process";
 import puppeteer from "puppeteer";
 import { isTransientA11yError, runAxeInPage } from "./a11y-axe-runtime.mjs";
 
@@ -14,6 +14,7 @@ const frontendPort = Number(process.env.A11Y_FRONTEND_PORT || 3333);
 const apiPort = Number(process.env.A11Y_API_PORT || 3008);
 const baseUrl = `http://127.0.0.1:${frontendPort}`;
 const isCi = process.env.CI === "true";
+const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "a11y-smoke";
 const runFullMatrix = process.env.A11Y_FULL === "true" || !isCi;
 const routeScenarios = [
 	{
@@ -228,7 +229,8 @@ async function waitForHttp(url, timeoutMs = 30_000) {
 			const response = await fetch(url);
 			if (response.ok) return;
 			lastError = new Error(`${url} returned ${response.status}`);
-		} catch (error) {
+		}
+		catch (error) {
 			lastError = error;
 		}
 		await new Promise(resolve => setTimeout(resolve, 400));
@@ -236,21 +238,12 @@ async function waitForHttp(url, timeoutMs = 30_000) {
 	throw lastError || new Error(`Timed out waiting for ${url}`);
 }
 
-function startVite() {
+function startPreview() {
+	const startedAt = new Date().toISOString();
+	const command = ["npm", "exec", "-w", "front-end", "--", "vite", "preview", "--host", "127.0.0.1", "--port", String(frontendPort), "--strictPort"];
 	const child = spawn(
 		"npm",
-		[
-			"exec",
-			"-w",
-			"front-end",
-			"--",
-			"vite",
-			"--host",
-			"127.0.0.1",
-			"--port",
-			String(frontendPort),
-			"--strictPort"
-		],
+		command.slice(1),
 		{
 			detached: process.platform !== "win32",
 			env: {
@@ -261,6 +254,20 @@ function startVite() {
 			stdio: ["ignore", "pipe", "pipe"]
 		}
 	);
+	console.log(JSON.stringify({ event: "start", parentTaskId: taskId, cwd: process.cwd(), command, pid: child.pid, startedAt, timeoutMs: 900000 }));
+	const timer = setTimeout(() => {
+		console.log(JSON.stringify({ event: "timeout", parentTaskId: taskId, pid: child.pid, timeoutMs: 900000 }));
+		killChild(child, "SIGKILL");
+	}, 900000);
+	timer.unref();
+	child.once("exit", (exitCode, signal) => {
+		clearTimeout(timer);
+		console.log(JSON.stringify({ event: "end", parentTaskId: taskId, cwd: process.cwd(), command, pid: child.pid, startedAt, endedAt: new Date().toISOString(), exitCode, signal }));
+	});
+	child.once("error", (error) => {
+		clearTimeout(timer);
+		console.error(JSON.stringify({ event: "end", parentTaskId: taskId, command, pid: child.pid, endedAt: new Date().toISOString(), exitCode: 1, error: error.message }));
+	});
 	child.stdout.on("data", data => writeServerLine("vite", data));
 	child.stderr.on("data", data => writeServerLine("vite", data));
 	return child;
@@ -268,6 +275,7 @@ function startVite() {
 
 function killChild(child, signal) {
 	if (!child.pid) return;
+	console.log(JSON.stringify({ event: "child-process-group-cleanup", parentTaskId: taskId, pid: child.pid, signal, time: new Date().toISOString() }));
 
 	if (process.platform === "win32") {
 		child.kill(signal);
@@ -276,7 +284,8 @@ function killChild(child, signal) {
 
 	try {
 		process.kill(-child.pid, signal);
-	} catch {
+	}
+	catch {
 		child.kill(signal);
 	}
 }
@@ -292,18 +301,20 @@ async function assertPortAvailable(port, label) {
 			probe.once("error", reject);
 			probe.listen(port, "127.0.0.1", resolve);
 		});
-	} catch (error) {
+	}
+	catch (error) {
 		throw new Error(
 			`${label} port ${port} is already in use; set A11Y_${label.toUpperCase()}_PORT to an unused port`,
 			{ cause: error }
 		);
-	} finally {
+	}
+	finally {
 		if (probe.listening) await closeServer(probe);
 	}
 }
 
 function waitForChildExit(child) {
-	return new Promise(resolve => {
+	return new Promise((resolve) => {
 		if (child.exitCode !== null || child.signalCode) {
 			resolve();
 			return;
@@ -318,7 +329,7 @@ async function stopChild(child) {
 	killChild(child, "SIGTERM");
 	const exited = await Promise.race([
 		waitForChildExit(child).then(() => true),
-		new Promise(resolve => setTimeout(() => resolve(false), 5_000))
+		new Promise(resolve => setTimeout(resolve, 5_000, false))
 	]);
 
 	if (exited) return;
@@ -335,6 +346,7 @@ async function runAxeAudit(page, url) {
 				waitUntil: "domcontentloaded"
 			});
 			await page.waitForSelector("body", { timeout: 10_000 });
+			// eslint-disable-next-line unicorn/prefer-dom-node-text-content -- Check rendered text, excluding hidden content and scripts.
 			await page.waitForFunction(() => document.body.innerText.trim().length > 0, { timeout: 10_000 });
 			await page.waitForFunction(() => document.querySelector("#app")?.hasAttribute("data-v-app"), {
 				timeout: 10_000
@@ -343,23 +355,26 @@ async function runAxeAudit(page, url) {
 			await page.addScriptTag({ path: axeSourcePath });
 
 			return await runAxeInPage(page);
-		} catch (error) {
+		}
+		catch (error) {
 			if (attempt === 3 || !isTransientA11yError(error)) {
 				throw error;
 			}
 
-			console.warn(`a11y retrying after a development-server reload: ${url}`);
+			console.warn(`a11y retrying after a transient document change: ${url}`);
 		}
 	}
 
 	throw new Error(`Unable to audit ${url}.`);
 }
 
-await prepareScratchEditor();
+if (!existsSync(new URL("../front-end/dist/index.html", import.meta.url))) {
+	throw new Error("Build the front end with npm run -w front-end build before accessibility checks.");
+}
 await assertPortAvailable(frontendPort, "frontend");
 await assertPortAvailable(apiPort, "api");
 const apiServer = createMockApiServer();
-const viteProcess = startVite();
+const viteProcess = startPreview();
 let browser;
 
 try {
@@ -386,18 +401,20 @@ try {
 						if (route === "/signup") {
 							// Isolate the embedded scheduler from production during accessibility checks.
 							await page.setRequestInterception(true);
-							page.on("request", request => {
-								if (request.isNavigationRequest() && request.frame() === page.mainFrame() &&
-									new URL(request.url()).origin !== baseUrl) {
+							page.on("request", (request) => {
+								if (request.isNavigationRequest() && request.frame() === page.mainFrame()
+									&& new URL(request.url()).origin !== baseUrl) {
 									void request.abort("aborted");
-								} else if (request.isNavigationRequest() &&
-									new URL(request.url()).origin !== baseUrl) {
+								}
+								else if (request.isNavigationRequest()
+									&& new URL(request.url()).origin !== baseUrl) {
 									void request.respond({
 										status: 200,
 										contentType: "text/html",
-										body: '<!doctype html><html lang="en"><head><title>Class scheduler fixture</title></head><body><main><h1>Class scheduler</h1></main></body></html>'
+										body: "<!doctype html><html lang=\"en\"><head><title>Class scheduler fixture</title></head><body><main><h1>Class scheduler</h1></main></body></html>"
 									});
-								} else {
+								}
+								else {
 									void request.continue();
 								}
 							});
@@ -417,7 +434,7 @@ try {
 								value: media.prefersReducedMotion
 							}
 						]);
-						await page.evaluateOnNewDocument(storedTheme => {
+						await page.evaluateOnNewDocument((storedTheme) => {
 							window.localStorage.setItem("vueuse-color-scheme", storedTheme);
 						}, media.storedTheme);
 						const result = await runAxeAudit(page, url);
@@ -431,7 +448,8 @@ try {
 							continue;
 						}
 						console.log(`a11y ok: ${url} (${scenario.name}, ${viewport.name}, ${media.name})`);
-					} finally {
+					}
+					finally {
 						await page.close().catch(() => {});
 					}
 				}
@@ -452,7 +470,8 @@ try {
 		}
 		process.exitCode = 1;
 	}
-} finally {
+}
+finally {
 	if (browser) await browser.close();
 	await stopChild(viteProcess);
 	apiServer.closeAllConnections?.();
