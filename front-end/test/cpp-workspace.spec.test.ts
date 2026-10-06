@@ -125,9 +125,13 @@ describe("C++ source workspace", () => {
 	});
 
 	it("gives a complete native command without pretending to execute C++", () => {
-		expect(getPythonIdeDefaultFileContent("main.cpp")).toContain("int main()");
+		expect(getPythonIdeDefaultFileContent("main.cpp")).toContain(
+			"int main()"
+		);
 		for (const name of ["Helper.cpp", "src/Task.cc", "Helper.cxx"])
-			expect(getPythonIdeDefaultFileContent(name)).not.toContain("int main");
+			expect(getPythonIdeDefaultFileContent(name)).not.toContain(
+				"int main"
+			);
 		const files = [
 			{ name: "main.cpp", content: "" },
 			{ name: "src/Helper.cxx", content: "" },
@@ -146,6 +150,9 @@ describe("C++ source workspace", () => {
 			"cpp-level-1-project",
 			"c-level-1:c-level-1-cppf1-variables-types-strings-and-input-output-curriculum-cppf1-project-1-mad-libs:starter",
 			"cpp-level-1:cpp-level-1-project:starter",
+			"cpp-level-2:cpp-level-2-cppm0-project:starter",
+			"cpp-level-2-project",
+			"cpp-level-2",
 			"c-level-1"
 		]) {
 			expect(cppBuildInstructions(files, key).join("\n")).toContain(
@@ -158,7 +165,12 @@ describe("C++ source workspace", () => {
 				"python-to-java-and-cpp-bridge-project"
 			).join("\n")
 		).toContain("-std=c++17");
-		for (const key of ["c-level-10:project:starter", "c-level-1x-project"]) {
+		for (const key of [
+			"c-level-10:project:starter",
+			"c-level-1x-project",
+			"cpp-level-20:project:starter",
+			"cpp-level-2x-project"
+		]) {
 			expect(cppBuildInstructions(files, key).join("\n")).toContain(
 				"-std=c++17"
 			);
