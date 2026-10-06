@@ -23,6 +23,7 @@ import {
 	cppParameterLessonBriefs,
 	cppParameterProjectBriefs
 } from "./cppParameterProjectBriefs";
+import { cppProfileProjectBriefs } from "./cppProfileProjectBriefs";
 import { isCoreProjectTitle } from "./projectGrouping";
 
 const cppLevel1SourceCourse: RawCourse = {
@@ -314,44 +315,34 @@ const cppLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Profile Modeling and API Design",
-					content:
-						"Model a `Post` as a small record and a `Profile` as a class that owns a vector of posts. Cover: why `Post` can be a simple record, why `Profile` owns the collection, how to design add/remove/print/update methods, how to validate indexes before mutation, and how to keep the API readable without introducing manual ownership logic.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-Profile-Posts"
+					content: cppProfileProjectBriefs.model
 				},
 				{
 					title: "Command Loops, Switches, and Simple State Machines",
-					content:
-						"Convert one-shot profile operations into a menu-driven command loop. Cover: prompting until quit, rejecting invalid choices, separating input handling from `Profile` methods, using `switch` when one discrete value selects the next action, using `enum class` instead of magic numbers or strings, ending each `case` intentionally, drawing a small state diagram, and explaining states such as `MainMenu`, `ViewingPosts`, `EditingPost`, and `Quit`. Close by naming the Level 1 outcomes: decomposition, object modeling, records, vectors, grids, command loops, switches, scoped enums, and simple program states."
+					content: cppProfileProjectBriefs.commands
 				},
 				{
 					title: "CPPF8 Project: Profile Posts",
-					content:
-						"Build a small profile manager that stores posts, prints them clearly, sums hearts, removes posts safely, and updates likes. The finished version includes a clear command loop, validated menu choices, and at least one named program state so Level 1 ends with a small interactive application rather than a collection of isolated functions.",
+					content: cppProfileProjectBriefs.profile,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-Profile-Posts",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-Profile-Posts/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-Profile-Posts"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-Profile-Posts/solution"
 				}
 			],
 			supplementalProjects: [
 				{
+					id: "c-level-1-cppf8-master-project-profile-posts-supplemental-extension-challenge-profile-posts",
 					title: "Profile Posts: Extension Challenge",
-					content:
-						"Extend the profile manager with search, extra post fields, or another summary statistic while keeping the `std::vector<Post>` design clean.",
-					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-Profile-Posts",
-					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-Profile-Posts"
+					content: cppProfileProjectBriefs.challenge
 				},
 				{
 					title: "CPPF8 Project 2: Profile Posts State Machine Extension",
-					content:
-						"Add a written state diagram and update the capstone so the user can move between at least three explicit modes. The extension justifies why a `switch` plus `enum class` is clearer than another long `if`/`else if` chain.",
+					content: cppProfileProjectBriefs.states,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-State-Machine-Profile-Posts",
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-State-Machine-Profile-Posts/starter",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-State-Machine-Profile-Posts"
+						"https://github.com/instruction-material/CPP-Level-1/tree/main/CPPF8-State-Machine-Profile-Posts/solution"
 				}
 			]
 		}
@@ -472,7 +463,7 @@ const CPP_LEVEL_1_MODULE_FLOW: Record<string, CppLevel1ModuleFlow> = {
 			"regression cases"
 		],
 		flowNote:
-			"Build a fictional, local-only profile manager in vertical slices, keep input handling outside the model, and validate every index and command. A warning-clean build plus normal, boundary, invalid-input, and fresh-start checks completes Level 1; networking, public posting, and real personal data are out of scope."
+			"Complete the required interactive multi-file profile manager in vertical slices, with full-line commands, guarded model bounds and cancellation before mutation. Preserve zero-based API versus one-based displayed indexes. The optional data-model challenge and scripted explicit-mode extension have distinct purposes. Retain warning-clean builds, normal/boundary/invalid/fresh-start evidence and a state diagram; use fictional local data."
 	}
 };
 
