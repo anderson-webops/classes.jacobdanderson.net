@@ -6159,7 +6159,7 @@ describe("course text quality normalization", () => {
 		"keeps generated architecture modules reader-facing",
 		async () => {
 			const loadedCourses = await loadedCatalogCourses();
-			const corpus = await loadedCatalogText();
+			const corpus = proseForQualityChecks(await loadedCatalogText());
 
 			const internalPhrases = [
 				/\binstructor\b/i,
