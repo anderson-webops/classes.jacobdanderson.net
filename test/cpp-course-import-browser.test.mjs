@@ -1501,6 +1501,12 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 		if (page) {
 			const state = await page.evaluate(() => ({
 				path: location.pathname,
+				viewportWidth: window.innerWidth,
+				workspaceClasses: document.querySelector(".code-ide-workspace")?.className,
+				sidebarPresent: !!document.querySelector("#code-ide-sidebar"),
+				fileButtonCount: document.querySelectorAll(".file-button").length,
+				activeFileOptions: document.querySelectorAll("select[aria-label='Active project file'] option").length,
+				sidebarControls: [...document.querySelectorAll("button[aria-controls='code-ide-sidebar']")].map(button => ({ label: button.getAttribute("aria-label") ?? button.textContent.trim(), expanded: button.getAttribute("aria-expanded"), visible: Boolean(button.getClientRects().length) })),
 				activeFile: document.querySelector(".file-button.is-active")?.textContent,
 				editorCount: document.querySelectorAll(".cm-content").length,
 				pendingImport: !!document.querySelector("[data-testid='ide-route-import-confirm']"),
