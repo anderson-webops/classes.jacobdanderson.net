@@ -25,14 +25,6 @@ const props = defineProps<{ mode?: "account" | "teaching" }>();
 /* -------------------------------------------------- */
 const app = useAppStore();
 const { currentTutor, users } = storeToRefs(app);
-const learnerSearch = ref("");
-const filteredUsers = computed(() =>
-	users.value.filter(user =>
-		`${user.name} ${user.email}`
-			.toLowerCase()
-			.includes(learnerSearch.value.trim().toLowerCase())
-	)
-);
 const error = ref("");
 const success = ref("");
 // const deleteMe = useDeleteAccount("tutor");
@@ -60,12 +52,6 @@ async function loadUsers() {
 }
 
 onMounted(loadUsers);
-
-const usersHeader = computed(() =>
-	currentTutor.value && users.value.length === 0
-		? "No Learners Yet"
-		: "Learners"
-);
 
 /* users under this tutor: course editing */
 const userEditing = ref<Record<string, boolean>>({});
@@ -224,34 +210,11 @@ async function saveUserCourses(userID: string) {
 			<SelfAccountSettings :entity="currentTutor" role="tutor" />
 		</article>
 
-		<div v-if="isTeachingMode" class="teaching-controls">
-			<label class="roster-search"
-				>Search learners<input
-					v-model="learnerSearch"
-					type="search"
-					placeholder="Name or email"
-			/></label>
-			<p v-if="!filteredUsers.length">No matching learners.</p>
-		</div>
-
 		<section v-if="isTeachingMode" class="directory-section">
-			<div class="section-heading">
-				<div>
-					<p class="workspace-eyebrow">Learners</p>
-					<h3>{{ usersHeader }}</h3>
-				</div>
-				<p class="section-copy">
-					Update course access for each learner using only the courses
-					already enabled for your account.
-				</p>
-			</div>
+			<p v-if="!users.length">No learners assigned yet.</p>
 
 			<div class="directory-grid">
-				<article
-					v-for="u in filteredUsers"
-					:key="u._id"
-					class="directory-card"
-				>
+				<article v-for="u in users" :key="u._id" class="directory-card">
 					<div class="directory-card-header">
 						<div>
 							<h4>{{ u.name }}</h4>
@@ -430,20 +393,6 @@ async function saveUserCourses(userID: string) {
 </template>
 
 <style scoped>
-.roster-search {
-	display: grid;
-	gap: 0.4rem;
-	margin-bottom: 1rem;
-	font: inherit;
-}
-.roster-search input {
-	padding: 0.65rem;
-	width: 100%;
-	color: var(--color-ink);
-	background: var(--color-surface);
-	border: 1px solid var(--color-border);
-	border-radius: 0.5rem;
-}
 .profile-workspace {
 	display: grid;
 	gap: 1.1rem;
@@ -488,7 +437,6 @@ async function saveUserCourses(userID: string) {
 	min-width: 0;
 }
 
-.section-heading,
 .directory-card-header,
 .action-row {
 	display: flex;
@@ -497,15 +445,7 @@ async function saveUserCourses(userID: string) {
 	gap: 1rem;
 }
 
-.section-heading {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	gap: 0.7rem;
-	align-items: flex-start;
-}
-
-.workspace-header h2,
-.section-heading h3 {
+.workspace-header h2 {
 	margin: 0;
 	color: #10263a;
 }
@@ -515,23 +455,12 @@ async function saveUserCourses(userID: string) {
 	line-height: 1.08;
 }
 
-.section-heading h3 {
-	margin-top: 0.1rem;
-	font-size: clamp(1.8rem, 3vw, 2.35rem);
-	color: #10263a;
-	font-family: inherit;
-	font-weight: 700;
-	letter-spacing: -0.03em;
-}
-
-.workspace-header p:last-child,
-.section-copy {
+.workspace-header p:last-child {
 	margin: 0;
 	line-height: 1.65;
 	color: #41566a;
 }
 
-.workspace-eyebrow,
 .panel-eyebrow,
 .summary-label {
 	margin: 0;
@@ -794,7 +723,6 @@ async function saveUserCourses(userID: string) {
 
 @media (max-width: 1500px) {
 	.workspace-header,
-	.section-heading,
 	.sheet-summary,
 	.sheet-body {
 		grid-template-columns: 1fr;
@@ -859,15 +787,6 @@ async function saveUserCourses(userID: string) {
 	gap: 0.65rem;
 	border-radius: 8px;
 	box-shadow: none;
-}
-.section-heading {
-	gap: 0.5rem;
-}
-.section-heading .workspace-eyebrow {
-	display: none;
-}
-.section-heading h3 {
-	font-size: 1.15rem;
 }
 .summary-block {
 	padding: 0.65rem;

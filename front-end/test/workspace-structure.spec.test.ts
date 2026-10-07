@@ -86,7 +86,7 @@ describe("simplified workspaces", () => {
 		});
 		wrapper.unmount();
 	});
-	it("puts learner search first and keeps tutor security in Account", async () => {
+	it("shows learners directly without search or introductory text", async () => {
 		const app = useAppStore();
 		app.setCurrentTutor({
 			_id: "teacher",
@@ -108,9 +108,26 @@ describe("simplified workspaces", () => {
 		});
 		await flushPromises();
 		expect(wrapper.text()).not.toContain("Manage account security");
-		await wrapper.get('input[type="search"]').setValue("Grace");
-		expect(wrapper.findAll(".directory-card")).toHaveLength(1);
-		expect(wrapper.find(".directory-card").text()).toContain("Grace");
+		expect(wrapper.find('input[type="search"]').exists()).toBe(false);
+		expect(wrapper.find(".section-heading").exists()).toBe(false);
+		expect(wrapper.text()).not.toContain("Search learners");
+		expect(wrapper.text()).not.toContain(
+			"Update course access for each learner"
+		);
+		const learners = wrapper.findAll(".directory-card");
+		expect(learners).toHaveLength(2);
+		expect(learners.map(learner => learner.find("h4").text())).toEqual([
+			"Ada",
+			"Grace"
+		]);
+		await learners[0]
+			.get('button[aria-label="Edit courses for Ada"]')
+			.trigger("click");
+		expect(learners[0].find(".course-editor").exists()).toBe(true);
+		app.setUsers([]);
+		await flushPromises();
+		expect(wrapper.findAll(".directory-card")).toHaveLength(0);
+		expect(wrapper.text()).toContain("No learners assigned yet.");
 		wrapper.unmount();
 	});
 	it("shows honest bounded review status only for an administrator", async () => {
