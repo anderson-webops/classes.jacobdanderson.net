@@ -60,6 +60,22 @@ context("Compact content-first workspaces", () => {
 		cy.get(".code-ide-sidebar").should("be.visible").then(sidebar => expect(sidebar[0].getBoundingClientRect().width).to.be.lessThan(240));
 		cy.screenshot("ide-compact", { capture: "viewport" });
 	});
+	for (const width of [320, 390, 768]) {
+		it("keeps IDE controls touch-accessible within a " + width + "px screen", () => {
+			cy.viewport(width, 800);
+			cy.visit("/ide");
+			cy.get(".code-ide-workspace").should("be.visible");
+			cy.get(".editor-actions").should(actions => {
+				for (const button of actions[0].querySelectorAll("button")) {
+					const box = button.getBoundingClientRect();
+					expect(box.left).to.be.at.least(0);
+					expect(box.right).to.be.at.most(width);
+					expect(box.width).to.be.at.least(44);
+					expect(box.height).to.be.at.least(44);
+				}
+			});
+		});
+	}
 	for (const viewport of [[1440, 900], [390, 844], [844, 390]]) {
 		it("fits the graph in the " + viewport.join("×") + " viewport without page overflow", () => {
 			cy.viewport(viewport[0], viewport[1]);

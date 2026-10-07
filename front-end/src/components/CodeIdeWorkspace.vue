@@ -10919,7 +10919,7 @@ html.dark .editor-shortcuts ul {
 }
 
 .code-ide-page {
-	--code-ide-toolbar-control-size: 2.5rem;
+	--code-ide-toolbar-control-size: 2.75rem;
 	--code-ide-toolbar-button-width: auto;
 }
 .code-ide-page .code-ide-workspace {
