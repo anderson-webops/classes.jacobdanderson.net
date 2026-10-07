@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 import { api } from "@/api";
 import AccountSecurity from "@/components/AccountSecurity.vue";
+import SessionNoteDraftSettings from "@/components/SessionNoteDraftSettings.vue";
 import { useAppStore } from "@/stores/app";
 
 const props = defineProps<{
@@ -76,6 +77,7 @@ async function saveName() {
 			:email="entity.email"
 			:role="role"
 		/>
+		<SessionNoteDraftSettings v-if="role === 'admin'" />
 	</section>
 </template>
 

@@ -197,9 +197,15 @@ describe("direct, safely validated session-note sending", () => {
 		expect(attempts[0][1]).toEqual(attempts[1][1]);
 	});
 	it("exposes student-list errors and offers a safe retry", async () => {
-		vi.mocked(api.get).mockRejectedValueOnce(
-			new Error("Synthetic identity load failure")
-		);
+		const original = vi.mocked(api.get).getMockImplementation()!;
+		let failIdentities = true;
+		vi.mocked(api.get).mockImplementation((path: string, ...args: any[]) => {
+			if (path.endsWith("/identities") && failIdentities) {
+				failIdentities = false;
+				return Promise.reject(new Error("Synthetic identity load failure"));
+			}
+			return original(path, ...args);
+		});
 		wrapper = mount(MdMail);
 		await flushPromises();
 		expect(wrapper.text()).toContain("Unable to load recipients");
