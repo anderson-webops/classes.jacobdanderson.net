@@ -1215,6 +1215,13 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				assert.equal(await page.$eval(worksheet, link => link.closest(".lesson-item").querySelectorAll(".is-ide-starter").length), 0);
 				assert.equal(!!await page.$("a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI0-Warnings-and-Debugger-Notebook/solution/EVIDENCE.md']"), referenceFixture);
 				assert.equal(sourceRequests, before, "Reading the worksheet never imports code");
+				if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+					const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
+					await mkdir(directory, { recursive: true });
+					const link = await page.$(worksheet);
+					const card = await link.evaluateHandle(element => element.closest(".lesson-item"));
+					await card.asElement().screenshot({ path: join(directory, `course-import-cpp-CPPI0-debug-notebook-${referenceFixture ? "staff" : "learner"}.png`) });
+				}
 				record("verified-notebook-routing", { folder, referenceVisible: referenceFixture, noCodeImport: true });
 			}
 			const href = await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll(".is-ide-starter")].find(action => new URL(action.href).searchParams.get("starterUrl") === link.href)?.getAttribute("href"));
