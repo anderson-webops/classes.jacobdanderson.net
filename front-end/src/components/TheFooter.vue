@@ -55,12 +55,12 @@ defineProps<{ compact?: boolean }>();
 		<div class="site-shell site-shell--wide site-footer__bottom">
 			<p>© {{ new Date().getFullYear() }} Jacob Anderson.</p>
 			<div class="site-action-row">
+				<RouterLink to="/privacy">Privacy</RouterLink>
 				<a v-if="compact" href="mailto:classes@jacobdanderson.net"
 					>Contact<span class="sr-only">
 						(opens your email app)</span
 					></a
 				>
-				<RouterLink to="/privacy">Privacy</RouterLink>
 			</div>
 			<button
 				class="site-footer__theme-toggle"
