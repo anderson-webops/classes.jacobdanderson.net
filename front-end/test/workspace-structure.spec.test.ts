@@ -4,13 +4,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { reactive } from "vue";
 import { routeLocationKey } from "vue-router";
 import { api } from "@/api";
+import AdminReviewStatus from "@/components/AdminReviewStatus.vue";
 import IdeStarterPicker from "@/components/IdeStarterPicker.vue";
 import TutorProfile from "@/components/TutorProfile.vue";
-import AdminReviewStatus from "@/components/AdminReviewStatus.vue";
+import { ideStarters } from "@/modules/ideStarterCatalog";
 import MdMail from "@/pages/admin/mdmail.vue";
 import Pathways from "@/pages/pathways.vue";
-import { ideStarters } from "@/modules/ideStarterCatalog";
 import { useAppStore } from "@/stores/app";
+
 vi.mock("@/api", () => ({ api: { get: vi.fn(), post: vi.fn() } }));
 vi.mock("@/modules/adminRecipients", () => ({
 	fetchAdminRecipients: vi
@@ -23,16 +24,18 @@ vi.mock("vue-router", async importOriginal => ({
 	...(await importOriginal<typeof import("vue-router")>()),
 	useRoute: () => ({ path: "/admin/mdmail" })
 }));
-const user = (id: string, name: string) => ({
-	_id: id,
-	name,
-	email: `${id}@example.invalid`,
-	age: 14,
-	state: "GA",
-	courseAccess: [],
-	editUsers: false,
-	saveEdit: "Save"
-});
+function user(id: string, name: string) {
+	return {
+		_id: id,
+		name,
+		email: `${id}@example.invalid`,
+		age: 14,
+		state: "GA",
+		courseAccess: [],
+		editUsers: false,
+		saveEdit: "Save"
+	};
+}
 const stubs = {
 	RouterLink: { props: ["to"], template: "<a><slot /></a>" },
 	CourseAccessCodeManager: true,
@@ -108,7 +111,7 @@ describe("simplified workspaces", () => {
 		});
 		await flushPromises();
 		expect(wrapper.text()).not.toContain("Manage account security");
-		expect(wrapper.find('input[type="search"]').exists()).toBe(false);
+		expect(wrapper.find("input[type=\"search\"]").exists()).toBe(false);
 		expect(wrapper.find(".section-heading").exists()).toBe(false);
 		expect(wrapper.text()).not.toContain("Search learners");
 		expect(wrapper.text()).not.toContain(
@@ -121,7 +124,7 @@ describe("simplified workspaces", () => {
 			"Grace"
 		]);
 		await learners[0]
-			.get('button[aria-label="Edit courses for Ada"]')
+			.get("button[aria-label=\"Edit courses for Ada\"]")
 			.trigger("click");
 		expect(learners[0].find(".course-editor").exists()).toBe(true);
 		app.setUsers([]);
@@ -166,34 +169,32 @@ describe("simplified workspaces", () => {
 		});
 		const wrapper = mount(AdminReviewStatus, { global: { stubs } });
 		await flushPromises();
-		expect(wrapper.find('[role="status"]').exists()).toBe(false);
+		expect(wrapper.find("[role=\"status\"]").exists()).toBe(false);
 		wrapper.unmount();
 	});
-	it("requires student and session identity for session notes, independent of label date", async () => {
+	it("requires a verified recipient choice without additional identity controls", async () => {
 		const wrapper = mount(MdMail, { global: { stubs } });
 		await flushPromises();
-		expect(wrapper.get("#note-student").exists()).toBe(true);
-		await wrapper.get("#recipient-select").setValue("Test Parent");
+		expect(wrapper.find("#note-student").exists()).toBe(false);
 		await wrapper.get("#subject-date-input").setValue("2026-10-04");
 		await wrapper.get("#markdown-input").setValue("Synthetic note");
 		await wrapper.get(".send-btn").trigger("click");
 		expect(wrapper.get("#send-validation").text()).toContain(
-			"Select the student"
+			"Select a recipient"
 		);
 		expect(api.post).not.toHaveBeenCalled();
 		wrapper.unmount();
 	});
-	it("previews internal messages without silently becoming a session-note send", async () => {
+	it("previews session notes without introducing another message mode", async () => {
 		const wrapper = mount(MdMail, { global: { stubs } });
 		await flushPromises();
-		await wrapper.get(".message-kind select").setValue("internal");
-		await wrapper.get("#recipient-select").setValue("Test Parent");
+		expect(wrapper.find(".message-kind").exists()).toBe(false);
 		await wrapper
 			.get("#subject-input")
 			.setValue("Synthetic internal message");
 		await wrapper.get("#markdown-input").setValue("Synthetic body");
-		await wrapper.get('[data-testid="tab-preview"]').trigger("click");
-		expect(wrapper.get('[data-testid="live-preview"]').exists()).toBe(true);
+		await wrapper.get("[data-testid=\"preview-toggle\"]").trigger("click");
+		expect(wrapper.get("[data-testid=\"live-preview\"]").exists()).toBe(true);
 		expect(api.post).not.toHaveBeenCalled();
 		wrapper.unmount();
 	});
@@ -204,10 +205,10 @@ describe("simplified workspaces", () => {
 		expect(wrapper.findAll(".pathway-card > details[open]")).toHaveLength(
 			0
 		);
-		await wrapper.get('input[type="search"]').setValue("turtle");
+		await wrapper.get("input[type=\"search\"]").setValue("turtle");
 		expect(wrapper.findAll(".pathway-card").length).toBeLessThan(total);
 		await wrapper
-			.get('input[type="search"]')
+			.get("input[type=\"search\"]")
 			.setValue("no matching family 12345");
 		expect(wrapper.text()).toContain("No matching pathways");
 		wrapper.unmount();
@@ -280,22 +281,18 @@ describe("simplified workspaces", () => {
 		}));
 		const wrapper = mount(MdMail, { global: { stubs } });
 		await flushPromises();
-		await wrapper.get("#note-student").setValue("child-a");
+		await wrapper.get("#recipient-select").setValue("child-a");
 		await flushPromises();
 		expect(api.get).toHaveBeenCalledWith("/users/child-a/session-notes");
-		expect(
-			wrapper.find('#saved-note option[value="foreign"]').exists()
-		).toBe(false);
-		await wrapper.get("#note-student").setValue("child-b");
+		expect(wrapper.findAll(".history-note")).toHaveLength(1);
+		expect(wrapper.get(".history-note").text()).toContain("Child A draft");
+		expect(wrapper.text()).not.toContain("Foreign draft");
+		expect(wrapper.findAll("#recipient-select option").map(option => option.text())).toContain("Same name · hild-a");
+		await wrapper.get("#recipient-select").setValue("child-b");
 		await flushPromises();
 		expect(api.get).toHaveBeenCalledWith("/users/child-b/session-notes");
-		expect(
-			wrapper.find('#saved-note option[value="note-a"]').exists()
-		).toBe(false);
-		await wrapper.get("#saved-note").setValue("note-b");
-		expect(
-			wrapper.get<HTMLTextAreaElement>("#markdown-input").element.value
-		).toBe("Child B draft");
+		expect(wrapper.get(".history-note").text()).toContain("Child B draft");
+		expect(wrapper.text()).not.toContain("Child A draft");
 		expect(api.post).not.toHaveBeenCalled();
 		wrapper.unmount();
 	});
@@ -324,7 +321,7 @@ describe("simplified workspaces", () => {
 		});
 		await flushPromises();
 		expect(
-			wrapper.get<HTMLSelectElement>("#note-student").element.value
+			wrapper.get<HTMLSelectElement>("#recipient-select").element.value
 		).toBe("a");
 		await wrapper
 			.get("#markdown-input")
@@ -332,25 +329,25 @@ describe("simplified workspaces", () => {
 		route.query.student = "b";
 		await flushPromises();
 		expect(
-			wrapper.get<HTMLSelectElement>("#note-student").element.value
+			wrapper.get<HTMLSelectElement>("#recipient-select").element.value
 		).toBe("a");
 		expect(
 			wrapper.get<HTMLTextAreaElement>("#markdown-input").element.value
 		).toBe("Student A private draft");
 		await wrapper
 			.findAll("button")
-			.find(button => button.text() === "Keep current student")!
+			.find(button => button.text() === "Keep current recipient")!
 			.trigger("click");
-		await wrapper.get("#note-student").setValue("b");
+		await wrapper.get("#recipient-select").setValue("b");
 		await wrapper
 			.findAll("button")
 			.find(
-				button => button.text() === "Discard draft and switch student"
+				button => button.text() === "Discard draft and switch recipient"
 			)!
 			.trigger("click");
 		await flushPromises();
 		expect(
-			wrapper.get<HTMLSelectElement>("#note-student").element.value
+			wrapper.get<HTMLSelectElement>("#recipient-select").element.value
 		).toBe("b");
 		expect(
 			wrapper.get<HTMLTextAreaElement>("#markdown-input").element.value

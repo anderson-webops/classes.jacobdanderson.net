@@ -5,8 +5,11 @@ context("Compact content-first workspaces", () => {
 		cy.intercept("GET", "**/api/**", { body: {} });
 		cy.intercept("GET", "**/api/accounts/me", { body: { adminID: "synthetic-admin" } });
 		cy.intercept("GET", "**/api/admins/loggedin", { body: { currentAdmin: {
-			_id: "synthetic-admin", name: "Synthetic admin", email: "admin@example.invalid",
-			editAdmins: false, saveEdit: "Edit"
+			_id: "synthetic-admin",
+			name: "Synthetic admin",
+			email: "admin@example.invalid",
+			editAdmins: false,
+			saveEdit: "Edit"
 		} } });
 		cy.intercept("GET", "**/api/users/all", { body: [{ _id: "synthetic-student", name: "Ada Student", email: "student@example.invalid", courseAccess: ["python-level-1"], tutors: [], courseProgress: [] }] });
 		cy.intercept("GET", "**/api/tutors", { body: [] });
@@ -37,22 +40,22 @@ context("Compact content-first workspaces", () => {
 		const noteId = "c".repeat(24);
 		cy.intercept("GET", "**/api/admin-mail/session-notes/identities", { body: { students: [{ studentId, name: "Synthetic Student", recipientName: "Synthetic Student" }] } });
 		cy.intercept("GET", "**/api/admin-mail/recipients", { body: { recipients: [{ name: "Synthetic Student", emails: ["student@example.invalid"] }] } });
-		cy.intercept("GET", "**/api/users/" + studentId + "/schedule", { body: { scheduledSessions: [] } });
-		cy.intercept("GET", "**/api/users/" + studentId + "/session-notes", { body: { sessionNotes: [] } });
-		cy.intercept("POST", "**/api/users/" + studentId + "/session-notes", { body: { sessionNote: { _id: noteId } } }).as("saveNote");
+		cy.intercept("GET", `**/api/users/${studentId}/schedule`, { body: { scheduledSessions: [] } });
+		cy.intercept("GET", `**/api/users/${studentId}/session-notes`, { body: { sessionNotes: [] } });
+		cy.intercept("POST", `**/api/users/${studentId}/session-notes`, { body: { sessionNote: { _id: noteId } } }).as("saveNote");
 		cy.intercept("POST", "**/api/admin-mail/send", { body: { ok: true, operationId: "synthetic-operation", evidenceStatus: "smtp_accepted" } }).as("sendNote");
 		cy.visit("/admin/mdmail");
-		cy.get("#recipient-select").select("Synthetic Student");
+		cy.get("#recipient-select").select(studentId);
 		cy.get("#subject-date-input").invoke("val", "2026-09-30").trigger("input", { force: true });
 		cy.get("#markdown-input").type("Synthetic note body");
-		cy.get("#note-student").select(studentId);
 		cy.get("#markdown-input").should("have.value", "Synthetic note body");
-		cy.get("#note-unlinked").check();
+		cy.get("#note-student, #note-session, #note-unlinked, #saved-note").should("not.exist");
+		cy.contains("Message type").should("not.exist");
 		cy.get(".send-btn").should("have.text", "Send").should("not.be.disabled").click();
 		cy.wait("@saveNote").its("request.body").should("include", { studentId, unlinked: true });
 		cy.wait("@sendNote").its("request.body").should("include", { studentId, noteId, unlinked: true, subject: "Session Notes (09/30)" });
 		cy.contains("Primary recipient accepted by SMTP").should("be.visible");
-		cy.get('[data-testid="live-preview"]').should("not.exist");
+		cy.get("[data-testid=\"live-preview\"]").should("not.exist");
 	});
 	it("uses compact stacked course and learner selectors, and puts search beside them", () => {
 		cy.visit("/courses");
@@ -69,25 +72,25 @@ context("Compact content-first workspaces", () => {
 		cy.visit("/ide");
 		cy.get(".code-ide-workspace").should("have.class", "is-sidebar-collapsed");
 		cy.window().then(win => expect(win.document.documentElement.scrollWidth).to.be.at.most(win.innerWidth + 2));
-		cy.get(".workspace-heading__title").find('select[aria-label="Editor environment"]').should("be.visible");
+		cy.get(".workspace-heading__title").find("select[aria-label=\"Editor environment\"]").should("be.visible");
 		cy.get(".editor-toolbar").contains("button", "Run").should("be.visible");
 		cy.get(".editor-toolbar").contains("button", "Save").should("be.visible");
-		cy.get('button[aria-label="IDE settings"]').click();
-		cy.get("#code-ide-settings-panel").find('[aria-label="Download project ZIP"]').should("be.visible");
+		cy.get("button[aria-label=\"IDE settings\"]").click();
+		cy.get("#code-ide-settings-panel").find("[aria-label=\"Download project ZIP\"]").should("be.visible");
 		cy.get("#code-ide-project-title").should("be.visible");
-		cy.get('button[aria-label="IDE settings"]').click();
+		cy.get("button[aria-label=\"IDE settings\"]").click();
 		cy.get("#code-ide-settings-panel").should("not.exist");
-		cy.get('[aria-label="Expand project sidebar"]').click();
+		cy.get("[aria-label=\"Expand project sidebar\"]").click();
 		cy.window().then(win => expect(win.document.documentElement.scrollWidth).to.be.at.most(win.innerWidth + 2));
 		cy.get(".code-ide-sidebar").should("be.visible").then(sidebar => expect(sidebar[0].getBoundingClientRect().width).to.be.lessThan(240));
 		cy.screenshot("ide-compact", { capture: "viewport" });
 	});
 	for (const width of [320, 390, 768]) {
-		it("keeps IDE controls touch-accessible within a " + width + "px screen", () => {
+		it(`keeps IDE controls touch-accessible within a ${width}px screen`, () => {
 			cy.viewport(width, 800);
 			cy.visit("/ide");
 			cy.get(".code-ide-workspace").should("be.visible");
-			cy.get(".editor-actions").should(actions => {
+			cy.get(".editor-actions").should((actions) => {
 				for (const button of actions[0].querySelectorAll("button")) {
 					const box = button.getBoundingClientRect();
 					expect(box.left).to.be.at.least(0);
@@ -99,24 +102,24 @@ context("Compact content-first workspaces", () => {
 		});
 	}
 	for (const viewport of [[1440, 900], [390, 844], [844, 390]]) {
-		it("fits the graph in the " + viewport.join("×") + " viewport without page overflow", () => {
+		it(`fits the graph in the ${viewport.join("×")} viewport without page overflow`, () => {
 			cy.viewport(viewport[0], viewport[1]);
 			cy.visit("/graph-sketcher");
 			cy.get(".graph-canvas").should("be.visible");
-			cy.window().then(win => {
+			cy.window().then((win) => {
 				expect(win.document.documentElement.scrollHeight).to.be.at.most(win.innerHeight + 2);
 				expect(win.document.documentElement.scrollWidth).to.be.at.most(win.innerWidth + 2);
 				const tools = win.document.querySelector(".graph-tools")!.getBoundingClientRect();
 				const canvas = win.document.querySelector(".graph-canvas-panel")!.getBoundingClientRect();
 				expect(tools.bottom).to.be.at.most(canvas.top + 2);
 			});
-			cy.get('[aria-label="Graph settings"]').click();
-			cy.get('[aria-label="Close graph settings"]').should("be.visible").click();
+			cy.get("[aria-label=\"Graph settings\"]").click();
+			cy.get("[aria-label=\"Close graph settings\"]").should("be.visible").click();
 			cy.get(".graph-canvas-shell").trigger("wheel", { deltaY: 100, clientX: 200, clientY: 200 });
 			cy.window().its("scrollY").should("equal", 0);
 			cy.contains("Expand graph").should("not.exist");
 			cy.contains("Saved on this device").should("not.exist");
-			cy.screenshot("graph-" + viewport.join("-"), { capture: "viewport" });
+			cy.screenshot(`graph-${viewport.join("-")}`, { capture: "viewport" });
 		});
 	}
 });

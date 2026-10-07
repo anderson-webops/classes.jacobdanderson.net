@@ -69,6 +69,27 @@ receive inline validation rather than a silently disabled button. Selecting the
 first student keeps an existing draft; switching an already-associated draft
 still requires confirmation. Durable identity and idempotency checks remain.
 
+The normal `/admin/mdmail` workspace contains one Recipient selection, the
+subject/date, Notes and Send, with an optional compact Preview toggle. The
+Recipient values are stable student IDs, not mailbox identities; shared parent
+mailboxes do not merge sibling notes or histories. Saving the note version and
+retaining its send key happen automatically before dispatch. Equivalent retries
+reuse the saved note and durable intent, including existing unlinked-draft keys.
+There is no internal-message mode, separate student/session selector, manual
+save gate or saved-version dropdown in this workspace.
+
+These simple sends explicitly remain `unlinked_review_required`; the subject
+date never establishes a scheduled-session association. Independently verified
+session corrections and protected evidence actions remain available only at
+the unlisted, administrator-only `/admin/session-note-recovery` page. This UI
+simplification requires no migration or changes to sending/recovery pause flags.
+
+Composer-simplification acceptance passed 38 focused frontend tests and eight
+isolated browser/accessibility checks at 1440, 768, 390 and 320 pixels in both
+themes. Browser tests intercepted every API request, verified sibling identity,
+automatic saving and equivalent retry keys, and sent no real email. Root lint,
+typecheck, build and lock-provenance checks passed with unchanged dependencies.
+
 Do not backfill or retry existing successful messages for this source repair.
 Archive-review records with independently verified Sent copies require the
 existing audited `archive_confirmed_present` action, after both pause gates and
