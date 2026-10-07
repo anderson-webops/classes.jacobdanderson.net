@@ -53,9 +53,11 @@ import LazyMarkdownContent from "./LazyMarkdownContent.vue";
 const props = withDefaults(
 	defineProps<{
 		publicCatalog?: boolean;
+		browseAll?: boolean;
 	}>(),
 	{
-		publicCatalog: false
+		publicCatalog: false,
+		browseAll: false
 	}
 );
 
@@ -230,8 +232,11 @@ const courseList = computed(() => {
 	if (isAllLearnersContext.value) return allCourses.value;
 	const allowed = new Set(permittedCourseIds.value);
 	return orderedCoursesByLearnerStatus(
-		allCourses.value.filter(course => allowed.has(course.id)),
-		courseGroupingOwner.value
+		props.browseAll
+			? allCourses.value
+			: allCourses.value.filter(course => allowed.has(course.id)),
+		courseGroupingOwner.value,
+		{ includeOther: props.browseAll }
 	);
 });
 
@@ -258,7 +263,8 @@ const courseGroups = computed(() => {
 
 	return groupCoursesByLearnerStatus(
 		courseList.value,
-		courseGroupingOwner.value
+		courseGroupingOwner.value,
+		{ includeOther: props.browseAll }
 	);
 });
 
@@ -538,7 +544,10 @@ const selectedCourseProgress = computed(() => {
 });
 
 const hasProgressTracking = computed(
-	() => !props.publicCatalog && !!progressOwner.value
+	() =>
+		!props.publicCatalog &&
+		!!progressOwner.value &&
+		permittedCourseIds.value.includes(selectedCourseId.value)
 );
 
 const completedModuleIdSet = computed(
@@ -3004,7 +3013,7 @@ function writeStoredValue(key: string, value: string) {
 .outline-section-label {
 	margin: 0;
 	padding: 0 0.25rem;
-	color: var(--course-muted);
+	color: var(--color-ink-muted);
 	font-size: 0.72rem;
 	font-weight: 800;
 	letter-spacing: 0.14em;

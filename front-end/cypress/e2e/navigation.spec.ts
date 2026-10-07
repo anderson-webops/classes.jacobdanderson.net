@@ -15,6 +15,7 @@
 
 context("Navigation & page smoke-tests", () => {
 	beforeEach(() => {
+		cy.intercept("GET", "**/api/**", { statusCode: 200, body: [] });
 		cy.intercept("GET", "**/api/accounts/me", {
 			statusCode: 200,
 			body: {}
@@ -44,23 +45,23 @@ context("Navigation & page smoke-tests", () => {
 		cy.get(".about-page h1").should("have.text", "About Jacob");
 
 		// ---- Tuition & Payment ---------------------------------------------
-		cy.get(".site-footer").contains("a:visible", "Tuition").click();
+		cy.get(".site-nav").contains("a:visible", "Payment").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/payment`);
-		cy.get("h1").contains("Tuition").should("exist");
+		cy.get("h1").contains("Payment").should("exist");
 
 		// ---- back to Home -------------------------------------------
 		cy.get(".site-brand").click();
 		cy.url().should("eq", `${Cypress.config().baseUrl}/`);
 	});
 
-	it("keeps Book a Class and its scheduler within Classes navigation", () => {
+	it("keeps Schedule Class and its scheduler within Classes navigation", () => {
 		const schedulerOrigin = "https://scheduler.classes.jacobdanderson.net";
 		cy.intercept("GET", `${schedulerOrigin}/?*`, {
 			statusCode: 200,
 			headers: { "content-type": "text/html" },
 			body: '<!doctype html><html lang="en"><head><title>Scheduler fixture</title></head><body><main><h1>Scheduler fixture</h1></main></body></html>'
 		}).as("scheduler");
-		cy.get(".site-nav").contains("a:visible", "Book a Class").click();
+		cy.get(".site-nav").contains("a:visible", "Schedule Class").click();
 		cy.wait("@scheduler");
 		cy.location("pathname").should("eq", "/signup");
 		cy.get(".scheduler-frame").should(frame => {

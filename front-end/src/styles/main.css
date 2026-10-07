@@ -1144,6 +1144,7 @@ html.dark body .course-explorer :is(.resource-link, .resource-link-label, .resou
 }
 
 /* Follow the actual link target, including links rendered from course Markdown. */
+a[href^="mailto:"]::after,
 a[target="_blank"]:not(.resource-link)::after,
 a.resource-link[target="_blank"] .resource-link-label::after {
 	content: "";
@@ -1155,6 +1156,10 @@ a.resource-link[target="_blank"] .resource-link-label::after {
 	vertical-align: baseline;
 	background: currentColor;
 	mask: url("../assets/icons/new-tab.svg") center / contain no-repeat;
+}
+
+a[href^="mailto:"]::after {
+	mask-image: url("../assets/icons/mail.svg");
 }
 
 /* Content pages use a quiet frame; the home page keeps its original presentation. */

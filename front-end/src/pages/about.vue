@@ -87,9 +87,6 @@ useHead(() => ({
 		</section>
 
 		<section aria-label="About page actions" class="site-action-row">
-			<RouterLink class="site-button site-button--primary" to="/signup">
-				Schedule Class
-			</RouterLink>
 			<RouterLink class="text-link" to="/pathways">
 				View Course Pathways
 			</RouterLink>

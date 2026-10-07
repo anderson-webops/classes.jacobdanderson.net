@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import PathwaysPage from "@/pages/pathways.vue";
 import { useAppStore } from "@/stores/app";
 import { courseCatalog } from "@/stores/courses/index";
+import { coursePathwayMaps } from "@/modules/coursePathwayMaps";
 import {
 	coursePublicPathwayByCourseId,
 	coursePublicPathways
@@ -182,7 +183,7 @@ describe("public course pathways", () => {
 		);
 	});
 
-	it("renders the public pathway page with admin priorities, coverage, and key course families", () => {
+	it("renders visual course maps without administrative planning text", () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 		const app = useAppStore();
@@ -201,18 +202,16 @@ describe("public course pathways", () => {
 		});
 
 		expect(wrapper.text()).toContain("Course Pathways");
-		expect(wrapper.text()).toContain("Scratch and Early Computer Science");
-		expect(wrapper.text()).toContain("JavaScript and Web Development");
+		expect(wrapper.text()).toContain("Scratch");
+		expect(wrapper.text()).toContain("JavaScript and the web");
 		expect(wrapper.text()).toContain("AP Computer Science A");
-		expect(wrapper.text()).toContain(
-			"Network, Low-Level, and Systems Security"
+		expect(wrapper.text()).toContain("Security");
+		expect(wrapper.findAll(".pathway-card")).toHaveLength(
+			coursePathwayMaps.length
 		);
-		expect(wrapper.text()).toMatch(/\d+ pathways · \d+ courses/);
-		expect(
-			wrapper.get(".pathway-index").attributes("open")
-		).toBeUndefined();
-		expect(wrapper.text()).toContain("Build next");
-		expect(wrapper.text()).toContain("Expansion Backlog");
+		expect(wrapper.findAll("details")).toHaveLength(0);
+		expect(wrapper.text()).not.toContain("Build next");
+		expect(wrapper.text()).not.toContain("Expansion Backlog");
 	});
 
 	it("shows redacted public pathways to non-admin visitors", () => {
@@ -232,9 +231,10 @@ describe("public course pathways", () => {
 		});
 
 		expect(wrapper.text()).toContain("Course Pathways");
-		expect(wrapper.text()).toContain("Scratch and Early Computer Science");
-		expect(wrapper.text()).toContain("JavaScript and Web Development");
-		expect(wrapper.text()).toContain("Assessment, tooling, and safety");
+		expect(wrapper.text()).toContain("Scratch");
+		expect(wrapper.text()).toContain("JavaScript and the web");
+		expect(wrapper.text()).toContain("Suggested progression");
+		expect(wrapper.text()).toContain("Choose a focus");
 		expect(wrapper.text()).not.toContain("Build next");
 		expect(wrapper.text()).not.toContain("Expansion Backlog");
 		expect(wrapper.text()).not.toMatch(/internal priorit/i);

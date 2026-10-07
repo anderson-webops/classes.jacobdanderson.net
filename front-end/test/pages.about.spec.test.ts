@@ -33,7 +33,7 @@ describe("AboutPage", () => {
 		);
 		expect(wrapper.findAll(".about-faq details[open]")).toHaveLength(0);
 		expect(wrapper.find('a[href="/payment"]').exists()).toBe(false);
-		expect(actions.get('a[href="/signup"]').text()).toBe("Schedule Class");
+		expect(wrapper.find('a[href="/signup"]').exists()).toBe(false);
 		wrapper.unmount();
 	});
 });
