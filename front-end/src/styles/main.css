@@ -1079,6 +1079,14 @@ html.dark body .course-explorer .reader-header {
 	border-color: var(--course-border) !important;
 }
 
+html.dark body .course-explorer .lesson-card {
+	background: var(--color-surface) !important;
+}
+
+html.dark body .course-explorer .assignment-section :is(p, li) {
+	color: var(--color-ink) !important;
+}
+
 html.dark body .course-explorer :is(.lesson-index, .section-count) {
 	background: #102235 !important;
 	color: var(--course-text) !important;

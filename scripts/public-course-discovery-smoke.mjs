@@ -316,6 +316,19 @@ try {
 						"python-level-1"
 					);
 					assert(await page.$(".catalog-signin"));
+					await page.select("#course-select", "scratch-level-1");
+					await page.waitForSelector(".lesson-view-toggle button");
+					await page.waitForFunction(() => document.querySelector(".lesson-card h5")?.textContent?.includes("Hungry Hippo"));
+					assert.equal(await page.$(".module-guide-disclosure"), null);
+					for (const [viewIndex, label] of ["Projects", "Supplemental Projects", "Learn"].entries()) {
+						await page.click(`.lesson-view-toggle button:nth-child(${viewIndex + 1})`);
+						await page.waitForFunction(expected => document.querySelector("#lesson-view-content")?.getAttribute("aria-label") === expected, {}, label);
+						await page.waitForFunction(() => [...document.querySelectorAll(".item-content-markdown")].every(element => element.textContent.trim()));
+						assert.equal(await page.$eval(`.lesson-view-toggle button:nth-child(${viewIndex + 1})`, element => element.getAttribute("aria-pressed")), "true");
+						assert.equal(await page.$(".key-blocks") !== null, label === "Learn");
+						await verifyLayout(page, `lesson-${label}-${theme}-${width}`);
+						await page.screenshot({ path: resolve(artifactDir, `lesson-${viewIndex}-${theme}-${width}.png`) });
+					}
 				}
 				if (pathname === "/") {
 					const hrefs = await page.$$eval("a[href]", anchors =>

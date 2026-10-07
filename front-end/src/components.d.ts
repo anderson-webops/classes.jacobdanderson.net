@@ -23,6 +23,7 @@ declare module 'vue' {
     CodePreview: typeof import('./components/CodePreview.vue')['default']
     CourseAccessCodeManager: typeof import('./components/CourseAccessCodeManager.vue')['default']
     CourseAssetPreview: typeof import('./components/CourseAssetPreview.vue')['default']
+    CourseAssignmentContent: typeof import('./components/CourseAssignmentContent.vue')['default']
     CourseCodeAccessForm: typeof import('./components/CourseCodeAccessForm.vue')['default']
     CourseExplorer: typeof import('./components/CourseExplorer.vue')['default']
     GraphSketcherWorkspace: typeof import('./components/GraphSketcherWorkspace.vue')['default']

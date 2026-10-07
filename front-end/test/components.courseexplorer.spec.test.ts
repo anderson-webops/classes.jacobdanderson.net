@@ -97,8 +97,9 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.find(".course-hero").exists()).toBe(false);
 		});
 		expect(wrapper.text()).toContain(assignedCourse.name);
-		expect(wrapper.text()).toContain("Core");
-		expect(wrapper.text()).toContain("Practice");
+		expect(wrapper.text()).toContain("Projects");
+		expect(wrapper.text()).toContain("Supplemental Projects");
+		expect(wrapper.text()).toContain("Learn");
 		expect(wrapper.find(".course-stats").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Complete");
 		expect(wrapper.text()).not.toContain("core items");
@@ -808,7 +809,7 @@ describe("CourseExplorer.vue", () => {
 		).toBe(true);
 	});
 
-	it("labels projects as core and supplemental projects as practice", async () => {
+	it("separates projects, supplemental projects and key blocks into lesson views", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -894,15 +895,26 @@ describe("CourseExplorer.vue", () => {
 			.trigger("click");
 		await flushPromises();
 
-		expect(wrapper.text()).toContain("Core");
-		expect(wrapper.text()).toContain("Estimated pace");
-		expect(wrapper.text()).toContain("1 optional session");
-		expect(wrapper.text()).toContain("repeat → loop");
-		expect(wrapper.text()).toContain("Next Step Projects");
+		expect(wrapper.text()).not.toContain("Estimated pace");
+		expect(wrapper.text()).not.toContain("1 optional session");
+		expect(wrapper.text()).not.toContain("Lesson guide");
+		expect(wrapper.text()).not.toContain("repeat → loop");
+		expect(wrapper.findAll(".lesson-card")).toHaveLength(1);
+		expect(wrapper.text()).toContain("Translation Build");
+		expect(wrapper.text()).not.toContain("Choose a Translation");
 		expect(wrapper.text()).toContain("Supplemental Projects");
-		expect(
-			wrapper.findAll(".lesson-kicker").map(kicker => kicker.text())
-		).toEqual(["Core", "Practice", "Practice"]);
+		await wrapper
+			.get('.lesson-view-toggle button[aria-pressed="false"]')
+			.trigger("click");
+		expect(wrapper.findAll(".lesson-card")).toHaveLength(2);
+		expect(wrapper.text()).toContain("Choose a Translation");
+		expect(wrapper.text()).not.toContain("Translation Build");
+		await wrapper
+			.get(".lesson-view-toggle button:last-child")
+			.trigger("click");
+		expect(wrapper.text()).toContain("repeat → loop");
+		expect(wrapper.findAll(".lesson-card")).toHaveLength(0);
+		expect(wrapper.find(".lesson-kicker").exists()).toBe(false);
 		expect(wrapper.text()).not.toContain("Mark next step complete");
 	});
 
@@ -1690,8 +1702,11 @@ describe("CourseExplorer.vue", () => {
 			expect(
 				wrapper.find<HTMLSelectElement>("#course-select").element.value
 			).toBe(chemistryCourse.id);
-			expect(wrapper.text()).toContain("Chemistry Basics Lesson");
 		});
+		await wrapper
+			.get(".lesson-view-toggle button:last-child")
+			.trigger("click");
+		expect(wrapper.text()).toContain("Chemistry Basics Lesson");
 	});
 
 	it("renders starter code previews but hides solution previews for learners", async () => {
@@ -2360,6 +2375,9 @@ describe("CourseExplorer.vue", () => {
 		});
 		await flushPromises();
 
+		await wrapper
+			.get(".lesson-view-toggle button:nth-child(2)")
+			.trigger("click");
 		const video = wrapper.find("video.item-media-video");
 		expect(video.exists()).toBe(true);
 
