@@ -9,6 +9,7 @@ import {
 	SCHEDULER_ORIGIN,
 	schedulerEmbedMessageSource,
 	schedulerEmbedResizeType,
+	schedulerEmbedViewType,
 	schedulerEmbedThemeMessageSource,
 	schedulerEmbedThemeType,
 	schedulerUrl
@@ -59,7 +60,9 @@ describe("booking inside Classes", () => {
 		expect(frame.attributes("src")).toBe(buildSchedulerEmbedUrl("light"));
 		expect(frame.attributes("title")).toBe("Class scheduler");
 		expect(frame.attributes("sandbox")).not.toContain("top-navigation");
-		expect(wrapper.get("h1").text()).toBe("Schedule a class");
+		expect(wrapper.get("h1").text()).toBe("Schedule Class");
+		expect(wrapper.find("details").exists()).toBe(false);
+		expect(wrapper.text()).not.toMatch(/View tuition|Preparing for class/);
 	});
 
 	it("follows trusted content heights with bounded minimum and maximum", async () => {
@@ -131,16 +134,77 @@ describe("booking inside Classes", () => {
 
 	it("keeps booking management in the same view with a return to the calendar", async () => {
 		await wrapper.get("button").trigger("click");
-		expect(wrapper.get("h1").text()).toBe("Manage bookings");
-		expect(wrapper.get("button").text()).toBe("Back to calendar");
+		expect(wrapper.get("h1").text()).toBe("Manage scheduled classes");
+		expect(wrapper.get("button").text()).toBe("Schedule Class");
 		expect(wrapper.get("iframe").attributes("src")).toBe(
 			buildSchedulerEmbedUrl("light", "/portal")
 		);
 		await wrapper.get("button").trigger("click");
-		expect(wrapper.get("h1").text()).toBe("Schedule a class");
+		expect(wrapper.get("h1").text()).toBe("Schedule Class");
 		expect(wrapper.get("iframe").attributes("src")).toBe(
 			buildSchedulerEmbedUrl("light")
 		);
+	});
+
+	function sendView(
+		view: unknown,
+		origin = SCHEDULER_ORIGIN,
+		source = wrapper.get("iframe").element.contentWindow,
+		extra = {}
+	) {
+		window.dispatchEvent(
+			new MessageEvent("message", {
+				origin,
+				source,
+				data: {
+					source: schedulerEmbedMessageSource,
+					type: schedulerEmbedViewType,
+					view,
+					...extra
+				}
+			})
+		);
+	}
+
+	it("synchronizes the heading after internal child navigation without reloading it", async () => {
+		const frame = wrapper.get("iframe").element;
+		const src = wrapper.get("iframe").attributes("src");
+		sendView("management");
+		await nextTick();
+		expect(wrapper.get("h1").text()).toBe("Manage scheduled classes");
+		expect(wrapper.get("iframe").element).toBe(frame);
+		expect(wrapper.get("iframe").attributes("src")).toBe(src);
+		sendView("calendar");
+		await nextTick();
+		expect(wrapper.get("h1").text()).toBe("Schedule Class");
+		expect(wrapper.get("iframe").element).toBe(frame);
+	});
+
+	it("replaces the child on explicit mode changes even if its original src already matches", async () => {
+		const oldFrame = wrapper.get("iframe").element;
+		const oldWindow = oldFrame.contentWindow;
+		sendView("management");
+		await nextTick();
+		await wrapper.get("button").trigger("click");
+		expect(wrapper.get("iframe").attributes("src")).toBe(
+			buildSchedulerEmbedUrl("light")
+		);
+		expect(wrapper.get("iframe").element).not.toBe(oldFrame);
+		sendView("management", SCHEDULER_ORIGIN, oldWindow);
+		await nextTick();
+		expect(wrapper.get("h1").text()).toBe("Schedule Class");
+	});
+
+	it("ignores forged and unsupported child view messages", async () => {
+		sendView("management", "https://example.invalid");
+		sendView("management", SCHEDULER_ORIGIN, window);
+		sendView("management", SCHEDULER_ORIGIN, undefined, {
+			source: "other"
+		});
+		sendView("management", SCHEDULER_ORIGIN, undefined, { type: "other" });
+		for (const view of ["admin", "/portal", null, true, {}]) sendView(view);
+		await nextTick();
+		expect(wrapper.get("h1").text()).toBe("Schedule Class");
 	});
 
 	it("offers an explicit fallback when loading stalls and clears it on load", async () => {

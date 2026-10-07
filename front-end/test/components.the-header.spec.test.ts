@@ -24,7 +24,7 @@ describe("TheHeader.vue", () => {
 				stubs: {
 					RouterLink: {
 						props: ["to"],
-						template: "<a><slot /></a>"
+						template: '<a :href="to"><slot /></a>'
 					}
 				}
 			}
@@ -39,14 +39,16 @@ describe("TheHeader.vue", () => {
 		const html = await renderToString(app);
 		expect(html).toContain("Courses");
 		expect(html).toContain("IDE");
-		expect(html).not.toMatch(/Log in|Book a Class|About|Join class/);
+		expect(html).not.toMatch(
+			/Log in|Schedule Class|About|Join on Zoom|Payment/
+		);
 	});
 
 	it("keeps a pending session neutral and restores guest controls when resolved", async () => {
 		const pinia = createPinia();
 		const wrapper = mountHeader(pinia, false);
 		expect(wrapper.text()).not.toMatch(
-			/Log in|Book a Class|About|Join class/
+			/Log in|Schedule Class|About|Join on Zoom|Payment/
 		);
 		useAppStore().sessionBootstrapStatus = "ready";
 		await nextTick();
@@ -67,10 +69,27 @@ describe("TheHeader.vue", () => {
 		courses.unmount();
 	});
 
-	it("shows Join class but keeps Pathways out of the primary navigation for visitors", () => {
+	it("places Zoom after About and Payment immediately before login for visitors", () => {
 		const wrapper = mountHeader();
 
-		expect(wrapper.text()).toContain("Join class");
+		const links = wrapper.findAll(".site-nav__links a");
+		expect(links.slice(-2).map(link => link.text())).toEqual([
+			"About",
+			"Join on Zoom (opens in a new tab)"
+		]);
+		const zoom = links.at(-1)!;
+		expect(zoom.attributes("href")).toBe(
+			"https://us06web.zoom.us/j/2543520025"
+		);
+		expect(zoom.attributes("target")).toBe("_blank");
+		expect(zoom.attributes("rel")).toBe("noopener noreferrer");
+		expect(wrapper.find('a[href="/zoom"]').exists()).toBe(false);
+		expect(wrapper.get('a[href="/signup"]').text()).toBe("Schedule Class");
+		const payment = wrapper.get(".site-nav__payment");
+		expect(payment.attributes("href")).toBe("/payment");
+		expect(payment.element.nextElementSibling?.textContent?.trim()).toBe(
+			"Log in"
+		);
 		expect(wrapper.text()).toContain("IDE");
 		expect(wrapper.text()).toContain("Graphing");
 		expect(wrapper.text()).not.toContain("BlueJ");
@@ -97,7 +116,9 @@ describe("TheHeader.vue", () => {
 		expect(wrapper.text()).not.toContain("BlueJ");
 		expect(wrapper.text()).not.toContain("Pathways");
 		expect(wrapper.text()).toContain("Account");
-		expect(wrapper.text()).not.toContain("Book a Class");
+		expect(wrapper.text()).not.toContain("Schedule Class");
+		expect(wrapper.find(".site-nav__payment").exists()).toBe(false);
+		expect(wrapper.find('a[target="_blank"]').exists()).toBe(false);
 	});
 
 	it("shows the Teaching workspace link for tutors", () => {

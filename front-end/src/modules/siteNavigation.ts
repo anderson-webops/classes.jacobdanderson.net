@@ -3,8 +3,8 @@ export const siteLabels = {
 	courses: "Courses",
 	ide: "IDE",
 	graphing: "Graphing",
-	booking: "Book a Class",
-	join: "Join class",
+	booking: "Schedule Class",
+	join: "Join on Zoom",
 	account: "Account"
 } as const;
 export const workspacePaths = [

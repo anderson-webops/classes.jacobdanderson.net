@@ -9,31 +9,11 @@ import {
 	schedulerEmbedResizeType,
 	schedulerEmbedThemeMessageSource,
 	schedulerEmbedThemeType,
+	schedulerEmbedViewType,
 	schedulerUrl
 } from "@/modules/scheduler";
 
-import { serializeJsonLd } from "@/modules/serializeJsonLd";
-import { useContentStore } from "@/stores/content";
-
 defineOptions({ name: "SignupPage" });
-const content = useContentStore();
-useHead(() => ({
-	script: [
-		{
-			type: "application/ld+json",
-			key: "classes-booking-faq",
-			innerHTML: serializeJsonLd({
-				"@context": "https://schema.org",
-				"@type": "FAQPage",
-				mainEntity: content.faqs.map(faq => ({
-					"@type": "Question",
-					name: faq.question,
-					acceptedAnswer: { "@type": "Answer", text: faq.answer }
-				}))
-			})
-		}
-	]
-}));
 
 const MIN_FRAME_HEIGHT = 760;
 const MAX_FRAME_HEIGHT = 5000;
@@ -42,6 +22,7 @@ const schedulerHeight = ref(MIN_FRAME_HEIGHT);
 const schedulerLoaded = ref(false);
 const schedulerTimedOut = ref(false);
 const showingPortal = ref(false);
+const schedulerFrameGeneration = ref(0);
 const schedulerTheme = computed(() => (isDark.value ? "dark" : "light"));
 // Theme changes use messages so an in-progress booking is never reloaded.
 const schedulerEmbedSrc = ref(buildSchedulerEmbedUrl(schedulerTheme.value));
@@ -77,7 +58,18 @@ function handleSchedulerMessage(event: MessageEvent) {
 	if (
 		typeof payload !== "object" ||
 		payload === null ||
-		payload.source !== schedulerEmbedMessageSource ||
+		payload.source !== schedulerEmbedMessageSource
+	) {
+		return;
+	}
+	if (payload.type === schedulerEmbedViewType) {
+		if (payload.view !== "calendar" && payload.view !== "management")
+			return;
+		showingPortal.value = payload.view === "management";
+		if (!schedulerLoaded.value) markSchedulerLoaded();
+		return;
+	}
+	if (
 		payload.type !== schedulerEmbedResizeType ||
 		typeof payload.height !== "number" ||
 		!Number.isFinite(payload.height) ||
@@ -114,6 +106,7 @@ function markSchedulerLoaded() {
 
 function toggleBookingView() {
 	showingPortal.value = !showingPortal.value;
+	schedulerFrameGeneration.value += 1;
 	schedulerLoaded.value = false;
 	schedulerTimedOut.value = false;
 	schedulerHeight.value = MIN_FRAME_HEIGHT;
@@ -143,17 +136,20 @@ onBeforeUnmount(() => {
 
 <template>
 	<section class="signup-page">
-		<p class="booking-tuition">
-			<RouterLink to="/payment"
-				>View tuition and payment options</RouterLink
-			>
-		</p>
 		<header class="scheduler-toolbar">
 			<h1>
-				{{ showingPortal ? "Manage bookings" : "Schedule a class" }}
+				{{
+					showingPortal
+						? "Manage scheduled classes"
+						: "Schedule Class"
+				}}
 			</h1>
 			<button class="text-link" type="button" @click="toggleBookingView">
-				{{ showingPortal ? "Back to calendar" : "Manage bookings" }}
+				{{
+					showingPortal
+						? "Schedule Class"
+						: "Manage scheduled classes"
+				}}
 			</button>
 		</header>
 		<p v-if="schedulerTimedOut" class="scheduler-status" role="alert">
@@ -166,6 +162,7 @@ onBeforeUnmount(() => {
 			Loading scheduler…
 		</p>
 		<iframe
+			:key="schedulerFrameGeneration"
 			ref="schedulerFrame"
 			class="scheduler-frame"
 			:src="schedulerEmbedSrc"
@@ -176,19 +173,6 @@ onBeforeUnmount(() => {
 			sandbox="allow-forms allow-popups allow-same-origin allow-scripts"
 			@load="markSchedulerLoaded"
 		/>
-		<details class="booking-help">
-			<summary>Preparing for class and booking help</summary>
-			<p>
-				Bring your assignment, project or current goal. Sessions can
-				follow schoolwork or a course path, with short written next
-				steps afterward.
-			</p>
-			<details v-for="faq in content.faqs" :key="faq.question">
-				<summary>{{ faq.question }}</summary>
-				<p>{{ faq.answer }}</p>
-			</details>
-			<RouterLink to="/payment">Tuition and payment options</RouterLink>
-		</details>
 		<noscript>
 			<p>
 				JavaScript is required for the calendar.
@@ -220,7 +204,7 @@ onBeforeUnmount(() => {
 	padding: 0.25rem 0.35rem 0.75rem;
 }
 .scheduler-toolbar h1 {
-	font-size: 1.4rem;
+	font-size: clamp(1.5rem, 2vw, 1.75rem);
 }
 .scheduler-toolbar button {
 	min-height: 44px;
@@ -236,18 +220,6 @@ onBeforeUnmount(() => {
 .scheduler-status {
 	padding: 0.5rem;
 	color: var(--color-ink);
-}
-.booking-help {
-	margin: 0.75rem;
-	padding: 0.75rem;
-	color: var(--color-ink);
-}
-.booking-help details {
-	margin-block: 0.75rem;
-}
-.booking-help summary {
-	cursor: pointer;
-	font-weight: 600;
 }
 </style>
 

@@ -45,25 +45,30 @@ const primaryLinks = computed<NavLink[]>(() => {
 
 	if (!isSessionResolved.value) return links;
 
-	if (!isAdmin.value) {
+	if (isLoggedIn.value && !isAdmin.value) {
 		links.push({
-			label: isLoggedIn.value ? "Join class on Zoom" : siteLabels.join,
-			to: isLoggedIn.value ? classMeetingUrl : "/zoom",
-			exact: true,
-			external: isLoggedIn.value
+			label: "Join class on Zoom",
+			to: classMeetingUrl,
+			external: true
 		});
 	}
 
 	if (!isAdmin.value) {
 		links.push({
-			label: "Book a Class",
+			label: siteLabels.booking,
 			to: "/signup",
 			exact: true
 		});
 	}
 
-	if (!isLoggedIn.value)
+	if (!isLoggedIn.value) {
 		links.push({ label: "About", to: "/about", exact: true });
+		links.push({
+			label: siteLabels.join,
+			to: classMeetingUrl,
+			external: true
+		});
+	}
 
 	return links;
 });
@@ -177,6 +182,16 @@ function isLinkActive(link: NavLink) {
 										{{ link.label }}
 									</router-link>
 
+									<RouterLink
+										v-if="isSessionResolved && !isLoggedIn"
+										class="site-nav__link site-nav__payment"
+										:class="{
+											'is-active':
+												route.path === '/payment'
+										}"
+										to="/payment"
+										>Payment</RouterLink
+									>
 									<details
 										v-if="isLoggedIn"
 										ref="accountMenu"
@@ -378,6 +393,14 @@ function isLinkActive(link: NavLink) {
 	justify-content: flex-end;
 	gap: 0.65rem;
 	flex-shrink: 0;
+}
+
+.site-nav__payment,
+.site-nav__payment:hover,
+.site-nav__payment.is-active {
+	color: var(--color-accent);
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
 }
 
 .site-nav__badge {

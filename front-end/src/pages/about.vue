@@ -1,24 +1,48 @@
 <script lang="ts" setup>
+import { serializeJsonLd } from "@/modules/serializeJsonLd";
+import { useContentStore } from "@/stores/content";
+
 defineOptions({ name: "AboutPage" });
+const content = useContentStore();
+useHead(() => ({
+	script: [
+		{
+			type: "application/ld+json",
+			key: "classes-about-faq",
+			innerHTML: serializeJsonLd({
+				"@context": "https://schema.org",
+				"@type": "FAQPage",
+				mainEntity: content.faqs.map(faq => ({
+					"@type": "Question",
+					name: faq.question,
+					acceptedAnswer: { "@type": "Answer", text: faq.answer }
+				}))
+			})
+		}
+	]
+}));
 </script>
 
 <template>
 	<section class="page-shell about-page">
-		<section aria-labelledby="intro-title" class="page-hero about-intro">
+		<section aria-labelledby="intro-title" class="about-intro">
 			<div class="copy">
 				<h1 id="intro-title" class="page-title">About Jacob</h1>
 				<p class="page-copy">
 					I taught hundreds of students through Juni Learning before
-					moving into direct private instruction. Most students come
-					to me with an assignment, bug, lab, or project that needs
-					focused one-on-one help.
+					moving into private instruction. We work one-on-one on
+					coursework, coding, math and science, or follow a course
+					path built around your goals.
 				</p>
-				<p class="page-copy">
-					That means sessions are built around the work in front of
-					the learner: debugging code, finishing coursework, reviewing
-					reasoning, or moving through a structured course path when
-					there is no active class assignment.
-				</p>
+				<a
+					class="text-link"
+					href="https://www.linkedin.com/in/jacoba1100254352/"
+					target="_blank"
+					rel="noopener noreferrer"
+					>LinkedIn<span class="sr-only">
+						(opens in a new tab)</span
+					></a
+				>
 			</div>
 			<figure class="image-wrapper">
 				<img
@@ -31,85 +55,42 @@ defineOptions({ name: "AboutPage" });
 			</figure>
 		</section>
 
-		<section aria-labelledby="fit-title" class="about-section">
-			<div class="section-heading">
-				<h2 id="fit-title" class="section-title">Best Fit</h2>
-			</div>
+		<section aria-labelledby="approach-title" class="about-section">
+			<h2 id="approach-title" class="section-title">How we work</h2>
 			<div class="fit-grid">
 				<article>
-					<h3>Active Coursework</h3>
+					<h3>Bring the work</h3>
 					<p>
-						A strong fit for students who need help finishing an
-						assignment, understanding a module, or preparing for the
-						next check-in.
+						Start with your assignment, project, bug or skill goal.
 					</p>
 				</article>
 				<article>
-					<h3>Projects</h3>
+					<h3>Think it through</h3>
 					<p>
-						Useful for students building apps, games, labs, or other
-						project work and needing direct feedback while the work
-						is still in progress.
+						Explain your choices, test ideas and build
+						understanding.
 					</p>
 				</article>
 				<article>
-					<h3>Course Paths</h3>
-					<p>
-						A good fit when a student needs a defined path with
-						linked projects and supplemental practice instead of
-						improvised enrichment.
-					</p>
+					<h3>Know what’s next</h3>
+					<p>Leave with a clear next step and short session notes.</p>
 				</article>
 			</div>
 		</section>
 
-		<section aria-labelledby="approach-title" class="about-section">
-			<div class="section-heading">
-				<h2 id="approach-title" class="section-title">
-					How Sessions Run
-				</h2>
-			</div>
-			<ul>
-				<li>
-					<p>
-						<strong>Start with the exact problem:</strong>
-						We work from the assignment, bug, or project in front of
-						the student instead of drifting into generic lecture.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Make the reasoning visible:</strong>
-						Students explain choices, test cases, and edge cases out
-						loud so understanding is easy to check.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Leave with a next step:</strong>
-						Each session ends with what was solved, what still needs
-						work, and what to do next.
-					</p>
-				</li>
-			</ul>
+		<section aria-labelledby="faq-title" class="about-faq">
+			<h2 id="faq-title" class="section-title">FAQ</h2>
+			<details v-for="faq in content.faqs" :key="faq.question">
+				<summary>{{ faq.question }}</summary>
+				<p>{{ faq.answer }}</p>
+			</details>
 		</section>
 
 		<section aria-label="About page actions" class="site-action-row">
 			<RouterLink class="site-button site-button--primary" to="/signup">
-				Book a Class
+				Schedule Class
 			</RouterLink>
-			<a
-				class="site-button site-button--secondary"
-				href="https://www.linkedin.com/in/jacoba1100254352/"
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				View LinkedIn<span class="sr-only"> (opens in a new tab)</span>
-			</a>
-			<RouterLink
-				class="site-button site-button--secondary"
-				to="/pathways"
-			>
+			<RouterLink class="text-link" to="/pathways">
 				View Course Pathways
 			</RouterLink>
 		</section>
@@ -118,11 +99,12 @@ defineOptions({ name: "AboutPage" });
 
 <style scoped>
 .about-page {
-	max-width: 64rem;
+	max-width: 58rem;
+	gap: 1.75rem;
 }
 .about-intro {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) 10rem;
+	grid-template-columns: minmax(0, 1fr) 8rem;
 	align-items: start;
 	gap: 2rem;
 }
@@ -139,6 +121,9 @@ defineOptions({ name: "AboutPage" });
 .about-section {
 	display: grid;
 	gap: 0.75rem;
+}
+.copy .page-copy {
+	font-size: 1rem;
 }
 .fit-grid {
 	display: grid;
@@ -158,10 +143,29 @@ defineOptions({ name: "AboutPage" });
 	color: var(--color-ink-soft);
 	line-height: 1.65;
 }
-.about-section ul {
-	list-style: none;
-	display: grid;
-	gap: 0.75rem;
+.about-faq {
+	border-top: 1px solid var(--color-border);
+	padding-top: 1.25rem;
+}
+.about-faq h2 {
+	margin-bottom: 0.75rem;
+}
+.about-faq details {
+	border-bottom: 1px solid var(--color-border);
+}
+.about-faq summary {
+	padding: 0.6rem 0;
+	cursor: pointer;
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: var(--color-ink);
+}
+.about-faq p {
+	padding: 0 0 0.75rem 1rem;
+	margin: 0;
+	font-size: 0.95rem;
+	line-height: 1.65;
+	color: var(--color-ink-soft);
 }
 @media (max-width: 700px) {
 	.about-intro {

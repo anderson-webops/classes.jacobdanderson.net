@@ -136,7 +136,7 @@ function openSignup() {
 					</button>
 				</div>
 				<RouterLink class="text-link" to="/signup"
-					>Book a Class</RouterLink
+					>Schedule Class</RouterLink
 				>
 				<RouterLink class="text-link" to="/pathways">
 					Explore course pathways

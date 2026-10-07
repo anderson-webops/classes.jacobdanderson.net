@@ -56,10 +56,10 @@ defineProps<{ compact?: boolean }>();
 				<h3>Use the Site</h3>
 				<ul>
 					<li>
-						<RouterLink to="/signup"> Book a Class </RouterLink>
+						<RouterLink to="/signup"> Schedule Class </RouterLink>
 					</li>
 					<li>
-						<RouterLink to="/payment">View Tuition</RouterLink>
+						<RouterLink to="/payment">Payment</RouterLink>
 					</li>
 					<li>
 						<RouterLink to="/graph-sketcher">{{
@@ -81,7 +81,7 @@ defineProps<{ compact?: boolean }>();
 			<div v-if="compact" class="site-action-row">
 				<a href="mailto:classes@jacobdanderson.net">Help</a
 				><RouterLink to="/privacy">Privacy</RouterLink
-				><RouterLink to="/payment">Tuition</RouterLink>
+				><RouterLink to="/payment">Payment</RouterLink>
 			</div>
 			<button
 				class="site-footer__theme-toggle"

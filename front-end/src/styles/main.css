@@ -702,7 +702,7 @@ html.dark body .course-chip-list li {
 	color: #f8fafc;
 }
 
-html.dark body :is(.workspace-header p:last-child, .section-copy, .security-copy, .helper-copy, .helper-text, .hint, .muted-copy, .empty-copy, .summary-copy.is-muted, .record-subcopy, .record-meta, .progress-helper, .field-stack span, .history-card__meta, .history-card__empty, .history-note__meta, .preview-meta, .association-copy, .stat-pill span, .directory-card-header p, .recipient-association, .tool-form label, .progress-check.is-item, .record-item small, .record-item span, .tools-summary small, .profile-card p, .profile-empty p, .tool-card p, .tuition-card p, .scheduler-loading-kicker, .dialog-description, .confirm-copy, .auth-switch, .auth-help, .scheduler-direct, .scheduler-fallback, .wheel-fallback p) {
+html.dark body :is(.workspace-header p:last-child, .section-copy, .security-copy, .helper-copy, .helper-text, .hint, .muted-copy, .empty-copy, .summary-copy.is-muted, .record-subcopy, .record-meta, .progress-helper, .field-stack span, .history-card__meta, .history-card__empty, .history-note__meta, .preview-meta, .association-copy, .stat-pill span, .directory-card-header p, .recipient-association, .tool-form label, .progress-check.is-item, .record-item small, .record-item span, .tools-summary small, .profile-card p, .profile-empty p, .tool-card p, .tuition-card p:not(.payment-policy), .scheduler-loading-kicker, .dialog-description, .confirm-copy, .auth-switch, .auth-help, .scheduler-direct, .scheduler-fallback, .wheel-fallback p) {
 	color: var(--color-ink-soft);
 }
 

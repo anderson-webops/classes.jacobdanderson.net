@@ -78,7 +78,7 @@ useHead(
 						class="site-button site-button--primary"
 						to="/signup"
 					>
-						Book a Class
+						Schedule Class
 					</RouterLink>
 					<RouterLink
 						class="site-button site-button--secondary"
@@ -137,7 +137,7 @@ useHead(
 		<section aria-labelledby="next-steps-title" class="home-section">
 			<div class="site-surface next-steps-card">
 				<h2 id="next-steps-title" class="section-title">
-					Book a Class
+					Schedule Class
 				</h2>
 				<p class="section-intro">
 					Use the scheduler for one-time or recurring classes. Add a
