@@ -3869,6 +3869,8 @@ button.resource-link {
 	grid-column: 2;
 	grid-row: 1 / 3;
 	align-self: center;
+	justify-self: end;
+	width: min(100%, 26rem);
 }
 .course-select,
 .course-search {
