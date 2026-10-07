@@ -302,7 +302,7 @@ export function isKnownCourseWorksheetResource(url: string) {
 		((resource.repo.toLowerCase() === "python-level-3" &&
 			/^AM6-Big-O-Analysis(?:\/|$)/.test(resource.path)) ||
 			(resource.repo.toLowerCase() === "cpp-level-3" &&
-				/^CPPI0-Warnings-and-Debugger-Notebook(?:\/|$)/.test(
+				/^(?:CPPI0-Warnings-and-Debugger-Notebook|CPPI2-Recursion-Trace-Drill)(?:\/|$)/.test(
 					resource.path
 				)))
 	);

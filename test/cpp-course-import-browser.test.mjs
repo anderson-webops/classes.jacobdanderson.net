@@ -24,8 +24,8 @@ import { cppManualCapstoneProjectBriefs } from "../front-end/src/stores/courses/
 import { cppParameterLessonBriefs } from "../front-end/src/stores/courses/cppParameterProjectBriefs.ts";
 import { completeBuildDebugFile, verifyBuildDebugDefaultExport, verifyBuildDebugExport } from "./cpp-build-debug-export-checks.mjs";
 import { completeDynamicMemoryFile, verifyDynamicMemoryDefaultExport, verifyDynamicMemoryExport } from "./cpp-dynamic-memory-export-checks.mjs";
-import { completeMazeSearchFile, verifyMazeSearchDefaultExport, verifyMazeSearchExport } from "./cpp-maze-search-export-checks.mjs";
 import { completeManualCapstoneFile, verifyManualCapstoneDefaultExport, verifyManualCapstoneExport } from "./cpp-manual-capstone-export-checks.mjs";
+import { completeMazeSearchFile, verifyMazeSearchDefaultExport, verifyMazeSearchExport } from "./cpp-maze-search-export-checks.mjs";
 import { completeRowImportFile, verifyRowImportDefaultExport, verifyRowImportExport } from "./cpp-row-import-export-checks.mjs";
 import { completeTaskManagerFile, verifyTaskManagerDefaultExport, verifyTaskManagerExport } from "./cpp-task-manager-export-checks.mjs";
 import { completeTwoDimensionalAttempt, verifyTwoDimensionalExport } from "./cpp-two-dimensional-export-checks.mjs";
@@ -1323,6 +1323,27 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				assert.match(briefText, /does not promise a shortest path/);
 				assert.match(briefText, /maze_search\.cpp/);
 				record("verified-complete-recursion-lessons", { folder, fullContract: true, finalSections: true });
+				const worksheet = "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/starter/WORKSHEET.md']";
+				await revealCourseSource(page, worksheet);
+				assert.equal(await page.$eval(worksheet, link => link.closest(".lesson-item").querySelectorAll(".is-ide-starter").length), 0);
+				assert.equal(!!await page.$("a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/solution/WORKED-TRACE.md']"), referenceFixture);
+				const worksheetText = await page.$eval(worksheet, link => link.closest(".lesson-item").textContent.replace(/\s+/g, " "));
+				assert.match(worksheetText, /Case A: Adjacent cells/);
+				assert.match(worksheetText, /Case B: Branch choices/);
+				assert.match(worksheetText, /Case C: A loop and a separated exit/);
+				assert.match(worksheetText, /Extend and review/);
+				assert.match(worksheetText, /two custom cases/);
+				assert.ok(await page.$eval(worksheet, link => Boolean(link.closest(".lesson-item").querySelector("table"))));
+				assert.equal(sourceRequests, before, "Reading the recursion worksheet never imports code");
+				if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+					const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
+					await mkdir(directory, { recursive: true });
+					const link = await page.$(worksheet);
+					const card = await link.evaluateHandle(element => element.closest(".lesson-item"));
+					await card.asElement().screenshot({ path: join(directory, `course-import-cpp-CPPI2-recursion-worksheet-${referenceFixture ? "staff" : "learner"}.png`) });
+				}
+				record("verified-recursion-worksheet-routing", { folder, referenceVisible: referenceFixture, noCodeImport: true, fullWorksheet: true });
+				await revealCourseSource(page, selector);
 			}
 			if (Object.hasOwn(rowImportPacks, folder)) {
 				await page.waitForFunction(selector => document.querySelector(selector)?.closest(".lesson-item").textContent.includes("65536/65537"), {}, selector);
@@ -1481,6 +1502,37 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
 			if (Object.hasOwn(files, "Makefile")) {
 				assert.ok(await page.evaluate(() => [...document.querySelectorAll(".project-context select option")].some(option => option.textContent.trim() === "Makefile")));
+			}
+			if (Object.hasOwn(mazeSearchPacks, folder) && folder.endsWith("/starter")) {
+				const requestsBeforeWorksheet = sourceRequests;
+				const savedBefore = await page.evaluate((key) => {
+					const projects = JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous"));
+					return { count: projects.length, files: projects.find(project => project.courseProjectKey === key).files };
+				}, key);
+				courseFixture = true;
+				await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
+				const worksheet = "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/starter/WORKSHEET.md']";
+				await revealCourseSource(page, worksheet);
+				const continuation = await page.$eval(worksheet, link => [...link.closest(".lesson-item").querySelectorAll("a")].find(action => action.textContent === "Continue saved maze")?.getAttribute("href"));
+				assert.ok(continuation);
+				assert.equal(new URL(continuation, origin).searchParams.get("projectKey"), key);
+				courseFixture = false;
+				await page.goto(new URL(continuation, origin).href, { waitUntil: "domcontentloaded" });
+				await page.waitForSelector(".cm-content");
+				await selectProjectFile(page, entryFile);
+				await page.click(".cm-content");
+				await page.keyboard.down(modifier);
+				await page.keyboard.press(modifier === "Meta" ? "ArrowDown" : "End");
+				await page.keyboard.up(modifier);
+				await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("Browser workflow edit"));
+				assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
+				assert.equal(sourceRequests, requestsBeforeWorksheet);
+				const savedAfter = await page.evaluate((key) => {
+					const projects = JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous"));
+					return { count: projects.length, files: projects.find(project => project.courseProjectKey === key).files };
+				}, key);
+				assert.deepEqual(savedAfter, savedBefore);
+				record("verified-recursion-worksheet-saved-attempt", { folder, previousKey: key, noCodeImport: true, fileCount: savedAfter.files.length });
 			}
 			if ((folder.startsWith("CPPI2") || folder.startsWith("CPPI0") || folder.startsWith("CPPI1") || folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);

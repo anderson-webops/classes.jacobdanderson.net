@@ -1721,6 +1721,30 @@ pgzrun.go()
 		}
 	});
 
+	it("keeps the recursion worksheet separate from runnable maze imports", () => {
+		for (const path of [
+			"tree/main/CPPI2-Recursion-Trace-Drill/starter",
+			"blob/main/CPPI2-Recursion-Trace-Drill/starter/WORKSHEET.md",
+			"blob/main/CPPI2-Recursion-Trace-Drill/solution/WORKED-TRACE.md",
+			"blob/main/CPPI2-Recursion-Trace-Drill/solution/main.cpp"
+		]) {
+			expect(
+				pythonIdeModeForCourseResource(
+					"cpp-level-3",
+					`https://github.com/instruction-material/CPP-Level-3/${path}`
+				)
+			).toBeNull();
+		}
+		for (const url of [
+			"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI2-Recursive-Maze-Search/starter",
+			"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI2-Recursion-Trace-Drill-Extra/starter",
+			"https://github.com/another-owner/CPP-Level-3/tree/main/CPPI2-Recursion-Trace-Drill/starter"
+		])
+			expect(pythonIdeModeForCourseResource("cpp-level-3", url)).toBe(
+				"cpp"
+			);
+	});
+
 	it("keeps Turtle fill and RGB color hooks wired in the runtime shim", () => {
 		const runtimeSource = readFileSync(
 			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),

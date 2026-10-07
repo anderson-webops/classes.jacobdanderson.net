@@ -2,6 +2,7 @@ import type { RawCourse } from "./types";
 import { cppBuildDebugProjectBrief } from "./cppBuildDebugProjectBrief";
 import { cppDebugEvidenceNotebookBrief } from "./cppDebugEvidenceNotebookBrief";
 import { cppMazeSearchBriefs } from "./cppMazeSearchBriefs";
+import { cppRecursionTraceWorksheet } from "./cppRecursionTraceWorksheet";
 import { cppRowImportProjectBrief } from "./cppRowImportProjectBrief";
 import { cppTaskManagerBriefs } from "./cppTaskManagerBriefs";
 
@@ -104,12 +105,12 @@ const cppLevel3SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "CPPI2 Project 2: Recursion Trace Drill",
-					content:
-						"Trace three recursive calls by hand before running the program. The submitted work includes the predicted output, the actual output, and one corrected misconception.",
+					content: cppRecursionTraceWorksheet,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI2-Recursion-Trace-Drill/starter",
+						"https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/starter/WORKSHEET.md",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI2-Recursion-Trace-Drill/solution"
+						"https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/solution/WORKED-TRACE.md"
 				}
 			]
 		},
