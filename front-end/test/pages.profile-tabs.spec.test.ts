@@ -24,8 +24,12 @@ describe("Profile page account routing", () => {
 
 	it("opens actual account creation without sending visitors to booking", async () => {
 		const app = useAppStore();
-		const wrapper = mount(ProfilePage, { global: { stubs: { RouterLink: true } } });
-		const button = wrapper.findAll("button").find(button => button.text() === "Create an account")!;
+		const wrapper = mount(ProfilePage, {
+			global: { stubs: { RouterLink: true } }
+		});
+		const button = wrapper
+			.findAll("button")
+			.find(button => button.text() === "Create an account")!;
 		await button.trigger("click");
 		expect(app.signupBlock).toBe(true);
 		expect(wrapper.find('[to="/signup"]').exists()).toBe(false);
@@ -75,7 +79,7 @@ describe("Profile page account routing", () => {
 			}
 		});
 
-		expect(wrapper.text()).toContain("Account Settings");
+		expect(wrapper.text()).toContain("Classroom workspace");
 		expect(wrapper.text()).toContain("Email-free classroom access");
 		expect(wrapper.text()).toContain("Open course");
 		expect(wrapper.text()).toContain("Open IDE");

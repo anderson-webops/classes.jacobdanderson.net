@@ -175,6 +175,7 @@
     "useContentStore": true,
     "useCountdown": true,
     "useCounter": true,
+    "useCourseAccessDrafts": true,
     "useCoursesStore": true,
     "useCssModule": true,
     "useCssSupports": true,

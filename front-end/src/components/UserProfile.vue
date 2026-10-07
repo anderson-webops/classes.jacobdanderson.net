@@ -1,393 +1,70 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import SelfAccountSettings from "@/components/SelfAccountSettings.vue";
 import UserCommunicationPanel from "@/components/UserCommunicationPanel.vue";
-// import { useDeleteAccount } from "@/composables/useDeleteAccount";
-import { groupCoursesByLearnerStatus } from "@/modules/courseAccess";
+import WorkspaceViewToggle from "@/components/WorkspaceViewToggle.vue";
 import { useAppStore } from "@/stores/app";
-import { useCoursesStore } from "@/stores/courses";
 
-/* -------------------------------------------------- */
-/*  Pinia state                                       */
-/* -------------------------------------------------- */
-const app = useAppStore();
-const { currentUser, tutors } = storeToRefs(app);
-// const deleteMe = useDeleteAccount("user");
-
-const coursesStore = useCoursesStore();
-const { courses } = storeToRefs(coursesStore);
-const courseOptions = computed(() => courses.value ?? []);
-const courseNameMap = computed<Record<string, string>>(
-	() =>
-		courseOptions.value?.reduce(
-			(map, course) => {
-				map[course.id] = course.name;
-				return map;
-			},
-			{} as Record<string, string>
-		) ?? {}
-);
-
-/* -------------------------------------------------- */
-/*  editable helper                                   */
-/* -------------------------------------------------- */
-const assignedTutorNames = computed(() => {
-	if (!currentUser.value?.tutors?.length) return [] as string[];
-	return currentUser.value.tutors
-		.map(t =>
-			typeof t === "string"
-				? (tutors.value.find(tt => tt._id === t)?.name ?? null)
-				: t.name
+const { currentUser, tutors } = storeToRefs(useAppStore());
+const mode = ref("profile");
+const historyOpened = ref(false);
+const options = [
+	{ value: "profile", label: "Profile" },
+	{ value: "history", label: "Classes & notes" }
+];
+const assignedTutorNames = computed(() =>
+	(currentUser.value?.tutors ?? [])
+		.map(tutor =>
+			typeof tutor === "string"
+				? tutors.value.find(candidate => candidate._id === tutor)?.name
+				: tutor.name
 		)
-		.filter((name): name is string => !!name);
-});
-
-/* -------------------------------------------------- */
-/*  course access text                                */
-/* -------------------------------------------------- */
-const courseAccessGroups = computed(() => {
-	const user = currentUser.value;
-	if (!user?.courseAccess?.length) return [];
-	return groupCoursesByLearnerStatus(courseOptions.value, user);
-});
-
-const courseAccessText = computed(() => {
-	if (courseAccessGroups.value.length === 0) return "No course access yet";
-	const names = courseNameMap.value ?? {};
-	return courseAccessGroups.value
-		.map(group => {
-			const groupLabel =
-				group.key === "past"
-					? "Past"
-					: group.key === "other"
-						? "Other available"
-						: "Current";
-			const courseNames = group.courses
-				.map(course => names[course.id] ?? course.name ?? course.id)
-				.join(", ");
-			return `${groupLabel}: ${courseNames}`;
-		})
-		.join(" · ");
-});
-
-/* -------------------------------------------------- */
-/*  field list (aligned with Admin users list)        */
-/* -------------------------------------------------- */
+		.filter(Boolean)
+		.join(", ")
+);
+function onModeChange(value: string) {
+	mode.value = value;
+	if (value === "history") historyOpened.value = true;
+}
 </script>
 
 <template>
-	<section class="profile-workspace">
-		<article v-if="currentUser" class="workspace-sheet">
-			<details class="profile-associations">
-				<summary>Courses and tutors</summary>
-				<div class="sheet-summary">
-					<div class="summary-block">
-						<p class="summary-label">Assigned tutors</p>
-						<p class="summary-copy">
-							{{
-								assignedTutorNames.length
-									? assignedTutorNames.join(", ")
-									: "No tutor assigned yet"
-							}}
-						</p>
-					</div>
-					<div class="summary-block">
-						<p class="summary-label">Course access</p>
-						<p class="summary-copy">{{ courseAccessText }}</p>
-					</div>
-				</div>
-			</details>
-
-			<SelfAccountSettings :entity="currentUser" role="user" />
-		</article>
-
-		<UserCommunicationPanel v-if="currentUser" />
+	<section
+		v-if="currentUser"
+		:key="currentUser._id"
+		class="student-workspace"
+	>
+		<WorkspaceViewToggle
+			:model-value="mode"
+			label="Account view"
+			:options="options"
+			@update:model-value="onModeChange"
+		/>
+		<SelfAccountSettings
+			v-show="mode === 'profile'"
+			:entity="currentUser"
+			role="user"
+		/>
+		<div v-if="historyOpened" v-show="mode === 'history'">
+			<p v-if="assignedTutorNames" class="tutor-contact">
+				Instructor: {{ assignedTutorNames }}
+			</p>
+			<UserCommunicationPanel />
+		</div>
 	</section>
 </template>
 
 <style scoped>
-.profile-workspace {
+.student-workspace {
 	display: grid;
-	gap: 1.1rem;
-	width: 100%;
-	margin: 0;
-}
-
-.profile-workspace p,
-.profile-workspace label,
-.profile-workspace button,
-.profile-workspace input,
-.profile-workspace select {
-	font-family: inherit;
-	text-align: left;
-}
-
-.workspace-header {
-	width: 100%;
-	box-sizing: border-box;
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem);
-	align-items: start;
-	gap: 1rem 1.5rem;
-	padding: clamp(1.35rem, 2.1vw, 1.8rem);
-	border-radius: 28px;
-	background: linear-gradient(
-		180deg,
-		rgba(248, 250, 252, 0.9),
-		rgba(255, 255, 255, 0.82)
-	);
-	border: 1px solid rgba(255, 255, 255, 0.48);
-	box-shadow: 0 28px 60px -44px rgba(15, 23, 42, 0.44);
-}
-
-.profile-workspace section {
-	margin: 0;
-}
-
-.workspace-header > div:first-child {
-	display: grid;
-	gap: 0.75rem;
+	gap: 1rem;
 	min-width: 0;
+	color: var(--color-ink);
 }
-
-.workspace-header h2 {
-	margin: 0;
-	font-size: clamp(2rem, 4vw, 3rem);
-	line-height: 1.08;
-	color: #10263a;
-}
-
-.workspace-header p:last-child {
-	margin: 0;
-	line-height: 1.65;
-	color: #405467;
-}
-
-.workspace-eyebrow,
-.panel-eyebrow,
-.summary-label {
-	margin: 0;
-	font-size: 0.78rem;
-	font-weight: 700;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: #0f766e;
-}
-
-.workspace-stats {
-	width: 100%;
-	max-width: 19rem;
-	min-width: 0;
-	display: grid;
-	grid-template-columns: repeat(2, minmax(7.5rem, 1fr));
-	gap: 0;
-	border-radius: 22px;
-	overflow: hidden;
-	background: rgba(255, 255, 255, 0.66);
-	border: 1px solid rgba(148, 163, 184, 0.22);
-	box-shadow: 0 24px 45px -38px rgba(15, 23, 42, 0.55);
-}
-
-.stat-pill {
-	min-width: 0;
-	padding: 1rem 1.1rem;
-	border-radius: 0;
-	background: transparent;
-	box-shadow: none;
-	border-right: 1px solid rgba(203, 213, 225, 0.78);
-}
-
-.stat-pill:last-child {
-	border-right: none;
-}
-
-.stat-pill span {
-	display: block;
-	font-size: 0.74rem;
-	font-weight: 700;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: #5f7a8e;
-}
-
-.stat-pill strong {
-	display: block;
-	margin-top: 0.35rem;
-	font-size: 1.75rem;
-	line-height: 1;
-	color: #10263a;
-}
-
-.workspace-sheet {
-	display: grid;
-	gap: 1.35rem;
-	width: 100%;
-	margin: 0;
-	padding: clamp(1.2rem, 2vw, 1.5rem);
-	border-radius: 30px;
-	background: linear-gradient(
-		180deg,
-		rgba(245, 249, 253, 0.98),
-		rgba(255, 255, 255, 0.96)
-	);
-	box-shadow: 0 30px 50px -42px rgba(15, 23, 42, 0.5);
-}
-
-.sheet-summary {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 1rem;
-}
-
-.summary-block,
-.sheet-panel {
-	padding: 1.2rem 1.25rem;
-	border-radius: 24px;
-	background: rgba(255, 255, 255, 0.88);
-	box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.68);
-}
-
-.summary-copy {
-	margin: 0.55rem 0 0;
-	color: #41566a;
-	line-height: 1.55;
-}
-
-.sheet-body {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 1rem;
-	align-items: stretch;
-}
-
-.sheet-body.is-editing {
-	align-items: flex-start;
-}
-
-.panel-header h3 {
-	margin: 0.25rem 0 0;
-	font-size: 1.25rem;
-	color: #10263a;
-	font-family: inherit;
-	font-weight: 700;
-	letter-spacing: -0.025em;
-}
-
-.field-stack {
-	display: grid;
-	gap: 0.75rem;
-	margin: 1rem 0 0;
-	padding: 0;
-}
-
-.security-panel {
-	display: grid;
-	align-content: start;
-	gap: 1rem;
-}
-
-.sheet-panel {
-	display: grid;
-	align-content: start;
-	gap: 1rem;
-}
-
-.security-copy {
-	margin: 0.85rem 0 0;
-	line-height: 1.6;
-	color: #41566a;
-}
-
-.action-row {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.75rem;
-	justify-content: flex-start;
-}
-
-.error {
-	color: red;
-	margin-top: 10px;
-}
-
-@media (max-width: 1500px) {
-	.workspace-header,
-	.sheet-summary,
-	.sheet-body {
-		grid-template-columns: 1fr;
-	}
-
-	.workspace-stats {
-		width: 100%;
-		max-width: none;
-	}
-}
-
-@media (max-width: 900px) {
-	.sheet-summary,
-	.sheet-body {
-		grid-template-columns: 1fr;
-	}
-}
-
-@media (max-width: 640px) {
-	.workspace-sheet {
-		padding: 1.1rem;
-		border-radius: 24px;
-	}
-
-	.action-row {
-		flex-direction: column;
-	}
-}
-
-.profile-workspace,
-.admin-workspace {
-	gap: 0.75rem;
-}
-.workspace-sheet {
-	padding: 0;
-	border: 0;
-	border-radius: 0;
-	box-shadow: none;
-	background: transparent;
-}
-.sheet-body {
-	gap: 1rem;
-}
-.sheet-panel {
-	padding: 0.75rem;
-	border-radius: 8px;
-	box-shadow: none;
-}
-.profile-associations > summary {
-	min-height: 2.75rem;
-	align-content: center;
-	cursor: pointer;
+.tutor-contact {
+	margin: 0 0 0.75rem;
+	font-size: 0.95rem;
 	color: var(--color-ink-soft);
-	font-size: 0.9rem;
-}
-.directory-grid {
-	gap: 0.75rem;
-}
-.directory-card {
-	padding: 0.85rem;
-	gap: 0.65rem;
-	border-radius: 8px;
-	box-shadow: none;
-}
-.section-heading {
-	gap: 0.5rem;
-}
-.section-heading .workspace-eyebrow {
-	display: none;
-}
-.section-heading h3 {
-	font-size: 1.15rem;
-}
-.summary-block {
-	padding: 0.65rem;
-	border-radius: 6px;
 }
 </style>

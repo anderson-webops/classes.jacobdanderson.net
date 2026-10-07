@@ -140,6 +140,9 @@ describe("TheHeader.vue", () => {
 		const wrapper = mountHeader(pinia);
 
 		expect(wrapper.text()).toContain("Teaching");
+		expect(wrapper.text()).not.toContain("Join class on Zoom");
+		expect(wrapper.text()).not.toContain("Schedule Class");
+		expect(wrapper.find('a[target="_blank"]').exists()).toBe(false);
 		expect(wrapper.text()).toContain("Account");
 		expect(wrapper.text()).not.toContain("Profile");
 	});

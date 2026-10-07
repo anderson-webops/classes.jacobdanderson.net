@@ -1,8 +1,8 @@
 // test/store.app.bootstrap.spec.test.ts
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { useAppStore } from "../src/stores/app";
 import * as apiMod from "../src/api";
+import { useAppStore } from "../src/stores/app";
 
 // mock axios client
 vi.mock("@/api", () => {
@@ -47,6 +47,55 @@ describe("app store bootstrapSession()", () => {
 		await pending;
 		expect(app.isSessionResolved).toBe(true);
 		expect(app.isAdmin).toBe(true);
+	});
+
+	it("clears managed directories on an account change and suppresses late privileged results", async () => {
+		const app = useAppStore();
+		app.setCurrentAdmin({ _id: "admin-1" } as any);
+		app.setUsers([{ _id: "private-student" } as any]);
+		app.setTutors([{ _id: "private-tutor" } as any]);
+		let resolve!: (value: any) => void;
+		(apiMod.api.get as any).mockImplementationOnce(
+			() =>
+				new Promise(done => {
+					resolve = done;
+				})
+		);
+		const pending = app.fetchUsers();
+		app.setCurrentAdmin(null);
+		app.setCurrentTutor({ _id: "tutor-1" } as any);
+		expect(app.users).toEqual([]);
+		expect(app.tutors).toEqual([]);
+		resolve({ data: [{ _id: "late-private-student" }] });
+		await pending;
+		expect(app.users).toEqual([]);
+	});
+
+	it("suppresses a previous role's directory even when the account ID is unchanged", async () => {
+		const app = useAppStore();
+		app.setCurrentAdmin({ _id: "shared-id" } as any);
+		let resolve!: (value: any) => void;
+		(apiMod.api.get as any).mockImplementationOnce(
+			() =>
+				new Promise(done => {
+					resolve = done;
+				})
+		);
+		const pending = app.fetchTutors();
+		app.setCurrentAdmin(null);
+		app.setCurrentTutor({ _id: "shared-id" } as any);
+		resolve({ data: [{ _id: "private-admin-directory" }] });
+		await pending;
+		expect(app.tutors).toEqual([]);
+	});
+
+	it("clears stale directories when a privileged list request fails", async () => {
+		const app = useAppStore();
+		app.setCurrentAdmin({ _id: "admin-1" } as any);
+		app.setUsers([{ _id: "stale-student" } as any]);
+		(apiMod.api.get as any).mockRejectedValueOnce(new Error("unavailable"));
+		await expect(app.fetchUsers()).rejects.toThrow("unavailable");
+		expect(app.users).toEqual([]);
 	});
 
 	it("settles an anonymous or failed session so login remains available", async () => {

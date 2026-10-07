@@ -7,7 +7,7 @@ import type {
 	PythonIdeProjectMetadata,
 	PythonIdeProjectReview
 } from "@/modules/pythonIde";
-import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import {
 	createPythonIdeProjectReview,
 	fetchManagedPythonIdeProject,
@@ -20,6 +20,7 @@ const props = defineProps<{
 	userId: string;
 	userName: string;
 	userEmail: string;
+	embedded?: boolean;
 }>();
 
 const opened = ref(false);
@@ -76,6 +77,21 @@ const sourceIsNewer = computed(() => {
 		new Date(projectUpdated).getTime() >
 		new Date(reviewSourceUpdated).getTime()
 	);
+});
+
+const hasUnsavedChanges = computed(
+	() =>
+		!!selectedReview.value &&
+		(noteDraft.value !== (selectedReview.value.note ?? "") ||
+			visibleDraft.value !== !!selectedReview.value.visibleToStudent ||
+			editFileContent.value !==
+				filePreview(
+					selectedReviewFile.value ?? selectedStudentFile.value
+				))
+);
+defineExpose({ hasUnsavedChanges, saving });
+onMounted(() => {
+	if (props.embedded) void loadProjectReviews();
 });
 
 function formatDate(value: string | undefined) {
@@ -356,12 +372,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<details
+	<component
+		:is="embedded ? 'section' : 'details'"
 		:id="`learner-${userId}-projects`"
+		:class="{ 'is-embedded': embedded }"
 		class="code-review-tools"
 		@toggle="onToggle"
 	>
-		<summary class="tools-summary">
+		<summary v-if="!embedded" class="tools-summary">
 			<span>
 				<strong>Code review</strong>
 				<small>{{ userName }} - {{ userEmail }}</small>
@@ -535,7 +553,7 @@ onBeforeUnmount(() => {
 				</div>
 			</div>
 		</div>
-	</details>
+	</component>
 </template>
 
 <style scoped>
@@ -740,5 +758,19 @@ onBeforeUnmount(() => {
 	.code-review-grid {
 		grid-template-columns: 1fr;
 	}
+}
+</style>
+
+<style scoped>
+.code-review-tools.is-embedded {
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	padding: 0;
+}
+.is-embedded .tools-body {
+	padding: 0;
+	border: 0;
 }
 </style>

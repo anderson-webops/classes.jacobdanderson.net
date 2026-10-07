@@ -11,12 +11,7 @@ const { currentTutor } = storeToRefs(app);
 <template>
 	<section class="teaching-page">
 		<div class="teaching-frame">
-			<WorkspaceHeader title="Teaching"
-				><RouterLink to="/courses">Course progress</RouterLink
-				><RouterLink to="/profile"
-					>Account and security</RouterLink
-				></WorkspaceHeader
-			>
+			<WorkspaceHeader title="Teaching" />
 
 			<TutorProfile v-if="currentTutor" mode="teaching" />
 

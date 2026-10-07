@@ -185,7 +185,11 @@ function openSignup() {
 			>
 				<h2>Get course access</h2>
 				<p>
-					Ask your tutor to assign a course, or email
+					{{
+						currentTutor
+							? "Ask an administrator to enable your teaching courses, or email"
+							: "Ask your tutor to assign a course, or email"
+					}}
 					<a
 						class="text-link"
 						href="mailto:classes@jacobdanderson.net"

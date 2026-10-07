@@ -2,6 +2,7 @@
 import type { CourseCodeLearner } from "@/modules/courseAccessCodes";
 import { defineStore } from "pinia";
 import { api } from "@/api";
+import { fetchManagedLearners } from "@/modules/managedLearners";
 
 type Displayable =
 	| string
@@ -99,6 +100,17 @@ export const useAppStore = defineStore("app", {
 
 		isAdmin: state => !!state.currentAdmin,
 
+		accountScopeKey: state =>
+			state.currentAdmin
+				? `admin:${state.currentAdmin._id}`
+				: state.currentTutor
+					? `tutor:${state.currentTutor._id}`
+					: state.currentUser
+						? `user:${state.currentUser._id}`
+						: state.currentCourseLearner
+							? `classroom:${state.currentCourseLearner._id}`
+							: "",
+
 		// Static HTML cannot know the cookie-backed session. Keep navigation
 		// neutral until bootstrap finishes or an interactive login succeeds.
 		isSessionResolved(): boolean {
@@ -152,15 +164,31 @@ export const useAppStore = defineStore("app", {
 			this.admins = a;
 		}, */
 		setCurrentUser(u: User | null) {
+			if (this.currentUser?._id !== u?._id) {
+				this.users = [];
+				this.tutors = [];
+			}
 			this.currentUser = u;
 		},
 		setCurrentTutor(t: Tutor | null) {
+			if (this.currentTutor?._id !== t?._id) {
+				this.users = [];
+				this.tutors = [];
+			}
 			this.currentTutor = t;
 		},
 		setCurrentAdmin(a: Admin | null) {
+			if (this.currentAdmin?._id !== a?._id) {
+				this.users = [];
+				this.tutors = [];
+			}
 			this.currentAdmin = a;
 		},
 		setCurrentCourseLearner(learner: CourseCodeLearner | null) {
+			if (this.currentCourseLearner?._id !== learner?._id) {
+				this.users = [];
+				this.tutors = [];
+			}
 			this.currentCourseLearner = learner;
 		},
 		setLoginBlock(v: boolean) {
@@ -178,20 +206,36 @@ export const useAppStore = defineStore("app", {
 
 		/* ---------- data fetchers ---------- */
 		async fetchUsers() {
+			const adminId = this.currentAdmin?._id;
+			if (!adminId) {
+				this.users = [];
+				return;
+			}
 			try {
-				const { data } = await api.get<User[]>("/users/all");
-				this.setUsers(data);
+				const data = await fetchManagedLearners({ role: "admin" });
+				if (this.currentAdmin?._id === adminId) this.setUsers(data);
 			} catch (e) {
-				console.error(e);
+				if (this.currentAdmin?._id === adminId) this.users = [];
+				throw e;
 			}
 		},
 
 		async fetchTutors() {
+			const identity = this.accountScopeKey;
+			if (!this.currentAdmin && !this.currentTutor && !this.currentUser) {
+				this.tutors = [];
+				return;
+			}
 			try {
 				const { data } = await api.get<Tutor[]>("/tutors");
-				this.setTutors(data);
+				if (this.accountScopeKey === identity) {
+					this.setTutors(data);
+				}
 			} catch (e) {
-				console.error(e);
+				if (this.accountScopeKey === identity) {
+					this.tutors = [];
+				}
+				throw e;
 			}
 		},
 

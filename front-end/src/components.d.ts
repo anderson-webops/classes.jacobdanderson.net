@@ -32,9 +32,10 @@ declare module 'vue' {
     IdeStarterPicker: typeof import('./components/IdeStarterPicker.vue')['default']
     LazyMarkdownContent: typeof import('./components/LazyMarkdownContent.vue')['default']
     LearnerCodeReviewTools: typeof import('./components/LearnerCodeReviewTools.vue')['default']
-    LearnerContextActions: typeof import('./components/LearnerContextActions.vue')['default']
+    LearnerCourseAccess: typeof import('./components/LearnerCourseAccess.vue')['default']
     LearnerCourseProgressEditor: typeof import('./components/LearnerCourseProgressEditor.vue')['default']
     LearnerSessionTools: typeof import('./components/LearnerSessionTools.vue')['default']
+    LearnerWorkspace: typeof import('./components/LearnerWorkspace.vue')['default']
     ProfileDetailsCard: typeof import('./components/ProfileDetailsCard.vue')['default']
     ProfileFields: typeof import('./components/ProfileFields.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
@@ -50,5 +51,6 @@ declare module 'vue' {
     UserProfile: typeof import('./components/UserProfile.vue')['default']
     WorkspaceHeader: typeof import('./components/WorkspaceHeader.vue')['default']
     WorkspaceStorageStatus: typeof import('./components/WorkspaceStorageStatus.vue')['default']
+    WorkspaceViewToggle: typeof import('./components/WorkspaceViewToggle.vue')['default']
   }
 }

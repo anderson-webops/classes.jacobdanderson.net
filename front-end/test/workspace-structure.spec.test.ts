@@ -89,7 +89,7 @@ describe("simplified workspaces", () => {
 		});
 		wrapper.unmount();
 	});
-	it("shows learners directly without search or introductory text", async () => {
+	it("selects one learner without search or introductory text", async () => {
 		const app = useAppStore();
 		app.setCurrentTutor({
 			_id: "teacher",
@@ -111,26 +111,28 @@ describe("simplified workspaces", () => {
 		});
 		await flushPromises();
 		expect(wrapper.text()).not.toContain("Manage account security");
-		expect(wrapper.find("input[type=\"search\"]").exists()).toBe(false);
+		expect(wrapper.find('input[type="search"]').exists()).toBe(false);
 		expect(wrapper.find(".section-heading").exists()).toBe(false);
 		expect(wrapper.text()).not.toContain("Search learners");
 		expect(wrapper.text()).not.toContain(
 			"Update course access for each learner"
 		);
-		const learners = wrapper.findAll(".directory-card");
-		expect(learners).toHaveLength(2);
-		expect(learners.map(learner => learner.find("h4").text())).toEqual([
-			"Ada",
-			"Grace"
-		]);
-		await learners[0]
-			.get("button[aria-label=\"Edit courses for Ada\"]")
-			.trigger("click");
-		expect(learners[0].find(".course-editor").exists()).toBe(true);
-		app.setUsers([]);
-		await flushPromises();
 		expect(wrapper.findAll(".directory-card")).toHaveLength(0);
-		expect(wrapper.text()).toContain("No learners assigned yet.");
+		const selector = wrapper.get(".learner-selector select");
+		expect(selector.findAll("option").map(option => option.text())).toEqual(
+			["Ada", "Grace"]
+		);
+		expect(selector.element.value).toBe("one");
+		await wrapper
+			.findAll("button")
+			.find(button => button.text() === "Edit course access")!
+			.trigger("click");
+		expect(
+			wrapper
+				.findComponent({ name: "LearnerCourseAccess" })
+				.props("editable")
+		).toBe(true);
+		expect(wrapper.find(".learner-content").exists()).toBe(true);
 		wrapper.unmount();
 	});
 	it("shows honest bounded review status only for an administrator", async () => {
@@ -169,7 +171,7 @@ describe("simplified workspaces", () => {
 		});
 		const wrapper = mount(AdminReviewStatus, { global: { stubs } });
 		await flushPromises();
-		expect(wrapper.find("[role=\"status\"]").exists()).toBe(false);
+		expect(wrapper.find('[role="status"]').exists()).toBe(false);
 		wrapper.unmount();
 	});
 	it("requires a verified recipient choice without additional identity controls", async () => {
@@ -193,8 +195,8 @@ describe("simplified workspaces", () => {
 			.get("#subject-input")
 			.setValue("Synthetic internal message");
 		await wrapper.get("#markdown-input").setValue("Synthetic body");
-		await wrapper.get("[data-testid=\"preview-toggle\"]").trigger("click");
-		expect(wrapper.get("[data-testid=\"live-preview\"]").exists()).toBe(true);
+		await wrapper.get('[data-testid="preview-toggle"]').trigger("click");
+		expect(wrapper.get('[data-testid="live-preview"]').exists()).toBe(true);
 		expect(api.post).not.toHaveBeenCalled();
 		wrapper.unmount();
 	});
@@ -205,10 +207,10 @@ describe("simplified workspaces", () => {
 		expect(wrapper.findAll(".pathway-card > details[open]")).toHaveLength(
 			0
 		);
-		await wrapper.get("input[type=\"search\"]").setValue("turtle");
+		await wrapper.get('input[type="search"]').setValue("turtle");
 		expect(wrapper.findAll(".pathway-card").length).toBeLessThan(total);
 		await wrapper
-			.get("input[type=\"search\"]")
+			.get('input[type="search"]')
 			.setValue("no matching family 12345");
 		expect(wrapper.text()).toContain("No matching pathways");
 		wrapper.unmount();
@@ -287,7 +289,11 @@ describe("simplified workspaces", () => {
 		expect(wrapper.findAll(".history-note")).toHaveLength(1);
 		expect(wrapper.get(".history-note").text()).toContain("Child A draft");
 		expect(wrapper.text()).not.toContain("Foreign draft");
-		expect(wrapper.findAll("#recipient-select option").map(option => option.text())).toContain("Same name · hild-a");
+		expect(
+			wrapper
+				.findAll("#recipient-select option")
+				.map(option => option.text())
+		).toContain("Same name · hild-a");
 		await wrapper.get("#recipient-select").setValue("child-b");
 		await flushPromises();
 		expect(api.get).toHaveBeenCalledWith("/users/child-b/session-notes");

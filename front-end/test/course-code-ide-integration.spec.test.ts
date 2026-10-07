@@ -21,10 +21,14 @@ describe("course-code IDE integration", () => {
 
 	it("uses the classroom learner as an isolated IDE project owner", () => {
 		const workspace = source("src/components/CodeIdeWorkspace.vue");
-		const accountWorkspace = source("src/components/AccountCodeIdeWorkspace.vue");
+		const accountWorkspace = source(
+			"src/components/AccountCodeIdeWorkspace.vue"
+		);
 
 		expect(accountWorkspace).toContain("app.currentCourseLearner?._id");
-		expect(accountWorkspace).toContain('`courseCodeLearner:${app.currentCourseLearner._id}`');
+		expect(accountWorkspace).toContain(
+			"`courseCodeLearner:${app.currentCourseLearner._id}`"
+		);
 		expect(workspace).toContain(
 			'accountScope.ownerKey?.startsWith("courseCodeLearner:")'
 		);
@@ -35,6 +39,7 @@ describe("course-code IDE integration", () => {
 	it("uses dark theme surfaces for course-code and learner assignment controls", () => {
 		const manager = source("src/components/CourseAccessCodeManager.vue");
 		const adminProfile = source("src/components/AdminProfile.vue");
+		const courseAccess = source("src/components/LearnerCourseAccess.vue");
 		const mainStyles = source("src/styles/main.css");
 
 		expect(manager).toContain(":global(html.dark .course-code-manager)");
@@ -42,33 +47,18 @@ describe("course-code IDE integration", () => {
 		expect(manager).toContain(
 			"--manager-surface-muted: var(--color-surface-muted);"
 		);
-		expect(adminProfile).toContain(
-			":global(html.dark .admin-workspace .course-choice)"
+		expect(adminProfile).toContain("<LearnerCourseAccess");
+		expect(adminProfile).toContain("background: var(--color-surface);");
+		expect(adminProfile).not.toContain("background: #");
+		expect(courseAccess).toContain("color: var(--color-ink-soft);");
+		expect(courseAccess).toContain(
+			"border-bottom: 1px solid var(--color-border);"
 		);
-		expect(adminProfile).toContain(
-			"background: var(--color-surface-soft);"
-		);
-		expect(adminProfile).toContain(
-			":global(html.dark .admin-workspace .assignment-editor)"
-		);
-		expect(adminProfile).toContain(
-			":global(html.dark .admin-workspace .editor-block)"
-		);
-		expect(adminProfile).toContain(
-			"background: transparent;"
-		);
-		expect(adminProfile).toContain(
-			"background: var(--color-surface-muted);"
-		);
-		expect(adminProfile).toContain(
-			":global(html.dark .admin-workspace .course-access-group-title)"
-		);
+		expect(courseAccess).not.toContain("background: #");
 		expect(mainStyles).toContain(
 			"html.dark body :is(.assignment-editor, .course-editor, .editor-block)"
 		);
-		expect(mainStyles).toContain(
-			"html.dark body .checkbox-grid label"
-		);
+		expect(mainStyles).toContain("html.dark body .checkbox-grid label");
 		expect(mainStyles).toContain(
 			"html.dark body :is(.course-choice, .checkbox-grid > label)"
 		);

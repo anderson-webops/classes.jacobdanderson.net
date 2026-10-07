@@ -2,8 +2,9 @@
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { api } from "@/api";
+import WorkspaceViewToggle from "@/components/WorkspaceViewToggle.vue";
 import { useAppStore } from "@/stores/app";
 
 marked.setOptions({ breaks: true, gfm: true });
@@ -56,17 +57,18 @@ const sessionNotes = ref<SessionNoteRecord[]>([]);
 const internalEmails = ref<InternalEmailRecord[]>([]);
 const scheduledSessions = ref<ScheduledSessionRecord[]>([]);
 
-const hasHistory = computed(
-	() =>
-		sessionNotes.value.length > 0 ||
-		internalEmails.value.length > 0 ||
-		scheduledSessions.value.length > 0
-);
+const view = ref("notes");
+const viewOptions = [
+	{ value: "notes", label: "Notes" },
+	{ value: "schedule", label: "Schedule" },
+	{ value: "messages", label: "Messages" }
+];
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
 	month: "short",
 	day: "numeric",
-	year: "numeric"
+	year: "numeric",
+	timeZone: "UTC"
 });
 
 const timestampFormatter = new Intl.DateTimeFormat("en-US", {
@@ -119,13 +121,19 @@ function renderMarkdown(markdown: string) {
 
 function describeEmailDelivery(email: InternalEmailRecord) {
 	if (email.matchedRecipientEmail === email.primaryEmail) {
-		return `Delivered directly to ${email.primaryEmail}`;
+		return `Sent to ${email.primaryEmail}`;
 	}
 
-	return `Delivered to ${email.matchedRecipientEmail} via CC on ${email.primaryEmail}`;
+	return `Sent to ${email.matchedRecipientEmail} via CC on ${email.primaryEmail}`;
 }
 
+let loadRun = 0;
 async function loadCommunications() {
+	const run = ++loadRun;
+	const userId = currentUser.value?._id;
+	sessionNotes.value = [];
+	internalEmails.value = [];
+	scheduledSessions.value = [];
 	if (!currentUser.value?._id) {
 		sessionNotes.value = [];
 		internalEmails.value = [];
@@ -140,10 +148,12 @@ async function loadCommunications() {
 		const { data } = await api.get<UserCommunicationsResponse>(
 			"/users/loggedin/communications"
 		);
+		if (run !== loadRun || currentUser.value?._id !== userId) return;
 		sessionNotes.value = data.sessionNotes ?? [];
 		internalEmails.value = data.internalEmails ?? [];
 		scheduledSessions.value = data.scheduledSessions ?? [];
 	} catch (err: any) {
+		if (run !== loadRun || currentUser.value?._id !== userId) return;
 		error.value =
 			err.response?.data?.message ??
 			err.message ??
@@ -152,7 +162,7 @@ async function loadCommunications() {
 		internalEmails.value = [];
 		scheduledSessions.value = [];
 	} finally {
-		loading.value = false;
+		if (run === loadRun) loading.value = false;
 	}
 }
 
@@ -160,6 +170,7 @@ watch(
 	() => currentUser.value?._id ?? "",
 	async userID => {
 		if (!userID) {
+			++loadRun;
 			sessionNotes.value = [];
 			internalEmails.value = [];
 			scheduledSessions.value = [];
@@ -175,20 +186,13 @@ watch(
 
 <template>
 	<section class="history-section">
-		<div class="section-heading">
-			<div>
-				<p class="section-eyebrow">Communication history</p>
-				<h3>Schedule, notes, and emails</h3>
-			</div>
-			<p class="section-copy">
-				Review your upcoming class schedule, the three newest session
-				notes, and any saved internal emails sent to the email on this
-				account.
-			</p>
-		</div>
-
+		<WorkspaceViewToggle
+			v-model="view"
+			label="Class history"
+			:options="viewOptions"
+		/>
 		<div class="history-grid">
-			<section class="history-panel">
+			<section v-show="view === 'schedule'" class="history-panel">
 				<div class="panel-heading">
 					<div>
 						<p class="panel-eyebrow">Schedule</p>
@@ -207,7 +211,7 @@ watch(
 					v-else-if="scheduledSessions.length === 0"
 					class="empty-copy"
 				>
-					No upcoming sessions are attached to this account yet.
+					No upcoming classes recorded.
 				</p>
 				<div v-else class="record-list">
 					<article
@@ -234,7 +238,7 @@ watch(
 				</div>
 			</section>
 
-			<section class="history-panel">
+			<section v-show="view === 'notes'" class="history-panel">
 				<div class="panel-heading">
 					<div>
 						<p class="panel-eyebrow">Session notes</p>
@@ -246,7 +250,7 @@ watch(
 				<p v-if="loading" class="empty-copy">Loading recent notes…</p>
 				<p v-else-if="error" class="error-copy">{{ error }}</p>
 				<p v-else-if="sessionNotes.length === 0" class="empty-copy">
-					No session notes are attached to this account yet.
+					No saved notes.
 				</p>
 				<div v-else class="record-list">
 					<details
@@ -257,13 +261,9 @@ watch(
 						<summary class="record-summary">
 							<div>
 								<p class="record-kicker">
-									Session date
 									{{ formatDate(note.sessionDate) }}
 								</p>
 								<h5>{{ note.subject }}</h5>
-								<p class="record-subcopy">
-									For {{ note.studentName }}
-								</p>
 							</div>
 							<span class="record-action">Open</span>
 						</summary>
@@ -278,7 +278,7 @@ watch(
 				</div>
 			</section>
 
-			<section class="history-panel">
+			<section v-show="view === 'messages'" class="history-panel">
 				<div class="panel-heading">
 					<div>
 						<p class="panel-eyebrow">Internal emails</p>
@@ -292,7 +292,7 @@ watch(
 				</p>
 				<p v-else-if="error" class="error-copy">{{ error }}</p>
 				<p v-else-if="internalEmails.length === 0" class="empty-copy">
-					No saved internal emails are attached to this account yet.
+					No saved messages.
 				</p>
 				<div v-else class="record-list">
 					<details
@@ -323,11 +323,6 @@ watch(
 				</div>
 			</section>
 		</div>
-
-		<p v-if="!loading && !error && !hasHistory" class="helper-copy">
-			Schedule items and messages appear here only when they are attached
-			to the email address on this account.
-		</p>
 	</section>
 </template>
 
@@ -336,203 +331,91 @@ watch(
 	display: grid;
 	gap: 1rem;
 	width: 100%;
+	min-width: 0;
 	margin: 0;
+	color: var(--color-ink);
 }
-
-.history-section p,
-.history-section label,
-.history-section button,
-.history-section input,
-.history-section select {
-	font-family: inherit;
-	text-align: left;
-}
-
-.section-heading {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	gap: 1rem 1.5rem;
-	align-items: start;
-	padding: clamp(1.25rem, 2vw, 1.6rem);
-	border-radius: 28px;
-	background: linear-gradient(
-		180deg,
-		rgba(248, 250, 252, 0.9),
-		rgba(255, 255, 255, 0.84)
-	);
-	border: 1px solid rgba(255, 255, 255, 0.48);
-	box-shadow: 0 28px 60px -44px rgba(15, 23, 42, 0.44);
-}
-
-.section-eyebrow,
-.panel-eyebrow,
-.record-kicker {
-	margin: 0;
-	font-size: 0.75rem;
-	font-weight: 700;
-	letter-spacing: 0.16em;
-	text-transform: uppercase;
-	color: #5a7893;
-}
-
-.section-heading h3,
-.panel-heading h4,
-.record-summary h5 {
-	margin: 0;
-	color: #1c2d3e;
-	font-family: inherit;
-	font-weight: 700;
-	letter-spacing: -0.025em;
-}
-
-.section-heading h3 {
-	font-size: clamp(1.8rem, 3vw, 2.35rem);
-}
-
-.section-copy {
-	margin: 0;
-	align-self: end;
-	line-height: 1.7;
-	color: #42586d;
-}
-
 .history-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-	gap: 1rem;
+	min-width: 0;
 }
-
 .history-panel {
-	display: grid;
-	gap: 1rem;
-	padding: clamp(1.25rem, 2vw, 1.55rem);
-	border-radius: 28px;
-	background: rgba(255, 255, 255, 0.92);
-	box-shadow: inset 0 0 0 1px rgba(215, 224, 235, 0.82);
+	min-width: 0;
+	margin: 0;
 }
-
 .panel-heading {
-	display: flex;
-	align-items: start;
-	justify-content: space-between;
-	gap: 1rem;
+	margin-bottom: 0.75rem;
 }
-
+.panel-heading h4 {
+	font: 600 1.1rem var(--font-sans);
+	margin: 0;
+	color: var(--color-ink);
+}
+.panel-eyebrow,
 .count-pill {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 2.4rem;
-	padding: 0.45rem 0.8rem;
-	border-radius: 999px;
-	background: #edf4fb;
-	color: #274866;
-	font-weight: 700;
-}
-
-.record-list {
-	display: grid;
-	gap: 0.85rem;
-}
-
-.record-card {
-	border-radius: 22px;
-	background: #f8fbff;
-	box-shadow: inset 0 0 0 1px rgba(210, 223, 237, 0.95);
-	overflow: hidden;
-}
-
-.record-summary {
-	list-style: none;
-	display: flex;
-	align-items: start;
-	justify-content: space-between;
-	gap: 1rem;
-	padding: 1rem 1.1rem;
-	cursor: pointer;
-}
-
-.record-summary::-webkit-details-marker {
 	display: none;
 }
-
-.record-card.is-static .record-summary {
-	cursor: default;
+.record-list {
+	display: grid;
+	gap: 0.5rem;
 }
-
-.record-action {
-	font-size: 0.92rem;
-	font-weight: 700;
-	color: #3a6ea5;
+.record-card {
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background: var(--color-surface);
 }
-
+.record-summary {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+	cursor: pointer;
+}
+.record-summary > div {
+	min-width: 0;
+}
+.record-summary h5 {
+	font: 600 1rem var(--font-sans);
+	color: var(--color-ink);
+	margin: 0.25rem 0;
+	overflow-wrap: anywhere;
+}
+.record-kicker,
 .record-subcopy,
-.record-meta,
-.empty-copy,
-.helper-copy,
-.error-copy {
-	margin: 0;
-	line-height: 1.65;
-	color: #55697c;
-}
-
-.record-subcopy {
-	margin-top: 0.35rem;
-}
-
 .record-meta {
-	padding: 0 1.1rem 0.8rem;
-	font-size: 0.92rem;
+	font-size: 0.9rem;
+	color: var(--color-ink-soft);
+	margin: 0;
 }
-
+.record-action {
+	color: var(--color-accent);
+	font-size: 0.9rem;
+}
+.record-meta {
+	padding: 0 1rem 0.75rem;
+}
 .record-body {
-	padding: 0 1.1rem 1.15rem;
-	color: #24384c;
+	padding: 0 1rem 1rem;
+	overflow-wrap: anywhere;
 }
-
-.record-body :deep(p),
-.record-body :deep(blockquote) {
-	margin: 0.65em 0;
-}
-
 .record-body :deep(ul),
 .record-body :deep(ol) {
 	margin: 0.75em 0 0.75em 0.25rem;
 	padding-inline-start: 1.65rem;
 	list-style-position: outside;
 }
-
 .record-body :deep(li) {
 	padding-inline-start: 0.25rem;
 }
-
-.record-body :deep(li + li) {
-	margin-top: 0.4em;
+.record-body :deep(pre) {
+	max-width: 100%;
+	overflow: auto;
 }
-
-.record-body :deep(a) {
-	color: #2f6699;
-	font-weight: 600;
+.empty-copy {
+	color: var(--color-ink-soft);
+	margin: 0.75rem 0;
 }
-
-.record-body :deep(code) {
-	background: #eef4fa;
-	padding: 0.08em 0.35em;
-	border-radius: 0.35rem;
-}
-
-.helper-copy {
-	text-align: center;
-}
-
 .error-copy {
-	color: #a13f3f;
-}
-
-@media (max-width: 900px) {
-	.section-heading,
-	.history-grid {
-		grid-template-columns: 1fr;
-	}
+	color: var(--color-danger, #b91c1c);
 }
 </style>

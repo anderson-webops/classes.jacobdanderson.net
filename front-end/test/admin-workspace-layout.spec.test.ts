@@ -22,13 +22,10 @@ describe("admin workspace mobile layout", () => {
 	it("keeps admin profile card grids and learner identity rows bounded", () => {
 		const source = readSource("../src/components/AdminProfile.vue");
 
-		expect(source).toContain(
-			"grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));"
-		);
-		expect(source).toContain(
-			"grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));"
-		);
-		expect(source).toContain(".directory-card-name-row");
+		expect(source).toContain("<LearnerWorkspace");
+		expect(source).toContain('v-for="t in selectedTutors"');
+		expect(source).not.toContain('v-for="u in filteredUsers"');
+		expect(source).toContain("max-width: 100%;");
 		expect(source).toContain("overflow-wrap: anywhere;");
 		expect(source).toContain("@media (max-width: 380px)");
 	});

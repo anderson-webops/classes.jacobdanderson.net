@@ -45,7 +45,7 @@ const primaryLinks = computed<NavLink[]>(() => {
 
 	if (!isSessionResolved.value) return links;
 
-	if (isLoggedIn.value && !isAdmin.value) {
+	if (isLoggedIn.value && !isAdmin.value && !currentTutor.value) {
 		links.push({
 			label: "Join class on Zoom",
 			to: classMeetingUrl,
@@ -53,7 +53,7 @@ const primaryLinks = computed<NavLink[]>(() => {
 		});
 	}
 
-	if (!isAdmin.value) {
+	if (!isAdmin.value && !currentTutor.value) {
 		links.push({
 			label: siteLabels.booking,
 			to: "/signup",

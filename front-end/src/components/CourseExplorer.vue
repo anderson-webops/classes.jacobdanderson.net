@@ -31,6 +31,7 @@ import {
 	isLessonLearningItem,
 	lessonContentSections
 } from "@/modules/courseLessonPresentation";
+import { fetchManagedLearners } from "@/modules/managedLearners";
 import {
 	getPythonIdeModeLabel,
 	isKnownCourseWorksheetResource,
@@ -963,10 +964,10 @@ async function loadManagedLearners() {
 		}
 
 		if (currentTutor.value) {
-			const { data } = await api.get<User[]>(
-				`/users/oftutor/${currentTutor.value._id}`
-			);
-			appStore.setUsers(data);
+			const tutorId = currentTutor.value._id;
+			const data = await fetchManagedLearners({ role: "tutor", tutorId });
+			if (currentTutor.value?._id === tutorId && !currentAdmin.value)
+				appStore.setUsers(data);
 		}
 	} catch (error: any) {
 		managedLearnersError.value =

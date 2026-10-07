@@ -150,6 +150,7 @@ declare global {
   const useContentStore: typeof import('./stores/content').useContentStore
   const useCountdown: typeof import('@vueuse/core').useCountdown
   const useCounter: typeof import('@vueuse/core').useCounter
+  const useCourseAccessDrafts: typeof import('./composables/useCourseAccessDrafts').useCourseAccessDrafts
   const useCoursesStore: typeof import('./stores/courses').useCoursesStore
   const useCssModule: typeof import('vue').useCssModule
   const useCssSupports: typeof import('@vueuse/core').useCssSupports
@@ -487,6 +488,7 @@ declare module 'vue' {
     readonly useContentStore: UnwrapRef<typeof import('./stores/content')['useContentStore']>
     readonly useCountdown: UnwrapRef<typeof import('@vueuse/core')['useCountdown']>
     readonly useCounter: UnwrapRef<typeof import('@vueuse/core')['useCounter']>
+    readonly useCourseAccessDrafts: UnwrapRef<typeof import('./composables/useCourseAccessDrafts')['useCourseAccessDrafts']>
     readonly useCoursesStore: UnwrapRef<typeof import('./stores/courses')['useCoursesStore']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssSupports: UnwrapRef<typeof import('@vueuse/core')['useCssSupports']>

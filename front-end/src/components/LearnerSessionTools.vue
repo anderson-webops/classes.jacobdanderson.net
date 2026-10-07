@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { api } from "@/api";
 
 type ScheduledSessionStatus =
@@ -31,6 +31,7 @@ const props = defineProps<{
 	userId: string;
 	userName: string;
 	userEmail: string;
+	embedded?: boolean;
 }>();
 
 const statusChoices: ScheduledSessionStatus[] = [
@@ -63,6 +64,18 @@ const noteForm = ref({
 	sessionDate: new Date().toISOString().slice(0, 10),
 	subject: "",
 	markdown: ""
+});
+
+let savedScheduleDraft = JSON.stringify(scheduleForm.value);
+const hasUnsavedChanges = computed(
+	() =>
+		JSON.stringify(scheduleForm.value) !== savedScheduleDraft ||
+		!!noteForm.value.subject.trim() ||
+		!!noteForm.value.markdown.trim()
+);
+defineExpose({ hasUnsavedChanges, saving });
+onMounted(() => {
+	if (props.embedded) void loadSessionTools();
 });
 
 const upcomingSessionCount = computed(
@@ -105,7 +118,8 @@ function formatDate(value: string) {
 	return new Intl.DateTimeFormat("en-US", {
 		month: "short",
 		day: "numeric",
-		year: "numeric"
+		year: "numeric",
+		timeZone: "UTC"
 	}).format(date);
 }
 
@@ -194,6 +208,7 @@ async function createScheduledSession() {
 			timezone,
 			notes: ""
 		};
+		savedScheduleDraft = JSON.stringify(scheduleForm.value);
 		success.value = "Scheduled session added.";
 	} catch (err: any) {
 		error.value =
@@ -275,12 +290,14 @@ async function createSessionNote() {
 </script>
 
 <template>
-	<details
+	<component
+		:is="embedded ? 'section' : 'details'"
 		:id="`learner-${userId}-sessions`"
+		:class="{ 'is-embedded': embedded }"
 		class="session-tools"
 		@toggle="onToggle"
 	>
-		<summary class="tools-summary">
+		<summary v-if="!embedded" class="tools-summary">
 			<span>
 				<strong>Schedule and notes</strong>
 				<small>{{ userName }} - {{ userEmail }}</small>
@@ -307,9 +324,76 @@ async function createSessionNote() {
 			<div class="tools-grid">
 				<section class="tool-panel">
 					<div class="tool-heading">
-						<p class="tool-eyebrow">Visible schedule</p>
-						<h5>Add a class session</h5>
+						<h3>Scheduled classes</h3>
 					</div>
+					<p v-if="!scheduledSessions.length" class="muted-copy">
+						No schedule items are attached yet.
+					</p>
+					<ul v-else class="record-list">
+						<li
+							v-for="session in scheduledSessions"
+							:key="session._id"
+							class="record-item"
+						>
+							<div>
+								<strong>{{ session.title }}</strong>
+								<span
+									>{{ formatDateTime(session.startAt) }} -
+									{{ session.timezone }}</span
+								>
+								<small v-if="session.notes">{{
+									session.notes
+								}}</small>
+							</div>
+							<select
+								:value="session.status"
+								:aria-label="statusSelectLabel(session)"
+								:disabled="saving"
+								@change="
+									updateSessionStatus(
+										session,
+										($event.target as HTMLSelectElement)
+											.value as ScheduledSessionStatus
+									)
+								"
+							>
+								<option
+									v-for="status in statusChoices"
+									:key="status"
+									:value="status"
+								>
+									{{ status }}
+								</option>
+							</select>
+						</li>
+					</ul>
+				</section>
+
+				<section class="tool-panel">
+					<div class="tool-heading">
+						<h3>Recent notes</h3>
+					</div>
+					<p v-if="!recentSessionNotes.length" class="muted-copy">
+						No session notes are attached yet.
+					</p>
+					<ul v-else class="record-list">
+						<li
+							v-for="note in recentSessionNotes"
+							:key="note._id"
+							class="record-item is-note"
+						>
+							<div>
+								<strong>{{ note.subject }}</strong>
+								<span>{{ formatDate(note.sessionDate) }}</span>
+								<small>{{ notePreview(note.markdown) }}</small>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</div>
+			<div class="tools-grid">
+				<details class="tool-panel tool-editor">
+					<summary>Add class</summary>
 					<form
 						class="tool-form"
 						@submit.prevent="createScheduledSession"
@@ -353,13 +437,10 @@ async function createSessionNote() {
 							Add schedule item
 						</button>
 					</form>
-				</section>
+				</details>
 
-				<section class="tool-panel">
-					<div class="tool-heading">
-						<p class="tool-eyebrow">Note-only log</p>
-						<h5>Save without email</h5>
-					</div>
+				<details class="tool-panel tool-editor">
+					<summary>Save a note without email</summary>
 					<form class="tool-form" @submit.prevent="createSessionNote">
 						<label
 							>Actual session
@@ -414,217 +495,114 @@ async function createSessionNote() {
 							Save note only
 						</button>
 					</form>
-				</section>
-			</div>
-
-			<div class="tools-grid">
-				<section class="tool-panel">
-					<div class="tool-heading">
-						<p class="tool-eyebrow">Schedule</p>
-						<h5>Current items</h5>
-					</div>
-					<p v-if="!scheduledSessions.length" class="muted-copy">
-						No schedule items are attached yet.
-					</p>
-					<ul v-else class="record-list">
-						<li
-							v-for="session in scheduledSessions"
-							:key="session._id"
-							class="record-item"
-						>
-							<div>
-								<strong>{{ session.title }}</strong>
-								<span
-									>{{ formatDateTime(session.startAt) }} -
-									{{ session.timezone }}</span
-								>
-								<small v-if="session.notes">{{
-									session.notes
-								}}</small>
-							</div>
-							<select
-								:value="session.status"
-								:aria-label="statusSelectLabel(session)"
-								:disabled="saving"
-								@change="
-									updateSessionStatus(
-										session,
-										($event.target as HTMLSelectElement)
-											.value as ScheduledSessionStatus
-									)
-								"
-							>
-								<option
-									v-for="status in statusChoices"
-									:key="status"
-									:value="status"
-								>
-									{{ status }}
-								</option>
-							</select>
-						</li>
-					</ul>
-				</section>
-
-				<section class="tool-panel">
-					<div class="tool-heading">
-						<p class="tool-eyebrow">Recent notes</p>
-						<h5>Latest three shown</h5>
-					</div>
-					<p v-if="!recentSessionNotes.length" class="muted-copy">
-						No session notes are attached yet.
-					</p>
-					<ul v-else class="record-list">
-						<li
-							v-for="note in recentSessionNotes"
-							:key="note._id"
-							class="record-item is-note"
-						>
-							<div>
-								<strong>{{ note.subject }}</strong>
-								<span>{{ formatDate(note.sessionDate) }}</span>
-								<small>{{ notePreview(note.markdown) }}</small>
-							</div>
-						</li>
-					</ul>
-				</section>
+				</details>
 			</div>
 		</div>
-	</details>
+	</component>
 </template>
 
 <style scoped>
 .session-tools {
 	margin-top: 1rem;
-	border-radius: 22px;
-	background: rgba(248, 250, 252, 0.9);
-	box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.75);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background: var(--color-surface);
+	color: var(--color-ink);
 }
-
 .tools-summary {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
-	padding: 1rem 1.05rem;
+	padding: 0.75rem;
 	cursor: pointer;
-	color: #10263a;
 	min-width: 0;
 	max-width: 100%;
 }
-
 .tools-summary span:first-child {
 	display: grid;
 	gap: 0.2rem;
 	min-width: 0;
 }
-
 .tools-summary strong {
 	font-size: 1rem;
 }
-
 .tools-summary small,
 .record-item small,
 .record-item span,
 .muted-copy {
-	color: #5f7a8e;
+	color: var(--color-ink-soft);
 	line-height: 1.5;
 	overflow-wrap: anywhere;
 }
-
-.summary-count {
-	flex: 0 0 auto;
-	padding: 0.35rem 0.65rem;
-	border-radius: 999px;
-	background: rgba(37, 99, 235, 0.08);
-	color: #245f96;
-	font-size: 0.8rem;
-	font-weight: 700;
-}
-
 .tools-body {
 	display: grid;
 	gap: 1rem;
-	padding: 0 1.05rem 1.05rem;
+	padding: 1rem;
 }
-
 .tools-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 1rem;
 }
-
 .tool-panel {
 	display: grid;
-	gap: 0.9rem;
-	padding: 1rem;
-	border-radius: 18px;
-	background: rgba(255, 255, 255, 0.9);
-	box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.72);
-}
-
-.tool-heading {
-	display: grid;
-	gap: 0.2rem;
-}
-
-.tool-eyebrow {
+	gap: 0.75rem;
+	min-width: 0;
 	margin: 0;
-	font-size: 0.72rem;
-	font-weight: 800;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: #0f766e;
 }
-
-.tool-heading h5 {
+.tool-heading h3 {
 	margin: 0;
-	font-size: 1rem;
-	color: #10263a;
+	font: 600 1rem var(--font-sans);
+	color: var(--color-ink);
 }
-
+.tool-editor {
+	display: block;
+	border-top: 1px solid var(--color-border);
+	padding-top: 0.75rem;
+}
+.tool-editor summary {
+	cursor: pointer;
+	font-size: 0.95rem;
+}
+.tool-editor[open] .tool-form {
+	margin-top: 0.75rem;
+}
 .tool-form {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 0.75rem;
 }
-
 .tool-form label {
 	display: grid;
 	gap: 0.35rem;
-	font-size: 0.83rem;
-	font-weight: 700;
-	color: #334155;
+	font-size: 0.95rem;
+	font-weight: 400;
+	color: var(--color-ink);
+	min-width: 0;
 }
-
 .tool-form .is-wide,
 .tool-form button {
 	grid-column: 1 / -1;
 }
-
-.tool-form input,
-.tool-form textarea,
+.tool-form :is(input, textarea, select),
 .record-item select {
 	width: 100%;
 	box-sizing: border-box;
-	border: 1px solid rgba(148, 163, 184, 0.55);
-	border-radius: 14px;
-	background: #fff;
-	color: #10263a;
+	padding: 0.5rem;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background: var(--color-surface);
+	color: var(--color-ink);
 	font: inherit;
 }
-
-.tool-form input,
-.record-item select {
-	min-height: 2.65rem;
-	padding: 0.65rem 0.75rem;
+.tool-form input[type="checkbox"] {
+	width: auto;
+	justify-self: start;
 }
-
 .tool-form textarea {
 	resize: vertical;
-	padding: 0.75rem;
 }
-
 .record-list {
 	display: grid;
 	gap: 0.7rem;
@@ -632,45 +610,41 @@ async function createSessionNote() {
 	padding: 0;
 	list-style: none;
 }
-
 .record-item {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(9rem, 12rem);
 	gap: 0.75rem;
 	align-items: center;
-	padding: 0.85rem;
-	border-radius: 16px;
-	background: rgba(248, 250, 252, 0.9);
+	padding: 0.75rem 0;
+	border-bottom: 1px solid var(--color-border);
 }
-
 .record-item.is-note {
 	grid-template-columns: 1fr;
 }
-
 .record-item div {
 	display: grid;
-	gap: 0.18rem;
+	gap: 0.2rem;
 	min-width: 0;
 }
-
-.record-item strong {
-	color: #10263a;
-}
-
 .error-copy,
 .success-copy,
 .muted-copy {
 	margin: 0;
 }
-
 .error-copy {
-	color: #b91c1c;
+	color: var(--color-danger, #b91c1c);
 }
-
 .success-copy {
-	color: #15803d;
+	color: var(--color-accent);
 }
-
+.session-tools.is-embedded {
+	border: 0;
+	background: transparent;
+	margin: 0;
+}
+.is-embedded .tools-body {
+	padding: 0;
+}
 @media (max-width: 900px) {
 	.tools-grid,
 	.tool-form,
