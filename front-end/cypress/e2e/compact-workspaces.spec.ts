@@ -32,6 +32,28 @@ context("Compact content-first workspaces", () => {
 		cy.contains("Course workspace").should("not.exist");
 		cy.screenshot("people-compact", { capture: "viewport" });
 	});
+	it("sends a complete unlinked note directly while every write is intercepted", () => {
+		const studentId = "a".repeat(24);
+		const noteId = "c".repeat(24);
+		cy.intercept("GET", "**/api/admin-mail/session-notes/identities", { body: { students: [{ studentId, name: "Synthetic Student", recipientName: "Synthetic Student" }] } });
+		cy.intercept("GET", "**/api/admin-mail/recipients", { body: { recipients: [{ name: "Synthetic Student", emails: ["student@example.invalid"] }] } });
+		cy.intercept("GET", "**/api/users/" + studentId + "/schedule", { body: { scheduledSessions: [] } });
+		cy.intercept("GET", "**/api/users/" + studentId + "/session-notes", { body: { sessionNotes: [] } });
+		cy.intercept("POST", "**/api/users/" + studentId + "/session-notes", { body: { sessionNote: { _id: noteId } } }).as("saveNote");
+		cy.intercept("POST", "**/api/admin-mail/send", { body: { ok: true, operationId: "synthetic-operation", evidenceStatus: "smtp_accepted" } }).as("sendNote");
+		cy.visit("/admin/mdmail");
+		cy.get("#recipient-select").select("Synthetic Student");
+		cy.get("#subject-date-input").invoke("val", "2026-09-30").trigger("input", { force: true });
+		cy.get("#markdown-input").type("Synthetic note body");
+		cy.get("#note-student").select(studentId);
+		cy.get("#markdown-input").should("have.value", "Synthetic note body");
+		cy.get("#note-unlinked").check();
+		cy.get(".send-btn").should("have.text", "Send").should("not.be.disabled").click();
+		cy.wait("@saveNote").its("request.body").should("include", { studentId, unlinked: true });
+		cy.wait("@sendNote").its("request.body").should("include", { studentId, noteId, unlinked: true, subject: "Session Notes (09/30)" });
+		cy.contains("Primary recipient accepted by SMTP").should("be.visible");
+		cy.get('[data-testid="live-preview"]').should("not.exist");
+	});
 	it("uses compact stacked course and learner selectors, and puts search beside them", () => {
 		cy.visit("/courses");
 		cy.get("#learner-select").should("be.visible").find("option:checked").should(option => expect(option.text().trim()).to.equal("All"));
