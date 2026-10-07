@@ -385,7 +385,7 @@ const fixtures = [
 		standard: 20,
 		folder,
 		hashes,
-		anchor: "cppi1-command-architecture-file-io-and-small-parsers",
+		anchor: "cppi1-command-architecture-file-i-o-and-small-parsers",
 		reference: folder.endsWith("/solution")
 	})),
 	...Object.entries(checkpointPacks).map(([folder, hashes]) => ({

@@ -44,10 +44,23 @@ describe("C++ task commands and persistence", () => {
 		);
 	});
 
-	it("offers a separate confirmed current pack while keeping older attempt identity", () => {
+	it("offers a separate confirmed current pack while keeping older attempt identity", async () => {
 		const href =
 			cppTaskManagerBriefs.project.match(/\]\((\/ide\?[^)]+)\)/)![1];
 		const params = new URL(href, "https://classes.local").searchParams;
+		setActivePinia(createPinia());
+		const course = (await useCoursesStore().loadCourseById("cpp-level-3"))!;
+		const module = course.modules.find(item => item.title === moduleTitle)!;
+		const project = module.curriculum.find(
+			item => item.title === projectTitle
+		)!;
+		expect(module.id).toBe(
+			"cpp-level-3-cppi1-command-architecture-file-i-o-and-small-parsers"
+		);
+		expect(project.id).toBe(
+			"cpp-level-3-cppi1-command-architecture-file-i-o-and-small-parsers-curriculum-cppi1-project-saveable-task-manager"
+		);
+		expect(params.get("lesson")).toBe(module.id);
 		expect(params.get("course")).toBe("cpp-level-3");
 		expect(params.get("mode")).toBe("cpp");
 		expect(params.get("starterUrl")).toBe(source + "starter");
@@ -55,7 +68,7 @@ describe("C++ task commands and persistence", () => {
 			"cpp-level-3:cppi1-saveable-task-manager:current-pack-v1"
 		);
 		expect(params.get("lesson")).toBe(
-			"cpp-level-3-cppi1-command-architecture-file-io-and-small-parsers"
+			"cpp-level-3-cppi1-command-architecture-file-i-o-and-small-parsers"
 		);
 		expect(cppTaskManagerBriefs.project).toContain(
 			"earlier project\nremains available in Projects"

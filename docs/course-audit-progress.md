@@ -29,7 +29,7 @@ briefs, preserves module/project titles and earlier saved attempts, and offers
 confirmed learner/reference imports plus a separate current-pack key. Browser
 acceptance now includes the Task Manager's untouched learner, completed learner
 and staff reference, with all source/header edits, save, ZIP export, reopen and
-native checks. These expanded hosted catalog gates are pending for this candidate;
+native checks. These expanded hosted catalog gates are required before integration;
 source publication alone does not establish their success.
 
 The preceding checkpoint/notebook milestone is delivered in canonical
