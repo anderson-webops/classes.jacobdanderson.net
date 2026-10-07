@@ -69,8 +69,11 @@ context("Session navigation without guest flashes", () => {
 				expect(documents).to.be.at.least(2);
 				for (const text of observed) {
 					expect(text).not.to.match(/Log in|About/);
-					if (role === "Admin")
+					if (role === "Admin" || role === "Tutor") {
 						expect(text).not.to.contain("Book a Class");
+						expect(text).not.to.contain("Schedule Class");
+						expect(text).not.to.contain("Join class");
+					}
 				}
 			});
 			cy.intercept("DELETE", "**/api/accounts/logout", { body: {} });
