@@ -1325,6 +1325,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				record("verified-complete-recursion-lessons", { folder, fullContract: true, finalSections: true });
 				const worksheet = "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/starter/WORKSHEET.md']";
 				await revealCourseSource(page, worksheet);
+				await page.waitForFunction(selector => [...document.querySelector(selector)?.closest(".lesson-item").querySelectorAll(".item-content-markdown h2") ?? []].some(heading => heading.textContent === "Extend and review"), {}, worksheet);
 				assert.equal(await page.$eval(worksheet, link => link.closest(".lesson-item").querySelectorAll(".is-ide-starter").length), 0);
 				assert.equal(!!await page.$("a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/solution/WORKED-TRACE.md']"), referenceFixture);
 				const worksheetText = await page.$eval(worksheet, link => link.closest(".lesson-item").textContent.replace(/\s+/g, " "));
