@@ -39,7 +39,13 @@ immutable release without changing course progress.
 - Synthetic student, tutor and administrator catalog checks and both restricted
   fork-origin checks passed. No production requests or API mutations occurred.
 - Both lockfiles are unchanged; no dependency reinstall was needed.
+- The view-aware C++/Java course import, edit, save, ZIP export, reopen and
+  native-compilation regression passed. Supplementary imports, protected
+  references and separate fresh imports preserve earlier learner attempts.
 - The wider serial frontend core run was stopped after five minutes without a
   completed report. It is not counted as a passing full-suite verification.
+- The hosted full unit-test job passed for the application change; the
+  browser-import follow-up fixes the integration test's old single-view
+  navigation assumptions and waits for rendered Markdown links.
 
 These are source and isolated-preview results, not confirmation of deployment.

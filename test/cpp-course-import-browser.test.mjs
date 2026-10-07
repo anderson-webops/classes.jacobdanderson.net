@@ -13,7 +13,6 @@ import { fileURLToPath } from "node:url";
 import { strFromU8, unzipSync } from "fflate";
 import puppeteer from "puppeteer";
 import { preview } from "vite";
-import { confirmProjectImport, downloadProjectZip, openProjectSidebar } from "./ide-workspace-controls.mjs";
 import { cppClassesLessonBriefs } from "../front-end/src/stores/courses/cppClassesProjectBriefs.ts";
 import { cppCollectionsLessonBrief } from "../front-end/src/stores/courses/cppCollectionsProjectBriefs.ts";
 import { cppDynamicMemoryProjectBriefs } from "../front-end/src/stores/courses/cppDynamicMemoryProjectBriefs.ts";
@@ -30,6 +29,7 @@ import { completeTaskManagerFile, verifyTaskManagerDefaultExport, verifyTaskMana
 import { completeTwoDimensionalAttempt, verifyTwoDimensionalExport } from "./cpp-two-dimensional-export-checks.mjs";
 import { checkpointPacks, checkpointRevision } from "./fixtures/cpp-build-debug-packs.mjs";
 import { taskManagerPacks, taskManagerRevision } from "./fixtures/cpp-task-manager-packs.mjs";
+import { confirmProjectImport, downloadProjectZip, openProjectSidebar } from "./ide-workspace-controls.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const bridgeRepository = "instruction-material/Python-to-Java-and-CPP-Bridge";
@@ -1101,6 +1101,17 @@ nodeTest("complete inline ownership comparison retains its published program", {
 	}
 });
 
+async function revealCourseSource(page, selector) {
+	await page.waitForSelector(".lesson-view-toggle button");
+	for (const position of [1, 2, 3]) {
+		const view = `.lesson-view-toggle button:nth-child(${position})`;
+		await page.click(view);
+		await page.waitForSelector(`${view}[aria-pressed='true']`);
+		if (await page.$(selector)) return;
+	}
+	await page.waitForSelector(selector);
+}
+
 async function downloadProjectFiles(page) {
 	await page.evaluate(() => {
 		window.__cppZip = null;
@@ -1227,7 +1238,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			assert.ok(anchor);
 			await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
 			const selector = `a[href='https://github.com/${repository}/tree/main/${folder}']:not(.is-ide-starter)`;
-			await page.waitForSelector(selector);
+			await revealCourseSource(page, selector);
 			if (Object.hasOwn(taskManagerPacks, folder)) {
 				await page.waitForFunction(() => {
 					const headings = [...document.querySelectorAll(".lesson-item .item-content-markdown h2")].map(heading => heading.textContent);
@@ -1241,6 +1252,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			}
 			if (folder === "CPPI0-Build-and-Debug-Checkpoint/starter" || folder === "CPPI0-Build-and-Debug-Checkpoint/solution") {
 				const worksheet = "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI0-Warnings-and-Debugger-Notebook/starter/EVIDENCE.md']";
+				await page.click(".lesson-view-toggle button:nth-child(2)");
 				await page.waitForSelector(worksheet);
 				assert.equal(await page.$eval(worksheet, link => link.closest(".lesson-item").querySelectorAll(".is-ide-starter").length), 0);
 				assert.equal(!!await page.$("a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI0-Warnings-and-Debugger-Notebook/solution/EVIDENCE.md']"), referenceFixture);
@@ -1253,6 +1265,8 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 					await card.asElement().screenshot({ path: join(directory, `course-import-cpp-CPPI0-debug-notebook-${referenceFixture ? "staff" : "learner"}.png`) });
 				}
 				record("verified-notebook-routing", { folder, referenceVisible: referenceFixture, noCodeImport: true });
+				await page.click(".lesson-view-toggle button:first-child");
+				await page.waitForSelector(selector);
 			}
 			const href = await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll(".is-ide-starter")].find(action => new URL(action.href).searchParams.get("starterUrl") === link.href)?.getAttribute("href"));
 			assert.ok(href, "The selected source has its own IDE action");
@@ -1415,7 +1429,8 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				assert.equal(sourceRequests, requestsBeforeLegacy);
 				courseFixture = true;
 				await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
-				await page.waitForSelector(selector);
+				await revealCourseSource(page, selector);
+				await page.waitForFunction(selector => [...document.querySelector(selector)?.closest(".lesson-item").querySelectorAll("a") ?? []].some(item => /Open current (?:starter|pack)\s+separately/.test(item.textContent)), {}, selector);
 				const freshHref = await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll("a")].find(item => /Open current (?:starter|pack)\s+separately/.test(item.textContent))?.getAttribute("href"));
 				assert.ok(freshHref, "Full project brief offers the separate current learner import");
 				const freshKey = new URL(freshHref, origin).searchParams.get("projectKey");
