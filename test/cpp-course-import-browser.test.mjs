@@ -1513,7 +1513,8 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
 				const worksheet = "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/starter/WORKSHEET.md']";
 				await revealCourseSource(page, worksheet);
-				const continuation = await page.$eval(worksheet, link => [...link.closest(".lesson-item").querySelectorAll("a")].find(action => action.textContent === "Continue saved maze")?.getAttribute("href"));
+				await page.waitForFunction(selector => [...document.querySelector(selector)?.closest(".lesson-item").querySelectorAll(".item-content-markdown a") ?? []].some(action => action.textContent.trim() === "Continue saved maze"), {}, worksheet);
+				const continuation = await page.$eval(worksheet, link => [...link.closest(".lesson-item").querySelectorAll(".item-content-markdown a")].find(action => action.textContent.trim() === "Continue saved maze")?.getAttribute("href"));
 				assert.ok(continuation);
 				assert.equal(new URL(continuation, origin).searchParams.get("projectKey"), key);
 				courseFixture = false;

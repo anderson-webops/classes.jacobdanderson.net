@@ -37,13 +37,16 @@ passed all seven native groups at `cee92a6348cd90fe797998944713abec6ec87a7f`,
 including an independent iterative stack model and breadth-first reachability,
 six ordinary/sanitizer maze variants, four worksheet printer variants, two CMake
 printers and four same-process repeated-search checks. The exact reviewed source
-is integrated; independent main validation remains pending.
+is integrated. Independent [main validation](https://github.com/instruction-material/CPP-Level-3/actions/runs/37700491585)
+also passed all seven groups; both actual native job outputs were inspected.
 
-The catalog candidate keeps the existing optional item, core/optional counts
+The catalog keeps the existing optional item, core/optional counts
 and saved maze key. It displays the whole learner worksheet, suppresses a code
 import for the worksheet printer, withholds the worked reference from learners
-and offers continuation of the existing maze attempt. Hosted learner/staff
-rendering, saved-file preservation and sitewide delivery checks remain pending.
+and offers continuation of the existing maze attempt. Publication requires
+hosted learner/staff rendering, saved-file preservation and sitewide checks.
+Review and delivery evidence is recorded in
+[PR #151](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/151).
 
 Seven other C++ Level 3 learner/reference pairs still contain generic
 placeholders or fixed evidence checklists and require substantive review.
