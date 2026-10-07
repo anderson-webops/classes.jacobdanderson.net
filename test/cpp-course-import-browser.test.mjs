@@ -1283,6 +1283,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				await revealCourseSource(page, selector);
 			}
 			if (Object.hasOwn(rowImportPacks, folder)) {
+				await page.waitForFunction(selector => document.querySelector(selector)?.closest(".lesson-item").textContent.includes("65536/65537"), {}, selector);
 				const briefText = await page.$eval(selector, link => link.closest(".lesson-item").textContent.replace(/\s+/g, " "));
 				assert.match(briefText, /Fatal errors and saved state/);
 				assert.match(briefText, /preserve both the ledger and the caller/i);
