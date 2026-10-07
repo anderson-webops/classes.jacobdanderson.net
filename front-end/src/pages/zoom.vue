@@ -16,13 +16,6 @@ const zoomMeetingUrl = classMeetingUrl;
 			target="_blank"
 			>Join on Zoom<span class="sr-only"> (opens in a new tab)</span></a
 		>
-		<details>
-			<summary>Direct link</summary>
-			<a :href="zoomMeetingUrl" rel="noopener noreferrer" target="_blank"
-				>{{ zoomMeetingUrl
-				}}<span class="sr-only"> (opens in a new tab)</span></a
-			>
-		</details>
 	</section>
 </template>
 
@@ -31,15 +24,6 @@ const zoomMeetingUrl = classMeetingUrl;
 	display: grid;
 	justify-items: start;
 	gap: 0.75rem;
-}
-.zoom-page details {
-	font-size: 0.9rem;
-	color: var(--color-ink-soft);
-}
-.zoom-page summary {
-	min-height: 2.75rem;
-	align-content: center;
-	cursor: pointer;
 }
 </style>
 

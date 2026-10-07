@@ -1,137 +1,69 @@
-import { createPinia, setActivePinia } from "pinia";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
+import { createPinia, setActivePinia } from "pinia";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { api } from "@/api";
 import MdMail from "@/pages/admin/mdmail.vue";
 
 vi.mock("@/api", () => ({ api: { get: vi.fn().mockResolvedValue({ data: { students: [] } }), post: vi.fn() } }));
-vi.mock("@/modules/adminRecipients", () => ({
-	fetchAdminRecipients: vi.fn().mockResolvedValue([])
-}));
+vi.mock("@/modules/adminRecipients", () => ({ fetchAdminRecipients: vi.fn().mockResolvedValue([]) }));
+let wrapper: ReturnType<typeof mount>;
+beforeEach(() => {
+	setActivePinia(createPinia());
+	vi.clearAllMocks();
+});
+afterEach(() => wrapper?.unmount());
 
-const findPreviewBody = (wrapper: ReturnType<typeof mount>) =>
-	wrapper.find('[data-testid="live-preview-body"]');
-
-beforeEach(() => setActivePinia(createPinia()));
-
-describe("Admin mail preview tabs", () => {
-	it("shows compose tab by default and hides preview", () => {
-		const wrapper = mount(MdMail);
-
-		expect(wrapper.find('[data-testid="md-input"]').exists()).toBe(true);
-		expect(wrapper.find('[data-testid="live-preview"]').exists()).toBe(
-			false
-		);
-		expect(wrapper.find("label[for='markdown-input']").text()).toBe(
-			"Markdown"
-		);
-		expect(wrapper.find("[data-testid='tab-compose']").attributes()).toMatchObject(
-			{
-				"aria-controls": "panel-compose",
-				"aria-selected": "true"
-			}
-		);
+describe("compact session-note preview", () => {
+	it("opens directly into the writing area without compose tabs", async () => {
+		wrapper = mount(MdMail);
+		await flushPromises();
+		expect(wrapper.find("[data-testid=\"md-input\"]").exists()).toBe(true);
+		expect(wrapper.find("[data-testid=\"live-preview\"]").exists()).toBe(false);
+		expect(wrapper.find("label[for='markdown-input']").text()).toBe("Notes");
+		expect(wrapper.find("[role=\"tablist\"]").exists()).toBe(false);
+		expect(wrapper.find("[data-testid=\"preview-toggle\"]").attributes("aria-expanded")).toBe("false");
 	});
-
-	it("renders markdown preview when preview tab is active", async () => {
-		const wrapper = mount(MdMail);
-
-		const mdInput = wrapper.find('[data-testid="md-input"]');
-		await mdInput.setValue("**Hello** _world_");
-
-		await wrapper.find('[data-testid="tab-preview"]').trigger("click");
-
-		const previewBody = findPreviewBody(wrapper);
-		expect(previewBody.exists()).toBe(true);
-		expect(previewBody.html()).toContain("<strong>Hello</strong>");
-		expect(previewBody.html()).toContain("<em>world</em>");
+	it("renders sanitized Markdown without hiding or resetting the draft", async () => {
+		wrapper = mount(MdMail);
+		await flushPromises();
+		const draft = "**Hello** _world_\n<script>alert('synthetic')</script><img src=x onerror=alert('synthetic')>";
+		await wrapper.get("[data-testid=\"md-input\"]").setValue(draft);
+		await wrapper.get("[data-testid=\"preview-toggle\"]").trigger("click");
+		const body = wrapper.get("[data-testid=\"live-preview-body\"]");
+		expect(body.html()).toContain("<strong>Hello</strong>");
+		expect(body.html()).toContain("<em>world</em>");
+		expect(body.find("script").exists()).toBe(false);
+		expect(body.find("[onerror]").exists()).toBe(false);
+		expect(wrapper.get<HTMLTextAreaElement>("[data-testid=\"md-input\"]").element.value).toBe(draft);
+		expect(api.post).not.toHaveBeenCalled();
 	});
-
-	it("renders homework bullets as an inset list in the preview", async () => {
-		const wrapper = mount(MdMail);
-
-		const mdInput = wrapper.find('[data-testid="md-input"]');
-		await mdInput.setValue(
-			[
-				"**Homework:**",
-				"- Add a start and pause feature.",
-				"- Add a timer mode."
-			].join("\n")
-		);
-
-		await wrapper.find('[data-testid="tab-preview"]').trigger("click");
-
-		const previewBody = findPreviewBody(wrapper);
-		expect(previewBody.findAll("ul li").map(item => item.text())).toEqual([
-			"Add a start and pause feature.",
-			"Add a timer mode."
-		]);
-
-		const source = readFileSync(
-			resolve(__dirname, "../src/pages/admin/mdmail.vue"),
-			"utf8"
-		);
+	it("preserves readable homework lists in both preview and history", async () => {
+		wrapper = mount(MdMail);
+		await flushPromises();
+		await wrapper.get("[data-testid=\"md-input\"]").setValue("**Homework:**\n- Add a start and pause feature.\n- Add a timer mode.");
+		await wrapper.get("[data-testid=\"preview-toggle\"]").trigger("click");
+		expect(wrapper.get("[data-testid=\"live-preview-body\"]").findAll("ul li").map(item => item.text())).toEqual(["Add a start and pause feature.", "Add a timer mode."]);
+		const source = readFileSync(resolve(__dirname, "../src/pages/admin/mdmail.vue"), "utf8");
 		expect(source).toContain(".preview-body :deep(ul),");
 		expect(source).toContain(".history-note__body :deep(ul),");
 		expect(source).toContain("padding-inline-start: 1.65rem;");
 		expect(source).toContain("list-style-position: outside;");
 	});
-
-	it("supports arrow-key tab navigation", async () => {
-		const wrapper = mount(MdMail, { attachTo: document.body });
-
-		await wrapper.find('[data-testid="tab-compose"]').trigger("keydown", {
-			key: "ArrowRight"
-		});
-
-		expect(wrapper.find('[data-testid="live-preview"]').exists()).toBe(
-			true
-		);
-		expect(
-			wrapper.find('[data-testid="tab-preview"]').attributes(
-				"aria-selected"
-			)
-		).toBe("true");
-		wrapper.unmount();
-	});
-
-	it("implements roving keyboard behavior for the full tab pattern", async () => {
-		const wrapper = mount(MdMail, { attachTo: document.body });
-
-		const composeTab = () => wrapper.find('[data-testid="tab-compose"]');
-		const previewTab = () => wrapper.find('[data-testid="tab-preview"]');
-
-		expect(composeTab().attributes("id")).toBe("tab-compose");
-		expect(composeTab().attributes("aria-controls")).toBe("panel-compose");
-		expect(composeTab().attributes("tabindex")).toBe("0");
-		expect(previewTab().attributes("id")).toBe("tab-preview");
-		expect(previewTab().attributes("aria-controls")).toBe("panel-preview");
-		expect(previewTab().attributes("tabindex")).toBe("-1");
-
-		await composeTab().trigger("keydown", { key: "End" });
-		expect(previewTab().attributes("aria-selected")).toBe("true");
-		expect(previewTab().attributes("tabindex")).toBe("0");
-		expect(
-			wrapper.find('[data-testid="live-preview"]').attributes()
-		).toMatchObject({
-			"aria-labelledby": "tab-preview",
-			id: "panel-preview",
-			role: "tabpanel"
-		});
-
-		await previewTab().trigger("keydown", { key: "Home" });
-		expect(composeTab().attributes("aria-selected")).toBe("true");
-		expect(composeTab().attributes("tabindex")).toBe("0");
-		expect(wrapper.find(".tab-panel").attributes()).toMatchObject({
-			"aria-labelledby": "tab-compose",
-			id: "panel-compose",
-			role: "tabpanel"
-		});
-
-		await composeTab().trigger("keydown", { key: "ArrowLeft" });
-		expect(previewTab().attributes("aria-selected")).toBe("true");
-
-		wrapper.unmount();
+	it("uses an accessible native toggle and retains the writing area when closing it", async () => {
+		wrapper = mount(MdMail);
+		await flushPromises();
+		const toggle = wrapper.get("[data-testid=\"preview-toggle\"]");
+		expect(toggle.attributes("type")).toBe("button");
+		expect(toggle.attributes("aria-controls")).toBe("note-preview");
+		await toggle.trigger("click");
+		expect(toggle.attributes("aria-expanded")).toBe("true");
+		expect(wrapper.get("[data-testid=\"live-preview\"]").attributes()).toMatchObject({ "id": "note-preview", "role": "region", "aria-label": "Note preview" });
+		await toggle.trigger("click");
+		expect(toggle.attributes("aria-expanded")).toBe("false");
+		expect(wrapper.find("[data-testid=\"live-preview\"]").exists()).toBe(false);
+		expect(wrapper.find("[data-testid=\"md-input\"]").exists()).toBe(true);
+		expect(api.post).not.toHaveBeenCalled();
 	});
 });

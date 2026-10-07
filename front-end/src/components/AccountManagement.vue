@@ -9,6 +9,7 @@ import { api } from "@/api";
 import AccessibleDialog from "@/components/AccessibleDialog.vue";
 import AccessModeToggle from "@/components/AccessModeToggle.vue";
 import CourseCodeAccessForm from "@/components/CourseCodeAccessForm.vue";
+import { hasCourseCodeEntry } from "@/modules/authEntryPolicy";
 import {
 	emptyOAuthProviderAvailability,
 	fetchOAuthProviderAvailability,
@@ -33,6 +34,7 @@ const errorLogin = ref("");
 const loginView = ref<"login" | "password-reset">("login");
 const loginMode = ref<"account" | "course-code">("account");
 const signupMode = ref<"account" | "course-code">("account");
+const courseCodeEntryEnabled = ref(false);
 const resetEmail = ref("");
 const resetMessage = ref("");
 const resetError = ref("");
@@ -73,6 +75,7 @@ watch(
 );
 
 onMounted(() => {
+	courseCodeEntryEnabled.value = hasCourseCodeEntry(window.location.origin);
 	const current = new URL(window.location.href);
 	const oauthError = current.searchParams.get("oauthError");
 	const hasOAuthResult =
@@ -254,7 +257,11 @@ async function addSignup() {
 			@close="changeLoginView(false)"
 		>
 			<template v-if="loginView === 'login'">
-				<AccessModeToggle v-model="loginMode" label="Sign-in method" />
+				<AccessModeToggle
+					v-if="courseCodeEntryEnabled"
+					v-model="loginMode"
+					label="Sign-in method"
+				/>
 				<form
 					v-show="loginMode === 'account'"
 					class="auth-form loginForm"
@@ -309,14 +316,23 @@ async function addSignup() {
 						type="password"
 					/>
 
-					<label class="remember">
-						<input
-							v-model="rememberMe"
-							name="remember"
-							type="checkbox"
-						/>
-						Remember me
-					</label>
+					<div class="login-options">
+						<label class="remember">
+							<input
+								v-model="rememberMe"
+								name="remember"
+								type="checkbox"
+							/>
+							Remember me
+						</label>
+						<button
+							class="text-button password-reset-link"
+							type="button"
+							@click="openPasswordReset"
+						>
+							Forgot Password?
+						</button>
+					</div>
 
 					<p
 						v-if="errorLogin"
@@ -339,7 +355,7 @@ async function addSignup() {
 					</div>
 
 					<p class="auth-switch">
-						Don't have an account?
+						New?
 						<button
 							class="text-button"
 							type="button"
@@ -348,19 +364,10 @@ async function addSignup() {
 							Sign up
 						</button>
 					</p>
-					<p class="auth-help">
-						Forgot your password?
-						<button
-							class="text-button"
-							type="button"
-							@click="openPasswordReset"
-						>
-							Reset it securely</button
-						>.
-					</p>
 				</form>
 
 				<div
+					v-if="courseCodeEntryEnabled"
 					v-show="loginMode === 'course-code'"
 					class="auth-code-view"
 				>
@@ -421,8 +428,16 @@ async function addSignup() {
 			title="Sign up"
 			@close="changeSignupView(false)"
 		>
-			<AccessModeToggle v-model="signupMode" label="Sign-up method" />
-			<div v-show="signupMode === 'course-code'" class="auth-code-view">
+			<AccessModeToggle
+				v-if="courseCodeEntryEnabled"
+				v-model="signupMode"
+				label="Sign-up method"
+			/>
+			<div
+				v-if="courseCodeEntryEnabled"
+				v-show="signupMode === 'course-code'"
+				class="auth-code-view"
+			>
 				<CourseCodeAccessForm embedded initial-entry="new" />
 			</div>
 			<form
@@ -593,6 +608,17 @@ async function addSignup() {
 	font: inherit;
 }
 
+.login-options {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+}
+
+.login-options .password-reset-link {
+	text-align: right;
+}
+
 .remember {
 	display: flex !important;
 	grid-template-columns: none !important;
@@ -655,6 +681,13 @@ async function addSignup() {
 	color: var(--color-ink-soft, #526779);
 }
 
+.auth-switch {
+	margin-top: 0.25rem;
+	padding-top: 0.9rem;
+	border-top: 1px solid var(--color-border, rgba(148, 163, 184, 0.45));
+	text-align: center;
+}
+
 .auth-help a {
 	color: #1d4ed8;
 	font-weight: bold;
@@ -682,16 +715,21 @@ async function addSignup() {
 	filter: brightness(0.96);
 }
 
-:global(html.dark) .text-button {
+html.dark .text-button {
 	color: #bfdbfe;
 }
 
-:global(html.dark) .text-button:hover {
+html.dark .text-button:hover {
 	color: #dbeafe;
 	filter: none;
 }
 
 @media (max-width: 520px) {
+	.login-options {
+		gap: 0.5rem;
+		font-size: 0.875rem;
+	}
+
 	.auth-actions {
 		flex-direction: column;
 	}

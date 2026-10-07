@@ -1,13 +1,74 @@
 import { flushPromises, mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import * as catalogVisibility from "@/modules/catalogVisibility";
 import CoursesPage from "@/pages/courses.vue";
 import { useAppStore } from "@/stores/app";
 
 describe("courses page access gate", () => {
+	afterEach(() => vi.restoreAllMocks());
 	beforeEach(() => {
 		document.body.innerHTML = "";
 		setActivePinia(createPinia());
+	});
+
+	it("opens the canonical catalog without a login gate and offers a red sign-in bar", async () => {
+		vi.spyOn(catalogVisibility, "hasOpenCourseCatalog").mockReturnValue(
+			true
+		);
+		const wrapper = mount(CoursesPage, {
+			global: {
+				stubs: {
+					RouterLink: true,
+					CourseExplorer: {
+						props: { publicCatalog: Boolean, browseAll: Boolean },
+						template:
+							'<div class="catalog" :data-public="publicCatalog" :data-all="browseAll" />'
+					}
+				}
+			}
+		});
+		await flushPromises();
+		expect(wrapper.get(".catalog").attributes("data-public")).toBe("true");
+		expect(wrapper.get(".catalog").attributes("data-all")).toBe("true");
+		expect(wrapper.find(".courses-code-entry").exists()).toBe(false);
+		await wrapper.get(".catalog-signin button").trigger("click");
+		expect(useAppStore().loginBlock).toBe(true);
+		wrapper.unmount();
+	});
+
+	it("keeps all courses visible to a signed-in canonical learner without assigned courses", async () => {
+		vi.spyOn(catalogVisibility, "hasOpenCourseCatalog").mockReturnValue(
+			true
+		);
+		useAppStore().setCurrentUser({
+			_id: "synthetic-user",
+			name: "Learner",
+			email: "learner@example.invalid",
+			age: 14,
+			state: "GA",
+			courseAccess: [],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+		const wrapper = mount(CoursesPage, {
+			global: {
+				stubs: {
+					RouterLink: true,
+					CourseExplorer: {
+						props: { publicCatalog: Boolean, browseAll: Boolean },
+						template:
+							'<div class="catalog" :data-public="publicCatalog" :data-all="browseAll" />'
+					}
+				}
+			}
+		});
+		await flushPromises();
+		expect(wrapper.get(".catalog").attributes("data-public")).toBe("false");
+		expect(wrapper.get(".catalog").attributes("data-all")).toBe("true");
+		expect(wrapper.find(".catalog-signin").exists()).toBe(false);
+		expect(wrapper.text()).not.toContain("Get course access");
+		wrapper.unmount();
 	});
 
 	it("opens the login modal when a logged-out visitor clicks Log in", async () => {

@@ -97,8 +97,9 @@ describe("CourseExplorer.vue", () => {
 			expect(wrapper.find(".course-hero").exists()).toBe(false);
 		});
 		expect(wrapper.text()).toContain(assignedCourse.name);
-		expect(wrapper.text()).toContain("Core");
-		expect(wrapper.text()).toContain("Practice");
+		expect(wrapper.text()).toContain("Projects");
+		expect(wrapper.text()).toContain("Supplemental Projects");
+		expect(wrapper.text()).toContain("Learn");
 		expect(wrapper.find(".course-stats").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Complete");
 		expect(wrapper.text()).not.toContain("core items");
@@ -132,7 +133,9 @@ describe("CourseExplorer.vue", () => {
 				expect(wrapper.find(".lesson-card").exists()).toBe(true)
 			);
 			expect(wrapper.find(".course-summary").exists()).toBe(false);
-			expect(wrapper.find(".course-toolbar-disclosure").exists()).toBe(false);
+			expect(wrapper.find(".course-toolbar-disclosure").exists()).toBe(
+				false
+			);
 			expect(wrapper.find("#course-search").exists()).toBe(true);
 			expect(wrapper.find(".reader-link-groups").exists()).toBe(false);
 			const toggle = wrapper.get(".outline-toggle");
@@ -204,6 +207,107 @@ describe("CourseExplorer.vue", () => {
 		});
 		expect(wrapper.text()).not.toContain(otherCourse.name);
 		expect(wrapper.text()).not.toContain("Mark module complete");
+	});
+
+	it("shows all catalog courses publicly without learner data, tracking or solutions", async () => {
+		const courses = useCoursesStore();
+		const wrapper = mount(CourseExplorer, {
+			props: { publicCatalog: true, browseAll: true }
+		});
+		try {
+			await flushPromises();
+			expect(wrapper.findAll("#course-select option")).toHaveLength(
+				courses.courses.length
+			);
+			expect(wrapper.find("#learner-select").exists()).toBe(false);
+			expect(wrapper.find(".progress-toggle").exists()).toBe(false);
+			expect(wrapper.find(".solution-preview-button").exists()).toBe(
+				false
+			);
+			expect(api.get).not.toHaveBeenCalled();
+			expect(api.put).not.toHaveBeenCalled();
+		} finally {
+			wrapper.unmount();
+		}
+	});
+
+	it("preserves staff tracking for assigned courses but never grants it to other catalog courses", async () => {
+		vi.useFakeTimers();
+		const app = useAppStore();
+		const courses = useCoursesStore();
+		const [assigned, other] = courses.courses;
+		vi.spyOn(courses, "loadCourseById").mockImplementation(async id => ({
+			id,
+			name: id,
+			modules: [
+				{
+					id: "module-1",
+					title: "Synthetic module",
+					curriculum: [
+						{
+							id: "item-1",
+							title: "Synthetic lesson",
+							content: "Fixture"
+						}
+					],
+					supplementalProjects: []
+				}
+			]
+		}));
+		app.setCurrentTutor({
+			_id: "synthetic-tutor",
+			name: "Tutor",
+			email: "tutor@example.invalid",
+			age: 30,
+			state: "GA",
+			usersOfTutorLength: 1,
+			coursePermissions: [assigned.id],
+			editTutors: false,
+			saveEdit: "Save"
+		});
+		vi.mocked(api.get).mockResolvedValueOnce({
+			data: [
+				{
+					_id: "synthetic-learner",
+					name: "Learner",
+					email: "learner@example.invalid",
+					age: 14,
+					state: "GA",
+					courseAccess: [assigned.id],
+					courseProgress: [],
+					editUsers: false,
+					saveEdit: "Save"
+				}
+			]
+		});
+		vi.mocked(api.put).mockResolvedValueOnce({ data: {} });
+		const wrapper = mount(CourseExplorer, { props: { browseAll: true } });
+		try {
+			await flushPromises();
+			expect(wrapper.findAll("#course-select option")).toHaveLength(
+				courses.courses.length
+			);
+			expect(wrapper.get("#learner-select").element).toBeTruthy();
+			await wrapper
+				.get(".progress-toggle.is-module input")
+				.setValue(true);
+			await vi.advanceTimersByTimeAsync(701);
+			await flushPromises();
+			expect(api.put).toHaveBeenCalledWith(
+				"/users/synthetic-learner/course-progress",
+				{
+					courseId: assigned.id,
+					completedModuleIds: ["module-1"],
+					completedItemIds: []
+				}
+			);
+			await wrapper.get("#course-select").setValue(other.id);
+			await flushPromises();
+			expect(wrapper.findAll(".progress-toggle")).toHaveLength(0);
+			expect(api.put).toHaveBeenCalledTimes(1);
+		} finally {
+			wrapper.unmount();
+		}
 	});
 
 	it("links Python-family courses to the integrated Code IDE", async () => {
@@ -705,7 +809,7 @@ describe("CourseExplorer.vue", () => {
 		).toBe(true);
 	});
 
-	it("labels projects as core and supplemental projects as practice", async () => {
+	it("separates projects, supplemental projects and key blocks into lesson views", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
 
@@ -791,15 +895,26 @@ describe("CourseExplorer.vue", () => {
 			.trigger("click");
 		await flushPromises();
 
-		expect(wrapper.text()).toContain("Core");
-		expect(wrapper.text()).toContain("Estimated pace");
-		expect(wrapper.text()).toContain("1 optional session");
-		expect(wrapper.text()).toContain("repeat → loop");
-		expect(wrapper.text()).toContain("Next Step Projects");
+		expect(wrapper.text()).not.toContain("Estimated pace");
+		expect(wrapper.text()).not.toContain("1 optional session");
+		expect(wrapper.text()).not.toContain("Lesson guide");
+		expect(wrapper.text()).not.toContain("repeat → loop");
+		expect(wrapper.findAll(".lesson-card")).toHaveLength(1);
+		expect(wrapper.text()).toContain("Translation Build");
+		expect(wrapper.text()).not.toContain("Choose a Translation");
 		expect(wrapper.text()).toContain("Supplemental Projects");
-		expect(
-			wrapper.findAll(".lesson-kicker").map(kicker => kicker.text())
-		).toEqual(["Core", "Practice", "Practice"]);
+		await wrapper
+			.get('.lesson-view-toggle button[aria-pressed="false"]')
+			.trigger("click");
+		expect(wrapper.findAll(".lesson-card")).toHaveLength(2);
+		expect(wrapper.text()).toContain("Choose a Translation");
+		expect(wrapper.text()).not.toContain("Translation Build");
+		await wrapper
+			.get(".lesson-view-toggle button:last-child")
+			.trigger("click");
+		expect(wrapper.text()).toContain("repeat → loop");
+		expect(wrapper.findAll(".lesson-card")).toHaveLength(0);
+		expect(wrapper.find(".lesson-kicker").exists()).toBe(false);
 		expect(wrapper.text()).not.toContain("Mark next step complete");
 	});
 
@@ -1156,9 +1271,9 @@ describe("CourseExplorer.vue", () => {
 				wrapper.find<HTMLSelectElement>("#course-select").element.value
 			).toBe(unassignedCourse.id);
 		});
-		expect(
-			wrapper.get("#learner-select option:checked").text()
-		).toContain("All");
+		expect(wrapper.get("#learner-select option:checked").text()).toContain(
+			"All"
+		);
 		expect(wrapper.findAll(".progress-toggle")).toHaveLength(0);
 
 		await wrapper
@@ -1226,7 +1341,9 @@ describe("CourseExplorer.vue", () => {
 		await flushPromises();
 
 		await vi.waitFor(() => {
-			expect(wrapper.get("#learner-select option:checked").text()).toBe("Learner");
+			expect(wrapper.get("#learner-select option:checked").text()).toBe(
+				"Learner"
+			);
 			expect(wrapper.text()).toContain(assignedCourse.name);
 		});
 		expect(wrapper.text()).not.toContain("learner@example.com");
@@ -1306,7 +1423,9 @@ describe("CourseExplorer.vue", () => {
 
 		await flushPromises();
 		await vi.waitFor(() => {
-			expect(wrapper.get("#learner-select option:checked").text()).toBe("Learner");
+			expect(wrapper.get("#learner-select option:checked").text()).toBe(
+				"Learner"
+			);
 		});
 
 		const moduleProgress = wrapper.find(".progress-toggle.is-module input");
@@ -1583,8 +1702,11 @@ describe("CourseExplorer.vue", () => {
 			expect(
 				wrapper.find<HTMLSelectElement>("#course-select").element.value
 			).toBe(chemistryCourse.id);
-			expect(wrapper.text()).toContain("Chemistry Basics Lesson");
 		});
+		await wrapper
+			.get(".lesson-view-toggle button:last-child")
+			.trigger("click");
+		expect(wrapper.text()).toContain("Chemistry Basics Lesson");
 	});
 
 	it("renders starter code previews but hides solution previews for learners", async () => {
@@ -2062,7 +2184,7 @@ describe("CourseExplorer.vue", () => {
 
 		await vi.waitFor(
 			() => {
-const heading = wrapper.find("#course-select option:checked");
+				const heading = wrapper.find("#course-select option:checked");
 				expect(heading.exists()).toBe(true);
 				expect(heading.text()).toContain(
 					"Pre-Calculus and Trigonometry A"
@@ -2120,7 +2242,7 @@ const heading = wrapper.find("#course-select option:checked");
 
 		await vi.waitFor(
 			() => {
-const heading = wrapper.find("#course-select option:checked");
+				const heading = wrapper.find("#course-select option:checked");
 				expect(heading.exists()).toBe(true);
 				expect(heading.text()).toContain(
 					"Pre-Calculus and Trigonometry B"
@@ -2178,7 +2300,7 @@ const heading = wrapper.find("#course-select option:checked");
 
 		await vi.waitFor(
 			() => {
-const heading = wrapper.find("#course-select option:checked");
+				const heading = wrapper.find("#course-select option:checked");
 				expect(heading.exists()).toBe(true);
 				expect(heading.text()).toContain("AP Calculus");
 				expect(wrapper.text()).not.toContain("Loading course");
@@ -2253,6 +2375,9 @@ const heading = wrapper.find("#course-select option:checked");
 		});
 		await flushPromises();
 
+		await wrapper
+			.get(".lesson-view-toggle button:nth-child(2)")
+			.trigger("click");
 		const video = wrapper.find("video.item-media-video");
 		expect(video.exists()).toBe(true);
 

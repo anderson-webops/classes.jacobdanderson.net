@@ -1,10 +1,11 @@
 // components/accountmanagement.login.spec.test.ts
 import { flushPromises, mount } from "@vue/test-utils";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import AccountManagement from "../src/components/AccountManagement.vue";
-import { useAppStore } from "../src/stores/app";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as apiMod from "../src/api";
+import AccountManagement from "../src/components/AccountManagement.vue";
+import * as authEntryPolicy from "../src/modules/authEntryPolicy";
+import { useAppStore } from "../src/stores/app";
 
 // Mock the axios client we export from "@/api"
 vi.mock("@/api", () => {
@@ -18,12 +19,60 @@ vi.mock("@/api", () => {
 	return { api: mock };
 });
 
-describe("AccountManagement.vue login (happy path)", () => {
+describe("accountManagement.vue login (happy path)", () => {
 	beforeEach(() => {
 		document.body.innerHTML = "";
 		window.history.replaceState({}, "", "/");
 		setActivePinia(createPinia());
 		vi.clearAllMocks();
+	});
+	afterEach(() => vi.restoreAllMocks());
+
+	it("keeps the course-code option disabled only on the Classes site", () => {
+		expect(
+			authEntryPolicy.hasCourseCodeEntry(
+				"https://classes.jacobdanderson.net"
+			)
+		).toBe(false);
+		for (const origin of [
+			"https://instruction-material.classes.jacobanderson.net",
+			"https://cs.avasan.org",
+			"http://localhost:3333"
+		]) {
+			expect(authEntryPolicy.hasCourseCodeEntry(origin)).toBe(true);
+		}
+	});
+
+	it("hides course-code entry in Classes login and signup while retaining account entry", async () => {
+		vi.spyOn(authEntryPolicy, "hasCourseCodeEntry").mockReturnValue(false);
+		const app = useAppStore();
+		app.setLoginBlock(true);
+		const wrapper = mount(AccountManagement, {
+			attachTo: document.body,
+			global: { stubs: { teleport: true } }
+		});
+		await flushPromises();
+		expect(wrapper.get(".loginForm").isVisible()).toBe(true);
+		expect(wrapper.find(".access-mode-toggle").exists()).toBe(false);
+		expect(wrapper.find(".auth-code-view").exists()).toBe(false);
+		expect(wrapper.get(".login-options .remember").text()).toBe(
+			"Remember me"
+		);
+		expect(wrapper.get(".login-options .password-reset-link").text()).toBe(
+			"Forgot Password?"
+		);
+		expect(wrapper.get(".password-reset-link").attributes("type")).toBe(
+			"button"
+		);
+		expect(wrapper.get(".auth-switch").text()).toMatch(/^New\?\s+Sign up$/);
+		expect(wrapper.text()).not.toContain("Don't have an account?");
+		expect(wrapper.text()).not.toContain("Reset it securely");
+		await wrapper.get(".auth-switch button").trigger("click");
+		expect(wrapper.get(".signupForm").isVisible()).toBe(true);
+		expect(wrapper.find(".access-mode-toggle").exists()).toBe(false);
+		expect(wrapper.find(".course-code-form").exists()).toBe(false);
+		expect(apiMod.api.post).not.toHaveBeenCalled();
+		wrapper.unmount();
 	});
 
 	it("switches sign-in methods instead of stacking forms and preserves drafts", async () => {
@@ -76,6 +125,7 @@ describe("AccountManagement.vue login (happy path)", () => {
 				}
 			}
 		});
+		await flushPromises();
 		expect(wrapper.get(".signupForm").isVisible()).toBe(true);
 		await wrapper.get('input[value="course-code"]').setValue(true);
 		expect(wrapper.get(".signupForm").isVisible()).toBe(false);
@@ -155,6 +205,7 @@ describe("AccountManagement.vue login (happy path)", () => {
 			);
 		});
 		expect(wrapper.find(".oauth-actions").exists()).toBe(false);
+		expect(wrapper.find(".auth-separator").exists()).toBe(false);
 		expect(wrapper.text()).not.toContain("Continue with Google");
 		expect(wrapper.text()).not.toContain("Continue with Apple");
 		wrapper.unmount();
@@ -284,12 +335,14 @@ describe("AccountManagement.vue login (happy path)", () => {
 		});
 
 		await wrapper.get("#uname").setValue("julio@example.com");
+		await wrapper.get('input[name="remember"]').setValue(true);
 		const resetButton = wrapper
 			.findAll("button")
-			.find(button => button.text() === "Reset it securely");
+			.find(button => button.text() === "Forgot Password?");
 		if (!resetButton)
 			throw new Error("Password reset button was not rendered.");
 		await resetButton.trigger("click");
+		expect(apiMod.api.post).not.toHaveBeenCalled();
 
 		expect(wrapper.get("#reset-email").element).toHaveProperty(
 			"value",
@@ -308,6 +361,17 @@ describe("AccountManagement.vue login (happy path)", () => {
 			);
 		});
 		expect(wrapper.find('a[href^="mailto:"]').exists()).toBe(false);
+		await wrapper
+			.get(".password-reset-form .button.secondary")
+			.trigger("click");
+		expect(wrapper.get("#uname").element).toHaveProperty(
+			"value",
+			"julio@example.com"
+		);
+		expect(wrapper.get('input[name="remember"]').element).toHaveProperty(
+			"checked",
+			true
+		);
 		wrapper.unmount();
 	});
 	it("closes access entry after classroom authentication without requesting an email login", async () => {

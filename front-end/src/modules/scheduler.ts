@@ -92,5 +92,6 @@ export const schedulerManageBookingUrl = buildSchedulerUrl("/booking/manage");
 export const schedulerEmbedMessageSource =
 	"scheduler.classes.jacobdanderson.net";
 export const schedulerEmbedResizeType = "scheduler:resize";
+export const schedulerEmbedViewType = "scheduler:view";
 export const schedulerEmbedThemeMessageSource = "classes.jacobdanderson.net";
 export const schedulerEmbedThemeType = "scheduler:theme";

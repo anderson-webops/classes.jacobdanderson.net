@@ -2,6 +2,7 @@
 import type { CodePreviewResource } from "@/modules/codePreview";
 import type { CourseCodeLearner } from "@/modules/courseAccessCodes";
 import type { CourseAssetResource } from "@/modules/courseAssetPreview";
+import type { LessonView } from "@/modules/courseLessonPresentation";
 import type { CourseProgress, User } from "@/stores/app";
 import type {
 	CourseDefinition,
@@ -27,6 +28,10 @@ import {
 } from "@/modules/courseAccess";
 import { courseAssetViewerUrl } from "@/modules/courseAssetPreview";
 import {
+	isLessonLearningItem,
+	lessonContentSections
+} from "@/modules/courseLessonPresentation";
+import {
 	getPythonIdeModeLabel,
 	isKnownCourseWorksheetResource,
 	pythonIdeModeForCourseId,
@@ -48,14 +53,17 @@ import {
 } from "@/stores/courses/staticMedia";
 import CodePreview from "./CodePreview.vue";
 import CourseAssetPreview from "./CourseAssetPreview.vue";
+import CourseAssignmentContent from "./CourseAssignmentContent.vue";
 import LazyMarkdownContent from "./LazyMarkdownContent.vue";
 
 const props = withDefaults(
 	defineProps<{
 		publicCatalog?: boolean;
+		browseAll?: boolean;
 	}>(),
 	{
-		publicCatalog: false
+		publicCatalog: false,
+		browseAll: false
 	}
 );
 
@@ -129,6 +137,12 @@ const { currentTutor, currentAdmin, currentCourseLearner, currentUser, users } =
 
 const searchQuery = ref("");
 const outlineOpen = ref(false);
+const lessonView = ref<LessonView>("projects");
+const lessonViews: { id: LessonView; label: string }[] = [
+	{ id: "projects", label: "Projects" },
+	{ id: "supplemental", label: "Supplemental Projects" },
+	{ id: "learn", label: "Learn" }
+];
 const selectedCourseId = ref("");
 const selectedLearnerId = ref("");
 const activeModuleId = ref("");
@@ -230,8 +244,11 @@ const courseList = computed(() => {
 	if (isAllLearnersContext.value) return allCourses.value;
 	const allowed = new Set(permittedCourseIds.value);
 	return orderedCoursesByLearnerStatus(
-		allCourses.value.filter(course => allowed.has(course.id)),
-		courseGroupingOwner.value
+		props.browseAll
+			? allCourses.value
+			: allCourses.value.filter(course => allowed.has(course.id)),
+		courseGroupingOwner.value,
+		{ includeOther: props.browseAll }
 	);
 });
 
@@ -258,7 +275,8 @@ const courseGroups = computed(() => {
 
 	return groupCoursesByLearnerStatus(
 		courseList.value,
-		courseGroupingOwner.value
+		courseGroupingOwner.value,
+		{ includeOther: props.browseAll }
 	);
 });
 
@@ -538,7 +556,10 @@ const selectedCourseProgress = computed(() => {
 });
 
 const hasProgressTracking = computed(
-	() => !props.publicCatalog && !!progressOwner.value
+	() =>
+		!props.publicCatalog &&
+		!!progressOwner.value &&
+		permittedCourseIds.value.includes(selectedCourseId.value)
 );
 
 const completedModuleIdSet = computed(
@@ -697,26 +718,67 @@ const canEditActiveModuleProgress = computed(
 		isCoreModule(activeModule.value)
 );
 
-const activeCurriculumSectionLabel = computed(() =>
-	activeModule.value?.kind === "appendix" ? "Reference" : "Core"
+const lessonItemsByView = computed(() => {
+	const module = activeModule.value;
+	return {
+		projects: (module?.curriculum ?? []).filter(
+			item => !isLessonLearningItem(item)
+		),
+		supplemental: (module?.supplementalProjects ?? []).filter(
+			item => !isLessonLearningItem(item)
+		),
+		learn: [
+			...(module?.curriculum ?? []),
+			...(module?.supplementalProjects ?? [])
+		].filter(isLessonLearningItem)
+	};
+});
+const activeLessonItems = computed(
+	() => lessonItemsByView.value[lessonView.value]
+);
+const learningTopics = computed(() =>
+	[
+		...lessonItemsByView.value.projects,
+		...lessonItemsByView.value.supplemental
+	]
+		.map(item => ({
+			item,
+			sections: lessonContentSections(item.content).filter(
+				section => section.kind === "learn"
+			)
+		}))
+		.filter(topic => topic.sections.length)
+);
+const lessonViewLabel = computed(
+	() =>
+		lessonViews.find(view => view.id === lessonView.value)?.label ??
+		"Projects"
 );
 
-const activeCurriculumHeading = computed(() =>
-	activeModule.value?.kind === "appendix"
-		? "Reference Materials"
-		: activeModule.value?.kind === "transition"
-			? "Next Step Projects"
-			: "Projects"
-);
-
-const activeSupplementalSectionLabel = computed(() =>
-	activeModule.value?.kind === "appendix" ? "Reference practice" : "Practice"
-);
-
-const activeSupplementalHeading = computed(() =>
-	activeModule.value?.kind === "appendix"
-		? "Reference Activities"
-		: "Supplemental Projects"
+watch(
+	[activeModule, selectedCourseId, currentHashAnchor, normalizedQuery],
+	([module, courseId, anchor, query], previous) => {
+		const moduleChanged =
+			module?.id !== previous?.[0]?.id || courseId !== previous?.[1];
+		if (moduleChanged) lessonView.value = "projects";
+		if (module && (moduleChanged || anchor !== previous?.[2])) {
+			const matchingView = lessonViews.find(view =>
+				lessonItemsByView.value[view.id].some(item =>
+					progressIds(item).some(
+						id => itemAnchorId(module.id, id) === anchor
+					)
+				)
+			);
+			if (matchingView) lessonView.value = matchingView.id;
+		}
+		if (query && !activeLessonItems.value.length) {
+			const matchingView = lessonViews.find(
+				view => lessonItemsByView.value[view.id].length
+			);
+			if (matchingView) lessonView.value = matchingView.id;
+		}
+	},
+	{ immediate: true }
 );
 
 const courseReaderStatus = computed(() => {
@@ -1972,79 +2034,81 @@ function writeStoredValue(key: string, value: string) {
 								Completed
 							</p>
 						</div>
-
-						<div class="reader-tools">
-							<details
-								v-if="
-									activeModule.estimatedTime ||
-									activeModule.keyBlocks?.length
-								"
-								class="module-guide-disclosure"
-							>
-								<summary>Lesson guide</summary>
-								<dl
-									v-if="
-										activeModule.estimatedTime ||
-										activeModule.keyBlocks?.length
-									"
-									class="module-guide"
-								>
-									<div v-if="activeModule.estimatedTime">
-										<dt>Estimated pace</dt>
-										<dd>
-											{{ activeModule.estimatedTime }}
-										</dd>
-									</div>
-									<div v-if="activeModule.keyBlocks?.length">
-										<dt>Key blocks</dt>
-										<dd class="key-block-list">
-											<span
-												v-for="block in activeModule.keyBlocks"
-												:key="block"
-											>
-												{{ block }}
-											</span>
-										</dd>
-									</div>
-								</dl>
-							</details>
-						</div>
 					</header>
 
-					<section class="reader-section">
-						<div class="section-header">
-							<div>
-								<p class="section-eyebrow">
-									{{ activeCurriculumSectionLabel }}
-								</p>
-								<h4>{{ activeCurriculumHeading }}</h4>
-							</div>
+					<div
+						class="lesson-view-toggle"
+						role="group"
+						aria-label="Lesson view"
+					>
+						<button
+							v-for="view in lessonViews"
+							:key="view.id"
+							type="button"
+							:aria-pressed="lessonView === view.id"
+							aria-controls="lesson-view-content"
+							@click="lessonView = view.id"
+						>
+							{{ view.label }}
+						</button>
+					</div>
+
+					<section
+						id="lesson-view-content"
+						class="reader-section"
+						:aria-label="lessonViewLabel"
+					>
+						<div
+							v-if="lessonView === 'learn'"
+							class="learning-overview"
+						>
+							<section
+								v-if="activeModule.keyBlocks?.length"
+								class="key-blocks"
+							>
+								<h4>Key blocks</h4>
+								<div class="key-block-list">
+									<span
+										v-for="block in activeModule.keyBlocks"
+										:key="block"
+										>{{ block }}</span
+									>
+								</div>
+							</section>
+							<article
+								v-for="topic in learningTopics"
+								:key="topic.item.id"
+								class="learning-card"
+							>
+								<h5>{{ topic.item.title }}</h5>
+								<section
+									v-for="(section, index) in topic.sections"
+									:key="index"
+								>
+									<h6>{{ section.label }}</h6>
+									<LazyMarkdownContent
+										:content="section.content"
+									/>
+								</section>
+							</article>
 						</div>
 
-						<ol class="lesson-list">
+						<ol v-if="activeLessonItems.length" class="lesson-list">
 							<li
-								v-for="(item, index) in activeModule.curriculum"
+								v-for="(item, index) in activeLessonItems"
 								:id="itemAnchorId(activeModule.id, item.id)"
 								:key="item.id"
 								class="lesson-item"
 							>
 								<article
 									class="lesson-card"
-									:class="`is-${itemLearningPath(item, 'core')}`"
+									:class="`is-${itemLearningPath(item, lessonView === 'supplemental' ? 'choice' : 'core')}`"
 								>
 									<header class="lesson-header">
 										<span class="lesson-index">
 											{{ index + 1 }}
 										</span>
 										<div class="lesson-title-group">
-											<p class="lesson-kicker">
-												{{
-													activeModule.kind ===
-													"appendix"
-														? "Reference"
-														: "Core"
-												}}
-											</p>
 											<h5>{{ item.title }}</h5>
 										</div>
 										<span
@@ -2078,8 +2142,17 @@ function writeStoredValue(key: string, value: string) {
 									</header>
 
 									<LazyMarkdownContent
-										v-if="item.content"
+										v-if="
+											lessonView === 'learn' &&
+											item.content
+										"
 										:content="item.content"
+									/>
+									<CourseAssignmentContent
+										v-else-if="item.content"
+										:sections="
+											lessonContentSections(item.content)
+										"
 									/>
 
 									<div
@@ -2279,278 +2352,23 @@ function writeStoredValue(key: string, value: string) {
 								</article>
 							</li>
 						</ol>
-					</section>
-
-					<section
-						v-if="activeModule.supplementalProjects.length > 0"
-						class="reader-section"
-					>
-						<div class="section-header">
-							<div>
-								<p class="section-eyebrow">
-									{{ activeSupplementalSectionLabel }}
-								</p>
-								<h4>{{ activeSupplementalHeading }}</h4>
-							</div>
-						</div>
-
-						<ol class="lesson-list">
-							<li
-								v-for="(
-									item, index
-								) in activeModule.supplementalProjects"
-								:id="itemAnchorId(activeModule.id, item.id)"
-								:key="item.id"
-								class="lesson-item"
-							>
-								<article
-									class="lesson-card is-supplemental"
-									:class="`is-${itemLearningPath(item, 'choice')}`"
-								>
-									<header class="lesson-header">
-										<span
-											class="lesson-index is-supplemental"
-										>
-											{{ index + 1 }}
-										</span>
-										<div class="lesson-title-group">
-											<p class="lesson-kicker">
-												Practice
-											</p>
-											<h5>{{ item.title }}</h5>
-										</div>
-										<span
-											v-if="
-												hasProgressTracking &&
-												isCoreModule(activeModule) &&
-												isItemComplete(item)
-											"
-											class="item-complete-badge"
-										>
-											Done
-										</span>
-										<label
-											v-if="canEditActiveModuleProgress"
-											class="progress-toggle is-item"
-										>
-											<input
-												:checked="isItemComplete(item)"
-												type="checkbox"
-												@change="
-													toggleItemProgress(
-														item,
-														(
-															$event.target as HTMLInputElement
-														).checked
-													)
-												"
-											/>
-											<span>Done</span>
-										</label>
-									</header>
-
-									<LazyMarkdownContent
-										v-if="item.content"
-										:content="item.content"
-									/>
-
-									<div
-										v-if="
-											resourceLinks(item).length > 0 ||
-											item.playableSolutionEmbedUrl
-										"
-										class="resource-list"
-									>
-										<template
-											v-for="resource in resourceLinks(
-												item
-											)"
-											:key="`${item.id}-${resource.kind}`"
-										>
-											<a
-												class="resource-link"
-												:class="[`is-${resource.kind}`]"
-												:href="
-													resourceOpenUrl(resource)
-												"
-												rel="noopener noreferrer"
-												target="_blank"
-											>
-												<span
-													class="resource-link-label"
-												>
-													{{ resource.label }}
-													<span class="sr-only">
-														(opens in a new tab)
-													</span>
-												</span>
-												<small
-													class="resource-link-host"
-												>
-													{{ resource.host }}
-												</small>
-											</a>
-											<a
-												v-if="
-													ideStarterHref(
-														item,
-														resource
-													)
-												"
-												class="resource-link is-ide-starter site-button--primary"
-												:href="
-													ideStarterHref(
-														item,
-														resource
-													)
-												"
-											>
-												<span
-													class="resource-link-label"
-												>
-													{{
-														resource.kind ===
-														"solution"
-															? "Open reference in IDE"
-															: "Start in IDE"
-													}}
-												</span>
-												<small
-													class="resource-link-host"
-												>
-													Browser workspace
-												</small>
-											</a>
-										</template>
-										<button
-											v-if="item.playableSolutionEmbedUrl"
-											aria-controls="scratch-solution-dialog"
-											aria-haspopup="dialog"
-											class="resource-link is-playable-solution"
-											type="button"
-											@click="
-												openPlayableSolution(
-													item,
-													$event
-												)
-											"
-										>
-											<span class="resource-link-label">
-												Play solution
-											</span>
-											<small class="resource-link-host">
-												Opens the Scratch player here
-											</small>
-										</button>
-									</div>
-
-									<CourseAssetPreview
-										v-if="
-											courseAssetPreviewResources(item)
-												.length > 0
-										"
-										:resources="
-											courseAssetPreviewResources(item)
-										"
-									/>
-
-									<CodePreview
-										v-if="
-											codePreviewResources(item).length >
-											0
-										"
-										:resources="codePreviewResources(item)"
-									/>
-
-									<div
-										v-if="
-											item.mediaLink &&
-											isEmbeddedMedia(item.mediaLink) &&
-											!isItemStaticMediaUnavailable(item)
-										"
-										class="item-media"
-									>
-										<video
-											v-if="isVideo(item.mediaLink)"
-											class="item-media-video"
-											:autoplay="!prefersReducedMotion"
-											:controls="prefersReducedMotion"
-											:loop="!prefersReducedMotion"
-											muted
-											playsinline
-											:preload="
-												prefersReducedMotion
-													? 'metadata'
-													: 'auto'
-											"
-											:aria-label="`Demo video for ${item.title}`"
-											@error="
-												markStaticMediaUnavailable(
-													item.mediaLink
-												)
-											"
-										>
-											<source
-												:src="item.mediaLink"
-												@error="
-													markStaticMediaUnavailable(
-														item.mediaLink
-													)
-												"
-											/>
-										</video>
-										<img
-											v-else-if="isImage(item.mediaLink)"
-											:src="item.mediaLink"
-											:alt="`Project demo media for ${item.title}`"
-											class="item-media-image"
-											loading="lazy"
-											@error="
-												markStaticMediaUnavailable(
-													item.mediaLink
-												)
-											"
-										/>
-									</div>
-									<div
-										v-else-if="
-											item.mediaLink &&
-											isEmbeddedMedia(item.mediaLink) &&
-											isItemStaticMediaUnavailable(item)
-										"
-										class="item-media item-media-placeholder"
-										role="note"
-									>
-										<p class="item-media-placeholder-label">
-											Static asset pending
-										</p>
-										<p>
-											Pending static asset:
-											<strong>
-												{{
-													staticAssetName(
-														item.mediaLink
-													)
-												}}</strong
-											>.
-										</p>
-										<p>Static media URL:</p>
-										<a
-											:href="item.mediaLink"
-											rel="noopener noreferrer"
-											target="_blank"
-										>
-											{{ item.mediaLink }}
-										</a>
-										<p>
-											This preview will show the image or
-											video here once the static media
-											file is added.
-										</p>
-									</div>
-								</article>
-							</li>
-						</ol>
+						<p
+							v-if="
+								!activeLessonItems.length &&
+								(lessonView !== 'learn' ||
+									(!learningTopics.length &&
+										!activeModule.keyBlocks?.length))
+							"
+							class="lesson-view-empty"
+						>
+							{{
+								lessonView === "supplemental"
+									? "No supplemental projects for this lesson."
+									: lessonView === "learn"
+										? "No separate learning material for this lesson."
+										: "No projects in this section. Check Learn for reference material."
+							}}
+						</p>
 					</section>
 				</div>
 
@@ -3004,7 +2822,7 @@ function writeStoredValue(key: string, value: string) {
 .outline-section-label {
 	margin: 0;
 	padding: 0 0.25rem;
-	color: var(--course-muted);
+	color: var(--color-ink-muted);
 	font-size: 0.72rem;
 	font-weight: 800;
 	letter-spacing: 0.14em;
@@ -3208,40 +3026,6 @@ function writeStoredValue(key: string, value: string) {
 	max-width: 100%;
 }
 
-.module-guide {
-	display: grid;
-	grid-template-columns: minmax(10rem, 0.7fr) minmax(0, 1.3fr);
-	gap: 0.75rem;
-	margin: 0.25rem 0 0;
-	padding: 0.9rem 1rem;
-	border: 1px solid rgba(15, 118, 110, 0.12);
-	border-radius: 16px;
-	background: rgba(240, 253, 250, 0.65);
-}
-
-.module-guide > div {
-	display: flex;
-	flex-direction: column;
-	gap: 0.35rem;
-	min-width: 0;
-}
-
-.module-guide dt {
-	color: var(--course-muted);
-	font-size: 0.72rem;
-	font-weight: 800;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-}
-
-.module-guide dd {
-	margin: 0;
-	color: var(--course-text);
-	font-size: 0.9rem;
-	font-weight: 700;
-	line-height: 1.45;
-}
-
 .key-block-list {
 	display: flex;
 	flex-wrap: wrap;
@@ -3251,8 +3035,8 @@ function writeStoredValue(key: string, value: string) {
 .key-block-list span {
 	padding: 0.2rem 0.45rem;
 	border-radius: 999px;
-	background: rgba(15, 118, 110, 0.1);
-	color: var(--course-accent);
+	background: var(--color-surface-muted);
+	color: var(--color-ink);
 	font-size: 0.8rem;
 }
 
@@ -3306,7 +3090,7 @@ button.resource-link {
 	margin: 0;
 	display: flex;
 	flex-direction: column;
-	gap: 0;
+	gap: 1.25rem;
 	width: 100%;
 	inline-size: 100%;
 	min-width: 0;
@@ -3314,7 +3098,6 @@ button.resource-link {
 	max-width: 100%;
 	max-inline-size: 100%;
 	box-sizing: border-box;
-	border-top: 1px solid rgba(148, 163, 184, 0.16);
 }
 
 .lesson-item {
@@ -3329,10 +3112,6 @@ button.resource-link {
 	overflow-inline: hidden;
 }
 
-.lesson-item + .lesson-item {
-	border-top: 1px solid rgba(148, 163, 184, 0.16);
-}
-
 .lesson-card {
 	display: flex;
 	flex-direction: column;
@@ -3344,10 +3123,10 @@ button.resource-link {
 	max-width: 100%;
 	max-inline-size: 100%;
 	box-sizing: border-box;
-	padding: clamp(1.2rem, 2.6vw, 1.5rem) 0;
-	border: none;
-	border-radius: 0;
-	background: transparent;
+	padding: clamp(1rem, 2.6vw, 1.5rem);
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	background: var(--color-surface);
 	box-shadow: none;
 }
 
@@ -3356,23 +3135,6 @@ button.resource-link {
 	min-inline-size: 0;
 	max-width: 100%;
 	max-inline-size: 100%;
-}
-
-.lesson-card.is-supplemental {
-	padding-left: clamp(1rem, 2.2vw, 1.35rem);
-	border-left: 3px solid rgba(245, 158, 11, 0.22);
-}
-
-.lesson-card.is-choice .lesson-kicker {
-	color: #b45309;
-}
-
-.lesson-card.is-challenge {
-	border-left-color: rgba(124, 58, 237, 0.3);
-}
-
-.lesson-card.is-challenge .lesson-kicker {
-	color: #6d28d9;
 }
 
 .lesson-header {
@@ -3781,10 +3543,6 @@ button.resource-link {
 		overflow: visible;
 	}
 
-	.module-guide {
-		grid-template-columns: 1fr;
-	}
-
 	.search-shell,
 	.lesson-header,
 	.section-header,
@@ -3815,10 +3573,6 @@ button.resource-link {
 	.reader-empty {
 		padding-left: 1rem;
 		padding-right: 1rem;
-	}
-
-	.lesson-card.is-supplemental {
-		padding-left: 0.85rem;
 	}
 }
 
@@ -3961,23 +3715,6 @@ button.resource-link {
 .reader-header h3 {
 	font-size: clamp(1.25rem, 2vw, 1.6rem);
 }
-.reader-tools {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: start;
-	gap: 0.25rem 1rem;
-	max-width: 100%;
-}
-.module-guide-disclosure summary {
-	min-height: 2.75rem;
-	align-content: center;
-	cursor: pointer;
-	color: var(--course-text-soft);
-	font-size: 0.85rem;
-}
-.module-guide {
-	margin-top: 0.5rem;
-}
 .progress-toggle.is-module {
 	margin-top: 0.35rem;
 	font-size: 0.85rem;
@@ -3998,9 +3735,61 @@ button.resource-link {
 	font-size: 1.2rem;
 }
 .lesson-card {
-	padding: 1rem;
-	border-radius: 8px;
+	padding: clamp(1rem, 2.2vw, 1.5rem);
+	border-radius: 10px;
 	box-shadow: none;
+}
+.lesson-view-toggle {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+.lesson-view-toggle button {
+	padding: 0.55rem 0.85rem;
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	background: transparent;
+	color: var(--color-ink-soft);
+	font: 500 0.95rem var(--font-sans);
+	cursor: pointer;
+}
+.lesson-view-toggle button[aria-pressed="true"] {
+	background: var(--color-accent-soft);
+	border-color: var(--color-accent);
+	color: var(--color-ink);
+}
+.lesson-view-toggle button:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 3px;
+}
+.learning-overview {
+	display: grid;
+	gap: 1rem;
+}
+.learning-card {
+	padding: 1.25rem;
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	background: var(--color-surface);
+	min-width: 0;
+}
+.learning-card h5 {
+	margin: 0 0 1rem;
+	font-size: 1.2rem;
+	color: var(--color-ink);
+}
+.learning-card h6,
+.key-blocks h4 {
+	margin: 0 0 0.6rem;
+	font: 600 0.95rem var(--font-sans);
+	color: var(--color-ink-soft);
+}
+.learning-card section + section {
+	margin-top: 1rem;
+}
+.lesson-view-empty {
+	margin: 0;
+	color: var(--color-ink-soft);
 }
 .lesson-header {
 	gap: 0.65rem;

@@ -1,493 +1,292 @@
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import { useAppStore } from "@/stores/app";
+import { coursePathwayMaps } from "@/modules/coursePathwayMaps";
 import { courseCatalog } from "@/stores/courses/index";
 import { coursePublicPathways } from "@/stores/courses/public-pathways";
 
 defineOptions({ name: "PathwaysPage" });
-
-const app = useAppStore();
-const { isAdmin } = storeToRefs(app);
+const search = ref("");
+const category = ref("all");
+const categories = [
+	{ id: "all", label: "All" },
+	{ id: "coding", label: "Coding" },
+	{ id: "math", label: "Math" },
+	{ id: "science", label: "Science" },
+	{ id: "language", label: "Reading and writing" },
+	{ id: "life", label: "Life skills" }
+];
 const courseNameById = new Map(
 	courseCatalog.map(course => [course.id, course.name])
 );
-const search = ref("");
-const priorityRank = {
-	urgent: 0,
-	soon: 1,
-	later: 2
-};
-
-const sortedPathways = computed(() =>
-	[...coursePublicPathways]
-		.filter(pathway =>
-			`${pathway.title} ${pathway.audience} ${pathway.prerequisiteSummary} ${pathway.courseIds.map(courseName).join(" ")}`
-				.toLowerCase()
-				.includes(search.value.trim().toLowerCase())
-		)
-		.sort(
-			(a, b) =>
-				(isAdmin.value
-					? priorityRank[a.adminPriority] -
-						priorityRank[b.adminPriority]
-					: 0) || a.title.localeCompare(b.title)
-		)
+const sourceById = new Map(
+	coursePublicPathways.map(pathway => [pathway.id, pathway])
 );
-const coveredCourseCount = computed(() =>
-	coursePublicPathways.reduce(
-		(total, pathway) => total + pathway.courseIds.length,
-		0
-	)
+const visiblePathways = computed(() =>
+	coursePathwayMaps.filter(pathway => {
+		if (category.value !== "all" && pathway.category !== category.value)
+			return false;
+		const source = sourceById.get(pathway.id);
+		return [
+			pathway.title,
+			pathway.summary,
+			pathway.readiness,
+			source?.audience,
+			source?.prerequisiteSummary,
+			...pathway.stages.flatMap(stage => stage.courseIds.map(courseName))
+		]
+			.join(" ")
+			.toLowerCase()
+			.includes(search.value.trim().toLowerCase());
+	})
 );
-
 function courseName(courseId: string) {
 	return courseNameById.get(courseId) ?? courseId;
-}
-
-function priorityLabel(priority: string) {
-	if (priority === "urgent") return "Build next";
-	if (priority === "soon") return "Strengthen soon";
-	return "Maintain";
 }
 </script>
 
 <template>
 	<section class="page-shell page-shell--wide pathways-page">
-		<header class="pathways-hero">
-			<div class="pathways-hero__copy">
-				<h1 class="page-title">Course Pathways</h1>
-			</div>
-			<p class="pathways-coverage">
-				{{ coursePublicPathways.length }} pathways ·
-				{{ coveredCourseCount }} courses
-			</p>
+		<header class="pathways-heading">
+			<h1 class="page-title">Course Pathways</h1>
+			<p>Find a starting point. Follow a path or choose a focus.</p>
 		</header>
-
-		<label class="pathway-search"
-			>Search course families<input
-				v-model="search"
-				type="search"
-				placeholder="Python, Scratch, math…"
-		/></label>
-		<details class="pathway-navigation">
-			<summary>Course families</summary>
-			<nav class="pathway-index" aria-label="Course family index">
-				<a
-					v-for="pathway in sortedPathways"
-					:key="pathway.id"
-					:href="`#pathway-${pathway.id}`"
-					>{{ pathway.title }}</a
+		<div class="pathway-tools">
+			<div
+				class="pathway-filters"
+				role="group"
+				aria-label="Filter pathways by subject"
+			>
+				<button
+					v-for="subject in categories"
+					:key="subject.id"
+					type="button"
+					:aria-pressed="category === subject.id"
+					@click="category = subject.id"
 				>
-			</nav>
-		</details>
-		<p v-if="!sortedPathways.length" role="status">
-			No matching pathways. Try a subject or course name.
+					{{ subject.label }}
+				</button>
+			</div>
+			<label class="pathway-search">
+				<span class="sr-only">Search pathways</span>
+				<input
+					v-model="search"
+					type="search"
+					placeholder="Find a subject or course"
+				/>
+			</label>
+		</div>
+		<p class="sr-only" role="status">
+			{{ visiblePathways.length }} matching pathways
+		</p>
+		<p v-if="!visiblePathways.length">
+			No matching pathways. Try another subject or search.
 		</p>
 		<div class="pathways-grid">
 			<article
-				v-for="pathway in sortedPathways"
+				v-for="pathway in visiblePathways"
 				:id="`pathway-${pathway.id}`"
 				:key="pathway.id"
-				class="site-surface site-surface--soft pathway-card"
+				class="pathway-card"
+				:class="{ 'pathway-card--wide': pathway.id === 'algebra' }"
 			>
-				<div class="pathway-card__header">
-					<div>
-						<p class="pathway-card__eyebrow">
-							{{
-								isAdmin
-									? priorityLabel(pathway.adminPriority)
-									: "Course pathway"
-							}}
-						</p>
-						<h2>{{ pathway.title }}</h2>
-					</div>
-					<span
-						v-if="isAdmin"
-						class="pathway-card__priority"
-						:class="`pathway-card__priority--${pathway.adminPriority}`"
+				<header>
+					<h2>{{ pathway.title }}</h2>
+					<p class="pathway-summary">{{ pathway.summary }}</p>
+				</header>
+				<p class="pathway-map-label">
+					{{
+						pathway.kind === "sequence"
+							? "Suggested progression"
+							: "Choose a focus"
+					}}
+				</p>
+				<ol
+					class="pathway-flow"
+					:class="{
+						'pathway-flow--sequence': pathway.kind === 'sequence'
+					}"
+					:aria-label="`${pathway.title}: ${pathway.kind === 'sequence' ? 'suggested progression' : 'course choices'}`"
+				>
+					<li
+						v-for="(stage, index) in pathway.stages"
+						:key="stage.title"
+						class="pathway-stage"
 					>
-						{{ pathway.adminPriority }}
-					</span>
-				</div>
-
-				<p class="pathway-card__audience">
-					{{ pathway.audience }}
-				</p>
-
-				<p class="pathway-readiness">
-					<strong>Readiness:</strong>
-					{{ pathway.prerequisiteSummary }}
-				</p>
-				<details>
-					<summary>
-						Courses, outcomes and project expectations
-					</summary>
-					<section>
-						<h3>Courses Covered</h3>
-						<ul class="course-chip-list">
+						<h3>
+							<span
+								v-if="pathway.kind === 'sequence'"
+								class="stage-number"
+								aria-hidden="true"
+								>{{ index + 1 }}</span
+							>{{ stage.title }}
+						</h3>
+						<ul>
 							<li
-								v-for="courseId in pathway.courseIds"
+								v-for="courseId in stage.courseIds"
 								:key="courseId"
 							>
-								{{ courseName(courseId) }}
+								<RouterLink :to="`/courses#${courseId}`">{{
+									courseName(courseId)
+								}}</RouterLink>
 							</li>
 						</ul>
-					</section>
-
-					<section>
-						<h3>Prerequisite Summary</h3>
-						<p>{{ pathway.prerequisiteSummary }}</p>
-					</section>
-
-					<div class="pathway-card__columns">
-						<section>
-							<h3>Outcomes</h3>
-							<ul>
-								<li
-									v-for="outcome in pathway.outcomes"
-									:key="outcome"
-								>
-									{{ outcome }}
-								</li>
-							</ul>
-						</section>
-
-						<section>
-							<h3>Project Expectations</h3>
-							<ul>
-								<li
-									v-for="project in pathway.projectExpectations"
-									:key="project"
-								>
-									{{ project }}
-								</li>
-							</ul>
-						</section>
-					</div>
-
-					<details>
-						<summary>
-							{{
-								isAdmin
-									? "Assessment, tooling, safety, and next work"
-									: "Assessment, tooling, and safety"
-							}}
-						</summary>
-						<div class="pathway-card__details">
-							<section>
-								<h3>Sequencing Notes</h3>
-								<ul>
-									<li
-										v-for="note in pathway.sequencingNotes"
-										:key="note"
-									>
-										{{ note }}
-									</li>
-								</ul>
-							</section>
-
-							<section>
-								<h3>Assessment Style</h3>
-								<ul>
-									<li
-										v-for="assessment in pathway.assessmentStyle"
-										:key="assessment"
-									>
-										{{ assessment }}
-									</li>
-								</ul>
-							</section>
-
-							<section>
-								<h3>Sources and Tooling</h3>
-								<ul>
-									<li
-										v-for="source in pathway.sourceAndTooling"
-										:key="source"
-									>
-										{{ source }}
-									</li>
-								</ul>
-							</section>
-
-							<section>
-								<h3>Safety and Access</h3>
-								<ul>
-									<li
-										v-for="boundary in pathway.safetyAndAccess"
-										:key="boundary"
-									>
-										{{ boundary }}
-									</li>
-								</ul>
-							</section>
-
-							<section v-if="isAdmin">
-								<h3>Expansion Backlog</h3>
-								<ul>
-									<li
-										v-for="item in pathway.adminExpansionBacklog"
-										:key="item"
-									>
-										{{ item }}
-									</li>
-								</ul>
-							</section>
-						</div>
-					</details>
-				</details>
+					</li>
+				</ol>
+				<p class="pathway-readiness">{{ pathway.readiness }}</p>
 			</article>
 		</div>
 	</section>
 </template>
 
 <style scoped>
+.pathways-heading p {
+	margin-top: 0.5rem;
+	color: var(--color-ink-soft);
+}
+.pathway-tools {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem 1.5rem;
+}
+.pathway-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+}
+.pathway-filters button {
+	padding: 0.4rem 0.7rem;
+	border: 1px solid transparent;
+	border-radius: 6px;
+	background: transparent;
+	color: var(--color-ink-soft);
+	font-weight: 500;
+}
+.pathway-filters button[aria-pressed="true"] {
+	background: var(--color-accent-soft);
+	border-color: var(--color-border-strong);
+	color: var(--color-accent-strong);
+}
 .pathway-search {
-	display: grid;
-	gap: 0.4rem;
-	font: inherit;
-	text-transform: none;
-	letter-spacing: normal;
-}
-.pathway-search input {
-	padding: 0.75rem;
-	border: 1px solid var(--color-border);
-	background: var(--color-surface);
-	color: var(--color-ink);
-	border-radius: 0.6rem;
-}
-.pathway-index {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem 1rem;
-}
-.pathway-card {
-	scroll-margin-top: 1rem;
-}
-.pathway-card details > section {
-	margin-top: 1rem;
-}
-
-.pathways-page {
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
-}
-
-.pathways-hero {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: end;
-	justify-content: space-between;
-	gap: 1.5rem 2rem;
-	padding: clamp(1.6rem, 3vw, 2.35rem);
-}
-
-.pathways-hero__copy {
-	flex: 1 1 48rem;
-	display: grid;
-	gap: 0.85rem;
-}
-
-.pathways-stats {
-	flex: 0 0 auto;
-	display: grid;
-	grid-template-columns: repeat(2, minmax(8rem, 1fr));
-	border: 1px solid var(--color-border);
-	border-radius: var(--radius-md);
-	overflow: hidden;
-	background: rgba(255, 255, 255, 0.56);
-}
-
-.pathways-stats div {
-	display: grid;
-	gap: 0.25rem;
-	padding: 1.1rem 1.25rem;
-	border-left: 1px solid var(--color-border);
-}
-
-.pathways-stats div:first-child {
-	border-left: 0;
-}
-
-.pathways-stats strong {
-	font-family: var(--font-display);
-	font-size: clamp(1.9rem, 3vw, 2.4rem);
-	line-height: 1;
-	color: var(--color-ink);
-}
-
-.pathways-stats span,
-.pathway-card__eyebrow {
-	font-size: 0.78rem;
-	font-weight: 800;
-	text-transform: uppercase;
-	letter-spacing: 0.12em;
-	color: var(--color-accent);
-}
-
-.pathways-grid {
-	display: grid;
-	gap: 1rem;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 34rem), 1fr));
-}
-
-.pathway-card {
-	display: grid;
-	align-content: start;
-	gap: 1.15rem;
-	padding: clamp(1.35rem, 2.2vw, 1.8rem);
-}
-
-.pathway-card__header {
-	display: flex;
-	align-items: start;
-	justify-content: space-between;
-	gap: 1rem;
-}
-
-.pathway-card h2,
-.pathway-card h3,
-.pathway-card p,
-.pathway-card ul {
+	flex: 0 1 18rem;
 	margin: 0;
 }
-
-.pathway-card h2 {
-	font-size: clamp(1.55rem, 2.3vw, 2.05rem);
-}
-
-.pathway-card h3 {
-	font-size: 0.95rem;
-	font-weight: 800;
-	text-transform: uppercase;
-	letter-spacing: 0.08em;
-	color: var(--color-ink);
-}
-
-.pathway-card p,
-.pathway-card li {
-	line-height: 1.65;
-	color: var(--color-ink-soft);
-}
-
-.pathway-card ul {
-	display: grid;
-	gap: 0.45rem;
-	padding-left: 1.1rem;
-}
-
-.pathway-card__audience {
-	font-size: 1.02rem;
-}
-
-.pathway-card__priority {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	flex: 0 0 auto;
-	padding: 0.4rem 0.65rem;
-	border-radius: var(--radius-pill);
-	font-size: 0.72rem;
-	font-weight: 800;
-	text-transform: uppercase;
-	letter-spacing: 0.08em;
-}
-
-.pathway-card__priority--urgent {
-	color: #7c2d12;
-	background: rgba(251, 146, 60, 0.18);
-}
-
-.pathway-card__priority--soon {
-	color: var(--color-accent);
-	background: rgba(31, 92, 145, 0.11);
-}
-
-.pathway-card__priority--later {
-	color: #365314;
-	background: rgba(132, 204, 22, 0.15);
-}
-
-.course-chip-list {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.45rem;
-	padding-left: 0;
-	list-style: none;
-}
-
-.course-chip-list li {
-	padding: 0.45rem 0.6rem;
+.pathway-search input {
+	width: 100%;
+	padding: 0.55rem 0.75rem;
 	border: 1px solid var(--color-border);
-	border-radius: var(--radius-pill);
-	background: rgba(255, 255, 255, 0.66);
-	font-size: 0.9rem;
-	font-weight: 700;
+	border-radius: 6px;
+	background: var(--color-surface);
 	color: var(--color-ink);
+	font: 400 0.95rem var(--font-sans);
 }
-
-.pathway-card__columns,
-.pathway-card__details {
+.pathways-grid {
 	display: grid;
-	gap: 1rem;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-}
-
-.pathway-card section {
-	display: grid;
-	gap: 0.55rem;
-}
-
-.pathway-card details {
-	border-top: 1px solid var(--color-border);
-	padding-top: 1rem;
-}
-
-.pathway-card summary {
-	cursor: pointer;
-	font-weight: 800;
-	color: var(--color-ink);
-}
-
-.pathway-card__details {
-	margin-top: 1rem;
-}
-
-@media (max-width: 760px) {
-	.pathways-stats {
-		width: 100%;
-	}
-
-	.pathway-card__header {
-		flex-direction: column;
-	}
-}
-
-.pathways-hero {
-	padding: 0;
-	align-items: center;
-	gap: 0.5rem 1rem;
-}
-.pathways-hero__copy {
-	gap: 0;
-}
-.pathways-coverage {
-	font-size: 0.85rem;
-	color: var(--color-ink-soft);
-}
-.pathway-navigation > summary {
-	min-height: 2.75rem;
-	align-content: center;
-	cursor: pointer;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-items: start;
+	gap: 1.5rem;
 }
 .pathway-card {
-	padding: 0.85rem 1rem;
-	gap: 0.65rem;
-	border-radius: 8px;
+	min-width: 0;
+	padding: 1.4rem;
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	background: var(--color-surface);
+}
+.pathway-card--wide {
+	grid-column: 1 / -1;
 }
 .pathway-card h2 {
-	font-size: 1.2rem;
+	font: 600 1.3rem var(--font-sans);
+	margin-bottom: 0.5rem;
+}
+.pathway-summary {
+	color: var(--color-ink-soft);
+	line-height: 1.55;
+	font-size: 0.95rem;
+}
+.pathway-map-label {
+	margin: 1.25rem 0 0.75rem;
+	font-size: 0.85rem;
+	color: var(--color-ink-muted);
+}
+.pathway-flow {
+	display: flex;
+	gap: 1.25rem;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.pathway-stage {
+	position: relative;
+	flex: 1;
+	min-width: 0;
+	padding: 0.8rem;
+	border-radius: 6px;
+	background: var(--color-accent-soft);
+}
+.pathway-flow--sequence > li + li::before {
+	content: "→";
+	position: absolute;
+	left: -1.15rem;
+	top: 0.8rem;
+	color: var(--color-accent);
+}
+.pathway-stage h3 {
+	display: flex;
+	align-items: baseline;
+	gap: 0.4rem;
+	font: 600 0.95rem/1.4 var(--font-sans);
+	margin: 0 0 0.7rem;
+}
+.stage-number {
+	color: var(--color-accent-strong);
+}
+.pathway-stage ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	gap: 0.6rem;
+}
+.pathway-stage a {
+	display: inline-block;
+	color: var(--color-link);
+	font-size: 0.9rem;
+	font-weight: 500;
+	line-height: 1.5;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	overflow-wrap: anywhere;
+}
+.pathway-readiness {
+	border-top: 1px solid var(--color-border);
+	padding-top: 0.85rem;
+	margin: 1rem 0 0;
+	color: var(--color-ink-soft);
+	font-size: 0.9rem;
+	line-height: 1.6;
+}
+@media (max-width: 1150px) {
+	.pathways-grid {
+		grid-template-columns: 1fr;
+	}
+}
+@media (max-width: 700px) {
+	.pathway-card {
+		padding: 1rem;
+	}
+	.pathway-flow {
+		flex-direction: column;
+	}
+	.pathway-flow--sequence > li + li::before {
+		content: "↓";
+		left: 1rem;
+		top: -1.25rem;
+	}
+	.pathway-search {
+		flex-basis: 100%;
+	}
 }
 </style>

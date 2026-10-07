@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { siteLabels } from "@/modules/siteNavigation";
-
 defineProps<{ compact?: boolean }>();
 </script>
 
@@ -11,11 +9,10 @@ defineProps<{ compact?: boolean }>();
 			class="site-shell site-shell--wide site-footer__inner"
 		>
 			<section class="site-footer__brand">
-				<p class="site-footer__eyebrow">Private Online Tutoring</p>
 				<h2>Classes with Jacob</h2>
 				<p class="site-footer__summary">
-					One-on-one support for active coursework, projects, and
-					structured course paths.
+					Private online tutoring, one-on-one, for coursework,
+					projects and course paths.
 				</p>
 			</section>
 
@@ -24,7 +21,9 @@ defineProps<{ compact?: boolean }>();
 				<ul>
 					<li>
 						<a href="mailto:classes@jacobdanderson.net">
-							Email Jacob
+							Contact<span class="sr-only">
+								(opens your email app)</span
+							>
 						</a>
 					</li>
 					<li>
@@ -51,37 +50,17 @@ defineProps<{ compact?: boolean }>();
 					</li>
 				</ul>
 			</section>
-
-			<section class="site-footer__group">
-				<h3>Use the Site</h3>
-				<ul>
-					<li>
-						<RouterLink to="/signup"> Book a Class </RouterLink>
-					</li>
-					<li>
-						<RouterLink to="/payment">View Tuition</RouterLink>
-					</li>
-					<li>
-						<RouterLink to="/graph-sketcher">{{
-							siteLabels.graphing
-						}}</RouterLink>
-					</li>
-					<li>
-						<RouterLink to="/about">About Jacob</RouterLink>
-					</li>
-					<li>
-						<RouterLink to="/privacy">Privacy</RouterLink>
-					</li>
-				</ul>
-			</section>
 		</div>
 
 		<div class="site-shell site-shell--wide site-footer__bottom">
 			<p>© {{ new Date().getFullYear() }} Jacob Anderson.</p>
-			<div v-if="compact" class="site-action-row">
-				<a href="mailto:classes@jacobdanderson.net">Help</a
-				><RouterLink to="/privacy">Privacy</RouterLink
-				><RouterLink to="/payment">Tuition</RouterLink>
+			<div class="site-action-row">
+				<a v-if="compact" href="mailto:classes@jacobdanderson.net"
+					>Contact<span class="sr-only">
+						(opens your email app)</span
+					></a
+				>
+				<RouterLink to="/privacy">Privacy</RouterLink>
 			</div>
 			<button
 				class="site-footer__theme-toggle"
@@ -108,7 +87,7 @@ defineProps<{ compact?: boolean }>();
 	padding: 0.5rem;
 	border: 0;
 }
-.site-footer--compact a {
+.site-footer__bottom a {
 	color: #9ec3f4;
 }
 .site-footer {
@@ -120,18 +99,9 @@ defineProps<{ compact?: boolean }>();
 
 .site-footer__inner {
 	display: grid;
-	grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 0.9fr));
+	grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.9fr);
 	gap: 2rem 2.5rem;
 	align-items: start;
-}
-
-.site-footer__eyebrow {
-	margin: 0 0 0.75rem;
-	font-size: 0.78rem;
-	font-weight: 700;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: #9ec3f4;
 }
 
 .site-footer__brand,

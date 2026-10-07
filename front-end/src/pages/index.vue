@@ -1,13 +1,11 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { serializeJsonLd } from "@/modules/serializeJsonLd";
-import { useAppStore } from "@/stores/app";
 import { useContentStore } from "@/stores/content";
 
 defineOptions({ name: "HomePage" });
 
 const content = useContentStore();
-const app = useAppStore();
 const siteUrl = "https://classes.jacobdanderson.net";
 const { subjectGroups } = storeToRefs(content);
 const courseStructuredData = computed(() =>
@@ -48,45 +46,11 @@ useHead(
 	<section class="page-shell page-shell--wide home-page">
 		<section aria-labelledby="hero-title" class="page-hero home-hero">
 			<div class="hero-text">
-				<p class="page-eyebrow">
-					Best for active coursework and projects
-				</p>
 				<h1 id="hero-title" class="page-title">Private Tutoring</h1>
 				<p class="page-copy">
-					Former Juni Learning instructor Jacob Anderson works best
-					with students who already have an assignment, bug, lab, or
-					course pathway in front of them. Sessions stay anchored to
-					the actual work blocking progress.
+					Learn with Jacob Anderson, one-on-one. Bring your coursework
+					or project, or find a course to explore.
 				</p>
-				<ul class="hero-proof">
-					<li class="site-chip">Hundreds of students taught</li>
-					<li class="site-chip">Assignment and project help</li>
-					<li class="site-chip">Short written follow-up notes</li>
-				</ul>
-				<div
-					aria-label="Primary actions"
-					class="site-action-row home-actions"
-				>
-					<RouterLink
-						v-if="app.isLoggedIn"
-						class="site-button site-button--primary"
-						to="/courses"
-						>Continue your course</RouterLink
-					>
-					<RouterLink
-						v-else
-						class="site-button site-button--primary"
-						to="/signup"
-					>
-						Book a Class
-					</RouterLink>
-					<RouterLink
-						class="site-button site-button--secondary"
-						to="/payment"
-					>
-						Tuition
-					</RouterLink>
-				</div>
 			</div>
 			<figure class="media-frame home-hero__media">
 				<img
@@ -105,60 +69,16 @@ useHead(
 			<div class="section-heading">
 				<h2 id="subjects-title" class="section-title">What I Teach</h2>
 				<p class="section-intro">
-					Most students come for coding and technical coursework, from
-					first projects through AP CS, algorithms, systems, web,
-					apps, data, and security. Math, science, and Spanish support
-					are also available when there is a clear course goal or
-					assignment.
+					Coding, math, science and Spanish, from first steps to
+					advanced coursework.
 				</p>
 			</div>
-			<div class="subject-grid">
-				<article
-					v-for="group in subjectGroups"
-					:key="group.title"
-					class="site-surface site-surface--soft subject-card"
-				>
-					<details>
-						<summary>{{ group.title }}</summary>
-						<ul>
-							<li
-								v-for="subject in group.subjects"
-								:key="subject"
-							>
-								{{ subject }}
-							</li>
-						</ul>
-					</details>
-				</article>
-			</div>
-			<RouterLink to="/pathways">Help choosing a course</RouterLink>
-		</section>
-
-		<section aria-labelledby="next-steps-title" class="home-section">
-			<div class="site-surface next-steps-card">
-				<h2 id="next-steps-title" class="section-title">
-					Book a Class
-				</h2>
-				<p class="section-intro">
-					Use the scheduler for one-time or recurring classes. Add a
-					short note about the assignment, project, or skill gap so
-					the session starts in the right place.
-				</p>
-				<div class="site-action-row">
-					<RouterLink
-						class="site-button site-button--primary"
-						to="/signup"
-					>
-						Open Scheduler
-					</RouterLink>
-					<a
-						class="site-button site-button--secondary"
-						href="mailto:classes@jacobdanderson.net"
-					>
-						Ask a Question
-					</a>
-				</div>
-			</div>
+			<RouterLink
+				class="site-button site-button--secondary pathway-action"
+				to="/pathways"
+			>
+				Course Pathways
+			</RouterLink>
 		</section>
 	</section>
 </template>
@@ -177,19 +97,6 @@ useHead(
 	display: grid;
 	gap: 1.25rem;
 	max-width: 38rem;
-}
-
-.hero-proof {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.7rem;
-}
-
-.home-actions {
-	justify-content: flex-start;
 }
 
 .home-hero__media {
@@ -213,46 +120,8 @@ useHead(
 	max-width: 44rem;
 }
 
-.subject-grid,
-.highlight-grid {
-	display: grid;
-	gap: 1rem 1.2rem;
-	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.subject-card,
-.highlight-card {
-	padding: 1.35rem 1.4rem;
-	display: grid;
-	gap: 0.75rem;
-	align-content: start;
-}
-
-.subject-card summary,
-.highlight-card h3 {
-	font-size: 1.12rem;
-}
-
-.subject-card ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	display: grid;
-	gap: 0.55rem;
-}
-
-.subject-card li,
-.highlight-card p {
-	color: var(--color-ink-soft);
-	line-height: 1.65;
-}
-
-.next-steps-card {
-	max-width: 52rem;
-	margin-inline: auto;
-	padding: clamp(1.5rem, 3vw, 2.2rem);
-	display: grid;
-	gap: 1rem 1.25rem;
+.pathway-action {
+	justify-self: start;
 }
 
 @media (max-width: 900px) {
