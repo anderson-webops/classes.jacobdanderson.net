@@ -7720,6 +7720,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 					class="site-button"
 					data-testid="ide-route-import-confirm"
 					type="button"
+					:disabled="isLoading"
 					@click="confirmRouteProjectImport"
 				>
 					Import project
@@ -11036,13 +11037,13 @@ html.dark .editor-shortcuts ul {
 .code-ide-page .editor-actions > .site-button {
 	width: auto;
 	padding: 0 0.8rem;
-	height: 2.5rem;
-	min-height: 2.5rem;
+	height: 2.75rem;
+	min-height: 2.75rem;
 }
 .code-ide-page .editor-actions .ide-settings-trigger {
-	width: 2.5rem;
-	height: 2.5rem;
-	min-height: 2.5rem;
+	width: 2.75rem;
+	height: 2.75rem;
+	min-height: 2.75rem;
 	border: 0;
 	background: transparent;
 }

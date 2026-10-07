@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { strFromU8, unzipSync } from "fflate";
 import puppeteer from "puppeteer";
 import { preview } from "vite";
+import { confirmProjectImport, downloadProjectZip, openProjectSidebar } from "./ide-workspace-controls.mjs";
 import { cppClassesLessonBriefs } from "../front-end/src/stores/courses/cppClassesProjectBriefs.ts";
 import { cppCollectionsLessonBrief } from "../front-end/src/stores/courses/cppCollectionsProjectBriefs.ts";
 import { cppDynamicMemoryProjectBriefs } from "../front-end/src/stores/courses/cppDynamicMemoryProjectBriefs.ts";
@@ -1116,7 +1117,7 @@ async function downloadProjectFiles(page) {
 			return original.call(this);
 		};
 	});
-	await page.click("button[aria-label='Download project ZIP']");
+	await downloadProjectZip(page);
 	await page.waitForFunction(() => Array.isArray(window.__cppZip));
 	const zip = unzipSync(Uint8Array.from(await page.evaluate(() => window.__cppZip)));
 	return Object.fromEntries(Object.entries(zip).map(([path, bytes]) => [path.slice(path.indexOf("/") + 1), strFromU8(bytes)]));
@@ -1265,11 +1266,12 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await page.goto(new URL(href, origin).href, { waitUntil: "domcontentloaded" });
 			await page.waitForSelector("[data-testid='ide-route-import-confirm']");
 			assert.equal(sourceRequests, before);
-			await page.click("[data-testid='ide-route-import-confirm']");
+			await confirmProjectImport(page);
 			if (mode === "cpp") await page.waitForSelector("[aria-label='C++ build workflow']");
 			if (Object.hasOwn(dynamicMemoryFolders, folder) || Object.hasOwn(capstoneFolders, folder)) assert.match(await page.$eval("[aria-label='C++ build workflow']", element => element.textContent), /C\+\+ project/);
 			await page.waitForFunction(mode => document.querySelector(".cm-content")?.textContent.includes(mode === "java" ? "public class Main" : "#include"), {}, mode);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
+			await openProjectSidebar(page);
 			if (((Object.hasOwn(dynamicMemoryPacks, folder) || Object.hasOwn(capstonePacks, folder)) && folder.endsWith("-Starter")) || ((Object.hasOwn(checkpointPacks, folder) || Object.hasOwn(taskManagerPacks, folder)) && folder.endsWith("/starter"))) {
 				const untouched = await downloadProjectFiles(page);
 				assert.deepEqual(untouched, files);
@@ -1354,6 +1356,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			if (Object.hasOwn(checkpointPacks, folder)) await verifyBuildDebugExport(directory, runNative);
 			if (folder.startsWith("CPPM")) await verifyMemoryExport(directory, folder);
 			await page.reload({ waitUntil: "domcontentloaded" });
+			await openProjectSidebar(page);
 			await page.waitForFunction(name => [...document.querySelectorAll(".file-button")].some(button => button.textContent.includes(name)), {}, entryFile);
 			await page.evaluate(name => [...document.querySelectorAll(".file-button")].find(button => button.textContent.includes(name)).click(), entryFile);
 			await page.waitForSelector(".cm-content");
@@ -1377,7 +1380,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening preserves learner edits without redownloading");
 			if (Object.hasOwn(files, "Makefile")) {
-				assert.equal(await page.evaluate(() => [...document.querySelectorAll(".file-button")].find(button => button.querySelector("span")?.textContent === "Makefile")?.querySelector("small")?.textContent.trim()), "Build file");
+				assert.ok(await page.evaluate(() => [...document.querySelectorAll(".project-context select option")].some(option => option.textContent.trim() === "Makefile")));
 			}
 			if ((folder.startsWith("CPPI0") || folder.startsWith("CPPI1") || folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
@@ -1421,7 +1424,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				await page.goto(new URL(freshHref, origin).href, { waitUntil: "domcontentloaded" });
 				await page.waitForSelector("[data-testid='ide-route-import-confirm']");
 				assert.equal(sourceRequests, requestsBeforeLegacy);
-				await page.click("[data-testid='ide-route-import-confirm']");
+				await confirmProjectImport(page);
 				await page.waitForFunction(() => document.querySelector(".cm-content")?.textContent.includes("#include"));
 				assert.equal(sourceRequests, requestsBeforeLegacy + 1 + Object.keys(files).length);
 				await page.waitForFunction(key => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key), {}, freshKey);
