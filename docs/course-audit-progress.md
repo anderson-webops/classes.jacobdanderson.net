@@ -1,8 +1,63 @@
 # Current course-audit checkpoint, 2026-10-07
 
-This section is the current status. Earlier dated milestones below are retained
-as history; their pending statements and counts are not current delivery status.
+This section gives the current status. Earlier checkpoints below retain their
+historical evidence; their pending statements and counts are not current status.
 The full 77-course audit remains active.
+
+The optional CPPI1 row-import catalog and required CPPI2 maze are delivered.
+Canonical [PR #150](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/150)
+and downstream [PR #39](https://github.com/instruction-material/classes.jacobdanderson.net/pull/39)
+include full learner instructions, separate staff references, confirmed source
+imports and saved-attempt preservation. Review and independent main CI, CodeQL
+and Qodana workflows passed. Actual browser logs verified 59 C++/Java import,
+edit, save, export, reopen and native-build workflows, 21 preserved attempts,
+nine untouched learner exports, two notebook routes and both complete recursion
+lessons. All 29 Cypress scenarios passed. The original signed archives,
+manifests and attestations are published as canonical
+[v2.8.57](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.57)
+and downstream
+[v2.8.8](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.8).
+Every packaged file digest and trusted release configuration was independently
+checked. The downstream remains current upstream plus its neutral overlay.
+Production activation is unverified.
+
+The maze source is integrated at `3adb873179bd149b1f6ef9fddfec8557a6a71eb4`.
+Its review and independent main [native gate](https://github.com/instruction-material/CPP-Level-3/actions/runs/37688460765)
+passed all six groups, including 480 independent reachability/path comparisons,
+strict ordinary and sanitizer builds, Make/CMake and parser rollback. The
+unchanged maze source is the prerequisite for the optional tracing worksheet.
+
+The optional Recursion Trace Drill now has a complete learner worksheet with
+three concrete inputs, blank prediction/state records, native commands, actual
+observation prompts and two custom cases. It extends the saved maze instead of
+creating another application. A separate staff document provides worked traces;
+its preserved C++17 source only prints that worksheet. The
+[source review gate](https://github.com/instruction-material/CPP-Level-3/actions/runs/37700000313)
+passed all seven native groups at `cee92a6348cd90fe797998944713abec6ec87a7f`,
+including an independent iterative stack model and breadth-first reachability,
+six ordinary/sanitizer maze variants, four worksheet printer variants, two CMake
+printers and four same-process repeated-search checks. The exact reviewed source
+is integrated. Independent [main validation](https://github.com/instruction-material/CPP-Level-3/actions/runs/37700491585)
+also passed all seven groups; both actual native job outputs were inspected.
+
+The catalog keeps the existing optional item, core/optional counts
+and saved maze key. It displays the whole learner worksheet, suppresses a code
+import for the worksheet printer, withholds the worked reference from learners
+and offers continuation of the existing maze attempt. Publication requires
+hosted learner/staff rendering, saved-file preservation and sitewide checks.
+Review and delivery evidence is recorded in
+[PR #151](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/151).
+
+Seven other C++ Level 3 learner/reference pairs still contain generic
+placeholders or fixed evidence checklists and require substantive review.
+Presence in the source manifest does not establish working course material.
+Transcript review remains limited by 51 unavailable assets; no additional
+transcript coverage is claimed in this checkpoint. The broader course audit
+is unfinished.
+
+## Earlier dated milestones
+
+# Earlier Task Manager and row-import checkpoint, 2026-10-07
 
 The CPPI1 Saveable Task Manager source correction is integrated in
 [CPP Level 3 PR #5](https://github.com/instruction-material/CPP-Level-3/pull/5)
@@ -81,8 +136,6 @@ and downstream
 The downstream neutral customizations are preserved. Production activation
 remains unverified. Transcript review has 51 unavailable assets; successful
 incremental checks provided no additional accessible transcript evidence.
-
-## Earlier dated milestones
 
 # CPPM2 arrays and game source/catalog audit (2026-10-06)
 

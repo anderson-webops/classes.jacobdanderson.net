@@ -312,9 +312,14 @@ function canonicalizeResourceUrl(url?: string) {
 			owner.toLowerCase() === "instruction-material" &&
 			repo.toLowerCase() === "cpp-level-3" &&
 			fileSegments.length === 3 &&
-			fileSegments[0] === "CPPI0-Warnings-and-Debugger-Notebook" &&
-			["starter", "solution"].includes(fileSegments[1]) &&
-			fileSegments[2] === "EVIDENCE.md"
+			((fileSegments[0] === "CPPI0-Warnings-and-Debugger-Notebook" &&
+				["starter", "solution"].includes(fileSegments[1]) &&
+				fileSegments[2] === "EVIDENCE.md") ||
+				(fileSegments[0] === "CPPI2-Recursion-Trace-Drill" &&
+					((fileSegments[1] === "starter" &&
+						fileSegments[2] === "WORKSHEET.md") ||
+						(fileSegments[1] === "solution" &&
+							fileSegments[2] === "WORKED-TRACE.md"))))
 		) {
 			return trimmedUrl;
 		}
