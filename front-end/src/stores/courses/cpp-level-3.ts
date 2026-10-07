@@ -1,6 +1,7 @@
 import type { RawCourse } from "./types";
 import { cppBuildDebugProjectBrief } from "./cppBuildDebugProjectBrief";
 import { cppDebugEvidenceNotebookBrief } from "./cppDebugEvidenceNotebookBrief";
+import { cppMazeSearchBriefs } from "./cppMazeSearchBriefs";
 import { cppRowImportProjectBrief } from "./cppRowImportProjectBrief";
 import { cppTaskManagerBriefs } from "./cppTaskManagerBriefs";
 
@@ -84,18 +85,16 @@ const cppLevel3SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Recursion, Base Cases, and Stack Frames",
-					content:
-						"Recursion starts with call-stack diagrams before algorithm vocabulary. The important pieces are the base case, the recursive step, the smaller subproblem, what data each stack frame owns, what value returns to the previous frame, and why missing or non-progressing base cases lead to infinite recursion. Strings, vectors, and small grids build control-flow confidence before linked lists or trees."
+					content: cppMazeSearchBriefs.stack
 				},
 				{
 					title: "Recursive Traversal and Backtracking",
-					content:
-						"Use traversal problems to show recursion as a practical tool rather than a trick. Cover: marking visited grid cells, stopping at invalid positions, returning success/failure, and the backtracking pattern of choose, recurse, undo, and try the next possibility. Keep the search space small enough to draw and to explain exactly why the algorithm stops."
+					content: cppMazeSearchBriefs.backtracking
 				},
 				{
 					title: "CPPI2 Project: Recursive Maze or Word Search",
-					content:
-						"Implement a recursive search through a small grid. Mark visited cells, backtrack safely, and explain why the algorithm stops instead of looping forever.",
+					content: cppMazeSearchBriefs.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI2-Recursive-Maze-Search/starter",
 					solutionLink:

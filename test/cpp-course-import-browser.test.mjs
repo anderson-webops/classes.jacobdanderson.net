@@ -24,11 +24,13 @@ import { cppManualCapstoneProjectBriefs } from "../front-end/src/stores/courses/
 import { cppParameterLessonBriefs } from "../front-end/src/stores/courses/cppParameterProjectBriefs.ts";
 import { completeBuildDebugFile, verifyBuildDebugDefaultExport, verifyBuildDebugExport } from "./cpp-build-debug-export-checks.mjs";
 import { completeDynamicMemoryFile, verifyDynamicMemoryDefaultExport, verifyDynamicMemoryExport } from "./cpp-dynamic-memory-export-checks.mjs";
+import { completeMazeSearchFile, verifyMazeSearchDefaultExport, verifyMazeSearchExport } from "./cpp-maze-search-export-checks.mjs";
 import { completeManualCapstoneFile, verifyManualCapstoneDefaultExport, verifyManualCapstoneExport } from "./cpp-manual-capstone-export-checks.mjs";
 import { completeRowImportFile, verifyRowImportDefaultExport, verifyRowImportExport } from "./cpp-row-import-export-checks.mjs";
 import { completeTaskManagerFile, verifyTaskManagerDefaultExport, verifyTaskManagerExport } from "./cpp-task-manager-export-checks.mjs";
 import { completeTwoDimensionalAttempt, verifyTwoDimensionalExport } from "./cpp-two-dimensional-export-checks.mjs";
 import { checkpointPacks, checkpointRevision } from "./fixtures/cpp-build-debug-packs.mjs";
+import { mazeSearchPacks, mazeSearchRevision } from "./fixtures/cpp-maze-search-packs.mjs";
 import { rowImportPacks, rowImportRevision } from "./fixtures/cpp-row-import-packs.mjs";
 import { taskManagerPacks, taskManagerRevision } from "./fixtures/cpp-task-manager-packs.mjs";
 import { confirmProjectImport, downloadProjectZip, openProjectSidebar } from "./ide-workspace-controls.mjs";
@@ -375,15 +377,28 @@ const capstoneReferences = {
 };
 const capstoneFolders = { ...capstonePacks, ...capstoneReferences };
 const capstoneReferenceFiles = {};
+const mazeSearchReferenceFiles = {};
+const mazeSearchLearnerPacks = Object.fromEntries(Object.entries(mazeSearchPacks).filter(([folder]) => folder.endsWith("/starter")));
 const rowImportReferenceFiles = {};
 const rowImportLearnerPacks = Object.fromEntries(Object.entries(rowImportPacks).filter(([folder]) => folder.endsWith("/starter")));
 const isTaskPack = folder => Object.hasOwn(taskManagerPacks, folder) || Object.hasOwn(rowImportPacks, folder);
+const isNativeContractPack = folder => isTaskPack(folder) || Object.hasOwn(checkpointPacks, folder) || Object.hasOwn(mazeSearchPacks, folder);
 const taskManagerReferenceFiles = {};
 const taskManagerLearnerPacks = Object.fromEntries(Object.entries(taskManagerPacks).filter(([folder]) => folder.endsWith("/starter")));
 const checkpointLearnerPacks = Object.fromEntries(Object.entries(checkpointPacks).filter(([folder]) => folder.endsWith("/starter")));
-const preservedPacks = { ...rowImportLearnerPacks, ...taskManagerLearnerPacks, ...checkpointLearnerPacks, ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks, ...dynamicMemoryPacks, ...capstonePacks };
+const preservedPacks = { ...mazeSearchLearnerPacks, ...rowImportLearnerPacks, ...taskManagerLearnerPacks, ...checkpointLearnerPacks, ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks, ...dynamicMemoryPacks, ...capstonePacks };
 
 const fixtures = [
+	...Object.entries(mazeSearchPacks).map(([folder, hashes]) => ({
+		repository: "instruction-material/CPP-Level-3",
+		revision: mazeSearchRevision,
+		courseId: "cpp-level-3",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: "cppi2-recursion-and-the-call-stack",
+		reference: folder.endsWith("/solution")
+	})),
 	...Object.entries(rowImportPacks).map(([folder, hashes]) => ({
 		repository: "instruction-material/CPP-Level-3",
 		revision: rowImportRevision,
@@ -1157,14 +1172,14 @@ async function downloadProjectFiles(page) {
 	return Object.fromEntries(Object.entries(zip).map(([path, bytes]) => [path.slice(path.indexOf("/") + 1), strFromU8(bytes)]));
 }
 
-nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 600000 }, async () => {
+nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 720000 }, async () => {
 	let browser;
 	let server;
 	let page;
 	let temporary;
 	let exitCode = 0;
 	const previousDirectory = process.cwd();
-	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 600000 });
+	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 720000 });
 	try {
 		process.chdir(root);
 		temporary = await mkdtemp(join(tmpdir(), "cpp-course-workflow-"));
@@ -1226,7 +1241,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			referenceFixture = fixture.reference ?? false;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder === "CPPI1-Import-and-Reject-Bad-Rows/starter" || folder === "CPPI1-Saveable-Task-Manager/starter" || folder === "CPPI0-Build-and-Debug-Checkpoint/starter" || folder.startsWith("CPPM0-Lifetime") || folder === "CPPM5-Profile-Posts-Starter" || folder === "CPPM5-Modern-Ownership-Reflection" || folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder === "CPPI2-Recursive-Maze-Search/starter" || folder === "CPPI1-Import-and-Reject-Bad-Rows/starter" || folder === "CPPI1-Saveable-Task-Manager/starter" || folder === "CPPI0-Build-and-Debug-Checkpoint/starter" || folder.startsWith("CPPM0-Lifetime") || folder === "CPPM5-Profile-Posts-Starter" || folder === "CPPM5-Modern-Ownership-Reflection" || folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			if (Object.hasOwn(pointerPacks, folder)) {
 				const referenceFolder = folder.replace(/-Starter$/, "");
@@ -1258,6 +1273,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				const referenceFolder = folder.replace(/starter$/, "solution");
 				rowImportReferenceFiles[folder] = await readStarter(repository, revision, referenceFolder, rowImportPacks[referenceFolder]);
 			}
+			if (Object.hasOwn(mazeSearchPacks, folder) && folder.endsWith("/starter")) {
+				const referenceFolder = folder.replace(/starter$/, "solution");
+				mazeSearchReferenceFiles[folder] = await readStarter(repository, revision, referenceFolder, mazeSearchPacks[referenceFolder]);
+			}
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
 			const beforeRuntime = runtimeRequests;
@@ -1281,6 +1300,29 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				assert.ok(await page.$$eval(".lesson-item", items => Boolean(items.find(item => item.querySelector("h5")?.textContent === "Scanning, Parsing, and Error Boundaries")?.querySelector("table"))), "Accepted and rejected examples remain a readable table");
 				record("verified-complete-lessons", { folder, finalSections: true, borrowingSemantics: true });
 				await revealCourseSource(page, selector);
+			}
+			if (Object.hasOwn(mazeSearchPacks, folder)) {
+				if (await page.$(".lesson-view-toggle button")) {
+					await page.click(".lesson-view-toggle button:first-child");
+					await page.waitForSelector(".lesson-view-toggle button:first-child[aria-pressed='true']");
+				}
+				await page.waitForFunction(() => {
+					const headings = [...document.querySelectorAll(".lesson-item .item-content-markdown h2")].map(heading => heading.textContent);
+					return headings.includes("Guided trace and self-checks") && headings.includes("Guided checks");
+				});
+				const lessonText = await page.$$eval(".lesson-item", items => items.filter(item => ["Recursion, Base Cases, and Stack Frames", "Recursive Traversal and Backtracking"].includes(item.querySelector("h5")?.textContent)).map(item => item.querySelector(".item-content-markdown")?.textContent.replace(/\s+/g, " ")));
+				assert.equal(lessonText.length, 2);
+				assert.match(lessonText[0], /countdown\(2\): childCount is 1; return 2/);
+				assert.match(lessonText[1], /independent study|Independent study/);
+				assert.match(lessonText[1], /Visited state and the current path/);
+				assert.match(lessonText[1], /large graph needs an explicit stack/);
+				await revealCourseSource(page, selector);
+				const briefText = await page.$eval(selector, link => link.closest(".lesson-item").textContent.replace(/\s+/g, " "));
+				assert.match(briefText, /Preserve an earlier attempt/);
+				assert.match(briefText, /16384 bytes/);
+				assert.match(briefText, /does not promise a shortest path/);
+				assert.match(briefText, /maze_search\.cpp/);
+				record("verified-complete-recursion-lessons", { folder, fullContract: true, finalSections: true });
 			}
 			if (Object.hasOwn(rowImportPacks, folder)) {
 				await page.waitForFunction(selector => document.querySelector(selector)?.closest(".lesson-item").textContent.includes("65536/65537"), {}, selector);
@@ -1326,7 +1368,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await page.waitForFunction(mode => document.querySelector(".cm-content")?.textContent.includes(mode === "java" ? "public class Main" : "#include"), {}, mode);
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
 			await openProjectSidebar(page);
-			if (((Object.hasOwn(dynamicMemoryPacks, folder) || Object.hasOwn(capstonePacks, folder)) && folder.endsWith("-Starter")) || ((Object.hasOwn(checkpointPacks, folder) || isTaskPack(folder)) && folder.endsWith("/starter"))) {
+			if (((Object.hasOwn(dynamicMemoryPacks, folder) || Object.hasOwn(capstonePacks, folder)) && folder.endsWith("-Starter")) || (isNativeContractPack(folder) && folder.endsWith("/starter"))) {
 				const untouched = await downloadProjectFiles(page);
 				assert.deepEqual(untouched, files);
 				const directory = join(temporary, `${folder.replaceAll("/", "-")}-untouched`);
@@ -1334,6 +1376,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				for (const [name, content] of Object.entries(untouched)) await writeFile(join(directory, name), content);
 				if (Object.hasOwn(taskManagerPacks, folder)) await verifyTaskManagerDefaultExport(directory, runNative);
 				else if (Object.hasOwn(rowImportPacks, folder)) await verifyRowImportDefaultExport(directory, runNative);
+				else if (Object.hasOwn(mazeSearchPacks, folder)) await verifyMazeSearchDefaultExport(directory, runNative);
 				else if (Object.hasOwn(checkpointPacks, folder)) await verifyBuildDebugDefaultExport(directory, runNative);
 				else if (Object.hasOwn(capstonePacks, folder)) await verifyManualCapstoneDefaultExport(directory, folder, runNative);
 				else await verifyDynamicMemoryDefaultExport(directory, folder, runNative);
@@ -1352,7 +1395,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const firstLine = files[entryFile].split("\n").find(line => line.trim());
 			await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
-			const completed = Object.hasOwn(rowImportPacks, folder) ? completeRowImportFile(folder, entryFile, files[entryFile], rowImportReferenceFiles[folder]) : Object.hasOwn(taskManagerPacks, folder) ? completeTaskManagerFile(folder, entryFile, files[entryFile], taskManagerReferenceFiles[folder]) : Object.hasOwn(checkpointPacks, folder) ? completeBuildDebugFile(folder, entryFile, files[entryFile]) : Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, entryFile, files[entryFile], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, entryFile, files[entryFile], dynamicMemoryReferenceFiles[folder]) : completeMemoryAttempt(folder, files[entryFile]);
+			const completed = Object.hasOwn(mazeSearchPacks, folder) ? completeMazeSearchFile(folder, entryFile, files[entryFile], mazeSearchReferenceFiles[folder]) : Object.hasOwn(rowImportPacks, folder) ? completeRowImportFile(folder, entryFile, files[entryFile], rowImportReferenceFiles[folder]) : Object.hasOwn(taskManagerPacks, folder) ? completeTaskManagerFile(folder, entryFile, files[entryFile], taskManagerReferenceFiles[folder]) : Object.hasOwn(checkpointPacks, folder) ? completeBuildDebugFile(folder, entryFile, files[entryFile]) : Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, entryFile, files[entryFile], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, entryFile, files[entryFile], dynamicMemoryReferenceFiles[folder]) : completeMemoryAttempt(folder, files[entryFile]);
 			const edited = `${completed}\n// Browser workflow edit\n`;
 			expectedFiles[entryFile] = edited;
 			await page.click(".cm-content");
@@ -1366,14 +1409,14 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await page.waitForFunction((key, source, name) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === name && file.content === source)), {}, key, edited, entryFile);
 			// The new class packs must preserve and save both their interface and
 			// implementation, not only the driver's text.
-			const multiFilePack = isTaskPack(folder) || Object.hasOwn(checkpointPacks, folder) || folder.startsWith("CPPF4") || folder.startsWith("CPPF8-Profile-Posts/") || Object.hasOwn(dynamicMemoryFolders, folder) || Object.hasOwn(capstoneFolders, folder);
+			const multiFilePack = isNativeContractPack(folder) || folder.startsWith("CPPF4") || folder.startsWith("CPPF8-Profile-Posts/") || Object.hasOwn(dynamicMemoryFolders, folder) || Object.hasOwn(capstoneFolders, folder);
 			const classFiles = multiFilePack ? Object.keys(files).filter(name => name !== entryFile && /\.(?:h|cpp)$/.test(name)) : [];
-			assert.equal(classFiles.length, Object.hasOwn(rowImportPacks, folder) ? 8 : Object.hasOwn(taskManagerPacks, folder) ? 6 : Object.hasOwn(checkpointPacks, folder) ? 4 : folder.includes("Grocery-List") ? 4 : folder.includes("Dynamic-Array-Implementation") || folder.includes("CPPM5-Profile-Posts") || folder.includes("Matrix-Class") ? 2 : multiFilePack && !Object.hasOwn(dynamicMemoryFolders, folder) && !Object.hasOwn(capstoneFolders, folder) ? 2 : 0);
+			assert.equal(classFiles.length, Object.hasOwn(mazeSearchPacks, folder) ? 3 : Object.hasOwn(rowImportPacks, folder) ? 8 : Object.hasOwn(taskManagerPacks, folder) ? 6 : Object.hasOwn(checkpointPacks, folder) ? 4 : folder.includes("Grocery-List") ? 4 : folder.includes("Dynamic-Array-Implementation") || folder.includes("CPPM5-Profile-Posts") || folder.includes("Matrix-Class") ? 2 : multiFilePack && !Object.hasOwn(dynamicMemoryFolders, folder) && !Object.hasOwn(capstoneFolders, folder) ? 2 : 0);
 			for (const name of classFiles) {
 				await selectProjectFile(page, name);
 				const first = files[name].split("\n").find(line => line.trim());
 				await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, first);
-				const source = `${Object.hasOwn(rowImportPacks, folder) ? completeRowImportFile(folder, name, files[name], rowImportReferenceFiles[folder]) : Object.hasOwn(taskManagerPacks, folder) ? completeTaskManagerFile(folder, name, files[name], taskManagerReferenceFiles[folder]) : Object.hasOwn(checkpointPacks, folder) ? completeBuildDebugFile(folder, name, files[name]) : Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, name, files[name], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, name, files[name], dynamicMemoryReferenceFiles[folder]) : files[name]}\n// Browser workflow edit\n`;
+				const source = `${Object.hasOwn(mazeSearchPacks, folder) ? completeMazeSearchFile(folder, name, files[name], mazeSearchReferenceFiles[folder]) : Object.hasOwn(rowImportPacks, folder) ? completeRowImportFile(folder, name, files[name], rowImportReferenceFiles[folder]) : Object.hasOwn(taskManagerPacks, folder) ? completeTaskManagerFile(folder, name, files[name], taskManagerReferenceFiles[folder]) : Object.hasOwn(checkpointPacks, folder) ? completeBuildDebugFile(folder, name, files[name]) : Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, name, files[name], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, name, files[name], dynamicMemoryReferenceFiles[folder]) : files[name]}\n// Browser workflow edit\n`;
 				expectedFiles[name] = source;
 				await page.click(".cm-content");
 				await page.keyboard.down(modifier);
@@ -1399,16 +1442,17 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			// below; the limited browser interpreter is not its execution gate.
 			const exported = await downloadProjectFiles(page);
 			assert.deepEqual(exported, expectedFiles);
-			const directory = join(temporary, `${(isTaskPack(folder) || Object.hasOwn(checkpointPacks, folder)) ? folder.replaceAll("/", "-") : folder.split("/")[0]}-${mode}`);
+			const directory = join(temporary, `${isNativeContractPack(folder) ? folder.replaceAll("/", "-") : folder.split("/")[0]}-${mode}`);
 			await mkdir(directory);
 			for (const [name, content] of Object.entries(exported)) {
 				const path = join(directory, name);
 				await mkdir(dirname(path), { recursive: true });
 				await writeFile(path, content);
 			}
-			await compileExport(directory, Object.keys(exported), mode, standard, isTaskPack(folder) || Object.hasOwn(checkpointPacks, folder));
+			await compileExport(directory, Object.keys(exported), mode, standard, isNativeContractPack(folder));
 			if (Object.hasOwn(taskManagerPacks, folder)) await verifyTaskManagerExport(directory, runNative);
 			if (Object.hasOwn(rowImportPacks, folder)) await verifyRowImportExport(directory, runNative);
+			if (Object.hasOwn(mazeSearchPacks, folder)) await verifyMazeSearchExport(directory, runNative);
 			if (Object.hasOwn(checkpointPacks, folder)) await verifyBuildDebugExport(directory, runNative);
 			if (folder.startsWith("CPPM")) await verifyMemoryExport(directory, folder);
 			await page.reload({ waitUntil: "domcontentloaded" });
@@ -1438,7 +1482,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			if (Object.hasOwn(files, "Makefile")) {
 				assert.ok(await page.evaluate(() => [...document.querySelectorAll(".project-context select option")].some(option => option.textContent.trim() === "Makefile")));
 			}
-			if ((folder.startsWith("CPPI0") || folder.startsWith("CPPI1") || folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+			if ((folder.startsWith("CPPI2") || folder.startsWith("CPPI0") || folder.startsWith("CPPI1") || folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
 				await mkdir(directory, { recursive: true });
 				// Show the imported source rather than the last edited blank line.
@@ -1447,7 +1491,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				await page.keyboard.press(modifier === "Meta" ? "ArrowUp" : "Home");
 				await page.keyboard.up(modifier);
 				await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
-				await page.screenshot({ path: join(directory, `course-import-${mode}-${(isTaskPack(folder) || Object.hasOwn(checkpointPacks, folder)) ? folder.replaceAll("/", "-") : folder.split("/")[0]}-workspace.png`), fullPage: true });
+				await page.screenshot({ path: join(directory, `course-import-${mode}-${isNativeContractPack(folder) ? folder.replaceAll("/", "-") : folder.split("/")[0]}-workspace.png`), fullPage: true });
 				if (folder.startsWith("PTJ7") && mode === "cpp") {
 					await page.setViewport({ width: 390, height: 900 });
 					await page.screenshot({ path: join(directory, "course-import-cpp-PTJ7-mobile.png"), fullPage: true });
