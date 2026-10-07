@@ -6,7 +6,6 @@ import { computed, inject, onMounted, ref, watch } from "vue";
 import { routeLocationKey } from "vue-router";
 import { api } from "@/api";
 import AdminWorkspaceShell from "@/components/AdminWorkspaceShell.vue";
-import SessionNoteEvidenceReview from "@/components/SessionNoteEvidenceReview.vue";
 import { fetchAdminRecipients } from "@/modules/adminRecipients";
 import { retainNoteSendIntent } from "@/modules/sessionNoteSendIntent";
 
@@ -687,7 +686,6 @@ function parseDateIso(value: string): string | null {
 <template>
 	<AdminWorkspaceShell title="Notes and Mail">
 		<section class="wrap">
-			<SessionNoteEvidenceReview />
 			<div class="mail-card">
 				<label class="message-kind"
 					>Message type<select v-model="messageKind">
