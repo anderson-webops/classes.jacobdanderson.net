@@ -38,6 +38,9 @@ context("Compact content-first workspaces", () => {
 			]
 		});
 		cy.intercept("GET", "**/api/tutors", { body: [] });
+		cy.intercept("GET", "**/api/course-access/codes", {
+			body: { codes: [] }
+		});
 		cy.intercept("GET", "**/api/admin-mail/session-notes/identities", {
 			body: { students: [] }
 		});
@@ -68,7 +71,9 @@ context("Compact content-first workspaces", () => {
 			.should("have.length", 1)
 			.within(() => {
 				cy.contains("a", "Python Level 1").should("be.visible");
-				cy.get(".person-advanced").should("not.have.attr", "open");
+				cy.get(
+					".person-advanced > .workspace-disclosure__trigger"
+				).should("have.attr", "aria-expanded", "false");
 			});
 		cy.get(".learner-selector select").select("synthetic-other");
 		cy.get(".learner-content").within(() => {
@@ -76,7 +81,11 @@ context("Compact content-first workspaces", () => {
 			cy.contains("a", "Python Level 1").should("not.exist");
 		});
 		cy.get(".person-details").should("not.exist");
-		cy.get(".tutor-management").should("not.have.attr", "open");
+		cy.get(".tutor-management > .workspace-disclosure__trigger").should(
+			"have.attr",
+			"aria-expanded",
+			"false"
+		);
 		cy.contains("Roster spreadsheet").should("not.exist");
 		cy.contains("Course workspace").should("not.exist");
 		cy.screenshot("people-compact", { capture: "viewport" });
@@ -244,7 +253,9 @@ context("Compact content-first workspaces", () => {
 				const canvas = win.document
 					.querySelector(".graph-canvas-panel")!
 					.getBoundingClientRect();
-				expect(tools.bottom).to.be.at.most(canvas.top + 2);
+				expect(tools.right).to.be.at.most(canvas.left + 2);
+				expect(tools.left).to.be.at.most(16);
+				expect(Math.abs(tools.top - canvas.top)).to.be.at.most(2);
 			});
 			cy.get('[aria-label="Graph settings"]').click();
 			cy.get('[aria-label="Close graph settings"]')

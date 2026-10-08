@@ -53,17 +53,15 @@ context("Session navigation without guest flashes", () => {
 			cy.wait(["@session", "@identity"]);
 			const accountLabel =
 				role === "CourseLearner" ? "Classroom" : "Account";
-			cy.get(".site-account-menu summary").should(
-				"contain.text",
-				accountLabel
-			);
+			cy.get(
+				".site-account-menu > .workspace-disclosure__trigger"
+			).should("contain.text", accountLabel);
 			cy.get(".site-nav").contains("a:visible", /^IDE$/).click();
 			cy.location("pathname").should("match", /^\/ide\/?$/);
 			cy.wait(["@session", "@identity"]);
-			cy.get(".site-account-menu summary").should(
-				"contain.text",
-				accountLabel
-			);
+			cy.get(
+				".site-account-menu > .workspace-disclosure__trigger"
+			).should("contain.text", accountLabel);
 			cy.then(() => {
 				expect(observed.length).to.be.greaterThan(0);
 				expect(documents).to.be.at.least(2);
@@ -77,7 +75,9 @@ context("Session navigation without guest flashes", () => {
 				}
 			});
 			cy.intercept("DELETE", "**/api/accounts/logout", { body: {} });
-			cy.get(".site-account-menu summary").click();
+			cy.get(
+				".site-account-menu > .workspace-disclosure__trigger"
+			).click();
 			cy.get(".site-nav").contains("button", "Log out").click();
 			cy.get(".site-nav")
 				.contains("button", "Log in")
