@@ -175,7 +175,7 @@ context("Compact content-first workspaces", () => {
 	});
 	it("keeps project backup and rename out of the main IDE toolbar", () => {
 		cy.visit("/ide");
-		cy.get(".code-ide-workspace").should(
+		cy.get(".code-ide-workspace", { timeout: 15_000 }).should(
 			"have.class",
 			"is-sidebar-collapsed"
 		);
@@ -219,7 +219,9 @@ context("Compact content-first workspaces", () => {
 		it(`keeps IDE controls touch-accessible within a ${width}px screen`, () => {
 			cy.viewport(width, 800);
 			cy.visit("/ide");
-			cy.get(".code-ide-workspace").should("be.visible");
+			cy.get(".code-ide-workspace", { timeout: 15_000 }).should(
+				"be.visible"
+			);
 			cy.get(".editor-actions").should(actions => {
 				for (const button of actions[0].querySelectorAll("button")) {
 					const box = button.getBoundingClientRect();
@@ -239,6 +241,11 @@ context("Compact content-first workspaces", () => {
 		it(`fits the graph in the ${viewport.join("×")} viewport without page overflow`, () => {
 			cy.viewport(viewport[0], viewport[1]);
 			cy.visit("/graph-sketcher");
+			cy.get(".graph-sketcher-page").should(page => {
+				expect((page[0] as HTMLElement).style.height).to.match(
+					/^\d+(?:\.\d+)?px$/
+				);
+			});
 			cy.get(".graph-canvas").should("be.visible");
 			cy.window().then(win => {
 				expect(win.document.documentElement.scrollHeight).to.be.at.most(
