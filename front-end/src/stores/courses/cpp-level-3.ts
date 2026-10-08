@@ -122,11 +122,15 @@ const cppLevel3SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Choosing Containers and Traversing with Iterators",
-					content: cppContainerLessons.containers
+					content: `**Concept focus:** Choose containers from required operations and traverse their elements without invalidating the current traversal.\n\n${
+						cppContainerLessons.containers
+					}`
 				},
 				{
 					title: "Standard Algorithms and Relation-Style Views",
-					content: cppContainerLessons.algorithms
+					content: `**Concept focus:** Use standard algorithms to build derived views while preserving container invariants.\n\n${
+						cppContainerLessons.algorithms
+					}`
 				},
 				{
 					title: "CPPI3 Project: Inventory Indexer",
@@ -363,8 +367,7 @@ function decorateCppLevel3Module(
 		...item,
 		content:
 			index === 0
-				? module.title ===
-					"CPPI4 RAII, Smart Pointers, and Robust Error Handling"
+				? item.content.startsWith("**Concept focus:**")
 					? item.content.replace(
 							/^(\*\*Concept focus:\*\*[\s\S]*?\n\n)/,
 							`$1**Course flow:** ${flow.flowNote}\n\n`

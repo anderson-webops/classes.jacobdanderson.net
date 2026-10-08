@@ -1,5 +1,8 @@
 import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
+import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
+import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import { cppContainerLessons } from "@/stores/courses/cppContainerLessons";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { cppLevel3Course } from "@/stores/courses/cpp-level-3";
@@ -151,4 +154,53 @@ describe("complete CPPI3 container teaching and primary project", () => {
 				requirement.toLowerCase()
 			);
 	});
+});
+
+describe("container learning-view placement", () => {
+	it.each(["learner", "instructor"])(
+		"keeps both complete lessons in Learn for %s access",
+		async role => {
+			setActivePinia(createPinia());
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["cpp-level-3"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const course =
+				(await useCoursesStore().loadCourseById("cpp-level-3"))!;
+			const module = course.modules.find(
+				item =>
+					item.title ===
+					"CPPI3 STL Containers, Iterators, and Algorithms"
+			)!;
+			const [containers, algorithms, project] = module.curriculum;
+			const programs = (content: string) =>
+				content.match(/```(?:cpp|text)[\s\S]*?```/g);
+			for (const [lesson, original] of [
+				[containers, cppContainerLessons.containers],
+				[algorithms, cppContainerLessons.algorithms]
+			] as const) {
+				expect(isLessonLearningItem(lesson)).toBe(true);
+				expect(lesson.content).toMatch(/^\*\*Concept focus:\*\*/);
+				expect(lesson.projectLink).toBeUndefined();
+				expect(lesson.ideImport).not.toBe(true);
+				expect(programs(lesson.content)).toEqual(programs(original));
+			}
+			expect(containers.content).toMatch(
+				/^\*\*Concept focus:\*\*[^\n]+\n\n\*\*Course flow:\*\*/
+			);
+			expect(normalizeInlineCourseMarkdown(containers.content)).toContain(
+				"2. Replace the searched value with `8`. Predict the result before running."
+			);
+			expect(isLessonLearningItem(project)).toBe(false);
+			expect(isLessonLearningItem(findWorksheet(course))).toBe(false);
+		}
+	);
 });
