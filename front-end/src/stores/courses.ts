@@ -324,7 +324,12 @@ function canonicalizeResourceUrl(url?: string) {
 					((fileSegments[1] === "starter" &&
 						fileSegments[2] === "WORKSHEET.md") ||
 						(fileSegments[1] === "solution" &&
-							fileSegments[2] === "WORKED-AUDIT.md"))))
+							fileSegments[2] === "WORKED-AUDIT.md"))) ||
+				(fileSegments[0] === "CPPI4-Ownership-Rewrite-Reflection" &&
+					((fileSegments[1] === "starter" &&
+						fileSegments[2] === "NOTES.md") ||
+						(fileSegments[1] === "solution" &&
+							fileSegments[2] === "WORKED.md"))))
 		) {
 			return trimmedUrl;
 		}

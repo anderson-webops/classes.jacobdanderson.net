@@ -1,4 +1,56 @@
-# Current course-audit checkpoint, 2026-10-07
+# Current course-audit checkpoint, 2026-10-08
+
+The full 77-course audit remains active. Earlier dated checkpoints retain their
+historical evidence; their pending statements and counts are not current status.
+Production activation remains unverified.
+
+The CPPI3 container milestone is published in canonical v2.8.62 and downstream
+v2.8.10. The subsequent Scratch teaching milestone is published in canonical
+[v2.8.65](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.65)
+and downstream
+[v2.8.12](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.12).
+It explains actual backdrop sampling, overlapping touching-color decisions,
+and the original Lightning movement and sound sequence, with an optional
+coordinated concurrent strike. Original Juni projects, source links and stable
+identities remain. Review and independent main each pass all nine checks and
+35 Cypress scenarios. Both original signed release packages, every payload
+file and thirteen trusted deployment configurations were independently checked.
+The downstream retains one neutral overlay and its existing customization paths.
+The optional Scratch challenge has no separate timing-execution measurement.
+
+The Resource-Safe File Processor and optional Ownership Rewrite Reflection
+source are integrated through
+[CPP Level 3 PR #6](https://github.com/instruction-material/CPP-Level-3/pull/6)
+at `e419fb3d1d0145e133ea83cefae1f368d2fd7b1a`.
+The reviewed and merged trees match. Both exact review runs pass all twelve
+native groups, preserving eight existing groups and adding four for the file
+processor, ownership comparison, complete teaching programs and build packs.
+Ordinary and sanitizer runs check untouched and completed learner code, the
+reference, input limits, independent report models, real partial-write and rename
+failures, path collisions and preservation of earlier report bytes. The ownership
+worksheet retains the verified Level 2 manual example; worked results match
+actual execution. The primary local source checkout remains intact.
+
+The site catalog candidate adds both complete ownership/error lessons, the full
+primary contract and optional worksheet. It preserves course scope and stable
+saved project keys, asks before importing the learner pack, continues an existing
+saved attempt from the worksheet and offers a separate current-pack action.
+The worksheet remains a document, with worked material visible to instructors.
+Browser coverage checks the actual catalog in learner/instructor views at 390px
+and 1280px, import confirmation, untouched and completed exports, native report
+results, saved files and reopened attempts. Hosted site acceptance remains
+required before catalog integration and release.
+
+Four other C++ Level 3 learner/reference pairs still need substantive source
+replacement: fraction toolkit, template-error drill, saveable simulation and
+state comparison. The latest available teaching transcript's three Scratch
+instruction gaps are addressed in the published milestone above. The 51
+unavailable historical Zoom assets remain unavailable. This checkpoint does not
+certify the remaining coursework or production deployment.
+
+## Earlier dated milestones
+
+# Earlier course-audit checkpoint, 2026-10-07
 
 This section gives current verified status. Earlier checkpoints retain their
 historical evidence; their pending statements and counts are not current status.

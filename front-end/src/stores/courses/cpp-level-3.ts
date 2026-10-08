@@ -5,6 +5,7 @@ import { cppContainerLessons } from "./cppContainerLessons";
 import { cppDebugEvidenceNotebookBrief } from "./cppDebugEvidenceNotebookBrief";
 import { cppMazeSearchBriefs } from "./cppMazeSearchBriefs";
 import { cppRecursionTraceWorksheet } from "./cppRecursionTraceWorksheet";
+import { cppResourceSafetyLessons } from "./cppResourceSafetyLessons";
 import { cppRowImportProjectBrief } from "./cppRowImportProjectBrief";
 import { cppTaskManagerBriefs } from "./cppTaskManagerBriefs";
 
@@ -154,18 +155,16 @@ const cppLevel3SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "RAII and Single-Owner Resource Design",
-					content:
-						"RAII is the default modern C++ answer to cleanup: resources are acquired by objects and released automatically when those objects leave scope. Destructors are not called manually in normal code; they run because scope, object lifetime, and ownership are designed correctly. Standard containers, file streams, lock guards, and small wrapper classes are concrete RAII examples before custom resource classes appear. `std::unique_ptr` is the first smart pointer because it models single ownership clearly: moving it transfers ownership, the moved-from pointer no longer owns the resource, and copying is intentionally blocked. `std::shared_ptr` appears only when shared lifetime is justified, with `std::weak_ptr` used to observe shared objects or break ownership cycles rather than making shared ownership the default."
+					content: cppResourceSafetyLessons.ownership
 				},
 				{
 					title: "Validation, Exceptions, and Resource Boundaries",
-					content:
-						"Error handling belongs beside resource safety. Expected bad input is validated and reported normally; exceptional failures interrupt the current operation because continuing would leave the program in an untrustworthy state. Key cases include failed file opens, parse errors, invalid numeric ranges, partial output, rollback of a failed save, and preserving the previous valid state when a command cannot be completed. RAII makes cleanup reliable even when a function returns early or throws, but it does not replace validation. The failure-path target is the basic guarantee: after a failed operation, the program can name which state was preserved, which temporary work was discarded, and which message explains the problem."
+					content: cppResourceSafetyLessons.errors
 				},
 				{
 					title: "CPPI4 Project: Resource-Safe File Processor",
-					content:
-						"Build a file-processing tool that opens input/output files, validates records, reports errors, and relies on object lifetime for cleanup. The project includes at least one deliberately failed open or parse case.",
+					content: cppResourceSafetyLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI4-Resource-Safe-File-Processor/starter",
 					solutionLink:
@@ -175,12 +174,12 @@ const cppLevel3SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "CPPI4 Project 2: Ownership Rewrite Reflection",
-					content:
-						"Rewrite one small raw-pointer example from Level 2 using a standard container or `std::unique_ptr`, then explain what cleanup responsibility disappeared and what responsibility remains.",
+					content: cppResourceSafetyLessons.worksheet,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI4-Ownership-Rewrite-Reflection/starter",
+						"https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI4-Ownership-Rewrite-Reflection/starter/NOTES.md",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI4-Ownership-Rewrite-Reflection/solution"
+						"https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI4-Ownership-Rewrite-Reflection/solution/WORKED.md"
 				}
 			]
 		},
@@ -364,7 +363,13 @@ function decorateCppLevel3Module(
 		...item,
 		content:
 			index === 0
-				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				? module.title ===
+					"CPPI4 RAII, Smart Pointers, and Robust Error Handling"
+					? item.content.replace(
+							/^(\*\*Concept focus:\*\*[\s\S]*?\n\n)/,
+							`$1**Course flow:** ${flow.flowNote}\n\n`
+						)
+					: `**Course flow:** ${flow.flowNote}\n\n${item.content}`
 				: item.content,
 		learningPath: "core" as const
 	}));
