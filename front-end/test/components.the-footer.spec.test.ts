@@ -36,8 +36,46 @@ describe("TheFooter.vue", () => {
 		try {
 			expect(wrapper.findAll('a[href^="mailto:"]')).toHaveLength(1);
 			expect(wrapper.get('a[href="/privacy"]').text()).toBe("Privacy");
+			expect(wrapper.findAll("footer")).toHaveLength(1);
+			expect(wrapper.findAll("h2, h3, .site-footer__inner")).toHaveLength(
+				0
+			);
+			expect(
+				wrapper.findAll("nav a").map(link => link.attributes("href"))
+			).toEqual([
+				"https://www.linkedin.com/in/jacoba1100254352/",
+				"https://github.com/jacoba1100254352",
+				"/privacy",
+				"mailto:classes@jacobdanderson.net"
+			]);
+			for (const link of wrapper.findAll('a[target="_blank"]')) {
+				expect(link.attributes("rel")).toBe("noopener noreferrer");
+				expect(link.text()).toContain("(opens in a new tab)");
+			}
 		} finally {
 			wrapper.unmount();
 		}
 	});
+
+	it.each([false, true])(
+		"retains the accessible theme control (%s)",
+		compact => {
+			const wrapper = mountFooter(compact);
+			try {
+				const button = wrapper.get("button");
+				expect(button.attributes("type")).toBe("button");
+				expect(button.attributes("aria-label")).toMatch(
+					/^Switch to (light|dark) mode$/
+				);
+				expect(button.attributes("aria-pressed")).toMatch(
+					/^(true|false)$/
+				);
+				expect(wrapper.get("nav").attributes("aria-label")).toBe(
+					"Footer"
+				);
+			} finally {
+				wrapper.unmount();
+			}
+		}
+	);
 });

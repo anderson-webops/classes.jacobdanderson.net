@@ -66,26 +66,84 @@ useHead(
 		</section>
 
 		<section aria-labelledby="subjects-title" class="home-section">
+			<div class="home-section__heading">
+				<div class="section-heading">
+					<h2 id="subjects-title" class="section-title">
+						What I Teach
+					</h2>
+					<p class="section-intro">
+						Start something new or get help with the work already in
+						front of you.
+					</p>
+				</div>
+				<RouterLink
+					class="site-button site-button--secondary pathway-action"
+					to="/pathways"
+				>
+					Course Pathways
+				</RouterLink>
+			</div>
+			<div class="home-subjects">
+				<article
+					v-for="group in subjectGroups"
+					:key="group.title"
+					class="home-subject"
+				>
+					<h3>{{ group.title }}</h3>
+					<p>{{ group.description }}</p>
+					<ul :aria-label="`${group.title} subjects`">
+						<li v-for="subject in group.subjects" :key="subject">
+							{{ subject }}
+						</li>
+					</ul>
+				</article>
+			</div>
+		</section>
+
+		<section
+			aria-labelledby="session-title"
+			class="home-section home-session"
+		>
 			<div class="section-heading">
-				<h2 id="subjects-title" class="section-title">What I Teach</h2>
+				<h2 id="session-title" class="section-title">
+					What a session looks like
+				</h2>
 				<p class="section-intro">
-					Coding, math, science and Spanish, from first steps to
-					advanced coursework.
+					We work through the problem together, with time to try
+					ideas, ask questions and understand the reasoning.
 				</p>
 			</div>
-			<RouterLink
-				class="site-button site-button--secondary pathway-action"
-				to="/pathways"
-			>
-				Course Pathways
-			</RouterLink>
+			<ol class="home-session__steps">
+				<li>
+					<h3>Bring a starting point</h3>
+					<p>
+						Share the assignment, code, problem or goal. Not sure
+						where to start? We can choose a course path together.
+					</p>
+				</li>
+				<li>
+					<h3>Work it through</h3>
+					<p>
+						Break the task into manageable steps, test your ideas
+						and explain why the solution works.
+					</p>
+				</li>
+				<li>
+					<h3>Know what comes next</h3>
+					<p>
+						Review what you learned and what still needs work, with
+						clear next steps to guide your practice.
+					</p>
+				</li>
+			</ol>
 		</section>
 	</section>
 </template>
 
 <style scoped>
 .home-page {
-	gap: clamp(2.5rem, 6vw, 4.75rem);
+	gap: clamp(2.5rem, 5vw, 4rem);
+	padding-bottom: 2rem;
 }
 
 .home-hero {
@@ -120,8 +178,79 @@ useHead(
 	max-width: 44rem;
 }
 
+.home-section__heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem 2rem;
+	flex-wrap: wrap;
+}
+
 .pathway-action {
-	justify-self: start;
+	flex-shrink: 0;
+}
+
+.home-subjects {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 1.75rem;
+}
+
+.home-subject {
+	display: grid;
+	align-content: start;
+	gap: 0.65rem;
+	padding-top: 1.25rem;
+	border-top: 2px solid var(--color-border-strong);
+}
+
+.home-subject h3,
+.home-session h3 {
+	font: 700 1.05rem / 1.4 var(--font-sans);
+}
+
+.home-subject p,
+.home-session__steps p {
+	margin: 0;
+	color: var(--color-ink-soft);
+	line-height: 1.65;
+}
+
+.home-subject ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem 0.85rem;
+	margin: 0.35rem 0 0;
+	padding: 0;
+	list-style: none;
+	font-size: 0.9rem;
+	color: var(--color-ink-soft);
+}
+
+.home-session {
+	padding-top: 2rem;
+	border-top: 1px solid var(--color-border);
+}
+
+.home-session__steps {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1.5rem 2rem;
+	margin: 0;
+	padding-left: 1.5rem;
+}
+
+.home-session__steps li {
+	padding-left: 0.35rem;
+}
+
+.home-session__steps li::marker {
+	color: var(--color-accent);
+	font-weight: 700;
+}
+
+.home-session__steps h3 {
+	margin-bottom: 0.5rem;
 }
 
 @media (max-width: 900px) {
@@ -132,11 +261,20 @@ useHead(
 	.hero-text {
 		max-width: none;
 	}
+
+	.home-subjects {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 }
 
 @media (max-width: 640px) {
 	.home-hero__media {
 		aspect-ratio: 4 / 3;
+	}
+
+	.home-subjects,
+	.home-session__steps {
+		grid-template-columns: 1fr;
 	}
 }
 </style>

@@ -9,6 +9,7 @@ import PathwaysPage from "@/pages/pathways.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import { courseCatalog } from "@/stores/courses/index";
 import { coursePublicPathways } from "@/stores/courses/public-pathways";
+import { useContentStore } from "@/stores/content";
 
 const link = { props: ["to"], template: '<a :href="to"><slot /></a>' };
 
@@ -92,6 +93,38 @@ describe("public course discovery", () => {
 			wrapper.get(".hero-text p").text().split(/\s+/).length
 		).toBeLessThan(30);
 		wrapper.unmount();
+	});
+
+	it("shows useful subjects and session preparation without hiding them behind controls", () => {
+		const pinia = createPinia();
+		const wrapper = mount(HomePage, {
+			global: {
+				plugins: [pinia, createHead()],
+				stubs: { RouterLink: link }
+			}
+		});
+		try {
+			const groups = useContentStore(pinia).subjectGroups;
+			expect(wrapper.findAll(".home-subject")).toHaveLength(
+				groups.length
+			);
+			for (const [index, group] of groups.entries()) {
+				const article = wrapper.findAll(".home-subject")[index];
+				expect(article.get("h3").text()).toBe(group.title);
+				expect(article.get("p").text()).toBe(group.description);
+				expect(article.findAll("li").map(item => item.text())).toEqual(
+					group.subjects
+				);
+			}
+			expect(wrapper.findAll(".home-session__steps > li")).toHaveLength(
+				3
+			);
+			expect(wrapper.get(".home-session").text()).toContain("assignment");
+			expect(wrapper.get(".home-session").text()).toContain("next steps");
+			expect(wrapper.findAll("button, details")).toHaveLength(0);
+		} finally {
+			wrapper.unmount();
+		}
 	});
 
 	it.each([false, true])(

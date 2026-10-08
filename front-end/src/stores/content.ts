@@ -3,6 +3,7 @@ import { acceptHMRUpdate, defineStore } from "pinia";
 
 export interface SubjectGroup {
 	title: string;
+	description: string;
 	subjects: string[];
 }
 
@@ -20,6 +21,8 @@ export const useContentStore = defineStore("content", () => {
 	const subjectGroups = ref<SubjectGroup[]>([
 		{
 			title: "Programming Foundations",
+			description:
+				"Build games and small programs while learning how code works.",
 			subjects: [
 				"Scratch",
 				"Python",
@@ -31,6 +34,8 @@ export const useContentStore = defineStore("content", () => {
 		},
 		{
 			title: "Advanced CS & Systems",
+			description:
+				"Work through challenging problems and understand the systems behind your code.",
 			subjects: [
 				"USACO and Algorithms",
 				"Data Structures",
@@ -42,6 +47,8 @@ export const useContentStore = defineStore("content", () => {
 		},
 		{
 			title: "Web, Apps & Data",
+			description:
+				"Create websites and apps, or use code to explore data.",
 			subjects: [
 				"HTML, CSS, and TypeScript",
 				"Web Development Foundations",
@@ -52,6 +59,8 @@ export const useContentStore = defineStore("content", () => {
 		},
 		{
 			title: "Math, Science & Spanish",
+			description:
+				"Make sense of course concepts and apply them to problems and practice.",
 			subjects: [
 				"Algebra 1 and Algebra 2",
 				"Physics",
