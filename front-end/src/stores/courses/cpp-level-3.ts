@@ -8,6 +8,7 @@ import { cppRecursionTraceWorksheet } from "./cppRecursionTraceWorksheet";
 import { cppResourceSafetyLessons } from "./cppResourceSafetyLessons";
 import { cppRowImportProjectBrief } from "./cppRowImportProjectBrief";
 import { cppTaskManagerBriefs } from "./cppTaskManagerBriefs";
+import { cppValueTemplateLessons } from "./cppValueTemplateLessons";
 
 const cppLevel3SourceCourse: RawCourse = {
 	name: "C++ Level 3",
@@ -192,18 +193,16 @@ const cppLevel3SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Predictable Value Types and Restrained Operators",
-					content:
-						"Review constructors, invariants, `const` methods, and value semantics before adding operator overloading. Cover: what makes a class safe to copy, compare, print, and store in containers; when `operator<<`, comparison operators, or arithmetic operators make a type read naturally; and why overloaded operators avoid surprising side effects. Leave with a bias toward readable value behavior, not clever syntax."
+					content: cppValueTemplateLessons.values
 				},
 				{
 					title: "Templates and Diagnostic Reading",
-					content:
-						"Templates are a way to write type-independent code after the standard library is familiar. Cover: small function templates, tiny class-template wrappers, comparison helpers, constraints stated in plain language, and how to read template compiler errors by finding the first useful diagnostic instead of reacting to the full wall of output."
+					content: cppValueTemplateLessons.templates
 				},
 				{
 					title: "CPPI5 Project: Score or Fraction Toolkit",
-					content:
-						"Build a small value type such as `Fraction`, `Score`, or `Measurement` with validation, output, comparisons, and one or two restrained overloaded operators. Add a templated helper where it improves reuse.",
+					content: cppValueTemplateLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI5-Fraction-Toolkit/starter",
 					solutionLink:
@@ -213,12 +212,12 @@ const cppLevel3SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "CPPI5 Project 2: Template Error Reading Drill",
-					content:
-						"Trigger one controlled template compile error and practice reading the first useful diagnostic instead of reacting to the entire wall of compiler output.",
+					content: cppValueTemplateLessons.worksheet,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI5-Template-Error-Reading-Drill/starter",
+						"https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI5-Template-Error-Reading-Drill/WORKSHEET.md",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI5-Template-Error-Reading-Drill/solution"
+						"/ide?course=cpp-level-3&mode=cpp&projectKey=cpp-level-3%3Acppi5-template-diagnostic%3Areference-pack-v1&starterUrl=https%3A%2F%2Fgithub.com%2Finstruction-material%2FCPP-Level-3%2Ftree%2Fmain%2FCPPI5-Template-Error-Reading-Drill%2Fsolution&starterTitle=CPPI5+Project+2%3A+Template+Error+Reading+Drill&starterLabel=Worked+reference&lesson=cpp-level-3-cppi5-value-types-operator-overloading-and-templates"
 				}
 			]
 		},
