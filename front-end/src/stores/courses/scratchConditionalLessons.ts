@@ -122,4 +122,27 @@ Choose the actual resting and smash costume names from the hammer's Costumes tab
 To play one whoosh per press, use a separate green-flag forever stack: wait until mouse down?, start sound [whoosh], then wait until not mouse down?. This keeps movement responsive and prevents a held button from starting the sound every loop pass. Select the sound that exists in the starter.
 
 **Check and explain:** Move without pressing, hold the button while moving, release, and press again. The hammer must follow throughout, show smash only while pressed, and return to rest after release. Restart with the button released and check the resting costume. Explain the true and false branches before reconnecting the spider's two-condition scoring check.
+
+## Keep the timer shared and movement responsive
+
+Create **Score** and **Time Left** with **For all sprites** selected. The hammer and spider must read the same Time Left variable. A sprite-only variable with the same label, or a separate variable with different capitalization, is different state. Show the shared monitor while debugging and check which variable every set, change, and comparison block selects. Keep an existing variable when it is already shared; reconnect mistaken blocks before removing an unused duplicate.
+
+Use one controller to initialize the round before starting other stacks:
+
+\`\`\`text
+when green flag clicked
+  set Score to 0
+  set Time Left to 60
+  broadcast [round ready]
+  repeat until Time Left = 0
+    wait 1 seconds
+    change Time Left by -1
+  stop all
+\`\`\`
+
+Move the reacting stacks to **when I receive [round ready]** so they begin after both variables are reset. Keep the hammer's pointer/costume loop, its sound monitor, and the spider's two-second relocation loop in separate stacks. The countdown's wait must not sit in the pointer loop: one long stack runs in order and would make the hammer wait for the timer. Use plain broadcast here, not broadcast and wait, because a receiver containing forever never finishes.
+
+Inside the spider's repeated hit check, require **Time Left > 0**, **mouse down?**, and **touching Hammer?** before changing Score, moving the spider, or starting its crunch sound. Nested if blocks or combined and conditions can express these three checks. A sprite-click event tests the pointer, not contact with the hammer's costume. Replace an earlier experimental click-scoring stack rather than leaving two stacks that can award the same hit. Start sound allows that stack to continue; play sound until done pauses that stack.
+
+**Check the whole round:** Start with both variable monitors visible, move while the timer counts down, hit while time remains, and try again at zero. Score must not increase after the timer ends. Restart and verify Score is 0 and Time Left is 60 before any hit check begins. Explain why moving, counting down, and playing a sound can use separate stacks, while initialization order belongs in one controller.
 `;

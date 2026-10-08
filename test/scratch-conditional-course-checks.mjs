@@ -67,15 +67,15 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			await page.goto(`${origin}/courses#scratch-level-1-gs9-variables`, { waitUntil: "networkidle2" });
 			await page.waitForSelector(".lesson-view-toggle button");
 			await page.click(".lesson-view-toggle button:nth-child(3)");
-			const hammer = await readLesson(page, "Spider Smash: Debugging Pitfalls", "true and false branches");
-			for (const required of ["else switch costume to [resting costume]", "wait until not mouse down?", "does not mean the pointer is moving downward"])
+			const hammer = await readLesson(page, "Spider Smash: Debugging Pitfalls", "initialization order belongs in one controller");
+			for (const required of ["else switch costume to [resting costume]", "wait until not mouse down?", "does not mean the pointer is moving downward", "For all sprites", "set Time Left to 60 broadcast [round ready]", "wait 1 seconds change Time Left by -1", "Time Left > 0", "must not sit in the pointer loop", "Score must not increase after the timer ends"])
 				assert.ok(hammer.includes(required), required);
 			assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
 			if (process.env.SCRATCH_SCREENSHOT_DIR) {
 				const card = await page.evaluateHandle(() => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes("Spider Smash: Debugging Pitfalls")));
 				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-hammer-${role}-${width}.png`) });
 			}
-			console.log(JSON.stringify({ event: "verified-scratch-hammer-guidance", role, width, falseBranchAndReleaseGate: true }));
+			console.log(JSON.stringify({ event: "verified-scratch-hammer-guidance", role, width, falseBranchAndReleaseGate: true, sharedTimerAndOrderedReset: true }));
 			await page.goto("about:blank");
 			await page.goto(`${origin}/courses#scratch-level-1-classroom`, { waitUntil: "networkidle2" });
 			await page.waitForSelector(".outline-button[aria-label*='Conditions and decisions']");
