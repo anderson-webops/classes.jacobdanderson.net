@@ -1393,16 +1393,6 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				const referenceFolder = folder.replace(/starter$/, "solution");
 				valueTemplateReferenceFiles[folder] = await readStarter(repository, revision, referenceFolder, valueTemplatePacks[referenceFolder]);
 			}
-			if (folder === "CPPI5-Template-Error-Reading-Drill/starter") {
-				await page.evaluate(() => {
-					const storage = "classes-python-ide-projects:anonymous";
-					const projects = JSON.parse(localStorage.getItem(storage));
-					const oldKey = "cpp-level-3:cpp-level-3-cppi5-value-types-operator-overloading-and-templates-supplemental-cppi5-project-2-template-error-reading-drill:starter";
-					if (!projects.some(project => project.courseProjectKey === oldKey)) projects.push({ ...projects[0], _id: "cppi5-previous-template-attempt", title: "Earlier optional template attempt", courseProjectKey: oldKey, activeFileName: "main.cpp", files: [{ name: "main.cpp", content: "// Earlier optional learner work\nint main() { return 0; }\n" }, { name: "README.md", content: "Earlier diagnostic notes remain intact.\n" }] });
-					localStorage.setItem(storage, JSON.stringify(projects));
-				});
-			}
-			const earlierValueProjects = folder.startsWith("CPPI5-Template-") ? await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]")) : null;
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
 			const beforeRuntime = runtimeRequests;
@@ -1411,6 +1401,20 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
 			const selector = folder.startsWith("CPPI5-Template-") ? referenceFixture ? "a.resource-link.is-solution[href*='reference-pack-v1']" : "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI5-Template-Error-Reading-Drill/WORKSHEET.md']" : `a[href='https://github.com/${repository}/tree/main/${folder}']:not(.is-ide-starter)`;
 			await revealCourseSource(page, selector);
+			// Seed a saved attempt only after the prior IDE has finished unloading.
+			// Its newer timestamp lets the storage reader reconcile the legacy mirror
+			// with IndexedDB rather than silently preferring the earlier snapshot.
+			if (folder === "CPPI5-Template-Error-Reading-Drill/starter") {
+				await page.evaluate(() => {
+					const storage = "classes-python-ide-projects:anonymous";
+					const projects = JSON.parse(localStorage.getItem(storage));
+					const oldKey = "cpp-level-3:cpp-level-3-cppi5-value-types-operator-overloading-and-templates-supplemental-cppi5-project-2-template-error-reading-drill:starter";
+					const latest = Math.max(Date.now(), ...projects.map(project => Date.parse(project.updatedAt ?? project.createdAt) || 0));
+					if (!projects.some(project => project.courseProjectKey === oldKey)) projects.push({ ...projects[0], _id: "cppi5-previous-template-attempt", title: "Earlier optional template attempt", courseProjectKey: oldKey, courseProjectTitle: "CPPI5 Project 2: Template Error Reading Drill", starterLabel: "Template practice", starterUrl: "https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI5-Template-Error-Reading-Drill/starter", updatedAt: new Date(latest + 1).toISOString(), activeFileName: "main.cpp", files: [{ name: "main.cpp", content: "// Earlier optional learner work\nint main() { return 0; }\n" }, { name: "README.md", content: "Earlier diagnostic notes remain intact.\n" }] });
+					localStorage.setItem(storage, JSON.stringify(projects));
+				});
+			}
+			const earlierValueProjects = folder.startsWith("CPPI5-Template-") ? await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]")) : null;
 			if (folder.startsWith("CPPI5-Fraction-Toolkit/")) {
 				const titles = ["Predictable Value Types and Restrained Operators", "Templates and Diagnostic Reading"];
 				for (const width of [390, 1280]) {
@@ -1650,6 +1654,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			assert.equal(sourceRequests, before);
 			await confirmProjectImport(page);
 			if (earlierValueProjects) {
+				await page.waitForFunction((key, files) => {
+					const project = JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").find(project => project.courseProjectKey === key);
+					return project && project.files.length === Object.keys(files).length && Object.entries(files).every(([name, content]) => project.files.some(file => file.name === name && file.content === content));
+				}, {}, key, files);
 				const after = await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]"));
 				assert.equal(after.length, earlierValueProjects.length + 1);
 				assert.deepEqual(after.filter(project => project.courseProjectKey !== key), earlierValueProjects);
