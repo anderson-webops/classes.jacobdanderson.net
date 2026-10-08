@@ -100,3 +100,26 @@ The single contact check starts both receivers. It does not rely on two separate
 Test a short glide with the existing thunder recording, then make the glide longer than that recording. Predict which receiver finishes last and check that the return still waits for it. Check one sustained contact, a second separated contact, and a green-flag restart during playback. Ball's independent movement continues. Explain why merely moving play sound until done before or after a glide in one stack makes the actions sequential, and why start sound alone does not provide a completion gate for returning.
 `
 };
+export const spiderSmashDebugGuide = `## Debugging hint: restore the hammer
+
+After the mouse-button check changes the hammer to its smash costume, release the button. If the costume stays smashed, the program has no instruction for the false case. Try fixing that branch before reading the block guide below. Mouse down? means the mouse button is pressed; it does not mean the pointer is moving downward. Put this Boolean directly in the condition slot, without an equals block.
+
+Keep the hammer following the pointer and check both costume states:
+
+\`\`\`text
+when green flag clicked
+  switch costume to [resting costume]
+  forever
+    go to [mouse-pointer]
+    if mouse down? then
+      switch costume to [smash costume]
+    else
+      switch costume to [resting costume]
+\`\`\`
+
+Choose the actual resting and smash costume names from the hammer's Costumes tab; the brackets above describe their roles. The else branch restores the resting costume whenever the button is released. A one-time reset alone cannot handle later releases.
+
+To play one whoosh per press, use a separate green-flag forever stack: wait until mouse down?, start sound [whoosh], then wait until not mouse down?. This keeps movement responsive and prevents a held button from starting the sound every loop pass. Select the sound that exists in the starter.
+
+**Check and explain:** Move without pressing, hold the button while moving, release, and press again. The hammer must follow throughout, show smash only while pressed, and return to rest after release. Restart with the button released and check the resting costume. Explain the true and false branches before reconnecting the spider's two-condition scoring check.
+`;

@@ -61,7 +61,24 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			assert.equal(references.length, role === "instructor" ? 2 : 0);
 			console.log(`Scratch conditional guidance, optional timing and source roles verified: ${role} at ${width}px`);
 			await page.goto("about:blank");
-			await page.goto(`${origin}/courses#scratch-level-1-classroom-scratch-classroom-5`, { waitUntil: "networkidle2" });
+			await page.goto(`${origin}/courses#scratch-level-1-gs9-variables`, { waitUntil: "networkidle2" });
+			await page.waitForSelector(".lesson-view-toggle button");
+			await page.click(".lesson-view-toggle button:nth-child(3)");
+			const hammer = await readLesson(page, "Spider Smash: Debugging Pitfalls", "true and false branches");
+			for (const required of ["else switch costume to [resting costume]", "wait until not mouse down?", "does not mean the pointer is moving downward"])
+				assert.ok(hammer.includes(required), required);
+			assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+			if (process.env.SCRATCH_SCREENSHOT_DIR) {
+				const card = await page.evaluateHandle(() => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes("Spider Smash: Debugging Pitfalls")));
+				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-hammer-${role}-${width}.png`) });
+			}
+			console.log(JSON.stringify({ event: "verified-scratch-hammer-guidance", role, width, falseBranchAndReleaseGate: true }));
+			await page.goto("about:blank");
+			await page.goto(`${origin}/courses#scratch-level-1-classroom`, { waitUntil: "networkidle2" });
+			await page.waitForSelector(".outline-button[aria-label*='Conditions and decisions']");
+			if (await page.$eval(".outline-toggle", button => Boolean(button.offsetWidth || button.offsetHeight)))
+				await page.click(".outline-toggle");
+			await page.click(".outline-button[aria-label*='Conditions and decisions']");
 			await page.waitForSelector(".lesson-view-toggle button");
 			await page.click(".lesson-view-toggle button:nth-child(1)");
 			const ending = await readLesson(page, "Maze Checkpoint", "Optional ending screen");
