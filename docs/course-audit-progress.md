@@ -36,6 +36,9 @@ primary contract and optional worksheet. It preserves course scope and stable
 saved project keys, asks before importing the learner pack, continues an existing
 saved attempt from the worksheet and offers a separate current-pack action.
 The worksheet remains a document, with worked material visible to instructors.
+The IDE now recognizes tab-separated text files, including the primary pack's
+`scores.tsv`; filename checks, file labels, imports, saved payloads and exports
+preserve tab-separated data alongside the source, build file and README.
 Browser coverage checks the actual catalog in learner/instructor views at 390px
 and 1280px, import confirmation, untouched and completed exports, native report
 results, saved files and reopened attempts. Hosted site acceptance remains

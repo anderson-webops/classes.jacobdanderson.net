@@ -1389,8 +1389,8 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			if (Object.hasOwn(fileProcessorPacks, folder)) {
 				for (const width of [390, 1280]) {
 					await page.setViewport({ width, height: 900 });
-					await page.click(".lesson-view-toggle button:first-child");
-					await page.waitForSelector(".lesson-view-toggle button:first-child[aria-pressed='true']");
+					await page.click(".lesson-view-toggle button:nth-child(3)");
+					await page.waitForSelector(".lesson-view-toggle button:nth-child(3)[aria-pressed='true']");
 					await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent === "Validation, Exceptions, and Resource Boundaries" && item.textContent.includes("accepted.swap(candidate)")));
 					const titles = ["RAII and Single-Owner Resource Design", "Validation, Exceptions, and Resource Boundaries"];
 					const lessons = await page.$$eval(".lesson-item", (items, titles) => titles.map(title => items.find(item => item.querySelector("h5")?.textContent === title)?.textContent.replace(/\s+/g, " ")), titles);
@@ -1417,7 +1417,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 						const link = await page.$(worksheet);
 						const card = await link.evaluateHandle(element => element.closest(".lesson-item"));
 						await card.asElement().screenshot({ path: join(directory, `course-import-cpp-CPPI4-ownership-worksheet-${referenceFixture ? "staff" : "learner"}-${width}.png`) });
-						await page.click(".lesson-view-toggle button:first-child");
+						await page.click(".lesson-view-toggle button:nth-child(3)");
 						for (const [index, title] of titles.entries()) {
 							const card = await page.evaluateHandle(title => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent === title), title);
 							await card.asElement().screenshot({ path: join(directory, `course-import-cpp-CPPI4-lesson-${index}-${referenceFixture ? "staff" : "learner"}-${width}.png`) });

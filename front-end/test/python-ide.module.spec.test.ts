@@ -1409,6 +1409,53 @@ pgzrun.go()
 		]);
 	});
 
+	it("imports the C++ score pack with its tab-separated data unchanged", async () => {
+		const source = "https://github.com/instruction-material/CPP-Level-3";
+		const folder = "CPPI4-Resource-Safe-File-Processor/starter";
+		const contents: Record<string, string> = {
+			"main.cpp": "#include <iostream>\nint main() { return 0; }\n",
+			Makefile: "main: main.cpp\n\tc++ main.cpp -o main\n",
+			"README.md": "# Native score processor\n",
+			"scores.tsv": "CPPI4_SCORES_V1\r\nAda\t84\r\nLin\t59\r\n"
+		};
+		const fetcher = vi.fn(async (url: string) => {
+			const parsed = new URL(url);
+			if (parsed.hostname === "api.github.com") {
+				return new Response(
+					JSON.stringify(
+						Object.entries(contents).map(([name, content]) => ({
+							type: "file",
+							name,
+							path: `${folder}/${name}`,
+							size: content.length,
+							html_url: `${source}/blob/main/${folder}/${name}`,
+							download_url: `https://raw.githubusercontent.com/instruction-material/CPP-Level-3/main/${folder}/${name}`
+						}))
+					)
+				);
+			}
+			const name = parsed.pathname.split("/").pop()!;
+			expect(Object.hasOwn(contents, name)).toBe(true);
+			return new Response(contents[name]);
+		});
+		vi.stubGlobal("fetch", fetcher);
+		const files = await loadPythonIdeStarterFilesFromGitHub(
+			`${source}/tree/main/${folder}`,
+			"cpp"
+		);
+		expect(
+			Object.fromEntries(files.map(file => [file.name, file.content]))
+		).toEqual(contents);
+		expect(files.every(file => file.encoding === "text")).toBe(true);
+		expect(fetcher).toHaveBeenCalledTimes(5);
+		const project = createPythonIdeProject("cpp", { files });
+		expect(
+			pythonIdeProjectToPayload(project).files.find(
+				file => file.name === "scores.tsv"
+			)?.content
+		).toBe(contents["scores.tsv"]);
+	});
+
 	it("serializes remote project payloads with course starter metadata", () => {
 		const project = createPythonIdeProject("turtle", {
 			courseID: "python-level-1",
@@ -5152,6 +5199,10 @@ pgzrun.go()
 		expect(isValidPythonFileName("Main.java")).toBe(true);
 		expect(isValidPythonFileName("src/main/java/Main.java")).toBe(true);
 		expect(isValidPythonFileName("scores.csv")).toBe(true);
+		expect(isValidPythonFileName("scores.tsv")).toBe(true);
+		expect(normalizePythonFileName("changed scores.TSV")).toBe(
+			"changed_scores.tsv"
+		);
 		expect(isValidPythonFileName("notes.md")).toBe(true);
 		expect(isValidPythonFileName("drawing.eps")).toBe(true);
 		expect(isValidPythonFileName("drawing.ps")).toBe(true);
@@ -5167,6 +5218,8 @@ pgzrun.go()
 		expect(isValidPythonFileName("images/Robot.java")).toBe(false);
 		expect(isValidPythonFileName("sounds/eep.py")).toBe(false);
 		expect(isValidPythonFileName("package/data.csv")).toBe(false);
+		expect(isValidPythonFileName("package/data.tsv")).toBe(false);
+		expect(isValidPythonFileName("../scores.tsv")).toBe(false);
 		expect(isValidPythonFileName("script.exe")).toBe(false);
 		expect(isPythonIdeRuntimeReservedPath("turtle.py")).toBe(true);
 		expect(isPythonIdeRuntimeReservedPath("keras/layers.py")).toBe(true);
@@ -5209,6 +5262,12 @@ pgzrun.go()
 
 	it("labels file kinds and creates safe default content", () => {
 		expect(getPythonIdeFileKindLabel("scores.csv")).toBe("CSV");
+		expect(getPythonIdeFileKindLabel("scores.tsv")).toBe("TSV");
+		expect(getPythonIdeDefaultFileContent("scores.tsv")).toBe(
+			"name\tvalue\nsample\t1\n"
+		);
+		expect(isPythonIdeTextFile("scores.tsv")).toBe(true);
+		expect(isPythonIdeRunnableFile("scores.tsv", "cpp")).toBe(false);
 		expect(getPythonIdeFileKindLabel("Main.java")).toBe("Java");
 		expect(getPythonIdeFileKindLabel("notes.md")).toBe("Markdown");
 		expect(getPythonIdeFileKindLabel("images/player.png")).toBe("Image");
