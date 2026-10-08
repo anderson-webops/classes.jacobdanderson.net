@@ -17,6 +17,23 @@ const introductions: Record<string, string> = {
 		"A variable remembers a value between events. Choose a meaningful name, reset it on the flag, and change it at exactly the event that earns a point. Combine earlier skills into a game whose rules you can explain to a partner."
 };
 
+const mazeEndingGuide = [
+	"## Optional ending screen",
+	"",
+	"After Normal works, use this Hard extension to end the game at the gold Goal. Keep the purple wall as a retry. A text costume is a sprite; a say block makes a speech bubble.",
+	"",
+	"1. Paint a new sprite named Ending. In Costumes, use the Text tool to write Maze complete! or a message that matches your ending rule. Place it near the center of the stage.",
+	"2. On Ending, build when green flag clicked -> hide. This reset runs each time a new game starts. Do not put hide inside a forever loop.",
+	"3. On Ending, build when I receive [Maze finished] -> go to front layer -> show. Create the same named message from the Events message menu. Leave this receiver as a short script that finishes.",
+	"4. Keep the player's green-flag go to x: -180 y: -120 reset. In a green-flag forever loop on the player, add if touching [Goal] then broadcast [Maze finished] and wait, followed by stop all. Keep the wall-reset check working.",
+	"5. Use broadcast and wait so Ending finishes showing before stop all stops the other scripts. Then press the flag again: the ending must hide and the player must return to its start.",
+	"",
+	"**Check the ending:** Reach the Goal and verify that the text appears in front and arrow movement stops. Restart and verify hidden text, the starting position and working arrows. Touch a wall before reaching the Goal and verify that it still retries. If the text disappears immediately, look for another script hiding it; if it never appears, compare the message names and the order of broadcast and wait / stop all.",
+	"",
+	"**Explain:** Point to the ending condition, the message sender and receiver, and the two reset scripts. Add this extension one working script at a time; the supplied starter remains your Normal checkpoint.",
+	""
+].join("\n");
+
 export const scratchLevel1ClassroomCourse: RawCourse = {
 	name: "Scratch Level 1: Classroom Edition",
 	modules: units.map((unit, index) => ({
@@ -38,7 +55,7 @@ export const scratchLevel1ClassroomCourse: RawCourse = {
 					title: project.name,
 					learningPath: "core" as const,
 					projectLink: `/ide?mode=scratch&starter=${project.id}`,
-					content: `**Concept:** ${project.concept}\n\n${project.id === "animate-word" ? "**Block guide:** Events supplies when this sprite clicked. Motion turns a letter; its rotation style controls how it appears, not whether it turns. Looks changes size, says dialogue, changes a color effect, or switches the backdrop. Change size by is cumulative; set size to restores a chosen value. Color effects do not recolor the costume itself. Next backdrop cycles through the list; switch backdrop to chooses a named one. Sound: start sound continues immediately; play sound until done waits before the next block. Add a sound from the Sounds tab to use in your own letter. The supplied example uses an original short chime. Green-flag scripts restore this starter's scene; other projects may deliberately run actions on the flag.\n\n" : ""}[Download the starter (.sb3)](/scratch-projects/${project.id}.sb3). Open it with **Open .sb3**, or import it into a Scratch-compatible classroom editor.\n\n**Normal:** ${project.normal}\n\n**Hard:** ${project.hard}\n\n**Check:** ${project.check}\n\n**Explain:** Point to the blocks you changed. Predict what would happen if one value or event changed, then test your prediction. Keep the supplied working scripts as examples rather than replacing the whole project.`
+					content: `**Concept:** ${project.concept}\n\n${project.id === "animate-word" ? "**Block guide:** Events supplies when this sprite clicked. Motion turns a letter; its rotation style controls how it appears, not whether it turns. Looks changes size, says dialogue, changes a color effect, or switches the backdrop. Change size by is cumulative; set size to restores a chosen value. Color effects do not recolor the costume itself. Next backdrop cycles through the list; switch backdrop to chooses a named one. Sound: start sound continues immediately; play sound until done waits before the next block. Add a sound from the Sounds tab to use in your own letter. The supplied example uses an original short chime. Green-flag scripts restore this starter's scene; other projects may deliberately run actions on the flag.\n\n" : ""}[Download the starter (.sb3)](/scratch-projects/${project.id}.sb3). Open it with **Open .sb3**, or import it into a Scratch-compatible classroom editor.\n\n**Normal:** ${project.normal}\n\n**Hard:** ${project.hard}\n\n**Check:** ${project.check}\n\n${project.id === "maze-reset" ? `${mazeEndingGuide}\n` : ""}**Explain:** Point to the blocks you changed. Predict what would happen if one value or event changed, then test your prediction. Keep the supplied working scripts as examples rather than replacing the whole project.`
 				})),
 			...(unit === "Variables and games"
 				? [

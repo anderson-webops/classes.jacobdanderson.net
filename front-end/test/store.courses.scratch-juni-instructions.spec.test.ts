@@ -330,6 +330,27 @@ describe("original Juni Scratch project instructions", () => {
 				expect(content).toContain(requirement);
 			for (const staleRequirement of excluded)
 				expect(content).not.toContain(staleRequirement);
+			if (title === "Project 2 – Spider Smash") {
+				const hint = course!.modules
+					.flatMap(module => module.curriculum)
+					.find(
+						item => item.id === "scratch-spider-costume-debugging"
+					);
+				expect(hint?.projectLink).toBeUndefined();
+				for (const required of [
+					"Debugging hint: restore the hammer",
+					"else\n      switch costume to [resting costume]",
+					"wait until not mouse down?",
+					"true and false branches",
+					"For all sprites",
+					"set Time Left to 60\n  broadcast [round ready]",
+					"wait 1 seconds\n    change Time Left by -1",
+					"Time Left > 0",
+					"must not sit in the pointer loop",
+					"Score must not increase after the timer ends"
+				])
+					expect(hint?.content).toContain(required);
+			}
 		});
 	}
 });

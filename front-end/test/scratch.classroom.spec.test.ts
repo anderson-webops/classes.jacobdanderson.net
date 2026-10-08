@@ -22,10 +22,30 @@ describe("Scratch classroom", () => {
 		expect(first?.content).toContain("**Normal:**");
 		expect(first?.content).toContain("**Hard:**");
 		expect(first?.content).toContain("**Check:**");
+		const maze = course?.modules
+			.flatMap(module => module.curriculum)
+			.find(item => item.id === "maze-reset");
+		expect(maze?.projectLink).toBe("/ide?mode=scratch&starter=maze-reset");
+		expect(maze?.content).toContain("## Optional ending screen");
+		expect(maze?.content).toContain("when green flag clicked -> hide");
+		expect(maze?.content).toContain(
+			"when I receive [Maze finished] -> go to front layer -> show"
+		);
+		expect(maze?.content).toContain(
+			"broadcast [Maze finished] and wait, followed by stop all"
+		);
+		expect(maze?.content).toContain(
+			"the ending must hide and the player must return to its start"
+		);
+		expect(maze?.content).toContain("it still retries");
 	});
 	it("keeps a small, ordered core sequence and separate practice", () => {
 		const projects = scratchLevel1ClassroomCourse.modules.flatMap(module =>
-			module.curriculum.filter(item => item.projectLink && item.id !== "scratch-classroom-independent-game")
+			module.curriculum.filter(
+				item =>
+					item.projectLink &&
+					item.id !== "scratch-classroom-independent-game"
+			)
 		);
 		expect(projects).toHaveLength(12);
 		expect(projects[0].title).toBe("Animate Your Name");
@@ -41,9 +61,12 @@ describe("Scratch classroom", () => {
 		}
 	});
 	it("launches independent work without starter scripts or a solution", () => {
-		const independent = scratchLevel1ClassroomCourse.modules.flatMap(module => module.curriculum)
+		const independent = scratchLevel1ClassroomCourse.modules
+			.flatMap(module => module.curriculum)
 			.find(item => item.id === "scratch-classroom-independent-game");
-		expect(independent?.projectLink).toBe("/ide?mode=scratch&starter=blank");
+		expect(independent?.projectLink).toBe(
+			"/ide?mode=scratch&starter=blank"
+		);
 		expect(independent?.content).toContain("/scratch-projects/blank.sb3");
 		expect(independent?.solutionLink).toBeUndefined();
 	});

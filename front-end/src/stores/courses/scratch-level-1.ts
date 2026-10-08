@@ -9,7 +9,8 @@ import { isCoreProjectTitle } from "./projectGrouping";
 import {
 	dinoColorsLesson,
 	lightningTimingChallenge,
-	noisyReactionsLesson
+	noisyReactionsLesson,
+	spiderSmashDebugGuide
 } from "./scratchConditionalLessons";
 import {
 	buildScratchFluencyDrill,
@@ -652,6 +653,11 @@ Challenge: Add a counter for the number of guesses and congratulate the player i
 					),
 					projectLink: "https://scratch.mit.edu/projects/299272518/",
 					solutionLink: "https://scratch.mit.edu/projects/299094220/"
+				},
+				{
+					id: "scratch-spider-costume-debugging",
+					title: "Spider Smash: Debugging Pitfalls",
+					content: spiderSmashDebugGuide
 				},
 				{
 					title: "Variables: Verification and Reflection",
