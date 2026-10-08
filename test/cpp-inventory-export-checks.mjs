@@ -26,7 +26,11 @@ export function completeInventoryFile(folder, source, referenceFiles) {
 		const completed = body(referenceFiles["main.cpp"], reference).text.replaceAll("supplier_by_id", "supplierById");
 		source = source.slice(0, target.start) + completed + source.slice(target.end);
 	}
-	return source;
+	// The reference's join formats rows with an output string stream.
+	// Its required header is added in the learner editor with the four bodies.
+	return source.includes("#include <sstream>")
+		? source
+		: source.replace("#include <string>", "#include <sstream>\n#include <string>");
 }
 
 async function build(directory, file, binary, sanitized, runNative) {
