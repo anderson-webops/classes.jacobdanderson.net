@@ -20,12 +20,15 @@ context("Useful homepage and single compact footer", () => {
 							"vueuse-color-scheme",
 							theme
 						);
+						window.document.documentElement.style.scrollBehavior =
+							"auto";
 					}
 				});
 				cy.contains("header button", "Log in", {
 					timeout: 15000
 				}).should("exist");
 				cy.get(".home-subject").should("have.length", 4);
+				cy.get(".home-page > section").should("have.length", 3);
 				cy.get(".home-session__steps > li").should("have.length", 3);
 				cy.get('.home-page a[href="/pathways"]')
 					.should("have.length", 1)
@@ -47,10 +50,27 @@ context("Useful homepage and single compact footer", () => {
 					).to.be.lessThan(viewport.width > 700 ? 100 : 160);
 				});
 				cy.document().then(document => {
+					const view = document.defaultView!;
+					const home = document.querySelector(".home-page")!;
+					const steps = document.querySelector(
+						".home-session__steps"
+					)!;
+					const rem = parseFloat(
+						view.getComputedStyle(document.documentElement).fontSize
+					);
+					const margin = parseFloat(
+						view.getComputedStyle(home).marginBottom
+					);
+					expect(margin).to.be.at.least(3 * rem);
+					expect(margin).to.be.at.most(6 * rem);
 					expect(document.documentElement.scrollWidth).to.be.at.most(
 						viewport.width
 					);
 					const footer = document.querySelector("footer")!;
+					expect(
+						footer.getBoundingClientRect().top -
+							steps.getBoundingClientRect().bottom
+					).to.be.at.least(5 * rem);
 					for (const control of footer.querySelectorAll(
 						"a, button"
 					)) {
@@ -58,6 +78,9 @@ context("Useful homepage and single compact footer", () => {
 						expect(bounds.left).to.be.at.least(0);
 						expect(bounds.right).to.be.at.most(viewport.width);
 					}
+				});
+				cy.screenshot(`home-margin-${viewport.name}-${theme}`, {
+					capture: "fullPage"
 				});
 				cy.get(".site-footer__theme-toggle")
 					.should(

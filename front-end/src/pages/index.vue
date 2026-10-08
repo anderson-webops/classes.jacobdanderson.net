@@ -144,6 +144,7 @@ useHead(
 .home-page {
 	gap: clamp(2.5rem, 5vw, 4rem);
 	padding-bottom: 2rem;
+	margin-bottom: clamp(3rem, 6vw, 6rem);
 }
 
 .home-hero {
