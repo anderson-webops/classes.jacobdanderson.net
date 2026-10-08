@@ -21,8 +21,10 @@ all nine jobs and 35 Cypress scenarios. Independent main now passes the same
 nine jobs and 35 scenarios. The first browser attempt failed while reading a
 Scratch archive before download completion; its log and the successful repeat
 are retained. A correction in this candidate waits for Chrome's matching
-completed-download event rather than filename existence. The next fork release
-is being prepared from the accepted main.
+completed-download event rather than filename existence. The accepted main is published as downstream
+[v2.8.15](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.15).
+The original signed package, every payload digest, thirteen trusted deployment
+configurations and the published asset digests were independently verified.
 
 The rover capstone and optional state-design review source is integrated through
 [CPP Level 3 PR #9](https://github.com/instruction-material/CPP-Level-3/pull/9)
