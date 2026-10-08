@@ -143,10 +143,44 @@ test(
 				}),
 				true
 			);
-			await frame.click('input[placeholder="x"]');
-			// Leave numeric inputs and focus the actual stage before a game key.
-			await frame.click("canvas");
+			const stageSelector = '[class*="stage_stage_"] > div > canvas';
+			// Enter directly from the host, without priming focus in a child
+			// input. Scratch cancels the stage's native mouse focus transfer.
+			await page.focus('.scratch-toolbar input[maxlength="120"]');
+			await frame.click(stageSelector);
 			await page.keyboard.press("ArrowRight");
+			await frame.waitForFunction(
+				() =>
+					document.querySelector('input[placeholder="x"]')?.value ===
+					"10"
+			);
+			assert.equal(
+				await page.evaluate(() => document.activeElement.tagName),
+				"IFRAME"
+			);
+			// Editor fields must retain their own arrow-key behavior.
+			await frame.click('input[placeholder="x"]');
+			await page.keyboard.press("ArrowRight");
+			assert.equal(
+				await frame.$eval(
+					'input[placeholder="x"]',
+					input => input.value
+				),
+				"10"
+			);
+			// Returning after a host-toolbar action must work repeatedly.
+			await page.focus('.scratch-toolbar input[maxlength="120"]');
+			await frame.click(stageSelector);
+			await page.keyboard.press("ArrowRight");
+			await frame.waitForFunction(
+				() =>
+					document.querySelector('input[placeholder="x"]')?.value ===
+					"20"
+			);
+			// Green flag entry also leaves keyboard events in the editor.
+			await page.focus('.scratch-toolbar input[maxlength="120"]');
+			await frame.locator('[title="Go"]').click();
+			await page.keyboard.press("ArrowLeft");
 			await frame.waitForFunction(
 				() =>
 					document.querySelector('input[placeholder="x"]')?.value ===
