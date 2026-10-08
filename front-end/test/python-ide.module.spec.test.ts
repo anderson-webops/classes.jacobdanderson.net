@@ -1745,6 +1745,29 @@ pgzrun.go()
 			);
 	});
 
+	it("keeps the container worksheet separate from real inventory code", () => {
+		for (const path of [
+			"tree/main/CPPI3-Container-Tradeoff-Audit/starter",
+			"blob/main/CPPI3-Container-Tradeoff-Audit/starter/WORKSHEET.md",
+			"blob/main/CPPI3-Container-Tradeoff-Audit/solution/WORKED-AUDIT.md",
+			"blob/main/CPPI3-Container-Tradeoff-Audit/solution/main.cpp"
+		])
+			expect(
+				pythonIdeModeForCourseResource(
+					"cpp-level-3",
+					`https://github.com/instruction-material/CPP-Level-3/${path}`
+				)
+			).toBeNull();
+		for (const url of [
+			"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI3-Inventory-Indexer/starter",
+			"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI3-Container-Tradeoff-Audit-Extra/starter",
+			"https://github.com/another-owner/CPP-Level-3/tree/main/CPPI3-Container-Tradeoff-Audit/starter"
+		])
+			expect(pythonIdeModeForCourseResource("cpp-level-3", url)).toBe(
+				"cpp"
+			);
+	});
+
 	it("keeps Turtle fill and RGB color hooks wired in the runtime shim", () => {
 		const runtimeSource = readFileSync(
 			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),

@@ -1,5 +1,7 @@
 import type { RawCourse } from "./types";
 import { cppBuildDebugProjectBrief } from "./cppBuildDebugProjectBrief";
+import { cppContainerAuditWorksheet } from "./cppContainerAuditWorksheet";
+import { cppContainerLessons } from "./cppContainerLessons";
 import { cppDebugEvidenceNotebookBrief } from "./cppDebugEvidenceNotebookBrief";
 import { cppMazeSearchBriefs } from "./cppMazeSearchBriefs";
 import { cppRecursionTraceWorksheet } from "./cppRecursionTraceWorksheet";
@@ -119,18 +121,16 @@ const cppLevel3SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Choosing Containers and Traversing with Iterators",
-					content:
-						"Move beyond `vector` by treating standard containers as design choices. Compare when `array`, `deque`, `set`, `map`, and `unordered_map` fit better than a vector; how ordering, uniqueness, key lookup, insertion, and mutation patterns affect the choice; how iterators represent positions across different containers; and how iterator invalidation differs from pointer arithmetic. A justified container choice follows from the operations the program actually performs."
+					content: cppContainerLessons.containers
 				},
 				{
 					title: "Standard Algorithms and Relation-Style Views",
-					content:
-						"Standard algorithms are reusable operations that often communicate intent better than another hand-written loop. Cover: `find`, `count`, `sort`, `transform`, custom predicates, and when explicit loops are still clearer. Then adapt the CS236 relation idea into a practical container exercise: model rows as records and implement small `select`, `project`, `rename`, and join-style views with `vector`, `set`, and `map`."
+					content: cppContainerLessons.algorithms
 				},
 				{
 					title: "CPPI3 Project: Inventory Indexer",
-					content:
-						"Build an inventory or library index that stores records in a sequence, maps IDs to records, tracks unique categories, and produces sorted relation-style views such as selected rows, projected names, renamed categories, and supplier joins. The point is practical standard-library fluency before custom data structures.",
+					content: cppContainerLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI3-Inventory-Indexer/starter",
 					solutionLink:
@@ -140,12 +140,12 @@ const cppLevel3SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "CPPI3 Project 2: Container Tradeoff Mini-Audit",
-					content:
-						"Take one part of the inventory project and justify why the selected container is better than at least one alternative for the operations the program actually performs.",
+					content: cppContainerAuditWorksheet,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI3-Container-Tradeoff-Audit/starter",
+						"https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI3-Container-Tradeoff-Audit/starter/WORKSHEET.md",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI3-Container-Tradeoff-Audit/solution"
+						"https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI3-Container-Tradeoff-Audit/solution/WORKED-AUDIT.md"
 				}
 			]
 		},
