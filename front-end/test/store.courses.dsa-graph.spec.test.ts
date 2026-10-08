@@ -1,5 +1,6 @@
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
+import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import { pythonIdeModeForCourseResource } from "@/modules/pythonIde";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
@@ -32,6 +33,8 @@ describe("graph source, teaching and workspace boundaries", () => {
 				item => item.title === "DSCPP2 Graphs and Shortest Paths"
 			)!;
 			const lessons = module.curriculum.slice(0, 3);
+			for (const lesson of lessons)
+				expect(isLessonLearningItem(lesson), lesson.title).toBe(true);
 			expect(lessons.map(item => item.title)).toEqual([
 				"Adjacency Matrices and Weighted Connectivity",
 				"Shortest Path Thinking",

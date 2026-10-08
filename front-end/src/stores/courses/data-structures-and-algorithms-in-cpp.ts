@@ -1549,7 +1549,12 @@ function decorateDataStructuresCppModule(
 		...item,
 		content:
 			index === 0
-				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				? item.content.startsWith("**Concept focus:**")
+					? item.content.replace(
+							"\n\n",
+							`\n\n**Course flow:** ${flow.flowNote}\n\n`
+						)
+					: `**Course flow:** ${flow.flowNote}\n\n${item.content}`
 				: item.content,
 		learningPath: "core" as const
 	}));

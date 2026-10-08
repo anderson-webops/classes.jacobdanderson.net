@@ -1481,32 +1481,42 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				const titles = ["Adjacency Matrices and Weighted Connectivity", "Shortest Path Thinking", "Path Reconstruction"];
 				for (const width of [390, 1280]) {
 					await page.setViewport({ width, height: 900 });
+					const directory = process.env.COURSE_IMPORT_SCREENSHOT_DIR ? join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR) : null;
+					if (directory) await mkdir(directory, { recursive: true });
+					const capture = async (card, index) => {
+						if (directory) await card.asElement().screenshot({ path: join(directory, `course-import-cpp-DSCPP2-lesson-${index}-${referenceFixture ? "staff" : "learner"}-${width}.png`) });
+					};
 					await page.click(".lesson-view-toggle button:nth-child(3)");
 					await page.waitForSelector(".lesson-view-toggle button:nth-child(3)[aria-pressed='true']");
-					await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent === "Shortest Path Thinking" && item.textContent.includes("queue-demo.cpp")));
+					await page.waitForFunction(titles => titles.every(title => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent === title)), {}, titles);
 					const actual = await page.$$eval(".lesson-item", (items, titles) => titles.map((title) => {
 						const item = items.find(item => item.querySelector("h5")?.textContent === title);
-						return { title, text: item.textContent, importButtons: item.querySelectorAll(".is-ide-starter").length };
+						return { title, text: item.textContent, importButtons: item.querySelectorAll(".is-ide-starter").length, programs: [...item.querySelectorAll("pre code.language-cpp")].map(code => code.textContent) };
 					}), titles);
 					assert.ok(actual.every(item => item.importButtons === 0));
 					assert.ok(actual[0].text.includes("matrix.swap(candidate)"));
 					assert.ok(actual[2].text.includes("4,294,967,294"));
-					assert.equal(sourceRequests, before, "Reading graph teaching imports no code");
+					assert.deepEqual(actual[1].programs, [...dsaGraphLessons.selection.matchAll(/```cpp\n([\s\S]*?)\n```/g)].map(match => `${match[1]}\n`));
 					assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+					for (const [index, title] of titles.entries()) {
+						const card = await page.evaluateHandle(title => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent === title), title);
+						await capture(card, index);
+					}
+					await revealCourseSource(page, selector);
 					assert.equal(!!await page.$(`a.resource-link.is-solution[href='https://github.com/${repository}/tree/main/DSCPP2-Graph-Navigation/solution']`), referenceFixture);
-					for (const title of ["Project: Graph Navigation", "Graph Navigation Transfer Practice", "Graph Navigation Extension Practice"]) {
+					const primaryCard = await page.evaluateHandle(selector => document.querySelector(selector).closest(".lesson-item"), selector);
+					assert.ok(await primaryCard.evaluate(item => item.textContent.includes("Open current pack separately")));
+					await capture(primaryCard, 3);
+					await page.click(".lesson-view-toggle button:nth-child(2)");
+					await page.waitForSelector(".lesson-view-toggle button:nth-child(2)[aria-pressed='true']");
+					for (const [index, title] of ["Project: Graph Navigation", "Graph Navigation Transfer Practice", "Graph Navigation Extension Practice"].entries()) {
+						await page.waitForFunction(title => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent === title), {}, title);
 						const card = await page.evaluateHandle(title => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent === title), title);
 						assert.equal(await card.evaluate(item => item.querySelectorAll(".is-ide-starter").length), 0);
 						assert.ok(await card.evaluate(item => item.textContent.includes("imports no code")));
+						if (index > 0) await capture(card, index + 3);
 					}
-					if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
-						const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
-						await mkdir(directory, { recursive: true });
-						for (const [index, title] of [...titles, null, "Graph Navigation Transfer Practice", "Graph Navigation Extension Practice"].entries()) {
-							const card = await page.evaluateHandle(title => title === null ? document.querySelector("a[href='https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP2-Graph-Navigation/starter']:not(.is-ide-starter)")?.closest(".lesson-item") : [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent === title), title);
-							await card.asElement().screenshot({ path: join(directory, `course-import-cpp-DSCPP2-lesson-${index}-${referenceFixture ? "staff" : "learner"}-${width}.png`) });
-						}
-					}
+					assert.equal(sourceRequests, before, "Reading graph teaching and worksheets imports no code");
 					record("verified-graph-teaching", { role: referenceFixture ? "instructor" : "learner", width, fullPrograms: 1, readingImportsNoCode: true, unrelatedPracticeImports: 0, referenceVisible: referenceFixture });
 				}
 				await page.setViewport({ width: referenceFixture ? 1280 : 390, height: 900 });
