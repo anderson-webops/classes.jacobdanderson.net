@@ -97,7 +97,7 @@ describe("CourseAccessCodeManager.vue", () => {
 			}
 		});
 		await flushPromises();
-		const details = wrapper.get("details");
+		const details = wrapper.get(".workspace-disclosure");
 		await details.get("select").setValue("code-1");
 		await details.get("input:not([type=checkbox])").setValue("Learner");
 		await details.get("form").trigger("submit.prevent");

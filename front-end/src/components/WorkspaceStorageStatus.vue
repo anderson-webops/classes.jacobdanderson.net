@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
+
 defineProps<{ label: string }>();
 </script>
 
 <template>
-	<details class="workspace-storage">
-		<summary>
+	<WorkspaceDisclosure class="workspace-storage">
+		<template #label>
 			<span role="status">{{ label }}</span>
-		</summary>
+		</template>
 		<p v-if="$slots.default"><slot /></p>
-	</details>
+	</WorkspaceDisclosure>
 </template>
 
 <style scoped>
@@ -24,7 +26,7 @@ defineProps<{ label: string }>();
 	margin-right: 0.35rem;
 }
 
-.workspace-storage summary {
+.workspace-storage :deep(.workspace-disclosure__trigger) {
 	cursor: pointer;
 }
 .workspace-storage p {

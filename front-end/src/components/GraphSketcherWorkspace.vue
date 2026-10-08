@@ -16,6 +16,7 @@ import {
 	ref,
 	watch
 } from "vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import WorkspaceHeader from "@/components/WorkspaceHeader.vue";
 import {
 	axisFraction,
@@ -117,7 +118,7 @@ const interactiveDocument = computed(() =>
 let canvasResizeObserver: ResizeObserver | undefined;
 function updateCanvasViewport() {
 	const top = pageElement.value?.getBoundingClientRect().top ?? 0;
-	pageHeight.value = `${Math.max(0, window.innerHeight - Math.max(0, top) - 8)}px`;
+	pageHeight.value = `${Math.max(0, window.innerHeight - Math.max(0, top) - 40)}px`;
 	const width = canvasShell.value?.getBoundingClientRect().width ?? 0;
 	canvasViewportWidth.value =
 		window.innerWidth <= 600 ? Math.max(320, width - 24) : 0;
@@ -1720,12 +1721,14 @@ onBeforeUnmount(() => {
 		:style="{ height: pageHeight }"
 	>
 		<WorkspaceHeader title="Graphing">
-			<details
+			<WorkspaceDisclosure
 				class="graph-document-actions graph-project-menu"
+				popover
 				role="group"
 				aria-label="Graph project actions"
+				trigger-class="graph-button"
 			>
-				<summary class="graph-button">Project</summary>
+				<template #label>Project</template>
 				<div class="graph-project-options">
 					<button
 						type="button"
@@ -1760,8 +1763,11 @@ onBeforeUnmount(() => {
 					>
 						Download project
 					</button>
-					<details class="graph-export-menu">
-						<summary class="graph-button">Export</summary>
+					<WorkspaceDisclosure
+						class="graph-export-menu"
+						trigger-class="graph-button"
+					>
+						<template #label>Export</template>
 						<div class="graph-export-options">
 							<button
 								type="button"
@@ -1785,7 +1791,7 @@ onBeforeUnmount(() => {
 								CSV
 							</button>
 						</div>
-					</details>
+					</WorkspaceDisclosure>
 					<input
 						ref="fileInput"
 						class="sr-only"
@@ -1796,7 +1802,7 @@ onBeforeUnmount(() => {
 						@change="handleFileSelection"
 					/>
 				</div>
-			</details>
+			</WorkspaceDisclosure>
 		</WorkspaceHeader>
 
 		<div
@@ -4012,22 +4018,13 @@ onBeforeUnmount(() => {
 	position: relative;
 	display: block;
 }
-.graph-project-menu > summary {
+.graph-project-menu > :deep(.workspace-disclosure__trigger) {
 	cursor: pointer;
 }
 .graph-project-options {
-	position: absolute;
-	top: calc(100% + 0.4rem);
-	right: 0;
-	z-index: 10;
 	width: min(20rem, 85vw);
-	padding: 0.75rem;
 	display: grid;
 	gap: 0.5rem;
-	border: 1px solid var(--color-border);
-	border-radius: 8px;
-	background: var(--graph-panel);
-	box-shadow: var(--shadow-soft);
 }
 .graph-canvas-toolbar {
 	padding: 0.5rem 0.75rem;
@@ -4048,7 +4045,7 @@ onBeforeUnmount(() => {
 	flex-direction: column;
 	min-height: 0;
 	width: calc(100% - 1rem);
-	max-width: 1800px;
+	max-width: none;
 	margin-inline: auto;
 	padding: 0.35rem 0;
 	overflow: hidden;
@@ -4063,30 +4060,32 @@ onBeforeUnmount(() => {
 	flex: 1 1 0;
 	min-height: 0;
 	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	grid-template-rows: auto minmax(0, 1fr);
+	grid-template-columns: 7.5rem minmax(0, 1fr);
+	grid-template-rows: minmax(0, 1fr);
 }
 .graph-sketcher-page .graph-workspace:not(.inspector-hidden) {
-	grid-template-columns: minmax(0, 1fr) min(20rem, 35%);
+	grid-template-columns: 7.5rem minmax(0, 1fr) min(20rem, 32%);
 }
 .graph-sketcher-page .graph-tools {
-	grid-column: 1 / -1;
+	grid-column: 1;
 	grid-row: 1;
 	display: flex;
-	flex-direction: row;
-	align-items: center;
+	flex-direction: column;
+	align-items: stretch;
 	gap: 0.75rem;
 	padding: 0.25rem 0.5rem;
-	border-right: 0;
-	border-bottom: 1px solid var(--graph-border);
-	overflow-x: auto;
+	border-right: 1px solid var(--graph-border);
+	border-bottom: 0;
+	overflow: auto;
 	overscroll-behavior: contain;
 	min-width: 0;
+	min-height: 0;
 }
 .graph-sketcher-page .graph-tools__list,
 .graph-sketcher-page .graph-tools__history,
 .graph-sketcher-page .graph-tools__zoom {
 	display: flex;
+	flex-direction: column;
 	gap: 0.25rem;
 	flex: 0 0 auto;
 }
@@ -4097,12 +4096,12 @@ onBeforeUnmount(() => {
 	white-space: nowrap;
 }
 .graph-sketcher-page .graph-tool-draft {
-	display: flex;
-	min-width: 10rem;
+	display: grid;
+	min-width: 0;
 }
 .graph-sketcher-page .graph-canvas-panel {
-	grid-column: 1;
-	grid-row: 2;
+	grid-column: 2;
+	grid-row: 1;
 	display: flex;
 	flex-direction: column;
 	min-height: 0 !important;
@@ -4157,8 +4156,8 @@ onBeforeUnmount(() => {
 	min-height: 0;
 }
 .graph-sketcher-page .graph-inspector {
-	grid-column: 2;
-	grid-row: 2;
+	grid-column: 3;
+	grid-row: 1;
 	min-height: 0;
 	overflow: auto;
 	overscroll-behavior: contain;
@@ -4178,7 +4177,10 @@ onBeforeUnmount(() => {
 }
 @media (max-width: 760px) {
 	.graph-sketcher-page .graph-workspace:not(.inspector-hidden) {
-		grid-template-columns: minmax(0, 1fr);
+		grid-template-columns: 6rem minmax(0, 1fr);
+	}
+	.graph-sketcher-page .graph-workspace.inspector-hidden {
+		grid-template-columns: 6rem minmax(0, 1fr);
 	}
 	.graph-sketcher-page
 		.graph-workspace:not(.inspector-hidden)
@@ -4187,12 +4189,17 @@ onBeforeUnmount(() => {
 		display: flex;
 	}
 	.graph-sketcher-page .graph-inspector {
-		grid-column: 1;
-		grid-row: 2;
+		grid-column: 2;
+		grid-row: 1;
 		z-index: 2;
 		background: var(--graph-panel);
 	}
 	.graph-coordinate-tools p {
+		font-size: 0.75rem;
+	}
+	.graph-sketcher-page .graph-tool {
+		gap: 0.25rem;
+		padding-inline: 0.2rem;
 		font-size: 0.75rem;
 	}
 }

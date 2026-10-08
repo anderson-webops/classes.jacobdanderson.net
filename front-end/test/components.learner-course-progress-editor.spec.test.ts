@@ -50,7 +50,7 @@ describe("LearnerCourseProgressEditor", () => {
 			}
 		});
 
-		expect(wrapper.find("summary input").exists()).toBe(false);
+		expect(wrapper.find(".workspace-disclosure__trigger input").exists()).toBe(false);
 		expect(
 			wrapper
 				.find("input[aria-label='Mark module Variables complete']")

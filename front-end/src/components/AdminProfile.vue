@@ -8,6 +8,7 @@ import CourseAccessCodeManager from "@/components/CourseAccessCodeManager.vue";
 import LearnerCourseAccess from "@/components/LearnerCourseAccess.vue";
 import LearnerWorkspace from "@/components/LearnerWorkspace.vue";
 import SelfAccountSettings from "@/components/SelfAccountSettings.vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import { useCourseAccessDrafts } from "@/composables/useCourseAccessDrafts";
 import { useDeleteAccount } from "@/composables/useDeleteAccount";
 import { fetchAdminRecipients } from "@/modules/adminRecipients";
@@ -627,8 +628,8 @@ function confirmDeleteAdmin() {
 							</button>
 						</div>
 					</form>
-					<details class="person-advanced">
-						<summary>Student account</summary>
+					<WorkspaceDisclosure class="person-advanced">
+						<template #label>Student account</template>
 						<div class="action-row">
 							<button
 								class="btn-secondary btn"
@@ -645,11 +646,11 @@ function confirmDeleteAdmin() {
 								Delete learner
 							</button>
 						</div>
-					</details>
+					</WorkspaceDisclosure>
 				</template>
 			</LearnerWorkspace>
-			<details class="tutor-management">
-				<summary>Instructor permissions</summary>
+			<WorkspaceDisclosure class="tutor-management">
+				<template #label>Instructor permissions</template>
 				<section class="directory-section">
 					<label class="instructor-selector"
 						>Select instructor
@@ -699,14 +700,15 @@ function confirmDeleteAdmin() {
 								</button>
 							</div>
 
-							<details
+							<WorkspaceDisclosure
 								class="summary-block is-inline is-collapsible"
+								trigger-class="summary-toggle"
 							>
-								<summary class="summary-toggle">
+								<template #label>
 									<span class="summary-label">
 										Course access
 									</span>
-								</summary>
+								</template>
 								<ul
 									v-if="tutorCourseLabels(t._id).length"
 									class="summary-list"
@@ -723,7 +725,7 @@ function confirmDeleteAdmin() {
 								<p v-else class="summary-copy is-muted">
 									No course access enabled
 								</p>
-							</details>
+							</WorkspaceDisclosure>
 
 							<div
 								v-if="tutorEditing[t._id]"
@@ -780,8 +782,8 @@ function confirmDeleteAdmin() {
 									</button>
 								</div>
 							</div>
-							<details class="person-advanced">
-								<summary>Instructor account</summary>
+							<WorkspaceDisclosure class="person-advanced">
+								<template #label>Instructor account</template>
 								<div class="action-row">
 									<button
 										class="btn-secondary btn"
@@ -798,17 +800,17 @@ function confirmDeleteAdmin() {
 										Delete tutor
 									</button>
 								</div>
-							</details>
+							</WorkspaceDisclosure>
 						</article>
 					</div>
 				</section>
-			</details>
-			<details>
-				<summary>Create or manage classroom codes</summary>
+			</WorkspaceDisclosure>
+			<WorkspaceDisclosure>
+				<template #label>Create or manage classroom codes</template>
 				<CourseAccessCodeManager :courses="courseOptions" />
-			</details>
-			<details class="person-advanced">
-				<summary>Administrator account</summary>
+			</WorkspaceDisclosure>
+			<WorkspaceDisclosure class="person-advanced">
+				<template #label>Administrator account</template>
 				<button
 					v-if="currentAdmin"
 					class="btn-danger btn"
@@ -817,7 +819,7 @@ function confirmDeleteAdmin() {
 				>
 					Delete admin account
 				</button>
-			</details>
+			</WorkspaceDisclosure>
 		</template>
 
 		<AccessibleDialog
@@ -876,10 +878,10 @@ function confirmDeleteAdmin() {
 	min-width: 0;
 	margin: 0;
 }
-.admin-workspace :is(summary, label) {
+.admin-workspace :is(:deep(.workspace-disclosure__trigger), label) {
 	font-size: 0.95rem;
 }
-.admin-workspace summary {
+.admin-workspace :deep(.workspace-disclosure__trigger) {
 	cursor: pointer;
 }
 .admin-workspace select {

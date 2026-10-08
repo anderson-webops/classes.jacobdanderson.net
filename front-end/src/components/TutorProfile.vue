@@ -7,6 +7,7 @@ import CourseAccessCodeManager from "@/components/CourseAccessCodeManager.vue";
 import LearnerCourseAccess from "@/components/LearnerCourseAccess.vue";
 import LearnerWorkspace from "@/components/LearnerWorkspace.vue";
 import SelfAccountSettings from "@/components/SelfAccountSettings.vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import { useCourseAccessDrafts } from "@/composables/useCourseAccessDrafts";
 import { cleanCourseStatusMap } from "@/modules/courseAccess";
 import { fetchManagedLearners } from "@/modules/managedLearners";
@@ -168,10 +169,10 @@ async function saveCourses(userId: string) {
 					</button>
 				</template>
 			</LearnerWorkspace>
-			<details class="classroom-tools">
-				<summary>Classroom codes</summary>
+			<WorkspaceDisclosure class="classroom-tools">
+				<template #label>Classroom codes</template>
 				<CourseAccessCodeManager :courses="permittedCourses" />
-			</details>
+			</WorkspaceDisclosure>
 		</template>
 		<p v-if="success" role="status">{{ success }}</p>
 		<p v-if="error" role="alert">
@@ -213,7 +214,7 @@ async function saveCourses(userId: string) {
 	border-top: 1px solid var(--color-border);
 	padding-top: 0.75rem;
 }
-.classroom-tools summary {
+.classroom-tools :deep(.workspace-disclosure__trigger) {
 	font-size: 0.95rem;
 	cursor: pointer;
 }

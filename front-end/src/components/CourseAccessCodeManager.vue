@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CourseAccessCodeSummary } from "@/modules/courseAccessCodes";
 import { computed, onMounted, ref, watch } from "vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import {
 	createCourseAccessCode,
 	fetchCourseAccessCodes,
@@ -284,8 +285,8 @@ onMounted(loadCodes);
 			</article>
 		</div>
 
-		<details v-if="codes.length">
-			<summary>Recover an existing learner workspace</summary>
+		<WorkspaceDisclosure v-if="codes.length">
+			<template #label>Recover an existing learner workspace</template>
 			<p class="privacy-note">
 				Confirm the learner's identity using your existing class records
 				or a private conversation. A shared course code or claimed
@@ -355,7 +356,7 @@ onMounted(loadCodes);
 					Hide password
 				</button>
 			</div>
-		</details>
+		</WorkspaceDisclosure>
 		<p class="privacy-note">
 			Course codes enroll learners; only their private passwords reopen
 			saved workspaces. Use separate codes for separate classes and

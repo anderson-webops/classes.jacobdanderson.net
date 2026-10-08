@@ -101,9 +101,7 @@ function mountTools() {
 }
 
 async function openTools(wrapper: ReturnType<typeof mountTools>) {
-	const details = wrapper.find("details");
-	(details.element as HTMLDetailsElement).open = true;
-	await details.trigger("toggle");
+	await wrapper.get(".code-review-tools > .workspace-disclosure__trigger").trigger("click");
 	await flushPromises();
 }
 

@@ -51,6 +51,7 @@ declare module 'vue' {
     TutorProfile: typeof import('./components/TutorProfile.vue')['default']
     UserCommunicationPanel: typeof import('./components/UserCommunicationPanel.vue')['default']
     UserProfile: typeof import('./components/UserProfile.vue')['default']
+    WorkspaceDisclosure: typeof import('./components/WorkspaceDisclosure.vue')['default']
     WorkspaceHeader: typeof import('./components/WorkspaceHeader.vue')['default']
     WorkspaceStorageStatus: typeof import('./components/WorkspaceStorageStatus.vue')['default']
     WorkspaceViewToggle: typeof import('./components/WorkspaceViewToggle.vue')['default']

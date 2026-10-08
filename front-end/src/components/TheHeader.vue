@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import { classMeetingUrl, siteLabels } from "@/modules/siteNavigation";
 import { useAppStore } from "@/stores/app";
 
@@ -12,11 +13,11 @@ const emit = defineEmits<{
 
 const app = useAppStore();
 const route = useRoute();
-const accountMenu = ref<HTMLDetailsElement>();
+const accountMenu = ref<InstanceType<typeof WorkspaceDisclosure>>();
 watch(
 	() => route.fullPath,
 	() => {
-		if (accountMenu.value) accountMenu.value.open = false;
+		accountMenu.value?.close();
 	}
 );
 const {
@@ -98,7 +99,7 @@ const accountBadge = computed(() => {
 });
 
 function logoutUser() {
-	if (accountMenu.value) accountMenu.value.open = false;
+	accountMenu.value?.close();
 	app.logout();
 }
 
@@ -192,22 +193,19 @@ function isLinkActive(link: NavLink) {
 										to="/payment"
 										>Payment</RouterLink
 									>
-									<details
+									<WorkspaceDisclosure
 										v-if="isLoggedIn"
 										ref="accountMenu"
 										class="site-account-menu"
-										@keydown.esc.prevent="
-											accountMenu &&
-											(accountMenu.open = false)
-										"
+										popover
 									>
-										<summary>
+										<template #label>
 											{{
 												currentCourseLearner
 													? "Classroom"
 													: siteLabels.account
 											}}
-										</summary>
+										</template>
 										<div class="site-account-menu__content">
 											<span class="site-nav__badge">{{
 												accountBadge
@@ -229,7 +227,7 @@ function isLinkActive(link: NavLink) {
 												Log out
 											</button>
 										</div>
-									</details>
+									</WorkspaceDisclosure>
 									<button
 										v-else-if="isSessionResolved"
 										class="site-button site-button--secondary site-nav__action"
@@ -265,7 +263,11 @@ function isLinkActive(link: NavLink) {
 	font-size: 1.15rem;
 }
 .site-header--compact
-	:is(.site-nav__link, .site-nav__action, .site-account-menu > summary) {
+	:is(
+		.site-nav__link,
+		.site-nav__action,
+		:deep(.workspace-disclosure__trigger)
+	) {
 	min-height: 2.75rem;
 	padding: 0.35rem 0.65rem;
 	font-size: 0.9rem;
@@ -472,7 +474,7 @@ function isLinkActive(link: NavLink) {
 .site-account-menu {
 	position: relative;
 }
-.site-account-menu summary {
+.site-account-menu :deep(.workspace-disclosure__trigger) {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -483,24 +485,13 @@ function isLinkActive(link: NavLink) {
 	border-radius: var(--radius-sm);
 	color: var(--color-ink);
 }
-.site-account-menu summary::-webkit-details-marker {
-	display: none;
-}
 .site-account-menu__content {
-	position: absolute;
-	right: 0;
-	top: calc(100% + 0.3rem);
 	min-width: 14rem;
 	display: grid;
 	gap: 0.5rem;
-	padding: 0.75rem;
-	border: 1px solid var(--color-border);
-	border-radius: var(--radius-sm);
-	background: var(--color-surface-strong);
-	box-shadow: var(--shadow-soft);
 }
 @media (max-width: 1199px) {
-	.site-account-menu__content {
+	.site-account-menu :deep(.workspace-disclosure__content) {
 		position: static;
 		margin-top: 0.4rem;
 	}

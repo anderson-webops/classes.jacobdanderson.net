@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { api } from "@/api";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import { retainEvidenceActionKey } from "@/modules/sessionNoteSendIntent";
 
 interface Operation {
@@ -158,11 +159,11 @@ async function registerEvidence() {
 </script>
 
 <template>
-	<details
+	<WorkspaceDisclosure
 		class="evidence-review"
-		@toggle="($event.target as HTMLDetailsElement).open && loadReview()"
+		@toggle="open => open && loadReview()"
 	>
-		<summary>Session-note evidence review</summary>
+		<template #label>Session-note evidence review</template>
 		<p>
 			Use verified student and session IDs. Dates and shared mailboxes do
 			not identify a class. A proven-nonacceptance retry queues delivery;
@@ -322,7 +323,7 @@ async function registerEvidence() {
 			</p>
 			<button type="submit">Register evidence</button>
 		</form>
-	</details>
+	</WorkspaceDisclosure>
 </template>
 
 <style scoped>

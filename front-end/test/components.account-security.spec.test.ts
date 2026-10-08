@@ -21,7 +21,7 @@ describe("AccountSecurity", () => {
 
 	function mountPasswordForm(role: "admin" | "tutor" | "user" = "user") {
 		return mount(AccountSecurity, {
-			props: { email: "account@example.com", entityId: "account", role }
+			props: { email: "account@example.com", entityId: "account", role, editing: true }
 		});
 	}
 
@@ -55,8 +55,8 @@ describe("AccountSecurity", () => {
 			);
 			const wrapper = mountPasswordForm(role);
 			await fillPasswords(wrapper);
-			await wrapper.get("form").trigger("submit");
-			await wrapper.get("form").trigger("submit");
+			await wrapper.get(".password-form").trigger("submit");
+			await wrapper.get(".password-form").trigger("submit");
 
 			expect(apiMocks.post).toHaveBeenCalledTimes(1);
 			expect(apiMocks.post).toHaveBeenCalledWith(
@@ -68,15 +68,15 @@ describe("AccountSecurity", () => {
 				{ signal: expect.any(AbortSignal), timeout: 30_000 }
 			);
 			expectPasswordsCleared(wrapper);
-			expect(wrapper.get("form").attributes("aria-busy")).toBe("true");
+			expect(wrapper.get(".password-form").attributes("aria-busy")).toBe("true");
 			expect(
-				wrapper.get<HTMLButtonElement>('button[type="submit"]').element
+				wrapper.get<HTMLButtonElement>('.password-form button[type="submit"]').element
 					.disabled
 			).toBe(true);
 			resolveRequest();
 			await flushPromises();
 			expect(wrapper.text()).toContain("Password updated successfully.");
-			expect(wrapper.get("form").attributes("aria-busy")).toBe("false");
+			expect(wrapper.find(".password-form").exists()).toBe(false);
 			expectPasswordsCleared(wrapper);
 			wrapper.unmount();
 		}
@@ -84,13 +84,13 @@ describe("AccountSecurity", () => {
 
 	it("keeps validation local until both new passwords match", async () => {
 		const wrapper = mountPasswordForm();
-		await wrapper.get("form").trigger("submit");
+		await wrapper.get(".password-form").trigger("submit");
 		expect(wrapper.text()).toContain("New password is required.");
 		await fillPasswords(wrapper);
 		await wrapper
 			.get('[name="confirm-password"]')
 			.setValue("different-password");
-		await wrapper.get("form").trigger("submit");
+		await wrapper.get(".password-form").trigger("submit");
 		expect(wrapper.text()).toContain("New passwords do not match.");
 		expect(apiMocks.post).not.toHaveBeenCalled();
 		wrapper.unmount();
@@ -102,17 +102,17 @@ describe("AccountSecurity", () => {
 		});
 		const wrapper = mountPasswordForm();
 		await fillPasswords(wrapper);
-		await wrapper.get("form").trigger("submit");
+		await wrapper.get(".password-form").trigger("submit");
 		await flushPromises();
 		expect(wrapper.text()).toContain("Current password is incorrect.");
 		expectPasswordsCleared(wrapper);
 		expect(
-			wrapper.get<HTMLButtonElement>('button[type="submit"]').element
+			wrapper.get<HTMLButtonElement>('.password-form button[type="submit"]').element
 				.disabled
 		).toBe(false);
 		apiMocks.post.mockResolvedValueOnce({});
 		await fillPasswords(wrapper);
-		await wrapper.get("form").trigger("submit");
+		await wrapper.get(".password-form").trigger("submit");
 		await flushPromises();
 		expect(apiMocks.post).toHaveBeenCalledTimes(2);
 		expect(wrapper.text()).toContain("Password updated successfully.");
@@ -132,7 +132,7 @@ describe("AccountSecurity", () => {
 			);
 			const wrapper = mountPasswordForm();
 			await fillPasswords(wrapper);
-			await wrapper.get("form").trigger("submit");
+			await wrapper.get(".password-form").trigger("submit");
 			const signal = apiMocks.post.mock.calls[0][2].signal as AbortSignal;
 			await wrapper.setProps(changedProps);
 			expect(signal.aborted).toBe(true);
@@ -142,7 +142,7 @@ describe("AccountSecurity", () => {
 			expect(wrapper.text()).not.toContain(
 				"Password updated successfully."
 			);
-			expect(wrapper.get("form").attributes("aria-busy")).toBe("false");
+			expect(wrapper.find(".password-form").exists()).toBe(false);
 			wrapper.unmount();
 		}
 	);
@@ -157,7 +157,7 @@ describe("AccountSecurity", () => {
 		);
 		const wrapper = mountPasswordForm();
 		await fillPasswords(wrapper);
-		await wrapper.get("form").trigger("submit");
+		await wrapper.get(".password-form").trigger("submit");
 		const signal = apiMocks.post.mock.calls[0][2].signal as AbortSignal;
 		wrapper.unmount();
 		expect(signal.aborted).toBe(true);
@@ -170,14 +170,16 @@ describe("AccountSecurity", () => {
 			props: {
 				email: "first@example.com",
 				entityId: "first-user",
-				role: "user"
+				role: "user",
+				editing: true
 			}
 		});
 		const second = mount(AccountSecurity, {
 			props: {
 				email: "second@example.com",
 				entityId: "second-user",
-				role: "user"
+				role: "user",
+				editing: true
 			}
 		});
 
@@ -200,10 +202,12 @@ describe("AccountSecurity", () => {
 			data: { message: "All sessions have been signed out." }
 		});
 		const wrapper = mount(AccountSecurity, {
+			attachTo: document.body,
 			props: {
 				email: "student@example.com",
 				entityId: "student-user",
-				role: "user"
+				role: "user",
+				editing: true
 			}
 		});
 		const button = wrapper
@@ -211,14 +215,18 @@ describe("AccountSecurity", () => {
 			.find(candidate => candidate.text() === "Sign out of all sessions");
 
 		expect(button).toBeDefined();
+		expect(button!.isVisible()).toBe(false);
+		await wrapper.get(".advanced-settings > button").trigger("click");
+		expect(button!.isVisible()).toBe(true);
 		await button!.trigger("click");
 		await flushPromises();
 
-		expect(wrapper.get(".advanced-settings").attributes("open")).toBeUndefined();
+		expect(wrapper.get(".advanced-settings > button").attributes("aria-expanded")).toBe("true");
 		expect(button!.classes()).toContain("btn-danger");
 		expect(apiMocks.post).toHaveBeenCalledWith("/accounts/signout-all");
 		expect(wrapper.text()).toContain(
 			"All sessions have been signed out."
 		);
+		wrapper.unmount();
 	});
 });

@@ -105,15 +105,15 @@ test(
 			async function setProjectMenuOpen(open) {
 				if (
 					(await page.$eval(
-						".scratch-project-menu",
-						menu => menu.open
+						".scratch-project-menu > .workspace-disclosure__trigger",
+						menu => menu.getAttribute("aria-expanded") === "true"
 					)) !== open
 				)
-					await page.click(".scratch-project-menu > summary");
+					await page.click(".scratch-project-menu > .workspace-disclosure__trigger");
 				await page.waitForFunction(
 					open =>
-						document.querySelector(".scratch-project-menu")
-							?.open === open,
+						(document.querySelector(".scratch-project-menu > .workspace-disclosure__trigger")
+							?.getAttribute("aria-expanded") === "true") === open,
 					{},
 					open
 				);

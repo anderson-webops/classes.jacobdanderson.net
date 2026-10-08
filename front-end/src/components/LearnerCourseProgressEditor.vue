@@ -2,6 +2,7 @@
 import type { LearnerCourseProgressController } from "@/composables/useLearnerCourseProgress";
 import type { CourseModuleItem } from "@/stores/courses";
 import { computed } from "vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 
 const props = defineProps<{
 	courseLabel: (courseId: string) => string;
@@ -118,14 +119,15 @@ function toggleItem(item: CourseModuleItem, event: Event) {
 			</p>
 
 			<div v-else-if="selectedCourse" class="progress-outline">
-				<details
+				<WorkspaceDisclosure
 					v-for="module in selectedCourse.modules"
 					:key="module.id"
 					class="progress-module"
+					trigger-class="progress-module-summary"
 				>
-					<summary class="progress-module-summary">
+					<template #label>
 						<span>{{ module.title }}</span>
-					</summary>
+					</template>
 					<label class="progress-check is-module">
 						<input
 							:checked="isModuleComplete(module.id)"
@@ -153,7 +155,7 @@ function toggleItem(item: CourseModuleItem, event: Event) {
 							<span>{{ item.title }}</span>
 						</label>
 					</div>
-				</details>
+				</WorkspaceDisclosure>
 			</div>
 
 			<div class="progress-actions">
@@ -230,19 +232,15 @@ function toggleItem(item: CourseModuleItem, event: Event) {
 	box-shadow: inset 0 0 0 1px var(--color-border);
 }
 
-.progress-module summary {
+.progress-module :deep(.workspace-disclosure__trigger) {
 	cursor: pointer;
 	list-style: none;
 	padding: 0.75rem 0.85rem;
 }
 
-.progress-module-summary {
+:deep(.progress-module-summary) {
 	color: var(--color-ink);
 	font-weight: 800;
-}
-
-.progress-module summary::-webkit-details-marker {
-	display: none;
 }
 
 .progress-check {

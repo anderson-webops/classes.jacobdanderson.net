@@ -1,18 +1,21 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { api } from "@/api";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import { useAppStore } from "@/stores/app";
 
 type Role = "admin" | "tutor" | "user";
 
 const props = defineProps<{ entityId: string; role: Role; email: string }>();
-
+const emit = defineEmits<{ busy: [busy: boolean] }>();
+const editing = defineModel<boolean>("editing", { default: false });
 const app = useAppStore();
 const email = ref(props.email);
 const emailStatus = ref("");
 const emailError = ref("");
 const emailPassword = ref("");
 const emailSubmitting = ref(false);
+let emailRequest: AbortController | null = null;
 
 const currentPassword = ref("");
 const newPassword = ref("");
@@ -26,6 +29,16 @@ const isPasswordSubmitting = ref(false);
 let passwordRequest: AbortController | null = null;
 const sessionStatus = ref("");
 const sessionError = ref("");
+watch(
+	() => emailSubmitting.value || isPasswordSubmitting.value,
+	value => emit("busy", value)
+);
+watch(editing, () => {
+	email.value = props.email;
+	emailPassword.value = "";
+	clearPasswordInputs();
+	emailError.value = passwordError.value = "";
+});
 const idPrefix = computed(
 	() =>
 		`account-security-${props.role}-${props.entityId.replace(
@@ -53,24 +66,33 @@ async function updateEmail() {
 	emailSubmitting.value = true;
 	const password = emailPassword.value;
 	emailPassword.value = "";
+	const request = new AbortController();
+	emailRequest = request;
 	try {
 		const { data } = await api.post(
 			`/accounts/changeEmail/${props.entityId}`,
 			{
 				email: email.value,
 				currentPassword: password
-			}
+			},
+			{ signal: request.signal, timeout: 30_000 }
 		);
+		if (emailRequest !== request) return;
 		emailStatus.value =
 			data.message ?? "Check your new email to verify the change.";
+		editing.value = false;
 	} catch (err: any) {
+		if (emailRequest !== request) return;
 		emailError.value =
 			err.response?.data?.message ??
 			err.message ??
 			"Unable to update email.";
 	} finally {
-		emailSubmitting.value = false;
-		emailPassword.value = "";
+		if (emailRequest === request) {
+			emailRequest = null;
+			emailSubmitting.value = false;
+			emailPassword.value = "";
+		}
 	}
 }
 
@@ -94,8 +116,18 @@ function resetPasswordForm() {
 	clearPasswordInputs();
 }
 
-watch(() => [props.entityId, props.role], resetPasswordForm, { flush: "sync" });
-onBeforeUnmount(resetPasswordForm);
+function resetAccountForms() {
+	resetPasswordForm();
+	emailRequest?.abort();
+	emailRequest = null;
+	emailSubmitting.value = false;
+	email.value = props.email;
+	emailPassword.value = emailStatus.value = emailError.value = "";
+	sessionStatus.value = sessionError.value = "";
+	editing.value = false;
+}
+watch(() => [props.entityId, props.role], resetAccountForms, { flush: "sync" });
+onBeforeUnmount(resetAccountForms);
 
 async function updatePassword() {
 	if (isPasswordSubmitting.value) return;
@@ -125,6 +157,7 @@ async function updatePassword() {
 		});
 		if (passwordRequest !== request) return;
 		passwordStatus.value = "Password updated successfully.";
+		editing.value = false;
 	} catch (err: any) {
 		if (passwordRequest !== request) return;
 		passwordError.value =
@@ -159,8 +192,22 @@ async function signOutAllSessions() {
 
 <template>
 	<section class="security-card">
-		<details class="security-section">
-			<summary>Change email</summary>
+		<dl v-if="!editing" class="security-values">
+			<div>
+				<dt>Email</dt>
+				<dd>{{ props.email }}</dd>
+			</div>
+			<div>
+				<dt>Password</dt>
+				<dd aria-label="Password is set">••••••••</dd>
+			</div>
+		</dl>
+		<form
+			v-if="editing"
+			class="security-section email-form"
+			@submit.prevent="updateEmail"
+		>
+			<h3>Change email</h3>
 			<div class="field">
 				<label :for="`${idPrefix}-email`">Email</label>
 				<input
@@ -185,31 +232,25 @@ async function signOutAllSessions() {
 			</div>
 			<button
 				class="btn-secondary btn"
-				type="button"
+				type="submit"
 				:disabled="emailSubmitting"
-				@click="updateEmail"
 			>
 				Send verification
 			</button>
-			<p
-				v-if="emailStatus"
-				class="status"
-				role="status"
-				aria-live="polite"
-			>
-				{{ emailStatus }}
-			</p>
 			<p v-if="emailError" class="error" role="alert">
 				{{ emailError }}
 			</p>
-		</details>
+		</form>
+		<p v-if="emailStatus" class="status" role="status" aria-live="polite">
+			{{ emailStatus }}
+		</p>
 
-		<details class="security-section">
-			<summary>Change password</summary>
+		<section v-if="editing" class="security-section">
+			<h3>Change password</h3>
 			<form
 				:aria-busy="isPasswordSubmitting ? 'true' : 'false'"
 				:aria-labelledby="`${idPrefix}-password-title`"
-				class="security-section"
+				class="password-form"
 				@submit.prevent="updatePassword"
 			>
 				<h5 :id="`${idPrefix}-password-title`" class="sr-only">
@@ -264,22 +305,24 @@ async function signOutAllSessions() {
 				>
 					{{ isPasswordSubmitting ? "Updating…" : "Update password" }}
 				</button>
-				<p
-					v-if="passwordStatus"
-					class="status"
-					role="status"
-					aria-live="polite"
-				>
-					{{ passwordStatus }}
-				</p>
 				<p v-if="passwordError" class="error" role="alert">
 					{{ passwordError }}
 				</p>
 			</form>
-		</details>
+		</section>
+		<p
+			v-if="passwordStatus"
+			class="status"
+			role="status"
+			aria-live="polite"
+		>
+			{{ passwordStatus }}
+		</p>
 
-		<details class="security-section advanced-settings">
-			<summary>Advanced Settings</summary>
+		<WorkspaceDisclosure
+			class="security-section advanced-settings"
+			label="Advanced Settings"
+		>
 			<button
 				class="btn-danger btn"
 				type="button"
@@ -293,7 +336,8 @@ async function signOutAllSessions() {
 			<p v-if="sessionError" class="status error" role="alert">
 				{{ sessionError }}
 			</p>
-		</details>
+			<slot name="advanced" />
+		</WorkspaceDisclosure>
 	</section>
 </template>
 
@@ -307,11 +351,28 @@ async function signOutAllSessions() {
 	border-top: 1px solid var(--color-border);
 	padding-top: 0.65rem;
 }
-.security-section > summary {
-	cursor: pointer;
-	font-size: 0.95rem;
+.security-section > h3 {
+	font-size: 1rem;
+	margin: 0 0 0.85rem;
 }
-.security-section[open] > summary {
+.security-values {
+	margin: 0;
+}
+.security-values > div {
+	display: grid;
+	grid-template-columns: 6rem minmax(0, 1fr);
+	gap: 0.75rem;
+	padding-block: 0.35rem;
+}
+.security-values dt {
+	font-weight: 500;
+	color: var(--color-ink-soft);
+}
+.security-values dd {
+	margin: 0;
+	overflow-wrap: anywhere;
+}
+.security-section > .field:first-of-type {
 	margin-bottom: 0.85rem;
 }
 .security-section form {

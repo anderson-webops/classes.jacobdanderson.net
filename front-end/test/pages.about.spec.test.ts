@@ -27,11 +27,11 @@ describe("AboutPage", () => {
 		expect(wrapper.get(".copy p").text().split(/\s+/).length).toBeLessThan(
 			50
 		);
-		const questions = wrapper.findAll(".about-faq summary");
+		const questions = wrapper.findAll(".about-faq .workspace-disclosure__label");
 		expect(questions.map(question => question.text())).toEqual(
 			useContentStore(pinia).faqs.map(faq => faq.question)
 		);
-		expect(wrapper.findAll(".about-faq details[open]")).toHaveLength(0);
+		expect(wrapper.findAll('.about-faq button[aria-expanded="true"]')).toHaveLength(0);
 		expect(wrapper.find('a[href="/payment"]').exists()).toBe(false);
 		expect(wrapper.find('a[href="/signup"]').exists()).toBe(false);
 		wrapper.unmount();

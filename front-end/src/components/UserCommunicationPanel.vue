@@ -4,6 +4,7 @@ import { marked } from "marked";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 import { api } from "@/api";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import WorkspaceViewToggle from "@/components/WorkspaceViewToggle.vue";
 import { useAppStore } from "@/stores/app";
 
@@ -253,12 +254,13 @@ watch(
 					No saved notes.
 				</p>
 				<div v-else class="record-list">
-					<details
+					<WorkspaceDisclosure
 						v-for="note in sessionNotes"
 						:key="note._id"
 						class="record-card"
+						trigger-class="record-summary"
 					>
-						<summary class="record-summary">
+						<template #label>
 							<div>
 								<p class="record-kicker">
 									{{ formatDate(note.sessionDate) }}
@@ -266,7 +268,7 @@ watch(
 								<h5>{{ note.subject }}</h5>
 							</div>
 							<span class="record-action">Open</span>
-						</summary>
+						</template>
 						<div class="record-meta">
 							Saved {{ formatTimestamp(note.createdAt) }}
 						</div>
@@ -274,7 +276,7 @@ watch(
 							class="record-body"
 							v-html="renderMarkdown(note.markdown)"
 						/>
-					</details>
+					</WorkspaceDisclosure>
 				</div>
 			</section>
 
@@ -295,12 +297,13 @@ watch(
 					No saved messages.
 				</p>
 				<div v-else class="record-list">
-					<details
+					<WorkspaceDisclosure
 						v-for="email in internalEmails"
 						:key="email._id"
 						class="record-card"
+						trigger-class="record-summary"
 					>
-						<summary class="record-summary">
+						<template #label>
 							<div>
 								<p class="record-kicker">
 									Sent {{ formatTimestamp(email.sentAt) }}
@@ -311,7 +314,7 @@ watch(
 								</p>
 							</div>
 							<span class="record-action">Open</span>
-						</summary>
+						</template>
 						<div class="record-meta">
 							From {{ email.fromAddress }}
 						</div>
@@ -319,7 +322,7 @@ watch(
 							class="record-body"
 							v-html="renderMarkdown(email.markdown)"
 						/>
-					</details>
+					</WorkspaceDisclosure>
 				</div>
 			</section>
 		</div>
@@ -363,7 +366,7 @@ watch(
 	border-radius: var(--radius-sm);
 	background: var(--color-surface);
 }
-.record-summary {
+:deep(.record-summary) {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -371,10 +374,10 @@ watch(
 	padding: 0.75rem 1rem;
 	cursor: pointer;
 }
-.record-summary > div {
+:deep(.record-summary) > div {
 	min-width: 0;
 }
-.record-summary h5 {
+:deep(.record-summary) h5 {
 	font: 600 1rem var(--font-sans);
 	color: var(--color-ink);
 	margin: 0.25rem 0;

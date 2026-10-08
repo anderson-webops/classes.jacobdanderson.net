@@ -36,6 +36,7 @@ import { useRoute, useRouter } from "vue-router";
 import IdeDiagnosticsControls from "@/components/IdeDiagnosticsControls.vue";
 import IdeEnvironmentSelect from "@/components/IdeEnvironmentSelect.vue";
 import IdeStarterPicker from "@/components/IdeStarterPicker.vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import WorkspaceHeader from "@/components/WorkspaceHeader.vue";
 import { cppBuildInstructions } from "@/modules/cppBuildInstructions";
 import {
@@ -8192,12 +8193,14 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 										{{ shareMessage }}
 									</small>
 								</div>
-								<details class="ide-diagnostics-settings">
-									<summary>Diagnostics</summary>
+								<WorkspaceDisclosure
+									class="ide-diagnostics-settings"
+								>
+									<template #label>Diagnostics</template>
 									<IdeDiagnosticsControls
 										:capture="captureIdeDiagnostics"
 									/>
-								</details>
+								</WorkspaceDisclosure>
 								<button
 									aria-label="Download project ZIP"
 									class="ide-setting-action"
@@ -8256,12 +8259,12 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 					</p>
 				</section>
 
-				<details
+				<WorkspaceDisclosure
 					v-if="selectedProjectCanShowBlueJIntegration"
 					class="bluej-integration-panel"
 					aria-label="BlueJ integration"
 				>
-					<summary>BlueJ desktop integration</summary>
+					<template #label>BlueJ desktop integration</template>
 					<div>
 						<p class="bluej-integration-eyebrow">BlueJ</p>
 						<h2>BlueJ Desktop Integration</h2>
@@ -8333,7 +8336,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 							BlueJ source
 						</a>
 					</div>
-				</details>
+				</WorkspaceDisclosure>
 
 				<section
 					v-if="selectedVisibleReview"
@@ -8408,8 +8411,11 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 								<small v-if="editorCursorCount > 1">
 									{{ editorCursorCount }} cursors
 								</small>
-								<details class="editor-shortcuts">
-									<summary>Shortcuts</summary>
+								<WorkspaceDisclosure
+									class="editor-shortcuts"
+									popover
+								>
+									<template #label>Shortcuts</template>
 									<ul>
 										<li>Cmd/Ctrl+F opens search.</li>
 										<li>
@@ -8454,7 +8460,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 											text.
 										</li>
 									</ul>
-								</details>
+								</WorkspaceDisclosure>
 							</div>
 						</div>
 						<div
@@ -10167,7 +10173,7 @@ html.dark .ide-splitter::before {
 	text-transform: none;
 }
 
-.editor-shortcuts summary {
+.editor-shortcuts :deep(.workspace-disclosure__trigger) {
 	list-style: none;
 	cursor: pointer;
 	border: 1px solid var(--color-border);
@@ -10180,32 +10186,20 @@ html.dark .ide-splitter::before {
 	letter-spacing: 0;
 }
 
-.editor-shortcuts summary::-webkit-details-marker {
-	display: none;
-}
-
-.editor-shortcuts[open] summary {
+.editor-shortcuts.is-open :deep(.workspace-disclosure__trigger) {
 	border-color: var(--python-focus-ring);
 	box-shadow: 0 0 0 3px var(--python-focus-glow);
 	color: var(--color-ink);
 }
 
 .editor-shortcuts ul {
-	position: absolute;
-	z-index: 25;
-	top: calc(100% + 0.5rem);
-	right: 0;
 	width: min(17.5rem, 78vw);
 	max-height: min(24rem, 44vh);
 	display: grid;
 	gap: 0.35rem;
 	margin: 0;
 	overflow: auto;
-	padding: 0.8rem 0.9rem;
-	border: 1px solid var(--color-border);
-	border-radius: 14px;
-	background: var(--color-surface-strong);
-	box-shadow: var(--shadow-soft);
+	padding: 0;
 	color: var(--color-ink-soft);
 	font-size: 0.82rem;
 	font-weight: 700;
@@ -10219,13 +10213,13 @@ html.dark .ide-splitter::before {
 	margin-left: 1rem;
 }
 
-html.dark .editor-shortcuts summary {
+html.dark .editor-shortcuts :deep(.workspace-disclosure__trigger) {
 	border-color: rgba(148, 163, 184, 0.32);
 	background: rgba(15, 23, 42, 0.7);
 	color: #c8dce6;
 }
 
-html.dark .editor-shortcuts[open] summary {
+html.dark .editor-shortcuts.is-open :deep(.workspace-disclosure__trigger) {
 	border-color: rgba(94, 234, 212, 0.56);
 	color: #f8fbff;
 }
@@ -10796,11 +10790,11 @@ html.dark .editor-shortcuts ul {
 .mobile-view-picker {
 	display: none;
 }
-.bluej-integration-panel summary {
+.bluej-integration-panel :deep(.workspace-disclosure__trigger) {
 	cursor: pointer;
 	font-weight: 600;
 }
-.bluej-integration-panel:not([open]) {
+.bluej-integration-panel:not(.is-open) {
 	display: block;
 	padding: 0.6rem 0.75rem;
 }

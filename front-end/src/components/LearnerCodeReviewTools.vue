@@ -8,6 +8,7 @@ import type {
 	PythonIdeProjectReview
 } from "@/modules/pythonIde";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import {
 	createPythonIdeProjectReview,
 	fetchManagedPythonIdeProject,
@@ -226,8 +227,8 @@ async function loadSelectedProject() {
 	}
 }
 
-async function onToggle(event: Event) {
-	opened.value = (event.target as HTMLDetailsElement).open;
+async function onToggle(open: boolean) {
+	opened.value = open;
 	if (opened.value && !loaded.value && !loading.value)
 		await loadProjectReviews();
 }
@@ -372,14 +373,15 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<component
-		:is="embedded ? 'section' : 'details'"
+	<WorkspaceDisclosure
 		:id="`learner-${userId}-projects`"
+		:embedded="embedded"
+		trigger-class="tools-summary"
 		:class="{ 'is-embedded': embedded }"
 		class="code-review-tools"
 		@toggle="onToggle"
 	>
-		<summary v-if="!embedded" class="tools-summary">
+		<template #label>
 			<span>
 				<strong>Code review</strong>
 				<small>{{ userName }} - {{ userEmail }}</small>
@@ -387,7 +389,7 @@ onBeforeUnmount(() => {
 			<span v-if="loaded" class="summary-count">
 				{{ projectCountLabel }}
 			</span>
-		</summary>
+		</template>
 
 		<div class="tools-body">
 			<p v-if="loading" class="muted-copy">
@@ -553,7 +555,7 @@ onBeforeUnmount(() => {
 				</div>
 			</div>
 		</div>
-	</component>
+	</WorkspaceDisclosure>
 </template>
 
 <style scoped>
@@ -564,7 +566,7 @@ onBeforeUnmount(() => {
 	box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.7);
 }
 
-.tools-summary {
+:deep(.tools-summary) {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -576,21 +578,21 @@ onBeforeUnmount(() => {
 	max-width: 100%;
 }
 
-.tools-summary::-webkit-details-marker {
+:deep(.tools-summary)::-webkit-details-marker {
 	display: none;
 }
 
-.tools-summary span:first-child {
+:deep(.tools-summary) span:first-child {
 	display: grid;
 	gap: 0.2rem;
 	min-width: 0;
 }
 
-.tools-summary strong {
+:deep(.tools-summary) strong {
 	color: #10263a;
 }
 
-.tools-summary small,
+:deep(.tools-summary) small,
 .summary-count,
 .muted-copy,
 .project-meta,

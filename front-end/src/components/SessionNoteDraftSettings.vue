@@ -39,8 +39,8 @@ async function setAccess(value: boolean) {
 </script>
 
 <template>
-	<details v-if="available" class="draft-settings">
-		<summary>Session-note AI</summary>
+	<section v-if="available" class="draft-settings">
+		<h3>Session-note AI</h3>
 		<fieldset :disabled="saving">
 			<legend>Allow tutors to generate drafts</legend>
 			<label
@@ -64,7 +64,7 @@ async function setAccess(value: boolean) {
 		</fieldset>
 		<p v-if="message" role="status">{{ message }}</p>
 		<p v-if="error" role="alert">{{ error }}</p>
-	</details>
+	</section>
 </template>
 
 <style scoped>
@@ -72,8 +72,9 @@ async function setAccess(value: boolean) {
 	border-top: 1px solid var(--color-border);
 	padding-top: 0.75rem;
 }
-.draft-settings summary {
-	cursor: pointer;
+.draft-settings h3 {
+	font-size: 1rem;
+	margin: 0 0 0.5rem;
 }
 .draft-settings fieldset {
 	display: flex;

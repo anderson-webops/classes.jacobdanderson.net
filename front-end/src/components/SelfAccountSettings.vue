@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 import { api } from "@/api";
 import AccountSecurity from "@/components/AccountSecurity.vue";
 import SessionNoteDraftSettings from "@/components/SessionNoteDraftSettings.vue";
@@ -11,73 +11,131 @@ const props = defineProps<{
 }>();
 const app = useAppStore();
 const name = ref(props.entity.name);
+const editing = ref(false);
+const securityBusy = ref(false);
 const status = ref("");
 const error = ref("");
 const busy = ref(false);
+let nameRequest: AbortController | null = null;
 watch(
 	() => props.entity.name,
 	value => {
-		name.value = value;
+		if (!editing.value) name.value = value;
 	}
 );
+watch(
+	() => [props.entity._id, props.role],
+	() => {
+		nameRequest?.abort();
+		nameRequest = null;
+		busy.value = editing.value = securityBusy.value = false;
+		name.value = props.entity.name;
+		status.value = error.value = "";
+	},
+	{ flush: "sync" }
+);
+onBeforeUnmount(() => nameRequest?.abort());
+function toggleEditing() {
+	if (busy.value || securityBusy.value) return;
+	name.value = props.entity.name;
+	status.value = error.value = "";
+	editing.value = !editing.value;
+}
 async function saveName() {
-	if (busy.value) return;
+	if (busy.value || securityBusy.value) return;
 	status.value = error.value = "";
 	busy.value = true;
+	const request = new AbortController();
+	nameRequest = request;
+	const accountId = props.entity._id;
+	const role = props.role;
 	try {
 		const path =
-			props.role === "user"
+			role === "user"
 				? "/users/user/"
-				: props.role === "tutor"
+				: role === "tutor"
 					? "/tutors/"
 					: "/admins/";
-		await api.put(path + props.entity._id, { name: name.value.trim() });
-		if (props.role === "admin") await app.refreshCurrentAdmin();
-		else if (props.role === "tutor") await app.refreshCurrentTutor();
+		await api.put(
+			path + accountId,
+			{ name: name.value.trim() },
+			{
+				signal: request.signal,
+				timeout: 30_000
+			}
+		);
+		if (nameRequest !== request) return;
+		if (role === "admin") await app.refreshCurrentAdmin();
+		else if (role === "tutor") await app.refreshCurrentTutor();
 		else await app.refreshCurrentUser();
+		if (nameRequest !== request) return;
+		editing.value = false;
 		status.value = "Name updated.";
 	} catch (cause: any) {
+		if (nameRequest !== request) return;
 		error.value =
 			cause.response?.data?.message ?? "Unable to update your name.";
 	} finally {
-		busy.value = false;
+		if (nameRequest === request) {
+			nameRequest = null;
+			busy.value = false;
+		}
 	}
 }
 </script>
 
 <template>
 	<section class="self-account-settings">
-		<h2>Profile</h2>
-		<form class="profile-name-form" @submit.prevent="saveName">
+		<header class="profile-heading">
+			<h2>Profile</h2>
+			<button
+				class="btn-secondary btn"
+				type="button"
+				:disabled="busy || securityBusy"
+				@click="toggleEditing"
+			>
+				{{ editing ? "Cancel" : "Edit" }}
+			</button>
+		</header>
+		<dl v-if="!editing" class="profile-values">
+			<div>
+				<dt>Name</dt>
+				<dd>{{ entity.name }}</dd>
+			</div>
+		</dl>
+		<form v-else class="profile-name-form" @submit.prevent="saveName">
 			<label>
 				<span>Name</span>
 				<input
 					v-model="name"
+					name="profile-name"
 					autocomplete="name"
 					required
 					maxlength="160"
-					:disabled="busy"
+					:disabled="busy || securityBusy"
 				/>
 			</label>
 			<button
 				class="btn-secondary btn"
 				type="submit"
-				:disabled="busy || name.trim() === entity.name"
+				:disabled="busy || securityBusy || name.trim() === entity.name"
 			>
-				{{ busy ? "Saving…" : "Save name" }}
+				{{ busy ? "Saving…" : "Update name" }}
 			</button>
 		</form>
 		<p v-if="status" role="status">{{ status }}</p>
 		<p v-if="error" role="alert">{{ error }}</p>
-		<div class="profile-email">
-			<span>Email</span><span>{{ entity.email }}</span>
-		</div>
 		<AccountSecurity
+			v-model:editing="editing"
 			:entity-id="entity._id"
 			:email="entity.email"
 			:role="role"
-		/>
-		<SessionNoteDraftSettings v-if="role === 'admin'" />
+			@busy="securityBusy = $event"
+		>
+			<template #advanced
+				><SessionNoteDraftSettings v-if="role === 'admin'"
+			/></template>
+		</AccountSecurity>
 	</section>
 </template>
 
@@ -91,11 +149,35 @@ async function saveName() {
 	font-size: 1.1rem;
 	margin: 0 0 0.25rem;
 }
-.profile-name-form {
+.profile-heading {
 	display: flex;
-	align-items: end;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+.profile-heading button {
+	margin: 0;
+}
+.profile-values {
+	margin: 0;
+}
+.profile-values > div {
+	display: grid;
+	grid-template-columns: 6rem minmax(0, 1fr);
+	gap: 0.75rem;
+	padding-block: 0.35rem;
+}
+.profile-values dt {
+	font-weight: 500;
+	color: var(--color-ink-soft);
+}
+.profile-values dd {
+	margin: 0;
+	overflow-wrap: anywhere;
+}
+.profile-name-form {
+	display: grid;
 	gap: 0.65rem;
-	flex-wrap: wrap;
 }
 .profile-name-form label {
 	flex: 1 1 15rem;
@@ -113,14 +195,6 @@ async function saveName() {
 }
 .profile-name-form button {
 	margin: 0;
-}
-.profile-email {
-	display: grid;
-	gap: 0.3rem;
-	font-size: 0.9rem;
-	overflow-wrap: anywhere;
-}
-.profile-email > span:first-child {
-	color: var(--color-ink-soft);
+	justify-self: start;
 }
 </style>

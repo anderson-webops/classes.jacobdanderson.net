@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import { serializeJsonLd } from "@/modules/serializeJsonLd";
 import { useContentStore } from "@/stores/content";
 
@@ -80,10 +81,13 @@ useHead(() => ({
 
 		<section aria-labelledby="faq-title" class="about-faq">
 			<h2 id="faq-title" class="section-title">FAQ</h2>
-			<details v-for="faq in content.faqs" :key="faq.question">
-				<summary>{{ faq.question }}</summary>
+			<WorkspaceDisclosure
+				v-for="faq in content.faqs"
+				:key="faq.question"
+			>
+				<template #label>{{ faq.question }}</template>
 				<p>{{ faq.answer }}</p>
-			</details>
+			</WorkspaceDisclosure>
 		</section>
 
 		<section aria-label="About page actions" class="site-action-row">
@@ -147,10 +151,10 @@ useHead(() => ({
 .about-faq h2 {
 	margin-bottom: 0.75rem;
 }
-.about-faq details {
+.about-faq .workspace-disclosure {
 	border-bottom: 1px solid var(--color-border);
 }
-.about-faq summary {
+.about-faq :deep(.workspace-disclosure__trigger) {
 	padding: 0.6rem 0;
 	cursor: pointer;
 	font-size: 0.95rem;

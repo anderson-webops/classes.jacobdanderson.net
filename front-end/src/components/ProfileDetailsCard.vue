@@ -43,6 +43,7 @@ watch(
 
 		<AccountSecurity
 			v-if="editing"
+			:editing="editing"
 			:email="securityEmail"
 			:entity-id="entityId"
 			:role="role"

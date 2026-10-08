@@ -9,6 +9,7 @@ import {
 } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 import IdeEnvironmentSelect from "@/components/IdeEnvironmentSelect.vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import WorkspaceHeader from "@/components/WorkspaceHeader.vue";
 import WorkspaceStorageStatus from "@/components/WorkspaceStorageStatus.vue";
 import {
@@ -249,8 +250,8 @@ defineExpose({ stop: () => send("stop") });
 			<button :aria-pressed="expanded" @click="expanded = !expanded">
 				{{ expanded ? "Exit expanded view" : "Expand editor" }}
 			</button>
-			<details class="scratch-project-menu">
-				<summary>New / open</summary>
+			<WorkspaceDisclosure class="scratch-project-menu" popover>
+				<template #label>New / open</template>
 				<div class="scratch-project-options">
 					<label class="file-control"
 						>Open .sb3
@@ -288,7 +289,7 @@ defineExpose({ stop: () => send("stop") });
 						</button>
 					</div>
 				</div>
-			</details>
+			</WorkspaceDisclosure>
 		</div>
 		<span class="scratch-status" role="status"
 			>{{ status }}{{ dirty ? " Unsaved changes." : "" }}</span
@@ -327,8 +328,8 @@ defineExpose({ stop: () => send("stop") });
 				title="Scratch block editor and stage"
 			/>
 		</div>
-		<details class="scratch-help">
-			<summary>Classroom tasks and credits</summary>
+		<WorkspaceDisclosure class="scratch-help">
+			<template #label>Classroom tasks and credits</template>
 			<p v-if="selected && starter !== 'blank'">
 				<strong>Normal:</strong> {{ selected.normal }}
 				<strong>Hard:</strong> {{ selected.hard }}
@@ -354,7 +355,7 @@ defineExpose({ stop: () => send("stop") });
 				>. Scratch is a project of the Scratch Foundation, which does
 				not sponsor or endorse this site.
 			</p>
-		</details>
+		</WorkspaceDisclosure>
 	</section>
 </template>
 
@@ -484,7 +485,7 @@ defineExpose({ stop: () => send("stop") });
 .scratch-project-menu {
 	position: relative;
 }
-.scratch-project-menu > summary {
+.scratch-project-menu > :deep(.workspace-disclosure__trigger) {
 	cursor: pointer;
 	min-height: 2.75rem;
 	padding: 0.5rem 0.75rem;
@@ -492,18 +493,9 @@ defineExpose({ stop: () => send("stop") });
 	border-radius: 8px;
 }
 .scratch-project-options {
-	position: absolute;
-	z-index: 10;
-	top: calc(100% + 0.4rem);
-	right: 0;
 	display: grid;
 	gap: 0.75rem;
 	width: min(25rem, 85vw);
-	padding: 0.75rem;
-	border: 1px solid var(--color-border);
-	border-radius: 8px;
-	background: var(--color-surface);
-	box-shadow: var(--shadow-soft);
 }
 .scratch-project-options .scratch-starters {
 	display: grid;

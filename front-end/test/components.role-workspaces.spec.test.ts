@@ -98,9 +98,9 @@ describe("shared learner workspace", () => {
 			`/users/${students[0]._id}/schedule`
 		);
 		expect(wrapper.find(".tools-summary").exists()).toBe(false);
-		expect(wrapper.findAll("details.tool-editor")).toHaveLength(2);
-		for (const editor of wrapper.findAll("details.tool-editor")) {
-			expect(editor.element.open).toBe(false);
+		expect(wrapper.findAll(".tool-editor")).toHaveLength(2);
+		for (const editor of wrapper.findAll(".tool-editor")) {
+			expect(editor.get(".workspace-disclosure__trigger").attributes("aria-expanded")).toBe("false");
 		}
 		await wrapper.get("select").setValue(students[1]._id);
 		await flushPromises();
@@ -311,7 +311,7 @@ describe("role-specific parents", () => {
 			global: { stubs }
 		});
 		await flushPromises();
-		await wrapper.get(".tutor-management button").trigger("click");
+		await wrapper.get('button[aria-label="Edit courses for Instructor"]').trigger("click");
 		let resolve!: (value: any) => void;
 		vi.mocked(api.put).mockImplementationOnce(
 			() =>

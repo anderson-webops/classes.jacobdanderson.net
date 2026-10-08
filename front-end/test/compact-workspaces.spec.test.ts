@@ -50,12 +50,13 @@ describe("content-first workspace refinements", () => {
 	});
 	it("keeps the existing email until verification and clears password input immediately", async () => {
 		mocks.post.mockResolvedValue({ data: { message: "Check your new email to verify the change." } });
-		const wrapper = mount(AccountSecurity, { props: { email: "old@example.invalid", entityId: "synthetic", role: "admin" } });
+		const wrapper = mount(AccountSecurity, { props: { email: "old@example.invalid", entityId: "synthetic", role: "admin", editing: true } });
 		await wrapper.get('[name="account-email"]').setValue("new@example.invalid");
 		await wrapper.get('[name="email-current-password"]').setValue("synthetic-password");
-		await wrapper.findAll("button").find(button => button.text() === "Send verification")!.trigger("click");
-		expect(mocks.post).toHaveBeenCalledWith("/accounts/changeEmail/synthetic", { email: "new@example.invalid", currentPassword: "synthetic-password" });
-		expect(wrapper.get<HTMLInputElement>('[name="email-current-password"]').element.value).toBe("");
+		await wrapper.get(".email-form").trigger("submit");
+		expect(mocks.post).toHaveBeenCalledWith("/accounts/changeEmail/synthetic", { email: "new@example.invalid", currentPassword: "synthetic-password" }, { signal: expect.any(AbortSignal), timeout: 30_000 });
+		expect(wrapper.find('[name="email-current-password"]').exists()).toBe(false);
+		expect(wrapper.text()).toContain("old@example.invalid");
 		expect(wrapper.text()).not.toContain("Email updated successfully");
 		wrapper.unmount();
 	});

@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import { api } from "@/api";
 import SessionNoteGenerate from "@/components/SessionNoteGenerate.vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 
 type ScheduledSessionStatus =
 	"scheduled" | "cancelled" | "completed" | "rescheduled";
@@ -164,8 +165,8 @@ async function loadSessionTools() {
 	}
 }
 
-async function onToggle(event: Event) {
-	opened.value = (event.target as HTMLDetailsElement).open;
+async function onToggle(open: boolean) {
+	opened.value = open;
 	if (opened.value && !loaded.value && !loading.value) {
 		await loadSessionTools();
 	}
@@ -296,14 +297,15 @@ async function createSessionNote() {
 </script>
 
 <template>
-	<component
-		:is="embedded ? 'section' : 'details'"
+	<WorkspaceDisclosure
 		:id="`learner-${userId}-sessions`"
+		:embedded="embedded"
+		trigger-class="tools-summary"
 		:class="{ 'is-embedded': embedded }"
 		class="session-tools"
 		@toggle="onToggle"
 	>
-		<summary v-if="!embedded" class="tools-summary">
+		<template #label>
 			<span>
 				<strong>Schedule and notes</strong>
 				<small>{{ userName }} - {{ userEmail }}</small>
@@ -311,7 +313,7 @@ async function createSessionNote() {
 			<span v-if="loaded" class="summary-count">
 				{{ upcomingSessionCount }} upcoming
 			</span>
-		</summary>
+		</template>
 
 		<div class="tools-body">
 			<p v-if="loading" class="muted-copy">
@@ -398,8 +400,8 @@ async function createSessionNote() {
 				</section>
 			</div>
 			<div class="tools-grid">
-				<details class="tool-panel tool-editor">
-					<summary>Add class</summary>
+				<WorkspaceDisclosure class="tool-panel tool-editor">
+					<template #label>Add class</template>
 					<form
 						class="tool-form"
 						@submit.prevent="createScheduledSession"
@@ -443,10 +445,10 @@ async function createSessionNote() {
 							Add schedule item
 						</button>
 					</form>
-				</details>
+				</WorkspaceDisclosure>
 
-				<details class="tool-panel tool-editor">
-					<summary>Save a note without email</summary>
+				<WorkspaceDisclosure class="tool-panel tool-editor">
+					<template #label>Save a note without email</template>
 					<form class="tool-form" @submit.prevent="createSessionNote">
 						<label
 							>Actual session
@@ -515,10 +517,10 @@ async function createSessionNote() {
 							Save note only
 						</button>
 					</form>
-				</details>
+				</WorkspaceDisclosure>
 			</div>
 		</div>
-	</component>
+	</WorkspaceDisclosure>
 </template>
 
 <style scoped>
@@ -529,7 +531,7 @@ async function createSessionNote() {
 	background: var(--color-surface);
 	color: var(--color-ink);
 }
-.tools-summary {
+:deep(.tools-summary) {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -539,15 +541,15 @@ async function createSessionNote() {
 	min-width: 0;
 	max-width: 100%;
 }
-.tools-summary span:first-child {
+:deep(.tools-summary) span:first-child {
 	display: grid;
 	gap: 0.2rem;
 	min-width: 0;
 }
-.tools-summary strong {
+:deep(.tools-summary) strong {
 	font-size: 1rem;
 }
-.tools-summary small,
+:deep(.tools-summary) small,
 .record-item small,
 .record-item span,
 .muted-copy {
@@ -581,11 +583,11 @@ async function createSessionNote() {
 	border-top: 1px solid var(--color-border);
 	padding-top: 0.75rem;
 }
-.tool-editor summary {
+.tool-editor :deep(.workspace-disclosure__trigger) {
 	cursor: pointer;
 	font-size: 0.95rem;
 }
-.tool-editor[open] .tool-form {
+.tool-editor.is-open .tool-form {
 	margin-top: 0.75rem;
 }
 .tool-form {
