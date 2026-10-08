@@ -1440,6 +1440,13 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 					assert.equal(await page.$eval(worksheet, link => link.closest(".lesson-item").querySelectorAll(".is-ide-starter").length), 0);
 					assert.equal(!!await page.$("a.resource-link.is-solution[href*='reference-pack-v1']"), referenceFixture);
 					assert.match(await page.$eval(worksheet, link => link.closest(".lesson-item").textContent.replace(/\s+/g, " ")), /try.*catch cannot repair an ill-formed program/);
+					assert.ok(await page.$eval(worksheet, link => [...link.closest(".lesson-item").querySelectorAll(".item-content-markdown p")].some(paragraph => paragraph.textContent.includes("A failed final stdout flush returns") && [...paragraph.querySelectorAll("code")].some(code => code.textContent === "1"))), "The output-failure status remains inline code in its sentence");
+					if (referenceFixture) {
+						const reference = "a.resource-link.is-solution[href*='reference-pack-v1']";
+						assert.match(await page.$eval(reference, link => link.textContent), /Open reference in IDE/);
+						assert.equal(await page.$eval(reference, link => link.querySelector(".resource-link-host").textContent.trim()), "Browser workspace");
+						assert.doesNotMatch(await page.$eval(reference, link => link.textContent), /projectKey=|starterUrl=/);
+					}
 					if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 						const card = await page.$eval(worksheet, link => link.closest(".lesson-item").outerHTML);
 						assert.ok(card.includes("WORKSHEET.md"));
