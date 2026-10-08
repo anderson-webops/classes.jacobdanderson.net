@@ -1,59 +1,51 @@
 # Current course-audit checkpoint, 2026-10-07
 
-This section gives the current status. Earlier checkpoints below retain their
+This section gives current verified status. Earlier checkpoints retain their
 historical evidence; their pending statements and counts are not current status.
 The full 77-course audit remains active.
 
-The optional CPPI1 row-import catalog and required CPPI2 maze are delivered.
-Canonical [PR #150](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/150)
-and downstream [PR #39](https://github.com/instruction-material/classes.jacobdanderson.net/pull/39)
-include full learner instructions, separate staff references, confirmed source
-imports and saved-attempt preservation. Review and independent main CI, CodeQL
-and Qodana workflows passed. Actual browser logs verified 59 C++/Java import,
-edit, save, export, reopen and native-build workflows, 21 preserved attempts,
-nine untouched learner exports, two notebook routes and both complete recursion
-lessons. All 29 Cypress scenarios passed. The original signed archives,
-manifests and attestations are published as canonical
-[v2.8.57](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.57)
+The row-import, required maze and optional recursion worksheet milestones are
+published. Canonical [PR #151](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/151)
+and downstream [PR #40](https://github.com/instruction-material/classes.jacobdanderson.net/pull/40)
+are delivered as canonical
+[v2.8.60](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.60)
 and downstream
-[v2.8.8](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.8).
-Every packaged file digest and trusted release configuration was independently
-checked. The downstream remains current upstream plus its neutral overlay.
-Production activation is unverified.
+[v2.8.9](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.9).
+Review and independent main CI/CodeQL passed, along with 59 imported C++/Java
+workflows, 21 preserved attempts, nine untouched learner exports, both complete
+recursion lessons and both worksheet roles. All 29 Cypress scenarios passed.
+The original signed release assets, every payload digest and thirteen trusted
+source configurations were independently checked. The downstream keeps its
+neutral overlay and excludes the canonical-only session-note drafting feature.
+Production activation remains unverified.
 
-The maze source is integrated at `3adb873179bd149b1f6ef9fddfec8557a6a71eb4`.
-Its review and independent main [native gate](https://github.com/instruction-material/CPP-Level-3/actions/runs/37688460765)
-passed all six groups, including 480 independent reachability/path comparisons,
-strict ordinary and sanitizer builds, Make/CMake and parser rollback. The
-unchanged maze source is the prerequisite for the optional tracing worksheet.
+The current container source is integrated at
+`5647ce247101d3a537c3d8b79a6525e6fbb66ed5`. Its
+[review](https://github.com/instruction-material/CPP-Level-3/actions/runs/37707513605)
+and independent
+[main verification](https://github.com/instruction-material/CPP-Level-3/actions/runs/37708148045)
+each passed all eight native groups; both actual logs were inspected. Three
+container cases are checked against independent plain-row models with actual
+untouched learner, completed learner and reference code in ordinary/sanitizer
+builds. Four notes printers and two CMake targets match complete documents.
+Primary inventory and maze source bytes remain unchanged.
 
-The optional Recursion Trace Drill now has a complete learner worksheet with
-three concrete inputs, blank prediction/state records, native commands, actual
-observation prompts and two custom cases. It extends the saved maze instead of
-creating another application. A separate staff document provides worked traces;
-its preserved C++17 source only prints that worksheet. The
-[source review gate](https://github.com/instruction-material/CPP-Level-3/actions/runs/37700000313)
-passed all seven native groups at `cee92a6348cd90fe797998944713abec6ec87a7f`,
-including an independent iterative stack model and breadth-first reachability,
-six ordinary/sanitizer maze variants, four worksheet printer variants, two CMake
-printers and four same-process repeated-search checks. The exact reviewed source
-is integrated. Independent [main validation](https://github.com/instruction-material/CPP-Level-3/actions/runs/37700491585)
-also passed all seven groups; both actual native job outputs were inspected.
+[Catalog PR #152](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/152)
+adds both complete CPPI3 lessons, the full Inventory Indexer brief and the
+optional worksheet. It preserves core/optional identity and 22/8 counts, keeps
+staff worked material separate, routes notes without importing a printer, and
+continues the original saved inventory key. A separate current-pack action
+preserves older work. All 172 focused tests and scoped source/browser lint pass.
+Full hosted learner/staff rendering, native lesson/export checks, saved-file
+preservation and sitewide gates are required before integration and release.
 
-The catalog keeps the existing optional item, core/optional counts
-and saved maze key. It displays the whole learner worksheet, suppresses a code
-import for the worksheet printer, withholds the worked reference from learners
-and offers continuation of the existing maze attempt. Publication requires
-hosted learner/staff rendering, saved-file preservation and sitewide checks.
-Review and delivery evidence is recorded in
-[PR #151](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/151).
-
-Seven other C++ Level 3 learner/reference pairs still contain generic
-placeholders or fixed evidence checklists and require substantive review.
-Presence in the source manifest does not establish working course material.
-Transcript review remains limited by 51 unavailable assets; no additional
-transcript coverage is claimed in this checkpoint. The broader course audit
-is unfinished.
+Six other C++ Level 3 learner/reference pairs retain generic placeholders and
+fixed evidence checklists: the resource-safe file processor, ownership rewrite,
+fraction toolkit, template-error drill, saveable simulation and state comparison.
+Presence in a source manifest does not establish working course material.
+The latest Zoom increment finds one single-attendee PMI meeting with no transcript
+or recording; it adds no teaching transcript coverage. The 51 unavailable
+historical assets remain unavailable. The broader audit is unfinished.
 
 ## Earlier dated milestones
 
