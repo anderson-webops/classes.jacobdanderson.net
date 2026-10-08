@@ -42,6 +42,9 @@ nodeTest(
 			assert.ok(productionCsp);
 			server = await createServer({
 				root,
+				// Course lessons load Markdown after the standalone editor checks.
+				// Optimize it up front so discovery cannot invalidate an open page.
+				optimizeDeps: { include: ["markdown-it"] },
 				plugins: [
 					{
 						name: "production-ide-policy-fixture",
