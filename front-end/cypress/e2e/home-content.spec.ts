@@ -41,6 +41,9 @@ context("Useful homepage and single compact footer", () => {
 					"not.exist"
 				);
 				cy.get("footer nav a")
+					.first()
+					.should("have.attr", "href", "/privacy");
+				cy.get("footer nav a")
 					.last()
 					.should("have.attr", "href")
 					.and("match", /^mailto:/);
@@ -67,6 +70,24 @@ context("Useful homepage and single compact footer", () => {
 						viewport.width
 					);
 					const footer = document.querySelector("footer")!;
+					const footerRow = footer
+						.querySelector(".site-footer__bottom")!
+						.getBoundingClientRect();
+					const links = footer
+						.querySelector("nav")!
+						.getBoundingClientRect();
+					const themeButton = footer
+						.querySelector(".site-footer__theme-toggle")!
+						.getBoundingClientRect();
+					expect(
+						Math.abs(
+							(links.left + links.right) / 2 -
+								(footerRow.left + footerRow.right) / 2
+						)
+					).to.be.lessThan(1);
+					expect(
+						Math.abs(themeButton.right - footerRow.right)
+					).to.be.lessThan(1);
 					expect(
 						footer.getBoundingClientRect().top -
 							steps.getBoundingClientRect().bottom
@@ -79,9 +100,9 @@ context("Useful homepage and single compact footer", () => {
 						expect(bounds.right).to.be.at.most(viewport.width);
 					}
 				});
-				cy.screenshot(`home-margin-${viewport.name}-${theme}`, {
-					capture: "fullPage"
-				});
+				cy.get("footer").screenshot(
+					`footer-layout-${viewport.name}-${theme}`
+				);
 				cy.get(".site-footer__theme-toggle")
 					.should(
 						"have.attr",

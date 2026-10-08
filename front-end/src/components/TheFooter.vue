@@ -6,18 +6,8 @@ defineProps<{ compact?: boolean }>();
 	<footer class="site-footer" :class="{ 'site-footer--compact': compact }">
 		<div class="site-shell site-shell--wide site-footer__bottom">
 			<p>© {{ new Date().getFullYear() }} Jacob Anderson.</p>
-			<button
-				class="site-footer__theme-toggle"
-				type="button"
-				:aria-label="
-					isDark ? 'Switch to light mode' : 'Switch to dark mode'
-				"
-				:aria-pressed="isDark"
-				@click="toggleDark()"
-			>
-				{{ isDark ? "Light mode" : "Dark mode" }}
-			</button>
 			<nav aria-label="Footer" class="site-action-row site-footer__links">
+				<RouterLink to="/privacy">Privacy</RouterLink>
 				<a
 					v-if="!compact"
 					href="https://www.linkedin.com/in/jacoba1100254352/"
@@ -34,11 +24,21 @@ defineProps<{ compact?: boolean }>();
 				>
 					GitHub<span class="sr-only"> (opens in a new tab)</span>
 				</a>
-				<RouterLink to="/privacy">Privacy</RouterLink>
 				<a href="mailto:classes@jacobdanderson.net">
 					Contact<span class="sr-only"> (opens your email app)</span>
 				</a>
 			</nav>
+			<button
+				class="site-footer__theme-toggle"
+				type="button"
+				:aria-label="
+					isDark ? 'Switch to light mode' : 'Switch to dark mode'
+				"
+				:aria-pressed="isDark"
+				@click="toggleDark()"
+			>
+				{{ isDark ? "Light mode" : "Dark mode" }}
+			</button>
 		</div>
 	</footer>
 </template>
@@ -54,19 +54,23 @@ defineProps<{ compact?: boolean }>();
 
 .site-footer__bottom {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto auto;
+	grid-template-areas: "copyright links theme";
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 	align-items: center;
 	gap: 0.75rem 1.5rem;
 }
 
 .site-footer__bottom p {
+	grid-area: copyright;
 	margin: 0;
 	font-size: 0.85rem;
 }
 
 .site-footer__links {
+	grid-area: links;
+	justify-self: center;
 	width: auto;
-	justify-content: flex-end;
+	justify-content: center;
 	gap: 0.5rem 1.1rem;
 }
 
@@ -79,6 +83,8 @@ defineProps<{ compact?: boolean }>();
 }
 
 .site-footer__theme-toggle {
+	grid-area: theme;
+	justify-self: end;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -99,12 +105,11 @@ defineProps<{ compact?: boolean }>();
 
 @media (max-width: 700px) {
 	.site-footer__bottom {
+		grid-template-areas:
+			"copyright theme"
+			"links links";
 		grid-template-columns: minmax(0, 1fr) auto;
 		gap: 0.5rem 1rem;
-	}
-
-	.site-footer__links {
-		grid-column: 1 / -1;
 	}
 }
 </style>

@@ -43,9 +43,9 @@ describe("TheFooter.vue", () => {
 			expect(
 				wrapper.findAll("nav a").map(link => link.attributes("href"))
 			).toEqual([
+				"/privacy",
 				"https://www.linkedin.com/in/jacoba1100254352/",
 				"https://github.com/jacoba1100254352",
-				"/privacy",
 				"mailto:classes@jacobdanderson.net"
 			]);
 			for (const link of wrapper.findAll('a[target="_blank"]')) {
@@ -62,6 +62,11 @@ describe("TheFooter.vue", () => {
 		compact => {
 			const wrapper = mountFooter(compact);
 			try {
+				expect(
+					Array.from(
+						wrapper.get(".site-footer__bottom").element.children
+					).map(child => child.tagName)
+				).toEqual(["P", "NAV", "BUTTON"]);
 				const button = wrapper.get("button");
 				expect(button.attributes("type")).toBe("button");
 				expect(button.attributes("aria-label")).toMatch(
