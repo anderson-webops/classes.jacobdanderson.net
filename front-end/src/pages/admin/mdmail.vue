@@ -14,8 +14,8 @@ import { retainNoteSendIntent } from "@/modules/sessionNoteSendIntent";
 marked.setOptions({ breaks: true, gfm: true });
 
 interface SessionNoteRecord {
-	studentId?: string;
-	scheduledSessionId?: string;
+	studentId: string | null;
+	scheduledSessionId: string | null;
 	_id: string;
 	studentName: string;
 	primaryEmail: string;
@@ -333,7 +333,9 @@ async function loadRecentSessionNotes() {
 	recentNotesLoading.value = true;
 	recentNotesError.value = "";
 	try {
-		const { data } = await api.get(`/users/${studentId}/session-notes`);
+		const { data } = await api.get<{ sessionNotes: SessionNoteRecord[] }>(
+			`/users/${studentId}/session-notes/recent`
+		);
 		if (
 			requestToken !== recentNotesRequestToken ||
 			studentId !== noteStudentId.value

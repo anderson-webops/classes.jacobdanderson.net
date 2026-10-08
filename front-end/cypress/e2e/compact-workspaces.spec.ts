@@ -117,9 +117,25 @@ context("Compact content-first workspaces", () => {
 		cy.intercept("GET", `**/api/users/${studentId}/schedule`, {
 			body: { scheduledSessions: [] }
 		});
-		cy.intercept("GET", `**/api/users/${studentId}/session-notes`, {
-			body: { sessionNotes: [] }
-		});
+		cy.intercept("GET", `**/api/users/${studentId}/session-notes/recent`, {
+			body: {
+				sessionNotes: [
+					{
+						_id: "b".repeat(24),
+						studentId,
+						scheduledSessionId: null,
+						studentName: "Synthetic Student",
+						primaryEmail: "student@example.invalid",
+						ccEmails: [],
+						subject: "Synthetic saved note",
+						sessionDate: "2026-10-01T12:00:00Z",
+						markdown: "Synthetic saved history body",
+						createdAt: "2026-10-01T18:00:00Z",
+						updatedAt: "2026-10-01T18:00:00Z"
+					}
+				]
+			}
+		}).as("recentNotes");
 		cy.intercept("POST", `**/api/users/${studentId}/session-notes`, {
 			body: { sessionNote: { _id: noteId } }
 		}).as("saveNote");
@@ -132,6 +148,12 @@ context("Compact content-first workspaces", () => {
 		}).as("sendNote");
 		cy.visit("/admin/mdmail");
 		cy.get("#recipient-select").select(studentId);
+		cy.wait("@recentNotes").its("response.statusCode").should("eq", 200);
+		cy.get(".history-note").should("have.length", 1);
+		cy.contains(
+			".history-note__body",
+			"Synthetic saved history body"
+		).should("be.visible");
 		cy.get("#subject-date-input")
 			.invoke("val", "2026-09-30")
 			.trigger("input", { force: true });

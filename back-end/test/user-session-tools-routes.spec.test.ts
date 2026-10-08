@@ -115,6 +115,7 @@ function makeSession(overrides: Record<string, unknown> = {}) {
 function makeNote(overrides: Record<string, unknown> = {}) {
 	return {
 		_id: new Types.ObjectId(),
+		user: studentID,
 		studentName: "Student One",
 		primaryEmail: "student@example.com",
 		ccEmails: [],
@@ -363,6 +364,59 @@ describe("user schedule and note-only routes", () => {
 
 			expect(response.status).toBe(403);
 			expect(modelMocks.scheduledSessionCreate).not.toHaveBeenCalled();
+		});
+	});
+
+	it.each(["admin", "tutor"])("returns stable identities through the authorized recent-note route for %s", async role => {
+		const recentQuery = queryWith([makeNote({ scheduledSessionId: sessionID }), makeNote(), makeNote()]);
+		modelMocks.sessionNoteFind.mockReturnValue(recentQuery);
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(`${baseUrl}/users/${studentID}/session-notes/recent`, { headers: role === "admin" ? { "x-admin-id": String(adminID) } : { "x-tutor-id": String(tutorID) } });
+			expect(response.status).toBe(200);
+			const body = await response.json();
+			expect(body.sessionNotes).toHaveLength(3);
+			expect(body.sessionNotes[0]).toMatchObject({ studentId: String(studentID), scheduledSessionId: String(sessionID) });
+			expect(body.sessionNotes[1].scheduledSessionId).toBeNull();
+			expect(body.sessionNotes[0]).not.toHaveProperty("sentAt");
+			expect(modelMocks.sessionNoteFind).toHaveBeenCalledWith({ user: studentID });
+			expect(recentQuery.limit).toHaveBeenCalledWith(3);
+			expect(recentQuery.sort).toHaveBeenCalledWith({ sessionDate: -1, createdAt: -1 });
+		});
+	});
+
+	it("serializes missing persisted identities as null without inventing associations", async () => {
+		modelMocks.sessionNoteFind.mockReturnValue(queryWith([makeNote({ user: undefined, scheduledSessionId: undefined })]));
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(`${baseUrl}/users/${studentID}/session-notes/recent`, { headers: { "x-admin-id": String(adminID) } });
+			expect(response.status).toBe(200);
+			expect((await response.json()).sessionNotes[0]).toMatchObject({ studentId: null, scheduledSessionId: null });
+		});
+	});
+
+	it("returns an empty history without looking up a recipient email", async () => {
+		modelMocks.sessionNoteFind.mockReturnValue(queryWith([]));
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(`${baseUrl}/users/${studentID}/session-notes/recent`, { headers: { "x-admin-id": String(adminID) } });
+			expect(response.status).toBe(200);
+			expect(await response.json()).toEqual({ sessionNotes: [] });
+			expect(modelMocks.sessionNoteFind).toHaveBeenCalledWith({ user: studentID });
+		});
+	});
+
+	it.each(["anonymous", "unrelated-tutor"])("forbids %s note reads before accessing saved notes", async role => {
+		modelMocks.userFindById.mockImplementation(() => queryWith(makeStudent([otherTutorID])));
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(`${baseUrl}/users/${studentID}/session-notes/recent`, { headers: role === "unrelated-tutor" ? { "x-tutor-id": String(tutorID) } : {} });
+			expect(response.status).toBe(403);
+			expect(modelMocks.sessionNoteFind).not.toHaveBeenCalled();
+		});
+	});
+
+	it("does not add a GET alias to the save-only route", async () => {
+		await withUserRoutes(async baseUrl => {
+			const response = await fetch(`${baseUrl}/users/${studentID}/session-notes`, { headers: { "x-admin-id": String(adminID) } });
+			expect(response.status).toBe(404);
+			expect(modelMocks.sessionNoteFind).not.toHaveBeenCalled();
 		});
 	});
 

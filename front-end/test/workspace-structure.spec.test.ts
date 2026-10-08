@@ -233,7 +233,7 @@ describe("simplified workspaces", () => {
 								}
 							]
 						}
-					: path === "/users/child-a/session-notes"
+					: path === "/users/child-a/session-notes/recent"
 						? {
 								sessionNotes: [
 									{
@@ -257,7 +257,7 @@ describe("simplified workspaces", () => {
 									}
 								]
 							}
-						: path === "/users/child-b/session-notes"
+						: path === "/users/child-b/session-notes/recent"
 							? {
 									sessionNotes: [
 										{
@@ -285,7 +285,9 @@ describe("simplified workspaces", () => {
 		await flushPromises();
 		await wrapper.get("#recipient-select").setValue("child-a");
 		await flushPromises();
-		expect(api.get).toHaveBeenCalledWith("/users/child-a/session-notes");
+		expect(api.get).toHaveBeenCalledWith(
+			"/users/child-a/session-notes/recent"
+		);
 		expect(wrapper.findAll(".history-note")).toHaveLength(1);
 		expect(wrapper.get(".history-note").text()).toContain("Child A draft");
 		expect(wrapper.text()).not.toContain("Foreign draft");
@@ -296,7 +298,9 @@ describe("simplified workspaces", () => {
 		).toContain("Same name · hild-a");
 		await wrapper.get("#recipient-select").setValue("child-b");
 		await flushPromises();
-		expect(api.get).toHaveBeenCalledWith("/users/child-b/session-notes");
+		expect(api.get).toHaveBeenCalledWith(
+			"/users/child-b/session-notes/recent"
+		);
 		expect(wrapper.get(".history-note").text()).toContain("Child B draft");
 		expect(wrapper.text()).not.toContain("Child A draft");
 		expect(api.post).not.toHaveBeenCalled();

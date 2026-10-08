@@ -185,6 +185,8 @@ function serializeSessionNote(
 	note: Pick<
 		ISessionNote,
 		| "_id"
+		| "user"
+		| "scheduledSessionId"
 		| "studentName"
 		| "primaryEmail"
 		| "ccEmails"
@@ -197,6 +199,8 @@ function serializeSessionNote(
 ) {
 	return {
 		_id: String(note._id),
+		studentId: note.user ? String(note.user) : null,
+		scheduledSessionId: note.scheduledSessionId ? String(note.scheduledSessionId) : null,
 		studentName: note.studentName,
 		primaryEmail: note.primaryEmail,
 		ccEmails: note.ccEmails ?? [],

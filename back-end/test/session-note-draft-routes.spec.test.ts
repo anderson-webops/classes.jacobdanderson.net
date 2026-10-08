@@ -63,6 +63,26 @@ async function withApi(run: (request: (path: string, method?: string, role?: str
 }
 
 describe("session-note drafting authorization", () => {
+	it("reports canonical admin availability separately from disabled provider processing", async () => {
+		vi.stubEnv("SESSION_NOTE_AI_ENABLED", "false");
+		await withApi(async request => {
+			const response = await request("/settings", "GET");
+			expect(response.status).toBe(200);
+			expect(await response.json()).toMatchObject({ siteAvailable: true, allowed: true, ready: false, tutorsEnabled: false });
+			expect(mocks.candidates).not.toHaveBeenCalled();
+			expect(mocks.generate).not.toHaveBeenCalled();
+		});
+	});
+	it("returns a bounded settings error without leaking database failures or calling providers", async () => {
+		mocks.setting.mockReturnValue({ maxTimeMS: () => ({ lean: async () => { throw new Error("synthetic private database error"); } }) });
+		await withApi(async request => {
+			const response = await request("/settings", "GET");
+			expect(response.status).toBe(503);
+			expect(await response.json()).toEqual({ code: "DRAFT_UNAVAILABLE", message: "AI drafting is unavailable. Your notes are unchanged." });
+			expect(mocks.candidates).not.toHaveBeenCalled();
+			expect(mocks.generate).not.toHaveBeenCalled();
+		});
+	});
 	it("lets a live administrator draft without enabling tutors and projects no private config", async () => {
 		await withApi(async request => {
 			const capabilities = await request("/settings", "GET");

@@ -19,7 +19,6 @@ vi.mock("@/modules/sessionNoteSendIntent", () => ({
 }));
 
 const studentId = "a".repeat(24);
-const sessionId = "b".repeat(24);
 const noteId = "c".repeat(24);
 let wrapper: ReturnType<typeof mount>;
 
@@ -32,9 +31,10 @@ beforeEach(() => {
 	vi.mocked(fetchAdminRecipients).mockResolvedValue([
 		{ name: "Synthetic Student", emails: ["student@example.invalid"] }
 	]);
-	vi.mocked(api.get).mockImplementation(async (path: string) => ({
-		data: path.endsWith("/identities")
-			? {
+	vi.mocked(api.get).mockImplementation(async (path: string) => {
+		if (path === "/admin-mail/session-notes/identities") {
+			return {
+				data: {
 					students: [
 						{
 							studentId,
@@ -43,17 +43,23 @@ beforeEach(() => {
 						}
 					]
 				}
-			: {
-					scheduledSessions: [
-						{
-							_id: sessionId,
-							startAt: "2026-09-30T17:00:00Z",
-							timezone: "America/New_York"
-						}
-					],
-					sessionNotes: []
+			};
+		}
+		if (path === `/users/${studentId}/session-notes/recent`) {
+			return { data: { sessionNotes: [] } };
+		}
+		if (path === "/session-notes/drafting/settings") {
+			return {
+				data: {
+					siteAvailable: false,
+					allowed: false,
+					ready: false,
+					tutorsEnabled: false
 				}
-	}));
+			};
+		}
+		throw new Error(`Unexpected GET path: ${path}`);
+	});
 	vi.mocked(api.post).mockImplementation(async (path: string) => ({
 		data: path.endsWith("/session-notes")
 			? { sessionNote: { _id: noteId } }
@@ -87,11 +93,25 @@ async function compose(selectStudent = true) {
 describe("direct, safely validated session-note sending", () => {
 	it("keeps only recipient, date and notes instead of workflow controls", async () => {
 		await compose();
-		for (const removed of ["Message type", "Internal message", "Compose Message", "Student identity", "Actual session", "Saved note version", "Save this draft before sending", "Unlinked note;"])
+		for (const removed of [
+			"Message type",
+			"Internal message",
+			"Compose Message",
+			"Student identity",
+			"Actual session",
+			"Saved note version",
+			"Save this draft before sending",
+			"Unlinked note;"
+		])
 			expect(wrapper.text()).not.toContain(removed);
 		expect(wrapper.findAll("select")).toHaveLength(1);
-		expect(wrapper.find("[role=\"tablist\"]").exists()).toBe(false);
-		for (const selector of ["#note-student", "#note-session", "#note-unlinked", "#saved-note"])
+		expect(wrapper.find('[role="tablist"]').exists()).toBe(false);
+		for (const selector of [
+			"#note-student",
+			"#note-session",
+			"#note-unlinked",
+			"#saved-note"
+		])
 			expect(wrapper.find(selector).exists()).toBe(false);
 	});
 	it("sends a complete unlinked note from Compose with one click", async () => {
@@ -113,7 +133,7 @@ describe("direct, safely validated session-note sending", () => {
 			}),
 			{ withCredentials: true }
 		);
-		expect(wrapper.find("[data-testid=\"live-preview\"]").exists()).toBe(
+		expect(wrapper.find('[data-testid="live-preview"]').exists()).toBe(
 			false
 		);
 	});
@@ -130,8 +150,12 @@ describe("direct, safely validated session-note sending", () => {
 			}),
 			{ withCredentials: true }
 		);
-		expect(api.get).not.toHaveBeenCalledWith(`/users/${studentId}/schedule`);
-		expect(JSON.parse(vi.mocked(retainNoteSendIntent).mock.calls[0][0])).toMatchObject({ studentId, unlinked: true, selectedSavedNoteId: "" });
+		expect(api.get).not.toHaveBeenCalledWith(
+			`/users/${studentId}/schedule`
+		);
+		expect(
+			JSON.parse(vi.mocked(retainNoteSendIntent).mock.calls[0][0])
+		).toMatchObject({ studentId, unlinked: true, selectedSavedNoteId: "" });
 	});
 	it("requires the single recipient choice without guessing a student from the date", async () => {
 		await compose(false);
@@ -158,8 +182,8 @@ describe("direct, safely validated session-note sending", () => {
 	});
 	it("keeps Preview optional and never sends from its compact toggle", async () => {
 		await compose();
-		await wrapper.get("[data-testid=\"preview-toggle\"]").trigger("click");
-		expect(wrapper.get("[data-testid=\"live-preview\"]").exists()).toBe(true);
+		await wrapper.get('[data-testid="preview-toggle"]').trigger("click");
+		expect(wrapper.get('[data-testid="live-preview"]').exists()).toBe(true);
 		expect(api.post).not.toHaveBeenCalled();
 	});
 	it("rejects a whitespace-only body with visible feedback", async () => {
@@ -173,7 +197,7 @@ describe("direct, safely validated session-note sending", () => {
 	});
 	it("reuses the saved note and send key after a request failure", async () => {
 		await compose();
-		vi.mocked(api.post).mockImplementation(async (path) => {
+		vi.mocked(api.post).mockImplementation(async path => {
 			if (path === "/admin-mail/send")
 				throw new Error("Synthetic network interruption");
 			return { data: { sessionNote: { _id: noteId } } };
@@ -190,22 +214,24 @@ describe("direct, safely validated session-note sending", () => {
 		).toHaveLength(1);
 		const attempts = vi
 			.mocked(api.post)
-			.mock
-			.calls
-			.filter(([path]) => path === "/admin-mail/send");
+			.mock.calls.filter(([path]) => path === "/admin-mail/send");
 		expect(attempts).toHaveLength(2);
 		expect(attempts[0][1]).toEqual(attempts[1][1]);
 	});
 	it("exposes student-list errors and offers a safe retry", async () => {
 		const original = vi.mocked(api.get).getMockImplementation()!;
 		let failIdentities = true;
-		vi.mocked(api.get).mockImplementation((path: string, ...args: any[]) => {
-			if (path.endsWith("/identities") && failIdentities) {
-				failIdentities = false;
-				return Promise.reject(new Error("Synthetic identity load failure"));
+		vi.mocked(api.get).mockImplementation(
+			(path: string, ...args: any[]) => {
+				if (path.endsWith("/identities") && failIdentities) {
+					failIdentities = false;
+					return Promise.reject(
+						new Error("Synthetic identity load failure")
+					);
+				}
+				return original(path, ...args);
 			}
-			return original(path, ...args);
-		});
+		);
 		wrapper = mount(MdMail);
 		await flushPromises();
 		expect(wrapper.text()).toContain("Unable to load recipients");
@@ -224,45 +250,86 @@ describe("direct, safely validated session-note sending", () => {
 		vi.mocked(fetchAdminRecipients).mockResolvedValue([]);
 		await compose();
 		await wrapper.get(".send-btn").trigger("click");
-		expect(wrapper.get("#send-validation").text()).toContain("No saved recipient address");
+		expect(wrapper.get("#send-validation").text()).toContain(
+			"No saved recipient address"
+		);
 		expect(api.post).not.toHaveBeenCalled();
 	});
 	it("does not dispatch when saving the note fails", async () => {
 		await compose();
-		vi.mocked(api.post).mockRejectedValue(new Error("Synthetic draft-save failure"));
+		vi.mocked(api.post).mockRejectedValue(
+			new Error("Synthetic draft-save failure")
+		);
 		await wrapper.get(".send-btn").trigger("click");
 		await flushPromises();
 		expect(api.post).toHaveBeenCalledTimes(1);
-		expect(vi.mocked(api.post).mock.calls[0][0]).toBe(`/users/${studentId}/session-notes`);
-		expect(wrapper.get(".result").text()).toContain("Synthetic draft-save failure");
+		expect(vi.mocked(api.post).mock.calls[0][0]).toBe(
+			`/users/${studentId}/session-notes`
+		);
+		expect(wrapper.get(".result").text()).toContain(
+			"Synthetic draft-save failure"
+		);
 	});
 	it("keeps sibling identity explicit inside the single recipient choice", async () => {
 		const siblingId = "d".repeat(24);
-		vi.mocked(fetchAdminRecipients).mockResolvedValue([{ name: "Synthetic Family", emails: ["family@example.invalid"] }]);
-		vi.mocked(api.get).mockResolvedValue({ data: {
-			students: [
-				{ studentId, name: "First child", recipientName: "Synthetic Family" },
-				{ studentId: siblingId, name: "Second child", recipientName: "Synthetic Family" }
-			],
-			sessionNotes: []
-		} });
+		vi.mocked(fetchAdminRecipients).mockResolvedValue([
+			{ name: "Synthetic Family", emails: ["family@example.invalid"] }
+		]);
+		vi.mocked(api.get).mockResolvedValue({
+			data: {
+				students: [
+					{
+						studentId,
+						name: "First child",
+						recipientName: "Synthetic Family"
+					},
+					{
+						studentId: siblingId,
+						name: "Second child",
+						recipientName: "Synthetic Family"
+					}
+				],
+				sessionNotes: []
+			}
+		});
 		await compose(false);
 		await wrapper.get("#recipient-select").setValue(siblingId);
 		await wrapper.get(".send-btn").trigger("click");
 		await flushPromises();
-		expect(api.post).toHaveBeenLastCalledWith("/admin-mail/send", expect.objectContaining({ studentId: siblingId, recipientName: "Synthetic Family", to: "family@example.invalid", unlinked: true }), { withCredentials: true });
-		expect(wrapper.findAll("#recipient-select option").map(option => option.text())).toEqual(["Select a person", "First child", "Second child"]);
+		expect(api.post).toHaveBeenLastCalledWith(
+			"/admin-mail/send",
+			expect.objectContaining({
+				studentId: siblingId,
+				recipientName: "Synthetic Family",
+				to: "family@example.invalid",
+				unlinked: true
+			}),
+			{ withCredentials: true }
+		);
+		expect(
+			wrapper
+				.findAll("#recipient-select option")
+				.map(option => option.text())
+		).toEqual(["Select a person", "First child", "Second child"]);
 	});
 	it("does not dispatch concurrent double clicks twice", async () => {
 		await compose();
-		let finishSave!: (value: { data: { sessionNote: { _id: string } } }) => void;
-		vi.mocked(api.post).mockImplementation(async (path) => {
+		let finishSave!: (value: {
+			data: { sessionNote: { _id: string } };
+		}) => void;
+		vi.mocked(api.post).mockImplementation(async path => {
 			if (path.endsWith("/session-notes")) {
-				return new Promise((resolve) => {
+				return new Promise(resolve => {
 					finishSave = resolve;
 				});
 			}
-			return { data: { ok: true, operationId: "synthetic-operation", evidenceStatus: "smtp_accepted" } };
+			return {
+				data: {
+					ok: true,
+					operationId: "synthetic-operation",
+					evidenceStatus: "smtp_accepted"
+				}
+			};
 		});
 		await wrapper.get(".send-btn").trigger("click");
 		await wrapper.get(".send-btn").trigger("click");

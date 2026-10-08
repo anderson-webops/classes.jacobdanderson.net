@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { api } from "@/api";
+import { useSessionNoteDraftSettings } from "@/modules/useSessionNoteDraftSettings";
 
 const props = defineProps<{
 	studentId: string;
@@ -19,8 +20,18 @@ interface Candidate {
 	startAt: string;
 	timezone: string;
 }
-const available = ref(false);
-const ready = ref(false);
+const {
+	settings,
+	loading: settingsLoading,
+	loadError,
+	loadSettings
+} = useSessionNoteDraftSettings();
+const available = computed(
+	() =>
+		settings.value?.siteAvailable === true &&
+		settings.value.allowed === true
+);
+const ready = computed(() => settings.value?.ready === true);
 const busy = ref(false);
 const message = ref("");
 const error = ref("");
@@ -96,17 +107,6 @@ onBeforeUnmount(() => {
 	cancel();
 });
 
-onMounted(async () => {
-	try {
-		const { data } = await api.get("/session-notes/drafting/settings");
-		if (disposed) return;
-		available.value = data.siteAvailable === true && data.allowed === true;
-		ready.value = data.ready === true;
-	} catch {
-		available.value = false;
-	}
-});
-
 function classLabel(candidate: Candidate) {
 	return `${new Intl.DateTimeFormat("en-US", {
 		dateStyle: "medium",
@@ -116,7 +116,7 @@ function classLabel(candidate: Candidate) {
 }
 
 async function generate() {
-	if (!canGenerate.value) return;
+	if (!available.value || settingsLoading.value || !canGenerate.value) return;
 	error.value = message.value = "";
 	if (!ready.value) {
 		error.value =
@@ -224,6 +224,16 @@ function replaceDraft() {
 				@click="generate"
 			>
 				{{ busy ? "Generating…" : "Generate" }}
+			</button>
+		</div>
+		<div v-if="loadError" class="note-generation__choice" role="alert">
+			<span>{{ loadError }}</span>
+			<button
+				type="button"
+				:disabled="settingsLoading"
+				@click="loadSettings"
+			>
+				Retry drafting settings
 			</button>
 		</div>
 		<div v-if="confirmReplace" class="note-generation__choice" role="alert">

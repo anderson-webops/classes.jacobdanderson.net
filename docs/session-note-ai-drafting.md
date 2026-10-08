@@ -8,6 +8,11 @@ credentials, session associations and historical evidence remain unchanged.
 ## User interface
 
 - Select a student and class date. **Generate** is at the right of **Markdown**.
+- Settings failures on the canonical site show a bounded error and an explicit
+  retry beside the editor and in administrator drafting settings. Failed or
+  malformed settings never enable generation or change tutor permissions.
+  Until private provider configuration is complete, Generate explains that
+  configuration is required without looking up transcripts or calling AI.
 - The default Zoom meeting number is `2543520025`. The lookup uses the configured
   Zoom time zone, not a date parsed from an email subject or a nearest-day match.
 - Confirm the actual Zoom occurrence belongs to the selected student. A recurring

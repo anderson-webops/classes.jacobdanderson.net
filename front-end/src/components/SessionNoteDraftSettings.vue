@@ -1,25 +1,30 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { api } from "@/api";
+import { useSessionNoteDraftSettings } from "@/modules/useSessionNoteDraftSettings";
 
-const available = ref(false);
+const { settings, loading, loadError, loadSettings } =
+	useSessionNoteDraftSettings();
+const available = computed(() => settings.value?.siteAvailable === true);
 const tutorsEnabled = ref(false);
 const chosenAccess = ref(false);
 const saving = ref(false);
 const message = ref("");
 const error = ref("");
-onMounted(async () => {
-	try {
-		const { data } = await api.get("/session-notes/drafting/settings");
-		available.value = data.siteAvailable === true;
-		tutorsEnabled.value = data.tutorsEnabled === true;
-		chosenAccess.value = tutorsEnabled.value;
-	} catch {
-		available.value = false;
-	}
+watch(settings, data => {
+	if (!data) return;
+	tutorsEnabled.value = data.tutorsEnabled;
+	chosenAccess.value = tutorsEnabled.value;
 });
 async function setAccess(value: boolean) {
-	if (saving.value || value === tutorsEnabled.value) return;
+	if (
+		!available.value ||
+		loading.value ||
+		saving.value ||
+		value === tutorsEnabled.value
+	) {
+		return;
+	}
 	saving.value = true;
 	error.value = message.value = "";
 	try {
@@ -39,9 +44,15 @@ async function setAccess(value: boolean) {
 </script>
 
 <template>
-	<section v-if="available" class="draft-settings">
+	<section v-if="available || loadError" class="draft-settings">
 		<h3>Session-note AI</h3>
-		<fieldset :disabled="saving">
+		<div v-if="loadError" role="alert">
+			<p>{{ loadError }}</p>
+			<button type="button" :disabled="loading" @click="loadSettings">
+				Retry drafting settings
+			</button>
+		</div>
+		<fieldset v-if="available" :disabled="saving || loading">
 			<legend>Allow tutors to generate drafts</legend>
 			<label
 				><input
