@@ -84,6 +84,7 @@ const CODE_EXTENSIONS = new Set([
 	".swift",
 	".toml",
 	".ts",
+	".tsv",
 	".tsx",
 	".txt",
 	".vue",
