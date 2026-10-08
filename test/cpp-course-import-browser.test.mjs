@@ -1633,6 +1633,9 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				record("verified-notebook-routing", { folder, referenceVisible: referenceFixture, noCodeImport: true });
 				await revealCourseSource(page, selector);
 			}
+			if (folder.startsWith("CPPI5-Template-") && !referenceFixture) {
+				await page.waitForFunction(selector => [...document.querySelector(selector)?.closest(".lesson-item").querySelectorAll(".item-content-markdown a") ?? []].some(action => action.textContent.trim() === "Open separate template practice" && action.getAttribute("href")?.startsWith("/ide?")), {}, selector);
+			}
 			const href = folder.startsWith("CPPI5-Template-") ? await page.$eval(selector, (link, reference) => reference ? link.getAttribute("href") : [...link.closest(".lesson-item").querySelectorAll(".item-content-markdown a")].find(action => action.textContent.trim() === "Open separate template practice")?.getAttribute("href"), referenceFixture) : await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll(".is-ide-starter")].find(action => new URL(action.href).searchParams.get("starterUrl") === link.href)?.getAttribute("href"));
 			assert.ok(href, "The selected source has its own IDE action");
 			const params = new URL(href, origin).searchParams;
