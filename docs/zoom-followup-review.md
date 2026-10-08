@@ -55,6 +55,29 @@ or forward account data.
 
 ## Already present or excluded
 
+An additional teaching transcript became available on October 8. Its discussion
+identified three missing explanations in Scratch Level 1: sampling an actual
+backdrop color, choosing a priority when a costume touches multiple regions, and
+coordinating lightning motion with sound completion. The four public Juni
+starter/reference projects for Dino's Colors and Noisy Reactions were inspected
+directly on October 8. Their original project instructions, source links,
+placement, and progress identities remain unchanged.
+
+Supporting lessons now explain the color picker, repeated and nested checks,
+grey as part of the completed assignment, boundary priority, stale-message
+clearing, sound selection and waiting, cloud reset, and one reaction per contact.
+The original lightning sequence is taught explicitly. A separate optional
+broadcast challenge starts motion and sound from one contact decision and waits
+for both finite receivers before returning to Cloud. The challenge includes
+shorter/longer motion tests and a pointer to the later broadcasting module.
+These additions do not expand the six approved project-instruction corrections.
+
+The transcript search listing incorrectly marked this session as lacking a
+transcript; the asset reader returned its full transcript. This adds one teaching
+session to the earlier review and does not recover the 51 unavailable historical
+assets. A brief loading delay resolved during the session and lacked enough
+evidence to identify a new site defect.
+
 Current source already includes corrected Scratch links, independent blank
 Scratch starters for open-ended work, learner-accessible course progress editing,
 dark-mode course styling, the footer theme control, and the PyGame Surface
