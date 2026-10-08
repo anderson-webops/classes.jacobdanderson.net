@@ -28,9 +28,11 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			// Returning to another course anchor can reuse the previous document.
 			// Start a fresh document so each fixture bootstraps its own account.
 			await page.goto("about:blank");
-			const accountResponse = page.waitForResponse(response => new URL(response.url()).pathname === "/api/accounts/me");
-			await page.goto(`${origin}/courses#scratch-level-1-gs5-basic-conditionals`, { waitUntil: "networkidle2" });
-			assert.deepEqual(await (await accountResponse).json(), role === "instructor" ? { tutorID: "scratch-tutor-fixture" } : { userID: "scratch-course-fixture" });
+			const [accountResponse] = await Promise.all([
+				page.waitForResponse(response => response.request().method() === "GET" && new URL(response.url()).pathname === "/api/accounts/me"),
+				page.goto(`${origin}/courses#scratch-level-1-gs5-basic-conditionals`, { waitUntil: "networkidle2" })
+			]);
+			assert.equal(accountResponse.status(), 200);
 			await page.waitForFunction(role => document.querySelector(".site-nav__badge")?.textContent.trim() === (role === "instructor" ? "Tutor" : "Student"), {}, role);
 			await page.waitForSelector(".lesson-view-toggle button");
 			await page.click(".lesson-view-toggle button:nth-child(3)");

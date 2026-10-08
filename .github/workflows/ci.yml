@@ -271,6 +271,19 @@ jobs:
             - name: Build front-end
               run: npm run -w front-end build
 
+            - name: Verify Scratch classroom import, execution and downloads
+              env:
+                  SCRATCH_SCREENSHOT_DIR: output/playwright
+              run: node --test test/scratch-projects.test.mjs test/scratch-browser.test.mjs
+
+            - name: Retain Scratch conditional lesson screenshots
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: scratch-conditional-screenshots
+                  path: front-end/output/playwright/scratch-conditionals-*.png
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify bridge and C++ foundation import, export and native compilation
               env:
                   COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
@@ -292,19 +305,6 @@ jobs:
 
             - name: Verify console scrolling and editor argument warnings
               run: node --test test/ide-console-browser.test.mjs
-
-            - name: Verify Scratch classroom import, execution and downloads
-              env:
-                  SCRATCH_SCREENSHOT_DIR: output/playwright
-              run: node --test test/scratch-projects.test.mjs test/scratch-browser.test.mjs
-
-            - name: Retain Scratch conditional lesson screenshots
-              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-              with:
-                  name: scratch-conditional-screenshots
-                  path: front-end/output/playwright/scratch-conditionals-*.png
-                  if-no-files-found: error
-                  retention-days: 7
 
             - name: Verify Turtle manual updates and editor search contrast
               run: node --test test/turtle-tracer-browser.test.mjs
