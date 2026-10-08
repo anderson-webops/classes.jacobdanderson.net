@@ -5,10 +5,10 @@ import process from "node:process";
 
 export function scratchCourseAccount(path, role) {
 	if (!role) return {};
-	const user = { _id: "scratch-course-fixture", name: "Course fixture", email: "course@example.invalid", age: 14, state: "GA", courseAccess: ["scratch-level-1"], courseProgress: [] };
+	const user = { _id: "scratch-course-fixture", name: "Course fixture", email: "course@example.invalid", age: 14, state: "GA", courseAccess: ["scratch-level-1", "scratch-level-1-classroom"], courseProgress: [] };
 	if (path === "/api/accounts/me") return role === "instructor" ? { tutorID: "scratch-tutor-fixture" } : { userID: user._id };
 	if (path === "/api/users/loggedin" && role === "learner") return { currentUser: user };
-	if (path === "/api/tutors/loggedin" && role === "instructor") return { currentTutor: { _id: "scratch-tutor-fixture", name: "Course fixture", email: "course@example.invalid", age: 30, state: "GA", usersOfTutorLength: 1, coursePermissions: ["scratch-level-1"] } };
+	if (path === "/api/tutors/loggedin" && role === "instructor") return { currentTutor: { _id: "scratch-tutor-fixture", name: "Course fixture", email: "course@example.invalid", age: 30, state: "GA", usersOfTutorLength: 1, coursePermissions: ["scratch-level-1", "scratch-level-1-classroom"] } };
 	if (path === "/api/users/oftutor/scratch-tutor-fixture") return [user];
 	return {};
 }
@@ -60,6 +60,20 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			const references = await page.$$eval("a", links => links.map(link => link.href).filter(href => /scratch\.mit\.edu\/projects\/(?:291220849|291530292)\//.test(href)));
 			assert.equal(references.length, role === "instructor" ? 2 : 0);
 			console.log(`Scratch conditional guidance, optional timing and source roles verified: ${role} at ${width}px`);
+			await page.goto("about:blank");
+			await page.goto(`${origin}/courses#scratch-level-1-classroom-scratch-classroom-5`, { waitUntil: "networkidle2" });
+			await page.waitForSelector(".lesson-view-toggle button");
+			await page.click(".lesson-view-toggle button:nth-child(1)");
+			const ending = await readLesson(page, "Maze Checkpoint", "Optional ending screen");
+			for (const required of ["when green flag clicked -> hide", "when I receive [Maze finished] -> go to front layer -> show", "broadcast [Maze finished] and wait, followed by stop all", "the ending must hide and the player must return to its start", "it still retries"])
+				assert.ok(ending.includes(required), required);
+			assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+			assert.ok(await page.$("a[href='/ide?mode=scratch&starter=maze-reset']"));
+			if (process.env.SCRATCH_SCREENSHOT_DIR) {
+				const card = await page.evaluateHandle(() => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes("Maze Checkpoint")));
+				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-ending-${role}-${width}.png`) });
+			}
+			console.log(JSON.stringify({ event: "verified-scratch-ending-guidance", role, width, starter: "maze-reset", hideShowRestartAndMessageOrder: true }));
 		}
 	}
 }
