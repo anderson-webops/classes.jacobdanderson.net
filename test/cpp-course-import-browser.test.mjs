@@ -1429,17 +1429,31 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				await revealCourseSource(page, selector);
 			}
 			if (Object.hasOwn(inventoryPacks, folder)) {
-				if (await page.$(".lesson-view-toggle button")) {
-					await page.click(".lesson-view-toggle button:first-child");
-					await page.waitForSelector(".lesson-view-toggle button:first-child[aria-pressed='true']");
+				for (const width of [390, 1280]) {
+					await page.setViewport({ width, height: 900 });
+					await page.click(".lesson-view-toggle button:nth-child(3)");
+					await page.waitForSelector(".lesson-view-toggle button:nth-child(3)[aria-pressed='true']");
+					await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item .item-content-markdown h2")].filter(heading => heading.textContent === "Guided checks and independent study").length === 2);
+					const titles = ["Choosing Containers and Traversing with Iterators", "Standard Algorithms and Relation-Style Views"];
+					const lessons = await page.$$eval(".lesson-item", (items, titles) => titles.map(title => items.find(item => item.querySelector("h5")?.textContent === title)?.querySelector(".item-content-markdown")?.textContent.replace(/\s+/g, " ")), titles);
+					assert.equal(lessons.length, 2);
+					assert.match(lessons[0], /old end iterator is invalidated/);
+					assert.match(lessons[0], /worst-case linear/);
+					assert.match(lessons[1], /reserve alone does not change vector size/);
+					assert.match(lessons[1], /not a full relational database/);
+					assert.equal(sourceRequests, before, "Reading container lessons in Learn never imports code");
+					assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), "Container learning content fits each viewport");
+					if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+						const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
+						await mkdir(directory, { recursive: true });
+						for (const [index, title] of titles.entries()) {
+							const card = await page.evaluateHandle(title => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent === title), title);
+							await card.asElement().screenshot({ path: join(directory, `course-import-cpp-CPPI3-lesson-${index}-${referenceFixture ? "staff" : "learner"}-${width}.png`) });
+						}
+					}
+					record("verified-container-learning-view", { folder, role: referenceFixture ? "instructor" : "learner", width, lessonCount: 2, learningView: true, noCodeImport: true });
 				}
-				await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item .item-content-markdown h2")].filter(heading => heading.textContent === "Guided checks and independent study").length === 2);
-				const lessons = await page.$$eval(".lesson-item", items => items.filter(item => ["Choosing Containers and Traversing with Iterators", "Standard Algorithms and Relation-Style Views"].includes(item.querySelector("h5")?.textContent)).map(item => item.querySelector(".item-content-markdown")?.textContent.replace(/\s+/g, " ")));
-				assert.equal(lessons.length, 2);
-				assert.match(lessons[0], /old end iterator is invalidated/);
-				assert.match(lessons[0], /worst-case linear/);
-				assert.match(lessons[1], /reserve alone does not change vector size/);
-				assert.match(lessons[1], /not a full relational database/);
+				await page.setViewport({ width: referenceFixture ? 1280 : 390, height: 900 });
 				await revealCourseSource(page, selector);
 				await page.waitForFunction(selector => document.querySelector(selector)?.closest(".lesson-item").textContent.includes("Completion and walkthrough evidence"), {}, selector);
 				const briefText = await page.$eval(selector, link => link.closest(".lesson-item").textContent.replace(/\s+/g, " "));
