@@ -36,6 +36,43 @@ context("Useful homepage and single compact footer", () => {
 				cy.get(".home-page details, .home-page button").should(
 					"not.exist"
 				);
+				cy.document().then(document => {
+					const view = document.defaultView!;
+					const rem = parseFloat(
+						view.getComputedStyle(document.documentElement).fontSize
+					);
+					const sections = Array.from(
+						document.querySelectorAll(".home-page > section")
+					);
+					for (let index = 1; index < sections.length; index++) {
+						const gap =
+							sections[index].getBoundingClientRect().top -
+							sections[index - 1].getBoundingClientRect().bottom;
+						expect(gap).to.be.at.least(4 * rem);
+						expect(gap).to.be.at.most(7 * rem);
+					}
+					const session = document.querySelector(".home-session")!;
+					expect(
+						session
+							.querySelector(".section-heading")!
+							.getBoundingClientRect().top -
+							session.getBoundingClientRect().top
+					).to.be.at.least(4 * rem);
+					for (const selector of [
+						".home-subjects",
+						".home-session__steps"
+					]) {
+						const grid = document.querySelector(selector)!;
+						const rowGap = parseFloat(
+							view.getComputedStyle(grid).rowGap
+						);
+						expect(rowGap).to.be.at.least(2.5 * rem);
+						expect(rowGap).to.be.at.most(4 * rem);
+					}
+				});
+				cy.screenshot(`homepage-spacing-${viewport.name}-${theme}`, {
+					capture: "fullPage"
+				});
 				cy.get("footer").should("have.length", 1).scrollIntoView();
 				cy.get("footer h2, footer h3, .site-footer__inner").should(
 					"not.exist"

@@ -142,7 +142,8 @@ useHead(
 
 <style scoped>
 .home-page {
-	gap: clamp(2.5rem, 5vw, 4rem);
+	--home-section-space: clamp(4rem, 8vw, 7rem);
+	gap: var(--home-section-space);
 	padding-bottom: 2rem;
 	margin-bottom: clamp(3rem, 6vw, 6rem);
 }
@@ -170,7 +171,7 @@ useHead(
 
 .home-section {
 	display: grid;
-	gap: 1.35rem;
+	gap: clamp(2rem, 3vw, 3rem);
 }
 
 .section-heading {
@@ -194,7 +195,7 @@ useHead(
 .home-subjects {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
-	gap: 1.75rem;
+	gap: clamp(2.5rem, 4vw, 4rem) 1.75rem;
 }
 
 .home-subject {
@@ -229,14 +230,14 @@ useHead(
 }
 
 .home-session {
-	padding-top: 2rem;
+	padding-top: var(--home-section-space);
 	border-top: 1px solid var(--color-border);
 }
 
 .home-session__steps {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1.5rem 2rem;
+	gap: clamp(2.5rem, 4vw, 4rem) 2rem;
 	margin: 0;
 	padding-left: 1.5rem;
 }
