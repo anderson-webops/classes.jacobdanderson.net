@@ -535,6 +535,78 @@ describe("Python project routes", () => {
 		);
 	});
 
+	it("stores the complete C++ score pack and preserves tab-separated data for both owners", async () => {
+		const files = [
+			{
+				name: "main.cpp",
+				content: "#include <iostream>\nint main() {}\n"
+			},
+			{
+				name: "Makefile",
+				content: "main: main.cpp\n\tc++ main.cpp -o main\n"
+			},
+			{ name: "README.md", content: "# Resource-safe file processor\n" },
+			{
+				name: "scores.tsv",
+				content: "CPPI4_SCORES_V1\r\nAda\t84\r\nLin\t59\r\n"
+			}
+		];
+		for (const owner of ["user", "course-code"] as const) {
+			await withPythonProjectRoute(async baseUrl => {
+				const response = await postJson(baseUrl, {
+					mode: "cpp",
+					files,
+					activeFileName: "main.cpp"
+				});
+				expect(response.status).toBe(201);
+				const body = await response.json();
+				expect(body.project.files).toEqual(
+					files.map(file => ({ ...file, encoding: "text" }))
+				);
+				expect(body.project.activeFileName).toBe("main.cpp");
+			}, owner);
+		}
+		expect(modelMocks.pythonProjectCreate).toHaveBeenCalledTimes(2);
+		for (const [payload] of modelMocks.pythonProjectCreate.mock.calls) {
+			expect(payload.files).toEqual(
+				files.map(file => ({ ...file, encoding: "text" }))
+			);
+		}
+		expect(modelMocks.pythonProjectCreate.mock.calls[0]?.[0].user).toEqual(
+			userID
+		);
+		expect(modelMocks.pythonProjectCreate.mock.calls[1]?.[0]).toMatchObject(
+			{ user: courseCodeLearnerID, ownerRole: "courseCodeLearner" }
+		);
+	});
+
+	it("keeps tab-separated data at safe root paths and rejects a data-only C++ project", async () => {
+		await withPythonProjectRoute(async baseUrl => {
+			for (const name of [
+				"../scores.tsv",
+				"src/scores.tsv",
+				"images/scores.tsv",
+				"scores.tsv.exe",
+				"scores\\data.tsv"
+			]) {
+				const response = await postJson(baseUrl, {
+					mode: "cpp",
+					files: [
+						{ name: "main.cpp", content: "int main() {}" },
+						{ name, content: "CPPI4_SCORES_V1\n" }
+					]
+				});
+				expect(response.status).toBe(400);
+			}
+			const response = await postJson(baseUrl, {
+				mode: "cpp",
+				files: [{ name: "scores.tsv", content: "CPPI4_SCORES_V1\n" }]
+			});
+			expect(response.status).toBe(400);
+		});
+		expect(modelMocks.pythonProjectCreate).not.toHaveBeenCalled();
+	});
+
 	it("keeps build files inert and rejects unsupported build-file paths", async () => {
 		await withPythonProjectRoute(async baseUrl => {
 			for (const name of ["../Makefile", "src/Makefile", "Makefile.sh"]) {
