@@ -338,7 +338,10 @@ function canonicalizeResourceUrl(url?: string) {
 			owner.toLowerCase() === "instruction-material" &&
 			repo.toLowerCase() === "cpp-level-3" &&
 			fileSegments.length === 2 &&
-			fileSegments[0] === "CPPI5-Template-Error-Reading-Drill" &&
+			[
+				"CPPI5-Template-Error-Reading-Drill",
+				"CPPI6-Enum-vs-Polymorphic-State-Review"
+			].includes(fileSegments[0]) &&
 			fileSegments[1] === "WORKSHEET.md"
 		) {
 			return trimmedUrl;

@@ -306,8 +306,10 @@ export function isKnownCourseWorksheetResource(url: string) {
 				(/^(?:CPPI0-Warnings-and-Debugger-Notebook|CPPI2-Recursion-Trace-Drill|CPPI3-Container-Tradeoff-Audit|CPPI4-Ownership-Rewrite-Reflection)(?:\/|$)/.test(
 					resource.path
 				) ||
-					resource.path ===
-						"CPPI5-Template-Error-Reading-Drill/WORKSHEET.md")))
+					[
+						"CPPI5-Template-Error-Reading-Drill/WORKSHEET.md",
+						"CPPI6-Enum-vs-Polymorphic-State-Review/WORKSHEET.md"
+					].includes(resource.path))))
 	);
 }
 
