@@ -1,58 +1,52 @@
 # Current course-audit checkpoint, 2026-10-08
 
-The full 77-course audit remains active. Earlier dated checkpoints retain their
-historical evidence; their pending statements and counts are not current status.
+The full 77-course audit remains active. Earlier dated sections describe historical
+checkpoints; their pending statements and counts are not current status.
 Production activation remains unverified.
 
-The CPPI3 container milestone is published in canonical v2.8.62 and downstream
-v2.8.10. The subsequent Scratch teaching milestone is published in canonical
-[v2.8.65](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.65)
-and downstream
-[v2.8.12](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.12).
-It explains actual backdrop sampling, overlapping touching-color decisions,
-and the original Lightning movement and sound sequence, with an optional
-coordinated concurrent strike. Original Juni projects, source links and stable
-identities remain. Review and independent main each pass all nine checks and
-35 Cypress scenarios. Both original signed release packages, every payload
-file and thirteen trusted deployment configurations were independently checked.
-The downstream retains one neutral overlay and its existing customization paths.
-The optional Scratch challenge has no separate timing-execution measurement.
+Canonical [v2.8.68](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.68)
+is published at `d1607a41e87230c6c08b50019cec6ff8f958c894`. It includes the
+complete resource-safety and value/template coursework, separate optional
+worksheets and practice imports, saved-attempt preservation, and the concurrent
+saved-notes correction. Exact review and independent main each pass all nine
+site jobs and 35 Cypress scenarios. Native release provenance, all payload
+files, thirteen trusted source configurations and the published asset digests
+were independently verified. This is source/release acceptance, not evidence
+of production activation.
 
-The Resource-Safe File Processor and optional Ownership Rewrite Reflection
-source are integrated through
-[CPP Level 3 PR #6](https://github.com/instruction-material/CPP-Level-3/pull/6)
-at `e419fb3d1d0145e133ea83cefae1f368d2fd7b1a`.
-The reviewed and merged trees match. Both exact review runs pass all twelve
-native groups, preserving eight existing groups and adding four for the file
-processor, ownership comparison, complete teaching programs and build packs.
-Ordinary and sanitizer runs check untouched and completed learner code, the
-reference, input limits, independent report models, real partial-write and rename
-failures, path collisions and preservation of earlier report bytes. The ownership
-worksheet retains the verified Level 2 manual example; worked results match
-actual execution. The primary local source checkout remains intact.
+The downstream main is synchronized at
+`3ef834b608c7d61a0adf3a0cc3a4ac296532a551`, with one neutral overlay and all 98
+current customization paths preserved. Its exact combined review tree passes
+all nine jobs and 35 Cypress scenarios. Independent main now passes the same
+nine jobs and 35 scenarios. The first browser attempt failed while reading a
+Scratch archive before download completion; its log and the successful repeat
+are retained. A correction in this candidate waits for Chrome's matching
+completed-download event rather than filename existence. The next fork release
+is being prepared from the accepted main.
 
-The site catalog candidate adds both complete ownership/error lessons, the full
-primary contract and optional worksheet. It preserves course scope and stable
-saved project keys, asks before importing the learner pack, continues an existing
-saved attempt from the worksheet and offers a separate current-pack action.
-The worksheet remains a document, with worked material visible to instructors.
-The IDE now recognizes tab-separated text files, including the primary pack's
-`scores.tsv`; filename checks, file labels, imports, saved payloads and exports
-preserve tab-separated data alongside the source, build file and README.
-The cloud-save validator accepts this root data file for both regular and
-course-code accounts; route checks preserve its tabs and line endings and reject
-unsafe paths and C++ projects without source code.
-Browser coverage checks the actual catalog in learner/instructor views at 390px
-and 1280px, import confirmation, untouched and completed exports, native report
-results, saved files and reopened attempts. Hosted site acceptance remains
-required before catalog integration and release.
+The rover capstone and optional state-design review source is integrated through
+[CPP Level 3 PR #9](https://github.com/instruction-material/CPP-Level-3/pull/9)
+at `d2b1820f2c253e7c3e7a07f6c6daef38ed7a2952`, with exact pack source pinned to
+`ecdc6b5089c09850ce66178d75dd5e21275498e3`. Review and independent main each pass
+all twenty native groups. All sixteen earlier groups remain. The four new groups
+check six learner/completed/reference program variants, 256 independent route
+comparisons and 22 malformed snapshots per completed rover program, 64-level
+routes, actual save/restart and file-publication failures, 256 event sequences
+per completed state program, real virtual destruction, two complete teaching
+programs and all four Make/CMake packs in ordinary/sanitizer builds.
 
-Four other C++ Level 3 learner/reference pairs still need substantive source
-replacement: fraction toolkit, template-error drill, saveable simulation and
-state comparison. The latest available teaching transcript's three Scratch
-instruction gaps are addressed in the published milestone above. The 51
-unavailable historical Zoom assets remain unavailable. This checkpoint does not
-certify the remaining coursework or production deployment.
+The site candidate adds the full dispatch/pathway lessons, required rover brief
+and optional state worksheet. It retains 22 core/eight optional items and the
+existing course/progress/saved-primary identities. Reading the worksheet imports
+no code; the current primary pack, state practice and instructor reference use
+separate identities. Actual browser editing, saving, complete export, native
+compilation and reopening are being added for all four source packs. Hosted site
+acceptance, visual review, integration and release remain pending.
+
+The latest available teaching transcript's three Scratch instruction gaps are
+addressed in canonical v2.8.65 and downstream v2.8.12. The 51 unavailable
+historical Zoom assets remain unavailable. These milestones do not certify
+remaining coursework, the whole catalog or live deployment.
 
 ## Earlier dated milestones
 

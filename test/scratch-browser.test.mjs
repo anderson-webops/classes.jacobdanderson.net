@@ -98,8 +98,41 @@ nodeTest(
 			const client = await page.createCDPSession();
 			await client.send("Browser.setDownloadBehavior", {
 				behavior: "allow",
-				downloadPath: files
+				downloadPath: files,
+				eventsEnabled: true
 			});
+			async function downloadProject(filename) {
+				// File creation and the page's status precede Chrome's final write.
+				// Wait for the matching browser download to finish before reading it.
+				let guid, timer;
+				let began, progressed;
+				const completed = new Promise((resolve, reject) => {
+					began = (event) => {
+						if (event.suggestedFilename === filename) guid = event.guid;
+					};
+					progressed = (event) => {
+						if (event.guid !== guid) return;
+						if (event.state === "completed") resolve();
+						if (event.state === "canceled")
+							reject(new Error(`Download canceled: ${filename}`));
+					};
+					client.on("Browser.downloadWillBegin", began);
+					client.on("Browser.downloadProgress", progressed);
+					timer = setTimeout(() =>
+						reject(new Error(`Download did not finish: ${filename}`)), 20000);
+				});
+				try {
+					await Promise.all([
+						completed,
+						page.locator("::-p-text(Download project)").click()
+					]);
+				}
+				finally {
+					clearTimeout(timer);
+					client.off("Browser.downloadWillBegin", began);
+					client.off("Browser.downloadProgress", progressed);
+				}
+			}
 			await page.goto(
 				"http://127.0.0.1:5198/ide?mode=scratch&starter=two-arrows",
 				{ waitUntil: "networkidle2" }
@@ -236,7 +269,7 @@ nodeTest(
 			);
 			await setProjectMenuOpen(false);
 			page.on("dialog", dialog => dialog.accept());
-			await page.locator("::-p-text(Download project)").click();
+			await downloadProject("Two Arrows.sb3");
 			await page.waitForFunction(() =>
 				document
 					.querySelector(".scratch-status[role=status]")
@@ -244,8 +277,6 @@ nodeTest(
 					.includes("Downloaded")
 			);
 			const exported = path.join(files, "Two Arrows.sb3");
-			for (let n = 0; n < 30 && !existsSync(exported); n++)
-				await new Promise(resolve => setTimeout(resolve, 100));
 			const project = JSON.parse(
 				strFromU8(
 					unzipSync(new Uint8Array(await readFile(exported)))[
@@ -288,9 +319,7 @@ nodeTest(
 			const nameFile = path.join(files, "Animate Your Name.sb3");
 			async function exportName() {
 				await rm(nameFile, { force: true });
-				await page.locator("::-p-text(Download project)").click();
-				for (let n = 0; n < 50 && !existsSync(nameFile); n++)
-					await new Promise(resolve => setTimeout(resolve, 100));
+				await downloadProject("Animate Your Name.sb3");
 				return JSON.parse(
 					strFromU8(
 						unzipSync(new Uint8Array(await readFile(nameFile)))[
@@ -342,9 +371,7 @@ nodeTest(
 			await loaded();
 			await setProjectMenuOpen(false);
 			const blankFile = path.join(files, "Independent Mini-Game.sb3");
-			await page.locator("::-p-text(Download project)").click();
-			for (let n = 0; n < 50 && !existsSync(blankFile); n++)
-				await new Promise(resolve => setTimeout(resolve, 100));
+			await downloadProject("Independent Mini-Game.sb3");
 			const blankProject = JSON.parse(
 				strFromU8(
 					unzipSync(new Uint8Array(await readFile(blankFile)))[

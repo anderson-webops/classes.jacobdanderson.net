@@ -1,5 +1,6 @@
 import type { RawCourse } from "./types";
 import { cppBuildDebugProjectBrief } from "./cppBuildDebugProjectBrief";
+import { cppCapstoneLessons } from "./cppCapstoneLessons";
 import { cppContainerAuditWorksheet } from "./cppContainerAuditWorksheet";
 import { cppContainerLessons } from "./cppContainerLessons";
 import { cppDebugEvidenceNotebookBrief } from "./cppDebugEvidenceNotebookBrief";
@@ -226,18 +227,16 @@ const cppLevel3SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Polymorphism, Composition, and Runtime Dispatch",
-					content:
-						"Inheritance is a tool for shared interfaces and substitutable roles, not the default way to reuse code. Cover: composition versus inheritance, pure virtual interfaces, virtual destructors, `override`, runtime dispatch through references or smart pointers, object-slicing avoidance, and how this differs from a simple `enum class` state machine. Connect the comparison directly to future design-pattern work, especially polymorphic state objects."
+					content: cppCapstoneLessons.dispatch
 				},
 				{
 					title: "Advanced Pathways and Program Framing",
-					content:
-						"Close the course by naming the next paths clearly and framing the capstone as evidence of readiness. `Data Structures and Algorithms in C++` fits when performance, asymptotic reasoning, trees, graphs, and containers are the main next gap. `Design Patterns in C++` fits when the next gap is architecture: polymorphic roles, state objects, factories, adapters, and testable boundaries. `C Systems Engineering` fits when memory layout, compilation, operating-system interfaces, and lower-level representation are the strongest pull. The advanced CS236-inspired capstone can combine a scanner, parser, command or AST objects, table-style evaluation, and a dependency graph, but it remains smaller than the original college project. Readiness evidence includes a parse trace, a class or ownership diagram, focused tests, and a written limitation."
+					content: cppCapstoneLessons.pathways
 				},
 				{
 					title: "CPPI6 Capstone: Saveable Command-Driven Simulation",
-					content:
-						"Build a small simulation, game, or interpreter-style command engine with saved data, explicit states, STL containers, one recursive or algorithmic subsystem, and a narrow polymorphic interface. The capstone demonstrates medium-size C++ program organization without jumping into a full application framework.",
+					content: cppCapstoneLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI6-Saveable-Command-Simulation/starter",
 					solutionLink:
@@ -247,12 +246,12 @@ const cppLevel3SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "CPPI6 Project 2: Enum State versus Polymorphic State Review",
-					content:
-						"Take one capstone state transition and compare the simple `enum class` approach with a possible polymorphic State-pattern design. Explain which version is more appropriate for the current project size.",
+					content: cppCapstoneLessons.worksheet,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI6-Enum-vs-Polymorphic-State-Review/starter",
+						"https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI6-Enum-vs-Polymorphic-State-Review/WORKSHEET.md",
 					solutionLink:
-						"https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI6-Enum-vs-Polymorphic-State-Review/solution"
+						"/ide?course=cpp-level-3&mode=cpp&projectKey=cpp-level-3%3Acppi6-state-review%3Areference-pack-v1&starterUrl=https%3A%2F%2Fgithub.com%2Finstruction-material%2FCPP-Level-3%2Ftree%2Fmain%2FCPPI6-Enum-vs-Polymorphic-State-Review%2Fsolution&starterTitle=CPPI6+Project+2%3A+Enum+State+versus+Polymorphic+State+Review&starterLabel=Worked+reference&lesson=cpp-level-3-cppi6-polymorphism-and-bridge-to-advanced-c"
 				}
 			]
 		}
