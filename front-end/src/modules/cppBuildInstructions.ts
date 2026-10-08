@@ -5,11 +5,14 @@ export function cppBuildInstructions(
 	files: PythonIdeFile[],
 	courseProjectKey?: string
 ) {
-	const standard = /^(?:(?:c|cpp)-level-1|cpp-level-[23])(?:[:-]|$)/.test(
-		courseProjectKey ?? ""
-	)
-		? 20
-		: 17;
+	const key = courseProjectKey ?? "";
+	const standard =
+		/^(?:(?:c|cpp)-level-1|cpp-level-[23])(?:[:-]|$)/.test(key) ||
+		/^data-structures-and-algorithms-in-cpp:(?:data-structures-and-algorithms-in-cpp-dscpp2-graphs-and-shortest-paths(?:[:-]|$)|dscpp2-graph(?::|$))/.test(
+			key
+		)
+			? 20
+			: 17;
 	const sources = files
 		.filter(
 			file =>

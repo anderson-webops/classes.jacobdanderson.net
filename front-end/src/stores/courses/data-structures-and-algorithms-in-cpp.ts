@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { dsaGraphLessons } from "./dsaGraphLessons";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
@@ -168,18 +169,19 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Adjacency Matrices and Weighted Connectivity",
-					content:
-						"Represent a graph as weighted node-to-node connectivity and make the storage format explicit. Explain what `-1` or another sentinel means in the matrix instead of only copying loops that walk it. The CS235 navigation lab maps cleanly here: a road network file, weighted adjacency matrix, and route query become the concrete project shape."
+					id: "data-structures-and-algorithms-in-cpp-dscpp2-graphs-and-shortest-paths-curriculum-graphs-and-shortest-paths-core-concepts",
+					content: dsaGraphLessons.representation,
+					ideImport: false
 				},
 				{
 					title: "Shortest Path Thinking",
-					content:
-						"Shortest-path work is a repeated relaxation problem rather than memorized Dijkstra vocabulary. State Dijkstra's nonnegative-edge precondition and reject unsupported negative weights before searching. Compare the straightforward adjacency-matrix `O(V^2)` frontier scan with an adjacency-list implementation backed by `std::priority_queue`, including stale queue entries and disconnected goals. The key judgment is understanding why a currently known best cost can still improve through another route until the frontier closes."
+					content: dsaGraphLessons.selection,
+					ideImport: false
 				},
 				{
 					title: "Path Reconstruction",
-					content:
-						"Do not stop at distance values. Record parent relationships and reconstruct the actual route so they understand the difference between knowing a cost and knowing the path that produced it. If visual output is useful, treat map rendering as an optional extension after the path logic is correct."
+					content: dsaGraphLessons.reconstruction,
+					ideImport: false
 				},
 				{
 					title: "Graphs and Shortest Paths: Verification and Reflection",
@@ -191,12 +193,8 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 				},
 				{
 					title: "DSCPP2 Graphs and Shortest Paths: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle: "DSCPP2 Graphs and Shortest Paths",
-						projectKind: "core",
-						hasReference: true
-					}),
+					content: dsaGraphLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP2-Graph-Navigation/starter",
 					solutionLink:
@@ -206,38 +204,24 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Project: Graph Navigation",
-					content:
-						"Read a weighted road-style network, compute the shortest path between two nodes, and reconstruct the route from start to goal. The project emphasizes clean starter code, readable graph representation, and review material that makes the path reconstruction easy to inspect.",
+					content: dsaGraphLessons.walkthrough,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP2-Graph-Navigation/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP2-Graph-Navigation/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP2-Graph-Navigation/README.md"
 				},
 				{
 					title: "Graph Navigation Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle: "DSCPP2 Graphs and Shortest Paths",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaGraphLessons.transfer,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-05-dscpp2-graphs-and-shortest-paths-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-05-dscpp2-graphs-and-shortest-paths-supplemental-2/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP2-Graph-Navigation/README.md"
 				},
 				{
 					title: "Graph Navigation Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle: "DSCPP2 Graphs and Shortest Paths",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaGraphLessons.extension,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-06-dscpp2-graphs-and-shortest-paths-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-06-dscpp2-graphs-and-shortest-paths-supplemental-3/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP2-Graph-Navigation/README.md"
 				}
 			]
 		},
@@ -1463,7 +1447,7 @@ const DATA_STRUCTURES_CPP_MODULE_FLOW: Record<
 			"path reconstruction"
 		],
 		flowNote:
-			"Define node, edge, sentinel, and weight rules before parsing the fixture. Compare matrix scanning with an adjacency-list/priority-queue frontier, reject negative weights, ignore stale queue entries, and test start-equals-goal, disconnected, competing-route, and path-reconstruction cases."
+			"Define node, edge, sentinel, and weight rules before parsing the fixture. The core task replaces matrix minimum selection with a priority queue; adjacency lists are an optional representation change. Reject negative weights other than the absent sentinel, ignore stale queue entries, preserve valid state on a rejected reload, and test large costs, start-equals-goal, disconnected, competing-route, and path-reconstruction cases."
 	},
 	"DSCPP3 STL Containers and State-Based Text Generation": {
 		estimatedTime: "3–4 sessions · 45–60 minutes each",
@@ -1565,7 +1549,12 @@ function decorateDataStructuresCppModule(
 		...item,
 		content:
 			index === 0
-				? `**Course flow:** ${flow.flowNote}\n\n${item.content}`
+				? item.content.startsWith("**Concept focus:**")
+					? item.content.replace(
+							"\n\n",
+							`\n\n**Course flow:** ${flow.flowNote}\n\n`
+						)
+					: `**Course flow:** ${flow.flowNote}\n\n${item.content}`
 				: item.content,
 		learningPath: "core" as const
 	}));

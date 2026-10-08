@@ -300,8 +300,11 @@ export function isKnownCourseWorksheetResource(url: string) {
 	return (
 		!!resource &&
 		resource.owner.toLowerCase() === "instruction-material" &&
-		((resource.repo.toLowerCase() === "python-level-3" &&
-			/^AM6-Big-O-Analysis(?:\/|$)/.test(resource.path)) ||
+		((resource.repo.toLowerCase() ===
+			"data-structures-and-algorithms-in-cpp" &&
+			resource.path === "DSCPP2-Graph-Navigation/README.md") ||
+			(resource.repo.toLowerCase() === "python-level-3" &&
+				/^AM6-Big-O-Analysis(?:\/|$)/.test(resource.path)) ||
 			(resource.repo.toLowerCase() === "cpp-level-3" &&
 				(/^(?:CPPI0-Warnings-and-Debugger-Notebook|CPPI2-Recursion-Trace-Drill|CPPI3-Container-Tradeoff-Audit|CPPI4-Ownership-Rewrite-Reflection)(?:\/|$)/.test(
 					resource.path

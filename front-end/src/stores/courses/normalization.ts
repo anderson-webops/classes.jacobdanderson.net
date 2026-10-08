@@ -1405,6 +1405,8 @@ function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 		// Preserve that sequence rather than grouping all concepts at the front.
 		if (
 			(courseId === "c-level-1" && /^CPPF[1-8] /.test(module.title)) ||
+			(courseId === "data-structures-and-algorithms-in-cpp" &&
+				module.title === "DSCPP2 Graphs and Shortest Paths") ||
 			(courseId === "scratch-level-1" &&
 				module.title === "GS7 Basic Conditionals")
 		) {

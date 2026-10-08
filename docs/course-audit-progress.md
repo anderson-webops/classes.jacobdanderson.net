@@ -1243,3 +1243,55 @@ visual review, integration and downstream delivery remain required.
 Two generic CPPI6 source pairs and the broader 77-course audit remain active.
 The 51 unavailable historical Zoom assets remain unavailable; no new transcript
 access is claimed by this coursework checkpoint.
+
+
+## Rover delivery and graph navigation candidate
+
+The rover milestone is published as canonical
+[v2.8.69](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.69)
+and downstream
+[v2.8.16](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.16).
+The downstream now includes the accepted rover teaching, separate optional
+state worksheet, preserved saved attempts and Scratch download verification
+correction. Review and independent main checks pass all nine required jobs,
+71 C++/Java imports, 25 saved-attempt cases, 15 untouched learner exports and
+35 Cypress scenarios. Fresh teaching/workspace images are accepted. The original
+signed archives and thirteen trusted deployment configurations are verified.
+The neutral overlay remains intact. Production activation remains unverified.
+
+[Graph source PR #1](https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/pull/1)
+is merged at `8a6f91135c1721035603b8c6cec602903a2f6ab3`. Both compiler
+jobs pass eight actual ordinary/sanitizer role groups on review and independent
+main. The graph loader validates a complete bounded candidate before replacing
+accepted state. Signed 64-bit costs handle large valid routes; invalid endpoints,
+missing edges, disconnected goals and zero-cost cycles have explicit contracts.
+The working linear-scan starter retains a marked priority-queue assignment.
+
+The graph catalog candidate gives the three explanations separate readable
+lessons, preserves the earlier grouped progress identity and the actual primary
+saved-project key, and supplies a full runnable queue demonstration, distance
+trace, reconstruction guidance and source project brief. A separate current-pack
+action preserves earlier files. Optional walkthrough/transfer/extension guidance
+imports no code and keeps its reading links. Two unrelated generic numeric pack
+links are replaced with graph-specific worksheets. Full reconstruction and
+worksheet instructions survive display normalization. Raw course counts remain
+11 modules, 53 core entries and 79 optional entries.
+
+Local validation passes 441 catalog/IDE tests in six files, full workspace lint,
+strict browser syntax and six actual untouched/completed/reference native groups.
+Each native group checks 14 malformed loads and 816 independent endpoint pairs,
+large costs, the maximum node bound and zero-cost cycles. The complete queue
+example passes ordinary/sanitizer builds and changed predictions. Exact source
+fixtures pin the independently accepted graph main. Browser coverage adds actual
+import/edit/save/export/reopen, compiled exported sources, earlier-attempt
+preservation and learner/instructor teaching checks at 390/1280 pixels. Hosted
+site validation, visual acceptance, integration and downstream replay remain
+pending for this candidate.
+
+Two additional recovered Julio sessions, September 26 and September 30, have
+been read in full. Scheduler readability, sequential working starters,
+coordinate/layer guidance and transparent artwork requests are already covered
+by accepted work. The September 30 ambiguous spoken domain occurs in a Scratch
+publishing discussion and does not establish a new AP Computer Science request.
+The wider transcript/course audit remains active; this checkpoint does not
+certify unreviewed sessions or other advanced C++ projects.
