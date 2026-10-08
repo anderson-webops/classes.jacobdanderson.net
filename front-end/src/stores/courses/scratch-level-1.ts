@@ -7,6 +7,11 @@ import type {
 import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrections";
 import { isCoreProjectTitle } from "./projectGrouping";
 import {
+	dinoColorsLesson,
+	lightningTimingChallenge,
+	noisyReactionsLesson
+} from "./scratchConditionalLessons";
+import {
 	buildScratchFluencyDrill,
 	buildScratchOpenEndedVariant
 } from "./scratchProjectGuidance";
@@ -337,6 +342,7 @@ Challenge: Draw a different circle using different numbers.`,
 					content:
 						'Conditionals let a program make decisions. The "if … then" block checks a condition, and sensing blocks such as "touching mouse pointer", "key right arrow pressed", and "touching color ___" provide facts the condition can test. In games, conditionals often sit inside a `forever` loop so Scratch keeps checking for changes. A useful test describes both outcomes: what happens when the condition is true and what remains unchanged when it is false.'
 				},
+				dinoColorsLesson,
 				{
 					title: "Project 1 – Dino's Colors",
 					content: `
@@ -346,6 +352,7 @@ Challenge: Draw a different circle using different numbers.`,
 					projectLink: "https://scratch.mit.edu/projects/291223299/",
 					solutionLink: "https://scratch.mit.edu/projects/291220849/"
 				},
+				noisyReactionsLesson,
 				{
 					title: "Project 2 – Noisy Reactions",
 					content: `
@@ -370,6 +377,7 @@ Challenge: Draw a different circle using different numbers.`,
 				}
 			],
 			supplementalProjects: [
+				lightningTimingChallenge,
 				{
 					title: "GS5 Supplemental Project 1 – Camouflaging Octopus",
 					content: `

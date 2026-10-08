@@ -3,20 +3,23 @@ import { existsSync } from "node:fs";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+// This browser workflow runs in the native CI test runner, outside Vitest.
+// eslint-disable-next-line test/no-import-node-test -- Native CI workflow.
+import { test as nodeTest } from "node:test";
 import { fileURLToPath } from "node:url";
-import { test } from "node:test";
-import { unzipSync, strFromU8 } from "fflate";
+import { strFromU8, unzipSync } from "fflate";
 import puppeteer from "puppeteer";
 import { createServer } from "vite";
 import {
 	createProject,
 	lessons
 } from "../front-end/scripts/scratch/generate-projects.mjs";
+import { checkScratchConditionalCourse, scratchCourseAccount } from "./scratch-conditional-course-checks.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
-test(
-	"Scratch imports classroom projects, runs events and exports reusable files in isolation",
-	{ timeout: 120000 },
+nodeTest(
+	"scratch imports classroom projects, runs events and exports reusable files in isolation",
+	{ timeout: 180000 },
 	async () => {
 		let server, browser;
 		const previous = process.cwd();
@@ -35,7 +38,7 @@ test(
 			const productionCsp = headerMaps
 				.split("\n")
 				.find(line => line.includes("(?:ide|python-ide|bluej)"))
-				?.split('"')[1];
+				?.split("\"")[1];
 			assert.ok(productionCsp);
 			server = await createServer({
 				root,
@@ -45,11 +48,12 @@ test(
 						configureServer(server) {
 							server.middlewares.use(
 								(request, response, next) => {
-									if (request.url?.startsWith("/ide?"))
+									if (request.url?.startsWith("/ide?")) {
 										response.setHeader(
 											"Content-Security-Policy",
 											productionCsp
 										);
+									}
 									next();
 								}
 							);
@@ -75,14 +79,18 @@ test(
 			page.on("pageerror", error => errors.push(error.message));
 			page.on("dialog", dialog => dialog.accept());
 			await page.setRequestInterception(true);
-			page.on("request", request => {
-				if (new URL(request.url()).pathname.startsWith("/api/"))
+			let courseRole = null;
+			page.on("request", (request) => {
+				if (new URL(request.url()).pathname.startsWith("/api/")) {
 					void request.respond({
 						status: 200,
 						contentType: "application/json",
-						body: "{}"
+						body: JSON.stringify(scratchCourseAccount(new URL(request.url()).pathname, courseRole))
 					});
-				else void request.continue();
+				}
+				else {
+					void request.continue();
+				}
 			});
 			const client = await page.createCDPSession();
 			await client.send("Browser.setDownloadBehavior", {
@@ -98,7 +106,8 @@ test(
 					() =>
 						document
 							.querySelector(".scratch-status[role=status]")
-							?.textContent.includes("Project open"),
+							?.textContent
+							.includes("Project open"),
 					{ timeout: 20000 }
 				);
 			await loaded();
@@ -108,8 +117,9 @@ test(
 						".scratch-project-menu > .workspace-disclosure__trigger",
 						menu => menu.getAttribute("aria-expanded") === "true"
 					)) !== open
-				)
+				) {
 					await page.click(".scratch-project-menu > .workspace-disclosure__trigger");
+				}
 				await page.waitForFunction(
 					open =>
 						(document.querySelector(".scratch-project-menu > .workspace-disclosure__trigger")
@@ -128,8 +138,7 @@ test(
 			const frame = page.frames().find(f => f !== page.mainFrame());
 			assert.equal(
 				await page.$eval(".scratch-workspace iframe", e =>
-					e.getAttribute("sandbox")
-				),
+					e.getAttribute("sandbox")),
 				"allow-scripts allow-downloads"
 			);
 			assert.equal(
@@ -137,69 +146,71 @@ test(
 					try {
 						void parent.document.body;
 						return false;
-					} catch {
+					}
+					catch {
 						return true;
 					}
 				}),
 				true
 			);
-			const stageSelector = '[class*="stage_stage_"] > div > canvas';
+			const stageSelector = "[class*=\"stage_stage_\"] > div > canvas";
 			// Enter directly from the host, without priming focus in a child
 			// input. Scratch cancels the stage's native mouse focus transfer.
-			await page.focus('.scratch-toolbar input[maxlength="120"]');
+			await page.focus(".scratch-toolbar input[maxlength=\"120\"]");
 			await frame.click(stageSelector);
 			await page.keyboard.press("ArrowRight");
 			await frame.waitForFunction(
 				() =>
-					document.querySelector('input[placeholder="x"]')?.value ===
-					"10"
+					document.querySelector("input[placeholder=\"x\"]")?.value
+					=== "10"
 			);
 			assert.equal(
 				await page.evaluate(() => document.activeElement.tagName),
 				"IFRAME"
 			);
 			// Editor fields must retain their own arrow-key behavior.
-			await frame.click('input[placeholder="x"]');
+			await frame.click("input[placeholder=\"x\"]");
 			await page.keyboard.press("ArrowRight");
 			assert.equal(
 				await frame.$eval(
-					'input[placeholder="x"]',
+					"input[placeholder=\"x\"]",
 					input => input.value
 				),
 				"10"
 			);
 			// Returning after a host-toolbar action must work repeatedly.
-			await page.focus('.scratch-toolbar input[maxlength="120"]');
+			await page.focus(".scratch-toolbar input[maxlength=\"120\"]");
 			await frame.click(stageSelector);
 			await page.keyboard.press("ArrowRight");
 			await frame.waitForFunction(
 				() =>
-					document.querySelector('input[placeholder="x"]')?.value ===
-					"20"
+					document.querySelector("input[placeholder=\"x\"]")?.value
+					=== "20"
 			);
 			// Green flag entry also leaves keyboard events in the editor.
-			await page.focus('.scratch-toolbar input[maxlength="120"]');
-			await frame.locator('[title="Go"]').click();
+			await page.focus(".scratch-toolbar input[maxlength=\"120\"]");
+			await frame.locator("[title=\"Go\"]").click();
 			await page.keyboard.press("ArrowLeft");
 			await frame.waitForFunction(
 				() =>
-					document.querySelector('input[placeholder="x"]')?.value ===
-					"10"
+					document.querySelector("input[placeholder=\"x\"]")?.value
+					=== "10"
 			);
 			// Editing a sprite position is unsaved student work; cancelling
 			// replacement must preserve it.
-			await frame.locator('input[placeholder="x"]').fill("20");
+			await frame.locator("input[placeholder=\"x\"]").fill("20");
 			await page.keyboard.press("Enter");
 			await frame.click("canvas");
 			await page.waitForFunction(() =>
 				document
 					.querySelector(".scratch-status[role=status]")
-					?.textContent.includes("Unsaved changes")
+					?.textContent
+					.includes("Unsaved changes")
 			);
 			await setProjectMenuOpen(true);
 			page.removeAllListeners("dialog");
 			const cancelledReplacement = new Promise(resolve =>
-				page.once("dialog", async dialog => {
+				page.once("dialog", async (dialog) => {
 					await dialog.dismiss();
 					resolve();
 				})
@@ -215,7 +226,7 @@ test(
 			);
 			assert.equal(
 				await frame.$eval(
-					'input[placeholder="x"]',
+					"input[placeholder=\"x\"]",
 					input => input.value
 				),
 				"20"
@@ -226,7 +237,8 @@ test(
 			await page.waitForFunction(() =>
 				document
 					.querySelector(".scratch-status[role=status]")
-					?.textContent.includes("Downloaded")
+					?.textContent
+					.includes("Downloaded")
 			);
 			const exported = path.join(files, "Two Arrows.sb3");
 			for (let n = 0; n < 30 && !existsSync(exported); n++)
@@ -242,7 +254,7 @@ test(
 			// The official editor validator, not just our own schema checks, opens
 			// every starter and every teacher reference completion.
 			await setProjectMenuOpen(true);
-			for (const lesson of lessons)
+			for (const lesson of lessons) {
 				for (const solution of [false, true]) {
 					const filename = path.join(
 						files,
@@ -257,6 +269,7 @@ test(
 					).uploadFile(filename);
 					await loaded();
 				}
+			}
 			await setProjectMenuOpen(false);
 			// September 30 first lesson: sprite clicks are local, size changes
 			// accumulate, and the documented green-flag reset restores the scene.
@@ -306,7 +319,7 @@ test(
 				nameProject.targets.find(target => target.name === "E").size,
 				90
 			);
-			await frame.locator('[title="Go"]').click();
+			await frame.locator("[title=\"Go\"]").click();
 			await new Promise(resolve => setTimeout(resolve, 250));
 			nameProject = await exportName();
 			assert.equal(
@@ -362,8 +375,12 @@ test(
 			await page.screenshot({
 				path: "/tmp/scratch-classroom-editor.png"
 			});
+			await checkScratchConditionalCourse(page, "http://127.0.0.1:5198", (role) => {
+				courseRole = role;
+			});
 			assert.deepEqual(errors, []);
-		} finally {
+		}
+		finally {
 			await browser?.close();
 			await server?.close();
 			process.chdir(previous);
