@@ -1,5 +1,6 @@
 import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
+import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import { cppContainerLessons } from "@/stores/courses/cppContainerLessons";
 import { useAppStore } from "@/stores/app";
@@ -194,6 +195,9 @@ describe("container learning-view placement", () => {
 			}
 			expect(containers.content).toMatch(
 				/^\*\*Concept focus:\*\*[^\n]+\n\n\*\*Course flow:\*\*/
+			);
+			expect(normalizeInlineCourseMarkdown(containers.content)).toContain(
+				"2. Replace the searched value with `8`. Predict the result before running."
 			);
 			expect(isLessonLearningItem(project)).toBe(false);
 			expect(isLessonLearningItem(findWorksheet(course))).toBe(false);

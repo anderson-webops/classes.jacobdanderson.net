@@ -1439,6 +1439,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 					assert.equal(lessons.length, 2);
 					assert.match(lessons[0], /old end iterator is invalidated/);
 					assert.match(lessons[0], /worst-case linear/);
+					assert.ok(await page.$$eval(".lesson-item", items => [...items.find(item => item.querySelector("h5")?.textContent === "Choosing Containers and Traversing with Iterators").querySelectorAll(".item-content-markdown code")].some(code => code.textContent === "8")), "The searched numeric value stays inline code rather than a numbered question");
 					assert.match(lessons[1], /reserve alone does not change vector size/);
 					assert.match(lessons[1], /not a full relational database/);
 					assert.equal(sourceRequests, before, "Reading container lessons in Learn never imports code");
