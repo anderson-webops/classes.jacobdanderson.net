@@ -25,7 +25,13 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 		setRole(role);
 		for (const width of [390, 1280]) {
 			await page.setViewport({ width, height: 900 });
+			// Returning to another course anchor can reuse the previous document.
+			// Start a fresh document so each fixture bootstraps its own account.
+			await page.goto("about:blank");
+			const accountResponse = page.waitForResponse(response => new URL(response.url()).pathname === "/api/accounts/me");
 			await page.goto(`${origin}/courses#scratch-level-1-gs5-basic-conditionals`, { waitUntil: "networkidle2" });
+			assert.deepEqual(await (await accountResponse).json(), role === "instructor" ? { tutorID: "scratch-tutor-fixture" } : { userID: "scratch-course-fixture" });
+			await page.waitForFunction(role => document.querySelector(".site-nav__badge")?.textContent.trim() === (role === "instructor" ? "Tutor" : "Student"), {}, role);
 			await page.waitForSelector(".lesson-view-toggle button");
 			await page.click(".lesson-view-toggle button:nth-child(3)");
 			const colors = await readLesson(page, "Dino's Colors: Sampling and Boundary Decisions", "swap roles");
