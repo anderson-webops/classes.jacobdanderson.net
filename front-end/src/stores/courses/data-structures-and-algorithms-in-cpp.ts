@@ -1,5 +1,6 @@
 import type { RawCourse } from "./types";
 import { dsaGraphLessons } from "./dsaGraphLessons";
+import { dsaSetupLessons } from "./dsaSetupLessons";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
@@ -11,33 +12,29 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			title: "DSCPP0 Setup and Positioning",
 			curriculum: [
 				{
-					title: "Course Positioning After C++ Level 2",
-					content:
-						"Position this course as the algorithmic next step after `C++ Level 2`, with `C++ Level 3` preferred first when file-backed programs, recursion, STL containers, RAII, and medium-size C++ structure need more practice. The expected prerequisites are variables, control flow, functions, classes, vectors, pointers, references, and ownership reasoning before the focus shifts to data structures, algorithm design, and complexity."
+					title: "Setup and Positioning Core Concepts",
+					content: dsaSetupLessons.positioning,
+					ideImport: false
 				},
 				{
 					title: "Preferred Toolchain",
-					content:
-						"Standardize on a C++20 compiler in `CLion` or `VS Code`, a debugger, and a small `CMake`/`CTest` workflow. Keep `-Wall -Wextra -Wpedantic` enabled and use AddressSanitizer/UndefinedBehaviorSanitizer or the closest supported diagnostic for pointer-heavy labs. This course depends on multi-file structure, repeatable builds, deterministic tests, and enough debugging fluency to inspect recursive and ownership-heavy code without guessing."
+					content: dsaSetupLessons.toolchain,
+					ideImport: false
 				},
 				{
 					title: "Why This Course Uses Small Labs Instead of Giant Apps",
-					content:
-						"Keep the codebases small enough to inspect every pointer update, recursive branch, and container mutation. The course prioritizes clear reasoning about structure, invariants, and algorithmic tradeoffs over flashy UI work."
+					content: dsaSetupLessons.invariant,
+					ideImport: false
 				},
 				{
 					title: "Working Habits for the Sequence",
-					content:
-						"Get used to tracing data by hand, printing intermediate structure states, and explaining asymptotic behavior in plain language. Every unit ends with at least one debugging pass that checks the shape of the structure, not just final output."
+					content: dsaSetupLessons.habits,
+					ideImport: false
 				},
 				{
 					title: "DSCPP0 Setup and Positioning: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle: "DSCPP0 Setup and Positioning",
-						projectKind: "core",
-						hasReference: true
-					}),
+					content: dsaSetupLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-08-dscpp0-setup-and-positioning/starter",
 					solutionLink:
@@ -47,38 +44,24 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Complexity Checkpoint: Setup and Positioning",
-					content:
-						"Pause after setup and positioning and record the key operation count story, the dominant data movement pattern, and one plain-language explanation of why the cost of debugging late is much higher once recursion and ownership bugs enter the picture.",
+					content: dsaSetupLessons.checkpoint,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-08-dscpp0-setup-and-positioning/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-08-dscpp0-setup-and-positioning/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSA-08-dscpp0-setup-and-positioning/README.md"
 				},
 				{
 					title: "Setup and Positioning Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle: "DSCPP0 Setup and Positioning",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaSetupLessons.transfer,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-01-dscpp0-setup-and-positioning-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-01-dscpp0-setup-and-positioning-supplemental-2/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSA-01-dscpp0-setup-and-positioning-supplemental-2/README.md"
 				},
 				{
 					title: "Setup and Positioning Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle: "DSCPP0 Setup and Positioning",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaSetupLessons.extension,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-02-dscpp0-setup-and-positioning-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-02-dscpp0-setup-and-positioning-supplemental-3/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSA-02-dscpp0-setup-and-positioning-supplemental-3/README.md"
 				}
 			]
 		},
@@ -1562,13 +1545,8 @@ function decorateDataStructuresCppModule(
 	if (module.title === "DSCPP0 Setup and Positioning") {
 		curriculum.push({
 			title: "DSCPP0 Project 0: Complexity and Toolchain Readiness",
-			content: [
-				"**Completion evidence:**",
-				"- Compiler and CMake versions plus a documented C++20 configure/build/test path from a clean checkout.",
-				"- Warning-clean output and one supported sanitizer or equivalent memory-diagnostic run.",
-				"- A deterministic test that fails when a small regression is introduced.",
-				"- One operation-count table, one invariant, and one justified Big-O statement for the same small algorithm."
-			].join("\n"),
+			content: dsaSetupLessons.completion,
+			ideImport: false,
 			learningPath: "core"
 		});
 	}

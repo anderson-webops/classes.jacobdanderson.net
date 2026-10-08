@@ -7,6 +7,9 @@ export function cppBuildInstructions(
 ) {
 	const key = courseProjectKey ?? "";
 	const standard =
+		/^data-structures-and-algorithms-in-cpp:(?:data-structures-and-algorithms-in-cpp-dscpp0-setup-and-positioning(?:[:-]|$)|dscpp0-setup(?::|$))/.test(
+			key
+		) ||
 		/^(?:(?:c|cpp)-level-1|cpp-level-[23])(?:[:-]|$)/.test(key) ||
 		/^data-structures-and-algorithms-in-cpp:(?:data-structures-and-algorithms-in-cpp-dscpp2-graphs-and-shortest-paths(?:[:-]|$)|dscpp2-graph(?::|$))/.test(
 			key
