@@ -1406,7 +1406,10 @@ function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 		if (
 			(courseId === "c-level-1" && /^CPPF[1-8] /.test(module.title)) ||
 			(courseId === "data-structures-and-algorithms-in-cpp" &&
-				module.title === "DSCPP2 Graphs and Shortest Paths") ||
+				[
+					"DSCPP0 Setup and Positioning",
+					"DSCPP2 Graphs and Shortest Paths"
+				].includes(module.title)) ||
 			(courseId === "scratch-level-1" &&
 				module.title === "GS7 Basic Conditionals")
 		) {

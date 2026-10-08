@@ -1,54 +1,61 @@
 # Current course-audit checkpoint, 2026-10-08
 
-The full 77-course audit remains active. Earlier dated sections describe historical
-checkpoints; their pending statements and counts are not current status.
+The full 77-course audit remains unfinished. This checkpoint records verified
+source and review status; the dated sections below retain historical evidence.
 Production activation remains unverified.
 
-Canonical [v2.8.68](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.68)
-is published at `d1607a41e87230c6c08b50019cec6ff8f958c894`. It includes the
-complete resource-safety and value/template coursework, separate optional
-worksheets and practice imports, saved-attempt preservation, and the concurrent
-saved-notes correction. Exact review and independent main each pass all nine
-site jobs and 35 Cypress scenarios. Native release provenance, all payload
-files, thirteen trusted source configurations and the published asset digests
-were independently verified. This is source/release acceptance, not evidence
-of production activation.
+The Scratch ending-screen and Spider Smash debugging additions are merged through
+[PR #159](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/159)
+at `578e810b76b2a6cc9907387930b590b5077e21b4`. The exact combined review and
+independent main both pass nine hosted jobs, CodeQL, 35 Cypress scenarios, 73
+C++/Java import workflows, 26 saved-attempt checks and 16 untouched exports.
+Twelve Scratch screens and 26 graph screens were accepted by direct inspection
+or byte comparison with previously inspected screens of the same source tree.
+Qodana's workflow passed; its scan step was skipped. These checks preserve the
+original published Scratch instructions, project links and saved work.
 
-The downstream main is synchronized at
-`3ef834b608c7d61a0adf3a0cc3a4ac296532a551`, with one neutral overlay and all 98
-current customization paths preserved. Its exact combined review tree passes
-all nine jobs and 35 Cypress scenarios. Independent main now passes the same
-nine jobs and 35 scenarios. The first browser attempt failed while reading a
-Scratch archive before download completion; its log and the successful repeat
-are retained. A correction in this candidate waits for Chrome's matching
-completed-download event rather than filename existence. The accepted main is published as downstream
-[v2.8.15](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.15).
-The original signed package, every payload digest, thirteen trusted deployment
-configurations and the published asset digests were independently verified.
+A concurrent homepage-spacing change advanced canonical main to
+`684d998773c8e3a8389a3382ba1e15f43983fc5f` and downstream main to
+`b9fd9eec28c15f0793d4ab9cd2d04c2af0c64908`. The downstream is that current upstream
+plus one neutral overlay affecting 98 customization paths. Its Scratch changes
+are already present. Canonical CI and CodeQL passed; downstream CI was still
+running when this checkpoint was written. No stale overlay replay is needed.
+Release provenance and production activation are separate checks.
 
-The rover capstone and optional state-design review source is integrated through
-[CPP Level 3 PR #9](https://github.com/instruction-material/CPP-Level-3/pull/9)
-at `d2b1820f2c253e7c3e7a07f6c6daef38ed7a2952`, with exact pack source pinned to
-`ecdc6b5089c09850ce66178d75dd5e21275498e3`. Review and independent main each pass
-all twenty native groups. All sixteen earlier groups remain. The four new groups
-check six learner/completed/reference program variants, 256 independent route
-comparisons and 22 malformed snapshots per completed rover program, 64-level
-routes, actual save/restart and file-publication failures, 256 event sequences
-per completed state program, real virtual destruction, two complete teaching
-programs and all four Make/CMake packs in ordinary/sanitizer builds.
+The setup-and-positioning C++ source is merged through
+[DSA source PR #2](https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/pull/2)
+at `cb441b2d227037e1b2b2b7e60f636e55f253e958`. The required project has a supplied
+input driver, two marked first-match search bodies and three-file CMake/CTest
+packs. It teaches duplicates, empty input, invalid input, comparison counts,
+the half-open binary-search interval and the distinction between algorithm work
+and the driver's linear input validation. Two optional extras are separate
+search-cost and build/debug worksheets using the same completed project. Their
+legacy files remain for old links and saved imports.
 
-The site candidate adds the full dispatch/pathway lessons, required rover brief
-and optional state worksheet. It retains 22 core/eight optional items and the
-existing course/progress/saved-primary identities. Reading the worksheet imports
-no code; the current primary pack, state practice and instructor reference use
-separate identities. Actual browser editing, saving, complete export, native
-compilation and reopening are being added for all four source packs. Hosted site
-acceptance, visual review, integration and release remain pending.
+Both exact review and independent source main pass eight GCC/Clang ordinary and
+sanitizer setup groups, including 5,397 independent generated search cases per
+completed/reference group, twelve invalid-input cases, 1,024-value limits and
+four named role-local CTest cases. Eight existing graph groups also pass. The
+untouched starter builds and intentionally fails the two nonempty success tests;
+its two marked tasks remain unfinished. This acceptance covers those units,
+not all of the remaining DSA coursework.
 
-The latest available teaching transcript's three Scratch instruction gaps are
-addressed in canonical v2.8.65 and downstream v2.8.12. The 51 unavailable
-historical Zoom assets remain unavailable. These milestones do not certify
-remaining coursework, the whole catalog or live deployment.
+The site candidate connects the accepted three-file packs, four full Learn
+sections and the complete core brief. Its normal saved-project key and existing
+progress identities remain. A separate current-pack action asks before importing
+into different work. Optional reading cards preserve their file links and saved
+project continuation; reading imports no unrelated numeric-transform program.
+Actual browser import, marked-header editing, save/export/reopen, native builds,
+CMake/CTest, older saved attempts and learner/instructor visibility are covered
+by the extended acceptance check. Hosted site review and visual acceptance are
+required before integration, downstream synchronization and release alignment.
+Dependencies and both lockfiles are unchanged.
+
+Branch consolidation is complete, with removed tips retained in verified recovery
+bundles. Other DSA placeholder and correctness findings, remaining advanced
+course source validation and transcript reviews are still open. Historical Zoom
+assets that cannot be retrieved are not counted as reviewed. No source milestone
+here certifies the full catalog or a live deployment.
 
 ## Earlier dated milestones
 

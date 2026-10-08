@@ -302,7 +302,12 @@ export function isKnownCourseWorksheetResource(url: string) {
 		resource.owner.toLowerCase() === "instruction-material" &&
 		((resource.repo.toLowerCase() ===
 			"data-structures-and-algorithms-in-cpp" &&
-			resource.path === "DSCPP2-Graph-Navigation/README.md") ||
+			[
+				"DSCPP2-Graph-Navigation/README.md",
+				"DSA-08-dscpp0-setup-and-positioning/README.md",
+				"DSA-01-dscpp0-setup-and-positioning-supplemental-2/README.md",
+				"DSA-02-dscpp0-setup-and-positioning-supplemental-3/README.md"
+			].includes(resource.path)) ||
 			(resource.repo.toLowerCase() === "python-level-3" &&
 				/^AM6-Big-O-Analysis(?:\/|$)/.test(resource.path)) ||
 			(resource.repo.toLowerCase() === "cpp-level-3" &&
