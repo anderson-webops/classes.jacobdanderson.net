@@ -310,6 +310,13 @@ function canonicalizeResourceUrl(url?: string) {
 		const [owner, repo, _blob, ref, ...fileSegments] = pathSegments;
 		if (
 			owner.toLowerCase() === "instruction-material" &&
+			repo.toLowerCase() === "data-structures-and-algorithms-in-cpp" &&
+			fileSegments.join("/") === "DSCPP2-Graph-Navigation/README.md"
+		) {
+			return trimmedUrl;
+		}
+		if (
+			owner.toLowerCase() === "instruction-material" &&
 			repo.toLowerCase() === "cpp-level-3" &&
 			fileSegments.length === 3 &&
 			((fileSegments[0] === "CPPI0-Warnings-and-Debugger-Notebook" &&
