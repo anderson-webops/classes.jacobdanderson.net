@@ -1200,3 +1200,50 @@ recording, summary or transcript, and no additional teaching transcript asset.
 The 51 unavailable historical assets remain unavailable. The broader 77-course
 audit and remaining C++ packs/lessons continue; this scoped milestone does not
 certify unreviewed coursework.
+
+## CPPI4 delivery, C++3 Learn placement and C++5 catalog candidate
+
+The resource-safety milestone is published as canonical
+[v2.8.66](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.66)
+and neutral downstream
+[v2.8.13](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.13).
+Both review and independent main checks passed all nine required jobs and 35
+Cypress scenarios. Original signed archives and manifests were independently
+verified against their source tags before publication. The downstream preserves
+its intentional neutral overlay. This supersedes the earlier candidate status;
+production activation remains unverified.
+
+[C++3 Learn placement PR #155](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/155)
+integrates at `9c4f48958a7876e415ca191607de478783145fe9`. Both full container
+lessons appear in Learn for learners and instructors while assignments stay in
+Projects. A practice numeric value is inline code so it remains in its original
+question. Exact review passed nine jobs and 35 browser scenarios, and all eight
+role/viewport lesson images are accepted. Independent main acceptance also passes all nine jobs and 35 browser
+scenarios. The next downstream synchronization remains required.
+
+[C++5 source PR #7](https://github.com/instruction-material/CPP-Level-3/pull/7)
+integrates at `7575a12d6bf420368445f9b99854cf6d9015974c`. Exact review and
+independent main pass all sixteen native groups. The Fraction Toolkit now has
+five real unfinished bodies and a bounded, const, copyable reference value type.
+An independent exact-arithmetic model checks 101 cases per completed program,
+with eight copy/const/ordering probes. The optional drill produces real missing
+comparison diagnostics under GCC and Clang for C++17 and C++20. Corrected and
+changed calls, both full source lessons, four Make packs and four preserved
+CMake targets pass ordinary and sanitizer checks.
+
+The site candidate includes both complete source lessons, an additional complete
+class-template wrapper program, the full Fraction brief and the full optional
+diagnostic worksheet. It preserves 22 core and eight optional items, stable
+primary progress and saved identities, and neutral independent/instructor
+wording. The normal primary action reopens saved work; a separate current pack
+and explicit template practice use different identities. Reading the worksheet
+imports no code. The instructor reference import has its own identity and
+includes the worked record. Browser fixtures pin three-file primary/practice
+packs and the four-file worked drill, preserve earlier primary and optional
+attempts, edit/save/export through the actual workspace, and compile exported
+programs against independent output expectations. Full hosted site acceptance,
+visual review, integration and downstream delivery remain required.
+
+Two generic CPPI6 source pairs and the broader 77-course audit remain active.
+The 51 unavailable historical Zoom assets remain unavailable; no new transcript
+access is claimed by this coursework checkpoint.

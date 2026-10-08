@@ -334,6 +334,16 @@ function canonicalizeResourceUrl(url?: string) {
 			return trimmedUrl;
 		}
 
+		if (
+			owner.toLowerCase() === "instruction-material" &&
+			repo.toLowerCase() === "cpp-level-3" &&
+			fileSegments.length === 2 &&
+			fileSegments[0] === "CPPI5-Template-Error-Reading-Drill" &&
+			fileSegments[1] === "WORKSHEET.md"
+		) {
+			return trimmedUrl;
+		}
+
 		if (fileSegments.length === 0) {
 			return trimmedUrl.replace(TRAILING_SLASH_RE, "");
 		}

@@ -24,6 +24,7 @@ import { cppLifetimeProjectBriefs } from "../front-end/src/stores/courses/cppLif
 import { cppManualCapstoneProjectBriefs } from "../front-end/src/stores/courses/cppManualCapstoneProjectBriefs.ts";
 import { cppParameterLessonBriefs } from "../front-end/src/stores/courses/cppParameterProjectBriefs.ts";
 import { cppResourceSafetyLessons } from "../front-end/src/stores/courses/cppResourceSafetyLessons.ts";
+import { cppValueTemplateLessons } from "../front-end/src/stores/courses/cppValueTemplateLessons.ts";
 import { completeBuildDebugFile, verifyBuildDebugDefaultExport, verifyBuildDebugExport } from "./cpp-build-debug-export-checks.mjs";
 import { completeDynamicMemoryFile, verifyDynamicMemoryDefaultExport, verifyDynamicMemoryExport } from "./cpp-dynamic-memory-export-checks.mjs";
 import { completeFileProcessorFile, verifyFileProcessorDefaultExport, verifyFileProcessorExport, verifyResourceLessonPrograms } from "./cpp-file-processor-export-checks.mjs";
@@ -33,12 +34,14 @@ import { completeMazeSearchFile, verifyMazeSearchDefaultExport, verifyMazeSearch
 import { completeRowImportFile, verifyRowImportDefaultExport, verifyRowImportExport } from "./cpp-row-import-export-checks.mjs";
 import { completeTaskManagerFile, verifyTaskManagerDefaultExport, verifyTaskManagerExport } from "./cpp-task-manager-export-checks.mjs";
 import { completeTwoDimensionalAttempt, verifyTwoDimensionalExport } from "./cpp-two-dimensional-export-checks.mjs";
+import { completeValueTemplateFile, verifyValueTemplateDefaultExport, verifyValueTemplateExport, verifyValueTemplateLessons } from "./cpp-value-template-export-checks.mjs";
 import { checkpointPacks, checkpointRevision } from "./fixtures/cpp-build-debug-packs.mjs";
 import { fileProcessorPacks, fileProcessorRevision } from "./fixtures/cpp-file-processor-packs.mjs";
 import { inventoryPacks, inventoryRevision } from "./fixtures/cpp-inventory-packs.mjs";
 import { mazeSearchPacks, mazeSearchRevision } from "./fixtures/cpp-maze-search-packs.mjs";
 import { rowImportPacks, rowImportRevision } from "./fixtures/cpp-row-import-packs.mjs";
 import { taskManagerPacks, taskManagerRevision } from "./fixtures/cpp-task-manager-packs.mjs";
+import { valueTemplatePacks, valueTemplateRevision } from "./fixtures/cpp-value-template-packs.mjs";
 import { confirmProjectImport, downloadProjectZip, openProjectSidebar } from "./ide-workspace-controls.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
@@ -385,6 +388,8 @@ const capstoneFolders = { ...capstonePacks, ...capstoneReferences };
 const capstoneReferenceFiles = {};
 const mazeSearchReferenceFiles = {};
 const inventoryReferenceFiles = {};
+const valueTemplateReferenceFiles = {};
+const valueTemplateLearnerPacks = Object.fromEntries(Object.entries(valueTemplatePacks).filter(([folder]) => folder === "CPPI5-Fraction-Toolkit/starter"));
 const fileProcessorReferenceFiles = {};
 const fileProcessorLearnerPacks = Object.fromEntries(Object.entries(fileProcessorPacks).filter(([folder]) => folder.endsWith("/starter")));
 const inventoryLearnerPacks = Object.fromEntries(Object.entries(inventoryPacks).filter(([folder]) => folder.endsWith("/starter")));
@@ -392,13 +397,23 @@ const mazeSearchLearnerPacks = Object.fromEntries(Object.entries(mazeSearchPacks
 const rowImportReferenceFiles = {};
 const rowImportLearnerPacks = Object.fromEntries(Object.entries(rowImportPacks).filter(([folder]) => folder.endsWith("/starter")));
 const isTaskPack = folder => Object.hasOwn(taskManagerPacks, folder) || Object.hasOwn(rowImportPacks, folder);
-const isNativeContractPack = folder => Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(inventoryPacks, folder) || isTaskPack(folder) || Object.hasOwn(checkpointPacks, folder) || Object.hasOwn(mazeSearchPacks, folder);
+const isNativeContractPack = folder => Object.hasOwn(valueTemplatePacks, folder) || Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(inventoryPacks, folder) || isTaskPack(folder) || Object.hasOwn(checkpointPacks, folder) || Object.hasOwn(mazeSearchPacks, folder);
 const taskManagerReferenceFiles = {};
 const taskManagerLearnerPacks = Object.fromEntries(Object.entries(taskManagerPacks).filter(([folder]) => folder.endsWith("/starter")));
 const checkpointLearnerPacks = Object.fromEntries(Object.entries(checkpointPacks).filter(([folder]) => folder.endsWith("/starter")));
-const preservedPacks = { ...fileProcessorLearnerPacks, ...inventoryLearnerPacks, ...mazeSearchLearnerPacks, ...rowImportLearnerPacks, ...taskManagerLearnerPacks, ...checkpointLearnerPacks, ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks, ...dynamicMemoryPacks, ...capstonePacks };
+const preservedPacks = { ...valueTemplateLearnerPacks, ...fileProcessorLearnerPacks, ...inventoryLearnerPacks, ...mazeSearchLearnerPacks, ...rowImportLearnerPacks, ...taskManagerLearnerPacks, ...checkpointLearnerPacks, ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks, ...dynamicMemoryPacks, ...capstonePacks };
 
 const fixtures = [
+	...Object.entries(valueTemplatePacks).map(([folder, hashes]) => ({
+		repository: "instruction-material/CPP-Level-3",
+		revision: valueTemplateRevision,
+		courseId: "cpp-level-3",
+		standard: 20,
+		folder,
+		hashes,
+		anchor: "cppi5-value-types-operator-overloading-and-templates",
+		reference: folder.endsWith("/solution")
+	})),
 	...Object.entries(fileProcessorPacks).map(([folder, hashes]) => ({
 		repository: "instruction-material/CPP-Level-3",
 		revision: fileProcessorRevision,
@@ -919,6 +934,18 @@ int main() {
 	assert.equal(clean.code, 0, clean.stderr);
 }
 
+nodeTest("complete value, function-template and class-template lessons match changed native predictions", { timeout: 120000 }, async () => {
+	const temporary = await mkdtemp(join(tmpdir(), "cpp-value-template-lessons-"));
+	try {
+		await verifyValueTemplateLessons(temporary, cppValueTemplateLessons, runNative);
+		record("verified-native-value-template-lessons", { programs: 3, changedPrograms: 3, ordinaryAndSanitized: true, extraArgumentUsage: true });
+	}
+	finally {
+		await rm(temporary, { recursive: true, force: true });
+		record("cleanup", { command: "cpp-value-template-lessons", pid: process.pid });
+	}
+});
+
 nodeTest("the resource lessons execute their ownership and failed-state predictions", { timeout: 120000 }, async () => {
 	const temporary = await mkdtemp(join(tmpdir(), "cpp-resource-lesson-contracts-"));
 	try {
@@ -1318,7 +1345,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			referenceFixture = fixture.reference ?? false;
 			const mode = folder.endsWith("/java") ? "java" : "cpp";
 			const entryFile = mode === "java" ? "Main.java" : "main.cpp";
-			await page.setViewport({ width: folder === "CPPI4-Resource-Safe-File-Processor/starter" || folder === "CPPI3-Inventory-Indexer/starter" || folder === "CPPI2-Recursive-Maze-Search/starter" || folder === "CPPI1-Import-and-Reject-Bad-Rows/starter" || folder === "CPPI1-Saveable-Task-Manager/starter" || folder === "CPPI0-Build-and-Debug-Checkpoint/starter" || folder.startsWith("CPPM0-Lifetime") || folder === "CPPM5-Profile-Posts-Starter" || folder === "CPPM5-Modern-Ownership-Reflection" || folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
+			await page.setViewport({ width: folder.startsWith("CPPI5") || folder === "CPPI4-Resource-Safe-File-Processor/starter" || folder === "CPPI3-Inventory-Indexer/starter" || folder === "CPPI2-Recursive-Maze-Search/starter" || folder === "CPPI1-Import-and-Reject-Bad-Rows/starter" || folder === "CPPI1-Saveable-Task-Manager/starter" || folder === "CPPI0-Build-and-Debug-Checkpoint/starter" || folder.startsWith("CPPM0-Lifetime") || folder === "CPPM5-Profile-Posts-Starter" || folder === "CPPM5-Modern-Ownership-Reflection" || folder.startsWith("PTJ1") || folder.startsWith("CPPF1") || folder.startsWith("CPPF3-Number-Guesser") || folder.startsWith("CPPF4-Person-Class/") || folder.startsWith("CPPF5-Bank-Accounts/") || folder.startsWith("CPPF6-Defanging-a-Website-URL/") || folder.startsWith("CPPF7-Matrix-Addition/") || folder.startsWith("CPPF8-Profile-Posts/") || mode === "java" ? 390 : 1280, height: 900 });
 			files = await readStarter(repository, revision, folder, hashes);
 			if (Object.hasOwn(pointerPacks, folder)) {
 				const referenceFolder = folder.replace(/-Starter$/, "");
@@ -1362,14 +1389,79 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				const referenceFolder = folder.replace(/starter$/, "solution");
 				fileProcessorReferenceFiles[folder] = await readStarter(repository, revision, referenceFolder, fileProcessorPacks[referenceFolder]);
 			}
+			if (Object.hasOwn(valueTemplatePacks, folder) && folder.endsWith("/starter")) {
+				const referenceFolder = folder.replace(/starter$/, "solution");
+				valueTemplateReferenceFiles[folder] = await readStarter(repository, revision, referenceFolder, valueTemplatePacks[referenceFolder]);
+			}
 			const expectedFiles = { ...files };
 			const before = sourceRequests;
 			const beforeRuntime = runtimeRequests;
 			courseFixture = true;
 			assert.ok(anchor);
 			await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
-			const selector = `a[href='https://github.com/${repository}/tree/main/${folder}']:not(.is-ide-starter)`;
+			const selector = folder.startsWith("CPPI5-Template-") ? referenceFixture ? "a.resource-link.is-solution[href*='reference-pack-v1']" : "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI5-Template-Error-Reading-Drill/WORKSHEET.md']" : `a[href='https://github.com/${repository}/tree/main/${folder}']:not(.is-ide-starter)`;
 			await revealCourseSource(page, selector);
+			// Seed a saved attempt only after the prior IDE has finished unloading.
+			// Its newer timestamp lets the storage reader reconcile the legacy mirror
+			// with IndexedDB rather than silently preferring the earlier snapshot.
+			if (folder === "CPPI5-Template-Error-Reading-Drill/starter") {
+				await page.evaluate(() => {
+					const storage = "classes-python-ide-projects:anonymous";
+					const projects = JSON.parse(localStorage.getItem(storage));
+					const oldKey = "cpp-level-3:cpp-level-3-cppi5-value-types-operator-overloading-and-templates-supplemental-cppi5-project-2-template-error-reading-drill:starter";
+					const latest = Math.max(Date.now(), ...projects.map(project => Date.parse(project.updatedAt ?? project.createdAt) || 0));
+					if (!projects.some(project => project.courseProjectKey === oldKey)) projects.push({ ...projects[0], _id: "cppi5-previous-template-attempt", title: "Earlier optional template attempt", courseProjectKey: oldKey, courseProjectTitle: "CPPI5 Project 2: Template Error Reading Drill", starterLabel: "Template practice", starterUrl: "https://github.com/instruction-material/CPP-Level-3/tree/main/CPPI5-Template-Error-Reading-Drill/starter", updatedAt: new Date(latest + 1).toISOString(), activeFileName: "main.cpp", files: [{ name: "main.cpp", content: "// Earlier optional learner work\nint main() { return 0; }\n" }, { name: "README.md", content: "Earlier diagnostic notes remain intact.\n" }] });
+					localStorage.setItem(storage, JSON.stringify(projects));
+				});
+			}
+			const earlierValueProjects = folder.startsWith("CPPI5-Template-") ? await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]")) : null;
+			if (folder.startsWith("CPPI5-Fraction-Toolkit/")) {
+				const titles = ["Predictable Value Types and Restrained Operators", "Templates and Diagnostic Reading"];
+				for (const width of [390, 1280]) {
+					await page.setViewport({ width, height: 900 });
+					await page.click(".lesson-view-toggle button:nth-child(3)");
+					await page.waitForSelector(".lesson-view-toggle button:nth-child(3)[aria-pressed='true']");
+					await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent === "Templates and Diagnostic Reading" && item.textContent.includes("class ValueBox")));
+					const actual = await page.$$eval(".lesson-item", (items, titles) => titles.map(title => [...items.find(item => item.querySelector("h5")?.textContent === title).querySelectorAll(".item-content-markdown pre code.language-cpp")].map(code => code.textContent)), titles);
+					assert.deepEqual(actual, [cppValueTemplateLessons.values, cppValueTemplateLessons.templates].map(lesson => [...lesson.matchAll(/```cpp\n([\s\S]*?)\n```/g)].map(match => `${match[1]}\n`)));
+					assert.equal(sourceRequests, before, "Reading complete value/template lessons imports no code");
+					assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+					if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+						const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
+						await mkdir(directory, { recursive: true });
+						for (const [index, title] of titles.entries()) {
+							const card = await page.evaluateHandle(title => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent === title), title);
+							await card.asElement().screenshot({ path: join(directory, `course-import-cpp-CPPI5-lesson-${index}-${referenceFixture ? "staff" : "learner"}-${width}.png`) });
+						}
+					}
+					const worksheet = "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI5-Template-Error-Reading-Drill/WORKSHEET.md']";
+					await revealCourseSource(page, worksheet);
+					await page.waitForFunction(selector => document.querySelector(selector)?.closest(".lesson-item").textContent.includes("Open separate template practice"), {}, worksheet);
+					assert.equal(await page.$eval(worksheet, link => link.closest(".lesson-item").querySelectorAll(".is-ide-starter").length), 0);
+					assert.equal(!!await page.$("a.resource-link.is-solution[href*='reference-pack-v1']"), referenceFixture);
+					assert.match(await page.$eval(worksheet, link => link.closest(".lesson-item").textContent.replace(/\s+/g, " ")), /try.*catch cannot repair an ill-formed program/);
+					assert.ok(await page.$eval(worksheet, link => [...link.closest(".lesson-item").querySelectorAll(".item-content-markdown p")].some(paragraph => paragraph.textContent.includes("A failed final stdout flush returns") && [...paragraph.querySelectorAll("code")].some(code => code.textContent === "1"))), "The output-failure status remains inline code in its sentence");
+					if (referenceFixture) {
+						const reference = "a.resource-link.is-solution[href*='reference-pack-v1']";
+						assert.match(await page.$eval(reference, link => link.textContent), /Open reference in IDE/);
+						assert.equal(await page.$eval(reference, link => link.querySelector(".resource-link-host").textContent.trim()), "Browser workspace");
+						assert.doesNotMatch(await page.$eval(reference, link => link.textContent), /projectKey=|starterUrl=/);
+					}
+					if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+						const card = await page.$eval(worksheet, link => link.closest(".lesson-item").outerHTML);
+						assert.ok(card.includes("WORKSHEET.md"));
+						const link = await page.$(worksheet);
+						const handle = await link.evaluateHandle(element => element.closest(".lesson-item"));
+						await handle.asElement().screenshot({ path: join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR, `course-import-cpp-CPPI5-template-worksheet-${referenceFixture ? "staff" : "learner"}-${width}.png`) });
+					}
+					record("verified-value-template-teaching", { role: referenceFixture ? "instructor" : "learner", width, programs: 3, noCodeImport: true, referenceVisible: referenceFixture });
+				}
+				await page.setViewport({ width: referenceFixture ? 1280 : 390, height: 900 });
+				await revealCourseSource(page, selector);
+				await page.waitForFunction(selector => document.querySelector(selector)?.closest(".lesson-item").textContent.includes("Open current pack separately"), {}, selector);
+				const brief = await page.$eval(selector, link => link.closest(".lesson-item").textContent.replace(/\s+/g, " "));
+				for (const requirement of [/five.*TODO BEGIN/, /1,000,000/, /no result output/, /Completion and walkthrough evidence/]) assert.match(brief, requirement);
+			}
 			if (isTaskPack(folder)) {
 				if (await page.$(".lesson-view-toggle button")) {
 					await page.click(".lesson-view-toggle button:first-child");
@@ -1552,7 +1644,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				record("verified-notebook-routing", { folder, referenceVisible: referenceFixture, noCodeImport: true });
 				await revealCourseSource(page, selector);
 			}
-			const href = await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll(".is-ide-starter")].find(action => new URL(action.href).searchParams.get("starterUrl") === link.href)?.getAttribute("href"));
+			if (folder.startsWith("CPPI5-Template-") && !referenceFixture) {
+				await page.waitForFunction(selector => [...document.querySelector(selector)?.closest(".lesson-item").querySelectorAll(".item-content-markdown a") ?? []].some(action => action.textContent.trim() === "Open separate template practice" && action.getAttribute("href")?.startsWith("/ide?")), {}, selector);
+			}
+			const href = folder.startsWith("CPPI5-Template-") ? await page.$eval(selector, (link, reference) => reference ? link.getAttribute("href") : [...link.closest(".lesson-item").querySelectorAll(".item-content-markdown a")].find(action => action.textContent.trim() === "Open separate template practice")?.getAttribute("href"), referenceFixture) : await page.$eval(selector, link => [...link.closest(".lesson-item").querySelectorAll(".is-ide-starter")].find(action => new URL(action.href).searchParams.get("starterUrl") === link.href)?.getAttribute("href"));
 			assert.ok(href, "The selected source has its own IDE action");
 			const params = new URL(href, origin).searchParams;
 			assert.equal(params.get("mode"), mode);
@@ -1565,6 +1660,16 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await page.waitForSelector("[data-testid='ide-route-import-confirm']");
 			assert.equal(sourceRequests, before);
 			await confirmProjectImport(page);
+			if (earlierValueProjects) {
+				await page.waitForFunction((key, files) => {
+					const project = JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").find(project => project.courseProjectKey === key);
+					return project && project.files.length === Object.keys(files).length && Object.entries(files).every(([name, content]) => project.files.some(file => file.name === name && file.content === content));
+				}, {}, key, files);
+				const after = await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]"));
+				assert.equal(after.length, earlierValueProjects.length + 1);
+				assert.deepEqual(after.filter(project => project.courseProjectKey !== key), earlierValueProjects);
+				record("verified-template-practice-preservation", { reference: referenceFixture, retainedProjects: earlierValueProjects.length, separateKey: key, noPriorFilesChanged: true });
+			}
 			if (mode === "cpp") await page.waitForSelector("[aria-label='C++ build workflow']");
 			if (Object.hasOwn(dynamicMemoryFolders, folder) || Object.hasOwn(capstoneFolders, folder)) assert.match(await page.$eval("[aria-label='C++ build workflow']", element => element.textContent), /C\+\+ project/);
 			await page.waitForFunction(mode => document.querySelector(".cm-content")?.textContent.includes(mode === "java" ? "public class Main" : "#include"), {}, mode);
@@ -1576,7 +1681,8 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				const directory = join(temporary, `${folder.replaceAll("/", "-")}-untouched`);
 				await mkdir(directory);
 				for (const [name, content] of Object.entries(untouched)) await writeFile(join(directory, name), content);
-				if (Object.hasOwn(fileProcessorPacks, folder)) await verifyFileProcessorDefaultExport(directory, runNative);
+				if (Object.hasOwn(valueTemplatePacks, folder)) await verifyValueTemplateDefaultExport(directory, folder, runNative);
+				else if (Object.hasOwn(fileProcessorPacks, folder)) await verifyFileProcessorDefaultExport(directory, runNative);
 				else if (Object.hasOwn(inventoryPacks, folder)) await verifyInventoryDefaultExport(directory, runNative);
 				else if (Object.hasOwn(taskManagerPacks, folder)) await verifyTaskManagerDefaultExport(directory, runNative);
 				else if (Object.hasOwn(rowImportPacks, folder)) await verifyRowImportDefaultExport(directory, runNative);
@@ -1599,7 +1705,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const firstLine = files[entryFile].split("\n").find(line => line.trim());
 			await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
-			const completed = Object.hasOwn(fileProcessorPacks, folder) ? completeFileProcessorFile(folder, files[entryFile], fileProcessorReferenceFiles[folder]) : Object.hasOwn(inventoryPacks, folder) ? completeInventoryFile(folder, files[entryFile], inventoryReferenceFiles[folder]) : Object.hasOwn(mazeSearchPacks, folder) ? completeMazeSearchFile(folder, entryFile, files[entryFile], mazeSearchReferenceFiles[folder]) : Object.hasOwn(rowImportPacks, folder) ? completeRowImportFile(folder, entryFile, files[entryFile], rowImportReferenceFiles[folder]) : Object.hasOwn(taskManagerPacks, folder) ? completeTaskManagerFile(folder, entryFile, files[entryFile], taskManagerReferenceFiles[folder]) : Object.hasOwn(checkpointPacks, folder) ? completeBuildDebugFile(folder, entryFile, files[entryFile]) : Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, entryFile, files[entryFile], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, entryFile, files[entryFile], dynamicMemoryReferenceFiles[folder]) : completeMemoryAttempt(folder, files[entryFile]);
+			const completed = Object.hasOwn(valueTemplatePacks, folder) ? completeValueTemplateFile(folder, files[entryFile], valueTemplateReferenceFiles[folder]) : Object.hasOwn(fileProcessorPacks, folder) ? completeFileProcessorFile(folder, files[entryFile], fileProcessorReferenceFiles[folder]) : Object.hasOwn(inventoryPacks, folder) ? completeInventoryFile(folder, files[entryFile], inventoryReferenceFiles[folder]) : Object.hasOwn(mazeSearchPacks, folder) ? completeMazeSearchFile(folder, entryFile, files[entryFile], mazeSearchReferenceFiles[folder]) : Object.hasOwn(rowImportPacks, folder) ? completeRowImportFile(folder, entryFile, files[entryFile], rowImportReferenceFiles[folder]) : Object.hasOwn(taskManagerPacks, folder) ? completeTaskManagerFile(folder, entryFile, files[entryFile], taskManagerReferenceFiles[folder]) : Object.hasOwn(checkpointPacks, folder) ? completeBuildDebugFile(folder, entryFile, files[entryFile]) : Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, entryFile, files[entryFile], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, entryFile, files[entryFile], dynamicMemoryReferenceFiles[folder]) : completeMemoryAttempt(folder, files[entryFile]);
 			const edited = `${completed}\n// Browser workflow edit\n`;
 			expectedFiles[entryFile] = edited;
 			await page.click(".cm-content");
@@ -1615,7 +1721,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			// implementation, not only the driver's text.
 			const multiFilePack = isNativeContractPack(folder) || folder.startsWith("CPPF4") || folder.startsWith("CPPF8-Profile-Posts/") || Object.hasOwn(dynamicMemoryFolders, folder) || Object.hasOwn(capstoneFolders, folder);
 			const classFiles = multiFilePack ? Object.keys(files).filter(name => name !== entryFile && /\.(?:h|cpp)$/.test(name)) : [];
-			assert.equal(classFiles.length, Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(inventoryPacks, folder) ? 0 : Object.hasOwn(mazeSearchPacks, folder) ? 3 : Object.hasOwn(rowImportPacks, folder) ? 8 : Object.hasOwn(taskManagerPacks, folder) ? 6 : Object.hasOwn(checkpointPacks, folder) ? 4 : folder.includes("Grocery-List") ? 4 : folder.includes("Dynamic-Array-Implementation") || folder.includes("CPPM5-Profile-Posts") || folder.includes("Matrix-Class") ? 2 : multiFilePack && !Object.hasOwn(dynamicMemoryFolders, folder) && !Object.hasOwn(capstoneFolders, folder) ? 2 : 0);
+			assert.equal(classFiles.length, Object.hasOwn(valueTemplatePacks, folder) ? 0 : Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(inventoryPacks, folder) ? 0 : Object.hasOwn(mazeSearchPacks, folder) ? 3 : Object.hasOwn(rowImportPacks, folder) ? 8 : Object.hasOwn(taskManagerPacks, folder) ? 6 : Object.hasOwn(checkpointPacks, folder) ? 4 : folder.includes("Grocery-List") ? 4 : folder.includes("Dynamic-Array-Implementation") || folder.includes("CPPM5-Profile-Posts") || folder.includes("Matrix-Class") ? 2 : multiFilePack && !Object.hasOwn(dynamicMemoryFolders, folder) && !Object.hasOwn(capstoneFolders, folder) ? 2 : 0);
 			for (const name of classFiles) {
 				await selectProjectFile(page, name);
 				const first = files[name].split("\n").find(line => line.trim());
@@ -1654,6 +1760,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				await writeFile(path, content);
 			}
 			await compileExport(directory, Object.keys(exported), mode, standard, isNativeContractPack(folder));
+			if (Object.hasOwn(valueTemplatePacks, folder)) {
+				await verifyValueTemplateExport(directory, folder, runNative);
+				record("verified-native-value-template-export", { folder, fileCount: Object.keys(exported).length, ordinaryAndSanitized: true, changedCases: true });
+			}
 			if (Object.hasOwn(fileProcessorPacks, folder)) await verifyFileProcessorExport(directory, folder, runNative);
 			if (Object.hasOwn(inventoryPacks, folder)) await verifyInventoryExport(directory, folder, runNative);
 			if (Object.hasOwn(taskManagerPacks, folder)) await verifyTaskManagerExport(directory, runNative);
@@ -1688,7 +1798,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			if (Object.hasOwn(files, "Makefile")) {
 				assert.ok(await page.evaluate(() => [...document.querySelectorAll(".project-context select option")].some(option => option.textContent.trim() === "Makefile")));
 			}
-			if ((Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(mazeSearchPacks, folder) || Object.hasOwn(inventoryPacks, folder)) && folder.endsWith("/starter")) {
+			if ((folder === "CPPI5-Fraction-Toolkit/starter" || Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(mazeSearchPacks, folder) || Object.hasOwn(inventoryPacks, folder)) && folder.endsWith("/starter")) {
 				const requestsBeforeWorksheet = sourceRequests;
 				const savedBefore = await page.evaluate((key) => {
 					const projects = JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous"));
@@ -1698,9 +1808,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				await page.goto(`${origin}/courses#${courseId}-${anchor}`, { waitUntil: "domcontentloaded" });
 				const inventory = Object.hasOwn(inventoryPacks, folder);
 				const fileProcessor = Object.hasOwn(fileProcessorPacks, folder);
-				const worksheet = fileProcessor ? "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI4-Ownership-Rewrite-Reflection/starter/NOTES.md']" : inventory ? "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI3-Container-Tradeoff-Audit/starter/WORKSHEET.md']" : "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/starter/WORKSHEET.md']";
+				const valueTemplate = folder === "CPPI5-Fraction-Toolkit/starter";
+				const worksheet = valueTemplate ? "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI5-Template-Error-Reading-Drill/WORKSHEET.md']" : fileProcessor ? "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI4-Ownership-Rewrite-Reflection/starter/NOTES.md']" : inventory ? "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI3-Container-Tradeoff-Audit/starter/WORKSHEET.md']" : "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/starter/WORKSHEET.md']";
 				await revealCourseSource(page, worksheet);
-				const continueLabel = fileProcessor ? "Continue saved file processor" : inventory ? "Continue saved inventory" : "Continue saved maze";
+				const continueLabel = valueTemplate ? "Continue saved Fraction Toolkit" : fileProcessor ? "Continue saved file processor" : inventory ? "Continue saved inventory" : "Continue saved maze";
 				await page.waitForFunction((selector, label) => [...document.querySelector(selector)?.closest(".lesson-item").querySelectorAll(".item-content-markdown a") ?? []].some(action => action.textContent.trim() === label), {}, worksheet, continueLabel);
 				const continuation = await page.$eval(worksheet, (link, label) => [...link.closest(".lesson-item").querySelectorAll(".item-content-markdown a")].find(action => action.textContent.trim() === label)?.getAttribute("href"), continueLabel);
 				assert.ok(continuation);
@@ -1721,9 +1832,9 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 					return { count: projects.length, files: projects.find(project => project.courseProjectKey === key).files };
 				}, key);
 				assert.deepEqual(savedAfter, savedBefore);
-				record(fileProcessor ? "verified-ownership-worksheet-saved-attempt" : inventory ? "verified-container-worksheet-saved-attempt" : "verified-recursion-worksheet-saved-attempt", { folder, previousKey: key, noCodeImport: true, fileCount: savedAfter.files.length });
+				record(valueTemplate ? "verified-value-template-worksheet-saved-attempt" : fileProcessor ? "verified-ownership-worksheet-saved-attempt" : inventory ? "verified-container-worksheet-saved-attempt" : "verified-recursion-worksheet-saved-attempt", { folder, previousKey: key, noCodeImport: true, fileCount: savedAfter.files.length });
 			}
-			if ((folder.startsWith("CPPI4") || folder.startsWith("CPPI3") || folder.startsWith("CPPI2") || folder.startsWith("CPPI0") || folder.startsWith("CPPI1") || folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+			if ((folder.startsWith("CPPI5") || folder.startsWith("CPPI4") || folder.startsWith("CPPI3") || folder.startsWith("CPPI2") || folder.startsWith("CPPI0") || folder.startsWith("CPPI1") || folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
 				await mkdir(directory, { recursive: true });
 				// Show the imported source rather than the last edited blank line.

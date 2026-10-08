@@ -1213,6 +1213,8 @@ function markStaticMediaUnavailable(url: string) {
 }
 
 function linkHost(url: string) {
+	if (url.startsWith("/ide?")) return "Browser workspace";
+
 	if (url.startsWith("/course-assets/")) {
 		return "Course asset";
 	}
@@ -1288,6 +1290,7 @@ function projectLabel(item: CourseModuleItem, url: string) {
 
 function solutionLabel(url: string) {
 	const normalizedUrl = url.toLowerCase();
+	if (normalizedUrl.startsWith("/ide?")) return "Open reference in IDE";
 
 	if (
 		normalizedUrl.includes("answer-key") ||

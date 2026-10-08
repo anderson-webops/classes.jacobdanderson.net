@@ -303,9 +303,11 @@ export function isKnownCourseWorksheetResource(url: string) {
 		((resource.repo.toLowerCase() === "python-level-3" &&
 			/^AM6-Big-O-Analysis(?:\/|$)/.test(resource.path)) ||
 			(resource.repo.toLowerCase() === "cpp-level-3" &&
-				/^(?:CPPI0-Warnings-and-Debugger-Notebook|CPPI2-Recursion-Trace-Drill|CPPI3-Container-Tradeoff-Audit|CPPI4-Ownership-Rewrite-Reflection)(?:\/|$)/.test(
+				(/^(?:CPPI0-Warnings-and-Debugger-Notebook|CPPI2-Recursion-Trace-Drill|CPPI3-Container-Tradeoff-Audit|CPPI4-Ownership-Rewrite-Reflection)(?:\/|$)/.test(
 					resource.path
-				)))
+				) ||
+					resource.path ===
+						"CPPI5-Template-Error-Reading-Drill/WORKSHEET.md")))
 	);
 }
 
