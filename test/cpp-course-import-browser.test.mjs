@@ -1489,6 +1489,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 					await page.click(".lesson-view-toggle button:nth-child(3)");
 					await page.waitForSelector(".lesson-view-toggle button:nth-child(3)[aria-pressed='true']");
 					await page.waitForFunction(titles => titles.every(title => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent === title)), {}, titles);
+					await page.waitForFunction(titles => titles.every((title, index) => {
+						const item = [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent === title);
+						return item?.textContent.includes(["matrix.swap(candidate)", "Complexity check:", "4,294,967,294"][index]);
+					}), {}, titles);
 					const actual = await page.$$eval(".lesson-item", (items, titles) => titles.map((title) => {
 						const item = items.find(item => item.querySelector("h5")?.textContent === title);
 						return { title, text: item.textContent, importButtons: item.querySelectorAll(".is-ide-starter").length, programs: [...item.querySelectorAll("pre code.language-cpp")].map(code => code.textContent) };
@@ -1503,6 +1507,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 						await capture(card, index);
 					}
 					await revealCourseSource(page, selector);
+					await page.waitForFunction(selector => document.querySelector(selector)?.closest(".lesson-item").textContent.includes("Open current pack separately"), {}, selector);
 					assert.equal(!!await page.$(`a.resource-link.is-solution[href='https://github.com/${repository}/tree/main/DSCPP2-Graph-Navigation/solution']`), referenceFixture);
 					const primaryCard = await page.evaluateHandle(selector => document.querySelector(selector).closest(".lesson-item"), selector);
 					assert.ok(await primaryCard.evaluate(item => item.textContent.includes("Open current pack separately")));
@@ -1511,6 +1516,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 					await page.waitForSelector(".lesson-view-toggle button:nth-child(2)[aria-pressed='true']");
 					for (const [index, title] of ["Project: Graph Navigation", "Graph Navigation Transfer Practice", "Graph Navigation Extension Practice"].entries()) {
 						await page.waitForFunction(title => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent === title), {}, title);
+						await page.waitForFunction(title => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent === title)?.textContent.includes("imports no code"), {}, title);
 						const card = await page.evaluateHandle(title => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent === title), title);
 						assert.equal(await card.evaluate(item => item.querySelectorAll(".is-ide-starter").length), 0);
 						assert.ok(await card.evaluate(item => item.textContent.includes("imports no code")));
