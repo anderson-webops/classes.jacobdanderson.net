@@ -16,7 +16,10 @@ export function scratchCourseAccount(path, role) {
 async function readLesson(page, title, required) {
 	await page.waitForFunction(title => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes(title)), {}, title);
 	await page.$$eval(".lesson-item", (items, title) => items.find(item => item.querySelector("h5")?.textContent.includes(title)).scrollIntoView(), title);
-	await page.waitForFunction(({ title, required }) => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes(title))?.querySelector(".item-content-markdown")?.textContent.includes(required), {}, { title, required });
+	await page.waitForFunction(({ title, required }) => {
+		const item = [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes(title));
+		return !!item && [...item.querySelectorAll(".item-content-markdown")].some(section => section.textContent.includes(required));
+	}, {}, { title, required });
 	return page.$$eval(".lesson-item", (items, title) => items.find(item => item.querySelector("h5")?.textContent.includes(title)).textContent.replace(/\s+/g, " "), title);
 }
 
@@ -85,7 +88,10 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			for (const required of ["when green flag clicked -> hide", "when I receive [Maze finished] -> go to front layer -> show", "broadcast [Maze finished] and wait, followed by stop all", "the ending must hide and the player must return to its start", "it still retries"])
 				assert.ok(ending.includes(required), required);
 			assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-			assert.ok(await page.$("a[href='/ide?mode=scratch&starter=maze-reset']"));
+			assert.ok(await page.$$eval("a[href]", links => links.some((link) => {
+				const url = new URL(link.href);
+				return url.pathname === "/ide" && url.searchParams.get("mode") === "scratch" && url.searchParams.get("starter") === "maze-reset";
+			})));
 			if (process.env.SCRATCH_SCREENSHOT_DIR) {
 				const card = await page.evaluateHandle(() => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes("Maze Checkpoint")));
 				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-ending-${role}-${width}.png`) });
