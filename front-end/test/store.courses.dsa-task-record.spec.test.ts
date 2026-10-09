@@ -39,7 +39,7 @@ describe("task-record lessons, saved work and reference boundaries", () => {
 					"Verify and debug",
 					"Extend and review"
 				])
-					expect(lesson.content).toContain(stage);
+					expect(lesson.content).toContain(`\n\n## ${stage}\n\n`);
 			}
 			expect(module.curriculum.map(item => item.id)).toEqual(
 				expect.arrayContaining([

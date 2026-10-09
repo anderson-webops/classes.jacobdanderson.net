@@ -21,9 +21,13 @@ upstream plus one neutral overlay. Its exact combined review passed all nine
 jobs and the same 82/30/20 browser boundaries. All 79 selected screens passed;
 97 customization paths retain their exact bytes, and the CI overlay retains its
 manual trigger while inheriting the bounded browser limit. Main was published
-with a lease pinned to its observed prior tip. Independent downstream main and
-its next release remain separate acceptance gates. The prior v2.8.19 tag and
-release assets are preserved.
+with a lease pinned to its observed prior tip. Independent downstream main also
+passes all nine jobs and the same 82/30/20 browser boundaries, with all 79
+selected screens accepted. The signed native
+[v2.8.20 release](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.20)
+is public. Its producer, archive/manifest provenance, all 7,853 payload files
+and public asset hashes were independently verified. The prior v2.8.19 tag and
+release assets are preserved. Production activation remains unverified.
 
 The task-manager record fix is merged through
 [DSA source PR #4](https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/pull/4).
@@ -50,18 +54,25 @@ The record website follow-up preserves the primary project/progress identities
 and all three optional resource identities. Four authored lessons cover records,
 non-mutating views, the fixed driver and independent verification. Worksheets
 read the core README and continue the saved primary without importing code;
-the current starter uses a separate confirmed workspace identity. All 201
+the current starter uses a separate confirmed workspace identity. All 205
 focused catalog/quality tests pass. Six local actual-pack export groups pass
 with 512 model transitions per group, including untouched learner tasks,
 completion of only the two sorting methods and both original demonstrations.
 Hosted review adds two actual imports, one saved case, one untouched case and
-34 record screens. Full hosted and visual acceptance remains required before
-merging this follow-up, replaying the downstream overlay or creating a release.
+34 record screens. The initial review passed all nine hosted jobs, but direct
+screenshot inspection caught flattened section headings in the first authored
+lesson. A narrow normalization fix preserves all four authored heading blocks;
+the focused catalog test and hosted browser check now require real section
+headings. Acceptance of that corrected commit remains required before merging
+this follow-up, replaying the downstream overlay or creating a release.
 Dependencies and both lockfiles are unchanged.
 
-All thirteen currently retrievable Zoom transcripts have full semantic-review
-receipts. Fifty-one older unavailable transcript assets are not counted as
-reviewed. Remaining DSA placeholders, algorithm audits and advanced course source
+The complete Zoom room inventory contains 128 sessions: 76 have full readable
+transcripts and 52 return no transcript. Asset retrieval supersedes the older
+unavailable-transcript snapshot: 69 readable transcripts were returned despite
+incomplete availability flags. Twenty transcripts have full semantic-review
+receipts; 56 remain pending. Retrieval is not counted as semantic review.
+Remaining DSA placeholders, algorithm audits and advanced course source
 validation remain open. No milestone certifies the full catalog or live site.
 
 ## Earlier October 8 checkpoint

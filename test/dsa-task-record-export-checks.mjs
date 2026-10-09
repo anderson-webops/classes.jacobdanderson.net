@@ -200,6 +200,17 @@ export async function verifyTaskRecordTeaching(page, options) {
 					title
 				);
 				const text = await card.evaluate(item => item.textContent);
+				const headings = await card.evaluate(item =>
+					[...item.querySelectorAll(".item-content-markdown h2")].map(
+						heading => heading.textContent.trim()
+					)
+				);
+				assert.deepEqual(headings, [
+					"Learn",
+					"Predict and practice",
+					"Verify and debug",
+					"Extend and review"
+				]);
 				for (const stage of [
 					"Learn",
 					"Predict and practice",
@@ -332,6 +343,7 @@ export async function verifyTaskRecordTeaching(page, options) {
 			role: referenceFixture ? "instructor" : "learner",
 			width,
 			authoredLessons: 4,
+			sectionHeadingsRendered: true,
 			optionalWorksheets: 3,
 			readingImportsNoCode: true,
 			referenceVisible: referenceFixture
