@@ -272,7 +272,7 @@ nodeTest("restored USACO roles confirm, preserve edits and export correct native
 			const saved = await page.evaluate(key => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").find(project => project.courseProjectKey === key), key);
 			assert.deepEqual(Object.fromEntries(saved.files.map(file => [file.name, file.content])), expectedFiles);
 			const all = await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]"));
-			for (const project of previous) assert.deepEqual(all.find(item => item.id === project.id), project, "Other saved attempts are unchanged");
+			for (const project of previous) assert.deepEqual(all.find(item => item._id === project._id), project, "Other saved attempts are unchanged");
 			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening never redownloads or overwrites edits");
 			if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				await page.screenshot({ path: join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR, `course-import-usaco-${fixture.courseId}-${fixture.folder.replaceAll("/", "-")}-workspace.png`) });
