@@ -1594,6 +1594,10 @@ function decorateDataStructuresCppModule(
 	}
 
 	if (module.title === "DSCPP9 Benchmarking and Data-Structure Tradeoffs") {
+		const project = curriculum.find(
+			item => item.title === `${module.title}: Core Project`
+		)!;
+		project.ideImport = true;
 		curriculum.push({
 			title: "DSCPP9 Capstone Completion Contract",
 			content: [

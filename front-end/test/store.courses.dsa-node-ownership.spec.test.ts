@@ -46,6 +46,12 @@ describe("node-owning course native build directions", () => {
 						item.projectLink?.endsWith(`/${folder}/starter`)
 					)!;
 				expect(item).toBeDefined();
+				if (folder !== "DSCPP1-Task-Manager-CLI") {
+					expect(item.ideImport).toBe(true);
+					if (role === "instructor")
+						expect(item.solutionLink).toMatch(/\/solution$/);
+					else expect(item.solutionLink).toBeUndefined();
+				}
 				for (const sourceRole of role === "learner"
 					? ["starter"]
 					: ["starter", "solution"]) {

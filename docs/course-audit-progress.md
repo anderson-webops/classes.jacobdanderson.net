@@ -78,7 +78,9 @@ The three ownership starters offer an explicit current-pack action with separate
 workspace identities and import confirmation. Course-wide C++20 assertions now
 cover other DSA units while excluding similar unrelated course names. The prior
 hosted run caught the missing action and stale C++17 expectation; it failed and
-is not accepted.
+is not accepted. The next run passed all unit checks and six ownership exports,
+then caught the benchmark reference missing its IDE action. Explicit import
+actions now cover all four ownership units; that failed run is not accepted.
 All fourteen local export-checker native groups, nineteen focused catalog tests
 and full workspace source lint pass. Full hosted browser and visual acceptance
 remain pending. Dependencies and both lockfiles are unchanged.
