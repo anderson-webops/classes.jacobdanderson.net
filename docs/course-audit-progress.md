@@ -69,8 +69,9 @@ These are bounded ownership/lifetime checks, not full acceptance of every unit.
 
 The website imports from published source main. The follow-up records the exact
 accepted source revision and hashes independently in seven browser fixtures,
-adds a small ownership-policy note and matching C++20 build directions to four
-units, and checks actual imports,
+adds a small ownership-policy note to four units and matching course-wide C++20
+build directions. The root source toolchain specifies C++20; the task-manager
+reference also requires it for erase_if and ranges::sort. It checks actual imports,
 saves, exports and reopening with ordinary/sanitized native ownership checks.
 Three additional untouched/saved learner cases preserve existing attempts.
 All fourteen local export-checker native groups, fifteen focused catalog tests

@@ -6,6 +6,7 @@ import { useCoursesStore } from "@/stores/courses";
 
 const courseId = "data-structures-and-algorithms-in-cpp";
 const folders = [
+	"DSCPP1-Task-Manager-CLI",
 	"DSCPP6-Template-Linked-List",
 	"DSCPP7-Binary-Search-Tree",
 	"DSCPP8-AVL-Tree",

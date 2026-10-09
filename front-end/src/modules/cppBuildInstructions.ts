@@ -7,14 +7,7 @@ export function cppBuildInstructions(
 ) {
 	const key = courseProjectKey ?? "";
 	const standard =
-		/^data-structures-and-algorithms-in-cpp:(?:data-structures-and-algorithms-in-cpp-dscpp0-setup-and-positioning(?:[:-]|$)|dscpp0-setup(?::|$))/.test(
-			key
-		) ||
-		/^data-structures-and-algorithms-in-cpp:data-structures-and-algorithms-in-cpp-dscpp(?:6-templates-and-linked-structures|7-binary-search-trees|8-avl-trees-and-rebalancing|9-benchmarking-and-data-structure-tradeoffs)(?:[:-]|$)/.test(
-			key
-		) ||
-		/^(?:(?:c|cpp)-level-1|cpp-level-[23])(?:[:-]|$)/.test(key) ||
-		/^data-structures-and-algorithms-in-cpp:(?:data-structures-and-algorithms-in-cpp-dscpp2-graphs-and-shortest-paths(?:[:-]|$)|dscpp2-graph(?::|$))/.test(
+		/^(?:(?:c|cpp)-level-1|cpp-level-[23]|data-structures-and-algorithms-in-cpp)(?:[:-]|$)/.test(
 			key
 		)
 			? 20
