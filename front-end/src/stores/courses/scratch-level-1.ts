@@ -647,6 +647,19 @@ Challenge: Add a counter for the number of guesses and congratulate the player i
 					solutionLink: "https://scratch.mit.edu/projects/299311602/"
 				},
 				{
+					id: "scratch-speed-click-timer-debugging",
+					title: "Speed Click: Debugging Pitfalls",
+					content: `**Concept focus:** Keep the original Speed Click game and verify exactly when a click may earn a point.
+
+- On the green flag, show the button and reset the click count and timer. Use **set** for these starting values; use **change by 1** for an accepted click and **change by -1** for each countdown step after its one-second wait.
+- Keep initialization outside the countdown loop. The timer starts at 10 and follows 10, 9, 8, ... 1, 0; stop at zero. Do not repeatedly set it back to 10 inside the loop.
+- In the click handler, require **Time Left > 0** before changing the score, costume or sound. **not (Time Left = 0)** would incorrectly allow a negative timer value. Select the same timer variable in the reset, countdown and click checks.
+- Keep scoring inactive during the published Ready/Set/Go sequence. If the button can receive clicks during that sequence, use a shared **Round Running** flag: reset it to 0, set it to 1 after Ready/Set/Go finishes and before the countdown loop, and set it back to 0 when time ends. Require both that flag and positive time in the click handler.
+- Hide the button at the end as the original instructions require. A restart restores its visibility and starting values. Change a costume or sound on the existing sprite to preserve its scripts.
+
+**Predict and test:** Try one click during setup, a click with 1 second left, and clicks at 0 and a deliberately set -1. Only the active positive-time click scores. Restore the normal countdown and restart twice; each round starts from 0 clicks and 10 seconds. Explain why resetting the score on every click or checking only that time is not zero gives the wrong result.`
+				},
+				{
 					title: "Project 2 – Spider Smash",
 					content: correctedJuniScratchInstructions(
 						"Project 2 – Spider Smash"

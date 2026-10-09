@@ -1412,7 +1412,9 @@ function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 					"DSCPP2 Graphs and Shortest Paths"
 				].includes(module.title)) ||
 			(courseId === "scratch-level-1" &&
-				module.title === "GS7 Basic Conditionals")
+				["GS6 Variables", "GS7 Basic Conditionals"].includes(
+					module.title
+				))
 		) {
 			continue;
 		}

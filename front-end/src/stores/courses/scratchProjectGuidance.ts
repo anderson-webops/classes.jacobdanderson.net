@@ -33,5 +33,7 @@ export function buildScratchOpenEndedVariant({
 
 **Design path:** Start from a working version, then change one rule deliberately. Name the trigger, the state being tracked, and the feedback that proves the rule worked.
 
+**Independent start:** For a separate original version, [open an empty Scratch project](/ide?mode=scratch&starter=blank). Download the working .sb3 file before starting a new scene. Download the new project as well; use **Open .sb3** in the IDE to continue it next time.
+
 **Verification:** Test the normal path, one boundary case, and a fresh green-flag restart. ${evidence}`;
 }

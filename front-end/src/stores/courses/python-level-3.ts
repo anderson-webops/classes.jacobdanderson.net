@@ -239,7 +239,7 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 				{
 					title: "Functions",
 					content:
-						"Functions are reusable templates for computation. A function definition begins with `def`, receives values through parameters, and sends values back with `return`. A simple function that squares its input leads naturally into functions with multiple parameters and more complex logic."
+						"Functions are reusable templates for computation. A function definition begins with `def`, receives values through parameters, and sends values back with `return`. A simple function that squares its input leads naturally into functions with multiple parameters and more complex logic. Python annotations such as `text: str` and `-> bool` describe expected input and return types for readers, editors and type checkers; standard Python does not enforce them at runtime. If a function must reject an invalid value, it needs explicit validation. A default such as `enabled=False` instead supplies an actual value when that argument is omitted. Avoid a list or dictionary as a mutable default: that object is created once when the function is defined and is shared by calls that omit the argument. Use `items=None` and create a fresh list inside the function when `items is None`. Assignment such as `other = items` keeps the same object; `items.copy()` creates a shallow copy whose nested objects can still be shared."
 				},
 				{
 					title: "AM2 Project 1: Functions Practice",
@@ -459,7 +459,8 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						build: [
 							"Create `cascade()` so it prints the first character, then the first two characters, continuing until the full string is printed.",
 							"Create the inverse version so it prints the full string first and removes one character at a time.",
-							"Trace where the print statement happens relative to the recursive call.",
+							"Trace where the print statement happens relative to the recursive call. For `cat`, predict `c`, `ca`, `cat` for the growing version and `cat`, `ca`, `c` for the shrinking version.",
+							"Keep each call's substring or position in its parameters; separate growing and shrinking functions need no shared global counter. Printing a cascade is a side effect, so an implicit `None` return is valid here.",
 							"Compare head recursion and tail recursion using the two versions."
 						],
 						checkpoints: [
@@ -478,14 +479,15 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 					content: projectBrief({
 						goal: "Write a recursive palindrome checker for literal, case-sensitive strings.",
 						build: [
-							"Compare the first and last characters.",
-							"Return `False` immediately when the characters do not match.",
-							"Continue recursively on the smaller middle substring when the characters match.",
-							"Add base cases for strings that are empty or one character long."
+							"First return `True` for an empty or one-character string, before indexing either end.",
+							"Compare the first and last characters; return `False` immediately when they do not match.",
+							"When the ends match, return the recursive result for `text[1:-1]`. Calling the function without returning its result makes the outer call return `None`.",
+							"Keep this version recursive; a loop is not needed to compare the remaining middle substring."
 						],
 						checkpoints: [
 							"Known palindromes return `True` and non-palindromes return `False`.",
-							"Even-length and odd-length examples both work.",
+							"Even-length and odd-length examples both work. Predict literal, case-sensitive results first: empty text, `x`, `abba`, and `racecar` are `True`; `ab`, `abca`, and `Aa` are `False`.",
+							"Use a table of inputs and independently predicted booleans. Pass your checker function to the test helper without calling it; the helper calls it for each input and compares the returned value with the expectation.",
 							"The explanation names why each recursive call is closer to a base case."
 						]
 					}),

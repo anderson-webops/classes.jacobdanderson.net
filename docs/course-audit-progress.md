@@ -1,5 +1,36 @@
 # Current course-audit checkpoint, 2026-10-08
 
+Branch consolidation is complete. Five subsequent accepted review branches were
+also removed with observed-tip leases; their tips remain in a verified recovery
+bundle. Checked-out local worktrees and pre-existing local work are preserved.
+
+The task-record website correction is merged through
+[PR #162](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/162)
+at `65ba08b81200b8ba85bc710637f1a5d9102ad045`. Its exact combined review passes
+all nine hosted jobs, CodeQL, 35 Cypress scenarios, 84 C++/Java imports, 31 saved
+attempts and 21 untouched exports. All 113 selected images pass: 44 directly
+inspected and 69 identical to accepted images. Authored section headings render
+in both roles and viewports. Independent main acceptance is in progress;
+downstream replay and release publication remain separate gates.
+
+Thirty-one of the 76 readable Zoom transcripts now have full semantic-review
+receipts; 45 remain pending. The consolidated guidance change addresses recursive
+return values, independent expected results, Python scope and mutable defaults,
+type annotations, tile identity and restart boundaries, expired Scratch clicks,
+C++ integer widths and vector boundaries. Open-ended Scratch guidance now links
+to the existing blank project with download/reopen instructions. Existing source
+packs, published Scratch instructions and progress identities remain intact.
+All 254 focused cases and full source lint pass. The Variables module preserves
+its separate learning guides, including the existing Spider Smash guide. Browser
+checks now require the new Speed Click guide and independent-project link in
+both roles at mobile and desktop widths; their hosted acceptance remains pending.
+
+The full 77-course audit remains unfinished. The prior accepted downstream
+`v2.8.20` at `6c4b8bfa36df7cfcd43abcf743eeb280246a6b30` remains preserved.
+Production activation is unverified.
+
+## Earlier accepted ownership checkpoint, 2026-10-08
+
 The full 77-course audit remains unfinished. Branch consolidation is complete;
 removed tips remain in verified recovery bundles. Production activation is
 unverified. The dated sections below preserve historical evidence.
