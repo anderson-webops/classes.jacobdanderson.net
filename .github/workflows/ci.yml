@@ -271,6 +271,19 @@ jobs:
             - name: Build front-end
               run: npm run -w front-end build
 
+            - name: Verify restored USACO imports and native file I/O
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
+              run: node --test test/usaco-course-import-browser.test.mjs
+
+            - name: Retain USACO project workflow screenshots
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: usaco-workspace-screenshots
+                  path: output/playwright/course-import-usaco-*.png
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Scratch classroom import, execution and downloads
               env:
                   SCRATCH_SCREENSHOT_DIR: output/playwright
@@ -295,19 +308,6 @@ jobs:
                   name: cpp-workspace-screenshots
                   path: output/playwright/course-import-*.png
                   if-no-files-found: ignore
-                  retention-days: 7
-
-            - name: Verify restored USACO imports and native file I/O
-              env:
-                  COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
-              run: node --test test/usaco-course-import-browser.test.mjs
-
-            - name: Retain USACO project workflow screenshots
-              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-              with:
-                  name: usaco-workspace-screenshots
-                  path: output/playwright/course-import-usaco-*.png
-                  if-no-files-found: error
                   retention-days: 7
 
             - name: Verify Pygame surfaces in the browser IDE

@@ -1,6 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
-import { parseGitHubResource } from "@/modules/codePreview";
-import { restoredUsacoResource } from "@/modules/usacoProjectResources";
+import { restoredUsacoResourceUrl } from "../../modules/usacoProjectResources";
 
 export const marathonSavedItemId =
 	"usaco-gold-optional-historical-and-applied-gold-studios-supplemental-marathon";
@@ -183,15 +182,10 @@ export function applyRestoredUsacoProjects(
 	for (const module of course.modules) {
 		for (const section of ["curriculum", "supplementalProjects"] as const) {
 			for (const item of module[section]) {
-				const link = parseGitHubResource(item.projectLink ?? "");
-				const resource =
-					link &&
-					restoredUsacoResource(
-						courseId,
-						link.owner,
-						link.repo,
-						link.path
-					);
+				const resource = restoredUsacoResourceUrl(
+					courseId,
+					item.projectLink ?? ""
+				);
 				if (!resource) continue;
 				item.ideImport = true;
 				item.content = projectBrief(

@@ -70,3 +70,29 @@ export function restoredUsacoResource(
 			].includes(path)
 	);
 }
+
+// Course data is also loaded by native Node catalog/media tools without aliases.
+export function restoredUsacoResourceUrl(courseId: string, value: string) {
+	try {
+		const url = new URL(value);
+		const [owner, repository, kind, ref, ...path] = url.pathname
+			.split("/")
+			.slice(1);
+		if (
+			url.protocol !== "https:" ||
+			url.hostname !== "github.com" ||
+			kind !== "tree" ||
+			!ref
+		) {
+			return undefined;
+		}
+		return restoredUsacoResource(
+			courseId,
+			owner ?? "",
+			repository ?? "",
+			path.join("/")
+		);
+	} catch {
+		return undefined;
+	}
+}
