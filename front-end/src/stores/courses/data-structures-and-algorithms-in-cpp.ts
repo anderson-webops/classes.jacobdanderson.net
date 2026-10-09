@@ -1478,7 +1478,7 @@ const DATA_STRUCTURES_CPP_MODULE_FLOW: Record<
 			"sanitizer evidence"
 		],
 		flowNote:
-			"Choose and document one ownership model before linking nodes. Test empty, front, middle, back, missing, repeated clear, copy/move policy, and destruction behavior; every mutation must preserve the head/tail/size invariant and pass the available memory diagnostic."
+			"Choose and document one ownership model before linking nodes. Test empty, front, middle, back, missing, repeated clear, copy/move policy, and destruction behavior; every mutation must preserve the head/tail/size invariant and pass the available memory diagnostic. The supplied node-owning collections are noncopyable and nonmovable. Pass an existing collection by reference; implementing deep copy or move is outside these algorithm exercises."
 	},
 	"DSCPP7 Binary Search Trees": {
 		estimatedTime: "5 sessions · 45–60 minutes each",
@@ -1490,7 +1490,7 @@ const DATA_STRUCTURES_CPP_MODULE_FLOW: Record<
 			"destruction"
 		],
 		flowNote:
-			"Check the ordering invariant after every mutation rather than judging only printed output. Cover empty and missing cases, duplicate policy, leaf removal, one-child removal, two-child removal with the selected predecessor convention, repeated clear, and clean destruction."
+			"Check the ordering invariant after every mutation rather than judging only printed output. Cover empty and missing cases, duplicate policy, leaf removal, one-child removal, two-child removal with the selected predecessor convention, repeated clear, and clean destruction. The supplied node-owning collections are noncopyable and nonmovable. Pass an existing collection by reference; implementing deep copy or move is outside these algorithm exercises."
 	},
 	"DSCPP8 AVL Trees and Rebalancing": {
 		estimatedTime: "5–6 sessions · 45–60 minutes each",
@@ -1502,7 +1502,7 @@ const DATA_STRUCTURES_CPP_MODULE_FLOW: Record<
 			"ordered workload"
 		],
 		flowNote:
-			"Derive each rotation from a tiny tree and verify both BST order and stored heights afterward. Exercise all four insertion rotations, duplicates, missing removals, removal-triggered rebalancing, and ordered insert/remove sequences while checking every balance factor."
+			"Derive each rotation from a tiny tree and verify both BST order and stored heights afterward. Exercise all four insertion rotations, duplicates, missing removals, removal-triggered rebalancing, and ordered insert/remove sequences while checking every balance factor. The supplied node-owning collections are noncopyable and nonmovable. Pass an existing collection by reference; implementing deep copy or move is outside these algorithm exercises."
 	},
 	"DSCPP9 Benchmarking and Data-Structure Tradeoffs": {
 		estimatedTime: "4–5 sessions · 45–60 minutes each",
@@ -1514,7 +1514,7 @@ const DATA_STRUCTURES_CPP_MODULE_FLOW: Record<
 			"bounded conclusion"
 		],
 		flowNote:
-			"Pass identical correctness fixtures before collecting performance data. Record compiler and build mode, fixed seeds, workload sizes, warm-up policy, repeated raw samples, and median results for random and ordered workloads, then limit conclusions to the measured implementations and environment."
+			"Pass identical correctness fixtures before collecting performance data. Record compiler and build mode, fixed seeds, workload sizes, warm-up policy, repeated raw samples, and median results for random and ordered workloads, then limit conclusions to the measured implementations and environment. The supplied node-owning collections are noncopyable and nonmovable. Pass an existing collection by reference; implementing deep copy or move is outside these algorithm exercises."
 	}
 };
 

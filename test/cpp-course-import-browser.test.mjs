@@ -39,6 +39,7 @@ import { completeTaskManagerFile, verifyTaskManagerDefaultExport, verifyTaskMana
 import { completeTwoDimensionalAttempt, verifyTwoDimensionalExport } from "./cpp-two-dimensional-export-checks.mjs";
 import { completeValueTemplateFile, verifyValueTemplateDefaultExport, verifyValueTemplateExport, verifyValueTemplateLessons } from "./cpp-value-template-export-checks.mjs";
 import { completeGraphFile, verifyGraphExport, verifyGraphLesson } from "./dsa-graph-export-checks.mjs";
+import { verifyNodeOwnershipExport } from "./dsa-node-ownership-export-checks.mjs";
 import { completeSetupFile, verifySetupExport } from "./dsa-setup-export-checks.mjs";
 import { checkpointPacks, checkpointRevision } from "./fixtures/cpp-build-debug-packs.mjs";
 import { fileProcessorPacks, fileProcessorRevision } from "./fixtures/cpp-file-processor-packs.mjs";
@@ -49,6 +50,7 @@ import { rowImportPacks, rowImportRevision } from "./fixtures/cpp-row-import-pac
 import { taskManagerPacks, taskManagerRevision } from "./fixtures/cpp-task-manager-packs.mjs";
 import { valueTemplatePacks, valueTemplateRevision } from "./fixtures/cpp-value-template-packs.mjs";
 import { graphPacks, graphRevision } from "./fixtures/dsa-graph-packs.mjs";
+import { ownershipAnchors, ownershipPacks, ownershipRevision } from "./fixtures/dsa-node-ownership-packs.mjs";
 import { setupPacks, setupRevision } from "./fixtures/dsa-setup-packs.mjs";
 import { confirmProjectImport, downloadProjectZip, openProjectSidebar } from "./ide-workspace-controls.mjs";
 
@@ -411,13 +413,15 @@ const mazeSearchLearnerPacks = Object.fromEntries(Object.entries(mazeSearchPacks
 const rowImportReferenceFiles = {};
 const rowImportLearnerPacks = Object.fromEntries(Object.entries(rowImportPacks).filter(([folder]) => folder.endsWith("/starter")));
 const isTaskPack = folder => Object.hasOwn(taskManagerPacks, folder) || Object.hasOwn(rowImportPacks, folder);
-const isNativeContractPack = folder => Object.hasOwn(setupPacks, folder) || Object.hasOwn(graphPacks, folder) || Object.hasOwn(roverPacks, folder) || Object.hasOwn(valueTemplatePacks, folder) || Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(inventoryPacks, folder) || isTaskPack(folder) || Object.hasOwn(checkpointPacks, folder) || Object.hasOwn(mazeSearchPacks, folder);
+const isNativeContractPack = folder => Object.hasOwn(ownershipPacks, folder) || Object.hasOwn(setupPacks, folder) || Object.hasOwn(graphPacks, folder) || Object.hasOwn(roverPacks, folder) || Object.hasOwn(valueTemplatePacks, folder) || Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(inventoryPacks, folder) || isTaskPack(folder) || Object.hasOwn(checkpointPacks, folder) || Object.hasOwn(mazeSearchPacks, folder);
 const taskManagerReferenceFiles = {};
 const taskManagerLearnerPacks = Object.fromEntries(Object.entries(taskManagerPacks).filter(([folder]) => folder.endsWith("/starter")));
 const checkpointLearnerPacks = Object.fromEntries(Object.entries(checkpointPacks).filter(([folder]) => folder.endsWith("/starter")));
-const preservedPacks = { ...setupLearnerPacks, ...graphLearnerPacks, ...roverLearnerPacks, ...valueTemplateLearnerPacks, ...fileProcessorLearnerPacks, ...inventoryLearnerPacks, ...mazeSearchLearnerPacks, ...rowImportLearnerPacks, ...taskManagerLearnerPacks, ...checkpointLearnerPacks, ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks, ...dynamicMemoryPacks, ...capstonePacks };
+const ownershipLearnerPacks = Object.fromEntries(Object.entries(ownershipPacks).filter(([folder]) => folder.endsWith("/starter")));
+const preservedPacks = { ...ownershipLearnerPacks, ...setupLearnerPacks, ...graphLearnerPacks, ...roverLearnerPacks, ...valueTemplateLearnerPacks, ...fileProcessorLearnerPacks, ...inventoryLearnerPacks, ...mazeSearchLearnerPacks, ...rowImportLearnerPacks, ...taskManagerLearnerPacks, ...checkpointLearnerPacks, ...pointerPacks, ...arrayPacks, ...gamePacks, ...twoDimensionalPacks, ...dynamicMemoryPacks, ...capstonePacks };
 
 const fixtures = [
+	...Object.entries(ownershipPacks).map(([folder, hashes]) => ({ repository: "instruction-material/Data-Structures-and-Algorithms-in-CPP", revision: ownershipRevision, courseId: "data-structures-and-algorithms-in-cpp", standard: 20, folder, hashes, anchor: ownershipAnchors[folder.split("/")[0]], reference: folder.endsWith("/solution") })),
 	...Object.entries(setupPacks).map(([folder, hashes]) => ({ repository: "instruction-material/Data-Structures-and-Algorithms-in-CPP", revision: setupRevision, courseId: "data-structures-and-algorithms-in-cpp", standard: 20, folder, hashes, anchor: "dscpp0-setup-and-positioning", reference: folder.endsWith("/solution") })),
 	...Object.entries(graphPacks).map(([folder, hashes]) => ({ repository: "instruction-material/Data-Structures-and-Algorithms-in-CPP", revision: graphRevision, courseId: "data-structures-and-algorithms-in-cpp", standard: 20, folder, hashes, anchor: "dscpp2-graphs-and-shortest-paths", reference: folder.endsWith("/solution") })),
 	...Object.entries(roverPacks).map(([folder, hashes]) => ({
@@ -1326,14 +1330,14 @@ async function downloadProjectFiles(page) {
 	return Object.fromEntries(Object.entries(zip).map(([path, bytes]) => [path.slice(path.indexOf("/") + 1), strFromU8(bytes)]));
 }
 
-nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 720000 }, async () => {
+nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 900000 }, async () => {
 	let browser;
 	let server;
 	let page;
 	let temporary;
 	let exitCode = 0;
 	const previousDirectory = process.cwd();
-	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 720000 });
+	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 900000 });
 	try {
 		process.chdir(root);
 		temporary = await mkdtemp(join(tmpdir(), "cpp-course-workflow-"));
@@ -1894,7 +1898,8 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				const directory = join(temporary, `${folder.replaceAll("/", "-")}-untouched`);
 				await mkdir(directory);
 				for (const [name, content] of Object.entries(untouched)) await writeFile(join(directory, name), content);
-				if (Object.hasOwn(setupPacks, folder)) await verifySetupExport(directory, runNative, true);
+				if (Object.hasOwn(ownershipPacks, folder)) await verifyNodeOwnershipExport(directory, folder, runNative);
+				else if (Object.hasOwn(setupPacks, folder)) await verifySetupExport(directory, runNative, true);
 				else if (Object.hasOwn(graphPacks, folder)) await verifyGraphExport(directory, folder, runNative);
 				else if (Object.hasOwn(roverPacks, folder)) await verifyRoverDefaultExport(directory, folder, runNative);
 				else if (Object.hasOwn(valueTemplatePacks, folder)) await verifyValueTemplateDefaultExport(directory, folder, runNative);
@@ -1921,7 +1926,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			const firstLine = files[entryFile].split("\n").find(line => line.trim());
 			await page.waitForFunction(line => document.querySelector(".cm-content")?.textContent.includes(line), {}, firstLine);
 			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
-			const completed = Object.hasOwn(setupPacks, folder) ? completeSetupFile(folder, entryFile, files[entryFile], setupReferenceFiles[folder]) : Object.hasOwn(graphPacks, folder) ? completeGraphFile(folder, files[entryFile], graphReferenceFiles[folder]?.[entryFile]) : Object.hasOwn(roverPacks, folder) ? completeRoverFile(folder, entryFile, files[entryFile], roverReferenceFiles[folder]) : Object.hasOwn(valueTemplatePacks, folder) ? completeValueTemplateFile(folder, files[entryFile], valueTemplateReferenceFiles[folder]) : Object.hasOwn(fileProcessorPacks, folder) ? completeFileProcessorFile(folder, files[entryFile], fileProcessorReferenceFiles[folder]) : Object.hasOwn(inventoryPacks, folder) ? completeInventoryFile(folder, files[entryFile], inventoryReferenceFiles[folder]) : Object.hasOwn(mazeSearchPacks, folder) ? completeMazeSearchFile(folder, entryFile, files[entryFile], mazeSearchReferenceFiles[folder]) : Object.hasOwn(rowImportPacks, folder) ? completeRowImportFile(folder, entryFile, files[entryFile], rowImportReferenceFiles[folder]) : Object.hasOwn(taskManagerPacks, folder) ? completeTaskManagerFile(folder, entryFile, files[entryFile], taskManagerReferenceFiles[folder]) : Object.hasOwn(checkpointPacks, folder) ? completeBuildDebugFile(folder, entryFile, files[entryFile]) : Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, entryFile, files[entryFile], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, entryFile, files[entryFile], dynamicMemoryReferenceFiles[folder]) : completeMemoryAttempt(folder, files[entryFile]);
+			const completed = Object.hasOwn(ownershipPacks, folder) ? files[entryFile] : Object.hasOwn(setupPacks, folder) ? completeSetupFile(folder, entryFile, files[entryFile], setupReferenceFiles[folder]) : Object.hasOwn(graphPacks, folder) ? completeGraphFile(folder, files[entryFile], graphReferenceFiles[folder]?.[entryFile]) : Object.hasOwn(roverPacks, folder) ? completeRoverFile(folder, entryFile, files[entryFile], roverReferenceFiles[folder]) : Object.hasOwn(valueTemplatePacks, folder) ? completeValueTemplateFile(folder, files[entryFile], valueTemplateReferenceFiles[folder]) : Object.hasOwn(fileProcessorPacks, folder) ? completeFileProcessorFile(folder, files[entryFile], fileProcessorReferenceFiles[folder]) : Object.hasOwn(inventoryPacks, folder) ? completeInventoryFile(folder, files[entryFile], inventoryReferenceFiles[folder]) : Object.hasOwn(mazeSearchPacks, folder) ? completeMazeSearchFile(folder, entryFile, files[entryFile], mazeSearchReferenceFiles[folder]) : Object.hasOwn(rowImportPacks, folder) ? completeRowImportFile(folder, entryFile, files[entryFile], rowImportReferenceFiles[folder]) : Object.hasOwn(taskManagerPacks, folder) ? completeTaskManagerFile(folder, entryFile, files[entryFile], taskManagerReferenceFiles[folder]) : Object.hasOwn(checkpointPacks, folder) ? completeBuildDebugFile(folder, entryFile, files[entryFile]) : Object.hasOwn(capstoneFolders, folder) ? completeManualCapstoneFile(folder, entryFile, files[entryFile], capstoneReferenceFiles[folder]) : Object.hasOwn(dynamicMemoryFolders, folder) ? completeDynamicMemoryFile(folder, entryFile, files[entryFile], dynamicMemoryReferenceFiles[folder]) : completeMemoryAttempt(folder, files[entryFile]);
 			const edited = `${completed}\n// Browser workflow edit\n`;
 			expectedFiles[entryFile] = edited;
 			await page.click(".cm-content");
@@ -1937,7 +1942,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			// implementation, not only the driver's text.
 			const multiFilePack = isNativeContractPack(folder) || folder.startsWith("CPPF4") || folder.startsWith("CPPF8-Profile-Posts/") || Object.hasOwn(dynamicMemoryFolders, folder) || Object.hasOwn(capstoneFolders, folder);
 			const classFiles = multiFilePack ? Object.keys(files).filter(name => name !== entryFile && (/\.(?:h|cpp)$/.test(name) || (Object.hasOwn(setupPacks, folder) && name === "search.hpp"))) : [];
-			assert.equal(classFiles.length, Object.hasOwn(setupPacks, folder) ? 1 : Object.hasOwn(graphPacks, folder) ? 0 : Object.hasOwn(roverPacks, folder) ? folder.startsWith("CPPI6-Saveable-") ? 5 : 2 : Object.hasOwn(valueTemplatePacks, folder) ? 0 : Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(inventoryPacks, folder) ? 0 : Object.hasOwn(mazeSearchPacks, folder) ? 3 : Object.hasOwn(rowImportPacks, folder) ? 8 : Object.hasOwn(taskManagerPacks, folder) ? 6 : Object.hasOwn(checkpointPacks, folder) ? 4 : folder.includes("Grocery-List") ? 4 : folder.includes("Dynamic-Array-Implementation") || folder.includes("CPPM5-Profile-Posts") || folder.includes("Matrix-Class") ? 2 : multiFilePack && !Object.hasOwn(dynamicMemoryFolders, folder) && !Object.hasOwn(capstoneFolders, folder) ? 2 : 0);
+			assert.equal(classFiles.length, Object.hasOwn(ownershipPacks, folder) ? 0 : Object.hasOwn(setupPacks, folder) ? 1 : Object.hasOwn(graphPacks, folder) ? 0 : Object.hasOwn(roverPacks, folder) ? folder.startsWith("CPPI6-Saveable-") ? 5 : 2 : Object.hasOwn(valueTemplatePacks, folder) ? 0 : Object.hasOwn(fileProcessorPacks, folder) || Object.hasOwn(inventoryPacks, folder) ? 0 : Object.hasOwn(mazeSearchPacks, folder) ? 3 : Object.hasOwn(rowImportPacks, folder) ? 8 : Object.hasOwn(taskManagerPacks, folder) ? 6 : Object.hasOwn(checkpointPacks, folder) ? 4 : folder.includes("Grocery-List") ? 4 : folder.includes("Dynamic-Array-Implementation") || folder.includes("CPPM5-Profile-Posts") || folder.includes("Matrix-Class") ? 2 : multiFilePack && !Object.hasOwn(dynamicMemoryFolders, folder) && !Object.hasOwn(capstoneFolders, folder) ? 2 : 0);
 			for (const name of classFiles) {
 				await selectProjectFile(page, name);
 				const first = files[name].split("\n").find(line => line.trim());
@@ -1976,6 +1981,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				await writeFile(path, content);
 			}
 			await compileExport(directory, Object.keys(exported), mode, standard, isNativeContractPack(folder));
+			if (Object.hasOwn(ownershipPacks, folder)) {
+				await verifyNodeOwnershipExport(directory, folder, runNative);
+				record("verified-native-node-ownership-export", { folder, fileCount: Object.keys(exported).length, ordinaryAndSanitized: true, copyAndMoveRejected: true, independentLifetimes: 32, learnerTasksPreserved: !referenceFixture });
+			}
 			if (Object.hasOwn(setupPacks, folder)) {
 				await verifySetupExport(directory, runNative);
 				record("verified-native-setup-export", { folder, fileCount: Object.keys(exported).length, ordinaryAndSanitized: true, invalidInputs: 12, oraclePairs: 5397, roleCmakeCtestVerified: true, markedHeaderTasksCompleted: !referenceFixture });
@@ -2063,7 +2072,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				assert.deepEqual(savedAfter, savedBefore);
 				record(rover ? "verified-rover-worksheet-saved-attempt" : valueTemplate ? "verified-value-template-worksheet-saved-attempt" : fileProcessor ? "verified-ownership-worksheet-saved-attempt" : inventory ? "verified-container-worksheet-saved-attempt" : "verified-recursion-worksheet-saved-attempt", { folder, previousKey: key, noCodeImport: true, fileCount: savedAfter.files.length });
 			}
-			if ((Object.hasOwn(setupPacks, folder) || folder.startsWith("DSCPP2") || folder.startsWith("CPPI6") || folder.startsWith("CPPI5") || folder.startsWith("CPPI4") || folder.startsWith("CPPI3") || folder.startsWith("CPPI2") || folder.startsWith("CPPI0") || folder.startsWith("CPPI1") || folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+			if ((Object.hasOwn(ownershipPacks, folder) || Object.hasOwn(setupPacks, folder) || folder.startsWith("DSCPP2") || folder.startsWith("CPPI6") || folder.startsWith("CPPI5") || folder.startsWith("CPPI4") || folder.startsWith("CPPI3") || folder.startsWith("CPPI2") || folder.startsWith("CPPI0") || folder.startsWith("CPPI1") || folder.startsWith("PTJ4") || folder.startsWith("PTJ7") || folder.startsWith("CPPF") || folder.startsWith("CPPM")) && process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
 				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
 				await mkdir(directory, { recursive: true });
 				// Show the imported source rather than the last edited blank line.
