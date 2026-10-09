@@ -99,6 +99,8 @@ describe("restored USACO project workflows", () => {
 				])
 					expect(item.content, pack.folder).toContain(contract);
 				expect(item.content.length).toBeGreaterThan(2200);
+				expect(item.content).not.toContain("**Studio focus:**");
+				expect(item.content).not.toContain("**Build steps:**");
 				const stdio
 					= pack.folder === "UB62-Cow-College"
 						|| pack.folder === "UB63-Feeding-the-Cows";
