@@ -1,0 +1,2 @@
+# Bundled reference text must retain the same bytes across native checkouts.
+* text eol=lf
