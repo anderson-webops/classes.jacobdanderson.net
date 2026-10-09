@@ -3,7 +3,7 @@ import { Buffer } from "node:buffer";
 import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import process from "node:process";
 // eslint-disable-next-line test/no-import-node-test -- Native browser CI entrypoint.
 import { test as nodeTest } from "node:test";
@@ -45,6 +45,9 @@ nodeTest("confirmed independent reference imports, exact exports and real browse
 	let browser;
 	let server;
 	const previous = process.cwd();
+	const screenshotDirectory = process.env.COURSE_IMPORT_SCREENSHOT_DIR
+		? resolve(previous, process.env.COURSE_IMPORT_SCREENSHOT_DIR)
+		: null;
 	const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "course-reference-browser-ci";
 	const startedAt = new Date().toISOString();
 	console.log(JSON.stringify({ event: "start", taskId, cwd: root, command: "course-reference-browser", pid: process.pid, startedAt, timeoutMs: 240000 }));
@@ -96,9 +99,9 @@ nodeTest("confirmed independent reference imports, exact exports and real browse
 						assert.equal(strFromU8(exported[member]), await readFile(join(root, "src/assets/course-references", source), "utf8"));
 					}
 					assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-					if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
-						await mkdir(process.env.COURSE_IMPORT_SCREENSHOT_DIR, { recursive: true });
-						await page.screenshot({ path: join(process.env.COURSE_IMPORT_SCREENSHOT_DIR, `course-import-reference-${scenario.template}-${width}.png`), fullPage: true });
+					if (screenshotDirectory) {
+						await mkdir(screenshotDirectory, { recursive: true });
+						await page.screenshot({ path: join(screenshotDirectory, `course-import-reference-${scenario.template}-${width}.png`), fullPage: true });
 					}
 					console.log(JSON.stringify({ event: "verified-course-reference-import", template: scenario.template, width, exactExport: true, confirmation: width === 390, savedReopen: width === 1280 }));
 				}
@@ -144,7 +147,7 @@ nodeTest("confirmed independent reference imports, exact exports and real browse
 					assert.equal(await page.$eval("a[download='course_melody.wav']", link => link.getBoundingClientRect().width > 0), true);
 					assert.equal(await page.$eval("audio[src^='data:audio/wav']", audio => audio.getBoundingClientRect().width > 0), true);
 					assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-					if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) await page.screenshot({ path: join(process.env.COURSE_IMPORT_SCREENSHOT_DIR, `course-import-reference-melody-output-${width}.png`), fullPage: true });
+					if (screenshotDirectory) await page.screenshot({ path: join(screenshotDirectory, `course-import-reference-melody-output-${width}.png`), fullPage: true });
 					console.log(JSON.stringify({ event: "verified-course-reference-melody-view", width, visibleAudioAndDownload: true }));
 				}
 				console.log(JSON.stringify({ event: "verified-course-reference-melody", seconds: 2, restPresent: true, finalNotePresent: true, realBrowserRuntime: true, exactWavDownload: true }));
