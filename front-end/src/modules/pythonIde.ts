@@ -303,6 +303,7 @@ export function isKnownCourseWorksheetResource(url: string) {
 		((resource.repo.toLowerCase() ===
 			"data-structures-and-algorithms-in-cpp" &&
 			[
+				"DSCPP1-Task-Manager-CLI/README.md",
 				"DSCPP2-Graph-Navigation/README.md",
 				"DSA-08-dscpp0-setup-and-positioning/README.md",
 				"DSA-01-dscpp0-setup-and-positioning-supplemental-2/README.md",

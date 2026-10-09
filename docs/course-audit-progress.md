@@ -1,5 +1,73 @@
 # Current course-audit checkpoint, 2026-10-08
 
+The full 77-course audit remains unfinished. Branch consolidation is complete;
+removed tips remain in verified recovery bundles. Production activation is
+unverified. The dated sections below preserve historical evidence.
+
+Canonical main is `34752b39783d3061512ade40cb6ad47bac1c5297` through
+[PR #161](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/161).
+Both its exact combined review and independent main pass nine hosted jobs,
+CodeQL, 35 Cypress scenarios, 82 C++/Java imports, 30 saved-attempt cases and
+20 untouched exports. All 79 selected screens pass direct inspection or exact
+comparison with accepted images. The seven actual ownership exports pass 14
+ordinary/sanitizer groups; setup and graph export checks remain required.
+Qodana's workflow passed; its scan step was skipped. The signed native
+[v2.8.73 release](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.73)
+is public, with archive/manifest provenance, all 7,865 payload files and public
+asset metadata independently verified. This does not establish activation.
+
+Downstream main is `6c4b8bfa36df7cfcd43abcf743eeb280246a6b30`, accepted canonical
+upstream plus one neutral overlay. Its exact combined review passed all nine
+jobs and the same 82/30/20 browser boundaries. All 79 selected screens passed;
+97 customization paths retain their exact bytes, and the CI overlay retains its
+manual trigger while inheriting the bounded browser limit. Main was published
+with a lease pinned to its observed prior tip. Independent downstream main and
+its next release remain separate acceptance gates. The prior v2.8.19 tag and
+release assets are preserved.
+
+The task-manager record fix is merged through
+[DSA source PR #4](https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/pull/4).
+Both roles remove the first matching description, retain insertion order for
+updates and preserve state on missing descriptions. The starter retains two
+marked sorting tasks. The reference sorts copied single-date and full views;
+printing must not reorder the stored records. Numeric IDs, interactive parsing
+and persistence are optional extensions, not supplied requirements.
+
+The Markov input fix is merged through
+[DSA source PR #5](https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/pull/5)
+at `9b5dfab2a2589f4820ac8bb58f612ddf9522628f`. Negative order previously crashed;
+negative output length was silently accepted. The reference now rejects both,
+while retaining zero-order/zero-length behavior and its original demonstration.
+Its starter remains unchanged. Both exact review and independent source main
+pass all 60 GCC/Clang ordinary/sanitizer role groups: eight Markov, eight record,
+28 ownership, eight setup and eight graph groups. The Markov model gate checks
+320 independent windows and observed successor paths. Original valid-demo output
+is compared using the same compiler/library. Seven owner and two record source
+files retain exact accepted Git bytes, so their website fixture snapshots remain
+valid. This is bounded unit acceptance, not full DSA algorithm acceptance.
+
+The record website follow-up preserves the primary project/progress identities
+and all three optional resource identities. Four authored lessons cover records,
+non-mutating views, the fixed driver and independent verification. Worksheets
+read the core README and continue the saved primary without importing code;
+the current starter uses a separate confirmed workspace identity. All 201
+focused catalog/quality tests pass. Six local actual-pack export groups pass
+with 512 model transitions per group, including untouched learner tasks,
+completion of only the two sorting methods and both original demonstrations.
+Hosted review adds two actual imports, one saved case, one untouched case and
+34 record screens. Full hosted and visual acceptance remains required before
+merging this follow-up, replaying the downstream overlay or creating a release.
+Dependencies and both lockfiles are unchanged.
+
+All thirteen currently retrievable Zoom transcripts have full semantic-review
+receipts. Fifty-one older unavailable transcript assets are not counted as
+reviewed. Remaining DSA placeholders, algorithm audits and advanced course source
+validation remain open. No milestone certifies the full catalog or live site.
+
+## Earlier October 8 checkpoint
+
+# Course-audit checkpoint before ownership integration, 2026-10-08
+
 The full 77-course audit remains unfinished. This checkpoint records verified
 source and review status; the dated sections below retain historical evidence.
 Production activation remains unverified.

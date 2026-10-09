@@ -1408,6 +1408,7 @@ function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 			(courseId === "data-structures-and-algorithms-in-cpp" &&
 				[
 					"DSCPP0 Setup and Positioning",
+					"DSCPP1 Interfaces, Records, and a Task Manager CLI",
 					"DSCPP2 Graphs and Shortest Paths"
 				].includes(module.title)) ||
 			(courseId === "scratch-level-1" &&

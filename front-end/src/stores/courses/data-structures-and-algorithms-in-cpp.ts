@@ -1,6 +1,7 @@
 import type { RawCourse } from "./types";
 import { dsaGraphLessons } from "./dsaGraphLessons";
 import { dsaSetupLessons } from "./dsaSetupLessons";
+import { dsaTaskRecordLessons } from "./dsaTaskRecordLessons";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
@@ -69,38 +70,32 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			title: "DSCPP1 Interfaces, Records, and a Task Manager CLI",
 			curriculum: [
 				{
-					title: "Small Record Types and Sequence Storage",
-					content:
-						"Use a simple task manager to re-center the work on structured records, not just primitive values. This is the point where a vector of objects becomes a normal representation choice instead of an advanced feature."
+					title: "Interfaces, Records, and a Task Manager CLI Core Concepts",
+					id: "data-structures-and-algorithms-in-cpp-dscpp1-interfaces-records-and-a-task-manager-cli-curriculum-interfaces-records-and-a-task-manager-cli-core-concepts",
+					content: dsaTaskRecordLessons.records,
+					ideImport: false
 				},
 				{
 					title: "Filtering, Removal, and Stable Output",
-					content:
-						"Sequence mutation becomes concrete through task filtering and removal. The important distinction is the difference between searching, erasing, and printing sorted views rather than treating a vector like a magical bag of values."
+					content: dsaTaskRecordLessons.views,
+					ideImport: false
 				},
 				{
 					title: "Command-Style Program Structure",
-					content:
-						"Model programs that interpret an action, update state, and print a clear result. This becomes a useful pattern later when tree and graph labs expose many small operations through a driver."
+					content: dsaTaskRecordLessons.driver,
+					ideImport: false
 				},
 				{
-					title: "Interfaces, Records, and a Task Manager CLI: Verification and Reflection",
-					content: buildSupportSectionGuidance({
-						courseFamily: "C++ data structures and algorithms",
-						moduleTitle:
-							"Interfaces, Records, and a Task Manager CLI",
-						section: "verification"
-					})
+					title: "Verification Review: Interfaces, Records, and a Task Manager CLI",
+					id: "data-structures-and-algorithms-in-cpp-dscpp1-interfaces-records-and-a-task-manager-cli-curriculum-verification-review-interfaces-records-and-a-task-manager-cli",
+					content: dsaTaskRecordLessons.verification,
+					ideImport: false
 				},
 				{
 					title: "DSCPP1 Interfaces, Records, and a Task Manager CLI: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle:
-							"DSCPP1 Interfaces, Records, and a Task Manager CLI",
-						projectKind: "core",
-						hasReference: true
-					}),
+					id: "data-structures-and-algorithms-in-cpp-dscpp1-interfaces-records-and-a-task-manager-cli-curriculum-core-project-interfaces-records-and-a-task-manager-cli",
+					content: dsaTaskRecordLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP1-Task-Manager-CLI/starter",
 					solutionLink:
@@ -110,40 +105,27 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Project: Task Manager CLI",
-					content:
-						"Build a file-ready task manager that stores dated tasks, filters by date, removes tasks safely, and prints consistent views of the current schedule. The lab is intentionally small to keep the focus on clean data handling and interface boundaries.",
+					id: "data-structures-and-algorithms-in-cpp-dscpp1-interfaces-records-and-a-task-manager-cli-supplemental-project-task-manager-cli",
+					content: dsaTaskRecordLessons.checkpoint,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP1-Task-Manager-CLI/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP1-Task-Manager-CLI/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP1-Task-Manager-CLI/README.md"
 				},
 				{
 					title: "Task Manager CLI Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle:
-							"DSCPP1 Interfaces, Records, and a Task Manager CLI",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					id: "data-structures-and-algorithms-in-cpp-dscpp1-interfaces-records-and-a-task-manager-cli-supplemental-task-manager-cli-transfer-practice",
+					content: dsaTaskRecordLessons.transfer,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-03-dscpp1-interfaces-records-and-a-task-manager-cli-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-03-dscpp1-interfaces-records-and-a-task-manager-cli-supplemental-2/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP1-Task-Manager-CLI/README.md"
 				},
 				{
 					title: "Task Manager CLI Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle:
-							"DSCPP1 Interfaces, Records, and a Task Manager CLI",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					id: "data-structures-and-algorithms-in-cpp-dscpp1-interfaces-records-and-a-task-manager-cli-supplemental-task-manager-cli-extension-practice",
+					content: dsaTaskRecordLessons.extension,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-04-dscpp1-interfaces-records-and-a-task-manager-cli-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-04-dscpp1-interfaces-records-and-a-task-manager-cli-supplemental-3/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP1-Task-Manager-CLI/README.md"
 				}
 			]
 		},
@@ -1415,10 +1397,10 @@ const DATA_STRUCTURES_CPP_MODULE_FLOW: Record<
 			"sequence storage",
 			"search / erase",
 			"stable output",
-			"invalid command"
+			"missing description"
 		],
 		flowNote:
-			"Use the task manager as a short readiness bridge rather than a large application. Prove empty, one-item, duplicate, missing-ID, filtered, removed, and malformed-command behavior, then explain the cost of the principal vector operations before moving to graph structures."
+			"Use the task manager as a short readiness bridge rather than a large application. Prove empty, one-record, duplicate, missing-description, filtered and removed behavior. Complete the two sorting tasks while preserving insertion-order first matches, then explain vector search, erasure and copied-view sorting costs before moving to graphs."
 	},
 	"DSCPP2 Graphs and Shortest Paths": {
 		estimatedTime: "5–6 sessions · 45–60 minutes each",
@@ -1559,6 +1541,37 @@ function decorateDataStructuresCppModule(
 				: item.content,
 		learningPath: "core" as const
 	}));
+	if (module.title === "DSCPP1 Interfaces, Records, and a Task Manager CLI") {
+		const project = curriculum.find(
+			item => item.title === `${module.title}: Core Project`
+		)!;
+		const courseId = "data-structures-and-algorithms-in-cpp";
+		const lesson = `${courseId}-dscpp1-interfaces-records-and-a-task-manager-cli`;
+		const params = new URLSearchParams({
+			course: courseId,
+			mode: "cpp",
+			projectKey: `${courseId}:dscpp1-task-record:current-pack-v1`,
+			starterUrl: project.projectLink!,
+			starterTitle:
+				"Core Project: Interfaces, Records, and a Task Manager CLI",
+			starterLabel: "Learner starter",
+			lesson
+		});
+		project.content += `\n\n## Keep existing work and compare current source\n\nThe normal Start in IDE action continues your saved project. Save and export an earlier attempt before comparing the current record starter. [Open current starter separately](/ide?${params}) asks before importing and keeps the earlier project available.`;
+		const continuation = new URLSearchParams({
+			course: courseId,
+			mode: "cpp",
+			projectKey: `${courseId}:data-structures-and-algorithms-in-cpp-dscpp1-interfaces-records-and-a-task-manager-cli-curriculum-core-project-interfaces-records-and-a-task-manager-cli:starter`,
+			starterUrl: project.projectLink!,
+			starterTitle:
+				"Core Project: Interfaces, Records, and a Task Manager CLI",
+			starterLabel: "Learner starter",
+			lesson
+		});
+		for (const worksheet of module.supplementalProjects)
+			worksheet.content += `\n\n[Continue saved task-manager project](/ide?${continuation}). This worksheet adds practice to the same required record project.`;
+	}
+
 	const currentOwnershipPack =
 		DATA_STRUCTURES_CPP_CURRENT_OWNERSHIP_PACKS[module.title];
 	if (currentOwnershipPack) {
