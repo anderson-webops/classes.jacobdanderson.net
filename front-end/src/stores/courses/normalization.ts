@@ -1409,7 +1409,9 @@ function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 				[
 					"DSCPP0 Setup and Positioning",
 					"DSCPP1 Interfaces, Records, and a Task Manager CLI",
-					"DSCPP2 Graphs and Shortest Paths"
+					"DSCPP2 Graphs and Shortest Paths",
+					"DSCPP3 STL Containers and State-Based Text Generation",
+					"DSCPP4 Recursion and Backtracking in 3D Mazes"
 				].includes(module.title)) ||
 			(courseId === "scratch-level-1" &&
 				["GS6 Variables", "GS7 Basic Conditionals"].includes(
@@ -3467,8 +3469,11 @@ function needsContentSupport(context: CourseTextContext) {
 	if (hasCompleteScratchSupportPrompt(context)) return false;
 	if (
 		context.courseId === "data-structures-and-algorithms-in-cpp" &&
-		context.module.title ===
-			"DSCPP1 Interfaces, Records, and a Task Manager CLI" &&
+		[
+			"DSCPP1 Interfaces, Records, and a Task Manager CLI",
+			"DSCPP3 STL Containers and State-Based Text Generation",
+			"DSCPP4 Recursion and Backtracking in 3D Mazes"
+		].includes(context.module.title) &&
 		[
 			"Learn",
 			"Predict and practice",
