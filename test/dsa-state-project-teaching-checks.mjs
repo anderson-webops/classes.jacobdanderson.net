@@ -239,6 +239,20 @@ export async function verifyStateProjectTeaching(page, options) {
 					new URL(href, origin).searchParams.get("projectKey"),
 					primaryKey
 				);
+				if (quicksort && index === 1) {
+					const items = await card.evaluate(item =>
+						[
+							...item.querySelectorAll(
+								".item-content-markdown ol > li"
+							)
+						].map(entry => entry.textContent.replace(/\s+/g, " "))
+					);
+					assert.equal(items.length, 4);
+					assert.ok(
+						items[0].includes("at index 2. Predict the pivot's")
+					);
+					assert.ok(items[1].includes("index 3."));
+				}
 				await capture(card, index + 5);
 			} finally {
 				await card.dispose();

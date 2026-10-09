@@ -35,6 +35,31 @@ opening a separate current task pack. Hosted browser acceptance, integration,
 downstream replay and release publication remain pending. Dependencies and
 lockfiles are unchanged.
 
+Visual review found that the shared inline-list formatter treated the numeric
+sentence ending in `index 2. Predict` as a second list marker, hiding the pivot
+index in the otherwise correct source worksheet. Preserve authored block-list
+lines while retaining compact inline-list formatting. Fifteen focused component
+and quicksort cases pass, and the actual browser gate now checks all four transfer
+items and both pivot indices. The prior full hosted suite passed, but these new
+renderer changes require fresh hosted and visual acceptance.
+
+A static routing audit loads all 77 entries and identifies 16 courses with core
+GitHub resources but no configured course IDE mode. The course-level gate prevents
+their import action before resource inference. A mapped mode alone does not prove
+successful import or execution. The initial complete USACO source-tree audit
+found 146 of 165 starter directories containing only a README, plus five missing
+reference folders that are advertised by the Silver/Gold catalog. These broader
+workflow and source findings remain unfinished.
+
+The Square Pasture learner pack is now supplied through
+[USACO Bronze source PR #1](https://github.com/instruction-material/USACO-Bronze/pull/1),
+merged at `9def4c6337b899af9367f6ade93e570a007303be`. Provided file handling, three
+unfinished geometry tasks, sample input and a complete guide replace its migration
+placeholder. Every original reference and fixture is preserved. Local, exact
+review and independent main pass 200 actual file-I/O fixtures against an independent
+bounded square-placement oracle; the untouched starter produces no answer file.
+Site routing and actual consent/import/export acceptance are still pending.
+
 ## Earlier dated checkpoints
 
 # Current course-audit checkpoint, 2026-10-08

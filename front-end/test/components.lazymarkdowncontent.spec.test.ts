@@ -1,6 +1,7 @@
 import { flushPromises, mount } from "@vue/test-utils";
 import { describe, expect, it, vi } from "vitest";
 import LazyMarkdownContent from "@/components/LazyMarkdownContent.vue";
+import { dsaQuicksortLessons } from "@/stores/courses/dsaQuicksortLessons";
 
 describe("LazyMarkdownContent.vue", () => {
 	it("renders markdown tables as structured table elements", async () => {
@@ -79,6 +80,19 @@ describe("LazyMarkdownContent.vue", () => {
 		expect(wrapper.find("a").exists()).toBe(false);
 		expect(wrapper.html()).not.toContain("<img");
 		expect(wrapper.html()).not.toContain('href="javascript:');
+	});
+
+	it("preserves the pivot index inside the authored quicksort worksheet", async () => {
+		const wrapper = mount(LazyMarkdownContent, {
+			props: { content: dsaQuicksortLessons.transfer }
+		});
+		await vi.waitFor(() => {
+			expect(wrapper.findAll("ol li")).toHaveLength(4);
+		});
+		expect(wrapper.findAll("ol li")[0].text()).toContain(
+			"at index 2. Predict the pivot's"
+		);
+		expect(wrapper.findAll("ol li")[1].text()).toContain("index 3.");
 	});
 
 	it("formats compact inline course steps as readable markdown lists", async () => {
