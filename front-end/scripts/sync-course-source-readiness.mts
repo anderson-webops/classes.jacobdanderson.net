@@ -1,14 +1,26 @@
-import fs from "node:fs";
-import path from "node:path";
-import { courseCatalog, loadRawCourse } from "../src/stores/courses/index";
-import { courseImplementationSourceRepos } from "../src/stores/courses/course-implementation-artifacts";
 import type {
 	RawCourse,
 	RawCourseModuleItem
 } from "../src/stores/courses/types";
+import fs from "node:fs";
+import path from "node:path";
+import process from "node:process";
+import { courseImplementationSourceRepos } from "../src/stores/courses/course-implementation-artifacts";
+import { courseCatalog, loadRawCourse } from "../src/stores/courses/index";
+import {
+	parseSourceReadinessOptions,
+	sourceReadinessRepositoryRoot,
+	writeSourceReadinessFile
+} from "./source-readiness-io.mts";
 
-const instructionRoot =
-	"/Users/jacobanderson/Documents/Work/Instruction-Material";
+const options = parseSourceReadinessOptions(process.argv.slice(2));
+const fileActions: Array<{ file: string; action: string }> = [];
+if (
+	options.repository &&
+	!Object.values(courseImplementationSourceRepos).includes(options.repository)
+) {
+	throw new Error(`Unknown mapped source repository: ${options.repository}`);
+}
 
 const ignoredTopLevelDirs = new Set([
 	"build",
@@ -142,12 +154,16 @@ function markdownTable(headers: string[], rows: string[][]) {
 }
 
 function writeFileIfChanged(file: string, content: string, mode?: number) {
-	const normalized = `${content.trim()}\n`;
-	if (!fs.existsSync(file) || fs.readFileSync(file, "utf8") !== normalized) {
-		fs.mkdirSync(path.dirname(file), { recursive: true });
-		fs.writeFileSync(file, normalized);
-	}
-	if (mode !== undefined) fs.chmodSync(file, mode);
+	fileActions.push({
+		file,
+		action: writeSourceReadinessFile(
+			options.sourceRoot,
+			file,
+			content,
+			options.write,
+			mode
+		)
+	});
 }
 
 function repoVerificationScript(repo: string) {
@@ -196,7 +212,7 @@ source_count="$(find . \\
 
 [ "$source_count" -gt 0 ] || fail "no source-like files found"
 
-printf 'course source verification passed: %s source-like files\\n' "$source_count"
+printf 'course source inventory checks passed: %s source-like files (project correctness is not verified)\\n' "$source_count"
 `;
 }
 
@@ -627,10 +643,17 @@ function syncUnityProject(root: string) {
 
 const loadedCourses = (
 	await Promise.all(
-		courseCatalog.map(async entry => ({
-			entry,
-			course: await loadRawCourse(entry.id)
-		}))
+		courseCatalog
+			.filter(
+				entry =>
+					!options.repository ||
+					courseImplementationSourceRepos[entry.id] ===
+						options.repository
+			)
+			.map(async entry => ({
+				entry,
+				course: await loadRawCourse(entry.id)
+			}))
 	)
 ).filter(
 	(
@@ -654,11 +677,16 @@ for (const { entry, course } of loadedCourses) {
 
 const summaries: string[] = [];
 
+if (options.repository && !repos.has(options.repository)) {
+	throw new Error(`Unknown mapped source repository: ${options.repository}`);
+}
+
 for (const [repo, mappedCourses] of [...repos].sort((a, b) =>
 	a[0].localeCompare(b[0])
 )) {
-	const root = path.join(instructionRoot, repo);
-	if (!fs.existsSync(root)) {
+	if (options.repository && options.repository !== repo) continue;
+	const root = sourceReadinessRepositoryRoot(options, repo);
+	if (!root) {
 		summaries.push(`${repo}: missing local root`);
 		continue;
 	}
@@ -703,8 +731,8 @@ for (const [repo, mappedCourses] of [...repos].sort((a, b) =>
 		"## Verification Gate",
 		"",
 		"- Run `./verify-course-source.sh` from this repository root before treating the source pack as ready.",
-		"- The verification gate checks for this manifest, the source backlog ledger, source-like files, removed Replit metadata, and any repo-specific readiness files.",
-		"- Project-specific unit tests or build commands should still be run inside individual project folders when a project includes its own test harness.",
+		"- A newly generated gate checks inventory only. File counts, including Markdown, do not establish usable starter/reference roles or correct algorithms.",
+		"- Existing authored verification gates and role ledgers are preserved. Run their project-specific tests and build commands separately.",
 		"",
 		"## Active Catalog Targets",
 		"",
@@ -726,7 +754,7 @@ for (const [repo, mappedCourses] of [...repos].sort((a, b) =>
 	const backlog = [
 		"# Source Backlog Ledger",
 		"",
-		"This ledger records top-level source folders that are present in the repository but are not active catalog starter or solution targets. A folder listed here is intentionally not an unresolved audit failure.",
+		"This generated inventory lists folders outside detected catalog links. Each classification is a candidate for review, not proof that a folder is complete, intentionally inactive, or free of audit findings.",
 		"",
 		"Promotion rule: move a folder out of this ledger only after the course text names where it belongs, whether it is starter or solution material, and how the student or tutor verifies it.",
 		"",
@@ -755,4 +783,10 @@ for (const [repo, mappedCourses] of [...repos].sort((a, b) =>
 	);
 }
 
+console.log(
+	options.write
+		? "Create missing files only"
+		: "Preview only; no files changed"
+);
 console.log(summaries.join("\n"));
+for (const { file, action } of fileActions) console.log(`${action}: ${file}`);

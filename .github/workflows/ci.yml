@@ -148,6 +148,9 @@ jobs:
             - name: Scratch first-lesson event and archive regressions
               run: node --test test/scratch-name-events.test.mjs
 
+            - name: Preserve authored course source checks
+              run: node --test test/course-source-readiness.test.mjs
+
             - name: Backend tests
               env:
                   VITEST_WATCH: "false"
