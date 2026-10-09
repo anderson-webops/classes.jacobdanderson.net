@@ -1,0 +1,72 @@
+// Only these role folders have verified, runnable learner and reference packs.
+// Legacy USACO folders mix languages and may still contain only a README.
+export const usacoRestoredResources = [
+	{
+		course: "usaco-bronze",
+		repository: "USACO-Bronze",
+		folder: "UB1-Square-Pasture",
+		mode: "python"
+	},
+	{
+		course: "usaco-silver",
+		repository: "USACO-Silver",
+		folder: "US18-Counting-Haybales",
+		mode: "cpp"
+	},
+	{
+		course: "usaco-silver",
+		repository: "USACO-Silver",
+		folder: "US21-Priority-Queues",
+		mode: "cpp"
+	},
+	{
+		course: "usaco-silver",
+		repository: "USACO-Silver",
+		folder: "US22-Prefix-Sums",
+		mode: "cpp"
+	},
+	{
+		course: "usaco-gold",
+		repository: "USACO-Gold",
+		folder: "UG1-Dynamic-Programming-with-Fibonacci",
+		mode: "cpp"
+	},
+	{
+		course: "usaco-gold",
+		repository: "USACO-Gold",
+		folder: "UG3-Teamwork",
+		mode: "cpp"
+	},
+	{
+		course: "usaco-gold",
+		repository: "USACO-Gold",
+		folder: "UG5-Marathon",
+		mode: "cpp"
+	},
+	{
+		course: "usaco-gold",
+		repository: "USACO-Gold",
+		folder: "UG8-Bookshelf",
+		mode: "cpp"
+	}
+] as const;
+
+export function restoredUsacoResource(
+	courseId: string,
+	owner: string,
+	repository: string,
+	path: string
+) {
+	if (owner.toLowerCase() !== "instruction-material") return undefined;
+	const course =
+		courseId === "usaco-bronze-on-demand" ? "usaco-bronze" : courseId;
+	return usacoRestoredResources.find(
+		resource =>
+			resource.course === course &&
+			resource.repository.toLowerCase() === repository.toLowerCase() &&
+			[
+				`${resource.folder}/starter`,
+				`${resource.folder}/solution`
+			].includes(path)
+	);
+}

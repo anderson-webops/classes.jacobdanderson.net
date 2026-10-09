@@ -8,6 +8,7 @@ export function cppBuildInstructions(
 	const key = courseProjectKey ?? "";
 	const standard =
 		/^(?:(?:c|cpp)-level-1|cpp-level-[23])(?:[:-]|$)/.test(key) ||
+		/^usaco-(?:silver|gold)(?::|$)/.test(key) ||
 		/^data-structures-and-algorithms-in-cpp(?::|$)/.test(key)
 			? 20
 			: 17;
