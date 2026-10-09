@@ -82,7 +82,7 @@ describe("PyGames learner flow", () => {
 		);
 
 		expect(requiredCount).toBe(85);
-		expect(choiceAndChallengeCount).toBe(52);
+		expect(choiceAndChallengeCount).toBe(53);
 
 		const actors = requireSourceModule(
 			"PyG1 Object-Oriented Programming: Actors"

@@ -4,6 +4,7 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import { talentShowControllerGuide } from "./classroomReferenceGuides";
 import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrections";
 import { isCoreProjectTitle } from "./projectGrouping";
 import {
@@ -598,6 +599,12 @@ Challenge: Add a counter for the number of guesses and congratulate the player i
 				}
 			],
 			supplementalProjects: [
+				{
+					id: "scratch-talent-show-controller-guide",
+					title: "Talent Show Controller Trace",
+					learningPath: "choice",
+					content: talentShowControllerGuide
+				},
 				{
 					title: "GS8 Supplemental Project 1 – Quadrant Practice",
 					content: `

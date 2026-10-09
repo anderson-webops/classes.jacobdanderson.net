@@ -280,7 +280,10 @@ export const preAlgebraACourse: RawCourse = {
 						title: "Ratios compare quantities, proportions state two ratios are equal, conversions change units, and distance problems connect d = rt.",
 						concepts: [
 							"A ratio compares two quantities in a fixed relationship, such as cups of flour to batches of cookies.",
-							"A proportion uses equivalent ratios to solve for an unknown value.",
+							"A proportion uses equivalent ratios to solve for an unknown value. For k/6 = 4/3, multiply both sides by 6: k = 8. Substitute to check 8/6 = 4/3.",
+							"For 6/k = 4/3, require k != 0. Multiply both sides by 3k to get 18 = 4k, so k = 9/2. Check 6/(9/2) = 4/3. The position of the unknown changes the solution.",
+							"A scale factor is new length divided by corresponding original length. Scaling 6 cm to 8 cm gives 4/3; multiply each matching length by that factor. A GCF or a difference is not a scale factor.",
+							"Keep ratios in the same quantity order and show the same operation on both sides. Multiply or divide by a nonzero value when preserving an equivalent equation; multiplication by zero can lose information. Cancel common factors in products, not individual terms in a sum.",
 							"Unit conversion multiplies by a form of 1 so the value stays the same while the unit changes.",
 							"Distance-rate-time problems use d = rt and can be reorganized to find distance, rate, or time."
 						],
@@ -399,8 +402,9 @@ export const preAlgebraACourse: RawCourse = {
 							"A positive whole-number exponent counts repeated multiplication by the same base.",
 							"When multiplying powers with the same base, add exponents; when dividing powers with the same base, subtract exponents.",
 							"A zero exponent equals 1 for any nonzero base because the quotient rule leaves no factors behind.",
-							"A negative exponent represents a reciprocal power.",
-							"A square root asks which value squared gives the radicand; fractional exponents connect roots and powers."
+							"A negative exponent represents a reciprocal power with a nonzero base. Division also requires a nonzero denominator.",
+							"The square-root symbol denotes the nonnegative principal root: sqrt(49) = 7. Solving x^2 = 49 instead gives x = 7 or x = -7. For real x, sqrt(x^2) = abs(x). Real square roots require a nonnegative radicand.",
+							"Nested roots and products differ: sqrt(sqrt(16)) = 2, while sqrt(16) times sqrt(16) = 16. Fractional powers involving even roots retain the real-domain restriction; do not apply root rules across a sum."
 						],
 						practice:
 							"Rewrite each expression in expanded form first, then simplify with exponent rules and compare the two paths.",

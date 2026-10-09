@@ -1285,6 +1285,9 @@ const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
 	if (rawTemplate === "course" && requestedCourseStarter.value)
 		return "course";
 	if (rawTemplate === "demo") return "demo";
+	if (rawTemplate === "event-reference") return "event-reference";
+	if (rawTemplate === "melody-reference") return "melody-reference";
+	if (rawTemplate === "record-reference") return "record-reference";
 	if (rawTemplate === "firework-festival") return "firework-festival";
 	if (rawTemplate === "flower-garden") return "flower-garden";
 	if (rawTemplate === "maze-explorer") return "maze-explorer";
@@ -8685,6 +8688,19 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 										:title="artifact.title"
 									/>
 									<pre v-else>{{ artifact.text }}</pre>
+									<a
+										v-if="
+											artifact.audioUrl &&
+											artifact.mimeType === 'audio/wav'
+										"
+										:href="artifact.audioUrl"
+										:download="
+											artifact.title
+												.replace(/^PySynth:\s*/i, '')
+												.replace(/[^\w.-]/g, '_')
+										"
+										>Download WAV</a
+									>
 								</figure>
 							</div>
 						</div>

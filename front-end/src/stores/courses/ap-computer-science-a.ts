@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import { gitCourseGuideLink } from "./classroomReferenceGuides";
 import {
 	staticMediaFilename,
 	withPendingStaticMediaNotice
@@ -2092,6 +2093,11 @@ function decorateApCsaModule(
 		}));
 
 	if (module.title === "General: Course Introduction and Setup") {
+		curriculum = curriculum.map((item, index) =>
+			index === 0
+				? { ...item, content: item.content + gitCourseGuideLink }
+				: item
+		);
 		curriculum = insertApCsaItem(curriculum, "Track Guide", {
 			title: "Current Four-Unit Framework and Digital Exam",
 			content: [

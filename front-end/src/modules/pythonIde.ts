@@ -7,6 +7,7 @@ import {
 	parseGitHubResource
 } from "@/modules/codePreview";
 
+import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
 
 const WHITESPACE_RE = /\s+/g;
@@ -74,6 +75,9 @@ export type PythonIdeProjectTemplate =
 	| "classroom-project"
 	| "course"
 	| "demo"
+	| "event-reference"
+	| "melody-reference"
+	| "record-reference"
 	| "firework-festival"
 	| "flower-garden"
 	| "maze-explorer"
@@ -2483,6 +2487,13 @@ function getStarterFilesForTemplate(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate
 ) {
+	if (
+		(template === "event-reference" && mode === "pgzero") ||
+		(template === "melody-reference" && mode === "python") ||
+		(template === "record-reference" && mode === "java")
+	) {
+		return courseReferenceExamples[template].map(file => ({ ...file }));
+	}
 	if (template === "bluej") return getBlueJStarterFiles(mode);
 	if (template === "circle-art") {
 		return getGuidedTurtleStarterFiles(mode, turtleCircleArtStarterCode);

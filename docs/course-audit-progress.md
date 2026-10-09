@@ -1,5 +1,63 @@
 # Current course-audit checkpoint, 2026-10-08
 
+
+## Reference-guidance source checkpoint, 2026-10-09
+
+The full 77-course audit remains unfinished. All 76 available Zoom transcripts,
+covering 52,690 utterances, now have complete semantic-review receipts. The
+other 52 room sessions return no readable transcript. Complete review does not
+mean every resulting implementation or production check is finished.
+
+The accepted branch-consolidation checkpoint removed 98 remote refs with their
+tips retained in verified recovery bundles. Both remotes had only main and no
+open pull requests at that checkpoint; four checked-out local branches and the
+original dirty downstream work remain preserved. Canonical main
+`745b3b9c2c6b8aaf797803f649d5d8bc08218d48` and downstream main
+`0f9a2d6a2aece6cd33cd72ecbd8fcff1cdfdc74f` independently pass all nine hosted
+jobs, 84 C++/Java imports, 31 saved attempts, 21 untouched exports and 35 Cypress
+scenarios. All 121 selected views are accepted. Signed native releases
+[v2.8.74](https://github.com/anderson-webops/classes.jacobdanderson.net/releases/tag/v2.8.74)
+and [v2.8.21](https://github.com/instruction-material/classes.jacobdanderson.net/releases/tag/v2.8.21)
+are public and independently verified; all 98 downstream customization paths
+retain their intended bytes. This evidence does not establish activation.
+
+The new reference-guidance change addresses remaining classroom findings:
+Talent Show controller flow without changing its eight published instructions;
+a brief optional Scratch play/analyze/paper-plan warmup; explicit merge call and
+return traces; worked proportion, scale-factor and root/domain examples; safe
+Golf shot/goal/reset conditions; responsive Alien Catch scheduling; and finite
+Number Count placement with an optional untimed practice boundary.
+
+Separate confirmed IDE imports supply an asset-free Pygame Zero event demo and
+finite tile helper, a complete browser PySynth melody and a native Java record
+comparison. The classroom normalization preserves these worked-reference
+imports instead of replacing them with a generic classroom task. A shared Git
+walkthrough explains learner/reference paths, ZIP/clone/import distinctions,
+reviewed local checkpoints, forks and sharing. Java records remain optional and
+require native JDK 17+ compilation after export. The browser Java preview is not
+a full JDK. Generated WAV results now have a visible Download WAV action.
+
+All 383 focused course, import-consent, quality and implementation-artifact
+cases pass. The actual examples independently pass finite-layout boundaries and
+pair checks, WAV duration/rest/all-note pitch checks, event state/callback reset
+checks and warning-clean native Java compilation with exact expected output.
+Source lint and typecheck pass; manifests and both lockfiles retain their
+accepted bytes. Workflow syntax passes. The guarded local workflow-security
+scanner refused version drift (expected 1.29.0, installed 1.30.1); it was not
+bypassed or reconfigured. Hosted CodeQL and exact combined-tree acceptance
+remain required. Build and browser gates run remotely because local storage is
+below the repository's heavy-task threshold.
+
+The hosted browser gate must confirm and export all three untouched references
+at 390px, reopen the saved projects at 1280px, retain six workspace screenshots,
+and execute the complete melody in the real browser runtime. It must verify
+the two-second result, silent rest, final note and exact bytes produced by the
+actual Download WAV action. Those checks, screenshot acceptance, integration,
+downstream replay and release alignment remain pending at this source checkpoint.
+Existing core projects, progress identities and source starter/solution paths
+are preserved. Broader source-pack/algorithm acceptance and production workflow
+acceptance remain separate unfinished requirements.
+
 Branch consolidation is complete. Five subsequent accepted review branches were
 also removed with observed-tip leases; their tips remain in a verified recovery
 bundle. Checked-out local worktrees and pre-existing local work are preserved.

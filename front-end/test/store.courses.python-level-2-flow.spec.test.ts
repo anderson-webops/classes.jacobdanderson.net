@@ -82,7 +82,7 @@ describe("Python Level 2 learner flow", () => {
 		);
 
 		expect(requiredCount).toBe(54);
-		expect(optionCount).toBe(52);
+		expect(optionCount).toBe(53);
 
 		// Juni places these check-in projects in curriculum, despite their titles.
 		for (const title of ["Check-In #1", "Check-In #2"]) {
