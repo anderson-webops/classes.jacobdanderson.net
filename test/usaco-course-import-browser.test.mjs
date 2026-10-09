@@ -283,6 +283,10 @@ nodeTest(
 			let remoteWrites = 0;
 			await page.setRequestInterception(true);
 			page.on("request", (request) => {
+				if (request.interceptResolutionState().action === "disabled") {
+					if (!["GET", "OPTIONS"].includes(request.method())) remoteWrites++;
+					return;
+				}
 				const url = new URL(request.url());
 				const respond = (body, contentType = "application/json") => request.respond({ status: 200, contentType, headers: { "access-control-allow-origin": "*" }, body });
 				if (url.hostname === "api.github.com") {
@@ -403,16 +407,46 @@ nodeTest(
 						await page.waitForSelector(
 							"button.run-control:not([disabled])"
 						);
-						await page.click("button.run-control");
-						await page.waitForFunction(
-							() =>
-								/Run complete|Run failed/.test(
-									document.querySelector(
-										"[data-testid='ide-run-status']"
-									)?.textContent ?? ""
-								),
-							{ timeout: 120000 }
-						);
+						const runtimeNetwork = await page.createCDPSession();
+						try {
+							await runtimeNetwork.send("Network.enable");
+							await runtimeNetwork.send("Network.setBlockedURLs", {
+								urls: [
+									`${origin}/api/*`,
+									"*://*.jacobdanderson.net/*",
+									"*://cs.avasan.org/*",
+									"*://api.github.com/*",
+									"*://raw.githubusercontent.com/*"
+								]
+							});
+							// Chrome worker imports stall under page-level interception.
+							// Retain service blocks while letting the real worker start.
+							await page.setRequestInterception(false);
+							await page.$eval("[data-testid='ide-run-status']", (element) => {
+								element.dataset.usacoRunStarted = "false";
+								const observer = new MutationObserver(() => {
+									if (element.textContent.trim() === "Starting Python") {
+										element.dataset.usacoRunStarted = "true";
+										observer.disconnect();
+									}
+								});
+								observer.observe(element, { childList: true, characterData: true, subtree: true });
+							});
+							await page.click("button.run-control");
+							await page.waitForFunction(
+								() => {
+									const status = document.querySelector("[data-testid='ide-run-status']");
+									return status?.dataset.usacoRunStarted === "true"
+										&& /Run complete|Run failed/.test(status.textContent ?? "");
+								},
+								{ timeout: 120000 }
+							);
+						}
+						finally {
+							await page.setRequestInterception(true);
+							await runtimeNetwork.send("Network.setBlockedURLs", { urls: [] });
+							await runtimeNetwork.detach();
+						}
 						const status = await page.$eval(
 							"[data-testid='ide-run-status']",
 							element => element.textContent.trim()
