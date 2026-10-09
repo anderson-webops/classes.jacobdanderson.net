@@ -1,5 +1,7 @@
 import type { RawCourse } from "./types";
 import { dsaGraphLessons } from "./dsaGraphLessons";
+import { dsaMarkovLessons } from "./dsaMarkovLessons";
+import { dsaMazeLessons } from "./dsaMazeLessons";
 import { dsaSetupLessons } from "./dsaSetupLessons";
 import { dsaTaskRecordLessons } from "./dsaTaskRecordLessons";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
@@ -195,37 +197,28 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Vectors, Sets, Maps, and Deques as Different Stories",
-					content:
-						"Each container solves a different problem: vectors preserve sequence, sets track uniqueness, maps connect keys to values, and deques are helpful when the state window slides forward over time."
+					content: dsaMarkovLessons.containers,
+					ideImport: false
 				},
 				{
 					title: "Tokenization and Cleanup",
-					content:
-						"Use a text pipeline to normalize tokens, remove punctuation, and distinguish total tokens from unique vocabulary. This gives the program a concrete reason to combine multiple container types coherently."
+					content: dsaMarkovLessons.cleanup,
+					ideImport: false
 				},
 				{
 					title: "State Windows and Markov-Style Generation",
-					content:
-						"An n-gram or state-window model uses recent history to choose the next output token. The data-structure lesson matters more than the novelty of generated text."
+					content: dsaMarkovLessons.windows,
+					ideImport: false
 				},
 				{
 					title: "STL Containers and State Based Text Generation: Verification and Reflection",
-					content: buildSupportSectionGuidance({
-						courseFamily: "C++ data structures and algorithms",
-						moduleTitle:
-							"STL Containers and State Based Text Generation",
-						section: "verification"
-					})
+					content: dsaMarkovLessons.verification,
+					ideImport: false
 				},
 				{
 					title: "DSCPP3 STL Containers and State-Based Text Generation: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle:
-							"DSCPP3 STL Containers and State-Based Text Generation",
-						projectKind: "core",
-						hasReference: true
-					}),
+					content: dsaMarkovLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP3-Markov-Text-Generator/starter",
 					solutionLink:
@@ -235,40 +228,24 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Project: Markov Text Generator",
-					content:
-						"Build a small text generator that tokenizes an input string, records unique vocabulary, and uses a deque-backed state window with a map to produce sample output. This adapts the container-heavy source lab into a more readable course project.",
+					content: dsaMarkovLessons.checkpoint,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP3-Markov-Text-Generator/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP3-Markov-Text-Generator/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP3-Markov-Text-Generator/README.md"
 				},
 				{
 					title: "Container Text Generation Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle:
-							"DSCPP3 STL Containers and State-Based Text Generation",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaMarkovLessons.transfer,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-07-dscpp3-stl-containers-and-state-based-text-generation-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-07-dscpp3-stl-containers-and-state-based-text-generation-supplemental-2/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP3-Markov-Text-Generator/README.md"
 				},
 				{
 					title: "Container Text Generation Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle:
-							"DSCPP3 STL Containers and State-Based Text Generation",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaMarkovLessons.extension,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-08-dscpp3-stl-containers-and-state-based-text-generation-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-08-dscpp3-stl-containers-and-state-based-text-generation-supplemental-3/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP3-Markov-Text-Generator/README.md"
 				}
 			]
 		},
@@ -277,36 +254,28 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Recursive Search as Controlled Exploration",
-					content:
-						"Treat recursion as a disciplined search strategy, not a mysterious language trick. Explain what each call means, what state is local to that call, and when the recursion is done."
+					content: dsaMazeLessons.recursion,
+					ideImport: false
 				},
 				{
 					title: "Visited State and Cycle Prevention",
-					content:
-						"Backtracking only works cleanly when visited cells and state changes are tracked carefully. This unit deliberately surfaces accidental revisits, coordinate mistakes, and off-by-one bugs. Use the CS235 5x5x5 maze constraints as the anchor: exactly 125 imported cells, six legal directions, and no mutation of the current maze after a bad import."
+					content: dsaMazeLessons.state,
+					ideImport: false
 				},
 				{
 					title: "Path Construction and Rollback",
-					content:
-						"Make path handling explicit: add a coordinate when the recursion advances, remove it when a branch fails, and keep the successful path intact. This becomes an important mental model for recursive data-structure work later."
+					content: dsaMazeLessons.coordinates,
+					ideImport: false
 				},
 				{
 					title: "Recursion and Backtracking in 3D Mazes: Verification and Reflection",
-					content: buildSupportSectionGuidance({
-						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "Recursion and Backtracking in 3D Mazes",
-						section: "verification"
-					})
+					content: dsaMazeLessons.verification,
+					ideImport: false
 				},
 				{
 					title: "DSCPP4 Recursion and Backtracking in 3D Mazes: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle:
-							"DSCPP4 Recursion and Backtracking in 3D Mazes",
-						projectKind: "core",
-						hasReference: true
-					}),
+					content: dsaMazeLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP4-Recursive-Maze-Pathfinder/starter",
 					solutionLink:
@@ -316,40 +285,24 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Project: Recursive Maze Pathfinder",
-					content:
-						"Import a 5x5x5 maze, validate the data, and recursively search for a path from the entrance to the exit without cycles. This keeps the original maze-lab spirit while removing grading harness clutter from the visible project version.",
+					content: dsaMazeLessons.checkpoint,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP4-Recursive-Maze-Pathfinder/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP4-Recursive-Maze-Pathfinder/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP4-Recursive-Maze-Pathfinder/README.md"
 				},
 				{
 					title: "Recursive Maze Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle:
-							"DSCPP4 Recursion and Backtracking in 3D Mazes",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaMazeLessons.transfer,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-09-dscpp4-recursion-and-backtracking-in-3d-mazes-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-09-dscpp4-recursion-and-backtracking-in-3d-mazes-supplemental-2/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP4-Recursive-Maze-Pathfinder/README.md"
 				},
 				{
 					title: "Recursive Maze Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle:
-							"DSCPP4 Recursion and Backtracking in 3D Mazes",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaMazeLessons.extension,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-10-dscpp4-recursion-and-backtracking-in-3d-mazes-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-10-dscpp4-recursion-and-backtracking-in-3d-mazes-supplemental-3/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP4-Recursive-Maze-Pathfinder/README.md"
 				}
 			]
 		},
@@ -1570,6 +1523,49 @@ function decorateDataStructuresCppModule(
 		});
 		for (const worksheet of module.supplementalProjects)
 			worksheet.content += `\n\n[Continue saved task-manager project](/ide?${continuation}). This worksheet adds practice to the same required record project.`;
+	}
+
+	const statePractice = {
+		"DSCPP3 STL Containers and State-Based Text Generation": {
+			key: "dscpp3-markov-contract",
+			anchor: "dscpp3-stl-containers-and-state-based-text-generation",
+			label: "text-generator"
+		},
+		"DSCPP4 Recursion and Backtracking in 3D Mazes": {
+			key: "dscpp4-maze-contract",
+			anchor: "dscpp4-recursion-and-backtracking-in-3d-mazes",
+			label: "maze"
+		}
+	}[module.title];
+	if (statePractice) {
+		const project = curriculum.find(
+			item => item.title === `${module.title}: Core Project`
+		)!;
+		const courseId = "data-structures-and-algorithms-in-cpp";
+		const starterTitle = `Core Project: ${module.title.replace(/^DSCPP\d+ /, "")}`;
+		const lesson = `${courseId}-${statePractice.anchor}`;
+		const params = new URLSearchParams({
+			course: courseId,
+			mode: "cpp",
+			projectKey: `${courseId}:${statePractice.key}:current-pack-v1`,
+			starterUrl: project.projectLink!,
+			starterTitle,
+			starterLabel: "Learner starter",
+			lesson
+		});
+		project.content += `\n\n## Keep existing work and compare current source\n\nThe normal Start in IDE action continues the saved core project. Save and export an earlier attempt before comparing source. [Open current starter separately](/ide?${params}) asks before importing and keeps that earlier project available.`;
+		const resource = `${lesson}-curriculum-core-project-${statePractice.anchor.replace(/^dscpp\d+-/, "")}`;
+		const continuation = new URLSearchParams({
+			course: courseId,
+			mode: "cpp",
+			projectKey: `${courseId}:${resource}:starter`,
+			starterUrl: project.projectLink!,
+			starterTitle,
+			starterLabel: "Learner starter",
+			lesson
+		});
+		for (const worksheet of module.supplementalProjects)
+			worksheet.content += `\n\n[Continue saved ${statePractice.label} project](/ide?${continuation}). This worksheet continues the same required project.`;
 	}
 
 	const currentOwnershipPack =
